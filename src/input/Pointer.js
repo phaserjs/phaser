@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -503,7 +503,7 @@ Phaser.Pointer.prototype = {
                 if ((fromClick && currentNode.checkPointerDown(this, true)) ||
                     (!fromClick && currentNode.checkPointerOver(this, true)))
                 {
-                    highestRenderOrderID = currentNode.sprite._cache[3]; // renderOrderID
+                    highestRenderOrderID = currentNode.sprite.renderOrderID;
                     highestInputPriorityID = currentNode.priorityID;
                     candidateTarget = currentNode;
                 }
@@ -526,7 +526,7 @@ Phaser.Pointer.prototype = {
                 if ((fromClick && currentNode.checkPointerDown(this, false)) ||
                     (!fromClick && currentNode.checkPointerOver(this, false)))
                 {
-                    highestRenderOrderID = currentNode.sprite._cache[3]; // renderOrderID
+                    highestRenderOrderID = currentNode.sprite.renderOrderID;
                     highestInputPriorityID = currentNode.priorityID;
                     candidateTarget = currentNode;
                 }
@@ -601,7 +601,7 @@ Phaser.Pointer.prototype = {
     */
     stop: function (event) {
 
-        if (this._stateReset)
+        if (this._stateReset && this.withinGame)
         {
             event.preventDefault();
             return;

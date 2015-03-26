@@ -1,18 +1,18 @@
 /**
  * The MIT License (MIT)
- * 
- * Copyright (c) 2013 p2.js authors
- * 
+ *
+ * Copyright (c) 2015 p2.js authors
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -21,1907 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-!function(e){"object"==typeof exports?module.exports=e():"function"==typeof define&&define.amd?define('p2', (function() { return this.p2 = e(); })()):"undefined"!=typeof window?window.p2=e():"undefined"!=typeof global?self.p2=e():"undefined"!=typeof self&&(self.p2=e())}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"PcZj9L":[function(require,module,exports){
-var TA = require('typedarray')
-var xDataView = typeof DataView === 'undefined'
-  ? TA.DataView : DataView
-var xArrayBuffer = typeof ArrayBuffer === 'undefined'
-  ? TA.ArrayBuffer : ArrayBuffer
-var xUint8Array = typeof Uint8Array === 'undefined'
-  ? TA.Uint8Array : Uint8Array
-
-exports.Buffer = Buffer
-exports.SlowBuffer = Buffer
-exports.INSPECT_MAX_BYTES = 50
-Buffer.poolSize = 8192
-
-var browserSupport
-
-/**
- * Class: Buffer
- * =============
- *
- * The Buffer constructor returns instances of `Uint8Array` that are augmented
- * with function properties for all the node `Buffer` API functions. We use
- * `Uint8Array` so that square bracket notation works as expected -- it returns
- * a single octet.
- *
- * By augmenting the instances, we can avoid modifying the `Uint8Array`
- * prototype.
- *
- * Firefox is a special case because it doesn't allow augmenting "native" object
- * instances. See `ProxyBuffer` below for more details.
- */
-function Buffer (subject, encoding) {
-  var type = typeof subject
-
-  // Work-around: node's base64 implementation
-  // allows for non-padded strings while base64-js
-  // does not..
-  if (encoding === 'base64' && type === 'string') {
-    subject = stringtrim(subject)
-    while (subject.length % 4 !== 0) {
-      subject = subject + '='
-    }
-  }
-
-  // Find the length
-  var length
-  if (type === 'number')
-    length = coerce(subject)
-  else if (type === 'string')
-    length = Buffer.byteLength(subject, encoding)
-  else if (type === 'object')
-    length = coerce(subject.length) // Assume object is an array
-  else
-    throw new Error('First argument needs to be a number, array or string.')
-
-  var buf = augment(new xUint8Array(length))
-  if (Buffer.isBuffer(subject)) {
-    // Speed optimization -- use set if we're copying from a Uint8Array
-    buf.set(subject)
-  } else if (isArrayIsh(subject)) {
-    // Treat array-ish objects as a byte array.
-    for (var i = 0; i < length; i++) {
-      if (Buffer.isBuffer(subject))
-        buf[i] = subject.readUInt8(i)
-      else
-        buf[i] = subject[i]
-    }
-  } else if (type === 'string') {
-    buf.write(subject, 0, encoding)
-  }
-
-  return buf
-}
-
-// STATIC METHODS
-// ==============
-
-Buffer.isEncoding = function(encoding) {
-  switch ((encoding + '').toLowerCase()) {
-    case 'hex':
-    case 'utf8':
-    case 'utf-8':
-    case 'ascii':
-    case 'binary':
-    case 'base64':
-    case 'ucs2':
-    case 'ucs-2':
-    case 'utf16le':
-    case 'utf-16le':
-    case 'raw':
-      return true
-
-    default:
-      return false
-  }
-}
-
-Buffer.isBuffer = function isBuffer (b) {
-  return b && b._isBuffer
-}
-
-Buffer.byteLength = function (str, encoding) {
-  switch (encoding || 'utf8') {
-    case 'hex':
-      return str.length / 2
-
-    case 'utf8':
-    case 'utf-8':
-      return utf8ToBytes(str).length
-
-    case 'ascii':
-    case 'binary':
-      return str.length
-
-    case 'base64':
-      return base64ToBytes(str).length
-
-    default:
-      throw new Error('Unknown encoding')
-  }
-}
-
-Buffer.concat = function (list, totalLength) {
-  if (!Array.isArray(list)) {
-    throw new Error('Usage: Buffer.concat(list, [totalLength])\n' +
-        'list should be an Array.')
-  }
-
-  var i
-  var buf
-
-  if (list.length === 0) {
-    return new Buffer(0)
-  } else if (list.length === 1) {
-    return list[0]
-  }
-
-  if (typeof totalLength !== 'number') {
-    totalLength = 0
-    for (i = 0; i < list.length; i++) {
-      buf = list[i]
-      totalLength += buf.length
-    }
-  }
-
-  var buffer = new Buffer(totalLength)
-  var pos = 0
-  for (i = 0; i < list.length; i++) {
-    buf = list[i]
-    buf.copy(buffer, pos)
-    pos += buf.length
-  }
-  return buffer
-}
-
-// INSTANCE METHODS
-// ================
-
-function _hexWrite (buf, string, offset, length) {
-  offset = Number(offset) || 0
-  var remaining = buf.length - offset
-  if (!length) {
-    length = remaining
-  } else {
-    length = Number(length)
-    if (length > remaining) {
-      length = remaining
-    }
-  }
-
-  // must be an even number of digits
-  var strLen = string.length
-  if (strLen % 2 !== 0) {
-    throw new Error('Invalid hex string')
-  }
-  if (length > strLen / 2) {
-    length = strLen / 2
-  }
-  for (var i = 0; i < length; i++) {
-    var byte = parseInt(string.substr(i * 2, 2), 16)
-    if (isNaN(byte)) throw new Error('Invalid hex string')
-    buf[offset + i] = byte
-  }
-  Buffer._charsWritten = i * 2
-  return i
-}
-
-function _utf8Write (buf, string, offset, length) {
-  var bytes, pos
-  return Buffer._charsWritten = blitBuffer(utf8ToBytes(string), buf, offset, length)
-}
-
-function _asciiWrite (buf, string, offset, length) {
-  var bytes, pos
-  return Buffer._charsWritten = blitBuffer(asciiToBytes(string), buf, offset, length)
-}
-
-function _binaryWrite (buf, string, offset, length) {
-  return _asciiWrite(buf, string, offset, length)
-}
-
-function _base64Write (buf, string, offset, length) {
-  var bytes, pos
-  return Buffer._charsWritten = blitBuffer(base64ToBytes(string), buf, offset, length)
-}
-
-function BufferWrite (string, offset, length, encoding) {
-  // Support both (string, offset, length, encoding)
-  // and the legacy (string, encoding, offset, length)
-  if (isFinite(offset)) {
-    if (!isFinite(length)) {
-      encoding = length
-      length = undefined
-    }
-  } else {  // legacy
-    var swap = encoding
-    encoding = offset
-    offset = length
-    length = swap
-  }
-
-  offset = Number(offset) || 0
-  var remaining = this.length - offset
-  if (!length) {
-    length = remaining
-  } else {
-    length = Number(length)
-    if (length > remaining) {
-      length = remaining
-    }
-  }
-  encoding = String(encoding || 'utf8').toLowerCase()
-
-  switch (encoding) {
-    case 'hex':
-      return _hexWrite(this, string, offset, length)
-
-    case 'utf8':
-    case 'utf-8':
-      return _utf8Write(this, string, offset, length)
-
-    case 'ascii':
-      return _asciiWrite(this, string, offset, length)
-
-    case 'binary':
-      return _binaryWrite(this, string, offset, length)
-
-    case 'base64':
-      return _base64Write(this, string, offset, length)
-
-    default:
-      throw new Error('Unknown encoding')
-  }
-}
-
-function BufferToString (encoding, start, end) {
-  var self = (this instanceof ProxyBuffer)
-    ? this._proxy
-    : this
-
-  encoding = String(encoding || 'utf8').toLowerCase()
-  start = Number(start) || 0
-  end = (end !== undefined)
-    ? Number(end)
-    : end = self.length
-
-  // Fastpath empty strings
-  if (end === start)
-    return ''
-
-  switch (encoding) {
-    case 'hex':
-      return _hexSlice(self, start, end)
-
-    case 'utf8':
-    case 'utf-8':
-      return _utf8Slice(self, start, end)
-
-    case 'ascii':
-      return _asciiSlice(self, start, end)
-
-    case 'binary':
-      return _binarySlice(self, start, end)
-
-    case 'base64':
-      return _base64Slice(self, start, end)
-
-    default:
-      throw new Error('Unknown encoding')
-  }
-}
-
-function BufferToJSON () {
-  return {
-    type: 'Buffer',
-    data: Array.prototype.slice.call(this, 0)
-  }
-}
-
-// copy(targetBuffer, targetStart=0, sourceStart=0, sourceEnd=buffer.length)
-function BufferCopy (target, target_start, start, end) {
-  var source = this
-
-  if (!start) start = 0
-  if (!end && end !== 0) end = this.length
-  if (!target_start) target_start = 0
-
-  // Copy 0 bytes; we're done
-  if (end === start) return
-  if (target.length === 0 || source.length === 0) return
-
-  // Fatal error conditions
-  if (end < start)
-    throw new Error('sourceEnd < sourceStart')
-  if (target_start < 0 || target_start >= target.length)
-    throw new Error('targetStart out of bounds')
-  if (start < 0 || start >= source.length)
-    throw new Error('sourceStart out of bounds')
-  if (end < 0 || end > source.length)
-    throw new Error('sourceEnd out of bounds')
-
-  // Are we oob?
-  if (end > this.length)
-    end = this.length
-  if (target.length - target_start < end - start)
-    end = target.length - target_start + start
-
-  // copy!
-  for (var i = 0; i < end - start; i++)
-    target[i + target_start] = this[i + start]
-}
-
-function _base64Slice (buf, start, end) {
-  var bytes = buf.slice(start, end)
-  return require('base64-js').fromByteArray(bytes)
-}
-
-function _utf8Slice (buf, start, end) {
-  var bytes = buf.slice(start, end)
-  var res = ''
-  var tmp = ''
-  var i = 0
-  while (i < bytes.length) {
-    if (bytes[i] <= 0x7F) {
-      res += decodeUtf8Char(tmp) + String.fromCharCode(bytes[i])
-      tmp = ''
-    } else {
-      tmp += '%' + bytes[i].toString(16)
-    }
-
-    i++
-  }
-
-  return res + decodeUtf8Char(tmp)
-}
-
-function _asciiSlice (buf, start, end) {
-  var bytes = buf.slice(start, end)
-  var ret = ''
-  for (var i = 0; i < bytes.length; i++)
-    ret += String.fromCharCode(bytes[i])
-  return ret
-}
-
-function _binarySlice (buf, start, end) {
-  return _asciiSlice(buf, start, end)
-}
-
-function _hexSlice (buf, start, end) {
-  var len = buf.length
-
-  if (!start || start < 0) start = 0
-  if (!end || end < 0 || end > len) end = len
-
-  var out = ''
-  for (var i = start; i < end; i++) {
-    out += toHex(buf[i])
-  }
-  return out
-}
-
-// TODO: add test that modifying the new buffer slice will modify memory in the
-// original buffer! Use code from:
-// http://nodejs.org/api/buffer.html#buffer_buf_slice_start_end
-function BufferSlice (start, end) {
-  var len = this.length
-  start = clamp(start, len, 0)
-  end = clamp(end, len, len)
-  return augment(this.subarray(start, end)) // Uint8Array built-in method
-}
-
-function BufferReadUInt8 (offset, noAssert) {
-  var buf = this
-  if (!noAssert) {
-    assert(offset !== undefined && offset !== null, 'missing offset')
-    assert(offset < buf.length, 'Trying to read beyond buffer length')
-  }
-
-  if (offset >= buf.length)
-    return
-
-  return buf[offset]
-}
-
-function _readUInt16 (buf, offset, littleEndian, noAssert) {
-  if (!noAssert) {
-    assert(typeof (littleEndian) === 'boolean',
-        'missing or invalid endian')
-    assert(offset !== undefined && offset !== null, 'missing offset')
-    assert(offset + 1 < buf.length, 'Trying to read beyond buffer length')
-  }
-
-  var len = buf.length
-  if (offset >= len) {
-    return
-  } else if (offset + 1 === len) {
-    var dv = new xDataView(new xArrayBuffer(2))
-    dv.setUint8(0, buf[len - 1])
-    return dv.getUint16(0, littleEndian)
-  } else {
-    return buf._dataview.getUint16(offset, littleEndian)
-  }
-}
-
-function BufferReadUInt16LE (offset, noAssert) {
-  return _readUInt16(this, offset, true, noAssert)
-}
-
-function BufferReadUInt16BE (offset, noAssert) {
-  return _readUInt16(this, offset, false, noAssert)
-}
-
-function _readUInt32 (buf, offset, littleEndian, noAssert) {
-  if (!noAssert) {
-    assert(typeof (littleEndian) === 'boolean',
-        'missing or invalid endian')
-    assert(offset !== undefined && offset !== null, 'missing offset')
-    assert(offset + 3 < buf.length, 'Trying to read beyond buffer length')
-  }
-
-  var len = buf.length
-  if (offset >= len) {
-    return
-  } else if (offset + 3 >= len) {
-    var dv = new xDataView(new xArrayBuffer(4))
-    for (var i = 0; i + offset < len; i++) {
-      dv.setUint8(i, buf[i + offset])
-    }
-    return dv.getUint32(0, littleEndian)
-  } else {
-    return buf._dataview.getUint32(offset, littleEndian)
-  }
-}
-
-function BufferReadUInt32LE (offset, noAssert) {
-  return _readUInt32(this, offset, true, noAssert)
-}
-
-function BufferReadUInt32BE (offset, noAssert) {
-  return _readUInt32(this, offset, false, noAssert)
-}
-
-function BufferReadInt8 (offset, noAssert) {
-  var buf = this
-  if (!noAssert) {
-    assert(offset !== undefined && offset !== null,
-        'missing offset')
-    assert(offset < buf.length, 'Trying to read beyond buffer length')
-  }
-
-  if (offset >= buf.length)
-    return
-
-  return buf._dataview.getInt8(offset)
-}
-
-function _readInt16 (buf, offset, littleEndian, noAssert) {
-  if (!noAssert) {
-    assert(typeof (littleEndian) === 'boolean',
-        'missing or invalid endian')
-    assert(offset !== undefined && offset !== null,
-        'missing offset')
-    assert(offset + 1 < buf.length, 'Trying to read beyond buffer length')
-  }
-
-  var len = buf.length
-  if (offset >= len) {
-    return
-  } else if (offset + 1 === len) {
-    var dv = new xDataView(new xArrayBuffer(2))
-    dv.setUint8(0, buf[len - 1])
-    return dv.getInt16(0, littleEndian)
-  } else {
-    return buf._dataview.getInt16(offset, littleEndian)
-  }
-}
-
-function BufferReadInt16LE (offset, noAssert) {
-  return _readInt16(this, offset, true, noAssert)
-}
-
-function BufferReadInt16BE (offset, noAssert) {
-  return _readInt16(this, offset, false, noAssert)
-}
-
-function _readInt32 (buf, offset, littleEndian, noAssert) {
-  if (!noAssert) {
-    assert(typeof (littleEndian) === 'boolean',
-        'missing or invalid endian')
-    assert(offset !== undefined && offset !== null, 'missing offset')
-    assert(offset + 3 < buf.length, 'Trying to read beyond buffer length')
-  }
-
-  var len = buf.length
-  if (offset >= len) {
-    return
-  } else if (offset + 3 >= len) {
-    var dv = new xDataView(new xArrayBuffer(4))
-    for (var i = 0; i + offset < len; i++) {
-      dv.setUint8(i, buf[i + offset])
-    }
-    return dv.getInt32(0, littleEndian)
-  } else {
-    return buf._dataview.getInt32(offset, littleEndian)
-  }
-}
-
-function BufferReadInt32LE (offset, noAssert) {
-  return _readInt32(this, offset, true, noAssert)
-}
-
-function BufferReadInt32BE (offset, noAssert) {
-  return _readInt32(this, offset, false, noAssert)
-}
-
-function _readFloat (buf, offset, littleEndian, noAssert) {
-  if (!noAssert) {
-    assert(typeof (littleEndian) === 'boolean',
-        'missing or invalid endian')
-    assert(offset + 3 < buf.length, 'Trying to read beyond buffer length')
-  }
-
-  return buf._dataview.getFloat32(offset, littleEndian)
-}
-
-function BufferReadFloatLE (offset, noAssert) {
-  return _readFloat(this, offset, true, noAssert)
-}
-
-function BufferReadFloatBE (offset, noAssert) {
-  return _readFloat(this, offset, false, noAssert)
-}
-
-function _readDouble (buf, offset, littleEndian, noAssert) {
-  if (!noAssert) {
-    assert(typeof (littleEndian) === 'boolean',
-        'missing or invalid endian')
-    assert(offset + 7 < buf.length, 'Trying to read beyond buffer length')
-  }
-
-  return buf._dataview.getFloat64(offset, littleEndian)
-}
-
-function BufferReadDoubleLE (offset, noAssert) {
-  return _readDouble(this, offset, true, noAssert)
-}
-
-function BufferReadDoubleBE (offset, noAssert) {
-  return _readDouble(this, offset, false, noAssert)
-}
-
-function BufferWriteUInt8 (value, offset, noAssert) {
-  var buf = this
-  if (!noAssert) {
-    assert(value !== undefined && value !== null, 'missing value')
-    assert(offset !== undefined && offset !== null, 'missing offset')
-    assert(offset < buf.length, 'trying to write beyond buffer length')
-    verifuint(value, 0xff)
-  }
-
-  if (offset >= buf.length) return
-
-  buf[offset] = value
-}
-
-function _writeUInt16 (buf, value, offset, littleEndian, noAssert) {
-  if (!noAssert) {
-    assert(value !== undefined && value !== null, 'missing value')
-    assert(typeof (littleEndian) === 'boolean',
-        'missing or invalid endian')
-    assert(offset !== undefined && offset !== null, 'missing offset')
-    assert(offset + 1 < buf.length, 'trying to write beyond buffer length')
-    verifuint(value, 0xffff)
-  }
-
-  var len = buf.length
-  if (offset >= len) {
-    return
-  } else if (offset + 1 === len) {
-    var dv = new xDataView(new xArrayBuffer(2))
-    dv.setUint16(0, value, littleEndian)
-    buf[offset] = dv.getUint8(0)
-  } else {
-    buf._dataview.setUint16(offset, value, littleEndian)
-  }
-}
-
-function BufferWriteUInt16LE (value, offset, noAssert) {
-  _writeUInt16(this, value, offset, true, noAssert)
-}
-
-function BufferWriteUInt16BE (value, offset, noAssert) {
-  _writeUInt16(this, value, offset, false, noAssert)
-}
-
-function _writeUInt32 (buf, value, offset, littleEndian, noAssert) {
-  if (!noAssert) {
-    assert(value !== undefined && value !== null, 'missing value')
-    assert(typeof (littleEndian) === 'boolean',
-        'missing or invalid endian')
-    assert(offset !== undefined && offset !== null, 'missing offset')
-    assert(offset + 3 < buf.length, 'trying to write beyond buffer length')
-    verifuint(value, 0xffffffff)
-  }
-
-  var len = buf.length
-  if (offset >= len) {
-    return
-  } else if (offset + 3 >= len) {
-    var dv = new xDataView(new xArrayBuffer(4))
-    dv.setUint32(0, value, littleEndian)
-    for (var i = 0; i + offset < len; i++) {
-      buf[i + offset] = dv.getUint8(i)
-    }
-  } else {
-    buf._dataview.setUint32(offset, value, littleEndian)
-  }
-}
-
-function BufferWriteUInt32LE (value, offset, noAssert) {
-  _writeUInt32(this, value, offset, true, noAssert)
-}
-
-function BufferWriteUInt32BE (value, offset, noAssert) {
-  _writeUInt32(this, value, offset, false, noAssert)
-}
-
-function BufferWriteInt8 (value, offset, noAssert) {
-  var buf = this
-  if (!noAssert) {
-    assert(value !== undefined && value !== null, 'missing value')
-    assert(offset !== undefined && offset !== null, 'missing offset')
-    assert(offset < buf.length, 'Trying to write beyond buffer length')
-    verifsint(value, 0x7f, -0x80)
-  }
-
-  if (offset >= buf.length) return
-
-  buf._dataview.setInt8(offset, value)
-}
-
-function _writeInt16 (buf, value, offset, littleEndian, noAssert) {
-  if (!noAssert) {
-    assert(value !== undefined && value !== null, 'missing value')
-    assert(typeof (littleEndian) === 'boolean',
-        'missing or invalid endian')
-    assert(offset !== undefined && offset !== null, 'missing offset')
-    assert(offset + 1 < buf.length, 'Trying to write beyond buffer length')
-    verifsint(value, 0x7fff, -0x8000)
-  }
-
-  var len = buf.length
-  if (offset >= len) {
-    return
-  } else if (offset + 1 === len) {
-    var dv = new xDataView(new xArrayBuffer(2))
-    dv.setInt16(0, value, littleEndian)
-    buf[offset] = dv.getUint8(0)
-  } else {
-    buf._dataview.setInt16(offset, value, littleEndian)
-  }
-}
-
-function BufferWriteInt16LE (value, offset, noAssert) {
-  _writeInt16(this, value, offset, true, noAssert)
-}
-
-function BufferWriteInt16BE (value, offset, noAssert) {
-  _writeInt16(this, value, offset, false, noAssert)
-}
-
-function _writeInt32 (buf, value, offset, littleEndian, noAssert) {
-  if (!noAssert) {
-    assert(value !== undefined && value !== null, 'missing value')
-    assert(typeof (littleEndian) === 'boolean',
-        'missing or invalid endian')
-    assert(offset !== undefined && offset !== null, 'missing offset')
-    assert(offset + 3 < buf.length, 'Trying to write beyond buffer length')
-    verifsint(value, 0x7fffffff, -0x80000000)
-  }
-
-  var len = buf.length
-  if (offset >= len) {
-    return
-  } else if (offset + 3 >= len) {
-    var dv = new xDataView(new xArrayBuffer(4))
-    dv.setInt32(0, value, littleEndian)
-    for (var i = 0; i + offset < len; i++) {
-      buf[i + offset] = dv.getUint8(i)
-    }
-  } else {
-    buf._dataview.setInt32(offset, value, littleEndian)
-  }
-}
-
-function BufferWriteInt32LE (value, offset, noAssert) {
-  _writeInt32(this, value, offset, true, noAssert)
-}
-
-function BufferWriteInt32BE (value, offset, noAssert) {
-  _writeInt32(this, value, offset, false, noAssert)
-}
-
-function _writeFloat (buf, value, offset, littleEndian, noAssert) {
-  if (!noAssert) {
-    assert(value !== undefined && value !== null, 'missing value')
-    assert(typeof (littleEndian) === 'boolean',
-        'missing or invalid endian')
-    assert(offset !== undefined && offset !== null, 'missing offset')
-    assert(offset + 3 < buf.length, 'Trying to write beyond buffer length')
-    verifIEEE754(value, 3.4028234663852886e+38, -3.4028234663852886e+38)
-  }
-
-  var len = buf.length
-  if (offset >= len) {
-    return
-  } else if (offset + 3 >= len) {
-    var dv = new xDataView(new xArrayBuffer(4))
-    dv.setFloat32(0, value, littleEndian)
-    for (var i = 0; i + offset < len; i++) {
-      buf[i + offset] = dv.getUint8(i)
-    }
-  } else {
-    buf._dataview.setFloat32(offset, value, littleEndian)
-  }
-}
-
-function BufferWriteFloatLE (value, offset, noAssert) {
-  _writeFloat(this, value, offset, true, noAssert)
-}
-
-function BufferWriteFloatBE (value, offset, noAssert) {
-  _writeFloat(this, value, offset, false, noAssert)
-}
-
-function _writeDouble (buf, value, offset, littleEndian, noAssert) {
-  if (!noAssert) {
-    assert(value !== undefined && value !== null, 'missing value')
-    assert(typeof (littleEndian) === 'boolean',
-        'missing or invalid endian')
-    assert(offset !== undefined && offset !== null, 'missing offset')
-    assert(offset + 7 < buf.length,
-        'Trying to write beyond buffer length')
-    verifIEEE754(value, 1.7976931348623157E+308, -1.7976931348623157E+308)
-  }
-
-  var len = buf.length
-  if (offset >= len) {
-    return
-  } else if (offset + 7 >= len) {
-    var dv = new xDataView(new xArrayBuffer(8))
-    dv.setFloat64(0, value, littleEndian)
-    for (var i = 0; i + offset < len; i++) {
-      buf[i + offset] = dv.getUint8(i)
-    }
-  } else {
-    buf._dataview.setFloat64(offset, value, littleEndian)
-  }
-}
-
-function BufferWriteDoubleLE (value, offset, noAssert) {
-  _writeDouble(this, value, offset, true, noAssert)
-}
-
-function BufferWriteDoubleBE (value, offset, noAssert) {
-  _writeDouble(this, value, offset, false, noAssert)
-}
-
-// fill(value, start=0, end=buffer.length)
-function BufferFill (value, start, end) {
-  if (!value) value = 0
-  if (!start) start = 0
-  if (!end) end = this.length
-
-  if (typeof value === 'string') {
-    value = value.charCodeAt(0)
-  }
-
-  if (typeof value !== 'number' || isNaN(value)) {
-    throw new Error('value is not a number')
-  }
-
-  if (end < start) throw new Error('end < start')
-
-  // Fill 0 bytes; we're done
-  if (end === start) return
-  if (this.length === 0) return
-
-  if (start < 0 || start >= this.length) {
-    throw new Error('start out of bounds')
-  }
-
-  if (end < 0 || end > this.length) {
-    throw new Error('end out of bounds')
-  }
-
-  for (var i = start; i < end; i++) {
-    this[i] = value
-  }
-}
-
-function BufferInspect () {
-  var out = []
-  var len = this.length
-  for (var i = 0; i < len; i++) {
-    out[i] = toHex(this[i])
-    if (i === exports.INSPECT_MAX_BYTES) {
-      out[i + 1] = '...'
-      break
-    }
-  }
-  return '<Buffer ' + out.join(' ') + '>'
-}
-
-// Creates a new `ArrayBuffer` with the *copied* memory of the buffer instance.
-// Added in Node 0.12.
-function BufferToArrayBuffer () {
-  return (new Buffer(this)).buffer
-}
-
-
-// HELPER FUNCTIONS
-// ================
-
-function stringtrim (str) {
-  if (str.trim) return str.trim()
-  return str.replace(/^\s+|\s+$/g, '')
-}
-
-/**
- * Check to see if the browser supports augmenting a `Uint8Array` instance.
- * @return {boolean}
- */
-function _browserSupport () {
-  var arr = new xUint8Array(0)
-  arr.foo = function () { return 42 }
-
-  try {
-    return (42 === arr.foo())
-  } catch (e) {
-    return false
-  }
-}
-
-/**
- * Class: ProxyBuffer
- * ==================
- *
- * Only used in Firefox, since Firefox does not allow augmenting "native"
- * objects (like Uint8Array instances) with new properties for some unknown
- * (probably silly) reason. So we'll use an ES6 Proxy (supported since
- * Firefox 18) to wrap the Uint8Array instance without actually adding any
- * properties to it.
- *
- * Instances of this "fake" Buffer class are the "target" of the
- * ES6 Proxy (see `augment` function).
- *
- * We couldn't just use the `Uint8Array` as the target of the `Proxy` because
- * Proxies have an important limitation on trapping the `toString` method.
- * `Object.prototype.toString.call(proxy)` gets called whenever something is
- * implicitly cast to a String. Unfortunately, with a `Proxy` this
- * unconditionally returns `Object.prototype.toString.call(target)` which would
- * always return "[object Uint8Array]" if we used the `Uint8Array` instance as
- * the target. And, remember, in Firefox we cannot redefine the `Uint8Array`
- * instance's `toString` method.
- *
- * So, we use this `ProxyBuffer` class as the proxy's "target". Since this class
- * has its own custom `toString` method, it will get called whenever `toString`
- * gets called, implicitly or explicitly, on the `Proxy` instance.
- *
- * We also have to define the Uint8Array methods `subarray` and `set` on
- * `ProxyBuffer` because if we didn't then `proxy.subarray(0)` would have its
- * `this` set to `proxy` (a `Proxy` instance) which throws an exception in
- * Firefox which expects it to be a `TypedArray` instance.
- */
-function ProxyBuffer (arr) {
-  this._arr = arr
-
-  if (arr.byteLength !== 0)
-    this._dataview = new xDataView(arr.buffer, arr.byteOffset, arr.byteLength)
-}
-
-ProxyBuffer.prototype.write = BufferWrite
-ProxyBuffer.prototype.toString = BufferToString
-ProxyBuffer.prototype.toLocaleString = BufferToString
-ProxyBuffer.prototype.toJSON = BufferToJSON
-ProxyBuffer.prototype.copy = BufferCopy
-ProxyBuffer.prototype.slice = BufferSlice
-ProxyBuffer.prototype.readUInt8 = BufferReadUInt8
-ProxyBuffer.prototype.readUInt16LE = BufferReadUInt16LE
-ProxyBuffer.prototype.readUInt16BE = BufferReadUInt16BE
-ProxyBuffer.prototype.readUInt32LE = BufferReadUInt32LE
-ProxyBuffer.prototype.readUInt32BE = BufferReadUInt32BE
-ProxyBuffer.prototype.readInt8 = BufferReadInt8
-ProxyBuffer.prototype.readInt16LE = BufferReadInt16LE
-ProxyBuffer.prototype.readInt16BE = BufferReadInt16BE
-ProxyBuffer.prototype.readInt32LE = BufferReadInt32LE
-ProxyBuffer.prototype.readInt32BE = BufferReadInt32BE
-ProxyBuffer.prototype.readFloatLE = BufferReadFloatLE
-ProxyBuffer.prototype.readFloatBE = BufferReadFloatBE
-ProxyBuffer.prototype.readDoubleLE = BufferReadDoubleLE
-ProxyBuffer.prototype.readDoubleBE = BufferReadDoubleBE
-ProxyBuffer.prototype.writeUInt8 = BufferWriteUInt8
-ProxyBuffer.prototype.writeUInt16LE = BufferWriteUInt16LE
-ProxyBuffer.prototype.writeUInt16BE = BufferWriteUInt16BE
-ProxyBuffer.prototype.writeUInt32LE = BufferWriteUInt32LE
-ProxyBuffer.prototype.writeUInt32BE = BufferWriteUInt32BE
-ProxyBuffer.prototype.writeInt8 = BufferWriteInt8
-ProxyBuffer.prototype.writeInt16LE = BufferWriteInt16LE
-ProxyBuffer.prototype.writeInt16BE = BufferWriteInt16BE
-ProxyBuffer.prototype.writeInt32LE = BufferWriteInt32LE
-ProxyBuffer.prototype.writeInt32BE = BufferWriteInt32BE
-ProxyBuffer.prototype.writeFloatLE = BufferWriteFloatLE
-ProxyBuffer.prototype.writeFloatBE = BufferWriteFloatBE
-ProxyBuffer.prototype.writeDoubleLE = BufferWriteDoubleLE
-ProxyBuffer.prototype.writeDoubleBE = BufferWriteDoubleBE
-ProxyBuffer.prototype.fill = BufferFill
-ProxyBuffer.prototype.inspect = BufferInspect
-ProxyBuffer.prototype.toArrayBuffer = BufferToArrayBuffer
-ProxyBuffer.prototype._isBuffer = true
-ProxyBuffer.prototype.subarray = function () {
-  return this._arr.subarray.apply(this._arr, arguments)
-}
-ProxyBuffer.prototype.set = function () {
-  return this._arr.set.apply(this._arr, arguments)
-}
-
-var ProxyHandler = {
-  get: function (target, name) {
-    if (name in target) return target[name]
-    else return target._arr[name]
-  },
-  set: function (target, name, value) {
-    target._arr[name] = value
-  }
-}
-
-function augment (arr) {
-  if (browserSupport === undefined) {
-    browserSupport = _browserSupport()
-  }
-
-  if (browserSupport) {
-    // Augment the Uint8Array *instance* (not the class!) with Buffer methods
-    arr.write = BufferWrite
-    arr.toString = BufferToString
-    arr.toLocaleString = BufferToString
-    arr.toJSON = BufferToJSON
-    arr.copy = BufferCopy
-    arr.slice = BufferSlice
-    arr.readUInt8 = BufferReadUInt8
-    arr.readUInt16LE = BufferReadUInt16LE
-    arr.readUInt16BE = BufferReadUInt16BE
-    arr.readUInt32LE = BufferReadUInt32LE
-    arr.readUInt32BE = BufferReadUInt32BE
-    arr.readInt8 = BufferReadInt8
-    arr.readInt16LE = BufferReadInt16LE
-    arr.readInt16BE = BufferReadInt16BE
-    arr.readInt32LE = BufferReadInt32LE
-    arr.readInt32BE = BufferReadInt32BE
-    arr.readFloatLE = BufferReadFloatLE
-    arr.readFloatBE = BufferReadFloatBE
-    arr.readDoubleLE = BufferReadDoubleLE
-    arr.readDoubleBE = BufferReadDoubleBE
-    arr.writeUInt8 = BufferWriteUInt8
-    arr.writeUInt16LE = BufferWriteUInt16LE
-    arr.writeUInt16BE = BufferWriteUInt16BE
-    arr.writeUInt32LE = BufferWriteUInt32LE
-    arr.writeUInt32BE = BufferWriteUInt32BE
-    arr.writeInt8 = BufferWriteInt8
-    arr.writeInt16LE = BufferWriteInt16LE
-    arr.writeInt16BE = BufferWriteInt16BE
-    arr.writeInt32LE = BufferWriteInt32LE
-    arr.writeInt32BE = BufferWriteInt32BE
-    arr.writeFloatLE = BufferWriteFloatLE
-    arr.writeFloatBE = BufferWriteFloatBE
-    arr.writeDoubleLE = BufferWriteDoubleLE
-    arr.writeDoubleBE = BufferWriteDoubleBE
-    arr.fill = BufferFill
-    arr.inspect = BufferInspect
-    arr.toArrayBuffer = BufferToArrayBuffer
-    arr._isBuffer = true
-
-    if (arr.byteLength !== 0)
-      arr._dataview = new xDataView(arr.buffer, arr.byteOffset, arr.byteLength)
-
-    return arr
-
-  } else {
-    // This is a browser that doesn't support augmenting the `Uint8Array`
-    // instance (*ahem* Firefox) so use an ES6 `Proxy`.
-    var proxyBuffer = new ProxyBuffer(arr)
-    var proxy = new Proxy(proxyBuffer, ProxyHandler)
-    proxyBuffer._proxy = proxy
-    return proxy
-  }
-}
-
-// slice(start, end)
-function clamp (index, len, defaultValue) {
-  if (typeof index !== 'number') return defaultValue
-  index = ~~index;  // Coerce to integer.
-  if (index >= len) return len
-  if (index >= 0) return index
-  index += len
-  if (index >= 0) return index
-  return 0
-}
-
-function coerce (length) {
-  // Coerce length to a number (possibly NaN), round up
-  // in case it's fractional (e.g. 123.456) then do a
-  // double negate to coerce a NaN to 0. Easy, right?
-  length = ~~Math.ceil(+length)
-  return length < 0 ? 0 : length
-}
-
-function isArrayIsh (subject) {
-  return Array.isArray(subject) || Buffer.isBuffer(subject) ||
-      subject && typeof subject === 'object' &&
-      typeof subject.length === 'number'
-}
-
-function toHex (n) {
-  if (n < 16) return '0' + n.toString(16)
-  return n.toString(16)
-}
-
-function utf8ToBytes (str) {
-  var byteArray = []
-  for (var i = 0; i < str.length; i++)
-    if (str.charCodeAt(i) <= 0x7F)
-      byteArray.push(str.charCodeAt(i))
-    else {
-      var h = encodeURIComponent(str.charAt(i)).substr(1).split('%')
-      for (var j = 0; j < h.length; j++)
-        byteArray.push(parseInt(h[j], 16))
-    }
-
-  return byteArray
-}
-
-function asciiToBytes (str) {
-  var byteArray = []
-  for (var i = 0; i < str.length; i++) {
-    // Node's code seems to be doing this and not & 0x7F..
-    byteArray.push(str.charCodeAt(i) & 0xFF)
-  }
-
-  return byteArray
-}
-
-function base64ToBytes (str) {
-  return require('base64-js').toByteArray(str)
-}
-
-function blitBuffer (src, dst, offset, length) {
-  var pos, i = 0
-  while (i < length) {
-    if ((i + offset >= dst.length) || (i >= src.length))
-      break
-
-    dst[i + offset] = src[i]
-    i++
-  }
-  return i
-}
-
-function decodeUtf8Char (str) {
-  try {
-    return decodeURIComponent(str)
-  } catch (err) {
-    return String.fromCharCode(0xFFFD) // UTF 8 invalid char
-  }
-}
-
-/*
- * We have to make sure that the value is a valid integer. This means that it
- * is non-negative. It has no fractional component and that it does not
- * exceed the maximum allowed value.
- *
- *      value           The number to check for validity
- *
- *      max             The maximum value
- */
-function verifuint (value, max) {
-  assert(typeof (value) == 'number', 'cannot write a non-number as a number')
-  assert(value >= 0,
-      'specified a negative value for writing an unsigned value')
-  assert(value <= max, 'value is larger than maximum value for type')
-  assert(Math.floor(value) === value, 'value has a fractional component')
-}
-
-/*
- * A series of checks to make sure we actually have a signed 32-bit number
- */
-function verifsint(value, max, min) {
-  assert(typeof (value) == 'number', 'cannot write a non-number as a number')
-  assert(value <= max, 'value larger than maximum allowed value')
-  assert(value >= min, 'value smaller than minimum allowed value')
-  assert(Math.floor(value) === value, 'value has a fractional component')
-}
-
-function verifIEEE754(value, max, min) {
-  assert(typeof (value) == 'number', 'cannot write a non-number as a number')
-  assert(value <= max, 'value larger than maximum allowed value')
-  assert(value >= min, 'value smaller than minimum allowed value')
-}
-
-function assert (test, message) {
-  if (!test) throw new Error(message || 'Failed assertion')
-}
-
-},{"base64-js":3,"typedarray":4}],"native-buffer-browserify":[function(require,module,exports){
-module.exports=require('PcZj9L');
-},{}],3:[function(require,module,exports){
-(function (exports) {
-	'use strict';
-
-	var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
-
-	function b64ToByteArray(b64) {
-		var i, j, l, tmp, placeHolders, arr;
-	
-		if (b64.length % 4 > 0) {
-			throw 'Invalid string. Length must be a multiple of 4';
-		}
-
-		// the number of equal signs (place holders)
-		// if there are two placeholders, than the two characters before it
-		// represent one byte
-		// if there is only one, then the three characters before it represent 2 bytes
-		// this is just a cheap hack to not do indexOf twice
-		placeHolders = b64.indexOf('=');
-		placeHolders = placeHolders > 0 ? b64.length - placeHolders : 0;
-
-		// base64 is 4/3 + up to two characters of the original data
-		arr = [];//new Uint8Array(b64.length * 3 / 4 - placeHolders);
-
-		// if there are placeholders, only get up to the last complete 4 chars
-		l = placeHolders > 0 ? b64.length - 4 : b64.length;
-
-		for (i = 0, j = 0; i < l; i += 4, j += 3) {
-			tmp = (lookup.indexOf(b64[i]) << 18) | (lookup.indexOf(b64[i + 1]) << 12) | (lookup.indexOf(b64[i + 2]) << 6) | lookup.indexOf(b64[i + 3]);
-			arr.push((tmp & 0xFF0000) >> 16);
-			arr.push((tmp & 0xFF00) >> 8);
-			arr.push(tmp & 0xFF);
-		}
-
-		if (placeHolders === 2) {
-			tmp = (lookup.indexOf(b64[i]) << 2) | (lookup.indexOf(b64[i + 1]) >> 4);
-			arr.push(tmp & 0xFF);
-		} else if (placeHolders === 1) {
-			tmp = (lookup.indexOf(b64[i]) << 10) | (lookup.indexOf(b64[i + 1]) << 4) | (lookup.indexOf(b64[i + 2]) >> 2);
-			arr.push((tmp >> 8) & 0xFF);
-			arr.push(tmp & 0xFF);
-		}
-
-		return arr;
-	}
-
-	function uint8ToBase64(uint8) {
-		var i,
-			extraBytes = uint8.length % 3, // if we have 1 byte left, pad 2 bytes
-			output = "",
-			temp, length;
-
-		function tripletToBase64 (num) {
-			return lookup[num >> 18 & 0x3F] + lookup[num >> 12 & 0x3F] + lookup[num >> 6 & 0x3F] + lookup[num & 0x3F];
-		};
-
-		// go through the array every three bytes, we'll deal with trailing stuff later
-		for (i = 0, length = uint8.length - extraBytes; i < length; i += 3) {
-			temp = (uint8[i] << 16) + (uint8[i + 1] << 8) + (uint8[i + 2]);
-			output += tripletToBase64(temp);
-		}
-
-		// pad the end with zeros, but make sure to not forget the extra bytes
-		switch (extraBytes) {
-			case 1:
-				temp = uint8[uint8.length - 1];
-				output += lookup[temp >> 2];
-				output += lookup[(temp << 4) & 0x3F];
-				output += '==';
-				break;
-			case 2:
-				temp = (uint8[uint8.length - 2] << 8) + (uint8[uint8.length - 1]);
-				output += lookup[temp >> 10];
-				output += lookup[(temp >> 4) & 0x3F];
-				output += lookup[(temp << 2) & 0x3F];
-				output += '=';
-				break;
-		}
-
-		return output;
-	}
-
-	module.exports.toByteArray = b64ToByteArray;
-	module.exports.fromByteArray = uint8ToBase64;
-}());
-
-},{}],4:[function(require,module,exports){
-var undefined = (void 0); // Paranoia
-
-// Beyond this value, index getters/setters (i.e. array[0], array[1]) are so slow to
-// create, and consume so much memory, that the browser appears frozen.
-var MAX_ARRAY_LENGTH = 1e5;
-
-// Approximations of internal ECMAScript conversion functions
-var ECMAScript = (function() {
-  // Stash a copy in case other scripts modify these
-  var opts = Object.prototype.toString,
-      ophop = Object.prototype.hasOwnProperty;
-
-  return {
-    // Class returns internal [[Class]] property, used to avoid cross-frame instanceof issues:
-    Class: function(v) { return opts.call(v).replace(/^\[object *|\]$/g, ''); },
-    HasProperty: function(o, p) { return p in o; },
-    HasOwnProperty: function(o, p) { return ophop.call(o, p); },
-    IsCallable: function(o) { return typeof o === 'function'; },
-    ToInt32: function(v) { return v >> 0; },
-    ToUint32: function(v) { return v >>> 0; }
-  };
-}());
-
-// Snapshot intrinsics
-var LN2 = Math.LN2,
-    abs = Math.abs,
-    floor = Math.floor,
-    log = Math.log,
-    min = Math.min,
-    pow = Math.pow,
-    round = Math.round;
-
-// ES5: lock down object properties
-function configureProperties(obj) {
-  if (getOwnPropertyNames && defineProperty) {
-    var props = getOwnPropertyNames(obj), i;
-    for (i = 0; i < props.length; i += 1) {
-      defineProperty(obj, props[i], {
-        value: obj[props[i]],
-        writable: false,
-        enumerable: false,
-        configurable: false
-      });
-    }
-  }
-}
-
-// emulate ES5 getter/setter API using legacy APIs
-// http://blogs.msdn.com/b/ie/archive/2010/09/07/transitioning-existing-code-to-the-es5-getter-setter-apis.aspx
-// (second clause tests for Object.defineProperty() in IE<9 that only supports extending DOM prototypes, but
-// note that IE<9 does not support __defineGetter__ or __defineSetter__ so it just renders the method harmless)
-var defineProperty = Object.defineProperty || function(o, p, desc) {
-  if (!o === Object(o)) throw new TypeError("Object.defineProperty called on non-object");
-  if (ECMAScript.HasProperty(desc, 'get') && Object.prototype.__defineGetter__) { Object.prototype.__defineGetter__.call(o, p, desc.get); }
-  if (ECMAScript.HasProperty(desc, 'set') && Object.prototype.__defineSetter__) { Object.prototype.__defineSetter__.call(o, p, desc.set); }
-  if (ECMAScript.HasProperty(desc, 'value')) { o[p] = desc.value; }
-  return o;
-};
-
-var getOwnPropertyNames = Object.getOwnPropertyNames || function getOwnPropertyNames(o) {
-  if (o !== Object(o)) throw new TypeError("Object.getOwnPropertyNames called on non-object");
-  var props = [], p;
-  for (p in o) {
-    if (ECMAScript.HasOwnProperty(o, p)) {
-      props.push(p);
-    }
-  }
-  return props;
-};
-
-// ES5: Make obj[index] an alias for obj._getter(index)/obj._setter(index, value)
-// for index in 0 ... obj.length
-function makeArrayAccessors(obj) {
-  if (!defineProperty) { return; }
-
-  if (obj.length > MAX_ARRAY_LENGTH) throw new RangeError("Array too large for polyfill");
-
-  function makeArrayAccessor(index) {
-    defineProperty(obj, index, {
-      'get': function() { return obj._getter(index); },
-      'set': function(v) { obj._setter(index, v); },
-      enumerable: true,
-      configurable: false
-    });
-  }
-
-  var i;
-  for (i = 0; i < obj.length; i += 1) {
-    makeArrayAccessor(i);
-  }
-}
-
-// Internal conversion functions:
-//    pack<Type>()   - take a number (interpreted as Type), output a byte array
-//    unpack<Type>() - take a byte array, output a Type-like number
-
-function as_signed(value, bits) { var s = 32 - bits; return (value << s) >> s; }
-function as_unsigned(value, bits) { var s = 32 - bits; return (value << s) >>> s; }
-
-function packI8(n) { return [n & 0xff]; }
-function unpackI8(bytes) { return as_signed(bytes[0], 8); }
-
-function packU8(n) { return [n & 0xff]; }
-function unpackU8(bytes) { return as_unsigned(bytes[0], 8); }
-
-function packU8Clamped(n) { n = round(Number(n)); return [n < 0 ? 0 : n > 0xff ? 0xff : n & 0xff]; }
-
-function packI16(n) { return [(n >> 8) & 0xff, n & 0xff]; }
-function unpackI16(bytes) { return as_signed(bytes[0] << 8 | bytes[1], 16); }
-
-function packU16(n) { return [(n >> 8) & 0xff, n & 0xff]; }
-function unpackU16(bytes) { return as_unsigned(bytes[0] << 8 | bytes[1], 16); }
-
-function packI32(n) { return [(n >> 24) & 0xff, (n >> 16) & 0xff, (n >> 8) & 0xff, n & 0xff]; }
-function unpackI32(bytes) { return as_signed(bytes[0] << 24 | bytes[1] << 16 | bytes[2] << 8 | bytes[3], 32); }
-
-function packU32(n) { return [(n >> 24) & 0xff, (n >> 16) & 0xff, (n >> 8) & 0xff, n & 0xff]; }
-function unpackU32(bytes) { return as_unsigned(bytes[0] << 24 | bytes[1] << 16 | bytes[2] << 8 | bytes[3], 32); }
-
-function packIEEE754(v, ebits, fbits) {
-
-  var bias = (1 << (ebits - 1)) - 1,
-      s, e, f, ln,
-      i, bits, str, bytes;
-
-  function roundToEven(n) {
-    var w = floor(n), f = n - w;
-    if (f < 0.5)
-      return w;
-    if (f > 0.5)
-      return w + 1;
-    return w % 2 ? w + 1 : w;
-  }
-
-  // Compute sign, exponent, fraction
-  if (v !== v) {
-    // NaN
-    // http://dev.w3.org/2006/webapi/WebIDL/#es-type-mapping
-    e = (1 << ebits) - 1; f = pow(2, fbits - 1); s = 0;
-  } else if (v === Infinity || v === -Infinity) {
-    e = (1 << ebits) - 1; f = 0; s = (v < 0) ? 1 : 0;
-  } else if (v === 0) {
-    e = 0; f = 0; s = (1 / v === -Infinity) ? 1 : 0;
-  } else {
-    s = v < 0;
-    v = abs(v);
-
-    if (v >= pow(2, 1 - bias)) {
-      e = min(floor(log(v) / LN2), 1023);
-      f = roundToEven(v / pow(2, e) * pow(2, fbits));
-      if (f / pow(2, fbits) >= 2) {
-        e = e + 1;
-        f = 1;
-      }
-      if (e > bias) {
-        // Overflow
-        e = (1 << ebits) - 1;
-        f = 0;
-      } else {
-        // Normalized
-        e = e + bias;
-        f = f - pow(2, fbits);
-      }
-    } else {
-      // Denormalized
-      e = 0;
-      f = roundToEven(v / pow(2, 1 - bias - fbits));
-    }
-  }
-
-  // Pack sign, exponent, fraction
-  bits = [];
-  for (i = fbits; i; i -= 1) { bits.push(f % 2 ? 1 : 0); f = floor(f / 2); }
-  for (i = ebits; i; i -= 1) { bits.push(e % 2 ? 1 : 0); e = floor(e / 2); }
-  bits.push(s ? 1 : 0);
-  bits.reverse();
-  str = bits.join('');
-
-  // Bits to bytes
-  bytes = [];
-  while (str.length) {
-    bytes.push(parseInt(str.substring(0, 8), 2));
-    str = str.substring(8);
-  }
-  return bytes;
-}
-
-function unpackIEEE754(bytes, ebits, fbits) {
-
-  // Bytes to bits
-  var bits = [], i, j, b, str,
-      bias, s, e, f;
-
-  for (i = bytes.length; i; i -= 1) {
-    b = bytes[i - 1];
-    for (j = 8; j; j -= 1) {
-      bits.push(b % 2 ? 1 : 0); b = b >> 1;
-    }
-  }
-  bits.reverse();
-  str = bits.join('');
-
-  // Unpack sign, exponent, fraction
-  bias = (1 << (ebits - 1)) - 1;
-  s = parseInt(str.substring(0, 1), 2) ? -1 : 1;
-  e = parseInt(str.substring(1, 1 + ebits), 2);
-  f = parseInt(str.substring(1 + ebits), 2);
-
-  // Produce number
-  if (e === (1 << ebits) - 1) {
-    return f !== 0 ? NaN : s * Infinity;
-  } else if (e > 0) {
-    // Normalized
-    return s * pow(2, e - bias) * (1 + f / pow(2, fbits));
-  } else if (f !== 0) {
-    // Denormalized
-    return s * pow(2, -(bias - 1)) * (f / pow(2, fbits));
-  } else {
-    return s < 0 ? -0 : 0;
-  }
-}
-
-function unpackF64(b) { return unpackIEEE754(b, 11, 52); }
-function packF64(v) { return packIEEE754(v, 11, 52); }
-function unpackF32(b) { return unpackIEEE754(b, 8, 23); }
-function packF32(v) { return packIEEE754(v, 8, 23); }
-
-
-//
-// 3 The ArrayBuffer Type
-//
-
-(function() {
-
-  /** @constructor */
-  var ArrayBuffer = function ArrayBuffer(length) {
-    length = ECMAScript.ToInt32(length);
-    if (length < 0) throw new RangeError('ArrayBuffer size is not a small enough positive integer');
-
-    this.byteLength = length;
-    this._bytes = [];
-    this._bytes.length = length;
-
-    var i;
-    for (i = 0; i < this.byteLength; i += 1) {
-      this._bytes[i] = 0;
-    }
-
-    configureProperties(this);
-  };
-
-  exports.ArrayBuffer = exports.ArrayBuffer || ArrayBuffer;
-
-  //
-  // 4 The ArrayBufferView Type
-  //
-
-  // NOTE: this constructor is not exported
-  /** @constructor */
-  var ArrayBufferView = function ArrayBufferView() {
-    //this.buffer = null;
-    //this.byteOffset = 0;
-    //this.byteLength = 0;
-  };
-
-  //
-  // 5 The Typed Array View Types
-  //
-
-  function makeConstructor(bytesPerElement, pack, unpack) {
-    // Each TypedArray type requires a distinct constructor instance with
-    // identical logic, which this produces.
-
-    var ctor;
-    ctor = function(buffer, byteOffset, length) {
-      var array, sequence, i, s;
-
-      if (!arguments.length || typeof arguments[0] === 'number') {
-        // Constructor(unsigned long length)
-        this.length = ECMAScript.ToInt32(arguments[0]);
-        if (length < 0) throw new RangeError('ArrayBufferView size is not a small enough positive integer');
-
-        this.byteLength = this.length * this.BYTES_PER_ELEMENT;
-        this.buffer = new ArrayBuffer(this.byteLength);
-        this.byteOffset = 0;
-      } else if (typeof arguments[0] === 'object' && arguments[0].constructor === ctor) {
-        // Constructor(TypedArray array)
-        array = arguments[0];
-
-        this.length = array.length;
-        this.byteLength = this.length * this.BYTES_PER_ELEMENT;
-        this.buffer = new ArrayBuffer(this.byteLength);
-        this.byteOffset = 0;
-
-        for (i = 0; i < this.length; i += 1) {
-          this._setter(i, array._getter(i));
-        }
-      } else if (typeof arguments[0] === 'object' &&
-                 !(arguments[0] instanceof ArrayBuffer || ECMAScript.Class(arguments[0]) === 'ArrayBuffer')) {
-        // Constructor(sequence<type> array)
-        sequence = arguments[0];
-
-        this.length = ECMAScript.ToUint32(sequence.length);
-        this.byteLength = this.length * this.BYTES_PER_ELEMENT;
-        this.buffer = new ArrayBuffer(this.byteLength);
-        this.byteOffset = 0;
-
-        for (i = 0; i < this.length; i += 1) {
-          s = sequence[i];
-          this._setter(i, Number(s));
-        }
-      } else if (typeof arguments[0] === 'object' &&
-                 (arguments[0] instanceof ArrayBuffer || ECMAScript.Class(arguments[0]) === 'ArrayBuffer')) {
-        // Constructor(ArrayBuffer buffer,
-        //             optional unsigned long byteOffset, optional unsigned long length)
-        this.buffer = buffer;
-
-        this.byteOffset = ECMAScript.ToUint32(byteOffset);
-        if (this.byteOffset > this.buffer.byteLength) {
-          throw new RangeError("byteOffset out of range");
-        }
-
-        if (this.byteOffset % this.BYTES_PER_ELEMENT) {
-          // The given byteOffset must be a multiple of the element
-          // size of the specific type, otherwise an exception is raised.
-          throw new RangeError("ArrayBuffer length minus the byteOffset is not a multiple of the element size.");
-        }
-
-        if (arguments.length < 3) {
-          this.byteLength = this.buffer.byteLength - this.byteOffset;
-
-          if (this.byteLength % this.BYTES_PER_ELEMENT) {
-            throw new RangeError("length of buffer minus byteOffset not a multiple of the element size");
-          }
-          this.length = this.byteLength / this.BYTES_PER_ELEMENT;
-        } else {
-          this.length = ECMAScript.ToUint32(length);
-          this.byteLength = this.length * this.BYTES_PER_ELEMENT;
-        }
-
-        if ((this.byteOffset + this.byteLength) > this.buffer.byteLength) {
-          throw new RangeError("byteOffset and length reference an area beyond the end of the buffer");
-        }
-      } else {
-        throw new TypeError("Unexpected argument type(s)");
-      }
-
-      this.constructor = ctor;
-
-      configureProperties(this);
-      makeArrayAccessors(this);
-    };
-
-    ctor.prototype = new ArrayBufferView();
-    ctor.prototype.BYTES_PER_ELEMENT = bytesPerElement;
-    ctor.prototype._pack = pack;
-    ctor.prototype._unpack = unpack;
-    ctor.BYTES_PER_ELEMENT = bytesPerElement;
-
-    // getter type (unsigned long index);
-    ctor.prototype._getter = function(index) {
-      if (arguments.length < 1) throw new SyntaxError("Not enough arguments");
-
-      index = ECMAScript.ToUint32(index);
-      if (index >= this.length) {
-        return undefined;
-      }
-
-      var bytes = [], i, o;
-      for (i = 0, o = this.byteOffset + index * this.BYTES_PER_ELEMENT;
-           i < this.BYTES_PER_ELEMENT;
-           i += 1, o += 1) {
-        bytes.push(this.buffer._bytes[o]);
-      }
-      return this._unpack(bytes);
-    };
-
-    // NONSTANDARD: convenience alias for getter: type get(unsigned long index);
-    ctor.prototype.get = ctor.prototype._getter;
-
-    // setter void (unsigned long index, type value);
-    ctor.prototype._setter = function(index, value) {
-      if (arguments.length < 2) throw new SyntaxError("Not enough arguments");
-
-      index = ECMAScript.ToUint32(index);
-      if (index >= this.length) {
-        return undefined;
-      }
-
-      var bytes = this._pack(value), i, o;
-      for (i = 0, o = this.byteOffset + index * this.BYTES_PER_ELEMENT;
-           i < this.BYTES_PER_ELEMENT;
-           i += 1, o += 1) {
-        this.buffer._bytes[o] = bytes[i];
-      }
-    };
-
-    // void set(TypedArray array, optional unsigned long offset);
-    // void set(sequence<type> array, optional unsigned long offset);
-    ctor.prototype.set = function(index, value) {
-      if (arguments.length < 1) throw new SyntaxError("Not enough arguments");
-      var array, sequence, offset, len,
-          i, s, d,
-          byteOffset, byteLength, tmp;
-
-      if (typeof arguments[0] === 'object' && arguments[0].constructor === this.constructor) {
-        // void set(TypedArray array, optional unsigned long offset);
-        array = arguments[0];
-        offset = ECMAScript.ToUint32(arguments[1]);
-
-        if (offset + array.length > this.length) {
-          throw new RangeError("Offset plus length of array is out of range");
-        }
-
-        byteOffset = this.byteOffset + offset * this.BYTES_PER_ELEMENT;
-        byteLength = array.length * this.BYTES_PER_ELEMENT;
-
-        if (array.buffer === this.buffer) {
-          tmp = [];
-          for (i = 0, s = array.byteOffset; i < byteLength; i += 1, s += 1) {
-            tmp[i] = array.buffer._bytes[s];
-          }
-          for (i = 0, d = byteOffset; i < byteLength; i += 1, d += 1) {
-            this.buffer._bytes[d] = tmp[i];
-          }
-        } else {
-          for (i = 0, s = array.byteOffset, d = byteOffset;
-               i < byteLength; i += 1, s += 1, d += 1) {
-            this.buffer._bytes[d] = array.buffer._bytes[s];
-          }
-        }
-      } else if (typeof arguments[0] === 'object' && typeof arguments[0].length !== 'undefined') {
-        // void set(sequence<type> array, optional unsigned long offset);
-        sequence = arguments[0];
-        len = ECMAScript.ToUint32(sequence.length);
-        offset = ECMAScript.ToUint32(arguments[1]);
-
-        if (offset + len > this.length) {
-          throw new RangeError("Offset plus length of array is out of range");
-        }
-
-        for (i = 0; i < len; i += 1) {
-          s = sequence[i];
-          this._setter(offset + i, Number(s));
-        }
-      } else {
-        throw new TypeError("Unexpected argument type(s)");
-      }
-    };
-
-    // TypedArray subarray(long begin, optional long end);
-    ctor.prototype.subarray = function(start, end) {
-      function clamp(v, min, max) { return v < min ? min : v > max ? max : v; }
-
-      start = ECMAScript.ToInt32(start);
-      end = ECMAScript.ToInt32(end);
-
-      if (arguments.length < 1) { start = 0; }
-      if (arguments.length < 2) { end = this.length; }
-
-      if (start < 0) { start = this.length + start; }
-      if (end < 0) { end = this.length + end; }
-
-      start = clamp(start, 0, this.length);
-      end = clamp(end, 0, this.length);
-
-      var len = end - start;
-      if (len < 0) {
-        len = 0;
-      }
-
-      return new this.constructor(
-        this.buffer, this.byteOffset + start * this.BYTES_PER_ELEMENT, len);
-    };
-
-    return ctor;
-  }
-
-  var Int8Array = makeConstructor(1, packI8, unpackI8);
-  var Uint8Array = makeConstructor(1, packU8, unpackU8);
-  var Uint8ClampedArray = makeConstructor(1, packU8Clamped, unpackU8);
-  var Int16Array = makeConstructor(2, packI16, unpackI16);
-  var Uint16Array = makeConstructor(2, packU16, unpackU16);
-  var Int32Array = makeConstructor(4, packI32, unpackI32);
-  var Uint32Array = makeConstructor(4, packU32, unpackU32);
-  var Float32Array = makeConstructor(4, packF32, unpackF32);
-  var Float64Array = makeConstructor(8, packF64, unpackF64);
-
-  exports.Int8Array = exports.Int8Array || Int8Array;
-  exports.Uint8Array = exports.Uint8Array || Uint8Array;
-  exports.Uint8ClampedArray = exports.Uint8ClampedArray || Uint8ClampedArray;
-  exports.Int16Array = exports.Int16Array || Int16Array;
-  exports.Uint16Array = exports.Uint16Array || Uint16Array;
-  exports.Int32Array = exports.Int32Array || Int32Array;
-  exports.Uint32Array = exports.Uint32Array || Uint32Array;
-  exports.Float32Array = exports.Float32Array || Float32Array;
-  exports.Float64Array = exports.Float64Array || Float64Array;
-}());
-
-//
-// 6 The DataView View Type
-//
-
-(function() {
-  function r(array, index) {
-    return ECMAScript.IsCallable(array.get) ? array.get(index) : array[index];
-  }
-
-  var IS_BIG_ENDIAN = (function() {
-    var u16array = new(exports.Uint16Array)([0x1234]),
-        u8array = new(exports.Uint8Array)(u16array.buffer);
-    return r(u8array, 0) === 0x12;
-  }());
-
-  // Constructor(ArrayBuffer buffer,
-  //             optional unsigned long byteOffset,
-  //             optional unsigned long byteLength)
-  /** @constructor */
-  var DataView = function DataView(buffer, byteOffset, byteLength) {
-    if (arguments.length === 0) {
-      buffer = new ArrayBuffer(0);
-    } else if (!(buffer instanceof ArrayBuffer || ECMAScript.Class(buffer) === 'ArrayBuffer')) {
-      throw new TypeError("TypeError");
-    }
-
-    this.buffer = buffer || new ArrayBuffer(0);
-
-    this.byteOffset = ECMAScript.ToUint32(byteOffset);
-    if (this.byteOffset > this.buffer.byteLength) {
-      throw new RangeError("byteOffset out of range");
-    }
-
-    if (arguments.length < 3) {
-      this.byteLength = this.buffer.byteLength - this.byteOffset;
-    } else {
-      this.byteLength = ECMAScript.ToUint32(byteLength);
-    }
-
-    if ((this.byteOffset + this.byteLength) > this.buffer.byteLength) {
-      throw new RangeError("byteOffset and length reference an area beyond the end of the buffer");
-    }
-
-    configureProperties(this);
-  };
-
-  function makeGetter(arrayType) {
-    return function(byteOffset, littleEndian) {
-
-      byteOffset = ECMAScript.ToUint32(byteOffset);
-
-      if (byteOffset + arrayType.BYTES_PER_ELEMENT > this.byteLength) {
-        throw new RangeError("Array index out of range");
-      }
-      byteOffset += this.byteOffset;
-
-      var uint8Array = new Uint8Array(this.buffer, byteOffset, arrayType.BYTES_PER_ELEMENT),
-          bytes = [], i;
-      for (i = 0; i < arrayType.BYTES_PER_ELEMENT; i += 1) {
-        bytes.push(r(uint8Array, i));
-      }
-
-      if (Boolean(littleEndian) === Boolean(IS_BIG_ENDIAN)) {
-        bytes.reverse();
-      }
-
-      return r(new arrayType(new Uint8Array(bytes).buffer), 0);
-    };
-  }
-
-  DataView.prototype.getUint8 = makeGetter(exports.Uint8Array);
-  DataView.prototype.getInt8 = makeGetter(exports.Int8Array);
-  DataView.prototype.getUint16 = makeGetter(exports.Uint16Array);
-  DataView.prototype.getInt16 = makeGetter(exports.Int16Array);
-  DataView.prototype.getUint32 = makeGetter(exports.Uint32Array);
-  DataView.prototype.getInt32 = makeGetter(exports.Int32Array);
-  DataView.prototype.getFloat32 = makeGetter(exports.Float32Array);
-  DataView.prototype.getFloat64 = makeGetter(exports.Float64Array);
-
-  function makeSetter(arrayType) {
-    return function(byteOffset, value, littleEndian) {
-
-      byteOffset = ECMAScript.ToUint32(byteOffset);
-      if (byteOffset + arrayType.BYTES_PER_ELEMENT > this.byteLength) {
-        throw new RangeError("Array index out of range");
-      }
-
-      // Get bytes
-      var typeArray = new arrayType([value]),
-          byteArray = new Uint8Array(typeArray.buffer),
-          bytes = [], i, byteView;
-
-      for (i = 0; i < arrayType.BYTES_PER_ELEMENT; i += 1) {
-        bytes.push(r(byteArray, i));
-      }
-
-      // Flip if necessary
-      if (Boolean(littleEndian) === Boolean(IS_BIG_ENDIAN)) {
-        bytes.reverse();
-      }
-
-      // Write them
-      byteView = new Uint8Array(this.buffer, byteOffset, arrayType.BYTES_PER_ELEMENT);
-      byteView.set(bytes);
-    };
-  }
-
-  DataView.prototype.setUint8 = makeSetter(exports.Uint8Array);
-  DataView.prototype.setInt8 = makeSetter(exports.Int8Array);
-  DataView.prototype.setUint16 = makeSetter(exports.Uint16Array);
-  DataView.prototype.setInt16 = makeSetter(exports.Int16Array);
-  DataView.prototype.setUint32 = makeSetter(exports.Uint32Array);
-  DataView.prototype.setInt32 = makeSetter(exports.Int32Array);
-  DataView.prototype.setFloat32 = makeSetter(exports.Float32Array);
-  DataView.prototype.setFloat64 = makeSetter(exports.Float64Array);
-
-  exports.DataView = exports.DataView || DataView;
-
-}());
-
-},{}]},{},[])
-;;module.exports=require("native-buffer-browserify").Buffer
-
-},{}],2:[function(require,module,exports){
-// shim for using process in browser
-
-var process = module.exports = {};
-
-process.nextTick = (function () {
-    var canSetImmediate = typeof window !== 'undefined'
-    && window.setImmediate;
-    var canPost = typeof window !== 'undefined'
-    && window.postMessage && window.addEventListener
-    ;
-
-    if (canSetImmediate) {
-        return function (f) { return window.setImmediate(f) };
-    }
-
-    if (canPost) {
-        var queue = [];
-        window.addEventListener('message', function (ev) {
-            if (ev.source === window && ev.data === 'process-tick') {
-                ev.stopPropagation();
-                if (queue.length > 0) {
-                    var fn = queue.shift();
-                    fn();
-                }
-            }
-        }, true);
-
-        return function nextTick(fn) {
-            queue.push(fn);
-            window.postMessage('process-tick', '*');
-        };
-    }
-
-    return function nextTick(fn) {
-        setTimeout(fn, 0);
-    };
-})();
-
-process.title = 'browser';
-process.browser = true;
-process.env = {};
-process.argv = [];
-
-process.binding = function (name) {
-    throw new Error('process.binding is not supported');
-}
-
-// TODO(shtylman)
-process.cwd = function () { return '/' };
-process.chdir = function (dir) {
-    throw new Error('process.chdir is not supported');
-};
-
-},{}],3:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/..\\node_modules\\poly-decomp\\src\\Line.js",__dirname="/..\\node_modules\\poly-decomp\\src";var Scalar = require('./Scalar');
+!function(e){"object"==typeof exports?module.exports=e():"function"==typeof define&&define.amd?define(e):"undefined"!=typeof window?window.p2=e():"undefined"!=typeof global?global.p2=e():"undefined"!=typeof self&&(self.p2=e())}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+var Scalar = require('./Scalar');
 
 module.exports = Line;
 
@@ -1984,8 +85,8 @@ Line.segmentsIntersect = function(p1, p2, q1, q2){
 };
 
 
-},{"./Scalar":6,"__browserify_Buffer":1,"__browserify_process":2}],4:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/..\\node_modules\\poly-decomp\\src\\Point.js",__dirname="/..\\node_modules\\poly-decomp\\src";module.exports = Point;
+},{"./Scalar":4}],2:[function(require,module,exports){
+module.exports = Point;
 
 /**
  * Point related functions
@@ -2060,8 +161,8 @@ Point.sqdist = function(a,b){
     return dx * dx + dy * dy;
 };
 
-},{"__browserify_Buffer":1,"__browserify_process":2}],5:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/..\\node_modules\\poly-decomp\\src\\Polygon.js",__dirname="/..\\node_modules\\poly-decomp\\src";var Line = require("./Line")
+},{}],3:[function(require,module,exports){
+var Line = require("./Line")
 ,   Point = require("./Point")
 ,   Scalar = require("./Scalar")
 
@@ -2556,8 +657,8 @@ Polygon.prototype.removeCollinearPoints = function(precision){
     return num;
 };
 
-},{"./Line":3,"./Point":4,"./Scalar":6,"__browserify_Buffer":1,"__browserify_process":2}],6:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/..\\node_modules\\poly-decomp\\src\\Scalar.js",__dirname="/..\\node_modules\\poly-decomp\\src";module.exports = Scalar;
+},{"./Line":1,"./Point":2,"./Scalar":4}],4:[function(require,module,exports){
+module.exports = Scalar;
 
 /**
  * Scalar functions
@@ -2579,14 +680,14 @@ Scalar.eq = function(a,b,precision){
     return Math.abs(a-b) < precision;
 };
 
-},{"__browserify_Buffer":1,"__browserify_process":2}],7:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/..\\node_modules\\poly-decomp\\src\\index.js",__dirname="/..\\node_modules\\poly-decomp\\src";module.exports = {
+},{}],5:[function(require,module,exports){
+module.exports = {
     Polygon : require("./Polygon"),
     Point : require("./Point"),
 };
 
-},{"./Point":4,"./Polygon":5,"__browserify_Buffer":1,"__browserify_process":2}],8:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/..\\package.json",__dirname="/..";module.exports={
+},{"./Point":2,"./Polygon":3}],6:[function(require,module,exports){
+module.exports={
   "name": "p2",
   "version": "0.6.0",
   "description": "A JavaScript 2D physics engine.",
@@ -2628,8 +729,8 @@ var process=require("__browserify_process"),global=typeof self !== "undefined" ?
   }
 }
 
-},{"__browserify_Buffer":1,"__browserify_process":2}],9:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/collision\\AABB.js",__dirname="/collision";var vec2 = require('../math/vec2')
+},{}],7:[function(require,module,exports){
+var vec2 = require('../math/vec2')
 ,   Utils = require('../utils/Utils');
 
 module.exports = AABB;
@@ -2780,8 +881,8 @@ AABB.prototype.overlaps = function(aabb){
            ((l2[1] <= u1[1] && u1[1] <= u2[1]) || (l1[1] <= u2[1] && u2[1] <= u1[1]));
 };
 
-},{"../math/vec2":31,"../utils/Utils":50,"__browserify_Buffer":1,"__browserify_process":2}],10:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/collision\\Broadphase.js",__dirname="/collision";var vec2 = require('../math/vec2');
+},{"../math/vec2":31,"../utils/Utils":50}],8:[function(require,module,exports){
+var vec2 = require('../math/vec2');
 var Body = require('../objects/Body');
 
 module.exports = Broadphase;
@@ -2942,8 +1043,8 @@ Broadphase.canCollide = function(bodyA, bodyB){
 Broadphase.NAIVE = 1;
 Broadphase.SAP = 2;
 
-},{"../math/vec2":31,"../objects/Body":32,"__browserify_Buffer":1,"__browserify_process":2}],11:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/collision\\GridBroadphase.js",__dirname="/collision";var Circle = require('../shapes/Circle')
+},{"../math/vec2":31,"../objects/Body":32}],9:[function(require,module,exports){
+var Circle = require('../shapes/Circle')
 ,   Plane = require('../shapes/Plane')
 ,   Particle = require('../shapes/Particle')
 ,   Broadphase = require('../collision/Broadphase')
@@ -2989,6 +1090,7 @@ function GridBroadphase(options){
     this.binsizeY = (this.ymax-this.ymin) / this.ny;
 }
 GridBroadphase.prototype = new Broadphase();
+GridBroadphase.prototype.constructor = GridBroadphase;
 
 /**
  * Get collision pairs.
@@ -3061,8 +1163,8 @@ GridBroadphase.prototype.getCollisionPairs = function(world){
     return result;
 };
 
-},{"../collision/Broadphase":10,"../math/vec2":31,"../shapes/Circle":38,"../shapes/Particle":42,"../shapes/Plane":43,"../utils/Utils":50,"__browserify_Buffer":1,"__browserify_process":2}],12:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/collision\\NaiveBroadphase.js",__dirname="/collision";var Circle = require('../shapes/Circle'),
+},{"../collision/Broadphase":8,"../math/vec2":31,"../shapes/Circle":38,"../shapes/Particle":42,"../shapes/Plane":43,"../utils/Utils":50}],10:[function(require,module,exports){
+var Circle = require('../shapes/Circle'),
     Plane = require('../shapes/Plane'),
     Shape = require('../shapes/Shape'),
     Particle = require('../shapes/Particle'),
@@ -3082,6 +1184,7 @@ function NaiveBroadphase(){
     Broadphase.call(this, Broadphase.NAIVE);
 }
 NaiveBroadphase.prototype = new Broadphase();
+NaiveBroadphase.prototype.constructor = NaiveBroadphase;
 
 /**
  * Get the colliding pairs
@@ -3110,8 +1213,34 @@ NaiveBroadphase.prototype.getCollisionPairs = function(world){
     return result;
 };
 
-},{"../collision/Broadphase":10,"../math/vec2":31,"../shapes/Circle":38,"../shapes/Particle":42,"../shapes/Plane":43,"../shapes/Shape":45,"__browserify_Buffer":1,"__browserify_process":2}],13:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/collision\\Narrowphase.js",__dirname="/collision";var vec2 = require('../math/vec2')
+/**
+ * Returns all the bodies within an AABB.
+ * @method aabbQuery
+ * @param  {World} world
+ * @param  {AABB} aabb
+ * @param {array} result An array to store resulting bodies in.
+ * @return {array}
+ */
+NaiveBroadphase.prototype.aabbQuery = function(world, aabb, result){
+    result = result || [];
+
+    var bodies = world.bodies;
+    for(var i = 0; i < bodies.length; i++){
+        var b = bodies[i];
+
+        if(b.aabbNeedsUpdate){
+            b.updateAABB();
+        }
+
+        if(b.aabb.overlaps(aabb)){
+            result.push(b);
+        }
+    }
+
+    return result;
+};
+},{"../collision/Broadphase":8,"../math/vec2":31,"../shapes/Circle":38,"../shapes/Particle":42,"../shapes/Plane":43,"../shapes/Shape":45}],11:[function(require,module,exports){
+var vec2 = require('../math/vec2')
 ,   sub = vec2.sub
 ,   add = vec2.add
 ,   dot = vec2.dot
@@ -3176,6 +1305,13 @@ function Narrowphase(){
      * @type {Boolean}
      */
     this.enableFriction = true;
+
+    /**
+     * Whether to make equations enabled in upcoming contacts.
+     * @property enabledEquations
+     * @type {Boolean}
+     */
+    this.enabledEquations = true;
 
     /**
      * The friction slip force to use when creating friction equations.
@@ -3259,6 +1395,54 @@ function Narrowphase(){
     this.contactSkinSize = 0.01;
 }
 
+var bodiesOverlap_shapePositionA = vec2.create();
+var bodiesOverlap_shapePositionB = vec2.create();
+
+/**
+ * @method bodiesOverlap
+ * @param  {Body} bodyA
+ * @param  {Body} bodyB
+ * @return {Boolean}
+ */
+Narrowphase.prototype.bodiesOverlap = function(bodyA, bodyB){
+    var shapePositionA = bodiesOverlap_shapePositionA;
+    var shapePositionB = bodiesOverlap_shapePositionB;
+
+    // Loop over all shapes of bodyA
+    for(var k=0, Nshapesi=bodyA.shapes.length; k!==Nshapesi; k++){
+        var shapeA = bodyA.shapes[k],
+            positionA = bodyA.shapeOffsets[k],
+            angleA = bodyA.shapeAngles[k];
+
+        bodyA.toWorldFrame(shapePositionA, positionA);
+
+        // All shapes of body j
+        for(var l=0, Nshapesj=bodyB.shapes.length; l!==Nshapesj; l++){
+            var shapeB = bodyB.shapes[l],
+                positionB = bodyB.shapeOffsets[l],
+                angleB = bodyB.shapeAngles[l];
+
+            bodyB.toWorldFrame(shapePositionB, positionB);
+
+            if(this[shapeA.type | shapeB.type](
+                bodyA,
+                shapeA,
+                shapePositionA,
+                shapeA.angle + bodyA.angle,
+                bodyB,
+                shapeB,
+                shapePositionB,
+                shapeB.angle + bodyB.angle,
+                true
+            )){
+                return true;
+            }
+        }
+    }
+
+    return false;
+};
+
 /**
  * Check if the bodies were in contact since the last reset().
  * @method collidedLastStep
@@ -3319,7 +1503,7 @@ Narrowphase.prototype.createContactEquation = function(bodyA, bodyB, shapeA, sha
     c.stiffness = this.stiffness;
     c.relaxation = this.relaxation;
     c.needsUpdate = true;
-    c.enabled = true;
+    c.enabled = this.enabledEquations;
     c.offset = this.contactSkinSize;
 
     return c;
@@ -3341,7 +1525,7 @@ Narrowphase.prototype.createFrictionEquation = function(bodyA, bodyB, shapeA, sh
     c.setSlipForce(this.slipForce);
     c.frictionCoefficient = this.frictionCoefficient;
     c.relativeVelocity = this.surfaceVelocity;
-    c.enabled = true;
+    c.enabled = this.enabledEquations;
     c.needsUpdate = true;
     c.stiffness = this.frictionStiffness;
     c.relaxation = this.frictionRelaxation;
@@ -3366,9 +1550,6 @@ Narrowphase.prototype.createFrictionFromContact = function(c){
 
 // Take the average N latest contact point on the plane.
 Narrowphase.prototype.createFrictionFromAverage = function(numContacts){
-    if(!numContacts){
-        throw new Error("numContacts == 0!");
-    }
     var c = this.contactEquations[this.contactEquations.length - 1];
     var eq = this.createFrictionEquation(c.bodyA, c.bodyB, c.shapeA, c.shapeB);
     var bodyA = c.bodyA;
@@ -5478,8 +3659,697 @@ Narrowphase.prototype.convexHeightfield = function( convexBody,convexShape,conve
 
     return numContacts;
 };
-},{"../equations/ContactEquation":22,"../equations/Equation":23,"../equations/FrictionEquation":24,"../math/vec2":31,"../objects/Body":32,"../shapes/Circle":38,"../shapes/Convex":39,"../shapes/Rectangle":44,"../shapes/Shape":45,"../utils/TupleDictionary":49,"../utils/Utils":50,"__browserify_Buffer":1,"__browserify_process":2}],14:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/collision\\SAPBroadphase.js",__dirname="/collision";var Utils = require('../utils/Utils')
+},{"../equations/ContactEquation":22,"../equations/Equation":23,"../equations/FrictionEquation":24,"../math/vec2":31,"../objects/Body":32,"../shapes/Circle":38,"../shapes/Convex":39,"../shapes/Rectangle":44,"../shapes/Shape":45,"../utils/TupleDictionary":49,"../utils/Utils":50}],12:[function(require,module,exports){
+module.exports = Ray;
+
+var vec2 = require('../math/vec2');
+var RaycastResult = require('../collision/RaycastResult');
+var Shape = require('../shapes/Shape');
+var AABB = require('../collision/AABB');
+
+/**
+ * A line with a start and end point that is used to intersect shapes.
+ * @class Ray
+ * @constructor
+ */
+function Ray(options){
+    options = options || {};
+
+    /**
+     * @property {array} from
+     */
+    this.from = options.from ? vec2.fromValues(options.from[0], options.from[1]) : vec2.create();
+
+    /**
+     * @property {array} to
+     */
+    this.to = options.to ? vec2.fromValues(options.to[0], options.to[1]) : vec2.create();
+
+    /**
+     * @private
+     * @property {array} _direction
+     */
+    this._direction = vec2.create();
+
+    /**
+     * The precision of the ray. Used when checking parallelity etc.
+     * @property {Number} precision
+     */
+    this.precision = 0.0001;
+
+    /**
+     * Set to true if you want the Ray to take .collisionResponse flags into account on bodies and shapes.
+     * @property {Boolean} checkCollisionResponse
+     */
+    this.checkCollisionResponse = true;
+
+    /**
+     * If set to true, the ray skips any hits with normal.dot(rayDirection) < 0.
+     * @property {Boolean} skipBackfaces
+     */
+    this.skipBackfaces = false;
+
+    /**
+     * @property {number} collisionMask
+     * @default -1
+     */
+    this.collisionMask = -1;
+
+    /**
+     * @property {number} collisionGroup
+     * @default -1
+     */
+    this.collisionGroup = -1;
+
+    /**
+     * The intersection mode. Should be Ray.ANY, Ray.ALL or Ray.CLOSEST.
+     * @property {number} mode
+     */
+    this.mode = Ray.ANY;
+
+    /**
+     * Current result object.
+     * @property {RaycastResult} result
+     */
+    this.result = new RaycastResult();
+
+    /**
+     * Will be set to true during intersectWorld() if the ray hit anything.
+     * @property {Boolean} hasHit
+     */
+    this.hasHit = false;
+
+    /**
+     * Current, user-provided result callback. Will be used if mode is Ray.ALL.
+     * @property {Function} callback
+     */
+    this.callback = function(result){};
+}
+Ray.prototype.constructor = Ray;
+
+Ray.CLOSEST = 1;
+Ray.ANY = 2;
+Ray.ALL = 4;
+
+var tmpAABB = new AABB();
+var tmpArray = [];
+
+/**
+ * Do itersection against all bodies in the given World.
+ * @method intersectWorld
+ * @param  {World} world
+ * @param  {object} options
+ * @return {Boolean} True if the ray hit anything, otherwise false.
+ */
+Ray.prototype.intersectWorld = function (world, options) {
+    this.mode = options.mode || Ray.ANY;
+    this.result = options.result || new RaycastResult();
+    this.skipBackfaces = !!options.skipBackfaces;
+    this.collisionMask = typeof(options.collisionMask) !== 'undefined' ? options.collisionMask : -1;
+    this.collisionGroup = typeof(options.collisionGroup) !== 'undefined' ? options.collisionGroup : -1;
+    if(options.from){
+        vec2.copy(this.from, options.from);
+    }
+    if(options.to){
+        vec2.copy(this.to, options.to);
+    }
+    this.callback = options.callback || function(){};
+    this.hasHit = false;
+
+    this.result.reset();
+    this._updateDirection();
+
+    this.getAABB(tmpAABB);
+    tmpArray.length = 0;
+    world.broadphase.aabbQuery(world, tmpAABB, tmpArray);
+    this.intersectBodies(tmpArray);
+
+    return this.hasHit;
+};
+
+var v1 = vec2.create(),
+    v2 = vec2.create();
+
+var intersectBody_worldPosition = vec2.create();
+
+/**
+ * Shoot a ray at a body, get back information about the hit.
+ * @method intersectBody
+ * @private
+ * @param {Body} body
+ * @param {RaycastResult} [result] Deprecated - set the result property of the Ray instead.
+ */
+Ray.prototype.intersectBody = function (body, result) {
+
+    if(result){
+        this.result = result;
+        this._updateDirection();
+    }
+    var checkCollisionResponse = this.checkCollisionResponse;
+
+    if(checkCollisionResponse && !body.collisionResponse){
+        return;
+    }
+
+    // if((this.collisionGroup & body.collisionMask)===0 || (body.collisionGroup & this.collisionMask)===0){
+    //     return;
+    // }
+
+    var worldPosition = intersectBody_worldPosition;
+
+    for (var i = 0, N = body.shapes.length; i < N; i++) {
+        var shape = body.shapes[i];
+
+        if(checkCollisionResponse && !shape.collisionResponse){
+            continue; // Skip
+        }
+
+        // Get world angle and position of the shape
+        vec2.copy(worldPosition, body.shapeOffsets[i]);
+        vec2.rotate(worldPosition, worldPosition, body.angle);
+        vec2.add(worldPosition, worldPosition, body.position);
+        var worldAngle = body.shapeAngles[i] + body.angle;
+
+        this.intersectShape(
+            shape,
+            worldAngle,
+            worldPosition,
+            body
+        );
+
+        if(this.result._shouldStop){
+            break;
+        }
+    }
+};
+
+/**
+ * @method intersectBodies
+ * @param {Array} bodies An array of Body objects.
+ * @param {RaycastResult} [result] Deprecated
+ */
+Ray.prototype.intersectBodies = function (bodies, result) {
+    if(result){
+        this.result = result;
+        this._updateDirection();
+    }
+
+    for ( var i = 0, l = bodies.length; !this.result._shouldStop && i < l; i ++ ) {
+        this.intersectBody(bodies[i]);
+    }
+};
+
+/**
+ * Updates the _direction vector.
+ * @private
+ * @method _updateDirection
+ */
+Ray.prototype._updateDirection = function(){
+    var d = this._direction;
+    vec2.sub(d, this.to, this.from); // this.to.vsub(this.from, this._direction);
+    vec2.normalize(d, d); // this._direction.normalize();
+};
+
+/**
+ * @method intersectShape
+ * @private
+ * @param {Shape} shape
+ * @param {number} angle
+ * @param {array} position
+ * @param {Body} body
+ */
+Ray.prototype.intersectShape = function(shape, angle, position, body){
+    var from = this.from;
+
+
+    // Checking boundingSphere
+    var distance = distanceFromIntersection(from, this._direction, position);
+    if ( distance > shape.boundingSphereRadius ) {
+        return;
+    }
+
+    var method = this[shape.type];
+    if(method){
+        method.call(this, shape, angle, position, body);
+    }
+};
+
+var vector = vec2.create();
+var normal = vec2.create();
+var intersectPoint = vec2.create();
+
+var a = vec2.create();
+var b = vec2.create();
+var c = vec2.create();
+var d = vec2.create();
+
+var tmpRaycastResult = new RaycastResult();
+var intersectRectangle_direction = vec2.create();
+var intersectRectangle_rayStart = vec2.create();
+var intersectRectangle_worldNormalMin = vec2.create();
+var intersectRectangle_worldNormalMax = vec2.create();
+var intersectRectangle_hitPointWorld = vec2.create();
+var intersectRectangle_boxMin = vec2.create();
+var intersectRectangle_boxMax = vec2.create();
+
+/**
+ * @method intersectRectangle
+ * @private
+ * @param  {Shape} shape
+ * @param  {number} angle
+ * @param  {array} position
+ * @param  {Body} body
+ */
+Ray.prototype.intersectRectangle = function(shape, angle, position, body){
+    var tmin = -Number.MAX_VALUE;
+    var tmax = Number.MAX_VALUE;
+
+    var direction = intersectRectangle_direction;
+    var rayStart = intersectRectangle_rayStart;
+    var worldNormalMin = intersectRectangle_worldNormalMin;
+    var worldNormalMax = intersectRectangle_worldNormalMax;
+    var hitPointWorld = intersectRectangle_hitPointWorld;
+    var boxMin = intersectRectangle_boxMin;
+    var boxMax = intersectRectangle_boxMax;
+
+    vec2.set(boxMin, -shape.width * 0.5, -shape.height * 0.5);
+    vec2.set(boxMax, shape.width * 0.5, shape.height * 0.5);
+
+    // Transform the ray direction and start to local space
+    vec2.rotate(direction, this._direction, -angle);
+    body.toLocalFrame(rayStart, this.from);
+
+    if (direction[0] !== 0) {
+        var tx1 = (boxMin[0] - rayStart[0]) / direction[0];
+        var tx2 = (boxMax[0] - rayStart[0]) / direction[0];
+
+        var tminOld = tmin;
+        tmin = Math.max(tmin, Math.min(tx1, tx2));
+        if(tmin !== tminOld){
+            vec2.set(worldNormalMin, tx1 > tx2 ? 1 : -1, 0);
+        }
+
+        var tmaxOld = tmax;
+        tmax = Math.min(tmax, Math.max(tx1, tx2));
+        if(tmax !== tmaxOld){
+            vec2.set(worldNormalMax, tx1 < tx2 ? 1 : -1, 0);
+        }
+    }
+
+    if (direction[1] !== 0) {
+        var ty1 = (boxMin[1] - rayStart[1]) / direction[1];
+        var ty2 = (boxMax[1] - rayStart[1]) / direction[1];
+
+        var tminOld = tmin;
+        tmin = Math.max(tmin, Math.min(ty1, ty2));
+        if(tmin !== tminOld){
+            vec2.set(worldNormalMin, 0, ty1 > ty2 ? 1 : -1);
+        }
+
+        var tmaxOld = tmax;
+        tmax = Math.min(tmax, Math.max(ty1, ty2));
+        if(tmax !== tmaxOld){
+            vec2.set(worldNormalMax, 0, ty1 < ty2 ? 1 : -1);
+        }
+    }
+
+    if(tmax >= tmin){
+        // Hit point
+        vec2.set(
+            hitPointWorld,
+            rayStart[0] + direction[0] * tmin,
+            rayStart[1] + direction[1] * tmin
+        );
+
+        vec2.rotate(worldNormalMin, worldNormalMin, angle);
+
+        body.toWorldFrame(hitPointWorld, hitPointWorld);
+
+        this.reportIntersection(worldNormalMin, hitPointWorld, shape, body, -1);
+        if(this._shouldStop){
+            return;
+        }
+
+        vec2.rotate(worldNormalMax, worldNormalMax, angle);
+
+        // Hit point
+        vec2.set(
+            hitPointWorld,
+            rayStart[0] + direction[0] * tmax,
+            rayStart[1] + direction[1] * tmax
+        );
+        body.toWorldFrame(hitPointWorld, hitPointWorld);
+
+        this.reportIntersection(worldNormalMax, hitPointWorld, shape, body, -1);
+    }
+};
+Ray.prototype[Shape.RECTANGLE] = Ray.prototype.intersectRectangle;
+
+var intersectPlane_planePointToFrom = vec2.create();
+var intersectPlane_dir_scaled_with_t = vec2.create();
+var intersectPlane_hitPointWorld = vec2.create();
+var intersectPlane_worldNormal = vec2.create();
+var intersectPlane_len = vec2.create();
+
+/**
+ * @method intersectPlane
+ * @private
+ * @param  {Shape} shape
+ * @param  {number} angle
+ * @param  {array} position
+ * @param  {Body} body
+ */
+Ray.prototype.intersectPlane = function(shape, angle, position, body){
+    var from = this.from;
+    var to = this.to;
+    var direction = this._direction;
+
+    var planePointToFrom = intersectPlane_planePointToFrom;
+    var dir_scaled_with_t = intersectPlane_dir_scaled_with_t;
+    var hitPointWorld = intersectPlane_hitPointWorld;
+    var worldNormal = intersectPlane_worldNormal;
+    var len = intersectPlane_len;
+
+    // Get plane normal
+    vec2.set(worldNormal, 0, 1);
+    vec2.rotate(worldNormal, worldNormal, angle);
+
+    vec2.sub(len, from, position); //from.vsub(position, len);
+    var planeToFrom = vec2.dot(len, worldNormal); // len.dot(worldNormal);
+    vec2.sub(len, to, position); // to.vsub(position, len);
+    var planeToTo = vec2.dot(len, worldNormal); // len.dot(worldNormal);
+
+    if(planeToFrom * planeToTo > 0){
+        // "from" and "to" are on the same side of the plane... bail out
+        return;
+    }
+
+    if(vec2.distance(from, to) /* from.distanceTo(to) */ < planeToFrom){
+        return;
+    }
+
+    var n_dot_dir = vec2.dot(worldNormal, direction); // worldNormal.dot(direction);
+
+    // if (Math.abs(n_dot_dir) < this.precision) {
+    //     // No intersection
+    //     return;
+    // }
+
+    vec2.sub(planePointToFrom, from, position); // from.vsub(position, planePointToFrom);
+    var t = -vec2.dot(worldNormal, planePointToFrom) / n_dot_dir; // - worldNormal.dot(planePointToFrom) / n_dot_dir;
+    vec2.scale(dir_scaled_with_t, direction, t); // direction.scale(t, dir_scaled_with_t);
+    vec2.add(hitPointWorld, from, dir_scaled_with_t); // from.vadd(dir_scaled_with_t, hitPointWorld);
+
+    this.reportIntersection(worldNormal, hitPointWorld, shape, body, -1);
+};
+Ray.prototype[Shape.PLANE] = Ray.prototype.intersectPlane;
+
+var Ray_intersectSphere_intersectionPoint = vec2.create();
+var Ray_intersectSphere_normal = vec2.create();
+Ray.prototype.intersectCircle = function(shape, angle, position, body){
+    var from = this.from,
+        to = this.to,
+        r = shape.radius;
+
+    var a = Math.pow(to[0] - from[0], 2) + Math.pow(to[1] - from[1], 2);
+    var b = 2 * ((to[0] - from[0]) * (from[0] - position[0]) + (to[1] - from[1]) * (from[1] - position[1]));
+    var c = Math.pow(from[0] - position[0], 2) + Math.pow(from[1] - position[1], 2) - Math.pow(r, 2);
+
+    var delta = Math.pow(b, 2) - 4 * a * c;
+
+    var intersectionPoint = Ray_intersectSphere_intersectionPoint;
+    var normal = Ray_intersectSphere_normal;
+
+    if(delta < 0){
+        // No intersection
+        return;
+
+    } else if(delta === 0){
+        // single intersection point
+        vec2.lerp(intersectionPoint, from, to, delta); // from.lerp(to, delta, intersectionPoint);
+
+        vec2.sub(normal, intersectionPoint, position); // intersectionPoint.vsub(position, normal);
+        vec2.normalize(normal,normal); //normal.normalize();
+
+        this.reportIntersection(normal, intersectionPoint, shape, body, -1);
+
+    } else {
+        var d1 = (- b - Math.sqrt(delta)) / (2 * a);
+        var d2 = (- b + Math.sqrt(delta)) / (2 * a);
+
+        vec2.lerp(intersectionPoint, from, to, d1); // from.lerp(to, d1, intersectionPoint);
+
+        vec2.sub(normal, intersectionPoint, position); // intersectionPoint.vsub(position, normal);
+        vec2.normalize(normal,normal); //normal.normalize();
+
+        this.reportIntersection(normal, intersectionPoint, shape, body, -1);
+
+        if(this.result._shouldStop){
+            return;
+        }
+
+        vec2.lerp(intersectionPoint, from, to, d2); // from.lerp(to, d2, intersectionPoint);
+
+        vec2.sub(normal, intersectionPoint, position); // intersectionPoint.vsub(position, normal);
+        vec2.normalize(normal,normal); //normal.normalize();
+
+        this.reportIntersection(normal, intersectionPoint, shape, body, -1);
+    }
+};
+Ray.prototype[Shape.CIRCLE] = Ray.prototype.intersectCircle;
+
+/**
+ * Get the AABB of the ray.
+ * @method getAABB
+ * @param  {AABB} aabb
+ */
+Ray.prototype.getAABB = function(result){
+    var to = this.to;
+    var from = this.from;
+    result.lowerBound[0] = Math.min(to[0], from[0]);
+    result.lowerBound[1] = Math.min(to[1], from[1]);
+    result.upperBound[0] = Math.max(to[0], from[0]);
+    result.upperBound[1] = Math.max(to[1], from[1]);
+};
+
+/**
+ * @method reportIntersection
+ * @private
+ * @param  {array} normal
+ * @param  {array} hitPointWorld
+ * @param  {Shape} shape
+ * @param  {Body} body
+ * @return {boolean} True if the intersections should continue
+ */
+Ray.prototype.reportIntersection = function(normal, hitPointWorld, shape, body, hitFaceIndex){
+    var from = this.from;
+    var to = this.to;
+    var distance = vec2.distance(from, hitPointWorld); // from.distanceTo(hitPointWorld);
+    var result = this.result;
+
+    // Skip back faces?
+    if(this.skipBackfaces && /* normal.dot(this._direction) */ vec2.dot(normal, this._direction) > 0){
+        return;
+    }
+
+    result.hitFaceIndex = typeof(hitFaceIndex) !== 'undefined' ? hitFaceIndex : -1;
+
+    switch(this.mode){
+    case Ray.ALL:
+        this.hasHit = true;
+        result.set(
+            from,
+            to,
+            normal,
+            hitPointWorld,
+            shape,
+            body,
+            distance
+        );
+        result.hasHit = true;
+        this.callback(result);
+        break;
+
+    case Ray.CLOSEST:
+
+        // Store if closer than current closest
+        if(distance < result.distance || !result.hasHit){
+            this.hasHit = true;
+            result.hasHit = true;
+            result.set(
+                from,
+                to,
+                normal,
+                hitPointWorld,
+                shape,
+                body,
+                distance
+            );
+        }
+        break;
+
+    case Ray.ANY:
+
+        // Report and stop.
+        this.hasHit = true;
+        result.hasHit = true;
+        result.set(
+            from,
+            to,
+            normal,
+            hitPointWorld,
+            shape,
+            body,
+            distance
+        );
+        result._shouldStop = true;
+        break;
+    }
+};
+
+var v0 = vec2.create(),
+    intersect = vec2.create();
+function distanceFromIntersection(from, direction, position) {
+
+    // v0 is vector from from to position
+    vec2.sub(v0, position, from); // position.vsub(from,v0);
+    var dot = vec2.dot(v0, direction); // v0.dot(direction);
+
+    // intersect = direction*dot + from
+    vec2.scale(intersect, direction, dot); //direction.mult(dot,intersect);
+    vec2.add(intersect, intersect, from); // intersect.vadd(from, intersect);
+
+    var distance = vec2.distance(position, intersect); // position.distanceTo(intersect);
+
+    return distance;
+}
+
+
+},{"../collision/AABB":7,"../collision/RaycastResult":13,"../math/vec2":31,"../shapes/Shape":45}],13:[function(require,module,exports){
+var vec2 = require('../math/vec2');
+
+module.exports = RaycastResult;
+
+/**
+ * Storage for Ray casting data.
+ * @class RaycastResult
+ * @constructor
+ */
+function RaycastResult(){
+
+	/**
+	 * @property {array} rayFromWorld
+	 */
+	this.rayFromWorld = vec2.create();
+
+	/**
+	 * @property {array} rayToWorld
+	 */
+	this.rayToWorld = vec2.create();
+
+	/**
+	 * @property {array} hitNormalWorld
+	 */
+	this.hitNormalWorld = vec2.create();
+
+	/**
+	 * @property {array} hitPointWorld
+	 */
+	this.hitPointWorld = vec2.create();
+
+	/**
+	 * @property {boolean} hasHit
+	 */
+	this.hasHit = false;
+
+	/**
+	 * The hit shape, or null.
+	 * @property {Shape} shape
+	 */
+	this.shape = null;
+
+	/**
+	 * The hit body, or null.
+	 * @property {Body} body
+	 */
+	this.body = null;
+
+	/**
+	 * The index of the hit triangle, if the hit shape was a trimesh.
+	 * @property {number} hitFaceIndex
+	 * @default -1
+	 */
+	this.hitFaceIndex = -1;
+
+	/**
+	 * Distance to the hit. Will be set to -1 if there was no hit.
+	 * @property {number} distance
+	 * @default -1
+	 */
+	this.distance = -1;
+
+	/**
+	 * If the ray should stop traversing the bodies.
+	 * @private
+	 * @property {Boolean} _shouldStop
+	 * @default false
+	 */
+	this._shouldStop = false;
+}
+
+/**
+ * Reset all result data.
+ * @method reset
+ */
+RaycastResult.prototype.reset = function () {
+	vec2.set(this.rayFromWorld, 0, 0);
+	vec2.set(this.rayToWorld, 0, 0);
+	vec2.set(this.hitNormalWorld, 0, 0);
+	vec2.set(this.hitPointWorld, 0, 0);
+	this.hasHit = false;
+	this.shape = null;
+	this.body = null;
+	this.hitFaceIndex = -1;
+	this.distance = -1;
+	this._shouldStop = false;
+};
+
+/**
+ * @method abort
+ */
+RaycastResult.prototype.abort = function(){
+	this._shouldStop = true;
+};
+
+/**
+ * @method set
+ * @param {array} rayFromWorld
+ * @param {array} rayToWorld
+ * @param {array} hitNormalWorld
+ * @param {array} hitPointWorld
+ * @param {Shape} shape
+ * @param {Body} body
+ * @param {number} distance
+ */
+RaycastResult.prototype.set = function(
+	rayFromWorld,
+	rayToWorld,
+	hitNormalWorld,
+	hitPointWorld,
+	shape,
+	body,
+	distance
+){
+	vec2.copy(this.rayFromWorld, rayFromWorld);
+	vec2.copy(this.rayToWorld, rayToWorld);
+	vec2.copy(this.hitNormalWorld, hitNormalWorld);
+	vec2.copy(this.hitPointWorld, hitPointWorld);
+	this.shape = shape;
+	this.body = body;
+	this.distance = distance;
+};
+},{"../math/vec2":31}],14:[function(require,module,exports){
+var Utils = require('../utils/Utils')
 ,   Broadphase = require('../collision/Broadphase');
 
 module.exports = SAPBroadphase;
@@ -5522,6 +4392,7 @@ function SAPBroadphase(){
     };
 }
 SAPBroadphase.prototype = new Broadphase();
+SAPBroadphase.prototype.constructor = SAPBroadphase;
 
 /**
  * Change the world
@@ -5568,6 +4439,14 @@ SAPBroadphase.sortAxisList = function(a, axisIndex){
     return a;
 };
 
+SAPBroadphase.prototype.sortList = function(){
+    var bodies = this.axisList,
+    axisIndex = this.axisIndex;
+
+    // Sort the lists
+    SAPBroadphase.sortAxisList(bodies, axisIndex);
+};
+
 /**
  * Get the colliding pairs
  * @method getCollisionPairs
@@ -5591,7 +4470,7 @@ SAPBroadphase.prototype.getCollisionPairs = function(world){
     }
 
     // Sort the lists
-    SAPBroadphase.sortAxisList(bodies, axisIndex);
+    this.sortList();
 
     // Look through the X list
     for(var i=0, N=bodies.length|0; i!==N; i++){
@@ -5615,9 +4494,43 @@ SAPBroadphase.prototype.getCollisionPairs = function(world){
     return result;
 };
 
+/**
+ * Returns all the bodies within an AABB.
+ * @method aabbQuery
+ * @param  {World} world
+ * @param  {AABB} aabb
+ * @param {array} result An array to store resulting bodies in.
+ * @return {array}
+ */
+SAPBroadphase.prototype.aabbQuery = function(world, aabb, result){
+    result = result || [];
 
-},{"../collision/Broadphase":10,"../utils/Utils":50,"__browserify_Buffer":1,"__browserify_process":2}],15:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/constraints\\Constraint.js",__dirname="/constraints";module.exports = Constraint;
+    this.sortList();
+
+    var axisIndex = this.axisIndex;
+    var axis = 'x';
+    if(axisIndex === 1){ axis = 'y'; }
+    if(axisIndex === 2){ axis = 'z'; }
+
+    var axisList = this.axisList;
+    var lower = aabb.lowerBound[axis];
+    var upper = aabb.upperBound[axis];
+    for(var i = 0; i < axisList.length; i++){
+        var b = axisList[i];
+
+        if(b.aabbNeedsUpdate){
+            b.updateAABB();
+        }
+
+        if(b.aabb.overlaps(aabb)){
+            result.push(b);
+        }
+    }
+
+    return result;
+};
+},{"../collision/Broadphase":8,"../utils/Utils":50}],15:[function(require,module,exports){
+module.exports = Constraint;
 
 var Utils = require('../utils/Utils');
 
@@ -5753,8 +4666,8 @@ Constraint.prototype.setRelaxation = function(relaxation){
     }
 };
 
-},{"../utils/Utils":50,"__browserify_Buffer":1,"__browserify_process":2}],16:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/constraints\\DistanceConstraint.js",__dirname="/constraints";var Constraint = require('./Constraint')
+},{"../utils/Utils":50}],16:[function(require,module,exports){
+var Constraint = require('./Constraint')
 ,   Equation = require('../equations/Equation')
 ,   vec2 = require('../math/vec2')
 ,   Utils = require('../utils/Utils');
@@ -5928,6 +4841,7 @@ function DistanceConstraint(bodyA,bodyB,options){
     this.position = 0;
 }
 DistanceConstraint.prototype = new Constraint();
+DistanceConstraint.prototype.constructor = DistanceConstraint;
 
 /**
  * Update the constraint equations. Should be done if any of the bodies changed position, before solving.
@@ -6019,8 +4933,8 @@ DistanceConstraint.prototype.getMaxForce = function(f){
     return normal.maxForce;
 };
 
-},{"../equations/Equation":23,"../math/vec2":31,"../utils/Utils":50,"./Constraint":15,"__browserify_Buffer":1,"__browserify_process":2}],17:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/constraints\\GearConstraint.js",__dirname="/constraints";var Constraint = require('./Constraint')
+},{"../equations/Equation":23,"../math/vec2":31,"../utils/Utils":50,"./Constraint":15}],17:[function(require,module,exports){
+var Constraint = require('./Constraint')
 ,   Equation = require('../equations/Equation')
 ,   AngleLockEquation = require('../equations/AngleLockEquation')
 ,   vec2 = require('../math/vec2');
@@ -6074,6 +4988,7 @@ function GearConstraint(bodyA, bodyB, options){
     }
 }
 GearConstraint.prototype = new Constraint();
+GearConstraint.prototype.constructor = GearConstraint;
 
 GearConstraint.prototype.update = function(){
     var eq = this.equations[0];
@@ -6100,8 +5015,8 @@ GearConstraint.prototype.setMaxTorque = function(torque){
 GearConstraint.prototype.getMaxTorque = function(torque){
     return this.equations[0].maxForce;
 };
-},{"../equations/AngleLockEquation":21,"../equations/Equation":23,"../math/vec2":31,"./Constraint":15,"__browserify_Buffer":1,"__browserify_process":2}],18:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/constraints\\LockConstraint.js",__dirname="/constraints";var Constraint = require('./Constraint')
+},{"../equations/AngleLockEquation":21,"../equations/Equation":23,"../math/vec2":31,"./Constraint":15}],18:[function(require,module,exports){
+var Constraint = require('./Constraint')
 ,   vec2 = require('../math/vec2')
 ,   Equation = require('../equations/Equation');
 
@@ -6212,6 +5127,7 @@ function LockConstraint(bodyA, bodyB, options){
     this.setMaxForce(maxForce);
 }
 LockConstraint.prototype = new Constraint();
+LockConstraint.prototype.constructor = LockConstraint;
 
 /**
  * Set the maximum force to be applied.
@@ -6271,8 +5187,8 @@ LockConstraint.prototype.update = function(){
     rot.G[5] =  vec2.crossLength(r,t);
 };
 
-},{"../equations/Equation":23,"../math/vec2":31,"./Constraint":15,"__browserify_Buffer":1,"__browserify_process":2}],19:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/constraints\\PrismaticConstraint.js",__dirname="/constraints";var Constraint = require('./Constraint')
+},{"../equations/Equation":23,"../math/vec2":31,"./Constraint":15}],19:[function(require,module,exports){
+var Constraint = require('./Constraint')
 ,   ContactEquation = require('../equations/ContactEquation')
 ,   Equation = require('../equations/Equation')
 ,   vec2 = require('../math/vec2')
@@ -6469,6 +5385,7 @@ function PrismaticConstraint(bodyA, bodyB, options){
 }
 
 PrismaticConstraint.prototype = new Constraint();
+PrismaticConstraint.prototype.constructor = PrismaticConstraint;
 
 var worldAxisA = vec2.create(),
     worldAnchorA = vec2.create(),
@@ -6624,8 +5541,8 @@ PrismaticConstraint.prototype.setLimits = function (lower, upper) {
 };
 
 
-},{"../equations/ContactEquation":22,"../equations/Equation":23,"../equations/RotationalLockEquation":25,"../math/vec2":31,"./Constraint":15,"__browserify_Buffer":1,"__browserify_process":2}],20:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/constraints\\RevoluteConstraint.js",__dirname="/constraints";var Constraint = require('./Constraint')
+},{"../equations/ContactEquation":22,"../equations/Equation":23,"../equations/RotationalLockEquation":25,"../math/vec2":31,"./Constraint":15}],20:[function(require,module,exports){
+var Constraint = require('./Constraint')
 ,   Equation = require('../equations/Equation')
 ,   RotationalVelocityEquation = require('../equations/RotationalVelocityEquation')
 ,   RotationalLockEquation = require('../equations/RotationalLockEquation')
@@ -6779,6 +5696,7 @@ function RevoluteConstraint(bodyA, bodyB, options){
     this.lowerLimitEquation.maxForce = 0;
 }
 RevoluteConstraint.prototype = new Constraint();
+RevoluteConstraint.prototype.constructor = RevoluteConstraint;
 
 /**
  * Set the constraint angle limits.
@@ -6950,8 +5868,8 @@ RevoluteConstraint.prototype.getMotorSpeed = function(){
     return this.motorEquation.relativeVelocity;
 };
 
-},{"../equations/Equation":23,"../equations/RotationalLockEquation":25,"../equations/RotationalVelocityEquation":26,"../math/vec2":31,"./Constraint":15,"__browserify_Buffer":1,"__browserify_process":2}],21:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/equations\\AngleLockEquation.js",__dirname="/equations";var Equation = require("./Equation"),
+},{"../equations/Equation":23,"../equations/RotationalLockEquation":25,"../equations/RotationalVelocityEquation":26,"../math/vec2":31,"./Constraint":15}],21:[function(require,module,exports){
+var Equation = require("./Equation"),
     vec2 = require('../math/vec2');
 
 module.exports = AngleLockEquation;
@@ -7012,8 +5930,8 @@ AngleLockEquation.prototype.setMaxTorque = function(torque){
     this.minForce = -torque;
 };
 
-},{"../math/vec2":31,"./Equation":23,"__browserify_Buffer":1,"__browserify_process":2}],22:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/equations\\ContactEquation.js",__dirname="/equations";var Equation = require("./Equation"),
+},{"../math/vec2":31,"./Equation":23}],22:[function(require,module,exports){
+var Equation = require("./Equation"),
     vec2 = require('../math/vec2');
 
 module.exports = ContactEquation;
@@ -7128,8 +6046,8 @@ ContactEquation.prototype.computeB = function(a,b,h){
     return B;
 };
 
-},{"../math/vec2":31,"./Equation":23,"__browserify_Buffer":1,"__browserify_process":2}],23:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/equations\\Equation.js",__dirname="/equations";module.exports = Equation;
+},{"../math/vec2":31,"./Equation":23}],23:[function(require,module,exports){
+module.exports = Equation;
 
 var vec2 = require('../math/vec2'),
     Utils = require('../utils/Utils'),
@@ -7447,8 +6365,8 @@ Equation.prototype.computeInvC = function(eps){
     return 1.0 / (this.computeGiMGt() + eps);
 };
 
-},{"../math/vec2":31,"../objects/Body":32,"../utils/Utils":50,"__browserify_Buffer":1,"__browserify_process":2}],24:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/equations\\FrictionEquation.js",__dirname="/equations";var vec2 = require('../math/vec2')
+},{"../math/vec2":31,"../objects/Body":32,"../utils/Utils":50}],24:[function(require,module,exports){
+var vec2 = require('../math/vec2')
 ,   Equation = require('./Equation')
 ,   Utils = require('../utils/Utils');
 
@@ -7566,8 +6484,8 @@ FrictionEquation.prototype.computeB = function(a,b,h){
     return B;
 };
 
-},{"../math/vec2":31,"../utils/Utils":50,"./Equation":23,"__browserify_Buffer":1,"__browserify_process":2}],25:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/equations\\RotationalLockEquation.js",__dirname="/equations";var Equation = require("./Equation"),
+},{"../math/vec2":31,"../utils/Utils":50,"./Equation":23}],25:[function(require,module,exports){
+var Equation = require("./Equation"),
     vec2 = require('../math/vec2');
 
 module.exports = RotationalLockEquation;
@@ -7609,8 +6527,8 @@ RotationalLockEquation.prototype.computeGq = function(){
     return vec2.dot(worldVectorA,worldVectorB);
 };
 
-},{"../math/vec2":31,"./Equation":23,"__browserify_Buffer":1,"__browserify_process":2}],26:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/equations\\RotationalVelocityEquation.js",__dirname="/equations";var Equation = require("./Equation"),
+},{"../math/vec2":31,"./Equation":23}],26:[function(require,module,exports){
+var Equation = require("./Equation"),
     vec2 = require('../math/vec2');
 
 module.exports = RotationalVelocityEquation;
@@ -7643,8 +6561,8 @@ RotationalVelocityEquation.prototype.computeB = function(a,b,h){
     return B;
 };
 
-},{"../math/vec2":31,"./Equation":23,"__browserify_Buffer":1,"__browserify_process":2}],27:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/events\\EventEmitter.js",__dirname="/events";/**
+},{"../math/vec2":31,"./Equation":23}],27:[function(require,module,exports){
+/**
  * Base class for objects that dispatches events.
  * @class EventEmitter
  * @constructor
@@ -7746,8 +6664,8 @@ EventEmitter.prototype = {
     }
 };
 
-},{"__browserify_Buffer":1,"__browserify_process":2}],28:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/material\\ContactMaterial.js",__dirname="/material";var Material = require('./Material');
+},{}],28:[function(require,module,exports){
+var Material = require('./Material');
 var Equation = require('../equations/Equation');
 
 module.exports = ContactMaterial;
@@ -7854,8 +6772,8 @@ function ContactMaterial(materialA, materialB, options){
 
 ContactMaterial.idCounter = 0;
 
-},{"../equations/Equation":23,"./Material":29,"__browserify_Buffer":1,"__browserify_process":2}],29:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/material\\Material.js",__dirname="/material";module.exports = Material;
+},{"../equations/Equation":23,"./Material":29}],29:[function(require,module,exports){
+module.exports = Material;
 
 /**
  * Defines a physics material.
@@ -7875,8 +6793,8 @@ function Material(id){
 
 Material.idCounter = 0;
 
-},{"__browserify_Buffer":1,"__browserify_process":2}],30:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/math\\polyk.js",__dirname="/math";
+},{}],30:[function(require,module,exports){
+
     /*
         PolyK library
         url: http://polyk.ivank.net
@@ -8354,8 +7272,8 @@ var process=require("__browserify_process"),global=typeof self !== "undefined" ?
 
 module.exports = PolyK;
 
-},{"__browserify_Buffer":1,"__browserify_process":2}],31:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/math\\vec2.js",__dirname="/math";/* Copyright (c) 2013, Brandon Jones, Colin MacKenzie IV. All rights reserved.
+},{}],31:[function(require,module,exports){
+/* Copyright (c) 2013, Brandon Jones, Colin MacKenzie IV. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
@@ -8817,8 +7735,16 @@ vec2.str = function (a) {
     return 'vec2(' + a[0] + ', ' + a[1] + ')';
 };
 
-},{"../utils/Utils":50,"__browserify_Buffer":1,"__browserify_process":2}],32:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/objects\\Body.js",__dirname="/objects";var vec2 = require('../math/vec2')
+vec2.lerp = function (out, a, b, t) {
+    var ax = a[0],
+        ay = a[1];
+    out[0] = ax + t * (b[0] - ax);
+    out[1] = ay + t * (b[1] - ay);
+    return out;
+};
+
+},{"../utils/Utils":50}],32:[function(require,module,exports){
+var vec2 = require('../math/vec2')
 ,   decomp = require('poly-decomp')
 ,   Convex = require('../shapes/Convex')
 ,   AABB = require('../collision/AABB')
@@ -8842,8 +7768,11 @@ module.exports = Body;
  * @param {Array}               [options.force]
  * @param {Number}              [options.angularForce=0]
  * @param {Number}              [options.fixedRotation=false]
+ * @param {Number}              [options.ccdSpeedThreshold=-1]
+ * @param {Number}              [options.ccdIterations=10]
  *
  * @example
+ *
  *     // Create a typical dynamic body
  *     var body = new Body({
  *         mass: 1,
@@ -9185,11 +8114,37 @@ function Body(options){
     this.gravityScale = 1;
 
     /**
+     * Whether to produce contact forces when in contact with other bodies. Note that contacts will be generated, but they will be disabled. That means that this body will move through other bodies, but it will still trigger contact events, etc.
+     * @property {Boolean} collisionResponse
+     */
+    this.collisionResponse = true;
+
+    /**
+     * How long the body has been sleeping.
+     * @property {Number} idleTime
+     */
+    this.idleTime = 0;
+
+    /**
      * The last time when the body went to SLEEPY state.
      * @property {Number} timeLastSleepy
      * @private
      */
     this.timeLastSleepy = 0;
+
+    /**
+     * If the body speed exceeds this threshold, CCD (continuous collision detection) will be enabled. Set it to a negative number to disable CCD completely for this body.
+     * @property {number} ccdSpeedThreshold
+     * @default -1
+     */
+    this.ccdSpeedThreshold = options.ccdSpeedThreshold !== undefined ? options.ccdSpeedThreshold : -1;
+
+    /**
+     * The number of iterations that should be used when searching for the time of impact during CCD. A larger number will assure that there's a small penetration on CCD collision, but a small number will give more performance.
+     * @property {number} ccdIterations
+     * @default 10
+     */
+    this.ccdIterations = options.ccdIterations !== undefined ? options.ccdIterations : 10;
 
     this.concavePath = null;
 
@@ -9198,6 +8153,7 @@ function Body(options){
     this.updateMassProperties();
 }
 Body.prototype = new EventEmitter();
+Body.prototype.constructor = Body;
 
 Body._idCounter = 0;
 
@@ -9704,6 +8660,7 @@ Body.prototype.getVelocityFromPosition = function(store, timeStep){
     vec2.scale(store, store, 1/timeStep);
     return store;
 };
+
 Body.prototype.getAngularVelocityFromPosition = function(timeStep){
     return (this.angle - this.previousAngle) / timeStep;
 };
@@ -9716,6 +8673,130 @@ Body.prototype.getAngularVelocityFromPosition = function(timeStep){
  */
 Body.prototype.overlaps = function(body){
     return this.world.overlapKeeper.bodiesAreOverlapping(this, body);
+};
+
+var integrate_fhMinv = vec2.create();
+var integrate_velodt = vec2.create();
+
+/**
+ * Move the body forward in time given its current velocity.
+ * @method integrate
+ * @param  {Number} dt
+ */
+Body.prototype.integrate = function(dt){
+    var minv = this.invMass,
+        f = this.force,
+        pos = this.position,
+        velo = this.velocity;
+
+    // Save old position
+    vec2.copy(this.previousPosition, this.position);
+    this.previousAngle = this.angle;
+
+    // Velocity update
+    if(!this.fixedRotation){
+        this.angularVelocity += this.angularForce * this.invInertia * dt;
+    }
+    vec2.scale(integrate_fhMinv, f, dt * minv);
+    vec2.add(velo, integrate_fhMinv, velo);
+
+    // CCD
+    if(!this.integrateToTimeOfImpact(dt)){
+
+        // Regular position update
+        vec2.scale(integrate_velodt, velo, dt);
+        vec2.add(pos, pos, integrate_velodt);
+        if(!this.fixedRotation){
+            this.angle += this.angularVelocity * dt;
+        }
+    }
+
+    this.aabbNeedsUpdate = true;
+};
+
+var direction = vec2.create();
+var end = vec2.create();
+var startToEnd = vec2.create();
+var rememberPosition = vec2.create();
+Body.prototype.integrateToTimeOfImpact = function(dt){
+
+    if(this.ccdSpeedThreshold < 0 || vec2.squaredLength(this.velocity) < Math.pow(this.ccdSpeedThreshold, 2)){
+        return false;
+    }
+
+    vec2.normalize(direction, this.velocity);
+
+    vec2.scale(end, this.velocity, dt);
+    vec2.add(end, end, this.position);
+
+    vec2.sub(startToEnd, end, this.position);
+    var startToEndAngle = this.angularVelocity * dt;
+    var len = vec2.length(startToEnd);
+
+    var timeOfImpact = 1;
+
+    var hit;
+    var that = this;
+    this.world.raycastAll(this.position, end, {}, function (result) {
+        if(result.body === that){
+            return;
+        }
+        hit = result.body;
+        vec2.copy(end, result.hitPointWorld);
+        vec2.sub(startToEnd, result.hitPointWorld, that.position);
+        timeOfImpact = vec2.length(startToEnd) / len;
+        result.abort();
+    });
+
+    if(!hit){
+        return false;
+    }
+
+    var rememberAngle = this.angle;
+    vec2.copy(rememberPosition, this.position);
+
+    // Got a start and end point. Approximate time of impact using binary search
+    var iter = 0;
+    var tmin = 0;
+    var tmid = 0;
+    var tmax = timeOfImpact;
+    while (tmax >= tmin && iter < this.ccdIterations) {
+        iter++;
+
+        // calculate the midpoint
+        tmid = (tmax - tmin) / 2;
+
+        // Move the body to that point
+        vec2.scale(integrate_velodt, startToEnd, timeOfImpact);
+        vec2.add(this.position, rememberPosition, integrate_velodt);
+        this.angle = rememberAngle + startToEndAngle * timeOfImpact;
+        this.updateAABB();
+
+        // check overlap
+        var overlaps = this.aabb.overlaps(hit.aabb) && this.world.narrowphase.bodiesOverlap(this, hit);
+
+        if (overlaps) {
+            // change min to search upper interval
+            tmin = tmid;
+        } else {
+            // change max to search lower interval
+            tmax = tmid;
+        }
+    }
+
+    timeOfImpact = tmid;
+
+    vec2.copy(this.position, rememberPosition);
+    this.angle = rememberAngle;
+
+    // move to TOI
+    vec2.scale(integrate_velodt, startToEnd, timeOfImpact);
+    vec2.add(this.position, this.position, integrate_velodt);
+    if(!this.fixedRotation){
+        this.angle += startToEndAngle * timeOfImpact;
+    }
+
+    return true;
 };
 
 /**
@@ -9785,8 +8866,8 @@ Body.SLEEPY = 1;
 Body.SLEEPING = 2;
 
 
-},{"../collision/AABB":9,"../events/EventEmitter":27,"../math/vec2":31,"../shapes/Convex":39,"__browserify_Buffer":1,"__browserify_process":2,"poly-decomp":7}],33:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/objects\\LinearSpring.js",__dirname="/objects";var vec2 = require('../math/vec2');
+},{"../collision/AABB":7,"../events/EventEmitter":27,"../math/vec2":31,"../shapes/Convex":39,"poly-decomp":5}],33:[function(require,module,exports){
+var vec2 = require('../math/vec2');
 var Spring = require('./Spring');
 var Utils = require('../utils/Utils');
 
@@ -9849,6 +8930,7 @@ function LinearSpring(bodyA,bodyB,options){
     this.restLength = typeof(options.restLength) === "number" ? options.restLength : worldDistance;
 }
 LinearSpring.prototype = new Spring();
+LinearSpring.prototype.constructor = LinearSpring;
 
 /**
  * Set the anchor point on body A, using world coordinates.
@@ -9954,8 +9036,8 @@ LinearSpring.prototype.applyForce = function(){
     bodyB.angularForce += rj_x_f;
 };
 
-},{"../math/vec2":31,"../utils/Utils":50,"./Spring":35,"__browserify_Buffer":1,"__browserify_process":2}],34:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/objects\\RotationalSpring.js",__dirname="/objects";var vec2 = require('../math/vec2');
+},{"../math/vec2":31,"../utils/Utils":50,"./Spring":35}],34:[function(require,module,exports){
+var vec2 = require('../math/vec2');
 var Spring = require('./Spring');
 
 module.exports = RotationalSpring;
@@ -9988,6 +9070,7 @@ function RotationalSpring(bodyA, bodyB, options){
     this.restAngle = typeof(options.restAngle) === "number" ? options.restAngle : bodyB.angle - bodyA.angle;
 }
 RotationalSpring.prototype = new Spring();
+RotationalSpring.prototype.constructor = RotationalSpring;
 
 /**
  * Apply the spring force to the connected bodies.
@@ -10008,8 +9091,8 @@ RotationalSpring.prototype.applyForce = function(){
     bodyB.angularForce += torque;
 };
 
-},{"../math/vec2":31,"./Spring":35,"__browserify_Buffer":1,"__browserify_process":2}],35:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/objects\\Spring.js",__dirname="/objects";var vec2 = require('../math/vec2');
+},{"../math/vec2":31,"./Spring":35}],35:[function(require,module,exports){
+var vec2 = require('../math/vec2');
 var Utils = require('../utils/Utils');
 
 module.exports = Spring;
@@ -10072,8 +9155,8 @@ Spring.prototype.applyForce = function(){
     // To be implemented by subclasses
 };
 
-},{"../math/vec2":31,"../utils/Utils":50,"__browserify_Buffer":1,"__browserify_process":2}],36:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/p2.js",__dirname="/";// Export p2 classes
+},{"../math/vec2":31,"../utils/Utils":50}],36:[function(require,module,exports){
+// Export p2 classes
 module.exports = {
     AABB :                          require('./collision/AABB'),
     AngleLockEquation :             require('./equations/AngleLockEquation'),
@@ -10102,6 +9185,8 @@ module.exports = {
     Plane :                         require('./shapes/Plane'),
     RevoluteConstraint :            require('./constraints/RevoluteConstraint'),
     PrismaticConstraint :           require('./constraints/PrismaticConstraint'),
+    Ray :                           require('./collision/Ray'),
+    RaycastResult :                 require('./collision/RaycastResult'),
     Rectangle :                     require('./shapes/Rectangle'),
     RotationalVelocityEquation :    require('./equations/RotationalVelocityEquation'),
     SAPBroadphase :                 require('./collision/SAPBroadphase'),
@@ -10116,8 +9201,8 @@ module.exports = {
     version :                       require('../package.json').version,
 };
 
-},{"../package.json":8,"./collision/AABB":9,"./collision/Broadphase":10,"./collision/GridBroadphase":11,"./collision/NaiveBroadphase":12,"./collision/Narrowphase":13,"./collision/SAPBroadphase":14,"./constraints/Constraint":15,"./constraints/DistanceConstraint":16,"./constraints/GearConstraint":17,"./constraints/LockConstraint":18,"./constraints/PrismaticConstraint":19,"./constraints/RevoluteConstraint":20,"./equations/AngleLockEquation":21,"./equations/ContactEquation":22,"./equations/Equation":23,"./equations/FrictionEquation":24,"./equations/RotationalVelocityEquation":26,"./events/EventEmitter":27,"./material/ContactMaterial":28,"./material/Material":29,"./math/vec2":31,"./objects/Body":32,"./objects/LinearSpring":33,"./objects/RotationalSpring":34,"./objects/Spring":35,"./shapes/Capsule":37,"./shapes/Circle":38,"./shapes/Convex":39,"./shapes/Heightfield":40,"./shapes/Line":41,"./shapes/Particle":42,"./shapes/Plane":43,"./shapes/Rectangle":44,"./shapes/Shape":45,"./solver/GSSolver":46,"./solver/Solver":47,"./utils/Utils":50,"./world/World":54,"__browserify_Buffer":1,"__browserify_process":2}],37:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/shapes\\Capsule.js",__dirname="/shapes";var Shape = require('./Shape')
+},{"../package.json":6,"./collision/AABB":7,"./collision/Broadphase":8,"./collision/GridBroadphase":9,"./collision/NaiveBroadphase":10,"./collision/Narrowphase":11,"./collision/Ray":12,"./collision/RaycastResult":13,"./collision/SAPBroadphase":14,"./constraints/Constraint":15,"./constraints/DistanceConstraint":16,"./constraints/GearConstraint":17,"./constraints/LockConstraint":18,"./constraints/PrismaticConstraint":19,"./constraints/RevoluteConstraint":20,"./equations/AngleLockEquation":21,"./equations/ContactEquation":22,"./equations/Equation":23,"./equations/FrictionEquation":24,"./equations/RotationalVelocityEquation":26,"./events/EventEmitter":27,"./material/ContactMaterial":28,"./material/Material":29,"./math/vec2":31,"./objects/Body":32,"./objects/LinearSpring":33,"./objects/RotationalSpring":34,"./objects/Spring":35,"./shapes/Capsule":37,"./shapes/Circle":38,"./shapes/Convex":39,"./shapes/Heightfield":40,"./shapes/Line":41,"./shapes/Particle":42,"./shapes/Plane":43,"./shapes/Rectangle":44,"./shapes/Shape":45,"./solver/GSSolver":46,"./solver/Solver":47,"./utils/Utils":50,"./world/World":54}],37:[function(require,module,exports){
+var Shape = require('./Shape')
 ,   vec2 = require('../math/vec2');
 
 module.exports = Capsule;
@@ -10152,6 +9237,7 @@ function Capsule(length, radius){
     Shape.call(this,Shape.CAPSULE);
 }
 Capsule.prototype = new Shape();
+Capsule.prototype.constructor = Capsule;
 
 /**
  * Compute the mass moment of inertia of the Capsule.
@@ -10210,8 +9296,8 @@ Capsule.prototype.computeAABB = function(out, position, angle){
     vec2.add(out.upperBound, out.upperBound, position);
 };
 
-},{"../math/vec2":31,"./Shape":45,"__browserify_Buffer":1,"__browserify_process":2}],38:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/shapes\\Circle.js",__dirname="/shapes";var Shape = require('./Shape')
+},{"../math/vec2":31,"./Shape":45}],38:[function(require,module,exports){
+var Shape = require('./Shape')
 ,    vec2 = require('../math/vec2');
 
 module.exports = Circle;
@@ -10240,6 +9326,7 @@ function Circle(radius){
     Shape.call(this,Shape.CIRCLE);
 }
 Circle.prototype = new Shape();
+Circle.prototype.constructor = Circle;
 
 /**
  * @method computeMomentOfInertia
@@ -10283,8 +9370,8 @@ Circle.prototype.computeAABB = function(out, position, angle){
     }
 };
 
-},{"../math/vec2":31,"./Shape":45,"__browserify_Buffer":1,"__browserify_process":2}],39:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/shapes\\Convex.js",__dirname="/shapes";var Shape = require('./Shape')
+},{"../math/vec2":31,"./Shape":45}],39:[function(require,module,exports){
+var Shape = require('./Shape')
 ,   vec2 = require('../math/vec2')
 ,   polyk = require('../math/polyk')
 ,   decomp = require('poly-decomp');
@@ -10387,6 +9474,7 @@ function Convex(vertices, axes){
     }
 }
 Convex.prototype = new Shape();
+Convex.prototype.constructor = Convex;
 
 var tmpVec1 = vec2.create();
 var tmpVec2 = vec2.create();
@@ -10610,8 +9698,8 @@ Convex.prototype.computeAABB = function(out, position, angle){
     out.setFromPoints(this.vertices, position, angle, 0);
 };
 
-},{"../math/polyk":30,"../math/vec2":31,"./Shape":45,"__browserify_Buffer":1,"__browserify_process":2,"poly-decomp":7}],40:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/shapes\\Heightfield.js",__dirname="/shapes";var Shape = require('./Shape')
+},{"../math/polyk":30,"../math/vec2":31,"./Shape":45,"poly-decomp":5}],40:[function(require,module,exports){
+var Shape = require('./Shape')
 ,    vec2 = require('../math/vec2')
 ,    Utils = require('../utils/Utils');
 
@@ -10693,6 +9781,7 @@ function Heightfield(data, options){
     Shape.call(this,Shape.HEIGHTFIELD);
 }
 Heightfield.prototype = new Shape();
+Heightfield.prototype.constructor = Heightfield;
 
 /**
  * @method computeMomentOfInertia
@@ -10730,8 +9819,8 @@ Heightfield.prototype.computeAABB = function(out, position, angle){
     out.lowerBound[1] = -Number.MAX_VALUE; // Infinity
 };
 
-},{"../math/vec2":31,"../utils/Utils":50,"./Shape":45,"__browserify_Buffer":1,"__browserify_process":2}],41:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/shapes\\Line.js",__dirname="/shapes";var Shape = require('./Shape')
+},{"../math/vec2":31,"../utils/Utils":50,"./Shape":45}],41:[function(require,module,exports){
+var Shape = require('./Shape')
 ,   vec2 = require('../math/vec2');
 
 module.exports = Line;
@@ -10755,6 +9844,8 @@ function Line(length){
     Shape.call(this,Shape.LINE);
 }
 Line.prototype = new Shape();
+Line.prototype.constructor = Line;
+
 Line.prototype.computeMomentOfInertia = function(mass){
     return mass * Math.pow(this.length,2) / 12;
 };
@@ -10779,8 +9870,8 @@ Line.prototype.computeAABB = function(out, position, angle){
 };
 
 
-},{"../math/vec2":31,"./Shape":45,"__browserify_Buffer":1,"__browserify_process":2}],42:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/shapes\\Particle.js",__dirname="/shapes";var Shape = require('./Shape')
+},{"../math/vec2":31,"./Shape":45}],42:[function(require,module,exports){
+var Shape = require('./Shape')
 ,   vec2 = require('../math/vec2');
 
 module.exports = Particle;
@@ -10795,6 +9886,8 @@ function Particle(){
     Shape.call(this,Shape.PARTICLE);
 }
 Particle.prototype = new Shape();
+Particle.prototype.constructor = Particle;
+
 Particle.prototype.computeMomentOfInertia = function(mass){
     return 0; // Can't rotate a particle
 };
@@ -10814,8 +9907,8 @@ Particle.prototype.computeAABB = function(out, position, angle){
     vec2.copy(out.upperBound, position);
 };
 
-},{"../math/vec2":31,"./Shape":45,"__browserify_Buffer":1,"__browserify_process":2}],43:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/shapes\\Plane.js",__dirname="/shapes";var Shape =  require('./Shape')
+},{"../math/vec2":31,"./Shape":45}],43:[function(require,module,exports){
+var Shape =  require('./Shape')
 ,    vec2 =  require('../math/vec2')
 ,    Utils = require('../utils/Utils');
 
@@ -10831,6 +9924,7 @@ function Plane(){
     Shape.call(this,Shape.PLANE);
 }
 Plane.prototype = new Shape();
+Plane.prototype.constructor = Plane;
 
 /**
  * Compute moment of inertia
@@ -10892,8 +9986,8 @@ Plane.prototype.updateArea = function(){
 };
 
 
-},{"../math/vec2":31,"../utils/Utils":50,"./Shape":45,"__browserify_Buffer":1,"__browserify_process":2}],44:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/shapes\\Rectangle.js",__dirname="/shapes";var vec2 = require('../math/vec2')
+},{"../math/vec2":31,"../utils/Utils":50,"./Shape":45}],44:[function(require,module,exports){
+var vec2 = require('../math/vec2')
 ,   Shape = require('./Shape')
 ,   Convex = require('./Convex');
 
@@ -10934,6 +10028,7 @@ function Rectangle(width, height){
     this.type = Shape.RECTANGLE;
 }
 Rectangle.prototype = new Convex([]);
+Rectangle.prototype.constructor = Rectangle;
 
 /**
  * Compute moment of inertia
@@ -10977,8 +10072,8 @@ Rectangle.prototype.updateArea = function(){
 };
 
 
-},{"../math/vec2":31,"./Convex":39,"./Shape":45,"__browserify_Buffer":1,"__browserify_process":2}],45:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/shapes\\Shape.js",__dirname="/shapes";module.exports = Shape;
+},{"../math/vec2":31,"./Convex":39,"./Shape":45}],45:[function(require,module,exports){
+module.exports = Shape;
 
 /**
  * Base class for shapes.
@@ -11048,6 +10143,12 @@ function Shape(type){
      *     }
      */
     this.collisionGroup = 1;
+
+    /**
+     * Whether to produce contact forces when in contact with other bodies. Note that contacts will be generated, but they will be disabled. That means that this shape will move through other body shapes, but it will still trigger contact events, etc.
+     * @property {Boolean} collisionResponse
+     */
+    this.collisionResponse = true;
 
     /**
      * Collision mask of this shape. See .collisionGroup.
@@ -11170,8 +10271,8 @@ Shape.prototype.computeAABB = function(out, position, angle){
     // To be implemented in each subclass
 };
 
-},{"__browserify_Buffer":1,"__browserify_process":2}],46:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/solver\\GSSolver.js",__dirname="/solver";var vec2 = require('../math/vec2')
+},{}],46:[function(require,module,exports){
+var vec2 = require('../math/vec2')
 ,   Solver = require('./Solver')
 ,   Utils = require('../utils/Utils')
 ,   FrictionEquation = require('../equations/FrictionEquation');
@@ -11233,6 +10334,7 @@ function GSSolver(options){
     this.usedIterations = 0;
 }
 GSSolver.prototype = new Solver();
+GSSolver.prototype.constructor = GSSolver;
 
 function setArrayZero(array){
     var l = array.length;
@@ -11414,8 +10516,8 @@ GSSolver.iterateEquation = function(j,eq,eps,Bs,invCs,lambda,useZeroRHS,dt,iter)
     return deltalambda;
 };
 
-},{"../equations/FrictionEquation":24,"../math/vec2":31,"../utils/Utils":50,"./Solver":47,"__browserify_Buffer":1,"__browserify_process":2}],47:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/solver\\Solver.js",__dirname="/solver";var Utils = require('../utils/Utils')
+},{"../equations/FrictionEquation":24,"../math/vec2":31,"../utils/Utils":50,"./Solver":47}],47:[function(require,module,exports){
+var Utils = require('../utils/Utils')
 ,   EventEmitter = require('../events/EventEmitter');
 
 module.exports = Solver;
@@ -11449,6 +10551,7 @@ function Solver(options,type){
     this.equationSortFunction = options.equationSortFunction || false;
 }
 Solver.prototype = new EventEmitter();
+Solver.prototype.constructor = Solver;
 
 /**
  * Method to be implemented in each subclass
@@ -11548,8 +10651,8 @@ Solver.prototype.removeAllEquations = function(){
 Solver.GS = 1;
 Solver.ISLAND = 2;
 
-},{"../events/EventEmitter":27,"../utils/Utils":50,"__browserify_Buffer":1,"__browserify_process":2}],48:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/utils\\OverlapKeeper.js",__dirname="/utils";var TupleDictionary = require('./TupleDictionary');
+},{"../events/EventEmitter":27,"../utils/Utils":50}],48:[function(require,module,exports){
+var TupleDictionary = require('./TupleDictionary');
 var Utils = require('./Utils');
 
 module.exports = OverlapKeeper;
@@ -11764,8 +10867,8 @@ OverlapKeeperRecord.prototype.set = function(bodyA, shapeA, bodyB, shapeB){
     OverlapKeeperRecord.call(this, bodyA, shapeA, bodyB, shapeB);
 };
 
-},{"./TupleDictionary":49,"./Utils":50,"__browserify_Buffer":1,"__browserify_process":2}],49:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/utils\\TupleDictionary.js",__dirname="/utils";var Utils = require('./Utils');
+},{"./TupleDictionary":49,"./Utils":50}],49:[function(require,module,exports){
+var Utils = require('./Utils');
 
 module.exports = TupleDictionary;
 
@@ -11886,8 +10989,8 @@ TupleDictionary.prototype.copy = function(dict) {
     }
 };
 
-},{"./Utils":50,"__browserify_Buffer":1,"__browserify_process":2}],50:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/utils\\Utils.js",__dirname="/utils";module.exports = Utils;
+},{"./Utils":50}],50:[function(require,module,exports){
+module.exports = Utils;
 
 /**
  * Misc utility functions
@@ -11967,8 +11070,8 @@ Utils.defaults = function(options, defaults){
     return options;
 };
 
-},{"__browserify_Buffer":1,"__browserify_process":2}],51:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/world\\Island.js",__dirname="/world";var Body = require('../objects/Body');
+},{}],51:[function(require,module,exports){
+var Body = require('../objects/Body');
 
 module.exports = Island;
 
@@ -12054,8 +11157,8 @@ Island.prototype.sleep = function(){
     return true;
 };
 
-},{"../objects/Body":32,"__browserify_Buffer":1,"__browserify_process":2}],52:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/world\\IslandManager.js",__dirname="/world";var vec2 = require('../math/vec2')
+},{"../objects/Body":32}],52:[function(require,module,exports){
+var vec2 = require('../math/vec2')
 ,   Island = require('./Island')
 ,   IslandNode = require('./IslandNode')
 ,   Body = require('../objects/Body');
@@ -12241,8 +11344,8 @@ IslandManager.prototype.split = function(world){
     return islands;
 };
 
-},{"../math/vec2":31,"../objects/Body":32,"./Island":51,"./IslandNode":53,"__browserify_Buffer":1,"__browserify_process":2}],53:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/world\\IslandNode.js",__dirname="/world";module.exports = IslandNode;
+},{"../math/vec2":31,"../objects/Body":32,"./Island":51,"./IslandNode":53}],53:[function(require,module,exports){
+module.exports = IslandNode;
 
 /**
  * Holds a body and keeps track of some additional properties needed for graph traversal.
@@ -12289,13 +11392,14 @@ IslandNode.prototype.reset = function(){
     this.body = null;
 };
 
-},{"__browserify_Buffer":1,"__browserify_process":2}],54:[function(require,module,exports){
-var process=require("__browserify_process"),global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},Buffer=require("__browserify_Buffer"),__filename="/world\\World.js",__dirname="/world";/* global performance */
+},{}],54:[function(require,module,exports){
+/* global performance */
 /*jshint -W020 */
 
 var  GSSolver = require('../solver/GSSolver')
 ,    Solver = require('../solver/Solver')
 ,    NaiveBroadphase = require('../collision/NaiveBroadphase')
+,    Ray = require('../collision/Ray')
 ,    vec2 = require('../math/vec2')
 ,    Circle = require('../shapes/Circle')
 ,    Rectangle = require('../shapes/Rectangle')
@@ -12688,6 +11792,7 @@ function World(options){
     this.overlapKeeper = new OverlapKeeper();
 }
 World.prototype = new Object(EventEmitter.prototype);
+World.prototype.constructor = World;
 
 /**
  * Never deactivate bodies.
@@ -13074,7 +12179,7 @@ World.prototype.internalStep = function(dt){
         var body = bodies[i];
 
         if(body.sleepState !== Body.SLEEPING && body.type !== Body.STATIC){
-            World.integrateBody(body,dt);
+            body.integrate(dt);
         }
     }
 
@@ -13138,42 +12243,6 @@ World.prototype.internalStep = function(dt){
     this.emit(this.postStepEvent);
 };
 
-var ib_fhMinv = vec2.create();
-var ib_velodt = vec2.create();
-
-/**
- * Move a body forward in time.
- * @static
- * @method integrateBody
- * @param  {Body} body
- * @param  {Number} dt
- * @todo Move to Body.prototype?
- */
-World.integrateBody = function(body,dt){
-    var minv = body.invMass,
-        f = body.force,
-        pos = body.position,
-        velo = body.velocity;
-
-    // Save old position
-    vec2.copy(body.previousPosition, body.position);
-    body.previousAngle = body.angle;
-
-    // Angular step
-    if(!body.fixedRotation){
-        body.angularVelocity += body.angularForce * body.invInertia * dt;
-        body.angle += body.angularVelocity * dt;
-    }
-
-    // Linear step
-    vec2.scale(ib_fhMinv,f,dt*minv);
-    vec2.add(velo,ib_fhMinv,velo);
-    vec2.scale(ib_velodt,velo,dt);
-    vec2.add(pos,pos,ib_velodt);
-
-    body.aabbNeedsUpdate = true;
-};
-
 /**
  * Runs narrowphase for the shape pair i and j.
  * @method runNarrowphase
@@ -13221,6 +12290,7 @@ World.prototype.runNarrowphase = function(np,bi,si,xi,ai,bj,sj,xj,aj,cm,glen){
     np.stiffness = cm.stiffness;
     np.relaxation = cm.relaxation;
     np.contactSkinSize = cm.contactSkinSize;
+    np.enabledEquations = bi.collisionResponse && bj.collisionResponse && si.collisionResponse && sj.collisionResponse;
 
     var resolver = np[si.type | sj.type],
         numContacts = 0;
@@ -13613,7 +12683,71 @@ World.prototype.setGlobalRelaxation = function(relaxation){
     });
 };
 
-},{"../../package.json":8,"../collision/Broadphase":10,"../collision/NaiveBroadphase":12,"../collision/Narrowphase":13,"../collision/SAPBroadphase":14,"../constraints/Constraint":15,"../constraints/DistanceConstraint":16,"../constraints/GearConstraint":17,"../constraints/LockConstraint":18,"../constraints/PrismaticConstraint":19,"../constraints/RevoluteConstraint":20,"../events/EventEmitter":27,"../material/ContactMaterial":28,"../material/Material":29,"../math/vec2":31,"../objects/Body":32,"../objects/LinearSpring":33,"../objects/RotationalSpring":34,"../shapes/Capsule":37,"../shapes/Circle":38,"../shapes/Convex":39,"../shapes/Line":41,"../shapes/Particle":42,"../shapes/Plane":43,"../shapes/Rectangle":44,"../shapes/Shape":45,"../solver/GSSolver":46,"../solver/Solver":47,"../utils/OverlapKeeper":48,"../utils/Utils":50,"./IslandManager":52,"__browserify_Buffer":1,"__browserify_process":2}]},{},[36])
+var tmpRay = new Ray();
+
+/**
+ * Ray cast against all bodies. The provided callback will be executed for each hit with a RaycastResult as single argument.
+ * @method raycastAll
+ * @param  {Vec3} from
+ * @param  {Vec3} to
+ * @param  {Object} options
+ * @param  {number} [options.collisionMask=-1]
+ * @param  {number} [options.collisionGroup=-1]
+ * @param  {boolean} [options.skipBackfaces=false]
+ * @param  {boolean} [options.checkCollisionResponse=true]
+ * @param  {Function} callback
+ * @return {boolean} True if any body was hit.
+ */
+World.prototype.raycastAll = function(from, to, options, callback){
+    options.mode = Ray.ALL;
+    options.from = from;
+    options.to = to;
+    options.callback = callback;
+    return tmpRay.intersectWorld(this, options);
+};
+
+/**
+ * Ray cast, and stop at the first result. Note that the order is random - but the method is fast.
+ * @method raycastAny
+ * @param  {Vec3} from
+ * @param  {Vec3} to
+ * @param  {Object} options
+ * @param  {number} [options.collisionMask=-1]
+ * @param  {number} [options.collisionGroup=-1]
+ * @param  {boolean} [options.skipBackfaces=false]
+ * @param  {boolean} [options.checkCollisionResponse=true]
+ * @param  {RaycastResult} result
+ * @return {boolean} True if any body was hit.
+ */
+World.prototype.raycastAny = function(from, to, options, result){
+    options.mode = Ray.ANY;
+    options.from = from;
+    options.to = to;
+    options.result = result;
+    return tmpRay.intersectWorld(this, options);
+};
+
+/**
+ * Ray cast, and return information of the closest hit.
+ * @method raycastClosest
+ * @param  {Vec3} from
+ * @param  {Vec3} to
+ * @param  {Object} options
+ * @param  {number} [options.collisionMask=-1]
+ * @param  {number} [options.collisionGroup=-1]
+ * @param  {boolean} [options.skipBackfaces=false]
+ * @param  {boolean} [options.checkCollisionResponse=true]
+ * @param  {RaycastResult} result
+ * @return {boolean} True if any body was hit.
+ */
+World.prototype.raycastClosest = function(from, to, options, result){
+    options.mode = Ray.CLOSEST;
+    options.from = from;
+    options.to = to;
+    options.result = result;
+    return tmpRay.intersectWorld(this, options);
+};
+},{"../../package.json":6,"../collision/Broadphase":8,"../collision/NaiveBroadphase":10,"../collision/Narrowphase":11,"../collision/Ray":12,"../collision/SAPBroadphase":14,"../constraints/Constraint":15,"../constraints/DistanceConstraint":16,"../constraints/GearConstraint":17,"../constraints/LockConstraint":18,"../constraints/PrismaticConstraint":19,"../constraints/RevoluteConstraint":20,"../events/EventEmitter":27,"../material/ContactMaterial":28,"../material/Material":29,"../math/vec2":31,"../objects/Body":32,"../objects/LinearSpring":33,"../objects/RotationalSpring":34,"../shapes/Capsule":37,"../shapes/Circle":38,"../shapes/Convex":39,"../shapes/Line":41,"../shapes/Particle":42,"../shapes/Plane":43,"../shapes/Rectangle":44,"../shapes/Shape":45,"../solver/GSSolver":46,"../solver/Solver":47,"../utils/OverlapKeeper":48,"../utils/Utils":50,"./IslandManager":52}]},{},[36])
 (36)
 });
 ;;

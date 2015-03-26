@@ -1,21 +1,18 @@
 [
     "src/pixi/Intro.js",
+
     "src/pixi/Pixi.js",
-    "src/pixi/geom/Polygon.js",
-    "src/pixi/geom/Matrix.js",
-    "src/pixi/geom/Rectangle.js",
-    "src/pixi/geom/RoundedRectangle.js",
     "src/pixi/display/DisplayObject.js",
     "src/pixi/display/DisplayObjectContainer.js",
     "src/pixi/display/Sprite.js",
     "src/pixi/display/SpriteBatch.js",
-    "src/pixi/filters/FilterBlock.js",
     "src/pixi/text/Text.js",
     "src/pixi/text/BitmapText.js",
     "src/pixi/display/Stage.js",
+
     "src/pixi/utils/Utils.js",
-    "src/pixi/utils/EventTarget.js",
     "src/pixi/utils/Polyk.js",
+
     "src/pixi/renderers/webgl/utils/WebGLShaderUtils.js",
     "src/pixi/renderers/webgl/shaders/PixiShader.js",
     "src/pixi/renderers/webgl/shaders/PixiFastShader.js",
@@ -38,12 +35,17 @@
     "src/pixi/renderers/canvas/CanvasRenderer.js",
     "src/pixi/renderers/canvas/CanvasGraphics.js",
 
+    "src/pixi/primitives/Graphics.js",
+    "src/pixi/primitives/GraphicsData.js",
+
     "src/pixi/extras/Strip.js",
     "src/pixi/extras/Rope.js",
     "src/pixi/extras/TilingSprite.js",
+
     "src/pixi/textures/BaseTexture.js",
     "src/pixi/textures/Texture.js",
     "src/pixi/textures/RenderTexture.js",
+
     "src/pixi/filters/AbstractFilter.js",
 
     "src/pixi/Outro.js"

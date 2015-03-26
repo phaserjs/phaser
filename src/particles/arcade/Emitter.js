@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -37,6 +37,12 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
     * @protected
     */
     this.type = Phaser.EMITTER;
+
+    /**
+    * @property {number} physicsType - The const physics body type of this object.
+    * @readonly
+    */
+    this.physicsType = Phaser.GROUP;
 
     /**
     * @property {Phaser.Rectangle} area - The area of the emitter. Particles can be randomly generated from anywhere within this rectangle.
@@ -229,6 +235,18 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
     this._counter = 0;
 
     /**
+    * @property {number} _flowQuantity - Internal counter for figuring out how many particles to launch per flow update.
+    * @private
+    */
+    this._flowQuantity = 0;
+
+    /**
+    * @property {number} _flowTotal - Internal counter for figuring out how many particles to launch in total.
+    * @private
+    */
+    this._flowTotal = 0;
+
+    /**
     * @property {boolean} _explode - Internal helper for the style of particle emission (all at once, or one at a time).
     * @private
     */
@@ -256,15 +274,50 @@ Phaser.Particles.Arcade.Emitter.prototype.update = function () {
     {
         this._timer = this.game.time.time + this.frequency * this.game.time.slowMotion;
 
-        if (this.emitParticle())
+        if (this._flowTotal !== 0)
         {
-            this._counter++;
-
-            if (this._quantity > 0 && this._counter >= this._quantity)
+            if (this._flowQuantity > 0)
             {
-                this.on = false;
+                for (var i = 0; i < this._flowQuantity; i++)
+                {
+                    if (this.emitParticle())
+                    {
+                        this._counter++;
+
+                        if (this._flowTotal !== -1 && this._counter >= this._flowTotal)
+                        {
+                            this.on = false;
+                            break;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if (this.emitParticle())
+                {
+                    this._counter++;
+
+                    if (this._flowTotal !== -1 && this._counter >= this._flowTotal)
+                    {
+                        this.on = false;
+                    }
+                }
             }
         }
+        else
+        {
+            if (this.emitParticle())
+            {
+                this._counter++;
+
+                if (this._quantity > 0 && this._counter >= this._quantity)
+                {
+                    this.on = false;
+                }
+            }
+        }
+
     }
 
     var i = this.children.length;
@@ -385,21 +438,53 @@ Phaser.Particles.Arcade.Emitter.prototype.revive = function () {
 */
 Phaser.Particles.Arcade.Emitter.prototype.explode = function (lifespan, quantity) {
 
+    this._flowTotal = 0;
+
     this.start(true, lifespan, 0, quantity, false);
 
 };
 
 /**
 * Call this function to start emitting a flow of particles at the given frequency.
+* It will carry on going until the total given is reached.
+* Each time the flow is run the quantity number of particles will be emitted together.
+* If you set the total to be 20 and quantity to be 5 then flow will emit 4 times in total (4 x 5 = 20 total)
+* If you set the total to be -1 then no quantity cap is used and it will keep emitting.
 * 
 * @method Phaser.Particles.Arcade.Emitter#flow
 * @param {number} [lifespan=0] - How long each particle lives once emitted in ms. 0 = forever.
-* @param {number} [frequency=250] - Frequency is how often to emit a particle, given in ms.
-* @param {number} [quantity=0] - How many particles to launch.
+* @param {number} [frequency=250] - Frequency is how often to emit the particles, given in ms.
+* @param {number} [quantity=1] - How many particles to launch each time the frequency is met. Can never be > Emitter.maxParticles.
+* @param {number} [total=-1] - How many particles to launch in total. If -1 it will carry on indefinitely.
+* @param {boolean} [immediate=true] - Should the flow start immediately (true) or wait until the first frequency event? (false)
 */
-Phaser.Particles.Arcade.Emitter.prototype.flow = function (lifespan, frequency, quantity) {
+Phaser.Particles.Arcade.Emitter.prototype.flow = function (lifespan, frequency, quantity, total, immediate) {
 
-    this.start(false, lifespan, frequency, quantity, true);
+    if (typeof quantity === 'undefined' || quantity === 0) { quantity = 1; }
+    if (typeof total === 'undefined') { total = -1; }
+    if (typeof immediate === 'undefined') { immediate = true; }
+
+    if (quantity > this.maxParticles)
+    {
+        quantity = this.maxParticles;
+    }
+
+    this._counter = 0;
+    this._flowQuantity = quantity;
+    this._flowTotal = total;
+
+    if (immediate)
+    {
+        this.start(true, lifespan, frequency, quantity);
+
+        this._counter += quantity;
+        this.on = true;
+        this._timer = this.game.time.time + frequency * this.game.time.slowMotion;
+    }
+    else
+    {
+        this.start(false, lifespan, frequency, quantity);
+    }
 
 };
 
@@ -523,9 +608,9 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function () {
 
     particle.body.bounce.setTo(this.bounce.x, this.bounce.y);
 
-    particle.body.velocity.x = this.game.rnd.integerInRange(this.minParticleSpeed.x, this.maxParticleSpeed.x);
-    particle.body.velocity.y = this.game.rnd.integerInRange(this.minParticleSpeed.y, this.maxParticleSpeed.y);
-    particle.body.angularVelocity = this.game.rnd.integerInRange(this.minRotation, this.maxRotation);
+    particle.body.velocity.x = this.game.rnd.between(this.minParticleSpeed.x, this.maxParticleSpeed.x);
+    particle.body.velocity.y = this.game.rnd.between(this.minParticleSpeed.y, this.maxParticleSpeed.y);
+    particle.body.angularVelocity = this.game.rnd.between(this.minRotation, this.maxRotation);
 
     particle.body.gravity.y = this.gravity;
 
@@ -537,6 +622,19 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function () {
     particle.onEmit();
 
     return true;
+
+};
+
+/**
+* Destroys this Emitter, all associated child Particles and then removes itself from the Particle Manager.
+* 
+* @method Phaser.Particles.Arcade.Emitter#destroy
+*/
+Phaser.Particles.Arcade.Emitter.prototype.destroy = function () {
+
+    this.game.particles.remove(this);
+
+    Phaser.Group.prototype.destroy.call(this, true, false);
 
 };
 
@@ -612,7 +710,7 @@ Phaser.Particles.Arcade.Emitter.prototype.setRotation = function (min, max) {
 * @param {number} [min=1] - The minimum value for this range.
 * @param {number} [max=1] - The maximum value for this range.
 * @param {number} [rate=0] - The rate (in ms) at which the particles will change in alpha from min to max, or set to zero to pick a random alpha between the two.
-* @param {number} [ease=Phaser.Easing.Linear.None] - If you've set a rate > 0 this is the easing formula applied between the min and max values.
+* @param {function} [ease=Phaser.Easing.Linear.None] - If you've set a rate > 0 this is the easing formula applied between the min and max values.
 * @param {boolean} [yoyo=false] - If you've set a rate > 0 you can set if the ease will yoyo or not (i.e. ease back to its original values)
 */
 Phaser.Particles.Arcade.Emitter.prototype.setAlpha = function (min, max, rate, ease, yoyo) {
@@ -653,7 +751,7 @@ Phaser.Particles.Arcade.Emitter.prototype.setAlpha = function (min, max, rate, e
 * @param {number} [minY=1] - The minimum value of Particle.scale.y.
 * @param {number} [maxY=1] - The maximum value of Particle.scale.y.
 * @param {number} [rate=0] - The rate (in ms) at which the particles will change in scale from min to max, or set to zero to pick a random size between the two.
-* @param {number} [ease=Phaser.Easing.Linear.None] - If you've set a rate > 0 this is the easing formula applied between the min and max values.
+* @param {function} [ease=Phaser.Easing.Linear.None] - If you've set a rate > 0 this is the easing formula applied between the min and max values.
 * @param {boolean} [yoyo=false] - If you've set a rate > 0 you can set if the ease will yoyo or not (i.e. ease back to its original values)
 */
 Phaser.Particles.Arcade.Emitter.prototype.setScale = function (minX, maxX, minY, maxY, rate, ease, yoyo) {

@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -30,6 +30,12 @@ Phaser.Line = function (x1, y1, x2, y2) {
     * @property {Phaser.Point} end - The end point of the line.
     */
     this.end = new Phaser.Point(x2, y2);
+
+    /**
+    * @property {number} type - The const type of this object.
+    * @readonly
+    */
+    this.type = Phaser.LINE;
 
 };
 

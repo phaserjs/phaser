@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -25,6 +25,40 @@ Phaser.MSPointer = function (game) {
     * @property {object} callbackContext - The context under which callbacks are called (defaults to game).
     */
     this.callbackContext = this.game;
+
+    /**
+    * @property {function} pointerDownCallback - A callback that can be fired on a MSPointerDown event.
+    */
+    this.pointerDownCallback = null;
+
+    /**
+    * @property {function} pointerMoveCallback - A callback that can be fired on a MSPointerMove event.
+    */
+    this.pointerMoveCallback = null;
+
+    /**
+    * @property {function} pointerUpCallback - A callback that can be fired on a MSPointerUp event.
+    */
+    this.pointerUpCallback = null;
+
+    /**
+    * @property {boolean} capture - If true the Pointer events will have event.preventDefault applied to them, if false they will propagate fully.
+    */
+    this.capture = true;
+
+    /**
+    * @property {number} button- The type of click, either: Phaser.Mouse.NO_BUTTON, Phaser.Mouse.LEFT_BUTTON, Phaser.Mouse.MIDDLE_BUTTON or Phaser.Mouse.RIGHT_BUTTON.
+    * @default
+    */
+    this.button = -1;
+
+    /**
+    * The browser MSPointer DOM event. Will be null if no event has ever been received.
+    * Access this property only inside a Pointer event handler and do not keep references to it.
+    * @property {MSPointerEvent|null} event
+    * @default
+    */
+    this.event = null;
 
     /**
     * MSPointer input will only be processed if enabled.
@@ -106,12 +140,25 @@ Phaser.MSPointer.prototype = {
     */
     onPointerDown: function (event) {
 
+        this.event = event;
+
+        if (this.capture)
+        {
+            event.preventDefault();
+        }
+
+        this.button = event.button;
+
+        if (this.pointerDownCallback)
+        {
+            this.pointerDownCallback.call(this.callbackContext, event);
+        }
+
         if (!this.game.input.enabled || !this.enabled)
         {
             return;
         }
 
-        event.preventDefault();
         event.identifier = event.pointerId;
 
         this.game.input.startPointer(event);
@@ -125,12 +172,23 @@ Phaser.MSPointer.prototype = {
     */
     onPointerMove: function (event) {
 
+        this.event = event;
+
+        if (this.capture)
+        {
+            event.preventDefault();
+        }
+
+        if (this.pointerMoveCallback)
+        {
+            this.pointerMoveCallback.call(this.callbackContext, event);
+        }
+
         if (!this.game.input.enabled || !this.enabled)
         {
             return;
         }
 
-        event.preventDefault();
         event.identifier = event.pointerId;
 
         this.game.input.updatePointer(event);
@@ -144,12 +202,25 @@ Phaser.MSPointer.prototype = {
     */
     onPointerUp: function (event) {
 
+        this.event = event;
+
+        if (this.capture)
+        {
+            event.preventDefault();
+        }
+
+        this.button = Phaser.Mouse.NO_BUTTON;
+
+        if (this.pointerUpCallback)
+        {
+            this.pointerUpCallback.call(this.callbackContext, event);
+        }
+
         if (!this.game.input.enabled || !this.enabled)
         {
             return;
         }
 
-        event.preventDefault();
         event.identifier = event.pointerId;
 
         this.game.input.stopPointer(event);

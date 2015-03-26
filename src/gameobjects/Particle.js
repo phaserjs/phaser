@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -152,25 +152,7 @@ Phaser.Particle.prototype.setScaleData = function(data) {
 */
 Phaser.Particle.prototype.reset = function(x, y, health) {
 
-    if (typeof health === 'undefined') { health = 1; }
-
-    this.world.setTo(x, y);
-    this.position.x = x;
-    this.position.y = y;
-    this.alive = true;
-    this.exists = true;
-    this.visible = true;
-    this.renderable = true;
-    this._outOfBoundsFired = false;
-
-    this.health = health;
-
-    if (this.body)
-    {
-        this.body.reset(x, y, false, false);
-    }
-
-    this._cache[4] = 1;
+    Phaser.Component.Reset.prototype.reset.call(this, x, y, health);
 
     this.alpha = 1;
     this.scale.set(1);

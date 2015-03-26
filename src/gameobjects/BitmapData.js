@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -1355,6 +1355,45 @@ Phaser.BitmapData.prototype = {
     },
 
     /**
+    * Draws text to the BitmapData in the given font and color.
+    * The default font is 14px Courier, so useful for quickly drawing debug text.
+    * If you need to do a lot of font work to this BitmapData we'd recommend implementing your own text draw method.
+    *
+    * @method Phaser.BitmapData#text
+    * @param {string} text - The text to write to the BitmapData.
+    * @param {number} x - The x coordinate of the top-left of the text string.
+    * @param {number} y - The y coordinate of the top-left of the text string.
+    * @param {string} [font='14px Courier'] - The font. This is passed directly to Context.font, so anything that can support, this can.
+    * @param {string} [color='rgb(255,255,255)'] - The color the text will be drawn in.
+    * @param {boolean} [shadow=true] - Draw a single pixel black shadow below the text (offset by text.x/y + 1)
+    * @return {Phaser.BitmapData} This BitmapData object for method chaining.
+    */
+    text: function (text, x, y, font, color, shadow) {
+
+        if (typeof x === 'undefined') { x = 0; }
+        if (typeof y === 'undefined') { y = 0; }
+        if (typeof font === 'undefined') { font = '14px Courier'; }
+        if (typeof color === 'undefined') { color = 'rgb(255,255,255)'; }
+        if (typeof shadow === 'undefined') { shadow = true; }
+
+        var prevFont = this.context.font;
+
+        this.context.font = font;
+
+        if (shadow)
+        {
+            this.context.fillStyle = 'rgb(0,0,0)';
+            this.context.fillText(text, x + 1, y + 1);
+        }
+        
+        this.context.fillStyle = color;
+        this.context.fillText(text, x, y);
+
+        this.context.font = prevFont;
+
+    },
+
+    /**
     * Draws a filled Circle to the BitmapData at the given x, y coordinates and radius in size.
     *
     * @method Phaser.BitmapData#circle
@@ -1790,7 +1829,7 @@ Phaser.BitmapData.prototype = {
 };
 
 /**
-* @name Phaser.Sprite#smoothed
+* @memberof Phaser.BitmapData
 * @property {boolean} smoothed - Gets or sets this BitmapData.contexts smoothing enabled value.
 */
 Object.defineProperty(Phaser.BitmapData.prototype, "smoothed", {

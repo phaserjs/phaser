@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -78,10 +78,21 @@ Phaser.TweenData = function (parent) {
     this.repeatDelay = 0;
 
     /**
+    * @property {boolean} interpolate - True if the Tween will use interpolation (i.e. is an Array to Array tween)
+    * @default
+    */
+    this.interpolate = false;
+
+    /**
     * @property {boolean} yoyo - True if the Tween is set to yoyo, otherwise false.
     * @default
     */
     this.yoyo = false;
+
+    /**
+    * @property {number} yoyoDelay - The amount of time in ms between yoyos of this tween.
+    */
+    this.yoyoDelay = 0;
 
     /**
     * @property {boolean} inReverse - When a Tween is yoyoing this value holds if it's currently playing forwards (false) or in reverse (true).
@@ -90,7 +101,7 @@ Phaser.TweenData = function (parent) {
     this.inReverse = false;
 
     /**
-    * @property {number} delay - The amount to delay by until the Tween starts (in ms).
+    * @property {number} delay - The amount to delay by until the Tween starts (in ms). Only applies to the start, use repeatDelay to handle repeats.
     * @default
     */
     this.delay = 0;
@@ -116,6 +127,12 @@ Phaser.TweenData = function (parent) {
     * @default Phaser.Math.linearInterpolation
     */
     this.interpolationFunction = Phaser.Math.linearInterpolation;
+
+    /**
+    * @property {object} interpolationContext - The interpolation function context used for the Tween.
+    * @default Phaser.Math
+    */
+    this.interpolationContext = Phaser.Math;
 
     /**
     * @property {boolean} isRunning - If the tween is running this is set to `true`. Unless Phaser.Tween a TweenData that is waiting for a delay to expire is *not* considered as running.
@@ -273,7 +290,7 @@ Phaser.TweenData.prototype = {
             //  Load the property from the parent object
             this.vStart[property] = this.parent.properties[property];
 
-            //  Check if an Array was provided as property value (NEEDS TESTING)
+            //  Check if an Array was provided as property value
             if (Array.isArray(this.vEnd[property]))
             {
                 if (this.vEnd[property].length === 0)
@@ -282,7 +299,7 @@ Phaser.TweenData.prototype = {
                 }
 
                 //  Create a local copy of the Array with the start value at the front
-                this.vEnd[property] = [this.parent.properties[property]].concat(this.vEnd[property]);
+                this.vEnd[property] = [this.vStart[property]].concat(this.vEnd[property]);
             }
 
             if (typeof this.vEnd[property] !== 'undefined')
@@ -329,6 +346,14 @@ Phaser.TweenData.prototype = {
                 return Phaser.TweenData.PENDING;
             }
         }
+        else
+        {
+            //  Is Running, but is waiting to repeat
+            if (this.game.time.time < this.startTime)
+            {
+                return Phaser.TweenData.RUNNING;
+            }
+        }
 
         if (this.parent.reverse)
         {
@@ -352,7 +377,7 @@ Phaser.TweenData.prototype = {
 
             if (Array.isArray(end))
             {
-                this.parent.target[property] = this.interpolationFunction(end, this.value);
+                this.parent.target[property] = this.interpolationFunction.call(this.interpolationContext, end, this.value);
             }
             else
             {
@@ -501,7 +526,16 @@ Phaser.TweenData.prototype = {
             }
         }
 
-        this.startTime = this.game.time.time + this.delay;
+        this.startTime = this.game.time.time;
+
+        if (this.yoyo && this.inReverse)
+        {
+            this.startTime += this.yoyoDelay;
+        }
+        else if (!this.inReverse)
+        {
+            this.startTime += this.repeatDelay;
+        }
 
         if (this.parent.reverse)
         {

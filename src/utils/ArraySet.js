@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -68,6 +68,31 @@ Phaser.ArraySet.prototype = {
     },
 
     /**
+    * Gets an item from the set based on the property strictly equaling the value given.
+    * Returns null if not found.
+    *
+    * @method Phaser.ArraySet#getByKey
+    * @param {string} property - The property to check against the value.
+    * @param {any} value - The value to check if the property strictly equals.
+    * @return {any} The item that was found, or null if nothing matched.
+    */
+    getByKey: function (property, value) {
+
+        var i = this.list.length;
+
+        while (i--)
+        {
+            if (this.list[i][property] === value)
+            {
+                return this.list[i];
+            }
+        }
+
+        return null;
+
+    },
+
+    /**
     * Checks for the item within this list.
     *
     * @method Phaser.ArraySet#exists
@@ -114,7 +139,7 @@ Phaser.ArraySet.prototype = {
     * Sets the property `key` to the given value on all members of this list.
     *
     * @method Phaser.ArraySet#setAll
-    * @param {any} key - The propety of the item to set.
+    * @param {any} key - The property of the item to set.
     * @param {any} value - The value to set the property to.
     */
     setAll: function (key, value) {
@@ -154,6 +179,36 @@ Phaser.ArraySet.prototype = {
                 this.list[i][key].apply(this.list[i], args);
             }
         }
+
+    },
+
+    /**
+    * Removes every member from this ArraySet and optionally destroys it.
+    *
+    * @method Phaser.ArraySet#removeAll
+    * @param {boolean} [destroy=false] - Call `destroy` on each member as it's removed from this set.
+    */
+    removeAll: function (destroy) {
+
+        if (typeof destroy === 'undefined') { destroy = false; }
+
+        var i = this.list.length;
+
+        while (i--)
+        {
+            if (this.list[i])
+            {
+                var item = this.remove(this.list[i]);
+
+                if (destroy)
+                {
+                    item.destroy();
+                }
+            }
+        }
+
+        this.position = 0;
+        this.list = [];
 
     }
 

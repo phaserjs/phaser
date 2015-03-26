@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -9,7 +9,7 @@
 *
 * Since a TilemapLayer is a Sprite it can be moved around the display, added to other groups or display objects, etc.
 *
-* By default TilemapLayers have fixedToCamera set to `true`. Changing this will break Camera follow and scrolling behaviour.
+* By default TilemapLayers have fixedToCamera set to `true`. Changing this will break Camera follow and scrolling behavior.
 *
 * @class Phaser.TilemapLayer
 * @extends {Phaser.Image}
@@ -25,13 +25,9 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     width |= 0;
     height |= 0;
 
-    /**
-    * A reference to the currently running Game.
-    * @property {Phaser.Game} game
-    * @protected
-    * @readonly
-    */
-    this.game = game;
+    PIXI.Sprite.call(this, PIXI.TextureCache['__default']);
+
+    Phaser.Component.Core.init.call(this, game, 0, 0, null, null);
 
     /**
     * The Tilemap to which this layer is bound.
@@ -92,14 +88,6 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     */
     this.textureFrame = new Phaser.Frame(0, 0, 0, width, height, 'tilemapLayer', game.rnd.uuid());
 
-    Phaser.Image.call(this, this.game, 0, 0, this.texture, this.textureFrame);
-
-    /**
-    * The name of the layer.
-    * @property {string} name
-    */
-    this.name = '';
-
     /**
     * The const type of this object.
     * @property {number} type
@@ -110,17 +98,10 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     this.type = Phaser.TILEMAPLAYER;
 
     /**
-    * An object that is fixed to the camera ignores the position of any ancestors in the display list and uses its x/y coordinates as offsets from the top left of the camera.
-    * @property {boolean} fixToCamera
-    * @default
+    * @property {number} physicsType - The const physics body type of this object.
+    * @readonly
     */
-    this.fixedToCamera = true;
-
-    /**
-    * If this object is fixed to the camera then use this Point to specify how far away from the Camera x/y it's rendered.
-    * @property {Phaser.Point} cameraOffset
-    */
-    this.cameraOffset = new Phaser.Point(0, 0);
+    this.physicsType = Phaser.TILEMAPLAYER;
 
     /**
     * Settings that control standard (non-diagnostic) rendering.
@@ -133,16 +114,12 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     *     Using a canvas bitblt/copy when the source and destinations region overlap produces unexpected behavior
     *     in some browsers, notably Safari. 
     *
-    * @property {integer} copySliceCount - [Internal] The number of vertical slices to copy when using a `copyCanvas`.
-    *     This is ratio of the pixel count of the primary canvas to the copy canvas.
-    *
     * @default
     */
     this.renderSettings = {
         enableScrollDelta: true,
         overdrawRatio: 0.20,
-        copyCanvas: null,
-        copySliceCount: 4
+        copyCanvas: null
     };
 
     /**
@@ -152,6 +129,11 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     * @default
     */
     this.debug = false;
+
+    /**
+    * @property {boolean} exists - Controls if the core game loop and physics update this game object or not.
+    */
+    this.exists = true;
 
     /**
     * Settings used for debugging and diagnostics.
@@ -272,7 +254,22 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
         this.renderSettings.copyCanvas = Phaser.TilemapLayer.ensureSharedCopyCanvas();
     }
 
+    this.fixedToCamera = true;
+
 };
+
+Phaser.TilemapLayer.prototype = Object.create(PIXI.Sprite.prototype);
+Phaser.TilemapLayer.prototype.constructor = Phaser.TilemapLayer;
+
+var components = [
+    'Bounds',
+    'Destroy',
+    'FixedToCamera',
+    'Reset',
+    'Smoothed'
+];
+
+Phaser.Component.Core.install.call(Phaser.TilemapLayer.prototype, components);
 
 /**
 * The shared double-copy canvas, created as needed.
@@ -291,36 +288,29 @@ Phaser.TilemapLayer.sharedCopyCanvas = null;
 * @static
 */
 Phaser.TilemapLayer.ensureSharedCopyCanvas = function () {
+
     if (!this.sharedCopyCanvas)
     {
         this.sharedCopyCanvas = Phaser.Canvas.create(2, 2);
     }
+
     return this.sharedCopyCanvas;
+
 };
 
-Phaser.TilemapLayer.prototype = Object.create(Phaser.Image.prototype);
-Phaser.TilemapLayer.prototype.constructor = Phaser.TilemapLayer;
-
 /**
-* If no valid tileset/image can be found for a tile, the tile is rendered as a rectangle using this as a fill value.
+* Automatically called by World.preUpdate.
 *
-* Set to `null` to disable rendering anything for tiles without value tileset images.
-*
-* @property {?string} tileColor
-* @memberof Phaser.TilemapLayer
-* @default 'rgb(255, 255, 255)'
-* @deprecated Use `debugSettings.missingImageFill` instead.
+* @method Phaser.Image#preUpdate
+* @memberof Phaser.Image
 */
-Object.defineProperty(Phaser.TilemapLayer.prototype, 'tileColor', {
+Phaser.TilemapLayer.prototype.preUpdate = function() {
 
-    get: function () {
-        return this.debugSettings.missingImageFill;
-    },
-    set: function (value) {
-        this.debugSettings.missingImageFill = value;
-    }
+    Phaser.Component.Core.preUpdate.call(this);
 
-});
+    return true;
+
+};
 
 /**
 * Automatically called by World.postUpdate. Handles cache updates.
@@ -330,27 +320,15 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, 'tileColor', {
 */
 Phaser.TilemapLayer.prototype.postUpdate = function () {
 
-    Phaser.Image.prototype.postUpdate.call(this);
+    Phaser.Component.Core.prototype.postUpdate.call(this);
 
     //  Stops you being able to auto-scroll the camera if it's not following a sprite
     var camera = this.game.camera;
-    this.scrollX = camera.x * this.scrollFactorX;
-    this.scrollY = camera.y * this.scrollFactorY;
+
+    this.scrollX = camera.x * this.scrollFactorX / this.scale.x;
+    this.scrollY = camera.y * this.scrollFactorY / this.scale.y;
 
     this.render();
-
-    //  Fixed to Camera?
-    if (this._cache[7] === 1)
-    {
-        this.position.x = (camera.view.x + this.cameraOffset.x) / camera.scale.x;
-        this.position.y = (camera.view.y + this.cameraOffset.y) / camera.scale.y;
-    }
-
-    //  Update any Children
-    // for (var i = 0, len = this.children.length; i < len; i++)
-    // {
-        // this.children[i].postUpdate();
-    // }
 
 };
 
@@ -362,7 +340,7 @@ Phaser.TilemapLayer.prototype.postUpdate = function () {
 */
 Phaser.TilemapLayer.prototype.resizeWorld = function () {
 
-    this.game.world.setBounds(0, 0, this.layer.widthInPixels, this.layer.heightInPixels);
+    this.game.world.setBounds(0, 0, this.layer.widthInPixels * this.scale.x, this.layer.heightInPixels * this.scale.y);
 
 };
 
@@ -574,11 +552,11 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
     y = this._fixY(y);
 
     //  Convert the pixel values into tile coordinates
-    var tx = Math.floor(x / this._mc.cw);
-    var ty = Math.floor(y / this._mc.ch);
+    var tx = Math.floor(x / (this._mc.cw * this.scale.x));
+    var ty = Math.floor(y / (this._mc.ch * this.scale.y));
     //  Don't just use ceil(width/cw) to allow account for x/y diff within cell
-    var tw = Math.ceil((x + width) / this._mc.cw) - tx;
-    var th = Math.ceil((y + height) / this._mc.ch) - ty;
+    var tw = Math.ceil((x + width) / (this._mc.cw * this.scale.x)) - tx;
+    var th = Math.ceil((y + height) / (this._mc.ch * this.scale.y)) - ty;
 
     while (this._results.length)
     {
@@ -600,9 +578,31 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
         }
     }
 
-    return this._results;
+    return this._results.slice();
 
 };
+
+/**
+* If no valid tileset/image can be found for a tile, the tile is rendered as a rectangle using this as a fill value.
+*
+* Set to `null` to disable rendering anything for tiles without value tileset images.
+*
+* @property {?string} tileColor
+* @memberof Phaser.TilemapLayer
+* @default 'rgb(255, 255, 255)'
+* @deprecated Use `debugSettings.missingImageFill` instead.
+*/
+Object.defineProperty(Phaser.TilemapLayer.prototype, 'tileColor', {
+
+    get: function () {
+        return this.debugSettings.missingImageFill;
+    },
+
+    set: function (value) {
+        this.debugSettings.missingImageFill = value;
+    }
+
+});
 
 /**
 * Flag controlling if the layer tiles wrap at the edges. Only works if the World size matches the Map size.
@@ -639,8 +639,10 @@ Phaser.TilemapLayer.prototype.resolveTileset = function (tileIndex)
     var tilesets = this._mc.tilesets;
 
     //  Try for dense array if reasonable
-    if (tileIndex < 2000) {
-        while (tilesets.length < tileIndex) {
+    if (tileIndex < 2000)
+    {
+        while (tilesets.length < tileIndex)
+        {
             tilesets.push(undefined);
         }
     }
@@ -650,6 +652,7 @@ Phaser.TilemapLayer.prototype.resolveTileset = function (tileIndex)
     if (setIndex != null) // number: not null or undefined
     {
         var tileset = this.map.tilesets[setIndex];
+
         if (tileset && tileset.containsTileIndex(tileIndex))
         {
             return (tilesets[tileIndex] = tileset);
@@ -672,9 +675,43 @@ Phaser.TilemapLayer.prototype.resetTilesetCache = function ()
 {
 
     var tilesets = this._mc.tilesets;
-    while (tilesets.length) {
+
+    while (tilesets.length)
+    {
         tilesets.pop();
     }
+
+};
+
+/**
+ * This method will set the scale of the tilemap as well as update the underlying block data of this layer
+ * 
+ * @method Phaser.TilemapLayer#setScale
+ * @param {number} [xScale=1] - The scale factor along the X-plane 
+ * @param {number} [yScale] - The scale factor along the Y-plane
+ */
+Phaser.TilemapLayer.prototype.setScale = function(xScale, yScale) {
+
+    xScale = xScale || 1;
+    yScale = yScale || xScale;
+
+    for (var y = 0; y < this.layer.data.length; y++)
+    {
+        var row = this.layer.data[y];
+
+        for (var x = 0; x < row.length; x++)
+        {
+            var tile = row[x];
+
+            tile.width = this.map.tileWidth * xScale;
+            tile.height = this.map.tileHeight * yScale;
+
+            tile.worldX = tile.x * tile.width;
+            tile.worldY = tile.y * tile.height;
+        }
+    }
+
+    this.scale.setTo(xScale, yScale);
 
 };
 
@@ -691,7 +728,6 @@ Phaser.TilemapLayer.prototype.resetTilesetCache = function ()
 */
 Phaser.TilemapLayer.prototype.shiftCanvas = function (context, x, y)
 {
-
     var canvas = context.canvas;
     var copyW = canvas.width - Math.abs(x);
     var copyH = canvas.height - Math.abs(y);
@@ -715,42 +751,23 @@ Phaser.TilemapLayer.prototype.shiftCanvas = function (context, x, y)
     }
 
     var copyCanvas = this.renderSettings.copyCanvas;
+
     if (copyCanvas)
     {
-        // Copying happens in slices to minimize copy canvas size overhead
-        var sliceCount = this.renderSettings.copySliceCount;
-        var sH = Math.ceil(copyH / sliceCount);
+        // Use a second copy buffer, without slice support, for Safari .. again.
         // Ensure copy canvas is large enough
-        if (copyCanvas.width < copyW) { copyCanvas.width = copyW; }
-        if (copyCanvas.height < sH) { copyCanvas.height = sH; }
-
-        var vShift;
-        if (dy >= sy)
+        if (copyCanvas.width < copyW || copyCanvas.height < copyH)
         {
-            // move old region up, or don't change vertically - copy top to bottom
-            vShift = sH;
-        }
-        else
-        {
-            // move old region down - copy segments from bottom to top
-            vShift = -sH;
-            dy += (sH * (sliceCount - 1));
-            sy += (sH * (sliceCount - 1));
+            copyCanvas.width = copyW;
+            copyCanvas.height = copyH;
         }
 
         var copyContext = copyCanvas.getContext('2d');
-        while (sliceCount--)
-        {
-            copyContext.clearRect(0, 0, copyW, sH);
-            copyContext.drawImage(canvas, dx, dy, copyW, sH, 0, 0, copyW, sH);
-            // clear allows default 'source-over' semantics
-            context.clearRect(sx, sy, copyW, sH);
-            context.drawImage(copyCanvas, 0, 0, copyW, sH, sx, sy, copyW, sH);
-
-            dy += vShift;
-            sy += vShift;
-        }
-
+        copyContext.clearRect(0, 0, copyW, copyH);
+        copyContext.drawImage(canvas, dx, dy, copyW, copyH, 0, 0, copyW, copyH);
+        // clear allows default 'source-over' semantics
+        context.clearRect(sx, sy, copyW, copyH);
+        context.drawImage(copyCanvas, 0, 0, copyW, copyH, sx, sy, copyW, copyH);
     }
     else
     {
@@ -761,6 +778,7 @@ Phaser.TilemapLayer.prototype.shiftCanvas = function (context, x, y)
         context.drawImage(canvas, dx, dy, copyW, copyH, sx, sy, copyW, copyH);
         context.restore();
     }
+    
 };
 
 /**
@@ -834,6 +852,7 @@ Phaser.TilemapLayer.prototype.renderRegion = function (scrollX, scrollY, left, t
             if (x >= width) { x -= width; }
 
             var tile = row[x];
+
             if (!tile || tile.index < 0)
             {
                 continue;
@@ -842,6 +861,7 @@ Phaser.TilemapLayer.prototype.renderRegion = function (scrollX, scrollY, left, t
             var index = tile.index;
 
             var set = tilesets[index];
+
             if (set === undefined)
             {
                 set = this.resolveTileset(index);
@@ -856,7 +876,24 @@ Phaser.TilemapLayer.prototype.renderRegion = function (scrollX, scrollY, left, t
 
             if (set)
             {
-                set.draw(context, tx, ty, index);
+                if (tile.rotation || tile.flipped)
+                {
+                    context.save();
+                    context.translate(tx + tile.centerX, ty + tile.centerY);
+                    context.rotate(tile.rotation);
+
+                    if (tile.flipped)
+                    {
+                        context.scale(-1, 1);
+                    }
+
+                    set.draw(context, -tile.centerX, -tile.centerY, index);
+                    context.restore();
+                }
+                else
+                {
+                    set.draw(context, tx, ty, index);
+                }
             }
             else if (this.debugSettings.missingImageFill)
             {
@@ -996,6 +1033,8 @@ Phaser.TilemapLayer.prototype.render = function () {
         return;
     }
 
+    this.context.save();
+
     if (this.dirty || this.layer.dirty)
     {
         this.layer.dirty = false;
@@ -1034,6 +1073,7 @@ Phaser.TilemapLayer.prototype.render = function () {
     if (this.debug)
     {
         this.context.globalAlpha = this.debugSettings.debugAlpha;
+
         if (this.debugSettings.forceFullRedraw)
         {
             redrawAll = true;
@@ -1061,6 +1101,8 @@ Phaser.TilemapLayer.prototype.render = function () {
     this.baseTexture.dirty();
 
     this.dirty = false;
+
+    this.context.restore();
 
     return true;
 

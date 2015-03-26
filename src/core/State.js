@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -17,6 +17,11 @@ Phaser.State = function () {
     * @property {Phaser.Game} game - This is a reference to the currently running Game.
     */
     this.game = null;
+
+    /**
+    * @property {string} key - The string based identifier given to the State when added into the State Manager.
+    */
+    this.key = '';
 
     /**
     * @property {Phaser.GameObjectFactory} add - A reference to the GameObjectFactory which can be used to add new objects to the World.

@@ -41,6 +41,27 @@ PIXI.BitmapText = function(text, style)
     this.textHeight = 0;
 
     /**
+     * The max width of this bitmap text in pixels. If the text provided is longer than the value provided, line breaks will be 
+     * automatically inserted in the last whitespace. Disable by setting value to 0.
+     *
+     * @property maxWidth
+     * @type Number
+     */
+    this.maxWidth = 0;
+
+    /**
+     * @property anchor
+     * @type Point
+     */
+    this.anchor = new Phaser.Point(0, 0);
+
+    /**
+     * @property _prevAnchor
+     * @type Point
+     */
+    this._prevAnchor = new Phaser.Point(0, 0);
+
+    /**
      * @property _pool
      * @type Array
      * @private
@@ -113,15 +134,33 @@ PIXI.BitmapText.prototype.updateText = function()
     var lineWidths = [];
     var line = 0;
     var scale = this.fontSize / data.size;
+    var lastSpace = 0;
 
-    for(var i = 0; i < this.text.length; i++)
+    for (var i = 0; i < this.text.length; i++)
     {
         var charCode = this.text.charCodeAt(i);
+        lastSpace = /(\s)/.test(this.text.charAt(i)) ? i : lastSpace;
 
-        if(/(?:\r\n|\r|\n)/.test(this.text.charAt(i)))
+        if (/(?:\r\n|\r|\n)/.test(this.text.charAt(i)))
         {
             lineWidths.push(pos.x);
             maxLineWidth = Math.max(maxLineWidth, pos.x);
+            line++;
+
+            pos.x = 0;
+            pos.y += data.lineHeight;
+            prevCharCode = null;
+            continue;
+        }
+
+        if (lastSpace !== -1 && this.maxWidth > 0 && pos.x * scale > this.maxWidth)
+        {
+            chars.splice(lastSpace, i - lastSpace);
+            i = lastSpace;
+            lastSpace = -1;
+
+            lineWidths.push(lastLineWidth);
+            maxLineWidth = Math.max(maxLineWidth, lastLineWidth);
             line++;
 
             pos.x = 0;
@@ -150,17 +189,19 @@ PIXI.BitmapText.prototype.updateText = function()
 
     var lineAlignOffsets = [];
 
-    for(i = 0; i <= line; i++)
+    for (i = 0; i <= line; i++)
     {
         var alignOffset = 0;
-        if(this.style.align === 'right')
+
+        if (this.style.align === 'right')
         {
             alignOffset = maxLineWidth - lineWidths[i];
         }
-        else if(this.style.align === 'center')
+        else if (this.style.align === 'center')
         {
             alignOffset = (maxLineWidth - lineWidths[i]) / 2;
         }
+
         lineAlignOffsets.push(alignOffset);
     }
 
@@ -168,31 +209,35 @@ PIXI.BitmapText.prototype.updateText = function()
     var lenChars = chars.length;
     var tint = this.tint || 0xFFFFFF;
 
-    for(i = 0; i < lenChars; i++)
+    this.textWidth = maxLineWidth * scale;
+    this.textHeight = (pos.y + data.lineHeight) * scale;
+
+    var ax = this.textWidth * this.anchor.x;
+    var ay = this.textHeight * this.anchor.y;
+
+    for (i = 0; i < lenChars; i++)
     {
         var c = i < lenChildren ? this.children[i] : this._pool.pop(); // get old child if have. if not - take from pool.
 
         if (c) c.setTexture(chars[i].texture); // check if got one before.
         else c = new PIXI.Sprite(chars[i].texture); // if no create new one.
 
-        c.position.x = (chars[i].position.x + lineAlignOffsets[chars[i].line]) * scale;
-        c.position.y = chars[i].position.y * scale;
+        c.position.x = ((chars[i].position.x + lineAlignOffsets[chars[i].line]) * scale) - ax;
+        c.position.y = (chars[i].position.y * scale) - ay;
+
         c.scale.x = c.scale.y = scale;
         c.tint = tint;
         if (!c.parent) this.addChild(c);
     }
 
-    // remove unnecessary children.
-    // and put their into the pool.
-    while(this.children.length > lenChars)
+    //  Remove unnecessary children and put them into the pool
+    while (this.children.length > lenChars)
     {
         var child = this.getChildAt(this.children.length - 1);
         this._pool.push(child);
         this.removeChild(child);
     }
 
-    this.textWidth = maxLineWidth * scale;
-    this.textHeight = (pos.y + data.lineHeight) * scale;
 };
 
 /**
@@ -203,10 +248,11 @@ PIXI.BitmapText.prototype.updateText = function()
  */
 PIXI.BitmapText.prototype.updateTransform = function()
 {
-    if(this.dirty)
+    if (this.dirty || !this.anchor.equals(this._prevAnchor))
     {
         this.updateText();
         this.dirty = false;
+        this._prevAnchor.copyFrom(this.anchor);
     }
 
     PIXI.DisplayObjectContainer.prototype.updateTransform.call(this);

@@ -1,7 +1,7 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
 * @author       Adrien Brault <adrien.brault@gmail.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -24,11 +24,6 @@
 Phaser.Polygon = function () {
 
     /**
-     * @property {number} type - The base object type.
-     */
-    this.type = Phaser.POLYGON;
-
-    /**
     * @property {number} area - The area of this Polygon.
     */
     this.area = 0;
@@ -49,9 +44,58 @@ Phaser.Polygon = function () {
     */
     this.closed = true;
 
+    /**
+     * @property {number} type - The base object type.
+     */
+    this.type = Phaser.POLYGON;
+
 };
 
 Phaser.Polygon.prototype = {
+
+    /**
+     * Export the points as an array of flat numbers, following the sequence [ x,y, x,y, x,y ]
+     *
+     * @method Phaser.Polygon#toNumberArray
+     * @param {array} [output] - The array to append the points to. If not specified a new array will be created.
+     * @return {array} The flattened array.
+     */
+    toNumberArray: function (output) {
+
+        if (typeof output === 'undefined') { output = []; }
+
+        for (var i = 0; i < this._points.length; i++)
+        {
+            if (typeof this._points[i] === 'number')
+            {
+                output.push(this._points[i]);
+                output.push(this._points[i + 1]);
+                i++;
+            }
+            else
+            {
+                output.push(this._points[i].x);
+                output.push(this._points[i].y);
+            }
+        }
+
+        return output;
+
+    },
+
+    /**
+     * Flattens this Polygon so the points are a sequence of numbers. Any Point objects found are removed and replaced with two numbers.
+     *
+     * @method Phaser.Polygon#flatten
+     * @return {Phaser.Polygon} This Polygon object
+     */
+    flatten: function () {
+
+        this._points = this.toNumberArray();
+
+        return this;
+
+    },
 
     /**
      * Creates a copy of the given Polygon.
@@ -149,12 +193,12 @@ Phaser.Polygon.prototype = {
             {
                 if (typeof points[i] === 'number')
                 {
-                    var p = new Phaser.Point(points[i], points[i + 1]);
+                    var p = new PIXI.Point(points[i], points[i + 1]);
                     i++;
                 }
                 else
                 {
-                    var p = new Phaser.Point(points[i].x, points[i].y);
+                    var p = new PIXI.Point(points[i].x, points[i].y);
                 }
 
                 this._points.push(p);
@@ -244,3 +288,6 @@ Object.defineProperty(Phaser.Polygon.prototype, 'points', {
     }
 
 });
+
+//  Because PIXI uses its own type, we'll replace it with ours to avoid duplicating code or confusion.
+PIXI.Polygon = Phaser.Polygon;

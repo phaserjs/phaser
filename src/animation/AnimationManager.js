@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -254,8 +254,10 @@ Phaser.AnimationManager.prototype = {
     },
 
     /**
-    * Play an animation based on the given key. The animation should previously have been added via sprite.animations.add()
-    * If the requested animation is already playing this request will be ignored. If you need to reset an already running animation do so directly on the Animation object itself.
+    * Play an animation based on the given key. The animation should previously have been added via `animations.add`
+    * 
+    * If the requested animation is already playing this request will be ignored. 
+    * If you need to reset an already running animation do so directly on the Animation object itself.
     *
     * @method Phaser.AnimationManager#play
     * @param {string} name - The name of the animation to be played, e.g. "fire", "walk", "jump".
@@ -337,7 +339,7 @@ Phaser.AnimationManager.prototype = {
             return false;
         }
 
-        if (this.currentAnim && this.currentAnim.update() === true)
+        if (this.currentAnim && this.currentAnim.update())
         {
             this.currentFrame = this.currentAnim.currentFrame;
             return true;
@@ -438,7 +440,6 @@ Phaser.AnimationManager.prototype = {
         this._anims = {};
         this._outputFrames = [];
         this._frameData = null;
-        this._frameIndex = 0;
         this.currentAnim = null;
         this.currentFrame = null;
         this.sprite = null;
@@ -524,7 +525,7 @@ Object.defineProperty(Phaser.AnimationManager.prototype, 'frame', {
 
         if (this.currentFrame)
         {
-            return this._frameIndex;
+            return this.currentFrame.index;
         }
 
     },
@@ -537,8 +538,6 @@ Object.defineProperty(Phaser.AnimationManager.prototype, 'frame', {
 
             if (this.currentFrame)
             {
-                this._frameIndex = value;
-
                 this.sprite.setFrame(this.currentFrame);
 
                 if (this.sprite.__tilePattern)

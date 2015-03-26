@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -337,6 +337,58 @@ Phaser.Utils = {
 
         // Return the modified object
         return target;
+
+    },
+
+    /**
+    * Mixes in an existing mixin object with the target.
+    *
+    * Values in the mixin that have either `get` or `set` functions are created as properties via `defineProperty`
+    * _except_ if they also define a `clone` method - if a clone method is defined that is called instead and
+    * the result is assigned directly.
+    *
+    * @method Phaser.Utils.mixinPrototype
+    * @param {object} target - The target object to receive the new functions.
+    * @param {object} mixin - The object to copy the functions from.
+    * @param {boolean} [replace=false] - If the target object already has a matching function should it be overwritten or not?
+    */
+    mixinPrototype: function (target, mixin, replace) {
+    
+        if (typeof replace === 'undefined') { replace = false; }
+
+        var mixinKeys = Object.keys(mixin);
+
+        for (var i = 0; i < mixinKeys.length; i++)
+        {
+            var key = mixinKeys[i];
+            var value = mixin[key];
+
+            if (!replace && (key in target))
+            {
+                //  Not overwriting existing property
+                continue;
+            }
+            else
+            {
+                if (value &&
+                    (typeof value.get === 'function' || typeof value.set === 'function'))
+                {
+                    //  Special case for classes like Phaser.Point which has a 'set' function!
+                    if (typeof value.clone === 'function')
+                    {
+                        target[key] = value.clone();
+                    }
+                    else
+                    {
+                        Object.defineProperty(target, key, value);
+                    }
+                }
+                else
+                {
+                    target[key] = value;
+                }
+            }
+        }
 
     },
 

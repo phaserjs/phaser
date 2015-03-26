@@ -1,0 +1,2112 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Phaser Source: src/gameobjects/Text.js</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+
+	<link type="text/css" rel="stylesheet" href="styles/default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	
+	<link type="text/css" rel="stylesheet" href="styles/site.cerulean.css">
+	
+</head>
+
+<body>
+
+<div class="container-fluid">
+	<div class="navbar navbar-fixed-top navbar-inverse">
+		<div style="position: absolute; width: 143px; height: 31px; right: 10px; top: 10px; z-index: 1050"><a href="http://phaser.io"><img src="img/phaser.png" border="0" /></a></div>
+		<div class="navbar-inner">
+			<a class="brand" href="index.html">Phaser API</a>
+			<ul class="nav">
+
+				
+				<li class="dropdown">
+					<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+						
+						<li class="class-depth-0">
+							<a href="Phaser.html">Phaser</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="PIXI.html">PIXI</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
+				<li class="dropdown">
+					<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+						
+						<li class="class-depth-0">
+							<a href="Matrix.html">Matrix</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Animation.html">Animation</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.AnimationManager.html">AnimationManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.AnimationParser.html">AnimationParser</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.ArrayList.html">ArrayList</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.ArraySet.html">ArraySet</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.ArrayUtils.html">ArrayUtils</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.AudioSprite.html">AudioSprite</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.BitmapData.html">BitmapData</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.BitmapText.html">BitmapText</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Button.html">Button</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Cache.html">Cache</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Camera.html">Camera</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Canvas.html">Canvas</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Circle.html">Circle</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Color.html">Color</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Angle.html">Angle</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Animation.html">Animation</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.AutoCull.html">AutoCull</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Bounds.html">Bounds</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.BringToTop.html">BringToTop</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Core.html">Core</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Crop.html">Crop</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Delta.html">Delta</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Destroy.html">Destroy</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.FixedToCamera.html">FixedToCamera</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Health.html">Health</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.InCamera.html">InCamera</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.InputEnabled.html">InputEnabled</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.InWorld.html">InWorld</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.LifeSpan.html">LifeSpan</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.LoadTexture.html">LoadTexture</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Overlap.html">Overlap</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.PhysicsBody.html">PhysicsBody</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Reset.html">Reset</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.ScaleMinMax.html">ScaleMinMax</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Smoothed.html">Smoothed</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Device.html">Device</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.DOM.html">DOM</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Easing.html">Easing</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Back.html">Back</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Bounce.html">Bounce</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Circular.html">Circular</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Cubic.html">Cubic</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Elastic.html">Elastic</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Exponential.html">Exponential</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Linear.html">Linear</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Quadratic.html">Quadratic</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Quartic.html">Quartic</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Quintic.html">Quintic</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Sinusoidal.html">Sinusoidal</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Ellipse.html">Ellipse</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Events.html">Events</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Filter.html">Filter</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.FlexGrid.html">FlexGrid</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.FlexLayer.html">FlexLayer</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Frame.html">Frame</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.FrameData.html">FrameData</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Game.html">Game</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.GameObjectCreator.html">GameObjectCreator</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.GameObjectFactory.html">GameObjectFactory</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Gamepad.html">Gamepad</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.GamepadButton.html">GamepadButton</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Graphics.html">Graphics</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Group.html">Group</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Image.html">Image</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Input.html">Input</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.InputHandler.html">InputHandler</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Key.html">Key</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Keyboard.html">Keyboard</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Line.html">Line</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.LinkedList.html">LinkedList</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Loader.html">Loader</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.LoaderParser.html">LoaderParser</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Math.html">Math</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Mouse.html">Mouse</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.MSPointer.html">MSPointer</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Net.html">Net</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Particle.html">Particle</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Particles.html">Particles</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Particles.Arcade.html">Arcade</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Particles.Arcade.Emitter.html">Emitter</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Physics.html">Physics</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Physics.Arcade.html">Arcade</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.Arcade.Body.html">Body</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.Arcade.html#TilemapCollision">TilemapCollision</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Physics.Ninja.html">Ninja</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.Ninja.AABB.html">AABB</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.Ninja.Body.html">Body</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.Ninja.Circle.html">Circle</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.Ninja.Tile.html">Tile</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Physics.P2.html">P2</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.Body.html">Body</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.BodyDebug.html">BodyDebug</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.CollisionGroup.html">CollisionGroup</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.ContactMaterial.html">ContactMaterial</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.DistanceConstraint.html">DistanceConstraint</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.FixtureList.html">FixtureList</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.GearConstraint.html">GearConstraint</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.InversePointProxy.html">InversePointProxy</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.LockConstraint.html">LockConstraint</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.Material.html">Material</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.PointProxy.html">PointProxy</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.PrismaticConstraint.html">PrismaticConstraint</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.RevoluteConstraint.html">RevoluteConstraint</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.RotationalSpring.html">RotationalSpring</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.Spring.html">Spring</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Plugin.html">Plugin</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.PluginManager.html">PluginManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Point.html">Point</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Pointer.html">Pointer</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Polygon.html">Polygon</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.QuadTree.html">QuadTree</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.RandomDataGenerator.html">RandomDataGenerator</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Rectangle.html">Rectangle</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.RenderTexture.html">RenderTexture</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.RequestAnimationFrame.html">RequestAnimationFrame</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.RetroFont.html">RetroFont</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Rope.html">Rope</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.ScaleManager.html">ScaleManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Signal.html">Signal</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.SignalBinding.html">SignalBinding</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.SinglePad.html">SinglePad</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Sound.html">Sound</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.SoundManager.html">SoundManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Sprite.html">Sprite</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.SpriteBatch.html">SpriteBatch</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Stage.html">Stage</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.State.html">State</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.StateManager.html">StateManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Text.html">Text</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Tile.html">Tile</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Tilemap.html">Tilemap</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.TilemapLayer.html">TilemapLayer</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.TilemapParser.html">TilemapParser</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Tileset.html">Tileset</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.TileSprite.html">TileSprite</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Time.html">Time</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Timer.html">Timer</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.TimerEvent.html">TimerEvent</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Touch.html">Touch</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Tween.html">Tween</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.TweenData.html">TweenData</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.TweenManager.html">TweenManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Utils.html">Utils</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Utils.Debug.html">Debug</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.World.html">World</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.AbstractFilter.html">AbstractFilter</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.BaseTexture.html">BaseTexture</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.BitmapText.html">BitmapText</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.CanvasBuffer.html">CanvasBuffer</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.CanvasGraphics.html">CanvasGraphics</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.CanvasMaskManager.html">CanvasMaskManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.CanvasRenderer.html">CanvasRenderer</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.CanvasTinter.html">CanvasTinter</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.ComplexPrimitiveShader.html">ComplexPrimitiveShader</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.DisplayObject.html">DisplayObject</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.DisplayObjectContainer.html">DisplayObjectContainer</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.Event.html">Event</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.EventTarget.html">EventTarget</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.FilterTexture.html">FilterTexture</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.Graphics.html">Graphics</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.GraphicsData.html">GraphicsData</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.PIXI.html">PIXI</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.PixiFastShader.html">PixiFastShader</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.PixiShader.html">PixiShader</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.PolyK.html">PolyK</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.PrimitiveShader.html">PrimitiveShader</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.RenderTexture.html">RenderTexture</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.Rope.html">Rope</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.Sprite.html">Sprite</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.SpriteBatch.html">SpriteBatch</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.Stage.html">Stage</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.Strip.html">Strip</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.StripShader.html">StripShader</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.Text.html">Text</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.Texture.html">Texture</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.TilingSprite.html">TilingSprite</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.VideoTexture.html">VideoTexture</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.WebGLBlendModeManager.html">WebGLBlendModeManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.WebGLFastSpriteBatch.html">WebGLFastSpriteBatch</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.WebGLFilterManager.html">WebGLFilterManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.WebGLRenderer.html">WebGLRenderer</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="RoundedRectangle.html">RoundedRectangle</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
+				<li class="dropdown">
+					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+						
+						<li class="class-depth-0">
+							<a href="global.html#append">append</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#apply">apply</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#applyInverse">applyInverse</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#blendModes">blendModes</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#clone">clone</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#contains">contains</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#fromArray">fromArray</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#identity">identity</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#rotate">rotate</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#scale">scale</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#scaleModes">scaleModes</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#sort">sort</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#toArray">toArray</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#translate">translate</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
+
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Core<b class="caret"></b></a>
+					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.Game.html">Game</a></li>
+						<li class="class-depth-1"><a href="Phaser.Group.html">Group</a></li>
+						<li class="class-depth-1"><a href="Phaser.World.html">World</a></li>
+						<li class="class-depth-1"><a href="Phaser.Loader.html">Loader</a></li>
+						<li class="class-depth-1"><a href="Phaser.Time.html">Time</a></li>
+						<li class="class-depth-1"><a href="Phaser.Camera.html">Camera</a></li>
+						<li class="class-depth-1"><a href="Phaser.StateManager.html">State Manager</a></li>
+						<li class="class-depth-1"><a href="Phaser.TweenManager.html">Tween Manager</a></li>
+						<li class="class-depth-1"><a href="Phaser.SoundManager.html">Sound Manager</a></li>
+						<li class="class-depth-1"><a href="Phaser.Input.html">Input Manager</a></li>
+						<li class="class-depth-1"><a href="Phaser.ScaleManager.html">Scale Manager</a></li>
+					</ul>
+				</li>
+
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Game Objects<b class="caret"></b></a>
+					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.GameObjectFactory.html">Factory (game.add)</a></li>
+						<li class="class-depth-1"><a href="Phaser.GameObjectCreator.html">Creator (game.make)</a></li>
+						<li class="class-depth-1"><a href="Phaser.Sprite.html">Sprite</a></li>
+						<li class="class-depth-1"><a href="Phaser.Image.html">Image</a></li>
+						<li class="class-depth-1"><a href="Phaser.Sound.html">Sound</a></li>
+						<li class="class-depth-1"><a href="Phaser.Particles.Arcade.Emitter.html">Particle Emitter</a></li>
+						<li class="class-depth-1"><a href="Phaser.Particle.html">Particle</a></li>
+						<li class="class-depth-1"><a href="Phaser.Text.html">Text</a></li>
+						<li class="class-depth-1"><a href="Phaser.Tween.html">Tween</a></li>
+						<li class="class-depth-1"><a href="Phaser.BitmapText.html">BitmapText</a></li>
+						<li class="class-depth-1"><a href="Phaser.Tilemap.html">Tilemap</a></li>
+						<li class="class-depth-1"><a href="Phaser.BitmapData.html">BitmapData</a></li>
+						<li class="class-depth-1"><a href="Phaser.RetroFont.html">RetroFont</a></li>
+						<li class="class-depth-1"><a href="Phaser.Button.html">Button</a></li>
+						<li class="class-depth-1"><a href="Phaser.Animation.html">Animation</a></li>
+						<li class="class-depth-1"><a href="Phaser.Graphics.html">Graphics</a></li>
+						<li class="class-depth-1"><a href="Phaser.RenderTexture.html">RenderTexture</a></li>
+						<li class="class-depth-1"><a href="Phaser.TileSprite.html">TileSprite</a></li>
+					</ul>
+				</li>
+
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Geometry<b class="caret"></b></a>
+					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.Circle.html">Circle</a></li>
+						<li class="class-depth-1"><a href="Phaser.Rectangle.html">Rectangle</a></li>
+						<li class="class-depth-1"><a href="Phaser.Point.html">Point</a></li>
+						<li class="class-depth-1"><a href="Phaser.Line.html">Line</a></li>
+						<li class="class-depth-1"><a href="Phaser.Ellipse.html">Ellipse</a></li>
+						<li class="class-depth-1"><a href="Phaser.Polygon.html">Polygon</a></li>
+					</ul>
+				</li>
+
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Physics<b class="caret"></b></a>
+					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.Physics.Arcade.html">Arcade Physics</a></li>
+						<li class="class-depth-2"><a href="Phaser.Physics.Arcade.Body.html">Body</a></li>
+						<li class="class-depth-1"><a href="Phaser.Physics.P2.html">P2 Physics</a></li>
+						<li class="class-depth-2"><a href="Phaser.Physics.P2.Body.html">Body</a></li>
+						<li class="class-depth-2"><a href="Phaser.Physics.P2.Spring.html">Spring</a></li>
+						<li class="class-depth-2"><a href="Phaser.Physics.P2.CollisionGroup.html">CollisionGroup</a></li>
+						<li class="class-depth-2"><a href="Phaser.Physics.P2.ContactMaterial.html">ContactMaterial</a></li>
+						<li class="class-depth-1"><a href="Phaser.Physics.Ninja.html">Ninja Physics</a></li>
+						<li class="class-depth-2"><a href="Phaser.Physics.Body.html">Body</a></li>
+					</ul>
+				</li>
+
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Input<b class="caret"></b></a>
+					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.InputHandler.html">Input Handler</a></li>
+						<li class="class-depth-1"><a href="Phaser.Pointer.html">Pointer</a></li>
+						<li class="class-depth-1"><a href="Phaser.Mouse.html">Mouse</a></li>
+						<li class="class-depth-1"><a href="Phaser.Keyboard.html">Keyboard</a></li>
+						<li class="class-depth-1"><a href="Phaser.Key.html">Key</a></li>
+						<li class="class-depth-1"><a href="Phaser.Gamepad.html">Gamepad</a></li>
+					</ul>
+				</li>
+
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Community<b class="caret"></b></a>
+					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="http://phaser.io">Phaser Web Site</a></li>
+						<li class="class-depth-1"><a href="https://github.com/photonstorm/phaser">Phaser Github</a></li>
+						<li class="class-depth-1"><a href="http://phaser.io/examples">Phaser Examples</a></li>
+						<li class="class-depth-1"><a href="https://github.com/photonstorm/phaser-plugins">Phaser Plugins</a></li>
+						<li class="class-depth-1"><a href="http://www.html5gamedevs.com/forum/14-phaser/">Forum</a></li>
+						<li class="class-depth-1"><a href="http://stackoverflow.com/questions/tagged/phaser-framework">Stack Overflow</a></li>
+						<li class="class-depth-1"><a href="http://phaser.io/learn">Weekly Coding Tips</a></li>
+						<li class="class-depth-1"><a href="https://confirmsubscription.com/h/r/369DE48E3E86AF1E">Newsletter</a></li>
+						<li class="class-depth-1"><a href="http://phaser.io/community/twitter">Twitter</a></li>
+						<li class="class-depth-1"><a href="http://phaser.io/community/irc">IRC</a></li>
+						<li class="class-depth-1"><a href="https://www.gittip.com/photonstorm/">Donate to the project</a></li>
+						<li class="class-depth-1"><a href="https://www.codeandweb.com/texturepacker/phaser">Texture Packer</a></li>
+					</ul>
+				</li>
+
+			</ul>
+		</div>
+	</div>
+
+	<div class="row-fluid">
+
+		
+			<div class="span12">
+				
+				<div id="main">
+					
+
+
+		<h1 class="page-title">Source: src/gameobjects/Text.js</h1>
+    
+    <section>
+        <article>
+            <pre class="sunlight-highlight-javascript linenums">/**
+* @author       Richard Davey &lt;rich@photonstorm.com>
+* @copyright    2015 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
+* Create a new game object for displaying Text.
+*
+* This uses a local hidden Canvas object and renders the type into it. It then makes a texture from this for rendering to the view.
+* Because of this you can only display fonts that are currently loaded and available to the browser: fonts must be pre-loaded.
+*
+* See {@link http://www.jordanm.co.uk/tinytype this compatibility table} for the available default fonts across mobile browsers.
+*
+* @class Phaser.Text
+* @extends PIXI.Text
+* @extends Phaser.Component.Core
+* @extends Phaser.Component.Angle
+* @extends Phaser.Component.AutoCull
+* @extends Phaser.Component.Bounds
+* @extends Phaser.Component.BringToTop
+* @extends Phaser.Component.Destroy
+* @extends Phaser.Component.FixedToCamera
+* @extends Phaser.Component.InputEnabled
+* @extends Phaser.Component.InWorld
+* @extends Phaser.Component.LifeSpan
+* @extends Phaser.Component.Overlap
+* @extends Phaser.Component.PhysicsBody
+* @extends Phaser.Component.Reset
+* @extends Phaser.Component.Smoothed
+* @constructor
+* @param {Phaser.Game} game - Current game instance.
+* @param {number} x - X position of the new text object.
+* @param {number} y - Y position of the new text object.
+* @param {string} text - The actual text that will be written.
+* @param {object} style - The style object containing style attributes like font, font size, etc.
+*/
+Phaser.Text = function (game, x, y, text, style) {
+
+    x = x || 0;
+    y = y || 0;
+    text = text || ' ';
+    style = style || {};
+
+    if (text.length === 0)
+    {
+        text = ' ';
+    }
+    else
+    {
+        text = text.toString();
+    }
+
+    /**
+    * @property {number} type - The const type of this object.
+    * @default
+    */
+    this.type = Phaser.TEXT;
+
+    /**
+    * @property {number} physicsType - The const physics body type of this object.
+    * @readonly
+    */
+    this.physicsType = Phaser.SPRITE;
+
+    /**
+    * Specify a padding value which is added to the line width and height when calculating the Text size.
+    * ALlows you to add extra spacing if Phaser is unable to accurately determine the true font dimensions.
+    * @property {Phaser.Point} padding
+    */
+    this.padding = new Phaser.Point();
+
+    /**
+    * @property {string} _text - Internal cache var.
+    * @private
+    */
+    this._text = text;
+
+    /**
+    * @property {object} _fontComponents - The font, broken down into components, set in `setStyle`.
+    * @private
+    */
+    this._fontComponents = null;
+
+    /**
+    * @property {number} lineSpacing - Additional spacing (in pixels) between each line of text if multi-line.
+    * @private
+    */
+    this._lineSpacing = 0;
+
+    /**
+    * @property {number} _charCount - Internal character counter used by the text coloring.
+    * @private
+    */
+    this._charCount = 0;
+
+    /**
+    * @property {array} colors - An array of the color values as specified by {@link Phaser.Text#addColor addColor}.
+    */
+    this.colors = [];
+
+    this.setStyle(style);
+
+    PIXI.Text.call(this, text, this.style);
+
+    Phaser.Component.Core.init.call(this, game, x, y, '', null);
+
+    if (text !== ' ')
+    {
+        this.updateText();
+    }
+
+};
+
+Phaser.Text.prototype = Object.create(PIXI.Text.prototype);
+Phaser.Text.prototype.constructor = Phaser.Text;
+
+Phaser.Component.Core.install.call(Phaser.Text.prototype, [
+    'Angle',
+    'AutoCull',
+    'Bounds',
+    'BringToTop',
+    'Destroy',
+    'FixedToCamera',
+    'InputEnabled',
+    'InWorld',
+    'LifeSpan',
+    'Overlap',
+    'PhysicsBody',
+    'Reset',
+    'Smoothed'
+]);
+
+Phaser.Text.prototype.preUpdatePhysics = Phaser.Component.PhysicsBody.preUpdate;
+Phaser.Text.prototype.preUpdateLifeSpan = Phaser.Component.LifeSpan.preUpdate;
+Phaser.Text.prototype.preUpdateInWorld = Phaser.Component.InWorld.preUpdate;
+Phaser.Text.prototype.preUpdateCore = Phaser.Component.Core.preUpdate;
+
+/**
+* Automatically called by World.preUpdate.
+* 
+* @method Phaser.Text#preUpdate
+* @protected
+*/
+Phaser.Text.prototype.preUpdate = function () {
+
+    if (!this.preUpdatePhysics() || !this.preUpdateLifeSpan() || !this.preUpdateInWorld())
+    {
+        return false;
+    }
+
+    return this.preUpdateCore();
+
+};
+
+/**
+* Override this function to handle any special update requirements.
+*
+* @method Phaser.Text#update
+* @protected
+*/
+Phaser.Text.prototype.update = function() {
+
+};
+
+/**
+* Destroy this Text object, removing it from the group it belongs to.
+*
+* @method Phaser.Text#destroy
+* @param {boolean} [destroyChildren=true] - Should every child of this object have its destroy method called?
+*/
+Phaser.Text.prototype.destroy = function (destroyChildren) {
+
+    this.texture.destroy(true);
+
+    if (this.canvas &amp;&amp; this.canvas.parentNode)
+    {
+        this.canvas.parentNode.removeChild(this.canvas);
+    }
+    else
+    {
+        this.canvas = null;
+        this.context = null;
+    }
+
+    Phaser.Component.Destroy.prototype.destroy.call(this, destroyChildren);
+
+};
+
+/**
+* Sets a drop shadow effect on the Text. You can specify the horizontal and vertical distance of the drop shadow with the `x` and `y` parameters.
+* The color controls the shade of the shadow (default is black) and can be either an `rgba` or `hex` value.
+* The blur is the strength of the shadow. A value of zero means a hard shadow, a value of 10 means a very soft shadow.
+* To remove a shadow already in place you can call this method with no parameters set.
+* 
+* @method Phaser.Text#setShadow
+* @param {number} [x=0] - The shadowOffsetX value in pixels. This is how far offset horizontally the shadow effect will be.
+* @param {number} [y=0] - The shadowOffsetY value in pixels. This is how far offset vertically the shadow effect will be.
+* @param {string} [color='rgba(0,0,0,1)'] - The color of the shadow, as given in CSS rgba or hex format. Set the alpha component to 0 to disable the shadow.
+* @param {number} [blur=0] - The shadowBlur value. Make the shadow softer by applying a Gaussian blur to it. A number from 0 (no blur) up to approx. 10 (depending on scene).
+*/
+Phaser.Text.prototype.setShadow = function (x, y, color, blur) {
+
+    if (typeof x === 'undefined') { x = 0; }
+    if (typeof y === 'undefined') { y = 0; }
+    if (typeof color === 'undefined') { color = 'rgba(0, 0, 0, 1)'; }
+    if (typeof blur === 'undefined') { blur = 0; }
+
+    this.style.shadowOffsetX = x;
+    this.style.shadowOffsetY = y;
+    this.style.shadowColor = color;
+    this.style.shadowBlur = blur;
+    this.dirty = true;
+
+};
+
+/**
+* Set the style of the text by passing a single style object to it.
+*
+* @method Phaser.Text#setStyle
+* @param {object} [style] - The style properties to be set on the Text.
+* @param {string} [style.font='bold 20pt Arial'] - The style and size of the font.
+* @param {string} [style.fontStyle=(from font)] - The style of the font (eg. 'italic'): overrides the value in `style.font`.
+* @param {string} [style.fontVariant=(from font)] - The variant of the font (eg. 'small-caps'): overrides the value in `style.font`.
+* @param {string} [style.fontWeight=(from font)] - The weight of the font (eg. 'bold'): overrides the value in `style.font`.
+* @param {string|number} [style.fontSize=(from font)] - The size of the font (eg. 32 or '32px'): overrides the value in `style.font`.
+* @param {string} [style.backgroundColor=null] - A canvas fillstyle that will be used as the background for the whole Text object. Set to `null` to disable.
+* @param {string} [style.fill='black'] - A canvas fillstyle that will be used on the text eg 'red', '#00FF00'.
+* @param {string} [style.align='left'] - Alignment for multiline text ('left', 'center' or 'right'), does not affect single line text.
+* @param {string} [style.stroke='black'] - A canvas stroke style that will be used on the text stroke eg 'blue', '#FCFF00'.
+* @param {number} [style.strokeThickness=0] - A number that represents the thickness of the stroke. Default is 0 (no stroke).
+* @param {boolean} [style.wordWrap=false] - Indicates if word wrap should be used.
+* @param {number} [style.wordWrapWidth=100] - The width in pixels at which text will wrap.
+*/
+Phaser.Text.prototype.setStyle = function (style) {
+
+    style = style || {};
+    style.font = style.font || 'bold 20pt Arial';
+    style.backgroundColor = style.backgroundColor || null;
+    style.fill = style.fill || 'black';
+    style.align = style.align || 'left';
+    style.stroke = style.stroke || 'black'; //provide a default, see: https://github.com/GoodBoyDigital/pixi.js/issues/136
+    style.strokeThickness = style.strokeThickness || 0;
+    style.wordWrap = style.wordWrap || false;
+    style.wordWrapWidth = style.wordWrapWidth || 100;
+    style.shadowOffsetX = style.shadowOffsetX || 0;
+    style.shadowOffsetY = style.shadowOffsetY || 0;
+    style.shadowColor = style.shadowColor || 'rgba(0,0,0,0)';
+    style.shadowBlur = style.shadowBlur || 0;
+
+    var components = this.fontToComponents(style.font);
+
+    if (style.fontStyle)
+    {
+        components.fontStyle = style.fontStyle;
+    }
+
+    if (style.fontVariant)
+    {
+        components.fontVariant = style.fontVariant;
+    }
+
+    if (style.fontWeight)
+    {
+        components.fontWeight = style.fontWeight;
+    }
+
+    if (style.fontSize)
+    {
+        if (typeof style.fontSize === 'number')
+        {
+            style.fontSize = style.fontSize + 'px';
+        }
+
+        components.fontSize = style.fontSize;
+    }
+
+    this._fontComponents = components;
+
+    style.font = this.componentsToFont(this._fontComponents);
+    this.style = style;
+    this.dirty = true;
+
+};
+
+/**
+* Renders text. This replaces the Pixi.Text.updateText function as we need a few extra bits in here.
+*
+* @method Phaser.Text#updateText
+* @private
+*/
+Phaser.Text.prototype.updateText = function () {
+
+    this.texture.baseTexture.resolution = this.resolution;
+
+    this.context.font = this.style.font;
+
+    var outputText = this.text;
+
+    if (this.style.wordWrap)
+    {
+        outputText = this.runWordWrap(this.text);
+    }
+
+    //split text into lines
+    var lines = outputText.split(/(?:\r\n|\r|\n)/);
+
+    //calculate text width
+    var lineWidths = [];
+    var maxLineWidth = 0;
+    var fontProperties = this.determineFontProperties(this.style.font);
+
+    for (var i = 0; i &lt; lines.length; i++)
+    {
+        var lineWidth = this.context.measureText(lines[i]).width + this.padding.x;
+        lineWidths[i] = lineWidth;
+        maxLineWidth = Math.max(maxLineWidth, lineWidth);
+    }
+
+    var width = maxLineWidth + this.style.strokeThickness;
+
+    this.canvas.width = width * this.resolution;
+    
+    //calculate text height
+    var lineHeight = fontProperties.fontSize + this.style.strokeThickness + this.padding.y;
+    var height = lineHeight * lines.length;
+    var lineSpacing = this._lineSpacing;
+
+    if (lineSpacing &lt; 0 &amp;&amp; Math.abs(lineSpacing) > lineHeight)
+    {
+        lineSpacing = -lineHeight;
+    }
+
+    //  Adjust for line spacing
+    if (lineSpacing !== 0)
+    {
+        var diff = lineSpacing * (lines.length - 1);
+        height += diff;
+    }
+
+    this.canvas.height = height * this.resolution;
+
+    this.context.scale(this.resolution, this.resolution);
+
+    if (navigator.isCocoonJS)
+    {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+
+    if (this.style.backgroundColor)
+    {
+        this.context.fillStyle = this.style.backgroundColor;
+        this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+    
+    this.context.fillStyle = this.style.fill;
+    this.context.font = this.style.font;
+    this.context.strokeStyle = this.style.stroke;
+    this.context.textBaseline = 'alphabetic';
+    this.context.shadowOffsetX = this.style.shadowOffsetX;
+    this.context.shadowOffsetY = this.style.shadowOffsetY;
+    this.context.shadowColor = this.style.shadowColor;
+    this.context.shadowBlur = this.style.shadowBlur;
+    this.context.lineWidth = this.style.strokeThickness;
+    this.context.lineCap = 'round';
+    this.context.lineJoin = 'round';
+
+    var linePositionX;
+    var linePositionY;
+
+    this._charCount = 0;
+
+    //  Draw text line by line
+    for (i = 0; i &lt; lines.length; i++)
+    {
+        linePositionX = this.style.strokeThickness / 2;
+        linePositionY = (this.style.strokeThickness / 2 + i * lineHeight) + fontProperties.ascent;
+
+        if (i > 0)
+        {
+            linePositionY += (lineSpacing * i);
+        }
+
+        if (this.style.align === 'right')
+        {
+            linePositionX += maxLineWidth - lineWidths[i];
+        }
+        else if (this.style.align === 'center')
+        {
+            linePositionX += (maxLineWidth - lineWidths[i]) / 2;
+        }
+
+        if (this.colors.length > 0)
+        {
+            this.updateLine(lines[i], linePositionX, linePositionY);
+        }
+        else
+        {
+            if (this.style.stroke &amp;&amp; this.style.strokeThickness)
+            {
+                this.context.strokeText(lines[i], linePositionX, linePositionY);
+            }
+
+            if (this.style.fill)
+            {
+                this.context.fillText(lines[i], linePositionX, linePositionY);
+            }
+        }
+
+    }
+
+    this.updateTexture();
+
+};
+
+/**
+* Updates a line of text.
+*
+* @method Phaser.Text#updateLine
+* @private
+*/
+Phaser.Text.prototype.updateLine = function (line, x, y) {
+
+    for (var i = 0; i &lt; line.length; i++)
+    {
+        var letter = line[i];
+
+        if (this.colors[this._charCount])
+        {
+            this.context.fillStyle = this.colors[this._charCount];
+            this.context.strokeStyle = this.colors[this._charCount];
+        }
+
+        if (this.style.stroke &amp;&amp; this.style.strokeThickness)
+        {
+            this.context.strokeText(letter, x, y);
+        }
+
+        if (this.style.fill)
+        {
+            this.context.fillText(letter, x, y);
+        }
+
+        x += this.context.measureText(letter).width;
+
+        this._charCount++;
+    }
+
+};
+
+/**
+* Clears any previously set color stops.
+*
+* @method Phaser.Text#clearColors
+*/
+Phaser.Text.prototype.clearColors = function () {
+
+    this.colors = [];
+    this.dirty = true;
+
+};
+
+/**
+* Set specific colors for certain characters within the Text.
+*
+* It works by taking a color value, which is a typical HTML string such as `#ff0000` or `rgb(255,0,0)` and a position.
+* The position value is the index of the character in the Text string to start applying this color to.
+* Once set the color remains in use until either another color or the end of the string is encountered.
+* For example if the Text was `Photon Storm` and you did `Text.addColor('#ffff00', 6)` it would color in the word `Storm` in yellow.
+*
+* @method Phaser.Text#addColor
+* @param {string} color - A canvas fillstyle that will be used on the text eg `red`, `#00FF00`, `rgba()`.
+* @param {number} position - The index of the character in the string to start applying this color value from.
+*/
+Phaser.Text.prototype.addColor = function (color, position) {
+
+    this.colors[position] = color;
+    this.dirty = true;
+
+};
+
+/**
+* Greedy wrapping algorithm that will wrap words as the line grows longer than its horizontal bounds.
+*
+* @method Phaser.Text#runWordWrap
+* @param {string} text - The text to perform word wrap detection against.
+* @private
+*/
+Phaser.Text.prototype.runWordWrap = function (text) {
+
+    var result = '';
+    var lines = text.split('\n');
+
+    for (var i = 0; i &lt; lines.length; i++)
+    {
+        var spaceLeft = this.style.wordWrapWidth;
+        var words = lines[i].split(' ');
+
+        for (var j = 0; j &lt; words.length; j++)
+        {
+            var wordWidth = this.context.measureText(words[j]).width;
+            var wordWidthWithSpace = wordWidth + this.context.measureText(' ').width;
+
+            if (wordWidthWithSpace > spaceLeft)
+            {
+                // Skip printing the newline if it's the first word of the line that is greater than the word wrap width.
+                if (j > 0)
+                {
+                    result += '\n';
+                }
+                result += words[j] + ' ';
+                spaceLeft = this.style.wordWrapWidth - wordWidth;
+            }
+            else
+            {
+                spaceLeft -= wordWidthWithSpace;
+                result += words[j] + ' ';
+            }
+        }
+
+        if (i &lt; lines.length-1)
+        {
+            result += '\n';
+        }
+    }
+
+    return result;
+
+};
+
+/**
+* Updates the internal `style.font` if it now differs according to generation from components.
+*
+* @method Phaser.Text#updateFont
+* @private
+* @param {object} components - Font components.
+*/
+Phaser.Text.prototype.updateFont = function (components) {
+
+    var font = this.componentsToFont(components);
+
+    if (this.style.font !== font)
+    {
+        this.style.font = font;
+        this.dirty = true;
+
+        if (this.parent)
+        {
+            this.updateTransform();
+        }
+    }
+
+};
+
+/**
+* Converting a short CSS-font string into the relevant components.
+*
+* @method Phaser.Text#fontToComponents
+* @private
+* @param {string} font - a CSS font string
+*/
+Phaser.Text.prototype.fontToComponents = function (font) {
+
+    // The format is specified in http://www.w3.org/TR/CSS2/fonts.html#font-shorthand:
+    // style - normal | italic | oblique | inherit
+    // variant - normal | small-caps | inherit
+    // weight - normal | bold | bolder | lighter | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900 | inherit
+    // size - xx-small | x-small | small | medium | large | x-large | xx-large,
+    //        larger | smaller
+    //        {number} (em | ex | ch | rem | vh | vw | vmin | vmax | px | mm | cm | in | pt | pc | %)
+    // font-family - rest (but identifiers or quoted with comma separation)
+    var m = font.match(/^\s*(?:\b(normal|italic|oblique|inherit)?\b)\s*(?:\b(normal|small-caps|inherit)?\b)\s*(?:\b(normal|bold|bolder|lighter|100|200|300|400|500|600|700|800|900|inherit)?\b)\s*(?:\b(xx-small|x-small|small|medium|large|x-large|xx-large|larger|smaller|0|\d*(?:[.]\d*)?(?:%|[a-z]{2,5}))?\b)\s*(.*)\s*$/);
+
+    if (m)
+    {
+        return {
+            font: font,
+            fontStyle: m[1] || 'normal',
+            fontVariant: m[2] || 'normal',
+            fontWeight: m[3] || 'normal',
+            fontSize: m[4] || 'medium',
+            fontFamily: m[5]
+        };
+    }
+    else
+    {
+        console.warn("Phaser.Text - unparsable CSS font: " + font);
+        return {
+            font: font
+        };
+    }
+
+};
+
+/**
+* Converts individual font components (see `fontToComponents`) to a short CSS font string.
+*
+* @method Phaser.Text#componentsToFont
+* @private
+* @param {object} components - Font components.
+*/
+Phaser.Text.prototype.componentsToFont = function (components) {
+
+    var parts = [];
+    var v;
+
+    v = components.fontStyle;
+    if (v &amp;&amp; v !== 'normal') { parts.push(v); }
+
+    v = components.fontVariant;
+    if (v &amp;&amp; v !== 'normal') { parts.push(v); }
+
+    v = components.fontWeight;
+    if (v &amp;&amp; v !== 'normal') { parts.push(v); }
+
+    v = components.fontSize;
+    if (v &amp;&amp; v !== 'medium') { parts.push(v); }
+
+    v = components.fontFamily;
+    if (v) { parts.push(v); }
+
+    if (!parts.length)
+    {
+        // Fallback to whatever value the 'font' was
+        parts.push(components.font);
+    }
+
+    return parts.join(" ");
+
+};
+
+/**
+* The text string to be displayed by this Text object, taking into account the style settings.
+*
+* @name Phaser.Text#text
+* @property {string} text
+*/
+Object.defineProperty(Phaser.Text.prototype, 'text', {
+
+    get: function() {
+        return this._text;
+    },
+
+    set: function(value) {
+
+        if (value !== this._text)
+        {
+            this._text = value.toString() || ' ';
+            this.dirty = true;
+
+            if (this.parent)
+            {
+                this.updateTransform();
+            }
+        }
+
+    }
+
+});
+
+/**
+* Change the font used.
+*
+* This is equivalent of the `font` property specified to {@link Phaser.Text#setStyle setStyle}, except
+* that unlike using `setStyle` this will not change any current font fill/color settings.
+*
+* The CSS font string can also be individually altered with the `font`, `fontSize`, `fontWeight`, `fontStyle`, and `fontVariant` properties.
+*
+* @name Phaser.Text#cssFont
+* @property {string} cssFont
+*/
+Object.defineProperty(Phaser.Text.prototype, 'cssFont', {
+
+    get: function() {
+        return this.componentsToFont(this._fontComponents);
+    },
+
+    set: function (value)
+    {
+        value = value || 'bold 20pt Arial';
+        this._fontComponents = this.fontToComponents(value);
+        this.updateFont(this._fontComponents);
+    }
+
+});
+
+/**
+* Change the font family that the text will be rendered in, such as 'Arial'.
+*
+* Multiple CSS font families and generic fallbacks can be specified as long as
+* {@link http://www.w3.org/TR/CSS2/fonts.html#propdef-font-family CSS font-family rules} are followed.
+*
+* To change the entire font string use {@link Phaser.Text#cssFont cssFont} instead: eg. `text.cssFont = 'bold 20pt Arial'`.
+*
+* @name Phaser.Text#font
+* @property {string} font
+*/
+Object.defineProperty(Phaser.Text.prototype, 'font', {
+
+    get: function() {
+        return this._fontComponents.fontFamily;
+    },
+
+    set: function(value) {
+
+        value = value || 'Arial';
+        value = value.trim();
+
+        // If it looks like the value should be quoted, but isn't, then quote it.
+        if (!/^(?:inherit|serif|sans-serif|cursive|fantasy|monospace)$/.exec(value) &amp;&amp; !/['",]/.exec(value))
+        {
+            value = "'" + value + "'";
+        }
+
+        this._fontComponents.fontFamily = value;
+        this.updateFont(this._fontComponents);
+
+    }
+
+});
+
+/**
+* The size of the font.
+*
+* If the font size is specified in pixels (eg. `32` or `'32px`') then a number (ie. `32`) representing
+* the font size in pixels is returned; otherwise the value with CSS unit is returned as a string (eg. `'12pt'`).
+*
+* @name Phaser.Text#fontSize
+* @property {number|string} fontSize
+*/
+Object.defineProperty(Phaser.Text.prototype, 'fontSize', {
+
+    get: function() {
+
+        var size = this._fontComponents.fontSize;
+
+        if (size &amp;&amp; /(?:^0$|px$)/.exec(size))
+        {
+            return parseInt(size, 10);
+        }
+        else
+        {
+            return size;
+        }
+
+    },
+
+    set: function(value) {
+
+        value = value || '0';
+        
+        if (typeof value === 'number')
+        {
+            value = value + 'px';
+        }
+
+        this._fontComponents.fontSize = value;
+        this.updateFont(this._fontComponents);
+
+    }
+
+});
+
+/**
+* The weight of the font: 'normal', 'bold', or {@link http://www.w3.org/TR/CSS2/fonts.html#propdef-font-weight a valid CSS font weight}.
+* @name Phaser.Text#fontWeight
+* @property {string} fontWeight
+*/
+Object.defineProperty(Phaser.Text.prototype, 'fontWeight', {
+
+    get: function() {
+        return this._fontComponents.fontWeight || 'normal';
+    },
+
+    set: function(value) {
+
+        value = value || 'normal';
+        this._fontComponents.fontWeight = value;
+        this.updateFont(this._fontComponents);
+
+    }
+
+});
+
+/**
+* The style of the font: 'normal', 'italic', 'oblique'
+* @name Phaser.Text#fontStyle
+* @property {string} fontStyle
+*/
+Object.defineProperty(Phaser.Text.prototype, 'fontStyle', {
+
+    get: function() {
+        return this._fontComponents.fontStyle || 'normal';
+    },
+
+    set: function(value) {
+
+        value = value || 'normal';
+        this._fontComponents.fontStyle = value;
+        this.updateFont(this._fontComponents);
+
+    }
+
+});
+
+/**
+* The variant the font: 'normal', 'small-caps'
+* @name Phaser.Text#fontVariant
+* @property {string} fontVariant
+*/
+Object.defineProperty(Phaser.Text.prototype, 'fontVariant', {
+
+    get: function() {
+        return this._fontComponents.fontVariant || 'normal';
+    },
+
+    set: function(value) {
+
+        value = value || 'normal';
+        this._fontComponents.fontVariant = value;
+        this.updateFont(this._fontComponents);
+
+    }
+
+});
+
+/**
+* @name Phaser.Text#fill
+* @property {object} fill - A canvas fillstyle that will be used on the text eg 'red', '#00FF00'.
+*/
+Object.defineProperty(Phaser.Text.prototype, 'fill', {
+
+    get: function() {
+        return this.style.fill;
+    },
+
+    set: function(value) {
+
+        if (value !== this.style.fill)
+        {
+            this.style.fill = value;
+            this.dirty = true;
+        }
+
+    }
+
+});
+
+/**
+* @name Phaser.Text#align
+* @property {string} align - Alignment for multiline text ('left', 'center' or 'right'), does not affect single line text.
+*/
+Object.defineProperty(Phaser.Text.prototype, 'align', {
+
+    get: function() {
+        return this.style.align;
+    },
+
+    set: function(value) {
+
+        if (value !== this.style.align)
+        {
+            this.style.align = value;
+            this.dirty = true;
+        }
+
+    }
+
+});
+
+/**
+* @name Phaser.Text#stroke
+* @property {string} stroke - A canvas fillstyle that will be used on the text stroke eg 'blue', '#FCFF00'.
+*/
+Object.defineProperty(Phaser.Text.prototype, 'stroke', {
+
+    get: function() {
+        return this.style.stroke;
+    },
+
+    set: function(value) {
+
+        if (value !== this.style.stroke)
+        {
+            this.style.stroke = value;
+            this.dirty = true;
+        }
+
+    }
+
+});
+
+/**
+* @name Phaser.Text#strokeThickness
+* @property {number} strokeThickness - A number that represents the thickness of the stroke. Default is 0 (no stroke)
+*/
+Object.defineProperty(Phaser.Text.prototype, 'strokeThickness', {
+
+    get: function() {
+        return this.style.strokeThickness;
+    },
+
+    set: function(value) {
+
+        if (value !== this.style.strokeThickness)
+        {
+            this.style.strokeThickness = value;
+            this.dirty = true;
+        }
+
+    }
+
+});
+
+/**
+* @name Phaser.Text#wordWrap
+* @property {boolean} wordWrap - Indicates if word wrap should be used.
+*/
+Object.defineProperty(Phaser.Text.prototype, 'wordWrap', {
+
+    get: function() {
+        return this.style.wordWrap;
+    },
+
+    set: function(value) {
+
+        if (value !== this.style.wordWrap)
+        {
+            this.style.wordWrap = value;
+            this.dirty = true;
+        }
+
+    }
+
+});
+
+/**
+* @name Phaser.Text#wordWrapWidth
+* @property {number} wordWrapWidth - The width at which text will wrap.
+*/
+Object.defineProperty(Phaser.Text.prototype, 'wordWrapWidth', {
+
+    get: function() {
+        return this.style.wordWrapWidth;
+    },
+
+    set: function(value) {
+
+        if (value !== this.style.wordWrapWidth)
+        {
+            this.style.wordWrapWidth = value;
+            this.dirty = true;
+        }
+
+    }
+
+});
+
+/**
+* @name Phaser.Text#lineSpacing
+* @property {number} lineSpacing - Additional spacing (in pixels) between each line of text if multi-line.
+*/
+Object.defineProperty(Phaser.Text.prototype, 'lineSpacing', {
+
+    get: function() {
+        return this._lineSpacing;
+    },
+
+    set: function(value) {
+
+        if (value !== this._lineSpacing)
+        {
+            this._lineSpacing = parseFloat(value);
+            this.dirty = true;
+
+            if (this.parent)
+            {
+                this.updateTransform();
+            }
+        }
+
+    }
+
+});
+
+/**
+* @name Phaser.Text#shadowOffsetX
+* @property {number} shadowOffsetX - The shadowOffsetX value in pixels. This is how far offset horizontally the shadow effect will be.
+*/
+Object.defineProperty(Phaser.Text.prototype, 'shadowOffsetX', {
+
+    get: function() {
+        return this.style.shadowOffsetX;
+    },
+
+    set: function(value) {
+
+        if (value !== this.style.shadowOffsetX)
+        {
+            this.style.shadowOffsetX = value;
+            this.dirty = true;
+        }
+
+    }
+
+});
+
+/**
+* @name Phaser.Text#shadowOffsetY
+* @property {number} shadowOffsetY - The shadowOffsetY value in pixels. This is how far offset vertically the shadow effect will be.
+*/
+Object.defineProperty(Phaser.Text.prototype, 'shadowOffsetY', {
+
+    get: function() {
+        return this.style.shadowOffsetY;
+    },
+
+    set: function(value) {
+
+        if (value !== this.style.shadowOffsetY)
+        {
+            this.style.shadowOffsetY = value;
+            this.dirty = true;
+        }
+
+    }
+
+});
+
+/**
+* @name Phaser.Text#shadowColor
+* @property {string} shadowColor - The color of the shadow, as given in CSS rgba format. Set the alpha component to 0 to disable the shadow.
+*/
+Object.defineProperty(Phaser.Text.prototype, 'shadowColor', {
+
+    get: function() {
+        return this.style.shadowColor;
+    },
+
+    set: function(value) {
+
+        if (value !== this.style.shadowColor)
+        {
+            this.style.shadowColor = value;
+            this.dirty = true;
+        }
+
+    }
+
+});
+
+/**
+* @name Phaser.Text#shadowBlur
+* @property {number} shadowBlur - The shadowBlur value. Make the shadow softer by applying a Gaussian blur to it. A number from 0 (no blur) up to approx. 10 (depending on scene).
+*/
+Object.defineProperty(Phaser.Text.prototype, 'shadowBlur', {
+
+    get: function() {
+        return this.style.shadowBlur;
+    },
+
+    set: function(value) {
+
+        if (value !== this.style.shadowBlur)
+        {
+            this.style.shadowBlur = value;
+            this.dirty = true;
+        }
+
+    }
+
+});
+</pre>
+        </article>
+    </section>
+
+
+
+
+
+				</div>
+
+				<div class="clearfix"></div>
+				<footer>
+					
+					
+		<span class="copyright">
+		Phaser Copyright © 2012-2015 Photon Storm Ltd.
+		</span>
+					<br />
+					
+		<span class="jsdoc-message">
+		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha10</a>
+		on Thu Mar 26 2015 02:53:48 GMT+0000 (GMT Standard Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		</span>
+				</footer>
+			</div>
+
+			
+			<br clear="both">
+		</div>
+
+	</div>
+	<script src="scripts/sunlight.js"></script>
+	<script src="scripts/sunlight.javascript.js"></script>
+	<script src="scripts/sunlight-plugin.doclinks.js"></script>
+	<script src="scripts/sunlight-plugin.linenumbers.js"></script>
+	<script src="scripts/sunlight-plugin.menu.js"></script>
+	<script src="scripts/jquery.min.js"></script>
+	<script src="scripts/jquery.scrollTo.js"></script>
+	<script src="scripts/jquery.localScroll.js"></script>
+	<script src="scripts/bootstrap-dropdown.js"></script>
+	<script src="scripts/toc.js"></script>
+
+	<script>  Sunlight.highlightAll({lineNumbers:true,  showMenu: true, enableDoclinks :true}); </script>
+
+	<script>
+		$( function () {
+			$( "#toc" ).toc( {
+				anchorName  : function(i, heading, prefix) {
+					return $(heading).attr("id") || ( prefix + i );
+				},
+				selectors   : "h1,h2,h3,h4",
+				showAndHide : false,
+				scrollTo    : 60
+			} );
+			$( "#toc>ul" ).addClass( "nav nav-pills nav-stacked" );
+			$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+
+		} );
+	</script>
+
+	
+
+</body>
+</html>

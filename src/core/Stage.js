@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -29,13 +29,6 @@ Phaser.Stage = function (game) {
     this.name = '_stage_root';
 
     /**
-    * @property {boolean} interactive - Pixi level var, ignored by Phaser.
-    * @default
-    * @private
-    */
-    this.interactive = false;
-
-    /**
     * @property {boolean} disableVisibilityChange - By default if the browser tab loses focus the game will pause. You can stop that behaviour by setting this property to true.
     * @default
     */
@@ -57,6 +50,12 @@ Phaser.Stage = function (game) {
     * @private
     */
     this._hiddenVar = 'hidden';
+
+    /**
+    * @property {function} _onChange - The blur/focus event handler.
+    * @private
+    */
+    this._onChange = null;
 
     /**
     * @property {number} _backgroundColor - Stage background color.
@@ -104,12 +103,6 @@ Phaser.Stage.prototype.boot = function () {
 
     Phaser.DOM.getOffset(this.game.canvas, this.offset);
 
-    var _this = this;
-
-    this._onChange = function (event) {
-        return _this.visibilityChange(event);
-    };
-
     Phaser.Canvas.setUserSelect(this.game.canvas, 'none');
     Phaser.Canvas.setTouchAction(this.game.canvas, 'none');
 
@@ -128,7 +121,7 @@ Phaser.Stage.prototype.preUpdate = function () {
     this.currentRenderOrderID = 0;
 
     //  This can't loop in reverse, we need the orderID to be in sequence
-    for (var i = 0, len = this.children.length; i < len; i++)
+    for (var i = 0; i < this.children.length; i++)
     {
         this.children[i].preUpdate();
     }
@@ -201,7 +194,7 @@ Phaser.Stage.prototype.updateTransform = function () {
 
     this.worldAlpha = 1;
 
-    for (var i = 0, j = this.children.length; i < j; i++)
+    for (var i = 0; i < this.children.length; i++)
     {
         this.children[i].updateTransform();
     }
@@ -209,7 +202,9 @@ Phaser.Stage.prototype.updateTransform = function () {
 };
 
 /**
-* Starts a page visibility event listener running, or window.blur/focus if not supported by the browser.
+* Starts a page visibility event listener running, or window.onpagehide/onpageshow if not supported by the browser.
+* Also listens for window.onblur and window.onfocus.
+* 
 * @method Phaser.Stage#checkVisibility
 */
 Phaser.Stage.prototype.checkVisibility = function () {
@@ -235,28 +230,32 @@ Phaser.Stage.prototype.checkVisibility = function () {
         this._hiddenVar = null;
     }
 
+    var _this = this;
+
+    this._onChange = function (event) {
+        return _this.visibilityChange(event);
+    };
+
     //  Does browser support it? If not (like in IE9 or old Android) we need to fall back to blur/focus
     if (this._hiddenVar)
     {
         document.addEventListener(this._hiddenVar, this._onChange, false);
     }
 
-    window.onpagehide = this._onChange;
-    window.onpageshow = this._onChange;
-
     window.onblur = this._onChange;
     window.onfocus = this._onChange;
+
+    window.onpagehide = this._onChange;
+    window.onpageshow = this._onChange;
     
-    var _this = this;
-	
     if (this.game.device.cocoonJSApp)
     {
         CocoonJS.App.onSuspended.addEventListener(function () {
-            Phaser.Stage.prototype.visibilityChange.call(_this, {type: "pause"});
+            Phaser.Stage.prototype.visibilityChange.call(_this, { type: "pause" });
         });
 
         CocoonJS.App.onActivated.addEventListener(function () {
-            Phaser.Stage.prototype.visibilityChange.call(_this, {type: "resume"});
+            Phaser.Stage.prototype.visibilityChange.call(_this, { type: "resume" });
         });
     }
 
@@ -307,7 +306,7 @@ Phaser.Stage.prototype.visibilityChange = function (event) {
 *
 * An alpha channel is _not_ supported and will be ignored.
 *
-* @name Phaser.Stage#setBackgroundColor
+* @method Phaser.Stage#setBackgroundColor
 * @param {number|string} backgroundColor - The color of the background.
 */
 Phaser.Stage.prototype.setBackgroundColor = function(backgroundColor)
@@ -323,7 +322,7 @@ Phaser.Stage.prototype.setBackgroundColor = function(backgroundColor)
 /**
 * Destroys the Stage and removes event listeners.
 *
-* @name Phaser.Stage#destroy
+* @method Phaser.Stage#destroy
 */
 Phaser.Stage.prototype.destroy  = function () {
 

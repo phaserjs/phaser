@@ -111,6 +111,14 @@ module.exports = {
                 to: '<img src="http://phaser.io/images/github/shot14.jpg">'
             }
         ]
-    }
+    },
 
+    phasertsdefheader: {
+        src: ['typescript/phaser.comments.d.ts'],
+        dest: 'typescript/phaser.comments.d.ts',
+        replacements: [{
+            from: 'path="pixi.d.ts"',
+            to: 'path="pixi.comments.d.ts"'
+        }]
+    }
 };

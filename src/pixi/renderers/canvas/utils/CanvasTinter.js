@@ -25,31 +25,35 @@ PIXI.CanvasTinter.getTintedTexture = function(sprite, color)
 {
     var texture = sprite.texture;
 
-    color = PIXI.CanvasTinter.roundColor(color);
+    //  Disabling the tintCache for a number of reasons:
+    //  
+    //  1) It ate memory like it was going out of fashion if the texture was big
+    //  2) It doesn't work with animated sprites, only the first frame is ever tinted
+    //  3) The tinted texture is stored in Sprite.tintedTexture anyway, so isn't completed un-cached
+    //  4) The cache stopped you being to able to do subtle tint shifts as the color value was rounded
 
-    var stringColor = "#" + ("00000" + ( color | 0).toString(16)).substr(-6);
-   
-    texture.tintCache = texture.tintCache || {};
+    // color = PIXI.CanvasTinter.roundColor(color);
+    // var stringColor = "#" + ("00000" + ( color | 0).toString(16)).substr(-6);
+    // texture.tintCache = texture.tintCache || {};
+    // if(texture.tintCache[stringColor]) return texture.tintCache[stringColor];
 
-    if(texture.tintCache[stringColor]) return texture.tintCache[stringColor];
-
-     // clone texture..
+    // clone texture..
     var canvas = PIXI.CanvasTinter.canvas || document.createElement("canvas");
     
-    //PIXI.CanvasTinter.tintWithPerPixel(texture, stringColor, canvas);
     PIXI.CanvasTinter.tintMethod(texture, color, canvas);
 
-    if(PIXI.CanvasTinter.convertTintToImage)
+    if (PIXI.CanvasTinter.convertTintToImage)
     {
         // is this better?
         var tintImage = new Image();
         tintImage.src = canvas.toDataURL();
 
-        texture.tintCache[stringColor] = tintImage;
+        // texture.tintCache[stringColor] = tintImage;
     }
     else
     {
-        texture.tintCache[stringColor] = canvas;
+        // texture.tintCache = canvas;
+        // texture.tintCache[stringColor] = canvas;
         // if we are not converting the texture to an image then we need to lose the reference to the canvas
         PIXI.CanvasTinter.canvas = null;
     }
@@ -216,11 +220,10 @@ PIXI.CanvasTinter.roundColor = function(color)
 };
 
 /**
- * Rounds the specified color according to the PIXI.CanvasTinter.cacheStepsPerColorChannel.
+ * Checks if the browser correctly supports putImageData alpha channels.
  * 
- * @method roundColor
+ * @method checkInverseAlpha
  * @static
- * @param color {number} the color to round, should be a hex color
  */
 PIXI.CanvasTinter.checkInverseAlpha = function()
 {

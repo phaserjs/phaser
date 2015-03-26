@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -686,8 +686,7 @@ Phaser.Device._initialize = function () {
     */
     function _checkInput () {
 
-        if ('ontouchstart' in document.documentElement ||
-            (window.navigator.maxTouchPoints && window.navigator.maxTouchPoints > 1))
+        if ('ontouchstart' in document.documentElement || (window.navigator.maxTouchPoints && window.navigator.maxTouchPoints >= 1))
         {
             device.touch = true;
         }

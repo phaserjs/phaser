@@ -39,7 +39,6 @@ PIXI.WebGLRenderer = function(width, height, options)
 
     if(!PIXI.defaultRenderer)
     {
-        PIXI.sayHello('webGL');
         PIXI.defaultRenderer = this;
     }
 
@@ -248,7 +247,7 @@ PIXI.WebGLRenderer.prototype.initContext = function()
         throw new Error('This browser does not support webGL. Try using the canvas renderer');
     }
 
-    this.glContextId = gl.id = PIXI.WebGLRenderer.glContextId ++;
+    this.glContextId = gl.id = PIXI.WebGLRenderer.glContextId++;
 
     PIXI.glContexts[this.glContextId] = gl;
 
@@ -282,13 +281,11 @@ PIXI.WebGLRenderer.prototype.initContext = function()
 PIXI.WebGLRenderer.prototype.render = function(stage)
 {
     // no point rendering if our context has been blown up!
-    if(this.contextLost)return;
+    if (this.contextLost) return;
 
     // if rendering a new stage clear the batches..
-    if(this.__stage !== stage)
+    if (this.__stage !== stage)
     {
-        if(stage.interactive)stage.interactionManager.removeEvents();
-
         // TODO make this work
         // dont think this is needed any more?
         this.__stage = stage;
@@ -299,25 +296,6 @@ PIXI.WebGLRenderer.prototype.render = function(stage)
 
     var gl = this.gl;
 
-    // interaction
-    if(stage._interactive)
-    {
-        //need to add some events!
-        if(!stage._interactiveEventsAdded)
-        {
-            stage._interactiveEventsAdded = true;
-            stage.interactionManager.setTarget(this);
-        }
-    }
-    else
-    {
-        if(stage._interactiveEventsAdded)
-        {
-            stage._interactiveEventsAdded = false;
-            stage.interactionManager.setTarget(this);
-        }
-    }
-
     // -- Does this need to be set every frame? -- //
     gl.viewport(0, 0, this.width, this.height);
 
@@ -325,8 +303,8 @@ PIXI.WebGLRenderer.prototype.render = function(stage)
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
     if (this.clearBeforeRender)
-        {
-        if(this.transparent)
+    {
+        if (this.transparent)
         {
             gl.clearColor(0, 0, 0, 0);
         }
@@ -424,7 +402,6 @@ PIXI.WebGLRenderer.prototype.updateTexture = function(texture)
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.source);
 
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, texture.scaleMode === PIXI.scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
-    
 
     if(texture.mipmap && PIXI.isPowerOfTwo(texture.width, texture.height))
     {
@@ -503,7 +480,6 @@ PIXI.WebGLRenderer.prototype.destroy = function()
     this.projection = null;
     this.offset = null;
 
-    // time to create the render managers! each one focuses on managine a state in webGL
     this.shaderManager.destroy();
     this.spriteBatch.destroy();
     this.maskManager.destroy();
@@ -516,6 +492,10 @@ PIXI.WebGLRenderer.prototype.destroy = function()
 
     this.gl = null;
     this.renderSession = null;
+
+    PIXI.instances[this.glContextId] = null;
+
+    PIXI.WebGLRenderer.glContextId--;
 };
 
 /**

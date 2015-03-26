@@ -1,4 +1,4 @@
-// Type definitions for PIXI 2.2.5 dev/master 2015-02-15
+// Type definitions for PIXI 2.2.8 2015-03-24
 // Project: https://github.com/GoodBoyDigital/pixi.js/
 
 declare module PIXI {
@@ -91,12 +91,15 @@ declare module PIXI {
     export interface PixiRenderer {
 
         autoResize: boolean;
+        clearBeforeRender: boolean;
         height: number;
+        resolution: number;
         transparent: boolean;
         type: number;
-        width: number;
         view: HTMLCanvasElement;
+        width: number;
 
+        destroy(): void;
         render(stage: Stage): void;
         resize(width: number, height: number): void;
 
@@ -131,6 +134,7 @@ declare module PIXI {
         dropShadowDistance?: number;
         fill?: string;
         font?: string;
+        lineJoin?: string;
         stroke?: string;
         strokeThickness?: number;
         wordWrap?: boolean;
@@ -310,6 +314,7 @@ declare module PIXI {
         dirty: boolean;
         fontName: string;
         fontSize: number;
+        maxWidth: number;
         textWidth: number;
         textHeight: number;
         tint: number;
@@ -614,7 +619,7 @@ declare module PIXI {
         fillAlpha: number;
         isMask: boolean;
         lineWidth: number;
-        lineColor: string;
+        lineColor: number;
         tint: number;
         worldAlpha: number;
 
@@ -626,7 +631,7 @@ declare module PIXI {
         destroyCachedSprite(): void;
         drawCircle(x: number, y: number, radius: number): Graphics;
         drawEllipse(x: number, y: number, width: number, height: number): Graphics;
-        drawPolygon(path: any): Graphics;
+        drawPolygon(...path: any[]): Graphics;
         drawRect(x: number, y: number, width: number, height: number): Graphics;
         drawRoundedRect(x: number, y: number, width: number, height: number, radius: number): Graphics;
         drawShape(shape: Circle): GraphicsData;
@@ -673,7 +678,7 @@ declare module PIXI {
         target: Sprite;
         originalEvent: Event;
 
-        getLocalPosition(displayObject: DisplayObject): Point;
+        getLocalPosition(displayObject: DisplayObject, point?: Point, globalPos?: Point): Point;
 
     }
 
@@ -1101,6 +1106,10 @@ declare module PIXI {
 
         constructor(text: string, style?: TextStyle);
 
+        static fontPropertiesCanvas: any;
+        static fontPropertiesContext: any;
+        static fontPropertiesCache: any;
+
         context: CanvasRenderingContext2D;
         resolution: number;
 
@@ -1158,10 +1167,10 @@ declare module PIXI {
         tileScale: Point;
         tileScaleOffset: Point;
 
-        generateTilingTexture(forcePowerOfTwo: boolean): void;
+        destroy(): void;
+        generateTilingTexture(forcePowerOfTwo?: boolean): void;
         setTexture(texture: Texture): void;
 
-        destroy(): void;
     }
 
     export class TiltShiftFilter extends AbstractFilter {

@@ -204,7 +204,7 @@ PIXI.TilingSprite.prototype._renderCanvas = function(renderSession)
 
     if (this._mask)
     {
-        renderSession.maskManager.pushMask(this._mask, context);
+        renderSession.maskManager.pushMask(this._mask, renderSession);
     }
 
     context.globalAlpha = this.worldAlpha;
@@ -265,7 +265,7 @@ PIXI.TilingSprite.prototype._renderCanvas = function(renderSession)
 
     if (this._mask)
     {
-        renderSession.maskManager.popMask(renderSession.context);
+        renderSession.maskManager.popMask(renderSession);
     }
 
     for (i=0,j=this.children.length; i<j; i++)
@@ -391,19 +391,36 @@ PIXI.TilingSprite.prototype.generateTilingTexture = function(forcePowerOfTwo)
     {
         if (isFrame)
         {
-            targetWidth = frame.width;
-            targetHeight = frame.height;
+            if (texture.crop)
+            {
+                targetWidth = texture.crop.width;
+                targetHeight = texture.crop.height;
+            }
+            else
+            {
+                targetWidth = frame.width;
+                targetHeight = frame.height;
+            }
            
             newTextureRequired = true;
         }
     }
     else
     {
-        targetWidth = PIXI.getNextPowerOfTwo(frame.width);
-        targetHeight = PIXI.getNextPowerOfTwo(frame.height);
+        if (texture.crop)
+        {
+            targetWidth = PIXI.getNextPowerOfTwo(texture.crop.width);
+            targetHeight = PIXI.getNextPowerOfTwo(texture.crop.height);
+        }
+        else
+        {
+            targetWidth = PIXI.getNextPowerOfTwo(frame.width);
+            targetHeight = PIXI.getNextPowerOfTwo(frame.height);
+        }
+            newTextureRequired = true;
 
         //  If the BaseTexture dimensions don't match the texture frame then we need a new texture anyway because it's part of a texture atlas
-        if (frame.width !== targetWidth || frame.height !== targetHeight || texture.baseTexture.width !== targetWidth || texture.baseTexture.height || targetHeight) newTextureRequired = true;
+        // if (frame.width !== targetWidth || frame.height !== targetHeight || texture.baseTexture.width !== targetWidth || texture.baseTexture.height || targetHeight) newTextureRequired = true;
     }
 
     if (newTextureRequired)
@@ -461,4 +478,20 @@ PIXI.TilingSprite.prototype.generateTilingTexture = function(forcePowerOfTwo)
     this.texture = this.tilingTexture;
     
     this.tilingTexture.baseTexture._powerOf2 = true;
+};
+
+PIXI.TilingSprite.prototype.destroy = function () {
+
+    PIXI.Sprite.prototype.destroy.call(this);
+
+    this.tileScale = null;
+    this.tileScaleOffset = null;
+    this.tilePosition = null;
+
+    if (this.tilingTexture)
+    {
+        this.tilingTexture.destroy(true);
+        this.tilingTexture = null;
+    }
+
 };

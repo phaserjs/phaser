@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -58,7 +58,7 @@ Phaser.Mouse = function (game) {
     this.mouseWheelCallback = null;
 
     /**
-    * @property {boolean} capture - If true the DOM mouse events will have event.preventDefault applied to them, if false they will propogate fully.
+    * @property {boolean} capture - If true the DOM mouse events will have event.preventDefault applied to them, if false they will propagate fully.
     */
     this.capture = false;
 
@@ -249,6 +249,7 @@ Phaser.Mouse.prototype = {
         }
 
         var wheelEvent = this.game.device.wheelEvent;
+
         if (wheelEvent)
         {
             this.game.canvas.addEventListener(wheelEvent, this._onMouseWheel, true);

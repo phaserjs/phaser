@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -62,7 +62,7 @@ Phaser.Input = function (game) {
     this.enabled = true;
 
     /**
-    * @property {number} multiInputOverride - Controls the expected behaviour when using a mouse and touch together on a multi-input device.
+    * @property {number} multiInputOverride - Controls the expected behavior when using a mouse and touch together on a multi-input device.
     * @default
     */
     this.multiInputOverride = Phaser.Input.MOUSE_TOUCH_COMBINE;
@@ -361,10 +361,18 @@ Phaser.Input.prototype = {
         this.addPointer();
 
         this.mouse = new Phaser.Mouse(this.game);
-        this.keyboard = new Phaser.Keyboard(this.game);
         this.touch = new Phaser.Touch(this.game);
         this.mspointer = new Phaser.MSPointer(this.game);
-        this.gamepad = new Phaser.Gamepad(this.game);
+
+        if (Phaser.Keyboard)
+        {
+            this.keyboard = new Phaser.Keyboard(this.game);
+        }
+
+        if (Phaser.Gamepad)
+        {
+            this.gamepad = new Phaser.Gamepad(this.game);
+        }
 
         this.onDown = new Phaser.Signal();
         this.onUp = new Phaser.Signal();
@@ -387,12 +395,17 @@ Phaser.Input.prototype = {
         this.hitContext = this.hitCanvas.getContext('2d');
 
         this.mouse.start();
-        this.keyboard.start();
         this.touch.start();
         this.mspointer.start();
         this.mousePointer.active = true;
 
+        if (this.keyboard)
+        {
+            this.keyboard.start();
+        }
+
         var _this = this;
+
         this._onClickTrampoline = function (event) {
             _this.onClickTrampoline(event);
         };
@@ -409,10 +422,18 @@ Phaser.Input.prototype = {
     destroy: function () {
 
         this.mouse.stop();
-        this.keyboard.stop();
         this.touch.stop();
         this.mspointer.stop();
-        this.gamepad.stop();
+
+        if (this.keyboard)
+        {
+            this.keyboard.stop();
+        }
+
+        if (this.gamepad)
+        {
+            this.gamepad.stop();
+        }
 
         this.moveCallbacks = [];
 
@@ -489,7 +510,10 @@ Phaser.Input.prototype = {
     */
     update: function () {
 
-        this.keyboard.update();
+        if (this.keyboard)
+        {
+            this.keyboard.update();
+        }
 
         if (this.pollRate > 0 && this._pollCounter < this.pollRate)
         {
@@ -503,7 +527,10 @@ Phaser.Input.prototype = {
         this._oldPosition.copyFrom(this.position);
         this.mousePointer.update();
 
-        if (this.gamepad.active) { this.gamepad.update(); }
+        if (this.gamepad && this.gamepad.active)
+        {
+            this.gamepad.update();
+        }
 
         for (var i = 0; i < this.pointers.length; i++)
         {
@@ -534,9 +561,17 @@ Phaser.Input.prototype = {
 
         if (typeof hard === 'undefined') { hard = false; }
 
-        this.keyboard.reset(hard);
         this.mousePointer.reset();
-        this.gamepad.reset();
+
+        if (this.keyboard)
+        {
+            this.keyboard.reset(hard);
+        }
+
+        if (this.gamepad)
+        {
+            this.gamepad.reset();
+        }
 
         for (var i = 0; i < this.pointers.length; i++)
         {
@@ -601,6 +636,7 @@ Phaser.Input.prototype = {
         {
             return this.pointer1.start(event);
         }
+
         if (!this.pointer2.active)
         {
             return this.pointer2.start(event);
@@ -609,6 +645,7 @@ Phaser.Input.prototype = {
         for (var i = 2; i < this.pointers.length; i++)
         {
             var pointer = this.pointers[i];
+
             if (!pointer.active)
             {
                 return pointer.start(event);
@@ -634,6 +671,7 @@ Phaser.Input.prototype = {
         {
             return this.pointer1.move(event);
         }
+
         if (this.pointer2.active && this.pointer2.identifier === event.identifier)
         {
             return this.pointer2.move(event);
@@ -642,6 +680,7 @@ Phaser.Input.prototype = {
         for (var i = 2; i < this.pointers.length; i++)
         {
             var pointer = this.pointers[i];
+
             if (pointer.active && pointer.identifier === event.identifier)
             {
                 return pointer.move(event);
@@ -666,6 +705,7 @@ Phaser.Input.prototype = {
         {
             return this.pointer1.stop(event);
         }
+
         if (this.pointer2.active && this.pointer2.identifier === event.identifier)
         {
             return this.pointer2.stop(event);
@@ -674,6 +714,7 @@ Phaser.Input.prototype = {
         for (var i = 2; i < this.pointers.length; i++)
         {
             var pointer = this.pointers[i];
+
             if (pointer.active && pointer.identifier === event.identifier)
             {
                 return pointer.stop(event);
@@ -697,9 +738,11 @@ Phaser.Input.prototype = {
         if (typeof limit === 'undefined') { limit = this.pointers.length; }
 
         var count = limit;
+
         for (var i = 0; i < this.pointers.length && count > 0; i++)
         {
             var pointer = this.pointers[i];
+
             if (pointer.active)
             {
                 count--;
@@ -727,6 +770,7 @@ Phaser.Input.prototype = {
         for (var i = 0; i < this.pointers.length; i++)
         {
             var pointer = this.pointers[i];
+
             if (pointer.active === isActive)
             {
                 return pointer;
@@ -753,6 +797,7 @@ Phaser.Input.prototype = {
         for (var i = 0; i < this.pointers.length; i++)
         {
             var pointer = this.pointers[i];
+
             if (pointer.identifier === identifier)
             {
                 return pointer;
@@ -834,10 +879,10 @@ Phaser.Input.prototype = {
         {
             return (displayObject.hitArea.contains(this._localPoint.x, this._localPoint.y));
         }
-        else if (displayObject instanceof PIXI.Sprite)
+        else if (displayObject instanceof Phaser.TileSprite)
         {
-            var width = displayObject.texture.frame.width;
-            var height = displayObject.texture.frame.height;
+            var width = displayObject.width;
+            var height = displayObject.height;
             var x1 = -width * displayObject.anchor.x;
 
             if (this._localPoint.x >= x1 && this._localPoint.x < x1 + width)
@@ -850,10 +895,10 @@ Phaser.Input.prototype = {
                 }
             }
         }
-        else if (displayObject instanceof Phaser.TileSprite)
+        else if (displayObject instanceof PIXI.Sprite)
         {
-            var width = displayObject.width;
-            var height = displayObject.height;
+            var width = displayObject.texture.frame.width;
+            var height = displayObject.texture.frame.height;
             var x1 = -width * displayObject.anchor.x;
 
             if (this._localPoint.x >= x1 && this._localPoint.x < x1 + width)

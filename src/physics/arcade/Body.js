@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -59,7 +59,9 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.allowRotation = true;
 
     /**
-    * @property {number} rotation - The amount the Body is rotated.
+    * An Arcade Physics Body can have angularVelocity and angularAcceleration. Please understand that the collision Body
+    * itself never rotates, it is always axis-aligned. However these values are passed up to the parent Sprite and updates its rotation.
+    * @property {number} rotation
     */
     this.rotation = sprite.rotation;
 
@@ -70,49 +72,60 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.preRotation = sprite.rotation;
 
     /**
+    * @property {number} width - The calculated width of the physics body.
+    * @readonly
+    */
+    this.width = sprite.width;
+
+    /**
+    * @property {number} height - The calculated height of the physics body.
+    * @readonly
+    */
+    this.height = sprite.height;
+
+    /**
     * @property {number} sourceWidth - The un-scaled original size.
     * @readonly
     */
-    this.sourceWidth = sprite.texture.frame.width;
+    this.sourceWidth = sprite.width;
 
     /**
     * @property {number} sourceHeight - The un-scaled original size.
     * @readonly
     */
-    this.sourceHeight = sprite.texture.frame.height;
+    this.sourceHeight = sprite.height;
 
-    /**
-    * @property {number} width - The calculated width of the physics body.
-    */
-    this.width = sprite.width;
-
-    /**
-    * @property .numInternal ID cache
-    */
-    this.height = sprite.height;
+    if (sprite.texture)
+    {
+        this.sourceWidth = sprite.texture.frame.width;
+        this.sourceHeight = sprite.texture.frame.height;
+    }
 
     /**
     * @property {number} halfWidth - The calculated width / 2 of the physics body.
+    * @readonly
     */
     this.halfWidth = Math.abs(sprite.width / 2);
 
     /**
     * @property {number} halfHeight - The calculated height / 2 of the physics body.
+    * @readonly
     */
     this.halfHeight = Math.abs(sprite.height / 2);
 
     /**
     * @property {Phaser.Point} center - The center coordinate of the Physics Body.
+    * @readonly
     */
     this.center = new Phaser.Point(sprite.x + this.halfWidth, sprite.y + this.halfHeight);
 
     /**
-    * @property {Phaser.Point} velocity - The velocity in pixels per second sq. of the Body.
+    * @property {Phaser.Point} velocity - The velocity, or rate of change in speed of the Body. Measured in pixels per second.
     */
     this.velocity = new Phaser.Point();
 
     /**
-    * @property {Phaser.Point} newVelocity - New velocity.
+    * @property {Phaser.Point} newVelocity - The new velocity. Calculated during the Body.preUpdate and applied to its position.
     * @readonly
     */
     this.newVelocity = new Phaser.Point(0, 0);
@@ -123,7 +136,7 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.deltaMax = new Phaser.Point(0, 0);
 
     /**
-    * @property {Phaser.Point} acceleration - The velocity in pixels per second sq. of the Body.
+    * @property {Phaser.Point} acceleration - The acceleration is the rate of change of the velocity. Measured in pixels per second squared.
     */
     this.acceleration = new Phaser.Point();
 
@@ -144,7 +157,7 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.gravity = new Phaser.Point(0, 0);
 
     /**
-    * @property {Phaser.Point} bounce - The elasticitiy of the Body when colliding. bounce.x/y = 1 means full rebound, bounce.x/y = 0.5 means 50% rebound velocity.
+    * @property {Phaser.Point} bounce - The elasticity of the Body when colliding. bounce.x/y = 1 means full rebound, bounce.x/y = 0.5 means 50% rebound velocity.
     */
     this.bounce = new Phaser.Point();
 
@@ -155,37 +168,42 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.maxVelocity = new Phaser.Point(10000, 10000);
 
     /**
-    * @property {number} angularVelocity - The angular velocity in pixels per second sq. of the Body.
+    * @property {Phaser.Point} friction - The amount of movement that will occur if another object 'rides' this one.
+    */
+    this.friction = new Phaser.Point(1, 0);
+
+    /**
+    * @property {number} angularVelocity - The angular velocity controls the rotation speed of the Body. It is measured in radians per second.
     * @default
     */
     this.angularVelocity = 0;
 
     /**
-    * @property {number} angularAcceleration - The angular acceleration in pixels per second sq. of the Body.
+    * @property {number} angularAcceleration - The angular acceleration is the rate of change of the angular velocity. Measured in radians per second squared.
     * @default
     */
     this.angularAcceleration = 0;
 
     /**
-    * @property {number} angularDrag - The angular drag applied to the rotation of the Body.
+    * @property {number} angularDrag - The drag applied during the rotation of the Body.
     * @default
     */
     this.angularDrag = 0;
 
     /**
-    * @property {number} maxAngular - The maximum angular velocity in pixels per second sq. that the Body can reach.
+    * @property {number} maxAngular - The maximum angular velocity in radians per second that the Body can reach.
     * @default
     */
     this.maxAngular = 1000;
 
     /**
-    * @property {number} mass - The mass of the Body.
+    * @property {number} mass - The mass of the Body. When two bodies collide their mass is used in the calculation to determine the exchange of velocity.
     * @default
     */
     this.mass = 1;
 
     /**
-    * @property {number} angle - The angle of the Body in radians as calculated by its velocity, rather than its visual angle.
+    * @property {number} angle - The angle of the Body in radians, as calculated by its angularVelocity.
     * @readonly
     */
     this.angle = 0;
@@ -212,7 +230,7 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     * If you have a Body that is being moved around the world via a tween or a Group motion, but its local x/y position never
     * actually changes, then you should set Body.moves = false. Otherwise it will most likely fly off the screen.
     * If you want the physics system to move the body around, then set moves to true.
-    * @property {boolean} moves - Set to true to allow the Physics system to move this Body, other false to move it manually.
+    * @property {boolean} moves - Set to true to allow the Physics system to move this Body, otherwise false to move it manually.
     * @default
     */
     this.moves = true;
@@ -287,14 +305,14 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     /**
     * If this is an especially small or fast moving object then it can sometimes skip over tilemap collisions if it moves through a tile in a step.
     * Set this padding value to add extra padding to its bounds. tilePadding.x applied to its width, y to its height.
-    * @property {Phaser.Point} tilePadding - Extra padding to be added to this sprites dimensions when checking for tile collision.
+    * @property {Phaser.Point} tilePadding - Extra padding to be added to this sprite's dimensions when checking for tile collision.
     */
     this.tilePadding = new Phaser.Point();
 
     /**
-    * @property {number} phaser - Is this Body in a preUpdate (1) or postUpdate (2) state?
+    * @property {boolean} dirty - If this Body in a preUpdate (true) or postUpdate (false) state?
     */
-    this.phase = 0;
+    this.dirty = false;
 
     /**
     * @property {boolean} skipQuadTree - If true and you collide this Sprite against a Group, it will disable the collision check from using a QuadTree.
@@ -369,12 +387,12 @@ Phaser.Physics.Arcade.Body.prototype = {
     */
     preUpdate: function () {
 
-        if (!this.enable)
+        if (!this.enable || this.game.physics.arcade.isPaused)
         {
             return;
         }
 
-        this.phase = 1;
+        this.dirty = true;
 
         //  Store and reset collision flags
         this.wasTouching.none = this.touching.none;
@@ -404,7 +422,7 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         this.preRotation = this.rotation;
 
-        if (this._reset || this.sprite._cache[4] === 1)
+        if (this._reset || this.sprite.fresh)
         {
             this.prev.x = this.position.x;
             this.prev.y = this.position.y;
@@ -449,18 +467,13 @@ Phaser.Physics.Arcade.Body.prototype = {
     */
     postUpdate: function () {
 
-        if (!this.enable)
-        {
-            return;
-        }
-
         //  Only allow postUpdate to be called once per frame
-        if (this.phase === 2)
+        if (!this.enable || !this.dirty)
         {
             return;
         }
 
-        this.phase = 2;
+        this.dirty = false;
 
         if (this.deltaX() < 0)
         {
@@ -509,8 +522,9 @@ Phaser.Physics.Arcade.Body.prototype = {
                 }
             }
 
-            this.sprite.x += this._dx;
-            this.sprite.y += this._dy;
+            this.sprite.position.x += this._dx;
+            this.sprite.position.y += this._dy;
+            this._reset = true;
         }
 
         this.center.setTo(this.position.x + this.halfWidth, this.position.y + this.halfHeight);
@@ -526,7 +540,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     },
 
     /**
-    * Removes this bodies reference to its parent sprite, freeing it up for gc.
+    * Removes this body's reference to its parent sprite, freeing it up for gc.
     *
     * @method Phaser.Physics.Arcade.Body#destroy
     */
@@ -613,6 +627,7 @@ Phaser.Physics.Arcade.Body.prototype = {
         this.velocity.set(0);
         this.acceleration.set(0);
 
+        this.speed = 0;
         this.angularVelocity = 0;
         this.angularAcceleration = 0;
 
@@ -641,9 +656,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     * @return {boolean} True if the given coordinates are inside this Body, otherwise false.
     */
     hitTest: function (x, y) {
-
         return Phaser.Rectangle.contains(this, x, y);
-
     },
 
     /**

@@ -1,11 +1,12 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
 /**
 * An Animation instance contains a single animation and the controls to play it.
+* 
 * It is created by the AnimationManager, consists of Animation.Frame objects and belongs to a single Game Object such as a Sprite.
 *
 * @class Phaser.Animation
@@ -191,21 +192,14 @@ Phaser.Animation.prototype = {
         this._timeNextFrame = this.game.time.time + this.delay;
 
         this._frameIndex = 0;
-
-        this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
-
-        this._parent.setFrame(this.currentFrame);
-
-        //  TODO: Double check if required
-        if (this._parent.__tilePattern)
-        {
-            this._parent.__tilePattern = false;
-            this._parent.tilingTexture = false;
-        }
+        this.updateCurrentFrame(false);
 
         this._parent.events.onAnimationStart$dispatch(this._parent, this);
 
         this.onStart.dispatch(this._parent, this);
+
+        this._parent.animations.currentAnim = this;
+        this._parent.animations.currentFrame = this.currentFrame;
 
         return this;
 
@@ -231,6 +225,9 @@ Phaser.Animation.prototype = {
         this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
 
         this._parent.setFrame(this.currentFrame);
+
+        this._parent.animations.currentAnim = this;
+        this._parent.animations.currentFrame = this.currentFrame;
 
         this.onStart.dispatch(this._parent, this);
 
@@ -390,40 +387,71 @@ Phaser.Animation.prototype = {
             {
                 if (this.loop)
                 {
+                    // Update current state before event callback
                     this._frameIndex %= this._frames.length;
                     this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
                     this.loopCount++;
                     this._parent.events.onAnimationLoop$dispatch(this._parent, this);
                     this.onLoop.dispatch(this._parent, this);
+                    return this.updateCurrentFrame(true);
                 }
                 else
                 {
                     this.complete();
+                    return false;
                 }
             }
-
-            this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
-
-            if (this.currentFrame)
+            else
             {
-                this._parent.setFrame(this.currentFrame);
-
-                if (this._parent.__tilePattern)
-                {
-                    this._parent.__tilePattern = false;
-                    this._parent.tilingTexture = false;
-                }
-
-                if (this.onUpdate)
-                {
-                    this.onUpdate.dispatch(this, this.currentFrame);
-                }
+                return this.updateCurrentFrame(true);
             }
-
-            return true;
         }
 
         return false;
+
+    },
+
+    /**
+    * Changes the currentFrame per the _frameIndex, updates the display state,
+    * and triggers the update signal.
+    *
+    * Returns true if the current frame update was 'successful', false otherwise.
+    *
+    * @method Phaser.Animation#updateCurrentFrame
+    * @param {bool} signalUpdate - If true th onUpdate signal will be triggered.
+    * @private
+    */
+    updateCurrentFrame: function (signalUpdate) {
+
+        if (!this._frameData)
+        {
+            // The animation is already destroyed, probably from a callback
+            return false;
+        }
+
+        this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
+
+        if (this.currentFrame)
+        {
+            this._parent.setFrame(this.currentFrame);
+
+            if (this._parent.__tilePattern)
+            {
+                this._parent.__tilePattern = false;
+                this._parent.tilingTexture = false;
+            }
+        }
+
+        if (this.onUpdate && signalUpdate)
+        {
+            this.onUpdate.dispatch(this, this.currentFrame);
+            // False if the animation was destroyed from within a callback
+            return !!this._frameData;
+        }
+        else
+        {
+            return true;
+        }
 
     },
 
@@ -454,24 +482,7 @@ Phaser.Animation.prototype = {
         if (frame !== this._frameIndex)
         {
             this._frameIndex = frame;
-
-            this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
-
-            if (this.currentFrame)
-            {
-                this._parent.setFrame(this.currentFrame);
-
-                if (this._parent.__tilePattern)
-                {
-                    this._parent.__tilePattern = false;
-                    this._parent.tilingTexture = false;
-                }
-            }
-
-            if (this.onUpdate)
-            {
-                this.onUpdate.dispatch(this, this.currentFrame);
-            }
+            this.updateCurrentFrame(true);
         }
 
     },
@@ -503,24 +514,7 @@ Phaser.Animation.prototype = {
         if (frame !== this._frameIndex)
         {
             this._frameIndex = frame;
-
-            this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
-
-            if (this.currentFrame)
-            {
-                this._parent.setFrame(this.currentFrame);
-
-                if (this._parent.__tilePattern)
-                {
-                    this._parent.__tilePattern = false;
-                    this._parent.tilingTexture = false;
-                }
-            }
-
-            if (this.onUpdate)
-            {
-                this.onUpdate.dispatch(this, this.currentFrame);
-            }
+            this.updateCurrentFrame(true);
         }
 
     },
@@ -544,6 +538,12 @@ Phaser.Animation.prototype = {
     * @method Phaser.Animation#destroy
     */
     destroy: function () {
+
+        if (!this._frameData)
+        {
+            // Already destroyed
+            return;
+        }
 
         this.game.onPause.remove(this.onPause, this);
         this.game.onResume.remove(this.onResume, this);
@@ -573,6 +573,9 @@ Phaser.Animation.prototype = {
     * @method Phaser.Animation#complete
     */
     complete: function () {
+
+        this._frameIndex = this._frames.length - 1;
+        this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
 
         this.isPlaying = false;
         this.isFinished = true;

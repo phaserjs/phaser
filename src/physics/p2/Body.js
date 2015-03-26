@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -105,6 +105,11 @@ Phaser.Physics.P2.Body = function (game, sprite, x, y, mass) {
     this.debugBody = null;
 
     /**
+    * @property {boolean} dirty - Internally used by Sprite.x/y
+    */
+    this.dirty = false;
+
+    /**
     * @property {boolean} _collideWorldBounds - Internal var that determines if this Body collides with the world bounds or not.
     * @private
     */
@@ -133,6 +138,12 @@ Phaser.Physics.P2.Body = function (game, sprite, x, y, mass) {
     * @private
     */
     this._groupCallbackContext = {};
+
+    /**
+    * @property {boolean} _reset - Internal var.
+    * @private
+    */
+    this._reset = false;
 
     //  Set-up the default shape
     if (sprite)
@@ -302,6 +313,9 @@ Phaser.Physics.P2.Body.prototype = {
     */
     clearCollision: function (clearGroup, clearMask, shape) {
 
+        if (typeof clearGroup === 'undefined') { clearGroup = true; }
+        if (typeof clearMask === 'undefined') { clearMask = true; }
+
         if (typeof shape === 'undefined')
         {
             for (var i = this.data.shapes.length - 1; i >= 0; i--)
@@ -400,6 +414,7 @@ Phaser.Physics.P2.Body.prototype = {
     adjustCenterOfMass: function () {
 
         this.data.adjustCenterOfMass();
+        this.shapeChanged();
 
     },
 
@@ -653,6 +668,8 @@ Phaser.Physics.P2.Body.prototype = {
     */
     preUpdate: function () {
 
+        this.dirty = true;
+
         if (this.removeNextStep)
         {
             this.removeFromWorld();
@@ -681,6 +698,8 @@ Phaser.Physics.P2.Body.prototype = {
         {
             this.debugBody.updateSpriteTransform();
         }
+
+        this.dirty = false;
 
     },
 
@@ -804,6 +823,7 @@ Phaser.Physics.P2.Body.prototype = {
     /**
     * Add a shape to the body. You can pass a local transform when adding a shape, so that the shape gets an offset and an angle relative to the body center of mass.
     * Will automatically update the mass properties and bounding radius.
+    * If this Body had a previously set Collision Group you will need to re-apply it to the new Shape this creates.
     *
     * @method Phaser.Physics.P2.Body#addShape
     * @param {p2.Shape} shape - The shape to add to the body.
@@ -1020,6 +1040,7 @@ Phaser.Physics.P2.Body.prototype = {
 
     /**
     * Clears any previously set shapes. Then creates a new Circle shape and adds it to this Body.
+    * If this Body had a previously set Collision Group you will need to re-apply it to the new Shape this creates.
     *
     * @method Phaser.Physics.P2.Body#setCircle
     * @param {number} radius - The radius of this circle (in pixels)
@@ -1038,6 +1059,7 @@ Phaser.Physics.P2.Body.prototype = {
     /**
     * Clears any previously set shapes. The creates a new Rectangle shape at the given size and offset, and adds it to this Body.
     * If you wish to create a Rectangle to match the size of a Sprite or Image see Body.setRectangleFromSprite.
+    * If this Body had a previously set Collision Group you will need to re-apply it to the new Shape this creates.
     *
     * @method Phaser.Physics.P2.Body#setRectangle
     * @param {number} [width=16] - The width of the rectangle in pixels.
@@ -1062,6 +1084,7 @@ Phaser.Physics.P2.Body.prototype = {
     * Clears any previously set shapes.
     * Then creates a Rectangle shape sized to match the dimensions and orientation of the Sprite given.
     * If no Sprite is given it defaults to using the parent of this Body.
+    * If this Body had a previously set Collision Group you will need to re-apply it to the new Shape this creates.
     *
     * @method Phaser.Physics.P2.Body#setRectangleFromSprite
     * @param {Phaser.Sprite|Phaser.Image} [sprite] - The Sprite on which the Rectangle will get its dimensions.

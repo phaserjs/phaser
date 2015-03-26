@@ -1,7 +1,7 @@
 /**
 * @author       George https://github.com/georgiee
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -56,6 +56,8 @@ Phaser.Physics.P2.BodyDebug = function(game, body, settings) {
 
     this.draw();
 
+    this.updateSpriteTransform();
+
 };
 
 Phaser.Physics.P2.BodyDebug.prototype = Object.create(Phaser.Group.prototype);
@@ -109,6 +111,21 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
                 {
                     this.drawCircle(sprite, offset[0] * this.ppu, offset[1] * this.ppu, angle, child.radius * this.ppu, color, lw);
                 }
+                else if (child instanceof p2.Capsule) {
+                    this.drawCapsule(sprite, offset[0] * this.ppu, offset[1] * this.ppu, angle, child.length * this.ppu, child.radius * this.ppu, lineColor, color, lw);
+                }
+                else if (child instanceof p2.Plane)
+                {
+                    this.drawPlane(sprite, offset[0] * this.ppu, -offset[1] * this.ppu, color, lineColor, lw * 5, lw * 10, lw * 10, this.ppu * 100, angle);
+                }
+                else if (child instanceof p2.Line)
+                {
+                    this.drawLine(sprite, child.length * this.ppu, lineColor, lw);
+                }
+                else if (child instanceof p2.Rectangle)
+                {
+                    this.drawRectangle(sprite, offset[0] * this.ppu, offset[1] * this.ppu, angle, child.width * this.ppu, child.height * this.ppu, lineColor, color, lw);
+                }
                 else if (child instanceof p2.Convex)
                 {
                     verts = [];
@@ -123,18 +140,6 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
 
                     this.drawConvex(sprite, verts, child.triangles, lineColor, color, lw, this.settings.debugPolygons, [offset[0] * this.ppu, -offset[1] * this.ppu]);
                 }
-                else if (child instanceof p2.Plane)
-                {
-                    this.drawPlane(sprite, offset[0] * this.ppu, -offset[1] * this.ppu, color, lineColor, lw * 5, lw * 10, lw * 10, this.ppu * 100, angle);
-                }
-                else if (child instanceof p2.Line)
-                {
-                    this.drawLine(sprite, child.length * this.ppu, lineColor, lw);
-                }
-                else if (child instanceof p2.Rectangle)
-                {
-                    this.drawRectangle(sprite, offset[0] * this.ppu, -offset[1] * this.ppu, angle, child.width * this.ppu, child.height * this.ppu, lineColor, color, lw);
-                }
 
                 i++;
             }
@@ -145,7 +150,7 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
     /**
     * Draws the P2 shapes to the Graphics object.
     *
-    * @method Phaser.Physics.P2.BodyDebug#draw
+    * @method Phaser.Physics.P2.BodyDebug#drawRectangle
     */
     drawRectangle: function(g, x, y, angle, w, h, color, fillColor, lineWidth) {
 
@@ -155,7 +160,6 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
         g.lineStyle(lineWidth, color, 1);
         g.beginFill(fillColor);
         g.drawRect(x - w / 2, y - h / 2, w, h);
-
     },
 
     /**
@@ -179,7 +183,7 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
     /**
     * Draws a P2 Line shape.
     *
-    * @method Phaser.Physics.P2.BodyDebug#drawCircle
+    * @method Phaser.Physics.P2.BodyDebug#drawLine
     */
     drawLine: function(g, len, color, lineWidth) {
 
@@ -356,6 +360,40 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
         xd = x0 + Math.cos(angle) * -this.game.width;
         yd = x1 + Math.sin(angle) * -this.game.height;
         g.lineTo(xd, -yd);
+
+    },
+
+    drawCapsule: function(g, x, y, angle, len, radius, color, fillColor, lineWidth) {
+
+        if (typeof lineWidth === 'undefined') { lineWidth = 1; }
+        if (typeof color === 'undefined') { color =  0x000000; }
+
+        g.lineStyle(lineWidth, color, 1);
+
+        // Draw circles at ends
+        var c = Math.cos(angle);
+        var s = Math.sin(angle);
+
+        g.beginFill(fillColor, 1);
+        g.drawCircle(-len/2*c + x, -len/2*s + y, -radius * 2);
+        g.drawCircle( len/2*c + x,  len/2*s + y, -radius * 2);
+        g.endFill();
+
+        // Draw rectangle
+        g.lineStyle(lineWidth, color, 0);
+        g.beginFill(fillColor, 1);
+        g.moveTo(-len/2*c + radius*s + x, -len/2*s + radius*c + y);
+        g.lineTo( len/2*c + radius*s + x,  len/2*s + radius*c + y);
+        g.lineTo( len/2*c - radius*s + x,  len/2*s - radius*c + y);
+        g.lineTo(-len/2*c - radius*s + x, -len/2*s - radius*c + y);
+        g.endFill();
+
+        // Draw lines in between
+        g.lineStyle(lineWidth, color, 1);
+        g.moveTo(-len/2*c + radius*s + x, -len/2*s + radius*c + y);
+        g.lineTo( len/2*c + radius*s + x,  len/2*s + radius*c + y);
+        g.moveTo(-len/2*c - radius*s + x, -len/2*s - radius*c + y);
+        g.lineTo( len/2*c - radius*s + x,  len/2*s - radius*c + y);
 
     },
 

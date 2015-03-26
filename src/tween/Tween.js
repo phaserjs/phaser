@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -61,11 +61,6 @@ Phaser.Tween = function (target, game, manager) {
     * @property {number} repeatCounter - If the Tween and any child tweens are set to repeat this contains the current repeat count.
     */
     this.repeatCounter = 0;
-
-    /**
-    * @property {number} repeatDelay - The amount of time in ms between repeats of this tween and any child tweens.
-    */
-    this.repeatDelay = 0;
 
     /**
     * @property {boolean} pendingDelete - True if this Tween is ready to be deleted by the TweenManager.
@@ -177,7 +172,7 @@ Phaser.Tween.prototype = {
     * ".easeIn", ".easeOut" and "easeInOut" variants are all supported for all ease types.
     *
     * @method Phaser.Tween#to
-    * @param {object} properties - An object containing the properties you want to tween., such as `Sprite.x` or `Sound.volume`. Given as a JavaScript object.
+    * @param {object} properties - An object containing the properties you want to tween, such as `Sprite.x` or `Sound.volume`. Given as a JavaScript object.
     * @param {number} [duration=1000] - Duration of this tween in ms.
     * @param {function|string} [ease=null] - Easing function. If not set it will default to Phaser.Easing.Default, which is Phaser.Easing.Linear.None by default but can be over-ridden.
     * @param {boolean} [autoStart=false] - Set to `true` to allow this tween to start automatically. Otherwise call Tween.start().
@@ -357,6 +352,39 @@ Phaser.Tween.prototype = {
     },
 
     /**
+    * Updates either a single TweenData or all TweenData objects properties to the given value.
+    * Used internally by methods like Tween.delay, Tween.yoyo, etc. but can also be called directly if you know which property you want to tweak.
+    * The property is not checked, so if you pass an invalid one you'll generate a run-time error.
+    *
+    * @method Phaser.Tween#updateTweenData
+    * @param {string} property - The property to update.
+    * @param {number|function} value - The value to set the property to.
+    * @param {number} [index=0] - If this tween has more than one child this allows you to target a specific child. If set to -1 it will set the delay on all the children.
+    * @return {Phaser.Tween} This tween. Useful for method chaining.
+    */
+    updateTweenData: function (property, value, index) {
+
+        if (this.timeline.length === 0) { return this; }
+
+        if (typeof index === 'undefined') { index = 0; }
+
+        if (index === -1)
+        {
+            for (var i = 0; i < this.timeline.length; i++)
+            {
+                this.timeline[i][property] = value;
+            }
+        }
+        else
+        {
+            this.timeline[index][property] = value;
+        }
+
+        return this;
+
+    },
+
+    /**
     * Sets the delay in milliseconds before this tween will start. If there are child tweens it sets the delay before the first child starts.
     * The delay is invoked as soon as you call `Tween.start`. If the tween is already running this method doesn't do anything for the current active tween.
     * If you have not yet called `Tween.to` or `Tween.from` at least once then this method will do nothing, as there are no tweens to delay.
@@ -369,23 +397,7 @@ Phaser.Tween.prototype = {
     */
     delay: function (duration, index) {
 
-        if (this.timeline.length === 0) { return this; }
-
-        if (typeof index === 'undefined') { index = 0; }
-
-        if (index === -1)
-        {
-            for (var i = 0; i < this.timeline.length; i++)
-            {
-                this.timeline[i].delay = duration;
-            }
-        }
-        else
-        {
-            this.timeline[index].delay = duration;
-        }
-
-        return this;
+        return this.updateTweenData('delay', duration, index);
 
     },
 
@@ -397,28 +409,34 @@ Phaser.Tween.prototype = {
     *
     * @method Phaser.Tween#repeat
     * @param {number} total - How many times a tween should repeat before completing. Set to zero to remove an active repeat. Set to -1 to repeat forever.
+    * @param {number} [repeat=0] - This is the amount of time to pause (in ms) before the repeat will start.
     * @param {number} [index=0] - If this tween has more than one child this allows you to target a specific child. If set to -1 it will set the repeat value on all the children.
     * @return {Phaser.Tween} This tween. Useful for method chaining.
     */
-    repeat: function (total, index) {
+    repeat: function (total, repeatDelay, index) {
 
-        if (this.timeline.length === 0) { return this; }
+        if (typeof repeatDelay === 'undefined') { repeatDelay = 0; }
 
-        if (typeof index === 'undefined') { index = 0; }
+        this.updateTweenData('repeatCounter', total, index);
 
-        if (index === -1)
-        {
-            for (var i = 0; i < this.timeline.length; i++)
-            {
-                this.timeline[i].repeatCounter = total;
-            }
-        }
-        else
-        {
-            this.timeline[index].repeatCounter = total;
-        }
+        return this.updateTweenData('repeatDelay', repeatDelay, index);
 
-        return this;
+    },
+
+    /**
+    * Sets the delay in milliseconds before this tween will repeat itself.
+    * The repeatDelay is invoked as soon as you call `Tween.start`. If the tween is already running this method doesn't do anything for the current active tween.
+    * If you have not yet called `Tween.to` or `Tween.from` at least once then this method will do nothing, as there are no tweens to set repeatDelay on.
+    * If you have child tweens and pass -1 as the index value it sets the repeatDelay across all of them.
+    *
+    * @method Phaser.Tween#repeatDelay
+    * @param {number} duration - The amount of time in ms that the Tween should wait until it repeats or yoyos once start is called. Set to zero to remove any active repeatDelay.
+    * @param {number} [index=0] - If this tween has more than one child this allows you to target a specific child. If set to -1 it will set the repeatDelay on all the children.
+    * @return {Phaser.Tween} This tween. Useful for method chaining.
+    */
+    repeatDelay: function (duration, index) {
+
+        return this.updateTweenData('repeatDelay', duration, index);
 
     },
 
@@ -431,28 +449,34 @@ Phaser.Tween.prototype = {
     *
     * @method Phaser.Tween#yoyo
     * @param {boolean} enable - Set to true to yoyo this tween, or false to disable an already active yoyo.
+    * @param {number} [yoyoDelay=0] - This is the amount of time to pause (in ms) before the yoyo will start.
     * @param {number} [index=0] - If this tween has more than one child this allows you to target a specific child. If set to -1 it will set yoyo on all the children.
     * @return {Phaser.Tween} This tween. Useful for method chaining.
     */
-    yoyo: function(enable, index) {
+    yoyo: function(enable, yoyoDelay, index) {
 
-        if (this.timeline.length === 0) { return this; }
+        if (typeof yoyoDelay === 'undefined') { yoyoDelay = 0; }
 
-        if (typeof index === 'undefined') { index = 0; }
+        this.updateTweenData('yoyo', enable, index);
 
-        if (index === -1)
-        {
-            for (var i = 0; i < this.timeline.length; i++)
-            {
-                this.timeline[i].yoyo = enable;
-            }
-        }
-        else
-        {
-            this.timeline[index].yoyo = enable;
-        }
+        return this.updateTweenData('yoyoDelay', yoyoDelay, index);
 
-        return this;
+    },
+
+    /**
+    * Sets the delay in milliseconds before this tween will run a yoyo (only applies if yoyo is enabled).
+    * The repeatDelay is invoked as soon as you call `Tween.start`. If the tween is already running this method doesn't do anything for the current active tween.
+    * If you have not yet called `Tween.to` or `Tween.from` at least once then this method will do nothing, as there are no tweens to set repeatDelay on.
+    * If you have child tweens and pass -1 as the index value it sets the repeatDelay across all of them.
+    *
+    * @method Phaser.Tween#yoyoDelay
+    * @param {number} duration - The amount of time in ms that the Tween should wait until it repeats or yoyos once start is called. Set to zero to remove any active yoyoDelay.
+    * @param {number} [index=0] - If this tween has more than one child this allows you to target a specific child. If set to -1 it will set the yoyoDelay on all the children.
+    * @return {Phaser.Tween} This tween. Useful for method chaining.
+    */
+    yoyoDelay: function (duration, index) {
+
+        return this.updateTweenData('yoyoDelay', duration, index);
 
     },
 
@@ -469,26 +493,12 @@ Phaser.Tween.prototype = {
     */
     easing: function (ease, index) {
 
-        if (typeof index === 'undefined') { index = 0; }
-
         if (typeof ease === 'string' && this.manager.easeMap[ease])
         {
             ease = this.manager.easeMap[ease];
         }
 
-        if (index === -1)
-        {
-            for (var i = 0; i < this.timeline.length; i++)
-            {
-                this.timeline[i].easingFunction = ease;
-            }
-        }
-        else
-        {
-            this.timeline[index].easingFunction = ease;
-        }
-
-        return this;
+        return this.updateTweenData('easingFunction', ease, index);
 
     },
 
@@ -496,30 +506,21 @@ Phaser.Tween.prototype = {
     * Sets the interpolation function the tween will use. By default it uses Phaser.Math.linearInterpolation.
     * Also available: Phaser.Math.bezierInterpolation and Phaser.Math.catmullRomInterpolation.
     * The interpolation function is only used if the target properties is an array.
-    * If you have child tweens and pass -1 as the index value it sets the interpolation function across all of them.
+    * If you have child tweens and pass -1 as the index value and it will set the interpolation function across all of them.
     *
     * @method Phaser.Tween#interpolation
     * @param {function} interpolation - The interpolation function to use (Phaser.Math.linearInterpolation by default)
-    * @param {number} [index=0] - If this tween has more than one child this allows you to target a specific child. If set to -1 it will set the easing function on all children.
+    * @param {object} [context] - The context under which the interpolation function will be run.
+    * @param {number} [index=0] - If this tween has more than one child this allows you to target a specific child. If set to -1 it will set the interpolation function on all children.
     * @return {Phaser.Tween} This tween. Useful for method chaining.
     */
-    interpolation: function (interpolation, index) {
+    interpolation: function (interpolation, context, index) {
 
-        if (typeof index === 'undefined') { index = 0; }
+        if (typeof context === 'undefined') { context = Phaser.Math; }
 
-        if (index === -1)
-        {
-            for (var i = 0; i < this.timeline.length; i++)
-            {
-                this.timeline[i].interpolationFunction = interpolation;
-            }
-        }
-        else
-        {
-            this.timeline[index].interpolationFunction = interpolation;
-        }
+        this.updateTweenData('interpolationFunction', interpolation, index);
 
-        return this;
+        return this.updateTweenData('interpolationContext', context, index);
 
     },
 

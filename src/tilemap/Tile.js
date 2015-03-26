@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -37,7 +37,17 @@ Phaser.Tile = function (layer, index, x, y, width, height) {
     * @property {number} y - The y map coordinate of this tile.
     */
     this.y = y;
+    
+    /**
+    * @property {number} rotation - The rotation angle of this tile.
+    */
+    this.rotation = 0;
 
+    /**
+    * @property {boolean} flipped - Whether this tile is flipped (mirrored) or not.
+    */
+    this.flipped = false;
+    
     /**
     * @property {number} x - The x map coordinate of this tile.
     */
