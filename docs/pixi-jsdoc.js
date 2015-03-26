@@ -1163,7 +1163,7 @@ Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier
 * @param {Number} toY - Destination point y
 * @return {PIXI.Graphics} 
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 256
+* @sourceline 264
 */
 /**
 * @description The arc method creates an arc/curve (used to create circles, or parts of circles).
@@ -1176,7 +1176,7 @@ Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier
 * @param {Boolean} anticlockwise - Optional. Specifies whether the drawing should be counterclockwise or clockwise. False is default, and indicates clockwise, while true indicates counter-clockwise.
 * @return {PIXI.Graphics} 
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 374
+* @sourceline 391
 */
 /**
 * @description Specifies a simple one-color fill that subsequent calls to other Graphics methods
@@ -1186,14 +1186,14 @@ Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier
 * @param {Number} alpha - the alpha of the fill
 * @return {PIXI.Graphics} 
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 455
+* @sourceline 474
 */
 /**
 * @description Applies a fill to the lines and shapes that were added since the last call to the beginFill() method.
 * @method PIXI.Graphics#endFill
 * @return {PIXI.Graphics} 
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 483
+* @sourceline 502
 */
 /**
 * @method PIXI.Graphics#drawRect
@@ -1203,7 +1203,7 @@ Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier
 * @param {Number} height - The height of the rectangle
 * @return {PIXI.Graphics} 
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 498
+* @sourceline 517
 */
 /**
 * @method PIXI.Graphics#drawRoundedRect
@@ -1213,7 +1213,7 @@ Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier
 * @param {Number} height - The height of the rectangle
 * @param {Number} radius - Radius of the rectangle corners
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 514
+* @sourceline 533
 */
 /**
 * @description Draws an ellipse.
@@ -1224,22 +1224,22 @@ Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier
 * @param {Number} height - The half height of the ellipse
 * @return {PIXI.Graphics} 
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 546
+* @sourceline 565
 */
 /**
 * @description Draws a polygon using the given path.
 * @method PIXI.Graphics#drawPolygon
-* @param {Array} path - The path data used to construct the polygon.
+* @param {Array} path - The path data used to construct the polygon. If you've got a Phaser.Polygon object then pass `polygon.points` here.
 * @return {PIXI.Graphics} 
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 563
+* @sourceline 582
 */
 /**
 * @description Clears the graphics that were drawn to this Graphics object, and resets fill and line style settings.
 * @method PIXI.Graphics#clear
 * @return {PIXI.Graphics} 
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 579
+* @sourceline 612
 */
 /**
 * @description Useful function that returns a texture of the graphics object that can then be used to create sprites
@@ -1249,7 +1249,7 @@ This can be quite useful if your geometry is complicated and needs to be reused 
 * @param {Number} scaleMode - Should be one of the PIXI.scaleMode consts
 * @return {PIXI.Texture} a texture of the graphics object
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 597
+* @sourceline 630
 */
 /**
 * @description Renders the object using the WebGL renderer
@@ -1257,7 +1257,7 @@ This can be quite useful if your geometry is complicated and needs to be reused 
 * @param {RenderSession} renderSession - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 626
+* @sourceline 659
 */
 /**
 * @description Renders the object using the Canvas renderer
@@ -1265,40 +1265,41 @@ This can be quite useful if your geometry is complicated and needs to be reused 
 * @param {RenderSession} renderSession - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 705
+* @sourceline 738
 */
 /**
 * @description Retrieves the bounds of the graphic shape as a rectangle object
 * @method PIXI.Graphics#getBounds
 * @return {Rectangle} the rectangular bounding area
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 775
+* @sourceline 816
 */
+
 /**
 * @description Update the bounds of the object
 * @method PIXI.Graphics#updateLocalBounds
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 854
+* @sourceline 938
 */
 /**
 * @description Generates the cached sprite when the sprite has cacheAsBitmap = true
 * @method PIXI.Graphics#_generateCachedSprite
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 966
+* @sourceline 1050
 */
 /**
 * @description Updates texture size based on canvas size
 * @method PIXI.Graphics#updateCachedSpriteTexture
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 1006
+* @sourceline 1090
 */
 /**
 * @description Destroys a previous cached sprite.
 * @method PIXI.Graphics#destroyCachedSprite
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 1030
+* @sourceline 1114
 */
 /**
 * @description Draws the given shape to this Graphics object. Can be any of Circle, Rectangle, Ellipse, Line or Polygon.
@@ -1306,7 +1307,7 @@ This can be quite useful if your geometry is complicated and needs to be reused 
 * @param {(Circle|Rectangle|Ellipse|Line|Polygon)} shape - The Shape object to draw.
 * @return {PIXI.GraphicsData} The generated GraphicsData object.
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 1041
+* @sourceline 1125
 */
 /**
 * @description When cacheAsBitmap is set to true the graphics object will be rendered as if it was a sprite.
@@ -1318,19 +1319,31 @@ This is not recommended if you are constantly redrawing the graphics element.
 * @default false
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 1082
+* @sourceline 1166
 */
 /**
 * @class PIXI.GraphicsData
 * @description A GraphicsData object.
-* @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 1116
+* @sourcefile d:\wamp\www\phaser\src\pixi\primitives\GraphicsData.js
+* @sourceline 1
 */
 /**
-* @fileoverview
-* @author Mat Groves http://matgroves.com/ @Doormat23
-* @sourcefile d:\wamp\www\phaser\src\pixi\renderers\canvas\utils\CanvasBuffer.js
-* @sourceline 1
+* @class 
+* @description A GraphicsData object.
+* @param {Number} lineWidth - the width of the line to draw
+* @param {Number} lineColor - the color of the line to draw
+* @param {Number} lineAlpha - the alpha of the line to draw
+* @param {Number} fillColor - the color of the fill
+* @param {Number} fillAlpha - the alpha of the fill
+* @param {Boolean} fill - whether or not the shape is filled with a colour
+* @param {(Circle|Rectangle|Ellipse|Line|Polygon)} shape - The shape object to draw.
+* @sourcefile d:\wamp\www\phaser\src\pixi\primitives\GraphicsData.js
+* @sourceline 23
+*/
+/**
+* @fileoverview Creates a new GraphicsData object with the same values as this one.
+* @sourcefile d:\wamp\www\phaser\src\pixi\primitives\GraphicsData.js
+* @sourceline 93
 */
 /**
 * @class PIXI.CanvasBuffer
@@ -1340,6 +1353,7 @@ This is not recommended if you are constantly redrawing the graphics element.
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\canvas\utils\CanvasBuffer.js
 * @sourceline 5
 */
+
 /**
 * @description The width of the Canvas in pixels.
 * @member PIXI.CanvasBuffer#width

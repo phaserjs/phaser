@@ -1001,9 +1001,9 @@
 <p>Thousands of developers worldwide use it. From indies and multi-national digital agencies to schools and Universities. Each creating their own incredible games. Grab the source and join in the fun!</p>
 <ul>
 <li><strong>Visit:</strong> The <a href="http://phaser.io">Phaser website</a> and follow on <a href="https://twitter.com/photonstorm">Twitter</a> (#phaserjs)</li>
-<li><strong>Learn:</strong> <a href="http://docs.phaser.io">API Documentation</a>, <a href="http://www.html5gamedevs.com/forum/14-phaser/">Support Forum</a> and <a href="http://stackoverflow.com/questions/tagged/phaser-framework">StackOverflow</a></li>
-<li><strong>Code:</strong> 400+ <a href="http://examples.phaser.io">Source Examples</a> (also available in this <a href="https://github.com/photonstorm/phaser-examples">git repo</a>)</li>
-<li><strong>Read:</strong> Subscribe to the <a href="https://confirmsubscription.com/h/r/369DE48E3E86AF1E">Newsletter</a> and grab our <a href="https://leanpub.com/u/photonstorm">Phaser Books</a></li>
+<li><strong>Learn:</strong> <a href="http://phaser.io/docs">API Documentation</a>, <a href="http://www.html5gamedevs.com/forum/14-phaser/">Support Forum</a> and <a href="http://stackoverflow.com/questions/tagged/phaser-framework">StackOverflow</a></li>
+<li><strong>Code:</strong> 500+ <a href="http://phaser.io/examples">Source Examples</a> (also available in this <a href="https://github.com/photonstorm/phaser-examples">git repo</a>)</li>
+<li><strong>Read:</strong> Subscribe to the <a href="https://confirmsubscription.com/h/r/369DE48E3E86AF1E">Newsletter</a> and grab our <a href="http://phaser.io/shop">Phaser Books</a></li>
 <li><strong>Chat:</strong> <a href="http://www.html5gamedevs.com/topic/4470-official-phaserio-irc-channel-phaserio-on-freenode/">#phaserio IRC channel</a> on freenode</li>
 <li><strong>Extend:</strong> With <a href="https://github.com/photonstorm/phaser-plugins">Phaser Plugins</a></li>
 <li><strong>Be awesome:</strong> Support our work via <a href="https://gratipay.com/photonstorm/">Gratipay</a></li>
@@ -1011,32 +1011,129 @@
 
 <h2>Index</h2><ul>
 <li><a href="#whats-new">What's New?</a></li>
-<li><a href="#change-log">Change Log</a></li>
 <li><a href="#download">Download Phaser</a></li>
 <li><a href="#getting-started">Getting Started</a></li>
 <li><a href="#using-phaser">Using Phaser</a></li>
 <li><a href="#games">Games made with Phaser</a></li>
 <li><a href="#requirements">Requirements</a></li>
 <li><a href="#road-map">Road Map</a></li>
+<li><a href="#change-log">Change Log</a></li>
 <li><a href="#contributing">Contributing</a></li>
 </ul>
 
 <p><a name="whats-new"></a></p>
-<h2>What's new in 2.2.2?</h2><div align="center"><img src="http://phaser.io/images/github/news.jpg"></div>
+<h2>What's new in Phaser 2.3.0</h2><div align="center"><img src="http://phaser.io/images/github/news.jpg"></div>
 
-<p>Happy New Year! Welcome to the first release of Phaser in 2015.</p>
-<p>We're kicking off the year with the 2.2.2 release. This is mostly a maintenance release and fixes a few crucial issues such as tilemap rendering in Safari and physics performance. But a few small yet super-useful features sneaked in too, my favourite being that the Loader now supports BLOB urls for audio files.</p>
-<p>We're hard at work on Phaser 3. Development on the brand new renderer began in earnest last year and we're already seeing exceptional results from it. You can follow our development in the forum and public repo. Even though we're working on taking Phaser 3 into ES6 and the next generation of web browsers, we haven't stopped with the 2.x branch.</p>
-<p>If you take a peek at the <a href="https://github.com/photonstorm/phaser/milestones/2.3.0">2.3 milestones</a> you'll see we've got some great features in build. Included is a refactoring of all the Game Object classes, a new parallel asset loader and more consistent Text style handling.</p>
-<p>After the runaway success Phaser enjoyed in 2014 we're really excited to see what this year will bring, and hope you'll join us for the ride.</p>
-<p>Happy coding everyone! See you on the forums.</p>
+<blockquote>
+<p>26th March 2015</p>
+</blockquote>
+<p>Phaser 2.3.0 marks the second release in 2015 and easily one of our most significant for a while. In terms of API changes they're actually quite minimal, but under the hood we've taken Phaser for a serious workout.</p>
+<p>We've traditionally had something of a 'kitchen sink' issue with Phaser. As we thought of great new features to give you we just added them in. And like too much of a good thing they contributed to an ever growing file size.</p>
+<p>So two of the biggest changes 2.3.0 has is an internal shift to using Game Object components, and allowing you to exclude features in your own custom builds. The new build system lets you selectively exclude features from being bundled in: for example if your game doesn't need Gamepad or Keyboard support you can now tell Phaser to skip those parts entirely.</p>
+<p><a href="http://phaser.io/tutorials/creating-custom-phaser-builds">This tutorial</a> explains the process in detail. But the end result is that thanks to these changes we've both managed to remove thousands of lines of code and let you decide what Phaser contains. The minimum build size is now just 83KB minified and gzipped and that's still including both the WebGL and Canvas renderers.</p>
+<p>Even though we've been cutting down on size we still managed to pack a whole load of great new features in. For example the new spacial sorting added to Arcade Physics allows for incredible speed increases when dealing with densely populated game worlds. The Loader has received a complete overhaul - now offering full parallel asset loading, sync points and more! The Tilemap system was upgraded to support new Tiled 0.11 editor features. Audio has been also been enhanced, with better marker and loop handling. See the Change Log for all the details.</p>
+<p>Your games will run faster, have a smaller footprint and load faster than ever.</p>
+<p>But it's not just Phaser that has been updated - we also finally released the <a href="http://phaser.io">new Phaser web site</a>! For the past few years it was a huge &quot;wall of text&quot;, with hundreds of links filling up the single page site. Now it's all changed! with a much more attractive layout and structure. We've got a healthy and constantly updating <a href="http://phaser.io/news">news section</a>, the <a href="http://phaser.io/examples">examples</a> have a great new visual showcase and there's even a <a href="http://phaser.io/sandbox">Sandbox</a> to play in.</p>
+<p>It was a lot of hard work but we're super-happy with the result - and judging by our page hits, which are going off the charts, you are too :) We'll be sure to keep enhancing it over the coming months, especially as Phaser 3 development ramps up.</p>
+<p>That's all for now. I hope you enjoy Phaser 2.3.0, the new site, the new features and the New Year. Happy coding everyone! See you on the forums.</p>
+<p>Cheers,</p>
+<p>Rich - <a href="https://twitter.com/photonstorm">@photonstorm</a></p>
 <p><img src="http://www.phaser.io/images/spacedancer.gif" alt="boogie"></p>
 
+<p><a name="download"></a></p>
+<h2>Download Phaser</h2><p>Phaser is <a href="https://github.com/photonstorm/phaser">hosted on Github</a>. There are a number of ways to download it:</p>
+<ul>
+<li>Clone the git repository via <a href="https://github.com/photonstorm/phaser.git">https</a>, <a href="git@github.com:photonstorm/phaser.git">ssh</a> or with the Github <a href="github-windows://openRepo/https://github.com/photonstorm/phaser">Windows</a> or <a href="github-mac://openRepo/https://github.com/photonstorm/phaser">Mac</a> clients.</li>
+<li>Download as <a href="https://github.com/photonstorm/phaser/archive/v2.3.0.zip">zip</a> or <a href="https://github.com/photonstorm/phaser/archive/v2.3.0.tar.gz">tar.gz</a></li>
+<li>Download just the build files: <a href="https://github.com/photonstorm/phaser/releases/download/v2.3.0/phaser.js">phaser.js</a> and <a href="https://github.com/photonstorm/phaser/releases/download/v2.3.0/phaser.min.js">phaser.min.js</a></li>
+<li>Checkout with <a href="https://github.com/photonstorm/phaser">svn</a></li>
+</ul>
+<h3>Bower / npm</h3><p>Install via <a href="http://bower.io">bower</a></p>
+<p><code>bower install phaser</code></p>
+<p>Install via <a href="https://www.npmjs.com">npm</a></p>
+<p><code>npm install phaser</code></p>
+<h3>CDN</h3><p><a href="http://www.jsdelivr.com/#!phaser">jsDelivr</a> is a &quot;super-fast CDN for developers&quot;. Include the following in your html:</p>
+<p><code>&lt;script src=&quot;//cdn.jsdelivr.net/phaser/2.3.0/phaser.js&quot;&gt;&lt;/script&gt;</code></p>
+<p>or the minified version:</p>
+<p><code>&lt;script src=&quot;//cdn.jsdelivr.net/phaser/2.3.0/phaser.min.js&quot;&gt;&lt;/script&gt;</code></p>
+<h3>Phaser Sandbox</h3><p>If you'd like to try coding in Phaser right now, with nothing more than your web browser then you can head over to the <a href="http://phaser.io/sandbox">Phaser Sandbox</a>. You'll find Quick Start templates and a user-friendly editor filled with handy code-completion features.</p>
+<h3>Koding</h3><p>Want to try Phaser without downloading anything? <a href="https://koding.com/Teamwork?import=https://github.com/photonstorm/phaser/archive/master.zip&amp;c=git1">Clone Phaser in Koding</a> and start working right away in their web based development system.</p>
+<h3>License</h3><p>Phaser is released under the <a href="http://opensource.org/licenses/MIT">MIT License</a>.</p>
+
+<p><a name="getting-started"></a></p>
+<h2>Getting Started</h2><p><img src="http://phaser.io/images/github/learn.jpg" align="right"></p>
+<p>We have a <a href="http://phaser.io/tutorials/getting-started">Getting Started Guide</a> which covers all you need to begin developing games with Phaser. From setting up a web server, to picking an IDE and coding your first game.</p>
+<p>Prefer <strong>videos</strong> to reading? Lynda.com have published a free course: <a href="http://www.lynda.com/Phaser-tutorials/HTML5-Game-Development-Phaser/163641-2.html">HTML5 Game Development with Phaser</a></p>
+<p>The single biggest Phaser resource is the new <a href="http://phaser.io/news">Phaser web site</a>. It has hundreds of tutorials listed and fresh ones are added every week, so keep coming back to see what's new!</p>
+<p>Using Phaser with <strong>TypeScript</strong>? Check out this great series of <a href="http://www.gamefromscratch.com/page/Adventures-in-Phaser-with-TypeScript-tutorial-series.aspx">Game From Scratch</a> tutorials.</p>
+<h3>Source Code Examples</h3><p>Ever since we started Phaser we've been growing and expanding our extensive set of source code examples. Currently there are over 500 of them!</p>
+<p>Browse the <a href="http://phaser.io/examples">Phaser Examples</a> or clone the <a href="https://github.com/photonstorm/phaser-examples">examples repo</a> and eat your heart out!</p>
+<h3>Phaser Books</h3><div align="center"><img src="http://phaser.io/images/github/books.jpg"></div>
+
+<p>We've been busy writing books about Phaser. Available now:</p>
+<ul>
+<li><a href="https://leanpub.com/phasertweenmanager">A Guide to the Phaser Tween Manager</a> Book + Code Bundle</li>
+<li><a href="https://leanpub.com/phaserscalemanager">A Guide to the Phaser Scale Manager</a></li>
+</ul>
+<p>With more on the way. <a href="http://www.html5gamedevs.com/topic/10962-which-phaser-book-would-you-like-to-see-next/">Vote on the next title</a> to be written.</p>
+<h3>Game Mechanic Explorer</h3><p>The <a href="http://gamemechanicexplorer.com">Game Mechanic Explorer</a> is a great interactive way to learn how to develop specific game mechanics in Phaser. Well worth exploring once you've got your dev environment set-up.</p>
+<h3>Mighty Editor - Visual Game Editor</h3><p><a href="http://mightyfingers.com/">MightyEditor</a> is a browser-based visual Phaser game editor. Create your maps with ease, position objects and share them in seconds. It also exports to native Phaser code. Excellent for quickly setting-up levels and scenes.</p>
+
+<p><a name="using-phaser"></a></p>
+<h2>Using Phaser</h2><p>Phaser is provided ready compiled in the <code>build</code> folder of the repository. There are both plain and minified versions. The plain version is for use during development and the minified version for production.</p>
+<h3>Custom Builds</h3><p>As of Phaser 2.3.0 we now include a brand new build system which allows you to strip out lots of additional features you may not require, saving hundreds of KB in the process. Don't use any Sound in your game? Then you can now exclude the entire sound system. Don't need Keyboard support? That can be stripped out too.</p>
+<p>As a result of this work the minimum build size of Phaser is now just 83KB minified and gzipped.</p>
+<p>See the <a href="http://phaser.io/tutorials/creating-custom-phaser-builds">Creating a Custom Phaser Build</a> tutorial for details.</p>
+<h3>Building from source</h3><p>Should you wish to build Phaser from source you can take advantage of the provided <a href="http://gruntjs.com/">Grunt</a> scripts. Ensure you have the required packages by running <code>npm install</code> first.</p>
+<p>Run <code>grunt</code> to perform a default build to the <code>dist</code> folder.</p>
+<p>If you change either Pixi.js or P2 then use the Grunt tasks <code>replace:pixi</code> and <code>replace:p2</code> respectively. These tasks patch their UMD strings so they work properly with Phaser under requireJS.</p>
+
+<p><a name="games"></a></p>
+<h2>Games made with Phaser</h2><p>Thousands of games have been made in Phaser. From game jam entries to titles for some of the largest entertainment brands in the world. This is just a tiny sample.</p>
+<p><a href="https://www.prodigygame.com/Fun-Math-Games/"><img src="http://phaser.io/images/github/shot1a.jpg" alt="Game"></a>
+<a href="http://www.bbc.co.uk/cbbc/games/deadly-defenders"><img src="http://phaser.io/images/github/shot2a.jpg" alt="Game"></a>
+<a href="http://www.defiantfew.com/"><img src="http://phaser.io/images/github/shot3a.jpg" alt="Game"></a>
+<a href="http://www.pawpatrol.com/fun.php"><img src="http://phaser.io/images/github/shot4a.jpg" alt="Game"></a>
+<a href="http://www.fyretale.com/"><img src="http://phaser.io/images/github/shot5b.jpg" alt="Game"></a>
+<a href="http://www.pocoyo.com/juegos-ninos/caramelos"><img src="http://phaser.io/images/github/shot6b.jpg" alt="Game"></a>
+<a href="http://www.html5gamedevs.com/topic/11179-phaser-cocoonjs-tap-tap-submarine/"><img src="http://phaser.io/images/github/shot7b.jpg" alt="Game"></a>
+<a href="http://www.gamepix.com/project/footchinko/"><img src="http://phaser.io/images/github/shot8.jpg" alt="Game"></a>
+<a href="http://orcattack.thehobbit.com"><img src="http://phaser.io/images/github/shot9.jpg" alt="Game"></a>
+<a href="http://runsheldon.com/"><img src="http://phaser.io/images/github/shot10.jpg" alt="Game"></a>
+<a href="http://www.tempalabs.com/works/moon-rocket/"><img src="http://phaser.io/images/github/shot11.jpg" alt="Game"></a>
+<a href="http://www.tempalabs.com/works/master-of-arms-sword-staff-spear/"><img src="http://phaser.io/images/github/shot12.jpg" alt="Game"></a>
+<a href="http://m.silvergames.com/en/pocahontas-slots"><img src="http://phaser.io/images/github/shot13.jpg" alt="Game"></a>
+<a href="http://www.tempalabs.com/works/gattai/"><img src="http://phaser.io/images/github/shot14.jpg" alt="Game"></a></p>
+<p>Artwork copyright their respective owners.</p>
+<p>We add <a href="http://phaser.io/news/category/game">new games</a> to the Phaser site regularly, be sure to send us yours when it's finished!</p>
+
+<p><a name="requirements"></a></p>
+<h2>Requirements</h2><p>Phaser requires a web browser that supports the <a href="http://caniuse.com/#feat=canvas">canvas tag</a>. This includes Internet Explorer 9+, Firefox, Chrome, Safari and Opera on desktop. iOS Safari, Android Browser and Chrome for Android are supported on mobile.</p>
+<p>While Phaser does its best to ensure a consistent cross-platform experience always be aware of browser and device limitations. This is especially important with regard to memory and GPU limitations on mobile, and legacy browser HTML5 compatibility.</p>
+<h3>IE9</h3><p>If you need to support IE9 / Android 2.x <strong>and</strong> use P2 physics then you must use the polyfill in the <code>resources/IE9 Polyfill</code> folder. If you don't use P2 (or don't care about IE9!) you can skip this.</p>
+<h3>JavaScript and TypeScript</h3><p>Phaser is developed in JavaScript. We've made no assumptions about how you like to code and were careful not to impose a strict structure upon you. You won't find Phaser split into modules, requiring a build step, or making you use a class / inheritance OOP approach. That doesn't mean you can't do so, it just means we don't <em>force</em> you to. It's your choice.</p>
+<p>If you code with <a href="http://www.typescriptlang.org/">TypeScript</a> there are comprehensive definition files in the <code>typescript</code> folder. They are for TypeScript 1.4+.</p>
+
+<p><a name="road-map"></a></p>
+<h2>Road Map</h2><p>All Phaser development is now taking place on the Phaser 3 project. The Phaser 2 branch will still be supported and issues fixed, but roadmap features have been migrated over to Phaser 3.</p>
+<p><a name="phaser3"></a></p>
+<h2>Phaser 3</h2><p>We're now several months in to development of Phaser 3. We've been working hard on creating a brand new and extremely powerful renderer. Progress reports are posted to the web site and <a href="https://github.com/photonstorm/phaser3">Phaser 3 repo</a>.</p>
+<p>There is still plenty of time to add your suggestions and feedback in <a href="http://www.html5gamedevs.com/topic/7949-the-phaser-3-wishlist-thread/">this forum thread</a>.</p>
+<p>If you are an exceptional JavaScript developer and would like to join the Phaser 3 development team then let us know. We have a limited budget available to pay towards your time.</p>
+
 <p><a name="change-log"></a></p>
-<h2>Change Log</h2><p>Version 2.3.0 - &quot;Tarabon&quot; - in dev</p>
-<h3>Significant Updates</h3><h4>Game Objects, Components and Custom Builds</h4><p>All of the core Game Objects have received a small but important restructuring.</p>
-<h3>Arcade Physics</h3><p>We've updated the core of Arcade Physics in a number of significant ways. </p>
-<p>First we've dropped lots of internal private vars and moved to using non-cached local vars. Array lengths are no longer cached and we've implemented physicsType properties on Game Objects to speed-up the core World collideHandler. All of these small changes have lead to a nice improvement in speed as a result, and also allows us to now offer things like physics enabled BitmapText objects.</p>
+<h2>Change Log</h2><p>Version 2.3.0 - &quot;Tarabon&quot; - 26th March 2015</p>
+<h3>Significant Updates</h3><h4>Game Objects and Components</h4><p>All of the core Game Objects have received an important internal restructuring. We have moved all of the common functions to a new set of Component classes. They cover functionality such as 'Crop', 'Physics Body', 'InCamera' and more. You can find the source code to each component in the <code>src/gameobjects/components</code> folder of the repo.</p>
+<p>All of the Game Object classes have been restructured to use the new component approach. This puts an end to the &quot;God classes&quot; structure we had before and removes literally hundreds of lines of duplicate code. It also allowed us to add features to Game Objects; for example Bitmap Text objects are now full-class citizens with regard to physics capabilities.</p>
+<p>Although this was a big internal shift from an API point of view not much changed - you still access the same methods and properties in the same way as before. Phaser is just a lot leaner under the hood now.</p>
+<p>It's worth mentioning that from a JavaScript perspective components are  mixins applied to the core game objects when Phaser is instantiated. They are not added at run-time or are dynamic (they never get removed from an object once added for example). Please understand that this is by design.</p>
+<p>You can create your own custom Phaser classes, with your own set of active components by copying any of the pre-existing Game Objects and modifying them.</p>
+<h4>Custom Builds</h4><p>As a result of the shift to components we went through the entire source base and optimised everything we could. Redundant paths were removed, debug flags removed and new stub classes and hooks were created. What this means is that it's now easier than ever to &quot;disable&quot; parts of Phaser and build your own custom version.</p>
+<p>We have always included a couple of extra custom builds with Phaser. For example a build without P2 Physics included. But now you can strip out lots of additional features you may not require, saving hundreds of KB from your build file in the process. Don't use any Sound in your game? Then you can now exclude the entire sound system. Don't need Keyboard support? That can be stripped out too.</p>
+<p>As a result of this work the minimum build size of Phaser is now just 83KB (minified and gzipped).</p>
+<p>Please see the README instructions on how to create custom builds.</p>
+<h4>Arcade Physics</h4><p>We've updated the core of Arcade Physics in a number of significant ways. </p>
+<p>First we've dropped lots of internal private vars and moved to using non-cached local vars. Array lengths are no longer cached and we've implemented <code>physicsType</code> properties on Game Objects to speed-up the core World collideHandler. All of these small changes have lead to a nice improvement in speed as a result, and also allows us to now offer things like physics enabled BitmapText objects.</p>
 <p>More importantly we're now using a spacial pre-sort for all Sprite vs. Group and Group vs. Group collisions. You can define the direction the sort will prioritize via the new <code>sortDirection</code> property. By default it is set to <code>Phaser.Physics.Arcade.LEFT_RIGHT</code>. For example if you are making a horizontally scrolling game, where the player starts on the left of the world and moves to the right, then this sort order will allow the physics system to quickly eliminate any objects to the right of the player bounds. This cuts down on the sheer volume of actual collision checks needing to be made. In a densely populated level it can improve the fps rate <em>dramatically</em>.</p>
 <p>There are 3 other directions available (<code>RIGHT_LEFT</code>, <code>TOP_BOTTOM</code> and <code>BOTTOM_TOP</code>) and which one you need will depend on your game type. If you were making a vertically scrolling shoot-em-up then you'd pick <code>BOTTOM_TOP</code> so it sorts all objects above and can bail out quickly. There is also <code>SORT_NONE</code> if you would like to pre-sort the Groups yourself or disable this feature.</p>
 <p>Another handy feature is that you can switch the <code>sortDirection</code> at run-time with no loss of performance. Just make sure you do it <em>before</em> running any collision checks. So if you had a large 8-way scrolling world you could set the <code>sortDirection</code> to match the direction the player was moving in and adjust it in real-time, getting the benefits as you go. My thanks to Aaron Lahman for inspiring this update.</p>
@@ -1052,8 +1149,8 @@
 <p>Loader.resetLocked is a boolean that allows you to control what happens when the loader is reset, <em>which happens automatically on a State change</em>. If you set <code>resetLocked</code> to <code>true</code> it allows you to populate the loader queue in one State, then swap to another State without having the queue erased, and start the load going from there. After the load has completed you could then disable the lock again as needed.</p>
 <p>Thanks to @pnstickne for vast majority of this update.</p>
 <h4>Pixi v2</h4><p>We are now using our own custom build of Pixi v2. The Pixi project has moved all development resources over to Pixi v3, but it wasn't ready in time for the release of Phaser 2.3 so we've started applying our own fixes to the version of Pixi that Phaser uses.</p>
-<p>As a result we have removed all files from the src/pixi folder that Phaser doesn't use in order to make this distinction clearer. This includes <code>EventTarget</code>, so if you were relying on that in your game you'll need to add it back in to your local build.</p>
-<p>We've also removed functions and properties from Pixi classes that Phaser doesn't require - such as the Interaction Manager, Stage.dirty, etc. This has helped us cut down the source code size and make the docs less confusing, as they no longer show properties for things that weren't even enabled.</p>
+<p>As a result we have removed all files from the <code>src/pixi</code> folder that Phaser doesn't use, in order to make this distinction clearer. This includes <code>EventTarget</code>, so if you were relying on that in your game you'll need to add it back in to your local build.</p>
+<p>We've also removed functions and properties from Pixi classes that Phaser doesn't require: such as the Interaction Manager, Stage.dirty, etc. This has helped us cut down the source code size and make the docs less confusing, as they no longer show properties for things that weren't even enabled.</p>
 <p>We've rolled our own fixes into our version of Pixi, ensuring we keep it as bug-free as possible.</p>
 <h3>New Features</h3><ul>
 <li><code>Physics.Arcade.isPaused</code> allows you to toggle Arcade Physics processing on and off. If <code>true</code> the <code>Body.preUpdate</code> method will be skipped, halting all motion for all bodies. Note that other methods such as <code>collide</code> will still work, so be careful not to call them on paused bodies.</li>
@@ -1070,19 +1167,19 @@
 <li>TilemapLayer.setScale will allow you to apply scaling to a specific Tilemap layer, i.e. <code>layer.setScale(2)</code> would double the size of the layer. The way the Camera responds to the layer is adjusted accordingly based on the scale, as is Arcade collision (thanks @mickez #1605)</li>
 <li>SoundManager.setDecodedCallback lets you specify a list of Sound files, or keys, and a callback. Once all of the Sound files have finished decoding the callback will be invoked. The amount of time spent decoding depends on the codec used and file size. If all of the files given have already decoded the callback is triggered immediately.</li>
 <li>Sound.loopFull is a new method that will start playback of the Sound and set it to loop in its entirety.</li>
-<li>Sprite.left, Sprite.right, Sprite.top, Sprite.bottom are new properties that contain the totals of the Sprite position and dimensions, adjusted for the anchor.</li>
+<li>left, right, top and bottom are new properties that contain the totals of the Game Objects position and dimensions, adjusted for the anchor. These are available on any Game Object with the Bounds Component.</li>
 <li>Sprite.offsetX and Sprite.offsetY contain the offsets from the Sprite.x/y coordinates to the top-left of the Sprite, taking anchor into consideration.</li>
 <li>Emitter.flow now works in a slightly different (and more useful!) way. You can now specify a <code>quantity</code> and a <code>total</code>. The <code>quantity</code> controls how many particles are emitted every time the flow frequency is met. The <code>total</code> controls how many particles will be emitted in total. You can set <code>total</code> to be -1 and it will carry on emitting at the given frequency forever (also fixes #1598 thanks @brianbunch)</li>
 <li>ArraySet.removeAll allows you to remove all members of an ArraySet and optionally call <code>destroy</code> on them as well.</li>
 <li>GameObject.input.dragStartPoint now stores the coordinates the object was at when the drag started. This value is populated when the drag starts. It can be used to return an object to its pre-drag position, for example if it was dropped in an invalid place in-game.</li>
-<li>Text.padding specifies a padding value which is added to the line width and height when calculating the Text size. ALlows you to add extra spacing if Phaser is unable to accurately determine the true font dimensions (#1561 #1518)</li>
+<li>Text.padding specifies a padding value which is added to the line width and height when calculating the Text size. Allows you to add extra spacing if Phaser is unable to accurately determine the true font dimensions (#1561 #1518)</li>
 <li>P2 Capsule Shapes now support BodyDebug drawing (thanks @englercj #1686)</li>
-<li>Game Objects now have a new <code>physicsType</code> property. This maps to a Phaser const such as <code>SPRITE</code> or <code>GROUP</code> and has allowed us sort out pairings for collision checks in the core World collide handler much quicker than before.</li>
+<li>Game Objects now have a new <code>physicsType</code> property. This maps to a Phaser const such as <code>SPRITE</code> or <code>GROUP</code> and allows Phaser to sort out pairings for collision checks in the core World collide handler much quicker than before.</li>
 <li>BitmapText objects can now have physics enabled on them. When the physics body is first created it will use the dimensions of the BitmapText at the time you enable it. If you update the text it will adjust the body width and height as well, however any applied offset will be retained.</li>
 <li>BitmapText objects now have an <code>anchor</code> property. This works in a similar way to Sprite.anchor except that it offsets the position of each letter of the BitmapText by the given amount, based on the overall BitmapText width - whereas Sprite.anchor offsets the position the texture is drawn at.</li>
 </ul>
 <h3>Updates</h3><ul>
-<li>TypeScript definitions fixes and updates (thanks @Phaiax @Bilge @clark-stevenson @TimvdEijnden @belohlavek @ivw @vulvulune @zeh)</li>
+<li>TypeScript definitions fixes and updates (thanks @Phaiax @Bilge @clark-stevenson @TimvdEijnden @belohlavek @ivw @vulvulune @zeh @englercj)</li>
 <li>There is a new TypeScript defs file (phaser.comments.d.ts) which now has all of the jsdocs included! (thanks @vulvulune #1559)</li>
 <li>Sound.fadeTween is now used for Sound.fadeIn and Sound.fadeOut audio tweens.</li>
 <li>Sound.stop and Sound.destroy now halt a fade tween if in effect.</li>
@@ -1092,9 +1189,9 @@
 <li>Added missing plugins member in Phaser.Game class (thanks @Bilge #1568)</li>
 <li>Lots of JSDocs fixes (thanks @vulvulune @micahjohnston @Marchys @JesseAldridge)</li>
 <li>TilemapLayer.getTiles now returns a copy of the Tiles found by the method, rather than references to the original Tile objects, so you're free to modify them without corrupting the source (thanks @Leekao #1585)</li>
-<li>Sprite.events.onDragStart has 2 new parameters <code>x</code> and <code>y</code> which is the position of the Sprite before the drag was started. The full list of parameters is: <code>(sprite, pointer, x, y)</code>. This allows you to retain the position of the Sprite prior to dragging should <code>dragFromCenter</code> have been enabled (thanks @vulvulune #1583)</li>
+<li>Sprite.events.onDragStart has 2 new parameters <code>x</code> and <code>y</code> which is the position of the Sprite <em>before</em> the drag was started. The full list of parameters is: <code>(sprite, pointer, x, y)</code>. This allows you to retain the position of the Sprite prior to dragging should <code>dragFromCenter</code> have been enabled (thanks @vulvulune #1583)</li>
 <li>Body.reset now resets the Body.speed value to zero.</li>
-<li>Device.touch checks if <code>window.navigator.maxTouchPoints</code> is <code>&gt;= 1</code> rather than &gt; 1, which now allows touch events to work properly in Chrome mobile emulation.</li>
+<li>Device.touch checks if <code>window.navigator.maxTouchPoints</code> is <code>&gt;= 1</code> rather than <code>&gt; 1</code>, which allows touch events to work properly in Chrome mobile emulation.</li>
 <li>Loader.XDomainRequest wasn't used for atlas json loading. It has now been moved to the <code>xhrLoad</code> method to ensure it's used for all request if required (thanks @draconisNoctis #1601)</li>
 <li>Loader.reset has a new optional 2nd parameter <code>clearEvents</code> which if set to <code>true</code> (the default is false) will reset all event listeners bound to the Loader.</li>
 <li>If <code>Body.customSeparateX</code> or <code>customSeparateY</code> is <code>true</code> then the Body will no longer be automatically separated from a <strong>Tilemap</strong> collision or exchange any velocity. The amount of pixels that the Body has intersected the tile is available in <code>Body.overlapX</code> and <code>overlapY</code>, so you can use these values to perform your own separation in your collision callback (#992)</li>
@@ -1123,6 +1220,11 @@
 <li>A State swap now sets the Loader.reset <code>hard</code> parameter to <code>true</code> by default. This will null any Loader.preloadSprite that may have been set.</li>
 <li>You can now set a <code>resolution</code> property in your Game Configuration object. This will be read when the Pixi renderer instance is created and used to set the resolution within that (#1621)</li>
 <li>Text style has a new optional property: <code>backgroundColor</code> which is a Canvas fill style that is set behind all Text in the Text object. It allows you to set a background color without having to use an additional Graphics object.</li>
+<li>The Physics Manager now has a new <code>reset</code> method which will reset the active physics systems. This is called automatically on a State swap (thanks @englercj #1691)</li>
+<li>When a State is started and linked to Phaser it has a new property created on it: <code>key</code>, which is the string identifier used by the State.</li>
+<li>When the Game first boots it will now call <code>window.focus()</code>. This allows keyboard events to work properly in IE when the game is running inside an iframe. You can stop this from happening by setting <code>window.PhaserGlobal.stopFocus = true</code> (thanks @webholics #1681)</li>
+<li>When an Animation completes playback and isn't set to loop it would change the <code>currentFrame</code> property to be the first frame in the set after the <code>onComplete</code> callback had fired. This meant if you set a Sprite to a new frame within an Animation onComplete callback then your change would have been overwritten by the animation itself. This is now no longer the case.</li>
+<li>When an Emitter is destroyed via Emitter.destroy it now removes itself from the Phaser Particle Manager, freeing it up for garbage collection and stopping it from being processed.</li>
 </ul>
 <h3>Bug Fixes</h3><ul>
 <li>SoundManager.unlock checks for audio <code>start</code> support and falls back to <code>noteOn</code> if not found.</li>
@@ -1161,6 +1263,13 @@
 <li>Animations are now guarded allowing Sprites with animations to be destroyed from within onUpdate, onLoop or onComplete events (thanks @pnstickne #1685 #1679)</li>
 <li>Text.lineSpacing can now accept negative values without cutting the bottom of the Text object off. The value can never be less than the height of a single line of text (thanks @anthonysapp #1690)</li>
 <li>Text.lineSpacing is no longer applied to the first line of Text, which prevents text from being cut off further down the Text object.</li>
+<li>If you paused a Sound object that is using audio markers and then resumed it, it wouldn't correctly calculate the resume duration - causing the sound to sometimes play into the marker that followed it (thanks @AnderbergE #1669)</li>
+<li>Animation.play wouldn't correctly set the play state on the Game Objects AnimationManager causing the animation to fail to start (calling AnimationManager.play did work however), now they're both consistently working.</li>
+<li>Graphics.drawArc would fail to draw any subsequent arcs if you set <code>beginFill</code> on it after drawing the first arc.</li>
+<li>Graphics.drawArc would only move to the center position of the first arc created and ignore any subsequent arcs.</li>
+<li>Graphics.drawArc now correctly renders multiple arcs across both WebGL and Canvas. You no longer need to specifically call moveTo to move into the correct place to draw the arc.</li>
+<li>Graphics.drawArc now bails out if the startAngle = the endAngle and/or the sweep is invalid <em>before</em> adjusting any points.</li>
+<li>Graphics.drawArc now correctly handles the fill on the CanvasRenderer if the arc is a subsequent arc and no line style is set.</li>
 </ul>
 <h3>Pixi 2.2.8 Bug Fixes</h3><ul>
 <li>SpriteBatch added fix to handle batch context loss on change.</li>
@@ -1170,112 +1279,6 @@
 <li>TilingSprite.destroy fixed if TilingSprite hasn't ever been rendered.</li>
 </ul>
 <p>For changes in previous releases please see the extensive <a href="https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md">Version History</a>.</p>
-
-<p><a name="download"></a></p>
-<h2>Download Phaser</h2><p>Phaser is <a href="https://github.com/photonstorm/phaser">hosted on Github</a>. There are a number of ways to download it:</p>
-<ul>
-<li>Clone the git repository via <a href="https://github.com/photonstorm/phaser.git">https</a>, <a href="git@github.com:photonstorm/phaser.git">ssh</a> or with the Github <a href="github-windows://openRepo/https://github.com/photonstorm/phaser">Windows</a> or <a href="github-mac://openRepo/https://github.com/photonstorm/phaser">Mac</a> clients.</li>
-<li>Download as <a href="https://github.com/photonstorm/phaser/archive/v2.3.0.zip">zip</a> or <a href="https://github.com/photonstorm/phaser/archive/v2.3.0.tar.gz">tar.gz</a></li>
-<li>Download just the build files: <a href="https://github.com/photonstorm/phaser/releases/download/v2.3.0/phaser.js">phaser.js</a> and <a href="https://github.com/photonstorm/phaser/releases/download/v2.3.0/phaser.min.js">phaser.min.js</a></li>
-<li>Checkout with <a href="https://github.com/photonstorm/phaser">svn</a></li>
-</ul>
-<h3>Bower / npm</h3><p>Install via <a href="http://bower.io">bower</a></p>
-<p><code>bower install phaser</code></p>
-<p>Install via <a href="https://www.npmjs.com">npm</a></p>
-<p><code>npm install phaser</code></p>
-<h3>CDN</h3><p><a href="http://www.jsdelivr.com/#!phaser">jsDelivr</a> is a &quot;super-fast CDN for developers&quot;. Include the following in your html:</p>
-<p><code>&lt;script src=&quot;//cdn.jsdelivr.net/phaser/2.3.0/phaser.js&quot;&gt;&lt;/script&gt;</code></p>
-<p>or the minified version:</p>
-<p><code>&lt;script src=&quot;//cdn.jsdelivr.net/phaser/2.3.0/phaser.min.js&quot;&gt;&lt;/script&gt;</code></p>
-<h3>Koding</h3><p>Want to try Phaser without downloading anything? <a href="https://koding.com/Teamwork?import=https://github.com/photonstorm/phaser/archive/master.zip&amp;c=git1">Clone Phaser in Koding</a> and start working right away in their web based development system.</p>
-<h3>License</h3><p>Phaser is released under the <a href="http://opensource.org/licenses/MIT">MIT License</a>.</p>
-
-<p><a name="getting-started"></a></p>
-<h2>Getting Started</h2><p><img src="http://phaser.io/images/github/learn.jpg" align="right"></p>
-<p>We have a <a href="http://phaser.io/tutorials/getting-started">Getting Started Guide</a> which covers all you need to begin developing games with Phaser. From setting up a web server, to picking an IDE and coding your first game.</p>
-<p>Prefer <strong>videos</strong> to reading? Lynda.com have published a free course: <a href="http://www.lynda.com/Phaser-tutorials/HTML5-Game-Development-Phaser/163641-2.html">HTML5 Game Development with Phaser</a></p>
-<p>Use the <a href="http://gamedevelopment.tutsplus.com/articles/how-to-learn-the-phaser-html5-game-engine--gamedev-13643">How to Learn Phaser</a> guide we wrote for GameDevTuts. It covers finding tutorials, examples and getting support.</p>
-<p>Although currently a bit of a &quot;wall of text&quot; we urge you to keep an eye on the <strong>News</strong> section of the <a href="http://phaser.io">Phaser web site</a>. We post fresh links there <em>daily</em>.</p>
-<p>Using Phaser with <strong>TypeScript</strong>? Check out this great series of <a href="http://www.gamefromscratch.com/page/Adventures-in-Phaser-with-TypeScript-tutorial-series.aspx">Game From Scratch</a> tutorials.</p>
-<h3>Source Code Examples</h3><p>Ever since we started Phaser we've been growing and expanding our extensive set of source code examples. Currently there are over 400 of them!</p>
-<p>Browse the <a href="http://phaser.io/examples">Phaser Examples</a> or clone the <a href="https://github.com/photonstorm/phaser-examples">examples repo</a> and eat your heart out!</p>
-<h3>Phaser Books</h3><div align="center"><img src="http://phaser.io/images/github/books.jpg"></div>
-
-<p>We've been busy writing books about Phaser. Available now:</p>
-<ul>
-<li><a href="https://leanpub.com/phasertweenmanager">A Guide to the Phaser Tween Manager</a> Book + Code Bundle</li>
-<li><a href="https://leanpub.com/phaserscalemanager">A Guide to the Phaser Scale Manager</a></li>
-</ul>
-<p>With more on the way. <a href="http://www.html5gamedevs.com/topic/10962-which-phaser-book-would-you-like-to-see-next/">Vote on the next title</a> to be written.</p>
-<h3>Game Mechanic Explorer</h3><p>The <a href="http://gamemechanicexplorer.com">Game Mechanic Explorer</a> is a great interactive way to learn how to develop specific game mechanics in Phaser. Well worth exploring once you've got your dev environment set-up.</p>
-<h3>Mighty Editor - Visual Game Editor</h3><p><a href="http://mightyfingers.com/">MightyEditor</a> is a browser-based visual Phaser game editor. Create your maps with ease, position objects and share them in seconds. It also exports to native Phaser code. Excellent for quickly setting-up levels and scenes.</p>
-
-<p><a name="using-phaser"></a></p>
-<h2>Using Phaser</h2><p>Phaser is provided ready compiled in the <code>build</code> folder of the repository. There are both plain and minified versions. The plain version is for use during development and the minified version for production.</p>
-<p>This current release of Phaser is 153 KB <em>gzipped and minified</em> with both <strong>Arcade Physics</strong> and <strong>P2 Physics</strong> included. We also provide smaller custom builds.</p>
-<h3>Custom Builds</h3><p>The custom builds of Phaser are in the <code>build\custom</code> folder.</p>
-<p>Phaser comes with two physics systems: Arcade Physics and <a href="https://schteppe.github.io/p2.js/">P2.js</a>. Arcade Physics is perfect for arcade style games and provides an AABB (bounding box) based collision system. P2 is a full body physics system, complete with springs, materials, constraints and lots more.</p>
-<p>If you don't require P2 then use the custom build: <code>phaser-arcade-physics.js</code>. This will save nearly 200 KB from the <em>minified</em> file size.</p>
-<p>If you don't need physics at all, or are implementing your own, there is an even smaller build: <code>phaser-no-physics.js</code>. This doesn't include Tilemaps or Particle Emitter support either, as both rely on Arcade Physics, but is even smaller as a result.</p>
-<p>Finally there is <code>phaser-no-libs.js</code> which is Phaser without any physics support <em>or</em> Pixi.js. Phaser requires Pixi.js to work, but this build allows you to use your own version of Pixi instead of the one Phaser provides.</p>
-<p>Want to create your own custom builds? Take a look at the manifests files in the <code>tasks</code> folder.</p>
-<h3>Building from source</h3><p>Should you wish to build Phaser from source you can take advantage of the provided <a href="http://gruntjs.com/">Grunt</a> scripts. Ensure you have the required packages by running <code>npm install</code> first.</p>
-<p>Run <code>grunt</code> to perform a default build to the <code>dist</code> folder.</p>
-<p>If you change either Pixi.js or P2 then use the Grunt tasks <code>replace:pixi</code> and <code>replace:p2</code> respectively. These tasks patch their UMD strings so they work properly with Phaser under requireJS.</p>
-
-<p><a name="games"></a></p>
-<h2>Games made with Phaser</h2><p>Thousands of games have been made in Phaser. From game jam entries to titles for some of the largest entertainment brands in the world. This is just a tiny sample.</p>
-<p><a href="https://www.prodigygame.com/Fun-Math-Games/"><img src="http://phaser.io/images/github/shot1a.jpg" alt="Game"></a>
-<a href="http://www.bbc.co.uk/cbbc/games/deadly-defenders"><img src="http://phaser.io/images/github/shot2a.jpg" alt="Game"></a>
-<a href="http://www.defiantfew.com/"><img src="http://phaser.io/images/github/shot3a.jpg" alt="Game"></a>
-<a href="http://www.pawpatrol.com/fun.php"><img src="http://phaser.io/images/github/shot4a.jpg" alt="Game"></a>
-<a href="http://www.fyretale.com/"><img src="http://phaser.io/images/github/shot5b.jpg" alt="Game"></a>
-<a href="http://www.pocoyo.com/juegos-ninos/caramelos"><img src="http://phaser.io/images/github/shot6b.jpg" alt="Game"></a>
-<a href="http://www.html5gamedevs.com/topic/11179-phaser-cocoonjs-tap-tap-submarine/"><img src="http://phaser.io/images/github/shot7b.jpg" alt="Game"></a>
-<a href="http://www.gamepix.com/project/footchinko/"><img src="http://phaser.io/images/github/shot8.jpg" alt="Game"></a>
-<a href="http://orcattack.thehobbit.com"><img src="http://phaser.io/images/github/shot9.jpg" alt="Game"></a>
-<a href="http://runsheldon.com/"><img src="http://phaser.io/images/github/shot10.jpg" alt="Game"></a>
-<a href="http://www.tempalabs.com/works/moon-rocket/"><img src="http://phaser.io/images/github/shot11.jpg" alt="Game"></a>
-<a href="http://www.tempalabs.com/works/master-of-arms-sword-staff-spear/"><img src="http://phaser.io/images/github/shot12.jpg" alt="Game"></a>
-<a href="http://m.silvergames.com/en/pocahontas-slots"><img src="http://phaser.io/images/github/shot13.jpg" alt="Game"></a>
-<a href="http://www.tempalabs.com/works/gattai/"><img src="http://phaser.io/images/github/shot14.jpg" alt="Game"></a></p>
-<p>Artwork copyright their respective owners.</p>
-<p>Find lots more on the <a href="http://www.html5gamedevs.com/forum/8-game-showcase/">HTML5 Game Devs Forum</a>.</p>
-
-<p><a name="requirements"></a></p>
-<h2>Requirements</h2><p>Phaser requires a web browser that supports the <a href="http://caniuse.com/#feat=canvas">canvas tag</a>. This includes Internet Explorer 9+, Firefox, Chrome, Safari and Opera on desktop. iOS Safari, Android Browser and Chrome for Android are supported on mobile.</p>
-<p>While Phaser does its best to ensure a consistent cross-platform experience always be aware of browser and device limitations. This is especially important with regard to memory and GPU limitations on mobile, and legacy browser HTML5 compatibility.</p>
-<h3>IE9</h3><p>If you need to support IE9 / Android 2.x <strong>and</strong> use P2 physics then you must use the polyfill in the <code>resources/IE9 Polyfill</code> folder. If you don't use P2 (or don't care about IE9!) you can skip this.</p>
-<h3>JavaScript and TypeScript</h3><p>Phaser is developed in JavaScript. We've made no assumptions about how you like to code and were careful not to impose a strict structure upon you. You won't find Phaser split into modules, requiring a build step, or making you use a class / inheritance OOP approach. That doesn't mean you can't do so, it just means we don't <em>force</em> you to. It's your choice.</p>
-<p>If you code with <a href="http://www.typescriptlang.org/">TypeScript</a> there are comprehensive definition files in the <code>typescript</code> folder. They are for TypeScript 1.4+ only.</p>
-<p>We don't officially support any version of TypeScript before 1.4, however you can use any of our defs files from January 2015 or before, although they will not be fully feature complete. If using a very early version of TypeScript (i.e. 0.9.5) you will need to include <a href="https://github.com/piersh/WebGL.ts">WebGL definitions</a> into your project first.</p>
-
-<p><a name="road-map"></a></p>
-<h2>Road Map</h2><p>Here are some of the features planned for future releases. Not all are promised to be delivered and no timescale is given. But they serve as a good indication of the direction Phaser is heading in.</p>
-<h3>Version 2.4</h3><ul>
-<li>Enhance the State Management, so you can perform non-destructive State swaps and persistence.</li>
-<li>Updated Text handling</li>
-<li>Restore Math.interpolateAngles and Math.nearestAngleBetween</li>
-<li>Scene Manager - json scene parser.</li>
-<li>Touch Gestures.</li>
-<li>Adjust how Pointers and Interactive Objects work. Allow an IO to be flagged as &quot;on click only&quot;, so it doesn't ever get processed during normal Pointer move events (unless being dragged)</li>
-<li>Allow multiple drag items - no longer bind just 1 to a Pointer</li>
-<li>Allow Groups to have Priority IDs too and input disable entire Groups and all children (let it flow down the chain)</li>
-<li>Allow Groups to be InputEnabled? Dragging a Group would be really useful.</li>
-<li>Cache to localStorage using If-Modified-Since. <a href="https://github.com/photonstorm/phaser/issues/495">See github request</a></li>
-<li>Allow for complex assets like Bitmap Fonts to be stored within a texture atlas.</li>
-<li>Add more support for <a href="https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Media_events">Legacy Audio Events</a></li>
-<li>Ability to control DOM elements from the core game and layer them into the game.</li>
-<li>Flash CC HTML5 export integration.</li>
-<li>Massively enhance the audio side of Phaser. Take more advantage of Web Audio: echo effects, positional sound, etc.</li>
-<li>DragonBones support.</li>
-</ul>
-
-<p><a name="phaser3"></a></p>
-<h2>Phaser 3</h2><p>Development has begun on Phaser 3. At the moment it's still in the very early stages. We are asking for suggestions and feedback in <a href="http://www.html5gamedevs.com/topic/7949-the-phaser-3-wishlist-thread/">this forum thread</a> so be sure to add your voice.</p>
-<p>We are currently experimenting with an ES6 based module system and we're keen for Phaser 3 to use as many native ES6 features as possible. It will be a significant refactoring of the code base, but never at the expense of features or ease-of-use.</p>
-<p>We don't anticipate a release until Summer 2015 and will support Phaser 2 fully in the meantime.</p>
-<p>If you are an exceptional JavaScript developer and would like to join the Phaser 3 development team then let us know. We have a limited budget available to pay towards your time.</p>
 
 <p><a name="contributing"></a></p>
 <h2>Contributing</h2><p>Please read the <a href="https://github.com/photonstorm/phaser/blob/master/CONTRIBUTING.md">Contributors Guide</a> for full details on helping with Phaser, but the main points are:</p>
@@ -1289,7 +1292,7 @@
 <li><p>Before contributing please read the <a href="https://github.com/photonstorm/phaser/blob/master/CODE_OF_CONDUCT.md">code of conduct</a>.</p>
 </li>
 </ul>
-<p>Written something cool that shows Phaser in use? Please tell us about it in our <a href="http://www.html5gamedevs.com/forum/14-phaser/">forum</a> or email: rich@photonstorm.com</p>
+<p>Written something cool that shows Phaser in use? Please tell us about it in our <a href="http://www.html5gamedevs.com/forum/14-phaser/">forum</a> or email: support@phaser.io</p>
 <p><a href="https://travis-ci.org/photonstorm/phaser"><img src="https://travis-ci.org/photonstorm/phaser.png?branch=dev" alt="Build Status"></a></p>
 
 <p><img src="http://www.phaser.io/images/github/photonstorm-x2.png" alt="storm"></p>
@@ -1317,7 +1320,7 @@
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha10</a>
-		on Mon Mar 23 2015 23:44:01 GMT+0000 (GMT Standard Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Thu Mar 26 2015 02:37:59 GMT+0000 (GMT Standard Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

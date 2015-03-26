@@ -1831,7 +1831,7 @@ and on-screen orientation and position.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-903">line 903</a>
+    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-916">line 916</a>
     </dt>
     
 
@@ -3019,7 +3019,7 @@ So if this Group was in a Group that has x: 200, then this will be added to the 
 
     
     <dt class="tag-source">Source -
-    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-816">line 816</a>
+    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-829">line 829</a>
     </dt>
     
 
@@ -3220,7 +3220,7 @@ Setting it is a neat way of optimising the hitTest function that the interaction
 
     
     <dt class="tag-source">Source -
-    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-864">line 864</a>
+    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-877">line 877</a>
     </dt>
     
 
@@ -4802,7 +4802,7 @@ To remove a mask, set this property to null.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-877">line 877</a>
+    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-890">line 890</a>
     </dt>
     
 
@@ -5099,7 +5099,7 @@ This will have no impact on the rotation value of its children, but it will upda
 
     
     <dt class="tag-source">Source -
-    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-890">line 890</a>
+    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-903">line 903</a>
     </dt>
     
 
@@ -5465,7 +5465,7 @@ This ability allows you to check any of the matrix values and perform actions su
 
     
     <dt class="tag-source">Source -
-    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-800">line 800</a>
+    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-813">line 813</a>
     </dt>
     
 
@@ -5643,7 +5643,7 @@ This ability allows you to check any of the matrix values and perform actions su
 
     
     <dt class="tag-source">Source -
-    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-832">line 832</a>
+    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-845">line 845</a>
     </dt>
     
 
@@ -5699,7 +5699,7 @@ This ability allows you to check any of the matrix values and perform actions su
 
     
     <dt class="tag-source">Source -
-    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-848">line 848</a>
+    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-861">line 861</a>
     </dt>
     
 
@@ -7194,7 +7194,7 @@ If the object doesn't have a center property it will be set to object.x + object
 
     
     <dt class="tag-source">Source -
-    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-778">line 778</a>
+    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-791">line 791</a>
     </dt>
     
 
@@ -9613,7 +9613,7 @@ It should return -1 if <code>a &gt; b</code>, 1 if <code>a &lt; b</code> or 0 if
             
 <dt>
     <h4 class="name "
-        id="destroy"><span class="type-signature"></span>destroy<span class="signature">(<span class="optional">destroyChildren</span>, <span class="optional">soft</span>)</span><span class="type-signature"></span></h4>
+        id="destroy"><span class="type-signature"></span>destroy<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -9622,8 +9622,7 @@ It should return -1 if <code>a &gt; b</code>, 1 if <code>a &lt; b</code> or 0 if
 
     
     <div class="description">
-        <p>Destroys this group.</p>
-<p>Removes all children, then removes this group from its parent and nulls references.</p>
+        <p>Destroys this Emitter, all associated child Particles and then removes itself from the Particle Manager.</p>
     </div>
     
 
@@ -9631,114 +9630,6 @@ It should return -1 if <code>a &gt; b</code>, 1 if <code>a &lt; b</code> or 0 if
     
     
     
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-		<th>Argument</th>
-		
-
-		
-		<th>Default</th>
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>destroyChildren</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    true
-                
-                </td>
-            
-
-            <td class="description last"><p>If true <code>destroy</code> will be invoked on each removed child.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>soft</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    false
-                
-                </td>
-            
-
-            <td class="description last"><p>A 'soft destroy' (set to true) doesn't remove this group from its parent or null the game reference. Set to false and it does.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
     
 
     
@@ -9751,11 +9642,6 @@ It should return -1 if <code>a &gt; b</code>, 1 if <code>a &lt; b</code> or 0 if
 
     
 
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Group.html#destroy">Phaser.Group#destroy</a>
-    </li></dd>
     
 
     
@@ -9770,7 +9656,7 @@ It should return -1 if <code>a &gt; b</code>, 1 if <code>a &lt; b</code> or 0 if
 
     
     <dt class="tag-source">Source -
-    <a href="src_core_Group.js.html">core/Group.js</a>, <a href="src_core_Group.js.html#sunlight-1-line-1962">line 1962</a>
+    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-628">line 628</a>
     </dt>
     
 
@@ -18268,7 +18154,7 @@ If rate is zero, which is the default, the particle won't change alpha - instead
 
     
     <dt class="tag-source">Source -
-    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-691">line 691</a>
+    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-704">line 704</a>
     </dt>
     
 
@@ -18909,7 +18795,7 @@ If rate is zero, which is the default, the particle won't change alpha - instead
 
     
     <dt class="tag-source">Source -
-    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-674">line 674</a>
+    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-687">line 687</a>
     </dt>
     
 
@@ -19284,7 +19170,7 @@ If rate is zero, which is the default, the particle won't change scale during up
 
     
     <dt class="tag-source">Source -
-    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-730">line 730</a>
+    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-743">line 743</a>
     </dt>
     
 
@@ -19426,7 +19312,7 @@ If rate is zero, which is the default, the particle won't change scale during up
 
     
     <dt class="tag-source">Source -
-    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-628">line 628</a>
+    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-641">line 641</a>
     </dt>
     
 
@@ -19728,7 +19614,7 @@ If rate is zero, which is the default, the particle won't change scale during up
 
     
     <dt class="tag-source">Source -
-    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-642">line 642</a>
+    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-655">line 655</a>
     </dt>
     
 
@@ -19906,7 +19792,7 @@ If rate is zero, which is the default, the particle won't change scale during up
 
     
     <dt class="tag-source">Source -
-    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-658">line 658</a>
+    <a href="src_particles_arcade_Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="src_particles_arcade_Emitter.js.html#sunlight-1-line-671">line 671</a>
     </dt>
     
 
@@ -21653,7 +21539,7 @@ For example to depth sort Sprites for Zelda-style game you might call <code>grou
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha10</a>
-		on Mon Mar 23 2015 23:44:07 GMT+0000 (GMT Standard Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Thu Mar 26 2015 02:38:04 GMT+0000 (GMT Standard Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
