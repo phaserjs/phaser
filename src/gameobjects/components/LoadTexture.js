@@ -89,10 +89,10 @@ Phaser.Component.LoadTexture.prototype = {
             }
         }
         
-        if (!isRenderTexture)
-        {
-            this.texture.baseTexture.dirty();
-        }
+        // if (!isRenderTexture)
+        // {
+        //     this.texture.baseTexture.dirty();
+        // }
 
         if (setFrame)
         {
