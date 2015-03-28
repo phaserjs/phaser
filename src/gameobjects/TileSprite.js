@@ -49,6 +49,12 @@ Phaser.TileSprite = function (game, x, y, width, height, key, frame) {
     this.type = Phaser.TILESPRITE;
 
     /**
+    * @property {number} physicsType - The const physics body type of this object.
+    * @readonly
+    */
+    this.physicsType = Phaser.SPRITE;
+
+    /**
     * @property {Phaser.Point} _scroll - Internal cache var.
     * @private
     */
