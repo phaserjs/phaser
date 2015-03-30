@@ -16,10 +16,14 @@
 * @extends Phaser.Component.Animation
 * @extends Phaser.Component.AutoCull
 * @extends Phaser.Component.Bounds
+* @extends Phaser.Component.BringToTop
 * @extends Phaser.Component.Destroy
 * @extends Phaser.Component.FixedToCamera
+* @extends Phaser.Component.Health
+* @extends Phaser.Component.InCamera
 * @extends Phaser.Component.InputEnabled
 * @extends Phaser.Component.InWorld
+* @extends Phaser.Component.LifeSpan
 * @extends Phaser.Component.LoadTexture
 * @extends Phaser.Component.Overlap
 * @extends Phaser.Component.PhysicsBody
@@ -74,10 +78,14 @@ Phaser.Component.Core.install.call(Phaser.TileSprite.prototype, [
     'Animation',
     'AutoCull',
     'Bounds',
+    'BringToTop',
     'Destroy',
     'FixedToCamera',
+    'Health',
+    'InCamera',
     'InputEnabled',
     'InWorld',
+    'LifeSpan',
     'LoadTexture',
     'Overlap',
     'PhysicsBody',
