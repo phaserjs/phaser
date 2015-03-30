@@ -250,6 +250,7 @@ Version 2.3.1 - "Katar" - in dev
 
 * The LoadTexture component has had a redundant `dirty` call removed from it.
 * TileSprites were missing a `physicsType` property, causing them to not collide with anything (thanks @numbofathma #1702)
+* Sprite was missing the Health and InCamera components.
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
