@@ -1451,7 +1451,7 @@ declare module Phaser {
         addAll(property: string, amount: number, checkAlive: boolean, checkVisible: boolean): void;
         addAt(child: any, index: number, silent?: boolean): any;
         addMultiple(children: any[], silent?: boolean): any[];
-        bringToTop(): PIXI.DisplayObject;
+        bringToTop(child: any): any;
         callAll(method: string, context: any, ...parameters: any[]): void;
         callAllExists(callback: Function, existsValue: boolean, ...parameters: any[]): void;
         callbackFromArray(child: any, callback: Function, length: number): void;
@@ -1479,7 +1479,7 @@ declare module Phaser {
         getTop(): any;
         hasProperty(child: any, key: string[]): boolean;
         iterate(key: string, value: any, returnType: number, callback?: Function, callbackContext?: any, ...args: any[]): any;
-        moveDown(): PIXI.DisplayObject;
+        moveDown(child: any): any;
         moveUp(child: any): any;
         multiplyAll(property: string, amount: number, checkAlive: boolean, checkVisible: boolean): void;
         next(): void;
