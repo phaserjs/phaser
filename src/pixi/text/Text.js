@@ -353,7 +353,7 @@ PIXI.Text.prototype.determineFontProperties = function(fontStyle)
 {
     var properties = PIXI.Text.fontPropertiesCache[fontStyle];
 
-    if(!properties)
+    if (!properties)
     {
         properties = {};
         
@@ -380,6 +380,17 @@ PIXI.Text.prototype.determineFontProperties = function(fontStyle)
         context.fillStyle = '#000';
         context.fillText('|MÉq', 0, baseline);
 
+        if (!context.getImageData(0, 0, width, height))
+        {
+            properties.ascent = baseline;
+            properties.descent = baseline + 6;
+            properties.fontSize = properties.ascent + properties.descent;
+
+            PIXI.Text.fontPropertiesCache[fontStyle] = properties;
+
+            return properties;
+        }
+
         var imagedata = context.getImageData(0, 0, width, height).data;
         var pixels = imagedata.length;
         var line = width * 4;
@@ -390,17 +401,18 @@ PIXI.Text.prototype.determineFontProperties = function(fontStyle)
         var stop = false;
 
         // ascent. scan from top to bottom until we find a non red pixel
-        for(i = 0; i < baseline; i++)
+        for (i = 0; i < baseline; i++)
         {
-            for(j = 0; j < line; j += 4)
+            for (j = 0; j < line; j += 4)
             {
-                if(imagedata[idx + j] !== 255)
+                if (imagedata[idx + j] !== 255)
                 {
                     stop = true;
                     break;
                 }
             }
-            if(!stop)
+
+            if (!stop)
             {
                 idx += line;
             }
@@ -416,17 +428,18 @@ PIXI.Text.prototype.determineFontProperties = function(fontStyle)
         stop = false;
 
         // descent. scan from bottom to top until we find a non red pixel
-        for(i = height; i > baseline; i--)
+        for (i = height; i > baseline; i--)
         {
-            for(j = 0; j < line; j += 4)
+            for (j = 0; j < line; j += 4)
             {
-                if(imagedata[idx + j] !== 255)
+                if (imagedata[idx + j] !== 255)
                 {
                     stop = true;
                     break;
                 }
             }
-            if(!stop)
+
+            if (!stop)
             {
                 idx -= line;
             }
