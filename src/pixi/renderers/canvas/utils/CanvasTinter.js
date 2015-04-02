@@ -237,6 +237,11 @@ PIXI.CanvasTinter.checkInverseAlpha = function()
     //  Get the color values
     var s1 = canvas.context.getImageData(0, 0, 1, 1);
 
+    if (s1 === null)
+    {
+        return false;
+    }
+
     //  Plot them to x2
     canvas.context.putImageData(s1, 1, 0);
 
