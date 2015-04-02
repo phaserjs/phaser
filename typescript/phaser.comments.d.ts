@@ -7142,7 +7142,7 @@ declare module Phaser {
         * @param child The child to bring to the top of this group.
         * @return The child that was moved.
         */
-        bringToTop(): PIXI.DisplayObject;
+        bringToTop(child: any): any;
 
         /**
         * Calls a function, specified by name, on all on children.
@@ -7454,7 +7454,7 @@ declare module Phaser {
         * @param child The child to move down in the group.
         * @return The child that was moved.
         */
-        moveDown(): PIXI.DisplayObject;
+        moveDown(child: any): any;
 
         /**
         * Moves the given child up one place in this group unless it's already at the top.
