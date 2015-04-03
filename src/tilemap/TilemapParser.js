@@ -257,7 +257,7 @@ Phaser.TilemapParser = {
                 flipped = false;
                 gid = json.layers[i].data[t];
 
-                //  If true the current tile is flipped or rotated (Tiled TMX format) 
+                //  If true the current tile is flipped or rotated (Tiled TMX format)
                 if (gid > 0x20000000)
                 {
                     flippedVal = 0;
@@ -282,7 +282,7 @@ Phaser.TilemapParser = {
                         gid -= 0x20000000;
                         flippedVal += 1;
                     }
-                   
+
                     switch (flippedVal)
                     {
                         case 5:
@@ -379,11 +379,56 @@ Phaser.TilemapParser = {
         //  Tilesets
         var tilesets = [];
 
+        // Array with animated tiles information
+        map.animatedTiles = {"updated": false};
+
         for (var i = 0; i < json.tilesets.length; i++)
         {
-            //  name, firstgid, width, height, margin, spacing, properties
+            // name, firstgid, width, height, margin, spacing, properties
             var set = json.tilesets[i];
 
+            if (set.hasOwnProperty('tiles'))
+            {
+                var tileIndices = Object.keys(set.tiles);
+                for (var k in tileIndices)
+                {
+                    if (set.tiles[tileIndices[k]].hasOwnProperty('animation'))
+                    {
+                        gid = parseInt(tileIndices[k],10) + set.firstgid;
+                        map.animatedTiles[gid] = ({
+                            frames: [],
+                            currentFrame: 0,
+                            msToNextFrame: false //timestamp is set in first call to Phaser.TilemapLayer#update
+                        });
+                        for (var i2 in set.tiles[tileIndices[k]].animation)
+                        {
+                            map.animatedTiles[gid].frames[i2] = {};
+                            map.animatedTiles[gid].frames[i2].gid = set.tiles[tileIndices[k]].animation[i2].tileid + set.firstgid;
+                            map.animatedTiles[gid].frames[i2].duration = set.tiles[tileIndices[k]].animation[i2].duration;
+                        }
+                        // Keep track of layers with this particular animated tile
+                        var layersWithAnimatedTile = [];
+                        var tilelayerIndex = 0;
+                        for (var i2 = 0; i2 < json.layers.length; i2++)
+                        {
+                            if (json.layers[i2].type === 'tilelayer')
+                            {
+                                for (var t = 0, len = json.layers[i2].data.length; t < len; t++)
+                                {
+                                    if (json.layers[i2].data[t] === gid)
+                                    {
+                                        layersWithAnimatedTile.push(tilelayerIndex);
+                                        break;
+                                    }
+                                }
+                                tilelayerIndex++;
+                            }
+                        }
+                        map.animatedTiles[gid].currentGid = map.animatedTiles[gid].frames[0].gid;
+                        map.animatedTiles[gid].layers = layersWithAnimatedTile;
+                    }
+                }
+            }
             if (set.image)
             {
                 var newSet = new Phaser.Tileset(set.name, set.firstgid, set.tilewidth, set.tileheight, set.margin, set.spacing, set.properties);

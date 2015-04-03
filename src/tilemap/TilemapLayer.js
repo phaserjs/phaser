@@ -112,7 +112,7 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     *
     * @property {?DOMCanvasElement} [copyCanvas=(auto)] - [Internal] If set, force using a separate (shared) copy canvas.
     *     Using a canvas bitblt/copy when the source and destinations region overlap produces unexpected behavior
-    *     in some browsers, notably Safari. 
+    *     in some browsers, notably Safari.
     *
     * @default
     */
@@ -219,7 +219,7 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
 
         // Collision width/height (pixels)
         // What purpose do these have? Most things use tile width/height directly.
-        // This also only extends collisions right and down.       
+        // This also only extends collisions right and down.
         cw: tilemap.tileWidth,
         ch: tilemap.tileHeight,
 
@@ -301,15 +301,66 @@ Phaser.TilemapLayer.ensureSharedCopyCanvas = function () {
 /**
 * Automatically called by World.preUpdate.
 *
-* @method Phaser.Image#preUpdate
-* @memberof Phaser.Image
+* @method Phaser.TilemapLayer#preUpdate
+* @protected
 */
 Phaser.TilemapLayer.prototype.preUpdate = function() {
 
     Phaser.Component.Core.preUpdate.call(this);
+    this.map.animatedTiles.updated = false;
 
     return true;
 
+};
+
+/**
+* Automatically called by World.update. Handles animated tiles.
+*
+* @method Phaser.TilemapLayer#update
+* @protected
+*/
+Phaser.TilemapLayer.prototype.update = function () {
+    var tile;
+    // Update is called on all tilemap layers but only required, and wanted, once. Also skip if there is no defined animated tiles.
+    if(this.map.animatedTiles.updated || Object.keys(this.map.animatedTiles).length===1){
+        return;
+    }
+    this.map.animatedTiles.updated = true;
+
+    for (var gid in this.map.animatedTiles)
+    {
+        if(gid==="updated"){ continue; }
+
+        if (!this.map.animatedTiles[gid].msToNextFrame)
+        {
+            this.map.animatedTiles[gid].msToNextFrame = this.map.animatedTiles[gid].frames[this.map.animatedTiles[gid].currentFrame].duration;
+        }
+        else if ((this.map.animatedTiles[gid].msToNextFrame-=this.game.time.physicsElapsedMS)<=0)
+        {
+            this.map.animatedTiles[gid].currentFrame++;
+            if (this.map.animatedTiles[gid].currentFrame > (this.map.animatedTiles[gid].frames.length - 1))
+            {
+                this.map.animatedTiles[gid].currentFrame = 0;
+            }
+            this.map.animatedTiles[gid].currentGid = this.map.animatedTiles[gid].frames[this.map.animatedTiles[gid].currentFrame].gid;
+            this.map.animatedTiles[gid].msToNextFrame += this.map.animatedTiles[gid].frames[this.map.animatedTiles[gid].currentFrame].duration;
+            for (var layer in this.map.animatedTiles[gid].layers)
+            {
+                //Check if there is any animated tiles within camera view before setting dirty = true
+                if(this.map.layers[this.map.animatedTiles[gid].layers[layer]].dirty){continue;}
+                tileLoop:
+                for(var x2 = Math.ceil((this.game.camera.x+this.game.camera.width)/this.map.tileWidth), x = Math.floor(this.game.camera.x/this.map.tileWidth); x<x2; x+=1){
+                    for(var y2 = Math.ceil((this.game.camera.y+this.game.camera.height)/this.map.tileHeight), y = Math.floor(this.game.camera.y/this.map.tileHeight); y<y2; y+=1) {
+                        tile = this.map.getTile(x,y,this.map.layers[this.map.animatedTiles[gid].layers[layer]].name);
+                        if(tile && tile.index == gid){
+                            this.map.layers[this.map.animatedTiles[gid].layers[layer]].dirty = true;
+                            break tileLoop;
+                        }
+                    }
+                }
+            }
+        }
+    }
 };
 
 /**
@@ -685,9 +736,9 @@ Phaser.TilemapLayer.prototype.resetTilesetCache = function ()
 
 /**
  * This method will set the scale of the tilemap as well as update the underlying block data of this layer
- * 
+ *
  * @method Phaser.TilemapLayer#setScale
- * @param {number} [xScale=1] - The scale factor along the X-plane 
+ * @param {number} [xScale=1] - The scale factor along the X-plane
  * @param {number} [yScale] - The scale factor along the Y-plane
  */
 Phaser.TilemapLayer.prototype.setScale = function(xScale, yScale) {
@@ -778,7 +829,7 @@ Phaser.TilemapLayer.prototype.shiftCanvas = function (context, x, y)
         context.drawImage(canvas, dx, dy, copyW, copyH, sx, sy, copyW, copyH);
         context.restore();
     }
-    
+
 };
 
 /**
@@ -819,7 +870,7 @@ Phaser.TilemapLayer.prototype.renderRegion = function (scrollX, scrollY, left, t
             bottom = Math.min(height - 1, bottom);
         }
     }
-   
+
     // top-left pixel of top-left cell
     var baseX = (left * tw) - scrollX;
     var baseY = (top * th) - scrollY;
@@ -876,6 +927,10 @@ Phaser.TilemapLayer.prototype.renderRegion = function (scrollX, scrollY, left, t
 
             if (set)
             {
+				if (this.map.animatedTiles.hasOwnProperty(index))
+                {
+                    index = this.map.animatedTiles[index].currentGid;
+                }
                 if (tile.rotation || tile.flipped)
                 {
                     context.save();
@@ -906,7 +961,7 @@ Phaser.TilemapLayer.prototype.renderRegion = function (scrollX, scrollY, left, t
                 context.fillStyle = this.debugSettings.debuggedTileOverfill;
                 context.fillRect(tx, ty, tw, th);
             }
-           
+
         }
 
     }
@@ -997,7 +1052,7 @@ Phaser.TilemapLayer.prototype.renderDeltaScroll = function (shiftX, shiftY) {
 */
 Phaser.TilemapLayer.prototype.renderFull = function ()
 {
-    
+
     var scrollX = this._mc.scrollX;
     var scrollY = this._mc.scrollY;
 
@@ -1203,7 +1258,7 @@ Phaser.TilemapLayer.prototype.renderDebug = function () {
 
                 context.stroke();
             }
-           
+
         }
 
     }

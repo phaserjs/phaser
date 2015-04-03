@@ -13,6 +13,12 @@
 * A Tile map is rendered to the display using a TilemapLayer. It is not added to the display list directly itself.
 * A map may have multiple layers. You can perform operations on the map data such as copying, pasting, filling and shuffling the tiles around.
 *
+* Performance note on animated tiles: Since there is no current way to render only a selection of tiles, every tile frame change
+* will cause a full re-render of all layers with that tile within camera view. The rendering will be done only once per update
+* loop. Therefore it's a good idea to make animations run as much in sync with each other as possible. Setting one tile to update
+* every 260ms and another every 500ms will result in up to 6 redraws per second, while adjusting the first to 250ms will result
+* in only up to 4 redraws in total.
+*
 * @class Phaser.Tilemap
 * @constructor
 * @param {Phaser.Game} game - Game reference to the currently running game.
@@ -100,6 +106,11 @@ Phaser.Tilemap = function (game, key, tileWidth, tileHeight, width, height) {
     * @property {array} tilesets - An array of Tilesets.
     */
     this.tilesets = data.tilesets;
+
+    /**
+    * @property {array} tilesets - An object with animatedTiles information.
+    */
+    this.animatedTiles = data.animatedTiles;
 
     /**
     * @property {array} tiles - The super array of Tiles.
@@ -426,7 +437,7 @@ Phaser.Tilemap.prototype = {
     /**
     * Creates a Sprite for every object matching the given tile indexes in the map data.
     * You can specify the group that the Sprite will be created in. If none is given it will be created in the World.
-    * You can optional specify if the tile will be replaced with another after the Sprite is created. This is useful if you want to lay down special 
+    * You can optional specify if the tile will be replaced with another after the Sprite is created. This is useful if you want to lay down special
     * tiles in a level that are converted to Sprites, but want to replace the tile itself with a floor tile or similar once converted.
     *
     * @method Phaser.Tilemap#createFromTiles
@@ -790,7 +801,7 @@ Phaser.Tilemap.prototype = {
 
         if (typeof collides === 'undefined') { collides = true; }
         if (typeof recalculate === 'undefined') { recalculate = true; }
-        
+
         layer = this.getLayer(layer);
 
         if (typeof indexes === 'number')
@@ -830,7 +841,7 @@ Phaser.Tilemap.prototype = {
 
         if (typeof collides === 'undefined') { collides = true; }
         if (typeof recalculate === 'undefined') { recalculate = true; }
-        
+
         layer = this.getLayer(layer);
 
         if (start > stop)
@@ -865,7 +876,7 @@ Phaser.Tilemap.prototype = {
 
         if (typeof collides === 'undefined') { collides = true; }
         if (typeof recalculate === 'undefined') { recalculate = true; }
-        
+
         layer = this.getLayer(layer);
 
         //  Collide everything, except the IDs given in the indexes array
@@ -979,7 +990,7 @@ Phaser.Tilemap.prototype = {
     },
 
     /**
-    * Turn off/on the recalculation of faces for tile or collision updates. 
+    * Turn off/on the recalculation of faces for tile or collision updates.
     * `setPreventRecalculate(true)` puts recalculation on hold while `setPreventRecalculate(false)` recalculates all the changed layers.
     *
     * @method Phaser.Tilemap#setPreventRecalculate
@@ -1021,7 +1032,7 @@ Phaser.Tilemap.prototype = {
             this.needToRecalculate[layer] = true;
             return;
         }
-        
+
         var above = null;
         var below = null;
         var left = null;
@@ -1496,7 +1507,7 @@ Phaser.Tilemap.prototype = {
         if (typeof y === "undefined") { y = 0; }
         if (typeof width === "undefined") { width = this.layers[layer].width; }
         if (typeof height === "undefined") { height = this.layers[layer].height; }
-        
+
         if (x < 0)
         {
             x = 0;
