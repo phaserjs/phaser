@@ -1405,6 +1405,7 @@ declare module Phaser {
         destroy(): void;
         drawTriangle(points: Phaser.Point[], cull?: boolean): void;
         drawTriangles(vertices: any[], indices?: number[], cull?: boolean): void;
+        generateTexture(resolution?: number, scaleMode?: number): PIXI.RenderTexture;
         postUpdate(): void;
         preUpdate(): void;
         update(): void;
