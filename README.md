@@ -97,6 +97,10 @@ or the minified version:
 
 `<script src="//cdn.jsdelivr.net/phaser/2.3.0/phaser.min.js"></script>`
 
+[cdnjs.com](https://cdnjs.com/libraries/phaser) also offers a free CDN service. They have all versions of Phaser and even the custom builds:
+
+`<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/2.3.0/phaser.js"></script>`
+
 ### Phaser Sandbox
 
 If you'd like to try coding in Phaser right now, with nothing more than your web browser then you can head over to the [Phaser Sandbox](http://phaser.io/sandbox). You'll find Quick Start templates and a user-friendly editor filled with handy code-completion features.
@@ -244,6 +248,7 @@ Version 2.3.1 - "Katar" - in dev
 
 ### Updates
 
+* TypeScript definitions fixes and updates (thanks @clark-stevenson @isuda)
 * Added missing `resumed` method to Phaser.State class template.
 
 ### Bug Fixes
@@ -251,6 +256,8 @@ Version 2.3.1 - "Katar" - in dev
 * The LoadTexture component has had a redundant `dirty` call removed from it.
 * TileSprites were missing a `physicsType` property, causing them to not collide with anything (thanks @numbofathma #1702)
 * Sprite was missing the Health and InCamera components.
+* A Tween could be incorrectly set to never end if it was given a duration of zero (thanks @hardalias #1710)
+* Added guards around `context.getImageData` calls in BitmapData, Text and Canvas Tinting classes to avoid crashing restricted browsers like Epic Browser. Please understand that several Phaser features won't work correctly with this browser (thanks @Erik3000 #1714)
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
