@@ -64,9 +64,16 @@ Phaser.BitmapData = function (game, key, width, height) {
     this.imageData = this.context.getImageData(0, 0, width, height);
 
     /**
-    * @property {Uint8ClampedArray} data - A Uint8ClampedArray view into BitmapData.buffer.
+    * A Uint8ClampedArray view into BitmapData.buffer.
+    * Note that this is unavailable in some browsers (such as Epic Browser due to its security restrictions)
+    * @property {Uint8ClampedArray} data
     */
-    this.data = this.imageData.data;
+    this.data = null;
+
+    if (this.imageData)
+    {
+        this.data = this.imageData.data;
+    }
 
     /**
     * @property {Uint32Array} pixels - An Uint32Array view into BitmapData.buffer.
@@ -76,21 +83,24 @@ Phaser.BitmapData = function (game, key, width, height) {
     /**
     * @property {ArrayBuffer} buffer - An ArrayBuffer the same size as the context ImageData.
     */
-    if (this.imageData.data.buffer)
+    if (this.data)
     {
-        this.buffer = this.imageData.data.buffer;
-        this.pixels = new Uint32Array(this.buffer);
-    }
-    else
-    {
-        if (window['ArrayBuffer'])
+        if (this.imageData.data.buffer)
         {
-            this.buffer = new ArrayBuffer(this.imageData.data.length);
+            this.buffer = this.imageData.data.buffer;
             this.pixels = new Uint32Array(this.buffer);
         }
         else
         {
-            this.pixels = this.imageData.data;
+            if (window['ArrayBuffer'])
+            {
+                this.buffer = new ArrayBuffer(this.imageData.data.length);
+                this.pixels = new Uint32Array(this.buffer);
+            }
+            else
+            {
+                this.pixels = this.imageData.data;
+            }
         }
     }
 

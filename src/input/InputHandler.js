@@ -1402,7 +1402,7 @@ Phaser.InputHandler.prototype = {
     * @param {boolean} [onDrag=true] - If true the sprite will snap to the grid while being dragged.
     * @param {boolean} [onRelease=false] - If true the sprite will snap to the grid when released.
     * @param {number} [snapOffsetX=0] - Used to offset the top-left starting point of the snap grid.
-    * @param {number} [snapOffsetX=0] - Used to offset the top-left starting point of the snap grid.
+    * @param {number} [snapOffsetY=0] - Used to offset the top-left starting point of the snap grid.
     */
     enableSnap: function (snapX, snapY, onDrag, onRelease, snapOffsetX, snapOffsetY) {
 
