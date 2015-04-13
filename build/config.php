@@ -20,13 +20,19 @@
             'arcade' => true,
             'p2' => true,
             'ninja' => false,
-            'box2d' => false
+            'box2d' => false,
+            'creature' => false,
         );
     }
 
     if ($modules['p2'])
     {
         echo "    <script src=\"$path/src/physics/p2/p2.js\"></script>";
+    }
+
+    if ($modules['creature'])
+    {
+        echo "    <script src=\"$path/src/animation/creature/gl-matrix.js\"></script>";
     }
 
     if ($modules['box2d'] && isset($box2dpath))
@@ -287,6 +293,17 @@ EOL;
 
 
 EOL;
+
+    if ($modules['creature'])
+    {
+        echo <<<EOL
+    <script src="$path/src/animation/creature/CreatureMeshBone.js"></script>
+    <script src="$path/src/animation/creature/CreaturePixiJSRenderer.js"></script>
+    <script src="$path/src/gameobjects/Creature.js"></script>
+
+
+EOL;
+    }
 
     if ($modules['sound'])
     {
