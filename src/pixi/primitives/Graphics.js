@@ -749,10 +749,8 @@ PIXI.Graphics.prototype._renderWebGL = function(renderSession)
 */
 PIXI.Graphics.prototype._renderCanvas = function(renderSession)
 {
-    if (this.isMask === true)
-    {
-        return;
-    }
+    // if the sprite is not visible or the alpha is 0 then no need to render this element
+    if (this.visible === false || this.alpha === 0 || this.isMask === true) return;
 
     // if the tint has changed, set the graphics object to dirty.
     if (this._prevTint !== this.tint) {
