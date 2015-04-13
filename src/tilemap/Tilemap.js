@@ -390,10 +390,32 @@ Phaser.Tilemap.prototype = {
         }
 
         var sprite;
+        var found = false;
 
         for (var i = 0, len = this.objects[name].length; i < len; i++)
         {
-            if (this.objects[name][i].gid === gid)
+            if (typeof this.objects[name][i].gid !== 'undefined' &&
+                typeof gid === 'number') {
+                if (this.objects[name][i].gid === gid) {
+                    found = true;
+                }
+            }
+
+            if (typeof this.objects[name][i].id !== 'undefined' &&
+                typeof gid === 'number') {
+                if (this.objects[name][i].id === gid) {
+                    found = true;
+                }
+            }
+
+            if (typeof this.objects[name][i].name !== 'undefined' &&
+                typeof gid === 'string') {
+                if (this.objects[name][i].name === gid) {
+                    found = true;
+                }
+            }
+
+            if (found)
             {
                 sprite = new CustomClass(this.game, this.objects[name][i].x, this.objects[name][i].y, key, frame);
 
@@ -401,6 +423,9 @@ Phaser.Tilemap.prototype = {
                 sprite.visible = this.objects[name][i].visible;
                 sprite.autoCull = autoCull;
                 sprite.exists = exists;
+
+                sprite.width = this.objects[name][i].width;
+                sprite.height = this.objects[name][i].height;
 
                 if (this.objects[name][i].rotation)
                 {
