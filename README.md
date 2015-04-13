@@ -246,10 +246,13 @@ Version 2.3.1 - "Katar" - in dev
 
 ### New Features
 
+* Tilemap.getTileWorldXY has a new optional parameter: `nonNull` which if set makes it behave in the same way as `getTile` does (thanks @GGAlanSmithee #1722)
+
 ### Updates
 
-* TypeScript definitions fixes and updates (thanks @clark-stevenson @isuda)
+* TypeScript definitions fixes and updates (thanks @clark-stevenson @isuda @ggarek)
 * Added missing `resumed` method to Phaser.State class template.
+* Color.webToColor and Color.updateColor now updates the `out.color` and `out.color32` properties (thanks @cuixiping #1728)
 
 ### Bug Fixes
 
@@ -258,6 +261,9 @@ Version 2.3.1 - "Katar" - in dev
 * Sprite was missing the Health and InCamera components.
 * A Tween could be incorrectly set to never end if it was given a duration of zero (thanks @hardalias #1710)
 * Added guards around `context.getImageData` calls in BitmapData, Text and Canvas Tinting classes to avoid crashing restricted browsers like Epic Browser. Please understand that several Phaser features won't work correctly with this browser (thanks @Erik3000 #1714)
+* P2 Body.destroy now checks for the existence of a `sprite` property on the body before nulling it (thanks @englercj #1736)
+* The version of p2.js being used in 2.3.0 wasn't correctly declaring itself as a global for browserify / requireJS. This update resolves that (thanks @dgoemans #1723)
+* AnimationManager.frameName setter wasn't checking if `_frameData` existed before accessing it (thanks @nesukun #1727)
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
