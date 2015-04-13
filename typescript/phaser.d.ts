@@ -4117,7 +4117,7 @@ declare module Phaser {
         world: Phaser.World;
 
         create(): void;
-        init(): void;
+        init(...args: any[]): void;
         loadRender(): void;
         loadUpdate(): void;
         paused(): void;
