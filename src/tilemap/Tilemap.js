@@ -394,23 +394,26 @@ Phaser.Tilemap.prototype = {
 
         for (var i = 0, len = this.objects[name].length; i < len; i++)
         {
-            if (typeof this.objects[name][i].gid !== 'undefined' &&
-                typeof gid === 'number') {
-                if (this.objects[name][i].gid === gid) {
+            if (typeof this.objects[name][i].gid !== 'undefined' && typeof gid === 'number')
+            {
+                if (this.objects[name][i].gid === gid)
+                {
                     found = true;
                 }
             }
 
-            if (typeof this.objects[name][i].id !== 'undefined' &&
-                typeof gid === 'number') {
-                if (this.objects[name][i].id === gid) {
+            if (typeof this.objects[name][i].id !== 'undefined' && typeof gid === 'number')
+            {
+                if (this.objects[name][i].id === gid)
+                {
                     found = true;
                 }
             }
 
-            if (typeof this.objects[name][i].name !== 'undefined' &&
-                typeof gid === 'string') {
-                if (this.objects[name][i].name === gid) {
+            if (typeof this.objects[name][i].name !== 'undefined' && typeof gid === 'string')
+            {
+                if (this.objects[name][i].name === gid)
+                {
                     found = true;
                 }
             }
