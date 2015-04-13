@@ -1455,9 +1455,10 @@ Phaser.Tilemap.prototype = {
     * @param {number} [tileWidth] - The width of the tiles. If not given the map default is used.
     * @param {number} [tileHeight] - The height of the tiles. If not given the map default is used.
     * @param {number|string|Phaser.TilemapLayer} [layer] - The layer to get the tile from.
+    * @param {boolean} [nonNull=false] - If true getTile won't return null for empty tiles, but a Tile object with an index of -1.
     * @return {Phaser.Tile} The tile at the given coordinates.
     */
-    getTileWorldXY: function (x, y, tileWidth, tileHeight, layer) {
+    getTileWorldXY: function (x, y, tileWidth, tileHeight, layer, nonNull) {
 
         if (typeof tileWidth === 'undefined') { tileWidth = this.tileWidth; }
         if (typeof tileHeight === 'undefined') { tileHeight = this.tileHeight; }
@@ -1467,7 +1468,7 @@ Phaser.Tilemap.prototype = {
         x = this.game.math.snapToFloor(x, tileWidth) / tileWidth;
         y = this.game.math.snapToFloor(y, tileHeight) / tileHeight;
 
-        return this.getTile(x, y, layer);
+        return this.getTile(x, y, layer, nonNull);
 
     },
 
