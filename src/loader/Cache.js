@@ -1108,24 +1108,43 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * DEPRECATED: Please use Cache.getRenderTexture instead. This method will be removed in Phaser 2.2.0.
-    * 
-    * Get a RenderTexture by key.
+    * Gets a PIXI.Texture by key from the Cache.
     *
-    * @method Phaser.Cache#getTexture
-    * @deprecated Please use Cache.getRenderTexture instead. This method will be removed in Phaser 2.2.0.
-    * @param {string} key - Asset key of the RenderTexture to retrieve from the Cache.
-    * @return {Phaser.RenderTexture} The RenderTexture object.
+    * @method Phaser.Cache#getPixiTexture
+    * @param {string} key - Asset key of the Texture to retrieve from the Cache.
+    * @return {PIXI.Texture} The Texture object.
     */
-    getTexture: function (key) {
+    getPixiTexture: function (key) {
 
-        if (this._textures[key])
+        if (PIXI.TextureCache[key])
         {
-            return this._textures[key];
+            return PIXI.TextureCache[key];
         }
         else
         {
-            console.warn('Phaser.Cache.getTexture: Invalid key: "' + key + '"');
+            console.warn('Phaser.Cache.getPixiTexture: Invalid key: "' + key + '"');
+            return null;
+        }
+
+    },
+
+    /**
+    * Gets a PIXI.BaseTexture by key from the Cache.
+    *
+    * @method Phaser.Cache#getPixiBaseTexture
+    * @param {string} key - Asset key of the BaseTexture to retrieve from the Cache.
+    * @return {PIXI.BaseTexture} The BaseTexture object.
+    */
+    getPixiBaseTexture: function (key) {
+
+        if (PIXI.BaseTextureCache[key])
+        {
+            return PIXI.BaseTextureCache[key];
+        }
+        else
+        {
+            console.warn('Phaser.Cache.getPixiBaseTexture: Invalid key: "' + key + '"');
+            return null;
         }
 
     },
@@ -1245,13 +1264,23 @@ Phaser.Cache.prototype = {
     *
     * @method Phaser.Cache#getJSON
     * @param {string} key - Asset key of the json object to retrieve from the Cache.
+    * @param {boolean} [parse=false] - If true this will parse the object via JSON.parse before returning it.
     * @return {object} The JSON object.
     */
-    getJSON: function (key) {
+    getJSON: function (key, parse) {
+
+        if (typeof parse === 'undefined') { parse = false; }
 
         if (this._json[key])
         {
-            return this._json[key].data;
+            if (parse)
+            {
+                return JSON.parse(this._json[key].data);
+            }
+            else
+            {
+                return this._json[key].data;
+            }
         }
         else
         {
