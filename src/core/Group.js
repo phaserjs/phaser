@@ -157,6 +157,24 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
     this.physicsBodyType = physicsBodyType;
 
     /**
+    * If this Group contains Arcade Physics Sprites you can set a custom sort direction via this property.
+    * 
+    * It should be set to one of the Phaser.Physics.Arcade sort direction constants: 
+    * 
+    * Phaser.Physics.Arcade.SORT_NONE
+    * Phaser.Physics.Arcade.LEFT_RIGHT
+    * Phaser.Physics.Arcade.RIGHT_LEFT
+    * Phaser.Physics.Arcade.TOP_BOTTOM
+    * Phaser.Physics.Arcade.BOTTOM_TOP
+    *
+    * If set to `null` the Group will use whatever Phaser.Physics.Arcade.sortDirection is set to. This is the default behavior.
+    * 
+    * @property {integer} physicsSortDirection
+    * @default
+    */
+    this.physicsSortDirection = null;
+
+    /**
     * This signal is dispatched when the group is destroyed.
     * @property {Phaser.Signal} onDestroy
     */
@@ -186,11 +204,17 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
     this.cameraOffset = new Phaser.Point();
 
     /**
-    * An internal array used by physics for fast non z-index destructive sorting.
-    * @property {array} _hash
-    * @private
+    * The hash array is an array belonging to this Group into which you can add any of its children via Group.addToHash and Group.removeFromHash.
+    * 
+    * Only children of this Group can be added to and removed from the hash.
+    * 
+    * This hash is used automatically by Phaser Arcade Physics in order to perform non z-index based destructive sorting.
+    * However if you don't use Arcade Physics, or this isn't a physics enabled Group, then you can use the hash to perform your own
+    * sorting and filtering of Group children without touching their z-index (and therefore display draw order)
+    * 
+    * @property {array} hash
     */
-    this._hash = [];
+    this.hash = [];
 
     /**
     * The property on which children are sorted.
@@ -257,16 +281,14 @@ Phaser.Group.prototype.add = function (child, silent) {
 
     if (child.parent !== this)
     {
+        this.addChild(child);
+
+        child.z = this.children.length;
+
         if (this.enableBody)
         {
             this.game.physics.enable(child, this.physicsBodyType);
         }
-
-        this.addChild(child);
-
-        this._hash.push(child);
-
-        child.z = this.children.length;
 
         if (!silent && child.events)
         {
@@ -280,6 +302,56 @@ Phaser.Group.prototype.add = function (child, silent) {
     }
 
     return child;
+
+};
+
+/**
+* Adds a child of this Group into the hash array.
+* This call will return false if the child is not a child of this Group, or is already in the hash.
+*
+* @method Phaser.Group#addToHash
+* @param {DisplayObject} child - The display object to add to this Groups hash. Must be a member of this Group already and not present in the hash.
+* @return {boolean} True if the child was successfully added to the hash, otherwise false.
+*/
+Phaser.Group.prototype.addToHash = function (child) {
+
+    if (child.parent === this)
+    {
+        var index = this.hash.indexOf(child);
+
+        if (index === -1)
+        {
+            this.hash.push(child);
+            return true;
+        }
+    }
+
+    return false;
+
+};
+
+/**
+* Removes a child of this Group from the hash array.
+* This call will return false if the child is not in the hash.
+*
+* @method Phaser.Group#removeFromHash
+* @param {DisplayObject} child - The display object to remove from this Groups hash. Must be a member of this Group and in the hash.
+* @return {boolean} True if the child was successfully removed from the hash, otherwise false.
+*/
+Phaser.Group.prototype.removeFromHash = function (child) {
+
+    if (child)
+    {
+        var index = this.hash.indexOf(child);
+
+        if (index !== -1)
+        {
+            this.hash.splice(index, 1);
+            return true;
+        }
+    }
+
+    return false;
 
 };
 
@@ -326,16 +398,14 @@ Phaser.Group.prototype.addAt = function (child, index, silent) {
 
     if (child.parent !== this)
     {
+        this.addChildAt(child, index);
+
+        this.updateZ();
+
         if (this.enableBody)
         {
             this.game.physics.enable(child, this.physicsBodyType);
         }
-
-        this.addChildAt(child, index);
-
-        this._hash.push(child);
-
-        this.updateZ();
 
         if (!silent && child.events)
         {
@@ -391,20 +461,18 @@ Phaser.Group.prototype.create = function (x, y, key, frame, exists) {
 
     var child = new this.classType(this.game, x, y, key, frame);
 
-    if (this.enableBody)
-    {
-        this.game.physics.enable(child, this.physicsBodyType, this.enableBodyDebug);
-    }
-
     child.exists = exists;
     child.visible = exists;
     child.alive = exists;
 
     this.addChild(child);
 
-    this._hash.push(child);
-
     child.z = this.children.length;
+
+    if (this.enableBody)
+    {
+        this.game.physics.enable(child, this.physicsBodyType, this.enableBodyDebug);
+    }
 
     if (child.events)
     {
@@ -1830,12 +1898,7 @@ Phaser.Group.prototype.remove = function (child, destroy, silent) {
 
     var removed = this.removeChild(child);
 
-    var index = this._hash.indexOf(removed);
-
-    if (index !== -1)
-    {
-        this._hash.splice(index, 1);
-    }
+    this.removeFromHash(child);
 
     this.updateZ();
 
@@ -1879,12 +1942,7 @@ Phaser.Group.prototype.removeAll = function (destroy, silent) {
 
         var removed = this.removeChild(this.children[0]);
 
-        var index = this._hash.indexOf(removed);
-
-        if (index !== -1)
-        {
-            this._hash.splice(index, 1);
-        }
+        this.removeFromHash(removed);
 
         if (destroy && removed)
         {
@@ -1893,7 +1951,7 @@ Phaser.Group.prototype.removeAll = function (destroy, silent) {
     }
     while (this.children.length > 0);
 
-    this._hash = [];
+    this.hash = [];
 
     this.cursor = null;
 
@@ -1935,12 +1993,7 @@ Phaser.Group.prototype.removeBetween = function (startIndex, endIndex, destroy, 
 
         var removed = this.removeChild(this.children[i]);
 
-        var index = this._hash.indexOf(removed);
-
-        if (index !== -1)
-        {
-            this._hash.splice(index, 1);
-        }
+        this.removeFromHash(removed);
 
         if (destroy && removed)
         {
