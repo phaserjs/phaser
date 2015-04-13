@@ -1264,23 +1264,13 @@ Phaser.Cache.prototype = {
     *
     * @method Phaser.Cache#getJSON
     * @param {string} key - Asset key of the json object to retrieve from the Cache.
-    * @param {boolean} [parse=false] - If true this will parse the object via JSON.parse before returning it.
     * @return {object} The JSON object.
     */
-    getJSON: function (key, parse) {
-
-        if (typeof parse === 'undefined') { parse = false; }
+    getJSON: function (key) {
 
         if (this._json[key])
         {
-            if (parse)
-            {
-                return JSON.parse(this._json[key].data);
-            }
-            else
-            {
-                return this._json[key].data;
-            }
+            return this._json[key].data;
         }
         else
         {

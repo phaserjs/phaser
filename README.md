@@ -266,7 +266,7 @@ Version 2.3.1 - "Katar" - in dev
 * Physics.Arcade.sort now doesn't bail out if the Group contains a mixture of physics and non-physics enabled objects, as the Group hash is now only ever populated with physics enabled objects. Also the sort comparison functions no longer return -1 if the bodies are invalid, but zero instead (#1721)
 * Group would automatically add a child into the _hash array as soon as the child was created (or moved into the Group). This no longer happens. Instead the child is only added to Group.hash if it is enabled for Arcade Physics. However Group.addToHash and the hash array have been exposed in case you were taking advantage of the _hash even though it was a private array.
 * Cache.getTexture has now been removed (it was deprecated several versions ago). Use Cache.getRenderTexture instead.
-* Cache.getJSON has a new optional parameter: `parse`. If `true` the method will pass the data through JSON.parse before returning it. The default is `false` to retain backwards compatibility.
+* Removed duplicate methods from PIXI.Text such as wordWrap and updateText as Phaser overrides them, so it was wasting bytes.
 
 ### Bug Fixes
 
