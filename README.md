@@ -254,6 +254,7 @@ Version 2.3.1 - "Katar" - in dev
 * Added missing `resumed` method to Phaser.State class template.
 * Color.webToColor and Color.updateColor now updates the `out.color` and `out.color32` properties (thanks @cuixiping #1728)
 * Tilemap.createFromObjects has been updated for Tiled 0.11 and can now look-up object layers based on id, uid or name. It will also now copy over Sprite scaling properties if set (thanks @mandarinx #1738)
+* Graphics.drawPolygon can now accept a Phaser.Polygon or PIXI.Polygon object, as well as a points array (#1712)
 
 ### Bug Fixes
 
