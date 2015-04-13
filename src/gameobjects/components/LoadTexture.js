@@ -89,11 +89,6 @@ Phaser.Component.LoadTexture.prototype = {
             }
         }
         
-        // if (!isRenderTexture)
-        // {
-        //     this.texture.baseTexture.dirty();
-        // }
-
         if (setFrame)
         {
             this._frame = Phaser.Rectangle.clone(this.texture.frame);
