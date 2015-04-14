@@ -280,7 +280,6 @@ Phaser.Component.Core.install.call(Phaser.TilemapLayer.prototype, [
 ]);
 
 Phaser.TilemapLayer.prototype.preUpdateCore = Phaser.Component.Core.preUpdate;
-Phaser.TilemapLayer.prototype.postUpdateCore = Phaser.Component.Core.postUpdate;
 
 /**
 * The shared double-copy canvas, created as needed.
@@ -329,7 +328,9 @@ Phaser.TilemapLayer.prototype.preUpdate = function() {
 */
 Phaser.TilemapLayer.prototype.postUpdate = function () {
 
-    this.postUpdateCore();
+    Phaser.Component.FixedToCamera.postUpdate.call(this);
+
+    // this.postUpdateCore();
 
     //  Stops you being able to auto-scroll the camera if it's not following a sprite
     var camera = this.game.camera;
