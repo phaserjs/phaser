@@ -265,6 +265,7 @@ Version 2.4 - "Katar" - in dev
 ### Updates
 
 * TypeScript definitions fixes and updates (thanks @clark-stevenson @isuda @ggarek)
+* JSDoc typo fixes (thanks @robertpenner)
 * Added missing `resumed` method to Phaser.State class template.
 * Color.webToColor and Color.updateColor now updates the `out.color` and `out.color32` properties (thanks @cuixiping #1728)
 * Tilemap.createFromObjects has been updated for Tiled 0.11 and can now look-up object layers based on id, uid or name. It will also now copy over Sprite scaling properties if set (thanks @mandarinx #1738)
@@ -359,7 +360,7 @@ All rights reserved.
 [forum]: http://www.html5gamedevs.com/forum/14-phaser/
 
 [game1]: https://www.prodigygame.com/Fun-Math-Games/
-[game2]: http://www.bbc.co.uk/cbbc/games/deadly-defenders
+[game2]: http://www.bbc.co.uk/cbbc/games/deadly-defenders-game
 [game3]: http://www.defiantfew.com/
 [game4]: http://www.pawpatrol.com/fun.php
 [game5]: http://www.fyretale.com/
