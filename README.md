@@ -282,6 +282,9 @@ Version 2.4 - "Katar" - in dev
 * RenderTexture.render and `renderXY` would ignore the Sprites rotation or scale. The full Sprite transform is now used correctly when the Sprite is drawn to the texture. If you wish to replicate the old behavior please use `RenderTexture.renderRawXY` instead.
 * Pixi.Sprite.renderCanvas and renderWebGL now has a new optional matrix parameter. You can use this to render the Sprite with an alternative transform matrix without actually adjusting the Sprite matrix at all.
 * RenderTexture.matrix has been removed as it's no longer used.
+* SoundManager.pauseAll, resumeAll and stopAll now checks if the SoundManager.noAudio is set and ignores the calls.
+* SoundManager.usingWebAudio is set to `false` by default (used to be `true`) and is only explicitly set if Web Audio is available and hasn't been disabled in the PhaserGlobal object.
+* SoundManager.touchLocked is now set to `false` should the device be using legacy Audio, avoiding the unlock call running without need.
 
 ### Bug Fixes
 
@@ -303,6 +306,7 @@ Version 2.4 - "Katar" - in dev
 * Added the missing `preRender` function to the Phaser.State class template.
 * Fixed bug in Pixi where RenderTexture.render would ignore the given matrix.
 * Fixed a bug in Pixi where drawing a Sprite to a RenderTexture would reset the Sprites transform to an identity Matrix.
+* The SoundManager didn't accurately detect devices or browser environments with no sound card present and would try to carry on using a null Web Audio context (thanks @englercj #1746)
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
