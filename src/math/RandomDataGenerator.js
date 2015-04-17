@@ -270,7 +270,7 @@ Phaser.RandomDataGenerator.prototype = {
     */
     weightedPick: function (ary) {
 
-        return ary[~~(Math.pow(this.frac(), 2) * (ary.length - 1))];
+        return ary[~~(Math.pow(this.frac(), 2) * (ary.length - 1) + 0.5)];
 
     },
 
