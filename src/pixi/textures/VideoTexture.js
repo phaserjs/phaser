@@ -9,47 +9,54 @@
  * @param source {HTMLVideoElement}
  * @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
  */
-PIXI.VideoTexture = function( source, scaleMode )
+PIXI.VideoTexture = function(source, scaleMode)
 {
-    if( !source ){
+    if (!source)
+    {
         throw new Error( 'No video source element specified.' );
     }
 
     // hook in here to check if video is already available.
     // PIXI.BaseTexture looks for a source.complete boolean, plus width & height.
 
-    if( (source.readyState === source.HAVE_ENOUGH_DATA || source.readyState === source.HAVE_FUTURE_DATA ) && source.width && source.height )
+    if ((source.readyState === source.HAVE_ENOUGH_DATA || source.readyState === source.HAVE_FUTURE_DATA ) && source.width && source.height)
     {
         source.complete = true;
     }
 
-    PIXI.BaseTexture.call( this, source, scaleMode );
+    this.ended = false;
+
+    PIXI.BaseTexture.call(this, source, scaleMode);
 
     this.autoUpdate = false;
     this.updateBound = this._onUpdate.bind(this);
 
-    if( !source.complete )
+    if (!source.complete)
     {
         this._onCanPlay = this.onCanPlay.bind(this);
 
-        source.addEventListener( 'canplay', this._onCanPlay );
-        source.addEventListener( 'canplaythrough', this._onCanPlay );
+        source.addEventListener('canplay', this._onCanPlay);
+        source.addEventListener('canplaythrough', this._onCanPlay);
+        source.addEventListener('ended', this._onEnded.bind(this));
 
         // started playing..
-        source.addEventListener( 'play', this.onPlayStart.bind(this) );
-        source.addEventListener( 'pause', this.onPlayStop.bind(this) );
+        source.addEventListener('play', this.onPlayStart.bind(this));
+        source.addEventListener('pause', this.onPlayStop.bind(this));
     }
 
 };
 
-PIXI.VideoTexture.prototype = Object.create( PIXI.BaseTexture.prototype );
-
+PIXI.VideoTexture.prototype = Object.create(PIXI.BaseTexture.prototype);
 PIXI.VideoTexture.constructor = PIXI.VideoTexture;
+
+PIXI.VideoTexture.prototype._onEnded = function()
+{
+    this.ended = true;
+};
 
 PIXI.VideoTexture.prototype._onUpdate = function()
 {
-
-    if(this.autoUpdate)
+    if (this.autoUpdate)
     {
         window.requestAnimationFrame(this.updateBound);
         this.dirty();
@@ -58,7 +65,7 @@ PIXI.VideoTexture.prototype._onUpdate = function()
 
 PIXI.VideoTexture.prototype.onPlayStart = function()
 {
-    if(!this.autoUpdate)
+    if (!this.autoUpdate)
     {
         window.requestAnimationFrame(this.updateBound);
         this.autoUpdate = true;
@@ -72,23 +79,23 @@ PIXI.VideoTexture.prototype.onPlayStop = function()
 
 PIXI.VideoTexture.prototype.onCanPlay = function()
 {
-    if( event.type === 'canplaythrough' )
+    if (event.type === 'canplaythrough')
     {
-        this.hasLoaded  = true;
+        this.hasLoaded = true;
 
-
-        if( this.source )
+        if (this.source)
         {
-            this.source.removeEventListener( 'canplay', this._onCanPlay );
-            this.source.removeEventListener( 'canplaythrough', this._onCanPlay );
+            this.source.removeEventListener('canplay', this._onCanPlay);
+            this.source.removeEventListener('canplaythrough', this._onCanPlay);
 
-            this.width      = this.source.videoWidth;
-            this.height     = this.source.videoHeight;
+            this.width = this.source.videoWidth;
+            this.height = this.source.videoHeight;
 
             // prevent multiple loaded dispatches..
-            if( !this.__loaded ){
+            if (!this.__loaded )
+            {
                 this.__loaded = true;
-                // this.dispatchEvent( { type: 'loaded', content: this } );
+                this.dispatchEvent( { type: 'loaded', content: this } );
             }
         }
     }
@@ -96,10 +103,10 @@ PIXI.VideoTexture.prototype.onCanPlay = function()
 
 PIXI.VideoTexture.prototype.destroy = function()
 {
-    if( this.source && this.source._pixiId )
+    if (this.source && this.source._pixiId)
     {
         PIXI.BaseTextureCache[ this.source._pixiId ] = null;
-        delete PIXI.BaseTextureCache[ this.source._pixiId ];
+        delete PIXI.BaseTextureCache[this.source._pixiId];
 
         this.source._pixiId = null;
         delete this.source._pixiId;
@@ -117,19 +124,19 @@ PIXI.VideoTexture.prototype.destroy = function()
  * @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
  * @return {VideoTexture}
  */
-PIXI.VideoTexture.baseTextureFromVideo = function( video, scaleMode )
+PIXI.VideoTexture.baseTextureFromVideo = function(video, scaleMode)
 {
-    if( !video._pixiId )
+    if (!video._pixiId)
     {
         video._pixiId = 'video_' + PIXI.TextureCacheIdGenerator++;
     }
 
-    var baseTexture = PIXI.BaseTextureCache[ video._pixiId ];
+    var baseTexture = PIXI.BaseTextureCache[video._pixiId];
 
-    if( !baseTexture )
+    if (!baseTexture)
     {
-        baseTexture = new PIXI.VideoTexture( video, scaleMode );
-        PIXI.BaseTextureCache[ video._pixiId ] = baseTexture;
+        baseTexture = new PIXI.VideoTexture(video, scaleMode);
+        PIXI.BaseTextureCache[video._pixiId] = baseTexture;
     }
 
     return baseTexture;
@@ -144,10 +151,11 @@ PIXI.VideoTexture.baseTextureFromVideo = function( video, scaleMode )
  * @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
  * @return {Texture} A Texture, but not a VideoTexture.
  */
-PIXI.VideoTexture.textureFromVideo = function( video, scaleMode )
+PIXI.VideoTexture.textureFromVideo = function(video, scaleMode)
 {
-    var baseTexture = PIXI.VideoTexture.baseTextureFromVideo( video, scaleMode );
-    return new PIXI.Texture( baseTexture );
+    var baseTexture = PIXI.VideoTexture.baseTextureFromVideo(video, scaleMode);
+
+    return new PIXI.Texture(baseTexture);
 };
 
 /**
@@ -159,11 +167,13 @@ PIXI.VideoTexture.textureFromVideo = function( video, scaleMode )
  * @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
  * @return {VideoTexture}
  */
-PIXI.VideoTexture.fromUrl = function( videoSrc, scaleMode )
+PIXI.VideoTexture.fromUrl = function(videoSrc, scaleMode, autoPlay)
 {
     var video = document.createElement('video');
+
     video.src = videoSrc;
     video.autoPlay = true;
     video.play();
-    return PIXI.VideoTexture.textureFromVideo( video, scaleMode);
+
+    return PIXI.VideoTexture.textureFromVideo(video, scaleMode);
 };
