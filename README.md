@@ -244,6 +244,11 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 
 Version 2.4 - "Katar" - in dev
 
+### API Changes
+
+* RenderTexture.render now takes a Matrix as its second parameter, not a Point object. This brings it in line with Pixi and allows you to perform much more complex transformations on the object being rendered. If you need to replicate the old behavior please use RenderTexture.renderXY(sprite, point.x, point.y) instead.
+* PIXI.DisplayObject.updateTransform has a new optional parameter `parent`. If the DisplayObject doesn't have a parent (i.e. it isn't on the display list yet) then in the past `updateTransform` would fail. This meant you couldn't do things like scale or rotate a Sprite and then draw it to a RenderTexture or BitmapData, as calls to updateTransform would be ignored. The new checks now look to see if the `parent` parameter is set. If so this takes priority over the actual parent and is used to modify the transform (note that it **doesn't** reparent the DisplayObject, it merely uses it for the transform.) If there is no parent (explicitly or via the parameter) then it falls back to use Phaser.World as the parent. If it can't reach that then no transform takes place.
+
 ### New Features
 
 * Added support for the [Creature Automated Animation Tool](http://www.kestrelmoon.com/creature/). You can now create a Phaser.Creature object which uses json data and a texture atlas for the animations. Creature is a powerful animation tool, similar to Spriter or Spine. It is currently limited to WebGL games only, but the new libs should prove a solid starting point for anyone wanting to incorporate Creature animations into their games.
@@ -252,6 +257,10 @@ Version 2.4 - "Katar" - in dev
 * Group.physicsSortDirection is a new property allowing you to set a custom sort direction for Arcade Physics Sprites within the Group hash. Previously Arcade Physics used one single sort direction (defined on `Phaser.Physics.Arcade.sortDirection`) but this change allows you to specifically control how each and every Group is sorted, so you can now combine tall and wide Groups with narrow and thin in a single system.
 * Cache.getPixiTexture will return a PIXI.Texture from the cache based on the given key. A PIXI Texture is created automatically for all images loaded and added to the cache.
 * Cache.getPixiBaseTexture will return a PIXI.BaseTexture from the cache based on the given key. A PIXI BaseTexture is created automatically for all images loaded and added to the cache.
+* Phaser.Matrix.clone allows you to clone the Matrix to a new object, or copy its values into the given Matrix.
+* Phaser.Matrix.copyFrom and copyTo allow you to copy Matrix values from and to other Matrix  objects.
+* Phaser.Matrix.setTo allows you to set all properties of a Matrix in a single call.
+* The Phaser.Matrix constructor now allows you to optionally set all Matrix properties on instantiation.
 
 ### Updates
 
@@ -270,6 +279,9 @@ Version 2.4 - "Katar" - in dev
 * Removed duplicate methods from PIXI.Text such as wordWrap and updateText as Phaser overrides them, so it was wasting bytes.
 * Phaser.StateManager no longer calls `preRender` unless the State `create` method has finished. If the State doesn't have a `create` method then `preRender` runs immediately.
 * Phaser.StateManager.created is a new read-only boolean that tells you if the State has finished running its `create` method. If it doesn't have one it's always true.
+* RenderTexture.render and `renderXY` would ignore the Sprites rotation or scale. The full Sprite transform is now used correctly when the Sprite is drawn to the texture. If you wish to replicate the old behavior please use `RenderTexture.renderRawXY` instead.
+* Pixi.Sprite.renderCanvas and renderWebGL now has a new optional matrix parameter. You can use this to render the Sprite with an alternative transform matrix without actually adjusting the Sprite matrix at all.
+* RenderTexture.matrix has been removed as it's no longer used.
 
 ### Bug Fixes
 
@@ -289,6 +301,8 @@ Version 2.4 - "Katar" - in dev
 * Phaser.StateManager would incorrectly call `loadUpdate` while the game was paused or if the State didn't have an `update` method defined even after the loader was completed.
 * Phaser.StateManager would incorrectly call `loadRender` while the game was paused or if the State didn't have an `render` method defined even after the loader was completed.
 * Added the missing `preRender` function to the Phaser.State class template.
+* Fixed bug in Pixi where RenderTexture.render would ignore the given matrix.
+* Fixed a bug in Pixi where drawing a Sprite to a RenderTexture would reset the Sprites transform to an identity Matrix.
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
