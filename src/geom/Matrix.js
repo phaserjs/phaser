@@ -199,7 +199,7 @@ Phaser.Matrix.prototype = {
     */
     toArray: function (transpose, array) {
 
-        if (typeof array === 'undefined') { array = new PIXI.Float32Array(9) };
+        if (typeof array === 'undefined') { array = new PIXI.Float32Array(9); }
 
         if (transpose)
         {
@@ -242,7 +242,7 @@ Phaser.Matrix.prototype = {
     */
     apply: function (pos, newPos) {
 
-        if (typeof newPos === 'undefined') { newPos = new Phaser.Point() };
+        if (typeof newPos === 'undefined') { newPos = new Phaser.Point(); }
 
         newPos.x = this.a * pos.x + this.c * pos.y + this.tx;
         newPos.y = this.b * pos.x + this.d * pos.y + this.ty;
@@ -263,7 +263,7 @@ Phaser.Matrix.prototype = {
     */
     applyInverse: function (pos, newPos) {
 
-        if (typeof newPos === 'undefined') { newPos = new Phaser.Point() };
+        if (typeof newPos === 'undefined') { newPos = new Phaser.Point(); }
 
         var id = 1 / (this.a * this.d + this.c * -this.b);
         var x = pos.x;
