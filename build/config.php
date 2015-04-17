@@ -86,6 +86,7 @@
     <script src="$path/src/pixi/textures/BaseTexture.js"></script>
     <script src="$path/src/pixi/textures/Texture.js"></script>
     <script src="$path/src/pixi/textures/RenderTexture.js"></script>
+    <script src="$path/src/pixi/textures/VideoTexture.js"></script>
 
     <script src="$path/src/pixi/filters/AbstractFilter.js"></script>
 

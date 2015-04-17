@@ -42,12 +42,13 @@ PIXI.VideoTexture = function( source, scaleMode )
 
 };
 
-PIXI.VideoTexture.prototype   = Object.create( PIXI.BaseTexture.prototype );
+PIXI.VideoTexture.prototype = Object.create( PIXI.BaseTexture.prototype );
 
 PIXI.VideoTexture.constructor = PIXI.VideoTexture;
 
 PIXI.VideoTexture.prototype._onUpdate = function()
 {
+
     if(this.autoUpdate)
     {
         window.requestAnimationFrame(this.updateBound);
@@ -87,7 +88,7 @@ PIXI.VideoTexture.prototype.onCanPlay = function()
             // prevent multiple loaded dispatches..
             if( !this.__loaded ){
                 this.__loaded = true;
-                this.dispatchEvent( { type: 'loaded', content: this } );
+                // this.dispatchEvent( { type: 'loaded', content: this } );
             }
         }
     }

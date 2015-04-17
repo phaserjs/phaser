@@ -45,6 +45,7 @@
     "src/pixi/textures/BaseTexture.js",
     "src/pixi/textures/Texture.js",
     "src/pixi/textures/RenderTexture.js",
+    "src/pixi/textures/VideoTexture.js",
 
     "src/pixi/filters/AbstractFilter.js",
 
