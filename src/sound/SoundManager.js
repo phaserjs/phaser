@@ -210,7 +210,7 @@ Phaser.SoundManager.prototype = {
         if (this.context === null)
         {
             //  No Web Audio support - how about legacy Audio?
-            if (!!window['Audio'])
+            if (window['Audio'] === undefined)
             {
                 this.noAudio = true;
                 return;
