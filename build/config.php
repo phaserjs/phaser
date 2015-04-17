@@ -51,6 +51,7 @@
     <script src="$path/src/pixi/text/BitmapText.js"></script>
     <script src="$path/src/pixi/display/Stage.js"></script>
 
+    <script src="$path/src/pixi/utils/EventTarget.js"></script>
     <script src="$path/src/pixi/utils/Utils.js"></script>
     <script src="$path/src/pixi/utils/Polyk.js"></script>
 

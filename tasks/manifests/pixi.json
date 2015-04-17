@@ -10,6 +10,7 @@
     "src/pixi/text/BitmapText.js",
     "src/pixi/display/Stage.js",
 
+    "src/pixi/utils/EventTarget.js",
     "src/pixi/utils/Utils.js",
     "src/pixi/utils/Polyk.js",
 
