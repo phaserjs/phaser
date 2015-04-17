@@ -269,13 +269,14 @@ PIXI.CanvasRenderer.prototype.resize = function(width, height)
  * @method renderDisplayObject
  * @param displayObject {DisplayObject} The displayObject to render
  * @param context {CanvasRenderingContext2D} the context 2d method of the canvas
+ * @param [matrix] {Matrix} Optional matrix to apply to the display object before rendering.
  * @private
  */
-PIXI.CanvasRenderer.prototype.renderDisplayObject = function(displayObject, context)
+PIXI.CanvasRenderer.prototype.renderDisplayObject = function(displayObject, context, matrix)
 {
     this.renderSession.context = context || this.context;
     this.renderSession.resolution = this.resolution;
-    displayObject._renderCanvas(this.renderSession);
+    displayObject._renderCanvas(this.renderSession, matrix);
 };
 
 /**
