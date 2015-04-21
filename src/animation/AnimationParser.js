@@ -71,17 +71,7 @@ Phaser.AnimationParser = {
 
         for (var i = 0; i < total; i++)
         {
-            // var uuid = game.rnd.uuid();
-
-            //  uuid needed?
             data.addFrame(new Phaser.Frame(i, x, y, frameWidth, frameHeight, ''));
-
-            // PIXI.TextureCache[uuid] = new PIXI.Texture(PIXI.BaseTextureCache[key], {
-            //     x: x,
-            //     y: y,
-            //     width: frameWidth,
-            //     height: frameHeight
-            // });
 
             x += frameWidth + spacing;
 
@@ -124,24 +114,14 @@ Phaser.AnimationParser = {
 
         for (var i = 0; i < frames.length; i++)
         {
-            var uuid = game.rnd.uuid();
-
             newFrame = data.addFrame(new Phaser.Frame(
                 i,
                 frames[i].frame.x,
                 frames[i].frame.y,
                 frames[i].frame.w,
                 frames[i].frame.h,
-                frames[i].filename,
-                uuid
+                frames[i].filename
             ));
-
-            PIXI.TextureCache[uuid] = new PIXI.Texture(PIXI.BaseTextureCache[cacheKey], {
-                x: frames[i].frame.x,
-                y: frames[i].frame.y,
-                width: frames[i].frame.w,
-                height: frames[i].frame.h
-            });
 
             if (frames[i].trimmed)
             {
@@ -190,24 +170,14 @@ Phaser.AnimationParser = {
 
         for (var key in frames)
         {
-            var uuid = game.rnd.uuid();
-
             newFrame = data.addFrame(new Phaser.Frame(
                 i,
                 frames[key].frame.x,
                 frames[key].frame.y,
                 frames[key].frame.w,
                 frames[key].frame.h,
-                key,
-                uuid
+                key
             ));
-
-            PIXI.TextureCache[uuid] = new PIXI.Texture(PIXI.BaseTextureCache[cacheKey], {
-                x: frames[key].frame.x,
-                y: frames[key].frame.y,
-                width: frames[key].frame.w,
-                height: frames[key].frame.h
-            });
 
             if (frames[key].trimmed)
             {
@@ -252,7 +222,7 @@ Phaser.AnimationParser = {
         var frames = xml.getElementsByTagName('SubTexture');
         var newFrame;
 
-        var uuid;
+        // var uuid;
         var name;
         var frame;
         var x;
@@ -266,8 +236,6 @@ Phaser.AnimationParser = {
 
         for (var i = 0; i < frames.length; i++)
         {
-            uuid = game.rnd.uuid();
-
             frame = frames[i].attributes;
             
             name = frame.name.value;
@@ -287,15 +255,9 @@ Phaser.AnimationParser = {
                 frameHeight = parseInt(frame.frameHeight.value, 10);
             }
 
-            newFrame = data.addFrame(new Phaser.Frame(i, x, y, width, height, name, uuid));
+            newFrame = data.addFrame(new Phaser.Frame(i, x, y, width, height, name));
 
-            PIXI.TextureCache[uuid] = new PIXI.Texture(PIXI.BaseTextureCache[cacheKey], {
-                x: x,
-                y: y,
-                width: width,
-                height: height
-            });
-                        //  Trimmed?
+            //  Trimmed?
             if (frameX !== null || frameY !== null)
             {
                 newFrame.setTrim(true, width, height, frameX, frameY, frameWidth, frameHeight);
