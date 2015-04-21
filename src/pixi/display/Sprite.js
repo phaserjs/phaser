@@ -378,25 +378,13 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession, matrix)
         //  Allow for pixel rounding
         if (renderSession.roundPixels)
         {
-            renderSession.context.setTransform(
-                wt.a,
-                wt.b,
-                wt.c,
-                wt.d,
-                (wt.tx * renderSession.resolution) | 0,
-                (wt.ty * renderSession.resolution) | 0);
+            renderSession.context.setTransform(wt.a, wt.b, wt.c, wt.d, (wt.tx * renderSession.resolution) | 0, (wt.ty * renderSession.resolution) | 0);
             dx = dx | 0;
             dy = dy | 0;
         }
         else
         {
-            renderSession.context.setTransform(
-                wt.a,
-                wt.b,
-                wt.c,
-                wt.d,
-                wt.tx * renderSession.resolution,
-                wt.ty * renderSession.resolution);
+            renderSession.context.setTransform(wt.a, wt.b, wt.c, wt.d, wt.tx * renderSession.resolution, wt.ty * renderSession.resolution);
         }
 
         if (this.tint !== 0xFFFFFF)
@@ -433,7 +421,6 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession, matrix)
         }
     }
 
-    // OVERWRITE
     for (var i = 0; i < this.children.length; i++)
     {
         this.children[i]._renderCanvas(renderSession);

@@ -71,17 +71,17 @@ Phaser.AnimationParser = {
 
         for (var i = 0; i < total; i++)
         {
-            var uuid = game.rnd.uuid();
+            // var uuid = game.rnd.uuid();
 
             //  uuid needed?
-            data.addFrame(new Phaser.Frame(i, x, y, frameWidth, frameHeight, '', uuid));
+            data.addFrame(new Phaser.Frame(i, x, y, frameWidth, frameHeight, ''));
 
-            PIXI.TextureCache[uuid] = new PIXI.Texture(PIXI.BaseTextureCache[key], {
-                x: x,
-                y: y,
-                width: frameWidth,
-                height: frameHeight
-            });
+            // PIXI.TextureCache[uuid] = new PIXI.Texture(PIXI.BaseTextureCache[key], {
+            //     x: x,
+            //     y: y,
+            //     width: frameWidth,
+            //     height: frameHeight
+            // });
 
             x += frameWidth + spacing;
 

@@ -344,7 +344,7 @@ PIXI.WebGLSpriteBatch.prototype.renderTilingSprite = function(tilingSprite)
     var texture = tilingSprite.tilingTexture;
 
     // check texture..
-    if(this.currentBatchSize >= this.size)
+    if (this.currentBatchSize >= this.size)
     {
         //return;
         this.flush();
@@ -352,20 +352,21 @@ PIXI.WebGLSpriteBatch.prototype.renderTilingSprite = function(tilingSprite)
     }
 
      // set the textures uvs temporarily
-    // TODO create a separate texture so that we can tile part of a texture
-
-    if(!tilingSprite._uvs)tilingSprite._uvs = new PIXI.TextureUvs();
+    if (!tilingSprite._uvs)
+    {
+        tilingSprite._uvs = new PIXI.TextureUvs();
+    }
 
     var uvs = tilingSprite._uvs;
 
     tilingSprite.tilePosition.x %= texture.baseTexture.width * tilingSprite.tileScaleOffset.x;
     tilingSprite.tilePosition.y %= texture.baseTexture.height * tilingSprite.tileScaleOffset.y;
 
-    var offsetX =  tilingSprite.tilePosition.x/(texture.baseTexture.width*tilingSprite.tileScaleOffset.x);
-    var offsetY =  tilingSprite.tilePosition.y/(texture.baseTexture.height*tilingSprite.tileScaleOffset.y);
+    var offsetX = tilingSprite.tilePosition.x / (texture.baseTexture.width * tilingSprite.tileScaleOffset.x);
+    var offsetY = tilingSprite.tilePosition.y / (texture.baseTexture.height * tilingSprite.tileScaleOffset.y);
 
-    var scaleX =  (tilingSprite.width / texture.baseTexture.width)  / (tilingSprite.tileScale.x * tilingSprite.tileScaleOffset.x);
-    var scaleY =  (tilingSprite.height / texture.baseTexture.height) / (tilingSprite.tileScale.y * tilingSprite.tileScaleOffset.y);
+    var scaleX = (tilingSprite.width / texture.baseTexture.width)  / (tilingSprite.tileScale.x * tilingSprite.tileScaleOffset.x);
+    var scaleY = (tilingSprite.height / texture.baseTexture.height) / (tilingSprite.tileScale.y * tilingSprite.tileScaleOffset.y);
 
     uvs.x0 = 0 - offsetX;
     uvs.y0 = 0 - offsetY;
@@ -379,7 +380,7 @@ PIXI.WebGLSpriteBatch.prototype.renderTilingSprite = function(tilingSprite)
     uvs.x3 = 0 - offsetX;
     uvs.y3 = (1 * scaleY) - offsetY;
 
-    // get the tilingSprites current alpha and tint and combining them into a single color
+    //  Get the tilingSprites current alpha and tint and combine them into a single color
     var tint = tilingSprite.tint;
     var color = (tint >> 16) + (tint & 0xff00) + ((tint & 0xff) << 16) + (tilingSprite.alpha * 255 << 24);
 

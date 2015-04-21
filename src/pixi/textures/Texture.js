@@ -82,6 +82,14 @@ PIXI.Texture = function(baseTexture, frame, crop, trim)
     this.valid = false;
 
     /**
+     * Is this a tiling texture? As used by the likes of a TilingSprite.
+     *
+     * @property isTiling
+     * @type Boolean
+     */
+    this.isTiling = false;
+
+    /**
      * This will let a renderer know that a texture has been updated (used mainly for webGL uv updates)
      *
      * @property requiresUpdate

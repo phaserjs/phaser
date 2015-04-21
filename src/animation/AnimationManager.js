@@ -205,15 +205,19 @@ Phaser.AnimationManager.prototype = {
         this.currentAnim = this._anims[name];
         this.currentFrame = this.currentAnim.currentFrame;
 
-        // this.sprite.setFrame(this.currentFrame);
-
-        //  CHECK WE STILL NEED THIS - PRETTY SURE IT DOESN'T ACTUALLY DO ANYTHING!
-        if (this.sprite.__tilePattern)
+        if (this.sprite.tilingTexture)
         {
-            // this.__tilePattern = false;
-            this.sprite.__tilePattern = false;
-            this.tilingTexture = false;
+            this.sprite.refreshTexture = true;
         }
+
+        // this.sprite.setFrame(this.currentFrame);
+        //  CHECK WE STILL NEED THIS - PRETTY SURE IT DOESN'T ACTUALLY DO ANYTHING!
+        // if (this.sprite.__tilePattern)
+        // {
+            // this.__tilePattern = false;
+            // this.sprite.__tilePattern = false;
+            // this.tilingTexture = false;
+        // }
 
         return this._anims[name];
 

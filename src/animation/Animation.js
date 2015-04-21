@@ -429,22 +429,24 @@ Phaser.Animation.prototype = {
             return false;
         }
 
+        var idx = this.currentFrame.index;
+
         this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
 
-        if (this.currentFrame)
+        if (this.currentFrame && idx !== this.currentFrame.index)
         {
             this._parent.setFrame(this.currentFrame);
 
-            if (this._parent.__tilePattern)
+            if (this._parent.tilingTexture)
             {
-                this._parent.__tilePattern = false;
-                this._parent.tilingTexture = false;
+                this._parent.refreshTexture = true;
             }
         }
 
         if (this.onUpdate && signalUpdate)
         {
             this.onUpdate.dispatch(this, this.currentFrame);
+
             // False if the animation was destroyed from within a callback
             return !!this._frameData;
         }
