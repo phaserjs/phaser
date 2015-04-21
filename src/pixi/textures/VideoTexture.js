@@ -24,6 +24,8 @@ PIXI.VideoTexture = function(source, scaleMode)
         source.complete = true;
     }
 
+    this.video = this.source;
+
     this.ended = false;
 
     PIXI.BaseTexture.call(this, source, scaleMode);
@@ -165,15 +167,23 @@ PIXI.VideoTexture.textureFromVideo = function(video, scaleMode)
  * @method fromUrl 
  * @param videoSrc {String} The URL for the video.
  * @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
+ * @param autoPlay {boolean} Automatically start the video playing? Until you do this you can't get the width / height of the resulting texture.
  * @return {VideoTexture}
  */
 PIXI.VideoTexture.fromUrl = function(videoSrc, scaleMode, autoPlay)
 {
+    if (typeof scaleMode === 'undefined') { scaleMode = PIXI.scaleModes.DEFAULT; }
+    if (typeof autoPlay === 'undefined') { autoPlay = true; }
+
     var video = document.createElement('video');
 
     video.src = videoSrc;
-    video.autoPlay = true;
-    video.play();
+
+    if (autoPlay)
+    {
+        video.autoPlay = true;
+        video.play();
+    }
 
     return PIXI.VideoTexture.textureFromVideo(video, scaleMode);
 };
