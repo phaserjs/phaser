@@ -210,15 +210,6 @@ Phaser.AnimationManager.prototype = {
             this.sprite.refreshTexture = true;
         }
 
-        // this.sprite.setFrame(this.currentFrame);
-        //  CHECK WE STILL NEED THIS - PRETTY SURE IT DOESN'T ACTUALLY DO ANYTHING!
-        // if (this.sprite.__tilePattern)
-        // {
-            // this.__tilePattern = false;
-            // this.sprite.__tilePattern = false;
-            // this.tilingTexture = false;
-        // }
-
         return this._anims[name];
 
     },
@@ -415,12 +406,6 @@ Phaser.AnimationManager.prototype = {
 
         this.sprite.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
 
-        if (this.sprite.__tilePattern)
-        {
-            this.__tilePattern = false;
-            this.tilingTexture = false;
-        }
-
     },
 
     /**
@@ -543,12 +528,6 @@ Object.defineProperty(Phaser.AnimationManager.prototype, 'frame', {
             if (this.currentFrame)
             {
                 this.sprite.setFrame(this.currentFrame);
-
-                if (this.sprite.__tilePattern)
-                {
-                    this.__tilePattern = false;
-                    this.tilingTexture = false;
-                }
             }
         }
 
@@ -582,12 +561,6 @@ Object.defineProperty(Phaser.AnimationManager.prototype, 'frameName', {
                 this._frameIndex = this.currentFrame.index;
 
                 this.sprite.setFrame(this.currentFrame);
-
-                if (this.sprite.__tilePattern)
-                {
-                    this.__tilePattern = false;
-                    this.tilingTexture = false;
-                }
             }
         }
         else

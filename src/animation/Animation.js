@@ -436,11 +436,6 @@ Phaser.Animation.prototype = {
         if (this.currentFrame && idx !== this.currentFrame.index)
         {
             this._parent.setFrame(this.currentFrame);
-
-            if (this._parent.tilingTexture)
-            {
-                this._parent.refreshTexture = true;
-            }
         }
 
         if (this.onUpdate && signalUpdate)
