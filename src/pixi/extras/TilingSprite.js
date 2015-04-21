@@ -83,31 +83,54 @@ PIXI.TilingSprite = function(texture, width, height)
      */
     this.blendMode = PIXI.blendModes.NORMAL;
 
+    /**
+     * The CanvasBuffer object that the tiled texture is drawn to.
+     *
+     * @property canvasBuffer
+     * @type PIXI.CanvasBuffer
+     */
+    this.canvasBuffer = null;
+
+    /**
+     * An internal Texture object that holds the tiling texture that was generated from TilingSprite.texture.
+     *
+     * @property tilingTexture
+     * @type PIXI.Texture
+     */
     this.tilingTexture = null;
-    this.__tilePattern = null;
+
+    /**
+     * The Context fill pattern that is used to draw the TilingSprite in Canvas mode only (will be null in WebGL).
+     *
+     * @property tilePattern
+     * @type PIXI.Texture
+     */
+    this.tilePattern = null;
+
+    /**
+     * If true the TilingSprite will run generateTexture on its **next** render pass.
+     * This is set by the likes of Phaser.LoadTexture.setFrame.
+     *
+     * @property refreshTexture
+     * @type Boolean
+     * @default true
+     */
     this.refreshTexture = true;
-
-    this.originalTexture = texture;
-
-    this._cropX = 0;
-    this._cropY = 0;
 
 };
 
-// constructor
 PIXI.TilingSprite.prototype = Object.create(PIXI.Sprite.prototype);
 PIXI.TilingSprite.prototype.constructor = PIXI.TilingSprite;
 
 PIXI.TilingSprite.prototype.setTexture = function(texture)
 {
-    this.texture = texture;
-    this.originalTexture = texture;
-    this.refreshTexture = true;
+    if (this.texture !== texture)
+    {
+        this.texture = texture;
+        this.refreshTexture = true;
+        this.cachedTint = 0xFFFFFF;
+    }
 
-    this._cropX = 0;
-    this._cropY = 0;
-
-    this.cachedTint = 0xFFFFFF;
 };
 
 /**
@@ -137,7 +160,6 @@ PIXI.TilingSprite.prototype._renderWebGL = function(renderSession)
         renderSession.filterManager.pushFilter(this._filterBlock);
     }
 
-    // if (!this.tilingTexture || this.refreshTexture)
     if (this.refreshTexture)
     {
         this.generateTilingTexture(true);
@@ -189,24 +211,23 @@ PIXI.TilingSprite.prototype._renderCanvas = function(renderSession)
 
     context.globalAlpha = this.worldAlpha;
     
-    var transform = this.worldTransform;
+    var wt = this.worldTransform;
     var resolution = renderSession.resolution;
 
-    context.setTransform(transform.a * resolution,
-                         transform.b * resolution,
-                         transform.c * resolution,
-                         transform.d * resolution,
-                         transform.tx * resolution,
-                         transform.ty * resolution);
+    context.setTransform(wt.a * resolution,
+                         wt.b * resolution,
+                         wt.c * resolution,
+                         wt.d * resolution,
+                         wt.tx * resolution,
+                         wt.ty * resolution);
 
-    // if (!this.__tilePattern || this.refreshTexture)
     if (this.refreshTexture)
     {
         this.generateTilingTexture(false);
     
         if (this.tilingTexture)
         {
-            this.__tilePattern = context.createPattern(this.tilingTexture.baseTexture.source, 'repeat');
+            this.tilePattern = context.createPattern(this.tilingTexture.baseTexture.source, 'repeat');
         }
         else
         {
@@ -214,7 +235,9 @@ PIXI.TilingSprite.prototype._renderCanvas = function(renderSession)
         }
     }
 
-    // check blend mode
+    var sessionBlendMode = renderSession.currentBlendMode;
+
+    //  Check blend mode
     if (this.blendMode !== renderSession.currentBlendMode)
     {
         renderSession.currentBlendMode = this.blendMode;
@@ -227,17 +250,29 @@ PIXI.TilingSprite.prototype._renderCanvas = function(renderSession)
     tilePosition.x %= this.tilingTexture.baseTexture.width;
     tilePosition.y %= this.tilingTexture.baseTexture.height;
 
-    // offset - make sure to account for the anchor point..
-    context.scale(tileScale.x,tileScale.y);
+    //  Translate
+    context.scale(tileScale.x, tileScale.y);
     context.translate(tilePosition.x + (this.anchor.x * -this._width), tilePosition.y + (this.anchor.y * -this._height));
 
-    context.fillStyle = this.__tilePattern;
+    context.fillStyle = this.tilePattern;
 
-    context.fillRect(-tilePosition.x,
-                    -tilePosition.y,
-                    this._width / tileScale.x,
-                    this._height / tileScale.y);
+    var tx = -tilePosition.x;
+    var ty = -tilePosition.y;
+    var tw = this._width / tileScale.x;
+    var th = this._height / tileScale.y;
 
+    //  Allow for pixel rounding
+    if (renderSession.roundPixels)
+    {
+        tx | 0;
+        ty | 0;
+        tw | 0;
+        th | 0;
+    }
+
+    context.fillRect(tx, ty, tw, th);
+
+    //  Translate back again
     context.scale(1 / tileScale.x, 1 / tileScale.y);
     context.translate(-tilePosition.x + (this.anchor.x * this._width), -tilePosition.y + (this.anchor.y * this._height));
 
@@ -250,6 +285,96 @@ PIXI.TilingSprite.prototype._renderCanvas = function(renderSession)
     {
         this.children[i]._renderCanvas(renderSession);
     }
+
+    //  Reset blend mode
+    if (sessionBlendMode !== this.blendMode)
+    {
+        renderSession.currentBlendMode = sessionBlendMode;
+        context.globalCompositeOperation = PIXI.blendModesCanvas[sessionBlendMode];
+    }
+
+};
+
+/**
+ * When the texture is updated, this event will fire to update the scale and frame
+ *
+ * @method onTextureUpdate
+ * @param event
+ * @private
+ */
+PIXI.TilingSprite.prototype.onTextureUpdate = function()
+{
+   // overriding the sprite version of this!
+};
+
+/**
+* 
+* @method generateTilingTexture
+* 
+* @param forcePowerOfTwo {Boolean} Whether we want to force the texture to be a power of two
+*/
+PIXI.TilingSprite.prototype.generateTilingTexture = function(forcePowerOfTwo)
+{
+    if (!this.texture.baseTexture.hasLoaded)
+    {
+        return;
+    }
+
+    var texture = this.texture;
+    var frame = texture.frame;
+
+    var targetWidth = this._frame.sourceSizeW;
+    var targetHeight = this._frame.sourceSizeH;
+
+    var dx = 0;
+    var dy = 0;
+
+    if (this._frame.trimmed)
+    {
+        dx = this._frame.spriteSourceSizeX;
+        dy = this._frame.spriteSourceSizeY;
+    }
+
+    if (forcePowerOfTwo)
+    {
+        targetWidth = PIXI.getNextPowerOfTwo(texture.crop.width);
+        targetHeight = PIXI.getNextPowerOfTwo(texture.crop.height);
+    }
+
+    if (this.canvasBuffer)
+    {
+        this.canvasBuffer.resize(targetWidth, targetHeight);
+        this.tilingTexture.baseTexture.width = targetWidth;
+        this.tilingTexture.baseTexture.height = targetHeight;
+        this.tilingTexture.needsUpdate = true;
+    }
+    else
+    {
+        this.canvasBuffer = new PIXI.CanvasBuffer(targetWidth, targetHeight);
+        this.tilingTexture = PIXI.Texture.fromCanvas(this.canvasBuffer.canvas);
+        this.tilingTexture.isTiling = true;
+        // Phaser.Canvas.addToDOM(this.canvasBuffer.canvas, document.body, false);
+    }
+
+    // this.canvasBuffer.context.fillStyle = 'rgb(0,255,0)';
+    // this.canvasBuffer.context.fillRect(0, 0, targetWidth, targetHeight);
+
+    this.canvasBuffer.context.drawImage(texture.baseTexture.source,
+                           texture.crop.x,
+                           texture.crop.y,
+                           texture.crop.width,
+                           texture.crop.height,
+                           dx,
+                           dy,
+                           texture.crop.width,
+                           texture.crop.height);
+
+    this.tileScaleOffset.x = frame.width / targetWidth;
+    this.tileScaleOffset.y = frame.height / targetHeight;
+
+    this.refreshTexture = false;
+
+    this.tilingTexture.baseTexture._powerOf2 = true;
 
 };
 
@@ -329,125 +454,6 @@ PIXI.TilingSprite.prototype.getBounds = function()
     this._currentBounds = bounds;
 
     return bounds;
-};
-
-/**
- * When the texture is updated, this event will fire to update the scale and frame
- *
- * @method onTextureUpdate
- * @param event
- * @private
- */
-PIXI.TilingSprite.prototype.onTextureUpdate = function()
-{
-   // overriding the sprite version of this!
-};
-
-/**
-* 
-* @method generateTilingTexture
-* 
-* @param forcePowerOfTwo {Boolean} Whether we want to force the texture to be a power of two
-*/
-PIXI.TilingSprite.prototype.generateTilingTexture = function(forcePowerOfTwo)
-{
-    if (!this.originalTexture.baseTexture.hasLoaded)
-    {
-        return;
-    }
-
-    this.originalTexture = this.texture;
-
-    var texture = this.originalTexture;
-    var frame = texture.frame;
-
-    var targetWidth;
-    var targetHeight;
-
-    var newTextureRequired = false;
-
-    if (texture.crop.x !== this._cropX || texture.crop.y !== this._cropY || this.tilingTexture === null)
-    {
-        newTextureRequired = true;
-        this._cropX = texture.crop.x;
-        this._cropY = texture.crop.y;
-    }
-
-    if (!forcePowerOfTwo)
-    {
-        targetWidth = texture.crop.width;
-        targetHeight = texture.crop.height;
-        newTextureRequired = true;
-    }
-    else
-    {
-        targetWidth = PIXI.getNextPowerOfTwo(texture.crop.width);
-        targetHeight = PIXI.getNextPowerOfTwo(texture.crop.height);
-        newTextureRequired = true;
-    }
-
-    // console.log('generateTilingTexture', newTextureRequired, frame, 'pot', forcePowerOfTwo, 'bt', texture.baseTexture.width, texture.baseTexture.height, 'fr', frame.width, frame.height);
-    // console.log('generateTilingTexture');
-    // console.log(texture);
-
-    if (newTextureRequired)
-    {
-        var canvasBuffer;
-
-        if (this.tilingTexture && this.tilingTexture.isTiling)
-        {
-            canvasBuffer = this.tilingTexture.canvasBuffer;
-            canvasBuffer.resize(targetWidth, targetHeight);
-            this.tilingTexture.baseTexture.width = targetWidth;
-            this.tilingTexture.baseTexture.height = targetHeight;
-            this.tilingTexture.needsUpdate = true;
-        }
-        else
-        {
-            canvasBuffer = new PIXI.CanvasBuffer(targetWidth, targetHeight);
-            this.tilingTexture = PIXI.Texture.fromCanvas(canvasBuffer.canvas);
-            this.tilingTexture.canvasBuffer = canvasBuffer;
-            this.tilingTexture.isTiling = true;
-        }
-
-        canvasBuffer.context.drawImage(texture.baseTexture.source,
-                               texture.crop.x,
-                               texture.crop.y,
-                               texture.crop.width,
-                               texture.crop.height,
-                               0,
-                               0,
-                               targetWidth,
-                               targetHeight);
-
-        this.tileScaleOffset.x = frame.width / targetWidth;
-        this.tileScaleOffset.y = frame.height / targetHeight;
-    }
-    else
-    {
-        /*
-        //  TODO - switching?
-        if (this.tilingTexture && this.tilingTexture.isTiling)
-        {
-            // destroy the tiling texture!
-            // TODO could store this somewhere?
-            this.tilingTexture.destroy(true);
-        }
-
-        this.tileScaleOffset.x = 1;
-        this.tileScaleOffset.y = 1;
-        this.tilingTexture = texture;
-        */
-    }
-
-    this.refreshTexture = false;
-    
-    this.texture = this.tilingTexture;
-    
-    this.tilingTexture.baseTexture._powerOf2 = true;
-
-    // debugger;
-
 };
 
 PIXI.TilingSprite.prototype.destroy = function () {
