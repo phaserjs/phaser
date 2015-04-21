@@ -231,7 +231,6 @@ PIXI.WebGLSpriteBatch.prototype.render = function(sprite, matrix)
         return;
     }
 
-    // TODO trim??
     var aX = sprite.anchor.x;
     var aY = sprite.anchor.y;
 
@@ -346,6 +345,7 @@ PIXI.WebGLSpriteBatch.prototype.renderTilingSprite = function(tilingSprite)
     // check texture..
     if (this.currentBatchSize >= this.size)
     {
+        console.log('batch flush');
         //return;
         this.flush();
         this.currentBaseTexture = texture.baseTexture;
@@ -403,14 +403,14 @@ PIXI.WebGLSpriteBatch.prototype.renderTilingSprite = function(tilingSprite)
 
     var resolution = texture.baseTexture.resolution;
 
-    var worldTransform = tilingSprite.worldTransform;
+    var wt = tilingSprite.wt;
 
-    var a = worldTransform.a / resolution;//[0];
-    var b = worldTransform.b / resolution;//[3];
-    var c = worldTransform.c / resolution;//[1];
-    var d = worldTransform.d / resolution;//[4];
-    var tx = worldTransform.tx;//[2];
-    var ty = worldTransform.ty;//[5];
+    var a = wt.a / resolution;
+    var b = wt.b / resolution;
+    var c = wt.c / resolution;
+    var d = wt.d / resolution;
+    var tx = wt.tx;
+    var ty = wt.ty;
 
     // xy
     positions[index++] = a * w1 + c * h1 + tx;

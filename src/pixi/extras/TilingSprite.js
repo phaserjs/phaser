@@ -169,6 +169,10 @@ PIXI.TilingSprite.prototype._renderWebGL = function(renderSession)
             renderSession.renderer.updateTexture(this.tilingTexture.baseTexture);
             this.tilingTexture.needsUpdate = false;
         }
+        else
+        {
+            return;
+        }
     }
     else
     {
@@ -182,8 +186,15 @@ PIXI.TilingSprite.prototype._renderWebGL = function(renderSession)
 
     renderSession.spriteBatch.stop();
 
-    if (this._filters) renderSession.filterManager.popFilter();
-    if (this._mask) renderSession.maskManager.popMask(this._mask, renderSession);
+    if (this._filters)
+    {
+        renderSession.filterManager.popFilter();
+    }
+
+    if (this._mask)
+    {
+        renderSession.maskManager.popMask(this._mask, renderSession);
+    }
     
     renderSession.spriteBatch.start();
 };
@@ -353,6 +364,7 @@ PIXI.TilingSprite.prototype.generateTilingTexture = function(forcePowerOfTwo)
         this.canvasBuffer = new PIXI.CanvasBuffer(targetWidth, targetHeight);
         this.tilingTexture = PIXI.Texture.fromCanvas(this.canvasBuffer.canvas);
         this.tilingTexture.isTiling = true;
+        this.tilingTexture.needsUpdate = true;
         // Phaser.Canvas.addToDOM(this.canvasBuffer.canvas, document.body, false);
     }
 
