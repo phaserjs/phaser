@@ -82,12 +82,12 @@ Phaser.Frame = function (index, x, y, width, height, name) {
     this.trimmed = false;
 
     /**
-    * @property {number} sourceSizeW - Width of the original sprite.
+    * @property {number} sourceSizeW - Width of the original sprite before it was trimmed.
     */
     this.sourceSizeW = width;
 
     /**
-    * @property {number} sourceSizeH - Height of the original sprite.
+    * @property {number} sourceSizeH - Height of the original sprite before it was trimmed.
     */
     this.sourceSizeH = height;
 
