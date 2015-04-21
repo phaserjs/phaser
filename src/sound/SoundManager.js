@@ -222,6 +222,8 @@ Phaser.SoundManager.prototype = {
         }
         else
         {
+            this.usingWebAudio = true;
+
             if (typeof this.context.createGain === 'undefined')
             {
                 this.masterGain = this.context.createGainNode();
