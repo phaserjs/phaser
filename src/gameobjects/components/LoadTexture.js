@@ -159,6 +159,11 @@ Phaser.Component.LoadTexture.prototype = {
 
         this.texture._updateUvs();
 
+        if (this.tilingTexture)
+        {
+            this.refreshTexture = true;
+        }
+
     },
 
     /**
