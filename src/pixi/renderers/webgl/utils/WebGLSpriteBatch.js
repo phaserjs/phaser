@@ -357,11 +357,11 @@ PIXI.WebGLSpriteBatch.prototype.renderTilingSprite = function(sprite)
 
     var uvs = sprite._uvs;
 
-    // var w = texture.baseTexture.width;
-    // var h = texture.baseTexture.height;
+    var w = texture.baseTexture.width;
+    var h = texture.baseTexture.height;
 
-    var w = sprite._frame.sourceSizeW;
-    var h = sprite._frame.sourceSizeH;
+    // var w = sprite._frame.sourceSizeW;
+    // var h = sprite._frame.sourceSizeH;
 
     // w = 16;
     // h = 16;
@@ -486,10 +486,10 @@ PIXI.WebGLSpriteBatch.prototype.flush = function()
         gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
 
-        shader =  this.defaultShader.shaders[gl.id];
+        shader = this.defaultShader.shaders[gl.id];
 
         // this is the same for each shader?
-        var stride =  this.vertSize * 4;
+        var stride = this.vertSize * 4;
         gl.vertexAttribPointer(shader.aVertexPosition, 2, gl.FLOAT, false, stride, 0);
         gl.vertexAttribPointer(shader.aTextureCoord, 2, gl.FLOAT, false, stride, 2 * 4);
 
