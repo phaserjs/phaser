@@ -62,8 +62,11 @@ PIXI.VideoTexture.prototype.play = function()
 
 PIXI.VideoTexture.prototype.stop = function()
 {
-    this.source.stop();
-    this.onComplete.dispatch();
+    if (this.source && !this.source.paused)
+    {
+        this.source.pause();
+        this.onComplete.dispatch();
+    }
 };
 
 PIXI.VideoTexture.prototype._onEnded = function()
@@ -194,15 +197,16 @@ PIXI.VideoTexture.fromUrl = function(videoSrc, scaleMode, autoPlay)
     var video = document.createElement('video');
 
     video.src = videoSrc;
+    video.controls = true;
 
     if (autoPlay)
     {
-        video.autoPlay = true;
+        video.autoplay = true;
         video.play();
     }
     else
     {
-        video.autoPlay = false;
+        video.autoplay = false;
     }
 
     return PIXI.VideoTexture.textureFromVideo(video, scaleMode);
