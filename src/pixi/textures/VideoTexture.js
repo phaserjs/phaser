@@ -46,14 +46,30 @@ PIXI.VideoTexture = function(source, scaleMode)
         source.addEventListener('pause', this.onPlayStop.bind(this));
     }
 
+    this.onPlay = new Phaser.Signal();
+    this.onComplete = new Phaser.Signal();
+
 };
 
 PIXI.VideoTexture.prototype = Object.create(PIXI.BaseTexture.prototype);
 PIXI.VideoTexture.constructor = PIXI.VideoTexture;
 
+PIXI.VideoTexture.prototype.play = function()
+{
+    this.source.play();
+    this.onPlay.dispatch();
+};
+
+PIXI.VideoTexture.prototype.stop = function()
+{
+    this.source.stop();
+    this.onComplete.dispatch();
+};
+
 PIXI.VideoTexture.prototype._onEnded = function()
 {
     this.ended = true;
+    this.onComplete.dispatch();
 };
 
 PIXI.VideoTexture.prototype._onUpdate = function()
@@ -183,6 +199,10 @@ PIXI.VideoTexture.fromUrl = function(videoSrc, scaleMode, autoPlay)
     {
         video.autoPlay = true;
         video.play();
+    }
+    else
+    {
+        video.autoPlay = false;
     }
 
     return PIXI.VideoTexture.textureFromVideo(video, scaleMode);
