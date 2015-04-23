@@ -302,7 +302,7 @@ Phaser.Cache.prototype = {
         this._images[key] = { url: url, data: data, frameWidth: frameWidth, frameHeight: frameHeight, margin: margin, spacing: spacing };
 
         PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
-        PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
+        // PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
 
         this._images[key].frameData = Phaser.AnimationParser.spriteSheet(this.game, key, frameWidth, frameHeight, frameMax, margin, spacing);
 
@@ -342,7 +342,7 @@ Phaser.Cache.prototype = {
         this._images[key] = { url: url, data: data };
 
         PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
-        PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
+        // PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
 
         if (format == Phaser.Loader.TEXTURE_ATLAS_XML_STARLING)
         {
@@ -381,7 +381,7 @@ Phaser.Cache.prototype = {
         this._images[key] = { url: url, data: data };
 
         PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
-        PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
+        // PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
 
         Phaser.LoaderParser.bitmapFont(this.game, xmlData, key, xSpacing, ySpacing);
 
@@ -521,7 +521,7 @@ Phaser.Cache.prototype = {
         this._images[key].frameData.addFrame(new Phaser.Frame(0, 0, 0, data.width, data.height, url, this.game.rnd.uuid()));
 
         PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
-        PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
+        // PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
 
         this._resolveURL(url, this._images[key]);
 
