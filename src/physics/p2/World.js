@@ -1296,6 +1296,8 @@ Phaser.Physics.P2.prototype = {
 
     /**
     * Populates and returns an array of all current Constraints in the world.
+    * You will get an array of p2 constraints back. This can be of mixed types, for example the array may contain
+    * PrismaticConstraints, RevoluteConstraints or any other valid p2 constraint type.
     *
     * @method Phaser.Physics.P2#getConstraints
     * @return {array<Phaser.Physics.P2.Constraint>} An array containing all current Constraints in the world.
@@ -1307,7 +1309,7 @@ Phaser.Physics.P2.prototype = {
 
         while (i--)
         {
-            output.push(this.world.constraints[i].parent);
+            output.push(this.world.constraints[i]);
         }
 
         return output;

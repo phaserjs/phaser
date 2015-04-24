@@ -753,7 +753,7 @@ Phaser.Physics.P2.Body.prototype = {
                 }
             }
         }
-        
+
         if (this.data.world !== this.game.physics.p2.world)
         {
             this.game.physics.p2.addBody(this);
@@ -797,8 +797,11 @@ Phaser.Physics.P2.Body.prototype = {
         }
 
         this.debugBody = null;
-        this.sprite.body = null;
-        this.sprite = null;
+
+        if (this.sprite) {
+            this.sprite.body = null;
+            this.sprite = null;
+        }
 
     },
 
@@ -1032,9 +1035,9 @@ Phaser.Physics.P2.Body.prototype = {
     removeShape: function (shape) {
 
 		var result = this.data.removeShape(shape);
-	
+
 		this.shapeChanged();
-	
+
         return result;
     },
 

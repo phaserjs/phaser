@@ -2056,7 +2056,7 @@ declare module Phaser {
 
         apply(pos: Phaser.Point, newPos?: Phaser.Point): Phaser.Point;
         applyInverse(pos: Phaser.Point, newPos?: Phaser.Point): Phaser.Point;
-        fromArray(array: number[]);
+        fromArray(array: number[]): void;
         toArray(transpose: boolean): number[];
         translate(x: number, y: number): Phaser.Matrix;
         scale(x: number, y: number): Phaser.Matrix;
@@ -4117,7 +4117,7 @@ declare module Phaser {
         world: Phaser.World;
 
         create(): void;
-        init(): void;
+        init(...args: any[]): void;
         loadRender(): void;
         loadUpdate(): void;
         paused(): void;

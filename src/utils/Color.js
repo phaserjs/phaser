@@ -441,9 +441,6 @@ Phaser.Color = {
 
         var out = { r: r || 0, g: g || 0, b: b || 0, a: a || 1, h: h || 0, s: s || 0, l: l || 0, v: v || 0, color: 0, color32: 0, rgba: '' };
 
-        out.color = Phaser.Color.getColor(out.r, out.g, out.b);
-        out.color32 = Phaser.Color.getColor32(out.a, out.r, out.g, out.b);
-
         return Phaser.Color.updateColor(out);
 
     },
@@ -459,6 +456,8 @@ Phaser.Color = {
     updateColor: function (out) {
 
         out.rgba = 'rgba(' + out.r.toString() + ',' + out.g.toString() + ',' + out.b.toString() + ',' + out.a.toString() + ')';
+        out.color = Phaser.Color.getColor(out.r, out.g, out.b);
+        out.color32 = Phaser.Color.getColor32(out.a, out.r, out.g, out.b);
 
         return out;
 
@@ -615,6 +614,7 @@ Phaser.Color = {
             out.g = parseInt(result[2], 10);
             out.b = parseInt(result[3], 10);
             out.a = result[4] !== undefined ? parseFloat(result[4]) : 1;
+            Phaser.Color.updateColor(out);
         }
 
         return out;

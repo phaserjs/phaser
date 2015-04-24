@@ -459,11 +459,34 @@ Phaser.Loader.prototype = {
     * @protected
     * @param {string} type - The type of resource to add to the list (image, audio, xml, etc).
     * @param {string} key - The unique Cache ID key of this resource.
-    * @param {string} url - The URL the asset will be loaded from.
+    * @param {string} [url] - The URL the asset will be loaded from.
     * @param {object} [properties=(none)] - Any additional properties needed to load the file. These are added directly to the added file object and overwrite any defaults.
     * @param {boolean} [overwrite=false] - If true then this will overwrite a file asset of the same type/key. Otherwise it will will only add a new asset. If overwrite is true, and the asset is already being loaded (or has been loaded), then it is appended instead.
+    * @param {string} [extension] - If no URL is given the Loader will sometimes auto-generate the URL based on the key, using this as the extension.
+    * @return {Phaser.Loader} This instance of the Phaser Loader.
     */
-    addToFileList: function (type, key, url, properties, overwrite) {
+    addToFileList: function (type, key, url, properties, overwrite, extension) {
+
+        if (typeof overwrite === 'undefined') { overwrite = false; }
+        
+        if (typeof key === 'undefined' || key === '')
+        {
+            console.warn("Phaser.Loader: Invalid or no key given of type " + type);
+            return this;
+        }
+
+        if (typeof url === 'undefined' || url === null)
+        {
+            if (extension)
+            {
+                url = key + extension;
+            }
+            else
+            {
+                console.warn("Phaser.Loader: No URL given for file type: " + type + " key: " + key);
+                return this;
+            }
+        }
 
         var file = {
             type: type,
@@ -505,6 +528,8 @@ Phaser.Loader.prototype = {
             this._fileList.push(file);
             this._totalFileCount++;
         }
+
+        return this;
 
     },
 
@@ -596,111 +621,165 @@ Phaser.Loader.prototype = {
     },
 
     /**
-    * Add an 'image' to the Loader.
+    * Adds an Image to the current load queue.
+    * 
+    * The file is **not** loaded immediately after calling this method. The file is added to the queue ready to be loaded when the loader starts.
+    * 
+    * Phaser can load all common image types: png, jpg, gif and any other format the browser can natively handle.
+    * 
+    * The key must be a unique String. It is used to add the file to the Phaser.Cache upon successful load.
+    *
+    * Retrieve the image via `Cache.getImage(key)`
+    * 
+    * The URL can be relative or absolute. If relative it will take the Loader.baseURL into consideration.
+    * 
+    * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "bomb"
+    * and no URL is given then the Loader will set the URL to be "bomb.png". It will always add `.png` as the extension.
+    * If you do not desire this action then provide a URL.
     *
     * @method Phaser.Loader#image
     * @param {string} key - Unique asset key of this image file.
-    * @param {string} url - URL of image file.
+    * @param {string} [url] - URL of an image file. If undefined or `null` the url will be set to `<key>.png`, i.e. if `key` was "bomb" then the URL will be "bomb.png".
     * @param {boolean} [overwrite=false] - If an unloaded file with a matching key already exists in the queue, this entry will overwrite it.
     * @return {Phaser.Loader} This Loader instance.
     */
     image: function (key, url, overwrite) {
 
-        if (typeof overwrite === 'undefined') { overwrite = false; }
-
-        this.addToFileList('image', key, url, undefined, overwrite);
-
-        return this;
+        return this.addToFileList('image', key, url, undefined, overwrite, '.png');
 
     },
 
     /**
-    * Add a 'text' file to the Loader.
+    * Adds a Text file to the current load queue.
+    * 
+    * The file is **not** loaded immediately after calling this method. The file is added to the queue ready to be loaded when the loader starts.
+    * 
+    * The key must be a unique String. It is used to add the file to the Phaser.Cache upon successful load.
+    *
+    * Retrieve the file via `Cache.getText(key)`
+    * 
+    * The URL can be relative or absolute. If relative it will take the Loader.baseURL into consideration.
+    * 
+    * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "bomb"
+    * and no URL is given then the Loader will set the URL to be "bomb.txt". It will always add `.txt` as the extension.
+    * If you do not desire this action then provide a URL.
     *
     * @method Phaser.Loader#text
     * @param {string} key - Unique asset key of the text file.
-    * @param {string} url - URL of the text file.
+    * @param {string} [url] - URL of the text file. If undefined or `null` the url will be set to `<key>.txt`, i.e. if `key` was "bomb" then the URL will be "bomb.txt".
     * @param {boolean} [overwrite=false] - If an unloaded file with a matching key already exists in the queue, this entry will overwrite it.
     * @return {Phaser.Loader} This Loader instance.
     */
     text: function (key, url, overwrite) {
 
-        if (typeof overwrite === 'undefined') { overwrite = false; }
-
-        this.addToFileList('text', key, url, undefined, overwrite);
-
-        return this;
+        return this.addToFileList('text', key, url, undefined, overwrite, '.txt');
 
     },
 
     /**
-    * Add a 'json' file to the Loader.
+    * Adds a JSON file to the current load queue.
+    * 
+    * The file is **not** loaded immediately after calling this method. The file is added to the queue ready to be loaded when the loader starts.
+    * 
+    * The key must be a unique String. It is used to add the file to the Phaser.Cache upon successful load.
+    *
+    * Retrieve the file via `Cache.getJSON(key)`. JSON files are automatically parsed upon load.
+    * If you need to control when the JSON is parsed then use `Loader.text` instead and parse the text file as needed.
+    * 
+    * The URL can be relative or absolute. If relative it will take the Loader.baseURL into consideration.
+    * 
+    * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "bomb"
+    * and no URL is given then the Loader will set the URL to be "bomb.json". It will always add `.json` as the extension.
+    * If you do not desire this action then provide a URL.
     *
     * @method Phaser.Loader#json
     * @param {string} key - Unique asset key of the json file.
-    * @param {string} url - URL of the json file.
+    * @param {string} [url] - URL of the JSON file. If undefined or `null` the url will be set to `<key>.json`, i.e. if `key` was "bomb" then the URL will be "bomb.json".
     * @param {boolean} [overwrite=false] - If an unloaded file with a matching key already exists in the queue, this entry will overwrite it.
     * @return {Phaser.Loader} This Loader instance.
     */
     json: function (key, url, overwrite) {
 
-        if (typeof overwrite === 'undefined') { overwrite = false; }
-
-        this.addToFileList('json', key, url, undefined, overwrite);
-
-        return this;
+        return this.addToFileList('json', key, url, undefined, overwrite, '.json');
 
     },
 
     /**
-    * Add an XML ('xml') file to the Loader.
+    * Adds an XML file to the current load queue.
+    * 
+    * The file is **not** loaded immediately after calling this method. The file is added to the queue ready to be loaded when the loader starts.
+    * 
+    * The key must be a unique String. It is used to add the file to the Phaser.Cache upon successful load.
+    *
+    * Retrieve the file via `Cache.getXML(key)`.
+    * 
+    * The URL can be relative or absolute. If relative it will take the Loader.baseURL into consideration.
+    * 
+    * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "bomb"
+    * and no URL is given then the Loader will set the URL to be "bomb.xml". It will always add `.xml` as the extension.
+    * If you do not desire this action then provide a URL.
     *
     * @method Phaser.Loader#xml
     * @param {string} key - Unique asset key of the xml file.
-    * @param {string} url - URL of the xml file.
+    * @param {string} [url] - URL of the XML file. If undefined or `null` the url will be set to `<key>.xml`, i.e. if `key` was "bomb" then the URL will be "bomb.xml".
     * @param {boolean} [overwrite=false] - If an unloaded file with a matching key already exists in the queue, this entry will overwrite it.
     * @return {Phaser.Loader} This Loader instance.
     */
     xml: function (key, url, overwrite) {
 
-        if (typeof overwrite === 'undefined') { overwrite = false; }
-
-        this.addToFileList('xml', key, url, undefined, overwrite);
-
-        return this;
+        return this.addToFileList('xml', key, url, undefined, overwrite, '.xml');
 
     },
 
     /**
-    * Add a JavaScript ('script') file to the Loader.
+    * Adds a JavaScript file to the current load queue.
+    * 
+    * The file is **not** loaded immediately after calling this method. The file is added to the queue ready to be loaded when the loader starts.
+    * 
+    * The key must be a unique String.
+    * 
+    * The URL can be relative or absolute. If relative it will take the Loader.baseURL into consideration.
+    * 
+    * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "bomb"
+    * and no URL is given then the Loader will set the URL to be "bomb.js". It will always add `.js` as the extension.
+    * If you do not desire this action then provide a URL.
     *
-    * The loaded JavaScript is automatically turned into a script tag and executed, so be careful what you load!
+    * Upon successful load the JavaScript is automatically turned into a script tag and executed, so be careful what you load!
     *
     * A callback, which will be invoked as the script tag has been created, can also be specified.
     * The callback must return relevant `data`.
     *
     * @method Phaser.Loader#script
     * @param {string} key - Unique asset key of the script file.
-    * @param {string} url - URL of the JavaScript file.
+    * @param {string} [url] - URL of the JavaScript file. If undefined or `null` the url will be set to `<key>.js`, i.e. if `key` was "bomb" then the URL will be "bomb.js".
     * @param {function} [callback=(none)] - Optional callback that will be called after the script tag has loaded, so you can perform additional processing.
-    * @param {object} [callbackContext=(loader)] - The context under which the callback will be applied. If not specified it will use the callback itself as the context.
+    * @param {object} [callbackContext=(loader)] - The context under which the callback will be applied. If not specified it will use the Phaser Loader as the context.
     * @return {Phaser.Loader} This Loader instance.
     */
     script: function (key, url, callback, callbackContext) {
 
         if (typeof callback === 'undefined') { callback = false; }
 
-        // Why is the default callback context the ..callback?
-        if (callback !== false && typeof callbackContext === 'undefined') { callbackContext = callback; }
+        if (callback !== false && typeof callbackContext === 'undefined') { callbackContext = this; }
 
-        this.addToFileList('script', key, url, { syncPoint: true, callback: callback, callbackContext: callbackContext });
-
-        return this;
+        return this.addToFileList('script', key, url, { syncPoint: true, callback: callback, callbackContext: callbackContext }, false, '.js');
 
     },
 
     /**
-    * Add a 'binary' file to the Loader.
+    * Adds a binary file to the current load queue.
+    * 
+    * The file is **not** loaded immediately after calling this method. The file is added to the queue ready to be loaded when the loader starts.
+    * 
+    * The key must be a unique String. It is used to add the file to the Phaser.Cache upon successful load.
+    *
+    * Retrieve the file via `Cache.getBinary(key)`.
+    * 
+    * The URL can be relative or absolute. If relative it will take the Loader.baseURL into consideration.
+    * 
+    * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "bomb"
+    * and no URL is given then the Loader will set the URL to be "bomb.bin". It will always add `.bin` as the extension.
+    * If you do not desire this action then provide a URL.
     *
     * It will be loaded via xhr with a responseType of "arraybuffer". You can specify an optional callback to process the file after load.
     * When the callback is called it will be passed 2 parameters: the key of the file and the file data.
@@ -709,7 +788,7 @@ Phaser.Loader.prototype = {
     *
     * @method Phaser.Loader#binary
     * @param {string} key - Unique asset key of the binary file.
-    * @param {string} url - URL of the binary file.
+    * @param {string} [url] - URL of the binary file. If undefined or `null` the url will be set to `<key>.bin`, i.e. if `key` was "bomb" then the URL will be "bomb.bin".
     * @param {function} [callback=(none)] - Optional callback that will be passed the file after loading, so you can perform additional processing on it.
     * @param {object} [callbackContext] - The context under which the callback will be applied. If not specified it will use the callback itself as the context.
     * @return {Phaser.Loader} This Loader instance.
@@ -721,20 +800,37 @@ Phaser.Loader.prototype = {
         // Why is the default callback context the ..callback?
         if (callback !== false && typeof callbackContext === 'undefined') { callbackContext = callback; }
 
-        this.addToFileList('binary', key, url, { callback: callback, callbackContext: callbackContext });
-
-        return this;
+        return this.addToFileList('binary', key, url, { callback: callback, callbackContext: callbackContext }, false, '.bin');
 
     },
 
     /**
-    * Add a new sprite sheet ('spritesheet') to the loader.
+    * Adds a Sprite Sheet to the current load queue.
+    * 
+    * The file is **not** loaded immediately after calling this method. The file is added to the queue ready to be loaded when the loader starts.
+    *
+    * To clarify the terminology that Phaser uses: A Sprite Sheet is an image containing frames, usually of an animation, that are all equal
+    * dimensions and often in sequence. For example if the frame size is 32x32 then every frame in the sprite sheet will be that size. 
+    * Sometimes (outside of Phaser) the term "sprite sheet" is used to refer to a texture atlas.
+    * A Texture Atlas works by packing together images as best it can, using whatever frame sizes it likes, often with cropping and trimming
+    * the frames in the process. Software such as Texture Packer, Flash CC or Shoebox all generate texture atlases, not sprite sheets.
+    * If you've got an atlas then use `Loader.atlas` instead.
+    * 
+    * The key must be a unique String. It is used to add the image to the Phaser.Cache upon successful load.
+    *
+    * Retrieve the file via `Cache.getImage(key)`. Sprite sheets, being image based, live in the same Cache as all other Images.
+    * 
+    * The URL can be relative or absolute. If relative it will take the Loader.baseURL into consideration.
+    * 
+    * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "bomb"
+    * and no URL is given then the Loader will set the URL to be "bomb.png". It will always add `.png` as the extension.
+    * If you do not desire this action then provide a URL.
     *
     * @method Phaser.Loader#spritesheet
     * @param {string} key - Unique asset key of the sheet file.
-    * @param {string} url - URL of the sheet file.
-    * @param {number} frameWidth - Width of each single frame.
-    * @param {number} frameHeight - Height of each single frame.
+    * @param {string} url - URL of the sprite sheet file. If undefined or `null` the url will be set to `<key>.png`, i.e. if `key` was "bomb" then the URL will be "bomb.png".
+    * @param {number} frameWidth - Width in pixels of a single frame in the sprite sheet.
+    * @param {number} frameHeight - Height in pixels of a single frame in the sprite sheet.
     * @param {number} [frameMax=-1] - How many frames in this sprite sheet. If not specified it will divide the whole image into frames.
     * @param {number} [margin=0] - If the frames have been drawn with a margin, specify the amount here.
     * @param {number} [spacing=0] - If the frames have been drawn with spacing between them, specify the amount here.
@@ -746,14 +842,20 @@ Phaser.Loader.prototype = {
         if (typeof margin === 'undefined') { margin = 0; }
         if (typeof spacing === 'undefined') { spacing = 0; }
 
-        this.addToFileList('spritesheet', key, url, { frameWidth: frameWidth, frameHeight: frameHeight, frameMax: frameMax, margin: margin, spacing: spacing });
-
-        return this;
+        return this.addToFileList('spritesheet', key, url, { frameWidth: frameWidth, frameHeight: frameHeight, frameMax: frameMax, margin: margin, spacing: spacing }, false, '.png');
 
     },
 
     /**
-    * Add a new 'audio' file to the loader.
+    * Adds an audio file to the current load queue.
+    * 
+    * The file is **not** loaded immediately after calling this method. The file is added to the queue ready to be loaded when the loader starts.
+    * 
+    * The key must be a unique String. It is used to add the file to the Phaser.Cache upon successful load.
+    *
+    * Retrieve the file via `Cache.getSound(key)`.
+    * 
+    * The URL can be relative or absolute. If relative it will take the Loader.baseURL into consideration.
     *
     * @method Phaser.Loader#audio
     * @param {string} key - Unique asset key of the audio file.
@@ -767,6 +869,11 @@ Phaser.Loader.prototype = {
     */
     audio: function (key, urls, autoDecode) {
 
+        if (this.game.sound.noAudio)
+        {
+            return this;
+        }
+
         if (typeof autoDecode === 'undefined') { autoDecode = true; }
 
         if (typeof urls === 'string')
@@ -774,17 +881,24 @@ Phaser.Loader.prototype = {
             urls = [urls];
         }
 
-        this.addToFileList('audio', key, urls, { buffer: null, autoDecode: autoDecode });
-
-        return this;
+        return this.addToFileList('audio', key, urls, { buffer: null, autoDecode: autoDecode });
 
     },
 
     /**
-    * Add a new audiosprite file to the loader.
+    * Adds an audio sprite file to the current load queue.
+    * 
+    * The file is **not** loaded immediately after calling this method. The file is added to the queue ready to be loaded when the loader starts.
+    * 
+    * The key must be a unique String. It is used to add the file to the Phaser.Cache upon successful load.
     *
     * Audio Sprites are a combination of audio files and a JSON configuration.
+    * 
     * The JSON follows the format of that created by https://github.com/tonistiigi/audiosprite
+    * 
+    * Retrieve the file via `Cache.getSoundData(key)`.
+    * 
+    * The URL can be relative or absolute. If relative it will take the Loader.baseURL into consideration.
     *
     * @method Phaser.Loader#audiosprite
     * @param {string} key - Unique asset key of the audio file.
@@ -796,6 +910,11 @@ Phaser.Loader.prototype = {
     * @return {Phaser.Loader} This Loader instance.
     */
     audiosprite: function(key, urls, jsonURL, jsonData, autoDecode) {
+
+        if (this.game.sound.noAudio)
+        {
+            return this;
+        }
 
         if (typeof jsonURL === 'undefined') { jsonURL = null; }
         if (typeof jsonData === 'undefined') { jsonData = null; }
@@ -826,12 +945,31 @@ Phaser.Loader.prototype = {
     },
 
     /**
-    * Add a new 'tilemap' loading request. If data is supplied the object is loaded immediately.
+    * Adds a Tile Map data file to the current load queue.
+    *
+    * You can choose to either load the data externally, by providing a URL to a json file.
+    * Or you can pass in a JSON object or String via the `data` parameter.
+    * If you pass a String the data is automatically run through `JSON.parse` and then immediately added to the Phaser.Cache.
+    * 
+    * If a URL is provided the file is **not** loaded immediately after calling this method, but is added to the load queue.
+    * 
+    * The key must be a unique String. It is used to add the file to the Phaser.Cache upon successful load.
+    * 
+    * Retrieve the file via `Cache.getTilemapData(key)`. JSON files are automatically parsed upon load.
+    * If you need to control when the JSON is parsed then use `Loader.text` instead and parse the text file as needed.
+    * 
+    * The URL can be relative or absolute. If relative it will take the Loader.baseURL into consideration.
+    * 
+    * If the URL isn't specified and no data is given then the Loader will take the key and create a filename from that.
+    * For example if the key is "level1" and no URL or data is given then the Loader will set the URL to be "level1.json".
+    * If you set the format to be Tilemap.CSV it will set the URL to be "level1.csv" instead.
+    * 
+    * If you do not desire this action then provide a URL or data object.
     *
     * @method Phaser.Loader#tilemap
     * @param {string} key - Unique asset key of the tilemap data.
-    * @param {string} [url] - The url of the map data file (csv/json)
-    * @param {object} [data] - An optional JSON data object. If given then the url is ignored and this JSON object is used for map data instead.
+    * @param {string} [url] - URL of the tile map file. If undefined or `null` and no data is given the url will be set to `<key>.json`, i.e. if `key` was "level1" then the URL will be "level1.json".
+    * @param {object|string} [data] - An optional JSON data object. If given then the url is ignored and this JSON object is used for map data instead.
     * @param {number} [format=Phaser.Tilemap.CSV] - The format of the map data. Either Phaser.Tilemap.CSV or Phaser.Tilemap.TILED_JSON.
     * @return {Phaser.Loader} This Loader instance.
     */
@@ -843,9 +981,14 @@ Phaser.Loader.prototype = {
 
         if (!url && !data)
         {
-            console.warn('Phaser.Loader.tilemap - Both url and data are null. One must be set.');
-
-            return this;
+            if (format === Phaser.Tilemap.CSV)
+            {
+                url = key + '.csv';
+            }
+            else
+            {
+                url = key + '.json';
+            }
         }
 
         //  A map data object has been given
@@ -857,7 +1000,7 @@ Phaser.Loader.prototype = {
                 case Phaser.Tilemap.CSV:
                     break;
 
-                //  An xml string or object has been given
+                //  A json string or object has been given
                 case Phaser.Tilemap.TILED_JSON:
 
                     if (typeof data === 'string')
@@ -879,14 +1022,33 @@ Phaser.Loader.prototype = {
     },
 
     /**
-    * Add a new 'physics' data object loading request. If data is supplied the object is loaded immediately.
+    * Adds a physics data file to the current load queue.
     *
-    * The data must be in Lime + Corona JSON format. Physics Editor by code'n'web exports in this format natively.
+    * The data must be in `Lime + Corona` JSON format. [Physics Editor](https://www.codeandweb.com) by code'n'web exports in this format natively.
+    * 
+    * You can choose to either load the data externally, by providing a URL to a json file.
+    * Or you can pass in a JSON object or String via the `data` parameter.
+    * If you pass a String the data is automatically run through `JSON.parse` and then immediately added to the Phaser.Cache.
+    * 
+    * If a URL is provided the file is **not** loaded immediately after calling this method, but is added to the load queue.
+    * 
+    * The key must be a unique String. It is used to add the file to the Phaser.Cache upon successful load.
+    *
+    * Retrieve the file via `Cache.getJSON(key)`. JSON files are automatically parsed upon load.
+    * If you need to control when the JSON is parsed then use `Loader.text` instead and parse the text file as needed.
+    * 
+    * The URL can be relative or absolute. If relative it will take the Loader.baseURL into consideration.
+    * 
+    * If the URL isn't specified and no data is given then the Loader will take the key and create a filename from that.
+    * For example if the key is "bomb" and no URL or data is given then the Loader will set the URL to be "bomb.json".
+    * It will always use `.json` as the extension.
+    * 
+    * If you do not desire this action then provide a URL or data object.
     *
     * @method Phaser.Loader#physics
     * @param {string} key - Unique asset key of the physics json data.
-    * @param {string} [url] - The url of the map data file (csv/json)
-    * @param {object} [data] - An optional JSON data object. If given then the url is ignored and this JSON object is used for physics data instead.
+    * @param {string} [url] - URL of the physics data file. If undefined or `null` and no data is given the url will be set to `<key>.json`, i.e. if `key` was "bomb" then the URL will be "bomb.json".
+    * @param {object|string} [data] - An optional JSON data object. If given then the url is ignored and this JSON object is used for physics data instead.
     * @param {string} [format=Phaser.Physics.LIME_CORONA_JSON] - The format of the physics data.
     * @return {Phaser.Loader} This Loader instance.
     */
@@ -898,9 +1060,7 @@ Phaser.Loader.prototype = {
 
         if (!url && !data)
         {
-            console.warn('Phaser.Loader.physics - Both url and data are null. One must be set.');
-
-            return this;
+            url = key + '.json';
         }
 
         //  A map data object has been given
@@ -923,12 +1083,38 @@ Phaser.Loader.prototype = {
     },
 
     /**
-    * Add a new bitmap font ('bitmapfont') loading request.
+    * Adds Bitmap Font files to the current load queue.
+    * 
+    * To create the Bitmap Font files you can use:
+    *
+    * BMFont (Windows, free): http://www.angelcode.com/products/bmfont/
+    * Glyph Designer (OS X, commercial): http://www.71squared.com/en/glyphdesigner
+    * Littera (Web-based, free): http://kvazars.com/littera/
+    *
+    * You can choose to either load the data externally, by providing a URL to an xml file.
+    * Or you can pass in an XML object or String via the `xmlData` parameter.
+    * If you pass a String the data is automatically run through `Loader.parseXML` and then immediately added to the Phaser.Cache.
+    * 
+    * If URLs are provided the files are **not** loaded immediately after calling this method, but are added to the load queue.
+    * 
+    * The key must be a unique String. It is used to add the file to the Phaser.Cache upon successful load.
+    * 
+    * Retrieve the file via `Cache.getBitmapFont(key)`. XML files are automatically parsed upon load.
+    * If you need to control when the XML is parsed then use `Loader.text` instead and parse the XML file as needed.
+    * 
+    * The URLs can be relative or absolute. If relative it will take the Loader.baseURL into consideration.
+    * 
+    * If the textureURL isn't specified then the Loader will take the key and create a filename from that.
+    * For example if the key is "megaFont" and textureURL is null then the Loader will set the URL to be "megaFont.png".
+    * The same is true for the xmlURL. If xmlURL isn't specified and no xmlData has been provided then the Loader will
+    * set the xmlURL to be the key. For example if the key is "megaFont" the xmlURL will be set to "megaFont.xml".
+    * 
+    * If you do not desire this action then provide URLs and / or a data object.
     *
     * @method Phaser.Loader#bitmapFont
     * @param {string} key - Unique asset key of the bitmap font.
-    * @param {string} textureURL - The url of the font image file.
-    * @param {string} [xmlURL] - The url of the font data file (xml/fnt)
+    * @param {string} [textureURL] - URL of the Bitmap Font texture file. If undefined or `null` the url will be set to `<key>.png`, i.e. if `key` was "megaFont" then the URL will be "megaFont.png".
+    * @param {string} [xmlURL] - URL of the Bitmap Font data file. If undefined or `null` and no data is given the url will be set to `<key>.xml`, i.e. if `key` was "megaFont" then the URL will be "megaFont.xml".
     * @param {object} [xmlData] - An optional XML data object.
     * @param {number} [xSpacing=0] - If you'd like to add additional horizontal spacing between the characters then set the pixel value here.
     * @param {number} [ySpacing=0] - If you'd like to add additional vertical spacing between the lines then set the pixel value here.
@@ -936,10 +1122,20 @@ Phaser.Loader.prototype = {
     */
     bitmapFont: function (key, textureURL, xmlURL, xmlData, xSpacing, ySpacing) {
 
+        if (typeof textureURL === 'undefined' || textureURL === null)
+        {
+            textureURL = key + '.png';
+        }
+
         if (typeof xmlURL === 'undefined') { xmlURL = null; }
         if (typeof xmlData === 'undefined') { xmlData = null; }
         if (typeof xSpacing === 'undefined') { xSpacing = 0; }
         if (typeof ySpacing === 'undefined') { ySpacing = 0; }
+
+        if (!xmlURL && !xmlData)
+        {
+            xmlURL = key + '.xml';
+        }
 
         //  A URL to a json/xml file has been given
         if (xmlURL)
@@ -967,16 +1163,40 @@ Phaser.Loader.prototype = {
     },
 
     /**
-    * Add a new texture atlas ('textureatlas') to the loader. This atlas uses the JSON Array data format.
+    * Adds a Texture Atlas file to the current load queue.
     *
-    * Texture Atlases can be created with tools such as [Texture Packer](https://www.codeandweb.com/texturepacker/phaser) and
+    * Unlike `Loader.atlasJSONHash` this call expects the atlas data to be in a JSON Array format.
+    * 
+    * To create the Texture Atlas you can use tools such as:
+    *
+    * [Texture Packer](https://www.codeandweb.com/texturepacker/phaser)
     * [Shoebox](http://renderhjs.net/shoebox/)
+    *
+    * You can choose to either load the data externally, by providing a URL to a json file.
+    * Or you can pass in a JSON object or String via the `atlasData` parameter.
+    * If you pass a String the data is automatically run through `JSON.parse` and then immediately added to the Phaser.Cache.
+    * 
+    * If URLs are provided the files are **not** loaded immediately after calling this method, but are added to the load queue.
+    * 
+    * The key must be a unique String. It is used to add the file to the Phaser.Cache upon successful load.
+    * 
+    * Retrieve the file via `Cache.getImage(key)`. JSON files are automatically parsed upon load.
+    * If you need to control when the JSON is parsed then use `Loader.text` instead and parse the JSON file as needed.
+    * 
+    * The URLs can be relative or absolute. If relative it will take the Loader.baseURL into consideration.
+    * 
+    * If the textureURL isn't specified then the Loader will take the key and create a filename from that.
+    * For example if the key is "player" and textureURL is null then the Loader will set the URL to be "player.png".
+    * The same is true for the atlasURL. If atlasURL isn't specified and no atlasData has been provided then the Loader will
+    * set the atlasURL to be the key. For example if the key is "player" the atlasURL will be set to "player.json".
+    * 
+    * If you do not desire this action then provide URLs and / or a data object.
     *
     * @method Phaser.Loader#atlasJSONArray
     * @param {string} key - Unique asset key of the texture atlas file.
-    * @param {string} textureURL - The url of the texture atlas image file.
-    * @param {string} [atlasURL] - The url of the texture atlas data file (json/xml). You don't need this if you are passing an atlasData object instead.
-    * @param {object} [atlasData] - A JSON or XML data object. You don't need this if the data is being loaded from a URL.
+    * @param {string} [textureURL] - URL of the texture atlas image file. If undefined or `null` the url will be set to `<key>.png`, i.e. if `key` was "bomb" then the URL will be "bomb.png".
+    * @param {string} [atlasURL] - URL of the texture atlas data file. If undefined or `null` and no atlasData is given, the url will be set to `<key>.json`, i.e. if `key` was "bomb" then the URL will be "bomb.json".
+    * @param {object} [atlasData] - A JSON data object. You don't need this if the data is being loaded from a URL.
     * @return {Phaser.Loader} This Loader instance.
     */
     atlasJSONArray: function (key, textureURL, atlasURL, atlasData) {
@@ -986,16 +1206,40 @@ Phaser.Loader.prototype = {
     },
 
     /**
-    * Add a new texture atlas ('textureatlas') to the loader. This atlas uses the JSON Hash data format.
+    * Adds a Texture Atlas file to the current load queue.
     *
-    * Texture Atlases can be created with tools such as [Texture Packer](https://www.codeandweb.com/texturepacker/phaser) and
+    * Unlike `Loader.atlas` this call expects the atlas data to be in a JSON Hash format.
+    * 
+    * To create the Texture Atlas you can use tools such as:
+    *
+    * [Texture Packer](https://www.codeandweb.com/texturepacker/phaser)
     * [Shoebox](http://renderhjs.net/shoebox/)
+    *
+    * You can choose to either load the data externally, by providing a URL to a json file.
+    * Or you can pass in a JSON object or String via the `atlasData` parameter.
+    * If you pass a String the data is automatically run through `JSON.parse` and then immediately added to the Phaser.Cache.
+    * 
+    * If URLs are provided the files are **not** loaded immediately after calling this method, but are added to the load queue.
+    * 
+    * The key must be a unique String. It is used to add the file to the Phaser.Cache upon successful load.
+    * 
+    * Retrieve the file via `Cache.getImage(key)`. JSON files are automatically parsed upon load.
+    * If you need to control when the JSON is parsed then use `Loader.text` instead and parse the JSON file as needed.
+    * 
+    * The URLs can be relative or absolute. If relative it will take the Loader.baseURL into consideration.
+    * 
+    * If the textureURL isn't specified then the Loader will take the key and create a filename from that.
+    * For example if the key is "player" and textureURL is null then the Loader will set the URL to be "player.png".
+    * The same is true for the atlasURL. If atlasURL isn't specified and no atlasData has been provided then the Loader will
+    * set the atlasURL to be the key. For example if the key is "player" the atlasURL will be set to "player.json".
+    * 
+    * If you do not desire this action then provide URLs and / or a data object.
     *
     * @method Phaser.Loader#atlasJSONHash
     * @param {string} key - Unique asset key of the texture atlas file.
-    * @param {string} textureURL - The url of the texture atlas image file.
-    * @param {string} [atlasURL] - The url of the texture atlas data file (json/xml). You don't need this if you are passing an atlasData object instead.
-    * @param {object} [atlasData] - A JSON or XML data object. You don't need this if the data is being loaded from a URL.
+    * @param {string} [textureURL] - URL of the texture atlas image file. If undefined or `null` the url will be set to `<key>.png`, i.e. if `key` was "bomb" then the URL will be "bomb.png".
+    * @param {string} [atlasURL] - URL of the texture atlas data file. If undefined or `null` and no atlasData is given, the url will be set to `<key>.json`, i.e. if `key` was "bomb" then the URL will be "bomb.json".
+    * @param {object} [atlasData] - A JSON data object. You don't need this if the data is being loaded from a URL.
     * @return {Phaser.Loader} This Loader instance.
     */
     atlasJSONHash: function (key, textureURL, atlasURL, atlasData) {
@@ -1005,40 +1249,114 @@ Phaser.Loader.prototype = {
     },
 
     /**
-    * Add a new texture atlas ('textureatlas') to the loader. This atlas uses the Starling XML data format.
+    * Adds a Texture Atlas file to the current load queue.
+    *
+    * This call expects the atlas data to be in the Starling XML data format.
+    * 
+    * To create the Texture Atlas you can use tools such as:
+    *
+    * [Texture Packer](https://www.codeandweb.com/texturepacker/phaser)
+    * [Shoebox](http://renderhjs.net/shoebox/)
+    *
+    * You can choose to either load the data externally, by providing a URL to an xml file.
+    * Or you can pass in an XML object or String via the `atlasData` parameter.
+    * If you pass a String the data is automatically run through `Loader.parseXML` and then immediately added to the Phaser.Cache.
+    * 
+    * If URLs are provided the files are **not** loaded immediately after calling this method, but are added to the load queue.
+    * 
+    * The key must be a unique String. It is used to add the file to the Phaser.Cache upon successful load.
+    * 
+    * Retrieve the file via `Cache.getImage(key)`. XML files are automatically parsed upon load.
+    * If you need to control when the XML is parsed then use `Loader.text` instead and parse the XML file as needed.
+    * 
+    * The URLs can be relative or absolute. If relative it will take the Loader.baseURL into consideration.
+    * 
+    * If the textureURL isn't specified then the Loader will take the key and create a filename from that.
+    * For example if the key is "player" and textureURL is null then the Loader will set the URL to be "player.png".
+    * The same is true for the atlasURL. If atlasURL isn't specified and no atlasData has been provided then the Loader will
+    * set the atlasURL to be the key. For example if the key is "player" the atlasURL will be set to "player.xml".
+    * 
+    * If you do not desire this action then provide URLs and / or a data object.
     *
     * @method Phaser.Loader#atlasXML
     * @param {string} key - Unique asset key of the texture atlas file.
-    * @param {string} textureURL - The url of the texture atlas image file.
-    * @param {string} [atlasURL] - The url of the texture atlas data file (json/xml). You don't need this if you are passing an atlasData object instead.
-    * @param {object} [atlasData] - A JSON or XML data object. You don't need this if the data is being loaded from a URL.
+    * @param {string} [textureURL] - URL of the texture atlas image file. If undefined or `null` the url will be set to `<key>.png`, i.e. if `key` was "bomb" then the URL will be "bomb.png".
+    * @param {string} [atlasURL] - URL of the texture atlas data file. If undefined or `null` and no atlasData is given, the url will be set to `<key>.json`, i.e. if `key` was "bomb" then the URL will be "bomb.xml".
+    * @param {object} [atlasData] - An XML data object. You don't need this if the data is being loaded from a URL.
     * @return {Phaser.Loader} This Loader instance.
     */
     atlasXML: function (key, textureURL, atlasURL, atlasData) {
+
+        if (typeof atlasURL === 'undefined') { atlasURL = null; }
+        if (typeof atlasData === 'undefined') { atlasData = null; }
+
+        if (!atlasURL && !atlasData)
+        {
+            atlasURL = key + '.xml';
+        }
 
         return this.atlas(key, textureURL, atlasURL, atlasData, Phaser.Loader.TEXTURE_ATLAS_XML_STARLING);
 
     },
 
     /**
-    * Add a new texture atlas ('textureatlas') to the loader.
+    * Adds a Texture Atlas file to the current load queue.
     *
-    * Texture Atlases can be created with tools such as [Texture Packer](https://www.codeandweb.com/texturepacker/phaser) and
+    * To create the Texture Atlas you can use tools such as:
+    *
+    * [Texture Packer](https://www.codeandweb.com/texturepacker/phaser)
     * [Shoebox](http://renderhjs.net/shoebox/)
+    *
+    * You can choose to either load the data externally, by providing a URL to a json file.
+    * Or you can pass in a JSON object or String via the `atlasData` parameter.
+    * If you pass a String the data is automatically run through `JSON.parse` and then immediately added to the Phaser.Cache.
+    * 
+    * If URLs are provided the files are **not** loaded immediately after calling this method, but are added to the load queue.
+    * 
+    * The key must be a unique String. It is used to add the file to the Phaser.Cache upon successful load.
+    * 
+    * Retrieve the file via `Cache.getImage(key)`. JSON files are automatically parsed upon load.
+    * If you need to control when the JSON is parsed then use `Loader.text` instead and parse the JSON file as needed.
+    * 
+    * The URLs can be relative or absolute. If relative it will take the Loader.baseURL into consideration.
+    * 
+    * If the textureURL isn't specified then the Loader will take the key and create a filename from that.
+    * For example if the key is "player" and textureURL is null then the Loader will set the URL to be "player.png".
+    * The same is true for the atlasURL. If atlasURL isn't specified and no atlasData has been provided then the Loader will
+    * set the atlasURL to be the key. For example if the key is "player" the atlasURL will be set to "player.json".
+    * 
+    * If you do not desire this action then provide URLs and / or a data object.
     *
     * @method Phaser.Loader#atlas
     * @param {string} key - Unique asset key of the texture atlas file.
-    * @param {string} textureURL - The url of the texture atlas image file.
-    * @param {string} [atlasURL] - The url of the texture atlas data file (json/xml). You don't need this if you are passing an atlasData object instead.
+    * @param {string} [textureURL] - URL of the texture atlas image file. If undefined or `null` the url will be set to `<key>.png`, i.e. if `key` was "bomb" then the URL will be "bomb.png".
+    * @param {string} [atlasURL] - URL of the texture atlas data file. If undefined or `null` and no atlasData is given, the url will be set to `<key>.json`, i.e. if `key` was "bomb" then the URL will be "bomb.json".
     * @param {object} [atlasData] - A JSON or XML data object. You don't need this if the data is being loaded from a URL.
-    * @param {number} [format] - A value describing the format of the data, the default is Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY.
+    * @param {number} [format] - The format of the data. Can be Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY (the default), Phaser.Loader.TEXTURE_ATLAS_JSON_HASH or Phaser.Loader.TEXTURE_ATLAS_XML_STARLING.
     * @return {Phaser.Loader} This Loader instance.
     */
     atlas: function (key, textureURL, atlasURL, atlasData, format) {
 
+        if (typeof textureURL === 'undefined' || textureURL === null)
+        {
+            textureURL = key + '.png';
+        }
+
         if (typeof atlasURL === 'undefined') { atlasURL = null; }
         if (typeof atlasData === 'undefined') { atlasData = null; }
         if (typeof format === 'undefined') { format = Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY; }
+
+        if (!atlasURL && !atlasData)
+        {
+            if (format === Phaser.Loader.TEXTURE_ATLAS_XML_STARLING)
+            {
+                atlasURL = key + '.xml';
+            }
+            else
+            {
+                atlasURL = key + '.json';
+            }
+        }
 
         //  A URL to a json/xml file has been given
         if (atlasURL)
@@ -1490,13 +1808,25 @@ Phaser.Loader.prototype = {
     },
 
     /**
-    * Transforms the asset URL. The default implementation prepends the baseURL.
+    * Transforms the asset URL.
+    * The default implementation prepends the baseURL if the url doesn't being with http or //
     *
     * @method Phaser.Loader#transformUrl
     * @protected
+    * @param {string} url - The url to transform
+    * @return {string} The transformed url
     */
-    transformUrl: function (url /*, file */) {
-        return this.baseURL + url;
+    transformUrl: function (url) {
+
+        if (url.substr(0, 4) === 'http' || url.substr(0, 2) === '//')
+        {
+            return url;
+        }
+        else
+        {
+            return this.baseURL + url;
+        }
+
     },
 
     /**
@@ -1541,7 +1871,7 @@ Phaser.Loader.prototype = {
                 }
                 else
                 {
-                    this.fileError(file, null, 'no supported audio URL specified');
+                    this.fileError(file, null, 'No supported audio URL specified or device does not have audio playback support');
                 }
                 break;
 
@@ -1843,6 +2173,11 @@ Phaser.Loader.prototype = {
     * @return {string} The URL to try and fetch; or null.
     */
     getAudioURL: function (urls) {
+
+        if (this.game.sound.noAudio)
+        {
+            return null;
+        }
 
         for (var i = 0; i < urls.length; i++)
         {

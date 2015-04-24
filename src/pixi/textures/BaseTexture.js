@@ -90,7 +90,6 @@ PIXI.BaseTexture = function(source, scaleMode)
     this._glTextures = [];
 
     /**
-     *
      * Set this to true if a mipmap of this texture needs to be generated. This value needs to be set before the texture is used
      * Also the texture must be a power of two size to work
      * 
@@ -98,8 +97,6 @@ PIXI.BaseTexture = function(source, scaleMode)
      * @type {Boolean}
      */
     this.mipmap = false;
-    // used for webGL texture updating...
-    // TODO - this needs to be addressed
 
     /**
      * @property _dirty
@@ -119,7 +116,6 @@ PIXI.BaseTexture = function(source, scaleMode)
     }
     else
     {
-        /*
         var scope = this;
 
         this.source.onload = function() {
@@ -137,7 +133,6 @@ PIXI.BaseTexture = function(source, scaleMode)
         this.source.onerror = function() {
             scope.dispatchEvent( { type: 'error', content: scope } );
         };
-        */
     }
 
     /**
@@ -156,8 +151,7 @@ PIXI.BaseTexture = function(source, scaleMode)
 };
 
 PIXI.BaseTexture.prototype.constructor = PIXI.BaseTexture;
-
-// PIXI.EventTarget.mixin(PIXI.BaseTexture.prototype);
+PIXI.EventTarget.mixin(PIXI.BaseTexture.prototype);
 
 /**
  * Destroys this base texture

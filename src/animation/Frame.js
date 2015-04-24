@@ -15,9 +15,8 @@
 * @param {number} width - Width of the frame within the texture image.
 * @param {number} height - Height of the frame within the texture image.
 * @param {string} name - The name of the frame. In Texture Atlas data this is usually set to the filename.
-* @param {string} uuid - Internal UUID key.
 */
-Phaser.Frame = function (index, x, y, width, height, name, uuid) {
+Phaser.Frame = function (index, x, y, width, height, name) {
 
     /**
     * @property {number} index - The index of this Frame within the FrameData set it is being added to.
@@ -48,11 +47,6 @@ Phaser.Frame = function (index, x, y, width, height, name, uuid) {
     * @property {string} name - Useful for Texture Atlas files (is set to the filename value).
     */
     this.name = name;
-
-    /**
-    * @property {string} uuid - DEPRECATED: A link to the PIXI.TextureCache entry.
-    */
-    this.uuid = uuid;
 
     /**
     * @property {number} centerX - Center X position within the image to cut from.
@@ -88,12 +82,12 @@ Phaser.Frame = function (index, x, y, width, height, name, uuid) {
     this.trimmed = false;
 
     /**
-    * @property {number} sourceSizeW - Width of the original sprite.
+    * @property {number} sourceSizeW - Width of the original sprite before it was trimmed.
     */
     this.sourceSizeW = width;
 
     /**
-    * @property {number} sourceSizeH - Height of the original sprite.
+    * @property {number} sourceSizeH - Height of the original sprite before it was trimmed.
     */
     this.sourceSizeH = height;
 
@@ -174,7 +168,7 @@ Phaser.Frame.prototype = {
      */
     clone: function () {
 
-        var output = new Phaser.Frame(this.index, this.x, this.y, this.width, this.height, this.name, this.uuid);
+        var output = new Phaser.Frame(this.index, this.x, this.y, this.width, this.height, this.name);
 
         for (var prop in this)
         {

@@ -546,6 +546,11 @@ Phaser.Physics.Arcade.Body.prototype = {
     */
     destroy: function () {
 
+        if (this.sprite.parent && this.sprite.parent instanceof Phaser.Group)
+        {
+            this.sprite.parent.removeFromHash(this.sprite);
+        }
+
         this.sprite.body = null;
         this.sprite = null;
 

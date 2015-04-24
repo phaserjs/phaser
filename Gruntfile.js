@@ -62,6 +62,7 @@ module.exports = function (grunt) {
             'p2':               { 'description': 'P2 Physics',                                  'optional': true, 'stub': false },
             'tilemaps':         { 'description': 'Tilemap Support',                             'optional': true, 'stub': false },
             'particles':        { 'description': 'Arcade Physics Particle System',              'optional': true, 'stub': true },
+            'creature':         { 'description': 'Creature Animation Tool Support',             'optional': true, 'stub': false },
             'outro':            { 'description': 'Phaser UMD closure',                          'optional': true, 'stub': false }
 
         };
@@ -207,7 +208,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('build', 'Compile all Phaser versions just to the dist folder', function() {
 
-        grunt.option('exclude', 'ninja');
+        grunt.option('exclude', 'ninja,creature');
         grunt.option('filename', 'phaser');
         grunt.option('sourcemap', true);
         grunt.option('copy', false);
@@ -218,7 +219,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('full', 'Phaser complete', function() {
 
-        grunt.option('exclude', 'ninja');
+        grunt.option('exclude', 'ninja,creature');
         grunt.option('filename', 'phaser');
         grunt.option('sourcemap', true);
         grunt.option('copy', true);
@@ -229,7 +230,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('arcadephysics', 'Phaser with Arcade Physics, Tilemaps and Particles', function() {
 
-        grunt.option('exclude', 'ninja,p2');
+        grunt.option('exclude', 'ninja,p2,creature');
         grunt.option('filename', 'phaser-arcade-physics');
         grunt.option('sourcemap', true);
         grunt.option('copy', false);
@@ -241,7 +242,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('nophysics', 'Phaser without physics, tilemaps or particles', function() {
 
-        grunt.option('exclude', 'arcade,ninja,p2,tilemaps,particles');
+        grunt.option('exclude', 'arcade,ninja,p2,tilemaps,particles,creature');
         grunt.option('filename', 'phaser-no-physics');
         grunt.option('sourcemap', true);
         grunt.option('copy', false);
@@ -253,7 +254,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('minimum', 'Phaser without any optional modules except Pixi', function() {
 
-        grunt.option('exclude', 'gamepad,keyboard,bitmapdata,graphics,rendertexture,text,bitmaptext,retrofont,net,tweens,sound,debug,arcade,ninja,p2,tilemaps,particles');
+        grunt.option('exclude', 'gamepad,keyboard,bitmapdata,graphics,rendertexture,text,bitmaptext,retrofont,net,tweens,sound,debug,arcade,ninja,p2,tilemaps,particles,creature');
         grunt.option('filename', 'phaser-minimum');
         grunt.option('sourcemap', true);
         grunt.option('copy', false);

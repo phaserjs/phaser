@@ -95,19 +95,19 @@ Phaser.SoundManager = function (game) {
     this.context = null;
 
     /**
-    * @property {boolean} usingWebAudio - true if this sound is being played with Web Audio.
+    * @property {boolean} usingWebAudio - True the SoundManager and device are both using Web Audio.
     * @readonly
     */
-    this.usingWebAudio = true;
+    this.usingWebAudio = false;
 
     /**
-    * @property {boolean} usingAudioTag - true if the sound is being played via the Audio tag.
+    * @property {boolean} usingAudioTag - True the SoundManager and device are both using the Audio tag instead of Web Audio.
     * @readonly
     */
     this.usingAudioTag = false;
 
     /**
-    * @property {boolean} noAudio - Has audio been disabled via the PhaserGlobal object? Useful if you need to use a 3rd party audio library instead.
+    * @property {boolean} noAudio - True if audio been disabled via the PhaserGlobal (useful if you need to use a 3rd party audio library) or the device doesn't support any audio.
     * @default
     */
     this.noAudio = false;
@@ -159,22 +159,22 @@ Phaser.SoundManager.prototype = {
             this.touchLocked = false;
         }
 
+        //  PhaserGlobal overrides
         if (window['PhaserGlobal'])
         {
             //  Check to see if all audio playback is disabled (i.e. handled by a 3rd party class)
             if (window['PhaserGlobal'].disableAudio === true)
             {
-                this.usingWebAudio = false;
                 this.noAudio = true;
+                this.touchLocked = false;
                 return;
             }
 
             //  Check if the Web Audio API is disabled (for testing Audio Tag playback during development)
             if (window['PhaserGlobal'].disableWebAudio === true)
             {
-                this.usingWebAudio = false;
                 this.usingAudioTag = true;
-                this.noAudio = false;
+                this.touchLocked = false;
                 return;
             }
         }
@@ -192,7 +192,7 @@ Phaser.SoundManager.prototype = {
                 } catch (error) {
                     this.context = null;
                     this.usingWebAudio = false;
-                    this.noAudio = true;
+                    this.touchLocked = false;
                 }
             }
             else if (!!window['webkitAudioContext'])
@@ -202,20 +202,28 @@ Phaser.SoundManager.prototype = {
                 } catch (error) {
                     this.context = null;
                     this.usingWebAudio = false;
-                    this.noAudio = true;
+                    this.touchLocked = false;
                 }
             }
         }
 
-        if (!!window['Audio'] && this.context === null)
+        if (this.context === null)
         {
-            this.usingWebAudio = false;
-            this.usingAudioTag = true;
-            this.noAudio = false;
+            //  No Web Audio support - how about legacy Audio?
+            if (window['Audio'] === undefined)
+            {
+                this.noAudio = true;
+                return;
+            }
+            else
+            {
+                this.usingAudioTag = true;
+            }
         }
-
-        if (this.context !== null)
+        else
         {
+            this.usingWebAudio = true;
+
             if (typeof this.context.createGain === 'undefined')
             {
                 this.masterGain = this.context.createGainNode();
@@ -280,6 +288,11 @@ Phaser.SoundManager.prototype = {
     */
     stopAll: function () {
 
+        if (this.noAudio)
+        {
+            return;
+        }
+
         for (var i = 0; i < this._sounds.length; i++)
         {
             if (this._sounds[i])
@@ -297,6 +310,11 @@ Phaser.SoundManager.prototype = {
     */
     pauseAll: function () {
 
+        if (this.noAudio)
+        {
+            return;
+        }
+
         for (var i = 0; i < this._sounds.length; i++)
         {
             if (this._sounds[i])
@@ -313,6 +331,11 @@ Phaser.SoundManager.prototype = {
     * @method Phaser.SoundManager#resumeAll
     */
     resumeAll: function () {
+
+        if (this.noAudio)
+        {
+            return;
+        }
 
         for (var i = 0; i < this._sounds.length; i++)
         {
