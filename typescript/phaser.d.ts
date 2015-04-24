@@ -4560,15 +4560,15 @@ declare module Phaser {
         paused: boolean;
         seconds: number;
 
-        add(delay: number, callback: Function, callbackContext: any, ...args: any[]): Phaser.TimerEvent;
+        add(delay: number, callback: Function, callbackContext?: any, ...args: any[]): Phaser.TimerEvent;
         clearPendingEvents(): void;
         destroy(): void;
-        loop(delay: number, callback: Function, callbackContext: any, ...args: any[]): Phaser.TimerEvent;
+        loop(delay: number, callback: Function, callbackContext?: any, ...args: any[]): Phaser.TimerEvent;
         order(): void;
         pause(): void;
         remove(event: Phaser.TimerEvent): boolean;
         removeAll(): void;
-        repeat(delay: number, repeatCount: number, callback: Function, callbackContext: any, ...args: any[]): Phaser.TimerEvent;
+        repeat(delay: number, repeatCount: number, callback: Function, callbackContext?: any, ...args: any[]): Phaser.TimerEvent;
         resume(): void;
         sortHandler(a: any, b: any): number;
         start(startDelay?: number): void;
