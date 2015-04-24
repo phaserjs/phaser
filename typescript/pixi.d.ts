@@ -511,7 +511,7 @@ declare module PIXI {
         touchendoutside(e: InteractionData): void;
         touchstart(e: InteractionData): void;
         touchmove(e: InteractionData): void;
-        updateTransform(): void;
+        updateTransform(parent?: PIXI.DisplayObjectContainer): void;
 
     }
 
@@ -1161,10 +1161,13 @@ declare module PIXI {
 
         constructor(texture: Texture, width: number, height: number);
 
+        canvasBuffer: PIXI.CanvasBuffer;
         blendMode: number;
+        refreshTexture: boolean;
         texture: Texture;
         tint: number;
         tilePosition: Point;
+        tilePattern: PIXI.Texture;
         tileScale: Point;
         tileScaleOffset: Point;
 
@@ -1221,11 +1224,17 @@ declare module PIXI {
 
         autoUpdate: boolean;
 
+        onPlay: Phaser.Signal;
+        onComplete: Phaser.Signal;
+        
+        play(): void;
+        stop(): void;
+
         destroy(): void;
         updateBound(): void;
-        onPlayStart(): void;
-        onPlayStop(): void;
-        onCanPlay(): void;
+        onPlayStart: () => void;
+        onPlayStop: () => void;
+        onCanPlay: () => void;
 
     }
 
@@ -1453,7 +1462,7 @@ declare module PIXI {
         getCanvas(): HTMLCanvasElement;
         getImage(): HTMLImageElement;
         resize(width: number, height: number, updateBase: boolean): void;
-        render(displayObject: DisplayObject, position?: Point, clear?: boolean): void;
+        render(displayObject: DisplayObject, matrix?: Matrix, clear?: boolean): void;
 
     }
 
