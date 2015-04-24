@@ -4105,7 +4105,6 @@ declare module Phaser {
         key: string;
         load: Phaser.Loader;
         make: Phaser.GameObjectCreator;
-        math: Phaser.Math;
         particles: Phaser.Particles;
         physics: Phaser.Physics;
         rnd: Phaser.RandomDataGenerator;
