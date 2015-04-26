@@ -20,7 +20,7 @@ Phaser.Stage = function (game) {
     */
     this.game = game;
 
-    PIXI.Stage.call(this, 0x000000);
+    PIXI.Container.call(this);
 
     /**
     * @property {string} name - The name of this object.
@@ -70,7 +70,7 @@ Phaser.Stage = function (game) {
 
 };
 
-Phaser.Stage.prototype = Object.create(PIXI.Stage.prototype);
+Phaser.Stage.prototype = Object.create(PIXI.Container.prototype);
 Phaser.Stage.prototype.constructor = Phaser.Stage;
 
 /**
@@ -187,7 +187,7 @@ Phaser.Stage.prototype.postUpdate = function () {
 /**
 * Updates the transforms for all objects on the display list.
 * This overrides the Pixi default as we don't need the interactionManager, but do need the game property check.
-* 
+*
 * @method Phaser.Stage#updateTransform
 */
 Phaser.Stage.prototype.updateTransform = function () {
@@ -204,7 +204,7 @@ Phaser.Stage.prototype.updateTransform = function () {
 /**
 * Starts a page visibility event listener running, or window.onpagehide/onpageshow if not supported by the browser.
 * Also listens for window.onblur and window.onfocus.
-* 
+*
 * @method Phaser.Stage#checkVisibility
 */
 Phaser.Stage.prototype.checkVisibility = function () {
@@ -247,7 +247,7 @@ Phaser.Stage.prototype.checkVisibility = function () {
 
     window.onpagehide = this._onChange;
     window.onpageshow = this._onChange;
-    
+
     if (this.game.device.cocoonJSApp)
     {
         CocoonJS.App.onSuspended.addEventListener(function () {
@@ -263,7 +263,7 @@ Phaser.Stage.prototype.checkVisibility = function () {
 
 /**
 * This method is called when the document visibility is changed.
-* 
+*
 * @method Phaser.Stage#visibilityChange
 * @param {Event} event - Its type will be used to decide whether the game should be paused or not.
 */
@@ -372,7 +372,7 @@ Object.defineProperty(Phaser.Stage.prototype, "smoothed", {
 
     get: function () {
 
-        return PIXI.scaleModes.DEFAULT === PIXI.scaleModes.LINEAR;
+        return PIXI.SCALE_MODES.DEFAULT === PIXI.SCALE_MODES.LINEAR;
 
     },
 
@@ -380,11 +380,11 @@ Object.defineProperty(Phaser.Stage.prototype, "smoothed", {
 
         if (value)
         {
-            PIXI.scaleModes.DEFAULT = PIXI.scaleModes.LINEAR;
+            PIXI.SCALE_MODES.DEFAULT = PIXI.SCALE_MODES.LINEAR;
         }
         else
         {
-            PIXI.scaleModes.DEFAULT = PIXI.scaleModes.NEAREST;
+            PIXI.SCALE_MODES.DEFAULT = PIXI.SCALE_MODES.NEAREST;
         }
     }
 

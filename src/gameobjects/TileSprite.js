@@ -10,7 +10,7 @@
 *
 * @class Phaser.TileSprite
 * @constructor
-* @extends PIXI.TilingSprite
+* @extends PIXI.extras.TilingSprite
 * @extends Phaser.Component.Core
 * @extends Phaser.Component.Angle
 * @extends Phaser.Component.Animation
@@ -64,13 +64,13 @@ Phaser.TileSprite = function (game, x, y, width, height, key, frame) {
     */
     this._scroll = new Phaser.Point();
 
-    PIXI.TilingSprite.call(this, PIXI.TextureCache['__default'], width, height);
+    PIXI.extras.TilingSprite.call(this, PIXI.utils.TextureCache['__default'], width, height);
 
     Phaser.Component.Core.init.call(this, game, x, y, key, frame);
 
 };
 
-Phaser.TileSprite.prototype = Object.create(PIXI.TilingSprite.prototype);
+Phaser.TileSprite.prototype = Object.create(PIXI.extras.TilingSprite.prototype);
 Phaser.TileSprite.prototype.constructor = Phaser.TileSprite;
 
 Phaser.Component.Core.install.call(Phaser.TileSprite.prototype, [
@@ -166,7 +166,7 @@ Phaser.TileSprite.prototype.destroy = function(destroyChildren) {
 
     Phaser.Component.Destroy.prototype.destroy.call(this, destroyChildren);
 
-    PIXI.TilingSprite.prototype.destroy.call(this);
+    PIXI.extras.TilingSprite.prototype.destroy.call(this);
 
 };
 

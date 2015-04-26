@@ -6,7 +6,7 @@
 
 /**
 * BitmapText objects work by taking a texture file and an XML file that describes the font structure.
-* It then generates a new Sprite object for each letter of the text, proportionally spaced out and aligned to 
+* It then generates a new Sprite object for each letter of the text, proportionally spaced out and aligned to
 * match the font structure.
 * 
 * BitmapText objects are less flexible than Text objects, in that they have less features such as shadows, fills and the ability 
@@ -55,7 +55,7 @@ Phaser.BitmapText = function (game, x, y, font, text, size, align) {
     size = size || 32;
     align = align || 'left';
 
-    PIXI.DisplayObjectContainer.call(this);
+    PIXI.Container.call(this);
 
     /**
     * @property {number} type - The const type of this object.
@@ -143,9 +143,10 @@ Phaser.BitmapText = function (game, x, y, font, text, size, align) {
 
     Phaser.Component.Core.init.call(this, game, x, y, '', null);
 
+    this.text = text;
 };
 
-Phaser.BitmapText.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
+Phaser.BitmapText.prototype = Object.create(PIXI.Container.prototype);
 Phaser.BitmapText.prototype.constructor = Phaser.BitmapText;
 
 Phaser.Component.Core.install.call(Phaser.BitmapText.prototype, [
@@ -524,7 +525,7 @@ Object.defineProperty(Phaser.BitmapText.prototype, 'font', {
 Object.defineProperty(Phaser.BitmapText.prototype, 'fontSize', {
 
     get: function() {
-        return this._fontSize;
+        return this._font.size;
     },
 
     set: function(value) {
