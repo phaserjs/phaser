@@ -268,6 +268,8 @@ Version 2.4 - "Katar" - in dev
 * Phaser.Matrix.copyFrom and copyTo allow you to copy Matrix values from and to other Matrix  objects.
 * Phaser.Matrix.setTo allows you to set all properties of a Matrix in a single call.
 * The Phaser.Matrix constructor now allows you to optionally set all Matrix properties on instantiation.
+* Text.setShadow has two new optional parameters: `shadowStroke` and `shadowFill`. These allow you to set if the drop shadow is applied to the Text stroke, the Text fill or both of them (thanks @qdrj #1766)
+* Text.shadowStroke and Text.shadowFill allow you to toggle if the drop shadow is applied to the Text stroke or fill independently.
 
 ### Updates
 

@@ -198,18 +198,24 @@ Phaser.Text.prototype.destroy = function (destroyChildren) {
 * @param {number} [y=0] - The shadowOffsetY value in pixels. This is how far offset vertically the shadow effect will be.
 * @param {string} [color='rgba(0,0,0,1)'] - The color of the shadow, as given in CSS rgba or hex format. Set the alpha component to 0 to disable the shadow.
 * @param {number} [blur=0] - The shadowBlur value. Make the shadow softer by applying a Gaussian blur to it. A number from 0 (no blur) up to approx. 10 (depending on scene).
+* @param {boolean} [shadowStroke=true] - Apply the drop shadow to the Text stroke (if set).
+* @param {boolean} [shadowFill=true] - Apply the drop shadow to the Text fill (if set).
 */
-Phaser.Text.prototype.setShadow = function (x, y, color, blur) {
+Phaser.Text.prototype.setShadow = function (x, y, color, blur, shadowStroke, shadowFill) {
 
     if (typeof x === 'undefined') { x = 0; }
     if (typeof y === 'undefined') { y = 0; }
     if (typeof color === 'undefined') { color = 'rgba(0, 0, 0, 1)'; }
     if (typeof blur === 'undefined') { blur = 0; }
+    if (typeof shadowStroke === 'undefined') { shadowStroke = true; }
+    if (typeof shadowFill === 'undefined') { shadowFill = true; }
 
     this.style.shadowOffsetX = x;
     this.style.shadowOffsetY = y;
     this.style.shadowColor = color;
     this.style.shadowBlur = blur;
+    this.style.shadowStroke = shadowStroke;
+    this.style.shadowFill = shadowFill;
     this.dirty = true;
 
 };
@@ -302,10 +308,10 @@ Phaser.Text.prototype.updateText = function () {
         outputText = this.runWordWrap(this.text);
     }
 
-    //split text into lines
+    //  Split text into lines
     var lines = outputText.split(/(?:\r\n|\r|\n)/);
 
-    //calculate text width
+    //  Calculate text width
     var lineWidths = [];
     var maxLineWidth = 0;
     var fontProperties = this.determineFontProperties(this.style.font);
@@ -321,7 +327,7 @@ Phaser.Text.prototype.updateText = function () {
 
     this.canvas.width = width * this.resolution;
     
-    //calculate text height
+    //  Calculate text height
     var lineHeight = fontProperties.fontSize + this.style.strokeThickness + this.padding.y;
     var height = lineHeight * lines.length;
     var lineSpacing = this._lineSpacing;
@@ -357,10 +363,7 @@ Phaser.Text.prototype.updateText = function () {
     this.context.font = this.style.font;
     this.context.strokeStyle = this.style.stroke;
     this.context.textBaseline = 'alphabetic';
-    this.context.shadowOffsetX = this.style.shadowOffsetX;
-    this.context.shadowOffsetY = this.style.shadowOffsetY;
-    this.context.shadowColor = this.style.shadowColor;
-    this.context.shadowBlur = this.style.shadowBlur;
+
     this.context.lineWidth = this.style.strokeThickness;
     this.context.lineCap = 'round';
     this.context.lineJoin = 'round';
@@ -398,18 +401,45 @@ Phaser.Text.prototype.updateText = function () {
         {
             if (this.style.stroke && this.style.strokeThickness)
             {
+                this.updateShadow(this.style.shadowStroke);
                 this.context.strokeText(lines[i], linePositionX, linePositionY);
             }
 
             if (this.style.fill)
             {
+                this.updateShadow(this.style.shadowFill);
                 this.context.fillText(lines[i], linePositionX, linePositionY);
             }
         }
-
     }
 
     this.updateTexture();
+
+};
+
+/**
+* Sets the Shadow on the Text.context based on the Style settings, or disables it if not enabled.
+* This is called automatically by Text.updateText.
+*
+* @method Phaser.Text#updateShadow
+* @param {boolean} state - If true the shadow will be set to the Style values, otherwise it will be set to zero.
+*/
+Phaser.Text.prototype.updateShadow = function (state) {
+
+    if (state)
+    {
+        this.context.shadowOffsetX = this.style.shadowOffsetX;
+        this.context.shadowOffsetY = this.style.shadowOffsetY;
+        this.context.shadowColor = this.style.shadowColor;
+        this.context.shadowBlur = this.style.shadowBlur;
+    }
+    else
+    {
+        this.context.shadowOffsetX = 0;
+        this.context.shadowOffsetY = 0;
+        this.context.shadowColor = 0;
+        this.context.shadowBlur = 0;
+    }
 
 };
 
@@ -433,11 +463,13 @@ Phaser.Text.prototype.updateLine = function (line, x, y) {
 
         if (this.style.stroke && this.style.strokeThickness)
         {
+            this.updateShadow(this.style.shadowStroke);
             this.context.strokeText(letter, x, y);
         }
 
         if (this.style.fill)
         {
+            this.updateShadow(this.style.shadowFill);
             this.context.fillText(letter, x, y);
         }
 
@@ -1064,6 +1096,50 @@ Object.defineProperty(Phaser.Text.prototype, 'shadowBlur', {
         if (value !== this.style.shadowBlur)
         {
             this.style.shadowBlur = value;
+            this.dirty = true;
+        }
+
+    }
+
+});
+
+/**
+* @name Phaser.Text#shadowStroke
+* @property {boolean} shadowStroke - Sets if the drop shadow is applied to the Text stroke.
+*/
+Object.defineProperty(Phaser.Text.prototype, 'shadowStroke', {
+
+    get: function() {
+        return this.style.shadowStroke;
+    },
+
+    set: function(value) {
+
+        if (value !== this.style.shadowStroke)
+        {
+            this.style.shadowStroke = value;
+            this.dirty = true;
+        }
+
+    }
+
+});
+
+/**
+* @name Phaser.Text#shadowFill
+* @property {boolean} shadowFill - Sets if the drop shadow is applied to the Text fill.
+*/
+Object.defineProperty(Phaser.Text.prototype, 'shadowFill', {
+
+    get: function() {
+        return this.style.shadowFill;
+    },
+
+    set: function(value) {
+
+        if (value !== this.style.shadowFill)
+        {
+            this.style.shadowFill = value;
             this.dirty = true;
         }
 
