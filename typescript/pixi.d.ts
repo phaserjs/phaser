@@ -492,7 +492,7 @@ declare module PIXI {
         displayObjectUpdateTransform(): void;
         getBounds(matrix?: Matrix): Rectangle;
         getLocalBounds(): Rectangle;
-        generateTexture(resolution: number, scaleMode: scaleModes, renderer: PixiRenderer): RenderTexture;
+        generateTexture(resolution?: number, scaleMode?: number, renderer?: PixiRenderer): Texture;
         mousedown(e: InteractionData): void;
         mouseout(e: InteractionData): void;
         mouseover(e: InteractionData): void;
@@ -511,7 +511,7 @@ declare module PIXI {
         touchendoutside(e: InteractionData): void;
         touchstart(e: InteractionData): void;
         touchmove(e: InteractionData): void;
-        updateTransform(): void;
+        updateTransform(parent?: PIXI.DisplayObjectContainer): void;
 
     }
 
@@ -639,6 +639,7 @@ declare module PIXI {
         drawShape(shape: Ellipse): GraphicsData;
         drawShape(shape: Polygon): GraphicsData;
         endFill(): Graphics;
+        generateTexture(resolution?: number, scaleMode?: number): Texture;
         lineStyle(lineWidth?: number, color?: number, alpha?: number): Graphics;
         lineTo(x: number, y: number): Graphics;
         moveTo(x: number, y: number): Graphics;
@@ -1160,10 +1161,13 @@ declare module PIXI {
 
         constructor(texture: Texture, width: number, height: number);
 
+        canvasBuffer: PIXI.CanvasBuffer;
         blendMode: number;
+        refreshTexture: boolean;
         texture: Texture;
         tint: number;
         tilePosition: Point;
+        tilePattern: PIXI.Texture;
         tileScale: Point;
         tileScaleOffset: Point;
 
@@ -1220,11 +1224,17 @@ declare module PIXI {
 
         autoUpdate: boolean;
 
+        onPlay: Phaser.Signal;
+        onComplete: Phaser.Signal;
+        
+        play(): void;
+        stop(): void;
+
         destroy(): void;
         updateBound(): void;
-        onPlayStart(): void;
-        onPlayStop(): void;
-        onCanPlay(): void;
+        onPlayStart: () => void;
+        onPlayStop: () => void;
+        onCanPlay: () => void;
 
     }
 
@@ -1452,7 +1462,7 @@ declare module PIXI {
         getCanvas(): HTMLCanvasElement;
         getImage(): HTMLImageElement;
         resize(width: number, height: number, updateBase: boolean): void;
-        render(displayObject: DisplayObject, position?: Point, clear?: boolean): void;
+        render(displayObject: DisplayObject, matrix?: Matrix, clear?: boolean): void;
 
     }
 
