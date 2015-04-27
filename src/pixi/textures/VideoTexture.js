@@ -47,6 +47,7 @@ PIXI.VideoTexture = function(source, scaleMode)
     }
 
     this.onPlay = new Phaser.Signal();
+    this.onUpdate = new Phaser.Signal();
     this.onComplete = new Phaser.Signal();
 
 };
@@ -56,6 +57,13 @@ PIXI.VideoTexture.constructor = PIXI.VideoTexture;
 
 PIXI.VideoTexture.prototype.play = function()
 {
+    this.source.play();
+    this.onPlay.dispatch();
+};
+
+PIXI.VideoTexture.prototype.changeSource = function(src)
+{
+    this.source.src = src;
     this.source.play();
     this.onPlay.dispatch();
 };
@@ -81,6 +89,7 @@ PIXI.VideoTexture.prototype._onUpdate = function()
     {
         window.requestAnimationFrame(this.updateBound);
         this.dirty();
+        this.onUpdate.dispatch(this);
     }
 };
 
