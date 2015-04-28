@@ -340,7 +340,7 @@ Phaser.Math = {
     * Find the angle of a segment from (x1, y1) -> (x2, y2).
     * Note that the difference between this method and Math.angleBetween is that this assumes the y coordinate travels
     * down the screen.
-    * 
+    *
     * @method Phaser.Math#angleBetweenY
     * @param {number} x1
     * @param {number} y1
@@ -577,7 +577,7 @@ Phaser.Math = {
     *
     * @method Phaser.Math#isOdd
     * @param {integer} n - The number to check.
-    * @return {boolean} True if the given number is odd. False if the given number is even.    
+    * @return {boolean} True if the given number is odd. False if the given number is even.
     */
     isOdd: function (n) {
         // Does not work with extremely large values
@@ -597,7 +597,7 @@ Phaser.Math = {
     },
 
     /**
-    * Variation of Math.min that can be passed either an array of numbers or the numbers as parameters.    
+    * Variation of Math.min that can be passed either an array of numbers or the numbers as parameters.
     *
     * Prefer the standard `Math.min` function when appropriate.
     *
@@ -606,7 +606,7 @@ Phaser.Math = {
     * @see {@link http://jsperf.com/math-s-min-max-vs-homemade}
     */
     min: function () {
- 
+
         if (arguments.length === 1 && typeof arguments[0] === 'object')
         {
             var data = arguments[0];
@@ -615,7 +615,7 @@ Phaser.Math = {
         {
             var data = arguments;
         }
- 
+
         for (var i = 1, min = 0, len = data.length; i < len; i++)
         {
             if (data[i] < data[min])
@@ -638,7 +638,7 @@ Phaser.Math = {
     * @see {@link http://jsperf.com/math-s-min-max-vs-homemade}
     */
     max: function () {
- 
+
         if (arguments.length === 1 && typeof arguments[0] === 'object')
         {
             var data = arguments[0];
@@ -647,7 +647,7 @@ Phaser.Math = {
         {
             var data = arguments;
         }
- 
+
         for (var i = 1, max = 0, len = data.length; i < len; i++)
         {
             if (data[i] > data[max])
@@ -763,7 +763,7 @@ Phaser.Math = {
 
     /**
     * A Linear Interpolation Method, mostly used by Phaser.Tween.
-    * 
+    *
     * @method Phaser.Math#linearInterpolation
     * @param {Array} v - The input array of values to interpolate between.
     * @param {number} k - The percentage of interpolation, between 0 and 1.
@@ -791,7 +791,7 @@ Phaser.Math = {
 
     /**
     * A Bezier Interpolation Method, mostly used by Phaser.Tween.
-    * 
+    *
     * @method Phaser.Math#bezierInterpolation
     * @param {Array} v - The input array of values to interpolate between.
     * @param {number} k - The percentage of interpolation, between 0 and 1.
@@ -813,7 +813,7 @@ Phaser.Math = {
 
     /**
     * A Catmull Rom Interpolation Method, mostly used by Phaser.Tween.
-    * 
+    *
     * @method Phaser.Math#catmullRomInterpolation
     * @param {Array} v - The input array of values to interpolate between.
     * @param {number} k - The percentage of interpolation, between 0 and 1.
@@ -853,7 +853,7 @@ Phaser.Math = {
 
     /**
     * Calculates a linear (interpolation) value over t.
-    * 
+    *
     * @method Phaser.Math#linear
     * @param {number} p0
     * @param {number} p1
@@ -900,7 +900,7 @@ Phaser.Math = {
 
     /**
     * Calculates a catmum rom value.
-    * 
+    *
     * @method Phaser.Math#catmullRom
     * @protected
     * @param {number} p0
@@ -940,7 +940,7 @@ Phaser.Math = {
     * @param {any[]} objects - An array of objects.
     * @param {integer} startIndex - Optional offset off the front of the array. Default value is 0, or the beginning of the array.
     * @param {integer} length - Optional restriction on the number of values you want to randomly select from.
-    * @return {object} The random object that was selected.    
+    * @return {object} The random object that was selected.
     * @deprecated 2.2.0 - Use {@link Phaser.ArrayUtils.getRandomItem}
     */
     getRandom: function (objects, startIndex, length) {
@@ -1092,6 +1092,26 @@ Phaser.Math = {
         var dy = y1 - y2;
 
         return Math.sqrt(dx * dx + dy * dy);
+
+    },
+
+    /**
+    * Returns the euclidian distance squared between the two given set of
+    * coordinates (cuts out a square root operation before returning).
+    *
+    * @method Phaser.Math#distanceSq
+    * @param {number} x1
+    * @param {number} y1
+    * @param {number} x2
+    * @param {number} y2
+    * @return {number} The distance squared between the two sets of coordinates.
+    */
+    distanceSq: function (x1, y1, x2, y2) {
+
+        var dx = x1 - x2;
+        var dy = y1 - y2;
+
+        return dx * dx + dy * dy;
 
     },
 
