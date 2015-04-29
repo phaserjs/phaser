@@ -14,13 +14,13 @@ var netNoop = function () {};
 Phaser.Net = netNoop;
 
 Phaser.Net.prototype = {
-	isDisabled: true,
+    isDisabled: true,
 
-	getHostName: netNoop,
-	checkDomainName: netNoop,
-	updateQueryString: netNoop,
-	getQueryString: netNoop,
-	decodeURI: netNoop
+    getHostName: netNoop,
+    checkDomainName: netNoop,
+    updateQueryString: netNoop,
+    getQueryString: netNoop,
+    decodeURI: netNoop
 };
 
 Phaser.Net.prototype.constructor = Phaser.Net;

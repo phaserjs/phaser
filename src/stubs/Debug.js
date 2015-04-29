@@ -14,7 +14,7 @@ var debugNoop = function () {};
 Phaser.Utils.Debug = debugNoop;
 
 Phaser.Utils.Debug.prototype = {
-	isDisabled: true,
+    isDisabled: true,
 
     boot: debugNoop,
     preUpdate: debugNoop,
