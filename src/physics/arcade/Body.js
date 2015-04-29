@@ -320,6 +320,16 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.skipQuadTree = false;
 
     /**
+    * If true the Body will check itself against the Sprite.getBounds() dimensions and adjust its width and height accordingly.
+    * If false it will compare its dimensions against the Sprite scale instead, and adjust its width height if the scale has changed.
+    * Typically you would need to enable syncBounds if your sprite is the child of a responsive display object such as a FlexLayer, 
+    * or in any situation where the Sprite scale doesn't change, but its parents scale is effecting the dimensions regardless.
+    * @property {boolean} syncBounds
+    * @default
+    */
+    this.syncBounds = false;
+
+    /**
     * @property {boolean} _reset - Internal cache var.
     * @private
     */
@@ -361,20 +371,38 @@ Phaser.Physics.Arcade.Body.prototype = {
     */
     updateBounds: function () {
 
-        var asx = Math.abs(this.sprite.scale.x);
-        var asy = Math.abs(this.sprite.scale.y);
-
-        if (asx !== this._sx || asy !== this._sy)
+        if (this.syncBounds)
         {
-            this.width = this.sourceWidth * asx;
-            this.height = this.sourceHeight * asy;
+            var b = this.sprite.getBounds();
+            b.ceilAll();
+
+            if (b.width !== this.width || b.height !== this.height)
+            {
+                this.width = b.width;
+                this.height = b.height;
+                this._reset = true;
+            }
+        }
+        else
+        {
+            var asx = Math.abs(this.sprite.scale.x);
+            var asy = Math.abs(this.sprite.scale.y);
+
+            if (asx !== this._sx || asy !== this._sy)
+            {
+                this.width = this.sourceWidth * asx;
+                this.height = this.sourceHeight * asy;
+                this._sx = asx;
+                this._sy = asy;
+                this._reset = true;
+            }
+        }
+
+        if (this._reset)
+        {
             this.halfWidth = Math.floor(this.width / 2);
             this.halfHeight = Math.floor(this.height / 2);
-            this._sx = asx;
-            this._sy = asy;
             this.center.setTo(this.position.x + this.halfWidth, this.position.y + this.halfHeight);
-
-            this._reset = true;
         }
 
     },
