@@ -95,6 +95,11 @@ module.exports = {
         dest: '<%= modules_dir %>/net.js'
     },
 
+    netStub: {
+        src: require('../manifests/net.stub'),
+        dest: '<%= modules_dir %>/net.js'
+    },
+
     tweens: {
         src: require('../manifests/tweens'),
         dest: '<%= modules_dir %>/tweens.js'
@@ -132,6 +137,11 @@ module.exports = {
 
     debug: {
         src: require('../manifests/debug'),
+        dest: '<%= modules_dir %>/debug.js'
+    },
+
+    debugStub: {
+        src: require('../manifests/debug.stub'),
         dest: '<%= modules_dir %>/debug.js'
     },
 
