@@ -15,11 +15,7 @@
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
 */
-Phaser.Utils.Debug = function (game, enabled) {
-    /**
-     * @property {boolean} enabled - Is debugging enabled?
-     */
-    this.enabled = enabled || true;
+Phaser.Utils.Debug = function (game) {
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running Game.
@@ -115,6 +111,7 @@ Phaser.Utils.Debug.prototype = {
             this.canvas = Phaser.Canvas.create(this.game.width, this.game.height, '', true);
             this.context = this.canvas.getContext('2d');
         }
+
     },
 
     /**
@@ -123,8 +120,6 @@ Phaser.Utils.Debug.prototype = {
     * @method Phaser.Utils.Debug#preUpdate
     */
     preUpdate: function () {
-
-        if (!this.enabled) { return; }
 
         if (this.dirty && this.sprite)
         {
@@ -167,8 +162,6 @@ Phaser.Utils.Debug.prototype = {
     * @param {number} [columnWidth=0] - The spacing between columns.
     */
     start: function (x, y, color, columnWidth) {
-
-        if (!this.enabled) { return; }
 
         if (typeof x !== 'number') { x = 0; }
         if (typeof y !== 'number') { y = 0; }
@@ -213,8 +206,6 @@ Phaser.Utils.Debug.prototype = {
     */
     line: function () {
 
-        if (!this.enabled) { return; }
-
         var x = this.currentX;
 
         for (var i = 0; i < arguments.length; i++)
@@ -245,8 +236,6 @@ Phaser.Utils.Debug.prototype = {
     * @param {string} [color='rgb(255,255,255)'] - color of the debug info to be rendered. (format is css color string).
     */
     soundInfo: function (sound, x, y, color) {
-
-        if (!this.enabled) { return; }
 
         this.start(x, y, color);
         this.line('Sound: ' + sound.key + ' Locked: ' + sound.game.sound.touchLocked);
@@ -279,8 +268,6 @@ Phaser.Utils.Debug.prototype = {
     */
     cameraInfo: function (camera, x, y, color) {
 
-        if (!this.enabled) { return; }
-
         this.start(x, y, color);
         this.line('Camera (' + camera.width + ' x ' + camera.height + ')');
         this.line('X: ' + camera.x + ' Y: ' + camera.y);
@@ -308,8 +295,6 @@ Phaser.Utils.Debug.prototype = {
     */
     timer: function (timer, x, y, color) {
 
-        if (!this.enabled) { return; }
-
         this.start(x, y, color);
         this.line('Timer (running: ' + timer.running + ' expired: ' + timer.expired + ')');
         this.line('Next Tick: ' + timer.next + ' Duration: ' + timer.duration);
@@ -329,8 +314,6 @@ Phaser.Utils.Debug.prototype = {
     * @param {string} [color='rgb(255,255,255)'] - color of the debug info to be rendered. (format is css color string).
     */
     pointer: function (pointer, hideIfUp, downColor, upColor, color) {
-
-        if (!this.enabled) { return; }
 
         if (pointer == null)
         {
@@ -391,8 +374,6 @@ Phaser.Utils.Debug.prototype = {
     */
     spriteInputInfo: function (sprite, x, y, color) {
 
-        if (!this.enabled) { return; }
-
         this.start(x, y, color);
         this.line('Sprite Input: (' + sprite.width + ' x ' + sprite.height + ')');
         this.line('x: ' + sprite.input.pointerX().toFixed(1) + ' y: ' + sprite.input.pointerY().toFixed(1));
@@ -414,8 +395,6 @@ Phaser.Utils.Debug.prototype = {
     */
     key: function (key, x, y, color) {
 
-        if (!this.enabled) { return; }
-
         this.start(x, y, color, 150);
 
         this.line('Key:', key.keyCode, 'isDown:', key.isDown);
@@ -435,8 +414,6 @@ Phaser.Utils.Debug.prototype = {
     * @param {string} [color='rgb(255,255,255)'] - color of the debug info to be rendered. (format is css color string).
     */
     inputInfo: function (x, y, color) {
-
-        if (!this.enabled) { return; }
 
         this.start(x, y, color);
         this.line('Input');
@@ -458,8 +435,6 @@ Phaser.Utils.Debug.prototype = {
     */
     spriteBounds: function (sprite, color, filled) {
 
-        if (!this.enabled) { return; }
-
         var bounds = sprite.getBounds();
 
         bounds.x += this.game.camera.x;
@@ -477,9 +452,6 @@ Phaser.Utils.Debug.prototype = {
     * @param {boolean} [filled=true] - Render the rectangle as a fillRect (default, true) or a strokeRect (false)
     */
     ropeSegments: function(rope, color, filled) {
-
-        if (!this.enabled) { return; }
-
         var segments = rope.segments;
         segments.forEach(function(segment) {
             this.rectangle(segment, color, filled);
@@ -497,8 +469,6 @@ Phaser.Utils.Debug.prototype = {
     * @param {string} [color='rgb(255,255,255)'] - color of the debug info to be rendered. (format is css color string).
     */
     spriteInfo: function (sprite, x, y, color) {
-
-        if (!this.enabled) { return; }
 
         this.start(x, y, color);
 
@@ -522,8 +492,6 @@ Phaser.Utils.Debug.prototype = {
     * @param {string} [color='rgb(255,255,255)'] - color of the debug info to be rendered. (format is css color string).
     */
     spriteCoords: function (sprite, x, y, color) {
-
-        if (!this.enabled) { return; }
 
         this.start(x, y, color, 100);
 
@@ -551,8 +519,6 @@ Phaser.Utils.Debug.prototype = {
     */
     lineInfo: function (line, x, y, color) {
 
-        if (!this.enabled) { return; }
-
         this.start(x, y, color, 80);
         this.line('start.x:', line.start.x.toFixed(2), 'start.y:', line.start.y.toFixed(2));
         this.line('end.x:', line.end.x.toFixed(2), 'end.y:', line.end.y.toFixed(2));
@@ -571,8 +537,6 @@ Phaser.Utils.Debug.prototype = {
     * @param {number} [size=2] - The 'size' to render the pixel at.
     */
     pixel: function (x, y, color, size) {
-
-        if (!this.enabled) { return; }
 
         size = size || 2;
 
@@ -593,8 +557,6 @@ Phaser.Utils.Debug.prototype = {
     * @param {number} [forceType=0] - Force rendering of a specific type. If 0 no type will be forced, otherwise 1 = Rectangle, 2 = Circle, 3 = Point and 4 = Line.
     */
     geom: function (object, color, filled, forceType) {
-
-        if (!this.enabled) { return; }
 
         if (typeof filled === 'undefined') { filled = true; }
         if (typeof forceType === 'undefined') { forceType = 0; }
@@ -660,8 +622,6 @@ Phaser.Utils.Debug.prototype = {
     */
     rectangle: function (object, color, filled) {
 
-        if (!this.enabled) { return; }
-
         if (typeof filled === 'undefined') { filled = true; }
 
         color = color || 'rgba(0, 255, 0, 0.4)';
@@ -695,8 +655,6 @@ Phaser.Utils.Debug.prototype = {
     */
     text: function (text, x, y, color, font) {
 
-        if (!this.enabled) { return; }
-
         color = color || 'rgb(255,255,255)';
         font = font || '16px Courier';
 
@@ -724,8 +682,6 @@ Phaser.Utils.Debug.prototype = {
     * @param {string} color - The color of the lines in the quadtree.
     */
     quadTree: function (quadtree, color) {
-
-        if (!this.enabled) { return; }
 
         color = color || 'rgba(255,0,0,0.3)';
 
@@ -770,8 +726,6 @@ Phaser.Utils.Debug.prototype = {
     */
     body: function (sprite, color, filled) {
 
-        if (!this.enabled) { return; }
-
         if (sprite.body)
         {
             this.start();
@@ -805,8 +759,6 @@ Phaser.Utils.Debug.prototype = {
     */
     bodyInfo: function (sprite, x, y, color) {
 
-        if (!this.enabled) { return; }
-
         if (sprite.body)
         {
             this.start(x, y, color, 210);
@@ -833,14 +785,12 @@ Phaser.Utils.Debug.prototype = {
     * @method Phaser.Utils.Debug#box2dWorld
     */
     box2dWorld: function () {
-
-        if (!this.enabled) { return; }
-
+    
         this.start();
-
+        
         this.context.translate(-this.game.camera.view.x, -this.game.camera.view.y, 0);
         this.game.physics.box2d.renderDebugDraw(this.context);
-
+        
         this.stop();
 
     },
@@ -854,9 +804,7 @@ Phaser.Utils.Debug.prototype = {
     * @param {string} [color='rgb(0,255,0)'] - color of the debug info to be rendered. (format is css color string).
     */
     box2dBody: function (body, color) {
-
-        if (!this.enabled) { return; }
-
+    
         this.start();
         Phaser.Physics.Box2D.renderBody(this.context, body, color);
         this.stop();

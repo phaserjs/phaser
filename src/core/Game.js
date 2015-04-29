@@ -7,7 +7,7 @@
 /**
 * This is where the magic happens. The Game object is the heart of your game,
 * providing quick access to common functions and handling the boot process.
-*
+* 
 * "Hell, there are no rules here - we're trying to accomplish something."
 *                                                       Thomas A. Edison
 *
@@ -211,7 +211,7 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     * @property {Phaser.Physics} physics - Reference to the physics manager.
     */
     this.physics = null;
-
+    
     /**
     * @property {Phaser.PluginManager} plugins - Reference to the plugin manager.
     */
@@ -544,7 +544,6 @@ Phaser.Game.prototype = {
         this.particles = new Phaser.Particles(this);
         this.plugins = new Phaser.PluginManager(this);
         this.net = new Phaser.Net(this);
-        this.debug = new Phaser.Utils.Debug(this, this.config['enableDebug']);
 
         this.time.boot();
         this.stage.boot();
@@ -553,7 +552,16 @@ Phaser.Game.prototype = {
         this.input.boot();
         this.sound.boot();
         this.state.boot();
-        this.debug.boot();
+
+        if (this.config['enableDebug'])
+        {
+            this.debug = new Phaser.Utils.Debug(this);
+            this.debug.boot();
+        }
+        else
+        {
+            this.debug = { preUpdate: function () {}, update: function () {}, reset: function () {} };
+        }
 
         this.showDebugHeader();
 
@@ -724,7 +732,7 @@ Phaser.Game.prototype = {
         if (this.renderType !== Phaser.HEADLESS)
         {
             this.stage.smoothed = this.antialias;
-
+            
             Phaser.Canvas.addToDOM(this.canvas, this.parent, false);
             Phaser.Canvas.setTouchAction(this.canvas);
         }
@@ -746,7 +754,7 @@ Phaser.Game.prototype = {
         {
             this.updateLogic(1.0 / this.time.desiredFps);
 
-            //  Sync the scene graph after _every_ logic update to account for moved game objects
+            //  Sync the scene graph after _every_ logic update to account for moved game objects                
             this.stage.updateTransform();
 
             // call the game render update exactly once every frame
