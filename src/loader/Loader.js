@@ -112,9 +112,13 @@ Phaser.Loader = function (game) {
     this.onFileStart = new Phaser.Signal();
 
     /**
-    * This event is dispatched when a file has either loaded or failed to load.
+    * This event is dispatched when a file has either loaded or failed to load.    *
     *
-    * Params: `(progress, file key, success?, total loaded files, total files)`
+    * Any function bound to this will receive the following parameters:
+    *
+    * progress, file key, success?, total loaded files, total files
+    *
+    * Where progress is a number between 1 and 100 (inclusive) representing the percentage of the load.
     * 
     * @property {Phaser.Signal} onFileComplete
     */
