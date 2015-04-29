@@ -273,6 +273,7 @@ Version 2.4 - "Katar" - in dev
 * ArcadePhysics.Body.syncBounds is a new property that if true forces the Body to check itself against the Sprite.getBounds() dimensions and adjust its width and height accordingly. If false it will compare its dimensions against the Sprite scale instead, and adjust its width height if the scale has changed. Typically you would need to enable `syncBounds` if your sprite is the child of a responsive display object such as a FlexLayer, or in any situation where the sprite scale doesn't change, but its parents scale is effecting the dimensions regardless.
 * Rectangle.ceil runs Math.ceil() on both the x and y values of the Rectangle.
 * Rectangle.ceilAll runs Math.ceil() on the x, y, width and height values of the Rectangle.
+* The Net and Debug classes have been stubbed out, so they can be properly excluded during a custom build (thanks @soldoutactivist #1772)
 
 ### Updates
 
@@ -322,6 +323,7 @@ Version 2.4 - "Katar" - in dev
 * Fixed a bug in Pixi where drawing a Sprite to a RenderTexture would reset the Sprites transform to an identity Matrix.
 * The SoundManager didn't accurately detect devices or browser environments with no sound card present and would try to carry on using a null Web Audio context (thanks @englercj #1746)
 * The Tween.onStart signal wasn't dispatched if the Tween had a delay set. It's now dispatched immediately if no delay, or after the delay if set. It also respects the `autoStart` parameter and will still dispatch even if `autoStart` is true.
+* PIXI.CanvasTinter.tintWithMultiply was performing a double drawImage operation for no reason. Simplified down to a single drawImage call.
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 

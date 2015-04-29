@@ -8,9 +8,7 @@
  * @class CanvasTinter
  * @static
  */
-PIXI.CanvasTinter = function()
-{
-};
+PIXI.CanvasTinter = function() {};
 
 /**
  * Basically this method just needs a sprite and a color and tints the sprite with the given color.
@@ -25,36 +23,18 @@ PIXI.CanvasTinter.getTintedTexture = function(sprite, color)
 {
     var texture = sprite.texture;
 
-    //  Disabling the tintCache for a number of reasons:
-    //  
-    //  1) It ate memory like it was going out of fashion if the texture was big
-    //  2) It doesn't work with animated sprites, only the first frame is ever tinted
-    //  3) The tinted texture is stored in Sprite.tintedTexture anyway, so isn't completed un-cached
-    //  4) The cache stopped you being to able to do subtle tint shifts as the color value was rounded
-
-    // color = PIXI.CanvasTinter.roundColor(color);
-    // var stringColor = "#" + ("00000" + ( color | 0).toString(16)).substr(-6);
-    // texture.tintCache = texture.tintCache || {};
-    // if(texture.tintCache[stringColor]) return texture.tintCache[stringColor];
-
-    // clone texture..
     var canvas = PIXI.CanvasTinter.canvas || document.createElement("canvas");
     
     PIXI.CanvasTinter.tintMethod(texture, color, canvas);
 
     if (PIXI.CanvasTinter.convertTintToImage)
     {
-        // is this better?
         var tintImage = new Image();
         tintImage.src = canvas.toDataURL();
-
-        // texture.tintCache[stringColor] = tintImage;
     }
     else
     {
-        // texture.tintCache = canvas;
-        // texture.tintCache[stringColor] = canvas;
-        // if we are not converting the texture to an image then we need to lose the reference to the canvas
+        //  If we are not converting the texture to an image then we need to lose the reference to the canvas
         PIXI.CanvasTinter.canvas = null;
     }
 
@@ -72,7 +52,7 @@ PIXI.CanvasTinter.getTintedTexture = function(sprite, color)
  */
 PIXI.CanvasTinter.tintWithMultiply = function(texture, color, canvas)
 {
-    var context = canvas.getContext( "2d" );
+    var context = canvas.getContext("2d");
 
     var crop = texture.crop;
 
@@ -80,68 +60,11 @@ PIXI.CanvasTinter.tintWithMultiply = function(texture, color, canvas)
     canvas.height = crop.height;
 
     context.fillStyle = "#" + ("00000" + ( color | 0).toString(16)).substr(-6);
-    
     context.fillRect(0, 0, crop.width, crop.height);
-    
+
     context.globalCompositeOperation = "multiply";
 
-    context.drawImage(texture.baseTexture.source,
-                           crop.x,
-                           crop.y,
-                           crop.width,
-                           crop.height,
-                           0,
-                           0,
-                           crop.width,
-                           crop.height);
-
-    context.globalCompositeOperation = "destination-atop";
-
-    context.drawImage(texture.baseTexture.source,
-                           crop.x,
-                           crop.y,
-                           crop.width,
-                           crop.height,
-                           0,
-                           0,
-                           crop.width,
-                           crop.height);
-};
-
-/**
- * Tint a texture using the "overlay" operation.
- * 
- * @method tintWithOverlay
- * @static
- * @param texture {Texture} the texture to tint
- * @param color {Number} the color to use to tint the sprite with
- * @param canvas {HTMLCanvasElement} the current canvas
- */
-PIXI.CanvasTinter.tintWithOverlay = function(texture, color, canvas)
-{
-    var context = canvas.getContext( "2d" );
-
-    var crop = texture.crop;
-
-    canvas.width = crop.width;
-    canvas.height = crop.height;
-    
-    context.globalCompositeOperation = "copy";
-    context.fillStyle = "#" + ("00000" + ( color | 0).toString(16)).substr(-6);
-    context.fillRect(0, 0, crop.width, crop.height);
-
-    context.globalCompositeOperation = "destination-atop";
-    context.drawImage(texture.baseTexture.source,
-                           crop.x,
-                           crop.y,
-                           crop.width,
-                           crop.height,
-                           0,
-                           0,
-                           crop.width,
-                           crop.height);
-    
-    //context.globalCompositeOperation = "copy";
+    context.drawImage(texture.baseTexture.source, crop.x, crop.y, crop.width, crop.height, 0, 0, crop.width, crop.height);
 };
 
 /**
@@ -163,15 +86,8 @@ PIXI.CanvasTinter.tintWithPerPixel = function(texture, color, canvas)
     canvas.height = crop.height;
   
     context.globalCompositeOperation = "copy";
-    context.drawImage(texture.baseTexture.source,
-                           crop.x,
-                           crop.y,
-                           crop.width,
-                           crop.height,
-                           0,
-                           0,
-                           crop.width,
-                           crop.height);
+
+    context.drawImage(texture.baseTexture.source, crop.x, crop.y, crop.width, crop.height, 0, 0, crop.width, crop.height);
 
     var rgbValues = PIXI.hex2rgb(color);
     var r = rgbValues[0], g = rgbValues[1], b = rgbValues[2];
@@ -182,18 +98,18 @@ PIXI.CanvasTinter.tintWithPerPixel = function(texture, color, canvas)
 
     for (var i = 0; i < pixels.length; i += 4)
     {
-      pixels[i+0] *= r;
-      pixels[i+1] *= g;
-      pixels[i+2] *= b;
+        pixels[i + 0] *= r;
+        pixels[i + 1] *= g;
+        pixels[i + 2] *= b;
 
-      if (!PIXI.CanvasTinter.canHandleAlpha)
-      {
-        var alpha = pixels[i+3];
+        if (!PIXI.CanvasTinter.canHandleAlpha)
+        {
+            var alpha = pixels[i + 3];
 
-        pixels[i+0] /= 255 / alpha;
-        pixels[i+1] /= 255 / alpha;
-        pixels[i+2] /= 255 / alpha;
-      }
+            pixels[i + 0] /= 255 / alpha;
+            pixels[i + 1] /= 255 / alpha;
+            pixels[i + 2] /= 255 / alpha;
+        }
     }
 
     context.putImageData(pixelData, 0, 0);
