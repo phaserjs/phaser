@@ -298,6 +298,7 @@ Version 2.4 - "Katar" - in dev
 * SoundManager.pauseAll, resumeAll and stopAll now checks if the SoundManager.noAudio is set and ignores the calls.
 * SoundManager.usingWebAudio is set to `false` by default (used to be `true`) and is only explicitly set if Web Audio is available and hasn't been disabled in the PhaserGlobal object.
 * SoundManager.touchLocked is now set to `false` should the device be using legacy Audio, avoiding the unlock call running without need.
+* Added `type` parameter to `VideoTexture.fromUrl` allowing you to define the mime-type of the video file, which is required for Firefox and Safari in most cases.
 
 ### Bug Fixes
 

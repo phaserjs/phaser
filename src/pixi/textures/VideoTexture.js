@@ -77,13 +77,13 @@ PIXI.VideoTexture.prototype.stop = function()
     }
 };
 
-PIXI.VideoTexture.prototype._onEnded = function()
+PIXI.VideoTexture.prototype._onEnded = function(event)
 {
     this.ended = true;
     this.onComplete.dispatch();
 };
 
-PIXI.VideoTexture.prototype._onUpdate = function()
+PIXI.VideoTexture.prototype._onUpdate = function(event)
 {
     if (this.autoUpdate)
     {
@@ -107,7 +107,7 @@ PIXI.VideoTexture.prototype.onPlayStop = function()
     this.autoUpdate = false;
 };
 
-PIXI.VideoTexture.prototype.onCanPlay = function()
+PIXI.VideoTexture.prototype.onCanPlay = function(event)
 {
     if (event.type === 'canplaythrough')
     {
@@ -196,17 +196,20 @@ PIXI.VideoTexture.textureFromVideo = function(video, scaleMode)
  * @param videoSrc {String} The URL for the video.
  * @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
  * @param autoPlay {boolean} Automatically start the video playing? Until you do this you can't get the width / height of the resulting texture.
+ * @param type {string} The mime-type of the video to be played. Defaults to "video/mp4". Needed for Firefox and Safari.
  * @return {VideoTexture}
  */
-PIXI.VideoTexture.fromUrl = function(videoSrc, scaleMode, autoPlay)
+PIXI.VideoTexture.fromUrl = function(videoSrc, scaleMode, autoPlay, type)
 {
     if (typeof scaleMode === 'undefined') { scaleMode = PIXI.scaleModes.DEFAULT; }
     if (typeof autoPlay === 'undefined') { autoPlay = true; }
+    if (typeof type === 'undefined') { type = "video/mp4"; }
 
     var video = document.createElement('video');
 
     video.src = videoSrc;
-    video.controls = true;
+    video.controls = false;
+    video.type = type;
 
     if (autoPlay)
     {
