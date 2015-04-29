@@ -270,6 +270,9 @@ Version 2.4 - "Katar" - in dev
 * The Phaser.Matrix constructor now allows you to optionally set all Matrix properties on instantiation.
 * Text.setShadow has two new optional parameters: `shadowStroke` and `shadowFill`. These allow you to set if the drop shadow is applied to the Text stroke, the Text fill or both of them (thanks @qdrj #1766)
 * Text.shadowStroke and Text.shadowFill allow you to toggle if the drop shadow is applied to the Text stroke or fill independently.
+* ArcadePhysics.Body.syncBounds is a new property that if true forces the Body to check itself against the Sprite.getBounds() dimensions and adjust its width and height accordingly. If false it will compare its dimensions against the Sprite scale instead, and adjust its width height if the scale has changed. Typically you would need to enable `syncBounds` if your sprite is the child of a responsive display object such as a FlexLayer, or in any situation where the sprite scale doesn't change, but its parents scale is effecting the dimensions regardless.
+* Rectangle.ceil runs Math.ceil() on both the x and y values of the Rectangle.
+* Rectangle.ceilAll runs Math.ceil() on the x, y, width and height values of the Rectangle.
 
 ### Updates
 
