@@ -1776,7 +1776,7 @@ Phaser.Loader.prototype = {
                     break;
 
                 case "audiosprite":
-                    this.audio(file.key, file.urls, file.jsonURL);
+                    this.audiosprite(file.key, file.urls, file.jsonURL, file.jsonData, file.autoDecode);
                     break;
 
                 case "tilemap":
