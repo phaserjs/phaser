@@ -105,9 +105,12 @@ PIXI.BaseTexture = function(source, scaleMode)
      */
     this._dirty = [true, true, true, true];
 
-    if(!source)return;
+    if (!source)
+    {
+        return;
+    }
 
-    if((this.source.complete || this.source.getContext) && this.source.width && this.source.height)
+    if ((this.source.complete || this.source.getContext) && this.source.width && this.source.height)
     {
         this.hasLoaded = true;
         this.width = this.source.naturalWidth || this.source.width;
@@ -154,13 +157,31 @@ PIXI.BaseTexture.prototype.constructor = PIXI.BaseTexture;
 PIXI.EventTarget.mixin(PIXI.BaseTexture.prototype);
 
 /**
+ * Forces this BaseTexture to be set as loaded, with the given width and height.
+ * Then calls BaseTexture.dirty.
+ * Important for when you don't want to modify the source object by forcing in `complete` or dimension properties it may not have.
+ *
+ * @method forceLoaded
+ * @param {number} width - The new width to force the BaseTexture to be.
+ * @param {number} height - The new height to force the BaseTexture to be.
+ */
+PIXI.BaseTexture.prototype.forceLoaded = function(width, height)
+{
+    this.hasLoaded = true;
+    this.width = width;
+    this.height = height;
+    this.dirty();
+
+};
+
+/**
  * Destroys this base texture
  *
  * @method destroy
  */
 PIXI.BaseTexture.prototype.destroy = function()
 {
-    if(this.imageUrl)
+    if (this.imageUrl)
     {
         delete PIXI.BaseTextureCache[this.imageUrl];
         delete PIXI.TextureCache[this.imageUrl];
