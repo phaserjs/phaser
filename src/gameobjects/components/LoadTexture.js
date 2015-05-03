@@ -64,6 +64,16 @@ Phaser.Component.LoadTexture.prototype = {
                 setFrame = !this.animations.loadFrameData(this.game.cache.getFrameData(key.key, Phaser.Cache.BITMAPDATA), frame);
             }
         }
+        else if (Phaser.Video && key instanceof Phaser.Video)
+        {
+            //  This works from a reference, which probably isn't what we need here
+            this.setTexture(key.texture);
+
+            if (this.game.cache.getFrameData(key.key, Phaser.Cache.VIDEO))
+            {
+                setFrame = !this.animations.loadFrameData(this.game.cache.getFrameData(key.key, Phaser.Cache.VIDEO), frame);
+            }
+        }
         else if (key instanceof PIXI.Texture)
         {
             this.setTexture(key);
