@@ -133,6 +133,36 @@ PIXI.DisplayObject = function()
     this.worldTransform = new PIXI.Matrix();
 
     /**
+     * The position of the Display Object based on the world transform.
+     * This value is updated at the end of updateTransform and takes all parent transforms into account.
+     *
+     * @property worldPosition
+     * @type Point
+     * @readOnly
+     */
+    this.worldPosition = new PIXI.Point(0, 0);
+
+    /**
+     * The scale of the Display Object based on the world transform.
+     * This value is updated at the end of updateTransform and takes all parent transforms into account.
+     *
+     * @property worldScale
+     * @type Point
+     * @readOnly
+     */
+    this.worldScale = new PIXI.Point(1, 1);
+
+    /**
+     * The rotation of the Display Object, in radians, based on the world transform.
+     * This value is updated at the end of updateTransform and takes all parent transforms into account.
+     *
+     * @property worldRotation
+     * @type Number
+     * @readOnly
+     */
+    this.worldRotation = 0;
+
+    /**
      * cached sin rotation and cos rotation
      *
      * @property _sr
@@ -453,6 +483,10 @@ PIXI.DisplayObject.prototype.updateTransform = function(parent)
 
     // multiply the alphas..
     this.worldAlpha = this.alpha * p.worldAlpha;
+
+    this.worldPosition.set(wt.tx, wt.ty);
+    this.worldScale.set(Math.sqrt(wt.a * wt.a + wt.b * wt.b), Math.sqrt(wt.c * wt.c + wt.d * wt.d));
+    this.worldRotation = Math.atan2(-wt.c, wt.d);
 
     //  Custom callback?
     if (this.transformCallback)
