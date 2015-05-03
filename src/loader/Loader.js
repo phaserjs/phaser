@@ -635,15 +635,15 @@ Phaser.Loader.prototype = {
     *
     * Retrieve the image via `Cache.getImage(key)`
     * 
-    * The URL can be relative or absolute. If relative it will take the Loader.baseURL into consideration.
+    * The URL can be relative or absolute. If the URL is relative the Loader.baseURL value will be prepended to it.
     * 
-    * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "bomb"
-    * and no URL is given then the Loader will set the URL to be "bomb.png". It will always add `.png` as the extension.
+    * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "alien"
+    * and no URL is given then the Loader will set the URL to be "alien.png". It will always add `.png` as the extension.
     * If you do not desire this action then provide a URL.
     *
     * @method Phaser.Loader#image
     * @param {string} key - Unique asset key of this image file.
-    * @param {string} [url] - URL of an image file. If undefined or `null` the url will be set to `<key>.png`, i.e. if `key` was "bomb" then the URL will be "bomb.png".
+    * @param {string} [url] - URL of an image file. If undefined or `null` the url will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
     * @param {boolean} [overwrite=false] - If an unloaded file with a matching key already exists in the queue, this entry will overwrite it.
     * @return {Phaser.Loader} This Loader instance.
     */
@@ -662,15 +662,15 @@ Phaser.Loader.prototype = {
     *
     * Retrieve the file via `Cache.getText(key)`
     * 
-    * The URL can be relative or absolute. If relative it will take the Loader.baseURL into consideration.
+    * The URL can be relative or absolute. If the URL is relative the Loader.baseURL value will be prepended to it.
     * 
-    * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "bomb"
-    * and no URL is given then the Loader will set the URL to be "bomb.txt". It will always add `.txt` as the extension.
+    * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "alien"
+    * and no URL is given then the Loader will set the URL to be "alien.txt". It will always add `.txt` as the extension.
     * If you do not desire this action then provide a URL.
     *
     * @method Phaser.Loader#text
     * @param {string} key - Unique asset key of the text file.
-    * @param {string} [url] - URL of the text file. If undefined or `null` the url will be set to `<key>.txt`, i.e. if `key` was "bomb" then the URL will be "bomb.txt".
+    * @param {string} [url] - URL of the text file. If undefined or `null` the url will be set to `<key>.txt`, i.e. if `key` was "alien" then the URL will be "alien.txt".
     * @param {boolean} [overwrite=false] - If an unloaded file with a matching key already exists in the queue, this entry will overwrite it.
     * @return {Phaser.Loader} This Loader instance.
     */
@@ -690,15 +690,15 @@ Phaser.Loader.prototype = {
     * Retrieve the file via `Cache.getJSON(key)`. JSON files are automatically parsed upon load.
     * If you need to control when the JSON is parsed then use `Loader.text` instead and parse the text file as needed.
     * 
-    * The URL can be relative or absolute. If relative it will take the Loader.baseURL into consideration.
+    * The URL can be relative or absolute. If the URL is relative the Loader.baseURL value will be prepended to it.
     * 
-    * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "bomb"
-    * and no URL is given then the Loader will set the URL to be "bomb.json". It will always add `.json` as the extension.
+    * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "alien"
+    * and no URL is given then the Loader will set the URL to be "alien.json". It will always add `.json` as the extension.
     * If you do not desire this action then provide a URL.
     *
     * @method Phaser.Loader#json
     * @param {string} key - Unique asset key of the json file.
-    * @param {string} [url] - URL of the JSON file. If undefined or `null` the url will be set to `<key>.json`, i.e. if `key` was "bomb" then the URL will be "bomb.json".
+    * @param {string} [url] - URL of the JSON file. If undefined or `null` the url will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
     * @param {boolean} [overwrite=false] - If an unloaded file with a matching key already exists in the queue, this entry will overwrite it.
     * @return {Phaser.Loader} This Loader instance.
     */
@@ -717,15 +717,15 @@ Phaser.Loader.prototype = {
     *
     * Retrieve the file via `Cache.getXML(key)`.
     * 
-    * The URL can be relative or absolute. If relative it will take the Loader.baseURL into consideration.
+    * The URL can be relative or absolute. If the URL is relative the Loader.baseURL value will be prepended to it.
     * 
-    * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "bomb"
-    * and no URL is given then the Loader will set the URL to be "bomb.xml". It will always add `.xml` as the extension.
+    * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "alien"
+    * and no URL is given then the Loader will set the URL to be "alien.xml". It will always add `.xml` as the extension.
     * If you do not desire this action then provide a URL.
     *
     * @method Phaser.Loader#xml
     * @param {string} key - Unique asset key of the xml file.
-    * @param {string} [url] - URL of the XML file. If undefined or `null` the url will be set to `<key>.xml`, i.e. if `key` was "bomb" then the URL will be "bomb.xml".
+    * @param {string} [url] - URL of the XML file. If undefined or `null` the url will be set to `<key>.xml`, i.e. if `key` was "alien" then the URL will be "alien.xml".
     * @param {boolean} [overwrite=false] - If an unloaded file with a matching key already exists in the queue, this entry will overwrite it.
     * @return {Phaser.Loader} This Loader instance.
     */
@@ -742,10 +742,10 @@ Phaser.Loader.prototype = {
     * 
     * The key must be a unique String.
     * 
-    * The URL can be relative or absolute. If relative it will take the Loader.baseURL into consideration.
+    * The URL can be relative or absolute. If the URL is relative the Loader.baseURL value will be prepended to it.
     * 
-    * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "bomb"
-    * and no URL is given then the Loader will set the URL to be "bomb.js". It will always add `.js` as the extension.
+    * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "alien"
+    * and no URL is given then the Loader will set the URL to be "alien.js". It will always add `.js` as the extension.
     * If you do not desire this action then provide a URL.
     *
     * Upon successful load the JavaScript is automatically turned into a script tag and executed, so be careful what you load!
@@ -755,7 +755,7 @@ Phaser.Loader.prototype = {
     *
     * @method Phaser.Loader#script
     * @param {string} key - Unique asset key of the script file.
-    * @param {string} [url] - URL of the JavaScript file. If undefined or `null` the url will be set to `<key>.js`, i.e. if `key` was "bomb" then the URL will be "bomb.js".
+    * @param {string} [url] - URL of the JavaScript file. If undefined or `null` the url will be set to `<key>.js`, i.e. if `key` was "alien" then the URL will be "alien.js".
     * @param {function} [callback=(none)] - Optional callback that will be called after the script tag has loaded, so you can perform additional processing.
     * @param {object} [callbackContext=(loader)] - The context under which the callback will be applied. If not specified it will use the Phaser Loader as the context.
     * @return {Phaser.Loader} This Loader instance.
@@ -779,10 +779,10 @@ Phaser.Loader.prototype = {
     *
     * Retrieve the file via `Cache.getBinary(key)`.
     * 
-    * The URL can be relative or absolute. If relative it will take the Loader.baseURL into consideration.
+    * The URL can be relative or absolute. If the URL is relative the Loader.baseURL value will be prepended to it.
     * 
-    * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "bomb"
-    * and no URL is given then the Loader will set the URL to be "bomb.bin". It will always add `.bin` as the extension.
+    * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "alien"
+    * and no URL is given then the Loader will set the URL to be "alien.bin". It will always add `.bin` as the extension.
     * If you do not desire this action then provide a URL.
     *
     * It will be loaded via xhr with a responseType of "arraybuffer". You can specify an optional callback to process the file after load.
@@ -792,7 +792,7 @@ Phaser.Loader.prototype = {
     *
     * @method Phaser.Loader#binary
     * @param {string} key - Unique asset key of the binary file.
-    * @param {string} [url] - URL of the binary file. If undefined or `null` the url will be set to `<key>.bin`, i.e. if `key` was "bomb" then the URL will be "bomb.bin".
+    * @param {string} [url] - URL of the binary file. If undefined or `null` the url will be set to `<key>.bin`, i.e. if `key` was "alien" then the URL will be "alien.bin".
     * @param {function} [callback=(none)] - Optional callback that will be passed the file after loading, so you can perform additional processing on it.
     * @param {object} [callbackContext] - The context under which the callback will be applied. If not specified it will use the callback itself as the context.
     * @return {Phaser.Loader} This Loader instance.
@@ -824,15 +824,15 @@ Phaser.Loader.prototype = {
     *
     * Retrieve the file via `Cache.getImage(key)`. Sprite sheets, being image based, live in the same Cache as all other Images.
     * 
-    * The URL can be relative or absolute. If relative it will take the Loader.baseURL into consideration.
+    * The URL can be relative or absolute. If the URL is relative the Loader.baseURL value will be prepended to it.
     * 
-    * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "bomb"
-    * and no URL is given then the Loader will set the URL to be "bomb.png". It will always add `.png` as the extension.
+    * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "alien"
+    * and no URL is given then the Loader will set the URL to be "alien.png". It will always add `.png` as the extension.
     * If you do not desire this action then provide a URL.
     *
     * @method Phaser.Loader#spritesheet
     * @param {string} key - Unique asset key of the sheet file.
-    * @param {string} url - URL of the sprite sheet file. If undefined or `null` the url will be set to `<key>.png`, i.e. if `key` was "bomb" then the URL will be "bomb.png".
+    * @param {string} url - URL of the sprite sheet file. If undefined or `null` the url will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
     * @param {number} frameWidth - Width in pixels of a single frame in the sprite sheet.
     * @param {number} frameHeight - Height in pixels of a single frame in the sprite sheet.
     * @param {number} [frameMax=-1] - How many frames in this sprite sheet. If not specified it will divide the whole image into frames.
@@ -859,7 +859,7 @@ Phaser.Loader.prototype = {
     *
     * Retrieve the file via `Cache.getSound(key)`.
     * 
-    * The URL can be relative or absolute. If relative it will take the Loader.baseURL into consideration.
+    * The URL can be relative or absolute. If the URL is relative the Loader.baseURL value will be prepended to it.
     *
     * @method Phaser.Loader#audio
     * @param {string} key - Unique asset key of the audio file.
@@ -868,7 +868,7 @@ Phaser.Loader.prototype = {
     *    For example: `"jump.mp3"`, `['jump.mp3', 'jump.ogg', 'jump.m4a']`, or `[{uri: "data:<opus_resource>", type: 'opus'}, 'fallback.mp3']`.
     *    BLOB and DATA URIs can be used but only support automatic detection when used in the pair form; otherwise the format must be manually checked before adding the resource.
     * @param {boolean} [autoDecode=true] - When using Web Audio the audio files can either be decoded at load time or run-time.
-    *    Audio files can't be played until they are decoded and, if specified, this enables immediate decoding. Decoding is a non-blocking async process.
+    *    Audio files can't be played until they are decoded and, if specified, this enables immediate decoding. Decoding is a non-blocking async process, however it consumes huge amounts of CPU time on mobiles especially.
     * @return {Phaser.Loader} This Loader instance.
     */
     audio: function (key, urls, autoDecode) {
@@ -902,7 +902,7 @@ Phaser.Loader.prototype = {
     * 
     * Retrieve the file via `Cache.getSoundData(key)`.
     * 
-    * The URL can be relative or absolute. If relative it will take the Loader.baseURL into consideration.
+    * The URL can be relative or absolute. If the URL is relative the Loader.baseURL value will be prepended to it.
     *
     * @method Phaser.Loader#audiosprite
     * @param {string} key - Unique asset key of the audio file.
@@ -910,7 +910,7 @@ Phaser.Loader.prototype = {
     * @param {string} [jsonURL=null] - The URL of the audiosprite configuration JSON object. If you wish to pass the data directly set this parameter to null.
     * @param {string|object} [jsonData=null] - A JSON object or string containing the audiosprite configuration data. This is ignored if jsonURL is not null.
     * @param {boolean} [autoDecode=true] - When using Web Audio the audio files can either be decoded at load time or run-time.
-    *    Audio files can't be played until they are decoded and, if specified, this enables immediate decoding. Decoding is a non-blocking async process.
+    *    Audio files can't be played until they are decoded and, if specified, this enables immediate decoding. Decoding is a non-blocking async process, however it consumes huge amounts of CPU time on mobiles especially.
     * @return {Phaser.Loader} This Loader instance.
     */
     audiosprite: function(key, urls, jsonURL, jsonData, autoDecode) {
@@ -948,6 +948,43 @@ Phaser.Loader.prototype = {
 
     },
 
+
+    /**
+    * Adds a video file to the current load queue.
+    * 
+    * The file is **not** loaded immediately after calling this method. The file is added to the queue ready to be loaded when the loader starts.
+    * 
+    * The key must be a unique String. It is used to add the file to the Phaser.Cache upon successful load.
+    *
+    * Retrieve the file via `Cache.getVideo(key)`.
+    * 
+    * The URL can be relative or absolute. If the URL is relative the Loader.baseURL value will be prepended to it.
+    *
+    * @method Phaser.Loader#video
+    * @param {string} key - Unique asset key of the video file.
+    * @param {string|string[]|object[]} urls - Either a single string or an array of URIs or pairs of `{uri: .., type: ..}`.
+    *    If an array is specified then the first URI (or URI + mime pair) that is device-compatible will be selected.
+    *    For example: `"boom.mp4"`, `['boom.mp4', 'boom.ogg', 'boom.webm']`, or `[{uri: "data:<opus_resource>", type: 'opus'}, 'fallback.mp4']`.
+    *    BLOB and DATA URIs can be used but only support automatic detection when used in the pair form; otherwise the format must be manually checked before adding the resource.
+    * @param {boolean} [asBlob=false] - Video files can either be loaded via the creation of a video element which has its src property set.
+    *    Or they can be loaded via xhr, stored as binary data in memory and then converted to a Blob. This isn't supported in IE9 or Android 2.
+    * @return {Phaser.Loader} This Loader instance.
+    */
+    video: function (key, urls, asBlob) {
+
+        //  Add stream parameter? Set canplay instead of canplaythrough
+
+        if (typeof asBlob === 'undefined') { asBlob = false; }
+
+        if (typeof urls === 'string')
+        {
+            urls = [urls];
+        }
+
+        return this.addToFileList('video', key, urls, { buffer: null, asBlob: asBlob });
+
+    },
+
     /**
     * Adds a Tile Map data file to the current load queue.
     *
@@ -962,7 +999,7 @@ Phaser.Loader.prototype = {
     * Retrieve the file via `Cache.getTilemapData(key)`. JSON files are automatically parsed upon load.
     * If you need to control when the JSON is parsed then use `Loader.text` instead and parse the text file as needed.
     * 
-    * The URL can be relative or absolute. If relative it will take the Loader.baseURL into consideration.
+    * The URL can be relative or absolute. If the URL is relative the Loader.baseURL value will be prepended to it.
     * 
     * If the URL isn't specified and no data is given then the Loader will take the key and create a filename from that.
     * For example if the key is "level1" and no URL or data is given then the Loader will set the URL to be "level1.json".
@@ -1041,17 +1078,17 @@ Phaser.Loader.prototype = {
     * Retrieve the file via `Cache.getJSON(key)`. JSON files are automatically parsed upon load.
     * If you need to control when the JSON is parsed then use `Loader.text` instead and parse the text file as needed.
     * 
-    * The URL can be relative or absolute. If relative it will take the Loader.baseURL into consideration.
+    * The URL can be relative or absolute. If the URL is relative the Loader.baseURL value will be prepended to it.
     * 
     * If the URL isn't specified and no data is given then the Loader will take the key and create a filename from that.
-    * For example if the key is "bomb" and no URL or data is given then the Loader will set the URL to be "bomb.json".
+    * For example if the key is "alien" and no URL or data is given then the Loader will set the URL to be "alien.json".
     * It will always use `.json` as the extension.
     * 
     * If you do not desire this action then provide a URL or data object.
     *
     * @method Phaser.Loader#physics
     * @param {string} key - Unique asset key of the physics json data.
-    * @param {string} [url] - URL of the physics data file. If undefined or `null` and no data is given the url will be set to `<key>.json`, i.e. if `key` was "bomb" then the URL will be "bomb.json".
+    * @param {string} [url] - URL of the physics data file. If undefined or `null` and no data is given the url will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
     * @param {object|string} [data] - An optional JSON data object. If given then the url is ignored and this JSON object is used for physics data instead.
     * @param {string} [format=Phaser.Physics.LIME_CORONA_JSON] - The format of the physics data.
     * @return {Phaser.Loader} This Loader instance.
@@ -1106,7 +1143,7 @@ Phaser.Loader.prototype = {
     * Retrieve the file via `Cache.getBitmapFont(key)`. XML files are automatically parsed upon load.
     * If you need to control when the XML is parsed then use `Loader.text` instead and parse the XML file as needed.
     * 
-    * The URLs can be relative or absolute. If relative it will take the Loader.baseURL into consideration.
+    * The URLs can be relative or absolute. If the URL is relative the Loader.baseURL value will be prepended to it.
     * 
     * If the textureURL isn't specified then the Loader will take the key and create a filename from that.
     * For example if the key is "megaFont" and textureURL is null then the Loader will set the URL to be "megaFont.png".
@@ -1175,6 +1212,9 @@ Phaser.Loader.prototype = {
     *
     * [Texture Packer](https://www.codeandweb.com/texturepacker/phaser)
     * [Shoebox](http://renderhjs.net/shoebox/)
+    * 
+    * If using Texture Packer we recommend you enable "Trim sprite names".
+    * If your atlas software has an option to "rotate" the resulting frames, you must disable it.
     *
     * You can choose to either load the data externally, by providing a URL to a json file.
     * Or you can pass in a JSON object or String via the `atlasData` parameter.
@@ -1187,7 +1227,7 @@ Phaser.Loader.prototype = {
     * Retrieve the file via `Cache.getImage(key)`. JSON files are automatically parsed upon load.
     * If you need to control when the JSON is parsed then use `Loader.text` instead and parse the JSON file as needed.
     * 
-    * The URLs can be relative or absolute. If relative it will take the Loader.baseURL into consideration.
+    * The URLs can be relative or absolute. If the URL is relative the Loader.baseURL value will be prepended to it.
     * 
     * If the textureURL isn't specified then the Loader will take the key and create a filename from that.
     * For example if the key is "player" and textureURL is null then the Loader will set the URL to be "player.png".
@@ -1198,8 +1238,8 @@ Phaser.Loader.prototype = {
     *
     * @method Phaser.Loader#atlasJSONArray
     * @param {string} key - Unique asset key of the texture atlas file.
-    * @param {string} [textureURL] - URL of the texture atlas image file. If undefined or `null` the url will be set to `<key>.png`, i.e. if `key` was "bomb" then the URL will be "bomb.png".
-    * @param {string} [atlasURL] - URL of the texture atlas data file. If undefined or `null` and no atlasData is given, the url will be set to `<key>.json`, i.e. if `key` was "bomb" then the URL will be "bomb.json".
+    * @param {string} [textureURL] - URL of the texture atlas image file. If undefined or `null` the url will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
+    * @param {string} [atlasURL] - URL of the texture atlas data file. If undefined or `null` and no atlasData is given, the url will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
     * @param {object} [atlasData] - A JSON data object. You don't need this if the data is being loaded from a URL.
     * @return {Phaser.Loader} This Loader instance.
     */
@@ -1218,6 +1258,9 @@ Phaser.Loader.prototype = {
     *
     * [Texture Packer](https://www.codeandweb.com/texturepacker/phaser)
     * [Shoebox](http://renderhjs.net/shoebox/)
+    * 
+    * If using Texture Packer we recommend you enable "Trim sprite names".
+    * If your atlas software has an option to "rotate" the resulting frames, you must disable it.
     *
     * You can choose to either load the data externally, by providing a URL to a json file.
     * Or you can pass in a JSON object or String via the `atlasData` parameter.
@@ -1230,7 +1273,7 @@ Phaser.Loader.prototype = {
     * Retrieve the file via `Cache.getImage(key)`. JSON files are automatically parsed upon load.
     * If you need to control when the JSON is parsed then use `Loader.text` instead and parse the JSON file as needed.
     * 
-    * The URLs can be relative or absolute. If relative it will take the Loader.baseURL into consideration.
+    * The URLs can be relative or absolute. If the URL is relative the Loader.baseURL value will be prepended to it.
     * 
     * If the textureURL isn't specified then the Loader will take the key and create a filename from that.
     * For example if the key is "player" and textureURL is null then the Loader will set the URL to be "player.png".
@@ -1241,8 +1284,8 @@ Phaser.Loader.prototype = {
     *
     * @method Phaser.Loader#atlasJSONHash
     * @param {string} key - Unique asset key of the texture atlas file.
-    * @param {string} [textureURL] - URL of the texture atlas image file. If undefined or `null` the url will be set to `<key>.png`, i.e. if `key` was "bomb" then the URL will be "bomb.png".
-    * @param {string} [atlasURL] - URL of the texture atlas data file. If undefined or `null` and no atlasData is given, the url will be set to `<key>.json`, i.e. if `key` was "bomb" then the URL will be "bomb.json".
+    * @param {string} [textureURL] - URL of the texture atlas image file. If undefined or `null` the url will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
+    * @param {string} [atlasURL] - URL of the texture atlas data file. If undefined or `null` and no atlasData is given, the url will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
     * @param {object} [atlasData] - A JSON data object. You don't need this if the data is being loaded from a URL.
     * @return {Phaser.Loader} This Loader instance.
     */
@@ -1262,6 +1305,9 @@ Phaser.Loader.prototype = {
     * [Texture Packer](https://www.codeandweb.com/texturepacker/phaser)
     * [Shoebox](http://renderhjs.net/shoebox/)
     *
+    * If using Texture Packer we recommend you enable "Trim sprite names".
+    * If your atlas software has an option to "rotate" the resulting frames, you must disable it.
+    * 
     * You can choose to either load the data externally, by providing a URL to an xml file.
     * Or you can pass in an XML object or String via the `atlasData` parameter.
     * If you pass a String the data is automatically run through `Loader.parseXML` and then immediately added to the Phaser.Cache.
@@ -1273,7 +1319,7 @@ Phaser.Loader.prototype = {
     * Retrieve the file via `Cache.getImage(key)`. XML files are automatically parsed upon load.
     * If you need to control when the XML is parsed then use `Loader.text` instead and parse the XML file as needed.
     * 
-    * The URLs can be relative or absolute. If relative it will take the Loader.baseURL into consideration.
+    * The URLs can be relative or absolute. If the URL is relative the Loader.baseURL value will be prepended to it.
     * 
     * If the textureURL isn't specified then the Loader will take the key and create a filename from that.
     * For example if the key is "player" and textureURL is null then the Loader will set the URL to be "player.png".
@@ -1284,8 +1330,8 @@ Phaser.Loader.prototype = {
     *
     * @method Phaser.Loader#atlasXML
     * @param {string} key - Unique asset key of the texture atlas file.
-    * @param {string} [textureURL] - URL of the texture atlas image file. If undefined or `null` the url will be set to `<key>.png`, i.e. if `key` was "bomb" then the URL will be "bomb.png".
-    * @param {string} [atlasURL] - URL of the texture atlas data file. If undefined or `null` and no atlasData is given, the url will be set to `<key>.json`, i.e. if `key` was "bomb" then the URL will be "bomb.xml".
+    * @param {string} [textureURL] - URL of the texture atlas image file. If undefined or `null` the url will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
+    * @param {string} [atlasURL] - URL of the texture atlas data file. If undefined or `null` and no atlasData is given, the url will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.xml".
     * @param {object} [atlasData] - An XML data object. You don't need this if the data is being loaded from a URL.
     * @return {Phaser.Loader} This Loader instance.
     */
@@ -1311,6 +1357,9 @@ Phaser.Loader.prototype = {
     * [Texture Packer](https://www.codeandweb.com/texturepacker/phaser)
     * [Shoebox](http://renderhjs.net/shoebox/)
     *
+    * If using Texture Packer we recommend you enable "Trim sprite names".
+    * If your atlas software has an option to "rotate" the resulting frames, you must disable it.
+    *
     * You can choose to either load the data externally, by providing a URL to a json file.
     * Or you can pass in a JSON object or String via the `atlasData` parameter.
     * If you pass a String the data is automatically run through `JSON.parse` and then immediately added to the Phaser.Cache.
@@ -1322,7 +1371,7 @@ Phaser.Loader.prototype = {
     * Retrieve the file via `Cache.getImage(key)`. JSON files are automatically parsed upon load.
     * If you need to control when the JSON is parsed then use `Loader.text` instead and parse the JSON file as needed.
     * 
-    * The URLs can be relative or absolute. If relative it will take the Loader.baseURL into consideration.
+    * The URLs can be relative or absolute. If the URL is relative the Loader.baseURL value will be prepended to it.
     * 
     * If the textureURL isn't specified then the Loader will take the key and create a filename from that.
     * For example if the key is "player" and textureURL is null then the Loader will set the URL to be "player.png".
@@ -1333,8 +1382,8 @@ Phaser.Loader.prototype = {
     *
     * @method Phaser.Loader#atlas
     * @param {string} key - Unique asset key of the texture atlas file.
-    * @param {string} [textureURL] - URL of the texture atlas image file. If undefined or `null` the url will be set to `<key>.png`, i.e. if `key` was "bomb" then the URL will be "bomb.png".
-    * @param {string} [atlasURL] - URL of the texture atlas data file. If undefined or `null` and no atlasData is given, the url will be set to `<key>.json`, i.e. if `key` was "bomb" then the URL will be "bomb.json".
+    * @param {string} [textureURL] - URL of the texture atlas image file. If undefined or `null` the url will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
+    * @param {string} [atlasURL] - URL of the texture atlas data file. If undefined or `null` and no atlasData is given, the url will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
     * @param {object} [atlasData] - A JSON or XML data object. You don't need this if the data is being loaded from a URL.
     * @param {number} [format] - The format of the data. Can be Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY (the default), Phaser.Loader.TEXTURE_ATLAS_JSON_HASH or Phaser.Loader.TEXTURE_ATLAS_XML_STARLING.
     * @return {Phaser.Loader} This Loader instance.
@@ -1771,6 +1820,10 @@ Phaser.Loader.prototype = {
                     this.spritesheet(file.key, file.url, file.frameWidth, file.frameHeight, file.frameMax, file.margin, file.spacing);
                     break;
 
+                case "video":
+                    this.video(file.key, file.urls);
+                    break;
+
                 case "audio":
                     this.audio(file.key, file.urls, file.autoDecode);
                     break;
@@ -1879,6 +1932,26 @@ Phaser.Loader.prototype = {
                 }
                 break;
 
+            case 'video':
+                file.url = this.getVideoURL(file.url);
+
+                if (file.url)
+                {
+                    if (file.asBlob)
+                    {
+                        this.xhrLoad(file, this.transformUrl(file.url, file), 'arraybuffer', this.fileComplete);
+                    }
+                    else
+                    {
+                        this.loadVideoTag(file);
+                    }
+                }
+                else
+                {
+                    this.fileError(file, null, 'No supported video URL specified or device does not have video playback support');
+                }
+                break;
+
             case 'json':
 
                 this.xhrLoad(file, this.transformUrl(file.url, file), 'text', this.jsonLoadComplete);
@@ -1960,6 +2033,37 @@ Phaser.Loader.prototype = {
             file.data.onerror = null;
             this.fileComplete(file);
         }
+
+    },
+
+    /**
+    * Continue async loading through a Video tag.
+    * @private
+    */
+    loadVideoTag: function (file) {
+
+        var _this = this;
+
+        file.data = document.createElement("video");
+        file.data.name = file.key;
+        
+        var playThroughEvent = function () {
+            file.data.removeEventListener('canplaythrough', playThroughEvent, false);
+            file.data.onerror = null;
+            // Why does this cycle through games?
+            Phaser.GAMES[_this.game.id].load.fileComplete(file);
+        };
+        file.data.onerror = function () {
+            file.data.removeEventListener('canplaythrough', playThroughEvent, false);
+            file.data.onerror = null;
+            _this.fileError(file);
+        };
+
+        file.data.controls = false;
+        file.data.autoplay = false;
+        //  canplaythrough will wait for the whole video to download before it plays it
+        file.data.addEventListener('canplaythrough', playThroughEvent, false);
+        file.data.src = this.transformUrl(file.url, file);
 
     },
 
@@ -2171,6 +2275,56 @@ Phaser.Loader.prototype = {
     *
     * It is assumed that the device can play "blob:" or "data:" URIs - There is no mime-type checking on data URIs.
     *
+    * @method Phaser.Loader#getVideoURL
+    * @private
+    * @param {object[]|string[]} urls - See {@link #video} for format.
+    * @return {string} The URL to try and fetch; or null.
+    */
+    getVideoURL: function (urls) {
+
+        for (var i = 0; i < urls.length; i++)
+        {
+            var url = urls[i];
+            var videoType;
+
+            if (url.uri) // {uri: .., type: ..} pair
+            {
+                url = url.uri;
+                videoType = url.type;
+            }
+            else
+            {
+                // Assume direct-data URI can be played if not in a paired form; select immediately
+                if (url.indexOf("blob:") === 0 || url.indexOf("data:") === 0)
+                {
+                    return url;
+                }
+
+                if (url.indexOf("?") >= 0) // Remove query from URL
+                {
+                    url = url.substr(0, url.indexOf("?"));
+                }
+
+                var extension = url.substr((Math.max(0, url.lastIndexOf(".")) || Infinity) + 1);
+
+                videoType = extension.toLowerCase();
+            }
+
+            if (this.game.device.canPlayVideo(videoType))
+            {
+                return urls[i];
+            }
+        }
+
+        return null;
+
+    },
+
+    /**
+    * Give a bunch of URLs, return the first URL that has an extension this device thinks it can play.
+    *
+    * It is assumed that the device can play "blob:" or "data:" URIs - There is no mime-type checking on data URIs.
+    *
     * @method Phaser.Loader#getAudioURL
     * @private
     * @param {object[]|string[]} urls - See {@link #audio} for format.
@@ -2318,6 +2472,23 @@ Phaser.Loader.prototype = {
                     loadNext = false;
                     this.xhrLoad(file, this.transformUrl(file.xmlURL, file), 'text', this.xmlLoadComplete);
                 }
+                break;
+
+            case 'video':
+
+                if (file.asBlob)
+                {
+                    try
+                    {
+                        file.data = new Blob([new Uint8Array(xhr.response)]);
+                    }
+                    catch (e)
+                    {
+                        throw new Error("Phaser.Loader. Unable to parse video file as Blob: " + file.key);
+                    }
+                }
+                
+                this.game.cache.addVideo(file.key, file.url, file.data, file.asBlob);
                 break;
 
             case 'audio':
