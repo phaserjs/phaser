@@ -274,6 +274,20 @@ Version 2.4 - "Katar" - in dev
 * Rectangle.ceil runs Math.ceil() on both the x and y values of the Rectangle.
 * Rectangle.ceilAll runs Math.ceil() on the x, y, width and height values of the Rectangle.
 * The Net and Debug classes have been stubbed out, so they can be properly excluded during a custom build (thanks @soldoutactivist #1772)
+* Device.oggVideo indicates if the browser can play back ogg video files.
+* Device.h264Video indicates if the browser can play back H264 (mp4) video files.
+* Device.mp4Video indicates if the browser can play back H264 (mp4) video files.
+* Device.webmVideo indicates if the browser can play back webm video files with the vp8 codec.
+* Device.vp9Video indicates if the browser can play back webm video files with the vp9 codec.
+* Device.hlsVideo indicates if the browser can play back mpeg video files.
+* PIXI.DisplayObject.worldPosition contains the position of the DisplayObject (and therefore any object that inherits from it, such as Phaser.Sprite) taking into account all transforms in the display list. It is updated at the end of `DisplayObject.updateTransform`. DisplayObject.position reflects only the position applied to the object directly, whereas worldPosition includes the positions that may have been applied to its ancestors.
+* PIXI.DisplayObject.worldScale contains the scale of the DisplayObject (and therefore any object that inherits from it, such as Phaser.Sprite) taking into account all transforms in the display list. It is updated at the end of `DisplayObject.updateTransform`. DisplayObject.scale reflects only the scale applied to the object directly, whereas worldScale includes any scales that may have been applied to its ancestors.
+* PIXI.DisplayObject.worldRotation contains the rotation of the DisplayObject (and therefore any object that inherits from it, such as Phaser.Sprite) taking into account all transforms in the display list. It is updated at the end of `DisplayObject.updateTransform`. DisplayObject.rotation reflects only the rotation applied to the object directly, whereas worldRotation includes any rotations that may have been applied to its ancestors.
+* Loader.video allows you to load a video file into Phaser. It works in the same way as Loader.audio, allowing you to pass an array of video files - and it will load the first one the device is capable of playing back. You can optionally load the video via xhr where the video data is converted to a Blob upon successful load.
+* Cache.addVideo allows you to add a loaded video into the Phaser Cache. This is called automatically by the Phaser Loader, but may be invoked directly as well.
+* Cache.checkVideoKey allows you to check if a video is stored in the cache based on the given key.
+* Cache.getVideo allows you to extract a video from the Cache based on its key. The video element itself (or the Blob is loaded with asBlob true) will be found in the `data` property of the returned object.
+* Cache.removeVideo will remove a video from the Cache based on the given key.
 
 ### Updates
 
