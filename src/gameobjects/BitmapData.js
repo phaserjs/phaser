@@ -12,7 +12,7 @@
 * @class Phaser.BitmapData
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
-* @param {string} key - Internal Phaser reference key for the render texture.
+* @param {string} key - Internal Phaser reference key for the BitmapData.
 * @param {number} [width=256] - The width of the BitmapData in pixels.
 * @param {number} [height=256] - The height of the BitmapData in pixels.
 */
@@ -120,7 +120,7 @@ Phaser.BitmapData = function (game, key, width, height) {
     * @property {Phaser.Frame} textureFrame - The Frame this BitmapData uses for rendering.
     * @default
     */
-    this.textureFrame = new Phaser.Frame(0, 0, 0, width, height, 'bitmapData', game.rnd.uuid());
+    this.textureFrame = new Phaser.Frame(0, 0, 0, width, height, 'bitmapData');
 
     this.texture.frame = this.textureFrame;
 
