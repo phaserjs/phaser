@@ -49,6 +49,12 @@ Phaser.Cache = function (game) {
     this._sounds = {};
 
     /**
+    * @property {object} _videos - Video key-value container.
+    * @private
+    */
+    this._videos = {};
+
+    /**
     * @property {object} _text - Text key-value container.
     * @private
     */
@@ -131,6 +137,7 @@ Phaser.Cache = function (game) {
     this._cacheMap[Phaser.Cache.CANVAS] = this._canvases;
     this._cacheMap[Phaser.Cache.IMAGE] = this._images;
     this._cacheMap[Phaser.Cache.TEXTURE] = this._textures;
+    this._cacheMap[Phaser.Cache.VIDEO] = this._videos;
     this._cacheMap[Phaser.Cache.SOUND] = this._sounds;
     this._cacheMap[Phaser.Cache.TEXT] = this._text;
     this._cacheMap[Phaser.Cache.PHYSICS] = this._physics;
@@ -214,6 +221,12 @@ Phaser.Cache.JSON = 11;
 * @type {number}
 */
 Phaser.Cache.XML = 12;
+
+/**
+* @constant
+* @type {number}
+*/
+Phaser.Cache.VIDEO = 13;
 
 Phaser.Cache.prototype = {
 
@@ -624,127 +637,19 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * Get a canvas object from the cache by its key.
+    * Adds a Video file into the Cache. The file must have already been loaded, typically via Phaser.Loader.
     *
-    * @method Phaser.Cache#getCanvas
-    * @param {string} key - Asset key of the canvas to retrieve from the Cache.
-    * @return {object} The canvas object.
+    * @method Phaser.Cache#addVideo
+    * @param {string} key - Asset key for the video.
+    * @param {string} url - URL of this video file.
+    * @param {object} data - Extra video data.
+    * @param {boolean} isBlob - True if the file was preloaded via xhr and the data parameter is a Blob. false if a Video tag was created instead.
     */
-    getCanvas: function (key) {
+    addVideo: function (key, url, data, isBlob) {
 
-        if (this._canvases[key])
-        {
-            return this._canvases[key].canvas;
-        }
-        else
-        {
-            console.warn('Phaser.Cache.getCanvas: Invalid key: "' + key + '"');
-            return null;
-        }
+        this._videos[key] = { url: url, data: data, isBlob: isBlob, locked: true };
 
-    },
-
-    /**
-    * Get a BitmapData object from the cache by its key.
-    *
-    * @method Phaser.Cache#getBitmapData
-    * @param {string} key - Asset key of the BitmapData object to retrieve from the Cache.
-    * @return {Phaser.BitmapData} The requested BitmapData object if found, or null if not.
-    */
-    getBitmapData: function (key) {
-
-        if (this._bitmapDatas[key])
-        {
-            return this._bitmapDatas[key].data;
-        }
-        else
-        {
-            console.warn('Phaser.Cache.getBitmapData: Invalid key: "' + key + '"');
-            return null;
-        }
-
-    },
-
-    /**
-    * Get a BitmapFont object from the cache by its key.
-    *
-    * @method Phaser.Cache#getBitmapFont
-    * @param {string} key - Asset key of the BitmapFont object to retrieve from the Cache.
-    * @return {Phaser.BitmapFont} The requested BitmapFont object if found, or null if not.
-    */
-    getBitmapFont: function (key) {
-
-        if (this._bitmapFont[key])
-        {
-            return this._bitmapFont[key];
-        }
-        else
-        {
-            console.warn('Phaser.Cache.getBitmapFont: Invalid key: "' + key + '"');
-            return null;
-        }
-
-    },
-
-    /**
-    * Get a physics data object from the cache by its key. You can get either the entire data set, a single object or a single fixture of an object from it.
-    *
-    * @method Phaser.Cache#getPhysicsData
-    * @param {string} key - Asset key of the physics data object to retrieve from the Cache.
-    * @param {string} [object=null] - If specified it will return just the physics object that is part of the given key, if null it will return them all.
-    * @param {string} fixtureKey - Fixture key of fixture inside an object. This key can be set per fixture with the Phaser Exporter.
-    * @return {object} The requested physics object data if found.
-    */
-    getPhysicsData: function (key, object, fixtureKey) {
-
-        if (typeof object === 'undefined' || object === null)
-        {
-            //  Get 'em all
-            if (this._physics[key])
-            {
-                return this._physics[key].data;
-            }
-            else
-            {
-                console.warn('Phaser.Cache.getPhysicsData: Invalid key: "' + key + '"');
-            }
-        }
-        else
-        {
-            if (this._physics[key] && this._physics[key].data[object])
-            {
-                var fixtures = this._physics[key].data[object];
-
-                //try to find a fixture by it's fixture key if given
-                if (fixtures && fixtureKey)
-                {
-                    for (var fixture in fixtures)
-                    {
-                        //  This contains the fixture data of a polygon or a circle
-                        fixture = fixtures[fixture];
-
-                        //  Test the key
-                        if (fixture.fixtureKey === fixtureKey)
-                        {
-                            return fixture;
-                        }
-                    }
-
-                    //  We did not find the requested fixture
-                    console.warn('Phaser.Cache.getPhysicsData: Could not find given fixtureKey: "' + fixtureKey + ' in ' + key + '"');
-                }
-                else
-                {
-                    return fixtures;
-                }
-            }
-            else
-            {
-                console.warn('Phaser.Cache.getPhysicsData: Invalid key/object: "' + key + ' / ' + object + '"');
-            }
-        }
-
-        return null;
+        this._resolveURL(url, this._videos[key]);
 
     },
 
@@ -816,6 +721,19 @@ Phaser.Cache.prototype = {
     checkSoundKey: function (key) {
 
         return this.checkKey(Phaser.Cache.SOUND, key);
+
+    },
+
+    /**
+    * Checks if the given key exists in the Video Cache.
+    *
+    * @method Phaser.Cache#checkVideoKey
+    * @param {string} key - Asset key of the video file to check is in the Cache.
+    * @return {boolean} True if the key exists, otherwise false.
+    */
+    checkVideoKey: function (key) {
+
+        return this.checkKey(Phaser.Cache.VIDEO, key);
 
     },
 
@@ -941,6 +859,131 @@ Phaser.Cache.prototype = {
         }
 
         return false;
+
+    },
+
+    /**
+    * Get a canvas object from the cache by its key.
+    *
+    * @method Phaser.Cache#getCanvas
+    * @param {string} key - Asset key of the canvas to retrieve from the Cache.
+    * @return {object} The canvas object.
+    */
+    getCanvas: function (key) {
+
+        if (this._canvases[key])
+        {
+            return this._canvases[key].canvas;
+        }
+        else
+        {
+            console.warn('Phaser.Cache.getCanvas: Invalid key: "' + key + '"');
+            return null;
+        }
+
+    },
+
+    /**
+    * Get a BitmapData object from the cache by its key.
+    *
+    * @method Phaser.Cache#getBitmapData
+    * @param {string} key - Asset key of the BitmapData object to retrieve from the Cache.
+    * @return {Phaser.BitmapData} The requested BitmapData object if found, or null if not.
+    */
+    getBitmapData: function (key) {
+
+        if (this._bitmapDatas[key])
+        {
+            return this._bitmapDatas[key].data;
+        }
+        else
+        {
+            console.warn('Phaser.Cache.getBitmapData: Invalid key: "' + key + '"');
+            return null;
+        }
+
+    },
+
+    /**
+    * Get a BitmapFont object from the cache by its key.
+    *
+    * @method Phaser.Cache#getBitmapFont
+    * @param {string} key - Asset key of the BitmapFont object to retrieve from the Cache.
+    * @return {Phaser.BitmapFont} The requested BitmapFont object if found, or null if not.
+    */
+    getBitmapFont: function (key) {
+
+        if (this._bitmapFont[key])
+        {
+            return this._bitmapFont[key];
+        }
+        else
+        {
+            console.warn('Phaser.Cache.getBitmapFont: Invalid key: "' + key + '"');
+            return null;
+        }
+
+    },
+
+    /**
+    * Get a physics data object from the cache by its key. You can get either the entire data set, a single object or a single fixture of an object from it.
+    *
+    * @method Phaser.Cache#getPhysicsData
+    * @param {string} key - Asset key of the physics data object to retrieve from the Cache.
+    * @param {string} [object=null] - If specified it will return just the physics object that is part of the given key, if null it will return them all.
+    * @param {string} fixtureKey - Fixture key of fixture inside an object. This key can be set per fixture with the Phaser Exporter.
+    * @return {object} The requested physics object data if found.
+    */
+    getPhysicsData: function (key, object, fixtureKey) {
+
+        if (typeof object === 'undefined' || object === null)
+        {
+            //  Get 'em all
+            if (this._physics[key])
+            {
+                return this._physics[key].data;
+            }
+            else
+            {
+                console.warn('Phaser.Cache.getPhysicsData: Invalid key: "' + key + '"');
+            }
+        }
+        else
+        {
+            if (this._physics[key] && this._physics[key].data[object])
+            {
+                var fixtures = this._physics[key].data[object];
+
+                //try to find a fixture by it's fixture key if given
+                if (fixtures && fixtureKey)
+                {
+                    for (var fixture in fixtures)
+                    {
+                        //  This contains the fixture data of a polygon or a circle
+                        fixture = fixtures[fixture];
+
+                        //  Test the key
+                        if (fixture.fixtureKey === fixtureKey)
+                        {
+                            return fixture;
+                        }
+                    }
+
+                    //  We did not find the requested fixture
+                    console.warn('Phaser.Cache.getPhysicsData: Could not find given fixtureKey: "' + fixtureKey + ' in ' + key + '"');
+                }
+                else
+                {
+                    return fixtures;
+                }
+            }
+            else
+            {
+                console.warn('Phaser.Cache.getPhysicsData: Invalid key/object: "' + key + ' / ' + object + '"');
+            }
+        }
+
+        return null;
 
     },
 
@@ -1225,6 +1268,27 @@ Phaser.Cache.prototype = {
     },
 
     /**
+    * Get video by key.
+    *
+    * @method Phaser.Cache#getVideo
+    * @param {string} key - Asset key of the video to retrieve from the Cache.
+    * @return {Phaser.Sound} The video object.
+    */
+    getVideo: function (key) {
+
+        if (this._videos[key])
+        {
+            return this._videos[key];
+        }
+        else
+        {
+            console.warn('Phaser.Cache.getVideo: Invalid key: "' + key + '"');
+            return null;
+        }
+
+    },
+
+    /**
     * Get the number of frames in this image.
     *
     * @method Phaser.Cache#getFrameCount
@@ -1397,6 +1461,10 @@ Phaser.Cache.prototype = {
                 array = this._sounds;
                 break;
 
+            case Phaser.Cache.VIDEO:
+                array = this._videos;
+                break;
+
             case Phaser.Cache.TEXT:
                 array = this._text;
                 break;
@@ -1487,6 +1555,16 @@ Phaser.Cache.prototype = {
     */
     removeSound: function (key) {
         delete this._sounds[key];
+    },
+
+    /**
+    * Removes a video from the cache.
+    *
+    * @method Phaser.Cache#removeVideo
+    * @param {string} key - Key of the asset you want to remove.
+    */
+    removeVideo: function (key) {
+        delete this._videos[key];
     },
 
     /**
@@ -1621,6 +1699,7 @@ Phaser.Cache.prototype = {
         var containers = [
             this._canvases,
             this._sounds,
+            this._videos,
             this._text,
             this._json,
             this._xml,
