@@ -968,6 +968,7 @@ Phaser.Loader.prototype = {
     *    BLOB and DATA URIs can be used but only support automatic detection when used in the pair form; otherwise the format must be manually checked before adding the resource.
     * @param {boolean} [asBlob=false] - Video files can either be loaded via the creation of a video element which has its src property set.
     *    Or they can be loaded via xhr, stored as binary data in memory and then converted to a Blob. This isn't supported in IE9 or Android 2.
+    *    If you need to have the same video playing at different times across multiple Sprites then you need to load it as a Blob.
     * @return {Phaser.Loader} This Loader instance.
     */
     video: function (key, urls, asBlob) {
