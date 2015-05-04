@@ -201,4 +201,34 @@ Phaser.Video.prototype = {
 
 };
 
+/**
+* @memberof Phaser.Video
+* @property {number} currentTime - The current time of the video in seconds.
+* @readOnly
+*/
+Object.defineProperty(Phaser.Video.prototype, "currentTime", {
+
+    get: function () {
+
+        return this.video.currentTime;
+
+    }
+
+});
+
+/**
+* @memberof Phaser.Video
+* @property {number} duration - The duration of the video in seconds.
+* @readOnly
+*/
+Object.defineProperty(Phaser.Video.prototype, "duration", {
+
+    get: function () {
+
+        return this.video.duration;
+
+    }
+
+});
+
 Phaser.Video.prototype.constructor = Phaser.Video;
