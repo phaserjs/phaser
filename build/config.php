@@ -22,6 +22,7 @@
             'ninja' => false,
             'box2d' => false,
             'creature' => false,
+            'video' => true,
         );
     }
 
@@ -238,6 +239,15 @@ EOL;
     {
         echo <<<EOL
     <script src="$path/src/gameobjects/RetroFont.js"></script>
+
+
+EOL;
+    }
+
+    if ($modules['video'])
+    {
+        echo <<<EOL
+    <script src="$path/src/gameobjects/Video.js"></script>
 
 
 EOL;

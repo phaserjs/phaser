@@ -416,6 +416,23 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
+    * Create a Video object.
+    *
+    * The video file must have already been loaded into the Phaser.Cache.
+    * The key given is the key you used when the video was preloaded.
+    * This will return a Phaser.Video object which you can pass to a Sprite to be used as a texture.
+    *
+    * @method Phaser.GameObjectFactory#video
+    * @param {string} key - The key of the file in the Phaser.Cache that this video will use.
+    * @return {Phaser.Video} The newly created Video object.
+    */
+    video: function (key) {
+
+        return new Phaser.Video(this.game, key);
+
+    },
+
+    /**
     * Create a BitmapData object.
     *
     * A BitmapData object can be manipulated and drawn to like a traditional Canvas object and used to texture Sprites.
