@@ -765,7 +765,7 @@ Object.defineProperty(Phaser.SoundManager.prototype, "mute", {
 
 /**
 * @name Phaser.SoundManager#volume
-* @property {number} volume - Gets or sets the global volume of the SoundManager, a value between 0 and 1.
+* @property {number} volume - Gets or sets the global volume of the SoundManager, a value between 0 and 1. The value given is clamped to the range 0 to 1.
 */
 Object.defineProperty(Phaser.SoundManager.prototype, "volume", {
 
@@ -776,6 +776,15 @@ Object.defineProperty(Phaser.SoundManager.prototype, "volume", {
     },
 
     set: function (value) {
+
+        if (value < 0)
+        {
+            value = 0;
+        }
+        else if (value > 1)
+        {
+            value = 1;
+        }
 
         if (this._volume !== value)
         {
