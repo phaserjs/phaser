@@ -132,6 +132,13 @@ Phaser.Video = function (game, key) {
     */
     this._paused = false;
 
+    /**
+    * @property {boolean} _pending - Internal var tracking play pending.
+    * @private
+    * @default
+    */
+    this._pending = false;
+
     if (!this.game.device.cocoonJS && this.game.device.iOS || (window['PhaserGlobal'] && window['PhaserGlobal'].fakeiOSTouchLock))
     {
         this.setTouchLock();
@@ -214,9 +221,19 @@ Phaser.Video.prototype = {
         }
 
         this.video.playbackRate = playbackRate;
-        this.video.play();
 
-        this.onPlay.dispatch(this, loop, playbackRate);
+        if (this.touchLocked)
+        {
+            this._pending = true;
+        }
+        else
+        {
+            this._pending = false;
+
+            this.video.play();
+
+            this.onPlay.dispatch(this, loop, playbackRate);
+        }
 
         return this;
 
@@ -247,7 +264,14 @@ Phaser.Video.prototype = {
 
         this.video.removeEventListener('ended', this.complete.bind(this));
 
-        this.video.pause();
+        if (this.touchLocked)
+        {
+            this._pending = false;
+        }
+        else
+        {
+            this.video.pause();
+        }
 
         return this;
 
@@ -370,7 +394,7 @@ Phaser.Video.prototype = {
     */
     setPause: function () {
 
-        if (this._paused)
+        if (this._paused || this.touchLocked)
         {
             return;
         }
@@ -389,7 +413,7 @@ Phaser.Video.prototype = {
     */
     setResume: function () {
 
-        if (!this._paused || this._codePaused)
+        if (!this._paused || this._codePaused || this.touchLocked)
         {
             return;
         }
@@ -417,23 +441,52 @@ Phaser.Video.prototype = {
      */
     changeSource: function (src, autoplay) {
 
-
+        this.video.src = src;
 
         return this;
 
     },
 
     /**
-    * Sets the Input Manager touch callback to be SoundManager.unlock.
-    * Required for iOS audio device unlocking. Mostly just used internally.
+    * Sets the Input Manager touch callback to be Video.unlock.
+    * Required for iOS video unlocking. Mostly just used internally.
     * 
     * @method Phaser.Video#setTouchLock
     */
     setTouchLock: function () {
 
-        this.game.input.touch.callbackContext = this;
-        this.game.input.touch.touchStartCallback = this.unlock;
+        // this.game.input.touch.callbackContext = this;
+        // this.game.input.touch.touchStartCallback = this.unlock;
+        this.game.input.touch.addTouchLockCallback(this.unlock, this);
         this.touchLocked = true;
+
+    },
+
+    /**
+    * Enables the video on mobile devices, usually after the first touch.
+    * If the SoundManager hasn't been unlocked then this will automatically unlock that as well.
+    * Only one video can be pending unlock at any one time.
+    * 
+    * @method Phaser.Video#unlock
+    */
+    unlock: function () {
+
+        //  We can remove the event because we've done what we needed (started the unlock sound playing)
+        // this.game.input.touch.callbackContext = null;
+        // this.game.input.touch.touchStartCallback = null;
+
+        this.touchLocked = false;
+
+        // if (this.game.sound && this.game.sound.touchLocked)
+        // {
+        //     this.game.sound.unlock();
+        // }
+
+        this.video.play();
+
+        this.onPlay.dispatch(this, this.loop, this.playbackRate);
+
+        return true;
 
     },
 
@@ -546,8 +599,11 @@ Object.defineProperty(Phaser.Video.prototype, "mute", {
 });
 
 /**
+* Gets or sets the paused state of the Video.
+* If the video is still touch locked (such as on iOS devices) this call has no effect.
+* 
 * @name Phaser.Video#paused
-* @property {boolean} paused - Gets or sets the paused state of the Video.
+* @property {boolean} paused
 */
 Object.defineProperty(Phaser.Video.prototype, "paused", {
 
@@ -560,6 +616,11 @@ Object.defineProperty(Phaser.Video.prototype, "paused", {
     set: function (value) {
 
         value = value || null;
+
+        if (this.touchLocked)
+        {
+            return;
+        }
 
         if (value)
         {
@@ -629,6 +690,36 @@ Object.defineProperty(Phaser.Video.prototype, "playbackRate", {
     set: function (value) {
 
         this.video.playbackRate = value;
+
+    }
+
+});
+
+/**
+* Gets or sets if the Video is set to loop.
+* Please note that at present some browsers (i.e. Chrome) do not support *seamless* video looping.
+* 
+* @name Phaser.Video#loop
+* @property {number} loop
+*/
+Object.defineProperty(Phaser.Video.prototype, "loop", {
+
+    get: function () {
+
+        return this.video.loop;
+
+    },
+
+    set: function (value) {
+
+        if (value)
+        {
+            this.video.loop = 'loop';
+        }
+        else
+        {
+            this.video.loop = '';
+        }
 
     }
 
