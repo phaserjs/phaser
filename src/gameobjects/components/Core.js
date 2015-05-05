@@ -306,7 +306,7 @@ Phaser.Component.Core.prototype = {
     */
     postUpdate: function() {
 
-        if (this.key instanceof Phaser.BitmapData)
+        if (this.key instanceof Phaser.BitmapData || this.key instanceof Phaser.Video)
         {
             this.key.render();
         }
