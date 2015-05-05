@@ -207,11 +207,10 @@ Phaser.Touch.prototype = {
     * @method Phaser.Touch#addTouchLockCallback
     * @param {function} callback - The callback that will be called when a touchstart event is received.
     * @param {object} context - The context in which the callback will be called.
-    * @return {number} The index of the callback entry. Use this index when calling Touch.removeTouchLockCallback.
     */
     addTouchLockCallback: function (callback, context) {
 
-        return this.touchLockCallbacks.push({ callback: callback, context: context }) - 1;
+        this.touchLockCallbacks.push({ callback: callback, context: context });
 
     },
 
@@ -219,14 +218,24 @@ Phaser.Touch.prototype = {
     * Removes the callback at the defined index from the Phaser.Touch.touchLockCallbacks array
     * 
     * @method Phaser.Touch#removeTouchLockCallback
-    * @param {number} index - The index of the callback to remove.
+    * @param {function} callback - The callback to be removed.
+    * @param {object} context - The context in which the callback exists.
+    * @return {boolean} True if the callback was deleted, otherwise false.
     */
-    removeTouchLockCallback: function (index) {
+    removeTouchLockCallback: function (callback, context) {
 
-        if (this.touchLockCallbacks[index])
+        var i = this.touchLockCallbacks.length;
+
+        while (i--)
         {
-            this.touchLockCallbacks.splice(index, 1);
+            if (this.touchLockCallbacks[i].callback === callback && this.touchLockCallbacks[i].context === context)
+            {
+                this.touchLockCallbacks.splice(i, 1);
+                return true;
+            }
         }
+
+        return false;
 
     },
 
