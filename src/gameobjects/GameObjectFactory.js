@@ -421,6 +421,7 @@ Phaser.GameObjectFactory.prototype = {
     * The video file must have already been loaded into the Phaser.Cache.
     * The key given is the key you used when the video was preloaded.
     * This will return a Phaser.Video object which you can pass to a Sprite to be used as a texture.
+    * If you wish to create a Sprite with a Video texture automatically you can use `GameObjectFactory.videoSprite`.
     *
     * @method Phaser.GameObjectFactory#video
     * @param {string} key - The key of the file in the Phaser.Cache that this video will use.
