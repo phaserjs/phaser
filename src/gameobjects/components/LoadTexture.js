@@ -69,6 +69,8 @@ Phaser.Component.LoadTexture.prototype = {
             //  This works from a reference, which probably isn't what we need here
             this.setTexture(key.texture);
 
+            key.onChangeSource.add(this.resizeFrame, this);
+
             if (this.game.cache.getFrameData(key.key, Phaser.Cache.VIDEO))
             {
                 setFrame = !this.animations.loadFrameData(this.game.cache.getFrameData(key.key, Phaser.Cache.VIDEO), frame);
@@ -173,6 +175,24 @@ Phaser.Component.LoadTexture.prototype = {
         {
             this.refreshTexture = true;
         }
+
+    },
+
+    /**
+    * Resizes the Frame dimensions that the Game Object uses for rendering.
+    * 
+    * You shouldn't normally need to ever call this, but in the case of special texture types such as Video or BitmapData
+    * it can be useful to adjust the dimensions directly in this way.
+    *
+    * @method
+    * @param {object} parent - The parent texture object that caused the resize, i.e. a Phaser.Video object.
+    * @param {integer} width - The new width of the texture.
+    * @param {integer} height - The new height of the texture.
+    */
+    resizeFrame: function (parent, width, height) {
+
+        this.texture.frame.resize(width, height);
+        this.texture.setFrame(this.texture.frame);
 
     },
 
