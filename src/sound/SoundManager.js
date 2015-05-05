@@ -624,7 +624,7 @@ Phaser.SoundManager.prototype = {
     },
 
     /**
-    * Internal mute handler called automatically by the Sound.mute setter.
+    * Internal mute handler called automatically by the SoundManager.mute setter.
     *
     * @method Phaser.SoundManager#setMute
     * @private
@@ -658,7 +658,7 @@ Phaser.SoundManager.prototype = {
     },
 
     /**
-    * Internal mute handler called automatically by the Sound.mute setter.
+    * Internal mute handler called automatically by the SoundManager.mute setter.
     *
     * @method Phaser.SoundManager#unsetMute
     * @private
