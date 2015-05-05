@@ -32,19 +32,12 @@ Phaser.Input = function (game) {
     this.hitContext = null;
 
     /**
-    * @property {array} moveCallbacks - An array of callbacks that will be fired every time the activePointer receives a move event from the DOM.
+    * An array of callbacks that will be fired every time the activePointer receives a move event from the DOM.
+    * To add a callback to this array please use `Input.addMoveCallback`.
+    * @property {array} moveCallbacks
+    * @protected
     */
     this.moveCallbacks = [];
-
-    /**
-    * @property {function} moveCallback - An optional callback that will be fired every time the activePointer receives a move event from the DOM. Set to null to disable.
-    */
-    this.moveCallback = null;
-
-    /**
-    * @property {object} moveCallbackContext - The context in which the moveCallback will be sent. Defaults to Phaser.Input but can be set to any valid JS object.
-    */
-    this.moveCallbackContext = this;
 
     /**
     * @property {number} pollRate - How often should the input pointers be checked for updates? A value of 0 means every single frame (60fps); a value of 1 means every other frame (30fps) and so on.
@@ -445,7 +438,7 @@ Phaser.Input.prototype = {
     * Adds a callback that is fired every time the activePointer receives a DOM move event such as a mousemove or touchmove.
     *
     * The callback will be sent 4 parameters: The Pointer that moved, the x position of the pointer, the y position and the down state.
-
+    * 
     * It will be called every time the activePointer moves, which in a multi-touch game can be a lot of times, so this is best
     * to only use if you've limited input to a single pointer (i.e. mouse or touch).
     * The callback is added to the Phaser.Input.moveCallbacks array and should be removed with Phaser.Input.deleteMoveCallback.
