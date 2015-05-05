@@ -973,8 +973,6 @@ Phaser.Loader.prototype = {
     */
     video: function (key, urls, asBlob) {
 
-        //  Add stream parameter? Set canplay instead of canplaythrough
-
         if (typeof asBlob === 'undefined') { asBlob = false; }
 
         if (typeof urls === 'string')
