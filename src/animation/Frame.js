@@ -130,6 +130,27 @@ Phaser.Frame = function (index, x, y, width, height, name) {
 Phaser.Frame.prototype = {
 
     /**
+    * Adjusts of all the Frame properties based on the given width and height values.
+    *
+    * @method Phaser.Frame#resize
+    * @param {integer} width - The new width of the Frame.
+    * @param {integer} height - The new height of the Frame.
+    */
+    resize: function (width, height) {
+
+        this.width = width;
+        this.height = height;
+        this.centerX = Math.floor(width / 2);
+        this.centerY = Math.floor(height / 2);
+        this.distance = Phaser.Math.distance(0, 0, width, height);
+        this.sourceSizeW = width;
+        this.sourceSizeH = height;
+        this.right = this.x + width;
+        this.bottom = this.y + height;
+
+    },
+
+    /**
     * If the frame was trimmed when added to the Texture Atlas this records the trim and source data.
     *
     * @method Phaser.Frame#setTrim
