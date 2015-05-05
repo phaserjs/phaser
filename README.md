@@ -291,6 +291,7 @@ Version 2.4 - "Katar" - in dev
 * SoundManager.onVolumeChange is a new signal that is dispatched whenever the global volume changes. The new volume is passed as the only parameter to your callback.
 * SoundManager.onMute is a new signal that is dispatched when the SoundManager is globally muted, either directly via game code or as a result of the game pausing.
 * SoundManager.onUnMute is a new signal that is dispatched when the SoundManager is globally un-muted, either directly via game code or as a result of the game resuming from a pause.
+* Input.Touch.addTouchLockCallback allows you to add a callback that will be invoked automatically upon a touchstart event. This is used internally by the SoundManager and Video objects to handle mobile device unlocking, but is exposed publicly as well.
 
 ### Updates
 
@@ -319,6 +320,8 @@ Version 2.4 - "Katar" - in dev
 * Added `type` parameter to `VideoTexture.fromUrl` allowing you to define the mime-type of the video file, which is required for Firefox and Safari in most cases.
 * PIXI.BaseTexture.forceLoaded allows you to set a BaseTexture as loaded, with the given width and height. It then calls `BaseTexture.dirty`. This is important for when you don't want to modify the shape of the source object by forcing in `complete` or dimension properties it may not naturally have, but still wish to use it as a base texture.
 * SoundManager.volume now has its input value clamped to ensure it's between 0 and 1 (inclusive)
+* Removed `Input.moveCallback` and `Input.moveCallbackContext` as neither are used any longer. Use `Input.addMoveCallback`.
+* SoundManager now uses the new `Touch.addTouchLockCallback` methods to handle mobile device audio unlocking.
 
 ### Bug Fixes
 
