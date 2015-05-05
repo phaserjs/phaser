@@ -143,6 +143,10 @@ Phaser.Video = function (game, key) {
     {
         this.setTouchLock();
     }
+    else
+    {
+        _video.locked = false;
+    }
 
 };
 
@@ -455,8 +459,6 @@ Phaser.Video.prototype = {
     */
     setTouchLock: function () {
 
-        // this.game.input.touch.callbackContext = this;
-        // this.game.input.touch.touchStartCallback = this.unlock;
         this.game.input.touch.addTouchLockCallback(this.unlock, this);
         this.touchLocked = true;
 
@@ -471,20 +473,18 @@ Phaser.Video.prototype = {
     */
     unlock: function () {
 
-        //  We can remove the event because we've done what we needed (started the unlock sound playing)
-        // this.game.input.touch.callbackContext = null;
-        // this.game.input.touch.touchStartCallback = null;
-
         this.touchLocked = false;
-
-        // if (this.game.sound && this.game.sound.touchLocked)
-        // {
-        //     this.game.sound.unlock();
-        // }
 
         this.video.play();
 
         this.onPlay.dispatch(this, this.loop, this.playbackRate);
+
+        var _video = this.game.cache.getVideo(this.key);
+
+        if (!_video.isBlob)
+        {
+            _video.locked = false;
+        }
 
         return true;
 
@@ -501,8 +501,12 @@ Phaser.Video.prototype = {
         this.stop();
 
         this.video.src = '';
-
         this.video = null;
+
+        if (this.touchLocked)
+        {
+            this.game.input.touch.removeTouchLockCallback(this.unlock, this);
+        }
 
     }
 
