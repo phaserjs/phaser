@@ -49,6 +49,48 @@ Phaser.SoundManager = function (game) {
     this.onUnMute = new Phaser.Signal();
 
     /**
+    * @property {AudioContext} context - The AudioContext being used for playback.
+    * @default
+    */
+    this.context = null;
+
+    /**
+    * @property {boolean} usingWebAudio - True the SoundManager and device are both using Web Audio.
+    * @readonly
+    */
+    this.usingWebAudio = false;
+
+    /**
+    * @property {boolean} usingAudioTag - True the SoundManager and device are both using the Audio tag instead of Web Audio.
+    * @readonly
+    */
+    this.usingAudioTag = false;
+
+    /**
+    * @property {boolean} noAudio - True if audio been disabled via the PhaserGlobal (useful if you need to use a 3rd party audio library) or the device doesn't support any audio.
+    * @default
+    */
+    this.noAudio = false;
+
+    /**
+    * @property {boolean} connectToMaster - Used in conjunction with Sound.externalNode this allows you to stop a Sound node being connected to the SoundManager master gain node.
+    * @default
+    */
+    this.connectToMaster = true;
+
+    /**
+    * @property {boolean} touchLocked - true if the audio system is currently locked awaiting a touch event.
+    * @default
+    */
+    this.touchLocked = false;
+
+    /**
+    * @property {number} channels - The number of audio channels to use in playback.
+    * @default
+    */
+    this.channels = 32;
+
+    /**
     * @property {boolean} _codeMuted - Internal mute tracking var.
     * @private
     * @default
@@ -105,48 +147,6 @@ Phaser.SoundManager = function (game) {
     * @private
     */
     this._watchContext = null;
-
-    /**
-    * @property {AudioContext} context - The AudioContext being used for playback.
-    * @default
-    */
-    this.context = null;
-
-    /**
-    * @property {boolean} usingWebAudio - True the SoundManager and device are both using Web Audio.
-    * @readonly
-    */
-    this.usingWebAudio = false;
-
-    /**
-    * @property {boolean} usingAudioTag - True the SoundManager and device are both using the Audio tag instead of Web Audio.
-    * @readonly
-    */
-    this.usingAudioTag = false;
-
-    /**
-    * @property {boolean} noAudio - True if audio been disabled via the PhaserGlobal (useful if you need to use a 3rd party audio library) or the device doesn't support any audio.
-    * @default
-    */
-    this.noAudio = false;
-
-    /**
-    * @property {boolean} connectToMaster - Used in conjunction with Sound.externalNode this allows you to stop a Sound node being connected to the SoundManager master gain node.
-    * @default
-    */
-    this.connectToMaster = true;
-
-    /**
-    * @property {boolean} touchLocked - true if the audio system is currently locked awaiting a touch event.
-    * @default
-    */
-    this.touchLocked = false;
-
-    /**
-    * @property {number} channels - The number of audio channels to use in playback.
-    * @default
-    */
-    this.channels = 32;
 
 };
 
