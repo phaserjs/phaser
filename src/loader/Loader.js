@@ -2047,12 +2047,15 @@ Phaser.Loader.prototype = {
         file.data.name = file.key;
         
         var playThroughEvent = function () {
+            file.data.removeEventListener('canplay', playThroughEvent, false);
             file.data.removeEventListener('canplaythrough', playThroughEvent, false);
             file.data.onerror = null;
             // Why does this cycle through games?
             Phaser.GAMES[_this.game.id].load.fileComplete(file);
         };
+
         file.data.onerror = function () {
+            file.data.removeEventListener('canplay', playThroughEvent, false);
             file.data.removeEventListener('canplaythrough', playThroughEvent, false);
             file.data.onerror = null;
             _this.fileError(file);
@@ -2060,9 +2063,10 @@ Phaser.Loader.prototype = {
 
         file.data.controls = false;
         file.data.autoplay = false;
-        //  canplaythrough will wait for the whole video to download before it plays it
+        file.data.addEventListener('canplay', playThroughEvent, false);
         file.data.addEventListener('canplaythrough', playThroughEvent, false);
         file.data.src = this.transformUrl(file.url, file);
+        file.data.load();
 
     },
 
