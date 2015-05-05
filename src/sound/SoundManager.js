@@ -31,6 +31,24 @@ Phaser.SoundManager = function (game) {
     this.onSoundDecode = new Phaser.Signal();
 
     /**
+    * This signal is dispatched whenever the global volume changes. The new volume is passed as the only parameter to your callback.
+    * @property {Phaser.Signal} onVolumeChange
+    */
+    this.onVolumeChange = new Phaser.Signal();
+
+    /**
+    * This signal is dispatched when the SoundManager is globally muted, either directly via game code or as a result of the game pausing.
+    * @property {Phaser.Signal} onMute
+    */
+    this.onMute = new Phaser.Signal();
+
+    /**
+    * This signal is dispatched when the SoundManager is globally un-muted, either directly via game code or as a result of the game resuming from a pause.
+    * @property {Phaser.Signal} onUnMute
+    */
+    this.onUnMute = new Phaser.Signal();
+
+    /**
     * @property {boolean} _codeMuted - Internal mute tracking var.
     * @private
     * @default
@@ -146,19 +164,6 @@ Phaser.SoundManager.prototype = {
             this.channels = 1;
         }
 
-        if (!this.game.device.cocoonJS && this.game.device.iOS || (window['PhaserGlobal'] && window['PhaserGlobal'].fakeiOSTouchLock))
-        {
-            this.game.input.touch.callbackContext = this;
-            this.game.input.touch.touchStartCallback = this.unlock;
-            this.game.input.mouse.callbackContext = this;
-            this.game.input.mouse.mouseDownCallback = this.unlock;
-            this.touchLocked = true;
-        }
-        else
-        {
-            this.touchLocked = false;
-        }
-
         //  PhaserGlobal overrides
         if (window['PhaserGlobal'])
         {
@@ -237,33 +242,54 @@ Phaser.SoundManager.prototype = {
             this.masterGain.connect(this.context.destination);
         }
 
+        if (!this.noAudio)
+        {
+            //  On mobile we need a native touch event before we can play anything, so capture it here
+            if (!this.game.device.cocoonJS && this.game.device.iOS || (window['PhaserGlobal'] && window['PhaserGlobal'].fakeiOSTouchLock))
+            {
+                this.setTouchLock();
+            }
+        }
+
+    },
+
+    /**
+    * Sets the Input Manager touch callback to be SoundManager.unlock.
+    * Required for iOS audio device unlocking. Mostly just used internally.
+    * 
+    * @method Phaser.SoundManager#setTouchLock
+    */
+    setTouchLock: function () {
+
+        this.game.input.touch.callbackContext = this;
+        this.game.input.touch.touchStartCallback = this.unlock;
+        this.touchLocked = true;
+
     },
 
     /**
     * Enables the audio, usually after the first touch.
+    * 
     * @method Phaser.SoundManager#unlock
     */
     unlock: function () {
 
-        if (this.touchLocked === false)
+        if (this.noAudio || !this.touchLocked || this._unlockSource !== null)
         {
             return;
         }
 
         //  Global override (mostly for Audio Tag testing)
-        if (this.game.device.webAudio === false || (window['PhaserGlobal'] && window['PhaserGlobal'].disableWebAudio === true))
+        if (this.usingAudioTag)
         {
-            //  Create an Audio tag?
             this.touchLocked = false;
             this._unlockSource = null;
-            this.game.input.touch.callbackContext = null;
-            this.game.input.touch.touchStartCallback = null;
-            this.game.input.mouse.callbackContext = null;
-            this.game.input.mouse.mouseDownCallback = null;
         }
-        else
+        else if (this.usingWebAudio)
         {
             // Create empty buffer and play it
+            // The SoundManager.update loop captures the state of it and then resets touchLocked to false
+
             var buffer = this.context.createBuffer(1, 1, 22050);
             this._unlockSource = this.context.createBufferSource();
             this._unlockSource.buffer = buffer;
@@ -278,6 +304,10 @@ Phaser.SoundManager.prototype = {
                 this._unlockSource.start(0);
             }
         }
+
+        //  We can remove the event because we've done what we needed (started the unlock sound playing)
+        this.game.input.touch.callbackContext = null;
+        this.game.input.touch.touchStartCallback = null;
 
     },
 
@@ -360,8 +390,6 @@ Phaser.SoundManager.prototype = {
 
         var soundData = this.game.cache.getSoundData(key);
 
-        // console.log(key, 'soundData', soundData);
-
         if (soundData)
         {
             if (this.game.cache.isSoundDecoded(key) === false)
@@ -434,24 +462,22 @@ Phaser.SoundManager.prototype = {
     },
 
     /**
-    * Updates every sound in the game.
+    * Updates every sound in the game, checks for audio unlock on mobile and monitors the decoding watch list.
     *
     * @method Phaser.SoundManager#update
+    * @protected
     */
     update: function () {
 
-        if (this.touchLocked)
+        if (this.noAudio)
         {
-            if (this.game.device.webAudio && this._unlockSource !== null)
-            {
-                if ((this._unlockSource.playbackState === this._unlockSource.PLAYING_STATE || this._unlockSource.playbackState === this._unlockSource.FINISHED_STATE))
-                {
-                    this.touchLocked = false;
-                    this._unlockSource = null;
-                    this.game.input.touch.callbackContext = null;
-                    this.game.input.touch.touchStartCallback = null;
-                }
-            }
+            return;
+        }
+
+        if (this.touchLocked && this._unlockSource !== null && (this._unlockSource.playbackState === this._unlockSource.PLAYING_STATE || this._unlockSource.playbackState === this._unlockSource.FINISHED_STATE))
+        {
+            this.touchLocked = false;
+            this._unlockSource = null;
         }
 
         for (var i = 0; i < this._sounds.length; i++)
@@ -584,6 +610,11 @@ Phaser.SoundManager.prototype = {
     */
     play: function (key, volume, loop) {
 
+        if (this.noAudio)
+        {
+            return;
+        }
+
         var sound = this.add(key, volume, loop);
 
         sound.play();
@@ -622,6 +653,8 @@ Phaser.SoundManager.prototype = {
             }
         }
 
+        this.onMute.dispatch();
+
     },
 
     /**
@@ -652,6 +685,8 @@ Phaser.SoundManager.prototype = {
                 this._sounds[i].mute = false;
             }
         }
+
+        this.onUnMute.dispatch();
 
     },
 
@@ -736,35 +771,34 @@ Object.defineProperty(Phaser.SoundManager.prototype, "volume", {
 
     get: function () {
 
-        if (this.usingWebAudio)
-        {
-            return this.masterGain.gain.value;
-        }
-        else
-        {
-            return this._volume;
-        }
+        return this._volume;
 
     },
 
     set: function (value) {
 
-        this._volume = value;
+        if (this._volume !== value)
+        {
+            this._volume = value;
 
-        if (this.usingWebAudio)
-        {
-            this.masterGain.gain.value = value;
-        }
-        else
-        {
-            //  Loop through the sound cache and change the volume of all html audio tags
-            for (var i = 0; i < this._sounds.length; i++)
+            if (this.usingWebAudio)
             {
-                if (this._sounds[i].usingAudioTag)
+                this.masterGain.gain.value = value;
+            }
+            else
+            {
+                //  Loop through the sound cache and change the volume of all html audio tags
+                for (var i = 0; i < this._sounds.length; i++)
                 {
-                    this._sounds[i].volume = this._sounds[i].volume * value;
+                    if (this._sounds[i].usingAudioTag)
+                    {
+                        this._sounds[i].volume = this._sounds[i].volume * value;
+                    }
                 }
             }
+
+            this.onVolumeChange.dispatch(value);
+
         }
 
     }
