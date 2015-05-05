@@ -261,8 +261,7 @@ Phaser.SoundManager.prototype = {
     */
     setTouchLock: function () {
 
-        this.game.input.touch.callbackContext = this;
-        this.game.input.touch.touchStartCallback = this.unlock;
+        this.game.input.touch.addTouchLockCallback(this.unlock, this);
         this.touchLocked = true;
 
     },
@@ -271,12 +270,13 @@ Phaser.SoundManager.prototype = {
     * Enables the audio, usually after the first touch.
     * 
     * @method Phaser.SoundManager#unlock
+    * @return {boolean} True if the callback should be removed, otherwise false.
     */
     unlock: function () {
 
         if (this.noAudio || !this.touchLocked || this._unlockSource !== null)
         {
-            return;
+            return true;
         }
 
         //  Global override (mostly for Audio Tag testing)
@@ -306,8 +306,7 @@ Phaser.SoundManager.prototype = {
         }
 
         //  We can remove the event because we've done what we needed (started the unlock sound playing)
-        this.game.input.touch.callbackContext = null;
-        this.game.input.touch.touchStartCallback = null;
+        return true;
 
     },
 
