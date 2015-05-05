@@ -19,7 +19,7 @@ PIXI.VideoTexture = function(source, scaleMode)
     // hook in here to check if video is already available.
     // PIXI.BaseTexture looks for a source.complete boolean, plus width & height.
 
-    if ((source.readyState === source.HAVE_ENOUGH_DATA || source.readyState === source.HAVE_FUTURE_DATA ) && source.width && source.height)
+    if ((source.readyState === source.HAVE_ENOUGH_DATA || source.readyState === source.HAVE_FUTURE_DATA) && source.width && source.height)
     {
         source.complete = true;
     }
@@ -61,8 +61,18 @@ PIXI.VideoTexture.prototype.play = function()
     this.onPlay.dispatch();
 };
 
-PIXI.VideoTexture.prototype.changeSource = function(src)
+PIXI.VideoTexture.prototype.changeSource = function(src, type, loop)
 {
+    if (typeof type === 'undefined') { type = "video/mp4"; }
+    if (typeof loop === 'undefined') { loop = false; }
+
+    this.source.type = type;
+
+    if (loop)
+    {
+        this.source.loop = "loop";
+    }
+
     this.source.src = src;
     this.source.play();
     this.onPlay.dispatch();
@@ -97,8 +107,9 @@ PIXI.VideoTexture.prototype.onPlayStart = function()
 {
     if (!this.autoUpdate)
     {
-        window.requestAnimationFrame(this.updateBound);
         this.autoUpdate = true;
+        window.ds = "onPlayStart";
+        window.requestAnimationFrame(this.updateBound);
     }
 };
 
@@ -120,6 +131,7 @@ PIXI.VideoTexture.prototype.onCanPlay = function(event)
 
             this.width = this.source.videoWidth;
             this.height = this.source.videoHeight;
+            // this.autoUpdate = true;
 
             // prevent multiple loaded dispatches..
             if (!this.__loaded )
@@ -197,13 +209,15 @@ PIXI.VideoTexture.textureFromVideo = function(video, scaleMode)
  * @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
  * @param autoPlay {boolean} Automatically start the video playing? Until you do this you can't get the width / height of the resulting texture.
  * @param type {string} The mime-type of the video to be played. Defaults to "video/mp4". Needed for Firefox and Safari.
+ * @param loop {boolean} Should the loop property be set or not?
  * @return {VideoTexture}
  */
-PIXI.VideoTexture.fromUrl = function(videoSrc, scaleMode, autoPlay, type)
+PIXI.VideoTexture.fromUrl = function(videoSrc, scaleMode, autoPlay, type, loop)
 {
     if (typeof scaleMode === 'undefined') { scaleMode = PIXI.scaleModes.DEFAULT; }
     if (typeof autoPlay === 'undefined') { autoPlay = true; }
     if (typeof type === 'undefined') { type = "video/mp4"; }
+    if (typeof loop === 'undefined') { loop = false; }
 
     var video = document.createElement('video');
 
@@ -211,14 +225,14 @@ PIXI.VideoTexture.fromUrl = function(videoSrc, scaleMode, autoPlay, type)
     video.controls = false;
     video.type = type;
 
+    if (loop)
+    {
+        video.loop = "loop";
+    }
+
     if (autoPlay)
     {
-        video.autoplay = true;
-        video.play();
-    }
-    else
-    {
-        video.autoplay = false;
+        video.autoplay = "autoplay";
     }
 
     return PIXI.VideoTexture.textureFromVideo(video, scaleMode);
