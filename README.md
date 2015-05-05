@@ -288,6 +288,9 @@ Version 2.4 - "Katar" - in dev
 * Cache.checkVideoKey allows you to check if a video is stored in the cache based on the given key.
 * Cache.getVideo allows you to extract a video from the Cache based on its key. The video element itself (or the Blob is loaded with asBlob true) will be found in the `data` property of the returned object.
 * Cache.removeVideo will remove a video from the Cache based on the given key.
+* SoundManager.onVolumeChange is a new signal that is dispatched whenever the global volume changes. The new volume is passed as the only parameter to your callback.
+* SoundManager.onMute is a new signal that is dispatched when the SoundManager is globally muted, either directly via game code or as a result of the game pausing.
+* SoundManager.onUnMute is a new signal that is dispatched when the SoundManager is globally un-muted, either directly via game code or as a result of the game resuming from a pause.
 
 ### Updates
 
@@ -315,6 +318,7 @@ Version 2.4 - "Katar" - in dev
 * SoundManager.touchLocked is now set to `false` should the device be using legacy Audio, avoiding the unlock call running without need.
 * Added `type` parameter to `VideoTexture.fromUrl` allowing you to define the mime-type of the video file, which is required for Firefox and Safari in most cases.
 * PIXI.BaseTexture.forceLoaded allows you to set a BaseTexture as loaded, with the given width and height. It then calls `BaseTexture.dirty`. This is important for when you don't want to modify the shape of the source object by forcing in `complete` or dimension properties it may not naturally have, but still wish to use it as a base texture.
+* SoundManager.volume now has its input value clamped to ensure it's between 0 and 1 (inclusive)
 
 ### Bug Fixes
 
