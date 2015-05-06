@@ -63,6 +63,7 @@ module.exports = function (grunt) {
             'tilemaps':         { 'description': 'Tilemap Support',                             'optional': true, 'stub': false },
             'particles':        { 'description': 'Arcade Physics Particle System',              'optional': true, 'stub': true },
             'creature':         { 'description': 'Creature Animation Tool Support',             'optional': true, 'stub': false },
+            'video':            { 'description': 'Video Game Object',                           'optional': true, 'stub': false },
             'outro':            { 'description': 'Phaser UMD closure',                          'optional': true, 'stub': false }
 
         };
@@ -254,7 +255,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('minimum', 'Phaser without any optional modules except Pixi', function() {
 
-        grunt.option('exclude', 'gamepad,keyboard,bitmapdata,graphics,rendertexture,text,bitmaptext,retrofont,net,tweens,sound,debug,arcade,ninja,p2,tilemaps,particles,creature');
+        grunt.option('exclude', 'gamepad,keyboard,bitmapdata,graphics,rendertexture,text,bitmaptext,retrofont,net,tweens,sound,debug,arcade,ninja,p2,tilemaps,particles,creature,video');
         grunt.option('filename', 'phaser-minimum');
         grunt.option('sourcemap', true);
         grunt.option('copy', false);
