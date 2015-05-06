@@ -21705,9 +21705,9 @@ declare module Phaser {
         /**
         * init is the very first function called when your State starts up. It's called before preload, create or anything else.
         * If you need to route the game away to another State you could do so here, or if you need to prepare a set of variables
-        * or objects before the preloading starts.
+        * or objects before the preloading starts. If your state is started with parameters via StateManager.start they will be passed in here.
         */
-        init(): void;
+        init(...args: any[]): void;
 
         /**
         * loadRender is called during the Loader process. This only happens if you've set one or more assets to load in the preload method.
