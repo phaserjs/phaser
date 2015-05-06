@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.4.0 "Katar" - Built: Wed May 06 2015 07:58:16
+* v2.4.0 "Katar" - Built: Wed May 06 2015 17:04:30
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -38904,13 +38904,13 @@ Phaser.Particle.prototype.reset = function(x, y, health) {
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
 * @param {string} key - Internal Phaser reference key for the BitmapData.
-* @param {number} [width=256] - The width of the BitmapData in pixels.
-* @param {number} [height=256] - The height of the BitmapData in pixels.
+* @param {number} [width=256] - The width of the BitmapData in pixels. If undefined or zero it's set to a default value.
+* @param {number} [height=256] - The height of the BitmapData in pixels. If undefined or zero it's set to a default value.
 */
 Phaser.BitmapData = function (game, key, width, height) {
 
-    if (typeof width === 'undefined') { width = 256; }
-    if (typeof height === 'undefined') { height = 256; }
+    if (typeof width === 'undefined' || width === 0) { width = 256; }
+    if (typeof height === 'undefined' || height === 0) { height = 256; }
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running game.
@@ -91540,6 +91540,21 @@ Phaser.Video = function (game, key, captureAudio, width, height) {
     this.videoStream = null;
 
     /**
+    * A snapshot grabbed from the video. This is initially black. Populate it by calling Video.grab().
+    * When called the BitmapData is updated with a grab taken from the current video playing or active video stream.
+    * If Phaser has been compiled without BitmapData support this property will always be `null`.
+    * 
+    * @property {Phaser.BitmapData} snapshot
+    * @readOnly
+    */
+    this.snapshot = null;
+
+    if (Phaser.BitmapData)
+    {
+        this.snapshot = new Phaser.BitmapData(this.game, '', this.width, this.height);
+    }
+
+    /**
     * @property {boolean} _codeMuted - Internal mute tracking var.
     * @private
     * @default
@@ -91661,7 +91676,7 @@ Phaser.Video.prototype = {
 
         var _streamError = function(e) {
             _this.onError.dispatch(_this, e);
-        }
+        };
 
         navigator.getUserMedia({ audio: captureAudio, video: true }, _streamStart, _streamError);
 
@@ -91703,7 +91718,7 @@ Phaser.Video.prototype = {
 
         var change = false;
 
-        if (typeof width === 'undefined' || width === null) { width = this.video.videoWidth; change = true }
+        if (typeof width === 'undefined' || width === null) { width = this.video.videoWidth; change = true; }
         if (typeof height === 'undefined' || height === null) { height = this.video.videoHeight; }
 
         // if (change)
@@ -91722,6 +91737,11 @@ Phaser.Video.prototype = {
 
         this.texture.frame.width = width;
         this.texture.frame.height = height;
+
+        if (this.snapshot)
+        {
+            this.snapshot.resize(width, height);
+        }
 
         if (change)
         {
@@ -91767,6 +91787,11 @@ Phaser.Video.prototype = {
         {
             this.game.sound.onMute.add(this.setMute, this);
             this.game.sound.onUnMute.add(this.unsetMute, this);
+
+            if (this.game.sound.mute)
+            {
+                this.setMute();
+            }
         }
 
         this.game.onPause.add(this.setPause, this);
@@ -92095,9 +92120,39 @@ Phaser.Video.prototype = {
 
     },
 
-    snapshot: function () {
+    /**
+     * Grabs the current frame from the Video or Video Stream and renders it to the Video.snapshot BitmapData.
+     *
+     * You can optionally set if the BitmapData should be cleared or not, the alpha and the blend mode of the draw.
+     *
+     * If you need more advanced control over the grabbing them call `Video.snapshot.copy` directly with the same parameters as BitmapData.copy.
+     *
+     * @method Phaser.Video#grab
+     * @param {boolean} [clear=false] - Should the BitmapData be cleared before the Video is grabbed? Unless you are using alpha or a blend mode you can usually leave this set to false.
+     * @param {number} [alpha=1] - The alpha that will be set on the video before drawing. A value between 0 (fully transparent) and 1, opaque.
+     * @param {string} [blendMode=null] - The composite blend mode that will be used when drawing. The default is no blend mode at all. This is a Canvas globalCompositeOperation value such as 'lighter' or 'xor'.
+     * @return {Phaser.BitmapData} A reference to the Video.snapshot BitmapData object for further method chaining.
+     */
+    grab: function (clear, alpha, blendMode) {
 
+        if (typeof clear === 'undefined') { clear = false; }
+        if (typeof alpha === 'undefined') { alpha = 1; }
+        if (typeof blendMode === 'undefined') { blendMode = null; }
 
+        if (this.snapshot === null)
+        {
+            console.warn('Video.grab cannot run because Phaser.BitmapData is unavailable');
+            return;
+        }
+
+        if (clear)
+        {
+            this.snapshot.cls();
+        }
+
+        this.snapshot.copy(this.video, 0, 0, this.width, this.height, 0, 0, this.width, this.height, 0, 0, 0, 1, 1, alpha, blendMode);
+
+        return this.snapshot;
 
     },
 
