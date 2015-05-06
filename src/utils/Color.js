@@ -978,7 +978,7 @@ Phaser.Color = {
     * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
     * @returns {integer} The blended color value, in the range 1 to 255.
     */
-    blendNormal: function (a, b) {
+    blendNormal: function (a) {
         return a;
     },
 
