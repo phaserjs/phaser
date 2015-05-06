@@ -7,6 +7,9 @@
 /**
 * A Video object that takes a previously loaded Video from the Phaser Cache and handles playback of it.
 * 
+* Alternatively it takes a getUserMedia feed from an active webcam and streams the contents of that to
+* the Video instead.
+* 
 * This can be applied to a Sprite as a texture. If multiple Sprites share the same Video texture and playback
 * changes (i.e. you pause the video, or seek to a new time) then this change will be seen across all Sprites simultaneously.
 * 
@@ -24,9 +27,15 @@
 * @class Phaser.Video
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
-* @param {string} key - The key of the video file stored in the Phaser.Cache that this Video object should use.
+* @param {string|null} key - The key of the video file in the Phaser.Cache that this Video object should use. If null a `getUserMedia` video stream will be established instead.
+* @param {boolean} [captureAudio=false] - If the key is null this controls if audio should be captured along with video in the video stream.
+* @param {integer} [width] - If the key is null this width is used to create the video stream. If not provided the video width will be set to the width of the webcam input source.
+* @param {integer} [height] - If the key is null this height is used to create the video stream. If not provided the video height will be set to the height of the webcam input source.
 */
-Phaser.Video = function (game, key) {
+Phaser.Video = function (game, key, captureAudio, width, height) {
+
+    if (typeof key === 'undefined') { key = null; }
+    if (typeof captureAudio === 'undefined') { captureAudio = false; }
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running game.
@@ -34,35 +43,45 @@ Phaser.Video = function (game, key) {
     this.game = game;
 
     /**
-    * @property {string} key - The key of the BitmapData in the Cache, if stored there.
+    * @property {string} key - The key of the Video in the Cache, if stored there.
     */
     this.key = key;
+
+    /**
+    * @property {number} width - The width of the video in pixels.
+    */
+    this.width = (width) ? width : 0;
+
+    /**
+    * @property {number} height - The height of the video in pixels.
+    */
+    this.height = (height) ? height : 0;
 
     /**
     * @property {HTMLVideoElement} video - The HTML Video Element that is added to the document.
     */
     this.video = null;
 
-    var _video = this.game.cache.getVideo(key);
-
-    if (_video.isBlob)
+    if (key === null)
     {
-        this.createVideoFromBlob(_video.data);
+        this.createVideoStream(captureAudio, width, height);
     }
     else
     {
-        this.video = _video.data;
+        var _video = this.game.cache.getVideo(key);
+
+        if (_video.isBlob)
+        {
+            this.createVideoFromBlob(_video.data);
+        }
+        else
+        {
+            this.video = _video.data;
+        }
+
+        this.width = this.video.videoWidth;
+        this.height = this.video.videoHeight;
     }
-
-    /**
-    * @property {number} width - The width of the video in pixels.
-    */
-    this.width = this.video.videoWidth;
-
-    /**
-    * @property {number} height - The height of the video in pixels.
-    */
-    this.height = this.video.videoHeight;
 
     /**
     * @property {PIXI.BaseTexture} baseTexture - The PIXI.BaseTexture.
@@ -119,6 +138,11 @@ Phaser.Video = function (game, key) {
     this.touchLocked = false;
 
     /**
+    * @property {object} videoStream - The Video Stream data. Only set if this Video is streaming from the webcam via `createVideoStream`.
+    */
+    this.videoStream = null;
+
+    /**
     * @property {boolean} _codeMuted - Internal mute tracking var.
     * @private
     * @default
@@ -166,12 +190,85 @@ Phaser.Video = function (game, key) {
     }
     else
     {
-        _video.locked = false;
+        if (_video)
+        {
+            _video.locked = false;
+        }
     }
 
 };
 
 Phaser.Video.prototype = {
+
+    /**
+     * Instead of playing a video file this method allows you to stream video data from an attached webcam.
+     *
+     * As soon as this method is called the user will be prompted by their browser to "Allow" access to the webcam.
+     * If they allow it the webcam feed is directed to this Video. Call `Video.play` to start the stream.
+     *
+     * If they block the webcam a console warning will be displayed containing the NavigatorUserMediaError event.
+     *
+     * You can optionally set a width and height for the stream. If set the input will be cropped to these dimensions.
+     * If not given as soon as the stream has enough data the video dimensions will be changed to match the webcam device.
+     * You can listen for this with the onChangeSource signal.
+     *
+     * @method Phaser.Video#createVideoStream
+     * @param {boolean} [captureAudio=false] - Controls if audio should be captured along with video in the video stream.
+     * @param {integer} [width] - The width is used to create the video stream. If not provided the video width will be set to the width of the webcam input source.
+     * @param {integer} [height] - The height is used to create the video stream. If not provided the video height will be set to the height of the webcam input source.
+     * @return {Phaser.Video} This Video object for method chaining.
+     */
+    createVideoStream: function (captureAudio, width, height) {
+
+        if (typeof captureAudio === 'undefined') { captureAudio = false; }
+        if (typeof width === 'undefined') { width = null; }
+        if (typeof height === 'undefined') { height = null; }
+
+        if (!this.game.device.getUserMedia)
+        {
+            return false;
+        }
+
+        this.video = document.createElement("video");
+        this.video.controls = false;
+        this.video.autoplay = false;
+
+        if (width !== null)
+        {
+            this.video.width = width;
+        }
+
+        if (height !== null)
+        {
+            this.video.height = height;
+        }
+
+        if (!navigator['getUserMedia'])
+        {
+            navigator.getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+        }
+
+        var _this = this;
+
+        var _streamStart = function(stream) {
+
+            _this.videoStream = stream;
+
+            _this.video.src = window.URL.createObjectURL(stream);
+
+            _this.video.addEventListener('loadeddata', function (event) { _this.updateTexture(width, height); }, true);
+
+        };
+
+        var _streamError = function(e) {
+            console.warn('Stream Error', e);
+        }
+
+        navigator.getUserMedia({ audio: captureAudio, video: true }, _streamStart, _streamError);
+
+        return this;
+
+    },
 
     /**
      * Creates a new Video element from the given Blob. The Blob must contain the video data in the correct encoded format.
@@ -183,18 +280,12 @@ Phaser.Video.prototype = {
      */
     createVideoFromBlob: function (blob) {
 
-        if (this.video !== null)
-        {
-            this.destroy();
-        }
-
         this.video = document.createElement("video");
         this.video.controls = false;
         this.video.autoplay = false;
         this.video.src = window.URL.createObjectURL(blob);
 
-        this.width = this.video.videoWidth;
-        this.height = this.video.videoHeight;
+        this.updateTexture();
 
         return this;
 
@@ -205,25 +296,44 @@ Phaser.Video.prototype = {
      * Then dispatches the onChangeSource signal.
      *
      * @method Phaser.Video#updateTexture
+     * @param {integer} [width] - The new width of the video. If undefined `video.videoWidth` is used.
+     * @param {integer} [height] - The new height of the video. If undefined `video.videoHeight` is used.
      */
-    updateTexture: function () {
+    updateTexture: function (width, height) {
 
-        this.width = this.video.videoWidth;
-        this.height = this.video.videoHeight;
+        var change = false;
 
-        this.baseTexture.forceLoaded(this.width, this.height);
+        if (typeof width === 'undefined' || width === null) { width = this.video.videoWidth; change = true }
+        if (typeof height === 'undefined' || height === null) { height = this.video.videoHeight; }
 
-        this.texture.frame.width = this.width;
-        this.texture.frame.height = this.height;
-
-        this.video.removeEventListener('canplaythrough', this.updateTexture.bind(this));
-
-        this.onChangeSource.dispatch(this, this.width, this.height);
-
-        if (this._autoplay)
+        if (change)
         {
-            this.video.play();
-            this.onPlay.dispatch(this, this.loop, this.playbackRate);
+            console.log('updateTexture resizing to webcam', width, height);
+        }
+        else
+        {
+            console.log('updateTexture resizing to fixed dimensions', width, height);
+        }
+
+        this.width = width;
+        this.height = height;
+
+        this.baseTexture.forceLoaded(width, height);
+
+        this.texture.frame.width = width;
+        this.texture.frame.height = height;
+
+        if (change)
+        {
+            this.video.removeEventListener('canplaythrough', this.updateTexture.bind(this));
+
+            this.onChangeSource.dispatch(this, width, height);
+
+            if (this._autoplay)
+            {
+                this.video.play();
+                this.onPlay.dispatch(this, this.loop, this.playbackRate);
+            }
         }
 
     },

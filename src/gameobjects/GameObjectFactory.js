@@ -418,18 +418,18 @@ Phaser.GameObjectFactory.prototype = {
     /**
     * Create a Video object.
     *
-    * The video file must have already been loaded into the Phaser.Cache.
-    * The key given is the key you used when the video was preloaded.
     * This will return a Phaser.Video object which you can pass to a Sprite to be used as a texture.
-    * If you wish to create a Sprite with a Video texture automatically you can use `GameObjectFactory.videoSprite`.
     *
     * @method Phaser.GameObjectFactory#video
-    * @param {string} key - The key of the file in the Phaser.Cache that this video will use.
+    * @param {string|null} key - The key of the video file in the Phaser.Cache that the Video object will use. If null a `getUserMedia` video stream will be established instead.
+    * @param {boolean} [captureAudio=false] - If the key is null this controls if audio should be captured along with video in the video stream.
+    * @param {integer} [width] - If the key is null this width is used to create the video stream. If not provided the video width will be set to the width of the webcam input source.
+    * @param {integer} [height] - If the key is null this height is used to create the video stream. If not provided the video height will be set to the height of the webcam input source.
     * @return {Phaser.Video} The newly created Video object.
     */
-    video: function (key) {
+    video: function (key, captureAudio, width, height) {
 
-        return new Phaser.Video(this.game, key);
+        return new Phaser.Video(this.game, key, captureAudio, width, height);
 
     },
 
