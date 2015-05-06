@@ -306,14 +306,14 @@ Phaser.Video.prototype = {
         if (typeof width === 'undefined' || width === null) { width = this.video.videoWidth; change = true }
         if (typeof height === 'undefined' || height === null) { height = this.video.videoHeight; }
 
-        if (change)
-        {
-            console.log('updateTexture resizing to webcam', width, height);
-        }
-        else
-        {
-            console.log('updateTexture resizing to fixed dimensions', width, height);
-        }
+        // if (change)
+        // {
+        //     console.log('updateTexture resizing to webcam', width, height);
+        // }
+        // else
+        // {
+        //     console.log('updateTexture resizing to fixed dimensions', width, height);
+        // }
 
         this.width = width;
         this.height = height;
@@ -425,15 +425,35 @@ Phaser.Video.prototype = {
         this.game.onPause.remove(this.setPause, this);
         this.game.onResume.remove(this.setResume, this);
 
-        this.video.removeEventListener('ended', this.complete.bind(this));
+        //  Stream or file?
 
-        if (this.touchLocked)
+        if (this.videoStream)
         {
-            this._pending = false;
+            if (this.video.mozSrcObject)
+            {
+                this.video.mozSrcObject.stop();
+                this.video.src = null;
+            }
+            else
+            {
+                this.video.src = "";
+                this.videoStream.stop();
+            }
+
+            this.videoStream = null;
         }
         else
         {
-            this.video.pause();
+            this.video.removeEventListener('ended', this.complete.bind(this));
+
+            if (this.touchLocked)
+            {
+                this._pending = false;
+            }
+            else
+            {
+                this.video.pause();
+            }
         }
 
         return this;
