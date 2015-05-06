@@ -132,13 +132,23 @@ Phaser.Video = function (game, key, captureAudio, width, height) {
     this.onComplete = new Phaser.Signal();
 
     /**
+    * @property {Phaser.Signal} onAccess - This signal is dispatched if the user allows access to their webcam.
+    */
+    this.onAccess = new Phaser.Signal();
+
+    /**
+    * @property {Phaser.Signal} onError - This signal is dispatched if an error occurs either getting permission to use the webcam (for a Video Stream) or when trying to play back a video file.
+    */
+    this.onError = new Phaser.Signal();
+
+    /**
     * @property {boolean} touchLocked - true if this video is currently locked awaiting a touch event. This happens on some mobile devices, such as iOS.
     * @default
     */
     this.touchLocked = false;
 
     /**
-    * @property {object} videoStream - The Video Stream data. Only set if this Video is streaming from the webcam via `createVideoStream`.
+    * @property {MediaStream} videoStream - The Video Stream data. Only set if this Video is streaming from the webcam via `createVideoStream`.
     */
     this.videoStream = null;
 
@@ -206,10 +216,10 @@ Phaser.Video.prototype = {
      * As soon as this method is called the user will be prompted by their browser to "Allow" access to the webcam.
      * If they allow it the webcam feed is directed to this Video. Call `Video.play` to start the stream.
      *
-     * If they block the webcam a console warning will be displayed containing the NavigatorUserMediaError event.
+     * If they block the webcam the onError signal will be dispatched containing the NavigatorUserMediaError event.
      *
      * You can optionally set a width and height for the stream. If set the input will be cropped to these dimensions.
-     * If not given as soon as the stream has enough data the video dimensions will be changed to match the webcam device.
+     * If not given then as soon as the stream has enough data the video dimensions will be changed to match the webcam device.
      * You can listen for this with the onChangeSource signal.
      *
      * @method Phaser.Video#createVideoStream
@@ -258,10 +268,12 @@ Phaser.Video.prototype = {
 
             _this.video.addEventListener('loadeddata', function (event) { _this.updateTexture(width, height); }, true);
 
+            _this.onAccess.dispatch(_this);
+
         };
 
         var _streamError = function(e) {
-            console.warn('Stream Error', e);
+            _this.onError.dispatch(_this, e);
         }
 
         navigator.getUserMedia({ audio: captureAudio, video: true }, _streamStart, _streamError);
@@ -410,6 +422,8 @@ Phaser.Video.prototype = {
      * If you only wish to pause playback of the video, to resume at a later time, use `Video.paused = true` instead.
      * If the video hasn't finished downloading calling `Video.stop` will not abort the download. To do that you need to 
      * call `Video.destroy` instead.
+     *
+     * If you are using a video stream from a webcam then calling Stop will disconnect the MediaStream session and disable the webcam.
      *
      * @method Phaser.Video#stop
      * @return {Phaser.Video} This Video object for method chaining.
@@ -690,6 +704,12 @@ Phaser.Video.prototype = {
         }
 
         return true;
+
+    },
+
+    snapshot: function () {
+
+
 
     },
 
