@@ -6,11 +6,20 @@
 
 /**
 * A Video object that takes a previously loaded Video from the Phaser Cache and handles playback of it.
-* Can be applied to a Sprite as a texture. If multiple Sprites share the same Video texture then playback
-* changes on the video will be seen across all Sprites simultaneously. If you need each Sprite to be able to
-* play the videos independently (i.e. starting playback at different times) then you will need one Video object
-* per Sprite. Please understand the obvious performance implications of doing this, and the memory required
-* to hold videos in active RAM.
+* 
+* This can be applied to a Sprite as a texture. If multiple Sprites share the same Video texture and playback
+* changes (i.e. you pause the video, or seek to a new time) then this change will be seen across all Sprites simultaneously.
+* 
+* If you need each Sprite to be able to play a video fully independently then you will need one Video object per Sprite.
+* Please understand the obvious performance implications of doing this, and the memory required to hold videos in RAM.
+*
+* On some mobile browsers such as iOS Safari, you cannot play a video until the user has explicitly touched the screen.
+* This works in the same way as audio unlocking. Phaser will handle the touch unlocking for you, however unlike with audio
+* it's worth noting that every single Video needs to be touch unlocked, not just the first one. You can use the `changeSource`
+* method to try and work around this limitation, but see the method help for details.
+*
+* Small screen devices, especially iPod and iPhone will launch the video in its own native video player, 
+* outside of the Safari browser. There is no way to avoid this, it's a device imposed limitation.
 *
 * @class Phaser.Video
 * @constructor
@@ -94,6 +103,11 @@ Phaser.Video = function (game, key) {
     this.onPlay = new Phaser.Signal();
 
     /**
+    * @property {Phaser.Signal} onChangeSource - This signal is dispatched if the Video source is changed. It sends 3 parameters: a reference to the Video object and the new width and height of the new video source.
+    */
+    this.onChangeSource = new Phaser.Signal();
+
+    /**
     * @property {Phaser.Signal} onComplete - This signal is dispatched when the Video completes playback, i.e. enters an 'ended' state. Videos set to loop will never dispatch this signal.
     */
     this.onComplete = new Phaser.Signal();
@@ -139,6 +153,13 @@ Phaser.Video = function (game, key) {
     */
     this._pending = false;
 
+    /**
+    * @property {boolean} _autoplay - Internal var tracking autoplay when changing source.
+    * @private
+    * @default
+    */
+    this._autoplay = false;
+
     if (!this.game.device.cocoonJS && this.game.device.iOS || (window['PhaserGlobal'] && window['PhaserGlobal'].fakeiOSTouchLock))
     {
         this.setTouchLock();
@@ -176,6 +197,34 @@ Phaser.Video.prototype = {
         this.height = this.video.videoHeight;
 
         return this;
+
+    },
+
+    /**
+     * Called automatically if the video source changes and updates the internal texture dimensions.
+     * Then dispatches the onChangeSource signal.
+     *
+     * @method Phaser.Video#updateTexture
+     */
+    updateTexture: function () {
+
+        this.width = this.video.videoWidth;
+        this.height = this.video.videoHeight;
+
+        this.baseTexture.forceLoaded(this.width, this.height);
+
+        this.texture.frame.width = this.width;
+        this.texture.frame.height = this.height;
+
+        this.video.removeEventListener('canplaythrough', this.updateTexture.bind(this));
+
+        this.onChangeSource.dispatch(this, this.width, this.height);
+
+        if (this._autoplay)
+        {
+            this.video.play();
+            this.onPlay.dispatch(this, this.loop, this.playbackRate);
+        }
 
     },
 
@@ -433,10 +482,19 @@ Phaser.Video.prototype = {
 
     /**
      * On some mobile browsers you cannot play a video until the user has explicitly touched the video to allow it.
-     * Phaser handles this via the setTouchLock method. However if you have 3 different videos, maybe an "Intro", "Start" and "Game Over"
+     * Phaser handles this via the `setTouchLock` method. However if you have 3 different videos, maybe an "Intro", "Start" and "Game Over"
      * split into three different Video objects, then you will need the user to touch-unlock every single one of them.
+     * 
      * You can avoid this by using just one Video object and simply changing the video source. Once a Video element is unlocked it remains
      * unlocked, even if the source changes. So you can use this to your benefit to avoid forcing the user to 'touch' the video yet again.
+     *
+     * As you'd expect there are limitations. So far we've found that the videos need to be in the same encoding format and bitrate.
+     * This method will automatically handle a change in video dimensions, but if you try swapping to a different bitrate we've found it
+     * cannot render the new video on iOS (desktop browsers cope better).
+     *
+     * When the video source is changed the video file is requested over the network. Listen for the `onChangeSource` signal to know
+     * when the new video has downloaded enough content to be able to be played. Previous settings such as the volume and loop state
+     * are adopted automatically by the new video.
      *
      * @method Phaser.Video#changeSource
      * @param {string} src - The new URL to change the video.src to.
@@ -445,7 +503,22 @@ Phaser.Video.prototype = {
      */
     changeSource: function (src, autoplay) {
 
+        if (typeof autoplay === 'undefined') { autoplay = true; }
+
+        this.video.pause();
+
+        this.video.addEventListener('canplaythrough', this.updateTexture.bind(this), true);
+
         this.video.src = src;
+
+        this.video.load();
+
+        this._autoplay = autoplay;
+
+        if (!autoplay)
+        {
+            this.paused = true;
+        }
 
         return this;
 
