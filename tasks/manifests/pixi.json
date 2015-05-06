@@ -10,7 +10,6 @@
     "src/pixi/text/BitmapText.js",
     "src/pixi/display/Stage.js",
 
-    "src/pixi/utils/EventTarget.js",
     "src/pixi/utils/Utils.js",
     "src/pixi/utils/Polyk.js",
 
@@ -46,7 +45,6 @@
     "src/pixi/textures/BaseTexture.js",
     "src/pixi/textures/Texture.js",
     "src/pixi/textures/RenderTexture.js",
-    "src/pixi/textures/VideoTexture.js",
 
     "src/pixi/filters/AbstractFilter.js",
 

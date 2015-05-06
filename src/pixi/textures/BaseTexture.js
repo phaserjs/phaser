@@ -117,26 +117,6 @@ PIXI.BaseTexture = function(source, scaleMode)
         this.height = this.source.naturalHeight || this.source.height;
         this.dirty();
     }
-    else
-    {
-        var scope = this;
-
-        this.source.onload = function() {
-
-            scope.hasLoaded = true;
-            scope.width = scope.source.naturalWidth || scope.source.width;
-            scope.height = scope.source.naturalHeight || scope.source.height;
-
-            scope.dirty();
-
-            // add it to somewhere...
-            scope.dispatchEvent( { type: 'loaded', content: scope } );
-        };
-
-        this.source.onerror = function() {
-            scope.dispatchEvent( { type: 'error', content: scope } );
-        };
-    }
 
     /**
      * @property imageUrl
@@ -154,7 +134,6 @@ PIXI.BaseTexture = function(source, scaleMode)
 };
 
 PIXI.BaseTexture.prototype.constructor = PIXI.BaseTexture;
-PIXI.EventTarget.mixin(PIXI.BaseTexture.prototype);
 
 /**
  * Forces this BaseTexture to be set as loaded, with the given width and height.
