@@ -266,7 +266,7 @@ Phaser.Video.prototype = {
 
             _this.video.src = window.URL.createObjectURL(stream);
 
-            _this.video.addEventListener('loadeddata', function (event) { _this.updateTexture(width, height); }, true);
+            _this.video.addEventListener('loadeddata', function (event) { _this.updateTexture(event, width, height); }, true);
 
             _this.onAccess.dispatch(_this);
 
@@ -308,10 +308,11 @@ Phaser.Video.prototype = {
      * Then dispatches the onChangeSource signal.
      *
      * @method Phaser.Video#updateTexture
+     * @param {object} [event] - The event which triggered the texture update.
      * @param {integer} [width] - The new width of the video. If undefined `video.videoWidth` is used.
      * @param {integer} [height] - The new height of the video. If undefined `video.videoHeight` is used.
      */
-    updateTexture: function (width, height) {
+    updateTexture: function (event, width, height) {
 
         var change = false;
 
