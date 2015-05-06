@@ -325,6 +325,7 @@ Version 2.4 - "Katar" - in dev
 * SoundManager.volume now has its input value clamped to ensure it's between 0 and 1 (inclusive)
 * Removed `Input.moveCallback` and `Input.moveCallbackContext` as neither are used any longer. Use `Input.addMoveCallback`.
 * SoundManager now uses the new `Touch.addTouchLockCallback` methods to handle mobile device audio unlocking.
+* If a BitmapData is created with a width or height set to zero then the width and/or height are set to a default value (256) instead to avoid getContext errors.
 
 ### Bug Fixes
 

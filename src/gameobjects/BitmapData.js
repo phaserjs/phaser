@@ -13,13 +13,13 @@
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
 * @param {string} key - Internal Phaser reference key for the BitmapData.
-* @param {number} [width=256] - The width of the BitmapData in pixels.
-* @param {number} [height=256] - The height of the BitmapData in pixels.
+* @param {number} [width=256] - The width of the BitmapData in pixels. If undefined or zero it's set to a default value.
+* @param {number} [height=256] - The height of the BitmapData in pixels. If undefined or zero it's set to a default value.
 */
 Phaser.BitmapData = function (game, key, width, height) {
 
-    if (typeof width === 'undefined') { width = 256; }
-    if (typeof height === 'undefined') { height = 256; }
+    if (typeof width === 'undefined' || width === 0) { width = 256; }
+    if (typeof height === 'undefined' || height === 0) { height = 256; }
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running game.
