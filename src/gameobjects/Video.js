@@ -274,7 +274,7 @@ Phaser.Video.prototype = {
 
         var _streamError = function(e) {
             _this.onError.dispatch(_this, e);
-        }
+        };
 
         navigator.getUserMedia({ audio: captureAudio, video: true }, _streamStart, _streamError);
 
@@ -316,7 +316,7 @@ Phaser.Video.prototype = {
 
         var change = false;
 
-        if (typeof width === 'undefined' || width === null) { width = this.video.videoWidth; change = true }
+        if (typeof width === 'undefined' || width === null) { width = this.video.videoWidth; change = true; }
         if (typeof height === 'undefined' || height === null) { height = this.video.videoHeight; }
 
         // if (change)
