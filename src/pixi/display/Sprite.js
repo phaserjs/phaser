@@ -144,6 +144,7 @@ PIXI.Sprite.prototype.setTexture = function(texture)
 {
     this.texture = texture;
     this.cachedTint = 0xFFFFFF;
+    this.texture.valid = true;
 };
 
 /**
