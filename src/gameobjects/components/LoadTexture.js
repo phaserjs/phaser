@@ -68,13 +68,8 @@ Phaser.Component.LoadTexture.prototype = {
         {
             //  This works from a reference, which probably isn't what we need here
             this.setTexture(key.texture);
-
+            this.setFrame(key.texture.frame.clone());
             key.onChangeSource.add(this.resizeFrame, this);
-
-            if (this.game.cache.getFrameData(key.key, Phaser.Cache.VIDEO))
-            {
-                setFrame = !this.animations.loadFrameData(this.game.cache.getFrameData(key.key, Phaser.Cache.VIDEO), frame);
-            }
         }
         else if (key instanceof PIXI.Texture)
         {
