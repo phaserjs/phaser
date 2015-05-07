@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.4.0 "Katar" - Built: Wed May 06 2015 17:05:01
+* v2.4.0 "Katar" - Built: Thu May 07 2015 02:46:20
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -1564,6 +1564,7 @@ PIXI.Sprite.prototype.setTexture = function(texture)
 {
     this.texture = texture;
     this.cachedTint = 0xFFFFFF;
+    this.texture.valid = true;
 };
 
 /**
@@ -33401,13 +33402,8 @@ Phaser.Component.LoadTexture.prototype = {
         {
             //  This works from a reference, which probably isn't what we need here
             this.setTexture(key.texture);
-
+            this.setFrame(key.texture.frame.clone());
             key.onChangeSource.add(this.resizeFrame, this);
-
-            if (this.game.cache.getFrameData(key.key, Phaser.Cache.VIDEO))
-            {
-                setFrame = !this.animations.loadFrameData(this.game.cache.getFrameData(key.key, Phaser.Cache.VIDEO), frame);
-            }
         }
         else if (key instanceof PIXI.Texture)
         {
