@@ -103,7 +103,7 @@ Phaser.Video = function (game, key, captureAudio, width, height) {
     */
     this.textureFrame = new Phaser.Frame(0, 0, 0, this.width, this.height, 'video');
 
-    this.texture.frame = this.textureFrame;
+    this.texture.setFrame(this.textureFrame);
 
     /**
     * @property {number} type - The const type of this object.
@@ -348,8 +348,9 @@ Phaser.Video.prototype = {
 
         this.baseTexture.forceLoaded(width, height);
 
-        this.texture.frame.width = width;
-        this.texture.frame.height = height;
+        this.texture.frame.resize(width, height);
+        this.texture.width = width;
+        this.texture.height = height;
 
         if (this.snapshot)
         {
