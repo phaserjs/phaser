@@ -33,10 +33,11 @@ Phaser.GameObjectFactory = function (game) {
 Phaser.GameObjectFactory.prototype = {
 
     /**
-    * Adds an existing object to the game world.
+    * Adds an existing display object to the game world.
+    * 
     * @method Phaser.GameObjectFactory#existing
-    * @param {any} object - An instance of Phaser.Sprite, Phaser.Button or any other display object..
-    * @return {any} The child that was added to the Group.
+    * @param {any} object - An instance of Phaser.Sprite, Phaser.Button or any other display object.
+    * @return {any} The child that was added to the World.
     */
     existing: function (object) {
 
@@ -45,16 +46,20 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-    * Create a new `Image` object. An Image is a light-weight object you can use to display anything that doesn't need physics or animation.
-    * It can still rotate, scale, crop and receive input events. This makes it perfect for logos, backgrounds, simple buttons and other non-Sprite graphics.
+    * Create a new `Image` object.
+    * 
+    * An Image is a light-weight object you can use to display anything that doesn't need physics or animation.
+    * 
+    * It can still rotate, scale, crop and receive input events. 
+    * This makes it perfect for logos, backgrounds, simple buttons and other non-Sprite graphics.
     *
     * @method Phaser.GameObjectFactory#image
-    * @param {number} x - X position of the image.
-    * @param {number} y - Y position of the image.
-    * @param {string|Phaser.RenderTexture|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
-    * @param {string|number} [frame] - If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
+    * @param {number} [x=0] - The x coordinate of the Image. The coordinate is relative to any parent container this Image may be in.
+    * @param {number} [y=0] - The y coordinate of the Image. The coordinate is relative to any parent container this Image may be in.
+    * @param {string|Phaser.RenderTexture|Phaser.BitmapData|Phaser.Video|PIXI.Texture} [key] - The image used as a texture by this display object during rendering. If a string Phaser will get for an entry in the Image Cache. Or it can be an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
+    * @param {string|number} [frame] - If a Texture Atlas or Sprite Sheet is used this allows you to specify the frame to be used. Use either an integer for a Frame ID or a string for a frame name.
     * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
-    * @returns {Phaser.Sprite} the newly created sprite object.
+    * @returns {Phaser.Image} The newly created Image object.
     */
     image: function (x, y, key, frame, group) {
 
@@ -67,13 +72,17 @@ Phaser.GameObjectFactory.prototype = {
     /**
     * Create a new Sprite with specific position and sprite sheet key.
     *
+    * At its most basic a Sprite consists of a set of coordinates and a texture that is used when rendered.
+    * They also contain additional properties allowing for physics motion (via Sprite.body), input handling (via Sprite.input),
+    * events (via Sprite.events), animation (via Sprite.animations), camera culling and more. Please see the Examples for use cases.
+    *
     * @method Phaser.GameObjectFactory#sprite
-    * @param {number} x - X position of the new sprite.
-    * @param {number} y - Y position of the new sprite.
-    * @param {string|Phaser.RenderTexture|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
-    * @param {string|number} [frame] - If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
+    * @param {number} [x=0] - The x coordinate of the sprite. The coordinate is relative to any parent container this sprite may be in.
+    * @param {number} [y=0] - The y coordinate of the sprite. The coordinate is relative to any parent container this sprite may be in.
+    * @param {string|Phaser.RenderTexture|Phaser.BitmapData|Phaser.Video|PIXI.Texture} [key] - The image used as a texture by this display object during rendering. If a string Phaser will get for an entry in the Image Cache. Or it can be an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
+    * @param {string|number} [frame] - If a Texture Atlas or Sprite Sheet is used this allows you to specify the frame to be used. Use either an integer for a Frame ID or a string for a frame name.
     * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
-    * @returns {Phaser.Sprite} the newly created sprite object.
+    * @returns {Phaser.Sprite} The newly created Sprite object.
     */
     sprite: function (x, y, key, frame, group) {
 
@@ -84,15 +93,17 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-    * Create a tween on a specific object. The object can be any JavaScript object or Phaser object such as Sprite.
+    * Create a tween on a specific object.
+    * 
+    * The object can be any JavaScript object or Phaser object such as Sprite.
     *
     * @method Phaser.GameObjectFactory#tween
-    * @param {object} obj - Object the tween will be run on.
+    * @param {object} object - Object the tween will be run on.
     * @return {Phaser.Tween} The newly created Phaser.Tween object.
     */
-    tween: function (obj) {
+    tween: function (object) {
 
-        return this.game.tweens.create(obj);
+        return this.game.tweens.create(object);
 
     },
 
@@ -105,7 +116,7 @@ Phaser.GameObjectFactory.prototype = {
     * @param {boolean} [addToStage=false] - If set to true this Group will be added directly to the Game.Stage instead of Game.World.
     * @param {boolean} [enableBody=false] - If true all Sprites created with `Group.create` or `Group.createMulitple` will have a physics body created on them. Change the body type with physicsBodyType.
     * @param {number} [physicsBodyType=0] - If enableBody is true this is the type of physics body that is created on new Sprites. Phaser.Physics.ARCADE, Phaser.Physics.P2, Phaser.Physics.NINJA, etc.
-    * @return {Phaser.Group} The newly created group.
+    * @return {Phaser.Group} The newly created Group.
     */
     group: function (parent, name, addToStage, enableBody, physicsBodyType) {
 
@@ -115,6 +126,7 @@ Phaser.GameObjectFactory.prototype = {
 
     /**
     * A Group is a container for display objects that allows for fast pooling, recycling and collision checks.
+    * 
     * A Physics Group is the same as an ordinary Group except that is has enableBody turned on by default, so any Sprites it creates
     * are automatically given a physics body.
     *
@@ -123,7 +135,7 @@ Phaser.GameObjectFactory.prototype = {
     * @param {any} [parent] - The parent Group or DisplayObjectContainer that will hold this group, if any. If set to null the Group won't be added to the display list. If undefined it will be added to World by default.
     * @param {string} [name='group'] - A name for this Group. Not used internally but useful for debugging.
     * @param {boolean} [addToStage=false] - If set to true this Group will be added directly to the Game.Stage instead of Game.World.
-    * @return {Phaser.Group} The newly created group.
+    * @return {Phaser.Group} The newly created Group.
     */
     physicsGroup: function (physicsBodyType, parent, name, addToStage) {
 
@@ -140,7 +152,7 @@ Phaser.GameObjectFactory.prototype = {
     * @param {Phaser.Group|null} parent - The parent Group that will hold this Sprite Batch. Set to `undefined` or `null` to add directly to game.world.
     * @param {string} [name='group'] - A name for this Sprite Batch. Not used internally but useful for debugging.
     * @param {boolean} [addToStage=false] - If set to true this Sprite Batch will be added directly to the Game.Stage instead of the parent.
-    * @return {Phaser.Group} The newly created group.
+    * @return {Phaser.SpriteBatch} The newly created Sprite Batch.
     */
     spriteBatch: function (parent, name, addToStage) {
 
@@ -160,7 +172,7 @@ Phaser.GameObjectFactory.prototype = {
     * @param {number} [volume=1] - The volume at which the sound will be played.
     * @param {boolean} [loop=false] - Whether or not the sound will loop.
     * @param {boolean} [connect=true] - Controls if the created Sound object will connect to the master gainNode of the SoundManager when running under WebAudio.
-    * @return {Phaser.Sound} The newly created text object.
+    * @return {Phaser.Sound} The newly created sound object.
     */
     audio: function (key, volume, loop, connect) {
 
@@ -176,7 +188,7 @@ Phaser.GameObjectFactory.prototype = {
     * @param {number} [volume=1] - The volume at which the sound will be played.
     * @param {boolean} [loop=false] - Whether or not the sound will loop.
     * @param {boolean} [connect=true] - Controls if the created Sound object will connect to the master gainNode of the SoundManager when running under WebAudio.
-    * @return {Phaser.Sound} The newly created text object.
+    * @return {Phaser.Sound} The newly created sound object.
     */
     sound: function (key, volume, loop, connect) {
 
@@ -201,14 +213,14 @@ Phaser.GameObjectFactory.prototype = {
     * Creates a new TileSprite object.
     *
     * @method Phaser.GameObjectFactory#tileSprite
-    * @param {number} x - The x coordinate (in world space) to position the TileSprite at.
-    * @param {number} y - The y coordinate (in world space) to position the TileSprite at.
+    * @param {number} x - The x coordinate of the TileSprite. The coordinate is relative to any parent container this TileSprite may be in.
+    * @param {number} y - The y coordinate of the TileSprite. The coordinate is relative to any parent container this TileSprite may be in.
     * @param {number} width - The width of the TileSprite.
     * @param {number} height - The height of the TileSprite.
-    * @param {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the TileSprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
-    * @param {string|number} frame - If this TileSprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
+    * @param {string|Phaser.RenderTexture|Phaser.BitmapData|Phaser.Video|PIXI.Texture} key - The image used as a texture by this display object during rendering. If a string Phaser will get for an entry in the Image Cache. Or it can be an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
+    * @param {string|number} [frame] - If a Texture Atlas or Sprite Sheet is used this allows you to specify the frame to be used. Use either an integer for a Frame ID or a string for a frame name.
     * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
-    * @return {Phaser.TileSprite} The newly created tileSprite object.
+    * @return {Phaser.TileSprite} The newly created TileSprite object.
     */
     tileSprite: function (x, y, width, height, key, frame, group) {
 
@@ -221,15 +233,16 @@ Phaser.GameObjectFactory.prototype = {
     /**
     * Creates a new Rope object.
     *
+    * Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/demo.js
+    *
     * @method Phaser.GameObjectFactory#rope
-    * @param {number} x - The x coordinate (in world space) to position the TileSprite at.
-    * @param {number} y - The y coordinate (in world space) to position the TileSprite at.
-    * @param {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the TileSprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
-    * @param {string|number} frame - If this TileSprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
+    * @param {number} [x=0] - The x coordinate of the Rope. The coordinate is relative to any parent container this rope may be in.
+    * @param {number} [y=0] - The y coordinate of the Rope. The coordinate is relative to any parent container this rope may be in.
+    * @param {string|Phaser.RenderTexture|Phaser.BitmapData|Phaser.Video|PIXI.Texture} [key] - The image used as a texture by this display object during rendering. If a string Phaser will get for an entry in the Image Cache. Or it can be an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
+    * @param {string|number} [frame] - If a Texture Atlas or Sprite Sheet is used this allows you to specify the frame to be used. Use either an integer for a Frame ID or a string for a frame name.
     * @param {Array} points - An array of {Phaser.Point}.
     * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
-    * @return {Phaser.TileSprite} The newly created tileSprite object.
-    * Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/demo.js
+    * @return {Phaser.Rope} The newly created Rope object.
     */
     rope: function (x, y, key, frame, points, group) {
 
@@ -243,10 +256,10 @@ Phaser.GameObjectFactory.prototype = {
     * Creates a new Text object.
     *
     * @method Phaser.GameObjectFactory#text
-    * @param {number} x - X position of the new text object.
-    * @param {number} y - Y position of the new text object.
-    * @param {string} text - The actual text that will be written.
-    * @param {object} style - The style object containing style attributes like font, font size , etc.
+    * @param {number} [x=0] - The x coordinate of the Text. The coordinate is relative to any parent container this text may be in.
+    * @param {number} [y=0] - The y coordinate of the Text. The coordinate is relative to any parent container this text may be in.
+    * @param {string} [text=''] - The text string that will be displayed.
+    * @param {object} [style] - The style object containing style attributes like font, font size , etc.
     * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
     * @return {Phaser.Text} The newly created text object.
     */
@@ -262,8 +275,8 @@ Phaser.GameObjectFactory.prototype = {
     * Creates a new Button object.
     *
     * @method Phaser.GameObjectFactory#button
-    * @param {number} [x] - X position of the new button object.
-    * @param {number} [y] - Y position of the new button object.
+    * @param {number} [x=0] - The x coordinate of the Button. The coordinate is relative to any parent container this button may be in.
+    * @param {number} [y=0] - The y coordinate of the Button. The coordinate is relative to any parent container this button may be in.
     * @param {string} [key] - The image key as defined in the Game.Cache to use as the texture for this button.
     * @param {function} [callback] - The function to call when this button is pressed
     * @param {object} [callbackContext] - The context in which the callback will be called (usually 'this')
@@ -272,7 +285,7 @@ Phaser.GameObjectFactory.prototype = {
     * @param {string|number} [downFrame] - This is the frame or frameName that will be set when this button is in a down state. Give either a number to use a frame ID or a string for a frame name.
     * @param {string|number} [upFrame] - This is the frame or frameName that will be set when this button is in an up state. Give either a number to use a frame ID or a string for a frame name.
     * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
-    * @return {Phaser.Button} The newly created button object.
+    * @return {Phaser.Button} The newly created Button object.
     */
     button: function (x, y, key, callback, callbackContext, overFrame, outFrame, downFrame, upFrame, group) {
 
@@ -286,8 +299,8 @@ Phaser.GameObjectFactory.prototype = {
     * Creates a new Graphics object.
     *
     * @method Phaser.GameObjectFactory#graphics
-    * @param {number} x - X position of the new graphics object.
-    * @param {number} y - Y position of the new graphics object.
+    * @param {number} [x=0] - The x coordinate of the Graphic. The coordinate is relative to any parent container this object may be in.
+    * @param {number} [y=0] - The y coordinate of the Graphic. The coordinate is relative to any parent container this object may be in.
     * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
     * @return {Phaser.Graphics} The newly created graphics object.
     */
@@ -310,7 +323,7 @@ Phaser.GameObjectFactory.prototype = {
     * @param {number} [x=0] - The x coordinate within the Emitter that the particles are emitted from.
     * @param {number} [y=0] - The y coordinate within the Emitter that the particles are emitted from.
     * @param {number} [maxParticles=50] - The total number of particles in this emitter.
-    * @return {Phaser.Emitter} The newly created emitter object.
+    * @return {Phaser.Particles.Arcade.Emitter} The newly created emitter object.
     */
     emitter: function (x, y, maxParticles) {
 
@@ -350,8 +363,8 @@ Phaser.GameObjectFactory.prototype = {
     * Create a new BitmapText object.
     *
     * @method Phaser.GameObjectFactory#bitmapText
-    * @param {number} x - X position of the new bitmapText object.
-    * @param {number} y - Y position of the new bitmapText object.
+    * @param {number} x - The x coordinate of the BitmapText. The coordinate is relative to any parent container this object may be in.
+    * @param {number} y - The y coordinate of the BitmapText. The coordinate is relative to any parent container this object may be in.
     * @param {string} font - The key of the BitmapText font as stored in Game.Cache.
     * @param {string} [text] - The actual text that will be rendered. Can be set later via BitmapText.text.
     * @param {number} [size] - The size the font will be rendered in, in pixels.
