@@ -98,6 +98,14 @@ PIXI.Texture = function(baseTexture, frame, crop, trim)
     this.requiresUpdate = false;
 
     /**
+     * This will let a renderer know that a tinted parent has updated its texture.
+     *
+     * @property requiresReTint
+     * @type Boolean
+     */
+    this.requiresReTint = false;
+
+    /**
      * The WebGL UV data cache.
      *
      * @property _uvs
