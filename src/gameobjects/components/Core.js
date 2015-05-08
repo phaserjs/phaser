@@ -106,6 +106,8 @@ Phaser.Component.Core.preUpdate = function () {
         this.renderOrderID = this.game.stage.currentRenderOrderID++;
     }
 
+    this.texture.requiresReTint = false;
+
     if (this.animations)
     {
         this.animations.update();
@@ -174,11 +176,11 @@ Phaser.Component.Core.prototype = {
 
     /**
     * The key of the image or texture used by this Game Object during rendering.
-    * If it is a string it's the string used to retrieve the texture from the Phaser.Cache.
-    * It can also be an instance of a RenderTexture, BitmapData or PIXI.Texture.
+    * If it is a string it's the string used to retrieve the texture from the Phaser Image Cache.
+    * It can also be an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
     * If a Game Object is created without a key it is automatically assigned the key `__default` which is a 32x32 transparent PNG stored within the Cache.
-    * If a Game Object is given a key which doesn't exist in the Cache it is re-assigned the key `__missing` which is a 32x32 PNG of a green box with a line through it.
-    *  @property {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key
+    * If a Game Object is given a key which doesn't exist in the Image Cache it is re-assigned the key `__missing` which is a 32x32 PNG of a green box with a line through it.
+    * @property {string|Phaser.RenderTexture|Phaser.BitmapData|Phaser.Video|PIXI.Texture} key
     */
     key: '',
 
