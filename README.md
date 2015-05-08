@@ -329,6 +329,8 @@ Version 2.4 - "Katar" - in dev
 * RetroFont has been updated to use RenderTexture.renderXY, removing the need for creating a Point object each update.
 * RetroFont no longer puts any entries into the TextureCache or generates any UUIDs on instantiation, speeding up creation and lowering memory use.
 * BitmapData.update now validates the `width` and `height` values to ensure they aren't lower than 1, which would previously cause a context error.
+* Texture.requiresReTint is a new property that controls if a texture requires the display object to be re-tinted having been updated internally. The LoadTexture component now sets this.
+* PIXI.Sprite.tintedTexture contains a canvas object that holds the tinted version of the Sprite. This is only populated in Canvas, not in WebGL.
 
 ### Bug Fixes
 
@@ -352,7 +354,6 @@ Version 2.4 - "Katar" - in dev
 * Fixed a bug in Pixi where drawing a Sprite to a RenderTexture would reset the Sprites transform to an identity Matrix.
 * The SoundManager didn't accurately detect devices or browser environments with no sound card present and would try to carry on using a null Web Audio context (thanks @englercj #1746)
 * The Tween.onStart signal wasn't dispatched if the Tween had a delay set. It's now dispatched immediately if no delay, or after the delay if set. It also respects the `autoStart` parameter and will still dispatch even if `autoStart` is true.
-* PIXI.CanvasTinter.tintWithMultiply was performing a double drawImage operation for no reason. Simplified down to a single drawImage call.
 * Input.addMoveCallback used to return the index of the callback entry in the internal `moveCallbacks` array. However as callbacks were removed the indexes became invalid, potentially causing a future `Input.deleteMoveCallback` to remove the wrong callback entirely or error. Input.deleteMoveCallback now takes the original callback and context as its parameters to ensure deletion safety.
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
