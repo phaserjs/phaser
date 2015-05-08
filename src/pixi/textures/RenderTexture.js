@@ -179,7 +179,10 @@ PIXI.RenderTexture.prototype.resize = function(width, height, updateBase)
  */
 PIXI.RenderTexture.prototype.clear = function()
 {
-    if(!this.valid)return;
+    if (!this.valid)
+    {
+        return;
+    }
 
     if (this.renderer.type === PIXI.WEBGL_RENDERER)
     {
@@ -254,7 +257,7 @@ PIXI.RenderTexture.prototype.renderCanvas = function(displayObject, matrix, clea
         return;
     }
 
-    // setWorld Alpha to ensure that the object is renderer at full opacity
+    // setWorld Alpha to ensure that the object is rendered at full opacity
     displayObject.worldAlpha = 1;
 
     // Time to update all the children of the displayObject with the new matrix (what new matrix? there isn't one!)
@@ -268,13 +271,11 @@ PIXI.RenderTexture.prototype.renderCanvas = function(displayObject, matrix, clea
         this.textureBuffer.clear();
     }
 
-    var context = this.textureBuffer.context;
-
     var realResolution = this.renderer.resolution;
 
     this.renderer.resolution = this.resolution;
 
-    this.renderer.renderDisplayObject(displayObject, context, matrix);
+    this.renderer.renderDisplayObject(displayObject, this.textureBuffer.context, matrix);
 
     this.renderer.resolution = realResolution;
 };
@@ -293,7 +294,7 @@ PIXI.RenderTexture.prototype.getImage = function()
 };
 
 /**
- * Will return a a base64 encoded string of this texture. It works by calling RenderTexture.getCanvas and then running toDataURL on that.
+ * Will return a base64 encoded string of this texture. It works by calling RenderTexture.getCanvas and then running toDataURL on that.
  *
  * @method getBase64
  * @return {String} A base64 encoded string of the texture.

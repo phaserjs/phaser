@@ -19,7 +19,7 @@
  */
 PIXI.CanvasRenderer = function(width, height, options)
 {
-    if(options)
+    if (options)
     {
         for (var i in PIXI.defaultRenderOptions)
         {
@@ -31,7 +31,7 @@ PIXI.CanvasRenderer = function(width, height, options)
         options = PIXI.defaultRenderOptions;
     }
 
-    if(!PIXI.defaultRenderer)
+    if (!PIXI.defaultRenderer)
     {
         PIXI.defaultRenderer = this;
     }
