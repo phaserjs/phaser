@@ -104,7 +104,7 @@ PIXI.RenderTexture = function(width, height, renderer, scaleMode, resolution)
      */
     this.renderer = renderer || PIXI.defaultRenderer;
 
-    if(this.renderer.type === PIXI.WEBGL_RENDERER)
+    if (this.renderer.type === PIXI.WEBGL_RENDERER)
     {
         var gl = this.renderer.gl;
         this.baseTexture._dirty[gl.id] = false;
@@ -113,12 +113,12 @@ PIXI.RenderTexture = function(width, height, renderer, scaleMode, resolution)
         this.baseTexture._glTextures[gl.id] =  this.textureBuffer.texture;
 
         this.render = this.renderWebGL;
-        this.projection = new PIXI.Point(this.width*0.5, -this.height*0.5);
+        this.projection = new PIXI.Point(this.width * 0.5, -this.height * 0.5);
     }
     else
     {
         this.render = this.renderCanvas;
-        this.textureBuffer = new PIXI.CanvasBuffer(this.width* this.resolution, this.height* this.resolution);
+        this.textureBuffer = new PIXI.CanvasBuffer(this.width * this.resolution, this.height * this.resolution);
         this.baseTexture.source = this.textureBuffer.canvas;
     }
 
