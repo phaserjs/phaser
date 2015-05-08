@@ -21,22 +21,9 @@ PIXI.CanvasTinter = function() {};
  */
 PIXI.CanvasTinter.getTintedTexture = function(sprite, color)
 {
-    var texture = sprite.texture;
-
-    var canvas = PIXI.CanvasTinter.canvas || document.createElement("canvas");
+    var canvas = sprite.tintedTexture || document.createElement("canvas");
     
-    PIXI.CanvasTinter.tintMethod(texture, color, canvas);
-
-    if (PIXI.CanvasTinter.convertTintToImage)
-    {
-        var tintImage = new Image();
-        tintImage.src = canvas.toDataURL();
-    }
-    else
-    {
-        //  If we are not converting the texture to an image then we need to lose the reference to the canvas
-        PIXI.CanvasTinter.canvas = null;
-    }
+    PIXI.CanvasTinter.tintMethod(sprite.texture, color, canvas);
 
     return canvas;
 };
@@ -56,15 +43,23 @@ PIXI.CanvasTinter.tintWithMultiply = function(texture, color, canvas)
 
     var crop = texture.crop;
 
-    canvas.width = crop.width;
-    canvas.height = crop.height;
+    if (canvas.width !== crop.width || canvas.height !== crop.height)
+    {
+        canvas.width = crop.width;
+        canvas.height = crop.height;
+    }
 
-    context.fillStyle = "#" + ("00000" + ( color | 0).toString(16)).substr(-6);
+    context.clearRect(0, 0, crop.width, crop.height);
+
+    context.fillStyle = "#" + ("00000" + (color | 0).toString(16)).substr(-6);
     context.fillRect(0, 0, crop.width, crop.height);
 
     context.globalCompositeOperation = "multiply";
-
     context.drawImage(texture.baseTexture.source, crop.x, crop.y, crop.width, crop.height, 0, 0, crop.width, crop.height);
+
+    context.globalCompositeOperation = "destination-atop";
+    context.drawImage(texture.baseTexture.source, crop.x, crop.y, crop.width, crop.height, 0, 0, crop.width, crop.height);
+
 };
 
 /**
@@ -75,7 +70,7 @@ PIXI.CanvasTinter.tintWithMultiply = function(texture, color, canvas)
  * @param texture {Texture} the texture to tint
  * @param color {Number} the color to use to tint the sprite with
  * @param canvas {HTMLCanvasElement} the current canvas
- */
+ */ 
 PIXI.CanvasTinter.tintWithPerPixel = function(texture, color, canvas)
 {
     var context = canvas.getContext("2d");
@@ -116,26 +111,6 @@ PIXI.CanvasTinter.tintWithPerPixel = function(texture, color, canvas)
 };
 
 /**
- * Rounds the specified color according to the PIXI.CanvasTinter.cacheStepsPerColorChannel.
- * 
- * @method roundColor
- * @static
- * @param color {number} the color to round, should be a hex color
- */
-PIXI.CanvasTinter.roundColor = function(color)
-{
-    var step = PIXI.CanvasTinter.cacheStepsPerColorChannel;
-
-    var rgbValues = PIXI.hex2rgb(color);
-
-    rgbValues[0] = Math.min(255, (rgbValues[0] / step) * step);
-    rgbValues[1] = Math.min(255, (rgbValues[1] / step) * step);
-    rgbValues[2] = Math.min(255, (rgbValues[2] / step) * step);
-
-    return PIXI.rgb2hex(rgbValues);
-};
-
-/**
  * Checks if the browser correctly supports putImageData alpha channels.
  * 
  * @method checkInverseAlpha
@@ -167,24 +142,6 @@ PIXI.CanvasTinter.checkInverseAlpha = function()
     //  Compare and return
     return (s2.data[0] === s1.data[0] && s2.data[1] === s1.data[1] && s2.data[2] === s1.data[2] && s2.data[3] === s1.data[3]);
 };
-
-/**
- * Number of steps which will be used as a cap when rounding colors.
- *
- * @property cacheStepsPerColorChannel 
- * @type Number
- * @static
- */
-PIXI.CanvasTinter.cacheStepsPerColorChannel = 8;
-
-/**
- * Tint cache boolean flag.
- *
- * @property convertTintToImage
- * @type Boolean
- * @static
- */
-PIXI.CanvasTinter.convertTintToImage = false;
 
 /**
  * If the browser isn't capable of handling tinting with alpha this will be false.
