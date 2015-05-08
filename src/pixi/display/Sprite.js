@@ -66,6 +66,25 @@ PIXI.Sprite = function(texture)
     this.tint = 0xFFFFFF;
 
     /**
+     * The tint applied to the sprite. This is a hex value. A value of 0xFFFFFF will remove any tint effect.
+     *
+     * @property cachedTint
+     * @private
+     * @type Number
+     * @default -1
+     */
+    this.cachedTint = -1;
+
+    /**
+     * A canvas that contains the tinted version of the Sprite (in Canvas mode, WebGL doesn't populate this)
+     *
+     * @property tintedTexture
+     * @type Canvas
+     * @default null
+     */
+    this.tintedTexture = null;
+
+    /**
      * The blend mode to be applied to the sprite. Set to PIXI.blendModes.NORMAL to remove any blend mode.
      *
      * @property blendMode
@@ -143,7 +162,6 @@ Object.defineProperty(PIXI.Sprite.prototype, 'height', {
 PIXI.Sprite.prototype.setTexture = function(texture)
 {
     this.texture = texture;
-    this.cachedTint = 0xFFFFFF;
     this.texture.valid = true;
 };
 
@@ -399,10 +417,11 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession, matrix)
 
         if (this.tint !== 0xFFFFFF)
         {
-            if (this.cachedTint !== this.tint)
+            if (this.texture.requiresReTint || this.cachedTint !== this.tint)
             {
-                this.cachedTint = this.tint;
                 this.tintedTexture = PIXI.CanvasTinter.getTintedTexture(this, this.tint);
+
+                this.cachedTint = this.tint;
             }
 
             renderSession.context.drawImage(this.tintedTexture, 0, 0, cw, ch, dx, dy, cw / resolution, ch / resolution);
