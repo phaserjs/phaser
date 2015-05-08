@@ -336,6 +336,7 @@ Phaser.RetroFont.prototype.buildRetroFontText = function () {
     var cx = 0;
     var cy = 0;
 
+    //  Clears the textureBuffer
     this.clear();
 
     if (this.multiLine)
@@ -409,10 +410,10 @@ Phaser.RetroFont.prototype.buildRetroFontText = function () {
             cx = 0;
         }
 
-        this.textureBuffer.clear();
-
         this.pasteLine(this._text, cx, 0, this.customSpacingX);
     }
+
+    this.requiresReTint = true;
 
 };
 
