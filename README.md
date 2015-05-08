@@ -326,6 +326,9 @@ Version 2.4 - "Katar" - in dev
 * Removed `Input.moveCallback` and `Input.moveCallbackContext` as neither are used any longer. Use `Input.addMoveCallback`.
 * SoundManager now uses the new `Touch.addTouchLockCallback` methods to handle mobile device audio unlocking.
 * If a BitmapData is created with a width or height set to zero then the width and/or height are set to a default value (256) instead to avoid getContext errors.
+* RetroFont has been updated to use RenderTexture.renderXY, removing the need for creating a Point object each update.
+* RetroFont no longer puts any entries into the TextureCache or generates any UUIDs on instantiation, speeding up creation and lowering memory use.
+* BitmapData.update now validates the `width` and `height` values to ensure they aren't lower than 1, which would previously cause a context error.
 
 ### Bug Fixes
 
