@@ -51,7 +51,7 @@ Phaser.Tween = function (target, game, manager) {
     /**
     * The speed at which the tweens will run. A value of 1 means it will match the game frame rate. 0.5 will run at half the frame rate. 2 at double the frame rate, etc.
     * If a tweens duration is 1 second but timeScale is 0.5 then it will take 2 seconds to complete.
-    * 
+    *
     * @property {number} timeScale
     * @default
     */
@@ -551,7 +551,7 @@ Phaser.Tween.prototype = {
     * as soon as this tween completes. If this tween never completes (i.e. repeatAll or loop is set) then the chain will never progress.
     * Note that `Tween.onComplete` will fire when *this* tween completes, not when the whole chain completes.
     * For that you should listen to `onComplete` on the final tween in your chain.
-    * 
+    *
     * If you pass multiple tweens to this method they will be joined into a single long chain.
     * For example if this is Tween A and you pass in B, C and D then B will be chained to A, C will be chained to B and D will be chained to C.
     * Any previously chained tweens that may have been set will be overwritten.
@@ -646,7 +646,7 @@ Phaser.Tween.prototype = {
 
     /**
     * This is called by the core Game loop. Do not call it directly, instead use Tween.pause.
-    * 
+    *
     * @private
     * @method Phaser.Tween#_pause
     */
