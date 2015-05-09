@@ -835,8 +835,13 @@ Phaser.Tween.prototype = {
             return null;
         }
 
-        if (typeof frameRate === 'undefined') { frameRate = 60; }
-        if (typeof data === 'undefined') { data = []; }
+        if (typeof frameRate === 'undefined') {
+            frameRate = 60;
+        }
+
+        if (typeof data === 'undefined') {
+            data = [];
+        }
 
         //  Populate the tween data
         for (var i = 0; i < this.timeline.length; i++)
