@@ -1,5 +1,4 @@
-// Type definitions for PIXI 2.2.8 2015-03-24
-// Project: https://github.com/GoodBoyDigital/pixi.js/
+// Type definitions for PIXI 2.2.8 Deviation. Commit History Reviewed: 2015-May-09
 
 declare module PIXI {
 
@@ -275,7 +274,7 @@ declare module PIXI {
         once(eventName: string, fn: Function): Function;
         off(eventName: string, fn: Function): Function;
         removeAllEventListeners(eventName: string): void;
-
+        forceLoaded(width: number, height: number): void;
         destroy(): void;
         dirty(): void;
         updateSourceImage(newSrc: string): void;
@@ -396,10 +395,7 @@ declare module PIXI {
         static tintWithMultiply(texture: Texture, color: number, canvas: HTMLCanvasElement): void;
         static tintWithOverlay(texture: Texture, color: number, canvas: HTMLCanvasElement): void;
         static tintWithPerPixel(texture: Texture, color: number, canvas: HTMLCanvasElement): void;
-        static roundColor(color: number): void;
 
-        static cacheStepsPerColorChannel: number;
-        static convertTintToImage: boolean;
         static canUseMultiply: boolean;
         static tintMethod: any;
 
@@ -484,6 +480,9 @@ declare module PIXI {
         stage: Stage;
         visible: boolean;
         worldAlpha: number;
+        worldPosition: PIXI.Point;
+        worldScale: PIXI.Point;
+        worldRotation: number;
         worldVisible: boolean;
         x: number;
         y: number;
@@ -1220,13 +1219,13 @@ declare module PIXI {
 
         static baseTextureFromVideo(video: HTMLVideoElement, scaleMode: number): BaseTexture;
         static textureFromVideo(video: HTMLVideoElement, scaleMode: number): Texture;
-        static fromUrl(videoSrc: string, scaleMode: number): Texture;
+        static fromUrl(videoSrc: string, scaleMode?: number, autoPlay?: boolean, type?: string, loop?: boolean): Texture;
 
+        controls: boolean;
         autoUpdate: boolean;
+        type: string;
 
-        onPlay: Phaser.Signal;
-        onComplete: Phaser.Signal;
-        
+        changeSource(src: string, type: string, loop: boolean): void;
         play(): void;
         stop(): void;
 
@@ -1234,7 +1233,7 @@ declare module PIXI {
         updateBound(): void;
         onPlayStart: () => void;
         onPlayStop: () => void;
-        onCanPlay: () => void;
+        onCanPlay: (event: any) => void;
 
     }
 
