@@ -2027,7 +2027,13 @@ Phaser.ScaleManager.prototype = {
         if (typeof height === 'undefined') { height = this.height; }
         if (typeof letterBox === 'undefined') { letterBox = false; }
 
-        sprite.scale.set(1);
+        if (!sprite || !sprite['scale'])
+        {
+            return sprite;
+        }
+
+        sprite.scale.x = 1;
+        sprite.scale.y = 1;
 
         if ((sprite.width <= 0) || (sprite.height <= 0) || (width <= 0) || (height <= 0))
         {
