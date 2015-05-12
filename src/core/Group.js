@@ -121,7 +121,7 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
     *
     * @property {Phaser.Point} scale
     */
-    this.scale = new Phaser.Point(1, 1);
+    // this.scale = new Phaser.Point(1, 1);
 
     /**
     * The current display object that the group cursor is pointing to, if any. (Can be set manually.)
