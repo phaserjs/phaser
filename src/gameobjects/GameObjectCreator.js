@@ -237,8 +237,8 @@ Phaser.GameObjectCreator.prototype = {
     * Creates a new Graphics object.
     *
     * @method Phaser.GameObjectCreator#graphics
-    * @param {number} x - X position of the new graphics object.
-    * @param {number} y - Y position of the new graphics object.
+    * @param {number} [x=0] - X position of the new graphics object.
+    * @param {number} [y=0] - Y position of the new graphics object.
     * @return {Phaser.Graphics} The newly created graphics object.
     */
     graphics: function (x, y) {
