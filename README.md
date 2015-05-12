@@ -357,6 +357,7 @@ Version 2.4 - "Katar" - in dev
 * The SoundManager didn't accurately detect devices or browser environments with no sound card present and would try to carry on using a null Web Audio context (thanks @englercj #1746)
 * The Tween.onStart signal wasn't dispatched if the Tween had a delay set. It's now dispatched immediately if no delay, or after the delay if set. It also respects the `autoStart` parameter and will still dispatch even if `autoStart` is true.
 * Input.addMoveCallback used to return the index of the callback entry in the internal `moveCallbacks` array. However as callbacks were removed the indexes became invalid, potentially causing a future `Input.deleteMoveCallback` to remove the wrong callback entirely or error. Input.deleteMoveCallback now takes the original callback and context as its parameters to ensure deletion safety.
+* Graphics constructor now sets x/y parameters to zero if undefined. Before it would set them to undefined as the type check wasn't strict.
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
