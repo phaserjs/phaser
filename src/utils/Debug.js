@@ -715,14 +715,14 @@ Phaser.Utils.Debug.prototype = {
     },
 
     /**
-    * Render a Sprites Physics body if it has one set. Note this only works for Arcade and
-    * Ninja (AABB, circle only) Physics.
-    * To display a P2 body you should enable debug mode on the body when creating it.
+    * Render a Sprites Physics body if it has one set. The body is rendered as a filled or stroked rectangle.
+    * This only works for Arcade Physics, Ninja Physics (AABB and Circle only) and Box2D Physics bodies.
+    * To display a P2 Physics body you should enable debug mode on the body when creating it.
     *
     * @method Phaser.Utils.Debug#body
-    * @param {Phaser.Sprite} sprite - The sprite whos body will be rendered.
-    * @param {string} [color='rgba(0,255,0,0.4)'] - color of the debug info to be rendered. (format is css color string).
-    * @param {boolean} [filled=true] - Render the objected as a filled (default, true) or a stroked (false)
+    * @param {Phaser.Sprite} sprite - The Sprite who's body will be rendered.
+    * @param {string} [color='rgba(0,255,0,0.4)'] - Color of the debug rectangle to be rendered. The format is a CSS color string such as '#ff0000' or 'rgba(255,0,0,0.5)'.
+    * @param {boolean} [filled=true] - Render the body as a filled rectangle (true) or a stroked rectangle (false)
     */
     body: function (sprite, color, filled) {
 

@@ -12,14 +12,14 @@
 * @class Phaser.BitmapData
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
-* @param {string} key - Internal Phaser reference key for the render texture.
-* @param {number} [width=256] - The width of the BitmapData in pixels.
-* @param {number} [height=256] - The height of the BitmapData in pixels.
+* @param {string} key - Internal Phaser reference key for the BitmapData.
+* @param {number} [width=256] - The width of the BitmapData in pixels. If undefined or zero it's set to a default value.
+* @param {number} [height=256] - The height of the BitmapData in pixels. If undefined or zero it's set to a default value.
 */
 Phaser.BitmapData = function (game, key, width, height) {
 
-    if (typeof width === 'undefined') { width = 256; }
-    if (typeof height === 'undefined') { height = 256; }
+    if (typeof width === 'undefined' || width === 0) { width = 256; }
+    if (typeof height === 'undefined' || height === 0) { height = 256; }
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running game.
@@ -64,9 +64,16 @@ Phaser.BitmapData = function (game, key, width, height) {
     this.imageData = this.context.getImageData(0, 0, width, height);
 
     /**
-    * @property {Uint8ClampedArray} data - A Uint8ClampedArray view into BitmapData.buffer.
+    * A Uint8ClampedArray view into BitmapData.buffer.
+    * Note that this is unavailable in some browsers (such as Epic Browser due to its security restrictions)
+    * @property {Uint8ClampedArray} data
     */
-    this.data = this.imageData.data;
+    this.data = null;
+
+    if (this.imageData)
+    {
+        this.data = this.imageData.data;
+    }
 
     /**
     * @property {Uint32Array} pixels - An Uint32Array view into BitmapData.buffer.
@@ -76,21 +83,24 @@ Phaser.BitmapData = function (game, key, width, height) {
     /**
     * @property {ArrayBuffer} buffer - An ArrayBuffer the same size as the context ImageData.
     */
-    if (this.imageData.data.buffer)
+    if (this.data)
     {
-        this.buffer = this.imageData.data.buffer;
-        this.pixels = new Uint32Array(this.buffer);
-    }
-    else
-    {
-        if (window['ArrayBuffer'])
+        if (this.imageData.data.buffer)
         {
-            this.buffer = new ArrayBuffer(this.imageData.data.length);
+            this.buffer = this.imageData.data.buffer;
             this.pixels = new Uint32Array(this.buffer);
         }
         else
         {
-            this.pixels = this.imageData.data;
+            if (window['ArrayBuffer'])
+            {
+                this.buffer = new ArrayBuffer(this.imageData.data.length);
+                this.pixels = new Uint32Array(this.buffer);
+            }
+            else
+            {
+                this.pixels = this.imageData.data;
+            }
         }
     }
 
@@ -110,7 +120,7 @@ Phaser.BitmapData = function (game, key, width, height) {
     * @property {Phaser.Frame} textureFrame - The Frame this BitmapData uses for rendering.
     * @default
     */
-    this.textureFrame = new Phaser.Frame(0, 0, 0, width, height, 'bitmapData', game.rnd.uuid());
+    this.textureFrame = new Phaser.Frame(0, 0, 0, width, height, 'bitmapData');
 
     this.texture.frame = this.textureFrame;
 
@@ -354,16 +364,16 @@ Phaser.BitmapData.prototype = {
     * @method Phaser.BitmapData#update
     * @param {number} [x=0] - The x coordinate of the top-left of the image data area to grab from.
     * @param {number} [y=0] - The y coordinate of the top-left of the image data area to grab from.
-    * @param {number} [width] - The width of the image data area.
-    * @param {number} [height] - The height of the image data area.
+    * @param {number} [width=1] - The width of the image data area.
+    * @param {number} [height=1] - The height of the image data area.
     * @return {Phaser.BitmapData} This BitmapData object for method chaining.
     */
     update: function (x, y, width, height) {
 
         if (typeof x === 'undefined') { x = 0; }
         if (typeof y === 'undefined') { y = 0; }
-        if (typeof width === 'undefined') { width = this.width; }
-        if (typeof height === 'undefined') { height = this.height; }
+        if (typeof width === 'undefined') { width = Math.max(1, this.width); }
+        if (typeof height === 'undefined') { height = Math.max(1, this.height); }
 
         this.imageData = this.context.getImageData(x, y, width, height);
         this.data = this.imageData.data;
@@ -819,7 +829,7 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Scans the BitmapData, pixel by pixel, until it encounters a pixel that isn't transparent (i.e. has an alpha value > 0).
-    * It then stops scanning and returns an object containing the colour of the pixel in r, g and b properties and the location in the x and y properties.
+    * It then stops scanning and returns an object containing the color of the pixel in r, g and b properties and the location in the x and y properties.
     * 
     * The direction parameter controls from which direction it should start the scan:
     * 
@@ -830,7 +840,7 @@ Phaser.BitmapData.prototype = {
     *
     * @method Phaser.BitmapData#getFirstPixel
     * @param {number} [direction=0] - The direction in which to scan for the first pixel. 0 = top to bottom, 1 = bottom to top, 2 = left to right and 3 = right to left.
-    * @return {object} Returns an object containing the colour of the pixel in the `r`, `g` and `b` properties and the location in the `x` and `y` properties.
+    * @return {object} Returns an object containing the color of the pixel in the `r`, `g` and `b` properties and the location in the `x` and `y` properties.
     */
     getFirstPixel: function (direction) {
 
@@ -902,7 +912,7 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Scans the BitmapData and calculates the bounds. This is a rectangle that defines the extent of all non-transparent pixels.
-    * The rectangle returned will extend from the top-left of the image to the bottom-right, exluding transparent pixels.
+    * The rectangle returned will extend from the top-left of the image to the bottom-right, excluding transparent pixels.
     *
     * @method Phaser.BitmapData#getBounds
     * @param {Phaser.Rectangle} [rect] - If provided this Rectangle object will be populated with the bounds, otherwise a new object will be created.
@@ -979,7 +989,7 @@ Phaser.BitmapData.prototype = {
      * @param {number} [scaleX=1] - The horizontal scale factor of the block. A value of 1 means no scaling. 2 would be twice the size, and so on.
      * @param {number} [scaleY=1] - The vertical scale factor of the block. A value of 1 means no scaling. 2 would be twice the size, and so on.
      * @param {number} [alpha=1] - The alpha that will be set on the context before drawing. A value between 0 (fully transparent) and 1, opaque.
-     * @param {number} [blendMode=null] - The composite blend mode that will be used when drawing. The default is no blend mode at all.
+     * @param {string} [blendMode=null] - The composite blend mode that will be used when drawing. The default is no blend mode at all. This is a Canvas globalCompositeOperation value such as 'lighter' or 'xor'.
      * @param {boolean} [roundPx=false] - Should the x and y values be rounded to integers before drawing? This prevents anti-aliasing in some instances.
      * @return {Phaser.BitmapData} This BitmapData object for method chaining.
      */
@@ -1159,7 +1169,7 @@ Phaser.BitmapData.prototype = {
     * @param {number} x - The destination x coordinate to copy the image to.
     * @param {number} y - The destination y coordinate to copy the image to.
     * @param {number} [alpha=1] - The alpha that will be set on the context before drawing. A value between 0 (fully transparent) and 1, opaque.
-    * @param {number} [blendMode=null] - The composite blend mode that will be used when drawing. The default is no blend mode at all.
+    * @param {string} [blendMode=null] - The composite blend mode that will be used when drawing. The default is no blend mode at all. This is a Canvas globalCompositeOperation value such as 'lighter' or 'xor'.
     * @param {boolean} [roundPx=false] - Should the x and y values be rounded to integers before drawing? This prevents anti-aliasing in some instances.
     * @return {Phaser.BitmapData} This BitmapData object for method chaining.
     */
@@ -1180,7 +1190,7 @@ Phaser.BitmapData.prototype = {
     * @param {number} [y=0] - The y coordinate to translate to before drawing. If not specified it will default to `source.y`.
     * @param {number} [width] - The new width of the Sprite being copied. If not specified it will default to `source.width`.
     * @param {number} [height] - The new height of the Sprite being copied. If not specified it will default to `source.height`.
-    * @param {number} [blendMode=null] - The composite blend mode that will be used when drawing the Sprite. The default is no blend mode at all.
+    * @param {string} [blendMode=null] - The composite blend mode that will be used when drawing. The default is no blend mode at all. This is a Canvas globalCompositeOperation value such as 'lighter' or 'xor'.
     * @param {boolean} [roundPx=false] - Should the x and y values be rounded to integers before drawing? This prevents anti-aliasing in some instances.
     * @return {Phaser.BitmapData} This BitmapData object for method chaining.
     */
@@ -1200,7 +1210,7 @@ Phaser.BitmapData.prototype = {
     *
     * @method Phaser.BitmapData#drawGroup
     * @param {Phaser.Group} group - The Group to draw onto this BitmapData.
-    * @param {number} [blendMode=null] - The composite blend mode that will be used when drawing the Group children. The default is no blend mode at all.
+    * @param {string} [blendMode=null] - The composite blend mode that will be used when drawing. The default is no blend mode at all. This is a Canvas globalCompositeOperation value such as 'lighter' or 'xor'.
     * @param {boolean} [roundPx=false] - Should the x and y values be rounded to integers before drawing? This prevents anti-aliasing in some instances.
     * @return {Phaser.BitmapData} This BitmapData object for method chaining.
     */

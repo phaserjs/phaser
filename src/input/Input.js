@@ -32,19 +32,12 @@ Phaser.Input = function (game) {
     this.hitContext = null;
 
     /**
-    * @property {array} moveCallbacks - An array of callbacks that will be fired every time the activePointer receives a move event from the DOM.
+    * An array of callbacks that will be fired every time the activePointer receives a move event from the DOM.
+    * To add a callback to this array please use `Input.addMoveCallback`.
+    * @property {array} moveCallbacks
+    * @protected
     */
     this.moveCallbacks = [];
-
-    /**
-    * @property {function} moveCallback - An optional callback that will be fired every time the activePointer receives a move event from the DOM. Set to null to disable.
-    */
-    this.moveCallback = null;
-
-    /**
-    * @property {object} moveCallbackContext - The context in which the moveCallback will be sent. Defaults to Phaser.Input but can be set to any valid JS object.
-    */
-    this.moveCallbackContext = this;
 
     /**
     * @property {number} pollRate - How often should the input pointers be checked for updates? A value of 0 means every single frame (60fps); a value of 1 means every other frame (30fps) and so on.
@@ -445,33 +438,40 @@ Phaser.Input.prototype = {
     * Adds a callback that is fired every time the activePointer receives a DOM move event such as a mousemove or touchmove.
     *
     * The callback will be sent 4 parameters: The Pointer that moved, the x position of the pointer, the y position and the down state.
-
+    * 
     * It will be called every time the activePointer moves, which in a multi-touch game can be a lot of times, so this is best
     * to only use if you've limited input to a single pointer (i.e. mouse or touch).
+    * 
     * The callback is added to the Phaser.Input.moveCallbacks array and should be removed with Phaser.Input.deleteMoveCallback.
     * 
     * @method Phaser.Input#addMoveCallback
     * @param {function} callback - The callback that will be called each time the activePointer receives a DOM move event.
     * @param {object} context - The context in which the callback will be called.
-    * @return {number} The index of the callback entry. Use this index when calling Input.deleteMoveCallback.
     */
     addMoveCallback: function (callback, context) {
 
-        return this.moveCallbacks.push({ callback: callback, context: context }) - 1;
+        this.moveCallbacks.push({ callback: callback, context: context });
 
     },
 
     /**
-    * Removes the callback at the defined index from the Phaser.Input.moveCallbacks array
+    * Removes the callback from the Phaser.Input.moveCallbacks array.
     * 
     * @method Phaser.Input#deleteMoveCallback
-    * @param {number} index - The index of the callback to remove.
+    * @param {function} callback - The callback to be removed.
+    * @param {object} context - The context in which the callback exists.
     */
-    deleteMoveCallback: function (index) {
+    deleteMoveCallback: function (callback, context) {
 
-        if (this.moveCallbacks[index])
+        var i = this.moveCallbacks.length;
+
+        while (i--)
         {
-            this.moveCallbacks.splice(index, 1);
+            if (this.moveCallbacks[i].callback === callback && this.moveCallbacks[i].context === context)
+            {
+                this.moveCallbacks.splice(i, 1);
+                return;
+            }
         }
 
     },
@@ -488,7 +488,7 @@ Phaser.Input.prototype = {
 
         if (this.pointers.length >= Phaser.Input.MAX_POINTERS)
         {
-            console.warn("Phaser.Input.addPointer: only " + Phaser.Input.MAX_POINTERS + " pointer allowed");
+            console.warn("Phaser.Input.addPointer: Maximum limit of " + Phaser.Input.MAX_POINTERS + " pointers reached.");
             return null;
         }
 

@@ -262,7 +262,7 @@ Object.defineProperty(Phaser.Line.prototype, "length", {
 
 /**
 * @name Phaser.Line#angle
-* @property {number} angle - Gets the angle of the line.
+* @property {number} angle - Gets the angle of the line in radians.
 * @readonly
 */
 Object.defineProperty(Phaser.Line.prototype, "angle", {

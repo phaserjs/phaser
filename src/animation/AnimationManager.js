@@ -205,14 +205,9 @@ Phaser.AnimationManager.prototype = {
         this.currentAnim = this._anims[name];
         this.currentFrame = this.currentAnim.currentFrame;
 
-        // this.sprite.setFrame(this.currentFrame);
-
-        //  CHECK WE STILL NEED THIS - PRETTY SURE IT DOESN'T ACTUALLY DO ANYTHING!
-        if (this.sprite.__tilePattern)
+        if (this.sprite.tilingTexture)
         {
-            // this.__tilePattern = false;
-            this.sprite.__tilePattern = false;
-            this.tilingTexture = false;
+            this.sprite.refreshTexture = true;
         }
 
         return this._anims[name];
@@ -409,13 +404,8 @@ Phaser.AnimationManager.prototype = {
     */
     refreshFrame: function () {
 
+        //  TODO
         this.sprite.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
-
-        if (this.sprite.__tilePattern)
-        {
-            this.__tilePattern = false;
-            this.tilingTexture = false;
-        }
 
     },
 
@@ -539,12 +529,6 @@ Object.defineProperty(Phaser.AnimationManager.prototype, 'frame', {
             if (this.currentFrame)
             {
                 this.sprite.setFrame(this.currentFrame);
-
-                if (this.sprite.__tilePattern)
-                {
-                    this.__tilePattern = false;
-                    this.tilingTexture = false;
-                }
             }
         }
 
@@ -569,7 +553,7 @@ Object.defineProperty(Phaser.AnimationManager.prototype, 'frameName', {
 
     set: function (value) {
 
-        if (typeof value === 'string' && this._frameData.getFrameByName(value) !== null)
+        if (typeof value === 'string' && this._frameData && this._frameData.getFrameByName(value) !== null)
         {
             this.currentFrame = this._frameData.getFrameByName(value);
 
@@ -578,12 +562,6 @@ Object.defineProperty(Phaser.AnimationManager.prototype, 'frameName', {
                 this._frameIndex = this.currentFrame.index;
 
                 this.sprite.setFrame(this.currentFrame);
-
-                if (this.sprite.__tilePattern)
-                {
-                    this.__tilePattern = false;
-                    this.tilingTexture = false;
-                }
             }
         }
         else

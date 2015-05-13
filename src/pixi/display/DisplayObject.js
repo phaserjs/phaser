@@ -133,6 +133,36 @@ PIXI.DisplayObject = function()
     this.worldTransform = new PIXI.Matrix();
 
     /**
+     * The position of the Display Object based on the world transform.
+     * This value is updated at the end of updateTransform and takes all parent transforms into account.
+     *
+     * @property worldPosition
+     * @type Point
+     * @readOnly
+     */
+    this.worldPosition = new PIXI.Point(0, 0);
+
+    /**
+     * The scale of the Display Object based on the world transform.
+     * This value is updated at the end of updateTransform and takes all parent transforms into account.
+     *
+     * @property worldScale
+     * @type Point
+     * @readOnly
+     */
+    this.worldScale = new PIXI.Point(1, 1);
+
+    /**
+     * The rotation of the Display Object, in radians, based on the world transform.
+     * This value is updated at the end of updateTransform and takes all parent transforms into account.
+     *
+     * @property worldRotation
+     * @type Number
+     * @readOnly
+     */
+    this.worldRotation = 0;
+
+    /**
      * cached sin rotation and cos rotation
      *
      * @property _sr
@@ -364,20 +394,37 @@ Object.defineProperty(PIXI.DisplayObject.prototype, 'cacheAsBitmap', {
 });
 
 /*
- * Updates the object transform for rendering
+ * Updates the object transform for rendering.
+ *
+ * If the object has no parent, and no parent parameter is provided, it will default to Phaser.Game.World as the parent.
+ * If that is unavailable the transform fails to take place.
+ *
+ * The `parent` parameter has priority over the actual parent. Use it as a parent override.
+ * Setting it does **not** change the actual parent of this DisplayObject, it just uses the parent for the transform update.
  *
  * @method updateTransform
- * @private
+ * @param {DisplayObject} [parent] - Optional parent to parent this DisplayObject transform from.
  */
-PIXI.DisplayObject.prototype.updateTransform = function()
+PIXI.DisplayObject.prototype.updateTransform = function(parent)
 {
-    if (!this.parent)
+    if (!parent && !this.parent && !this.game)
     {
         return;
     }
 
+    var p = this.parent;
+
+    if (parent)
+    {
+        p = parent;
+    }
+    else if (!this.parent)
+    {
+        p = this.game.world;
+    }
+
     // create some matrix refs for easy access
-    var pt = this.parent.worldTransform;
+    var pt = p.worldTransform;
     var wt = this.worldTransform;
 
     // temporary matrix variables
@@ -435,7 +482,11 @@ PIXI.DisplayObject.prototype.updateTransform = function()
     }
 
     // multiply the alphas..
-    this.worldAlpha = this.alpha * this.parent.worldAlpha;
+    this.worldAlpha = this.alpha * p.worldAlpha;
+
+    this.worldPosition.set(wt.tx, wt.ty);
+    this.worldScale.set(Math.sqrt(wt.a * wt.a + wt.b * wt.b), Math.sqrt(wt.c * wt.c + wt.d * wt.d));
+    this.worldRotation = Math.atan2(-wt.c, wt.d);
 
     //  Custom callback?
     if (this.transformCallback)

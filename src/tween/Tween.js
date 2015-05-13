@@ -161,6 +161,11 @@ Phaser.Tween = function (target, game, manager) {
     */
     this._codePaused = false;
 
+    /**
+    * @property {boolean} _hasStarted - Internal var to track if the Tween has started yet or not.
+    * @private
+    */
+    this._hasStarted = false;
 };
 
 Phaser.Tween.prototype = {
@@ -183,7 +188,7 @@ Phaser.Tween.prototype = {
     */
     to: function (properties, duration, ease, autoStart, delay, repeat, yoyo) {
 
-        if (typeof duration === 'undefined') { duration = 1000; }
+        if (typeof duration === 'undefined' || duration <= 0) { duration = 1000; }
         if (typeof ease === 'undefined') { ease = Phaser.Easing.Default; }
         if (typeof autoStart === 'undefined') { autoStart = false; }
         if (typeof delay === 'undefined') { delay = 0; }
@@ -310,8 +315,6 @@ Phaser.Tween.prototype = {
         this.current = index;
 
         this.timeline[this.current].start();
-
-        this.onStart.dispatch(this.target, this);
 
         return this;
 
@@ -727,6 +730,12 @@ Phaser.Tween.prototype = {
         }
         else if (status === Phaser.TweenData.RUNNING)
         {
+            if (!this._hasStarted)
+            {
+                this.onStart.dispatch(this.target, this);
+                this._hasStarted = true;
+            }
+
             if (this._onUpdateCallback !== null)
             {
                 this._onUpdateCallback.call(this._onUpdateCallbackContext, this, this.timeline[this.current].value, this.timeline[this.current]);

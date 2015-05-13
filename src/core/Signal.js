@@ -6,7 +6,7 @@
 */
 
 /**
-* A Signal is an event dispatch mechansim than supports broadcasting to multiple listeners.
+* A Signal is an event dispatch mechansim that supports broadcasting to multiple listeners.
 *
 * Event listeners are uniquely identified by the listener/callback function and the context.
 * 
@@ -47,7 +47,7 @@ Phaser.Signal.prototype = {
     _shouldPropagate: true,
 
     /**
-    * Is the Signal active? Only active signal will broadcast dispatched events.
+    * Is the Signal active? Only active signals will broadcast dispatched events.
     *
     * Setting this property during a dispatch will only affect the next dispatch. To stop the propagation of a signal from a listener use {@link #halt}.
     *
@@ -302,7 +302,7 @@ Phaser.Signal.prototype = {
     /**
     * Stop propagation of the event, blocking the dispatch to next listener on the queue.
     *
-    * This should be called only during event dispatch as calling it before/after dispatch won't affect other broadcast.
+    * This should be called only during event dispatch as calling it before/after dispatch won't affect another broadcast.
     * See {@link #active} to enable/disable the signal entirely.
     *
     * @method Phaser.Signal#halt

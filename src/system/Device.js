@@ -373,6 +373,44 @@ Phaser.Device = function () {
     */
     this.webm = false;
 
+    //  Video
+
+    /**
+    * @property {boolean} oggVideo - Can this device play ogg video files?
+    * @default
+    */
+    this.oggVideo = false;
+
+    /**
+    * @property {boolean} h264Video - Can this device play h264 mp4 video files?
+    * @default
+    */
+    this.h264Video = false;
+
+    /**
+    * @property {boolean} mp4Video - Can this device play h264 mp4 video files?
+    * @default
+    */
+    this.mp4Video = false;
+
+    /**
+    * @property {boolean} webmVideo - Can this device play webm video files?
+    * @default
+    */
+    this.webmVideo = false;
+
+    /**
+    * @property {boolean} vp9Video - Can this device play vp9 video files?
+    * @default
+    */
+    this.vp9Video = false;
+
+    /**
+    * @property {boolean} hlsVideo - Can this device play hls video files?
+    * @default
+    */
+    this.hlsVideo = false;
+
     //  Device
 
     /**
@@ -891,6 +929,47 @@ Phaser.Device._initialize = function () {
     }
 
     /**
+    * Check video support.
+    */
+    function _checkVideo () {
+
+        var videoElement = document.createElement("video");
+        var result = false;
+
+        try {
+            if (result = !!videoElement.canPlayType)
+            {
+                if (videoElement.canPlayType('video/ogg; codecs="theora"').replace(/^no$/, ''))
+                {
+                    device.oggVideo = true;
+                }
+
+                if (videoElement.canPlayType('video/mp4; codecs="avc1.42E01E"').replace(/^no$/, ''))
+                {
+                    // Without QuickTime, this value will be `undefined`. github.com/Modernizr/Modernizr/issues/546
+                    device.h264Video = true;
+                    device.mp4Video = true;
+                }
+
+                if (videoElement.canPlayType('video/webm; codecs="vp8, vorbis"').replace(/^no$/, ''))
+                {
+                    device.webmVideo = true;
+                }
+
+                if (videoElement.canPlayType('video/webm; codecs="vp9"').replace(/^no$/, ''))
+                {
+                    device.vp9Video = true;
+                }
+
+                if (videoElement.canPlayType('application/x-mpegURL; codecs="avc1.42E01E"').replace(/^no$/, ''))
+                {
+                    device.hlsVideo = true;
+                }
+            }
+        } catch (e) {}
+    }
+
+    /**
     * Check audio support.
     */
     function _checkAudio () {
@@ -1065,6 +1144,7 @@ Phaser.Device._initialize = function () {
     //  Run the checks
     _checkOS();
     _checkAudio();
+    _checkVideo();
     _checkBrowser();
     _checkCSS3D();
     _checkDevice();
@@ -1084,27 +1164,58 @@ Phaser.Device._initialize = function () {
 */
 Phaser.Device.canPlayAudio = function (type) {
 
-    if (type == 'mp3' && this.mp3)
+    if (type === 'mp3' && this.mp3)
     {
         return true;
     }
-    else if (type == 'ogg' && (this.ogg || this.opus))
+    else if (type === 'ogg' && (this.ogg || this.opus))
     {
         return true;
     }
-    else if (type == 'm4a' && this.m4a)
+    else if (type === 'm4a' && this.m4a)
     {
         return true;
     }
-    else if (type == 'opus' && this.opus)
+    else if (type === 'opus' && this.opus)
     {
         return true;
     }
-    else if (type == 'wav' && this.wav)
+    else if (type === 'wav' && this.wav)
     {
         return true;
     }
-    else if (type == 'webm' && this.webm)
+    else if (type === 'webm' && this.webm)
+    {
+        return true;
+    }
+
+    return false;
+
+};
+
+/**
+* Check whether the host environment can play video files.
+*
+* @method canPlayVideo
+* @memberof Phaser.Device.prototype
+* @param {string} type - One of 'mp4, 'ogg', 'webm' or 'mpeg'.
+* @return {boolean} True if the given file type is supported by the browser, otherwise false.
+*/
+Phaser.Device.canPlayVideo = function (type) {
+
+    if (type === 'webm' && (this.webmVideo || this.vp9Video))
+    {
+        return true;
+    }
+    else if (type === 'mp4' && this.mp4Video)
+    {
+        return true;
+    }
+    else if (type === 'ogg' && this.oggVideo)
+    {
+        return true;
+    }
+    else if (type === 'mpeg' && this.hlsVideo)
     {
         return true;
     }

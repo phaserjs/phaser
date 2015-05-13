@@ -182,7 +182,7 @@ Phaser.FrameData.prototype = {
         else
         {
             //  Input array given, loop through that instead
-            for (var i = 0, len = frames.length; i < len; i++)
+            for (var i = 0; i < frames.length; i++)
             {
                 //  Does the input array contain names or indexes?
                 if (useNumericIndex)
@@ -220,7 +220,7 @@ Phaser.FrameData.prototype = {
         if (typeof frames === "undefined" || frames.length === 0)
         {
             //  No frames array, so we loop through all frames
-            for (var i = 0, len = this._frames.length; i < len; i++)
+            for (var i = 0; i < this._frames.length; i++)
             {
                 output.push(this._frames[i].index);
             }
@@ -228,7 +228,7 @@ Phaser.FrameData.prototype = {
         else
         {
             //  Input array given, loop through that instead
-            for (var i = 0, len = frames.length; i < len; i++)
+            for (var i = 0; i < this._frames.length; i++)
             {
                 //  Does the frames array contain names or indexes?
                 if (useNumericIndex)
