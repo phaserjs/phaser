@@ -581,7 +581,7 @@ Phaser.Math = {
     */
     isOdd: function (n) {
         // Does not work with extremely large values
-        return (n & 1);
+        return !!(n & 1);
     },
 
     /**
