@@ -69,6 +69,8 @@ Phaser.Video = function (game, key, captureAudio, width, height) {
     */
     this.videoStream = null;
 
+    this.isStreaming = false;
+
     if (key === null)
     {
         this.createVideoStream(captureAudio, width, height);
@@ -111,9 +113,11 @@ Phaser.Video = function (game, key, captureAudio, width, height) {
 
     this.texture.setFrame(this.textureFrame);
 
+    this.texture.valid = false;
+
     if (key !== null && this.video)
     {
-        console.log('invalid texture?', this.video.canplay, this.width, this.height);
+        console.log('canplay?', this.key, 'cp', this.video.canplay, this.width, this.height);
         this.texture.valid = this.video.canplay;
     }
 
@@ -262,9 +266,12 @@ Phaser.Video.prototype = {
         }
 
         this.video = document.createElement("video");
-        this.video.controls = false;
-        this.video.autoplay = false;
-        this.video.canplay = true;
+
+        this.video.setAttribute('autoplay', 'autoplay');
+
+        // this.video.controls = false;
+        // this.video.autoplay = false;
+        // this.video.canplay = false;
 
         if (width !== null)
         {
@@ -276,35 +283,120 @@ Phaser.Video.prototype = {
             this.video.height = height;
         }
 
-        if (!navigator['getUserMedia'])
+        if (!navigator.getUserMedia)
         {
             navigator.getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
         }
 
-        var _this = this;
+        window.URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
 
-        var _streamStart = function(stream) {
+        var self = this;
 
-            _this.videoStream = stream;
+        console.log('createVideoStream', width, height);
 
-            _this.video.autoplay = true;
-            _this.video.src = window.URL.createObjectURL(stream);
+        navigator.getUserMedia({ 
+            "audio": captureAudio, 
+            "video": true
+        },
+        function(stream) {
 
-            _this.video.addEventListener('loadeddata', function (event) { _this.updateTexture(event, width, height); }, true);
+            self.videoStream = stream;
 
-            _this.onAccess.dispatch(_this);
+            //  attach the stream to the video
 
-        };
+            // Set the source of the video element with the stream from the camera
+            if (self.video.mozSrcObject !== undefined)
+            {
+                self.video.mozSrcObject = stream;
+            }
+            else
+            {
+                self.video.src = (window.URL && window.URL.createObjectURL(stream)) || stream;
+            }
 
-        var _streamError = function(e) {
-            _this.onError.dispatch(_this, e);
-        };
+            self.video.play();
+        },
+        function(err) {
+            self.onError.dispatch(self, err);
+        });
 
-        navigator.getUserMedia({ audio: captureAudio, video: true }, _streamStart, _streamError);
+        // this.video.addEventListener('loadeddata', function (event) { self.streamLoaded(event); }, false);
+
+        this.video.addEventListener('loadeddata', function () {
+
+            var retry = 10;
+
+            function checkStream () {
+
+                if (retry > 0)
+                {
+                    if (self.video.videoWidth > 0)
+                    {
+                        // Patch for Firefox bug where the height can't be read from the video
+                        var width = self.video.videoWidth
+
+                        if (isNaN(self.video.videoHeight))
+                        {
+                            var height = width / (4/3);
+                        }
+
+                        console.log('checkStream', retry);
+                        self.isStreaming = true;
+                        self.updateTexture(null, width, height);
+                        self.onAccess.dispatch(self);
+                    }
+                    else
+                    {
+                        window.setTimeout(checkStream, 500);
+                    }
+                }
+                else
+                {
+                    console.warn('Unable to connect to video stream. Webcam error?');
+                }
+
+                retry--;
+            }
+
+            checkStream();
+
+        }, false);
 
         return this;
 
     },
+
+/*
+    streamLoaded: function (event) {
+
+        console.log('mozStreamLoaded', arguments);
+
+        if (!this.isStreaming)
+        {
+            this.video.removeEventListener('canplay', this.mozStreamLoaded, false);
+
+            this.texture.valid = true;
+
+            if (this.video)
+            {
+                console.log('vwh', this.video.videoWidth, this.video.videoHeight);
+            }
+      
+            // Firefox currently has a bug where the height can't be read from
+            // the video, so we will make assumptions if this happens.
+
+            if (this.video.videoHeight)
+if (isNaN(height)) {
+          height = width / (4/3);
+        }
+
+            this.isStreaming = true;
+        }
+
+        this.updateTexture();
+
+    },
+*/
 
     /**
      * Creates a new Video element from the given Blob. The Blob must contain the video data in the correct encoded format.
@@ -320,7 +412,7 @@ Phaser.Video.prototype = {
 
         this.video = document.createElement("video");
         this.video.controls = false;
-        this.video.autoplay = false;
+        this.video.setAttribute('autoplay', 'autoplay');
         this.video.addEventListener('loadeddata', function (event) { _this.updateTexture(event); }, true);
         this.video.src = window.URL.createObjectURL(blob);
         this.video.canplay = true;
@@ -348,7 +440,7 @@ Phaser.Video.prototype = {
         this.width = width;
         this.height = height;
 
-        console.log('updateTexture ---', this.key);
+        console.log('updateTexture ---', this.key, change);
         console.log(width, height);
 
         this.baseTexture.forceLoaded(width, height);
@@ -363,7 +455,7 @@ Phaser.Video.prototype = {
             this.snapshot.resize(width, height);
         }
 
-        if (change)
+        if (change && this.key !== null)
         {
             this.video.removeEventListener('canplaythrough', this.updateTexture.bind(this));
 
@@ -432,49 +524,49 @@ Phaser.Video.prototype = {
 
         this.video.playbackRate = playbackRate;
 
-        //  Thanks Firefox
-        if (this.video.canplay)
+        if (this.touchLocked)
         {
-            if (this.touchLocked)
-            {
-                this._pending = true;
-            }
-            else
-            {
-                this._pending = false;
-
-                this.video.play();
-
-                this.onPlay.dispatch(this, loop, playbackRate);
-            }
+            this._pending = true;
         }
         else
         {
-            console.log('play - but canplay false');
-            // this.video.addEventListener('canplay', this.canPlayHandler.bind(this), true);
-            // this.video.addEventListener('canplaythrough', this.canPlayHandler.bind(this), true);
-            this.video.addEventListener('playing', this.canPlayHandler.bind(this), true);
+            this._pending = false;
+
+            if (this.key !== null)
+            {
+                this.video.addEventListener('playing', this.playHandler.bind(this), true);
+            }
 
             this.video.play();
+
+            this.onPlay.dispatch(this, loop, playbackRate);
         }
 
         return this;
 
     },
 
-    canPlayHandler: function () {
+    // canPlayHandler: function () {
+    playHandler: function () {
 
-        console.log('canPlayHandler ---', this.key);
+        // console.log('canPlayHandler ---', this.key);
+        console.log('playHandler ---', this.key);
 
         // this.video.removeEventListener('canplay', this.canPlayHandler.bind(this));
         // this.video.removeEventListener('canplaythrough', this.canPlayHandler.bind(this));
-        this.video.removeEventListener('playing', this.canPlayHandler.bind(this));
+        // this.video.removeEventListener('playing', this.canPlayHandler.bind(this));
+        this.video.removeEventListener('playing', this.playHandler.bind(this));
 
-        this.video.canplay = true;
+        // this.video.canplay = true;
+
+        // if (this.width !== this.texture.width || this.width !== this.baseTexture.width)
+
+        // this.width = width;
+        // this.height = height;
 
         this.updateTexture();
 
-        this.onPlay.dispatch(this, this.loop, this.playbackRate);
+        // this.onPlay.dispatch(this, this.loop, this.playbackRate);
 
     },
 
