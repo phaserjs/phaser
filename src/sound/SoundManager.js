@@ -395,16 +395,19 @@ Phaser.SoundManager.prototype = {
             {
                 this.game.cache.updateSound(key, 'isDecoding', true);
 
-                var that = this;
+                var _this = this;
 
-                this.context.decodeAudioData(soundData, function (buffer) {
+                try {
+                    this.context.decodeAudioData(soundData, function (buffer) {
 
-                    if (buffer)
-                    {
-                        that.game.cache.decodedSound(key, buffer);
-                        that.onSoundDecode.dispatch(key, sound);
-                    }
-                });
+                        if (buffer)
+                        {
+                            _this.game.cache.decodedSound(key, buffer);
+                            _this.onSoundDecode.dispatch(key, sound);
+                        }
+                    });
+                }
+                catch (e) {}
             }
         }
 
