@@ -88,7 +88,6 @@ Phaser.Video = function (game, key, captureAudio, width, height) {
     * @default
     */
     this.baseTexture = new PIXI.BaseTexture(this.video);
-
     this.baseTexture.forceLoaded(this.width, this.height);
 
     /**
@@ -104,6 +103,11 @@ Phaser.Video = function (game, key, captureAudio, width, height) {
     this.textureFrame = new Phaser.Frame(0, 0, 0, this.width, this.height, 'video');
 
     this.texture.setFrame(this.textureFrame);
+
+    if (this.video)
+    {
+        this.texture.valid = this.video.canplay;
+    }
 
     /**
     * @property {number} type - The const type of this object.
@@ -209,7 +213,7 @@ Phaser.Video = function (game, key, captureAudio, width, height) {
     */
     this._autoplay = false;
 
-    if (!this.game.device.cocoonJS && this.game.device.iOS || (window['PhaserGlobal'] && window['PhaserGlobal'].fakeiOSTouchLock))
+    if (!this.game.device.cocoonJS && (this.game.device.iOS || this.game.device.android) || (window['PhaserGlobal'] && window['PhaserGlobal'].fakeiOSTouchLock))
     {
         this.setTouchLock();
     }
@@ -279,6 +283,7 @@ Phaser.Video.prototype = {
 
             _this.videoStream = stream;
 
+            _this.video.autoplay = true;
             _this.video.src = window.URL.createObjectURL(stream);
 
             _this.video.addEventListener('loadeddata', function (event) { _this.updateTexture(event, width, height); }, true);
@@ -307,12 +312,14 @@ Phaser.Video.prototype = {
      */
     createVideoFromBlob: function (blob) {
 
+        var _this = this;
+
         this.video = document.createElement("video");
         this.video.controls = false;
         this.video.autoplay = false;
+        this.video.addEventListener('loadeddata', function (event) { _this.updateTexture(event); }, true);
         this.video.src = window.URL.createObjectURL(blob);
-
-        this.updateTexture();
+        this.video.canplay = true;
 
         return this;
 
@@ -334,15 +341,6 @@ Phaser.Video.prototype = {
         if (typeof width === 'undefined' || width === null) { width = this.video.videoWidth; change = true; }
         if (typeof height === 'undefined' || height === null) { height = this.video.videoHeight; }
 
-        // if (change)
-        // {
-        //     console.log('updateTexture resizing to webcam', width, height);
-        // }
-        // else
-        // {
-        //     console.log('updateTexture resizing to fixed dimensions', width, height);
-        // }
-
         this.width = width;
         this.height = height;
 
@@ -351,6 +349,7 @@ Phaser.Video.prototype = {
         this.texture.frame.resize(width, height);
         this.texture.width = width;
         this.texture.height = height;
+        this.texture.valid = true;
 
         if (this.snapshot)
         {
@@ -424,20 +423,42 @@ Phaser.Video.prototype = {
 
         this.video.playbackRate = playbackRate;
 
-        if (this.touchLocked)
+        //  Thanks Firefox
+        if (this.video.canplay)
         {
-            this._pending = true;
+            if (this.touchLocked)
+            {
+                this._pending = true;
+            }
+            else
+            {
+                this._pending = false;
+
+                this.video.play();
+
+                this.onPlay.dispatch(this, loop, playbackRate);
+            }
         }
         else
         {
-            this._pending = false;
+            this.video.addEventListener('canplay', this.canPlayHandler.bind(this), true);
 
             this.video.play();
-
-            this.onPlay.dispatch(this, loop, playbackRate);
         }
 
         return this;
+
+    },
+
+    canPlayHandler: function () {
+
+        this.video.removeEventListener('canplay', this.canPlayHandler.bind(this));
+
+        this.video.canplay = true;
+
+        this.updateTexture();
+
+        this.onPlay.dispatch(this, this.loop, this.playbackRate);
 
     },
 
@@ -697,7 +718,7 @@ Phaser.Video.prototype = {
 
     /**
     * Sets the Input Manager touch callback to be Video.unlock.
-    * Required for iOS video unlocking. Mostly just used internally.
+    * Required for mobile video unlocking. Mostly just used internally.
     * 
     * @method Phaser.Video#setTouchLock
     */
@@ -723,11 +744,14 @@ Phaser.Video.prototype = {
 
         this.onPlay.dispatch(this, this.loop, this.playbackRate);
 
-        var _video = this.game.cache.getVideo(this.key);
-
-        if (!_video.isBlob)
+        if (this.key)
         {
-            _video.locked = false;
+            var _video = this.game.cache.getVideo(this.key);
+
+            if (_video && !_video.isBlob)
+            {
+                _video.locked = false;
+            }
         }
 
         return true;
@@ -800,7 +824,7 @@ Object.defineProperty(Phaser.Video.prototype, "currentTime", {
 
     get: function () {
 
-        return this.video.currentTime;
+        return (this.video) ? this.video.currentTime : 0;
 
     },
 
@@ -821,7 +845,7 @@ Object.defineProperty(Phaser.Video.prototype, "duration", {
 
     get: function () {
 
-        return this.video.duration;
+        return (this.video) ? this.video.duration : 0;
 
     }
 
@@ -836,7 +860,7 @@ Object.defineProperty(Phaser.Video.prototype, "progress", {
 
     get: function () {
 
-        return (this.video.currentTime / this.video.duration);
+        return (this.video) ? (this.video.currentTime / this.video.duration) : 0;
 
     }
 
@@ -938,7 +962,7 @@ Object.defineProperty(Phaser.Video.prototype, "volume", {
 
     get: function () {
 
-        return this.video.volume;
+        return (this.video) ? this.video.volume : 1;
 
     },
 
@@ -953,7 +977,10 @@ Object.defineProperty(Phaser.Video.prototype, "volume", {
             value = 1;
         }
 
-        this.video.volume = value;
+        if (this.video)
+        {
+            this.video.volume = value;
+        }
 
     }
 
@@ -967,13 +994,16 @@ Object.defineProperty(Phaser.Video.prototype, "playbackRate", {
 
     get: function () {
 
-        return this.video.playbackRate;
+        return (this.video) ? this.video.playbackRate : 1;
 
     },
 
     set: function (value) {
 
-        this.video.playbackRate = value;
+        if (this.video)
+        {
+            this.video.playbackRate = value;
+        }
 
     }
 
@@ -982,25 +1012,26 @@ Object.defineProperty(Phaser.Video.prototype, "playbackRate", {
 /**
 * Gets or sets if the Video is set to loop.
 * Please note that at present some browsers (i.e. Chrome) do not support *seamless* video looping.
+* If the video isn't yet set this will always return false.
 * 
 * @name Phaser.Video#loop
-* @property {number} loop
+* @property {boolean} loop
 */
 Object.defineProperty(Phaser.Video.prototype, "loop", {
 
     get: function () {
 
-        return this.video.loop;
+        return (this.video) ? this.video.loop : false;
 
     },
 
     set: function (value) {
 
-        if (value)
+        if (value && this.video)
         {
             this.video.loop = 'loop';
         }
-        else
+        else if (this.video)
         {
             this.video.loop = '';
         }
