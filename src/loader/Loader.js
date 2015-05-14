@@ -2041,15 +2041,19 @@ Phaser.Loader.prototype = {
     */
     loadVideoTag: function (file) {
 
+        console.log('loadVideoTag', file.key);
+
         var _this = this;
 
         file.data = document.createElement("video");
         file.data.name = file.key;
+        file.data.controls = false;
+        file.data.autoplay = false;
         
         var playThroughEvent = function () {
-            file.data.removeEventListener('canplay', playThroughEvent, false);
+            console.log('playThroughEvent', file.data.name);
+            // file.data.removeEventListener('canplay', playThroughEvent, false);
             file.data.removeEventListener('canplaythrough', playThroughEvent, false);
-            file.data.removeEventListener('loadeddata', playThroughEvent, false);
             file.data.onerror = null;
             file.data.canplay = true;
             // Why does this cycle through games?
@@ -2057,8 +2061,7 @@ Phaser.Loader.prototype = {
         };
 
         var loadedDataEvent = function () {
-            file.data.removeEventListener('canplay', playThroughEvent, false);
-            file.data.removeEventListener('canplaythrough', playThroughEvent, false);
+            console.log('loadedDataEvent', file.data.name);
             file.data.removeEventListener('loadeddata', loadedDataEvent, false);
             file.data.onerror = null;
             file.data.canplay = false;
@@ -2067,7 +2070,7 @@ Phaser.Loader.prototype = {
         };
 
         file.data.onerror = function () {
-            file.data.removeEventListener('canplay', playThroughEvent, false);
+            // file.data.removeEventListener('canplay', playThroughEvent, false);
             file.data.removeEventListener('canplaythrough', playThroughEvent, false);
             file.data.removeEventListener('loadeddata', playThroughEvent, false);
             file.data.onerror = null;
@@ -2075,11 +2078,17 @@ Phaser.Loader.prototype = {
             _this.fileError(file);
         };
 
-        file.data.controls = false;
-        file.data.autoplay = false;
-        file.data.addEventListener('canplay', playThroughEvent, false);
-        file.data.addEventListener('canplaythrough', playThroughEvent, false);
-        file.data.addEventListener('loadeddata', loadedDataEvent, false);
+        if (this.game.device.firefox)
+        {
+            //  I wish there was another easier way, but I'm not aware of it yet
+            file.data.addEventListener('loadeddata', loadedDataEvent, false);
+        }
+        else
+        {
+            // file.data.addEventListener('canplay', playThroughEvent, false);
+            file.data.addEventListener('canplaythrough', playThroughEvent, false);
+        }
+
         file.data.src = this.transformUrl(file.url, file);
         file.data.load();
 

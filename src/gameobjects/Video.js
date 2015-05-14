@@ -37,6 +37,8 @@ Phaser.Video = function (game, key, captureAudio, width, height) {
     if (typeof key === 'undefined') { key = null; }
     if (typeof captureAudio === 'undefined') { captureAudio = false; }
 
+    console.log('create video', key);
+
     /**
     * @property {Phaser.Game} game - A reference to the currently running game.
     */
@@ -61,6 +63,11 @@ Phaser.Video = function (game, key, captureAudio, width, height) {
     * @property {HTMLVideoElement} video - The HTML Video Element that is added to the document.
     */
     this.video = null;
+
+    /**
+    * @property {MediaStream} videoStream - The Video Stream data. Only set if this Video is streaming from the webcam via `createVideoStream`.
+    */
+    this.videoStream = null;
 
     if (key === null)
     {
@@ -104,8 +111,9 @@ Phaser.Video = function (game, key, captureAudio, width, height) {
 
     this.texture.setFrame(this.textureFrame);
 
-    if (this.video)
+    if (key !== null && this.video)
     {
+        console.log('invalid texture?', this.video.canplay, this.width, this.height);
         this.texture.valid = this.video.canplay;
     }
 
@@ -150,11 +158,6 @@ Phaser.Video = function (game, key, captureAudio, width, height) {
     * @default
     */
     this.touchLocked = false;
-
-    /**
-    * @property {MediaStream} videoStream - The Video Stream data. Only set if this Video is streaming from the webcam via `createVideoStream`.
-    */
-    this.videoStream = null;
 
     /**
     * A snapshot grabbed from the video. This is initially black. Populate it by calling Video.grab().
@@ -261,6 +264,7 @@ Phaser.Video.prototype = {
         this.video = document.createElement("video");
         this.video.controls = false;
         this.video.autoplay = false;
+        this.video.canplay = true;
 
         if (width !== null)
         {
@@ -344,6 +348,9 @@ Phaser.Video.prototype = {
         this.width = width;
         this.height = height;
 
+        console.log('updateTexture ---', this.key);
+        console.log(width, height);
+
         this.baseTexture.forceLoaded(width, height);
 
         this.texture.frame.resize(width, height);
@@ -393,6 +400,8 @@ Phaser.Video.prototype = {
      */
     play: function (loop, playbackRate) {
 
+        console.log('play ---', this.key);
+
         if (typeof loop === 'undefined') { loop = false; }
         if (typeof playbackRate === 'undefined') { playbackRate = 1; }
 
@@ -441,7 +450,10 @@ Phaser.Video.prototype = {
         }
         else
         {
-            this.video.addEventListener('canplay', this.canPlayHandler.bind(this), true);
+            console.log('play - but canplay false');
+            // this.video.addEventListener('canplay', this.canPlayHandler.bind(this), true);
+            // this.video.addEventListener('canplaythrough', this.canPlayHandler.bind(this), true);
+            this.video.addEventListener('playing', this.canPlayHandler.bind(this), true);
 
             this.video.play();
         }
@@ -452,7 +464,11 @@ Phaser.Video.prototype = {
 
     canPlayHandler: function () {
 
-        this.video.removeEventListener('canplay', this.canPlayHandler.bind(this));
+        console.log('canPlayHandler ---', this.key);
+
+        // this.video.removeEventListener('canplay', this.canPlayHandler.bind(this));
+        // this.video.removeEventListener('canplaythrough', this.canPlayHandler.bind(this));
+        this.video.removeEventListener('playing', this.canPlayHandler.bind(this));
 
         this.video.canplay = true;
 
@@ -694,6 +710,8 @@ Phaser.Video.prototype = {
      * @return {Phaser.Video} This Video object for method chaining.
      */
     changeSource: function (src, autoplay) {
+
+        console.log('changeSource', this.key);
 
         if (typeof autoplay === 'undefined') { autoplay = true; }
 
