@@ -47,7 +47,7 @@ Phaser.Component.Health.prototype = {
 
         return this;
 
-    }
+    },
 
     /**
     * Heal the Game Object. This adds the given amount of health from the `health` property.
