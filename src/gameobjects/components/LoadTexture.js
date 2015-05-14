@@ -65,9 +65,11 @@ Phaser.Component.LoadTexture.prototype = {
         else if (Phaser.Video && key instanceof Phaser.Video)
         {
             //  This works from a reference, which probably isn't what we need here
+            var valid = key.texture.valid;
             this.setTexture(key.texture);
             this.setFrame(key.texture.frame.clone());
             key.onChangeSource.add(this.resizeFrame, this);
+            this.texture.valid = valid;
         }
         else if (key instanceof PIXI.Texture)
         {
