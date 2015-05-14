@@ -207,7 +207,7 @@ Phaser.Device = function () {
     * @property {boolean} getUserMedia - Does the device support the getUserMedia API?
     * @default
     */
-    this.getUserMedia = false;
+    this.getUserMedia = true;
 
     /**
     * @property {boolean} quirksMode - Is the browser running in strict mode (false) or quirks mode? (true)
@@ -699,7 +699,20 @@ Phaser.Device._initialize = function () {
 
         device.quirksMode = (document.compatMode === 'CSS1Compat') ? false : true;
 
-        device.getUserMedia = !!(navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
+        navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+
+        window.URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
+
+        device.getUserMedia = device.getUserMedia && !!navigator.getUserMedia && !!window.URL;
+
+        // Older versions of firefox (< 21) apparently claim support but user media does not actually work
+        if (navigator.userAgent.match(/Firefox\D+(\d+)/))
+        {
+            if (parseInt(RegExp.$1, 10) < 21)
+            {
+                device.getUserMedia = false;
+            }
+        }
 
         // TODO: replace canvasBitBltShift detection with actual feature check
 
