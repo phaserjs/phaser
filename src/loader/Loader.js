@@ -1461,7 +1461,7 @@ Phaser.Loader.prototype = {
     * for previous assets to load (unless they are sync-points). Resources, such as packs, may still
     * be downloaded around sync-points, as long as they do not finalize loading.
     *
-    * @method Phader.Loader#withSyncPoints
+    * @method Phaser.Loader#withSyncPoints
     * @param {function} callback - The callback is invoked and is supplied with a single argument: the loader.
     * @param {object} [callbackContext=(loader)] - Context for the callback.
     * @return {Phaser.Loader} This Loader instance.
@@ -1484,9 +1484,9 @@ Phaser.Loader.prototype = {
     *
     * This has no effect on already loaded assets.    
     *
-    * @method Phader.Loader#withSyncPoints
-    * @param {function} callback - The callback is invoked and is supplied with a single argument: the loader.
-    * @param {object} [callbackContext=(loader)] - Context for the callback.
+    * @method Phaser.Loader#addSyncPoint
+    * @param {string} type - The type of resource to turn into a sync point (image, audio, xml, etc).
+    * @param {string} key - Key of the file you want to turn into a sync point.
     * @return {Phaser.Loader} This Loader instance.
     * @see {@link Phaser.Loader#withSyncPoint withSyncPoint}
     */
@@ -2041,8 +2041,6 @@ Phaser.Loader.prototype = {
     */
     loadVideoTag: function (file) {
 
-        console.log('loadVideoTag', file.key);
-
         var _this = this;
 
         file.data = document.createElement("video");
@@ -2051,8 +2049,7 @@ Phaser.Loader.prototype = {
         file.data.autoplay = false;
         
         var playThroughEvent = function () {
-            console.log('playThroughEvent', file.data.name);
-            // file.data.removeEventListener('canplay', playThroughEvent, false);
+            // console.log('playThroughEvent', file.data.name);
             file.data.removeEventListener('canplaythrough', playThroughEvent, false);
             file.data.onerror = null;
             file.data.canplay = true;
@@ -2061,7 +2058,7 @@ Phaser.Loader.prototype = {
         };
 
         var loadedDataEvent = function () {
-            console.log('loadedDataEvent', file.data.name);
+            // console.log('loadedDataEvent', file.data.name);
             file.data.removeEventListener('loadeddata', loadedDataEvent, false);
             file.data.onerror = null;
             file.data.canplay = false;
