@@ -2049,7 +2049,19 @@ Phaser.Loader.prototype = {
         var playThroughEvent = function () {
             file.data.removeEventListener('canplay', playThroughEvent, false);
             file.data.removeEventListener('canplaythrough', playThroughEvent, false);
+            file.data.removeEventListener('loadeddata', playThroughEvent, false);
             file.data.onerror = null;
+            file.data.canplay = true;
+            // Why does this cycle through games?
+            Phaser.GAMES[_this.game.id].load.fileComplete(file);
+        };
+
+        var loadedDataEvent = function () {
+            file.data.removeEventListener('canplay', playThroughEvent, false);
+            file.data.removeEventListener('canplaythrough', playThroughEvent, false);
+            file.data.removeEventListener('loadeddata', loadedDataEvent, false);
+            file.data.onerror = null;
+            file.data.canplay = false;
             // Why does this cycle through games?
             Phaser.GAMES[_this.game.id].load.fileComplete(file);
         };
@@ -2057,7 +2069,9 @@ Phaser.Loader.prototype = {
         file.data.onerror = function () {
             file.data.removeEventListener('canplay', playThroughEvent, false);
             file.data.removeEventListener('canplaythrough', playThroughEvent, false);
+            file.data.removeEventListener('loadeddata', playThroughEvent, false);
             file.data.onerror = null;
+            file.data.canplay = false;
             _this.fileError(file);
         };
 
@@ -2065,6 +2079,7 @@ Phaser.Loader.prototype = {
         file.data.autoplay = false;
         file.data.addEventListener('canplay', playThroughEvent, false);
         file.data.addEventListener('canplaythrough', playThroughEvent, false);
+        file.data.addEventListener('loadeddata', loadedDataEvent, false);
         file.data.src = this.transformUrl(file.url, file);
         file.data.load();
 
