@@ -269,10 +269,6 @@ Phaser.Video.prototype = {
 
         this.video.setAttribute('autoplay', 'autoplay');
 
-        // this.video.controls = false;
-        // this.video.autoplay = false;
-        // this.video.canplay = false;
-
         if (width !== null)
         {
             this.video.width = width;
@@ -320,8 +316,6 @@ Phaser.Video.prototype = {
             self.onError.dispatch(self, err);
         });
 
-        // this.video.addEventListener('loadeddata', function (event) { self.streamLoaded(event); }, false);
-
         this.video.addEventListener('loadeddata', function () {
 
             var retry = 10;
@@ -366,38 +360,6 @@ Phaser.Video.prototype = {
 
     },
 
-/*
-    streamLoaded: function (event) {
-
-        console.log('mozStreamLoaded', arguments);
-
-        if (!this.isStreaming)
-        {
-            this.video.removeEventListener('canplay', this.mozStreamLoaded, false);
-
-            this.texture.valid = true;
-
-            if (this.video)
-            {
-                console.log('vwh', this.video.videoWidth, this.video.videoHeight);
-            }
-      
-            // Firefox currently has a bug where the height can't be read from
-            // the video, so we will make assumptions if this happens.
-
-            if (this.video.videoHeight)
-if (isNaN(height)) {
-          height = width / (4/3);
-        }
-
-            this.isStreaming = true;
-        }
-
-        this.updateTexture();
-
-    },
-*/
-
     /**
      * Creates a new Video element from the given Blob. The Blob must contain the video data in the correct encoded format.
      * This method is typically called by the Phaser.Loader and Phaser.Cache for you, but is exposed publicly for convenience.
@@ -440,7 +402,7 @@ if (isNaN(height)) {
         this.width = width;
         this.height = height;
 
-        console.log('updateTexture ---', this.key, change);
+        console.log('updateTexture ---', this.key, 'change?', change);
         console.log(width, height);
 
         this.baseTexture.forceLoaded(width, height);
@@ -803,9 +765,12 @@ if (isNaN(height)) {
      */
     changeSource: function (src, autoplay) {
 
-        console.log('changeSource', this.key);
+        console.log('changeSource from', this.key, 'to', src);
 
         if (typeof autoplay === 'undefined') { autoplay = true; }
+
+        //  Invalidate the texture while we wait for the new one to load (crashes IE11 otherwise)
+        this.texture.valid = false;
 
         this.video.pause();
 
