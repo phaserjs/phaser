@@ -12,6 +12,8 @@
 * 
 * This can be applied to a Sprite as a texture. If multiple Sprites share the same Video texture and playback
 * changes (i.e. you pause the video, or seek to a new time) then this change will be seen across all Sprites simultaneously.
+*
+* Due to a bug in IE11 you cannot play a video texture to a Sprite in WebGL. For IE11 force Canvas mode.
 * 
 * If you need each Sprite to be able to play a video fully independently then you will need one Video object per Sprite.
 * Please understand the obvious performance implications of doing this, and the memory required to hold videos in RAM.
@@ -36,8 +38,6 @@ Phaser.Video = function (game, key, captureAudio, width, height) {
 
     if (typeof key === 'undefined') { key = null; }
     if (typeof captureAudio === 'undefined') { captureAudio = false; }
-
-    console.log('create video', key);
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running game.
@@ -69,6 +69,9 @@ Phaser.Video = function (game, key, captureAudio, width, height) {
     */
     this.videoStream = null;
 
+    /**
+    * @property {boolean} isStreaming - Is there a streaming video source? I.e. from a webcam.
+    */
     this.isStreaming = false;
 
     if (key === null)
@@ -117,7 +120,6 @@ Phaser.Video = function (game, key, captureAudio, width, height) {
 
     if (key !== null && this.video)
     {
-        console.log('canplay?', this.key, 'cp', this.video.canplay, this.width, this.height);
         this.texture.valid = this.video.canplay;
     }
 
@@ -279,16 +281,7 @@ Phaser.Video.prototype = {
             this.video.height = height;
         }
 
-        if (!navigator.getUserMedia)
-        {
-            navigator.getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
-        }
-
-        window.URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
-
         var self = this;
-
-        console.log('createVideoStream', width, height);
 
         navigator.getUserMedia({ 
             "audio": captureAudio, 
@@ -334,7 +327,6 @@ Phaser.Video.prototype = {
                             var height = width / (4/3);
                         }
 
-                        console.log('checkStream', retry);
                         self.isStreaming = true;
                         self.updateTexture(null, width, height);
                         self.onAccess.dispatch(self);
@@ -402,9 +394,6 @@ Phaser.Video.prototype = {
         this.width = width;
         this.height = height;
 
-        console.log('updateTexture ---', this.key, 'change?', change);
-        console.log(width, height);
-
         this.baseTexture.forceLoaded(width, height);
 
         this.texture.frame.resize(width, height);
@@ -453,8 +442,6 @@ Phaser.Video.prototype = {
      * @return {Phaser.Video} This Video object for method chaining.
      */
     play: function (loop, playbackRate) {
-
-        console.log('play ---', this.key);
 
         if (typeof loop === 'undefined') { loop = false; }
         if (typeof playbackRate === 'undefined') { playbackRate = 1; }
@@ -508,27 +495,19 @@ Phaser.Video.prototype = {
 
     },
 
-    // canPlayHandler: function () {
+    /**
+     * Called when the video starts to play. Updates the texture.
+     *
+     * @method Phaser.Video#playHandler
+     * @private
+     */
     playHandler: function () {
 
-        // console.log('canPlayHandler ---', this.key);
-        console.log('playHandler ---', this.key);
-
-        // this.video.removeEventListener('canplay', this.canPlayHandler.bind(this));
-        // this.video.removeEventListener('canplaythrough', this.canPlayHandler.bind(this));
-        // this.video.removeEventListener('playing', this.canPlayHandler.bind(this));
         this.video.removeEventListener('playing', this.playHandler.bind(this));
 
         // this.video.canplay = true;
 
-        // if (this.width !== this.texture.width || this.width !== this.baseTexture.width)
-
-        // this.width = width;
-        // this.height = height;
-
         this.updateTexture();
-
-        // this.onPlay.dispatch(this, this.loop, this.playbackRate);
 
     },
 
@@ -559,7 +538,7 @@ Phaser.Video.prototype = {
 
         //  Stream or file?
 
-        if (this.videoStream)
+        if (this.isStreaming)
         {
             if (this.video.mozSrcObject)
             {
@@ -573,6 +552,7 @@ Phaser.Video.prototype = {
             }
 
             this.videoStream = null;
+            this.isStreaming = false;
         }
         else
         {
@@ -764,8 +744,6 @@ Phaser.Video.prototype = {
      * @return {Phaser.Video} This Video object for method chaining.
      */
     changeSource: function (src, autoplay) {
-
-        console.log('changeSource from', this.key, 'to', src);
 
         if (typeof autoplay === 'undefined') { autoplay = true; }
 
