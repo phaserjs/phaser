@@ -283,8 +283,8 @@ Phaser.Video.prototype = {
 
         var self = this;
 
-        navigator.getUserMedia({ 
-            "audio": captureAudio, 
+        navigator.getUserMedia({
+            "audio": captureAudio,
             "video": true
         },
         function(stream) {
@@ -320,7 +320,7 @@ Phaser.Video.prototype = {
                     if (self.video.videoWidth > 0)
                     {
                         // Patch for Firefox bug where the height can't be read from the video
-                        var width = self.video.videoWidth
+                        var width = self.video.videoWidth;
 
                         if (isNaN(self.video.videoHeight))
                         {
