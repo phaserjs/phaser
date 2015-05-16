@@ -61,7 +61,7 @@ Phaser.Rope = function (game, x, y, key, frame, points) {
     */
     this._scroll = new Phaser.Point();
 
-    PIXI.Rope.call(this, key, this.points);
+    PIXI.Rope.call(this, PIXI.TextureCache['__default'], this.points);
 
     Phaser.Component.Core.init.call(this, game, x, y, key, frame);
 
