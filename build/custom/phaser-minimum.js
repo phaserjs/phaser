@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.4.0 "Katar" - Built: Thu May 14 2015 16:47:28
+* v2.4.0 "Katar" - Built: Mon May 18 2015 12:55:12
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -36625,7 +36625,7 @@ Phaser.Device = function () {
     * @property {boolean} getUserMedia - Does the device support the getUserMedia API?
     * @default
     */
-    this.getUserMedia = false;
+    this.getUserMedia = true;
 
     /**
     * @property {boolean} quirksMode - Is the browser running in strict mode (false) or quirks mode? (true)
@@ -37117,7 +37117,20 @@ Phaser.Device._initialize = function () {
 
         device.quirksMode = (document.compatMode === 'CSS1Compat') ? false : true;
 
-        device.getUserMedia = !!(navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
+        navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+
+        window.URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
+
+        device.getUserMedia = device.getUserMedia && !!navigator.getUserMedia && !!window.URL;
+
+        // Older versions of firefox (< 21) apparently claim support but user media does not actually work
+        if (navigator.userAgent.match(/Firefox\D+(\d+)/))
+        {
+            if (parseInt(RegExp.$1, 10) < 21)
+            {
+                device.getUserMedia = false;
+            }
+        }
 
         // TODO: replace canvasBitBltShift detection with actual feature check
 
@@ -39169,7 +39182,7 @@ Phaser.Math = {
     */
     isOdd: function (n) {
         // Does not work with extremely large values
-        return (n & 1);
+        return !!(n & 1);
     },
 
     /**
@@ -41950,7 +41963,10 @@ Phaser.AnimationManager = function (sprite) {
     this.game = sprite.game;
 
     /**
-    * @property {Phaser.Frame} currentFrame - The currently displayed Frame of animation, if any.
+    * The currently displayed Frame of animation, if any.
+    * This property is only set once an Animation starts playing. Until that point it remains set as `null`.
+    * 
+    * @property {Phaser.Frame} currentFrame
     * @default
     */
     this.currentFrame = null;
@@ -42121,14 +42137,16 @@ Phaser.AnimationManager.prototype = {
             }
         }
 
-        this._outputFrames.length = 0;
+        this._outputFrames = [];
 
         this._frameData.getFrameIndexes(frames, useNumericIndex, this._outputFrames);
 
         this._anims[name] = new Phaser.Animation(this.game, this.sprite, name, this._frameData, this._outputFrames, frameRate, loop);
 
         this.currentAnim = this._anims[name];
-        this.currentFrame = this.currentAnim.currentFrame;
+
+        //  This shouldn't be set until the Animation is played, surely?
+        // this.currentFrame = this.currentAnim.currentFrame;
 
         if (this.sprite.tilingTexture)
         {
@@ -42197,6 +42215,7 @@ Phaser.AnimationManager.prototype = {
                     this.currentAnim.paused = false;
                     return this.currentAnim.play(frameRate, loop, killOnComplete);
                 }
+
                 return this.currentAnim;
             }
             else
@@ -42691,7 +42710,7 @@ Phaser.Animation.prototype = {
         this._timeNextFrame = this.game.time.time + this.delay;
 
         this._frameIndex = 0;
-        this.updateCurrentFrame(false);
+        this.updateCurrentFrame(false, true);
 
         this._parent.events.onAnimationStart$dispatch(this._parent, this);
 
@@ -42880,6 +42899,7 @@ Phaser.Animation.prototype = {
             //  And what's left now?
             this._timeNextFrame = this.game.time.time + (this.delay - this._frameDiff);
 
+            var fi = this._frameIndex;
             this._frameIndex += this._frameSkip;
 
             if (this._frameIndex >= this._frames.length)
@@ -42917,10 +42937,13 @@ Phaser.Animation.prototype = {
     * Returns true if the current frame update was 'successful', false otherwise.
     *
     * @method Phaser.Animation#updateCurrentFrame
-    * @param {bool} signalUpdate - If true th onUpdate signal will be triggered.
+    * @param {boolean} signalUpdate - If true the `Animation.onUpdate` signal will be dispatched.
+    * @param {boolean} fromPlay - Was this call made from the playing of a new animation?
     * @private
     */
-    updateCurrentFrame: function (signalUpdate) {
+    updateCurrentFrame: function (signalUpdate, fromPlay) {
+
+        if (typeof fromPlay === 'undefined') { fromPlay = false; }
 
         if (!this._frameData)
         {
@@ -42928,13 +42951,25 @@ Phaser.Animation.prototype = {
             return false;
         }
 
-        var idx = this.currentFrame.index;
-
-        this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
-
-        if (this.currentFrame && idx !== this.currentFrame.index)
+        if (fromPlay)
         {
-            this._parent.setFrame(this.currentFrame);
+            this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
+
+            if (this.currentFrame && idx !== this.currentFrame.index)
+            {
+                this._parent.setFrame(this.currentFrame);
+            }
+        }
+        else
+        {
+            var idx = this.currentFrame.index;
+
+            this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
+
+            if (this.currentFrame && idx !== this.currentFrame.index)
+            {
+                this._parent.setFrame(this.currentFrame);
+            }
         }
 
         if (this.onUpdate && signalUpdate)
@@ -43543,7 +43578,6 @@ Phaser.FrameData = function () {
     */
     this._frames = [];
 
-
     /**
     * @property {Array} _frameNames - Local array of frame names for name to index conversions.
     * @private
@@ -43685,7 +43719,7 @@ Phaser.FrameData.prototype = {
     * The frames are returned in the output array, or if none is provided in a new Array object.
     *
     * @method Phaser.FrameData#getFrames
-    * @param {Array} frames - An Array containing the indexes of the frames to retrieve. If the array is empty then all frames in the FrameData are returned.
+    * @param {Array} [frames] - An Array containing the indexes of the frames to retrieve. If the array is empty or undefined then all frames in the FrameData are returned.
     * @param {boolean} [useNumericIndex=true] - Are the given frames using numeric indexes (default) or strings? (false)
     * @param {Array} [output] - If given the results will be appended to the end of this array otherwise a new array will be created.
     * @return {Array} An array of all Frames in this FrameData set matching the given names or IDs.
@@ -43732,7 +43766,7 @@ Phaser.FrameData.prototype = {
     * The frames indexes are returned in the output array, or if none is provided in a new Array object.
     *
     * @method Phaser.FrameData#getFrameIndexes
-    * @param {Array} frames - An Array containing the indexes of the frames to retrieve. If the array is empty then all frames in the FrameData are returned.
+    * @param {Array} [frames] - An Array containing the indexes of the frames to retrieve. If undefined or the array is empty then all frames in the FrameData are returned.
     * @param {boolean} [useNumericIndex=true] - Are the given frames using numeric indexes (default) or strings? (false)
     * @param {Array} [output] - If given the results will be appended to the end of this array otherwise a new array will be created.
     * @return {Array} An array of all Frame indexes matching the given names or IDs.
@@ -43753,12 +43787,12 @@ Phaser.FrameData.prototype = {
         else
         {
             //  Input array given, loop through that instead
-            for (var i = 0; i < this._frames.length; i++)
+            for (var i = 0; i < frames.length; i++)
             {
                 //  Does the frames array contain names or indexes?
                 if (useNumericIndex)
                 {
-                    output.push(frames[i]);
+                    output.push(this._frames[frames[i]].index);
                 }
                 else
                 {
@@ -47253,7 +47287,7 @@ Phaser.Loader.prototype = {
     * for previous assets to load (unless they are sync-points). Resources, such as packs, may still
     * be downloaded around sync-points, as long as they do not finalize loading.
     *
-    * @method Phader.Loader#withSyncPoints
+    * @method Phaser.Loader#withSyncPoints
     * @param {function} callback - The callback is invoked and is supplied with a single argument: the loader.
     * @param {object} [callbackContext=(loader)] - Context for the callback.
     * @return {Phaser.Loader} This Loader instance.
@@ -47276,9 +47310,9 @@ Phaser.Loader.prototype = {
     *
     * This has no effect on already loaded assets.    
     *
-    * @method Phader.Loader#withSyncPoints
-    * @param {function} callback - The callback is invoked and is supplied with a single argument: the loader.
-    * @param {object} [callbackContext=(loader)] - Context for the callback.
+    * @method Phaser.Loader#addSyncPoint
+    * @param {string} type - The type of resource to turn into a sync point (image, audio, xml, etc).
+    * @param {string} key - Key of the file you want to turn into a sync point.
     * @return {Phaser.Loader} This Loader instance.
     * @see {@link Phaser.Loader#withSyncPoint withSyncPoint}
     */
@@ -47837,11 +47871,12 @@ Phaser.Loader.prototype = {
 
         file.data = document.createElement("video");
         file.data.name = file.key;
+        file.data.controls = false;
+        file.data.autoplay = false;
         
         var playThroughEvent = function () {
-            file.data.removeEventListener('canplay', playThroughEvent, false);
+            // console.log('playThroughEvent', file.data.name);
             file.data.removeEventListener('canplaythrough', playThroughEvent, false);
-            file.data.removeEventListener('loadeddata', playThroughEvent, false);
             file.data.onerror = null;
             file.data.canplay = true;
             // Why does this cycle through games?
@@ -47849,8 +47884,7 @@ Phaser.Loader.prototype = {
         };
 
         var loadedDataEvent = function () {
-            file.data.removeEventListener('canplay', playThroughEvent, false);
-            file.data.removeEventListener('canplaythrough', playThroughEvent, false);
+            // console.log('loadedDataEvent', file.data.name);
             file.data.removeEventListener('loadeddata', loadedDataEvent, false);
             file.data.onerror = null;
             file.data.canplay = false;
@@ -47859,7 +47893,7 @@ Phaser.Loader.prototype = {
         };
 
         file.data.onerror = function () {
-            file.data.removeEventListener('canplay', playThroughEvent, false);
+            // file.data.removeEventListener('canplay', playThroughEvent, false);
             file.data.removeEventListener('canplaythrough', playThroughEvent, false);
             file.data.removeEventListener('loadeddata', playThroughEvent, false);
             file.data.onerror = null;
@@ -47867,11 +47901,17 @@ Phaser.Loader.prototype = {
             _this.fileError(file);
         };
 
-        file.data.controls = false;
-        file.data.autoplay = false;
-        file.data.addEventListener('canplay', playThroughEvent, false);
-        file.data.addEventListener('canplaythrough', playThroughEvent, false);
-        file.data.addEventListener('loadeddata', loadedDataEvent, false);
+        if (this.game.device.firefox)
+        {
+            //  I wish there was another easier way, but I'm not aware of it yet
+            file.data.addEventListener('loadeddata', loadedDataEvent, false);
+        }
+        else
+        {
+            // file.data.addEventListener('canplay', playThroughEvent, false);
+            file.data.addEventListener('canplaythrough', playThroughEvent, false);
+        }
+
         file.data.src = this.transformUrl(file.url, file);
         file.data.load();
 
