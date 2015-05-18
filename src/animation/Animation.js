@@ -381,7 +381,6 @@ Phaser.Animation.prototype = {
             //  And what's left now?
             this._timeNextFrame = this.game.time.time + (this.delay - this._frameDiff);
 
-            var fi = this._frameIndex;
             this._frameIndex += this._frameSkip;
 
             if (this._frameIndex >= this._frames.length)
@@ -437,7 +436,7 @@ Phaser.Animation.prototype = {
         {
             this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
 
-            if (this.currentFrame && idx !== this.currentFrame.index)
+            if (this.currentFrame)
             {
                 this._parent.setFrame(this.currentFrame);
             }
