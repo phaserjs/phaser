@@ -296,6 +296,7 @@ Version 2.4 - "Katar" - in dev
 * Frame.resize allows you to change the dimensions of a Frame object and recalculate all of its internal properties (such as `bottom` and `distance`).
 * LoadTexture.resizeFrame lets you resize the Frame dimensions that the Game Object uses for rendering. You shouldn't normally need to ever call this, but in the case of special texture types such as Video or BitmapData it can be useful to adjust the dimensions directly in this way.
 * Rectangle.bottomLeft has been added (thanks @mattmogford #1788)
+* Device.firefoxVersion is a new property that contains the major Firefox version number if running within Firefox, otherwise zero.
 
 ### Updates
 

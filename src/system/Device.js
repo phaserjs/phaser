@@ -263,6 +263,12 @@ Phaser.Device = function () {
     this.firefox = false;
 
     /**
+    * @property {number} firefoxVersion - If running in Firefox this will contain the major version number.
+    * @default
+    */
+    this.firefoxVersion = 0;
+
+    /**
     * @property {boolean} ie - Set to true if running in Internet Explorer.
     * @default
     */
@@ -847,9 +853,10 @@ Phaser.Device._initialize = function () {
         {
             device.epiphany = true;
         }
-        else if (/Firefox/.test(ua))
+        else if (/Firefox\D+(\d+)/.test(ua))
         {
             device.firefox = true;
+            device.firefoxVersion = parseInt(RegExp.$1, 10);
         }
         else if (/AppleWebKit/.test(ua) && device.iOS)
         {
