@@ -359,6 +359,9 @@ Version 2.4 - "Katar" - in dev
 * Input.addMoveCallback used to return the index of the callback entry in the internal `moveCallbacks` array. However as callbacks were removed the indexes became invalid, potentially causing a future `Input.deleteMoveCallback` to remove the wrong callback entirely or error. Input.deleteMoveCallback now takes the original callback and context as its parameters to ensure deletion safety.
 * Graphics constructor now sets x/y parameters to zero if undefined. Before it would set them to undefined as the type check wasn't strict.
 * Math.isOdd now returns an actual boolean value instead of 1 (thanks @formigone #1792)
+* Rope constructor was fixed enabling it again (thanks @gionatan7 #1799)
+* FrameData.getFrameIndexes when called with a partial array (such as creating an animation out of a set of frames) would return the indexes array padded out with 'undefined' entries, causing short animations to never fully play through.
+* AnimationManager.add no longer sets the `currentFrame` property when just adding an Animation to a Sprite. The `currentFrame` property is now only set when the animation begins playing. This avoids the Sprite.frame and Sprite.frameName properties from returning incorrect results after adding (but not playing) an Animation. It also allows very short animations (2 frames) to play correctly without needing to loop.
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
