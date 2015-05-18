@@ -25,7 +25,10 @@ Phaser.AnimationManager = function (sprite) {
     this.game = sprite.game;
 
     /**
-    * @property {Phaser.Frame} currentFrame - The currently displayed Frame of animation, if any.
+    * The currently displayed Frame of animation, if any.
+    * This property is only set once an Animation starts playing. Until that point it remains set as `null`.
+    * 
+    * @property {Phaser.Frame} currentFrame
     * @default
     */
     this.currentFrame = null;
@@ -196,14 +199,16 @@ Phaser.AnimationManager.prototype = {
             }
         }
 
-        this._outputFrames.length = 0;
+        this._outputFrames = [];
 
         this._frameData.getFrameIndexes(frames, useNumericIndex, this._outputFrames);
 
         this._anims[name] = new Phaser.Animation(this.game, this.sprite, name, this._frameData, this._outputFrames, frameRate, loop);
 
         this.currentAnim = this._anims[name];
-        this.currentFrame = this.currentAnim.currentFrame;
+
+        //  This shouldn't be set until the Animation is played, surely?
+        // this.currentFrame = this.currentAnim.currentFrame;
 
         if (this.sprite.tilingTexture)
         {
@@ -272,6 +277,7 @@ Phaser.AnimationManager.prototype = {
                     this.currentAnim.paused = false;
                     return this.currentAnim.play(frameRate, loop, killOnComplete);
                 }
+
                 return this.currentAnim;
             }
             else
