@@ -1096,7 +1096,7 @@ Phaser.Math = {
     },
 
     /**
-    * Returns the euclidian distance squared between the two given set of
+    * Returns the euclidean distance squared between the two given set of
     * coordinates (cuts out a square root operation before returning).
     *
     * @method Phaser.Math#distanceSq
