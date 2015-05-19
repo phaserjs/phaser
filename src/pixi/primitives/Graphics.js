@@ -1146,8 +1146,9 @@ PIXI.Graphics.prototype.drawShape = function(shape)
     this.currentPath = null;
 
     //  Handle mixed-type polygons
-    if (shape instanceof PIXI.Polygon)
+    if (shape instanceof Phaser.Polygon)
     {
+        shape = shape.clone();
         shape.flatten();
     }
 
