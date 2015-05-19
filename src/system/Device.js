@@ -1227,7 +1227,7 @@ Phaser.Device.canPlayVideo = function (type) {
     {
         return true;
     }
-    else if (type === 'mp4' && this.mp4Video)
+    else if (type === 'mp4' && (this.mp4Video || this.h264Video))
     {
         return true;
     }
