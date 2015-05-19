@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.4.0 "Katar" - Built: Mon May 18 2015 12:55:12
+* v2.4.0 "Katar" - Built: Tue May 19 2015 14:20:08
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -35455,7 +35455,7 @@ Phaser.Rope = function (game, x, y, key, frame, points) {
     */
     this._scroll = new Phaser.Point();
 
-    PIXI.Rope.call(this, key, this.points);
+    PIXI.Rope.call(this, PIXI.TextureCache['__default'], this.points);
 
     Phaser.Component.Core.init.call(this, game, x, y, key, frame);
 
@@ -36681,6 +36681,12 @@ Phaser.Device = function () {
     this.firefox = false;
 
     /**
+    * @property {number} firefoxVersion - If running in Firefox this will contain the major version number.
+    * @default
+    */
+    this.firefoxVersion = 0;
+
+    /**
     * @property {boolean} ie - Set to true if running in Internet Explorer.
     * @default
     */
@@ -37265,9 +37271,10 @@ Phaser.Device._initialize = function () {
         {
             device.epiphany = true;
         }
-        else if (/Firefox/.test(ua))
+        else if (/Firefox\D+(\d+)/.test(ua))
         {
             device.firefox = true;
+            device.firefoxVersion = parseInt(RegExp.$1, 10);
         }
         else if (/AppleWebKit/.test(ua) && device.iOS)
         {
@@ -37638,7 +37645,7 @@ Phaser.Device.canPlayVideo = function (type) {
     {
         return true;
     }
-    else if (type === 'mp4' && this.mp4Video)
+    else if (type === 'mp4' && (this.mp4Video || this.h264Video))
     {
         return true;
     }
@@ -42899,7 +42906,6 @@ Phaser.Animation.prototype = {
             //  And what's left now?
             this._timeNextFrame = this.game.time.time + (this.delay - this._frameDiff);
 
-            var fi = this._frameIndex;
             this._frameIndex += this._frameSkip;
 
             if (this._frameIndex >= this._frames.length)
@@ -42955,7 +42961,7 @@ Phaser.Animation.prototype = {
         {
             this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
 
-            if (this.currentFrame && idx !== this.currentFrame.index)
+            if (this.currentFrame)
             {
                 this._parent.setFrame(this.currentFrame);
             }
@@ -47696,9 +47702,14 @@ Phaser.Loader.prototype = {
     * @method Phaser.Loader#transformUrl
     * @protected
     * @param {string} url - The url to transform
-    * @return {string} The transformed url
+    * @return {string} The transformed url. In rare cases where the url isn't specified it will return false instead.
     */
     transformUrl: function (url) {
+
+        if (!url)
+        {
+            return false;
+        }
 
         if (url.substr(0, 4) === 'http' || url.substr(0, 2) === '//')
         {
@@ -47893,7 +47904,6 @@ Phaser.Loader.prototype = {
         };
 
         file.data.onerror = function () {
-            // file.data.removeEventListener('canplay', playThroughEvent, false);
             file.data.removeEventListener('canplaythrough', playThroughEvent, false);
             file.data.removeEventListener('loadeddata', playThroughEvent, false);
             file.data.onerror = null;
