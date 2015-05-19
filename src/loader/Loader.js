@@ -1870,9 +1870,14 @@ Phaser.Loader.prototype = {
     * @method Phaser.Loader#transformUrl
     * @protected
     * @param {string} url - The url to transform
-    * @return {string} The transformed url
+    * @return {string} The transformed url. In rare cases where the url isn't specified it will return false instead.
     */
     transformUrl: function (url) {
+
+        if (!url)
+        {
+            return false;
+        }
 
         if (url.substr(0, 4) === 'http' || url.substr(0, 2) === '//')
         {
@@ -2067,7 +2072,6 @@ Phaser.Loader.prototype = {
         };
 
         file.data.onerror = function () {
-            // file.data.removeEventListener('canplay', playThroughEvent, false);
             file.data.removeEventListener('canplaythrough', playThroughEvent, false);
             file.data.removeEventListener('loadeddata', playThroughEvent, false);
             file.data.onerror = null;
