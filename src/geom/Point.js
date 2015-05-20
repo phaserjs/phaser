@@ -87,7 +87,7 @@ Phaser.Point.prototype = {
     /**
     * Sets the `x` and `y` values of this Point object to the given values.
     * If you omit the `y` value then the `x` value will be applied to both, for example:
-    * `Point.setTo(2)` is the same as `Point.setTo(2, 2)`
+    * `Point.set(2)` is the same as `Point.set(2, 2)`
     *
     * @method Phaser.Point#set
     * @param {number} x - The horizontal value of this point.
