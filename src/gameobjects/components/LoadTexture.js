@@ -14,6 +14,12 @@ Phaser.Component.LoadTexture = function () {};
 Phaser.Component.LoadTexture.prototype = {
 
     /**
+    * @property {boolean} customRender - Does this texture require a custom render call? (as set by BitmapData, Video, etc)
+    * @private
+    */
+    customRender: false,
+
+    /**
     * @property {Phaser.Rectangle} _frame - Internal cache var.
     * @private
     */
@@ -43,6 +49,7 @@ Phaser.Component.LoadTexture.prototype = {
         }
 
         this.key = key;
+        this.customRender = false;
 
         var setFrame = true;
         var smoothed = !this.texture.baseTexture.scaleMode;
@@ -54,6 +61,8 @@ Phaser.Component.LoadTexture.prototype = {
         }
         else if (Phaser.BitmapData && key instanceof Phaser.BitmapData)
         {
+            this.customRender = true;
+
             //  This works from a reference, which probably isn't what we need here
             this.setTexture(key.texture);
 
@@ -64,6 +73,8 @@ Phaser.Component.LoadTexture.prototype = {
         }
         else if (Phaser.Video && key instanceof Phaser.Video)
         {
+            this.customRender = true;
+
             //  This works from a reference, which probably isn't what we need here
             var valid = key.texture.valid;
             this.setTexture(key.texture);
