@@ -443,6 +443,7 @@ Phaser.Utils.Debug.prototype = {
         this.rectangle(bounds, color, filled);
 
     },
+
     /**
     * Renders the Rope's segments. Note: This is really expensive as it has to calculate new segments everytime you call it
     *
@@ -452,9 +453,13 @@ Phaser.Utils.Debug.prototype = {
     * @param {boolean} [filled=true] - Render the rectangle as a fillRect (default, true) or a strokeRect (false)
     */
     ropeSegments: function(rope, color, filled) {
+
         var segments = rope.segments;
+
+        var self = this;
+
         segments.forEach(function(segment) {
-            this.rectangle(segment, color, filled);
+            self.rectangle(segment, color, filled);
         }, this);
 
     },
