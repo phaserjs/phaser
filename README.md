@@ -298,6 +298,7 @@ Version 2.4 - "Katar" - in dev
 * Rectangle.bottomLeft has been added (thanks @mattmogford #1788)
 * Device.firefoxVersion is a new property that contains the major Firefox version number if running within Firefox, otherwise zero.
 * Math.distanceSq will return the euclidean distance squared between the two given set of coordinates (thanks @jeremyosborne #1761 #1770)
+* StateManager.onStateChange is a new signal which is dispatched whenever the State changes from one to another. The callback you specify is sent two parameters: the string based key of the new state, and the second parameter is the string based key of the old / previous state. 
 
 ### Updates
 
@@ -335,6 +336,7 @@ Version 2.4 - "Katar" - in dev
 * Texture.requiresReTint is a new property that controls if a texture requires the display object to be re-tinted having been updated internally. The LoadTexture component now sets this.
 * PIXI.Sprite.tintedTexture contains a canvas object that holds the tinted version of the Sprite. This is only populated in Canvas, not in WebGL.
 * ScaleManager.scaleSprite will no longer try and scale a display object that doesn't have a scale property.
+* The LoadTexture component has a new property `customRender` which is checked for in the Core postUpdate to know when to render custom elements like Videos.
 
 ### Bug Fixes
 
