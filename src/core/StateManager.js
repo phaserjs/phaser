@@ -337,7 +337,7 @@ Phaser.StateManager.prototype = {
 
             this.setCurrentState(this._pendingState);
 
-            this.onStateChange.dispatch(this.current, this.previousStateKey);
+            this.onStateChange.dispatch(this.current, previousStateKey);
 
             if (this.current !== this._pendingState)
             {
