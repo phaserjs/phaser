@@ -68,6 +68,20 @@ Phaser.StateManager = function (game, pendingState) {
     this.current = '';
 
     /**
+    * onStateChange is a Phaser.Signal that is dispatched whenever the game changes state.
+    * 
+    * It is dispatched only when the new state is started, which isn't usually at the same time as StateManager.start
+    * is called because state swapping is done in sync with the game loop. It is dispatched *before* any of the new states
+    * methods (such as preload and create) are called, and *after* the previous states shutdown method has been run.
+    *
+    * The callback you specify is sent two parameters: the string based key of the new state, 
+    * and the second parameter is the string based key of the old / previous state.
+    * 
+    * @property {Phaser.Signal} onStateChange
+    */
+    this.onStateChange = new Phaser.Signal();
+
+    /**
     * @property {function} onInitCallback - This is called when the state is set as the active state.
     * @default
     */
@@ -316,10 +330,14 @@ Phaser.StateManager.prototype = {
 
         if (this._pendingState && this.game.isBooted)
         {
+            var previousStateKey = this.current;
+
             //  Already got a state running?
             this.clearCurrentState();
 
             this.setCurrentState(this._pendingState);
+
+            this.onStateChange.dispatch(this.current, this.previousStateKey);
 
             if (this.current !== this._pendingState)
             {
