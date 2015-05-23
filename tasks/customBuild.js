@@ -5,49 +5,51 @@
 'use strict';
 
 
+// The available Phaser modules.
+var modules = {
+
+    'pixi':             { 'description': 'Pixi.js (custom Phaser build)',               'optional': true, 'stub': false },
+    'intro':            { 'description': 'Phaser UMD wrapper',                          'optional': true, 'stub': false },
+    'phaser':           { 'description': 'Phaser Globals',                              'optional': false, 'stub': false },
+    'geom':             { 'description': 'Geometry Classes',                            'optional': false, 'stub': false },
+    'core':             { 'description': 'Phaser Core',                                 'optional': false, 'stub': false },
+    'input':            { 'description': 'Input Manager + Mouse and Touch Support',     'optional': false, 'stub': false },
+    'gamepad':          { 'description': 'Gamepad Input',                               'optional': true, 'stub': false },
+    'keyboard':         { 'description': 'Keyboard Input',                              'optional': true, 'stub': false },
+    'components':       { 'description': 'Game Object Components',                      'optional': false, 'stub': false },
+    'gameobjects':      { 'description': 'Core Game Objects',                           'optional': false, 'stub': false },
+    'bitmapdata':       { 'description': 'BitmapData Game Object',                      'optional': true, 'stub': false },
+    'graphics':         { 'description': 'Graphics Game Object',                        'optional': true, 'stub': false },
+    'rendertexture':    { 'description': 'RenderTexture Game Object',                   'optional': true, 'stub': false },
+    'text':             { 'description': 'Text Game Object (inc. Web Font Support)',    'optional': true, 'stub': false },
+    'bitmaptext':       { 'description': 'BitmapText Game Object',                      'optional': true, 'stub': false },
+    'retrofont':        { 'description': 'Retro Fonts Game Object',                     'optional': true, 'stub': false },
+    'system':           { 'description': 'System Classes',                              'optional': false, 'stub': false },
+    'math':             { 'description': 'Math, QuadTree and RND',                      'optional': false, 'stub': false },
+    'net':              { 'description': 'Network Class',                               'optional': true, 'stub': true },
+    'tweens':           { 'description': 'Tween Manager',                               'optional': true, 'stub': true },
+    'time':             { 'description': 'Time and Clock Manager',                      'optional': false, 'stub': false },
+    'animation':        { 'description': 'Animation and Frame Manager',                 'optional': false, 'stub': false },
+    'loader':           { 'description': 'Loader and Cache',                            'optional': false, 'stub': false },
+    'sound':            { 'description': 'Sound Support (Web Audio and HTML Audio)',    'optional': true, 'stub': true },
+    'debug':            { 'description': 'Debug Class',                                 'optional': true, 'stub': true },
+    'utils':            { 'description': 'Core Utilities',                              'optional': false, 'stub': false },
+    'physics':          { 'description': 'Physics Manager',                             'optional': false, 'stub': false },
+    'arcade':           { 'description': 'Arcade Physics',                              'optional': true, 'stub': false },
+    'ninja':            { 'description': 'Ninja Physics',                               'optional': true, 'stub': false },
+    'p2':               { 'description': 'P2 Physics',                                  'optional': true, 'stub': false },
+    'tilemaps':         { 'description': 'Tilemap Support',                             'optional': true, 'stub': false },
+    'particles':        { 'description': 'Arcade Physics Particle System',              'optional': true, 'stub': true },
+    'creature':         { 'description': 'Creature Animation Tool Support',             'optional': true, 'stub': false },
+    'video':            { 'description': 'Video Game Object',                           'optional': true, 'stub': false },
+    'outro':            { 'description': 'Phaser UMD closure',                          'optional': true, 'stub': false }
+
+};
+
+
 module.exports = function (grunt) {
 
     grunt.registerTask('custom', 'Build a custom version of Phaser', function(arg) {
-
-        var modules = {
-
-            'pixi':             { 'description': 'Pixi.js (custom Phaser build)',               'optional': true, 'stub': false },
-            'intro':            { 'description': 'Phaser UMD wrapper',                          'optional': true, 'stub': false },
-            'phaser':           { 'description': 'Phaser Globals',                              'optional': false, 'stub': false },
-            'geom':             { 'description': 'Geometry Classes',                            'optional': false, 'stub': false },
-            'core':             { 'description': 'Phaser Core',                                 'optional': false, 'stub': false },
-            'input':            { 'description': 'Input Manager + Mouse and Touch Support',     'optional': false, 'stub': false },
-            'gamepad':          { 'description': 'Gamepad Input',                               'optional': true, 'stub': false },
-            'keyboard':         { 'description': 'Keyboard Input',                              'optional': true, 'stub': false },
-            'components':       { 'description': 'Game Object Components',                      'optional': false, 'stub': false },
-            'gameobjects':      { 'description': 'Core Game Objects',                           'optional': false, 'stub': false },
-            'bitmapdata':       { 'description': 'BitmapData Game Object',                      'optional': true, 'stub': false },
-            'graphics':         { 'description': 'Graphics Game Object',                        'optional': true, 'stub': false },
-            'rendertexture':    { 'description': 'RenderTexture Game Object',                   'optional': true, 'stub': false },
-            'text':             { 'description': 'Text Game Object (inc. Web Font Support)',    'optional': true, 'stub': false },
-            'bitmaptext':       { 'description': 'BitmapText Game Object',                      'optional': true, 'stub': false },
-            'retrofont':        { 'description': 'Retro Fonts Game Object',                     'optional': true, 'stub': false },
-            'system':           { 'description': 'System Classes',                              'optional': false, 'stub': false },
-            'math':             { 'description': 'Math, QuadTree and RND',                      'optional': false, 'stub': false },
-            'net':              { 'description': 'Network Class',                               'optional': true, 'stub': true },
-            'tweens':           { 'description': 'Tween Manager',                               'optional': true, 'stub': true },
-            'time':             { 'description': 'Time and Clock Manager',                      'optional': false, 'stub': false },
-            'animation':        { 'description': 'Animation and Frame Manager',                 'optional': false, 'stub': false },
-            'loader':           { 'description': 'Loader and Cache',                            'optional': false, 'stub': false },
-            'sound':            { 'description': 'Sound Support (Web Audio and HTML Audio)',    'optional': true, 'stub': true },
-            'debug':            { 'description': 'Debug Class',                                 'optional': true, 'stub': true },
-            'utils':            { 'description': 'Core Utilities',                              'optional': false, 'stub': false },
-            'physics':          { 'description': 'Physics Manager',                             'optional': false, 'stub': false },
-            'arcade':           { 'description': 'Arcade Physics',                              'optional': true, 'stub': false },
-            'ninja':            { 'description': 'Ninja Physics',                               'optional': true, 'stub': false },
-            'p2':               { 'description': 'P2 Physics',                                  'optional': true, 'stub': false },
-            'tilemaps':         { 'description': 'Tilemap Support',                             'optional': true, 'stub': false },
-            'particles':        { 'description': 'Arcade Physics Particle System',              'optional': true, 'stub': true },
-            'creature':         { 'description': 'Creature Animation Tool Support',             'optional': true, 'stub': false },
-            'video':            { 'description': 'Video Game Object',                           'optional': true, 'stub': false },
-            'outro':            { 'description': 'Phaser UMD closure',                          'optional': true, 'stub': false }
-
-        };
 
         grunt.log.writeln("---------------------");
         grunt.log.writeln("Building Phaser " + grunt.config.get('package.version'));
