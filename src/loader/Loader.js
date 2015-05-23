@@ -861,6 +861,10 @@ Phaser.Loader.prototype = {
     * 
     * The URL can be relative or absolute. If the URL is relative the Loader.baseURL value will be prepended to it.
     *
+    * Mobile warning: There are some mobile devices (certain iPad 2 and iPad Mini revisions) that cannot play 48000 Hz audio.
+    * When they try to play the audio becomes extremely distorted and buzzes, eventually crashing the sound system.
+    * The solution is to use a lower encoding rate such as 44100 Hz.
+    *
     * @method Phaser.Loader#audio
     * @param {string} key - Unique asset key of the audio file.
     * @param {string|string[]|object[]} urls - Either a single string or an array of URIs or pairs of `{uri: .., type: ..}`.
