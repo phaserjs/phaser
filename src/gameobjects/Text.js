@@ -138,7 +138,7 @@ Phaser.Text.prototype.preUpdateCore = Phaser.Component.Core.preUpdate;
 
 /**
 * Automatically called by World.preUpdate.
-* 
+*
 * @method Phaser.Text#preUpdate
 * @protected
 */
@@ -192,7 +192,7 @@ Phaser.Text.prototype.destroy = function (destroyChildren) {
 * The color controls the shade of the shadow (default is black) and can be either an `rgba` or `hex` value.
 * The blur is the strength of the shadow. A value of zero means a hard shadow, a value of 10 means a very soft shadow.
 * To remove a shadow already in place you can call this method with no parameters set.
-* 
+*
 * @method Phaser.Text#setShadow
 * @param {number} [x=0] - The shadowOffsetX value in pixels. This is how far offset horizontally the shadow effect will be.
 * @param {number} [y=0] - The shadowOffsetY value in pixels. This is how far offset vertically the shadow effect will be.
@@ -241,18 +241,17 @@ Phaser.Text.prototype.setShadow = function (x, y, color, blur, shadowStroke, sha
 Phaser.Text.prototype.setStyle = function (style) {
 
     style = style || {};
-    style.font = style.font || 'bold 20pt Arial';
+    style.align = style.align || 'left';
     style.backgroundColor = style.backgroundColor || null;
     style.fill = style.fill || 'black';
-    style.align = style.align || 'left';
+    style.font = style.font || 'bold 20pt Arial';
+    style.shadowColor = style.shadowColor || 'rgba(0,0,0,0)';
+    style.shadowOffsetX = style.shadowOffsetX || 0;
+    style.shadowOffsetY = style.shadowOffsetY || 0;
     style.stroke = style.stroke || 'black'; //provide a default, see: https://github.com/GoodBoyDigital/pixi.js/issues/136
     style.strokeThickness = style.strokeThickness || 0;
     style.wordWrap = style.wordWrap || false;
     style.wordWrapWidth = style.wordWrapWidth || 100;
-    style.shadowOffsetX = style.shadowOffsetX || 0;
-    style.shadowOffsetY = style.shadowOffsetY || 0;
-    style.shadowColor = style.shadowColor || 'rgba(0,0,0,0)';
-    style.shadowBlur = style.shadowBlur || 0;
 
     var components = this.fontToComponents(style.font);
 
@@ -326,7 +325,7 @@ Phaser.Text.prototype.updateText = function () {
     var width = maxLineWidth + this.style.strokeThickness;
 
     this.canvas.width = width * this.resolution;
-    
+
     //  Calculate text height
     var lineHeight = fontProperties.fontSize + this.style.strokeThickness + this.padding.y;
     var height = lineHeight * lines.length;
@@ -358,7 +357,7 @@ Phaser.Text.prototype.updateText = function () {
         this.context.fillStyle = this.style.backgroundColor;
         this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
     }
-    
+
     this.context.fillStyle = this.style.fill;
     this.context.font = this.style.font;
     this.context.strokeStyle = this.style.stroke;
@@ -514,50 +513,105 @@ Phaser.Text.prototype.addColor = function (color, position) {
 /**
 * Greedy wrapping algorithm that will wrap words as the line grows longer than its horizontal bounds.
 *
+* If the first word of any given line is longer than wordWrapWidth, it will be broken to fit.
+*
 * @method Phaser.Text#runWordWrap
 * @param {string} text - The text to perform word wrap detection against.
 * @private
 */
 Phaser.Text.prototype.runWordWrap = function (text) {
+    var context = this.context;
+    var wordWrapWidth = this.style.wordWrapWidth;
 
-    var result = '';
-    var lines = text.split('\n');
+    var output = '';
 
-    for (var i = 0; i < lines.length; i++)
-    {
-        var spaceLeft = this.style.wordWrapWidth;
-        var words = lines[i].split(' ');
+    // (1) condense whitespace
+    // (2) split into lines
+    var lines = text
+    .replace(/ +/gi, ' ')
+    .split(/\r?\n/gi);
 
-        for (var j = 0; j < words.length; j++)
-        {
-            var wordWidth = this.context.measureText(words[j]).width;
-            var wordWidthWithSpace = wordWidth + this.context.measureText(' ').width;
+    var linesCount = lines.length;
+    for (var i = 0; i < linesCount; i ++) {
+        var line = lines[i];
 
-            if (wordWidthWithSpace > spaceLeft)
-            {
-                // Skip printing the newline if it's the first word of the line that is greater than the word wrap width.
-                if (j > 0)
-                {
-                    result += '\n';
+        var out = '';
+
+        // trim whitespace
+        line = line.replace(/^ *|\s*$/gi, '');
+
+        // if entire line is less than wordWrapWidth
+        // append the entire line and exit early
+        var lineWidth = context.measureText(line).width;
+        if (lineWidth < wordWrapWidth) {
+            output += line + '\n';
+            continue;
+        }
+
+        // otherwise, calculate new lines
+        var currentLineWidth = wordWrapWidth;
+
+        // split into words
+        var words = line.split(' ');
+
+        for (var j = 0; j < words.length; j++) {
+            var word = words[j];
+            var wordWithSpace = word + ' ';
+            var wordWidth = context.measureText(wordWithSpace).width;
+
+            if (wordWidth > currentLineWidth) {
+                if (j === 0) { // break word
+                    // shave off letters from word until it's small enough
+                    var newWord = wordWithSpace;
+                    while (newWord.length) {
+                        newWord = newWord.slice(0, -1);
+                        wordWidth = context.measureText(newWord).width;
+                        if (wordWidth <= currentLineWidth) {
+                            break;
+                        }
+                    }
+
+                    // if wordWrapWidth is too small for even a single
+                    // letter, shame user failure with a fatal error
+                    if (!newWord.length) {
+                        throw new Error('This text\'s wordWrapWidth setting is less than a single character!');
+                    }
+
+                    // replace current word in array with remainder
+                    var secondPart = word.substr(newWord.length);
+                    words[j] = secondPart;
+
+                    // append first piece to output
+                    out += newWord;
                 }
-                result += words[j] + ' ';
-                spaceLeft = this.style.wordWrapWidth - wordWidth;
-            }
-            else
-            {
-                spaceLeft -= wordWidthWithSpace;
-                result += words[j] + ' ';
+
+                // if existing word length is 0, don't include it
+                var offset = (words[j].length) ? j : j + 1;
+
+                // collapse rest of sentence
+                var remainder = words.slice(offset).join(' ')
+                // remove any trailing white space
+                .replace(/[ \n]*$/gi, '');
+
+                // prepend remainder to next line
+                lines[i + 1] = remainder + ' ' + (lines[i + 1] || '');
+                linesCount = lines.length;
+
+                break; // processing on this line
+            } else { // append word with space to output
+                out += wordWithSpace;
+                currentLineWidth -= wordWidth;
             }
         }
 
-        if (i < lines.length-1)
-        {
-            result += '\n';
-        }
+        // append processed line to output
+        output += out.replace(/[ \n]*$/gi, '') + '\n';
     }
 
-    return result;
+    // trim the end of the string
+    output = output.replace(/[\s|\n]*$/gi, '');
 
+    return output;
 };
 
 /**
@@ -780,7 +834,7 @@ Object.defineProperty(Phaser.Text.prototype, 'fontSize', {
     set: function(value) {
 
         value = value || '0';
-        
+
         if (typeof value === 'number')
         {
             value = value + 'px';
