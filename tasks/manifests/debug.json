@@ -2,10 +2,13 @@
 
     "description": "Debug Class",
     "optional": true,
-    "stub": true,
 
     "files": [
         "src/utils/Debug.js"
+    ],
+
+    "stubs": [
+        "src/stubs/Debug.js"
     ]
 
 }

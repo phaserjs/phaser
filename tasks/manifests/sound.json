@@ -2,12 +2,15 @@
 
     "description": "Sound Support (Web Audio and HTML Audio)",
     "optional": true,
-    "stub": true,
 
     "files": [
         "src/sound/AudioSprite.js",
         "src/sound/Sound.js",
         "src/sound/SoundManager.js"
+    ],
+
+    "stubs": [
+        "src/stubs/SoundManager.js"
     ]
 
 }

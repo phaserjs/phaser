@@ -2,10 +2,13 @@
 
     "description": "Network Class",
     "optional": true,
-    "stub": true,
 
     "files": [
         "src/net/Net.js"
+    ],
+
+    "stubs": [
+        "src/stubs/Net.js"
     ]
 
 }

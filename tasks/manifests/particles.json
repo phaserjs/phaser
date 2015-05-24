@@ -2,12 +2,15 @@
 
     "description": "Arcade Physics Particle System",
     "optional": true,
-    "stub": true,
 
     "files": [
         "src/particles/Particles.js",
         "src/particles/arcade/ArcadeParticles.js",
         "src/particles/arcade/Emitter.js"
+    ],
+
+    "stubs": [
+        "src/particles/Particles.js"
     ]
 
 }
