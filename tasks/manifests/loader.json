@@ -1,5 +1,14 @@
-[
-    "src/loader/Cache.js",
-    "src/loader/Loader.js",
-    "src/loader/LoaderParser.js"
-]
+{
+
+    "description": "Loader and Cache",
+    "optional": false,
+    "stub": false,
+
+    "files": [
+        "src/loader/Cache.js",
+        "src/loader/Loader.js",
+        "src/loader/LoaderParser.js"
+    ]
+
+}
+

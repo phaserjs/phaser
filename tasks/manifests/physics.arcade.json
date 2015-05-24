@@ -1,4 +1,12 @@
-[
-    "src/physics/arcade/World.js",
-    "src/physics/arcade/Body.js"
-]
+{
+
+    "description": "Arcade Physics",
+    "optional": true,
+    "stub": false,
+
+    "files": [
+        "src/physics/arcade/World.js",
+        "src/physics/arcade/Body.js"
+    ]
+
+}

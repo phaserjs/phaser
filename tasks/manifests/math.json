@@ -1,5 +1,13 @@
-[
-    "src/math/Math.js",
-    "src/math/RandomDataGenerator.js",
-    "src/math/QuadTree.js"
-]
+{
+
+    "description": "Math, QuadTree and RND",
+    "optional": false,
+    "stub": false,
+
+    "files": [
+        "src/math/Math.js",
+        "src/math/RandomDataGenerator.js",
+        "src/math/QuadTree.js"
+    ]
+
+}

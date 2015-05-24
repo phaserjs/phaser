@@ -1,3 +1,11 @@
-[
-    "src/physics/Physics.js"
-]
+{
+
+    "description": "Physics Manager",
+    "optional": false,
+    "stub": false,
+
+    "files": [
+        "src/physics/Physics.js"
+    ]
+
+}

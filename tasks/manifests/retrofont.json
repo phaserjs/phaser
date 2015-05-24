@@ -1,3 +1,11 @@
-[
-    "src/gameobjects/RetroFont.js"
-]
+{
+
+    "description": "Retro Fonts Game Object",
+    "optional": true,
+    "stub": false,
+
+    "files": [
+        "src/gameobjects/RetroFont.js"
+    ]
+
+}

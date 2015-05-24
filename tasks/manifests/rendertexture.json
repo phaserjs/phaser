@@ -1,3 +1,10 @@
-[
-    "src/gameobjects/RenderTexture.js"
-]
+{
+    "description": "RenderTexture Game Object",
+    "optional": true,
+    "stub": false,
+
+    "files": [
+        "src/gameobjects/RenderTexture.js"
+    ]
+
+}

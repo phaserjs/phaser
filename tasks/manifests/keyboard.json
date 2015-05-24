@@ -1,4 +1,12 @@
-[
-    "src/input/Key.js",
-    "src/input/Keyboard.js"
-]
+{
+
+    "description": "Keyboard Input",
+    "optional": true,
+    "stub": false,
+
+    "files": [
+        "src/input/Key.js",
+        "src/input/Keyboard.js"
+    ]
+
+}

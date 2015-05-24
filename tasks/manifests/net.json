@@ -1,3 +1,11 @@
-[
-    "src/net/Net.js"
-]
+{
+
+    "description": "Network Class",
+    "optional": true,
+    "stub": true,
+
+    "files": [
+        "src/net/Net.js"
+    ]
+
+}
