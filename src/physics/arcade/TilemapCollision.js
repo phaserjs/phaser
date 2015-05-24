@@ -34,7 +34,7 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
     * @param {object} callbackContext - The context in which to run the callbacks.
     * @param {boolean} overlapOnly - Just run an overlap or a full collision.
     */
-    collideSpriteVsTilemapLayer: function (sprite, tilemapLayer, collideCallback, processCallback, callbackContext) {
+    collideSpriteVsTilemapLayer: function (sprite, tilemapLayer, collideCallback, processCallback, callbackContext, overlapOnly) {
 
         if (!sprite.body)
         {
@@ -59,7 +59,7 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
             {
                 if (processCallback.call(callbackContext, sprite, mapData[i]))
                 {
-                    if (this.separateTile(i, sprite.body, mapData[i]))
+                    if (this.separateTile(i, sprite.body, mapData[i], overlapOnly))
                     {
                         this._total++;
 
@@ -72,7 +72,7 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
             }
             else
             {
-                if (this.separateTile(i, sprite.body, mapData[i]))
+                if (this.separateTile(i, sprite.body, mapData[i], overlapOnly))
                 {
                     this._total++;
 
@@ -98,7 +98,7 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
     * @param {object} callbackContext - The context in which to run the callbacks.
     * @param {boolean} overlapOnly - Just run an overlap or a full collision.
     */
-    collideGroupVsTilemapLayer: function (group, tilemapLayer, collideCallback, processCallback, callbackContext) {
+    collideGroupVsTilemapLayer: function (group, tilemapLayer, collideCallback, processCallback, callbackContext, overlapOnly) {
 
         if (group.length === 0)
         {
@@ -109,7 +109,7 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
         {
             if (group.children[i].exists)
             {
-                this.collideSpriteVsTilemapLayer(group.children[i], tilemapLayer, collideCallback, processCallback, callbackContext);
+                this.collideSpriteVsTilemapLayer(group.children[i], tilemapLayer, collideCallback, processCallback, callbackContext, overlapOnly);
             }
         }
 
@@ -124,13 +124,23 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
     * @param {Phaser.Tile} tile - The tile to collide against.
     * @return {boolean} Returns true if the body was separated, otherwise false.
     */
-    separateTile: function (i, body, tile) {
+    separateTile: function (i, body, tile, overlapOnly) {
+
+        if (!body.enable)
+        {
+            return false;
+        }
 
         //  We re-check for collision in case body was separated in a previous step
-        if (!body.enable || !tile.intersects(body.position.x, body.position.y, body.right, body.bottom))
+        if (!tile.intersects(body.position.x, body.position.y, body.right, body.bottom))
         {
             //  no collision so bail out (separated in a previous step)
             return false;
+        }
+        else if (overlapOnly)
+        {
+            //  There is an overlap, and we don't need to separate. Bail.
+            return true;
         }
 
         //  They overlap. Any custom callbacks?
