@@ -3,6 +3,11 @@
     "description": "Arcade Physics Particle System",
     "optional": true,
 
+    "dependencies": {
+        "modules": [ "arcade" ],
+        "reason": "Particles rely on Arcade Physics."
+    },
+
     "files": [
         "src/particles/Particles.js",
         "src/particles/arcade/ArcadeParticles.js",
