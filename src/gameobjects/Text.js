@@ -241,17 +241,18 @@ Phaser.Text.prototype.setShadow = function (x, y, color, blur, shadowStroke, sha
 Phaser.Text.prototype.setStyle = function (style) {
 
     style = style || {};
-    style.align = style.align || 'left';
+    style.font = style.font || 'bold 20pt Arial';
     style.backgroundColor = style.backgroundColor || null;
     style.fill = style.fill || 'black';
-    style.font = style.font || 'bold 20pt Arial';
-    style.shadowColor = style.shadowColor || 'rgba(0,0,0,0)';
-    style.shadowOffsetX = style.shadowOffsetX || 0;
-    style.shadowOffsetY = style.shadowOffsetY || 0;
+    style.align = style.align || 'left';
     style.stroke = style.stroke || 'black'; //provide a default, see: https://github.com/GoodBoyDigital/pixi.js/issues/136
     style.strokeThickness = style.strokeThickness || 0;
     style.wordWrap = style.wordWrap || false;
     style.wordWrapWidth = style.wordWrapWidth || 100;
+    style.shadowOffsetX = style.shadowOffsetX || 0;
+    style.shadowOffsetY = style.shadowOffsetY || 0;
+    style.shadowColor = style.shadowColor || 'rgba(0,0,0,0)';
+    style.shadowBlur = style.shadowBlur || 0;
 
     var components = this.fontToComponents(style.font);
 
@@ -532,7 +533,8 @@ Phaser.Text.prototype.runWordWrap = function (text) {
     .split(/\r?\n/gi);
 
     var linesCount = lines.length;
-    for (var i = 0; i < linesCount; i ++) {
+    for (var i = 0; i < linesCount; i ++)
+    {
         var line = lines[i];
 
         var out = '';
@@ -543,7 +545,8 @@ Phaser.Text.prototype.runWordWrap = function (text) {
         // if entire line is less than wordWrapWidth
         // append the entire line and exit early
         var lineWidth = context.measureText(line).width;
-        if (lineWidth < wordWrapWidth) {
+        if (lineWidth < wordWrapWidth)
+        {
             output += line + '\n';
             continue;
         }
@@ -554,26 +557,33 @@ Phaser.Text.prototype.runWordWrap = function (text) {
         // split into words
         var words = line.split(' ');
 
-        for (var j = 0; j < words.length; j++) {
+        for (var j = 0; j < words.length; j++)
+        {
             var word = words[j];
             var wordWithSpace = word + ' ';
             var wordWidth = context.measureText(wordWithSpace).width;
 
-            if (wordWidth > currentLineWidth) {
-                if (j === 0) { // break word
+            if (wordWidth > currentLineWidth)
+            {
+                // break word
+                if (j === 0)
+                {
                     // shave off letters from word until it's small enough
                     var newWord = wordWithSpace;
-                    while (newWord.length) {
+                    while (newWord.length)
+                    {
                         newWord = newWord.slice(0, -1);
                         wordWidth = context.measureText(newWord).width;
-                        if (wordWidth <= currentLineWidth) {
+                        if (wordWidth <= currentLineWidth)
+                        {
                             break;
                         }
                     }
 
                     // if wordWrapWidth is too small for even a single
                     // letter, shame user failure with a fatal error
-                    if (!newWord.length) {
+                    if (!newWord.length)
+                    {
                         throw new Error('This text\'s wordWrapWidth setting is less than a single character!');
                     }
 
@@ -598,7 +608,11 @@ Phaser.Text.prototype.runWordWrap = function (text) {
                 linesCount = lines.length;
 
                 break; // processing on this line
-            } else { // append word with space to output
+
+            // append word with space to output
+            }
+            else
+            {
                 out += wordWithSpace;
                 currentLineWidth -= wordWidth;
             }
