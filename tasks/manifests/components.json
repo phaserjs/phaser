@@ -2,7 +2,6 @@
 
     "description": "Game Object Components",
     "optional": false,
-    "stub": false,
 
     "files": [
         "src/gameobjects/components/Component.js",
@@ -28,6 +27,8 @@
         "src/gameobjects/components/Reset.js",
         "src/gameobjects/components/ScaleMinMax.js",
         "src/gameobjects/components/Smoothed.js"
-    ]
+    ],
+
+    "stubs": null
 
 }

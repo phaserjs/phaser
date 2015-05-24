@@ -2,12 +2,13 @@
 
     "description": "Time and Clock Manager",
     "optional": false,
-    "stub": false,
 
     "files": [
         "src/time/Time.js",
         "src/time/Timer.js",
         "src/time/TimerEvent.js"
-    ]
+    ],
+
+    "stubs": null
 
 }

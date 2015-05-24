@@ -2,10 +2,11 @@
 
     "description": "Physics Manager",
     "optional": false,
-    "stub": false,
 
     "files": [
         "src/physics/Physics.js"
-    ]
+    ],
+
+    "stubs": null
 
 }

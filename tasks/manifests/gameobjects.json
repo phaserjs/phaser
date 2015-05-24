@@ -2,7 +2,6 @@
 
     "description": "Core Game Objects",
     "optional": false,
-    "stub": false,
 
     "files": [
         "src/gameobjects/GameObjectFactory.js",
@@ -14,6 +13,8 @@
         "src/gameobjects/Button.js",
         "src/gameobjects/SpriteBatch.js",
         "src/gameobjects/Particle.js"
-    ]
+    ],
+
+    "stubs": null
 
 }

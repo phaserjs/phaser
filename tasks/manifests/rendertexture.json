@@ -1,10 +1,11 @@
 {
     "description": "RenderTexture Game Object",
     "optional": true,
-    "stub": false,
 
     "files": [
         "src/gameobjects/RenderTexture.js"
-    ]
+    ],
+
+    "stubs": null
 
 }

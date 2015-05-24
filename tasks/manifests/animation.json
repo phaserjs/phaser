@@ -2,7 +2,6 @@
 
     "description": "Animation and Frame Manager",
     "optional": false,
-    "stub": false,
 
     "files": [
         "src/animation/AnimationManager.js",
@@ -10,6 +9,8 @@
         "src/animation/Frame.js",
         "src/animation/FrameData.js",
         "src/animation/AnimationParser.js"
-    ]
+    ],
+
+    "stubs": null
 
 }

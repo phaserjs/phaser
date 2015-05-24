@@ -2,7 +2,6 @@
 
     "description": "Input Manager + Mouse and Touch Support",
     "optional": false,
-    "stub": false,
 
     "files": [
         "src/input/Input.js",
@@ -12,6 +11,8 @@
         "src/input/Pointer.js",
         "src/input/Touch.js",
         "src/input/InputHandler.js"
-    ]
+    ],
+
+    "stubs": null
 
 }

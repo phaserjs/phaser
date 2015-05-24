@@ -2,13 +2,14 @@
 
     "description": "Core Utilities",
     "optional": false,
-    "stub": false,
 
     "files": [
         "src/utils/ArraySet.js",
         "src/utils/ArrayUtils.js",
         "src/utils/Color.js",
         "src/utils/LinkedList.js"
-    ]
+    ],
+
+    "stubs": null
 
 }

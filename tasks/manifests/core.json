@@ -2,7 +2,6 @@
 
     "description": "Phaser Core",
     "optional": false,
-    "stub": false,
 
     "files": [
         "src/core/Camera.js",
@@ -21,6 +20,8 @@
         "src/core/FlexLayer.js",
         "src/core/ScaleManager.js",
         "src/core/Game.js"
-    ]
+    ],
+
+    "stubs": null
 
 }

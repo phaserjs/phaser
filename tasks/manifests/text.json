@@ -2,10 +2,11 @@
 
     "description": "Text Game Object (inc. Web Font Support)",
     "optional": true,
-    "stub": false,
 
     "files": [
         "src/gameobjects/Text.js"
-    ]
+    ],
+
+    "stubs": null
 
 }

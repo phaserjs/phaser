@@ -2,10 +2,11 @@
 
     "description": "BitmapData Game Object",
     "optional": true,
-    "stub": false,
 
     "files": [
         "src/gameobjects/BitmapData.js"
-    ]
+    ],
+
+    "stubs": null
 
 }

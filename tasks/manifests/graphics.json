@@ -2,10 +2,11 @@
 
     "description": "Graphics Game Object",
     "optional": true,
-    "stub": false,
 
     "files": [
         "src/gameobjects/Graphics.js"
-    ]
+    ],
+
+    "stubs": null
 
 }

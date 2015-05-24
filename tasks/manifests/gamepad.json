@@ -2,11 +2,12 @@
 
     "description": "Gamepad Input",
     "optional": true,
-    "stub": false,
 
     "files": [
         "src/input/Gamepad.js",
         "src/input/SinglePad.js"
-    ]
+    ],
+
+    "stubs": null
 
 }

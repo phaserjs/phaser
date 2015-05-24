@@ -2,11 +2,12 @@
 
     "description": "Phaser UMD closure",
     "optional": true,
-    "stub": false,
 
     "files": [
         "src/PixiDefaults.js",
         "src/Outro.js"
-    ]
+    ],
+
+    "stubs": null
 
 }

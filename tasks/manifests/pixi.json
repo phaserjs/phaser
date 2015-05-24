@@ -2,7 +2,6 @@
 
     "description": "Pixi.js (custom Phaser build)",
     "optional": true,
-    "stub": false,
 
     "files": [
         "src/pixi/Intro.js",
@@ -53,6 +52,8 @@
         "src/pixi/filters/AbstractFilter.js",
 
         "src/pixi/Outro.js"
-    ]
+    ],
+
+    "stubs": null
 
 }

@@ -2,7 +2,6 @@
 
     "description": "P2 Physics",
     "optional": true,
-    "stub": false,
 
     "files": [
         "src/physics/p2/p2.js",
@@ -22,6 +21,8 @@
         "src/physics/p2/LockConstraint.js",
         "src/physics/p2/PrismaticConstraint.js",
         "src/physics/p2/RevoluteConstraint.js"
-    ]
+    ],
+
+    "stubs": null
 
 }

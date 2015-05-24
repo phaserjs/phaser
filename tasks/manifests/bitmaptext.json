@@ -2,10 +2,11 @@
 
     "description": "BitmapText Game Object",
     "optional": true,
-    "stub": false,
 
     "files": [
         "src/gameobjects/BitmapText.js"
-    ]
+    ],
+
+    "stubs": null
 
 }

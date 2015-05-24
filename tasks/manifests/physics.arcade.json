@@ -2,11 +2,12 @@
 
     "description": "Arcade Physics",
     "optional": true,
-    "stub": false,
 
     "files": [
         "src/physics/arcade/World.js",
         "src/physics/arcade/Body.js"
-    ]
+    ],
+
+    "stubs": null
 
 }

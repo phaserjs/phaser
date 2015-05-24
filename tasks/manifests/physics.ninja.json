@@ -2,7 +2,6 @@
 
     "description": "Ninja Physics",
     "optional": true,
-    "stub": false,
 
     "files": [
         "src/physics/ninja/World.js",
@@ -10,7 +9,9 @@
         "src/physics/ninja/AABB.js",
         "src/physics/ninja/Tile.js",
         "src/physics/ninja/Circle.js"
-    ]
+    ],
+
+    "stubs": null
 
 }
 

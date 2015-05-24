@@ -2,7 +2,6 @@
 
     "description": "Geometry Classes",
     "optional": false,
-    "stub": false,
 
     "files": [
         "src/geom/Circle.js",
@@ -13,6 +12,8 @@
         "src/geom/Polygon.js",
         "src/geom/Rectangle.js",
         "src/geom/RoundedRectangle.js"
-    ]
+    ],
+
+    "stubs": null
 
 }

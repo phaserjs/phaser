@@ -2,10 +2,11 @@
 
     "description": "Phaser UMD wrapper",
     "optional": true,
-    "stub": false,
 
     "files": [
         "src/Intro.js"
-    ]
+    ],
+
+    "stubs": null
 
 }

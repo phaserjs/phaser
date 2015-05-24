@@ -2,7 +2,6 @@
 
     "description": "Tilemap Support",
     "optional": true,
-    "stub": false,
 
     "files": [
         "src/tilemap/ImageCollection.js",
@@ -11,6 +10,8 @@
         "src/tilemap/TilemapLayer.js",
         "src/tilemap/TilemapParser.js",
         "src/tilemap/Tileset.js"
-    ]
+    ],
+
+    "stubs": null
 
 }

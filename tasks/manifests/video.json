@@ -2,10 +2,11 @@
 
     "description": "Video Game Object",
     "optional": true,
-    "stub": false,
 
     "files": [
         "src/gameobjects/Video.js"
-    ]
+    ],
+
+    "stubs": null
 
 }
