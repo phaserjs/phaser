@@ -55,25 +55,26 @@ module.exports = function (grunt) {
         grunt.log.writeln("Building Phaser " + grunt.config.get('package.version'));
         grunt.log.writeln("---------------------");
 
-        if (!grunt.option('exclude'))
-        {
-            grunt.log.writeln("\nUse --exclude to select which modules to exclude:\n");
+        // if (!grunt.option('exclude'))
+        // {
+        //     grunt.log.writeln("\nUse --exclude to select which modules to exclude:\n");
+        //
+        //     for (var module in modules)
+        //     {
+        //         if (modules[module].optional)
+        //         {
+        //             grunt.log.writeln(module + ' - ' + modules[module].description);
+        //         }
+        //     }
+        //
+        //     grunt.log.writeln("\nFor example: --exclude p2,tilemap,retrofont");
+        //     grunt.log.writeln("Optional flags: --filename yourfilename and --sourcemap true");
+        //     grunt.log.writeln("Note that some modules have dependencies on others.\n");
+        //
+        //     grunt.fail.fatal("No build options were specified.");
+        // }
+        // else
 
-            for (var module in modules)
-            {
-                if (modules[module].optional)
-                {
-                    grunt.log.writeln(module + ' - ' + modules[module].description);
-                }
-            }
-
-            grunt.log.writeln("\nFor example: --exclude p2,tilemap,retrofont");
-            grunt.log.writeln("Optional flags: --filename yourfilename and --sourcemap true");
-            grunt.log.writeln("Note that some modules have dependencies on others.\n");
-
-            grunt.fail.fatal("No build options were specified.");
-        }
-        else
         {
             //  Defaults
             grunt.config.set('sourcemap', false);
@@ -91,29 +92,35 @@ module.exports = function (grunt) {
                 grunt.config.set('sourcemap', grunt.option('sourcemap'));
             }
 
+            //  Handle user choices.
             grunt.log.writeln("Excluding modules:\n");
 
-            var excludes = grunt.option('exclude').split(',');
+            var excludes = [];
 
-            //  Check the given modules are all valid
-            for (var i = 0; i < excludes.length; i++)
+            if (typeof grunt.option('exclude') === 'string')
             {
-                var exclude = excludes[i];
+                excludes = grunt.option('exclude').split(',');
 
-                if (modules[exclude])
+                //  Check the given modules are all valid
+                for (var i = 0; i < excludes.length; i++)
                 {
-                    grunt.log.writeln("* " + exclude + ' - ' + modules[exclude].description);
+                    var exclude = excludes[i];
+
+                    if (modules[exclude])
+                    {
+                        grunt.log.writeln("* " + exclude + ' - ' + modules[exclude].description);
+                    }
+                    else
+                    {
+                        grunt.fail.fatal("Unknown module '" + exclude + "'");
+                    }
                 }
-                else
-                {
-                    grunt.fail.fatal("Unknown module '" + exclude + "'");
-                }
+
+                //  Handle dependencies
+                grunt.log.writeln("\nChecking for unmet dependencies:\n");
+
+                excludes = excludes.concat(filterUnmetDependencies(excludes));
             }
-
-            //  Handle dependencies
-            grunt.log.writeln("\nChecking for unmet dependencies:\n");
-
-            excludes = excludes.concat(filterUnmetDependencies(excludes));
 
             //  Ok we know the excludes array is fine, let's get this show started
 
