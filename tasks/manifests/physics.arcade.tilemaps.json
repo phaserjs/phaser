@@ -1,3 +1,17 @@
-[
-    "src/physics/arcade/TilemapCollision.js"
-]
+{
+
+    "description": "Arcade Physics Support for Tilemaps",
+    "optional": true,
+
+    "dependencies": {
+        "modules": [ "arcade", "tilemap" ],
+        "reason": "Tilemap Physics depend on both Arcade Physics and Tilemap."
+    },
+
+    "files": [
+        "src/physics/arcade/TilemapCollision.js"
+    ],
+
+    "stubs": null
+
+}
