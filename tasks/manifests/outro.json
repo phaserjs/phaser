@@ -3,6 +3,11 @@
     "description": "Phaser UMD closure",
     "optional": true,
 
+    "dependencies": {
+        "modules": [ "intro" ],
+        "reason": "Only required if building Phaser as an UMD library"
+    },
+
     "files": [
         "src/PixiDefaults.js",
         "src/Outro.js"
