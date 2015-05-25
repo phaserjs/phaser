@@ -190,6 +190,11 @@ module.exports = {
         dest: '<%= modules_dir %>/particles.js'
     },
 
+    creature: {
+        src: require('../manifests/creature').files,
+        dest: '<%= modules_dir %>/creature.js'
+    },
+
     video: {
         src: require('../manifests/video').files,
         dest: '<%= modules_dir %>/video.js'
