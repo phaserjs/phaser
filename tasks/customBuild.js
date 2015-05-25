@@ -8,8 +8,11 @@
 // The available Phaser modules.
 var modules = require('./manifests');
 
+// The Phaser module names.
+var moduleNames = Object.keys(modules);
+
 // Take the names of the modules which have dependencies.
-var modulesWithDependencies = Object.keys(modules)
+var modulesWithDependencies = moduleNames
     .reduce(function (memo, name) {
         if (modules[name].dependencies)
         {
@@ -101,20 +104,25 @@ module.exports = function (grunt) {
             {
                 excludes = grunt.option('exclude').split(',');
 
-                //  Check the given modules are all valid
-                for (var i = 0; i < excludes.length; i++)
-                {
-                    var exclude = excludes[i];
+                var invalidExcludes = excludes.filter(function (exclude) {
+                    return moduleNames.indexOf(exclude) < 0;
+                });
 
-                    if (modules[exclude])
-                    {
-                        grunt.log.writeln("* " + exclude + ' - ' + modules[exclude].description);
-                    }
-                    else
-                    {
-                        grunt.fail.fatal("Unknown module '" + exclude + "'");
-                    }
+                //  Check the given modules are all valid
+                if (invalidExcludes.length > 0)
+                {
+                    grunt.log.writeln('Warning: The following module name(s) are invalid:');
+
+                    invalidExcludes.forEach(function (name) {
+                        grunt.log.writeln('* ' + name);
+                    })
+
+                    grunt.fail.fatal('Aborting due to invalid parameter input.');
                 }
+
+                excludes.forEach(function (exclude) {
+                    grunt.log.writeln("* " + exclude + ' - ' + modules[exclude].description);
+                });
 
                 //  Handle dependencies
                 grunt.log.writeln("\nChecking for unmet dependencies:\n");
