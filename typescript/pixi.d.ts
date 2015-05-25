@@ -50,8 +50,9 @@ declare module PIXI {
     export var glContexts: WebGLRenderingContext[];
     export var instances: any[];
 
-    export var BaseTextureCache: { [key: string]: BaseTexture }
-    export var TextureCache: { [key: string]: Texture }
+    export var BaseTextureCache: { [key: string]: BaseTexture };
+    export var TextureCache: { [key: string]: Texture };
+    export var TextureSilentFail: boolean;
 
     export function isPowerOfTwo(width: number, height: number): boolean;
 
@@ -310,6 +311,7 @@ declare module PIXI {
 
         constructor(text: string, style: BitmapTextStyle);
 
+        anchor: Point;
         dirty: boolean;
         fontName: string;
         fontSize: number;
