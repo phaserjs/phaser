@@ -8,8 +8,46 @@
 // The available Phaser modules.
 var modules = require('./manifests');
 
+// Take the names of the modules which have dependencies.
+var modulesWithDependencies = Object.keys(modules)
+    .reduce(function (memo, name) {
+        if (modules[name].dependencies)
+        {
+            memo[name] = modules[name].dependencies;
+        }
+
+        return memo;
+    }, {});
+
 
 module.exports = function (grunt) {
+
+    //  Filter modules whose dependencies were excluded.
+    function filterUnmetDependencies (excludes) {
+        return Object.keys(modulesWithDependencies)
+            .reduce(function (memo, name) {
+                var dependencies = modulesWithDependencies[name].modules;
+                var reason = modulesWithDependencies[name].reason;
+
+                //  Look for missing dependencies.
+                var mismatch =
+                    excludes.indexOf(name) < 0 &&
+                    excludes.some(function (exclude) {
+                        return dependencies.indexOf(exclude) >= 0;
+                    });
+
+                //  A required module is missing for this dependency:
+                //  Warn the user and select it for removal.
+                if (mismatch)
+                {
+                    grunt.log.writeln('Warning: ' + reason);
+                    memo.push(name);
+                }
+
+                return memo;
+            }, []);
+    }
+
 
     grunt.registerTask('custom', 'Build a custom version of Phaser', function(arg) {
 
@@ -72,19 +110,10 @@ module.exports = function (grunt) {
                 }
             }
 
-            //  Handle basic dependencies
+            //  Handle dependencies
+            grunt.log.writeln("\nChecking for unmet dependencies:\n");
 
-            if (excludes['arcade'] && !excludes['particles'])
-            {
-                grunt.log.writeln("Warning: Particles rely on Arcade Physics. Excluding from build.");
-                excludes.push('particles');
-            }
-
-            if (excludes['rendertexture'] && !excludes['retrofont'])
-            {
-                grunt.log.writeln("Warning: RetroFonts rely on RenderTextures. Excluding from build.");
-                excludes.push('retrofont');
-            }
+            excludes = excludes.concat(filterUnmetDependencies(excludes));
 
             //  Ok we know the excludes array is fine, let's get this show started
 
@@ -110,13 +139,6 @@ module.exports = function (grunt) {
                     tasks.push('concat:' + key);
 
                     filelist.push('<%= modules_dir %>/' + key + '.js');
-
-                    //  Special case: If they have Arcade Physics AND Tilemaps we need to include the Tilemap Collision class
-                    if (key === 'arcade' && !excludes['tilemaps'])
-                    {
-                        tasks.push('concat:arcadeTilemaps');
-                        filelist.push('<%= modules_dir %>/arcadeTilemaps.js');
-                    }
                 }
             }
 
