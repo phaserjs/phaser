@@ -97,7 +97,7 @@ module.exports = function (grunt) {
 
             for (var key in modules)
             {
-                if (modules[key].stub && excludes.indexOf(key) !== -1)
+                if (modules[key].stubs && excludes.indexOf(key) !== -1)
                 {
                     //  If the module IS excluded and has a stub, we need that
                     tasks.push('concat:' + key + 'Stub');
