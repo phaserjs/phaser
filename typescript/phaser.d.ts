@@ -1,7 +1,7 @@
 /// <reference path="pixi.d.ts" />
 /// <reference path="p2.d.ts" />
 
-// Type definitions for Phaser 2.4.0 2015-May-09
+// Type definitions for Phaser 2.4.0 2015-May-25
 // Project: https://github.com/photonstorm/phaser
 
 declare class Phaser {
@@ -91,6 +91,7 @@ declare module Phaser {
         setFrame(frameId?: string|number, useLocalFrameIndex?: boolean): void;
         stop(resetFrame?: boolean, dispatchComplete?: boolean): void;
         update(): boolean;
+        updateCurrentFrame(signalUpdate: boolean, fromPlay?: boolean): boolean;
         updateFrameData(frameData: FrameData): void;
 
     }
@@ -656,6 +657,7 @@ declare module Phaser {
         file: boolean;
         fileSystem: boolean;
         firefox: boolean;
+        firefoxVersion: number;
         fullScreen: boolean;
         fullScreenKeyboard: boolean;
         getUserMedia: boolean;
@@ -985,6 +987,8 @@ declare module Phaser {
         class Pixelate extends Phaser.Filter {
 
             size: number;
+            sizeX: number;
+            sizeY: number;
 
         }
 
@@ -1129,9 +1133,9 @@ declare module Phaser {
         clone(): Phaser.FrameData;
         getFrame(index: number): Phaser.Frame;
         getFrameByName(name: string): Phaser.Frame;
-        getFrameIndexes(frames: number[], useNumericIndex?: boolean, output?: number[]): number[];
+        getFrameIndexes(frames?: number[], useNumericIndex?: boolean, output?: number[]): number[];
         getFrameRange(start: number, end: number, output: Phaser.Frame[]): Phaser.Frame[];
-        getFrames(frames: number[], useNumericIndex?: boolean, output?: Phaser.Frame[]): Phaser.Frame[];
+        getFrames(frames?: number[], useNumericIndex?: boolean, output?: Phaser.Frame[]): Phaser.Frame[];
 
     }
 
@@ -1243,7 +1247,7 @@ declare module Phaser {
         button(x?: number, y?: number, key?: string, callback?: Function, callbackContext?: any, overFrame?: any, outFrame?: any, downFrame?: any, upFrame?: any): Phaser.Button;
         emitter(x?: number, y?: number, maxParticles?: number): Phaser.Particles.Arcade.Emitter;
         filter(filter: any, ...args: any[]): Phaser.Filter;
-        graphics(x: number, y: number): Phaser.Graphics;
+        graphics(x?: number, y?: number): Phaser.Graphics;
         group(parent?: any, name?: string, addToStage?: boolean, enableBody?: boolean, physicsBodyType?: number): Phaser.Group;
         image(x: number, y: number, key?: any, frame?: any): Phaser.Image;
         renderTexture(width?: number, height?: number, key?: any, addToCache?: boolean): Phaser.RenderTexture;
@@ -1427,7 +1431,7 @@ declare module Phaser {
 
     class Graphics extends PIXI.Graphics {
 
-        constructor(game: Phaser.Game, x: number, y: number);
+        constructor(game: Phaser.Game, x?: number, y?: number);
 
         angle: number;
         cameraOffset: Phaser.Point;
@@ -2103,7 +2107,6 @@ declare module Phaser {
 
         constructor(a?: number, b?: number, c?: number, d?: number, tx?: number, ty?: number);
 
-
         apply(pos: Phaser.Point, newPos?: Phaser.Point): Phaser.Point;
         applyInverse(pos: Phaser.Point, newPos?: Phaser.Point): Phaser.Point;
         clone(output?: Phaser.Matrix): Phaser.Matrix;
@@ -2140,6 +2143,7 @@ declare module Phaser {
         static degToRad(degrees: number): number;
         static difference(a: number, b: number): number;
         static distance(x1: number, y1: number, x2: number, y2: number): number;
+        static distanceSq(x1: number, y1: number, x2: number, y2: number): number;
         static distancePow(xy: number, y1: number, x2: number, y2: number, pow?: number): number;
         static distanceRounded(x1: number, y1: number, x2: number, y2: number): number;
         static factorial(value: number): number;
@@ -2456,6 +2460,7 @@ declare module Phaser {
         width: number;
         height: number;
         videoStream: any;
+        isStreaming: boolean;
         snapshot: Phaser.BitmapData;
 
         onAccess: Phaser.Signal;
@@ -2476,6 +2481,7 @@ declare module Phaser {
         changeSource(src: string, autoplay?: boolean): Phaser.Video;
         destroy(): void;
         play(loop?: boolean, playbackRate?: number): Phaser.Video;
+        playHandler(): void;
         render(): void;
         resizeFrame(parent: any, width: number, height: number): void;
         setTouchLock(): void;
@@ -3615,6 +3621,7 @@ declare module Phaser {
 
         bottom: number;
         bottomRight: Phaser.Point;
+        bottomLeft: Phaser.Point;
         centerX: number;
         centerY: number;
         empty: boolean;
@@ -4287,6 +4294,7 @@ declare module Phaser {
         onUpdateCallback: Function;
         states: any;
 
+        onStateChange: Phaser.Signal;
         add(key: string, state: any, autoStart?: boolean): void;
         checkState(key: string): boolean;
         clearCurrentState(): void;
