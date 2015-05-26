@@ -189,7 +189,7 @@ Phaser.Tween.prototype = {
     to: function (properties, duration, ease, autoStart, delay, repeat, yoyo) {
 
         if (typeof duration === 'undefined' || duration <= 0) { duration = 1000; }
-        if (typeof ease === 'undefined') { ease = Phaser.Easing.Default; }
+        if (typeof ease === 'undefined' || ease === null) { ease = Phaser.Easing.Default; }
         if (typeof autoStart === 'undefined') { autoStart = false; }
         if (typeof delay === 'undefined') { delay = 0; }
         if (typeof repeat === 'undefined') { repeat = 0; }
@@ -236,7 +236,7 @@ Phaser.Tween.prototype = {
     from: function (properties, duration, ease, autoStart, delay, repeat, yoyo) {
 
         if (typeof duration === 'undefined') { duration = 1000; }
-        if (typeof ease === 'undefined') { ease = Phaser.Easing.Default; }
+        if (typeof ease === 'undefined' || ease === null) { ease = Phaser.Easing.Default; }
         if (typeof autoStart === 'undefined') { autoStart = false; }
         if (typeof delay === 'undefined') { delay = 0; }
         if (typeof repeat === 'undefined') { repeat = 0; }
