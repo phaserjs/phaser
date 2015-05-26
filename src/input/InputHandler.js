@@ -195,6 +195,11 @@ Phaser.InputHandler = function (sprite) {
     this.dragStartPoint = new Phaser.Point();
 
     /**
+    * @property {Phaser.Point} snapPoint - If the sprite is set to snap while dragging this holds the point of the most recent 'snap' event.
+    */
+    this.snapPoint = new Phaser.Point();
+
+    /**
     * @property {Phaser.Point} _dragPoint - Internal cache var.
     * @private
     */
