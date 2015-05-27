@@ -59,6 +59,14 @@ module.exports = function (grunt) {
         return missingExcludes;
     }
 
+    function showExcludedModules (excludes) {
+        grunt.log.writeln('\nExcluding the following modules from this build:');
+
+        excludes.forEach(function (exclude) {
+            grunt.log.writeln("* " + exclude + ' - ' + modules[exclude].description);
+        });
+    }
+
     grunt.registerMultiTask('build-phaser', 'Compiles a custom build of Phaser from a desired set of modules.', function () {
 
         // Initialize options, with default values.
@@ -91,17 +99,13 @@ module.exports = function (grunt) {
                 grunt.fail.fatal('Aborting due to invalid parameter input.');
             }
 
-            excludes.forEach(function (exclude) {
-                grunt.log.writeln("* " + exclude + ' - ' + modules[exclude].description);
-            });
-
             //  Handle dependencies
-            grunt.log.writeln("\nChecking for unmet dependencies ...");
-
             var missingExcludes = filterUnmetDependencies(excludes);
             explainUnmetDependencies(missingExcludes);
 
             excludes = excludes.concat(missingExcludes);
+
+            showExcludedModules(excludes);
         }
 
         //  The excludes were filtered and validated, now proceeding with the
