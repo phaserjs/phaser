@@ -59,14 +59,14 @@ module.exports = function (grunt) {
         };
     };
 
-    // Filter required module names given by the user.
+    //  Filter required module names given by the user.
     function filterNotOptionalModules (excludes) {
         return excludes.filter(function (name) {
             return optionalModules.indexOf(name) < 0;
         });
     }
 
-    // Report required module names.
+    //  Report required module names.
     function reportNotOptionalModules (excludes) {
         grunt.log.writeln('Error: Some modules are required and can not be ommited.');
 
@@ -124,7 +124,7 @@ module.exports = function (grunt) {
 
     grunt.registerMultiTask('build-phaser', 'Compiles a custom build of Phaser from a desired set of modules.', function () {
 
-        // Initialize options, with default values.
+        //  Initialize options, with default values.
         var options = this.options({
             filename: 'phaser',
             sourcemap: true,
@@ -133,7 +133,7 @@ module.exports = function (grunt) {
             copyCustom: false
         });
 
-        // Extract options as local variables.
+        //  Extract options as local variables.
         var filename   = options.filename;
         var sourcemap  = options.sourcemap;
         var excludes   = options.excludes;
@@ -163,7 +163,7 @@ module.exports = function (grunt) {
         //  Clean the working folder
         var tasks = [ 'clean:build' ];
 
-        // Process which modules will be compiled.
+        //  Process which modules will be compiled.
         var filelist = [];
 
         for (var key in modules)
@@ -184,32 +184,32 @@ module.exports = function (grunt) {
             }
         }
 
-        // Set the source files to be compiled.
+        //  Set the source files to be compiled.
         grunt.config.set('filelist', filelist);
 
-        // Call these tasks to compile the modules.
+        //  Call these tasks to compile the modules.
         tasks.push('concat:custom');
         tasks.push('uglify:custom');
 
-        // Set the output filename.
+        //  Set the output filename.
         grunt.config.set('filename', filename);
 
-        // Generate sourcemaps for minified scripts?
+        //  Generate sourcemaps for minified scripts?
         grunt.config.set('sourcemap', sourcemap);
 
-        // Copy to 'build' directory?
+        //  Copy to 'build' directory?
         if (copy)
         {
             tasks.push('copy:custom');
         }
 
-        // Copy into 'build/custom'?
+        //  Copy into 'build/custom'?
         if (copyCustom)
         {
             grunt.config.set('target_dir', '<%= release_custom_dir %>');
         }
 
-        // Run all tasks.
+        //  Run all tasks.
         grunt.task.run(tasks);
 
     });
