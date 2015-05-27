@@ -54,19 +54,17 @@ module.exports = function (grunt) {
     };
 
     //  Filter invalid module names given by the user.
-    function filterInvalidModules (excludes) {
+    function filterUnknownModules (excludes) {
         return excludes.filter(function (name) {
             return moduleNames.indexOf(name) < 0;
         });
     }
 
     //  Display invalid module names.
-    function showInvalidModules (invalidExcludes) {
-        invalidExcludes.forEach(function (name) {
+    function reportUnknownModules (excludes) {
+        excludes.forEach(function (name) {
             grunt.log.error('Error: Unknown module "' + name + '".');
         });
-
-        return invalidExcludes.length > 0;
     }
 
     //  Filter modules whose dependencies were excluded by the user.
@@ -83,20 +81,18 @@ module.exports = function (grunt) {
             });
     }
 
-    function explainUnmetDependencies (missingExcludes) {
+    function reportUnmetDependencies (excludes) {
         grunt.log.writeln('Warning: Some modules cannot be included in this build due to dependency tracking:');
 
-        missingExcludes.forEach(function (name) {
+        excludes.forEach(function (name) {
             var dependencies = modules[name].dependencies;
             grunt.log.writeln('\nModule "' + name+ '"');
             grunt.log.writeln('    Reason: ' + dependencies.reason);
             grunt.log.writeln('    Depends on: ' + dependencies.modules.join(', '));
         });
-
-        return missingExcludes;
     }
 
-    function showExcludedModules (excludes) {
+    function reportExcludedModules (excludes) {
         grunt.log.writeln('\nExcluding the following modules from this build:');
 
         excludes.forEach(function (exclude) {
@@ -132,9 +128,9 @@ module.exports = function (grunt) {
             grunt.log.writeln("Excluding modules:\n");
 
             excludes = validateExcludes(excludes)
-                .fail(filterInvalidModules, showInvalidModules)
-                .push(filterUnmetDependencies, explainUnmetDependencies)
-                .result(showExcludedModules);
+                .fail(filterUnknownModules, reportUnknownModules)
+                .push(filterUnmetDependencies, reportUnmetDependencies)
+                .result(reportExcludedModules);
         }
 
         //  The excludes were filtered and validated, now proceeding with the
