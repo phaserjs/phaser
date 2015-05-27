@@ -4,7 +4,7 @@
     "optional": true,
 
     "dependencies": {
-        "modules": [ "arcade", "tilemap" ],
+        "modules": [ "arcade", "tilemaps" ],
         "reason": "Tilemap Physics depend on both Arcade Physics and Tilemap."
     },
 
