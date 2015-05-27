@@ -30,7 +30,6 @@ module.exports = function (grunt) {
         return Object.keys(modulesWithDependencies)
             .reduce(function (memo, name) {
                 var dependencies = modulesWithDependencies[name].modules;
-                var reason = modulesWithDependencies[name].reason;
 
                 //  Look for missing dependencies.
                 var mismatch =
@@ -43,12 +42,20 @@ module.exports = function (grunt) {
                 //  Warn the user and select it for removal.
                 if (mismatch)
                 {
-                    grunt.log.writeln('Warning: ' + reason);
                     memo.push(name);
                 }
 
                 return memo;
             }, []);
+    }
+
+    function explainUnmetDependencies (missingExcludes) {
+        missingExcludes.forEach(function (exclude) {
+            var reason = modulesWithDependencies[exclude].reason;
+            grunt.log.writeln('Warning: ' + reason);
+        });
+
+        return missingExcludes;
     }
 
     grunt.registerMultiTask('build-phaser', 'Compiles a custom build of Phaser from a desired set of modules.', function () {
@@ -101,7 +108,10 @@ module.exports = function (grunt) {
             //  Handle dependencies
             grunt.log.writeln("\nChecking for unmet dependencies ...");
 
-            excludes = excludes.concat(filterUnmetDependencies(excludes));
+            var missingExcludes = filterUnmetDependencies(excludes);
+            explainUnmetDependencies(missingExcludes);
+
+            excludes = excludes.concat(missingExcludes);
         }
 
         //  The excludes were filtered and validated, now proceeding with the
