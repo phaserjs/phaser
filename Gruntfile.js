@@ -1,9 +1,7 @@
 /// <binding />
 module.exports = function (grunt) {
 
-    var loadConfig = require('load-grunt-config');
-
-    loadConfig(grunt, {
+    require('load-grunt-config')(grunt, {
         configPath: __dirname + '/tasks/options',
         config: {
             target_dir: 'build',
