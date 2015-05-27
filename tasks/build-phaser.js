@@ -20,6 +20,22 @@ var modulesWithDependencies = moduleNames
 
 module.exports = function (grunt) {
 
+    //  Filter invalid module names given by the user.
+    function filterInvalidModules (excludes) {
+        return excludes.filter(function (name) {
+            return moduleNames.indexOf(name) < 0;
+        });
+    }
+
+    //  Display invalid module names.
+    function showInvalidModules (invalidExcludes) {
+        invalidExcludes.forEach(function (name) {
+            grunt.log.error('Error: Unknown module "' + name + '".');
+        });
+
+        return invalidExcludes.length > 0;
+    }
+
     //  Filter modules whose dependencies were excluded by the user.
     function filterUnmetDependencies (excludes) {
         return modulesWithDependencies
@@ -70,19 +86,8 @@ module.exports = function (grunt) {
         {
             grunt.log.writeln("Excluding modules:\n");
 
-            var invalidExcludes = excludes.filter(function (exclude) {
-                return moduleNames.indexOf(exclude) < 0;
-            });
-
-            //  Check the given modules are all valid
-            if (invalidExcludes.length > 0)
+            if (showInvalidModules(filterInvalidModules(excludes)))
             {
-                grunt.log.writeln('Warning: The following module name(s) are invalid:');
-
-                invalidExcludes.forEach(function (name) {
-                    grunt.log.writeln('* ' + name);
-                })
-
                 grunt.fail.fatal('Aborting due to invalid parameter input.');
             }
 
