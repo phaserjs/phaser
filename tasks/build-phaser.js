@@ -51,9 +51,13 @@ module.exports = function (grunt) {
     }
 
     function explainUnmetDependencies (missingExcludes) {
+        grunt.log.writeln('Warning: Some modules cannot be included in this build due to dependency tracking:');
+
         missingExcludes.forEach(function (name) {
             var dependencies = modules[name].dependencies;
-            grunt.log.writeln('Warning: ' + dependencies.reason);
+            grunt.log.writeln('\nModule "' + name+ '"');
+            grunt.log.writeln('    Reason: ' + dependencies.reason);
+            grunt.log.writeln('    Depends on: ' + dependencies.modules.join(', '));
         });
 
         return missingExcludes;
