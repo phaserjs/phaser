@@ -20,6 +20,39 @@ var modulesWithDependencies = moduleNames
 
 module.exports = function (grunt) {
 
+    //  Validate module exclusions.
+    function validateExcludes (excludes) {
+        return {
+            fail: function (filter, reporter) {
+                var result = filter(excludes);
+
+                if (result.length > 0)
+                {
+                    reporter(result);
+
+                    grunt.fail.fatal('Aborting due to invalid parameter input.');
+                }
+
+                return this;
+            },
+
+            push: function (filter, reporter) {
+                var result = filter(excludes);
+
+                reporter(result);
+                excludes = excludes.concat(result);
+
+                return this;
+            },
+
+            result (reporter) {
+                reporter(excludes);
+
+                return excludes;
+            }
+        };
+    };
+
     //  Filter invalid module names given by the user.
     function filterInvalidModules (excludes) {
         return excludes.filter(function (name) {
@@ -98,18 +131,10 @@ module.exports = function (grunt) {
         {
             grunt.log.writeln("Excluding modules:\n");
 
-            if (showInvalidModules(filterInvalidModules(excludes)))
-            {
-                grunt.fail.fatal('Aborting due to invalid parameter input.');
-            }
-
-            //  Handle dependencies
-            var missingExcludes = filterUnmetDependencies(excludes);
-            explainUnmetDependencies(missingExcludes);
-
-            excludes = excludes.concat(missingExcludes);
-
-            showExcludedModules(excludes);
+            excludes = validateExcludes(excludes)
+                .fail(filterInvalidModules, showInvalidModules)
+                .push(filterUnmetDependencies, explainUnmetDependencies)
+                .result(showExcludedModules);
         }
 
         //  The excludes were filtered and validated, now proceeding with the
