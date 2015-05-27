@@ -38,4 +38,10 @@ module.exports = function (grunt) {
         ]
     );
 
+    // Alias the common Phaser building tasks.
+    grunt.registerTask('standard', 'Builds the standard Phaser library', ['build-phaser:standard']);
+    grunt.registerTask('arcadephysics', 'Phaser with Arcade Physics, Tilemaps and Particles', ['build-phaser:arcadephysics']);
+    grunt.registerTask('nophysics', 'Phaser without physics, tilemaps or particles', ['build-phaser:nophysics']);
+    grunt.registerTask('minimum', 'Phaser without any optional modules except Pixi', ['build-phaser:minimum']);
+
 };
