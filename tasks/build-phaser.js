@@ -11,6 +11,12 @@ var modules = require('./manifests');
 //  The Phaser module names.
 var moduleNames = Object.keys(modules);
 
+// Optional Phaser modules.
+var optionalModules = moduleNames
+    .filter(function (name) {
+        return modules[name].optional;
+    });
+
 //  Take the names of the modules with dependencies.
 var modulesWithDependencies = moduleNames
     .filter(function (name) {
@@ -52,6 +58,22 @@ module.exports = function (grunt) {
             }
         };
     };
+
+    // Filter required module names given by the user.
+    function filterNotOptionalModules (excludes) {
+        return excludes.filter(function (name) {
+            return optionalModules.indexOf(name) < 0;
+        });
+    }
+
+    // Report required module names.
+    function reportNotOptionalModules (excludes) {
+        grunt.log.writeln('Error: Some modules are required and can not be ommited.');
+
+        excludes.forEach(function (name) {
+            grunt.log.writeln('* ' + name + ' - ' + modules[name].description);
+        });
+    }
 
     //  Filter invalid module names given by the user.
     function filterUnknownModules (excludes) {
@@ -128,6 +150,7 @@ module.exports = function (grunt) {
             grunt.log.writeln("Excluding modules:\n");
 
             excludes = validateExcludes(excludes)
+                .fail(filterNotOptionalModules, reportNotOptionalModules)
                 .fail(filterUnknownModules, reportUnknownModules)
                 .push(filterUnmetDependencies, reportUnmetDependencies)
                 .result(reportExcludedModules);
