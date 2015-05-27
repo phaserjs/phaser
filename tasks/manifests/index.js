@@ -1,5 +1,5 @@
 /*
- *
+ * Phaser module collection manifest index.
  */
 
 'use strict';

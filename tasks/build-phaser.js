@@ -51,7 +51,7 @@ module.exports = function (grunt) {
             }, []);
     }
 
-    grunt.registerMultiTask('build-phaser', 'Build a custom version of Phaser', function () {
+    grunt.registerMultiTask('build-phaser', 'Compiles a custom build of Phaser from a desired set of modules.', function () {
 
         // Initialize options, with default values.
         var options = this.options({

@@ -1,5 +1,5 @@
 /**
-* Compiles a custom build of Phaser from a desired set of modules.
+* Build a custom version of Phaser.
 */
 
 'use strict';
@@ -7,7 +7,7 @@
 
 module.exports = function (grunt) {
 
-    grunt.registerTask('custom', 'Build a custom version of Phaser', function () {
+    grunt.registerTask('custom', 'Build a custom version of Phaser.', function () {
 
         //  Defaults
         var filename   = 'phaser-custom';
