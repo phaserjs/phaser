@@ -11,48 +11,33 @@ var modules = require('./manifests');
 //  The Phaser module names.
 var moduleNames = Object.keys(modules);
 
-//  Take the names of the modules which have dependencies.
+//  Take the names of the modules with dependencies.
 var modulesWithDependencies = moduleNames
-    .reduce(function (memo, name) {
-        if (modules[name].dependencies)
-        {
-            memo[name] = modules[name].dependencies;
-        }
-
-        return memo;
-    }, {});
+    .filter(function (name) {
+        return modules[name].dependencies;
+    });
 
 
 module.exports = function (grunt) {
 
-    //  Filter modules whose dependencies were excluded.
+    //  Filter modules whose dependencies were excluded by the user.
     function filterUnmetDependencies (excludes) {
-        return Object.keys(modulesWithDependencies)
-            .reduce(function (memo, name) {
-                var dependencies = modulesWithDependencies[name].modules;
+        return modulesWithDependencies
+            .filter(function (name) {
+                var dependencies = modules[name].dependencies;
 
                 //  Look for missing dependencies.
-                var mismatch =
-                    excludes.indexOf(name) < 0 &&
+                return excludes.indexOf(name) < 0 &&
                     excludes.some(function (exclude) {
-                        return dependencies.indexOf(exclude) >= 0;
+                        return dependencies.modules.indexOf(exclude) >= 0;
                     });
-
-                //  A required module is missing for this dependency:
-                //  Warn the user and select it for removal.
-                if (mismatch)
-                {
-                    memo.push(name);
-                }
-
-                return memo;
-            }, []);
+            });
     }
 
     function explainUnmetDependencies (missingExcludes) {
-        missingExcludes.forEach(function (exclude) {
-            var reason = modulesWithDependencies[exclude].reason;
-            grunt.log.writeln('Warning: ' + reason);
+        missingExcludes.forEach(function (name) {
+            var dependencies = modules[name].dependencies;
+            grunt.log.writeln('Warning: ' + dependencies.reason);
         });
 
         return missingExcludes;
