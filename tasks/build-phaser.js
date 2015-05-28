@@ -170,21 +170,22 @@ module.exports = function (grunt) {
         var tasks = [ 'clean:build' ];
 
         //  Process which modules will be compiled.
-        var filelist = [];
+        var filelist = moduleNames.reduce(function (filelist, name) {
+            var m = modules[name];
 
-        for (var key in modules)
-        {
-            if (modules[key].stubs && excludes.indexOf(key) !== -1)
+            if (optionalModules.indexOf(name) < 0 || excludes.indexOf(name) < 0)
             {
-                //  If the module IS excluded and has a stub, we need that
-                filelist.push(modules[key].stubs);
+                //  A module is required or is optional but was not excluded.
+                filelist.push(m.files);
             }
-            else if (modules[key].optional === false || excludes.indexOf(key) === -1)
+            else if (excludes.indexOf(name) >= 0 && m.stubs)
             {
-                //  If it's required or NOT excluded, add it to the tasks list
-                filelist.push(modules[key].files);
+                //  A module is excluded but has a stub.
+                filelist.push(m.stubs);
             }
-        }
+
+            return filelist;
+        }, []);
 
         //  Set the source files to be compiled.
         grunt.config.set('filelist', filelist);
