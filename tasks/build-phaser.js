@@ -128,6 +128,27 @@ module.exports = function (grunt) {
         });
     }
 
+    // Select the module files to be compiled.
+    function selectBuildFiles (excludes) {
+        return moduleNames.reduce(function (filelist, name) {
+            var m = modules[name];
+
+            if (optionalModules.indexOf(name) < 0 || excludes.indexOf(name) < 0)
+            {
+                //  A module is required or is optional but was not excluded.
+                filelist.push(m.files);
+            }
+            else if (excludes.indexOf(name) >= 0 && m.stubs)
+            {
+                //  A module is excluded but has a stub.
+                filelist.push(m.stubs);
+            }
+
+            return filelist;
+        }, []);
+    }
+
+
     grunt.registerMultiTask('build-phaser', 'Compiles a custom build of Phaser from a desired set of modules.', function () {
 
         //  Initialize options, with default values.
@@ -169,26 +190,8 @@ module.exports = function (grunt) {
         //  Clean the working folder
         var tasks = [ 'clean:build' ];
 
-        //  Process which modules will be compiled.
-        var filelist = moduleNames.reduce(function (filelist, name) {
-            var m = modules[name];
-
-            if (optionalModules.indexOf(name) < 0 || excludes.indexOf(name) < 0)
-            {
-                //  A module is required or is optional but was not excluded.
-                filelist.push(m.files);
-            }
-            else if (excludes.indexOf(name) >= 0 && m.stubs)
-            {
-                //  A module is excluded but has a stub.
-                filelist.push(m.stubs);
-            }
-
-            return filelist;
-        }, []);
-
-        //  Set the source files to be compiled.
-        grunt.config.set('filelist', filelist);
+        //  Select the module files to be compiled.
+        grunt.config.set('filelist', selectBuildFiles(excludes));
 
         //  Call these tasks to compile the modules.
         tasks.push('concat:custom');
