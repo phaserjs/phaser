@@ -48,7 +48,11 @@ module.exports = function (grunt) {
             push: function (filter, reporter) {
                 var result = filter(excludes);
 
-                reporter(result);
+                if (result.length > 0)
+                {
+                    reporter(result);
+                }
+
                 excludes = excludes.concat(result);
 
                 return this;
@@ -56,7 +60,10 @@ module.exports = function (grunt) {
 
             //  Report the excluded modules.
             result (reporter) {
-                reporter(excludes);
+                if (excludes.length > 0)
+                {
+                    reporter(excludes);
+                }
 
                 return excludes;
             }
@@ -109,7 +116,7 @@ module.exports = function (grunt) {
 
     //  List the modules whose dependencies have been excluded.
     function reportUnmetDependencies (excludes) {
-        grunt.log.writeln('Warning: Some modules cannot be included in this build due to dependency tracking:');
+        grunt.log.writeln('\nWarning: Some modules with unmet dependencies will automatically be excluded from the build:');
 
         excludes.forEach(function (name) {
             var dependencies = modules[name].dependencies;
@@ -172,16 +179,11 @@ module.exports = function (grunt) {
         grunt.log.writeln("---------------------");
 
         //  Handle user choices.
-        if (excludes.length > 0)
-        {
-            grunt.log.writeln("Excluding modules:\n");
-
-            excludes = validateExcludes(excludes)
-                .fail(filterNotOptionalModules, reportNotOptionalModules)
-                .fail(filterUnknownModules, reportUnknownModules)
-                .push(filterUnmetDependencies, reportUnmetDependencies)
-                .result(reportExcludedModules);
-        }
+        excludes = validateExcludes(excludes)
+            .fail(filterNotOptionalModules, reportNotOptionalModules)
+            .fail(filterUnknownModules, reportUnknownModules)
+            .push(filterUnmetDependencies, reportUnmetDependencies)
+            .result(reportExcludedModules);
 
         //  The excludes were filtered and validated, now proceeding with the
         //  building.
