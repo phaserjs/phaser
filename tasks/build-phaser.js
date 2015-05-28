@@ -185,21 +185,21 @@ module.exports = function (grunt) {
         //  building.
         grunt.log.writeln("\nBuilding ...");
 
-        //  Clean the working folder
-        var tasks = [ 'clean:build' ];
-
         //  Select the module files to be compiled.
         grunt.config.set('filelist', selectBuildFiles(excludes));
-
-        //  Call these tasks to compile the modules.
-        tasks.push('concat:custom');
-        tasks.push('uglify:custom');
 
         //  Set the output filename.
         grunt.config.set('filename', filename);
 
         //  Generate sourcemaps for minified scripts?
         grunt.config.set('sourcemap', sourcemap);
+
+        //  Call the following tasks to build Phaser:
+        //  -   Clean the working folder;
+        //  -   Compile the library by concatenating the selected modules;
+        //  -   Minify the compiled library script with optional source map
+        //      output.
+        var tasks = [ 'clean:build', 'concat:custom', 'uglify:custom' ];
 
         //  Copy to 'build' directory?
         if (copy)
