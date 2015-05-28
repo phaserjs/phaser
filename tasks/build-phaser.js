@@ -29,6 +29,7 @@ module.exports = function (grunt) {
     //  Validate module exclusions.
     function validateExcludes (excludes) {
         return {
+            //  Fail a validation if conditions are not met.
             fail: function (filter, reporter) {
                 var result = filter(excludes);
 
@@ -42,6 +43,8 @@ module.exports = function (grunt) {
                 return this;
             },
 
+            //  If a module's dependencies are missing, select that to be
+            //  removed from the build.
             push: function (filter, reporter) {
                 var result = filter(excludes);
 
@@ -51,6 +54,7 @@ module.exports = function (grunt) {
                 return this;
             },
 
+            //  Report the excluded modules.
             result (reporter) {
                 reporter(excludes);
 
@@ -103,6 +107,7 @@ module.exports = function (grunt) {
             });
     }
 
+    //  List the modules whose dependencies have been excluded.
     function reportUnmetDependencies (excludes) {
         grunt.log.writeln('Warning: Some modules cannot be included in this build due to dependency tracking:');
 
@@ -114,6 +119,7 @@ module.exports = function (grunt) {
         });
     }
 
+    //  List the actually excluded module names and their descriptions.
     function reportExcludedModules (excludes) {
         grunt.log.writeln('\nExcluding the following modules from this build:');
 
