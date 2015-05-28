@@ -19,7 +19,7 @@ module.exports = function (grunt) {
         {
             var modules = require('./manifests');
 
-            grunt.log.writeln('\nUse --exclude to select which modules to exclude:\n');
+            grunt.log.writeln('\nUse --exclude to remove optional modules from build:\n');
 
             // List optional modules.
             Object.keys(modules)

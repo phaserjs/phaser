@@ -73,7 +73,7 @@ module.exports = function (grunt) {
 
     //  Report required module names.
     function reportNotOptionalModules (excludes) {
-        grunt.log.writeln('Error: Some modules are required and can not be ommited.');
+        grunt.log.writeln('\nError: Some modules are required and can not be ommited.');
 
         excludes.forEach(function (name) {
             grunt.log.writeln('* ' + name + ' - ' + modules[name].description);
@@ -83,14 +83,16 @@ module.exports = function (grunt) {
     //  Filter invalid module names given by the user.
     function filterUnknownModules (excludes) {
         return excludes.filter(function (name) {
-            return moduleNames.indexOf(name) < 0;
+            return !modules[name];
         });
     }
 
     //  Display invalid module names.
     function reportUnknownModules (excludes) {
+        grunt.log.writeln('\nError: The following module names are misspelled or doesn\'t exist.');
+
         excludes.forEach(function (name) {
-            grunt.log.error('Error: Unknown module "' + name + '".');
+            grunt.log.writeln('* ' + name);
         });
     }
 
