@@ -209,12 +209,12 @@ module.exports = function (grunt) {
         if (copy)
         {
             tasks.push('copy:custom');
-        }
 
-        //  Copy into 'build/custom'?
-        if (copyCustom)
-        {
-            grunt.config.set('target_dir', '<%= release_custom_dir %>');
+            //  Copy into 'build/custom'?
+            if (copyCustom)
+            {
+                grunt.config.set('target_dir', '<%= release_custom_dir %>');
+            }
         }
 
         //  Run all tasks.
