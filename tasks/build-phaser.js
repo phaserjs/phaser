@@ -11,12 +11,6 @@ var modules = require('./manifests');
 //  The Phaser module names.
 var moduleNames = Object.keys(modules);
 
-// Optional Phaser modules.
-var optionalModules = moduleNames
-    .filter(function (name) {
-        return modules[name].optional;
-    });
-
 //  Take the names of the modules with dependencies.
 var modulesWithDependencies = moduleNames
     .filter(function (name) {
@@ -73,7 +67,7 @@ module.exports = function (grunt) {
     //  Filter required module names given by the user.
     function filterNotOptionalModules (excludes) {
         return excludes.filter(function (name) {
-            return optionalModules.indexOf(name) < 0;
+            return modules[name] && !modules[name].optional;
         });
     }
 
@@ -140,7 +134,7 @@ module.exports = function (grunt) {
         return moduleNames.reduce(function (filelist, name) {
             var m = modules[name];
 
-            if (optionalModules.indexOf(name) < 0 || excludes.indexOf(name) < 0)
+            if (!m.optional || excludes.indexOf(name) < 0)
             {
                 //  A module is required or is optional but was not excluded.
                 filelist.push(m.files);
