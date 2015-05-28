@@ -8,88 +8,22 @@
 //  The available Phaser modules.
 var modules = require('./manifests');
 
-//  The Phaser module names.
-var moduleNames = Object.keys(modules);
-
-//  Take the names of the modules with dependencies.
-var modulesWithDependencies = moduleNames
-    .filter(function (name) {
-        return modules[name].dependencies;
-    });
-
 
 module.exports = function (grunt) {
 
-    var validateExcludes = require('./helpers/validateExcludes')(grunt);
+    var validateExcludes = require('./helpers/validateExcludes')(grunt, modules);
+
+    var notOptionalModules = validateExcludes.notOptionalModules;
+    var unknownModules     = validateExcludes.unknownModules;
+    var unmetDependencies  = validateExcludes.unmetDependencies;
+
+    var reportNotOptionalModules = validateExcludes.reportNotOptionalModules;
+    var reportUnknownModules     = validateExcludes.reportUnknownModules;
+    var reportUnmetDependencies  = validateExcludes.reportUnmetDependencies;
+    var reportExcludedModules    = validateExcludes.reportExcludedModules;
+
 
     var selectBuildFiles = require('./helpers/selectBuildFiles')(modules);
-
-    //  Filter required module names given by the user.
-    function filterNotOptionalModules (excludes) {
-        return excludes.filter(function (name) {
-            return modules[name] && !modules[name].optional;
-        });
-    }
-
-    //  Report required module names.
-    function reportNotOptionalModules (excludes) {
-        grunt.log.writeln('\nError: Some modules are required and can not be ommited.');
-
-        excludes.forEach(function (name) {
-            grunt.log.writeln('* ' + name + ' - ' + modules[name].description);
-        });
-    }
-
-    //  Filter invalid module names given by the user.
-    function filterUnknownModules (excludes) {
-        return excludes.filter(function (name) {
-            return !modules[name];
-        });
-    }
-
-    //  Display invalid module names.
-    function reportUnknownModules (excludes) {
-        grunt.log.writeln('\nError: The following module names are misspelled or doesn\'t exist.');
-
-        excludes.forEach(function (name) {
-            grunt.log.writeln('* ' + name);
-        });
-    }
-
-    //  Filter modules whose dependencies were excluded by the user.
-    function filterUnmetDependencies (excludes) {
-        return modulesWithDependencies
-            .filter(function (name) {
-                var dependencies = modules[name].dependencies;
-
-                //  Look for missing dependencies.
-                return excludes.indexOf(name) < 0 &&
-                    excludes.some(function (exclude) {
-                        return dependencies.modules.indexOf(exclude) >= 0;
-                    });
-            });
-    }
-
-    //  List the modules whose dependencies have been excluded.
-    function reportUnmetDependencies (excludes) {
-        grunt.log.writeln('\nWarning: Some modules with unmet dependencies will automatically be excluded from the build:');
-
-        excludes.forEach(function (name) {
-            var dependencies = modules[name].dependencies;
-            grunt.log.writeln('\nModule "' + name+ '"');
-            grunt.log.writeln('    Reason: ' + dependencies.reason);
-            grunt.log.writeln('    Depends on: ' + dependencies.modules.join(', '));
-        });
-    }
-
-    //  List the actually excluded module names and their descriptions.
-    function reportExcludedModules (excludes) {
-        grunt.log.writeln('\nExcluding the following modules from this build:');
-
-        excludes.forEach(function (exclude) {
-            grunt.log.writeln("* " + exclude + ' - ' + modules[exclude].description);
-        });
-    }
 
 
     grunt.registerMultiTask('build-phaser', 'Compiles a custom build of Phaser from a desired set of modules.', function () {
@@ -116,9 +50,9 @@ module.exports = function (grunt) {
 
         //  Handle user choices.
         excludes = validateExcludes(excludes)
-            .fail(filterNotOptionalModules, reportNotOptionalModules)
-            .fail(filterUnknownModules, reportUnknownModules)
-            .push(filterUnmetDependencies, reportUnmetDependencies)
+            .fail(notOptionalModules, reportNotOptionalModules)
+            .fail(unknownModules, reportUnknownModules)
+            .push(unmetDependencies, reportUnmetDependencies)
             .result(reportExcludedModules);
 
         //  The excludes were filtered and validated, now proceeding with the
