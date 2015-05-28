@@ -268,6 +268,8 @@ Phaser.Group.SORT_DESCENDING = 1;
 *
 * The child is automatically added to the top of the group and is displayed on top of every previous child.
 *
+* If Group.enableBody is set then a physics body will be created on the object, so long as one does not already exist.
+*
 * Use {@link #addAt} to control where a child is added. Use {@link #create} to create and add a new child.
 *
 * @method Phaser.Group#add
@@ -285,9 +287,13 @@ Phaser.Group.prototype.add = function (child, silent) {
 
         child.z = this.children.length;
 
-        if (this.enableBody)
+        if (this.enableBody && child.body === null)
         {
             this.game.physics.enable(child, this.physicsBodyType);
+        }
+        else if (child.body)
+        {
+            this.addToHash(child);
         }
 
         if (!silent && child.events)
@@ -402,9 +408,13 @@ Phaser.Group.prototype.addAt = function (child, index, silent) {
 
         this.updateZ();
 
-        if (this.enableBody)
+        if (this.enableBody && child.body === null)
         {
             this.game.physics.enable(child, this.physicsBodyType);
+        }
+        else if (child.body)
+        {
+            this.addToHash(child);
         }
 
         if (!silent && child.events)
