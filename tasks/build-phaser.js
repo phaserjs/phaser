@@ -177,16 +177,12 @@ module.exports = function (grunt) {
             if (modules[key].stubs && excludes.indexOf(key) !== -1)
             {
                 //  If the module IS excluded and has a stub, we need that
-                tasks.push('concat:' + key + 'Stub');
-
-                filelist.push('<%= modules_dir %>/' + key + '.js');
+                filelist.push(modules[key].stubs);
             }
             else if (modules[key].optional === false || excludes.indexOf(key) === -1)
             {
                 //  If it's required or NOT excluded, add it to the tasks list
-                tasks.push('concat:' + key);
-
-                filelist.push('<%= modules_dir %>/' + key + '.js');
+                filelist.push(modules[key].files);
             }
         }
 
