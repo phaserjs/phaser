@@ -42,6 +42,7 @@ module.exports = {
     'particles'     : require('./particles.json'),
     'creature'      : require('./creature.json'),
     'video'         : require('./video.json'),
+    'pixidefaults'  : require('./pixidefaults.json'),
     'outro'         : require('./outro.json')
 
 };

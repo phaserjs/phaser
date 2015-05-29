@@ -9,7 +9,6 @@
     },
 
     "files": [
-        "src/PixiDefaults.js",
         "src/Outro.js"
     ],
 
