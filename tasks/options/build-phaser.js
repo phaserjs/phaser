@@ -35,7 +35,7 @@ module.exports = {
         options: {
             filename: 'phaser-no-physics',
             sourcemap: true,
-            excludes: [ 'arcade', 'ninja', 'p2', 'tilemaps', 'particles', 'creature' ],
+            excludes: [ 'arcade', 'ninja', 'p2', 'tilemaps', 'arcadetilemaps', 'particles', 'creature' ],
             copy: true,
             copyCustom: true
         }
@@ -47,7 +47,7 @@ module.exports = {
         options: {
             filename: 'phaser-minimum',
             sourcemap: true,
-            excludes: [ 'gamepad', 'keyboard', 'bitmapdata', 'graphics', 'rendertexture', 'text', 'bitmaptext', 'retrofont', 'net', 'tweens', 'sound', 'debug', 'arcade', 'ninja', 'p2', 'tilemaps', 'particles', 'creature', 'video' ],
+            excludes: [ 'gamepad', 'keyboard', 'bitmapdata', 'graphics', 'rendertexture', 'text', 'bitmaptext', 'retrofont', 'net', 'tweens', 'sound', 'debug', 'arcade', 'ninja', 'p2', 'tilemaps', 'arcadetilemaps', 'particles', 'creature', 'video' ],
             copy: true,
             copyCustom: true
         }

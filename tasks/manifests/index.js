@@ -35,7 +35,7 @@ module.exports = {
     'utils'         : require('./utils.json'),
     'physics'       : require('./physics.json'),
     'arcade'        : require('./physics.arcade.json'),
-    'arcadeTilemaps': require('./physics.arcade.tilemaps.json'),
+    'arcadetilemaps': require('./physics.arcade.tilemaps.json'),
     'ninja'         : require('./physics.ninja.json'),
     'p2'            : require('./physics.p2.json'),
     'tilemaps'      : require('./tilemaps.json'),
