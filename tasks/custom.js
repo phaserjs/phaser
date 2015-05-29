@@ -23,7 +23,7 @@ module.exports = function (grunt) {
 
             // List optional modules.
             Object.keys(modules)
-                .filter(function (name) { return modules[name].optional })
+                .filter(function (name) { return modules[name].optional; })
                 .forEach(function (name) {
                     grunt.log.writeln('* ' + name + ' - ' + modules[name].description);
                 });

@@ -49,7 +49,7 @@ module.exports = function (grunt, modules) {
             },
 
             //  Report the excluded modules.
-            result (reporter) {
+            result: function (reporter) {
                 if (excludes.length > 0)
                 {
                     reporter(excludes);
