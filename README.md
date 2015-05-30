@@ -51,7 +51,7 @@ So two of the biggest changes 2.3.0 has is an internal shift to using Game Objec
 
 Even though we've been cutting down on size we still managed to pack a whole load of great new features in. For example the new spacial sorting added to Arcade Physics allows for incredible speed increases when dealing with densely populated game worlds. The Loader has received a complete overhaul - now offering full parallel asset loading, sync points and more! The Tilemap system was upgraded to support new Tiled 0.11 editor features. Audio has been also been enhanced, with better marker and loop handling. See the Change Log for all the details.
 
-Your games will run faster, have a smaller footprint and load faster than ever.
+Your games will run faster, have a smaller footprint, and load faster than ever.
 
 But it's not just Phaser that has been updated - we also finally released the [new Phaser web site](http://phaser.io)! For the past few years it was a huge "wall of text", with hundreds of links filling up the single page site. Now it's all changed! with a much more attractive layout and structure. We've got a healthy and constantly updating [news section](http://phaser.io/news), the [examples](http://phaser.io/examples) have a great new visual showcase and there's even a [Sandbox](http://phaser.io/sandbox) to play in.
 
