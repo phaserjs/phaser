@@ -62,6 +62,17 @@ module.exports = {
             copy: true,
             copyCustom: true
         }
+    },
+
+    //  Required by npm's `prepublish` hook. Same as the 'standard' preset.
+    prepublish: {
+        options: {
+            filename: 'phaser',
+            sourcemap: true,
+            excludes: [ 'ninja', 'creature' ],
+            copy: false,
+            copyCustom: false
+        }
     }
 
 };
