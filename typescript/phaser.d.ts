@@ -419,7 +419,7 @@ declare module Phaser {
         getFrameData(key: string, map?: string): Phaser.FrameData;
         getImage(key: string): Phaser.Image;
         getJSON(key: string): any;
-        getKeys(array: string[]): string[];
+        getKeys(type: number): string[];
         getPixiTexture(key: string): PIXI.Texture;
         getPixiBaseTexture(key: string): PIXI.BaseTexture;
         getPhysicsData(key: string, object?: string, fixtureKey?: string): any[];
