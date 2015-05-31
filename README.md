@@ -303,8 +303,8 @@ Version 2.4 - "Katar" - in dev
 
 ### Updates
 
-* TypeScript definitions fixes and updates (thanks @clark-stevenson @isuda @ggarek)
-* JSDoc typo fixes (thanks @robertpenner @luckylooke)
+* TypeScript definitions fixes and updates (thanks @clark-stevenson @isuda @ggarek @jamesgroat)
+* JSDoc typo fixes (thanks @robertpenner @luckylooke @asyncanup)
 * Added missing `resumed` method to Phaser.State class template.
 * Color.webToColor and Color.updateColor now updates the `out.color` and `out.color32` properties (thanks @cuixiping #1728)
 * Tilemap.createFromObjects has been updated for Tiled 0.11 and can now look-up object layers based on id, uid or name. It will also now copy over Sprite scaling properties if set (thanks @mandarinx #1738)
@@ -338,6 +338,7 @@ Version 2.4 - "Katar" - in dev
 * PIXI.Sprite.tintedTexture contains a canvas object that holds the tinted version of the Sprite. This is only populated in Canvas, not in WebGL.
 * ScaleManager.scaleSprite will no longer try and scale a display object that doesn't have a scale property.
 * The LoadTexture component has a new property `customRender` which is checked for in the Core postUpdate to know when to render custom elements like Videos.
+* BitmapText line spacing and word wrapping has been vastly improved and bought in-line with how Pixi 3 handles it, but with additional anchor support.
 
 ### Bug Fixes
 

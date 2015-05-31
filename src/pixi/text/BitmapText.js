@@ -21,7 +21,7 @@ PIXI.BitmapText = function(text, style)
     PIXI.DisplayObjectContainer.call(this);
 
     /**
-     * [read-only] The width of the overall text, different from fontSize,
+     * The width of the overall text, different from fontSize,
      * which is defined in the style object
      *
      * @property textWidth
@@ -31,7 +31,7 @@ PIXI.BitmapText = function(text, style)
     this.textWidth = 0;
 
     /**
-     * [read-only] The height of the overall text, different from fontSize,
+     * The height of the overall text, different from fontSize,
      * which is defined in the style object
      *
      * @property textHeight
@@ -62,11 +62,12 @@ PIXI.BitmapText = function(text, style)
     this._prevAnchor = new Phaser.Point(0, 0);
 
     /**
-     * @property _pool
-     * @type Array
+     * Private tracker for the letter sprite pool.
+     *
+     * @member {Sprite[]}
      * @private
      */
-    this._pool = [];
+    this._glyphs = [];
 
     this.setText(text);
     this.setStyle(style);
@@ -78,6 +79,7 @@ PIXI.BitmapText = function(text, style)
      * @type Boolean
      */
     this.dirty = false;
+
 };
 
 // constructor
@@ -130,11 +132,12 @@ PIXI.BitmapText.prototype.updateText = function()
     var pos = new PIXI.Point();
     var prevCharCode = null;
     var chars = [];
+    var lastLineWidth = 0;
     var maxLineWidth = 0;
     var lineWidths = [];
     var line = 0;
     var scale = this.fontSize / data.size;
-    var lastSpace = 0;
+    var lastSpace = -1;
 
     for (var i = 0; i < this.text.length; i++)
     {
@@ -143,8 +146,8 @@ PIXI.BitmapText.prototype.updateText = function()
 
         if (/(?:\r\n|\r|\n)/.test(this.text.charAt(i)))
         {
-            lineWidths.push(pos.x);
-            maxLineWidth = Math.max(maxLineWidth, pos.x);
+            lineWidths.push(lastLineWidth);
+            maxLineWidth = Math.max(maxLineWidth, lastLineWidth);
             line++;
 
             pos.x = 0;
@@ -153,6 +156,7 @@ PIXI.BitmapText.prototype.updateText = function()
             continue;
         }
 
+        //  This doesn't factor in the width of the current character
         if (lastSpace !== -1 && this.maxWidth > 0 && pos.x * scale > this.maxWidth)
         {
             chars.splice(lastSpace, i - lastSpace);
@@ -171,21 +175,33 @@ PIXI.BitmapText.prototype.updateText = function()
 
         var charData = data.chars[charCode];
 
-        if(!charData) continue;
+        if (!charData)
+        {
+            continue;
+        }
 
-        if(prevCharCode && charData.kerning[prevCharCode])
+        if (prevCharCode && charData.kerning[prevCharCode])
         {
             pos.x += charData.kerning[prevCharCode];
         }
 
-        chars.push({texture:charData.texture, line: line, charCode: charCode, position: new PIXI.Point(pos.x + charData.xOffset, pos.y + charData.yOffset)});
+        chars.push({ 
+            texture: charData.texture, 
+            line: line, 
+            charCode: charCode, 
+            position: new PIXI.Point(pos.x + charData.xOffset, pos.y + charData.yOffset)
+        });
+
+        lastLineWidth = pos.x + (charData.texture.width + charData.xOffset);
         pos.x += charData.xAdvance;
 
         prevCharCode = charCode;
     }
 
-    lineWidths.push(pos.x);
-    maxLineWidth = Math.max(maxLineWidth, pos.x);
+    lineWidths.push(lastLineWidth);
+    maxLineWidth = Math.max(maxLineWidth, lastLineWidth);
+
+    console.log('maxLineWidth', maxLineWidth);
 
     var lineAlignOffsets = [];
 
@@ -205,38 +221,46 @@ PIXI.BitmapText.prototype.updateText = function()
         lineAlignOffsets.push(alignOffset);
     }
 
-    var lenChildren = this.children.length;
     var lenChars = chars.length;
     var tint = this.tint || 0xFFFFFF;
-
-    this.textWidth = maxLineWidth * scale;
-    this.textHeight = (pos.y + data.lineHeight) * scale;
 
     var ax = this.textWidth * this.anchor.x;
     var ay = this.textHeight * this.anchor.y;
 
     for (i = 0; i < lenChars; i++)
     {
-        var c = i < lenChildren ? this.children[i] : this._pool.pop(); // get old child if have. if not - take from pool.
+        var c = this._glyphs[i]; // get the next glyph sprite
 
-        if (c) c.setTexture(chars[i].texture); // check if got one before.
-        else c = new PIXI.Sprite(chars[i].texture); // if no create new one.
+        if (c)
+        {
+            c.texture = chars[i].texture;
+        }
+        else
+        {
+            c = new PIXI.Sprite(chars[i].texture);
+            this._glyphs.push(c);
+        }
 
         c.position.x = ((chars[i].position.x + lineAlignOffsets[chars[i].line]) * scale) - ax;
         c.position.y = (chars[i].position.y * scale) - ay;
 
         c.scale.x = c.scale.y = scale;
         c.tint = tint;
-        if (!c.parent) this.addChild(c);
+
+        if (!c.parent)
+        {
+            this.addChild(c);
+        }
     }
 
-    //  Remove unnecessary children and put them into the pool
-    while (this.children.length > lenChars)
+    //  Remove unnecessary children.
+    for (i = lenChars; i < this._glyphs.length; ++i)
     {
-        var child = this.getChildAt(this.children.length - 1);
-        this._pool.push(child);
-        this.removeChild(child);
+        this.removeChild(this._glyphs[i]);
     }
+
+    this.textWidth = maxLineWidth * scale;
+    this.textHeight = (pos.y + data.lineHeight) * scale;
 
 };
 
