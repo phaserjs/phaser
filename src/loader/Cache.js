@@ -328,7 +328,7 @@ Phaser.Cache.prototype = {
     *
     * @method Phaser.Cache#addTilemap
     * @param {string} key - The unique key by which you will reference this object.
-    * @param {string} url - URL of the tilemap image.
+    * @param {string} url - URL of the tilemap image or key reference.
     * @param {object} mapData - The tilemap data object (either a CSV or JSON file).
     * @param {number} format - The format of the tilemap data.
     */
