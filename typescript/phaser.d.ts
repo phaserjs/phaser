@@ -1,7 +1,7 @@
 /// <reference path="pixi.d.ts" />
 /// <reference path="p2.d.ts" />
 
-// Type definitions for Phaser 2.4.0 2015-May-25
+// Type definitions for Phaser 2.4.0 2015-Jun-02
 // Project: https://github.com/photonstorm/phaser
 
 declare class Phaser {
@@ -1733,6 +1733,7 @@ declare module Phaser {
         snapOffsetY: number;
         snapOnDrag: boolean;
         snapOnRelease: boolean;
+        snapPoint: Phaser.Point;
         snapX: number;
         snapY: number;
         sprite: Phaser.Sprite;
