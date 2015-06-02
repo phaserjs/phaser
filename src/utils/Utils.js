@@ -184,13 +184,13 @@ Phaser.Utils = {
     },
 
     /**
-    * Javascript string pad http://www.webtoolkit.info/.
+    * JavaScript string pad http://www.webtoolkit.info/.
     *
     * @method Phaser.Utils.pad
     * @param {string} str - The target string.
-    * @param {number} len - The number of characters to be added.
-    * @param {number} pad - The string to pad it out with (defaults to a space).
-    * @param {number} [dir=3] The direction dir = 1 (left), 2 (right), 3 (both).
+    * @param {integer} [len=0] - The number of characters to be added.
+    * @param {string} [pad=" "] - The string to pad it out with (defaults to a space).
+    * @param {integer} [dir=3] The direction dir = 1 (left), 2 (right), 3 (both).
     * @return {string} The padded string
     */
     pad: function (str, len, pad, dir) {

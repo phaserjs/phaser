@@ -4879,7 +4879,7 @@ declare module Phaser {
         static getProperty(obj: any, prop: string): any;
         static isPlainObject(object: any): boolean;
         static mixin(from: any, to: any): any;
-        static pad(str: string, len: number, pad: number, dir?: number): string;
+        static pad(str: string, len?: number, pad?: string, dir?: number): string;
         static parseDimension(size: any, dimension: number): number;
         static randomChoice(choice1: any, choice2: any): any;
         static rotateArray<T>(array: T[], direction: any): T;
