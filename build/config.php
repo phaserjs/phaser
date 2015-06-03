@@ -49,7 +49,6 @@
     <script src="$path/src/pixi/display/Sprite.js"></script>
     <script src="$path/src/pixi/display/SpriteBatch.js"></script>
     <script src="$path/src/pixi/text/Text.js"></script>
-    <script src="$path/src/pixi/text/BitmapText.js"></script>
     <script src="$path/src/pixi/display/Stage.js"></script>
 
     <script src="$path/src/pixi/utils/Utils.js"></script>
