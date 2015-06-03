@@ -107,6 +107,11 @@ Phaser.Component.Destroy.prototype = {
             this.key.onChangeSource.remove(this.resizeFrame, this);
         }
 
+        if (Phaser.BitmapText && this._glyphs)
+        {
+            this._glyphs = [];
+        }
+
         this.alive = false;
         this.exists = false;
         this.visible = false;
