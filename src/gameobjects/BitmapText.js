@@ -239,23 +239,23 @@ Phaser.BitmapText.prototype.scanLine = function (data, scale, text) {
     {
         var end = (i === text.length - 1) ? true : false;
 
-        var charCode = text.charCodeAt(i);
-        var charData = data.chars[charCode];
-
-        var c = 0;
-
-        if (!charData)
-        {
-            // Skipped a character not found in font data
-            continue;
-        }
-
         if (/(?:\r\n|\r|\n)/.test(text.charAt(i)))
         {
             return { width: w, text: text.substr(0, i), end: end, chars: chars };
         }
         else
         {
+            var charCode = text.charCodeAt(i);
+            var charData = data.chars[charCode];
+
+            var c = 0;
+
+            if (!charData)
+            {
+                // Skipped a character not found in font data
+                continue;
+            }
+
             //  Adjust for kerning from previous character to this one
             var kerning = (prevCharCode && charData.kerning[prevCharCode]) ? charData.kerning[prevCharCode] : 0;
 
@@ -265,18 +265,11 @@ Phaser.BitmapText.prototype.scanLine = function (data, scale, text) {
             //  What will the line width be if we add this character to it?
             c = (kerning + charData.texture.width + charData.xOffset) * scale;
 
-            if (maxWidth && ((w + c) >= this._maxWidth))
+            //  Do we need to line-wrap?
+            if (maxWidth && ((w + c) >= this._maxWidth) && lastSpace > -1)
             {
-                //  We need to line-wrap
-                if (lastSpace === -1)
-                {
-                    //  Damn we can't, there are no spaces in the text
-                }
-                else
-                {
-                    //  The last space was at "lastSpace" which was "i - lastSpace" characters ago
-                    return { width: w, text: text.substr(0, i - (i - lastSpace)), end: end, chars: chars };
-                }
+                //  The last space was at "lastSpace" which was "i - lastSpace" characters ago
+                return { width: w, text: text.substr(0, i - (i - lastSpace)), end: end, chars: chars };
             }
             else
             {
