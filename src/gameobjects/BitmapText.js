@@ -314,10 +314,7 @@ Phaser.BitmapText.prototype.updateText = function () {
     var scale = this._fontSize / data.size;
     var lines = [];
 
-    // console.log('scale', scale);
-    // console.log(text);
-
-    var c = 0;
+    // var c = 0;
     var y = 0;
 
     this.textWidth = 0;
@@ -330,7 +327,7 @@ Phaser.BitmapText.prototype.updateText = function () {
 
         lines.push(line);
 
-        console.log(line);
+        // console.log(line);
 
         if (line.width > this.textWidth)
         {
@@ -343,12 +340,10 @@ Phaser.BitmapText.prototype.updateText = function () {
 
         c++;
         
-    } while (line.end === false && c < 10)
-    // } while (line.end === false)
+    // } while (line.end === false && c < 10)
+    } while (line.end === false)
 
     this.textHeight = y;
-
-    console.log('text area', this.textWidth, 'x', this.textHeight);
 
     var t = 0;
     var align = 0;
