@@ -42,3 +42,5 @@ if (PIXI.Graphics.POLY === undefined)
 }
 
 PIXI.TextureSilentFail = true;
+
+PIXI.BitmapText = { fonts: {} };
