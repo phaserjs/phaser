@@ -546,15 +546,15 @@ PIXI.Graphics.prototype.drawRoundedRect = function(x, y, width, height, radius)
     return this;
 };
 
-/*
-* Draws a circle.
-*
-* @method Phaser.Graphics.prototype.drawCircle
-* @param {Number} x - The X coordinate of the center of the circle.
-* @param {Number} y - The Y coordinate of the center of the circle.
-* @param {Number} diameter - The diameter of the circle.
-* @return {Graphics} This Graphics object.
-*/
+/**
+ * Draws a circle.
+ *
+ * @method drawCircle
+ * @param x {Number} The X coordinate of the center of the circle
+ * @param y {Number} The Y coordinate of the center of the circle
+ * @param diameter {Number} The diameter of the circle
+ * @return {Graphics}
+ */
 PIXI.Graphics.prototype.drawCircle = function(x, y, diameter)
 {
     this.drawShape(new PIXI.Circle(x, y, diameter));
