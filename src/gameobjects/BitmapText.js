@@ -15,6 +15,9 @@
 *
 * To create multi-line text insert \r, \n or \r\n escape codes into the text string.
 *
+* If you are having performance issues due to the volume of sprites being rendered, and do not require the text to be constantly
+* updating, you can use BitmapText.generateTexture to create a static texture from this BitmapText.
+*
 * To create a BitmapText data files you can use:
 *
 * BMFont (Windows, free): http://www.angelcode.com/products/bmfont/
@@ -252,7 +255,7 @@ Phaser.BitmapText.prototype.scanLine = function (data, scale, text) {
 
             if (!charData)
             {
-                // Skipped a character not found in font data
+                // Skip a character not found in the font data
                 continue;
             }
 
@@ -266,7 +269,7 @@ Phaser.BitmapText.prototype.scanLine = function (data, scale, text) {
             c = (kerning + charData.texture.width + charData.xOffset) * scale;
 
             //  Do we need to line-wrap?
-            if (maxWidth && ((w + c) >= this._maxWidth) && lastSpace > -1)
+            if (maxWidth && ((w + c) >= maxWidth) && lastSpace > -1)
             {
                 //  The last space was at "lastSpace" which was "i - lastSpace" characters ago
                 return { width: w, text: text.substr(0, i - (i - lastSpace)), end: end, chars: chars };
@@ -333,8 +336,8 @@ Phaser.BitmapText.prototype.updateText = function () {
 
         c++;
         
-    // } while (line.end === false && c < 10)
     } while (line.end === false)
+    // } while (line.end === false && c < 10)
 
     this.textHeight = y;
 
@@ -361,7 +364,7 @@ Phaser.BitmapText.prototype.updateText = function () {
             var charCode = line.text.charCodeAt(c);
             var charData = data.chars[charCode];
 
-            var g = this._glyphs[t];
+            var g = this.children[t];
 
             if (g)
             {
@@ -393,6 +396,45 @@ Phaser.BitmapText.prototype.updateText = function () {
     {
         this.removeChild(this._glyphs[i]);
     }
+
+};
+
+/**
+* If a BitmapText changes from having a large number of characters to having very few characters it will cause lots of
+* Sprites to be retained in the BitmapText._glyphs array. Although they are not attached to the display list they
+* still take up memory while sat in the glyphs pool waiting to be re-used in the future.
+*
+* If you know that the BitmapText will not grow any larger then you can purge out the excess glyphs from the pool 
+* by calling this method.
+*
+* Calling this doesn't prevent you from increasing the length of the text again in the future.
+*
+* @method Phaser.BitmapText.prototype.purgeGlyphs
+* @return {integer} The amount of glyphs removed from the pool.
+*/
+Phaser.BitmapText.prototype.purgeGlyphs = function () {
+
+    var len = this._glyphs.length;
+    var kept = [];
+
+    for (var i = 0; i < this._glyphs.length; i++)
+    {
+        if (this._glyphs[i].parent !== this)
+        {
+            this._glyphs[i].destroy();
+        }
+        else
+        {
+            kept.push(this._glyphs[i]);
+        }
+    }
+
+    this._glyphs = [];
+    this._glyphs = kept;
+
+    this.updateText();
+
+    return len - kept.length;
 
 };
 
@@ -452,7 +494,6 @@ Object.defineProperty(Phaser.BitmapText.prototype, 'tint', {
         if (value !== this._tint)
         {
             this._tint = value;
-            this.dirty = true;
             this.updateText();
         }
 
@@ -475,9 +516,6 @@ Object.defineProperty(Phaser.BitmapText.prototype, 'font', {
         if (value !== this._font)
         {
             this._font = value.trim();
-            // this.fontName = this._font;
-            // this.style.font = this._fontSize + "px '" + this._font + "'";
-            this.dirty = true;
             this.updateText();
         }
 
@@ -499,11 +537,9 @@ Object.defineProperty(Phaser.BitmapText.prototype, 'fontSize', {
 
         value = parseInt(value, 10);
 
-        if (value !== this._fontSize)
+        if (value !== this._fontSize && value > 0)
         {
             this._fontSize = value;
-            // this.style.font = this._fontSize + "px '" + this._font + "'";
-            this.dirty = true;
             this.updateText();
         }
 
@@ -526,7 +562,6 @@ Object.defineProperty(Phaser.BitmapText.prototype, 'text', {
         if (value !== this._text)
         {
             this._text = value.toString() || '';
-            this.dirty = true;
             this.updateText();
         }
 
