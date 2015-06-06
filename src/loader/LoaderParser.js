@@ -139,7 +139,7 @@ Phaser.LoaderParser = {
                 );
 
                 letter.texture = new PIXI.Texture(PIXI.BaseTextureCache[cacheKey], textureRect);
-    }
+            }
         );
 
         PIXI.BitmapText.fonts[cacheKey] = bitmapFontData;

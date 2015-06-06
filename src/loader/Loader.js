@@ -1188,11 +1188,11 @@ Phaser.Loader.prototype = {
                 var json, xml;
 
                 try
-        {
+                {
                     json = JSON.parse(atlasData);
-        }
+                }
                 catch ( e )
-            {
+                {
                     xml = this.parseXml(atlasData);
                 }
 
