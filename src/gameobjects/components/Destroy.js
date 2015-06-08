@@ -102,6 +102,16 @@ Phaser.Component.Destroy.prototype = {
             this._frame = null;
         }
 
+        if (Phaser.Video && this.key instanceof Phaser.Video)
+        {
+            this.key.onChangeSource.remove(this.resizeFrame, this);
+        }
+
+        if (Phaser.BitmapText && this._glyphs)
+        {
+            this._glyphs = [];
+        }
+
         this.alive = false;
         this.exists = false;
         this.visible = false;

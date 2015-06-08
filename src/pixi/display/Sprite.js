@@ -66,6 +66,25 @@ PIXI.Sprite = function(texture)
     this.tint = 0xFFFFFF;
 
     /**
+     * The tint applied to the sprite. This is a hex value. A value of 0xFFFFFF will remove any tint effect.
+     *
+     * @property cachedTint
+     * @private
+     * @type Number
+     * @default -1
+     */
+    this.cachedTint = -1;
+
+    /**
+     * A canvas that contains the tinted version of the Sprite (in Canvas mode, WebGL doesn't populate this)
+     *
+     * @property tintedTexture
+     * @type Canvas
+     * @default null
+     */
+    this.tintedTexture = null;
+
+    /**
      * The blend mode to be applied to the sprite. Set to PIXI.blendModes.NORMAL to remove any blend mode.
      *
      * @property blendMode
@@ -143,7 +162,7 @@ Object.defineProperty(PIXI.Sprite.prototype, 'height', {
 PIXI.Sprite.prototype.setTexture = function(texture)
 {
     this.texture = texture;
-    this.cachedTint = 0xFFFFFF;
+    this.texture.valid = true;
 };
 
 /**
@@ -260,16 +279,23 @@ PIXI.Sprite.prototype.getBounds = function(matrix)
 *
 * @method _renderWebGL
 * @param renderSession {RenderSession}
+* @param {Matrix} [matrix] - Optional matrix. If provided the Display Object will be rendered using this matrix, otherwise it will use its worldTransform.
 * @private
 */
-PIXI.Sprite.prototype._renderWebGL = function(renderSession)
+PIXI.Sprite.prototype._renderWebGL = function(renderSession, matrix)
 {
     // if the sprite is not visible or the alpha is 0 then no need to render this element
     if (!this.visible || this.alpha <= 0 || !this.renderable) return;
 
-    var i, j;
+    //  They provided an alternative rendering matrix, so use it
+    var wt = this.worldTransform;
 
-    // do a quick check to see if this element has a mask or a filter.
+    if (matrix)
+    {
+        wt = matrix;
+    }
+
+    //  A quick check to see if this element has a mask or a filter.
     if (this._mask || this._filters)
     {
         var spriteBatch =  renderSession.spriteBatch;
@@ -292,7 +318,7 @@ PIXI.Sprite.prototype._renderWebGL = function(renderSession)
         spriteBatch.render(this);
 
         // now loop through the children and make sure they get rendered
-        for (i = 0; i < this.children.length; i++)
+        for (var i = 0; i < this.children.length; i++)
         {
             this.children[i]._renderWebGL(renderSession);
         }
@@ -307,12 +333,12 @@ PIXI.Sprite.prototype._renderWebGL = function(renderSession)
     }
     else
     {
-        renderSession.spriteBatch.render(this);
+        renderSession.spriteBatch.render(this, wt);
 
-        // simple render children!
-        for (i = 0; i < this.children.length; i++)
+        //  Render children!
+        for (var i = 0; i < this.children.length; i++)
         {
-            this.children[i]._renderWebGL(renderSession);
+            this.children[i]._renderWebGL(renderSession, wt);
         }
 
     }
@@ -323,12 +349,24 @@ PIXI.Sprite.prototype._renderWebGL = function(renderSession)
 *
 * @method _renderCanvas
 * @param renderSession {RenderSession}
+* @param {Matrix} [matrix] - Optional matrix. If provided the Display Object will be rendered using this matrix, otherwise it will use its worldTransform.
 * @private
 */
-PIXI.Sprite.prototype._renderCanvas = function(renderSession)
+PIXI.Sprite.prototype._renderCanvas = function(renderSession, matrix)
 {
     // If the sprite is not visible or the alpha is 0 then no need to render this element
-    if (this.visible === false || this.alpha === 0 || this.renderable === false || this.texture.crop.width <= 0 || this.texture.crop.height <= 0) return;
+    if (this.visible === false || this.alpha === 0 || this.renderable === false || this.texture.crop.width <= 0 || this.texture.crop.height <= 0)
+    {
+        return;
+    }
+
+    var wt = this.worldTransform;
+
+    //  If they provided an alternative rendering matrix then use it
+    if (matrix)
+    {
+        wt = matrix;
+    }
 
     if (this.blendMode !== renderSession.currentBlendMode)
     {
@@ -362,62 +400,40 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession)
         //  Allow for pixel rounding
         if (renderSession.roundPixels)
         {
-            renderSession.context.setTransform(
-                this.worldTransform.a,
-                this.worldTransform.b,
-                this.worldTransform.c,
-                this.worldTransform.d,
-                (this.worldTransform.tx * renderSession.resolution) | 0,
-                (this.worldTransform.ty * renderSession.resolution) | 0);
+            renderSession.context.setTransform(wt.a, wt.b, wt.c, wt.d, (wt.tx * renderSession.resolution) | 0, (wt.ty * renderSession.resolution) | 0);
             dx = dx | 0;
             dy = dy | 0;
         }
         else
         {
-            renderSession.context.setTransform(
-                this.worldTransform.a,
-                this.worldTransform.b,
-                this.worldTransform.c,
-                this.worldTransform.d,
-                this.worldTransform.tx * renderSession.resolution,
-                this.worldTransform.ty * renderSession.resolution);
+            renderSession.context.setTransform(wt.a, wt.b, wt.c, wt.d, wt.tx * renderSession.resolution, wt.ty * renderSession.resolution);
         }
+
+        var cw = this.texture.crop.width;
+        var ch = this.texture.crop.height;
+
+        dx /= resolution;
+        dy /= resolution;
 
         if (this.tint !== 0xFFFFFF)
         {
-            if (this.cachedTint !== this.tint)
+            if (this.texture.requiresReTint || this.cachedTint !== this.tint)
             {
-                this.cachedTint = this.tint;
                 this.tintedTexture = PIXI.CanvasTinter.getTintedTexture(this, this.tint);
+
+                this.cachedTint = this.tint;
             }
 
-            renderSession.context.drawImage(
-                                this.tintedTexture,
-                                0,
-                                0,
-                                this.texture.crop.width,
-                                this.texture.crop.height,
-                                dx / resolution,
-                                dy / resolution,
-                                this.texture.crop.width / resolution,
-                                this.texture.crop.height / resolution);
+            renderSession.context.drawImage(this.tintedTexture, 0, 0, cw, ch, dx, dy, cw / resolution, ch / resolution);
         }
         else
         {
-            renderSession.context.drawImage(
-                                this.texture.baseTexture.source,
-                                this.texture.crop.x,
-                                this.texture.crop.y,
-                                this.texture.crop.width,
-                                this.texture.crop.height,
-                                dx / resolution,
-                                dy / resolution,
-                                this.texture.crop.width / resolution,
-                                this.texture.crop.height / resolution);
+            var cx = this.texture.crop.x;
+            var cy = this.texture.crop.y;
+            renderSession.context.drawImage(this.texture.baseTexture.source, cx, cy, cw, ch, dx, dy, cw / resolution, ch / resolution);
         }
     }
 
-    // OVERWRITE
     for (var i = 0; i < this.children.length; i++)
     {
         this.children[i]._renderCanvas(renderSession);
@@ -427,6 +443,7 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession)
     {
         renderSession.maskManager.popMask(renderSession);
     }
+
 };
 
 // some helper functions..

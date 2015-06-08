@@ -161,6 +161,30 @@ Phaser.Rectangle.prototype = {
     },
 
     /**
+    * Runs Math.ceil() on both the x and y values of this Rectangle.
+    * @method Phaser.Rectangle#ceil
+    */
+    ceil: function () {
+
+        this.x = Math.ceil(this.x);
+        this.y = Math.ceil(this.y);
+
+    },
+
+    /**
+    * Runs Math.ceil() on the x, y, width and height values of this Rectangle.
+    * @method Phaser.Rectangle#ceilAll
+    */
+    ceilAll: function () {
+
+        this.x = Math.ceil(this.x);
+        this.y = Math.ceil(this.y);
+        this.width = Math.ceil(this.width);
+        this.height = Math.ceil(this.height);
+
+    },
+
+    /**
     * Copies the x, y, width and height properties from any given object to this Rectangle.
     * @method Phaser.Rectangle#copyFrom
     * @param {any} source - The object to copy from.
@@ -373,18 +397,41 @@ Object.defineProperty(Phaser.Rectangle.prototype, "bottom", {
     },
 
     set: function (value) {
-        if (value <= this.y) {
+
+        if (value <= this.y)
+        {
             this.height = 0;
-        } else {
+        }
+        else
+        {
             this.height = value - this.y;
         }
+
+    }
+
+});
+
+/**
+* The location of the Rectangles bottom left corner as a Point object.
+* @name Phaser.Rectangle#bottomLeft
+* @property {Phaser.Point} bottomLeft - Gets or sets the location of the Rectangles bottom left corner as a Point object.
+*/
+Object.defineProperty(Phaser.Rectangle.prototype, "bottomLeft", {
+
+    get: function () {
+        return new Phaser.Point(this.x, this.bottom);
+    },
+
+    set: function (value) {
+        this.x = value.x;
+        this.bottom = value.y;
     }
 
 });
 
 /**
 * The location of the Rectangles bottom right corner as a Point object.
-* @name Phaser.Rectangle#bottom
+* @name Phaser.Rectangle#bottomRight
 * @property {Phaser.Point} bottomRight - Gets or sets the location of the Rectangles bottom right corner as a Point object.
 */
 Object.defineProperty(Phaser.Rectangle.prototype, "bottomRight", {

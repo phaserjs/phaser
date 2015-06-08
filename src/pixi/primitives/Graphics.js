@@ -546,15 +546,15 @@ PIXI.Graphics.prototype.drawRoundedRect = function(x, y, width, height, radius)
     return this;
 };
 
-/*
-* Draws a circle.
-*
-* @method Phaser.Graphics.prototype.drawCircle
-* @param {Number} x - The X coordinate of the center of the circle.
-* @param {Number} y - The Y coordinate of the center of the circle.
-* @param {Number} diameter - The diameter of the circle.
-* @return {Graphics} This Graphics object.
-*/
+/**
+ * Draws a circle.
+ *
+ * @method drawCircle
+ * @param x {Number} The X coordinate of the center of the circle
+ * @param y {Number} The Y coordinate of the center of the circle
+ * @param diameter {Number} The diameter of the circle
+ * @return {Graphics}
+ */
 PIXI.Graphics.prototype.drawCircle = function(x, y, diameter)
 {
     this.drawShape(new PIXI.Circle(x, y, diameter));
@@ -583,11 +583,16 @@ PIXI.Graphics.prototype.drawEllipse = function(x, y, width, height)
  * Draws a polygon using the given path.
  *
  * @method drawPolygon
- * @param path {Array} The path data used to construct the polygon. If you've got a Phaser.Polygon object then pass `polygon.points` here.
+ * @param path {Array|Phaser.Polygon} The path data used to construct the polygon. Can either be an array of points or a Phaser.Polygon object.
  * @return {Graphics}
  */
 PIXI.Graphics.prototype.drawPolygon = function(path)
 {
+    if (path instanceof Phaser.Polygon || path instanceof PIXI.Polygon)
+    {
+        path = path.points;
+    }
+
     // prevents an argument assignment deopt
     // see section 3.1: https://github.com/petkaantonov/bluebird/wiki/Optimization-killers#3-managing-arguments
     var points = path;
@@ -744,10 +749,8 @@ PIXI.Graphics.prototype._renderWebGL = function(renderSession)
 */
 PIXI.Graphics.prototype._renderCanvas = function(renderSession)
 {
-    if (this.isMask === true)
-    {
-        return;
-    }
+    // if the sprite is not visible or the alpha is 0 then no need to render this element
+    if (this.visible === false || this.alpha === 0 || this.isMask === true) return;
 
     // if the tint has changed, set the graphics object to dirty.
     if (this._prevTint !== this.tint) {
@@ -1143,8 +1146,9 @@ PIXI.Graphics.prototype.drawShape = function(shape)
     this.currentPath = null;
 
     //  Handle mixed-type polygons
-    if (shape instanceof PIXI.Polygon)
+    if (shape instanceof Phaser.Polygon)
     {
+        shape = shape.clone();
         shape.flatten();
     }
 

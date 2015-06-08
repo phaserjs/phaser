@@ -50,7 +50,7 @@ Phaser.LoaderParser = {
                 yOffset: parseInt(letters[i].getAttribute('yoffset'), 10),
                 xAdvance: parseInt(letters[i].getAttribute('xadvance'), 10) + xSpacing,
                 kerning: {},
-                texture: PIXI.TextureCache[cacheKey] = new PIXI.Texture(PIXI.BaseTextureCache[cacheKey], textureRect)
+                texture: new PIXI.Texture(PIXI.BaseTextureCache[cacheKey], textureRect)
             };
         }
 

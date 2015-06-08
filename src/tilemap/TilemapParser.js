@@ -420,7 +420,7 @@ Phaser.TilemapParser = {
             {
                 var key = fields[k];
 
-                if (obj[key])
+                if (typeof obj[key] !== 'undefined')
                 {
                     sliced[key] = obj[key];
                 }

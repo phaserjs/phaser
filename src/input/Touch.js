@@ -26,6 +26,15 @@ Phaser.Touch = function (game) {
     this.enabled = true;
 
     /**
+    * An array of callbacks that will be fired every time a native touch start event is received from the browser.
+    * This is used internally to handle audio and video unlocking on mobile devices.
+    * To add a callback to this array please use `Touch.addTouchLockCallback`.
+    * @property {array} touchLockCallbacks
+    * @protected
+    */
+    this.touchLockCallbacks = [];
+
+    /**
     * @property {object} callbackContext - The context under which callbacks are called.
     */
     this.callbackContext = this.game;
@@ -187,22 +196,76 @@ Phaser.Touch.prototype = {
     },
 
     /**
+    * Adds a callback that is fired when a browser touchstart event is received.
+    *
+    * This is used internally to handle audio and video unlocking on mobile devices.
+    *
+    * If the callback returns 'true' then the callback is automatically deleted once invoked.
+    *
+    * The callback is added to the Phaser.Touch.touchLockCallbacks array and should be removed with Phaser.Touch.removeTouchLockCallback.
+    * 
+    * @method Phaser.Touch#addTouchLockCallback
+    * @param {function} callback - The callback that will be called when a touchstart event is received.
+    * @param {object} context - The context in which the callback will be called.
+    */
+    addTouchLockCallback: function (callback, context) {
+
+        this.touchLockCallbacks.push({ callback: callback, context: context });
+
+    },
+
+    /**
+    * Removes the callback at the defined index from the Phaser.Touch.touchLockCallbacks array
+    * 
+    * @method Phaser.Touch#removeTouchLockCallback
+    * @param {function} callback - The callback to be removed.
+    * @param {object} context - The context in which the callback exists.
+    * @return {boolean} True if the callback was deleted, otherwise false.
+    */
+    removeTouchLockCallback: function (callback, context) {
+
+        var i = this.touchLockCallbacks.length;
+
+        while (i--)
+        {
+            if (this.touchLockCallbacks[i].callback === callback && this.touchLockCallbacks[i].context === context)
+            {
+                this.touchLockCallbacks.splice(i, 1);
+                return true;
+            }
+        }
+
+        return false;
+
+    },
+
+    /**
     * The internal method that handles the touchstart event from the browser.
     * @method Phaser.Touch#onTouchStart
     * @param {TouchEvent} event - The native event from the browser. This gets stored in Touch.event.
     */
     onTouchStart: function (event) {
 
-        this.event = event;
+        var i = this.touchLockCallbacks.length;
 
-        if (this.touchStartCallback)
+        while (i--)
         {
-            this.touchStartCallback.call(this.callbackContext, event);
+            if (this.touchLockCallbacks[i].callback.call(this.touchLockCallbacks[i].context, this, event))
+            {
+                this.touchLockCallbacks.splice(i, 1);
+            }
         }
+
+        this.event = event;
 
         if (!this.game.input.enabled || !this.enabled)
         {
             return;
+        }
+
+        if (this.touchStartCallback)
+        {
+            this.touchStartCallback.call(this.callbackContext, event);
         }
 
         if (this.preventDefault)
@@ -392,6 +455,7 @@ Object.defineProperty(Phaser.Touch.prototype, "disabled", {
     get: function () {
         return !this.enabled;
     },
+
     set: function (value) {
         this.enabled = !value;
     }

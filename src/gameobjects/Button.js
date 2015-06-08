@@ -259,7 +259,7 @@ Phaser.Button.prototype.setStateFrame = function (state, frame, switchImmediatel
 {
     var frameKey = '_on' + state + 'Frame';
 
-    if (frame != null) // not null or undefined
+    if (frame !== null) // not null or undefined
     {
         this[frameKey] = frame;
 

@@ -12,7 +12,15 @@
 * By default TilemapLayers have fixedToCamera set to `true`. Changing this will break Camera follow and scrolling behavior.
 *
 * @class Phaser.TilemapLayer
-* @extends {Phaser.Image}
+* @extends PIXI.Sprite
+* @extends Phaser.Component.Core
+* @extends Phaser.Component.Bounds
+* @extends Phaser.Component.BringToTop
+* @extends Phaser.Component.Destroy
+* @extends Phaser.Component.FixedToCamera
+* @extends Phaser.Component.InputEnabled
+* @extends Phaser.Component.Reset
+* @extends Phaser.Component.Smoothed
 * @constructor
 * @param {Phaser.Game} game - Game reference to the currently running game.
 * @param {Phaser.Tilemap} tilemap - The tilemap to which this layer belongs.
@@ -261,15 +269,17 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
 Phaser.TilemapLayer.prototype = Object.create(PIXI.Sprite.prototype);
 Phaser.TilemapLayer.prototype.constructor = Phaser.TilemapLayer;
 
-var components = [
+Phaser.Component.Core.install.call(Phaser.TilemapLayer.prototype, [
     'Bounds',
+    'BringToTop',
     'Destroy',
     'FixedToCamera',
+    'InputEnabled',
     'Reset',
     'Smoothed'
-];
+]);
 
-Phaser.Component.Core.install.call(Phaser.TilemapLayer.prototype, components);
+Phaser.TilemapLayer.prototype.preUpdateCore = Phaser.Component.Core.preUpdate;
 
 /**
 * The shared double-copy canvas, created as needed.
@@ -306,9 +316,7 @@ Phaser.TilemapLayer.ensureSharedCopyCanvas = function () {
 */
 Phaser.TilemapLayer.prototype.preUpdate = function() {
 
-    Phaser.Component.Core.preUpdate.call(this);
-
-    return true;
+    return this.preUpdateCore();
 
 };
 
@@ -320,7 +328,9 @@ Phaser.TilemapLayer.prototype.preUpdate = function() {
 */
 Phaser.TilemapLayer.prototype.postUpdate = function () {
 
-    Phaser.Component.Core.prototype.postUpdate.call(this);
+    Phaser.Component.FixedToCamera.postUpdate.call(this);
+
+    // this.postUpdateCore();
 
     //  Stops you being able to auto-scroll the camera if it's not following a sprite
     var camera = this.game.camera;

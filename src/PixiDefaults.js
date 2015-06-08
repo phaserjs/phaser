@@ -40,3 +40,7 @@ if (PIXI.Graphics.POLY === undefined)
     PIXI.Graphics.ELIP = Phaser.ELLIPSE;
     PIXI.Graphics.RREC = Phaser.ROUNDEDRECTANGLE;
 }
+
+PIXI.TextureSilentFail = true;
+
+PIXI.BitmapText = { fonts: {} };
