@@ -323,6 +323,7 @@ Phaser.Sound = function (game, key, volume, loop, connect) {
     * @private
     */
     this._onDecodedEventDispatched = false;
+
 };
 
 Phaser.Sound.prototype = {
@@ -356,7 +357,7 @@ Phaser.Sound.prototype = {
     */
     addMarker: function (name, start, duration, volume, loop) {
 
-        if (typeof volume === 'undefined') { volume = 1; }
+        if (typeof volume === 'undefined' || volume === null) { volume = 1; }
         if (typeof loop === 'undefined') { loop = false; }
 
         this.markers[name] = {
