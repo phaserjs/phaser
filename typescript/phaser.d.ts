@@ -1293,8 +1293,7 @@ declare module Phaser {
         tilemap(key?: string, tileWidth?: number, tileHeight?: number, width?: number, height?: number): Phaser.Tilemap;
         tileSprite(x: number, y: number, width: number, height: number, key?: any, frame?: any, group?: Phaser.Group): Phaser.TileSprite;
         tween(obj: any): Phaser.Tween;
-        video(key: string, captureAudio?: boolean, width?: number, height?: number): Phaser.Video;
-        videoSprite(): void; //todo not sure?
+        video(key?: string): Phaser.Video;
 
     }
 
@@ -2473,12 +2472,12 @@ declare module Phaser {
         touchLocked: boolean;
         complete: () => void;
 
-        constructor(game: Phaser.Game, key?: string, captureAudio?: boolean, width?: number, height?: number);
+        constructor(game: Phaser.Game, key?: string);
 
         add(object: Phaser.Sprite | Phaser.Sprite[]| Phaser.Image | Phaser.Image[]): Phaser.Video;
         addToWorld(x?: number, y?: number, anchorX?: number, anchorY?: Number, scaleX?: number, scaleY?: number): Phaser.Image;
         createVideoFromBlob(blob: Blob): Phaser.Video;
-        createVideoStream(captureAudio?: boolean, width?: number, height?: number): Phaser.Video;
+        startMediaStream(captureAudio?: boolean, width?: number, height?: number): Phaser.Video;
         changeSource(src: string, autoplay?: boolean): Phaser.Video;
         destroy(): void;
         play(loop?: boolean, playbackRate?: number): Phaser.Video;

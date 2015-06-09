@@ -8,9 +8,9 @@
 * A Video object that takes a previously loaded Video from the Phaser Cache and handles playback of it.
 * 
 * Alternatively it takes a getUserMedia feed from an active webcam and streams the contents of that to
-* the Video instead.
+* the Video instead (see `startMediaStream` method)
 * 
-* This can be applied to a Sprite as a texture. If multiple Sprites share the same Video texture and playback
+* The video can then be applied to a Sprite as a texture. If multiple Sprites share the same Video texture and playback
 * changes (i.e. you pause the video, or seek to a new time) then this change will be seen across all Sprites simultaneously.
 *
 * Due to a bug in IE11 you cannot play a video texture to a Sprite in WebGL. For IE11 force Canvas mode.
@@ -29,15 +29,11 @@
 * @class Phaser.Video
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
-* @param {string|null} key - The key of the video file in the Phaser.Cache that this Video object should use. If null a `getUserMedia` video stream will be established instead.
-* @param {boolean} [captureAudio=false] - If the key is null this controls if audio should be captured along with video in the video stream.
-* @param {integer} [width] - If the key is null this width is used to create the video stream. If not provided the video width will be set to the width of the webcam input source.
-* @param {integer} [height] - If the key is null this height is used to create the video stream. If not provided the video height will be set to the height of the webcam input source.
+* @param {string|null} [key=null] - The key of the video file in the Phaser.Cache that this Video object will play. Set to `null` or leave undefined if you wish to use a webcam as the source. See `startMediaStream` to start webcam capture.
 */
-Phaser.Video = function (game, key, captureAudio, width, height) {
+Phaser.Video = function (game, key) {
 
     if (typeof key === 'undefined') { key = null; }
-    if (typeof captureAudio === 'undefined') { captureAudio = false; }
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running game.
@@ -45,19 +41,64 @@ Phaser.Video = function (game, key, captureAudio, width, height) {
     this.game = game;
 
     /**
-    * @property {string} key - The key of the Video in the Cache, if stored there.
+    * @property {string} key - The key of the Video in the Cache, if stored there. Will be `null` if this Video is using the webcam instead.
+    * @default null
     */
     this.key = key;
 
     /**
     * @property {number} width - The width of the video in pixels.
+    * @default
     */
-    this.width = (width) ? width : 0;
+    this.width = 320;
 
     /**
     * @property {number} height - The height of the video in pixels.
+    * @default
     */
-    this.height = (height) ? height : 0;
+    this.height = 240;
+
+    /**
+    * @property {number} type - The const type of this object.
+    * @default
+    */
+    this.type = Phaser.VIDEO;
+
+    /**
+    * @property {boolean} disableTextureUpload - If true this video will never send its image data to the GPU when its dirty flag is true. This only applies in WebGL.
+    */
+    this.disableTextureUpload = false;
+
+    /**
+    * @property {boolean} touchLocked - true if this video is currently locked awaiting a touch event. This happens on some mobile devices, such as iOS.
+    * @default
+    */
+    this.touchLocked = false;
+
+    /**
+    * @property {Phaser.Signal} onPlay - This signal is dispatched when the Video starts to play. It sends 3 parameters: a reference to the Video object, if the video is set to loop or not and the playback rate.
+    */
+    this.onPlay = new Phaser.Signal();
+
+    /**
+    * @property {Phaser.Signal} onChangeSource - This signal is dispatched if the Video source is changed. It sends 3 parameters: a reference to the Video object and the new width and height of the new video source.
+    */
+    this.onChangeSource = new Phaser.Signal();
+
+    /**
+    * @property {Phaser.Signal} onComplete - This signal is dispatched when the Video completes playback, i.e. enters an 'ended' state. Videos set to loop will never dispatch this signal.
+    */
+    this.onComplete = new Phaser.Signal();
+
+    /**
+    * @property {Phaser.Signal} onAccess - This signal is dispatched if the user allows access to their webcam.
+    */
+    this.onAccess = new Phaser.Signal();
+
+    /**
+    * @property {Phaser.Signal} onError - This signal is dispatched if an error occurs either getting permission to use the webcam (for a Video Stream) or when trying to play back a video file.
+    */
+    this.onError = new Phaser.Signal();
 
     /**
     * @property {HTMLVideoElement} video - The HTML Video Element that is added to the document.
@@ -65,7 +106,7 @@ Phaser.Video = function (game, key, captureAudio, width, height) {
     this.video = null;
 
     /**
-    * @property {MediaStream} videoStream - The Video Stream data. Only set if this Video is streaming from the webcam via `createVideoStream`.
+    * @property {MediaStream} videoStream - The Video Stream data. Only set if this Video is streaming from the webcam via `startMediaStream`.
     */
     this.videoStream = null;
 
@@ -74,11 +115,7 @@ Phaser.Video = function (game, key, captureAudio, width, height) {
     */
     this.isStreaming = false;
 
-    if (key === null)
-    {
-        this.createVideoStream(captureAudio, width, height);
-    }
-    else
+    if (this.game.cache.checkVideoKey(key))
     {
         var _video = this.game.cache.getVideo(key);
 
@@ -122,48 +159,6 @@ Phaser.Video = function (game, key, captureAudio, width, height) {
     {
         this.texture.valid = this.video.canplay;
     }
-
-    /**
-    * @property {number} type - The const type of this object.
-    * @default
-    */
-    this.type = Phaser.VIDEO;
-
-    /**
-    * @property {boolean} disableTextureUpload - If true this video will never send its image data to the GPU when its dirty flag is true. This only applies in WebGL.
-    */
-    this.disableTextureUpload = false;
-
-    /**
-    * @property {Phaser.Signal} onPlay - This signal is dispatched when the Video starts to play. It sends 3 parameters: a reference to the Video object, if the video is set to loop or not and the playback rate.
-    */
-    this.onPlay = new Phaser.Signal();
-
-    /**
-    * @property {Phaser.Signal} onChangeSource - This signal is dispatched if the Video source is changed. It sends 3 parameters: a reference to the Video object and the new width and height of the new video source.
-    */
-    this.onChangeSource = new Phaser.Signal();
-
-    /**
-    * @property {Phaser.Signal} onComplete - This signal is dispatched when the Video completes playback, i.e. enters an 'ended' state. Videos set to loop will never dispatch this signal.
-    */
-    this.onComplete = new Phaser.Signal();
-
-    /**
-    * @property {Phaser.Signal} onAccess - This signal is dispatched if the user allows access to their webcam.
-    */
-    this.onAccess = new Phaser.Signal();
-
-    /**
-    * @property {Phaser.Signal} onError - This signal is dispatched if an error occurs either getting permission to use the webcam (for a Video Stream) or when trying to play back a video file.
-    */
-    this.onError = new Phaser.Signal();
-
-    /**
-    * @property {boolean} touchLocked - true if this video is currently locked awaiting a touch event. This happens on some mobile devices, such as iOS.
-    * @default
-    */
-    this.touchLocked = false;
 
     /**
     * A snapshot grabbed from the video. This is initially black. Populate it by calling Video.grab().
@@ -244,19 +239,20 @@ Phaser.Video.prototype = {
      * As soon as this method is called the user will be prompted by their browser to "Allow" access to the webcam.
      * If they allow it the webcam feed is directed to this Video. Call `Video.play` to start the stream.
      *
-     * If they block the webcam the onError signal will be dispatched containing the NavigatorUserMediaError event.
+     * If they block the webcam the onError signal will be dispatched containing the NavigatorUserMediaError
+     * or MediaStreamError event.
      *
      * You can optionally set a width and height for the stream. If set the input will be cropped to these dimensions.
      * If not given then as soon as the stream has enough data the video dimensions will be changed to match the webcam device.
      * You can listen for this with the onChangeSource signal.
      *
-     * @method Phaser.Video#createVideoStream
+     * @method Phaser.Video#startMediaStream
      * @param {boolean} [captureAudio=false] - Controls if audio should be captured along with video in the video stream.
      * @param {integer} [width] - The width is used to create the video stream. If not provided the video width will be set to the width of the webcam input source.
      * @param {integer} [height] - The height is used to create the video stream. If not provided the video height will be set to the height of the webcam input source.
-     * @return {Phaser.Video} This Video object for method chaining.
+     * @return {Phaser.Video} This Video object for method chaining or false if the device doesn't support getUserMedia.
      */
-    createVideoStream: function (captureAudio, width, height) {
+    startMediaStream: function (captureAudio, width, height) {
 
         if (typeof captureAudio === 'undefined') { captureAudio = false; }
         if (typeof width === 'undefined') { width = null; }
@@ -264,12 +260,11 @@ Phaser.Video.prototype = {
 
         if (!this.game.device.getUserMedia)
         {
+            this.onError.dispatch(this, 'No getUserMedia');
             return false;
         }
 
         this.video = document.createElement("video");
-
-        this.video.setAttribute('autoplay', 'autoplay');
 
         if (width !== null)
         {
@@ -280,34 +275,6 @@ Phaser.Video.prototype = {
         {
             this.video.height = height;
         }
-
-        var self = this;
-
-        navigator.getUserMedia({
-            "audio": captureAudio,
-            "video": true
-        },
-        function(stream) {
-
-            self.videoStream = stream;
-
-            //  attach the stream to the video
-
-            // Set the source of the video element with the stream from the camera
-            if (self.video.mozSrcObject !== undefined)
-            {
-                self.video.mozSrcObject = stream;
-            }
-            else
-            {
-                self.video.src = (window.URL && window.URL.createObjectURL(stream)) || stream;
-            }
-
-            self.video.play();
-        },
-        function(err) {
-            self.onError.dispatch(self, err);
-        });
 
         this.video.addEventListener('loadeddata', function () {
 
@@ -347,6 +314,37 @@ Phaser.Video.prototype = {
             checkStream();
 
         }, false);
+
+        //  Request access to the webcam
+
+        var self = this;
+
+        navigator.getUserMedia({ "audio": captureAudio, "video": true },
+            function(stream) {
+
+                // Attach the stream to the video
+                self.videoStream = stream;
+
+                self.video.setAttribute('autoplay', 'autoplay');
+
+                // Set the source of the video element with the stream from the camera
+                if (self.video.mozSrcObject !== undefined)
+                {
+                    self.video.mozSrcObject = stream;
+                }
+                else
+                {
+                    self.video.src = (window.URL && window.URL.createObjectURL(stream)) || stream;
+                }
+
+                self.video.play();
+            },
+            function(event) {
+
+                self.onError.dispatch(self, event);
+
+            }
+        );
 
         return this;
 
@@ -857,7 +855,19 @@ Phaser.Video.prototype = {
 
         this.stop();
 
-        this.video.src = '';
+        if (this.video.parentNode)
+        {
+            this.video.parentNode.removeChild(this.video);
+        }
+
+        while (this.video.hasChildNodes())
+        {
+            this.video.removeChild(this.video.firstChild);
+        }
+
+        this.video.removeAttribute('autoplay');
+        this.video.removeAttribute('src');
+
         this.video = null;
 
         if (this.touchLocked)
