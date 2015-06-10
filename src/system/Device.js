@@ -635,6 +635,17 @@ Phaser.Device._initialize = function () {
             // This will NOT detect early generations of Kindle Fire, I think there is no reliable way...
             // E.g. "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_3; en-us; Silk/1.1.0-80) AppleWebKit/533.16 (KHTML, like Gecko) Version/5.0 Safari/533.16 Silk-Accelerated=true"
         }
+        // IE wants to be "like Android" and "like iPhone" and "like Mac OS" on various mobile devices
+        // ref. https://github.com/photonstorm/phaser/issues/1496
+        else if (/Windows Phone/i.test(ua))
+        {
+            device.windows = true;
+            device.windowsPhone = true;
+        }
+        else if (/Windows NT/i.test(ua))
+        {
+            device.windows = true;
+        }
         else if (/Android/.test(ua))
         {
             device.android = true;
@@ -643,7 +654,7 @@ Phaser.Device._initialize = function () {
         {
             device.chromeOS = true;
         }
-        else if (/iP[ao]d|iPhone/i.test(ua))
+        else if (/iPad|iPod|iPhone/i.test(ua))
         {
             device.iOS = true;
         }
@@ -655,15 +666,6 @@ Phaser.Device._initialize = function () {
         {
             device.macOS = true;
         }
-        else if (/Windows/.test(ua))
-        {
-            device.windows = true;
-
-            if (/Windows Phone/i.test(ua))
-            {
-                device.windowsPhone = true;
-            }
-        }
 
         var silk = /Silk/.test(ua); // detected in browsers
 
@@ -672,8 +674,9 @@ Phaser.Device._initialize = function () {
             device.desktop = true;
         }
 
-        //  Windows Phone / Table reset
-        if (device.windowsPhone || ((/Windows NT/i.test(ua)) && (/Touch/i.test(ua))))
+        //  Windows Phone / Tablet reset
+        //  TODO: this is probably wrong, see http://msdn.microsoft.com/en-us/library/ie/hh869301(v=vs.85).aspx
+        if (device.windowsPhone || (device.windows && /Touch/i.test(ua)))
         {
             device.desktop = false;
         }
@@ -845,6 +848,18 @@ Phaser.Device._initialize = function () {
         {
             device.arora = true;
         }
+        // IE wants to be like everybody, but it's still a special kid.
+        // ref. https://github.com/photonstorm/phaser/issues/1496
+        else if (device.windows && /(?:Edge|IEMobile)\/(\d+\.\d+)/.test(ua))
+        {
+            device.ie = true;
+            device.ieVersion = parseInt(RegExp.$1, 10);
+        }
+        else if (/Trident\/(?:\d+\.\d+)(?:.*)rv:(\d+\.\d+)/.test(ua))
+        {
+            device.ie = true;
+            device.ieVersion = parseInt(RegExp.$1, 10);
+        }
         else if (/Chrome/.test(ua))
         {
             device.chrome = true;
@@ -862,11 +877,6 @@ Phaser.Device._initialize = function () {
         {
             device.mobileSafari = true;
         }
-        else if (/MSIE (\d+\.\d+);/.test(ua))
-        {
-            device.ie = true;
-            device.ieVersion = parseInt(RegExp.$1, 10);
-        }
         else if (/Midori/.test(ua))
         {
             device.midori = true;
@@ -879,12 +889,26 @@ Phaser.Device._initialize = function () {
         {
             device.safari = true;
         }
-        else if (/Trident\/(\d+\.\d+)(.*)rv:(\d+\.\d+)/.test(ua))
+        else if (/MSIE (\d+\.\d+);/.test(ua)) // and finally IE again.
         {
             device.ie = true;
+            device.ieVersion = parseInt(RegExp.$1, 10);
+        }
+
+        // If IE is detected, try to determine the Trident version.
+        // This unifies across the different IE UAs, once IE is detected. The check for the ieVersion is
+        // to honor the original `trident` contract, where trident is only true for IE11+
+        if (device.ie && device.ieVersion >= 11)
+        {
             device.trident = true;
-            device.tridentVersion = parseInt(RegExp.$1, 10);
-            device.ieVersion = parseInt(RegExp.$3, 10);
+            if (/Trident\/(\d+\.\d+)/.test(ua))
+            {
+                device.tridentVersion = parseInt(RegExp.$1, 10);
+            }
+            else
+            {
+                device.tridentVersion = 7;  // This may be a lie, but what can you do?
+            }
         }
 
         //Silk gets its own if clause because its ua also contains 'Safari'
