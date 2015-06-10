@@ -136,8 +136,16 @@ Phaser.Video = function (game, key) {
     * @property {PIXI.BaseTexture} baseTexture - The PIXI.BaseTexture.
     * @default
     */
-    this.baseTexture = new PIXI.BaseTexture(this.video);
-    this.baseTexture.forceLoaded(this.width, this.height);
+    if (this.video)
+    {
+        this.baseTexture = new PIXI.BaseTexture(this.video);
+        this.baseTexture.forceLoaded(this.width, this.height);
+    }
+    else
+    {
+        this.baseTexture = new PIXI.BaseTexture(PIXI.TextureCache['__default'].baseTexture.source);
+        this.baseTexture.forceLoaded(this.width, this.height);
+    }
 
     /**
     * @property {PIXI.Texture} texture - The PIXI.Texture.
@@ -288,13 +296,15 @@ Phaser.Video.prototype = {
                     {
                         // Patch for Firefox bug where the height can't be read from the video
                         var width = self.video.videoWidth;
+                        var height = self.video.videoHeight;
 
                         if (isNaN(self.video.videoHeight))
                         {
-                            var height = width / (4/3);
+                            height = width / (4/3);
                         }
 
                         self.isStreaming = true;
+                        self.baseTexture.source = self.video;
                         self.updateTexture(null, width, height);
                         self.onAccess.dispatch(self);
                     }
