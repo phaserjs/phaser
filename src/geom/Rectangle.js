@@ -239,6 +239,24 @@ Phaser.Rectangle.prototype = {
     },
 
     /**
+    * Resize the Rectangle by providing a new width and height.
+    * The x and y positions remain unchanged.
+    * 
+    * @method Phaser.Rectangle#resize
+    * @param {number} width - The width of the Rectangle. Should always be either zero or a positive value.
+    * @param {number} height - The height of the Rectangle. Should always be either zero or a positive value.
+    * @return {Phaser.Rectangle} This Rectangle object
+    */
+    resize: function (width, height) {
+
+        this.width = width;
+        this.height = height;
+
+        return this;
+
+    },
+
+    /**
     * Returns a new Rectangle object with the same values for the x, y, width, and height properties as the original Rectangle object.
     * @method Phaser.Rectangle#clone
     * @param {Phaser.Rectangle} [output] - Optional Rectangle object. If given the values will be set into the object, otherwise a brand new Rectangle object will be created and returned.

@@ -2462,6 +2462,9 @@ declare module Phaser {
         videoStream: any;
         isStreaming: boolean;
         snapshot: Phaser.BitmapData;
+        retryLimit: number;
+        retry: number;
+        retryInterval: number;
 
         onAccess: Phaser.Signal;
         onError: Phaser.Signal;
@@ -3674,6 +3677,7 @@ declare module Phaser {
         intersectsRaw(left: number, right: number, top: number, bottom: number, tolerance: number): boolean;
         offset(dx: number, dy: number): Phaser.Rectangle;
         offsetPoint(point: Phaser.Point): Phaser.Rectangle;
+        resize(width: number, height: number): Phaser.Rectangle;
         setTo(x: number, y: number, width: number, height: number): Phaser.Rectangle;
         scale(x: number, y?: number): Phaser.Rectangle;
         size(output?: Phaser.Point): Phaser.Point;

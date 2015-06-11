@@ -301,6 +301,7 @@ Version 2.4 - "Katar" - in dev
 * Math.distanceSq will return the euclidean distance squared between the two given set of coordinates (thanks @jeremyosborne #1761 #1770)
 * StateManager.onStateChange is a new signal which is dispatched whenever the State changes from one to another. The callback you specify is sent two parameters: the string based key of the new state, and the second parameter is the string based key of the old / previous state. 
 * onDragUpdate is a new signal that is dispatched whenever a Game object enabled for input and drag is moved by a pointer (i.e. during a drag event). See the `Phaser.InputHandler.enableDrag` docs for parameter details and the new Phaser Example.
+* Rectangle.resize allows you to resize a Rectangle to the new given dimensions without altering its position.
 
 ### Updates
 
