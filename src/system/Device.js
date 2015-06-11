@@ -705,7 +705,7 @@ Phaser.Device._initialize = function () {
 
         device.quirksMode = (document.compatMode === 'CSS1Compat') ? false : true;
 
-        navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+        navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
 
         window.URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
 
