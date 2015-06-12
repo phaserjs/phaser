@@ -450,12 +450,13 @@ Phaser.GameObjectFactory.prototype = {
     * This will return a Phaser.Video object which you can pass to a Sprite to be used as a texture.
     *
     * @method Phaser.GameObjectFactory#video
-    * @param {string|null} key - The key of the video file in the Phaser.Cache that this Video object will play. Set to `null` or leave undefined if you wish to use a webcam as the source. See `startMediaStream` to start webcam capture.
+    * @param {string|null} [key=null] - The key of the video file in the Phaser.Cache that this Video object will play. Set to `null` or leave undefined if you wish to use a webcam as the source. See `startMediaStream` to start webcam capture.
+    * @param {string|null} [url=null] - If the video hasn't been loaded then you can provide a full URL to the file here (make sure to set key to null)
     * @return {Phaser.Video} The newly created Video object.
     */
-    video: function (key) {
+    video: function (key, url) {
 
-        return new Phaser.Video(this.game, key);
+        return new Phaser.Video(this.game, key, url);
 
     },
 
