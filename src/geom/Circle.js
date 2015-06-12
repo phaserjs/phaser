@@ -70,6 +70,31 @@ Phaser.Circle.prototype = {
     },
 
     /**
+    * Returns a random point from anywhere within this circle.
+    * The point is uniformly distributed within bounds.
+    * 
+    * @method Phaser.Circle#random
+    * @param {Phaser.Point|object} [out] - A Phaser.Point, or any object with public x/y properties, that the values will be set in.
+    * @return {number} The circumference of the circle.
+    */
+    random: function (out) {
+
+        if (typeof out === 'undefined') { out = new Phaser.Point(); }
+
+        var t = 2 * Math.PI * Math.random();
+        var u = Math.random() + Math.random();
+        var r = (u > 1) ? 2 - u : u;
+        var x = r * Math.cos(t);
+        var y = r * Math.sin(t);
+
+        out.x = this.x + (x * this.radius);
+        out.y = this.y + (y * this.radius);
+
+        return out;
+
+    },
+
+    /**
     * Returns the framing rectangle of the circle as a Phaser.Rectangle object.
     * 
     * @method Phaser.Circle#getBounds

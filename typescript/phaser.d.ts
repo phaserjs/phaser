@@ -549,6 +549,7 @@ declare module Phaser {
         getBounds(): Phaser.Rectangle;
         offset(dx: number, dy: number): Phaser.Circle;
         offsetPoint(point: Phaser.Point): Phaser.Circle;
+        random(out? Phaser.Point): Phaser.Point;
         scale(x: number, y?: number): Phaser.Rectangle;
         setTo(x: number, y: number, diameter: number): Circle;
         toString(): string;

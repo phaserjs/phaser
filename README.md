@@ -303,6 +303,7 @@ Version 2.4 - "Katar" - in dev
 * onDragUpdate is a new signal that is dispatched whenever a Game object enabled for input and drag is moved by a pointer (i.e. during a drag event). See the `Phaser.InputHandler.enableDrag` docs for parameter details and the new Phaser Example.
 * Rectangle.resize allows you to resize a Rectangle to the new given dimensions without altering its position.
 * Cache.getJSON has a new parameter: `clone`. If set it will return a clone of the object stored in the Cache rather than a reference to it.
+* Circle.random will return a random point from anywhere within the circle.
 
 ### Updates
 
