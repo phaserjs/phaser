@@ -915,11 +915,11 @@ Phaser.Device._initialize = function () {
             device.node = true;
         }
         
-        if (device.node)
+        if (device.node && typeof window.process.versions === 'object')
         {
-            device.nodeWebkit = (window.process.versions && window.process.versions['node-webkit']);
+            device.nodeWebkit = !!window.process.versions['node-webkit'];
             
-            device.electron = (window.process.versions && window.process.versions.electron);
+            device.electron = !!window.process.versions.electron;
         }
         
         if (navigator['isCocoonJS'])
