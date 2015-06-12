@@ -88,6 +88,12 @@ Phaser.Device = function () {
     this.nodeWebkit = false;
     
     /**
+    * @property {boolean} electron - Is the game running under GitHub Electron?
+    * @default
+    */
+    this.electron = false;
+    
+    /**
     * @property {boolean} ejecta - Is the game running under Ejecta?
     * @default
     */
@@ -912,6 +918,8 @@ Phaser.Device._initialize = function () {
         if (device.node)
         {
             device.nodeWebkit = (window.process.versions && window.process.versions['node-webkit']);
+            
+            device.electron = (window.process.versions && window.process.versions.electron);
         }
         
         if (navigator['isCocoonJS'])
