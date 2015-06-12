@@ -30,10 +30,12 @@
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
 * @param {string|null} [key=null] - The key of the video file in the Phaser.Cache that this Video object will play. Set to `null` or leave undefined if you wish to use a webcam as the source. See `startMediaStream` to start webcam capture.
+* @param {string|null} [url=null] - If the video hasn't been loaded then you can provide a full URL to the file here (make sure to set key to null)
 */
-Phaser.Video = function (game, key) {
+Phaser.Video = function (game, key, url) {
 
     if (typeof key === 'undefined') { key = null; }
+    if (typeof url === 'undefined') { url = null; }
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running game.
@@ -50,13 +52,13 @@ Phaser.Video = function (game, key) {
     * @property {number} width - The width of the video in pixels.
     * @default
     */
-    this.width = 320;
+    this.width = 0;
 
     /**
     * @property {number} height - The height of the video in pixels.
     * @default
     */
-    this.height = 240;
+    this.height = 0;
 
     /**
     * @property {number} type - The const type of this object.
@@ -101,6 +103,25 @@ Phaser.Video = function (game, key) {
     this.onError = new Phaser.Signal();
 
     /**
+    * This signal is dispatched if when asking for permission to use the webcam no response is given within a the Video.timeout limit.
+    * This may be because the user has picked `Not now` in the permissions window, or there is a delay in establishing the LocalMediaStream.
+    * @property {Phaser.Signal} onTimeout
+    */
+    this.onTimeout = new Phaser.Signal();
+
+    /**
+    * @property {integer} timeout - The amount of ms allowed to elapsed before the Video.onTimeout signal is dispatched while waiting for webcam access.
+    * @default
+    */
+    this.timeout = 15000;
+
+    /**
+    * @property {integer} _timeOutID - setTimeout ID.
+    * @private
+    */
+    this._timeOutID = null;
+
+    /**
     * @property {HTMLVideoElement} video - The HTML Video Element that is added to the document.
     */
     this.video = null;
@@ -115,7 +136,76 @@ Phaser.Video = function (game, key) {
     */
     this.isStreaming = false;
 
-    if (this.game.cache.checkVideoKey(key))
+    /**
+    * When starting playback of a video Phaser will monitor its readyState using a setTimeout call.
+    * The setTimeout happens once every `Video.retryInterval` ms. It will carry on monitoring the video
+    * state in this manner until the `retryLimit` is reached and then abort.
+    * @property {integer} retryLimit
+    * @default
+    */
+    this.retryLimit = 20;
+
+    /**
+    * @property {integer} retry - The current retry attempt.
+    * @default
+    */
+    this.retry = 0;
+
+    /**
+    * @property {integer} retryInterval - The number of ms between each retry at monitoring the status of a downloading video.
+    * @default
+    */
+    this.retryInterval = 500;
+
+    /**
+    * @property {integer} _retryID - The callback ID of the retry setTimeout.
+    * @private
+    */
+    this._retryID = null;
+
+    /**
+    * @property {boolean} _codeMuted - Internal mute tracking var.
+    * @private
+    * @default
+    */
+    this._codeMuted = false;
+
+    /**
+    * @property {boolean} _muted - Internal mute tracking var.
+    * @private
+    * @default
+    */
+    this._muted = false;
+
+    /**
+    * @property {boolean} _codePaused - Internal paused tracking var.
+    * @private
+    * @default
+    */
+    this._codePaused = false;
+
+    /**
+    * @property {boolean} _paused - Internal paused tracking var.
+    * @private
+    * @default
+    */
+    this._paused = false;
+
+    /**
+    * @property {boolean} _pending - Internal var tracking play pending.
+    * @private
+    * @default
+    */
+    this._pending = false;
+
+    /**
+    * @property {boolean} _autoplay - Internal var tracking autoplay when changing source.
+    * @private
+    * @default
+    */
+    this._autoplay = false;
+
+    if (key && this.game.cache.checkVideoKey(key))
     {
         var _video = this.game.cache.getVideo(key);
 
@@ -131,12 +221,16 @@ Phaser.Video = function (game, key) {
         this.width = this.video.videoWidth;
         this.height = this.video.videoHeight;
     }
+    else if (url)
+    {
+        this.createVideoFromURL(url, false);
+    }
 
     /**
     * @property {PIXI.BaseTexture} baseTexture - The PIXI.BaseTexture.
     * @default
     */
-    if (this.video)
+    if (this.video && !url)
     {
         this.baseTexture = new PIXI.BaseTexture(this.video);
         this.baseTexture.forceLoaded(this.width, this.height);
@@ -183,48 +277,6 @@ Phaser.Video = function (game, key) {
         this.snapshot = new Phaser.BitmapData(this.game, '', this.width, this.height);
     }
 
-    /**
-    * @property {boolean} _codeMuted - Internal mute tracking var.
-    * @private
-    * @default
-    */
-    this._codeMuted = false;
-
-    /**
-    * @property {boolean} _muted - Internal mute tracking var.
-    * @private
-    * @default
-    */
-    this._muted = false;
-
-    /**
-    * @property {boolean} _codePaused - Internal paused tracking var.
-    * @private
-    * @default
-    */
-    this._codePaused = false;
-
-    /**
-    * @property {boolean} _paused - Internal paused tracking var.
-    * @private
-    * @default
-    */
-    this._paused = false;
-
-    /**
-    * @property {boolean} _pending - Internal var tracking play pending.
-    * @private
-    * @default
-    */
-    this._pending = false;
-
-    /**
-    * @property {boolean} _autoplay - Internal var tracking autoplay when changing source.
-    * @private
-    * @default
-    */
-    this._autoplay = false;
-
     if (!this.game.device.cocoonJS && (this.game.device.iOS || this.game.device.android) || (window['PhaserGlobal'] && window['PhaserGlobal'].fakeiOSTouchLock))
     {
         this.setTouchLock();
@@ -240,6 +292,24 @@ Phaser.Video = function (game, key) {
 };
 
 Phaser.Video.prototype = {
+
+    connectToMediaStream: function (video, stream) {
+
+        if (video && stream)
+        {
+            this.video = video;
+            this.videoStream = stream;
+
+            this.isStreaming = true;
+            this.baseTexture.source = this.video;
+            this.updateTexture(null, this.video.videoWidth, this.video.videoHeight);
+
+            this.onAccess.dispatch(this);
+        }
+
+        return this;
+
+    },
 
     /**
      * Instead of playing a video file this method allows you to stream video data from an attached webcam.
@@ -272,7 +342,15 @@ Phaser.Video.prototype = {
             return false;
         }
 
+        if (this.videoStream !== null)
+        {
+            this.videoStream.stop();
+        }
+
+        this.removeVideoElement();
+
         this.video = document.createElement("video");
+        this.video.setAttribute('autoplay', 'autoplay');
 
         if (width !== null)
         {
@@ -284,7 +362,62 @@ Phaser.Video.prototype = {
             this.video.height = height;
         }
 
-        this.video.addEventListener('loadeddata', function () {
+        //  Request access to the webcam
+
+        this._timeOutID = window.setTimeout(this.getUserMediaTimeout.bind(this), this.timeout);
+
+        try {
+            navigator.getUserMedia(
+                { "audio": captureAudio, "video": true }, 
+                this.getUserMediaSuccess.bind(this), 
+                this.getUserMediaError.bind(this)
+            );
+        }
+        catch (error)
+        {
+            this.getUserMediaError(error);
+        }
+
+        return this;
+
+    },
+
+    getUserMediaTimeout: function () {
+
+        clearTimeout(this._timeOutID);
+
+        this.onTimeout.dispatch(this);
+
+    },
+
+    getUserMediaError: function (event) {
+
+        clearTimeout(this._timeOutID);
+
+        this.onError.dispatch(this, event);
+
+    },
+
+    getUserMediaSuccess: function (stream) {
+
+        clearTimeout(this._timeOutID);
+
+        // Attach the stream to the video
+        this.videoStream = stream;
+
+        // Set the source of the video element with the stream from the camera
+        if (this.video.mozSrcObject !== undefined)
+        {
+            this.video.mozSrcObject = stream;
+        }
+        else
+        {
+            this.video.src = (window.URL && window.URL.createObjectURL(stream)) || stream;
+        }
+
+        var self = this;
+
+        this.video.onloadeddata = function (e) {
 
             var retry = 10;
 
@@ -302,6 +435,8 @@ Phaser.Video.prototype = {
                         {
                             height = width / (4/3);
                         }
+
+                        self.video.play();
 
                         self.isStreaming = true;
                         self.baseTexture.source = self.video;
@@ -323,40 +458,7 @@ Phaser.Video.prototype = {
 
             checkStream();
 
-        }, false);
-
-        //  Request access to the webcam
-
-        var self = this;
-
-        navigator.getUserMedia({ "audio": captureAudio, "video": true },
-            function(stream) {
-
-                // Attach the stream to the video
-                self.videoStream = stream;
-
-                self.video.setAttribute('autoplay', 'autoplay');
-
-                // Set the source of the video element with the stream from the camera
-                if (self.video.mozSrcObject !== undefined)
-                {
-                    self.video.mozSrcObject = stream;
-                }
-                else
-                {
-                    self.video.src = (window.URL && window.URL.createObjectURL(stream)) || stream;
-                }
-
-                self.video.play();
-            },
-            function(event) {
-
-                self.onError.dispatch(self, event);
-
-            }
-        );
-
-        return this;
+        };
 
     },
 
@@ -383,6 +485,40 @@ Phaser.Video.prototype = {
 
     },
 
+    createVideoFromURL: function (url, autoplay) {
+
+        if (typeof autoplay === 'undefined') { autoplay = false; }
+
+        //  Invalidate the texture while we wait for the new one to load (crashes IE11 otherwise)
+        if (this.texture)
+        {
+            this.texture.valid = false;
+        }
+
+        this.video = document.createElement("video");
+        this.video.controls = false;
+
+        if (autoplay)
+        {
+            this.video.setAttribute('autoplay', 'autoplay');
+        }
+
+        this.video.src = url;
+
+        this.video.canplay = true;
+
+        this.video.load();
+
+        this.retry = this.retryLimit;
+
+        this._retryID = window.setTimeout(this.checkVideoProgress.bind(this), this.retryInterval);
+
+        this.key = url;
+
+        return this;
+
+    },
+
     /**
      * Called automatically if the video source changes and updates the internal texture dimensions.
      * Then dispatches the onChangeSource signal.
@@ -402,11 +538,18 @@ Phaser.Video.prototype = {
         this.width = width;
         this.height = height;
 
+        if (this.baseTexture.source !== this.video)
+        {
+            this.baseTexture.source = this.video;
+        }
+
         this.baseTexture.forceLoaded(width, height);
 
         this.texture.frame.resize(width, height);
+
         this.texture.width = width;
         this.texture.height = height;
+
         this.texture.valid = true;
 
         if (this.snapshot)
@@ -416,8 +559,6 @@ Phaser.Video.prototype = {
 
         if (change && this.key !== null)
         {
-            this.video.removeEventListener('canplaythrough', this.updateTexture.bind(this));
-
             this.onChangeSource.dispatch(this, width, height);
 
             if (this._autoplay)
@@ -491,7 +632,15 @@ Phaser.Video.prototype = {
 
             if (this.key !== null)
             {
-                this.video.addEventListener('playing', this.playHandler.bind(this), true);
+                if (this.video.readyState !== 4)
+                {
+                    this.retry = this.retryLimit;
+                    this._retryID = window.setTimeout(this.checkVideoProgress.bind(this), this.retryInterval);
+                }
+                else
+                {
+                    this.video.addEventListener('playing', this.playHandler.bind(this), true);
+                }
             }
 
             this.video.play();
@@ -512,8 +661,6 @@ Phaser.Video.prototype = {
     playHandler: function () {
 
         this.video.removeEventListener('playing', this.playHandler.bind(this));
-
-        // this.video.canplay = true;
 
         this.updateTexture();
 
@@ -760,7 +907,9 @@ Phaser.Video.prototype = {
 
         this.video.pause();
 
-        this.video.addEventListener('canplaythrough', this.updateTexture.bind(this), true);
+        this.retry = this.retryLimit;
+
+        this._retryID = window.setTimeout(this.checkVideoProgress.bind(this), this.retryInterval);
 
         this.video.src = src;
 
@@ -774,6 +923,36 @@ Phaser.Video.prototype = {
         }
 
         return this;
+
+    },
+
+    /**
+    * Internal callback that monitors the download progress of a video after changing its source.
+    * 
+    * @method Phaser.Video#checkVideoProgress
+    * @private
+    */
+    checkVideoProgress: function () {
+
+        // if (this.video.readyState === 2 || this.video.readyState === 4)
+        if (this.video.readyState === 4)
+        {
+            //  We've got enough data to update the texture for playback
+            this.updateTexture();
+        }
+        else
+        {
+            this.retry--;
+
+            if (this.retry > 0)
+            {
+                this._retryID = window.setTimeout(this.checkVideoProgress.bind(this), this.retryInterval);
+            }
+            else
+            {
+                console.warn('Phaser.Video: Unable to start downloading video in time', this.isStreaming);
+            }
+        }
 
     },
 
@@ -856,14 +1035,17 @@ Phaser.Video.prototype = {
     },
 
     /**
-     * Destroys the Video object. This calls Video.stop(), then sets the Video src to a blank string and nulls the reference.
-     * If any Sprites are using this Video as their texture it is up to you to manage those.
-     *
-     * @method Phaser.Video#destroy
+     * Removes the Video element from the DOM by calling parentNode.removeChild on itself.
+     * Also removes the autoplay and src attributes and nulls the reference.
+     * 
+     * @method Phaser.Video#removeVideoElement
      */
-    destroy: function () {
+    removeVideoElement: function () {
 
-        this.stop();
+        if (!this.video)
+        {
+            return;
+        }
 
         if (this.video.parentNode)
         {
@@ -880,9 +1062,28 @@ Phaser.Video.prototype = {
 
         this.video = null;
 
+    },
+
+    /**
+     * Destroys the Video object. This calls `Video.stop` and then `Video.removeVideoElement`.
+     * If any Sprites are using this Video as their texture it is up to you to manage those.
+     *
+     * @method Phaser.Video#destroy
+     */
+    destroy: function () {
+
+        this.stop();
+
+        this.removeVideoElement();
+
         if (this.touchLocked)
         {
             this.game.input.touch.removeTouchLockCallback(this.unlock, this);
+        }
+
+        if (this._retryID)
+        {
+            window.clearTimeout(this._retryID);
         }
 
     }
