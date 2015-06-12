@@ -964,18 +964,37 @@ Phaser.Loader.prototype = {
     * 
     * The URL can be relative or absolute. If the URL is relative the Loader.baseURL value will be prepended to it.
     *
+    * You don't need to preload a video in order to play it in your game. See `Video.createVideoFromURL` for details.
+    *
     * @method Phaser.Loader#video
     * @param {string} key - Unique asset key of the video file.
     * @param {string|string[]|object[]} urls - Either a single string or an array of URIs or pairs of `{uri: .., type: ..}`.
     *    If an array is specified then the first URI (or URI + mime pair) that is device-compatible will be selected.
     *    For example: `"boom.mp4"`, `['boom.mp4', 'boom.ogg', 'boom.webm']`, or `[{uri: "data:<opus_resource>", type: 'opus'}, 'fallback.mp4']`.
     *    BLOB and DATA URIs can be used but only support automatic detection when used in the pair form; otherwise the format must be manually checked before adding the resource.
+    * @param {string} [loadEvent='canplaythrough'] - This sets the Video source event to listen for before the load is considered complete.
+    *    'canplaythrough' implies the video has downloaded enough, and bandwidth is high enough that it can be played to completion.
+    *    'canplay' implies the video has downloaded enough to start playing, but not necessarily to finish.
+    *    'loadeddata' just makes sure that the video meta data and first frame have downloaded. Phaser uses this value automatically if the
+    *    browser is detected as being Firefox and no `loadEvent` is given, otherwise it defaults to `canplaythrough`.
     * @param {boolean} [asBlob=false] - Video files can either be loaded via the creation of a video element which has its src property set.
     *    Or they can be loaded via xhr, stored as binary data in memory and then converted to a Blob. This isn't supported in IE9 or Android 2.
     *    If you need to have the same video playing at different times across multiple Sprites then you need to load it as a Blob.
     * @return {Phaser.Loader} This Loader instance.
     */
-    video: function (key, urls, asBlob) {
+    video: function (key, urls, loadEvent, asBlob) {
+
+        if (typeof loadEvent === 'undefined')
+        {
+            if (this.game.device.firefox)
+            {
+                file.loadEvent = 'loadeddata';
+            }
+            else
+            {
+                loadEvent = 'canplaythrough';
+            }
+        }
 
         if (typeof asBlob === 'undefined') { asBlob = false; }
 
@@ -984,7 +1003,7 @@ Phaser.Loader.prototype = {
             urls = [urls];
         }
 
-        return this.addToFileList('video', key, urls, { buffer: null, asBlob: asBlob });
+        return this.addToFileList('video', key, urls, { buffer: null, asBlob: asBlob, loadEvent: loadEvent });
 
     },
 
@@ -2057,42 +2076,23 @@ Phaser.Loader.prototype = {
         file.data.controls = false;
         file.data.autoplay = false;
         
-        var playThroughEvent = function () {
-            // console.log('playThroughEvent', file.data.name);
-            file.data.removeEventListener('canplaythrough', playThroughEvent, false);
+        var videoLoadEvent = function () {
+
+            file.data.removeEventListener(file.loadEvent, videoLoadEvent, false);
             file.data.onerror = null;
             file.data.canplay = true;
-            // Why does this cycle through games?
             Phaser.GAMES[_this.game.id].load.fileComplete(file);
-        };
 
-        var loadedDataEvent = function () {
-            // console.log('loadedDataEvent', file.data.name);
-            file.data.removeEventListener('loadeddata', loadedDataEvent, false);
-            file.data.onerror = null;
-            file.data.canplay = false;
-            // Why does this cycle through games?
-            Phaser.GAMES[_this.game.id].load.fileComplete(file);
         };
 
         file.data.onerror = function () {
-            file.data.removeEventListener('canplaythrough', playThroughEvent, false);
-            file.data.removeEventListener('loadeddata', playThroughEvent, false);
+            file.data.removeEventListener(file.loadEvent, videoLoadEvent, false);
             file.data.onerror = null;
             file.data.canplay = false;
             _this.fileError(file);
         };
-
-        if (this.game.device.firefox)
-        {
-            //  I wish there was another easier way, but I'm not aware of it yet
-            file.data.addEventListener('loadeddata', loadedDataEvent, false);
-        }
-        else
-        {
-            // file.data.addEventListener('canplay', playThroughEvent, false);
-            file.data.addEventListener('canplaythrough', playThroughEvent, false);
-        }
+       
+        file.data.addEventListener(file.loadEvent, videoLoadEvent, false);
 
         file.data.src = this.transformUrl(file.url, file);
         file.data.load();

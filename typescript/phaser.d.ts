@@ -2081,7 +2081,7 @@ declare module Phaser {
         totalQueuedPacks(): number;
         transformUrl(url: string): string;
         updateProgress(): void;
-        video(key: string, urls: string | string[]| any, asBlob?: boolean): Phaser.Loader;
+        video(key: string, urls: string | string[]| any, loadEvent?: string, asBlob?: boolean): Phaser.Loader;
         withSyncPoint(callback: Function, callbackContext?: any): Phaser.Loader;
         xml(key: string, url?: string, overwrite?: boolean): Phaser.Loader;
         xhrLoad(file: any, url: string, type: string, onload: Function, onerror?: Function): void;
