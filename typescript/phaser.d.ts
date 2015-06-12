@@ -418,7 +418,7 @@ declare module Phaser {
         getFrameCount(key: string): number;
         getFrameData(key: string, map?: string): Phaser.FrameData;
         getImage(key: string): Phaser.Image;
-        getJSON(key: string): any;
+        getJSON(key: string, clone?: boolean): any;
         getKeys(type: number): string[];
         getPixiTexture(key: string): PIXI.Texture;
         getPixiBaseTexture(key: string): PIXI.BaseTexture;

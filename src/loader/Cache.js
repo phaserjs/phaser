@@ -1329,16 +1329,27 @@ Phaser.Cache.prototype = {
 
     /**
     * Get a JSON object by key from the cache.
+    * 
+    * You can either return the object by reference (the default), or return a clone
+    * of it using the `clone` parameter.
     *
     * @method Phaser.Cache#getJSON
     * @param {string} key - Asset key of the json object to retrieve from the Cache.
+    * @param {boolean} [clonse=false] - Return a clone of the original object (true) or a reference to it? (false)
     * @return {object} The JSON object.
     */
-    getJSON: function (key) {
+    getJSON: function (key, clone) {
 
         if (this._json[key])
         {
-            return this._json[key].data;
+            if (clone)
+            {
+                return Phaser.Utils.extend(true, this._json[key].data);
+            }
+            else
+            {
+                return this._json[key].data;
+            }
         }
         else
         {
