@@ -911,13 +911,7 @@ Phaser.Device._initialize = function () {
         
         if (device.node)
         {
-            try {
-                device.nodeWebkit = (typeof require('nw.gui') !== "undefined");
-            }
-            catch(error)
-            {
-                device.nodeWebkit = false;
-            }
+            device.nodeWebkit = (window.process.versions && window.process.versions['node-webkit']);
         }
         
         if (navigator['isCocoonJS'])
