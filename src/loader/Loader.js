@@ -988,7 +988,7 @@ Phaser.Loader.prototype = {
         {
             if (this.game.device.firefox)
             {
-                file.loadEvent = 'loadeddata';
+                loadEvent = 'loadeddata';
             }
             else
             {
