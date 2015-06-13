@@ -814,6 +814,7 @@ declare module Phaser {
         copyFrom(source: any): Phaser.Ellipse;
         copyTo(dest: any): any;
         getBounds(): Phaser.Rectangle;
+        random(out?: Phaser.Point): Phaser.Point;
         setTo(x: number, y: number, width: number, height: number): Phaser.Ellipse;
         toString(): string;
 
