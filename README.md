@@ -304,6 +304,7 @@ Version 2.4 - "Katar" - in dev
 * Rectangle.resize allows you to resize a Rectangle to the new given dimensions without altering its position.
 * Cache.getJSON has a new parameter: `clone`. If set it will return a clone of the object stored in the Cache rather than a reference to it.
 * Circle.random will return a random point from anywhere within the circle.
+* Line.random will return a random point from anywhere on the Line segment.
 
 ### Updates
 

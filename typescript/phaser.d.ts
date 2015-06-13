@@ -1985,6 +1985,7 @@ declare module Phaser {
         intersects(line: Phaser.Line, asSegment?: boolean, result?: Phaser.Point): Phaser.Point;
         pointOnLine(x: number, y: number): boolean;
         pointOnSegment(x: number, y: number): boolean;
+        random(out?: Phaser.Point): Phaser.Point;
         reflect(line: Phaser.Line): number;
         setTo(x1?: number, y1?: number, x2?: number, y2?: number): Phaser.Line;
 

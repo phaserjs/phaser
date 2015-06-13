@@ -167,6 +167,27 @@ Phaser.Line.prototype = {
     },
 
     /**
+    * Picks a random point from anywhere on the Line segment and returns it.
+    * 
+    * @method Phaser.Line#random
+    * @param {Phaser.Point|object} [out] - A Phaser.Point, or any object with public x/y properties, that the values will be set in.
+    *     If no object is provided a new Phaser.Point object will be created. In high performance areas avoid this by re-using an object.
+    * @return {Phaser.Point} An object containing the random point in its `x` and `y` properties.
+    */
+    random: function (out) {
+
+        if (typeof out === 'undefined') { out = new Phaser.Point(); }
+
+        var t = Math.random();
+
+        out.x = this.start.x + t * (this.end.x - this.start.x);
+        out.y = this.start.y + t * (this.end.y - this.start.y);
+
+        return out;
+
+    },
+
+    /**
     * Using Bresenham's line algorithm this will return an array of all coordinates on this line.
     * The start and end points are rounded before this runs as the algorithm works on integers.
     *
