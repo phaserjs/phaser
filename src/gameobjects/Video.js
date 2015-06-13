@@ -368,8 +368,8 @@ Phaser.Video.prototype = {
 
         try {
             navigator.getUserMedia(
-                { "audio": captureAudio, "video": true }, 
-                this.getUserMediaSuccess.bind(this), 
+                { "audio": captureAudio, "video": true },
+                this.getUserMediaSuccess.bind(this),
                 this.getUserMediaError.bind(this)
             );
         }
@@ -417,7 +417,7 @@ Phaser.Video.prototype = {
 
         var self = this;
 
-        this.video.onloadeddata = function (e) {
+        this.video.onloadeddata = function () {
 
             var retry = 10;
 
