@@ -103,6 +103,30 @@ Phaser.Line.prototype = {
     },
 
     /**
+    * Rotates the line by the amount specified in `angle`.
+    * 
+    * Rotation takes place from the center of the line.
+    * 
+    * If you wish to rotate from either end see Line.start.rotate or Line.end.rotate.
+    * 
+    * @method Phaser.Line#rotate
+    * @param {number} angle - The angle in radians (unless asDegrees is true) to rotate the line by.
+    * @param {boolean} [asDegrees=false] - Is the given angle in radians (false) or degrees (true)?
+    * @return {Phaser.Line} This line object
+    */
+    rotate: function (angle, asDegrees) {
+
+        var x = this.start.x;
+        var y = this.start.y;
+
+        this.start.rotate(this.end.x, this.end.y, angle, asDegrees, this.length);
+        this.end.rotate(x, y, angle, asDegrees, this.length);
+
+        return this;
+
+    },
+
+    /**
     * Checks for intersection between this line and another Line.
     * If asSegment is true it will check for segment intersection. If asSegment is false it will check for line intersection.
     * Returns the intersection segment of AB and EF as a Point, or null if there is no intersection.

@@ -307,6 +307,7 @@ Version 2.4 - "Katar" - in dev
 * Line.random will return a random point from anywhere on the Line segment.
 * Ellipse.random will return a uniformly distributed random point from anywhere within the ellipse.
 * Rectangle.random will return a uniformly distributed random point from anywhere within the rectangle.
+* Line.rotate allows you to rotate a line by the given amount around its center point.
 
 ### Updates
 

@@ -1988,6 +1988,7 @@ declare module Phaser {
         pointOnSegment(x: number, y: number): boolean;
         random(out?: Phaser.Point): Phaser.Point;
         reflect(line: Phaser.Line): number;
+        rotate(angle: number, asDegrees?: boolean): Phaser.Line;
         setTo(x1?: number, y1?: number, x2?: number, y2?: number): Phaser.Line;
 
     }

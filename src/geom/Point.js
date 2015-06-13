@@ -308,7 +308,7 @@ Phaser.Point.prototype = {
     * @param {number} x - The x coordinate of the anchor point.
     * @param {number} y - The y coordinate of the anchor point.
     * @param {number} angle - The angle in radians (unless asDegrees is true) to rotate the Point to.
-    * @param {boolean} asDegrees - Is the given rotation in radians (false) or degrees (true)?
+    * @param {boolean} [asDegrees=false] - Is the given angle in radians (false) or degrees (true)?
     * @param {number} [distance] - An optional distance constraint between the Point and the anchor.
     * @return {Phaser.Point} The modified point object.
     */
@@ -797,7 +797,7 @@ Phaser.Point.normalize = function (a, out) {
 * @param {number} x - The x coordinate of the anchor point
 * @param {number} y - The y coordinate of the anchor point
 * @param {number} angle - The angle in radians (unless asDegrees is true) to rotate the Point by.
-* @param {boolean} [asDegrees=false] - Is the given angle to rotate by in radians (false) or degrees (true)?
+* @param {boolean} [asDegrees=false] - Is the given angle in radians (false) or degrees (true)?
 * @param {number} [distance] - An optional distance constraint between the Point and the anchor.
 * @return {Phaser.Point} The modified point object.
 */
