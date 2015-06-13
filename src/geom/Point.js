@@ -785,36 +785,44 @@ Phaser.Point.normalize = function (a, out) {
 };
 
 /**
-* Rotates a Point around the x/y coordinates given to the desired angle.
+* Rotates a Point object, or any object with exposed x/y properties, around the given coordinates by
+* the angle specified. If the angle between the point and coordinates was 45 deg and the angle argument
+* is 45 deg then the resulting angle will be 90 deg, as the angle argument is added to the current angle.
+*
+* The distance allows you to specify a distance constraint for the rotation between the point and the 
+* coordinates. If none is given the distance between the two is calculated and used.
 *
 * @method Phaser.Point.rotate
 * @param {Phaser.Point} a - The Point object to rotate.
 * @param {number} x - The x coordinate of the anchor point
 * @param {number} y - The y coordinate of the anchor point
-* @param {number} angle - The angle in radians (unless asDegrees is true) to rotate the Point to.
-* @param {boolean} [asDegrees=false] - Is the given rotation in radians (false) or degrees (true)?
+* @param {number} angle - The angle in radians (unless asDegrees is true) to rotate the Point by.
+* @param {boolean} [asDegrees=false] - Is the given angle to rotate by in radians (false) or degrees (true)?
 * @param {number} [distance] - An optional distance constraint between the Point and the anchor.
 * @return {Phaser.Point} The modified point object.
 */
 Phaser.Point.rotate = function (a, x, y, angle, asDegrees, distance) {
 
-    asDegrees = asDegrees || false;
-    distance = distance || null;
+    if (typeof asDegrees === 'undefined') { asDegrees = false; }
+    if (typeof distance === 'undefined') { distance = null; }
 
     if (asDegrees)
     {
         angle = Phaser.Math.degToRad(angle);
     }
 
-    //  Get distance from origin (cx/cy) to this point
     if (distance === null)
     {
+        //  Get distance from origin (cx/cy) to this point
         distance = Math.sqrt(((x - a.x) * (x - a.x)) + ((y - a.y) * (y - a.y)));
     }
 
-    var requiredAngle = angle + Math.atan2(a.y - y, a.x - x);
+    var t = angle + Math.atan2(a.y - y, a.x - x);
 
-    return a.setTo(x + distance * Math.cos(requiredAngle), y + distance * Math.sin(requiredAngle));
+    a.x = x + distance * Math.cos(t);
+    a.y = y + distance * Math.sin(t);
+
+    return a;
 
 };
 
