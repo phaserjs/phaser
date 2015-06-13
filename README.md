@@ -306,6 +306,7 @@ Version 2.4 - "Katar" - in dev
 * Circle.random will return a uniformly distributed random point from anywhere within the circle.
 * Line.random will return a random point from anywhere on the Line segment.
 * Ellipse.random will return a uniformly distributed random point from anywhere within the ellipse.
+* Rectangle.random will return a uniformly distributed random point from anywhere within the rectangle.
 
 ### Updates
 

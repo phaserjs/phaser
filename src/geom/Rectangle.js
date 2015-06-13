@@ -365,6 +365,25 @@ Phaser.Rectangle.prototype = {
     },
 
     /**
+    * Returns a uniformly distributed random point from anywhere within this Rectangle.
+    * 
+    * @method Phaser.Rectangle#random
+    * @param {Phaser.Point|object} [out] - A Phaser.Point, or any object with public x/y properties, that the values will be set in.
+    *     If no object is provided a new Phaser.Point object will be created. In high performance areas avoid this by re-using an existing object.
+    * @return {Phaser.Point} An object containing the random point in its `x` and `y` properties.
+    */
+    random: function (out) {
+
+        if (typeof out === 'undefined') { out = new Phaser.Point(); }
+
+        out.x = this.randomX;
+        out.y = this.randomY;
+
+        return out;
+
+    },
+
+    /**
     * Returns a string representation of this object.
     * @method Phaser.Rectangle#toString
     * @return {string} A string representation of the instance.

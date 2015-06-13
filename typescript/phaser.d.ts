@@ -3680,6 +3680,7 @@ declare module Phaser {
         intersectsRaw(left: number, right: number, top: number, bottom: number, tolerance: number): boolean;
         offset(dx: number, dy: number): Phaser.Rectangle;
         offsetPoint(point: Phaser.Point): Phaser.Rectangle;
+        random(out?: Phaser.Point): Phaser.Point;
         resize(width: number, height: number): Phaser.Rectangle;
         setTo(x: number, y: number, width: number, height: number): Phaser.Rectangle;
         scale(x: number, y?: number): Phaser.Rectangle;
