@@ -167,21 +167,18 @@ Phaser.Keyboard.prototype = {
     * @return {object} An object containing user selected properties
     */
     addKeys: function (keycodes,hotkeys){
-      if(keycodes.length === hotkeys.length)
-        debugger;
+        var result = "{";
+        for(var i = 0; i < hotkeys.length; i++){
 
-      var result = "{";
-      for(var i = 0; i < hotkeys.length; i++){
+          result += hotkeys[i] + ": this.addKey(" + keycodes[i] + ")";
 
-        result += hotkeys[i] + ": this.addKey("+keycodes[i]+")";
+          if(i !== ( hotkeys.length-1 ))
+            result += ",";
 
-        if(i !== (hotkeys.length-1))
-          result += ",";
+        }
+        result += "}";
 
-      }
-      result += "}";
-
-	  return(eval("("+ result +")"));
+	    return(eval("(" + result + ")"));
     },
 
 
