@@ -159,6 +159,33 @@ Phaser.Keyboard.prototype = {
     },
 
     /**
+    * A practical way to create an object containing user selected hotkeys.
+    *
+    * @method Phaser.Keyboard#addKeys
+    * @param {Array : number} Keycodes - The keycodes of the keys to add ie.  [Phaser.Keyboard.UP,Phaser.Keyboard.SPACEBAR] or [52,82].
+    * @param {Array : string} Hotkeys - The hotkeys that ll be assigned to keycodes ie. ["UP","DOWN"] or ["RIGHT","LEFT"]
+    * @return {object} An object containing user selected properties
+    */
+    addKeys: function (keycodes,hotkeys){
+      if(keycodes.length === hotkeys.length)
+        debugger;
+
+      var result = "{";
+      for(var i = 0; i < hotkeys.length; i++){
+
+        result += hotkeys[i] + ": this.addKey("+keycodes[i]+")";
+
+        if(i !== (hotkeys.length-1))
+          result += ",";
+
+      }
+      result += "}";
+
+	  return(eval("("+ result +")"));
+    },
+
+
+    /**
     * Removes a Key object from the Keyboard manager.
     *
     * @method Phaser.Keyboard#removeKey
