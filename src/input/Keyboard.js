@@ -169,15 +169,13 @@ Phaser.Keyboard.prototype = {
     addKeys: function (keycodes,hotkeys){
         var result = "{";
         for(var i = 0; i < hotkeys.length; i++){
-
           result += hotkeys[i] + ": this.addKey(" + keycodes[i] + ")";
-
           if(i !== ( hotkeys.length-1 ))
             result += ",";
 
         }
         result += "}";
-
+        //eval here should be quite safe.
 	    return(eval("(" + result + ")"));
     },
 
