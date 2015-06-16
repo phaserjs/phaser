@@ -1,4 +1,4 @@
-// Type definitions for PIXI 2.2.8 Deviation. Commit History Reviewed: 2015-May-09
+// Type definitions for PIXI with Phaser Deviations. 
 
 declare module PIXI {
 
@@ -53,6 +53,7 @@ declare module PIXI {
     export var BaseTextureCache: { [key: string]: BaseTexture };
     export var TextureCache: { [key: string]: Texture };
     export var TextureSilentFail: boolean;
+    export var BitmapText: { fonts: {} };
 
     export function isPowerOfTwo(width: number, height: number): boolean;
 
@@ -302,27 +303,6 @@ declare module PIXI {
         removeAllEventListeners(eventName: string): void;
 
         load(): void;
-
-    }
-
-    export class BitmapText extends DisplayObjectContainer {
-
-        static fonts: any;
-
-        constructor(text: string, style: BitmapTextStyle);
-
-        anchor: Point;
-        dirty: boolean;
-        fontName: string;
-        fontSize: number;
-        maxWidth: number;
-        textWidth: number;
-        textHeight: number;
-        tint: number;
-        style: BitmapTextStyle;
-
-        setText(text: string): void;
-        setStyle(style: BitmapTextStyle): void;
 
     }
 
@@ -630,7 +610,7 @@ declare module PIXI {
         bezierCurveTo(cpX: number, cpY: number, cpX2: number, cpY2: number, toX: number, toY: number): Graphics;
         clear(): Graphics;
         destroyCachedSprite(): void;
-        drawCircle(x: number, y: number, radius: number): Graphics;
+        drawCircle(x: number, y: number, diameter: number): Graphics;
         drawEllipse(x: number, y: number, width: number, height: number): Graphics;
         drawPolygon(...path: any[]): Graphics;
         drawRect(x: number, y: number, width: number, height: number): Graphics;
