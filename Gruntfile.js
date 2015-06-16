@@ -30,7 +30,7 @@ module.exports = function (grunt) {
 
         var modules = {
 
-            'pixi':             { 'description': 'Pixi.js (custom Phaser build)',               'optional': true, 'stub': false },
+            'pixi':             { 'description': 'Pixi.js',                                     'optional': true, 'stub': false },
             'intro':            { 'description': 'Phaser UMD wrapper',                          'optional': true, 'stub': false },
             'phaser':           { 'description': 'Phaser Globals',                              'optional': false, 'stub': false },
             'geom':             { 'description': 'Geometry Classes',                            'optional': false, 'stub': false },

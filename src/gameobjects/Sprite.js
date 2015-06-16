@@ -60,7 +60,7 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     */
     this.physicsType = Phaser.SPRITE;
 
-    PIXI.Sprite.call(this, PIXI.TextureCache['__default']);
+    PIXI.Sprite.call(this, PIXI.utils.TextureCache['__default']);
 
     Phaser.Component.Core.init.call(this, game, x, y, key, frame);
 

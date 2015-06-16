@@ -27,11 +27,11 @@ Phaser.Component.LoadTexture.prototype = {
 
     /**
     * Changes the base texture the Game Object is using. The old texture is removed and the new one is referenced or fetched from the Cache.
-    * 
+    *
     * If your Game Object is using a frame from a texture atlas and you just wish to change to another frame, then see the `frame` or `frameName` properties instead.
-    * 
+    *
     * You should only use `loadTexture` if you want to replace the base texture entirely.
-    * 
+    *
     * Calling this method causes a WebGL texture update, so use sparingly or in low-intensity portions of your game, or if you know the new texture is already on the GPU.
     *
     * @method
@@ -57,14 +57,14 @@ Phaser.Component.LoadTexture.prototype = {
         if (Phaser.RenderTexture && key instanceof Phaser.RenderTexture)
         {
             this.key = key.key;
-            this.setTexture(key);
+            this.texture = key;
         }
         else if (Phaser.BitmapData && key instanceof Phaser.BitmapData)
         {
             this.customRender = true;
 
             //  This works from a reference, which probably isn't what we need here
-            this.setTexture(key.texture);
+            this.texture = key.texture;
 
             if (this.game.cache.getFrameData(key.key, Phaser.Cache.BITMAPDATA))
             {
@@ -84,29 +84,29 @@ Phaser.Component.LoadTexture.prototype = {
         }
         else if (key instanceof PIXI.Texture)
         {
-            this.setTexture(key);
+            this.texture = key;
         }
         else
         {
             if (key === null || typeof key === 'undefined')
             {
                 this.key = '__default';
-                this.setTexture(PIXI.TextureCache[this.key]);
+                this.texture = PIXI.utils.TextureCache[this.key];
             }
             else if (typeof key === 'string' && !this.game.cache.checkImageKey(key))
             {
                 console.warn("Texture with key '" + key + "' not found.");
                 this.key = '__missing';
-                this.setTexture(PIXI.TextureCache[this.key]);
+                this.texture = PIXI.utils.TextureCache[this.key];
             }
             else
             {
-                this.setTexture(new PIXI.Texture(PIXI.BaseTextureCache[key]));
+                this.texture = new PIXI.Texture(PIXI.utils.BaseTextureCache[key]);
 
                 setFrame = !this.animations.loadFrameData(this.game.cache.getFrameData(key), frame);
             }
         }
-        
+
         if (setFrame)
         {
             this._frame = Phaser.Rectangle.clone(this.texture.frame);
@@ -120,8 +120,18 @@ Phaser.Component.LoadTexture.prototype = {
     },
 
     /**
+    * Backwards compatibility with v2 of pixi.
+    *
+    * @deprecated
+    * @see {PIXI.Sprite.texture}
+    */
+    setTexture: function (texture) {
+        this.texture = texture;
+    },
+
+    /**
     * Sets the texture frame the Game Object uses for rendering.
-    * 
+    *
     * This is primarily an internal method used by `loadTexture`, but is exposed for the use of plugins and custom classes.
     *
     * @method
@@ -218,11 +228,11 @@ Phaser.Component.LoadTexture.prototype = {
     *
     * To change the frame set `frame` to the index of the new frame in the sprite sheet you wish this Game Object to use,
     * for example: `player.frame = 4`.
-    * 
+    *
     * If the frame index given doesn't exist it will revert to the first frame found in the texture.
-    * 
+    *
     * If you are using a texture atlas then you should use the `frameName` property instead.
-    * 
+    *
     * If you wish to fully replace the texture being used see `loadTexture`.
     * @property {integer} frame
     */
@@ -240,14 +250,14 @@ Phaser.Component.LoadTexture.prototype = {
 
     /**
     * Gets or sets the current frame name of the texture being used to render this Game Object.
-    * 
-    * To change the frame set `frameName` to the name of the new frame in the texture atlas you wish this Game Object to use, 
+    *
+    * To change the frame set `frameName` to the name of the new frame in the texture atlas you wish this Game Object to use,
     * for example: `player.frameName = "idle"`.
     *
     * If the frame name given doesn't exist it will revert to the first frame found in the texture and throw a console warning.
-    * 
+    *
     * If you are using a sprite sheet then you should use the `frame` property instead.
-    * 
+    *
     * If you wish to fully replace the texture being used see `loadTexture`.
     * @property {string} frameName
     */

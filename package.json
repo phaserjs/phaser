@@ -30,6 +30,9 @@
     "javascript",
     "typescript"
   ],
+  "dependencies": {
+      "pixi.js": "^3.0.2"
+  },
   "devDependencies": {
     "grunt": "^0.4.1",
     "grunt-contrib-clean": "^0.5.0",

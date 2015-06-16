@@ -314,8 +314,8 @@ Phaser.Cache.prototype = {
 
         this._images[key] = { url: url, data: data, frameWidth: frameWidth, frameHeight: frameHeight, margin: margin, spacing: spacing };
 
-        PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
-        // PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
+        PIXI.utils.BaseTextureCache[key] = new PIXI.BaseTexture(data);
+//        PIXI.utils.TextureCache[key] = new PIXI.Texture(PIXI.utils.BaseTextureCache[key]);
 
         this._images[key].frameData = Phaser.AnimationParser.spriteSheet(this.game, key, frameWidth, frameHeight, frameMax, margin, spacing);
 
@@ -354,8 +354,8 @@ Phaser.Cache.prototype = {
 
         this._images[key] = { url: url, data: data };
 
-        PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
-        // PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
+        PIXI.utils.BaseTextureCache[key] = new PIXI.BaseTexture(data);
+//        PIXI.utils.TextureCache[key] = new PIXI.Texture(PIXI.utils.BaseTextureCache[key]);
 
         if (format == Phaser.Loader.TEXTURE_ATLAS_XML_STARLING)
         {
@@ -393,8 +393,8 @@ Phaser.Cache.prototype = {
 
         this._images[key] = { url: url, data: data };
 
-        PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
-        // PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
+        PIXI.utils.BaseTextureCache[key] = new PIXI.BaseTexture(data);
+//        PIXI.utils.TextureCache[key] = new PIXI.Texture(PIXI.utils.BaseTextureCache[key]);
 
         Phaser.LoaderParser.bitmapFont(this.game, xmlData, key, xSpacing, ySpacing);
 
@@ -437,8 +437,8 @@ Phaser.Cache.prototype = {
         this._images['__default'].frameData = new Phaser.FrameData();
         this._images['__default'].frameData.addFrame(new Phaser.Frame(0, 0, 0, 32, 32, null, this.game.rnd.uuid()));
 
-        PIXI.BaseTextureCache['__default'] = new PIXI.BaseTexture(img);
-        PIXI.TextureCache['__default'] = new PIXI.Texture(PIXI.BaseTextureCache['__default']);
+        PIXI.utils.BaseTextureCache['__default'] = new PIXI.BaseTexture(img);
+        PIXI.utils.TextureCache['__default'] = new PIXI.Texture(PIXI.utils.BaseTextureCache['__default']);
 
     },
 
@@ -458,8 +458,8 @@ Phaser.Cache.prototype = {
         this._images['__missing'].frameData = new Phaser.FrameData();
         this._images['__missing'].frameData.addFrame(new Phaser.Frame(0, 0, 0, 32, 32, null, this.game.rnd.uuid()));
 
-        PIXI.BaseTextureCache['__missing'] = new PIXI.BaseTexture(img);
-        PIXI.TextureCache['__missing'] = new PIXI.Texture(PIXI.BaseTextureCache['__missing']);
+        PIXI.utils.BaseTextureCache['__missing'] = new PIXI.BaseTexture(img);
+        PIXI.utils.TextureCache['__missing'] = new PIXI.Texture(PIXI.utils.BaseTextureCache['__missing']);
 
     },
 
@@ -533,8 +533,8 @@ Phaser.Cache.prototype = {
         this._images[key].frameData = new Phaser.FrameData();
         this._images[key].frameData.addFrame(new Phaser.Frame(0, 0, 0, data.width, data.height, url, this.game.rnd.uuid()));
 
-        PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
-        // PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
+        PIXI.utils.BaseTextureCache[key] = new PIXI.BaseTexture(data);
+//        PIXI.utils.TextureCache[key] = new PIXI.Texture(PIXI.utils.BaseTextureCache[key]);
 
         this._resolveURL(url, this._images[key]);
 
@@ -1163,9 +1163,9 @@ Phaser.Cache.prototype = {
     */
     getPixiTexture: function (key) {
 
-        if (PIXI.TextureCache[key])
+        if (PIXI.utils.TextureCache[key])
         {
-            return PIXI.TextureCache[key];
+            return PIXI.utils.TextureCache[key];
         }
         else
         {
@@ -1184,9 +1184,9 @@ Phaser.Cache.prototype = {
     */
     getPixiBaseTexture: function (key) {
 
-        if (PIXI.BaseTextureCache[key])
+        if (PIXI.utils.BaseTextureCache[key])
         {
-            return PIXI.BaseTextureCache[key];
+            return PIXI.utils.BaseTextureCache[key];
         }
         else
         {
@@ -1539,7 +1539,7 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * Removes an image from the cache and optionally from the Pixi.BaseTextureCache as well.
+    * Removes an image from the cache and optionally from the PIXI.utils.BaseTextureCache as well.
     *
     * @method Phaser.Cache#removeImage
     * @param {string} key - Key of the asset you want to remove.
@@ -1553,7 +1553,7 @@ Phaser.Cache.prototype = {
 
         if (removeFromPixi)
         {
-            PIXI.BaseTextureCache[key].destroy();
+            PIXI.utils.BaseTextureCache[key].destroy();
         }
 
     },

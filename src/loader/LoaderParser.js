@@ -13,7 +13,7 @@ Phaser.LoaderParser = {
 
     /**
     * Parse a Bitmap Font from an XML file.
-    * 
+    *
     * @method Phaser.LoaderParser.bitmapFont
     * @param {Phaser.Game} game - A reference to the current game.
     * @param {object} xml - XML data you want to parse.
@@ -50,7 +50,7 @@ Phaser.LoaderParser = {
                 yOffset: parseInt(letters[i].getAttribute('yoffset'), 10),
                 xAdvance: parseInt(letters[i].getAttribute('xadvance'), 10) + xSpacing,
                 kerning: {},
-                texture: new PIXI.Texture(PIXI.BaseTextureCache[cacheKey], textureRect)
+                texture: new PIXI.Texture(PIXI.utils.BaseTextureCache[cacheKey], textureRect)
             };
         }
 

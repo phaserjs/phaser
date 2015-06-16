@@ -6,7 +6,7 @@
 
 /**
 * A BitmapData object contains a Canvas element to which you can draw anything you like via normal Canvas context operations.
-* A single BitmapData can be used as the texture for one or many Images/Sprites. 
+* A single BitmapData can be used as the texture for one or many Images/Sprites.
 * So if you need to dynamically create a Sprite texture then they are a good choice.
 *
 * @class Phaser.BitmapData
@@ -514,7 +514,7 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Replaces all pixels matching one color with another. The color values are given as two sets of RGBA values.
-    * An optional region parameter controls if the replacement happens in just a specific area of the BitmapData or the entire thing. 
+    * An optional region parameter controls if the replacement happens in just a specific area of the BitmapData or the entire thing.
     *
     * @method Phaser.BitmapData#replaceRGB
     * @param {number} r1 - The red color value to be replaced. Between 0 and 255.
@@ -830,9 +830,9 @@ Phaser.BitmapData.prototype = {
     /**
     * Scans the BitmapData, pixel by pixel, until it encounters a pixel that isn't transparent (i.e. has an alpha value > 0).
     * It then stops scanning and returns an object containing the color of the pixel in r, g and b properties and the location in the x and y properties.
-    * 
+    *
     * The direction parameter controls from which direction it should start the scan:
-    * 
+    *
     * 0 = top to bottom
     * 1 = bottom to top
     * 2 = left to right
@@ -969,7 +969,7 @@ Phaser.BitmapData.prototype = {
      * You can optionally resize, translate, rotate, scale, alpha or blend as it's drawn.
      * All rotation, scaling and drawing takes place around the regions center point by default, but can be changed with the anchor parameters.
      * Note that the source image can also be this BitmapData, which can create some interesting effects.
-     * 
+     *
      * This method has a lot of parameters for maximum control.
      * You can use the more friendly methods like `copyRect` and `draw` to avoid having to remember them all.
      *
@@ -1395,7 +1395,7 @@ Phaser.BitmapData.prototype = {
             this.context.fillStyle = 'rgb(0,0,0)';
             this.context.fillText(text, x + 1, y + 1);
         }
-        
+
         this.context.fillStyle = color;
         this.context.fillText(text, x, y);
 
@@ -1490,7 +1490,7 @@ Phaser.BitmapData.prototype = {
 
         if (!this.disableTextureUpload && this.dirty)
         {
-            this.baseTexture.dirty();
+            this.baseTexture.update();
             this.dirty = false;
         }
 
