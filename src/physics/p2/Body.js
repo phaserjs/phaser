@@ -798,7 +798,8 @@ Phaser.Physics.P2.Body.prototype = {
 
         this.debugBody = null;
 
-        if (this.sprite) {
+        if (this.sprite)
+        {
             this.sprite.body = null;
             this.sprite = null;
         }
