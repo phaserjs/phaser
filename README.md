@@ -386,6 +386,7 @@ Version 2.4 - "Katar" - in dev
 * Sound.resume wouldn't properly restart looped sounds in Chrome after being paused. Phaser now specifically handles the Chrome 42 bug and later fix (thanks @nkovacs #1820)
 * Setting the BitmapText.maxWidth property would throw an error (thanks @drhayes #1807)
 * If running under Cordova and iOS the Game.lockRender boolean will be set to `true` when the game pauses and `false` when it resumes. This avoids the `gpus_ReturnNotPermittedKillClient` app crash on iOS (thanks @cncolder #1800)
+* Sound.restart and Sound.stop now properly disconnect the sound from the gainNode (or external node) before stopping it, allowing restart to work correctly (thanks @eofs #1796)
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
