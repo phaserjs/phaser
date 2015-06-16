@@ -2685,7 +2685,7 @@ declare module Phaser {
 
             clearTilemapLayerBodies(map: Phaser.Tilemap, layer: any): void;
             collide(object1: any, object2: any, collideCallback?: Function, processCallback?: Function, callbackContext?: any): boolean;
-            convertTilemap(map: Phaser.Tilemap, layer?: any, slopeMap?: any): Phaser.Physics.Ninja.Tile[];
+            convertTilemap(map: Phaser.Tilemap, layer: any, slopeMap: any): Phaser.Physics.Ninja.Tile[];
             enableAABB(object: any, children?: boolean): void;
             enableCircle(object: any, radius: number, children?: boolean): void;
             enableTile(object: any, id: number, children?: boolean): void;
