@@ -251,6 +251,12 @@ Phaser.Device = function () {
     this.chrome = false;
 
     /**
+    * @property {number} chromeVersion - If running in Chrome this will contain the major version number.
+    * @default
+    */
+    this.chromeVersion = 0;
+
+    /**
     * @property {boolean} epiphany - Set to true if running in Epiphany.
     * @default
     */
@@ -712,12 +718,9 @@ Phaser.Device._initialize = function () {
         device.getUserMedia = device.getUserMedia && !!navigator.getUserMedia && !!window.URL;
 
         // Older versions of firefox (< 21) apparently claim support but user media does not actually work
-        if (navigator.userAgent.match(/Firefox\D+(\d+)/))
+        if (device.firefoxVersion < 21)
         {
-            if (parseInt(RegExp.$1, 10) < 21)
-            {
-                device.getUserMedia = false;
-            }
+            device.getUserMedia = false;
         }
 
         // TODO: replace canvasBitBltShift detection with actual feature check
@@ -845,9 +848,10 @@ Phaser.Device._initialize = function () {
         {
             device.arora = true;
         }
-        else if (/Chrome/.test(ua))
+        else if (/Chrome\/(\d+)/.test(ua))
         {
             device.chrome = true;
+            device.chromeVersion = parseInt(RegExp.$1, 10);
         }
         else if (/Epiphany/.test(ua))
         {

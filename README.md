@@ -308,6 +308,7 @@ Version 2.4 - "Katar" - in dev
 * Ellipse.random will return a uniformly distributed random point from anywhere within the ellipse.
 * Rectangle.random will return a uniformly distributed random point from anywhere within the rectangle.
 * Line.rotate allows you to rotate a line by the given amount around its center point.
+* Device.chromeVersion will return the major version number of Chrome.
 
 ### Updates
 
@@ -382,6 +383,7 @@ Version 2.4 - "Katar" - in dev
 * Tween.to and Tween.from can now accept `null` as the ease parameter value. If `null` it will use the default tween, as per the documentation (thanks @nkovacs #1817)
 * TilemapParser.parseTiledJSON would ignore 'falsey' properties set on Objects in Tiled JSON tilemaps, such as `x: 0` or `visible: false`. These properties are now accurately copied over to the destination map data (thanks @MaksJS #1818)
 * Removed un-necessary PIXI.TextureCache pollution in Phaser.LoaderParser.bitmapFont.
+* 
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
