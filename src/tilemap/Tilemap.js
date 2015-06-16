@@ -243,7 +243,9 @@ Phaser.Tilemap.prototype = {
     *
     * @method Phaser.Tilemap#addTilesetImage
     * @param {string} tileset - The name of the tileset as specified in the map data.
-    * @param {string} [key] - The key of the Phaser.Cache image used for this tileset. If not specified it will look for an image with a key matching the tileset parameter.
+    * @param {string|Phaser.BitmapData} [key] - The key of the Phaser.Cache image used for this tileset.
+    *     If `undefined` or `null` it will look for an image with a key matching the tileset parameter.
+    *     You can also pass in a BitmapData which can be used instead of an Image.
     * @param {number} [tileWidth=32] - The width of the tiles in the Tileset Image. If not given it will default to the map.tileWidth value, if that isn't set then 32.
     * @param {number} [tileHeight=32] - The height of the tiles in the Tileset Image. If not given it will default to the map.tileHeight value, if that isn't set then 32.
     * @param {number} [tileMargin=0] - The width of the tiles in the Tileset Image. If not given it will default to the map.tileWidth value.
@@ -253,6 +255,7 @@ Phaser.Tilemap.prototype = {
     */
     addTilesetImage: function (tileset, key, tileWidth, tileHeight, tileMargin, tileSpacing, gid) {
 
+        if (typeof tileset === 'undefined') { return null; }
         if (typeof tileWidth === 'undefined') { tileWidth = this.tileWidth; }
         if (typeof tileHeight === 'undefined') { tileHeight = this.tileHeight; }
         if (typeof tileMargin === 'undefined') { tileMargin = 0; }
@@ -270,45 +273,44 @@ Phaser.Tilemap.prototype = {
             tileHeight = 32;
         }
 
-        if (typeof key === 'undefined')
-        {
-            if (typeof tileset === 'string')
-            {
-                key = tileset;
+        var img = null;
 
-                if (!this.game.cache.checkImageKey(key))
-                {
-                    console.warn('Phaser.Tilemap.addTilesetImage: Invalid image key given: "' + key + '"');
-                    return null;
-                }
-            }
-            else
-            {
-                return null;
-            }
+        if (typeof key === 'undefined' || key === null)
+        {
+            key = tileset;
         }
 
-        if (typeof tileset === 'string')
+        if (key instanceof Phaser.BitmapData)
         {
-            tileset = this.getTilesetIndex(tileset);
-
-            if (tileset === null && this.format === Phaser.Tilemap.TILED_JSON)
+            img = key.canvas;
+        }
+        else
+        {
+            if (!this.game.cache.checkImageKey(key))
             {
-                console.warn('Phaser.Tilemap.addTilesetImage: No data found in the JSON matching the tileset name: "' + key + '"');
+                console.warn('Phaser.Tilemap.addTilesetImage: Invalid image key given: "' + key + '"');
                 return null;
             }
+
+            img = this.game.cache.getImage(key);
+        }
+
+        if (this.getTilesetIndex(tileset) === null && this.format === Phaser.Tilemap.TILED_JSON)
+        {
+            console.warn('Phaser.Tilemap.addTilesetImage: No data found in the JSON matching the tileset name: "' + key + '"');
+            return null;
         }
 
         if (this.tilesets[tileset])
         {
-            this.tilesets[tileset].setImage(this.game.cache.getImage(key));
+            this.tilesets[tileset].setImage(img);
             return this.tilesets[tileset];
         }
         else
         {
-            var newSet = new Phaser.Tileset(key, gid, tileWidth, tileHeight, tileMargin, tileSpacing, {});
+            var newSet = new Phaser.Tileset(tilset, gid, tileWidth, tileHeight, tileMargin, tileSpacing, {});
 
-            newSet.setImage(this.game.cache.getImage(key));
+            newSet.setImage(img);
 
             this.tilesets.push(newSet);
 
