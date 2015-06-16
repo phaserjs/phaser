@@ -358,16 +358,22 @@ Phaser.BitmapText.prototype.updateText = function () {
             var charCode = line.text.charCodeAt(c);
             var charData = data.chars[charCode];
 
-            var g = this.children[t];
+            var g = this._glyphs[t];
 
             if (g)
             {
+                //  Sprite already exists in the glyphs pool, so we'll reuse it for this letter
                 g.texture = charData.texture;
+                // g.name = line.text[c];
+                // console.log('reusing', g.name, 'as', line.text[c]);
             }
             else
             {
+                //  We need a new sprite as the pool is empty or exhausted
                 g = new PIXI.Sprite(charData.texture);
+                g.name = line.text[c];
                 this._glyphs.push(g);
+                // console.log('new', line.text[c]);
             }
 
             g.position.x = (line.chars[c] + align) - ax;
@@ -386,6 +392,7 @@ Phaser.BitmapText.prototype.updateText = function () {
     }
 
     //  Remove unnecessary children
+    //  This moves them from the display list (children array) but retains them in the _glyphs pool
     for (i = t; i < this._glyphs.length; i++)
     {
         this.removeChild(this._glyphs[i]);
