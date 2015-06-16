@@ -654,6 +654,7 @@ declare module Phaser {
         canvas: boolean;
         chrome: boolean;
         chromeOS: boolean;
+        chromeVersion: number;
         cocoonJS: boolean;
         cocoonJSApp: boolean;
         cordova: boolean;

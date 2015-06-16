@@ -804,7 +804,22 @@ Phaser.Sound.prototype = {
                 }
                 else
                 {
-                    this._sound.start(0, p, duration);
+                    if (this.loop && this.game.device.chrome)
+                    {
+                        //  Handle chrome bug: https://code.google.com/p/chromium/issues/detail?id=457099
+                        if (this.game.device.chromeVersion === 42)
+                        {
+                            this._sound.start(0);
+                        }
+                        else
+                        {
+                            this._sound.start(0, p);
+                        }
+                    }
+                    else
+                    {
+                        this._sound.start(0, p, duration);
+                    }
                 }
             }
             else
