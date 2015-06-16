@@ -47,7 +47,7 @@ Phaser.PluginManager.prototype = {
     *
     * @method Phaser.PluginManager#add
     * @param {object|Phaser.Plugin} plugin - The Plugin to add into the PluginManager. This can be a function or an existing object.
-    * @param {...*} parameter - Additional parameters that will be passed to the Plugin.init method.
+    * @param {...*} parameter - Additional arguments that will be passed to the Plugin.init method.
     * @return {Phaser.Plugin} The Plugin that was added to the manager.
     */
     add: function (plugin) {
