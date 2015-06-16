@@ -389,7 +389,7 @@ PIXI.WebGLSpriteBatch.prototype.renderTilingSprite = function(sprite)
 
     //  Get the sprites current alpha and tint and combine them into a single color
     var tint = sprite.tint;
-    var color = (tint >> 16) + (tint & 0xff00) + ((tint & 0xff) << 16) + (sprite.alpha * 255 << 24);
+    var color = (tint >> 16) + (tint & 0xff00) + ((tint & 0xff) << 16) + (sprite.worldAlpha * 255 << 24);
 
     var positions = this.positions;
     var colors = this.colors;

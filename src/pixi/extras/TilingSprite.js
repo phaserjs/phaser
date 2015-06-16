@@ -201,6 +201,7 @@ PIXI.TilingSprite.prototype._renderWebGL = function(renderSession)
     }
     
     renderSession.spriteBatch.start();
+
 };
 
 /**
