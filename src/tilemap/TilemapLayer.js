@@ -12,15 +12,7 @@
 * By default TilemapLayers have fixedToCamera set to `true`. Changing this will break Camera follow and scrolling behavior.
 *
 * @class Phaser.TilemapLayer
-* @extends PIXI.Sprite
-* @extends Phaser.Component.Core
-* @extends Phaser.Component.Bounds
-* @extends Phaser.Component.BringToTop
-* @extends Phaser.Component.Destroy
-* @extends Phaser.Component.FixedToCamera
-* @extends Phaser.Component.InputEnabled
-* @extends Phaser.Component.Reset
-* @extends Phaser.Component.Smoothed
+* @extends Phaser.Sprite
 * @constructor
 * @param {Phaser.Game} game - Game reference to the currently running game.
 * @param {Phaser.Tilemap} tilemap - The tilemap to which this layer belongs.
@@ -33,9 +25,7 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     width |= 0;
     height |= 0;
 
-    PIXI.Sprite.call(this, PIXI.TextureCache['__default']);
-
-    Phaser.Component.Core.init.call(this, game, 0, 0, null, null);
+    Phaser.Sprite.call(this, game, 0, 0);
 
     /**
     * The Tilemap to which this layer is bound.
@@ -266,18 +256,8 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
 
 };
 
-Phaser.TilemapLayer.prototype = Object.create(PIXI.Sprite.prototype);
+Phaser.TilemapLayer.prototype = Object.create(Phaser.Sprite.prototype);
 Phaser.TilemapLayer.prototype.constructor = Phaser.TilemapLayer;
-
-Phaser.Component.Core.install.call(Phaser.TilemapLayer.prototype, [
-    'Bounds',
-    'BringToTop',
-    'Destroy',
-    'FixedToCamera',
-    'InputEnabled',
-    'Reset',
-    'Smoothed'
-]);
 
 Phaser.TilemapLayer.prototype.preUpdateCore = Phaser.Component.Core.preUpdate;
 
