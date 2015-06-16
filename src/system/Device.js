@@ -1004,32 +1004,38 @@ Phaser.Device._initialize = function () {
         var result = false;
 
         try {
-            if (result = !!audioElement.canPlayType) {
-
-                if (audioElement.canPlayType('audio/ogg; codecs="vorbis"').replace(/^no$/, '')) {
+            if (result = !!audioElement.canPlayType)
+            {
+                if (audioElement.canPlayType('audio/ogg; codecs="vorbis"').replace(/^no$/, ''))
+                {
                     device.ogg = true;
                 }
 
-                if (audioElement.canPlayType('audio/ogg; codecs="opus"').replace(/^no$/, '') || audioElement.canPlayType('audio/opus;').replace(/^no$/, '')) {
+                if (audioElement.canPlayType('audio/ogg; codecs="opus"').replace(/^no$/, '') || audioElement.canPlayType('audio/opus;').replace(/^no$/, ''))
+                {
                     device.opus = true;
                 }
 
-                if (audioElement.canPlayType('audio/mpeg;').replace(/^no$/, '')) {
+                if (audioElement.canPlayType('audio/mpeg;').replace(/^no$/, ''))
+                {
                     device.mp3 = true;
                 }
 
                 // Mimetypes accepted:
                 //   developer.mozilla.org/En/Media_formats_supported_by_the_audio_and_video_elements
                 //   bit.ly/iphoneoscodecs
-                if (audioElement.canPlayType('audio/wav; codecs="1"').replace(/^no$/, '')) {
+                if (audioElement.canPlayType('audio/wav; codecs="1"').replace(/^no$/, ''))
+                {
                     device.wav = true;
                 }
 
-                if (audioElement.canPlayType('audio/x-m4a;') || audioElement.canPlayType('audio/aac;').replace(/^no$/, '')) {
+                if (audioElement.canPlayType('audio/x-m4a;') || audioElement.canPlayType('audio/aac;').replace(/^no$/, ''))
+                {
                     device.m4a = true;
                 }
 
-                if (audioElement.canPlayType('audio/webm; codecs="vorbis"').replace(/^no$/, '')) {
+                if (audioElement.canPlayType('audio/webm; codecs="vorbis"').replace(/^no$/, ''))
+                {
                     device.webm = true;
                 }
             }
