@@ -1253,15 +1253,29 @@ Phaser.Physics.P2.Body.prototype = {
 
     /**
     * Reads the shape data from a physics data file stored in the Game.Cache and adds it as a polygon to this Body.
+    * 
+    * As well as reading the data from the Cache you can also pass `null` as the first argument and a
+    * physics data object as the second. When doing this you must ensure the structure of the object is correct in advance.
+    * 
+    * For more details see the format of the Lime / Corona Physics Editor export.
     *
     * @method Phaser.Physics.P2.Body#loadPolygon
-    * @param {string} key - The key of the Physics Data file as stored in Game.Cache.
-    * @param {string} object - The key of the object within the Physics data file that you wish to load the shape data from.
+    * @param {string} key - The key of the Physics Data file as stored in Game.Cache. Alternatively set to `null` and pass the 
+    *     data as the 2nd argument.
+    * @param {string|object} object - The key of the object within the Physics data file that you wish to load the shape data from, 
+    *     or if key is null pass the actual physics data object itself as this parameter.
     * @return {boolean} True on success, else false.
     */
     loadPolygon: function (key, object) {
 
-        var data = this.game.cache.getPhysicsData(key, object);
+        if (key === null)
+        {
+            var data = object;
+        }
+        else
+        {
+            var data = this.game.cache.getPhysicsData(key, object);
+        }
 
         //  We've multiple Convex shapes, they should be CCW automatically
         var cm = p2.vec2.create();

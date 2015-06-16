@@ -309,6 +309,7 @@ Version 2.4 - "Katar" - in dev
 * Rectangle.random will return a uniformly distributed random point from anywhere within the rectangle.
 * Line.rotate allows you to rotate a line by the given amount around its center point.
 * Device.chromeVersion will return the major version number of Chrome.
+* TilingSprite.textureDebug is a new boolean that allows you to visually debug the generated texture a TilingSprite creates.
 
 ### Updates
 
@@ -348,6 +349,7 @@ Version 2.4 - "Katar" - in dev
 * ScaleManager.scaleSprite will no longer try and scale a display object that doesn't have a scale property.
 * The LoadTexture component has a new property `customRender` which is checked for in the Core postUpdate to know when to render custom elements like Videos.
 * BitmapText line spacing and word wrapping has been vastly improved and bought in-line with how Pixi 3 handles it, but with additional anchor support.
+* P2.Body.loadPolygon now allows the `key` parameter to be passed as `null` - when this happens the `object` parameter can be the actual physics object data instead of a string pointing to the cache, allowing you to take advantage of adding multiple convex shapes with automatic adjustments for center of mass #1801
 
 ### Bug Fixes
 
