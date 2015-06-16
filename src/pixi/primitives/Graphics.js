@@ -532,12 +532,11 @@ PIXI.Graphics.prototype.drawRect = function(x, y, width, height)
 
 /**
  * @method drawRoundedRect
- *
  * @param x {Number} The X coord of the top-left of the rectangle
  * @param y {Number} The Y coord of the top-left of the rectangle
  * @param width {Number} The width of the rectangle
  * @param height {Number} The height of the rectangle
- * @param radius {Number} Radius of the rectangle corners
+ * @param radius {Number} Radius of the rectangle corners. In WebGL this must be a value between 0 and 9.
  */
 PIXI.Graphics.prototype.drawRoundedRect = function(x, y, width, height, radius)
 {
