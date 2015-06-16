@@ -73,6 +73,15 @@ PIXI.TilingSprite = function(texture, width, height)
      * @default 0xFFFFFF
      */
     this.tint = 0xFFFFFF;
+
+    /**
+     * If enabled a green rectangle will be drawn behind the generated tiling texture, allowing you to visually
+     * debug the texture being used.
+     *
+     * @property textureDebug
+     * @type Boolean
+     */
+    this.textureDebug = false;
     
     /**
      * The blend mode to be applied to the sprite
@@ -372,9 +381,11 @@ PIXI.TilingSprite.prototype.generateTilingTexture = function(forcePowerOfTwo)
         this.tilingTexture.needsUpdate = true;
     }
 
-    //  Debug
-    this.canvasBuffer.context.strokeStyle = 'rgb(0,255,0)';
-    this.canvasBuffer.context.strokeRect(0, 0, targetWidth, targetHeight);
+    if (this.textureDebug)
+    {
+        this.canvasBuffer.context.strokeStyle = '#00ff00';
+        this.canvasBuffer.context.strokeRect(0, 0, targetWidth, targetHeight);
+    }
 
     this.canvasBuffer.context.drawImage(texture.baseTexture.source,
                            texture.crop.x,
