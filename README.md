@@ -384,6 +384,8 @@ Version 2.4 - "Katar" - in dev
 * TilemapParser.parseTiledJSON would ignore 'falsey' properties set on Objects in Tiled JSON tilemaps, such as `x: 0` or `visible: false`. These properties are now accurately copied over to the destination map data (thanks @MaksJS #1818)
 * Removed un-necessary PIXI.TextureCache pollution in Phaser.LoaderParser.bitmapFont.
 * Sound.resume wouldn't properly restart looped sounds in Chrome after being paused. Phaser now specifically handles the Chrome 42 bug and later fix (thanks @nkovacs #1820)
+* Setting the BitmapText.maxWidth property would throw an error (thanks @drhayes #1807)
+* If running under Cordova and iOS the Game.lockRender boolean will be set to `true` when the game pauses and `false` when it resumes. This avoids the `gpus_ReturnNotPermittedKillClient` app crash on iOS (thanks @cncolder #1800)
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 

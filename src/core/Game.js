@@ -243,7 +243,7 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this.context = null;
 
     /**
-    * @property {Phaser.Utils.Debug} debug - A set of useful debug utilitie.
+    * @property {Phaser.Utils.Debug} debug - A set of useful debug utilities.
     */
     this.debug = null;
 
@@ -1007,6 +1007,12 @@ Phaser.Game.prototype = {
             this.time.gamePaused();
             this.sound.setMute();
             this.onPause.dispatch(event);
+
+            //  Avoids Cordova iOS crash event: https://github.com/photonstorm/phaser/issues/1800
+            if (this.device.cordova && this.device.iOS)
+            {
+                this.lockRender = true;
+            }
         }
 
     },
@@ -1028,6 +1034,12 @@ Phaser.Game.prototype = {
             this.input.reset();
             this.sound.unsetMute();
             this.onResume.dispatch(event);
+
+            //  Avoids Cordova iOS crash event: https://github.com/photonstorm/phaser/issues/1800
+            if (this.device.cordova && this.device.iOS)
+            {
+                this.lockRender = false;
+            }
         }
 
     },
