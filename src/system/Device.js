@@ -88,6 +88,12 @@ Phaser.Device = function () {
     this.nodeWebkit = false;
     
     /**
+    * @property {boolean} electron - Is the game running under GitHub Electron?
+    * @default
+    */
+    this.electron = false;
+    
+    /**
     * @property {boolean} ejecta - Is the game running under Ejecta?
     * @default
     */
@@ -913,15 +919,11 @@ Phaser.Device._initialize = function () {
             device.node = true;
         }
         
-        if (device.node)
+        if (device.node && typeof window.process.versions === 'object')
         {
-            try {
-                device.nodeWebkit = (typeof require('nw.gui') !== "undefined");
-            }
-            catch(error)
-            {
-                device.nodeWebkit = false;
-            }
+            device.nodeWebkit = !!window.process.versions['node-webkit'];
+            
+            device.electron = !!window.process.versions.electron;
         }
         
         if (navigator['isCocoonJS'])
