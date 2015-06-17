@@ -255,6 +255,7 @@ Version 2.4 - "Katar" - in dev
 * Phaser.AnimationParser methods `JSONData`, `JSONDataHash` and `XMLData` have all had their `cacheKey` parameter removed as it's no longer used.
 * Input.deleteMoveCallback no longer takes an integer as its parameter. Now you have to give it the original callback and context in order to remove it. This is to protect against index invalidation (see the fixed Bugs list)
 * Group.add and Group.addAt will only create a Physics Body on the child if it doesn't already have one. This is a change from 2.3 where it would replace the physics body property with the new body, but this could lead to garbage build-up over time, so you should now properly destroy the body before changing it.
+* Button game objects now have `Input.useHandCursor` set to `true` by default.
 
 ### New Features
 
@@ -311,6 +312,8 @@ Version 2.4 - "Katar" - in dev
 * Device.chromeVersion will return the major version number of Chrome.
 * TilingSprite.textureDebug is a new boolean that allows you to visually debug the generated texture a TilingSprite creates.
 * Device.electron will return true if running under GitHub Electron (thanks @rblopes #1851)
+* When loading a BitmapText you can now specify either an XML file or a JSON file for the font data. This is useful in environments such as Cocoon where you don't have a native XML parser. If you wish to use JSON the formatting should be equal to the result of running a valid XML file through X2JS (thanks @Feenposhleen #1837)
+* Game Objects that have the Health component (such as Sprites) now have a new method: `heal` which adds the given amount to the health property, i.e. is the opposite of `damage` (thanks @stephandesouza #1794)
 
 ### Updates
 
@@ -353,6 +356,8 @@ Version 2.4 - "Katar" - in dev
 * P2.Body.loadPolygon now allows the `key` parameter to be passed as `null` - when this happens the `object` parameter can be the actual physics object data instead of a string pointing to the cache, allowing you to take advantage of adding multiple convex shapes with automatic adjustments for center of mass #1801
 * Tilemap.addTilesetImage can now accept a BitmapData as the `key` parameter and will use the BitmapData to render the tileset with instead of an image from the cache (thanks to @unstoppablecarl for the idea #1838)
 * Device now uses a new way to detect when Phaser is running under a NW.js (formerly Node-WebKit) environment, using feature detection, instead of relying on a guarded require statement. The former way was the source of a known incompatibility with browserify and similar tools (thanks @rblopes #1851)
+* Sprite vs. Tilemap collision can now check if the sprite overlaps the tilemap without trying to separate it (thanks @Preece #1810)
+* The Asset Pack JSON Format example has been updated to include new and missing file formats (thanks @rblopes #1808)
 
 ### Bug Fixes
 
