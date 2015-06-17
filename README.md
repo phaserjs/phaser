@@ -310,6 +310,7 @@ Version 2.4 - "Katar" - in dev
 * Line.rotate allows you to rotate a line by the given amount around its center point.
 * Device.chromeVersion will return the major version number of Chrome.
 * TilingSprite.textureDebug is a new boolean that allows you to visually debug the generated texture a TilingSprite creates.
+* Device.electron will return true if running under GitHub Electron (thanks @rblopes #1851)
 
 ### Updates
 
@@ -351,6 +352,7 @@ Version 2.4 - "Katar" - in dev
 * BitmapText line spacing and word wrapping has been vastly improved and bought in-line with how Pixi 3 handles it, but with additional anchor support.
 * P2.Body.loadPolygon now allows the `key` parameter to be passed as `null` - when this happens the `object` parameter can be the actual physics object data instead of a string pointing to the cache, allowing you to take advantage of adding multiple convex shapes with automatic adjustments for center of mass #1801
 * Tilemap.addTilesetImage can now accept a BitmapData as the `key` parameter and will use the BitmapData to render the tileset with instead of an image from the cache (thanks to @unstoppablecarl for the idea #1838)
+* Device now uses a new way to detect when Phaser is running under a NW.js (formerly Node-WebKit) environment, using feature detection, instead of relying on a guarded require statement. The former way was the source of a known incompatibility with browserify and similar tools (thanks @rblopes #1851)
 
 ### Bug Fixes
 
