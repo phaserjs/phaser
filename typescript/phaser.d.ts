@@ -4059,6 +4059,7 @@ declare module Phaser {
         key: string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture;
         left: number;
         lifespan: number;
+        maxHealth: number;
         name: string;
         offsetX: number;
         offsetY: number;
@@ -4087,6 +4088,7 @@ declare module Phaser {
         damage(amount: number): Phaser.Sprite;
         destroy(destroyChildren?: boolean): void;
         drawPolygon(): void;
+        heal(amount: number): Phaser.Sprite;
         kill(): Phaser.Sprite;
         loadTexture(key: string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture, frame?: string|number, stopAnimation?: boolean): void;
         overlap(displayObject: PIXI.DisplayObject): boolean;
