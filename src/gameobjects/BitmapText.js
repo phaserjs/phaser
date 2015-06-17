@@ -5,13 +5,13 @@
 */
 
 /**
-* BitmapText objects work by taking a texture file and an XML file that describes the font structure.
+* BitmapText objects work by taking a texture file and an XML or JSON file that describes the font structure.
 * It then generates a new Sprite object for each letter of the text, proportionally spaced out and aligned to 
 * match the font structure.
 * 
 * BitmapText objects are less flexible than Text objects, in that they have less features such as shadows, fills and the ability 
-* to use Web Fonts. However you trade this flexibility for pure rendering speed. You can also create visually compelling BitmapTexts by 
-* processing the font texture in an image editor first, applying fills and any other effects required.
+* to use Web Fonts, however you trade this flexibility for rendering speed. You can also create visually compelling BitmapTexts by
+* processing the font texture in an image editor, applying fills and any other effects required.
 *
 * To create multi-line text insert \r, \n or \r\n escape codes into the text string.
 *
@@ -23,6 +23,8 @@
 * BMFont (Windows, free): http://www.angelcode.com/products/bmfont/
 * Glyph Designer (OS X, commercial): http://www.71squared.com/en/glyphdesigner
 * Littera (Web-based, free): http://kvazars.com/littera/
+*
+* For most use cases it is recommended to use XML. If you wish to use JSON, the formatting should be equal to the result of running a valid XML file through the popular X2JS library.
 *
 * @class Phaser.BitmapText
 * @constructor

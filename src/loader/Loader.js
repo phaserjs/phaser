@@ -112,7 +112,7 @@ Phaser.Loader = function (game) {
     this.onFileStart = new Phaser.Signal();
 
     /**
-    * This event is dispatched when a file has either loaded or failed to load.    *
+    * This event is dispatched when a file has either loaded or failed to load.
     *
     * Any function bound to this will receive the following parameters:
     *
@@ -1176,53 +1176,56 @@ Phaser.Loader.prototype = {
     *
     * @method Phaser.Loader#bitmapFont
     * @param {string} key - Unique asset key of the bitmap font.
-    * @param {string} [textureURL] - URL of the Bitmap Font texture file. If undefined or `null` the url will be set to `<key>.png`, i.e. if `key` was "megaFont" then the URL will be "megaFont.png".
-    * @param {string} [xmlURL] - URL of the Bitmap Font data file. If undefined or `null` and no data is given the url will be set to `<key>.xml`, i.e. if `key` was "megaFont" then the URL will be "megaFont.xml".
-    * @param {object} [xmlData] - An optional XML data object.
+    * @param {string} textureURL -  URL of the Bitmap Font texture file. If undefined or `null` the url will be set to `<key>.png`, i.e. if `key` was "megaFont" then the URL will be "megaFont.png".
+    * @param {string} atlasURL - URL of the Bitmap Font atlas file (xml/json).
+    * @param {object} atlasData - An optional Bitmap Font atlas in string form (stringified xml/json).
     * @param {number} [xSpacing=0] - If you'd like to add additional horizontal spacing between the characters then set the pixel value here.
     * @param {number} [ySpacing=0] - If you'd like to add additional vertical spacing between the lines then set the pixel value here.
     * @return {Phaser.Loader} This Loader instance.
     */
-    bitmapFont: function (key, textureURL, xmlURL, xmlData, xSpacing, ySpacing) {
-
+    bitmapFont: function (key, textureURL, atlasURL, atlasData, xSpacing, ySpacing) {
         if (typeof textureURL === 'undefined' || textureURL === null)
         {
             textureURL = key + '.png';
         }
 
-        if (typeof xmlURL === 'undefined') { xmlURL = null; }
-        if (typeof xmlData === 'undefined') { xmlData = null; }
+        if (typeof atlasURL === 'undefined') { atlasURL = null; }
+        if (typeof atlasData === 'undefined') { atlasData = null; }
         if (typeof xSpacing === 'undefined') { xSpacing = 0; }
         if (typeof ySpacing === 'undefined') { ySpacing = 0; }
 
-        if (!xmlURL && !xmlData)
+        //  A URL to a json/xml atlas has been given
+        if (atlasURL)
         {
-            xmlURL = key + '.xml';
-        }
-
-        //  A URL to a json/xml file has been given
-        if (xmlURL)
-        {
-            this.addToFileList('bitmapfont', key, textureURL, { xmlURL: xmlURL, xSpacing: xSpacing, ySpacing: ySpacing });
+            this.addToFileList('bitmapfont', key, textureURL, { atlasURL: atlasURL, xSpacing: xSpacing, ySpacing: ySpacing });
         }
         else
         {
-            //  An xml string or object has been given
-            if (typeof xmlData === 'string')
+            //  A stringified xml/json atlas has been given
+            if (typeof atlasData === 'string')
             {
-                var xml = this.parseXml(xmlData);
+                var json, xml;
 
-                if (!xml)
+                try
                 {
-                    throw new Error("Phaser.Loader. Invalid Bitmap Font XML given");
+                    json = JSON.parse(atlasData);
+                }
+                catch ( e )
+                {
+                    xml = this.parseXml(atlasData);
                 }
 
-                this.addToFileList('bitmapfont', key, textureURL, { xmlURL: null, xmlData: xml, xSpacing: xSpacing, ySpacing: ySpacing });
+                if (!xml && !json)
+                {
+                    throw new Error("Phaser.Loader. Invalid Bitmap Font atlas given");
+                }
+
+                this.addToFileList('bitmapfont', key, textureURL, { atlasURL: null, atlasData: json || xml,
+                    atlasType: (!!json ? 'json' : 'xml'), xSpacing: xSpacing, ySpacing: ySpacing });
             }
         }
 
         return this;
-
     },
 
     /**
@@ -1863,7 +1866,7 @@ Phaser.Loader.prototype = {
                     break;
 
                 case "bitmapFont":
-                    this.bitmapFont(file.key, file.textureURL, file.xmlURL, file.xmlData, file.xSpacing, file.ySpacing);
+                    this.bitmapFont(file.key, file.textureURL, file.atlasURL, file.atlasData, file.xSpacing, file.ySpacing);
                     break;
 
                 case "atlasJSONArray":
@@ -2494,15 +2497,35 @@ Phaser.Loader.prototype = {
 
             case 'bitmapfont':
 
-                if (!file.xmlURL)
+                if (!file.atlasURL)
                 {
-                    this.game.cache.addBitmapFont(file.key, file.url, file.data, file.xmlData, file.xSpacing, file.ySpacing);
+                    this.game.cache.addBitmapFont(file.key, file.url, file.data, file.atlasData, file.atlasType, file.xSpacing, file.ySpacing);
                 }
                 else
                 {
                     //  Load the XML before carrying on with the next file
                     loadNext = false;
-                    this.xhrLoad(file, this.transformUrl(file.xmlURL, file), 'text', this.xmlLoadComplete);
+                    this.xhrLoad(file, this.transformUrl(file.atlasURL, file), 'text', function (file, xhr) {
+                        var json;
+
+                        try
+                        {
+                            // Try to parse as JSON, if it fails, then it's hopefully XML
+                            json = JSON.parse(xhr.responseText);
+                        }
+                        catch (e) {}
+
+                        if (!!json)
+                        {
+                            file.atlasType = 'json';
+                            this.jsonLoadComplete(file, xhr);
+                        }
+                        else
+                        {
+                            file.atlasType = 'xml';
+                            this.xmlLoadComplete(file, xhr);
+                        }
+                    });
                 }
                 break;
 
@@ -2603,6 +2626,10 @@ Phaser.Loader.prototype = {
         {
             this.game.cache.addTilemap(file.key, file.url, data, file.format);
         }
+        else if (file.type === 'bitmapfont')
+        {
+            this.game.cache.addBitmapFont(file.key, file.url, file.data, data, file.atlasType, file.xSpacing, file.ySpacing);
+        }
         else if (file.type === 'json')
         {
             this.game.cache.addJSON(file.key, file.url, data);
@@ -2613,7 +2640,6 @@ Phaser.Loader.prototype = {
         }
 
         this.asyncComplete(file);
-
     },
 
     /**
@@ -2658,7 +2684,7 @@ Phaser.Loader.prototype = {
 
         if (file.type === 'bitmapfont')
         {
-            this.game.cache.addBitmapFont(file.key, file.url, file.data, xml, file.xSpacing, file.ySpacing);
+            this.game.cache.addBitmapFont(file.key, file.url, file.data, xml, file.atlasType, file.xSpacing, file.ySpacing);
         }
         else if (file.type === 'textureatlas')
         {
