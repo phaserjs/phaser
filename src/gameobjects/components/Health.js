@@ -47,6 +47,24 @@ Phaser.Component.Health.prototype = {
 
         return this;
 
+    },
+
+    /**
+    * Heal the Game Object. This adds the given amount of health from the `health` property.
+    *
+    * @member
+    * @param {number} amount - The amount to add from the current `health` value.
+    * @return {Phaser.Sprite} This instance.
+    */
+    heal: function(amount) {
+
+        if (this.alive)
+        {
+            this.health += amount;
+        }
+
+        return this;
+
     }
 
 };
