@@ -617,7 +617,7 @@ Phaser.Physics.Arcade.prototype = {
             }
             else if (object2.physicsType === Phaser.TILEMAPLAYER)
             {
-                this.collideSpriteVsTilemapLayer(object1, object2, collideCallback, processCallback, callbackContext);
+                this.collideSpriteVsTilemapLayer(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly);
             }
         }
         //  GROUPS
