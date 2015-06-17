@@ -256,6 +256,8 @@ Version 2.4 - "Katar" - in dev
 * Input.deleteMoveCallback no longer takes an integer as its parameter. Now you have to give it the original callback and context in order to remove it. This is to protect against index invalidation (see the fixed Bugs list)
 * Group.add and Group.addAt will only create a Physics Body on the child if it doesn't already have one. This is a change from 2.3 where it would replace the physics body property with the new body, but this could lead to garbage build-up over time, so you should now properly destroy the body before changing it.
 * Button game objects now have `Input.useHandCursor` set to `true` by default.
+* Phaser.BitmapText no longer extends PIXI.BitmapText but replaces it entirely.
+* Phaser.Text no longer extends PIXI.Text but replaces it entirely. Phaser.Text now natively extends a Phaser Sprite, meaning it can be enabled for physics, damaged, etc.
 
 ### New Features
 

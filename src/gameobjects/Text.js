@@ -13,21 +13,7 @@
 * See {@link http://www.jordanm.co.uk/tinytype this compatibility table} for the available default fonts across mobile browsers.
 *
 * @class Phaser.Text
-* @extends PIXI.Text
-* @extends Phaser.Component.Core
-* @extends Phaser.Component.Angle
-* @extends Phaser.Component.AutoCull
-* @extends Phaser.Component.Bounds
-* @extends Phaser.Component.BringToTop
-* @extends Phaser.Component.Destroy
-* @extends Phaser.Component.FixedToCamera
-* @extends Phaser.Component.InputEnabled
-* @extends Phaser.Component.InWorld
-* @extends Phaser.Component.LifeSpan
-* @extends Phaser.Component.Overlap
-* @extends Phaser.Component.PhysicsBody
-* @extends Phaser.Component.Reset
-* @extends Phaser.Component.Smoothed
+* @extends Phaser.Sprite
 * @constructor
 * @param {Phaser.Game} game - Current game instance.
 * @param {number} x - X position of the new text object.
@@ -71,6 +57,28 @@ Phaser.Text = function (game, x, y, text, style) {
     this.padding = new Phaser.Point();
 
     /**
+     * @property {HTMLCanvasElement} canvas - The canvas element that the text is rendered.
+     */
+    this.canvas = document.createElement('canvas');
+
+    /**
+     * @property {HTMLCanvasElement} context - The context of the canvas element that the text is rendered to.
+     */
+    this.context = this.canvas.getContext('2d');
+
+    /**
+     * 
+     * @property {number} resolution - The resolution of the canvas.
+     * @default
+     */
+    this.resolution = 1;
+
+    /**
+    * @property {array} colors - An array of the color values as specified by {@link Phaser.Text#addColor addColor}.
+    */
+    this.colors = [];
+
+    /**
     * @property {string} _text - Internal cache var.
     * @private
     */
@@ -95,15 +103,20 @@ Phaser.Text = function (game, x, y, text, style) {
     this._charCount = 0;
 
     /**
-    * @property {array} colors - An array of the color values as specified by {@link Phaser.Text#addColor addColor}.
+    * @property {number} _width - Internal width var.
+    * @private
     */
-    this.colors = [];
+    this._width = 0;
+
+    /**
+    * @property {number} _height - Internal height var.
+    * @private
+    */
+    this._height = 0;
+
+    Phaser.Sprite.call(this, game, x, y, PIXI.Texture.fromCanvas(this.canvas));
 
     this.setStyle(style);
-
-    PIXI.Text.call(this, text, this.style);
-
-    Phaser.Component.Core.init.call(this, game, x, y, '', null);
 
     if (text !== ' ')
     {
@@ -112,29 +125,8 @@ Phaser.Text = function (game, x, y, text, style) {
 
 };
 
-Phaser.Text.prototype = Object.create(PIXI.Text.prototype);
+Phaser.Text.prototype = Object.create(Phaser.Sprite.prototype);
 Phaser.Text.prototype.constructor = Phaser.Text;
-
-Phaser.Component.Core.install.call(Phaser.Text.prototype, [
-    'Angle',
-    'AutoCull',
-    'Bounds',
-    'BringToTop',
-    'Destroy',
-    'FixedToCamera',
-    'InputEnabled',
-    'InWorld',
-    'LifeSpan',
-    'Overlap',
-    'PhysicsBody',
-    'Reset',
-    'Smoothed'
-]);
-
-Phaser.Text.prototype.preUpdatePhysics = Phaser.Component.PhysicsBody.preUpdate;
-Phaser.Text.prototype.preUpdateLifeSpan = Phaser.Component.LifeSpan.preUpdate;
-Phaser.Text.prototype.preUpdateInWorld = Phaser.Component.InWorld.preUpdate;
-Phaser.Text.prototype.preUpdateCore = Phaser.Component.Core.preUpdate;
 
 /**
 * Automatically called by World.preUpdate.
@@ -662,7 +654,226 @@ Phaser.Text.prototype.componentsToFont = function (components) {
 };
 
 /**
-* The text string to be displayed by this Text object, taking into account the style settings.
+ * The text to be displayed by this Text object.
+ * Use a \n to insert a carriage return and split the text.
+ * The text will be rendered with any style currently set.
+ *
+ * @method Phaser.Text#setText
+ * @param {string} [text] - The text to be displayed. Set to an empty string to clear text that is already present.
+ */
+Phaser.Text.prototype.setText = function (text) {
+
+    this.text = text.toString() || '';
+    this.dirty = true;
+
+};
+
+/**
+ * Updates the texture based on the canvas dimensions.
+ *
+ * @method Phaser.Text#updateTexture
+ * @private
+ */
+Phaser.Text.prototype.updateTexture = function () {
+
+    this.texture.baseTexture.width = this.canvas.width;
+    this.texture.baseTexture.height = this.canvas.height;
+    this.texture.crop.width = this.texture.frame.width = this.canvas.width;
+    this.texture.crop.height = this.texture.frame.height = this.canvas.height;
+
+    this._width = this.canvas.width;
+    this._height = this.canvas.height;
+
+    // update the dirty base textures
+    this.texture.baseTexture.dirty();
+
+};
+
+/**
+* Renders the object using the WebGL renderer
+*
+* @method Phaser.Text#_renderWebGL
+* @private
+* @param {RenderSession} renderSession - The Render Session to render the Text on.
+*/
+Phaser.Text.prototype._renderWebGL = function (renderSession) {
+
+    if (this.dirty)
+    {
+        this.resolution = renderSession.resolution;
+
+        this.updateText();
+        this.dirty = false;
+    }
+
+    PIXI.Sprite.prototype._renderWebGL.call(this, renderSession);
+
+};
+
+/**
+* Renders the object using the Canvas renderer.
+*
+* @method Phaser.Text#_renderCanvas
+* @private
+* @param {RenderSession} renderSession - The Render Session to render the Text on.
+*/
+Phaser.Text.prototype._renderCanvas = function (renderSession) {
+
+    if (this.dirty)
+    {
+        this.resolution = renderSession.resolution;
+
+        this.updateText();
+        this.dirty = false;
+    }
+     
+    PIXI.Sprite.prototype._renderCanvas.call(this, renderSession);
+
+};
+
+/**
+* Calculates the ascent, descent and fontSize of a given font style.
+*
+* @method Phaser.Text#determineFontProperties
+* @private
+* @param {object} fontStyle 
+*/
+Phaser.Text.prototype.determineFontProperties = function (fontStyle) {
+
+    var properties = Phaser.Text.fontPropertiesCache[fontStyle];
+
+    if (!properties)
+    {
+        properties = {};
+        
+        var canvas = Phaser.Text.fontPropertiesCanvas;
+        var context = Phaser.Text.fontPropertiesContext;
+
+        context.font = fontStyle;
+
+        var width = Math.ceil(context.measureText('|MÉq').width);
+        var baseline = Math.ceil(context.measureText('|MÉq').width);
+        var height = 2 * baseline;
+
+        baseline = baseline * 1.4 | 0;
+
+        canvas.width = width;
+        canvas.height = height;
+
+        context.fillStyle = '#f00';
+        context.fillRect(0, 0, width, height);
+
+        context.font = fontStyle;
+
+        context.textBaseline = 'alphabetic';
+        context.fillStyle = '#000';
+        context.fillText('|MÉq', 0, baseline);
+
+        if (!context.getImageData(0, 0, width, height))
+        {
+            properties.ascent = baseline;
+            properties.descent = baseline + 6;
+            properties.fontSize = properties.ascent + properties.descent;
+
+            Phaser.Text.fontPropertiesCache[fontStyle] = properties;
+
+            return properties;
+        }
+
+        var imagedata = context.getImageData(0, 0, width, height).data;
+        var pixels = imagedata.length;
+        var line = width * 4;
+
+        var i, j;
+
+        var idx = 0;
+        var stop = false;
+
+        // ascent. scan from top to bottom until we find a non red pixel
+        for (i = 0; i < baseline; i++)
+        {
+            for (j = 0; j < line; j += 4)
+            {
+                if (imagedata[idx + j] !== 255)
+                {
+                    stop = true;
+                    break;
+                }
+            }
+
+            if (!stop)
+            {
+                idx += line;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        properties.ascent = baseline - i;
+
+        idx = pixels - line;
+        stop = false;
+
+        // descent. scan from bottom to top until we find a non red pixel
+        for (i = height; i > baseline; i--)
+        {
+            for (j = 0; j < line; j += 4)
+            {
+                if (imagedata[idx + j] !== 255)
+                {
+                    stop = true;
+                    break;
+                }
+            }
+
+            if (!stop)
+            {
+                idx -= line;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        properties.descent = i - baseline;
+        //TODO might need a tweak. kind of a temp fix!
+        properties.descent += 6;
+        properties.fontSize = properties.ascent + properties.descent;
+
+        Phaser.Text.fontPropertiesCache[fontStyle] = properties;
+    }
+
+    return properties;
+
+};
+
+/**
+* Returns the bounds of the Text as a rectangle.
+* The bounds calculation takes the worldTransform into account.
+*
+* @method Phaser.Text#getBounds
+* @param {Phaser.Matrix} matrix - The transformation matrix of the Text.
+* @return {Phaser.Rectangle} The framing rectangle
+*/
+Phaser.Text.prototype.getBounds = function (matrix) {
+
+    if (this.dirty)
+    {
+        this.updateText();
+        this.dirty = false;
+    }
+
+    return PIXI.Sprite.prototype.getBounds.call(this, matrix);
+
+};
+
+/**
+* The text to be displayed by this Text object.
+* Use a \n to insert a carriage return and split the text.
+* The text will be rendered with any style currently set.
 *
 * @name Phaser.Text#text
 * @property {string} text
@@ -1146,3 +1357,58 @@ Object.defineProperty(Phaser.Text.prototype, 'shadowFill', {
     }
 
 });
+
+/**
+* @name Phaser.Text#width
+* @property {number} width - The width of the Text. Setting this will modify the scale to achieve the value requested.
+*/
+Object.defineProperty(Phaser.Text.prototype, 'width', {
+
+    get: function() {
+
+        if (this.dirty)
+        {
+            this.updateText();
+            this.dirty = false;
+        }
+
+        return this.scale.x * this.texture.frame.width;
+    },
+
+    set: function(value) {
+
+        this.scale.x = value / this.texture.frame.width;
+        this._width = value;
+    }
+
+});
+
+/**
+* @name Phaser.Text#height
+* @property {number} height - The height of the Text. Setting this will modify the scale to achieve the value requested.
+*/
+Object.defineProperty(Phaser.Text.prototype, 'height', {
+
+    get: function() {
+
+        if (this.dirty)
+        {
+            this.updateText();
+            this.dirty = false;
+        }
+
+        return this.scale.y * this.texture.frame.height;
+    },
+
+    set: function(value) {
+
+        this.scale.y = value / this.texture.frame.height;
+        this._height = value;
+    }
+
+});
+
+Phaser.Text.fontPropertiesCache = {};
+
+Phaser.Text.fontPropertiesCanvas = document.createElement('canvas');
+Phaser.Text.fontPropertiesContext = Phaser.Text.fontPropertiesCanvas.getContext('2d');
