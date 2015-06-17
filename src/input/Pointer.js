@@ -308,7 +308,9 @@ Phaser.Pointer.prototype = {
         // x and y are the old values here?
         this.positionDown.setTo(this.x, this.y);
 
-        if (this.game.input.multiInputOverride === Phaser.Input.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride === Phaser.Input.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride === Phaser.Input.TOUCH_OVERRIDES_MOUSE && this.game.input.currentPointers === 0))
+        if (this.game.input.multiInputOverride === Phaser.Input.MOUSE_OVERRIDES_TOUCH ||
+            this.game.input.multiInputOverride === Phaser.Input.MOUSE_TOUCH_COMBINE ||
+            (this.game.input.multiInputOverride === Phaser.Input.TOUCH_OVERRIDES_MOUSE && this.game.input.totalActivePointers === 0))
         {
             this.game.input.x = this.x;
             this.game.input.y = this.y;
@@ -319,11 +321,6 @@ Phaser.Pointer.prototype = {
 
         this._stateReset = false;
         this.totalTouches++;
-
-        if (!this.isMouse)
-        {
-            this.game.input.currentPointers++;
-        }
 
         if (this.targetObject !== null)
         {
@@ -355,7 +352,9 @@ Phaser.Pointer.prototype = {
 
             if (this._holdSent === false && this.duration >= this.game.input.holdRate)
             {
-                if (this.game.input.multiInputOverride == Phaser.Input.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride == Phaser.Input.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride == Phaser.Input.TOUCH_OVERRIDES_MOUSE && this.game.input.currentPointers === 0))
+                if (this.game.input.multiInputOverride === Phaser.Input.MOUSE_OVERRIDES_TOUCH ||
+                    this.game.input.multiInputOverride === Phaser.Input.MOUSE_TOUCH_COMBINE ||
+                    (this.game.input.multiInputOverride === Phaser.Input.TOUCH_OVERRIDES_MOUSE && this.game.input.totalActivePointers === 0))
                 {
                     this.game.input.onHold.dispatch(this);
                 }
@@ -428,7 +427,9 @@ Phaser.Pointer.prototype = {
         this.circle.x = this.x;
         this.circle.y = this.y;
 
-        if (this.game.input.multiInputOverride === Phaser.Input.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride === Phaser.Input.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride === Phaser.Input.TOUCH_OVERRIDES_MOUSE && this.game.input.currentPointers === 0))
+        if (this.game.input.multiInputOverride === Phaser.Input.MOUSE_OVERRIDES_TOUCH ||
+            this.game.input.multiInputOverride === Phaser.Input.MOUSE_TOUCH_COMBINE ||
+            (this.game.input.multiInputOverride === Phaser.Input.TOUCH_OVERRIDES_MOUSE && this.game.input.totalActivePointers === 0))
         {
             this.game.input.activePointer = this;
             this.game.input.x = this.x;
@@ -609,7 +610,9 @@ Phaser.Pointer.prototype = {
 
         this.timeUp = this.game.time.time;
 
-        if (this.game.input.multiInputOverride === Phaser.Input.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride === Phaser.Input.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride === Phaser.Input.TOUCH_OVERRIDES_MOUSE && this.game.input.currentPointers === 0))
+        if (this.game.input.multiInputOverride === Phaser.Input.MOUSE_OVERRIDES_TOUCH ||
+            this.game.input.multiInputOverride === Phaser.Input.MOUSE_TOUCH_COMBINE ||
+            (this.game.input.multiInputOverride === Phaser.Input.TOUCH_OVERRIDES_MOUSE && this.game.input.totalActivePointers === 0))
         {
             this.game.input.onUp.dispatch(this, event);
 

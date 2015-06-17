@@ -246,21 +246,3 @@ Phaser.MSPointer.prototype = {
 };
 
 Phaser.MSPointer.prototype.constructor = Phaser.MSPointer;
-
-/**
-* If disabled all MSPointer input will be ignored.
-* @property {boolean} disabled
-* @memberof Phaser.MSPointer
-* @default false
-* @deprecated Use {@link Phaser.MSPointer#enabled} instead
-*/
-Object.defineProperty(Phaser.MSPointer.prototype, "disabled", {
-
-    get: function () {
-        return !this.enabled;
-    },
-    set: function (value) {
-        this.enabled = !value;
-    }
-
-});

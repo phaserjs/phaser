@@ -45,12 +45,6 @@ Phaser.Camera = function (game, id, x, y, width, height) {
     this.view = new Phaser.Rectangle(x, y, width, height);
 
     /**
-    * @property {Phaser.Rectangle} screenView - Used by Sprites to work out Camera culling.
-    * @deprecated No longer used for camera culling. Uses Camera.view instead.
-    */
-    this.screenView = new Phaser.Rectangle(x, y, width, height);
-
-    /**
     * The Camera is bound to this Rectangle and cannot move outside of it. By default it is enabled and set to the size of the World.
     * The Rectangle can be located anywhere in the world and updated as often as you like. If you don't wish the Camera to be bound
     * at all then set this to null. The values can be anything and are in World coordinates, with 0,0 being the top-left of the world.

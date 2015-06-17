@@ -573,28 +573,6 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
 };
 
 /**
-* If no valid tileset/image can be found for a tile, the tile is rendered as a rectangle using this as a fill value.
-*
-* Set to `null` to disable rendering anything for tiles without value tileset images.
-*
-* @property {?string} tileColor
-* @memberof Phaser.TilemapLayer
-* @default 'rgb(255, 255, 255)'
-* @deprecated Use `debugSettings.missingImageFill` instead.
-*/
-Object.defineProperty(Phaser.TilemapLayer.prototype, 'tileColor', {
-
-    get: function () {
-        return this.debugSettings.missingImageFill;
-    },
-
-    set: function (value) {
-        this.debugSettings.missingImageFill = value;
-    }
-
-});
-
-/**
 * Flag controlling if the layer tiles wrap at the edges. Only works if the World size matches the Map size.
 *
 * @property {boolean} wrap

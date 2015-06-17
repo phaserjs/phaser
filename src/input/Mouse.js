@@ -32,12 +32,6 @@ Phaser.Mouse = function (game) {
     this.mouseDownCallback = null;
 
     /**
-    * @property {function} mouseMoveCallback - A callback that can be fired when the mouse is moved.
-    * @deprecated Will be removed soon. Please use `Input.addMoveCallback` instead.
-    */
-    this.mouseMoveCallback = null;
-
-    /**
     * @property {function} mouseUpCallback - A callback that can be fired when the mouse is released from a pressed down state.
     */
     this.mouseUpCallback = null;
@@ -577,24 +571,6 @@ Phaser.Mouse.prototype = {
 };
 
 Phaser.Mouse.prototype.constructor = Phaser.Mouse;
-
-/**
-* If disabled all Mouse input will be ignored.
-* @property {boolean} disabled
-* @memberof Phaser.Mouse
-* @default false
-* @deprecated Use {@link Phaser.Mouse#enabled} instead
-*/
-Object.defineProperty(Phaser.Mouse.prototype, "disabled", {
-
-    get: function () {
-        return !this.enabled;
-    },
-    set: function (value) {
-        this.enabled = !value;
-    }
-
-});
 
 /* jshint latedef:nofunc */
 /**

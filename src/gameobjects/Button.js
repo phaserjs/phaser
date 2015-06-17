@@ -86,7 +86,6 @@ Phaser.Button = function (game, x, y, key, callback, callbackContext, overFrame,
     /**
     * The Sound to be played when this Buttons Over state is activated.
     * @property {Phaser.Sound|Phaser.AudioSprite|null} onOverSound
-    * @deprecated
     * @readonly
     */
     this.onOverSound = null;
@@ -94,7 +93,6 @@ Phaser.Button = function (game, x, y, key, callback, callbackContext, overFrame,
     /**
     * The Sound to be played when this Buttons Out state is activated.
     * @property {Phaser.Sound|Phaser.AudioSprite|null} onOutSound
-    * @deprecated
     * @readonly
     */
     this.onOutSound = null;
@@ -102,7 +100,6 @@ Phaser.Button = function (game, x, y, key, callback, callbackContext, overFrame,
     /**
     * The Sound to be played when this Buttons Down state is activated.
     * @property {Phaser.Sound|Phaser.AudioSprite|null} onDownSound
-    * @deprecated
     * @readonly
     */
     this.onDownSound = null;
@@ -110,7 +107,6 @@ Phaser.Button = function (game, x, y, key, callback, callbackContext, overFrame,
     /**
     * The Sound to be played when this Buttons Up state is activated.
     * @property {Phaser.Sound|Phaser.AudioSprite|null} onUpSound
-    * @deprecated
     * @readonly
     */
     this.onUpSound = null;
@@ -118,7 +114,6 @@ Phaser.Button = function (game, x, y, key, callback, callbackContext, overFrame,
     /**
     * The Sound Marker used in conjunction with the onOverSound.
     * @property {string} onOverSoundMarker
-    * @deprecated
     * @readonly
     */
     this.onOverSoundMarker = '';
@@ -126,7 +121,6 @@ Phaser.Button = function (game, x, y, key, callback, callbackContext, overFrame,
     /**
     * The Sound Marker used in conjunction with the onOutSound.
     * @property {string} onOutSoundMarker
-    * @deprecated
     * @readonly
     */
     this.onOutSoundMarker = '';
@@ -134,7 +128,6 @@ Phaser.Button = function (game, x, y, key, callback, callbackContext, overFrame,
     /**
     * The Sound Marker used in conjunction with the onDownSound.
     * @property {string} onDownSoundMarker
-    * @deprecated
     * @readonly
     */
     this.onDownSoundMarker = '';
@@ -142,7 +135,6 @@ Phaser.Button = function (game, x, y, key, callback, callbackContext, overFrame,
     /**
     * The Sound Marker used in conjunction with the onUpSound.
     * @property {string} onUpSoundMarker
-    * @deprecated
     * @readonly
     */
     this.onUpSoundMarker = '';

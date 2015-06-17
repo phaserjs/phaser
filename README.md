@@ -402,6 +402,59 @@ Version 2.4 - "Katar" - in dev
 * Due to a Pixi 2 issue TileSprite when running under WebGL didn't respect the world alpha setting and would only work with its own alpha (thanks @hanenbro #1774)
 * TileSprite now fully supports animation again, having been broken for several versions due to a Pixi upgrade. We've updated the way TileSprites generate their textures internally considerably and animation support is back across both Canvas and WebGL as a result (#1653)
 
+### Deprecated
+
+All of the following have been removed from Phaser 2.4.
+They were flagged as deprecated in Phaser 2.2 or earlier.
+
+* Camera.screenView
+* ScaleManager.maxIterations
+* ScaleManager.enterPortrait (see onOrientationChange)
+* ScaleManager.enterLandscape (see onOrientationChange)
+* ScaleManager.enterFullScreen (see onFullScreenChange)
+* ScaleManager.leaveFullScreen (see onFullScreenChange)
+* ScaleManager.fullScreenFailed (see onFullScreenError)
+* ScaleManager.checkResize
+* ScaleManager.checkOrientation
+* ScaleManager.setScreenSize (see updateLayout)
+* ScaleManager.setSize (see reflowCanvas)
+* ScaleManager.checkOrientationState (see reflowCanvas)
+* ScaleManager.orientation (see screenOrientation)
+* Gamepad.disabled (see enabled)
+* Input.currentPointers (see totalActivePointers)
+* Input.disabled (see enabled)
+* Keyboard.disabled (see enabled)
+* Mouse.disabled (see enabled)
+* Mouse.mouseMoveCallback (see Input.addMoveCallback)
+* MSPointer.disabled (see enabled)
+* Touch.disabled (see enabled)
+* Cache.getUrl (see getURL)
+* Math.truncate (see Math.trunc)
+* Math.snapToInArray (see Phaser.ArrayUtils.findClosest)
+* Math.interpolateFloat (see Math.linear)
+* Math.normalizeLatitude (use Phaser.Math.clamp(lat, -90, 90))
+* Math.normalizeLongitude (use Phaser.Math.wrap(lng, -180, 180))
+* Math.chanceRoll (use Phaser.Utils.chanceRoll)
+* Math.numberArray (use Phaser.ArrayUtils.numberArray)
+* Math.numberArrayStep (use Phaser.ArrayUtils.numberArrayStep)
+* Math.limitValue (use Phaser.Math.clamp)
+* Math.randomSign (use Phaser.Utils.randomChoice(-1, 1))
+* Math.angleLimit (use Phaser.Math.clamp)
+* Math.getRandom (use Phaser.ArrayUtils.getRandomItem)
+* Math.removeRandom (use Phaser.ArrayUtils.removeRandomItem)
+* Math.floor (use Math.trunc)
+* Math.ceil (use Phaser.Math.roundAwayFromZero)
+* Math.shift (use Phaser.ArrayUtils.rotate)
+* Math.shuffleArray (use Phaser.ArrayUtils.shuffle)
+* Math.distanceRounded (do the rounding locally)
+* Canvas.getOffset (see Phaser.DOM.getOffset)
+* Canvas.getAspectRatio (see Phaser.DOM.getAspectRatio)
+* TilemapLayer.tileColor (use TilemapLayer.debugSettings.missingImageFill)
+* Phaser.ArrayList alias removed, now use Phaser.ArraySet
+* Utils.transposeArray (see Phaser.ArrayUtils.transposeMatrix)
+* Utils.rotateArray (see Phaser.ArrayUtils.rotateMatrix)
+* Utils.shuffle (see Phaser.ArrayUtils.shuffle)
+
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
 ![div](http://www.phaser.io/images/github/div.png)

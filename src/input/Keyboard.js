@@ -518,24 +518,6 @@ Phaser.Keyboard.prototype = {
 };
 
 /**
-* If disabled all Keyboard input will be ignored.
-* @property {boolean} disabled
-* @memberof Phaser.Keyboard
-* @default false
-* @deprecated Use {@link Phaser.Keyboard#enabled} instead
-*/
-Object.defineProperty(Phaser.Keyboard.prototype, "disabled", {
-
-    get: function () {
-        return !this.enabled;
-    },
-    set: function (value) {
-        this.enabled = !value;
-    }
-
-});
-
-/**
 * Returns the string value of the most recently pressed key.
 * @name Phaser.Keyboard#lastChar
 * @property {string} lastChar - The string value of the most recently pressed key.

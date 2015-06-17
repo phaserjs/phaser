@@ -1433,23 +1433,6 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * DEPRECATED: Please use Cache.getURL instead.
-    * Get a cached object by the URL.
-    * This only returns a value if you set Cache.autoResolveURL to `true` *before* starting the preload of any assets.
-    * Be aware that every call to this function makes a DOM src query, so use carefully and double-check for implications in your target browsers/devices.
-    *
-    * @method Phaser.Cache#getUrl
-    * @deprecated Please use Cache.getURL instead.
-    * @param {string} url - The url for the object loaded to get from the cache.
-    * @return {object} The cached object.
-    */
-    getUrl: function (url) {
-
-        return this.getURL(url);
-
-    },
-
-    /**
     * Gets all keys used by the Cache for the given data type.
     *
     * @method Phaser.Cache#getKeys

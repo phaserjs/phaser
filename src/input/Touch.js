@@ -442,22 +442,3 @@ Phaser.Touch.prototype = {
 };
 
 Phaser.Touch.prototype.constructor = Phaser.Touch;
-
-/**
-* If disabled all Touch events will be ignored.
-* @property {boolean} disabled
-* @memberof Phaser.Touch
-* @default false
-* @deprecated Use {@link Phaser.Touch#enabled} instead
-*/
-Object.defineProperty(Phaser.Touch.prototype, "disabled", {
-
-    get: function () {
-        return !this.enabled;
-    },
-
-    set: function (value) {
-        this.enabled = !value;
-    }
-
-});

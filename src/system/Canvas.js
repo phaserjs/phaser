@@ -264,24 +264,3 @@ Phaser.Canvas = {
     }
 
 };
-
-/**
-* Get the DOM offset values of any given element
-*
-* @method Phaser.Canvas.getOffset
-* @param {HTMLElement} element - The targeted element that we want to retrieve the offset.
-* @param {Phaser.Point} [point] - The point we want to take the x/y values of the offset.
-* @return {Phaser.Point} - A point objet with the offsetX and Y as its properties.
-* @deprecated 2.1.4 - Use {@link Phaser.DOM.getOffset}
-*/
-Phaser.Canvas.getOffset = Phaser.DOM.getOffset;
-
-/**
-* Returns the aspect ratio of the given canvas.
-*
-* @method Phaser.Canvas.getAspectRatio
-* @param {HTMLCanvasElement} canvas - The canvas to get the aspect ratio from.
-* @return {number} The ratio between canvas' width and height.
-* @deprecated 2.1.4 - User {@link Phaser.DOM.getAspectRatio}
-*/
-Phaser.Canvas.getAspectRatio = Phaser.DOM.getAspectRatio;

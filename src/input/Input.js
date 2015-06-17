@@ -90,12 +90,6 @@ Phaser.Input = function (game) {
     this.maxPointers = -1;
 
     /**
-    * @property {number} currentPointers - The current number of active Pointers.
-    * @deprecated This is only updated when `maxPointers >= 0` and will generally be innacurate. Use `totalActivePointers` instead.
-    */
-    this.currentPointers = 0;
-
-    /**
     * @property {number} tapRate - The number of milliseconds that the Pointer has to be pressed down and then released to be considered a tap or click.
     * @default
     */
@@ -380,7 +374,6 @@ Phaser.Input.prototype = {
         this.circle = new Phaser.Circle(0, 0, 44);
 
         this.activePointer = this.mousePointer;
-        this.currentPointers = 0;
 
         this.hitCanvas = document.createElement('canvas');
         this.hitCanvas.width = 1;
@@ -578,8 +571,6 @@ Phaser.Input.prototype = {
             this.pointers[i].reset();
         }
 
-        this.currentPointers = 0;
-
         if (this.game.canvas.style.cursor !== 'none')
         {
             this.game.canvas.style.cursor = 'inherit';
@@ -749,9 +740,6 @@ Phaser.Input.prototype = {
             }
         }
 
-        // For backwards compatibility with side-effect in totalActivePointers.
-        this.currentPointers = (limit - count);
-
         return (limit - count);
 
     },
@@ -760,7 +748,7 @@ Phaser.Input.prototype = {
     * Get the first Pointer with the given active state.
     *
     * @method Phaser.Input#getPointer
-    * @param {boolean} [isActive=false] - The state the Pointer should be in - active or innactive?
+    * @param {boolean} [isActive=false] - The state the Pointer should be in - active or inactive?
     * @return {Phaser.Pointer} A Pointer object or null if no Pointer object matches the requested state.
     */
     getPointer: function (isActive) {
@@ -1063,25 +1051,6 @@ Object.defineProperty(Phaser.Input.prototype, "worldY", {
 
     get: function () {
         return this.game.camera.view.y + this.y;
-    }
-
-});
-
-/**
-* _All_ input sources (eg. Mouse, Keyboard, Touch) are ignored when Input is disabled.
-* To disable just one type of input; for example, the Mouse, use `input.mouse.enabled = false`.
-* @property {boolean} disabled
-* @memberof Phaser.Input
-* @default false
-* @deprecated Use {@link Phaser.Input#enabled} instead
-*/
-Object.defineProperty(Phaser.Input.prototype, "disabled", {
-
-    get: function () {
-        return !this.enabled;
-    },
-    set: function (value) {
-        this.enabled = !value;
     }
 
 });

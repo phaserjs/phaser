@@ -279,12 +279,3 @@ Object.defineProperty(Phaser.ArraySet.prototype, "next", {
 });
 
 Phaser.ArraySet.prototype.constructor = Phaser.ArraySet;
-
-/**
-* Phaser.ArrayList is a deprecated alias for Phaser.ArraySet.
-*
-* @class Phaser.ArrayList
-* @constructor
-* @deprecated 2.2.0 - Use {@link Phaser.ArraySet} instead.
-*/
-Phaser.ArrayList = Phaser.ArraySet;
