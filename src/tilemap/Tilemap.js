@@ -308,7 +308,7 @@ Phaser.Tilemap.prototype = {
         }
         else
         {
-            var newSet = new Phaser.Tileset(tilset, gid, tileWidth, tileHeight, tileMargin, tileSpacing, {});
+            var newSet = new Phaser.Tileset(tileset, gid, tileWidth, tileHeight, tileMargin, tileSpacing, {});
 
             newSet.setImage(img);
 
