@@ -4342,14 +4342,22 @@ declare module Phaser {
 
     }
 
-    class Text extends PIXI.Text {
+    class Text extends Phaser.Sprite {
 
         constructor(game: Phaser.Game, x: number, y: number, text: string, style: any);
 
+        static fontPropertiesCanvas: any;
+        static fontPropertiesContext: any;
+        static fontPropertiesCache: any;
+
         align: string;
         angle: number;
+        boundsAlignH: string;
+        boundsAlignV: string;
         cameraOffset: Phaser.Point;
+        canvas: HTMLCanvasElement;
         colors: string[];
+        context: CanvasRenderingContext2D;
         cssFont: string;
         destroyPhase: boolean;
         events: Phaser.Events;
@@ -4372,6 +4380,7 @@ declare module Phaser {
         previousPosition: Phaser.Point;
         previousRotation: number;
         renderOrderID: number;
+        resolution: number;
         shadowBlur: number;
         shadowColor: string;
         shadowFill: boolean;
@@ -4382,21 +4391,24 @@ declare module Phaser {
         strokeThickness: number;
         scale: Phaser.Point;
         text: string;
+        textBounds: Phaser.Rectangle;
         type: number;
         world: Phaser.Point;
         wordWrap: boolean;
         wordWrapWidth: number;
         z: number;
 
-        addColor(color: string, position: number): void;
-        clearColors(): void;
+        addColor(color: string, position: number): Phaser.Text;
+        clearColors(): Phaser.Text;
         componentsToFont(components: any): string;
         destroy(destroyChildren?: boolean): void;
         fontToComponents(font: string): any;
         postUpdate(): void;
         preUpdate(): void;
-        setShadow(x?: number, y?: number, color?: any, blur?: number, shadowStroke?: boolean, shadowFill?: boolean): void;
-        setStyle(style?: { font?: string; fill?: any; align?: string; stroke?: string; strokeThickness?: number; wordWrap?: boolean; wordWrapWidth?: number; shadowOffsetX?: number; shadowOffsetY?: number; shadowColor?: string; shadowBlur?: number; }): void;
+        setShadow(x?: number, y?: number, color?: any, blur?: number, shadowStroke?: boolean, shadowFill?: boolean): Phaser.Text;
+        setStyle(style?: { font?: string; fill?: any; align?: string; stroke?: string; strokeThickness?: number; wordWrap?: boolean; wordWrapWidth?: number; shadowOffsetX?: number; shadowOffsetY?: number; shadowColor?: string; shadowBlur?: number; valign?: string; }): Phaser.Text;
+        setText(text: string): Phaser.Text;
+        setTextBounds(x?: number, y?: number, width?: number, height?: number): Phaser.Text;
         update(): void;
         updateFont(components: any): void;
         updateLine(text: string, x?: number, y?: number): void;

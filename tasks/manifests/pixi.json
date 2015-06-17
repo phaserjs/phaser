@@ -6,7 +6,6 @@
     "src/pixi/display/DisplayObjectContainer.js",
     "src/pixi/display/Sprite.js",
     "src/pixi/display/SpriteBatch.js",
-    "src/pixi/text/Text.js",
     "src/pixi/display/Stage.js",
 
     "src/pixi/utils/Utils.js",

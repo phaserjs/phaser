@@ -19,23 +19,28 @@
 * @param {number} x - X position of the new text object.
 * @param {number} y - Y position of the new text object.
 * @param {string} text - The actual text that will be written.
-* @param {object} style - The style object containing style attributes like font, font size, etc.
+* @param {object} [style] - The style properties to be set on the Text.
+* @param {string} [style.font='bold 20pt Arial'] - The style and size of the font.
+* @param {string} [style.fontStyle=(from font)] - The style of the font (eg. 'italic'): overrides the value in `style.font`.
+* @param {string} [style.fontVariant=(from font)] - The variant of the font (eg. 'small-caps'): overrides the value in `style.font`.
+* @param {string} [style.fontWeight=(from font)] - The weight of the font (eg. 'bold'): overrides the value in `style.font`.
+* @param {string|number} [style.fontSize=(from font)] - The size of the font (eg. 32 or '32px'): overrides the value in `style.font`.
+* @param {string} [style.backgroundColor=null] - A canvas fillstyle that will be used as the background for the whole Text object. Set to `null` to disable.
+* @param {string} [style.fill='black'] - A canvas fillstyle that will be used on the text eg 'red', '#00FF00'.
+* @param {string} [style.align='left'] - Horizontal alignment of each line in multiline text. Can be: 'left', 'center' or 'right'. Does not affect single lines of text (see `textBounds` and `boundsAlignH` for that).
+* @param {string} [style.boundsAlignH='left'] - Horizontal alignment of the text within the `textBounds`. Can be: 'left', 'center' or 'right'.
+* @param {string} [style.boundsAlignV='top'] - Vertical alignment of the text within the `textBounds`. Can be: 'top', 'middle' or 'bottom'.
+* @param {string} [style.stroke='black'] - A canvas stroke style that will be used on the text stroke eg 'blue', '#FCFF00'.
+* @param {number} [style.strokeThickness=0] - A number that represents the thickness of the stroke. Default is 0 (no stroke).
+* @param {boolean} [style.wordWrap=false] - Indicates if word wrap should be used.
+* @param {number} [style.wordWrapWidth=100] - The width in pixels at which text will wrap.
 */
 Phaser.Text = function (game, x, y, text, style) {
 
     x = x || 0;
     y = y || 0;
-    text = text || ' ';
+    text = text || '';
     style = style || {};
-
-    if (text.length === 0)
-    {
-        text = ' ';
-    }
-    else
-    {
-        text = text.toString();
-    }
 
     /**
     * @property {number} type - The const type of this object.
@@ -55,6 +60,14 @@ Phaser.Text = function (game, x, y, text, style) {
     * @property {Phaser.Point} padding
     */
     this.padding = new Phaser.Point();
+
+    /**
+    * The textBounds property allows you to specify a rectangular region upon which text alignment is based.
+    * See `Text.setTextBounds` for more details.
+    * @property {Phaser.Rectangle} textBounds
+    * @readOnly
+    */
+    this.textBounds = null;
 
     /**
      * @property {HTMLCanvasElement} canvas - The canvas element that the text is rendered.
@@ -116,9 +129,11 @@ Phaser.Text = function (game, x, y, text, style) {
 
     Phaser.Sprite.call(this, game, x, y, PIXI.Texture.fromCanvas(this.canvas));
 
+    this.texture.trim = new Phaser.Rectangle();
+
     this.setStyle(style);
 
-    if (text !== ' ')
+    if (text !== '')
     {
         this.updateText();
     }
@@ -192,6 +207,7 @@ Phaser.Text.prototype.destroy = function (destroyChildren) {
 * @param {number} [blur=0] - The shadowBlur value. Make the shadow softer by applying a Gaussian blur to it. A number from 0 (no blur) up to approx. 10 (depending on scene).
 * @param {boolean} [shadowStroke=true] - Apply the drop shadow to the Text stroke (if set).
 * @param {boolean} [shadowFill=true] - Apply the drop shadow to the Text fill (if set).
+* @return {Phaser.Text} This Text instance.
 */
 Phaser.Text.prototype.setShadow = function (x, y, color, blur, shadowStroke, shadowFill) {
 
@@ -210,6 +226,8 @@ Phaser.Text.prototype.setShadow = function (x, y, color, blur, shadowStroke, sha
     this.style.shadowFill = shadowFill;
     this.dirty = true;
 
+    return this;
+
 };
 
 /**
@@ -224,11 +242,14 @@ Phaser.Text.prototype.setShadow = function (x, y, color, blur, shadowStroke, sha
 * @param {string|number} [style.fontSize=(from font)] - The size of the font (eg. 32 or '32px'): overrides the value in `style.font`.
 * @param {string} [style.backgroundColor=null] - A canvas fillstyle that will be used as the background for the whole Text object. Set to `null` to disable.
 * @param {string} [style.fill='black'] - A canvas fillstyle that will be used on the text eg 'red', '#00FF00'.
-* @param {string} [style.align='left'] - Alignment for multiline text ('left', 'center' or 'right'), does not affect single line text.
+* @param {string} [style.align='left'] - Horizontal alignment of each line in multiline text. Can be: 'left', 'center' or 'right'. Does not affect single lines of text (see `textBounds` and `boundsAlignH` for that).
+* @param {string} [style.boundsAlignH='left'] - Horizontal alignment of the text within the `textBounds`. Can be: 'left', 'center' or 'right'.
+* @param {string} [style.boundsAlignV='top'] - Vertical alignment of the text within the `textBounds`. Can be: 'top', 'middle' or 'bottom'.
 * @param {string} [style.stroke='black'] - A canvas stroke style that will be used on the text stroke eg 'blue', '#FCFF00'.
 * @param {number} [style.strokeThickness=0] - A number that represents the thickness of the stroke. Default is 0 (no stroke).
 * @param {boolean} [style.wordWrap=false] - Indicates if word wrap should be used.
 * @param {number} [style.wordWrapWidth=100] - The width in pixels at which text will wrap.
+* @return {Phaser.Text} This Text instance.
 */
 Phaser.Text.prototype.setStyle = function (style) {
 
@@ -237,6 +258,8 @@ Phaser.Text.prototype.setStyle = function (style) {
     style.backgroundColor = style.backgroundColor || null;
     style.fill = style.fill || 'black';
     style.align = style.align || 'left';
+    style.boundsAlignH = style.boundsAlignH || 'left';
+    style.boundsAlignV = style.boundsAlignV || 'top';
     style.stroke = style.stroke || 'black'; //provide a default, see: https://github.com/GoodBoyDigital/pixi.js/issues/136
     style.strokeThickness = style.strokeThickness || 0;
     style.wordWrap = style.wordWrap || false;
@@ -278,6 +301,8 @@ Phaser.Text.prototype.setStyle = function (style) {
     style.font = this.componentsToFont(this._fontComponents);
     this.style = style;
     this.dirty = true;
+
+    return this;
 
 };
 
@@ -476,11 +501,14 @@ Phaser.Text.prototype.updateLine = function (line, x, y) {
 * Clears any previously set color stops.
 *
 * @method Phaser.Text#clearColors
+* @return {Phaser.Text} This Text instance.
 */
 Phaser.Text.prototype.clearColors = function () {
 
     this.colors = [];
     this.dirty = true;
+
+    return this;
 
 };
 
@@ -495,11 +523,14 @@ Phaser.Text.prototype.clearColors = function () {
 * @method Phaser.Text#addColor
 * @param {string} color - A canvas fillstyle that will be used on the text eg `red`, `#00FF00`, `rgba()`.
 * @param {number} position - The index of the character in the string to start applying this color value from.
+* @return {Phaser.Text} This Text instance.
 */
 Phaser.Text.prototype.addColor = function (color, position) {
 
     this.colors[position] = color;
     this.dirty = true;
+
+    return this;
 
 };
 
@@ -660,11 +691,60 @@ Phaser.Text.prototype.componentsToFont = function (components) {
  *
  * @method Phaser.Text#setText
  * @param {string} [text] - The text to be displayed. Set to an empty string to clear text that is already present.
+ * @return {Phaser.Text} This Text instance.
  */
 Phaser.Text.prototype.setText = function (text) {
 
     this.text = text.toString() || '';
     this.dirty = true;
+
+    return this;
+
+};
+
+/**
+ * The Text Bounds is a rectangular region that allows you to align your text within it, regardless of the number of lines of text
+ * or position within the world. For example in an 800x600 sized game if you set the textBounds to be 0,0,800,600 and text alignment
+ * to 'left' and vertical alignment to 'bottom' then the text will render in the bottom-right hand corner of the game, regardless of
+ * the size of font you're using or the number of lines in the text itself.
+ *
+ * Set the Style properties `boundsAlignH` and `boundsAlignV` or adjust them via the Text setters to change the alignment.
+ * 
+ * It works by calculating the final position based on the Text.canvas size, which is modified as the text is updated. Some fonts
+ * have additional padding around them which you can mitigate by tweaking the Text.padding property.
+ *
+ * Setting a textBounds _doesn't_ update the wordWrapWidth, so be aware of the relationship between the two.
+ *
+ * Call this method with nothing defined for any of the parameters to reset an existing textBounds.
+ *
+ * @method Phaser.Text#setTextBounds
+ * @param {number} [x] - The x coordinate of the Text Bounds region.
+ * @param {number} [y] - The y coordinate of the Text Bounds region.
+ * @param {number} [width] - The width of the Text Bounds region.
+ * @param {number} [height] - The height of the Text Bounds region.
+ * @return {Phaser.Text} This Text instance.
+ */
+Phaser.Text.prototype.setTextBounds = function (x, y, width, height) {
+
+    if (typeof x === 'undefined')
+    {
+        this.textBounds = null;
+    }
+    else
+    {
+        if (!this.textBounds)
+        {
+            this.textBounds = new Phaser.Rectangle(x, y, width, height);
+        }
+        else
+        {
+            this.textBounds.setTo(x, y, width, height);
+        }
+    }
+
+    this.updateTexture();
+    
+    return this;
 
 };
 
@@ -676,15 +756,60 @@ Phaser.Text.prototype.setText = function (text) {
  */
 Phaser.Text.prototype.updateTexture = function () {
 
-    this.texture.baseTexture.width = this.canvas.width;
-    this.texture.baseTexture.height = this.canvas.height;
-    this.texture.crop.width = this.texture.frame.width = this.canvas.width;
-    this.texture.crop.height = this.texture.frame.height = this.canvas.height;
+    var base = this.texture.baseTexture;
+    var crop = this.texture.crop;
+    var trim = this.texture.trim;
+    var frame = this.texture.frame;
 
-    this._width = this.canvas.width;
-    this._height = this.canvas.height;
+    var w = this.canvas.width;
+    var h = this.canvas.height;
 
-    // update the dirty base textures
+    base.width = w;
+    base.height = h;
+
+    crop.width = w;
+    crop.height = h;
+
+    trim.width = w;
+    trim.height = h;
+
+    frame.width = w;
+    frame.height = h;
+
+    this.texture.width = w;
+    this.texture.height = h;
+
+    this._width = w;
+    this._height = h;
+
+    if (this.textBounds)
+    {
+        var x = this.textBounds.x;
+        var y = this.textBounds.y;
+
+        //  Align the canvas based on the bounds
+        if (this.style.boundsAlignH === 'right')
+        {
+            x = this.textBounds.width - this.canvas.width;
+        }
+        else if (this.style.boundsAlignH === 'center')
+        {
+            x = this.textBounds.halfWidth - (this.canvas.width / 2);
+        }
+
+        if (this.style.boundsAlignV === 'bottom')
+        {
+            y = this.textBounds.height - this.canvas.height;
+        }
+        else if (this.style.boundsAlignV === 'middle')
+        {
+            y = this.textBounds.halfHeight - (this.canvas.height / 2);
+        }
+
+        trim.x = x;
+        trim.y = y;
+    }
+
     this.texture.baseTexture.dirty();
 
 };
@@ -1090,8 +1215,11 @@ Object.defineProperty(Phaser.Text.prototype, 'fill', {
 });
 
 /**
+* Controls the horizontal alignment for multiline text.
+* Can be: 'left', 'center' or 'right'.
+* Does not affect single lines of text. For that please see `setTextBounds`.
 * @name Phaser.Text#align
-* @property {string} align - Alignment for multiline text ('left', 'center' or 'right'), does not affect single line text.
+* @property {string} align
 */
 Object.defineProperty(Phaser.Text.prototype, 'align', {
 
@@ -1104,6 +1232,52 @@ Object.defineProperty(Phaser.Text.prototype, 'align', {
         if (value !== this.style.align)
         {
             this.style.align = value;
+            this.dirty = true;
+        }
+
+    }
+
+});
+
+/**
+* Horizontal alignment of the text within the `textBounds`. Can be: 'left', 'center' or 'right'.
+* @name Phaser.Text#boundsAlignH
+* @property {string} boundsAlignH
+*/
+Object.defineProperty(Phaser.Text.prototype, 'boundsAlignH', {
+
+    get: function() {
+        return this.style.boundsAlignH;
+    },
+
+    set: function(value) {
+
+        if (value !== this.style.boundsAlignH)
+        {
+            this.style.boundsAlignH = value;
+            this.dirty = true;
+        }
+
+    }
+
+});
+
+/**
+* Vertical alignment of the text within the `textBounds`. Can be: 'top', 'middle' or 'bottom'.
+* @name Phaser.Text#boundsAlignV
+* @property {string} boundsAlignV
+*/
+Object.defineProperty(Phaser.Text.prototype, 'boundsAlignV', {
+
+    get: function() {
+        return this.style.boundsAlignV;
+    },
+
+    set: function(value) {
+
+        if (value !== this.style.boundsAlignV)
+        {
+            this.style.boundsAlignV = value;
             this.dirty = true;
         }
 
