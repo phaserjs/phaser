@@ -37,7 +37,7 @@ Phaser.Tileset = function (name, firstgid, width, height, margin, spacing, prope
     * This is the starting index of the first tile index this Tileset contains.
     * @property {integer} firstgid
     */
-    this.firstgid = firstgid | 0;
+    this.firstgid = firstgid | 1;
 
     /**
     * The width of each tile (in pixels).
