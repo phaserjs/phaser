@@ -1069,15 +1069,14 @@ Object.defineProperty(Phaser.Sound.prototype, "mute", {
         if (value)
         {
             this._muted = true;
+            this._muteVolume = this._tempVolume;
 
             if (this.usingWebAudio)
             {
-                this._muteVolume = this.gainNode.gain.value;
                 this.gainNode.gain.value = 0;
             }
             else if (this.usingAudioTag && this._sound)
             {
-                this._muteVolume = this._sound.volume;
                 this._sound.volume = 0;
             }
         }
@@ -1114,19 +1113,28 @@ Object.defineProperty(Phaser.Sound.prototype, "volume", {
 
     set: function (value) {
 
+        //  Causes an Index size error in Firefox if you don't clamp the value
+        if (this.game.device.firefox && this.usingAudioTag)
+        {
+            value = this.game.math.clamp(value, 0, 1);
+        }
+
+        if (this._muted)
+        {
+            this._muteVolume = value;
+            return;
+        }
+
+        this._tempVolume = value;
+        this._volume = value;
+
         if (this.usingWebAudio)
         {
-            this._volume = value;
             this.gainNode.gain.value = value;
         }
         else if (this.usingAudioTag && this._sound)
         {
-            //  Causes an Index size error in Firefox if you don't clamp the value
-            if (value >= 0 && value <= 1)
-            {
-                this._volume = value;
-                this._sound.volume = value;
-            }
+            this._sound.volume = value;
         }
     }
 

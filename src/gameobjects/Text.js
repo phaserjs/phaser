@@ -703,19 +703,26 @@ Phaser.Text.prototype.setText = function (text) {
 };
 
 /**
- * The Text Bounds is a rectangular region that allows you to align your text within it, regardless of the number of lines of text
- * or position within the world. For example in an 800x600 sized game if you set the textBounds to be 0,0,800,600 and text alignment
- * to 'left' and vertical alignment to 'bottom' then the text will render in the bottom-right hand corner of the game, regardless of
- * the size of font you're using or the number of lines in the text itself.
+ * The Text Bounds is a rectangular region that you control the dimensions of into which the Text object itself is positioned,
+ * regardless of the number of lines in the text, the font size or any other attribute.
  *
- * Set the Style properties `boundsAlignH` and `boundsAlignV` or adjust them via the Text setters to change the alignment.
- * 
+ * Alignment is controlled via the properties `boundsAlignH` and `boundsAlignV` within the Text.style object, or can be directly
+ * set through the setters `Text.boundsAlignH` and `Text.boundsAlignV`. Bounds alignment is independent of text alignment.
+ *
+ * For example: If your game is 800x600 in size and you set the text bounds to be 0,0,800,600 then by setting boundsAlignH to
+ * 'center' and boundsAlignV to 'bottom' the text will render in the center and at the bottom of your game window, regardless of
+ * how many lines of text there may be. Even if you adjust the text content or change the style it will remain at the bottom center
+ * of the text bounds.
+ *
+ * This is especially powerful when you need to align text against specific coordinates in your game, but the actual text dimensions
+ * may vary based on font (say for multi-lingual games).
+* 
  * It works by calculating the final position based on the Text.canvas size, which is modified as the text is updated. Some fonts
  * have additional padding around them which you can mitigate by tweaking the Text.padding property.
  *
- * Setting a textBounds _doesn't_ update the wordWrapWidth, so be aware of the relationship between the two.
+ * If `Text.wordWrapWidth` is greater than the width of the text bounds it is clamped to match the bounds width.
  *
- * Call this method with nothing defined for any of the parameters to reset an existing textBounds.
+ * Call this method with no arguments given to reset an existing textBounds.
  *
  * @method Phaser.Text#setTextBounds
  * @param {number} [x] - The x coordinate of the Text Bounds region.
@@ -739,6 +746,11 @@ Phaser.Text.prototype.setTextBounds = function (x, y, width, height) {
         else
         {
             this.textBounds.setTo(x, y, width, height);
+        }
+
+        if (this.style.wordWrapWidth > width)
+        {
+            this.style.wordWrapWidth = width;
         }
     }
 
