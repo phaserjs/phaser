@@ -1059,7 +1059,12 @@ Object.defineProperty(Phaser.Sound.prototype, "mute", {
 
     set: function (value) {
 
-        value = value || null;
+        value = value || false;
+
+        if (value === this._muted)
+        {
+            return;
+        }
 
         if (value)
         {

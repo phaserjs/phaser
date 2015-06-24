@@ -743,7 +743,7 @@ Object.defineProperty(Phaser.SoundManager.prototype, "mute", {
 
     set: function (value) {
 
-        value = value || null;
+        value = value || false;
 
         if (value)
         {
