@@ -362,6 +362,7 @@ Version 2.4 - "Katar" - in dev
 * Device now uses a new way to detect when Phaser is running under a NW.js (formerly Node-WebKit) environment, using feature detection, instead of relying on a guarded require statement. The former way was the source of a known incompatibility with browserify and similar tools (thanks @rblopes #1851)
 * Sprite vs. Tilemap collision can now check if the sprite overlaps the tilemap without trying to separate it (thanks @Preece #1810)
 * The Asset Pack JSON Format example has been updated to include new and missing file formats (thanks @rblopes #1808)
+* RenderTexture now takes the display objects alpha into consideration when rendering it, before it would always reset worldAlpha to 1 before rendering, thus ignoring any alpha that may be set.
 
 ### Bug Fixes
 

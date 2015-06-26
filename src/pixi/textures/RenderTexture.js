@@ -203,7 +203,7 @@ PIXI.RenderTexture.prototype.clear = function()
  */
 PIXI.RenderTexture.prototype.renderWebGL = function(displayObject, matrix, clear)
 {
-    if (!this.valid)
+    if (!this.valid || displayObject.alpha === 0)
     {
         return;
     }
@@ -211,9 +211,6 @@ PIXI.RenderTexture.prototype.renderWebGL = function(displayObject, matrix, clear
     //  Frame buffers come in upside down so we need to flip the matrix 
     matrix.translate(0, this.projection.y * 2);
     matrix.scale(1, -1);
-
-    //  Set worldAlpha to ensure that the object is renderer at full opacity
-    displayObject.worldAlpha = 1;
 
     //  Time to update all the children of the displayObject with the new matrix.
     for (var i = 0; i < displayObject.children.length; i++)
@@ -252,13 +249,10 @@ PIXI.RenderTexture.prototype.renderWebGL = function(displayObject, matrix, clear
  */
 PIXI.RenderTexture.prototype.renderCanvas = function(displayObject, matrix, clear)
 {
-    if (!this.valid)
+    if (!this.valid || displayObject.alpha === 0)
     {
         return;
     }
-
-    // setWorld Alpha to ensure that the object is rendered at full opacity
-    displayObject.worldAlpha = 1;
 
     // Time to update all the children of the displayObject with the new matrix (what new matrix? there isn't one!)
     for (var i = 0; i < displayObject.children.length; i++)
