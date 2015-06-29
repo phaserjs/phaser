@@ -104,7 +104,7 @@ Phaser.Tilemap = function (game, key, tileWidth, tileHeight, width, height) {
     /**
     * @property {array} imagecollections - An array of Image Collections.
     */
-    this.imagecollections = data.imagecollections;  
+    this.imagecollections = data.imagecollections;
 
     /**
     * @property {array} tiles - The super array of Tiles.
