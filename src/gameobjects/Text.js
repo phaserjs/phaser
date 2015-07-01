@@ -39,7 +39,7 @@ Phaser.Text = function (game, x, y, text, style) {
 
     x = x || 0;
     y = y || 0;
-    text = text || '';
+    text = text.toString() || '';
     style = style || {};
 
     /**
@@ -1025,7 +1025,7 @@ Object.defineProperty(Phaser.Text.prototype, 'text', {
 
         if (value !== this._text)
         {
-            this._text = value.toString() || ' ';
+            this._text = value.toString() || '';
             this.dirty = true;
 
             if (this.parent)
