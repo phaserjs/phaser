@@ -84,7 +84,7 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     * @property {Phaser.Frame} textureFrame
     * @protected
     */
-    this.textureFrame = new Phaser.Frame(0, 0, 0, width, height, 'tilemapLayer', game.rnd.uuid());
+    this.textureFrame = new Phaser.Frame(0, 0, 0, width, height, 'tilemapLayer');
 
     /**
     * The const type of this object.
@@ -310,8 +310,6 @@ Phaser.TilemapLayer.prototype.postUpdate = function () {
 
     Phaser.Component.FixedToCamera.postUpdate.call(this);
 
-    // this.postUpdateCore();
-
     //  Stops you being able to auto-scroll the camera if it's not following a sprite
     var camera = this.game.camera;
 
@@ -319,6 +317,27 @@ Phaser.TilemapLayer.prototype.postUpdate = function () {
     this.scrollY = camera.y * this.scrollFactorY / this.scale.y;
 
     this.render();
+
+};
+
+/**
+* Resizes the internal canvas and texture frame used by this TilemapLayer.
+*
+* This is an expensive call, so don't bind it to a window resize event or similar!
+* 
+* @method Phaser.TilemapLayer#resize
+* @param {number} width - The new width of the TilemapLayer
+* @param {number} height - The new height of the TilemapLayer
+*/
+Phaser.TilemapLayer.resize = function (width, height) {
+
+    this.baseTexture.width = width;
+    this.baseTexture.height = height;
+
+    this.resizeFrame(width, height);
+
+    this.textureFrame.resize(width, height);
+
 
 };
 
@@ -558,6 +577,7 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
         for (var wx = tx; wx < tx + tw; wx++)
         {
             var row = this.layer.data[wy];
+
             if (row && row[wx])
             {
                 if (fetchAll || row[wx].isInteresting(collides, interestingFace))
@@ -573,27 +593,6 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
 };
 
 /**
-* Flag controlling if the layer tiles wrap at the edges. Only works if the World size matches the Map size.
-*
-* @property {boolean} wrap
-* @memberof Phaser.TilemapLayer
-* @public
-* @default false
-*/
-Object.defineProperty(Phaser.TilemapLayer.prototype, "wrap", {
-
-    get: function () {
-        return this._wrap;
-    },
-
-    set: function (value) {
-        this._wrap = value;
-        this.dirty = true;
-    }
-
-});
-
-/**
 * Returns the appropriate tileset for the index, updating the internal cache as required.
 * This should only be called if `tilesets[index]` evaluates to undefined.
 *
@@ -602,8 +601,8 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, "wrap", {
 * @param {integer} Tile index
 * @return {Phaser.Tileset|null} Returns the associated tileset or null if there is no such mapping.
 */
-Phaser.TilemapLayer.prototype.resolveTileset = function (tileIndex)
-{
+Phaser.TilemapLayer.prototype.resolveTileset = function (tileIndex) {
+
     var tilesets = this._mc.tilesets;
 
     //  Try for dense array if reasonable
@@ -639,8 +638,7 @@ Phaser.TilemapLayer.prototype.resolveTileset = function (tileIndex)
 * @method Phaser.TilemapLayer#resetTilesetCache
 * @public
 */
-Phaser.TilemapLayer.prototype.resetTilesetCache = function ()
-{
+Phaser.TilemapLayer.prototype.resetTilesetCache = function () {
 
     var tilesets = this._mc.tilesets;
 
@@ -658,7 +656,7 @@ Phaser.TilemapLayer.prototype.resetTilesetCache = function ()
  * @param {number} [xScale=1] - The scale factor along the X-plane 
  * @param {number} [yScale] - The scale factor along the Y-plane
  */
-Phaser.TilemapLayer.prototype.setScale = function(xScale, yScale) {
+Phaser.TilemapLayer.prototype.setScale = function (xScale, yScale) {
 
     xScale = xScale || 1;
     yScale = yScale || xScale;
@@ -694,8 +692,8 @@ Phaser.TilemapLayer.prototype.setScale = function(xScale, yScale) {
 * @param {integer} x
 * @param {integer} y
 */
-Phaser.TilemapLayer.prototype.shiftCanvas = function (context, x, y)
-{
+Phaser.TilemapLayer.prototype.shiftCanvas = function (context, x, y) {
+
     var canvas = context.canvas;
     var copyW = canvas.width - Math.abs(x);
     var copyH = canvas.height - Math.abs(y);
@@ -945,6 +943,7 @@ Phaser.TilemapLayer.prototype.renderDeltaScroll = function (shiftX, shiftY) {
         var trueBottom = Math.floor((renderH - 1 + scrollY) / th);
         this.renderRegion(scrollX, scrollY, left, trueTop, right, trueBottom);
     }
+
     if (top <= bottom)
     {
         // Clear top or bottom edge
@@ -963,8 +962,7 @@ Phaser.TilemapLayer.prototype.renderDeltaScroll = function (shiftX, shiftY) {
 * @method Phaser.TilemapLayer#renderFull
 * @private
 */
-Phaser.TilemapLayer.prototype.renderFull = function ()
-{
+Phaser.TilemapLayer.prototype.renderFull = function () {
     
     var scrollX = this._mc.scrollX;
     var scrollY = this._mc.scrollY;
@@ -1177,6 +1175,27 @@ Phaser.TilemapLayer.prototype.renderDebug = function () {
     }
 
 };
+
+/**
+* Flag controlling if the layer tiles wrap at the edges. Only works if the World size matches the Map size.
+*
+* @property {boolean} wrap
+* @memberof Phaser.TilemapLayer
+* @public
+* @default false
+*/
+Object.defineProperty(Phaser.TilemapLayer.prototype, "wrap", {
+
+    get: function () {
+        return this._wrap;
+    },
+
+    set: function (value) {
+        this._wrap = value;
+        this.dirty = true;
+    }
+
+});
 
 /**
 * Scrolls the map horizontally or returns the current x position.
