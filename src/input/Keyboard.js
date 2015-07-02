@@ -161,24 +161,32 @@ Phaser.Keyboard.prototype = {
     /**
     * A practical way to create an object containing user selected hotkeys.
     *
+    * For example: `addKeys( [Phaser.Keyboard.W, Phaser.Keyboard.S, Phaser.Keyboard.A, Phaser.Keyboard.D], [ 'up', 'down', 'left', 'right' ] );`
+    *
+    * Would return an object containing the properties `up`, `down`, `left` and `right` that you could poll just like a Phaser.Key object.
+    *
     * @method Phaser.Keyboard#addKeys
-    * @param {Array : number} Keycodes - The keycodes of the keys to add ie.  [Phaser.Keyboard.UP,Phaser.Keyboard.SPACEBAR] or [52,82].
-    * @param {Array : string} Hotkeys - The hotkeys that ll be assigned to keycodes ie. ["UP","DOWN"] or ["RIGHT","LEFT"]
+    * @param {Array<number>} keycodes - The keycodes of the keys to add i.e. [Phaser.Keyboard.UP, Phaser.Keyboard.SPACEBAR] or [52, 82].
+    * @param {Array<string>} hotkeys - The hotkeys that will be assigned to the keycodes ie. ["UP", "DOWN"] or ["RIGHT", "LEFT"]
     * @return {object} An object containing user selected properties
     */
-    addKeys: function (keycodes,hotkeys){
-        var result = "{";
-        for(var i = 0; i < hotkeys.length; i++){
-            result += hotkeys[i] + ": this.addKey(" + keycodes[i] + ")";
-            if(i !== ( hotkeys.length-1 ))
-                result += ",";
+    addKeys: function (keycodes, hotkeys) {
 
+        if (keycodes.length !== hotkeys.length)
+        {
+            return null;
         }
-        result += "}";
-        //eval here should be quite safe.
-	    return(eval("(" + result + ")"));
-    },
 
+        var output = {};
+
+        for (var i = 0; i < keycodes.length; i++)
+        {
+            output[hotkeys[i]] = this.addKey(keycodes[i]);
+        }
+
+        return output;
+
+    },
 
     /**
     * Removes a Key object from the Keyboard manager.
@@ -205,12 +213,7 @@ Phaser.Keyboard.prototype = {
     */
     createCursorKeys: function () {
 
-        return {
-            up: this.addKey(Phaser.Keyboard.UP),
-            down: this.addKey(Phaser.Keyboard.DOWN),
-            left: this.addKey(Phaser.Keyboard.LEFT),
-            right: this.addKey(Phaser.Keyboard.RIGHT)
-        };
+        return this.addKeys([Phaser.Keyboard.UP, Phaser.Keyboard.DOWN, Phaser.Keyboard.LEFT, Phaser.Keyboard.RIGHT], ['up', 'down', 'left', 'right']);
 
     },
 
