@@ -92,6 +92,14 @@ Phaser.Text = function (game, x, y, text, style) {
     this.colors = [];
 
     /**
+    * Should the linePositionX and Y values be automatically rounded before rendering the Text?
+    * You may wish to enable this if you want to remove the effect of sub-pixel aliasing from text.
+    * @property {boolean} autoRound
+    * @default
+    */
+    this.autoRound = false;
+
+    /**
     * @property {string} _text - Internal cache var.
     * @private
     */
@@ -408,6 +416,12 @@ Phaser.Text.prototype.updateText = function () {
         else if (this.style.align === 'center')
         {
             linePositionX += (maxLineWidth - lineWidths[i]) / 2;
+        }
+
+        if (this.autoRound)
+        {
+            linePositionX = Math.round(linePositionX);
+            linePositionY = Math.round(linePositionY);
         }
 
         if (this.colors.length > 0)

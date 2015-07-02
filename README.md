@@ -318,6 +318,7 @@ Version 2.4 - "Katar" - in dev
 * Game Objects that have the Health component (such as Sprites) now have a new method: `heal` which adds the given amount to the health property, i.e. is the opposite of `damage` (thanks @stephandesouza #1794)
 * maxHealth is a new property that Game Objects with the Health component receive and works in combination with the `heal` method to ensure a health limit cap.
 * Text.setTextBounds is a rectangular region that allows you to align your text within it, regardless of the number of lines of text or position within the world. For example in an 800x600 sized game if you set the textBounds to be 0,0,800,600 and text alignment to 'left' and vertical alignment to 'bottom' then the text will render in the bottom-right hand corner of the game, regardless of the size of font you're using or the number of lines in the text itself.
+* Text.autoRound allows you to control if the text is allowed to render at sub-pixel coordinates or not. Set to `true` to round the coordinates, often eliminating anti-aliasing from certain font types (#1867)
 
 ### Updates
 

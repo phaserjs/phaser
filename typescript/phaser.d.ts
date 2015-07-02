@@ -4339,6 +4339,7 @@ declare module Phaser {
 
         align: string;
         angle: number;
+        autoRound: boolean;
         boundsAlignH: string;
         boundsAlignV: string;
         cameraOffset: Phaser.Point;
