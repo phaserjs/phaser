@@ -78,7 +78,7 @@ Phaser.ImageCollection = function (name, firstgid, width, height, margin, spacin
 
     /**
     * The cached images that are a part of this collection.
-    * @property {?object} images
+    * @property {array} images
     * @readonly
     */
     // Modified internally
@@ -94,11 +94,12 @@ Phaser.ImageCollection = function (name, firstgid, width, height, margin, spacin
 };
 
 Phaser.ImageCollection.prototype = {
+
     /**
     * Returns true if and only if this image collection contains the given image index.
     *
     * @method Phaser.ImageCollection#containsImageIndex
-    * @public
+    * @param {integer} imageIndex - The image index to search for.
     * @return {boolean} True if this Image Collection contains the given index.
     */
     containsImageIndex: function (imageIndex) {
@@ -114,20 +115,16 @@ Phaser.ImageCollection.prototype = {
     * Add an image to this Image Collection.
     *
     * @method Phaser.ImageCollection#addImage
-    * @public
-    * @param {string} image - The the key of the image in the Image Collection and in the cache.
     * @param {integer} gid - The gid of the image in the Image Collection.
+    * @param {string} image - The the key of the image in the Image Collection and in the cache.
     */
     addImage: function (gid, image) {
-        var newImage = {
-            gid: gid,
-            image: image
-        };
 
-        this.images.push(newImage);
-        this.total ++;
+        this.images.push({ gid: gid, image: image });
+        this.total++;
+
     }
-};
 
+};
 
 Phaser.ImageCollection.prototype.constructor = Phaser.ImageCollection;

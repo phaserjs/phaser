@@ -1628,6 +1628,25 @@ declare module Phaser {
 
     }
 
+    class ImageCollection {
+
+        constructor(name: string, firstgid: number, width?: number, height?: number, margin?: number, spacing?: number, properties?: any);
+
+        name: string;
+        firstgid: number;
+        imageWidth: number;
+        imageHeight: number;
+        imageMargin: number;
+        imageSpacing: number;
+        properties: any;
+        images: array;
+        total: number;
+
+        addImage(gid: number, image: string): void;
+        containsImageIndex(imageIndex: number): boolean;
+
+    }
+
     class Input {
 
         constructor(game: Phaser.Game);
