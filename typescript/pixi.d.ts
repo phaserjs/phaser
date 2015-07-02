@@ -1084,23 +1084,6 @@ declare module PIXI {
 
     }
 
-    export class Text extends Sprite {
-
-        constructor(text: string, style?: TextStyle);
-
-        static fontPropertiesCanvas: any;
-        static fontPropertiesContext: any;
-        static fontPropertiesCache: any;
-
-        context: CanvasRenderingContext2D;
-        resolution: number;
-
-        destroy(destroyTexture: boolean): void;
-        setStyle(style: TextStyle): void;
-        setText(text: string): void;
-
-    }
-
     export class Texture implements Mixin {
 
         static emptyTexture: Texture;
@@ -1146,6 +1129,7 @@ declare module PIXI {
         blendMode: number;
         refreshTexture: boolean;
         texture: Texture;
+        textureDebug: boolean;
         tint: number;
         tilePosition: Point;
         tilePattern: PIXI.Texture;
