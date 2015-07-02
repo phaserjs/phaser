@@ -376,8 +376,9 @@ Phaser.TilemapParser = {
 
         map.images = images;
 
-        //  Tilesets
+        //  Tilesets & Image Collections
         var tilesets = [];
+        var imagecollections = [];
 
         for (var i = 0; i < json.tilesets.length; i++)
         {
@@ -400,13 +401,22 @@ Phaser.TilemapParser = {
             }
             else
             {
-                // TODO: Handle Tileset Image Collections (multiple images in a tileset, no slicing into each image)
-                console.warn("Phaser.TilemapParser - Image Collection Tilesets are not support");
+                var newCollection = new Phaser.ImageCollection(set.name, set.firstgid, set.tilewidth, set.tileheight, set.margin, set.spacing, set.properties);
+                
+                for (var i in set.tiles)
+                {
+                    var image = set.tiles[i].image;
+                    var gid = set.firstgid + parseInt(i, 10);
+                    newCollection.addImage(gid, image);
+                }
+
+                imagecollections.push(newCollection);
             }
 
         }
 
         map.tilesets = tilesets;
+        map.imagecollections = imagecollections;
 
         //  Objects & Collision Data (polylines, etc)
         var objects = {};
