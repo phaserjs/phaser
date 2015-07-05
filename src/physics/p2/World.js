@@ -337,7 +337,9 @@ Phaser.Physics.P2.prototype = {
         {
             object.body = new Phaser.Physics.P2.Body(this.game, object, object.x, object.y, 1);
             object.body.debug = debug;
-            object.anchor.set(0.5);
+			if (typeof object.anchor !== 'undefined') {
+				object.anchor.set(0.5);
+			}
         }
 
     },
