@@ -217,7 +217,7 @@ Phaser.Physics.P2.Body.prototype = {
         if (callback === null)
         {
             delete (this._groupCallbacks[group.mask]);
-            delete (this._groupCallbacksContext[group.mask]);
+            delete (this._groupCallbackContext[group.mask]);
         }
         else
         {
