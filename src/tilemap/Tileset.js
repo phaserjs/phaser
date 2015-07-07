@@ -177,7 +177,6 @@ Phaser.Tileset.prototype = {
     */
     setImage: function (image) {
 
-        console.log('Tileset.setImage', image.width, image.height);
         this.image = image;
         this.updateTileData(image.width, image.height);
        
@@ -216,9 +215,6 @@ Phaser.Tileset.prototype = {
         // May be fractional values
         var rowCount = (imageHeight - this.tileMargin * 2 + this.tileSpacing) / (this.tileHeight + this.tileSpacing);
         var colCount = (imageWidth - this.tileMargin * 2 + this.tileSpacing) / (this.tileWidth + this.tileSpacing);
-
-        console.log(imageWidth, imageHeight, rowCount, colCount);
-        console.log('ts', this.tileMargin, this.tileSpacing, 'th', this.tileWidth, this.tileHeight);
 
         if (rowCount % 1 !== 0 || colCount % 1 !== 0)
         {
