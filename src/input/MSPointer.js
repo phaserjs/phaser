@@ -10,6 +10,8 @@
 * It will work only in Internet Explorer 10 and Windows Store or Windows Phone 8 apps using JavaScript.
 * http://msdn.microsoft.com/en-us/library/ie/hh673557(v=vs.85).aspx
 *
+* You should not normally access this class directly, but instead use a Phaser.Pointer object which normalises all game input for you.
+*
 * @class Phaser.MSPointer
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
