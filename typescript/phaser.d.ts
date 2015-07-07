@@ -3506,20 +3506,33 @@ declare module Phaser {
 
         constructor(game: Phaser.Game, id: number);
 
+        static NO_BUTTON: number;
+        static LEFT_BUTTON: number;
+        static RIGHT_BUTTON: number;
+        static MIDDLE_BUTTON: number;
+        static BACK_BUTTON: number;
+        static FORWARD_BUTTON: number;
+        static ERASER_BUTTON: number;
+
         active: boolean;
+        backButton: boolean;
         button: any;
         circle: Phaser.Circle;
         clientX: number;
         clientY: number;
         dirty: boolean;
         duration: number;
+        eraserButton: boolean;
         exists: boolean;
+        forwardButton: boolean;
         game: Phaser.Game;
         id: number;
         identifier: number;
         isDown: boolean;
         isMouse: boolean;
         isUp: boolean;
+        leftButton: boolean;
+        middleButton: boolean;
         movementX: number;
         movementY: number;
         msSinceLastClick: number;
@@ -3532,6 +3545,7 @@ declare module Phaser {
         previousTapTime: number;
         rawMovementX: number;
         rawMovementY: number;
+        rightButton: boolean;
         screenX: number;
         screenY: number;
         target: any;
@@ -3552,10 +3566,12 @@ declare module Phaser {
         leave(event: any): void;
         move(event: any, fromClick?: boolean): void;
         reset(): void;
+        resetButtons(): void;
         resetMovement(): void;
         start(event: any): void;
         stop(event: any): void;
         update(): void;
+        updateButtons(buttons: number): void;
 
     }
 

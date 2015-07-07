@@ -322,6 +322,7 @@ Version 2.4 - "Katar" - in dev
 * Tiled Image Collection support is now available and has been added to the TilemapParser and Tilemap classes (thanks @asyed94 #1879)
 * Keyboard.addKeys is a practical way to create an object containing user selected hotkeys. For example: `addKeys( [Phaser.Keyboard.W, Phaser.Keyboard.S, Phaser.Keyboard.A, Phaser.Keyboard.D], [ 'up', 'down', 'left', 'right' ] );` would return an object containing the properties `up`, `down`, `left` and `right` that you could poll just like a Phaser.Key object. (thanks @Mourtz #1857)
 * TilemapLayer.resize allows you to resize a TilemapLayer. It will update the internal canvas object and corresponding texture dimensions (#1881)
+* Pointer button handling has been given an overhaul. It has the following new boolean properties: `leftButton`, `rightButton`, `middleButton`, `backButton`, `forwardButton` and `eraserButton`. So you can now easily check which buttons are active and build right or middle click support into your games. The Pointer object normalises these properties for you, regardless if they came from a MouseEvent or PointerEvent (thanks @youssefdetovernickr for the idea #1848)
 
 ### Updates
 
