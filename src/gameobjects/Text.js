@@ -34,6 +34,7 @@
 * @param {number} [style.strokeThickness=0] - A number that represents the thickness of the stroke. Default is 0 (no stroke).
 * @param {boolean} [style.wordWrap=false] - Indicates if word wrap should be used.
 * @param {number} [style.wordWrapWidth=100] - The width in pixels at which text will wrap.
+* @param {number} [style.tab=0] - The size (in pixels) of a tab stop, for when text includes tab characters. 0 disables.
 */
 Phaser.Text = function (game, x, y, text, style) {
 
@@ -92,11 +93,8 @@ Phaser.Text = function (game, x, y, text, style) {
     */
     this.autoRound = false;
 
-    this.tab = 0;
-
     /**
-     * The resolution of the canvas used for rendering the Text.
-     * @property {number} _res
+     * @property {number} _res - Internal canvas resolution var.
      * @private
      */
     this._res = game.renderer.resolution;
@@ -257,6 +255,7 @@ Phaser.Text.prototype.setShadow = function (x, y, color, blur, shadowStroke, sha
 * @param {number} [style.strokeThickness=0] - A number that represents the thickness of the stroke. Default is 0 (no stroke).
 * @param {boolean} [style.wordWrap=false] - Indicates if word wrap should be used.
 * @param {number} [style.wordWrapWidth=100] - The width in pixels at which text will wrap.
+* @param {number} [style.tab=0] - The size (in pixels) of a tab stop, for when text includes tab characters. 0 disables.
 * @return {Phaser.Text} This Text instance.
 */
 Phaser.Text.prototype.setStyle = function (style) {
@@ -276,6 +275,7 @@ Phaser.Text.prototype.setStyle = function (style) {
     style.shadowOffsetY = style.shadowOffsetY || 0;
     style.shadowColor = style.shadowColor || 'rgba(0,0,0,0)';
     style.shadowBlur = style.shadowBlur || 0;
+    style.tab = style.tab || 0;
 
     var components = this.fontToComponents(style.font);
 
@@ -337,31 +337,40 @@ Phaser.Text.prototype.updateText = function () {
     var lines = outputText.split(/(?:\r\n|\r|\n)/);
 
     //  Calculate text width
+    var tab = this.style.tab;
     var lineWidths = [];
     var maxLineWidth = 0;
     var fontProperties = this.determineFontProperties(this.style.font);
 
     for (var i = 0; i < lines.length; i++)
     {
-        if (this.tab === 0)
+        if (tab === 0)
         {
             //  Simple layout (no tabs)
-            var lineWidth = this.context.measureText(lines[i]).width + this.padding.x;
+            var lineWidth = this.context.measureText(lines[i]).width + this.style.strokeThickness + this.padding.x;
         }
         else
         {
             //  Complex layout (tabs)
             var line = lines[i].split(/(?:\t)/);
-            var lineWidth = this.padding.x;
+            var lineWidth = this.padding.x + this.style.strokeThickness;
 
             for (var c = 0; c < line.length; c++)
             {
-                lineWidth += this.context.measureText(line[c]).width;
+                var section = Math.ceil(this.context.measureText(line[c]).width);
+
+                //  How far to the next tab?
+                lineWidth += section;
+
+                var snap = this.game.math.snapToCeil(lineWidth, tab);
+                var diff = snap - lineWidth;
+
+                lineWidth += diff;
             }
         }
 
-        lineWidths[i] = lineWidth;
-        maxLineWidth = Math.max(maxLineWidth, lineWidth);
+        lineWidths[i] = Math.ceil(lineWidth);
+        maxLineWidth = Math.max(maxLineWidth, lineWidths[i]);
     }
 
     var width = maxLineWidth + this.style.strokeThickness;
@@ -451,18 +460,71 @@ Phaser.Text.prototype.updateText = function () {
             if (this.style.stroke && this.style.strokeThickness)
             {
                 this.updateShadow(this.style.shadowStroke);
-                this.context.strokeText(lines[i], linePositionX, linePositionY);
+
+                if (tab === 0)
+                {
+                    this.context.strokeText(lines[i], linePositionX, linePositionY);
+                }
+                else
+                {
+                    this.renderTabLine(lines[i], linePositionX, linePositionY);
+                }
             }
 
             if (this.style.fill)
             {
                 this.updateShadow(this.style.shadowFill);
-                this.context.fillText(lines[i], linePositionX, linePositionY);
+
+                if (tab === 0)
+                {
+                    this.context.fillText(lines[i], linePositionX, linePositionY);
+                }
+                else
+                {
+                    this.renderTabLine(lines[i], linePositionX, linePositionY);
+                }
             }
         }
     }
 
     this.updateTexture();
+
+};
+
+/**
+* Renders a line of text that contains tab characters if Text.tab > 0.
+* Called automatically by updateText.
+*
+* @method Phaser.Text#renderTabLine
+* @private
+* @param {string} line - The line of text to render.
+* @param {integer} x - The x position to start rendering from.
+* @param {integer} y - The y position to start rendering from.
+*/
+Phaser.Text.prototype.renderTabLine = function (line, x, y) {
+
+    //  Complex layout (tabs)
+    var text = line.split(/(?:\t)/);
+    var w = 0;
+
+    for (var c = 0; c < text.length; c++)
+    {
+        var section = Math.ceil(this.context.measureText(text[c]).width);
+
+        //  How far to the next tab?
+
+        console.log(text[c], '=', section);
+
+        // w += section;
+
+        var snap = this.game.math.snapToCeil(x, this.style.tab);
+
+        this.context.fillText(text[c], snap, y);
+
+        console.log('x', snap);
+
+        x = snap + section;
+    }
 
 };
 
@@ -1294,6 +1356,30 @@ Object.defineProperty(Phaser.Text.prototype, 'resolution', {
         if (value !== this._res)
         {
             this._res = value;
+            this.dirty = true;
+        }
+
+    }
+
+});
+
+/**
+* x
+* 
+* @name Phaser.Text#tab
+* @property {integer} tab
+*/
+Object.defineProperty(Phaser.Text.prototype, 'tab', {
+
+    get: function() {
+        return this.style.tab;
+    },
+
+    set: function(value) {
+
+        if (value !== this.style.tab)
+        {
+            this.style.tab = value;
             this.dirty = true;
         }
 
