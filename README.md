@@ -366,6 +366,7 @@ Version 2.4 - "Katar" - in dev
 * Sprite vs. Tilemap collision can now check if the sprite overlaps the tilemap without trying to separate it (thanks @Preece #1810)
 * The Asset Pack JSON Format example has been updated to include new and missing file formats (thanks @rblopes #1808)
 * RenderTexture now takes the display objects alpha into consideration when rendering it, before it would always reset worldAlpha to 1 before rendering, thus ignoring any alpha that may be set.
+* P2.enableBody now checks if an anchor exists on target object before attempting to set its value (thanks @standardgaussian  #1885)
 
 ### Bug Fixes
 
@@ -409,6 +410,7 @@ Version 2.4 - "Katar" - in dev
 * Due to a Pixi 2 issue TileSprite when running under WebGL didn't respect the world alpha setting and would only work with its own alpha (thanks @hanenbro #1774)
 * TileSprite now fully supports animation again, having been broken for several versions due to a Pixi upgrade. We've updated the way TileSprites generate their textures internally considerably and animation support is back across both Canvas and WebGL as a result (#1653)
 * Setting mute to false on Sound that was never muted caused its volume to be set to zero (thanks @brianbunch #1870)
+* P2.Body.createGroupCallback incorrectly referenced the `_groupCallbackContext` when deleting it (thanks @Langerz82 #1886)
 
 ### Deprecated
 
