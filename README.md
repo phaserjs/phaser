@@ -413,6 +413,7 @@ Version 2.4 - "Katar" - in dev
 * TileSprite now fully supports animation again, having been broken for several versions due to a Pixi upgrade. We've updated the way TileSprites generate their textures internally considerably and animation support is back across both Canvas and WebGL as a result (#1653)
 * Setting mute to false on Sound that was never muted caused its volume to be set to zero (thanks @brianbunch #1870)
 * P2.Body.createGroupCallback incorrectly referenced the `_groupCallbackContext` when deleting it (thanks @Langerz82 #1886)
+* When reusing a Tween created with an array of properties the values would get exponentially added to the TweenData internal array each time the tween was re-run (thanks @SBCGames #1747)
 
 ### Deprecated
 

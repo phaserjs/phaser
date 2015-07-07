@@ -437,7 +437,7 @@ Phaser.Group.prototype.addAt = function (child, index, silent) {
 *
 * @method Phaser.Group#getAt
 * @param {integer} index - The index to return the child from.
-* @return {DisplayObject} The child that was found at the given index, or -1 for an invalid index.
+* @return {DisplayObject|integer} The child that was found at the given index, or -1 for an invalid index.
 */
 Phaser.Group.prototype.getAt = function (index) {
 
