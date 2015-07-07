@@ -1,7 +1,7 @@
 /// <reference path="pixi.d.ts" />
 /// <reference path="p2.d.ts" />
 
-// Type definitions for Phaser 2.4.0 2015-Jun-22
+// Type definitions for Phaser 2.4.0 2015-Jul-07
 // Project: https://github.com/photonstorm/phaser
 
 declare class Phaser {
@@ -4560,7 +4560,6 @@ declare module Phaser {
 
         constructor(game: Phaser.Game, tilemap: Phaser.Tilemap, index: number, width?: number, height?: number);
 
-        baseTexture: PIXI.BaseTexture;
         cameraOffset: Phaser.Point;
         canvas: HTMLCanvasElement;
         collisionHeight: number;
@@ -4586,8 +4585,6 @@ declare module Phaser {
         scrollFactorY: number;
         scrollX: number;
         scrollY: number;
-        texture: PIXI.Texture;
-        textureFrame: Phaser.Frame;
         type: number;
         wrap: boolean;
 
@@ -4598,6 +4595,7 @@ declare module Phaser {
         getTileY(y: number): number;
         postUpdate(): void;
         render(): void;
+        resize(width: number, height: number): void;
         resizeWorld(): void;
         resetTilesetCache(): void;
         setScale(xScale?: number, yScale?: number): void;

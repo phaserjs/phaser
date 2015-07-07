@@ -321,6 +321,7 @@ Version 2.4 - "Katar" - in dev
 * Text.autoRound allows you to control if the text is allowed to render at sub-pixel coordinates or not. Set to `true` to round the coordinates, often eliminating anti-aliasing from certain font types (#1867)
 * Tiled Image Collection support is now available and has been added to the TilemapParser and Tilemap classes (thanks @asyed94 #1879)
 * Keyboard.addKeys is a practical way to create an object containing user selected hotkeys. For example: `addKeys( [Phaser.Keyboard.W, Phaser.Keyboard.S, Phaser.Keyboard.A, Phaser.Keyboard.D], [ 'up', 'down', 'left', 'right' ] );` would return an object containing the properties `up`, `down`, `left` and `right` that you could poll just like a Phaser.Key object. (thanks @Mourtz #1857)
+* TilemapLayer.resize allows you to resize a TilemapLayer. It will update the internal canvas object and corresponding texture dimensions (#1881)
 
 ### Updates
 
