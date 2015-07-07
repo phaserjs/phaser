@@ -80,14 +80,6 @@ Phaser.Text = function (game, x, y, text, style) {
     this.context = this.canvas.getContext('2d');
 
     /**
-     * The resolution of the canvas used for rendering the Text.
-     * If you change this you need to call `Text.updateText` after doing so.
-     * @property {number} resolution
-     * @default
-     */
-    this.resolution = 1;
-
-    /**
     * @property {array} colors - An array of the color values as specified by {@link Phaser.Text#addColor addColor}.
     */
     this.colors = [];
@@ -99,6 +91,15 @@ Phaser.Text = function (game, x, y, text, style) {
     * @default
     */
     this.autoRound = false;
+
+    this.tab = 0;
+
+    /**
+     * The resolution of the canvas used for rendering the Text.
+     * @property {number} _res
+     * @private
+     */
+    this._res = game.renderer.resolution;
 
     /**
     * @property {string} _text - Internal cache var.
@@ -321,7 +322,7 @@ Phaser.Text.prototype.setStyle = function (style) {
 */
 Phaser.Text.prototype.updateText = function () {
 
-    this.texture.baseTexture.resolution = this.resolution;
+    this.texture.baseTexture.resolution = this._res;
 
     this.context.font = this.style.font;
 
@@ -342,14 +343,30 @@ Phaser.Text.prototype.updateText = function () {
 
     for (var i = 0; i < lines.length; i++)
     {
-        var lineWidth = this.context.measureText(lines[i]).width + this.padding.x;
+        if (this.tab === 0)
+        {
+            //  Simple layout (no tabs)
+            var lineWidth = this.context.measureText(lines[i]).width + this.padding.x;
+        }
+        else
+        {
+            //  Complex layout (tabs)
+            var line = lines[i].split(/(?:\t)/);
+            var lineWidth = this.padding.x;
+
+            for (var c = 0; c < line.length; c++)
+            {
+                lineWidth += this.context.measureText(line[c]).width;
+            }
+        }
+
         lineWidths[i] = lineWidth;
         maxLineWidth = Math.max(maxLineWidth, lineWidth);
     }
 
     var width = maxLineWidth + this.style.strokeThickness;
 
-    this.canvas.width = width * this.resolution;
+    this.canvas.width = width * this._res;
     
     //  Calculate text height
     var lineHeight = fontProperties.fontSize + this.style.strokeThickness + this.padding.y;
@@ -368,9 +385,9 @@ Phaser.Text.prototype.updateText = function () {
         height += diff;
     }
 
-    this.canvas.height = height * this.resolution;
+    this.canvas.height = height * this._res;
 
-    this.context.scale(this.resolution, this.resolution);
+    this.context.scale(this._res, this._res);
 
     if (navigator.isCocoonJS)
     {
@@ -400,6 +417,8 @@ Phaser.Text.prototype.updateText = function () {
     //  Draw text line by line
     for (i = 0; i < lines.length; i++)
     {
+        //  Split the line by
+
         linePositionX = this.style.strokeThickness / 2;
         linePositionY = (this.style.strokeThickness / 2 + i * lineHeight) + fontProperties.ascent;
 
@@ -848,8 +867,6 @@ Phaser.Text.prototype._renderWebGL = function (renderSession) {
 
     if (this.dirty)
     {
-        this.resolution = renderSession.resolution;
-
         this.updateText();
         this.dirty = false;
     }
@@ -869,8 +886,6 @@ Phaser.Text.prototype._renderCanvas = function (renderSession) {
 
     if (this.dirty)
     {
-        this.resolution = renderSession.resolution;
-
         this.updateText();
         this.dirty = false;
     }
@@ -1255,6 +1270,30 @@ Object.defineProperty(Phaser.Text.prototype, 'align', {
         if (value !== this.style.align)
         {
             this.style.align = value;
+            this.dirty = true;
+        }
+
+    }
+
+});
+
+/**
+* The resolution of the canvas the text is rendered to.
+* This defaults to match the resolution of the renderer, but can be changed on a per Text object basis.
+* @name Phaser.Text#resolution
+* @property {integer} resolution
+*/
+Object.defineProperty(Phaser.Text.prototype, 'resolution', {
+
+    get: function() {
+        return this._res;
+    },
+
+    set: function(value) {
+
+        if (value !== this._res)
+        {
+            this._res = value;
             this.dirty = true;
         }
 
