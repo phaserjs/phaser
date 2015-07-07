@@ -70,21 +70,23 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     * @property {PIXI.BaseTexture} baseTexture
     * @protected
     */
-    this.baseTexture = new PIXI.BaseTexture(this.canvas);
+    // this.baseTexture = new PIXI.BaseTexture(this.canvas);
 
     /**
     * Required Pixi var.
     * @property {PIXI.Texture} texture
     * @protected
     */
-    this.texture = new PIXI.Texture(this.baseTexture);
+    // this.texture = new PIXI.Texture(this.baseTexture);
 
     /**
     * Dimensions of the renderable area.
     * @property {Phaser.Frame} textureFrame
     * @protected
     */
-    this.textureFrame = new Phaser.Frame(0, 0, 0, width, height, 'tilemapLayer');
+    // this.textureFrame = new Phaser.Frame(0, 0, 0, width, height, 'tilemapLayer');
+
+    this.setTexture(new PIXI.Texture(new PIXI.BaseTexture(this.canvas)));
 
     /**
     * The const type of this object.
@@ -104,7 +106,7 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     /**
     * Settings that control standard (non-diagnostic) rendering.
     *
-    * @property {boolean} [enableScrollDelta=true] - Delta scroll rendering only draws tiles/edges as them come into view.
+    * @property {boolean} [enableScrollDelta=true] - Delta scroll rendering only draws tiles/edges as they come into view.
     *     This can greatly improve scrolling rendering performance, especially when there are many small tiles.
     *     It should only be disabled in rare cases.
     *
@@ -331,13 +333,12 @@ Phaser.TilemapLayer.prototype.postUpdate = function () {
 */
 Phaser.TilemapLayer.resize = function (width, height) {
 
-    this.baseTexture.width = width;
-    this.baseTexture.height = height;
+    // this.baseTexture.width = width;
+    // this.baseTexture.height = height;
 
     this.resizeFrame(width, height);
 
-    this.textureFrame.resize(width, height);
-
+    // this.textureFrame.resize(width, height);
 
 };
 
@@ -1064,7 +1065,7 @@ Phaser.TilemapLayer.prototype.render = function () {
         this.renderDebug();
     }
 
-    this.baseTexture.dirty();
+    this.texture.baseTexture.dirty();
 
     this.dirty = false;
 
