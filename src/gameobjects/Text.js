@@ -357,13 +357,10 @@ Phaser.Text.prototype.updateText = function () {
 
             for (var c = 0; c < line.length; c++)
             {
-                var section = Math.ceil(this.context.measureText(line[c]).width);
-
                 //  How far to the next tab?
-                lineWidth += section;
+                lineWidth += Math.ceil(this.context.measureText(line[c]).width);
 
-                var snap = this.game.math.snapToCeil(lineWidth, tab);
-                var diff = snap - lineWidth;
+                var diff = this.game.math.snapToCeil(lineWidth, tab) - lineWidth;
 
                 lineWidth += diff;
             }
@@ -467,7 +464,7 @@ Phaser.Text.prototype.updateText = function () {
                 }
                 else
                 {
-                    this.renderTabLine(lines[i], linePositionX, linePositionY);
+                    this.renderTabLine(lines[i], linePositionX, linePositionY, false);
                 }
             }
 
@@ -481,7 +478,7 @@ Phaser.Text.prototype.updateText = function () {
                 }
                 else
                 {
-                    this.renderTabLine(lines[i], linePositionX, linePositionY);
+                    this.renderTabLine(lines[i], linePositionX, linePositionY, true);
                 }
             }
         }
@@ -500,12 +497,11 @@ Phaser.Text.prototype.updateText = function () {
 * @param {string} line - The line of text to render.
 * @param {integer} x - The x position to start rendering from.
 * @param {integer} y - The y position to start rendering from.
+* @param {boolean} fill - If true uses fillText, if false uses strokeText.
 */
-Phaser.Text.prototype.renderTabLine = function (line, x, y) {
+Phaser.Text.prototype.renderTabLine = function (line, x, y, fill) {
 
-    //  Complex layout (tabs)
     var text = line.split(/(?:\t)/);
-    var w = 0;
 
     for (var c = 0; c < text.length; c++)
     {
@@ -513,15 +509,16 @@ Phaser.Text.prototype.renderTabLine = function (line, x, y) {
 
         //  How far to the next tab?
 
-        console.log(text[c], '=', section);
-
-        // w += section;
-
         var snap = this.game.math.snapToCeil(x, this.style.tab);
 
-        this.context.fillText(text[c], snap, y);
-
-        console.log('x', snap);
+        if (fill)
+        {
+            this.context.fillText(text[c], snap, y);
+        }
+        else
+        {
+            this.context.strokeText(text[c], snap, y);
+        }
 
         x = snap + section;
     }
