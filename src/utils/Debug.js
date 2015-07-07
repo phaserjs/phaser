@@ -76,7 +76,7 @@ Phaser.Utils.Debug = function (game) {
     this.currentY = 0;
 
     /**
-    * @property {number} currentAlpha - The current alpha the debug information will be rendered at.
+    * @property {number} currentAlpha - The alpha of the Debug context, set before all debug information is rendered to it.
     * @default
     */
     this.currentAlpha = 1;
@@ -171,7 +171,6 @@ Phaser.Utils.Debug.prototype = {
         this.currentX = x;
         this.currentY = y;
         this.currentColor = color;
-        this.currentAlpha = this.context.globalAlpha;
         this.columnWidth = columnWidth;
 
         this.dirty = true;
@@ -181,7 +180,7 @@ Phaser.Utils.Debug.prototype = {
         this.context.strokeStyle = color;
         this.context.fillStyle = color;
         this.context.font = this.font;
-        this.context.globalAlpha = 1;
+        this.context.globalAlpha = this.currentAlpha;
 
     },
 
@@ -194,7 +193,6 @@ Phaser.Utils.Debug.prototype = {
     stop: function () {
 
         this.context.restore();
-        this.context.globalAlpha = this.currentAlpha;
 
     },
 

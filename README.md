@@ -368,6 +368,7 @@ Version 2.4 - "Katar" - in dev
 * The Asset Pack JSON Format example has been updated to include new and missing file formats (thanks @rblopes #1808)
 * RenderTexture now takes the display objects alpha into consideration when rendering it, before it would always reset worldAlpha to 1 before rendering, thus ignoring any alpha that may be set.
 * P2.enableBody now checks if an anchor exists on target object before attempting to set its value (thanks @standardgaussian  #1885)
+* Debug.currentAlpha wasn't being used to set the alpha of the Debug context at all (was always set to 1) but now updates the alpha of the Debug context before anything is rendered to it (thanks @wayfu #1888)
 
 ### Bug Fixes
 
