@@ -80,8 +80,9 @@ Phaser.Text = function (game, x, y, text, style) {
     this.context = this.canvas.getContext('2d');
 
     /**
-     * 
-     * @property {number} resolution - The resolution of the canvas.
+     * The resolution of the canvas used for rendering the Text.
+     * If you change this you need to call `Text.updateText` after doing so.
+     * @property {number} resolution
      * @default
      */
     this.resolution = 1;
@@ -136,8 +137,6 @@ Phaser.Text = function (game, x, y, text, style) {
     this._height = 0;
 
     Phaser.Sprite.call(this, game, x, y, PIXI.Texture.fromCanvas(this.canvas));
-
-    this.texture.trim = new Phaser.Rectangle();
 
     this.setStyle(style);
 
@@ -730,13 +729,15 @@ Phaser.Text.prototype.setText = function (text) {
  *
  * This is especially powerful when you need to align text against specific coordinates in your game, but the actual text dimensions
  * may vary based on font (say for multi-lingual games).
-* 
- * It works by calculating the final position based on the Text.canvas size, which is modified as the text is updated. Some fonts
- * have additional padding around them which you can mitigate by tweaking the Text.padding property.
  *
  * If `Text.wordWrapWidth` is greater than the width of the text bounds it is clamped to match the bounds width.
  *
  * Call this method with no arguments given to reset an existing textBounds.
+ * 
+ * It works by calculating the final position based on the Text.canvas size, which is modified as the text is updated. Some fonts
+ * have additional padding around them which you can mitigate by tweaking the Text.padding property. It then adjusts the `pivot`
+ * property based on the given bounds and canvas size. This means if you need to set the pivot property directly in your game then
+ * you either cannot use `setTextBounds` or you must place the Text object inside another DisplayObject on which you set the pivot.
  *
  * @method Phaser.Text#setTextBounds
  * @param {number} [x] - The x coordinate of the Text Bounds region.
@@ -784,7 +785,6 @@ Phaser.Text.prototype.updateTexture = function () {
 
     var base = this.texture.baseTexture;
     var crop = this.texture.crop;
-    var trim = this.texture.trim;
     var frame = this.texture.frame;
 
     var w = this.canvas.width;
@@ -795,9 +795,6 @@ Phaser.Text.prototype.updateTexture = function () {
 
     crop.width = w;
     crop.height = h;
-
-    trim.width = w;
-    trim.height = h;
 
     frame.width = w;
     frame.height = h;
@@ -832,8 +829,8 @@ Phaser.Text.prototype.updateTexture = function () {
             y = this.textBounds.halfHeight - (this.canvas.height / 2);
         }
 
-        trim.x = x;
-        trim.y = y;
+        this.pivot.x = -x;
+        this.pivot.y = -y;
     }
 
     this.texture.baseTexture.dirty();
