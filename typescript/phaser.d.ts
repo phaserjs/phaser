@@ -1204,7 +1204,7 @@ declare module Phaser {
         plugins: PluginManager;
         preserveDrawingBuffer: Boolean;
         raf: Phaser.RequestAnimationFrame;
-        renderer: number;
+        renderer: PIXI.CanvasRenderer | PIXI.WebGLRenderer;
         renderType: number;
         resolution: number;
         rnd: Phaser.RandomDataGenerator;
@@ -1527,7 +1527,7 @@ declare module Phaser {
         forEachDead(callback: Function, callbackContext: any, ...args: any[]): void;
         forEachExists(callback: Function, callbackContext: any): void;
         filter(predicate: Function, checkExists?: boolean): ArraySet;
-        getAt(index: number): any;
+        getAt(index: number): PIXI.DisplayObject | number;
         getBottom(): any;
         getFirstAlive(): any;
         getFirstDead(): any;
@@ -1639,7 +1639,7 @@ declare module Phaser {
         imageMargin: number;
         imageSpacing: number;
         properties: any;
-        images: array;
+        images: any[];
         total: number;
 
         addImage(gid: number, image: string): void;
@@ -4494,6 +4494,7 @@ declare module Phaser {
         height: number;
         heightInPixels: number;
         images: any[];
+        imagecollections: ImageCollection[];
         key: string;
         layer: Phaser.TilemapLayer[];
         layers: any[];
