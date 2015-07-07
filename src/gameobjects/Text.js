@@ -794,6 +794,62 @@ Phaser.Text.prototype.setText = function (text) {
 };
 
 /**
+ * The text to be displayed by this Text object.
+ * Use a \n to insert a carriage return and split the text.
+ * The text will be rendered with any style currently set.
+ *
+ * @method Phaser.Text#parseList
+ * @param {array} list - X
+ * @return {Phaser.Text} This Text instance.
+ */
+Phaser.Text.prototype.parseList = function (list) {
+
+    //  list can be either an array containing strings, or an array containing arrays.
+    //  If a multi-dim array then each new array equals a new line in the text.
+    //  
+    //  [ 'a', 'b', 'c' ] = "a\tb\tc";
+    //  
+    //  [
+    //      [ 'a', 'b', 'c' ],
+    //      [ 'd', 'e', 'f']
+    //  ] = "a\tb\tc\nd\te\tf";
+
+    if (!Array.isArray(list))
+    {
+        return this;
+    }
+    else
+    {
+        var s = "";
+
+        for (var i = 0; i < list.length; i++)
+        {
+            if (Array.isArray(list[i]))
+            {
+                s += list[i].join("\t");
+
+                if (i < list.length - 1)
+                {
+                    s += "\n";
+                }
+            }
+            else
+            {
+                s += list[i] + "\t";
+            }
+        }
+    }
+
+    console.log(s);
+
+    this.text = s;
+    this.dirty = true;
+
+    return this;
+
+};
+
+/**
  * The Text Bounds is a rectangular region that you control the dimensions of into which the Text object itself is positioned,
  * regardless of the number of lines in the text, the font size or any other attribute.
  *
