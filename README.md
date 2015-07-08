@@ -425,6 +425,8 @@ Version 2.4 - "Katar" - in dev
 * Text.addColor would incorrectly color the text stroke if set (thanks @llevkin #1893)
 * Setting the scaleMode property of a Game configuration object would cause a ScaleManager TypeError in the resize method. It now stores the scale mode locally and applies it after boot (thanks @Mickawesomesque #1534)
 * Device.windowsPhone should now correctly identify Windows Phone 8.1 devices, which also think they are iOS and Androids. If you find a device that gets around this check please send us its ua string! (thanks @jounii #1496)
+* Rope.segments used the wrong vertices property, causing a runtime error.
+* Debug.ropeSegments didn't take the scale of the Rope object into consideration, causing incorrect debug rendering.
 
 ### Deprecated
 

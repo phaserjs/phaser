@@ -443,14 +443,14 @@ Phaser.Utils.Debug.prototype = {
     },
 
     /**
-    * Renders the Rope's segments. Note: This is really expensive as it has to calculate new segments everytime you call it
+    * Renders the Rope's segments. Note: This is really expensive as it has to calculate new segments every time you call it
     *
     * @method Phaser.Utils.Debug#ropeSegments
     * @param {Phaser.Rope} rope - The rope to display the segments of.
     * @param {string} [color] - Color of the debug info to be rendered (format is css color string).
     * @param {boolean} [filled=true] - Render the rectangle as a fillRect (default, true) or a strokeRect (false)
     */
-    ropeSegments: function(rope, color, filled) {
+    ropeSegments: function (rope, color, filled) {
 
         var segments = rope.segments;
 
