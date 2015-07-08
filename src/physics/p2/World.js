@@ -88,42 +88,74 @@ Phaser.Physics.P2 = function (game, config) {
     this.walls = { left: null, right: null, top: null, bottom: null };
 
     /**
-    * @property {Phaser.Signal} onBodyAdded - Dispatched when a new Body is added to the World.
+    * This signal is dispatched when a new Body is added to the World.
+    *
+    * It sends 1 argument: `body` which is the `Phaser.Physics.P2.Body` that was added to the world.
+    * 
+    * @property {Phaser.Signal} onBodyAdded
     */
     this.onBodyAdded = new Phaser.Signal();
 
     /**
-    * @property {Phaser.Signal} onBodyRemoved - Dispatched when a Body is removed from the World.
+    * This signal is dispatched when a Body is removed to the World.
+    *
+    * It sends 1 argument: `body` which is the `Phaser.Physics.P2.Body` that was removed from the world.
+    * 
+    * @property {Phaser.Signal} onBodyRemoved
     */
     this.onBodyRemoved = new Phaser.Signal();
 
     /**
-    * @property {Phaser.Signal} onSpringAdded - Dispatched when a new Spring is added to the World.
+    * This signal is dispatched when a Spring is added to the World.
+    *
+    * It sends 1 argument: `spring` which is either a `Phaser.Physics.P2.Spring`, `p2.LinearSpring` or `p2.RotationalSpring` that was added to the world.
+    * 
+    * @property {Phaser.Signal} onSpringAdded
     */
     this.onSpringAdded = new Phaser.Signal();
 
     /**
-    * @property {Phaser.Signal} onSpringRemoved - Dispatched when a Spring is removed from the World.
+    * This signal is dispatched when a Spring is removed from the World.
+    *
+    * It sends 1 argument: `spring` which is either a `Phaser.Physics.P2.Spring`, `p2.LinearSpring` or `p2.RotationalSpring` that was removed from the world.
+    * 
+    * @property {Phaser.Signal} onSpringRemoved
     */
     this.onSpringRemoved = new Phaser.Signal();
 
     /**
-    * @property {Phaser.Signal} onConstraintAdded - Dispatched when a new Constraint is added to the World.
+    * This signal is dispatched when a Constraint is added to the World.
+    *
+    * It sends 1 argument: `constraint` which is the `Phaser.Physics.P2.Constraint` that was added to the world.
+    * 
+    * @property {Phaser.Signal} onConstraintAdded
     */
     this.onConstraintAdded = new Phaser.Signal();
 
     /**
-    * @property {Phaser.Signal} onConstraintRemoved - Dispatched when a Constraint is removed from the World.
+    * This signal is dispatched when a Constraint is removed from the World.
+    *
+    * It sends 1 argument: `constraint` which is the `Phaser.Physics.P2.Constraint` that was removed from the world.
+    * 
+    * @property {Phaser.Signal} onConstraintRemoved
     */
     this.onConstraintRemoved = new Phaser.Signal();
 
     /**
-    * @property {Phaser.Signal} onContactMaterialAdded - Dispatched when a new ContactMaterial is added to the World.
+    * This signal is dispatched when a Contact Material is added to the World.
+    *
+    * It sends 1 argument: `material` which is the `Phaser.Physics.P2.ContactMaterial` that was added to the world.
+    * 
+    * @property {Phaser.Signal} onContactMaterialAdded
     */
     this.onContactMaterialAdded = new Phaser.Signal();
 
     /**
-    * @property {Phaser.Signal} onContactMaterialRemoved - Dispatched when a ContactMaterial is removed from the World.
+    * This signal is dispatched when a Contact Material is removed from the World.
+    *
+    * It sends 1 argument: `material` which is the `Phaser.Physics.P2.ContactMaterial` that was removed from the world.
+    * 
+    * @property {Phaser.Signal} onContactMaterialRemoved
     */
     this.onContactMaterialRemoved = new Phaser.Signal();
 
@@ -138,12 +170,26 @@ Phaser.Physics.P2 = function (game, config) {
     this.callbackContext = null;
 
     /**
-    * @property {Phaser.Signal} onBeginContact - Dispatched when a first contact is created between two bodies. This event is fired before the step has been done.
+    * This Signal is dispatched when a first contact is created between two bodies. This happens *before* the step has been done.
+    * 
+    * It sends 5 arguments: `bodyA`, `bodyB`, `shapeA`, `shapeB` and `contactEquations`.
+    * 
+    * It is possible that in certain situations the `bodyA` or `bodyB` values are `null`. You should check for this
+    * in your own code to avoid processing potentially null physics bodies.
+    * 
+    * @property {Phaser.Signal} onBeginContact
     */
     this.onBeginContact = new Phaser.Signal();
 
     /**
-    * @property {Phaser.Signal} onEndContact - Dispatched when final contact occurs between two bodies. This event is fired before the step has been done.
+    * This Signal is dispatched when final contact occurs between two bodies. This happens *before* the step has been done.
+    * 
+    * It sends 4 arguments: `bodyA`, `bodyB`, `shapeA` and `shapeB`.
+    * 
+    * It is possible that in certain situations the `bodyA` or `bodyB` values are `null`. You should check for this
+    * in your own code to avoid processing potentially null physics bodies.
+    * 
+    * @property {Phaser.Signal} onEndContact
     */
     this.onEndContact = new Phaser.Signal();
 
