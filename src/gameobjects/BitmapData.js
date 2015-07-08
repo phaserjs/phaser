@@ -209,9 +209,192 @@ Phaser.BitmapData = function (game, key, width, height) {
     */
     this._circle = new Phaser.Circle();
 
+    /**
+    * @property {HTMLCanvasElement} _swapCanvas - A swap canvas.
+    * @private
+    */
+    this._swapCanvas = Phaser.Canvas.create(width, height, '', true);
+
+    // http://androidarts.com/palette/16pal.htm
+
+    this.palettes = {
+        'arne': { 0: '#000000', 1: '#9D9D9D', 2: '#FFFFFF', 3: '#BE2633', 4: '#E06F8B', 5: '#493C2B', 6: '#A46422', 7: '#EB8931', 8: '#F7E26B', 9: '#2F484E', A: '#44891A', B: '#A3CE27', C: '#1B2632', D: '#005784', E: '#31A2F2', F: '#B2DCEF' },
+        'jmp': { 0: '#000000', 1: '#191028', 2: '#46af45', 3: '#a1d685', 4: '#453e78', 5: '#7664fe', 6: '#833129', 7: '#9ec2e8', 8: '#dc534b', 9: '#e18d79', A: '#d6b97b', B: '#e9d8a1', C: '#216c4b', D: '#d365c8', E: '#afaab9', F: '#f5f4eb' },
+        'cga': { 0: '#000000', 1: '#2234d1', 2: '#0c7e45', 3: '#44aacc', 4: '#8a3622', 5: '#5c2e78', 6: '#aa5c3d', 7: '#b5b5b5', 8: '#5e606e', 9: '#4c81fb', A: '#6cd947', B: '#7be2f9', C: '#eb8a60', D: '#e23d69', E: '#ffd93f', F: '#fffff' }
+    };
+
 };
 
 Phaser.BitmapData.prototype = {
+
+    /**
+    * Shifts the contents of this BitmapData by the distances given.
+    * 
+    * The image will wrap-around the edges on all sides.
+    *
+    * @method Phaser.BitmapData#move
+    * @param {integer} x - The amount of pixels to horizontally shift the canvas by. Use a negative value to shift to the left, positive to the right.
+    * @param {integer} y - The amount of pixels to vertically shift the canvas by. Use a negative value to shift up, positive to shift down.
+    * @return {Phaser.BitmapData} This BitmapData object for method chaining.
+    */
+    move: function (x, y) {
+
+        if (x !== 0)
+        {
+            this.moveH(x);
+        }
+
+        if (y !== 0)
+        {
+            this.moveV(y);
+        }
+
+        return this;
+
+    },
+
+    /**
+    * Shifts the contents of this BitmapData horizontally.
+    * 
+    * The image will wrap-around the sides.
+    *
+    * @method Phaser.BitmapData#moveH
+    * @param {integer} distance - The amount of pixels to horizontally shift the canvas by. Use a negative value to shift to the left, positive to the right.
+    * @return {Phaser.BitmapData} This BitmapData object for method chaining.
+    */
+    moveH: function (distance) {
+
+        var c = this._swapCanvas;
+        var ctx = c.getContext('2d');
+        var h = this.height;
+        var src = this.canvas;
+
+        ctx.clearRect(0, 0, this.width, this.height);
+
+        if (distance < 0)
+        {
+            distance = Math.abs(distance);
+
+            //  Moving to the left
+            var w = this.width - distance;
+
+            //  Left-hand chunk
+            ctx.drawImage(src, 0, 0, distance, h, w, 0, distance, h);
+
+            //  Rest of the image
+            ctx.drawImage(src, distance, 0, w, h, 0, 0, w, h);
+        }
+        else
+        {
+            //  Moving to the right
+            var w = this.width - distance;
+
+            //  Right-hand chunk
+            ctx.drawImage(src, w, 0, distance, h, 0, 0, distance, h);
+
+            //  Rest of the image
+            ctx.drawImage(src, 0, 0, w, h, distance, 0, w, h);
+        }
+
+        this.clear();
+
+        return this.copy(this._swapCanvas);
+
+    },
+
+    /**
+    * Shifts the contents of this BitmapData vertically.
+    * 
+    * The image will wrap-around the sides.
+    *
+    * @method Phaser.BitmapData#moveV
+    * @param {integer} distance - The amount of pixels to vertically shift the canvas by. Use a negative value to shift up, positive to shift down.
+    * @return {Phaser.BitmapData} This BitmapData object for method chaining.
+    */
+    moveV: function (distance) {
+
+        var c = this._swapCanvas;
+        var ctx = c.getContext('2d');
+        var w = this.width;
+        var src = this.canvas;
+
+        ctx.clearRect(0, 0, this.width, this.height);
+
+        if (distance < 0)
+        {
+            distance = Math.abs(distance);
+
+            //  Moving up
+            var h = this.height - distance;
+
+            //  Top chunk
+            ctx.drawImage(src, 0, 0, w, distance, 0, h, w, distance);
+
+            //  Rest of the image
+            ctx.drawImage(src, 0, distance, w, h, 0, 0, w, h);
+        }
+        else
+        {
+            //  Moving down
+            var h = this.height - distance;
+
+            //  Bottom chunk
+            ctx.drawImage(src, 0, h, w, distance, 0, 0, w, distance);
+
+            //  Rest of the image
+            ctx.drawImage(src, 0, 0, w, h, 0, distance, w, h);
+        }
+
+        this.clear();
+
+        return this.copy(this._swapCanvas);
+
+    },
+
+    grid: function (w, h, color) {
+
+        this.context.fillStyle = color;
+
+        for (var y = 0; y < this.height; y += h)
+        {
+            this.context.fillRect(0, y, this.width, 1);
+        }
+
+        for (var x = 0; x < this.width; x += w)
+        {
+            this.context.fillRect(x, 0, 1, this.height);
+        }
+
+    },
+
+    generate: function (data, palette, size) {
+
+        if (typeof palette === 'undefined') { palette = 'arne'; }
+        if (typeof size === 'undefined') { size = 8; }
+
+        var w = data[0].length * size;
+        var h = data.length * size;
+
+        this.resize(w, h);
+
+        //  Draw it
+        for (var y = 0; y < data.length; y++)
+        {
+            var row = data[y];
+
+            for (var x = 0; x < row.length; x++)
+            {
+                var d = row[x];
+
+                if (d !== '.' && d !== ' ')
+                {
+                    this.context.fillStyle = this.palettes[palette][d];
+                    this.context.fillRect(x * size, y * size, size, size);
+                }
+            }
+        }
+
+    },
 
     /**
     * Updates the given objects so that they use this BitmapData as their texture. This will replace any texture they will currently have set.
@@ -335,6 +518,9 @@ Phaser.BitmapData.prototype = {
 
             this.canvas.width = width;
             this.canvas.height = height;
+
+            this._swapCanvas.width = width;
+            this._swapCanvas.height = height;
 
             this.baseTexture.width = width;
             this.baseTexture.height = height;

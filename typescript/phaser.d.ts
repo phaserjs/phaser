@@ -1,7 +1,7 @@
 /// <reference path="pixi.d.ts" />
 /// <reference path="p2.d.ts" />
 
-// Type definitions for Phaser 2.4.0 2015-Jul-07
+// Type definitions for Phaser 2.4.0 2015-Jul-08
 // Project: https://github.com/photonstorm/phaser
 
 declare class Phaser {
@@ -261,6 +261,9 @@ declare module Phaser {
         getPixels(rect: Phaser.Rectangle): ImageData;
         getTransform(translateX: number, translateY: number, scaleX: number, scaleY: number, skewX: number, skewY: number): any;
         load(source: any): Phaser.BitmapData;
+        move(x: number, y: number): Phaser.BitmapData;
+        moveH(distance: number): Phaser.BitmapData;
+        moveV(distance: number): Phaser.BitmapData;
         processPixel(callback: Function, callbackContext: any, x?: number, y?: Number, width?: number, height?: number): Phaser.BitmapData;
         processPixelRGB(callback: Function, callbackContext: any, x?: number, y?: Number, width?: number, height?: number): Phaser.BitmapData;
         rect(x: number, y: number, width: number, height: number, fillStyle?: string): Phaser.BitmapData;

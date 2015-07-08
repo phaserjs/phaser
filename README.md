@@ -324,6 +324,9 @@ Version 2.4 - "Katar" - in dev
 * TilemapLayer.resize allows you to resize a TilemapLayer. It will update the internal canvas object and corresponding texture dimensions (#1881)
 * Pointer button handling has been given an overhaul. It has the following new boolean properties: `leftButton`, `rightButton`, `middleButton`, `backButton`, `forwardButton` and `eraserButton`. So you can now easily check which buttons are active and build right or middle click support into your games. The Pointer object normalises these properties for you, regardless if they came from a MouseEvent or PointerEvent (thanks @youssefdetovernickr for the idea #1848)
 * Text has a new style property: tabs. This allows you to specify a pixel value (or values) that allows you to space out text that contains tab characters within it. `Text.tabs` can be either an integer, in which case all tabs share the same spacing, or an array of pixel values corresponding exactly to the number of tabs per line of text. This allows you to easily align columns of data in a single Text object.
+* BitmapData.move(x, y) allows you to shift the contents of the BitmapData horizontally and vertically by the given amounts. The image wraps-around the edges of the BitmapData.
+* BitmapData.moveH(distance) allows you to horizontally shift the BitmapData with wrap-around the edges.
+* BitmapData.moveV(distance) allows you to vertically shift the BitmapData with wrap-around the edges.
 
 ### Updates
 
