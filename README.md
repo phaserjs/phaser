@@ -327,6 +327,7 @@ Version 2.4 - "Katar" - in dev
 * BitmapData.move(x, y) allows you to shift the contents of the BitmapData horizontally and vertically by the given amounts. The image wraps-around the edges of the BitmapData.
 * BitmapData.moveH(distance) allows you to horizontally shift the BitmapData with wrap-around the edges.
 * BitmapData.moveV(distance) allows you to vertically shift the BitmapData with wrap-around the edges.
+* Text.addStrokeColor works in the same way as `Text.addColor` but allows you to define a color stop for the stroke color instead of the fill color.
 
 ### Updates
 
@@ -420,6 +421,7 @@ Version 2.4 - "Katar" - in dev
 * P2.Body.createGroupCallback incorrectly referenced the `_groupCallbackContext` when deleting it (thanks @Langerz82 #1886)
 * When reusing a Tween created with an array of properties the values would get exponentially added to the TweenData internal array each time the tween was re-run (thanks @SBCGames #1747)
 * Reading the dimensions of a Text object would reset its resolution property (thanks @joelika #1717)
+* Text.addColor would incorrectly color the text stroke if set (thanks @llevkin #1893)
 
 ### Deprecated
 

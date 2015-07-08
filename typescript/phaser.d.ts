@@ -4415,6 +4415,7 @@ declare module Phaser {
         shadowOffsetY: number;
         shadowStroke: boolean;
         stroke: string;
+        strokeColors: string[];
         strokeThickness: number;
         scale: Phaser.Point;
         tabs: number|number[];
@@ -4427,6 +4428,7 @@ declare module Phaser {
         z: number;
 
         addColor(color: string, position: number): Phaser.Text;
+        addStrokeColor(color: string, position: number): Phaser.Text;
         clearColors(): Phaser.Text;
         componentsToFont(components: any): string;
         destroy(destroyChildren?: boolean): void;

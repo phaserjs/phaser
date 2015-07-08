@@ -86,6 +86,11 @@ Phaser.Text = function (game, x, y, text, style) {
     this.colors = [];
 
     /**
+    * @property {array} strokeColors - An array of the stroke color values as specified by {@link Phaser.Text#addStrokeColor addStrokeColor}.
+    */
+    this.strokeColors = [];
+
+    /**
     * Should the linePositionX and Y values be automatically rounded before rendering the Text?
     * You may wish to enable this if you want to remove the effect of sub-pixel aliasing from text.
     * @property {boolean} autoRound
@@ -467,7 +472,7 @@ Phaser.Text.prototype.updateText = function () {
             linePositionY = Math.round(linePositionY);
         }
 
-        if (this.colors.length > 0)
+        if (this.colors.length > 0 || this.strokeColors.length > 0)
         {
             this.updateLine(lines[i], linePositionX, linePositionY);
         }
@@ -598,31 +603,35 @@ Phaser.Text.prototype.updateShadow = function (state) {
 };
 
 /**
-* Updates a line of text.
+* Updates a line of text, applying fill and stroke per-character colors if applicable.
 *
 * @method Phaser.Text#updateLine
 * @private
 */
 Phaser.Text.prototype.updateLine = function (line, x, y) {
 
-    for (var i = 0; i < line.length; i++)
+    for (i = 0; i < line.length; i++)
     {
         var letter = line[i];
 
-        if (this.colors[this._charCount])
-        {
-            this.context.fillStyle = this.colors[this._charCount];
-            this.context.strokeStyle = this.colors[this._charCount];
-        }
-
         if (this.style.stroke && this.style.strokeThickness)
         {
+            if (this.strokeColors[this._charCount])
+            {
+                this.context.strokeStyle = this.strokeColors[this._charCount];
+            }
+
             this.updateShadow(this.style.shadowStroke);
             this.context.strokeText(letter, x, y);
         }
 
         if (this.style.fill)
         {
+            if (this.colors[this._charCount])
+            {
+                this.context.fillStyle = this.colors[this._charCount];
+            }
+
             this.updateShadow(this.style.shadowFill);
             this.context.fillText(letter, x, y);
         }
@@ -635,7 +644,7 @@ Phaser.Text.prototype.updateLine = function (line, x, y) {
 };
 
 /**
-* Clears any previously set color stops.
+* Clears any text fill or stroke colors that were set by `addColor` or `addStrokeColor`.
 *
 * @method Phaser.Text#clearColors
 * @return {Phaser.Text} This Text instance.
@@ -643,6 +652,7 @@ Phaser.Text.prototype.updateLine = function (line, x, y) {
 Phaser.Text.prototype.clearColors = function () {
 
     this.colors = [];
+    this.strokeColors = [];
     this.dirty = true;
 
     return this;
@@ -657,6 +667,8 @@ Phaser.Text.prototype.clearColors = function () {
 * Once set the color remains in use until either another color or the end of the string is encountered.
 * For example if the Text was `Photon Storm` and you did `Text.addColor('#ffff00', 6)` it would color in the word `Storm` in yellow.
 *
+* If you wish to change the stroke color see addStrokeColor instead.
+*
 * @method Phaser.Text#addColor
 * @param {string} color - A canvas fillstyle that will be used on the text eg `red`, `#00FF00`, `rgba()`.
 * @param {number} position - The index of the character in the string to start applying this color value from.
@@ -665,6 +677,32 @@ Phaser.Text.prototype.clearColors = function () {
 Phaser.Text.prototype.addColor = function (color, position) {
 
     this.colors[position] = color;
+    this.dirty = true;
+
+    return this;
+
+};
+
+/**
+* Set specific stroke colors for certain characters within the Text.
+*
+* It works by taking a color value, which is a typical HTML string such as `#ff0000` or `rgb(255,0,0)` and a position.
+* The position value is the index of the character in the Text string to start applying this color to.
+* Once set the color remains in use until either another color or the end of the string is encountered.
+* For example if the Text was `Photon Storm` and you did `Text.addColor('#ffff00', 6)` it would color in the word `Storm` in yellow.
+*
+* This has no effect if stroke is disabled or has a thickness of 0.
+*
+* If you wish to change the text fill color see addColor instead.
+*
+* @method Phaser.Text#addStrokeColor
+* @param {string} color - A canvas fillstyle that will be used on the text stroke eg `red`, `#00FF00`, `rgba()`.
+* @param {number} position - The index of the character in the string to start applying this color value from.
+* @return {Phaser.Text} This Text instance.
+*/
+Phaser.Text.prototype.addStrokeColor = function (color, position) {
+
+    this.strokeColors[position] = color;
     this.dirty = true;
 
     return this;
