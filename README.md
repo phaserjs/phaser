@@ -422,6 +422,7 @@ Version 2.4 - "Katar" - in dev
 * When reusing a Tween created with an array of properties the values would get exponentially added to the TweenData internal array each time the tween was re-run (thanks @SBCGames #1747)
 * Reading the dimensions of a Text object would reset its resolution property (thanks @joelika #1717)
 * Text.addColor would incorrectly color the text stroke if set (thanks @llevkin #1893)
+* Setting the scaleMode property of a Game configuration object would cause a ScaleManager TypeError in the resize method. It now stores the scale mode locally and applies it after boot (thanks @Mickawesomesque #1534)
 
 ### Deprecated
 
