@@ -375,6 +375,7 @@ Version 2.4 - "Katar" - in dev
 * RenderTexture now takes the display objects alpha into consideration when rendering it, before it would always reset worldAlpha to 1 before rendering, thus ignoring any alpha that may be set.
 * P2.enableBody now checks if an anchor exists on target object before attempting to set its value (thanks @standardgaussian  #1885)
 * Debug.currentAlpha wasn't being used to set the alpha of the Debug context at all (was always set to 1) but now updates the alpha of the Debug context before anything is rendered to it (thanks @wayfu #1888)
+* If the device is detected as a Windows Phone the renderer is automatically set to use Canvas, even if WebGL or AUTO was requested (thanks @ramarro123 #1706)
 
 ### Bug Fixes
 

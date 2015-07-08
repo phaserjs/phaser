@@ -696,6 +696,12 @@ Phaser.Game.prototype = {
             }
         }
 
+        //  Until Windows Phone supports otherwise ...
+        if (this.device.windowsPhone)
+        {
+            this.renderType = Phaser.CANVAS;
+        }
+
         if (this.renderType === Phaser.HEADLESS || this.renderType === Phaser.CANVAS || (this.renderType === Phaser.AUTO && this.device.webGL === false))
         {
             if (this.device.canvas)
