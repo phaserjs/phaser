@@ -329,6 +329,7 @@ Version 2.4 - "Katar" - in dev
 * BitmapData.moveV(distance) allows you to vertically shift the BitmapData with wrap-around the edges.
 * Text.addStrokeColor works in the same way as `Text.addColor` but allows you to define a color stop for the stroke color instead of the fill color.
 * All Game Objects have a new boolean property called `pendingDestroy`. If you set this to `true` then the object will automatically destroy itself in the *next* logic update, rather than immediately. This is useful for cases when you wish to destroy an object from within one of its own callbacks, such as with buttons or other input events (thanks @alamboley #1748)
+* BitmapData.generateTexture will take a snapshot of the BitmapDatas canvas at that moment in time and convert it into an Image, which is then stored in the Phaser image Cache based on the key given. You can then use the new texture for any future sprites or texture based objects.
 
 ### Updates
 

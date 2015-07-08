@@ -215,14 +215,6 @@ Phaser.BitmapData = function (game, key, width, height) {
     */
     this._swapCanvas = Phaser.Canvas.create(width, height, '', true);
 
-    // http://androidarts.com/palette/16pal.htm
-
-    this.palettes = {
-        'arne': { 0: '#000000', 1: '#9D9D9D', 2: '#FFFFFF', 3: '#BE2633', 4: '#E06F8B', 5: '#493C2B', 6: '#A46422', 7: '#EB8931', 8: '#F7E26B', 9: '#2F484E', A: '#44891A', B: '#A3CE27', C: '#1B2632', D: '#005784', E: '#31A2F2', F: '#B2DCEF' },
-        'jmp': { 0: '#000000', 1: '#191028', 2: '#46af45', 3: '#a1d685', 4: '#453e78', 5: '#7664fe', 6: '#833129', 7: '#9ec2e8', 8: '#dc534b', 9: '#e18d79', A: '#d6b97b', B: '#e9d8a1', C: '#216c4b', D: '#d365c8', E: '#afaab9', F: '#f5f4eb' },
-        'cga': { 0: '#000000', 1: '#2234d1', 2: '#0c7e45', 3: '#44aacc', 4: '#8a3622', 5: '#5c2e78', 6: '#aa5c3d', 7: '#b5b5b5', 8: '#5e606e', 9: '#4c81fb', A: '#6cd947', B: '#7be2f9', C: '#eb8a60', D: '#e23d69', E: '#ffd93f', F: '#fffff' }
-    };
-
 };
 
 Phaser.BitmapData.prototype = {
@@ -351,53 +343,9 @@ Phaser.BitmapData.prototype = {
 
     },
 
-    grid: function (w, h, color) {
-
-        this.context.fillStyle = color;
-
-        for (var y = 0; y < this.height; y += h)
-        {
-            this.context.fillRect(0, y, this.width, 1);
-        }
-
-        for (var x = 0; x < this.width; x += w)
-        {
-            this.context.fillRect(x, 0, 1, this.height);
-        }
-
-    },
-
-    generate: function (data, palette, size) {
-
-        if (typeof palette === 'undefined') { palette = 'arne'; }
-        if (typeof size === 'undefined') { size = 8; }
-
-        var w = data[0].length * size;
-        var h = data.length * size;
-
-        this.resize(w, h);
-
-        //  Draw it
-        for (var y = 0; y < data.length; y++)
-        {
-            var row = data[y];
-
-            for (var x = 0; x < row.length; x++)
-            {
-                var d = row[x];
-
-                if (d !== '.' && d !== ' ')
-                {
-                    this.context.fillStyle = this.palettes[palette][d];
-                    this.context.fillRect(x * size, y * size, size, size);
-                }
-            }
-        }
-
-    },
-
     /**
-    * Updates the given objects so that they use this BitmapData as their texture. This will replace any texture they will currently have set.
+    * Updates the given objects so that they use this BitmapData as their texture.
+    * This will replace any texture they will currently have set.
     *
     * @method Phaser.BitmapData#add
     * @param {Phaser.Sprite|Phaser.Sprite[]|Phaser.Image|Phaser.Image[]} object - Either a single Sprite/Image or an Array of Sprites/Images.
@@ -500,6 +448,42 @@ Phaser.BitmapData.prototype = {
         this.dirty = true;
 
         return this;
+
+    },
+
+    /**
+    * Creates a new Image element by converting this BitmapDatas canvas into a dataURL.
+    *
+    * The image is then stored in the Cache using the key given.
+    *
+    * Finally a PIXI.Texture is created based on the image and returned.
+    *
+    * You can apply the texture to a sprite or any other supporting object by using either the
+    * key or the texture. First call generateTexture:
+    *
+    * `var texture = bitmapdata.generateTexture('ball');`
+    *
+    * Then you can either apply the texture to a sprite:
+    * 
+    * `game.add.sprite(0, 0, texture);`
+    *
+    * or by using the string based key:
+    *
+    * `game.add.sprite(0, 0, 'ball');`
+    *
+    * @method Phaser.BitmapData#generateTexture
+    * @param {string} key - The key which will be used to store the image in the Cache.
+    * @return {PIXI.Texture} The newly generated texture.
+    */
+    generateTexture: function (key) {
+
+        var image = new Image();
+
+        image.src = this.canvas.toDataURL("image/png");
+
+        this.game.cache.addImage(key, '', image);
+
+        return new PIXI.Texture(PIXI.BaseTextureCache[key]);
 
     },
 
