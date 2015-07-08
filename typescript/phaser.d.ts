@@ -4414,6 +4414,7 @@ declare module Phaser {
         stroke: string;
         strokeThickness: number;
         scale: Phaser.Point;
+        tabs: number|number[];
         text: string;
         textBounds: Phaser.Rectangle;
         type: number;
@@ -4428,6 +4429,7 @@ declare module Phaser {
         destroy(destroyChildren?: boolean): void;
         fontToComponents(font: string): any;
         postUpdate(): void;
+        parseList(list: any[]): void;
         preUpdate(): void;
         setShadow(x?: number, y?: number, color?: any, blur?: number, shadowStroke?: boolean, shadowFill?: boolean): Phaser.Text;
         setStyle(style?: PhaserTextStyle): Phaser.Text;

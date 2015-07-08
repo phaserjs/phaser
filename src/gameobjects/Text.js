@@ -255,7 +255,7 @@ Phaser.Text.prototype.setShadow = function (x, y, color, blur, shadowStroke, sha
 * @param {number} [style.strokeThickness=0] - A number that represents the thickness of the stroke. Default is 0 (no stroke).
 * @param {boolean} [style.wordWrap=false] - Indicates if word wrap should be used.
 * @param {number} [style.wordWrapWidth=100] - The width in pixels at which text will wrap.
-* @param {number} [style.tab=0] - The size (in pixels) of a tab stop, for when text includes tab characters. 0 disables.
+* @param {number|array} [style.tabs=0] - The size (in pixels) of the tabs, for when text includes tab characters. 0 disables. Can be an array of varying tab sizes, one per tab stop.
 * @return {Phaser.Text} This Text instance.
 */
 Phaser.Text.prototype.setStyle = function (style) {
@@ -275,7 +275,7 @@ Phaser.Text.prototype.setStyle = function (style) {
     style.shadowOffsetY = style.shadowOffsetY || 0;
     style.shadowColor = style.shadowColor || 'rgba(0,0,0,0)';
     style.shadowBlur = style.shadowBlur || 0;
-    style.tab = style.tab || 0;
+    style.tabs = style.tabs || 0;
 
     var components = this.fontToComponents(style.font);
 
@@ -337,14 +337,14 @@ Phaser.Text.prototype.updateText = function () {
     var lines = outputText.split(/(?:\r\n|\r|\n)/);
 
     //  Calculate text width
-    var tab = this.style.tab;
+    var tabs = this.style.tabs;
     var lineWidths = [];
     var maxLineWidth = 0;
     var fontProperties = this.determineFontProperties(this.style.font);
 
     for (var i = 0; i < lines.length; i++)
     {
-        if (tab === 0)
+        if (tabs === 0)
         {
             //  Simple layout (no tabs)
             var lineWidth = this.context.measureText(lines[i]).width + this.style.strokeThickness + this.padding.x;
@@ -355,14 +355,33 @@ Phaser.Text.prototype.updateText = function () {
             var line = lines[i].split(/(?:\t)/);
             var lineWidth = this.padding.x + this.style.strokeThickness;
 
-            for (var c = 0; c < line.length; c++)
+            if (Array.isArray(tabs))
             {
-                //  How far to the next tab?
-                lineWidth += Math.ceil(this.context.measureText(line[c]).width);
+                var tab = 0;
 
-                var diff = this.game.math.snapToCeil(lineWidth, tab) - lineWidth;
+                for (var c = 0; c < line.length; c++)
+                {
+                    var section = Math.ceil(this.context.measureText(line[c]).width);
 
-                lineWidth += diff;
+                    if (c > 0)
+                    {
+                        tab += tabs[c - 1];
+                    }
+
+                    lineWidth = tab + section;
+                }
+            }
+            else
+            {
+                for (var c = 0; c < line.length; c++)
+                {
+                    //  How far to the next tab?
+                    lineWidth += Math.ceil(this.context.measureText(line[c]).width);
+
+                    var diff = this.game.math.snapToCeil(lineWidth, tabs) - lineWidth;
+
+                    lineWidth += diff;
+                }
             }
         }
 
@@ -458,7 +477,7 @@ Phaser.Text.prototype.updateText = function () {
             {
                 this.updateShadow(this.style.shadowStroke);
 
-                if (tab === 0)
+                if (tabs === 0)
                 {
                     this.context.strokeText(lines[i], linePositionX, linePositionY);
                 }
@@ -472,7 +491,7 @@ Phaser.Text.prototype.updateText = function () {
             {
                 this.updateShadow(this.style.shadowFill);
 
-                if (tab === 0)
+                if (tabs === 0)
                 {
                     this.context.fillText(lines[i], linePositionX, linePositionY);
                 }
@@ -502,25 +521,52 @@ Phaser.Text.prototype.updateText = function () {
 Phaser.Text.prototype.renderTabLine = function (line, x, y, fill) {
 
     var text = line.split(/(?:\t)/);
+    var tabs = this.style.tabs;
+    var snap = 0;
 
-    for (var c = 0; c < text.length; c++)
+    if (Array.isArray(tabs))
     {
-        var section = Math.ceil(this.context.measureText(text[c]).width);
+        var tab = 0;
 
-        //  How far to the next tab?
-
-        var snap = this.game.math.snapToCeil(x, this.style.tab);
-
-        if (fill)
+        for (var c = 0; c < text.length; c++)
         {
-            this.context.fillText(text[c], snap, y);
-        }
-        else
-        {
-            this.context.strokeText(text[c], snap, y);
-        }
+            if (c > 0)
+            {
+                tab += tabs[c - 1];
+            }
 
-        x = snap + section;
+            snap = x + tab;
+
+            if (fill)
+            {
+                this.context.fillText(text[c], snap, y);
+            }
+            else
+            {
+                this.context.strokeText(text[c], snap, y);
+            }
+        }
+    }
+    else
+    {
+        for (var c = 0; c < text.length; c++)
+        {
+            var section = Math.ceil(this.context.measureText(text[c]).width);
+
+            //  How far to the next tab?
+            snap = this.game.math.snapToCeil(x, tabs);
+
+            if (fill)
+            {
+                this.context.fillText(text[c], snap, y);
+            }
+            else
+            {
+                this.context.strokeText(text[c], snap, y);
+            }
+
+            x = snap + section;
+        }
     }
 
 };
@@ -794,25 +840,27 @@ Phaser.Text.prototype.setText = function (text) {
 };
 
 /**
- * The text to be displayed by this Text object.
- * Use a \n to insert a carriage return and split the text.
- * The text will be rendered with any style currently set.
+ * Converts the given array into a tab delimited string and then updates this Text object.
+ * This is mostly used when you want to display external data using tab stops.
+ *
+ * The array can be either single or multi dimensional depending on the result you need:
+ *
+ * `[ 'a', 'b', 'c' ]` would convert in to `"a\tb\tc"`.
+ *
+ * Where as:
+ *
+ * `[
+ *      [ 'a', 'b', 'c' ],
+ *      [ 'd', 'e', 'f']
+ * ]`
+ *
+ * would convert in to: `"a\tb\tc\nd\te\tf"`
  *
  * @method Phaser.Text#parseList
- * @param {array} list - X
+ * @param {array} list - The array of data to convert into a string.
  * @return {Phaser.Text} This Text instance.
  */
 Phaser.Text.prototype.parseList = function (list) {
-
-    //  list can be either an array containing strings, or an array containing arrays.
-    //  If a multi-dim array then each new array equals a new line in the text.
-    //  
-    //  [ 'a', 'b', 'c' ] = "a\tb\tc";
-    //  
-    //  [
-    //      [ 'a', 'b', 'c' ],
-    //      [ 'd', 'e', 'f']
-    //  ] = "a\tb\tc\nd\te\tf";
 
     if (!Array.isArray(list))
     {
@@ -835,12 +883,15 @@ Phaser.Text.prototype.parseList = function (list) {
             }
             else
             {
-                s += list[i] + "\t";
+                s += list[i];
+
+                if (i < list.length - 1)
+                {
+                    s += "\t";
+                }
             }
         }
     }
-
-    console.log(s);
 
     this.text = s;
     this.dirty = true;
@@ -1420,19 +1471,19 @@ Object.defineProperty(Phaser.Text.prototype, 'resolution', {
 * x
 * 
 * @name Phaser.Text#tab
-* @property {integer} tab
+* @property {integer|array} tabs
 */
-Object.defineProperty(Phaser.Text.prototype, 'tab', {
+Object.defineProperty(Phaser.Text.prototype, 'tabs', {
 
     get: function() {
-        return this.style.tab;
+        return this.style.tabs;
     },
 
     set: function(value) {
 
-        if (value !== this.style.tab)
+        if (value !== this.style.tabs)
         {
-            this.style.tab = value;
+            this.style.tabs = value;
             this.dirty = true;
         }
 
