@@ -376,6 +376,7 @@ Version 2.4 - "Katar" - in dev
 * P2.enableBody now checks if an anchor exists on target object before attempting to set its value (thanks @standardgaussian  #1885)
 * Debug.currentAlpha wasn't being used to set the alpha of the Debug context at all (was always set to 1) but now updates the alpha of the Debug context before anything is rendered to it (thanks @wayfu #1888)
 * If the device is detected as a Windows Phone the renderer is automatically set to use Canvas, even if WebGL or AUTO was requested (thanks @ramarro123 #1706)
+* RandomDataGenerator.weightedPick has been tweaked slightly to allow for a more even distribution of weights. It still favors the earlier array elements, but will accurately include 'distance' elements as well (thanks @gingerbeardman #1751)
 
 ### Bug Fixes
 
@@ -427,6 +428,7 @@ Version 2.4 - "Katar" - in dev
 * Device.windowsPhone should now correctly identify Windows Phone 8.1 devices, which also think they are iOS and Androids. If you find a device that gets around this check please send us its ua string! (thanks @jounii #1496)
 * Rope.segments used the wrong vertices property, causing a runtime error.
 * Debug.ropeSegments didn't take the scale of the Rope object into consideration, causing incorrect debug rendering.
+* If a Sound was muted, or had its volume changed while it was still decoding (i.e. before it started playback) then the mute and/or volume were ignored and the sound would play anyway (thanks @brianbunch #1872)
 
 ### Deprecated
 
