@@ -610,7 +610,7 @@ Phaser.Text.prototype.updateShadow = function (state) {
 */
 Phaser.Text.prototype.updateLine = function (line, x, y) {
 
-    for (i = 0; i < line.length; i++)
+    for (var i = 0; i < line.length; i++)
     {
         var letter = line[i];
 
