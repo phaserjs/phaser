@@ -302,6 +302,7 @@ declare module Phaser {
         inputEnabled: boolean;
         name: string;
         maxWidth: number;
+        pendingDestroy: boolean;
         physicsType: number;
         previousPosition: Phaser.Point;
         previousRotation: Phaser.Point;
@@ -1452,6 +1453,7 @@ declare module Phaser {
         game: Phaser.Game;
         height: number;
         name: string;
+        pendingDestroy: boolean;
         physicsType: number;
         position: Phaser.Point;
         previousPosition: Point;
@@ -1601,6 +1603,7 @@ declare module Phaser {
         name: string;
         offsetX: number;
         offsetY: number;
+        pendingDestroy: boolean;
         position: Phaser.Point;
         previousPosition: Phaser.Point;
         previousRotation: number;
@@ -3820,6 +3823,7 @@ declare module Phaser {
         inputEnabled: boolean;
         key: string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture;
         name: string;
+        pendingDestroy: boolean;
         points: Phaser.Point[];
         position: Phaser.Point;
         previousPosition: Phaser.Point;
@@ -4075,6 +4079,7 @@ declare module Phaser {
         offsetX: number;
         offsetY: number;
         outOfBoundsKill: boolean;
+        pendingDestroy: boolean;
         previousPosition: Phaser.Point;
         previousRotation: number;
         position: Phaser.Point;
@@ -4402,6 +4407,7 @@ declare module Phaser {
         lineSpacing: number;
         name: string;
         padding: Phaser.Point;
+        pendingDestroy: boolean;
         physicsType: number;
         position: Phaser.Point;
         previousPosition: Phaser.Point;
@@ -4682,6 +4688,7 @@ declare module Phaser {
         inputEnabled: boolean;
         key: string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture;
         name: string;
+        pendingDestroy: boolean;
         physicsType: number;
         position: Phaser.Point;
         previousPosition: Phaser.Point;
