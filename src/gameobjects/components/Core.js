@@ -90,6 +90,12 @@ Phaser.Component.Core.init = function (game, x, y, key, frame) {
 
 Phaser.Component.Core.preUpdate = function () {
 
+    if (this.pendingDestroy)
+    {
+        this.destroy();
+        return;
+    }
+
     this.previousPosition.set(this.world.x, this.world.y);
     this.previousRotation = this.rotation;
 
@@ -231,6 +237,15 @@ Phaser.Component.Core.prototype = {
     * @readOnly
     */
     fresh: true,
+
+    /**
+    * A Game Object is that is pendingDestroy is flagged to have its destroy method called on the next logic update.
+    * This is used internally by the likes of Buttons but you can also set it directly, to allow you to flag an
+    * object to be destroyed from within one of its own callbacks (such as a Button or Input event)
+    * 
+    * @property {boolean} pendingDestroy
+    */
+    pendingDestroy: false,
 
     /**
     * @property {Phaser.Rectangle} _bounds - Internal cache var.
