@@ -80,7 +80,6 @@ PIXI.CanvasRenderer = function(width, height, options)
      */
     this.autoResize = options.autoResize || false;
 
-
     /**
      * The width of the canvas view
      *
@@ -156,7 +155,6 @@ PIXI.CanvasRenderer = function(width, height, options)
         /**
          * If true Pixi will Math.floor() x/y values when rendering, stopping pixel interpolation.
          * Handy for crisp pixel art and speed on legacy devices.
-         *
          */
         roundPixels: false
     };

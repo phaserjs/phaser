@@ -161,27 +161,21 @@ Phaser.Keyboard.prototype = {
     /**
     * A practical way to create an object containing user selected hotkeys.
     *
-    * For example: `addKeys( [Phaser.Keyboard.W, Phaser.Keyboard.S, Phaser.Keyboard.A, Phaser.Keyboard.D], [ 'up', 'down', 'left', 'right' ] );`
+    * For example: `addKeys( { 'up': Phaser.Keyboard.W, 'down': Phaser.Keyboard.S, 'left': Phaser.Keyboard.A, 'right': Phaser.Keyboard.D } );`
     *
     * Would return an object containing the properties `up`, `down`, `left` and `right` that you could poll just like a Phaser.Key object.
     *
     * @method Phaser.Keyboard#addKeys
-    * @param {Array<number>} keycodes - The keycodes of the keys to add i.e. [Phaser.Keyboard.UP, Phaser.Keyboard.SPACEBAR] or [52, 82].
-    * @param {Array<string>} hotkeys - The hotkeys that will be assigned to the keycodes ie. ["UP", "DOWN"] or ["RIGHT", "LEFT"]
+    * @param {object} keys - A key mapping object, i.e. `{ 'up': Phaser.Keyboard.W, 'down': Phaser.Keyboard.S }` or `{ 'up': 52, 'down': 53 }`.
     * @return {object} An object containing user selected properties
     */
-    addKeys: function (keycodes, hotkeys) {
-
-        if (keycodes.length !== hotkeys.length)
-        {
-            return null;
-        }
+    addKeys: function (keys) {
 
         var output = {};
 
-        for (var i = 0; i < keycodes.length; i++)
+        for (var key in keys)
         {
-            output[hotkeys[i]] = this.addKey(keycodes[i]);
+            output[key] = this.addKey(keys[key]);
         }
 
         return output;
@@ -213,7 +207,7 @@ Phaser.Keyboard.prototype = {
     */
     createCursorKeys: function () {
 
-        return this.addKeys([Phaser.Keyboard.UP, Phaser.Keyboard.DOWN, Phaser.Keyboard.LEFT, Phaser.Keyboard.RIGHT], ['up', 'down', 'left', 'right']);
+        return this.addKeys({ 'up': Phaser.Keyboard.UP, 'down': Phaser.Keyboard.DOWN, 'left': Phaser.Keyboard.LEFT, 'right': Phaser.Keyboard.RIGHT });
 
     },
 
@@ -652,7 +646,9 @@ Phaser.Keyboard.F14 = 125;
 Phaser.Keyboard.F15 = 126;
 Phaser.Keyboard.COLON = 186;
 Phaser.Keyboard.EQUALS = 187;
+Phaser.Keyboard.COMMA = 188;
 Phaser.Keyboard.UNDERSCORE = 189;
+Phaser.Keyboard.PERIOD = 190;
 Phaser.Keyboard.QUESTION_MARK = 191;
 Phaser.Keyboard.TILDE = 192;
 Phaser.Keyboard.OPEN_BRACKET = 219;
@@ -677,9 +673,9 @@ Phaser.Keyboard.LEFT = 37;
 Phaser.Keyboard.UP = 38;
 Phaser.Keyboard.RIGHT = 39;
 Phaser.Keyboard.DOWN = 40;
+Phaser.Keyboard.PLUS = 43;
+Phaser.Keyboard.MINUS = 44;
 Phaser.Keyboard.INSERT = 45;
 Phaser.Keyboard.DELETE = 46;
 Phaser.Keyboard.HELP = 47;
 Phaser.Keyboard.NUM_LOCK = 144;
-Phaser.Keyboard.PLUS = 43;
-Phaser.Keyboard.MINUS = 45;

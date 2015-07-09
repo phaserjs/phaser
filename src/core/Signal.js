@@ -86,7 +86,7 @@ Phaser.Signal.prototype = {
     * @param {number} [priority] - The priority level of the event listener. Listeners with higher priority will be executed before listeners with lower priority. Listeners with same priority level will be executed at the same order as they were added. (default = 0).
     * @return {Phaser.SignalBinding} An Object representing the binding between the Signal and listener.
     */
-    _registerListener: function (listener, isOnce, listenerContext, priority) {
+    _registerListener: function (listener, isOnce, listenerContext, priority, args) {
 
         var prevIndex = this._indexOfListener(listener, listenerContext);
         var binding;
@@ -102,7 +102,7 @@ Phaser.Signal.prototype = {
         }
         else
         {
-            binding = new Phaser.SignalBinding(this, listener, isOnce, listenerContext, priority);
+            binding = new Phaser.SignalBinding(this, listener, isOnce, listenerContext, priority, args);
             this._addBinding(binding);
         }
 
@@ -187,19 +187,44 @@ Phaser.Signal.prototype = {
     },
 
     /**
-    * Add an event listener.
+    * Add an event listener for this signal.
+    *
+    * An event listener is a callback with a related context and priority.
+    *
+    * You can optionally provide extra arguments which will be passed to the callback after any internal parameters.
+    *
+    * For example: `Phaser.Key.onDown` when dispatched will send the Phaser.Key object that caused the signal as the first parameter.
+    * Any arguments you've specified after `priority` will be sent as well:
+    *
+    * `fireButton.onDown.add(shoot, this, 0, 'lazer', 100);`
+    *
+    * When onDown dispatches it will call the `shoot` callback passing it: `Phaser.Key, 'lazer', 100`.
+    *
+    * Where the first parameter is the one that Key.onDown dispatches internally and 'lazer', 
+    * and the value 100 were the custom arguments given in the call to 'add'.
     *
     * @method Phaser.Signal#add
     * @param {function} listener - The function to call when this Signal is dispatched.
     * @param {object} [listenerContext] - The context under which the listener will be executed (i.e. the object that should represent the `this` variable).
     * @param {number} [priority] - The priority level of the event listener. Listeners with higher priority will be executed before listeners with lower priority. Listeners with same priority level will be executed at the same order as they were added (default = 0)
+    * @param {...any} [args=(none)] - Additional arguments to pass to the callback (listener) function. They will be appended after any arguments usually dispatched.
     * @return {Phaser.SignalBinding} An Object representing the binding between the Signal and listener.
     */
     add: function (listener, listenerContext, priority) {
 
         this.validateListener(listener, 'add');
 
-        return this._registerListener(listener, false, listenerContext, priority);
+        var args = [];
+
+        if (arguments.length > 3)
+        {
+            for (var i = 3; i < arguments.length; i++)
+            {
+                args.push(arguments[i]);
+            }
+        }
+
+        return this._registerListener(listener, false, listenerContext, priority, args);
 
     },
 
@@ -213,13 +238,24 @@ Phaser.Signal.prototype = {
     * @param {function} listener - The function to call when this Signal is dispatched.
     * @param {object} [listenerContext] - The context under which the listener will be executed (i.e. the object that should represent the `this` variable).
     * @param {number} [priority] - The priority level of the event listener. Listeners with higher priority will be executed before listeners with lower priority. Listeners with same priority level will be executed at the same order as they were added (default = 0)
+    * @param {...any} [args=(none)] - Additional arguments to pass to the callback (listener) function. They will be appended after any arguments usually dispatched.
     * @return {Phaser.SignalBinding} An Object representing the binding between the Signal and listener.
     */
     addOnce: function (listener, listenerContext, priority) {
 
         this.validateListener(listener, 'addOnce');
 
-        return this._registerListener(listener, true, listenerContext, priority);
+        var args = [];
+
+        if (arguments.length > 3)
+        {
+            for (var i = 3; i < arguments.length; i++)
+            {
+                args.push(arguments[i]);
+            }
+        }
+
+        return this._registerListener(listener, true, listenerContext, priority, args);
 
     },
 

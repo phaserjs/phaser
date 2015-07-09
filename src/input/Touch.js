@@ -7,6 +7,8 @@
 /**
 * Phaser.Touch handles touch events with your game. Note: Android 2.x only supports 1 touch event at once, no multi-touch.
 *
+* You should not normally access this class directly, but instead use a Phaser.Pointer object which normalises all game input for you.
+*
 * @class Phaser.Touch
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.

@@ -437,7 +437,7 @@ Phaser.Group.prototype.addAt = function (child, index, silent) {
 *
 * @method Phaser.Group#getAt
 * @param {integer} index - The index to return the child from.
-* @return {DisplayObject} The child that was found at the given index, or -1 for an invalid index.
+* @return {DisplayObject|integer} The child that was found at the given index, or -1 for an invalid index.
 */
 Phaser.Group.prototype.getAt = function (index) {
 
@@ -1464,7 +1464,10 @@ Phaser.Group.prototype.forEach = function (callback, callbackContext, checkExist
         // Using an array and pushing each element (not a slice!) is _significantly_ faster.
         var args = [null];
 
-        for (var i = 3; i < arguments.length; i++) { args.push(arguments[i]); }
+        for (var i = 3; i < arguments.length; i++)
+        {
+            args.push(arguments[i]);
+        }
 
         for (var i = 0; i < this.children.length; i++)
         {
