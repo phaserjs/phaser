@@ -119,6 +119,7 @@ Phaser.Create.prototype.constructor = Phaser.Create;
  *
  */
 
+/*
 var FastBase64 = {
 
     chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
@@ -230,3 +231,4 @@ var RIFFWAVE = function(data) {
     if (data instanceof Array) this.Make(data);
 
 }; // end RIFFWAVE
+*/
