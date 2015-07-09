@@ -58,6 +58,7 @@ Phaser.Create.prototype = {
         var h = data.length * pixelHeight;
 
         this.bmd.resize(w, h);
+        this.bmd.clear();
 
         //  Draw it
         for (var y = 0; y < data.length; y++)
