@@ -1464,7 +1464,10 @@ Phaser.Group.prototype.forEach = function (callback, callbackContext, checkExist
         // Using an array and pushing each element (not a slice!) is _significantly_ faster.
         var args = [null];
 
-        for (var i = 3; i < arguments.length; i++) { args.push(arguments[i]); }
+        for (var i = 3; i < arguments.length; i++)
+        {
+            args.push(arguments[i]);
+        }
 
         for (var i = 0; i < this.children.length; i++)
         {

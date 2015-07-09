@@ -3871,8 +3871,8 @@ declare module Phaser {
         boundDispatch: Function;
         memorize: boolean;
 
-        add(listener: Function, listenerContext?: any, priority?: number): Phaser.SignalBinding;
-        addOnce(listener: Function, listenerContext?: any, priority?: number): Phaser.SignalBinding;
+        add(listener: Function, listenerContext?: any, priority?: number, ...args: any[]): Phaser.SignalBinding;
+        addOnce(listener: Function, listenerContext?: any, priority?: number, ...args: any[]): Phaser.SignalBinding;
         dispatch(...params: any[]): void;
         dispose(): void;
         forget(): void;
@@ -3888,7 +3888,7 @@ declare module Phaser {
 
     class SignalBinding {
 
-        constructor(signal: Phaser.Signal, listener: Function, isOnce: boolean, listenerContext?: any, priority?: number);
+        constructor(signal: Phaser.Signal, listener: Function, isOnce: boolean, listenerContext?: any, priority?: number, ...args: any[]);
 
         active: boolean;
         callCount: number;
