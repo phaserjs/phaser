@@ -228,6 +228,16 @@ module.exports = function (grunt) {
         grunt.task.run('custom');
 
     });
+	grunt.registerTask('fullNinja', 'Phaser complete with ninja physics', function() {
+
+        grunt.option('exclude', 'creature');
+        grunt.option('filename', 'phaser');
+        grunt.option('sourcemap', true);
+        grunt.option('copy', true);
+
+        grunt.task.run('custom');
+
+    });
 
     grunt.registerTask('arcadephysics', 'Phaser with Arcade Physics, Tilemaps and Particles', function() {
 
