@@ -1,7 +1,7 @@
 /// <reference path="pixi.d.ts" />
 /// <reference path="p2.d.ts" />
 
-// Type definitions for Phaser 2.4.0 2015-Jul-08
+// Type definitions for Phaser 2.4.0 2015-Jul-09
 // Project: https://github.com/photonstorm/phaser
 
 declare class Phaser {
@@ -244,7 +244,7 @@ declare module Phaser {
         blendSourceOver(): Phaser.BitmapData;
         blendXor(): Phaser.BitmapData;
         circle(x: number, y: number, radius: number, fillStyle?: string): Phaser.BitmapData;
-        clear(): Phaser.BitmapData;
+        clear(x?: number, y?: number, width?: number, height?: number): Phaser.BitmapData;
         cls(): Phaser.BitmapData;
         copy(source?: any, x?: number, y?: number, width?: number, height?: number, tx?: number, ty?: number, newWidth?: number, newHeight?: number, rotate?: number, anchorX?: number, anchorY?: number, scaleX?: number, scaleY?: number, alpha?: number, blendMode?: number, roundPx?: boolean): Phaser.BitmapData;
         copyPixels(source: any, area: Phaser.Rectangle, x: number, y: number, alpha?: number): void;

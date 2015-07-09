@@ -416,12 +416,24 @@ Phaser.BitmapData.prototype = {
     /**
     * Clears the BitmapData context using a clearRect.
     *
+    * You can optionally define the area to clear.
+    * If the arguments are left empty it will clear the entire canvas.
+    *
     * @method Phaser.BitmapData#clear
+    * @param {number} [x=0] - The x coordinate of the top-left of the area to clear.
+    * @param {number} [y=0] - The y coordinate of the top-left of the area to clear.
+    * @param {number} [width] - The width of the area to clear. If undefined it will use BitmapData.width.
+    * @param {number} [height] - The height of the area to clear. If undefined it will use BitmapData.height.
     * @return {Phaser.BitmapData} This BitmapData object for method chaining.
     */
-    clear: function () {
+    clear: function (x, y, width, height) {
 
-        this.context.clearRect(0, 0, this.width, this.height);
+        if (typeof x === 'undefined') { x = 0; }
+        if (typeof y === 'undefined') { y = 0; }
+        if (typeof width === 'undefined') { width = this.width; }
+        if (typeof height === 'undefined') { height = this.height; }
+
+        this.context.clearRect(x, y, width, height);
 
         this.dirty = true;
 
