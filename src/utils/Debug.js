@@ -76,7 +76,7 @@ Phaser.Utils.Debug = function (game) {
     this.currentY = 0;
 
     /**
-    * @property {number} currentAlpha - The current alpha the debug information will be rendered at.
+    * @property {number} currentAlpha - The alpha of the Debug context, set before all debug information is rendered to it.
     * @default
     */
     this.currentAlpha = 1;
@@ -171,7 +171,6 @@ Phaser.Utils.Debug.prototype = {
         this.currentX = x;
         this.currentY = y;
         this.currentColor = color;
-        this.currentAlpha = this.context.globalAlpha;
         this.columnWidth = columnWidth;
 
         this.dirty = true;
@@ -181,7 +180,7 @@ Phaser.Utils.Debug.prototype = {
         this.context.strokeStyle = color;
         this.context.fillStyle = color;
         this.context.font = this.font;
-        this.context.globalAlpha = 1;
+        this.context.globalAlpha = this.currentAlpha;
 
     },
 
@@ -194,7 +193,6 @@ Phaser.Utils.Debug.prototype = {
     stop: function () {
 
         this.context.restore();
-        this.context.globalAlpha = this.currentAlpha;
 
     },
 
@@ -443,18 +441,23 @@ Phaser.Utils.Debug.prototype = {
         this.rectangle(bounds, color, filled);
 
     },
+
     /**
-    * Renders the Rope's segments. Note: This is really expensive as it has to calculate new segments everytime you call it
+    * Renders the Rope's segments. Note: This is really expensive as it has to calculate new segments every time you call it
     *
     * @method Phaser.Utils.Debug#ropeSegments
     * @param {Phaser.Rope} rope - The rope to display the segments of.
     * @param {string} [color] - Color of the debug info to be rendered (format is css color string).
     * @param {boolean} [filled=true] - Render the rectangle as a fillRect (default, true) or a strokeRect (false)
     */
-    ropeSegments: function(rope, color, filled) {
+    ropeSegments: function (rope, color, filled) {
+
         var segments = rope.segments;
+
+        var self = this;
+
         segments.forEach(function(segment) {
-            this.rectangle(segment, color, filled);
+            self.rectangle(segment, color, filled);
         }, this);
 
     },
@@ -715,14 +718,14 @@ Phaser.Utils.Debug.prototype = {
     },
 
     /**
-    * Render a Sprites Physics body if it has one set. Note this only works for Arcade and
-    * Ninja (AABB, circle only) Physics.
-    * To display a P2 body you should enable debug mode on the body when creating it.
+    * Render a Sprites Physics body if it has one set. The body is rendered as a filled or stroked rectangle.
+    * This only works for Arcade Physics, Ninja Physics (AABB and Circle only) and Box2D Physics bodies.
+    * To display a P2 Physics body you should enable debug mode on the body when creating it.
     *
     * @method Phaser.Utils.Debug#body
-    * @param {Phaser.Sprite} sprite - The sprite whos body will be rendered.
-    * @param {string} [color='rgba(0,255,0,0.4)'] - color of the debug info to be rendered. (format is css color string).
-    * @param {boolean} [filled=true] - Render the objected as a filled (default, true) or a stroked (false)
+    * @param {Phaser.Sprite} sprite - The Sprite who's body will be rendered.
+    * @param {string} [color='rgba(0,255,0,0.4)'] - Color of the debug rectangle to be rendered. The format is a CSS color string such as '#ff0000' or 'rgba(255,0,0,0.5)'.
+    * @param {boolean} [filled=true] - Render the body as a filled rectangle (true) or a stroked rectangle (false)
     */
     body: function (sprite, color, filled) {
 

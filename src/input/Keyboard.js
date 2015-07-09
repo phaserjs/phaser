@@ -159,6 +159,30 @@ Phaser.Keyboard.prototype = {
     },
 
     /**
+    * A practical way to create an object containing user selected hotkeys.
+    *
+    * For example: `addKeys( { 'up': Phaser.Keyboard.W, 'down': Phaser.Keyboard.S, 'left': Phaser.Keyboard.A, 'right': Phaser.Keyboard.D } );`
+    *
+    * Would return an object containing the properties `up`, `down`, `left` and `right` that you could poll just like a Phaser.Key object.
+    *
+    * @method Phaser.Keyboard#addKeys
+    * @param {object} keys - A key mapping object, i.e. `{ 'up': Phaser.Keyboard.W, 'down': Phaser.Keyboard.S }` or `{ 'up': 52, 'down': 53 }`.
+    * @return {object} An object containing user selected properties
+    */
+    addKeys: function (keys) {
+
+        var output = {};
+
+        for (var key in keys)
+        {
+            output[key] = this.addKey(keys[key]);
+        }
+
+        return output;
+
+    },
+
+    /**
     * Removes a Key object from the Keyboard manager.
     *
     * @method Phaser.Keyboard#removeKey
@@ -183,12 +207,7 @@ Phaser.Keyboard.prototype = {
     */
     createCursorKeys: function () {
 
-        return {
-            up: this.addKey(Phaser.Keyboard.UP),
-            down: this.addKey(Phaser.Keyboard.DOWN),
-            left: this.addKey(Phaser.Keyboard.LEFT),
-            right: this.addKey(Phaser.Keyboard.RIGHT)
-        };
+        return this.addKeys({ 'up': Phaser.Keyboard.UP, 'down': Phaser.Keyboard.DOWN, 'left': Phaser.Keyboard.LEFT, 'right': Phaser.Keyboard.RIGHT });
 
     },
 
@@ -518,24 +537,6 @@ Phaser.Keyboard.prototype = {
 };
 
 /**
-* If disabled all Keyboard input will be ignored.
-* @property {boolean} disabled
-* @memberof Phaser.Keyboard
-* @default false
-* @deprecated Use {@link Phaser.Keyboard#enabled} instead
-*/
-Object.defineProperty(Phaser.Keyboard.prototype, "disabled", {
-
-    get: function () {
-        return !this.enabled;
-    },
-    set: function (value) {
-        this.enabled = !value;
-    }
-
-});
-
-/**
 * Returns the string value of the most recently pressed key.
 * @name Phaser.Keyboard#lastChar
 * @property {string} lastChar - The string value of the most recently pressed key.
@@ -645,7 +646,9 @@ Phaser.Keyboard.F14 = 125;
 Phaser.Keyboard.F15 = 126;
 Phaser.Keyboard.COLON = 186;
 Phaser.Keyboard.EQUALS = 187;
+Phaser.Keyboard.COMMA = 188;
 Phaser.Keyboard.UNDERSCORE = 189;
+Phaser.Keyboard.PERIOD = 190;
 Phaser.Keyboard.QUESTION_MARK = 191;
 Phaser.Keyboard.TILDE = 192;
 Phaser.Keyboard.OPEN_BRACKET = 219;
@@ -670,9 +673,9 @@ Phaser.Keyboard.LEFT = 37;
 Phaser.Keyboard.UP = 38;
 Phaser.Keyboard.RIGHT = 39;
 Phaser.Keyboard.DOWN = 40;
+Phaser.Keyboard.PLUS = 43;
+Phaser.Keyboard.MINUS = 44;
 Phaser.Keyboard.INSERT = 45;
 Phaser.Keyboard.DELETE = 46;
 Phaser.Keyboard.HELP = 47;
 Phaser.Keyboard.NUM_LOCK = 144;
-Phaser.Keyboard.PLUS = 43;
-Phaser.Keyboard.MINUS = 45;

@@ -192,7 +192,7 @@ Phaser.Animation.prototype = {
         this._timeNextFrame = this.game.time.time + this.delay;
 
         this._frameIndex = 0;
-        this.updateCurrentFrame(false);
+        this.updateCurrentFrame(false, true);
 
         this._parent.events.onAnimationStart$dispatch(this._parent, this);
 
@@ -418,10 +418,13 @@ Phaser.Animation.prototype = {
     * Returns true if the current frame update was 'successful', false otherwise.
     *
     * @method Phaser.Animation#updateCurrentFrame
-    * @param {bool} signalUpdate - If true th onUpdate signal will be triggered.
+    * @param {boolean} signalUpdate - If true the `Animation.onUpdate` signal will be dispatched.
+    * @param {boolean} fromPlay - Was this call made from the playing of a new animation?
     * @private
     */
-    updateCurrentFrame: function (signalUpdate) {
+    updateCurrentFrame: function (signalUpdate, fromPlay) {
+
+        if (typeof fromPlay === 'undefined') { fromPlay = false; }
 
         if (!this._frameData)
         {
@@ -429,22 +432,31 @@ Phaser.Animation.prototype = {
             return false;
         }
 
-        this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
-
-        if (this.currentFrame)
+        if (fromPlay)
         {
-            this._parent.setFrame(this.currentFrame);
+            this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
 
-            if (this._parent.__tilePattern)
+            if (this.currentFrame)
             {
-                this._parent.__tilePattern = false;
-                this._parent.tilingTexture = false;
+                this._parent.setFrame(this.currentFrame);
+            }
+        }
+        else
+        {
+            var idx = this.currentFrame.index;
+
+            this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
+
+            if (this.currentFrame && idx !== this.currentFrame.index)
+            {
+                this._parent.setFrame(this.currentFrame);
             }
         }
 
         if (this.onUpdate && signalUpdate)
         {
             this.onUpdate.dispatch(this, this.currentFrame);
+
             // False if the animation was destroyed from within a callback
             return !!this._frameData;
         }

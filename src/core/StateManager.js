@@ -68,6 +68,20 @@ Phaser.StateManager = function (game, pendingState) {
     this.current = '';
 
     /**
+    * onStateChange is a Phaser.Signal that is dispatched whenever the game changes state.
+    * 
+    * It is dispatched only when the new state is started, which isn't usually at the same time as StateManager.start
+    * is called because state swapping is done in sync with the game loop. It is dispatched *before* any of the new states
+    * methods (such as preload and create) are called, and *after* the previous states shutdown method has been run.
+    *
+    * The callback you specify is sent two parameters: the string based key of the new state, 
+    * and the second parameter is the string based key of the old / previous state.
+    * 
+    * @property {Phaser.Signal} onStateChange
+    */
+    this.onStateChange = new Phaser.Signal();
+
+    /**
     * @property {function} onInitCallback - This is called when the state is set as the active state.
     * @default
     */
@@ -316,10 +330,14 @@ Phaser.StateManager.prototype = {
 
         if (this._pendingState && this.game.isBooted)
         {
+            var previousStateKey = this.current;
+
             //  Already got a state running?
             this.clearCurrentState();
 
             this.setCurrentState(this._pendingState);
+
+            this.onStateChange.dispatch(this.current, previousStateKey);
 
             if (this.current !== this._pendingState)
             {
@@ -614,9 +632,12 @@ Phaser.StateManager.prototype = {
     */
     update: function () {
 
-        if (this._created && this.onUpdateCallback)
+        if (this._created)
         {
-            this.onUpdateCallback.call(this.callbackContext, this.game);
+            if (this.onUpdateCallback)
+            {
+                this.onUpdateCallback.call(this.callbackContext, this.game);
+            }
         }
         else
         {
@@ -634,9 +655,12 @@ Phaser.StateManager.prototype = {
     */
     pauseUpdate: function () {
 
-        if (this._created && this.onPauseUpdateCallback)
+        if (this._created)
         {
-            this.onPauseUpdateCallback.call(this.callbackContext, this.game);
+            if (this.onPauseUpdateCallback)
+            {
+                this.onPauseUpdateCallback.call(this.callbackContext, this.game);
+            }
         }
         else
         {
@@ -655,7 +679,7 @@ Phaser.StateManager.prototype = {
     */
     preRender: function (elapsedTime) {
 
-        if (this.onPreRenderCallback)
+        if (this._created && this.onPreRenderCallback)
         {
             this.onPreRenderCallback.call(this.callbackContext, this.game, elapsedTime);
         }
@@ -681,18 +705,21 @@ Phaser.StateManager.prototype = {
     */
     render: function () {
 
-        if (this._created && this.onRenderCallback)
+        if (this._created)
         {
-            if (this.game.renderType === Phaser.CANVAS)
+            if (this.onRenderCallback)
             {
-                this.game.context.save();
-                this.game.context.setTransform(1, 0, 0, 1, 0, 0);
-                this.onRenderCallback.call(this.callbackContext, this.game);
-                this.game.context.restore();
-            }
-            else
-            {
-                this.onRenderCallback.call(this.callbackContext, this.game);
+                if (this.game.renderType === Phaser.CANVAS)
+                {
+                    this.game.context.save();
+                    this.game.context.setTransform(1, 0, 0, 1, 0, 0);
+                    this.onRenderCallback.call(this.callbackContext, this.game);
+                    this.game.context.restore();
+                }
+                else
+                {
+                    this.onRenderCallback.call(this.callbackContext, this.game);
+                }
             }
         }
         else
@@ -739,3 +766,18 @@ Phaser.StateManager.prototype = {
 };
 
 Phaser.StateManager.prototype.constructor = Phaser.StateManager;
+
+/**
+* @name Phaser.StateManager#created
+* @property {boolean} created - True if the current state has had its `create` method run (if it has one, if not this is true by default).
+* @readOnly
+*/
+Object.defineProperty(Phaser.StateManager.prototype, "created", {
+
+    get: function () {
+
+        return this._created;
+
+    }
+
+});

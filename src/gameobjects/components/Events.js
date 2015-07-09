@@ -56,6 +56,7 @@ Phaser.Events.prototype = {
         if (this._onInputDown)         { this._onInputDown.dispose(); }
         if (this._onInputUp)           { this._onInputUp.dispose(); }
         if (this._onDragStart)         { this._onDragStart.dispose(); }
+        if (this._onDragUpdate)        { this._onDragUpdate.dispose(); }
         if (this._onDragStop)          { this._onDragStop.dispose(); }
 
         if (this._onAnimationStart)    { this._onAnimationStart.dispose(); }
@@ -130,6 +131,11 @@ Phaser.Events.prototype = {
     * @property {Phaser.Signal} onDragStart - This signal is dispatched if the parent is inputEnabled and receives a drag start event from a Pointer.
     */
     onDragStart: null,
+
+    /**
+    * @property {Phaser.Signal} onDragUpdate - This signal is dispatched if the parent is inputEnabled and receives a drag update event from a Pointer.
+    */
+    onDragUpdate: null,
 
     /**
     * @property {Phaser.Signal} onDragStop - This signal is dispatched if the parent is inputEnabled and receives a drag stop event from a Pointer.

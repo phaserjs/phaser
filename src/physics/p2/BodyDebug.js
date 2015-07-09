@@ -10,6 +10,10 @@
 * Needless to say, for every body you enable debug drawing on, you are adding processor and graphical overhead.
 * So use sparingly and rarely (if ever) in production code.
 *
+* Also be aware that the Debug body is only updated when the Sprite it is connected to changes position. If you
+* manipulate the sprite in any other way (such as moving it to another Group or bringToTop, etc) then you will
+* need to manually adjust its BodyDebug as well.
+*
 * @class Phaser.Physics.P2.BodyDebug
 * @constructor
 * @extends Phaser.Group
@@ -111,7 +115,8 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
                 {
                     this.drawCircle(sprite, offset[0] * this.ppu, offset[1] * this.ppu, angle, child.radius * this.ppu, color, lw);
                 }
-                else if (child instanceof p2.Capsule) {
+                else if (child instanceof p2.Capsule)
+                {
                     this.drawCapsule(sprite, offset[0] * this.ppu, offset[1] * this.ppu, angle, child.length * this.ppu, child.radius * this.ppu, lineColor, color, lw);
                 }
                 else if (child instanceof p2.Plane)

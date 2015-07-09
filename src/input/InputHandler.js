@@ -195,6 +195,11 @@ Phaser.InputHandler = function (sprite) {
     this.dragStartPoint = new Phaser.Point();
 
     /**
+    * @property {Phaser.Point} snapPoint - If the sprite is set to snap while dragging this holds the point of the most recent 'snap' event.
+    */
+    this.snapPoint = new Phaser.Point();
+
+    /**
     * @property {Phaser.Point} _dragPoint - Internal cache var.
     * @private
     */
@@ -1059,6 +1064,7 @@ Phaser.InputHandler.prototype = {
             {
                 this.sprite.cameraOffset.x = Math.round((this.sprite.cameraOffset.x - (this.snapOffsetX % this.snapX)) / this.snapX) * this.snapX + (this.snapOffsetX % this.snapX);
                 this.sprite.cameraOffset.y = Math.round((this.sprite.cameraOffset.y - (this.snapOffsetY % this.snapY)) / this.snapY) * this.snapY + (this.snapOffsetY % this.snapY);
+                this.snapPoint.set(this.sprite.cameraOffset.x, this.sprite.cameraOffset.y);
             }
         }
         else
@@ -1087,8 +1093,11 @@ Phaser.InputHandler.prototype = {
             {
                 this.sprite.x = Math.round((this.sprite.x - (this.snapOffsetX % this.snapX)) / this.snapX) * this.snapX + (this.snapOffsetX % this.snapX);
                 this.sprite.y = Math.round((this.sprite.y - (this.snapOffsetY % this.snapY)) / this.snapY) * this.snapY + (this.snapOffsetY % this.snapY);
+                this.snapPoint.set(this.sprite.x, this.sprite.y);
             }
         }
+
+        this.sprite.events.onDragUpdate.dispatch(this.sprite, pointer, px, py, this.snapPoint);
 
         return true;
 
@@ -1197,7 +1206,15 @@ Phaser.InputHandler.prototype = {
     },
 
     /**
-    * Make this Sprite draggable by the mouse. You can also optionally set mouseStartDragCallback and mouseStopDragCallback
+    * Allow this Sprite to be dragged by any valid pointer.
+    *
+    * When the drag begins the Sprite.events.onDragStart event will be dispatched.
+    * 
+    * When the drag completes by way of the user letting go of the pointer that was dragging the sprite, the Sprite.events.onDragStop event is dispatched.
+    *
+    * For the duration of the drag the Sprite.events.onDragUpdate event is dispatched. This event is only dispatched when the pointer actually
+    * changes position and moves. The event sends 5 parameters: `sprite`, `pointer`, `dragX`, `dragY` and `snapPoint`.
+    * 
     * @method Phaser.InputHandler#enableDrag
     * @param {boolean} [lockCenter=false] - If false the Sprite will drag from where you click it minus the dragOffset. If true it will center itself to the tip of the mouse pointer.
     * @param {boolean} [bringToTop=false] - If true the Sprite will be bought to the top of the rendering list in its current Group.
@@ -1402,7 +1419,7 @@ Phaser.InputHandler.prototype = {
     * @param {boolean} [onDrag=true] - If true the sprite will snap to the grid while being dragged.
     * @param {boolean} [onRelease=false] - If true the sprite will snap to the grid when released.
     * @param {number} [snapOffsetX=0] - Used to offset the top-left starting point of the snap grid.
-    * @param {number} [snapOffsetX=0] - Used to offset the top-left starting point of the snap grid.
+    * @param {number} [snapOffsetY=0] - Used to offset the top-left starting point of the snap grid.
     */
     enableSnap: function (snapX, snapY, onDrag, onRelease, snapOffsetX, snapOffsetY) {
 

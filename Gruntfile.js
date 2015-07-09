@@ -48,13 +48,13 @@ module.exports = function (grunt) {
             'retrofont':        { 'description': 'Retro Fonts Game Object',                     'optional': true, 'stub': false },
             'system':           { 'description': 'System Classes',                              'optional': false, 'stub': false },
             'math':             { 'description': 'Math, QuadTree and RND',                      'optional': false, 'stub': false },
-            'net':              { 'description': 'Network Class',                               'optional': true, 'stub': false },
+            'net':              { 'description': 'Network Class',                               'optional': true, 'stub': true },
             'tweens':           { 'description': 'Tween Manager',                               'optional': true, 'stub': true },
             'time':             { 'description': 'Time and Clock Manager',                      'optional': false, 'stub': false },
             'animation':        { 'description': 'Animation and Frame Manager',                 'optional': false, 'stub': false },
             'loader':           { 'description': 'Loader and Cache',                            'optional': false, 'stub': false },
             'sound':            { 'description': 'Sound Support (Web Audio and HTML Audio)',    'optional': true, 'stub': true },
-            'debug':            { 'description': 'Debug Class',                                 'optional': true, 'stub': false },
+            'debug':            { 'description': 'Debug Class',                                 'optional': true, 'stub': true },
             'utils':            { 'description': 'Core Utilities',                              'optional': false, 'stub': false },
             'physics':          { 'description': 'Physics Manager',                             'optional': false, 'stub': false },
             'arcade':           { 'description': 'Arcade Physics',                              'optional': true, 'stub': false },
@@ -62,6 +62,8 @@ module.exports = function (grunt) {
             'p2':               { 'description': 'P2 Physics',                                  'optional': true, 'stub': false },
             'tilemaps':         { 'description': 'Tilemap Support',                             'optional': true, 'stub': false },
             'particles':        { 'description': 'Arcade Physics Particle System',              'optional': true, 'stub': true },
+            'creature':         { 'description': 'Creature Animation Tool Support',             'optional': true, 'stub': false },
+            'video':            { 'description': 'Video Game Object',                           'optional': true, 'stub': false },
             'outro':            { 'description': 'Phaser UMD closure',                          'optional': true, 'stub': false }
 
         };
@@ -207,7 +209,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('build', 'Compile all Phaser versions just to the dist folder', function() {
 
-        grunt.option('exclude', 'ninja');
+        grunt.option('exclude', 'ninja,creature');
         grunt.option('filename', 'phaser');
         grunt.option('sourcemap', true);
         grunt.option('copy', false);
@@ -218,7 +220,17 @@ module.exports = function (grunt) {
 
     grunt.registerTask('full', 'Phaser complete', function() {
 
-        grunt.option('exclude', 'ninja');
+        grunt.option('exclude', 'ninja,creature');
+        grunt.option('filename', 'phaser');
+        grunt.option('sourcemap', true);
+        grunt.option('copy', true);
+
+        grunt.task.run('custom');
+
+    });
+	grunt.registerTask('fullNinja', 'Phaser complete with ninja physics', function() {
+
+        grunt.option('exclude', 'creature');
         grunt.option('filename', 'phaser');
         grunt.option('sourcemap', true);
         grunt.option('copy', true);
@@ -229,7 +241,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('arcadephysics', 'Phaser with Arcade Physics, Tilemaps and Particles', function() {
 
-        grunt.option('exclude', 'ninja,p2');
+        grunt.option('exclude', 'ninja,p2,creature');
         grunt.option('filename', 'phaser-arcade-physics');
         grunt.option('sourcemap', true);
         grunt.option('copy', false);
@@ -241,7 +253,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('nophysics', 'Phaser without physics, tilemaps or particles', function() {
 
-        grunt.option('exclude', 'arcade,ninja,p2,tilemaps,particles');
+        grunt.option('exclude', 'arcade,ninja,p2,tilemaps,particles,creature');
         grunt.option('filename', 'phaser-no-physics');
         grunt.option('sourcemap', true);
         grunt.option('copy', false);
@@ -253,7 +265,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('minimum', 'Phaser without any optional modules except Pixi', function() {
 
-        grunt.option('exclude', 'gamepad,keyboard,bitmapdata,graphics,rendertexture,text,bitmaptext,retrofont,net,tweens,sound,debug,arcade,ninja,p2,tilemaps,particles');
+        grunt.option('exclude', 'gamepad,keyboard,bitmapdata,graphics,rendertexture,text,bitmaptext,retrofont,net,tweens,sound,debug,arcade,ninja,p2,tilemaps,particles,creature,video');
         grunt.option('filename', 'phaser-minimum');
         grunt.option('sourcemap', true);
         grunt.option('copy', false);

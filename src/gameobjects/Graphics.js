@@ -21,14 +21,14 @@
 * @extends Phaser.Component.LifeSpan
 * @extends Phaser.Component.PhysicsBody
 * @extends Phaser.Component.Reset
-* @param {Phaser.Game} game Current game instance.
-* @param {number} x - X position of the new graphics object.
-* @param {number} y - Y position of the new graphics object.
+* @param {Phaser.Game} game - Current game instance.
+* @param {number} [x=0] - X position of the new graphics object.
+* @param {number} [y=0] - Y position of the new graphics object.
 */
 Phaser.Graphics = function (game, x, y) {
 
-    x = x || 0;
-    y = y || 0;
+    if (typeof x === 'undefined') { x = 0; }
+    if (typeof y === 'undefined') { y = 0; }
 
     /**
     * @property {number} type - The const type of this object.

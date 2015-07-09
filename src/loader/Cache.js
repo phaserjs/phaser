@@ -49,6 +49,12 @@ Phaser.Cache = function (game) {
     this._sounds = {};
 
     /**
+    * @property {object} _videos - Video key-value container.
+    * @private
+    */
+    this._videos = {};
+
+    /**
     * @property {object} _text - Text key-value container.
     * @private
     */
@@ -131,6 +137,7 @@ Phaser.Cache = function (game) {
     this._cacheMap[Phaser.Cache.CANVAS] = this._canvases;
     this._cacheMap[Phaser.Cache.IMAGE] = this._images;
     this._cacheMap[Phaser.Cache.TEXTURE] = this._textures;
+    this._cacheMap[Phaser.Cache.VIDEO] = this._videos;
     this._cacheMap[Phaser.Cache.SOUND] = this._sounds;
     this._cacheMap[Phaser.Cache.TEXT] = this._text;
     this._cacheMap[Phaser.Cache.PHYSICS] = this._physics;
@@ -214,6 +221,12 @@ Phaser.Cache.JSON = 11;
 * @type {number}
 */
 Phaser.Cache.XML = 12;
+
+/**
+* @constant
+* @type {number}
+*/
+Phaser.Cache.VIDEO = 13;
 
 Phaser.Cache.prototype = {
 
@@ -302,7 +315,7 @@ Phaser.Cache.prototype = {
         this._images[key] = { url: url, data: data, frameWidth: frameWidth, frameHeight: frameHeight, margin: margin, spacing: spacing };
 
         PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
-        PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
+        // PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
 
         this._images[key].frameData = Phaser.AnimationParser.spriteSheet(this.game, key, frameWidth, frameHeight, frameMax, margin, spacing);
 
@@ -315,7 +328,7 @@ Phaser.Cache.prototype = {
     *
     * @method Phaser.Cache#addTilemap
     * @param {string} key - The unique key by which you will reference this object.
-    * @param {string} url - URL of the tilemap image.
+    * @param {string} url - URL of the tilemap image or key reference.
     * @param {object} mapData - The tilemap data object (either a CSV or JSON file).
     * @param {number} format - The format of the tilemap data.
     */
@@ -342,19 +355,23 @@ Phaser.Cache.prototype = {
         this._images[key] = { url: url, data: data };
 
         PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
-        PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
+        // PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
 
-        if (format == Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY)
-        {
-            this._images[key].frameData = Phaser.AnimationParser.JSONData(this.game, atlasData, key);
-        }
-        else if (format == Phaser.Loader.TEXTURE_ATLAS_JSON_HASH)
-        {
-            this._images[key].frameData = Phaser.AnimationParser.JSONDataHash(this.game, atlasData, key);
-        }
-        else if (format == Phaser.Loader.TEXTURE_ATLAS_XML_STARLING)
+        if (format == Phaser.Loader.TEXTURE_ATLAS_XML_STARLING)
         {
             this._images[key].frameData = Phaser.AnimationParser.XMLData(this.game, atlasData, key);
+        }
+        else
+        {
+            //  Let's just work it out from the frames array
+            if (Array.isArray(atlasData.frames))
+            {
+                this._images[key].frameData = Phaser.AnimationParser.JSONData(this.game, atlasData, key);
+            }
+            else
+            {
+                this._images[key].frameData = Phaser.AnimationParser.JSONDataHash(this.game, atlasData, key);
+            }
         }
 
         this._resolveURL(url, this._images[key]);
@@ -368,23 +385,29 @@ Phaser.Cache.prototype = {
     * @param {string} key - The unique key by which you will reference this object.
     * @param {string} url - URL of this font xml file.
     * @param {object} data - Extra font data.
-    * @param {object} xmlData - Texture atlas frames data.
+    * @param {object} atlasData - Texture atlas frames data.
     * @param {number} [xSpacing=0] - If you'd like to add additional horizontal spacing between the characters then set the pixel value here.
     * @param {number} [ySpacing=0] - If you'd like to add additional vertical spacing between the lines then set the pixel value here.
     */
-    addBitmapFont: function (key, url, data, xmlData, xSpacing, ySpacing) {
+    addBitmapFont: function (key, url, data, atlasData, atlasType, xSpacing, ySpacing) {
 
         this._images[key] = { url: url, data: data };
 
         PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
-        PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
+        // PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
 
-        Phaser.LoaderParser.bitmapFont(this.game, xmlData, key, xSpacing, ySpacing);
+        if (atlasType === 'json')
+        {
+            Phaser.LoaderParser.jsonBitmapFont(this.game, atlasData, key, xSpacing, ySpacing);
+        }
+        else
+        {
+            Phaser.LoaderParser.xmlBitmapFont(this.game, atlasData, key, xSpacing, ySpacing);
+        }
 
         this._bitmapFont[key] = PIXI.BitmapText.fonts[key];
 
         this._resolveURL(url, this._bitmapFont[key]);
-
     },
 
     /**
@@ -512,12 +535,11 @@ Phaser.Cache.prototype = {
 
         this._images[key] = { url: url, data: data };
 
-        this._images[key].frame = new Phaser.Frame(0, 0, 0, data.width, data.height, key, this.game.rnd.uuid());
+        this._images[key].frame = new Phaser.Frame(0, 0, 0, data.width, data.height, key);
         this._images[key].frameData = new Phaser.FrameData();
-        this._images[key].frameData.addFrame(new Phaser.Frame(0, 0, 0, data.width, data.height, url, this.game.rnd.uuid()));
+        this._images[key].frameData.addFrame(new Phaser.Frame(0, 0, 0, data.width, data.height, url));
 
         PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
-        PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
 
         this._resolveURL(url, this._images[key]);
 
@@ -620,127 +642,19 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * Get a canvas object from the cache by its key.
+    * Adds a Video file into the Cache. The file must have already been loaded, typically via Phaser.Loader.
     *
-    * @method Phaser.Cache#getCanvas
-    * @param {string} key - Asset key of the canvas to retrieve from the Cache.
-    * @return {object} The canvas object.
+    * @method Phaser.Cache#addVideo
+    * @param {string} key - Asset key for the video.
+    * @param {string} url - URL of this video file.
+    * @param {object} data - Extra video data.
+    * @param {boolean} isBlob - True if the file was preloaded via xhr and the data parameter is a Blob. false if a Video tag was created instead.
     */
-    getCanvas: function (key) {
+    addVideo: function (key, url, data, isBlob) {
 
-        if (this._canvases[key])
-        {
-            return this._canvases[key].canvas;
-        }
-        else
-        {
-            console.warn('Phaser.Cache.getCanvas: Invalid key: "' + key + '"');
-            return null;
-        }
+        this._videos[key] = { url: url, data: data, isBlob: isBlob, locked: true };
 
-    },
-
-    /**
-    * Get a BitmapData object from the cache by its key.
-    *
-    * @method Phaser.Cache#getBitmapData
-    * @param {string} key - Asset key of the BitmapData object to retrieve from the Cache.
-    * @return {Phaser.BitmapData} The requested BitmapData object if found, or null if not.
-    */
-    getBitmapData: function (key) {
-
-        if (this._bitmapDatas[key])
-        {
-            return this._bitmapDatas[key].data;
-        }
-        else
-        {
-            console.warn('Phaser.Cache.getBitmapData: Invalid key: "' + key + '"');
-            return null;
-        }
-
-    },
-
-    /**
-    * Get a BitmapFont object from the cache by its key.
-    *
-    * @method Phaser.Cache#getBitmapFont
-    * @param {string} key - Asset key of the BitmapFont object to retrieve from the Cache.
-    * @return {Phaser.BitmapFont} The requested BitmapFont object if found, or null if not.
-    */
-    getBitmapFont: function (key) {
-
-        if (this._bitmapFont[key])
-        {
-            return this._bitmapFont[key];
-        }
-        else
-        {
-            console.warn('Phaser.Cache.getBitmapFont: Invalid key: "' + key + '"');
-            return null;
-        }
-
-    },
-
-    /**
-    * Get a physics data object from the cache by its key. You can get either the entire data set, a single object or a single fixture of an object from it.
-    *
-    * @method Phaser.Cache#getPhysicsData
-    * @param {string} key - Asset key of the physics data object to retrieve from the Cache.
-    * @param {string} [object=null] - If specified it will return just the physics object that is part of the given key, if null it will return them all.
-    * @param {string} fixtureKey - Fixture key of fixture inside an object. This key can be set per fixture with the Phaser Exporter.
-    * @return {object} The requested physics object data if found.
-    */
-    getPhysicsData: function (key, object, fixtureKey) {
-
-        if (typeof object === 'undefined' || object === null)
-        {
-            //  Get 'em all
-            if (this._physics[key])
-            {
-                return this._physics[key].data;
-            }
-            else
-            {
-                console.warn('Phaser.Cache.getPhysicsData: Invalid key: "' + key + '"');
-            }
-        }
-        else
-        {
-            if (this._physics[key] && this._physics[key].data[object])
-            {
-                var fixtures = this._physics[key].data[object];
-
-                //try to find a fixture by it's fixture key if given
-                if (fixtures && fixtureKey)
-                {
-                    for (var fixture in fixtures)
-                    {
-                        //  This contains the fixture data of a polygon or a circle
-                        fixture = fixtures[fixture];
-
-                        //  Test the key
-                        if (fixture.fixtureKey === fixtureKey)
-                        {
-                            return fixture;
-                        }
-                    }
-
-                    //  We did not find the requested fixture
-                    console.warn('Phaser.Cache.getPhysicsData: Could not find given fixtureKey: "' + fixtureKey + ' in ' + key + '"');
-                }
-                else
-                {
-                    return fixtures;
-                }
-            }
-            else
-            {
-                console.warn('Phaser.Cache.getPhysicsData: Invalid key/object: "' + key + ' / ' + object + '"');
-            }
-        }
-
-        return null;
+        this._resolveURL(url, this._videos[key]);
 
     },
 
@@ -812,6 +726,19 @@ Phaser.Cache.prototype = {
     checkSoundKey: function (key) {
 
         return this.checkKey(Phaser.Cache.SOUND, key);
+
+    },
+
+    /**
+    * Checks if the given key exists in the Video Cache.
+    *
+    * @method Phaser.Cache#checkVideoKey
+    * @param {string} key - Asset key of the video file to check is in the Cache.
+    * @return {boolean} True if the key exists, otherwise false.
+    */
+    checkVideoKey: function (key) {
+
+        return this.checkKey(Phaser.Cache.VIDEO, key);
 
     },
 
@@ -937,6 +864,131 @@ Phaser.Cache.prototype = {
         }
 
         return false;
+
+    },
+
+    /**
+    * Get a canvas object from the cache by its key.
+    *
+    * @method Phaser.Cache#getCanvas
+    * @param {string} key - Asset key of the canvas to retrieve from the Cache.
+    * @return {object} The canvas object.
+    */
+    getCanvas: function (key) {
+
+        if (this._canvases[key])
+        {
+            return this._canvases[key].canvas;
+        }
+        else
+        {
+            console.warn('Phaser.Cache.getCanvas: Invalid key: "' + key + '"');
+            return null;
+        }
+
+    },
+
+    /**
+    * Get a BitmapData object from the cache by its key.
+    *
+    * @method Phaser.Cache#getBitmapData
+    * @param {string} key - Asset key of the BitmapData object to retrieve from the Cache.
+    * @return {Phaser.BitmapData} The requested BitmapData object if found, or null if not.
+    */
+    getBitmapData: function (key) {
+
+        if (this._bitmapDatas[key])
+        {
+            return this._bitmapDatas[key].data;
+        }
+        else
+        {
+            console.warn('Phaser.Cache.getBitmapData: Invalid key: "' + key + '"');
+            return null;
+        }
+
+    },
+
+    /**
+    * Get a BitmapFont object from the cache by its key.
+    *
+    * @method Phaser.Cache#getBitmapFont
+    * @param {string} key - Asset key of the BitmapFont object to retrieve from the Cache.
+    * @return {Phaser.BitmapFont} The requested BitmapFont object if found, or null if not.
+    */
+    getBitmapFont: function (key) {
+
+        if (this._bitmapFont[key])
+        {
+            return this._bitmapFont[key];
+        }
+        else
+        {
+            console.warn('Phaser.Cache.getBitmapFont: Invalid key: "' + key + '"');
+            return null;
+        }
+
+    },
+
+    /**
+    * Get a physics data object from the cache by its key. You can get either the entire data set, a single object or a single fixture of an object from it.
+    *
+    * @method Phaser.Cache#getPhysicsData
+    * @param {string} key - Asset key of the physics data object to retrieve from the Cache.
+    * @param {string} [object=null] - If specified it will return just the physics object that is part of the given key, if null it will return them all.
+    * @param {string} fixtureKey - Fixture key of fixture inside an object. This key can be set per fixture with the Phaser Exporter.
+    * @return {object} The requested physics object data if found.
+    */
+    getPhysicsData: function (key, object, fixtureKey) {
+
+        if (typeof object === 'undefined' || object === null)
+        {
+            //  Get 'em all
+            if (this._physics[key])
+            {
+                return this._physics[key].data;
+            }
+            else
+            {
+                console.warn('Phaser.Cache.getPhysicsData: Invalid key: "' + key + '"');
+            }
+        }
+        else
+        {
+            if (this._physics[key] && this._physics[key].data[object])
+            {
+                var fixtures = this._physics[key].data[object];
+
+                //try to find a fixture by it's fixture key if given
+                if (fixtures && fixtureKey)
+                {
+                    for (var fixture in fixtures)
+                    {
+                        //  This contains the fixture data of a polygon or a circle
+                        fixture = fixtures[fixture];
+
+                        //  Test the key
+                        if (fixture.fixtureKey === fixtureKey)
+                        {
+                            return fixture;
+                        }
+                    }
+
+                    //  We did not find the requested fixture
+                    console.warn('Phaser.Cache.getPhysicsData: Could not find given fixtureKey: "' + fixtureKey + ' in ' + key + '"');
+                }
+                else
+                {
+                    return fixtures;
+                }
+            }
+            else
+            {
+                console.warn('Phaser.Cache.getPhysicsData: Invalid key/object: "' + key + ' / ' + object + '"');
+            }
+        }
+
+        return null;
 
     },
 
@@ -1108,24 +1160,43 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * DEPRECATED: Please use Cache.getRenderTexture instead. This method will be removed in Phaser 2.2.0.
-    * 
-    * Get a RenderTexture by key.
+    * Gets a PIXI.Texture by key from the Cache.
     *
-    * @method Phaser.Cache#getTexture
-    * @deprecated Please use Cache.getRenderTexture instead. This method will be removed in Phaser 2.2.0.
-    * @param {string} key - Asset key of the RenderTexture to retrieve from the Cache.
-    * @return {Phaser.RenderTexture} The RenderTexture object.
+    * @method Phaser.Cache#getPixiTexture
+    * @param {string} key - Asset key of the Texture to retrieve from the Cache.
+    * @return {PIXI.Texture} The Texture object.
     */
-    getTexture: function (key) {
+    getPixiTexture: function (key) {
 
-        if (this._textures[key])
+        if (PIXI.TextureCache[key])
         {
-            return this._textures[key];
+            return PIXI.TextureCache[key];
         }
         else
         {
-            console.warn('Phaser.Cache.getTexture: Invalid key: "' + key + '"');
+            console.warn('Phaser.Cache.getPixiTexture: Invalid key: "' + key + '"');
+            return null;
+        }
+
+    },
+
+    /**
+    * Gets a PIXI.BaseTexture by key from the Cache.
+    *
+    * @method Phaser.Cache#getPixiBaseTexture
+    * @param {string} key - Asset key of the BaseTexture to retrieve from the Cache.
+    * @return {PIXI.BaseTexture} The BaseTexture object.
+    */
+    getPixiBaseTexture: function (key) {
+
+        if (PIXI.BaseTextureCache[key])
+        {
+            return PIXI.BaseTextureCache[key];
+        }
+        else
+        {
+            console.warn('Phaser.Cache.getPixiBaseTexture: Invalid key: "' + key + '"');
+            return null;
         }
 
     },
@@ -1202,6 +1273,27 @@ Phaser.Cache.prototype = {
     },
 
     /**
+    * Get video by key.
+    *
+    * @method Phaser.Cache#getVideo
+    * @param {string} key - Asset key of the video to retrieve from the Cache.
+    * @return {Phaser.Sound} The video object.
+    */
+    getVideo: function (key) {
+
+        if (this._videos[key])
+        {
+            return this._videos[key];
+        }
+        else
+        {
+            console.warn('Phaser.Cache.getVideo: Invalid key: "' + key + '"');
+            return null;
+        }
+
+    },
+
+    /**
     * Get the number of frames in this image.
     *
     * @method Phaser.Cache#getFrameCount
@@ -1242,16 +1334,27 @@ Phaser.Cache.prototype = {
 
     /**
     * Get a JSON object by key from the cache.
+    * 
+    * You can either return the object by reference (the default), or return a clone
+    * of it using the `clone` parameter.
     *
     * @method Phaser.Cache#getJSON
     * @param {string} key - Asset key of the json object to retrieve from the Cache.
+    * @param {boolean} [clonse=false] - Return a clone of the original object (true) or a reference to it? (false)
     * @return {object} The JSON object.
     */
-    getJSON: function (key) {
+    getJSON: function (key, clone) {
 
         if (this._json[key])
         {
-            return this._json[key].data;
+            if (clone)
+            {
+                return Phaser.Utils.extend(true, this._json[key].data);
+            }
+            else
+            {
+                return this._json[key].data;
+            }
         }
         else
         {
@@ -1329,23 +1432,6 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * DEPRECATED: Please use Cache.getURL instead.
-    * Get a cached object by the URL.
-    * This only returns a value if you set Cache.autoResolveURL to `true` *before* starting the preload of any assets.
-    * Be aware that every call to this function makes a DOM src query, so use carefully and double-check for implications in your target browsers/devices.
-    *
-    * @method Phaser.Cache#getUrl
-    * @deprecated Please use Cache.getURL instead.
-    * @param {string} url - The url for the object loaded to get from the cache.
-    * @return {object} The cached object.
-    */
-    getUrl: function (url) {
-
-        return this.getURL(url);
-
-    },
-
-    /**
     * Gets all keys used by the Cache for the given data type.
     *
     * @method Phaser.Cache#getKeys
@@ -1372,6 +1458,10 @@ Phaser.Cache.prototype = {
 
             case Phaser.Cache.SOUND:
                 array = this._sounds;
+                break;
+
+            case Phaser.Cache.VIDEO:
+                array = this._videos;
                 break;
 
             case Phaser.Cache.TEXT:
@@ -1464,6 +1554,16 @@ Phaser.Cache.prototype = {
     */
     removeSound: function (key) {
         delete this._sounds[key];
+    },
+
+    /**
+    * Removes a video from the cache.
+    *
+    * @method Phaser.Cache#removeVideo
+    * @param {string} key - Key of the asset you want to remove.
+    */
+    removeVideo: function (key) {
+        delete this._videos[key];
     },
 
     /**
@@ -1598,6 +1698,7 @@ Phaser.Cache.prototype = {
         var containers = [
             this._canvases,
             this._sounds,
+            this._videos,
             this._text,
             this._json,
             this._xml,

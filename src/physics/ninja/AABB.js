@@ -124,18 +124,17 @@ Phaser.Physics.Ninja.AABB.prototype = {
         this.oldpos.set(px, py);
 
     },
-
+    
     /**
-    * Process a world collision and apply the resulting forces.
-    *
-    * @method Phaser.Physics.Ninja.AABB#reportCollisionVsWorld
-    * @param {number} px - The tangent velocity
-    * @param {number} py - The tangent velocity
-    * @param {number} dx - Collision normal
-    * @param {number} dy - Collision normal
-    * @param {number} obj - Object this AABB collided with
-    */
-    reportCollisionVsWorld: function (px, py, dx, dy) {
+     * Process a collision partner-agnostic collision response and apply the resulting forces.
+     * 
+     * @method Phaser.Phyiscs.Ninja.AABB#reportCollision
+     * @param {number} px - The tangent velocity
+     * @param {number} py - The tangent velocity
+     * @param {number} dx - Collision normal
+     * @param {number} dy - Collision normal
+     */
+    reportCollision: function(px, py, dx, dy) {
 
         var p = this.pos;
         var o = this.oldpos;
@@ -150,7 +149,7 @@ Phaser.Physics.Ninja.AABB.prototype = {
 
         var ny = dp * dy;   //nx,ny is normal velocity
 
-        var tx = vx - nx;   //px,py is tangent velocity
+        var tx = vx - nx;   //tx,ty is tangent velocity
         var ty = vy - ny;
 
         //  We only want to apply collision response forces if the object is travelling into, and not out of, the collision
@@ -198,6 +197,20 @@ Phaser.Physics.Ninja.AABB.prototype = {
         o.x += px + bx + fx;
         o.y += py + by + fy;
 
+    },
+
+    /**
+    * Process a world collision and apply the resulting forces.
+    *
+    * @method Phaser.Physics.Ninja.AABB#reportCollisionVsWorld
+    * @param {number} px - The tangent velocity
+    * @param {number} py - The tangent velocity
+    * @param {number} dx - Collision normal
+    * @param {number} dy - Collision normal
+    */
+    reportCollisionVsWorld: function (px, py, dx, dy) {
+
+        this.reportCollision(px,py,dx,dy);
     },
 
     reverse: function () {
@@ -266,32 +279,16 @@ Phaser.Physics.Ninja.AABB.prototype = {
             px *= 0.5;
             py *= 0.5;
 
-            this.pos.add(px, py);
-            obj.pos.subtract(px, py);
-
-            if (dp1 < 0)
-            {
-                this.reverse();
-                obj.reverse();
-            }
+            this.reportCollision(px, py, dx, dy);
+            obj.reportCollision(-px, -py, -dx, -dy);
         }
         else if (!this.body.immovable)
         {
-            this.pos.subtract(px, py);
-
-            if (dp1 < 0)
-            {
-                this.reverse();
-            }
+            this.reportCollision(px,py,dx,dy);
         }
         else if (!obj.body.immovable)
         {
-            obj.pos.subtract(px, py);
-
-            if (dp1 < 0)
-            {
-                obj.reverse();
-            }
+            obj.reportCollision(-px, -py, -dx, -dy);
         }
 
     },

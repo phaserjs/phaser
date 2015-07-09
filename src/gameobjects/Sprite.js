@@ -24,6 +24,8 @@
 * @extends Phaser.Component.Delta
 * @extends Phaser.Component.Destroy
 * @extends Phaser.Component.FixedToCamera
+* @extends Phaser.Component.Health
+* @extends Phaser.Component.InCamera
 * @extends Phaser.Component.InputEnabled
 * @extends Phaser.Component.InWorld
 * @extends Phaser.Component.LifeSpan
@@ -77,6 +79,8 @@ Phaser.Component.Core.install.call(Phaser.Sprite.prototype, [
     'Delta',
     'Destroy',
     'FixedToCamera',
+    'Health',
+    'InCamera',
     'InputEnabled',
     'InWorld',
     'LifeSpan',

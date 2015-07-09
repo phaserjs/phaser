@@ -17,8 +17,9 @@
 * @param {boolean} isOnce - If binding should be executed just once.
 * @param {object} [listenerContext=null] - Context on which listener will be executed (object that should represent the `this` variable inside listener function).
 * @param {number} [priority] - The priority level of the event listener. (default = 0).
+* @param {...any} [args=(none)] - Additional arguments to pass to the callback (listener) function. They will be appended after any arguments usually dispatched.
 */
-Phaser.SignalBinding = function (signal, listener, isOnce, listenerContext, priority) {
+Phaser.SignalBinding = function (signal, listener, isOnce, listenerContext, priority, args) {
 
     /**
     * @property {Phaser.Game} _listener - Handler function bound to the signal.
@@ -47,6 +48,11 @@ Phaser.SignalBinding = function (signal, listener, isOnce, listenerContext, prio
         this._priority = priority;
     }
 
+    if (args && args.length)
+    {
+        this._args = args;
+    }
+
 };
 
 Phaser.SignalBinding.prototype = {
@@ -67,6 +73,12 @@ Phaser.SignalBinding.prototype = {
     * @private
     */
     _priority: 0,
+
+    /**
+    * @property {array} _args - Listener arguments.
+    * @private
+    */
+    _args: null,
 
     /**
     * @property {number} callCount - The number of times the handler function has been called.
@@ -101,7 +113,14 @@ Phaser.SignalBinding.prototype = {
         if (this.active && !!this._listener)
         {
             params = this.params ? this.params.concat(paramsArr) : paramsArr;
+
+            if (this._args)
+            {
+                params = params.concat(this._args);
+            }
+
             handlerReturn = this._listener.apply(this.context, params);
+
             this.callCount++;
 
             if (this._isOnce)
