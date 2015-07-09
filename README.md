@@ -380,6 +380,7 @@ Version 2.4 - "Katar" - in dev
 * If the device is detected as a Windows Phone the renderer is automatically set to use Canvas, even if WebGL or AUTO was requested (thanks @ramarro123 #1706)
 * RandomDataGenerator.weightedPick has been tweaked slightly to allow for a more even distribution of weights. It still favors the earlier array elements, but will accurately include 'distance' elements as well (thanks @gingerbeardman #1751)
 * BitmapData.clear has 4 new optional parameters: x, y, width and height, that define the area to be cleared. If left undefined it works exactly the same as before and clears the entire canvas.
+* Added Phaser.Keyboard.COMMA and Phaser.Keyboard.PERIOD to the consts list.
 
 ### Bug Fixes
 

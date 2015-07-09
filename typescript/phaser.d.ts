@@ -1919,7 +1919,9 @@ declare module Phaser {
         static F15: number;
         static COLON: number;
         static EQUALS: number;
+        static COMMA: number;
         static UNDERSCORE: number;
+        static PERIOD: number;
         static QUESTION_MARK: number;
         static TILDE: number;
         static OPEN_BRACKET: number;
