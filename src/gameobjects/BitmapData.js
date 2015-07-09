@@ -209,12 +209,143 @@ Phaser.BitmapData = function (game, key, width, height) {
     */
     this._circle = new Phaser.Circle();
 
+    /**
+    * @property {HTMLCanvasElement} _swapCanvas - A swap canvas.
+    * @private
+    */
+    this._swapCanvas = Phaser.Canvas.create(width, height, '', true);
+
 };
 
 Phaser.BitmapData.prototype = {
 
     /**
-    * Updates the given objects so that they use this BitmapData as their texture. This will replace any texture they will currently have set.
+    * Shifts the contents of this BitmapData by the distances given.
+    * 
+    * The image will wrap-around the edges on all sides.
+    *
+    * @method Phaser.BitmapData#move
+    * @param {integer} x - The amount of pixels to horizontally shift the canvas by. Use a negative value to shift to the left, positive to the right.
+    * @param {integer} y - The amount of pixels to vertically shift the canvas by. Use a negative value to shift up, positive to shift down.
+    * @return {Phaser.BitmapData} This BitmapData object for method chaining.
+    */
+    move: function (x, y) {
+
+        if (x !== 0)
+        {
+            this.moveH(x);
+        }
+
+        if (y !== 0)
+        {
+            this.moveV(y);
+        }
+
+        return this;
+
+    },
+
+    /**
+    * Shifts the contents of this BitmapData horizontally.
+    * 
+    * The image will wrap-around the sides.
+    *
+    * @method Phaser.BitmapData#moveH
+    * @param {integer} distance - The amount of pixels to horizontally shift the canvas by. Use a negative value to shift to the left, positive to the right.
+    * @return {Phaser.BitmapData} This BitmapData object for method chaining.
+    */
+    moveH: function (distance) {
+
+        var c = this._swapCanvas;
+        var ctx = c.getContext('2d');
+        var h = this.height;
+        var src = this.canvas;
+
+        ctx.clearRect(0, 0, this.width, this.height);
+
+        if (distance < 0)
+        {
+            distance = Math.abs(distance);
+
+            //  Moving to the left
+            var w = this.width - distance;
+
+            //  Left-hand chunk
+            ctx.drawImage(src, 0, 0, distance, h, w, 0, distance, h);
+
+            //  Rest of the image
+            ctx.drawImage(src, distance, 0, w, h, 0, 0, w, h);
+        }
+        else
+        {
+            //  Moving to the right
+            var w = this.width - distance;
+
+            //  Right-hand chunk
+            ctx.drawImage(src, w, 0, distance, h, 0, 0, distance, h);
+
+            //  Rest of the image
+            ctx.drawImage(src, 0, 0, w, h, distance, 0, w, h);
+        }
+
+        this.clear();
+
+        return this.copy(this._swapCanvas);
+
+    },
+
+    /**
+    * Shifts the contents of this BitmapData vertically.
+    * 
+    * The image will wrap-around the sides.
+    *
+    * @method Phaser.BitmapData#moveV
+    * @param {integer} distance - The amount of pixels to vertically shift the canvas by. Use a negative value to shift up, positive to shift down.
+    * @return {Phaser.BitmapData} This BitmapData object for method chaining.
+    */
+    moveV: function (distance) {
+
+        var c = this._swapCanvas;
+        var ctx = c.getContext('2d');
+        var w = this.width;
+        var src = this.canvas;
+
+        ctx.clearRect(0, 0, this.width, this.height);
+
+        if (distance < 0)
+        {
+            distance = Math.abs(distance);
+
+            //  Moving up
+            var h = this.height - distance;
+
+            //  Top chunk
+            ctx.drawImage(src, 0, 0, w, distance, 0, h, w, distance);
+
+            //  Rest of the image
+            ctx.drawImage(src, 0, distance, w, h, 0, 0, w, h);
+        }
+        else
+        {
+            //  Moving down
+            var h = this.height - distance;
+
+            //  Bottom chunk
+            ctx.drawImage(src, 0, h, w, distance, 0, 0, w, distance);
+
+            //  Rest of the image
+            ctx.drawImage(src, 0, 0, w, h, 0, distance, w, h);
+        }
+
+        this.clear();
+
+        return this.copy(this._swapCanvas);
+
+    },
+
+    /**
+    * Updates the given objects so that they use this BitmapData as their texture.
+    * This will replace any texture they will currently have set.
     *
     * @method Phaser.BitmapData#add
     * @param {Phaser.Sprite|Phaser.Sprite[]|Phaser.Image|Phaser.Image[]} object - Either a single Sprite/Image or an Array of Sprites/Images.
@@ -285,12 +416,24 @@ Phaser.BitmapData.prototype = {
     /**
     * Clears the BitmapData context using a clearRect.
     *
+    * You can optionally define the area to clear.
+    * If the arguments are left empty it will clear the entire canvas.
+    *
     * @method Phaser.BitmapData#clear
+    * @param {number} [x=0] - The x coordinate of the top-left of the area to clear.
+    * @param {number} [y=0] - The y coordinate of the top-left of the area to clear.
+    * @param {number} [width] - The width of the area to clear. If undefined it will use BitmapData.width.
+    * @param {number} [height] - The height of the area to clear. If undefined it will use BitmapData.height.
     * @return {Phaser.BitmapData} This BitmapData object for method chaining.
     */
-    clear: function () {
+    clear: function (x, y, width, height) {
 
-        this.context.clearRect(0, 0, this.width, this.height);
+        if (typeof x === 'undefined') { x = 0; }
+        if (typeof y === 'undefined') { y = 0; }
+        if (typeof width === 'undefined') { width = this.width; }
+        if (typeof height === 'undefined') { height = this.height; }
+
+        this.context.clearRect(x, y, width, height);
 
         this.dirty = true;
 
@@ -321,6 +464,42 @@ Phaser.BitmapData.prototype = {
     },
 
     /**
+    * Creates a new Image element by converting this BitmapDatas canvas into a dataURL.
+    *
+    * The image is then stored in the Cache using the key given.
+    *
+    * Finally a PIXI.Texture is created based on the image and returned.
+    *
+    * You can apply the texture to a sprite or any other supporting object by using either the
+    * key or the texture. First call generateTexture:
+    *
+    * `var texture = bitmapdata.generateTexture('ball');`
+    *
+    * Then you can either apply the texture to a sprite:
+    * 
+    * `game.add.sprite(0, 0, texture);`
+    *
+    * or by using the string based key:
+    *
+    * `game.add.sprite(0, 0, 'ball');`
+    *
+    * @method Phaser.BitmapData#generateTexture
+    * @param {string} key - The key which will be used to store the image in the Cache.
+    * @return {PIXI.Texture} The newly generated texture.
+    */
+    generateTexture: function (key) {
+
+        var image = new Image();
+
+        image.src = this.canvas.toDataURL("image/png");
+
+        this.game.cache.addImage(key, '', image);
+
+        return new PIXI.Texture(PIXI.BaseTextureCache[key]);
+
+    },
+
+    /**
     * Resizes the BitmapData. This changes the size of the underlying canvas and refreshes the buffer.
     *
     * @method Phaser.BitmapData#resize
@@ -335,6 +514,9 @@ Phaser.BitmapData.prototype = {
 
             this.canvas.width = width;
             this.canvas.height = height;
+
+            this._swapCanvas.width = width;
+            this._swapCanvas.height = height;
 
             this.baseTexture.width = width;
             this.baseTexture.height = height;

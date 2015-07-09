@@ -173,7 +173,8 @@ Phaser.Math = {
     /**
     * Snap a value to nearest grid slice, using ceil.
     *
-    * Example: if you have an interval gap of 5 and a position of 12... you will snap to 15. As will 14 will snap to 15... but 16 will snap to 20.
+    * Example: if you have an interval gap of 5 and a position of 12... you will snap to 15.
+    * As will 14 will snap to 15... but 16 will snap to 20.
     *
     * @method Phaser.Math#snapToCeil
     * @param {number} input - The value to snap.

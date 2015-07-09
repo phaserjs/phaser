@@ -203,18 +203,27 @@ Phaser.Input = function (game) {
 
     /**
     * The most recently active Pointer object.
+    * 
     * When you've limited max pointers to 1 this will accurately be either the first finger touched or mouse.
+    * 
     * @property {Phaser.Pointer} activePointer
     */
     this.activePointer = null;
 
     /**
-    * @property {Pointer} mousePointer - The mouse has its own unique Phaser.Pointer object which you can use if making a desktop specific game.
+    * The mouse has its own unique Phaser.Pointer object which you can use if making a desktop specific game.
+    * 
+    * @property {Pointer} mousePointer
     */
     this.mousePointer = null;
 
     /**
-    * @property {Phaser.Mouse} mouse - The Mouse Input manager.
+    * The Mouse Input manager.
+    * 
+    * You should not usually access this manager directly, but instead use Input.mousePointer or Input.activePointer 
+    * which normalizes all the input values for you, regardless of browser.
+    * 
+    * @property {Phaser.Mouse} mouse
     */
     this.mouse = null;
 
@@ -224,12 +233,22 @@ Phaser.Input = function (game) {
     this.keyboard = null;
 
     /**
-    * @property {Phaser.Touch} touch - the Touch Input manager.
+    * The Touch Input manager.
+    * 
+    * You should not usually access this manager directly, but instead use Input.activePointer 
+    * which normalizes all the input values for you, regardless of browser.
+    * 
+    * @property {Phaser.Touch} touch
     */
     this.touch = null;
 
     /**
-    * @property {Phaser.MSPointer} mspointer - The MSPointer Input manager.
+    * The MSPointer Input manager.
+    * 
+    * You should not usually access this manager directly, but instead use Input.activePointer 
+    * which normalizes all the input values for you, regardless of browser.
+    * 
+    * @property {Phaser.MSPointer} mspointer
     */
     this.mspointer = null;
 

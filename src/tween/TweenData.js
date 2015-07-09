@@ -44,7 +44,7 @@ Phaser.TweenData = function (parent) {
     this.vEnd = {};
 
     /**
-    * @property {object} vEnd - Cached ending values.
+    * @property {object} vEndCache - Cached ending values.
     * @private
     */
     this.vEndCache = {};
@@ -298,8 +298,12 @@ Phaser.TweenData.prototype = {
                     continue;
                 }
 
-                //  Create a local copy of the Array with the start value at the front
-                this.vEnd[property] = [this.vStart[property]].concat(this.vEnd[property]);
+                if (this.percent === 0)
+                {
+                    //  Put the start value at the beginning of the array
+                    //  but we only want to do this once, if the Tween hasn't run before
+                    this.vEnd[property] = [this.vStart[property]].concat(this.vEnd[property]);
+                }
             }
 
             if (typeof this.vEnd[property] !== 'undefined')

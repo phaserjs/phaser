@@ -253,6 +253,11 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this.particles = null;
 
     /**
+    * @property {Phaser.Create} create - The Asset Generator.
+    */
+    this.create = null;
+
+    /**
     * If `false` Phaser will automatically render the display list every update. If `true` the render loop will be skipped.
     * You can toggle this value at run-time to gain exact control over when Phaser renders. This can be useful in certain types of game or application.
     * Please note that if you don't render the display list then none of the game object transforms will be updated, so use this value carefully.
@@ -542,6 +547,7 @@ Phaser.Game.prototype = {
         this.sound = new Phaser.SoundManager(this);
         this.physics = new Phaser.Physics(this, this.physicsConfig);
         this.particles = new Phaser.Particles(this);
+        this.create = new Phaser.Create(this);
         this.plugins = new Phaser.PluginManager(this);
         this.net = new Phaser.Net(this);
 

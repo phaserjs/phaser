@@ -45,7 +45,7 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
 
     /**
     * The layer object within the Tilemap that this layer represents.
-    * @property {Phaser.TileLayer} layer
+    * @property {object} layer
     * @protected
     * @readonly
     */
@@ -65,26 +65,7 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     */
     this.context = this.canvas.getContext('2d');
 
-    /**
-    * Required Pixi var.
-    * @property {PIXI.BaseTexture} baseTexture
-    * @protected
-    */
-    this.baseTexture = new PIXI.BaseTexture(this.canvas);
-
-    /**
-    * Required Pixi var.
-    * @property {PIXI.Texture} texture
-    * @protected
-    */
-    this.texture = new PIXI.Texture(this.baseTexture);
-
-    /**
-    * Dimensions of the renderable area.
-    * @property {Phaser.Frame} textureFrame
-    * @protected
-    */
-    this.textureFrame = new Phaser.Frame(0, 0, 0, width, height, 'tilemapLayer');
+    this.setTexture(new PIXI.Texture(new PIXI.BaseTexture(this.canvas)));
 
     /**
     * The const type of this object.
@@ -104,7 +85,7 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     /**
     * Settings that control standard (non-diagnostic) rendering.
     *
-    * @property {boolean} [enableScrollDelta=true] - Delta scroll rendering only draws tiles/edges as them come into view.
+    * @property {boolean} [enableScrollDelta=true] - Delta scroll rendering only draws tiles/edges as they come into view.
     *     This can greatly improve scrolling rendering performance, especially when there are many small tiles.
     *     It should only be disabled in rare cases.
     *
@@ -115,7 +96,7 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     * @default
     */
     this.renderSettings = {
-        enableScrollDelta: true,
+        enableScrollDelta: false,
         overdrawRatio: 0.20,
         copyCanvas: null
     };
@@ -323,21 +304,38 @@ Phaser.TilemapLayer.prototype.postUpdate = function () {
 /**
 * Resizes the internal canvas and texture frame used by this TilemapLayer.
 *
-* This is an expensive call, so don't bind it to a window resize event or similar!
+* This is an expensive call, so don't bind it to a window resize event! But instead call it at carefully
+* selected times.
+*
+* Be aware that no validation of the new sizes takes place and the current map scroll coordinates are not
+* modified either. You will have to handle both of these things from your game code if required.
 * 
 * @method Phaser.TilemapLayer#resize
 * @param {number} width - The new width of the TilemapLayer
 * @param {number} height - The new height of the TilemapLayer
 */
-Phaser.TilemapLayer.resize = function (width, height) {
+Phaser.TilemapLayer.prototype.resize = function (width, height) {
 
-    this.baseTexture.width = width;
-    this.baseTexture.height = height;
+    this.canvas.width = width;
+    this.canvas.height = height;
 
-    this.resizeFrame(width, height);
+    this.texture.frame.resize(width, height);
 
-    this.textureFrame.resize(width, height);
+    this.texture.width = width;
+    this.texture.height = height;
 
+    this.texture.crop.width = width;
+    this.texture.crop.height = height;
+
+    this.texture.baseTexture.width = width;
+    this.texture.baseTexture.height = height;
+
+    this.texture.baseTexture.dirty();
+    this.texture.requiresUpdate = true;
+
+    this.texture._updateUvs();
+
+    this.dirty = true;
 
 };
 
@@ -1064,7 +1062,7 @@ Phaser.TilemapLayer.prototype.render = function () {
         this.renderDebug();
     }
 
-    this.baseTexture.dirty();
+    this.texture.baseTexture.dirty();
 
     this.dirty = false;
 

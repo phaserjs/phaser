@@ -30,7 +30,7 @@ Phaser.Component.Destroy.prototype = {
     * @method
     * @param {boolean} [destroyChildren=true] - Should every child of this object have its destroy method called as well?
     */
-    destroy: function(destroyChildren) {
+    destroy: function (destroyChildren) {
 
         if (this.game === null || this.destroyPhase) { return; }
 
@@ -138,6 +138,7 @@ Phaser.Component.Destroy.prototype = {
         this._destroyCachedSprite();
 
         this.destroyPhase = false;
+        this.pendingDestroy = false;
 
     }
 

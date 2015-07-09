@@ -300,16 +300,18 @@ Phaser.Tilemap.prototype = {
             img = this.game.cache.getImage(key);
         }
 
-        if (this.getTilesetIndex(tileset) === null && this.format === Phaser.Tilemap.TILED_JSON)
+        var idx = this.getTilesetIndex(tileset);
+
+        if (idx === null && this.format === Phaser.Tilemap.TILED_JSON)
         {
             console.warn('Phaser.Tilemap.addTilesetImage: No data found in the JSON matching the tileset name: "' + key + '"');
             return null;
         }
 
-        if (this.tilesets[tileset])
+        if (this.tilesets[idx])
         {
-            this.tilesets[tileset].setImage(img);
-            return this.tilesets[tileset];
+            this.tilesets[idx].setImage(img);
+            return this.tilesets[idx];
         }
         else
         {

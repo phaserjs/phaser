@@ -102,6 +102,7 @@
     <script src="$path/src/geom/RoundedRectangle.js"></script>
 
     <script src="$path/src/core/Camera.js"></script>
+    <script src="$path/src/core/Create.js"></script>
     <script src="$path/src/core/State.js"></script>
     <script src="$path/src/core/StateManager.js"></script>
     <script src="$path/src/core/Signal.js"></script>

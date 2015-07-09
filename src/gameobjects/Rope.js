@@ -208,20 +208,21 @@ Object.defineProperty(Phaser.Rope.prototype, "segments", {
         {
             index = i * 4;
 
-            x1 = this.verticies[index];
-            y1 = this.verticies[index + 1];
-            x2 = this.verticies[index + 4];
-            y2 = this.verticies[index + 3];
+            x1 = this.vertices[index] * this.scale.x;
+            y1 = this.vertices[index + 1] * this.scale.y;
+            x2 = this.vertices[index + 4] * this.scale.x;
+            y2 = this.vertices[index + 3] * this.scale.y;
 
-            width = Phaser.Math.difference(x1,x2);
-            height = Phaser.Math.difference(y1,y2);
+            width = Phaser.Math.difference(x1, x2);
+            height = Phaser.Math.difference(y1, y2);
 
             x1 += this.world.x;
             y1 += this.world.y;
-            rect = new Phaser.Rectangle(x1,y1, width, height);
+            rect = new Phaser.Rectangle(x1, y1, width, height);
             segments.push(rect);
         }
 
         return segments;
     }
+
 });

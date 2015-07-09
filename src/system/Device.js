@@ -670,11 +670,15 @@ Phaser.Device._initialize = function () {
         else if (/Windows/.test(ua))
         {
             device.windows = true;
+        }
 
-            if (/Windows Phone/i.test(ua))
-            {
-                device.windowsPhone = true;
-            }
+        if (/Windows Phone/i.test(ua) || /IEMobile/i.test(ua))
+        {
+            device.android = false;
+            device.iOS = false;
+            device.macOS = false;
+            device.windows = true;
+            device.windowsPhone = true;
         }
 
         var silk = /Silk/.test(ua); // detected in browsers
@@ -854,7 +858,7 @@ Phaser.Device._initialize = function () {
         {
             device.arora = true;
         }
-        else if (/Chrome\/(\d+)/.test(ua))
+        else if (/Chrome\/(\d+)/.test(ua) && !device.windowsPhone)
         {
             device.chrome = true;
             device.chromeVersion = parseInt(RegExp.$1, 10);
@@ -885,7 +889,7 @@ Phaser.Device._initialize = function () {
         {
             device.opera = true;
         }
-        else if (/Safari/.test(ua))
+        else if (/Safari/.test(ua) && !device.windowsPhone)
         {
             device.safari = true;
         }
@@ -897,13 +901,13 @@ Phaser.Device._initialize = function () {
             device.ieVersion = parseInt(RegExp.$3, 10);
         }
 
-        //Silk gets its own if clause because its ua also contains 'Safari'
+        //  Silk gets its own if clause because its ua also contains 'Safari'
         if (/Silk/.test(ua))
         {
             device.silk = true;
         }
 
-        // WebApp mode in iOS
+        //  WebApp mode in iOS
         if (navigator['standalone'])
         {
             device.webApp = true;

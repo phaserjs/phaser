@@ -10,6 +10,8 @@
 * It captures and processes mouse events that happen on the game canvas object. It also adds a single `mouseup` listener to `window` which
 * is used to capture the mouse being released when not over the game.
 *
+* You should not normally access this class directly, but instead use a Phaser.Pointer object which normalises all game input for you.
+*
 * @class Phaser.Mouse
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
