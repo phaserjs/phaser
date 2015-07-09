@@ -333,7 +333,7 @@ PIXI.Sprite.prototype._renderWebGL = function(renderSession, matrix)
     }
     else
     {
-        renderSession.spriteBatch.render(this, wt);
+        renderSession.spriteBatch.render(this);
 
         //  Render children!
         for (var i = 0; i < this.children.length; i++)
