@@ -331,6 +331,7 @@ Version 2.4 - "Katar" - in dev
 * All Game Objects have a new boolean property called `pendingDestroy`. If you set this to `true` then the object will automatically destroy itself in the *next* logic update, rather than immediately. This is useful for cases when you wish to destroy an object from within one of its own callbacks, such as with buttons or other input events (thanks @alamboley #1748)
 * BitmapData.generateTexture will take a snapshot of the BitmapDatas canvas at that moment in time and convert it into an Image, which is then stored in the Phaser image Cache based on the key given. You can then use the new texture for any future sprites or texture based objects.
 * All Signals now have the ability to carry extra custom arguments with them, which are passed on to the callback you define after any internal arguments. For example a Phaser.Key has an onDown signal. When dispatched onDown sends a reference to the Key as the first and only argument. But you can now set the callback like this: `fireKey.onDown.add(shoot, this, 0, 'lazer', 64)`. So when the onDown signal is dispatched internally the callback (`shoot` in this case) will receive 3 arguments: the Key reference that is raised internally and the string 'lazer' and value 64, which were the custom arguments provided when setting-up the callback.
+* Group.moveAll allows you to move all of the children of a Group into another Group.
 
 ### Updates
 
@@ -435,6 +436,7 @@ Version 2.4 - "Katar" - in dev
 * Rope.segments used the wrong vertices property, causing a runtime error.
 * Debug.ropeSegments didn't take the scale of the Rope object into consideration, causing incorrect debug rendering.
 * If a Sound was muted, or had its volume changed while it was still decoding (i.e. before it started playback) then the mute and/or volume were ignored and the sound would play anyway (thanks @brianbunch #1872)
+* Group.addMultiple if given a Group.children array as the first parameter would fail as the original group length was decreased out of line with the children being added. Group.addMultiple now checks if the children argument is a Phaser.Group instance, and if so it uses Group.moveAll instead on it (thanks @AnderbergE #1898)
 
 ### Deprecated
 

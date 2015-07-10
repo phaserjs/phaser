@@ -1543,6 +1543,7 @@ declare module Phaser {
         getTop(): any;
         hasProperty(child: any, key: string[]): boolean;
         iterate(key: string, value: any, returnType: number, callback?: Function, callbackContext?: any, ...args: any[]): any;
+        moveAll(group: Phaser.Group, silent?: boolean): Phaser.Group;
         moveDown(child: any): any;
         moveUp(child: any): any;
         multiplyAll(property: string, amount: number, checkAlive: boolean, checkVisible: boolean): void;

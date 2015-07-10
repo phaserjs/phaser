@@ -362,20 +362,25 @@ Phaser.Group.prototype.removeFromHash = function (child) {
 };
 
 /**
-* Adds an array of existing display objects to this group.
+* Adds an array of existing Display Objects to this Group.
 *
-* The children are automatically added to the top of the group, so render on-top of everything else within the group.
+* The Display Objects are automatically added to the top of this Group, and will render on-top of everything already in this Group.
 *
-* TODO: Add ability to pass the children as parameters rather than having to be an array.
+* As well as an array you can also pass another Group as the first argument. In this case all of the children from that
+* Group will be removed from it and added into this Group.
 *
 * @method Phaser.Group#addMultiple
-* @param {DisplayObject[]} children - An array of display objects to add as children.
+* @param {DisplayObject[]|Phaser.Group} children - An array of display objects or a Phaser.Group. If a Group is given then *all* children will be moved from it.
 * @param {boolean} [silent=false] - If true the children will not dispatch the `onAddedToGroup` event.
-* @return {DisplayObject[]} The array of children that were added to the group.
+* @return {DisplayObject[]|Phaser.Group} The array of children or Group of children that were added to this Group.
 */
 Phaser.Group.prototype.addMultiple = function (children, silent) {
 
-    if (Array.isArray(children))
+    if (children instanceof Phaser.Group)
+    {
+        children.moveAll(this, silent);
+    }
+    else if (Array.isArray(children))
     {
         for (var i = 0; i < children.length; i++)
         {
@@ -504,7 +509,7 @@ Phaser.Group.prototype.create = function (x, y, key, frame, exists) {
 * Useful if you need to quickly generate a pool of identical sprites, such as bullets.
 *
 * By default the sprites will be set to not exist and will be positioned at 0, 0 (relative to the group.x/y).
-* Use {@link #classType} to change the type of object creaded.
+* Use {@link #classType} to change the type of object created.
 *
 * @method Phaser.Group#createMultiple
 * @param {integer} quantity - The number of Sprites to create.
@@ -524,7 +529,7 @@ Phaser.Group.prototype.createMultiple = function (quantity, key, frame, exists) 
 };
 
 /**
-* Internal method that re-applies all of the childrens Z values.
+* Internal method that re-applies all of the children's Z values.
 *
 * This must be called whenever children ordering is altered so that their `z` indices are correctly updated.
 *
@@ -1926,6 +1931,35 @@ Phaser.Group.prototype.remove = function (child, destroy, silent) {
     }
 
     return true;
+
+};
+
+/**
+* Moves all children from this Group to the Group given.
+*
+* @method Phaser.Group#moveAll
+* @param {Phaser.Group} group - The new Group to which the children will be moved to.
+* @param {boolean} [silent=false] - If true the children will not dispatch the `onAddedToGroup` event for the new Group.
+* @return {Phaser.Group} The Group to which all the children were moved.
+*/
+Phaser.Group.prototype.moveAll = function (group, silent) {
+
+    if (typeof silent === 'undefined') { silent = false; }
+
+    if (this.children.length > 0 && group instanceof Phaser.Group)
+    {
+        do
+        {
+            group.add(this.children[0], silent);
+        }
+        while (this.children.length > 0);
+
+        this.hash = [];
+
+        this.cursor = null;
+    }
+
+    return group;
 
 };
 
