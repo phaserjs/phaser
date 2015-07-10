@@ -1209,18 +1209,6 @@ Phaser.ScaleManager.prototype = {
         var changed = previousOrientation !== this.screenOrientation;
         var correctnessChanged = previouslyIncorrect !== this.incorrectOrientation;
 
-        if (changed)
-        {
-            if (this.isLandscape)
-            {
-                this.enterLandscape.dispatch(this.orientation, true, false);
-            }
-            else
-            {
-                this.enterPortrait.dispatch(this.orientation, false, true);
-            }
-        }
-
         if (correctnessChanged)
         {
             if (this.incorrectOrientation)
