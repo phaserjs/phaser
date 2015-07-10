@@ -382,6 +382,7 @@ Version 2.4 - "Katar" - in dev
 * RandomDataGenerator.weightedPick has been tweaked slightly to allow for a more even distribution of weights. It still favors the earlier array elements, but will accurately include 'distance' elements as well (thanks @gingerbeardman #1751)
 * BitmapData.clear has 4 new optional parameters: x, y, width and height, that define the area to be cleared. If left undefined it works exactly the same as before and clears the entire canvas.
 * Added Phaser.Keyboard.COMMA and Phaser.Keyboard.PERIOD to the consts list.
+* Canvas.setSmoothingEnabled only applies the value of the property exists, which avoids the Chrome webkit prefix deprecation warnings.
 
 ### Bug Fixes
 

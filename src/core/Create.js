@@ -9,6 +9,7 @@
 * TODO: Gradient generator
 * TODO: Look at sfxr for audio gen
 * TODO: Dither support
+* TODO: Sprite Sheet generator
 *
 * @class Phaser.Create
 * @constructor
