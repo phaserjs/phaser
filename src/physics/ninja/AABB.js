@@ -254,10 +254,6 @@ Phaser.Physics.Ninja.AABB.prototype = {
     */
     reportCollisionVsBody: function (px, py, dx, dy, obj) {
 
-        var vx1 = this.pos.x - this.oldpos.x;   //  Calc velocity of this object
-        var vy1 = this.pos.y - this.oldpos.y;
-        var dp1 = (vx1 * dx + vy1 * dy);         //  Find component of velocity parallel to collision normal
-
         //  We only want to apply collision response forces if the object is travelling into, and not out of, the collision
         if (this.body.immovable && obj.body.immovable)
         {
