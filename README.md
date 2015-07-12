@@ -244,6 +244,7 @@ Version 2.4 - "Katar" - in dev
 * Button game objects now have `Input.useHandCursor` set to `true` by default.
 * Phaser.BitmapText no longer extends PIXI.BitmapText but replaces it entirely.
 * Phaser.Text no longer extends PIXI.Text but replaces it entirely. Phaser.Text now natively extends a Phaser Sprite, meaning it can be enabled for physics, damaged, etc.
+* Mouse.button and MSPointer.button have been removed. They never supported complex button events (such as holding down 2 buttons and releasing just one) or any buttons other than left and right. They have been replaced with the far more robust and accurate Pointer button properties such as `Pointer.leftButton`, `Pointer.rightButton` and so on.
 
 ### New Features
 

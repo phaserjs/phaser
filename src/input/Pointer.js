@@ -55,7 +55,10 @@ Phaser.Pointer = function (game, id) {
     this.target = null;
 
     /**
-    * @property {any} button - The button property of the most recent event as set by the DOM event when this Pointer is started.
+    * The button property of the most recent DOM event when this Pointer is started.
+    * You should not rely on this value for accurate button detection, instead use the Pointer properties
+    * `leftButton`, `rightButton`, `middleButton` and so on.
+    * @property {any} button
     * @default
     */
     this.button = null;
@@ -389,6 +392,8 @@ Phaser.Pointer.prototype = {
     * @param {MouseEvent} event - The DOM event.
     */
     updateButtons: function (event) {
+
+        this.button = event.button;
 
         var buttons = event.buttons;
 
