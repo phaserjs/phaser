@@ -242,7 +242,7 @@ Phaser.Component.Core.prototype = {
     * A Game Object is that is pendingDestroy is flagged to have its destroy method called on the next logic update.
     * You can set it directly to allow you to flag an object to be destroyed on its next update.
     * 
-    * This is extremely useful if you wish to destroy and object from within one of its own callbacks 
+    * This is extremely useful if you wish to destroy an object from within one of its own callbacks 
     * such as with Buttons or other Input events.
     * 
     * @property {boolean} pendingDestroy
