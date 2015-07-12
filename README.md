@@ -424,6 +424,7 @@ Version 2.4 - "Katar" - in dev
 * Debug.ropeSegments didn't take the scale of the Rope object into consideration, causing incorrect debug rendering.
 * If a Sound was muted, or had its volume changed while it was still decoding (i.e. before it started playback) then the mute and/or volume were ignored and the sound would play anyway (thanks @brianbunch #1872)
 * Group.addMultiple if given a Group.children array as the first parameter would fail as the original group length was decreased out of line with the children being added. Group.addMultiple now checks if the children argument is a Phaser.Group instance, and if so it uses Group.moveAll instead on it (thanks @AnderbergE #1898)
+* PIXI.DisplayObject.updateTransform now nulls the _currentBounds property (thanks @gaufqwi #1906)
 
 ### Deprecated
 
