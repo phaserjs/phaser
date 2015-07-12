@@ -210,13 +210,13 @@ Phaser.Pointer = function (game, id) {
     this.isMouse = false;
 
     /**
-    * @property {boolean} isDown - If the Pointer is touching the touchscreen, or the mouse button is held down, isDown is set to true.
+    * @property {boolean} isDown - If the Pointer is touching the touchscreen, or *any* mouse button is held down, isDown is set to true.
     * @default
     */
     this.isDown = false;
 
     /**
-    * @property {boolean} isUp - If the Pointer is not touching the touchscreen, or the mouse button is up, isUp is set to true.
+    * @property {boolean} isUp - If the Pointer is not touching the touchscreen, or *all* mouse buttons are up, isUp is set to true.
     * @default
     */
     this.isUp = true;
@@ -381,6 +381,9 @@ Phaser.Pointer.prototype = {
         this.forwardButton = false;
         this.eraserButton = false;
 
+        this.isUp = true;
+        this.isDown = false;
+
     },
 
     /**
@@ -416,6 +419,15 @@ Phaser.Pointer.prototype = {
             this.rightButton = true;
         }
 
+        this.isUp = true;
+        this.isDown = false;
+
+        if (this.leftButton || this.rightButton || this.middleButton || this.backButton || this.forwardButton || this.eraserButton)
+        {
+            this.isUp = false;
+            this.isDown = true;
+        }
+
     },
 
     /**
@@ -438,8 +450,6 @@ Phaser.Pointer.prototype = {
         this._history = [];
         this.active = true;
         this.withinGame = true;
-        this.isDown = true;
-        this.isUp = false;
         this.dirty = false;
         this._clickTrampolines = null;
         this._trampolineTargetObject = null;
@@ -791,8 +801,6 @@ Phaser.Pointer.prototype = {
         }
 
         this.withinGame = false;
-        this.isDown = false;
-        this.isUp = true;
         this.pointerId = null;
         this.identifier = null;
         
@@ -844,7 +852,7 @@ Phaser.Pointer.prototype = {
 
         duration = duration || this.game.input.justReleasedRate;
 
-        return (this.isUp === true && (this.timeUp + duration) > this.game.time.time);
+        return (this.isUp && (this.timeUp + duration) > this.game.time.time);
 
     },
 
@@ -936,8 +944,6 @@ Phaser.Pointer.prototype = {
         this.pointerId = null;
         this.identifier = null;
         this.dirty = false;
-        this.isDown = false;
-        this.isUp = true;
         this.totalTouches = 0;
         this._holdSent = false;
         this._history.length = 0;
@@ -970,9 +976,11 @@ Phaser.Pointer.prototype = {
 Phaser.Pointer.prototype.constructor = Phaser.Pointer;
 
 /**
-* How long the Pointer has been depressed on the touchscreen. If not currently down it returns -1.
+* How long the Pointer has been depressed on the touchscreen or *any* of the mouse buttons have been held down.
+* If not currently down it returns -1.
+* 
 * @name Phaser.Pointer#duration
-* @property {number} duration - How long the Pointer has been depressed on the touchscreen. If not currently down it returns -1.
+* @property {number} duration
 * @readonly
 */
 Object.defineProperty(Phaser.Pointer.prototype, "duration", {
