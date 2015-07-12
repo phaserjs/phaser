@@ -1,7 +1,7 @@
 /// <reference path="pixi.d.ts" />
 /// <reference path="p2.d.ts" />
 
-// Type definitions for Phaser 2.4.0 2015-Jul-09
+// Type definitions for Phaser 2.4.0 2015-Jul-12
 // Project: https://github.com/photonstorm/phaser
 
 declare class Phaser {
@@ -2065,6 +2065,7 @@ declare module Phaser {
         onLoadComplete: Phaser.Signal;
         onLoadStart: Phaser.Signal;
         onPackComplete: Phaser.Signal;
+        path: string;
         preloadSprite: any;
         progress: number;
         progressFloat: number;
