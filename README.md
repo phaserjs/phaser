@@ -245,6 +245,10 @@ Version 2.4 - "Katar" - in dev
 * Phaser.BitmapText no longer extends PIXI.BitmapText but replaces it entirely.
 * Phaser.Text no longer extends PIXI.Text but replaces it entirely. Phaser.Text now natively extends a Phaser Sprite, meaning it can be enabled for physics, damaged, etc.
 * Mouse.button and MSPointer.button have been removed. They never supported complex button events (such as holding down 2 buttons and releasing just one) or any buttons other than left and right. They have been replaced with the far more robust and accurate Pointer button properties such as `Pointer.leftButton`, `Pointer.rightButton` and so on.
+* The P2.Body.onBeginContact arguments have changed. It now sends 5 arguments: The Phaser.P2.Body, the p2.Body, the p2 Shape from Body A, the p2 Shape from Body B and the contact equations array. Note that the Phaser.P2.Body may be null if you collide with a 'native' p2 body (such as the world bounds). However the p2.Body argument will always be populated.
+* The P2.Body.onEndContact arguments have changed. It now sends 4 arguments: The Phaser.P2.Body, the p2.Body, the p2 Shape from Body A and the p2 Shape from Body B. Note that the Phaser.P2.Body may be null if this is the end of a contact with a 'native' p2 body (such as the world bounds). However the p2.Body argument will always be populated.
+
+### p2.js Upgraded to version 0.7
 
 ### New Features
 
@@ -513,7 +517,7 @@ The Phaser logo and characters are &copy; 2015 Photon Storm Limited.
 
 All rights reserved.
 
-"The art challenges the technology, and the technology inspires the art." - John Lasseter
+"Above all, video games are meant to be just one thing: fun. Fun for everyone." - Satoru Iwata
 
 [![Analytics](https://ga-beacon.appspot.com/UA-44006568-2/phaser/index)](https://github.com/igrigorik/ga-beacon)
 

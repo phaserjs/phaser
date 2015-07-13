@@ -507,16 +507,19 @@ Phaser.Physics.P2.prototype = {
     */
     beginContactHandler: function (event) {
 
-        this.onBeginContact.dispatch(event.bodyA, event.bodyB, event.shapeA, event.shapeB, event.contactEquations);
-
-        if (event.bodyA.parent)
+        if (event.bodyA && event.bodyB)
         {
-            event.bodyA.parent.onBeginContact.dispatch(event.bodyB.parent, event.shapeA, event.shapeB, event.contactEquations);
-        }
+            this.onBeginContact.dispatch(event.bodyA, event.bodyB, event.shapeA, event.shapeB, event.contactEquations);
 
-        if (event.bodyB.parent)
-        {
-            event.bodyB.parent.onBeginContact.dispatch(event.bodyA.parent, event.shapeB, event.shapeA, event.contactEquations);
+            if (event.bodyA.parent)
+            {
+                event.bodyA.parent.onBeginContact.dispatch(event.bodyB.parent, event.bodyB, event.shapeA, event.shapeB, event.contactEquations);
+            }
+
+            if (event.bodyB.parent)
+            {
+                event.bodyB.parent.onBeginContact.dispatch(event.bodyA.parent, event.bodyA, event.shapeB, event.shapeA, event.contactEquations);
+            }
         }
 
     },
@@ -529,16 +532,19 @@ Phaser.Physics.P2.prototype = {
     */
     endContactHandler: function (event) {
 
-        this.onEndContact.dispatch(event.bodyA, event.bodyB, event.shapeA, event.shapeB);
-
-        if (event.bodyA.parent)
+        if (event.bodyA && event.bodyB)
         {
-            event.bodyA.parent.onEndContact.dispatch(event.bodyB.parent, event.shapeA, event.shapeB);
-        }
+            this.onEndContact.dispatch(event.bodyA, event.bodyB, event.shapeA, event.shapeB);
 
-        if (event.bodyB.parent)
-        {
-            event.bodyB.parent.onEndContact.dispatch(event.bodyA.parent, event.shapeB, event.shapeA);
+            if (event.bodyA.parent)
+            {
+                event.bodyA.parent.onEndContact.dispatch(event.bodyB.parent, event.bodyB, event.shapeA, event.shapeB);
+            }
+
+            if (event.bodyB.parent)
+            {
+                event.bodyB.parent.onEndContact.dispatch(event.bodyA.parent, event.bodyA, event.shapeB, event.shapeA);
+            }
         }
 
     },
