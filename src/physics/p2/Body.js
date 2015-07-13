@@ -436,6 +436,20 @@ Phaser.Physics.P2.Body.prototype = {
     },
 
     /**
+    * Gets the velocity of a point in the body.
+    *
+    * @method Phaser.Physics.P2.Body#getVelocityAtPoint
+    * @param {Array} result - A vector to store the result in.
+    * @param {Array} relativePoint - A world oriented vector, indicating the position of the point to get the velocity from.
+    * @return {Array} The result vector.
+    */
+    getVelocityAtPoint: function (result, relativePoint) {
+
+        return this.data.getVelocityAtPoint(result, relativePoint);
+
+    },
+
+    /**
     * Apply damping, see http://code.google.com/p/bullet/issues/detail?id=74 for details.
     *
     * @method Phaser.Physics.P2.Body#applyDamping
@@ -444,6 +458,38 @@ Phaser.Physics.P2.Body.prototype = {
     applyDamping: function (dt) {
 
         this.data.applyDamping(dt);
+
+    },
+
+    /**
+    * Apply impulse to a point relative to the body.
+    * This could for example be a point on the Body surface. An impulse is a force added to a body during a short 
+    * period of time (impulse = force * time). Impulses will be added to Body.velocity and Body.angularVelocity.
+    *
+    * @method Phaser.Physics.P2.Body#applyImpulse
+    * @param {Float32Array|Array} impulse - The impulse vector to add, oriented in world space.
+    * @param {number} worldX - A point relative to the body in world space. If not given, it is set to zero and all of the impulse will be exerted on the center of mass.
+    * @param {number} worldY - A point relative to the body in world space. If not given, it is set to zero and all of the impulse will be exerted on the center of mass.
+    */
+    applyImpulse: function (impulse, worldX, worldY) {
+
+        this.data.applyImpulse(impulse, [this.world.pxmi(worldX), this.world.pxmi(worldY)]);
+
+    },
+
+    /**
+    * Apply impulse to a point local to the body.
+    * This could for example be a point on the Body surface. An impulse is a force added to a body during a short 
+    * period of time (impulse = force * time). Impulses will be added to Body.velocity and Body.angularVelocity.
+    *
+    * @method Phaser.Physics.P2.Body#applyImpulseLocal
+    * @param {Float32Array|Array} impulse - The impulse vector to add, oriented in world space.
+    * @param {number} localX - A local point on the body.
+    * @param {number} localY - A local point on the body.
+    */
+    applyImpulseLocal: function (force, localX, localY) {
+
+        this.data.applyImpulseLocal(force, [this.world.pxmi(localX), this.world.pxmi(localY)]);
 
     },
 
@@ -1631,7 +1677,7 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "inertia", {
 
 /**
 * @name Phaser.Physics.P2.Body#mass
-* @property {number} mass -
+* @property {number} mass - The mass of the body.
 */
 Object.defineProperty(Phaser.Physics.P2.Body.prototype, "mass", {
 
