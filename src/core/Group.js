@@ -106,6 +106,18 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
     this.ignoreDestroy = false;
 
     /**
+    * A Group is that has `pendingDestroy` set to `true` is flagged to have its destroy method 
+    * called on the next logic update.
+    * You can set it directly to flag the Group to be destroyed on its next update.
+    * 
+    * This is extremely useful if you wish to destroy a Group from within one of its own callbacks 
+    * or a callback of one of its children.
+    * 
+    * @property {boolean} pendingDestroy
+    */
+    this.pendingDestroy = false;
+
+    /**
     * The type of objects that will be created when using {@link #create} or {@link #createMultiple}.
     *
     * Any object may be used but it should extend either Sprite or Image and accept the same constructor arguments:
@@ -115,13 +127,6 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
     * @default {@link Phaser.Sprite}
     */
     this.classType = Phaser.Sprite;
-
-    /**
-    * The scale of the group container.
-    *
-    * @property {Phaser.Point} scale
-    */
-    // this.scale = new Phaser.Point(1, 1);
 
     /**
     * The current display object that the group cursor is pointing to, if any. (Can be set manually.)
@@ -1335,6 +1340,12 @@ Phaser.Group.prototype.callAll = function (method, context) {
 */
 Phaser.Group.prototype.preUpdate = function () {
 
+    if (this.pendingDestroy)
+    {
+        this.destroy();
+        return false;
+    }
+
     if (!this.exists || !this.parent.exists)
     {
         this.renderOrderID = -1;
@@ -2081,6 +2092,7 @@ Phaser.Group.prototype.destroy = function (destroyChildren, soft) {
 
     this.cursor = null;
     this.filters = null;
+    this.pendingDestroy = false;
 
     if (!soft)
     {

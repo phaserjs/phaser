@@ -10,7 +10,8 @@
 * It will work only in Internet Explorer 10 and Windows Store or Windows Phone 8 apps using JavaScript.
 * http://msdn.microsoft.com/en-us/library/ie/hh673557(v=vs.85).aspx
 *
-* You should not normally access this class directly, but instead use a Phaser.Pointer object which normalises all game input for you.
+* You should not normally access this class directly, but instead use a Phaser.Pointer object which 
+* normalises all game input for you including accurate button handling.
 *
 * @class Phaser.MSPointer
 * @constructor
@@ -49,8 +50,9 @@ Phaser.MSPointer = function (game) {
     this.capture = true;
 
     /**
-    * @property {number} button- The type of click, either: Phaser.Mouse.NO_BUTTON, Phaser.Mouse.LEFT_BUTTON, Phaser.Mouse.MIDDLE_BUTTON or Phaser.Mouse.RIGHT_BUTTON.
-    * @default
+    * This property was removed in Phaser 2.4 and should no longer be used.
+    * Instead please see the Pointer button properties such as `Pointer.leftButton`, `Pointer.rightButton` and so on.
+    * @property {number} button
     */
     this.button = -1;
 
@@ -149,8 +151,6 @@ Phaser.MSPointer.prototype = {
             event.preventDefault();
         }
 
-        this.button = event.button;
-
         if (this.pointerDownCallback)
         {
             this.pointerDownCallback.call(this.callbackContext, event);
@@ -210,8 +210,6 @@ Phaser.MSPointer.prototype = {
         {
             event.preventDefault();
         }
-
-        this.button = Phaser.Mouse.NO_BUTTON;
 
         if (this.pointerUpCallback)
         {

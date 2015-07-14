@@ -76,15 +76,32 @@ Phaser.Physics.P2.Body = function (game, sprite, x, y, mass) {
     this.gravity = new Phaser.Point();
 
     /**
-    * Dispatched when a first contact is created between shapes in two bodies. This event is fired during the step, so collision has already taken place.
-    * The event will be sent 4 parameters: The body it is in contact with, the shape from this body that caused the contact, the shape from the contact body and the contact equation data array.
+    * Dispatched when a first contact is created between shapes in two bodies. 
+    * This event is fired during the step, so collision has already taken place.
+    * 
+    * The event will be sent 5 arguments in this order:
+    * 
+    * The Phaser.Physics.P2.Body it is in contact with. *This might be null* if the Body was created directly in the p2 world.
+    * The p2.Body this Body is in contact with.
+    * The Shape from this body that caused the contact.
+    * The Shape from the contact body.
+    * The Contact Equation data array.
+    * 
     * @property {Phaser.Signal} onBeginContact
     */
     this.onBeginContact = new Phaser.Signal();
 
     /**
-    * Dispatched when contact ends between shapes in two bodies. This event is fired during the step, so collision has already taken place.
-    * The event will be sent 3 parameters: The body it is in contact with, the shape from this body that caused the contact and the shape from the contact body.
+    * Dispatched when contact ends between shapes in two bodies.
+    * This event is fired during the step, so collision has already taken place.
+    * 
+    * The event will be sent 4 arguments in this order:
+    * 
+    * The Phaser.Physics.P2.Body it is in contact with. *This might be null* if the Body was created directly in the p2 world.
+    * The p2.Body this Body has ended contact with.
+    * The Shape from this body that caused the original contact.
+    * The Shape from the contact body.
+    * 
     * @property {Phaser.Signal} onEndContact
     */
     this.onEndContact = new Phaser.Signal();
@@ -419,6 +436,20 @@ Phaser.Physics.P2.Body.prototype = {
     },
 
     /**
+    * Gets the velocity of a point in the body.
+    *
+    * @method Phaser.Physics.P2.Body#getVelocityAtPoint
+    * @param {Array} result - A vector to store the result in.
+    * @param {Array} relativePoint - A world oriented vector, indicating the position of the point to get the velocity from.
+    * @return {Array} The result vector.
+    */
+    getVelocityAtPoint: function (result, relativePoint) {
+
+        return this.data.getVelocityAtPoint(result, relativePoint);
+
+    },
+
+    /**
     * Apply damping, see http://code.google.com/p/bullet/issues/detail?id=74 for details.
     *
     * @method Phaser.Physics.P2.Body#applyDamping
@@ -427,6 +458,38 @@ Phaser.Physics.P2.Body.prototype = {
     applyDamping: function (dt) {
 
         this.data.applyDamping(dt);
+
+    },
+
+    /**
+    * Apply impulse to a point relative to the body.
+    * This could for example be a point on the Body surface. An impulse is a force added to a body during a short 
+    * period of time (impulse = force * time). Impulses will be added to Body.velocity and Body.angularVelocity.
+    *
+    * @method Phaser.Physics.P2.Body#applyImpulse
+    * @param {Float32Array|Array} impulse - The impulse vector to add, oriented in world space.
+    * @param {number} worldX - A point relative to the body in world space. If not given, it is set to zero and all of the impulse will be exerted on the center of mass.
+    * @param {number} worldY - A point relative to the body in world space. If not given, it is set to zero and all of the impulse will be exerted on the center of mass.
+    */
+    applyImpulse: function (impulse, worldX, worldY) {
+
+        this.data.applyImpulse(impulse, [this.world.pxmi(worldX), this.world.pxmi(worldY)]);
+
+    },
+
+    /**
+    * Apply impulse to a point local to the body.
+    * This could for example be a point on the Body surface. An impulse is a force added to a body during a short 
+    * period of time (impulse = force * time). Impulses will be added to Body.velocity and Body.angularVelocity.
+    *
+    * @method Phaser.Physics.P2.Body#applyImpulseLocal
+    * @param {Float32Array|Array} impulse - The impulse vector to add, oriented in world space.
+    * @param {number} localX - A local point on the body.
+    * @param {number} localY - A local point on the body.
+    */
+    applyImpulseLocal: function (force, localX, localY) {
+
+        this.data.applyImpulseLocal(force, [this.world.pxmi(localX), this.world.pxmi(localY)]);
 
     },
 
@@ -861,7 +924,7 @@ Phaser.Physics.P2.Body.prototype = {
     */
     addCircle: function (radius, offsetX, offsetY, rotation) {
 
-        var shape = new p2.Circle(this.world.pxm(radius));
+        var shape = new p2.Circle({ radius: this.world.pxm(radius) });
 
         return this.addShape(shape, offsetX, offsetY, rotation);
 
@@ -876,11 +939,11 @@ Phaser.Physics.P2.Body.prototype = {
     * @param {number} [offsetX=0] - Local horizontal offset of the shape relative to the body center of mass.
     * @param {number} [offsetY=0] - Local vertical offset of the shape relative to the body center of mass.
     * @param {number} [rotation=0] - Local rotation of the shape relative to the body center of mass, specified in radians.
-    * @return {p2.Rectangle} The Rectangle shape that was added to the Body.
+    * @return {p2.Box} The shape that was added to the Body.
     */
     addRectangle: function (width, height, offsetX, offsetY, rotation) {
 
-        var shape = new p2.Rectangle(this.world.pxm(width), this.world.pxm(height));
+        var shape = new p2.Box({ width: this.world.pxm(width), height: this.world.pxm(height)});
 
         return this.addShape(shape, offsetX, offsetY, rotation);
 
@@ -934,7 +997,7 @@ Phaser.Physics.P2.Body.prototype = {
     */
     addLine: function (length, offsetX, offsetY, rotation) {
 
-        var shape = new p2.Line(this.world.pxm(length));
+        var shape = new p2.Line({ length: this.world.pxm(length)});
 
         return this.addShape(shape, offsetX, offsetY, rotation);
 
@@ -954,7 +1017,7 @@ Phaser.Physics.P2.Body.prototype = {
     */
     addCapsule: function (length, radius, offsetX, offsetY, rotation) {
 
-        var shape = new p2.Capsule(this.world.pxm(length), this.world.pxm(radius));
+        var shape = new p2.Capsule({ length: this.world.pxm(length), radius: this.world.pxm(radius) });
 
         return this.addShape(shape, offsetX, offsetY, rotation);
 
@@ -1192,7 +1255,7 @@ Phaser.Physics.P2.Body.prototype = {
 
         if (fixtureData.circle)
         {
-            var shape = new p2.Circle(this.world.pxm(fixtureData.circle.radius));
+            var shape = new p2.Circle({ radius: this.world.pxm(fixtureData.circle.radius) });
             shape.collisionGroup = fixtureData.filter.categoryBits;
             shape.collisionMask = fixtureData.filter.maskBits;
             shape.sensor = fixtureData.isSensor;
@@ -1219,7 +1282,7 @@ Phaser.Physics.P2.Body.prototype = {
                     vertices.push([ this.world.pxmi(shapes[s]), this.world.pxmi(shapes[s + 1]) ]);
                 }
 
-                var shape = new p2.Convex(vertices);
+                var shape = new p2.Convex({ vertices: vertices });
 
                 //  Move all vertices so its center of mass is in the local center of the convex
                 for (var j = 0; j !== shape.vertices.length; j++)
@@ -1289,7 +1352,7 @@ Phaser.Physics.P2.Body.prototype = {
                 vertices.push([ this.world.pxmi(data[i].shape[s]), this.world.pxmi(data[i].shape[s + 1]) ]);
             }
 
-            var c = new p2.Convex(vertices);
+            var c = new p2.Convex({ vertices: vertices });
 
             // Move all vertices so its center of mass is in the local center of the convex
             for (var j = 0; j !== c.vertices.length; j++)
@@ -1614,7 +1677,7 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "inertia", {
 
 /**
 * @name Phaser.Physics.P2.Body#mass
-* @property {number} mass -
+* @property {number} mass - The mass of the body.
 */
 Object.defineProperty(Phaser.Physics.P2.Body.prototype, "mass", {
 

@@ -90,6 +90,7 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
     draw: function() {
 
         var angle, child, color, i, j, lineColor, lw, obj, offset, sprite, v, verts, vrot, _j, _ref1;
+
         obj = this.body;
         sprite = this.canvas;
         sprite.clear();
@@ -106,10 +107,8 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
             while (i !== l)
             {
                 child = obj.shapes[i];
-                offset = obj.shapeOffsets[i];
-                angle = obj.shapeAngles[i];
-                offset = offset || 0;
-                angle = angle || 0;
+                offset = child.position || 0;
+                angle = child.angle || 0;
 
                 if (child instanceof p2.Circle)
                 {
@@ -127,7 +126,7 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
                 {
                     this.drawLine(sprite, child.length * this.ppu, lineColor, lw);
                 }
-                else if (child instanceof p2.Rectangle)
+                else if (child instanceof p2.Box)
                 {
                     this.drawRectangle(sprite, offset[0] * this.ppu, offset[1] * this.ppu, angle, child.width * this.ppu, child.height * this.ppu, lineColor, color, lw);
                 }
@@ -153,9 +152,10 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
     },
 
     /**
-    * Draws the P2 shapes to the Graphics object.
+    * Draws a p2.Box to the Graphics object.
     *
     * @method Phaser.Physics.P2.BodyDebug#drawRectangle
+    * @private
     */
     drawRectangle: function(g, x, y, angle, w, h, color, fillColor, lineWidth) {
 
@@ -165,12 +165,14 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
         g.lineStyle(lineWidth, color, 1);
         g.beginFill(fillColor);
         g.drawRect(x - w / 2, y - h / 2, w, h);
+
     },
 
     /**
-    * Draws a P2 Circle shape.
+    * Draws a p2.Circle to the Graphics object.
     *
     * @method Phaser.Physics.P2.BodyDebug#drawCircle
+    * @private
     */
     drawCircle: function(g, x, y, angle, radius, color, lineWidth) {
 
@@ -186,9 +188,10 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
     },
 
     /**
-    * Draws a P2 Line shape.
+    * Draws a p2.Line to the Graphics object.
     *
     * @method Phaser.Physics.P2.BodyDebug#drawLine
+    * @private
     */
     drawLine: function(g, len, color, lineWidth) {
 
@@ -202,9 +205,10 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
     },
 
     /**
-    * Draws a P2 Convex shape.
+    * Draws a p2.Convex to the Graphics object.
     *
     * @method Phaser.Physics.P2.BodyDebug#drawConvex
+    * @private
     */
     drawConvex: function(g, verts, triangles, color, fillColor, lineWidth, debug, offset) {
 
@@ -272,9 +276,10 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
     },
 
     /**
-    * Draws a P2 Path.
+    * Draws a p2.Path to the Graphics object.
     *
     * @method Phaser.Physics.P2.BodyDebug#drawPath
+    * @private
     */
     drawPath: function(g, path, color, fillColor, lineWidth) {
 
@@ -342,9 +347,10 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
     },
 
     /**
-    * Draws a P2 Plane shape.
+    * Draws a p2.Plane to the Graphics object.
     *
     * @method Phaser.Physics.P2.BodyDebug#drawPlane
+    * @private
     */
     drawPlane: function(g, x0, x1, color, lineColor, lineWidth, diagMargin, diagSize, maxLength, angle) {
 
@@ -368,6 +374,12 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
 
     },
 
+    /**
+    * Draws a p2.Capsule to the Graphics object.
+    *
+    * @method Phaser.Physics.P2.BodyDebug#drawCapsule
+    * @private
+    */
     drawCapsule: function(g, x, y, angle, len, radius, color, fillColor, lineWidth) {
 
         if (typeof lineWidth === 'undefined') { lineWidth = 1; }
@@ -406,6 +418,7 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
     * Picks a random pastel color.
     *
     * @method Phaser.Physics.P2.BodyDebug#randomPastelHex
+    * @private
     */
     randomPastelHex: function() {
 
@@ -428,6 +441,7 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
     * Converts from RGB to Hex.
     *
     * @method Phaser.Physics.P2.BodyDebug#rgbToHex
+    * @private
     */
     rgbToHex: function(r, g, b) {
         return this.componentToHex(r) + this.componentToHex(g) + this.componentToHex(b);
@@ -437,6 +451,7 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
     * Component to hex conversion.
     *
     * @method Phaser.Physics.P2.BodyDebug#componentToHex
+    * @private
     */
     componentToHex: function(c) {
 

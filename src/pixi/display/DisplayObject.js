@@ -488,6 +488,9 @@ PIXI.DisplayObject.prototype.updateTransform = function(parent)
     this.worldScale.set(Math.sqrt(wt.a * wt.a + wt.b * wt.b), Math.sqrt(wt.c * wt.c + wt.d * wt.d));
     this.worldRotation = Math.atan2(-wt.c, wt.d);
 
+    // reset the bounds each time this is called!
+    this._currentBounds = null;
+
     //  Custom callback?
     if (this.transformCallback)
     {

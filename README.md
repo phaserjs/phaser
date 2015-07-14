@@ -244,6 +244,19 @@ Version 2.4 - "Katar" - in dev
 * Button game objects now have `Input.useHandCursor` set to `true` by default.
 * Phaser.BitmapText no longer extends PIXI.BitmapText but replaces it entirely.
 * Phaser.Text no longer extends PIXI.Text but replaces it entirely. Phaser.Text now natively extends a Phaser Sprite, meaning it can be enabled for physics, damaged, etc.
+* Mouse.button and MSPointer.button have been removed. They never supported complex button events (such as holding down 2 buttons and releasing just one) or any buttons other than left and right. They have been replaced with the far more robust and accurate Pointer button properties such as `Pointer.leftButton`, `Pointer.rightButton` and so on.
+
+### p2.js Upgraded to version 0.7.0
+
+Phaser has been upgraded internally to use the new release of p2 physics. All Phaser based API call signatures remain unchanged unless listed below.
+
+For the full list of p2 additions please read [their change log](https://github.com/schteppe/p2.js/releases/tag/v0.7.0).
+
+* The P2.Body.onBeginContact arguments have changed. It now sends 5 arguments: The Phaser.P2.Body, the p2.Body, the p2 Shape from Body A, the p2 Shape from Body B and the contact equations array. Note that the Phaser.P2.Body may be null if you collide with a 'native' p2 body (such as the world bounds). However the p2.Body argument will always be populated.
+* The P2.Body.onEndContact arguments have changed. It now sends 4 arguments: The Phaser.P2.Body, the p2.Body, the p2 Shape from Body A and the p2 Shape from Body B. Note that the Phaser.P2.Body may be null if this is the end of a contact with a 'native' p2 body (such as the world bounds). However the p2.Body argument will always be populated.
+* P2.Body.applyImpulse allows you to apply an impulse to a Body. An impulse is a force added to a body during a short period of time.
+* P2.Body.applyImpulseLocal allows you to apply an impulse to a point local to the Body. An impulse is a force added to a body during a short period of time.
+* P2.Body.getVelocityAtPoint gets the velocity of a point in the body.
 
 ### New Features
 
@@ -314,10 +327,11 @@ Version 2.4 - "Katar" - in dev
 * BitmapData.moveH(distance) allows you to horizontally shift the BitmapData with wrap-around the edges.
 * BitmapData.moveV(distance) allows you to vertically shift the BitmapData with wrap-around the edges.
 * Text.addStrokeColor works in the same way as `Text.addColor` but allows you to define a color stop for the stroke color instead of the fill color.
-* All Game Objects have a new boolean property called `pendingDestroy`. If you set this to `true` then the object will automatically destroy itself in the *next* logic update, rather than immediately. This is useful for cases when you wish to destroy an object from within one of its own callbacks, such as with buttons or other input events (thanks @alamboley #1748)
+* All Game Objects and Groups have a new boolean property called `pendingDestroy`. If you set this to `true` then the object will automatically destroy itself in the *next* logic update, rather than immediately. This is useful for cases when you wish to destroy an object from within one of its own callbacks, such as with buttons or other input events (thanks @alamboley #1748)
 * BitmapData.generateTexture will take a snapshot of the BitmapDatas canvas at that moment in time and convert it into an Image, which is then stored in the Phaser image Cache based on the key given. You can then use the new texture for any future sprites or texture based objects.
 * All Signals now have the ability to carry extra custom arguments with them, which are passed on to the callback you define after any internal arguments. For example a Phaser.Key has an onDown signal. When dispatched onDown sends a reference to the Key as the first and only argument. But you can now set the callback like this: `fireKey.onDown.add(shoot, this, 0, 'lazer', 64)`. So when the onDown signal is dispatched internally the callback (`shoot` in this case) will receive 3 arguments: the Key reference that is raised internally and the string 'lazer' and value 64, which were the custom arguments provided when setting-up the callback.
 * Group.moveAll allows you to move all of the children of a Group into another Group.
+* Loader.path is a string and if set it is placed before any _relative_ file path given to the Loader. For example: `load.path = "images/sprites/";` followed by `load.image("ball", "ball.png");` and `load.image("tree", "level1/oaktree.png");` would load the `ball` file from `images/sprites/ball.png` and the tree from `images/sprites/level1/oaktree.png`. The path is added before the filename but *after* the `Loader.baseURL`. The path _must_ end with a "/". Set it to nothing to disable the path.
 
 ### Updates
 
@@ -423,6 +437,7 @@ Version 2.4 - "Katar" - in dev
 * Debug.ropeSegments didn't take the scale of the Rope object into consideration, causing incorrect debug rendering.
 * If a Sound was muted, or had its volume changed while it was still decoding (i.e. before it started playback) then the mute and/or volume were ignored and the sound would play anyway (thanks @brianbunch #1872)
 * Group.addMultiple if given a Group.children array as the first parameter would fail as the original group length was decreased out of line with the children being added. Group.addMultiple now checks if the children argument is a Phaser.Group instance, and if so it uses Group.moveAll instead on it (thanks @AnderbergE #1898)
+* PIXI.DisplayObject.updateTransform now nulls the _currentBounds property (thanks @gaufqwi #1906)
 
 ### Deprecated
 
@@ -510,7 +525,7 @@ The Phaser logo and characters are &copy; 2015 Photon Storm Limited.
 
 All rights reserved.
 
-"The art challenges the technology, and the technology inspires the art." - John Lasseter
+"Above all, video games are meant to be just one thing: fun. Fun for everyone." - Satoru Iwata
 
 [![Analytics](https://ga-beacon.appspot.com/UA-44006568-2/phaser/index)](https://github.com/igrigorik/ga-beacon)
 

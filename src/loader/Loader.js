@@ -76,6 +76,26 @@ Phaser.Loader = function (game) {
     this.baseURL = '';
 
     /**
+    * The value of `path`, if set, is placed before any _relative_ file path given. For example:
+    * 
+    * `load.path = "images/sprites/";
+    * load.image("ball", "ball.png");
+    * load.image("tree", "level1/oaktree.png");
+    * load.image("boom", "http://server.com/explode.png");`
+    *
+    * Would load the `ball` file from `images/sprites/ball.png` and the tree from 
+    * `images/sprites/level1/oaktree.png` but the file `boom` would load from the URL 
+    * given as it's an absolute URL.
+    *
+    * Please note that the path is added before the filename but *after* the baseURL (if set.)
+    * 
+    * The string _must_ end with a "/".
+    *
+    * @property {string} path
+    */
+    this.path = '';
+
+    /**
     * This event is dispatched when the loading process starts: before the first file has been requested,
     * but after all the initial packs have been loaded.
     *
@@ -495,6 +515,7 @@ Phaser.Loader.prototype = {
         var file = {
             type: type,
             key: key,
+            path: this.path,
             url: url,
             syncPoint: this._withSyncPointDepth > 0,
             data: null,
@@ -635,7 +656,7 @@ Phaser.Loader.prototype = {
     *
     * Retrieve the image via `Cache.getImage(key)`
     * 
-    * The URL can be relative or absolute. If the URL is relative the Loader.baseURL value will be prepended to it.
+    * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
     * 
     * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "alien"
     * and no URL is given then the Loader will set the URL to be "alien.png". It will always add `.png` as the extension.
@@ -662,7 +683,7 @@ Phaser.Loader.prototype = {
     *
     * Retrieve the file via `Cache.getText(key)`
     * 
-    * The URL can be relative or absolute. If the URL is relative the Loader.baseURL value will be prepended to it.
+    * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
     * 
     * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "alien"
     * and no URL is given then the Loader will set the URL to be "alien.txt". It will always add `.txt` as the extension.
@@ -690,7 +711,7 @@ Phaser.Loader.prototype = {
     * Retrieve the file via `Cache.getJSON(key)`. JSON files are automatically parsed upon load.
     * If you need to control when the JSON is parsed then use `Loader.text` instead and parse the text file as needed.
     * 
-    * The URL can be relative or absolute. If the URL is relative the Loader.baseURL value will be prepended to it.
+    * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
     * 
     * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "alien"
     * and no URL is given then the Loader will set the URL to be "alien.json". It will always add `.json` as the extension.
@@ -717,7 +738,7 @@ Phaser.Loader.prototype = {
     *
     * Retrieve the file via `Cache.getXML(key)`.
     * 
-    * The URL can be relative or absolute. If the URL is relative the Loader.baseURL value will be prepended to it.
+    * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
     * 
     * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "alien"
     * and no URL is given then the Loader will set the URL to be "alien.xml". It will always add `.xml` as the extension.
@@ -742,7 +763,7 @@ Phaser.Loader.prototype = {
     * 
     * The key must be a unique String.
     * 
-    * The URL can be relative or absolute. If the URL is relative the Loader.baseURL value will be prepended to it.
+    * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
     * 
     * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "alien"
     * and no URL is given then the Loader will set the URL to be "alien.js". It will always add `.js` as the extension.
@@ -779,7 +800,7 @@ Phaser.Loader.prototype = {
     *
     * Retrieve the file via `Cache.getBinary(key)`.
     * 
-    * The URL can be relative or absolute. If the URL is relative the Loader.baseURL value will be prepended to it.
+    * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
     * 
     * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "alien"
     * and no URL is given then the Loader will set the URL to be "alien.bin". It will always add `.bin` as the extension.
@@ -824,7 +845,7 @@ Phaser.Loader.prototype = {
     *
     * Retrieve the file via `Cache.getImage(key)`. Sprite sheets, being image based, live in the same Cache as all other Images.
     * 
-    * The URL can be relative or absolute. If the URL is relative the Loader.baseURL value will be prepended to it.
+    * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
     * 
     * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "alien"
     * and no URL is given then the Loader will set the URL to be "alien.png". It will always add `.png` as the extension.
@@ -859,7 +880,7 @@ Phaser.Loader.prototype = {
     *
     * Retrieve the file via `Cache.getSound(key)`.
     * 
-    * The URL can be relative or absolute. If the URL is relative the Loader.baseURL value will be prepended to it.
+    * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
     *
     * Mobile warning: There are some mobile devices (certain iPad 2 and iPad Mini revisions) that cannot play 48000 Hz audio.
     * When they try to play the audio becomes extremely distorted and buzzes, eventually crashing the sound system.
@@ -906,7 +927,7 @@ Phaser.Loader.prototype = {
     * 
     * Retrieve the file via `Cache.getSoundData(key)`.
     * 
-    * The URL can be relative or absolute. If the URL is relative the Loader.baseURL value will be prepended to it.
+    * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
     *
     * @method Phaser.Loader#audiosprite
     * @param {string} key - Unique asset key of the audio file.
@@ -962,7 +983,7 @@ Phaser.Loader.prototype = {
     *
     * Retrieve the file via `Cache.getVideo(key)`.
     * 
-    * The URL can be relative or absolute. If the URL is relative the Loader.baseURL value will be prepended to it.
+    * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
     *
     * You don't need to preload a video in order to play it in your game. See `Video.createVideoFromURL` for details.
     *
@@ -1021,7 +1042,7 @@ Phaser.Loader.prototype = {
     * Retrieve the file via `Cache.getTilemapData(key)`. JSON files are automatically parsed upon load.
     * If you need to control when the JSON is parsed then use `Loader.text` instead and parse the text file as needed.
     * 
-    * The URL can be relative or absolute. If the URL is relative the Loader.baseURL value will be prepended to it.
+    * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
     * 
     * If the URL isn't specified and no data is given then the Loader will take the key and create a filename from that.
     * For example if the key is "level1" and no URL or data is given then the Loader will set the URL to be "level1.json".
@@ -1100,7 +1121,7 @@ Phaser.Loader.prototype = {
     * Retrieve the file via `Cache.getJSON(key)`. JSON files are automatically parsed upon load.
     * If you need to control when the JSON is parsed then use `Loader.text` instead and parse the text file as needed.
     * 
-    * The URL can be relative or absolute. If the URL is relative the Loader.baseURL value will be prepended to it.
+    * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
     * 
     * If the URL isn't specified and no data is given then the Loader will take the key and create a filename from that.
     * For example if the key is "alien" and no URL or data is given then the Loader will set the URL to be "alien.json".
@@ -1165,7 +1186,7 @@ Phaser.Loader.prototype = {
     * Retrieve the file via `Cache.getBitmapFont(key)`. XML files are automatically parsed upon load.
     * If you need to control when the XML is parsed then use `Loader.text` instead and parse the XML file as needed.
     * 
-    * The URLs can be relative or absolute. If the URL is relative the Loader.baseURL value will be prepended to it.
+    * The URLs can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
     * 
     * If the textureURL isn't specified then the Loader will take the key and create a filename from that.
     * For example if the key is "megaFont" and textureURL is null then the Loader will set the URL to be "megaFont.png".
@@ -1252,7 +1273,7 @@ Phaser.Loader.prototype = {
     * Retrieve the file via `Cache.getImage(key)`. JSON files are automatically parsed upon load.
     * If you need to control when the JSON is parsed then use `Loader.text` instead and parse the JSON file as needed.
     * 
-    * The URLs can be relative or absolute. If the URL is relative the Loader.baseURL value will be prepended to it.
+    * The URLs can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
     * 
     * If the textureURL isn't specified then the Loader will take the key and create a filename from that.
     * For example if the key is "player" and textureURL is null then the Loader will set the URL to be "player.png".
@@ -1298,7 +1319,7 @@ Phaser.Loader.prototype = {
     * Retrieve the file via `Cache.getImage(key)`. JSON files are automatically parsed upon load.
     * If you need to control when the JSON is parsed then use `Loader.text` instead and parse the JSON file as needed.
     * 
-    * The URLs can be relative or absolute. If the URL is relative the Loader.baseURL value will be prepended to it.
+    * The URLs can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
     * 
     * If the textureURL isn't specified then the Loader will take the key and create a filename from that.
     * For example if the key is "player" and textureURL is null then the Loader will set the URL to be "player.png".
@@ -1344,7 +1365,7 @@ Phaser.Loader.prototype = {
     * Retrieve the file via `Cache.getImage(key)`. XML files are automatically parsed upon load.
     * If you need to control when the XML is parsed then use `Loader.text` instead and parse the XML file as needed.
     * 
-    * The URLs can be relative or absolute. If the URL is relative the Loader.baseURL value will be prepended to it.
+    * The URLs can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
     * 
     * If the textureURL isn't specified then the Loader will take the key and create a filename from that.
     * For example if the key is "player" and textureURL is null then the Loader will set the URL to be "player.png".
@@ -1396,7 +1417,7 @@ Phaser.Loader.prototype = {
     * Retrieve the file via `Cache.getImage(key)`. JSON files are automatically parsed upon load.
     * If you need to control when the JSON is parsed then use `Loader.text` instead and parse the JSON file as needed.
     * 
-    * The URLs can be relative or absolute. If the URL is relative the Loader.baseURL value will be prepended to it.
+    * The URLs can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
     * 
     * If the textureURL isn't specified then the Loader will take the key and create a filename from that.
     * For example if the key is "player" and textureURL is null then the Loader will set the URL to be "player.png".
@@ -1895,10 +1916,11 @@ Phaser.Loader.prototype = {
     *
     * @method Phaser.Loader#transformUrl
     * @protected
-    * @param {string} url - The url to transform
+    * @param {string} url - The url to transform.
+    * @param {object} file - The file object being transformed.
     * @return {string} The transformed url. In rare cases where the url isn't specified it will return false instead.
     */
-    transformUrl: function (url) {
+    transformUrl: function (url, file) {
 
         if (!url)
         {
@@ -1911,7 +1933,7 @@ Phaser.Loader.prototype = {
         }
         else
         {
-            return this.baseURL + url;
+            return this.baseURL + file.path + url;
         }
 
     },

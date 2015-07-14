@@ -7,10 +7,12 @@
 /**
 * The Mouse class is responsible for handling all aspects of mouse interaction with the browser.
 *
-* It captures and processes mouse events that happen on the game canvas object. It also adds a single `mouseup` listener to `window` which
-* is used to capture the mouse being released when not over the game.
+* It captures and processes mouse events that happen on the game canvas object.
+* It also adds a single `mouseup` listener to `window` which is used to capture the mouse being released 
+* when not over the game.
 *
-* You should not normally access this class directly, but instead use a Phaser.Pointer object which normalises all game input for you.
+* You should not normally access this class directly, but instead use a Phaser.Pointer object 
+* which normalises all game input for you, including accurate button handling.
 *
 * @class Phaser.Mouse
 * @constructor
@@ -59,7 +61,9 @@ Phaser.Mouse = function (game) {
     this.capture = false;
 
     /**
-    * @property {number} button- The type of click, either: Phaser.Mouse.NO_BUTTON, Phaser.Mouse.LEFT_BUTTON, Phaser.Mouse.MIDDLE_BUTTON or Phaser.Mouse.RIGHT_BUTTON.
+    * This property was removed in Phaser 2.4 and should no longer be used.
+    * Instead please see the Pointer button properties such as `Pointer.leftButton`, `Pointer.rightButton` and so on.
+    * @property {number} button
     * @default
     */
     this.button = -1;
@@ -146,30 +150,6 @@ Phaser.Mouse = function (game) {
     this._wheelEvent = null;
 
 };
-
-/**
-* @constant
-* @type {number}
-*/
-Phaser.Mouse.NO_BUTTON = -1;
-
-/**
-* @constant
-* @type {number}
-*/
-Phaser.Mouse.LEFT_BUTTON = 0;
-
-/**
-* @constant
-* @type {number}
-*/
-Phaser.Mouse.MIDDLE_BUTTON = 1;
-
-/**
-* @constant
-* @type {number}
-*/
-Phaser.Mouse.RIGHT_BUTTON = 2;
 
 /**
  * @constant
@@ -276,8 +256,6 @@ Phaser.Mouse.prototype = {
             event.preventDefault();
         }
 
-        this.button = event.button;
-
         if (this.mouseDownCallback)
         {
             this.mouseDownCallback.call(this.callbackContext, event);
@@ -338,8 +316,6 @@ Phaser.Mouse.prototype = {
             event.preventDefault();
         }
 
-        this.button = Phaser.Mouse.NO_BUTTON;
-
         if (this.mouseUpCallback)
         {
             this.mouseUpCallback.call(this.callbackContext, event);
@@ -366,8 +342,6 @@ Phaser.Mouse.prototype = {
 
         if (!this.game.input.mousePointer.withinGame)
         {
-            this.button = Phaser.Mouse.NO_BUTTON;
-
             if (this.mouseUpCallback)
             {
                 this.mouseUpCallback.call(this.callbackContext, event);
