@@ -29,6 +29,13 @@ Phaser.Loader = function (game) {
     this.game = game;
 
     /**
+    * Local reference to the Phaser.Cache.
+    * @property {Phaser.Cache} cache
+    * @protected
+    */
+    this.cache = game.cache;
+
+    /**
     * If true all calls to Loader.reset will be ignored. Useful if you need to create a load queue before swapping to a preloader state.
     * @property {boolean} resetLocked
     * @default
@@ -730,6 +737,33 @@ Phaser.Loader.prototype = {
     },
 
     /**
+    * Adds a fragment shader file to the current load queue.
+    * 
+    * The file is **not** loaded immediately after calling this method. The file is added to the queue ready to be loaded when the loader starts.
+    * 
+    * The key must be a unique String. It is used to add the file to the Phaser.Cache upon successful load.
+    *
+    * Retrieve the file via `Cache.getShader(key)`.
+    * 
+    * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
+    * 
+    * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "blur"
+    * and no URL is given then the Loader will set the URL to be "blur.frag". It will always add `.frag` as the extension.
+    * If you do not desire this action then provide a URL.
+    *
+    * @method Phaser.Loader#shader
+    * @param {string} key - Unique asset key of the fragment file.
+    * @param {string} [url] - URL of the fragment file. If undefined or `null` the url will be set to `<key>.frag`, i.e. if `key` was "blur" then the URL will be "blur.frag".
+    * @param {boolean} [overwrite=false] - If an unloaded file with a matching key already exists in the queue, this entry will overwrite it.
+    * @return {Phaser.Loader} This Loader instance.
+    */
+    shader: function (key, url, overwrite) {
+
+        return this.addToFileList('shader', key, url, undefined, overwrite, '.frag');
+
+    },
+
+    /**
     * Adds an XML file to the current load queue.
     * 
     * The file is **not** loaded immediately after calling this method. The file is added to the queue ready to be loaded when the loader starts.
@@ -962,7 +996,7 @@ Phaser.Loader.prototype = {
                 jsonData = JSON.parse(jsonData);
             }
 
-            this.game.cache.addJSON(key + '-audioatlas', '', jsonData);
+            this.cache.addJSON(key + '-audioatlas', '', jsonData);
         }
         else
         {
@@ -1094,7 +1128,7 @@ Phaser.Loader.prototype = {
                     break;
             }
 
-            this.game.cache.addTilemap(key, null, data, format);
+            this.cache.addTilemap(key, null, data, format);
         }
         else
         {
@@ -1155,7 +1189,7 @@ Phaser.Loader.prototype = {
                 data = JSON.parse(data);
             }
 
-            this.game.cache.addPhysicsData(key, null, data, format);
+            this.cache.addPhysicsData(key, null, data, format);
         }
         else
         {
@@ -2032,6 +2066,7 @@ Phaser.Loader.prototype = {
 
             case 'text':
             case 'script':
+            case 'shader':
             case 'physics':
                 this.xhrLoad(file, this.transformUrl(file.url, file), 'text', this.fileComplete);
                 break;
@@ -2483,19 +2518,19 @@ Phaser.Loader.prototype = {
 
             case 'image':
 
-                this.game.cache.addImage(file.key, file.url, file.data);
+                this.cache.addImage(file.key, file.url, file.data);
                 break;
 
             case 'spritesheet':
 
-                this.game.cache.addSpriteSheet(file.key, file.url, file.data, file.frameWidth, file.frameHeight, file.frameMax, file.margin, file.spacing);
+                this.cache.addSpriteSheet(file.key, file.url, file.data, file.frameWidth, file.frameHeight, file.frameMax, file.margin, file.spacing);
                 break;
 
             case 'textureatlas':
 
                 if (file.atlasURL == null)
                 {
-                    this.game.cache.addTextureAtlas(file.key, file.url, file.data, file.atlasData, file.format);
+                    this.cache.addTextureAtlas(file.key, file.url, file.data, file.atlasData, file.format);
                 }
                 else
                 {
@@ -2521,7 +2556,7 @@ Phaser.Loader.prototype = {
 
                 if (!file.atlasURL)
                 {
-                    this.game.cache.addBitmapFont(file.key, file.url, file.data, file.atlasData, file.atlasType, file.xSpacing, file.ySpacing);
+                    this.cache.addBitmapFont(file.key, file.url, file.data, file.atlasData, file.atlasType, file.xSpacing, file.ySpacing);
                 }
                 else
                 {
@@ -2565,7 +2600,7 @@ Phaser.Loader.prototype = {
                     }
                 }
                 
-                this.game.cache.addVideo(file.key, file.url, file.data, file.asBlob);
+                this.cache.addVideo(file.key, file.url, file.data, file.asBlob);
                 break;
 
             case 'audio':
@@ -2574,7 +2609,7 @@ Phaser.Loader.prototype = {
                 {
                     file.data = xhr.response;
 
-                    this.game.cache.addSound(file.key, file.url, file.data, true, false);
+                    this.cache.addSound(file.key, file.url, file.data, true, false);
 
                     if (file.autoDecode)
                     {
@@ -2583,18 +2618,23 @@ Phaser.Loader.prototype = {
                 }
                 else
                 {
-                    this.game.cache.addSound(file.key, file.url, file.data, false, true);
+                    this.cache.addSound(file.key, file.url, file.data, false, true);
                 }
                 break;
 
             case 'text':
                 file.data = xhr.responseText;
-                this.game.cache.addText(file.key, file.url, file.data);
+                this.cache.addText(file.key, file.url, file.data);
+                break;
+
+            case 'shader':
+                file.data = xhr.responseText;
+                this.cache.addShader(file.key, file.url, file.data);
                 break;
 
             case 'physics':
                 var data = JSON.parse(xhr.responseText);
-                this.game.cache.addPhysicsData(file.key, file.url, data, file.format);
+                this.cache.addPhysicsData(file.key, file.url, data, file.format);
                 break;
 
             case 'script':
@@ -2620,7 +2660,7 @@ Phaser.Loader.prototype = {
                     file.data = xhr.response;
                 }
 
-                this.game.cache.addBinary(file.key, file.data);
+                this.cache.addBinary(file.key, file.data);
 
                 break;
         }
@@ -2646,19 +2686,19 @@ Phaser.Loader.prototype = {
 
         if (file.type === 'tilemap')
         {
-            this.game.cache.addTilemap(file.key, file.url, data, file.format);
+            this.cache.addTilemap(file.key, file.url, data, file.format);
         }
         else if (file.type === 'bitmapfont')
         {
-            this.game.cache.addBitmapFont(file.key, file.url, file.data, data, file.atlasType, file.xSpacing, file.ySpacing);
+            this.cache.addBitmapFont(file.key, file.url, file.data, data, file.atlasType, file.xSpacing, file.ySpacing);
         }
         else if (file.type === 'json')
         {
-            this.game.cache.addJSON(file.key, file.url, data);
+            this.cache.addJSON(file.key, file.url, data);
         }
         else
         {
-            this.game.cache.addTextureAtlas(file.key, file.url, file.data, data, file.format);
+            this.cache.addTextureAtlas(file.key, file.url, file.data, data, file.format);
         }
 
         this.asyncComplete(file);
@@ -2676,7 +2716,7 @@ Phaser.Loader.prototype = {
 
         var data = xhr.responseText;
 
-        this.game.cache.addTilemap(file.key, file.url, data, file.format);
+        this.cache.addTilemap(file.key, file.url, data, file.format);
 
         this.asyncComplete(file);
 
@@ -2706,15 +2746,15 @@ Phaser.Loader.prototype = {
 
         if (file.type === 'bitmapfont')
         {
-            this.game.cache.addBitmapFont(file.key, file.url, file.data, xml, file.atlasType, file.xSpacing, file.ySpacing);
+            this.cache.addBitmapFont(file.key, file.url, file.data, xml, file.atlasType, file.xSpacing, file.ySpacing);
         }
         else if (file.type === 'textureatlas')
         {
-            this.game.cache.addTextureAtlas(file.key, file.url, file.data, xml, file.format);
+            this.cache.addTextureAtlas(file.key, file.url, file.data, xml, file.format);
         }
         else if (file.type === 'xml')
         {
-            this.game.cache.addXML(file.key, file.url, xml);
+            this.cache.addXML(file.key, file.url, xml);
         }
 
         this.asyncComplete(file);
@@ -2732,6 +2772,7 @@ Phaser.Loader.prototype = {
     parseXml: function (data) {
 
         var xml;
+
         try
         {
             if (window['DOMParser'])
