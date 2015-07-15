@@ -243,15 +243,19 @@ Phaser.Cache.prototype = {
             this.removeImage(key);
         }
 
-        this._cache.image[key] = { url: url, data: data };
+        var img = {
+            url: url,
+            data: data,
+            base: new PIXI.BaseTexture(data),
+            frame: new Phaser.Frame(0, 0, 0, data.width, data.height, key),
+            frameData: new Phaser.FrameData()
+        };
 
-        this._cache.image[key].frame = new Phaser.Frame(0, 0, 0, data.width, data.height, key);
-        this._cache.image[key].frameData = new Phaser.FrameData();
-        this._cache.image[key].frameData.addFrame(new Phaser.Frame(0, 0, 0, data.width, data.height, url));
+        img.frameData.addFrame(new Phaser.Frame(0, 0, 0, data.width, data.height, url);
 
-        PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
+        this._cache.image[key] = img;
 
-        this._resolveURL(url, this._cache.image[key]);
+        this._resolveURL(url, img);
 
     },
 
@@ -264,15 +268,10 @@ Phaser.Cache.prototype = {
     addDefaultImage: function () {
 
         var img = new Image();
+
         img.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgAQMAAABJtOi3AAAAA1BMVEX///+nxBvIAAAAAXRSTlMAQObYZgAAABVJREFUeF7NwIEAAAAAgKD9qdeocAMAoAABm3DkcAAAAABJRU5ErkJggg==";
 
-        this._cache.image['__default'] = { url: null, data: img };
-        this._cache.image['__default'].frame = new Phaser.Frame(0, 0, 0, 32, 32, '', '');
-        this._cache.image['__default'].frameData = new Phaser.FrameData();
-        this._cache.image['__default'].frameData.addFrame(new Phaser.Frame(0, 0, 0, 32, 32, null));
-
-        PIXI.BaseTextureCache['__default'] = new PIXI.BaseTexture(img);
-        PIXI.TextureCache['__default'] = new PIXI.Texture(PIXI.BaseTextureCache['__default']);
+        this.addImage('__default', null, img);
 
     },
 
@@ -285,15 +284,10 @@ Phaser.Cache.prototype = {
     addMissingImage: function () {
 
         var img = new Image();
+
         img.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAJ9JREFUeNq01ssOwyAMRFG46v//Mt1ESmgh+DFmE2GPOBARKb2NVjo+17PXLD8a1+pl5+A+wSgFygymWYHBb0FtsKhJDdZlncG2IzJ4ayoMDv20wTmSMzClEgbWYNTAkQ0Z+OJ+A/eWnAaR9+oxCF4Os0H8htsMUp+pwcgBBiMNnAwF8GqIgL2hAzaGFFgZauDPKABmowZ4GL369/0rwACp2yA/ttmvsQAAAABJRU5ErkJggg==";
 
-        this._cache.image['__missing'] = { url: null, data: img };
-        this._cache.image['__missing'].frame = new Phaser.Frame(0, 0, 0, 32, 32, '', '');
-        this._cache.image['__missing'].frameData = new Phaser.FrameData();
-        this._cache.image['__missing'].frameData.addFrame(new Phaser.Frame(0, 0, 0, 32, 32, null));
-
-        PIXI.BaseTextureCache['__missing'] = new PIXI.BaseTexture(img);
-        PIXI.TextureCache['__missing'] = new PIXI.Texture(PIXI.BaseTextureCache['__missing']);
+        this.addImage('__missing', null, img);
 
     },
 
@@ -309,8 +303,8 @@ Phaser.Cache.prototype = {
     */
     addSound: function (key, url, data, webAudio, audioTag) {
 
-        webAudio = webAudio || true;
-        audioTag = audioTag || false;
+        if (webAudio === undefined) { webAudio = true; audioTag = false; }
+        if (audioTag === undefined) { webAudio = false; audioTag = true; }
 
         var decoded = false;
 
@@ -319,7 +313,15 @@ Phaser.Cache.prototype = {
             decoded = true;
         }
 
-        this._cache.sounds[key] = { url: url, data: data, isDecoding: false, decoded: decoded, webAudio: webAudio, audioTag: audioTag, locked: this.game.sound.touchLocked };
+        this._cache.sounds[key] = {
+            url: url,
+            data: data,
+            isDecoding: false,
+            decoded: decoded,
+            webAudio: webAudio,
+            audioTag: audioTag,
+            locked: this.game.sound.touchLocked
+        };
 
         this._resolveURL(url, this._cache.sounds[key]);
 
@@ -426,14 +428,16 @@ Phaser.Cache.prototype = {
     */
     addBitmapFont: function (key, url, data, atlasData, atlasType, xSpacing, ySpacing) {
 
-        var entry = { url: url, data: data, font: null };
-
-        // this._cache.bitmapFont[key] = { url: url, data: data };
-
-        PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
+        var obj = {
+            url: url,
+            data: data,
+            font: null,
+            base: new PIXI.BaseTexture(data)
+        };
 
         if (atlasType === 'json')
         {
+            //  TODO: These can return the object rather than add it to the PIXI Cache
             Phaser.LoaderParser.jsonBitmapFont(this.game, atlasData, key, xSpacing, ySpacing);
         }
         else
@@ -441,13 +445,11 @@ Phaser.Cache.prototype = {
             Phaser.LoaderParser.xmlBitmapFont(this.game, atlasData, key, xSpacing, ySpacing);
         }
 
-        entry.font = PIXI.BitmapText.fonts[key];;
+        obj.font = PIXI.BitmapText.fonts[key];;
 
-        // this._cache.bitmapFont[key] = PIXI.BitmapText.fonts[key];
+        this._cache.bitmapFont[key] = obj;
 
-        this._cache.bitmapFont[key] = entry;
-
-        this._resolveURL(url, this._cache.bitmapFont[key]);
+        this._resolveURL(url, obj);
 
     },
 
@@ -544,13 +546,20 @@ Phaser.Cache.prototype = {
     */
     addSpriteSheet: function (key, url, data, frameWidth, frameHeight, frameMax, margin, spacing) {
 
-        this._cache.spriteSheet[key] = { url: url, data: data, frameWidth: frameWidth, frameHeight: frameHeight, margin: margin, spacing: spacing };
+        var obj = {
+            url: url,
+            data: data,
+            frameWidth: frameWidth,
+            frameHeight: frameHeight,
+            margin: margin, 
+            spacing: spacing,
+            base: new PIXI.BaseTexture(data),
+            frameData: Phaser.AnimationParser.spriteSheet(this.game, key, frameWidth, frameHeight, frameMax, margin, spacing)
+        };
 
-        PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
+        this._cache.spriteSheet[key] = obj;
 
-        this._cache.spriteSheet[key].frameData = Phaser.AnimationParser.spriteSheet(this.game, key, frameWidth, frameHeight, frameMax, margin, spacing);
-
-        this._resolveURL(url, this._cache.spriteSheet[key]);
+        this._resolveURL(url, obj);
 
     },
 
@@ -566,28 +575,28 @@ Phaser.Cache.prototype = {
     */
     addTextureAtlas: function (key, url, data, atlasData, format) {
 
-        this._cache.atlas[key] = { url: url, data: data };
-
-        PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
+        var obj = { url: url, data: data, base: new PIXI.BaseTexture(data) };
 
         if (format == Phaser.Loader.TEXTURE_ATLAS_XML_STARLING)
         {
-            this._cache.atlas[key].frameData = Phaser.AnimationParser.XMLData(this.game, atlasData, key);
+            obj.frameData = Phaser.AnimationParser.XMLData(this.game, atlasData, key);
         }
         else
         {
             //  Let's just work it out from the frames array
             if (Array.isArray(atlasData.frames))
             {
-                this._cache.atlas[key].frameData = Phaser.AnimationParser.JSONData(this.game, atlasData, key);
+                obj.frameData = Phaser.AnimationParser.JSONData(this.game, atlasData, key);
             }
             else
             {
-                this._cache.atlas[key].frameData = Phaser.AnimationParser.JSONDataHash(this.game, atlasData, key);
+                obj.frameData = Phaser.AnimationParser.JSONDataHash(this.game, atlasData, key);
             }
         }
 
-        this._resolveURL(url, this._cache.atlas[key]);
+        this._cache.atlas[key] = obj;
+
+        this._resolveURL(url, obj);
 
     },
 
@@ -605,16 +614,19 @@ Phaser.Cache.prototype = {
 
         var _this = this;
 
-        if (this._cache.sound[key])
-        {
-            this._cache.sound[key].data.src = this._cache.sound[key].url;
+        var sound = this.getSound(key);
 
-            this._cache.sound[key].data.addEventListener('canplaythrough', function () {
+        if (sound)
+        {
+            sound.data.src = sound.url;
+
+            sound.data.addEventListener('canplaythrough', function () {
                 return _this.reloadSoundComplete(key);
             }, false);
 
-            this._cache.sound[key].data.load();
+            sound.data.load();
         }
+
     },
 
     /**
@@ -625,9 +637,11 @@ Phaser.Cache.prototype = {
     */
     reloadSoundComplete: function (key) {
 
-        if (this._cache.sound[key])
+        var sound = this.getSound(key);
+
+        if (sound)
         {
-            this._cache.sound[key].locked = false;
+            sound.locked = false;
             this.onSoundUnlock.dispatch(key);
         }
 
@@ -641,9 +655,11 @@ Phaser.Cache.prototype = {
     */
     updateSound: function (key, property, value) {
 
-        if (this._cache.sound[key])
+        var sound = this.getSound(key);
+
+        if (sound)
         {
-            this._cache.sound[key][property] = value;
+            sound[property] = value;
         }
 
     },
@@ -657,9 +673,11 @@ Phaser.Cache.prototype = {
     */
     decodedSound: function (key, data) {
 
-        this._cache.sound[key].data = data;
-        this._cache.sound[key].decoded = true;
-        this._cache.sound[key].isDecoding = false;
+        var sound = this.getSound(key);
+
+        sound.data = data;
+        sound.decoded = true;
+        sound.isDecoding = false;
 
     },
 
@@ -707,13 +725,13 @@ Phaser.Cache.prototype = {
     * Checks if a key for the given cache object type exists.
     *
     * @method Phaser.Cache#checkKey
-    * @param {number} type - The Cache type to check against. I.e. Phaser.Cache.CANVAS, Phaser.Cache.IMAGE, Phaser.Cache.JSON, etc.
+    * @param {number} cache - The Cache to check against. I.e. Phaser.Cache.CANVAS, Phaser.Cache.IMAGE, Phaser.Cache.JSON, etc.
     * @param {string} key - Asset key of the image to check is in the Cache.
     * @return {boolean} True if the key exists, otherwise false.
     */
-    checkKey: function (type, key) {
+    checkKey: function (cache, key) {
 
-        if (this._cacheMap[type][key])
+        if (this._cacheMap[cache][key])
         {
             return true;
         }
@@ -1288,6 +1306,22 @@ Phaser.Cache.prototype = {
     ////////////////////////////
     //  Frame Related Methods //
     ////////////////////////////
+
+    /**
+    * Gets a PIXI.BaseTexture by key from the given Cache.
+    *
+    * @method Phaser.Cache#getBaseTexture
+    * @param {string} key - Asset key of the image for which you want the BaseTexture for.
+    * @param {integer} [cache=Phaser.Cache.IMAGE] - The cache to search for the item in.
+    * @return {PIXI.BaseTexture} The BaseTexture object.
+    */
+    getBaseTexture: function (key, cache) {
+
+        if (cache === undefined) { cache = Phaser.Cache.IMAGE; }
+
+        return this.getItem(key, cache, 'getBaseTexture', 'base');
+
+    },
 
     /**
     * Get a single frame by key. You'd only do this to get the default Frame created for a non-atlas/spritesheet image.

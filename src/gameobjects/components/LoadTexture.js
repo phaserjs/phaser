@@ -88,16 +88,18 @@ Phaser.Component.LoadTexture.prototype = {
         }
         else
         {
-            if (key === null || typeof key === 'undefined')
+            if (key === null || key === undefined)
             {
                 this.key = '__default';
-                this.setTexture(PIXI.TextureCache[this.key]);
+                // this.setTexture(PIXI.TextureCache[this.key]);
+                this.setTexture(cache.getTexture(this.key));
             }
             else if (typeof key === 'string' && !cache.checkImageKey(key))
             {
                 console.warn("Texture with key '" + key + "' not found.");
                 this.key = '__missing';
-                this.setTexture(PIXI.TextureCache[this.key]);
+                // this.setTexture(PIXI.TextureCache[this.key]);
+                this.setTexture(cache.getTexture(this.key));
             }
             else
             {
