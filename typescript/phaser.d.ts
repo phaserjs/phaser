@@ -1,7 +1,7 @@
 /// <reference path="pixi.d.ts" />
 /// <reference path="p2.d.ts" />
 
-// Type definitions for Phaser 2.4.0 2015-Jul-12
+// Type definitions for Phaser 2.4.0 2015-Jul-15
 // Project: https://github.com/photonstorm/phaser
 
 declare class Phaser {
@@ -376,12 +376,16 @@ declare module Phaser {
         static IMAGE: number;
         static JSON: number;
         static PHYSICS: number;
-        static VIDEO: number;
+        static RENDER_TEXTURE: number;
+        static SHADER: number;
         static SOUND: number;
+        static SPRITE_SHEET: number;
         static TEXT: number;
         static TEXTURE: number;
+        static TEXTURE_ATLAS: number;
         static TILEMAP: number;
         static XML: number;
+        static VIDEO: number;
 
         autoResolveURL: boolean;
         game: Phaser.Game;
@@ -398,6 +402,7 @@ declare module Phaser {
         addMissingImage(): void;
         addPhysicsData(key: string, url: string, JSONData: any, format: number): void;
         addRenderTexture(key: string, texture: RenderTexture): void;
+        addShader(key: string, url: string, data: any): void;
         addSound(key: string, url: string, data: any, webAudio: boolean, audioTag: boolean): void;
         addSpriteSheet(key: string, url: string, data: any, frameWidth: number, frameHeight: number, frameMax?: number, margin?: number, spacing?: number): void;
         addText(key: string, url: string, data: any): void;
@@ -410,33 +415,41 @@ declare module Phaser {
         checkCanvasKey(key: string): boolean;
         checkImageKey(key: string): boolean;
         checkJSONKey(key: string): boolean;
-        checkKey(type: number, key: string): boolean;
+        checkKey(cache: number, key: string): boolean;
         checkPhysicsKey(key: string): boolean;
+        checkRenderTextureKey(key: string): boolean;
+        checkShaderKey(key: string): boolean;
         checkSoundKey(key: string): boolean;
+        checkSpriteSheetKey(key: string): boolean;
         checkTextKey(key: string): boolean;
         checkTextureKey(key: string): boolean;
+        checkTextureAtlasKey(key: string): boolean;
         checkTilemapKey(key: string): boolean;
         checkURL(url: string): any;
         checkUrl(url: string): any;
         checkXMLKey(key: string): boolean;
+        checkVideoKey(key: string): boolean;
         decodedSound(key: string, data: any): void;
         destroy(): void;
+        getBaseTexture(key: string, cache?: number): PIXI.BaseTexture;
         getBinary(key: string): any;
         getBitmapData(key: string): Phaser.BitmapData;
         getBitmapFont(key: string): Phaser.RetroFont;
         getCanvas(key: string): any;
         getFrame(key: string): Phaser.Frame;
-        getFrameByIndex(key: string, frame: string): Phaser.Frame;
-        getFrameByName(key: string, frame: string): Phaser.Frame;
+        getFrameByIndex(key: string, index: number, cache?: number): Phaser.Frame;
+        getFrameByName(key: string, name: string, cache?: number): Phaser.Frame;
         getFrameCount(key: string): number;
-        getFrameData(key: string, map?: string): Phaser.FrameData;
+        getFrameData(key: string, cache?: string): Phaser.FrameData;
         getImage(key: string): Phaser.Image;
+        getItem(key: string, cache: number, method?: string, property?: string): any;
         getJSON(key: string, clone?: boolean): any;
-        getKeys(type: number): string[];
+        getKeys(cache: number): string[];
         getPixiTexture(key: string): PIXI.Texture;
         getPixiBaseTexture(key: string): PIXI.BaseTexture;
         getPhysicsData(key: string, object?: string, fixtureKey?: string): any[];
         getRenderTexture(key: string): Phaser.RenderTexture;
+        getShader(key: string): string;
         getSound(key: string): Phaser.Sound;
         getSoundData(key: string): any;
         getText(key: string): string;
@@ -448,6 +461,7 @@ declare module Phaser {
         getURL(url: string): any;
         getXML(key: string): any;
         getVideo(key: string): Phaser.Video;
+        hasFrameData(key: string, cache?: string): boolean;
         isSoundDecoded(key: string): boolean;
         isSoundReady(key: string): boolean;
         isSpriteSheet(key: string): boolean;
@@ -460,12 +474,16 @@ declare module Phaser {
         removeImage(key: string, removeFromPixi?: boolean): void;
         removeJSON(key: string): void;
         removePhysics(key: string): void;
+        removeRenderTexture(key: string): void;
+        removeShader(key: string): void;
         removeSound(key: string): void;
+        removeSpriteSheet(key: string): void;
         removeText(key: string): void;
+        removeTextureAtlas(key: string): void;
         removeTilemap(key: string): void;
         removeXML(key: string): void;
         removeVideo(key: string): void;
-        updateFrameData(key: string, frameData: any): void;
+        updateFrameData(key: string, frameData: any, cache?: number): void;
         updateSound(key: string, property: string, value: Phaser.Sound): void;
 
     }
@@ -2108,6 +2126,7 @@ declare module Phaser {
         reset(hard?: boolean, clearEvents?: boolean): void;
         resize(): void;
         script(key: string, url?: String, callback?: Function, callbackContext?: any): Phaser.Loader;
+        shader(key: string, url?: String, overwrite?: boolean): Phaser.Loader;
         setPreloadSprite(sprite: Phaser.Sprite|Phaser.Image, direction?: number): void;
         spritesheet(key: string, url: string, frameWidth: number, frameHeight: number, frameMax?: number, margin?: number, spacing?: number): Phaser.Loader;
         start(): void;

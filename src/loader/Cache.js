@@ -272,7 +272,7 @@ Phaser.Cache.prototype = {
             frameData: new Phaser.FrameData()
         };
 
-        img.frameData.addFrame(new Phaser.Frame(0, 0, 0, data.width, data.height, url);
+        img.frameData.addFrame(new Phaser.Frame(0, 0, 0, data.width, data.height, url));
 
         this._cache.image[key] = img;
 
@@ -1372,7 +1372,7 @@ Phaser.Cache.prototype = {
     */
     getShader: function (key) {
 
-        return this.getItem(key, Phaser.Cache.SHADER, 'getShader');
+        return this.getItem(key, Phaser.Cache.SHADER, 'getShader', 'data');
 
     },
 
