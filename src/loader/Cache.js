@@ -5,8 +5,27 @@
 */
 
 /**
-* A game only has one instance of a Cache and it is used to store all externally loaded assets such as images, sounds
-* and data files as a result of Loader calls. Cached items use string based keys for look-up.
+* Phaser has one single cache in which it stores all assets.
+* 
+* The cache is split up into sections, such as images, sounds, video, json, etc. All assets are stored using
+* a unique string-based key as their identifier. Assets stored in different areas of the cache can have the
+* same key, for example 'playerWalking' could be used as the key for both a sprite sheet and an audio file,
+* because they are unique data types.
+* 
+* The cache is automatically populated by the Phaser.Loader. When you use the loader to pull in external assets
+* such as images they are automatically placed into their respective cache. Most common Game Objects, such as
+* Sprites and Videos automatically query the cache to extra the assets they need on instantiation.
+*
+* You can access the cache from within a State via `this.cache`. From here you can call any public method it has,
+* including adding new entries to it, deleting them or querying them.
+*
+* Understand that almost without exception when you get an item from the cache it will return a reference to the
+* item stored in the cache, not a copy of it. Therefore if you retrieve an item and then modify it, the original
+* object in the cache will also be updated, even if you don't put it back into the cache again.
+*
+* By default when you change State the cache is _not_ cleared, although there is an option to clear it should
+* your game require it. In a typical game set-up the cache is populated once after the main game has loaded and
+* then used as an asset store.
 *
 * @class Phaser.Cache
 * @constructor
@@ -71,9 +90,6 @@ Phaser.Cache = function (game) {
     */
     this._urlTemp = null;
 
-    this.addDefaultImage();
-    this.addMissingImage();
-
     /**
     * @property {Phaser.Signal} onSoundUnlock - This event is dispatched when the sound system is unlocked via a touch event on cellular devices.
     */
@@ -102,6 +118,9 @@ Phaser.Cache = function (game) {
     this._cacheMap[Phaser.Cache.RENDER_TEXTURE] = this._cache.renderTexture;
     this._cacheMap[Phaser.Cache.SPRITE_SHEET] = this._cache.spriteSheet;
     this._cacheMap[Phaser.Cache.TEXTURE_ATLAS] = this._cache.atlas;
+
+    this.addDefaultImage();
+    this.addMissingImage();
 
 };
 
@@ -217,11 +236,13 @@ Phaser.Cache.prototype = {
     * Add a new canvas object in to the cache.
     *
     * @method Phaser.Cache#addCanvas
-    * @param {string} key - Asset key for this canvas.
-    * @param {HTMLCanvasElement} canvas - Canvas DOM element.
-    * @param {CanvasRenderingContext2D} context - Render context of this canvas.
+    * @param {string} key - The key that this asset will be stored in the cache under. This should be unique within this cache.
+    * @param {HTMLCanvasElement} canvas - The Canvas DOM element.
+    * @param {CanvasRenderingContext2D} [context] - The context of the canvas element. If not specified it will default go `getContext('2d')`.
     */
     addCanvas: function (key, canvas, context) {
+
+        if (context === undefined) { context = canvas.getContext('2d'); }
 
         this._cache.canvas[key] = { canvas: canvas, context: context };
 
@@ -232,8 +253,8 @@ Phaser.Cache.prototype = {
     * If an image already exists in the cache with the same key then it is removed and destroyed, and the new image inserted in its place.
     *
     * @method Phaser.Cache#addImage
-    * @param {string} key - The unique key by which you will reference this object.
-    * @param {string} url - URL of this image file.
+    * @param {string} key - The key that this asset will be stored in the cache under. This should be unique within this cache.
+    * @param {string} url - The URL the asset was loaded from. If the asset was not loaded externally set to `null`.
     * @param {object} data - Extra image data.
     */
     addImage: function (key, url, data) {
@@ -260,7 +281,10 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * Adds a default image to be used in special cases such as WebGL Filters. Is mapped to the key __default.
+    * Adds a default image to be used in special cases such as WebGL Filters.
+    * It uses the special reserved key of `__default`.
+    * This method is called automatically when the Cache is created.
+    * This image is skipped when `Cache.destroy` is called due to its internal requirements.
     *
     * @method Phaser.Cache#addDefaultImage
     * @protected
@@ -276,7 +300,10 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * Adds an image to be used when a key is wrong / missing. Is mapped to the key __missing.
+    * Adds an image to be used when a key is wrong / missing.
+    * It uses the special reserved key of `__missing`.
+    * This method is called automatically when the Cache is created.
+    * This image is skipped when `Cache.destroy` is called due to its internal requirements.
     *
     * @method Phaser.Cache#addMissingImage
     * @protected
@@ -295,8 +322,8 @@ Phaser.Cache.prototype = {
     * Adds a Sound file into the Cache. The file must have already been loaded, typically via Phaser.Loader.
     *
     * @method Phaser.Cache#addSound
-    * @param {string} key - Asset key for the sound.
-    * @param {string} url - URL of this sound file.
+    * @param {string} key - The key that this asset will be stored in the cache under. This should be unique within this cache.
+    * @param {string} url - The URL the asset was loaded from. If the asset was not loaded externally set to `null`.
     * @param {object} data - Extra sound data.
     * @param {boolean} webAudio - True if the file is using web audio.
     * @param {boolean} audioTag - True if the file is using legacy HTML audio.
@@ -331,8 +358,8 @@ Phaser.Cache.prototype = {
     * Add a new text data.
     *
     * @method Phaser.Cache#addText
-    * @param {string} key - Asset key for the text data.
-    * @param {string} url - URL of this text data file.
+    * @param {string} key - The key that this asset will be stored in the cache under. This should be unique within this cache.
+    * @param {string} url - The URL the asset was loaded from. If the asset was not loaded externally set to `null`.
     * @param {object} data - Extra text data.
     */
     addText: function (key, url, data) {
@@ -347,8 +374,8 @@ Phaser.Cache.prototype = {
     * Add a new physics data object to the Cache.
     *
     * @method Phaser.Cache#addPhysicsData
-    * @param {string} key - The unique key by which you will reference this object.
-    * @param {string} url - URL of the physics json data.
+    * @param {string} key - The key that this asset will be stored in the cache under. This should be unique within this cache.
+    * @param {string} url - The URL the asset was loaded from. If the asset was not loaded externally set to `null`.
     * @param {object} JSONData - The physics data object (a JSON file).
     * @param {number} format - The format of the physics data.
     */
@@ -364,8 +391,8 @@ Phaser.Cache.prototype = {
     * Add a new tilemap to the Cache.
     *
     * @method Phaser.Cache#addTilemap
-    * @param {string} key - The unique key by which you will reference this object.
-    * @param {string} url - URL of the tilemap image or key reference.
+    * @param {string} key - The key that this asset will be stored in the cache under. This should be unique within this cache.
+    * @param {string} url - The URL the asset was loaded from. If the asset was not loaded externally set to `null`.
     * @param {object} mapData - The tilemap data object (either a CSV or JSON file).
     * @param {number} format - The format of the tilemap data.
     */
@@ -381,8 +408,8 @@ Phaser.Cache.prototype = {
     * Add a binary object in to the cache.
     *
     * @method Phaser.Cache#addBinary
-    * @param {string} key - Asset key for this binary data.
-    * @param {object} binaryData - The binary object to be addded to the cache.
+    * @param {string} key - The key that this asset will be stored in the cache under. This should be unique within this cache.
+    * @param {object} binaryData - The binary object to be added to the cache.
     */
     addBinary: function (key, binaryData) {
 
@@ -394,7 +421,7 @@ Phaser.Cache.prototype = {
     * Add a BitmapData object to the cache.
     *
     * @method Phaser.Cache#addBitmapData
-    * @param {string} key - Asset key for this BitmapData.
+    * @param {string} key - The key that this asset will be stored in the cache under. This should be unique within this cache.
     * @param {Phaser.BitmapData} bitmapData - The BitmapData object to be addded to the cache.
     * @param {Phaser.FrameData|null} [frameData=(auto create)] - Optional FrameData set associated with the given BitmapData. If not specified (or `undefined`) a new FrameData object is created containing the Bitmap's Frame. If `null` is supplied then no FrameData will be created.
     * @return {Phaser.BitmapData} The BitmapData object to be addded to the cache.
@@ -419,8 +446,8 @@ Phaser.Cache.prototype = {
     * Add a new Bitmap Font to the Cache.
     *
     * @method Phaser.Cache#addBitmapFont
-    * @param {string} key - The unique key by which you will reference this object.
-    * @param {string} url - URL of this font xml file.
+    * @param {string} key - The key that this asset will be stored in the cache under. This should be unique within this cache.
+    * @param {string} url - The URL the asset was loaded from. If the asset was not loaded externally set to `null`.
     * @param {object} data - Extra font data.
     * @param {object} atlasData - Texture atlas frames data.
     * @param {number} [xSpacing=0] - If you'd like to add additional horizontal spacing between the characters then set the pixel value here.
@@ -457,8 +484,8 @@ Phaser.Cache.prototype = {
     * Add a new json object into the cache.
     *
     * @method Phaser.Cache#addJSON
-    * @param {string} key - Asset key for the json data.
-    * @param {string} url - URL of this json data file.
+    * @param {string} key - The key that this asset will be stored in the cache under. This should be unique within this cache.
+    * @param {string} url - The URL the asset was loaded from. If the asset was not loaded externally set to `null`.
     * @param {object} data - Extra json data.
     */
     addJSON: function (key, url, data) {
@@ -473,8 +500,8 @@ Phaser.Cache.prototype = {
     * Add a new xml object into the cache.
     *
     * @method Phaser.Cache#addXML
-    * @param {string} key - Asset key for the xml file.
-    * @param {string} url - URL of this xml file.
+    * @param {string} key - The key that this asset will be stored in the cache under. This should be unique within this cache.
+    * @param {string} url - The URL the asset was loaded from. If the asset was not loaded externally set to `null`.
     * @param {object} data - Extra text data.
     */
     addXML: function (key, url, data) {
@@ -489,8 +516,8 @@ Phaser.Cache.prototype = {
     * Adds a Video file into the Cache. The file must have already been loaded, typically via Phaser.Loader.
     *
     * @method Phaser.Cache#addVideo
-    * @param {string} key - Asset key for the video.
-    * @param {string} url - URL of this video file.
+    * @param {string} key - The key that this asset will be stored in the cache under. This should be unique within this cache.
+    * @param {string} url - The URL the asset was loaded from. If the asset was not loaded externally set to `null`.
     * @param {object} data - Extra video data.
     * @param {boolean} isBlob - True if the file was preloaded via xhr and the data parameter is a Blob. false if a Video tag was created instead.
     */
@@ -506,8 +533,8 @@ Phaser.Cache.prototype = {
     * Adds a Fragment Shader in to the Cache. The file must have already been loaded, typically via Phaser.Loader.
     *
     * @method Phaser.Cache#addShader
-    * @param {string} key - Asset key for the shader.
-    * @param {string} url - URL of this shader file.
+    * @param {string} key - The key that this asset will be stored in the cache under. This should be unique within this cache.
+    * @param {string} url - The URL the asset was loaded from. If the asset was not loaded externally set to `null`.
     * @param {object} data - Extra shader data.
     */
     addShader: function (key, url, data) {
@@ -522,7 +549,7 @@ Phaser.Cache.prototype = {
     * Add a new Phaser.RenderTexture in to the cache.
     *
     * @method Phaser.Cache#addRenderTexture
-    * @param {string} key - The unique key by which you will reference this object.
+    * @param {string} key - The key that this asset will be stored in the cache under. This should be unique within this cache.
     * @param {Phaser.RenderTexture} texture - The texture to use as the base of the RenderTexture.
     */
     addRenderTexture: function (key, texture) {
@@ -535,8 +562,8 @@ Phaser.Cache.prototype = {
     * Add a new sprite sheet in to the cache.
     *
     * @method Phaser.Cache#addSpriteSheet
-    * @param {string} key - The unique key by which you will reference this object.
-    * @param {string} url - URL of this sprite sheet file.
+    * @param {string} key - The key that this asset will be stored in the cache under. This should be unique within this cache.
+    * @param {string} url - The URL the asset was loaded from. If the asset was not loaded externally set to `null`.
     * @param {object} data - Extra sprite sheet data.
     * @param {number} frameWidth - Width of the sprite sheet.
     * @param {number} frameHeight - Height of the sprite sheet.
@@ -567,8 +594,8 @@ Phaser.Cache.prototype = {
     * Add a new texture atlas to the Cache.
     *
     * @method Phaser.Cache#addTextureAtlas
-    * @param {string} key - The unique key by which you will reference this object.
-    * @param {string} url - URL of this texture atlas file.
+    * @param {string} key - The key that this asset will be stored in the cache under. This should be unique within this cache.
+    * @param {string} url - The URL the asset was loaded from. If the asset was not loaded externally set to `null`.
     * @param {object} data - Extra texture atlas data.
     * @param {object} atlasData  - Texture atlas frames data.
     * @param {number} format - The format of the texture atlas.
@@ -608,7 +635,7 @@ Phaser.Cache.prototype = {
     * Reload a Sound file from the server.
     *
     * @method Phaser.Cache#reloadSound
-    * @param {string} key - Asset key for the sound.
+    * @param {string} key - The key of the asset within the cache.
     */
     reloadSound: function (key) {
 
@@ -633,7 +660,7 @@ Phaser.Cache.prototype = {
     * Fires the onSoundUnlock event when the sound has completed reloading.
     *
     * @method Phaser.Cache#reloadSoundComplete
-    * @param {string} key - Asset key for the sound.
+    * @param {string} key - The key of the asset within the cache.
     */
     reloadSoundComplete: function (key) {
 
@@ -651,7 +678,7 @@ Phaser.Cache.prototype = {
     * Updates the sound object in the cache.
     *
     * @method Phaser.Cache#updateSound
-    * @param {string} key - Asset key for the sound.
+    * @param {string} key - The key of the asset within the cache.
     */
     updateSound: function (key, property, value) {
 
@@ -668,7 +695,7 @@ Phaser.Cache.prototype = {
     * Add a new decoded sound.
     *
     * @method Phaser.Cache#decodedSound
-    * @param {string} key - Asset key for the sound.
+    * @param {string} key - The key of the asset within the cache.
     * @param {object} data - Extra sound data.
     */
     decodedSound: function (key, data) {
@@ -685,7 +712,7 @@ Phaser.Cache.prototype = {
     * Check if the given sound has finished decoding.
     *
     * @method Phaser.Cache#isSoundDecoded
-    * @param {string} key - Asset key of the sound in the Cache.
+    * @param {string} key - The key of the asset within the cache.
     * @return {boolean} The decoded state of the Sound object.
     */
     isSoundDecoded: function (key) {
@@ -700,10 +727,11 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * Check if the given sound is ready for playback. A sound is considered ready when it has finished decoding and the device is no longer touch locked.
+    * Check if the given sound is ready for playback.
+    * A sound is considered ready when it has finished decoding and the device is no longer touch locked.
     *
     * @method Phaser.Cache#isSoundReady
-    * @param {string} key - Asset key of the sound in the Cache.
+    * @param {string} key - The key of the asset within the cache.
     * @return {boolean} True if the sound is decoded and the device is not touch locked.
     */
     isSoundReady: function (key) {
@@ -725,8 +753,8 @@ Phaser.Cache.prototype = {
     * Checks if a key for the given cache object type exists.
     *
     * @method Phaser.Cache#checkKey
-    * @param {number} cache - The Cache to check against. I.e. Phaser.Cache.CANVAS, Phaser.Cache.IMAGE, Phaser.Cache.JSON, etc.
-    * @param {string} key - Asset key of the image to check is in the Cache.
+    * @param {integer} cache - The cache to search. One of the Cache consts such as `Phaser.Cache.IMAGE` or `Phaser.Cache.SOUND`.
+    * @param {string} key - The key of the asset within the cache.
     * @return {boolean} True if the key exists, otherwise false.
     */
     checkKey: function (cache, key) {
@@ -765,8 +793,8 @@ Phaser.Cache.prototype = {
     * Checks if the given key exists in the Canvas Cache.
     *
     * @method Phaser.Cache#checkCanvasKey
-    * @param {string} key - Asset key of the canvas to check is in the Cache.
-    * @return {boolean} True if the key exists, otherwise false.
+    * @param {string} key - The key of the asset within the cache.
+    * @return {boolean} True if the key exists in the cache, otherwise false.
     */
     checkCanvasKey: function (key) {
 
@@ -778,8 +806,8 @@ Phaser.Cache.prototype = {
     * Checks if the given key exists in the Image Cache. Note that this also includes Texture Atlases, Sprite Sheets and Retro Fonts.
     *
     * @method Phaser.Cache#checkImageKey
-    * @param {string} key - Asset key of the image to check is in the Cache.
-    * @return {boolean} True if the key exists, otherwise false.
+    * @param {string} key - The key of the asset within the cache.
+    * @return {boolean} True if the key exists in the cache, otherwise false.
     */
     checkImageKey: function (key) {
 
@@ -791,8 +819,8 @@ Phaser.Cache.prototype = {
     * Checks if the given key exists in the Texture Cache.
     *
     * @method Phaser.Cache#checkTextureKey
-    * @param {string} key - Asset key of the image to check is in the Cache.
-    * @return {boolean} True if the key exists, otherwise false.
+    * @param {string} key - The key of the asset within the cache.
+    * @return {boolean} True if the key exists in the cache, otherwise false.
     */
     checkTextureKey: function (key) {
 
@@ -804,8 +832,8 @@ Phaser.Cache.prototype = {
     * Checks if the given key exists in the Sound Cache.
     *
     * @method Phaser.Cache#checkSoundKey
-    * @param {string} key - Asset key of the sound file to check is in the Cache.
-    * @return {boolean} True if the key exists, otherwise false.
+    * @param {string} key - The key of the asset within the cache.
+    * @return {boolean} True if the key exists in the cache, otherwise false.
     */
     checkSoundKey: function (key) {
 
@@ -817,8 +845,8 @@ Phaser.Cache.prototype = {
     * Checks if the given key exists in the Text Cache.
     *
     * @method Phaser.Cache#checkTextKey
-    * @param {string} key - Asset key of the text file to check is in the Cache.
-    * @return {boolean} True if the key exists, otherwise false.
+    * @param {string} key - The key of the asset within the cache.
+    * @return {boolean} True if the key exists in the cache, otherwise false.
     */
     checkTextKey: function (key) {
 
@@ -830,8 +858,8 @@ Phaser.Cache.prototype = {
     * Checks if the given key exists in the Physics Cache.
     *
     * @method Phaser.Cache#checkPhysicsKey
-    * @param {string} key - Asset key of the physics data file to check is in the Cache.
-    * @return {boolean} True if the key exists, otherwise false.
+    * @param {string} key - The key of the asset within the cache.
+    * @return {boolean} True if the key exists in the cache, otherwise false.
     */
     checkPhysicsKey: function (key) {
 
@@ -843,8 +871,8 @@ Phaser.Cache.prototype = {
     * Checks if the given key exists in the Tilemap Cache.
     *
     * @method Phaser.Cache#checkTilemapKey
-    * @param {string} key - Asset key of the Tilemap to check is in the Cache.
-    * @return {boolean} True if the key exists, otherwise false.
+    * @param {string} key - The key of the asset within the cache.
+    * @return {boolean} True if the key exists in the cache, otherwise false.
     */
     checkTilemapKey: function (key) {
 
@@ -856,8 +884,8 @@ Phaser.Cache.prototype = {
     * Checks if the given key exists in the Binary Cache.
     *
     * @method Phaser.Cache#checkBinaryKey
-    * @param {string} key - Asset key of the binary file to check is in the Cache.
-    * @return {boolean} True if the key exists, otherwise false.
+    * @param {string} key - The key of the asset within the cache.
+    * @return {boolean} True if the key exists in the cache, otherwise false.
     */
     checkBinaryKey: function (key) {
 
@@ -869,8 +897,8 @@ Phaser.Cache.prototype = {
     * Checks if the given key exists in the BitmapData Cache.
     *
     * @method Phaser.Cache#checkBitmapDataKey
-    * @param {string} key - Asset key of the BitmapData to check is in the Cache.
-    * @return {boolean} True if the key exists, otherwise false.
+    * @param {string} key - The key of the asset within the cache.
+    * @return {boolean} True if the key exists in the cache, otherwise false.
     */
     checkBitmapDataKey: function (key) {
 
@@ -882,8 +910,8 @@ Phaser.Cache.prototype = {
     * Checks if the given key exists in the BitmapFont Cache.
     *
     * @method Phaser.Cache#checkBitmapFontKey
-    * @param {string} key - Asset key of the BitmapFont to check is in the Cache.
-    * @return {boolean} True if the key exists, otherwise false.
+    * @param {string} key - The key of the asset within the cache.
+    * @return {boolean} True if the key exists in the cache, otherwise false.
     */
     checkBitmapFontKey: function (key) {
 
@@ -895,8 +923,8 @@ Phaser.Cache.prototype = {
     * Checks if the given key exists in the JSON Cache.
     *
     * @method Phaser.Cache#checkJSONKey
-    * @param {string} key - Asset key of the JSON file to check is in the Cache.
-    * @return {boolean} True if the key exists, otherwise false.
+    * @param {string} key - The key of the asset within the cache.
+    * @return {boolean} True if the key exists in the cache, otherwise false.
     */
     checkJSONKey: function (key) {
 
@@ -908,8 +936,8 @@ Phaser.Cache.prototype = {
     * Checks if the given key exists in the XML Cache.
     *
     * @method Phaser.Cache#checkXMLKey
-    * @param {string} key - Asset key of the XML file to check is in the Cache.
-    * @return {boolean} True if the key exists, otherwise false.
+    * @param {string} key - The key of the asset within the cache.
+    * @return {boolean} True if the key exists in the cache, otherwise false.
     */
     checkXMLKey: function (key) {
 
@@ -921,8 +949,8 @@ Phaser.Cache.prototype = {
     * Checks if the given key exists in the Video Cache.
     *
     * @method Phaser.Cache#checkVideoKey
-    * @param {string} key - Asset key of the video file to check is in the Cache.
-    * @return {boolean} True if the key exists, otherwise false.
+    * @param {string} key - The key of the asset within the cache.
+    * @return {boolean} True if the key exists in the cache, otherwise false.
     */
     checkVideoKey: function (key) {
 
@@ -934,8 +962,8 @@ Phaser.Cache.prototype = {
     * Checks if the given key exists in the Fragment Shader Cache.
     *
     * @method Phaser.Cache#checkShaderKey
-    * @param {string} key - Asset key of the shader file to check is in the Cache.
-    * @return {boolean} True if the key exists, otherwise false.
+    * @param {string} key - The key of the asset within the cache.
+    * @return {boolean} True if the key exists in the cache, otherwise false.
     */
     checkShaderKey: function (key) {
 
@@ -947,8 +975,8 @@ Phaser.Cache.prototype = {
     * Checks if the given key exists in the Render Texture Cache.
     *
     * @method Phaser.Cache#checkRenderTextureKey
-    * @param {string} key - Asset key of the render texture to check the cache for.
-    * @return {boolean} True if the key exists, otherwise false.
+    * @param {string} key - The key of the asset within the cache.
+    * @return {boolean} True if the key exists in the cache, otherwise false.
     */
     checkRenderTextureKey: function (key) {
 
@@ -961,8 +989,8 @@ Phaser.Cache.prototype = {
     * Note that this is a different cache to the Images and Texture Atlas caches.
     *
     * @method Phaser.Cache#checkSpriteSheetKey
-    * @param {string} key - Asset key of the sprite sheet to check the cache for.
-    * @return {boolean} True if the key exists, otherwise false.
+    * @param {string} key - The key of the asset within the cache.
+    * @return {boolean} True if the key exists in the cache, otherwise false.
     */
     checkSpriteSheetKey: function (key) {
 
@@ -975,8 +1003,8 @@ Phaser.Cache.prototype = {
     * Note that this is a different cache to the Images and Sprite Sheet caches.
     *
     * @method Phaser.Cache#checkTextureAtlasKey
-    * @param {string} key - Asset key of the texture atlas to check the cache for.
-    * @return {boolean} True if the key exists, otherwise false.
+    * @param {string} key - The key of the asset within the cache.
+    * @return {boolean} True if the key exists in the cache, otherwise false.
     */
     checkTextureAtlasKey: function (key) {
 
@@ -995,7 +1023,7 @@ Phaser.Cache.prototype = {
     * publicly for your own use as well.
     *
     * @method Phaser.Cache#getItem
-    * @param {string} key - Asset key of the item in the Cache.
+    * @param {string} key - The key of the asset within the cache.
     * @param {integer} cache - The cache to search. One of the Cache consts such as `Phaser.Cache.IMAGE` or `Phaser.Cache.SOUND`.
     * @param {string} [method] - The string name of the method calling getItem. Can be empty, in which case no console warning is output.
     * @param {string} [property] - If you require a specific property from the cache item, specify it here.
@@ -1027,10 +1055,14 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * Get a canvas object from the cache by its key.
+    * Gets a Canvas object from the cache.
+    * 
+    * The object is looked-up based on the key given.
+    * 
+    * Note: If the object cannot be found a `console.warn` message is displayed.
     *
     * @method Phaser.Cache#getCanvas
-    * @param {string} key - Asset key of the canvas to retrieve from the Cache.
+    * @param {string} key - The key of the asset to retrieve from the cache.
     * @return {object} The canvas object or `null` if no item could be found matching the given key.
     */
     getCanvas: function (key) {
@@ -1040,12 +1072,18 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * Gets an image by its key. Note that this returns a DOM Image object, not a Phaser object.
+    * Gets a Image object from the cache. This returns a DOM Image object, not a Phaser.Image object.
+    * 
+    * The object is looked-up based on the key given.
+    * 
+    * Note: If the object cannot be found a `console.warn` message is displayed.
+    * 
     * Only the Image cache is searched, which covers images loaded via Loader.image.
-    * If you need the image for a texture atlas, bitmap font or similar then please see those respective 'get' methods.
+    * 
+    * If you need the image used by a texture atlas, bitmap font or similar then please use those respective 'get' methods.
     *
     * @method Phaser.Cache#getImage
-    * @param {string} key - Asset key of the image to retrieve from the Cache.
+    * @param {string} key - The key of the asset to retrieve from the cache.
     * @return {Image} The Image object if found in the Cache, otherwise `null`.
     */
     getImage: function (key) {
@@ -1056,10 +1094,11 @@ Phaser.Cache.prototype = {
 
     /**
     * Get a single texture frame by key.
-    * You'd only do this to get the default Frame created for a non-atlas/spritesheet image.
+    * 
+    * You'd only do this to get the default Frame created for a non-atlas / spritesheet image.
     *
     * @method Phaser.Cache#getTextureFrame
-    * @param {string} key - Asset key of the frame to retrieve from the Cache.
+    * @param {string} key - The key of the asset to retrieve from the cache.
     * @return {Phaser.Frame} The frame data.
     */
     getTextureFrame: function (key) {
@@ -1069,10 +1108,14 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * Get sound by key.
+    * Gets a Phaser.Sound object from the cache.
+    * 
+    * The object is looked-up based on the key given.
+    * 
+    * Note: If the object cannot be found a `console.warn` message is displayed.
     *
     * @method Phaser.Cache#getSound
-    * @param {string} key - Asset key of the sound to retrieve from the Cache.
+    * @param {string} key - The key of the asset to retrieve from the cache.
     * @return {Phaser.Sound} The sound object.
     */
     getSound: function (key) {
@@ -1082,10 +1125,14 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * Get sound data by key.
+    * Gets a raw Sound data object from the cache.
+    * 
+    * The object is looked-up based on the key given.
+    * 
+    * Note: If the object cannot be found a `console.warn` message is displayed.
     *
     * @method Phaser.Cache#getSoundData
-    * @param {string} key - Asset key of the sound to retrieve from the Cache.
+    * @param {string} key - The key of the asset to retrieve from the cache.
     * @return {object} The sound data.
     */
     getSoundData: function (key) {
@@ -1095,10 +1142,14 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * Get text data by key.
+    * Gets a Text object from the cache.
+    * 
+    * The object is looked-up based on the key given.
+    * 
+    * Note: If the object cannot be found a `console.warn` message is displayed.
     *
     * @method Phaser.Cache#getText
-    * @param {string} key - Asset key of the text data to retrieve from the Cache.
+    * @param {string} key - The key of the asset to retrieve from the cache.
     * @return {object} The text data.
     */
     getText: function (key) {
@@ -1108,11 +1159,16 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * Get a physics data object from the cache by its key.
+    * Gets a Physics Data object from the cache.
+    * 
+    * The object is looked-up based on the key given.
+    * 
+    * Note: If the object cannot be found a `console.warn` message is displayed.
+    * 
     * You can get either the entire data set, a single object or a single fixture of an object from it.
     *
     * @method Phaser.Cache#getPhysicsData
-    * @param {string} key - Asset key of the physics data object to retrieve from the Cache.
+    * @param {string} key - The key of the asset to retrieve from the cache.
     * @param {string} [object=null] - If specified it will return just the physics object that is part of the given key, if null it will return them all.
     * @param {string} fixtureKey - Fixture key of fixture inside an object. This key can be set per fixture with the Phaser Exporter.
     * @return {object} The requested physics object data if found.
@@ -1165,10 +1221,14 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * Get tilemap data by key.
+    * Gets a raw Tilemap data object from the cache. This will be in either CSV or JSON format.
+    * 
+    * The object is looked-up based on the key given.
+    * 
+    * Note: If the object cannot be found a `console.warn` message is displayed.
     *
     * @method Phaser.Cache#getTilemapData
-    * @param {string} key - Asset key of the tilemap data to retrieve from the Cache.
+    * @param {string} key - The key of the asset to retrieve from the cache.
     * @return {object} The raw tilemap data in CSV or JSON format.
     */
     getTilemapData: function (key) {
@@ -1178,10 +1238,14 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * Get binary data by key.
+    * Gets a binary object from the cache.
+    * 
+    * The object is looked-up based on the key given.
+    * 
+    * Note: If the object cannot be found a `console.warn` message is displayed.
     *
     * @method Phaser.Cache#getBinary
-    * @param {string} key - Asset key of the binary data object to retrieve from the Cache.
+    * @param {string} key - The key of the asset to retrieve from the cache.
     * @return {object} The binary data object.
     */
     getBinary: function (key) {
@@ -1191,10 +1255,14 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * Get a BitmapData object from the cache by its key.
+    * Gets a BitmapData object from the cache.
+    * 
+    * The object is looked-up based on the key given.
+    * 
+    * Note: If the object cannot be found a `console.warn` message is displayed.
     *
     * @method Phaser.Cache#getBitmapData
-    * @param {string} key - Asset key of the BitmapData object to retrieve from the Cache.
+    * @param {string} key - The key of the asset to retrieve from the cache.
     * @return {Phaser.BitmapData} The requested BitmapData object if found, or null if not.
     */
     getBitmapData: function (key) {
@@ -1204,10 +1272,14 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * Get a BitmapFont object from the cache by its key.
+    * Gets a Bitmap Font object from the cache.
+    * 
+    * The object is looked-up based on the key given.
+    * 
+    * Note: If the object cannot be found a `console.warn` message is displayed.
     *
     * @method Phaser.Cache#getBitmapFont
-    * @param {string} key - Asset key of the BitmapFont object to retrieve from the Cache.
+    * @param {string} key - The key of the asset to retrieve from the cache.
     * @return {Phaser.BitmapFont} The requested BitmapFont object if found, or null if not.
     */
     getBitmapFont: function (key) {
@@ -1217,13 +1289,17 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * Get a JSON object by key from the cache.
+    * Gets a JSON object from the cache.
+    * 
+    * The object is looked-up based on the key given.
+    * 
+    * Note: If the object cannot be found a `console.warn` message is displayed.
     * 
     * You can either return the object by reference (the default), or return a clone
-    * of it using the `clone` parameter.
+    * of it by setting the `clone` argument to `true`.
     *
     * @method Phaser.Cache#getJSON
-    * @param {string} key - Asset key of the json object to retrieve from the Cache.
+    * @param {string} key - The key of the asset to retrieve from the cache.
     * @param {boolean} [clone=false] - Return a clone of the original object (true) or a reference to it? (false)
     * @return {object} The JSON object.
     */
@@ -1250,10 +1326,14 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * Get a XML object by key from the cache.
+    * Gets an XML object from the cache.
+    * 
+    * The object is looked-up based on the key given.
+    * 
+    * Note: If the object cannot be found a `console.warn` message is displayed.
     *
     * @method Phaser.Cache#getXML
-    * @param {string} key - Asset key of the XML object to retrieve from the Cache.
+    * @param {string} key - The key of the asset to retrieve from the cache.
     * @return {object} The XML object.
     */
     getXML: function (key) {
@@ -1263,10 +1343,14 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * Get video by key.
+    * Gets a Phaser.Video object from the cache.
+    * 
+    * The object is looked-up based on the key given.
+    * 
+    * Note: If the object cannot be found a `console.warn` message is displayed.
     *
     * @method Phaser.Cache#getVideo
-    * @param {string} key - Asset key of the video to retrieve from the Cache.
+    * @param {string} key - The key of the asset to retrieve from the cache.
     * @return {Phaser.Video} The video object.
     */
     getVideo: function (key) {
@@ -1276,10 +1360,14 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * Get shader by key.
+    * Gets a fragment shader object from the cache.
+    * 
+    * The object is looked-up based on the key given.
+    * 
+    * Note: If the object cannot be found a `console.warn` message is displayed.
     *
     * @method Phaser.Cache#getShader
-    * @param {string} key - Asset key of the shader to retrieve from the Cache.
+    * @param {string} key - The key of the asset to retrieve from the cache.
     * @return {string} The shader object.
     */
     getShader: function (key) {
@@ -1289,10 +1377,14 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * Get a RenderTexture by key.
+    * Gets a RenderTexture object from the cache.
+    * 
+    * The object is looked-up based on the key given.
+    * 
+    * Note: If the object cannot be found a `console.warn` message is displayed.
     *
     * @method Phaser.Cache#getRenderTexture
-    * @param {string} key - Asset key of the RenderTexture to retrieve from the Cache.
+    * @param {string} key - The key of the asset to retrieve from the cache.
     * @return {Phaser.RenderTexture} The RenderTexture object.
     */
     getRenderTexture: function (key) {
@@ -1337,13 +1429,15 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * Get the number of frames in this image.
+    * Get the total number of frames contained in the FrameData object specified by the given key.
     *
     * @method Phaser.Cache#getFrameCount
-    * @param {string} key - Asset key of the image you want.
+    * @param {string} key - Asset key of the FrameData you want.
     * @return {number} Then number of frames. 0 if the image is not found.
     */
     getFrameCount: function (key) {
+
+        if (map === undefined) { map = Phaser.Cache.IMAGE; }
 
         var data = this.getFrameData(key, map);
 
@@ -1359,34 +1453,38 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * Get frame data by key.
+    * Gets a Phaser.FrameData object from the cache.
+    * 
+    * The object is looked-up based on the key given.
+    * 
+    * Note: If the object cannot be found a `console.warn` message is displayed.
     *
     * @method Phaser.Cache#getFrameData
     * @param {string} key - Asset key of the frame data to retrieve from the Cache.
-    * @param {number} [map=Phaser.Cache.IMAGE] - The asset map to get the frameData from, for example `Phaser.Cache.IMAGE`.
+    * @param {integer} [cache=Phaser.Cache.IMAGE] - The cache to search. One of the Cache consts such as `Phaser.Cache.IMAGE` or `Phaser.Cache.SOUND`.
     * @return {Phaser.FrameData} The frame data.
     */
-    getFrameData: function (key, map) {
+    getFrameData: function (key, cache) {
 
-        if (map === undefined) { map = Phaser.Cache.IMAGE; }
+        if (cache === undefined) { cache = Phaser.Cache.IMAGE; }
 
-        return this.getItem(key, map, 'getFrameData', 'frameData');
+        return this.getItem(key, cache, 'getFrameData', 'frameData');
 
     },
 
     /**
-    * Check if frame data for the given key exists in the cache.
+    * Check if the FrameData for the given key exists in the cache.
     *
     * @method Phaser.Cache#hasFrameData
     * @param {string} key - Asset key of the frame data to retrieve from the Cache.
-    * @param {number} [map=Phaser.Cache.IMAGE] - The asset map to get the frameData from, for example `Phaser.Cache.IMAGE`.
+    * @param {integer} [cache=Phaser.Cache.IMAGE] - The cache to search. One of the Cache consts such as `Phaser.Cache.IMAGE` or `Phaser.Cache.SOUND`.
     * @return {boolean} True if the given key has frameData in the cache, otherwise false.
     */
-    hasFrameData: function (key, map) {
+    hasFrameData: function (key, cache) {
 
-        if (map === undefined) { map = Phaser.Cache.IMAGE; }
+        if (cache === undefined) { cache = Phaser.Cache.IMAGE; }
 
-        return (this.getItem(key, map, '', 'frameData') !== null);
+        return (this.getItem(key, cache, '', 'frameData') !== null);
 
     },
 
@@ -1396,15 +1494,15 @@ Phaser.Cache.prototype = {
     * @method Phaser.Cache#updateFrameData
     * @param {string} key - The unique key by which you will reference this object.
     * @param {number} frameData - The new FrameData.
-    * @param {integer} [map=Phaser.Cache.IMAGE] - The asset map to get the frameData from, for example `Phaser.Cache.IMAGE`.
+    * @param {integer} [cache=Phaser.Cache.IMAGE] - The cache to search. One of the Cache consts such as `Phaser.Cache.IMAGE` or `Phaser.Cache.SOUND`.
     */
-    updateFrameData: function (key, frameData, map) {
+    updateFrameData: function (key, frameData, cache) {
 
-        if (map === undefined) { map = Phaser.Cache.IMAGE; }
+        if (cache === undefined) { cache = Phaser.Cache.IMAGE; }
 
-        if (this._cacheMap[map][key])
+        if (this._cacheMap[cache][key])
         {
-            this._cacheMap[map][key].frameData = frameData;
+            this._cacheMap[cache][key].frameData = frameData;
         }
 
     },
@@ -1414,16 +1512,17 @@ Phaser.Cache.prototype = {
     *
     * @method Phaser.Cache#getFrameByIndex
     * @param {string} key - Asset key of the frame data to retrieve from the Cache.
-    * @param {integer} [map=Phaser.Cache.IMAGE] - The asset map to get the frameData from, for example `Phaser.Cache.IMAGE`.
+    * @param {number} index - The index of the frame you want to get.
+    * @param {integer} [cache=Phaser.Cache.IMAGE] - The cache to search. One of the Cache consts such as `Phaser.Cache.IMAGE` or `Phaser.Cache.SOUND`.
     * @return {Phaser.Frame} The frame object.
     */
-    getFrameByIndex: function (key, frame, map) {
+    getFrameByIndex: function (key, index, cache) {
 
-        var data = this.getFrameData(key, map);
+        var data = this.getFrameData(key, cache);
 
         if (data)
         {
-            return data.getFrame(frame);
+            return data.getFrame(index);
         }
         else
         {
@@ -1437,15 +1536,17 @@ Phaser.Cache.prototype = {
     *
     * @method Phaser.Cache#getFrameByName
     * @param {string} key - Asset key of the frame data to retrieve from the Cache.
+    * @param {string} name - The name of the frame you want to get.
+    * @param {integer} [cache=Phaser.Cache.IMAGE] - The cache to search. One of the Cache consts such as `Phaser.Cache.IMAGE` or `Phaser.Cache.SOUND`.
     * @return {Phaser.Frame} The frame object.
     */
-    getFrameByName: function (key, frame, map) {
+    getFrameByName: function (key, name, cache) {
 
-        var data = this.getFrameData(key, map);
+        var data = this.getFrameData(key, cache);
 
         if (data)
         {
-            return data.getFrameByName(frame);
+            return data.getFrameByName(name);
         }
         else
         {
@@ -1455,7 +1556,7 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * Gets a PIXI.Texture by key from the Cache.
+    * Gets a PIXI.Texture by key from the PIXI.TextureCache.
     *
     * @method Phaser.Cache#getPixiTexture
     * @deprecated
@@ -1477,7 +1578,7 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * Gets a PIXI.BaseTexture by key from the Cache.
+    * Gets a PIXI.BaseTexture by key from the PIXI.BaseTExtureCache.
     *
     * @method Phaser.Cache#getPixiBaseTexture
     * @deprecated
@@ -1527,16 +1628,18 @@ Phaser.Cache.prototype = {
     * Gets all keys used in the requested Cache.
     *
     * @method Phaser.Cache#getKeys
-    * @param {integer} [type=Phaser.Cache.IMAGE] - The Cache you wish to get the keys from. Can be any of the Cache consts such as `Phaser.Cache.IMAGE`, `Phaser.Cache.SOUND` etc.
+    * @param {integer} [cache=Phaser.Cache.IMAGE] - The Cache you wish to get the keys from. Can be any of the Cache consts such as `Phaser.Cache.IMAGE`, `Phaser.Cache.SOUND` etc.
     * @return {Array} The array of keys in the requested cache.
     */
-    getKeys: function (type) {
+    getKeys: function (cache) {
+
+        if (cache === undefined) { cache = Phaser.Cache.IMAGE; }
 
         var out = [];
 
-        if (this._cache[type])
+        if (this._cache[cache])
         {
-            for (var key in this._cache[type])
+            for (var key in this._cache[cache])
             {
                 if (key !== '__default' && key !== '__missing')
                 {
@@ -1556,6 +1659,9 @@ Phaser.Cache.prototype = {
     /**
     * Removes a canvas from the cache.
     *
+    * Note that this only removes it from the Phaser.Cache. If you still have references to the data elsewhere
+    * then it will persist in memory.
+    *
     * @method Phaser.Cache#removeCanvas
     * @param {string} key - Key of the asset you want to remove.
     */
@@ -1567,6 +1673,9 @@ Phaser.Cache.prototype = {
 
     /**
     * Removes an image from the cache and optionally from the Pixi.BaseTextureCache as well.
+    *
+    * Note that this only removes it from the Phaser.Cache. If you still have references to the data elsewhere
+    * then it will persist in memory.
     *
     * @method Phaser.Cache#removeImage
     * @param {string} key - Key of the asset you want to remove.
@@ -1588,6 +1697,9 @@ Phaser.Cache.prototype = {
     /**
     * Removes a sound from the cache.
     *
+    * Note that this only removes it from the Phaser.Cache. If you still have references to the data elsewhere
+    * then it will persist in memory.
+    *
     * @method Phaser.Cache#removeSound
     * @param {string} key - Key of the asset you want to remove.
     */
@@ -1598,7 +1710,10 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * Removes a text from the cache.
+    * Removes a text file from the cache.
+    *
+    * Note that this only removes it from the Phaser.Cache. If you still have references to the data elsewhere
+    * then it will persist in memory.
     *
     * @method Phaser.Cache#removeText
     * @param {string} key - Key of the asset you want to remove.
@@ -1612,6 +1727,9 @@ Phaser.Cache.prototype = {
     /**
     * Removes a physics data file from the cache.
     *
+    * Note that this only removes it from the Phaser.Cache. If you still have references to the data elsewhere
+    * then it will persist in memory.
+    *
     * @method Phaser.Cache#removePhysics
     * @param {string} key - Key of the asset you want to remove.
     */
@@ -1623,6 +1741,9 @@ Phaser.Cache.prototype = {
 
     /**
     * Removes a tilemap from the cache.
+    *
+    * Note that this only removes it from the Phaser.Cache. If you still have references to the data elsewhere
+    * then it will persist in memory.
     *
     * @method Phaser.Cache#removeTilemap
     * @param {string} key - Key of the asset you want to remove.
@@ -1636,6 +1757,9 @@ Phaser.Cache.prototype = {
     /**
     * Removes a binary file from the cache.
     *
+    * Note that this only removes it from the Phaser.Cache. If you still have references to the data elsewhere
+    * then it will persist in memory.
+    *
     * @method Phaser.Cache#removeBinary
     * @param {string} key - Key of the asset you want to remove.
     */
@@ -1647,6 +1771,9 @@ Phaser.Cache.prototype = {
 
     /**
     * Removes a bitmap data from the cache.
+    *
+    * Note that this only removes it from the Phaser.Cache. If you still have references to the data elsewhere
+    * then it will persist in memory.
     *
     * @method Phaser.Cache#removeBitmapData
     * @param {string} key - Key of the asset you want to remove.
@@ -1660,6 +1787,9 @@ Phaser.Cache.prototype = {
     /**
     * Removes a bitmap font from the cache.
     *
+    * Note that this only removes it from the Phaser.Cache. If you still have references to the data elsewhere
+    * then it will persist in memory.
+    *
     * @method Phaser.Cache#removeBitmapFont
     * @param {string} key - Key of the asset you want to remove.
     */
@@ -1671,6 +1801,9 @@ Phaser.Cache.prototype = {
 
     /**
     * Removes a json object from the cache.
+    *
+    * Note that this only removes it from the Phaser.Cache. If you still have references to the data elsewhere
+    * then it will persist in memory.
     *
     * @method Phaser.Cache#removeJSON
     * @param {string} key - Key of the asset you want to remove.
@@ -1684,6 +1817,9 @@ Phaser.Cache.prototype = {
     /**
     * Removes a xml object from the cache.
     *
+    * Note that this only removes it from the Phaser.Cache. If you still have references to the data elsewhere
+    * then it will persist in memory.
+    *
     * @method Phaser.Cache#removeXML
     * @param {string} key - Key of the asset you want to remove.
     */
@@ -1695,6 +1831,9 @@ Phaser.Cache.prototype = {
 
     /**
     * Removes a video from the cache.
+    *
+    * Note that this only removes it from the Phaser.Cache. If you still have references to the data elsewhere
+    * then it will persist in memory.
     *
     * @method Phaser.Cache#removeVideo
     * @param {string} key - Key of the asset you want to remove.
@@ -1708,6 +1847,9 @@ Phaser.Cache.prototype = {
     /**
     * Removes a shader from the cache.
     *
+    * Note that this only removes it from the Phaser.Cache. If you still have references to the data elsewhere
+    * then it will persist in memory.
+    *
     * @method Phaser.Cache#removeShader
     * @param {string} key - Key of the asset you want to remove.
     */
@@ -1719,6 +1861,9 @@ Phaser.Cache.prototype = {
 
     /**
     * Removes a Render Texture from the cache.
+    *
+    * Note that this only removes it from the Phaser.Cache. If you still have references to the data elsewhere
+    * then it will persist in memory.
     *
     * @method Phaser.Cache#removeRenderTexture
     * @param {string} key - Key of the asset you want to remove.
@@ -1732,6 +1877,9 @@ Phaser.Cache.prototype = {
     /**
     * Removes a Sprite Sheet from the cache.
     *
+    * Note that this only removes it from the Phaser.Cache. If you still have references to the data elsewhere
+    * then it will persist in memory.
+    *
     * @method Phaser.Cache#removeSpriteSheet
     * @param {string} key - Key of the asset you want to remove.
     */
@@ -1743,6 +1891,9 @@ Phaser.Cache.prototype = {
 
     /**
     * Removes a Texture Atlas from the cache.
+    *
+    * Note that this only removes it from the Phaser.Cache. If you still have references to the data elsewhere
+    * then it will persist in memory.
     *
     * @method Phaser.Cache#removeTextureAtlas
     * @param {string} key - Key of the asset you want to remove.
@@ -1789,7 +1940,7 @@ Phaser.Cache.prototype = {
 
     /**
     * Clears the cache. Removes every local cache object reference.
-    * If an object in the cache has a `destroy` method it will be called.
+    * If an object in the cache has a `destroy` method it will also be called.
     *
     * @method Phaser.Cache#destroy
     */
