@@ -50,6 +50,7 @@ Phaser.Component.LoadTexture.prototype = {
 
         this.key = key;
         this.customRender = false;
+        var cache = this.game.cache;
 
         var setFrame = true;
         var smoothed = !this.texture.baseTexture.scaleMode;
@@ -63,12 +64,11 @@ Phaser.Component.LoadTexture.prototype = {
         {
             this.customRender = true;
 
-            //  This works from a reference, which probably isn't what we need here
             this.setTexture(key.texture);
 
-            if (this.game.cache.getFrameData(key.key, Phaser.Cache.BITMAPDATA))
+            if (cache.hasFrameData(key.key, Phaser.Cache.BITMAPDATA))
             {
-                setFrame = !this.animations.loadFrameData(this.game.cache.getFrameData(key.key, Phaser.Cache.BITMAPDATA), frame);
+                setFrame = !this.animations.loadFrameData(cache.getFrameData(key.key, Phaser.Cache.BITMAPDATA), frame);
             }
         }
         else if (Phaser.Video && key instanceof Phaser.Video)
@@ -93,7 +93,7 @@ Phaser.Component.LoadTexture.prototype = {
                 this.key = '__default';
                 this.setTexture(PIXI.TextureCache[this.key]);
             }
-            else if (typeof key === 'string' && !this.game.cache.checkImageKey(key))
+            else if (typeof key === 'string' && !cache.checkImageKey(key))
             {
                 console.warn("Texture with key '" + key + "' not found.");
                 this.key = '__missing';
@@ -103,7 +103,7 @@ Phaser.Component.LoadTexture.prototype = {
             {
                 this.setTexture(new PIXI.Texture(PIXI.BaseTextureCache[key]));
 
-                setFrame = !this.animations.loadFrameData(this.game.cache.getFrameData(key), frame);
+                setFrame = !this.animations.loadFrameData(cache.getFrameData(key), frame);
             }
         }
         
