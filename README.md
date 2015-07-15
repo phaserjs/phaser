@@ -335,8 +335,10 @@ For the full list of p2 additions please read [their change log](https://github.
 * Loader.shader allows you to load a fragment shader from an external file.
 * Cache.addShader adds a fragment shader into the cache.
 * Cache.getShader gets a fragment shader from the cache.
-* The Cache has been internally refactored considerably. Images are now no longer grouped in a single Images cache, but split based on their type. For example you can now load an image called 'fire' and a texture atlas called 'fire' at they are placed into unique caches, where-as before you had to be careful not to use the same keys for anything using an image.
+* The Cache has been internally refactored considerably. Image data is now all stored in the same object, rather than being split across the PIXI global caches (such as PIXI.TextureCache and PIXI.BaseTextureCache), which are no longer used by Phaser.
 * Internally the Cache now uses a single _cache object, which is partitioned to store the various different object types. Before the cache used lots of private objects, one per data type, but it's now a lot cleaner and we've managed to cut out hundreds of lines of duplicate code in the process.
+* Cache.getImage has a new argument which lets you return either just the HTML Image element or the entire image cache object, which includes the baseTexture and frame data.
+* Cache.getImage will return a __default image if the key isn't given, or a __missing image if the key is given but not found in the cache. This means it will always return a valid image and no longer cause Phaser to throw runtime errors deeper down with invalid image objects.
 
 ### Updates
 

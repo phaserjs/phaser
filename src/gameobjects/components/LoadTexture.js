@@ -88,25 +88,32 @@ Phaser.Component.LoadTexture.prototype = {
         }
         else
         {
-            if (key === null || key === undefined)
-            {
-                this.key = '__default';
-                // this.setTexture(PIXI.TextureCache[this.key]);
-                this.setTexture(cache.getTexture(this.key));
-            }
-            else if (typeof key === 'string' && !cache.checkImageKey(key))
-            {
-                console.warn("Texture with key '" + key + "' not found.");
-                this.key = '__missing';
-                // this.setTexture(PIXI.TextureCache[this.key]);
-                this.setTexture(cache.getTexture(this.key));
-            }
-            else
-            {
-                this.setTexture(new PIXI.Texture(PIXI.BaseTextureCache[key]));
+            var img = cache.getImage(key, true);
 
-                setFrame = !this.animations.loadFrameData(cache.getFrameData(key), frame);
-            }
+            this.key = img.key;
+            this.setTexture(new PIXI.Texture(img.base));
+            
+            setFrame = !this.animations.loadFrameData(cache.getFrameData(this.key), frame);
+
+            // if (key === null || key === undefined)
+            // {
+            //     this.key = '__default';
+            //     // this.setTexture(PIXI.TextureCache[this.key]);
+            //     this.setTexture(cache.getTexture(this.key));
+            // }
+            // else if (typeof key === 'string' && !cache.checkImageKey(key))
+            // {
+            //     console.warn("Texture with key '" + key + "' not found.");
+            //     this.key = '__missing';
+            //     // this.setTexture(PIXI.TextureCache[this.key]);
+            //     this.setTexture(cache.getTexture(this.key));
+            // }
+            // else
+            // {
+            //     this.setTexture(new PIXI.Texture(PIXI.BaseTextureCache[key]));
+
+                // setFrame = !this.animations.loadFrameData(cache.getFrameData(key), frame);
+            // }
         }
         
         if (setFrame)

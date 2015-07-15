@@ -14,7 +14,7 @@
 * 
 * The cache is automatically populated by the Phaser.Loader. When you use the loader to pull in external assets
 * such as images they are automatically placed into their respective cache. Most common Game Objects, such as
-* Sprites and Videos automatically query the cache to extra the assets they need on instantiation.
+* Sprites and Videos automatically query the cache to extract the assets they need on instantiation.
 *
 * You can access the cache from within a State via `this.cache`. From here you can call any public method it has,
 * including adding new entries to it, deleting them or querying them.
@@ -67,9 +67,7 @@ Phaser.Cache = function (game) {
             data: {}
         },
         shader: {},
-        renderTexture: {},
-        spriteSheet: {},
-        atlas: {}
+        renderTexture: {}
     };
 
     /**
@@ -116,8 +114,6 @@ Phaser.Cache = function (game) {
     this._cacheMap[Phaser.Cache.VIDEO] = this._cache.video;
     this._cacheMap[Phaser.Cache.SHADER] = this._cache.shader;
     this._cacheMap[Phaser.Cache.RENDER_TEXTURE] = this._cache.renderTexture;
-    this._cacheMap[Phaser.Cache.SPRITE_SHEET] = this._cache.spriteSheet;
-    this._cacheMap[Phaser.Cache.TEXTURE_ATLAS] = this._cache.atlas;
 
     this.addDefaultImage();
     this.addMissingImage();
@@ -214,18 +210,6 @@ Phaser.Cache.SHADER = 14;
 */
 Phaser.Cache.RENDER_TEXTURE = 15;
 
-/**
-* @constant
-* @type {number}
-*/
-Phaser.Cache.SPRITE_SHEET = 16;
-
-/**
-* @constant
-* @type {number}
-*/
-Phaser.Cache.TEXTURE_ATLAS = 17;
-
 Phaser.Cache.prototype = {
 
     //////////////////
@@ -265,6 +249,7 @@ Phaser.Cache.prototype = {
         }
 
         var img = {
+            key: key,
             url: url,
             data: data,
             base: new PIXI.BaseTexture(data),
@@ -584,7 +569,7 @@ Phaser.Cache.prototype = {
             frameData: Phaser.AnimationParser.spriteSheet(this.game, key, frameWidth, frameHeight, frameMax, margin, spacing)
         };
 
-        this._cache.spriteSheet[key] = obj;
+        this._cache.image[key] = obj;
 
         this._resolveURL(url, obj);
 
@@ -602,9 +587,13 @@ Phaser.Cache.prototype = {
     */
     addTextureAtlas: function (key, url, data, atlasData, format) {
 
-        var obj = { url: url, data: data, base: new PIXI.BaseTexture(data) };
+        var obj = {
+            url: url,
+            data: data,
+            base: new PIXI.BaseTexture(data)
+        };
 
-        if (format == Phaser.Loader.TEXTURE_ATLAS_XML_STARLING)
+        if (format === Phaser.Loader.TEXTURE_ATLAS_XML_STARLING)
         {
             obj.frameData = Phaser.AnimationParser.XMLData(this.game, atlasData, key);
         }
@@ -621,7 +610,7 @@ Phaser.Cache.prototype = {
             }
         }
 
-        this._cache.atlas[key] = obj;
+        this._cache.image[key] = obj;
 
         this._resolveURL(url, obj);
 
@@ -984,34 +973,6 @@ Phaser.Cache.prototype = {
 
     },
 
-    /**
-    * Checks if the given key exists in the Sprite Sheet Cache.
-    * Note that this is a different cache to the Images and Texture Atlas caches.
-    *
-    * @method Phaser.Cache#checkSpriteSheetKey
-    * @param {string} key - The key of the asset within the cache.
-    * @return {boolean} True if the key exists in the cache, otherwise false.
-    */
-    checkSpriteSheetKey: function (key) {
-
-        return this.checkKey(Phaser.Cache.SPRITE_SHEET, key);
-
-    },
-
-    /**
-    * Checks if the given key exists in the Texture Atlas Cache.
-    * Note that this is a different cache to the Images and Sprite Sheet caches.
-    *
-    * @method Phaser.Cache#checkTextureAtlasKey
-    * @param {string} key - The key of the asset within the cache.
-    * @return {boolean} True if the key exists in the cache, otherwise false.
-    */
-    checkTextureAtlasKey: function (key) {
-
-        return this.checkKey(Phaser.Cache.TEXTURE_ATLAS, key);
-
-    },
-
     ////////////////
     //  Get Items //
     ////////////////
@@ -1078,17 +1039,39 @@ Phaser.Cache.prototype = {
     * 
     * Note: If the object cannot be found a `console.warn` message is displayed.
     * 
-    * Only the Image cache is searched, which covers images loaded via Loader.image.
+    * Only the Image cache is searched, which covers images loaded via Loader.image, Sprite Sheets and Texture Atlases.
     * 
-    * If you need the image used by a texture atlas, bitmap font or similar then please use those respective 'get' methods.
+    * If you need the image used by a bitmap font or similar then please use those respective 'get' methods.
     *
     * @method Phaser.Cache#getImage
-    * @param {string} key - The key of the asset to retrieve from the cache.
-    * @return {Image} The Image object if found in the Cache, otherwise `null`.
+    * @param {string} [key] - The key of the asset to retrieve from the cache. If not given or null it will return a default image. If given but not found in the cache it will throw a warning and return the missing image.
+    * @param {boolean} [full=false] - If true the full image object will be returned, if false just the HTML Image object is returned.
+    * @return {Image} The Image object if found in the Cache, otherwise `null`. If `full` was true then a JavaScript object is returned.
     */
-    getImage: function (key) {
+    getImage: function (key, full) {
 
-        return this.getItem(key, Phaser.Cache.IMAGE, 'getImage', 'data');
+        if (key === undefined || key === null)
+        {
+            key = '__default';
+        }
+
+        if (full === undefined) { full = false; }
+
+        var img = this.getItem(key, Phaser.Cache.IMAGE, 'getImage');
+
+        if (img === null)
+        {
+            img = this.getItem('__missing', Phaser.Cache.IMAGE, 'getImage');
+        }
+
+        if (full)
+        {
+            return img;
+        }
+        else
+        {
+            return img.data;
+        }
 
     },
 
@@ -1392,8 +1375,6 @@ Phaser.Cache.prototype = {
         return this.getItem(key, Phaser.Cache.RENDER_TEXTURE, 'getRenderTexture');
 
     },
-
-    //  TODO: Get Sprite Sheet + Atlas
 
     ////////////////////////////
     //  Frame Related Methods //

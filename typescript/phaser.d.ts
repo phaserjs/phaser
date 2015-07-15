@@ -379,10 +379,8 @@ declare module Phaser {
         static RENDER_TEXTURE: number;
         static SHADER: number;
         static SOUND: number;
-        static SPRITE_SHEET: number;
         static TEXT: number;
         static TEXTURE: number;
-        static TEXTURE_ATLAS: number;
         static TILEMAP: number;
         static XML: number;
         static VIDEO: number;
@@ -420,10 +418,8 @@ declare module Phaser {
         checkRenderTextureKey(key: string): boolean;
         checkShaderKey(key: string): boolean;
         checkSoundKey(key: string): boolean;
-        checkSpriteSheetKey(key: string): boolean;
         checkTextKey(key: string): boolean;
         checkTextureKey(key: string): boolean;
-        checkTextureAtlasKey(key: string): boolean;
         checkTilemapKey(key: string): boolean;
         checkURL(url: string): any;
         checkUrl(url: string): any;
@@ -441,7 +437,7 @@ declare module Phaser {
         getFrameByName(key: string, name: string, cache?: number): Phaser.Frame;
         getFrameCount(key: string): number;
         getFrameData(key: string, cache?: string): Phaser.FrameData;
-        getImage(key: string): Phaser.Image;
+        getImage(key: string, full?: boolean): Phaser.Image;
         getItem(key: string, cache: number, method?: string, property?: string): any;
         getJSON(key: string, clone?: boolean): any;
         getKeys(cache: number): string[];
