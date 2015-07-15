@@ -390,8 +390,8 @@ Phaser.GameObjectCreator.prototype = {
     */
     bitmapData: function (width, height, key, addToCache) {
 
-        if (typeof addToCache === 'undefined') { addToCache = false; }
-        if (typeof key === 'undefined' || key === '') { key = this.game.rnd.uuid(); }
+        if (addToCache === undefined) { addToCache = false; }
+        if (key === undefined || key === '') { key = this.game.rnd.uuid(); }
 
         var texture = new Phaser.BitmapData(this.game, key, width, height);
 
