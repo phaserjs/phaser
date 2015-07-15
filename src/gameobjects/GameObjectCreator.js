@@ -93,7 +93,7 @@ Phaser.GameObjectCreator.prototype = {
     */
     group: function (parent, name, addToStage, enableBody, physicsBodyType) {
 
-        return new Phaser.Group(this.game, null, name, addToStage, enableBody, physicsBodyType);
+        return new Phaser.Group(this.game, parent, name, addToStage, enableBody, physicsBodyType);
 
     },
 
