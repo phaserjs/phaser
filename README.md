@@ -332,6 +332,11 @@ For the full list of p2 additions please read [their change log](https://github.
 * All Signals now have the ability to carry extra custom arguments with them, which are passed on to the callback you define after any internal arguments. For example a Phaser.Key has an onDown signal. When dispatched onDown sends a reference to the Key as the first and only argument. But you can now set the callback like this: `fireKey.onDown.add(shoot, this, 0, 'lazer', 64)`. So when the onDown signal is dispatched internally the callback (`shoot` in this case) will receive 3 arguments: the Key reference that is raised internally and the string 'lazer' and value 64, which were the custom arguments provided when setting-up the callback.
 * Group.moveAll allows you to move all of the children of a Group into another Group.
 * Loader.path is a string and if set it is placed before any _relative_ file path given to the Loader. For example: `load.path = "images/sprites/";` followed by `load.image("ball", "ball.png");` and `load.image("tree", "level1/oaktree.png");` would load the `ball` file from `images/sprites/ball.png` and the tree from `images/sprites/level1/oaktree.png`. The path is added before the filename but *after* the `Loader.baseURL`. The path _must_ end with a "/". Set it to nothing to disable the path.
+* Loader.shader allows you to load a fragment shader from an external file.
+* Cache.addShader adds a fragment shader into the cache.
+* Cache.getShader gets a fragment shader from the cache.
+* The Cache has been internally refactored considerably. Images are now no longer grouped in a single Images cache, but split based on their type. For example you can now load an image called 'fire' and a texture atlas called 'fire' at they are placed into unique caches, where-as before you had to be careful not to use the same keys for anything using an image.
+* Internally the Cache now uses a single _cache object, which is partitioned to store the various different object types. Before the cache used lots of private objects, one per data type, but it's now a lot cleaner and we've managed to cut out hundreds of lines of duplicate code in the process.
 
 ### Updates
 
@@ -384,6 +389,7 @@ For the full list of p2 additions please read [their change log](https://github.
 * BitmapData.clear has 4 new optional parameters: x, y, width and height, that define the area to be cleared. If left undefined it works exactly the same as before and clears the entire canvas.
 * Added Phaser.Keyboard.COMMA and Phaser.Keyboard.PERIOD to the consts list.
 * Canvas.setSmoothingEnabled only applies the value of the property exists, which avoids the Chrome webkit prefix deprecation warnings.
+* PIXI._CompileShader can now take an array or a string for the fragment src.
 
 ### Bug Fixes
 
