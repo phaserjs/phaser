@@ -113,6 +113,12 @@ Phaser.BitmapText = function (game, x, y, font, text, size, align) {
     this._text = text;
 
     /**
+    * @property {string} _data - Internal cache var.
+    * @private
+    */
+    this._data = game.cache.getBitmapFont(font);
+
+    /**
     * @property {string} _font - Internal cache var.
     * @private
     */
@@ -225,7 +231,7 @@ Phaser.BitmapText.prototype.setText = function (text) {
 * 
 * @method Phaser.BitmapText.prototype.scanLine
 * @private
-* @param {object} data - A reference to the font object in the PIXI.BitmapText.fonts array.
+* @param {object} data - A reference to the font object in the Phaser.Cache.
 * @param {float} scale - The scale of the font in relation to the texture.
 * @param {string} text - The text to parse.
 * @return {object} An object containing the parsed characters, total pixel width and x offsets.
@@ -301,7 +307,7 @@ Phaser.BitmapText.prototype.scanLine = function (data, scale, text) {
 */
 Phaser.BitmapText.prototype.updateText = function () {
 
-    var data = PIXI.BitmapText.fonts[this._font];
+    var data = this._data.font;
 
     if (!data)
     {
