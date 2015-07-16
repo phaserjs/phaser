@@ -298,7 +298,7 @@ PIXI.Sprite.prototype._renderWebGL = function(renderSession, matrix)
     //  A quick check to see if this element has a mask or a filter.
     if (this._mask || this._filters)
     {
-        var spriteBatch =  renderSession.spriteBatch;
+        var spriteBatch = renderSession.spriteBatch;
 
         // push filter first as we need to ensure the stencil buffer is correct for any masking
         if (this._filters)
