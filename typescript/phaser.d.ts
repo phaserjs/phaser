@@ -1,7 +1,7 @@
 /// <reference path="pixi.d.ts" />
 /// <reference path="p2.d.ts" />
 
-// Type definitions for Phaser 2.4.0 2015-Jul-15
+// Type definitions for Phaser 2.4.0 2015-Jul-16
 // Project: https://github.com/photonstorm/phaser
 
 declare class Phaser {
@@ -433,10 +433,10 @@ declare module Phaser {
         getBitmapFont(key: string): Phaser.RetroFont;
         getCanvas(key: string): any;
         getFrame(key: string): Phaser.Frame;
-        getFrameByIndex(key: string, index: number, cache?: number): Phaser.Frame;
-        getFrameByName(key: string, name: string, cache?: number): Phaser.Frame;
+        getFrameByIndex(key: string, index: number): Phaser.Frame;
+        getFrameByName(key: string, name: string): Phaser.Frame;
         getFrameCount(key: string): number;
-        getFrameData(key: string, cache?: string): Phaser.FrameData;
+        getFrameData(key: string): Phaser.FrameData;
         getImage(key: string, full?: boolean): Phaser.Image;
         getItem(key: string, cache: number, method?: string, property?: string): any;
         getJSON(key: string, clone?: boolean): any;

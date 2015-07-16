@@ -560,7 +560,7 @@ Phaser.Cache.prototype = {
             data: data,
             frameWidth: frameWidth,
             frameHeight: frameHeight,
-            margin: margin, 
+            margin: margin,
             spacing: spacing,
             base: new PIXI.BaseTexture(data),
             frameData: Phaser.AnimationParser.spriteSheet(this.game, data, frameWidth, frameHeight, frameMax, margin, spacing)
@@ -1415,9 +1415,7 @@ Phaser.Cache.prototype = {
     */
     getFrameCount: function (key) {
 
-        if (map === undefined) { map = Phaser.Cache.IMAGE; }
-
-        var data = this.getFrameData(key, map);
+        var data = this.getFrameData(key);
 
         if (data)
         {
@@ -1431,7 +1429,7 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * Gets a Phaser.FrameData object from the cache.
+    * Gets a Phaser.FrameData object from the Image Cache.
     * 
     * The object is looked-up based on the key given.
     * 
@@ -1439,30 +1437,24 @@ Phaser.Cache.prototype = {
     *
     * @method Phaser.Cache#getFrameData
     * @param {string} key - Asset key of the frame data to retrieve from the Cache.
-    * @param {integer} [cache=Phaser.Cache.IMAGE] - The cache to search. One of the Cache consts such as `Phaser.Cache.IMAGE` or `Phaser.Cache.SOUND`.
     * @return {Phaser.FrameData} The frame data.
     */
-    getFrameData: function (key, cache) {
+    getFrameData: function (key) {
 
-        if (cache === undefined) { cache = Phaser.Cache.IMAGE; }
-
-        return this.getItem(key, cache, 'getFrameData', 'frameData');
+        return this.getItem(key, Phaser.Cache.IMAGE, 'getFrameData', 'frameData');
 
     },
 
     /**
-    * Check if the FrameData for the given key exists in the cache.
+    * Check if the FrameData for the given key exists in the Image Cache.
     *
     * @method Phaser.Cache#hasFrameData
     * @param {string} key - Asset key of the frame data to retrieve from the Cache.
-    * @param {integer} [cache=Phaser.Cache.IMAGE] - The cache to search. One of the Cache consts such as `Phaser.Cache.IMAGE` or `Phaser.Cache.SOUND`.
     * @return {boolean} True if the given key has frameData in the cache, otherwise false.
     */
-    hasFrameData: function (key, cache) {
+    hasFrameData: function (key) {
 
-        if (cache === undefined) { cache = Phaser.Cache.IMAGE; }
-
-        return (this.getItem(key, cache, '', 'frameData') !== null);
+        return (this.getItem(key, Phaser.Cache.IMAGE, '', 'frameData') !== null);
 
     },
 
@@ -1491,12 +1483,11 @@ Phaser.Cache.prototype = {
     * @method Phaser.Cache#getFrameByIndex
     * @param {string} key - Asset key of the frame data to retrieve from the Cache.
     * @param {number} index - The index of the frame you want to get.
-    * @param {integer} [cache=Phaser.Cache.IMAGE] - The cache to search. One of the Cache consts such as `Phaser.Cache.IMAGE` or `Phaser.Cache.SOUND`.
     * @return {Phaser.Frame} The frame object.
     */
-    getFrameByIndex: function (key, index, cache) {
+    getFrameByIndex: function (key, index) {
 
-        var data = this.getFrameData(key, cache);
+        var data = this.getFrameData(key);
 
         if (data)
         {
@@ -1515,12 +1506,11 @@ Phaser.Cache.prototype = {
     * @method Phaser.Cache#getFrameByName
     * @param {string} key - Asset key of the frame data to retrieve from the Cache.
     * @param {string} name - The name of the frame you want to get.
-    * @param {integer} [cache=Phaser.Cache.IMAGE] - The cache to search. One of the Cache consts such as `Phaser.Cache.IMAGE` or `Phaser.Cache.SOUND`.
     * @return {Phaser.Frame} The frame object.
     */
-    getFrameByName: function (key, name, cache) {
+    getFrameByName: function (key, name) {
 
-        var data = this.getFrameData(key, cache);
+        var data = this.getFrameData(key);
 
         if (data)
         {
