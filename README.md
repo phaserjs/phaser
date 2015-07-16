@@ -339,6 +339,7 @@ For the full list of p2 additions please read [their change log](https://github.
 * Internally the Cache now uses a single _cache object, which is partitioned to store the various different object types. Before the cache used lots of private objects, one per data type, but it's now a lot cleaner and we've managed to cut out hundreds of lines of duplicate code in the process.
 * Cache.getImage has a new argument which lets you return either just the HTML Image element or the entire image cache object, which includes the baseTexture and frame data.
 * Cache.getImage will return a __default image if the key isn't given, or a __missing image if the key is given but not found in the cache. This means it will always return a valid image and no longer cause Phaser to throw runtime errors deeper down with invalid image objects.
+* AABB vs. AABB collisions now work in Ninja Physics. `reportCollisionVsWorld` already worked, and contained all of the logic required to resolve a collision once the appropriate vectors had been established. `reportCollisionVsBody` was refactored to use that function (now generically named `reportCollision`), and now AABBs can collide properly, including bouncing and friction. reportCollisionVsWorld is now just a wrapper around reportCollision to maintain compatibility (thanks @standardgaussian #1905)
 
 ### Updates
 
@@ -449,6 +450,8 @@ For the full list of p2 additions please read [their change log](https://github.
 * If a Sound was muted, or had its volume changed while it was still decoding (i.e. before it started playback) then the mute and/or volume were ignored and the sound would play anyway (thanks @brianbunch #1872)
 * Group.addMultiple if given a Group.children array as the first parameter would fail as the original group length was decreased out of line with the children being added. Group.addMultiple now checks if the children argument is a Phaser.Group instance, and if so it uses Group.moveAll instead on it (thanks @AnderbergE #1898)
 * PIXI.DisplayObject.updateTransform now nulls the _currentBounds property (thanks @gaufqwi #1906)
+* Improved the JSON BitmapText implementation (thanks @Feenposhleen #1912 #1837)
+* game.make.group did not setup parent correctly (thanks @mthurlin #1911)
 
 ### Deprecated
 
