@@ -566,7 +566,7 @@ Phaser.Cache.prototype = {
             margin: margin, 
             spacing: spacing,
             base: new PIXI.BaseTexture(data),
-            frameData: Phaser.AnimationParser.spriteSheet(this.game, key, frameWidth, frameHeight, frameMax, margin, spacing)
+            frameData: Phaser.AnimationParser.spriteSheet(this.game, data, frameWidth, frameHeight, frameMax, margin, spacing)
         };
 
         this._cache.image[key] = obj;

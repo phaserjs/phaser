@@ -392,6 +392,7 @@ For the full list of p2 additions please read [their change log](https://github.
 * Added Phaser.Keyboard.COMMA and Phaser.Keyboard.PERIOD to the consts list.
 * Canvas.setSmoothingEnabled only applies the value of the property exists, which avoids the Chrome webkit prefix deprecation warnings.
 * PIXI._CompileShader can now take an array or a string for the fragment src.
+* AnimationParser.spriteSheet can now accept either a string-based key or an HTML Image object as the key argument.
 
 ### Bug Fixes
 
