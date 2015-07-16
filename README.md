@@ -393,6 +393,7 @@ For the full list of p2 additions please read [their change log](https://github.
 * Canvas.setSmoothingEnabled only applies the value of the property exists, which avoids the Chrome webkit prefix deprecation warnings.
 * PIXI._CompileShader can now take an array or a string for the fragment src.
 * AnimationParser.spriteSheet can now accept either a string-based key or an HTML Image object as the key argument.
+* LoaderParser.bitmapFont, xmlBitmapFont and jsonBitmapFont all now return the font data rather than write it to the now deprecated PIXI global font cache.
 
 ### Bug Fixes
 

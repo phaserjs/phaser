@@ -449,15 +449,12 @@ Phaser.Cache.prototype = {
 
         if (atlasType === 'json')
         {
-            //  TODO: These can return the object rather than add it to the PIXI Cache
-            Phaser.LoaderParser.jsonBitmapFont(this.game, atlasData, key, xSpacing, ySpacing);
+            obj.font = Phaser.LoaderParser.jsonBitmapFont(atlasData, obj.base, xSpacing, ySpacing);
         }
         else
         {
-            Phaser.LoaderParser.xmlBitmapFont(this.game, atlasData, key, xSpacing, ySpacing);
+            obj.font = Phaser.LoaderParser.xmlBitmapFont(atlasData, obj.base, xSpacing, ySpacing);
         }
-
-        obj.font = PIXI.BitmapText.fonts[key];;
 
         this._cache.bitmapFont[key] = obj;
 

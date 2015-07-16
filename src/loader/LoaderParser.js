@@ -12,30 +12,33 @@
 Phaser.LoaderParser = {
 
     /**
-    * Alias for xmlBitmapFont, for backwards compatiblity.
+    * Alias for xmlBitmapFont, for backwards compatibility.
     * 
     * @method Phaser.LoaderParser.bitmapFont
-    * @param {Phaser.Game} game - A reference to the current game.
     * @param {object} xml - XML data you want to parse.
-    * @param {string} cacheKey - The key of the texture this font uses in the cache.
+    * @param {PIXI.BaseTexture} baseTexture - The BaseTexture this font uses.
     * @param {number} [xSpacing=0] - Additional horizontal spacing between the characters.
     * @param {number} [ySpacing=0] - Additional vertical spacing between the characters.
+    * @return {object} The parsed Bitmap Font data.
     */
-    bitmapFont: function (game, xml, cacheKey, xSpacing, ySpacing) {
-        this.xmlBitmapFont(game, xml, cacheKey, xSpacing, ySpacing);
+    bitmapFont: function (xml, baseTexture, xSpacing, ySpacing) {
+
+        return this.xmlBitmapFont(xml, baseTexture, xSpacing, ySpacing);
+
     },
 
     /**
     * Parse a Bitmap Font from an XML file.
     *
     * @method Phaser.LoaderParser.xmlBitmapFont
-    * @param {Phaser.Game} game - A reference to the current game.
     * @param {object} xml - XML data you want to parse.
-    * @param {string} cacheKey - The key of the texture this font uses in the cache.
+    * @param {PIXI.BaseTexture} baseTexture - The BaseTexture this font uses.
     * @param {number} [xSpacing=0] - Additional horizontal spacing between the characters.
     * @param {number} [ySpacing=0] - Additional vertical spacing between the characters.
+    * @return {object} The parsed Bitmap Font data.
     */
-    xmlBitmapFont: function (game, xml, cacheKey, xSpacing, ySpacing) {
+    xmlBitmapFont: function (xml, baseTexture, xSpacing, ySpacing) {
+
         var data = {};
         var info = xml.getElementsByTagName('info')[0];
         var common = xml.getElementsByTagName('common')[0];
@@ -74,20 +77,22 @@ Phaser.LoaderParser = {
             data.chars[second].kerning[first] = amount;
         }
 
-        this.finalizeBitmapFont(cacheKey, data);
+        return this.finalizeBitmapFont(baseTexture, data);
+
     },
 
     /**
     * Parse a Bitmap Font from a JSON file.
     *
     * @method Phaser.LoaderParser.jsonBitmapFont
-    * @param {Phaser.Game} game - A reference to the current game.
     * @param {object} json - JSON data you want to parse.
-    * @param {string} cacheKey - The key of the texture this font uses in the cache.
+    * @param {PIXI.BaseTexture} baseTexture - The BaseTexture this font uses.
     * @param {number} [xSpacing=0] - Additional horizontal spacing between the characters.
     * @param {number} [ySpacing=0] - Additional vertical spacing between the characters.
+    * @return {object} The parsed Bitmap Font data.
     */
-    jsonBitmapFont: function (game, json, cacheKey, xSpacing, ySpacing) {
+    jsonBitmapFont: function (json, baseTexture, xSpacing, ySpacing) {
+
         var data = {
             font: json.font.info._font,
             size: parseInt(json.font.info._size, 10),
@@ -96,7 +101,9 @@ Phaser.LoaderParser = {
         };
 
         json.font.chars["char"].forEach(
+
             function parseChar(letter) {
+
                 var charCode = parseInt(letter._id, 10);
 
                 data.chars[charCode] = {
@@ -110,15 +117,21 @@ Phaser.LoaderParser = {
                     kerning: {}
                 };
             }
+
         );
 
         json.font.kernings.kerning.forEach(
+
             function parseKerning(kerning) {
+
                 data.chars[kerning._second].kerning[kerning._first] = parseInt(kerning._amount, 10);
+
             }
+
         );
 
-        this.finalizeBitmapFont(cacheKey, data);
+        return this.finalizeBitmapFont(baseTexture, data);
+
     },
 
     /**
@@ -126,22 +139,25 @@ Phaser.LoaderParser = {
     *
     * @method Phaser.LoaderParser.finalizeBitmapFont
     * @private
-    * @param {string} cacheKey - The key of the texture this font uses in the cache.
+    * @param {PIXI.BaseTexture} baseTexture - The BaseTexture this font uses.
     * @param {object} bitmapFontData - Pre-parsed bitmap font data.
-   */
-    finalizeBitmapFont: function (cacheKey, bitmapFontData) {
-        Object.keys(bitmapFontData.chars).forEach(
-            function addTexture(charCode) {
-                var letter = bitmapFontData.chars[charCode];
-                var textureRect = new PIXI.Rectangle(
-                    letter.x, letter.y,
-                    letter.width, letter.height
-                );
+    * @return {object} The parsed Bitmap Font data.
+    */
+    finalizeBitmapFont: function (baseTexture, bitmapFontData) {
 
-                letter.texture = new PIXI.Texture(PIXI.BaseTextureCache[cacheKey], textureRect);
+        Object.keys(bitmapFontData.chars).forEach(
+
+            function addTexture(charCode) {
+
+                var letter = bitmapFontData.chars[charCode];
+
+                letter.texture = new PIXI.Texture(baseTexture, new Phaser.Rectangle(letter.x, letter.y, letter.width, letter.height));
+
             }
+
         );
 
-        PIXI.BitmapText.fonts[cacheKey] = bitmapFontData;
+        return bitmapFontData;
+
     }
 };
