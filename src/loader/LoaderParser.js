@@ -94,7 +94,7 @@ Phaser.LoaderParser = {
     jsonBitmapFont: function (json, baseTexture, xSpacing, ySpacing) {
 
         var data = {
-            font: json.font.info._font,
+            font: json.font.info._face,
             size: parseInt(json.font.info._size, 10),
             lineHeight: parseInt(json.font.common._lineHeight, 10) + ySpacing,
             chars: {}
@@ -120,15 +120,19 @@ Phaser.LoaderParser = {
 
         );
 
-        json.font.kernings.kerning.forEach(
+        if (json.font.kernings && json.font.kernings.kerning) {
 
-            function parseKerning(kerning) {
+            json.font.kernings.kerning.forEach(
 
-                data.chars[kerning._second].kerning[kerning._first] = parseInt(kerning._amount, 10);
+                function parseKerning(kerning) {
 
-            }
+                    data.chars[kerning._second].kerning[kerning._first] = parseInt(kerning._amount, 10);
 
-        );
+                }
+
+            );
+
+        }
 
         return this.finalizeBitmapFont(baseTexture, data);
 
