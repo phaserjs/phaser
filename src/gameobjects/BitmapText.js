@@ -24,7 +24,8 @@
 * Glyph Designer (OS X, commercial): http://www.71squared.com/en/glyphdesigner
 * Littera (Web-based, free): http://kvazars.com/littera/
 *
-* For most use cases it is recommended to use XML. If you wish to use JSON, the formatting should be equal to the result of running a valid XML file through the popular X2JS library.
+* For most use cases it is recommended to use XML. If you wish to use JSON, the formatting should be equal to the result of
+* converting a valid XML file through the popular X2JS library. An online tool for conversion can be found here: http://codebeautify.org/xmltojson
 *
 * @class Phaser.BitmapText
 * @constructor
