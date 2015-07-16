@@ -62,10 +62,7 @@ Phaser.Cache = function (game) {
         tilemap: {},
         binary: {},
         bitmapData: {},
-        bitmapFont: {
-            image: {},
-            data: {}
-        },
+        bitmapFont: {},
         shader: {},
         renderTexture: {}
     };
@@ -325,7 +322,7 @@ Phaser.Cache.prototype = {
             decoded = true;
         }
 
-        this._cache.sounds[key] = {
+        this._cache.sound[key] = {
             url: url,
             data: data,
             isDecoding: false,
@@ -335,7 +332,7 @@ Phaser.Cache.prototype = {
             locked: this.game.sound.touchLocked
         };
 
-        this._resolveURL(url, this._cache.sounds[key]);
+        this._resolveURL(url, this._cache.sound[key]);
 
     },
 
