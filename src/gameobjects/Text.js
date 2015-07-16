@@ -13,43 +13,35 @@
 * See {@link http://www.jordanm.co.uk/tinytype this compatibility table} for the available default fonts across mobile browsers.
 *
 * @class Phaser.Text
-* @extends PIXI.Text
-* @extends Phaser.Component.Core
-* @extends Phaser.Component.Angle
-* @extends Phaser.Component.AutoCull
-* @extends Phaser.Component.Bounds
-* @extends Phaser.Component.BringToTop
-* @extends Phaser.Component.Destroy
-* @extends Phaser.Component.FixedToCamera
-* @extends Phaser.Component.InputEnabled
-* @extends Phaser.Component.InWorld
-* @extends Phaser.Component.LifeSpan
-* @extends Phaser.Component.Overlap
-* @extends Phaser.Component.PhysicsBody
-* @extends Phaser.Component.Reset
-* @extends Phaser.Component.Smoothed
+* @extends Phaser.Sprite
 * @constructor
 * @param {Phaser.Game} game - Current game instance.
 * @param {number} x - X position of the new text object.
 * @param {number} y - Y position of the new text object.
 * @param {string} text - The actual text that will be written.
-* @param {object} style - The style object containing style attributes like font, font size, etc.
+* @param {object} [style] - The style properties to be set on the Text.
+* @param {string} [style.font='bold 20pt Arial'] - The style and size of the font.
+* @param {string} [style.fontStyle=(from font)] - The style of the font (eg. 'italic'): overrides the value in `style.font`.
+* @param {string} [style.fontVariant=(from font)] - The variant of the font (eg. 'small-caps'): overrides the value in `style.font`.
+* @param {string} [style.fontWeight=(from font)] - The weight of the font (eg. 'bold'): overrides the value in `style.font`.
+* @param {string|number} [style.fontSize=(from font)] - The size of the font (eg. 32 or '32px'): overrides the value in `style.font`.
+* @param {string} [style.backgroundColor=null] - A canvas fillstyle that will be used as the background for the whole Text object. Set to `null` to disable.
+* @param {string} [style.fill='black'] - A canvas fillstyle that will be used on the text eg 'red', '#00FF00'.
+* @param {string} [style.align='left'] - Horizontal alignment of each line in multiline text. Can be: 'left', 'center' or 'right'. Does not affect single lines of text (see `textBounds` and `boundsAlignH` for that).
+* @param {string} [style.boundsAlignH='left'] - Horizontal alignment of the text within the `textBounds`. Can be: 'left', 'center' or 'right'.
+* @param {string} [style.boundsAlignV='top'] - Vertical alignment of the text within the `textBounds`. Can be: 'top', 'middle' or 'bottom'.
+* @param {string} [style.stroke='black'] - A canvas stroke style that will be used on the text stroke eg 'blue', '#FCFF00'.
+* @param {number} [style.strokeThickness=0] - A number that represents the thickness of the stroke. Default is 0 (no stroke).
+* @param {boolean} [style.wordWrap=false] - Indicates if word wrap should be used.
+* @param {number} [style.wordWrapWidth=100] - The width in pixels at which text will wrap.
+* @param {number} [style.tab=0] - The size (in pixels) of a tab stop, for when text includes tab characters. 0 disables.
 */
 Phaser.Text = function (game, x, y, text, style) {
 
     x = x || 0;
     y = y || 0;
-    text = text || ' ';
+    text = text.toString() || '';
     style = style || {};
-
-    if (text.length === 0)
-    {
-        text = ' ';
-    }
-    else
-    {
-        text = text.toString();
-    }
 
     /**
     * @property {number} type - The const type of this object.
@@ -69,6 +61,48 @@ Phaser.Text = function (game, x, y, text, style) {
     * @property {Phaser.Point} padding
     */
     this.padding = new Phaser.Point();
+
+    /**
+    * The textBounds property allows you to specify a rectangular region upon which text alignment is based.
+    * See `Text.setTextBounds` for more details.
+    * @property {Phaser.Rectangle} textBounds
+    * @readOnly
+    */
+    this.textBounds = null;
+
+    /**
+     * @property {HTMLCanvasElement} canvas - The canvas element that the text is rendered.
+     */
+    this.canvas = document.createElement('canvas');
+
+    /**
+     * @property {HTMLCanvasElement} context - The context of the canvas element that the text is rendered to.
+     */
+    this.context = this.canvas.getContext('2d');
+
+    /**
+    * @property {array} colors - An array of the color values as specified by {@link Phaser.Text#addColor addColor}.
+    */
+    this.colors = [];
+
+    /**
+    * @property {array} strokeColors - An array of the stroke color values as specified by {@link Phaser.Text#addStrokeColor addStrokeColor}.
+    */
+    this.strokeColors = [];
+
+    /**
+    * Should the linePositionX and Y values be automatically rounded before rendering the Text?
+    * You may wish to enable this if you want to remove the effect of sub-pixel aliasing from text.
+    * @property {boolean} autoRound
+    * @default
+    */
+    this.autoRound = false;
+
+    /**
+     * @property {number} _res - Internal canvas resolution var.
+     * @private
+     */
+    this._res = game.renderer.resolution;
 
     /**
     * @property {string} _text - Internal cache var.
@@ -95,46 +129,30 @@ Phaser.Text = function (game, x, y, text, style) {
     this._charCount = 0;
 
     /**
-    * @property {array} colors - An array of the color values as specified by {@link Phaser.Text#addColor addColor}.
+    * @property {number} _width - Internal width var.
+    * @private
     */
-    this.colors = [];
+    this._width = 0;
+
+    /**
+    * @property {number} _height - Internal height var.
+    * @private
+    */
+    this._height = 0;
+
+    Phaser.Sprite.call(this, game, x, y, PIXI.Texture.fromCanvas(this.canvas));
 
     this.setStyle(style);
 
-    PIXI.Text.call(this, text, this.style);
-
-    Phaser.Component.Core.init.call(this, game, x, y, '', null);
-
-    if (text !== ' ')
+    if (text !== '')
     {
         this.updateText();
     }
 
 };
 
-Phaser.Text.prototype = Object.create(PIXI.Text.prototype);
+Phaser.Text.prototype = Object.create(Phaser.Sprite.prototype);
 Phaser.Text.prototype.constructor = Phaser.Text;
-
-Phaser.Component.Core.install.call(Phaser.Text.prototype, [
-    'Angle',
-    'AutoCull',
-    'Bounds',
-    'BringToTop',
-    'Destroy',
-    'FixedToCamera',
-    'InputEnabled',
-    'InWorld',
-    'LifeSpan',
-    'Overlap',
-    'PhysicsBody',
-    'Reset',
-    'Smoothed'
-]);
-
-Phaser.Text.prototype.preUpdatePhysics = Phaser.Component.PhysicsBody.preUpdate;
-Phaser.Text.prototype.preUpdateLifeSpan = Phaser.Component.LifeSpan.preUpdate;
-Phaser.Text.prototype.preUpdateInWorld = Phaser.Component.InWorld.preUpdate;
-Phaser.Text.prototype.preUpdateCore = Phaser.Component.Core.preUpdate;
 
 /**
 * Automatically called by World.preUpdate.
@@ -198,19 +216,28 @@ Phaser.Text.prototype.destroy = function (destroyChildren) {
 * @param {number} [y=0] - The shadowOffsetY value in pixels. This is how far offset vertically the shadow effect will be.
 * @param {string} [color='rgba(0,0,0,1)'] - The color of the shadow, as given in CSS rgba or hex format. Set the alpha component to 0 to disable the shadow.
 * @param {number} [blur=0] - The shadowBlur value. Make the shadow softer by applying a Gaussian blur to it. A number from 0 (no blur) up to approx. 10 (depending on scene).
+* @param {boolean} [shadowStroke=true] - Apply the drop shadow to the Text stroke (if set).
+* @param {boolean} [shadowFill=true] - Apply the drop shadow to the Text fill (if set).
+* @return {Phaser.Text} This Text instance.
 */
-Phaser.Text.prototype.setShadow = function (x, y, color, blur) {
+Phaser.Text.prototype.setShadow = function (x, y, color, blur, shadowStroke, shadowFill) {
 
     if (typeof x === 'undefined') { x = 0; }
     if (typeof y === 'undefined') { y = 0; }
     if (typeof color === 'undefined') { color = 'rgba(0, 0, 0, 1)'; }
     if (typeof blur === 'undefined') { blur = 0; }
+    if (typeof shadowStroke === 'undefined') { shadowStroke = true; }
+    if (typeof shadowFill === 'undefined') { shadowFill = true; }
 
     this.style.shadowOffsetX = x;
     this.style.shadowOffsetY = y;
     this.style.shadowColor = color;
     this.style.shadowBlur = blur;
+    this.style.shadowStroke = shadowStroke;
+    this.style.shadowFill = shadowFill;
     this.dirty = true;
+
+    return this;
 
 };
 
@@ -226,11 +253,15 @@ Phaser.Text.prototype.setShadow = function (x, y, color, blur) {
 * @param {string|number} [style.fontSize=(from font)] - The size of the font (eg. 32 or '32px'): overrides the value in `style.font`.
 * @param {string} [style.backgroundColor=null] - A canvas fillstyle that will be used as the background for the whole Text object. Set to `null` to disable.
 * @param {string} [style.fill='black'] - A canvas fillstyle that will be used on the text eg 'red', '#00FF00'.
-* @param {string} [style.align='left'] - Alignment for multiline text ('left', 'center' or 'right'), does not affect single line text.
+* @param {string} [style.align='left'] - Horizontal alignment of each line in multiline text. Can be: 'left', 'center' or 'right'. Does not affect single lines of text (see `textBounds` and `boundsAlignH` for that).
+* @param {string} [style.boundsAlignH='left'] - Horizontal alignment of the text within the `textBounds`. Can be: 'left', 'center' or 'right'.
+* @param {string} [style.boundsAlignV='top'] - Vertical alignment of the text within the `textBounds`. Can be: 'top', 'middle' or 'bottom'.
 * @param {string} [style.stroke='black'] - A canvas stroke style that will be used on the text stroke eg 'blue', '#FCFF00'.
 * @param {number} [style.strokeThickness=0] - A number that represents the thickness of the stroke. Default is 0 (no stroke).
 * @param {boolean} [style.wordWrap=false] - Indicates if word wrap should be used.
 * @param {number} [style.wordWrapWidth=100] - The width in pixels at which text will wrap.
+* @param {number|array} [style.tabs=0] - The size (in pixels) of the tabs, for when text includes tab characters. 0 disables. Can be an array of varying tab sizes, one per tab stop.
+* @return {Phaser.Text} This Text instance.
 */
 Phaser.Text.prototype.setStyle = function (style) {
 
@@ -239,6 +270,8 @@ Phaser.Text.prototype.setStyle = function (style) {
     style.backgroundColor = style.backgroundColor || null;
     style.fill = style.fill || 'black';
     style.align = style.align || 'left';
+    style.boundsAlignH = style.boundsAlignH || 'left';
+    style.boundsAlignV = style.boundsAlignV || 'top';
     style.stroke = style.stroke || 'black'; //provide a default, see: https://github.com/GoodBoyDigital/pixi.js/issues/136
     style.strokeThickness = style.strokeThickness || 0;
     style.wordWrap = style.wordWrap || false;
@@ -247,6 +280,7 @@ Phaser.Text.prototype.setStyle = function (style) {
     style.shadowOffsetY = style.shadowOffsetY || 0;
     style.shadowColor = style.shadowColor || 'rgba(0,0,0,0)';
     style.shadowBlur = style.shadowBlur || 0;
+    style.tabs = style.tabs || 0;
 
     var components = this.fontToComponents(style.font);
 
@@ -281,6 +315,8 @@ Phaser.Text.prototype.setStyle = function (style) {
     this.style = style;
     this.dirty = true;
 
+    return this;
+
 };
 
 /**
@@ -291,7 +327,7 @@ Phaser.Text.prototype.setStyle = function (style) {
 */
 Phaser.Text.prototype.updateText = function () {
 
-    this.texture.baseTexture.resolution = this.resolution;
+    this.texture.baseTexture.resolution = this._res;
 
     this.context.font = this.style.font;
 
@@ -302,26 +338,67 @@ Phaser.Text.prototype.updateText = function () {
         outputText = this.runWordWrap(this.text);
     }
 
-    //split text into lines
+    //  Split text into lines
     var lines = outputText.split(/(?:\r\n|\r|\n)/);
 
-    //calculate text width
+    //  Calculate text width
+    var tabs = this.style.tabs;
     var lineWidths = [];
     var maxLineWidth = 0;
     var fontProperties = this.determineFontProperties(this.style.font);
 
     for (var i = 0; i < lines.length; i++)
     {
-        var lineWidth = this.context.measureText(lines[i]).width + this.padding.x;
-        lineWidths[i] = lineWidth;
-        maxLineWidth = Math.max(maxLineWidth, lineWidth);
+        if (tabs === 0)
+        {
+            //  Simple layout (no tabs)
+            var lineWidth = this.context.measureText(lines[i]).width + this.style.strokeThickness + this.padding.x;
+        }
+        else
+        {
+            //  Complex layout (tabs)
+            var line = lines[i].split(/(?:\t)/);
+            var lineWidth = this.padding.x + this.style.strokeThickness;
+
+            if (Array.isArray(tabs))
+            {
+                var tab = 0;
+
+                for (var c = 0; c < line.length; c++)
+                {
+                    var section = Math.ceil(this.context.measureText(line[c]).width);
+
+                    if (c > 0)
+                    {
+                        tab += tabs[c - 1];
+                    }
+
+                    lineWidth = tab + section;
+                }
+            }
+            else
+            {
+                for (var c = 0; c < line.length; c++)
+                {
+                    //  How far to the next tab?
+                    lineWidth += Math.ceil(this.context.measureText(line[c]).width);
+
+                    var diff = this.game.math.snapToCeil(lineWidth, tabs) - lineWidth;
+
+                    lineWidth += diff;
+                }
+            }
+        }
+
+        lineWidths[i] = Math.ceil(lineWidth);
+        maxLineWidth = Math.max(maxLineWidth, lineWidths[i]);
     }
 
     var width = maxLineWidth + this.style.strokeThickness;
 
-    this.canvas.width = width * this.resolution;
+    this.canvas.width = width * this._res;
     
-    //calculate text height
+    //  Calculate text height
     var lineHeight = fontProperties.fontSize + this.style.strokeThickness + this.padding.y;
     var height = lineHeight * lines.length;
     var lineSpacing = this._lineSpacing;
@@ -338,9 +415,9 @@ Phaser.Text.prototype.updateText = function () {
         height += diff;
     }
 
-    this.canvas.height = height * this.resolution;
+    this.canvas.height = height * this._res;
 
-    this.context.scale(this.resolution, this.resolution);
+    this.context.scale(this._res, this._res);
 
     if (navigator.isCocoonJS)
     {
@@ -357,10 +434,7 @@ Phaser.Text.prototype.updateText = function () {
     this.context.font = this.style.font;
     this.context.strokeStyle = this.style.stroke;
     this.context.textBaseline = 'alphabetic';
-    this.context.shadowOffsetX = this.style.shadowOffsetX;
-    this.context.shadowOffsetY = this.style.shadowOffsetY;
-    this.context.shadowColor = this.style.shadowColor;
-    this.context.shadowBlur = this.style.shadowBlur;
+
     this.context.lineWidth = this.style.strokeThickness;
     this.context.lineCap = 'round';
     this.context.lineJoin = 'round';
@@ -373,6 +447,8 @@ Phaser.Text.prototype.updateText = function () {
     //  Draw text line by line
     for (i = 0; i < lines.length; i++)
     {
+        //  Split the line by
+
         linePositionX = this.style.strokeThickness / 2;
         linePositionY = (this.style.strokeThickness / 2 + i * lineHeight) + fontProperties.ascent;
 
@@ -390,7 +466,13 @@ Phaser.Text.prototype.updateText = function () {
             linePositionX += (maxLineWidth - lineWidths[i]) / 2;
         }
 
-        if (this.colors.length > 0)
+        if (this.autoRound)
+        {
+            linePositionX = Math.round(linePositionX);
+            linePositionY = Math.round(linePositionY);
+        }
+
+        if (this.colors.length > 0 || this.strokeColors.length > 0)
         {
             this.updateLine(lines[i], linePositionX, linePositionY);
         }
@@ -398,15 +480,32 @@ Phaser.Text.prototype.updateText = function () {
         {
             if (this.style.stroke && this.style.strokeThickness)
             {
-                this.context.strokeText(lines[i], linePositionX, linePositionY);
+                this.updateShadow(this.style.shadowStroke);
+
+                if (tabs === 0)
+                {
+                    this.context.strokeText(lines[i], linePositionX, linePositionY);
+                }
+                else
+                {
+                    this.renderTabLine(lines[i], linePositionX, linePositionY, false);
+                }
             }
 
             if (this.style.fill)
             {
-                this.context.fillText(lines[i], linePositionX, linePositionY);
+                this.updateShadow(this.style.shadowFill);
+
+                if (tabs === 0)
+                {
+                    this.context.fillText(lines[i], linePositionX, linePositionY);
+                }
+                else
+                {
+                    this.renderTabLine(lines[i], linePositionX, linePositionY, true);
+                }
             }
         }
-
     }
 
     this.updateTexture();
@@ -414,7 +513,97 @@ Phaser.Text.prototype.updateText = function () {
 };
 
 /**
-* Updates a line of text.
+* Renders a line of text that contains tab characters if Text.tab > 0.
+* Called automatically by updateText.
+*
+* @method Phaser.Text#renderTabLine
+* @private
+* @param {string} line - The line of text to render.
+* @param {integer} x - The x position to start rendering from.
+* @param {integer} y - The y position to start rendering from.
+* @param {boolean} fill - If true uses fillText, if false uses strokeText.
+*/
+Phaser.Text.prototype.renderTabLine = function (line, x, y, fill) {
+
+    var text = line.split(/(?:\t)/);
+    var tabs = this.style.tabs;
+    var snap = 0;
+
+    if (Array.isArray(tabs))
+    {
+        var tab = 0;
+
+        for (var c = 0; c < text.length; c++)
+        {
+            if (c > 0)
+            {
+                tab += tabs[c - 1];
+            }
+
+            snap = x + tab;
+
+            if (fill)
+            {
+                this.context.fillText(text[c], snap, y);
+            }
+            else
+            {
+                this.context.strokeText(text[c], snap, y);
+            }
+        }
+    }
+    else
+    {
+        for (var c = 0; c < text.length; c++)
+        {
+            var section = Math.ceil(this.context.measureText(text[c]).width);
+
+            //  How far to the next tab?
+            snap = this.game.math.snapToCeil(x, tabs);
+
+            if (fill)
+            {
+                this.context.fillText(text[c], snap, y);
+            }
+            else
+            {
+                this.context.strokeText(text[c], snap, y);
+            }
+
+            x = snap + section;
+        }
+    }
+
+};
+
+/**
+* Sets the Shadow on the Text.context based on the Style settings, or disables it if not enabled.
+* This is called automatically by Text.updateText.
+*
+* @method Phaser.Text#updateShadow
+* @param {boolean} state - If true the shadow will be set to the Style values, otherwise it will be set to zero.
+*/
+Phaser.Text.prototype.updateShadow = function (state) {
+
+    if (state)
+    {
+        this.context.shadowOffsetX = this.style.shadowOffsetX;
+        this.context.shadowOffsetY = this.style.shadowOffsetY;
+        this.context.shadowColor = this.style.shadowColor;
+        this.context.shadowBlur = this.style.shadowBlur;
+    }
+    else
+    {
+        this.context.shadowOffsetX = 0;
+        this.context.shadowOffsetY = 0;
+        this.context.shadowColor = 0;
+        this.context.shadowBlur = 0;
+    }
+
+};
+
+/**
+* Updates a line of text, applying fill and stroke per-character colors if applicable.
 *
 * @method Phaser.Text#updateLine
 * @private
@@ -425,19 +614,25 @@ Phaser.Text.prototype.updateLine = function (line, x, y) {
     {
         var letter = line[i];
 
-        if (this.colors[this._charCount])
-        {
-            this.context.fillStyle = this.colors[this._charCount];
-            this.context.strokeStyle = this.colors[this._charCount];
-        }
-
         if (this.style.stroke && this.style.strokeThickness)
         {
+            if (this.strokeColors[this._charCount])
+            {
+                this.context.strokeStyle = this.strokeColors[this._charCount];
+            }
+
+            this.updateShadow(this.style.shadowStroke);
             this.context.strokeText(letter, x, y);
         }
 
         if (this.style.fill)
         {
+            if (this.colors[this._charCount])
+            {
+                this.context.fillStyle = this.colors[this._charCount];
+            }
+
+            this.updateShadow(this.style.shadowFill);
             this.context.fillText(letter, x, y);
         }
 
@@ -449,14 +644,18 @@ Phaser.Text.prototype.updateLine = function (line, x, y) {
 };
 
 /**
-* Clears any previously set color stops.
+* Clears any text fill or stroke colors that were set by `addColor` or `addStrokeColor`.
 *
 * @method Phaser.Text#clearColors
+* @return {Phaser.Text} This Text instance.
 */
 Phaser.Text.prototype.clearColors = function () {
 
     this.colors = [];
+    this.strokeColors = [];
     this.dirty = true;
+
+    return this;
 
 };
 
@@ -468,14 +667,45 @@ Phaser.Text.prototype.clearColors = function () {
 * Once set the color remains in use until either another color or the end of the string is encountered.
 * For example if the Text was `Photon Storm` and you did `Text.addColor('#ffff00', 6)` it would color in the word `Storm` in yellow.
 *
+* If you wish to change the stroke color see addStrokeColor instead.
+*
 * @method Phaser.Text#addColor
 * @param {string} color - A canvas fillstyle that will be used on the text eg `red`, `#00FF00`, `rgba()`.
 * @param {number} position - The index of the character in the string to start applying this color value from.
+* @return {Phaser.Text} This Text instance.
 */
 Phaser.Text.prototype.addColor = function (color, position) {
 
     this.colors[position] = color;
     this.dirty = true;
+
+    return this;
+
+};
+
+/**
+* Set specific stroke colors for certain characters within the Text.
+*
+* It works by taking a color value, which is a typical HTML string such as `#ff0000` or `rgb(255,0,0)` and a position.
+* The position value is the index of the character in the Text string to start applying this color to.
+* Once set the color remains in use until either another color or the end of the string is encountered.
+* For example if the Text was `Photon Storm` and you did `Text.addColor('#ffff00', 6)` it would color in the word `Storm` in yellow.
+*
+* This has no effect if stroke is disabled or has a thickness of 0.
+*
+* If you wish to change the text fill color see addColor instead.
+*
+* @method Phaser.Text#addStrokeColor
+* @param {string} color - A canvas fillstyle that will be used on the text stroke eg `red`, `#00FF00`, `rgba()`.
+* @param {number} position - The index of the character in the string to start applying this color value from.
+* @return {Phaser.Text} This Text instance.
+*/
+Phaser.Text.prototype.addStrokeColor = function (color, position) {
+
+    this.strokeColors[position] = color;
+    this.dirty = true;
+
+    return this;
 
 };
 
@@ -630,7 +860,387 @@ Phaser.Text.prototype.componentsToFont = function (components) {
 };
 
 /**
-* The text string to be displayed by this Text object, taking into account the style settings.
+ * The text to be displayed by this Text object.
+ * Use a \n to insert a carriage return and split the text.
+ * The text will be rendered with any style currently set.
+ *
+ * @method Phaser.Text#setText
+ * @param {string} [text] - The text to be displayed. Set to an empty string to clear text that is already present.
+ * @return {Phaser.Text} This Text instance.
+ */
+Phaser.Text.prototype.setText = function (text) {
+
+    this.text = text.toString() || '';
+    this.dirty = true;
+
+    return this;
+
+};
+
+/**
+ * Converts the given array into a tab delimited string and then updates this Text object.
+ * This is mostly used when you want to display external data using tab stops.
+ *
+ * The array can be either single or multi dimensional depending on the result you need:
+ *
+ * `[ 'a', 'b', 'c' ]` would convert in to `"a\tb\tc"`.
+ *
+ * Where as:
+ *
+ * `[
+ *      [ 'a', 'b', 'c' ],
+ *      [ 'd', 'e', 'f']
+ * ]`
+ *
+ * would convert in to: `"a\tb\tc\nd\te\tf"`
+ *
+ * @method Phaser.Text#parseList
+ * @param {array} list - The array of data to convert into a string.
+ * @return {Phaser.Text} This Text instance.
+ */
+Phaser.Text.prototype.parseList = function (list) {
+
+    if (!Array.isArray(list))
+    {
+        return this;
+    }
+    else
+    {
+        var s = "";
+
+        for (var i = 0; i < list.length; i++)
+        {
+            if (Array.isArray(list[i]))
+            {
+                s += list[i].join("\t");
+
+                if (i < list.length - 1)
+                {
+                    s += "\n";
+                }
+            }
+            else
+            {
+                s += list[i];
+
+                if (i < list.length - 1)
+                {
+                    s += "\t";
+                }
+            }
+        }
+    }
+
+    this.text = s;
+    this.dirty = true;
+
+    return this;
+
+};
+
+/**
+ * The Text Bounds is a rectangular region that you control the dimensions of into which the Text object itself is positioned,
+ * regardless of the number of lines in the text, the font size or any other attribute.
+ *
+ * Alignment is controlled via the properties `boundsAlignH` and `boundsAlignV` within the Text.style object, or can be directly
+ * set through the setters `Text.boundsAlignH` and `Text.boundsAlignV`. Bounds alignment is independent of text alignment.
+ *
+ * For example: If your game is 800x600 in size and you set the text bounds to be 0,0,800,600 then by setting boundsAlignH to
+ * 'center' and boundsAlignV to 'bottom' the text will render in the center and at the bottom of your game window, regardless of
+ * how many lines of text there may be. Even if you adjust the text content or change the style it will remain at the bottom center
+ * of the text bounds.
+ *
+ * This is especially powerful when you need to align text against specific coordinates in your game, but the actual text dimensions
+ * may vary based on font (say for multi-lingual games).
+ *
+ * If `Text.wordWrapWidth` is greater than the width of the text bounds it is clamped to match the bounds width.
+ *
+ * Call this method with no arguments given to reset an existing textBounds.
+ * 
+ * It works by calculating the final position based on the Text.canvas size, which is modified as the text is updated. Some fonts
+ * have additional padding around them which you can mitigate by tweaking the Text.padding property. It then adjusts the `pivot`
+ * property based on the given bounds and canvas size. This means if you need to set the pivot property directly in your game then
+ * you either cannot use `setTextBounds` or you must place the Text object inside another DisplayObject on which you set the pivot.
+ *
+ * @method Phaser.Text#setTextBounds
+ * @param {number} [x] - The x coordinate of the Text Bounds region.
+ * @param {number} [y] - The y coordinate of the Text Bounds region.
+ * @param {number} [width] - The width of the Text Bounds region.
+ * @param {number} [height] - The height of the Text Bounds region.
+ * @return {Phaser.Text} This Text instance.
+ */
+Phaser.Text.prototype.setTextBounds = function (x, y, width, height) {
+
+    if (typeof x === 'undefined')
+    {
+        this.textBounds = null;
+    }
+    else
+    {
+        if (!this.textBounds)
+        {
+            this.textBounds = new Phaser.Rectangle(x, y, width, height);
+        }
+        else
+        {
+            this.textBounds.setTo(x, y, width, height);
+        }
+
+        if (this.style.wordWrapWidth > width)
+        {
+            this.style.wordWrapWidth = width;
+        }
+    }
+
+    this.updateTexture();
+    
+    return this;
+
+};
+
+/**
+ * Updates the texture based on the canvas dimensions.
+ *
+ * @method Phaser.Text#updateTexture
+ * @private
+ */
+Phaser.Text.prototype.updateTexture = function () {
+
+    var base = this.texture.baseTexture;
+    var crop = this.texture.crop;
+    var frame = this.texture.frame;
+
+    var w = this.canvas.width;
+    var h = this.canvas.height;
+
+    base.width = w;
+    base.height = h;
+
+    crop.width = w;
+    crop.height = h;
+
+    frame.width = w;
+    frame.height = h;
+
+    this.texture.width = w;
+    this.texture.height = h;
+
+    this._width = w;
+    this._height = h;
+
+    if (this.textBounds)
+    {
+        var x = this.textBounds.x;
+        var y = this.textBounds.y;
+
+        //  Align the canvas based on the bounds
+        if (this.style.boundsAlignH === 'right')
+        {
+            x = this.textBounds.width - this.canvas.width;
+        }
+        else if (this.style.boundsAlignH === 'center')
+        {
+            x = this.textBounds.halfWidth - (this.canvas.width / 2);
+        }
+
+        if (this.style.boundsAlignV === 'bottom')
+        {
+            y = this.textBounds.height - this.canvas.height;
+        }
+        else if (this.style.boundsAlignV === 'middle')
+        {
+            y = this.textBounds.halfHeight - (this.canvas.height / 2);
+        }
+
+        this.pivot.x = -x;
+        this.pivot.y = -y;
+    }
+
+    this.texture.baseTexture.dirty();
+
+};
+
+/**
+* Renders the object using the WebGL renderer
+*
+* @method Phaser.Text#_renderWebGL
+* @private
+* @param {RenderSession} renderSession - The Render Session to render the Text on.
+*/
+Phaser.Text.prototype._renderWebGL = function (renderSession) {
+
+    if (this.dirty)
+    {
+        this.updateText();
+        this.dirty = false;
+    }
+
+    PIXI.Sprite.prototype._renderWebGL.call(this, renderSession);
+
+};
+
+/**
+* Renders the object using the Canvas renderer.
+*
+* @method Phaser.Text#_renderCanvas
+* @private
+* @param {RenderSession} renderSession - The Render Session to render the Text on.
+*/
+Phaser.Text.prototype._renderCanvas = function (renderSession) {
+
+    if (this.dirty)
+    {
+        this.updateText();
+        this.dirty = false;
+    }
+     
+    PIXI.Sprite.prototype._renderCanvas.call(this, renderSession);
+
+};
+
+/**
+* Calculates the ascent, descent and fontSize of a given font style.
+*
+* @method Phaser.Text#determineFontProperties
+* @private
+* @param {object} fontStyle 
+*/
+Phaser.Text.prototype.determineFontProperties = function (fontStyle) {
+
+    var properties = Phaser.Text.fontPropertiesCache[fontStyle];
+
+    if (!properties)
+    {
+        properties = {};
+        
+        var canvas = Phaser.Text.fontPropertiesCanvas;
+        var context = Phaser.Text.fontPropertiesContext;
+
+        context.font = fontStyle;
+
+        var width = Math.ceil(context.measureText('|MÉq').width);
+        var baseline = Math.ceil(context.measureText('|MÉq').width);
+        var height = 2 * baseline;
+
+        baseline = baseline * 1.4 | 0;
+
+        canvas.width = width;
+        canvas.height = height;
+
+        context.fillStyle = '#f00';
+        context.fillRect(0, 0, width, height);
+
+        context.font = fontStyle;
+
+        context.textBaseline = 'alphabetic';
+        context.fillStyle = '#000';
+        context.fillText('|MÉq', 0, baseline);
+
+        if (!context.getImageData(0, 0, width, height))
+        {
+            properties.ascent = baseline;
+            properties.descent = baseline + 6;
+            properties.fontSize = properties.ascent + properties.descent;
+
+            Phaser.Text.fontPropertiesCache[fontStyle] = properties;
+
+            return properties;
+        }
+
+        var imagedata = context.getImageData(0, 0, width, height).data;
+        var pixels = imagedata.length;
+        var line = width * 4;
+
+        var i, j;
+
+        var idx = 0;
+        var stop = false;
+
+        // ascent. scan from top to bottom until we find a non red pixel
+        for (i = 0; i < baseline; i++)
+        {
+            for (j = 0; j < line; j += 4)
+            {
+                if (imagedata[idx + j] !== 255)
+                {
+                    stop = true;
+                    break;
+                }
+            }
+
+            if (!stop)
+            {
+                idx += line;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        properties.ascent = baseline - i;
+
+        idx = pixels - line;
+        stop = false;
+
+        // descent. scan from bottom to top until we find a non red pixel
+        for (i = height; i > baseline; i--)
+        {
+            for (j = 0; j < line; j += 4)
+            {
+                if (imagedata[idx + j] !== 255)
+                {
+                    stop = true;
+                    break;
+                }
+            }
+
+            if (!stop)
+            {
+                idx -= line;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        properties.descent = i - baseline;
+        //TODO might need a tweak. kind of a temp fix!
+        properties.descent += 6;
+        properties.fontSize = properties.ascent + properties.descent;
+
+        Phaser.Text.fontPropertiesCache[fontStyle] = properties;
+    }
+
+    return properties;
+
+};
+
+/**
+* Returns the bounds of the Text as a rectangle.
+* The bounds calculation takes the worldTransform into account.
+*
+* @method Phaser.Text#getBounds
+* @param {Phaser.Matrix} matrix - The transformation matrix of the Text.
+* @return {Phaser.Rectangle} The framing rectangle
+*/
+Phaser.Text.prototype.getBounds = function (matrix) {
+
+    if (this.dirty)
+    {
+        this.updateText();
+        this.dirty = false;
+    }
+
+    return PIXI.Sprite.prototype.getBounds.call(this, matrix);
+
+};
+
+/**
+* The text to be displayed by this Text object.
+* Use a \n to insert a carriage return and split the text.
+* The text will be rendered with any style currently set.
 *
 * @name Phaser.Text#text
 * @property {string} text
@@ -645,7 +1255,7 @@ Object.defineProperty(Phaser.Text.prototype, 'text', {
 
         if (value !== this._text)
         {
-            this._text = value.toString() || ' ';
+            this._text = value.toString() || '';
             this.dirty = true;
 
             if (this.parent)
@@ -847,8 +1457,11 @@ Object.defineProperty(Phaser.Text.prototype, 'fill', {
 });
 
 /**
+* Controls the horizontal alignment for multiline text.
+* Can be: 'left', 'center' or 'right'.
+* Does not affect single lines of text. For that please see `setTextBounds`.
 * @name Phaser.Text#align
-* @property {string} align - Alignment for multiline text ('left', 'center' or 'right'), does not affect single line text.
+* @property {string} align
 */
 Object.defineProperty(Phaser.Text.prototype, 'align', {
 
@@ -861,6 +1474,100 @@ Object.defineProperty(Phaser.Text.prototype, 'align', {
         if (value !== this.style.align)
         {
             this.style.align = value;
+            this.dirty = true;
+        }
+
+    }
+
+});
+
+/**
+* The resolution of the canvas the text is rendered to.
+* This defaults to match the resolution of the renderer, but can be changed on a per Text object basis.
+* @name Phaser.Text#resolution
+* @property {integer} resolution
+*/
+Object.defineProperty(Phaser.Text.prototype, 'resolution', {
+
+    get: function() {
+        return this._res;
+    },
+
+    set: function(value) {
+
+        if (value !== this._res)
+        {
+            this._res = value;
+            this.dirty = true;
+        }
+
+    }
+
+});
+
+/**
+* x
+* 
+* @name Phaser.Text#tab
+* @property {integer|array} tabs
+*/
+Object.defineProperty(Phaser.Text.prototype, 'tabs', {
+
+    get: function() {
+        return this.style.tabs;
+    },
+
+    set: function(value) {
+
+        if (value !== this.style.tabs)
+        {
+            this.style.tabs = value;
+            this.dirty = true;
+        }
+
+    }
+
+});
+
+/**
+* Horizontal alignment of the text within the `textBounds`. Can be: 'left', 'center' or 'right'.
+* @name Phaser.Text#boundsAlignH
+* @property {string} boundsAlignH
+*/
+Object.defineProperty(Phaser.Text.prototype, 'boundsAlignH', {
+
+    get: function() {
+        return this.style.boundsAlignH;
+    },
+
+    set: function(value) {
+
+        if (value !== this.style.boundsAlignH)
+        {
+            this.style.boundsAlignH = value;
+            this.dirty = true;
+        }
+
+    }
+
+});
+
+/**
+* Vertical alignment of the text within the `textBounds`. Can be: 'top', 'middle' or 'bottom'.
+* @name Phaser.Text#boundsAlignV
+* @property {string} boundsAlignV
+*/
+Object.defineProperty(Phaser.Text.prototype, 'boundsAlignV', {
+
+    get: function() {
+        return this.style.boundsAlignV;
+    },
+
+    set: function(value) {
+
+        if (value !== this.style.boundsAlignV)
+        {
+            this.style.boundsAlignV = value;
             this.dirty = true;
         }
 
@@ -1070,3 +1777,102 @@ Object.defineProperty(Phaser.Text.prototype, 'shadowBlur', {
     }
 
 });
+
+/**
+* @name Phaser.Text#shadowStroke
+* @property {boolean} shadowStroke - Sets if the drop shadow is applied to the Text stroke.
+*/
+Object.defineProperty(Phaser.Text.prototype, 'shadowStroke', {
+
+    get: function() {
+        return this.style.shadowStroke;
+    },
+
+    set: function(value) {
+
+        if (value !== this.style.shadowStroke)
+        {
+            this.style.shadowStroke = value;
+            this.dirty = true;
+        }
+
+    }
+
+});
+
+/**
+* @name Phaser.Text#shadowFill
+* @property {boolean} shadowFill - Sets if the drop shadow is applied to the Text fill.
+*/
+Object.defineProperty(Phaser.Text.prototype, 'shadowFill', {
+
+    get: function() {
+        return this.style.shadowFill;
+    },
+
+    set: function(value) {
+
+        if (value !== this.style.shadowFill)
+        {
+            this.style.shadowFill = value;
+            this.dirty = true;
+        }
+
+    }
+
+});
+
+/**
+* @name Phaser.Text#width
+* @property {number} width - The width of the Text. Setting this will modify the scale to achieve the value requested.
+*/
+Object.defineProperty(Phaser.Text.prototype, 'width', {
+
+    get: function() {
+
+        if (this.dirty)
+        {
+            this.updateText();
+            this.dirty = false;
+        }
+
+        return this.scale.x * this.texture.frame.width;
+    },
+
+    set: function(value) {
+
+        this.scale.x = value / this.texture.frame.width;
+        this._width = value;
+    }
+
+});
+
+/**
+* @name Phaser.Text#height
+* @property {number} height - The height of the Text. Setting this will modify the scale to achieve the value requested.
+*/
+Object.defineProperty(Phaser.Text.prototype, 'height', {
+
+    get: function() {
+
+        if (this.dirty)
+        {
+            this.updateText();
+            this.dirty = false;
+        }
+
+        return this.scale.y * this.texture.frame.height;
+    },
+
+    set: function(value) {
+
+        this.scale.y = value / this.texture.frame.height;
+        this._height = value;
+    }
+
+});
+
+Phaser.Text.fontPropertiesCache = {};
+
+Phaser.Text.fontPropertiesCanvas = document.createElement('canvas');
+Phaser.Text.fontPropertiesContext = Phaser.Text.fontPropertiesCanvas.getContext('2d');

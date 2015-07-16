@@ -1,5 +1,6 @@
 [
     "src/core/Camera.js",
+    "src/core/Create.js",
     "src/core/State.js",
     "src/core/StateManager.js",
     "src/core/Signal.js",

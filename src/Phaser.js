@@ -10,7 +10,7 @@
 */
 var Phaser = Phaser || {
 
-	VERSION: '2.3.0',
+	VERSION: '2.4.0-dev',
 	GAMES: [],
 
     AUTO: 0,
@@ -51,9 +51,12 @@ var Phaser = Phaser || {
     MATRIX: 24,
     POINT: 25,
     ROUNDEDRECTANGLE: 26,
+    CREATURE: 27,
+    VIDEO: 28,
 
     /**
-     * Various blend modes supported by pixi. IMPORTANT - The WebGL renderer only supports the NORMAL, ADD, MULTIPLY and SCREEN blend modes.
+     * Various blend modes supported by Pixi.
+     * IMPORTANT: The WebGL renderer only supports the NORMAL, ADD, MULTIPLY and SCREEN blend modes.
      * 
      * @property {Object} blendModes
      * @property {Number} blendModes.NORMAL
@@ -96,7 +99,7 @@ var Phaser = Phaser || {
     },
 
     /**
-     * The scale modes that are supported by pixi.
+     * The scale modes that are supported by Pixi.
      *
      * The DEFAULT scale mode affects the default scaling mode of future operations.
      * It can be re-assigned to either LINEAR or NEAREST, depending upon suitability.

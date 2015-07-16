@@ -187,8 +187,8 @@ Phaser.Tileset.prototype = {
     *
     * @method Phaser.Tileset#setSpacing
     * @public
-    * @param {integer} tileMargin - The margin around the tiles in the sheet (in pixels).
-    * @param {integer} tileSpacing - The spacing between the tiles in the sheet (in pixels).
+    * @param {integer} [margin=0] - The margin around the tiles in the sheet (in pixels).
+    * @param {integer} [spacing=0] - The spacing between the tiles in the sheet (in pixels).
     */
     setSpacing: function (margin, spacing) {
 

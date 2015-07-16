@@ -57,6 +57,11 @@ Phaser.Physics = function (game, config) {
     */
     this.chipmunk = null;
 
+    /**
+    * @property {Phaser.Physics.Matter} matter - The MatterJS Physics system (coming soon).
+    */
+    this.matter = null;
+
     this.parseConfig();
 
 };
@@ -91,6 +96,12 @@ Phaser.Physics.BOX2D = 3;
 */
 Phaser.Physics.CHIPMUNK = 4;
 
+/**
+* @const
+* @type {number}
+*/
+Phaser.Physics.MATTERJS = 5;
+
 Phaser.Physics.prototype = {
 
     /**
@@ -104,7 +115,6 @@ Phaser.Physics.prototype = {
         {
             //  If Arcade isn't specified, we create it automatically if we can
             this.arcade = new Phaser.Physics.Arcade(this.game);
-            this.game.time.deltaCap = 0.2;
         }
 
         if (this.config.hasOwnProperty('ninja') && this.config['ninja'] === true && Phaser.Physics.hasOwnProperty('Ninja'))
@@ -120,6 +130,11 @@ Phaser.Physics.prototype = {
         if (this.config.hasOwnProperty('box2d') && this.config['box2d'] === true && Phaser.Physics.hasOwnProperty('BOX2D'))
         {
             this.box2d = new Phaser.Physics.BOX2D(this.game, this.config);
+        }
+
+        if (this.config.hasOwnProperty('matter') && this.config['matter'] === true && Phaser.Physics.hasOwnProperty('Matter'))
+        {
+            this.matter = new Phaser.Physics.Matter(this.game, this.config);
         }
 
     },
@@ -176,6 +191,17 @@ Phaser.Physics.prototype = {
                 this.box2d.reset();
             }
         }
+        else if (system === Phaser.Physics.MATTERJS)
+        {
+            if (this.matter === null)
+            {
+                this.matter = new Phaser.Physics.Matter(this.game, this.config);
+            }
+            else
+            {
+                this.matter.reset();
+            }
+        }
 
     },
 
@@ -188,6 +214,7 @@ Phaser.Physics.prototype = {
     * Phaser.Physics.P2JS - A full-body advanced physics system supporting multiple object shapes, polygon loading, contact materials, springs and constraints.
     * Phaser.Physics.NINJA - A port of Metanet Softwares N+ physics system. Advanced AABB and Circle vs. Tile collision.
     * Phaser.Physics.BOX2D - A port of https://code.google.com/p/box2d-html5
+    * Phaser.Physics.MATTER - A full-body and light-weight advanced physics system (still in development)
     * Phaser.Physics.CHIPMUNK is still in development.
     *
     * If you require more control over what type of body is created, for example to create a Ninja Physics Circle instead of the default AABB, then see the
@@ -219,6 +246,10 @@ Phaser.Physics.prototype = {
         {
             this.box2d.enable(object);
         }
+        else if (system === Phaser.Physics.MATTERJS && this.matter)
+        {
+            this.matter.enable(object);
+        }
 
     },
 
@@ -242,6 +273,11 @@ Phaser.Physics.prototype = {
             this.box2d.preUpdate();
         }
 
+        if (this.matter)
+        {
+            this.matter.preUpdate();
+        }
+
     },
 
     /**
@@ -262,6 +298,11 @@ Phaser.Physics.prototype = {
         if (this.box2d)
         {
             this.box2d.update();
+        }
+
+        if (this.matter)
+        {
+            this.matter.update();
         }
 
     },
@@ -294,6 +335,11 @@ Phaser.Physics.prototype = {
             this.box2d.setBoundsToWorld();
         }
 
+        if (this.matter)
+        {
+            this.matter.setBoundsToWorld();
+        }
+
     },
 
     /**
@@ -312,6 +358,11 @@ Phaser.Physics.prototype = {
         if (this.box2d)
         {
             this.box2d.clear();
+        }
+
+        if (this.matter)
+        {
+            this.matter.clear();
         }
 
     },
@@ -334,6 +385,11 @@ Phaser.Physics.prototype = {
             this.box2d.reset();
         }
 
+        if (this.matter)
+        {
+            this.matter.reset();
+        }
+
     },
 
     /**
@@ -353,10 +409,16 @@ Phaser.Physics.prototype = {
             this.box2d.destroy();
         }
 
+        if (this.matter)
+        {
+            this.matter.destroy();
+        }
+
         this.arcade = null;
         this.ninja = null;
         this.p2 = null;
         this.box2d = null;
+        this.matter = null;
 
     }
 

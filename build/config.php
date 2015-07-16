@@ -20,13 +20,20 @@
             'arcade' => true,
             'p2' => true,
             'ninja' => false,
-            'box2d' => false
+            'box2d' => false,
+            'creature' => false,
+            'video' => true,
         );
     }
 
     if ($modules['p2'])
     {
         echo "    <script src=\"$path/src/physics/p2/p2.js\"></script>";
+    }
+
+    if ($modules['creature'])
+    {
+        echo "    <script src=\"$path/src/animation/creature/gl-matrix.js\"></script>";
     }
 
     if ($modules['box2d'] && isset($box2dpath))
@@ -41,8 +48,6 @@
     <script src="$path/src/pixi/display/DisplayObjectContainer.js"></script>
     <script src="$path/src/pixi/display/Sprite.js"></script>
     <script src="$path/src/pixi/display/SpriteBatch.js"></script>
-    <script src="$path/src/pixi/text/Text.js"></script>
-    <script src="$path/src/pixi/text/BitmapText.js"></script>
     <script src="$path/src/pixi/display/Stage.js"></script>
 
     <script src="$path/src/pixi/utils/Utils.js"></script>
@@ -97,6 +102,7 @@
     <script src="$path/src/geom/RoundedRectangle.js"></script>
 
     <script src="$path/src/core/Camera.js"></script>
+    <script src="$path/src/core/Create.js"></script>
     <script src="$path/src/core/State.js"></script>
     <script src="$path/src/core/StateManager.js"></script>
     <script src="$path/src/core/Signal.js"></script>
@@ -235,6 +241,15 @@ EOL;
 EOL;
     }
 
+    if ($modules['video'])
+    {
+        echo <<<EOL
+    <script src="$path/src/gameobjects/Video.js"></script>
+
+
+EOL;
+    }
+
     echo <<<EOL
     <script src="$path/src/system/Device.js"></script>
     <script src="$path/src/system/DOM.js"></script>
@@ -287,6 +302,17 @@ EOL;
 
 
 EOL;
+
+    if ($modules['creature'])
+    {
+        echo <<<EOL
+    <script src="$path/src/animation/creature/CreatureMeshBone.js"></script>
+    <script src="$path/src/animation/creature/CreaturePixiJSRenderer.js"></script>
+    <script src="$path/src/gameobjects/Creature.js"></script>
+
+
+EOL;
+    }
 
     if ($modules['sound'])
     {
@@ -341,6 +367,7 @@ EOL;
     if ($modules['tilemap'])
     {
         echo <<<EOL
+    <script src="$path/src/tilemap/ImageCollection.js"></script>
     <script src="$path/src/tilemap/Tile.js"></script>
     <script src="$path/src/tilemap/Tilemap.js"></script>
     <script src="$path/src/tilemap/TilemapLayer.js"></script>

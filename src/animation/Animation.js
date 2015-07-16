@@ -131,7 +131,9 @@ Phaser.Animation = function (game, parent, name, frameData, frames, frameRate, l
     this.onStart = new Phaser.Signal();
 
     /**
-    * @property {Phaser.Signal|null} onUpdate - This event is dispatched when the Animation changes frame. By default this event is disabled due to its intensive nature. Enable it with: `Animation.enableUpdate = true`.
+    * This event is dispatched when the Animation changes frame. 
+    * By default this event is disabled due to its intensive nature. Enable it with: `Animation.enableUpdate = true`.
+    * @property {Phaser.Signal|null} onUpdate
     * @default
     */
     this.onUpdate = null;
@@ -192,7 +194,7 @@ Phaser.Animation.prototype = {
         this._timeNextFrame = this.game.time.time + this.delay;
 
         this._frameIndex = 0;
-        this.updateCurrentFrame(false);
+        this.updateCurrentFrame(false, true);
 
         this._parent.events.onAnimationStart$dispatch(this._parent, this);
 
@@ -390,10 +392,28 @@ Phaser.Animation.prototype = {
                     // Update current state before event callback
                     this._frameIndex %= this._frames.length;
                     this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
+
+                    //  Instead of calling updateCurrentFrame we do it here instead
+                    if (this.currentFrame)
+                    {
+                        this._parent.setFrame(this.currentFrame);
+                    }
+
                     this.loopCount++;
                     this._parent.events.onAnimationLoop$dispatch(this._parent, this);
                     this.onLoop.dispatch(this._parent, this);
-                    return this.updateCurrentFrame(true);
+
+                    if (this.onUpdate)
+                    {
+                        this.onUpdate.dispatch(this, this.currentFrame);
+
+                        // False if the animation was destroyed from within a callback
+                        return !!this._frameData;
+                    }
+                    else
+                    {
+                        return true;
+                    }
                 }
                 else
                 {
@@ -418,33 +438,35 @@ Phaser.Animation.prototype = {
     * Returns true if the current frame update was 'successful', false otherwise.
     *
     * @method Phaser.Animation#updateCurrentFrame
-    * @param {bool} signalUpdate - If true th onUpdate signal will be triggered.
     * @private
+    * @param {boolean} signalUpdate - If true the `Animation.onUpdate` signal will be dispatched.
+    * @param {boolean} fromPlay - Was this call made from the playing of a new animation?
+    * @return {boolean} True if the current frame was updated, otherwise false.
     */
-    updateCurrentFrame: function (signalUpdate) {
+    updateCurrentFrame: function (signalUpdate, fromPlay) {
+
+        if (typeof fromPlay === 'undefined') { fromPlay = false; }
 
         if (!this._frameData)
         {
             // The animation is already destroyed, probably from a callback
             return false;
         }
+            
+        //  Previous index
+        var idx = this.currentFrame.index;
 
         this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
 
-        if (this.currentFrame)
+        if (this.currentFrame && (fromPlay || (!fromPlay && idx !== this.currentFrame.index)))
         {
             this._parent.setFrame(this.currentFrame);
-
-            if (this._parent.__tilePattern)
-            {
-                this._parent.__tilePattern = false;
-                this._parent.tilingTexture = false;
-            }
         }
 
         if (this.onUpdate && signalUpdate)
         {
             this.onUpdate.dispatch(this, this.currentFrame);
+
             // False if the animation was destroyed from within a callback
             return !!this._frameData;
         }

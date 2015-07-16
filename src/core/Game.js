@@ -243,7 +243,7 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this.context = null;
 
     /**
-    * @property {Phaser.Utils.Debug} debug - A set of useful debug utilitie.
+    * @property {Phaser.Utils.Debug} debug - A set of useful debug utilities.
     */
     this.debug = null;
 
@@ -251,6 +251,11 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     * @property {Phaser.Particles} particles - The Particle Manager.
     */
     this.particles = null;
+
+    /**
+    * @property {Phaser.Create} create - The Asset Generator.
+    */
+    this.create = null;
 
     /**
     * If `false` Phaser will automatically render the display list every update. If `true` the render loop will be skipped.
@@ -542,6 +547,7 @@ Phaser.Game.prototype = {
         this.sound = new Phaser.SoundManager(this);
         this.physics = new Phaser.Physics(this, this.physicsConfig);
         this.particles = new Phaser.Particles(this);
+        this.create = new Phaser.Create(this);
         this.plugins = new Phaser.PluginManager(this);
         this.net = new Phaser.Net(this);
 
@@ -1007,6 +1013,12 @@ Phaser.Game.prototype = {
             this.time.gamePaused();
             this.sound.setMute();
             this.onPause.dispatch(event);
+
+            //  Avoids Cordova iOS crash event: https://github.com/photonstorm/phaser/issues/1800
+            if (this.device.cordova && this.device.iOS)
+            {
+                this.lockRender = true;
+            }
         }
 
     },
@@ -1028,6 +1040,12 @@ Phaser.Game.prototype = {
             this.input.reset();
             this.sound.unsetMute();
             this.onResume.dispatch(event);
+
+            //  Avoids Cordova iOS crash event: https://github.com/photonstorm/phaser/issues/1800
+            if (this.device.cordova && this.device.iOS)
+            {
+                this.lockRender = false;
+            }
         }
 
     },
@@ -1115,5 +1133,9 @@ Object.defineProperty(Phaser.Game.prototype, "paused", {
 });
 
 /**
-* "Deleted code is debugged code." - Jeff Sickel
+ * 
+ * "Deleted code is debugged code." - Jeff Sickel
+ *
+ * ヽ(〃＾▽＾〃)ﾉ
+ * 
 */

@@ -90,6 +90,12 @@ Phaser.Component.Core.init = function (game, x, y, key, frame) {
 
 Phaser.Component.Core.preUpdate = function () {
 
+    if (this.pendingDestroy)
+    {
+        this.destroy();
+        return;
+    }
+
     this.previousPosition.set(this.world.x, this.world.y);
     this.previousRotation = this.rotation;
 
@@ -104,6 +110,11 @@ Phaser.Component.Core.preUpdate = function () {
     if (this.visible)
     {
         this.renderOrderID = this.game.stage.currentRenderOrderID++;
+    }
+
+    if (this.texture)
+    {
+        this.texture.requiresReTint = false;
     }
 
     if (this.animations)
@@ -174,11 +185,11 @@ Phaser.Component.Core.prototype = {
 
     /**
     * The key of the image or texture used by this Game Object during rendering.
-    * If it is a string it's the string used to retrieve the texture from the Phaser.Cache.
-    * It can also be an instance of a RenderTexture, BitmapData or PIXI.Texture.
+    * If it is a string it's the string used to retrieve the texture from the Phaser Image Cache.
+    * It can also be an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
     * If a Game Object is created without a key it is automatically assigned the key `__default` which is a 32x32 transparent PNG stored within the Cache.
-    * If a Game Object is given a key which doesn't exist in the Cache it is re-assigned the key `__missing` which is a 32x32 PNG of a green box with a line through it.
-    *  @property {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key
+    * If a Game Object is given a key which doesn't exist in the Image Cache it is re-assigned the key `__missing` which is a 32x32 PNG of a green box with a line through it.
+    * @property {string|Phaser.RenderTexture|Phaser.BitmapData|Phaser.Video|PIXI.Texture} key
     */
     key: '',
 
@@ -226,6 +237,17 @@ Phaser.Component.Core.prototype = {
     * @readOnly
     */
     fresh: true,
+
+    /**
+    * A Game Object is that is pendingDestroy is flagged to have its destroy method called on the next logic update.
+    * You can set it directly to allow you to flag an object to be destroyed on its next update.
+    * 
+    * This is extremely useful if you wish to destroy an object from within one of its own callbacks 
+    * such as with Buttons or other Input events.
+    * 
+    * @property {boolean} pendingDestroy
+    */
+    pendingDestroy: false,
 
     /**
     * @property {Phaser.Rectangle} _bounds - Internal cache var.
@@ -306,7 +328,7 @@ Phaser.Component.Core.prototype = {
     */
     postUpdate: function() {
 
-        if (this.key instanceof Phaser.BitmapData)
+        if (this.customRender)
         {
             this.key.render();
         }

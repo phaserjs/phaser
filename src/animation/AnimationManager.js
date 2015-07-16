@@ -25,7 +25,10 @@ Phaser.AnimationManager = function (sprite) {
     this.game = sprite.game;
 
     /**
-    * @property {Phaser.Frame} currentFrame - The currently displayed Frame of animation, if any.
+    * The currently displayed Frame of animation, if any.
+    * This property is only set once an Animation starts playing. Until that point it remains set as `null`.
+    * 
+    * @property {Phaser.Frame} currentFrame
     * @default
     */
     this.currentFrame = null;
@@ -196,23 +199,20 @@ Phaser.AnimationManager.prototype = {
             }
         }
 
-        this._outputFrames.length = 0;
+        this._outputFrames = [];
 
         this._frameData.getFrameIndexes(frames, useNumericIndex, this._outputFrames);
 
         this._anims[name] = new Phaser.Animation(this.game, this.sprite, name, this._frameData, this._outputFrames, frameRate, loop);
 
         this.currentAnim = this._anims[name];
-        this.currentFrame = this.currentAnim.currentFrame;
 
-        // this.sprite.setFrame(this.currentFrame);
+        //  This shouldn't be set until the Animation is played, surely?
+        // this.currentFrame = this.currentAnim.currentFrame;
 
-        //  CHECK WE STILL NEED THIS - PRETTY SURE IT DOESN'T ACTUALLY DO ANYTHING!
-        if (this.sprite.__tilePattern)
+        if (this.sprite.tilingTexture)
         {
-            // this.__tilePattern = false;
-            this.sprite.__tilePattern = false;
-            this.tilingTexture = false;
+            this.sprite.refreshTexture = true;
         }
 
         return this._anims[name];
@@ -277,6 +277,7 @@ Phaser.AnimationManager.prototype = {
                     this.currentAnim.paused = false;
                     return this.currentAnim.play(frameRate, loop, killOnComplete);
                 }
+
                 return this.currentAnim;
             }
             else
@@ -409,13 +410,8 @@ Phaser.AnimationManager.prototype = {
     */
     refreshFrame: function () {
 
+        //  TODO
         this.sprite.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
-
-        if (this.sprite.__tilePattern)
-        {
-            this.__tilePattern = false;
-            this.tilingTexture = false;
-        }
 
     },
 
@@ -539,12 +535,6 @@ Object.defineProperty(Phaser.AnimationManager.prototype, 'frame', {
             if (this.currentFrame)
             {
                 this.sprite.setFrame(this.currentFrame);
-
-                if (this.sprite.__tilePattern)
-                {
-                    this.__tilePattern = false;
-                    this.tilingTexture = false;
-                }
             }
         }
 
@@ -569,7 +559,7 @@ Object.defineProperty(Phaser.AnimationManager.prototype, 'frameName', {
 
     set: function (value) {
 
-        if (typeof value === 'string' && this._frameData.getFrameByName(value) !== null)
+        if (typeof value === 'string' && this._frameData && this._frameData.getFrameByName(value) !== null)
         {
             this.currentFrame = this._frameData.getFrameByName(value);
 
@@ -578,12 +568,6 @@ Object.defineProperty(Phaser.AnimationManager.prototype, 'frameName', {
                 this._frameIndex = this.currentFrame.index;
 
                 this.sprite.setFrame(this.currentFrame);
-
-                if (this.sprite.__tilePattern)
-                {
-                    this.__tilePattern = false;
-                    this.tilingTexture = false;
-                }
             }
         }
         else

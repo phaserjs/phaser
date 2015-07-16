@@ -103,6 +103,30 @@ Phaser.Line.prototype = {
     },
 
     /**
+    * Rotates the line by the amount specified in `angle`.
+    * 
+    * Rotation takes place from the center of the line.
+    * 
+    * If you wish to rotate from either end see Line.start.rotate or Line.end.rotate.
+    * 
+    * @method Phaser.Line#rotate
+    * @param {number} angle - The angle in radians (unless asDegrees is true) to rotate the line by.
+    * @param {boolean} [asDegrees=false] - Is the given angle in radians (false) or degrees (true)?
+    * @return {Phaser.Line} This line object
+    */
+    rotate: function (angle, asDegrees) {
+
+        var x = this.start.x;
+        var y = this.start.y;
+
+        this.start.rotate(this.end.x, this.end.y, angle, asDegrees, this.length);
+        this.end.rotate(x, y, angle, asDegrees, this.length);
+
+        return this;
+
+    },
+
+    /**
     * Checks for intersection between this line and another Line.
     * If asSegment is true it will check for segment intersection. If asSegment is false it will check for line intersection.
     * Returns the intersection segment of AB and EF as a Point, or null if there is no intersection.
@@ -163,6 +187,27 @@ Phaser.Line.prototype = {
         var yMax = Math.max(this.start.y, this.end.y);
 
         return (this.pointOnLine(x, y) && (x >= xMin && x <= xMax) && (y >= yMin && y <= yMax));
+
+    },
+
+    /**
+    * Picks a random point from anywhere on the Line segment and returns it.
+    * 
+    * @method Phaser.Line#random
+    * @param {Phaser.Point|object} [out] - A Phaser.Point, or any object with public x/y properties, that the values will be set in.
+    *     If no object is provided a new Phaser.Point object will be created. In high performance areas avoid this by re-using an object.
+    * @return {Phaser.Point} An object containing the random point in its `x` and `y` properties.
+    */
+    random: function (out) {
+
+        if (typeof out === 'undefined') { out = new Phaser.Point(); }
+
+        var t = Math.random();
+
+        out.x = this.start.x + t * (this.end.x - this.start.x);
+        out.y = this.start.y + t * (this.end.y - this.start.y);
+
+        return out;
 
     },
 
@@ -262,7 +307,7 @@ Object.defineProperty(Phaser.Line.prototype, "length", {
 
 /**
 * @name Phaser.Line#angle
-* @property {number} angle - Gets the angle of the line.
+* @property {number} angle - Gets the angle of the line in radians.
 * @readonly
 */
 Object.defineProperty(Phaser.Line.prototype, "angle", {

@@ -6,7 +6,7 @@
 
 /**
 * The PhysicsBody component manages the Game Objects physics body and physics enabling.
-* It also overrides the x and y properties, ensuring that any manual adjustment of them is reflect in the physics body itself.
+* It also overrides the x and y properties, ensuring that any manual adjustment of them is reflected in the physics body itself.
 *
 * @class
 */

@@ -258,8 +258,8 @@ Phaser.Physics.Ninja.prototype = {
     *
     * @method Phaser.Physics.Ninja#convertTilemap
     * @param {Phaser.Tilemap} map - The Tilemap to get the map data from.
-    * @param {number|string|Phaser.TilemapLayer} [layer] - The layer to operate on. If not given will default to map.currentLayer.
-    * @param {object} [slopeMap] - The tilemap index to Tile ID map.
+    * @param {number|string|Phaser.TilemapLayer} layer - The layer to operate on. If not given will default to map.currentLayer.
+    * @param {object} slopeMap - The tilemap index to Tile ID map.
     * @return {array} An array of the Phaser.Physics.Ninja.Tile objects that were created.
     */
     convertTilemap: function (map, layer, slopeMap) {

@@ -164,6 +164,14 @@ Phaser.State.prototype = {
     },
 
     /**
+    * The preRender method is called after all Game Objects have been updated, but before any rendering takes place.
+    *
+    * @method Phaser.State#preRender
+    */
+    preRender: function () {
+    },
+
+    /**
     * Nearly all display objects in Phaser render automatically, you don't need to tell them to render.
     * However the render method is called AFTER the game renderer and plugins have rendered, so you're able to do any
     * final post-processing style effects here. Note that this happens before plugins postRender takes place.
@@ -187,6 +195,14 @@ Phaser.State.prototype = {
     * @method Phaser.State#paused
     */
     paused: function () {
+    },
+
+    /**
+    * This method will be called when the core game loop resumes from a paused state.
+    *
+    * @method Phaser.State#resumed
+    */
+    resumed: function () {
     },
 
     /**

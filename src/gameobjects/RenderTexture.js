@@ -41,9 +41,10 @@ Phaser.RenderTexture = function (game, width, height, key, scaleMode, resolution
     this.type = Phaser.RENDERTEXTURE;
 
     /**
-    * @property {PIXI.Matrix} matrix - The matrix that is applied when display objects are rendered to this RenderTexture.
+    * @property {PIXI.Matrix} _tempMatrix - The matrix that is applied when display objects are rendered to this RenderTexture.
+    * @private
     */
-    this.matrix = new PIXI.Matrix();
+    this._tempMatrix = new PIXI.Matrix();
 
     PIXI.RenderTexture.call(this, width, height, this.game.renderer, scaleMode, resolution);
 
@@ -55,50 +56,98 @@ Phaser.RenderTexture.prototype = Object.create(PIXI.RenderTexture.prototype);
 Phaser.RenderTexture.prototype.constructor = Phaser.RenderTexture;
 
 /**
-* This function will draw the display object to the texture.
+* This function will draw the display object to the RenderTexture at the given coordinates.
+*
+* When the display object is drawn it takes into account scale and rotation.
+*
+* If you don't want those then use RenderTexture.renderRawXY instead.
 *
 * @method Phaser.RenderTexture.prototype.renderXY
-* @param {Phaser.Sprite|Phaser.Image|Phaser.Text|Phaser.BitmapText|Phaser.Group} displayObject  The display object to render to this texture.
+* @param {Phaser.Sprite|Phaser.Image|Phaser.Text|Phaser.BitmapText|Phaser.Group} displayObject - The display object to render to this texture.
 * @param {number} x - The x position to render the object at.
 * @param {number} y - The y position to render the object at.
-* @param {boolean} clear - If true the texture will be cleared before the display object is drawn.
+* @param {boolean} [clear=false] - If true the texture will be cleared before the display object is drawn.
 */
 Phaser.RenderTexture.prototype.renderXY = function (displayObject, x, y, clear) {
 
-    this.matrix.tx = x;
-    this.matrix.ty = y;
+    displayObject.updateTransform();
+
+    this._tempMatrix.copyFrom(displayObject.worldTransform);
+    this._tempMatrix.tx = x;
+    this._tempMatrix.ty = y;
 
     if (this.renderer.type === PIXI.WEBGL_RENDERER)
     {
-        this.renderWebGL(displayObject, this.matrix, clear);
+        this.renderWebGL(displayObject, this._tempMatrix, clear);
     }
     else
     {
-        this.renderCanvas(displayObject, this.matrix, clear);
+        this.renderCanvas(displayObject, this._tempMatrix, clear);
     }
 
 };
 
 /**
-* This function will draw the display object to the texture.
+* This function will draw the display object to the RenderTexture at the given coordinates.
 *
-* @method Phaser.RenderTexture.prototype.render
-* @param {Phaser.Sprite|Phaser.Image|Phaser.Text|Phaser.BitmapText|Phaser.Group} displayObject  The display object to render to this texture.
-* @param {Phaser.Point} position - A Point object containing the position to render the display object at.
-* @param {boolean} clear - If true the texture will be cleared before the display object is drawn.
+* When the display object is drawn it doesn't take into account scale, rotation or translation.
+*
+* If you need those then use RenderTexture.renderXY instead.
+*
+* @method Phaser.RenderTexture.prototype.renderRawXY
+* @param {Phaser.Sprite|Phaser.Image|Phaser.Text|Phaser.BitmapText|Phaser.Group} displayObject - The display object to render to this texture.
+* @param {number} x - The x position to render the object at.
+* @param {number} y - The y position to render the object at.
+* @param {boolean} [clear=false] - If true the texture will be cleared before the display object is drawn.
 */
-Phaser.RenderTexture.prototype.render = function (displayObject, position, clear) {
+Phaser.RenderTexture.prototype.renderRawXY = function (displayObject, x, y, clear) {
 
-    this.matrix.tx = position.x;
-    this.matrix.ty = position.y;
+    this._tempMatrix.identity().translate(x, y);
 
     if (this.renderer.type === PIXI.WEBGL_RENDERER)
     {
-        this.renderWebGL(displayObject, this.matrix, clear);
+        this.renderWebGL(displayObject, this._tempMatrix, clear);
     }
     else
     {
-        this.renderCanvas(displayObject, this.matrix, clear);
+        this.renderCanvas(displayObject, this._tempMatrix, clear);
+    }
+
+};
+
+/**
+* This function will draw the display object to the RenderTexture.
+*
+* In versions of Phaser prior to 2.4.0 the second parameter was a Phaser.Point object. 
+* This is now a Matrix allowing you much more control over how the Display Object is rendered.
+* If you need to replicate the earlier behavior please use Phaser.RenderTexture.renderXY instead.
+*
+* If you wish for the displayObject to be rendered taking its current scale, rotation and translation into account then either
+* pass `null`, leave it undefined or pass `displayObject.worldTransform` as the matrix value.
+*
+* @method Phaser.RenderTexture.prototype.render
+* @param {Phaser.Sprite|Phaser.Image|Phaser.Text|Phaser.BitmapText|Phaser.Group} displayObject - The display object to render to this texture.
+* @param {Phaser.Matrix} [matrix] - Optional matrix to apply to the display object before rendering. If null or undefined it will use the worldTransform matrix of the given display object.
+* @param {boolean} [clear=false] - If true the texture will be cleared before the display object is drawn.
+*/
+Phaser.RenderTexture.prototype.render = function (displayObject, matrix, clear) {
+
+    if (typeof matrix === 'undefined' || matrix === null)
+    {
+        this._tempMatrix.copyFrom(displayObject.worldTransform);
+    }
+    else
+    {
+        this._tempMatrix.copyFrom(matrix);
+    }
+
+    if (this.renderer.type === PIXI.WEBGL_RENDERER)
+    {
+        this.renderWebGL(displayObject, this._tempMatrix, clear);
+    }
+    else
+    {
+        this.renderCanvas(displayObject, this._tempMatrix, clear);
     }
 
 };
