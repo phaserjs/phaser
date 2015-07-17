@@ -65,21 +65,21 @@ Phaser.Pointer = function (game, id) {
 
     /**
     * True if the left mouse button is being held down, or in PointerEvent based devices it represents a Touch contact or Pen contact.
-    * @property {boolean} leftButton
+    * @property {Phaser.DeviceButton} leftButton
     * @default
     */
     this.leftButton = false;
 
     /**
     * True if the middle mouse button is being held down.
-    * @property {boolean} middleButton
+    * @property {Phaser.DeviceButton} middleButton
     * @default
     */
     this.middleButton = false;
 
     /**
     * True if the right mouse button is being held down, or in PointerEvent based devices it represents a Pen contact with a barrel button.
-    * @property {boolean} rightButton
+    * @property {Phaser.DeviceButton} rightButton
     * @default
     */
     this.rightButton = false;
@@ -87,7 +87,7 @@ Phaser.Pointer = function (game, id) {
     /**
     * True if the X1 (back) mouse button is being held down. On Linux (GTK) this is unsupported.
     * On Windows if advanced pointer software (such as IntelliPoint) is installed this doesn't register.
-    * @property {boolean} backButton
+    * @property {Phaser.DeviceButton} backButton
     * @default
     */
     this.backButton = false;
@@ -95,14 +95,14 @@ Phaser.Pointer = function (game, id) {
     /**
     * True if the X2 (forward) mouse button is being held down. On Linux (GTK) this is unsupported.
     * On Windows if advanced pointer software (such as IntelliPoint) is installed this doesn't register.
-    * @property {boolean} forwardButton
+    * @property {Phaser.DeviceButton} forwardButton
     * @default
     */
     this.forwardButton = false;
 
     /**
     * True if the Eraser pen button is being held down. Only works on PointerEvent supported devices.
-    * @property {boolean} eraserButton
+    * @property {Phaser.DeviceButton} eraserButton
     * @default
     */
     this.eraserButton = false;
@@ -437,6 +437,8 @@ Phaser.Pointer.prototype = {
     */
     start: function (event) {
 
+        console.log('Pointer.start');
+
         if (event['pointerId'])
         {
             this.pointerId = event.pointerId;
@@ -445,7 +447,15 @@ Phaser.Pointer.prototype = {
         this.identifier = event.identifier;
         this.target = event.target;
 
-        this.updateButtons(event);
+        if (this.isMouse)
+        {
+            this.updateButtons(event);
+        }
+        else
+        {
+            this.isDown = true;
+            this.isUp = false;
+        }
 
         this._history = [];
         this.active = true;
@@ -765,7 +775,15 @@ Phaser.Pointer.prototype = {
             return;
         }
 
-        this.updateButtons(event);
+        if (this.isMouse)
+        {
+            this.updateButtons(event);
+        }
+        else
+        {
+            this.isDown = false;
+            this.isUp = true;
+        }
 
         this.timeUp = this.game.time.time;
 
