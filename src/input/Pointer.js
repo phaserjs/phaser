@@ -64,48 +64,80 @@ Phaser.Pointer = function (game, id) {
     this.button = null;
 
     /**
-    * True if the left mouse button is being held down, or in PointerEvent based devices it represents a Touch contact or Pen contact.
+    * If this Pointer is a Mouse or Pen / Stylus then you can access its left button directly through this property.
+    * 
+    * The DeviceButton has its own properties such as `isDown`, `duration` and methods like `justReleased` for more fine-grained
+    * button control.
+    * 
     * @property {Phaser.DeviceButton} leftButton
     * @default
     */
-    this.leftButton = false;
+    this.leftButton = null;
 
     /**
-    * True if the middle mouse button is being held down.
+    * If this Pointer is a Mouse or Pen / Stylus then you can access its middle button directly through this property.
+    * 
+    * The DeviceButton has its own properties such as `isDown`, `duration` and methods like `justReleased` for more fine-grained
+    * button control.
+    *
+    * Please see the DeviceButton docs for details on browser button limitations.
+    * 
     * @property {Phaser.DeviceButton} middleButton
     * @default
     */
-    this.middleButton = false;
+    this.middleButton = null;
 
     /**
-    * True if the right mouse button is being held down, or in PointerEvent based devices it represents a Pen contact with a barrel button.
+    * If this Pointer is a Mouse or Pen / Stylus then you can access its right button directly through this property.
+    * 
+    * The DeviceButton has its own properties such as `isDown`, `duration` and methods like `justReleased` for more fine-grained
+    * button control.
+    *
+    * Please see the DeviceButton docs for details on browser button limitations.
+    * 
     * @property {Phaser.DeviceButton} rightButton
     * @default
     */
-    this.rightButton = false;
+    this.rightButton = null;
 
     /**
-    * True if the X1 (back) mouse button is being held down. On Linux (GTK) this is unsupported.
-    * On Windows if advanced pointer software (such as IntelliPoint) is installed this doesn't register.
+    * If this Pointer is a Mouse or Pen / Stylus then you can access its X1 (back) button directly through this property.
+    * 
+    * The DeviceButton has its own properties such as `isDown`, `duration` and methods like `justReleased` for more fine-grained
+    * button control.
+    *
+    * Please see the DeviceButton docs for details on browser button limitations.
+    * 
     * @property {Phaser.DeviceButton} backButton
     * @default
     */
-    this.backButton = false;
+    this.backButton = null;
 
     /**
-    * True if the X2 (forward) mouse button is being held down. On Linux (GTK) this is unsupported.
-    * On Windows if advanced pointer software (such as IntelliPoint) is installed this doesn't register.
+    * If this Pointer is a Mouse or Pen / Stylus then you can access its X2 (forward) button directly through this property.
+    * 
+    * The DeviceButton has its own properties such as `isDown`, `duration` and methods like `justReleased` for more fine-grained
+    * button control.
+    *
+    * Please see the DeviceButton docs for details on browser button limitations.
+    * 
     * @property {Phaser.DeviceButton} forwardButton
     * @default
     */
-    this.forwardButton = false;
+    this.forwardButton = null;
 
     /**
-    * True if the Eraser pen button is being held down. Only works on PointerEvent supported devices.
+    * If this Pointer is a Pen / Stylus then you can access its eraser button directly through this property.
+    * 
+    * The DeviceButton has its own properties such as `isDown`, `duration` and methods like `justReleased` for more fine-grained
+    * button control.
+    *
+    * Please see the DeviceButton docs for details on browser button limitations.
+    * 
     * @property {Phaser.DeviceButton} eraserButton
     * @default
     */
-    this.eraserButton = false;
+    this.eraserButton = null;
 
     /**
     * @property {boolean} _holdSent - Local private variable to store the status of dispatching a hold event.
@@ -204,19 +236,23 @@ Phaser.Pointer = function (game, id) {
     this.y = -1;
 
     /**
-    * @property {boolean} isMouse - If the Pointer is a mouse this is true, otherwise false.
+    * @property {boolean} isMouse - If the Pointer is a mouse or pen / stylus this is true, otherwise false.
     * @default
     */
     this.isMouse = false;
 
     /**
-    * @property {boolean} isDown - If the Pointer is touching the touchscreen, or *any* mouse button is held down, isDown is set to true.
+    * If the Pointer is touching the touchscreen, or *any* mouse or pen button is held down, isDown is set to true.
+    * If you need to check a specific mouse or pen button then use the button properties, i.e. Pointer.rightButton.isDown.
+    * @property {boolean} isDown
     * @default
     */
     this.isDown = false;
 
     /**
-    * @property {boolean} isUp - If the Pointer is not touching the touchscreen, or *all* mouse buttons are up, isUp is set to true.
+    * If the Pointer is not touching the touchscreen, or *all* mouse or pen buttons are up, isUp is set to true.
+    * If you need to check a specific mouse or pen button then use the button properties, i.e. Pointer.rightButton.isUp.
+    * @property {boolean} isUp
     * @default
     */
     this.isUp = true;
@@ -294,6 +330,14 @@ Phaser.Pointer = function (game, id) {
     if (id === 0)
     {
         this.isMouse = true;
+
+        //  No point doing this for non-mice / pens
+        this.leftButton = new Phaser.DeviceButton(this, Phaser.Pointer.LEFT_BUTTON);
+        this.rightButton = new Phaser.DeviceButton(this, Phaser.Pointer.RIGHT_BUTTON);
+        this.middleButton = new Phaser.DeviceButton(this, Phaser.Pointer.MIDDLE_BUTTON);
+        this.backButton = new Phaser.DeviceButton(this, Phaser.Pointer.BACK_BUTTON);
+        this.forwardButton = new Phaser.DeviceButton(this, Phaser.Pointer.FORWARD_BUTTON);
+        this.eraserButton = new Phaser.DeviceButton(this, Phaser.Pointer.ERASER_BUTTON);
     }
 
     /**
@@ -374,15 +418,18 @@ Phaser.Pointer.prototype = {
     */
     resetButtons: function () {
 
-        this.leftButton = false;
-        this.middleButton = false;
-        this.rightButton = false;
-        this.backButton = false;
-        this.forwardButton = false;
-        this.eraserButton = false;
-
-        this.isUp = true;
         this.isDown = false;
+        this.isUp = true;
+
+        if (this.isMouse)
+        {
+            this.leftButton.reset();
+            this.middleButton.reset();
+            this.rightButton.reset();
+            this.backButton.reset();
+            this.forwardButton.reset();
+            this.eraserButton.reset();
+        }
 
     },
 
@@ -398,31 +445,33 @@ Phaser.Pointer.prototype = {
 
         this.button = event.button;
 
+        //  This is tested back to IE9, but possibly some browsers may report this differently.
+        //  If you find one, please tell us!
         var buttons = event.buttons;
 
-        if (typeof buttons === 'undefined')
+        if (buttons === undefined)
         {
             return;
         }
 
-        this.leftButton = (Phaser.Pointer.LEFT_BUTTON & buttons) ? true : false;
-        this.rightButton = (Phaser.Pointer.RIGHT_BUTTON & buttons) ? true : false;
-        this.middleButton = (Phaser.Pointer.MIDDLE_BUTTON & buttons) ? true : false;
-        this.backButton = (Phaser.Pointer.BACK_BUTTON & buttons) ? true : false;
-        this.forwardButton = (Phaser.Pointer.FORWARD_BUTTON & buttons) ? true : false;
-        this.eraserButton = (Phaser.Pointer.ERASER_BUTTON & buttons) ? true : false;
+        (Phaser.Pointer.LEFT_BUTTON & buttons) ? this.leftButton.start(event) : this.leftButton.stop(event);
+        (Phaser.Pointer.RIGHT_BUTTON & buttons) ? this.rightButton.start(event) : this.rightButton.stop(event);
+        (Phaser.Pointer.MIDDLE_BUTTON & buttons) ? this.middleButton.start(event) : this.middleButton.stop(event);
+        (Phaser.Pointer.BACK_BUTTON & buttons) ? this.backButton.start(event) : this.backButton.stop(event);
+        (Phaser.Pointer.FORWARD_BUTTON & buttons) ? this.forwardButton.start(event) : this.forwardButton.stop(event);
+        (Phaser.Pointer.ERASER_BUTTON & buttons) ? this.eraserButton.start(event) : this.eraserButton.stop(event);
 
         //  On OS X (and other devices with trackpads) you have to press CTRL + the pad
         //  to initiate a right-click event, so we'll check for that here
-        if (event.ctrlKey && this.leftButton)
+        if (event.ctrlKey && this.leftButton.isDown)
         {
-            this.rightButton = true;
+            this.rightButton.start(event);
         }
 
         this.isUp = true;
         this.isDown = false;
 
-        if (this.leftButton || this.rightButton || this.middleButton || this.backButton || this.forwardButton || this.eraserButton)
+        if (this.leftButton.isDown || this.rightButton.isDown || this.middleButton.isDown || this.backButton.isDown || this.forwardButton.isDown || this.eraserButton.isDown)
         {
             this.isUp = false;
             this.isDown = true;
@@ -436,8 +485,6 @@ Phaser.Pointer.prototype = {
     * @param {any} event - The DOM event from the browser.
     */
     start: function (event) {
-
-        console.log('Pointer.start');
 
         if (event['pointerId'])
         {
@@ -562,7 +609,12 @@ Phaser.Pointer.prototype = {
             return;
         }
 
-        if (typeof fromClick === 'undefined') { fromClick = false; }
+        if (fromClick === undefined) { fromClick = false; }
+
+        if (event.button !== undefined)
+        {
+            this.button = event.button;
+        }
 
         if (fromClick)
         {
@@ -996,6 +1048,7 @@ Phaser.Pointer.prototype.constructor = Phaser.Pointer;
 /**
 * How long the Pointer has been depressed on the touchscreen or *any* of the mouse buttons have been held down.
 * If not currently down it returns -1.
+* If you need to test a specific mouse or pen button then access the buttons directly, i.e. `Pointer.rightButton.duration`.
 * 
 * @name Phaser.Pointer#duration
 * @property {number} duration

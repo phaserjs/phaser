@@ -121,6 +121,7 @@
     <script src="$path/src/input/Input.js"></script>
     <script src="$path/src/input/Mouse.js"></script>
     <script src="$path/src/input/MSPointer.js"></script>
+    <script src="$path/src/input/DeviceButton.js"></script>
     <script src="$path/src/input/Pointer.js"></script>
     <script src="$path/src/input/Touch.js"></script>
     <script src="$path/src/input/InputHandler.js"></script>
@@ -143,7 +144,6 @@ EOL;
         echo <<<EOL
     <script src="$path/src/input/Gamepad.js"></script>
     <script src="$path/src/input/SinglePad.js"></script>
-    <script src="$path/src/input/GamepadButton.js"></script>
 
 
 EOL;
