@@ -454,12 +454,61 @@ Phaser.Pointer.prototype = {
             return;
         }
 
-        (Phaser.Pointer.LEFT_BUTTON & buttons) ? this.leftButton.start(event) : this.leftButton.stop(event);
-        (Phaser.Pointer.RIGHT_BUTTON & buttons) ? this.rightButton.start(event) : this.rightButton.stop(event);
-        (Phaser.Pointer.MIDDLE_BUTTON & buttons) ? this.middleButton.start(event) : this.middleButton.stop(event);
-        (Phaser.Pointer.BACK_BUTTON & buttons) ? this.backButton.start(event) : this.backButton.stop(event);
-        (Phaser.Pointer.FORWARD_BUTTON & buttons) ? this.forwardButton.start(event) : this.forwardButton.stop(event);
-        (Phaser.Pointer.ERASER_BUTTON & buttons) ? this.eraserButton.start(event) : this.eraserButton.stop(event);
+        //  Note: These are bitwise checks, not booleans
+
+        if (Phaser.Pointer.LEFT_BUTTON & buttons)
+        {
+            this.leftButton.start(event);
+        }
+        else
+        {
+            this.leftButton.stop(event);
+        }
+
+        if (Phaser.Pointer.RIGHT_BUTTON & buttons)
+        {
+            this.rightButton.start(event);
+        }
+        else
+        {
+            this.rightButton.stop(event);
+        }
+                
+        if (Phaser.Pointer.MIDDLE_BUTTON & buttons)
+        {
+            this.middleButton.start(event);
+        }
+        else
+        {
+            this.middleButton.stop(event);
+        }
+
+        if (Phaser.Pointer.BACK_BUTTON & buttons)
+        {
+            this.backButton.start(event);
+        }
+        else
+        {
+            this.backButton.stop(event);
+        }
+
+        if (Phaser.Pointer.FORWARD_BUTTON & buttons)
+        {
+            this.forwardButton.start(event);
+        }
+        else
+        {
+            this.forwardButton.stop(event);
+        }
+
+        if (Phaser.Pointer.ERASER_BUTTON & buttons)
+        {
+            this.eraserButton.start(event);
+        }
+        else
+        {
+            this.eraserButton.stop(event);
+        }
 
         //  On OS X (and other devices with trackpads) you have to press CTRL + the pad
         //  to initiate a right-click event, so we'll check for that here

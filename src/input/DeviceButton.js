@@ -217,11 +217,11 @@ Phaser.DeviceButton.prototype = {
     /**
     * Called automatically by Phaser.SinglePad.
     * 
-    * @method Phaser.DeviceButton#float
+    * @method Phaser.DeviceButton#padFloat
     * @protected
     * @param {number} value - Button value
     */
-    float: function (value) {
+    padFloat: function (value) {
 
         this.value = value;
 

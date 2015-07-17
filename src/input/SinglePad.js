@@ -423,7 +423,7 @@ Phaser.SinglePad.prototype = {
 
         if (this._buttons[buttonCode])
         {
-            this._buttons[buttonCode].processButtonFloat(value);
+            this._buttons[buttonCode].padFloat(value);
         }
 
     },
