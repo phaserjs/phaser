@@ -379,8 +379,10 @@ declare module Phaser {
         static RENDER_TEXTURE: number;
         static SHADER: number;
         static SOUND: number;
+        static SPRITE_SHEET: number;
         static TEXT: number;
         static TEXTURE: number;
+        static TEXTURE_ATLAS: number;
         static TILEMAP: number;
         static XML: number;
         static VIDEO: number;
@@ -393,7 +395,7 @@ declare module Phaser {
         addBitmapData(key: string, bitmapData: Phaser.BitmapData, frameData?: Phaser.FrameData): Phaser.BitmapData;
         addBitmapFont(key: string, texture: Phaser.RetroFont): void;
         addBitmapFont(key: string, url: string, data: any, atlasData: any, atlasType: string, xSpacing?: number, ySpacing?: number): void;
-        addCanvas(key: string, canvas: HTMLCanvasElement, context: CanvasRenderingContext2D): void;
+        addCanvas(key: string, canvas: HTMLCanvasElement, context?: CanvasRenderingContext2D): void;
         addDefaultImage(): void;
         addImage(key: string, url: string, data: any): void;
         addJSON(key: string, urL: string, data: any): void;
@@ -406,6 +408,7 @@ declare module Phaser {
         addText(key: string, url: string, data: any): void;
         addTextureAtlas(key: string, url: string, data: any, atlasData: any, format: number): void;
         addTilemap(key: string, url: string, mapData: any, format: number): void;
+        addVideo(key: string, url: string, data: any, isBlob?: boolean): void;
         addXML(key: string, url: string, data: any): void;
         checkBinaryKey(key: string): boolean;
         checkBitmapDataKey(key: string): boolean;
@@ -431,7 +434,7 @@ declare module Phaser {
         getBinary(key: string): any;
         getBitmapData(key: string): Phaser.BitmapData;
         getBitmapFont(key: string): Phaser.RetroFont;
-        getCanvas(key: string): any;
+        getCanvas(key: string): HTMLCanvasElement;
         getFrame(key: string): Phaser.Frame;
         getFrameByIndex(key: string, index: number): Phaser.Frame;
         getFrameByName(key: string, name: string): Phaser.Frame;
@@ -448,16 +451,18 @@ declare module Phaser {
         getShader(key: string): string;
         getSound(key: string): Phaser.Sound;
         getSoundData(key: string): any;
+        getSpriteSheetKey(key: string): boolean;
         getText(key: string): string;
         getTextKeys(): string[];
         getTexture(key: string): Phaser.RenderTexture;
+        getTextureAtlasKey(key: string): boolean;
         getTextureFrame(key: string): Phaser.Frame;
         getTilemap(key: string): any;
         getTilemapData(key: string): any;
         getURL(url: string): any;
         getXML(key: string): any;
         getVideo(key: string): Phaser.Video;
-        hasFrameData(key: string, cache?: string): boolean;
+        hasFrameData(key: string): boolean;
         isSoundDecoded(key: string): boolean;
         isSoundReady(key: string): boolean;
         isSpriteSheet(key: string): boolean;
@@ -875,12 +880,12 @@ declare module Phaser {
 
     class Filter extends PIXI.AbstractFilter {
 
-        constructor(game: Phaser.Game, ...args: any[]);
+        constructor(game: Phaser.Game, uniforms: any, fragmentSrc: string | string[]);
 
         dirty: boolean;
         game: Phaser.Game;
         height: number;
-        fragmentSrc: any[];
+        fragmentSrc: string | string[];
         padding: number;
         prevPoint: Phaser.Point;
         type: number;
@@ -1513,6 +1518,7 @@ declare module Phaser {
         length: number;
         name: string;
         onDestroy: Phaser.Signal;
+        pendingDestroy: boolean;
         physicsBodyType: number;
         physicsType: number;
         physicsSortDirection: number;
@@ -1981,7 +1987,7 @@ declare module Phaser {
 
         addCallbacks(context: any, onDown?: Function, onUp?: Function, onPress?: Function): void;
         addKey(keycode: number): Phaser.Key;
-        addKeys(keycodes: number[], hotkeys: string[]): any;
+        addKeys(keys: any[]): any;
         addKeyCapture(keycode: any): void;
         createCursorKeys(): Phaser.CursorKeys;
         clearCaptures(): void;
@@ -2067,6 +2073,7 @@ declare module Phaser {
         static TEXTURE_ATLAS_XML_STARLING: number;
 
         baseURL: string;
+        cache: Phaser.Cache;
         crossOrigin: boolean|string;
         enableParallel: boolean;
         game: Phaser.Game;
@@ -2132,7 +2139,7 @@ declare module Phaser {
         totalLoadedPacks(): number;
         totalQueuedFiles(): number;
         totalQueuedPacks(): number;
-        transformUrl(url: string): string;
+        transformUrl(url: string, file?: any): string;
         updateProgress(): void;
         video(key: string, urls: string | string[]| any, loadEvent?: string, asBlob?: boolean): Phaser.Loader;
         withSyncPoint(callback: Function, callbackContext?: any): Phaser.Loader;
@@ -2145,8 +2152,10 @@ declare module Phaser {
 
     class LoaderParser {
 
-        static bitmapFont(game: Phaser.Game, xml: any, cacheKey: string, xSpacing: number, ySpacing: number): void;
-        static jsonBitmapFont(game: Phaser.Game, json: any, cacheKey: string, xSpacing?: number, ySpacing?: number): void;
+        static bitmapFont(xml: any, baseTexture: PIXI.BaseTexture, xSpacing?: number, ySpacing?: number): any;
+        static xmlBitmapFont(xml: any, baseTexture: PIXI.BaseTexture, xSpacing?: number, ySpacing?: number): any;
+        static jsonBitmapFont(json: any, baseTexture: PIXI.BaseTexture, xSpacing?: number, ySpacing?: number): any;
+
     }
 
     class Matrix extends PIXI.Matrix {
@@ -2254,10 +2263,6 @@ declare module Phaser {
 
         constructor(game: Phaser.Game);
 
-        static LEFT_BUTTON: number;
-        static MIDDLE_BUTTON: number;
-        static NO_BUTTON: number;
-        static RIGHT_BUTTON: number;
         static WHEEL_DOWN: number;
         static WHEEL_UP: number;
 
@@ -2794,6 +2799,7 @@ declare module Phaser {
                 destroy(): void;
                 integrate(): void;
                 render(context: any, xOffset: number, yOffset: number, color: string, filled: boolean): void;
+                reportCollision(px: number, py: number, dx: number, dy: number): void;
                 reportCollisionVsWorld(px: number, py: number, dx: number, dy: number, obj: any): void;
                 reportCollisionVsBody(px: number, py: number, dx: number, dy: number, obj: any): void;
                 resolveTile(x: number, y: number, body: Phaser.Physics.Ninja.AABB, tile: Phaser.Physics.Ninja.Tile): boolean;
@@ -3045,6 +3051,8 @@ declare module Phaser {
                 adjustCenterOfMass(): void;
                 applyDamping(dt: number): void;
                 applyForce(force: number[], worldX: number, worldY: number): void;
+                applyImpulse(impulse: number[], worldX: number, worldY: number): void;
+                applyImpulseLocal(force: number[], localX: number, localY: number): void;
                 clearCollision(clearGroup?: boolean, cleanMask?: boolean, shape?: p2.Shape): void;
                 clearShapes(): void;
                 collides(group: any, callback?: Function, callbackContext?: any, shape?: p2.Shape): void;
@@ -3052,6 +3060,7 @@ declare module Phaser {
                 createGroupCallback(group: Phaser.Physics.P2.CollisionGroup, callback: Function, callbackContext: any): void;
                 destroy(): void;
                 getCollisionMask(): number;
+                getVelocityAtPoint(result: number[], relativePoint: number[]): number[];
                 loadPolygon(key: string, object: string): boolean;
                 moveBackward(speed: number): void;
                 moveDown(speed: number): void;
@@ -3597,7 +3606,7 @@ declare module Phaser {
         start(event: any): void;
         stop(event: any): void;
         update(): void;
-        updateButtons(buttons: number): void;
+        updateButtons(event: MouseEvent): void;
 
     }
 
@@ -4383,6 +4392,8 @@ declare module Phaser {
         shadowColor?: string;
         shadowBlur?: number;
         valign?: string;
+        tab?: number;
+        tabs?: number;
 
         fontStyle?: string;
         fontVariant?: string;
@@ -4444,6 +4455,7 @@ declare module Phaser {
         strokeColors: string[];
         strokeThickness: number;
         scale: Phaser.Point;
+        tab: number;
         tabs: number|number[];
         text: string;
         textBounds: Phaser.Rectangle;
@@ -4460,8 +4472,9 @@ declare module Phaser {
         destroy(destroyChildren?: boolean): void;
         fontToComponents(font: string): any;
         postUpdate(): void;
-        parseList(list: any[]): void;
+        parseList(list: any[]): Phaser.Text;
         preUpdate(): void;
+        renderTabLine(line: string, x: number, y: number, fill?: boolean);
         setShadow(x?: number, y?: number, color?: any, blur?: number, shadowStroke?: boolean, shadowFill?: boolean): Phaser.Text;
         setStyle(style?: PhaserTextStyle): Phaser.Text;
         setText(text: string): Phaser.Text;
