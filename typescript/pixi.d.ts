@@ -179,12 +179,12 @@ declare module PIXI {
 
     export class AbstractFilter {
 
-        constructor(fragmentSrc: string[], uniforms: any);
+        constructor(fragmentSrc: string | string[], uniforms: any);
 
         dirty: boolean;
         padding: number;
         uniforms: any;
-        fragmentSrc: string[];
+        fragmentSrc: string | string[];
 
         apply(frameBuffer: WebGLFramebuffer): void;
         syncUniforms(): void;
