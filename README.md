@@ -244,7 +244,12 @@ Version 2.4 - "Katar" - in dev
 * Button game objects now have `Input.useHandCursor` set to `true` by default.
 * Phaser.BitmapText no longer extends PIXI.BitmapText but replaces it entirely.
 * Phaser.Text no longer extends PIXI.Text but replaces it entirely. Phaser.Text now natively extends a Phaser Sprite, meaning it can be enabled for physics, damaged, etc.
-* Mouse.button and MSPointer.button have been removed. They never supported complex button events (such as holding down 2 buttons and releasing just one) or any buttons other than left and right. They have been replaced with the far more robust and accurate Pointer button properties such as `Pointer.leftButton`, `Pointer.rightButton` and so on.
+* Mouse.button and MSPointer.button have been deprecated and are no longer set (they remain at -1). They never supported complex button events such as holding down 2 buttons and releasing just one, or any buttons other than left and right. They have been replaced with the far more robust and accurate Pointer DeviceButton properties such as `Pointer.leftButton`, `Pointer.rightButton` and so on.
+* Phaser.DeviceButton is a new class that handles a specific button on an input device, for example the middle button of a mouse, the eraser button of a stylus or a shoulder button on a Gamepad.
+* Phaser.DeviceButton.shiftKey is a boolean that holds if the shift key was held down or not during the last button event.
+* Phaser.DeviceButton.altKey is a boolean that holds if the alt key was held down or not during the last button event.
+* Phaser.DeviceButton.ctrlKey is a boolean that holds if the control key was held down or not during the last button event.
+* Phaser.GamepadButton has been removed and now uses DeviceButton instead. Three internal API changes took place: `processButtonDown` is renamed to `start`, `processButtonUp` is renamed to `stop` and `processButtonFloat` is renamed to `padFloat`. If you extended GamepadButton in your own code you need to replace it with DeviceButton.
 
 ### p2.js Upgraded to version 0.7.0
 

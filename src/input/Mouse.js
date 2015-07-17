@@ -63,6 +63,7 @@ Phaser.Mouse = function (game) {
     /**
     * This property was removed in Phaser 2.4 and should no longer be used.
     * Instead please see the Pointer button properties such as `Pointer.leftButton`, `Pointer.rightButton` and so on.
+    * Or Pointer.button holds the DOM event button value if you require that.
     * @property {number} button
     * @default
     */
