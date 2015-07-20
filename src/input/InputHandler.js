@@ -848,7 +848,7 @@ Phaser.InputHandler.prototype = {
     * 
     * @method Phaser.InputHandler#_pointerOverHandler
     * @private
-    * @param {Phaser.Pointer} pointer
+    * @param {Phaser.Pointer} pointer - The pointer that triggered the event
     */
     _pointerOverHandler: function (pointer) {
 
@@ -885,7 +885,7 @@ Phaser.InputHandler.prototype = {
     * 
     * @method Phaser.InputHandler#_pointerOutHandler
     * @private
-    * @param {Phaser.Pointer} pointer
+    * @param {Phaser.Pointer} pointer - The pointer that triggered the event.
     */
     _pointerOutHandler: function (pointer) {
 
@@ -913,10 +913,11 @@ Phaser.InputHandler.prototype = {
     },
 
     /**
-    * Internal method handling the touched event.
+    * Internal method handling the touched / clicked event.
+    * 
     * @method Phaser.InputHandler#_touchedHandler
     * @private
-    * @param {Phaser.Pointer} pointer
+    * @param {Phaser.Pointer} pointer - The pointer that triggered the event.
     */
     _touchedHandler: function (pointer) {
 

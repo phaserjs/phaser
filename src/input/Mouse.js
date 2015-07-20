@@ -70,7 +70,8 @@ Phaser.Mouse = function (game) {
     this.button = -1;
 
     /**
-     * @property {number} wheelDelta - The direction of the _last_ mousewheel usage 1 for up -1 for down
+     * The direction of the _last_ mousewheel usage 1 for up -1 for down.
+     * @property {number} wheelDelta
      */
     this.wheelDelta = 0;
 
@@ -151,6 +152,42 @@ Phaser.Mouse = function (game) {
     this._wheelEvent = null;
 
 };
+
+/**
+* @constant
+* @type {number}
+*/
+Phaser.Mouse.NO_BUTTON = -1;
+
+/**
+* @constant
+* @type {number}
+*/
+Phaser.Mouse.LEFT_BUTTON = 0;
+
+/**
+* @constant
+* @type {number}
+*/
+Phaser.Mouse.MIDDLE_BUTTON = 1;
+
+/**
+* @constant
+* @type {number}
+*/
+Phaser.Mouse.RIGHT_BUTTON = 2;
+
+/**
+* @constant
+* @type {number}
+*/
+Phaser.Mouse.BACK_BUTTON = 3;
+
+/**
+* @constant
+* @type {number}
+*/
+Phaser.Mouse.FORWARD_BUTTON = 4;
 
 /**
  * @constant
