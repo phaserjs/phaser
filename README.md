@@ -250,6 +250,7 @@ Version 2.4 - "Katar" - in dev
 * Phaser.DeviceButton.altKey is a boolean that holds if the alt key was held down or not during the last button event.
 * Phaser.DeviceButton.ctrlKey is a boolean that holds if the control key was held down or not during the last button event.
 * Phaser.GamepadButton has been removed and now uses DeviceButton instead. Three internal API changes took place: `processButtonDown` is renamed to `start`, `processButtonUp` is renamed to `stop` and `processButtonFloat` is renamed to `padFloat`. If you extended GamepadButton in your own code you need to replace it with DeviceButton.
+* MSPointer now checks the `pointerType` property of the DOM event and if it matches 'mouse' it will update `Input.mousePointer`, rather than `Input.pointer1` (or whatever the next free Pointer was).
 
 ### p2.js Upgraded to version 0.7.0
 

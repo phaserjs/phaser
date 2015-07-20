@@ -72,7 +72,7 @@ Phaser.Pointer = function (game, id) {
     * @property {Phaser.DeviceButton} leftButton
     * @default
     */
-    this.leftButton = null;
+    this.leftButton = new Phaser.DeviceButton(this, Phaser.Pointer.LEFT_BUTTON);
 
     /**
     * If this Pointer is a Mouse or Pen / Stylus then you can access its middle button directly through this property.
@@ -85,7 +85,7 @@ Phaser.Pointer = function (game, id) {
     * @property {Phaser.DeviceButton} middleButton
     * @default
     */
-    this.middleButton = null;
+    this.middleButton = new Phaser.DeviceButton(this, Phaser.Pointer.MIDDLE_BUTTON);
 
     /**
     * If this Pointer is a Mouse or Pen / Stylus then you can access its right button directly through this property.
@@ -98,7 +98,7 @@ Phaser.Pointer = function (game, id) {
     * @property {Phaser.DeviceButton} rightButton
     * @default
     */
-    this.rightButton = null;
+    this.rightButton = new Phaser.DeviceButton(this, Phaser.Pointer.RIGHT_BUTTON);
 
     /**
     * If this Pointer is a Mouse or Pen / Stylus then you can access its X1 (back) button directly through this property.
@@ -111,7 +111,7 @@ Phaser.Pointer = function (game, id) {
     * @property {Phaser.DeviceButton} backButton
     * @default
     */
-    this.backButton = null;
+    this.backButton = new Phaser.DeviceButton(this, Phaser.Pointer.BACK_BUTTON);
 
     /**
     * If this Pointer is a Mouse or Pen / Stylus then you can access its X2 (forward) button directly through this property.
@@ -124,7 +124,7 @@ Phaser.Pointer = function (game, id) {
     * @property {Phaser.DeviceButton} forwardButton
     * @default
     */
-    this.forwardButton = null;
+    this.forwardButton = new Phaser.DeviceButton(this, Phaser.Pointer.FORWARD_BUTTON);
 
     /**
     * If this Pointer is a Pen / Stylus then you can access its eraser button directly through this property.
@@ -137,7 +137,7 @@ Phaser.Pointer = function (game, id) {
     * @property {Phaser.DeviceButton} eraserButton
     * @default
     */
-    this.eraserButton = null;
+    this.eraserButton = new Phaser.DeviceButton(this, Phaser.Pointer.ERASER_BUTTON);
 
     /**
     * @property {boolean} _holdSent - Local private variable to store the status of dispatching a hold event.
@@ -237,9 +237,8 @@ Phaser.Pointer = function (game, id) {
 
     /**
     * @property {boolean} isMouse - If the Pointer is a mouse or pen / stylus this is true, otherwise false.
-    * @default
     */
-    this.isMouse = false;
+    this.isMouse = (id === 0);
 
     /**
     * If the Pointer is touching the touchscreen, or *any* mouse or pen button is held down, isDown is set to true.
@@ -326,19 +325,6 @@ Phaser.Pointer = function (game, id) {
     * @property {Phaser.Circle} circle
     */
     this.circle = new Phaser.Circle(0, 0, 44);
-
-    if (id === 0)
-    {
-        this.isMouse = true;
-
-        //  No point doing this for non-mice / pens
-        this.leftButton = new Phaser.DeviceButton(this, Phaser.Pointer.LEFT_BUTTON);
-        this.rightButton = new Phaser.DeviceButton(this, Phaser.Pointer.RIGHT_BUTTON);
-        this.middleButton = new Phaser.DeviceButton(this, Phaser.Pointer.MIDDLE_BUTTON);
-        this.backButton = new Phaser.DeviceButton(this, Phaser.Pointer.BACK_BUTTON);
-        this.forwardButton = new Phaser.DeviceButton(this, Phaser.Pointer.FORWARD_BUTTON);
-        this.eraserButton = new Phaser.DeviceButton(this, Phaser.Pointer.ERASER_BUTTON);
-    }
 
     /**
     * Click trampolines associated with this pointer. See `addClickTrampoline`.

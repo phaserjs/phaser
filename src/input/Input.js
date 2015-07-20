@@ -228,7 +228,9 @@ Phaser.Input = function (game) {
     this.mouse = null;
 
     /**
-    * @property {Phaser.Keyboard} keyboard - The Keyboard Input manager.
+    * The Keyboard Input manager.
+    * 
+    * @property {Phaser.Keyboard} keyboard
     */
     this.keyboard = null;
 
@@ -253,38 +255,48 @@ Phaser.Input = function (game) {
     this.mspointer = null;
 
     /**
-    * @property {Phaser.Gamepad} gamepad - The Gamepad Input manager.
+    * The Gamepad Input manager.
+    * 
+    * @property {Phaser.Gamepad} gamepad
     */
     this.gamepad = null;
 
     /**
-    * @property {boolean} resetLocked - If the Input Manager has been reset locked then all calls made to InputManager.reset, such as from a State change, are ignored.
+    * If the Input Manager has been reset locked then all calls made to InputManager.reset, 
+    * such as from a State change, are ignored.
+    * @property {boolean} resetLocked
     * @default
     */
     this.resetLocked = false;
 
     /**
-    * @property {Phaser.Signal} onDown - A Signal that is dispatched each time a pointer is pressed down.
+    * A Signal that is dispatched each time a pointer is pressed down.
+    * @property {Phaser.Signal} onDown
     */
     this.onDown = null;
 
     /**
-    * @property {Phaser.Signal} onUp - A Signal that is dispatched each time a pointer is released.
+    * A Signal that is dispatched each time a pointer is released.
+    * @property {Phaser.Signal} onUp
     */
     this.onUp = null;
 
     /**
-    * @property {Phaser.Signal} onTap - A Signal that is dispatched each time a pointer is tapped.
+    * A Signal that is dispatched each time a pointer is tapped.
+    * @property {Phaser.Signal} onTap
     */
     this.onTap = null;
 
     /**
-    * @property {Phaser.Signal} onHold - A Signal that is dispatched each time a pointer is held down.
+    * A Signal that is dispatched each time a pointer is held down.
+    * @property {Phaser.Signal} onHold
     */
     this.onHold = null;
 
     /**
-    * @property {number} minPriorityID - You can tell all Pointers to ignore any object with a priorityID lower than the minPriorityID. Useful when stacking UI layers. Set to zero to disable.
+    * You can tell all Pointers to ignore any Game Object with a `priorityID` lower than this value.
+    * This is useful when stacking UI layers. Set to zero to disable.
+    * @property {number} minPriorityID
     * @default
     */
     this.minPriorityID = 0;

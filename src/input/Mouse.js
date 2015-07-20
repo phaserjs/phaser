@@ -26,6 +26,12 @@ Phaser.Mouse = function (game) {
     this.game = game;
 
     /**
+    * @property {Phaser.Input} input - A reference to the Phaser Input Manager.
+    * @protected
+    */
+    this.input = game.input;
+
+    /**
     * @property {object} callbackContext - The context under which callbacks are called.
     */
     this.callbackContext = this.game;
@@ -251,22 +257,24 @@ Phaser.Mouse.prototype = {
             return _this.onMouseWheel(event);
         };
 
-        this.game.canvas.addEventListener('mousedown', this._onMouseDown, true);
-        this.game.canvas.addEventListener('mousemove', this._onMouseMove, true);
-        this.game.canvas.addEventListener('mouseup', this._onMouseUp, true);
+        var canvas = this.game.canvas;
+
+        canvas.addEventListener('mousedown', this._onMouseDown, true);
+        canvas.addEventListener('mousemove', this._onMouseMove, true);
+        canvas.addEventListener('mouseup', this._onMouseUp, true);
 
         if (!this.game.device.cocoonJS)
         {
             window.addEventListener('mouseup', this._onMouseUpGlobal, true);
-            this.game.canvas.addEventListener('mouseover', this._onMouseOver, true);
-            this.game.canvas.addEventListener('mouseout', this._onMouseOut, true);
+            canvas.addEventListener('mouseover', this._onMouseOver, true);
+            canvas.addEventListener('mouseout', this._onMouseOut, true);
         }
 
         var wheelEvent = this.game.device.wheelEvent;
 
         if (wheelEvent)
         {
-            this.game.canvas.addEventListener(wheelEvent, this._onMouseWheel, true);
+            canvas.addEventListener(wheelEvent, this._onMouseWheel, true);
 
             if (wheelEvent === 'mousewheel')
             {
@@ -299,14 +307,14 @@ Phaser.Mouse.prototype = {
             this.mouseDownCallback.call(this.callbackContext, event);
         }
 
-        if (!this.game.input.enabled || !this.enabled)
+        if (!this.input.enabled || !this.enabled)
         {
             return;
         }
 
         event['identifier'] = 0;
 
-        this.game.input.mousePointer.start(event);
+        this.input.mousePointer.start(event);
 
     },
 
@@ -329,14 +337,14 @@ Phaser.Mouse.prototype = {
             this.mouseMoveCallback.call(this.callbackContext, event);
         }
 
-        if (!this.game.input.enabled || !this.enabled)
+        if (!this.input.enabled || !this.enabled)
         {
             return;
         }
 
         event['identifier'] = 0;
 
-        this.game.input.mousePointer.move(event);
+        this.input.mousePointer.move(event);
 
     },
 
@@ -359,14 +367,14 @@ Phaser.Mouse.prototype = {
             this.mouseUpCallback.call(this.callbackContext, event);
         }
 
-        if (!this.game.input.enabled || !this.enabled)
+        if (!this.input.enabled || !this.enabled)
         {
             return;
         }
 
         event['identifier'] = 0;
 
-        this.game.input.mousePointer.stop(event);
+        this.input.mousePointer.stop(event);
 
     },
 
@@ -378,7 +386,7 @@ Phaser.Mouse.prototype = {
     */
     onMouseUpGlobal: function (event) {
 
-        if (!this.game.input.mousePointer.withinGame)
+        if (!this.input.mousePointer.withinGame)
         {
             if (this.mouseUpCallback)
             {
@@ -387,7 +395,7 @@ Phaser.Mouse.prototype = {
 
             event['identifier'] = 0;
 
-            this.game.input.mousePointer.stop(event);
+            this.input.mousePointer.stop(event);
         }
 
     },
@@ -407,14 +415,14 @@ Phaser.Mouse.prototype = {
             event.preventDefault();
         }
 
-        this.game.input.mousePointer.withinGame = false;
+        this.input.mousePointer.withinGame = false;
 
         if (this.mouseOutCallback)
         {
             this.mouseOutCallback.call(this.callbackContext, event);
         }
 
-        if (!this.game.input.enabled || !this.enabled)
+        if (!this.input.enabled || !this.enabled)
         {
             return;
         }
@@ -423,7 +431,7 @@ Phaser.Mouse.prototype = {
         {
             event['identifier'] = 0;
 
-            this.game.input.mousePointer.stop(event);
+            this.input.mousePointer.stop(event);
         }
 
     },
@@ -472,14 +480,14 @@ Phaser.Mouse.prototype = {
             event.preventDefault();
         }
 
-        this.game.input.mousePointer.withinGame = true;
+        this.input.mousePointer.withinGame = true;
 
         if (this.mouseOverCallback)
         {
             this.mouseOverCallback.call(this.callbackContext, event);
         }
 
-        if (!this.game.input.enabled || !this.enabled)
+        if (!this.input.enabled || !this.enabled)
         {
             return;
         }
@@ -562,16 +570,19 @@ Phaser.Mouse.prototype = {
     */
     stop: function () {
 
-        this.game.canvas.removeEventListener('mousedown', this._onMouseDown, true);
-        this.game.canvas.removeEventListener('mousemove', this._onMouseMove, true);
-        this.game.canvas.removeEventListener('mouseup', this._onMouseUp, true);
-        this.game.canvas.removeEventListener('mouseover', this._onMouseOver, true);
-        this.game.canvas.removeEventListener('mouseout', this._onMouseOut, true);
+        var canvas = this.game.canvas;
+
+        canvas.removeEventListener('mousedown', this._onMouseDown, true);
+        canvas.removeEventListener('mousemove', this._onMouseMove, true);
+        canvas.removeEventListener('mouseup', this._onMouseUp, true);
+        canvas.removeEventListener('mouseover', this._onMouseOver, true);
+        canvas.removeEventListener('mouseout', this._onMouseOut, true);
 
         var wheelEvent = this.game.device.wheelEvent;
+
         if (wheelEvent)
         {
-            this.game.canvas.removeEventListener(wheelEvent, this._onMouseWheel, true);
+            canvas.removeEventListener(wheelEvent, this._onMouseWheel, true);
         }
 
         window.removeEventListener('mouseup', this._onMouseUpGlobal, true);
@@ -617,6 +628,7 @@ function WheelEventProxy (scaleFactor, deltaMode) {
     * @private
     */
     this.originalEvent = null;
+
 }
 
 WheelEventProxy.prototype = {};
