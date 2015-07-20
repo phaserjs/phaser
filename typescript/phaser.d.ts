@@ -288,40 +288,64 @@ declare module Phaser {
         constructor(game: Phaser.Game, x: number, y: number, font: string, text?: string, size?: number, align?: string);
 
         align: string;
+        alive: boolean;
         anchor: Phaser.Point;
+        animations: Phaser.AnimationManager;
         angle: number;
+        autoCull: boolean;
+        body: Phaser.Physics.Arcade.Body | Phaser.Physics.P2.Body | Phaser.Physics.Ninja.Body | any;
+        bottom: number;
         cameraOffset: Phaser.Point;
+        checkWorldBounds: boolean;
         destroyPhase: boolean;
+        debug: boolean;
         dirty: boolean;
         events: Phaser.Events;
         exists: boolean;
         fixedToCamera: boolean;
         font: string;
         fontSize: number;
+        fresh: boolean;
         game: Phaser.Game;
         input: Phaser.InputHandler;
         inputEnabled: boolean;
+        inCamera: boolean;
+        inWorld: boolean;
+        key: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture;
+        left: number;
         name: string;
+        components: any;
+        lifespan: number;
         maxWidth: number;
+        offsetX: number;
+        offsetY: number;
+        outOfBoundsKill: boolean;
         pendingDestroy: boolean;
         physicsType: number;
         previousPosition: Phaser.Point;
-        previousRotation: Phaser.Point;
+        previousRotation: number;
         position: Phaser.Point;
         renderOrderID: number;
+        right: number;
         text: string;
         textWidth: number;
         textHeight: number;
         tint: number;
+        top: number;
         type: number;
         world: Phaser.Point;
+        x: number;
+        y: number;
         z: number;
 
         destroy(destroyChildren?: boolean): void;
+        kill(): void;
         postUpdate(): void;
         preUpdate(): void;
         purgeGlyphs(): number;
-        scanLine(text: string): { width: number; text: string; end: boolean; chars: string[] };
+        reset(x: number, y: number, health?: number): Phaser.BitmapText;
+        revive(health?: number): Phaser.BitmapText;
+        scanLine(data: any, scale: number, text: string): { width: number; text: string; end: boolean; chars: string[] };
         setText(text: string): void;
         update(): void;
         updateText(): void;
@@ -1466,27 +1490,54 @@ declare module Phaser {
         constructor(game: Phaser.Game, x?: number, y?: number);
 
         angle: number;
+        alive: boolean;
+        animations: Phaser.AnimationManager;
+        autoCull: boolean;
+        body: Phaser.Physics.Arcade.Body | Phaser.Physics.P2.Body | Phaser.Physics.Ninja.Body | any;
+        bottom: number;
         cameraOffset: Phaser.Point;
+        checkWorldBounds: boolean;
+        components: any;
+        debug: boolean;
         destroyPhase: boolean;
         exists: boolean;
+        events: Phaser.Events;
         fixedToCamera: boolean;
+        key: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture;
+        fresh: boolean;
         game: Phaser.Game;
         height: number;
+        input: Phaser.InputHandler;
+        inputEnabled: boolean;
+        inCamera: boolean;
+        inWorld: boolean;
+        left: number;
         name: string;
+        lifespan: number;
+        offsetX: number;
+        offsetY: number;
+        outOfBoundsKill: boolean;
         pendingDestroy: boolean;
         physicsType: number;
         position: Phaser.Point;
-        previousPosition: Point;
+        previousPosition: Phaser.Point;
         previousRotation: number;
+        renderOrderID: number;
+        right: number;
+        top: number;
         type: number;
         world: Phaser.Point;
+        width: number;
         z: number;
 
-        destroy(): void;
+        destroy(destroyChildren?: boolean): void;
         drawTriangle(points: Phaser.Point[], cull?: boolean): void;
-        drawTriangles(vertices: any[], indices?: number[], cull?: boolean): void;
+        drawTriangles(vertices: Phaser.Point[]| number[], indices?: number[], cull?: boolean): void;
+        kill(): Phaser.Graphics;
         postUpdate(): void;
         preUpdate(): void;
+        reset(x: number, y: number, health?: number): Phaser.Graphics;
+        revive(health?: number): Phaser.Graphics;
         update(): void;
 
     }
@@ -1603,7 +1654,9 @@ declare module Phaser {
         autoCull: boolean;
         bottom: number;
         cameraOffset: Phaser.Point;
+        components: any;
         cropRect: Phaser.Rectangle;
+        customRender: boolean;
         debug: boolean;
         deltaX: number;
         deltaY: number;
@@ -1620,7 +1673,8 @@ declare module Phaser {
         input: Phaser.InputHandler;
         inputEnabled: boolean;
         inWorld: boolean;
-        key: string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture;
+        key: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture;
+        lifespan: number;
         left: number;
         name: string;
         offsetX: number;
@@ -1642,15 +1696,19 @@ declare module Phaser {
         crop(rect: Phaser.Rectangle, copy?: boolean): void;
         destroy(destroyChildren?: boolean): void;
         kill(): Phaser.Image;
-        loadTexture(key: string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture, frame: string|number): void;
+        loadTexture(key: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture, frame?: string | number, stopAnimation?: boolean): void;
         resizeFrame(parent: any, width: number, height: number): void;
+        moveDown(): Phaser.Image;
+        moveUp(): Phaser.Image;
+        overlap(displayObject: Phaser.Sprite | Phaser.Image | Phaser.TileSprite | Phaser.Button | PIXI.DisplayObject): boolean;
+        play(name: string, frameRate?: number, loop?: boolean, killOnComplete?: boolean): Phaser.Animation;
         postUpdate(): void;
         preUpdate(): void;
-        reset(x: number, y: number): Phaser.Image;
+        reset(x: number, y: number, health?: number): Phaser.Image;
         resetFrame(): void;
-        revive(): Phaser.Image;
+        revive(health?: number): Phaser.Image;
+        sendToBack(): Phaser.Image;
         setFrame(frame: Phaser.Frame): void;
-        setScaleMinMax(minX?: number, minY?: number, maxX?: number, maxY?: number): void;
         update(): void;
         updateCrop(): void;
 
@@ -2263,6 +2321,12 @@ declare module Phaser {
 
         constructor(game: Phaser.Game);
 
+        static NO_BUTTON: number;
+        static LEFT_BUTTON: number;
+        static MIDDLE_BUTTON: number;
+        static RIGHT_BUTTON: number;
+        static BACK_BUTTON: number;
+        static FORWARD_BUTTON: number;
         static WHEEL_DOWN: number;
         static WHEEL_UP: number;
 
@@ -2272,6 +2336,7 @@ declare module Phaser {
         enabled: boolean;
         event: MouseEvent;
         game: Phaser.Game;
+        input: Phaser.Input;
         locked: boolean;
         mouseDownCallback: (event: MouseEvent) => void;
         mouseOutCallback: (event: MouseEvent) => void;
@@ -2313,6 +2378,7 @@ declare module Phaser {
         callbackContext: any;
         event: MSPointerEvent;
         game: Phaser.Game;
+        input: Phaser.Input;
 
         onPointerDown: (event: MSPointerEvent) => void;
         onPointerMove: (event: MSPointerEvent) => void;
@@ -3832,14 +3898,23 @@ declare module Phaser {
 
     class Rope extends PIXI.Rope {
 
-        constructor(game: Phaser.Game, x: number, y: number, key: string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture, frame?: string|number, points?: Phaser.Point[]);
+        constructor(game: Phaser.Game, x: number, y: number, key: string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture | Phaser.Video, frame?: string|number, points?: Phaser.Point[]);
 
         angle: number;
-        animations: AnimationManager;
+        animations: Phaser.AnimationManager;
+        alive: boolean;
         autoCull: boolean;
-        body: any;
+        body: Phaser.Physics.Arcade.Body | Phaser.Physics.P2.Body | Phaser.Physics.Ninja.Body | any;
+        bottom: number;
         cameraOffset: Phaser.Point;
         checkWorldBounds: boolean;
+        cropRect: Phaser.Rectangle;
+        components: any;
+        customRender: boolean;
+        debug: boolean;
+        deltaX: number;
+        deltaY: number;
+        deltaZ: number;
         destroyPhase: boolean;
         exists: boolean;
         events: Phaser.Events;
@@ -3848,31 +3923,58 @@ declare module Phaser {
         frameName: string;
         fresh: boolean;
         game: Phaser.Game;
+        inCamera: boolean;
         input: Phaser.InputHandler;
         inputEnabled: boolean;
-        key: string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture;
+        inWorld: boolean;
+        left: number;
+        lifespan: number;
+        key: string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture|Phaser.Video;
         name: string;
+        offsetX: number;
+        offsetY: number;
+        outOfBoundsKill: boolean;
+        overlap(displayObject: Phaser.Sprite | Phaser.Image | Phaser.TileSprite | Phaser.Button | PIXI.DisplayObject): boolean;
         pendingDestroy: boolean;
         points: Phaser.Point[];
         position: Phaser.Point;
         previousPosition: Phaser.Point;
         previousRotation: number;
+        right: number;
         renderOrderID: number;
         segments: Phaser.Rectangle[];
+        smoothed: boolean;
+        top: number;
         type: number;
+        transformCallback: Function;
+        transformCallbackContent: any;
+        scaleMin: Phaser.Point;
+        scaleMax: Phaser.Point;
         updateAnimation: Function;
         world: Phaser.Point;
         x: number;
         y: number;
         z: number;
 
+        bringToTop(): Phaser.Rope;
+        checkTransform(wt: PIXI.Matrix): void;
+        crop(rect: Phaser.Rectangle, copy?: boolean): void;
         destroy(destroyChildren?: boolean): void;
-        loadTexture(key: string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture, frame?: string|number): void;
-        play(): void;
+        kill(): Phaser.Rope;
+        loadTexture(key: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture, frame?: string | number, stopAnimation?: boolean): void;
+        moveUp(): Phaser.Rope;
+        moveDown(): Phaser.Rope;
+        play(name: string, frameRate?: number, loop?: boolean, killOnComplete?: boolean): Phaser.Animation;
         preUpdate(): void;
         postUpdate(): void;
-        reset(x: number, y: number): void;
+        reset(x: number, y: number, health?: number): Phaser.Rope;
+        resizeFrame(parent: any, width: number, height: number): void;
+        resetFrame(): void;
+        revive(health?: number): Phaser.Rope;
+        sendToBack(): Phaser.Rope;
         setFrame(frame: Phaser.Frame): void;
+        setScaleMinMax(minX?: number, minY?: number, maxX?: number, maxY?: number): void;
+        updateCrop(): void;
         update(): void;
 
     }
@@ -4078,11 +4180,13 @@ declare module Phaser {
         angle: number;
         animations: Phaser.AnimationManager;
         autoCull: boolean;
-        body: any;
+        body: Phaser.Physics.Arcade.Body | Phaser.Physics.P2.Body | Phaser.Physics.Ninja.Body | any;
         bottom: number;
         cameraOffset: Phaser.Point;
         checkWorldBounds: boolean;
+        components: any;
         cropRect: Phaser.Rectangle;
+        customRender: boolean;
         debug: boolean;
         deltaX: number;
         deltaY: number;
@@ -4100,7 +4204,7 @@ declare module Phaser {
         input: Phaser.InputHandler;
         inputEnabled: boolean;
         inWorld: boolean;
-        key: string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture;
+        key: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture;
         left: number;
         lifespan: number;
         maxHealth: number;
@@ -4123,6 +4227,8 @@ declare module Phaser {
         top: number;
         type: number;
         tintedTexture: HTMLCanvasElement;
+        transformCallback: Function;
+        transformCallbackContent: any;
         world: Phaser.Point;
         x: number;
         y: number;
@@ -4130,19 +4236,24 @@ declare module Phaser {
 
         bringToTop(): Phaser.Sprite;
         crop(rect: Phaser.Rectangle, copy: boolean): void;
+        checkTransform(wt: PIXI.Matrix): void;
         damage(amount: number): Phaser.Sprite;
         destroy(destroyChildren?: boolean): void;
         drawPolygon(): void;
         heal(amount: number): Phaser.Sprite;
         kill(): Phaser.Sprite;
-        loadTexture(key: string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture, frame?: string|number, stopAnimation?: boolean): void;
-        overlap(displayObject: PIXI.DisplayObject): boolean;
+        loadTexture(key: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture, frame?: string|number, stopAnimation?: boolean): void;
+        moveUp(): Phaser.Sprite;
+        moveDown(): Phaser.Sprite;
+        overlap(displayObject: Phaser.Sprite | Phaser.Image | Phaser.TileSprite | Phaser.Button | PIXI.DisplayObject): boolean;
         play(name: string, frameRate?: number, loop?: boolean, killOnComplete?: boolean): Phaser.Animation;
         postUpdate(): void;
         preUpdate(): void;
         reset(x: number, y: number, health?: number): Phaser.Sprite;
         resetFrame(): void;
+        resizeFrame(parent: any, width: number, height: number): void;
         revive(health?: number): Phaser.Sprite;
+        sendToBack(): Phaser.Sprite;
         setFrame(frame: Phaser.Frame): void;
         setScaleMinMax(minX?: number, minY?: number, maxX?: number, maxY?: number): void;
         update(): void;
@@ -4706,9 +4817,13 @@ declare module Phaser {
         angle: number;
         animations: Phaser.AnimationManager;
         autoCull: boolean;
-        body: any;
+        body: Phaser.Physics.Arcade.Body | Phaser.Physics.P2.Body | Phaser.Physics.Ninja.Body | any;
+        bottom: number;
         cameraOffset: Phaser.Point;
         checkWorldBounds: boolean;
+        components: any;
+        customRender: boolean;
+        debug: boolean;
         destroyPhase: boolean;
         events: Phaser.Events;
         exists: boolean;
@@ -4717,15 +4832,24 @@ declare module Phaser {
         frameName: string;
         fresh: boolean;
         game: Phaser.Game;
+        inCamera: boolean;
         input: Phaser.InputHandler;
         inputEnabled: boolean;
-        key: string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture;
+        inWorld: boolean;
+        key: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture;
+        left: number;
         name: string;
+        offsetX: number;
+        offsetY: number;
+        outOfBoundsKill: boolean;
         pendingDestroy: boolean;
         physicsType: number;
         position: Phaser.Point;
+        smoothed: boolean;
         previousPosition: Phaser.Point;
         previousRoation: number;
+        right: number;
+        top: number;
         renderOrderID: number;
         type: number;
         world: Phaser.Point;
@@ -4733,11 +4857,14 @@ declare module Phaser {
 
         autoScroll(x: number, y: number): void;
         destroy(destroyChildren?: boolean): void;
-        loadTexture(key: string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture, frame: string|number): void;
+        loadTexture(key: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture, frame?: string | number, stopAnimation?: boolean): void;
         play(name: string, frameRate?: number, loop?: boolean, killOnComplete?: boolean): Phaser.Animation;
         postUpdate(): void;
         preUpdate(): void;
-        reset(x: number, y: number): Phaser.TileSprite;
+        overlap(displayObject: Phaser.Sprite | Phaser.Image | Phaser.TileSprite | Phaser.Button | PIXI.DisplayObject): boolean;
+        reset(x: number, y: number, health?: number): Phaser.TileSprite;
+        resizeFrame(parent: any, width: number, height: number): void;
+        resetFrame(): void;
         setFrame(frame: Phaser.Frame): void;
         stopScroll(): void;
         update(): void;
@@ -5082,4 +5209,5 @@ declare module Phaser {
         wrap(sprite: any, padding?: number, useBounds?: boolean, horizontal?: boolean, vertical?: boolean): void;
 
     }
+
 }
