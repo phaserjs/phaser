@@ -156,8 +156,6 @@ Phaser.MSPointer.prototype = {
     */
     onPointerDown: function (event) {
 
-        console.log('onPointerDown', event.buttons, event.button);
-
         this.event = event;
 
         if (this.capture)
@@ -231,8 +229,6 @@ Phaser.MSPointer.prototype = {
     * @param {PointerEvent} event - The native DOM event.
     */
     onPointerUp: function (event) {
-
-        console.log('onPointerUp', event.buttons, event.button);
 
         this.event = event;
 
