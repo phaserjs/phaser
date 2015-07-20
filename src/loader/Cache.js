@@ -553,6 +553,7 @@ Phaser.Cache.prototype = {
     addSpriteSheet: function (key, url, data, frameWidth, frameHeight, frameMax, margin, spacing) {
 
         var obj = {
+            key: key,
             url: url,
             data: data,
             frameWidth: frameWidth,
@@ -582,6 +583,7 @@ Phaser.Cache.prototype = {
     addTextureAtlas: function (key, url, data, atlasData, format) {
 
         var obj = {
+            key: key,
             url: url,
             data: data,
             base: new PIXI.BaseTexture(data)
