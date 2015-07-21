@@ -253,6 +253,7 @@ Version 2.4 - "Katar" - in dev
 * Phaser.DeviceButton.ctrlKey is a boolean that holds if the control key was held down or not during the last button event.
 * Phaser.GamepadButton has been removed and now uses DeviceButton instead. Three internal API changes took place: `processButtonDown` is renamed to `start`, `processButtonUp` is renamed to `stop` and `processButtonFloat` is renamed to `padFloat`. If you extended GamepadButton in your own code you need to replace it with DeviceButton.
 * MSPointer now checks the `pointerType` property of the DOM event and if it matches 'mouse' it will update `Input.mousePointer`, rather than `Input.pointer1` (or whatever the next free Pointer was).
+* Time.suggestedFps is now only populated if `Time.advancedTiming` is enabled.
 
 ### p2.js Upgraded to version 0.7.0
 
@@ -405,6 +406,7 @@ For the full list of p2 additions please read [their change log](https://github.
 * LoaderParser.bitmapFont, xmlBitmapFont and jsonBitmapFont all now return the font data rather than write it to the now deprecated PIXI.BitmapText.fonts global array.
 * PIXI.BitmapText has been removed as a global array, as it is no longer used.
 * PIXI has been made available for Phaser when using requireJS (thanks @mkristo #1923)
+* Internally the Time class has been updated to split out the RAF and SetTimeout implementations. This cuts down the update loop workload significantly, which was causing a performance optimization bottleneck in V8.
 
 ### Bug Fixes
 
