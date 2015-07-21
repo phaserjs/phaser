@@ -458,6 +458,7 @@ For the full list of p2 additions please read [their change log](https://github.
 * PIXI.DisplayObject.updateTransform now nulls the _currentBounds property (thanks @gaufqwi #1906)
 * Improved the JSON BitmapText implementation (thanks @Feenposhleen #1912 #1837)
 * game.make.group did not setup parent correctly (thanks @mthurlin #1911)
+* Fix reference error for process in the Device class (thanks @mkristo #1922)
 
 ### Deprecated
 
