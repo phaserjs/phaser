@@ -14,10 +14,10 @@
  */
 PIXI.TilingSprite = function(texture, width, height)
 {
-    PIXI.Sprite.call( this, texture);
+    PIXI.Sprite.call(this, texture);
 
     /**
-     * The with of the tiling sprite
+     * The width of the tiling sprite
      *
      * @property width
      * @type Number
@@ -377,6 +377,7 @@ PIXI.TilingSprite.prototype.generateTilingTexture = function(forcePowerOfTwo)
     {
         this.canvasBuffer = new PIXI.CanvasBuffer(targetWidth, targetHeight);
         this.tilingTexture = PIXI.Texture.fromCanvas(this.canvasBuffer.canvas);
+        this.tilingTexture = PIXI.Texture.fromCanvas(this.canvasBuffer.canvas);
         this.tilingTexture.isTiling = true;
         this.tilingTexture.needsUpdate = true;
     }
@@ -387,6 +388,16 @@ PIXI.TilingSprite.prototype.generateTilingTexture = function(forcePowerOfTwo)
         this.canvasBuffer.context.strokeRect(0, 0, targetWidth, targetHeight);
     }
 
+    //  If a sprite sheet we need this:
+    var w = texture.crop.width;
+    var h = texture.crop.height;
+
+    if (w !== targetWidth || h !== targetHeight)
+    {
+        w = targetWidth;
+        h = targetHeight;
+    }
+
     this.canvasBuffer.context.drawImage(texture.baseTexture.source,
                            texture.crop.x,
                            texture.crop.y,
@@ -394,8 +405,8 @@ PIXI.TilingSprite.prototype.generateTilingTexture = function(forcePowerOfTwo)
                            texture.crop.height,
                            dx,
                            dy,
-                           texture.crop.width,
-                           texture.crop.height);
+                           w,
+                           h);
 
     this.tileScaleOffset.x = frame.width / targetWidth;
     this.tileScaleOffset.y = frame.height / targetHeight;
