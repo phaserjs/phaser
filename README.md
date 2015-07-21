@@ -407,6 +407,7 @@ For the full list of p2 additions please read [their change log](https://github.
 * PIXI.BitmapText has been removed as a global array, as it is no longer used.
 * PIXI has been made available for Phaser when using requireJS (thanks @mkristo #1923)
 * Internally the Time class has been updated to split out the RAF and SetTimeout implementations. This cuts down the update loop workload significantly, which was causing a performance optimization bottleneck in V8.
+* TweenData.update now uses the `Time.elapsedMS` value for its delta calculation, instead of the physicsStep - this is because tweens are inherently time duration based and on a lagging system they were not properly completing when they should do (also addresses #1819)
 
 ### Bug Fixes
 
