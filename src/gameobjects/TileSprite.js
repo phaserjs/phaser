@@ -10,9 +10,15 @@
 * 
 * TileSprites have no input handler or physics bodies by default, both need enabling in the same way as for normal Sprites.
 *
+* You shouldn't ever create a TileSprite any larger than your actual screen size. If you want to create a large repeating background
+* that scrolls across the whole map of your game, then you create a TileSprite that fits the screen size and then use the `tilePosition`
+* property to scroll the texture as the player moves. If you create a TileSprite that is thousands of pixels in size then it will 
+* consume huge amounts of memory and cause performance issues. Remember: use `tilePosition` to scroll your texture and `tileScale` to
+* adjust the scale of the texture - don't resize the sprite itself or make it larger than it needs.
+*
 * An important note about texture dimensions:
 *
-* When running under Canvas a TileSprite can use any texture size without issue. When running under WebGL the texture should be
+* When running under Canvas a TileSprite can use any texture size without issue. When running under WebGL the texture should ideally be
 * a power of two in size (i.e. 4, 8, 16, 32, 64, 128, 256, 512, etch pixels width by height). If the texture isn't a power of two
 * it will be rendered to a blank canvas that is the correct size, which means you may have 'blank' areas appearing to the right and
 * bottom of your frame. To avoid this ensure your textures are perfect powers of two.
@@ -77,7 +83,9 @@ Phaser.TileSprite = function (game, x, y, width, height, key, frame) {
     */
     this._scroll = new Phaser.Point();
 
-    PIXI.TilingSprite.call(this, PIXI.TextureCache['__default'], width, height);
+    var def = game.cache.getImage('__default', true);
+
+    PIXI.TilingSprite.call(this, new PIXI.Texture(def.base), width, height);
 
     Phaser.Component.Core.init.call(this, game, x, y, key, frame);
 
