@@ -12,4 +12,6 @@
     } else {
         root.PIXI = PIXI;
     }
+
+    return PIXI;
 }).call(this);
