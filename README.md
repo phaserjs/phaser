@@ -39,9 +39,11 @@ Thousands of developers worldwide use it. From indies and multi-national digital
 
 <div align="center"><img src="http://phaser.io/images/github/news.jpg"></div>
 
-> 15th July 2015
+> 22nd July 2015
 
-To be written.
+Phaser 2.4 is another huge update. We had to bump the version number from 2.3 directly to 2.4 because of some API adjustments, all of which are fully detailed in the [Change Log](#change-log) at the end of this readme. While it's true we could have released it over a few smaller point releases, that just isn't how the cookie crumbled this time.
+
+Phaser is a fully open-source project and as such we have no direct income from it at all. All development is funded by the client work that my company takes on. And of course the contributions from the incredible community (who also volunteer their skills for free)
 
 That's all for now. I hope you enjoy Phaser 2.4.0. Happy coding everyone! See you on the forums.
 
@@ -402,6 +404,7 @@ For the full list of p2 additions please read [their change log](https://github.
 * AnimationParser.spriteSheet can now accept either a string-based key or an HTML Image object as the key argument.
 * LoaderParser.bitmapFont, xmlBitmapFont and jsonBitmapFont all now return the font data rather than write it to the now deprecated PIXI.BitmapText.fonts global array.
 * PIXI.BitmapText has been removed as a global array, as it is no longer used.
+* PIXI has been made available for Phaser when using requireJS (thanks @mkristo #1923)
 
 ### Bug Fixes
 
