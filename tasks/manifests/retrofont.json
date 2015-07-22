@@ -1,3 +1,17 @@
-[
-    "src/gameobjects/RetroFont.js"
-]
+{
+
+    "description": "Retro Fonts Game Object",
+    "optional": true,
+
+    "dependencies": {
+        "modules": [ "rendertexture" ],
+        "reason": "RetroFonts rely on RenderTextures."
+    },
+
+    "files": [
+        "src/gameobjects/RetroFont.js"
+    ],
+
+    "stubs": null
+
+}

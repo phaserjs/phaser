@@ -1,18 +1,27 @@
-[
-    "src/core/Camera.js",
-    "src/core/Create.js",
-    "src/core/State.js",
-    "src/core/StateManager.js",
-    "src/core/Signal.js",
-    "src/core/SignalBinding.js",
-    "src/core/Filter.js",
-    "src/core/Plugin.js",
-    "src/core/PluginManager.js",
-    "src/core/Stage.js",
-    "src/core/Group.js",
-    "src/core/World.js",
-    "src/core/FlexGrid.js",
-    "src/core/FlexLayer.js",
-    "src/core/ScaleManager.js",
-    "src/core/Game.js"
-]
+{
+
+    "description": "Phaser Core",
+    "optional": false,
+
+    "files": [
+        "src/core/Camera.js",
+        "src/core/Create.js",
+        "src/core/State.js",
+        "src/core/StateManager.js",
+        "src/core/Signal.js",
+        "src/core/SignalBinding.js",
+        "src/core/Filter.js",
+        "src/core/Plugin.js",
+        "src/core/PluginManager.js",
+        "src/core/Stage.js",
+        "src/core/Group.js",
+        "src/core/World.js",
+        "src/core/FlexGrid.js",
+        "src/core/FlexLayer.js",
+        "src/core/ScaleManager.js",
+        "src/core/Game.js"
+    ],
+
+    "stubs": null
+
+}

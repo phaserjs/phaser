@@ -1,3 +1,12 @@
-[
-    "src/gameobjects/Video.js"
-]
+{
+
+    "description": "Video Game Object",
+    "optional": true,
+
+    "files": [
+        "src/gameobjects/Video.js"
+    ],
+
+    "stubs": null
+
+}

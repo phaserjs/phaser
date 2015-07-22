@@ -1,5 +1,14 @@
-[
-    "src/Phaser.js",
-    "src/polyfills.js",
-    "src/utils/Utils.js"
-]
+{
+
+    "description": "Phaser Globals",
+    "optional": false,
+
+    "files": [
+        "src/Phaser.js",
+        "src/polyfills.js",
+        "src/utils/Utils.js"
+    ],
+
+    "stubs": null
+
+}

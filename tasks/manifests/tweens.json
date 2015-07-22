@@ -1,6 +1,17 @@
-[
-    "src/tween/TweenManager.js",
-    "src/tween/Tween.js",
-    "src/tween/TweenData.js",
-    "src/tween/Easing.js"
-]
+{
+
+    "description": "Tween Manager",
+    "optional": true,
+
+    "files": [
+        "src/tween/TweenManager.js",
+        "src/tween/Tween.js",
+        "src/tween/TweenData.js",
+        "src/tween/Easing.js"
+    ],
+
+    "stubs": [
+        "src/stubs/TweenManager.js"
+    ]
+
+}

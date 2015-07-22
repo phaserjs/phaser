@@ -1,0 +1,12 @@
+{
+
+    "description": "Phaser's PIXI defaults",
+    "optional": false,
+
+    "files": [
+        "src/PixiDefaults.js"
+    ],
+
+    "stubs": null
+
+}

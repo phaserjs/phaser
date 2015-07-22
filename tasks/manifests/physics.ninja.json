@@ -1,7 +1,17 @@
-[
-    "src/physics/ninja/World.js",
-    "src/physics/ninja/Body.js",
-    "src/physics/ninja/AABB.js",
-    "src/physics/ninja/Tile.js",
-    "src/physics/ninja/Circle.js"
-]
+{
+
+    "description": "Ninja Physics",
+    "optional": true,
+
+    "files": [
+        "src/physics/ninja/World.js",
+        "src/physics/ninja/Body.js",
+        "src/physics/ninja/AABB.js",
+        "src/physics/ninja/Tile.js",
+        "src/physics/ninja/Circle.js"
+    ],
+
+    "stubs": null
+
+}
+

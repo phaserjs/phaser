@@ -1,8 +1,15 @@
-[
+{
 
-    "src/system/Device.js",
-    "src/system/DOM.js",
-    "src/system/Canvas.js",
-    "src/system/RequestAnimationFrame.js"
+    "description": "System Classes",
+    "optional": false,
 
-]
+    "files": [
+        "src/system/Device.js",
+        "src/system/DOM.js",
+        "src/system/Canvas.js",
+        "src/system/RequestAnimationFrame.js"
+    ],
+
+    "stubs": null
+
+}

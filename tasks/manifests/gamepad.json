@@ -1,4 +1,13 @@
-[
-    "src/input/Gamepad.js",
-    "src/input/SinglePad.js"
-]
+{
+
+    "description": "Gamepad Input",
+    "optional": true,
+
+    "files": [
+        "src/input/Gamepad.js",
+        "src/input/SinglePad.js"
+    ],
+
+    "stubs": null
+
+}

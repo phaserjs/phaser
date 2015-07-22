@@ -1,3 +1,17 @@
-[
-    "src/Intro.js"
-]
+{
+
+    "description": "Phaser UMD wrapper",
+    "optional": true,
+
+    "dependencies": {
+        "modules": [ "outro" ],
+        "reason": "Only required if building Phaser as an UMD library"
+    },
+
+    "files": [
+        "src/Intro.js"
+    ],
+
+    "stubs": null
+
+}

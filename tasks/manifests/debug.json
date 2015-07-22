@@ -1,3 +1,14 @@
-[
-    "src/utils/Debug.js"
-]
+{
+
+    "description": "Debug Class",
+    "optional": true,
+
+    "files": [
+        "src/utils/Debug.js"
+    ],
+
+    "stubs": [
+        "src/stubs/Debug.js"
+    ]
+
+}

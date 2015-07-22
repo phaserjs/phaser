@@ -1,6 +1,15 @@
-[
-    "src/animation/creature/gl-matrix.js",
-    "src/animation/creature/CreatureMeshBone.js",
-    "src/animation/creature/CreaturePixiJSRenderer.js",
-    "src/gameobjects/Creature.js"
-]
+{
+
+    "description": "Creature Animation Tool Support",
+    "optional": true,
+
+    "files": [
+        "src/animation/creature/gl-matrix.js",
+        "src/animation/creature/CreatureMeshBone.js",
+        "src/animation/creature/CreaturePixiJSRenderer.js",
+        "src/gameobjects/Creature.js"
+    ],
+
+    "stubs": null
+
+}

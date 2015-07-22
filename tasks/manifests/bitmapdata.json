@@ -1,3 +1,12 @@
-[
-    "src/gameobjects/BitmapData.js"
-]
+{
+
+    "description": "BitmapData Game Object",
+    "optional": true,
+
+    "files": [
+        "src/gameobjects/BitmapData.js"
+    ],
+
+    "stubs": null
+
+}

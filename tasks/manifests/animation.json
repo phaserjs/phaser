@@ -1,7 +1,16 @@
-[
-    "src/animation/AnimationManager.js",
-    "src/animation/Animation.js",
-    "src/animation/Frame.js",
-    "src/animation/FrameData.js",
-    "src/animation/AnimationParser.js"
-]
+{
+
+    "description": "Animation and Frame Manager",
+    "optional": false,
+
+    "files": [
+        "src/animation/AnimationManager.js",
+        "src/animation/Animation.js",
+        "src/animation/Frame.js",
+        "src/animation/FrameData.js",
+        "src/animation/AnimationParser.js"
+    ],
+
+    "stubs": null
+
+}
