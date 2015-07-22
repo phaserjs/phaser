@@ -568,7 +568,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     },
 
     /**
-    * Removes this body's reference to its parent sprite, freeing it up for gc.
+    * Removes this bodys reference to its parent sprite, freeing it up for gc.
     *
     * @method Phaser.Physics.Arcade.Body#destroy
     */
@@ -592,28 +592,32 @@ Phaser.Physics.Arcade.Body.prototype = {
     */
     checkWorldBounds: function () {
 
-        if (this.position.x < this.game.physics.arcade.bounds.x && this.game.physics.arcade.checkCollision.left)
+        var pos = this.position;
+        var bounds = this.game.physics.arcade.bounds;
+        var check = this.game.physics.arcade.checkCollision;
+
+        if (pos.x < bounds.x && check.left)
         {
-            this.position.x = this.game.physics.arcade.bounds.x;
+            pos.x = bounds.x;
             this.velocity.x *= -this.bounce.x;
             this.blocked.left = true;
         }
-        else if (this.right > this.game.physics.arcade.bounds.right && this.game.physics.arcade.checkCollision.right)
+        else if (this.right > bounds.right && check.right)
         {
-            this.position.x = this.game.physics.arcade.bounds.right - this.width;
+            pos.x = bounds.right - this.width;
             this.velocity.x *= -this.bounce.x;
             this.blocked.right = true;
         }
 
-        if (this.position.y < this.game.physics.arcade.bounds.y && this.game.physics.arcade.checkCollision.up)
+        if (pos.y < bounds.y && check.up)
         {
-            this.position.y = this.game.physics.arcade.bounds.y;
+            pos.y = bounds.y;
             this.velocity.y *= -this.bounce.y;
             this.blocked.up = true;
         }
-        else if (this.bottom > this.game.physics.arcade.bounds.bottom && this.game.physics.arcade.checkCollision.down)
+        else if (this.bottom > bounds.bottom && check.down)
         {
-            this.position.y = this.game.physics.arcade.bounds.bottom - this.height;
+            pos.y = bounds.bottom - this.height;
             this.velocity.y *= -this.bounce.y;
             this.blocked.down = true;
         }

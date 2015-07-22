@@ -50,6 +50,8 @@ Phaser.World = function (game) {
     */
     this._height = game.height;
 
+    this.game.state.onStateChange.add(this.stateChange, this);
+
 };
 
 Phaser.World.prototype = Object.create(Phaser.Group.prototype);
@@ -72,6 +74,24 @@ Phaser.World.prototype.boot = function () {
     this.game.camera = this.camera;
 
     this.game.stage.addChild(this);
+
+};
+
+/**
+* Called whenever the State changes or resets.
+* 
+* It resets the world.x and world.y coordinates back to zero,
+* then resets the Camera.
+*
+* @method Phaser.World#stateChange
+* @protected
+*/
+Phaser.World.prototype.stateChange = function () {
+
+    this.x = 0;
+    this.y = 0;
+
+    this.camera.reset();
 
 };
 

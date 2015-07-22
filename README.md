@@ -408,6 +408,7 @@ For the full list of p2 additions please read [their change log](https://github.
 * PIXI has been made available for Phaser when using requireJS (thanks @mkristo #1923)
 * Internally the Time class has been updated to split out the RAF and SetTimeout implementations. This cuts down the update loop workload significantly, which was causing a performance optimization bottleneck in V8.
 * TweenData.update now uses the `Time.elapsedMS` value for its delta calculation, instead of the physicsStep - this is because tweens are inherently time duration based and on a lagging system they were not properly completing when they should do (also addresses #1819)
+* World.stateChange is a new method that is called whenever the state changes or restarts. It resets the world x/y coordinates back to zero and then resets the Camera.
 
 ### Bug Fixes
 
@@ -465,6 +466,7 @@ For the full list of p2 additions please read [their change log](https://github.
 * Improved the JSON BitmapText implementation (thanks @Feenposhleen #1912 #1837)
 * game.make.group did not setup parent correctly (thanks @mthurlin #1911)
 * Fix reference error for process in the Device class (thanks @mkristo #1922)
+* Sprites with Arcade Physics bodies that had `collideWorldBounds` enabled would be moved to the wrong position if you restarted a State (or swapped to a new State) that reset the world bounds (thanks @vulvulune #1775)
 
 ### Deprecated
 
