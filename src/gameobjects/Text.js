@@ -1056,6 +1056,9 @@ Phaser.Text.prototype.updateTexture = function () {
         this.pivot.y = -y;
     }
 
+    //  Can't render something with a zero sized dimension
+    this.renderable = (w !== 0 && h !== 0);
+
     this.texture.baseTexture.dirty();
 
 };

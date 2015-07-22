@@ -410,6 +410,7 @@ For the full list of p2 additions please read [their change log](https://github.
 * TweenData.update now uses the `Time.elapsedMS` value for its delta calculation, instead of the physicsStep - this is because tweens are inherently time duration based and on a lagging system they were not properly completing when they should do (also addresses #1819)
 * World.stateChange is a new method that is called whenever the state changes or restarts. It resets the world x/y coordinates back to zero and then resets the Camera.
 * All undefined argument checks were changed from `if (typeof x === 'undefined')` to `if (x === undefined)` removing the typeof check and saving some bytes across the codebase in the process.
+* Text.updateText will now check the width and height values of the Text canvas and if either are zero it sets `Text.renderable = false` to avoid throwing WebGL texture binding errors.
 
 ### Bug Fixes
 
@@ -468,6 +469,7 @@ For the full list of p2 additions please read [their change log](https://github.
 * game.make.group did not setup parent correctly (thanks @mthurlin #1911)
 * Fix reference error for process in the Device class (thanks @mkristo #1922)
 * Sprites with Arcade Physics bodies that had `collideWorldBounds` enabled would be moved to the wrong position if you restarted a State (or swapped to a new State) that reset the world bounds (thanks @vulvulune #1775)
+* PIXI.BaseTexture.fromCanvas now checks the canvas dimensions and if either face is zero it sets them to 1px to avoid WebGL texture binding errors.
 
 ### Deprecated
 

@@ -304,7 +304,7 @@ PIXI.Texture.fromCanvas = function(canvas, scaleMode)
 {
     var baseTexture = PIXI.BaseTexture.fromCanvas(canvas, scaleMode);
 
-    return new PIXI.Texture( baseTexture );
+    return new PIXI.Texture(baseTexture);
 
 };
 
