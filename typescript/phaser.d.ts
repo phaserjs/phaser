@@ -4607,7 +4607,7 @@ declare module Phaser {
         postUpdate(): void;
         parseList(list: any[]): Phaser.Text;
         preUpdate(): void;
-        renderTabLine(line: string, x: number, y: number, fill?: boolean);
+        renderTabLine(line: string, x: number, y: number, fill?: boolean): void;
         setShadow(x?: number, y?: number, color?: any, blur?: number, shadowStroke?: boolean, shadowFill?: boolean): Phaser.Text;
         setStyle(style?: PhaserTextStyle): Phaser.Text;
         setText(text: string): Phaser.Text;
