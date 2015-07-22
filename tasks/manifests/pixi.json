@@ -33,13 +33,6 @@
     "src/pixi/renderers/canvas/CanvasRenderer.js",
     "src/pixi/renderers/canvas/CanvasGraphics.js",
 
-    "src/pixi/primitives/Graphics.js",
-    "src/pixi/primitives/GraphicsData.js",
-
-    "src/pixi/extras/Strip.js",
-    "src/pixi/extras/Rope.js",
-    "src/pixi/extras/TilingSprite.js",
-
     "src/pixi/textures/BaseTexture.js",
     "src/pixi/textures/Texture.js",
     "src/pixi/textures/RenderTexture.js",

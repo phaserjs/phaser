@@ -30,7 +30,7 @@ module.exports = function (grunt) {
 
         var modules = {
 
-            'pixi':             { 'description': 'Pixi.js (custom Phaser build)',               'optional': true, 'stub': false },
+            'pixi':             { 'description': 'Pixi.js (custom Phaser build)',               'optional': false, 'stub': false },
             'intro':            { 'description': 'Phaser UMD wrapper',                          'optional': true, 'stub': false },
             'phaser':           { 'description': 'Phaser Globals',                              'optional': false, 'stub': false },
             'geom':             { 'description': 'Geometry Classes',                            'optional': false, 'stub': false },
@@ -46,6 +46,8 @@ module.exports = function (grunt) {
             'text':             { 'description': 'Text Game Object (inc. Web Font Support)',    'optional': true, 'stub': false },
             'bitmaptext':       { 'description': 'BitmapText Game Object',                      'optional': true, 'stub': false },
             'retrofont':        { 'description': 'Retro Fonts Game Object',                     'optional': true, 'stub': false },
+            'rope':             { 'description': 'Rope and Strip Game Object',                  'optional': true, 'stub': false },
+            'tilesprite':       { 'description': 'Tile Sprite Game Object',                     'optional': true, 'stub': false },
             'system':           { 'description': 'System Classes',                              'optional': false, 'stub': false },
             'math':             { 'description': 'Math, QuadTree and RND',                      'optional': false, 'stub': false },
             'net':              { 'description': 'Network Class',                               'optional': true, 'stub': true },
@@ -255,7 +257,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('minimum', 'Phaser without any optional modules except Pixi', function() {
 
-        grunt.option('exclude', 'gamepad,keyboard,bitmapdata,graphics,rendertexture,text,bitmaptext,retrofont,net,tweens,sound,debug,arcade,ninja,p2,tilemaps,particles,creature,video');
+        grunt.option('exclude', 'gamepad,keyboard,bitmapdata,graphics,rendertexture,text,bitmaptext,retrofont,net,tweens,sound,debug,arcade,ninja,p2,tilemaps,particles,creature,video,rope,tilesprite');
         grunt.option('filename', 'phaser-minimum');
         grunt.option('sourcemap', true);
         grunt.option('copy', false);

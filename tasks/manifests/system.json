@@ -1,8 +1,6 @@
 [
-
     "src/system/Device.js",
     "src/system/DOM.js",
     "src/system/Canvas.js",
     "src/system/RequestAnimationFrame.js"
-
 ]

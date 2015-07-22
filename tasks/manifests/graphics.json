@@ -1,3 +1,5 @@
 [
+    "src/pixi/primitives/Graphics.js",
+    "src/pixi/primitives/GraphicsData.js",
     "src/gameobjects/Graphics.js"
 ]
