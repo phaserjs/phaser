@@ -237,6 +237,7 @@ Phaser.Cache.prototype = {
     * @param {string} key - The key that this asset will be stored in the cache under. This should be unique within this cache.
     * @param {string} url - The URL the asset was loaded from. If the asset was not loaded externally set to `null`.
     * @param {object} data - Extra image data.
+    * @return {object} The full image object that was added to the cache.
     */
     addImage: function (key, url, data) {
 
@@ -259,6 +260,8 @@ Phaser.Cache.prototype = {
         this._cache.image[key] = img;
 
         this._resolveURL(url, img);
+
+        return img;
 
     },
 

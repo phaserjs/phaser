@@ -466,7 +466,7 @@ Phaser.BitmapData.prototype = {
     /**
     * Creates a new Image element by converting this BitmapDatas canvas into a dataURL.
     *
-    * The image is then stored in the Cache using the key given.
+    * The image is then stored in the image Cache using the key given.
     *
     * Finally a PIXI.Texture is created based on the image and returned.
     *
@@ -493,9 +493,9 @@ Phaser.BitmapData.prototype = {
 
         image.src = this.canvas.toDataURL("image/png");
 
-        this.game.cache.addImage(key, '', image);
+        var obj = this.game.cache.addImage(key, '', image);
 
-        return new PIXI.Texture(PIXI.BaseTextureCache[key]);
+        return new PIXI.Texture(obj.base);
 
     },
 

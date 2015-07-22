@@ -768,9 +768,8 @@ Phaser.Game.prototype = {
     *
     * @method Phaser.Game#contextRestored
     * @private
-    * @param {Event} event - The webglcontextrestored event.
     */
-    contextRestored: function (event) {
+    contextRestored: function () {
 
         this.renderer.initContext();
 

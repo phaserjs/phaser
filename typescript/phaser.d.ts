@@ -452,6 +452,7 @@ declare module Phaser {
         checkUrl(url: string): any;
         checkXMLKey(key: string): boolean;
         checkVideoKey(key: string): boolean;
+        clearGLTextures(): void;
         decodedSound(key: string, data: any): void;
         destroy(): void;
         getBaseTexture(key: string, cache?: number): PIXI.BaseTexture;
