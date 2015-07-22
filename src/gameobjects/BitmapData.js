@@ -18,8 +18,8 @@
 */
 Phaser.BitmapData = function (game, key, width, height) {
 
-    if (typeof width === 'undefined' || width === 0) { width = 256; }
-    if (typeof height === 'undefined' || height === 0) { height = 256; }
+    if (width === undefined || width === 0) { width = 256; }
+    if (height === undefined || height === 0) { height = 256; }
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running game.
@@ -428,10 +428,10 @@ Phaser.BitmapData.prototype = {
     */
     clear: function (x, y, width, height) {
 
-        if (typeof x === 'undefined') { x = 0; }
-        if (typeof y === 'undefined') { y = 0; }
-        if (typeof width === 'undefined') { width = this.width; }
-        if (typeof height === 'undefined') { height = this.height; }
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+        if (width === undefined) { width = this.width; }
+        if (height === undefined) { height = this.height; }
 
         this.context.clearRect(x, y, width, height);
 
@@ -453,7 +453,7 @@ Phaser.BitmapData.prototype = {
     */
     fill: function (r, g, b, a) {
 
-        if (typeof a === 'undefined') { a = 1; }
+        if (a === undefined) { a = 1; }
 
         this.context.fillStyle = 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
         this.context.fillRect(0, 0, this.width, this.height);
@@ -552,10 +552,10 @@ Phaser.BitmapData.prototype = {
     */
     update: function (x, y, width, height) {
 
-        if (typeof x === 'undefined') { x = 0; }
-        if (typeof y === 'undefined') { y = 0; }
-        if (typeof width === 'undefined') { width = Math.max(1, this.width); }
-        if (typeof height === 'undefined') { height = Math.max(1, this.height); }
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+        if (width === undefined) { width = Math.max(1, this.width); }
+        if (height === undefined) { height = Math.max(1, this.height); }
 
         this.imageData = this.context.getImageData(x, y, width, height);
         this.data = this.imageData.data;
@@ -603,10 +603,10 @@ Phaser.BitmapData.prototype = {
     */
     processPixelRGB: function (callback, callbackContext, x, y, width, height) {
 
-        if (typeof x === 'undefined') { x = 0; }
-        if (typeof y === 'undefined') { y = 0; }
-        if (typeof width === 'undefined') { width = this.width; }
-        if (typeof height === 'undefined') { height = this.height; }
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+        if (width === undefined) { width = this.width; }
+        if (height === undefined) { height = this.height; }
 
         var w = x + width;
         var h = y + height;
@@ -658,10 +658,10 @@ Phaser.BitmapData.prototype = {
     */
     processPixel: function (callback, callbackContext, x, y, width, height) {
 
-        if (typeof x === 'undefined') { x = 0; }
-        if (typeof y === 'undefined') { y = 0; }
-        if (typeof width === 'undefined') { width = this.width; }
-        if (typeof height === 'undefined') { height = this.height; }
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+        if (width === undefined) { width = this.width; }
+        if (height === undefined) { height = this.height; }
 
         var w = x + width;
         var h = y + height;
@@ -756,16 +756,16 @@ Phaser.BitmapData.prototype = {
     */
     setHSL: function (h, s, l, region) {
 
-        if (typeof h === 'undefined' || h === null) { h = false; }
-        if (typeof s === 'undefined' || s === null) { s = false; }
-        if (typeof l === 'undefined' || l === null) { l = false; }
+        if (h === undefined || h === null) { h = false; }
+        if (s === undefined || s === null) { s = false; }
+        if (l === undefined || l === null) { l = false; }
 
         if (!h && !s && !l)
         {
             return;
         }
 
-        if (typeof region === 'undefined')
+        if (region === undefined)
         {
             region = new Phaser.Rectangle(0, 0, this.width, this.height);
         }
@@ -819,16 +819,16 @@ Phaser.BitmapData.prototype = {
     */
     shiftHSL: function (h, s, l, region) {
 
-        if (typeof h === 'undefined' || h === null) { h = false; }
-        if (typeof s === 'undefined' || s === null) { s = false; }
-        if (typeof l === 'undefined' || l === null) { l = false; }
+        if (h === undefined || h === null) { h = false; }
+        if (s === undefined || s === null) { s = false; }
+        if (l === undefined || l === null) { l = false; }
 
         if (!h && !s && !l)
         {
             return;
         }
 
-        if (typeof region === 'undefined')
+        if (region === undefined)
         {
             region = new Phaser.Rectangle(0, 0, this.width, this.height);
         }
@@ -883,7 +883,7 @@ Phaser.BitmapData.prototype = {
     */
     setPixel32: function (x, y, red, green, blue, alpha, immediate) {
 
-        if (typeof immediate === 'undefined') { immediate = true; }
+        if (immediate === undefined) { immediate = true; }
 
         if (x >= 0 && x <= this.width && y >= 0 && y <= this.height)
         {
@@ -1026,7 +1026,7 @@ Phaser.BitmapData.prototype = {
     */
     getFirstPixel: function (direction) {
 
-        if (typeof direction === 'undefined') { direction = 0; }
+        if (direction === undefined) { direction = 0; }
 
         var pixel = Phaser.Color.createColor();
 
@@ -1102,7 +1102,7 @@ Phaser.BitmapData.prototype = {
     */
     getBounds: function (rect) {
 
-        if (typeof rect === 'undefined') { rect = new Phaser.Rectangle(); }
+        if (rect === undefined) { rect = new Phaser.Rectangle(); }
 
         rect.x = this.getFirstPixel(2).x;
 
@@ -1177,7 +1177,7 @@ Phaser.BitmapData.prototype = {
      */
     copy: function (source, x, y, width, height, tx, ty, newWidth, newHeight, rotate, anchorX, anchorY, scaleX, scaleY, alpha, blendMode, roundPx) {
 
-        if (typeof source === 'undefined' || source === null) { source = this; }
+        if (source === undefined || source === null) { source = this; }
 
         this._image = source;
 
@@ -1192,8 +1192,8 @@ Phaser.BitmapData.prototype = {
             this._alpha.current = source.alpha;
             this._image = source.texture.baseTexture.source;
 
-            if (typeof tx === 'undefined' || tx === null) { tx = source.x; }
-            if (typeof ty === 'undefined' || ty === null) { ty = source.y; }
+            if (tx === undefined || tx === null) { tx = source.x; }
+            if (ty === undefined || ty === null) { ty = source.y; }
 
             if (source.texture.trim)
             {
@@ -1244,8 +1244,8 @@ Phaser.BitmapData.prototype = {
         }
 
         //  The source region to copy from
-        if (typeof x === 'undefined' || x === null) { x = 0; }
-        if (typeof y === 'undefined' || y === null) { y = 0; }
+        if (x === undefined || x === null) { x = 0; }
+        if (y === undefined || y === null) { y = 0; }
 
         //  If they set a width/height then we override the frame values with them
         if (width)
@@ -1259,10 +1259,10 @@ Phaser.BitmapData.prototype = {
         }
 
         //  The destination region to copy to
-        if (typeof tx === 'undefined' || tx === null) { tx = x; }
-        if (typeof ty === 'undefined' || ty === null) { ty = y; }
-        if (typeof newWidth === 'undefined' || newWidth === null) { newWidth = this._size.x; }
-        if (typeof newHeight === 'undefined' || newHeight === null) { newHeight = this._size.y; }
+        if (tx === undefined || tx === null) { tx = x; }
+        if (ty === undefined || ty === null) { ty = y; }
+        if (newWidth === undefined || newWidth === null) { newWidth = this._size.x; }
+        if (newHeight === undefined || newHeight === null) { newHeight = this._size.y; }
 
         //  Rotation - if set this will override any potential Sprite value
         if (typeof rotate === 'number')
@@ -1298,8 +1298,8 @@ Phaser.BitmapData.prototype = {
             this._alpha.current = alpha;
         }
 
-        if (typeof blendMode === 'undefined') { blendMode = null; }
-        if (typeof roundPx === 'undefined') { roundPx = false; }
+        if (blendMode === undefined) { blendMode = null; }
+        if (roundPx === undefined) { roundPx = false; }
 
         if (this._alpha.current <= 0 || this._scale.x === 0 || this._scale.y === 0 || this._size.x === 0 || this._size.y === 0)
         {
@@ -1421,7 +1421,7 @@ Phaser.BitmapData.prototype = {
     */
     shadow: function (color, blur, x, y) {
 
-        if (typeof color === 'undefined' || color === null)
+        if (color === undefined || color === null)
         {
             this.context.shadowColor = 'rgba(0,0,0,0)';
         }
@@ -1447,7 +1447,7 @@ Phaser.BitmapData.prototype = {
     */
     alphaMask: function (source, mask, sourceRect, maskRect) {
 
-        if (typeof maskRect === 'undefined' || maskRect === null)
+        if (maskRect === undefined || maskRect === null)
         {
             this.draw(mask).blendSourceAtop();
         }
@@ -1456,7 +1456,7 @@ Phaser.BitmapData.prototype = {
             this.draw(mask, maskRect.x, maskRect.y, maskRect.width, maskRect.height).blendSourceAtop();
         }
 
-        if (typeof sourceRect === 'undefined' || sourceRect === null)
+        if (sourceRect === undefined || sourceRect === null)
         {
             this.draw(source).blendReset();
         }
@@ -1493,11 +1493,11 @@ Phaser.BitmapData.prototype = {
     */
     extract: function (destination, r, g, b, a, resize, r2, g2, b2) {
 
-        if (typeof a === 'undefined') { a = 255; }
-        if (typeof resize === 'undefined') { resize = false; }
-        if (typeof r2 === 'undefined') { r2 = r; }
-        if (typeof g2 === 'undefined') { g2 = g; }
-        if (typeof b2 === 'undefined') { b2 = b; }
+        if (a === undefined) { a = 255; }
+        if (resize === undefined) { resize = false; }
+        if (r2 === undefined) { r2 = r; }
+        if (g2 === undefined) { g2 = g; }
+        if (b2 === undefined) { b2 = b; }
 
         if (resize)
         {
@@ -1562,11 +1562,11 @@ Phaser.BitmapData.prototype = {
     */
     text: function (text, x, y, font, color, shadow) {
 
-        if (typeof x === 'undefined') { x = 0; }
-        if (typeof y === 'undefined') { y = 0; }
-        if (typeof font === 'undefined') { font = '14px Courier'; }
-        if (typeof color === 'undefined') { color = 'rgb(255,255,255)'; }
-        if (typeof shadow === 'undefined') { shadow = true; }
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+        if (font === undefined) { font = '14px Courier'; }
+        if (color === undefined) { color = 'rgb(255,255,255)'; }
+        if (shadow === undefined) { shadow = true; }
 
         var prevFont = this.context.font;
 
@@ -1623,7 +1623,7 @@ Phaser.BitmapData.prototype = {
     */
     textureLine: function (line, image, repeat) {
 
-        if (typeof repeat === 'undefined') { repeat = 'repeat-x'; }
+        if (repeat === undefined) { repeat = 'repeat-x'; }
 
         if (typeof image === 'string')
         {

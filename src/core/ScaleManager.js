@@ -1155,7 +1155,7 @@ Phaser.ScaleManager.prototype = {
     */
     forceOrientation: function (forceLandscape, forcePortrait) {
 
-        if (typeof forcePortrait === 'undefined') { forcePortrait = false; }
+        if (forcePortrait === undefined) { forcePortrait = false; }
 
         this.forceLandscape = forceLandscape;
         this.forcePortrait = forcePortrait;
@@ -1577,8 +1577,8 @@ Phaser.ScaleManager.prototype = {
     */
     resetCanvas: function (cssWidth, cssHeight) {
 
-        if (typeof cssWidth === 'undefined') { cssWidth = this.width + 'px'; }
-        if (typeof cssHeight === 'undefined') { cssHeight = this.height + 'px'; }
+        if (cssWidth === undefined) { cssWidth = this.width + 'px'; }
+        if (cssHeight === undefined) { cssHeight = this.height + 'px'; }
 
         var canvas = this.game.canvas;
 
@@ -1978,9 +1978,9 @@ Phaser.ScaleManager.prototype = {
     */
     scaleSprite: function (sprite, width, height, letterBox) {
 
-        if (typeof width === 'undefined') { width = this.width; }
-        if (typeof height === 'undefined') { height = this.height; }
-        if (typeof letterBox === 'undefined') { letterBox = false; }
+        if (width === undefined) { width = this.width; }
+        if (height === undefined) { height = this.height; }
+        if (letterBox === undefined) { letterBox = false; }
 
         if (!sprite || !sprite['scale'])
         {

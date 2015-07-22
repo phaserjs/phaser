@@ -143,7 +143,7 @@ Phaser.FrameData.prototype = {
     */
     getFrameRange: function (start, end, output) {
 
-        if (typeof output === "undefined") { output = []; }
+        if (output === undefined) { output = []; }
 
         for (var i = start; i <= end; i++)
         {
@@ -166,10 +166,10 @@ Phaser.FrameData.prototype = {
     */
     getFrames: function (frames, useNumericIndex, output) {
 
-        if (typeof useNumericIndex === "undefined") { useNumericIndex = true; }
-        if (typeof output === "undefined") { output = []; }
+        if (useNumericIndex === undefined) { useNumericIndex = true; }
+        if (output === undefined) { output = []; }
 
-        if (typeof frames === "undefined" || frames.length === 0)
+        if (frames === undefined || frames.length === 0)
         {
             //  No input array, so we loop through all frames
             for (var i = 0; i < this._frames.length; i++)
@@ -213,10 +213,10 @@ Phaser.FrameData.prototype = {
     */
     getFrameIndexes: function (frames, useNumericIndex, output) {
 
-        if (typeof useNumericIndex === "undefined") { useNumericIndex = true; }
-        if (typeof output === "undefined") { output = []; }
+        if (useNumericIndex === undefined) { useNumericIndex = true; }
+        if (output === undefined) { output = []; }
 
-        if (typeof frames === "undefined" || frames.length === 0)
+        if (frames === undefined || frames.length === 0)
         {
             //  No frames array, so we loop through all frames
             for (var i = 0; i < this._frames.length; i++)

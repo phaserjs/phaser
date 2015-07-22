@@ -33,7 +33,7 @@ Phaser.Math = {
     * @return {boolean} True if |a-b|<epsilon
     */
     fuzzyEqual: function (a, b, epsilon) {
-        if (typeof epsilon === 'undefined') { epsilon = 0.0001; }
+        if (epsilon === undefined) { epsilon = 0.0001; }
         return Math.abs(a - b) < epsilon;
     },
 
@@ -47,7 +47,7 @@ Phaser.Math = {
     * @return {boolean} True if a<b+epsilon
     */
     fuzzyLessThan: function (a, b, epsilon) {
-        if (typeof epsilon === 'undefined') { epsilon = 0.0001; }
+        if (epsilon === undefined) { epsilon = 0.0001; }
         return a < b + epsilon;
     },
 
@@ -61,7 +61,7 @@ Phaser.Math = {
     * @return {boolean} True if a>b+epsilon
     */
     fuzzyGreaterThan: function (a, b, epsilon) {
-        if (typeof epsilon === 'undefined') { epsilon = 0.0001; }
+        if (epsilon === undefined) { epsilon = 0.0001; }
         return a > b - epsilon;
     },
 
@@ -73,7 +73,7 @@ Phaser.Math = {
     * @return {boolean} ceiling(val-epsilon)
     */
     fuzzyCeil: function (val, epsilon) {
-        if (typeof epsilon === 'undefined') { epsilon = 0.0001; }
+        if (epsilon === undefined) { epsilon = 0.0001; }
         return Math.ceil(val - epsilon);
     },
 
@@ -85,7 +85,7 @@ Phaser.Math = {
     * @return {boolean} floor(val-epsilon)
     */
     fuzzyFloor: function (val, epsilon) {
-        if (typeof epsilon === 'undefined') { epsilon = 0.0001; }
+        if (epsilon === undefined) { epsilon = 0.0001; }
         return Math.floor(val + epsilon);
     },
 
@@ -130,7 +130,7 @@ Phaser.Math = {
     */
     snapTo: function (input, gap, start) {
 
-        if (typeof start === 'undefined') { start = 0; }
+        if (start === undefined) { start = 0; }
 
         if (gap === 0) {
             return input;
@@ -157,7 +157,7 @@ Phaser.Math = {
     */
     snapToFloor: function (input, gap, start) {
 
-        if (typeof start === 'undefined') { start = 0; }
+        if (start === undefined) { start = 0; }
 
         if (gap === 0) {
             return input;
@@ -184,7 +184,7 @@ Phaser.Math = {
     */
     snapToCeil: function (input, gap, start) {
 
-        if (typeof start === 'undefined') { start = 0; }
+        if (start === undefined) { start = 0; }
 
         if (gap === 0) {
             return input;
@@ -234,8 +234,8 @@ Phaser.Math = {
     */
     roundTo: function (value, place, base) {
 
-        if (typeof place === 'undefined') { place = 0; }
-        if (typeof base === 'undefined') { base = 10; }
+        if (place === undefined) { place = 0; }
+        if (base === undefined) { base = 10; }
 
         var p = Math.pow(base, -place);
 
@@ -252,8 +252,8 @@ Phaser.Math = {
     */
     floorTo: function (value, place, base) {
 
-        if (typeof place === 'undefined') { place = 0; }
-        if (typeof base === 'undefined') { base = 10; }
+        if (place === undefined) { place = 0; }
+        if (base === undefined) { base = 10; }
 
         var p = Math.pow(base, -place);
 
@@ -270,8 +270,8 @@ Phaser.Math = {
     */
     ceilTo: function (value, place, base) {
 
-        if (typeof place === 'undefined') { place = 0; }
-        if (typeof base === 'undefined') { base = 10; }
+        if (place === undefined) { place = 0; }
+        if (base === undefined) { base = 10; }
 
         var p = Math.pow(base, -place);
 
@@ -793,9 +793,9 @@ Phaser.Math = {
     */
     sinCosGenerator: function (length, sinAmplitude, cosAmplitude, frequency) {
 
-        if (typeof sinAmplitude === 'undefined') { sinAmplitude = 1.0; }
-        if (typeof cosAmplitude === 'undefined') { cosAmplitude = 1.0; }
-        if (typeof frequency === 'undefined') { frequency = 1.0; }
+        if (sinAmplitude === undefined) { sinAmplitude = 1.0; }
+        if (cosAmplitude === undefined) { cosAmplitude = 1.0; }
+        if (frequency === undefined) { frequency = 1.0; }
 
         var sin = sinAmplitude;
         var cos = cosAmplitude;
@@ -870,7 +870,7 @@ Phaser.Math = {
     */
     distancePow: function (x1, y1, x2, y2, pow) {
 
-        if (typeof pow === 'undefined') { pow = 2; }
+        if (pow === undefined) { pow = 2; }
 
         return Math.sqrt(Math.pow(x2 - x1, pow) + Math.pow(y2 - y1, pow));
 
@@ -983,7 +983,7 @@ Phaser.Math = {
     */
     percent: function (a, b, base) {
 
-        if (typeof base === 'undefined') { base = 0; }
+        if (base === undefined) { base = 0; }
 
         if (a > b || base > b)
         {

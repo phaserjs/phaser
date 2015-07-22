@@ -447,7 +447,7 @@ Phaser.Loader.prototype = {
     */
     reset: function (hard, clearEvents) {
 
-        if (typeof clearEvents === 'undefined') { clearEvents = false; }
+        if (clearEvents === undefined) { clearEvents = false; }
 
         if (this.resetLocked)
         {
@@ -498,15 +498,15 @@ Phaser.Loader.prototype = {
     */
     addToFileList: function (type, key, url, properties, overwrite, extension) {
 
-        if (typeof overwrite === 'undefined') { overwrite = false; }
+        if (overwrite === undefined) { overwrite = false; }
         
-        if (typeof key === 'undefined' || key === '')
+        if (key === undefined || key === '')
         {
             console.warn("Phaser.Loader: Invalid or no key given of type " + type);
             return this;
         }
 
-        if (typeof url === 'undefined' || url === null)
+        if (url === undefined || url === null)
         {
             if (extension)
             {
@@ -597,9 +597,9 @@ Phaser.Loader.prototype = {
     */
     pack: function (key, url, data, callbackContext) {
 
-        if (typeof url === 'undefined') { url = null; }
-        if (typeof data === 'undefined') { data = null; }
-        if (typeof callbackContext === 'undefined') { callbackContext = null; }
+        if (url === undefined) { url = null; }
+        if (data === undefined) { data = null; }
+        if (callbackContext === undefined) { callbackContext = null; }
 
         if (!url && !data)
         {
@@ -817,9 +817,9 @@ Phaser.Loader.prototype = {
     */
     script: function (key, url, callback, callbackContext) {
 
-        if (typeof callback === 'undefined') { callback = false; }
+        if (callback === undefined) { callback = false; }
 
-        if (callback !== false && typeof callbackContext === 'undefined') { callbackContext = this; }
+        if (callback !== false && callbackContext === undefined) { callbackContext = this; }
 
         return this.addToFileList('script', key, url, { syncPoint: true, callback: callback, callbackContext: callbackContext }, false, '.js');
 
@@ -854,10 +854,10 @@ Phaser.Loader.prototype = {
     */
     binary: function (key, url, callback, callbackContext) {
 
-        if (typeof callback === 'undefined') { callback = false; }
+        if (callback === undefined) { callback = false; }
 
         // Why is the default callback context the ..callback?
-        if (callback !== false && typeof callbackContext === 'undefined') { callbackContext = callback; }
+        if (callback !== false && callbackContext === undefined) { callbackContext = callback; }
 
         return this.addToFileList('binary', key, url, { callback: callback, callbackContext: callbackContext }, false, '.bin');
 
@@ -897,9 +897,9 @@ Phaser.Loader.prototype = {
     */
     spritesheet: function (key, url, frameWidth, frameHeight, frameMax, margin, spacing) {
 
-        if (typeof frameMax === 'undefined') { frameMax = -1; }
-        if (typeof margin === 'undefined') { margin = 0; }
-        if (typeof spacing === 'undefined') { spacing = 0; }
+        if (frameMax === undefined) { frameMax = -1; }
+        if (margin === undefined) { margin = 0; }
+        if (spacing === undefined) { spacing = 0; }
 
         return this.addToFileList('spritesheet', key, url, { frameWidth: frameWidth, frameHeight: frameHeight, frameMax: frameMax, margin: margin, spacing: spacing }, false, '.png');
 
@@ -937,7 +937,7 @@ Phaser.Loader.prototype = {
             return this;
         }
 
-        if (typeof autoDecode === 'undefined') { autoDecode = true; }
+        if (autoDecode === undefined) { autoDecode = true; }
 
         if (typeof urls === 'string')
         {
@@ -979,9 +979,9 @@ Phaser.Loader.prototype = {
             return this;
         }
 
-        if (typeof jsonURL === 'undefined') { jsonURL = null; }
-        if (typeof jsonData === 'undefined') { jsonData = null; }
-        if (typeof autoDecode === 'undefined') { autoDecode = true; }
+        if (jsonURL === undefined) { jsonURL = null; }
+        if (jsonData === undefined) { jsonData = null; }
+        if (autoDecode === undefined) { autoDecode = true; }
 
         this.audio(key, urls, autoDecode);
 
@@ -1039,7 +1039,7 @@ Phaser.Loader.prototype = {
     */
     video: function (key, urls, loadEvent, asBlob) {
 
-        if (typeof loadEvent === 'undefined')
+        if (loadEvent === undefined)
         {
             if (this.game.device.firefox)
             {
@@ -1051,7 +1051,7 @@ Phaser.Loader.prototype = {
             }
         }
 
-        if (typeof asBlob === 'undefined') { asBlob = false; }
+        if (asBlob === undefined) { asBlob = false; }
 
         if (typeof urls === 'string')
         {
@@ -1093,9 +1093,9 @@ Phaser.Loader.prototype = {
     */
     tilemap: function (key, url, data, format) {
 
-        if (typeof url === 'undefined') { url = null; }
-        if (typeof data === 'undefined') { data = null; }
-        if (typeof format === 'undefined') { format = Phaser.Tilemap.CSV; }
+        if (url === undefined) { url = null; }
+        if (data === undefined) { data = null; }
+        if (format === undefined) { format = Phaser.Tilemap.CSV; }
 
         if (!url && !data)
         {
@@ -1172,9 +1172,9 @@ Phaser.Loader.prototype = {
     */
     physics: function (key, url, data, format) {
 
-        if (typeof url === 'undefined') { url = null; }
-        if (typeof data === 'undefined') { data = null; }
-        if (typeof format === 'undefined') { format = Phaser.Physics.LIME_CORONA_JSON; }
+        if (url === undefined) { url = null; }
+        if (data === undefined) { data = null; }
+        if (format === undefined) { format = Phaser.Physics.LIME_CORONA_JSON; }
 
         if (!url && !data)
         {
@@ -1239,15 +1239,15 @@ Phaser.Loader.prototype = {
     * @return {Phaser.Loader} This Loader instance.
     */
     bitmapFont: function (key, textureURL, atlasURL, atlasData, xSpacing, ySpacing) {
-        if (typeof textureURL === 'undefined' || textureURL === null)
+        if (textureURL === undefined || textureURL === null)
         {
             textureURL = key + '.png';
         }
 
-        if (typeof atlasURL === 'undefined') { atlasURL = null; }
-        if (typeof atlasData === 'undefined') { atlasData = null; }
-        if (typeof xSpacing === 'undefined') { xSpacing = 0; }
-        if (typeof ySpacing === 'undefined') { ySpacing = 0; }
+        if (atlasURL === undefined) { atlasURL = null; }
+        if (atlasData === undefined) { atlasData = null; }
+        if (xSpacing === undefined) { xSpacing = 0; }
+        if (ySpacing === undefined) { ySpacing = 0; }
 
         //  A URL to a json/xml atlas has been given
         if (atlasURL)
@@ -1417,8 +1417,8 @@ Phaser.Loader.prototype = {
     */
     atlasXML: function (key, textureURL, atlasURL, atlasData) {
 
-        if (typeof atlasURL === 'undefined') { atlasURL = null; }
-        if (typeof atlasData === 'undefined') { atlasData = null; }
+        if (atlasURL === undefined) { atlasURL = null; }
+        if (atlasData === undefined) { atlasData = null; }
 
         if (!atlasURL && !atlasData)
         {
@@ -1470,14 +1470,14 @@ Phaser.Loader.prototype = {
     */
     atlas: function (key, textureURL, atlasURL, atlasData, format) {
 
-        if (typeof textureURL === 'undefined' || textureURL === null)
+        if (textureURL === undefined || textureURL === null)
         {
             textureURL = key + '.png';
         }
 
-        if (typeof atlasURL === 'undefined') { atlasURL = null; }
-        if (typeof atlasData === 'undefined') { atlasData = null; }
-        if (typeof format === 'undefined') { format = Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY; }
+        if (atlasURL === undefined) { atlasURL = null; }
+        if (atlasData === undefined) { atlasData = null; }
+        if (format === undefined) { format = Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY; }
 
         if (!atlasURL && !atlasData)
         {
@@ -1832,7 +1832,7 @@ Phaser.Loader.prototype = {
     */
     asyncComplete: function (file, errorMessage) {
 
-        if (typeof errorMessage === 'undefined') { errorMessage = ''; }
+        if (errorMessage === undefined) { errorMessage = ''; }
 
         file.loaded = true;
         file.error = !!errorMessage;

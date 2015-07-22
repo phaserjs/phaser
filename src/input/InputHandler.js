@@ -259,7 +259,7 @@ Phaser.InputHandler.prototype = {
     start: function (priority, useHandCursor) {
 
         priority = priority || 0;
-        if (typeof useHandCursor === 'undefined') { useHandCursor = false; }
+        if (useHandCursor === undefined) { useHandCursor = false; }
 
         //  Turning on
         if (this.enabled === false)
@@ -436,7 +436,7 @@ Phaser.InputHandler.prototype = {
     */
     validForInput: function (highestID, highestRenderID, includePixelPerfect) {
 
-        if (typeof includePixelPerfect === 'undefined') { includePixelPerfect = true; }
+        if (includePixelPerfect === undefined) { includePixelPerfect = true; }
 
         if (this.sprite.scale.x === 0 || this.sprite.scale.y === 0 || this.priorityID < this.game.input.minPriorityID)
         {
@@ -572,7 +572,7 @@ Phaser.InputHandler.prototype = {
 
         if (this.enabled)
         {
-            if (typeof index === 'undefined')
+            if (index === undefined)
             {
                 for (var i = 0; i < 10; i++)
                 {
@@ -602,7 +602,7 @@ Phaser.InputHandler.prototype = {
 
         if (this.enabled)
         {
-            if (typeof index === 'undefined')
+            if (index === undefined)
             {
                 for (var i = 0; i < 10; i++)
                 {
@@ -683,7 +683,7 @@ Phaser.InputHandler.prototype = {
         //  Need to pass it a temp point, in case we need it again for the pixel check
         if (this.game.input.hitTest(this.sprite, pointer, this._tempPoint))
         {
-            if (typeof fastTest === 'undefined') { fastTest = false; }
+            if (fastTest === undefined) { fastTest = false; }
 
             if (!fastTest && this.pixelPerfectClick)
             {
@@ -718,7 +718,7 @@ Phaser.InputHandler.prototype = {
         //  Need to pass it a temp point, in case we need it again for the pixel check
         if (this.game.input.hitTest(this.sprite, pointer, this._tempPoint))
         {
-            if (typeof fastTest === 'undefined') { fastTest = false; }
+            if (fastTest === undefined) { fastTest = false; }
 
             if (!fastTest && this.pixelPerfectOver)
             {
@@ -1226,12 +1226,12 @@ Phaser.InputHandler.prototype = {
     */
     enableDrag: function (lockCenter, bringToTop, pixelPerfect, alphaThreshold, boundsRect, boundsSprite) {
 
-        if (typeof lockCenter === 'undefined') { lockCenter = false; }
-        if (typeof bringToTop === 'undefined') { bringToTop = false; }
-        if (typeof pixelPerfect === 'undefined') { pixelPerfect = false; }
-        if (typeof alphaThreshold === 'undefined') { alphaThreshold = 255; }
-        if (typeof boundsRect === 'undefined') { boundsRect = null; }
-        if (typeof boundsSprite === 'undefined') { boundsSprite = null; }
+        if (lockCenter === undefined) { lockCenter = false; }
+        if (bringToTop === undefined) { bringToTop = false; }
+        if (pixelPerfect === undefined) { pixelPerfect = false; }
+        if (alphaThreshold === undefined) { alphaThreshold = 255; }
+        if (boundsRect === undefined) { boundsRect = null; }
+        if (boundsSprite === undefined) { boundsSprite = null; }
 
         this._dragPoint = new Phaser.Point();
         this.draggable = true;
@@ -1403,8 +1403,8 @@ Phaser.InputHandler.prototype = {
     */
     setDragLock: function (allowHorizontal, allowVertical) {
 
-        if (typeof allowHorizontal === 'undefined') { allowHorizontal = true; }
-        if (typeof allowVertical === 'undefined') { allowVertical = true; }
+        if (allowHorizontal === undefined) { allowHorizontal = true; }
+        if (allowVertical === undefined) { allowVertical = true; }
 
         this.allowHorizontalDrag = allowHorizontal;
         this.allowVerticalDrag = allowVertical;
@@ -1424,10 +1424,10 @@ Phaser.InputHandler.prototype = {
     */
     enableSnap: function (snapX, snapY, onDrag, onRelease, snapOffsetX, snapOffsetY) {
 
-        if (typeof onDrag === 'undefined') { onDrag = true; }
-        if (typeof onRelease === 'undefined') { onRelease = false; }
-        if (typeof snapOffsetX === 'undefined') { snapOffsetX = 0; }
-        if (typeof snapOffsetY === 'undefined') { snapOffsetY = 0; }
+        if (onDrag === undefined) { onDrag = true; }
+        if (onRelease === undefined) { onRelease = false; }
+        if (snapOffsetX === undefined) { snapOffsetX = 0; }
+        if (snapOffsetY === undefined) { snapOffsetY = 0; }
 
         this.snapX = snapX;
         this.snapY = snapY;

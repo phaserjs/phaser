@@ -108,8 +108,8 @@ Phaser.GameObjectCreator.prototype = {
     */
     spriteBatch: function (parent, name, addToStage) {
 
-        if (typeof name === 'undefined') { name = 'group'; }
-        if (typeof addToStage === 'undefined') { addToStage = false; }
+        if (name === undefined) { name = 'group'; }
+        if (addToStage === undefined) { addToStage = false; }
 
         return new Phaser.SpriteBatch(this.game, parent, name, addToStage);
 
@@ -362,8 +362,8 @@ Phaser.GameObjectCreator.prototype = {
     */
     renderTexture: function (width, height, key, addToCache) {
 
-        if (typeof key === 'undefined' || key === '') { key = this.game.rnd.uuid(); }
-        if (typeof addToCache === 'undefined') { addToCache = false; }
+        if (key === undefined || key === '') { key = this.game.rnd.uuid(); }
+        if (addToCache === undefined) { addToCache = false; }
 
         var texture = new Phaser.RenderTexture(this.game, width, height, key);
 

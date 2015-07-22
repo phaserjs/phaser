@@ -227,8 +227,8 @@ Phaser.Physics.prototype = {
     */
     enable: function (object, system, debug) {
 
-        if (typeof system === 'undefined') { system = Phaser.Physics.ARCADE; }
-        if (typeof debug === 'undefined') { debug = false; }
+        if (system === undefined) { system = Phaser.Physics.ARCADE; }
+        if (debug === undefined) { debug = false; }
 
         if (system === Phaser.Physics.ARCADE)
         {

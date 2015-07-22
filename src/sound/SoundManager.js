@@ -233,7 +233,7 @@ Phaser.SoundManager.prototype = {
         {
             this.usingWebAudio = true;
 
-            if (typeof this.context.createGain === 'undefined')
+            if (this.context.createGain === undefined)
             {
                 this.masterGain = this.context.createGainNode();
             }
@@ -299,7 +299,7 @@ Phaser.SoundManager.prototype = {
             this._unlockSource.buffer = buffer;
             this._unlockSource.connect(this.context.destination);
 
-            if (typeof this._unlockSource.start === 'undefined')
+            if (this._unlockSource.start === undefined)
             {
                 this._unlockSource.noteOn(0);
             }
@@ -526,9 +526,9 @@ Phaser.SoundManager.prototype = {
     */
     add: function (key, volume, loop, connect) {
 
-        if (typeof volume === 'undefined') { volume = 1; }
-        if (typeof loop === 'undefined') { loop = false; }
-        if (typeof connect === 'undefined') { connect = this.connectToMaster; }
+        if (volume === undefined) { volume = 1; }
+        if (loop === undefined) { loop = false; }
+        if (connect === undefined) { connect = this.connectToMaster; }
 
         var sound = new Phaser.Sound(this.game, key, volume, loop, connect);
 

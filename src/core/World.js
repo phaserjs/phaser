@@ -185,10 +185,10 @@ Phaser.World.prototype.shutdown = function () {
 */
 Phaser.World.prototype.wrap = function (sprite, padding, useBounds, horizontal, vertical) {
 
-    if (typeof padding === 'undefined') { padding = 0; }
-    if (typeof useBounds === 'undefined') { useBounds = false; }
-    if (typeof horizontal === 'undefined') { horizontal = true; }
-    if (typeof vertical === 'undefined') { vertical = true; }
+    if (padding === undefined) { padding = 0; }
+    if (useBounds === undefined) { useBounds = false; }
+    if (horizontal === undefined) { horizontal = true; }
+    if (vertical === undefined) { vertical = true; }
 
     if (!useBounds)
     {

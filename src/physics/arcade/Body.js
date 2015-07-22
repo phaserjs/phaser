@@ -637,8 +637,8 @@ Phaser.Physics.Arcade.Body.prototype = {
     */
     setSize: function (width, height, offsetX, offsetY) {
 
-        if (typeof offsetX === 'undefined') { offsetX = this.offset.x; }
-        if (typeof offsetY === 'undefined') { offsetY = this.offset.y; }
+        if (offsetX === undefined) { offsetX = this.offset.x; }
+        if (offsetY === undefined) { offsetY = this.offset.y; }
 
         this.sourceWidth = width;
         this.sourceHeight = height;
@@ -840,7 +840,7 @@ Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "y", {
 */
 Phaser.Physics.Arcade.Body.render = function (context, body, color, filled) {
 
-    if (typeof filled === 'undefined') { filled = true; }
+    if (filled === undefined) { filled = true; }
 
     color = color || 'rgba(0,255,0,0.4)';
 

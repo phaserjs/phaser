@@ -583,7 +583,7 @@ Phaser.Input.prototype = {
             return;
         }
 
-        if (typeof hard === 'undefined') { hard = false; }
+        if (hard === undefined) { hard = false; }
 
         this.mousePointer.reset();
 
@@ -757,7 +757,7 @@ Phaser.Input.prototype = {
     */
     countActivePointers: function (limit) {
 
-        if (typeof limit === 'undefined') { limit = this.pointers.length; }
+        if (limit === undefined) { limit = this.pointers.length; }
 
         var count = limit;
 
@@ -784,7 +784,7 @@ Phaser.Input.prototype = {
     */
     getPointer: function (isActive) {
 
-        if (typeof isActive === 'undefined') { isActive = false; }
+        if (isActive === undefined) { isActive = false; }
 
         for (var i = 0; i < this.pointers.length; i++)
         {
@@ -863,7 +863,7 @@ Phaser.Input.prototype = {
     */
     getLocalPosition: function (displayObject, pointer, output) {
 
-        if (typeof output === 'undefined') { output = new Phaser.Point(); }
+        if (output === undefined) { output = new Phaser.Point(); }
 
         var wt = displayObject.worldTransform;
         var id = 1 / (wt.a * wt.d + wt.c * -wt.b);

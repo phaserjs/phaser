@@ -77,7 +77,7 @@ Phaser.Component.LifeSpan.prototype = {
     */
     revive: function (health) {
 
-        if (typeof health === 'undefined') { health = 1; }
+        if (health === undefined) { health = 1; }
 
         this.alive = true;
         this.exists = true;

@@ -1126,7 +1126,7 @@ Phaser.Device._initialize = function () {
     */
     function _checkIsUint8ClampedImageData () {
 
-        if (typeof Uint8ClampedArray === "undefined")
+        if (Uint8ClampedArray === undefined)
         {
             return false;
         }

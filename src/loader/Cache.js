@@ -412,7 +412,7 @@ Phaser.Cache.prototype = {
 
         bitmapData.key = key;
 
-        if (typeof frameData === 'undefined')
+        if (frameData === undefined)
         {
             frameData = new Phaser.FrameData();
             frameData.addFrame(bitmapData.textureFrame);

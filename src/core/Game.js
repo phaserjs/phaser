@@ -439,7 +439,7 @@ Phaser.Game.prototype = {
 
         this.config = config;
 
-        if (typeof config['enableDebug'] === 'undefined')
+        if (config['enableDebug'] === undefined)
         {
             this.config.enableDebug = true;
         }

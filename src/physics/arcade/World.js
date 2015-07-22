@@ -167,7 +167,7 @@ Phaser.Physics.Arcade.prototype = {
     */
     enable: function (object, children) {
 
-        if (typeof children === 'undefined') { children = true; }
+        if (children === undefined) { children = true; }
 
         var i = 1;
 
@@ -269,7 +269,7 @@ Phaser.Physics.Arcade.prototype = {
     */
     computeVelocity: function (axis, body, velocity, acceleration, drag, max) {
 
-        if (typeof max === 'undefined') { max = 10000; }
+        if (max === undefined) { max = 10000; }
 
         if (axis === 1 && body.allowGravity)
         {
@@ -536,7 +536,7 @@ Phaser.Physics.Arcade.prototype = {
         }
         else
         {
-            if (typeof sortDirection === 'undefined') { sortDirection = this.sortDirection; }
+            if (sortDirection === undefined) { sortDirection = this.sortDirection; }
         }
 
         if (sortDirection === Phaser.Physics.Arcade.LEFT_RIGHT)
@@ -577,7 +577,7 @@ Phaser.Physics.Arcade.prototype = {
     collideHandler: function (object1, object2, collideCallback, processCallback, callbackContext, overlapOnly) {
 
         //  Only collide valid objects
-        if (typeof object2 === 'undefined' && object1.physicsType === Phaser.GROUP)
+        if (object2 === undefined && object1.physicsType === Phaser.GROUP)
         {
             this.sort(object1);
             this.collideGroupVsSelf(object1, collideCallback, processCallback, callbackContext, overlapOnly);
@@ -1350,8 +1350,8 @@ Phaser.Physics.Arcade.prototype = {
     */
     moveToObject: function (displayObject, destination, speed, maxTime) {
 
-        if (typeof speed === 'undefined') { speed = 60; }
-        if (typeof maxTime === 'undefined') { maxTime = 0; }
+        if (speed === undefined) { speed = 60; }
+        if (maxTime === undefined) { maxTime = 0; }
 
         var angle = Math.atan2(destination.y - displayObject.y, destination.x - displayObject.x);
 
@@ -1384,9 +1384,9 @@ Phaser.Physics.Arcade.prototype = {
     */
     moveToPointer: function (displayObject, speed, pointer, maxTime) {
 
-        if (typeof speed === 'undefined') { speed = 60; }
+        if (speed === undefined) { speed = 60; }
         pointer = pointer || this.game.input.activePointer;
-        if (typeof maxTime === 'undefined') { maxTime = 0; }
+        if (maxTime === undefined) { maxTime = 0; }
 
         var angle = this.angleToPointer(displayObject, pointer);
 
@@ -1421,8 +1421,8 @@ Phaser.Physics.Arcade.prototype = {
     */
     moveToXY: function (displayObject, x, y, speed, maxTime) {
 
-        if (typeof speed === 'undefined') { speed = 60; }
-        if (typeof maxTime === 'undefined') { maxTime = 0; }
+        if (speed === undefined) { speed = 60; }
+        if (maxTime === undefined) { maxTime = 0; }
 
         var angle = Math.atan2(y - displayObject.y, x - displayObject.x);
 
@@ -1451,7 +1451,7 @@ Phaser.Physics.Arcade.prototype = {
     */
     velocityFromAngle: function (angle, speed, point) {
 
-        if (typeof speed === 'undefined') { speed = 60; }
+        if (speed === undefined) { speed = 60; }
         point = point || new Phaser.Point();
 
         return point.setTo((Math.cos(this.game.math.degToRad(angle)) * speed), (Math.sin(this.game.math.degToRad(angle)) * speed));
@@ -1470,7 +1470,7 @@ Phaser.Physics.Arcade.prototype = {
     */
     velocityFromRotation: function (rotation, speed, point) {
 
-        if (typeof speed === 'undefined') { speed = 60; }
+        if (speed === undefined) { speed = 60; }
         point = point || new Phaser.Point();
 
         return point.setTo((Math.cos(rotation) * speed), (Math.sin(rotation) * speed));
@@ -1489,7 +1489,7 @@ Phaser.Physics.Arcade.prototype = {
     */
     accelerationFromRotation: function (rotation, speed, point) {
 
-        if (typeof speed === 'undefined') { speed = 60; }
+        if (speed === undefined) { speed = 60; }
         point = point || new Phaser.Point();
 
         return point.setTo((Math.cos(rotation) * speed), (Math.sin(rotation) * speed));
@@ -1512,9 +1512,9 @@ Phaser.Physics.Arcade.prototype = {
     */
     accelerateToObject: function (displayObject, destination, speed, xSpeedMax, ySpeedMax) {
 
-        if (typeof speed === 'undefined') { speed = 60; }
-        if (typeof xSpeedMax === 'undefined') { xSpeedMax = 1000; }
-        if (typeof ySpeedMax === 'undefined') { ySpeedMax = 1000; }
+        if (speed === undefined) { speed = 60; }
+        if (xSpeedMax === undefined) { xSpeedMax = 1000; }
+        if (ySpeedMax === undefined) { ySpeedMax = 1000; }
 
         var angle = this.angleBetween(displayObject, destination);
 
@@ -1541,10 +1541,10 @@ Phaser.Physics.Arcade.prototype = {
     */
     accelerateToPointer: function (displayObject, pointer, speed, xSpeedMax, ySpeedMax) {
 
-        if (typeof speed === 'undefined') { speed = 60; }
-        if (typeof pointer === 'undefined') { pointer = this.game.input.activePointer; }
-        if (typeof xSpeedMax === 'undefined') { xSpeedMax = 1000; }
-        if (typeof ySpeedMax === 'undefined') { ySpeedMax = 1000; }
+        if (speed === undefined) { speed = 60; }
+        if (pointer === undefined) { pointer = this.game.input.activePointer; }
+        if (xSpeedMax === undefined) { xSpeedMax = 1000; }
+        if (ySpeedMax === undefined) { ySpeedMax = 1000; }
 
         var angle = this.angleToPointer(displayObject, pointer);
 
@@ -1572,9 +1572,9 @@ Phaser.Physics.Arcade.prototype = {
     */
     accelerateToXY: function (displayObject, x, y, speed, xSpeedMax, ySpeedMax) {
 
-        if (typeof speed === 'undefined') { speed = 60; }
-        if (typeof xSpeedMax === 'undefined') { xSpeedMax = 1000; }
-        if (typeof ySpeedMax === 'undefined') { ySpeedMax = 1000; }
+        if (speed === undefined) { speed = 60; }
+        if (xSpeedMax === undefined) { xSpeedMax = 1000; }
+        if (ySpeedMax === undefined) { ySpeedMax = 1000; }
 
         var angle = this.angleToXY(displayObject, x, y);
 

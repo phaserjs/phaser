@@ -222,12 +222,12 @@ Phaser.Text.prototype.destroy = function (destroyChildren) {
 */
 Phaser.Text.prototype.setShadow = function (x, y, color, blur, shadowStroke, shadowFill) {
 
-    if (typeof x === 'undefined') { x = 0; }
-    if (typeof y === 'undefined') { y = 0; }
-    if (typeof color === 'undefined') { color = 'rgba(0, 0, 0, 1)'; }
-    if (typeof blur === 'undefined') { blur = 0; }
-    if (typeof shadowStroke === 'undefined') { shadowStroke = true; }
-    if (typeof shadowFill === 'undefined') { shadowFill = true; }
+    if (x === undefined) { x = 0; }
+    if (y === undefined) { y = 0; }
+    if (color === undefined) { color = 'rgba(0, 0, 0, 1)'; }
+    if (blur === undefined) { blur = 0; }
+    if (shadowStroke === undefined) { shadowStroke = true; }
+    if (shadowFill === undefined) { shadowFill = true; }
 
     this.style.shadowOffsetX = x;
     this.style.shadowOffsetY = y;
@@ -971,7 +971,7 @@ Phaser.Text.prototype.parseList = function (list) {
  */
 Phaser.Text.prototype.setTextBounds = function (x, y, width, height) {
 
-    if (typeof x === 'undefined')
+    if (x === undefined)
     {
         this.textBounds = null;
     }

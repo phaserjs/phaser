@@ -22,7 +22,7 @@
 */
 Phaser.SpriteBatch = function (game, parent, name, addToStage) {
 
-    if (typeof parent === 'undefined' || parent === null) { parent = game.world; }
+    if (parent === undefined || parent === null) { parent = game.world; }
 
     PIXI.SpriteBatch.call(this);
 

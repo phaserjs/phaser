@@ -133,7 +133,7 @@ Phaser.TweenManager.prototype = {
     */
     removeFrom: function (obj, children) {
         
-        if (typeof children === 'undefined') { children = true; }
+        if (children === undefined) { children = true; }
 
         var i;
         var len;

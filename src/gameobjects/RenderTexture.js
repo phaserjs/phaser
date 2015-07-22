@@ -21,9 +21,9 @@
 */
 Phaser.RenderTexture = function (game, width, height, key, scaleMode, resolution) {
 
-    if (typeof key === 'undefined') { key = ''; }
-    if (typeof scaleMode === 'undefined') { scaleMode = Phaser.scaleModes.DEFAULT; }
-    if (typeof resolution === 'undefined') { resolution = 1; }
+    if (key === undefined) { key = ''; }
+    if (scaleMode === undefined) { scaleMode = Phaser.scaleModes.DEFAULT; }
+    if (resolution === undefined) { resolution = 1; }
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running game.
@@ -132,7 +132,7 @@ Phaser.RenderTexture.prototype.renderRawXY = function (displayObject, x, y, clea
 */
 Phaser.RenderTexture.prototype.render = function (displayObject, matrix, clear) {
 
-    if (typeof matrix === 'undefined' || matrix === null)
+    if (matrix === undefined || matrix === null)
     {
         this._tempMatrix.copyFrom(displayObject.worldTransform);
     }

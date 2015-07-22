@@ -192,7 +192,7 @@ Phaser.StateManager.prototype = {
     */
     add: function (key, state, autoStart) {
 
-        if (typeof autoStart === "undefined") { autoStart = false; }
+        if (autoStart === undefined) { autoStart = false; }
 
         var newState;
 
@@ -270,8 +270,8 @@ Phaser.StateManager.prototype = {
     */
     start: function (key, clearWorld, clearCache) {
 
-        if (typeof clearWorld === "undefined") { clearWorld = true; }
-        if (typeof clearCache === "undefined") { clearCache = false; }
+        if (clearWorld === undefined) { clearWorld = true; }
+        if (clearCache === undefined) { clearCache = false; }
 
         if (this.checkState(key))
         {
@@ -298,8 +298,8 @@ Phaser.StateManager.prototype = {
     */
     restart: function (clearWorld, clearCache) {
 
-        if (typeof clearWorld === "undefined") { clearWorld = true; }
-        if (typeof clearCache === "undefined") { clearCache = false; }
+        if (clearWorld === undefined) { clearWorld = true; }
+        if (clearCache === undefined) { clearCache = false; }
 
         //  Place the state in the queue. It will be started the next time the game loop starts.
         this._pendingState = this.current;

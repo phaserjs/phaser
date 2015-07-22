@@ -163,7 +163,7 @@ Phaser.Camera.prototype = {
     */
     follow: function (target, style) {
 
-        if (typeof style === "undefined") { style = Phaser.Camera.FOLLOW_LOCKON; }
+        if (style === undefined) { style = Phaser.Camera.FOLLOW_LOCKON; }
 
         this.target = target;
 

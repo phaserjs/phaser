@@ -25,7 +25,7 @@ Phaser.Physics.P2.Body = function (game, sprite, x, y, mass) {
     sprite = sprite || null;
     x = x || 0;
     y = y || 0;
-    if (typeof mass === 'undefined') { mass = 1; }
+    if (mass === undefined) { mass = 1; }
 
     /**
     * @property {Phaser.Game} game - Local reference to game.
@@ -278,7 +278,7 @@ Phaser.Physics.P2.Body.prototype = {
 
         var mask = this.getCollisionMask();
 
-        if (typeof shape === 'undefined')
+        if (shape === undefined)
         {
             for (var i = this.data.shapes.length - 1; i >= 0; i--)
             {
@@ -304,7 +304,7 @@ Phaser.Physics.P2.Body.prototype = {
 
         var mask = this.getCollisionMask();
 
-        if (typeof shape === 'undefined')
+        if (shape === undefined)
         {
             for (var i = this.data.shapes.length - 1; i >= 0; i--)
             {
@@ -330,10 +330,10 @@ Phaser.Physics.P2.Body.prototype = {
     */
     clearCollision: function (clearGroup, clearMask, shape) {
 
-        if (typeof clearGroup === 'undefined') { clearGroup = true; }
-        if (typeof clearMask === 'undefined') { clearMask = true; }
+        if (clearGroup === undefined) { clearGroup = true; }
+        if (clearMask === undefined) { clearMask = true; }
 
-        if (typeof shape === 'undefined')
+        if (shape === undefined)
         {
             for (var i = this.data.shapes.length - 1; i >= 0; i--)
             {
@@ -409,7 +409,7 @@ Phaser.Physics.P2.Body.prototype = {
 
         var mask = this.getCollisionMask();
 
-        if (typeof shape === 'undefined')
+        if (shape === undefined)
         {
             for (var i = this.data.shapes.length - 1; i >= 0; i--)
             {
@@ -777,8 +777,8 @@ Phaser.Physics.P2.Body.prototype = {
     */
     reset: function (x, y, resetDamping, resetMass) {
 
-        if (typeof resetDamping === 'undefined') { resetDamping = false; }
-        if (typeof resetMass === 'undefined') { resetMass = false; }
+        if (resetDamping === undefined) { resetDamping = false; }
+        if (resetMass === undefined) { resetMass = false; }
 
         this.setZeroForce();
         this.setZeroVelocity();
@@ -901,9 +901,9 @@ Phaser.Physics.P2.Body.prototype = {
     */
     addShape: function (shape, offsetX, offsetY, rotation) {
 
-        if (typeof offsetX === 'undefined') { offsetX = 0; }
-        if (typeof offsetY === 'undefined') { offsetY = 0; }
-        if (typeof rotation === 'undefined') { rotation = 0; }
+        if (offsetX === undefined) { offsetX = 0; }
+        if (offsetY === undefined) { offsetY = 0; }
+        if (rotation === undefined) { rotation = 0; }
 
         this.data.addShape(shape, [this.world.pxmi(offsetX), this.world.pxmi(offsetY)], rotation);
         this.shapeChanged();
@@ -1138,8 +1138,8 @@ Phaser.Physics.P2.Body.prototype = {
     */
     setRectangle: function (width, height, offsetX, offsetY, rotation) {
 
-        if (typeof width === 'undefined') { width = 16; }
-        if (typeof height === 'undefined') { height = 16; }
+        if (width === undefined) { width = 16; }
+        if (height === undefined) { height = 16; }
 
         this.clearShapes();
 
@@ -1159,7 +1159,7 @@ Phaser.Physics.P2.Body.prototype = {
     */
     setRectangleFromSprite: function (sprite) {
 
-        if (typeof sprite === 'undefined') { sprite = this.sprite; }
+        if (sprite === undefined) { sprite = this.sprite; }
 
         this.clearShapes();
 
@@ -1177,7 +1177,7 @@ Phaser.Physics.P2.Body.prototype = {
     */
     setMaterial: function (material, shape) {
 
-        if (typeof shape === 'undefined')
+        if (shape === undefined)
         {
             for (var i = this.data.shapes.length - 1; i >= 0; i--)
             {

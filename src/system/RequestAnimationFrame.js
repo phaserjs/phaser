@@ -14,7 +14,7 @@
 */
 Phaser.RequestAnimationFrame = function(game, forceSetTimeOut) {
 
-    if (typeof forceSetTimeOut === 'undefined') { forceSetTimeOut = false; }
+    if (forceSetTimeOut === undefined) { forceSetTimeOut = false; }
 
     /**
     * @property {Phaser.Game} game - The currently running game.

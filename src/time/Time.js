@@ -300,7 +300,7 @@ Phaser.Time.prototype = {
     */
     create: function (autoDestroy) {
 
-        if (typeof autoDestroy === 'undefined') { autoDestroy = true; }
+        if (autoDestroy === undefined) { autoDestroy = true; }
 
         var timer = new Phaser.Timer(this.game, autoDestroy);
 

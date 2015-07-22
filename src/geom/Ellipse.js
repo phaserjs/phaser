@@ -122,7 +122,7 @@ Phaser.Ellipse.prototype = {
     */
     clone: function(output) {
 
-        if (typeof output === "undefined" || output === null)
+        if (output === undefined || output === null)
         {
             output = new Phaser.Ellipse(this.x, this.y, this.width, this.height);
         }
@@ -159,7 +159,7 @@ Phaser.Ellipse.prototype = {
     */
     random: function (out) {
 
-        if (typeof out === 'undefined') { out = new Phaser.Point(); }
+        if (out === undefined) { out = new Phaser.Point(); }
 
         var p = Math.random() * Math.PI * 2;
         var r = Math.random();

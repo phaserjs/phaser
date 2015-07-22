@@ -63,7 +63,7 @@ Phaser.GameObjectFactory.prototype = {
     */
     image: function (x, y, key, frame, group) {
 
-        if (typeof group === 'undefined') { group = this.world; }
+        if (group === undefined) { group = this.world; }
 
         return group.add(new Phaser.Image(this.game, x, y, key, frame));
 
@@ -86,7 +86,7 @@ Phaser.GameObjectFactory.prototype = {
     */
     sprite: function (x, y, key, frame, group) {
 
-        if (typeof group === 'undefined') { group = this.world; }
+        if (group === undefined) { group = this.world; }
 
         return group.create(x, y, key, frame);
 
@@ -156,9 +156,9 @@ Phaser.GameObjectFactory.prototype = {
     */
     spriteBatch: function (parent, name, addToStage) {
 
-        if (typeof parent === 'undefined') { parent = null; }
-        if (typeof name === 'undefined') { name = 'group'; }
-        if (typeof addToStage === 'undefined') { addToStage = false; }
+        if (parent === undefined) { parent = null; }
+        if (name === undefined) { name = 'group'; }
+        if (addToStage === undefined) { addToStage = false; }
 
         return new Phaser.SpriteBatch(this.game, parent, name, addToStage);
 
@@ -224,7 +224,7 @@ Phaser.GameObjectFactory.prototype = {
     */
     tileSprite: function (x, y, width, height, key, frame, group) {
 
-        if (typeof group === 'undefined') { group = this.world; }
+        if (group === undefined) { group = this.world; }
 
         return group.add(new Phaser.TileSprite(this.game, x, y, width, height, key, frame));
 
@@ -246,7 +246,7 @@ Phaser.GameObjectFactory.prototype = {
     */
     rope: function (x, y, key, frame, points, group) {
 
-        if (typeof group === 'undefined') { group = this.world; }
+        if (group === undefined) { group = this.world; }
 
         return group.add(new Phaser.Rope(this.game, x, y, key, frame, points));
 
@@ -265,7 +265,7 @@ Phaser.GameObjectFactory.prototype = {
     */
     text: function (x, y, text, style, group) {
 
-        if (typeof group === 'undefined') { group = this.world; }
+        if (group === undefined) { group = this.world; }
 
         return group.add(new Phaser.Text(this.game, x, y, text, style));
 
@@ -289,7 +289,7 @@ Phaser.GameObjectFactory.prototype = {
     */
     button: function (x, y, key, callback, callbackContext, overFrame, outFrame, downFrame, upFrame, group) {
 
-        if (typeof group === 'undefined') { group = this.world; }
+        if (group === undefined) { group = this.world; }
 
         return group.add(new Phaser.Button(this.game, x, y, key, callback, callbackContext, overFrame, outFrame, downFrame, upFrame));
 
@@ -306,7 +306,7 @@ Phaser.GameObjectFactory.prototype = {
     */
     graphics: function (x, y, group) {
 
-        if (typeof group === 'undefined') { group = this.world; }
+        if (group === undefined) { group = this.world; }
 
         return group.add(new Phaser.Graphics(this.game, x, y));
 
@@ -389,7 +389,7 @@ Phaser.GameObjectFactory.prototype = {
     */
     bitmapText: function (x, y, font, text, size, group) {
 
-        if (typeof group === 'undefined') { group = this.world; }
+        if (group === undefined) { group = this.world; }
 
         return group.add(new Phaser.BitmapText(this.game, x, y, font, text, size));
 
@@ -430,8 +430,8 @@ Phaser.GameObjectFactory.prototype = {
     */
     renderTexture: function (width, height, key, addToCache) {
 
-        if (typeof key === 'undefined' || key === '') { key = this.game.rnd.uuid(); }
-        if (typeof addToCache === 'undefined') { addToCache = false; }
+        if (key === undefined || key === '') { key = this.game.rnd.uuid(); }
+        if (addToCache === undefined) { addToCache = false; }
 
         var texture = new Phaser.RenderTexture(this.game, width, height, key);
 
@@ -474,8 +474,8 @@ Phaser.GameObjectFactory.prototype = {
     */
     bitmapData: function (width, height, key, addToCache) {
 
-        if (typeof addToCache === 'undefined') { addToCache = false; }
-        if (typeof key === 'undefined' || key === '') { key = this.game.rnd.uuid(); }
+        if (addToCache === undefined) { addToCache = false; }
+        if (key === undefined || key === '') { key = this.game.rnd.uuid(); }
 
         var texture = new Phaser.BitmapData(this.game, key, width, height);
 

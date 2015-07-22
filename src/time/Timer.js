@@ -20,7 +20,7 @@
 */
 Phaser.Timer = function (game, autoDestroy) {
 
-    if (typeof autoDestroy === 'undefined') { autoDestroy = true; }
+    if (autoDestroy === undefined) { autoDestroy = true; }
 
     /**
     * @property {Phaser.Game} game - Local reference to game.
@@ -321,7 +321,7 @@ Phaser.Timer.prototype = {
 
         this.running = false;
 
-        if (typeof clearEvents === 'undefined') { clearEvents = true; }
+        if (clearEvents === undefined) { clearEvents = true; }
 
         if (clearEvents)
         {

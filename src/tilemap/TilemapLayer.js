@@ -500,8 +500,8 @@ Phaser.TilemapLayer.prototype.getTileXY = function (x, y, point) {
 Phaser.TilemapLayer.prototype.getRayCastTiles = function (line, stepRate, collides, interestingFace) {
 
     if (!stepRate) { stepRate = this.rayStepRate; }
-    if (typeof collides === 'undefined') { collides = false; }
-    if (typeof interestingFace === 'undefined') { interestingFace = false; }
+    if (collides === undefined) { collides = false; }
+    if (interestingFace === undefined) { interestingFace = false; }
 
     //  First get all tiles that touch the bounds of the line
     var tiles = this.getTiles(line.x, line.y, line.width, line.height, collides, interestingFace);
@@ -549,8 +549,8 @@ Phaser.TilemapLayer.prototype.getRayCastTiles = function (line, stepRate, collid
 Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides, interestingFace) {
 
     //  Should we only get tiles that have at least one of their collision flags set? (true = yes, false = no just get them all)
-    if (typeof collides === 'undefined') { collides = false; }
-    if (typeof interestingFace === 'undefined') { interestingFace = false; }
+    if (collides === undefined) { collides = false; }
+    if (interestingFace === undefined) { interestingFace = false; }
 
     var fetchAll = !(collides || interestingFace);
 

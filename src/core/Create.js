@@ -51,9 +51,9 @@ Phaser.Create.prototype = {
 
     texture: function (key, data, pixelWidth, pixelHeight, palette) {
 
-        if (typeof pixelWidth === 'undefined') { pixelWidth = 8; }
-        if (typeof pixelHeight === 'undefined') { pixelHeight = pixelWidth; }
-        if (typeof palette === 'undefined') { palette = 0; }
+        if (pixelWidth === undefined) { pixelWidth = 8; }
+        if (pixelHeight === undefined) { pixelHeight = pixelWidth; }
+        if (palette === undefined) { palette = 0; }
 
         var w = data[0].length * pixelWidth;
         var h = data.length * pixelHeight;

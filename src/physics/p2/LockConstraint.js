@@ -18,9 +18,9 @@
 */
 Phaser.Physics.P2.LockConstraint = function (world, bodyA, bodyB, offset, angle, maxForce) {
 
-    if (typeof offset === 'undefined') { offset = [0, 0]; }
-    if (typeof angle === 'undefined') { angle = 0; }
-    if (typeof maxForce === 'undefined') { maxForce = Number.MAX_VALUE; }
+    if (offset === undefined) { offset = [0, 0]; }
+    if (angle === undefined) { angle = 0; }
+    if (maxForce === undefined) { maxForce = Number.MAX_VALUE; }
 
     /**
     * @property {Phaser.Game} game - Local reference to game.

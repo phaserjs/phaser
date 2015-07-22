@@ -29,7 +29,7 @@ Phaser.Component.Reset = function () {};
 */
 Phaser.Component.Reset.prototype.reset = function (x, y, health) {
 
-    if (typeof health === 'undefined') { health = 1; }
+    if (health === undefined) { health = 1; }
 
     this.world.set(x, y);
     this.position.set(x, y);

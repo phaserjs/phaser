@@ -79,7 +79,7 @@ Phaser.Circle.prototype = {
     */
     random: function (out) {
 
-        if (typeof out === 'undefined') { out = new Phaser.Point(); }
+        if (out === undefined) { out = new Phaser.Point(); }
 
         var t = 2 * Math.PI * Math.random();
         var u = Math.random() + Math.random();
@@ -176,7 +176,7 @@ Phaser.Circle.prototype = {
     */
     clone: function (output) {
 
-        if (typeof output === "undefined" || output === null)
+        if (output === undefined || output === null)
         {
             output = new Phaser.Circle(this.x, this.y, this.diameter);
         }
@@ -514,8 +514,8 @@ Phaser.Circle.intersects = function (a, b) {
 */
 Phaser.Circle.circumferencePoint = function (a, angle, asDegrees, out) {
 
-    if (typeof asDegrees === "undefined") { asDegrees = false; }
-    if (typeof out === "undefined") { out = new Phaser.Point(); }
+    if (asDegrees === undefined) { asDegrees = false; }
+    if (out === undefined) { out = new Phaser.Point(); }
 
     if (asDegrees === true)
     {

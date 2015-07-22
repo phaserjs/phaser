@@ -84,7 +84,7 @@ Phaser.AudioSprite.prototype = {
      */
     play: function (marker, volume) {
 
-        if (typeof volume === 'undefined') { volume = 1; }
+        if (volume === undefined) { volume = 1; }
 
         return this.sounds[marker].play(marker, null, volume);
 
