@@ -119,24 +119,7 @@ PIXI.WebGLRenderer = function(width, height, options)
      * @property view
      * @type HTMLCanvasElement
      */
-    this.view = options.view || document.createElement( 'canvas' );
-
-    // deal with losing context..
-
-    /**
-     * @property contextLostBound
-     * @type Function
-     */
-    this.contextLostBound = this.handleContextLost.bind(this);
-
-    /**
-     * @property contextRestoredBound
-     * @type Function
-     */
-    this.contextRestoredBound = this.handleContextRestored.bind(this);
-
-    this.view.addEventListener('webglcontextlost', this.contextLostBound, false);
-    this.view.addEventListener('webglcontextrestored', this.contextRestoredBound, false);
+    this.view = options.view || document.createElement('canvas');
 
     /**
      * @property _contextOptions
@@ -390,20 +373,27 @@ PIXI.WebGLRenderer.prototype.resize = function(width, height)
  */
 PIXI.WebGLRenderer.prototype.updateTexture = function(texture)
 {
-    if(!texture.hasLoaded )return;
+    if (!texture.hasLoaded)
+    {
+        return;
+    }
 
     var gl = this.gl;
 
-    if(!texture._glTextures[gl.id])texture._glTextures[gl.id] = gl.createTexture();
+    if (!texture._glTextures[gl.id])
+    {
+        texture._glTextures[gl.id] = gl.createTexture();
+    }
 
     gl.bindTexture(gl.TEXTURE_2D, texture._glTextures[gl.id]);
 
     gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, texture.premultipliedAlpha);
+
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.source);
 
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, texture.scaleMode === PIXI.scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
 
-    if(texture.mipmap && PIXI.isPowerOfTwo(texture.width, texture.height))
+    if (texture.mipmap && PIXI.isPowerOfTwo(texture.width, texture.height))
     {
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, texture.scaleMode === PIXI.scaleModes.LINEAR ? gl.LINEAR_MIPMAP_LINEAR : gl.NEAREST_MIPMAP_NEAREST);
         gl.generateMipmap(gl.TEXTURE_2D);
@@ -413,8 +403,7 @@ PIXI.WebGLRenderer.prototype.updateTexture = function(texture)
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, texture.scaleMode === PIXI.scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
     }
 
-    // reguler...
-    if(!texture._powerOf2)
+    if (!texture._powerOf2)
     {
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
@@ -428,40 +417,7 @@ PIXI.WebGLRenderer.prototype.updateTexture = function(texture)
     texture._dirty[gl.id] = false;
 
     return  texture._glTextures[gl.id];
-};
 
-/**
- * Handles a lost webgl context
- *
- * @method handleContextLost
- * @param event {Event}
- * @private
- */
-PIXI.WebGLRenderer.prototype.handleContextLost = function(event)
-{
-    event.preventDefault();
-    this.contextLost = true;
-};
-
-/**
- * Handles a restored webgl context
- *
- * @method handleContextRestored
- * @param event {Event}
- * @private
- */
-PIXI.WebGLRenderer.prototype.handleContextRestored = function()
-{
-    this.initContext();
-
-    // empty all the ol gl textures as they are useless now
-    for(var key in PIXI.TextureCache)
-    {
-        var texture = PIXI.TextureCache[key].baseTexture;
-        texture._glTextures = [];
-    }
-
-    this.contextLost = false;
 };
 
 /**
@@ -471,10 +427,6 @@ PIXI.WebGLRenderer.prototype.handleContextRestored = function()
  */
 PIXI.WebGLRenderer.prototype.destroy = function()
 {
-    // remove listeners
-    this.view.removeEventListener('webglcontextlost', this.contextLostBound);
-    this.view.removeEventListener('webglcontextrestored', this.contextRestoredBound);
-
     PIXI.glContexts[this.glContextId] = null;
 
     this.projection = null;
@@ -507,7 +459,7 @@ PIXI.WebGLRenderer.prototype.mapBlendModes = function()
 {
     var gl = this.gl;
 
-    if(!PIXI.blendModesWebGL)
+    if (!PIXI.blendModesWebGL)
     {
         PIXI.blendModesWebGL = [];
 

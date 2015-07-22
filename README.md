@@ -411,6 +411,8 @@ For the full list of p2 additions please read [their change log](https://github.
 * World.stateChange is a new method that is called whenever the state changes or restarts. It resets the world x/y coordinates back to zero and then resets the Camera.
 * All undefined argument checks were changed from `if (typeof x === 'undefined')` to `if (x === undefined)` removing the typeof check and saving some bytes across the codebase in the process.
 * Text.updateText will now check the width and height values of the Text canvas and if either are zero it sets `Text.renderable = false` to avoid throwing WebGL texture binding errors.
+* WebGL context loss and restoration is now handled directly by Phaser.
+* Cache.clearGLTextures empties out all of the GL Textures from Images stored in the cache. This is called automatically when the WebGL context is lost and then restored.
 
 ### Bug Fixes
 

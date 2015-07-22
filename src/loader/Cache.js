@@ -1872,6 +1872,22 @@ Phaser.Cache.prototype = {
     },
 
     /**
+    * Empties out all of the GL Textures from Images stored in the cache.
+    * This is called automatically when the WebGL context is lost and then restored.
+    *
+    * @method Phaser.Cache#clearGLTextures
+    * @protected
+    */
+    clearGLTextures: function () {
+
+        for (var key in this.cache.image)
+        {
+            this.cache.image[key].base._glTextures = [];
+        }
+
+    },
+
+    /**
     * Resolves a URL to its absolute form and stores it in Cache._urlMap as long as Cache.autoResolveURL is set to `true`.
     * This is then looked-up by the Cache.getURL and Cache.checkURL calls.
     *
