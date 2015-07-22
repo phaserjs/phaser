@@ -35,25 +35,13 @@ Thousands of developers worldwide use it. From indies and multi-national digital
 ![div](http://www.phaser.io/images/github/div.png)
 
 <a name="whats-new"></a>
-## What's new in Phaser 2.4.0
+## What's new in Phaser 2.4.1
 
 <div align="center"><img src="http://phaser.io/images/github/news.jpg"></div>
 
-> 22nd July 2015
+> in development
 
-Phaser 2.4 is another huge update. We had to bump the version number from 2.3 directly to 2.4 because of some API adjustments, all of which are fully detailed in the [Change Log](#change-log). While it's true we could have released it over a few smaller point releases, that just isn't how the cookie crumbled this time. _Be sure to pay attention to the previous deprecated API calls that have been removed in 2.4._
-
-So although you had to wait for it a couple months more than usual, Phaser 2.4 is quite simply an **epic release** - there is no two ways about it! Brand new video component? Check. Support for fully boned Creature animations? Check. Brand new Cache and Loader updates? Check. Dynamic sprite and gradient generator? Check. Literally hundreds of updates, enhancements and fixes across the entire codebase? Yup, those too! The Change Log seems to scroll on forever, yet the overall package size continues to come down as we optimise and streamline our code too (this release actually builds smaller than 2.3 did, just 80KB min + gz)
-
-A few people on the forum have asked how Phaser is funded: Phaser is a fully open-source project and as such we have no _direct_ income from it at all. All development is funded by the client work that [my company](http://www.photonstorm.com) takes on. And of course the contributions from the incredible community (who also volunteer their skills for free).
-
-Sometimes this work directly impacts on Phaser. For example we recently built [5 games](http://www.insideouthq.com) for the new Pixar film Inside Out. Being Pixar they of course had high video requirements, so we literally coded from scratch the way videos were handled and added in video stream support in the process. Very often though our work simply uses Phaser but doesn't enhance it. Which is why if you buy any of the books or plugins we have on sale it really does make a difference! It buys us time to work on Phaser un-interrupted, which in turn benefits everyone. Some have asked if we could add a 'donate' button to the site, but instead I'd rather you get value from your money - so if we release a new plugin, book or magazine you like the look of, please do consider it a donation towards the continued work we all put in.
-
-Money stuff aside please enjoy this brand new release. We'll carry on supporting Phaser 2 for the rest of 2015 _at least_, while development of the Phaser 3 renderer proceeds at a rapid pace too.
-
-Make sure you check out the Phaser web site. We are going to be adding in stacks of new examples and features in the coming weeks.
-
-But that's all for now. I hope you enjoy Phaser 2.4. Happy coding everyone! See you on the forums.
+Happy coding everyone! See you on the forums.
 
 Cheers,
 
@@ -87,15 +75,15 @@ Install via [npm](https://www.npmjs.com)
 
 [jsDelivr](http://www.jsdelivr.com/#!phaser) is a "super-fast CDN for developers". Include the following in your html:
 
-`<script src="//cdn.jsdelivr.net/phaser/2.4.0/phaser.js"></script>`
+`<script src="//cdn.jsdelivr.net/phaser/2.4.1/phaser.js"></script>`
 
 or the minified version:
 
-`<script src="//cdn.jsdelivr.net/phaser/2.4.0/phaser.min.js"></script>`
+`<script src="//cdn.jsdelivr.net/phaser/2.4.1/phaser.min.js"></script>`
 
 [cdnjs.com](https://cdnjs.com/libraries/phaser) also offers a free CDN service. They have all versions of Phaser and even the custom builds:
 
-`<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/2.4.0/phaser.js"></script>`
+`<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/2.4.1/phaser.js"></script>`
 
 ### Phaser Sandbox
 
@@ -236,311 +224,16 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 <a name="change-log"></a>
 ## Change Log
 
-Version 2.4 - "Katar" - 22nd July 2015
+Version 2.4.1 - "Ionin Spring" - in development
 
-### API Changes
 
-* RenderTexture.render now takes a Matrix as its second parameter, not a Point object. This brings it in line with Pixi and allows you to perform much more complex transformations on the object being rendered. If you need to replicate the old behavior please use RenderTexture.renderXY(sprite, point.x, point.y) instead.
-* PIXI.DisplayObject.updateTransform has a new optional parameter `parent`. If the DisplayObject doesn't have a parent (i.e. it isn't on the display list yet) then in the past `updateTransform` would fail. This meant you couldn't do things like scale or rotate a Sprite and then draw it to a RenderTexture or BitmapData, as calls to updateTransform would be ignored. The new checks now look to see if the `parent` parameter is set. If so this takes priority over the actual parent and is used to modify the transform (note that it **doesn't** reparent the DisplayObject, it merely uses it for the transform.) If there is no parent (explicitly or via the parameter) then it falls back to use Phaser.World as the parent. If it can't reach that then no transform takes place.
-* If Phaser.Sound.noAudio has been set then Phaser.Loader will not load any audio files. No errors are thrown, but all calls to Loader.audio and Loader.audiosprite are silently ignored. `noAudio` can be set either via the `PhaserGlobal` global var or is set if the device your game is running on has no audio playback support.
-* Files can now be added to the Loader with an absolute URL even if you have a Loader.baseURL set. In previous versions the baseURL would still be prepended to the file URL, but the Loader now checks if the a file URL begins with `http` or `//` and skips prepending the baseURL to it.
-* Phaser.StateManager would incorrectly call `loadUpdate` and `loadRender` while the game was paused or if the State didn't have an `update` or `render` method defined, even after the loader was completed. Although this is a bug fix it's still an API change should you have been using the `loadUpdate/Render` calls in the old way. Also the StateManager no longer calls `preRender` unless the State `create` method has *finished*. If the State doesn't have a `create` method then `preRender` runs immediately.
-* Frame.uuid has been removed (was flagged as deprecated for several releases). This has a two-fold effect: First it means that the property no longer exists and secondly it means that the AnimationParser (the class responsible for loading sprite sheets and texture atlases) no longer has to call either RandomDataGenerator.uuid OR populates the PIXI.TextureCache. The first saves some CPU time and the second saves memory by not creating references to textures it doesn't ever use. The PIXI.TextureCache is now ignored by Phaser other than for the `__missing` and `__default` textures.
-* Phaser.AnimationParser methods `JSONData`, `JSONDataHash` and `XMLData` have all had their `cacheKey` parameter removed as it's no longer used.
-* Input.deleteMoveCallback no longer takes an integer as its parameter. Now you have to give it the original callback and context in order to remove it. This is to protect against index invalidation (see the fixed Bugs list)
-* Group.add and Group.addAt will only create a Physics Body on the child if it doesn't already have one. This is a change from 2.3 where it would replace the physics body property with the new body, but this could lead to garbage build-up over time, so you should now properly destroy the body before changing it.
-* Button game objects now have `Input.useHandCursor` set to `true` by default.
-* Phaser.BitmapText no longer extends PIXI.BitmapText but replaces it entirely.
-* Phaser.Text no longer extends PIXI.Text but replaces it entirely. Phaser.Text now natively extends a Phaser Sprite, meaning it can be enabled for physics, damaged, etc.
-* Mouse.button and MSPointer.button have been deprecated and are no longer set (they remain at -1). They never supported complex button events such as holding down 2 buttons and releasing just one, or any buttons other than left and right. They have been replaced with the far more robust and accurate Pointer DeviceButton properties such as `Pointer.leftButton`, `Pointer.rightButton` and so on.
-* Phaser.DeviceButton is a new class that handles a specific button on an input device, for example the middle button of a mouse, the eraser button of a stylus or a shoulder button on a Gamepad.
-* Phaser.DeviceButton.shiftKey is a boolean that holds if the shift key was held down or not during the last button event.
-* Phaser.DeviceButton.altKey is a boolean that holds if the alt key was held down or not during the last button event.
-* Phaser.DeviceButton.ctrlKey is a boolean that holds if the control key was held down or not during the last button event.
-* Phaser.GamepadButton has been removed and now uses DeviceButton instead. Three internal API changes took place: `processButtonDown` is renamed to `start`, `processButtonUp` is renamed to `stop` and `processButtonFloat` is renamed to `padFloat`. If you extended GamepadButton in your own code you need to replace it with DeviceButton.
-* MSPointer now checks the `pointerType` property of the DOM event and if it matches 'mouse' it will update `Input.mousePointer`, rather than `Input.pointer1` (or whatever the next free Pointer was).
-* Time.suggestedFps is now only populated if `Time.advancedTiming` is enabled.
 
-### p2.js Upgraded to version 0.7.0
 
-Phaser has been upgraded internally to use the new release of p2 physics. All Phaser based API call signatures remain unchanged unless listed below.
 
-For the full list of p2 additions please read [their change log](https://github.com/schteppe/p2.js/releases/tag/v0.7.0).
 
-* The P2.Body.onBeginContact arguments have changed. It now sends 5 arguments: The Phaser.P2.Body, the p2.Body, the p2 Shape from Body A, the p2 Shape from Body B and the contact equations array. Note that the Phaser.P2.Body may be null if you collide with a 'native' p2 body (such as the world bounds). However the p2.Body argument will always be populated.
-* The P2.Body.onEndContact arguments have changed. It now sends 4 arguments: The Phaser.P2.Body, the p2.Body, the p2 Shape from Body A and the p2 Shape from Body B. Note that the Phaser.P2.Body may be null if this is the end of a contact with a 'native' p2 body (such as the world bounds). However the p2.Body argument will always be populated.
-* P2.Body.applyImpulse allows you to apply an impulse to a Body. An impulse is a force added to a body during a short period of time.
-* P2.Body.applyImpulseLocal allows you to apply an impulse to a point local to the Body. An impulse is a force added to a body during a short period of time.
-* P2.Body.getVelocityAtPoint gets the velocity of a point in the body.
 
-### Build Updates
 
-* The Grunt build script now lets you exclude four new modules: rope, tilesprite, creature and video.
-* Rope removes the ability to create Rope sprites and also removes the PIXI.Rope and PIXI.Strip classes.
-* TileSprite removes the ability to create Tile Sprites and also removes the PIXI.TilingSprite class.
-* Creature is not enabled by default, but allows you to control support for Creature bone based animations.
-* Video removes the ability to render Videos and video streams to textures.
-* Pixi is no longer an optional module. Phaser no longer uses any main stream branch of Pixi and has multiple fixes and tweaks internally through-out it. Therefore it's now no longer possible to replace the version of Pixi that Phaser uses with any other version, so we removed the option from the custom list. Over time we will do away with the Pixi globals and merge it fully into Phaser to avoid conflicts with any other version of Pixi present.
 
-### New Features
-
-* All calls to Loader methods that add files to the queue, such as `Loader.image` or `Loader.atlas`, now have the URL as an optional parameter. If not set Loader will assume the URL to be based on the key given. For example the following: `game.load.image("boom", "boom.png")` can now be expressed as just `game.load.image("boom")`, or `game.load.atlas("player", "player.png", "player.json")` can now be shortened to `game.load.atlas("player")`. Please see the freshly updated jsdocs for full details.
-* Loader.atlas and `Cache.addTextureAtlas` will now automatically determine the format of the JSON data (array or hash) when added to the Cache. You no longer need to specify it explicitly if JSON, only if XML.
-* Added support for the [Creature Automated Animation Tool](http://www.kestrelmoon.com/creature/). You can now create a Phaser.Creature object which uses json data and a texture atlas for the animations. Creature is a powerful animation tool, similar to Spriter or Spine. It is currently limited to WebGL games only, but the new libs should prove a solid starting point for anyone wanting to incorporate Creature animations into their games.
-* Tilemap.getTileWorldXY has a new optional parameter: `nonNull` which if set makes it behave in the same way as `getTile` does (thanks @GGAlanSmithee #1722)
-* Group.hash is an array (previously available as `Group._hash`, but protected) into which you can add any of its children via `Group.addToHash` and `Group.removeFromHash`. Only children of the Group can be added to and removed from the hash. The hash is used automatically by Arcade Physics in order to perform non z-index based destructive sorting. However if you don't use Arcade Physics, or it isn't a physics enabled Group, then you can use the hash to perform your own sorting and filtering of Group children without touching their z-index (and therefore display draw order).
-* Group.physicsSortDirection is a new property allowing you to set a custom sort direction for Arcade Physics Sprites within the Group hash. Previously Arcade Physics used one single sort direction (defined on `Phaser.Physics.Arcade.sortDirection`) but this change allows you to specifically control how each and every Group is sorted, so you can now combine tall and wide Groups with narrow and thin in a single system.
-* Cache.getPixiTexture will return a PIXI.Texture from the cache based on the given key. A PIXI Texture is created automatically for all images loaded and added to the cache.
-* Cache.getPixiBaseTexture will return a PIXI.BaseTexture from the cache based on the given key. A PIXI BaseTexture is created automatically for all images loaded and added to the cache.
-* Phaser.Matrix.clone allows you to clone the Matrix to a new object, or copy its values into the given Matrix.
-* Phaser.Matrix.copyFrom and copyTo allow you to copy Matrix values from and to other Matrix  objects.
-* Phaser.Matrix.setTo allows you to set all properties of a Matrix in a single call.
-* The Phaser.Matrix constructor now allows you to optionally set all Matrix properties on instantiation.
-* Text.setShadow has two new optional parameters: `shadowStroke` and `shadowFill`. These allow you to set if the drop shadow is applied to the Text stroke, the Text fill or both of them (thanks @qdrj #1766)
-* Text.shadowStroke and Text.shadowFill allow you to toggle if the drop shadow is applied to the Text stroke or fill independently.
-* ArcadePhysics.Body.syncBounds is a new property that if true forces the Body to check itself against the Sprite.getBounds() dimensions and adjust its width and height accordingly. If false it will compare its dimensions against the Sprite scale instead, and adjust its width height if the scale has changed. Typically you would need to enable `syncBounds` if your sprite is the child of a responsive display object such as a FlexLayer, or in any situation where the sprite scale doesn't change, but its parents scale is effecting the dimensions regardless.
-* Rectangle.ceil runs Math.ceil() on both the x and y values of the Rectangle.
-* Rectangle.ceilAll runs Math.ceil() on the x, y, width and height values of the Rectangle.
-* The Net and Debug classes have been stubbed out, so they can be properly excluded during a custom build (thanks @soldoutactivist #1772)
-* Device.oggVideo indicates if the browser can play back ogg video files.
-* Device.h264Video indicates if the browser can play back H264 (mp4) video files.
-* Device.mp4Video indicates if the browser can play back H264 (mp4) video files.
-* Device.webmVideo indicates if the browser can play back webm video files with the vp8 codec.
-* Device.vp9Video indicates if the browser can play back webm video files with the vp9 codec.
-* Device.hlsVideo indicates if the browser can play back mpeg video files.
-* PIXI.DisplayObject.worldPosition contains the position of the DisplayObject (and therefore any object that inherits from it, such as Phaser.Sprite) taking into account all transforms in the display list. It is updated at the end of `DisplayObject.updateTransform`. DisplayObject.position reflects only the position applied to the object directly, whereas worldPosition includes the positions that may have been applied to its ancestors.
-* PIXI.DisplayObject.worldScale contains the scale of the DisplayObject (and therefore any object that inherits from it, such as Phaser.Sprite) taking into account all transforms in the display list. It is updated at the end of `DisplayObject.updateTransform`. DisplayObject.scale reflects only the scale applied to the object directly, whereas worldScale includes any scales that may have been applied to its ancestors.
-* PIXI.DisplayObject.worldRotation contains the rotation of the DisplayObject (and therefore any object that inherits from it, such as Phaser.Sprite) taking into account all transforms in the display list. It is updated at the end of `DisplayObject.updateTransform`. DisplayObject.rotation reflects only the rotation applied to the object directly, whereas worldRotation includes any rotations that may have been applied to its ancestors.
-* Loader.video allows you to load a video file into Phaser. It works in the same way as Loader.audio, allowing you to pass an array of video files - and it will load the first one the device is capable of playing back. You can optionally load the video via xhr where the video data is converted to a Blob upon successful load.
-* Cache.addVideo allows you to add a loaded video into the Phaser Cache. This is called automatically by the Phaser Loader, but may be invoked directly as well.
-* Cache.checkVideoKey allows you to check if a video is stored in the cache based on the given key.
-* Cache.getVideo allows you to extract a video from the Cache based on its key. The video element itself (or the Blob is loaded with asBlob true) will be found in the `data` property of the returned object.
-* Cache.removeVideo will remove a video from the Cache based on the given key.
-* SoundManager.onVolumeChange is a new signal that is dispatched whenever the global volume changes. The new volume is passed as the only parameter to your callback.
-* SoundManager.onMute is a new signal that is dispatched when the SoundManager is globally muted, either directly via game code or as a result of the game pausing.
-* SoundManager.onUnMute is a new signal that is dispatched when the SoundManager is globally un-muted, either directly via game code or as a result of the game resuming from a pause.
-* Input.Touch.addTouchLockCallback allows you to add a callback that will be invoked automatically upon a touchstart event. This is used internally by the SoundManager and Video objects to handle mobile device unlocking, but is exposed publicly as well.
-* Frame.resize allows you to change the dimensions of a Frame object and recalculate all of its internal properties (such as `bottom` and `distance`).
-* LoadTexture.resizeFrame lets you resize the Frame dimensions that the Game Object uses for rendering. You shouldn't normally need to ever call this, but in the case of special texture types such as Video or BitmapData it can be useful to adjust the dimensions directly in this way.
-* Rectangle.bottomLeft has been added (thanks @mattmogford #1788)
-* Device.firefoxVersion is a new property that contains the major Firefox version number if running within Firefox, otherwise zero.
-* Math.distanceSq will return the euclidean distance squared between the two given set of coordinates (thanks @jeremyosborne #1761 #1770)
-* StateManager.onStateChange is a new signal which is dispatched whenever the State changes from one to another. The callback you specify is sent two parameters: the string based key of the new state, and the second parameter is the string based key of the old / previous state. 
-* onDragUpdate is a new signal that is dispatched whenever a Game object enabled for input and drag is moved by a pointer (i.e. during a drag event). See the `Phaser.InputHandler.enableDrag` docs for parameter details and the new Phaser Example.
-* Rectangle.resize allows you to resize a Rectangle to the new given dimensions without altering its position.
-* Cache.getJSON has a new parameter: `clone`. If set it will return a clone of the object stored in the Cache rather than a reference to it.
-* Circle.random will return a uniformly distributed random point from anywhere within the circle.
-* Line.random will return a random point from anywhere on the Line segment.
-* Ellipse.random will return a uniformly distributed random point from anywhere within the ellipse.
-* Rectangle.random will return a uniformly distributed random point from anywhere within the rectangle.
-* Line.rotate allows you to rotate a line by the given amount around its center point.
-* Device.chromeVersion will return the major version number of Chrome.
-* TilingSprite.textureDebug is a new boolean that allows you to visually debug the generated texture a TilingSprite creates.
-* Device.electron will return true if running under GitHub Electron (thanks @rblopes #1851)
-* When loading a BitmapText you can now specify either an XML file or a JSON file for the font data. This is useful in environments such as Cocoon where you don't have a native XML parser. If you wish to use JSON the formatting should be equal to the result of running a valid XML file through X2JS (thanks @Feenposhleen #1837)
-* Game Objects that have the Health component (such as Sprites) now have a new method: `heal` which adds the given amount to the health property, i.e. is the opposite of `damage` (thanks @stephandesouza #1794)
-* maxHealth is a new property that Game Objects with the Health component receive and works in combination with the `heal` method to ensure a health limit cap.
-* Text.setTextBounds is a rectangular region that allows you to align your text within it, regardless of the number of lines of text or position within the world. For example in an 800x600 sized game if you set the textBounds to be 0,0,800,600 and text alignment to 'left' and vertical alignment to 'bottom' then the text will render in the bottom-right hand corner of the game, regardless of the size of font you're using or the number of lines in the text itself (thanks @boostermedia for the idea #1824)
-* Text.autoRound allows you to control if the text is allowed to render at sub-pixel coordinates or not. Set to `true` to round the coordinates, often eliminating anti-aliasing from certain font types (#1867)
-* Tiled Image Collection support is now available and has been added to the TilemapParser and Tilemap classes (thanks @asyed94 #1879)
-* Keyboard.addKeys is a practical way to create an object containing user selected hotkeys. For example: `addKeys( { 'up': Phaser.Keyboard.W, 'down': Phaser.Keyboard.S, 'left': Phaser.Keyboard.A, 'right': Phaser.Keyboard.D } );` would return an object containing the properties `up`, `down`, `left` and `right` that you could poll just like a Phaser.Key object. (thanks @Mourtz #1857)
-* TilemapLayer.resize allows you to resize a TilemapLayer. It will update the internal canvas object and corresponding texture dimensions (#1881)
-* Pointer button handling has been given an overhaul. It has the following new DeviceButton properties: `leftButton`, `rightButton`, `middleButton`, `backButton`, `forwardButton` and `eraserButton`. So you can now easily check which buttons are active and build right or middle click support into your games. The Pointer object normalises these properties for you, regardless if they came from a MouseEvent or PointerEvent (thanks @youssefdetovernickr for the idea #1848)
-* Text has a new style property: tabs. This allows you to specify a pixel value (or values) that allows you to space out text that contains tab characters within it. `Text.tabs` can be either an integer, in which case all tabs share the same spacing, or an array of pixel values corresponding exactly to the number of tabs per line of text. This allows you to easily align columns of data in a single Text object.
-* BitmapData.move(x, y) allows you to shift the contents of the BitmapData horizontally and vertically by the given amounts. The image wraps-around the edges of the BitmapData.
-* BitmapData.moveH(distance) allows you to horizontally shift the BitmapData with wrap-around the edges.
-* BitmapData.moveV(distance) allows you to vertically shift the BitmapData with wrap-around the edges.
-* Text.addStrokeColor works in the same way as `Text.addColor` but allows you to define a color stop for the stroke color instead of the fill color.
-* All Game Objects and Groups have a new boolean property called `pendingDestroy`. If you set this to `true` then the object will automatically destroy itself in the *next* logic update, rather than immediately. This is useful for cases when you wish to destroy an object from within one of its own callbacks, such as with buttons or other input events (thanks @alamboley #1748)
-* BitmapData.generateTexture will take a snapshot of the BitmapDatas canvas at that moment in time and convert it into an Image, which is then stored in the Phaser image Cache based on the key given. You can then use the new texture for any future sprites or texture based objects.
-* All Signals now have the ability to carry extra custom arguments with them, which are passed on to the callback you define after any internal arguments. For example a Phaser.Key has an onDown signal. When dispatched onDown sends a reference to the Key as the first and only argument. But you can now set the callback like this: `fireKey.onDown.add(shoot, this, 0, 'lazer', 64)`. So when the onDown signal is dispatched internally the callback (`shoot` in this case) will receive 3 arguments: the Key reference that is raised internally and the string 'lazer' and value 64, which were the custom arguments provided when setting-up the callback.
-* Group.moveAll allows you to move all of the children of a Group into another Group.
-* Loader.path is a string and if set it is placed before any _relative_ file path given to the Loader. For example: `load.path = "images/sprites/";` followed by `load.image("ball", "ball.png");` and `load.image("tree", "level1/oaktree.png");` would load the `ball` file from `images/sprites/ball.png` and the tree from `images/sprites/level1/oaktree.png`. The path is added before the filename but *after* the `Loader.baseURL`. The path _must_ end with a "/". Set it to nothing to disable the path.
-* Loader.shader allows you to load a fragment shader from an external file.
-* Cache.addShader adds a fragment shader into the cache.
-* Cache.getShader gets a fragment shader from the cache.
-* The Cache has been internally refactored considerably. Image data is now all stored in the same object, rather than being split across the PIXI global caches (such as PIXI.TextureCache and PIXI.BaseTextureCache), which are no longer used by Phaser.
-* Internally the Cache now uses a single _cache object, which is partitioned to store the various different object types. Before the cache used lots of private objects, one per data type, but it's now a lot cleaner and we've managed to cut out hundreds of lines of duplicate code in the process.
-* Cache.getImage has a new argument which lets you return either just the HTML Image element or the entire image cache object, which includes the baseTexture and frame data.
-* Cache.getImage will return a __default image if the key isn't given, or a __missing image if the key is given but not found in the cache. This means it will always return a valid image and no longer cause Phaser to throw runtime errors deeper down with invalid image objects.
-* AABB vs. AABB collisions now work in Ninja Physics. `reportCollisionVsWorld` already worked, and contained all of the logic required to resolve a collision once the appropriate vectors had been established. `reportCollisionVsBody` was refactored to use that function (now generically named `reportCollision`), and now AABBs can collide properly, including bouncing and friction. reportCollisionVsWorld is now just a wrapper around reportCollision to maintain compatibility (thanks @standardgaussian #1905)
-* Phaser.Create is a new class that allows you to dynamically generate sprite textures from an array of pixel data, without needing any external files. We'll continue to improve this over the coming releases, but for now please see the new examples showing how to use it.
-
-### Updates
-
-* TypeScript definitions fixes and updates (thanks @clark-stevenson @isuda @ggarek @jamesgroat)
-* JSDoc typo fixes (thanks @robertpenner @luckylooke @asyncanup @muzuiget @danxexe @rgk @matugm)
-* Added missing `resumed` method to Phaser.State class template.
-* Color.webToColor and Color.updateColor now updates the `out.color` and `out.color32` properties (thanks @cuixiping #1728)
-* Tilemap.createFromObjects has been updated for Tiled 0.11 and can now look-up object layers based on id, uid or name. It will also now copy over Sprite scaling properties if set (thanks @mandarinx #1738)
-* Graphics.drawPolygon can now accept a Phaser.Polygon or PIXI.Polygon object, as well as a points array (#1712)
-* Phaser.Physics hooks added in for MatterJS support (coming soon)
-* Body.destroy now automatically calls `Group.removeFromHash`.
-* Physics.Arcade.sort has a new property 'sortDirection'. If not specified it will use World.sortDirection. If the Group given as the first parameter has its `physicsSortDirection` property set that will override any other setting.
-* Physics.Arcade.sort now calls one of four functions: sortLeftRight, sortRightLeft, sortTopBottom and sortBottomTop. Each of which takes 2 Sprites as arguments.
-* Physics.Arcade.sort now doesn't bail out if the Group contains a mixture of physics and non-physics enabled objects, as the Group hash is now only ever populated with physics enabled objects. Also the sort comparison functions no longer return -1 if the bodies are invalid, but zero instead (#1721)
-* Phaser.Group would automatically add a child into the _hash array as soon as the child was created (or moved into the Group). This no longer happens. Instead the child is only added to `Group.hash` if it is enabled for Arcade Physics. However `Group.addToHash` and the hash array have been exposed as public in case you were taking advantage of the _hash even though it was a previously marked as private.
-* Cache.getTexture has now been removed (it was deprecated several versions ago). Use Cache.getRenderTexture instead.
-* Removed duplicate methods from PIXI.Text such as wordWrap and updateText as Phaser overrides them, so it was wasting bytes.
-* Phaser.StateManager no longer calls `preRender` unless the State `create` method has finished. If the State doesn't have a `create` method then `preRender` runs immediately.
-* Phaser.StateManager.created is a new read-only boolean that tells you if the State has finished running its `create` method. If it doesn't have one it's always true.
-* RenderTexture.render and `renderXY` would ignore the Sprites rotation or scale. The full Sprite transform is now used correctly when the Sprite is drawn to the texture. If you wish to replicate the old behavior please use `RenderTexture.renderRawXY` instead.
-* Pixi.Sprite.renderCanvas and renderWebGL now has a new optional matrix parameter. You can use this to render the Sprite with an alternative transform matrix without actually adjusting the Sprite matrix at all.
-* RenderTexture.matrix has been removed as it's no longer used.
-* SoundManager.pauseAll, resumeAll and stopAll now checks if the SoundManager.noAudio is set and ignores the calls.
-* SoundManager.usingWebAudio is set to `false` by default (used to be `true`) and is only explicitly set if Web Audio is available and hasn't been disabled in the PhaserGlobal object.
-* SoundManager.touchLocked is now set to `false` should the device be using legacy Audio, avoiding the unlock call running without need.
-* Added `type` parameter to `VideoTexture.fromUrl` allowing you to define the mime-type of the video file, which is required for Firefox and Safari in most cases.
-* PIXI.BaseTexture.forceLoaded allows you to set a BaseTexture as loaded, with the given width and height. It then calls `BaseTexture.dirty`. This is important for when you don't want to modify the shape of the source object by forcing in `complete` or dimension properties it may not naturally have, but still wish to use it as a base texture.
-* SoundManager.volume now has its input value clamped to ensure it's between 0 and 1 (inclusive)
-* Removed `Input.moveCallback` and `Input.moveCallbackContext` as neither are used any longer. Use `Input.addMoveCallback`.
-* SoundManager now uses the new `Touch.addTouchLockCallback` methods to handle mobile device audio unlocking.
-* If a BitmapData is created with a width or height set to zero then the width and/or height are set to a default value (256) instead to avoid getContext errors.
-* RetroFont has been updated to use RenderTexture.renderXY, removing the need for creating a Point object each update.
-* RetroFont no longer puts any entries into the TextureCache or generates any UUIDs on instantiation, speeding up creation and lowering memory use.
-* BitmapData.update now validates the `width` and `height` values to ensure they aren't lower than 1, which would previously cause a context error.
-* Texture.requiresReTint is a new property that controls if a texture requires the display object to be re-tinted having been updated internally. The LoadTexture component now sets this.
-* PIXI.Sprite.tintedTexture contains a canvas object that holds the tinted version of the Sprite. This is only populated in Canvas, not in WebGL.
-* ScaleManager.scaleSprite will no longer try and scale a display object that doesn't have a scale property.
-* The LoadTexture component has a new property `customRender` which is checked for in the Core postUpdate to know when to render custom elements like Videos.
-* BitmapText line spacing and word wrapping has been vastly improved and bought in-line with how Pixi 3 handles it, but with additional anchor support.
-* P2.Body.loadPolygon now allows the `key` parameter to be passed as `null` - when this happens the `object` parameter can be the actual physics object data instead of a string pointing to the cache, allowing you to take advantage of adding multiple convex shapes with automatic adjustments for center of mass #1801
-* Tilemap.addTilesetImage can now accept a BitmapData as the `key` parameter and will use the BitmapData to render the tileset with instead of an image from the cache (thanks to @unstoppablecarl for the idea #1838)
-* Device now uses a new way to detect when Phaser is running under a NW.js (formerly Node-WebKit) environment, using feature detection, instead of relying on a guarded require statement. The former way was the source of a known incompatibility with browserify and similar tools (thanks @rblopes #1851)
-* Sprite vs. Tilemap collision can now check if the sprite overlaps the tilemap without trying to separate it (thanks @Preece #1810)
-* The Asset Pack JSON Format example has been updated to include new and missing file formats (thanks @rblopes #1808)
-* RenderTexture now takes the display objects alpha into consideration when rendering it, before it would always reset worldAlpha to 1 before rendering, thus ignoring any alpha that may be set.
-* P2.enableBody now checks if an anchor exists on target object before attempting to set its value (thanks @standardgaussian  #1885)
-* Debug.currentAlpha wasn't being used to set the alpha of the Debug context at all (was always set to 1) but now updates the alpha of the Debug context before anything is rendered to it (thanks @wayfu #1888)
-* If the device is detected as a Windows Phone the renderer is automatically set to use Canvas, even if WebGL or AUTO was requested (thanks @ramarro123 #1706)
-* RandomDataGenerator.weightedPick has been tweaked slightly to allow for a more even distribution of weights. It still favors the earlier array elements, but will accurately include 'distance' elements as well (thanks @gingerbeardman #1751)
-* BitmapData.clear has 4 new optional parameters: x, y, width and height, that define the area to be cleared. If left undefined it works exactly the same as before and clears the entire canvas.
-* Added Phaser.Keyboard.COMMA and Phaser.Keyboard.PERIOD to the consts list.
-* Canvas.setSmoothingEnabled only applies the value of the property exists, which avoids the Chrome webkit prefix deprecation warnings.
-* PIXI._CompileShader can now take an array or a string for the fragment src.
-* AnimationParser.spriteSheet can now accept either a string-based key or an HTML Image object as the key argument.
-* LoaderParser.bitmapFont, xmlBitmapFont and jsonBitmapFont all now return the font data rather than write it to the now deprecated PIXI.BitmapText.fonts global array.
-* PIXI.BitmapText has been removed as a global array, as it is no longer used.
-* PIXI has been made available for Phaser when using requireJS (thanks @mkristo #1923)
-* Internally the Time class has been updated to split out the RAF and SetTimeout implementations. This cuts down the update loop workload significantly, which was causing a performance optimization bottleneck in V8.
-* TweenData.update now uses the `Time.elapsedMS` value for its delta calculation, instead of the physicsStep - this is because tweens are inherently time duration based and on a lagging system they were not properly completing when they should do (also addresses #1819)
-* World.stateChange is a new method that is called whenever the state changes or restarts. It resets the world x/y coordinates back to zero and then resets the Camera.
-* All undefined argument checks were changed from `if (typeof x === 'undefined')` to `if (x === undefined)` removing the typeof check and saving some bytes across the codebase in the process.
-* Text.updateText will now check the width and height values of the Text canvas and if either are zero it sets `Text.renderable = false` to avoid throwing WebGL texture binding errors.
-* WebGL context loss and restoration is now handled directly by Phaser.
-* Cache.clearGLTextures empties out all of the GL Textures from Images stored in the cache. This is called automatically when the WebGL context is lost and then restored.
-
-### Bug Fixes
-
-* The LoadTexture component has had a redundant `dirty` call removed from it that was causing textures to be re-uploaded to the GPU even though they may already have been on it.
-* TileSprites were missing a `physicsType` property, causing them to not collide with anything (thanks @numbofathma #1702)
-* Sprite was missing the Health and InCamera components.
-* A Tween could be incorrectly set to never end if it was given a duration of zero (thanks @hardalias #1710)
-* Added guards around `context.getImageData` calls in BitmapData, Text and Canvas Tinting classes to avoid crashing restricted browsers like Epic Browser. Please understand that several Phaser features won't work correctly with this browser (thanks @Erik3000 #1714)
-* P2 Body.destroy now checks for the existence of a `sprite` property on the body before nulling it (thanks @englercj #1736)
-* The version of p2.js being used in 2.3.0 wasn't correctly declaring itself as a global for browserify / requireJS. This update resolves that (thanks @dgoemans #1723)
-* AnimationManager.frameName setter wasn't checking if `_frameData` existed before accessing it (thanks @nesukun #1727)
-* P2.getConstraints would return an array of null objects. It now returns the raw p2 constraint objects (thanks @valueerrorx #1726)
-* TilemapLayer docs incorrectly reported it as extending Phaser.Image, but it doesn't share the same components so has been updated.
-* TilemapLayer was missing the Input component (thanks @uhe1231 #1700)
-* PIXI.Graphics in Canvas mode wouldn't respect the objects visible or alpha zero properties, rendering it regardless (thanks @TimvdEijnden #1720)
-* Enabling Arcade Physics would add the deltaCap property onto Phaser.Time, even though the property doesn't exist any more, changing the class shape in the process.
-* Phaser.StateManager would incorrectly call `loadUpdate` while the game was paused or if the State didn't have an `update` method defined even after the loader was completed.
-* Phaser.StateManager would incorrectly call `loadRender` while the game was paused or if the State didn't have an `render` method defined even after the loader was completed.
-* Added the missing `preRender` function to the Phaser.State class template.
-* Fixed bug in Pixi where RenderTexture.render would ignore the given matrix.
-* Fixed a bug in Pixi where drawing a Sprite to a RenderTexture would reset the Sprites transform to an identity Matrix.
-* The SoundManager didn't accurately detect devices or browser environments with no sound card present and would try to carry on using a null Web Audio context (thanks @englercj #1746)
-* The Tween.onStart signal wasn't dispatched if the Tween had a delay set. It's now dispatched immediately if no delay, or after the delay if set. It also respects the `autoStart` parameter and will still dispatch even if `autoStart` is true.
-* Input.addMoveCallback used to return the index of the callback entry in the internal `moveCallbacks` array. However as callbacks were removed the indexes became invalid, potentially causing a future `Input.deleteMoveCallback` to remove the wrong callback entirely or error. Input.deleteMoveCallback now takes the original callback and context as its parameters to ensure deletion safety.
-* Graphics constructor now sets x/y parameters to zero if undefined. Before it would set them to undefined as the type check wasn't strict.
-* Math.isOdd now returns an actual boolean value instead of 1 (thanks @formigone #1792)
-* Rope constructor was fixed enabling it again (thanks @gionatan7 #1799)
-* FrameData.getFrameIndexes when called with a partial array (such as creating an animation out of a set of frames) would return the indexes array padded out with 'undefined' entries, causing short animations to never fully play through.
-* AnimationManager.add no longer sets the `currentFrame` property when just adding an Animation to a Sprite. The `currentFrame` property is now only set when the animation begins playing. This avoids the Sprite.frame and Sprite.frameName properties from returning incorrect results after adding (but not playing) an Animation. It also allows very short animations (2 frames) to play correctly without needing to loop.
-* PIXI.Graphics was calling Polygon.flatten in its drawShape call, causing the original Polygon object to internally change. It now takes a clone of the polygon and only flattens that (#1779)
-* Tween.generateData didn't set a default value for the `frameRate` parameter if undefined, causing an infinite loop (thanks @rblopes #1782 #1785)
-* Fixed the Pixelate filter, changing the `dimensions` uniform to a 2f and removing un-needed vecs from the fragment src. Also fixed the size getter and added sizeX and sizeY getters/setters (#1780)
-* Tween.to and Tween.from can now accept `null` as the ease parameter value. If `null` it will use the default tween, as per the documentation (thanks @nkovacs #1817)
-* TilemapParser.parseTiledJSON would ignore 'falsey' properties set on Objects in Tiled JSON tilemaps, such as `x: 0` or `visible: false`. These properties are now accurately copied over to the destination map data (thanks @MaksJS #1818)
-* Removed un-necessary PIXI.TextureCache pollution in Phaser.LoaderParser.bitmapFont.
-* Sound.resume wouldn't properly restart looped sounds in Chrome after being paused. Phaser now specifically handles the Chrome 42 bug and later fix (thanks @nkovacs #1820)
-* Setting the BitmapText.maxWidth property would throw an error (thanks @drhayes #1807)
-* If running under Cordova and iOS the Game.lockRender boolean will be set to `true` when the game pauses and `false` when it resumes. This avoids the `gpus_ReturnNotPermittedKillClient` app crash on iOS (thanks @cncolder #1800)
-* Sound.restart and Sound.stop now properly disconnect the sound from the gainNode (or external node) before stopping it, allowing restart to work correctly (thanks @eofs #1796)
-* When loading an Audio Sprite from an Asset Pack the wrong Loader method was being used (thanks @boniatillo-com #1777)
-* Due to a Pixi 2 issue TileSprite when running under WebGL didn't respect the world alpha setting and would only work with its own alpha (thanks @hanenbro #1774)
-* TileSprite now fully supports animation again, having been broken for several versions due to a Pixi upgrade. We've updated the way TileSprites generate their textures internally considerably and animation support is back across both Canvas and WebGL as a result (#1653)
-* Setting mute to false on Sound that was never muted caused its volume to be set to zero (thanks @brianbunch #1870)
-* P2.Body.createGroupCallback incorrectly referenced the `_groupCallbackContext` when deleting it (thanks @Langerz82 #1886)
-* When reusing a Tween created with an array of properties the values would get exponentially added to the TweenData internal array each time the tween was re-run (thanks @SBCGames #1747)
-* Reading the dimensions of a Text object would reset its resolution property (thanks @joelika #1717)
-* Text.addColor would incorrectly color the text stroke if set (thanks @llevkin #1893)
-* Setting the scaleMode property of a Game configuration object would cause a ScaleManager TypeError in the resize method. It now stores the scale mode locally and applies it after boot (thanks @Mickawesomesque #1534)
-* Device.windowsPhone should now correctly identify Windows Phone 8.1 devices, which also think they are iOS and Androids. If you find a device that gets around this check please send us its ua string! (thanks @jounii #1496)
-* Rope.segments used the wrong vertices property, causing a runtime error.
-* Debug.ropeSegments didn't take the scale of the Rope object into consideration, causing incorrect debug rendering.
-* If a Sound was muted, or had its volume changed while it was still decoding (i.e. before it started playback) then the mute and/or volume were ignored and the sound would play anyway (thanks @brianbunch #1872)
-* Group.addMultiple if given a Group.children array as the first parameter would fail as the original group length was decreased out of line with the children being added. Group.addMultiple now checks if the children argument is a Phaser.Group instance, and if so it uses Group.moveAll instead on it (thanks @AnderbergE #1898)
-* PIXI.DisplayObject.updateTransform now nulls the _currentBounds property (thanks @gaufqwi #1906)
-* Improved the JSON BitmapText implementation (thanks @Feenposhleen #1912 #1837)
-* game.make.group did not setup parent correctly (thanks @mthurlin #1911)
-* Fix reference error for process in the Device class (thanks @mkristo #1922)
-* Sprites with Arcade Physics bodies that had `collideWorldBounds` enabled would be moved to the wrong position if you restarted a State (or swapped to a new State) that reset the world bounds (thanks @vulvulune #1775)
-* PIXI.BaseTexture.fromCanvas now checks the canvas dimensions and if either face is zero it sets them to 1px to avoid WebGL texture binding errors.
-
-### Deprecated
-
-All of the following have been removed from Phaser 2.4.
-They were flagged as deprecated in Phaser 2.2 or earlier.
-
-* Camera.screenView
-* ScaleManager.maxIterations
-* ScaleManager.enterPortrait (see onOrientationChange)
-* ScaleManager.enterLandscape (see onOrientationChange)
-* ScaleManager.enterFullScreen (see onFullScreenChange)
-* ScaleManager.leaveFullScreen (see onFullScreenChange)
-* ScaleManager.fullScreenFailed (see onFullScreenError)
-* ScaleManager.checkResize
-* ScaleManager.checkOrientation
-* ScaleManager.setScreenSize (see updateLayout)
-* ScaleManager.setSize (see reflowCanvas)
-* ScaleManager.checkOrientationState (see reflowCanvas)
-* ScaleManager.orientation (see screenOrientation)
-* Gamepad.disabled (see enabled)
-* Input.currentPointers (see totalActivePointers)
-* Input.disabled (see enabled)
-* Keyboard.disabled (see enabled)
-* Mouse.disabled (see enabled)
-* Mouse.mouseMoveCallback (see Input.addMoveCallback)
-* MSPointer.disabled (see enabled)
-* Touch.disabled (see enabled)
-* Cache.getUrl (see getURL)
-* Math.truncate (see Math.trunc)
-* Math.snapToInArray (see Phaser.ArrayUtils.findClosest)
-* Math.interpolateFloat (see Math.linear)
-* Math.normalizeLatitude (use Phaser.Math.clamp(lat, -90, 90))
-* Math.normalizeLongitude (use Phaser.Math.wrap(lng, -180, 180))
-* Math.chanceRoll (use Phaser.Utils.chanceRoll)
-* Math.numberArray (use Phaser.ArrayUtils.numberArray)
-* Math.numberArrayStep (use Phaser.ArrayUtils.numberArrayStep)
-* Math.limitValue (use Phaser.Math.clamp)
-* Math.randomSign (use Phaser.Utils.randomChoice(-1, 1))
-* Math.angleLimit (use Phaser.Math.clamp)
-* Math.getRandom (use Phaser.ArrayUtils.getRandomItem)
-* Math.removeRandom (use Phaser.ArrayUtils.removeRandomItem)
-* Math.floor (use Math.trunc)
-* Math.ceil (use Phaser.Math.roundAwayFromZero)
-* Math.shift (use Phaser.ArrayUtils.rotate)
-* Math.shuffleArray (use Phaser.ArrayUtils.shuffle)
-* Math.distanceRounded (do the rounding locally)
-* Canvas.getOffset (see Phaser.DOM.getOffset)
-* Canvas.getAspectRatio (see Phaser.DOM.getAspectRatio)
-* TilemapLayer.tileColor (use TilemapLayer.debugSettings.missingImageFill)
-* Phaser.ArrayList alias removed, now use Phaser.ArraySet
-* Utils.transposeArray (see Phaser.ArrayUtils.transposeMatrix)
-* Utils.rotateArray (see Phaser.ArrayUtils.rotateMatrix)
-* Utils.shuffle (see Phaser.ArrayUtils.shuffle)
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
