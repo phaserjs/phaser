@@ -584,9 +584,17 @@ Phaser.Loader.prototype = {
     /**
     * Add a JSON resource pack ('packfile') to the Loader.
     *
-    * Packs are always put before the first non-pack file that is not loaded/loading.
+    * A packfile is a JSON file that contains a list of assets to the be loaded.
+    * Please see the example 'loader/asset pack' in the Phaser Examples repository.
+    *
+    * Packs are always put before the first non-pack file that is not loaded / loading.
+    * 
     * This means that all packs added before any loading has started are added to the front
-    * of the file/asset list, in order added.
+    * of the file queue, in the order added.
+    * 
+    * The key must be a unique String. It is used to add the file to the Phaser.Cache upon successful load.
+    *
+    * The URL of the packfile can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
     *
     * @method Phaser.Loader#pack
     * @param {string} key - Unique asset key of this resource pack.
@@ -612,6 +620,7 @@ Phaser.Loader.prototype = {
             type: 'packfile',
             key: key,
             url: url,
+            path: this.path,
             syncPoint: true,
             data: null,
             loading: false,
@@ -1938,6 +1947,10 @@ Phaser.Loader.prototype = {
 
                 case "atlas":
                     this.atlas(file.key, file.textureURL, file.atlasURL, file.atlasData, Phaser.Loader[file.format]);
+                    break;
+
+                case "shader":
+                    this.shader(file.key, file.url, file.overwrite);
                     break;
             }
         }
