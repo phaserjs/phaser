@@ -12,9 +12,12 @@
 * 
 * Note 1: You can only use Phaser.Creature objects in WebGL enabled games. They do not work in Canvas mode games.
 *
-* Note 2: You must use a build of Phaser that includes the Creature runtimes, or have them loaded before your Phaser game boots. 
-* See the Phaser custom build process for more details. By default the Creature runtimes are NOT included in any pre-configured version of Phaser.
-* So you'll need to do `grunt custom` to specify a build that includes them.
+* Note 2: You must use a build of Phaser that includes the Creature runtimes, or have them loaded before your Phaser game boots.
+* 
+* See the Phaser custom build process for more details.
+* 
+* By default the Creature runtimes are NOT included in any pre-configured version of Phaser.
+* So you'll need to do `grunt custom` to create a build that includes them.
 *
 * @class Phaser.Creature
 * @extends PIXI.DisplayObjectContainer

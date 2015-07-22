@@ -195,6 +195,21 @@ module.exports = {
         dest: '<%= modules_dir %>/video.js'
     },
 
+    rope: {
+        src: require('../manifests/rope'),
+        dest: '<%= modules_dir %>/rope.js'
+    },
+
+    creature: {
+        src: require('../manifests/creature'),
+        dest: '<%= modules_dir %>/creature.js'
+    },
+
+    tilesprite: {
+        src: require('../manifests/tilesprite'),
+        dest: '<%= modules_dir %>/tilesprite.js'
+    },
+
     outro: {
         src: require('../manifests/outro'),
         dest: '<%= modules_dir %>/outro.js'

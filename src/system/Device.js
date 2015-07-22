@@ -728,7 +728,7 @@ Phaser.Device._initialize = function () {
         device.getUserMedia = device.getUserMedia && !!navigator.getUserMedia && !!window.URL;
 
         // Older versions of firefox (< 21) apparently claim support but user media does not actually work
-        if (device.firefoxVersion < 21)
+        if (device.firefox && device.firefoxVersion < 21)
         {
             device.getUserMedia = false;
         }
@@ -737,8 +737,7 @@ Phaser.Device._initialize = function () {
 
         // Excludes iOS versions as they generally wrap UIWebView (eg. Safari WebKit) and it
         // is safer to not try and use the fast copy-over method.
-        if (!device.iOS &&
-            (device.ie || device.firefox || device.chrome))
+        if (!device.iOS && (device.ie || device.firefox || device.chrome))
         {
             device.canvasBitBltShift = true;
         }

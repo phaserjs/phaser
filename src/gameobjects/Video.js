@@ -293,6 +293,14 @@ Phaser.Video = function (game, key, url) {
 
 Phaser.Video.prototype = {
 
+    /**
+     * Connects to an external media stream for the webcam, rather than using a local one.
+     *
+     * @method Phaser.Video#connectToMediaStream
+     * @param {HTMLVideoElement} video - The HTML Video Element that the stream uses.
+     * @param {MediaStream} stream - The Video Stream data.
+     * @return {Phaser.Video} This Video object for method chaining.
+     */
     connectToMediaStream: function (video, stream) {
 
         if (video && stream)
@@ -382,6 +390,10 @@ Phaser.Video.prototype = {
 
     },
 
+    /**
+     * @method Phaser.Video#getUserMediaTimeout
+     * @private
+     */
     getUserMediaTimeout: function () {
 
         clearTimeout(this._timeOutID);
@@ -390,6 +402,10 @@ Phaser.Video.prototype = {
 
     },
 
+    /**
+     * @method Phaser.Video#getUserMediaError
+     * @private
+     */
     getUserMediaError: function (event) {
 
         clearTimeout(this._timeOutID);
@@ -398,6 +414,10 @@ Phaser.Video.prototype = {
 
     },
 
+    /**
+     * @method Phaser.Video#getUserMediaSuccess
+     * @private
+     */
     getUserMediaSuccess: function (stream) {
 
         clearTimeout(this._timeOutID);
@@ -485,6 +505,14 @@ Phaser.Video.prototype = {
 
     },
 
+    /**
+     * Creates a new Video element from the given URL.
+     *
+     * @method Phaser.Video#createVideoFromURL
+     * @param {string} url - The URL of the video.
+     * @param {boolean} [autoplay=false] - Automatically start the video?
+     * @return {Phaser.Video} This Video object for method chaining.
+     */
     createVideoFromURL: function (url, autoplay) {
 
         if (autoplay === undefined) { autoplay = false; }

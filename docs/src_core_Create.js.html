@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Phaser Source: src/pixi/text/BitmapText.js</title>
+	<title>Phaser Source: src/core/Create.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -52,10 +52,6 @@
 
 					<ul class="dropdown-menu ">
 						
-						<li class="class-depth-0">
-							<a href="Matrix.html">Matrix</a>
-						</li>
-						
 						<li class="class-depth-1">
 							<a href="Phaser.Animation.html">Animation</a>
 						</li>
@@ -66,10 +62,6 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.AnimationParser.html">AnimationParser</a>
-						</li>
-						
-						<li class="class-depth-1">
-							<a href="Phaser.ArrayList.html">ArrayList</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -201,7 +193,19 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="Phaser.Create.html">Create</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Creature.html">Creature</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="Phaser.Device.html">Device</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.DeviceButton.html">DeviceButton</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -301,10 +305,6 @@
 						</li>
 						
 						<li class="class-depth-1">
-							<a href="Phaser.GamepadButton.html">GamepadButton</a>
-						</li>
-						
-						<li class="class-depth-1">
 							<a href="Phaser.Graphics.html">Graphics</a>
 						</li>
 						
@@ -314,6 +314,10 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.Image.html">Image</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.ImageCollection.html">ImageCollection</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -350,6 +354,10 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.Math.html">Math</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Matrix.html">Matrix</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -529,6 +537,10 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="Phaser.RoundedRectangle.html">RoundedRectangle</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="Phaser.ScaleManager.html">ScaleManager</a>
 						</li>
 						
@@ -637,6 +649,10 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="Phaser.Video.html">Video</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="Phaser.World.html">World</a>
 						</li>
 						
@@ -646,10 +662,6 @@
 						
 						<li class="class-depth-1">
 							<a href="PIXI.BaseTexture.html">BaseTexture</a>
-						</li>
-						
-						<li class="class-depth-1">
-							<a href="PIXI.BitmapText.html">BitmapText</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -753,19 +765,11 @@
 						</li>
 						
 						<li class="class-depth-1">
-							<a href="PIXI.Text.html">Text</a>
-						</li>
-						
-						<li class="class-depth-1">
 							<a href="PIXI.Texture.html">Texture</a>
 						</li>
 						
 						<li class="class-depth-1">
 							<a href="PIXI.TilingSprite.html">TilingSprite</a>
-						</li>
-						
-						<li class="class-depth-1">
-							<a href="PIXI.VideoTexture.html">VideoTexture</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -784,10 +788,6 @@
 							<a href="PIXI.WebGLRenderer.html">WebGLRenderer</a>
 						</li>
 						
-						<li class="class-depth-0">
-							<a href="RoundedRectangle.html">RoundedRectangle</a>
-						</li>
-						
 
 					</ul>
 				</li>
@@ -799,15 +799,15 @@
 					<ul class="dropdown-menu ">
 						
 						<li class="class-depth-0">
-							<a href="global.html#append">append</a>
+							<a href="global.html#AUTO">AUTO</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#apply">apply</a>
+							<a href="global.html#BITMAPDATA">BITMAPDATA</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#applyInverse">applyInverse</a>
+							<a href="global.html#BITMAPTEXT">BITMAPTEXT</a>
 						</li>
 						
 						<li class="class-depth-0">
@@ -815,27 +815,107 @@
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#clone">clone</a>
+							<a href="global.html#BUTTON">BUTTON</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#contains">contains</a>
+							<a href="global.html#CANVAS">CANVAS</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#fromArray">fromArray</a>
+							<a href="global.html#CANVAS_FILTER">CANVAS_FILTER</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#identity">identity</a>
+							<a href="global.html#CIRCLE">CIRCLE</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#rotate">rotate</a>
+							<a href="global.html#CREATURE">CREATURE</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#scale">scale</a>
+							<a href="global.html#DOWN">DOWN</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ELLIPSE">ELLIPSE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#EMITTER">EMITTER</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#GAMES">GAMES</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#GRAPHICS">GRAPHICS</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#GROUP">GROUP</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#HEADLESS">HEADLESS</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#IMAGE">IMAGE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#LEFT">LEFT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#LINE">LINE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#MATRIX">MATRIX</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#NONE">NONE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#POINT">POINT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#POINTER">POINTER</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#POLYGON">POLYGON</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#RECTANGLE">RECTANGLE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#RENDERTEXTURE">RENDERTEXTURE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#RETROFONT">RETROFONT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#RIGHT">RIGHT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ROPE">ROPE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ROUNDEDRECTANGLE">ROUNDEDRECTANGLE</a>
 						</li>
 						
 						<li class="class-depth-0">
@@ -843,15 +923,47 @@
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#sort">sort</a>
+							<a href="global.html#SPRITE">SPRITE</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#toArray">toArray</a>
+							<a href="global.html#SPRITEBATCH">SPRITEBATCH</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#translate">translate</a>
+							<a href="global.html#TEXT">TEXT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#TILEMAP">TILEMAP</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#TILEMAPLAYER">TILEMAPLAYER</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#TILESPRITE">TILESPRITE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#UP">UP</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#VERSION">VERSION</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#VIDEO">VIDEO</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#WEBGL">WEBGL</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#WEBGL_FILTER">WEBGL_FILTER</a>
 						</li>
 						
 
@@ -866,6 +978,7 @@
 						<li class="class-depth-1"><a href="Phaser.Group.html">Group</a></li>
 						<li class="class-depth-1"><a href="Phaser.World.html">World</a></li>
 						<li class="class-depth-1"><a href="Phaser.Loader.html">Loader</a></li>
+						<li class="class-depth-1"><a href="Phaser.Cache.html">Cache</a></li>
 						<li class="class-depth-1"><a href="Phaser.Time.html">Time</a></li>
 						<li class="class-depth-1"><a href="Phaser.Camera.html">Camera</a></li>
 						<li class="class-depth-1"><a href="Phaser.StateManager.html">State Manager</a></li>
@@ -884,6 +997,7 @@
 						<li class="class-depth-1"><a href="Phaser.Sprite.html">Sprite</a></li>
 						<li class="class-depth-1"><a href="Phaser.Image.html">Image</a></li>
 						<li class="class-depth-1"><a href="Phaser.Sound.html">Sound</a></li>
+						<li class="class-depth-1"><a href="Phaser.Video.html">Video</a></li>
 						<li class="class-depth-1"><a href="Phaser.Particles.Arcade.Emitter.html">Particle Emitter</a></li>
 						<li class="class-depth-1"><a href="Phaser.Particle.html">Particle</a></li>
 						<li class="class-depth-1"><a href="Phaser.Text.html">Text</a></li>
@@ -904,11 +1018,13 @@
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Geometry<b class="caret"></b></a>
 					<ul class="dropdown-menu ">
 						<li class="class-depth-1"><a href="Phaser.Circle.html">Circle</a></li>
-						<li class="class-depth-1"><a href="Phaser.Rectangle.html">Rectangle</a></li>
-						<li class="class-depth-1"><a href="Phaser.Point.html">Point</a></li>
-						<li class="class-depth-1"><a href="Phaser.Line.html">Line</a></li>
 						<li class="class-depth-1"><a href="Phaser.Ellipse.html">Ellipse</a></li>
+						<li class="class-depth-1"><a href="Phaser.Line.html">Line</a></li>
+						<li class="class-depth-1"><a href="Phaser.Matrix.html">Matrix</a></li>
+						<li class="class-depth-1"><a href="Phaser.Point.html">Point</a></li>
 						<li class="class-depth-1"><a href="Phaser.Polygon.html">Polygon</a></li>
+						<li class="class-depth-1"><a href="Phaser.Rectangle.html">Rectangle</a></li>
+						<li class="class-depth-1"><a href="Phaser.RoundedRectangle.html">Rounded Rectangle</a></li>
 					</ul>
 				</li>
 
@@ -932,6 +1048,7 @@
 					<ul class="dropdown-menu ">
 						<li class="class-depth-1"><a href="Phaser.InputHandler.html">Input Handler</a></li>
 						<li class="class-depth-1"><a href="Phaser.Pointer.html">Pointer</a></li>
+						<li class="class-depth-1"><a href="Phaser.DeviceButton.html">Device Button</a></li>
 						<li class="class-depth-1"><a href="Phaser.Mouse.html">Mouse</a></li>
 						<li class="class-depth-1"><a href="Phaser.Keyboard.html">Keyboard</a></li>
 						<li class="class-depth-1"><a href="Phaser.Key.html">Key</a></li>
@@ -948,11 +1065,10 @@
 						<li class="class-depth-1"><a href="https://github.com/photonstorm/phaser-plugins">Phaser Plugins</a></li>
 						<li class="class-depth-1"><a href="http://www.html5gamedevs.com/forum/14-phaser/">Forum</a></li>
 						<li class="class-depth-1"><a href="http://stackoverflow.com/questions/tagged/phaser-framework">Stack Overflow</a></li>
-						<li class="class-depth-1"><a href="http://phaser.io/learn">Weekly Coding Tips</a></li>
+						<li class="class-depth-1"><a href="http://phaser.io/learn">Tutorials</a></li>
 						<li class="class-depth-1"><a href="https://confirmsubscription.com/h/r/369DE48E3E86AF1E">Newsletter</a></li>
 						<li class="class-depth-1"><a href="http://phaser.io/community/twitter">Twitter</a></li>
 						<li class="class-depth-1"><a href="http://phaser.io/community/irc">IRC</a></li>
-						<li class="class-depth-1"><a href="https://www.gittip.com/photonstorm/">Donate to the project</a></li>
 						<li class="class-depth-1"><a href="https://www.codeandweb.com/texturepacker/phaser">Texture Packer</a></li>
 					</ul>
 				</li>
@@ -970,271 +1086,198 @@
 					
 
 
-		<h1 class="page-title">Source: src/pixi/text/BitmapText.js</h1>
+		<h1 class="page-title">Source: src/core/Create.js</h1>
     
     <section>
         <article>
             <pre class="sunlight-highlight-javascript linenums">/**
- * @author Mat Groves http://matgroves.com/ @Doormat23
- */
+* @author       Richard Davey &lt;rich@photonstorm.com>
+* @copyright    2015 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
 
 /**
- * A BitmapText object will create a line or multiple lines of text using bitmap font. To split a line you can use '\n', '\r' or '\r\n' in your string.
- * You can generate the fnt files using
- * http://www.angelcode.com/products/bmfont/ for windows or
- * http://www.bmglyph.com/ for mac.
- *
- * @class BitmapText
- * @extends DisplayObjectContainer
- * @constructor
- * @param text {String} The copy that you would like the text to display
- * @param style {Object} The style parameters
- * @param style.font {String} The size (optional) and bitmap font id (required) eq 'Arial' or '20px Arial' (must have loaded previously)
- * @param [style.align='left'] {String} Alignment for multiline text ('left', 'center' or 'right'), does not affect single line text
+* The Phaser.Create class is a collection of smaller helper methods that allow you to generate game content
+* quickly and easily, without the need for any external files. You can create textures for sprites and in
+* coming releases we'll add dynamic sound effect generation support as well (like sfxr).
+*
+* Access this via `State.create` (or `this.create` from within a State object)
+* 
+* @class Phaser.Create
+* @constructor
+* @param {Phaser.Game} game - Game reference to the currently running game.
  */
-PIXI.BitmapText = function(text, style)
-{
-    PIXI.DisplayObjectContainer.call(this);
+Phaser.Create = function (game) {
 
     /**
-     * [read-only] The width of the overall text, different from fontSize,
-     * which is defined in the style object
+    * @property {Phaser.Game} game - A reference to the currently running Game.
+    */
+    this.game = game;
+
+    /**
+    * @property {Phaser.BitmapData} bmd - The internal BitmapData Create uses to generate textures from.
+    */
+    this.bmd = game.make.bitmapData();
+
+    /**
+    * @property {HTMLCanvasElement} canvas - The canvas the BitmapData uses.
+    */
+    this.canvas = this.bmd.canvas;
+
+    /**
+    * @property {CanvasRenderingContext2D} context - The 2d context of the canvas.
+    */
+    this.ctx = this.bmd.context;
+
+    /**
+    * @property {array} palettes - A range of 16 color palettes for use with sprite generation.
+    */
+    this.palettes = [
+        { 0: '#000', 1: '#9D9D9D', 2: '#FFF', 3: '#BE2633', 4: '#E06F8B', 5: '#493C2B', 6: '#A46422', 7: '#EB8931', 8: '#F7E26B', 9: '#2F484E', A: '#44891A', B: '#A3CE27', C: '#1B2632', D: '#005784', E: '#31A2F2', F: '#B2DCEF' },
+        { 0: '#000', 1: '#191028', 2: '#46af45', 3: '#a1d685', 4: '#453e78', 5: '#7664fe', 6: '#833129', 7: '#9ec2e8', 8: '#dc534b', 9: '#e18d79', A: '#d6b97b', B: '#e9d8a1', C: '#216c4b', D: '#d365c8', E: '#afaab9', F: '#f5f4eb' },
+        { 0: '#000', 1: '#2234d1', 2: '#0c7e45', 3: '#44aacc', 4: '#8a3622', 5: '#5c2e78', 6: '#aa5c3d', 7: '#b5b5b5', 8: '#5e606e', 9: '#4c81fb', A: '#6cd947', B: '#7be2f9', C: '#eb8a60', D: '#e23d69', E: '#ffd93f', F: '#fff' },
+        { 0: '#000', 1: '#fff', 2: '#8b4131', 3: '#7bbdc5', 4: '#8b41ac', 5: '#6aac41', 6: '#3931a4', 7: '#d5de73', 8: '#945a20', 9: '#5a4100', A: '#bd736a', B: '#525252', C: '#838383', D: '#acee8b', E: '#7b73de', F: '#acacac' },
+        { 0: '#000', 1: '#191028', 2: '#46af45', 3: '#a1d685', 4: '#453e78', 5: '#7664fe', 6: '#833129', 7: '#9ec2e8', 8: '#dc534b', 9: '#e18d79', A: '#d6b97b', B: '#e9d8a1', C: '#216c4b', D: '#d365c8', E: '#afaab9', F: '#fff' }
+    ];
+
+};
+
+/**
+* A 16 color palette by [Arne](http://androidarts.com/palette/16pal.htm)
+* @constant
+* @type {number}
+*/
+Phaser.Create.PALETTE_ARNE = 0;
+
+/**
+* A 16 color JMP inspired palette.
+* @constant
+* @type {number}
+*/
+Phaser.Create.PALETTE_JMP = 1;
+
+/**
+* A 16 color CGA inspired palette.
+* @constant
+* @type {number}
+*/
+Phaser.Create.PALETTE_CGA = 2;
+
+/**
+* A 16 color C64 inspired palette.
+* @constant
+* @type {number}
+*/
+Phaser.Create.PALETTE_C64 = 3;
+
+/**
+* A 16 color palette inspired by Japanese computers like the MSX.
+* @constant
+* @type {number}
+*/
+Phaser.Create.PALETTE_JAPANESE_MACHINE = 4;
+
+Phaser.Create.prototype = {
+
+    /**
+     * Generates a new PIXI.Texture from the given data, which can be applied to a Sprite.
      *
-     * @property textWidth
-     * @type Number
-     * @readOnly
-     */
-    this.textWidth = 0;
-
-    /**
-     * [read-only] The height of the overall text, different from fontSize,
-     * which is defined in the style object
+     * This allows you to create game graphics quickly and easily, with no external files but that use actual proper images
+     * rather than Phaser.Graphics objects, which are expensive to render and limited in scope.
      *
-     * @property textHeight
-     * @type Number
-     * @readOnly
-     */
-    this.textHeight = 0;
-
-    /**
-     * The max width of this bitmap text in pixels. If the text provided is longer than the value provided, line breaks will be 
-     * automatically inserted in the last whitespace. Disable by setting value to 0.
+     * Each element of the array is a string holding the pixel color values, as mapped to one of the Phaser.Create PALETTE consts.
      *
-     * @property maxWidth
-     * @type Number
+     * For example:
+     *
+     * `var data = [
+     *   ' 333 ',
+     *   ' 777 ',
+     *   'E333E',
+     *   ' 333 ',
+     *   ' 3 3 '
+     * ];`
+     *
+     * `game.create.texture('bob', data);`
+     *
+     * The above will create a new texture called `bob`, which will look like a little man wearing a hat. You can then use it
+     * for sprites the same way you use any other texture: `game.add.sprite(0, 0, 'bob');`
+     *
+     * @method Phaser.Create#texture
+     * @param {string} key - The key used to store this texture in the Phaser Cache.
+     * @param {array} data - An array of pixel data.
+     * @param {integer} [pixelWidth=8] - The width of each pixel.
+     * @param {integer} [pixelHeight=8] - The height of each pixel.
+     * @param {integer} [palette=0] - The palette to use when rendering the texture. One of the Phaser.Create.PALETTE consts.
+     * @return {PIXI.Texture} The newly generated texture.
      */
-    this.maxWidth = 0;
+    texture: function (key, data, pixelWidth, pixelHeight, palette) {
+
+        if (pixelWidth === undefined) { pixelWidth = 8; }
+        if (pixelHeight === undefined) { pixelHeight = pixelWidth; }
+        if (palette === undefined) { palette = 0; }
+
+        var w = data[0].length * pixelWidth;
+        var h = data.length * pixelHeight;
+
+        this.bmd.resize(w, h);
+        this.bmd.clear();
+
+        //  Draw it
+        for (var y = 0; y &lt; data.length; y++)
+        {
+            var row = data[y];
+
+            for (var x = 0; x &lt; row.length; x++)
+            {
+                var d = row[x];
+
+                if (d !== '.' &amp;&amp; d !== ' ')
+                {
+                    this.ctx.fillStyle = this.palettes[palette][d];
+                    this.ctx.fillRect(x * pixelWidth, y * pixelHeight, pixelWidth, pixelHeight);
+                }
+            }
+        }
+
+        return this.bmd.generateTexture(key);
+
+    },
 
     /**
-     * @property anchor
-     * @type Point
+     * Creates a grid texture based on the given dimensions.
+     *
+     * @method Phaser.Create#grid
+     * @param {string} key - The key used to store this texture in the Phaser Cache.
+     * @param {integer} width - The width of the grid in pixels.
+     * @param {integer} height - The height of the grid in pixels.
+     * @param {integer} cellWidth - The width of the grid cells in pixels.
+     * @param {integer} cellHeight - The height of the grid cells in pixels.
+     * @param {string} color - The color to draw the grid lines in. Should be a Canvas supported color string like `#ff5500` or `rgba(200,50,3,0.5)`.
+     * @return {PIXI.Texture} The newly generated texture.
      */
-    this.anchor = new Phaser.Point(0, 0);
+    grid: function (key, width, height, cellWidth, cellHeight, color) {
 
-    /**
-     * @property _prevAnchor
-     * @type Point
-     */
-    this._prevAnchor = new Phaser.Point(0, 0);
+        this.bmd.resize(width, height);
 
-    /**
-     * @property _pool
-     * @type Array
-     * @private
-     */
-    this._pool = [];
+        this.ctx.fillStyle = color;
 
-    this.setText(text);
-    this.setStyle(style);
-    this.updateText();
-
-    /**
-     * The dirty state of this object.
-     * @property dirty
-     * @type Boolean
-     */
-    this.dirty = false;
-};
-
-// constructor
-PIXI.BitmapText.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
-PIXI.BitmapText.prototype.constructor = PIXI.BitmapText;
-
-/**
- * Set the text string to be rendered.
- *
- * @method setText
- * @param text {String} The text that you would like displayed
- */
-PIXI.BitmapText.prototype.setText = function(text)
-{
-    this.text = text || ' ';
-    this.dirty = true;
-};
-
-/**
- * Set the style of the text
- * style.font {String} The size (optional) and bitmap font id (required) eq 'Arial' or '20px Arial' (must have loaded previously)
- * [style.align='left'] {String} Alignment for multiline text ('left', 'center' or 'right'), does not affect single lines of text
- *
- * @method setStyle
- * @param style {Object} The style parameters, contained as properties of an object
- */
-PIXI.BitmapText.prototype.setStyle = function(style)
-{
-    style = style || {};
-    style.align = style.align || 'left';
-    this.style = style;
-
-    var font = style.font.split(' ');
-    this.fontName = font[font.length - 1];
-    this.fontSize = font.length >= 2 ? parseInt(font[font.length - 2], 10) : PIXI.BitmapText.fonts[this.fontName].size;
-
-    this.dirty = true;
-    this.tint = style.tint;
-};
-
-/**
- * Renders text and updates it when needed
- *
- * @method updateText
- * @private
- */
-PIXI.BitmapText.prototype.updateText = function()
-{
-    var data = PIXI.BitmapText.fonts[this.fontName];
-    var pos = new PIXI.Point();
-    var prevCharCode = null;
-    var chars = [];
-    var maxLineWidth = 0;
-    var lineWidths = [];
-    var line = 0;
-    var scale = this.fontSize / data.size;
-    var lastSpace = 0;
-
-    for (var i = 0; i &lt; this.text.length; i++)
-    {
-        var charCode = this.text.charCodeAt(i);
-        lastSpace = /(\s)/.test(this.text.charAt(i)) ? i : lastSpace;
-
-        if (/(?:\r\n|\r|\n)/.test(this.text.charAt(i)))
+        for (var y = 0; y &lt; height; y += cellHeight)
         {
-            lineWidths.push(pos.x);
-            maxLineWidth = Math.max(maxLineWidth, pos.x);
-            line++;
-
-            pos.x = 0;
-            pos.y += data.lineHeight;
-            prevCharCode = null;
-            continue;
+            this.ctx.fillRect(0, y, width, 1);
         }
 
-        if (lastSpace !== -1 &amp;&amp; this.maxWidth > 0 &amp;&amp; pos.x * scale > this.maxWidth)
+        for (var x = 0; x &lt; width; x += cellWidth)
         {
-            chars.splice(lastSpace, i - lastSpace);
-            i = lastSpace;
-            lastSpace = -1;
-
-            lineWidths.push(lastLineWidth);
-            maxLineWidth = Math.max(maxLineWidth, lastLineWidth);
-            line++;
-
-            pos.x = 0;
-            pos.y += data.lineHeight;
-            prevCharCode = null;
-            continue;
+            this.ctx.fillRect(x, 0, 1, height);
         }
 
-        var charData = data.chars[charCode];
+        return this.bmd.generateTexture(key);
 
-        if(!charData) continue;
-
-        if(prevCharCode &amp;&amp; charData.kerning[prevCharCode])
-        {
-            pos.x += charData.kerning[prevCharCode];
-        }
-
-        chars.push({texture:charData.texture, line: line, charCode: charCode, position: new PIXI.Point(pos.x + charData.xOffset, pos.y + charData.yOffset)});
-        pos.x += charData.xAdvance;
-
-        prevCharCode = charCode;
-    }
-
-    lineWidths.push(pos.x);
-    maxLineWidth = Math.max(maxLineWidth, pos.x);
-
-    var lineAlignOffsets = [];
-
-    for (i = 0; i &lt;= line; i++)
-    {
-        var alignOffset = 0;
-
-        if (this.style.align === 'right')
-        {
-            alignOffset = maxLineWidth - lineWidths[i];
-        }
-        else if (this.style.align === 'center')
-        {
-            alignOffset = (maxLineWidth - lineWidths[i]) / 2;
-        }
-
-        lineAlignOffsets.push(alignOffset);
-    }
-
-    var lenChildren = this.children.length;
-    var lenChars = chars.length;
-    var tint = this.tint || 0xFFFFFF;
-
-    this.textWidth = maxLineWidth * scale;
-    this.textHeight = (pos.y + data.lineHeight) * scale;
-
-    var ax = this.textWidth * this.anchor.x;
-    var ay = this.textHeight * this.anchor.y;
-
-    for (i = 0; i &lt; lenChars; i++)
-    {
-        var c = i &lt; lenChildren ? this.children[i] : this._pool.pop(); // get old child if have. if not - take from pool.
-
-        if (c) c.setTexture(chars[i].texture); // check if got one before.
-        else c = new PIXI.Sprite(chars[i].texture); // if no create new one.
-
-        c.position.x = ((chars[i].position.x + lineAlignOffsets[chars[i].line]) * scale) - ax;
-        c.position.y = (chars[i].position.y * scale) - ay;
-
-        c.scale.x = c.scale.y = scale;
-        c.tint = tint;
-        if (!c.parent) this.addChild(c);
-    }
-
-    //  Remove unnecessary children and put them into the pool
-    while (this.children.length > lenChars)
-    {
-        var child = this.getChildAt(this.children.length - 1);
-        this._pool.push(child);
-        this.removeChild(child);
     }
 
 };
 
-/**
- * Updates the transform of this object
- *
- * @method updateTransform
- * @private
- */
-PIXI.BitmapText.prototype.updateTransform = function()
-{
-    if (this.dirty || !this.anchor.equals(this._prevAnchor))
-    {
-        this.updateText();
-        this.dirty = false;
-        this._prevAnchor.copyFrom(this.anchor);
-    }
-
-    PIXI.DisplayObjectContainer.prototype.updateTransform.call(this);
-};
-
-PIXI.BitmapText.fonts = {};
+Phaser.Create.prototype.constructor = Phaser.Create;
 </pre>
         </article>
     </section>
@@ -1256,7 +1299,7 @@ PIXI.BitmapText.fonts = {};
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha10</a>
-		on Thu Mar 26 2015 02:53:48 GMT+0000 (GMT Standard Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Jul 22 2015 14:55:11 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

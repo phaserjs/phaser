@@ -34,7 +34,7 @@
 * @param {number} [style.strokeThickness=0] - A number that represents the thickness of the stroke. Default is 0 (no stroke).
 * @param {boolean} [style.wordWrap=false] - Indicates if word wrap should be used.
 * @param {number} [style.wordWrapWidth=100] - The width in pixels at which text will wrap.
-* @param {number} [style.tab=0] - The size (in pixels) of a tab stop, for when text includes tab characters. 0 disables.
+* @param {number} [style.tabs=0] - The size (in pixels) of the tabs, for when text includes tab characters. 0 disables. Can be an array of varying tab sizes, one per tab stop.
 */
 Phaser.Text = function (game, x, y, text, style) {
 
@@ -1509,9 +1509,12 @@ Object.defineProperty(Phaser.Text.prototype, 'resolution', {
 });
 
 /**
-* x
+* The size (in pixels) of the tabs, for when text includes tab characters. 0 disables. 
+* Can be an integer or an array of varying tab sizes, one tab per element.
+* For example if you set tabs to 100 then when Text encounters a tab it will jump ahead 100 pixels.
+* If you set tabs to be `[100,200]` then it will set the first tab at 100px and the second at 200px.
 * 
-* @name Phaser.Text#tab
+* @name Phaser.Text#tabs
 * @property {integer|array} tabs
 */
 Object.defineProperty(Phaser.Text.prototype, 'tabs', {

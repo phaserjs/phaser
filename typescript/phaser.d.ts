@@ -671,6 +671,27 @@ declare module Phaser {
 
     }
 
+    class Create {
+
+        constructor(game: Phaser.Game);
+
+        static PALETTE_ARNE: number;
+        static PALETTE_JMP: number;
+        static PALETTE_CGA: number;
+        static PALETTE_C64: number;
+        static PALETTE_JAPANESE_MACHINE: number;
+
+        bmd: Phaser.BitmapData;
+        canvas: HTMLCanvasElement;
+        ctx: CanvasRenderingContext2D;
+        game: Phaser.Game;
+        palettes: any;
+
+        grid(key: string, width: number, height: number, cellWidth: number, cellHeight: number, color: string): PIXI.Texture;
+        texture(key: string, data: any, pixelWidth?: number, pixelHeight?: number, palette?: number): PIXI.Texture;
+
+    }
+
     interface CursorKeys {
 
         up: Phaser.Key;

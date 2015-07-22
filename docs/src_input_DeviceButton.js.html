@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Phaser Source: src/input/GamepadButton.js</title>
+	<title>Phaser Source: src/input/DeviceButton.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -52,10 +52,6 @@
 
 					<ul class="dropdown-menu ">
 						
-						<li class="class-depth-0">
-							<a href="Matrix.html">Matrix</a>
-						</li>
-						
 						<li class="class-depth-1">
 							<a href="Phaser.Animation.html">Animation</a>
 						</li>
@@ -66,10 +62,6 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.AnimationParser.html">AnimationParser</a>
-						</li>
-						
-						<li class="class-depth-1">
-							<a href="Phaser.ArrayList.html">ArrayList</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -201,7 +193,19 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="Phaser.Create.html">Create</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Creature.html">Creature</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="Phaser.Device.html">Device</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.DeviceButton.html">DeviceButton</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -301,10 +305,6 @@
 						</li>
 						
 						<li class="class-depth-1">
-							<a href="Phaser.GamepadButton.html">GamepadButton</a>
-						</li>
-						
-						<li class="class-depth-1">
 							<a href="Phaser.Graphics.html">Graphics</a>
 						</li>
 						
@@ -314,6 +314,10 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.Image.html">Image</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.ImageCollection.html">ImageCollection</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -350,6 +354,10 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.Math.html">Math</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Matrix.html">Matrix</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -529,6 +537,10 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="Phaser.RoundedRectangle.html">RoundedRectangle</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="Phaser.ScaleManager.html">ScaleManager</a>
 						</li>
 						
@@ -637,6 +649,10 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="Phaser.Video.html">Video</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="Phaser.World.html">World</a>
 						</li>
 						
@@ -646,10 +662,6 @@
 						
 						<li class="class-depth-1">
 							<a href="PIXI.BaseTexture.html">BaseTexture</a>
-						</li>
-						
-						<li class="class-depth-1">
-							<a href="PIXI.BitmapText.html">BitmapText</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -753,19 +765,11 @@
 						</li>
 						
 						<li class="class-depth-1">
-							<a href="PIXI.Text.html">Text</a>
-						</li>
-						
-						<li class="class-depth-1">
 							<a href="PIXI.Texture.html">Texture</a>
 						</li>
 						
 						<li class="class-depth-1">
 							<a href="PIXI.TilingSprite.html">TilingSprite</a>
-						</li>
-						
-						<li class="class-depth-1">
-							<a href="PIXI.VideoTexture.html">VideoTexture</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -784,10 +788,6 @@
 							<a href="PIXI.WebGLRenderer.html">WebGLRenderer</a>
 						</li>
 						
-						<li class="class-depth-0">
-							<a href="RoundedRectangle.html">RoundedRectangle</a>
-						</li>
-						
 
 					</ul>
 				</li>
@@ -799,15 +799,15 @@
 					<ul class="dropdown-menu ">
 						
 						<li class="class-depth-0">
-							<a href="global.html#append">append</a>
+							<a href="global.html#AUTO">AUTO</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#apply">apply</a>
+							<a href="global.html#BITMAPDATA">BITMAPDATA</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#applyInverse">applyInverse</a>
+							<a href="global.html#BITMAPTEXT">BITMAPTEXT</a>
 						</li>
 						
 						<li class="class-depth-0">
@@ -815,27 +815,107 @@
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#clone">clone</a>
+							<a href="global.html#BUTTON">BUTTON</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#contains">contains</a>
+							<a href="global.html#CANVAS">CANVAS</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#fromArray">fromArray</a>
+							<a href="global.html#CANVAS_FILTER">CANVAS_FILTER</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#identity">identity</a>
+							<a href="global.html#CIRCLE">CIRCLE</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#rotate">rotate</a>
+							<a href="global.html#CREATURE">CREATURE</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#scale">scale</a>
+							<a href="global.html#DOWN">DOWN</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ELLIPSE">ELLIPSE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#EMITTER">EMITTER</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#GAMES">GAMES</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#GRAPHICS">GRAPHICS</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#GROUP">GROUP</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#HEADLESS">HEADLESS</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#IMAGE">IMAGE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#LEFT">LEFT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#LINE">LINE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#MATRIX">MATRIX</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#NONE">NONE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#POINT">POINT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#POINTER">POINTER</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#POLYGON">POLYGON</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#RECTANGLE">RECTANGLE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#RENDERTEXTURE">RENDERTEXTURE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#RETROFONT">RETROFONT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#RIGHT">RIGHT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ROPE">ROPE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ROUNDEDRECTANGLE">ROUNDEDRECTANGLE</a>
 						</li>
 						
 						<li class="class-depth-0">
@@ -843,15 +923,47 @@
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#sort">sort</a>
+							<a href="global.html#SPRITE">SPRITE</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#toArray">toArray</a>
+							<a href="global.html#SPRITEBATCH">SPRITEBATCH</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#translate">translate</a>
+							<a href="global.html#TEXT">TEXT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#TILEMAP">TILEMAP</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#TILEMAPLAYER">TILEMAPLAYER</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#TILESPRITE">TILESPRITE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#UP">UP</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#VERSION">VERSION</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#VIDEO">VIDEO</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#WEBGL">WEBGL</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#WEBGL_FILTER">WEBGL_FILTER</a>
 						</li>
 						
 
@@ -866,6 +978,7 @@
 						<li class="class-depth-1"><a href="Phaser.Group.html">Group</a></li>
 						<li class="class-depth-1"><a href="Phaser.World.html">World</a></li>
 						<li class="class-depth-1"><a href="Phaser.Loader.html">Loader</a></li>
+						<li class="class-depth-1"><a href="Phaser.Cache.html">Cache</a></li>
 						<li class="class-depth-1"><a href="Phaser.Time.html">Time</a></li>
 						<li class="class-depth-1"><a href="Phaser.Camera.html">Camera</a></li>
 						<li class="class-depth-1"><a href="Phaser.StateManager.html">State Manager</a></li>
@@ -884,6 +997,7 @@
 						<li class="class-depth-1"><a href="Phaser.Sprite.html">Sprite</a></li>
 						<li class="class-depth-1"><a href="Phaser.Image.html">Image</a></li>
 						<li class="class-depth-1"><a href="Phaser.Sound.html">Sound</a></li>
+						<li class="class-depth-1"><a href="Phaser.Video.html">Video</a></li>
 						<li class="class-depth-1"><a href="Phaser.Particles.Arcade.Emitter.html">Particle Emitter</a></li>
 						<li class="class-depth-1"><a href="Phaser.Particle.html">Particle</a></li>
 						<li class="class-depth-1"><a href="Phaser.Text.html">Text</a></li>
@@ -904,11 +1018,13 @@
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Geometry<b class="caret"></b></a>
 					<ul class="dropdown-menu ">
 						<li class="class-depth-1"><a href="Phaser.Circle.html">Circle</a></li>
-						<li class="class-depth-1"><a href="Phaser.Rectangle.html">Rectangle</a></li>
-						<li class="class-depth-1"><a href="Phaser.Point.html">Point</a></li>
-						<li class="class-depth-1"><a href="Phaser.Line.html">Line</a></li>
 						<li class="class-depth-1"><a href="Phaser.Ellipse.html">Ellipse</a></li>
+						<li class="class-depth-1"><a href="Phaser.Line.html">Line</a></li>
+						<li class="class-depth-1"><a href="Phaser.Matrix.html">Matrix</a></li>
+						<li class="class-depth-1"><a href="Phaser.Point.html">Point</a></li>
 						<li class="class-depth-1"><a href="Phaser.Polygon.html">Polygon</a></li>
+						<li class="class-depth-1"><a href="Phaser.Rectangle.html">Rectangle</a></li>
+						<li class="class-depth-1"><a href="Phaser.RoundedRectangle.html">Rounded Rectangle</a></li>
 					</ul>
 				</li>
 
@@ -932,6 +1048,7 @@
 					<ul class="dropdown-menu ">
 						<li class="class-depth-1"><a href="Phaser.InputHandler.html">Input Handler</a></li>
 						<li class="class-depth-1"><a href="Phaser.Pointer.html">Pointer</a></li>
+						<li class="class-depth-1"><a href="Phaser.DeviceButton.html">Device Button</a></li>
 						<li class="class-depth-1"><a href="Phaser.Mouse.html">Mouse</a></li>
 						<li class="class-depth-1"><a href="Phaser.Keyboard.html">Keyboard</a></li>
 						<li class="class-depth-1"><a href="Phaser.Key.html">Key</a></li>
@@ -948,11 +1065,10 @@
 						<li class="class-depth-1"><a href="https://github.com/photonstorm/phaser-plugins">Phaser Plugins</a></li>
 						<li class="class-depth-1"><a href="http://www.html5gamedevs.com/forum/14-phaser/">Forum</a></li>
 						<li class="class-depth-1"><a href="http://stackoverflow.com/questions/tagged/phaser-framework">Stack Overflow</a></li>
-						<li class="class-depth-1"><a href="http://phaser.io/learn">Weekly Coding Tips</a></li>
+						<li class="class-depth-1"><a href="http://phaser.io/learn">Tutorials</a></li>
 						<li class="class-depth-1"><a href="https://confirmsubscription.com/h/r/369DE48E3E86AF1E">Newsletter</a></li>
 						<li class="class-depth-1"><a href="http://phaser.io/community/twitter">Twitter</a></li>
 						<li class="class-depth-1"><a href="http://phaser.io/community/irc">IRC</a></li>
-						<li class="class-depth-1"><a href="https://www.gittip.com/photonstorm/">Donate to the project</a></li>
 						<li class="class-depth-1"><a href="https://www.codeandweb.com/texturepacker/phaser">Texture Packer</a></li>
 					</ul>
 				</li>
@@ -970,36 +1086,57 @@
 					
 
 
-		<h1 class="page-title">Source: src/input/GamepadButton.js</h1>
+		<h1 class="page-title">Source: src/input/DeviceButton.js</h1>
     
     <section>
         <article>
             <pre class="sunlight-highlight-javascript linenums">/**
-* @author       @karlmacklin &lt;tacklemcclean@gmail.com>
 * @author       Richard Davey &lt;rich@photonstorm.com>
+* @author       @karlmacklin &lt;tacklemcclean@gmail.com>
 * @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
 /**
-* If you need more fine-grained control over the handling of specific buttons you can create and use Phaser.GamepadButton objects.
+* DeviceButtons belong to both `Phaser.Pointer` and `Phaser.SinglePad` (Gamepad) instances.
+*
+* For Pointers they represent the various buttons that can exist on mice and pens, such as the left button, right button,
+* middle button and advanced buttons like back and forward.
+*
+* Access them via `Pointer.leftbutton`, `Pointer.rightButton` and so on.
+*
+* On Gamepads they represent all buttons on the pad: from shoulder buttons to action buttons.
+*
+* At the time of writing this there are device limitations you should be aware of:
+*
+* - On Windows, if you install a mouse driver, and its utility software allows you to customize button actions 
+*   (e.g., IntelliPoint and SetPoint), the middle (wheel) button, the 4th button, and the 5th button might not be set, 
+*   even when they are pressed.
+* - On Linux (GTK), the 4th button and the 5th button are not supported.
+* - On Mac OS X 10.5 there is no platform API for implementing any advanced buttons.
 * 
-* @class Phaser.GamepadButton
+* @class Phaser.DeviceButton
 * @constructor
-* @param {Phaser.SinglePad} pad - A reference to the gamepad that owns this button.
-* @param {number} buttonCode - The button code this GamepadButton is responsible for.
+* @param {Phaser.Pointer|Phaser.SinglePad} parent - A reference to the parent of this button. Either a Pointer or a Gamepad.
+* @param {number} buttonCode - The button code this DeviceButton is responsible for.
 */
-Phaser.GamepadButton = function (pad, buttonCode) {
+Phaser.DeviceButton = function (parent, buttonCode) {
 
     /**
-    * @property {Phaser.SinglePad} pad - A reference to the gamepad that owns this button.
+    * @property {Phaser.Pointer|Phaser.SinglePad} parent - A reference to the Pointer or Gamepad that owns this button.
     */
-    this.pad = pad;
+    this.parent = parent;
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running game.
     */
-    this.game = pad.game;
+    this.game = parent.game;
+
+    /**
+    * @property {object} event - The DOM event that caused the change in button state.
+    * @default
+    */
+    this.event = null;
 
     /**
     * @property {boolean} isDown - The "down" state of the button.
@@ -1022,7 +1159,8 @@ Phaser.GamepadButton = function (pad, buttonCode) {
     /**
     * If the button is down this value holds the duration of that button press and is constantly updated.
     * If the button is up it holds the duration of the previous down session.
-    * @property {number} duration - The number of milliseconds this button has been held down for.
+    * The value is stored in milliseconds.
+    * @property {number} duration
     * @default
     */
     this.duration = 0;
@@ -1034,74 +1172,135 @@ Phaser.GamepadButton = function (pad, buttonCode) {
     this.timeUp = 0;
 
     /**
-    * @property {number} repeats - If a button is held down this holds down the number of times the button has 'repeated'.
+    * Gamepad only.
+    * If a button is held down this holds down the number of times the button has 'repeated'.
+    * @property {number} repeats
     * @default
     */
     this.repeats = 0;
 
     /**
-    * @property {number} value - Button value. Mainly useful for checking analog buttons (like shoulder triggers)
+    * True if the alt key was held down when this button was last pressed or released.
+    * Not supported on Gamepads.
+    * @property {boolean} altKey
+    * @default
+    */
+    this.altKey = false;
+
+    /**
+    * True if the shift key was held down when this button was last pressed or released.
+    * Not supported on Gamepads.
+    * @property {boolean} shiftKey
+    * @default
+    */
+    this.shiftKey = false;
+
+    /**
+    * True if the control key was held down when this button was last pressed or released.
+    * Not supported on Gamepads.
+    * @property {boolean} ctrlKey
+    * @default
+    */
+    this.ctrlKey = false;
+
+    /**
+    * @property {number} value - Button value. Mainly useful for checking analog buttons (like shoulder triggers) on Gamepads.
     * @default
     */
     this.value = 0;
 
     /**
-    * @property {number} buttonCode - The buttoncode of this button.
+    * @property {number} buttonCode - The buttoncode of this button if a Gamepad, or the DOM button event value if a Pointer.
     */
     this.buttonCode = buttonCode;
 
     /**
-    * @property {Phaser.Signal} onDown - This Signal is dispatched every time this GamepadButton is pressed down. It is only dispatched once (until the button is released again).
+    * This Signal is dispatched every time this DeviceButton is pressed down.
+    * It is only dispatched once (until the button is released again).
+    * When dispatched it sends 2 arguments: A reference to this DeviceButton and the value of the button.
+    * @property {Phaser.Signal} onDown
     */
     this.onDown = new Phaser.Signal();
 
     /**
-    * @property {Phaser.Signal} onUp - This Signal is dispatched every time this GamepadButton is pressed down. It is only dispatched once (until the button is released again).
+    * This Signal is dispatched every time this DeviceButton is released from a down state.
+    * It is only dispatched once (until the button is pressed again).
+    * When dispatched it sends 2 arguments: A reference to this DeviceButton and the value of the button.
+    * @property {Phaser.Signal} onUp
     */
     this.onUp = new Phaser.Signal();
 
     /**
-    * @property {Phaser.Signal} onFloat - This Signal is dispatched every time this GamepadButton changes floating value (between (but not exactly) 0 and 1)
+    * Gamepad only.
+    * This Signal is dispatched every time this DeviceButton changes floating value (between, but not exactly, 0 and 1).
+    * When dispatched it sends 2 arguments: A reference to this DeviceButton and the value of the button.
+    * @property {Phaser.Signal} onFloat
     */
     this.onFloat = new Phaser.Signal();
 
 };
 
-Phaser.GamepadButton.prototype = {
+Phaser.DeviceButton.prototype = {
 
     /**
-    * Called automatically by Phaser.SinglePad.
+    * Called automatically by Phaser.Pointer and Phaser.SinglePad.
+    * Handles the button down state.
     * 
-    * @method Phaser.GamepadButton#processButtonDown
+    * @method Phaser.DeviceButton#start
     * @protected
-    * @param {number} value - Button value
+    * @param {object} [event] - The DOM event that triggered the button change.
+    * @param {number} [value] - The button value. Only get for Gamepads.
     */
-    processButtonDown: function (value) {
+    start: function (event, value) {
+
+        if (this.isDown)
+        {
+            return;
+        }
 
         this.isDown = true;
         this.isUp = false;
         this.timeDown = this.game.time.time;
         this.duration = 0;
         this.repeats = 0;
+
+        this.event = event;
         this.value = value;
+
+        this.altKey = event.altKey;
+        this.shiftKey = event.shiftKey;
+        this.ctrlKey = event.ctrlKey;
 
         this.onDown.dispatch(this, value);
 
     },
 
     /**
-    * Called automatically by Phaser.SinglePad.
+    * Called automatically by Phaser.Pointer and Phaser.SinglePad.
+    * Handles the button up state.
     * 
-    * @method Phaser.GamepadButton#processButtonUp
+    * @method Phaser.DeviceButton#stop
     * @protected
-    * @param {number} value - Button value
+    * @param {object} [event] - The DOM event that triggered the button change.
+    * @param {number} [value] - The button value. Only get for Gamepads.
     */
-    processButtonUp: function (value) {
+    stop: function (event, value) {
+
+        if (this.isUp)
+        {
+            return;
+        }
 
         this.isDown = false;
         this.isUp = true;
         this.timeUp = this.game.time.time;
+
+        this.event = event;
         this.value = value;
+
+        this.altKey = event.altKey;
+        this.shiftKey = event.shiftKey;
+        this.ctrlKey = event.ctrlKey;
 
         this.onUp.dispatch(this, value);
 
@@ -1110,11 +1309,11 @@ Phaser.GamepadButton.prototype = {
     /**
     * Called automatically by Phaser.SinglePad.
     * 
-    * @method Phaser.GamepadButton#processButtonFloat
+    * @method Phaser.DeviceButton#padFloat
     * @protected
     * @param {number} value - Button value
     */
-    processButtonFloat: function (value) {
+    padFloat: function (value) {
 
         this.value = value;
 
@@ -1123,54 +1322,62 @@ Phaser.GamepadButton.prototype = {
     },
 
     /**
-    * Returns the "just pressed" state of this button. Just pressed is considered true if the button was pressed down within the duration given (default 250ms).
+    * Returns the "just pressed" state of this button.
+    * Just pressed is considered true if the button was pressed down within the duration given (default 250ms).
     * 
-    * @method Phaser.GamepadButton#justPressed
-    * @param {number} [duration=250] - The duration below which the button is considered as being just pressed.
+    * @method Phaser.DeviceButton#justPressed
+    * @param {number} [duration=250] - The duration in ms below which the button is considered as being just pressed.
     * @return {boolean} True if the button is just pressed otherwise false.
     */
     justPressed: function (duration) {
 
         duration = duration || 250;
 
-        return (this.isDown === true &amp;&amp; (this.timeDown + duration) > this.game.time.time);
+        return (this.isDown &amp;&amp; (this.timeDown + duration) > this.game.time.time);
 
     },
 
     /**
-    * Returns the "just released" state of this button. Just released is considered as being true if the button was released within the duration given (default 250ms).
+    * Returns the "just released" state of this button.
+    * Just released is considered as being true if the button was released within the duration given (default 250ms).
     * 
-    * @method Phaser.GamepadButton#justPressed
-    * @param {number} [duration=250] - The duration below which the button is considered as being just released.
-    * @return {boolean} True if the button is just pressed otherwise false.
+    * @method Phaser.DeviceButton#justReleased
+    * @param {number} [duration=250] - The duration in ms below which the button is considered as being just released.
+    * @return {boolean} True if the button is just released otherwise false.
     */
     justReleased: function (duration) {
 
         duration = duration || 250;
 
-        return (this.isUp === true &amp;&amp; (this.timeUp + duration) > this.game.time.time);
+        return (this.isUp &amp;&amp; (this.timeUp + duration) > this.game.time.time);
 
     },
 
     /**
-    * Resets this GamepadButton, changing it to an isUp state and resetting the duration and repeats counters.
+    * Resets this DeviceButton, changing it to an isUp state and resetting the duration and repeats counters.
     * 
-    * @method Phaser.GamepadButton#reset
+    * @method Phaser.DeviceButton#reset
     */
     reset: function () {
 
         this.isDown = false;
         this.isUp = true;
+
         this.timeDown = this.game.time.time;
         this.duration = 0;
         this.repeats = 0;
 
+        this.altKey = false;
+        this.shiftKey = false;
+        this.ctrlKey = false;
+
     },
 
     /**
-    * Destroys this GamepadButton, this disposes of the onDown, onUp and onFloat signals and clears the pad and game references.
+    * Destroys this DeviceButton, this disposes of the onDown, onUp and onFloat signals 
+    * and clears the parent and game references.
     * 
-    * @method Phaser.GamepadButton#destroy
+    * @method Phaser.DeviceButton#destroy
     */
     destroy: function () {
 
@@ -1178,14 +1385,37 @@ Phaser.GamepadButton.prototype = {
         this.onUp.dispose();
         this.onFloat.dispose();
 
-        this.pad = null;
+        this.parent = null;
         this.game = null;
 
     }
 
 };
 
-Phaser.GamepadButton.prototype.constructor = Phaser.GamepadButton;
+Phaser.DeviceButton.prototype.constructor = Phaser.DeviceButton;
+
+/**
+* How long the button has been held down.
+* If not currently down it returns -1.
+* 
+* @name Phaser.DeviceButton#duration
+* @property {number} duration
+* @readonly
+*/
+Object.defineProperty(Phaser.DeviceButton.prototype, "duration", {
+
+    get: function () {
+
+        if (this.isUp)
+        {
+            return -1;
+        }
+
+        return this.game.time.time - this.timeDown;
+
+    }
+
+});
 </pre>
         </article>
     </section>
@@ -1207,7 +1437,7 @@ Phaser.GamepadButton.prototype.constructor = Phaser.GamepadButton;
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha10</a>
-		on Thu Mar 26 2015 02:53:48 GMT+0000 (GMT Standard Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Jul 22 2015 14:55:11 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

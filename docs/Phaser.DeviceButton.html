@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Phaser Class: GamepadButton</title>
+	<title>Phaser Class: DeviceButton</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -52,10 +52,6 @@
 
 					<ul class="dropdown-menu ">
 						
-						<li class="class-depth-0">
-							<a href="Matrix.html">Matrix</a>
-						</li>
-						
 						<li class="class-depth-1">
 							<a href="Phaser.Animation.html">Animation</a>
 						</li>
@@ -66,10 +62,6 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.AnimationParser.html">AnimationParser</a>
-						</li>
-						
-						<li class="class-depth-1">
-							<a href="Phaser.ArrayList.html">ArrayList</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -201,7 +193,19 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="Phaser.Create.html">Create</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Creature.html">Creature</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="Phaser.Device.html">Device</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.DeviceButton.html">DeviceButton</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -301,10 +305,6 @@
 						</li>
 						
 						<li class="class-depth-1">
-							<a href="Phaser.GamepadButton.html">GamepadButton</a>
-						</li>
-						
-						<li class="class-depth-1">
 							<a href="Phaser.Graphics.html">Graphics</a>
 						</li>
 						
@@ -314,6 +314,10 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.Image.html">Image</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.ImageCollection.html">ImageCollection</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -350,6 +354,10 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.Math.html">Math</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Matrix.html">Matrix</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -529,6 +537,10 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="Phaser.RoundedRectangle.html">RoundedRectangle</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="Phaser.ScaleManager.html">ScaleManager</a>
 						</li>
 						
@@ -637,6 +649,10 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="Phaser.Video.html">Video</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="Phaser.World.html">World</a>
 						</li>
 						
@@ -646,10 +662,6 @@
 						
 						<li class="class-depth-1">
 							<a href="PIXI.BaseTexture.html">BaseTexture</a>
-						</li>
-						
-						<li class="class-depth-1">
-							<a href="PIXI.BitmapText.html">BitmapText</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -753,19 +765,11 @@
 						</li>
 						
 						<li class="class-depth-1">
-							<a href="PIXI.Text.html">Text</a>
-						</li>
-						
-						<li class="class-depth-1">
 							<a href="PIXI.Texture.html">Texture</a>
 						</li>
 						
 						<li class="class-depth-1">
 							<a href="PIXI.TilingSprite.html">TilingSprite</a>
-						</li>
-						
-						<li class="class-depth-1">
-							<a href="PIXI.VideoTexture.html">VideoTexture</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -784,10 +788,6 @@
 							<a href="PIXI.WebGLRenderer.html">WebGLRenderer</a>
 						</li>
 						
-						<li class="class-depth-0">
-							<a href="RoundedRectangle.html">RoundedRectangle</a>
-						</li>
-						
 
 					</ul>
 				</li>
@@ -799,15 +799,15 @@
 					<ul class="dropdown-menu ">
 						
 						<li class="class-depth-0">
-							<a href="global.html#append">append</a>
+							<a href="global.html#AUTO">AUTO</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#apply">apply</a>
+							<a href="global.html#BITMAPDATA">BITMAPDATA</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#applyInverse">applyInverse</a>
+							<a href="global.html#BITMAPTEXT">BITMAPTEXT</a>
 						</li>
 						
 						<li class="class-depth-0">
@@ -815,27 +815,107 @@
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#clone">clone</a>
+							<a href="global.html#BUTTON">BUTTON</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#contains">contains</a>
+							<a href="global.html#CANVAS">CANVAS</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#fromArray">fromArray</a>
+							<a href="global.html#CANVAS_FILTER">CANVAS_FILTER</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#identity">identity</a>
+							<a href="global.html#CIRCLE">CIRCLE</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#rotate">rotate</a>
+							<a href="global.html#CREATURE">CREATURE</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#scale">scale</a>
+							<a href="global.html#DOWN">DOWN</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ELLIPSE">ELLIPSE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#EMITTER">EMITTER</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#GAMES">GAMES</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#GRAPHICS">GRAPHICS</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#GROUP">GROUP</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#HEADLESS">HEADLESS</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#IMAGE">IMAGE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#LEFT">LEFT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#LINE">LINE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#MATRIX">MATRIX</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#NONE">NONE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#POINT">POINT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#POINTER">POINTER</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#POLYGON">POLYGON</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#RECTANGLE">RECTANGLE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#RENDERTEXTURE">RENDERTEXTURE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#RETROFONT">RETROFONT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#RIGHT">RIGHT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ROPE">ROPE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ROUNDEDRECTANGLE">ROUNDEDRECTANGLE</a>
 						</li>
 						
 						<li class="class-depth-0">
@@ -843,15 +923,47 @@
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#sort">sort</a>
+							<a href="global.html#SPRITE">SPRITE</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#toArray">toArray</a>
+							<a href="global.html#SPRITEBATCH">SPRITEBATCH</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#translate">translate</a>
+							<a href="global.html#TEXT">TEXT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#TILEMAP">TILEMAP</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#TILEMAPLAYER">TILEMAPLAYER</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#TILESPRITE">TILESPRITE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#UP">UP</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#VERSION">VERSION</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#VIDEO">VIDEO</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#WEBGL">WEBGL</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#WEBGL_FILTER">WEBGL_FILTER</a>
 						</li>
 						
 
@@ -866,6 +978,7 @@
 						<li class="class-depth-1"><a href="Phaser.Group.html">Group</a></li>
 						<li class="class-depth-1"><a href="Phaser.World.html">World</a></li>
 						<li class="class-depth-1"><a href="Phaser.Loader.html">Loader</a></li>
+						<li class="class-depth-1"><a href="Phaser.Cache.html">Cache</a></li>
 						<li class="class-depth-1"><a href="Phaser.Time.html">Time</a></li>
 						<li class="class-depth-1"><a href="Phaser.Camera.html">Camera</a></li>
 						<li class="class-depth-1"><a href="Phaser.StateManager.html">State Manager</a></li>
@@ -884,6 +997,7 @@
 						<li class="class-depth-1"><a href="Phaser.Sprite.html">Sprite</a></li>
 						<li class="class-depth-1"><a href="Phaser.Image.html">Image</a></li>
 						<li class="class-depth-1"><a href="Phaser.Sound.html">Sound</a></li>
+						<li class="class-depth-1"><a href="Phaser.Video.html">Video</a></li>
 						<li class="class-depth-1"><a href="Phaser.Particles.Arcade.Emitter.html">Particle Emitter</a></li>
 						<li class="class-depth-1"><a href="Phaser.Particle.html">Particle</a></li>
 						<li class="class-depth-1"><a href="Phaser.Text.html">Text</a></li>
@@ -904,11 +1018,13 @@
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Geometry<b class="caret"></b></a>
 					<ul class="dropdown-menu ">
 						<li class="class-depth-1"><a href="Phaser.Circle.html">Circle</a></li>
-						<li class="class-depth-1"><a href="Phaser.Rectangle.html">Rectangle</a></li>
-						<li class="class-depth-1"><a href="Phaser.Point.html">Point</a></li>
-						<li class="class-depth-1"><a href="Phaser.Line.html">Line</a></li>
 						<li class="class-depth-1"><a href="Phaser.Ellipse.html">Ellipse</a></li>
+						<li class="class-depth-1"><a href="Phaser.Line.html">Line</a></li>
+						<li class="class-depth-1"><a href="Phaser.Matrix.html">Matrix</a></li>
+						<li class="class-depth-1"><a href="Phaser.Point.html">Point</a></li>
 						<li class="class-depth-1"><a href="Phaser.Polygon.html">Polygon</a></li>
+						<li class="class-depth-1"><a href="Phaser.Rectangle.html">Rectangle</a></li>
+						<li class="class-depth-1"><a href="Phaser.RoundedRectangle.html">Rounded Rectangle</a></li>
 					</ul>
 				</li>
 
@@ -932,6 +1048,7 @@
 					<ul class="dropdown-menu ">
 						<li class="class-depth-1"><a href="Phaser.InputHandler.html">Input Handler</a></li>
 						<li class="class-depth-1"><a href="Phaser.Pointer.html">Pointer</a></li>
+						<li class="class-depth-1"><a href="Phaser.DeviceButton.html">Device Button</a></li>
 						<li class="class-depth-1"><a href="Phaser.Mouse.html">Mouse</a></li>
 						<li class="class-depth-1"><a href="Phaser.Keyboard.html">Keyboard</a></li>
 						<li class="class-depth-1"><a href="Phaser.Key.html">Key</a></li>
@@ -948,11 +1065,10 @@
 						<li class="class-depth-1"><a href="https://github.com/photonstorm/phaser-plugins">Phaser Plugins</a></li>
 						<li class="class-depth-1"><a href="http://www.html5gamedevs.com/forum/14-phaser/">Forum</a></li>
 						<li class="class-depth-1"><a href="http://stackoverflow.com/questions/tagged/phaser-framework">Stack Overflow</a></li>
-						<li class="class-depth-1"><a href="http://phaser.io/learn">Weekly Coding Tips</a></li>
+						<li class="class-depth-1"><a href="http://phaser.io/learn">Tutorials</a></li>
 						<li class="class-depth-1"><a href="https://confirmsubscription.com/h/r/369DE48E3E86AF1E">Newsletter</a></li>
 						<li class="class-depth-1"><a href="http://phaser.io/community/twitter">Twitter</a></li>
 						<li class="class-depth-1"><a href="http://phaser.io/community/irc">IRC</a></li>
-						<li class="class-depth-1"><a href="https://www.gittip.com/photonstorm/">Donate to the project</a></li>
 						<li class="class-depth-1"><a href="https://www.codeandweb.com/texturepacker/phaser">Texture Packer</a></li>
 					</ul>
 				</li>
@@ -970,14 +1086,14 @@
 					
 
 
-	<!--<h1 class="page-title">Class: GamepadButton</h1>-->
+	<!--<h1 class="page-title">Class: DeviceButton</h1>-->
 <section>
 
 <header>
     <h2>
         <span class="ancestors"><a href="Phaser.html">Phaser</a>.</span>
     
-    GamepadButton
+    DeviceButton
     </h2>
     
 </header>
@@ -990,7 +1106,7 @@
         
 <dt>
     <h4 class="name "
-        id="GamepadButton"><span class="type-signature"></span>new GamepadButton<span class="signature">(pad, buttonCode)</span><span class="type-signature"></span></h4>
+        id="DeviceButton"><span class="type-signature"></span>new DeviceButton<span class="signature">(parent, buttonCode)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -999,7 +1115,19 @@
 
     
     <div class="description">
-        <p>If you need more fine-grained control over the handling of specific buttons you can create and use Phaser.GamepadButton objects.</p>
+        <p>DeviceButtons belong to both <code>Phaser.Pointer</code> and <code>Phaser.SinglePad</code> (Gamepad) instances.</p>
+<p>For Pointers they represent the various buttons that can exist on mice and pens, such as the left button, right button,
+middle button and advanced buttons like back and forward.</p>
+<p>Access them via <code>Pointer.leftbutton</code>, <code>Pointer.rightButton</code> and so on.</p>
+<p>On Gamepads they represent all buttons on the pad: from shoulder buttons to action buttons.</p>
+<p>At the time of writing this there are device limitations you should be aware of:</p>
+<ul>
+<li>On Windows, if you install a mouse driver, and its utility software allows you to customize button actions 
+(e.g., IntelliPoint and SetPoint), the middle (wheel) button, the 4th button, and the 5th button might not be set, 
+even when they are pressed.</li>
+<li>On Linux (GTK), the 4th button and the 5th button are not supported.</li>
+<li>On Mac OS X 10.5 there is no platform API for implementing any advanced buttons.</li>
+</ul>
     </div>
     
 
@@ -1033,12 +1161,15 @@
 
         <tr>
             
-                <td class="name"><code>pad</code></td>
+                <td class="name"><code>parent</code></td>
             
 
             <td class="type">
             
                 
+<span class="param-type"><a href="Phaser.Pointer.html">Phaser.Pointer</a></span>
+|
+
 <span class="param-type"><a href="Phaser.SinglePad.html">Phaser.SinglePad</a></span>
 
 
@@ -1049,7 +1180,7 @@
 
             
 
-            <td class="description last"><p>A reference to the gamepad that owns this button.</p></td>
+            <td class="description last"><p>A reference to the parent of this button. Either a Pointer or a Gamepad.</p></td>
         </tr>
 
 	
@@ -1072,7 +1203,7 @@
 
             
 
-            <td class="description last"><p>The button code this GamepadButton is responsible for.</p></td>
+            <td class="description last"><p>The button code this DeviceButton is responsible for.</p></td>
         </tr>
 
 	
@@ -1105,7 +1236,7 @@
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_GamepadButton.js.html">input/GamepadButton.js</a>, <a href="src_input_GamepadButton.js.html#sunlight-1-line-16">line 16</a>
+    <a href="src_input_DeviceButton.js.html">input/DeviceButton.js</a>, <a href="src_input_DeviceButton.js.html#sunlight-1-line-31">line 31</a>
     </dt>
     
 
@@ -1148,6 +1279,66 @@
             
 <dt>
     <h4 class="name "
+        id="altKey"><span class="type-signature"></span>altKey<span class="type-signature"> :boolean</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>True if the alt key was held down when this button was last pressed or released.
+Not supported on Gamepads.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_DeviceButton.js.html">input/DeviceButton.js</a>, <a href="src_input_DeviceButton.js.html#sunlight-1-line-96">line 96</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
         id="buttonCode"><span class="type-signature"></span>buttonCode<span class="type-signature"> :number</span></h4>
     
     
@@ -1157,7 +1348,7 @@
 
     
     <div class="description">
-        <p>The buttoncode of this button.</p>
+        <p>The buttoncode of this button if a Gamepad, or the DOM button event value if a Pointer.</p>
     </div>
     
     
@@ -1185,7 +1376,67 @@
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_GamepadButton.js.html">input/GamepadButton.js</a>, <a href="src_input_GamepadButton.js.html#sunlight-1-line-75">line 75</a>
+    <a href="src_input_DeviceButton.js.html">input/DeviceButton.js</a>, <a href="src_input_DeviceButton.js.html#sunlight-1-line-123">line 123</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="ctrlKey"><span class="type-signature"></span>ctrlKey<span class="type-signature"> :boolean</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>True if the control key was held down when this button was last pressed or released.
+Not supported on Gamepads.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_DeviceButton.js.html">input/DeviceButton.js</a>, <a href="src_input_DeviceButton.js.html#sunlight-1-line-112">line 112</a>
     </dt>
     
 
@@ -1214,7 +1465,8 @@
     
     <div class="description">
         <p>If the button is down this value holds the duration of that button press and is constantly updated.
-If the button is up it holds the duration of the previous down session. The number of milliseconds this button has been held down for.</p>
+If the button is up it holds the duration of the previous down session.
+The value is stored in milliseconds.</p>
     </div>
     
     
@@ -1245,7 +1497,123 @@ If the button is up it holds the duration of the previous down session. The numb
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_GamepadButton.js.html">input/GamepadButton.js</a>, <a href="src_input_GamepadButton.js.html#sunlight-1-line-52">line 52</a>
+    <a href="src_input_DeviceButton.js.html">input/DeviceButton.js</a>, <a href="src_input_DeviceButton.js.html#sunlight-1-line-74">line 74</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="duration"><span class="type-signature">&lt;readonly> </span>duration<span class="type-signature"> :number</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>How long the button has been held down.
+If not currently down it returns -1.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_DeviceButton.js.html">input/DeviceButton.js</a>, <a href="src_input_DeviceButton.js.html#sunlight-1-line-305">line 305</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="event"><span class="type-signature"></span>event<span class="type-signature"> :object</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>The DOM event that caused the change in button state.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_DeviceButton.js.html">input/DeviceButton.js</a>, <a href="src_input_DeviceButton.js.html#sunlight-1-line-47">line 47</a>
     </dt>
     
 
@@ -1301,7 +1669,7 @@ If the button is up it holds the duration of the previous down session. The numb
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_GamepadButton.js.html">input/GamepadButton.js</a>, <a href="src_input_GamepadButton.js.html#sunlight-1-line-26">line 26</a>
+    <a href="src_input_DeviceButton.js.html">input/DeviceButton.js</a>, <a href="src_input_DeviceButton.js.html#sunlight-1-line-41">line 41</a>
     </dt>
     
 
@@ -1360,7 +1728,7 @@ If the button is up it holds the duration of the previous down session. The numb
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_GamepadButton.js.html">input/GamepadButton.js</a>, <a href="src_input_GamepadButton.js.html#sunlight-1-line-32">line 32</a>
+    <a href="src_input_DeviceButton.js.html">input/DeviceButton.js</a>, <a href="src_input_DeviceButton.js.html#sunlight-1-line-53">line 53</a>
     </dt>
     
 
@@ -1419,7 +1787,7 @@ If the button is up it holds the duration of the previous down session. The numb
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_GamepadButton.js.html">input/GamepadButton.js</a>, <a href="src_input_GamepadButton.js.html#sunlight-1-line-38">line 38</a>
+    <a href="src_input_DeviceButton.js.html">input/DeviceButton.js</a>, <a href="src_input_DeviceButton.js.html#sunlight-1-line-59">line 59</a>
     </dt>
     
 
@@ -1447,7 +1815,9 @@ If the button is up it holds the duration of the previous down session. The numb
 
     
     <div class="description">
-        <p>This Signal is dispatched every time this GamepadButton is pressed down. It is only dispatched once (until the button is released again).</p>
+        <p>This Signal is dispatched every time this DeviceButton is pressed down.
+It is only dispatched once (until the button is released again).
+When dispatched it sends 2 arguments: A reference to this DeviceButton and the value of the button.</p>
     </div>
     
     
@@ -1475,7 +1845,7 @@ If the button is up it holds the duration of the previous down session. The numb
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_GamepadButton.js.html">input/GamepadButton.js</a>, <a href="src_input_GamepadButton.js.html#sunlight-1-line-80">line 80</a>
+    <a href="src_input_DeviceButton.js.html">input/DeviceButton.js</a>, <a href="src_input_DeviceButton.js.html#sunlight-1-line-131">line 131</a>
     </dt>
     
 
@@ -1503,7 +1873,9 @@ If the button is up it holds the duration of the previous down session. The numb
 
     
     <div class="description">
-        <p>This Signal is dispatched every time this GamepadButton changes floating value (between (but not exactly) 0 and 1)</p>
+        <p>Gamepad only.
+This Signal is dispatched every time this DeviceButton changes floating value (between, but not exactly, 0 and 1).
+When dispatched it sends 2 arguments: A reference to this DeviceButton and the value of the button.</p>
     </div>
     
     
@@ -1531,7 +1903,7 @@ If the button is up it holds the duration of the previous down session. The numb
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_GamepadButton.js.html">input/GamepadButton.js</a>, <a href="src_input_GamepadButton.js.html#sunlight-1-line-90">line 90</a>
+    <a href="src_input_DeviceButton.js.html">input/DeviceButton.js</a>, <a href="src_input_DeviceButton.js.html#sunlight-1-line-147">line 147</a>
     </dt>
     
 
@@ -1559,7 +1931,9 @@ If the button is up it holds the duration of the previous down session. The numb
 
     
     <div class="description">
-        <p>This Signal is dispatched every time this GamepadButton is pressed down. It is only dispatched once (until the button is released again).</p>
+        <p>This Signal is dispatched every time this DeviceButton is released from a down state.
+It is only dispatched once (until the button is pressed again).
+When dispatched it sends 2 arguments: A reference to this DeviceButton and the value of the button.</p>
     </div>
     
     
@@ -1587,7 +1961,7 @@ If the button is up it holds the duration of the previous down session. The numb
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_GamepadButton.js.html">input/GamepadButton.js</a>, <a href="src_input_GamepadButton.js.html#sunlight-1-line-85">line 85</a>
+    <a href="src_input_DeviceButton.js.html">input/DeviceButton.js</a>, <a href="src_input_DeviceButton.js.html#sunlight-1-line-139">line 139</a>
     </dt>
     
 
@@ -1606,7 +1980,7 @@ If the button is up it holds the duration of the previous down session. The numb
             
 <dt>
     <h4 class="name "
-        id="pad"><span class="type-signature"></span>pad<span class="type-signature"> :<a href="Phaser.SinglePad.html">Phaser.SinglePad</a></span></h4>
+        id="parent"><span class="type-signature"></span>parent<span class="type-signature"> :<a href="Phaser.Pointer.html">Phaser.Pointer</a>|<a href="Phaser.SinglePad.html">Phaser.SinglePad</a></span></h4>
     
     
 </dt>
@@ -1615,10 +1989,23 @@ If the button is up it holds the duration of the previous down session. The numb
 
     
     <div class="description">
-        <p>A reference to the gamepad that owns this button.</p>
+        <p>A reference to the Pointer or Gamepad that owns this button.</p>
     </div>
     
     
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type"><a href="Phaser.Pointer.html">Phaser.Pointer</a></span>
+|
+
+<span class="param-type"><a href="Phaser.SinglePad.html">Phaser.SinglePad</a></span>
+
+
+            </li>
+        </ul>
     
 
     
@@ -1643,7 +2030,7 @@ If the button is up it holds the duration of the previous down session. The numb
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_GamepadButton.js.html">input/GamepadButton.js</a>, <a href="src_input_GamepadButton.js.html#sunlight-1-line-21">line 21</a>
+    <a href="src_input_DeviceButton.js.html">input/DeviceButton.js</a>, <a href="src_input_DeviceButton.js.html#sunlight-1-line-36">line 36</a>
     </dt>
     
 
@@ -1671,7 +2058,8 @@ If the button is up it holds the duration of the previous down session. The numb
 
     
     <div class="description">
-        <p>If a button is held down this holds down the number of times the button has 'repeated'.</p>
+        <p>Gamepad only.
+If a button is held down this holds down the number of times the button has 'repeated'.</p>
     </div>
     
     
@@ -1702,7 +2090,67 @@ If the button is up it holds the duration of the previous down session. The numb
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_GamepadButton.js.html">input/GamepadButton.js</a>, <a href="src_input_GamepadButton.js.html#sunlight-1-line-64">line 64</a>
+    <a href="src_input_DeviceButton.js.html">input/DeviceButton.js</a>, <a href="src_input_DeviceButton.js.html#sunlight-1-line-88">line 88</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="shiftKey"><span class="type-signature"></span>shiftKey<span class="type-signature"> :boolean</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>True if the shift key was held down when this button was last pressed or released.
+Not supported on Gamepads.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_DeviceButton.js.html">input/DeviceButton.js</a>, <a href="src_input_DeviceButton.js.html#sunlight-1-line-104">line 104</a>
     </dt>
     
 
@@ -1761,7 +2209,7 @@ If the button is up it holds the duration of the previous down session. The numb
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_GamepadButton.js.html">input/GamepadButton.js</a>, <a href="src_input_GamepadButton.js.html#sunlight-1-line-44">line 44</a>
+    <a href="src_input_DeviceButton.js.html">input/DeviceButton.js</a>, <a href="src_input_DeviceButton.js.html#sunlight-1-line-65">line 65</a>
     </dt>
     
 
@@ -1820,7 +2268,7 @@ If the button is up it holds the duration of the previous down session. The numb
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_GamepadButton.js.html">input/GamepadButton.js</a>, <a href="src_input_GamepadButton.js.html#sunlight-1-line-58">line 58</a>
+    <a href="src_input_DeviceButton.js.html">input/DeviceButton.js</a>, <a href="src_input_DeviceButton.js.html#sunlight-1-line-80">line 80</a>
     </dt>
     
 
@@ -1848,7 +2296,7 @@ If the button is up it holds the duration of the previous down session. The numb
 
     
     <div class="description">
-        <p>Button value. Mainly useful for checking analog buttons (like shoulder triggers)</p>
+        <p>Button value. Mainly useful for checking analog buttons (like shoulder triggers) on Gamepads.</p>
     </div>
     
     
@@ -1879,7 +2327,7 @@ If the button is up it holds the duration of the previous down session. The numb
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_GamepadButton.js.html">input/GamepadButton.js</a>, <a href="src_input_GamepadButton.js.html#sunlight-1-line-70">line 70</a>
+    <a href="src_input_DeviceButton.js.html">input/DeviceButton.js</a>, <a href="src_input_DeviceButton.js.html#sunlight-1-line-118">line 118</a>
     </dt>
     
 
@@ -1913,7 +2361,8 @@ If the button is up it holds the duration of the previous down session. The numb
 
     
     <div class="description">
-        <p>Destroys this GamepadButton, this disposes of the onDown, onUp and onFloat signals and clears the pad and game references.</p>
+        <p>Destroys this DeviceButton, this disposes of the onDown, onUp and onFloat signals 
+and clears the parent and game references.</p>
     </div>
     
 
@@ -1947,7 +2396,7 @@ If the button is up it holds the duration of the previous down session. The numb
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_GamepadButton.js.html">input/GamepadButton.js</a>, <a href="src_input_GamepadButton.js.html#sunlight-1-line-194">line 194</a>
+    <a href="src_input_DeviceButton.js.html">input/DeviceButton.js</a>, <a href="src_input_DeviceButton.js.html#sunlight-1-line-284">line 284</a>
     </dt>
     
 
@@ -1983,7 +2432,8 @@ If the button is up it holds the duration of the previous down session. The numb
 
     
     <div class="description">
-        <p>Returns the &quot;just pressed&quot; state of this button. Just pressed is considered true if the button was pressed down within the duration given (default 250ms).</p>
+        <p>Returns the &quot;just pressed&quot; state of this button.
+Just pressed is considered true if the button was pressed down within the duration given (default 250ms).</p>
     </div>
     
 
@@ -2053,7 +2503,7 @@ If the button is up it holds the duration of the previous down session. The numb
                 </td>
             
 
-            <td class="description last"><p>The duration below which the button is considered as being just pressed.</p></td>
+            <td class="description last"><p>The duration in ms below which the button is considered as being just pressed.</p></td>
         </tr>
 
 	
@@ -2106,7 +2556,7 @@ If the button is up it holds the duration of the previous down session. The numb
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_GamepadButton.js.html">input/GamepadButton.js</a>, <a href="src_input_GamepadButton.js.html#sunlight-1-line-149">line 149</a>
+    <a href="src_input_DeviceButton.js.html">input/DeviceButton.js</a>, <a href="src_input_DeviceButton.js.html#sunlight-1-line-232">line 232</a>
     </dt>
     
 
@@ -2133,7 +2583,7 @@ If the button is up it holds the duration of the previous down session. The numb
             
 <dt>
     <h4 class="name "
-        id="justPressed"><span class="type-signature"></span>justPressed<span class="signature">(<span class="optional">duration</span>)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+        id="justReleased"><span class="type-signature"></span>justReleased<span class="signature">(<span class="optional">duration</span>)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
     
     
 </dt>
@@ -2142,7 +2592,8 @@ If the button is up it holds the duration of the previous down session. The numb
 
     
     <div class="description">
-        <p>Returns the &quot;just released&quot; state of this button. Just released is considered as being true if the button was released within the duration given (default 250ms).</p>
+        <p>Returns the &quot;just released&quot; state of this button.
+Just released is considered as being true if the button was released within the duration given (default 250ms).</p>
     </div>
     
 
@@ -2212,7 +2663,7 @@ If the button is up it holds the duration of the previous down session. The numb
                 </td>
             
 
-            <td class="description last"><p>The duration below which the button is considered as being just released.</p></td>
+            <td class="description last"><p>The duration in ms below which the button is considered as being just released.</p></td>
         </tr>
 
 	
@@ -2235,7 +2686,7 @@ If the button is up it holds the duration of the previous down session. The numb
         </div>
     
     <div class="returns-desc param-desc">
-        <p>True if the button is just pressed otherwise false.</p>
+        <p>True if the button is just released otherwise false.</p>
     </div>
 
 
@@ -2265,7 +2716,7 @@ If the button is up it holds the duration of the previous down session. The numb
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_GamepadButton.js.html">input/GamepadButton.js</a>, <a href="src_input_GamepadButton.js.html#sunlight-1-line-164">line 164</a>
+    <a href="src_input_DeviceButton.js.html">input/DeviceButton.js</a>, <a href="src_input_DeviceButton.js.html#sunlight-1-line-248">line 248</a>
     </dt>
     
 
@@ -2292,7 +2743,7 @@ If the button is up it holds the duration of the previous down session. The numb
             
 <dt>
     <h4 class="name "
-        id="processButtonDown"><span class="type-signature">&lt;internal> </span>processButtonDown<span class="signature">(value)</span><span class="type-signature"></span></h4>
+        id="padFloat"><span class="type-signature">&lt;internal> </span>padFloat<span class="signature">(value)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -2391,259 +2842,7 @@ If the button is up it holds the duration of the previous down session. The numb
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_GamepadButton.js.html">input/GamepadButton.js</a>, <a href="src_input_GamepadButton.js.html#sunlight-1-line-96">line 96</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="processButtonFloat"><span class="type-signature">&lt;internal> </span>processButtonFloat<span class="signature">(value)</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Called automatically by Phaser.SinglePad.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>value</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Button value</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-        <dt class="important tag-deprecated">Internal:</dt>
-        <dd class="tag-deprecated"><ul>
-        
-            <li>This member is <em>internal (protected)</em> and may be modified or removed in the future.</li>
-        
-        </ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_input_GamepadButton.js.html">input/GamepadButton.js</a>, <a href="src_input_GamepadButton.js.html#sunlight-1-line-134">line 134</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="processButtonUp"><span class="type-signature">&lt;internal> </span>processButtonUp<span class="signature">(value)</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Called automatically by Phaser.SinglePad.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>value</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Button value</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-        <dt class="important tag-deprecated">Internal:</dt>
-        <dd class="tag-deprecated"><ul>
-        
-            <li>This member is <em>internal (protected)</em> and may be modified or removed in the future.</li>
-        
-        </ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_input_GamepadButton.js.html">input/GamepadButton.js</a>, <a href="src_input_GamepadButton.js.html#sunlight-1-line-116">line 116</a>
+    <a href="src_input_DeviceButton.js.html">input/DeviceButton.js</a>, <a href="src_input_DeviceButton.js.html#sunlight-1-line-217">line 217</a>
     </dt>
     
 
@@ -2679,7 +2878,7 @@ If the button is up it holds the duration of the previous down session. The numb
 
     
     <div class="description">
-        <p>Resets this GamepadButton, changing it to an isUp state and resetting the duration and repeats counters.</p>
+        <p>Resets this DeviceButton, changing it to an isUp state and resetting the duration and repeats counters.</p>
     </div>
     
 
@@ -2713,7 +2912,351 @@ If the button is up it holds the duration of the previous down session. The numb
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_GamepadButton.js.html">input/GamepadButton.js</a>, <a href="src_input_GamepadButton.js.html#sunlight-1-line-179">line 179</a>
+    <a href="src_input_DeviceButton.js.html">input/DeviceButton.js</a>, <a href="src_input_DeviceButton.js.html#sunlight-1-line-264">line 264</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+       
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="start"><span class="type-signature">&lt;internal> </span>start<span class="signature">(<span class="optional">event</span>, <span class="optional">value</span>)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Called automatically by Phaser.Pointer and Phaser.SinglePad.
+Handles the button down state.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>event</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The DOM event that triggered the button change.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>value</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The button value. Only get for Gamepads.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="important tag-deprecated">Internal:</dt>
+        <dd class="tag-deprecated"><ul>
+        
+            <li>This member is <em>internal (protected)</em> and may be modified or removed in the future.</li>
+        
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_DeviceButton.js.html">input/DeviceButton.js</a>, <a href="src_input_DeviceButton.js.html#sunlight-1-line-153">line 153</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+       
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="stop"><span class="type-signature">&lt;internal> </span>stop<span class="signature">(<span class="optional">event</span>, <span class="optional">value</span>)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Called automatically by Phaser.Pointer and Phaser.SinglePad.
+Handles the button up state.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>event</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The DOM event that triggered the button change.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>value</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The button value. Only get for Gamepads.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="important tag-deprecated">Internal:</dt>
+        <dd class="tag-deprecated"><ul>
+        
+            <li>This member is <em>internal (protected)</em> and may be modified or removed in the future.</li>
+        
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_DeviceButton.js.html">input/DeviceButton.js</a>, <a href="src_input_DeviceButton.js.html#sunlight-1-line-186">line 186</a>
     </dt>
     
 
@@ -2762,7 +3305,7 @@ If the button is up it holds the duration of the previous down session. The numb
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha10</a>
-		on Thu Mar 26 2015 02:53:52 GMT+0000 (GMT Standard Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Jul 22 2015 14:55:14 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

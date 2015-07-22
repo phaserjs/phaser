@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Phaser Source: src/sound/SoundManager.js</title>
+	<title>Phaser Source: src/gameobjects/Video.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -1086,7 +1086,7 @@
 					
 
 
-		<h1 class="page-title">Source: src/sound/SoundManager.js</h1>
+		<h1 class="page-title">Source: src/gameobjects/Video.js</h1>
     
     <section>
         <article>
@@ -1097,94 +1097,163 @@
 */
 
 /**
-* The Sound Manager is responsible for playing back audio via either the Legacy HTML Audio tag or via Web Audio if the browser supports it.
-* Note: On Firefox 25+ on Linux if you have media.gstreamer disabled in about:config then it cannot play back mp3 or m4a files.
-* The audio file type and the encoding of those files are extremely important. Not all browsers can play all audio formats.
-* There is a good guide to what's supported here: http://hpr.dogphilosophy.net/test/
+* A Video object that takes a previously loaded Video from the Phaser Cache and handles playback of it.
+* 
+* Alternatively it takes a getUserMedia feed from an active webcam and streams the contents of that to
+* the Video instead (see `startMediaStream` method)
+* 
+* The video can then be applied to a Sprite as a texture. If multiple Sprites share the same Video texture and playback
+* changes (i.e. you pause the video, or seek to a new time) then this change will be seen across all Sprites simultaneously.
 *
-* If you are reloading a Phaser Game on a page that never properly refreshes (such as in an AngularJS project) then you will quickly run out
-* of AudioContext nodes. If this is the case create a global var called PhaserGlobal on the window object before creating the game. The active
-* AudioContext will then be saved to window.PhaserGlobal.audioContext when the Phaser game is destroyed, and re-used when it starts again.
+* Due to a bug in IE11 you cannot play a video texture to a Sprite in WebGL. For IE11 force Canvas mode.
+* 
+* If you need each Sprite to be able to play a video fully independently then you will need one Video object per Sprite.
+* Please understand the obvious performance implications of doing this, and the memory required to hold videos in RAM.
 *
-* Mobile warning: There are some mobile devices (certain iPad 2 and iPad Mini revisions) that cannot play 48000 Hz audio.
-* When they try to play the audio becomes extremely distorted and buzzes, eventually crashing the sound system.
-* The solution is to use a lower encoding rate such as 44100 Hz.
+* On some mobile browsers such as iOS Safari, you cannot play a video until the user has explicitly touched the screen.
+* This works in the same way as audio unlocking. Phaser will handle the touch unlocking for you, however unlike with audio
+* it's worth noting that every single Video needs to be touch unlocked, not just the first one. You can use the `changeSource`
+* method to try and work around this limitation, but see the method help for details.
 *
-* @class Phaser.SoundManager
+* Small screen devices, especially iPod and iPhone will launch the video in its own native video player, 
+* outside of the Safari browser. There is no way to avoid this, it's a device imposed limitation.
+*
+* @class Phaser.Video
 * @constructor
-* @param {Phaser.Game} game - Reference to the current game instance.
+* @param {Phaser.Game} game - A reference to the currently running game.
+* @param {string|null} [key=null] - The key of the video file in the Phaser.Cache that this Video object will play. Set to `null` or leave undefined if you wish to use a webcam as the source. See `startMediaStream` to start webcam capture.
+* @param {string|null} [url=null] - If the video hasn't been loaded then you can provide a full URL to the file here (make sure to set key to null)
 */
-Phaser.SoundManager = function (game) {
+Phaser.Video = function (game, key, url) {
+
+    if (key === undefined) { key = null; }
+    if (url === undefined) { url = null; }
 
     /**
-    * @property {Phaser.Game} game - Local reference to game.
+    * @property {Phaser.Game} game - A reference to the currently running game.
     */
     this.game = game;
 
     /**
-    * @property {Phaser.Signal} onSoundDecode - The event dispatched when a sound decodes (typically only for mp3 files)
+    * @property {string} key - The key of the Video in the Cache, if stored there. Will be `null` if this Video is using the webcam instead.
+    * @default null
     */
-    this.onSoundDecode = new Phaser.Signal();
+    this.key = key;
 
     /**
-    * This signal is dispatched whenever the global volume changes. The new volume is passed as the only parameter to your callback.
-    * @property {Phaser.Signal} onVolumeChange
-    */
-    this.onVolumeChange = new Phaser.Signal();
-
-    /**
-    * This signal is dispatched when the SoundManager is globally muted, either directly via game code or as a result of the game pausing.
-    * @property {Phaser.Signal} onMute
-    */
-    this.onMute = new Phaser.Signal();
-
-    /**
-    * This signal is dispatched when the SoundManager is globally un-muted, either directly via game code or as a result of the game resuming from a pause.
-    * @property {Phaser.Signal} onUnMute
-    */
-    this.onUnMute = new Phaser.Signal();
-
-    /**
-    * @property {AudioContext} context - The AudioContext being used for playback.
+    * @property {number} width - The width of the video in pixels.
     * @default
     */
-    this.context = null;
+    this.width = 0;
 
     /**
-    * @property {boolean} usingWebAudio - True the SoundManager and device are both using Web Audio.
-    * @readonly
-    */
-    this.usingWebAudio = false;
-
-    /**
-    * @property {boolean} usingAudioTag - True the SoundManager and device are both using the Audio tag instead of Web Audio.
-    * @readonly
-    */
-    this.usingAudioTag = false;
-
-    /**
-    * @property {boolean} noAudio - True if audio been disabled via the PhaserGlobal (useful if you need to use a 3rd party audio library) or the device doesn't support any audio.
+    * @property {number} height - The height of the video in pixels.
     * @default
     */
-    this.noAudio = false;
+    this.height = 0;
 
     /**
-    * @property {boolean} connectToMaster - Used in conjunction with Sound.externalNode this allows you to stop a Sound node being connected to the SoundManager master gain node.
+    * @property {number} type - The const type of this object.
     * @default
     */
-    this.connectToMaster = true;
+    this.type = Phaser.VIDEO;
 
     /**
-    * @property {boolean} touchLocked - true if the audio system is currently locked awaiting a touch event.
+    * @property {boolean} disableTextureUpload - If true this video will never send its image data to the GPU when its dirty flag is true. This only applies in WebGL.
+    */
+    this.disableTextureUpload = false;
+
+    /**
+    * @property {boolean} touchLocked - true if this video is currently locked awaiting a touch event. This happens on some mobile devices, such as iOS.
     * @default
     */
     this.touchLocked = false;
 
     /**
-    * @property {number} channels - The number of audio channels to use in playback.
+    * @property {Phaser.Signal} onPlay - This signal is dispatched when the Video starts to play. It sends 3 parameters: a reference to the Video object, if the video is set to loop or not and the playback rate.
+    */
+    this.onPlay = new Phaser.Signal();
+
+    /**
+    * @property {Phaser.Signal} onChangeSource - This signal is dispatched if the Video source is changed. It sends 3 parameters: a reference to the Video object and the new width and height of the new video source.
+    */
+    this.onChangeSource = new Phaser.Signal();
+
+    /**
+    * @property {Phaser.Signal} onComplete - This signal is dispatched when the Video completes playback, i.e. enters an 'ended' state. Videos set to loop will never dispatch this signal.
+    */
+    this.onComplete = new Phaser.Signal();
+
+    /**
+    * @property {Phaser.Signal} onAccess - This signal is dispatched if the user allows access to their webcam.
+    */
+    this.onAccess = new Phaser.Signal();
+
+    /**
+    * @property {Phaser.Signal} onError - This signal is dispatched if an error occurs either getting permission to use the webcam (for a Video Stream) or when trying to play back a video file.
+    */
+    this.onError = new Phaser.Signal();
+
+    /**
+    * This signal is dispatched if when asking for permission to use the webcam no response is given within a the Video.timeout limit.
+    * This may be because the user has picked `Not now` in the permissions window, or there is a delay in establishing the LocalMediaStream.
+    * @property {Phaser.Signal} onTimeout
+    */
+    this.onTimeout = new Phaser.Signal();
+
+    /**
+    * @property {integer} timeout - The amount of ms allowed to elapsed before the Video.onTimeout signal is dispatched while waiting for webcam access.
     * @default
     */
-    this.channels = 32;
+    this.timeout = 15000;
+
+    /**
+    * @property {integer} _timeOutID - setTimeout ID.
+    * @private
+    */
+    this._timeOutID = null;
+
+    /**
+    * @property {HTMLVideoElement} video - The HTML Video Element that is added to the document.
+    */
+    this.video = null;
+
+    /**
+    * @property {MediaStream} videoStream - The Video Stream data. Only set if this Video is streaming from the webcam via `startMediaStream`.
+    */
+    this.videoStream = null;
+
+    /**
+    * @property {boolean} isStreaming - Is there a streaming video source? I.e. from a webcam.
+    */
+    this.isStreaming = false;
+
+    /**
+    * When starting playback of a video Phaser will monitor its readyState using a setTimeout call.
+    * The setTimeout happens once every `Video.retryInterval` ms. It will carry on monitoring the video
+    * state in this manner until the `retryLimit` is reached and then abort.
+    * @property {integer} retryLimit
+    * @default
+    */
+    this.retryLimit = 20;
+
+    /**
+    * @property {integer} retry - The current retry attempt.
+    * @default
+    */
+    this.retry = 0;
+
+    /**
+    * @property {integer} retryInterval - The number of ms between each retry at monitoring the status of a downloading video.
+    * @default
+    */
+    this.retryInterval = 500;
+
+    /**
+    * @property {integer} _retryID - The callback ID of the retry setTimeout.
+    * @private
+    */
+    this._retryID = null;
 
     /**
     * @property {boolean} _codeMuted - Internal mute tracking var.
@@ -1201,530 +1270,630 @@ Phaser.SoundManager = function (game) {
     this._muted = false;
 
     /**
-    * @property {AudioContext} _unlockSource - Internal unlock tracking var.
+    * @property {boolean} _codePaused - Internal paused tracking var.
     * @private
     * @default
     */
-    this._unlockSource = null;
+    this._codePaused = false;
 
     /**
-    * @property {number} _volume - The global audio volume. A value between 0 (silence) and 1 (full volume).
+    * @property {boolean} _paused - Internal paused tracking var.
     * @private
     * @default
     */
-    this._volume = 1;
+    this._paused = false;
 
     /**
-    * @property {array} _sounds - An array containing all the sounds
+    * @property {boolean} _pending - Internal var tracking play pending.
     * @private
+    * @default
     */
-    this._sounds = [];
+    this._pending = false;
 
     /**
-    * @property {Phaser.ArraySet} _watchList - An array set containing all the sounds being monitored for decoding status.
+    * @property {boolean} _autoplay - Internal var tracking autoplay when changing source.
     * @private
+    * @default
     */
-    this._watchList = new Phaser.ArraySet();
+    this._autoplay = false;
+
+    if (key &amp;&amp; this.game.cache.checkVideoKey(key))
+    {
+        var _video = this.game.cache.getVideo(key);
+
+        if (_video.isBlob)
+        {
+            this.createVideoFromBlob(_video.data);
+        }
+        else
+        {
+            this.video = _video.data;
+        }
+
+        this.width = this.video.videoWidth;
+        this.height = this.video.videoHeight;
+    }
+    else if (url)
+    {
+        this.createVideoFromURL(url, false);
+    }
 
     /**
-    * @property {boolean} _watching - Is the SoundManager monitoring the watchList?
-    * @private
+    * @property {PIXI.BaseTexture} baseTexture - The PIXI.BaseTexture.
+    * @default
     */
-    this._watching = false;
+    if (this.video &amp;&amp; !url)
+    {
+        this.baseTexture = new PIXI.BaseTexture(this.video);
+        this.baseTexture.forceLoaded(this.width, this.height);
+    }
+    else
+    {
+        this.baseTexture = new PIXI.BaseTexture(PIXI.TextureCache['__default'].baseTexture.source);
+        this.baseTexture.forceLoaded(this.width, this.height);
+    }
 
     /**
-    * @property {function} _watchCallback - The callback to invoke once the watchlist is clear.
-    * @private
+    * @property {PIXI.Texture} texture - The PIXI.Texture.
+    * @default
     */
-    this._watchCallback = null;
+    this.texture = new PIXI.Texture(this.baseTexture);
 
     /**
-    * @property {object} _watchContext - The context in which to call the watchlist callback.
-    * @private
+    * @property {Phaser.Frame} textureFrame - The Frame this video uses for rendering.
+    * @default
     */
-    this._watchContext = null;
+    this.textureFrame = new Phaser.Frame(0, 0, 0, this.width, this.height, 'video');
+
+    this.texture.setFrame(this.textureFrame);
+
+    this.texture.valid = false;
+
+    if (key !== null &amp;&amp; this.video)
+    {
+        this.texture.valid = this.video.canplay;
+    }
+
+    /**
+    * A snapshot grabbed from the video. This is initially black. Populate it by calling Video.grab().
+    * When called the BitmapData is updated with a grab taken from the current video playing or active video stream.
+    * If Phaser has been compiled without BitmapData support this property will always be `null`.
+    * 
+    * @property {Phaser.BitmapData} snapshot
+    * @readOnly
+    */
+    this.snapshot = null;
+
+    if (Phaser.BitmapData)
+    {
+        this.snapshot = new Phaser.BitmapData(this.game, '', this.width, this.height);
+    }
+
+    if (!this.game.device.cocoonJS &amp;&amp; (this.game.device.iOS || this.game.device.android) || (window['PhaserGlobal'] &amp;&amp; window['PhaserGlobal'].fakeiOSTouchLock))
+    {
+        this.setTouchLock();
+    }
+    else
+    {
+        if (_video)
+        {
+            _video.locked = false;
+        }
+    }
 
 };
 
-Phaser.SoundManager.prototype = {
+Phaser.Video.prototype = {
+
+    connectToMediaStream: function (video, stream) {
+
+        if (video &amp;&amp; stream)
+        {
+            this.video = video;
+            this.videoStream = stream;
+
+            this.isStreaming = true;
+            this.baseTexture.source = this.video;
+            this.updateTexture(null, this.video.videoWidth, this.video.videoHeight);
+
+            this.onAccess.dispatch(this);
+        }
+
+        return this;
+
+    },
 
     /**
-    * Initialises the sound manager.
-    * @method Phaser.SoundManager#boot
-    * @protected
-    */
-    boot: function () {
+     * Instead of playing a video file this method allows you to stream video data from an attached webcam.
+     *
+     * As soon as this method is called the user will be prompted by their browser to "Allow" access to the webcam.
+     * If they allow it the webcam feed is directed to this Video. Call `Video.play` to start the stream.
+     *
+     * If they block the webcam the onError signal will be dispatched containing the NavigatorUserMediaError
+     * or MediaStreamError event.
+     *
+     * You can optionally set a width and height for the stream. If set the input will be cropped to these dimensions.
+     * If not given then as soon as the stream has enough data the video dimensions will be changed to match the webcam device.
+     * You can listen for this with the onChangeSource signal.
+     *
+     * @method Phaser.Video#startMediaStream
+     * @param {boolean} [captureAudio=false] - Controls if audio should be captured along with video in the video stream.
+     * @param {integer} [width] - The width is used to create the video stream. If not provided the video width will be set to the width of the webcam input source.
+     * @param {integer} [height] - The height is used to create the video stream. If not provided the video height will be set to the height of the webcam input source.
+     * @return {Phaser.Video} This Video object for method chaining or false if the device doesn't support getUserMedia.
+     */
+    startMediaStream: function (captureAudio, width, height) {
 
-        if (this.game.device.iOS &amp;&amp; this.game.device.webAudio === false)
+        if (captureAudio === undefined) { captureAudio = false; }
+        if (width === undefined) { width = null; }
+        if (height === undefined) { height = null; }
+
+        if (!this.game.device.getUserMedia)
         {
-            this.channels = 1;
+            this.onError.dispatch(this, 'No getUserMedia');
+            return false;
         }
 
-        //  PhaserGlobal overrides
-        if (window['PhaserGlobal'])
+        if (this.videoStream !== null)
         {
-            //  Check to see if all audio playback is disabled (i.e. handled by a 3rd party class)
-            if (window['PhaserGlobal'].disableAudio === true)
-            {
-                this.noAudio = true;
-                this.touchLocked = false;
-                return;
-            }
-
-            //  Check if the Web Audio API is disabled (for testing Audio Tag playback during development)
-            if (window['PhaserGlobal'].disableWebAudio === true)
-            {
-                this.usingAudioTag = true;
-                this.touchLocked = false;
-                return;
-            }
+            this.videoStream.stop();
         }
 
-        if (window['PhaserGlobal'] &amp;&amp; window['PhaserGlobal'].audioContext)
+        this.removeVideoElement();
+
+        this.video = document.createElement("video");
+        this.video.setAttribute('autoplay', 'autoplay');
+
+        if (width !== null)
         {
-            this.context = window['PhaserGlobal'].audioContext;
+            this.video.width = width;
+        }
+
+        if (height !== null)
+        {
+            this.video.height = height;
+        }
+
+        //  Request access to the webcam
+
+        this._timeOutID = window.setTimeout(this.getUserMediaTimeout.bind(this), this.timeout);
+
+        try {
+            navigator.getUserMedia(
+                { "audio": captureAudio, "video": true },
+                this.getUserMediaSuccess.bind(this),
+                this.getUserMediaError.bind(this)
+            );
+        }
+        catch (error)
+        {
+            this.getUserMediaError(error);
+        }
+
+        return this;
+
+    },
+
+    getUserMediaTimeout: function () {
+
+        clearTimeout(this._timeOutID);
+
+        this.onTimeout.dispatch(this);
+
+    },
+
+    getUserMediaError: function (event) {
+
+        clearTimeout(this._timeOutID);
+
+        this.onError.dispatch(this, event);
+
+    },
+
+    getUserMediaSuccess: function (stream) {
+
+        clearTimeout(this._timeOutID);
+
+        // Attach the stream to the video
+        this.videoStream = stream;
+
+        // Set the source of the video element with the stream from the camera
+        if (this.video.mozSrcObject !== undefined)
+        {
+            this.video.mozSrcObject = stream;
         }
         else
         {
-            if (!!window['AudioContext'])
-            {
-                try {
-                    this.context = new window['AudioContext']();
-                } catch (error) {
-                    this.context = null;
-                    this.usingWebAudio = false;
-                    this.touchLocked = false;
-                }
-            }
-            else if (!!window['webkitAudioContext'])
-            {
-                try {
-                    this.context = new window['webkitAudioContext']();
-                } catch (error) {
-                    this.context = null;
-                    this.usingWebAudio = false;
-                    this.touchLocked = false;
-                }
-            }
+            this.video.src = (window.URL &amp;&amp; window.URL.createObjectURL(stream)) || stream;
         }
 
-        if (this.context === null)
-        {
-            //  No Web Audio support - how about legacy Audio?
-            if (window['Audio'] === undefined)
-            {
-                this.noAudio = true;
-                return;
-            }
-            else
-            {
-                this.usingAudioTag = true;
-            }
-        }
-        else
-        {
-            this.usingWebAudio = true;
+        var self = this;
 
-            if (this.context.createGain === undefined)
-            {
-                this.masterGain = this.context.createGainNode();
-            }
-            else
-            {
-                this.masterGain = this.context.createGain();
-            }
+        this.video.onloadeddata = function () {
 
-            this.masterGain.gain.value = 1;
-            this.masterGain.connect(this.context.destination);
-        }
+            var retry = 10;
 
-        if (!this.noAudio)
-        {
-            //  On mobile we need a native touch event before we can play anything, so capture it here
-            if (!this.game.device.cocoonJS &amp;&amp; this.game.device.iOS || (window['PhaserGlobal'] &amp;&amp; window['PhaserGlobal'].fakeiOSTouchLock))
-            {
-                this.setTouchLock();
-            }
-        }
+            function checkStream () {
 
-    },
+                if (retry > 0)
+                {
+                    if (self.video.videoWidth > 0)
+                    {
+                        // Patch for Firefox bug where the height can't be read from the video
+                        var width = self.video.videoWidth;
+                        var height = self.video.videoHeight;
 
-    /**
-    * Sets the Input Manager touch callback to be SoundManager.unlock.
-    * Required for iOS audio device unlocking. Mostly just used internally.
-    * 
-    * @method Phaser.SoundManager#setTouchLock
-    */
-    setTouchLock: function () {
-
-        this.game.input.touch.addTouchLockCallback(this.unlock, this);
-        this.touchLocked = true;
-
-    },
-
-    /**
-    * Enables the audio, usually after the first touch.
-    * 
-    * @method Phaser.SoundManager#unlock
-    * @return {boolean} True if the callback should be removed, otherwise false.
-    */
-    unlock: function () {
-
-        if (this.noAudio || !this.touchLocked || this._unlockSource !== null)
-        {
-            return true;
-        }
-
-        //  Global override (mostly for Audio Tag testing)
-        if (this.usingAudioTag)
-        {
-            this.touchLocked = false;
-            this._unlockSource = null;
-        }
-        else if (this.usingWebAudio)
-        {
-            // Create empty buffer and play it
-            // The SoundManager.update loop captures the state of it and then resets touchLocked to false
-
-            var buffer = this.context.createBuffer(1, 1, 22050);
-            this._unlockSource = this.context.createBufferSource();
-            this._unlockSource.buffer = buffer;
-            this._unlockSource.connect(this.context.destination);
-
-            if (this._unlockSource.start === undefined)
-            {
-                this._unlockSource.noteOn(0);
-            }
-            else
-            {
-                this._unlockSource.start(0);
-            }
-        }
-
-        //  We can remove the event because we've done what we needed (started the unlock sound playing)
-        return true;
-
-    },
-
-    /**
-    * Stops all the sounds in the game.
-    *
-    * @method Phaser.SoundManager#stopAll
-    */
-    stopAll: function () {
-
-        if (this.noAudio)
-        {
-            return;
-        }
-
-        for (var i = 0; i &lt; this._sounds.length; i++)
-        {
-            if (this._sounds[i])
-            {
-                this._sounds[i].stop();
-            }
-        }
-
-    },
-
-    /**
-    * Pauses all the sounds in the game.
-    *
-    * @method Phaser.SoundManager#pauseAll
-    */
-    pauseAll: function () {
-
-        if (this.noAudio)
-        {
-            return;
-        }
-
-        for (var i = 0; i &lt; this._sounds.length; i++)
-        {
-            if (this._sounds[i])
-            {
-                this._sounds[i].pause();
-            }
-        }
-
-    },
-
-    /**
-    * Resumes every sound in the game.
-    *
-    * @method Phaser.SoundManager#resumeAll
-    */
-    resumeAll: function () {
-
-        if (this.noAudio)
-        {
-            return;
-        }
-
-        for (var i = 0; i &lt; this._sounds.length; i++)
-        {
-            if (this._sounds[i])
-            {
-                this._sounds[i].resume();
-            }
-        }
-
-    },
-
-    /**
-    * Decode a sound by its asset key.
-    *
-    * @method Phaser.SoundManager#decode
-    * @param {string} key - Assets key of the sound to be decoded.
-    * @param {Phaser.Sound} [sound] - Its buffer will be set to decoded data.
-    */
-    decode: function (key, sound) {
-
-        sound = sound || null;
-
-        var soundData = this.game.cache.getSoundData(key);
-
-        if (soundData)
-        {
-            if (this.game.cache.isSoundDecoded(key) === false)
-            {
-                this.game.cache.updateSound(key, 'isDecoding', true);
-
-                var _this = this;
-
-                try {
-                    this.context.decodeAudioData(soundData, function (buffer) {
-
-                        if (buffer)
+                        if (isNaN(self.video.videoHeight))
                         {
-                            _this.game.cache.decodedSound(key, buffer);
-                            _this.onSoundDecode.dispatch(key, sound);
+                            height = width / (4/3);
                         }
-                    });
+
+                        self.video.play();
+
+                        self.isStreaming = true;
+                        self.baseTexture.source = self.video;
+                        self.updateTexture(null, width, height);
+                        self.onAccess.dispatch(self);
+                    }
+                    else
+                    {
+                        window.setTimeout(checkStream, 500);
+                    }
                 }
-                catch (e) {}
+                else
+                {
+                    console.warn('Unable to connect to video stream. Webcam error?');
+                }
+
+                retry--;
+            }
+
+            checkStream();
+
+        };
+
+    },
+
+    /**
+     * Creates a new Video element from the given Blob. The Blob must contain the video data in the correct encoded format.
+     * This method is typically called by the Phaser.Loader and Phaser.Cache for you, but is exposed publicly for convenience.
+     *
+     * @method Phaser.Video#createVideoFromBlob
+     * @param {Blob} blob - The Blob containing the video data: `Blob([new Uint8Array(data)])`
+     * @return {Phaser.Video} This Video object for method chaining.
+     */
+    createVideoFromBlob: function (blob) {
+
+        var _this = this;
+
+        this.video = document.createElement("video");
+        this.video.controls = false;
+        this.video.setAttribute('autoplay', 'autoplay');
+        this.video.addEventListener('loadeddata', function (event) { _this.updateTexture(event); }, true);
+        this.video.src = window.URL.createObjectURL(blob);
+        this.video.canplay = true;
+
+        return this;
+
+    },
+
+    createVideoFromURL: function (url, autoplay) {
+
+        if (autoplay === undefined) { autoplay = false; }
+
+        //  Invalidate the texture while we wait for the new one to load (crashes IE11 otherwise)
+        if (this.texture)
+        {
+            this.texture.valid = false;
+        }
+
+        this.video = document.createElement("video");
+        this.video.controls = false;
+
+        if (autoplay)
+        {
+            this.video.setAttribute('autoplay', 'autoplay');
+        }
+
+        this.video.src = url;
+
+        this.video.canplay = true;
+
+        this.video.load();
+
+        this.retry = this.retryLimit;
+
+        this._retryID = window.setTimeout(this.checkVideoProgress.bind(this), this.retryInterval);
+
+        this.key = url;
+
+        return this;
+
+    },
+
+    /**
+     * Called automatically if the video source changes and updates the internal texture dimensions.
+     * Then dispatches the onChangeSource signal.
+     *
+     * @method Phaser.Video#updateTexture
+     * @param {object} [event] - The event which triggered the texture update.
+     * @param {integer} [width] - The new width of the video. If undefined `video.videoWidth` is used.
+     * @param {integer} [height] - The new height of the video. If undefined `video.videoHeight` is used.
+     */
+    updateTexture: function (event, width, height) {
+
+        var change = false;
+
+        if (width === undefined || width === null) { width = this.video.videoWidth; change = true; }
+        if (height === undefined || height === null) { height = this.video.videoHeight; }
+
+        this.width = width;
+        this.height = height;
+
+        if (this.baseTexture.source !== this.video)
+        {
+            this.baseTexture.source = this.video;
+        }
+
+        this.baseTexture.forceLoaded(width, height);
+
+        this.texture.frame.resize(width, height);
+
+        this.texture.width = width;
+        this.texture.height = height;
+
+        this.texture.valid = true;
+
+        if (this.snapshot)
+        {
+            this.snapshot.resize(width, height);
+        }
+
+        if (change &amp;&amp; this.key !== null)
+        {
+            this.onChangeSource.dispatch(this, width, height);
+
+            if (this._autoplay)
+            {
+                this.video.play();
+                this.onPlay.dispatch(this, this.loop, this.playbackRate);
             }
         }
 
     },
 
     /**
-     * This method allows you to give the SoundManager a list of Sound files, or keys, and a callback.
-     * Once all of the Sound files have finished decoding the callback will be invoked.
-     * The amount of time spent decoding depends on the codec used and file size.
-     * If all of the files given have already decoded the callback is triggered immediately.
+     * Called when the video completes playback (reaches and ended state).
+     * Dispatches the Video.onComplete signal.
      *
-     * @method Phaser.SoundManager#setDecodedCallback
-     * @param {string|array} files - An array containing either Phaser.Sound objects or their key strings as found in the Phaser.Cache.
-     * @param {Function} callback - The callback which will be invoked once all files have finished decoding.
-     * @param {Object} callbackContext - The context in which the callback will run.
+     * @method Phaser.Video#complete
      */
-    setDecodedCallback: function (files, callback, callbackContext) {
+    complete: function () {
 
-        if (typeof files === 'string')
+        this.onComplete.dispatch(this);
+
+    },
+
+    /**
+     * Starts this video playing if it's not already doing so.
+     *
+     * @method Phaser.Video#play
+     * @param {boolean} [loop=false] - Should the video loop automatically when it reaches the end? Please note that at present some browsers (i.e. Chrome) do not support *seamless* video looping.
+     * @param {number} [playbackRate=1] - The playback rate of the video. 1 is normal speed, 2 is x2 speed, and so on. You cannot set a negative playback rate.
+     * @return {Phaser.Video} This Video object for method chaining.
+     */
+    play: function (loop, playbackRate) {
+
+        if (loop === undefined) { loop = false; }
+        if (playbackRate === undefined) { playbackRate = 1; }
+
+        if (this.game.sound.onMute)
         {
-            files = [ files ];
+            this.game.sound.onMute.add(this.setMute, this);
+            this.game.sound.onUnMute.add(this.unsetMute, this);
+
+            if (this.game.sound.mute)
+            {
+                this.setMute();
+            }
         }
 
-        this._watchList.reset();
+        this.game.onPause.add(this.setPause, this);
+        this.game.onResume.add(this.setResume, this);
 
-        for (var i = 0; i &lt; files.length; i++)
-        {
-            if (files[i] instanceof Phaser.Sound)
-            {
-                if (!this.game.cache.isSoundDecoded(files[i].key))
-                {
-                    this._watchList.add(files[i].key);
-                }
-            }
-            else if (!this.game.cache.isSoundDecoded(files[i]))
-            {
-                this._watchList.add(files[i]);
-            }
-        }
+        this.video.addEventListener('ended', this.complete.bind(this), true);
 
-        //  All decoded already?
-        if (this._watchList.total === 0)
+        if (loop)
         {
-            this._watching = false;
-            callback.call(callbackContext);
+            this.video.loop = 'loop';
         }
         else
         {
-            this._watching = true;
-            this._watchCallback = callback;
-            this._watchContext = callbackContext;
+            this.video.loop = '';
         }
 
-    },
+        this.video.playbackRate = playbackRate;
 
-    /**
-    * Updates every sound in the game, checks for audio unlock on mobile and monitors the decoding watch list.
-    *
-    * @method Phaser.SoundManager#update
-    * @protected
-    */
-    update: function () {
-
-        if (this.noAudio)
+        if (this.touchLocked)
         {
-            return;
+            this._pending = true;
         }
-
-        if (this.touchLocked &amp;&amp; this._unlockSource !== null &amp;&amp; (this._unlockSource.playbackState === this._unlockSource.PLAYING_STATE || this._unlockSource.playbackState === this._unlockSource.FINISHED_STATE))
+        else
         {
-            this.touchLocked = false;
-            this._unlockSource = null;
-        }
+            this._pending = false;
 
-        for (var i = 0; i &lt; this._sounds.length; i++)
-        {
-            this._sounds[i].update();
-        }
-
-        if (this._watching)
-        {
-            var key = this._watchList.first;
-
-            while (key)
+            if (this.key !== null)
             {
-                if (this.game.cache.isSoundDecoded(key))
+                if (this.video.readyState !== 4)
                 {
-                    this._watchList.remove(key);
+                    this.retry = this.retryLimit;
+                    this._retryID = window.setTimeout(this.checkVideoProgress.bind(this), this.retryInterval);
                 }
-
-                key = this._watchList.next;
+                else
+                {
+                    this.video.addEventListener('playing', this.playHandler.bind(this), true);
+                }
             }
 
-            if (this._watchList.total === 0)
-            {
-                this._watching = false;
-                this._watchCallback.call(this._watchContext);
-            }
+            this.video.play();
+
+            this.onPlay.dispatch(this, loop, playbackRate);
         }
 
-    },
-
-    /**
-    * Adds a new Sound into the SoundManager.
-    *
-    * @method Phaser.SoundManager#add
-    * @param {string} key - Asset key for the sound.
-    * @param {number} [volume=1] - Default value for the volume.
-    * @param {boolean} [loop=false] - Whether or not the sound will loop.
-    * @param {boolean} [connect=true] - Controls if the created Sound object will connect to the master gainNode of the SoundManager when running under WebAudio.
-    * @return {Phaser.Sound} The new sound instance.
-    */
-    add: function (key, volume, loop, connect) {
-
-        if (volume === undefined) { volume = 1; }
-        if (loop === undefined) { loop = false; }
-        if (connect === undefined) { connect = this.connectToMaster; }
-
-        var sound = new Phaser.Sound(this.game, key, volume, loop, connect);
-
-        this._sounds.push(sound);
-
-        return sound;
+        return this;
 
     },
 
     /**
-     * Adds a new AudioSprite into the SoundManager.
+     * Called when the video starts to play. Updates the texture.
      *
-     * @method Phaser.SoundManager#addSprite
-     * @param {string} key - Asset key for the sound.
-     * @return {Phaser.AudioSprite} The new AudioSprite instance.
+     * @method Phaser.Video#playHandler
+     * @private
      */
-    addSprite: function(key) {
+    playHandler: function () {
 
-        var audioSprite = new Phaser.AudioSprite(this.game, key);
+        this.video.removeEventListener('playing', this.playHandler.bind(this));
 
-        return audioSprite;
+        this.updateTexture();
 
     },
 
     /**
-    * Removes a Sound from the SoundManager. The removed Sound is destroyed before removal.
-    *
-    * @method Phaser.SoundManager#remove
-    * @param {Phaser.Sound} sound - The sound object to remove.
-    * @return {boolean} True if the sound was removed successfully, otherwise false.
-    */
-    remove: function (sound) {
+     * Stops the video playing.
+     * 
+     * This removes all locally set signals.
+     * 
+     * If you only wish to pause playback of the video, to resume at a later time, use `Video.paused = true` instead.
+     * If the video hasn't finished downloading calling `Video.stop` will not abort the download. To do that you need to 
+     * call `Video.destroy` instead.
+     *
+     * If you are using a video stream from a webcam then calling Stop will disconnect the MediaStream session and disable the webcam.
+     *
+     * @method Phaser.Video#stop
+     * @return {Phaser.Video} This Video object for method chaining.
+     */
+    stop: function () {
 
-        var i = this._sounds.length;
-
-        while (i--)
+        if (this.game.sound.onMute)
         {
-            if (this._sounds[i] === sound)
+            this.game.sound.onMute.remove(this.setMute, this);
+            this.game.sound.onUnMute.remove(this.unsetMute, this);
+        }
+
+        this.game.onPause.remove(this.setPause, this);
+        this.game.onResume.remove(this.setResume, this);
+
+        //  Stream or file?
+
+        if (this.isStreaming)
+        {
+            if (this.video.mozSrcObject)
             {
-                this._sounds[i].destroy(false);
-                this._sounds.splice(i, 1);
-                return true;
+                this.video.mozSrcObject.stop();
+                this.video.src = null;
+            }
+            else
+            {
+                this.video.src = "";
+                this.videoStream.stop();
+            }
+
+            this.videoStream = null;
+            this.isStreaming = false;
+        }
+        else
+        {
+            this.video.removeEventListener('ended', this.complete.bind(this));
+
+            if (this.touchLocked)
+            {
+                this._pending = false;
+            }
+            else
+            {
+                this.video.pause();
             }
         }
 
-        return false;
+        return this;
 
     },
 
     /**
-    * Removes all Sounds from the SoundManager that have an asset key matching the given value.
-    * The removed Sounds are destroyed before removal.
+    * Updates the given Display Objects so they use this Video as their texture.
+    * This will replace any texture they will currently have set.
     *
-    * @method Phaser.SoundManager#removeByKey
-    * @param {string} key - The key to match when removing sound objects.
-    * @return {number} The number of matching sound objects that were removed.
+    * @method Phaser.Video#add
+    * @param {Phaser.Sprite|Phaser.Sprite[]|Phaser.Image|Phaser.Image[]} object - Either a single Sprite/Image or an Array of Sprites/Images.
+    * @return {Phaser.Video} This Video object for method chaining.
     */
-    removeByKey: function (key) {
+    add: function (object) {
 
-        var i = this._sounds.length;
-        var removed = 0;
-
-        while (i--)
+        if (Array.isArray(object))
         {
-            if (this._sounds[i].key === key)
+            for (var i = 0; i &lt; object.length; i++)
             {
-                this._sounds[i].destroy(false);
-                this._sounds.splice(i, 1);
-                removed++;
+                if (object[i]['loadTexture'])
+                {
+                    object[i].loadTexture(this);
+                }
             }
         }
-
-        return removed;
-
-    },
-
-    /**
-    * Adds a new Sound into the SoundManager and starts it playing.
-    *
-    * @method Phaser.SoundManager#play
-    * @param {string} key - Asset key for the sound.
-    * @param {number} [volume=1] - Default value for the volume.
-    * @param {boolean} [loop=false] - Whether or not the sound will loop.
-    * @return {Phaser.Sound} The new sound instance.
-    */
-    play: function (key, volume, loop) {
-
-        if (this.noAudio)
+        else
         {
-            return;
+            object.loadTexture(this);
         }
 
-        var sound = this.add(key, volume, loop);
-
-        sound.play();
-
-        return sound;
+        return this;
 
     },
 
     /**
-    * Internal mute handler called automatically by the SoundManager.mute setter.
+    * Creates a new Phaser.Image object, assigns this Video to be its texture, adds it to the world then returns it.
     *
-    * @method Phaser.SoundManager#setMute
+    * @method Phaser.Video#addToWorld
+    * @param {number} [x=0] - The x coordinate to place the Image at.
+    * @param {number} [y=0] - The y coordinate to place the Image at.
+    * @param {number} [anchorX=0] - Set the x anchor point of the Image. A value between 0 and 1, where 0 is the top-left and 1 is bottom-right.
+    * @param {number} [anchorY=0] - Set the y anchor point of the Image. A value between 0 and 1, where 0 is the top-left and 1 is bottom-right.
+    * @param {number} [scaleX=1] - The horizontal scale factor of the Image. A value of 1 means no scaling. 2 would be twice the size, and so on.
+    * @param {number} [scaleY=1] - The vertical scale factor of the Image. A value of 1 means no scaling. 2 would be twice the size, and so on.
+    * @return {Phaser.Image} The newly added Image object.
+    */
+    addToWorld: function (x, y, anchorX, anchorY, scaleX, scaleY) {
+
+        scaleX = scaleX || 1;
+        scaleY = scaleY || 1;
+
+        var image = this.game.add.image(x, y, this);
+
+        image.anchor.set(anchorX, anchorY);
+        image.scale.set(scaleX, scaleY);
+
+        return image;
+
+    },
+
+    /**
+    * If the game is running in WebGL this will push the texture up to the GPU if it's dirty.
+    * This is called automatically if the Video is being used by a Sprite, otherwise you need to remember to call it in your render function.
+    * If you wish to suppress this functionality set Video.disableTextureUpload to `true`.
+    *
+    * @method Phaser.Video#render
+    */
+    render: function () {
+
+        if (!this.disableTextureUpload &amp;&amp; this.playing)
+        {
+            this.baseTexture.dirty();
+        }
+
+    },
+
+    /**
+    * Internal handler called automatically by the Video.mute setter.
+    *
+    * @method Phaser.Video#setMute
     * @private
     */
     setMute: function () {
@@ -1736,29 +1905,14 @@ Phaser.SoundManager.prototype = {
 
         this._muted = true;
 
-        if (this.usingWebAudio)
-        {
-            this._muteVolume = this.masterGain.gain.value;
-            this.masterGain.gain.value = 0;
-        }
-
-        //  Loop through sounds
-        for (var i = 0; i &lt; this._sounds.length; i++)
-        {
-            if (this._sounds[i].usingAudioTag)
-            {
-                this._sounds[i].mute = true;
-            }
-        }
-
-        this.onMute.dispatch();
+        this.video.muted = true;
 
     },
 
     /**
-    * Internal mute handler called automatically by the SoundManager.mute setter.
+    * Internal handler called automatically by the Video.mute setter.
     *
-    * @method Phaser.SoundManager#unsetMute
+    * @method Phaser.Video#unsetMute
     * @private
     */
     unsetMute: function () {
@@ -1770,62 +1924,319 @@ Phaser.SoundManager.prototype = {
 
         this._muted = false;
 
-        if (this.usingWebAudio)
-        {
-            this.masterGain.gain.value = this._muteVolume;
-        }
-
-        //  Loop through sounds
-        for (var i = 0; i &lt; this._sounds.length; i++)
-        {
-            if (this._sounds[i].usingAudioTag)
-            {
-                this._sounds[i].mute = false;
-            }
-        }
-
-        this.onUnMute.dispatch();
+        this.video.muted = false;
 
     },
 
     /**
-    * Stops all the sounds in the game, then destroys them and finally clears up any callbacks.
+    * Internal handler called automatically by the Video.paused setter.
     *
-    * @method Phaser.SoundManager#destroy
+    * @method Phaser.Video#setPause
+    * @private
     */
-    destroy: function () {
+    setPause: function () {
 
-        this.stopAll();
-
-        for (var i = 0; i &lt; this._sounds.length; i++)
+        if (this._paused || this.touchLocked)
         {
-            if (this._sounds[i])
+            return;
+        }
+
+        this._paused = true;
+
+        this.video.pause();
+
+    },
+
+    /**
+    * Internal handler called automatically by the Video.paused setter.
+    *
+    * @method Phaser.Video#setResume
+    * @private
+    */
+    setResume: function () {
+
+        if (!this._paused || this._codePaused || this.touchLocked)
+        {
+            return;
+        }
+
+        this._paused = false;
+
+        if (!this.video.ended)
+        {
+            this.video.play();
+        }
+
+    },
+
+    /**
+     * On some mobile browsers you cannot play a video until the user has explicitly touched the video to allow it.
+     * Phaser handles this via the `setTouchLock` method. However if you have 3 different videos, maybe an "Intro", "Start" and "Game Over"
+     * split into three different Video objects, then you will need the user to touch-unlock every single one of them.
+     * 
+     * You can avoid this by using just one Video object and simply changing the video source. Once a Video element is unlocked it remains
+     * unlocked, even if the source changes. So you can use this to your benefit to avoid forcing the user to 'touch' the video yet again.
+     *
+     * As you'd expect there are limitations. So far we've found that the videos need to be in the same encoding format and bitrate.
+     * This method will automatically handle a change in video dimensions, but if you try swapping to a different bitrate we've found it
+     * cannot render the new video on iOS (desktop browsers cope better).
+     *
+     * When the video source is changed the video file is requested over the network. Listen for the `onChangeSource` signal to know
+     * when the new video has downloaded enough content to be able to be played. Previous settings such as the volume and loop state
+     * are adopted automatically by the new video.
+     *
+     * @method Phaser.Video#changeSource
+     * @param {string} src - The new URL to change the video.src to.
+     * @param {boolean} [autoplay=true] - Should the video play automatically after the source has been updated?
+     * @return {Phaser.Video} This Video object for method chaining.
+     */
+    changeSource: function (src, autoplay) {
+
+        if (autoplay === undefined) { autoplay = true; }
+
+        //  Invalidate the texture while we wait for the new one to load (crashes IE11 otherwise)
+        this.texture.valid = false;
+
+        this.video.pause();
+
+        this.retry = this.retryLimit;
+
+        this._retryID = window.setTimeout(this.checkVideoProgress.bind(this), this.retryInterval);
+
+        this.video.src = src;
+
+        this.video.load();
+
+        this._autoplay = autoplay;
+
+        if (!autoplay)
+        {
+            this.paused = true;
+        }
+
+        return this;
+
+    },
+
+    /**
+    * Internal callback that monitors the download progress of a video after changing its source.
+    * 
+    * @method Phaser.Video#checkVideoProgress
+    * @private
+    */
+    checkVideoProgress: function () {
+
+        // if (this.video.readyState === 2 || this.video.readyState === 4)
+        if (this.video.readyState === 4)
+        {
+            //  We've got enough data to update the texture for playback
+            this.updateTexture();
+        }
+        else
+        {
+            this.retry--;
+
+            if (this.retry > 0)
             {
-                this._sounds[i].destroy();
+                this._retryID = window.setTimeout(this.checkVideoProgress.bind(this), this.retryInterval);
+            }
+            else
+            {
+                console.warn('Phaser.Video: Unable to start downloading video in time', this.isStreaming);
             }
         }
 
-        this._sounds = [];
+    },
 
-        this.onSoundDecode.dispose();
+    /**
+    * Sets the Input Manager touch callback to be Video.unlock.
+    * Required for mobile video unlocking. Mostly just used internally.
+    * 
+    * @method Phaser.Video#setTouchLock
+    */
+    setTouchLock: function () {
 
-        if (this.context &amp;&amp; window['PhaserGlobal'])
+        this.game.input.touch.addTouchLockCallback(this.unlock, this);
+        this.touchLocked = true;
+
+    },
+
+    /**
+    * Enables the video on mobile devices, usually after the first touch.
+    * If the SoundManager hasn't been unlocked then this will automatically unlock that as well.
+    * Only one video can be pending unlock at any one time.
+    * 
+    * @method Phaser.Video#unlock
+    */
+    unlock: function () {
+
+        this.touchLocked = false;
+
+        this.video.play();
+
+        this.onPlay.dispatch(this, this.loop, this.playbackRate);
+
+        if (this.key)
         {
-            //  Store this in the PhaserGlobal window var, if set, to allow for re-use if the game is created again without the page refreshing
-            window['PhaserGlobal'].audioContext = this.context;
+            var _video = this.game.cache.getVideo(this.key);
+
+            if (_video &amp;&amp; !_video.isBlob)
+            {
+                _video.locked = false;
+            }
+        }
+
+        return true;
+
+    },
+
+    /**
+     * Grabs the current frame from the Video or Video Stream and renders it to the Video.snapshot BitmapData.
+     *
+     * You can optionally set if the BitmapData should be cleared or not, the alpha and the blend mode of the draw.
+     *
+     * If you need more advanced control over the grabbing them call `Video.snapshot.copy` directly with the same parameters as BitmapData.copy.
+     *
+     * @method Phaser.Video#grab
+     * @param {boolean} [clear=false] - Should the BitmapData be cleared before the Video is grabbed? Unless you are using alpha or a blend mode you can usually leave this set to false.
+     * @param {number} [alpha=1] - The alpha that will be set on the video before drawing. A value between 0 (fully transparent) and 1, opaque.
+     * @param {string} [blendMode=null] - The composite blend mode that will be used when drawing. The default is no blend mode at all. This is a Canvas globalCompositeOperation value such as 'lighter' or 'xor'.
+     * @return {Phaser.BitmapData} A reference to the Video.snapshot BitmapData object for further method chaining.
+     */
+    grab: function (clear, alpha, blendMode) {
+
+        if (clear === undefined) { clear = false; }
+        if (alpha === undefined) { alpha = 1; }
+        if (blendMode === undefined) { blendMode = null; }
+
+        if (this.snapshot === null)
+        {
+            console.warn('Video.grab cannot run because Phaser.BitmapData is unavailable');
+            return;
+        }
+
+        if (clear)
+        {
+            this.snapshot.cls();
+        }
+
+        this.snapshot.copy(this.video, 0, 0, this.width, this.height, 0, 0, this.width, this.height, 0, 0, 0, 1, 1, alpha, blendMode);
+
+        return this.snapshot;
+
+    },
+
+    /**
+     * Removes the Video element from the DOM by calling parentNode.removeChild on itself.
+     * Also removes the autoplay and src attributes and nulls the reference.
+     * 
+     * @method Phaser.Video#removeVideoElement
+     */
+    removeVideoElement: function () {
+
+        if (!this.video)
+        {
+            return;
+        }
+
+        if (this.video.parentNode)
+        {
+            this.video.parentNode.removeChild(this.video);
+        }
+
+        while (this.video.hasChildNodes())
+        {
+            this.video.removeChild(this.video.firstChild);
+        }
+
+        this.video.removeAttribute('autoplay');
+        this.video.removeAttribute('src');
+
+        this.video = null;
+
+    },
+
+    /**
+     * Destroys the Video object. This calls `Video.stop` and then `Video.removeVideoElement`.
+     * If any Sprites are using this Video as their texture it is up to you to manage those.
+     *
+     * @method Phaser.Video#destroy
+     */
+    destroy: function () {
+
+        this.stop();
+
+        this.removeVideoElement();
+
+        if (this.touchLocked)
+        {
+            this.game.input.touch.removeTouchLockCallback(this.unlock, this);
+        }
+
+        if (this._retryID)
+        {
+            window.clearTimeout(this._retryID);
         }
 
     }
 
 };
 
-Phaser.SoundManager.prototype.constructor = Phaser.SoundManager;
+/**
+* @memberof Phaser.Video
+* @property {number} currentTime - The current time of the video in seconds. If set the video will attempt to seek to that point in time.
+*/
+Object.defineProperty(Phaser.Video.prototype, "currentTime", {
+
+    get: function () {
+
+        return (this.video) ? this.video.currentTime : 0;
+
+    },
+
+    set: function (value) {
+
+        this.video.currentTime = value;
+
+    }
+
+});
 
 /**
-* @name Phaser.SoundManager#mute
-* @property {boolean} mute - Gets or sets the muted state of the SoundManager. This effects all sounds in the game.
+* @memberof Phaser.Video
+* @property {number} duration - The duration of the video in seconds.
+* @readOnly
 */
-Object.defineProperty(Phaser.SoundManager.prototype, "mute", {
+Object.defineProperty(Phaser.Video.prototype, "duration", {
+
+    get: function () {
+
+        return (this.video) ? this.video.duration : 0;
+
+    }
+
+});
+
+/**
+* @memberof Phaser.Video
+* @property {number} progress - The progress of this video. This is a value between 0 and 1, where 0 is the start and 1 is the end of the video.
+* @readOnly
+*/
+Object.defineProperty(Phaser.Video.prototype, "progress", {
+
+    get: function () {
+
+        return (this.video) ? (this.video.currentTime / this.video.duration) : 0;
+
+    }
+
+});
+
+/**
+* @name Phaser.Video#mute
+* @property {boolean} mute - Gets or sets the muted state of the Video.
+*/
+Object.defineProperty(Phaser.Video.prototype, "mute", {
 
     get: function () {
 
@@ -1835,7 +2246,7 @@ Object.defineProperty(Phaser.SoundManager.prototype, "mute", {
 
     set: function (value) {
 
-        value = value || false;
+        value = value || null;
 
         if (value)
         {
@@ -1862,14 +2273,62 @@ Object.defineProperty(Phaser.SoundManager.prototype, "mute", {
 });
 
 /**
-* @name Phaser.SoundManager#volume
-* @property {number} volume - Gets or sets the global volume of the SoundManager, a value between 0 and 1. The value given is clamped to the range 0 to 1.
+* Gets or sets the paused state of the Video.
+* If the video is still touch locked (such as on iOS devices) this call has no effect.
+* 
+* @name Phaser.Video#paused
+* @property {boolean} paused
 */
-Object.defineProperty(Phaser.SoundManager.prototype, "volume", {
+Object.defineProperty(Phaser.Video.prototype, "paused", {
 
     get: function () {
 
-        return this._volume;
+        return this._paused;
+
+    },
+
+    set: function (value) {
+
+        value = value || null;
+
+        if (this.touchLocked)
+        {
+            return;
+        }
+
+        if (value)
+        {
+            if (this._paused)
+            {
+                return;
+            }
+
+            this._codePaused = true;
+            this.setPause();
+        }
+        else
+        {
+            if (!this._paused)
+            {
+                return;
+            }
+
+            this._codePaused = false;
+            this.setResume();
+        }
+    }
+
+});
+
+/**
+* @name Phaser.Video#volume
+* @property {number} volume - Gets or sets the volume of the Video, a value between 0 and 1. The value given is clamped to the range 0 to 1.
+*/
+Object.defineProperty(Phaser.Video.prototype, "volume", {
+
+    get: function () {
+
+        return (this.video) ? this.video.volume : 1;
 
     },
 
@@ -1884,33 +2343,85 @@ Object.defineProperty(Phaser.SoundManager.prototype, "volume", {
             value = 1;
         }
 
-        if (this._volume !== value)
+        if (this.video)
         {
-            this._volume = value;
-
-            if (this.usingWebAudio)
-            {
-                this.masterGain.gain.value = value;
-            }
-            else
-            {
-                //  Loop through the sound cache and change the volume of all html audio tags
-                for (var i = 0; i &lt; this._sounds.length; i++)
-                {
-                    if (this._sounds[i].usingAudioTag)
-                    {
-                        this._sounds[i].volume = this._sounds[i].volume * value;
-                    }
-                }
-            }
-
-            this.onVolumeChange.dispatch(value);
-
+            this.video.volume = value;
         }
 
     }
 
 });
+
+/**
+* @name Phaser.Video#playbackRate
+* @property {number} playbackRate - Gets or sets the playback rate of the Video. This is the speed at which the video is playing.
+*/
+Object.defineProperty(Phaser.Video.prototype, "playbackRate", {
+
+    get: function () {
+
+        return (this.video) ? this.video.playbackRate : 1;
+
+    },
+
+    set: function (value) {
+
+        if (this.video)
+        {
+            this.video.playbackRate = value;
+        }
+
+    }
+
+});
+
+/**
+* Gets or sets if the Video is set to loop.
+* Please note that at present some browsers (i.e. Chrome) do not support *seamless* video looping.
+* If the video isn't yet set this will always return false.
+* 
+* @name Phaser.Video#loop
+* @property {boolean} loop
+*/
+Object.defineProperty(Phaser.Video.prototype, "loop", {
+
+    get: function () {
+
+        return (this.video) ? this.video.loop : false;
+
+    },
+
+    set: function (value) {
+
+        if (value &amp;&amp; this.video)
+        {
+            this.video.loop = 'loop';
+        }
+        else if (this.video)
+        {
+            this.video.loop = '';
+        }
+
+    }
+
+});
+
+/**
+* @name Phaser.Video#playing
+* @property {boolean} playing - True if the video is currently playing (and not paused or ended), otherwise false.
+* @readOnly
+*/
+Object.defineProperty(Phaser.Video.prototype, "playing", {
+
+    get: function () {
+
+        return !(this.video.paused &amp;&amp; this.video.ended);
+
+    }
+
+});
+
+Phaser.Video.prototype.constructor = Phaser.Video;
 </pre>
         </article>
     </section>
@@ -1932,7 +2443,7 @@ Object.defineProperty(Phaser.SoundManager.prototype, "volume", {
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha10</a>
-		on Wed Jul 22 2015 14:55:11 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Jul 22 2015 14:55:12 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

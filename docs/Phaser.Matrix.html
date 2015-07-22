@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Phaser Class: VideoTexture</title>
+	<title>Phaser Class: Matrix</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -52,10 +52,6 @@
 
 					<ul class="dropdown-menu ">
 						
-						<li class="class-depth-0">
-							<a href="Matrix.html">Matrix</a>
-						</li>
-						
 						<li class="class-depth-1">
 							<a href="Phaser.Animation.html">Animation</a>
 						</li>
@@ -66,10 +62,6 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.AnimationParser.html">AnimationParser</a>
-						</li>
-						
-						<li class="class-depth-1">
-							<a href="Phaser.ArrayList.html">ArrayList</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -201,7 +193,19 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="Phaser.Create.html">Create</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Creature.html">Creature</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="Phaser.Device.html">Device</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.DeviceButton.html">DeviceButton</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -301,10 +305,6 @@
 						</li>
 						
 						<li class="class-depth-1">
-							<a href="Phaser.GamepadButton.html">GamepadButton</a>
-						</li>
-						
-						<li class="class-depth-1">
 							<a href="Phaser.Graphics.html">Graphics</a>
 						</li>
 						
@@ -314,6 +314,10 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.Image.html">Image</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.ImageCollection.html">ImageCollection</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -350,6 +354,10 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.Math.html">Math</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Matrix.html">Matrix</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -529,6 +537,10 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="Phaser.RoundedRectangle.html">RoundedRectangle</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="Phaser.ScaleManager.html">ScaleManager</a>
 						</li>
 						
@@ -637,6 +649,10 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="Phaser.Video.html">Video</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="Phaser.World.html">World</a>
 						</li>
 						
@@ -646,10 +662,6 @@
 						
 						<li class="class-depth-1">
 							<a href="PIXI.BaseTexture.html">BaseTexture</a>
-						</li>
-						
-						<li class="class-depth-1">
-							<a href="PIXI.BitmapText.html">BitmapText</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -753,19 +765,11 @@
 						</li>
 						
 						<li class="class-depth-1">
-							<a href="PIXI.Text.html">Text</a>
-						</li>
-						
-						<li class="class-depth-1">
 							<a href="PIXI.Texture.html">Texture</a>
 						</li>
 						
 						<li class="class-depth-1">
 							<a href="PIXI.TilingSprite.html">TilingSprite</a>
-						</li>
-						
-						<li class="class-depth-1">
-							<a href="PIXI.VideoTexture.html">VideoTexture</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -784,10 +788,6 @@
 							<a href="PIXI.WebGLRenderer.html">WebGLRenderer</a>
 						</li>
 						
-						<li class="class-depth-0">
-							<a href="RoundedRectangle.html">RoundedRectangle</a>
-						</li>
-						
 
 					</ul>
 				</li>
@@ -799,15 +799,15 @@
 					<ul class="dropdown-menu ">
 						
 						<li class="class-depth-0">
-							<a href="global.html#append">append</a>
+							<a href="global.html#AUTO">AUTO</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#apply">apply</a>
+							<a href="global.html#BITMAPDATA">BITMAPDATA</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#applyInverse">applyInverse</a>
+							<a href="global.html#BITMAPTEXT">BITMAPTEXT</a>
 						</li>
 						
 						<li class="class-depth-0">
@@ -815,27 +815,107 @@
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#clone">clone</a>
+							<a href="global.html#BUTTON">BUTTON</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#contains">contains</a>
+							<a href="global.html#CANVAS">CANVAS</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#fromArray">fromArray</a>
+							<a href="global.html#CANVAS_FILTER">CANVAS_FILTER</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#identity">identity</a>
+							<a href="global.html#CIRCLE">CIRCLE</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#rotate">rotate</a>
+							<a href="global.html#CREATURE">CREATURE</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#scale">scale</a>
+							<a href="global.html#DOWN">DOWN</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ELLIPSE">ELLIPSE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#EMITTER">EMITTER</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#GAMES">GAMES</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#GRAPHICS">GRAPHICS</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#GROUP">GROUP</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#HEADLESS">HEADLESS</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#IMAGE">IMAGE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#LEFT">LEFT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#LINE">LINE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#MATRIX">MATRIX</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#NONE">NONE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#POINT">POINT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#POINTER">POINTER</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#POLYGON">POLYGON</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#RECTANGLE">RECTANGLE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#RENDERTEXTURE">RENDERTEXTURE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#RETROFONT">RETROFONT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#RIGHT">RIGHT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ROPE">ROPE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ROUNDEDRECTANGLE">ROUNDEDRECTANGLE</a>
 						</li>
 						
 						<li class="class-depth-0">
@@ -843,15 +923,47 @@
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#sort">sort</a>
+							<a href="global.html#SPRITE">SPRITE</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#toArray">toArray</a>
+							<a href="global.html#SPRITEBATCH">SPRITEBATCH</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#translate">translate</a>
+							<a href="global.html#TEXT">TEXT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#TILEMAP">TILEMAP</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#TILEMAPLAYER">TILEMAPLAYER</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#TILESPRITE">TILESPRITE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#UP">UP</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#VERSION">VERSION</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#VIDEO">VIDEO</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#WEBGL">WEBGL</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#WEBGL_FILTER">WEBGL_FILTER</a>
 						</li>
 						
 
@@ -866,6 +978,7 @@
 						<li class="class-depth-1"><a href="Phaser.Group.html">Group</a></li>
 						<li class="class-depth-1"><a href="Phaser.World.html">World</a></li>
 						<li class="class-depth-1"><a href="Phaser.Loader.html">Loader</a></li>
+						<li class="class-depth-1"><a href="Phaser.Cache.html">Cache</a></li>
 						<li class="class-depth-1"><a href="Phaser.Time.html">Time</a></li>
 						<li class="class-depth-1"><a href="Phaser.Camera.html">Camera</a></li>
 						<li class="class-depth-1"><a href="Phaser.StateManager.html">State Manager</a></li>
@@ -884,6 +997,7 @@
 						<li class="class-depth-1"><a href="Phaser.Sprite.html">Sprite</a></li>
 						<li class="class-depth-1"><a href="Phaser.Image.html">Image</a></li>
 						<li class="class-depth-1"><a href="Phaser.Sound.html">Sound</a></li>
+						<li class="class-depth-1"><a href="Phaser.Video.html">Video</a></li>
 						<li class="class-depth-1"><a href="Phaser.Particles.Arcade.Emitter.html">Particle Emitter</a></li>
 						<li class="class-depth-1"><a href="Phaser.Particle.html">Particle</a></li>
 						<li class="class-depth-1"><a href="Phaser.Text.html">Text</a></li>
@@ -904,11 +1018,13 @@
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Geometry<b class="caret"></b></a>
 					<ul class="dropdown-menu ">
 						<li class="class-depth-1"><a href="Phaser.Circle.html">Circle</a></li>
-						<li class="class-depth-1"><a href="Phaser.Rectangle.html">Rectangle</a></li>
-						<li class="class-depth-1"><a href="Phaser.Point.html">Point</a></li>
-						<li class="class-depth-1"><a href="Phaser.Line.html">Line</a></li>
 						<li class="class-depth-1"><a href="Phaser.Ellipse.html">Ellipse</a></li>
+						<li class="class-depth-1"><a href="Phaser.Line.html">Line</a></li>
+						<li class="class-depth-1"><a href="Phaser.Matrix.html">Matrix</a></li>
+						<li class="class-depth-1"><a href="Phaser.Point.html">Point</a></li>
 						<li class="class-depth-1"><a href="Phaser.Polygon.html">Polygon</a></li>
+						<li class="class-depth-1"><a href="Phaser.Rectangle.html">Rectangle</a></li>
+						<li class="class-depth-1"><a href="Phaser.RoundedRectangle.html">Rounded Rectangle</a></li>
 					</ul>
 				</li>
 
@@ -932,6 +1048,7 @@
 					<ul class="dropdown-menu ">
 						<li class="class-depth-1"><a href="Phaser.InputHandler.html">Input Handler</a></li>
 						<li class="class-depth-1"><a href="Phaser.Pointer.html">Pointer</a></li>
+						<li class="class-depth-1"><a href="Phaser.DeviceButton.html">Device Button</a></li>
 						<li class="class-depth-1"><a href="Phaser.Mouse.html">Mouse</a></li>
 						<li class="class-depth-1"><a href="Phaser.Keyboard.html">Keyboard</a></li>
 						<li class="class-depth-1"><a href="Phaser.Key.html">Key</a></li>
@@ -948,11 +1065,10 @@
 						<li class="class-depth-1"><a href="https://github.com/photonstorm/phaser-plugins">Phaser Plugins</a></li>
 						<li class="class-depth-1"><a href="http://www.html5gamedevs.com/forum/14-phaser/">Forum</a></li>
 						<li class="class-depth-1"><a href="http://stackoverflow.com/questions/tagged/phaser-framework">Stack Overflow</a></li>
-						<li class="class-depth-1"><a href="http://phaser.io/learn">Weekly Coding Tips</a></li>
+						<li class="class-depth-1"><a href="http://phaser.io/learn">Tutorials</a></li>
 						<li class="class-depth-1"><a href="https://confirmsubscription.com/h/r/369DE48E3E86AF1E">Newsletter</a></li>
 						<li class="class-depth-1"><a href="http://phaser.io/community/twitter">Twitter</a></li>
 						<li class="class-depth-1"><a href="http://phaser.io/community/irc">IRC</a></li>
-						<li class="class-depth-1"><a href="https://www.gittip.com/photonstorm/">Donate to the project</a></li>
 						<li class="class-depth-1"><a href="https://www.codeandweb.com/texturepacker/phaser">Texture Packer</a></li>
 					</ul>
 				</li>
@@ -970,14 +1086,14 @@
 					
 
 
-	<!--<h1 class="page-title">Class: VideoTexture</h1>-->
+	<!--<h1 class="page-title">Class: Matrix</h1>-->
 <section>
 
 <header>
     <h2>
-        <span class="ancestors"><a href="PIXI.html">PIXI</a>.</span>
+        <span class="ancestors"><a href="Phaser.html">Phaser</a>.</span>
     
-    VideoTexture
+    Matrix
     </h2>
     
 </header>
@@ -990,7 +1106,7 @@
         
 <dt>
     <h4 class="name "
-        id="VideoTexture"><span class="type-signature"></span>new VideoTexture<span class="signature">(source, scaleMode)</span><span class="type-signature"></span></h4>
+        id="Matrix"><span class="type-signature"></span>new Matrix<span class="signature">(<span class="optional">a</span>, <span class="optional">b</span>, <span class="optional">c</span>, <span class="optional">d</span>, <span class="optional">tx</span>, <span class="optional">ty</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -999,8 +1115,11 @@
 
     
     <div class="description">
-        <p>A texture of a [playing] Video.</p>
-<p>See the <a href="http://www.goodboydigital.com/pixijs/examples/deus/">&quot;deus&quot; demo</a>.</p>
+        <p>The Matrix is a 3x3 matrix mostly used for display transforms within the renderer.</p>
+<p>It is represented like so:</p>
+<p>| a | b | tx |
+| c | d | ty |
+| 0 | 0 | 1 |</p>
     </div>
     
 
@@ -1022,7 +1141,11 @@
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -1034,46 +1157,234 @@
 
         <tr>
             
-                <td class="name"><code>source</code></td>
+                <td class="name"><code>a</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">HTMLVideoElement</span>
+<span class="param-type">number</span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"><p>-</p></td>
+            
+                <td class="default">
+                
+                    1
+                
+                </td>
+            
+
+            <td class="description last"></td>
         </tr>
 
 	
 
         <tr>
             
-                <td class="name"><code>scaleMode</code></td>
+                <td class="name"><code>b</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Number</span>
+<span class="param-type">number</span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"><p>See {{#crossLink &quot;PIXI/scaleModes:property&quot;}}PIXI.scaleModes{{/crossLink}} for possible values</p></td>
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>c</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>d</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    1
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>tx</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>ty</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"></td>
         </tr>
 
 	
@@ -1106,7 +1417,7 @@
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_textures_VideoTexture.js.html">pixi/textures/VideoTexture.js</a>, <a href="src_pixi_textures_VideoTexture.js.html#sunlight-1-line-1">line 1</a>
+    <a href="src_geom_Matrix.js.html">geom/Matrix.js</a>, <a href="src_geom_Matrix.js.html#sunlight-1-line-26">line 26</a>
     </dt>
     
 
@@ -1133,12 +1444,6 @@
     </div>
 
     
-        <h3 class="subsection-title">Extends</h3>
-
-        <ul>
-            <li><a href="PIXI.BaseTexture.html">PIXI.BaseTexture</a></li>
-        </ul>
-    
 
     
 
@@ -1155,129 +1460,7 @@
             
 <dt>
     <h4 class="name "
-        id="hasLoaded"><span class="type-signature">&lt;readonly> </span>hasLoaded<span class="type-signature"> :Boolean</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>[read-only] Set to true once the base texture has loaded</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="PIXI.BaseTexture.html#hasLoaded">PIXI.BaseTexture#hasLoaded</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_pixi_textures_BaseTexture.js.html">pixi/textures/BaseTexture.js</a>, <a href="src_pixi_textures_BaseTexture.js.html#sunlight-1-line-55">line 55</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="height"><span class="type-signature">&lt;readonly> </span>height<span class="type-signature"> :Number</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>[read-only] The height of the base texture set when the image has loaded</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="PIXI.BaseTexture.html#height">PIXI.BaseTexture#height</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_pixi_textures_BaseTexture.js.html">pixi/textures/BaseTexture.js</a>, <a href="src_pixi_textures_BaseTexture.js.html#sunlight-1-line-37">line 37</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="imageUrl"><span class="type-signature"></span>imageUrl<span class="type-signature"> :String</span></h4>
+        id="a"><span class="type-signature"></span>a<span class="type-signature"> :number</span></h4>
     
     
 </dt>
@@ -1296,134 +1479,6 @@
 
     
 
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="PIXI.BaseTexture.html#imageUrl">PIXI.BaseTexture#imageUrl</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_pixi_textures_BaseTexture.js.html">pixi/textures/BaseTexture.js</a>, <a href="src_pixi_textures_BaseTexture.js.html#sunlight-1-line-143">line 143</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="mipmap"><span class="type-signature"></span>mipmap<span class="type-signature"> :Boolean</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Set this to true if a mipmap of this texture needs to be generated. This value needs to be set before the texture is used
- Also the texture must be a power of two size to work</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="PIXI.BaseTexture.html#mipmap">PIXI.BaseTexture#mipmap</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_pixi_textures_BaseTexture.js.html">pixi/textures/BaseTexture.js</a>, <a href="src_pixi_textures_BaseTexture.js.html#sunlight-1-line-92">line 92</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="premultipliedAlpha"><span class="type-signature"></span>premultipliedAlpha<span class="type-signature"> :Boolean</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Controls if RGB channels should be pre-multiplied by Alpha  (WebGL only)</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="PIXI.BaseTexture.html#premultipliedAlpha">PIXI.BaseTexture#premultipliedAlpha</a>
-    </li></dd>
     
 
     
@@ -1436,12 +1491,12 @@
 
     
     <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>true</li></ul></dd>
+    <dd class="tag-default"><ul class="dummy"><li>1</li></ul></dd>
     
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_textures_BaseTexture.js.html">pixi/textures/BaseTexture.js</a>, <a href="src_pixi_textures_BaseTexture.js.html#sunlight-1-line-74">line 74</a>
+    <a href="src_geom_Matrix.js.html">geom/Matrix.js</a>, <a href="src_geom_Matrix.js.html#sunlight-1-line-39">line 39</a>
     </dt>
     
 
@@ -1460,17 +1515,13 @@
             
 <dt>
     <h4 class="name "
-        id="resolution"><span class="type-signature"></span>resolution<span class="type-signature"> :Number</span></h4>
+        id="b"><span class="type-signature"></span>b<span class="type-signature"> :number</span></h4>
     
     
 </dt>
 <dd>
     
 
-    
-    <div class="description">
-        <p>The Resolution of the texture.</p>
-    </div>
     
     
     
@@ -1483,72 +1534,6 @@
 
     
 
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="PIXI.BaseTexture.html#resolution">PIXI.BaseTexture#resolution</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_pixi_textures_BaseTexture.js.html">pixi/textures/BaseTexture.js</a>, <a href="src_pixi_textures_BaseTexture.js.html#sunlight-1-line-20">line 20</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="scaleMode"><span class="type-signature"></span>scaleMode<span class="type-signature"> :Number</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>The scale mode to apply when scaling this texture</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="PIXI.BaseTexture.html#scaleMode">PIXI.BaseTexture#scaleMode</a>
-    </li></dd>
     
 
     
@@ -1561,12 +1546,12 @@
 
     
     <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>PIXI.scaleModes.LINEAR</li></ul></dd>
+    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
     
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_textures_BaseTexture.js.html">pixi/textures/BaseTexture.js</a>, <a href="src_pixi_textures_BaseTexture.js.html#sunlight-1-line-46">line 46</a>
+    <a href="src_geom_Matrix.js.html">geom/Matrix.js</a>, <a href="src_geom_Matrix.js.html#sunlight-1-line-45">line 45</a>
     </dt>
     
 
@@ -1585,17 +1570,13 @@
             
 <dt>
     <h4 class="name "
-        id="source"><span class="type-signature"></span>source<span class="type-signature"> :Image</span></h4>
+        id="c"><span class="type-signature"></span>c<span class="type-signature"> :number</span></h4>
     
     
 </dt>
 <dd>
     
 
-    
-    <div class="description">
-        <p>The image source that is used to create the texture.</p>
-    </div>
     
     
     
@@ -1609,11 +1590,6 @@
     
 
     
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="PIXI.BaseTexture.html#source">PIXI.BaseTexture#source</a>
-    </li></dd>
-    
 
     
 
@@ -1623,11 +1599,14 @@
 
     
 
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
     
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_textures_BaseTexture.js.html">pixi/textures/BaseTexture.js</a>, <a href="src_pixi_textures_BaseTexture.js.html#sunlight-1-line-64">line 64</a>
+    <a href="src_geom_Matrix.js.html">geom/Matrix.js</a>, <a href="src_geom_Matrix.js.html#sunlight-1-line-51">line 51</a>
     </dt>
     
 
@@ -1646,7 +1625,172 @@
             
 <dt>
     <h4 class="name "
-        id="width"><span class="type-signature">&lt;readonly> </span>width<span class="type-signature"> :Number</span></h4>
+        id="d"><span class="type-signature"></span>d<span class="type-signature"> :number</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>1</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_geom_Matrix.js.html">geom/Matrix.js</a>, <a href="src_geom_Matrix.js.html#sunlight-1-line-57">line 57</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="tx"><span class="type-signature"></span>tx<span class="type-signature"> :number</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_geom_Matrix.js.html">geom/Matrix.js</a>, <a href="src_geom_Matrix.js.html#sunlight-1-line-63">line 63</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="ty"><span class="type-signature"></span>ty<span class="type-signature"> :number</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_geom_Matrix.js.html">geom/Matrix.js</a>, <a href="src_geom_Matrix.js.html#sunlight-1-line-69">line 69</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="type"><span class="type-signature">&lt;readonly> </span>type<span class="type-signature"> :number</span></h4>
     
     
 </dt>
@@ -1655,7 +1799,7 @@
 
     
     <div class="description">
-        <p>[read-only] The width of the base texture set when the image has loaded</p>
+        <p>The const type of this object.</p>
     </div>
     
     
@@ -1670,11 +1814,6 @@
     
 
     
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="PIXI.BaseTexture.html#width">PIXI.BaseTexture#width</a>
-    </li></dd>
-    
 
     
 
@@ -1688,7 +1827,7 @@
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_textures_BaseTexture.js.html">pixi/textures/BaseTexture.js</a>, <a href="src_pixi_textures_BaseTexture.js.html#sunlight-1-line-28">line 28</a>
+    <a href="src_geom_Matrix.js.html">geom/Matrix.js</a>, <a href="src_geom_Matrix.js.html#sunlight-1-line-75">line 75</a>
     </dt>
     
 
@@ -1713,7 +1852,7 @@
             
 <dt>
     <h4 class="name "
-        id="baseTextureFromVideo"><span class="type-signature">&lt;static> </span>baseTextureFromVideo<span class="signature">(video, scaleMode)</span><span class="type-signature"> &rarr; {<a href="PIXI.VideoTexture.html">PIXI.VideoTexture</a>}</span></h4>
+        id="append"><span class="type-signature"></span>append<span class="signature">(matrix)</span><span class="type-signature"> &rarr; {<a href="Phaser.Matrix.html">Phaser.Matrix</a>}</span></h4>
     
     
 </dt>
@@ -1722,7 +1861,7 @@
 
     
     <div class="description">
-        <p>Mimic Pixi BaseTexture.from.... method.</p>
+        <p>Appends the given Matrix to this Matrix.</p>
     </div>
     
 
@@ -1756,13 +1895,13 @@
 
         <tr>
             
-                <td class="name"><code>video</code></td>
+                <td class="name"><code>matrix</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">HTMLVideoElement</span>
+<span class="param-type"><a href="Phaser.Matrix.html">Phaser.Matrix</a></span>
 
 
             
@@ -1772,30 +1911,7 @@
 
             
 
-            <td class="description last"><p>-</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>scaleMode</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>See {{#crossLink &quot;PIXI/scaleModes:property&quot;}}PIXI.scaleModes{{/crossLink}} for possible values</p></td>
+            <td class="description last"><p>The matrix to append to this one.</p></td>
         </tr>
 
 	
@@ -1812,13 +1928,13 @@
     
         <div class="returns-type">
         
-<span class="param-type"><a href="PIXI.VideoTexture.html">PIXI.VideoTexture</a></span>
+<span class="param-type"><a href="Phaser.Matrix.html">Phaser.Matrix</a></span>
 
  -
         </div>
     
     <div class="returns-desc param-desc">
-        
+        <p>This Matrix object.</p>
     </div>
 
 
@@ -1848,7 +1964,7 @@
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_textures_VideoTexture.js.html">pixi/textures/VideoTexture.js</a>, <a href="src_pixi_textures_VideoTexture.js.html#sunlight-1-line-110">line 110</a>
+    <a href="src_geom_Matrix.js.html">geom/Matrix.js</a>, <a href="src_geom_Matrix.js.html#sunlight-1-line-345">line 345</a>
     </dt>
     
 
@@ -1875,7 +1991,7 @@
             
 <dt>
     <h4 class="name "
-        id="fromUrl"><span class="type-signature">&lt;static> </span>fromUrl<span class="signature">(videoSrc, scaleMode)</span><span class="type-signature"> &rarr; {<a href="PIXI.VideoTexture.html">PIXI.VideoTexture</a>}</span></h4>
+        id="apply"><span class="type-signature"></span>apply<span class="signature">(pos, <span class="optional">newPos</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.Point.html">Phaser.Point</a>}</span></h4>
     
     
 </dt>
@@ -1884,7 +2000,8 @@
 
     
     <div class="description">
-        <p>Mimic Pixi BaseTexture.from.... method.</p>
+        <p>Get a new position with the current transformation applied.</p>
+<p>Can be used to go from a childs coordinate space to the world coordinate space (e.g. rendering)</p>
     </div>
     
 
@@ -1906,6 +2023,8 @@
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
 		
 
@@ -1918,46 +2037,64 @@
 
         <tr>
             
-                <td class="name"><code>videoSrc</code></td>
+                <td class="name"><code>pos</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type"><a href="Phaser.Point.html">Phaser.Point</a></span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
-            <td class="description last"><p>The URL for the video.</p></td>
+            <td class="description last"><p>The origin Point.</p></td>
         </tr>
 
 	
 
         <tr>
             
-                <td class="name"><code>scaleMode</code></td>
+                <td class="name"><code>newPos</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Number</span>
+<span class="param-type"><a href="Phaser.Point.html">Phaser.Point</a></span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
 
             
 
-            <td class="description last"><p>See {{#crossLink &quot;PIXI/scaleModes:property&quot;}}PIXI.scaleModes{{/crossLink}} for possible values</p></td>
+            <td class="description last"><p>The point that the new position is assigned to. This can be same as input point.</p></td>
         </tr>
 
 	
@@ -1974,13 +2111,13 @@
     
         <div class="returns-type">
         
-<span class="param-type"><a href="PIXI.VideoTexture.html">PIXI.VideoTexture</a></span>
+<span class="param-type"><a href="Phaser.Point.html">Phaser.Point</a></span>
 
  -
         </div>
     
     <div class="returns-desc param-desc">
-        
+        <p>The new point, transformed through this matrix.</p>
     </div>
 
 
@@ -2010,7 +2147,7 @@
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_textures_VideoTexture.js.html">pixi/textures/VideoTexture.js</a>, <a href="src_pixi_textures_VideoTexture.js.html#sunlight-1-line-152">line 152</a>
+    <a href="src_geom_Matrix.js.html">geom/Matrix.js</a>, <a href="src_geom_Matrix.js.html#sunlight-1-line-233">line 233</a>
     </dt>
     
 
@@ -2037,7 +2174,7 @@
             
 <dt>
     <h4 class="name "
-        id="textureFromVideo"><span class="type-signature">&lt;static> </span>textureFromVideo<span class="signature">(video, scaleMode)</span><span class="type-signature"> &rarr; {<a href="PIXI.Texture.html">PIXI.Texture</a>}</span></h4>
+        id="applyInverse"><span class="type-signature"></span>applyInverse<span class="signature">(pos, <span class="optional">newPos</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.Point.html">Phaser.Point</a>}</span></h4>
     
     
 </dt>
@@ -2046,7 +2183,8 @@
 
     
     <div class="description">
-        <p>Mimic Pixi BaseTexture.from.... method.</p>
+        <p>Get a new position with the inverse of the current transformation applied.</p>
+<p>Can be used to go from the world coordinate space to a childs coordinate space. (e.g. input)</p>
     </div>
     
 
@@ -2068,6 +2206,8 @@
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
 		
 
@@ -2080,46 +2220,64 @@
 
         <tr>
             
-                <td class="name"><code>video</code></td>
+                <td class="name"><code>pos</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">HTMLVideoElement</span>
+<span class="param-type"><a href="Phaser.Point.html">Phaser.Point</a></span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
-            <td class="description last"><p>-</p></td>
+            <td class="description last"><p>The origin Point.</p></td>
         </tr>
 
 	
 
         <tr>
             
-                <td class="name"><code>scaleMode</code></td>
+                <td class="name"><code>newPos</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Number</span>
+<span class="param-type"><a href="Phaser.Point.html">Phaser.Point</a></span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
 
             
 
-            <td class="description last"><p>See {{#crossLink &quot;PIXI/scaleModes:property&quot;}}PIXI.scaleModes{{/crossLink}} for possible values</p></td>
+            <td class="description last"><p>The point that the new position is assigned to. This can be same as input point.</p></td>
         </tr>
 
 	
@@ -2136,13 +2294,13 @@
     
         <div class="returns-type">
         
-<span class="param-type"><a href="PIXI.Texture.html">PIXI.Texture</a></span>
+<span class="param-type"><a href="Phaser.Point.html">Phaser.Point</a></span>
 
  -
         </div>
     
     <div class="returns-desc param-desc">
-        <p>A Texture, but not a VideoTexture.</p>
+        <p>The new point, inverse transformed through this matrix.</p>
     </div>
 
 
@@ -2172,7 +2330,7 @@
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_textures_VideoTexture.js.html">pixi/textures/VideoTexture.js</a>, <a href="src_pixi_textures_VideoTexture.js.html#sunlight-1-line-137">line 137</a>
+    <a href="src_geom_Matrix.js.html">geom/Matrix.js</a>, <a href="src_geom_Matrix.js.html#sunlight-1-line-254">line 254</a>
     </dt>
     
 
@@ -2199,7 +2357,7 @@
             
 <dt>
     <h4 class="name "
-        id="destroy"><span class="type-signature"></span>destroy<span class="signature">()</span><span class="type-signature"></span></h4>
+        id="clone"><span class="type-signature"></span>clone<span class="signature">(<span class="optional">output</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.Matrix.html">Phaser.Matrix</a>}</span></h4>
     
     
 </dt>
@@ -2208,7 +2366,9 @@
 
     
     <div class="description">
-        <p>Destroys this base texture</p>
+        <p>Creates a new Matrix object based on the values of this Matrix.
+If you provide the output parameter the values of this Matrix will be copied over to it.
+If the output parameter is blank a new Matrix object will be created.</p>
     </div>
     
 
@@ -2217,7 +2377,88 @@
     
     
     
+        <h5>Parameters:</h5>
+        
 
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>output</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Matrix.html">Phaser.Matrix</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>If provided the values of this Matrix will be copied to it, otherwise a new Matrix object is created.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+
+    
+    <h5>Returns:</h5>
+    <div class="returns">
+        
+            
+    
+        <div class="returns-type">
+        
+<span class="param-type"><a href="Phaser.Matrix.html">Phaser.Matrix</a></span>
+
+ -
+        </div>
+    
+    <div class="returns-desc param-desc">
+        <p>A clone of this Matrix.</p>
+    </div>
+
+
+        
+    </div>
     
     
     
@@ -2228,11 +2469,6 @@
 
     
 
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="PIXI.BaseTexture.html#destroy">PIXI.BaseTexture#destroy</a>
-    </li></dd>
     
 
     
@@ -2247,7 +2483,7 @@
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_textures_BaseTexture.js.html">pixi/textures/BaseTexture.js</a>, <a href="src_pixi_textures_BaseTexture.js.html#sunlight-1-line-162">line 162</a>
+    <a href="src_geom_Matrix.js.html">geom/Matrix.js</a>, <a href="src_geom_Matrix.js.html#sunlight-1-line-128">line 128</a>
     </dt>
     
 
@@ -2274,7 +2510,7 @@
             
 <dt>
     <h4 class="name "
-        id="dirty"><span class="type-signature"></span>dirty<span class="signature">()</span><span class="type-signature"></span></h4>
+        id="copyFrom"><span class="type-signature"></span>copyFrom<span class="signature">(matrix)</span><span class="type-signature"> &rarr; {<a href="Phaser.Matrix.html">Phaser.Matrix</a>}</span></h4>
     
     
 </dt>
@@ -2283,158 +2519,7 @@
 
     
     <div class="description">
-        <p>Sets all glTextures to be dirty.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="PIXI.BaseTexture.html#dirty">PIXI.BaseTexture#dirty</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_pixi_textures_BaseTexture.js.html">pixi/textures/BaseTexture.js</a>, <a href="src_pixi_textures_BaseTexture.js.html#sunlight-1-line-198">line 198</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="unloadFromGPU"><span class="type-signature"></span>unloadFromGPU<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Removes the base texture from the GPU, useful for managing resources on the GPU.
-Atexture is still 100% usable and will simply be reuploaded if there is a sprite on screen that is using it.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="PIXI.BaseTexture.html#unloadFromGPU">PIXI.BaseTexture#unloadFromGPU</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_pixi_textures_BaseTexture.js.html">pixi/textures/BaseTexture.js</a>, <a href="src_pixi_textures_BaseTexture.js.html#sunlight-1-line-211">line 211</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="updateSourceImage"><span class="type-signature"></span>updateSourceImage<span class="signature">(newSrc)</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Changes the source image of the texture</p>
+        <p>Copies the properties from the given Matrix into this Matrix.</p>
     </div>
     
 
@@ -2468,13 +2553,13 @@ Atexture is still 100% usable and will simply be reuploaded if there is a sprite
 
         <tr>
             
-                <td class="name"><code>newSrc</code></td>
+                <td class="name"><code>matrix</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type"><a href="Phaser.Matrix.html">Phaser.Matrix</a></span>
 
 
             
@@ -2484,7 +2569,7 @@ Atexture is still 100% usable and will simply be reuploaded if there is a sprite
 
             
 
-            <td class="description last"><p>the path of the image</p></td>
+            <td class="description last"><p>The Matrix to copy from.</p></td>
         </tr>
 
 	
@@ -2493,6 +2578,26 @@ Atexture is still 100% usable and will simply be reuploaded if there is a sprite
 
     
 
+    
+    <h5>Returns:</h5>
+    <div class="returns">
+        
+            
+    
+        <div class="returns-type">
+        
+<span class="param-type"><a href="Phaser.Matrix.html">Phaser.Matrix</a></span>
+
+ -
+        </div>
+    
+    <div class="returns-desc param-desc">
+        <p>This Matrix object.</p>
+    </div>
+
+
+        
+    </div>
     
     
     
@@ -2503,11 +2608,6 @@ Atexture is still 100% usable and will simply be reuploaded if there is a sprite
 
     
 
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="PIXI.BaseTexture.html#updateSourceImage">PIXI.BaseTexture#updateSourceImage</a>
-    </li></dd>
     
 
     
@@ -2522,7 +2622,1296 @@ Atexture is still 100% usable and will simply be reuploaded if there is a sprite
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_textures_BaseTexture.js.html">pixi/textures/BaseTexture.js</a>, <a href="src_pixi_textures_BaseTexture.js.html#sunlight-1-line-185">line 185</a>
+    <a href="src_geom_Matrix.js.html">geom/Matrix.js</a>, <a href="src_geom_Matrix.js.html#sunlight-1-line-172">line 172</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+       
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="copyTo"><span class="type-signature"></span>copyTo<span class="signature">(matrix)</span><span class="type-signature"> &rarr; {<a href="Phaser.Matrix.html">Phaser.Matrix</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Copies the properties from this Matrix to the given Matrix.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>matrix</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Matrix.html">Phaser.Matrix</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Matrix to copy from.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+
+    
+    <h5>Returns:</h5>
+    <div class="returns">
+        
+            
+    
+        <div class="returns-type">
+        
+<span class="param-type"><a href="Phaser.Matrix.html">Phaser.Matrix</a></span>
+
+ -
+        </div>
+    
+    <div class="returns-desc param-desc">
+        <p>The destination Matrix object.</p>
+    </div>
+
+
+        
+    </div>
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_geom_Matrix.js.html">geom/Matrix.js</a>, <a href="src_geom_Matrix.js.html#sunlight-1-line-157">line 157</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+       
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="fromArray"><span class="type-signature"></span>fromArray<span class="signature">(array)</span><span class="type-signature"> &rarr; {<a href="Phaser.Matrix.html">Phaser.Matrix</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Sets the values of this Matrix to the values in the given array.</p>
+<p>The Array elements should be set as follows:</p>
+<p>a = array[0]
+b = array[1]
+c = array[3]
+d = array[4]
+tx = array[2]
+ty = array[5]</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>array</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The array to copy from.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+
+    
+    <h5>Returns:</h5>
+    <div class="returns">
+        
+            
+    
+        <div class="returns-type">
+        
+<span class="param-type"><a href="Phaser.Matrix.html">Phaser.Matrix</a></span>
+
+ -
+        </div>
+    
+    <div class="returns-desc param-desc">
+        <p>This Matrix object.</p>
+    </div>
+
+
+        
+    </div>
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_geom_Matrix.js.html">geom/Matrix.js</a>, <a href="src_geom_Matrix.js.html#sunlight-1-line-81">line 81</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+       
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="identity"><span class="type-signature"></span>identity<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="Phaser.Matrix.html">Phaser.Matrix</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Resets this Matrix to an identity (default) matrix.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+
+    
+    <h5>Returns:</h5>
+    <div class="returns">
+        
+            
+    
+        <div class="returns-type">
+        
+<span class="param-type"><a href="Phaser.Matrix.html">Phaser.Matrix</a></span>
+
+ -
+        </div>
+    
+    <div class="returns-desc param-desc">
+        <p>This Matrix object.</p>
+    </div>
+
+
+        
+    </div>
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_geom_Matrix.js.html">geom/Matrix.js</a>, <a href="src_geom_Matrix.js.html#sunlight-1-line-371">line 371</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+       
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="rotate"><span class="type-signature"></span>rotate<span class="signature">(angle)</span><span class="type-signature"> &rarr; {<a href="Phaser.Matrix.html">Phaser.Matrix</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Applies a rotation transformation to this matrix.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>angle</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The angle to rotate by, given in radians.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+
+    
+    <h5>Returns:</h5>
+    <div class="returns">
+        
+            
+    
+        <div class="returns-type">
+        
+<span class="param-type"><a href="Phaser.Matrix.html">Phaser.Matrix</a></span>
+
+ -
+        </div>
+    
+    <div class="returns-desc param-desc">
+        <p>This Matrix object.</p>
+    </div>
+
+
+        
+    </div>
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_geom_Matrix.js.html">geom/Matrix.js</a>, <a href="src_geom_Matrix.js.html#sunlight-1-line-318">line 318</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+       
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="scale"><span class="type-signature"></span>scale<span class="signature">(x, y)</span><span class="type-signature"> &rarr; {<a href="Phaser.Matrix.html">Phaser.Matrix</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Applies a scale transformation to this matrix.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>x</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The amount to scale horizontally.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>y</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The amount to scale vertically.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+
+    
+    <h5>Returns:</h5>
+    <div class="returns">
+        
+            
+    
+        <div class="returns-type">
+        
+<span class="param-type"><a href="Phaser.Matrix.html">Phaser.Matrix</a></span>
+
+ -
+        </div>
+    
+    <div class="returns-desc param-desc">
+        <p>This Matrix object.</p>
+    </div>
+
+
+        
+    </div>
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_geom_Matrix.js.html">geom/Matrix.js</a>, <a href="src_geom_Matrix.js.html#sunlight-1-line-297">line 297</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+       
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="setTo"><span class="type-signature"></span>setTo<span class="signature">(a, b, c, d, tx, ty)</span><span class="type-signature"> &rarr; {<a href="Phaser.Matrix.html">Phaser.Matrix</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Sets the values of this Matrix to the given values.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>a</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>b</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>c</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>d</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>tx</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>ty</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+
+    
+    <h5>Returns:</h5>
+    <div class="returns">
+        
+            
+    
+        <div class="returns-type">
+        
+<span class="param-type"><a href="Phaser.Matrix.html">Phaser.Matrix</a></span>
+
+ -
+        </div>
+    
+    <div class="returns-desc param-desc">
+        <p>This Matrix object.</p>
+    </div>
+
+
+        
+    </div>
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_geom_Matrix.js.html">geom/Matrix.js</a>, <a href="src_geom_Matrix.js.html#sunlight-1-line-103">line 103</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+       
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="toArray"><span class="type-signature"></span>toArray<span class="signature">(<span class="optional">transpose</span>, <span class="optional">array</span>)</span><span class="type-signature"> &rarr; {PIXI.Float32Array}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Creates a Float32 Array with values populated from this Matrix object.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+		<th>Default</th>
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>transpose</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>Whether the values in the array are transposed or not.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>array</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">PIXI.Float32Array</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>If provided the values will be set into this array, otherwise a new Float32Array is created.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+
+    
+    <h5>Returns:</h5>
+    <div class="returns">
+        
+            
+    
+        <div class="returns-type">
+        
+<span class="param-type">PIXI.Float32Array</span>
+
+ -
+        </div>
+    
+    <div class="returns-desc param-desc">
+        <p>The newly created array which contains the matrix.</p>
+    </div>
+
+
+        
+    </div>
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_geom_Matrix.js.html">geom/Matrix.js</a>, <a href="src_geom_Matrix.js.html#sunlight-1-line-192">line 192</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+       
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="translate"><span class="type-signature"></span>translate<span class="signature">(x, y)</span><span class="type-signature"> &rarr; {<a href="Phaser.Matrix.html">Phaser.Matrix</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Translates the matrix on the x and y.
+This is the same as Matrix.tx += x.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>x</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The x value to translate on.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>y</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The y value to translate on.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+
+    
+    <h5>Returns:</h5>
+    <div class="returns">
+        
+            
+    
+        <div class="returns-type">
+        
+<span class="param-type"><a href="Phaser.Matrix.html">Phaser.Matrix</a></span>
+
+ -
+        </div>
+    
+    <div class="returns-desc param-desc">
+        <p>This Matrix object.</p>
+    </div>
+
+
+        
+    </div>
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_geom_Matrix.js.html">geom/Matrix.js</a>, <a href="src_geom_Matrix.js.html#sunlight-1-line-279">line 279</a>
     </dt>
     
 
@@ -2571,7 +3960,7 @@ Atexture is still 100% usable and will simply be reuploaded if there is a sprite
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha10</a>
-		on Thu Mar 26 2015 02:54:01 GMT+0000 (GMT Standard Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Jul 22 2015 14:55:16 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

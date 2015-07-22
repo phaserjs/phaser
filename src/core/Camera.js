@@ -145,6 +145,11 @@ Phaser.Camera.FOLLOW_TOPDOWN_TIGHT = 3;
 
 Phaser.Camera.prototype = {
 
+    /**
+    * Camera preUpdate. Sets the total view counter to zero.
+    *
+    * @method Phaser.Camera#preUpdate
+    */
     preUpdate: function () {
 
         this.totalInView = 0;

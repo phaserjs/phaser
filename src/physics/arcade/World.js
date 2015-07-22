@@ -436,7 +436,7 @@ Phaser.Physics.Arcade.prototype = {
      *
      * This is called automatically by World.sort
      *
-     * @method sortLeftRight
+     * @method Phaser.Physics.Arcade#sortLeftRight
      * @param {Phaser.Sprite} a - The first Sprite to test. The Sprite must have an Arcade Physics Body.
      * @param {Phaser.Sprite} b - The second Sprite to test. The Sprite must have an Arcade Physics Body.
      * @return {integer} A negative value if `a > b`, a positive value if `a < b` or 0 if `a === b` or the bodies are invalid.
@@ -457,7 +457,7 @@ Phaser.Physics.Arcade.prototype = {
      *
      * This is called automatically by World.sort
      *
-     * @method sortRightLeft
+     * @method Phaser.Physics.Arcade#sortRightLeft
      * @param {Phaser.Sprite} a - The first Sprite to test. The Sprite must have an Arcade Physics Body.
      * @param {Phaser.Sprite} b - The second Sprite to test. The Sprite must have an Arcade Physics Body.
      * @return {integer} A negative value if `a > b`, a positive value if `a < b` or 0 if `a === b` or the bodies are invalid.
@@ -478,7 +478,7 @@ Phaser.Physics.Arcade.prototype = {
      *
      * This is called automatically by World.sort
      *
-     * @method sortTopBottom
+     * @method Phaser.Physics.Arcade#sortTopBottom
      * @param {Phaser.Sprite} a - The first Sprite to test. The Sprite must have an Arcade Physics Body.
      * @param {Phaser.Sprite} b - The second Sprite to test. The Sprite must have an Arcade Physics Body.
      * @return {integer} A negative value if `a > b`, a positive value if `a < b` or 0 if `a === b` or the bodies are invalid.
@@ -499,7 +499,7 @@ Phaser.Physics.Arcade.prototype = {
      *
      * This is called automatically by World.sort
      *
-     * @method sortBottomTop
+     * @method Phaser.Physics.Arcade#sortBottomTop
      * @param {Phaser.Sprite} a - The first Sprite to test. The Sprite must have an Arcade Physics Body.
      * @param {Phaser.Sprite} b - The second Sprite to test. The Sprite must have an Arcade Physics Body.
      * @return {integer} A negative value if `a > b`, a positive value if `a < b` or 0 if `a === b` or the bodies are invalid.
@@ -524,7 +524,7 @@ Phaser.Physics.Arcade.prototype = {
      *
      * By changing Group.physicsSortDirection you can customise each Group to sort in a different order.
      *
-     * @method sort
+     * @method Phaser.Physics.Arcade#sort
      * @param {Phaser.Group} group - The Group to sort.
      * @param {integer} [sortDirection] - The sort direction used to sort this Group.
      */

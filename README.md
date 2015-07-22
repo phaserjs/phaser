@@ -41,11 +41,19 @@ Thousands of developers worldwide use it. From indies and multi-national digital
 
 > 22nd July 2015
 
-Phaser 2.4 is another huge update. We had to bump the version number from 2.3 directly to 2.4 because of some API adjustments, all of which are fully detailed in the [Change Log](#change-log) at the end of this readme. While it's true we could have released it over a few smaller point releases, that just isn't how the cookie crumbled this time.
+Phaser 2.4 is another huge update. We had to bump the version number from 2.3 directly to 2.4 because of some API adjustments, all of which are fully detailed in the [Change Log](#change-log). While it's true we could have released it over a few smaller point releases, that just isn't how the cookie crumbled this time. _Be sure to pay attention to the previous deprecated API calls that have been removed in 2.4._
 
-Phaser is a fully open-source project and as such we have no direct income from it at all. All development is funded by the client work that my company takes on. And of course the contributions from the incredible community (who also volunteer their skills for free)
+So although you had to wait for it a couple months more than usual, Phaser 2.4 is quite simply an **epic release** - there is no two ways about it! Brand new video component? Check. Support for fully boned Creature animations? Check. Brand new Cache and Loader updates? Check. Dynamic sprite and gradient generator? Check. Literally hundreds of updates, enhancements and fixes across the entire codebase? Yup, those too! The Change Log seems to scroll on forever, yet the overall package size continues to come down as we optimise and streamline our code too (this release actually builds smaller than 2.3 did, just 80KB min + gz)
 
-That's all for now. I hope you enjoy Phaser 2.4.0. Happy coding everyone! See you on the forums.
+A few people on the forum have asked how Phaser is funded: Phaser is a fully open-source project and as such we have no _direct_ income from it at all. All development is funded by the client work that [my company](http://www.photonstorm.com) takes on. And of course the contributions from the incredible community (who also volunteer their skills for free).
+
+Sometimes this work directly impacts on Phaser. For example we recently built [5 games](http://www.insideouthq.com) for the new Pixar film Inside Out. Being Pixar they of course had high video requirements, so we literally coded from scratch the way videos were handled and added in video stream support in the process. Very often though our work simply uses Phaser but doesn't enhance it. Which is why if you buy any of the books or plugins we have on sale it really does make a difference! It buys us time to work on Phaser un-interrupted, which in turn benefits everyone. Some have asked if we could add a 'donate' button to the site, but instead I'd rather you get value from your money - so if we release a new plugin, book or magazine you like the look of, please do consider it a donation towards the continued work we all put in.
+
+Money stuff aside please enjoy this brand new release. We'll carry on supporting Phaser 2 for the rest of 2015 _at least_, while development of the Phaser 3 renderer proceeds at a rapid pace too.
+
+Make sure you check out the Phaser web site. We are going to be adding in stacks of new examples and features in the coming weeks.
+
+But that's all for now. I hope you enjoy Phaser 2.4. Happy coding everyone! See you on the forums.
 
 Cheers,
 
@@ -150,9 +158,9 @@ Phaser is provided ready compiled in the `build` folder of the repository. There
 
 ### Custom Builds
 
-As of Phaser 2.3.0 we now include a brand new build system which allows you to strip out lots of additional features you may not require, saving hundreds of KB in the process. Don't use any Sound in your game? Then you can now exclude the entire sound system. Don't need Keyboard support? That can be stripped out too.
+Starting from Phaser 2.3.0 we now include a brand new build system which allows you to strip out lots of additional features you may not require, saving hundreds of KB in the process. Don't use any Sound in your game? Then you can now exclude the entire sound system. Don't need Keyboard support? That can be stripped out too.
 
-As a result of this work the minimum build size of Phaser is now just 83KB minified and gzipped.
+As a result of this work the minimum build size of Phaser is now just 80KB minified and gzipped.
 
 See the [Creating a Custom Phaser Build](http://phaser.io/tutorials/creating-custom-phaser-builds) tutorial for details.
 
@@ -161,8 +169,6 @@ See the [Creating a Custom Phaser Build](http://phaser.io/tutorials/creating-cus
 Should you wish to build Phaser from source you can take advantage of the provided [Grunt](http://gruntjs.com/) scripts. Ensure you have the required packages by running `npm install` first.
 
 Run `grunt` to perform a default build to the `dist` folder.
-
-If you change either Pixi.js or P2 then use the Grunt tasks `replace:pixi` and `replace:p2` respectively. These tasks patch their UMD strings so they work properly with Phaser under requireJS.
 
 ![div](http://www.phaser.io/images/github/div.png)
 
@@ -230,7 +236,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 <a name="change-log"></a>
 ## Change Log
 
-Version 2.4 - "Katar" - in dev
+Version 2.4 - "Katar" - 22nd July 2015
 
 ### API Changes
 
@@ -266,6 +272,15 @@ For the full list of p2 additions please read [their change log](https://github.
 * P2.Body.applyImpulse allows you to apply an impulse to a Body. An impulse is a force added to a body during a short period of time.
 * P2.Body.applyImpulseLocal allows you to apply an impulse to a point local to the Body. An impulse is a force added to a body during a short period of time.
 * P2.Body.getVelocityAtPoint gets the velocity of a point in the body.
+
+### Build Updates
+
+* The Grunt build script now lets you exclude four new modules: rope, tilesprite, creature and video.
+* Rope removes the ability to create Rope sprites and also removes the PIXI.Rope and PIXI.Strip classes.
+* TileSprite removes the ability to create Tile Sprites and also removes the PIXI.TilingSprite class.
+* Creature is not enabled by default, but allows you to control support for Creature bone based animations.
+* Video removes the ability to render Videos and video streams to textures.
+* Pixi is no longer an optional module. Phaser no longer uses any main stream branch of Pixi and has multiple fixes and tweaks internally through-out it. Therefore it's now no longer possible to replace the version of Pixi that Phaser uses with any other version, so we removed the option from the custom list. Over time we will do away with the Pixi globals and merge it fully into Phaser to avoid conflicts with any other version of Pixi present.
 
 ### New Features
 
@@ -349,6 +364,7 @@ For the full list of p2 additions please read [their change log](https://github.
 * Cache.getImage has a new argument which lets you return either just the HTML Image element or the entire image cache object, which includes the baseTexture and frame data.
 * Cache.getImage will return a __default image if the key isn't given, or a __missing image if the key is given but not found in the cache. This means it will always return a valid image and no longer cause Phaser to throw runtime errors deeper down with invalid image objects.
 * AABB vs. AABB collisions now work in Ninja Physics. `reportCollisionVsWorld` already worked, and contained all of the logic required to resolve a collision once the appropriate vectors had been established. `reportCollisionVsBody` was refactored to use that function (now generically named `reportCollision`), and now AABBs can collide properly, including bouncing and friction. reportCollisionVsWorld is now just a wrapper around reportCollision to maintain compatibility (thanks @standardgaussian #1905)
+* Phaser.Create is a new class that allows you to dynamically generate sprite textures from an array of pixel data, without needing any external files. We'll continue to improve this over the coming releases, but for now please see the new examples showing how to use it.
 
 ### Updates
 

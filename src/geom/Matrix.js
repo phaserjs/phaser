@@ -371,12 +371,13 @@ Phaser.Matrix.prototype = {
     /**
     * Resets this Matrix to an identity (default) matrix.
     * 
-    * @method identity
+    * @method Phaser.Matrix#identity
     * @return {Phaser.Matrix} This Matrix object.
     */
     identity: function () {
 
         return this.setTo(1, 0, 0, 1, 0, 0);
+
     }
 
 };

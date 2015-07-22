@@ -1,4 +1,4 @@
 [
-    "src/pixi/extras/TilingSprite.js"
-    "src/gameobjects/TileSprite.js",
+    "src/pixi/extras/TilingSprite.js",
+    "src/gameobjects/TileSprite.js"
 ]

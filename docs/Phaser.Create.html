@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Phaser Source: src/pixi/textures/VideoTexture.js</title>
+	<title>Phaser Class: Create</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -52,10 +52,6 @@
 
 					<ul class="dropdown-menu ">
 						
-						<li class="class-depth-0">
-							<a href="Matrix.html">Matrix</a>
-						</li>
-						
 						<li class="class-depth-1">
 							<a href="Phaser.Animation.html">Animation</a>
 						</li>
@@ -66,10 +62,6 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.AnimationParser.html">AnimationParser</a>
-						</li>
-						
-						<li class="class-depth-1">
-							<a href="Phaser.ArrayList.html">ArrayList</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -201,7 +193,19 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="Phaser.Create.html">Create</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Creature.html">Creature</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="Phaser.Device.html">Device</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.DeviceButton.html">DeviceButton</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -301,10 +305,6 @@
 						</li>
 						
 						<li class="class-depth-1">
-							<a href="Phaser.GamepadButton.html">GamepadButton</a>
-						</li>
-						
-						<li class="class-depth-1">
 							<a href="Phaser.Graphics.html">Graphics</a>
 						</li>
 						
@@ -314,6 +314,10 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.Image.html">Image</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.ImageCollection.html">ImageCollection</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -350,6 +354,10 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.Math.html">Math</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Matrix.html">Matrix</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -529,6 +537,10 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="Phaser.RoundedRectangle.html">RoundedRectangle</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="Phaser.ScaleManager.html">ScaleManager</a>
 						</li>
 						
@@ -637,6 +649,10 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="Phaser.Video.html">Video</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="Phaser.World.html">World</a>
 						</li>
 						
@@ -646,10 +662,6 @@
 						
 						<li class="class-depth-1">
 							<a href="PIXI.BaseTexture.html">BaseTexture</a>
-						</li>
-						
-						<li class="class-depth-1">
-							<a href="PIXI.BitmapText.html">BitmapText</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -753,19 +765,11 @@
 						</li>
 						
 						<li class="class-depth-1">
-							<a href="PIXI.Text.html">Text</a>
-						</li>
-						
-						<li class="class-depth-1">
 							<a href="PIXI.Texture.html">Texture</a>
 						</li>
 						
 						<li class="class-depth-1">
 							<a href="PIXI.TilingSprite.html">TilingSprite</a>
-						</li>
-						
-						<li class="class-depth-1">
-							<a href="PIXI.VideoTexture.html">VideoTexture</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -784,10 +788,6 @@
 							<a href="PIXI.WebGLRenderer.html">WebGLRenderer</a>
 						</li>
 						
-						<li class="class-depth-0">
-							<a href="RoundedRectangle.html">RoundedRectangle</a>
-						</li>
-						
 
 					</ul>
 				</li>
@@ -799,15 +799,15 @@
 					<ul class="dropdown-menu ">
 						
 						<li class="class-depth-0">
-							<a href="global.html#append">append</a>
+							<a href="global.html#AUTO">AUTO</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#apply">apply</a>
+							<a href="global.html#BITMAPDATA">BITMAPDATA</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#applyInverse">applyInverse</a>
+							<a href="global.html#BITMAPTEXT">BITMAPTEXT</a>
 						</li>
 						
 						<li class="class-depth-0">
@@ -815,27 +815,107 @@
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#clone">clone</a>
+							<a href="global.html#BUTTON">BUTTON</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#contains">contains</a>
+							<a href="global.html#CANVAS">CANVAS</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#fromArray">fromArray</a>
+							<a href="global.html#CANVAS_FILTER">CANVAS_FILTER</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#identity">identity</a>
+							<a href="global.html#CIRCLE">CIRCLE</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#rotate">rotate</a>
+							<a href="global.html#CREATURE">CREATURE</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#scale">scale</a>
+							<a href="global.html#DOWN">DOWN</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ELLIPSE">ELLIPSE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#EMITTER">EMITTER</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#GAMES">GAMES</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#GRAPHICS">GRAPHICS</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#GROUP">GROUP</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#HEADLESS">HEADLESS</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#IMAGE">IMAGE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#LEFT">LEFT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#LINE">LINE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#MATRIX">MATRIX</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#NONE">NONE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#POINT">POINT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#POINTER">POINTER</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#POLYGON">POLYGON</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#RECTANGLE">RECTANGLE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#RENDERTEXTURE">RENDERTEXTURE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#RETROFONT">RETROFONT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#RIGHT">RIGHT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ROPE">ROPE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ROUNDEDRECTANGLE">ROUNDEDRECTANGLE</a>
 						</li>
 						
 						<li class="class-depth-0">
@@ -843,15 +923,47 @@
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#sort">sort</a>
+							<a href="global.html#SPRITE">SPRITE</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#toArray">toArray</a>
+							<a href="global.html#SPRITEBATCH">SPRITEBATCH</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#translate">translate</a>
+							<a href="global.html#TEXT">TEXT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#TILEMAP">TILEMAP</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#TILEMAPLAYER">TILEMAPLAYER</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#TILESPRITE">TILESPRITE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#UP">UP</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#VERSION">VERSION</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#VIDEO">VIDEO</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#WEBGL">WEBGL</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#WEBGL_FILTER">WEBGL_FILTER</a>
 						</li>
 						
 
@@ -866,6 +978,7 @@
 						<li class="class-depth-1"><a href="Phaser.Group.html">Group</a></li>
 						<li class="class-depth-1"><a href="Phaser.World.html">World</a></li>
 						<li class="class-depth-1"><a href="Phaser.Loader.html">Loader</a></li>
+						<li class="class-depth-1"><a href="Phaser.Cache.html">Cache</a></li>
 						<li class="class-depth-1"><a href="Phaser.Time.html">Time</a></li>
 						<li class="class-depth-1"><a href="Phaser.Camera.html">Camera</a></li>
 						<li class="class-depth-1"><a href="Phaser.StateManager.html">State Manager</a></li>
@@ -884,6 +997,7 @@
 						<li class="class-depth-1"><a href="Phaser.Sprite.html">Sprite</a></li>
 						<li class="class-depth-1"><a href="Phaser.Image.html">Image</a></li>
 						<li class="class-depth-1"><a href="Phaser.Sound.html">Sound</a></li>
+						<li class="class-depth-1"><a href="Phaser.Video.html">Video</a></li>
 						<li class="class-depth-1"><a href="Phaser.Particles.Arcade.Emitter.html">Particle Emitter</a></li>
 						<li class="class-depth-1"><a href="Phaser.Particle.html">Particle</a></li>
 						<li class="class-depth-1"><a href="Phaser.Text.html">Text</a></li>
@@ -904,11 +1018,13 @@
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Geometry<b class="caret"></b></a>
 					<ul class="dropdown-menu ">
 						<li class="class-depth-1"><a href="Phaser.Circle.html">Circle</a></li>
-						<li class="class-depth-1"><a href="Phaser.Rectangle.html">Rectangle</a></li>
-						<li class="class-depth-1"><a href="Phaser.Point.html">Point</a></li>
-						<li class="class-depth-1"><a href="Phaser.Line.html">Line</a></li>
 						<li class="class-depth-1"><a href="Phaser.Ellipse.html">Ellipse</a></li>
+						<li class="class-depth-1"><a href="Phaser.Line.html">Line</a></li>
+						<li class="class-depth-1"><a href="Phaser.Matrix.html">Matrix</a></li>
+						<li class="class-depth-1"><a href="Phaser.Point.html">Point</a></li>
 						<li class="class-depth-1"><a href="Phaser.Polygon.html">Polygon</a></li>
+						<li class="class-depth-1"><a href="Phaser.Rectangle.html">Rectangle</a></li>
+						<li class="class-depth-1"><a href="Phaser.RoundedRectangle.html">Rounded Rectangle</a></li>
 					</ul>
 				</li>
 
@@ -932,6 +1048,7 @@
 					<ul class="dropdown-menu ">
 						<li class="class-depth-1"><a href="Phaser.InputHandler.html">Input Handler</a></li>
 						<li class="class-depth-1"><a href="Phaser.Pointer.html">Pointer</a></li>
+						<li class="class-depth-1"><a href="Phaser.DeviceButton.html">Device Button</a></li>
 						<li class="class-depth-1"><a href="Phaser.Mouse.html">Mouse</a></li>
 						<li class="class-depth-1"><a href="Phaser.Keyboard.html">Keyboard</a></li>
 						<li class="class-depth-1"><a href="Phaser.Key.html">Key</a></li>
@@ -948,11 +1065,10 @@
 						<li class="class-depth-1"><a href="https://github.com/photonstorm/phaser-plugins">Phaser Plugins</a></li>
 						<li class="class-depth-1"><a href="http://www.html5gamedevs.com/forum/14-phaser/">Forum</a></li>
 						<li class="class-depth-1"><a href="http://stackoverflow.com/questions/tagged/phaser-framework">Stack Overflow</a></li>
-						<li class="class-depth-1"><a href="http://phaser.io/learn">Weekly Coding Tips</a></li>
+						<li class="class-depth-1"><a href="http://phaser.io/learn">Tutorials</a></li>
 						<li class="class-depth-1"><a href="https://confirmsubscription.com/h/r/369DE48E3E86AF1E">Newsletter</a></li>
 						<li class="class-depth-1"><a href="http://phaser.io/community/twitter">Twitter</a></li>
 						<li class="class-depth-1"><a href="http://phaser.io/community/irc">IRC</a></li>
-						<li class="class-depth-1"><a href="https://www.gittip.com/photonstorm/">Donate to the project</a></li>
 						<li class="class-depth-1"><a href="https://www.codeandweb.com/texturepacker/phaser">Texture Packer</a></li>
 					</ul>
 				</li>
@@ -964,188 +1080,1364 @@
 	<div class="row-fluid">
 
 		
-			<div class="span12">
-				
+		<div class="span8">
+			
 				<div id="main">
 					
 
 
-		<h1 class="page-title">Source: src/pixi/textures/VideoTexture.js</h1>
+	<!--<h1 class="page-title">Class: Create</h1>-->
+<section>
+
+<header>
+    <h2>
+        <span class="ancestors"><a href="Phaser.html">Phaser</a>.</span>
     
-    <section>
-        <article>
-            <pre class="sunlight-highlight-javascript linenums">/**
- * A texture of a [playing] Video.
- *
- * See the ["deus" demo](http://www.goodboydigital.com/pixijs/examples/deus/).
- *
- * @class VideoTexture
- * @extends BaseTexture
- * @constructor
- * @param source {HTMLVideoElement}
- * @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
- */
-PIXI.VideoTexture = function( source, scaleMode )
-{
-    if( !source ){
-        throw new Error( 'No video source element specified.' );
-    }
+    Create
+    </h2>
+    
+</header>
 
-    // hook in here to check if video is already available.
-    // PIXI.BaseTexture looks for a source.complete boolean, plus width &amp; height.
+<article>
+    <div class="container-overview">
+    
 
-    if( (source.readyState === source.HAVE_ENOUGH_DATA || source.readyState === source.HAVE_FUTURE_DATA ) &amp;&amp; source.width &amp;&amp; source.height )
-    {
-        source.complete = true;
-    }
+    
+        
+<dt>
+    <h4 class="name "
+        id="Create"><span class="type-signature"></span>new Create<span class="signature">(game)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
 
-    PIXI.BaseTexture.call( this, source, scaleMode );
+    
+    <div class="description">
+        <p>The Phaser.Create class is a collection of smaller helper methods that allow you to generate game content
+quickly and easily, without the need for any external files. You can create textures for sprites and in
+coming releases we'll add dynamic sound effect generation support as well (like sfxr).</p>
+<p>Access this via <code>State.create</code> (or <code>this.create</code> from within a State object)</p>
+    </div>
+    
 
-    this.autoUpdate = false;
-    this.updateBound = this._onUpdate.bind(this);
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
 
-    if( !source.complete )
-    {
-        this._onCanPlay = this.onCanPlay.bind(this);
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
 
-        source.addEventListener( 'canplay', this._onCanPlay );
-        source.addEventListener( 'canplaythrough', this._onCanPlay );
+		<th>Type</th>
 
-        // started playing..
-        source.addEventListener( 'play', this.onPlayStart.bind(this) );
-        source.addEventListener( 'pause', this.onPlayStop.bind(this) );
-    }
+		
 
-};
+		
 
-PIXI.VideoTexture.prototype   = Object.create( PIXI.BaseTexture.prototype );
+		<th class="last">Description</th>
+	</tr>
+	</thead>
 
-PIXI.VideoTexture.constructor = PIXI.VideoTexture;
+	<tbody>
+	
 
-PIXI.VideoTexture.prototype._onUpdate = function()
-{
-    if(this.autoUpdate)
-    {
-        window.requestAnimationFrame(this.updateBound);
-        this.dirty();
-    }
-};
+        <tr>
+            
+                <td class="name"><code>game</code></td>
+            
 
-PIXI.VideoTexture.prototype.onPlayStart = function()
-{
-    if(!this.autoUpdate)
-    {
-        window.requestAnimationFrame(this.updateBound);
-        this.autoUpdate = true;
-    }
-};
-
-PIXI.VideoTexture.prototype.onPlayStop = function()
-{
-    this.autoUpdate = false;
-};
-
-PIXI.VideoTexture.prototype.onCanPlay = function()
-{
-    if( event.type === 'canplaythrough' )
-    {
-        this.hasLoaded  = true;
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Game.html">Phaser.Game</a></span>
 
 
-        if( this.source )
-        {
-            this.source.removeEventListener( 'canplay', this._onCanPlay );
-            this.source.removeEventListener( 'canplaythrough', this._onCanPlay );
+            
+            </td>
 
-            this.width      = this.source.videoWidth;
-            this.height     = this.source.videoHeight;
+            
 
-            // prevent multiple loaded dispatches..
-            if( !this.__loaded ){
-                this.__loaded = true;
-                this.dispatchEvent( { type: 'loaded', content: this } );
-            }
-        }
-    }
-};
+            
 
-PIXI.VideoTexture.prototype.destroy = function()
-{
-    if( this.source &amp;&amp; this.source._pixiId )
-    {
-        PIXI.BaseTextureCache[ this.source._pixiId ] = null;
-        delete PIXI.BaseTextureCache[ this.source._pixiId ];
+            <td class="description last"><p>Game reference to the currently running game.</p></td>
+        </tr>
 
-        this.source._pixiId = null;
-        delete this.source._pixiId;
-    }
+	
+	</tbody>
+</table>
 
-    PIXI.BaseTexture.prototype.destroy.call( this );
-};
+    
 
-/**
- * Mimic Pixi BaseTexture.from.... method.
- *
- * @static
- * @method baseTextureFromVideo
- * @param video {HTMLVideoElement}
- * @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
- * @return {VideoTexture}
- */
-PIXI.VideoTexture.baseTextureFromVideo = function( video, scaleMode )
-{
-    if( !video._pixiId )
-    {
-        video._pixiId = 'video_' + PIXI.TextureCacheIdGenerator++;
-    }
+    
+    
+    
+<dl class="details">
+    
 
-    var baseTexture = PIXI.BaseTextureCache[ video._pixiId ];
+    
 
-    if( !baseTexture )
-    {
-        baseTexture = new PIXI.VideoTexture( video, scaleMode );
-        PIXI.BaseTextureCache[ video._pixiId ] = baseTexture;
-    }
+    
 
-    return baseTexture;
-};
+    
 
-/**
- * Mimic Pixi BaseTexture.from.... method.
- *
- * @static
- * @method textureFromVideo 
- * @param video {HTMLVideoElement}
- * @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
- * @return {Texture} A Texture, but not a VideoTexture.
- */
-PIXI.VideoTexture.textureFromVideo = function( video, scaleMode )
-{
-    var baseTexture = PIXI.VideoTexture.baseTextureFromVideo( video, scaleMode );
-    return new PIXI.Texture( baseTexture );
-};
+    
 
-/**
- * Mimic Pixi BaseTexture.from.... method.
- *
- * @static
- * @method fromUrl 
- * @param videoSrc {String} The URL for the video.
- * @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
- * @return {VideoTexture}
- */
-PIXI.VideoTexture.fromUrl = function( videoSrc, scaleMode )
-{
-    var video = document.createElement('video');
-    video.src = videoSrc;
-    video.autoPlay = true;
-    video.play();
-    return PIXI.VideoTexture.textureFromVideo( video, scaleMode);
-};
-</pre>
-        </article>
-    </section>
+    
 
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_core_Create.js.html">core/Create.js</a>, <a href="src_core_Create.js.html#sunlight-1-line-18">line 18</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+       
+    
+    
+</dd>
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        <dl>
+            
+<dt>
+    <h4 class="name "
+        id="PALETTE_ARNE"><span class="type-signature">&lt;static, constant> </span>PALETTE_ARNE<span class="type-signature"> :number</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>A 16 color palette by <a href="http://androidarts.com/palette/16pal.htm">Arne</a></p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_core_Create.js.html">core/Create.js</a>, <a href="src_core_Create.js.html#sunlight-1-line-58">line 58</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="PALETTE_C64"><span class="type-signature">&lt;static, constant> </span>PALETTE_C64<span class="type-signature"> :number</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>A 16 color C64 inspired palette.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_core_Create.js.html">core/Create.js</a>, <a href="src_core_Create.js.html#sunlight-1-line-79">line 79</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="PALETTE_CGA"><span class="type-signature">&lt;static, constant> </span>PALETTE_CGA<span class="type-signature"> :number</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>A 16 color CGA inspired palette.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_core_Create.js.html">core/Create.js</a>, <a href="src_core_Create.js.html#sunlight-1-line-72">line 72</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="PALETTE_JAPANESE_MACHINE"><span class="type-signature">&lt;static, constant> </span>PALETTE_JAPANESE_MACHINE<span class="type-signature"> :number</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>A 16 color palette inspired by Japanese computers like the MSX.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_core_Create.js.html">core/Create.js</a>, <a href="src_core_Create.js.html#sunlight-1-line-86">line 86</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="PALETTE_JMP"><span class="type-signature">&lt;static, constant> </span>PALETTE_JMP<span class="type-signature"> :number</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>A 16 color JMP inspired palette.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_core_Create.js.html">core/Create.js</a>, <a href="src_core_Create.js.html#sunlight-1-line-65">line 65</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="bmd"><span class="type-signature"></span>bmd<span class="type-signature"> :<a href="Phaser.BitmapData.html">Phaser.BitmapData</a></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>The internal BitmapData Create uses to generate textures from.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_core_Create.js.html">core/Create.js</a>, <a href="src_core_Create.js.html#sunlight-1-line-28">line 28</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="canvas"><span class="type-signature"></span>canvas<span class="type-signature"> :HTMLCanvasElement</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>The canvas the BitmapData uses.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_core_Create.js.html">core/Create.js</a>, <a href="src_core_Create.js.html#sunlight-1-line-33">line 33</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="ctx"><span class="type-signature"></span>ctx<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>context</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">CanvasRenderingContext2D</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The 2d context of the canvas.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_core_Create.js.html">core/Create.js</a>, <a href="src_core_Create.js.html#sunlight-1-line-38">line 38</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="game"><span class="type-signature"></span>game<span class="type-signature"> :<a href="Phaser.Game.html">Phaser.Game</a></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>A reference to the currently running Game.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_core_Create.js.html">core/Create.js</a>, <a href="src_core_Create.js.html#sunlight-1-line-23">line 23</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="palettes"><span class="type-signature"></span>palettes<span class="type-signature"> :array</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>A range of 16 color palettes for use with sprite generation.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_core_Create.js.html">core/Create.js</a>, <a href="src_core_Create.js.html#sunlight-1-line-43">line 43</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        </dl>
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+            
+<dt>
+    <h4 class="name "
+        id="grid"><span class="type-signature"></span>grid<span class="signature">(key, width, height, cellWidth, cellHeight, color)</span><span class="type-signature"> &rarr; {<a href="PIXI.Texture.html">PIXI.Texture</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Creates a grid texture based on the given dimensions.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>key</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The key used to store this texture in the Phaser Cache.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>width</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">integer</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The width of the grid in pixels.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>height</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">integer</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The height of the grid in pixels.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>cellWidth</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">integer</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The width of the grid cells in pixels.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>cellHeight</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">integer</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The height of the grid cells in pixels.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>color</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The color to draw the grid lines in. Should be a Canvas supported color string like <code>#ff5500</code> or <code>rgba(200,50,3,0.5)</code>.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+
+    
+    <h5>Returns:</h5>
+    <div class="returns">
+        
+            
+    
+        <div class="returns-type">
+        
+<span class="param-type"><a href="PIXI.Texture.html">PIXI.Texture</a></span>
+
+ -
+        </div>
+    
+    <div class="returns-desc param-desc">
+        <p>The newly generated texture.</p>
+    </div>
+
+
+        
+    </div>
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_core_Create.js.html">core/Create.js</a>, <a href="src_core_Create.js.html#sunlight-1-line-154">line 154</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+       
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="texture"><span class="type-signature"></span>texture<span class="signature">(key, data, <span class="optional">pixelWidth</span>, <span class="optional">pixelHeight</span>, <span class="optional">palette</span>)</span><span class="type-signature"> &rarr; {<a href="PIXI.Texture.html">PIXI.Texture</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Generates a new PIXI.Texture from the given data, which can be applied to a Sprite.</p>
+<p>This allows you to create game graphics quickly and easily, with no external files but that use actual proper images
+rather than Phaser.Graphics objects, which are expensive to render and limited in scope.</p>
+<p>Each element of the array is a string holding the pixel color values, as mapped to one of the Phaser.Create PALETTE consts.</p>
+<p>For example:</p>
+<p><code>var data = [
+  ' 333 ',
+  ' 777 ',
+  'E333E',
+  ' 333 ',
+  ' 3 3 '
+];</code></p>
+<p><code>game.create.texture('bob', data);</code></p>
+<p>The above will create a new texture called <code>bob</code>, which will look like a little man wearing a hat. You can then use it
+for sprites the same way you use any other texture: <code>game.add.sprite(0, 0, 'bob');</code></p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+		<th>Default</th>
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>key</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The key used to store this texture in the Phaser Cache.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>data</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">array</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>An array of pixel data.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>pixelWidth</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">integer</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    8
+                
+                </td>
+            
+
+            <td class="description last"><p>The width of each pixel.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>pixelHeight</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">integer</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    8
+                
+                </td>
+            
+
+            <td class="description last"><p>The height of each pixel.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>palette</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">integer</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"><p>The palette to use when rendering the texture. One of the Phaser.Create.PALETTE consts.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+
+    
+    <h5>Returns:</h5>
+    <div class="returns">
+        
+            
+    
+        <div class="returns-type">
+        
+<span class="param-type"><a href="PIXI.Texture.html">PIXI.Texture</a></span>
+
+ -
+        </div>
+    
+    <div class="returns-desc param-desc">
+        <p>The newly generated texture.</p>
+    </div>
+
+
+        
+    </div>
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_core_Create.js.html">core/Create.js</a>, <a href="src_core_Create.js.html#sunlight-1-line-90">line 90</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+       
+    
+    
+</dd>
+
+        </dl>
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 
@@ -1163,11 +2455,15 @@ PIXI.VideoTexture.fromUrl = function( videoSrc, scaleMode )
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha10</a>
-		on Thu Mar 26 2015 02:53:48 GMT+0000 (GMT Standard Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Jul 22 2015 14:55:14 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
 
+			
+			<div class="span3">
+				<div id="toc"></div>
+			</div>
 			
 			<br clear="both">
 		</div>

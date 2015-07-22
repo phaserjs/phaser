@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Phaser Class: Graphics</title>
+	<title>Phaser Class: Creature</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -1086,14 +1086,14 @@
 					
 
 
-	<!--<h1 class="page-title">Class: Graphics</h1>-->
+	<!--<h1 class="page-title">Class: Creature</h1>-->
 <section>
 
 <header>
     <h2>
-        <span class="ancestors"><a href="PIXI.html">PIXI</a>.</span>
+        <span class="ancestors"><a href="Phaser.html">Phaser</a>.</span>
     
-    Graphics
+    Creature
     </h2>
     
 </header>
@@ -1106,7 +1106,7 @@
         
 <dt>
     <h4 class="name "
-        id="Graphics"><span class="type-signature"></span>new Graphics<span class="signature">()</span><span class="type-signature"></span></h4>
+        id="Creature"><span class="type-signature"></span>new Creature<span class="signature">(game, manager, x, y, key)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1115,7 +1115,13 @@
 
     
     <div class="description">
-        <p>The Graphics class contains methods used to draw primitive shapes such as lines, circles and rectangles to the display, and color and fill them.</p>
+        <p>Creature is a custom Game Object used in conjunction with the Creature Runtime libraries by Kestrel Moon Studios.</p>
+<p>It allows you to display animated Game Objects that were created with the <a href="http://www.kestrelmoon.com/creature/">Creature Automated Animation Tool</a>.</p>
+<p>Note 1: You can only use Phaser.Creature objects in WebGL enabled games. They do not work in Canvas mode games.</p>
+<p>Note 2: You must use a build of Phaser that includes the Creature runtimes, or have them loaded before your Phaser game boots.</p>
+<p>See the Phaser custom build process for more details.</p>
+<p>By default the Creature runtimes are NOT included in any pre-configured version of Phaser.
+So you'll need to do <code>grunt custom</code> to create a build that includes them.</p>
     </div>
     
 
@@ -1123,6 +1129,150 @@
     
     
     
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>game</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Game.html">Phaser.Game</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>A reference to the currently running game.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>manager</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">CreatureManager</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>A reference to the CreatureManager instance.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>x</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The x coordinate of the Game Object. The coordinate is relative to any parent container this Game Object may be in.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>y</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The y coordinate of the Game Object. The coordinate is relative to any parent container this Game Object may be in.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>key</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+|
+
+<span class="param-type"><a href="PIXI.Texture.html">PIXI.Texture</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The texture used by the Creature Object during rendering. It can be a string which is a reference to the Cache entry, or an instance of a PIXI.Texture.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
     
 
     
@@ -1149,7 +1299,7 @@
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-5">line 5</a>
+    <a href="src_gameobjects_Creature.js.html">gameobjects/Creature.js</a>, <a href="src_gameobjects_Creature.js.html#sunlight-1-line-39">line 39</a>
     </dt>
     
 
@@ -1180,6 +1330,22 @@
 
         <ul>
             <li><a href="PIXI.DisplayObjectContainer.html">PIXI.DisplayObjectContainer</a></li>
+        
+            <li><a href="Phaser.Component.Core.html">Phaser.Component.Core</a></li>
+        
+            <li><a href="Phaser.Component.Angle.html">Phaser.Component.Angle</a></li>
+        
+            <li><a href="Phaser.Component.AutoCull.html">Phaser.Component.AutoCull</a></li>
+        
+            <li><a href="Phaser.Component.BringToTop.html">Phaser.Component.BringToTop</a></li>
+        
+            <li><a href="Phaser.Component.Destroy.html">Phaser.Component.Destroy</a></li>
+        
+            <li><a href="Phaser.Component.FixedToCamera.html">Phaser.Component.FixedToCamera</a></li>
+        
+            <li><a href="Phaser.Component.LifeSpan.html">Phaser.Component.LifeSpan</a></li>
+        
+            <li><a href="Phaser.Component.Reset.html">Phaser.Component.Reset</a></li>
         </ul>
     
 
@@ -1195,6 +1361,74 @@
         <h3 class="subsection-title">Members</h3>
 
         <dl>
+            
+<dt>
+    <h4 class="name "
+        id="alive"><span class="type-signature"></span>alive<span class="type-signature"> :boolean</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>A useful flag to control if the Game Object is alive or dead.</p>
+<p>This is set automatically by the Health components <code>damage</code> method should the object run out of health.
+Or you can toggle it via your game code.</p>
+<p>This property is mostly just provided to be used by your game - it doesn't effect rendering or logic updates.
+However you can use <code>Group.getFirstAlive</code> in conjunction with this property for fast object pooling and recycling.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="Phaser.Component.LifeSpan.html#alive">Phaser.Component.LifeSpan#alive</a>
+    </li></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>true</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_gameobjects_components_LifeSpan.js.html">gameobjects/components/LifeSpan.js</a>, <a href="src_gameobjects_components_LifeSpan.js.html#sunlight-1-line-50">line 50</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
             
 <dt>
     <h4 class="name "
@@ -1259,7 +1493,7 @@
             
 <dt>
     <h4 class="name "
-        id="blendMode"><span class="type-signature"></span>blendMode<span class="type-signature"> :Number</span></h4>
+        id="angle"><span class="type-signature"></span>angle<span class="type-signature"> :number</span></h4>
     
     
 </dt>
@@ -1268,7 +1502,12 @@
 
     
     <div class="description">
-        <p>The blend mode to be applied to the graphic shape. Apply a value of PIXI.blendModes.NORMAL to reset the blend mode.</p>
+        <p>The angle property is the rotation of the Game Object in <em>degrees</em> from its original orientation.</p>
+<p>Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.</p>
+<p>Values outside this range are added to or subtracted from 360 to obtain a value within the range. 
+For example, the statement player.angle = 450 is the same as player.angle = 90.</p>
+<p>If you wish to work in radians instead of degrees you can use the property <code>rotation</code> instead. 
+Working in radians is slightly faster as it doesn't have to perform any calculations.</p>
     </div>
     
     
@@ -1283,7 +1522,10 @@
     
 
     
-
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="Phaser.Component.Angle.html#angle">Phaser.Component.Angle#angle</a>
+    </li></dd>
     
 
     
@@ -1293,13 +1535,12 @@
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>PIXI.blendModes.NORMAL;</li></ul></dd>
+
     
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-61">line 61</a>
+    <a href="src_gameobjects_components_Angle.js.html">gameobjects/components/Angle.js</a>, <a href="src_gameobjects_components_Angle.js.html#sunlight-1-line-29">line 29</a>
     </dt>
     
 
@@ -1318,7 +1559,7 @@
             
 <dt>
     <h4 class="name "
-        id="boundsPadding"><span class="type-signature"></span>boundsPadding<span class="type-signature"> :Number</span></h4>
+        id="animations"><span class="type-signature"></span>animations<span class="type-signature"> :<a href="Phaser.AnimationManager.html">Phaser.AnimationManager</a></span></h4>
     
     
 </dt>
@@ -1327,7 +1568,8 @@
 
     
     <div class="description">
-        <p>The bounds' padding used for bounds calculation.</p>
+        <p>If the Game Object is enabled for animation (such as a Phaser.Sprite) this is a reference to its AnimationManager instance.
+Through it you can create, play, pause and stop animations.</p>
     </div>
     
     
@@ -1342,6 +1584,11 @@
     
 
     
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="Phaser.Component.Core.html#animations">Phaser.Component.Core#animations</a>
+    </li></dd>
+    
 
     
 
@@ -1355,7 +1602,207 @@
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-96">line 96</a>
+    <a href="src_gameobjects_components_Core.js.html">gameobjects/components/Core.js</a>, <a href="src_gameobjects_components_Core.js.html#sunlight-1-line-184">line 184</a>
+    </dt>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="Phaser.AnimationManager.html">Phaser.AnimationManager</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="autoCull"><span class="type-signature"></span>autoCull<span class="type-signature"> :boolean</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>A Game Object with <code>autoCull</code> set to true will check its bounds against the World Camera every frame.
+If it is not intersecting the Camera bounds at any point then it has its <code>renderable</code> property set to <code>false</code>.
+This keeps the Game Object alive and still processing updates, but forces it to skip the render step entirely.</p>
+<p>This is a relatively expensive operation, especially if enabled on hundreds of Game Objects. So enable it only if you know it's required,
+or you have tested performance and find it acceptable.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="Phaser.Component.AutoCull.html#autoCull">Phaser.Component.AutoCull#autoCull</a>
+    </li></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_gameobjects_components_AutoCull.js.html">gameobjects/components/AutoCull.js</a>, <a href="src_gameobjects_components_AutoCull.js.html#sunlight-1-line-28">line 28</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="cacheAsBitmap"><span class="type-signature"></span>cacheAsBitmap<span class="type-signature"> :Boolean</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Set if this display object is cached as a bitmap.
+This basically takes a snap shot of the display object as it is at that moment. It can provide a performance benefit for complex static displayObjects.
+To remove simply set this property to 'null'</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="PIXI.DisplayObject.html#cacheAsBitmap">PIXI.DisplayObject#cacheAsBitmap</a>
+    </li></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-366">line 366</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="cameraOffset"><span class="type-signature"></span>cameraOffset<span class="type-signature"> :<a href="Phaser.Point.html">Phaser.Point</a></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>The x/y coordinate offset applied to the top-left of the camera that this Game Object will be drawn at if <code>fixedToCamera</code> is true.</p>
+<p>The values are relative to the top-left of the camera view and in addition to any parent of the Game Object on the display list.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="Phaser.Component.FixedToCamera.html#cameraOffset">Phaser.Component.FixedToCamera#cameraOffset</a>
+    </li></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_gameobjects_components_FixedToCamera.js.html">gameobjects/components/FixedToCamera.js</a>, <a href="src_gameobjects_components_FixedToCamera.js.html#sunlight-1-line-86">line 86</a>
     </dt>
     
 
@@ -1445,7 +1892,7 @@
             
 <dt>
     <h4 class="name "
-        id="fillAlpha"><span class="type-signature"></span>fillAlpha<span class="type-signature"> :Number</span></h4>
+        id="components"><span class="type-signature">&lt;internal> </span>components<span class="type-signature"> :object</span></h4>
     
     
 </dt>
@@ -1454,7 +1901,7 @@
 
     
     <div class="description">
-        <p>The alpha value used when filling the Graphics object.</p>
+        <p>The components this Game Object has installed.</p>
     </div>
     
     
@@ -1469,6 +1916,144 @@
     
 
     
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="Phaser.Component.Core.html#components">Phaser.Component.Core#components</a>
+    </li></dd>
+    
+
+    
+        <dt class="important tag-deprecated">Internal:</dt>
+        <dd class="tag-deprecated"><ul>
+        
+            <li>This member is <em>internal (protected)</em> and may be modified or removed in the future.</li>
+        
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_gameobjects_components_Core.js.html">gameobjects/components/Core.js</a>, <a href="src_gameobjects_components_Core.js.html#sunlight-1-line-160">line 160</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="debug"><span class="type-signature"></span>debug<span class="type-signature"> :boolean</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>A debug flag designed for use with <code>Game.enableStep</code>.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="Phaser.Component.Core.html#debug">Phaser.Component.Core#debug</a>
+    </li></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_gameobjects_components_Core.js.html">gameobjects/components/Core.js</a>, <a href="src_gameobjects_components_Core.js.html#sunlight-1-line-209">line 209</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="destroyPhase"><span class="type-signature">&lt;readonly> </span>destroyPhase<span class="type-signature"> :boolean</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>As a Game Object runs through its destroy method this flag is set to true, 
+and can be checked in any sub-systems or plugins it is being destroyed from.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="Phaser.Component.Destroy.html#destroyPhase">Phaser.Component.Destroy#destroyPhase</a>
+    </li></dd>
+    
 
     
 
@@ -1482,7 +2067,142 @@
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-18">line 18</a>
+    <a href="src_gameobjects_components_Destroy.js.html">gameobjects/components/Destroy.js</a>, <a href="src_gameobjects_components_Destroy.js.html#sunlight-1-line-22">line 22</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="events"><span class="type-signature"></span>events<span class="type-signature"> :<a href="Phaser.Events.html">Phaser.Events</a></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>All Phaser Game Objects have an Events class which contains all of the events that are dispatched when certain things happen to this
+Game Object, or any of its components.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="Phaser.Component.Core.html#events">Phaser.Component.Core#events</a>
+    </li></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_gameobjects_components_Core.js.html">gameobjects/components/Core.js</a>, <a href="src_gameobjects_components_Core.js.html#sunlight-1-line-176">line 176</a>
+    </dt>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="Phaser.Events.html">Phaser.Events</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="exists"><span class="type-signature"></span>exists<span class="type-signature"> :boolean</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Controls if this Game Object is processed by the core game loop.
+If this Game Object has a physics body it also controls if its physics body is updated or not.
+When <code>exists</code> is set to <code>false</code> it will remove its physics body from the physics world if it has one.
+It also toggles the <code>visible</code> property to false as well.</p>
+<p>Setting <code>exists</code> to true will add its physics body back in to the physics world, if it has one.
+It will also set the <code>visible</code> property to <code>true</code>.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="Phaser.Component.Core.html#exists">Phaser.Component.Core#exists</a>
+    </li></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_gameobjects_components_Core.js.html">gameobjects/components/Core.js</a>, <a href="src_gameobjects_components_Core.js.html#sunlight-1-line-275">line 275</a>
     </dt>
     
 
@@ -1618,6 +2338,197 @@ To remove filters simply set this property to 'null'</p>
     
     <dt class="tag-source">Source -
     <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-328">line 328</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="fixedToCamera"><span class="type-signature"></span>fixedToCamera<span class="type-signature"> :boolean</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>A Game Object that is &quot;fixed&quot; to the camera uses its x/y coordinates as offsets from the top left of the camera during rendering.</p>
+<p>The values are adjusted at the rendering stage, overriding the Game Objects actual world position.</p>
+<p>The end result is that the Game Object will appear to be 'fixed' to the camera, regardless of where in the game world
+the camera is viewing. This is useful if for example this Game Object is a UI item that you wish to be visible at all times 
+regardless where in the world the camera is.</p>
+<p>The offsets are stored in the <code>cameraOffset</code> property.</p>
+<p>Note that the <code>cameraOffset</code> values are in addition to any parent of this Game Object on the display list.</p>
+<p>Be careful not to set <code>fixedToCamera</code> on Game Objects which are in Groups that already have <code>fixedToCamera</code> enabled on them.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="Phaser.Component.FixedToCamera.html#fixedToCamera">Phaser.Component.FixedToCamera#fixedToCamera</a>
+    </li></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_gameobjects_components_FixedToCamera.js.html">gameobjects/components/FixedToCamera.js</a>, <a href="src_gameobjects_components_FixedToCamera.js.html#sunlight-1-line-56">line 56</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="fresh"><span class="type-signature">&lt;readonly> </span>fresh<span class="type-signature"> :boolean</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>A Game Object is considered <code>fresh</code> if it has just been created or reset and is yet to receive a renderer transform update.
+This property is mostly used internally by the physics systems, but is exposed for the use of plugins.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="Phaser.Component.Core.html#fresh">Phaser.Component.Core#fresh</a>
+    </li></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_gameobjects_components_Core.js.html">gameobjects/components/Core.js</a>, <a href="src_gameobjects_components_Core.js.html#sunlight-1-line-239">line 239</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="game"><span class="type-signature"></span>game<span class="type-signature"> :<a href="Phaser.Game.html">Phaser.Game</a></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>A reference to the currently running Game.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="Phaser.Component.Core.html#game">Phaser.Component.Core#game</a>
+    </li></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_gameobjects_components_Core.js.html">gameobjects/components/Core.js</a>, <a href="src_gameobjects_components_Core.js.html#sunlight-1-line-145">line 145</a>
     </dt>
     
 
@@ -1778,7 +2689,7 @@ Setting it is a neat way of optimising the hitTest function that the interaction
             
 <dt>
     <h4 class="name "
-        id="isMask"><span class="type-signature"></span>isMask<span class="type-signature"> :Boolean</span></h4>
+        id="inCamera"><span class="type-signature">&lt;readonly> </span>inCamera<span class="type-signature"> :boolean</span></h4>
     
     
 </dt>
@@ -1787,7 +2698,8 @@ Setting it is a neat way of optimising the hitTest function that the interaction
 
     
     <div class="description">
-        <p>Whether this shape is being used as a mask.</p>
+        <p>Checks if the Game Objects bounds intersect with the Game Camera bounds.
+Returns <code>true</code> if they do, otherwise <code>false</code> if fully outside of the Cameras bounds.</p>
     </div>
     
     
@@ -1802,6 +2714,11 @@ Setting it is a neat way of optimising the hitTest function that the interaction
     
 
     
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="Phaser.Component.AutoCull.html#inCamera">Phaser.Component.AutoCull#inCamera</a>
+    </li></dd>
+    
 
     
 
@@ -1815,7 +2732,7 @@ Setting it is a neat way of optimising the hitTest function that the interaction
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-88">line 88</a>
+    <a href="src_gameobjects_components_AutoCull.js.html">gameobjects/components/AutoCull.js</a>, <a href="src_gameobjects_components_AutoCull.js.html#sunlight-1-line-37">line 37</a>
     </dt>
     
 
@@ -1834,7 +2751,7 @@ Setting it is a neat way of optimising the hitTest function that the interaction
             
 <dt>
     <h4 class="name "
-        id="lineColor"><span class="type-signature"></span>lineColor<span class="type-signature"> :String</span></h4>
+        id="key"><span class="type-signature"></span>key<span class="type-signature"> :string|<a href="Phaser.RenderTexture.html">Phaser.RenderTexture</a>|<a href="Phaser.BitmapData.html">Phaser.BitmapData</a>|<a href="Phaser.Video.html">Phaser.Video</a>|<a href="PIXI.Texture.html">PIXI.Texture</a></span></h4>
     
     
 </dt>
@@ -1843,7 +2760,98 @@ Setting it is a neat way of optimising the hitTest function that the interaction
 
     
     <div class="description">
-        <p>The color of any lines drawn.</p>
+        <p>The key of the image or texture used by this Game Object during rendering.
+If it is a string it's the string used to retrieve the texture from the Phaser Image Cache.
+It can also be an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
+If a Game Object is created without a key it is automatically assigned the key <code>__default</code> which is a 32x32 transparent PNG stored within the Cache.
+If a Game Object is given a key which doesn't exist in the Image Cache it is re-assigned the key <code>__missing</code> which is a 32x32 PNG of a green box with a line through it.</p>
+    </div>
+    
+    
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">string</span>
+|
+
+<span class="param-type"><a href="Phaser.RenderTexture.html">Phaser.RenderTexture</a></span>
+|
+
+<span class="param-type"><a href="Phaser.BitmapData.html">Phaser.BitmapData</a></span>
+|
+
+<span class="param-type"><a href="Phaser.Video.html">Phaser.Video</a></span>
+|
+
+<span class="param-type"><a href="PIXI.Texture.html">PIXI.Texture</a></span>
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="Phaser.Component.Core.html#key">Phaser.Component.Core#key</a>
+    </li></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_gameobjects_components_Core.js.html">gameobjects/components/Core.js</a>, <a href="src_gameobjects_components_Core.js.html#sunlight-1-line-194">line 194</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="lifespan"><span class="type-signature"></span>lifespan<span class="type-signature"> :number</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>The lifespan allows you to give a Game Object a lifespan in milliseconds.</p>
+<p>Once the Game Object is 'born' you can set this to a positive value.</p>
+<p>It is automatically decremented by the millisecond equivalent of <code>game.time.physicsElapsed</code> each frame.
+When it reaches zero it will call the <code>kill</code> method.</p>
+<p>Very handy for particles, bullets, collectibles, or any other short-lived entity.</p>
     </div>
     
     
@@ -1857,6 +2865,11 @@ Setting it is a neat way of optimising the hitTest function that the interaction
 
     
 
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="Phaser.Component.LifeSpan.html#lifespan">Phaser.Component.LifeSpan#lifespan</a>
+    </li></dd>
     
 
     
@@ -1874,63 +2887,7 @@ Setting it is a neat way of optimising the hitTest function that the interaction
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-34">line 34</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="lineWidth"><span class="type-signature"></span>lineWidth<span class="type-signature"> :Number</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>The width (thickness) of any lines drawn.</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-26">line 26</a>
+    <a href="src_gameobjects_components_LifeSpan.js.html">gameobjects/components/LifeSpan.js</a>, <a href="src_gameobjects_components_LifeSpan.js.html#sunlight-1-line-65">line 65</a>
     </dt>
     
 
@@ -2012,6 +2969,68 @@ To remove a mask, set this property to null.</p>
             
 <dt>
     <h4 class="name "
+        id="name"><span class="type-signature"></span>name<span class="type-signature"> :string</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>A user defined name given to this Game Object.
+This value isn't ever used internally by Phaser, it is meant as a game level property.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="Phaser.Component.Core.html#name">Phaser.Component.Core#name</a>
+    </li></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_gameobjects_components_Core.js.html">gameobjects/components/Core.js</a>, <a href="src_gameobjects_components_Core.js.html#sunlight-1-line-153">line 153</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
         id="parent"><span class="type-signature">&lt;readonly> </span>parent<span class="type-signature"> :<a href="PIXI.DisplayObjectContainer.html">PIXI.DisplayObjectContainer</a></span></h4>
     
     
@@ -2055,6 +3074,70 @@ To remove a mask, set this property to null.</p>
     
     <dt class="tag-source">Source -
     <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-98">line 98</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="pendingDestroy"><span class="type-signature"></span>pendingDestroy<span class="type-signature"> :boolean</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>A Game Object is that is pendingDestroy is flagged to have its destroy method called on the next logic update.
+You can set it directly to allow you to flag an object to be destroyed on its next update.</p>
+<p>This is extremely useful if you wish to destroy an object from within one of its own callbacks 
+such as with Buttons or other Input events.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="Phaser.Component.Core.html#pendingDestroy">Phaser.Component.Core#pendingDestroy</a>
+    </li></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_gameobjects_components_Core.js.html">gameobjects/components/Core.js</a>, <a href="src_gameobjects_components_Core.js.html#sunlight-1-line-250">line 250</a>
     </dt>
     
 
@@ -2195,6 +3278,128 @@ To remove a mask, set this property to null.</p>
             
 <dt>
     <h4 class="name "
+        id="previousPosition"><span class="type-signature">&lt;readonly> </span>previousPosition<span class="type-signature"> :<a href="Phaser.Point.html">Phaser.Point</a></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>The position the Game Object was located in the previous frame.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="Phaser.Component.Core.html#previousPosition">Phaser.Component.Core#previousPosition</a>
+    </li></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_gameobjects_components_Core.js.html">gameobjects/components/Core.js</a>, <a href="src_gameobjects_components_Core.js.html#sunlight-1-line-216">line 216</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="previousRotation"><span class="type-signature">&lt;readonly> </span>previousRotation<span class="type-signature"> :number</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>The rotation the Game Object was in set to in the previous frame. Value is in radians.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="Phaser.Component.Core.html#previousRotation">Phaser.Component.Core#previousRotation</a>
+    </li></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_gameobjects_components_Core.js.html">gameobjects/components/Core.js</a>, <a href="src_gameobjects_components_Core.js.html#sunlight-1-line-223">line 223</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
         id="renderable"><span class="type-signature"></span>renderable<span class="type-signature"> :Boolean</span></h4>
     
     
@@ -2238,6 +3443,68 @@ To remove a mask, set this property to null.</p>
     
     <dt class="tag-source">Source -
     <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-90">line 90</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="renderOrderID"><span class="type-signature">&lt;readonly> </span>renderOrderID<span class="type-signature"> :number</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>The render order ID is used internally by the renderer and Input Manager and should not be modified.
+This property is mostly used internally by the renderers, but is exposed for the use of plugins.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="Phaser.Component.Core.html#renderOrderID">Phaser.Component.Core#renderOrderID</a>
+    </li></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_gameobjects_components_Core.js.html">gameobjects/components/Core.js</a>, <a href="src_gameobjects_components_Core.js.html#sunlight-1-line-231">line 231</a>
     </dt>
     
 
@@ -2439,7 +3706,7 @@ To remove a mask, set this property to null.</p>
             
 <dt>
     <h4 class="name "
-        id="tint"><span class="type-signature"></span>tint<span class="type-signature"> :Number</span></h4>
+        id="timeDelta"><span class="type-signature"></span>timeDelta<span class="type-signature"> :number</span></h4>
     
     
 </dt>
@@ -2448,7 +3715,7 @@ To remove a mask, set this property to null.</p>
 
     
     <div class="description">
-        <p>The tint applied to the graphic shape. This is a hex value. Apply a value of 0xFFFFFF to reset the tint.</p>
+        <p>How quickly the animation time/playback advances</p>
     </div>
     
     
@@ -2473,13 +3740,10 @@ To remove a mask, set this property to null.</p>
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>0xFFFFFF</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-52">line 52</a>
+    <a href="src_gameobjects_Creature.js.html">gameobjects/Creature.js</a>, <a href="src_gameobjects_Creature.js.html#sunlight-1-line-54">line 54</a>
     </dt>
     
 
@@ -2623,6 +3887,62 @@ This ability allows you to check any of the matrix values and perform actions su
             
 <dt>
     <h4 class="name "
+        id="type"><span class="type-signature">&lt;readonly> </span>type<span class="type-signature"> :number</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>The const type of this object.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_gameobjects_Creature.js.html">gameobjects/Creature.js</a>, <a href="src_gameobjects_Creature.js.html#sunlight-1-line-49">line 49</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
         id="visible"><span class="type-signature"></span>visible<span class="type-signature"> :Boolean</span></h4>
     
     
@@ -2727,6 +4047,69 @@ This ability allows you to check any of the matrix values and perform actions su
     
     <dt class="tag-source">Source -
     <a href="src_pixi_display_DisplayObjectContainer.js.html">pixi/display/DisplayObjectContainer.js</a>, <a href="src_pixi_display_DisplayObjectContainer.js.html#sunlight-1-line-32">line 32</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="world"><span class="type-signature"></span>world<span class="type-signature"> :<a href="Phaser.Point.html">Phaser.Point</a></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>The world coordinates of this Game Object in pixels.
+Depending on where in the display list this Game Object is placed this value can differ from <code>position</code>, 
+which contains the x/y coordinates relative to the Game Objects parent.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="Phaser.Component.Core.html#world">Phaser.Component.Core#world</a>
+    </li></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_gameobjects_components_Core.js.html">gameobjects/components/Core.js</a>, <a href="src_gameobjects_components_Core.js.html#sunlight-1-line-202">line 202</a>
     </dt>
     
 
@@ -3171,6 +4554,69 @@ This value is updated at the end of updateTransform and takes all parent transfo
     
 </dd>
 
+        
+            
+<dt>
+    <h4 class="name "
+        id="z"><span class="type-signature"></span>z<span class="type-signature"> :number</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>The z depth of this Game Object within its parent Group.
+No two objects in a Group can have the same z value.
+This value is adjusted automatically whenever the Group hierarchy changes.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="Phaser.Component.Core.html#z">Phaser.Component.Core#z</a>
+    </li></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_gameobjects_components_Core.js.html">gameobjects/components/Core.js</a>, <a href="src_gameobjects_components_Core.js.html#sunlight-1-line-168">line 168</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
         </dl>
     
 
@@ -3492,7 +4938,7 @@ This value is updated at the end of updateTransform and takes all parent transfo
             
 <dt>
     <h4 class="name "
-        id="arc"><span class="type-signature"></span>arc<span class="signature">(cx, cy, radius, startAngle, endAngle, anticlockwise)</span><span class="type-signature"> &rarr; {<a href="PIXI.Graphics.html">PIXI.Graphics</a>}</span></h4>
+        id="bringToTop"><span class="type-signature"></span>bringToTop<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="PIXI.DisplayObject.html">PIXI.DisplayObject</a>}</span></h4>
     
     
 </dt>
@@ -3501,7 +4947,10 @@ This value is updated at the end of updateTransform and takes all parent transfo
 
     
     <div class="description">
-        <p>The arc method creates an arc/curve (used to create circles, or parts of circles).</p>
+        <p>Brings this Game Object to the top of its parents display list.
+Visually this means it will render over the top of any old child in the same Group.</p>
+<p>If this Game Object hasn't been added to a custom Group then this method will bring it to the top of the Game World, 
+because the World is the root Group from which all Game Objects descend.</p>
     </div>
     
 
@@ -3509,170 +4958,6 @@ This value is updated at the end of updateTransform and takes all parent transfo
     
     
     
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>cx</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The x-coordinate of the center of the circle</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>cy</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The y-coordinate of the center of the circle</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>radius</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The radius of the circle</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>startAngle</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The starting angle, in radians (0 is at the 3 o'clock position of the arc's circle)</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>endAngle</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The ending angle, in radians</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>anticlockwise</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Optional. Specifies whether the drawing should be counterclockwise or clockwise. False is default, and indicates clockwise, while true indicates counter-clockwise.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
     
 
     
@@ -3683,13 +4968,13 @@ This value is updated at the end of updateTransform and takes all parent transfo
     
         <div class="returns-type">
         
-<span class="param-type"><a href="PIXI.Graphics.html">PIXI.Graphics</a></span>
+<span class="param-type"><a href="PIXI.DisplayObject.html">PIXI.DisplayObject</a></span>
 
  -
         </div>
     
     <div class="returns-desc param-desc">
-        
+        <p>This instance.</p>
     </div>
 
 
@@ -3706,6 +4991,11 @@ This value is updated at the end of updateTransform and takes all parent transfo
     
 
     
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="Phaser.Component.BringToTop.html#bringToTop">Phaser.Component.BringToTop#bringToTop</a>
+    </li></dd>
+    
 
     
 
@@ -3719,7 +5009,7 @@ This value is updated at the end of updateTransform and takes all parent transfo
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-391">line 391</a>
+    <a href="src_gameobjects_components_BringToTop.js.html">gameobjects/components/BringToTop.js</a>, <a href="src_gameobjects_components_BringToTop.js.html#sunlight-1-line-24">line 24</a>
     </dt>
     
 
@@ -3746,7 +5036,7 @@ This value is updated at the end of updateTransform and takes all parent transfo
             
 <dt>
     <h4 class="name "
-        id="beginFill"><span class="type-signature"></span>beginFill<span class="signature">(color, alpha)</span><span class="type-signature"> &rarr; {<a href="PIXI.Graphics.html">PIXI.Graphics</a>}</span></h4>
+        id="destroy"><span class="type-signature"></span>destroy<span class="signature">(<span class="optional">destroyChildren</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -3755,8 +5045,9 @@ This value is updated at the end of updateTransform and takes all parent transfo
 
     
     <div class="description">
-        <p>Specifies a simple one-color fill that subsequent calls to other Graphics methods
-(such as lineTo() or drawCircle()) use when drawing.</p>
+        <p>Destroys the Game Object. This removes it from its parent group, destroys the input, event and animation handlers if present
+and nulls its reference to <code>game</code>, freeing it up for garbage collection.</p>
+<p>If this Game Object has the Events component it will also dispatch the <code>onDestroy</code> event.</p>
     </div>
     
 
@@ -3778,7 +5069,11 @@ This value is updated at the end of updateTransform and takes all parent transfo
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -3790,46 +5085,39 @@ This value is updated at the end of updateTransform and takes all parent transfo
 
         <tr>
             
-                <td class="name"><code>color</code></td>
+                <td class="name"><code>destroyChildren</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Number</span>
+<span class="param-type">boolean</span>
 
 
             
             </td>
 
             
-
-            
-
-            <td class="description last"><p>the color of the fill</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>alpha</code></td>
-            
-
-            <td class="type">
-            
+                <td class="attributes">
                 
-<span class="param-type">Number</span>
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
+            
 
             
-            </td>
-
+                <td class="default">
+                
+                    true
+                
+                </td>
             
 
-            
-
-            <td class="description last"><p>the alpha of the fill</p></td>
+            <td class="description last"><p>Should every child of this object have its destroy method called as well?</p></td>
         </tr>
 
 	
@@ -3839,26 +5127,6 @@ This value is updated at the end of updateTransform and takes all parent transfo
     
 
     
-    <h5>Returns:</h5>
-    <div class="returns">
-        
-            
-    
-        <div class="returns-type">
-        
-<span class="param-type"><a href="PIXI.Graphics.html">PIXI.Graphics</a></span>
-
- -
-        </div>
-    
-    <div class="returns-desc param-desc">
-        
-    </div>
-
-
-        
-    </div>
-    
     
     
 <dl class="details">
@@ -3868,6 +5136,11 @@ This value is updated at the end of updateTransform and takes all parent transfo
 
     
 
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="Phaser.Component.Destroy.html#destroy">Phaser.Component.Destroy#destroy</a>
+    </li></dd>
     
 
     
@@ -3882,351 +5155,7 @@ This value is updated at the end of updateTransform and takes all parent transfo
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-474">line 474</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="bezierCurveTo"><span class="type-signature"></span>bezierCurveTo<span class="signature">(cpX, cpY, cpX2, cpY2, toX, toY)</span><span class="type-signature"> &rarr; {<a href="PIXI.Graphics.html">PIXI.Graphics</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Calculate the points for a bezier curve and then draws it.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>cpX</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Control point x</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>cpY</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Control point y</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>cpX2</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Second Control point x</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>cpY2</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Second Control point y</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>toX</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Destination point x</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>toY</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Destination point y</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-
-    
-    <h5>Returns:</h5>
-    <div class="returns">
-        
-            
-    
-        <div class="returns-type">
-        
-<span class="param-type"><a href="PIXI.Graphics.html">PIXI.Graphics</a></span>
-
- -
-        </div>
-    
-    <div class="returns-desc param-desc">
-        
-    </div>
-
-
-        
-    </div>
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-264">line 264</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="clear"><span class="type-signature"></span>clear<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="PIXI.Graphics.html">PIXI.Graphics</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Clears the graphics that were drawn to this Graphics object, and resets fill and line style settings.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-
-    
-    <h5>Returns:</h5>
-    <div class="returns">
-        
-            
-    
-        <div class="returns-type">
-        
-<span class="param-type"><a href="PIXI.Graphics.html">PIXI.Graphics</a></span>
-
- -
-        </div>
-    
-    <div class="returns-desc param-desc">
-        
-    </div>
-
-
-        
-    </div>
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-616">line 616</a>
+    <a href="src_gameobjects_components_Destroy.js.html">gameobjects/components/Destroy.js</a>, <a href="src_gameobjects_components_Destroy.js.html#sunlight-1-line-33">line 33</a>
     </dt>
     
 
@@ -4329,7 +5258,7 @@ Removes all references to transformCallbacks, its parent, the stage, filters, bo
             
 <dt>
     <h4 class="name "
-        id="destroyCachedSprite"><span class="type-signature"></span>destroyCachedSprite<span class="signature">()</span><span class="type-signature"></span></h4>
+        id="generateTexture"><span class="type-signature"></span>generateTexture<span class="signature">(resolution, scaleMode, renderer)</span><span class="type-signature"> &rarr; {<a href="PIXI.Texture.html">PIXI.Texture</a>}</span></h4>
     
     
 </dt>
@@ -4338,1265 +5267,8 @@ Removes all references to transformCallbacks, its parent, the stage, filters, bo
 
     
     <div class="description">
-        <p>Destroys a previous cached sprite.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-1116">line 1116</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="drawCircle"><span class="type-signature"></span>drawCircle<span class="signature">(x, y, diameter)</span><span class="type-signature"> &rarr; {<a href="PIXI.Graphics.html">PIXI.Graphics</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Draws a circle.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>x</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The X coordinate of the center of the circle</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>y</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The Y coordinate of the center of the circle</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>diameter</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The diameter of the circle</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-
-    
-    <h5>Returns:</h5>
-    <div class="returns">
-        
-            
-    
-        <div class="returns-type">
-        
-<span class="param-type"><a href="PIXI.Graphics.html">PIXI.Graphics</a></span>
-
- -
-        </div>
-    
-    <div class="returns-desc param-desc">
-        
-    </div>
-
-
-        
-    </div>
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-548">line 548</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="drawEllipse"><span class="type-signature"></span>drawEllipse<span class="signature">(x, y, width, height)</span><span class="type-signature"> &rarr; {<a href="PIXI.Graphics.html">PIXI.Graphics</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Draws an ellipse.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>x</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The X coordinate of the center of the ellipse</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>y</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The Y coordinate of the center of the ellipse</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>width</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The half width of the ellipse</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>height</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The half height of the ellipse</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-
-    
-    <h5>Returns:</h5>
-    <div class="returns">
-        
-            
-    
-        <div class="returns-type">
-        
-<span class="param-type"><a href="PIXI.Graphics.html">PIXI.Graphics</a></span>
-
- -
-        </div>
-    
-    <div class="returns-desc param-desc">
-        
-    </div>
-
-
-        
-    </div>
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-564">line 564</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="drawPolygon"><span class="type-signature"></span>drawPolygon<span class="signature">(path)</span><span class="type-signature"> &rarr; {<a href="PIXI.Graphics.html">PIXI.Graphics</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Draws a polygon using the given path.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>path</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array</span>
-|
-
-<span class="param-type">PhaserPolygon</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The path data used to construct the polygon. Can either be an array of points or a Phaser.Polygon object.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-
-    
-    <h5>Returns:</h5>
-    <div class="returns">
-        
-            
-    
-        <div class="returns-type">
-        
-<span class="param-type"><a href="PIXI.Graphics.html">PIXI.Graphics</a></span>
-
- -
-        </div>
-    
-    <div class="returns-desc param-desc">
-        
-    </div>
-
-
-        
-    </div>
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-581">line 581</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="drawRect"><span class="type-signature"></span>drawRect<span class="signature">(x, y, width, height)</span><span class="type-signature"> &rarr; {<a href="PIXI.Graphics.html">PIXI.Graphics</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>x</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The X coord of the top-left of the rectangle</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>y</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The Y coord of the top-left of the rectangle</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>width</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The width of the rectangle</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>height</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The height of the rectangle</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-
-    
-    <h5>Returns:</h5>
-    <div class="returns">
-        
-            
-    
-        <div class="returns-type">
-        
-<span class="param-type"><a href="PIXI.Graphics.html">PIXI.Graphics</a></span>
-
- -
-        </div>
-    
-    <div class="returns-desc param-desc">
-        
-    </div>
-
-
-        
-    </div>
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-517">line 517</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="drawRoundedRect"><span class="type-signature"></span>drawRoundedRect<span class="signature">(x, y, width, height, radius)</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>x</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The X coord of the top-left of the rectangle</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>y</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The Y coord of the top-left of the rectangle</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>width</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The width of the rectangle</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>height</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The height of the rectangle</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>radius</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Radius of the rectangle corners. In WebGL this must be a value between 0 and 9.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-533">line 533</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="drawShape"><span class="type-signature"></span>drawShape<span class="signature">(shape)</span><span class="type-signature"> &rarr; {<a href="PIXI.GraphicsData.html">PIXI.GraphicsData</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Draws the given shape to this Graphics object. Can be any of Circle, Rectangle, Ellipse, Line or Polygon.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>shape</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Circle</span>
-|
-
-<span class="param-type">Rectangle</span>
-|
-
-<span class="param-type">Ellipse</span>
-|
-
-<span class="param-type">Line</span>
-|
-
-<span class="param-type">Polygon</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The Shape object to draw.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-
-    
-    <h5>Returns:</h5>
-    <div class="returns">
-        
-            
-    
-        <div class="returns-type">
-        
-<span class="param-type"><a href="PIXI.GraphicsData.html">PIXI.GraphicsData</a></span>
-
- -
-        </div>
-    
-    <div class="returns-desc param-desc">
-        <p>The generated GraphicsData object.</p>
-    </div>
-
-
-        
-    </div>
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-1127">line 1127</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="endFill"><span class="type-signature"></span>endFill<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="PIXI.Graphics.html">PIXI.Graphics</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Applies a fill to the lines and shapes that were added since the last call to the beginFill() method.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-
-    
-    <h5>Returns:</h5>
-    <div class="returns">
-        
-            
-    
-        <div class="returns-type">
-        
-<span class="param-type"><a href="PIXI.Graphics.html">PIXI.Graphics</a></span>
-
- -
-        </div>
-    
-    <div class="returns-desc param-desc">
-        
-    </div>
-
-
-        
-    </div>
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-502">line 502</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="generateTexture"><span class="type-signature"></span>generateTexture<span class="signature">(resolution, scaleMode)</span><span class="type-signature"> &rarr; {<a href="PIXI.Texture.html">PIXI.Texture</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Useful function that returns a texture of the graphics object that can then be used to create sprites
-This can be quite useful if your geometry is complicated and needs to be reused multiple times.</p>
+        <p>Useful function that returns a texture of the displayObject object that can then be used to create sprites
+This can be quite useful if your displayObject is static / complicated and needs to be reused multiple times.</p>
     </div>
     
 
@@ -5669,7 +5341,33 @@ This can be quite useful if your geometry is complicated and needs to be reused 
 
             
 
-            <td class="description last"><p>Should be one of the PIXI.scaleMode consts</p></td>
+            <td class="description last"><p>See {{#crossLink &quot;PIXI/scaleModes:property&quot;}}PIXI.scaleModes{{/crossLink}} for possible values</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>renderer</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="PIXI.CanvasRenderer.html">PIXI.CanvasRenderer</a></span>
+|
+
+<span class="param-type"><a href="PIXI.WebGLRenderer.html">PIXI.WebGLRenderer</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The renderer used to generate the texture.</p></td>
         </tr>
 
 	
@@ -5709,6 +5407,11 @@ This can be quite useful if your geometry is complicated and needs to be reused 
     
 
     
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="PIXI.DisplayObject.html#generateTexture">PIXI.DisplayObject#generateTexture</a>
+    </li></dd>
+    
 
     
 
@@ -5722,7 +5425,7 @@ This can be quite useful if your geometry is complicated and needs to be reused 
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-634">line 634</a>
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-549">line 549</a>
     </dt>
     
 
@@ -5758,7 +5461,7 @@ This can be quite useful if your geometry is complicated and needs to be reused 
 
     
     <div class="description">
-        <p>Retrieves the bounds of the graphic shape as a rectangle object</p>
+        <p>Retrieves the bounds of the displayObjectContainer as a rectangle. The bounds calculation takes all visible children into consideration.</p>
     </div>
     
 
@@ -5782,7 +5485,7 @@ This can be quite useful if your geometry is complicated and needs to be reused 
         </div>
     
     <div class="returns-desc param-desc">
-        <p>the rectangular bounding area</p>
+        <p>The rectangular bounding area</p>
     </div>
 
 
@@ -5799,6 +5502,11 @@ This can be quite useful if your geometry is complicated and needs to be reused 
     
 
     
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="PIXI.DisplayObjectContainer.html#getBounds">PIXI.DisplayObjectContainer#getBounds</a>
+    </li></dd>
+    
 
     
 
@@ -5812,7 +5520,7 @@ This can be quite useful if your geometry is complicated and needs to be reused 
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-818">line 818</a>
+    <a href="src_pixi_display_DisplayObjectContainer.js.html">pixi/display/DisplayObjectContainer.js</a>, <a href="src_pixi_display_DisplayObjectContainer.js.html#sunlight-1-line-307">line 307</a>
     </dt>
     
 
@@ -6222,7 +5930,7 @@ This can be quite useful if your geometry is complicated and needs to be reused 
             
 <dt>
     <h4 class="name "
-        id="lineStyle"><span class="type-signature"></span>lineStyle<span class="signature">(lineWidth, color, alpha)</span><span class="type-signature"> &rarr; {<a href="PIXI.Graphics.html">PIXI.Graphics</a>}</span></h4>
+        id="kill"><span class="type-signature"></span>kill<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="PIXI.DisplayObject.html">PIXI.DisplayObject</a>}</span></h4>
     
     
 </dt>
@@ -6231,7 +5939,11 @@ This can be quite useful if your geometry is complicated and needs to be reused 
 
     
     <div class="description">
-        <p>Specifies the line style used for subsequent calls to Graphics methods such as the lineTo() method or the drawCircle() method.</p>
+        <p>Kills a Game Object. A killed Game Object has its <code>alive</code>, <code>exists</code> and <code>visible</code> properties all set to false.</p>
+<p>It will dispatch the <code>onKilled</code> event. You can listen to <code>events.onKilled</code> for the signal.</p>
+<p>Note that killing a Game Object is a way for you to quickly recycle it in an object pool, 
+it doesn't destroy the object or free it up from memory.</p>
+<p>If you don't need this Game Object any more you should call <code>destroy</code> instead.</p>
     </div>
     
 
@@ -6239,101 +5951,6 @@ This can be quite useful if your geometry is complicated and needs to be reused 
     
     
     
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>lineWidth</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>width of the line to draw, will update the objects stored style</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>color</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>color of the line to draw, will update the objects stored style</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>alpha</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>alpha of the line to draw, will update the objects stored style</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
     
 
     
@@ -6344,13 +5961,13 @@ This can be quite useful if your geometry is complicated and needs to be reused 
     
         <div class="returns-type">
         
-<span class="param-type"><a href="PIXI.Graphics.html">PIXI.Graphics</a></span>
+<span class="param-type"><a href="PIXI.DisplayObject.html">PIXI.DisplayObject</a></span>
 
  -
         </div>
     
     <div class="returns-desc param-desc">
-        
+        <p>This instance.</p>
     </div>
 
 
@@ -6367,6 +5984,11 @@ This can be quite useful if your geometry is complicated and needs to be reused 
     
 
     
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="Phaser.Component.LifeSpan.html#kill">Phaser.Component.LifeSpan#kill</a>
+    </li></dd>
+    
 
     
 
@@ -6380,7 +6002,7 @@ This can be quite useful if your geometry is complicated and needs to be reused 
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-139">line 139</a>
+    <a href="src_gameobjects_components_LifeSpan.js.html">gameobjects/components/LifeSpan.js</a>, <a href="src_gameobjects_components_LifeSpan.js.html#sunlight-1-line-113">line 113</a>
     </dt>
     
 
@@ -6407,7 +6029,7 @@ This can be quite useful if your geometry is complicated and needs to be reused 
             
 <dt>
     <h4 class="name "
-        id="lineTo"><span class="type-signature"></span>lineTo<span class="signature">(x, y)</span><span class="type-signature"> &rarr; {<a href="PIXI.Graphics.html">PIXI.Graphics</a>}</span></h4>
+        id="moveDown"><span class="type-signature"></span>moveDown<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="PIXI.DisplayObject.html">PIXI.DisplayObject</a>}</span></h4>
     
     
 </dt>
@@ -6416,8 +6038,10 @@ This can be quite useful if your geometry is complicated and needs to be reused 
 
     
     <div class="description">
-        <p>Draws a line using the current line style from the current drawing position to (x, y);
-The current drawing position is then set to (x, y).</p>
+        <p>Moves this Game Object down one place in its parents display list.
+This call has no effect if the Game Object is already at the bottom of the display list.</p>
+<p>If this Game Object hasn't been added to a custom Group then this method will move it one object down within the Game World, 
+because the World is the root Group from which all Game Objects descend.</p>
     </div>
     
 
@@ -6425,78 +6049,6 @@ The current drawing position is then set to (x, y).</p>
     
     
     
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>x</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>the X coordinate to draw to</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>y</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>the Y coordinate to draw to</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
     
 
     
@@ -6507,13 +6059,13 @@ The current drawing position is then set to (x, y).</p>
     
         <div class="returns-type">
         
-<span class="param-type"><a href="PIXI.Graphics.html">PIXI.Graphics</a></span>
+<span class="param-type"><a href="PIXI.DisplayObject.html">PIXI.DisplayObject</a></span>
 
  -
         </div>
     
     <div class="returns-desc param-desc">
-        
+        <p>This instance.</p>
     </div>
 
 
@@ -6530,6 +6082,11 @@ The current drawing position is then set to (x, y).</p>
     
 
     
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="Phaser.Component.BringToTop.html#moveDown">Phaser.Component.BringToTop#moveDown</a>
+    </li></dd>
+    
 
     
 
@@ -6543,7 +6100,7 @@ The current drawing position is then set to (x, y).</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-188">line 188</a>
+    <a href="src_gameobjects_components_BringToTop.js.html">gameobjects/components/BringToTop.js</a>, <a href="src_gameobjects_components_BringToTop.js.html#sunlight-1-line-87">line 87</a>
     </dt>
     
 
@@ -6570,7 +6127,7 @@ The current drawing position is then set to (x, y).</p>
             
 <dt>
     <h4 class="name "
-        id="moveTo"><span class="type-signature"></span>moveTo<span class="signature">(x, y)</span><span class="type-signature"> &rarr; {<a href="PIXI.Graphics.html">PIXI.Graphics</a>}</span></h4>
+        id="moveUp"><span class="type-signature"></span>moveUp<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="PIXI.DisplayObject.html">PIXI.DisplayObject</a>}</span></h4>
     
     
 </dt>
@@ -6579,7 +6136,10 @@ The current drawing position is then set to (x, y).</p>
 
     
     <div class="description">
-        <p>Moves the current drawing position to x, y.</p>
+        <p>Moves this Game Object up one place in its parents display list.
+This call has no effect if the Game Object is already at the top of the display list.</p>
+<p>If this Game Object hasn't been added to a custom Group then this method will move it one object up within the Game World, 
+because the World is the root Group from which all Game Objects descend.</p>
     </div>
     
 
@@ -6587,78 +6147,6 @@ The current drawing position is then set to (x, y).</p>
     
     
     
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>x</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>the X coordinate to move to</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>y</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>the Y coordinate to move to</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
     
 
     
@@ -6669,13 +6157,13 @@ The current drawing position is then set to (x, y).</p>
     
         <div class="returns-type">
         
-<span class="param-type"><a href="PIXI.Graphics.html">PIXI.Graphics</a></span>
+<span class="param-type"><a href="PIXI.DisplayObject.html">PIXI.DisplayObject</a></span>
 
  -
         </div>
     
     <div class="returns-desc param-desc">
-        
+        <p>This instance.</p>
     </div>
 
 
@@ -6692,6 +6180,11 @@ The current drawing position is then set to (x, y).</p>
     
 
     
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="Phaser.Component.BringToTop.html#moveUp">Phaser.Component.BringToTop#moveUp</a>
+    </li></dd>
+    
 
     
 
@@ -6705,7 +6198,89 @@ The current drawing position is then set to (x, y).</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-173">line 173</a>
+    <a href="src_gameobjects_components_BringToTop.js.html">gameobjects/components/BringToTop.js</a>, <a href="src_gameobjects_components_BringToTop.js.html#sunlight-1-line-66">line 66</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+       
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="postUpdate"><span class="type-signature">&lt;internal> </span>postUpdate<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Internal method called by the World postUpdate cycle.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="Phaser.Component.Core.html#postUpdate">Phaser.Component.Core#postUpdate</a>
+    </li></dd>
+    
+
+    
+        <dt class="important tag-deprecated">Internal:</dt>
+        <dd class="tag-deprecated"><ul>
+        
+            <li>This member is <em>internal (protected)</em> and may be modified or removed in the future.</li>
+        
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_gameobjects_components_Core.js.html">gameobjects/components/Core.js</a>, <a href="src_gameobjects_components_Core.js.html#sunlight-1-line-329">line 329</a>
     </dt>
     
 
@@ -6741,7 +6316,7 @@ The current drawing position is then set to (x, y).</p>
 
     
     <div class="description">
-        <p>Empty, to be overridden by classes that require it.</p>
+        <p>Automatically called by World.preUpdate.</p>
     </div>
     
 
@@ -6751,220 +6326,6 @@ The current drawing position is then set to (x, y).</p>
     
     
 
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="PIXI.DisplayObject.html#preUpdate">PIXI.DisplayObject#preUpdate</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-540">line 540</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="quadraticCurveTo"><span class="type-signature"></span>quadraticCurveTo<span class="signature">(cpX, cpY, toX, toY)</span><span class="type-signature"> &rarr; {<a href="PIXI.Graphics.html">PIXI.Graphics</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Calculate the points for a quadratic bezier curve and then draws it.
-Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier-curve-in-c</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>cpX</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Control point x</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>cpY</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Control point y</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>toX</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Destination point x</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>toY</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Destination point y</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-
-    
-    <h5>Returns:</h5>
-    <div class="returns">
-        
-            
-    
-        <div class="returns-type">
-        
-<span class="param-type"><a href="PIXI.Graphics.html">PIXI.Graphics</a></span>
-
- -
-        </div>
-    
-    <div class="returns-desc param-desc">
-        
-    </div>
-
-
-        
-    </div>
     
     
     
@@ -6989,7 +6350,7 @@ Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-210">line 210</a>
+    <a href="src_gameobjects_Creature.js.html">gameobjects/Creature.js</a>, <a href="src_gameobjects_Creature.js.html#sunlight-1-line-93">line 93</a>
     </dt>
     
 
@@ -7500,6 +6861,508 @@ Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier
     
     <dt class="tag-source">Source -
     <a href="src_pixi_display_DisplayObjectContainer.js.html">pixi/display/DisplayObjectContainer.js</a>, <a href="src_pixi_display_DisplayObjectContainer.js.html#sunlight-1-line-407">line 407</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+       
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="reset"><span class="type-signature"></span>reset<span class="signature">(x, y, <span class="optional">health</span>)</span><span class="type-signature"> &rarr; {<a href="PIXI.DisplayObject.html">PIXI.DisplayObject</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Resets the Game Object.</p>
+<p>This moves the Game Object to the given x/y world coordinates and sets <code>fresh</code>, <code>exists</code>, 
+<code>visible</code> and <code>renderable</code> to true.</p>
+<p>If this Game Object has the LifeSpan component it will also set <code>alive</code> to true and <code>health</code> to the given value.</p>
+<p>If this Game Object has a Physics Body it will reset the Body.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+		<th>Default</th>
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>x</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The x coordinate (in world space) to position the Game Object at.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>y</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The y coordinate (in world space) to position the Game Object at.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>health</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    1
+                
+                </td>
+            
+
+            <td class="description last"><p>The health to give the Game Object if it has the Health component.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+
+    
+    <h5>Returns:</h5>
+    <div class="returns">
+        
+            
+    
+        <div class="returns-type">
+        
+<span class="param-type"><a href="PIXI.DisplayObject.html">PIXI.DisplayObject</a></span>
+
+ -
+        </div>
+    
+    <div class="returns-desc param-desc">
+        <p>This instance.</p>
+    </div>
+
+
+        
+    </div>
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="Phaser.Component.Reset.html#reset">Phaser.Component.Reset#reset</a>
+    </li></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_gameobjects_components_Reset.js.html">gameobjects/components/Reset.js</a>, <a href="src_gameobjects_components_Reset.js.html#sunlight-1-line-30">line 30</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+       
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="revive"><span class="type-signature"></span>revive<span class="signature">(<span class="optional">health</span>)</span><span class="type-signature"> &rarr; {<a href="PIXI.DisplayObject.html">PIXI.DisplayObject</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Brings a 'dead' Game Object back to life, optionally resetting its health value in the process.</p>
+<p>A resurrected Game Object has its <code>alive</code>, <code>exists</code> and <code>visible</code> properties all set to true.</p>
+<p>It will dispatch the <code>onRevived</code> event. Listen to <code>events.onRevived</code> for the signal.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+		<th>Default</th>
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>health</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    1
+                
+                </td>
+            
+
+            <td class="description last"><p>The health to give the Game Object. Only set if the GameObject has the Health component.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+
+    
+    <h5>Returns:</h5>
+    <div class="returns">
+        
+            
+    
+        <div class="returns-type">
+        
+<span class="param-type"><a href="PIXI.DisplayObject.html">PIXI.DisplayObject</a></span>
+
+ -
+        </div>
+    
+    <div class="returns-desc param-desc">
+        <p>This instance.</p>
+    </div>
+
+
+        
+    </div>
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="Phaser.Component.LifeSpan.html#revive">Phaser.Component.LifeSpan#revive</a>
+    </li></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_gameobjects_components_LifeSpan.js.html">gameobjects/components/LifeSpan.js</a>, <a href="src_gameobjects_components_LifeSpan.js.html#sunlight-1-line-78">line 78</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+       
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="sendToBack"><span class="type-signature"></span>sendToBack<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="PIXI.DisplayObject.html">PIXI.DisplayObject</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Sends this Game Object to the bottom of its parents display list.
+Visually this means it will render below all other children in the same Group.</p>
+<p>If this Game Object hasn't been added to a custom Group then this method will send it to the bottom of the Game World, 
+because the World is the root Group from which all Game Objects descend.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+
+    
+    <h5>Returns:</h5>
+    <div class="returns">
+        
+            
+    
+        <div class="returns-type">
+        
+<span class="param-type"><a href="PIXI.DisplayObject.html">PIXI.DisplayObject</a></span>
+
+ -
+        </div>
+    
+    <div class="returns-desc param-desc">
+        <p>This instance.</p>
+    </div>
+
+
+        
+    </div>
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="Phaser.Component.BringToTop.html#sendToBack">Phaser.Component.BringToTop#sendToBack</a>
+    </li></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_gameobjects_components_BringToTop.js.html">gameobjects/components/BringToTop.js</a>, <a href="src_gameobjects_components_BringToTop.js.html#sunlight-1-line-45">line 45</a>
     </dt>
     
 
@@ -8275,6 +8138,83 @@ Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier
             
 <dt>
     <h4 class="name "
+        id="update"><span class="type-signature"></span>update<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Override this method in your own custom objects to handle any update requirements.
+It is called immediately after <code>preUpdate</code> and before <code>postUpdate</code>.
+Remember if this Game Object has any children you should call update on those too.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="Phaser.Component.Core.html#update">Phaser.Component.Core#update</a>
+    </li></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_gameobjects_components_Core.js.html">gameobjects/components/Core.js</a>, <a href="src_gameobjects_components_Core.js.html#sunlight-1-line-319">line 319</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+       
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
         id="updateCache"><span class="type-signature"></span>updateCache<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
@@ -8346,76 +8286,6 @@ Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier
     
 </dd>
 
-        
-            
-<dt>
-    <h4 class="name "
-        id="updateLocalBounds"><span class="type-signature"></span>updateLocalBounds<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Update the bounds of the object</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-940">line 940</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
         </dl>
     
 
@@ -8442,7 +8312,7 @@ Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha10</a>
-		on Wed Jul 22 2015 14:55:23 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Jul 22 2015 14:55:14 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
