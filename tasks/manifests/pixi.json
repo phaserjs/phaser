@@ -37,6 +37,10 @@
     "src/pixi/textures/Texture.js",
     "src/pixi/textures/RenderTexture.js",
 
+    "src/pixi/extras/TilingSprite.js",
+    "src/pixi/extras/Strip.js",
+    "src/pixi/extras/Rope.js",
+
     "src/pixi/filters/AbstractFilter.js",
 
     "src/pixi/Outro.js"

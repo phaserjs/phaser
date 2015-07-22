@@ -236,7 +236,9 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 <a name="change-log"></a>
 ## Change Log
 
-Version 2.4 - "Katar" - 22nd July 2015
+Version 2.4.0a - "Katar" - 22nd July 2015
+
+Note: Revision `a` of Phaser 2.4.0 includes a fix to the build files that stopped some PIXI classes being undefined (such as TilingSprite). Nothing in the framework itself changed.
 
 ### API Changes
 
