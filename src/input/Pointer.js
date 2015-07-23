@@ -435,65 +435,77 @@ Phaser.Pointer.prototype = {
         //  If you find one, please tell us!
         var buttons = event.buttons;
 
-        if (buttons === undefined)
+        if (buttons !== undefined)
         {
-            return;
-        }
+            //  Note: These are bitwise checks, not booleans
 
-        //  Note: These are bitwise checks, not booleans
+            if (Phaser.Pointer.LEFT_BUTTON & buttons)
+            {
+                this.leftButton.start(event);
+            }
+            else
+            {
+                this.leftButton.stop(event);
+            }
 
-        if (Phaser.Pointer.LEFT_BUTTON & buttons)
-        {
-            this.leftButton.start(event);
+            if (Phaser.Pointer.RIGHT_BUTTON & buttons)
+            {
+                this.rightButton.start(event);
+            }
+            else
+            {
+                this.rightButton.stop(event);
+            }
+                    
+            if (Phaser.Pointer.MIDDLE_BUTTON & buttons)
+            {
+                this.middleButton.start(event);
+            }
+            else
+            {
+                this.middleButton.stop(event);
+            }
+
+            if (Phaser.Pointer.BACK_BUTTON & buttons)
+            {
+                this.backButton.start(event);
+            }
+            else
+            {
+                this.backButton.stop(event);
+            }
+
+            if (Phaser.Pointer.FORWARD_BUTTON & buttons)
+            {
+                this.forwardButton.start(event);
+            }
+            else
+            {
+                this.forwardButton.stop(event);
+            }
+
+            if (Phaser.Pointer.ERASER_BUTTON & buttons)
+            {
+                this.eraserButton.start(event);
+            }
+            else
+            {
+                this.eraserButton.stop(event);
+            }
         }
         else
         {
-            this.leftButton.stop(event);
-        }
+            //  No buttons property (like Safari on OSX when using a trackpad)
 
-        if (Phaser.Pointer.RIGHT_BUTTON & buttons)
-        {
-            this.rightButton.start(event);
-        }
-        else
-        {
-            this.rightButton.stop(event);
-        }
-                
-        if (Phaser.Pointer.MIDDLE_BUTTON & buttons)
-        {
-            this.middleButton.start(event);
-        }
-        else
-        {
-            this.middleButton.stop(event);
-        }
-
-        if (Phaser.Pointer.BACK_BUTTON & buttons)
-        {
-            this.backButton.start(event);
-        }
-        else
-        {
-            this.backButton.stop(event);
-        }
-
-        if (Phaser.Pointer.FORWARD_BUTTON & buttons)
-        {
-            this.forwardButton.start(event);
-        }
-        else
-        {
-            this.forwardButton.stop(event);
-        }
-
-        if (Phaser.Pointer.ERASER_BUTTON & buttons)
-        {
-            this.eraserButton.start(event);
-        }
-        else
-        {
-            this.eraserButton.stop(event);
+            if (event.type === 'mousedown')
+            {
+                this.leftButton.start(event);
+            }
+            else
+            {
+                this.leftButton.stop(event);
+                this.rightButton.stop(event);
+            }
         }
 
         //  On OS X (and other devices with trackpads) you have to press CTRL + the pad

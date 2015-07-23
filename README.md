@@ -39,7 +39,7 @@ Thousands of developers worldwide use it. From indies and multi-national digital
 
 <div align="center"><img src="http://phaser.io/images/github/news.jpg"></div>
 
-> 23rd July 2015
+> 24th July 2015
 
 Phaser 2.4 is another huge update. We had to bump the version number from 2.3 directly to 2.4 because of some API adjustments, all of which are fully detailed in the [Change Log](#change-log). While it's true we could have released it over a few smaller point releases, that just isn't how the cookie crumbled this time. _Be sure to pay attention to the previous deprecated API calls that have been removed in 2.4._
 
@@ -258,6 +258,7 @@ It also modifies the Grunt build scripts so that all third party libs (such as C
 ### Bug Fixes
 
 * Fixed Cache.getKeys to use the `_cacheMap` (thanks @jamesgroat #1929)
+* Safari on OSX wouldn't recognise button presses on trackpads (thanks JakeCake)
 
 ## Version 2.4.0 - "Katar" - 22nd July 2015
 
