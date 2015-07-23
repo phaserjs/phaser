@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.4.0 "Katar" - Built: Wed Jul 22 2015 15:30:39
+* v2.4.1 "Ionin Spring" - Built: Thu Jul 23 2015 16:02:03
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -32,7 +32,7 @@
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
 
-var PIXI = (function(){
+(function(){
 
     var root = this;
 
@@ -9186,7 +9186,7 @@ var Phaser = Phaser || {
     * @constant
     * @type {string}
     */
-    VERSION: '2.4.0',
+    VERSION: '2.4.1',
 
     /**
     * An array of Phaser game instances.
@@ -32355,6 +32355,39 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
+    * Create a new Creature Animation object.
+    *
+    * Creature is a custom Game Object used in conjunction with the Creature Runtime libraries by Kestrel Moon Studios.
+    * 
+    * It allows you to display animated Game Objects that were created with the [Creature Automated Animation Tool](http://www.kestrelmoon.com/creature/).
+    * 
+    * Note 1: You can only use Phaser.Creature objects in WebGL enabled games. They do not work in Canvas mode games.
+    *
+    * Note 2: You must use a build of Phaser that includes the CreatureMeshBone.js runtime and gl-matrix.js, or have them
+    * loaded before your Phaser game boots.
+    * 
+    * See the Phaser custom build process for more details.
+    *
+    * @method Phaser.GameObjectFactory#creature
+    * @param {number} [x=0] - The x coordinate of the creature. The coordinate is relative to any parent container this creature may be in.
+    * @param {number} [y=0] - The y coordinate of the creature. The coordinate is relative to any parent container this creature may be in.
+    * @param {string|PIXI.Texture} [key] - The image used as a texture by this creature object during rendering. If a string Phaser will get for an entry in the Image Cache. Or it can be an instance of a PIXI.Texture.
+    * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
+    * @returns {Phaser.Creature} The newly created Sprite object.
+    */
+    creature: function (x, y, key, mesh, group) {
+
+        if (group === undefined) { group = this.world; }
+
+        var obj = new Phaser.Creature(this.game, x, y, key, mesh);
+
+        group.add(obj);
+
+        return obj;
+
+    },
+
+    /**
     * Create a tween on a specific object.
     * 
     * The object can be any JavaScript object or Phaser object such as Sprite.
@@ -43729,6 +43762,9 @@ Phaser.Cache.prototype = {
     /**
     * Gets a PIXI.Texture by key from the PIXI.TextureCache.
     *
+    * If the texture isn't found in the cache, then it searches the Phaser Image Cache and
+    * creates a new PIXI.Texture object which is then returned.
+    *
     * @method Phaser.Cache#getPixiTexture
     * @deprecated
     * @param {string} key - Asset key of the Texture to retrieve from the Cache.
@@ -43742,19 +43778,29 @@ Phaser.Cache.prototype = {
         }
         else
         {
-            console.warn('Phaser.Cache.getPixiTexture: Invalid key: "' + key + '"');
-            return null;
+            var base = this.getPixiBaseTexture(key);
+
+            if (base)
+            {
+                return new PIXI.Texture(base);
+            }
+            else
+            {
+                return null;
+            }
         }
 
     },
 
     /**
-    * Gets a PIXI.BaseTexture by key from the PIXI.BaseTExtureCache.
+    * Gets a PIXI.BaseTexture by key from the PIXI.BaseTextureCache.
+    * 
+    * If the texture isn't found in the cache, then it searches the Phaser Image Cache.
     *
     * @method Phaser.Cache#getPixiBaseTexture
     * @deprecated
     * @param {string} key - Asset key of the BaseTexture to retrieve from the Cache.
-    * @return {PIXI.BaseTexture} The BaseTexture object.
+    * @return {PIXI.BaseTexture} The BaseTexture object or null if not found.
     */
     getPixiBaseTexture: function (key) {
 
@@ -43764,8 +43810,16 @@ Phaser.Cache.prototype = {
         }
         else
         {
-            console.warn('Phaser.Cache.getPixiBaseTexture: Invalid key: "' + key + '"');
-            return null;
+            var img = this.getItem(key, Phaser.Cache.IMAGE, 'getPixiBaseTexture');
+
+            if (img !== null)
+            {
+                return img.base;
+            }
+            else
+            {
+                return null;
+            }
         }
 
     },
@@ -43808,9 +43862,9 @@ Phaser.Cache.prototype = {
 
         var out = [];
 
-        if (this._cache[cache])
+        if (this._cacheMap[cache])
         {
-            for (var key in this._cache[cache])
+            for (var key in this._cacheMap[cache])
             {
                 if (key !== '__default' && key !== '__missing')
                 {
