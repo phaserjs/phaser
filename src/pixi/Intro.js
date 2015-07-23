@@ -2,6 +2,6 @@
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
 
-var PIXI = (function(){
+(function(){
 
     var root = this;

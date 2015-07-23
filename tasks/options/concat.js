@@ -1,13 +1,43 @@
 module.exports = {
 
+    creatureGlobal: {
+        src: require('../manifests/creature-global'),
+        dest: '<%= modules_dir %>/creature-global.js'
+    },
+
+    creature: {
+        src: require('../manifests/creature'),
+        dest: '<%= modules_dir %>/creature.js'
+    },
+
+    p2Global: {
+        src: require('../manifests/p2'),
+        dest: '<%= modules_dir %>/p2-global.js'
+    },
+
+    pixiIntro: {
+        src: require('../manifests/pixi-intro'),
+        dest: '<%= modules_dir %>/pixi-intro.js'
+    },
+
+    pixiRope: {
+        src: require('../manifests/pixi-rope'),
+        dest: '<%= modules_dir %>/pixi-rope.js'
+    },
+
+    pixiTileSprite: {
+        src: require('../manifests/pixi-tilesprite'),
+        dest: '<%= modules_dir %>/pixi-tilesprite.js'
+    },
+
+    pixiOutro: {
+        src: require('../manifests/pixi-outro'),
+        dest: '<%= modules_dir %>/pixi-outro.js'
+    },
+
     intro: {
         src: require('../manifests/intro'),
         dest: '<%= modules_dir %>/intro.js'
-    },
-
-    pixi: {
-        src: require('../manifests/pixi'),
-        dest: '<%= modules_dir %>/pixi.js'
     },
 
     phaser: {
@@ -198,11 +228,6 @@ module.exports = {
     rope: {
         src: require('../manifests/rope'),
         dest: '<%= modules_dir %>/rope.js'
-    },
-
-    creature: {
-        src: require('../manifests/creature'),
-        dest: '<%= modules_dir %>/creature.js'
     },
 
     tilesprite: {
