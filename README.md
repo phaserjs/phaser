@@ -226,7 +226,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 
 Version 2.4.1 - "Ionin Spring" - in development
 
-
+* Fixed Cache.getKeys to use the `_cacheMap` (thanks @jamesgroat #1929)
 
 
 
