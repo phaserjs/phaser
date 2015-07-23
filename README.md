@@ -224,9 +224,13 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 <a name="change-log"></a>
 ## Change Log
 
-Version 2.4.1 - "Ionin Spring" - in development
+Version 2.4.1 - "Ionin Spring" - 23rd July 2015
 
+* The Creature Runtimes have been updated to the latest versions and the Phaser.Creature class updated to use them.
+* GameObjectFactory.creature is a new method to help with quick Creature animation object creation.
 * Fixed Cache.getKeys to use the `_cacheMap` (thanks @jamesgroat #1929)
+* Cache.getPixiTexture will now search the image cache if it couldn't find a texture in the PIXI.TextureCache global array, if it finds a matching image in the image cache then it returns a new PIXI.Texture based on it.
+* Cache.getPixiBaseTexture will now search the image cache if it couldn't find a BaseTexture in the PIXI.BaseTextureCache global array.
 
 
 
