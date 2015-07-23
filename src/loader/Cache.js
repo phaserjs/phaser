@@ -1611,9 +1611,9 @@ Phaser.Cache.prototype = {
 
         var out = [];
 
-        if (this._cache[cache])
+        if (this._cacheMap[cache])
         {
-            for (var key in this._cache[cache])
+            for (var key in this._cacheMap[cache])
             {
                 if (key !== '__default' && key !== '__missing')
                 {
