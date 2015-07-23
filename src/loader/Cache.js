@@ -1532,6 +1532,9 @@ Phaser.Cache.prototype = {
     /**
     * Gets a PIXI.Texture by key from the PIXI.TextureCache.
     *
+    * If the texture isn't found in the cache, then it searches the Phaser Image Cache and
+    * creates a new PIXI.Texture object which is then returned.
+    *
     * @method Phaser.Cache#getPixiTexture
     * @deprecated
     * @param {string} key - Asset key of the Texture to retrieve from the Cache.
@@ -1545,19 +1548,29 @@ Phaser.Cache.prototype = {
         }
         else
         {
-            console.warn('Phaser.Cache.getPixiTexture: Invalid key: "' + key + '"');
-            return null;
+            var base = this.getPixiBaseTexture(key);
+
+            if (base)
+            {
+                return new PIXI.Texture(base);
+            }
+            else
+            {
+                return null;
+            }
         }
 
     },
 
     /**
-    * Gets a PIXI.BaseTexture by key from the PIXI.BaseTExtureCache.
+    * Gets a PIXI.BaseTexture by key from the PIXI.BaseTextureCache.
+    * 
+    * If the texture isn't found in the cache, then it searches the Phaser Image Cache.
     *
     * @method Phaser.Cache#getPixiBaseTexture
     * @deprecated
     * @param {string} key - Asset key of the BaseTexture to retrieve from the Cache.
-    * @return {PIXI.BaseTexture} The BaseTexture object.
+    * @return {PIXI.BaseTexture} The BaseTexture object or null if not found.
     */
     getPixiBaseTexture: function (key) {
 
@@ -1567,8 +1580,16 @@ Phaser.Cache.prototype = {
         }
         else
         {
-            console.warn('Phaser.Cache.getPixiBaseTexture: Invalid key: "' + key + '"');
-            return null;
+            var img = this.getItem(key, Phaser.Cache.IMAGE, 'getPixiBaseTexture');
+
+            if (img !== null)
+            {
+                return img.base;
+            }
+            else
+            {
+                return null;
+            }
         }
 
     },

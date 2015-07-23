@@ -307,7 +307,6 @@ EOL;
     {
         echo <<<EOL
     <script src="$path/src/animation/creature/CreatureMeshBone.js"></script>
-    <script src="$path/src/animation/creature/CreaturePixiJSRenderer.js"></script>
     <script src="$path/src/gameobjects/Creature.js"></script>
 
 
