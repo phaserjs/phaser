@@ -1445,9 +1445,11 @@ Phaser.Cache.prototype = {
     * @param {string} key - Asset key of the frame data to retrieve from the Cache.
     * @return {Phaser.FrameData} The frame data.
     */
-    getFrameData: function (key) {
-
-        return this.getItem(key, Phaser.Cache.IMAGE, 'getFrameData', 'frameData');
+    getFrameData: function (key, cache) {
+		
+		if (cache === undefined) { cache = Phaser.Cache.IMAGE; }
+		
+        return this.getItem(key, cache, 'getFrameData', 'frameData');
 
     },
 
@@ -1458,9 +1460,10 @@ Phaser.Cache.prototype = {
     * @param {string} key - Asset key of the frame data to retrieve from the Cache.
     * @return {boolean} True if the given key has frameData in the cache, otherwise false.
     */
-    hasFrameData: function (key) {
-
-        return (this.getItem(key, Phaser.Cache.IMAGE, '', 'frameData') !== null);
+    hasFrameData: function (key, cache) {
+		if (cache === undefined) { cache = Phaser.Cache.IMAGE; }
+		
+        return (this.getItem(key, cache, '', 'frameData') !== null);
 
     },
 
