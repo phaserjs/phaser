@@ -259,6 +259,7 @@ It also modifies the Grunt build scripts so that all third party libs (such as C
 
 * Fixed Cache.getKeys to use the `_cacheMap` (thanks @jamesgroat #1929)
 * Safari on OSX wouldn't recognise button presses on trackpads (thanks JakeCake)
+* Cache.removeImage now calls destroy on the image BaseTexture, removing it from the PIXI global caches without throwing a warning.
 
 ## Version 2.4.0 - "Katar" - 22nd July 2015
 

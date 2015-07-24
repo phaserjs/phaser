@@ -322,8 +322,8 @@ module.exports = function (grunt) {
 
     grunt.registerTask('test', 'Phaser Test Build (all libs)', function() {
 
-        grunt.option('exclude', 'ninja');
-        grunt.option('filename', 'phaser');
+        grunt.option('exclude', 'ninja,creature');
+        grunt.option('filename', 'phaser-test');
         grunt.option('sourcemap', false);
         grunt.option('copy', false);
         grunt.option('uglify', false);
