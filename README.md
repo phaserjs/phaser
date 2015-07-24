@@ -35,7 +35,7 @@ Thousands of developers worldwide use it. From indies and multi-national digital
 ![div](http://www.phaser.io/images/github/div.png)
 
 <a name="whats-new"></a>
-## What's new in Phaser 2.4.1
+## What's new in Phaser 2.4.2
 
 <div align="center"><img src="http://phaser.io/images/github/news.jpg"></div>
 
@@ -89,15 +89,15 @@ Install via [npm](https://www.npmjs.com)
 
 [jsDelivr](http://www.jsdelivr.com/#!phaser) is a "super-fast CDN for developers". Include the following in your html:
 
-`<script src="//cdn.jsdelivr.net/phaser/2.4.1/phaser.js"></script>`
+`<script src="//cdn.jsdelivr.net/phaser/2.4.2/phaser.js"></script>`
 
 or the minified version:
 
-`<script src="//cdn.jsdelivr.net/phaser/2.4.1/phaser.min.js"></script>`
+`<script src="//cdn.jsdelivr.net/phaser/2.4.2/phaser.min.js"></script>`
 
 [cdnjs.com](https://cdnjs.com/libraries/phaser) also offers a free CDN service. They have all versions of Phaser and even the custom builds:
 
-`<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/2.4.1/phaser.js"></script>`
+`<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/2.4.2/phaser.js"></script>`
 
 ### Phaser Sandbox
 
@@ -241,6 +241,18 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 
 <a name="change-log"></a>
 ## Change Log
+
+## Version 2.4.2 - "Altara" - in dev
+
+
+
+
+
+
+
+
+
+
 
 ## Version 2.4.1 - "Ionin Spring" - 24th July 2015
 
