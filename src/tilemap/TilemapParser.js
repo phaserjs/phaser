@@ -25,12 +25,12 @@ Phaser.TilemapParser = {
     */
     parse: function (game, key, tileWidth, tileHeight, width, height) {
 
-        if (typeof tileWidth === 'undefined') { tileWidth = 32; }
-        if (typeof tileHeight === 'undefined') { tileHeight = 32; }
-        if (typeof width === 'undefined') { width = 10; }
-        if (typeof height === 'undefined') { height = 10; }
+        if (tileWidth === undefined) { tileWidth = 32; }
+        if (tileHeight === undefined) { tileHeight = 32; }
+        if (width === undefined) { width = 10; }
+        if (height === undefined) { height = 10; }
 
-        if (typeof key === 'undefined')
+        if (key === undefined)
         {
             return this.getEmptyData();
         }
@@ -376,8 +376,9 @@ Phaser.TilemapParser = {
 
         map.images = images;
 
-        //  Tilesets
+        //  Tilesets & Image Collections
         var tilesets = [];
+        var imagecollections = [];
 
         for (var i = 0; i < json.tilesets.length; i++)
         {
@@ -400,13 +401,22 @@ Phaser.TilemapParser = {
             }
             else
             {
-                // TODO: Handle Tileset Image Collections (multiple images in a tileset, no slicing into each image)
-                console.warn("Phaser.TilemapParser - Image Collection Tilesets are not support");
+                var newCollection = new Phaser.ImageCollection(set.name, set.firstgid, set.tilewidth, set.tileheight, set.margin, set.spacing, set.properties);
+                
+                for (var i in set.tiles)
+                {
+                    var image = set.tiles[i].image;
+                    var gid = set.firstgid + parseInt(i, 10);
+                    newCollection.addImage(gid, image);
+                }
+
+                imagecollections.push(newCollection);
             }
 
         }
 
         map.tilesets = tilesets;
+        map.imagecollections = imagecollections;
 
         //  Objects & Collision Data (polylines, etc)
         var objects = {};
@@ -420,7 +430,7 @@ Phaser.TilemapParser = {
             {
                 var key = fields[k];
 
-                if (obj[key])
+                if (typeof obj[key] !== 'undefined')
                 {
                     sliced[key] = obj[key];
                 }

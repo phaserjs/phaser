@@ -51,7 +51,7 @@ Phaser.Tween = function (target, game, manager) {
     /**
     * The speed at which the tweens will run. A value of 1 means it will match the game frame rate. 0.5 will run at half the frame rate. 2 at double the frame rate, etc.
     * If a tweens duration is 1 second but timeScale is 0.5 then it will take 2 seconds to complete.
-    * 
+    *
     * @property {number} timeScale
     * @default
     */
@@ -161,6 +161,11 @@ Phaser.Tween = function (target, game, manager) {
     */
     this._codePaused = false;
 
+    /**
+    * @property {boolean} _hasStarted - Internal var to track if the Tween has started yet or not.
+    * @private
+    */
+    this._hasStarted = false;
 };
 
 Phaser.Tween.prototype = {
@@ -183,12 +188,12 @@ Phaser.Tween.prototype = {
     */
     to: function (properties, duration, ease, autoStart, delay, repeat, yoyo) {
 
-        if (typeof duration === 'undefined') { duration = 1000; }
-        if (typeof ease === 'undefined') { ease = Phaser.Easing.Default; }
-        if (typeof autoStart === 'undefined') { autoStart = false; }
-        if (typeof delay === 'undefined') { delay = 0; }
-        if (typeof repeat === 'undefined') { repeat = 0; }
-        if (typeof yoyo === 'undefined') { yoyo = false; }
+        if (duration === undefined || duration <= 0) { duration = 1000; }
+        if (ease === undefined || ease === null) { ease = Phaser.Easing.Default; }
+        if (autoStart === undefined) { autoStart = false; }
+        if (delay === undefined) { delay = 0; }
+        if (repeat === undefined) { repeat = 0; }
+        if (yoyo === undefined) { yoyo = false; }
 
         if (typeof ease === 'string' && this.manager.easeMap[ease])
         {
@@ -230,12 +235,12 @@ Phaser.Tween.prototype = {
     */
     from: function (properties, duration, ease, autoStart, delay, repeat, yoyo) {
 
-        if (typeof duration === 'undefined') { duration = 1000; }
-        if (typeof ease === 'undefined') { ease = Phaser.Easing.Default; }
-        if (typeof autoStart === 'undefined') { autoStart = false; }
-        if (typeof delay === 'undefined') { delay = 0; }
-        if (typeof repeat === 'undefined') { repeat = 0; }
-        if (typeof yoyo === 'undefined') { yoyo = false; }
+        if (duration === undefined) { duration = 1000; }
+        if (ease === undefined || ease === null) { ease = Phaser.Easing.Default; }
+        if (autoStart === undefined) { autoStart = false; }
+        if (delay === undefined) { delay = 0; }
+        if (repeat === undefined) { repeat = 0; }
+        if (yoyo === undefined) { yoyo = false; }
 
         if (typeof ease === 'string' && this.manager.easeMap[ease])
         {
@@ -270,7 +275,7 @@ Phaser.Tween.prototype = {
     */
     start: function (index) {
 
-        if (typeof index === 'undefined') { index = 0; }
+        if (index === undefined) { index = 0; }
 
         if (this.game === null || this.target === null || this.timeline.length === 0 || this.isRunning)
         {
@@ -311,8 +316,6 @@ Phaser.Tween.prototype = {
 
         this.timeline[this.current].start();
 
-        this.onStart.dispatch(this.target, this);
-
         return this;
 
     },
@@ -328,7 +331,7 @@ Phaser.Tween.prototype = {
     */
     stop: function (complete) {
 
-        if (typeof complete === 'undefined') { complete = false; }
+        if (complete === undefined) { complete = false; }
 
         this.isRunning = false;
 
@@ -366,7 +369,7 @@ Phaser.Tween.prototype = {
 
         if (this.timeline.length === 0) { return this; }
 
-        if (typeof index === 'undefined') { index = 0; }
+        if (index === undefined) { index = 0; }
 
         if (index === -1)
         {
@@ -415,7 +418,7 @@ Phaser.Tween.prototype = {
     */
     repeat: function (total, repeatDelay, index) {
 
-        if (typeof repeatDelay === 'undefined') { repeatDelay = 0; }
+        if (repeatDelay === undefined) { repeatDelay = 0; }
 
         this.updateTweenData('repeatCounter', total, index);
 
@@ -455,7 +458,7 @@ Phaser.Tween.prototype = {
     */
     yoyo: function(enable, yoyoDelay, index) {
 
-        if (typeof yoyoDelay === 'undefined') { yoyoDelay = 0; }
+        if (yoyoDelay === undefined) { yoyoDelay = 0; }
 
         this.updateTweenData('yoyo', enable, index);
 
@@ -516,7 +519,7 @@ Phaser.Tween.prototype = {
     */
     interpolation: function (interpolation, context, index) {
 
-        if (typeof context === 'undefined') { context = Phaser.Math; }
+        if (context === undefined) { context = Phaser.Math; }
 
         this.updateTweenData('interpolationFunction', interpolation, index);
 
@@ -535,7 +538,7 @@ Phaser.Tween.prototype = {
     */
     repeatAll: function (total) {
 
-        if (typeof total === 'undefined') { total = 0; }
+        if (total === undefined) { total = 0; }
 
         this.repeatCounter = total;
 
@@ -548,7 +551,7 @@ Phaser.Tween.prototype = {
     * as soon as this tween completes. If this tween never completes (i.e. repeatAll or loop is set) then the chain will never progress.
     * Note that `Tween.onComplete` will fire when *this* tween completes, not when the whole chain completes.
     * For that you should listen to `onComplete` on the final tween in your chain.
-    * 
+    *
     * If you pass multiple tweens to this method they will be joined into a single long chain.
     * For example if this is Tween A and you pass in B, C and D then B will be chained to A, C will be chained to B and D will be chained to C.
     * Any previously chained tweens that may have been set will be overwritten.
@@ -594,7 +597,7 @@ Phaser.Tween.prototype = {
     */
     loop: function (value) {
 
-        if (typeof value === 'undefined') { value = true; }
+        if (value === undefined) { value = true; }
 
         if (value)
         {
@@ -643,7 +646,7 @@ Phaser.Tween.prototype = {
 
     /**
     * This is called by the core Game loop. Do not call it directly, instead use Tween.pause.
-    * 
+    *
     * @private
     * @method Phaser.Tween#_pause
     */
@@ -727,6 +730,12 @@ Phaser.Tween.prototype = {
         }
         else if (status === Phaser.TweenData.RUNNING)
         {
+            if (!this._hasStarted)
+            {
+                this.onStart.dispatch(this.target, this);
+                this._hasStarted = true;
+            }
+
             if (this._onUpdateCallback !== null)
             {
                 this._onUpdateCallback.call(this._onUpdateCallbackContext, this, this.timeline[this.current].value, this.timeline[this.current]);
@@ -826,7 +835,13 @@ Phaser.Tween.prototype = {
             return null;
         }
 
-        if (typeof data === 'undefined') { data = []; }
+        if (frameRate === undefined) {
+            frameRate = 60;
+        }
+
+        if (data === undefined) {
+            data = [];
+        }
 
         //  Populate the tween data
         for (var i = 0; i < this.timeline.length; i++)

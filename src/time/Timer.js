@@ -8,7 +8,7 @@
 * A Timer is a way to create small re-usable (or disposable) objects that wait for a specific moment in time,
 * and then run the specified callbacks.
 *
-* You can many events to a Timer, each with their own delays. A Timer uses milliseconds as its unit of time (there are 1000 ms in 1 second).
+* You can add many events to a Timer, each with their own delays. A Timer uses milliseconds as its unit of time (there are 1000 ms in 1 second).
 * So a delay to 250 would fire the event every quarter of a second.
 *
 * Timers are based on real-world (not physics) time, adjusted for game pause durations.
@@ -20,7 +20,7 @@
 */
 Phaser.Timer = function (game, autoDestroy) {
 
-    if (typeof autoDestroy === 'undefined') { autoDestroy = true; }
+    if (autoDestroy === undefined) { autoDestroy = true; }
 
     /**
     * @property {Phaser.Game} game - Local reference to game.
@@ -321,7 +321,7 @@ Phaser.Timer.prototype = {
 
         this.running = false;
 
-        if (typeof clearEvents === 'undefined') { clearEvents = true; }
+        if (clearEvents === undefined) { clearEvents = true; }
 
         if (clearEvents)
         {

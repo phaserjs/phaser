@@ -1,11 +1,11 @@
 # TypeScript Definitions #
 
-If you are a phaser dev then reference the `phaser.d.ts` in your project. 
+Reference the `phaser.d.ts` in your project. 
 
-Please use TypeScript 1.4
+Please use TypeScript 1.4+
 
-- `phaser.d.ts` contains a reference to `pixi.d.ts` and so both these files must remain siblings in the same directory.
-- `pixi.d.ts` has no dependencies and can be used by pixi devs standalone.
+- `phaser.d.ts` contains a reference to `pixi.d.ts` and `p2.d.ts` and so both these files must remain siblings in the same directory. 
+- `pixi.d.ts` has deviated from the official project. If you are a pixi user, pick up the ball over at [the  official pixi typescript repo](https://github.com/pixijs/pixi-typescript). 
 
 ## Contributing ##
 

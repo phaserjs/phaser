@@ -32,9 +32,9 @@ Phaser.Physics.P2.Spring = function (world, bodyA, bodyB, restLength, stiffness,
     */
     this.world = world;
 
-    if (typeof restLength === 'undefined') { restLength = 1; }
-    if (typeof stiffness === 'undefined') { stiffness = 100; }
-    if (typeof damping === 'undefined') { damping = 1; }
+    if (restLength === undefined) { restLength = 1; }
+    if (stiffness === undefined) { stiffness = 100; }
+    if (damping === undefined) { damping = 1; }
 
     restLength = world.pxm(restLength);
 

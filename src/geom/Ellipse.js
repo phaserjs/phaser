@@ -122,7 +122,7 @@ Phaser.Ellipse.prototype = {
     */
     clone: function(output) {
 
-        if (typeof output === "undefined" || output === null)
+        if (output === undefined || output === null)
         {
             output = new Phaser.Ellipse(this.x, this.y, this.width, this.height);
         }
@@ -137,6 +137,7 @@ Phaser.Ellipse.prototype = {
 
     /**
     * Return true if the given x/y coordinates are within this Ellipse object.
+    * 
     * @method Phaser.Ellipse#contains
     * @param {number} x - The X value of the coordinate to test.
     * @param {number} y - The Y value of the coordinate to test.
@@ -145,6 +146,31 @@ Phaser.Ellipse.prototype = {
     contains: function (x, y) {
 
         return Phaser.Ellipse.contains(this, x, y);
+
+    },
+
+    /**
+    * Returns a uniformly distributed random point from anywhere within this Ellipse.
+    * 
+    * @method Phaser.Ellipse#random
+    * @param {Phaser.Point|object} [out] - A Phaser.Point, or any object with public x/y properties, that the values will be set in.
+    *     If no object is provided a new Phaser.Point object will be created. In high performance areas avoid this by re-using an existing object.
+    * @return {Phaser.Point} An object containing the random point in its `x` and `y` properties.
+    */
+    random: function (out) {
+
+        if (out === undefined) { out = new Phaser.Point(); }
+
+        var p = Math.random() * Math.PI * 2;
+        var r = Math.random();
+
+        out.x = Math.sqrt(r) * Math.cos(p);
+        out.y = Math.sqrt(r) * Math.sin(p);
+
+        out.x = this.x + (out.x * this.width / 2.0);
+        out.y = this.y + (out.y * this.height / 2.0);
+
+        return out;
 
     },
 

@@ -100,6 +100,11 @@ Phaser.Tilemap = function (game, key, tileWidth, tileHeight, width, height) {
     * @property {array} tilesets - An array of Tilesets.
     */
     this.tilesets = data.tilesets;
+    
+    /**
+    * @property {array} imagecollections - An array of Image Collections.
+    */
+    this.imagecollections = data.imagecollections;
 
     /**
     * @property {array} tiles - The super array of Tiles.
@@ -208,7 +213,7 @@ Phaser.Tilemap.prototype = {
     */
     create: function (name, width, height, tileWidth, tileHeight, group) {
 
-        if (typeof group === 'undefined') { group = this.game.world; }
+        if (group === undefined) { group = this.game.world; }
 
         this.width = width;
         this.height = height;
@@ -243,7 +248,9 @@ Phaser.Tilemap.prototype = {
     *
     * @method Phaser.Tilemap#addTilesetImage
     * @param {string} tileset - The name of the tileset as specified in the map data.
-    * @param {string} [key] - The key of the Phaser.Cache image used for this tileset. If not specified it will look for an image with a key matching the tileset parameter.
+    * @param {string|Phaser.BitmapData} [key] - The key of the Phaser.Cache image used for this tileset.
+    *     If `undefined` or `null` it will look for an image with a key matching the tileset parameter.
+    *     You can also pass in a BitmapData which can be used instead of an Image.
     * @param {number} [tileWidth=32] - The width of the tiles in the Tileset Image. If not given it will default to the map.tileWidth value, if that isn't set then 32.
     * @param {number} [tileHeight=32] - The height of the tiles in the Tileset Image. If not given it will default to the map.tileHeight value, if that isn't set then 32.
     * @param {number} [tileMargin=0] - The width of the tiles in the Tileset Image. If not given it will default to the map.tileWidth value.
@@ -253,11 +260,12 @@ Phaser.Tilemap.prototype = {
     */
     addTilesetImage: function (tileset, key, tileWidth, tileHeight, tileMargin, tileSpacing, gid) {
 
-        if (typeof tileWidth === 'undefined') { tileWidth = this.tileWidth; }
-        if (typeof tileHeight === 'undefined') { tileHeight = this.tileHeight; }
-        if (typeof tileMargin === 'undefined') { tileMargin = 0; }
-        if (typeof tileSpacing === 'undefined') { tileSpacing = 0; }
-        if (typeof gid === 'undefined') { gid = 0; }
+        if (tileset === undefined) { return null; }
+        if (tileWidth === undefined) { tileWidth = this.tileWidth; }
+        if (tileHeight === undefined) { tileHeight = this.tileHeight; }
+        if (tileMargin === undefined) { tileMargin = 0; }
+        if (tileSpacing === undefined) { tileSpacing = 0; }
+        if (gid === undefined) { gid = 0; }
 
         //  In-case we're working from a blank map
         if (tileWidth === 0)
@@ -270,45 +278,46 @@ Phaser.Tilemap.prototype = {
             tileHeight = 32;
         }
 
-        if (typeof key === 'undefined')
-        {
-            if (typeof tileset === 'string')
-            {
-                key = tileset;
+        var img = null;
 
-                if (!this.game.cache.checkImageKey(key))
-                {
-                    console.warn('Phaser.Tilemap.addTilesetImage: Invalid image key given: "' + key + '"');
-                    return null;
-                }
-            }
-            else
-            {
-                return null;
-            }
+        if (key === undefined || key === null)
+        {
+            key = tileset;
         }
 
-        if (typeof tileset === 'string')
+        if (key instanceof Phaser.BitmapData)
         {
-            tileset = this.getTilesetIndex(tileset);
-
-            if (tileset === null && this.format === Phaser.Tilemap.TILED_JSON)
-            {
-                console.warn('Phaser.Tilemap.addTilesetImage: No data found in the JSON matching the tileset name: "' + key + '"');
-                return null;
-            }
-        }
-
-        if (this.tilesets[tileset])
-        {
-            this.tilesets[tileset].setImage(this.game.cache.getImage(key));
-            return this.tilesets[tileset];
+            img = key.canvas;
         }
         else
         {
-            var newSet = new Phaser.Tileset(key, gid, tileWidth, tileHeight, tileMargin, tileSpacing, {});
+            if (!this.game.cache.checkImageKey(key))
+            {
+                console.warn('Phaser.Tilemap.addTilesetImage: Invalid image key given: "' + key + '"');
+                return null;
+            }
 
-            newSet.setImage(this.game.cache.getImage(key));
+            img = this.game.cache.getImage(key);
+        }
+
+        var idx = this.getTilesetIndex(tileset);
+
+        if (idx === null && this.format === Phaser.Tilemap.TILED_JSON)
+        {
+            console.warn('Phaser.Tilemap.addTilesetImage: No data found in the JSON matching the tileset name: "' + key + '"');
+            return null;
+        }
+
+        if (this.tilesets[idx])
+        {
+            this.tilesets[idx].setImage(img);
+            return this.tilesets[idx];
+        }
+        else
+        {
+            var newSet = new Phaser.Tileset(tileset, gid, tileWidth, tileHeight, tileMargin, tileSpacing, {});
+
+            newSet.setImage(img);
 
             this.tilesets.push(newSet);
 
@@ -377,11 +386,11 @@ Phaser.Tilemap.prototype = {
     */
     createFromObjects: function (name, gid, key, frame, exists, autoCull, group, CustomClass, adjustY) {
 
-        if (typeof exists === 'undefined') { exists = true; }
-        if (typeof autoCull === 'undefined') { autoCull = false; }
-        if (typeof group === 'undefined') { group = this.game.world; }
-        if (typeof CustomClass === 'undefined') { CustomClass = Phaser.Sprite; }
-        if (typeof adjustY === 'undefined') { adjustY = true; }
+        if (exists === undefined) { exists = true; }
+        if (autoCull === undefined) { autoCull = false; }
+        if (group === undefined) { group = this.game.world; }
+        if (CustomClass === undefined) { CustomClass = Phaser.Sprite; }
+        if (adjustY === undefined) { adjustY = true; }
 
         if (!this.objects[name])
         {
@@ -390,10 +399,35 @@ Phaser.Tilemap.prototype = {
         }
 
         var sprite;
+        var found = false;
 
         for (var i = 0, len = this.objects[name].length; i < len; i++)
         {
-            if (this.objects[name][i].gid === gid)
+            if (typeof this.objects[name][i].gid !== 'undefined' && typeof gid === 'number')
+            {
+                if (this.objects[name][i].gid === gid)
+                {
+                    found = true;
+                }
+            }
+
+            if (typeof this.objects[name][i].id !== 'undefined' && typeof gid === 'number')
+            {
+                if (this.objects[name][i].id === gid)
+                {
+                    found = true;
+                }
+            }
+
+            if (typeof this.objects[name][i].name !== 'undefined' && typeof gid === 'string')
+            {
+                if (this.objects[name][i].name === gid)
+                {
+                    found = true;
+                }
+            }
+
+            if (found)
             {
                 sprite = new CustomClass(this.game, this.objects[name][i].x, this.objects[name][i].y, key, frame);
 
@@ -401,6 +435,9 @@ Phaser.Tilemap.prototype = {
                 sprite.visible = this.objects[name][i].visible;
                 sprite.autoCull = autoCull;
                 sprite.exists = exists;
+
+                sprite.width = this.objects[name][i].width;
+                sprite.height = this.objects[name][i].height;
 
                 if (this.objects[name][i].rotation)
                 {
@@ -442,7 +479,7 @@ Phaser.Tilemap.prototype = {
 
         if (typeof tiles === 'number') { tiles = [tiles]; }
 
-        if (typeof replacements === 'undefined' || replacements === null)
+        if (replacements === undefined || replacements === null)
         {
             replacements = [];
         }
@@ -453,8 +490,8 @@ Phaser.Tilemap.prototype = {
 
         layer = this.getLayer(layer);
 
-        if (typeof group === 'undefined') { group = this.game.world; }
-        if (typeof properties === 'undefined') { properties = {}; }
+        if (group === undefined) { group = this.game.world; }
+        if (properties === undefined) { properties = {}; }
 
         if (properties.customClass === undefined)
         {
@@ -534,9 +571,9 @@ Phaser.Tilemap.prototype = {
 
         //  Add Buffer support for the left of the canvas
 
-        if (typeof width === 'undefined') { width = this.game.width; }
-        if (typeof height === 'undefined') { height = this.game.height; }
-        if (typeof group === 'undefined') { group = this.game.world; }
+        if (width === undefined) { width = this.game.width; }
+        if (height === undefined) { height = this.game.height; }
+        if (group === undefined) { group = this.game.world; }
 
         var index = layer;
 
@@ -569,7 +606,7 @@ Phaser.Tilemap.prototype = {
     */
     createBlankLayer: function (name, width, height, tileWidth, tileHeight, group) {
 
-        if (typeof group === 'undefined') { group = this.game.world; }
+        if (group === undefined) { group = this.game.world; }
 
         if (this.getLayerIndex(name) !== null)
         {
@@ -788,8 +825,8 @@ Phaser.Tilemap.prototype = {
     */
     setCollision: function (indexes, collides, layer, recalculate) {
 
-        if (typeof collides === 'undefined') { collides = true; }
-        if (typeof recalculate === 'undefined') { recalculate = true; }
+        if (collides === undefined) { collides = true; }
+        if (recalculate === undefined) { recalculate = true; }
         
         layer = this.getLayer(layer);
 
@@ -828,8 +865,8 @@ Phaser.Tilemap.prototype = {
     */
     setCollisionBetween: function (start, stop, collides, layer, recalculate) {
 
-        if (typeof collides === 'undefined') { collides = true; }
-        if (typeof recalculate === 'undefined') { recalculate = true; }
+        if (collides === undefined) { collides = true; }
+        if (recalculate === undefined) { recalculate = true; }
         
         layer = this.getLayer(layer);
 
@@ -863,8 +900,8 @@ Phaser.Tilemap.prototype = {
     */
     setCollisionByExclusion: function (indexes, collides, layer, recalculate) {
 
-        if (typeof collides === 'undefined') { collides = true; }
-        if (typeof recalculate === 'undefined') { recalculate = true; }
+        if (collides === undefined) { collides = true; }
+        if (recalculate === undefined) { recalculate = true; }
         
         layer = this.getLayer(layer);
 
@@ -898,9 +935,9 @@ Phaser.Tilemap.prototype = {
     */
     setCollisionByIndex: function (index, collides, layer, recalculate) {
 
-        if (typeof collides === 'undefined') { collides = true; }
-        if (typeof layer === 'undefined') { layer = this.currentLayer; }
-        if (typeof recalculate === 'undefined') { recalculate = true; }
+        if (collides === undefined) { collides = true; }
+        if (layer === undefined) { layer = this.currentLayer; }
+        if (recalculate === undefined) { recalculate = true; }
 
         if (collides)
         {
@@ -961,7 +998,7 @@ Phaser.Tilemap.prototype = {
     */
     getLayer: function (layer) {
 
-        if (typeof layer === 'undefined')
+        if (layer === undefined)
         {
             layer = this.currentLayer;
         }
@@ -1353,8 +1390,8 @@ Phaser.Tilemap.prototype = {
     */
     searchTileIndex: function (index, skip, reverse, layer) {
 
-        if (typeof skip === 'undefined') { skip = 0; }
-        if (typeof reverse === 'undefined') { reverse = false; }
+        if (skip === undefined) { skip = 0; }
+        if (reverse === undefined) { reverse = false; }
 
         layer = this.getLayer(layer);
 
@@ -1417,7 +1454,7 @@ Phaser.Tilemap.prototype = {
     */
     getTile: function (x, y, layer, nonNull) {
 
-        if (typeof nonNull === 'undefined') { nonNull = false; }
+        if (nonNull === undefined) { nonNull = false; }
 
         layer = this.getLayer(layer);
 
@@ -1455,19 +1492,20 @@ Phaser.Tilemap.prototype = {
     * @param {number} [tileWidth] - The width of the tiles. If not given the map default is used.
     * @param {number} [tileHeight] - The height of the tiles. If not given the map default is used.
     * @param {number|string|Phaser.TilemapLayer} [layer] - The layer to get the tile from.
+    * @param {boolean} [nonNull=false] - If true getTile won't return null for empty tiles, but a Tile object with an index of -1.
     * @return {Phaser.Tile} The tile at the given coordinates.
     */
-    getTileWorldXY: function (x, y, tileWidth, tileHeight, layer) {
+    getTileWorldXY: function (x, y, tileWidth, tileHeight, layer, nonNull) {
 
-        if (typeof tileWidth === 'undefined') { tileWidth = this.tileWidth; }
-        if (typeof tileHeight === 'undefined') { tileHeight = this.tileHeight; }
+        if (tileWidth === undefined) { tileWidth = this.tileWidth; }
+        if (tileHeight === undefined) { tileHeight = this.tileHeight; }
 
         layer = this.getLayer(layer);
 
         x = this.game.math.snapToFloor(x, tileWidth) / tileWidth;
         y = this.game.math.snapToFloor(y, tileHeight) / tileHeight;
 
-        return this.getTile(x, y, layer);
+        return this.getTile(x, y, layer, nonNull);
 
     },
 
@@ -1492,10 +1530,10 @@ Phaser.Tilemap.prototype = {
             return;
         }
 
-        if (typeof x === "undefined") { x = 0; }
-        if (typeof y === "undefined") { y = 0; }
-        if (typeof width === "undefined") { width = this.layers[layer].width; }
-        if (typeof height === "undefined") { height = this.layers[layer].height; }
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+        if (width === undefined) { width = this.layers[layer].width; }
+        if (height === undefined) { height = this.layers[layer].height; }
         
         if (x < 0)
         {
@@ -1544,8 +1582,8 @@ Phaser.Tilemap.prototype = {
     */
     paste: function (x, y, tileblock, layer) {
 
-        if (typeof x === "undefined") { x = 0; }
-        if (typeof y === "undefined") { y = 0; }
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
 
         layer = this.getLayer(layer);
 

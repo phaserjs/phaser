@@ -20,11 +20,11 @@
 */
 Phaser.Physics.P2.PrismaticConstraint = function (world, bodyA, bodyB, lockRotation, anchorA, anchorB, axis, maxForce) {
 
-    if (typeof lockRotation === 'undefined') { lockRotation = true; }
-    if (typeof anchorA === 'undefined') { anchorA = [0, 0]; }
-    if (typeof anchorB === 'undefined') { anchorB = [0, 0]; }
-    if (typeof axis === 'undefined') { axis = [0, 0]; }
-    if (typeof maxForce === 'undefined') { maxForce = Number.MAX_VALUE; }
+    if (lockRotation === undefined) { lockRotation = true; }
+    if (anchorA === undefined) { anchorA = [0, 0]; }
+    if (anchorB === undefined) { anchorB = [0, 0]; }
+    if (axis === undefined) { axis = [0, 0]; }
+    if (maxForce === undefined) { maxForce = Number.MAX_VALUE; }
 
     /**
     * @property {Phaser.Game} game - Local reference to game.

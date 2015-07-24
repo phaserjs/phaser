@@ -17,14 +17,16 @@ BasicGame.MainMenu.prototype = {
 
 	    this.spriteTopLeft = this.add.sprite(0, 0, 'tetris3');
 
-	    this.spriteTopRight = this.add.sprite(game.width, 0, 'tetris1');
+	    this.spriteTopRight = this.add.sprite(this.game.width, 0, 'tetris1');
 	    this.spriteTopRight.anchor.set(1, 0);
 
-	    this.spriteBottomLeft = this.add.sprite(0, game.height, 'tetris2');
+	    this.spriteBottomLeft = this.add.sprite(0, this.game.height, 'tetris2');
 	    this.spriteBottomLeft.anchor.set(0, 1);
 
-	    this.spriteBottomRight = this.add.sprite(game.width, game.height, 'tetris3');
+	    this.spriteBottomRight = this.add.sprite(this.game.width, this.game.height, 'tetris3');
 	    this.spriteBottomRight.anchor.set(1, 1);
+
+        this.spriteMiddle = this.add.sprite(0, 0, 'hotdog');
 
 	},
 

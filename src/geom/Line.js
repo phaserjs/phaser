@@ -72,7 +72,7 @@ Phaser.Line.prototype = {
     */
     fromSprite: function (startSprite, endSprite, useCenter) {
 
-        if (typeof useCenter === 'undefined') { useCenter = false; }
+        if (useCenter === undefined) { useCenter = false; }
 
         if (useCenter)
         {
@@ -97,6 +97,30 @@ Phaser.Line.prototype = {
 
         this.start.setTo(x, y);
         this.end.setTo(x + (Math.cos(angle) * length), y + (Math.sin(angle) * length));
+
+        return this;
+
+    },
+
+    /**
+    * Rotates the line by the amount specified in `angle`.
+    * 
+    * Rotation takes place from the center of the line.
+    * 
+    * If you wish to rotate from either end see Line.start.rotate or Line.end.rotate.
+    * 
+    * @method Phaser.Line#rotate
+    * @param {number} angle - The angle in radians (unless asDegrees is true) to rotate the line by.
+    * @param {boolean} [asDegrees=false] - Is the given angle in radians (false) or degrees (true)?
+    * @return {Phaser.Line} This line object
+    */
+    rotate: function (angle, asDegrees) {
+
+        var x = this.start.x;
+        var y = this.start.y;
+
+        this.start.rotate(this.end.x, this.end.y, angle, asDegrees, this.length);
+        this.end.rotate(x, y, angle, asDegrees, this.length);
 
         return this;
 
@@ -167,6 +191,27 @@ Phaser.Line.prototype = {
     },
 
     /**
+    * Picks a random point from anywhere on the Line segment and returns it.
+    * 
+    * @method Phaser.Line#random
+    * @param {Phaser.Point|object} [out] - A Phaser.Point, or any object with public x/y properties, that the values will be set in.
+    *     If no object is provided a new Phaser.Point object will be created. In high performance areas avoid this by re-using an object.
+    * @return {Phaser.Point} An object containing the random point in its `x` and `y` properties.
+    */
+    random: function (out) {
+
+        if (out === undefined) { out = new Phaser.Point(); }
+
+        var t = Math.random();
+
+        out.x = this.start.x + t * (this.end.x - this.start.x);
+        out.y = this.start.y + t * (this.end.y - this.start.y);
+
+        return out;
+
+    },
+
+    /**
     * Using Bresenham's line algorithm this will return an array of all coordinates on this line.
     * The start and end points are rounded before this runs as the algorithm works on integers.
     *
@@ -177,8 +222,8 @@ Phaser.Line.prototype = {
     */
     coordinatesOnLine: function (stepRate, results) {
 
-        if (typeof stepRate === 'undefined') { stepRate = 1; }
-        if (typeof results === 'undefined') { results = []; }
+        if (stepRate === undefined) { stepRate = 1; }
+        if (results === undefined) { results = []; }
 
         var x1 = Math.round(this.start.x);
         var y1 = Math.round(this.start.y);
@@ -232,7 +277,7 @@ Phaser.Line.prototype = {
      */
     clone: function (output) {
 
-        if (typeof output === "undefined" || output === null)
+        if (output === undefined || output === null)
         {
             output = new Phaser.Line(this.start.x, this.start.y, this.end.x, this.end.y);
         }
@@ -262,7 +307,7 @@ Object.defineProperty(Phaser.Line.prototype, "length", {
 
 /**
 * @name Phaser.Line#angle
-* @property {number} angle - Gets the angle of the line.
+* @property {number} angle - Gets the angle of the line in radians.
 * @readonly
 */
 Object.defineProperty(Phaser.Line.prototype, "angle", {
@@ -459,8 +504,8 @@ Object.defineProperty(Phaser.Line.prototype, "normalAngle", {
 */
 Phaser.Line.intersectsPoints = function (a, b, e, f, asSegment, result) {
 
-    if (typeof asSegment === 'undefined') { asSegment = true; }
-    if (typeof result === 'undefined') { result = new Phaser.Point(); }
+    if (asSegment === undefined) { asSegment = true; }
+    if (result === undefined) { result = new Phaser.Point(); }
 
     var a1 = b.y - a.y;
     var a2 = f.y - e.y;

@@ -14,7 +14,7 @@
 */
 Phaser.Plugin = function (game, parent) {
 
-    if (typeof parent === 'undefined') { parent = null; }
+    if (parent === undefined) { parent = null; }
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running game.

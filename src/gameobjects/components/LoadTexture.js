@@ -14,6 +14,12 @@ Phaser.Component.LoadTexture = function () {};
 Phaser.Component.LoadTexture.prototype = {
 
     /**
+    * @property {boolean} customRender - Does this texture require a custom render call? (as set by BitmapData, Video, etc)
+    * @private
+    */
+    customRender: false,
+
+    /**
     * @property {Phaser.Rectangle} _frame - Internal cache var.
     * @private
     */
@@ -29,7 +35,7 @@ Phaser.Component.LoadTexture.prototype = {
     * Calling this method causes a WebGL texture update, so use sparingly or in low-intensity portions of your game, or if you know the new texture is already on the GPU.
     *
     * @method
-    * @param {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture, BitmapData or PIXI.Texture.
+    * @param {string|Phaser.RenderTexture|Phaser.BitmapData|Phaser.Video|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache Image entry, or an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
     * @param {string|number} [frame] - If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
     * @param {boolean} [stopAnimation=true] - If an animation is already playing on this Sprite you can choose to stop it or let it carry on playing.
     */
@@ -37,32 +43,44 @@ Phaser.Component.LoadTexture.prototype = {
 
         frame = frame || 0;
 
-        if ((stopAnimation || typeof stopAnimation === 'undefined') && this.animations)
+        if ((stopAnimation || stopAnimation === undefined) && this.animations)
         {
             this.animations.stop();
         }
 
         this.key = key;
+        this.customRender = false;
+        var cache = this.game.cache;
 
         var setFrame = true;
         var smoothed = !this.texture.baseTexture.scaleMode;
-        var isRenderTexture = false;
 
         if (Phaser.RenderTexture && key instanceof Phaser.RenderTexture)
         {
             this.key = key.key;
             this.setTexture(key);
-            isRenderTexture = true;
         }
         else if (Phaser.BitmapData && key instanceof Phaser.BitmapData)
         {
-            //  This works from a reference, which probably isn't what we need here
+            this.customRender = true;
+
             this.setTexture(key.texture);
 
-            if (this.game.cache.getFrameData(key.key, Phaser.Cache.BITMAPDATA))
+            if (cache.hasFrameData(key.key, Phaser.Cache.BITMAPDATA))
             {
-                setFrame = !this.animations.loadFrameData(this.game.cache.getFrameData(key.key, Phaser.Cache.BITMAPDATA), frame);
+                setFrame = !this.animations.loadFrameData(cache.getFrameData(key.key, Phaser.Cache.BITMAPDATA), frame);
             }
+        }
+        else if (Phaser.Video && key instanceof Phaser.Video)
+        {
+            this.customRender = true;
+
+            //  This works from a reference, which probably isn't what we need here
+            var valid = key.texture.valid;
+            this.setTexture(key.texture);
+            this.setFrame(key.texture.frame.clone());
+            key.onChangeSource.add(this.resizeFrame, this);
+            this.texture.valid = valid;
         }
         else if (key instanceof PIXI.Texture)
         {
@@ -70,30 +88,14 @@ Phaser.Component.LoadTexture.prototype = {
         }
         else
         {
-            if (key === null || typeof key === 'undefined')
-            {
-                this.key = '__default';
-                this.setTexture(PIXI.TextureCache[this.key]);
-            }
-            else if (typeof key === 'string' && !this.game.cache.checkImageKey(key))
-            {
-                console.warn("Texture with key '" + key + "' not found.");
-                this.key = '__missing';
-                this.setTexture(PIXI.TextureCache[this.key]);
-            }
-            else
-            {
-                this.setTexture(new PIXI.Texture(PIXI.BaseTextureCache[key]));
+            var img = cache.getImage(key, true);
 
-                setFrame = !this.animations.loadFrameData(this.game.cache.getFrameData(key), frame);
-            }
+            this.key = img.key;
+            this.setTexture(new PIXI.Texture(img.base));
+
+            setFrame = !this.animations.loadFrameData(img.frameData, frame);
         }
         
-        if (!isRenderTexture)
-        {
-            this.texture.baseTexture.dirty();
-        }
-
         if (setFrame)
         {
             this._frame = Phaser.Rectangle.clone(this.texture.frame);
@@ -157,12 +159,32 @@ Phaser.Component.LoadTexture.prototype = {
             this.updateCrop();
         }
 
-        if (this.tint !== 0xFFFFFF)
+        this.texture.requiresReTint = true;
+        
+        this.texture._updateUvs();
+
+        if (this.tilingTexture)
         {
-            this.cachedTint = -1;
+            this.refreshTexture = true;
         }
 
-        this.texture._updateUvs();
+    },
+
+    /**
+    * Resizes the Frame dimensions that the Game Object uses for rendering.
+    * 
+    * You shouldn't normally need to ever call this, but in the case of special texture types such as Video or BitmapData
+    * it can be useful to adjust the dimensions directly in this way.
+    *
+    * @method
+    * @param {object} parent - The parent texture object that caused the resize, i.e. a Phaser.Video object.
+    * @param {integer} width - The new width of the texture.
+    * @param {integer} height - The new height of the texture.
+    */
+    resizeFrame: function (parent, width, height) {
+
+        this.texture.frame.resize(width, height);
+        this.texture.setFrame(this.texture.frame);
 
     },
 

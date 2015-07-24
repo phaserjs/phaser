@@ -346,10 +346,10 @@ Phaser.Particles.Arcade.Emitter.prototype.update = function () {
 */
 Phaser.Particles.Arcade.Emitter.prototype.makeParticles = function (keys, frames, quantity, collide, collideWorldBounds) {
 
-    if (typeof frames === 'undefined') { frames = 0; }
-    if (typeof quantity === 'undefined') { quantity = this.maxParticles; }
-    if (typeof collide === 'undefined') { collide = false; }
-    if (typeof collideWorldBounds === 'undefined') { collideWorldBounds = false; }
+    if (frames === undefined) { frames = 0; }
+    if (quantity === undefined) { quantity = this.maxParticles; }
+    if (collide === undefined) { collide = false; }
+    if (collideWorldBounds === undefined) { collideWorldBounds = false; }
 
     var particle;
     var i = 0;
@@ -460,9 +460,9 @@ Phaser.Particles.Arcade.Emitter.prototype.explode = function (lifespan, quantity
 */
 Phaser.Particles.Arcade.Emitter.prototype.flow = function (lifespan, frequency, quantity, total, immediate) {
 
-    if (typeof quantity === 'undefined' || quantity === 0) { quantity = 1; }
-    if (typeof total === 'undefined') { total = -1; }
-    if (typeof immediate === 'undefined') { immediate = true; }
+    if (quantity === undefined || quantity === 0) { quantity = 1; }
+    if (total === undefined) { total = -1; }
+    if (immediate === undefined) { immediate = true; }
 
     if (quantity > this.maxParticles)
     {
@@ -500,11 +500,11 @@ Phaser.Particles.Arcade.Emitter.prototype.flow = function (lifespan, frequency, 
 */
 Phaser.Particles.Arcade.Emitter.prototype.start = function (explode, lifespan, frequency, quantity, forceQuantity) {
 
-    if (typeof explode === 'undefined') { explode = true; }
-    if (typeof lifespan === 'undefined') { lifespan = 0; }
-    if (typeof frequency === 'undefined' || frequency === null) { frequency = 250; }
-    if (typeof quantity === 'undefined') { quantity = 0; }
-    if (typeof forceQuantity === 'undefined') { forceQuantity = false; }
+    if (explode === undefined) { explode = true; }
+    if (lifespan === undefined) { lifespan = 0; }
+    if (frequency === undefined || frequency === null) { frequency = 250; }
+    if (quantity === undefined) { quantity = 0; }
+    if (forceQuantity === undefined) { forceQuantity = false; }
 
     if (quantity > this.maxParticles)
     {
@@ -715,11 +715,11 @@ Phaser.Particles.Arcade.Emitter.prototype.setRotation = function (min, max) {
 */
 Phaser.Particles.Arcade.Emitter.prototype.setAlpha = function (min, max, rate, ease, yoyo) {
 
-    if (typeof min === 'undefined') { min = 1; }
-    if (typeof max === 'undefined') { max = 1; }
-    if (typeof rate === 'undefined') { rate = 0; }
-    if (typeof ease === 'undefined') { ease = Phaser.Easing.Linear.None; }
-    if (typeof yoyo === 'undefined') { yoyo = false; }
+    if (min === undefined) { min = 1; }
+    if (max === undefined) { max = 1; }
+    if (rate === undefined) { rate = 0; }
+    if (ease === undefined) { ease = Phaser.Easing.Linear.None; }
+    if (yoyo === undefined) { yoyo = false; }
 
     this.minParticleAlpha = min;
     this.maxParticleAlpha = max;
@@ -756,13 +756,13 @@ Phaser.Particles.Arcade.Emitter.prototype.setAlpha = function (min, max, rate, e
 */
 Phaser.Particles.Arcade.Emitter.prototype.setScale = function (minX, maxX, minY, maxY, rate, ease, yoyo) {
 
-    if (typeof minX === 'undefined') { minX = 1; }
-    if (typeof maxX === 'undefined') { maxX = 1; }
-    if (typeof minY === 'undefined') { minY = 1; }
-    if (typeof maxY === 'undefined') { maxY = 1; }
-    if (typeof rate === 'undefined') { rate = 0; }
-    if (typeof ease === 'undefined') { ease = Phaser.Easing.Linear.None; }
-    if (typeof yoyo === 'undefined') { yoyo = false; }
+    if (minX === undefined) { minX = 1; }
+    if (maxX === undefined) { maxX = 1; }
+    if (minY === undefined) { minY = 1; }
+    if (maxY === undefined) { maxY = 1; }
+    if (rate === undefined) { rate = 0; }
+    if (ease === undefined) { ease = Phaser.Easing.Linear.None; }
+    if (yoyo === undefined) { yoyo = false; }
 
     //  Reset these
     this.minParticleScale = 1;

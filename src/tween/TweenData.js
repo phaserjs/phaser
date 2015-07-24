@@ -44,7 +44,7 @@ Phaser.TweenData = function (parent) {
     this.vEnd = {};
 
     /**
-    * @property {object} vEnd - Cached ending values.
+    * @property {object} vEndCache - Cached ending values.
     * @private
     */
     this.vEndCache = {};
@@ -178,7 +178,7 @@ Phaser.TweenData.prototype = {
     * Sets this tween to be a `to` tween on the properties given. A `to` tween starts at the current value and tweens to the destination value given.
     * For example a Sprite with an `x` coordinate of 100 could be tweened to `x` 200 by giving a properties object of `{ x: 200 }`.
     *
-    * @method Phaser.Tween#to
+    * @method Phaser.TweenData#to
     * @param {object} properties - The properties you want to tween, such as `Sprite.x` or `Sound.volume`. Given as a JavaScript object.
     * @param {number} [duration=1000] - Duration of this tween in ms.
     * @param {function} [ease=null] - Easing function. If not set it will default to Phaser.Easing.Default, which is Phaser.Easing.Linear.None by default but can be over-ridden at will.
@@ -206,7 +206,7 @@ Phaser.TweenData.prototype = {
     * Sets this tween to be a `from` tween on the properties given. A `from` tween sets the target to the destination value and tweens to its current value.
     * For example a Sprite with an `x` coordinate of 100 tweened from `x` 500 would be set to `x` 500 and then tweened to `x` 100 by giving a properties object of `{ x: 500 }`.
     *
-    * @method Phaser.Tween#from
+    * @method Phaser.TweenData#from
     * @param {object} properties - The properties you want to tween, such as `Sprite.x` or `Sound.volume`. Given as a JavaScript object.
     * @param {number} [duration=1000] - Duration of this tween in ms.
     * @param {function} [ease=null] - Easing function. If not set it will default to Phaser.Easing.Default, which is Phaser.Easing.Linear.None by default but can be over-ridden at will.
@@ -298,8 +298,12 @@ Phaser.TweenData.prototype = {
                     continue;
                 }
 
-                //  Create a local copy of the Array with the start value at the front
-                this.vEnd[property] = [this.vStart[property]].concat(this.vEnd[property]);
+                if (this.percent === 0)
+                {
+                    //  Put the start value at the beginning of the array
+                    //  but we only want to do this once, if the Tween hasn't run before
+                    this.vEnd[property] = [this.vStart[property]].concat(this.vEnd[property]);
+                }
             }
 
             if (typeof this.vEnd[property] !== 'undefined')
@@ -331,13 +335,14 @@ Phaser.TweenData.prototype = {
     *
     * @protected
     * @method Phaser.TweenData#update
+    * @param {number} time - A timestamp passed in by the Tween parent.
     * @return {number} The current status of this Tween. One of the Phaser.TweenData constants: PENDING, RUNNING, LOOPED or COMPLETE.
     */
-    update: function () {
+    update: function (time) {
 
         if (!this.isRunning)
         {
-            if (this.game.time.time >= this.startTime)
+            if (time >= this.startTime)
             {
                 this.isRunning = true;
             }
@@ -349,7 +354,7 @@ Phaser.TweenData.prototype = {
         else
         {
             //  Is Running, but is waiting to repeat
-            if (this.game.time.time < this.startTime)
+            if (time < this.startTime)
             {
                 return Phaser.TweenData.RUNNING;
             }
@@ -357,12 +362,12 @@ Phaser.TweenData.prototype = {
 
         if (this.parent.reverse)
         {
-            this.dt -= this.game.time.physicsElapsedMS * this.parent.timeScale;
+            this.dt -= this.game.time.elapsedMS * this.parent.timeScale;
             this.dt = Math.max(this.dt, 0);
         }
         else
         {
-            this.dt += this.game.time.physicsElapsedMS * this.parent.timeScale;
+            this.dt += this.game.time.elapsedMS * this.parent.timeScale;
             this.dt = Math.min(this.dt, this.duration);
         }
 

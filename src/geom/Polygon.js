@@ -62,7 +62,7 @@ Phaser.Polygon.prototype = {
      */
     toNumberArray: function (output) {
 
-        if (typeof output === 'undefined') { output = []; }
+        if (output === undefined) { output = []; }
 
         for (var i = 0; i < this._points.length; i++)
         {
@@ -109,7 +109,7 @@ Phaser.Polygon.prototype = {
 
         var points = this._points.slice();
 
-        if (typeof output === "undefined" || output === null)
+        if (output === undefined || output === null)
         {
             output = new Phaser.Polygon(points);
         }

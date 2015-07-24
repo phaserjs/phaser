@@ -60,7 +60,7 @@ Phaser.DOM = {
     */
     getBounds: function (element, cushion) {
 
-        if (typeof cushion === 'undefined') { cushion = 0; }
+        if (cushion === undefined) { cushion = 0; }
 
         element = element && !element.nodeType ? element[0] : element;
 

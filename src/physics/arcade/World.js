@@ -153,7 +153,7 @@ Phaser.Physics.Arcade.prototype = {
     */
     setBoundsToWorld: function () {
 
-        this.bounds.setTo(this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height);
+        this.bounds.copyFrom(this.game.world.bounds);
 
     },
 
@@ -167,7 +167,7 @@ Phaser.Physics.Arcade.prototype = {
     */
     enable: function (object, children) {
 
-        if (typeof children === 'undefined') { children = true; }
+        if (children === undefined) { children = true; }
 
         var i = 1;
 
@@ -215,7 +215,10 @@ Phaser.Physics.Arcade.prototype = {
 
     /**
     * Creates an Arcade Physics body on the given game object.
+    * 
     * A game object can only have 1 physics body active at any one time, and it can't be changed until the body is nulled.
+    *
+    * When you add an Arcade Physics body to an object it will automatically add the object into its parent Groups hash array.
     *
     * @method Phaser.Physics.Arcade#enableBody
     * @param {object} object - The game object to create the physics body on. A body will only be created if this object has a null `body` property.
@@ -225,6 +228,11 @@ Phaser.Physics.Arcade.prototype = {
         if (object.hasOwnProperty('body') && object.body === null)
         {
             object.body = new Phaser.Physics.Arcade.Body(object);
+
+            if (object.parent && object.parent instanceof Phaser.Group)
+            {
+                object.parent.addToHash(object);
+            }
         }
 
     },
@@ -261,7 +269,7 @@ Phaser.Physics.Arcade.prototype = {
     */
     computeVelocity: function (axis, body, velocity, acceleration, drag, max) {
 
-        if (typeof max === 'undefined') { max = 10000; }
+        if (max === undefined) { max = 10000; }
 
         if (axis === 1 && body.allowGravity)
         {
@@ -278,7 +286,6 @@ Phaser.Physics.Arcade.prototype = {
         }
         else if (drag)
         {
-            // var _drag = drag * this.game.time.physicsElapsed;
             drag *= this.game.time.physicsElapsed;
 
             if (velocity - drag > 0)
@@ -425,71 +432,132 @@ Phaser.Physics.Arcade.prototype = {
     },
 
     /**
-     * This method will sort a Groups _hash array based on the sortDirection property.
-     * 
-     * Each function should return -1 if `a > b`, 1 if `a < b` or 0 if `a === b`.
+     * A Sort function for sorting two bodies based on a LEFT to RIGHT sort direction.
      *
-     * @method sort
-     * @protected
-     * @param {Phaser.Group} group - The Group to sort.
+     * This is called automatically by World.sort
+     *
+     * @method Phaser.Physics.Arcade#sortLeftRight
+     * @param {Phaser.Sprite} a - The first Sprite to test. The Sprite must have an Arcade Physics Body.
+     * @param {Phaser.Sprite} b - The second Sprite to test. The Sprite must have an Arcade Physics Body.
+     * @return {integer} A negative value if `a > b`, a positive value if `a < b` or 0 if `a === b` or the bodies are invalid.
      */
-    sort: function (group) {
+    sortLeftRight: function (a, b) {
 
-        if (this.sortDirection === Phaser.Physics.Arcade.LEFT_RIGHT)
+        if (!a.body || !b.body)
+        {
+            return 0;
+        }
+
+        return a.body.x - b.body.x;
+
+    },
+
+    /**
+     * A Sort function for sorting two bodies based on a RIGHT to LEFT sort direction.
+     *
+     * This is called automatically by World.sort
+     *
+     * @method Phaser.Physics.Arcade#sortRightLeft
+     * @param {Phaser.Sprite} a - The first Sprite to test. The Sprite must have an Arcade Physics Body.
+     * @param {Phaser.Sprite} b - The second Sprite to test. The Sprite must have an Arcade Physics Body.
+     * @return {integer} A negative value if `a > b`, a positive value if `a < b` or 0 if `a === b` or the bodies are invalid.
+     */
+    sortRightLeft: function (a, b) {
+
+        if (!a.body || !b.body)
+        {
+            return 0;
+        }
+
+        return b.body.x - a.body.x;
+
+    },
+
+    /**
+     * A Sort function for sorting two bodies based on a TOP to BOTTOM sort direction.
+     *
+     * This is called automatically by World.sort
+     *
+     * @method Phaser.Physics.Arcade#sortTopBottom
+     * @param {Phaser.Sprite} a - The first Sprite to test. The Sprite must have an Arcade Physics Body.
+     * @param {Phaser.Sprite} b - The second Sprite to test. The Sprite must have an Arcade Physics Body.
+     * @return {integer} A negative value if `a > b`, a positive value if `a < b` or 0 if `a === b` or the bodies are invalid.
+     */
+    sortTopBottom: function (a, b) {
+
+        if (!a.body || !b.body)
+        {
+            return 0;
+        }
+
+        return a.body.y - b.body.y;
+
+    },
+
+    /**
+     * A Sort function for sorting two bodies based on a BOTTOM to TOP sort direction.
+     *
+     * This is called automatically by World.sort
+     *
+     * @method Phaser.Physics.Arcade#sortBottomTop
+     * @param {Phaser.Sprite} a - The first Sprite to test. The Sprite must have an Arcade Physics Body.
+     * @param {Phaser.Sprite} b - The second Sprite to test. The Sprite must have an Arcade Physics Body.
+     * @return {integer} A negative value if `a > b`, a positive value if `a < b` or 0 if `a === b` or the bodies are invalid.
+     */
+    sortBottomTop: function (a, b) {
+
+        if (!a.body || !b.body)
+        {
+            return 0;
+        }
+
+        return b.body.y - a.body.y;
+
+    },
+
+    /**
+     * This method will sort a Groups hash array.
+     *
+     * If the Group has `physicsSortDirection` set it will use the sort direction defined.
+     *
+     * Otherwise if the sortDirection parameter is undefined, or Group.physicsSortDirection is null, it will use Phaser.Physics.Arcade.sortDirection.
+     *
+     * By changing Group.physicsSortDirection you can customise each Group to sort in a different order.
+     *
+     * @method Phaser.Physics.Arcade#sort
+     * @param {Phaser.Group} group - The Group to sort.
+     * @param {integer} [sortDirection] - The sort direction used to sort this Group.
+     */
+    sort: function (group, sortDirection) {
+
+        if (group.physicsSortDirection !== null)
+        {
+            sortDirection = group.physicsSortDirection;
+        }
+        else
+        {
+            if (sortDirection === undefined) { sortDirection = this.sortDirection; }
+        }
+
+        if (sortDirection === Phaser.Physics.Arcade.LEFT_RIGHT)
         {
             //  Game world is say 2000x600 and you start at 0
-            group._hash.sort(function(a, b) {
-
-                if (!a.body || !b.body)
-                {
-                    return -1;
-                }
-
-                return a.body.x - b.body.x;
-
-            });
+            group.hash.sort(this.sortLeftRight);
         }
-        else if (this.sortDirection === Phaser.Physics.Arcade.RIGHT_LEFT)
+        else if (sortDirection === Phaser.Physics.Arcade.RIGHT_LEFT)
         {
             //  Game world is say 2000x600 and you start at 2000
-            group._hash.sort(function(a, b) {
-
-                if (!a.body || !b.body)
-                {
-                    return -1;
-                }
-
-                return b.body.x - a.body.x;
-
-            });
+            group.hash.sort(this.sortRightLeft);
         }
-        else if (this.sortDirection === Phaser.Physics.Arcade.TOP_BOTTOM)
+        else if (sortDirection === Phaser.Physics.Arcade.TOP_BOTTOM)
         {
             //  Game world is say 800x2000 and you start at 0
-            group._hash.sort(function(a, b) {
-
-                if (!a.body || !b.body)
-                {
-                    return -1;
-                }
-
-                return a.body.y - b.body.y;
-
-            });
+            group.hash.sort(this.sortTopBottom);
         }
-        else if (this.sortDirection === Phaser.Physics.Arcade.BOTTOM_TOP)
+        else if (sortDirection === Phaser.Physics.Arcade.BOTTOM_TOP)
         {
             //  Game world is say 800x2000 and you start at 2000
-            group._hash.sort(function(a, b) {
-
-                if (!a.body || !b.body)
-                {
-                    return -1;
-                }
-
-                return b.body.y - a.body.y;
-
-            });
+            group.hash.sort(this.sortBottomTop);
         }
 
     },
@@ -509,7 +577,7 @@ Phaser.Physics.Arcade.prototype = {
     collideHandler: function (object1, object2, collideCallback, processCallback, callbackContext, overlapOnly) {
 
         //  Only collide valid objects
-        if (typeof object2 === 'undefined' && object1.physicsType === Phaser.GROUP)
+        if (object2 === undefined && object1.physicsType === Phaser.GROUP)
         {
             this.sort(object1);
             this.collideGroupVsSelf(object1, collideCallback, processCallback, callbackContext, overlapOnly);
@@ -549,7 +617,7 @@ Phaser.Physics.Arcade.prototype = {
             }
             else if (object2.physicsType === Phaser.TILEMAPLAYER)
             {
-                this.collideSpriteVsTilemapLayer(object1, object2, collideCallback, processCallback, callbackContext);
+                this.collideSpriteVsTilemapLayer(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly);
             }
         }
         //  GROUPS
@@ -636,63 +704,67 @@ Phaser.Physics.Arcade.prototype = {
             return;
         }
 
+        var body;
+
         if (this.skipQuadTree || sprite.body.skipQuadTree)
         {
-            for (var i = 0; i < group._hash.length; i++)
+            for (var i = 0; i < group.hash.length; i++)
             {
                 //  Skip duff entries - we can't check a non-existent sprite or one with no body
-                if (!group._hash[i] || !group._hash[i].exists || !group._hash[i].body)
+                if (!group.hash[i] || !group.hash[i].exists || !group.hash[i].body)
                 {
                     continue;
                 }
 
+                body = group.hash[i].body;
+
                 //  Skip items either side of the sprite
                 if (this.sortDirection === Phaser.Physics.Arcade.LEFT_RIGHT)
                 {
-                    if (sprite.body.right < group._hash[i].body.x)
+                    if (sprite.body.right < body.x)
                     {
                         break;
                     }
-                    else if (group._hash[i].body.right < sprite.body.x)
+                    else if (body.right < sprite.body.x)
                     {
                         continue;
                     }
                 }
                 else if (this.sortDirection === Phaser.Physics.Arcade.RIGHT_LEFT)
                 {
-                    if (sprite.body.x > group._hash[i].body.right)
+                    if (sprite.body.x > body.right)
                     {
                         break;
                     }
-                    else if (group._hash[i].body.x > sprite.body.right)
+                    else if (body.x > sprite.body.right)
                     {
                         continue;
                     }
                 }
                 else if (this.sortDirection === Phaser.Physics.Arcade.TOP_BOTTOM)
                 {
-                    if (sprite.body.bottom < group._hash[i].body.y)
+                    if (sprite.body.bottom < body.y)
                     {
                         break;
                     }
-                    else if (group._hash[i].body.bottom < sprite.body.y)
+                    else if (body.bottom < sprite.body.y)
                     {
                         continue;
                     }
                 }
                 else if (this.sortDirection === Phaser.Physics.Arcade.BOTTOM_TOP)
                 {
-                    if (sprite.body.y > group._hash[i].body.bottom)
+                    if (sprite.body.y > body.bottom)
                     {
                         break;
                     }
-                    else if (group._hash[i].body.y > sprite.body.bottom)
+                    else if (body.y > sprite.body.bottom)
                     {
                         continue;
                     }
                 }
                 
-                this.collideSpriteVsSprite(sprite, group._hash[i], collideCallback, processCallback, callbackContext, overlapOnly);
+                this.collideSpriteVsSprite(sprite, group.hash[i], collideCallback, processCallback, callbackContext, overlapOnly);
             }
         }
         else
@@ -742,25 +814,25 @@ Phaser.Physics.Arcade.prototype = {
             return;
         }
 
-        for (var i = 0; i < group._hash.length; i++)
+        for (var i = 0; i < group.hash.length; i++)
         {
             //  Skip duff entries - we can't check a non-existent sprite or one with no body
-            if (!group._hash[i] || !group._hash[i].exists || !group._hash[i].body)
+            if (!group.hash[i] || !group.hash[i].exists || !group.hash[i].body)
             {
                 continue;
             }
 
-            var object1 = group._hash[i];
+            var object1 = group.hash[i];
 
-            for (var j = i + 1; j < group._hash.length; j++)
+            for (var j = i + 1; j < group.hash.length; j++)
             {
                 //  Skip duff entries - we can't check a non-existent sprite or one with no body
-                if (!group._hash[j] || !group._hash[j].exists || !group._hash[j].body)
+                if (!group.hash[j] || !group.hash[j].exists || !group.hash[j].body)
                 {
                     continue;
                 }
 
-                var object2 = group._hash[j];
+                var object2 = group.hash[j];
 
                 //  Skip items either side of the sprite
                 if (this.sortDirection === Phaser.Physics.Arcade.LEFT_RIGHT)
@@ -1278,8 +1350,8 @@ Phaser.Physics.Arcade.prototype = {
     */
     moveToObject: function (displayObject, destination, speed, maxTime) {
 
-        if (typeof speed === 'undefined') { speed = 60; }
-        if (typeof maxTime === 'undefined') { maxTime = 0; }
+        if (speed === undefined) { speed = 60; }
+        if (maxTime === undefined) { maxTime = 0; }
 
         var angle = Math.atan2(destination.y - displayObject.y, destination.x - displayObject.x);
 
@@ -1312,9 +1384,9 @@ Phaser.Physics.Arcade.prototype = {
     */
     moveToPointer: function (displayObject, speed, pointer, maxTime) {
 
-        if (typeof speed === 'undefined') { speed = 60; }
+        if (speed === undefined) { speed = 60; }
         pointer = pointer || this.game.input.activePointer;
-        if (typeof maxTime === 'undefined') { maxTime = 0; }
+        if (maxTime === undefined) { maxTime = 0; }
 
         var angle = this.angleToPointer(displayObject, pointer);
 
@@ -1349,8 +1421,8 @@ Phaser.Physics.Arcade.prototype = {
     */
     moveToXY: function (displayObject, x, y, speed, maxTime) {
 
-        if (typeof speed === 'undefined') { speed = 60; }
-        if (typeof maxTime === 'undefined') { maxTime = 0; }
+        if (speed === undefined) { speed = 60; }
+        if (maxTime === undefined) { maxTime = 0; }
 
         var angle = Math.atan2(y - displayObject.y, x - displayObject.x);
 
@@ -1379,7 +1451,7 @@ Phaser.Physics.Arcade.prototype = {
     */
     velocityFromAngle: function (angle, speed, point) {
 
-        if (typeof speed === 'undefined') { speed = 60; }
+        if (speed === undefined) { speed = 60; }
         point = point || new Phaser.Point();
 
         return point.setTo((Math.cos(this.game.math.degToRad(angle)) * speed), (Math.sin(this.game.math.degToRad(angle)) * speed));
@@ -1398,7 +1470,7 @@ Phaser.Physics.Arcade.prototype = {
     */
     velocityFromRotation: function (rotation, speed, point) {
 
-        if (typeof speed === 'undefined') { speed = 60; }
+        if (speed === undefined) { speed = 60; }
         point = point || new Phaser.Point();
 
         return point.setTo((Math.cos(rotation) * speed), (Math.sin(rotation) * speed));
@@ -1417,7 +1489,7 @@ Phaser.Physics.Arcade.prototype = {
     */
     accelerationFromRotation: function (rotation, speed, point) {
 
-        if (typeof speed === 'undefined') { speed = 60; }
+        if (speed === undefined) { speed = 60; }
         point = point || new Phaser.Point();
 
         return point.setTo((Math.cos(rotation) * speed), (Math.sin(rotation) * speed));
@@ -1440,9 +1512,9 @@ Phaser.Physics.Arcade.prototype = {
     */
     accelerateToObject: function (displayObject, destination, speed, xSpeedMax, ySpeedMax) {
 
-        if (typeof speed === 'undefined') { speed = 60; }
-        if (typeof xSpeedMax === 'undefined') { xSpeedMax = 1000; }
-        if (typeof ySpeedMax === 'undefined') { ySpeedMax = 1000; }
+        if (speed === undefined) { speed = 60; }
+        if (xSpeedMax === undefined) { xSpeedMax = 1000; }
+        if (ySpeedMax === undefined) { ySpeedMax = 1000; }
 
         var angle = this.angleBetween(displayObject, destination);
 
@@ -1469,10 +1541,10 @@ Phaser.Physics.Arcade.prototype = {
     */
     accelerateToPointer: function (displayObject, pointer, speed, xSpeedMax, ySpeedMax) {
 
-        if (typeof speed === 'undefined') { speed = 60; }
-        if (typeof pointer === 'undefined') { pointer = this.game.input.activePointer; }
-        if (typeof xSpeedMax === 'undefined') { xSpeedMax = 1000; }
-        if (typeof ySpeedMax === 'undefined') { ySpeedMax = 1000; }
+        if (speed === undefined) { speed = 60; }
+        if (pointer === undefined) { pointer = this.game.input.activePointer; }
+        if (xSpeedMax === undefined) { xSpeedMax = 1000; }
+        if (ySpeedMax === undefined) { ySpeedMax = 1000; }
 
         var angle = this.angleToPointer(displayObject, pointer);
 
@@ -1500,9 +1572,9 @@ Phaser.Physics.Arcade.prototype = {
     */
     accelerateToXY: function (displayObject, x, y, speed, xSpeedMax, ySpeedMax) {
 
-        if (typeof speed === 'undefined') { speed = 60; }
-        if (typeof xSpeedMax === 'undefined') { xSpeedMax = 1000; }
-        if (typeof ySpeedMax === 'undefined') { ySpeedMax = 1000; }
+        if (speed === undefined) { speed = 60; }
+        if (xSpeedMax === undefined) { xSpeedMax = 1000; }
+        if (ySpeedMax === undefined) { ySpeedMax = 1000; }
 
         var angle = this.angleToXY(displayObject, x, y);
 

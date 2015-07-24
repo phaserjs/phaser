@@ -85,7 +85,7 @@ Phaser.Utils = {
     * @return {boolean} True if the roll passed, or false otherwise.
     */
     chanceRoll: function (chance) {
-        if (typeof chance === 'undefined') { chance = 50; }
+        if (chance === undefined) { chance = 50; }
         return chance > 0 && (Math.random() * 100 <= chance);
     },
 
@@ -99,45 +99,6 @@ Phaser.Utils = {
     */
     randomChoice: function (choice1, choice2) {
         return (Math.random() < 0.5) ? choice1 : choice2;
-    },
-
-    /**
-    * Transposes the elements of the given matrix (array of arrays).
-    *
-    * @method Phaser.Utils.transposeArray
-    * @param {Array<any[]>} array - The matrix to transpose.
-    * @return {Array<any[]>} A new transposed matrix
-    * @deprecated 2.2.0 - Use Phaser.ArrayUtils.transposeMatrix
-    */
-    transposeArray: function (array) {
-        return Phaser.ArrayUtils.transposeMatrix(array);
-    },
-
-    /**
-    * Rotates the given matrix (array of arrays).
-    *
-    * Based on the routine from {@link http://jsfiddle.net/MrPolywhirl/NH42z/}.
-    *
-    * @method Phaser.Utils.rotateArray
-    * @param {Array<any[]>} matrix - The array to rotate; this matrix _may_ be altered.
-    * @param {number|string} direction - The amount to rotate: the roation in degrees (90, -90, 270, -270, 180) or a string command ('rotateLeft', 'rotateRight' or 'rotate180').
-    * @return {Array<any[]>} The rotated matrix. The source matrix should be discarded for the returned matrix.
-    * @deprecated 2.2.0 - Use Phaser.ArrayUtils.rotateMatrix
-    */
-    rotateArray: function (matrix, direction) {
-        return Phaser.ArrayUtils.rotateMatrix(matrix, direction);
-    },
-
-    /**
-    * A standard Fisher-Yates Array shuffle implementation.
-    *
-    * @method Phaser.Utils.shuffle
-    * @param {any[]} array - The array to shuffle.
-    * @return {any[]} The shuffled array.
-    * @deprecated 2.2.0 - User Phaser.ArrayUtils.shuffle
-    */
-    shuffle: function (array) {
-        return Phaser.ArrayUtils.shuffle(array);
     },
 
     /**
@@ -184,20 +145,20 @@ Phaser.Utils = {
     },
 
     /**
-    * Javascript string pad http://www.webtoolkit.info/.
+    * JavaScript string pad http://www.webtoolkit.info/.
     *
     * @method Phaser.Utils.pad
     * @param {string} str - The target string.
-    * @param {number} len - The number of characters to be added.
-    * @param {number} pad - The string to pad it out with (defaults to a space).
-    * @param {number} [dir=3] The direction dir = 1 (left), 2 (right), 3 (both).
+    * @param {integer} [len=0] - The number of characters to be added.
+    * @param {string} [pad=" "] - The string to pad it out with (defaults to a space).
+    * @param {integer} [dir=3] The direction dir = 1 (left), 2 (right), 3 (both).
     * @return {string} The padded string
     */
     pad: function (str, len, pad, dir) {
 
-        if (typeof(len) === "undefined") { var len = 0; }
-        if (typeof(pad) === "undefined") { var pad = ' '; }
-        if (typeof(dir) === "undefined") { var dir = 3; }
+        if (len === undefined) { var len = 0; }
+        if (pad === undefined) { var pad = ' '; }
+        if (dir === undefined) { var dir = 3; }
 
         var padlen = 0;
 
@@ -263,6 +224,7 @@ Phaser.Utils = {
 
     /**
     * This is a slightly modified version of http://api.jquery.com/jQuery.extend/
+    * 
     * @method Phaser.Utils.extend
     * @param {boolean} deep - Perform a deep copy?
     * @param {object} target - The target object to copy to.
@@ -354,7 +316,7 @@ Phaser.Utils = {
     */
     mixinPrototype: function (target, mixin, replace) {
     
-        if (typeof replace === 'undefined') { replace = false; }
+        if (replace === undefined) { replace = false; }
 
         var mixinKeys = Object.keys(mixin);
 

@@ -7,8 +7,12 @@
 /**
 * The Mouse class is responsible for handling all aspects of mouse interaction with the browser.
 *
-* It captures and processes mouse events that happen on the game canvas object. It also adds a single `mouseup` listener to `window` which
-* is used to capture the mouse being released when not over the game.
+* It captures and processes mouse events that happen on the game canvas object.
+* It also adds a single `mouseup` listener to `window` which is used to capture the mouse being released 
+* when not over the game.
+*
+* You should not normally access this class directly, but instead use a Phaser.Pointer object 
+* which normalises all game input for you, including accurate button handling.
 *
 * @class Phaser.Mouse
 * @constructor
@@ -22,6 +26,12 @@ Phaser.Mouse = function (game) {
     this.game = game;
 
     /**
+    * @property {Phaser.Input} input - A reference to the Phaser Input Manager.
+    * @protected
+    */
+    this.input = game.input;
+
+    /**
     * @property {object} callbackContext - The context under which callbacks are called.
     */
     this.callbackContext = this.game;
@@ -30,12 +40,6 @@ Phaser.Mouse = function (game) {
     * @property {function} mouseDownCallback - A callback that can be fired when the mouse is pressed down.
     */
     this.mouseDownCallback = null;
-
-    /**
-    * @property {function} mouseMoveCallback - A callback that can be fired when the mouse is moved.
-    * @deprecated Will be removed soon. Please use `Input.addMoveCallback` instead.
-    */
-    this.mouseMoveCallback = null;
 
     /**
     * @property {function} mouseUpCallback - A callback that can be fired when the mouse is released from a pressed down state.
@@ -63,13 +67,17 @@ Phaser.Mouse = function (game) {
     this.capture = false;
 
     /**
-    * @property {number} button- The type of click, either: Phaser.Mouse.NO_BUTTON, Phaser.Mouse.LEFT_BUTTON, Phaser.Mouse.MIDDLE_BUTTON or Phaser.Mouse.RIGHT_BUTTON.
+    * This property was removed in Phaser 2.4 and should no longer be used.
+    * Instead please see the Pointer button properties such as `Pointer.leftButton`, `Pointer.rightButton` and so on.
+    * Or Pointer.button holds the DOM event button value if you require that.
+    * @property {number} button
     * @default
     */
     this.button = -1;
 
     /**
-     * @property {number} wheelDelta - The direction of the _last_ mousewheel usage 1 for up -1 for down
+     * The direction of the _last_ mousewheel usage 1 for up -1 for down.
+     * @property {number} wheelDelta
      */
     this.wheelDelta = 0;
 
@@ -176,6 +184,18 @@ Phaser.Mouse.MIDDLE_BUTTON = 1;
 Phaser.Mouse.RIGHT_BUTTON = 2;
 
 /**
+* @constant
+* @type {number}
+*/
+Phaser.Mouse.BACK_BUTTON = 3;
+
+/**
+* @constant
+* @type {number}
+*/
+Phaser.Mouse.FORWARD_BUTTON = 4;
+
+/**
  * @constant
  * @type {number}
  */
@@ -237,22 +257,24 @@ Phaser.Mouse.prototype = {
             return _this.onMouseWheel(event);
         };
 
-        this.game.canvas.addEventListener('mousedown', this._onMouseDown, true);
-        this.game.canvas.addEventListener('mousemove', this._onMouseMove, true);
-        this.game.canvas.addEventListener('mouseup', this._onMouseUp, true);
+        var canvas = this.game.canvas;
+
+        canvas.addEventListener('mousedown', this._onMouseDown, true);
+        canvas.addEventListener('mousemove', this._onMouseMove, true);
+        canvas.addEventListener('mouseup', this._onMouseUp, true);
 
         if (!this.game.device.cocoonJS)
         {
             window.addEventListener('mouseup', this._onMouseUpGlobal, true);
-            this.game.canvas.addEventListener('mouseover', this._onMouseOver, true);
-            this.game.canvas.addEventListener('mouseout', this._onMouseOut, true);
+            canvas.addEventListener('mouseover', this._onMouseOver, true);
+            canvas.addEventListener('mouseout', this._onMouseOut, true);
         }
 
         var wheelEvent = this.game.device.wheelEvent;
 
         if (wheelEvent)
         {
-            this.game.canvas.addEventListener(wheelEvent, this._onMouseWheel, true);
+            canvas.addEventListener(wheelEvent, this._onMouseWheel, true);
 
             if (wheelEvent === 'mousewheel')
             {
@@ -280,21 +302,19 @@ Phaser.Mouse.prototype = {
             event.preventDefault();
         }
 
-        this.button = event.button;
-
         if (this.mouseDownCallback)
         {
             this.mouseDownCallback.call(this.callbackContext, event);
         }
 
-        if (!this.game.input.enabled || !this.enabled)
+        if (!this.input.enabled || !this.enabled)
         {
             return;
         }
 
         event['identifier'] = 0;
 
-        this.game.input.mousePointer.start(event);
+        this.input.mousePointer.start(event);
 
     },
 
@@ -317,14 +337,14 @@ Phaser.Mouse.prototype = {
             this.mouseMoveCallback.call(this.callbackContext, event);
         }
 
-        if (!this.game.input.enabled || !this.enabled)
+        if (!this.input.enabled || !this.enabled)
         {
             return;
         }
 
         event['identifier'] = 0;
 
-        this.game.input.mousePointer.move(event);
+        this.input.mousePointer.move(event);
 
     },
 
@@ -342,21 +362,19 @@ Phaser.Mouse.prototype = {
             event.preventDefault();
         }
 
-        this.button = Phaser.Mouse.NO_BUTTON;
-
         if (this.mouseUpCallback)
         {
             this.mouseUpCallback.call(this.callbackContext, event);
         }
 
-        if (!this.game.input.enabled || !this.enabled)
+        if (!this.input.enabled || !this.enabled)
         {
             return;
         }
 
         event['identifier'] = 0;
 
-        this.game.input.mousePointer.stop(event);
+        this.input.mousePointer.stop(event);
 
     },
 
@@ -368,10 +386,8 @@ Phaser.Mouse.prototype = {
     */
     onMouseUpGlobal: function (event) {
 
-        if (!this.game.input.mousePointer.withinGame)
+        if (!this.input.mousePointer.withinGame)
         {
-            this.button = Phaser.Mouse.NO_BUTTON;
-
             if (this.mouseUpCallback)
             {
                 this.mouseUpCallback.call(this.callbackContext, event);
@@ -379,7 +395,7 @@ Phaser.Mouse.prototype = {
 
             event['identifier'] = 0;
 
-            this.game.input.mousePointer.stop(event);
+            this.input.mousePointer.stop(event);
         }
 
     },
@@ -399,14 +415,14 @@ Phaser.Mouse.prototype = {
             event.preventDefault();
         }
 
-        this.game.input.mousePointer.withinGame = false;
+        this.input.mousePointer.withinGame = false;
 
         if (this.mouseOutCallback)
         {
             this.mouseOutCallback.call(this.callbackContext, event);
         }
 
-        if (!this.game.input.enabled || !this.enabled)
+        if (!this.input.enabled || !this.enabled)
         {
             return;
         }
@@ -415,7 +431,7 @@ Phaser.Mouse.prototype = {
         {
             event['identifier'] = 0;
 
-            this.game.input.mousePointer.stop(event);
+            this.input.mousePointer.stop(event);
         }
 
     },
@@ -464,14 +480,14 @@ Phaser.Mouse.prototype = {
             event.preventDefault();
         }
 
-        this.game.input.mousePointer.withinGame = true;
+        this.input.mousePointer.withinGame = true;
 
         if (this.mouseOverCallback)
         {
             this.mouseOverCallback.call(this.callbackContext, event);
         }
 
-        if (!this.game.input.enabled || !this.enabled)
+        if (!this.input.enabled || !this.enabled)
         {
             return;
         }
@@ -554,16 +570,19 @@ Phaser.Mouse.prototype = {
     */
     stop: function () {
 
-        this.game.canvas.removeEventListener('mousedown', this._onMouseDown, true);
-        this.game.canvas.removeEventListener('mousemove', this._onMouseMove, true);
-        this.game.canvas.removeEventListener('mouseup', this._onMouseUp, true);
-        this.game.canvas.removeEventListener('mouseover', this._onMouseOver, true);
-        this.game.canvas.removeEventListener('mouseout', this._onMouseOut, true);
+        var canvas = this.game.canvas;
+
+        canvas.removeEventListener('mousedown', this._onMouseDown, true);
+        canvas.removeEventListener('mousemove', this._onMouseMove, true);
+        canvas.removeEventListener('mouseup', this._onMouseUp, true);
+        canvas.removeEventListener('mouseover', this._onMouseOver, true);
+        canvas.removeEventListener('mouseout', this._onMouseOut, true);
 
         var wheelEvent = this.game.device.wheelEvent;
+
         if (wheelEvent)
         {
-            this.game.canvas.removeEventListener(wheelEvent, this._onMouseWheel, true);
+            canvas.removeEventListener(wheelEvent, this._onMouseWheel, true);
         }
 
         window.removeEventListener('mouseup', this._onMouseUpGlobal, true);
@@ -577,24 +596,6 @@ Phaser.Mouse.prototype = {
 };
 
 Phaser.Mouse.prototype.constructor = Phaser.Mouse;
-
-/**
-* If disabled all Mouse input will be ignored.
-* @property {boolean} disabled
-* @memberof Phaser.Mouse
-* @default false
-* @deprecated Use {@link Phaser.Mouse#enabled} instead
-*/
-Object.defineProperty(Phaser.Mouse.prototype, "disabled", {
-
-    get: function () {
-        return !this.enabled;
-    },
-    set: function (value) {
-        this.enabled = !value;
-    }
-
-});
 
 /* jshint latedef:nofunc */
 /**
@@ -627,6 +628,7 @@ function WheelEventProxy (scaleFactor, deltaMode) {
     * @private
     */
     this.originalEvent = null;
+
 }
 
 WheelEventProxy.prototype = {};

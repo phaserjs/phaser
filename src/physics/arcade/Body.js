@@ -320,6 +320,16 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.skipQuadTree = false;
 
     /**
+    * If true the Body will check itself against the Sprite.getBounds() dimensions and adjust its width and height accordingly.
+    * If false it will compare its dimensions against the Sprite scale instead, and adjust its width height if the scale has changed.
+    * Typically you would need to enable syncBounds if your sprite is the child of a responsive display object such as a FlexLayer, 
+    * or in any situation where the Sprite scale doesn't change, but its parents scale is effecting the dimensions regardless.
+    * @property {boolean} syncBounds
+    * @default
+    */
+    this.syncBounds = false;
+
+    /**
     * @property {boolean} _reset - Internal cache var.
     * @private
     */
@@ -361,20 +371,38 @@ Phaser.Physics.Arcade.Body.prototype = {
     */
     updateBounds: function () {
 
-        var asx = Math.abs(this.sprite.scale.x);
-        var asy = Math.abs(this.sprite.scale.y);
-
-        if (asx !== this._sx || asy !== this._sy)
+        if (this.syncBounds)
         {
-            this.width = this.sourceWidth * asx;
-            this.height = this.sourceHeight * asy;
+            var b = this.sprite.getBounds();
+            b.ceilAll();
+
+            if (b.width !== this.width || b.height !== this.height)
+            {
+                this.width = b.width;
+                this.height = b.height;
+                this._reset = true;
+            }
+        }
+        else
+        {
+            var asx = Math.abs(this.sprite.scale.x);
+            var asy = Math.abs(this.sprite.scale.y);
+
+            if (asx !== this._sx || asy !== this._sy)
+            {
+                this.width = this.sourceWidth * asx;
+                this.height = this.sourceHeight * asy;
+                this._sx = asx;
+                this._sy = asy;
+                this._reset = true;
+            }
+        }
+
+        if (this._reset)
+        {
             this.halfWidth = Math.floor(this.width / 2);
             this.halfHeight = Math.floor(this.height / 2);
-            this._sx = asx;
-            this._sy = asy;
             this.center.setTo(this.position.x + this.halfWidth, this.position.y + this.halfHeight);
-
-            this._reset = true;
         }
 
     },
@@ -540,11 +568,16 @@ Phaser.Physics.Arcade.Body.prototype = {
     },
 
     /**
-    * Removes this body's reference to its parent sprite, freeing it up for gc.
+    * Removes this bodys reference to its parent sprite, freeing it up for gc.
     *
     * @method Phaser.Physics.Arcade.Body#destroy
     */
     destroy: function () {
+
+        if (this.sprite.parent && this.sprite.parent instanceof Phaser.Group)
+        {
+            this.sprite.parent.removeFromHash(this.sprite);
+        }
 
         this.sprite.body = null;
         this.sprite = null;
@@ -559,28 +592,32 @@ Phaser.Physics.Arcade.Body.prototype = {
     */
     checkWorldBounds: function () {
 
-        if (this.position.x < this.game.physics.arcade.bounds.x && this.game.physics.arcade.checkCollision.left)
+        var pos = this.position;
+        var bounds = this.game.physics.arcade.bounds;
+        var check = this.game.physics.arcade.checkCollision;
+
+        if (pos.x < bounds.x && check.left)
         {
-            this.position.x = this.game.physics.arcade.bounds.x;
+            pos.x = bounds.x;
             this.velocity.x *= -this.bounce.x;
             this.blocked.left = true;
         }
-        else if (this.right > this.game.physics.arcade.bounds.right && this.game.physics.arcade.checkCollision.right)
+        else if (this.right > bounds.right && check.right)
         {
-            this.position.x = this.game.physics.arcade.bounds.right - this.width;
+            pos.x = bounds.right - this.width;
             this.velocity.x *= -this.bounce.x;
             this.blocked.right = true;
         }
 
-        if (this.position.y < this.game.physics.arcade.bounds.y && this.game.physics.arcade.checkCollision.up)
+        if (pos.y < bounds.y && check.up)
         {
-            this.position.y = this.game.physics.arcade.bounds.y;
+            pos.y = bounds.y;
             this.velocity.y *= -this.bounce.y;
             this.blocked.up = true;
         }
-        else if (this.bottom > this.game.physics.arcade.bounds.bottom && this.game.physics.arcade.checkCollision.down)
+        else if (this.bottom > bounds.bottom && check.down)
         {
-            this.position.y = this.game.physics.arcade.bounds.bottom - this.height;
+            pos.y = bounds.bottom - this.height;
             this.velocity.y *= -this.bounce.y;
             this.blocked.down = true;
         }
@@ -600,8 +637,8 @@ Phaser.Physics.Arcade.Body.prototype = {
     */
     setSize: function (width, height, offsetX, offsetY) {
 
-        if (typeof offsetX === 'undefined') { offsetX = this.offset.x; }
-        if (typeof offsetY === 'undefined') { offsetY = this.offset.y; }
+        if (offsetX === undefined) { offsetX = this.offset.x; }
+        if (offsetY === undefined) { offsetY = this.offset.y; }
 
         this.sourceWidth = width;
         this.sourceHeight = height;
@@ -803,7 +840,7 @@ Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "y", {
 */
 Phaser.Physics.Arcade.Body.render = function (context, body, color, filled) {
 
-    if (typeof filled === 'undefined') { filled = true; }
+    if (filled === undefined) { filled = true; }
 
     color = color || 'rgba(0,255,0,0.4)';
 

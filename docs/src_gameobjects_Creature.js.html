@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Phaser Class: GamepadButton</title>
+	<title>Phaser Source: src/gameobjects/Creature.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -52,10 +52,6 @@
 
 					<ul class="dropdown-menu ">
 						
-						<li class="class-depth-0">
-							<a href="Matrix.html">Matrix</a>
-						</li>
-						
 						<li class="class-depth-1">
 							<a href="Phaser.Animation.html">Animation</a>
 						</li>
@@ -66,10 +62,6 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.AnimationParser.html">AnimationParser</a>
-						</li>
-						
-						<li class="class-depth-1">
-							<a href="Phaser.ArrayList.html">ArrayList</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -201,7 +193,19 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="Phaser.Create.html">Create</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Creature.html">Creature</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="Phaser.Device.html">Device</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.DeviceButton.html">DeviceButton</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -301,10 +305,6 @@
 						</li>
 						
 						<li class="class-depth-1">
-							<a href="Phaser.GamepadButton.html">GamepadButton</a>
-						</li>
-						
-						<li class="class-depth-1">
 							<a href="Phaser.Graphics.html">Graphics</a>
 						</li>
 						
@@ -314,6 +314,10 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.Image.html">Image</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.ImageCollection.html">ImageCollection</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -350,6 +354,10 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.Math.html">Math</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Matrix.html">Matrix</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -529,6 +537,10 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="Phaser.RoundedRectangle.html">RoundedRectangle</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="Phaser.ScaleManager.html">ScaleManager</a>
 						</li>
 						
@@ -637,6 +649,10 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="Phaser.Video.html">Video</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="Phaser.World.html">World</a>
 						</li>
 						
@@ -646,10 +662,6 @@
 						
 						<li class="class-depth-1">
 							<a href="PIXI.BaseTexture.html">BaseTexture</a>
-						</li>
-						
-						<li class="class-depth-1">
-							<a href="PIXI.BitmapText.html">BitmapText</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -753,19 +765,11 @@
 						</li>
 						
 						<li class="class-depth-1">
-							<a href="PIXI.Text.html">Text</a>
-						</li>
-						
-						<li class="class-depth-1">
 							<a href="PIXI.Texture.html">Texture</a>
 						</li>
 						
 						<li class="class-depth-1">
 							<a href="PIXI.TilingSprite.html">TilingSprite</a>
-						</li>
-						
-						<li class="class-depth-1">
-							<a href="PIXI.VideoTexture.html">VideoTexture</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -784,10 +788,6 @@
 							<a href="PIXI.WebGLRenderer.html">WebGLRenderer</a>
 						</li>
 						
-						<li class="class-depth-0">
-							<a href="RoundedRectangle.html">RoundedRectangle</a>
-						</li>
-						
 
 					</ul>
 				</li>
@@ -799,15 +799,15 @@
 					<ul class="dropdown-menu ">
 						
 						<li class="class-depth-0">
-							<a href="global.html#append">append</a>
+							<a href="global.html#AUTO">AUTO</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#apply">apply</a>
+							<a href="global.html#BITMAPDATA">BITMAPDATA</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#applyInverse">applyInverse</a>
+							<a href="global.html#BITMAPTEXT">BITMAPTEXT</a>
 						</li>
 						
 						<li class="class-depth-0">
@@ -815,27 +815,107 @@
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#clone">clone</a>
+							<a href="global.html#BUTTON">BUTTON</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#contains">contains</a>
+							<a href="global.html#CANVAS">CANVAS</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#fromArray">fromArray</a>
+							<a href="global.html#CANVAS_FILTER">CANVAS_FILTER</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#identity">identity</a>
+							<a href="global.html#CIRCLE">CIRCLE</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#rotate">rotate</a>
+							<a href="global.html#CREATURE">CREATURE</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#scale">scale</a>
+							<a href="global.html#DOWN">DOWN</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ELLIPSE">ELLIPSE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#EMITTER">EMITTER</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#GAMES">GAMES</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#GRAPHICS">GRAPHICS</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#GROUP">GROUP</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#HEADLESS">HEADLESS</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#IMAGE">IMAGE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#LEFT">LEFT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#LINE">LINE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#MATRIX">MATRIX</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#NONE">NONE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#POINT">POINT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#POINTER">POINTER</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#POLYGON">POLYGON</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#RECTANGLE">RECTANGLE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#RENDERTEXTURE">RENDERTEXTURE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#RETROFONT">RETROFONT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#RIGHT">RIGHT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ROPE">ROPE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ROUNDEDRECTANGLE">ROUNDEDRECTANGLE</a>
 						</li>
 						
 						<li class="class-depth-0">
@@ -843,15 +923,47 @@
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#sort">sort</a>
+							<a href="global.html#SPRITE">SPRITE</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#toArray">toArray</a>
+							<a href="global.html#SPRITEBATCH">SPRITEBATCH</a>
 						</li>
 						
 						<li class="class-depth-0">
-							<a href="global.html#translate">translate</a>
+							<a href="global.html#TEXT">TEXT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#TILEMAP">TILEMAP</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#TILEMAPLAYER">TILEMAPLAYER</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#TILESPRITE">TILESPRITE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#UP">UP</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#VERSION">VERSION</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#VIDEO">VIDEO</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#WEBGL">WEBGL</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#WEBGL_FILTER">WEBGL_FILTER</a>
 						</li>
 						
 
@@ -866,6 +978,7 @@
 						<li class="class-depth-1"><a href="Phaser.Group.html">Group</a></li>
 						<li class="class-depth-1"><a href="Phaser.World.html">World</a></li>
 						<li class="class-depth-1"><a href="Phaser.Loader.html">Loader</a></li>
+						<li class="class-depth-1"><a href="Phaser.Cache.html">Cache</a></li>
 						<li class="class-depth-1"><a href="Phaser.Time.html">Time</a></li>
 						<li class="class-depth-1"><a href="Phaser.Camera.html">Camera</a></li>
 						<li class="class-depth-1"><a href="Phaser.StateManager.html">State Manager</a></li>
@@ -884,6 +997,7 @@
 						<li class="class-depth-1"><a href="Phaser.Sprite.html">Sprite</a></li>
 						<li class="class-depth-1"><a href="Phaser.Image.html">Image</a></li>
 						<li class="class-depth-1"><a href="Phaser.Sound.html">Sound</a></li>
+						<li class="class-depth-1"><a href="Phaser.Video.html">Video</a></li>
 						<li class="class-depth-1"><a href="Phaser.Particles.Arcade.Emitter.html">Particle Emitter</a></li>
 						<li class="class-depth-1"><a href="Phaser.Particle.html">Particle</a></li>
 						<li class="class-depth-1"><a href="Phaser.Text.html">Text</a></li>
@@ -904,11 +1018,13 @@
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Geometry<b class="caret"></b></a>
 					<ul class="dropdown-menu ">
 						<li class="class-depth-1"><a href="Phaser.Circle.html">Circle</a></li>
-						<li class="class-depth-1"><a href="Phaser.Rectangle.html">Rectangle</a></li>
-						<li class="class-depth-1"><a href="Phaser.Point.html">Point</a></li>
-						<li class="class-depth-1"><a href="Phaser.Line.html">Line</a></li>
 						<li class="class-depth-1"><a href="Phaser.Ellipse.html">Ellipse</a></li>
+						<li class="class-depth-1"><a href="Phaser.Line.html">Line</a></li>
+						<li class="class-depth-1"><a href="Phaser.Matrix.html">Matrix</a></li>
+						<li class="class-depth-1"><a href="Phaser.Point.html">Point</a></li>
 						<li class="class-depth-1"><a href="Phaser.Polygon.html">Polygon</a></li>
+						<li class="class-depth-1"><a href="Phaser.Rectangle.html">Rectangle</a></li>
+						<li class="class-depth-1"><a href="Phaser.RoundedRectangle.html">Rounded Rectangle</a></li>
 					</ul>
 				</li>
 
@@ -932,6 +1048,7 @@
 					<ul class="dropdown-menu ">
 						<li class="class-depth-1"><a href="Phaser.InputHandler.html">Input Handler</a></li>
 						<li class="class-depth-1"><a href="Phaser.Pointer.html">Pointer</a></li>
+						<li class="class-depth-1"><a href="Phaser.DeviceButton.html">Device Button</a></li>
 						<li class="class-depth-1"><a href="Phaser.Mouse.html">Mouse</a></li>
 						<li class="class-depth-1"><a href="Phaser.Keyboard.html">Keyboard</a></li>
 						<li class="class-depth-1"><a href="Phaser.Key.html">Key</a></li>
@@ -948,11 +1065,10 @@
 						<li class="class-depth-1"><a href="https://github.com/photonstorm/phaser-plugins">Phaser Plugins</a></li>
 						<li class="class-depth-1"><a href="http://www.html5gamedevs.com/forum/14-phaser/">Forum</a></li>
 						<li class="class-depth-1"><a href="http://stackoverflow.com/questions/tagged/phaser-framework">Stack Overflow</a></li>
-						<li class="class-depth-1"><a href="http://phaser.io/learn">Weekly Coding Tips</a></li>
+						<li class="class-depth-1"><a href="http://phaser.io/learn">Tutorials</a></li>
 						<li class="class-depth-1"><a href="https://confirmsubscription.com/h/r/369DE48E3E86AF1E">Newsletter</a></li>
 						<li class="class-depth-1"><a href="http://phaser.io/community/twitter">Twitter</a></li>
 						<li class="class-depth-1"><a href="http://phaser.io/community/irc">IRC</a></li>
-						<li class="class-depth-1"><a href="https://www.gittip.com/photonstorm/">Donate to the project</a></li>
 						<li class="class-depth-1"><a href="https://www.codeandweb.com/texturepacker/phaser">Texture Packer</a></li>
 					</ul>
 				</li>
@@ -964,1787 +1080,501 @@
 	<div class="row-fluid">
 
 		
-		<div class="span8">
-			
+			<div class="span12">
+				
 				<div id="main">
 					
 
 
-	<!--<h1 class="page-title">Class: GamepadButton</h1>-->
-<section>
+		<h1 class="page-title">Source: src/gameobjects/Creature.js</h1>
+    
+    <section>
+        <article>
+            <pre class="sunlight-highlight-javascript linenums">/**
+* @author       Richard Davey &lt;rich@photonstorm.com>
+* @author       Kestrel Moon Studios &lt;creature@kestrelmoon.com>
+* @copyright    2015 Photon Storm Ltd and Kestrel Moon Studios
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
 
-<header>
-    <h2>
-        <span class="ancestors"><a href="Phaser.html">Phaser</a>.</span>
-    
-    GamepadButton
-    </h2>
-    
-</header>
+/**
+* Creature is a custom Game Object used in conjunction with the Creature Runtime libraries by Kestrel Moon Studios.
+* 
+* It allows you to display animated Game Objects that were created with the [Creature Automated Animation Tool](http://www.kestrelmoon.com/creature/).
+* 
+* Note 1: You can only use Phaser.Creature objects in WebGL enabled games. They do not work in Canvas mode games.
+*
+* Note 2: You must use a build of Phaser that includes the CreatureMeshBone.js runtime and gl-matrix.js, or have them
+* loaded before your Phaser game boots.
+* 
+* See the Phaser custom build process for more details.
+* 
+* By default the Creature runtimes are NOT included in any pre-configured version of Phaser.
+* 
+* So you'll need to do `grunt custom` to create a build that includes them.
+*
+* @class Phaser.Creature
+* @extends PIXI.DisplayObjectContainer
+* @extends Phaser.Component.Core
+* @extends Phaser.Component.Angle
+* @extends Phaser.Component.AutoCull
+* @extends Phaser.Component.BringToTop
+* @extends Phaser.Component.Destroy
+* @extends Phaser.Component.FixedToCamera
+* @extends Phaser.Component.LifeSpan
+* @extends Phaser.Component.Reset
+* @constructor
+* @param {Phaser.Game} game - A reference to the currently running game.
+* @param {number} x - The x coordinate of the Game Object. The coordinate is relative to any parent container this Game Object may be in.
+* @param {number} y - The y coordinate of the Game Object. The coordinate is relative to any parent container this Game Object may be in.
+* @param {string|PIXI.Texture} key - The texture used by the Creature Object during rendering. It can be a string which is a reference to the Cache entry, or an instance of a PIXI.Texture.
+* @param {string} mesh - The mesh data for the Creature Object. It should be a string which is a reference to the Cache JSON entry.
+* @param {string} [animation='default'] - The animation within the mesh data  to play.
+*/
+Phaser.Creature = function (game, x, y, key, mesh, animation) {
 
-<article>
-    <div class="container-overview">
-    
+    if (animation === undefined) { animation = 'default'; }
 
+    /**
+    * @property {number} type - The const type of this object.
+    * @readonly
+    */
+    this.type = Phaser.CREATURE;
+
+    if (!game.cache.checkJSONKey(mesh))
+    {
+        console.warn('Phaser.Creature: Invalid mesh key given. Not found in Phaser.Cache');
+        return;
+    }
+
+    var meshData = game.cache.getJSON(mesh);
+
+    /**
+    * @property {Creature} _creature - The Creature instance.
+    * @private
+    */
+    this._creature = new Creature(meshData);
+
+    /**
+    * @property {CreatureAnimation} animation - The CreatureAnimation instance.
+    */
+    this.animation = new CreatureAnimation(meshData, animation, this._creature);
+
+    /**
+    * @property {CreatureManager} manager - The CreatureManager instance for this object.
+    */
+    this.manager = new CreatureManager(this._creature);
+
+    /**
+    * @property {number} timeDelta - How quickly the animation advances.
+    * @default
+    */
+    this.timeDelta = 0.05;
+
+    if (typeof key === 'string')
+    {
+        var texture = game.cache.getPixiTexture(key);
+    }
+    else
+    {
+        var texture = key;
+    }
+
+    /**
+    * @property {PIXI.Texture} texture - The texture the animation is using.
+    */
+    this.texture = texture;
+
+    PIXI.DisplayObjectContainer.call(this);
+
+    this.dirty = true;
+    this.blendMode = PIXI.blendModes.NORMAL;
+
+    /**
+    * @property {Phaser.Point} creatureBoundsMin - The minimum bounds point.
+    * @protected
+    */
+    this.creatureBoundsMin = new Phaser.Point();
+
+    /**
+    * @property {Phaser.Point} creatureBoundsMax - The maximum bounds point.
+    * @protected
+    */
+    this.creatureBoundsMax = new Phaser.Point();
     
+    var target = this.manager.target_creature;
+
+    /**
+    * @property {PIXI.Float32Array} vertices - The vertices data.
+    * @protected
+    */
+    this.vertices = new PIXI.Float32Array(target.total_num_pts * 2);
+
+    /**
+    * @property {PIXI.Float32Array} uvs - The UV data.
+    * @protected
+    */
+    this.uvs = new PIXI.Float32Array(target.total_num_pts * 2);
+    
+    /**
+    * @property {PIXI.Uint16Array} indices
+    * @protected
+    */
+    this.indices = new PIXI.Uint16Array(target.global_indices.length);
+
+    for (var i = 0; i &lt; this.indices.length; i++)
+    {
+        this.indices[i] = target.global_indices[i];
+    }
+    
+    /**
+    * @property {PIXI.Uint16Array} colors - The vertices colors
+    * @protected
+    */
+    this.colors = new PIXI.Float32Array([1, 1, 1, 1]);
+
+    this.updateRenderData(target.global_pts, target.global_uvs);
+
+    this.manager.AddAnimation(this.animation);
+    this.manager.SetActiveAnimationName(animation, false);
+
+    Phaser.Component.Core.init.call(this, game, x, y);
+
+};
+
+Phaser.Creature.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
+Phaser.Creature.prototype.constructor = Phaser.Creature;
+
+Phaser.Component.Core.install.call(Phaser.Creature.prototype, [
+    'Angle',
+    'AutoCull',
+    'BringToTop',
+    'Destroy',
+    'FixedToCamera',
+    'LifeSpan',
+    'Reset'
+]);
+
+Phaser.Creature.prototype.preUpdateInWorld = Phaser.Component.InWorld.preUpdate;
+Phaser.Creature.prototype.preUpdateCore = Phaser.Component.Core.preUpdate;
+
+/**
+* Automatically called by World.preUpdate.
+*
+* @method Phaser.Creature#preUpdate
+* @memberof Phaser.Creature
+*/
+Phaser.Creature.prototype.preUpdate = function () {
+
+    if (!this.preUpdateInWorld())
+    {
+        return false;
+    }
+
+    this.manager.Update(this.timeDelta);
+
+    this.updateData();
+
+    return this.preUpdateCore();
+
+};
+
+/**
+* 
+*
+* @method Phaser.Creature#_initWebGL
+* @memberof Phaser.Creature
+* @private
+*/
+Phaser.Creature.prototype._initWebGL = function (renderSession) {
+
+    // build the strip!
+    var gl = renderSession.gl;
+    
+    this._vertexBuffer = gl.createBuffer();
+    this._indexBuffer = gl.createBuffer();
+    this._uvBuffer = gl.createBuffer();
+    this._colorBuffer = gl.createBuffer();
+    
+    gl.bindBuffer(gl.ARRAY_BUFFER, this._vertexBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, this.vertices, gl.DYNAMIC_DRAW);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, this._uvBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER,  this.uvs, gl.DYNAMIC_DRAW);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, this._colorBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, this.colors, gl.STATIC_DRAW);
+ 
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._indexBuffer);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.indices, gl.STATIC_DRAW);
+
+};
+
+/**
+* @method Phaser.Creature#_renderWebGL
+* @memberof Phaser.Creature
+* @private
+*/
+Phaser.Creature.prototype._renderWebGL = function (renderSession) {
+
+    //  If the sprite is not visible or the alpha is 0 then no need to render this element
+    if (!this.visible || this.alpha &lt;= 0)
+    {
+        return;
+    }
+
+    renderSession.spriteBatch.stop();
+
+    // init! init!
+    if (!this._vertexBuffer)
+    {
+        this._initWebGL(renderSession);
+    }
+    
+    renderSession.shaderManager.setShader(renderSession.shaderManager.stripShader);
+
+    this._renderCreature(renderSession);
+
+    renderSession.spriteBatch.start();
+
+};
+
+/**
+* @method Phaser.Creature#_renderCreature
+* @memberof Phaser.Creature
+* @private
+*/
+Phaser.Creature.prototype._renderCreature = function (renderSession) {
+
+    var gl = renderSession.gl;
+
+    var projection = renderSession.projection;
+    var offset = renderSession.offset;
+    var shader = renderSession.shaderManager.stripShader;
+
+    renderSession.blendModeManager.setBlendMode(this.blendMode);
+
+    //  Set uniforms
+    gl.uniformMatrix3fv(shader.translationMatrix, false, this.worldTransform.toArray(true));
+    gl.uniform2f(shader.projectionVector, projection.x, -projection.y);
+    gl.uniform2f(shader.offsetVector, -offset.x, -offset.y);
+    gl.uniform1f(shader.alpha, this.worldAlpha);
+
+    if (!this.dirty)
+    {
+        gl.bindBuffer(gl.ARRAY_BUFFER, this._vertexBuffer);
+        gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.vertices);
+        gl.vertexAttribPointer(shader.aVertexPosition, 2, gl.FLOAT, false, 0, 0);
         
-<dt>
-    <h4 class="name "
-        id="GamepadButton"><span class="type-signature"></span>new GamepadButton<span class="signature">(pad, buttonCode)</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
+        //  Update the uvs
+        gl.bindBuffer(gl.ARRAY_BUFFER, this._uvBuffer);
+        gl.vertexAttribPointer(shader.aTextureCoord, 2, gl.FLOAT, false, 0, 0);
+            
+        gl.activeTexture(gl.TEXTURE0);
 
+        //  Check if a texture is dirty..
+        if (this.texture.baseTexture._dirty[gl.id])
+        {
+            renderSession.renderer.updateTexture(this.texture.baseTexture);
+        }
+        else
+        {
+            //  Bind the current texture
+            gl.bindTexture(gl.TEXTURE_2D, this.texture.baseTexture._glTextures[gl.id]);
+        }
     
-    <div class="description">
-        <p>If you need more fine-grained control over the handling of specific buttons you can create and use Phaser.GamepadButton objects.</p>
-    </div>
-    
+        //  Don't need to upload!
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._indexBuffer);
+    }
+    else
+    {
+        this.dirty = false;
 
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
+        gl.bindBuffer(gl.ARRAY_BUFFER, this._vertexBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, this.vertices, gl.DYNAMIC_DRAW);
+        gl.vertexAttribPointer(shader.aVertexPosition, 2, gl.FLOAT, false, 0, 0);
         
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
+        //  Update the uvs
+        gl.bindBuffer(gl.ARRAY_BUFFER, this._uvBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, this.uvs, gl.DYNAMIC_DRAW);
+        gl.vertexAttribPointer(shader.aTextureCoord, 2, gl.FLOAT, false, 0, 0);
             
-                <td class="name"><code>pad</code></td>
-            
+        gl.activeTexture(gl.TEXTURE0);
 
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.SinglePad.html">Phaser.SinglePad</a></span>
+        //  Check if a texture is dirty
+        if (this.texture.baseTexture._dirty[gl.id])
+        {
+            renderSession.renderer.updateTexture(this.texture.baseTexture);
+        }
+        else
+        {
+            gl.bindTexture(gl.TEXTURE_2D, this.texture.baseTexture._glTextures[gl.id]);
+        }
+    
+        //  Don't need to upload!
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._indexBuffer);
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.indices, gl.STATIC_DRAW);
+    }
+    
+    gl.drawElements(gl.TRIANGLES, this.indices.length, gl.UNSIGNED_SHORT, 0);
 
+};
 
-            
-            </td>
+/**
+* @method Phaser.Creature#updateCreatureBounds
+* @memberof Phaser.Creature
+* @private
+*/
+Phaser.Creature.prototype.updateCreatureBounds = function () {
 
-            
-
-            
-
-            <td class="description last"><p>A reference to the gamepad that owns this button.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>buttonCode</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The button code this GamepadButton is responsible for.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_input_GamepadButton.js.html">input/GamepadButton.js</a>, <a href="src_input_GamepadButton.js.html#sunlight-1-line-16">line 16</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-    
-    </div>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Members</h3>
-
-        <dl>
-            
-<dt>
-    <h4 class="name "
-        id="buttonCode"><span class="type-signature"></span>buttonCode<span class="type-signature"> :number</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>The buttoncode of this button.</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_input_GamepadButton.js.html">input/GamepadButton.js</a>, <a href="src_input_GamepadButton.js.html#sunlight-1-line-75">line 75</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
+    //  Update bounds based off world transform matrix
+    var target = this.manager.target_creature;
         
-            
-<dt>
-    <h4 class="name "
-        id="duration"><span class="type-signature"></span>duration<span class="type-signature"> :number</span></h4>
-    
-    
-</dt>
-<dd>
-    
+    target.ComputeBoundaryMinMax();
 
+    this.creatureBoundsMin.set(target.boundary_min[0], -target.boundary_min[1]);
+    this.creatureBoundsMax.set(target.boundary_max[0], -target.boundary_max[1]);
     
-    <div class="description">
-        <p>If the button is down this value holds the duration of that button press and is constantly updated.
-If the button is up it holds the duration of the previous down session. The number of milliseconds this button has been held down for.</p>
-    </div>
-    
-    
-    
+    this.worldTransform.apply(this.creatureBoundsMin, this.creatureBoundsMin);  
+    this.worldTransform.apply(this.creatureBoundsMax, this.creatureBoundsMax);              
 
-    
-<dl class="details">
-    
+};
 
-    
+/**
+* @method Phaser.Creature#updateData
+* @memberof Phaser.Creature
+* @private
+*/
+Phaser.Creature.prototype.updateData = function () {
 
-    
+    var target = this.manager.target_creature;
 
+    var read_pts = target.render_pts;
+    var read_uvs = target.global_uvs;
     
+    this.updateRenderData(read_pts, read_uvs);
+    this.updateCreatureBounds();
 
-    
+    this.dirty = true;
 
-    
+};
 
-    
+/**
+* @method Phaser.Creature#updateRenderData
+* @memberof Phaser.Creature
+* @private
+*/
+Phaser.Creature.prototype.updateRenderData = function (verts, uvs) {
 
-    
+    var target = this.manager.target_creature;
 
+    var pt_index = 0;
+    var uv_index = 0;
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
+    var write_pt_index = 0;
     
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_input_GamepadButton.js.html">input/GamepadButton.js</a>, <a href="src_input_GamepadButton.js.html#sunlight-1-line-52">line 52</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
+    for (var i = 0; i &lt; target.total_num_pts; i++)
+    {
+        this.vertices[write_pt_index] = verts[pt_index];
+        this.vertices[write_pt_index + 1] = -verts[pt_index + 1];
         
-            
-<dt>
-    <h4 class="name "
-        id="game"><span class="type-signature"></span>game<span class="type-signature"> :<a href="Phaser.Game.html">Phaser.Game</a></span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>A reference to the currently running game.</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_input_GamepadButton.js.html">input/GamepadButton.js</a>, <a href="src_input_GamepadButton.js.html#sunlight-1-line-26">line 26</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
+        this.uvs[uv_index] = uvs[uv_index];
+        this.uvs[uv_index + 1] = uvs[uv_index + 1];
         
-            
-<dt>
-    <h4 class="name "
-        id="isDown"><span class="type-signature"></span>isDown<span class="type-signature"> :boolean</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>The &quot;down&quot; state of the button.</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_input_GamepadButton.js.html">input/GamepadButton.js</a>, <a href="src_input_GamepadButton.js.html#sunlight-1-line-32">line 32</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
+        pt_index += 3;
+        uv_index += 2;
         
-            
-<dt>
-    <h4 class="name "
-        id="isUp"><span class="type-signature"></span>isUp<span class="type-signature"> :boolean</span></h4>
-    
-    
-</dt>
-<dd>
-    
+        write_pt_index += 2;
+    }
 
-    
-    <div class="description">
-        <p>The &quot;up&quot; state of the button.</p>
-    </div>
-    
-    
-    
+};
 
-    
-<dl class="details">
-    
+/**
+* Sets the Animation this Creature object will play, as defined in the mesh data.
+*
+* @method Phaser.Creature#setAnimation
+* @memberof Phaser.Creature
+* @param {string} key - The key of the animation to set, as defined in the mesh data.
+*/
+Phaser.Creature.prototype.setAnimation = function (key) {
 
-    
+    this.manager.SetActiveAnimationName(key, true);
 
-    
+};
 
-    
+/**
+* Plays the currently set animation.
+*
+* @method Phaser.Creature#play
+* @memberof Phaser.Creature
+* @param {boolean} [loop=false] - Should the animation loop?
+*/
+Phaser.Creature.prototype.play = function (loop) {
 
-    
+    if (loop === undefined) { loop = false; }
 
-    
+    this.loop = loop;
 
-    
+    this.manager.SetIsPlaying(true);
+    this.manager.RunAtTime(0);
 
-    
+};
 
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>true</li></ul></dd>
-    
+/**
+* Stops the currently playing animation.
+*
+* @method Phaser.Creature#stop
+* @memberof Phaser.Creature
+*/
+Phaser.Creature.prototype.stop = function () {
 
-    
-    <dt class="tag-source">Source -
-    <a href="src_input_GamepadButton.js.html">input/GamepadButton.js</a>, <a href="src_input_GamepadButton.js.html#sunlight-1-line-38">line 38</a>
-    </dt>
-    
+    this.manager.SetIsPlaying(false);
 
-    
+};
 
-    
+/**
+* @name Phaser.Creature#isPlaying
+* @property {boolean} isPlaying - Is the _current_ animation playing?
+*/
+Object.defineProperty(Phaser.Creature.prototype, 'isPlaying', {
 
-    
-</dl>
+    get: function() {
 
-    
-    
-</dd>
+        return this.manager.GetIsPlaying();
 
-        
-            
-<dt>
-    <h4 class="name "
-        id="onDown"><span class="type-signature"></span>onDown<span class="type-signature"> :<a href="Phaser.Signal.html">Phaser.Signal</a></span></h4>
-    
-    
-</dt>
-<dd>
-    
+    },
 
-    
-    <div class="description">
-        <p>This Signal is dispatched every time this GamepadButton is pressed down. It is only dispatched once (until the button is released again).</p>
-    </div>
-    
-    
-    
+    set: function(value) {
 
-    
-<dl class="details">
-    
+        this.manager.SetIsPlaying(value);
 
-    
+    }
 
-    
+});
 
-    
+/**
+* @name Phaser.Creature#loop
+* @property {boolean} loop - Should the _current_ animation loop or not?
+*/
+Object.defineProperty(Phaser.Creature.prototype, 'loop', {
 
-    
+    get: function() {
 
-    
+        return this.manager.should_loop;
 
-    
+    },
 
-    
+    set: function(value) {
 
-    
+        this.manager.SetShouldLoop(value);
 
-    
-    <dt class="tag-source">Source -
-    <a href="src_input_GamepadButton.js.html">input/GamepadButton.js</a>, <a href="src_input_GamepadButton.js.html#sunlight-1-line-80">line 80</a>
-    </dt>
-    
+    }
 
-    
+});
+</pre>
+        </article>
+    </section>
 
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="onFloat"><span class="type-signature"></span>onFloat<span class="type-signature"> :<a href="Phaser.Signal.html">Phaser.Signal</a></span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>This Signal is dispatched every time this GamepadButton changes floating value (between (but not exactly) 0 and 1)</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_input_GamepadButton.js.html">input/GamepadButton.js</a>, <a href="src_input_GamepadButton.js.html#sunlight-1-line-90">line 90</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="onUp"><span class="type-signature"></span>onUp<span class="type-signature"> :<a href="Phaser.Signal.html">Phaser.Signal</a></span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>This Signal is dispatched every time this GamepadButton is pressed down. It is only dispatched once (until the button is released again).</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_input_GamepadButton.js.html">input/GamepadButton.js</a>, <a href="src_input_GamepadButton.js.html#sunlight-1-line-85">line 85</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="pad"><span class="type-signature"></span>pad<span class="type-signature"> :<a href="Phaser.SinglePad.html">Phaser.SinglePad</a></span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>A reference to the gamepad that owns this button.</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_input_GamepadButton.js.html">input/GamepadButton.js</a>, <a href="src_input_GamepadButton.js.html#sunlight-1-line-21">line 21</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="repeats"><span class="type-signature"></span>repeats<span class="type-signature"> :number</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>If a button is held down this holds down the number of times the button has 'repeated'.</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_input_GamepadButton.js.html">input/GamepadButton.js</a>, <a href="src_input_GamepadButton.js.html#sunlight-1-line-64">line 64</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="timeDown"><span class="type-signature"></span>timeDown<span class="type-signature"> :number</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>The timestamp when the button was last pressed down.</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_input_GamepadButton.js.html">input/GamepadButton.js</a>, <a href="src_input_GamepadButton.js.html#sunlight-1-line-44">line 44</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="timeUp"><span class="type-signature"></span>timeUp<span class="type-signature"> :number</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>The timestamp when the button was last released.</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_input_GamepadButton.js.html">input/GamepadButton.js</a>, <a href="src_input_GamepadButton.js.html#sunlight-1-line-58">line 58</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="value"><span class="type-signature"></span>value<span class="type-signature"> :number</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Button value. Mainly useful for checking analog buttons (like shoulder triggers)</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_input_GamepadButton.js.html">input/GamepadButton.js</a>, <a href="src_input_GamepadButton.js.html#sunlight-1-line-70">line 70</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        </dl>
-    
-
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        <dl>
-            
-<dt>
-    <h4 class="name "
-        id="destroy"><span class="type-signature"></span>destroy<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Destroys this GamepadButton, this disposes of the onDown, onUp and onFloat signals and clears the pad and game references.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_input_GamepadButton.js.html">input/GamepadButton.js</a>, <a href="src_input_GamepadButton.js.html#sunlight-1-line-194">line 194</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="justPressed"><span class="type-signature"></span>justPressed<span class="signature">(<span class="optional">duration</span>)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Returns the &quot;just pressed&quot; state of this button. Just pressed is considered true if the button was pressed down within the duration given (default 250ms).</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-		<th>Argument</th>
-		
-
-		
-		<th>Default</th>
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>duration</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    250
-                
-                </td>
-            
-
-            <td class="description last"><p>The duration below which the button is considered as being just pressed.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-
-    
-    <h5>Returns:</h5>
-    <div class="returns">
-        
-            
-    
-        <div class="returns-type">
-        
-<span class="param-type">boolean</span>
-
- -
-        </div>
-    
-    <div class="returns-desc param-desc">
-        <p>True if the button is just pressed otherwise false.</p>
-    </div>
-
-
-        
-    </div>
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_input_GamepadButton.js.html">input/GamepadButton.js</a>, <a href="src_input_GamepadButton.js.html#sunlight-1-line-149">line 149</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="justPressed"><span class="type-signature"></span>justPressed<span class="signature">(<span class="optional">duration</span>)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Returns the &quot;just released&quot; state of this button. Just released is considered as being true if the button was released within the duration given (default 250ms).</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-		<th>Argument</th>
-		
-
-		
-		<th>Default</th>
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>duration</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    250
-                
-                </td>
-            
-
-            <td class="description last"><p>The duration below which the button is considered as being just released.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-
-    
-    <h5>Returns:</h5>
-    <div class="returns">
-        
-            
-    
-        <div class="returns-type">
-        
-<span class="param-type">boolean</span>
-
- -
-        </div>
-    
-    <div class="returns-desc param-desc">
-        <p>True if the button is just pressed otherwise false.</p>
-    </div>
-
-
-        
-    </div>
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_input_GamepadButton.js.html">input/GamepadButton.js</a>, <a href="src_input_GamepadButton.js.html#sunlight-1-line-164">line 164</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="processButtonDown"><span class="type-signature">&lt;internal> </span>processButtonDown<span class="signature">(value)</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Called automatically by Phaser.SinglePad.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>value</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Button value</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-        <dt class="important tag-deprecated">Internal:</dt>
-        <dd class="tag-deprecated"><ul>
-        
-            <li>This member is <em>internal (protected)</em> and may be modified or removed in the future.</li>
-        
-        </ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_input_GamepadButton.js.html">input/GamepadButton.js</a>, <a href="src_input_GamepadButton.js.html#sunlight-1-line-96">line 96</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="processButtonFloat"><span class="type-signature">&lt;internal> </span>processButtonFloat<span class="signature">(value)</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Called automatically by Phaser.SinglePad.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>value</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Button value</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-        <dt class="important tag-deprecated">Internal:</dt>
-        <dd class="tag-deprecated"><ul>
-        
-            <li>This member is <em>internal (protected)</em> and may be modified or removed in the future.</li>
-        
-        </ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_input_GamepadButton.js.html">input/GamepadButton.js</a>, <a href="src_input_GamepadButton.js.html#sunlight-1-line-134">line 134</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="processButtonUp"><span class="type-signature">&lt;internal> </span>processButtonUp<span class="signature">(value)</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Called automatically by Phaser.SinglePad.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>value</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Button value</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-        <dt class="important tag-deprecated">Internal:</dt>
-        <dd class="tag-deprecated"><ul>
-        
-            <li>This member is <em>internal (protected)</em> and may be modified or removed in the future.</li>
-        
-        </ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_input_GamepadButton.js.html">input/GamepadButton.js</a>, <a href="src_input_GamepadButton.js.html#sunlight-1-line-116">line 116</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="reset"><span class="type-signature"></span>reset<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Resets this GamepadButton, changing it to an isUp state and resetting the duration and repeats counters.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_input_GamepadButton.js.html">input/GamepadButton.js</a>, <a href="src_input_GamepadButton.js.html#sunlight-1-line-179">line 179</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        </dl>
-    
-
-    
-
-    
-</article>
-
-</section>
 
 
 
@@ -2762,15 +1592,11 @@ If the button is up it holds the duration of the previous down session. The numb
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha10</a>
-		on Thu Mar 26 2015 02:53:52 GMT+0000 (GMT Standard Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Jul 24 2015 13:29:45 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
 
-			
-			<div class="span3">
-				<div id="toc"></div>
-			</div>
 			
 			<br clear="both">
 		</div>

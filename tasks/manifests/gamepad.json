@@ -1,5 +1,4 @@
 [
     "src/input/Gamepad.js",
-    "src/input/SinglePad.js",
-    "src/input/GamepadButton.js"
+    "src/input/SinglePad.js"
 ]
