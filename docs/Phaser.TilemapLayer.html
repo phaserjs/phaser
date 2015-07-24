@@ -3977,6 +3977,68 @@ Setting it is a neat way of optimising the hitTest function that the interaction
 
     
     <div class="description">
+        <p>Checks if the Game Objects bounds intersect with the Game Camera bounds.
+Returns <code>true</code> if they do, otherwise <code>false</code> if fully outside of the Cameras bounds.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="Phaser.Component.AutoCull.html#inCamera">Phaser.Component.AutoCull#inCamera</a>
+    </li></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_gameobjects_components_AutoCull.js.html">gameobjects/components/AutoCull.js</a>, <a href="src_gameobjects_components_AutoCull.js.html#sunlight-1-line-37">line 37</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="inCamera"><span class="type-signature">&lt;readonly> </span>inCamera<span class="type-signature"> :boolean</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
         <p>Checks if this Game Objects bounds intersects with the Game Cameras bounds.</p>
 <p>It will be <code>true</code> if they intersect, or <code>false</code> if the Game Object is fully outside of the Cameras bounds.</p>
 <p>An object outside the bounds can be considered for camera culling if it has the AutoCull component.</p>
@@ -4013,68 +4075,6 @@ Setting it is a neat way of optimising the hitTest function that the interaction
     
     <dt class="tag-source">Source -
     <a href="src_gameobjects_components_InCamera.js.html">gameobjects/components/InCamera.js</a>, <a href="src_gameobjects_components_InCamera.js.html#sunlight-1-line-26">line 26</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="inCamera"><span class="type-signature">&lt;readonly> </span>inCamera<span class="type-signature"> :boolean</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Checks if the Game Objects bounds intersect with the Game Camera bounds.
-Returns <code>true</code> if they do, otherwise <code>false</code> if fully outside of the Cameras bounds.</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Component.AutoCull.html#inCamera">Phaser.Component.AutoCull#inCamera</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_gameobjects_components_AutoCull.js.html">gameobjects/components/AutoCull.js</a>, <a href="src_gameobjects_components_AutoCull.js.html#sunlight-1-line-37">line 37</a>
     </dt>
     
 
@@ -6852,67 +6852,6 @@ This ability allows you to check any of the matrix values and perform actions su
             
 <dt>
     <h4 class="name "
-        id="transformCallbackContext"><span class="type-signature"></span>transformCallbackContext<span class="type-signature"> :object</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>The context under which <code>transformCallback</code> is called.</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Component.ScaleMinMax.html#transformCallbackContext">Phaser.Component.ScaleMinMax#transformCallbackContext</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_gameobjects_components_ScaleMinMax.js.html">gameobjects/components/ScaleMinMax.js</a>, <a href="src_gameobjects_components_ScaleMinMax.js.html#sunlight-1-line-26">line 26</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
         id="transformCallbackContext"><span class="type-signature"></span>transformCallbackContext<span class="type-signature"> :Object</span></h4>
     
     
@@ -6956,6 +6895,67 @@ This ability allows you to check any of the matrix values and perform actions su
     
     <dt class="tag-source">Source -
     <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-41">line 41</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="transformCallbackContext"><span class="type-signature"></span>transformCallbackContext<span class="type-signature"> :object</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>The context under which <code>transformCallback</code> is called.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="Phaser.Component.ScaleMinMax.html#transformCallbackContext">Phaser.Component.ScaleMinMax#transformCallbackContext</a>
+    </li></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_gameobjects_components_ScaleMinMax.js.html">gameobjects/components/ScaleMinMax.js</a>, <a href="src_gameobjects_components_ScaleMinMax.js.html#sunlight-1-line-26">line 26</a>
     </dt>
     
 
@@ -7655,67 +7655,6 @@ This value is updated at the end of updateTransform and takes all parent transfo
             
 <dt>
     <h4 class="name "
-        id="y"><span class="type-signature"></span>y<span class="type-signature"> :Number</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>The position of the displayObject on the y axis relative to the local coordinates of the parent.</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="PIXI.DisplayObject.html#y">PIXI.DisplayObject#y</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-744">line 744</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
         id="y"><span class="type-signature"></span>y<span class="type-signature"> :number</span></h4>
     
     
@@ -7759,6 +7698,67 @@ This value is updated at the end of updateTransform and takes all parent transfo
     
     <dt class="tag-source">Source -
     <a href="src_gameobjects_components_PhysicsBody.js.html">gameobjects/components/PhysicsBody.js</a>, <a href="src_gameobjects_components_PhysicsBody.js.html#sunlight-1-line-124">line 124</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="y"><span class="type-signature"></span>y<span class="type-signature"> :Number</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>The position of the displayObject on the y axis relative to the local coordinates of the parent.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="PIXI.DisplayObject.html#y">PIXI.DisplayObject#y</a>
+    </li></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-744">line 744</a>
     </dt>
     
 
@@ -8519,6 +8519,82 @@ in which case the values are duplicated to a local object.</p>
             
 <dt>
     <h4 class="name "
+        id="destroy"><span class="type-signature"></span>destroy<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Destroy this DisplayObject.
+Removes all references to transformCallbacks, its parent, the stage, filters, bounds, mask and cached Sprites.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="PIXI.DisplayObject.html#destroy">PIXI.DisplayObject#destroy</a>
+    </li></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-242">line 242</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+       
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
         id="destroy"><span class="type-signature"></span>destroy<span class="signature">(<span class="optional">destroyChildren</span>)</span><span class="type-signature"></span></h4>
     
     
@@ -8639,82 +8715,6 @@ and nulls its reference to <code>game</code>, freeing it up for garbage collecti
     
     <dt class="tag-source">Source -
     <a href="src_gameobjects_components_Destroy.js.html">gameobjects/components/Destroy.js</a>, <a href="src_gameobjects_components_Destroy.js.html#sunlight-1-line-33">line 33</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="destroy"><span class="type-signature"></span>destroy<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Destroy this DisplayObject.
-Removes all references to transformCallbacks, its parent, the stage, filters, bounds, mask and cached Sprites.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="PIXI.DisplayObject.html#destroy">PIXI.DisplayObject#destroy</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-242">line 242</a>
     </dt>
     
 
@@ -14944,7 +14944,7 @@ or the rectangle it references, then you need to update the crop frame by callin
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha10</a>
-		on Wed Jul 22 2015 14:55:21 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Jul 24 2015 13:29:54 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

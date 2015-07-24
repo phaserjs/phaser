@@ -2985,16 +2985,21 @@ declare module Phaser {
         /**
         * Gets a PIXI.Texture by key from the PIXI.TextureCache.
         * 
+        * If the texture isn't found in the cache, then it searches the Phaser Image Cache and
+        * creates a new PIXI.Texture object which is then returned.
+        * 
         * @param key Asset key of the Texture to retrieve from the Cache.
         * @return The Texture object.
         */
         getPixiTexture(key: string): PIXI.Texture;
 
         /**
-        * Gets a PIXI.BaseTexture by key from the PIXI.BaseTExtureCache.
+        * Gets a PIXI.BaseTexture by key from the PIXI.BaseTextureCache.
+        * 
+        * If the texture isn't found in the cache, then it searches the Phaser Image Cache.
         * 
         * @param key Asset key of the BaseTexture to retrieve from the Cache.
-        * @return The BaseTexture object.
+        * @return The BaseTexture object or null if not found.
         */
         getPixiBaseTexture(key: string): PIXI.BaseTexture;
 
@@ -3216,13 +3221,15 @@ declare module Phaser {
         removeCanvas(key: string): void;
 
         /**
-        * Removes an image from the cache and optionally from the Pixi.BaseTextureCache as well.
+        * Removes an image from the cache.
         * 
-        * Note that this only removes it from the Phaser.Cache. If you still have references to the data elsewhere
+        * You can optionally elect to destroy it as well. This calls BaseTexture.destroy on it.
+        * 
+        * Note that this only removes it from the Phaser and PIXI Caches. If you still have references to the data elsewhere
         * then it will persist in memory.
         * 
         * @param key Key of the asset you want to remove.
-        * @param removeFromPixi Should this image also be removed from the Pixi BaseTextureCache? - Default: true
+        * @param removeFromPixi Should this image also be destroyed? Removing it from the PIXI.BaseTextureCache? - Default: true
         */
         removeImage(key: string, removeFromPixi?: boolean): void;
 
