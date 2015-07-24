@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.4.1 "Ionin Spring" - Built: Thu Jul 23 2015 16:01:54
+* v2.4.1 "Ionin Spring" - Built: Fri Jul 24 2015 13:26:51
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -8221,13 +8221,16 @@ PIXI.BaseTexture.prototype.destroy = function()
     {
         delete PIXI.BaseTextureCache[this.imageUrl];
         delete PIXI.TextureCache[this.imageUrl];
+
         this.imageUrl = null;
+
         if (!navigator.isCocoonJS) this.source.src = '';
     }
     else if (this.source && this.source._pixiId)
     {
         delete PIXI.BaseTextureCache[this.source._pixiId];
     }
+
     this.source = null;
 
     this.unloadFromGPU();
@@ -28232,65 +28235,77 @@ Phaser.Pointer.prototype = {
         //  If you find one, please tell us!
         var buttons = event.buttons;
 
-        if (buttons === undefined)
+        if (buttons !== undefined)
         {
-            return;
-        }
+            //  Note: These are bitwise checks, not booleans
 
-        //  Note: These are bitwise checks, not booleans
+            if (Phaser.Pointer.LEFT_BUTTON & buttons)
+            {
+                this.leftButton.start(event);
+            }
+            else
+            {
+                this.leftButton.stop(event);
+            }
 
-        if (Phaser.Pointer.LEFT_BUTTON & buttons)
-        {
-            this.leftButton.start(event);
+            if (Phaser.Pointer.RIGHT_BUTTON & buttons)
+            {
+                this.rightButton.start(event);
+            }
+            else
+            {
+                this.rightButton.stop(event);
+            }
+                    
+            if (Phaser.Pointer.MIDDLE_BUTTON & buttons)
+            {
+                this.middleButton.start(event);
+            }
+            else
+            {
+                this.middleButton.stop(event);
+            }
+
+            if (Phaser.Pointer.BACK_BUTTON & buttons)
+            {
+                this.backButton.start(event);
+            }
+            else
+            {
+                this.backButton.stop(event);
+            }
+
+            if (Phaser.Pointer.FORWARD_BUTTON & buttons)
+            {
+                this.forwardButton.start(event);
+            }
+            else
+            {
+                this.forwardButton.stop(event);
+            }
+
+            if (Phaser.Pointer.ERASER_BUTTON & buttons)
+            {
+                this.eraserButton.start(event);
+            }
+            else
+            {
+                this.eraserButton.stop(event);
+            }
         }
         else
         {
-            this.leftButton.stop(event);
-        }
+            //  No buttons property (like Safari on OSX when using a trackpad)
 
-        if (Phaser.Pointer.RIGHT_BUTTON & buttons)
-        {
-            this.rightButton.start(event);
-        }
-        else
-        {
-            this.rightButton.stop(event);
-        }
-                
-        if (Phaser.Pointer.MIDDLE_BUTTON & buttons)
-        {
-            this.middleButton.start(event);
-        }
-        else
-        {
-            this.middleButton.stop(event);
-        }
-
-        if (Phaser.Pointer.BACK_BUTTON & buttons)
-        {
-            this.backButton.start(event);
-        }
-        else
-        {
-            this.backButton.stop(event);
-        }
-
-        if (Phaser.Pointer.FORWARD_BUTTON & buttons)
-        {
-            this.forwardButton.start(event);
-        }
-        else
-        {
-            this.forwardButton.stop(event);
-        }
-
-        if (Phaser.Pointer.ERASER_BUTTON & buttons)
-        {
-            this.eraserButton.start(event);
-        }
-        else
-        {
-            this.eraserButton.stop(event);
+            if (event.type === 'mousedown')
+            {
+                this.leftButton.start(event);
+            }
+            else
+            {
+                this.leftButton.stop(event);
+                this.rightButton.stop(event);
+            }
         }
 
         //  On OS X (and other devices with trackpads) you have to press CTRL + the pad
@@ -57157,25 +57172,29 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * Removes an image from the cache and optionally from the Pixi.BaseTextureCache as well.
+    * Removes an image from the cache.
+    * 
+    * You can optionally elect to destroy it as well. This calls BaseTexture.destroy on it.
     *
-    * Note that this only removes it from the Phaser.Cache. If you still have references to the data elsewhere
+    * Note that this only removes it from the Phaser and PIXI Caches. If you still have references to the data elsewhere
     * then it will persist in memory.
     *
     * @method Phaser.Cache#removeImage
     * @param {string} key - Key of the asset you want to remove.
-    * @param {boolean} [removeFromPixi=true] - Should this image also be removed from the Pixi BaseTextureCache?
+    * @param {boolean} [removeFromPixi=true] - Should this image also be destroyed? Removing it from the PIXI.BaseTextureCache?
     */
     removeImage: function (key, removeFromPixi) {
 
         if (removeFromPixi === undefined) { removeFromPixi = true; }
 
-        delete this._cache.image[key];
+        var img = this.getImage(key, true);
 
-        if (removeFromPixi)
+        if (removeFromPixi && img.base)
         {
-            PIXI.BaseTextureCache[key].destroy();
+            img.base.destroy();
         }
+
+        delete this._cache.image[key];
 
     },
 
@@ -67547,10 +67566,12 @@ PIXI.TextureSilentFail = true;
         }
         exports.Phaser = Phaser;
     } else if (typeof define !== 'undefined' && define.amd) {
-        define('Phaser', (function() { return root.Phaser = Phaser; }) ());
+        define('Phaser', (function() { return root.Phaser = Phaser; })() );
     } else {
         root.Phaser = Phaser;
     }
+
+    return Phaser;
 }).call(this);
 
 /*
