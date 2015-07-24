@@ -997,8 +997,6 @@ Phaser.TilemapLayer.prototype.render = function () {
         return;
     }
 
-    this.context.save();
-
     if (this.dirty || this.layer.dirty)
     {
         this.layer.dirty = false;
@@ -1024,6 +1022,8 @@ Phaser.TilemapLayer.prototype.render = function () {
         return;
     }
 
+    this.context.save();
+    
     mc.scrollX = scrollX;
     mc.scrollY = scrollY;
 
