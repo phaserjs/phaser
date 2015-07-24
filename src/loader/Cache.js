@@ -1532,6 +1532,9 @@ Phaser.Cache.prototype = {
     /**
     * Gets a PIXI.Texture by key from the PIXI.TextureCache.
     *
+    * If the texture isn't found in the cache, then it searches the Phaser Image Cache and
+    * creates a new PIXI.Texture object which is then returned.
+    *
     * @method Phaser.Cache#getPixiTexture
     * @deprecated
     * @param {string} key - Asset key of the Texture to retrieve from the Cache.
@@ -1545,19 +1548,29 @@ Phaser.Cache.prototype = {
         }
         else
         {
-            console.warn('Phaser.Cache.getPixiTexture: Invalid key: "' + key + '"');
-            return null;
+            var base = this.getPixiBaseTexture(key);
+
+            if (base)
+            {
+                return new PIXI.Texture(base);
+            }
+            else
+            {
+                return null;
+            }
         }
 
     },
 
     /**
-    * Gets a PIXI.BaseTexture by key from the PIXI.BaseTExtureCache.
+    * Gets a PIXI.BaseTexture by key from the PIXI.BaseTextureCache.
+    * 
+    * If the texture isn't found in the cache, then it searches the Phaser Image Cache.
     *
     * @method Phaser.Cache#getPixiBaseTexture
     * @deprecated
     * @param {string} key - Asset key of the BaseTexture to retrieve from the Cache.
-    * @return {PIXI.BaseTexture} The BaseTexture object.
+    * @return {PIXI.BaseTexture} The BaseTexture object or null if not found.
     */
     getPixiBaseTexture: function (key) {
 
@@ -1567,8 +1580,16 @@ Phaser.Cache.prototype = {
         }
         else
         {
-            console.warn('Phaser.Cache.getPixiBaseTexture: Invalid key: "' + key + '"');
-            return null;
+            var img = this.getItem(key, Phaser.Cache.IMAGE, 'getPixiBaseTexture');
+
+            if (img !== null)
+            {
+                return img.base;
+            }
+            else
+            {
+                return null;
+            }
         }
 
     },
@@ -1611,9 +1632,9 @@ Phaser.Cache.prototype = {
 
         var out = [];
 
-        if (this._cache[cache])
+        if (this._cacheMap[cache])
         {
-            for (var key in this._cache[cache])
+            for (var key in this._cacheMap[cache])
             {
                 if (key !== '__default' && key !== '__missing')
                 {
@@ -1646,25 +1667,29 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * Removes an image from the cache and optionally from the Pixi.BaseTextureCache as well.
+    * Removes an image from the cache.
+    * 
+    * You can optionally elect to destroy it as well. This calls BaseTexture.destroy on it.
     *
-    * Note that this only removes it from the Phaser.Cache. If you still have references to the data elsewhere
+    * Note that this only removes it from the Phaser and PIXI Caches. If you still have references to the data elsewhere
     * then it will persist in memory.
     *
     * @method Phaser.Cache#removeImage
     * @param {string} key - Key of the asset you want to remove.
-    * @param {boolean} [removeFromPixi=true] - Should this image also be removed from the Pixi BaseTextureCache?
+    * @param {boolean} [removeFromPixi=true] - Should this image also be destroyed? Removing it from the PIXI.BaseTextureCache?
     */
     removeImage: function (key, removeFromPixi) {
 
         if (removeFromPixi === undefined) { removeFromPixi = true; }
 
-        delete this._cache.image[key];
+        var img = this.getImage(key, true);
 
-        if (removeFromPixi)
+        if (removeFromPixi && img.base)
         {
-            PIXI.BaseTextureCache[key].destroy();
+            img.base.destroy();
         }
+
+        delete this._cache.image[key];
 
     },
 

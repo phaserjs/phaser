@@ -164,13 +164,16 @@ PIXI.BaseTexture.prototype.destroy = function()
     {
         delete PIXI.BaseTextureCache[this.imageUrl];
         delete PIXI.TextureCache[this.imageUrl];
+
         this.imageUrl = null;
+
         if (!navigator.isCocoonJS) this.source.src = '';
     }
     else if (this.source && this.source._pixiId)
     {
         delete PIXI.BaseTextureCache[this.source._pixiId];
     }
+
     this.source = null;
 
     this.unloadFromGPU();

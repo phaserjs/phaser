@@ -1620,7 +1620,7 @@ using <a href="Phaser.Game.html#add"><code><code>game.add</code></code></a>.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="src_gameobjects_GameObjectFactory.js.html#sunlight-1-line-167">line 167</a>
+    <a href="src_gameobjects_GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="src_gameobjects_GameObjectFactory.js.html#sunlight-1-line-200">line 200</a>
     </dt>
     
 
@@ -1759,7 +1759,7 @@ using <a href="Phaser.Game.html#add"><code><code>game.add</code></code></a>.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="src_gameobjects_GameObjectFactory.js.html#sunlight-1-line-199">line 199</a>
+    <a href="src_gameobjects_GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="src_gameobjects_GameObjectFactory.js.html#sunlight-1-line-232">line 232</a>
     </dt>
     
 
@@ -2036,7 +2036,7 @@ using <a href="Phaser.Game.html#add"><code><code>game.add</code></code></a>.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="src_gameobjects_GameObjectFactory.js.html#sunlight-1-line-463">line 463</a>
+    <a href="src_gameobjects_GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="src_gameobjects_GameObjectFactory.js.html#sunlight-1-line-496">line 496</a>
     </dt>
     
 
@@ -2387,7 +2387,7 @@ Littera (Web-based, free): http://kvazars.com/littera/</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="src_gameobjects_GameObjectFactory.js.html#sunlight-1-line-362">line 362</a>
+    <a href="src_gameobjects_GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="src_gameobjects_GameObjectFactory.js.html#sunlight-1-line-395">line 395</a>
     </dt>
     
 
@@ -2893,7 +2893,288 @@ Littera (Web-based, free): http://kvazars.com/littera/</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="src_gameobjects_GameObjectFactory.js.html#sunlight-1-line-274">line 274</a>
+    <a href="src_gameobjects_GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="src_gameobjects_GameObjectFactory.js.html#sunlight-1-line-307">line 307</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+       
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="creature"><span class="type-signature"></span>creature<span class="signature">(<span class="optional">x</span>, <span class="optional">y</span>, <span class="optional">key</span>, <span class="optional">group</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.Creature.html">Phaser.Creature</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Create a new Creature Animation object.</p>
+<p>Creature is a custom Game Object used in conjunction with the Creature Runtime libraries by Kestrel Moon Studios.</p>
+<p>It allows you to display animated Game Objects that were created with the <a href="http://www.kestrelmoon.com/creature/">Creature Automated Animation Tool</a>.</p>
+<p>Note 1: You can only use Phaser.Creature objects in WebGL enabled games. They do not work in Canvas mode games.</p>
+<p>Note 2: You must use a build of Phaser that includes the CreatureMeshBone.js runtime and gl-matrix.js, or have them
+loaded before your Phaser game boots.</p>
+<p>See the Phaser custom build process for more details.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+		<th>Default</th>
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>x</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"><p>The x coordinate of the creature. The coordinate is relative to any parent container this creature may be in.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>y</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"><p>The y coordinate of the creature. The coordinate is relative to any parent container this creature may be in.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>key</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+|
+
+<span class="param-type"><a href="PIXI.Texture.html">PIXI.Texture</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The image used as a texture by this creature object during rendering. If a string Phaser will get for an entry in the Image Cache. Or it can be an instance of a PIXI.Texture.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>group</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Group.html">Phaser.Group</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>Optional Group to add the object to. If not specified it will be added to the World group.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+
+    
+    <h5>Returns:</h5>
+    <div class="returns">
+        
+            
+    
+        <div class="returns-type">
+        
+<span class="param-type"><a href="Phaser.Creature.html">Phaser.Creature</a></span>
+
+ -
+        </div>
+    
+    <div class="returns-desc param-desc">
+        <p>The newly created Sprite object.</p>
+    </div>
+
+
+        
+    </div>
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_gameobjects_GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="src_gameobjects_GameObjectFactory.js.html#sunlight-1-line-95">line 95</a>
     </dt>
     
 
@@ -3133,7 +3414,7 @@ at set intervals, and fixes their positions and velocities accordingly.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="src_gameobjects_GameObjectFactory.js.html#sunlight-1-line-315">line 315</a>
+    <a href="src_gameobjects_GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="src_gameobjects_GameObjectFactory.js.html#sunlight-1-line-348">line 348</a>
     </dt>
     
 
@@ -3434,7 +3715,7 @@ at set intervals, and fixes their positions and velocities accordingly.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="src_gameobjects_GameObjectFactory.js.html#sunlight-1-line-491">line 491</a>
+    <a href="src_gameobjects_GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="src_gameobjects_GameObjectFactory.js.html#sunlight-1-line-524">line 524</a>
     </dt>
     
 
@@ -3669,7 +3950,7 @@ at set intervals, and fixes their positions and velocities accordingly.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="src_gameobjects_GameObjectFactory.js.html#sunlight-1-line-298">line 298</a>
+    <a href="src_gameobjects_GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="src_gameobjects_GameObjectFactory.js.html#sunlight-1-line-331">line 331</a>
     </dt>
     
 
@@ -3982,7 +4263,7 @@ at set intervals, and fixes their positions and velocities accordingly.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="src_gameobjects_GameObjectFactory.js.html#sunlight-1-line-110">line 110</a>
+    <a href="src_gameobjects_GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="src_gameobjects_GameObjectFactory.js.html#sunlight-1-line-143">line 143</a>
     </dt>
     
 
@@ -4585,7 +4866,7 @@ are automatically given a physics body.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="src_gameobjects_GameObjectFactory.js.html#sunlight-1-line-127">line 127</a>
+    <a href="src_gameobjects_GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="src_gameobjects_GameObjectFactory.js.html#sunlight-1-line-160">line 160</a>
     </dt>
     
 
@@ -4771,7 +5052,7 @@ are automatically given a physics body.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="src_gameobjects_GameObjectFactory.js.html#sunlight-1-line-511">line 511</a>
+    <a href="src_gameobjects_GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="src_gameobjects_GameObjectFactory.js.html#sunlight-1-line-544">line 544</a>
     </dt>
     
 
@@ -5047,7 +5328,7 @@ are automatically given a physics body.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="src_gameobjects_GameObjectFactory.js.html#sunlight-1-line-421">line 421</a>
+    <a href="src_gameobjects_GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="src_gameobjects_GameObjectFactory.js.html#sunlight-1-line-454">line 454</a>
     </dt>
     
 
@@ -5504,7 +5785,7 @@ i.e. if you need each Image to have different text in it, then you need to creat
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="src_gameobjects_GameObjectFactory.js.html#sunlight-1-line-334">line 334</a>
+    <a href="src_gameobjects_GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="src_gameobjects_GameObjectFactory.js.html#sunlight-1-line-367">line 367</a>
     </dt>
     
 
@@ -5864,7 +6145,7 @@ i.e. if you need each Image to have different text in it, then you need to creat
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="src_gameobjects_GameObjectFactory.js.html#sunlight-1-line-233">line 233</a>
+    <a href="src_gameobjects_GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="src_gameobjects_GameObjectFactory.js.html#sunlight-1-line-266">line 266</a>
     </dt>
     
 
@@ -6136,7 +6417,7 @@ i.e. if you need each Image to have different text in it, then you need to creat
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="src_gameobjects_GameObjectFactory.js.html#sunlight-1-line-183">line 183</a>
+    <a href="src_gameobjects_GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="src_gameobjects_GameObjectFactory.js.html#sunlight-1-line-216">line 216</a>
     </dt>
     
 
@@ -6701,7 +6982,7 @@ The speed gains are specifically for WebGL. In Canvas mode you won't see any rea
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="src_gameobjects_GameObjectFactory.js.html#sunlight-1-line-146">line 146</a>
+    <a href="src_gameobjects_GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="src_gameobjects_GameObjectFactory.js.html#sunlight-1-line-179">line 179</a>
     </dt>
     
 
@@ -7012,7 +7293,7 @@ The speed gains are specifically for WebGL. In Canvas mode you won't see any rea
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="src_gameobjects_GameObjectFactory.js.html#sunlight-1-line-255">line 255</a>
+    <a href="src_gameobjects_GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="src_gameobjects_GameObjectFactory.js.html#sunlight-1-line-288">line 288</a>
     </dt>
     
 
@@ -7330,7 +7611,7 @@ Note that all Tilemaps use a base tile size to calculate dimensions from, but th
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="src_gameobjects_GameObjectFactory.js.html#sunlight-1-line-398">line 398</a>
+    <a href="src_gameobjects_GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="src_gameobjects_GameObjectFactory.js.html#sunlight-1-line-431">line 431</a>
     </dt>
     
 
@@ -7684,7 +7965,7 @@ Note that all Tilemaps use a base tile size to calculate dimensions from, but th
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="src_gameobjects_GameObjectFactory.js.html#sunlight-1-line-212">line 212</a>
+    <a href="src_gameobjects_GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="src_gameobjects_GameObjectFactory.js.html#sunlight-1-line-245">line 245</a>
     </dt>
     
 
@@ -7824,7 +8105,7 @@ Note that all Tilemaps use a base tile size to calculate dimensions from, but th
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="src_gameobjects_GameObjectFactory.js.html#sunlight-1-line-95">line 95</a>
+    <a href="src_gameobjects_GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="src_gameobjects_GameObjectFactory.js.html#sunlight-1-line-128">line 128</a>
     </dt>
     
 
@@ -8029,7 +8310,7 @@ Note that all Tilemaps use a base tile size to calculate dimensions from, but th
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="src_gameobjects_GameObjectFactory.js.html#sunlight-1-line-447">line 447</a>
+    <a href="src_gameobjects_GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="src_gameobjects_GameObjectFactory.js.html#sunlight-1-line-480">line 480</a>
     </dt>
     
 
@@ -8078,7 +8359,7 @@ Note that all Tilemaps use a base tile size to calculate dimensions from, but th
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha10</a>
-		on Wed Jul 22 2015 14:55:15 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Jul 24 2015 13:29:49 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

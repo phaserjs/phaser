@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.4.0 "Katar" - Built: Wed Jul 22 2015 21:09:12
+* v2.4.1 "Ionin Spring" - Built: Fri Jul 24 2015 13:26:42
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -32,7 +32,7 @@
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
 
-var PIXI = (function(){
+(function(){
 
     var root = this;
 
@@ -8221,13 +8221,16 @@ PIXI.BaseTexture.prototype.destroy = function()
     {
         delete PIXI.BaseTextureCache[this.imageUrl];
         delete PIXI.TextureCache[this.imageUrl];
+
         this.imageUrl = null;
+
         if (!navigator.isCocoonJS) this.source.src = '';
     }
     else if (this.source && this.source._pixiId)
     {
         delete PIXI.BaseTextureCache[this.source._pixiId];
     }
+
     this.source = null;
 
     this.unloadFromGPU();
@@ -9065,554 +9068,83 @@ PIXI.RenderTexture.prototype.getCanvas = function()
 };
 
 /**
- * @author Mat Groves http://matgroves.com/
+ * @author Mat Groves http://matgroves.com/ @Doormat23
  */
 
 /**
- * A tiling sprite is a fast way of rendering a tiling image
- *
- * @class TilingSprite
- * @extends Sprite
+ * This is the base class for creating a PIXI filter. Currently only webGL supports filters.
+ * If you want to make a custom filter this should be your base class.
+ * @class AbstractFilter
  * @constructor
- * @param texture {Texture} the texture of the tiling sprite
- * @param width {Number}  the width of the tiling sprite
- * @param height {Number} the height of the tiling sprite
+ * @param fragmentSrc {Array} The fragment source in an array of strings.
+ * @param uniforms {Object} An object containing the uniforms for this filter.
  */
-PIXI.TilingSprite = function(texture, width, height)
+PIXI.AbstractFilter = function(fragmentSrc, uniforms)
 {
-    PIXI.Sprite.call(this, texture);
+    /**
+    * An array of passes - some filters contain a few steps this array simply stores the steps in a liniear fashion.
+    * For example the blur filter has two passes blurX and blurY.
+    * @property passes
+    * @type Array(Filter)
+    * @private
+    */
+    this.passes = [this];
 
     /**
-     * The width of the tiling sprite
-     *
-     * @property width
-     * @type Number
-     */
-    this._width = width || 128;
-
-    /**
-     * The height of the tiling sprite
-     *
-     * @property height
-     * @type Number
-     */
-    this._height = height || 128;
-
-    /**
-     * The scaling of the image that is being tiled
-     *
-     * @property tileScale
-     * @type Point
-     */
-    this.tileScale = new PIXI.Point(1, 1);
-
-    /**
-     * A point that represents the scale of the texture object
-     *
-     * @property tileScaleOffset
-     * @type Point
-     */
-    this.tileScaleOffset = new PIXI.Point(1, 1);
+    * @property shaders
+    * @type Array(Shader)
+    * @private
+    */
+    this.shaders = [];
     
     /**
-     * The offset position of the image that is being tiled
-     *
-     * @property tilePosition
-     * @type Point
-     */
-    this.tilePosition = new PIXI.Point();
+    * @property dirty
+    * @type Boolean
+    */
+    this.dirty = true;
 
     /**
-     * Whether this sprite is renderable or not
-     *
-     * @property renderable
-     * @type Boolean
-     * @default true
-     */
-    this.renderable = true;
+    * @property padding
+    * @type Number
+    */
+    this.padding = 0;
 
     /**
-     * The tint applied to the sprite. This is a hex value
-     *
-     * @property tint
-     * @type Number
-     * @default 0xFFFFFF
-     */
-    this.tint = 0xFFFFFF;
+    * @property uniforms
+    * @type object
+    * @private
+    */
+    this.uniforms = uniforms || {};
 
     /**
-     * If enabled a green rectangle will be drawn behind the generated tiling texture, allowing you to visually
-     * debug the texture being used.
-     *
-     * @property textureDebug
-     * @type Boolean
-     */
-    this.textureDebug = false;
-    
-    /**
-     * The blend mode to be applied to the sprite
-     *
-     * @property blendMode
-     * @type Number
-     * @default PIXI.blendModes.NORMAL;
-     */
-    this.blendMode = PIXI.blendModes.NORMAL;
-
-    /**
-     * The CanvasBuffer object that the tiled texture is drawn to.
-     *
-     * @property canvasBuffer
-     * @type PIXI.CanvasBuffer
-     */
-    this.canvasBuffer = null;
-
-    /**
-     * An internal Texture object that holds the tiling texture that was generated from TilingSprite.texture.
-     *
-     * @property tilingTexture
-     * @type PIXI.Texture
-     */
-    this.tilingTexture = null;
-
-    /**
-     * The Context fill pattern that is used to draw the TilingSprite in Canvas mode only (will be null in WebGL).
-     *
-     * @property tilePattern
-     * @type PIXI.Texture
-     */
-    this.tilePattern = null;
-
-    /**
-     * If true the TilingSprite will run generateTexture on its **next** render pass.
-     * This is set by the likes of Phaser.LoadTexture.setFrame.
-     *
-     * @property refreshTexture
-     * @type Boolean
-     * @default true
-     */
-    this.refreshTexture = true;
-
-    this.frameWidth = 0;
-    this.frameHeight = 0;
-
+    * @property fragmentSrc
+    * @type Array
+    * @private
+    */
+    this.fragmentSrc = fragmentSrc || [];
 };
 
-PIXI.TilingSprite.prototype = Object.create(PIXI.Sprite.prototype);
-PIXI.TilingSprite.prototype.constructor = PIXI.TilingSprite;
-
-PIXI.TilingSprite.prototype.setTexture = function(texture)
-{
-    if (this.texture !== texture)
-    {
-        this.texture = texture;
-        this.refreshTexture = true;
-        this.cachedTint = 0xFFFFFF;
-    }
-
-};
+PIXI.AbstractFilter.prototype.constructor = PIXI.AbstractFilter;
 
 /**
-* Renders the object using the WebGL renderer
-*
-* @method _renderWebGL
-* @param renderSession {RenderSession} 
-* @private
-*/
-PIXI.TilingSprite.prototype._renderWebGL = function(renderSession)
-{
-    if (this.visible === false || this.alpha === 0)
-    {
-        return;
-    }
-
-    if (this._mask)
-    {
-        renderSession.spriteBatch.stop();
-        renderSession.maskManager.pushMask(this.mask, renderSession);
-        renderSession.spriteBatch.start();
-    }
-
-    if (this._filters)
-    {
-        renderSession.spriteBatch.flush();
-        renderSession.filterManager.pushFilter(this._filterBlock);
-    }
-
-    if (this.refreshTexture)
-    {
-        this.generateTilingTexture(true);
-
-        if (this.tilingTexture)
-        {
-            if (this.tilingTexture.needsUpdate)
-            {
-                renderSession.renderer.updateTexture(this.tilingTexture.baseTexture);
-                this.tilingTexture.needsUpdate = false;
-            }
-        }
-        else
-        {
-            return;
-        }
-    }
-    
-    renderSession.spriteBatch.renderTilingSprite(this);
-
-    for (var i = 0; i < this.children.length; i++)
-    {
-        this.children[i]._renderWebGL(renderSession);
-    }
-
-    renderSession.spriteBatch.stop();
-
-    if (this._filters)
-    {
-        renderSession.filterManager.popFilter();
-    }
-
-    if (this._mask)
-    {
-        renderSession.maskManager.popMask(this._mask, renderSession);
-    }
-    
-    renderSession.spriteBatch.start();
-
-};
-
-/**
-* Renders the object using the Canvas renderer
-*
-* @method _renderCanvas
-* @param renderSession {RenderSession} 
-* @private
-*/
-PIXI.TilingSprite.prototype._renderCanvas = function(renderSession)
-{
-    if (this.visible === false || this.alpha === 0)
-    {
-        return;
-    }
-    
-    var context = renderSession.context;
-
-    if (this._mask)
-    {
-        renderSession.maskManager.pushMask(this._mask, renderSession);
-    }
-
-    context.globalAlpha = this.worldAlpha;
-    
-    var wt = this.worldTransform;
-    var resolution = renderSession.resolution;
-
-    context.setTransform(wt.a * resolution,
-                         wt.b * resolution,
-                         wt.c * resolution,
-                         wt.d * resolution,
-                         wt.tx * resolution,
-                         wt.ty * resolution);
-
-    if (this.refreshTexture)
-    {
-        this.generateTilingTexture(false);
-    
-        if (this.tilingTexture)
-        {
-            this.tilePattern = context.createPattern(this.tilingTexture.baseTexture.source, 'repeat');
-        }
-        else
-        {
-            return;
-        }
-    }
-
-    var sessionBlendMode = renderSession.currentBlendMode;
-
-    //  Check blend mode
-    if (this.blendMode !== renderSession.currentBlendMode)
-    {
-        renderSession.currentBlendMode = this.blendMode;
-        context.globalCompositeOperation = PIXI.blendModesCanvas[renderSession.currentBlendMode];
-    }
-
-    var tilePosition = this.tilePosition;
-    var tileScale = this.tileScale;
-
-    tilePosition.x %= this.tilingTexture.baseTexture.width;
-    tilePosition.y %= this.tilingTexture.baseTexture.height;
-
-    //  Translate
-    context.scale(tileScale.x, tileScale.y);
-    context.translate(tilePosition.x + (this.anchor.x * -this._width), tilePosition.y + (this.anchor.y * -this._height));
-
-    context.fillStyle = this.tilePattern;
-
-    var tx = -tilePosition.x;
-    var ty = -tilePosition.y;
-    var tw = this._width / tileScale.x;
-    var th = this._height / tileScale.y;
-
-    //  Allow for pixel rounding
-    if (renderSession.roundPixels)
-    {
-        tx | 0;
-        ty | 0;
-        tw | 0;
-        th | 0;
-    }
-
-    context.fillRect(tx, ty, tw, th);
-
-    //  Translate back again
-    context.scale(1 / tileScale.x, 1 / tileScale.y);
-    context.translate(-tilePosition.x + (this.anchor.x * this._width), -tilePosition.y + (this.anchor.y * this._height));
-
-    if (this._mask)
-    {
-        renderSession.maskManager.popMask(renderSession);
-    }
-
-    for (var i = 0; i < this.children.length; i++)
-    {
-        this.children[i]._renderCanvas(renderSession);
-    }
-
-    //  Reset blend mode
-    if (sessionBlendMode !== this.blendMode)
-    {
-        renderSession.currentBlendMode = sessionBlendMode;
-        context.globalCompositeOperation = PIXI.blendModesCanvas[sessionBlendMode];
-    }
-
-};
-
-/**
- * When the texture is updated, this event will fire to update the scale and frame
+ * Syncs the uniforms between the class object and the shaders.
  *
- * @method onTextureUpdate
- * @param event
- * @private
+ * @method syncUniforms
  */
-PIXI.TilingSprite.prototype.onTextureUpdate = function()
+PIXI.AbstractFilter.prototype.syncUniforms = function()
 {
-   // overriding the sprite version of this!
+    for(var i=0,j=this.shaders.length; i<j; i++)
+    {
+        this.shaders[i].dirty = true;
+    }
 };
 
-/**
-* 
-* @method generateTilingTexture
-* 
-* @param forcePowerOfTwo {Boolean} Whether we want to force the texture to be a power of two
+/*
+PIXI.AbstractFilter.prototype.apply = function(frameBuffer)
+{
+    // TODO :)
+};
 */
-PIXI.TilingSprite.prototype.generateTilingTexture = function(forcePowerOfTwo)
-{
-    if (!this.texture.baseTexture.hasLoaded)
-    {
-        return;
-    }
-
-    var texture = this.texture;
-    var frame = texture.frame;
-
-    var targetWidth = this._frame.sourceSizeW;
-    var targetHeight = this._frame.sourceSizeH;
-
-    var dx = 0;
-    var dy = 0;
-
-    if (this._frame.trimmed)
-    {
-        dx = this._frame.spriteSourceSizeX;
-        dy = this._frame.spriteSourceSizeY;
-    }
-
-    if (forcePowerOfTwo)
-    {
-        targetWidth = PIXI.getNextPowerOfTwo(targetWidth);
-        targetHeight = PIXI.getNextPowerOfTwo(targetHeight);
-    }
-
-    if (this.canvasBuffer)
-    {
-        this.canvasBuffer.resize(targetWidth, targetHeight);
-        this.tilingTexture.baseTexture.width = targetWidth;
-        this.tilingTexture.baseTexture.height = targetHeight;
-        this.tilingTexture.needsUpdate = true;
-    }
-    else
-    {
-        this.canvasBuffer = new PIXI.CanvasBuffer(targetWidth, targetHeight);
-        this.tilingTexture = PIXI.Texture.fromCanvas(this.canvasBuffer.canvas);
-        this.tilingTexture = PIXI.Texture.fromCanvas(this.canvasBuffer.canvas);
-        this.tilingTexture.isTiling = true;
-        this.tilingTexture.needsUpdate = true;
-    }
-
-    if (this.textureDebug)
-    {
-        this.canvasBuffer.context.strokeStyle = '#00ff00';
-        this.canvasBuffer.context.strokeRect(0, 0, targetWidth, targetHeight);
-    }
-
-    //  If a sprite sheet we need this:
-    var w = texture.crop.width;
-    var h = texture.crop.height;
-
-    if (w !== targetWidth || h !== targetHeight)
-    {
-        w = targetWidth;
-        h = targetHeight;
-    }
-
-    this.canvasBuffer.context.drawImage(texture.baseTexture.source,
-                           texture.crop.x,
-                           texture.crop.y,
-                           texture.crop.width,
-                           texture.crop.height,
-                           dx,
-                           dy,
-                           w,
-                           h);
-
-    this.tileScaleOffset.x = frame.width / targetWidth;
-    this.tileScaleOffset.y = frame.height / targetHeight;
-
-    this.refreshTexture = false;
-
-    this.tilingTexture.baseTexture._powerOf2 = true;
-
-};
-
-/**
-* Returns the framing rectangle of the sprite as a PIXI.Rectangle object
-*
-* @method getBounds
-* @return {Rectangle} the framing rectangle
-*/
-PIXI.TilingSprite.prototype.getBounds = function()
-{
-    var width = this._width;
-    var height = this._height;
-
-    var w0 = width * (1-this.anchor.x);
-    var w1 = width * -this.anchor.x;
-
-    var h0 = height * (1-this.anchor.y);
-    var h1 = height * -this.anchor.y;
-
-    var worldTransform = this.worldTransform;
-
-    var a = worldTransform.a;
-    var b = worldTransform.b;
-    var c = worldTransform.c;
-    var d = worldTransform.d;
-    var tx = worldTransform.tx;
-    var ty = worldTransform.ty;
-    
-    var x1 = a * w1 + c * h1 + tx;
-    var y1 = d * h1 + b * w1 + ty;
-
-    var x2 = a * w0 + c * h1 + tx;
-    var y2 = d * h1 + b * w0 + ty;
-
-    var x3 = a * w0 + c * h0 + tx;
-    var y3 = d * h0 + b * w0 + ty;
-
-    var x4 =  a * w1 + c * h0 + tx;
-    var y4 =  d * h0 + b * w1 + ty;
-
-    var maxX = -Infinity;
-    var maxY = -Infinity;
-
-    var minX = Infinity;
-    var minY = Infinity;
-
-    minX = x1 < minX ? x1 : minX;
-    minX = x2 < minX ? x2 : minX;
-    minX = x3 < minX ? x3 : minX;
-    minX = x4 < minX ? x4 : minX;
-
-    minY = y1 < minY ? y1 : minY;
-    minY = y2 < minY ? y2 : minY;
-    minY = y3 < minY ? y3 : minY;
-    minY = y4 < minY ? y4 : minY;
-
-    maxX = x1 > maxX ? x1 : maxX;
-    maxX = x2 > maxX ? x2 : maxX;
-    maxX = x3 > maxX ? x3 : maxX;
-    maxX = x4 > maxX ? x4 : maxX;
-
-    maxY = y1 > maxY ? y1 : maxY;
-    maxY = y2 > maxY ? y2 : maxY;
-    maxY = y3 > maxY ? y3 : maxY;
-    maxY = y4 > maxY ? y4 : maxY;
-
-    var bounds = this._bounds;
-
-    bounds.x = minX;
-    bounds.width = maxX - minX;
-
-    bounds.y = minY;
-    bounds.height = maxY - minY;
-
-    // store a reference so that if this function gets called again in the render cycle we do not have to recalculate
-    this._currentBounds = bounds;
-
-    return bounds;
-};
-
-PIXI.TilingSprite.prototype.destroy = function () {
-
-    PIXI.Sprite.prototype.destroy.call(this);
-
-    this.tileScale = null;
-    this.tileScaleOffset = null;
-    this.tilePosition = null;
-
-    if (this.tilingTexture)
-    {
-        this.tilingTexture.destroy(true);
-        this.tilingTexture = null;
-    }
-
-};
-
-/**
- * The width of the sprite, setting this will actually modify the scale to achieve the value set
- *
- * @property width
- * @type Number
- */
-Object.defineProperty(PIXI.TilingSprite.prototype, 'width', {
-
-    get: function() {
-        return this._width;
-    },
-
-    set: function(value) {
-        this._width = value;
-    }
-
-});
-
-/**
- * The height of the TilingSprite, setting this will actually modify the scale to achieve the value set
- *
- * @property height
- * @type Number
- */
-Object.defineProperty(PIXI.TilingSprite.prototype, 'height', {
-
-    get: function() {
-        return  this._height;
-    },
-
-    set: function(value) {
-        this._height = value;
-    }
-
-});
-
 /**
  * @author Mat Groves http://matgroves.com/
  */
@@ -10259,83 +9791,554 @@ PIXI.Rope.prototype.setTexture = function(texture)
 };
 
 /**
- * @author Mat Groves http://matgroves.com/ @Doormat23
+ * @author Mat Groves http://matgroves.com/
  */
 
 /**
- * This is the base class for creating a PIXI filter. Currently only webGL supports filters.
- * If you want to make a custom filter this should be your base class.
- * @class AbstractFilter
+ * A tiling sprite is a fast way of rendering a tiling image
+ *
+ * @class TilingSprite
+ * @extends Sprite
  * @constructor
- * @param fragmentSrc {Array} The fragment source in an array of strings.
- * @param uniforms {Object} An object containing the uniforms for this filter.
+ * @param texture {Texture} the texture of the tiling sprite
+ * @param width {Number}  the width of the tiling sprite
+ * @param height {Number} the height of the tiling sprite
  */
-PIXI.AbstractFilter = function(fragmentSrc, uniforms)
+PIXI.TilingSprite = function(texture, width, height)
 {
-    /**
-    * An array of passes - some filters contain a few steps this array simply stores the steps in a liniear fashion.
-    * For example the blur filter has two passes blurX and blurY.
-    * @property passes
-    * @type Array(Filter)
-    * @private
-    */
-    this.passes = [this];
+    PIXI.Sprite.call(this, texture);
 
     /**
-    * @property shaders
-    * @type Array(Shader)
-    * @private
-    */
-    this.shaders = [];
+     * The width of the tiling sprite
+     *
+     * @property width
+     * @type Number
+     */
+    this._width = width || 128;
+
+    /**
+     * The height of the tiling sprite
+     *
+     * @property height
+     * @type Number
+     */
+    this._height = height || 128;
+
+    /**
+     * The scaling of the image that is being tiled
+     *
+     * @property tileScale
+     * @type Point
+     */
+    this.tileScale = new PIXI.Point(1, 1);
+
+    /**
+     * A point that represents the scale of the texture object
+     *
+     * @property tileScaleOffset
+     * @type Point
+     */
+    this.tileScaleOffset = new PIXI.Point(1, 1);
     
     /**
-    * @property dirty
-    * @type Boolean
-    */
-    this.dirty = true;
+     * The offset position of the image that is being tiled
+     *
+     * @property tilePosition
+     * @type Point
+     */
+    this.tilePosition = new PIXI.Point();
 
     /**
-    * @property padding
-    * @type Number
-    */
-    this.padding = 0;
+     * Whether this sprite is renderable or not
+     *
+     * @property renderable
+     * @type Boolean
+     * @default true
+     */
+    this.renderable = true;
 
     /**
-    * @property uniforms
-    * @type object
-    * @private
-    */
-    this.uniforms = uniforms || {};
+     * The tint applied to the sprite. This is a hex value
+     *
+     * @property tint
+     * @type Number
+     * @default 0xFFFFFF
+     */
+    this.tint = 0xFFFFFF;
 
     /**
-    * @property fragmentSrc
-    * @type Array
-    * @private
-    */
-    this.fragmentSrc = fragmentSrc || [];
+     * If enabled a green rectangle will be drawn behind the generated tiling texture, allowing you to visually
+     * debug the texture being used.
+     *
+     * @property textureDebug
+     * @type Boolean
+     */
+    this.textureDebug = false;
+    
+    /**
+     * The blend mode to be applied to the sprite
+     *
+     * @property blendMode
+     * @type Number
+     * @default PIXI.blendModes.NORMAL;
+     */
+    this.blendMode = PIXI.blendModes.NORMAL;
+
+    /**
+     * The CanvasBuffer object that the tiled texture is drawn to.
+     *
+     * @property canvasBuffer
+     * @type PIXI.CanvasBuffer
+     */
+    this.canvasBuffer = null;
+
+    /**
+     * An internal Texture object that holds the tiling texture that was generated from TilingSprite.texture.
+     *
+     * @property tilingTexture
+     * @type PIXI.Texture
+     */
+    this.tilingTexture = null;
+
+    /**
+     * The Context fill pattern that is used to draw the TilingSprite in Canvas mode only (will be null in WebGL).
+     *
+     * @property tilePattern
+     * @type PIXI.Texture
+     */
+    this.tilePattern = null;
+
+    /**
+     * If true the TilingSprite will run generateTexture on its **next** render pass.
+     * This is set by the likes of Phaser.LoadTexture.setFrame.
+     *
+     * @property refreshTexture
+     * @type Boolean
+     * @default true
+     */
+    this.refreshTexture = true;
+
+    this.frameWidth = 0;
+    this.frameHeight = 0;
+
 };
 
-PIXI.AbstractFilter.prototype.constructor = PIXI.AbstractFilter;
+PIXI.TilingSprite.prototype = Object.create(PIXI.Sprite.prototype);
+PIXI.TilingSprite.prototype.constructor = PIXI.TilingSprite;
+
+PIXI.TilingSprite.prototype.setTexture = function(texture)
+{
+    if (this.texture !== texture)
+    {
+        this.texture = texture;
+        this.refreshTexture = true;
+        this.cachedTint = 0xFFFFFF;
+    }
+
+};
 
 /**
- * Syncs the uniforms between the class object and the shaders.
- *
- * @method syncUniforms
- */
-PIXI.AbstractFilter.prototype.syncUniforms = function()
+* Renders the object using the WebGL renderer
+*
+* @method _renderWebGL
+* @param renderSession {RenderSession} 
+* @private
+*/
+PIXI.TilingSprite.prototype._renderWebGL = function(renderSession)
 {
-    for(var i=0,j=this.shaders.length; i<j; i++)
+    if (this.visible === false || this.alpha === 0)
     {
-        this.shaders[i].dirty = true;
+        return;
     }
+
+    if (this._mask)
+    {
+        renderSession.spriteBatch.stop();
+        renderSession.maskManager.pushMask(this.mask, renderSession);
+        renderSession.spriteBatch.start();
+    }
+
+    if (this._filters)
+    {
+        renderSession.spriteBatch.flush();
+        renderSession.filterManager.pushFilter(this._filterBlock);
+    }
+
+    if (this.refreshTexture)
+    {
+        this.generateTilingTexture(true);
+
+        if (this.tilingTexture)
+        {
+            if (this.tilingTexture.needsUpdate)
+            {
+                renderSession.renderer.updateTexture(this.tilingTexture.baseTexture);
+                this.tilingTexture.needsUpdate = false;
+            }
+        }
+        else
+        {
+            return;
+        }
+    }
+    
+    renderSession.spriteBatch.renderTilingSprite(this);
+
+    for (var i = 0; i < this.children.length; i++)
+    {
+        this.children[i]._renderWebGL(renderSession);
+    }
+
+    renderSession.spriteBatch.stop();
+
+    if (this._filters)
+    {
+        renderSession.filterManager.popFilter();
+    }
+
+    if (this._mask)
+    {
+        renderSession.maskManager.popMask(this._mask, renderSession);
+    }
+    
+    renderSession.spriteBatch.start();
+
 };
 
-/*
-PIXI.AbstractFilter.prototype.apply = function(frameBuffer)
-{
-    // TODO :)
-};
+/**
+* Renders the object using the Canvas renderer
+*
+* @method _renderCanvas
+* @param renderSession {RenderSession} 
+* @private
 */
+PIXI.TilingSprite.prototype._renderCanvas = function(renderSession)
+{
+    if (this.visible === false || this.alpha === 0)
+    {
+        return;
+    }
+    
+    var context = renderSession.context;
+
+    if (this._mask)
+    {
+        renderSession.maskManager.pushMask(this._mask, renderSession);
+    }
+
+    context.globalAlpha = this.worldAlpha;
+    
+    var wt = this.worldTransform;
+    var resolution = renderSession.resolution;
+
+    context.setTransform(wt.a * resolution,
+                         wt.b * resolution,
+                         wt.c * resolution,
+                         wt.d * resolution,
+                         wt.tx * resolution,
+                         wt.ty * resolution);
+
+    if (this.refreshTexture)
+    {
+        this.generateTilingTexture(false);
+    
+        if (this.tilingTexture)
+        {
+            this.tilePattern = context.createPattern(this.tilingTexture.baseTexture.source, 'repeat');
+        }
+        else
+        {
+            return;
+        }
+    }
+
+    var sessionBlendMode = renderSession.currentBlendMode;
+
+    //  Check blend mode
+    if (this.blendMode !== renderSession.currentBlendMode)
+    {
+        renderSession.currentBlendMode = this.blendMode;
+        context.globalCompositeOperation = PIXI.blendModesCanvas[renderSession.currentBlendMode];
+    }
+
+    var tilePosition = this.tilePosition;
+    var tileScale = this.tileScale;
+
+    tilePosition.x %= this.tilingTexture.baseTexture.width;
+    tilePosition.y %= this.tilingTexture.baseTexture.height;
+
+    //  Translate
+    context.scale(tileScale.x, tileScale.y);
+    context.translate(tilePosition.x + (this.anchor.x * -this._width), tilePosition.y + (this.anchor.y * -this._height));
+
+    context.fillStyle = this.tilePattern;
+
+    var tx = -tilePosition.x;
+    var ty = -tilePosition.y;
+    var tw = this._width / tileScale.x;
+    var th = this._height / tileScale.y;
+
+    //  Allow for pixel rounding
+    if (renderSession.roundPixels)
+    {
+        tx | 0;
+        ty | 0;
+        tw | 0;
+        th | 0;
+    }
+
+    context.fillRect(tx, ty, tw, th);
+
+    //  Translate back again
+    context.scale(1 / tileScale.x, 1 / tileScale.y);
+    context.translate(-tilePosition.x + (this.anchor.x * this._width), -tilePosition.y + (this.anchor.y * this._height));
+
+    if (this._mask)
+    {
+        renderSession.maskManager.popMask(renderSession);
+    }
+
+    for (var i = 0; i < this.children.length; i++)
+    {
+        this.children[i]._renderCanvas(renderSession);
+    }
+
+    //  Reset blend mode
+    if (sessionBlendMode !== this.blendMode)
+    {
+        renderSession.currentBlendMode = sessionBlendMode;
+        context.globalCompositeOperation = PIXI.blendModesCanvas[sessionBlendMode];
+    }
+
+};
+
+/**
+ * When the texture is updated, this event will fire to update the scale and frame
+ *
+ * @method onTextureUpdate
+ * @param event
+ * @private
+ */
+PIXI.TilingSprite.prototype.onTextureUpdate = function()
+{
+   // overriding the sprite version of this!
+};
+
+/**
+* 
+* @method generateTilingTexture
+* 
+* @param forcePowerOfTwo {Boolean} Whether we want to force the texture to be a power of two
+*/
+PIXI.TilingSprite.prototype.generateTilingTexture = function(forcePowerOfTwo)
+{
+    if (!this.texture.baseTexture.hasLoaded)
+    {
+        return;
+    }
+
+    var texture = this.texture;
+    var frame = texture.frame;
+
+    var targetWidth = this._frame.sourceSizeW;
+    var targetHeight = this._frame.sourceSizeH;
+
+    var dx = 0;
+    var dy = 0;
+
+    if (this._frame.trimmed)
+    {
+        dx = this._frame.spriteSourceSizeX;
+        dy = this._frame.spriteSourceSizeY;
+    }
+
+    if (forcePowerOfTwo)
+    {
+        targetWidth = PIXI.getNextPowerOfTwo(targetWidth);
+        targetHeight = PIXI.getNextPowerOfTwo(targetHeight);
+    }
+
+    if (this.canvasBuffer)
+    {
+        this.canvasBuffer.resize(targetWidth, targetHeight);
+        this.tilingTexture.baseTexture.width = targetWidth;
+        this.tilingTexture.baseTexture.height = targetHeight;
+        this.tilingTexture.needsUpdate = true;
+    }
+    else
+    {
+        this.canvasBuffer = new PIXI.CanvasBuffer(targetWidth, targetHeight);
+        this.tilingTexture = PIXI.Texture.fromCanvas(this.canvasBuffer.canvas);
+        this.tilingTexture = PIXI.Texture.fromCanvas(this.canvasBuffer.canvas);
+        this.tilingTexture.isTiling = true;
+        this.tilingTexture.needsUpdate = true;
+    }
+
+    if (this.textureDebug)
+    {
+        this.canvasBuffer.context.strokeStyle = '#00ff00';
+        this.canvasBuffer.context.strokeRect(0, 0, targetWidth, targetHeight);
+    }
+
+    //  If a sprite sheet we need this:
+    var w = texture.crop.width;
+    var h = texture.crop.height;
+
+    if (w !== targetWidth || h !== targetHeight)
+    {
+        w = targetWidth;
+        h = targetHeight;
+    }
+
+    this.canvasBuffer.context.drawImage(texture.baseTexture.source,
+                           texture.crop.x,
+                           texture.crop.y,
+                           texture.crop.width,
+                           texture.crop.height,
+                           dx,
+                           dy,
+                           w,
+                           h);
+
+    this.tileScaleOffset.x = frame.width / targetWidth;
+    this.tileScaleOffset.y = frame.height / targetHeight;
+
+    this.refreshTexture = false;
+
+    this.tilingTexture.baseTexture._powerOf2 = true;
+
+};
+
+/**
+* Returns the framing rectangle of the sprite as a PIXI.Rectangle object
+*
+* @method getBounds
+* @return {Rectangle} the framing rectangle
+*/
+PIXI.TilingSprite.prototype.getBounds = function()
+{
+    var width = this._width;
+    var height = this._height;
+
+    var w0 = width * (1-this.anchor.x);
+    var w1 = width * -this.anchor.x;
+
+    var h0 = height * (1-this.anchor.y);
+    var h1 = height * -this.anchor.y;
+
+    var worldTransform = this.worldTransform;
+
+    var a = worldTransform.a;
+    var b = worldTransform.b;
+    var c = worldTransform.c;
+    var d = worldTransform.d;
+    var tx = worldTransform.tx;
+    var ty = worldTransform.ty;
+    
+    var x1 = a * w1 + c * h1 + tx;
+    var y1 = d * h1 + b * w1 + ty;
+
+    var x2 = a * w0 + c * h1 + tx;
+    var y2 = d * h1 + b * w0 + ty;
+
+    var x3 = a * w0 + c * h0 + tx;
+    var y3 = d * h0 + b * w0 + ty;
+
+    var x4 =  a * w1 + c * h0 + tx;
+    var y4 =  d * h0 + b * w1 + ty;
+
+    var maxX = -Infinity;
+    var maxY = -Infinity;
+
+    var minX = Infinity;
+    var minY = Infinity;
+
+    minX = x1 < minX ? x1 : minX;
+    minX = x2 < minX ? x2 : minX;
+    minX = x3 < minX ? x3 : minX;
+    minX = x4 < minX ? x4 : minX;
+
+    minY = y1 < minY ? y1 : minY;
+    minY = y2 < minY ? y2 : minY;
+    minY = y3 < minY ? y3 : minY;
+    minY = y4 < minY ? y4 : minY;
+
+    maxX = x1 > maxX ? x1 : maxX;
+    maxX = x2 > maxX ? x2 : maxX;
+    maxX = x3 > maxX ? x3 : maxX;
+    maxX = x4 > maxX ? x4 : maxX;
+
+    maxY = y1 > maxY ? y1 : maxY;
+    maxY = y2 > maxY ? y2 : maxY;
+    maxY = y3 > maxY ? y3 : maxY;
+    maxY = y4 > maxY ? y4 : maxY;
+
+    var bounds = this._bounds;
+
+    bounds.x = minX;
+    bounds.width = maxX - minX;
+
+    bounds.y = minY;
+    bounds.height = maxY - minY;
+
+    // store a reference so that if this function gets called again in the render cycle we do not have to recalculate
+    this._currentBounds = bounds;
+
+    return bounds;
+};
+
+PIXI.TilingSprite.prototype.destroy = function () {
+
+    PIXI.Sprite.prototype.destroy.call(this);
+
+    this.tileScale = null;
+    this.tileScaleOffset = null;
+    this.tilePosition = null;
+
+    if (this.tilingTexture)
+    {
+        this.tilingTexture.destroy(true);
+        this.tilingTexture = null;
+    }
+
+};
+
+/**
+ * The width of the sprite, setting this will actually modify the scale to achieve the value set
+ *
+ * @property width
+ * @type Number
+ */
+Object.defineProperty(PIXI.TilingSprite.prototype, 'width', {
+
+    get: function() {
+        return this._width;
+    },
+
+    set: function(value) {
+        this._width = value;
+    }
+
+});
+
+/**
+ * The height of the TilingSprite, setting this will actually modify the scale to achieve the value set
+ *
+ * @property height
+ * @type Number
+ */
+Object.defineProperty(PIXI.TilingSprite.prototype, 'height', {
+
+    get: function() {
+        return  this._height;
+    },
+
+    set: function(value) {
+        this._height = value;
+    }
+
+});
+
 /**
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
@@ -10380,7 +10383,7 @@ var Phaser = Phaser || {
     * @constant
     * @type {string}
     */
-    VERSION: '2.4.0a',
+    VERSION: '2.4.1',
 
     /**
     * An array of Phaser game instances.
@@ -28232,65 +28235,77 @@ Phaser.Pointer.prototype = {
         //  If you find one, please tell us!
         var buttons = event.buttons;
 
-        if (buttons === undefined)
+        if (buttons !== undefined)
         {
-            return;
-        }
+            //  Note: These are bitwise checks, not booleans
 
-        //  Note: These are bitwise checks, not booleans
+            if (Phaser.Pointer.LEFT_BUTTON & buttons)
+            {
+                this.leftButton.start(event);
+            }
+            else
+            {
+                this.leftButton.stop(event);
+            }
 
-        if (Phaser.Pointer.LEFT_BUTTON & buttons)
-        {
-            this.leftButton.start(event);
+            if (Phaser.Pointer.RIGHT_BUTTON & buttons)
+            {
+                this.rightButton.start(event);
+            }
+            else
+            {
+                this.rightButton.stop(event);
+            }
+                    
+            if (Phaser.Pointer.MIDDLE_BUTTON & buttons)
+            {
+                this.middleButton.start(event);
+            }
+            else
+            {
+                this.middleButton.stop(event);
+            }
+
+            if (Phaser.Pointer.BACK_BUTTON & buttons)
+            {
+                this.backButton.start(event);
+            }
+            else
+            {
+                this.backButton.stop(event);
+            }
+
+            if (Phaser.Pointer.FORWARD_BUTTON & buttons)
+            {
+                this.forwardButton.start(event);
+            }
+            else
+            {
+                this.forwardButton.stop(event);
+            }
+
+            if (Phaser.Pointer.ERASER_BUTTON & buttons)
+            {
+                this.eraserButton.start(event);
+            }
+            else
+            {
+                this.eraserButton.stop(event);
+            }
         }
         else
         {
-            this.leftButton.stop(event);
-        }
+            //  No buttons property (like Safari on OSX when using a trackpad)
 
-        if (Phaser.Pointer.RIGHT_BUTTON & buttons)
-        {
-            this.rightButton.start(event);
-        }
-        else
-        {
-            this.rightButton.stop(event);
-        }
-                
-        if (Phaser.Pointer.MIDDLE_BUTTON & buttons)
-        {
-            this.middleButton.start(event);
-        }
-        else
-        {
-            this.middleButton.stop(event);
-        }
-
-        if (Phaser.Pointer.BACK_BUTTON & buttons)
-        {
-            this.backButton.start(event);
-        }
-        else
-        {
-            this.backButton.stop(event);
-        }
-
-        if (Phaser.Pointer.FORWARD_BUTTON & buttons)
-        {
-            this.forwardButton.start(event);
-        }
-        else
-        {
-            this.forwardButton.stop(event);
-        }
-
-        if (Phaser.Pointer.ERASER_BUTTON & buttons)
-        {
-            this.eraserButton.start(event);
-        }
-        else
-        {
-            this.eraserButton.stop(event);
+            if (event.type === 'mousedown')
+            {
+                this.leftButton.start(event);
+            }
+            else
+            {
+                this.leftButton.stop(event);
+                this.rightButton.stop(event);
+            }
         }
 
         //  On OS X (and other devices with trackpads) you have to press CTRL + the pad
@@ -35809,6 +35824,39 @@ Phaser.GameObjectFactory.prototype = {
         if (group === undefined) { group = this.world; }
 
         return group.create(x, y, key, frame);
+
+    },
+
+    /**
+    * Create a new Creature Animation object.
+    *
+    * Creature is a custom Game Object used in conjunction with the Creature Runtime libraries by Kestrel Moon Studios.
+    * 
+    * It allows you to display animated Game Objects that were created with the [Creature Automated Animation Tool](http://www.kestrelmoon.com/creature/).
+    * 
+    * Note 1: You can only use Phaser.Creature objects in WebGL enabled games. They do not work in Canvas mode games.
+    *
+    * Note 2: You must use a build of Phaser that includes the CreatureMeshBone.js runtime and gl-matrix.js, or have them
+    * loaded before your Phaser game boots.
+    * 
+    * See the Phaser custom build process for more details.
+    *
+    * @method Phaser.GameObjectFactory#creature
+    * @param {number} [x=0] - The x coordinate of the creature. The coordinate is relative to any parent container this creature may be in.
+    * @param {number} [y=0] - The y coordinate of the creature. The coordinate is relative to any parent container this creature may be in.
+    * @param {string|PIXI.Texture} [key] - The image used as a texture by this creature object during rendering. If a string Phaser will get for an entry in the Image Cache. Or it can be an instance of a PIXI.Texture.
+    * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
+    * @returns {Phaser.Creature} The newly created Sprite object.
+    */
+    creature: function (x, y, key, mesh, group) {
+
+        if (group === undefined) { group = this.world; }
+
+        var obj = new Phaser.Creature(this.game, x, y, key, mesh);
+
+        group.add(obj);
+
+        return obj;
 
     },
 
@@ -56989,6 +57037,9 @@ Phaser.Cache.prototype = {
     /**
     * Gets a PIXI.Texture by key from the PIXI.TextureCache.
     *
+    * If the texture isn't found in the cache, then it searches the Phaser Image Cache and
+    * creates a new PIXI.Texture object which is then returned.
+    *
     * @method Phaser.Cache#getPixiTexture
     * @deprecated
     * @param {string} key - Asset key of the Texture to retrieve from the Cache.
@@ -57002,19 +57053,29 @@ Phaser.Cache.prototype = {
         }
         else
         {
-            console.warn('Phaser.Cache.getPixiTexture: Invalid key: "' + key + '"');
-            return null;
+            var base = this.getPixiBaseTexture(key);
+
+            if (base)
+            {
+                return new PIXI.Texture(base);
+            }
+            else
+            {
+                return null;
+            }
         }
 
     },
 
     /**
-    * Gets a PIXI.BaseTexture by key from the PIXI.BaseTExtureCache.
+    * Gets a PIXI.BaseTexture by key from the PIXI.BaseTextureCache.
+    * 
+    * If the texture isn't found in the cache, then it searches the Phaser Image Cache.
     *
     * @method Phaser.Cache#getPixiBaseTexture
     * @deprecated
     * @param {string} key - Asset key of the BaseTexture to retrieve from the Cache.
-    * @return {PIXI.BaseTexture} The BaseTexture object.
+    * @return {PIXI.BaseTexture} The BaseTexture object or null if not found.
     */
     getPixiBaseTexture: function (key) {
 
@@ -57024,8 +57085,16 @@ Phaser.Cache.prototype = {
         }
         else
         {
-            console.warn('Phaser.Cache.getPixiBaseTexture: Invalid key: "' + key + '"');
-            return null;
+            var img = this.getItem(key, Phaser.Cache.IMAGE, 'getPixiBaseTexture');
+
+            if (img !== null)
+            {
+                return img.base;
+            }
+            else
+            {
+                return null;
+            }
         }
 
     },
@@ -57068,9 +57137,9 @@ Phaser.Cache.prototype = {
 
         var out = [];
 
-        if (this._cache[cache])
+        if (this._cacheMap[cache])
         {
-            for (var key in this._cache[cache])
+            for (var key in this._cacheMap[cache])
             {
                 if (key !== '__default' && key !== '__missing')
                 {
@@ -57103,25 +57172,29 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * Removes an image from the cache and optionally from the Pixi.BaseTextureCache as well.
+    * Removes an image from the cache.
+    * 
+    * You can optionally elect to destroy it as well. This calls BaseTexture.destroy on it.
     *
-    * Note that this only removes it from the Phaser.Cache. If you still have references to the data elsewhere
+    * Note that this only removes it from the Phaser and PIXI Caches. If you still have references to the data elsewhere
     * then it will persist in memory.
     *
     * @method Phaser.Cache#removeImage
     * @param {string} key - Key of the asset you want to remove.
-    * @param {boolean} [removeFromPixi=true] - Should this image also be removed from the Pixi BaseTextureCache?
+    * @param {boolean} [removeFromPixi=true] - Should this image also be destroyed? Removing it from the PIXI.BaseTextureCache?
     */
     removeImage: function (key, removeFromPixi) {
 
         if (removeFromPixi === undefined) { removeFromPixi = true; }
 
-        delete this._cache.image[key];
+        var img = this.getImage(key, true);
 
-        if (removeFromPixi)
+        if (removeFromPixi && img.base)
         {
-            PIXI.BaseTextureCache[key].destroy();
+            img.base.destroy();
         }
+
+        delete this._cache.image[key];
 
     },
 
@@ -76079,10 +76152,12 @@ PIXI.TextureSilentFail = true;
         }
         exports.Phaser = Phaser;
     } else if (typeof define !== 'undefined' && define.amd) {
-        define('Phaser', (function() { return root.Phaser = Phaser; }) ());
+        define('Phaser', (function() { return root.Phaser = Phaser; })() );
     } else {
         root.Phaser = Phaser;
     }
+
+    return Phaser;
 }).call(this);
 
 /*

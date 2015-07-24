@@ -30,7 +30,6 @@ module.exports = function (grunt) {
 
         var modules = {
 
-            'pixi':             { 'description': 'Pixi.js (custom Phaser build)',               'optional': false, 'stub': false },
             'intro':            { 'description': 'Phaser UMD wrapper',                          'optional': true, 'stub': false },
             'phaser':           { 'description': 'Phaser Globals',                              'optional': false, 'stub': false },
             'geom':             { 'description': 'Geometry Classes',                            'optional': false, 'stub': false },
@@ -112,68 +111,140 @@ module.exports = function (grunt) {
 
             grunt.log.writeln("Excluding modules:\n");
 
-            var excludes = grunt.option('exclude').split(',');
+            var excludedKeys = [];
 
-            //  Check the given modules are all valid
-            for (var i = 0; i < excludes.length; i++)
+            //  Nothing is excluded!
+            var excludes = false;
+
+            if (grunt.option('exclude') !== 'null')
             {
-                var exclude = excludes[i];
+                excludes = grunt.option('exclude').split(',');
 
-                if (modules[exclude])
+                //  Check the given modules are all valid
+                for (var i = 0; i < excludes.length; i++)
                 {
-                    grunt.log.writeln("* " + exclude + ' - ' + modules[exclude].description);
+                    var exclude = excludes[i];
+
+                    if (modules[exclude])
+                    {
+                        grunt.log.writeln("* " + exclude + ' - ' + modules[exclude].description);
+                        excludedKeys[exclude] = true;
+                    }
+                    else
+                    {
+                        grunt.fail.fatal("Unknown module '" + exclude + "'");
+                    }
                 }
-                else
+
+                //  Handle basic dependencies
+
+                if (excludedKeys['arcade'] && !excludedKeys['particles'])
                 {
-                    grunt.fail.fatal("Unknown module '" + exclude + "'");
+                    grunt.log.writeln("Warning: Particles rely on Arcade Physics which has been excluded. Removing Particles from build.");
+                    excludes.push('particles');
                 }
-            }
 
-            //  Handle basic dependencies
-
-            if (excludes['arcade'] && !excludes['particles'])
-            {
-                grunt.log.writeln("Warning: Particles rely on Arcade Physics. Excluding from build.");
-                excludes.push('particles');
-            }
-
-            if (excludes['rendertexture'] && !excludes['retrofont'])
-            {
-                grunt.log.writeln("Warning: RetroFonts rely on RenderTextures. Excluding from build.");
-                excludes.push('retrofont');
+                if (excludedKeys['rendertexture'] && !excludedKeys['retrofont'])
+                {
+                    grunt.log.writeln("Warning: RetroFonts rely on RenderTextures. Excluding from build.");
+                    excludes.push('retrofont');
+                }
             }
 
             //  Ok we know the excludes array is fine, let's get this show started
 
-            grunt.log.writeln("\nBuilding ...\n");
+            grunt.log.writeln("\nPackaging Globals ...\n");
 
             var filelist = [];
 
             //  Clean the working folder
             var tasks = [ 'clean:build' ];
 
-            for (var key in modules)
+            //  Prepare the globals first, the libs that live outside of Phaser
+
+            //  1) Creature
+
+            if (!excludedKeys['creature'])
             {
-                if (modules[key].stub && excludes.indexOf(key) !== -1)
+                grunt.log.writeln("-> Creature");
+                tasks.push('concat:creatureGlobal');
+                filelist.push('<%= modules_dir %>/creature-global.js');
+            }
+
+            //  2) P2
+
+            if (!excludedKeys['p2'])
+            {
+                grunt.log.writeln("-> P2.js");
+                tasks.push('concat:p2Global');
+                filelist.push('<%= modules_dir %>/p2-global.js');
+            }
+
+            //  3) PIXI
+
+            grunt.log.writeln("-> PIXI");
+            tasks.push('concat:pixiIntro');
+            filelist.push('<%= modules_dir %>/pixi-intro.js');
+
+            //  Optional Rope
+            if (!excludedKeys['rope'])
+            {
+                grunt.log.writeln("-> PIXI.Rope");
+                tasks.push('concat:pixiRope');
+                filelist.push('<%= modules_dir %>/pixi-rope.js');
+            }
+
+            //  Optional Tilesprite
+            if (!excludedKeys['tilesprite'])
+            {
+                grunt.log.writeln("-> PIXI.TileSprite");
+                tasks.push('concat:pixiTileSprite');
+                filelist.push('<%= modules_dir %>/pixi-tilesprite.js');
+            }
+
+            //  PIXI Outro
+            tasks.push('concat:pixiOutro');
+            filelist.push('<%= modules_dir %>/pixi-outro.js');
+
+            //  And now for Phaser
+
+            grunt.log.writeln("\nBuilding ...");
+
+            if (excludes !== false)
+            {
+                for (var key in modules)
                 {
-                    //  If the module IS excluded and has a stub, we need that
-                    tasks.push('concat:' + key + 'Stub');
-
-                    filelist.push('<%= modules_dir %>/' + key + '.js');
-                }
-                else if (modules[key].optional === false || excludes.indexOf(key) === -1)
-                {
-                    //  If it's required or NOT excluded, add it to the tasks list
-                    tasks.push('concat:' + key);
-
-                    filelist.push('<%= modules_dir %>/' + key + '.js');
-
-                    //  Special case: If they have Arcade Physics AND Tilemaps we need to include the Tilemap Collision class
-                    if (key === 'arcade' && !excludes['tilemaps'])
+                    if (modules[key].stub && excludes.indexOf(key) !== -1)
                     {
-                        tasks.push('concat:arcadeTilemaps');
-                        filelist.push('<%= modules_dir %>/arcadeTilemaps.js');
+                        //  If the module IS excluded and has a stub, we need that
+                        tasks.push('concat:' + key + 'Stub');
+
+                        filelist.push('<%= modules_dir %>/' + key + '.js');
                     }
+                    else if (modules[key].optional === false || excludes.indexOf(key) === -1)
+                    {
+                        //  If it's required or NOT excluded, add it to the tasks list
+                        tasks.push('concat:' + key);
+
+                        filelist.push('<%= modules_dir %>/' + key + '.js');
+
+                        //  Special case: If they have Arcade Physics AND Tilemaps we need to include the Tilemap Collision class
+                        if (key === 'arcade' && !excludes['tilemaps'])
+                        {
+                            tasks.push('concat:arcadeTilemaps');
+                            filelist.push('<%= modules_dir %>/arcadeTilemaps.js');
+                        }
+                    }
+                }
+            }
+            else
+            {
+                //  The full monty ...
+
+                for (var mkey in modules)
+                {
+                    tasks.push('concat:' + mkey);
+                    filelist.push('<%= modules_dir %>/' + mkey + '.js');
                 }
             }
 
@@ -181,7 +252,10 @@ module.exports = function (grunt) {
 
             tasks.push('concat:custom');
 
-            tasks.push('uglify:custom');
+            if (grunt.option('uglify'))
+            {
+                tasks.push('uglify:custom');
+            }
 
             if (grunt.option('copy'))
             {
@@ -215,17 +289,57 @@ module.exports = function (grunt) {
         grunt.option('filename', 'phaser');
         grunt.option('sourcemap', true);
         grunt.option('copy', false);
+        grunt.option('uglify', true);
 
         grunt.task.run('custom');
 
     });
 
-    grunt.registerTask('full', 'Phaser complete', function() {
+    grunt.registerTask('full', 'Phaser (excluding Ninja and Creature)', function() {
 
         grunt.option('exclude', 'ninja,creature');
         grunt.option('filename', 'phaser');
         grunt.option('sourcemap', true);
         grunt.option('copy', true);
+        grunt.option('uglify', true);
+
+        grunt.task.run('custom');
+
+    });
+
+    grunt.registerTask('complete', 'Phaser Build with all libs', function() {
+
+        grunt.option('exclude', 'null');
+        grunt.option('filename', 'phaser-complete');
+        grunt.option('sourcemap', false);
+        grunt.option('copy', true);
+        grunt.option('copycustom', true);
+        grunt.option('uglify', true);
+
+        grunt.task.run('custom');
+
+    });
+
+    grunt.registerTask('test', 'Phaser Test Build (all libs)', function() {
+
+        grunt.option('exclude', 'ninja,creature');
+        grunt.option('filename', 'phaser-test');
+        grunt.option('sourcemap', false);
+        grunt.option('copy', false);
+        grunt.option('uglify', false);
+
+        grunt.task.run('custom');
+
+    });
+
+    grunt.registerTask('creature', 'Phaser + Creature', function() {
+
+        grunt.option('exclude', 'ninja');
+        grunt.option('filename', 'phaser-creature');
+        grunt.option('sourcemap', true);
+        grunt.option('copy', true);
+        grunt.option('copycustom', true);
+        grunt.option('uglify', true);
 
         grunt.task.run('custom');
 
@@ -238,6 +352,20 @@ module.exports = function (grunt) {
         grunt.option('sourcemap', true);
         grunt.option('copy', false);
         grunt.option('copycustom', true);
+        grunt.option('uglify', true);
+
+        grunt.task.run('custom');
+
+    });
+
+    grunt.registerTask('ninjaphysics', 'Phaser with Ninja Physics and Tilemaps', function() {
+
+        grunt.option('exclude', 'p2,particles,creature');
+        grunt.option('filename', 'phaser-ninja-physics');
+        grunt.option('sourcemap', true);
+        grunt.option('copy', false);
+        grunt.option('copycustom', true);
+        grunt.option('uglify', true);
 
         grunt.task.run('custom');
 
@@ -250,18 +378,20 @@ module.exports = function (grunt) {
         grunt.option('sourcemap', true);
         grunt.option('copy', false);
         grunt.option('copycustom', true);
+        grunt.option('uglify', true);
 
         grunt.task.run('custom');
 
     });
 
-    grunt.registerTask('minimum', 'Phaser without any optional modules except Pixi', function() {
+    grunt.registerTask('minimum', 'Phaser without any optional modules', function() {
 
         grunt.option('exclude', 'gamepad,keyboard,bitmapdata,graphics,rendertexture,text,bitmaptext,retrofont,net,tweens,sound,debug,arcade,ninja,p2,tilemaps,particles,creature,video,rope,tilesprite');
         grunt.option('filename', 'phaser-minimum');
         grunt.option('sourcemap', true);
         grunt.option('copy', false);
         grunt.option('copycustom', true);
+        grunt.option('uglify', true);
 
         grunt.task.run('custom');
 

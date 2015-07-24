@@ -1,5 +1,24 @@
 # Change Log
 
+## Version 2.4.1 - "Ionin Spring" - 24th July 2015
+
+This is a small point release that updates the Creature runtimes and fixes a couple of small cache issues.
+
+It also modifies the Grunt build scripts so that all third party libs (such as Creature, P2, gl-matrix and PIXI) are now kept well and truly outside of Phaser. They are defined and placed first in the build files. So no more PIXI hiding within the Phaser namespace or UMD patching for Phaser required.
+
+### Updates
+
+* The Creature Runtimes have been updated to the latest versions and the `Phaser.Creature` class updated to use them.
+* GameObjectFactory.creature is a new method to help with quick Creature animation object creation.
+* Cache.getPixiTexture will now search the image cache if it couldn't find a texture in the PIXI.TextureCache global array, if it finds a matching image in the image cache then it returns a new PIXI.Texture based on it.
+* Cache.getPixiBaseTexture will now search the image cache if it couldn't find a BaseTexture in the PIXI.BaseTextureCache global array.
+
+### Bug Fixes
+
+* Fixed Cache.getKeys to use the `_cacheMap` (thanks @jamesgroat #1929)
+* Safari on OSX wouldn't recognise button presses on trackpads (thanks JakeCake)
+* Cache.removeImage now calls destroy on the image BaseTexture, removing it from the PIXI global caches without throwing a warning.
+
 ## Version 2.4 - "Katar" - 22nd July 2015
 
 ### API Changes

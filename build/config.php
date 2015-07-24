@@ -23,7 +23,15 @@
             'box2d' => false,
             'creature' => false,
             'video' => true,
+            'rope' => true,
+            'tilesprite' => true
         );
+    }
+
+    if ($modules['creature'])
+    {
+        echo "    <script src=\"$path/src/animation/creature/gl-matrix.js\"></script>";
+        echo "    <script src=\"$path/src/animation/creature/CreatureMeshBone.js\"></script>";
     }
 
     if ($modules['p2'])
@@ -31,16 +39,12 @@
         echo "    <script src=\"$path/src/physics/p2/p2.js\"></script>";
     }
 
-    if ($modules['creature'])
-    {
-        echo "    <script src=\"$path/src/animation/creature/gl-matrix.js\"></script>";
-    }
-
     if ($modules['box2d'] && isset($box2dpath))
     {
         echo "    <script src=\"$box2dpath/box2d-html5.js\"></script>";
     }
 
+    //  PIXI Intro
     echo <<<EOL
 
     <script src="$path/src/pixi/Pixi.js"></script>
@@ -78,9 +82,22 @@
     <script src="$path/src/pixi/primitives/Graphics.js"></script>
     <script src="$path/src/pixi/primitives/GraphicsData.js"></script>
 
-    <script src="$path/src/pixi/extras/Strip.js"></script>
-    <script src="$path/src/pixi/extras/Rope.js"></script>
-    <script src="$path/src/pixi/extras/TilingSprite.js"></script>
+
+EOL;
+
+    if ($modules['rope'])
+    {
+        echo "    <script src=\"$path/src/pixi/extras/Strip.js\"></script>";
+        echo "    <script src=\"$path/src/pixi/extras/Rope.js\"></script>";
+    }
+
+    if ($modules['tilesprite'])
+    {
+        echo "    <script src=\"$path/src/pixi/extras/TilingSprite.js\"></script>";
+    }
+
+    //  PIXI Outro + Phaser Global
+    echo <<<EOL
 
     <script src="$path/src/pixi/textures/BaseTexture.js"></script>
     <script src="$path/src/pixi/textures/Texture.js"></script>
@@ -178,14 +195,39 @@ EOL;
     <script src="$path/src/gameobjects/GameObjectCreator.js"></script>
     <script src="$path/src/gameobjects/Sprite.js"></script>
     <script src="$path/src/gameobjects/Image.js"></script>
-    <script src="$path/src/gameobjects/TileSprite.js"></script>
-    <script src="$path/src/gameobjects/Rope.js"></script>
     <script src="$path/src/gameobjects/Button.js"></script>
     <script src="$path/src/gameobjects/SpriteBatch.js"></script>
     <script src="$path/src/gameobjects/Particle.js"></script>
 
 
 EOL;
+
+    if ($modules['rope'])
+    {
+        echo <<<EOL
+    <script src="$path/src/gameobjects/Rope.js"></script>
+
+
+EOL;
+    }
+
+    if ($modules['tilesprite'])
+    {
+        echo <<<EOL
+    <script src="$path/src/gameobjects/TileSprite.js"></script>
+
+
+EOL;
+    }
+
+    if ($modules['creature'])
+    {
+        echo <<<EOL
+    <script src="$path/src/gameobjects/Creature.js"></script>
+
+
+EOL;
+    }
 
     if ($modules['bitmapdata'])
     {
@@ -303,16 +345,6 @@ EOL;
 
 EOL;
 
-    if ($modules['creature'])
-    {
-        echo <<<EOL
-    <script src="$path/src/animation/creature/CreatureMeshBone.js"></script>
-    <script src="$path/src/animation/creature/CreaturePixiJSRenderer.js"></script>
-    <script src="$path/src/gameobjects/Creature.js"></script>
-
-
-EOL;
-    }
 
     if ($modules['sound'])
     {
@@ -450,6 +482,8 @@ EOL;
 
     echo <<<EOL
     <script src="$path/src/PixiDefaults.js"></script>
+
+
 EOL;
 
     if (isset($custom))

@@ -35,11 +35,11 @@ Thousands of developers worldwide use it. From indies and multi-national digital
 ![div](http://www.phaser.io/images/github/div.png)
 
 <a name="whats-new"></a>
-## What's new in Phaser 2.4.0
+## What's new in Phaser 2.4.1
 
 <div align="center"><img src="http://phaser.io/images/github/news.jpg"></div>
 
-> 22nd July 2015
+> 24th July 2015
 
 Phaser 2.4 is another huge update. We had to bump the version number from 2.3 directly to 2.4 because of some API adjustments, all of which are fully detailed in the [Change Log](#change-log). While it's true we could have released it over a few smaller point releases, that just isn't how the cookie crumbled this time. _Be sure to pay attention to the previous deprecated API calls that have been removed in 2.4._
 
@@ -54,6 +54,8 @@ Money stuff aside please enjoy this brand new release. We'll carry on supporting
 Make sure you check out the Phaser web site. We are going to be adding in stacks of new examples and features in the coming weeks.
 
 But that's all for now. I hope you enjoy Phaser 2.4. Happy coding everyone! See you on the forums.
+
+Happy coding everyone! See you on the forums.
 
 Cheers,
 
@@ -87,15 +89,15 @@ Install via [npm](https://www.npmjs.com)
 
 [jsDelivr](http://www.jsdelivr.com/#!phaser) is a "super-fast CDN for developers". Include the following in your html:
 
-`<script src="//cdn.jsdelivr.net/phaser/2.4.0/phaser.js"></script>`
+`<script src="//cdn.jsdelivr.net/phaser/2.4.1/phaser.js"></script>`
 
 or the minified version:
 
-`<script src="//cdn.jsdelivr.net/phaser/2.4.0/phaser.min.js"></script>`
+`<script src="//cdn.jsdelivr.net/phaser/2.4.1/phaser.min.js"></script>`
 
 [cdnjs.com](https://cdnjs.com/libraries/phaser) also offers a free CDN service. They have all versions of Phaser and even the custom builds:
 
-`<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/2.4.0/phaser.js"></script>`
+`<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/2.4.1/phaser.js"></script>`
 
 ### Phaser Sandbox
 
@@ -175,8 +177,17 @@ Run `grunt` to perform a default build to the `dist` folder.
 <a name="games"></a>
 ## Games made with Phaser
 
-Thousands of games have been made in Phaser. From game jam entries to titles for some of the largest entertainment brands in the world. This is just a tiny sample.
+Thousands of games have been made in Phaser. From game jam entries to titles by some of the largest entertainment brands in the world. This is just a tiny sample:
 
+[![Game](http://phaser.io/images/github/241/bubble-academy.png)][game10]
+[![Game](http://phaser.io/images/github/241/woodventure.png)][game11]
+[![Game](http://phaser.io/images/github/241/hopsop.png)][game12]
+[![Game](http://phaser.io/images/github/241/banana-mania.png)][game13]
+[![Game](http://phaser.io/images/github/241/salazar.png)][game14]
+[![Game](http://phaser.io/images/github/241/phaser-shmup.png)][game15]
+[![Game](http://phaser.io/images/github/241/trappy-trap.png)][game16]
+[![Game](http://phaser.io/images/github/241/runaway-ruins.png)][game17]
+[![Game](http://phaser.io/images/github/241/ananias.png)][game18]
 [![Game](http://phaser.io/images/github/shot1a.jpg)][game1]
 [![Game](http://phaser.io/images/github/shot2a.jpg)][game2]
 [![Game](http://phaser.io/images/github/shot3a.jpg)][game3]
@@ -186,11 +197,6 @@ Thousands of games have been made in Phaser. From game jam entries to titles for
 [![Game](http://phaser.io/images/github/shot7b.jpg)][game7]
 [![Game](http://phaser.io/images/github/shot8.jpg)][game8]
 [![Game](http://phaser.io/images/github/shot9.jpg)][game9]
-[![Game](http://phaser.io/images/github/shot10.jpg)][game10]
-[![Game](http://phaser.io/images/github/shot11.jpg)][game11]
-[![Game](http://phaser.io/images/github/shot12.jpg)][game12]
-[![Game](http://phaser.io/images/github/shot13.jpg)][game13]
-[![Game](http://phaser.io/images/github/shot14.jpg)][game14]
 
 Artwork copyright their respective owners.
 
@@ -236,9 +242,26 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 <a name="change-log"></a>
 ## Change Log
 
-Version 2.4.0a - "Katar" - 22nd July 2015
+## Version 2.4.1 - "Ionin Spring" - 24th July 2015
 
-Note: Revision `a` of Phaser 2.4.0 includes a fix to the build files that stopped some PIXI classes being undefined (such as TilingSprite). Nothing in the framework itself changed.
+This is a small point release that updates the Creature runtimes and fixes a couple of small cache issues.
+
+It also modifies the Grunt build scripts so that all third party libs (such as Creature, P2, gl-matrix and PIXI) are now kept well and truly outside of Phaser. They are defined and placed first in the build files. So no more PIXI hiding within the Phaser namespace or UMD patching for Phaser required.
+
+### Updates
+
+* The Creature Runtimes have been updated to the latest versions and the `Phaser.Creature` class updated to use them.
+* GameObjectFactory.creature is a new method to help with quick Creature animation object creation.
+* Cache.getPixiTexture will now search the image cache if it couldn't find a texture in the PIXI.TextureCache global array, if it finds a matching image in the image cache then it returns a new PIXI.Texture based on it.
+* Cache.getPixiBaseTexture will now search the image cache if it couldn't find a BaseTexture in the PIXI.BaseTextureCache global array.
+
+### Bug Fixes
+
+* Fixed Cache.getKeys to use the `_cacheMap` (thanks @jamesgroat #1929)
+* Safari on OSX wouldn't recognise button presses on trackpads (thanks JakeCake)
+* Cache.removeImage now calls destroy on the image BaseTexture, removing it from the PIXI global caches without throwing a warning.
+
+## Version 2.4.0 - "Katar" - 22nd July 2015
 
 ### API Changes
 
@@ -605,8 +628,12 @@ All rights reserved.
 [game7]: http://www.html5gamedevs.com/topic/11179-phaser-cocoonjs-tap-tap-submarine/
 [game8]: http://www.gamepix.com/project/footchinko/
 [game9]: http://orcattack.thehobbit.com
-[game10]: http://runsheldon.com/
-[game11]: http://www.tempalabs.com/works/moon-rocket/
-[game12]: http://www.tempalabs.com/works/master-of-arms-sword-staff-spear/
-[game13]: http://m.silvergames.com/en/pocahontas-slots
-[game14]: http://www.tempalabs.com/works/gattai/
+[game10]: http://phaser.io/news/2015/06/bubble-academy
+[game11]: http://phaser.io/news/2015/07/woodventure
+[game12]: http://phaser.io/news/2015/04/hopsop-journey-to-the-top
+[game13]: http://phaser.io/news/2015/05/banana-mania
+[game14]: http://phaser.io/news/2015/06/salazar-the-alchemist
+[game15]: http://phaser.io/news/2015/05/phaser-shmup
+[game16]: http://phaser.io/news/2015/05/trappy-trap
+[game17]: http://phaser.io/news/2015/04/runaway-ruins
+[game18]: http://phaser.io/news/2015/04/ananias

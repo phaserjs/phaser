@@ -826,6 +826,7 @@ function MeshRenderRegion(indices_in, rest_pts_in, uvs_in, start_pt_index_in, en
 	this.normal_weight_map = {};
 	this.fast_normal_weight_map = [];
 	this.fast_bones_map = [];
+	this.relevant_bones_indices = [];
 	this.use_dq = true;
 	this.tag_id = -1;
 
@@ -899,6 +900,7 @@ MeshRenderRegion.prototype.poseFinalPts = function(output_pts, output_start_inde
 
   var boneKeys = Object.keys(bones_map);
   var boneKeyLength = boneKeys.length;
+  
   for(var i = 0, l = this.getNumPts(); i < l; i++) {
     var cur_rest_pt =
       vec3.set(tmp1, this.store_rest_pts[0 + read_pt_index],
@@ -921,55 +923,23 @@ MeshRenderRegion.prototype.poseFinalPts = function(output_pts, output_start_inde
     // var accum_dq = new dualQuat();
     accum_dq.reset();
 
-    var n_index = 0;
-    for (var j = 0; j < boneKeyLength; j++)
+	var curBoneIndices = this.relevant_bones_indices[i];
+  	var relevantIndicesLength = curBoneIndices.length;
+    for (var j = 0; j < relevantIndicesLength; j++)
     {
-      var cur_key = boneKeys[j];
-      //var cur_bone = bones_map[cur_key];
-      var cur_bone = this.fast_bones_map[n_index];
-      var cur_weight_val = 0;
-      
-      
-      if(this.fast_normal_weight_map.length > 0) {
-        cur_weight_val = this.fast_normal_weight_map[n_index][i];
-      }
-      else {
-        cur_weight_val = this.normal_weight_map[cur_key][i];
-      }
-      
-      //cur_weight_val = this.normal_weight_map[cur_key][i];
-
+      var idx_lookup = curBoneIndices[j];
+      var cur_bone = this.fast_bones_map[idx_lookup];
+      var cur_weight_val = this.fast_normal_weight_map[idx_lookup][i];
       var cur_im_weight_val = cur_weight_val;
 
-      if(this.use_dq == false) {
-        var world_delta_mat = cur_bone.getWorldDeltaMat();
-        //accum_mat = Utils.addMat(accum_mat, Utils.mulMat(world_delta_mat, cur_weight_val));
-        
-        var tmpMat = Utils.mulMat(world_delta_mat, cur_weight_val);
-        accum_mat = Utils.addMat(accum_mat, tmpMat);
-      }
-      else {
-        var world_dq = cur_bone.getWorldDq();
-        accum_dq.add(world_dq, cur_weight_val, cur_im_weight_val);
-      }
-
-      n_index++;
+       var world_dq = cur_bone.getWorldDq();
+       accum_dq.add(world_dq, cur_weight_val, cur_im_weight_val);
     }
 
-    if(this.use_dq == false) {
-      var tmp_pt = vec3.set(tmp2, cur_rest_pt[Q_X], cur_rest_pt[Q_Y], cur_rest_pt[Q_Z]);
-      // var tmp_pt = vec3.fromValues(cur_rest_pt[Q_X], cur_rest_pt[Q_Y], cur_rest_pt[Q_Z]);
-      //accum_mat.tra();
-      
-      //final_pt = tmp_pt.traMul(accum_mat);
-      final_pt = vec3.transformMat4(final_pt, tmp_pt, accum_mat);
-    }
-    else {
-      accum_dq.normalize();
-      var tmp_pt = vec3.set(tmp2, cur_rest_pt[Q_X], cur_rest_pt[Q_Y], cur_rest_pt[Q_Z]);
-      // var tmp_pt = vec3.fromValues(cur_rest_pt[Q_X], cur_rest_pt[Q_Y], cur_rest_pt[Q_Z]);
-      final_pt = accum_dq.transform(tmp_pt);
-    }
+    accum_dq.normalize();
+    var tmp_pt = vec3.set(tmp2, cur_rest_pt[Q_X], cur_rest_pt[Q_Y], cur_rest_pt[Q_Z]);
+    // var tmp_pt = vec3.fromValues(cur_rest_pt[Q_X], cur_rest_pt[Q_Y], cur_rest_pt[Q_Z]);
+    final_pt = accum_dq.transform(tmp_pt);
 
     // debug start
 
@@ -1134,10 +1104,13 @@ MeshRenderRegion.prototype.runUvWarp = function()
   for(var i = 0; i < this.uv_warp_ref_uvs.length; i++) {
     var set_uv = vec2.clone(this.uv_warp_ref_uvs[i]);
     
+   
     set_uv = vec2.subtract(set_uv, set_uv, this.uv_warp_local_offset);
-    set_uv = vec2.scale(set_uv, set_uv, this.uv_warp_scale);
+    set_uv[Q_X] *= this.uv_warp_scale[Q_X];
+    set_uv[Q_Y] *= this.uv_warp_scale[Q_Y];
     set_uv = vec2.add(set_uv, set_uv, this.uv_warp_global_offset);
     
+   
     /*
     set_uv.sub(uv_warp_local_offset);
     set_uv.scl(uv_warp_scale);
@@ -1145,8 +1118,8 @@ MeshRenderRegion.prototype.runUvWarp = function()
     */
 
 
-    store_uvs[0 + cur_uvs_index] = set_uv[Q_X];
-    store_uvs[1 + cur_uvs_index] = set_uv[Q_Y];
+    this.store_uvs[0 + cur_uvs_index] = set_uv[Q_X];
+    this.store_uvs[1 + cur_uvs_index] = set_uv[Q_Y];
 
 
     cur_uvs_index += 2;
@@ -1178,10 +1151,28 @@ MeshRenderRegion.prototype.setTagId = function(value_in)
 
 MeshRenderRegion.prototype.initFastNormalWeightMap = function(bones_map)
 {
+  this.relevant_bones_indices = [];
+  
   // fast normal weight map lookup, avoids hash lookups
   for (var cur_key in bones_map) {
     var values = this.normal_weight_map[cur_key];
     this.fast_normal_weight_map.push(values);
+  }
+  
+  // relevant bone indices
+  var cutoff_val = 0.05;
+   for(var i = 0; i < this.getNumPts(); i++) {
+  	var curIndicesArray = [];
+   	for (var j = 0; j < this.fast_normal_weight_map.length; j++)
+  	{
+  		var cur_val = this.fast_normal_weight_map[j][i];
+  		if(cur_val > cutoff_val)
+  		{
+  			curIndicesArray.push(j);
+  		}  		
+  	}
+  	
+  	this.relevant_bones_indices.push(curIndicesArray);
   }
   
   // fast bone map lookup
@@ -1464,7 +1455,7 @@ MeshBoneCacheManager.prototype.retrieveValuesAtTime = function(time_in, bone_map
   var base_time = this.getIndexByTime(Math.floor(time_in));
   var end_time = this.getIndexByTime(Math.ceil(time_in));
 
-  var ratio = (time_in - base_time);
+  var ratio = (time_in - Math.floor(time_in));
 
   if(this.bone_cache_data_ready.length == 0) {
     return;
@@ -1580,7 +1571,7 @@ MeshDisplacementCacheManager.prototype.retrieveValuesAtTime = function(time_in, 
   var base_time = this.getIndexByTime(Math.floor(time_in));
   var end_time = this.getIndexByTime(Math.ceil(time_in));
 
-  var ratio = (time_in - base_time);
+  var ratio = (time_in - Math.floor(time_in));
 
   if(this.displacement_cache_data_ready.length == 0) {
     return;
@@ -1737,7 +1728,7 @@ MeshUVWarpCacheManager.prototype.retrieveValuesAtTime = function(time_in, region
   var base_time = this.getIndexByTime(Math.floor(time_in));
   var end_time = this.getIndexByTime(Math.ceil(time_in));
 
-  var ratio = (time_in - base_time);
+  var ratio = (time_in - Math.floor(time_in));
 
   if(this.uv_cache_data_ready.length == 0) {
     return;
@@ -1759,18 +1750,12 @@ MeshUVWarpCacheManager.prototype.retrieveValuesAtTime = function(time_in, region
 
     var set_region = regions_map[cur_key];
     if(set_region.getUseUvWarp()) {
-      var final_local_offset = Utils.vec2Interp(base_data.getUvWarpLocalOffset(),
-      											end_data.getUvWarpLocalOffset(),
-      											ratio);
+      var final_local_offset = base_data.getUvWarpLocalOffset();
       
  
-      var final_global_offset = Utils.vec2Interp(base_data.getUvWarpGlobalOffset(),
-      											end_data.getUvWarpGlobalOffset(),
-      											ratio);
+      var final_global_offset = base_data.getUvWarpGlobalOffset();
 
-      var final_scale = Utils.vec2Interp(base_data.getUvWarpScale(),
-      											end_data.getUvWarpScale(),
-      											ratio);
+      var final_scale = base_data.getUvWarpScale();
       /*
          Vector2 final_local_offset = ((1.0f - ratio) * base_data.getUvWarpLocalOffset()) +
          (ratio * end_data.getUvWarpLocalOffset());
@@ -2072,6 +2057,10 @@ CreatureModuleUtils.GetStartEndTimes = function(json_obj, key)
       if(cur_num > end_time) {
         end_time = cur_num;
       }
+      
+      if(cur_num < start_time) {
+        start_time = cur_num;
+      }
     }
   }
 
@@ -2201,6 +2190,9 @@ function Creature(load_data)
     this.render_pts = null;
     this.render_colours = null;
     this.render_composition = null;
+    this.boundary_indices = [];
+    this.boundary_min = vec2.create();
+    this.boundary_max = vec2.create();
 
     this.LoadFromData(load_data);	
 };
@@ -2218,6 +2210,100 @@ Creature.prototype.FillRenderColours = function(r, g, b, a)
   }
 };
 
+// Compute boundary indices
+
+Creature.prototype.ComputeBoundaryIndices = function()
+{
+	var freq_table = {};
+	for(var i = 0; i < this.total_num_pts; i++)
+	{
+		freq_table[i] = 0;
+	}
+	
+	var cur_regions = this.render_composition.getRegions();
+	for(var i = 0; i < this.global_indices.length; i++)
+	{
+		var cur_idx = this.global_indices[i];
+		var is_found = false;
+		for(var j = 0; j < cur_regions.length; j++)
+		{
+    		var cur_region = cur_regions[j];
+    		var cur_start_index = cur_region.getStartPtIndex();
+    		var cur_end_index = cur_region.getEndPtIndex();
+    		
+    		if(cur_idx >= cur_start_index && cur_idx <= cur_end_index)
+    		{
+    			is_found = true;
+    			break;
+    		}
+    	}
+
+
+		if(is_found)
+		{
+			freq_table[cur_idx]++;
+		}
+	}
+	
+	// now find the boundary indices who have <= 5 referenced triangles
+	this.boundary_indices = [];
+	for(var i = 0; i < this.total_num_pts; i++)
+	{
+		if(freq_table[i] <=5)
+		{
+			this.boundary_indices.push(i);
+		}
+	}
+};
+
+// Compute min and max bounds of the animated mesh
+Creature.prototype.ComputeBoundaryMinMax = function()
+{
+	
+	if(this.boundary_indices.length <= 0)
+	{
+		this.ComputeBoundaryIndices();
+	}
+	
+	
+	var firstIdx = this.boundary_indices[0] * 3;
+	var minPt = vec2.fromValues(this.render_pts[firstIdx + 0], this.render_pts[firstIdx + 1]);
+	var maxPt = vec2.fromValues(minPt[0], minPt[1]);
+	
+	
+	for(var i = 0; i < this.boundary_indices.length; i++)
+	{
+		var ref_idx = this.boundary_indices[i] * 3;
+		var ref_x = this.render_pts[ref_idx];
+		var ref_y = this.render_pts[ref_idx + 1];
+		
+		if(minPt[0] > ref_x)
+		{
+			minPt[0] = ref_x;
+		}
+		
+		if(minPt[1] > ref_y)
+		{
+			minPt[1] = ref_y;
+		}
+		
+		if(maxPt[0] < ref_x)
+		{
+			maxPt[0] = ref_x;
+		}
+		
+		if(maxPt[1] < ref_y)
+		{
+			maxPt[1] = ref_y;
+		}
+	}
+	
+	this.boundary_min = minPt;
+	this.boundary_max = maxPt;
+};
+
+
+// Load data
 Creature.prototype.LoadFromData = function(load_data)
 {
   // Load points and topology
@@ -2232,12 +2318,6 @@ Creature.prototype.LoadFromData = function(load_data)
   this.global_uvs = CreatureModuleUtils.ReadFloatArrayJSON (json_mesh, "uvs");
   
   
-  // Flip UVs
-  for (var i = 0; i < this.global_uvs.length; i+=2) {
-  	this.global_uvs[i + 1] =  1.0 - this.global_uvs[i + 1];
-  }
-   
-
   this.render_colours = [];
   for(var i = 0; i < this.total_num_pts * 4; i++)
   {
@@ -2288,6 +2368,8 @@ function CreatureAnimation(load_data, name_in)
     this.bones_cache = new MeshBoneCacheManager();
     this.displacement_cache = new MeshDisplacementCacheManager();
     this.uv_warp_cache = new MeshUVWarpCacheManager();
+    this.cache_pts = [];
+    this.fill_cache_pts = [];
 
     this.LoadFromData(name_in, load_data);	
 };
@@ -2321,6 +2403,49 @@ CreatureAnimation.prototype.LoadFromData = function(name_in, load_data)
       this.start_time,
       this.end_time,
       this.uv_warp_cache);
+};
+
+CreatureAnimation.prototype.getIndexByTime = function(time_in)
+{
+  var retval = time_in - this.start_time;
+  retval = Utils.clamp(retval, 0, (this.cache_pts.length) - 1);
+
+  return retval;
+};
+
+CreatureAnimation.prototype.verifyFillCache = function()
+{
+	if(this.fill_cache_pts.length == (this.end_time - this.start_time + 1))
+	{
+		// ready to switch over
+		this.cache_pts = this.fill_cache_pts;
+	}
+};
+
+CreatureAnimation.prototype.poseFromCachePts = function(time_in, target_pts, num_pts)
+{
+        var cur_floor_time = this.getIndexByTime(Math.floor(time_in));
+        var cur_ceil_time = this.getIndexByTime(Math.ceil(time_in));
+        var cur_ratio = time_in - Math.floor(time_in);
+        
+        var set_pt = target_pts;
+        var floor_pts = this.cache_pts[cur_floor_time];
+        var ceil_pts = this.cache_pts[cur_ceil_time];
+        
+        var set_idx = 0;
+        var floor_idx = 0;
+        var ceil_idx = 0;
+        
+        for(var i = 0; i < num_pts; i++)
+        {
+            set_pt[set_idx + 0] = ((1.0 - cur_ratio) * floor_pts[floor_idx + 0]) + (cur_ratio * ceil_pts[ceil_idx + 0]);
+            set_pt[set_idx + 1] = ((1.0 - cur_ratio) * floor_pts[floor_idx + 1]) + (cur_ratio * ceil_pts[ceil_idx + 1]);
+            set_pt[set_idx + 2] = ((1.0 - cur_ratio) * floor_pts[floor_idx + 2]) + (cur_ratio * ceil_pts[ceil_idx + 2]);
+
+            set_idx += 3;
+            floor_idx += 3;
+            ceil_idx += 3;
+        }
 };
 
 // CreatureManager
@@ -2460,6 +2585,53 @@ CreatureManager.prototype.GetAllAnimations = function()
   return this.animations;
 };
 
+// Creates a point cache for the current animation
+CreatureManager.prototype.MakePointCache = function(animation_name_in)
+{
+        var store_run_time = this.getRunTime();
+        var cur_animation = this.animations[animation_name_in];
+        if(cur_animation.length > 0)
+        {
+            // cache already generated, just exit
+            return;
+        }
+        
+        var cache_pts_list = cur_animation.cache_pts;
+        
+        for(var i = cur_animation.start_time; i <= cur_animation.end_time; i++)
+        {
+            this.setRunTime(i);
+            var new_pts = [];
+            for (var j = 0; j < this.target_creature.total_num_pts * 3; j++) new_pts[j] = 0; 
+            //auto new_pts = new glm::float32[target_creature->GetTotalNumPoints() * 3];
+            this.PoseCreature(animation_name_in, new_pts);
+            
+            cache_pts_list.push(new_pts);
+        }
+        
+        this.setRunTime(store_run_time);
+};
+
+// Fills up a single frame for a point cache animation
+// Point caching is only enabled when the cache is FULLY filled up
+// Remember the new filled cache is Appended onto the end of a list
+// There is no indexing by time here so MAKE SURE this cache is filled up sequentially!
+CreatureManager.prototype.FillSinglePointCacheFrame = function(animation_name_in, time_in)
+{
+	var store_run_time = this.getRunTime();
+    var cur_animation = this.animations[animation_name_in];
+	
+	this.setRunTime(time_in);
+    var new_pts = [];
+    for (var j = 0; j < this.target_creature.total_num_pts * 3; j++) new_pts[j] = 0; 
+    this.PoseCreature(animation_name_in, new_pts);
+    
+    cur_animation.fill_cache_pts.push(new_pts);
+    cur_animation.verifyFillCache();
+
+    this.setRunTime(store_run_time);
+};
+
 // Returns if animation is playing
 CreatureManager.prototype.GetIsPlaying = function()
 {
@@ -2582,7 +2754,14 @@ CreatureManager.prototype.RunCreature = function()
   if(this.do_blending)
   {
     for(var i = 0; i < 2; i++) {
-      this.PoseCreature(this.active_blend_animation_names[i], this.blend_render_pts[i]);
+      var cur_animation = this.animations[this.active_blend_animation_names[i]];
+      if(cur_animation.cache_pts.length > 0)
+      {
+      	cur_animation.poseFromCachePts(this.getRunTime(), this.blend_render_pts[i], this.target_creature.total_num_pts);
+      }
+      else {
+	  	this.PoseCreature(this.active_blend_animation_names[i], this.blend_render_pts[i]);
+	  }
     }
 
     for(var j = 0; j < this.target_creature.total_num_pts * 3; j++)
@@ -2602,7 +2781,15 @@ CreatureManager.prototype.RunCreature = function()
     }
   }
   else {
-    this.PoseCreature(this.active_animation_name, this.target_creature.render_pts);
+    var cur_animation = this.animations[this.active_animation_name];
+    if(cur_animation.cache_pts.length > 0)
+    {
+    	cur_animation.poseFromCachePts(this.getRunTime(), this.target_creature.render_pts, this.target_creature.total_num_pts);
+    	// cur_animation->poseFromCachePts(getRunTime(), target_creature->GetRenderPts(), target_creature->GetTotalNumPoints());
+    }
+    else {
+		this.PoseCreature(this.active_animation_name, this.target_creature.render_pts);
+	}
   }
 };
 
