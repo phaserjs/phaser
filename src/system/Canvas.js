@@ -118,7 +118,7 @@ Phaser.Canvas = {
 
         var target;
 
-        if (typeof overflowHidden === 'undefined') { overflowHidden = true; }
+        if (overflowHidden === undefined) { overflowHidden = true; }
 
         if (parent)
         {

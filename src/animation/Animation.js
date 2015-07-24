@@ -22,7 +22,7 @@
 */
 Phaser.Animation = function (game, parent, name, frameData, frames, frameRate, loop) {
 
-    if (typeof loop === 'undefined') { loop = false; }
+    if (loop === undefined) { loop = false; }
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running Game.
@@ -246,7 +246,7 @@ Phaser.Animation.prototype = {
 
         var frameIndex;
 
-        if (typeof useLocalFrameIndex === 'undefined')
+        if (useLocalFrameIndex === undefined)
         {
             useLocalFrameIndex = false;
         }
@@ -303,8 +303,8 @@ Phaser.Animation.prototype = {
     */
     stop: function (resetFrame, dispatchComplete) {
 
-        if (typeof resetFrame === 'undefined') { resetFrame = false; }
-        if (typeof dispatchComplete === 'undefined') { dispatchComplete = false; }
+        if (resetFrame === undefined) { resetFrame = false; }
+        if (dispatchComplete === undefined) { dispatchComplete = false; }
 
         this.isPlaying = false;
         this.isFinished = true;
@@ -445,7 +445,7 @@ Phaser.Animation.prototype = {
     */
     updateCurrentFrame: function (signalUpdate, fromPlay) {
 
-        if (typeof fromPlay === 'undefined') { fromPlay = false; }
+        if (fromPlay === undefined) { fromPlay = false; }
 
         if (!this._frameData)
         {
@@ -485,7 +485,7 @@ Phaser.Animation.prototype = {
     */
     next: function (quantity) {
 
-        if (typeof quantity === 'undefined') { quantity = 1; }
+        if (quantity === undefined) { quantity = 1; }
 
         var frame = this._frameIndex + quantity;
 
@@ -517,7 +517,7 @@ Phaser.Animation.prototype = {
     */
     previous: function (quantity) {
 
-        if (typeof quantity === 'undefined') { quantity = 1; }
+        if (quantity === undefined) { quantity = 1; }
 
         var frame = this._frameIndex - quantity;
 
@@ -770,7 +770,7 @@ Object.defineProperty(Phaser.Animation.prototype, 'enableUpdate', {
 */
 Phaser.Animation.generateFrameNames = function (prefix, start, stop, suffix, zeroPad) {
 
-    if (typeof suffix === 'undefined') { suffix = ''; }
+    if (suffix === undefined) { suffix = ''; }
 
     var output = [];
     var frame = '';

@@ -72,7 +72,7 @@ Phaser.Line.prototype = {
     */
     fromSprite: function (startSprite, endSprite, useCenter) {
 
-        if (typeof useCenter === 'undefined') { useCenter = false; }
+        if (useCenter === undefined) { useCenter = false; }
 
         if (useCenter)
         {
@@ -200,7 +200,7 @@ Phaser.Line.prototype = {
     */
     random: function (out) {
 
-        if (typeof out === 'undefined') { out = new Phaser.Point(); }
+        if (out === undefined) { out = new Phaser.Point(); }
 
         var t = Math.random();
 
@@ -222,8 +222,8 @@ Phaser.Line.prototype = {
     */
     coordinatesOnLine: function (stepRate, results) {
 
-        if (typeof stepRate === 'undefined') { stepRate = 1; }
-        if (typeof results === 'undefined') { results = []; }
+        if (stepRate === undefined) { stepRate = 1; }
+        if (results === undefined) { results = []; }
 
         var x1 = Math.round(this.start.x);
         var y1 = Math.round(this.start.y);
@@ -277,7 +277,7 @@ Phaser.Line.prototype = {
      */
     clone: function (output) {
 
-        if (typeof output === "undefined" || output === null)
+        if (output === undefined || output === null)
         {
             output = new Phaser.Line(this.start.x, this.start.y, this.end.x, this.end.y);
         }
@@ -504,8 +504,8 @@ Object.defineProperty(Phaser.Line.prototype, "normalAngle", {
 */
 Phaser.Line.intersectsPoints = function (a, b, e, f, asSegment, result) {
 
-    if (typeof asSegment === 'undefined') { asSegment = true; }
-    if (typeof result === 'undefined') { result = new Phaser.Point(); }
+    if (asSegment === undefined) { asSegment = true; }
+    if (result === undefined) { result = new Phaser.Point(); }
 
     var a1 = b.y - a.y;
     var a2 = f.y - e.y;

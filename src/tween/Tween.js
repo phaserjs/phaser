@@ -188,12 +188,12 @@ Phaser.Tween.prototype = {
     */
     to: function (properties, duration, ease, autoStart, delay, repeat, yoyo) {
 
-        if (typeof duration === 'undefined' || duration <= 0) { duration = 1000; }
-        if (typeof ease === 'undefined' || ease === null) { ease = Phaser.Easing.Default; }
-        if (typeof autoStart === 'undefined') { autoStart = false; }
-        if (typeof delay === 'undefined') { delay = 0; }
-        if (typeof repeat === 'undefined') { repeat = 0; }
-        if (typeof yoyo === 'undefined') { yoyo = false; }
+        if (duration === undefined || duration <= 0) { duration = 1000; }
+        if (ease === undefined || ease === null) { ease = Phaser.Easing.Default; }
+        if (autoStart === undefined) { autoStart = false; }
+        if (delay === undefined) { delay = 0; }
+        if (repeat === undefined) { repeat = 0; }
+        if (yoyo === undefined) { yoyo = false; }
 
         if (typeof ease === 'string' && this.manager.easeMap[ease])
         {
@@ -235,12 +235,12 @@ Phaser.Tween.prototype = {
     */
     from: function (properties, duration, ease, autoStart, delay, repeat, yoyo) {
 
-        if (typeof duration === 'undefined') { duration = 1000; }
-        if (typeof ease === 'undefined' || ease === null) { ease = Phaser.Easing.Default; }
-        if (typeof autoStart === 'undefined') { autoStart = false; }
-        if (typeof delay === 'undefined') { delay = 0; }
-        if (typeof repeat === 'undefined') { repeat = 0; }
-        if (typeof yoyo === 'undefined') { yoyo = false; }
+        if (duration === undefined) { duration = 1000; }
+        if (ease === undefined || ease === null) { ease = Phaser.Easing.Default; }
+        if (autoStart === undefined) { autoStart = false; }
+        if (delay === undefined) { delay = 0; }
+        if (repeat === undefined) { repeat = 0; }
+        if (yoyo === undefined) { yoyo = false; }
 
         if (typeof ease === 'string' && this.manager.easeMap[ease])
         {
@@ -275,7 +275,7 @@ Phaser.Tween.prototype = {
     */
     start: function (index) {
 
-        if (typeof index === 'undefined') { index = 0; }
+        if (index === undefined) { index = 0; }
 
         if (this.game === null || this.target === null || this.timeline.length === 0 || this.isRunning)
         {
@@ -331,7 +331,7 @@ Phaser.Tween.prototype = {
     */
     stop: function (complete) {
 
-        if (typeof complete === 'undefined') { complete = false; }
+        if (complete === undefined) { complete = false; }
 
         this.isRunning = false;
 
@@ -369,7 +369,7 @@ Phaser.Tween.prototype = {
 
         if (this.timeline.length === 0) { return this; }
 
-        if (typeof index === 'undefined') { index = 0; }
+        if (index === undefined) { index = 0; }
 
         if (index === -1)
         {
@@ -418,7 +418,7 @@ Phaser.Tween.prototype = {
     */
     repeat: function (total, repeatDelay, index) {
 
-        if (typeof repeatDelay === 'undefined') { repeatDelay = 0; }
+        if (repeatDelay === undefined) { repeatDelay = 0; }
 
         this.updateTweenData('repeatCounter', total, index);
 
@@ -458,7 +458,7 @@ Phaser.Tween.prototype = {
     */
     yoyo: function(enable, yoyoDelay, index) {
 
-        if (typeof yoyoDelay === 'undefined') { yoyoDelay = 0; }
+        if (yoyoDelay === undefined) { yoyoDelay = 0; }
 
         this.updateTweenData('yoyo', enable, index);
 
@@ -519,7 +519,7 @@ Phaser.Tween.prototype = {
     */
     interpolation: function (interpolation, context, index) {
 
-        if (typeof context === 'undefined') { context = Phaser.Math; }
+        if (context === undefined) { context = Phaser.Math; }
 
         this.updateTweenData('interpolationFunction', interpolation, index);
 
@@ -538,7 +538,7 @@ Phaser.Tween.prototype = {
     */
     repeatAll: function (total) {
 
-        if (typeof total === 'undefined') { total = 0; }
+        if (total === undefined) { total = 0; }
 
         this.repeatCounter = total;
 
@@ -597,7 +597,7 @@ Phaser.Tween.prototype = {
     */
     loop: function (value) {
 
-        if (typeof value === 'undefined') { value = true; }
+        if (value === undefined) { value = true; }
 
         if (value)
         {
@@ -835,11 +835,11 @@ Phaser.Tween.prototype = {
             return null;
         }
 
-        if (typeof frameRate === 'undefined') {
+        if (frameRate === undefined) {
             frameRate = 60;
         }
 
-        if (typeof data === 'undefined') {
+        if (data === undefined) {
             data = [];
         }
 

@@ -34,7 +34,7 @@ Phaser.Component.Destroy.prototype = {
 
         if (this.game === null || this.destroyPhase) { return; }
 
-        if (typeof destroyChildren === 'undefined') { destroyChildren = true; }
+        if (destroyChildren === undefined) { destroyChildren = true; }
 
         this.destroyPhase = true;
 

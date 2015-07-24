@@ -24,7 +24,7 @@ Phaser.Physics.P2 = function (game, config) {
     */
     this.game = game;
 
-    if (typeof config === 'undefined')
+    if (config === undefined)
     {
         config = { gravity: [0, 0], broadphase: new p2.SAPBroadphase() };
     }
@@ -322,8 +322,8 @@ Phaser.Physics.P2.prototype = {
     */
     enable: function (object, debug, children) {
 
-        if (typeof debug === 'undefined') { debug = false; }
-        if (typeof children === 'undefined') { children = true; }
+        if (debug === undefined) { debug = false; }
+        if (children === undefined) { children = true; }
 
         var i = 1;
 
@@ -578,10 +578,10 @@ Phaser.Physics.P2.prototype = {
     */
     setWorldMaterial: function (material, left, right, top, bottom) {
 
-        if (typeof left === 'undefined') { left = true; }
-        if (typeof right === 'undefined') { right = true; }
-        if (typeof top === 'undefined') { top = true; }
-        if (typeof bottom === 'undefined') { bottom = true; }
+        if (left === undefined) { left = true; }
+        if (right === undefined) { right = true; }
+        if (top === undefined) { top = true; }
+        if (bottom === undefined) { bottom = true; }
 
         if (left && this.walls.left)
         {
@@ -617,7 +617,7 @@ Phaser.Physics.P2.prototype = {
 
         var mask = this.everythingCollisionGroup.mask;
 
-        if (typeof setCollisionGroup === 'undefined') { mask = this.boundsCollisionGroup.mask; }
+        if (setCollisionGroup === undefined) { mask = this.boundsCollisionGroup.mask; }
 
         if (this.walls.left)
         {
@@ -662,11 +662,11 @@ Phaser.Physics.P2.prototype = {
     */
     setBounds: function (x, y, width, height, left, right, top, bottom, setCollisionGroup) {
 
-        if (typeof left === 'undefined') { left = this._boundsLeft; }
-        if (typeof right === 'undefined') { right = this._boundsRight; }
-        if (typeof top === 'undefined') { top = this._boundsTop; }
-        if (typeof bottom === 'undefined') { bottom = this._boundsBottom; }
-        if (typeof setCollisionGroup === 'undefined') { setCollisionGroup = this._boundsOwnGroup; }
+        if (left === undefined) { left = this._boundsLeft; }
+        if (right === undefined) { right = this._boundsRight; }
+        if (top === undefined) { top = this._boundsTop; }
+        if (bottom === undefined) { bottom = this._boundsBottom; }
+        if (setCollisionGroup === undefined) { setCollisionGroup = this._boundsOwnGroup; }
 
         if (this.walls.left)
         {
@@ -1270,8 +1270,8 @@ Phaser.Physics.P2.prototype = {
     */
     createContactMaterial: function (materialA, materialB, options) {
 
-        if (typeof materialA === 'undefined') { materialA = this.createMaterial(); }
-        if (typeof materialB === 'undefined') { materialB = this.createMaterial(); }
+        if (materialA === undefined) { materialA = this.createMaterial(); }
+        if (materialB === undefined) { materialB = this.createMaterial(); }
 
         var contact = new Phaser.Physics.P2.ContactMaterial(materialA, materialB, options);
 
@@ -1383,9 +1383,9 @@ Phaser.Physics.P2.prototype = {
     */
     hitTest: function (worldPoint, bodies, precision, filterStatic) {
 
-        if (typeof bodies === 'undefined') { bodies = this.world.bodies; }
-        if (typeof precision === 'undefined') { precision = 5; }
-        if (typeof filterStatic === 'undefined') { filterStatic = false; }
+        if (bodies === undefined) { bodies = this.world.bodies; }
+        if (precision === undefined) { precision = 5; }
+        if (filterStatic === undefined) { filterStatic = false; }
 
         var physicsPosition = [ this.pxmi(worldPoint.x), this.pxmi(worldPoint.y) ];
 
@@ -1574,7 +1574,7 @@ Phaser.Physics.P2.prototype = {
     */
     createBody: function (x, y, mass, addToWorld, options, data) {
 
-        if (typeof addToWorld === 'undefined') { addToWorld = false; }
+        if (addToWorld === undefined) { addToWorld = false; }
 
         var body = new Phaser.Physics.P2.Body(this.game, null, x, y, mass);
 
@@ -1615,7 +1615,7 @@ Phaser.Physics.P2.prototype = {
     */
     createParticle: function (x, y, mass, addToWorld, options, data) {
 
-        if (typeof addToWorld === 'undefined') { addToWorld = false; }
+        if (addToWorld === undefined) { addToWorld = false; }
 
         var body = new Phaser.Physics.P2.Body(this.game, null, x, y, mass);
 
@@ -1650,7 +1650,7 @@ Phaser.Physics.P2.prototype = {
     */
     convertCollisionObjects: function (map, layer, addToWorld) {
 
-        if (typeof addToWorld === 'undefined') { addToWorld = true; }
+        if (addToWorld === undefined) { addToWorld = true; }
 
         var output = [];
 
@@ -1718,8 +1718,8 @@ Phaser.Physics.P2.prototype = {
 
         layer = map.getLayer(layer);
 
-        if (typeof addToWorld === 'undefined') { addToWorld = true; }
-        if (typeof optimize === 'undefined') { optimize = true; }
+        if (addToWorld === undefined) { addToWorld = true; }
+        if (optimize === undefined) { optimize = true; }
 
         //  If the bodies array is already populated we need to nuke it
         this.clearTilemapLayerBodies(map, layer);

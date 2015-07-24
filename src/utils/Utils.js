@@ -85,7 +85,7 @@ Phaser.Utils = {
     * @return {boolean} True if the roll passed, or false otherwise.
     */
     chanceRoll: function (chance) {
-        if (typeof chance === 'undefined') { chance = 50; }
+        if (chance === undefined) { chance = 50; }
         return chance > 0 && (Math.random() * 100 <= chance);
     },
 
@@ -156,9 +156,9 @@ Phaser.Utils = {
     */
     pad: function (str, len, pad, dir) {
 
-        if (typeof(len) === "undefined") { var len = 0; }
-        if (typeof(pad) === "undefined") { var pad = ' '; }
-        if (typeof(dir) === "undefined") { var dir = 3; }
+        if (len === undefined) { var len = 0; }
+        if (pad === undefined) { var pad = ' '; }
+        if (dir === undefined) { var dir = 3; }
 
         var padlen = 0;
 
@@ -316,7 +316,7 @@ Phaser.Utils = {
     */
     mixinPrototype: function (target, mixin, replace) {
     
-        if (typeof replace === 'undefined') { replace = false; }
+        if (replace === undefined) { replace = false; }
 
         var mixinKeys = Object.keys(mixin);
 

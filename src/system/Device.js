@@ -728,7 +728,7 @@ Phaser.Device._initialize = function () {
         device.getUserMedia = device.getUserMedia && !!navigator.getUserMedia && !!window.URL;
 
         // Older versions of firefox (< 21) apparently claim support but user media does not actually work
-        if (device.firefoxVersion < 21)
+        if (device.firefox && device.firefoxVersion < 21)
         {
             device.getUserMedia = false;
         }
@@ -737,8 +737,7 @@ Phaser.Device._initialize = function () {
 
         // Excludes iOS versions as they generally wrap UIWebView (eg. Safari WebKit) and it
         // is safer to not try and use the fast copy-over method.
-        if (!device.iOS &&
-            (device.ie || device.firefox || device.chrome))
+        if (!device.iOS && (device.ie || device.firefox || device.chrome))
         {
             device.canvasBitBltShift = true;
         }
@@ -923,11 +922,11 @@ Phaser.Device._initialize = function () {
             device.node = true;
         }
         
-        if (device.node && typeof window.process.versions === 'object')
+        if (device.node && typeof process.versions === 'object')
         {
-            device.nodeWebkit = !!window.process.versions['node-webkit'];
+            device.nodeWebkit = !!process.versions['node-webkit'];
             
-            device.electron = !!window.process.versions.electron;
+            device.electron = !!process.versions.electron;
         }
         
         if (navigator['isCocoonJS'])
@@ -1126,7 +1125,7 @@ Phaser.Device._initialize = function () {
     */
     function _checkIsUint8ClampedImageData () {
 
-        if (typeof Uint8ClampedArray === "undefined")
+        if (Uint8ClampedArray === undefined)
         {
             return false;
         }

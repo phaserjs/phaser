@@ -439,7 +439,7 @@ Phaser.Game.prototype = {
 
         this.config = config;
 
-        if (typeof config['enableDebug'] === 'undefined')
+        if (config['enableDebug'] === undefined)
         {
             this.config.enableDebug = true;
         }
@@ -733,6 +733,9 @@ Phaser.Game.prototype = {
                                                                                 "antialias": this.antialias,
                                                                                 "preserveDrawingBuffer": this.preserveDrawingBuffer });
             this.context = null;
+
+            this.canvas.addEventListener('webglcontextlost', this.contextLost.bind(this), false);
+            this.canvas.addEventListener('webglcontextrestored', this.contextRestored.bind(this), false);
         }
 
         if (this.renderType !== Phaser.HEADLESS)
@@ -742,6 +745,37 @@ Phaser.Game.prototype = {
             Phaser.Canvas.addToDOM(this.canvas, this.parent, false);
             Phaser.Canvas.setTouchAction(this.canvas);
         }
+
+    },
+
+    /**
+    * Handles WebGL context loss.
+    *
+    * @method Phaser.Game#contextLost
+    * @private
+    * @param {Event} event - The webglcontextlost event.
+    */
+    contextLost: function (event) {
+
+        event.preventDefault();
+
+        this.renderer.contextLost = true;
+
+    },
+
+    /**
+    * Handles WebGL context restoration.
+    *
+    * @method Phaser.Game#contextRestored
+    * @private
+    */
+    contextRestored: function () {
+
+        this.renderer.initContext();
+
+        this.cache.clearGLTextures();
+
+        this.renderer.contextLost = false;
 
     },
 

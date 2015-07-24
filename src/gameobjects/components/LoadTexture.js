@@ -43,13 +43,14 @@ Phaser.Component.LoadTexture.prototype = {
 
         frame = frame || 0;
 
-        if ((stopAnimation || typeof stopAnimation === 'undefined') && this.animations)
+        if ((stopAnimation || stopAnimation === undefined) && this.animations)
         {
             this.animations.stop();
         }
 
         this.key = key;
         this.customRender = false;
+        var cache = this.game.cache;
 
         var setFrame = true;
         var smoothed = !this.texture.baseTexture.scaleMode;
@@ -63,12 +64,11 @@ Phaser.Component.LoadTexture.prototype = {
         {
             this.customRender = true;
 
-            //  This works from a reference, which probably isn't what we need here
             this.setTexture(key.texture);
 
-            if (this.game.cache.getFrameData(key.key, Phaser.Cache.BITMAPDATA))
+            if (cache.hasFrameData(key.key, Phaser.Cache.BITMAPDATA))
             {
-                setFrame = !this.animations.loadFrameData(this.game.cache.getFrameData(key.key, Phaser.Cache.BITMAPDATA), frame);
+                setFrame = !this.animations.loadFrameData(cache.getFrameData(key.key, Phaser.Cache.BITMAPDATA), frame);
             }
         }
         else if (Phaser.Video && key instanceof Phaser.Video)
@@ -88,23 +88,12 @@ Phaser.Component.LoadTexture.prototype = {
         }
         else
         {
-            if (key === null || typeof key === 'undefined')
-            {
-                this.key = '__default';
-                this.setTexture(PIXI.TextureCache[this.key]);
-            }
-            else if (typeof key === 'string' && !this.game.cache.checkImageKey(key))
-            {
-                console.warn("Texture with key '" + key + "' not found.");
-                this.key = '__missing';
-                this.setTexture(PIXI.TextureCache[this.key]);
-            }
-            else
-            {
-                this.setTexture(new PIXI.Texture(PIXI.BaseTextureCache[key]));
+            var img = cache.getImage(key, true);
 
-                setFrame = !this.animations.loadFrameData(this.game.cache.getFrameData(key), frame);
-            }
+            this.key = img.key;
+            this.setTexture(new PIXI.Texture(img.base));
+
+            setFrame = !this.animations.loadFrameData(img.frameData, frame);
         }
         
         if (setFrame)

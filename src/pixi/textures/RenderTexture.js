@@ -208,9 +208,18 @@ PIXI.RenderTexture.prototype.renderWebGL = function(displayObject, matrix, clear
         return;
     }
    
-    //  Frame buffers come in upside down so we need to flip the matrix 
-    matrix.translate(0, this.projection.y * 2);
-    matrix.scale(1, -1);
+    //  Let's create a nice matrix to apply to our display object.
+    //  Frame buffers come in upside down so we need to flip the matrix.
+    var wt = displayObject.worldTransform;
+    wt.identity();
+    wt.translate(0, this.projection.y * 2);
+
+    if (matrix)
+    {
+        wt.append(matrix);
+    }
+
+    wt.scale(1, -1);
 
     //  Time to update all the children of the displayObject with the new matrix.
     for (var i = 0; i < displayObject.children.length; i++)

@@ -23,7 +23,7 @@ PIXI.CanvasRenderer = function(width, height, options)
     {
         for (var i in PIXI.defaultRenderOptions)
         {
-            if (typeof options[i] === "undefined") options[i] = PIXI.defaultRenderOptions[i];
+            if (options[i] === undefined) options[i] = PIXI.defaultRenderOptions[i];
         }
     }
     else
@@ -226,7 +226,7 @@ PIXI.CanvasRenderer.prototype.render = function(stage)
  */
 PIXI.CanvasRenderer.prototype.destroy = function(removeView)
 {
-    if (typeof removeView === "undefined") { removeView = true; }
+    if (removeView === undefined) { removeView = true; }
 
     if (removeView && this.view.parent)
     {

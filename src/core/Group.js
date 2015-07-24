@@ -26,9 +26,9 @@
 */
 Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBodyType) {
 
-    if (typeof addToStage === 'undefined') { addToStage = false; }
-    if (typeof enableBody === 'undefined') { enableBody = false; }
-    if (typeof physicsBodyType === 'undefined') { physicsBodyType = Phaser.Physics.ARCADE; }
+    if (addToStage === undefined) { addToStage = false; }
+    if (enableBody === undefined) { enableBody = false; }
+    if (physicsBodyType === undefined) { physicsBodyType = Phaser.Physics.ARCADE; }
 
     /**
     * A reference to the currently running Game.
@@ -37,7 +37,7 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
     */
     this.game = game;
 
-    if (typeof parent === 'undefined')
+    if (parent === undefined)
     {
         parent = game.world;
     }
@@ -284,7 +284,7 @@ Phaser.Group.SORT_DESCENDING = 1;
 */
 Phaser.Group.prototype.add = function (child, silent) {
 
-    if (typeof silent === 'undefined') { silent = false; }
+    if (silent === undefined) { silent = false; }
 
     if (child.parent !== this)
     {
@@ -410,7 +410,7 @@ Phaser.Group.prototype.addMultiple = function (children, silent) {
 */
 Phaser.Group.prototype.addAt = function (child, index, silent) {
 
-    if (typeof silent === 'undefined') { silent = false; }
+    if (silent === undefined) { silent = false; }
 
     if (child.parent !== this)
     {
@@ -477,7 +477,7 @@ Phaser.Group.prototype.getAt = function (index) {
 */
 Phaser.Group.prototype.create = function (x, y, key, frame, exists) {
 
-    if (typeof exists === 'undefined') { exists = true; }
+    if (exists === undefined) { exists = true; }
 
     var child = new this.classType(this.game, x, y, key, frame);
 
@@ -524,7 +524,7 @@ Phaser.Group.prototype.create = function (x, y, key, frame, exists) {
 */
 Phaser.Group.prototype.createMultiple = function (quantity, key, frame, exists) {
 
-    if (typeof exists === 'undefined') { exists = false; }
+    if (exists === undefined) { exists = false; }
 
     for (var i = 0; i < quantity; i++)
     {
@@ -563,7 +563,7 @@ Phaser.Group.prototype.updateZ = function () {
 */
 Phaser.Group.prototype.resetCursor = function (index) {
 
-    if (typeof index === 'undefined') { index = 0; }
+    if (index === undefined) { index = 0; }
 
     if (index > this.children.length - 1)
     {
@@ -878,7 +878,7 @@ Phaser.Group.prototype.hasProperty = function (child, key) {
 */
 Phaser.Group.prototype.setProperty = function (child, key, value, operation, force) {
 
-    if (typeof force === 'undefined') { force = false; }
+    if (force === undefined) { force = false; }
 
     operation = operation || 0;
 
@@ -948,7 +948,7 @@ Phaser.Group.prototype.setProperty = function (child, key, value, operation, for
 */
 Phaser.Group.prototype.checkProperty = function (child, key, value, force) {
 
-    if (typeof force === 'undefined') { force = false; }
+    if (force === undefined) { force = false; }
 
     //  We can't force a property in and the child doesn't have it, so abort.
     if (!Phaser.Utils.getProperty(child, key) && force)
@@ -982,12 +982,12 @@ Phaser.Group.prototype.checkProperty = function (child, key, value, force) {
 */
 Phaser.Group.prototype.set = function (child, key, value, checkAlive, checkVisible, operation, force) {
 
-    if (typeof force === 'undefined') { force = false; }
+    if (force === undefined) { force = false; }
 
     key = key.split('.');
 
-    if (typeof checkAlive === 'undefined') { checkAlive = false; }
-    if (typeof checkVisible === 'undefined') { checkVisible = false; }
+    if (checkAlive === undefined) { checkAlive = false; }
+    if (checkVisible === undefined) { checkVisible = false; }
 
     if ((checkAlive === false || (checkAlive && child.alive)) && (checkVisible === false || (checkVisible && child.visible)))
     {
@@ -1014,9 +1014,9 @@ Phaser.Group.prototype.set = function (child, key, value, checkAlive, checkVisib
 */
 Phaser.Group.prototype.setAll = function (key, value, checkAlive, checkVisible, operation, force) {
 
-    if (typeof checkAlive === 'undefined') { checkAlive = false; }
-    if (typeof checkVisible === 'undefined') { checkVisible = false; }
-    if (typeof force === 'undefined') { force = false; }
+    if (checkAlive === undefined) { checkAlive = false; }
+    if (checkVisible === undefined) { checkVisible = false; }
+    if (force === undefined) { force = false; }
 
     key = key.split('.');
     operation = operation || 0;
@@ -1049,9 +1049,9 @@ Phaser.Group.prototype.setAll = function (key, value, checkAlive, checkVisible, 
 */
 Phaser.Group.prototype.setAllChildren = function (key, value, checkAlive, checkVisible, operation, force) {
 
-    if (typeof checkAlive === 'undefined') { checkAlive = false; }
-    if (typeof checkVisible === 'undefined') { checkVisible = false; }
-    if (typeof force === 'undefined') { force = false; }
+    if (checkAlive === undefined) { checkAlive = false; }
+    if (checkVisible === undefined) { checkVisible = false; }
+    if (force === undefined) { force = false; }
 
     operation = operation || 0;
 
@@ -1086,9 +1086,9 @@ Phaser.Group.prototype.setAllChildren = function (key, value, checkAlive, checkV
 */
 Phaser.Group.prototype.checkAll = function (key, value, checkAlive, checkVisible, force) {
 
-    if (typeof checkAlive === 'undefined') { checkAlive = false; }
-    if (typeof checkVisible === 'undefined') { checkVisible = false; }
-    if (typeof force === 'undefined') { force = false; }
+    if (checkAlive === undefined) { checkAlive = false; }
+    if (checkVisible === undefined) { checkVisible = false; }
+    if (force === undefined) { force = false; }
 
     for (var i = 0; i < this.children.length; i++)
     {
@@ -1273,7 +1273,7 @@ Phaser.Group.prototype.callbackFromArray = function (child, callback, length) {
 */
 Phaser.Group.prototype.callAll = function (method, context) {
 
-    if (typeof method === 'undefined')
+    if (method === undefined)
     {
         return;
     }
@@ -1283,7 +1283,7 @@ Phaser.Group.prototype.callAll = function (method, context) {
 
     var methodLength = method.length;
 
-    if (typeof context === 'undefined' || context === null || context === '')
+    if (context === undefined || context === null || context === '')
     {
         context = null;
     }
@@ -1462,7 +1462,7 @@ Phaser.Group.prototype.filter = function (predicate, checkExists) {
 */
 Phaser.Group.prototype.forEach = function (callback, callbackContext, checkExists) {
 
-    if (typeof checkExists === 'undefined') { checkExists = false; }
+    if (checkExists === undefined) { checkExists = false; }
 
     if (arguments.length <= 3)
     {
@@ -1599,8 +1599,8 @@ Phaser.Group.prototype.sort = function (key, order) {
         return;
     }
 
-    if (typeof key === 'undefined') { key = 'z'; }
-    if (typeof order === 'undefined') { order = Phaser.Group.SORT_ASCENDING; }
+    if (key === undefined) { key = 'z'; }
+    if (order === undefined) { order = Phaser.Group.SORT_ASCENDING; }
 
     this._sortProperty = key;
 
@@ -1912,8 +1912,8 @@ Phaser.Group.prototype.getRandom = function (startIndex, length) {
 */
 Phaser.Group.prototype.remove = function (child, destroy, silent) {
 
-    if (typeof destroy === 'undefined') { destroy = false; }
-    if (typeof silent === 'undefined') { silent = false; }
+    if (destroy === undefined) { destroy = false; }
+    if (silent === undefined) { silent = false; }
 
     if (this.children.length === 0 || this.children.indexOf(child) === -1)
     {
@@ -1955,7 +1955,7 @@ Phaser.Group.prototype.remove = function (child, destroy, silent) {
 */
 Phaser.Group.prototype.moveAll = function (group, silent) {
 
-    if (typeof silent === 'undefined') { silent = false; }
+    if (silent === undefined) { silent = false; }
 
     if (this.children.length > 0 && group instanceof Phaser.Group)
     {
@@ -1983,8 +1983,8 @@ Phaser.Group.prototype.moveAll = function (group, silent) {
 */
 Phaser.Group.prototype.removeAll = function (destroy, silent) {
 
-    if (typeof destroy === 'undefined') { destroy = false; }
-    if (typeof silent === 'undefined') { silent = false; }
+    if (destroy === undefined) { destroy = false; }
+    if (silent === undefined) { silent = false; }
 
     if (this.children.length === 0)
     {
@@ -2026,9 +2026,9 @@ Phaser.Group.prototype.removeAll = function (destroy, silent) {
 */
 Phaser.Group.prototype.removeBetween = function (startIndex, endIndex, destroy, silent) {
 
-    if (typeof endIndex === 'undefined') { endIndex = this.children.length - 1; }
-    if (typeof destroy === 'undefined') { destroy = false; }
-    if (typeof silent === 'undefined') { silent = false; }
+    if (endIndex === undefined) { endIndex = this.children.length - 1; }
+    if (destroy === undefined) { destroy = false; }
+    if (silent === undefined) { silent = false; }
 
     if (this.children.length === 0)
     {
@@ -2083,8 +2083,8 @@ Phaser.Group.prototype.destroy = function (destroyChildren, soft) {
 
     if (this.game === null || this.ignoreDestroy) { return; }
 
-    if (typeof destroyChildren === 'undefined') { destroyChildren = true; }
-    if (typeof soft === 'undefined') { soft = false; }
+    if (destroyChildren === undefined) { destroyChildren = true; }
+    if (soft === undefined) { soft = false; }
 
     this.onDestroy.dispatch(this, destroyChildren, soft);
 

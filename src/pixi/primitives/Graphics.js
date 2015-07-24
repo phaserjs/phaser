@@ -408,7 +408,7 @@ PIXI.Graphics.prototype.arc = function(cx, cy, radius, startAngle, endAngle, ant
         return this;
     }
 
-    if (typeof anticlockwise === 'undefined') { anticlockwise = false; }
+    if (anticlockwise === undefined) { anticlockwise = false; }
 
     if (!anticlockwise && endAngle <= startAngle)
     {

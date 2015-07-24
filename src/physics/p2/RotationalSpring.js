@@ -28,9 +28,9 @@ Phaser.Physics.P2.RotationalSpring = function (world, bodyA, bodyB, restAngle, s
     */
     this.world = world;
 
-    if (typeof restAngle === 'undefined') { restAngle = null; }
-    if (typeof stiffness === 'undefined') { stiffness = 100; }
-    if (typeof damping === 'undefined') { damping = 1; }
+    if (restAngle === undefined) { restAngle = null; }
+    if (stiffness === undefined) { stiffness = 100; }
+    if (damping === undefined) { damping = 1; }
 
     if (restAngle)
     {

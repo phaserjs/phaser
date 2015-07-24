@@ -230,7 +230,7 @@ Phaser.Key.prototype = {
     */
     reset: function (hard) {
 
-        if (typeof hard === 'undefined') { hard = true; }
+        if (hard === undefined) { hard = true; }
 
         this.isDown = false;
         this.isUp = true;
@@ -260,7 +260,7 @@ Phaser.Key.prototype = {
     */
     downDuration: function (duration) {
 
-        if (typeof duration === "undefined") { duration = 50; }
+        if (duration === undefined) { duration = 50; }
 
         return (this.isDown && this.duration < duration);
 
@@ -276,7 +276,7 @@ Phaser.Key.prototype = {
     */
     upDuration: function (duration) {
 
-        if (typeof duration === "undefined") { duration = 50; }
+        if (duration === undefined) { duration = 50; }
 
         return (!this.isDown && ((this.game.time.time - this.timeUp) < duration));
 

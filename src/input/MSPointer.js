@@ -7,11 +7,14 @@
 /**
 * The MSPointer class handles Microsoft touch interactions with the game and the resulting Pointer objects.
 *
-* It will work only in Internet Explorer 10 and Windows Store or Windows Phone 8 apps using JavaScript.
+* It will work only in Internet Explorer 10+ and Windows Store or Windows Phone 8 apps using JavaScript.
 * http://msdn.microsoft.com/en-us/library/ie/hh673557(v=vs.85).aspx
 *
 * You should not normally access this class directly, but instead use a Phaser.Pointer object which 
 * normalises all game input for you including accurate button handling.
+*
+* Please note that at the current time of writing Phaser does not yet support chorded button interactions:
+* http://www.w3.org/TR/pointerevents/#chorded-button-interactions
 *
 * @class Phaser.MSPointer
 * @constructor
@@ -23,6 +26,12 @@ Phaser.MSPointer = function (game) {
     * @property {Phaser.Game} game - A reference to the currently running game.
     */
     this.game = game;
+
+    /**
+    * @property {Phaser.Input} input - A reference to the Phaser Input Manager.
+    * @protected
+    */
+    this.input = game.input;
 
     /**
     * @property {object} callbackContext - The context under which callbacks are called (defaults to game).
@@ -52,6 +61,7 @@ Phaser.MSPointer = function (game) {
     /**
     * This property was removed in Phaser 2.4 and should no longer be used.
     * Instead please see the Pointer button properties such as `Pointer.leftButton`, `Pointer.rightButton` and so on.
+    * Or Pointer.button holds the DOM event button value if you require that.
     * @property {number} button
     */
     this.button = -1;
@@ -121,17 +131,19 @@ Phaser.MSPointer.prototype = {
                 return _this.onPointerUp(event);
             };
 
-            this.game.canvas.addEventListener('MSPointerDown', this._onMSPointerDown, false);
-            this.game.canvas.addEventListener('MSPointerMove', this._onMSPointerMove, false);
-            this.game.canvas.addEventListener('MSPointerUp', this._onMSPointerUp, false);
+            var canvas = this.game.canvas;
+
+            canvas.addEventListener('MSPointerDown', this._onMSPointerDown, false);
+            canvas.addEventListener('MSPointerMove', this._onMSPointerMove, false);
+            canvas.addEventListener('MSPointerUp', this._onMSPointerUp, false);
 
             //  IE11+ uses non-prefix events
-            this.game.canvas.addEventListener('pointerDown', this._onMSPointerDown, false);
-            this.game.canvas.addEventListener('pointerMove', this._onMSPointerMove, false);
-            this.game.canvas.addEventListener('pointerUp', this._onMSPointerUp, false);
+            canvas.addEventListener('pointerDown', this._onMSPointerDown, false);
+            canvas.addEventListener('pointerMove', this._onMSPointerMove, false);
+            canvas.addEventListener('pointerUp', this._onMSPointerUp, false);
 
-            this.game.canvas.style['-ms-content-zooming'] = 'none';
-            this.game.canvas.style['-ms-touch-action'] = 'none';
+            canvas.style['-ms-content-zooming'] = 'none';
+            canvas.style['-ms-touch-action'] = 'none';
         }
 
     },
@@ -156,14 +168,21 @@ Phaser.MSPointer.prototype = {
             this.pointerDownCallback.call(this.callbackContext, event);
         }
 
-        if (!this.game.input.enabled || !this.enabled)
+        if (!this.input.enabled || !this.enabled)
         {
             return;
         }
 
         event.identifier = event.pointerId;
 
-        this.game.input.startPointer(event);
+        if (event.pointerType === 'mouse' || event.pointerType === 0x00000004)
+        {
+            this.input.mousePointer.start(event);
+        }
+        else
+        {
+            this.input.startPointer(event);
+        }
 
     },
 
@@ -186,14 +205,21 @@ Phaser.MSPointer.prototype = {
             this.pointerMoveCallback.call(this.callbackContext, event);
         }
 
-        if (!this.game.input.enabled || !this.enabled)
+        if (!this.input.enabled || !this.enabled)
         {
             return;
         }
 
         event.identifier = event.pointerId;
 
-        this.game.input.updatePointer(event);
+        if (event.pointerType === 'mouse' || event.pointerType === 0x00000004)
+        {
+            this.input.mousePointer.move(event);
+        }
+        else
+        {
+            this.input.updatePointer(event);
+        }
 
     },
 
@@ -216,14 +242,21 @@ Phaser.MSPointer.prototype = {
             this.pointerUpCallback.call(this.callbackContext, event);
         }
 
-        if (!this.game.input.enabled || !this.enabled)
+        if (!this.input.enabled || !this.enabled)
         {
             return;
         }
 
         event.identifier = event.pointerId;
 
-        this.game.input.stopPointer(event);
+        if (event.pointerType === 'mouse' || event.pointerType === 0x00000004)
+        {
+            this.input.mousePointer.stop(event);
+        }
+        else
+        {
+            this.input.stopPointer(event);
+        }
 
     },
 
@@ -233,13 +266,15 @@ Phaser.MSPointer.prototype = {
     */
     stop: function () {
 
-        this.game.canvas.removeEventListener('MSPointerDown', this._onMSPointerDown);
-        this.game.canvas.removeEventListener('MSPointerMove', this._onMSPointerMove);
-        this.game.canvas.removeEventListener('MSPointerUp', this._onMSPointerUp);
+        var canvas = this.game.canvas;
 
-        this.game.canvas.removeEventListener('pointerDown', this._onMSPointerDown);
-        this.game.canvas.removeEventListener('pointerMove', this._onMSPointerMove);
-        this.game.canvas.removeEventListener('pointerUp', this._onMSPointerUp);
+        canvas.removeEventListener('MSPointerDown', this._onMSPointerDown);
+        canvas.removeEventListener('MSPointerMove', this._onMSPointerMove);
+        canvas.removeEventListener('MSPointerUp', this._onMSPointerUp);
+
+        canvas.removeEventListener('pointerDown', this._onMSPointerDown);
+        canvas.removeEventListener('pointerMove', this._onMSPointerMove);
+        canvas.removeEventListener('pointerUp', this._onMSPointerUp);
 
     }
 

@@ -27,8 +27,8 @@
 */
 Phaser.Graphics = function (game, x, y) {
 
-    if (typeof x === 'undefined') { x = 0; }
-    if (typeof y === 'undefined') { y = 0; }
+    if (x === undefined) { x = 0; }
+    if (y === undefined) { y = 0; }
 
     /**
     * @property {number} type - The const type of this object.
@@ -109,7 +109,7 @@ Phaser.Graphics.prototype.destroy = function(destroyChildren) {
 */
 Phaser.Graphics.prototype.drawTriangle = function(points, cull) {
 
-    if (typeof cull === 'undefined') { cull = false; }
+    if (cull === undefined) { cull = false; }
 
     var triangle = new Phaser.Polygon(points);
 
@@ -142,7 +142,7 @@ Phaser.Graphics.prototype.drawTriangle = function(points, cull) {
 */
 Phaser.Graphics.prototype.drawTriangles = function(vertices, indices, cull) {
 
-    if (typeof cull === 'undefined') { cull = false; }
+    if (cull === undefined) { cull = false; }
 
     var point1 = new Phaser.Point();
     var point2 = new Phaser.Point();

@@ -17,20 +17,24 @@ Phaser.AnimationParser = {
     *
     * @method Phaser.AnimationParser.spriteSheet
     * @param {Phaser.Game} game - A reference to the currently running game.
-    * @param {string} key - The Game.Cache asset key of the Sprite Sheet image.
+    * @param {string|Image} key - The Game.Cache asset key of the Sprite Sheet image or an actual HTML Image element.
     * @param {number} frameWidth - The fixed width of each frame of the animation.
     * @param {number} frameHeight - The fixed height of each frame of the animation.
-    * @param {number} [frameMax=-1] - The total number of animation frames to extact from the Sprite Sheet. The default value of -1 means "extract all frames".
+    * @param {number} [frameMax=-1] - The total number of animation frames to extract from the Sprite Sheet. The default value of -1 means "extract all frames".
     * @param {number} [margin=0] - If the frames have been drawn with a margin, specify the amount here.
     * @param {number} [spacing=0] - If the frames have been drawn with spacing between them, specify the amount here.
     * @return {Phaser.FrameData} A FrameData object containing the parsed frames.
     */
     spriteSheet: function (game, key, frameWidth, frameHeight, frameMax, margin, spacing) {
 
-        //  How big is our image?
-        var img = game.cache.getImage(key);
+        var img = key;
 
-        if (img == null)
+        if (typeof key === 'string')
+        {
+            img = game.cache.getImage(key);
+        }
+
+        if (img === null)
         {
             return null;
         }

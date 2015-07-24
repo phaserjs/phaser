@@ -145,6 +145,11 @@ Phaser.Camera.FOLLOW_TOPDOWN_TIGHT = 3;
 
 Phaser.Camera.prototype = {
 
+    /**
+    * Camera preUpdate. Sets the total view counter to zero.
+    *
+    * @method Phaser.Camera#preUpdate
+    */
     preUpdate: function () {
 
         this.totalInView = 0;
@@ -163,7 +168,7 @@ Phaser.Camera.prototype = {
     */
     follow: function (target, style) {
 
-        if (typeof style === "undefined") { style = Phaser.Camera.FOLLOW_LOCKON; }
+        if (style === undefined) { style = Phaser.Camera.FOLLOW_LOCKON; }
 
         this.target = target;
 
@@ -310,10 +315,7 @@ Phaser.Camera.prototype = {
     */
     setBoundsToWorld: function () {
 
-        if (this.bounds)
-        {
-            this.bounds.setTo(this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height);
-        }
+        this.bounds.copyFrom(this.game.world.bounds);
 
     },
 

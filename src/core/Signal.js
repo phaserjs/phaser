@@ -153,7 +153,7 @@ Phaser.Signal.prototype = {
             return -1;
         }
 
-        if (typeof context === 'undefined') { context = null; }
+        if (context === undefined) { context = null; }
 
         var n = this._bindings.length;
         var cur;
@@ -291,7 +291,7 @@ Phaser.Signal.prototype = {
     */
     removeAll: function (context) {
 
-        if (typeof context === 'undefined') { context = null; }
+        if (context === undefined) { context = null; }
 
         if (!this._bindings)
         {

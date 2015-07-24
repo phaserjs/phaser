@@ -19,10 +19,10 @@
 */
 Phaser.Physics.P2.DistanceConstraint = function (world, bodyA, bodyB, distance, localAnchorA, localAnchorB, maxForce) {
 
-    if (typeof distance === 'undefined') { distance = 100; }
-    if (typeof localAnchorA === 'undefined') { localAnchorA = [0, 0]; }
-    if (typeof localAnchorB === 'undefined') { localAnchorB = [0, 0]; }
-    if (typeof maxForce === 'undefined') { maxForce = Number.MAX_VALUE; }
+    if (distance === undefined) { distance = 100; }
+    if (localAnchorA === undefined) { localAnchorA = [0, 0]; }
+    if (localAnchorB === undefined) { localAnchorB = [0, 0]; }
+    if (maxForce === undefined) { maxForce = Number.MAX_VALUE; }
 
     /**
     * @property {Phaser.Game} game - Local reference to game.

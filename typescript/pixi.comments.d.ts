@@ -1,5 +1,4 @@
-// Type definitions for PIXI 2.2.8 2015-03-24
-// Project: https://github.com/GoodBoyDigital/pixi.js/
+// Type definitions for PIXI with Phaser Deviations. 
 
 declare module PIXI {
 
@@ -51,8 +50,10 @@ declare module PIXI {
     export var glContexts: WebGLRenderingContext[];
     export var instances: any[];
 
-    export var BaseTextureCache: { [key: string]: BaseTexture }
-    export var TextureCache: { [key: string]: Texture }
+    export var BaseTextureCache: { [key: string]: BaseTexture };
+    export var TextureCache: { [key: string]: Texture };
+    export var TextureSilentFail: boolean;
+    export var BitmapText: { fonts: {} };
 
     export function isPowerOfTwo(width: number, height: number): boolean;
 
@@ -191,12 +192,12 @@ declare module PIXI {
         * @param fragmentSrc The fragment source in an array of strings.
         * @param uniforms An object containing the uniforms for this filter.
         */
-        constructor(fragmentSrc: string[], uniforms: any);
+        constructor(fragmentSrc: string | string[], uniforms: any);
 
         dirty: boolean;
         padding: number;
         uniforms: any;
-        fragmentSrc: string[];
+        fragmentSrc: string | string[];
 
         apply(frameBuffer: WebGLFramebuffer): void;
 
@@ -324,7 +325,7 @@ declare module PIXI {
 
         /**
         * Set this to true if a mipmap of this texture needs to be generated. This value needs to be set before the texture is used
-        *  Also the texture must be a power of two size to work
+        * Also the texture must be a power of two size to work
         */
         mipmap: boolean;
 
@@ -364,6 +365,15 @@ declare module PIXI {
         off(eventName: string, fn: Function): Function;
         removeAllEventListeners(eventName: string): void;
 
+        /**
+        * Forces this BaseTexture to be set as loaded, with the given width and height.
+        * Then calls BaseTexture.dirty.
+        * Important for when you don't want to modify the source object by forcing in `complete` or dimension properties it may not have.
+        * 
+        * @param width - The new width to force the BaseTexture to be.
+        * @param height - The new height to force the BaseTexture to be.
+        */
+        forceLoaded(width: number, height: number): void;
 
         /**
         * Destroys this base texture
@@ -409,76 +419,6 @@ declare module PIXI {
         removeAllEventListeners(eventName: string): void;
 
         load(): void;
-
-    }
-
-
-    /**
-    * A BitmapText object will create a line or multiple lines of text using bitmap font. To split a line you can use '\n', '\r' or '\r\n' in your string.
-    * You can generate the fnt files using
-    * http://www.angelcode.com/products/bmfont/ for windows or
-    * http://www.bmglyph.com/ for mac.
-    */
-    export class BitmapText extends DisplayObjectContainer {
-
-        static fonts: any;
-
-
-        /**
-        * A BitmapText object will create a line or multiple lines of text using bitmap font. To split a line you can use '\n', '\r' or '\r\n' in your string.
-        * You can generate the fnt files using
-        * http://www.angelcode.com/products/bmfont/ for windows or
-        * http://www.bmglyph.com/ for mac.
-        * 
-        * @param text The copy that you would like the text to display
-        * @param style The style parameters
-        */
-        constructor(text: string, style: BitmapTextStyle);
-
-
-        /**
-        * The dirty state of this object.
-        */
-        dirty: boolean;
-        fontName: string;
-        fontSize: number;
-
-        /**
-        * The max width of this bitmap text in pixels. If the text provided is longer than the value provided, line breaks will be
-        * automatically inserted in the last whitespace. Disable by setting value to 0.
-        */
-        maxWidth: number;
-
-        /**
-        * [read-only] The width of the overall text, different from fontSize,
-        * which is defined in the style object
-        */
-        textWidth: number;
-
-        /**
-        * [read-only] The height of the overall text, different from fontSize,
-        * which is defined in the style object
-        */
-        textHeight: number;
-        tint: number;
-        style: BitmapTextStyle;
-
-
-        /**
-        * Set the text string to be rendered.
-        * 
-        * @param text The text that you would like displayed
-        */
-        setText(text: string): void;
-
-        /**
-        * Set the style of the text
-        * style.font {String} The size (optional) and bitmap font id (required) eq 'Arial' or '20px Arial' (must have loaded previously)
-        * [style.align='left'] {String} Alignment for multiline text ('left', 'center' or 'right'), does not affect single lines of text
-        * 
-        * @param style The style parameters, contained as properties of an object
-        */
-        setStyle(style: BitmapTextStyle): void;
 
     }
 
@@ -712,34 +652,9 @@ declare module PIXI {
         * @param canvas the current canvas
         */
         static tintWithMultiply(texture: Texture, color: number, canvas: HTMLCanvasElement): void;
-
-        /**
-        * Tint a texture using the "overlay" operation.
-        * 
-        * @param texture the texture to tint
-        * @param color the color to use to tint the sprite with
-        * @param canvas the current canvas
-        */
         static tintWithOverlay(texture: Texture, color: number, canvas: HTMLCanvasElement): void;
         static tintWithPerPixel(texture: Texture, color: number, canvas: HTMLCanvasElement): void;
 
-        /**
-        * Rounds the specified color according to the PIXI.CanvasTinter.cacheStepsPerColorChannel.
-        * 
-        * @param color the color to round, should be a hex color
-        */
-        static roundColor(color: number): void;
-
-
-        /**
-        * Number of steps which will be used as a cap when rounding colors.
-        */
-        static cacheStepsPerColorChannel: number;
-
-        /**
-        * Tint cache boolean flag.
-        */
-        static convertTintToImage: boolean;
 
         /**
         * Whether or not the Canvas BlendModes are supported, consequently the ability to tint using the multiply method.
@@ -903,6 +818,24 @@ declare module PIXI {
         worldAlpha: number;
 
         /**
+        * The position of the Display Object based on the world transform.
+        * This value is updated at the end of updateTransform and takes all parent transforms into account.
+        */
+        worldPosition: PIXI.Point;
+
+        /**
+        * The scale of the Display Object based on the world transform.
+        * This value is updated at the end of updateTransform and takes all parent transforms into account.
+        */
+        worldScale: PIXI.Point;
+
+        /**
+        * The rotation of the Display Object, in radians, based on the world transform.
+        * This value is updated at the end of updateTransform and takes all parent transforms into account.
+        */
+        worldRotation: number;
+
+        /**
         * [read-only] Indicates if the sprite is globally visible.
         */
         worldVisible: boolean;
@@ -943,7 +876,7 @@ declare module PIXI {
         * @param renderer The renderer used to generate the texture.
         * @return a texture of the graphics object
         */
-        generateTexture(resolution: number, scaleMode: scaleModes, renderer: PixiRenderer): RenderTexture;
+        generateTexture(resolution?: number, scaleMode?: number, renderer?: PixiRenderer): Texture;
         mousedown(e: InteractionData): void;
         mouseout(e: InteractionData): void;
         mouseover(e: InteractionData): void;
@@ -983,7 +916,7 @@ declare module PIXI {
         touchendoutside(e: InteractionData): void;
         touchstart(e: InteractionData): void;
         touchmove(e: InteractionData): void;
-        updateTransform(): void;
+        updateTransform(parent?: PIXI.DisplayObjectContainer): void;
 
     }
 
@@ -1356,7 +1289,15 @@ declare module PIXI {
         * Destroys a previous cached sprite.
         */
         destroyCachedSprite(): void;
-        drawCircle(x: number, y: number, radius: number): Graphics;
+
+        /**
+        * Draws a circle.
+        * 
+        * @param x The X coordinate of the center of the circle
+        * @param y The Y coordinate of the center of the circle
+        * @param diameter The diameter of the circle
+        */
+        drawCircle(x: number, y: number, diameter: number): Graphics;
 
         /**
         * Draws an ellipse.
@@ -1371,7 +1312,7 @@ declare module PIXI {
         /**
         * Draws a polygon using the given path.
         * 
-        * @param path The path data used to construct the polygon. If you've got a Phaser.Polygon object then pass `polygon.points` here.
+        * @param path The path data used to construct the polygon. Can either be an array of points or a Phaser.Polygon object.
         */
         drawPolygon(...path: any[]): Graphics;
 
@@ -1392,7 +1333,7 @@ declare module PIXI {
         * @param y The Y coord of the top-left of the rectangle
         * @param width The width of the rectangle
         * @param height The height of the rectangle
-        * @param radius Radius of the rectangle corners
+        * @param radius Radius of the rectangle corners. In WebGL this must be a value between 0 and 9.
         */
         drawRoundedRect(x: number, y: number, width: number, height: number, radius: number): Graphics;
 
@@ -1432,6 +1373,16 @@ declare module PIXI {
         * Applies a fill to the lines and shapes that were added since the last call to the beginFill() method.
         */
         endFill(): Graphics;
+
+        /**
+        * Useful function that returns a texture of the graphics object that can then be used to create sprites
+        * This can be quite useful if your geometry is complicated and needs to be reused multiple times.
+        * 
+        * @param resolution The resolution of the texture being generated
+        * @param scaleMode Should be one of the PIXI.scaleMode consts
+        * @return a texture of the graphics object
+        */
+        generateTexture(resolution?: number, scaleMode?: number): Texture;
 
         /**
         * Specifies the line style used for subsequent calls to Graphics methods such as the lineTo() method or the drawCircle() method.
@@ -2258,73 +2209,6 @@ declare module PIXI {
 
 
     /**
-    * A Text Object will create a line or multiple lines of text. To split a line you can use '\n' in your text string,
-    * or add a wordWrap property set to true and and wordWrapWidth property with a value in the style object.
-    */
-    export class Text extends Sprite {
-
-
-        /**
-        * A Text Object will create a line or multiple lines of text. To split a line you can use '\n' in your text string,
-        * or add a wordWrap property set to true and and wordWrapWidth property with a value in the style object.
-        * 
-        * @param text The copy that you would like the text to display
-        * @param style The style parameters
-        */
-        constructor(text: string, style?: TextStyle);
-
-        static fontPropertiesCanvas: any;
-        static fontPropertiesContext: any;
-        static fontPropertiesCache: any;
-
-
-        /**
-        * The canvas 2d context that everything is drawn with
-        */
-        context: CanvasRenderingContext2D;
-
-        /**
-        * The resolution of the canvas.
-        */
-        resolution: number;
-
-
-        /**
-        * Destroys this text object.
-        * 
-        * @param destroyBaseTexture whether to destroy the base texture as well
-        */
-        destroy(destroyTexture: boolean): void;
-
-        /**
-        * Set the style of the text
-        * 
-        * @param style The style parameters
-        * @param style.fill A canvas fillstyle that will be used on the text eg 'red', '#00FF00' - Default: 'black'
-        * @param style.align Alignment for multiline text ('left', 'center' or 'right'), does not affect single line text - Default: 'left'
-        * @param style.stroke A canvas fillstyle that will be used on the text stroke eg 'blue', '#FCFF00' - Default: 'black'
-        * @param style.strokeThickness A number that represents the thickness of the stroke. Default is 0 (no stroke) - Default: 0
-        * @param style.wordWrap Indicates if word wrap should be used - Default: false
-        * @param style.wordWrapWidth The width at which text will wrap - Default: 100
-        * @param style.dropShadow Set a drop shadow for the text - Default: false
-        * @param style.dropShadowColor A fill style to be used on the dropshadow e.g 'red', '#00FF00' - Default: '#000000'
-        * @param style.dropShadowAngle Set a angle of the drop shadow - Default: Math.PI/4
-        * @param style.dropShadowDistance Set a distance of the drop shadow - Default: 5
-        * @param style.font The style and size of the font - Default: 'bold - 20pt Arial'
-        */
-        setStyle(style: TextStyle): void;
-
-        /**
-        * Set the copy for the text object. To split a line you can use '\n'.
-        * 
-        * @param text The copy that you would like the text to display
-        */
-        setText(text: string): void;
-
-    }
-
-
-    /**
     * A texture stores the information that represents an image or part of an image. It cannot be added
     * to the display list directly. Instead use it as the texture for a PIXI.Sprite. If no frame is provided then the whole image is used.
     */
@@ -2482,15 +2366,33 @@ declare module PIXI {
 
 
         /**
+        * The CanvasBuffer object that the tiled texture is drawn to.
+        */
+        canvasBuffer: PIXI.CanvasBuffer;
+
+        /**
         * The blend mode to be applied to the sprite
         * Default: PIXI.blendModes.NORMAL;
         */
         blendMode: number;
 
         /**
+        * If true the TilingSprite will run generateTexture on its **next** render pass.
+        * This is set by the likes of Phaser.LoadTexture.setFrame.
+        * Default: true
+        */
+        refreshTexture: boolean;
+
+        /**
         * The texture that the sprite is using
         */
         texture: Texture;
+
+        /**
+        * If enabled a green rectangle will be drawn behind the generated tiling texture, allowing you to visually
+        * debug the texture being used.
+        */
+        textureDebug: boolean;
 
         /**
         * The tint applied to the sprite. This is a hex value
@@ -2502,6 +2404,11 @@ declare module PIXI {
         * The offset position of the image that is being tiled
         */
         tilePosition: Point;
+
+        /**
+        * The Context fill pattern that is used to draw the TilingSprite in Canvas mode only (will be null in WebGL).
+        */
+        tilePattern: PIXI.Texture;
 
         /**
         * The scaling of the image that is being tiled
@@ -2575,51 +2482,25 @@ declare module PIXI {
 
     }
 
-
-    /**
-    * A texture of a [playing] Video.
-    * 
-    * See the ["deus" demo](http://www.goodboydigital.com/pixijs/examples/deus/).
-    */
     export class VideoTexture extends BaseTexture {
 
-
-        /**
-        * Mimic Pixi BaseTexture.from.... method.
-        * 
-        * @param video -
-        * @param scaleMode See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
-        */
         static baseTextureFromVideo(video: HTMLVideoElement, scaleMode: number): BaseTexture;
-
-        /**
-        * Mimic Pixi BaseTexture.from.... method.
-        * 
-        * @param video -
-        * @param scaleMode See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
-        * @return A Texture, but not a VideoTexture.
-        */
         static textureFromVideo(video: HTMLVideoElement, scaleMode: number): Texture;
+        static fromUrl(videoSrc: string, scaleMode?: number, autoPlay?: boolean, type?: string, loop?: boolean): Texture;
 
-        /**
-        * Mimic Pixi BaseTexture.from.... method.
-        * 
-        * @param videoSrc The URL for the video.
-        * @param scaleMode See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
-        */
-        static fromUrl(videoSrc: string, scaleMode: number): Texture;
-
+        controls: boolean;
         autoUpdate: boolean;
+        type: string;
 
+        changeSource(src: string, type: string, loop: boolean): void;
+        play(): void;
+        stop(): void;
 
-        /**
-        * Destroys this base texture
-        */
         destroy(): void;
         updateBound(): void;
-        onPlayStart(): void;
-        onPlayStop(): void;
-        onCanPlay(): void;
+        onPlayStart: () => void;
+        onPlayStop: () => void;
+        onCanPlay: (event: any) => void;
 
     }
 
@@ -3220,6 +3101,7 @@ declare module PIXI {
         * 
         * 
         * @param sprite the sprite to render when using this spritebatch
+        * @param matrix - Optional matrix. If provided the Display Object will be rendered using this matrix, otherwise it will use its worldTransform.
         */
         render(sprite: Sprite): void;
 
@@ -3235,7 +3117,7 @@ declare module PIXI {
         /**
         * Renders a TilingSprite using the spriteBatch.
         * 
-        * @param sprite the tilingSprite to render
+        * @param sprite the sprite to render
         */
         renderTilingSprite(sprite: TilingSprite): void;
         setBlendMode(blendMode: blendModes): void;
@@ -3334,7 +3216,7 @@ declare module PIXI {
         clear(): void;
 
         /**
-        * Will return a a base64 encoded string of this texture. It works by calling RenderTexture.getCanvas and then running toDataURL on that.
+        * Will return a base64 encoded string of this texture. It works by calling RenderTexture.getCanvas and then running toDataURL on that.
         * @return A base64 encoded string of the texture.
         */
         getBase64(): string;
@@ -3358,7 +3240,7 @@ declare module PIXI {
         * @param updateBase Should the baseTexture.width and height values be resized as well?
         */
         resize(width: number, height: number, updateBase: boolean): void;
-        render(displayObject: DisplayObject, position?: Point, clear?: boolean): void;
+        render(displayObject: DisplayObject, matrix?: Matrix, clear?: boolean): void;
 
     }
 

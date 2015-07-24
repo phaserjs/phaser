@@ -454,7 +454,7 @@ Phaser.Keyboard.prototype = {
     */
     reset: function (hard) {
 
-        if (typeof hard === 'undefined') { hard = true; }
+        if (hard === undefined) { hard = true; }
 
         this.event = null;
 

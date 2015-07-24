@@ -24,7 +24,8 @@
             "./src/utils/"
         ],
         "exclude": [
-            "./src/physics/p2/p2.js"
+            "./src/physics/p2/p2.js",
+            "./src/animation/creature/"
         ],
         "includePattern": ".+\\.js(doc)?$",
         "excludePattern": "(^|\\/|\\\\)_"

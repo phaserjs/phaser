@@ -222,7 +222,7 @@ Phaser.Point.prototype = {
     */
     clone: function (output) {
 
-        if (typeof output === "undefined" || output === null)
+        if (output === undefined || output === null)
         {
             output = new Phaser.Point(this.x, this.y);
         }
@@ -288,7 +288,7 @@ Phaser.Point.prototype = {
     */
     angle: function (a, asDegrees) {
 
-        if (typeof asDegrees === 'undefined') { asDegrees = false; }
+        if (asDegrees === undefined) { asDegrees = false; }
 
         if (asDegrees)
         {
@@ -499,7 +499,7 @@ Phaser.Point.prototype.constructor = Phaser.Point;
 */
 Phaser.Point.add = function (a, b, out) {
 
-    if (typeof out === "undefined") { out = new Phaser.Point(); }
+    if (out === undefined) { out = new Phaser.Point(); }
 
     out.x = a.x + b.x;
     out.y = a.y + b.y;
@@ -519,7 +519,7 @@ Phaser.Point.add = function (a, b, out) {
 */
 Phaser.Point.subtract = function (a, b, out) {
 
-    if (typeof out === "undefined") { out = new Phaser.Point(); }
+    if (out === undefined) { out = new Phaser.Point(); }
 
     out.x = a.x - b.x;
     out.y = a.y - b.y;
@@ -539,7 +539,7 @@ Phaser.Point.subtract = function (a, b, out) {
 */
 Phaser.Point.multiply = function (a, b, out) {
 
-    if (typeof out === "undefined") { out = new Phaser.Point(); }
+    if (out === undefined) { out = new Phaser.Point(); }
 
     out.x = a.x * b.x;
     out.y = a.y * b.y;
@@ -559,7 +559,7 @@ Phaser.Point.multiply = function (a, b, out) {
 */
 Phaser.Point.divide = function (a, b, out) {
 
-    if (typeof out === "undefined") { out = new Phaser.Point(); }
+    if (out === undefined) { out = new Phaser.Point(); }
 
     out.x = a.x / b.x;
     out.y = a.y / b.y;
@@ -607,7 +607,7 @@ Phaser.Point.angle = function (a, b) {
 */
 Phaser.Point.negative = function (a, out) {
 
-    if (typeof out === "undefined") { out = new Phaser.Point(); }
+    if (out === undefined) { out = new Phaser.Point(); }
 
     return out.setTo(-a.x, -a.y);
 
@@ -625,7 +625,7 @@ Phaser.Point.negative = function (a, out) {
 */
 Phaser.Point.multiplyAdd = function (a, b, s, out) {
 
-    if (typeof out === "undefined") { out = new Phaser.Point(); }
+    if (out === undefined) { out = new Phaser.Point(); }
 
     return out.setTo(a.x + b.x * s, a.y + b.y * s);
 
@@ -643,7 +643,7 @@ Phaser.Point.multiplyAdd = function (a, b, s, out) {
 */
 Phaser.Point.interpolate = function (a, b, f, out) {
 
-    if (typeof out === "undefined") { out = new Phaser.Point(); }
+    if (out === undefined) { out = new Phaser.Point(); }
 
     return out.setTo(a.x + (b.x - a.x) * f, a.y + (b.y - a.y) * f);
 
@@ -659,7 +659,7 @@ Phaser.Point.interpolate = function (a, b, f, out) {
 */
 Phaser.Point.perp = function (a, out) {
 
-    if (typeof out === "undefined") { out = new Phaser.Point(); }
+    if (out === undefined) { out = new Phaser.Point(); }
 
     return out.setTo(-a.y, a.x);
 
@@ -675,7 +675,7 @@ Phaser.Point.perp = function (a, out) {
 */
 Phaser.Point.rperp = function (a, out) {
 
-    if (typeof out === "undefined") { out = new Phaser.Point(); }
+    if (out === undefined) { out = new Phaser.Point(); }
 
     return out.setTo(a.y, -a.x);
 
@@ -708,7 +708,7 @@ Phaser.Point.distance = function (a, b, round) {
 */
 Phaser.Point.project = function (a, b, out) {
 
-    if (typeof out === "undefined") { out = new Phaser.Point(); }
+    if (out === undefined) { out = new Phaser.Point(); }
 
     var amt = a.dot(b) / b.getMagnitudeSq();
 
@@ -732,7 +732,7 @@ Phaser.Point.project = function (a, b, out) {
 */
 Phaser.Point.projectUnit = function (a, b, out) {
 
-    if (typeof out === "undefined") { out = new Phaser.Point(); }
+    if (out === undefined) { out = new Phaser.Point(); }
 
     var amt = a.dot(b);
 
@@ -755,7 +755,7 @@ Phaser.Point.projectUnit = function (a, b, out) {
 */
 Phaser.Point.normalRightHand = function (a, out) {
 
-    if (typeof out === "undefined") { out = new Phaser.Point(); }
+    if (out === undefined) { out = new Phaser.Point(); }
 
     return out.setTo(a.y * -1, a.x);
 
@@ -771,7 +771,7 @@ Phaser.Point.normalRightHand = function (a, out) {
 */
 Phaser.Point.normalize = function (a, out) {
 
-    if (typeof out === "undefined") { out = new Phaser.Point(); }
+    if (out === undefined) { out = new Phaser.Point(); }
 
     var m = a.getMagnitude();
 
@@ -803,8 +803,8 @@ Phaser.Point.normalize = function (a, out) {
 */
 Phaser.Point.rotate = function (a, x, y, angle, asDegrees, distance) {
 
-    if (typeof asDegrees === 'undefined') { asDegrees = false; }
-    if (typeof distance === 'undefined') { distance = null; }
+    if (asDegrees === undefined) { asDegrees = false; }
+    if (distance === undefined) { distance = null; }
 
     if (asDegrees)
     {
@@ -836,7 +836,7 @@ Phaser.Point.rotate = function (a, x, y, angle, asDegrees, distance) {
 */
 Phaser.Point.centroid = function (points, out) {
 
-    if (typeof out === "undefined") { out = new Phaser.Point(); }
+    if (out === undefined) { out = new Phaser.Point(); }
 
     if (Object.prototype.toString.call(points) !== '[object Array]')
     {

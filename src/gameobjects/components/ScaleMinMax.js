@@ -109,12 +109,12 @@ Phaser.Component.ScaleMinMax.prototype = {
      */
     setScaleMinMax: function (minX, minY, maxX, maxY) {
 
-        if (typeof minY === 'undefined')
+        if (minY === undefined)
         {
             //  1 parameter, set all to it
             minY = maxX = maxY = minX;
         }
-        else if (typeof maxX === 'undefined')
+        else if (maxX === undefined)
         {
             //  2 parameters, the first is min, the second max
             maxX = maxY = minY;

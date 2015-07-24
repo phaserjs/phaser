@@ -58,9 +58,9 @@ Phaser.Color = {
     */
     unpackPixel: function (rgba, out, hsl, hsv) {
 
-        if (typeof out === 'undefined' || out === null) { out = Phaser.Color.createColor(); }
-        if (typeof hsl === 'undefined' || hsl === null) { hsl = false; }
-        if (typeof hsv === 'undefined' || hsv === null) { hsv = false; }
+        if (out === undefined || out === null) { out = Phaser.Color.createColor(); }
+        if (hsl === undefined || hsl === null) { hsl = false; }
+        if (hsv === undefined || hsv === null) { hsv = false; }
 
         if (Phaser.Device.LITTLE_ENDIAN)
         {
@@ -323,7 +323,7 @@ Phaser.Color = {
     */
     HSVtoRGB: function (h, s, v, out) {
 
-        if (typeof out === 'undefined') { out = Phaser.Color.createColor(0, 0, 0, 1, h, s, 0, v); }
+        if (out === undefined) { out = Phaser.Color.createColor(0, 0, 0, 1, h, s, 0, v); }
 
         var r, g, b;
         var i = Math.floor(h * 6);
@@ -511,8 +511,8 @@ Phaser.Color = {
     */
     RGBtoString: function (r, g, b, a, prefix) {
 
-        if (typeof a === 'undefined') { a = 255; }
-        if (typeof prefix === 'undefined') { prefix = '#'; }
+        if (a === undefined) { a = 255; }
+        if (prefix === undefined) { prefix = '#'; }
 
         if (prefix === '#')
         {
@@ -700,8 +700,8 @@ Phaser.Color = {
     */
     HSVColorWheel: function (s, v) {
 
-        if (typeof s === 'undefined') { s = 1.0; }
-        if (typeof v === 'undefined') { v = 1.0; }
+        if (s === undefined) { s = 1.0; }
+        if (v === undefined) { v = 1.0; }
 
         var colors = [];
 
@@ -725,8 +725,8 @@ Phaser.Color = {
     */
     HSLColorWheel: function (s, l) {
 
-        if (typeof s === 'undefined') { s = 0.5; }
-        if (typeof l === 'undefined') { l = 0.5; }
+        if (s === undefined) { s = 0.5; }
+        if (l === undefined) { l = 0.5; }
 
         var colors = [];
 
@@ -753,7 +753,7 @@ Phaser.Color = {
     */
     interpolateColor: function (color1, color2, steps, currentStep, alpha) {
 
-        if (typeof alpha === "undefined") { alpha = 255; }
+        if (alpha === undefined) { alpha = 255; }
 
         var src1 = Phaser.Color.getRGB(color1);
         var src2 = Phaser.Color.getRGB(color2);
@@ -827,9 +827,9 @@ Phaser.Color = {
     */
     getRandomColor: function (min, max, alpha) {
 
-        if (typeof min === "undefined") { min = 0; }
-        if (typeof max === "undefined") { max = 255; }
-        if (typeof alpha === "undefined") { alpha = 255; }
+        if (min === undefined) { min = 0; }
+        if (max === undefined) { max = 255; }
+        if (alpha === undefined) { alpha = 255; }
 
         //  Sanity checks
         if (max > 255 || min > max)

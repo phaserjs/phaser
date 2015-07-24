@@ -110,7 +110,7 @@ Phaser.Rectangle.prototype = {
     */
     scale: function (x, y) {
 
-        if (typeof y === 'undefined') { y = x; }
+        if (y === undefined) { y = x; }
 
         this.width *= x;
         this.height *= y;
@@ -374,7 +374,7 @@ Phaser.Rectangle.prototype = {
     */
     random: function (out) {
 
-        if (typeof out === 'undefined') { out = new Phaser.Point(); }
+        if (out === undefined) { out = new Phaser.Point(); }
 
         out.x = this.randomX;
         out.y = this.randomY;
@@ -746,7 +746,7 @@ Phaser.Rectangle.inflatePoint = function (a, point) {
 */
 Phaser.Rectangle.size = function (a, output) {
 
-    if (typeof output === "undefined" || output === null)
+    if (output === undefined || output === null)
     {
         output = new Phaser.Point(a.width, a.height);
     }
@@ -768,7 +768,7 @@ Phaser.Rectangle.size = function (a, output) {
 */
 Phaser.Rectangle.clone = function (a, output) {
 
-    if (typeof output === "undefined" || output === null)
+    if (output === undefined || output === null)
     {
         output = new Phaser.Rectangle(a.x, a.y, a.width, a.height);
     }
@@ -887,7 +887,7 @@ Phaser.Rectangle.sameDimensions = function (a, b) {
 */
 Phaser.Rectangle.intersection = function (a, b, output) {
 
-    if (typeof output === "undefined")
+    if (output === undefined)
     {
         output = new Phaser.Rectangle();
     }
@@ -935,7 +935,7 @@ Phaser.Rectangle.intersects = function (a, b) {
 */
 Phaser.Rectangle.intersectsRaw = function (a, left, right, top, bottom, tolerance) {
 
-    if (typeof tolerance === "undefined") { tolerance = 0; }
+    if (tolerance === undefined) { tolerance = 0; }
 
     return !(left > a.right + tolerance || right < a.left - tolerance || top > a.bottom + tolerance || bottom < a.top - tolerance);
 
@@ -951,7 +951,7 @@ Phaser.Rectangle.intersectsRaw = function (a, left, right, top, bottom, toleranc
 */
 Phaser.Rectangle.union = function (a, b, output) {
 
-    if (typeof output === "undefined")
+    if (output === undefined)
     {
         output = new Phaser.Rectangle();
     }
@@ -971,7 +971,7 @@ Phaser.Rectangle.union = function (a, b, output) {
 */
 Phaser.Rectangle.aabb = function(points, out) {
 
-    if (typeof out === "undefined") {
+    if (out === undefined) {
         out = new Phaser.Rectangle();
     }
 

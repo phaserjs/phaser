@@ -164,13 +164,16 @@ PIXI.BaseTexture.prototype.destroy = function()
     {
         delete PIXI.BaseTextureCache[this.imageUrl];
         delete PIXI.TextureCache[this.imageUrl];
+
         this.imageUrl = null;
+
         if (!navigator.isCocoonJS) this.source.src = '';
     }
     else if (this.source && this.source._pixiId)
     {
         delete PIXI.BaseTextureCache[this.source._pixiId];
     }
+
     this.source = null;
 
     this.unloadFromGPU();
@@ -287,6 +290,16 @@ PIXI.BaseTexture.fromCanvas = function(canvas, scaleMode)
     if(!canvas._pixiId)
     {
         canvas._pixiId = 'canvas_' + PIXI.TextureCacheIdGenerator++;
+    }
+
+    if (canvas.width === 0)
+    {
+        canvas.width = 1;
+    }
+
+    if (canvas.height === 0)
+    {
+        canvas.height = 1;
     }
 
     var baseTexture = PIXI.BaseTextureCache[canvas._pixiId];

@@ -86,7 +86,7 @@ Phaser.AnimationManager.prototype = {
     */
     loadFrameData: function (frameData, frame) {
 
-        if (typeof frameData === 'undefined')
+        if (frameData === undefined)
         {
             return false;
         }
@@ -102,7 +102,7 @@ Phaser.AnimationManager.prototype = {
 
         this._frameData = frameData;
 
-        if (typeof frame === 'undefined' || frame === null)
+        if (frame === undefined || frame === null)
         {
             this.frame = 0;
         }
@@ -146,7 +146,7 @@ Phaser.AnimationManager.prototype = {
             }
         }
 
-        if (typeof frame === 'undefined' || frame === null)
+        if (frame === undefined || frame === null)
         {
             this.frame = 0;
         }
@@ -184,10 +184,10 @@ Phaser.AnimationManager.prototype = {
         frames = frames || [];
         frameRate = frameRate || 60;
 
-        if (typeof loop === 'undefined') { loop = false; }
+        if (loop === undefined) { loop = false; }
 
         //  If they didn't set the useNumericIndex then let's at least try and guess it
-        if (typeof useNumericIndex === 'undefined')
+        if (useNumericIndex === undefined)
         {
             if (frames && typeof frames[0] === 'number')
             {
@@ -229,7 +229,7 @@ Phaser.AnimationManager.prototype = {
     */
     validateFrames: function (frames, useNumericIndex) {
 
-        if (typeof useNumericIndex === 'undefined') { useNumericIndex = true; }
+        if (useNumericIndex === undefined) { useNumericIndex = true; }
 
         for (var i = 0; i < frames.length; i++)
         {
@@ -306,7 +306,7 @@ Phaser.AnimationManager.prototype = {
     */
     stop: function (name, resetFrame) {
 
-        if (typeof resetFrame === 'undefined') { resetFrame = false; }
+        if (resetFrame === undefined) { resetFrame = false; }
 
         if (typeof name === 'string')
         {

@@ -159,8 +159,8 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
     */
     drawRectangle: function(g, x, y, angle, w, h, color, fillColor, lineWidth) {
 
-        if (typeof lineWidth === 'undefined') { lineWidth = 1; }
-        if (typeof color === 'undefined') { color = 0x000000; }
+        if (lineWidth === undefined) { lineWidth = 1; }
+        if (color === undefined) { color = 0x000000; }
 
         g.lineStyle(lineWidth, color, 1);
         g.beginFill(fillColor);
@@ -176,8 +176,8 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
     */
     drawCircle: function(g, x, y, angle, radius, color, lineWidth) {
 
-        if (typeof lineWidth === 'undefined') { lineWidth = 1; }
-        if (typeof color === 'undefined') { color = 0xffffff; }
+        if (lineWidth === undefined) { lineWidth = 1; }
+        if (color === undefined) { color = 0xffffff; }
         g.lineStyle(lineWidth, 0x000000, 1);
         g.beginFill(color, 1.0);
         g.drawCircle(x, y, -radius*2);
@@ -195,8 +195,8 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
     */
     drawLine: function(g, len, color, lineWidth) {
 
-        if (typeof lineWidth === 'undefined') { lineWidth = 1; }
-        if (typeof color === 'undefined') { color = 0x000000; }
+        if (lineWidth === undefined) { lineWidth = 1; }
+        if (color === undefined) { color = 0x000000; }
 
         g.lineStyle(lineWidth * 5, color, 1);
         g.moveTo(-len / 2, 0);
@@ -214,8 +214,8 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
 
         var colors, i, v, v0, v1, x, x0, x1, y, y0, y1;
 
-        if (typeof lineWidth === 'undefined') { lineWidth = 1; }
-        if (typeof color === 'undefined') { color = 0x000000; }
+        if (lineWidth === undefined) { lineWidth = 1; }
+        if (color === undefined) { color = 0x000000; }
 
         if (!debug)
         {
@@ -284,8 +284,8 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
     drawPath: function(g, path, color, fillColor, lineWidth) {
 
         var area, i, lastx, lasty, p1x, p1y, p2x, p2y, p3x, p3y, v, x, y;
-        if (typeof lineWidth === 'undefined') { lineWidth = 1; }
-        if (typeof color === 'undefined') { color = 0x000000; }
+        if (lineWidth === undefined) { lineWidth = 1; }
+        if (color === undefined) { color = 0x000000; }
 
         g.lineStyle(lineWidth, color, 1);
 
@@ -355,8 +355,8 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
     drawPlane: function(g, x0, x1, color, lineColor, lineWidth, diagMargin, diagSize, maxLength, angle) {
 
         var max, xd, yd;
-        if (typeof lineWidth === 'undefined') { lineWidth = 1; }
-        if (typeof color === 'undefined') { color = 0xffffff; }
+        if (lineWidth === undefined) { lineWidth = 1; }
+        if (color === undefined) { color = 0xffffff; }
 
         g.lineStyle(lineWidth, lineColor, 11);
         g.beginFill(color);
@@ -382,8 +382,8 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
     */
     drawCapsule: function(g, x, y, angle, len, radius, color, fillColor, lineWidth) {
 
-        if (typeof lineWidth === 'undefined') { lineWidth = 1; }
-        if (typeof color === 'undefined') { color =  0x000000; }
+        if (lineWidth === undefined) { lineWidth = 1; }
+        if (color === undefined) { color =  0x000000; }
 
         g.lineStyle(lineWidth, color, 1);
 

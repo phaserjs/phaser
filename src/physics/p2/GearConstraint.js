@@ -17,8 +17,8 @@
 */
 Phaser.Physics.P2.GearConstraint = function (world, bodyA, bodyB, angle, ratio) {
 
-    if (typeof angle === 'undefined') { angle = 0; }
-    if (typeof ratio === 'undefined') { ratio = 1; }
+    if (angle === undefined) { angle = 0; }
+    if (ratio === undefined) { ratio = 1; }
 
     /**
     * @property {Phaser.Game} game - Local reference to game.

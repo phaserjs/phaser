@@ -136,7 +136,7 @@ Phaser.Matrix.prototype = {
      */
     clone: function (output) {
 
-        if (typeof output === "undefined" || output === null)
+        if (output === undefined || output === null)
         {
             output = new Phaser.Matrix(this.a, this.b, this.c, this.d, this.tx, this.ty);
         }
@@ -199,7 +199,7 @@ Phaser.Matrix.prototype = {
     */
     toArray: function (transpose, array) {
 
-        if (typeof array === 'undefined') { array = new PIXI.Float32Array(9); }
+        if (array === undefined) { array = new PIXI.Float32Array(9); }
 
         if (transpose)
         {
@@ -242,7 +242,7 @@ Phaser.Matrix.prototype = {
     */
     apply: function (pos, newPos) {
 
-        if (typeof newPos === 'undefined') { newPos = new Phaser.Point(); }
+        if (newPos === undefined) { newPos = new Phaser.Point(); }
 
         newPos.x = this.a * pos.x + this.c * pos.y + this.tx;
         newPos.y = this.b * pos.x + this.d * pos.y + this.ty;
@@ -263,7 +263,7 @@ Phaser.Matrix.prototype = {
     */
     applyInverse: function (pos, newPos) {
 
-        if (typeof newPos === 'undefined') { newPos = new Phaser.Point(); }
+        if (newPos === undefined) { newPos = new Phaser.Point(); }
 
         var id = 1 / (this.a * this.d + this.c * -this.b);
         var x = pos.x;
@@ -371,12 +371,13 @@ Phaser.Matrix.prototype = {
     /**
     * Resets this Matrix to an identity (default) matrix.
     * 
-    * @method identity
+    * @method Phaser.Matrix#identity
     * @return {Phaser.Matrix} This Matrix object.
     */
     identity: function () {
 
         return this.setTo(1, 0, 0, 1, 0, 0);
+
     }
 
 };

@@ -29,7 +29,7 @@ Phaser.RetroFont = function (game, key, characterWidth, characterHeight, chars, 
         return false;
     }
 
-    if (typeof charsPerRow === 'undefined' || charsPerRow === null)
+    if (charsPerRow === undefined || charsPerRow === null)
     {
         charsPerRow = game.cache.getImage(key).width / characterWidth;
     }
@@ -283,7 +283,7 @@ Phaser.RetroFont.TEXT_SET11 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ.,\"-+!?()':;0123456789
 */
 Phaser.RetroFont.prototype.setFixedWidth = function (width, lineAlignment) {
 
-    if (typeof lineAlignment === 'undefined') { lineAlignment = 'left'; }
+    if (lineAlignment === undefined) { lineAlignment = 'left'; }
 
     this.fixedWidth = width;
     this.align = lineAlignment;

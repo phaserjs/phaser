@@ -25,12 +25,12 @@ Phaser.TilemapParser = {
     */
     parse: function (game, key, tileWidth, tileHeight, width, height) {
 
-        if (typeof tileWidth === 'undefined') { tileWidth = 32; }
-        if (typeof tileHeight === 'undefined') { tileHeight = 32; }
-        if (typeof width === 'undefined') { width = 10; }
-        if (typeof height === 'undefined') { height = 10; }
+        if (tileWidth === undefined) { tileWidth = 32; }
+        if (tileHeight === undefined) { tileHeight = 32; }
+        if (width === undefined) { width = 10; }
+        if (height === undefined) { height = 10; }
 
-        if (typeof key === 'undefined')
+        if (key === undefined)
         {
             return this.getEmptyData();
         }

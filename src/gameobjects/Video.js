@@ -34,8 +34,8 @@
 */
 Phaser.Video = function (game, key, url) {
 
-    if (typeof key === 'undefined') { key = null; }
-    if (typeof url === 'undefined') { url = null; }
+    if (key === undefined) { key = null; }
+    if (url === undefined) { url = null; }
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running game.
@@ -293,6 +293,14 @@ Phaser.Video = function (game, key, url) {
 
 Phaser.Video.prototype = {
 
+    /**
+     * Connects to an external media stream for the webcam, rather than using a local one.
+     *
+     * @method Phaser.Video#connectToMediaStream
+     * @param {HTMLVideoElement} video - The HTML Video Element that the stream uses.
+     * @param {MediaStream} stream - The Video Stream data.
+     * @return {Phaser.Video} This Video object for method chaining.
+     */
     connectToMediaStream: function (video, stream) {
 
         if (video && stream)
@@ -332,9 +340,9 @@ Phaser.Video.prototype = {
      */
     startMediaStream: function (captureAudio, width, height) {
 
-        if (typeof captureAudio === 'undefined') { captureAudio = false; }
-        if (typeof width === 'undefined') { width = null; }
-        if (typeof height === 'undefined') { height = null; }
+        if (captureAudio === undefined) { captureAudio = false; }
+        if (width === undefined) { width = null; }
+        if (height === undefined) { height = null; }
 
         if (!this.game.device.getUserMedia)
         {
@@ -382,6 +390,10 @@ Phaser.Video.prototype = {
 
     },
 
+    /**
+     * @method Phaser.Video#getUserMediaTimeout
+     * @private
+     */
     getUserMediaTimeout: function () {
 
         clearTimeout(this._timeOutID);
@@ -390,6 +402,10 @@ Phaser.Video.prototype = {
 
     },
 
+    /**
+     * @method Phaser.Video#getUserMediaError
+     * @private
+     */
     getUserMediaError: function (event) {
 
         clearTimeout(this._timeOutID);
@@ -398,6 +414,10 @@ Phaser.Video.prototype = {
 
     },
 
+    /**
+     * @method Phaser.Video#getUserMediaSuccess
+     * @private
+     */
     getUserMediaSuccess: function (stream) {
 
         clearTimeout(this._timeOutID);
@@ -485,9 +505,17 @@ Phaser.Video.prototype = {
 
     },
 
+    /**
+     * Creates a new Video element from the given URL.
+     *
+     * @method Phaser.Video#createVideoFromURL
+     * @param {string} url - The URL of the video.
+     * @param {boolean} [autoplay=false] - Automatically start the video?
+     * @return {Phaser.Video} This Video object for method chaining.
+     */
     createVideoFromURL: function (url, autoplay) {
 
-        if (typeof autoplay === 'undefined') { autoplay = false; }
+        if (autoplay === undefined) { autoplay = false; }
 
         //  Invalidate the texture while we wait for the new one to load (crashes IE11 otherwise)
         if (this.texture)
@@ -532,8 +560,8 @@ Phaser.Video.prototype = {
 
         var change = false;
 
-        if (typeof width === 'undefined' || width === null) { width = this.video.videoWidth; change = true; }
-        if (typeof height === 'undefined' || height === null) { height = this.video.videoHeight; }
+        if (width === undefined || width === null) { width = this.video.videoWidth; change = true; }
+        if (height === undefined || height === null) { height = this.video.videoHeight; }
 
         this.width = width;
         this.height = height;
@@ -592,8 +620,8 @@ Phaser.Video.prototype = {
      */
     play: function (loop, playbackRate) {
 
-        if (typeof loop === 'undefined') { loop = false; }
-        if (typeof playbackRate === 'undefined') { playbackRate = 1; }
+        if (loop === undefined) { loop = false; }
+        if (playbackRate === undefined) { playbackRate = 1; }
 
         if (this.game.sound.onMute)
         {
@@ -900,7 +928,7 @@ Phaser.Video.prototype = {
      */
     changeSource: function (src, autoplay) {
 
-        if (typeof autoplay === 'undefined') { autoplay = true; }
+        if (autoplay === undefined) { autoplay = true; }
 
         //  Invalidate the texture while we wait for the new one to load (crashes IE11 otherwise)
         this.texture.valid = false;
@@ -1013,9 +1041,9 @@ Phaser.Video.prototype = {
      */
     grab: function (clear, alpha, blendMode) {
 
-        if (typeof clear === 'undefined') { clear = false; }
-        if (typeof alpha === 'undefined') { alpha = 1; }
-        if (typeof blendMode === 'undefined') { blendMode = null; }
+        if (clear === undefined) { clear = false; }
+        if (alpha === undefined) { alpha = 1; }
+        if (blendMode === undefined) { blendMode = null; }
 
         if (this.snapshot === null)
         {

@@ -30,8 +30,8 @@ Phaser.ArrayUtils = {
             return null;
         }
 
-        if (typeof startIndex === 'undefined') { startIndex = 0; }
-        if (typeof length === 'undefined') { length = objects.length; }
+        if (startIndex === undefined) { startIndex = 0; }
+        if (length === undefined) { length = objects.length; }
 
         var randomIndex = startIndex + Math.floor(Math.random() * length);
         return objects[randomIndex] === undefined ? null : objects[randomIndex];
@@ -56,8 +56,8 @@ Phaser.ArrayUtils = {
             return null;
         }
 
-        if (typeof startIndex === 'undefined') { startIndex = 0; }
-        if (typeof length === 'undefined') { length = objects.length; }
+        if (startIndex === undefined) { startIndex = 0; }
+        if (length === undefined) { length = objects.length; }
 
         var randomIndex = startIndex + Math.floor(Math.random() * length);
         if (randomIndex < objects.length)

@@ -190,7 +190,7 @@ Phaser.ArraySet.prototype = {
     */
     removeAll: function (destroy) {
 
-        if (typeof destroy === 'undefined') { destroy = false; }
+        if (destroy === undefined) { destroy = false; }
 
         var i = this.list.length;
 

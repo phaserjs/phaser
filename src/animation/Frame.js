@@ -212,7 +212,7 @@ Phaser.Frame.prototype = {
     */
     getRect: function (out) {
 
-        if (typeof out === 'undefined')
+        if (out === undefined)
         {
             out = new Phaser.Rectangle(this.x, this.y, this.width, this.height);
         }

@@ -166,7 +166,7 @@ Phaser.Utils.Debug.prototype = {
         if (typeof x !== 'number') { x = 0; }
         if (typeof y !== 'number') { y = 0; }
         color = color || 'rgb(255,255,255)';
-        if (typeof columnWidth === 'undefined') { columnWidth = 0; }
+        if (columnWidth === undefined) { columnWidth = 0; }
 
         this.currentX = x;
         this.currentY = y;
@@ -318,7 +318,7 @@ Phaser.Utils.Debug.prototype = {
             return;
         }
 
-        if (typeof hideIfUp === 'undefined') { hideIfUp = false; }
+        if (hideIfUp === undefined) { hideIfUp = false; }
         downColor = downColor || 'rgba(0,255,0,0.5)';
         upColor = upColor || 'rgba(255,0,0,0.5)';
 
@@ -561,8 +561,8 @@ Phaser.Utils.Debug.prototype = {
     */
     geom: function (object, color, filled, forceType) {
 
-        if (typeof filled === 'undefined') { filled = true; }
-        if (typeof forceType === 'undefined') { forceType = 0; }
+        if (filled === undefined) { filled = true; }
+        if (forceType === undefined) { forceType = 0; }
 
         color = color || 'rgba(0,255,0,0.4)';
 
@@ -625,7 +625,7 @@ Phaser.Utils.Debug.prototype = {
     */
     rectangle: function (object, color, filled) {
 
-        if (typeof filled === 'undefined') { filled = true; }
+        if (filled === undefined) { filled = true; }
 
         color = color || 'rgba(0, 255, 0, 0.4)';
 

@@ -22,7 +22,7 @@
 */
 Phaser.RandomDataGenerator = function (seeds) {
 
-    if (typeof seeds === "undefined") { seeds = []; }
+    if (seeds === undefined) { seeds = []; }
 
     /**
     * @property {number} c - Internal var.

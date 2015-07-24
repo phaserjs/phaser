@@ -48,7 +48,7 @@ Phaser.Component.Crop.prototype = {
     */
     crop: function(rect, copy) {
 
-        if (typeof copy === 'undefined') { copy = false; }
+        if (copy === undefined) { copy = false; }
 
         if (rect)
         {

@@ -131,10 +131,10 @@ Phaser.Physics.Ninja.prototype = {
     */
     enable: function (object, type, id, radius, children) {
 
-        if (typeof type === 'undefined') { type = 1; }
-        if (typeof id === 'undefined') { id = 1; }
-        if (typeof radius === 'undefined') { radius = 0; }
-        if (typeof children === 'undefined') { children = true; }
+        if (type === undefined) { type = 1; }
+        if (id === undefined) { id = 1; }
+        if (radius === undefined) { radius = 0; }
+        if (children === undefined) { children = true; }
 
         if (Array.isArray(object))
         {
@@ -383,7 +383,7 @@ Phaser.Physics.Ninja.prototype = {
     collideHandler: function (object1, object2, collideCallback, processCallback, callbackContext, overlapOnly) {
 
         //  Only collide valid objects
-        if (typeof object2 === 'undefined' && (object1.type === Phaser.GROUP || object1.type === Phaser.EMITTER))
+        if (object2 === undefined && (object1.type === Phaser.GROUP || object1.type === Phaser.EMITTER))
         {
             this.collideGroupVsSelf(object1, collideCallback, processCallback, callbackContext, overlapOnly);
             return;

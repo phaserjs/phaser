@@ -21,10 +21,10 @@
 */
 Phaser.ImageCollection = function (name, firstgid, width, height, margin, spacing, properties) {
 
-    if (typeof width === 'undefined' || width <= 0) { width = 32; }
-    if (typeof height === 'undefined' || height <= 0) { height = 32; }
-    if (typeof margin === 'undefined') { margin = 0; }
-    if (typeof spacing === 'undefined') { spacing = 0; }
+    if (width === undefined || width <= 0) { width = 32; }
+    if (height === undefined || height <= 0) { height = 32; }
+    if (margin === undefined) { margin = 0; }
+    if (spacing === undefined) { spacing = 0; }
 
     /**
     * The name of the Image Collection.

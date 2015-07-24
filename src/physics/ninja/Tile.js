@@ -24,7 +24,7 @@
 */
 Phaser.Physics.Ninja.Tile = function (body, x, y, width, height, type) {
 
-    if (typeof type === 'undefined') { type = Phaser.Physics.Ninja.Tile.EMPTY; }
+    if (type === undefined) { type = Phaser.Physics.Ninja.Tile.EMPTY; }
 
     /**
     * @property {Phaser.Physics.Ninja.Body} system - A reference to the body that owns this shape.

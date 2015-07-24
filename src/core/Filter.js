@@ -11,7 +11,7 @@
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
 * @param {object} uniforms - Uniform mappings object
-* @param {Array} fragmentSrc - The fragment shader code.
+* @param {Array|string} fragmentSrc - The fragment shader code. Either an array, one element per line of code, or a string.
 */
 Phaser.Filter = function (game, uniforms, fragmentSrc) {
 
@@ -90,9 +90,9 @@ Phaser.Filter = function (game, uniforms, fragmentSrc) {
     }
 
     /**
-    * @property {array} fragmentSrc - The fragment shader code.
+    * @property {array|string} fragmentSrc - The fragment shader code.
     */
-    this.fragmentSrc = fragmentSrc || [];
+    this.fragmentSrc = fragmentSrc || '';
 
 };
 
