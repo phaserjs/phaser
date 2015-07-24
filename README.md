@@ -242,7 +242,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 <a name="change-log"></a>
 ## Change Log
 
-## Version 2.4.1 - "Ionin Spring" - 23rd July 2015
+## Version 2.4.1 - "Ionin Spring" - 24th July 2015
 
 This is a small point release that updates the Creature runtimes and fixes a couple of small cache issues.
 
