@@ -1667,25 +1667,29 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * Removes an image from the cache and optionally from the Pixi.BaseTextureCache as well.
+    * Removes an image from the cache.
+    * 
+    * You can optionally elect to destroy it as well. This calls BaseTexture.destroy on it.
     *
-    * Note that this only removes it from the Phaser.Cache. If you still have references to the data elsewhere
+    * Note that this only removes it from the Phaser and PIXI Caches. If you still have references to the data elsewhere
     * then it will persist in memory.
     *
     * @method Phaser.Cache#removeImage
     * @param {string} key - Key of the asset you want to remove.
-    * @param {boolean} [removeFromPixi=true] - Should this image also be removed from the Pixi BaseTextureCache?
+    * @param {boolean} [removeFromPixi=true] - Should this image also be destroyed? Removing it from the PIXI.BaseTextureCache?
     */
     removeImage: function (key, removeFromPixi) {
 
         if (removeFromPixi === undefined) { removeFromPixi = true; }
 
-        delete this._cache.image[key];
+        var img = this.getImage(key, true);
 
-        if (removeFromPixi)
+        if (removeFromPixi && img.base)
         {
-            PIXI.BaseTextureCache[key].destroy();
+            img.base.destroy();
         }
+
+        delete this._cache.image[key];
 
     },
 
