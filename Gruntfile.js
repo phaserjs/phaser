@@ -4,6 +4,7 @@ module.exports = function (grunt) {
     require('load-grunt-config')(grunt, {
         configPath: __dirname + '/tasks/options',
         config: {
+            jitGrunt: true,
             target_dir: 'build',
             release_dir: 'build',
             release_custom_dir: 'build/custom',
