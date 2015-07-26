@@ -250,6 +250,13 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 
 * TypeScript definitions fixes and updates (thanks @clark-stevenson @shivinsky)
 * TilemapLayer - Fixed unmatched `context.save` and `context.restore` calls (thanks @MortimerGoro #1934)
+* Cache.getFrame has a new `cache` parameter (that defaults to the Image cache, but can be changed to any other)
+* Cache.getFrameCount has a new `cache` parameter (that defaults to the Image cache, but can be changed to any other)
+* Cache.getFrameData has a new `cache` parameter (that defaults to the Image cache, but can be changed to any other)
+* Cache.hasFrameData has a new `cache` parameter (that defaults to the Image cache, but can be changed to any other)
+* Cache.getFrameByIndex has a new `cache` parameter (that defaults to the Image cache, but can be changed to any other)
+* Cache.getFrameByName has a new `cache` parameter (that defaults to the Image cache, but can be changed to any other)
+
 
 ### Bug Fixes
 

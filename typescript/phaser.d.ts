@@ -460,11 +460,11 @@ declare module Phaser {
         getBitmapData(key: string): Phaser.BitmapData;
         getBitmapFont(key: string): Phaser.RetroFont;
         getCanvas(key: string): HTMLCanvasElement;
-        getFrame(key: string): Phaser.Frame;
-        getFrameByIndex(key: string, index: number): Phaser.Frame;
-        getFrameByName(key: string, name: string): Phaser.Frame;
-        getFrameCount(key: string): number;
-        getFrameData(key: string): Phaser.FrameData;
+        getFrame(key: string, cache?: number): Phaser.Frame;
+        getFrameByIndex(key: string, index: number, cache?: number): Phaser.Frame;
+        getFrameByName(key: string, name: string, cache?: number): Phaser.Frame;
+        getFrameCount(key: string, cache?: number): number;
+        getFrameData(key: string, cache?: number): Phaser.FrameData;
         getImage(key: string, full?: boolean): Phaser.Image;
         getItem(key: string, cache: number, method?: string, property?: string): any;
         getJSON(key: string, clone?: boolean): any;
@@ -487,7 +487,7 @@ declare module Phaser {
         getURL(url: string): any;
         getXML(key: string): any;
         getVideo(key: string): Phaser.Video;
-        hasFrameData(key: string): boolean;
+        hasFrameData(key: string, cache?: number): boolean;
         isSoundDecoded(key: string): boolean;
         isSoundReady(key: string): boolean;
         isSpriteSheet(key: string): boolean;

@@ -1404,11 +1404,14 @@ Phaser.Cache.prototype = {
     *
     * @method Phaser.Cache#getFrame
     * @param {string} key - Asset key of the frame data to retrieve from the Cache.
+    * @param {integer} [cache=Phaser.Cache.IMAGE] - The cache to search for the item in.
     * @return {Phaser.Frame} The frame data.
     */
-    getFrame: function (key) {
+    getFrame: function (key, cache) {
 
-        return this.getItem(key, Phaser.Cache.IMAGE, 'getFrame', 'frame');
+        if (cache === undefined) { cache = Phaser.Cache.IMAGE; }
+
+        return this.getItem(key, cache, 'getFrame', 'frame');
 
     },
 
@@ -1417,11 +1420,12 @@ Phaser.Cache.prototype = {
     *
     * @method Phaser.Cache#getFrameCount
     * @param {string} key - Asset key of the FrameData you want.
+    * @param {integer} [cache=Phaser.Cache.IMAGE] - The cache to search for the item in.
     * @return {number} Then number of frames. 0 if the image is not found.
     */
-    getFrameCount: function (key) {
+    getFrameCount: function (key, cache) {
 
-        var data = this.getFrameData(key);
+        var data = this.getFrameData(key, cache);
 
         if (data)
         {
@@ -1443,11 +1447,14 @@ Phaser.Cache.prototype = {
     *
     * @method Phaser.Cache#getFrameData
     * @param {string} key - Asset key of the frame data to retrieve from the Cache.
+    * @param {integer} [cache=Phaser.Cache.IMAGE] - The cache to search for the item in.
     * @return {Phaser.FrameData} The frame data.
     */
-    getFrameData: function (key) {
+    getFrameData: function (key, cache) {
 
-        return this.getItem(key, Phaser.Cache.IMAGE, 'getFrameData', 'frameData');
+        if (cache === undefined) { cache = Phaser.Cache.IMAGE; }
+
+        return this.getItem(key, cache, 'getFrameData', 'frameData');
 
     },
 
@@ -1456,11 +1463,14 @@ Phaser.Cache.prototype = {
     *
     * @method Phaser.Cache#hasFrameData
     * @param {string} key - Asset key of the frame data to retrieve from the Cache.
+    * @param {integer} [cache=Phaser.Cache.IMAGE] - The cache to search for the item in.
     * @return {boolean} True if the given key has frameData in the cache, otherwise false.
     */
-    hasFrameData: function (key) {
+    hasFrameData: function (key, cache) {
 
-        return (this.getItem(key, Phaser.Cache.IMAGE, '', 'frameData') !== null);
+        if (cache === undefined) { cache = Phaser.Cache.IMAGE; }
+
+        return (this.getItem(key, cache, '', 'frameData') !== null);
 
     },
 
@@ -1489,11 +1499,12 @@ Phaser.Cache.prototype = {
     * @method Phaser.Cache#getFrameByIndex
     * @param {string} key - Asset key of the frame data to retrieve from the Cache.
     * @param {number} index - The index of the frame you want to get.
+    * @param {integer} [cache=Phaser.Cache.IMAGE] - The cache to search. One of the Cache consts such as `Phaser.Cache.IMAGE` or `Phaser.Cache.SOUND`.
     * @return {Phaser.Frame} The frame object.
     */
-    getFrameByIndex: function (key, index) {
+    getFrameByIndex: function (key, index, cache) {
 
-        var data = this.getFrameData(key);
+        var data = this.getFrameData(key, cache);
 
         if (data)
         {
@@ -1512,11 +1523,12 @@ Phaser.Cache.prototype = {
     * @method Phaser.Cache#getFrameByName
     * @param {string} key - Asset key of the frame data to retrieve from the Cache.
     * @param {string} name - The name of the frame you want to get.
+    * @param {integer} [cache=Phaser.Cache.IMAGE] - The cache to search. One of the Cache consts such as `Phaser.Cache.IMAGE` or `Phaser.Cache.SOUND`.
     * @return {Phaser.Frame} The frame object.
     */
-    getFrameByName: function (key, name) {
+    getFrameByName: function (key, name, cache) {
 
-        var data = this.getFrameData(key);
+        var data = this.getFrameData(key, cache);
 
         if (data)
         {
