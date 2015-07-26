@@ -253,7 +253,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 
 ### Bug Fixes
 
-
+* DeviceButton would try to set `altKey`, `shiftKey` and `ctrlKey` even for Joypads (thanks @zatch #1939)
 
 
 
