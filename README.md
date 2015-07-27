@@ -257,6 +257,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * Cache.getFrameByIndex has a new `cache` parameter (that defaults to the Image cache, but can be changed to any other)
 * Cache.getFrameByName has a new `cache` parameter (that defaults to the Image cache, but can be changed to any other)
 * Device.canPlayVideo now checks for `ogv` as a valid file extension for OGG video files (thanks @JB-Tellez #1928)
+* Phaser.Sound will now automatically check the Cache to see if the audio file it is using is still there or not. If not then it will automatically called `Sound.destroy` on itself. If you do not desire this result then you should ensure that you undertake all house-keeping yourself, and properly destroy Sound objects _before_ calling `Cache.removeSound` (#1946)
 
 
 ### Bug Fixes

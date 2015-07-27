@@ -1708,6 +1708,10 @@ Phaser.Cache.prototype = {
     /**
     * Removes a sound from the cache.
     *
+    * If any `Phaser.Sound` objects use the audio file in the cache that you remove with this method, they will
+    * _automatically_ destroy themselves. If you wish to have full control over when Sounds are destroyed then
+    * you must finish your house-keeping and destroy them all yourself first, before calling this method.
+    *
     * Note that this only removes it from the Phaser.Cache. If you still have references to the data elsewhere
     * then it will persist in memory.
     *

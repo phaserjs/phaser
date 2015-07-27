@@ -404,6 +404,12 @@ Phaser.Sound.prototype = {
     */
     update: function () {
 
+        if (!this.game.cache.checkSoundKey(this.key))
+        {
+            this.destroy();
+            return;
+        }
+
         if (this.isDecoded && !this._onDecodedEventDispatched)
         {
             this.onDecoded.dispatch(this);
