@@ -39,7 +39,7 @@ PIXI.CANVAS_RENDERER = 1;
  */
 PIXI.VERSION = "v2.2.8";
 
-// used to create uids for various pixi objects..
+// used to create uids for various pixi objects.
 PIXI._UID = 0;
 
 if (typeof(Float32Array) != 'undefined')
