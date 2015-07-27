@@ -175,9 +175,12 @@ Phaser.DeviceButton.prototype = {
         this.event = event;
         this.value = value;
 
-        this.altKey = event.altKey;
-        this.shiftKey = event.shiftKey;
-        this.ctrlKey = event.ctrlKey;
+        if (event)
+        {
+            this.altKey = event.altKey;
+            this.shiftKey = event.shiftKey;
+            this.ctrlKey = event.ctrlKey;
+        }
 
         this.onDown.dispatch(this, value);
 
@@ -206,9 +209,12 @@ Phaser.DeviceButton.prototype = {
         this.event = event;
         this.value = value;
 
-        this.altKey = event.altKey;
-        this.shiftKey = event.shiftKey;
-        this.ctrlKey = event.ctrlKey;
+        if (event)
+        {
+            this.altKey = event.altKey;
+            this.shiftKey = event.shiftKey;
+            this.ctrlKey = event.ctrlKey;
+        }
 
         this.onUp.dispatch(this, value);
 

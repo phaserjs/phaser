@@ -1246,7 +1246,7 @@ Phaser.Device.canPlayVideo = function (type) {
     {
         return true;
     }
-    else if (type === 'ogg' && this.oggVideo)
+    else if ((type === 'ogg' || type === 'ogv') && this.oggVideo)
     {
         return true;
     }

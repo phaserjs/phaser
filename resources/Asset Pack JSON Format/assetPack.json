@@ -87,7 +87,7 @@
             "type": "audiosprite",
             "key": "dialog",
             "urls": [ "assets/audiosprites/dialog.m4a", "assets/audiosprites/dialog.oga" ],
-            "jsonURL": "assets/audiosprites/dialog.json"
+            "jsonURL": "assets/audiosprites/dialog.json",
             "jsonData": null,
             "autoDecode": true
         },
@@ -123,8 +123,8 @@
             "type": "bitmapFont",
             "key": "desyrel",
             "textureURL": "assets/fonts/bitmapFonts/desyrel.png",
-            "xmlURL": "assets/fonts/bitmapFonts/desyrel.xml",
-            "xmlData": null,
+            "atlasURL": "assets/fonts/bitmapFonts/desyrel.xml",
+            "atlasData": null,
             "xSpacing": 0,
             "ySpacing": 0
         },

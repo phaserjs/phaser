@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.4.1 "Ionin Spring" - Built: Fri Jul 24 2015 13:26:42
+* v2.4.2 "Altara" - Built: Mon Jul 27 2015 13:35:18
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -10383,7 +10383,7 @@ var Phaser = Phaser || {
     * @constant
     * @type {string}
     */
-    VERSION: '2.4.1',
+    VERSION: '2.4.2-dev',
 
     /**
     * An array of Phaser game instances.
@@ -27648,9 +27648,12 @@ Phaser.DeviceButton.prototype = {
         this.event = event;
         this.value = value;
 
-        this.altKey = event.altKey;
-        this.shiftKey = event.shiftKey;
-        this.ctrlKey = event.ctrlKey;
+        if (event)
+        {
+            this.altKey = event.altKey;
+            this.shiftKey = event.shiftKey;
+            this.ctrlKey = event.ctrlKey;
+        }
 
         this.onDown.dispatch(this, value);
 
@@ -27679,9 +27682,12 @@ Phaser.DeviceButton.prototype = {
         this.event = event;
         this.value = value;
 
-        this.altKey = event.altKey;
-        this.shiftKey = event.shiftKey;
-        this.ctrlKey = event.ctrlKey;
+        if (event)
+        {
+            this.altKey = event.altKey;
+            this.shiftKey = event.shiftKey;
+            this.ctrlKey = event.ctrlKey;
+        }
 
         this.onUp.dispatch(this, value);
 
@@ -28463,7 +28469,7 @@ Phaser.Pointer.prototype = {
             this.button = event.button;
         }
 
-        if (fromClick)
+        if (fromClick && this.isMouse)
         {
             this.updateButtons(event);
         }
@@ -46711,7 +46717,7 @@ Phaser.Device.canPlayVideo = function (type) {
     {
         return true;
     }
-    else if (type === 'ogg' && this.oggVideo)
+    else if ((type === 'ogg' || type === 'ogv') && this.oggVideo)
     {
         return true;
     }
@@ -56909,11 +56915,14 @@ Phaser.Cache.prototype = {
     *
     * @method Phaser.Cache#getFrame
     * @param {string} key - Asset key of the frame data to retrieve from the Cache.
+    * @param {integer} [cache=Phaser.Cache.IMAGE] - The cache to search for the item in.
     * @return {Phaser.Frame} The frame data.
     */
-    getFrame: function (key) {
+    getFrame: function (key, cache) {
 
-        return this.getItem(key, Phaser.Cache.IMAGE, 'getFrame', 'frame');
+        if (cache === undefined) { cache = Phaser.Cache.IMAGE; }
+
+        return this.getItem(key, cache, 'getFrame', 'frame');
 
     },
 
@@ -56922,11 +56931,12 @@ Phaser.Cache.prototype = {
     *
     * @method Phaser.Cache#getFrameCount
     * @param {string} key - Asset key of the FrameData you want.
+    * @param {integer} [cache=Phaser.Cache.IMAGE] - The cache to search for the item in.
     * @return {number} Then number of frames. 0 if the image is not found.
     */
-    getFrameCount: function (key) {
+    getFrameCount: function (key, cache) {
 
-        var data = this.getFrameData(key);
+        var data = this.getFrameData(key, cache);
 
         if (data)
         {
@@ -56948,11 +56958,14 @@ Phaser.Cache.prototype = {
     *
     * @method Phaser.Cache#getFrameData
     * @param {string} key - Asset key of the frame data to retrieve from the Cache.
+    * @param {integer} [cache=Phaser.Cache.IMAGE] - The cache to search for the item in.
     * @return {Phaser.FrameData} The frame data.
     */
-    getFrameData: function (key) {
+    getFrameData: function (key, cache) {
 
-        return this.getItem(key, Phaser.Cache.IMAGE, 'getFrameData', 'frameData');
+        if (cache === undefined) { cache = Phaser.Cache.IMAGE; }
+
+        return this.getItem(key, cache, 'getFrameData', 'frameData');
 
     },
 
@@ -56961,11 +56974,14 @@ Phaser.Cache.prototype = {
     *
     * @method Phaser.Cache#hasFrameData
     * @param {string} key - Asset key of the frame data to retrieve from the Cache.
+    * @param {integer} [cache=Phaser.Cache.IMAGE] - The cache to search for the item in.
     * @return {boolean} True if the given key has frameData in the cache, otherwise false.
     */
-    hasFrameData: function (key) {
+    hasFrameData: function (key, cache) {
 
-        return (this.getItem(key, Phaser.Cache.IMAGE, '', 'frameData') !== null);
+        if (cache === undefined) { cache = Phaser.Cache.IMAGE; }
+
+        return (this.getItem(key, cache, '', 'frameData') !== null);
 
     },
 
@@ -56994,11 +57010,12 @@ Phaser.Cache.prototype = {
     * @method Phaser.Cache#getFrameByIndex
     * @param {string} key - Asset key of the frame data to retrieve from the Cache.
     * @param {number} index - The index of the frame you want to get.
+    * @param {integer} [cache=Phaser.Cache.IMAGE] - The cache to search. One of the Cache consts such as `Phaser.Cache.IMAGE` or `Phaser.Cache.SOUND`.
     * @return {Phaser.Frame} The frame object.
     */
-    getFrameByIndex: function (key, index) {
+    getFrameByIndex: function (key, index, cache) {
 
-        var data = this.getFrameData(key);
+        var data = this.getFrameData(key, cache);
 
         if (data)
         {
@@ -57017,11 +57034,12 @@ Phaser.Cache.prototype = {
     * @method Phaser.Cache#getFrameByName
     * @param {string} key - Asset key of the frame data to retrieve from the Cache.
     * @param {string} name - The name of the frame you want to get.
+    * @param {integer} [cache=Phaser.Cache.IMAGE] - The cache to search. One of the Cache consts such as `Phaser.Cache.IMAGE` or `Phaser.Cache.SOUND`.
     * @return {Phaser.Frame} The frame object.
     */
-    getFrameByName: function (key, name) {
+    getFrameByName: function (key, name, cache) {
 
-        var data = this.getFrameData(key);
+        var data = this.getFrameData(key, cache);
 
         if (data)
         {
@@ -72537,8 +72555,6 @@ Phaser.TilemapLayer.prototype.render = function () {
         return;
     }
 
-    this.context.save();
-
     if (this.dirty || this.layer.dirty)
     {
         this.layer.dirty = false;
@@ -72564,6 +72580,8 @@ Phaser.TilemapLayer.prototype.render = function () {
         return;
     }
 
+    this.context.save();
+    
     mc.scrollX = scrollX;
     mc.scrollY = scrollY;
 
