@@ -663,7 +663,7 @@ Phaser.Pointer.prototype = {
             this.button = event.button;
         }
 
-        if (fromClick)
+        if (fromClick && this.isMouse)
         {
             this.updateButtons(event);
         }

@@ -262,7 +262,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 ### Bug Fixes
 
 * DeviceButton would try to set `altKey`, `shiftKey` and `ctrlKey` even for Joypads (thanks @zatch #1939)
-
+* Pointer.move would accidentally reset the `isDown` status of the Pointer on touch devices, which broke things like Sprite input events when built to native apps or run locally (#1932 #1943)
 
 
 
