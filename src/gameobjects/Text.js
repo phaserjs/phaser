@@ -91,6 +91,16 @@ Phaser.Text = function (game, x, y, text, style) {
     this.strokeColors = [];
 
     /**
+    * @property {array} fontStyles - An array of the font styles values as specified by {@link Phaser.Text#addFontStyle addFontStyle}.
+    */
+    this.fontStyles = [];
+
+    /**
+    * @property {array} fontWeights - An array of the font weights values as specified by {@link Phaser.Text#addFontWeight addFontWeight}.
+    */
+    this.fontWeights = [];
+
+    /**
     * Should the linePositionX and Y values be automatically rounded before rendering the Text?
     * You may wish to enable this if you want to remove the effect of sub-pixel aliasing from text.
     * @property {boolean} autoRound
@@ -472,7 +482,7 @@ Phaser.Text.prototype.updateText = function () {
             linePositionY = Math.round(linePositionY);
         }
 
-        if (this.colors.length > 0 || this.strokeColors.length > 0)
+        if (this.colors.length > 0 || this.strokeColors.length > 0 || this.fontWeights.length > 0 || this.fontStyles.length > 0)
         {
             this.updateLine(lines[i], linePositionX, linePositionY);
         }
@@ -603,7 +613,7 @@ Phaser.Text.prototype.updateShadow = function (state) {
 };
 
 /**
-* Updates a line of text, applying fill and stroke per-character colors if applicable.
+* Updates a line of text, applying fill and stroke per-character colors or style and weight per-character font if applicable.
 *
 * @method Phaser.Text#updateLine
 * @private
@@ -613,6 +623,21 @@ Phaser.Text.prototype.updateLine = function (line, x, y) {
     for (var i = 0; i < line.length; i++)
     {
         var letter = line[i];
+
+        if(this.fontWeights.length > 0 || this.fontStyles.length > 0){
+
+            var components = this.fontToComponents(this.context.font);
+
+            if(this.fontStyles[this._charCount]){
+                components.fontStyle = this.fontStyles[this._charCount];
+            }
+        
+            if(this.fontWeights[this._charCount]){
+                components.fontWeight = this.fontWeights[this._charCount];
+            }
+      
+            this.context.font = this.componentsToFont(components);
+        }
 
         if (this.style.stroke && this.style.strokeThickness)
         {
@@ -653,6 +678,22 @@ Phaser.Text.prototype.clearColors = function () {
 
     this.colors = [];
     this.strokeColors = [];
+    this.dirty = true;
+
+    return this;
+
+};
+
+/**
+* Clears any text styles or weights font that were set by `addFontStyle` or `addFontWeight`.
+*
+* @method Phaser.Text#clearFontValues
+* @return {Phaser.Text} This Text instance.
+*/
+Phaser.Text.prototype.clearFontValues = function () {
+
+    this.fontStyles = [];
+    this.fontWeights = [];
     this.dirty = true;
 
     return this;
@@ -703,6 +744,54 @@ Phaser.Text.prototype.addColor = function (color, position) {
 Phaser.Text.prototype.addStrokeColor = function (color, position) {
 
     this.strokeColors[position] = color;
+    this.dirty = true;
+
+    return this;
+
+};
+
+/**
+* Set specific font styles for certain characters within the Text.
+*
+* It works by taking a font style value, which is a typical string such as `normal`, `italic` or `oblique`.
+* The position value is the index of the character in the Text string to start applying this font style to.
+* Once set the font style remains in use until either another font style or the end of the string is encountered.
+* For example if the Text was `Photon Storm` and you did `Text.addFontStyle('italic', 6)` it would font style in the word `Storm` in italic.
+*
+* If you wish to change the text font weight see addFontWeight instead.
+*
+* @method Phaser.Text#addFontStyle
+* @param {string} style - A canvas font-style that will be used on the text style eg `normal`, `italic`, `oblique`.
+* @param {number} position - The index of the character in the string to start applying this font style value from.
+* @return {Phaser.Text} This Text instance.
+*/
+Phaser.Text.prototype.addFontStyle = function (style, position) {
+
+    this.fontStyles[position] = style;
+    this.dirty = true;
+
+    return this;
+
+};
+
+/**
+* Set specific font weights for certain characters within the Text.
+*
+* It works by taking a font weight value, which is a typical string such as `normal`, `bold`, `bolder`, etc.
+* The position value is the index of the character in the Text string to start applying this font weight to.
+* Once set the font weight remains in use until either another font weight or the end of the string is encountered.
+* For example if the Text was `Photon Storm` and you did `Text.addFontWeight('bold', 6)` it would font weight in the word `Storm` in bold.
+*
+* If you wish to change the text font style see addFontStyle instead.
+*
+* @method Phaser.Text#addFontWeight
+* @param {string} style - A canvas font-weight that will be used on the text weight eg `normal`, `bold`, `bolder`, `lighter`, etc.
+* @param {number} position - The index of the character in the string to start applying this font weight value from.
+* @return {Phaser.Text} This Text instance.
+*/
+Phaser.Text.prototype.addFontWeight = function (weight, position) {
+
+    this.fontWeights[position] = weight;
     this.dirty = true;
 
     return this;
