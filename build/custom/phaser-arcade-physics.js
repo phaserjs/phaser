@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.4.2 "Altara" - Built: Mon Jul 27 2015 13:35:18
+* v2.4.2 "Altara" - Built: Tue Jul 28 2015 14:17:06
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -28226,6 +28226,94 @@ Phaser.Pointer.prototype = {
     },
 
     /**
+    * Called by updateButtons.
+    * 
+    * @method Phaser.Pointer#processButtonsDown
+    * @private
+    * @param {integer} buttons - The DOM event.buttons property.
+    * @param {MouseEvent} event - The DOM event.
+    */
+    processButtonsDown: function (buttons, event) {
+
+        //  Note: These are bitwise checks, not booleans
+
+        if (Phaser.Pointer.LEFT_BUTTON & buttons)
+        {
+            this.leftButton.start(event);
+        }
+
+        if (Phaser.Pointer.RIGHT_BUTTON & buttons)
+        {
+            this.rightButton.start(event);
+        }
+                
+        if (Phaser.Pointer.MIDDLE_BUTTON & buttons)
+        {
+            this.middleButton.start(event);
+        }
+
+        if (Phaser.Pointer.BACK_BUTTON & buttons)
+        {
+            this.backButton.start(event);
+        }
+
+        if (Phaser.Pointer.FORWARD_BUTTON & buttons)
+        {
+            this.forwardButton.start(event);
+        }
+
+        if (Phaser.Pointer.ERASER_BUTTON & buttons)
+        {
+            this.eraserButton.start(event);
+        }
+
+    },
+
+    /**
+    * Called by updateButtons.
+    * 
+    * @method Phaser.Pointer#processButtonsUp
+    * @private
+    * @param {integer} buttons - The DOM event.buttons property.
+    * @param {MouseEvent} event - The DOM event.
+    */
+    processButtonsUp: function (button, event) {
+
+        //  Note: These are bitwise checks, not booleans
+
+        if (button === Phaser.Mouse.LEFT_BUTTON)
+        {
+            this.leftButton.stop(event);
+        }
+
+        if (button === Phaser.Mouse.RIGHT_BUTTON)
+        {
+            this.rightButton.stop(event);
+        }
+                
+        if (button === Phaser.Mouse.MIDDLE_BUTTON)
+        {
+            this.middleButton.stop(event);
+        }
+
+        if (button === Phaser.Mouse.BACK_BUTTON)
+        {
+            this.backButton.stop(event);
+        }
+
+        if (button === Phaser.Mouse.FORWARD_BUTTON)
+        {
+            this.forwardButton.stop(event);
+        }
+
+        if (button === 5)
+        {
+            this.eraserButton.stop(event);
+        }
+
+    },
+
+    /**
     * Called when the event.buttons property changes from zero.
     * Contains a button bitmask.
     * 
@@ -28237,73 +28325,23 @@ Phaser.Pointer.prototype = {
 
         this.button = event.button;
 
-        //  This is tested back to IE9, but possibly some browsers may report this differently.
-        //  If you find one, please tell us!
-        var buttons = event.buttons;
+        var down = (event.type.toLowerCase().substr(-4) === 'down');
 
-        if (buttons !== undefined)
+        if (event.buttons !== undefined)
         {
-            //  Note: These are bitwise checks, not booleans
-
-            if (Phaser.Pointer.LEFT_BUTTON & buttons)
+            if (down)
             {
-                this.leftButton.start(event);
+                this.processButtonsDown(event.buttons, event);
             }
             else
             {
-                this.leftButton.stop(event);
-            }
-
-            if (Phaser.Pointer.RIGHT_BUTTON & buttons)
-            {
-                this.rightButton.start(event);
-            }
-            else
-            {
-                this.rightButton.stop(event);
-            }
-                    
-            if (Phaser.Pointer.MIDDLE_BUTTON & buttons)
-            {
-                this.middleButton.start(event);
-            }
-            else
-            {
-                this.middleButton.stop(event);
-            }
-
-            if (Phaser.Pointer.BACK_BUTTON & buttons)
-            {
-                this.backButton.start(event);
-            }
-            else
-            {
-                this.backButton.stop(event);
-            }
-
-            if (Phaser.Pointer.FORWARD_BUTTON & buttons)
-            {
-                this.forwardButton.start(event);
-            }
-            else
-            {
-                this.forwardButton.stop(event);
-            }
-
-            if (Phaser.Pointer.ERASER_BUTTON & buttons)
-            {
-                this.eraserButton.start(event);
-            }
-            else
-            {
-                this.eraserButton.stop(event);
+                this.processButtonsUp(event.button, event);
             }
         }
         else
         {
             //  No buttons property (like Safari on OSX when using a trackpad)
-
-            if (event.type === 'mousedown')
+            if (down)
             {
                 this.leftButton.start(event);
             }
@@ -28316,6 +28354,7 @@ Phaser.Pointer.prototype = {
 
         //  On OS X (and other devices with trackpads) you have to press CTRL + the pad
         //  to initiate a right-click event, so we'll check for that here
+
         if (event.ctrlKey && this.leftButton.isDown)
         {
             this.rightButton.start(event);
@@ -28338,6 +28377,8 @@ Phaser.Pointer.prototype = {
     * @param {any} event - The DOM event from the browser.
     */
     start: function (event) {
+
+        // console.log(event);
 
         if (event['pointerId'])
         {
@@ -57219,6 +57260,10 @@ Phaser.Cache.prototype = {
     /**
     * Removes a sound from the cache.
     *
+    * If any `Phaser.Sound` objects use the audio file in the cache that you remove with this method, they will
+    * _automatically_ destroy themselves. If you wish to have full control over when Sounds are destroyed then
+    * you must finish your house-keeping and destroy them all yourself first, before calling this method.
+    *
     * Note that this only removes it from the Phaser.Cache. If you still have references to the data elsewhere
     * then it will persist in memory.
     *
@@ -61157,6 +61202,12 @@ Phaser.Sound.prototype = {
     * @protected
     */
     update: function () {
+
+        if (!this.game.cache.checkSoundKey(this.key))
+        {
+            this.destroy();
+            return;
+        }
 
         if (this.isDecoded && !this._onDecodedEventDispatched)
         {
