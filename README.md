@@ -36,7 +36,7 @@ Thousands of developers worldwide use it. From indies and multi-national digital
 ![div](http://www.phaser.io/images/github/div.png)
 
 <a name="whats-new"></a>
-## What's new in Phaser 2.4.2
+## What's new in Phaser 2.4.3
 
 <div align="center"><img src="http://phaser.io/images/github/news.jpg"></div>
 
@@ -93,15 +93,15 @@ Install via [npm](https://www.npmjs.com)
 
 [jsDelivr](http://www.jsdelivr.com/#!phaser) is a "super-fast CDN for developers". Include the following in your html:
 
-`<script src="//cdn.jsdelivr.net/phaser/2.4.2/phaser.js"></script>`
+`<script src="//cdn.jsdelivr.net/phaser/2.4.3/phaser.js"></script>`
 
 or the minified version:
 
-`<script src="//cdn.jsdelivr.net/phaser/2.4.2/phaser.min.js"></script>`
+`<script src="//cdn.jsdelivr.net/phaser/2.4.3/phaser.min.js"></script>`
 
 [cdnjs.com](https://cdnjs.com/libraries/phaser) also offers a free CDN service. They have all versions of Phaser and even the custom builds:
 
-`<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/2.4.2/phaser.js"></script>`
+`<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/2.4.3/phaser.js"></script>`
 
 ### Phaser Sandbox
 
@@ -246,27 +246,15 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 <a name="change-log"></a>
 ## Change Log
 
-## Version 2.4.2 - "Altara" - 29th July 2015
+## Version 2.4.3 - "Coramen" - in development
 
 ### Updates
 
-* TypeScript definitions fixes and updates (thanks @clark-stevenson @shivinsky)
-* JSDoc typo fixes (thanks @DrkSephy)
-* TilemapLayer - Fixed unmatched `context.save` and `context.restore` calls (thanks @MortimerGoro #1934)
-* Cache.getFrame has a new `cache` parameter (that defaults to the Image cache, but can be changed to any other)
-* Cache.getFrameCount has a new `cache` parameter (that defaults to the Image cache, but can be changed to any other)
-* Cache.getFrameData has a new `cache` parameter (that defaults to the Image cache, but can be changed to any other)
-* Cache.hasFrameData has a new `cache` parameter (that defaults to the Image cache, but can be changed to any other)
-* Cache.getFrameByIndex has a new `cache` parameter (that defaults to the Image cache, but can be changed to any other)
-* Cache.getFrameByName has a new `cache` parameter (that defaults to the Image cache, but can be changed to any other)
-* Device.canPlayVideo now checks for `ogv` as a valid file extension for OGG video files (thanks @JB-Tellez #1928)
-* Phaser.Sound will now automatically check the Cache to see if the audio file it is using is still there or not. If not then it will automatically called `Sound.destroy` on itself. If you do not desire this result then you should ensure that you undertake all house-keeping yourself, and properly destroy Sound objects _before_ calling `Cache.removeSound` (#1946)
+* TypeScript definitions fixes and updates (thanks @clark-stevenson)
+* JSDoc typo fixes (thanks )
 
 ### Bug Fixes
 
-* DeviceButton would try to set `altKey`, `shiftKey` and `ctrlKey` even for Joypads (thanks @zatch #1939)
-* Pointer.move would accidentally reset the `isDown` status of the Pointer on touch devices, which broke things like Sprite input events when built to native apps or run locally (#1932 #1943)
-* Pointer.onDown (and input enabled items like Buttons) would fail on FireFox / Linux and CocoonJS (#1944 #1945)
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
