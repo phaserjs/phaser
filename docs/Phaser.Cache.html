@@ -8061,7 +8061,7 @@ This is called automatically when the WebGL context is lost and then restored.</
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1906">line 1906</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1922">line 1922</a>
     </dt>
     
 
@@ -8274,7 +8274,7 @@ If an object in the cache has a <code>destroy</code> method it will also be call
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1956">line 1956</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1972">line 1972</a>
     </dt>
     
 
@@ -9059,7 +9059,7 @@ If an object in the cache has a <code>destroy</code> method it will also be call
             
 <dt>
     <h4 class="name "
-        id="getFrame"><span class="type-signature"></span>getFrame<span class="signature">(key)</span><span class="type-signature"> &rarr; {<a href="Phaser.Frame.html">Phaser.Frame</a>}</span></h4>
+        id="getFrame"><span class="type-signature"></span>getFrame<span class="signature">(key, <span class="optional">cache</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.Frame.html">Phaser.Frame</a>}</span></h4>
     
     
 </dt>
@@ -9090,7 +9090,11 @@ If an object in the cache has a <code>destroy</code> method it will also be call
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -9115,10 +9119,61 @@ If an object in the cache has a <code>destroy</code> method it will also be call
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>Asset key of the frame data to retrieve from the Cache.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>cache</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">integer</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    Phaser.Cache.IMAGE
+                
+                </td>
+            
+
+            <td class="description last"><p>The cache to search for the item in.</p></td>
         </tr>
 
 	
@@ -9198,7 +9253,7 @@ If an object in the cache has a <code>destroy</code> method it will also be call
             
 <dt>
     <h4 class="name "
-        id="getFrameByIndex"><span class="type-signature"></span>getFrameByIndex<span class="signature">(key, index)</span><span class="type-signature"> &rarr; {<a href="Phaser.Frame.html">Phaser.Frame</a>}</span></h4>
+        id="getFrameByIndex"><span class="type-signature"></span>getFrameByIndex<span class="signature">(key, index, <span class="optional">cache</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.Frame.html">Phaser.Frame</a>}</span></h4>
     
     
 </dt>
@@ -9229,7 +9284,11 @@ If an object in the cache has a <code>destroy</code> method it will also be call
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -9254,7 +9313,19 @@ If an object in the cache has a <code>destroy</code> method it will also be call
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>Asset key of the frame data to retrieve from the Cache.</p></td>
@@ -9277,10 +9348,61 @@ If an object in the cache has a <code>destroy</code> method it will also be call
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>The index of the frame you want to get.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>cache</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">integer</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    Phaser.Cache.IMAGE
+                
+                </td>
+            
+
+            <td class="description last"><p>The cache to search. One of the Cache consts such as <code>Phaser.Cache.IMAGE</code> or <code>Phaser.Cache.SOUND</code>.</p></td>
         </tr>
 
 	
@@ -9333,7 +9455,7 @@ If an object in the cache has a <code>destroy</code> method it will also be call
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1486">line 1486</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1496">line 1496</a>
     </dt>
     
 
@@ -9360,7 +9482,7 @@ If an object in the cache has a <code>destroy</code> method it will also be call
             
 <dt>
     <h4 class="name "
-        id="getFrameByName"><span class="type-signature"></span>getFrameByName<span class="signature">(key, name)</span><span class="type-signature"> &rarr; {<a href="Phaser.Frame.html">Phaser.Frame</a>}</span></h4>
+        id="getFrameByName"><span class="type-signature"></span>getFrameByName<span class="signature">(key, name, <span class="optional">cache</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.Frame.html">Phaser.Frame</a>}</span></h4>
     
     
 </dt>
@@ -9391,7 +9513,11 @@ If an object in the cache has a <code>destroy</code> method it will also be call
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -9416,7 +9542,19 @@ If an object in the cache has a <code>destroy</code> method it will also be call
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>Asset key of the frame data to retrieve from the Cache.</p></td>
@@ -9439,10 +9577,61 @@ If an object in the cache has a <code>destroy</code> method it will also be call
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>The name of the frame you want to get.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>cache</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">integer</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    Phaser.Cache.IMAGE
+                
+                </td>
+            
+
+            <td class="description last"><p>The cache to search. One of the Cache consts such as <code>Phaser.Cache.IMAGE</code> or <code>Phaser.Cache.SOUND</code>.</p></td>
         </tr>
 
 	
@@ -9495,7 +9684,7 @@ If an object in the cache has a <code>destroy</code> method it will also be call
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1509">line 1509</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1520">line 1520</a>
     </dt>
     
 
@@ -9522,7 +9711,7 @@ If an object in the cache has a <code>destroy</code> method it will also be call
             
 <dt>
     <h4 class="name "
-        id="getFrameCount"><span class="type-signature"></span>getFrameCount<span class="signature">(key)</span><span class="type-signature"> &rarr; {number}</span></h4>
+        id="getFrameCount"><span class="type-signature"></span>getFrameCount<span class="signature">(key, <span class="optional">cache</span>)</span><span class="type-signature"> &rarr; {number}</span></h4>
     
     
 </dt>
@@ -9553,7 +9742,11 @@ If an object in the cache has a <code>destroy</code> method it will also be call
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -9578,10 +9771,61 @@ If an object in the cache has a <code>destroy</code> method it will also be call
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>Asset key of the FrameData you want.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>cache</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">integer</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    Phaser.Cache.IMAGE
+                
+                </td>
+            
+
+            <td class="description last"><p>The cache to search for the item in.</p></td>
         </tr>
 
 	
@@ -9634,7 +9878,7 @@ If an object in the cache has a <code>destroy</code> method it will also be call
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1415">line 1415</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1418">line 1418</a>
     </dt>
     
 
@@ -9661,7 +9905,7 @@ If an object in the cache has a <code>destroy</code> method it will also be call
             
 <dt>
     <h4 class="name "
-        id="getFrameData"><span class="type-signature"></span>getFrameData<span class="signature">(key)</span><span class="type-signature"> &rarr; {<a href="Phaser.FrameData.html">Phaser.FrameData</a>}</span></h4>
+        id="getFrameData"><span class="type-signature"></span>getFrameData<span class="signature">(key, <span class="optional">cache</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.FrameData.html">Phaser.FrameData</a>}</span></h4>
     
     
 </dt>
@@ -9694,7 +9938,11 @@ If an object in the cache has a <code>destroy</code> method it will also be call
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -9719,10 +9967,61 @@ If an object in the cache has a <code>destroy</code> method it will also be call
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>Asset key of the frame data to retrieve from the Cache.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>cache</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">integer</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    Phaser.Cache.IMAGE
+                
+                </td>
+            
+
+            <td class="description last"><p>The cache to search for the item in.</p></td>
         </tr>
 
 	
@@ -9775,7 +10074,7 @@ If an object in the cache has a <code>destroy</code> method it will also be call
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1437">line 1437</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1441">line 1441</a>
     </dt>
     
 
@@ -10580,7 +10879,7 @@ of it by setting the <code>clone</code> argument to <code>true</code>.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1622">line 1622</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1634">line 1634</a>
     </dt>
     
 
@@ -10963,7 +11262,7 @@ of it by setting the <code>clone</code> argument to <code>true</code>.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1565">line 1565</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1577">line 1577</a>
     </dt>
     
 
@@ -11115,7 +11414,7 @@ creates a new PIXI.Texture object which is then returned.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1532">line 1532</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1544">line 1544</a>
     </dt>
     
 
@@ -12242,7 +12541,7 @@ Be aware that every call to this function makes a DOM src query, so use carefull
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1597">line 1597</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1609">line 1609</a>
     </dt>
     
 
@@ -12551,7 +12850,7 @@ Be aware that every call to this function makes a DOM src query, so use carefull
             
 <dt>
     <h4 class="name "
-        id="hasFrameData"><span class="type-signature"></span>hasFrameData<span class="signature">(key)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+        id="hasFrameData"><span class="type-signature"></span>hasFrameData<span class="signature">(key, <span class="optional">cache</span>)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
     
     
 </dt>
@@ -12582,7 +12881,11 @@ Be aware that every call to this function makes a DOM src query, so use carefull
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -12607,10 +12910,61 @@ Be aware that every call to this function makes a DOM src query, so use carefull
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>Asset key of the frame data to retrieve from the Cache.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>cache</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">integer</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    Phaser.Cache.IMAGE
+                
+                </td>
+            
+
+            <td class="description last"><p>The cache to search for the item in.</p></td>
         </tr>
 
 	
@@ -12663,7 +13017,7 @@ Be aware that every call to this function makes a DOM src query, so use carefull
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1454">line 1454</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1461">line 1461</a>
     </dt>
     
 
@@ -13301,7 +13655,7 @@ then it will persist in memory.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1756">line 1756</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1772">line 1772</a>
     </dt>
     
 
@@ -13422,7 +13776,7 @@ then it will persist in memory.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1771">line 1771</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1787">line 1787</a>
     </dt>
     
 
@@ -13543,7 +13897,7 @@ then it will persist in memory.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1786">line 1786</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1802">line 1802</a>
     </dt>
     
 
@@ -13664,7 +14018,7 @@ then it will persist in memory.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1654">line 1654</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1666">line 1666</a>
     </dt>
     
 
@@ -13841,7 +14195,7 @@ then it will persist in memory.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1669">line 1669</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1681">line 1681</a>
     </dt>
     
 
@@ -13962,7 +14316,7 @@ then it will persist in memory.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1801">line 1801</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1817">line 1817</a>
     </dt>
     
 
@@ -14083,7 +14437,7 @@ then it will persist in memory.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1726">line 1726</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1742">line 1742</a>
     </dt>
     
 
@@ -14204,7 +14558,7 @@ then it will persist in memory.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1861">line 1861</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1877">line 1877</a>
     </dt>
     
 
@@ -14325,7 +14679,7 @@ then it will persist in memory.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1846">line 1846</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1862">line 1862</a>
     </dt>
     
 
@@ -14362,6 +14716,9 @@ then it will persist in memory.</p>
     
     <div class="description">
         <p>Removes a sound from the cache.</p>
+<p>If any <code>Phaser.Sound</code> objects use the audio file in the cache that you remove with this method, they will
+<em>automatically</em> destroy themselves. If you wish to have full control over when Sounds are destroyed then
+you must finish your house-keeping and destroy them all yourself first, before calling this method.</p>
 <p>Note that this only removes it from the Phaser.Cache. If you still have references to the data elsewhere
 then it will persist in memory.</p>
     </div>
@@ -14446,7 +14803,7 @@ then it will persist in memory.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1696">line 1696</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1708">line 1708</a>
     </dt>
     
 
@@ -14567,7 +14924,7 @@ then it will persist in memory.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1876">line 1876</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1892">line 1892</a>
     </dt>
     
 
@@ -14688,7 +15045,7 @@ then it will persist in memory.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1711">line 1711</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1727">line 1727</a>
     </dt>
     
 
@@ -14809,7 +15166,7 @@ then it will persist in memory.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1891">line 1891</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1907">line 1907</a>
     </dt>
     
 
@@ -14930,7 +15287,7 @@ then it will persist in memory.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1741">line 1741</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1757">line 1757</a>
     </dt>
     
 
@@ -15051,7 +15408,7 @@ then it will persist in memory.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1831">line 1831</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1847">line 1847</a>
     </dt>
     
 
@@ -15172,7 +15529,7 @@ then it will persist in memory.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1816">line 1816</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1832">line 1832</a>
     </dt>
     
 
@@ -15381,7 +15738,7 @@ then it will persist in memory.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1467">line 1467</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1477">line 1477</a>
     </dt>
     
 
@@ -15549,7 +15906,7 @@ then it will persist in memory.</p>
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha10</a>
-		on Fri Jul 24 2015 13:29:46 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Jul 29 2015 14:57:52 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

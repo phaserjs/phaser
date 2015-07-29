@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.4.2 "Altara" - Built: Tue Jul 28 2015 14:16:55
+* v2.4.2 "Altara" - Built: Wed Jul 29 2015 14:59:16
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -13690,7 +13690,7 @@ PIXI.CANVAS_RENDERER = 1;
  */
 PIXI.VERSION = "v2.2.8";
 
-// used to create uids for various pixi objects..
+// used to create uids for various pixi objects.
 PIXI._UID = 0;
 
 if (typeof(Float32Array) != 'undefined')
@@ -23996,7 +23996,7 @@ var Phaser = Phaser || {
     * @constant
     * @type {string}
     */
-    VERSION: '2.4.2-dev',
+    VERSION: '2.4.2',
 
     /**
     * An array of Phaser game instances.
@@ -57488,6 +57488,8 @@ Phaser.Text.fontPropertiesContext = Phaser.Text.fontPropertiesCanvas.getContext(
 *
 * For most use cases it is recommended to use XML. If you wish to use JSON, the formatting should be equal to the result of
 * converting a valid XML file through the popular X2JS library. An online tool for conversion can be found here: http://codebeautify.org/xmltojson
+*
+* If you were using an older version of Phaser (< 2.4) and using the DOMish parser hack, please remove this. It isn't required any longer.
 *
 * @class Phaser.BitmapText
 * @constructor

@@ -1,5 +1,27 @@
 # Change Log
 
+## Version 2.4.2 - "Altara" - 29th July 2015
+
+### Updates
+
+* TypeScript definitions fixes and updates (thanks @clark-stevenson @shivinsky)
+* JSDoc typo fixes (thanks @DrkSephy)
+* TilemapLayer - Fixed unmatched `context.save` and `context.restore` calls (thanks @MortimerGoro #1934)
+* Cache.getFrame has a new `cache` parameter (that defaults to the Image cache, but can be changed to any other)
+* Cache.getFrameCount has a new `cache` parameter (that defaults to the Image cache, but can be changed to any other)
+* Cache.getFrameData has a new `cache` parameter (that defaults to the Image cache, but can be changed to any other)
+* Cache.hasFrameData has a new `cache` parameter (that defaults to the Image cache, but can be changed to any other)
+* Cache.getFrameByIndex has a new `cache` parameter (that defaults to the Image cache, but can be changed to any other)
+* Cache.getFrameByName has a new `cache` parameter (that defaults to the Image cache, but can be changed to any other)
+* Device.canPlayVideo now checks for `ogv` as a valid file extension for OGG video files (thanks @JB-Tellez #1928)
+* Phaser.Sound will now automatically check the Cache to see if the audio file it is using is still there or not. If not then it will automatically called `Sound.destroy` on itself. If you do not desire this result then you should ensure that you undertake all house-keeping yourself, and properly destroy Sound objects _before_ calling `Cache.removeSound` (#1946)
+
+### Bug Fixes
+
+* DeviceButton would try to set `altKey`, `shiftKey` and `ctrlKey` even for Joypads (thanks @zatch #1939)
+* Pointer.move would accidentally reset the `isDown` status of the Pointer on touch devices, which broke things like Sprite input events when built to native apps or run locally (#1932 #1943)
+* Pointer.onDown (and input enabled items like Buttons) would fail on FireFox / Linux and CocoonJS (#1944 #1945)
+
 ## Version 2.4.1 - "Ionin Spring" - 24th July 2015
 
 This is a small point release that updates the Creature runtimes and fixes a couple of small cache issues.

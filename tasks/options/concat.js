@@ -5,6 +5,11 @@ module.exports = {
         dest: '<%= modules_dir %>/creature-global.js'
     },
 
+    creatureGlobalSplit: {
+        src: require('../manifests/creature-global'),
+        dest: '<%= compile_dir %>/creature.js'
+    },
+
     creature: {
         src: require('../manifests/creature'),
         dest: '<%= modules_dir %>/creature.js'
@@ -13,6 +18,11 @@ module.exports = {
     p2Global: {
         src: require('../manifests/p2'),
         dest: '<%= modules_dir %>/p2-global.js'
+    },
+
+    p2GlobalSplit: {
+        src: require('../manifests/p2'),
+        dest: '<%= compile_dir %>/p2.js'
     },
 
     pixiIntro: {
@@ -240,9 +250,9 @@ module.exports = {
         dest: '<%= modules_dir %>/outro.js'
     },
 
-    ///////////////////
-    //  Custom Build //
-    ///////////////////
+    ////////////////////
+    //  Custom Builds //
+    ////////////////////
 
     custom: {
         options: {
@@ -250,6 +260,14 @@ module.exports = {
         },
         src: ['<%= filelist %>'],
         dest: '<%= compile_dir %>/<%= filename %>.js'
+    },
+
+    pixi: {
+        options: {
+            banner: '<%= banner %>',
+        },
+        src: ['<%= pixiFilelist %>'],
+        dest: '<%= compile_dir %>/pixi.js'
     }
 
 };

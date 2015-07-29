@@ -16,13 +16,14 @@ Thousands of developers worldwide use it. From indies and multi-national digital
 * **Read:** Subscribe to the [Newsletter](https://confirmsubscription.com/h/r/369DE48E3E86AF1E) and grab our [Phaser Books](http://phaser.io/shop)
 * **Chat:** [#phaserio IRC channel](http://www.html5gamedevs.com/topic/4470-official-phaserio-irc-channel-phaserio-on-freenode/) on freenode
 * **Extend:** With [Phaser Plugins](https://github.com/photonstorm/phaser-plugins)
-* **Be awesome:** Support our work by buying our [books](http://phaser.io/shop/books) and [plugins](http://phaser.io/shop/plugins)
+* **Be awesome:** Support the future of Phaser on [Patreon](https://www.patreon.com/photonstorm) or by buying our [books](http://phaser.io/shop/books) and [plugins](http://phaser.io/shop/plugins)
 
 ![div](http://www.phaser.io/images/github/div.png)
 
 ## Index
 
 - [What's New?](#whats-new)
+- [Support Phaser](#patreon)
 - [Download Phaser](#download)
 - [Getting Started](#getting-started)
 - [Using Phaser](#using-phaser)
@@ -39,21 +40,17 @@ Thousands of developers worldwide use it. From indies and multi-national digital
 
 <div align="center"><img src="http://phaser.io/images/github/news.jpg"></div>
 
-> 24th July 2015
+> 29th July 2015
 
 Phaser 2.4 is another huge update. We had to bump the version number from 2.3 directly to 2.4 because of some API adjustments, all of which are fully detailed in the [Change Log](#change-log). While it's true we could have released it over a few smaller point releases, that just isn't how the cookie crumbled this time. _Be sure to pay attention to the previous deprecated API calls that have been removed in 2.4._
 
 So although you had to wait for it a couple months more than usual, Phaser 2.4 is quite simply an **epic release** - there is no two ways about it! Brand new video component? Check. Support for fully boned Creature animations? Check. Brand new Cache and Loader updates? Check. Dynamic sprite and gradient generator? Check. Literally hundreds of updates, enhancements and fixes across the entire codebase? Yup, those too! The Change Log seems to scroll on forever, yet the overall package size continues to come down as we optimise and streamline our code too (this release actually builds smaller than 2.3 did, just 80KB min + gz)
 
-A few people on the forum have asked how Phaser is funded: Phaser is a fully open-source project and as such we have no _direct_ income from it at all. All development is funded by the client work that [my company](http://www.photonstorm.com) takes on. And of course the contributions from the incredible community (who also volunteer their skills for free).
-
-Sometimes this work directly impacts on Phaser. For example we recently built [5 games](http://www.insideouthq.com) for the new Pixar film Inside Out. Being Pixar they of course had high video requirements, so we literally coded from scratch the way videos were handled and added in video stream support in the process. Very often though our work simply uses Phaser but doesn't enhance it. Which is why if you buy any of the books or plugins we have on sale it really does make a difference! It buys us time to work on Phaser un-interrupted, which in turn benefits everyone. Some have asked if we could add a 'donate' button to the site, but instead I'd rather you get value from your money - so if we release a new plugin, book or magazine you like the look of, please do consider it a donation towards the continued work we all put in.
-
-Money stuff aside please enjoy this brand new release. We'll carry on supporting Phaser 2 for the rest of 2015 _at least_, while development of the Phaser 3 renderer proceeds at a rapid pace too.
-
 Make sure you check out the Phaser web site. We are going to be adding in stacks of new examples and features in the coming weeks.
 
-But that's all for now. I hope you enjoy Phaser 2.4. Happy coding everyone! See you on the forums.
+Also we'd be extremely grateful if you could get involved with our [Patreon campaign](https://www.patreon.com/photonstorm). We've got some really ambitious plans for how we'd like to see Phaser evolve in the future. Hopefully together we can reach that goal faster.
+
+But that's all for now. I hope you enjoy Phaser 2.4.
 
 Happy coding everyone! See you on the forums.
 
@@ -64,6 +61,13 @@ Rich - [@photonstorm](https://twitter.com/photonstorm)
 ![boogie](http://www.phaser.io/images/spacedancer.gif)
 
 ![div](http://www.phaser.io/images/github/div.png)
+
+<a name="patreon"></a>
+## Support Phaser on Patreon
+
+![patreon](http://www.phaser.io/images/patreon.png)
+
+Please help support the future development of Phaser through our [Patreon campaign](https://www.patreon.com/photonstorm). We've some exciting plans and there's so much we'd like to do - let's see if we can all work together to make this possible.
 
 <a name="download"></a>
 ## Download Phaser
@@ -242,9 +246,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 <a name="change-log"></a>
 ## Change Log
 
-## Version 2.4.2 - "Altara" - in dev
-
-### New Features
+## Version 2.4.2 - "Altara" - 29th July 2015
 
 ### Updates
 
@@ -260,15 +262,11 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * Device.canPlayVideo now checks for `ogv` as a valid file extension for OGG video files (thanks @JB-Tellez #1928)
 * Phaser.Sound will now automatically check the Cache to see if the audio file it is using is still there or not. If not then it will automatically called `Sound.destroy` on itself. If you do not desire this result then you should ensure that you undertake all house-keeping yourself, and properly destroy Sound objects _before_ calling `Cache.removeSound` (#1946)
 
-
 ### Bug Fixes
 
 * DeviceButton would try to set `altKey`, `shiftKey` and `ctrlKey` even for Joypads (thanks @zatch #1939)
 * Pointer.move would accidentally reset the `isDown` status of the Pointer on touch devices, which broke things like Sprite input events when built to native apps or run locally (#1932 #1943)
-
-
-
-
+* Pointer.onDown (and input enabled items like Buttons) would fail on FireFox / Linux and CocoonJS (#1944 #1945)
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 

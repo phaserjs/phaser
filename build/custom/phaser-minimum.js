@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.4.2 "Altara" - Built: Tue Jul 28 2015 14:17:23
+* v2.4.2 "Altara" - Built: Wed Jul 29 2015 14:59:45
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -77,7 +77,7 @@ PIXI.CANVAS_RENDERER = 1;
  */
 PIXI.VERSION = "v2.2.8";
 
-// used to create uids for various pixi objects..
+// used to create uids for various pixi objects.
 PIXI._UID = 0;
 
 if (typeof(Float32Array) != 'undefined')
@@ -9189,7 +9189,7 @@ var Phaser = Phaser || {
     * @constant
     * @type {string}
     */
-    VERSION: '2.4.2-dev',
+    VERSION: '2.4.2',
 
     /**
     * An array of Phaser game instances.

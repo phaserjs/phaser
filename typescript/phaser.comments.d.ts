@@ -1634,6 +1634,8 @@ declare module Phaser {
     * 
     * For most use cases it is recommended to use XML. If you wish to use JSON, the formatting should be equal to the result of
     * converting a valid XML file through the popular X2JS library. An online tool for conversion can be found here: http://codebeautify.org/xmltojson
+    * 
+    * If you were using an older version of Phaser (< 2.4) and using the DOMish parser hack, please remove this. It isn't required any longer.
     */
     class BitmapText extends PIXI.DisplayObjectContainer {
 
@@ -1660,6 +1662,8 @@ declare module Phaser {
         * 
         * For most use cases it is recommended to use XML. If you wish to use JSON, the formatting should be equal to the result of
         * converting a valid XML file through the popular X2JS library. An online tool for conversion can be found here: http://codebeautify.org/xmltojson
+        * 
+        * If you were using an older version of Phaser (< 2.4) and using the DOMish parser hack, please remove this. It isn't required any longer.
         * 
         * @param game A reference to the currently running game.
         * @param x X coordinate to display the BitmapText object at.
@@ -2885,35 +2889,39 @@ declare module Phaser {
         * Get a single frame by key. You'd only do this to get the default Frame created for a non-atlas/spritesheet image.
         * 
         * @param key Asset key of the frame data to retrieve from the Cache.
+        * @param cache The cache to search for the item in. - Default: Phaser.Cache.IMAGE
         * @return The frame data.
         */
-        getFrame(key: string): Phaser.Frame;
+        getFrame(key: string, cache?: number): Phaser.Frame;
 
         /**
         * Get a single frame out of a frameData set by key.
         * 
         * @param key Asset key of the frame data to retrieve from the Cache.
         * @param index The index of the frame you want to get.
+        * @param cache The cache to search. One of the Cache consts such as `Phaser.Cache.IMAGE` or `Phaser.Cache.SOUND`. - Default: Phaser.Cache.IMAGE
         * @return The frame object.
         */
-        getFrameByIndex(key: string, index: number): Phaser.Frame;
+        getFrameByIndex(key: string, index: number, cache?: number): Phaser.Frame;
 
         /**
         * Get a single frame out of a frameData set by key.
         * 
         * @param key Asset key of the frame data to retrieve from the Cache.
         * @param name The name of the frame you want to get.
+        * @param cache The cache to search. One of the Cache consts such as `Phaser.Cache.IMAGE` or `Phaser.Cache.SOUND`. - Default: Phaser.Cache.IMAGE
         * @return The frame object.
         */
-        getFrameByName(key: string, name: string): Phaser.Frame;
+        getFrameByName(key: string, name: string, cache?: number): Phaser.Frame;
 
         /**
         * Get the total number of frames contained in the FrameData object specified by the given key.
         * 
         * @param key Asset key of the FrameData you want.
+        * @param cache The cache to search for the item in. - Default: Phaser.Cache.IMAGE
         * @return Then number of frames. 0 if the image is not found.
         */
-        getFrameCount(key: string): number;
+        getFrameCount(key: string, cache?: number): number;
 
         /**
         * Gets a Phaser.FrameData object from the Image Cache.
@@ -2923,9 +2931,10 @@ declare module Phaser {
         * Note: If the object cannot be found a `console.warn` message is displayed.
         * 
         * @param key Asset key of the frame data to retrieve from the Cache.
+        * @param cache The cache to search for the item in. - Default: Phaser.Cache.IMAGE
         * @return The frame data.
         */
-        getFrameData(key: string): Phaser.FrameData;
+        getFrameData(key: string, cache?: number): Phaser.FrameData;
 
         /**
         * Gets a Image object from the cache. This returns a DOM Image object, not a Phaser.Image object.
@@ -3144,9 +3153,10 @@ declare module Phaser {
         * Check if the FrameData for the given key exists in the Image Cache.
         * 
         * @param key Asset key of the frame data to retrieve from the Cache.
+        * @param cache The cache to search for the item in. - Default: Phaser.Cache.IMAGE
         * @return True if the given key has frameData in the cache, otherwise false.
         */
-        hasFrameData(key: string): boolean;
+        hasFrameData(key: string, cache?: number): boolean;
 
         /**
         * Check if the given sound has finished decoding.
@@ -3275,6 +3285,10 @@ declare module Phaser {
 
         /**
         * Removes a sound from the cache.
+        * 
+        * If any `Phaser.Sound` objects use the audio file in the cache that you remove with this method, they will
+        * _automatically_ destroy themselves. If you wish to have full control over when Sounds are destroyed then
+        * you must finish your house-keeping and destroy them all yourself first, before calling this method.
         * 
         * Note that this only removes it from the Phaser.Cache. If you still have references to the data elsewhere
         * then it will persist in memory.
@@ -25781,7 +25795,7 @@ declare module Phaser {
         * @param y The y position to start rendering from.
         * @param fill If true uses fillText, if false uses strokeText.
         */
-        renderTabLine(line: string, x: number, y: number, fill?: boolean);
+        renderTabLine(line: string, x: number, y: number, fill?: boolean): void;
 
         /**
         * Sets a drop shadow effect on the Text. You can specify the horizontal and vertical distance of the drop shadow with the `x` and `y` parameters.

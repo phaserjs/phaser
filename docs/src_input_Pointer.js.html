@@ -1512,6 +1512,94 @@ Phaser.Pointer.prototype = {
     },
 
     /**
+    * Called by updateButtons.
+    * 
+    * @method Phaser.Pointer#processButtonsDown
+    * @private
+    * @param {integer} buttons - The DOM event.buttons property.
+    * @param {MouseEvent} event - The DOM event.
+    */
+    processButtonsDown: function (buttons, event) {
+
+        //  Note: These are bitwise checks, not booleans
+
+        if (Phaser.Pointer.LEFT_BUTTON &amp; buttons)
+        {
+            this.leftButton.start(event);
+        }
+
+        if (Phaser.Pointer.RIGHT_BUTTON &amp; buttons)
+        {
+            this.rightButton.start(event);
+        }
+                
+        if (Phaser.Pointer.MIDDLE_BUTTON &amp; buttons)
+        {
+            this.middleButton.start(event);
+        }
+
+        if (Phaser.Pointer.BACK_BUTTON &amp; buttons)
+        {
+            this.backButton.start(event);
+        }
+
+        if (Phaser.Pointer.FORWARD_BUTTON &amp; buttons)
+        {
+            this.forwardButton.start(event);
+        }
+
+        if (Phaser.Pointer.ERASER_BUTTON &amp; buttons)
+        {
+            this.eraserButton.start(event);
+        }
+
+    },
+
+    /**
+    * Called by updateButtons.
+    * 
+    * @method Phaser.Pointer#processButtonsUp
+    * @private
+    * @param {integer} buttons - The DOM event.buttons property.
+    * @param {MouseEvent} event - The DOM event.
+    */
+    processButtonsUp: function (button, event) {
+
+        //  Note: These are bitwise checks, not booleans
+
+        if (button === Phaser.Mouse.LEFT_BUTTON)
+        {
+            this.leftButton.stop(event);
+        }
+
+        if (button === Phaser.Mouse.RIGHT_BUTTON)
+        {
+            this.rightButton.stop(event);
+        }
+                
+        if (button === Phaser.Mouse.MIDDLE_BUTTON)
+        {
+            this.middleButton.stop(event);
+        }
+
+        if (button === Phaser.Mouse.BACK_BUTTON)
+        {
+            this.backButton.stop(event);
+        }
+
+        if (button === Phaser.Mouse.FORWARD_BUTTON)
+        {
+            this.forwardButton.stop(event);
+        }
+
+        if (button === 5)
+        {
+            this.eraserButton.stop(event);
+        }
+
+    },
+
+    /**
     * Called when the event.buttons property changes from zero.
     * Contains a button bitmask.
     * 
@@ -1523,73 +1611,23 @@ Phaser.Pointer.prototype = {
 
         this.button = event.button;
 
-        //  This is tested back to IE9, but possibly some browsers may report this differently.
-        //  If you find one, please tell us!
-        var buttons = event.buttons;
+        var down = (event.type.toLowerCase().substr(-4) === 'down');
 
-        if (buttons !== undefined)
+        if (event.buttons !== undefined)
         {
-            //  Note: These are bitwise checks, not booleans
-
-            if (Phaser.Pointer.LEFT_BUTTON &amp; buttons)
+            if (down)
             {
-                this.leftButton.start(event);
+                this.processButtonsDown(event.buttons, event);
             }
             else
             {
-                this.leftButton.stop(event);
-            }
-
-            if (Phaser.Pointer.RIGHT_BUTTON &amp; buttons)
-            {
-                this.rightButton.start(event);
-            }
-            else
-            {
-                this.rightButton.stop(event);
-            }
-                    
-            if (Phaser.Pointer.MIDDLE_BUTTON &amp; buttons)
-            {
-                this.middleButton.start(event);
-            }
-            else
-            {
-                this.middleButton.stop(event);
-            }
-
-            if (Phaser.Pointer.BACK_BUTTON &amp; buttons)
-            {
-                this.backButton.start(event);
-            }
-            else
-            {
-                this.backButton.stop(event);
-            }
-
-            if (Phaser.Pointer.FORWARD_BUTTON &amp; buttons)
-            {
-                this.forwardButton.start(event);
-            }
-            else
-            {
-                this.forwardButton.stop(event);
-            }
-
-            if (Phaser.Pointer.ERASER_BUTTON &amp; buttons)
-            {
-                this.eraserButton.start(event);
-            }
-            else
-            {
-                this.eraserButton.stop(event);
+                this.processButtonsUp(event.button, event);
             }
         }
         else
         {
             //  No buttons property (like Safari on OSX when using a trackpad)
-
-            if (event.type === 'mousedown')
+            if (down)
             {
                 this.leftButton.start(event);
             }
@@ -1602,6 +1640,7 @@ Phaser.Pointer.prototype = {
 
         //  On OS X (and other devices with trackpads) you have to press CTRL + the pad
         //  to initiate a right-click event, so we'll check for that here
+
         if (event.ctrlKey &amp;&amp; this.leftButton.isDown)
         {
             this.rightButton.start(event);
@@ -1624,6 +1663,8 @@ Phaser.Pointer.prototype = {
     * @param {any} event - The DOM event from the browser.
     */
     start: function (event) {
+
+        // console.log(event);
 
         if (event['pointerId'])
         {
@@ -1755,7 +1796,7 @@ Phaser.Pointer.prototype = {
             this.button = event.button;
         }
 
-        if (fromClick)
+        if (fromClick &amp;&amp; this.isMouse)
         {
             this.updateButtons(event);
         }
@@ -2260,7 +2301,7 @@ Object.defineProperty(Phaser.Pointer.prototype, "worldY", {
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha10</a>
-		on Fri Jul 24 2015 13:29:45 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Jul 29 2015 14:57:51 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

@@ -27,6 +27,8 @@
 * For most use cases it is recommended to use XML. If you wish to use JSON, the formatting should be equal to the result of
 * converting a valid XML file through the popular X2JS library. An online tool for conversion can be found here: http://codebeautify.org/xmltojson
 *
+* If you were using an older version of Phaser (< 2.4) and using the DOMish parser hack, please remove this. It isn't required any longer.
+*
 * @class Phaser.BitmapText
 * @constructor
 * @extends PIXI.DisplayObjectContainer
