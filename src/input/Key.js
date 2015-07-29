@@ -108,7 +108,7 @@ Phaser.Key = function (game, keycode) {
     this.onHoldContext = null;
 
     /**
-    * @property {Phaser.Signal} onUp - This Signal is dispatched every time this Key is pressed down. It is only dispatched once (until the key is released again).
+    * @property {Phaser.Signal} onUp - This Signal is dispatched every time this Key is released. It is only dispatched once (until the key is pressed and released again).
     */
     this.onUp = new Phaser.Signal();
 
