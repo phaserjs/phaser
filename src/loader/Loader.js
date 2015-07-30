@@ -691,6 +691,51 @@ Phaser.Loader.prototype = {
     },
 
     /**
+    * Adds an array of images to the current load queue.
+    *
+    * It works by passing each element of the array to the Loader.image method.
+    * 
+    * The files are **not** loaded immediately after calling this method. The files are added to the queue ready to be loaded when the loader starts.
+    * 
+    * Phaser can load all common image types: png, jpg, gif and any other format the browser can natively handle.
+    * 
+    * The keys must be unique Strings. They are used to add the files to the Phaser.Cache upon successful load.
+    *
+    * Retrieve the images via `Cache.getImage(key)`
+    * 
+    * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
+    * 
+    * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "alien"
+    * and no URL is given then the Loader will set the URL to be "alien.png". It will always add `.png` as the extension.
+    * If you do not desire this action then provide a URL.
+    *
+    * @method Phaser.Loader#images
+    * @param {array} keys - An array of unique asset keys of the image files.
+    * @param {array} [urls] - Optional array of URLs. If undefined or `null` the url will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png". If provided the URLs array length must match the keys array length.
+    * @return {Phaser.Loader} This Loader instance.
+     */
+    images: function (keys, urls) {
+
+        if (Array.isArray(urls))
+        {
+            for (var i = 0; i < keys.length; i++)
+            {
+                this.image(keys[i], urls[i]);
+            }
+        }
+        else
+        {
+            for (var i = 0; i < keys.length; i++)
+            {
+                this.image(keys[i]);
+            }
+        }
+
+        return this;
+
+    },
+
+    /**
     * Adds a Text file to the current load queue.
     * 
     * The file is **not** loaded immediately after calling this method. The file is added to the queue ready to be loaded when the loader starts.

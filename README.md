@@ -248,9 +248,13 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 
 ## Version 2.4.3 - "Coramen" - in development
 
+### New Features
+
+* Loader.images is a new method that allows you to pass an array of image keys, and optionally the urls, to the Loader and have them all added to the load queue in one go.
+
 ### Updates
 
-* TypeScript definitions fixes and updates (thanks @clark-stevenson)
+* TypeScript definitions fixes and updates (thanks @clark-stevenson @vrecluse)
 * JSDoc typo fixes (thanks )
 
 ### Bug Fixes
