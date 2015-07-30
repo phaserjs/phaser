@@ -255,6 +255,8 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 
 ### Bug Fixes
 
+* Pointer.isDown was reset before the Input.onUp event, meaning you couldn't get the Pointer.duration from within the event.
+* Pointer.isDown was reset before the Input tap calculations, meaning onTap wouldn't dispatch (thanks @stovenator #1953)
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 

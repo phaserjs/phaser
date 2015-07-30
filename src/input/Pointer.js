@@ -915,16 +915,6 @@ Phaser.Pointer.prototype = {
             return;
         }
 
-        if (this.isMouse)
-        {
-            this.updateButtons(event);
-        }
-        else
-        {
-            this.isDown = false;
-            this.isUp = true;
-        }
-
         this.timeUp = this.game.time.time;
 
         if (this.game.input.multiInputOverride === Phaser.Input.MOUSE_OVERRIDES_TOUCH ||
@@ -950,6 +940,16 @@ Phaser.Pointer.prototype = {
 
                 this.previousTapTime = this.timeUp;
             }
+        }
+
+        if (this.isMouse)
+        {
+            this.updateButtons(event);
+        }
+        else
+        {
+            this.isDown = false;
+            this.isUp = true;
         }
 
         //  Mouse is always active
