@@ -135,6 +135,19 @@ Phaser.Tween = function (target, game, manager) {
     this.isPaused = false;
 
     /**
+    * Is this Tween frame or time based? A frame based tween will use the physics elapsed timer when updating. This means
+    * it will retain the same consistent frame rate, regardless of the speed of the device. The duration value given should
+    * be given in frames.
+    * 
+    * If the Tween uses a time based update (which is the default) then the duration is given in milliseconds.
+    * In this situation a 2000ms tween will last exactly 2 seconds, regardless of the device and how many visual updates the tween
+    * has actually been through. For very short tweens you may wish to experiment with a frame based update instead.
+    * @property {boolean} frameBased
+    * @default
+    */
+    this.frameBased = false;
+
+    /**
     * @property {function} _onUpdateCallback - An onUpdate callback.
     * @private
     * @default null
@@ -178,7 +191,7 @@ Phaser.Tween.prototype = {
     *
     * @method Phaser.Tween#to
     * @param {object} properties - An object containing the properties you want to tween, such as `Sprite.x` or `Sound.volume`. Given as a JavaScript object.
-    * @param {number} [duration=1000] - Duration of this tween in ms.
+    * @param {number} [duration=1000] - Duration of this tween in ms. Or if `Tween.frameBased` is true this represents the number of frames that should elapse.
     * @param {function|string} [ease=null] - Easing function. If not set it will default to Phaser.Easing.Default, which is Phaser.Easing.Linear.None by default but can be over-ridden.
     * @param {boolean} [autoStart=false] - Set to `true` to allow this tween to start automatically. Otherwise call Tween.start().
     * @param {number} [delay=0] - Delay before this tween will start in milliseconds. Defaults to 0, no delay.
@@ -225,7 +238,7 @@ Phaser.Tween.prototype = {
     *
     * @method Phaser.Tween#from
     * @param {object} properties - An object containing the properties you want to tween., such as `Sprite.x` or `Sound.volume`. Given as a JavaScript object.
-    * @param {number} [duration=1000] - Duration of this tween in ms.
+    * @param {number} [duration=1000] - Duration of this tween in ms. Or if `Tween.frameBased` is true this represents the number of frames that should elapse.
     * @param {function|string} [ease=null] - Easing function. If not set it will default to Phaser.Easing.Default, which is Phaser.Easing.Linear.None by default but can be over-ridden.
     * @param {boolean} [autoStart=false] - Set to `true` to allow this tween to start automatically. Otherwise call Tween.start().
     * @param {number} [delay=0] - Delay before this tween will start in milliseconds. Defaults to 0, no delay.

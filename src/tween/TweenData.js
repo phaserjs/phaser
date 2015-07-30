@@ -360,14 +360,16 @@ Phaser.TweenData.prototype = {
             }
         }
 
+        var ms = (this.parent.frameBased) ? this.game.time.physicsElapsedMS : this.game.time.elapsedMS;
+
         if (this.parent.reverse)
         {
-            this.dt -= this.game.time.elapsedMS * this.parent.timeScale;
+            this.dt -= ms * this.parent.timeScale;
             this.dt = Math.max(this.dt, 0);
         }
         else
         {
-            this.dt += this.game.time.elapsedMS * this.parent.timeScale;
+            this.dt += ms * this.parent.timeScale;
             this.dt = Math.min(this.dt, this.duration);
         }
 

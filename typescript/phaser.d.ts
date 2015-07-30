@@ -5028,6 +5028,7 @@ declare module Phaser {
 
         chainedTween: Phaser.Tween;
         current: number;
+        frameBased: boolean;
         game: Phaser.Game;
         isRunning: boolean;
         isPaused: boolean;
