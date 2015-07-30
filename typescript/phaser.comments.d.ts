@@ -19660,7 +19660,7 @@ declare module Phaser {
         * @param distance An optional distance constraint between the Point and the anchor.
         * @return The modified point object.
         */
-        rotate(a: Phaser.Point, x: number, y: number, angle: number, asDegrees?: boolean, distance?: number): Phaser.Point;
+        rotate(x: number, y: number, angle: number, asDegrees?: boolean, distance?: number): Phaser.Point;
 
         /**
         * Sets the `x` and `y` values of this Point object to the given values.

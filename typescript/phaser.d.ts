@@ -3616,7 +3616,7 @@ declare module Phaser {
         normalRightHand(): Phaser.Point;
         perp(): Phaser.Point;
         rperp(): Phaser.Point;
-        rotate(a: Phaser.Point, x: number, y: number, angle: number, asDegrees?: boolean, distance?: number): Phaser.Point;
+        rotate(x: number, y: number, angle: number, asDegrees?: boolean, distance?: number): Phaser.Point;
         set(x: number, y?: number): Phaser.Point;
         setMagnitude(magnitude: number): Phaser.Point;
         setTo(x: number, y?: number): Phaser.Point;
