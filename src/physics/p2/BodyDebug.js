@@ -30,7 +30,7 @@ Phaser.Physics.P2.BodyDebug = function(game, body, settings) {
     * @private
     */
     var defaultSettings = {
-        pixelsPerLengthUnit: 20,
+        pixelsPerLengthUnit: game.physics.p2.mpx(1),
         debugPolygons: false,
         lineWidth: 1,
         alpha: 0.5
