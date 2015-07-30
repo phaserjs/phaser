@@ -257,6 +257,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 
 * Pointer.isDown was reset before the Input.onUp event, meaning you couldn't get the Pointer.duration from within the event.
 * Pointer.isDown was reset before the Input tap calculations, meaning onTap wouldn't dispatch (thanks @stovenator #1953)
+* InputHandler.pointerOver would get stuck in an 'isOver' state if the Sprite changed its visibility during an onUp callback (thanks @Cristy94 #1955)
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
