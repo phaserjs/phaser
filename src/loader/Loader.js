@@ -1293,6 +1293,7 @@ Phaser.Loader.prototype = {
     * @return {Phaser.Loader} This Loader instance.
     */
     bitmapFont: function (key, textureURL, atlasURL, atlasData, xSpacing, ySpacing) {
+
         if (textureURL === undefined || textureURL === null)
         {
             textureURL = key + '.png';

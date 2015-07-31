@@ -328,6 +328,7 @@ declare module Phaser {
         renderOrderID: number;
         right: number;
         text: string;
+        smoothed: boolean;
         textWidth: number;
         textHeight: number;
         tint: number;

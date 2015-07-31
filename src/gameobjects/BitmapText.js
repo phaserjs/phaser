@@ -375,8 +375,6 @@ Phaser.BitmapText.prototype.updateText = function () {
             {
                 //  Sprite already exists in the glyphs pool, so we'll reuse it for this letter
                 g.texture = charData.texture;
-                // g.name = line.text[c];
-                // console.log('reusing', g.name, 'as', line.text[c]);
             }
             else
             {
@@ -384,7 +382,6 @@ Phaser.BitmapText.prototype.updateText = function () {
                 g = new PIXI.Sprite(charData.texture);
                 g.name = line.text[c];
                 this._glyphs.push(g);
-                // console.log('new', line.text[c]);
             }
 
             g.position.x = (line.chars[c] + align) - ax;
@@ -608,6 +605,39 @@ Object.defineProperty(Phaser.BitmapText.prototype, 'maxWidth', {
         {
             this._maxWidth = value;
             this.updateText();
+        }
+
+    }
+
+});
+
+/**
+* Enable or disable texture smoothing for this BitmapText.
+*
+* The smoothing is applied to the BaseTexture of this font, which all letters of the text reference.
+* 
+* Smoothing is enabled by default.
+* 
+* @name Phaser.BitmapText#smoothed
+* @property {boolean} smoothed
+*/
+Object.defineProperty(Phaser.BitmapText.prototype, 'smoothed', {
+
+    get: function() {
+
+        return !this._data.base.scaleMode;
+
+    },
+
+    set: function(value) {
+
+        if (value)
+        {
+            this._data.base.scaleMode = 0;
+        }
+        else
+        {
+            this._data.base.scaleMode = 1;
         }
 
     }
