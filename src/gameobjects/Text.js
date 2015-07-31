@@ -624,15 +624,17 @@ Phaser.Text.prototype.updateLine = function (line, x, y) {
     {
         var letter = line[i];
 
-        if(this.fontWeights.length > 0 || this.fontStyles.length > 0){
-
+        if (this.fontWeights.length > 0 || this.fontStyles.length > 0)
+        {
             var components = this.fontToComponents(this.context.font);
 
-            if(this.fontStyles[this._charCount]){
+            if (this.fontStyles[this._charCount])
+            {
                 components.fontStyle = this.fontStyles[this._charCount];
             }
         
-            if(this.fontWeights[this._charCount]){
+            if (this.fontWeights[this._charCount])
+            {
                 components.fontWeight = this.fontWeights[this._charCount];
             }
       
@@ -1147,6 +1149,8 @@ Phaser.Text.prototype.updateTexture = function () {
 
     //  Can't render something with a zero sized dimension
     this.renderable = (w !== 0 && h !== 0);
+
+    this.texture.requiresReTint = true;
 
     this.texture.baseTexture.dirty();
 
