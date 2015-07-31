@@ -4564,9 +4564,11 @@ declare module Phaser {
         fixedToCamera: boolean;
         font: string;
         fontSize: number|string;
-        fontWeight: string;
         fontStyle: string;
+        fontStyles: string[];
         fontVariant: string;
+        fontWeight: string;
+        fontWeights: string[];
         game: Phaser.Game;
         input: Phaser.InputHandler;
         inputEnabled: boolean;
@@ -4601,8 +4603,11 @@ declare module Phaser {
         z: number;
 
         addColor(color: string, position: number): Phaser.Text;
+        addFontStyle(style: string, position: number): Phaser.Text;
+        addFontWeight(weight: string, position: number): Phaser.Text;
         addStrokeColor(color: string, position: number): Phaser.Text;
         clearColors(): Phaser.Text;
+        clearFontValues(): Phaser.Text;
         componentsToFont(components: any): string;
         destroy(destroyChildren?: boolean): void;
         fontToComponents(font: string): any;
