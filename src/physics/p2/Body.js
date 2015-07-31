@@ -479,6 +479,7 @@ Phaser.Physics.P2.Body.prototype = {
 
     /**
     * Apply impulse to a point local to the body.
+    * 
     * This could for example be a point on the Body surface. An impulse is a force added to a body during a short 
     * period of time (impulse = force * time). Impulses will be added to Body.velocity and Body.angularVelocity.
     *
@@ -487,14 +488,17 @@ Phaser.Physics.P2.Body.prototype = {
     * @param {number} localX - A local point on the body.
     * @param {number} localY - A local point on the body.
     */
-    applyImpulseLocal: function (force, localX, localY) {
+    applyImpulseLocal: function (impulse, localX, localY) {
 
-        this.data.applyImpulseLocal(force, [this.world.pxmi(localX), this.world.pxmi(localY)]);
+        this.data.applyImpulseLocal(impulse, [this.world.pxmi(localX), this.world.pxmi(localY)]);
 
     },
 
     /**
-    * Apply force to a world point. This could for example be a point on the RigidBody surface. Applying force this way will add to Body.force and Body.angularForce.
+    * Apply force to a world point.
+    * 
+    * This could for example be a point on the RigidBody surface. Applying force 
+    * this way will add to Body.force and Body.angularForce.
     *
     * @method Phaser.Physics.P2.Body#applyForce
     * @param {Float32Array|Array} force - The force vector to add.
