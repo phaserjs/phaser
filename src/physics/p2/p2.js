@@ -8271,8 +8271,8 @@ Body.prototype.applyImpulse = function(impulseVector, relativePoint){
 /**
  * Apply impulse to a point relative to the body. This could for example be a point on the Body surface. An impulse is a force added to a body during a short period of time (impulse = force * time). Impulses will be added to Body.velocity and Body.angularVelocity.
  * @method applyImpulseLocal
- * @param  {Array} impulse The impulse vector to add, oriented in world space.
- * @param  {Array} [relativePoint] A point relative to the body in world space. If not given, it is set to zero and all of the impulse will be excerted on the center of mass.
+ * @param  {Array} impulse The impulse vector to add, oriented in local space.
+ * @param  {Array} [relativePoint] A point relative to the body in local space. If not given, it is set to zero and all of the impulse will be excerted on the center of mass.
  */
 var Body_applyImpulse_impulseWorld = vec2.create();
 var Body_applyImpulse_pointWorld = vec2.create();

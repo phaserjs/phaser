@@ -17808,8 +17808,8 @@ declare module Phaser {
                 * Apply impulse to a point local to the body.
                 * This could for example be a point on the Body surface. An impulse is a force added to a body during a short
                 * period of time (impulse = force * time). Impulses will be added to Body.velocity and Body.angularVelocity.
-                * 
-                * @param impulse The impulse vector to add, oriented in world space.
+                *
+                * @param impulse The impulse vector to add, oriented in local space.
                 * @param localX A local point on the body.
                 * @param localY A local point on the body.
                 */
