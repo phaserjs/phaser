@@ -406,9 +406,7 @@ Phaser.Input.prototype = {
 
         this.activePointer = this.mousePointer;
 
-        this.hitCanvas = document.createElement('canvas');
-        this.hitCanvas.width = 1;
-        this.hitCanvas.height = 1;
+        this.hitCanvas = PIXI.CanvasPool.create(this, 1, 1);
         this.hitContext = this.hitCanvas.getContext('2d');
 
         this.mouse.start();
@@ -453,6 +451,8 @@ Phaser.Input.prototype = {
         }
 
         this.moveCallbacks = [];
+
+        PIXI.CanvasPool.remove(this);
 
         this.game.canvas.removeEventListener('click', this._onClickTrampoline);
 

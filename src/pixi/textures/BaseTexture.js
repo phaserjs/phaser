@@ -171,6 +171,8 @@ PIXI.BaseTexture.prototype.destroy = function()
     }
     else if (this.source && this.source._pixiId)
     {
+        PIXI.CanvasPool.removeByCanvas(this.source);
+
         delete PIXI.BaseTextureCache[this.source._pixiId];
     }
 
@@ -254,7 +256,7 @@ PIXI.BaseTexture.fromImage = function(imageUrl, crossorigin, scaleMode)
     {
         // new Image() breaks tex loading in some versions of Chrome.
         // See https://code.google.com/p/chromium/issues/detail?id=238071
-        var image = new Image();//document.createElement('img');
+        var image = new Image();
 
         if (crossorigin)
         {
@@ -287,7 +289,7 @@ PIXI.BaseTexture.fromImage = function(imageUrl, crossorigin, scaleMode)
  */
 PIXI.BaseTexture.fromCanvas = function(canvas, scaleMode)
 {
-    if(!canvas._pixiId)
+    if (!canvas._pixiId)
     {
         canvas._pixiId = 'canvas_' + PIXI.TextureCacheIdGenerator++;
     }
@@ -304,7 +306,7 @@ PIXI.BaseTexture.fromCanvas = function(canvas, scaleMode)
 
     var baseTexture = PIXI.BaseTextureCache[canvas._pixiId];
 
-    if(!baseTexture)
+    if (!baseTexture)
     {
         baseTexture = new PIXI.BaseTexture(canvas, scaleMode);
         PIXI.BaseTextureCache[canvas._pixiId] = baseTexture;

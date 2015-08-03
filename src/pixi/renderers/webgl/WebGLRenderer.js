@@ -119,7 +119,7 @@ PIXI.WebGLRenderer = function(width, height, options)
      * @property view
      * @type HTMLCanvasElement
      */
-    this.view = options.view || document.createElement('canvas');
+    this.view = options.view || PIXI.CanvasPool.create(this, this.width, this.height);
 
     /**
      * @property _contextOptions
@@ -444,6 +444,8 @@ PIXI.WebGLRenderer.prototype.destroy = function()
 
     this.gl = null;
     this.renderSession = null;
+
+    PIXI.CanvasPool.remove(this);
 
     PIXI.instances[this.glContextId] = null;
 
