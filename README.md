@@ -269,6 +269,8 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * ArrayUtils.numberArrayStep would return an empty array if a single parameter was given, instead of a single step array (thanks @pooya72 #1958)
 * Text with tints applied wouldn't update properly in Canvas mode.
 * Removed use of the deprecated `enterFullScreen` and `leaveFullScreen` signals from the Scale Manager (thanks @mmanlod #1972)
+* BitmapText with tints applied wouldn't update properly in Canvas mode (thanks @Pajamaman #1969)
+
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 

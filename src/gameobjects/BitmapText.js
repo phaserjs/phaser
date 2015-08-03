@@ -389,6 +389,7 @@ Phaser.BitmapText.prototype.updateText = function () {
 
             g.scale.set(scale);
             g.tint = this.tint;
+            g.texture.requiresReTint = true;
 
             if (!g.parent)
             {
