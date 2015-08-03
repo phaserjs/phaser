@@ -26,7 +26,7 @@ Phaser.Canvas = {
         width = width || 256;
         height = height || 256;
 
-        var canvas = document.createElement('canvas');
+        var canvas = PIXI.CanvasPool.create(this, width, height);
 
         if (typeof id === 'string' && id !== '')
         {

@@ -53,7 +53,8 @@ PIXI.CanvasPool = {
         {
             canvas.width = width;
             canvas.height = height;
-            canvas.clearRect(0, 0, width, height);
+            // var context = canvas.getContext('2d');
+            // context.clearRect(0, 0, width, height);
         }
 
         return canvas;

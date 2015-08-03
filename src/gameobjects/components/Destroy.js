@@ -135,6 +135,8 @@ Phaser.Component.Destroy.prototype = {
         this._currentBounds = null;
         this._mask = null;
 
+
+
         this._destroyCachedSprite();
 
         this.destroyPhase = false;

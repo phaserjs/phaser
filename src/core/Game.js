@@ -673,11 +673,11 @@ Phaser.Game.prototype = {
 
         if (this.config['canvasID'])
         {
-            this.canvas = Phaser.Canvas.create(this.width, this.height, this.config['canvasID']);
+            this.canvas = Phaser.Canvas.create(this, this.width, this.height, this.config['canvasID']);
         }
         else
         {
-            this.canvas = Phaser.Canvas.create(this.width, this.height);
+            this.canvas = Phaser.Canvas.create(this, this.width, this.height);
         }
 
         if (this.config['canvasStyle'])

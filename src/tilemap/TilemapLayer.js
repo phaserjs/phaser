@@ -56,7 +56,7 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     * @property {HTMLCanvasElement} canvas
     * @protected
     */
-    this.canvas = Phaser.Canvas.create(width, height);
+    this.canvas = PIXI.CanvasPool.create(this, width, height);
 
     /**
     * The 2d context of the canvas.
@@ -255,6 +255,7 @@ Phaser.TilemapLayer.sharedCopyCanvas = null;
 *
 * Code that uses the canvas is responsible to ensure the dimensions and save/restore state as appropriate.
 *
+* @method Phaser.TilemapLayer#ensureSharedCopyCanvas
 * @protected
 * @static
 */
@@ -272,8 +273,7 @@ Phaser.TilemapLayer.ensureSharedCopyCanvas = function () {
 /**
 * Automatically called by World.preUpdate.
 *
-* @method Phaser.Image#preUpdate
-* @memberof Phaser.Image
+* @method Phaser.TilemapLayer#preUpdate
 */
 Phaser.TilemapLayer.prototype.preUpdate = function() {
 
@@ -298,6 +298,19 @@ Phaser.TilemapLayer.prototype.postUpdate = function () {
     this.scrollY = camera.y * this.scrollFactorY / this.scale.y;
 
     this.render();
+
+};
+
+/**
+* Destroys this TilemapLayer.
+*
+* @method Phaser.TilemapLayer#destroy
+*/
+Phaser.TilemapLayer.prototype.destroy = function() {
+
+    PIXI.CanvasPool.remove(this);
+
+    Phaser.Component.Destroy.prototype.destroy.call(this);
 
 };
 

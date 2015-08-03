@@ -108,7 +108,7 @@ Phaser.Utils.Debug.prototype = {
             this.sprite = this.game.make.image(0, 0, this.bmd);
             this.game.stage.addChild(this.sprite);
 
-            this.canvas = Phaser.Canvas.create(this.game.width, this.game.height, '', true);
+            this.canvas = PIXI.CanvasPool.create(this, this.game.width, this.game.height);
             this.context = this.canvas.getContext('2d');
         }
 
@@ -811,6 +811,17 @@ Phaser.Utils.Debug.prototype = {
         this.start();
         Phaser.Physics.Box2D.renderBody(this.context, body, color);
         this.stop();
+
+    },
+
+    /**
+    * Destroy this object.
+    *
+    * @method Phaser.Utils.Debug#destroy
+    */
+    destroy: function () {
+    
+        PIXI.CanvasPool.remove(this);
 
     }
 
