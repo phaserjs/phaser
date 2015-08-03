@@ -378,21 +378,23 @@ Object.defineProperty(PIXI.DisplayObject.prototype, 'cacheAsBitmap', {
 
     set: function(value) {
 
-        if (this._cacheAsBitmap === value) return;
+        if (this._cacheAsBitmap === value)
+        {
+            return;
+        }
 
         if (value)
         {
-            console.log('DisplayObject.cacheAsBitmap - gen');
             this._generateCachedSprite();
         }
         else
         {
-            console.log('DisplayObject.cacheAsBitmap - nuke');
             this._destroyCachedSprite();
         }
 
         this._cacheAsBitmap = value;
     }
+
 });
 
 /*
@@ -652,8 +654,6 @@ PIXI.DisplayObject.prototype._generateCachedSprite = function()
 
     this.updateTransform();
 
-    console.log('bounds', bounds);
-
     if (!this._cachedSprite)
     {
         var renderTexture = new PIXI.RenderTexture(bounds.width | 1, bounds.height | 1);
@@ -670,56 +670,13 @@ PIXI.DisplayObject.prototype._generateCachedSprite = function()
     this._filters = null;
     this._cachedSprite.filters = tempFilters;
 
-    PIXI.DisplayObject._tempMatrix.identity();
+    // PIXI.DisplayObject._tempMatrix.identity();
     PIXI.DisplayObject._tempMatrix.tx = -bounds.x;
     PIXI.DisplayObject._tempMatrix.ty = -bounds.y;
 
-    console.log(PIXI.DisplayObject._tempMatrix);
-
-    // if (matrix === undefined || matrix === null)
-    // {
-
-    // var m = new Phaser.Matrix();
-    // m.scale(1, -1);
-    // m.tx = -bounds.x;
-    // m.ty = -bounds.y;
-
-    // m.copyFrom(this.worldTransform);
-
-        // this._tempMatrix.copyFrom(displayObject.worldTransform);
-    // }
-    // else
-    // {
-    //     this._tempMatrix.copyFrom(matrix);
-    // }
-
-
-    //  Let's create a nice matrix to apply to our display object.
-    //  Frame buffers come in upside down so we need to flip the matrix.
-    // var wt = this.worldTransform;
-    // wt.identity();
-    // wt.translate(0, this.projection.y * 2);
-
-    // if (matrix)
-    // {
-    //     wt.append(matrix);
-    // }
-
-    // wt.scale(1, -1);
-
-    this._cachedSprite.texture.textureBuffer.context.fillStyle = 'rgba(255,0,0,0.2)';
-    this._cachedSprite.texture.textureBuffer.context.fillRect(0, 0, this._cachedSprite.texture.textureBuffer.canvas.width, this._cachedSprite.texture.textureBuffer.canvas.height);
-
-    // this._cachedSprite.texture.render(this, m, true);
     this._cachedSprite.texture.render(this, PIXI.DisplayObject._tempMatrix, false);
-
-    // console.log(m);
-
-    // this._cachedSprite.texture.render(this, PIXI.DisplayObject._tempMatrix, true);
-    // this._cachedSprite.anchor.x = -( bounds.x / bounds.width );
-    // this._cachedSprite.anchor.y = -( bounds.y / bounds.height );
-
-    console.log(this._cachedSprite.position);
+    this._cachedSprite.anchor.x = -( bounds.x / bounds.width );
+    this._cachedSprite.anchor.y = -( bounds.y / bounds.height );
 
     this._filters = tempFilters;
 

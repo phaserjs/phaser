@@ -263,6 +263,16 @@ PIXI.RenderTexture.prototype.renderCanvas = function(displayObject, matrix, clea
         return;
     }
 
+    //  Let's create a nice matrix to apply to our display object.
+    //  Frame buffers come in upside down so we need to flip the matrix.
+    var wt = displayObject.worldTransform;
+    wt.identity();
+
+    if (matrix)
+    {
+        wt.append(matrix);
+    }
+
     // Time to update all the children of the displayObject with the new matrix (what new matrix? there isn't one!)
     for (var i = 0; i < displayObject.children.length; i++)
     {
