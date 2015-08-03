@@ -1922,8 +1922,6 @@ Phaser.ScaleManager.prototype = {
 
             this.updateLayout();
             this.queueUpdate(true);
-
-            this.enterFullScreen.dispatch(this.width, this.height);
         }
         else
         {
@@ -1933,11 +1931,9 @@ Phaser.ScaleManager.prototype = {
 
             this.updateLayout();
             this.queueUpdate(true);
-
-            this.leaveFullScreen.dispatch(this.width, this.height);
         }
 
-        this.onFullScreenChange.dispatch(this);
+        this.onFullScreenChange.dispatch(this, this.width, this.height);
 
     },
 
