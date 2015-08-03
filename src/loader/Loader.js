@@ -2161,6 +2161,7 @@ Phaser.Loader.prototype = {
                 _this.fileComplete(file);
             }
         };
+
         file.data.onerror = function () {
             if (file.data.onload)
             {
