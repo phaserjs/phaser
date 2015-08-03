@@ -5,7 +5,7 @@
 */
 
 /**
-* 
+* The CanvasPool is a global static object that allows Pixi and Phaser to pool
 *
 * @class PIXI.CanvasPool
 * @static
@@ -31,14 +31,14 @@ PIXI.CanvasPool = {
         {
             var container = {
                 parent: parent,
-                canvas: document.createElement("canvas")
+                canvas: document.createElement('canvas')
             }
 
             PIXI.CanvasPool.pool.push(container);
 
             canvas = container.canvas;
 
-            console.log('CanvasPool created', PIXI.CanvasPool.pool.length);
+            // console.log('CanvasPool created', PIXI.CanvasPool.pool.length);
         }
         else
         {
@@ -46,15 +46,13 @@ PIXI.CanvasPool = {
 
             canvas = PIXI.CanvasPool.pool[idx].canvas;
 
-            console.log('CanvasPool recycled', idx);
+            // console.log('CanvasPool recycled', idx);
         }
 
         if (width !== undefined)
         {
             canvas.width = width;
             canvas.height = height;
-            // var context = canvas.getContext('2d');
-            // context.clearRect(0, 0, width, height);
         }
 
         return canvas;
@@ -87,7 +85,7 @@ PIXI.CanvasPool = {
             {
                 pool[i].parent = null;
 
-                console.log('CanvasPool removed', i);
+                // console.log('CanvasPool removed', i);
             }
         }
 

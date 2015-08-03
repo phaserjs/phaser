@@ -119,7 +119,7 @@ PIXI.WebGLRenderer = function(width, height, options)
      * @property view
      * @type HTMLCanvasElement
      */
-    this.view = options.view || PIXI.CanvasPool.create(this, this.width, this.height);
+    this.view = options.view || document.createElement('canvas');
 
     /**
      * @property _contextOptions
@@ -129,8 +129,8 @@ PIXI.WebGLRenderer = function(width, height, options)
     this._contextOptions = {
         alpha: this.transparent,
         antialias: options.antialias, // SPEED UP??
-        premultipliedAlpha:this.transparent && this.transparent !== 'notMultiplied',
-        stencil:true,
+        premultipliedAlpha: this.transparent && this.transparent !== 'notMultiplied',
+        stencil: true,
         preserveDrawingBuffer: options.preserveDrawingBuffer
     };
 

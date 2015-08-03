@@ -10,6 +10,7 @@
 
     "src/pixi/utils/Utils.js",
     "src/pixi/utils/Polyk.js",
+    "src/pixi/utils/CanvasPool.js",
 
     "src/pixi/renderers/webgl/utils/WebGLShaderUtils.js",
     "src/pixi/renderers/webgl/shaders/PixiShader.js",
