@@ -274,7 +274,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * Removed use of the deprecated `enterFullScreen` and `leaveFullScreen` signals from the Scale Manager (thanks @mmanlod #1972)
 * BitmapText with tints applied wouldn't update properly in Canvas mode (thanks @Pajamaman #1969)
 * Group.cacheAsBitmap would be incorrectly offset in Canvas mode (thanks @mkristo #1925)
-
+* Text.setTextBounds didn't add the x and y values to the width and height offsets.
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
