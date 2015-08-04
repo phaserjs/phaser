@@ -261,6 +261,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 
 * TypeScript definitions fixes and updates (thanks @clark-stevenson @vrecluse)
 * JSDoc typo fixes (thanks )
+* VideoStream.active = false is used if the browser supports it, otherwise it falls back to VideoStream.stop.
 
 ### Bug Fixes
 

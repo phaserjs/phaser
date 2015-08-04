@@ -352,7 +352,14 @@ Phaser.Video.prototype = {
 
         if (this.videoStream !== null)
         {
-            this.videoStream.stop();
+            if (this.videoStream['active'])
+            {
+                this.videoStream.active = false;
+            }
+            else
+            {
+                this.videoStream.stop();
+            }
         }
 
         this.removeVideoElement();
@@ -731,7 +738,15 @@ Phaser.Video.prototype = {
             else
             {
                 this.video.src = "";
-                this.videoStream.stop();
+
+                if (this.videoStream['active'])
+                {
+                    this.videoStream.active = false;
+                }
+                else
+                {
+                    this.videoStream.stop();
+                }
             }
 
             this.videoStream = null;
