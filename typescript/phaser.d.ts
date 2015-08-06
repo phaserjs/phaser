@@ -421,7 +421,7 @@ declare module Phaser {
         addBitmapFont(key: string, url: string, data: any, atlasData: any, atlasType: string, xSpacing?: number, ySpacing?: number): void;
         addCanvas(key: string, canvas: HTMLCanvasElement, context?: CanvasRenderingContext2D): void;
         addDefaultImage(): void;
-        addImage(key: string, url: string, data: any): void;
+        addImage(key: string, url: string, data: any): Phaser.CachedImage;
         addJSON(key: string, urL: string, data: any): void;
         addMissingImage(): void;
         addPhysicsData(key: string, url: string, JSONData: any, format: number): void;
@@ -465,7 +465,7 @@ declare module Phaser {
         getFrameByName(key: string, name: string, cache?: number): Phaser.Frame;
         getFrameCount(key: string, cache?: number): number;
         getFrameData(key: string, cache?: number): Phaser.FrameData;
-        getImage(key: string, full?: boolean): Phaser.Image;
+        getImage(key: string, full?: boolean): Phaser.CachedImage;
         getItem(key: string, cache: number, method?: string, property?: string): any;
         getJSON(key: string, clone?: boolean): any;
         getKeys(cache: number): string[];
@@ -511,6 +511,17 @@ declare module Phaser {
         removeVideo(key: string): void;
         updateFrameData(key: string, frameData: any, cache?: number): void;
         updateSound(key: string, property: string, value: Phaser.Sound): void;
+
+    }
+    
+    interface CachedImage {
+
+            key: string,
+            url: string,
+            data: HTMLImageElement,
+            base: PIXI.BaseTexture,
+            frame: Phaser.Frame,
+            frameData: Phaser.FrameData
 
     }
 
