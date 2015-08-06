@@ -10,3 +10,7 @@ Please use TypeScript 1.4+
 ## Contributing ##
 
 If you find any mistakes in these definitions or you feel they can be improved in any way, please make a pull request against the dev branch. 
+
+## Note ##
+
+`Creature` and `Box2D` are not yet defined. 

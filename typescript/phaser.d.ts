@@ -1,7 +1,7 @@
 /// <reference path="pixi.d.ts" />
 /// <reference path="p2.d.ts" />
 
-// Type definitions for Phaser 2.4.0 2015-Jul-16
+// Type definitions for Phaser 2.4.3 2015-Jul-31
 // Project: https://github.com/photonstorm/phaser
 
 declare class Phaser {
@@ -3142,7 +3142,7 @@ declare module Phaser {
                 applyDamping(dt: number): void;
                 applyForce(force: number[], worldX: number, worldY: number): void;
                 applyImpulse(impulse: number[], worldX: number, worldY: number): void;
-                applyImpulseLocal(force: number[], localX: number, localY: number): void;
+                applyImpulseLocal(impulse: number[], localX: number, localY: number): void;
                 clearCollision(clearGroup?: boolean, cleanMask?: boolean, shape?: p2.Shape): void;
                 clearShapes(): void;
                 collides(group: any, callback?: Function, callbackContext?: any, shape?: p2.Shape): void;
@@ -3868,7 +3868,7 @@ declare module Phaser {
         start(): boolean;
         stop(): void;
         updateRAF(rafTime: number): void;
-        updateSetTimeout(): void;
+        updateSetTimeout(time: number): void;
 
     }
 
@@ -5114,7 +5114,7 @@ declare module Phaser {
         repeat(): number;
         start(): Phaser.TweenData;
         to(properties: any, duration?: number, ease?: Function, delay?: number, repeat?: number, yoyo?: boolean): Phaser.TweenData;
-        update(): number;
+        update(time: number): number;
 
     }
 
