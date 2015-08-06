@@ -40,7 +40,16 @@ Phaser.Text = function (game, x, y, text, style) {
 
     x = x || 0;
     y = y || 0;
-    text = text.toString() || '';
+
+    if (text === undefined || text === null)
+    {
+        text = '';
+    }
+    else
+    {
+        text = text.toString();
+    }
+
     style = style || {};
 
     /**
