@@ -61,7 +61,7 @@ Phaser.BitmapData = function (game, key, width, height) {
     /**
     * @property {ImageData} imageData - The context image data.
     * Please note that a call to BitmapData.draw() or BitmapData.copy() does not update immediately this property for performance reason. Use BitmapData.update() to do so.
-    * This property is updated automatically after the first game loop, according to the dirty flag property initially set on an instance of BitmapData.
+    * This property is updated automatically after the first game loop, according to the dirty flag property.
     */
     this.imageData = this.context.getImageData(0, 0, width, height);
 
