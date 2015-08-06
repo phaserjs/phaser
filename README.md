@@ -256,6 +256,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * Text.addFontStyle and Text.addFontWeight allow you to apply font weights and styles to specific characters in a Text object. For example you can now include bold or italics within single Text objects (thanks @jdnichollsc #1950)
 * PIXI.CanvasPool is a new static global created to deal with the issue of resource leaks and continuous DOM node build-up when creating lots of Text or BitmapData objects, or when calling `generateTexture` on any display object. The CanvasPool will do its best to re-use out dated canvas elements rather than filling up the DOM with new ones.
 * Sprite.setTexture has a new `destroyBase` parameter - set this to `true` if you know the base used a generated texture that isn't being used by any other sprites. This will free-up the canvas for further re-use by other calls to generateTexture or Text objects.
+* Line.midPoint will return a Point object where the x and y values correspond to the center (or midpoint) of the Line segment.
 
 ### Updates
 
