@@ -6,7 +6,7 @@
 */
 
 /**
-* A Signal is an event dispatch mechansim that supports broadcasting to multiple listeners.
+* A Signal is an event dispatch mechanism that supports broadcasting to multiple listeners.
 *
 * Event listeners are uniquely identified by the listener/callback function and the context.
 * 
