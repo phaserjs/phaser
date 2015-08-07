@@ -822,7 +822,7 @@ Phaser.Point.rotate = function (a, x, y, angle, asDegrees, distance) {
     {
         var t = angle + Math.atan2(a.y - y, a.x - x);
         a.x = x + distance * Math.cos(t);
-        a.y = y + distance * Math.sin(t);        
+        a.y = y + distance * Math.sin(t);
     }
 
     return a;
