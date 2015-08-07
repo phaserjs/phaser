@@ -1310,15 +1310,17 @@ Phaser.BitmapData.prototype = {
             return;
         }
 
-        this._alpha.prev = this.context.globalAlpha;
+        var ctx = this.context;
 
-        this.context.save();
+        this._alpha.prev = ctx.globalAlpha;
 
-        this.context.globalAlpha = this._alpha.current;
+        ctx.save();
+
+        ctx.globalAlpha = this._alpha.current;
 
         if (blendMode)
         {
-            this.context.globalCompositeOperation = blendMode;
+            this.op = blendMode;
         }
 
         if (roundPx)
@@ -1327,17 +1329,17 @@ Phaser.BitmapData.prototype = {
             ty |= 0;
         }
 
-        this.context.translate(tx, ty);
+        ctx.translate(tx, ty);
 
-        this.context.scale(this._scale.x, this._scale.y);
+        ctx.scale(this._scale.x, this._scale.y);
 
-        this.context.rotate(this._rotate);
+        ctx.rotate(this._rotate);
 
-        this.context.drawImage(this._image, this._pos.x + x, this._pos.y + y, this._size.x, this._size.y, -newWidth * this._anchor.x, -newHeight * this._anchor.y, newWidth, newHeight);
+        ctx.drawImage(this._image, this._pos.x + x, this._pos.y + y, this._size.x, this._size.y, -newWidth * this._anchor.x, -newHeight * this._anchor.y, newWidth, newHeight);
 
-        this.context.restore();
+        ctx.restore();
 
-        this.context.globalAlpha = this._alpha.prev;
+        ctx.globalAlpha = this._alpha.prev;
 
         this.dirty = true;
 
@@ -1424,16 +1426,18 @@ Phaser.BitmapData.prototype = {
     */
     shadow: function (color, blur, x, y) {
 
+        var ctx = this.context;
+
         if (color === undefined || color === null)
         {
-            this.context.shadowColor = 'rgba(0,0,0,0)';
+            ctx.shadowColor = 'rgba(0,0,0,0)';
         }
         else
         {
-            this.context.shadowColor = color;
-            this.context.shadowBlur = blur || 5;
-            this.context.shadowOffsetX = x || 10;
-            this.context.shadowOffsetY = y || 10;
+            ctx.shadowColor = color;
+            ctx.shadowBlur = blur || 5;
+            ctx.shadowOffsetX = x || 10;
+            ctx.shadowOffsetY = y || 10;
         }
 
     },
@@ -1571,20 +1575,21 @@ Phaser.BitmapData.prototype = {
         if (color === undefined) { color = 'rgb(255,255,255)'; }
         if (shadow === undefined) { shadow = true; }
 
-        var prevFont = this.context.font;
+        var ctx = this.context;
+        var prevFont = ctx.font;
 
-        this.context.font = font;
+        ctx.font = font;
 
         if (shadow)
         {
-            this.context.fillStyle = 'rgb(0,0,0)';
-            this.context.fillText(text, x + 1, y + 1);
+            ctx.fillStyle = 'rgb(0,0,0)';
+            ctx.fillText(text, x + 1, y + 1);
         }
         
-        this.context.fillStyle = color;
-        this.context.fillText(text, x, y);
+        ctx.fillStyle = color;
+        ctx.fillText(text, x, y);
 
-        this.context.font = prevFont;
+        ctx.font = prevFont;
 
     },
 
@@ -1600,16 +1605,52 @@ Phaser.BitmapData.prototype = {
     */
     circle: function (x, y, radius, fillStyle) {
 
-        if (typeof fillStyle !== 'undefined')
+        var ctx = this.context;
+
+        if (fillStyle !== undefined)
         {
-            this.context.fillStyle = fillStyle;
+            ctx.fillStyle = fillStyle;
         }
 
-        this.context.beginPath();
-        this.context.arc(x, y, radius, 0, Math.PI * 2, false);
-        this.context.closePath();
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, Math.PI * 2, false);
+        ctx.closePath();
 
-        this.context.fill();
+        ctx.fill();
+
+        return this;
+
+    },
+
+    /**
+    * Draws a line between the coordinates given in the color and thickness specified.
+    *
+    * @method Phaser.BitmapData#line
+    * @param {number} x1 - The x coordinate to start the line from.
+    * @param {number} y1 - The y coordinate to start the line from.
+    * @param {number} x2 - The x coordinate to draw the line to.
+    * @param {number} y2 - The y coordinate to draw the line to.
+    * @param {string} [color='#fff'] - The stroke color that the line will be drawn in.
+    * @param {number} [width=1] - The line thickness.
+    * @return {Phaser.BitmapData} This BitmapData object for method chaining.
+    */
+    line: function (x1, y1, x2, y2, color, width) {
+
+        if (color === undefined) { color = '#fff'; }
+        if (width === undefined) { width = 1; }
+
+        var ctx = this.context;
+
+        ctx.beginPath();
+
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+
+        ctx.lineWidth = width;
+        ctx.strokeStyle = color;
+        ctx.stroke();
+
+        ctx.closePath();
 
         return this;
 
@@ -1645,17 +1686,19 @@ Phaser.BitmapData.prototype = {
             width = image.width;
         }
 
-        this.context.fillStyle = this.context.createPattern(image, repeat);
+        var ctx = this.context;
+
+        ctx.fillStyle = ctx.createPattern(image, repeat);
 
         this._circle = new Phaser.Circle(line.start.x, line.start.y, image.height);
 
         this._circle.circumferencePoint(line.angle - 1.5707963267948966, false, this._pos);
 
-        this.context.save();
-        this.context.translate(this._pos.x, this._pos.y);
-        this.context.rotate(line.angle);
-        this.context.fillRect(0, 0, width, image.height);
-        this.context.restore();
+        ctx.save();
+        ctx.translate(this._pos.x, this._pos.y);
+        ctx.rotate(line.angle);
+        ctx.fillRect(0, 0, width, image.height);
+        ctx.restore();
 
         this.dirty = true;
 
@@ -1702,7 +1745,7 @@ Phaser.BitmapData.prototype = {
     */
     blendReset: function () {
 
-        this.context.globalCompositeOperation = 'source-over';
+        this.op = 'source-over';
         return this;
 
     },
@@ -1715,7 +1758,7 @@ Phaser.BitmapData.prototype = {
     */
     blendSourceOver: function () {
 
-        this.context.globalCompositeOperation = 'source-over';
+        this.op = 'source-over';
         return this;
 
     },
@@ -1728,7 +1771,7 @@ Phaser.BitmapData.prototype = {
     */
     blendSourceIn: function () {
 
-        this.context.globalCompositeOperation = 'source-in';
+        this.op = 'source-in';
         return this;
 
     },
@@ -1741,7 +1784,7 @@ Phaser.BitmapData.prototype = {
     */
     blendSourceOut: function () {
 
-        this.context.globalCompositeOperation = 'source-out';
+        this.op = 'source-out';
         return this;
 
     },
@@ -1754,7 +1797,7 @@ Phaser.BitmapData.prototype = {
     */
     blendSourceAtop: function () {
 
-        this.context.globalCompositeOperation = 'source-atop';
+        this.op = 'source-atop';
         return this;
 
     },
@@ -1767,7 +1810,7 @@ Phaser.BitmapData.prototype = {
     */
     blendDestinationOver: function () {
 
-        this.context.globalCompositeOperation = 'destination-over';
+        this.op = 'destination-over';
         return this;
 
     },
@@ -1780,7 +1823,7 @@ Phaser.BitmapData.prototype = {
     */
     blendDestinationIn: function () {
 
-        this.context.globalCompositeOperation = 'destination-in';
+        this.op = 'destination-in';
         return this;
 
     },
@@ -1793,7 +1836,7 @@ Phaser.BitmapData.prototype = {
     */
     blendDestinationOut: function () {
 
-        this.context.globalCompositeOperation = 'destination-out';
+        this.op = 'destination-out';
         return this;
 
     },
@@ -1806,7 +1849,7 @@ Phaser.BitmapData.prototype = {
     */
     blendDestinationAtop: function () {
 
-        this.context.globalCompositeOperation = 'destination-atop';
+        this.op = 'destination-atop';
         return this;
 
     },
@@ -1819,7 +1862,7 @@ Phaser.BitmapData.prototype = {
     */
     blendXor: function () {
 
-        this.context.globalCompositeOperation = 'xor';
+        this.op = 'xor';
         return this;
 
     },
@@ -1832,7 +1875,7 @@ Phaser.BitmapData.prototype = {
     */
     blendAdd: function () {
 
-        this.context.globalCompositeOperation = 'lighter';
+        this.op = 'lighter';
         return this;
 
     },
@@ -1845,7 +1888,7 @@ Phaser.BitmapData.prototype = {
     */
     blendMultiply: function () {
 
-        this.context.globalCompositeOperation = 'multiply';
+        this.op = 'multiply';
         return this;
 
     },
@@ -1858,7 +1901,7 @@ Phaser.BitmapData.prototype = {
     */
     blendScreen: function () {
 
-        this.context.globalCompositeOperation = 'screen';
+        this.op = 'screen';
         return this;
 
     },
@@ -1871,7 +1914,7 @@ Phaser.BitmapData.prototype = {
     */
     blendOverlay: function () {
 
-        this.context.globalCompositeOperation = 'overlay';
+        this.op = 'overlay';
         return this;
 
     },
@@ -1884,7 +1927,7 @@ Phaser.BitmapData.prototype = {
     */
     blendDarken: function () {
 
-        this.context.globalCompositeOperation = 'darken';
+        this.op = 'darken';
         return this;
 
     },
@@ -1897,7 +1940,7 @@ Phaser.BitmapData.prototype = {
     */
     blendLighten: function () {
 
-        this.context.globalCompositeOperation = 'lighten';
+        this.op = 'lighten';
         return this;
 
     },
@@ -1910,7 +1953,7 @@ Phaser.BitmapData.prototype = {
     */
     blendColorDodge: function () {
 
-        this.context.globalCompositeOperation = 'color-dodge';
+        this.op = 'color-dodge';
         return this;
 
     },
@@ -1923,7 +1966,7 @@ Phaser.BitmapData.prototype = {
     */
     blendColorBurn: function () {
 
-        this.context.globalCompositeOperation = 'color-burn';
+        this.op = 'color-burn';
         return this;
 
     },
@@ -1936,7 +1979,7 @@ Phaser.BitmapData.prototype = {
     */
     blendHardLight: function () {
 
-        this.context.globalCompositeOperation = 'hard-light';
+        this.op = 'hard-light';
         return this;
 
     },
@@ -1949,7 +1992,7 @@ Phaser.BitmapData.prototype = {
     */
     blendSoftLight: function () {
 
-        this.context.globalCompositeOperation = 'soft-light';
+        this.op = 'soft-light';
         return this;
 
     },
@@ -1962,7 +2005,7 @@ Phaser.BitmapData.prototype = {
     */
     blendDifference: function () {
 
-        this.context.globalCompositeOperation = 'difference';
+        this.op = 'difference';
         return this;
 
     },
@@ -1975,7 +2018,7 @@ Phaser.BitmapData.prototype = {
     */
     blendExclusion: function () {
 
-        this.context.globalCompositeOperation = 'exclusion';
+        this.op = 'exclusion';
         return this;
 
     },
@@ -1988,7 +2031,7 @@ Phaser.BitmapData.prototype = {
     */
     blendHue: function () {
 
-        this.context.globalCompositeOperation = 'hue';
+        this.op = 'hue';
         return this;
 
     },
@@ -2001,7 +2044,7 @@ Phaser.BitmapData.prototype = {
     */
     blendSaturation: function () {
 
-        this.context.globalCompositeOperation = 'saturation';
+        this.op = 'saturation';
         return this;
 
     },
@@ -2014,7 +2057,7 @@ Phaser.BitmapData.prototype = {
     */
     blendColor: function () {
 
-        this.context.globalCompositeOperation = 'color';
+        this.op = 'color';
         return this;
 
     },
@@ -2027,7 +2070,7 @@ Phaser.BitmapData.prototype = {
     */
     blendLuminosity: function () {
 
-        this.context.globalCompositeOperation = 'luminosity';
+        this.op = 'luminosity';
         return this;
 
     }
@@ -2049,6 +2092,26 @@ Object.defineProperty(Phaser.BitmapData.prototype, "smoothed", {
     set: function (value) {
 
         Phaser.Canvas.setSmoothingEnabled(this.context, value);
+
+    }
+
+});
+
+/**
+* @memberof Phaser.BitmapData
+* @property {string} op - A short-hand code to get or set the global composite operation of the BitmapDatas canvas.
+*/
+Object.defineProperty(Phaser.BitmapData.prototype, "op", {
+
+    get: function () {
+
+        return this.context.globalCompositeOperation;
+
+    },
+
+    set: function (value) {
+
+        this.context.globalCompositeOperation = value;
 
     }
 

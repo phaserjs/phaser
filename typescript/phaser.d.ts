@@ -205,6 +205,7 @@ declare module Phaser {
         height: number;
         imageData: ImageData;
         key: string;
+        op: string;
         pixels: Uint32Array;
         smoothed: boolean;
         texture: PIXI.Texture;
@@ -261,6 +262,7 @@ declare module Phaser {
         getPixel32(x: number, y: number): number;
         getPixels(rect: Phaser.Rectangle): ImageData;
         getTransform(translateX: number, translateY: number, scaleX: number, scaleY: number, skewX: number, skewY: number): any;
+        line(x1: number, y1: number, x2: number, y2: number, color?: string, width?: number): Phaser.BitmapData;
         load(source: any): Phaser.BitmapData;
         move(x: number, y: number): Phaser.BitmapData;
         moveH(distance: number): Phaser.BitmapData;

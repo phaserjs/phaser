@@ -259,6 +259,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * Line.midPoint will return a Point object where the x and y values correspond to the center (or midpoint) of the Line segment.
 * Line.rotateAround allows you to rotate a Line around the given coordinates (in world space)
 * Line.centerOn will position the Line so that its midpoint lays on the coordinates given.
+* BitmapData.line draws a line to the BitmapData in the color and thickness specified.
 
 ### Updates
 
