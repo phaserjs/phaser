@@ -803,24 +803,27 @@ Phaser.Point.normalize = function (a, out) {
 */
 Phaser.Point.rotate = function (a, x, y, angle, asDegrees, distance) {
 
-    if (asDegrees === undefined) { asDegrees = false; }
-    if (distance === undefined) { distance = null; }
+    if (asDegrees) { angle = Phaser.Math.degToRad(angle); }
 
-    if (asDegrees)
+    if (distance === undefined)
     {
-        angle = Phaser.Math.degToRad(angle);
-    }
+        a.subtract(x, y);
 
-    if (distance === null)
+        var s = Math.sin(angle);
+        var c = Math.cos(angle);
+
+        var tx = c * a.x - s * a.y;
+        var ty = s * a.x + c * a.y;
+
+        a.x = tx + x;
+        a.y = ty + y;
+    }
+    else
     {
-        //  Get distance from origin (cx/cy) to this point
-        distance = Math.sqrt(((x - a.x) * (x - a.x)) + ((y - a.y) * (y - a.y)));
+        var t = angle + Math.atan2(a.y - y, a.x - x);
+        a.x = x + distance * Math.cos(t);
+        a.y = y + distance * Math.sin(t);        
     }
-
-    var t = angle + Math.atan2(a.y - y, a.x - x);
-
-    a.x = x + distance * Math.cos(t);
-    a.y = y + distance * Math.sin(t);
 
     return a;
 

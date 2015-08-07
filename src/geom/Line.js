@@ -106,8 +106,9 @@ Phaser.Line.prototype = {
     * Rotates the line by the amount specified in `angle`.
     * 
     * Rotation takes place from the center of the line.
+    * If you wish to rotate around a different point see Line.rotateAround.
     * 
-    * If you wish to rotate from either end see Line.start.rotate or Line.end.rotate.
+    * If you wish to rotate the ends of the Line then see Line.start.rotate or Line.end.rotate.
     * 
     * @method Phaser.Line#rotate
     * @param {number} angle - The angle in radians (unless asDegrees is true) to rotate the line by.
@@ -116,11 +117,30 @@ Phaser.Line.prototype = {
     */
     rotate: function (angle, asDegrees) {
 
-        var x = this.start.x;
-        var y = this.start.y;
+        var cx = (this.start.x + this.end.x) / 2;
+        var cy = (this.start.y + this.end.y) / 2;
 
-        this.start.rotate(this.end.x, this.end.y, angle, asDegrees, this.length);
-        this.end.rotate(x, y, angle, asDegrees, this.length);
+        this.start.rotate(cx, cy, angle, asDegrees);
+        this.end.rotate(cx, cy, angle, asDegrees);
+
+        return this;
+
+    },
+
+    /**
+    * Rotates the line by the amount specified in `angle`.
+    * 
+    * Rotation takes place around the coordinates given.
+    * 
+    * @method Phaser.Line#rotateAround
+    * @param {number} angle - The angle in radians (unless asDegrees is true) to rotate the line by.
+    * @param {boolean} [asDegrees=false] - Is the given angle in radians (false) or degrees (true)?
+    * @return {Phaser.Line} This line object
+    */
+    rotateAround: function (x, y, angle, asDegrees) {
+
+        this.start.rotate(x, y, angle, asDegrees);
+        this.end.rotate(x, y, angle, asDegrees);
 
         return this;
 
@@ -172,6 +192,19 @@ Phaser.Line.prototype = {
         out.y = (this.start.y + this.end.y) / 2;
 
         return out;
+
+    },
+
+    centerOn: function (x, y) {
+
+        var midx = (this.start.x + this.end.x) / 2;
+        var midy = (this.start.y + this.end.y) / 2;
+
+        var tx = x - midx;
+        var ty = y - midy;
+
+        this.start.add(tx, ty);
+        this.end.add(tx, ty);
 
     },
 

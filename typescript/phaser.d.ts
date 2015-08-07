@@ -2136,6 +2136,7 @@ declare module Phaser {
         random(out?: Phaser.Point): Phaser.Point;
         reflect(line: Phaser.Line): number;
         rotate(angle: number, asDegrees?: boolean): Phaser.Line;
+        rotateAround(x: number, y: number, angle: number, asDegrees?: boolean): Phaser.Line;
         setTo(x1?: number, y1?: number, x2?: number, y2?: number): Phaser.Line;
 
     }

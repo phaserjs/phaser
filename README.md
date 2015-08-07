@@ -257,6 +257,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * PIXI.CanvasPool is a new static global created to deal with the issue of resource leaks and continuous DOM node build-up when creating lots of Text or BitmapData objects, or when calling `generateTexture` on any display object. The CanvasPool will do its best to re-use out dated canvas elements rather than filling up the DOM with new ones.
 * Sprite.setTexture has a new `destroyBase` parameter - set this to `true` if you know the base used a generated texture that isn't being used by any other sprites. This will free-up the canvas for further re-use by other calls to generateTexture or Text objects.
 * Line.midPoint will return a Point object where the x and y values correspond to the center (or midpoint) of the Line segment.
+* Line.rotateAround allows you to rotate a Line around the given coordinates (in world space)
 
 ### Updates
 
@@ -264,6 +265,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * JSDoc typo fixes (thanks @Cowa @yahiko00)
 * VideoStream.active = false is used if the browser supports it, otherwise it falls back to VideoStream.stop.
 * Text can now accept `undefined` or `null` as the `text` argument in the constructor and will cast it as an empty string.
+* Point.rotate uses a faster and simpler rotation function when no distance argument is specified.
 
 ### Bug Fixes
 
@@ -277,6 +279,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * BitmapText with tints applied wouldn't update properly in Canvas mode (thanks @Pajamaman #1969)
 * Group.cacheAsBitmap would be incorrectly offset in Canvas mode (thanks @mkristo #1925)
 * Text.setTextBounds didn't add the x and y values to the width and height offsets.
+* Line.rotate used a calculation method which resulted in the line growing (or shrinking) in length over time, the more it was rotated. The new method never changes the lines length.
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
