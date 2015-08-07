@@ -260,6 +260,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * Line.rotateAround allows you to rotate a Line around the given coordinates (in world space)
 * Line.centerOn will position the Line so that its midpoint lays on the coordinates given.
 * BitmapData.line draws a line to the BitmapData in the color and thickness specified.
+* BitmapData.op is a handy short-code to get and set the canvas global composite operator.
 
 ### Updates
 
