@@ -258,6 +258,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * Sprite.setTexture has a new `destroyBase` parameter - set this to `true` if you know the base used a generated texture that isn't being used by any other sprites. This will free-up the canvas for further re-use by other calls to generateTexture or Text objects.
 * Line.midPoint will return a Point object where the x and y values correspond to the center (or midpoint) of the Line segment.
 * Line.rotateAround allows you to rotate a Line around the given coordinates (in world space)
+* Line.centerOn will position the Line so that its midpoint lays on the coordinates given.
 
 ### Updates
 

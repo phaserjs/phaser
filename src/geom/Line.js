@@ -195,13 +195,24 @@ Phaser.Line.prototype = {
 
     },
 
+    /**
+    * Centers this Line on the given coordinates.
+    * 
+    * The line is centered by positioning the start and end points so that the lines midpoint matches
+    * the coordinates given.
+    * 
+    * @method Phaser.Line#centerOn
+    * @param {number} x - The x position to center the line on.
+    * @param {number} y - The y position to center the line on.
+    * @return {Phaser.Line} This line object
+    */
     centerOn: function (x, y) {
 
-        var midx = (this.start.x + this.end.x) / 2;
-        var midy = (this.start.y + this.end.y) / 2;
+        var cx = (this.start.x + this.end.x) / 2;
+        var cy = (this.start.y + this.end.y) / 2;
 
-        var tx = x - midx;
-        var ty = y - midy;
+        var tx = x - cx;
+        var ty = y - cy;
 
         this.start.add(tx, ty);
         this.end.add(tx, ty);

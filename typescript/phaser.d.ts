@@ -2125,6 +2125,7 @@ declare module Phaser {
         static intersects(a: Phaser.Line, b: Phaser.Line, asSegment?: boolean, result?: Phaser.Point): Phaser.Point;
         static reflect(a: Phaser.Line, b: Phaser.Line): number;
 
+        centerOn(x: number, y: number): Phaser.Line;
         clone(output: Phaser.Line): Phaser.Line;
         coordinatesOnLine(stepRate: number, results: any[]): any[];
         fromAngle(x: number, y: number, angle: number, length: number): Phaser.Line;
