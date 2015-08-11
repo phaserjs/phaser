@@ -9,6 +9,7 @@ module.exports = {
         }
     },
     json: {
+        jsdoc: './node_modules/.bin/jsdoc',
         src: [],
         options: {
             configure: 'tasks/jsdocexportjson-conf.json',
