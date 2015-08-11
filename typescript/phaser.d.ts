@@ -475,7 +475,7 @@ declare module Phaser {
         getPixiTexture(key: string): PIXI.Texture;
         getPixiBaseTexture(key: string): PIXI.BaseTexture;
         getPhysicsData(key: string, object?: string, fixtureKey?: string): any[];
-        getRenderTexture(key: string): Phaser.RenderTexture;
+        getRenderTexture(key: string): Phaser.CachedRenderTexture;
         getShader(key: string): string;
         getSound(key: string): Phaser.Sound;
         getSoundData(key: string): any;
@@ -516,15 +516,22 @@ declare module Phaser {
         updateSound(key: string, property: string, value: Phaser.Sound): void;
 
     }
-    
+
     interface CachedImage {
 
-            key: string,
-            url: string,
-            data: HTMLImageElement,
-            base: PIXI.BaseTexture,
-            frame: Phaser.Frame,
-            frameData: Phaser.FrameData
+        key: string,
+        url: string,
+        data: HTMLImageElement,
+        base: PIXI.BaseTexture,
+        frame: Phaser.Frame,
+        frameData: Phaser.FrameData
+
+    }
+
+    interface CachedRenderTexture {
+
+        frame: Phaser.Frame;
+        texture: Phaser.RenderTexture;
 
     }
 
