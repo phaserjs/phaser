@@ -381,6 +381,8 @@ declare module Phaser {
         clearFrames(): void;
         setDownSound(sound: Phaser.Sound|Phaser.AudioSprite, marker?: string): void;
         setFrames(overFrame?: string|number, outFrame?: string|number, downFrame?: string|number, upFrame?: string|number): void;
+        onInputOverHandler(sprite: Phaser.Button, pointer: Phaser.Pointer): void;
+        onInputOutHandler(sprite: Phaser.Button, pointer: Phaser.Pointer): void;
         onInputDownHandler(sprite: Phaser.Button, pointer: Phaser.Pointer): void;
         onInputUpHandler(sprite: Phaser.Button, pointer: Phaser.Pointer, isOver: boolean): void;
         removedFromWorld(): void;
