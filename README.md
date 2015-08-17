@@ -305,10 +305,10 @@ All rights reserved.
 
 [![Analytics](https://ga-beacon.appspot.com/UA-44006568-2/phaser/index)](https://github.com/igrigorik/ga-beacon)
 
-[get-js]: https://github.com/photonstorm/phaser/releases/download/v2.3.0/phaser.js
-[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v2.3.0/phaser.min.js
-[get-zip]: https://github.com/photonstorm/phaser/archive/v2.3.0.zip
-[get-tgz]: https://github.com/photonstorm/phaser/archive/v2.3.0.tar.gz
+[get-js]: https://github.com/photonstorm/phaser/releases/download/v2.4.2/phaser.js
+[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v2.4.2/phaser.min.js
+[get-zip]: https://github.com/photonstorm/phaser/archive/v2.4.2.zip
+[get-tgz]: https://github.com/photonstorm/phaser/archive/v2.4.2.tar.gz
 [clone-http]: https://github.com/photonstorm/phaser.git
 [clone-ssh]: git@github.com:photonstorm/phaser.git
 [clone-svn]: https://github.com/photonstorm/phaser
