@@ -284,6 +284,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * Text.setTextBounds didn't add the x and y values to the width and height offsets.
 * Line.rotate used a calculation method which resulted in the line growing (or shrinking) in length over time, the more it was rotated. The new method never changes the lines length.
 * BitmapText.font failed to pull the new font from the Phaser Cache, stopping it from updating properly (thanks @AbrahamAlcaina #2001)
+* Video.stop now removes the 'playing' event listener, which stop Videos set to loop from throwing errors after being destroyed.
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 

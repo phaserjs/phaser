@@ -754,7 +754,8 @@ Phaser.Video.prototype = {
         }
         else
         {
-            this.video.removeEventListener('ended', this.complete.bind(this));
+            this.video.removeEventListener('ended', this.complete.bind(this), true);
+            this.video.removeEventListener('playing', this.playHandler.bind(this), true);
 
             if (this.touchLocked)
             {
