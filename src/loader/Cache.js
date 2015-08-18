@@ -1371,7 +1371,7 @@ Phaser.Cache.prototype = {
     *
     * @method Phaser.Cache#getRenderTexture
     * @param {string} key - The key of the asset to retrieve from the cache.
-    * @return {Phaser.RenderTexture} The RenderTexture object.
+    * @return {Object} The object with Phaser.RenderTexture and Phaser.Frame.
     */
     getRenderTexture: function (key) {
 
