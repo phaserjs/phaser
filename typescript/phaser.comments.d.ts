@@ -2327,6 +2327,22 @@ declare module Phaser {
 
         /**
         * Internal function that handles input events.
+        *
+        * @param sprite The Button that the event occurred on.
+        * @param pointer The Pointer that activated the Button.
+        */
+        onInputOverHandler(sprite: Phaser.Button, pointer: Phaser.Pointer): void;
+
+        /**
+        * Internal function that handles input events.
+        *
+        * @param sprite The Button that the event occurred on.
+        * @param pointer The Pointer that activated the Button.
+        */
+        onInputOutHandler(sprite: Phaser.Button, pointer: Phaser.Pointer): void;
+
+        /**
+        * Internal function that handles input events.
         * 
         * @param sprite The Button that the event occurred on.
         * @param pointer The Pointer that activated the Button.
