@@ -526,6 +526,7 @@ Object.defineProperty(Phaser.BitmapText.prototype, 'font', {
         if (value !== this._font)
         {
             this._font = value.trim();
+            this._data = this.game.cache.getBitmapFont(this._font);
             this.updateText();
         }
 

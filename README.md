@@ -264,8 +264,8 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 
 ### Updates
 
-* TypeScript definitions fixes and updates (thanks @clark-stevenson @vrecluse @yahiko00)
-* JSDoc typo fixes (thanks @Cowa @yahiko00)
+* TypeScript definitions fixes and updates (thanks @clark-stevenson @vrecluse @yahiko00 @cloakedninjas @qdrj)
+* JSDoc typo fixes (thanks @Cowa @yahiko00 @qdrj)
 * VideoStream.active = false is used if the browser supports it, otherwise it falls back to VideoStream.stop.
 * Text can now accept `undefined` or `null` as the `text` argument in the constructor and will cast it as an empty string.
 * Point.rotate uses a faster and simpler rotation function when no distance argument is specified.
@@ -283,6 +283,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * Group.cacheAsBitmap would be incorrectly offset in Canvas mode (thanks @mkristo #1925)
 * Text.setTextBounds didn't add the x and y values to the width and height offsets.
 * Line.rotate used a calculation method which resulted in the line growing (or shrinking) in length over time, the more it was rotated. The new method never changes the lines length.
+* BitmapText.font failed to pull the new font from the Phaser Cache, stopping it from updating properly (thanks @AbrahamAlcaina #2001)
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
