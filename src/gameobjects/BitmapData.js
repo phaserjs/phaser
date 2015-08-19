@@ -919,7 +919,6 @@ Phaser.BitmapData.prototype = {
     * @param {number} red - The red color value, between 0 and 0xFF (255).
     * @param {number} green - The green color value, between 0 and 0xFF (255).
     * @param {number} blue - The blue color value, between 0 and 0xFF (255).
-    * @param {number} alpha - The alpha color value, between 0 and 0xFF (255).
     * @param {boolean} [immediate=true] - If `true` the context.putImageData will be called and the dirty flag set.
     * @return {Phaser.BitmapData} This BitmapData object for method chaining.
     */

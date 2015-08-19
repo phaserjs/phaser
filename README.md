@@ -278,7 +278,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 ### Updates
 
 * TypeScript definitions fixes and updates (thanks @clark-stevenson @vrecluse @yahiko00 @cloakedninjas @qdrj)
-* JSDoc typo fixes (thanks @Cowa @yahiko00 @qdrj)
+* JSDoc typo fixes (thanks @Cowa @yahiko00 @qdrj @STuFF)
 * VideoStream.active = false is used if the browser supports it, otherwise it falls back to VideoStream.stop.
 * Text can now accept `undefined` or `null` as the `text` argument in the constructor and will cast it as an empty string.
 * Point.rotate uses a faster and simpler rotation function when no distance argument is specified.
