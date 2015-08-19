@@ -67,7 +67,19 @@ Rich - [@photonstorm](https://twitter.com/photonstorm)
 
 ![patreon](http://www.phaser.io/images/patreon.png)
 
-Please help support the future development of Phaser through our [Patreon campaign](https://www.patreon.com/photonstorm). We've some exciting plans and there's so much we'd like to do - let's see if we can all work together to make this possible.
+Please help support the future development of Phaser through our [Patreon campaign](https://www.patreon.com/photonstorm). We've some exciting plans and there's so much we'd like to do. Let's see if we can all work together to make this possible.
+
+### Phaser Sponsors
+
+Phaser is [sponsored](https://www.patreon.com/photonstorm) by the following great companies:
+
+![qici](http://www.phaser.io/images/sponsors/qici-100.png)
+
+QICI Engine: [A powerful one-stop integrated Phaser game editor](http://www.qiciengine.com/)
+
+![zenva](http://www.phaser.io/images/sponsors/zenva-100.png)
+
+Zenva Academy: [Online courses on Phaser, HTML5 and native app development](https://academy.zenva.com/?zva_src=phaserpatreon)
 
 <a name="download"></a>
 ## Download Phaser
@@ -261,6 +273,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * Line.centerOn will position the Line so that its midpoint lays on the coordinates given.
 * BitmapData.line draws a line to the BitmapData in the color and thickness specified.
 * BitmapData.op is a handy short-code to get and set the canvas global composite operator.
+* BitmapData.drawFull draws the given Game Object or Group to a BitmapData and then recursively iterates through all of its children, including children of Game Objects and Groups. It can draw Text, BitmapText, Sprites, Images, Emitters and Graphics objects. It's perfectly valid to pass in `game.world` as the parent object, and it will iterate through the entire display list.
 
 ### Updates
 
