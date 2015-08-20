@@ -437,6 +437,30 @@ Phaser.Mouse.prototype = {
     },
 
     /**
+    * The internal method that handles the mouse over event from the browser.
+    *
+    * @method Phaser.Mouse#onMouseOver
+    * @param {MouseEvent} event - The native event from the browser. This gets stored in Mouse.event.
+    */
+    onMouseOver: function (event) {
+
+        this.event = event;
+
+        if (this.capture)
+        {
+            event.preventDefault();
+        }
+
+        this.input.mousePointer.withinGame = true;
+
+        if (this.mouseOverCallback)
+        {
+            this.mouseOverCallback.call(this.callbackContext, event);
+        }
+
+    },
+
+    /**
      * The internal method that handles the mouse wheel event from the browser.
      *
      * @method Phaser.Mouse#onMouseWheel
@@ -461,35 +485,6 @@ Phaser.Mouse.prototype = {
         if (this.mouseWheelCallback)
         {
             this.mouseWheelCallback.call(this.callbackContext, event);
-        }
-
-    },
-
-    /**
-    * The internal method that handles the mouse over event from the browser.
-    *
-    * @method Phaser.Mouse#onMouseOver
-    * @param {MouseEvent} event - The native event from the browser. This gets stored in Mouse.event.
-    */
-    onMouseOver: function (event) {
-
-        this.event = event;
-
-        if (this.capture)
-        {
-            event.preventDefault();
-        }
-
-        this.input.mousePointer.withinGame = true;
-
-        if (this.mouseOverCallback)
-        {
-            this.mouseOverCallback.call(this.callbackContext, event);
-        }
-
-        if (!this.input.enabled || !this.enabled)
-        {
-            return;
         }
 
     },

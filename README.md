@@ -283,6 +283,10 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * Text can now accept `undefined` or `null` as the `text` argument in the constructor and will cast it as an empty string.
 * Point.rotate uses a faster and simpler rotation function when no distance argument is specified.
 * Setting a P2.Body from Static or Kinematic to Dynamic will now automatically adjust the Body.mass to be 1 (thanks @wayfu #2005)
+* Pointer.withinGame is no longer automatically set to 'false' in the Pointer.stop method - it will check if the Pointer actually is within the stage bounds and only set `withinGame` to false if it's outside the bounds.
+* MSPointer now has an `onPointerUpGlobal` handler for when the pointer is released outside of the canvas, but still within the browser window. This means that in IE11 a Sprites `onInputUp` event will now trigger even when outside the canvas (thanks @bvargish #2000)
+* MSPointer now has handles for the pointer being over and outside of the canvas element, which sets the Pointer.withinGame booleans accordingly. It also triggers the Mouse.mouseOutCallback and Mouse.mouseOverCallback callbacks respectively.
+* The MSPointer event listeners have been renamed to all lower-case, i.e. 'pointerDown' is now 'pointerdown'.
 
 ### Bug Fixes
 

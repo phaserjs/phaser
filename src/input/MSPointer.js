@@ -99,6 +99,24 @@ Phaser.MSPointer = function (game) {
     */
     this._onMSPointerUp = null;
 
+    /**
+    * @property {function} _onMSPointerUpGlobal - Internal function to handle MSPointer events.
+    * @private
+    */
+    this._onMSPointerUpGlobal = null;
+
+    /**
+    * @property {function} _onMSPointerOut - Internal function to handle MSPointer events.
+    * @private
+    */
+    this._onMSPointerOut = null;
+
+    /**
+    * @property {function} _onMSPointerOver - Internal function to handle MSPointer events.
+    * @private
+    */
+    this._onMSPointerOver = null;
+
 };
 
 Phaser.MSPointer.prototype = {
@@ -131,6 +149,18 @@ Phaser.MSPointer.prototype = {
                 return _this.onPointerUp(event);
             };
 
+            this._onMSPointerUpGlobal = function (event) {
+                return _this.onPointerUpGlobal(event);
+            };
+
+            this._onMSPointerOut = function (event) {
+                return _this.onPointerOut(event);
+            };
+
+            this._onMSPointerOver = function (event) {
+                return _this.onPointerOver(event);
+            };
+
             var canvas = this.game.canvas;
 
             canvas.addEventListener('MSPointerDown', this._onMSPointerDown, false);
@@ -138,12 +168,24 @@ Phaser.MSPointer.prototype = {
             canvas.addEventListener('MSPointerUp', this._onMSPointerUp, false);
 
             //  IE11+ uses non-prefix events
-            canvas.addEventListener('pointerDown', this._onMSPointerDown, false);
-            canvas.addEventListener('pointerMove', this._onMSPointerMove, false);
-            canvas.addEventListener('pointerUp', this._onMSPointerUp, false);
+            canvas.addEventListener('pointerdown', this._onMSPointerDown, false);
+            canvas.addEventListener('pointermove', this._onMSPointerMove, false);
+            canvas.addEventListener('pointerup', this._onMSPointerUp, false);
 
             canvas.style['-ms-content-zooming'] = 'none';
             canvas.style['-ms-touch-action'] = 'none';
+
+            if (!this.game.device.cocoonJS)
+            {
+                window.addEventListener('MSPointerUp', this._onMSPointerUpGlobal, true);
+                canvas.addEventListener('MSPointerOver', this._onMSPointerOver, true);
+                canvas.addEventListener('MSPointerOut', this._onMSPointerOut, true);
+
+                //  IE11+ uses non-prefix events
+                window.addEventListener('pointerup', this._onMSPointerUpGlobal, true);
+                canvas.addEventListener('pointerover', this._onMSPointerOver, true);
+                canvas.addEventListener('pointerout', this._onMSPointerOut, true);
+            }
         }
 
     },
@@ -261,6 +303,121 @@ Phaser.MSPointer.prototype = {
     },
 
     /**
+    * The internal method that handles the mouse up event from the window.
+    * 
+    * @method Phaser.MSPointer#onPointerUpGlobal
+    * @param {PointerEvent} event - The native event from the browser. This gets stored in MSPointer.event.
+    */
+    onPointerUpGlobal: function (event) {
+
+        if ((event.pointerType === 'mouse' || event.pointerType === 0x00000004) && !this.input.mousePointer.withinGame)
+        {
+            this.onPointerUp(event);
+        }
+        else
+        {
+            var pointer = this.input.getPointerFromIdentifier(event.identifier);
+
+            if (pointer && pointer.withinGame)
+            {
+                this.onPointerUp(event);
+            }
+        }
+
+    },
+
+    /**
+    * The internal method that handles the pointer out event from the browser.
+    *
+    * @method Phaser.MSPointer#onPointerOut
+    * @param {PointerEvent} event - The native event from the browser. This gets stored in MSPointer.event.
+    */
+    onPointerOut: function (event) {
+
+        this.event = event;
+
+        if (this.capture)
+        {
+            event.preventDefault();
+        }
+
+        if (event.pointerType === 'mouse' || event.pointerType === 0x00000004)
+        {
+            this.input.mousePointer.withinGame = false;
+        }
+        else
+        {
+            var pointer = this.input.getPointerFromIdentifier(event.identifier);
+
+            if (pointer)
+            {
+                pointer.withinGame = false;
+            }
+        }
+
+        if (this.input.mouse.mouseOutCallback)
+        {
+            this.input.mouse.mouseOutCallback.call(this.input.mouse.callbackContext, event);
+        }
+
+        if (!this.input.enabled || !this.enabled)
+        {
+            return;
+        }
+
+        if (this.input.mouse.stopOnGameOut)
+        {
+            event['identifier'] = 0;
+
+            if (pointer)
+            {
+                pointer.stop(event);
+            }
+            else
+            {
+                this.input.mousePointer.stop(event);
+            }
+        }
+
+    },
+
+    /**
+    * The internal method that handles the pointer out event from the browser.
+    *
+    * @method Phaser.MSPointer#onPointerOut
+    * @param {PointerEvent} event - The native event from the browser. This gets stored in MSPointer.event.
+    */
+    onPointerOver: function (event) {
+
+        this.event = event;
+
+        if (this.capture)
+        {
+            event.preventDefault();
+        }
+
+        if (event.pointerType === 'mouse' || event.pointerType === 0x00000004)
+        {
+            this.input.mousePointer.withinGame = true;
+        }
+        else
+        {
+            var pointer = this.input.getPointerFromIdentifier(event.identifier);
+
+            if (pointer)
+            {
+                pointer.withinGame = true;
+            }
+        }
+
+        if (this.input.mouse.mouseOverCallback)
+        {
+            this.input.mouse.mouseOverCallback.call(this.input.mouse.callbackContext, event);
+        }
+
+    },
+
+    /**
     * Stop the event listeners.
     * @method Phaser.MSPointer#stop
     */
@@ -271,10 +428,17 @@ Phaser.MSPointer.prototype = {
         canvas.removeEventListener('MSPointerDown', this._onMSPointerDown);
         canvas.removeEventListener('MSPointerMove', this._onMSPointerMove);
         canvas.removeEventListener('MSPointerUp', this._onMSPointerUp);
+        canvas.removeEventListener('MSPointerOver', this._onMSPointerOver);
+        canvas.removeEventListener('MSPointerOut', this._onMSPointerOut);
 
-        canvas.removeEventListener('pointerDown', this._onMSPointerDown);
-        canvas.removeEventListener('pointerMove', this._onMSPointerMove);
-        canvas.removeEventListener('pointerUp', this._onMSPointerUp);
+        canvas.removeEventListener('pointerdown', this._onMSPointerDown);
+        canvas.removeEventListener('pointermove', this._onMSPointerMove);
+        canvas.removeEventListener('pointerup', this._onMSPointerUp);
+        canvas.removeEventListener('pointerover', this._onMSPointerOver);
+        canvas.removeEventListener('pointerout', this._onMSPointerOut);
+
+        window.removeEventListener('MSPointerUp', this._onMSPointerUpGlobal);
+        window.removeEventListener('pointerup', this._onMSPointerUpGlobal);
 
     }
 

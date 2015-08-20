@@ -572,8 +572,6 @@ Phaser.Pointer.prototype = {
     */
     start: function (event) {
 
-        // console.log(event);
-
         if (event['pointerId'])
         {
             this.pointerId = event.pointerId;
@@ -592,10 +590,11 @@ Phaser.Pointer.prototype = {
             this.isUp = false;
         }
 
-        this._history = [];
         this.active = true;
         this.withinGame = true;
         this.dirty = false;
+
+        this._history = [];
         this._clickTrampolines = null;
         this._trampolineTargetObject = null;
 
@@ -692,7 +691,9 @@ Phaser.Pointer.prototype = {
     */
     move: function (event, fromClick) {
 
-        if (this.game.input.pollLocked)
+        var input = this.game.input;
+
+        if (input.pollLocked)
         {
             return;
         }
@@ -718,7 +719,7 @@ Phaser.Pointer.prototype = {
         this.screenX = event.screenX;
         this.screenY = event.screenY;
 
-        if (this.isMouse && this.game.input.mouse.locked && !fromClick)
+        if (this.isMouse && input.mouse.locked && !fromClick)
         {
             this.rawMovementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
             this.rawMovementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
@@ -727,23 +728,23 @@ Phaser.Pointer.prototype = {
             this.movementY += this.rawMovementY;
         }
 
-        this.x = (this.pageX - this.game.scale.offset.x) * this.game.input.scale.x;
-        this.y = (this.pageY - this.game.scale.offset.y) * this.game.input.scale.y;
+        this.x = (this.pageX - this.game.scale.offset.x) * input.scale.x;
+        this.y = (this.pageY - this.game.scale.offset.y) * input.scale.y;
 
         this.position.setTo(this.x, this.y);
         this.circle.x = this.x;
         this.circle.y = this.y;
 
-        if (this.game.input.multiInputOverride === Phaser.Input.MOUSE_OVERRIDES_TOUCH ||
-            this.game.input.multiInputOverride === Phaser.Input.MOUSE_TOUCH_COMBINE ||
-            (this.game.input.multiInputOverride === Phaser.Input.TOUCH_OVERRIDES_MOUSE && this.game.input.totalActivePointers === 0))
+        if (input.multiInputOverride === Phaser.Input.MOUSE_OVERRIDES_TOUCH ||
+            input.multiInputOverride === Phaser.Input.MOUSE_TOUCH_COMBINE ||
+            (input.multiInputOverride === Phaser.Input.TOUCH_OVERRIDES_MOUSE && input.totalActivePointers === 0))
         {
-            this.game.input.activePointer = this;
-            this.game.input.x = this.x;
-            this.game.input.y = this.y;
-            this.game.input.position.setTo(this.game.input.x, this.game.input.y);
-            this.game.input.circle.x = this.game.input.x;
-            this.game.input.circle.y = this.game.input.y;
+            input.activePointer = this;
+            input.x = this.x;
+            input.y = this.y;
+            input.position.setTo(input.x, input.y);
+            input.circle.x = input.x;
+            input.circle.y = input.y;
         }
 
         this.withinGame = this.game.scale.bounds.contains(this.pageX, this.pageY);
@@ -754,11 +755,11 @@ Phaser.Pointer.prototype = {
             return this;
         }
 
-        var i = this.game.input.moveCallbacks.length;
+        var i = input.moveCallbacks.length;
 
         while (i--)
         {
-            this.game.input.moveCallbacks[i].callback.call(this.game.input.moveCallbacks[i].context, this, this.x, this.y, fromClick);
+            input.moveCallbacks[i].callback.call(input.moveCallbacks[i].context, this, this.x, this.y, fromClick);
         }
 
         //  Easy out if we're dragging something and it still exists
@@ -769,7 +770,7 @@ Phaser.Pointer.prototype = {
                 this.targetObject = null;
             }
         }
-        else if (this.game.input.interactiveItems.total > 0)
+        else if (input.interactiveItems.total > 0)
         {
             this.processInteractiveObjects(fromClick);
         }
@@ -958,7 +959,7 @@ Phaser.Pointer.prototype = {
             this.active = false;
         }
 
-        this.withinGame = false;
+        this.withinGame = this.game.scale.bounds.contains(event.pageX, event.pageY);
         this.pointerId = null;
         this.identifier = null;
         
