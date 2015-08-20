@@ -107,10 +107,6 @@ or the minified version:
 
 If you'd like to try coding in Phaser right now, with nothing more than your web browser then you can head over to the [Phaser Sandbox](http://phaser.io/sandbox). You'll find Quick Start templates and a user-friendly editor filled with handy code-completion features.
 
-### Koding
-
-Want to try Phaser without downloading anything? [Clone Phaser in Koding](https://koding.com/Teamwork?import=https://github.com/photonstorm/phaser/archive/master.zip&c=git1) and start working right away in their web based development system.
-
 ### License
 
 Phaser is released under the [MIT License](http://opensource.org/licenses/MIT).
