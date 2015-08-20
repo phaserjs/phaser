@@ -398,50 +398,46 @@ Phaser.Tilemap.prototype = {
             return;
         }
 
-        var sprite;
-        var found = false;
-
-        for (var i = 0, len = this.objects[name].length; i < len; i++)
+        for (var i = 0; i < this.objects[name].length; i++)
         {
-            if (typeof this.objects[name][i].gid !== 'undefined' && typeof gid === 'number')
-            {
-                if (this.objects[name][i].gid === gid)
-                {
-                    found = true;
-                }
-            }
+            var found = false;
+            var obj = this.objects[name][i];
 
-            if (typeof this.objects[name][i].id !== 'undefined' && typeof gid === 'number')
+            if (obj.gid !== undefined && typeof gid === 'number' && obj.gid === gid)
             {
-                if (this.objects[name][i].id === gid)
-                {
-                    found = true;
-                }
+                found = true;
             }
-
-            if (typeof this.objects[name][i].name !== 'undefined' && typeof gid === 'string')
+            else if (obj.id !== undefined && typeof gid === 'number' && obj.id === gid)
             {
-                if (this.objects[name][i].name === gid)
-                {
-                    found = true;
-                }
+                found = true;
+            }
+            else if (obj.name !== undefined && typeof gid === 'string' && obj.name === gid)
+            {
+                found = true;
             }
 
             if (found)
             {
-                sprite = new CustomClass(this.game, this.objects[name][i].x, this.objects[name][i].y, key, frame);
+                var sprite = new CustomClass(this.game, parseFloat(obj.x, 10), parseFloat(obj.y, 10), key, frame);
 
-                sprite.name = this.objects[name][i].name;
-                sprite.visible = this.objects[name][i].visible;
+                sprite.name = obj.name;
+                sprite.visible = obj.visible;
                 sprite.autoCull = autoCull;
                 sprite.exists = exists;
 
-                sprite.width = this.objects[name][i].width;
-                sprite.height = this.objects[name][i].height;
-
-                if (this.objects[name][i].rotation)
+                if (obj.width)
                 {
-                    sprite.angle = this.objects[name][i].rotation;
+                    sprite.width = obj.width;
+                }
+
+                if (obj.height)
+                {
+                    sprite.height = obj.height;
+                }
+
+                if (obj.rotation)
+                {
+                    sprite.angle = obj.rotation;
                 }
 
                 if (adjustY)
@@ -451,9 +447,9 @@ Phaser.Tilemap.prototype = {
 
                 group.add(sprite);
 
-                for (var property in this.objects[name][i].properties)
+                for (var property in obj.properties)
                 {
-                    group.set(sprite, property, this.objects[name][i].properties[property], false, false, 0, true);
+                    group.set(sprite, property, obj.properties[property], false, false, 0, true);
                 }
             }
         }
