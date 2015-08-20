@@ -354,7 +354,7 @@ Phaser.Utils.Debug.prototype = {
         //  Render the text
         this.line('ID: ' + pointer.id + " Active: " + pointer.active);
         this.line('World X: ' + pointer.worldX + " World Y: " + pointer.worldY);
-        this.line('Screen X: ' + pointer.x + " Screen Y: " + pointer.y);
+        this.line('Screen X: ' + pointer.x + " Screen Y: " + pointer.y + " In: " + pointer.withinGame);
         this.line('Duration: ' + pointer.duration + " ms");
         this.line('is Down: ' + pointer.isDown + " is Up: " + pointer.isUp);
         this.stop();
