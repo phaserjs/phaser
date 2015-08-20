@@ -1434,11 +1434,7 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "static", {
         else if (!value && this.data.type === Phaser.Physics.P2.Body.STATIC)
         {
             this.data.type = Phaser.Physics.P2.Body.DYNAMIC;
-
-            if (this.mass === 0)
-            {
-                this.mass = 1;
-            }
+            this.mass = 1;
         }
 
     }
@@ -1462,11 +1458,7 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "dynamic", {
         if (value && this.data.type !== Phaser.Physics.P2.Body.DYNAMIC)
         {
             this.data.type = Phaser.Physics.P2.Body.DYNAMIC;
-
-            if (this.mass === 0)
-            {
-                this.mass = 1;
-            }
+            this.mass = 1;
         }
         else if (!value && this.data.type === Phaser.Physics.P2.Body.DYNAMIC)
         {

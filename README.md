@@ -282,6 +282,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * VideoStream.active = false is used if the browser supports it, otherwise it falls back to VideoStream.stop.
 * Text can now accept `undefined` or `null` as the `text` argument in the constructor and will cast it as an empty string.
 * Point.rotate uses a faster and simpler rotation function when no distance argument is specified.
+* Setting a P2.Body from Static or Kinematic to Dynamic will now automatically adjust the Body.mass to be 1 (thanks @wayfu #2005)
 
 ### Bug Fixes
 
