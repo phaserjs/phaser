@@ -142,10 +142,13 @@ Phaser.Tween = function (target, game, manager) {
     * If the Tween uses a time based update (which is the default) then the duration is given in milliseconds.
     * In this situation a 2000ms tween will last exactly 2 seconds, regardless of the device and how many visual updates the tween
     * has actually been through. For very short tweens you may wish to experiment with a frame based update instead.
+    *
+    * The default value is whatever you've set in TweenManager.frameBased.
+    * 
     * @property {boolean} frameBased
     * @default
     */
-    this.frameBased = false;
+    this.frameBased = manager.frameBased;
 
     /**
     * @property {function} _onUpdateCallback - An onUpdate callback.
