@@ -1417,11 +1417,16 @@ Phaser.BitmapData.prototype = {
     * If a child has an `exists` property then it (and its children) will be only be drawn if exists is `true`.
     * 
     * The children will be drawn at their `x` and `y` world space coordinates. If this is outside the bounds of the BitmapData 
-    * they won't be drawn. You should resize the BitmapData in advance to match the overall bounds of the top-level Game Object.
+    * they won't be drawn. Depending on your requirements you may need to resize the BitmapData in advance to match the 
+    * bounds of the top-level Game Object.
     * 
     * When drawing it will take into account the child's world rotation, scale and alpha values.
     *
     * It's perfectly valid to pass in `game.world` as the parent object, and it will iterate through the entire display list.
+    * 
+    * Note: If you are trying to grab your entire game at the start of a State then you should ensure that at least 1 full update
+    * has taken place before doing so, otherwise all of the objects will render with incorrect positions and scales. You can 
+    * trigger an update yourself by calling `stage.updateTransform()` before calling `drawFull`.
     *
     * @method Phaser.BitmapData#drawFull
     * @param {Phaser.World|Phaser.Group|Phaser.Sprite|Phaser.Image|Phaser.Text|Phaser.BitmapText} parent - The Game Object to draw onto this BitmapData and then recursively draw all of its children.
