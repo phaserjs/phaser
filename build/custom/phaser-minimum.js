@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.4.2 "Altara" - Built: Wed Jul 29 2015 14:59:45
+* v2.4.3 "Coramen" - Built: Fri Aug 21 2015 16:23:33
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -528,7 +528,10 @@ Object.defineProperty(PIXI.DisplayObject.prototype, 'cacheAsBitmap', {
 
     set: function(value) {
 
-        if (this._cacheAsBitmap === value) return;
+        if (this._cacheAsBitmap === value)
+        {
+            return;
+        }
 
         if (value)
         {
@@ -541,6 +544,7 @@ Object.defineProperty(PIXI.DisplayObject.prototype, 'cacheAsBitmap', {
 
         this._cacheAsBitmap = value;
     }
+
 });
 
 /*
@@ -798,29 +802,29 @@ PIXI.DisplayObject.prototype._generateCachedSprite = function()
 
     var bounds = this.getLocalBounds();
 
+    this.updateTransform();
+
     if (!this._cachedSprite)
     {
-        var renderTexture = new PIXI.RenderTexture(bounds.width | 0, bounds.height | 0);//, renderSession.renderer);
-
+        var renderTexture = new PIXI.RenderTexture(bounds.width | 1, bounds.height | 1);
         this._cachedSprite = new PIXI.Sprite(renderTexture);
         this._cachedSprite.worldTransform = this.worldTransform;
     }
     else
     {
-        this._cachedSprite.texture.resize(bounds.width | 0, bounds.height | 0);
+        this._cachedSprite.texture.resize(bounds.width | 1, bounds.height | 1);
     }
 
-    //REMOVE filter!
+    //  Remove filters
     var tempFilters = this._filters;
     this._filters = null;
-
     this._cachedSprite.filters = tempFilters;
 
+    // PIXI.DisplayObject._tempMatrix.identity();
     PIXI.DisplayObject._tempMatrix.tx = -bounds.x;
     PIXI.DisplayObject._tempMatrix.ty = -bounds.y;
-    
-    this._cachedSprite.texture.render(this, PIXI.DisplayObject._tempMatrix, true);
 
+    this._cachedSprite.texture.render(this, PIXI.DisplayObject._tempMatrix, true);
     this._cachedSprite.anchor.x = -( bounds.x / bounds.width );
     this._cachedSprite.anchor.y = -( bounds.y / bounds.height );
 
@@ -1577,13 +1581,20 @@ Object.defineProperty(PIXI.Sprite.prototype, 'height', {
 });
 
 /**
- * Sets the texture of the sprite
+ * Sets the texture of the sprite. Be warned that this doesn't remove or destroy the previous
+ * texture this Sprite was using.
  *
  * @method setTexture
  * @param texture {Texture} The PIXI texture that is displayed by the sprite
+ * @param [destroy=false] {boolean} Call Texture.destroy on the current texture before replacing it with the new one?
  */
-PIXI.Sprite.prototype.setTexture = function(texture)
+PIXI.Sprite.prototype.setTexture = function(texture, destroyBase)
 {
+    if (destroyBase !== undefined)
+    {
+        this.texture.baseTexture.destroy();
+    }
+
     this.texture = texture;
     this.texture.valid = true;
 };
@@ -2205,9 +2216,7 @@ PIXI.canUseNewCanvasBlendModes = function()
     var yellow = new Image();
     yellow.src = pngHead + '/wCKxvRF' + pngEnd;
 
-    var canvas = document.createElement('canvas');
-    canvas.width = 6;
-    canvas.height = 1;
+    var canvas = PIXI.CanvasPool.create(this, 6, 1);
     var context = canvas.getContext('2d');
     context.globalCompositeOperation = 'multiply';
     context.drawImage(magenta, 0, 0);
@@ -2220,7 +2229,10 @@ PIXI.canUseNewCanvasBlendModes = function()
 
     var data = context.getImageData(2,0,1,1).data;
 
+    PIXI.CanvasPool.remove(this);
+
     return (data[0] === 255 && data[1] === 0 && data[2] === 0);
+
 };
 
 /**
@@ -2424,6 +2436,151 @@ PIXI.PolyK._convex = function(ax, ay, bx, by, cx, cy, sign)
 {
     return ((ay-by)*(cx-bx) + (bx-ax)*(cy-by) >= 0) === sign;
 };
+
+/**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2015 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
+* The CanvasPool is a global static object that allows Pixi and Phaser to pool
+*
+* @class PIXI.CanvasPool
+* @static
+*/
+PIXI.CanvasPool = {
+
+    /**
+    * 
+    * 
+    * @method PIXI.CanvasPool.create
+    * @static
+    * @param {any} parent - The parent of the canvas element.
+    * @param {number} width - The width of the canvas element.
+    * @param {number} height - The height of the canvas element.
+    * @return {HTMLCanvasElement} The canvas element.
+    */
+    create: function (parent, width, height) {
+
+        var idx = PIXI.CanvasPool.getFirst();
+        var canvas;
+
+        if (idx === -1)
+        {
+            var container = {
+                parent: parent,
+                canvas: document.createElement('canvas')
+            }
+
+            PIXI.CanvasPool.pool.push(container);
+
+            canvas = container.canvas;
+
+            // console.log('CanvasPool created', PIXI.CanvasPool.pool.length);
+        }
+        else
+        {
+            PIXI.CanvasPool.pool[idx].parent = parent;
+
+            canvas = PIXI.CanvasPool.pool[idx].canvas;
+
+            // console.log('CanvasPool recycled', idx);
+        }
+
+        if (width !== undefined)
+        {
+            canvas.width = width;
+            canvas.height = height;
+        }
+
+        return canvas;
+
+    },
+
+    getFirst: function () {
+
+        var pool = PIXI.CanvasPool.pool;
+
+        for (var i = 0; i < pool.length; i++)
+        {
+            if (pool[i].parent === null)
+            {
+                return i;
+            }
+        }
+
+        return -1;
+
+    },
+
+    remove: function (parent) {
+
+        var pool = PIXI.CanvasPool.pool;
+
+        for (var i = 0; i < pool.length; i++)
+        {
+            if (pool[i].parent === parent)
+            {
+                pool[i].parent = null;
+
+                // console.log('CanvasPool removed', i);
+            }
+        }
+
+    },
+
+    removeByCanvas: function (canvas) {
+
+        var pool = PIXI.CanvasPool.pool;
+
+        for (var i = 0; i < pool.length; i++)
+        {
+            if (pool[i].canvas === canvas)
+            {
+                pool[i].parent = null;
+            }
+        }
+
+    },
+
+    getTotal: function () {
+
+        var pool = PIXI.CanvasPool.pool;
+        var c = 0;
+
+        for (var i = 0; i < pool.length; i++)
+        {
+            if (pool[i].parent !== null)
+            {
+                c++;
+            }
+        }
+
+        return c;
+
+    },
+
+    getFree: function () {
+
+        var pool = PIXI.CanvasPool.pool;
+        var c = 0;
+
+        for (var i = 0; i < pool.length; i++)
+        {
+            if (pool[i].parent === null)
+            {
+                c++;
+            }
+        }
+
+        return c;
+
+    }
+
+};
+
+PIXI.CanvasPool.pool = [];
 
 /**
  * @author Mat Groves http://matgroves.com/ @Doormat23
@@ -4458,8 +4615,8 @@ PIXI.WebGLRenderer = function(width, height, options)
     this._contextOptions = {
         alpha: this.transparent,
         antialias: options.antialias, // SPEED UP??
-        premultipliedAlpha:this.transparent && this.transparent !== 'notMultiplied',
-        stencil:true,
+        premultipliedAlpha: this.transparent && this.transparent !== 'notMultiplied',
+        stencil: true,
         preserveDrawingBuffer: options.preserveDrawingBuffer
     };
 
@@ -4773,6 +4930,8 @@ PIXI.WebGLRenderer.prototype.destroy = function()
 
     this.gl = null;
     this.renderSession = null;
+
+    PIXI.CanvasPool.remove(this);
 
     PIXI.instances[this.glContextId] = null;
 
@@ -7095,7 +7254,7 @@ PIXI.CanvasBuffer = function(width, height)
      * @property canvas
      * @type HTMLCanvasElement
      */
-    this.canvas = document.createElement("canvas");
+    this.canvas = PIXI.CanvasPool.create(this, this.width, this.height);
 
     /**
      * A CanvasRenderingContext2D object representing a two-dimensional rendering context.
@@ -7134,6 +7293,16 @@ PIXI.CanvasBuffer.prototype.resize = function(width, height)
 {
     this.width = this.canvas.width = width;
     this.height = this.canvas.height = height;
+};
+
+/**
+ * Frees the canvas up for use again.
+ *
+ * @method destroy
+ */
+PIXI.CanvasBuffer.prototype.destroy = function()
+{
+    PIXI.CanvasPool.remove(this);
 };
 
 /**
@@ -7218,7 +7387,7 @@ PIXI.CanvasTinter = function() {};
  */
 PIXI.CanvasTinter.getTintedTexture = function(sprite, color)
 {
-    var canvas = sprite.tintedTexture || document.createElement("canvas");
+    var canvas = sprite.tintedTexture || PIXI.CanvasPool.create(this);
     
     PIXI.CanvasTinter.tintMethod(sprite.texture, color, canvas);
 
@@ -7476,14 +7645,14 @@ PIXI.CanvasRenderer = function(width, height, options)
      * @property view
      * @type HTMLCanvasElement
      */
-    this.view = options.view || document.createElement( "canvas" );
+    this.view = options.view || PIXI.CanvasPool.create(this, this.width, this.height);
 
     /**
      * The canvas 2d context that everything is drawn with
      * @property context
      * @type CanvasRenderingContext2D
      */
-    this.context = this.view.getContext( "2d", { alpha: this.transparent } );
+    this.context = this.view.getContext("2d", { alpha: this.transparent } );
 
     /**
      * Boolean flag controlling canvas refresh.
@@ -8228,6 +8397,8 @@ PIXI.BaseTexture.prototype.destroy = function()
     }
     else if (this.source && this.source._pixiId)
     {
+        PIXI.CanvasPool.removeByCanvas(this.source);
+
         delete PIXI.BaseTextureCache[this.source._pixiId];
     }
 
@@ -8311,7 +8482,7 @@ PIXI.BaseTexture.fromImage = function(imageUrl, crossorigin, scaleMode)
     {
         // new Image() breaks tex loading in some versions of Chrome.
         // See https://code.google.com/p/chromium/issues/detail?id=238071
-        var image = new Image();//document.createElement('img');
+        var image = new Image();
 
         if (crossorigin)
         {
@@ -8344,7 +8515,7 @@ PIXI.BaseTexture.fromImage = function(imageUrl, crossorigin, scaleMode)
  */
 PIXI.BaseTexture.fromCanvas = function(canvas, scaleMode)
 {
-    if(!canvas._pixiId)
+    if (!canvas._pixiId)
     {
         canvas._pixiId = 'canvas_' + PIXI.TextureCacheIdGenerator++;
     }
@@ -8361,7 +8532,7 @@ PIXI.BaseTexture.fromCanvas = function(canvas, scaleMode)
 
     var baseTexture = PIXI.BaseTextureCache[canvas._pixiId];
 
-    if(!baseTexture)
+    if (!baseTexture)
     {
         baseTexture = new PIXI.BaseTexture(canvas, scaleMode);
         PIXI.BaseTextureCache[canvas._pixiId] = baseTexture;
@@ -8677,7 +8848,6 @@ PIXI.Texture.fromCanvas = function(canvas, scaleMode)
     var baseTexture = PIXI.BaseTexture.fromCanvas(canvas, scaleMode);
 
     return new PIXI.Texture(baseTexture);
-
 };
 
 /**
@@ -8989,6 +9159,16 @@ PIXI.RenderTexture.prototype.renderCanvas = function(displayObject, matrix, clea
         return;
     }
 
+    //  Let's create a nice matrix to apply to our display object.
+    //  Frame buffers come in upside down so we need to flip the matrix.
+    var wt = displayObject.worldTransform;
+    wt.identity();
+
+    if (matrix)
+    {
+        wt.append(matrix);
+    }
+
     // Time to update all the children of the displayObject with the new matrix (what new matrix? there isn't one!)
     for (var i = 0; i < displayObject.children.length; i++)
     {
@@ -9189,7 +9369,7 @@ var Phaser = Phaser || {
     * @constant
     * @type {string}
     */
-    VERSION: '2.4.2',
+    VERSION: '2.4.3-RC1',
 
     /**
     * An array of Phaser game instances.
@@ -11102,8 +11282,9 @@ Phaser.Line.prototype = {
     * Rotates the line by the amount specified in `angle`.
     * 
     * Rotation takes place from the center of the line.
+    * If you wish to rotate around a different point see Line.rotateAround.
     * 
-    * If you wish to rotate from either end see Line.start.rotate or Line.end.rotate.
+    * If you wish to rotate the ends of the Line then see Line.start.rotate or Line.end.rotate.
     * 
     * @method Phaser.Line#rotate
     * @param {number} angle - The angle in radians (unless asDegrees is true) to rotate the line by.
@@ -11112,11 +11293,30 @@ Phaser.Line.prototype = {
     */
     rotate: function (angle, asDegrees) {
 
-        var x = this.start.x;
-        var y = this.start.y;
+        var cx = (this.start.x + this.end.x) / 2;
+        var cy = (this.start.y + this.end.y) / 2;
 
-        this.start.rotate(this.end.x, this.end.y, angle, asDegrees, this.length);
-        this.end.rotate(x, y, angle, asDegrees, this.length);
+        this.start.rotate(cx, cy, angle, asDegrees);
+        this.end.rotate(cx, cy, angle, asDegrees);
+
+        return this;
+
+    },
+
+    /**
+    * Rotates the line by the amount specified in `angle`.
+    * 
+    * Rotation takes place around the coordinates given.
+    * 
+    * @method Phaser.Line#rotateAround
+    * @param {number} angle - The angle in radians (unless asDegrees is true) to rotate the line by.
+    * @param {boolean} [asDegrees=false] - Is the given angle in radians (false) or degrees (true)?
+    * @return {Phaser.Line} This line object
+    */
+    rotateAround: function (x, y, angle, asDegrees) {
+
+        this.start.rotate(x, y, angle, asDegrees);
+        this.end.rotate(x, y, angle, asDegrees);
 
         return this;
 
@@ -11150,6 +11350,48 @@ Phaser.Line.prototype = {
     reflect: function (line) {
 
         return Phaser.Line.reflect(this, line);
+
+    },
+
+    /**
+    * Returns a Point object where the x and y values correspond to the center (or midpoint) of the Line segment.
+    * 
+    * @method Phaser.Line#midPoint
+    * @param {Phaser.Point} [out] - A Phaser.Point object into which the result will be populated. If not given a new Point object is created.
+    * @return {Phaser.Point} A Phaser.Point object with the x and y values set to the center of the line segment.
+    */
+    midPoint: function (out) {
+
+        if (out === undefined) { out = new Phaser.Point(); }
+
+        out.x = (this.start.x + this.end.x) / 2;
+        out.y = (this.start.y + this.end.y) / 2;
+
+        return out;
+
+    },
+
+    /**
+    * Centers this Line on the given coordinates.
+    * 
+    * The line is centered by positioning the start and end points so that the lines midpoint matches
+    * the coordinates given.
+    * 
+    * @method Phaser.Line#centerOn
+    * @param {number} x - The x position to center the line on.
+    * @param {number} y - The y position to center the line on.
+    * @return {Phaser.Line} This line object
+    */
+    centerOn: function (x, y) {
+
+        var cx = (this.start.x + this.end.x) / 2;
+        var cy = (this.start.y + this.end.y) / 2;
+
+        var tx = x - cx;
+        var ty = y - cy;
+
+        this.start.add(tx, ty);
+        this.end.add(tx, ty);
 
     },
 
@@ -12769,24 +13011,27 @@ Phaser.Point.normalize = function (a, out) {
 */
 Phaser.Point.rotate = function (a, x, y, angle, asDegrees, distance) {
 
-    if (asDegrees === undefined) { asDegrees = false; }
-    if (distance === undefined) { distance = null; }
+    if (asDegrees) { angle = Phaser.Math.degToRad(angle); }
 
-    if (asDegrees)
+    if (distance === undefined)
     {
-        angle = Phaser.Math.degToRad(angle);
-    }
+        a.subtract(x, y);
 
-    if (distance === null)
+        var s = Math.sin(angle);
+        var c = Math.cos(angle);
+
+        var tx = c * a.x - s * a.y;
+        var ty = s * a.x + c * a.y;
+
+        a.x = tx + x;
+        a.y = ty + y;
+    }
+    else
     {
-        //  Get distance from origin (cx/cy) to this point
-        distance = Math.sqrt(((x - a.x) * (x - a.x)) + ((y - a.y) * (y - a.y)));
+        var t = angle + Math.atan2(a.y - y, a.x - x);
+        a.x = x + distance * Math.cos(t);
+        a.y = y + distance * Math.sin(t);
     }
-
-    var t = angle + Math.atan2(a.y - y, a.x - x);
-
-    a.x = x + distance * Math.cos(t);
-    a.y = y + distance * Math.sin(t);
 
     return a;
 
@@ -16002,7 +16247,7 @@ Object.defineProperty(Phaser.StateManager.prototype, "created", {
 */
 
 /**
-* A Signal is an event dispatch mechansim that supports broadcasting to multiple listeners.
+* A Signal is an event dispatch mechanism that supports broadcasting to multiple listeners.
 *
 * Event listeners are uniquely identified by the listener/callback function and the context.
 * 
@@ -22600,8 +22845,6 @@ Phaser.ScaleManager.prototype = {
 
             this.updateLayout();
             this.queueUpdate(true);
-
-            this.enterFullScreen.dispatch(this.width, this.height);
         }
         else
         {
@@ -22611,11 +22854,9 @@ Phaser.ScaleManager.prototype = {
 
             this.updateLayout();
             this.queueUpdate(true);
-
-            this.leaveFullScreen.dispatch(this.width, this.height);
         }
 
-        this.onFullScreenChange.dispatch(this);
+        this.onFullScreenChange.dispatch(this, this.width, this.height);
 
     },
 
@@ -23719,14 +23960,7 @@ Phaser.Game.prototype = {
     */
     setUpRenderer: function () {
 
-        if (this.config['canvasID'])
-        {
-            this.canvas = Phaser.Canvas.create(this.width, this.height, this.config['canvasID']);
-        }
-        else
-        {
-            this.canvas = Phaser.Canvas.create(this.width, this.height);
-        }
+        this.canvas = Phaser.Canvas.create(this, this.width, this.height, this.config['canvasID'], true);
 
         if (this.config['canvasStyle'])
         {
@@ -24630,9 +24864,7 @@ Phaser.Input.prototype = {
 
         this.activePointer = this.mousePointer;
 
-        this.hitCanvas = document.createElement('canvas');
-        this.hitCanvas.width = 1;
-        this.hitCanvas.height = 1;
+        this.hitCanvas = PIXI.CanvasPool.create(this, 1, 1);
         this.hitContext = this.hitCanvas.getContext('2d');
 
         this.mouse.start();
@@ -24677,6 +24909,8 @@ Phaser.Input.prototype = {
         }
 
         this.moveCallbacks = [];
+
+        PIXI.CanvasPool.remove(this);
 
         this.game.canvas.removeEventListener('click', this._onClickTrampoline);
 
@@ -25749,6 +25983,30 @@ Phaser.Mouse.prototype = {
     },
 
     /**
+    * The internal method that handles the mouse over event from the browser.
+    *
+    * @method Phaser.Mouse#onMouseOver
+    * @param {MouseEvent} event - The native event from the browser. This gets stored in Mouse.event.
+    */
+    onMouseOver: function (event) {
+
+        this.event = event;
+
+        if (this.capture)
+        {
+            event.preventDefault();
+        }
+
+        this.input.mousePointer.withinGame = true;
+
+        if (this.mouseOverCallback)
+        {
+            this.mouseOverCallback.call(this.callbackContext, event);
+        }
+
+    },
+
+    /**
      * The internal method that handles the mouse wheel event from the browser.
      *
      * @method Phaser.Mouse#onMouseWheel
@@ -25773,35 +26031,6 @@ Phaser.Mouse.prototype = {
         if (this.mouseWheelCallback)
         {
             this.mouseWheelCallback.call(this.callbackContext, event);
-        }
-
-    },
-
-    /**
-    * The internal method that handles the mouse over event from the browser.
-    *
-    * @method Phaser.Mouse#onMouseOver
-    * @param {MouseEvent} event - The native event from the browser. This gets stored in Mouse.event.
-    */
-    onMouseOver: function (event) {
-
-        this.event = event;
-
-        if (this.capture)
-        {
-            event.preventDefault();
-        }
-
-        this.input.mousePointer.withinGame = true;
-
-        if (this.mouseOverCallback)
-        {
-            this.mouseOverCallback.call(this.callbackContext, event);
-        }
-
-        if (!this.input.enabled || !this.enabled)
-        {
-            return;
         }
 
     },
@@ -26094,6 +26323,24 @@ Phaser.MSPointer = function (game) {
     */
     this._onMSPointerUp = null;
 
+    /**
+    * @property {function} _onMSPointerUpGlobal - Internal function to handle MSPointer events.
+    * @private
+    */
+    this._onMSPointerUpGlobal = null;
+
+    /**
+    * @property {function} _onMSPointerOut - Internal function to handle MSPointer events.
+    * @private
+    */
+    this._onMSPointerOut = null;
+
+    /**
+    * @property {function} _onMSPointerOver - Internal function to handle MSPointer events.
+    * @private
+    */
+    this._onMSPointerOver = null;
+
 };
 
 Phaser.MSPointer.prototype = {
@@ -26126,6 +26373,18 @@ Phaser.MSPointer.prototype = {
                 return _this.onPointerUp(event);
             };
 
+            this._onMSPointerUpGlobal = function (event) {
+                return _this.onPointerUpGlobal(event);
+            };
+
+            this._onMSPointerOut = function (event) {
+                return _this.onPointerOut(event);
+            };
+
+            this._onMSPointerOver = function (event) {
+                return _this.onPointerOver(event);
+            };
+
             var canvas = this.game.canvas;
 
             canvas.addEventListener('MSPointerDown', this._onMSPointerDown, false);
@@ -26133,12 +26392,24 @@ Phaser.MSPointer.prototype = {
             canvas.addEventListener('MSPointerUp', this._onMSPointerUp, false);
 
             //  IE11+ uses non-prefix events
-            canvas.addEventListener('pointerDown', this._onMSPointerDown, false);
-            canvas.addEventListener('pointerMove', this._onMSPointerMove, false);
-            canvas.addEventListener('pointerUp', this._onMSPointerUp, false);
+            canvas.addEventListener('pointerdown', this._onMSPointerDown, false);
+            canvas.addEventListener('pointermove', this._onMSPointerMove, false);
+            canvas.addEventListener('pointerup', this._onMSPointerUp, false);
 
             canvas.style['-ms-content-zooming'] = 'none';
             canvas.style['-ms-touch-action'] = 'none';
+
+            if (!this.game.device.cocoonJS)
+            {
+                window.addEventListener('MSPointerUp', this._onMSPointerUpGlobal, true);
+                canvas.addEventListener('MSPointerOver', this._onMSPointerOver, true);
+                canvas.addEventListener('MSPointerOut', this._onMSPointerOut, true);
+
+                //  IE11+ uses non-prefix events
+                window.addEventListener('pointerup', this._onMSPointerUpGlobal, true);
+                canvas.addEventListener('pointerover', this._onMSPointerOver, true);
+                canvas.addEventListener('pointerout', this._onMSPointerOut, true);
+            }
         }
 
     },
@@ -26256,6 +26527,121 @@ Phaser.MSPointer.prototype = {
     },
 
     /**
+    * The internal method that handles the mouse up event from the window.
+    * 
+    * @method Phaser.MSPointer#onPointerUpGlobal
+    * @param {PointerEvent} event - The native event from the browser. This gets stored in MSPointer.event.
+    */
+    onPointerUpGlobal: function (event) {
+
+        if ((event.pointerType === 'mouse' || event.pointerType === 0x00000004) && !this.input.mousePointer.withinGame)
+        {
+            this.onPointerUp(event);
+        }
+        else
+        {
+            var pointer = this.input.getPointerFromIdentifier(event.identifier);
+
+            if (pointer && pointer.withinGame)
+            {
+                this.onPointerUp(event);
+            }
+        }
+
+    },
+
+    /**
+    * The internal method that handles the pointer out event from the browser.
+    *
+    * @method Phaser.MSPointer#onPointerOut
+    * @param {PointerEvent} event - The native event from the browser. This gets stored in MSPointer.event.
+    */
+    onPointerOut: function (event) {
+
+        this.event = event;
+
+        if (this.capture)
+        {
+            event.preventDefault();
+        }
+
+        if (event.pointerType === 'mouse' || event.pointerType === 0x00000004)
+        {
+            this.input.mousePointer.withinGame = false;
+        }
+        else
+        {
+            var pointer = this.input.getPointerFromIdentifier(event.identifier);
+
+            if (pointer)
+            {
+                pointer.withinGame = false;
+            }
+        }
+
+        if (this.input.mouse.mouseOutCallback)
+        {
+            this.input.mouse.mouseOutCallback.call(this.input.mouse.callbackContext, event);
+        }
+
+        if (!this.input.enabled || !this.enabled)
+        {
+            return;
+        }
+
+        if (this.input.mouse.stopOnGameOut)
+        {
+            event['identifier'] = 0;
+
+            if (pointer)
+            {
+                pointer.stop(event);
+            }
+            else
+            {
+                this.input.mousePointer.stop(event);
+            }
+        }
+
+    },
+
+    /**
+    * The internal method that handles the pointer out event from the browser.
+    *
+    * @method Phaser.MSPointer#onPointerOut
+    * @param {PointerEvent} event - The native event from the browser. This gets stored in MSPointer.event.
+    */
+    onPointerOver: function (event) {
+
+        this.event = event;
+
+        if (this.capture)
+        {
+            event.preventDefault();
+        }
+
+        if (event.pointerType === 'mouse' || event.pointerType === 0x00000004)
+        {
+            this.input.mousePointer.withinGame = true;
+        }
+        else
+        {
+            var pointer = this.input.getPointerFromIdentifier(event.identifier);
+
+            if (pointer)
+            {
+                pointer.withinGame = true;
+            }
+        }
+
+        if (this.input.mouse.mouseOverCallback)
+        {
+            this.input.mouse.mouseOverCallback.call(this.input.mouse.callbackContext, event);
+        }
+
+    },
+
+    /**
     * Stop the event listeners.
     * @method Phaser.MSPointer#stop
     */
@@ -26266,10 +26652,17 @@ Phaser.MSPointer.prototype = {
         canvas.removeEventListener('MSPointerDown', this._onMSPointerDown);
         canvas.removeEventListener('MSPointerMove', this._onMSPointerMove);
         canvas.removeEventListener('MSPointerUp', this._onMSPointerUp);
+        canvas.removeEventListener('MSPointerOver', this._onMSPointerOver);
+        canvas.removeEventListener('MSPointerOut', this._onMSPointerOut);
 
-        canvas.removeEventListener('pointerDown', this._onMSPointerDown);
-        canvas.removeEventListener('pointerMove', this._onMSPointerMove);
-        canvas.removeEventListener('pointerUp', this._onMSPointerUp);
+        canvas.removeEventListener('pointerdown', this._onMSPointerDown);
+        canvas.removeEventListener('pointermove', this._onMSPointerMove);
+        canvas.removeEventListener('pointerup', this._onMSPointerUp);
+        canvas.removeEventListener('pointerover', this._onMSPointerOver);
+        canvas.removeEventListener('pointerout', this._onMSPointerOut);
+
+        window.removeEventListener('MSPointerUp', this._onMSPointerUpGlobal);
+        window.removeEventListener('pointerup', this._onMSPointerUpGlobal);
 
     }
 
@@ -27184,8 +27577,6 @@ Phaser.Pointer.prototype = {
     */
     start: function (event) {
 
-        // console.log(event);
-
         if (event['pointerId'])
         {
             this.pointerId = event.pointerId;
@@ -27204,10 +27595,11 @@ Phaser.Pointer.prototype = {
             this.isUp = false;
         }
 
-        this._history = [];
         this.active = true;
         this.withinGame = true;
         this.dirty = false;
+
+        this._history = [];
         this._clickTrampolines = null;
         this._trampolineTargetObject = null;
 
@@ -27304,7 +27696,9 @@ Phaser.Pointer.prototype = {
     */
     move: function (event, fromClick) {
 
-        if (this.game.input.pollLocked)
+        var input = this.game.input;
+
+        if (input.pollLocked)
         {
             return;
         }
@@ -27330,7 +27724,7 @@ Phaser.Pointer.prototype = {
         this.screenX = event.screenX;
         this.screenY = event.screenY;
 
-        if (this.isMouse && this.game.input.mouse.locked && !fromClick)
+        if (this.isMouse && input.mouse.locked && !fromClick)
         {
             this.rawMovementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
             this.rawMovementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
@@ -27339,23 +27733,23 @@ Phaser.Pointer.prototype = {
             this.movementY += this.rawMovementY;
         }
 
-        this.x = (this.pageX - this.game.scale.offset.x) * this.game.input.scale.x;
-        this.y = (this.pageY - this.game.scale.offset.y) * this.game.input.scale.y;
+        this.x = (this.pageX - this.game.scale.offset.x) * input.scale.x;
+        this.y = (this.pageY - this.game.scale.offset.y) * input.scale.y;
 
         this.position.setTo(this.x, this.y);
         this.circle.x = this.x;
         this.circle.y = this.y;
 
-        if (this.game.input.multiInputOverride === Phaser.Input.MOUSE_OVERRIDES_TOUCH ||
-            this.game.input.multiInputOverride === Phaser.Input.MOUSE_TOUCH_COMBINE ||
-            (this.game.input.multiInputOverride === Phaser.Input.TOUCH_OVERRIDES_MOUSE && this.game.input.totalActivePointers === 0))
+        if (input.multiInputOverride === Phaser.Input.MOUSE_OVERRIDES_TOUCH ||
+            input.multiInputOverride === Phaser.Input.MOUSE_TOUCH_COMBINE ||
+            (input.multiInputOverride === Phaser.Input.TOUCH_OVERRIDES_MOUSE && input.totalActivePointers === 0))
         {
-            this.game.input.activePointer = this;
-            this.game.input.x = this.x;
-            this.game.input.y = this.y;
-            this.game.input.position.setTo(this.game.input.x, this.game.input.y);
-            this.game.input.circle.x = this.game.input.x;
-            this.game.input.circle.y = this.game.input.y;
+            input.activePointer = this;
+            input.x = this.x;
+            input.y = this.y;
+            input.position.setTo(input.x, input.y);
+            input.circle.x = input.x;
+            input.circle.y = input.y;
         }
 
         this.withinGame = this.game.scale.bounds.contains(this.pageX, this.pageY);
@@ -27366,11 +27760,11 @@ Phaser.Pointer.prototype = {
             return this;
         }
 
-        var i = this.game.input.moveCallbacks.length;
+        var i = input.moveCallbacks.length;
 
         while (i--)
         {
-            this.game.input.moveCallbacks[i].callback.call(this.game.input.moveCallbacks[i].context, this, this.x, this.y, fromClick);
+            input.moveCallbacks[i].callback.call(input.moveCallbacks[i].context, this, this.x, this.y, fromClick);
         }
 
         //  Easy out if we're dragging something and it still exists
@@ -27381,7 +27775,7 @@ Phaser.Pointer.prototype = {
                 this.targetObject = null;
             }
         }
-        else if (this.game.input.interactiveItems.total > 0)
+        else if (input.interactiveItems.total > 0)
         {
             this.processInteractiveObjects(fromClick);
         }
@@ -27527,16 +27921,6 @@ Phaser.Pointer.prototype = {
             return;
         }
 
-        if (this.isMouse)
-        {
-            this.updateButtons(event);
-        }
-        else
-        {
-            this.isDown = false;
-            this.isUp = true;
-        }
-
         this.timeUp = this.game.time.time;
 
         if (this.game.input.multiInputOverride === Phaser.Input.MOUSE_OVERRIDES_TOUCH ||
@@ -27564,13 +27948,23 @@ Phaser.Pointer.prototype = {
             }
         }
 
+        if (this.isMouse)
+        {
+            this.updateButtons(event);
+        }
+        else
+        {
+            this.isDown = false;
+            this.isUp = true;
+        }
+
         //  Mouse is always active
         if (this.id > 0)
         {
             this.active = false;
         }
 
-        this.withinGame = false;
+        this.withinGame = this.game.scale.bounds.contains(event.pageX, event.pageY);
         this.pointerId = null;
         this.identifier = null;
         
@@ -28933,7 +29327,10 @@ Phaser.InputHandler.prototype = {
         //  Need to pass it a temp point, in case we need it again for the pixel check
         if (this.game.input.hitTest(this.sprite, pointer, this._tempPoint))
         {
-            if (fastTest === undefined) { fastTest = false; }
+            if (fastTest === undefined)
+            {
+                fastTest = false;
+            }
 
             if (!fastTest && this.pixelPerfectClick)
             {
@@ -28968,7 +29365,10 @@ Phaser.InputHandler.prototype = {
         //  Need to pass it a temp point, in case we need it again for the pixel check
         if (this.game.input.hitTest(this.sprite, pointer, this._tempPoint))
         {
-            if (fastTest === undefined) { fastTest = false; }
+            if (fastTest === undefined)
+            {
+                fastTest = false;
+            }
 
             if (!fastTest && this.pixelPerfectOver)
             {
@@ -29108,15 +29508,17 @@ Phaser.InputHandler.prototype = {
             return;
         }
 
-        if (this._pointerData[pointer.id].isOver === false || pointer.dirty)
-        {
-            this._pointerData[pointer.id].isOver = true;
-            this._pointerData[pointer.id].isOut = false;
-            this._pointerData[pointer.id].timeOver = this.game.time.time;
-            this._pointerData[pointer.id].x = pointer.x - this.sprite.x;
-            this._pointerData[pointer.id].y = pointer.y - this.sprite.y;
+        var data = this._pointerData[pointer.id];
 
-            if (this.useHandCursor && this._pointerData[pointer.id].isDragged === false)
+        if (data.isOver === false || pointer.dirty)
+        {
+            data.isOver = true;
+            data.isOut = false;
+            data.timeOver = this.game.time.time;
+            data.x = pointer.x - this.sprite.x;
+            data.y = pointer.y - this.sprite.y;
+
+            if (this.useHandCursor && data.isDragged === false)
             {
                 this.game.canvas.style.cursor = "pointer";
                 this._setHandCursor = true;
@@ -29145,11 +29547,13 @@ Phaser.InputHandler.prototype = {
             return;
         }
 
-        this._pointerData[pointer.id].isOver = false;
-        this._pointerData[pointer.id].isOut = true;
-        this._pointerData[pointer.id].timeOut = this.game.time.time;
+        var data = this._pointerData[pointer.id];
 
-        if (this.useHandCursor && this._pointerData[pointer.id].isDragged === false)
+        data.isOver = false;
+        data.isOut = true;
+        data.timeOut = this.game.time.time;
+
+        if (this.useHandCursor && data.isDragged === false)
         {
             this.game.canvas.style.cursor = "default";
             this._setHandCursor = false;
@@ -29177,16 +29581,18 @@ Phaser.InputHandler.prototype = {
             return;
         }
 
-        if (!this._pointerData[pointer.id].isDown && this._pointerData[pointer.id].isOver)
+        var data = this._pointerData[pointer.id];
+
+        if (!data.isDown && data.isOver)
         {
             if (this.pixelPerfectClick && !this.checkPixel(null, null, pointer))
             {
                 return;
             }
 
-            this._pointerData[pointer.id].isDown = true;
-            this._pointerData[pointer.id].isUp = false;
-            this._pointerData[pointer.id].timeDown = this.game.time.time;
+            data.isDown = true;
+            data.isUp = false;
+            data.timeDown = this.game.time.time;
 
             if (this.sprite && this.sprite.events)
             {
@@ -29227,40 +29633,39 @@ Phaser.InputHandler.prototype = {
             return;
         }
 
+        var data = this._pointerData[pointer.id];
+
         //  If was previously touched by this Pointer, check if still is AND still over this item
-        if (this._pointerData[pointer.id].isDown && pointer.isUp)
+        if (data.isDown && pointer.isUp)
         {
-            this._pointerData[pointer.id].isDown = false;
-            this._pointerData[pointer.id].isUp = true;
-            this._pointerData[pointer.id].timeUp = this.game.time.time;
-            this._pointerData[pointer.id].downDuration = this._pointerData[pointer.id].timeUp - this._pointerData[pointer.id].timeDown;
+            data.isDown = false;
+            data.isUp = true;
+            data.timeUp = this.game.time.time;
+            data.downDuration = data.timeUp - data.timeDown;
 
             //  Only release the InputUp signal if the pointer is still over this sprite
-            if (this.checkPointerOver(pointer))
+            var isOver = this.checkPointerOver(pointer);
+
+            if (this.sprite && this.sprite.events)
             {
-                //  Release the inputUp signal and provide optional parameter if pointer is still over the sprite or not
-                if (this.sprite && this.sprite.events)
+                this.sprite.events.onInputUp$dispatch(this.sprite, pointer, isOver);
+
+                //  The onInputUp event may have changed the sprite so that checkPointerOver is no longer true, so update it.
+                if (isOver)
                 {
-                    this.sprite.events.onInputUp$dispatch(this.sprite, pointer, true);
+                    isOver = this.checkPointerOver(pointer);
                 }
             }
-            else
-            {
-                //  Release the inputUp signal and provide optional parameter if pointer is still over the sprite or not
-                if (this.sprite && this.sprite.events)
-                {
-                    this.sprite.events.onInputUp$dispatch(this.sprite, pointer, false);
-                }
+            
+            data.isOver = isOver;
 
-                //  Pointer outside the sprite? Reset the cursor
-                if (this.useHandCursor)
-                {
-                    this.game.canvas.style.cursor = "default";
-                    this._setHandCursor = false;
-                }
+            if (!isOver && this.useHandCursor)
+            {
+                this.game.canvas.style.cursor = "default";
+                this._setHandCursor = false;
             }
 
-            //  It's possible the onInputUp event created a new Sprite that is on-top of this one, so we ought to force a Pointer update
+            //  It's possible the onInputUp event created a new Sprite that is on-top of this one, so force a Pointer update
             pointer.dirty = true;
 
             //  Stop drag
@@ -30865,6 +31270,8 @@ Phaser.Component.Destroy.prototype = {
         this._bounds = null;
         this._currentBounds = null;
         this._mask = null;
+
+
 
         this._destroyCachedSprite();
 
@@ -35891,7 +36298,7 @@ Phaser.Device._initialize = function () {
             return false;
         }
 
-        var elem = document.createElement('canvas');
+        var elem = PIXI.CanvasPool.create(this, 1, 1);
         var ctx = elem.getContext('2d');
 
         if (!ctx)
@@ -35900,6 +36307,8 @@ Phaser.Device._initialize = function () {
         }
 
         var image = ctx.createImageData(1, 1);
+
+        PIXI.CanvasPool.remove(this);
 
         return image.data instanceof Uint8ClampedArray;
 
@@ -36514,7 +36923,8 @@ Phaser.Device.whenReady(function (device) {
 */
 
 /**
-* The Canvas class handles everything related to creating the `canvas` DOM tag that Phaser will use, including styles, offset and aspect ratio.
+* The Canvas class handles everything related to creating the `canvas` DOM tag that Phaser will use, 
+* including styles, offset and aspect ratio.
 *
 * @class Phaser.Canvas
 * @static
@@ -36525,27 +36935,35 @@ Phaser.Canvas = {
     * Creates a `canvas` DOM element. The element is not automatically added to the document.
     *
     * @method Phaser.Canvas.create
+    * @param {object} parent - The object that will own the canvas that is created.
     * @param {number} [width=256] - The width of the canvas element.
     * @param {number} [height=256] - The height of the canvas element..
     * @param {string} [id=(none)] - If specified, and not the empty string, this will be set as the ID of the canvas element. Otherwise no ID will be set.
+    * @param {boolean} [skipPool=false] - If `true` the canvas will not be placed in the CanvasPool global.
     * @return {HTMLCanvasElement} The newly created canvas element.
     */
-    create: function (width, height, id) {
+    create: function (parent, width, height, id, skipPool) {
 
         width = width || 256;
         height = height || 256;
 
-        var canvas = document.createElement('canvas');
-
-        if (typeof id === 'string' && id !== '')
+        if (skipPool === undefined)
         {
-            canvas.id = id;
+            var canvas = PIXI.CanvasPool.create(parent, width, height);
+        }
+        else
+        {
+            var canvas = document.createElement('canvas');
         }
 
         canvas.width = width;
         canvas.height = height;
 
-        canvas.style.display = 'block';
+        if (typeof id === 'string' && id !== '')
+        {
+            canvas.id = id;
+            canvas.style.display = 'block';
+        }
 
         return canvas;
 
@@ -43663,7 +44081,7 @@ Phaser.Cache.prototype = {
     *
     * @method Phaser.Cache#getRenderTexture
     * @param {string} key - The key of the asset to retrieve from the cache.
-    * @return {Phaser.RenderTexture} The RenderTexture object.
+    * @return {Object} The object with Phaser.RenderTexture and Phaser.Frame.
     */
     getRenderTexture: function (key) {
 
@@ -44990,6 +45408,51 @@ Phaser.Loader.prototype = {
     },
 
     /**
+    * Adds an array of images to the current load queue.
+    *
+    * It works by passing each element of the array to the Loader.image method.
+    * 
+    * The files are **not** loaded immediately after calling this method. The files are added to the queue ready to be loaded when the loader starts.
+    * 
+    * Phaser can load all common image types: png, jpg, gif and any other format the browser can natively handle.
+    * 
+    * The keys must be unique Strings. They are used to add the files to the Phaser.Cache upon successful load.
+    *
+    * Retrieve the images via `Cache.getImage(key)`
+    * 
+    * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
+    * 
+    * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "alien"
+    * and no URL is given then the Loader will set the URL to be "alien.png". It will always add `.png` as the extension.
+    * If you do not desire this action then provide a URL.
+    *
+    * @method Phaser.Loader#images
+    * @param {array} keys - An array of unique asset keys of the image files.
+    * @param {array} [urls] - Optional array of URLs. If undefined or `null` the url will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png". If provided the URLs array length must match the keys array length.
+    * @return {Phaser.Loader} This Loader instance.
+     */
+    images: function (keys, urls) {
+
+        if (Array.isArray(urls))
+        {
+            for (var i = 0; i < keys.length; i++)
+            {
+                this.image(keys[i], urls[i]);
+            }
+        }
+        else
+        {
+            for (var i = 0; i < keys.length; i++)
+            {
+                this.image(keys[i]);
+            }
+        }
+
+        return this;
+
+    },
+
+    /**
     * Adds a Text file to the current load queue.
     * 
     * The file is **not** loaded immediately after calling this method. The file is added to the queue ready to be loaded when the loader starts.
@@ -45547,6 +46010,7 @@ Phaser.Loader.prototype = {
     * @return {Phaser.Loader} This Loader instance.
     */
     bitmapFont: function (key, textureURL, atlasURL, atlasData, xSpacing, ySpacing) {
+
         if (textureURL === undefined || textureURL === null)
         {
             textureURL = key + '.png';
@@ -46414,6 +46878,7 @@ Phaser.Loader.prototype = {
                 _this.fileComplete(file);
             }
         };
+
         file.data.onerror = function () {
             if (file.data.onload)
             {
@@ -47997,14 +48462,14 @@ Phaser.ArrayUtils = {
     * Create an array of numbers (positive and/or negative) progressing from `start`
     * up to but not including `end` by advancing by `step`.
     *
-    * If `start` is less than `stop` a zero-length range is created unless a negative `step` is specified.
+    * If `start` is less than `end` a zero-length range is created unless a negative `step` is specified.
     *
     * Certain values for `start` and `end` (eg. NaN/undefined/null) are currently coerced to 0;
     * for forward compatibility make sure to pass in actual numbers.
     *
     * @method Phaser.ArrayUtils#numberArrayStep
     * @param {number} start - The start of the range.
-    * @param {number} end - The end of the range.
+    * @param {number} [end] - The end of the range.
     * @param {number} [step=1] - The value to increment or decrement by.
     * @returns {Array} Returns the new array of numbers.
     * @example
@@ -48026,39 +48491,24 @@ Phaser.ArrayUtils = {
     * Phaser.ArrayUtils.numberArrayStep(0);
     * // => []
     */
-    numberArrayStep: function(start, end, step) {
+    numberArrayStep: function (start, end, step) {
 
-        start = +start || 0;
+        if (start === undefined || start === null) { start = 0; }
 
-        // enables use as a callback for functions like `_.map`
-        var type = typeof end;
-
-        if ((type === 'number' || type === 'string') && step && step[end] === start)
-        {
-            end = step = null;
-        }
-
-        step = step == null ? 1 : (+step || 0);
-
-        if (end === null)
+        if (end === undefined || end === null)
         {
             end = start;
             start = 0;
         }
-        else
-        {
-            end = +end || 0;
-        }
 
-        // use `Array(length)` so engines like Chakra and V8 avoid slower modes
-        // http://youtu.be/XAqIpGU8ZZk#t=17m25s
-        var index = -1;
-        var length = Math.max(Phaser.Math.roundAwayFromZero((end - start) / (step || 1)), 0);
-        var result = new Array(length);
+        if (step === undefined) { step = 1; }
 
-        while (++index < length)
+        var result = [];
+        var total = Math.max(Phaser.Math.roundAwayFromZero((end - start) / (step || 1)), 0);
+
+        for (var i = 0; i < total; i++)
         {
-            result[index] = start;
+            result.push(start);
             start += step;
         }
 
