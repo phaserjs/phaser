@@ -289,10 +289,10 @@ PIXI.TilingSprite.prototype._renderCanvas = function(renderSession)
     //  Allow for pixel rounding
     if (renderSession.roundPixels)
     {
-        tx | 0;
-        ty | 0;
-        tw | 0;
-        th | 0;
+        tx |= 0;
+        ty |= 0;
+        tw |= 0;
+        th |= 0;
     }
 
     context.fillRect(tx, ty, tw, th);
