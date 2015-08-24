@@ -254,7 +254,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 <a name="change-log"></a>
 ## Change Log
 
-## Version 2.4.3 - "Coramen" - 24th August 2014
+## Version 2.4.3 - "Coramen" - 24th August 2015
 
 ### New Features
 

@@ -1,6 +1,6 @@
 # Change Log
 
-## Version 2.4.3 - "Coramen" - 24th August 2014
+## Version 2.4.3 - "Coramen" - 24th August 2015
 
 ### New Features
 
@@ -51,7 +51,7 @@
 * TilingSprite._renderCanvas wasn't correctly allowing for pixel rounding (thanks @ximop #2022)
 * Cache.addSpriteSheet didn't include default values for the `frameMax`, `margin` and `spacing` arguments (thanks @vladkens #2017 #2018)
 * Tilemap.shuffle was calling the deprecated Phaser.Utils.shuffle, which has now moved to Phaser.ArrayUtils.shuffle.
-* Enabling a filter on a display object that had a blend mode set would cause the object to become invisible. The two cannot be combined, so when you set a filter on a display object it now automatically resets the blend mode to `NORMAL`. The same does not happen in reverse however, so if you've got a filter set and then change the blend mode it will still break. Be careful to capture this yourself (thanks @wayfu #1994)
+* Enabling a filter on a display object that had a multiply blend mode set would cause the object to become invisible. The two cannot be combined, so when you set a filter on a display object it now automatically resets the blend mode to `NORMAL`. The same does not happen in reverse however, so if you've got a filter set and then change the blend mode to multiply it will still break. Be careful to capture this yourself (thanks @wayfu #1994)
 
 ## Version 2.4.2 - "Altara" - 29th July 2015
 
