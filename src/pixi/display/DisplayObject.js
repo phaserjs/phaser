@@ -327,8 +327,13 @@ Object.defineProperty(PIXI.DisplayObject.prototype, 'mask', {
 
 /**
  * Sets the filters for the displayObject.
- * * IMPORTANT: This is a webGL only feature and will be ignored by the canvas renderer.
- * To remove filters simply set this property to 'null'
+ * IMPORTANT: This is a webGL only feature and will be ignored by the Canvas renderer.
+ * 
+ * To remove filters simply set this property to 'null'.
+ * 
+ * You cannot have a filter and a blend mode active at the same time. Setting a filter will reset
+ * this objects blend mode to NORMAL.
+ * 
  * @property filters
  * @type Array(Filter)
  */
@@ -360,6 +365,11 @@ Object.defineProperty(PIXI.DisplayObject.prototype, 'filters', {
         }
 
         this._filters = value;
+
+        if (this.blendMode)
+        {
+            this.blendMode = PIXI.blendModes.NORMAL;
+        }
     }
 });
 

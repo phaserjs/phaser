@@ -87,6 +87,8 @@ PIXI.Sprite = function(texture)
     /**
      * The blend mode to be applied to the sprite. Set to PIXI.blendModes.NORMAL to remove any blend mode.
      *
+     * Warning: You cannot have a blend mode and a filter active on the same Sprite. Doing so will render the sprite invisible.
+     *
      * @property blendMode
      * @type Number
      * @default PIXI.blendModes.NORMAL;

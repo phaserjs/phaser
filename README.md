@@ -308,6 +308,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * TilingSprite._renderCanvas wasn't correctly allowing for pixel rounding (thanks @ximop #2022)
 * Cache.addSpriteSheet didn't include default values for the `frameMax`, `margin` and `spacing` arguments (thanks @vladkens #2017 #2018)
 * Tilemap.shuffle was calling the deprecated Phaser.Utils.shuffle, which has now moved to Phaser.ArrayUtils.shuffle.
+* Enabling a filter on a display object that had a blend mode set would cause the object to become invisible. The two cannot be combined, so when you set a filter on a display object it now automatically resets the blend mode to `NORMAL`. The same does not happen in reverse however, so if you've got a filter set and then change the blend mode it will still break. Be careful to capture this yourself (thanks @wayfu #1994)
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
