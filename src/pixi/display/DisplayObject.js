@@ -331,7 +331,7 @@ Object.defineProperty(PIXI.DisplayObject.prototype, 'mask', {
  * 
  * To remove filters simply set this property to 'null'.
  * 
- * You cannot have a filter and a blend mode active at the same time. Setting a filter will reset
+ * You cannot have a filter and a multiply blend mode active at the same time. Setting a filter will reset
  * this objects blend mode to NORMAL.
  * 
  * @property filters
@@ -366,7 +366,7 @@ Object.defineProperty(PIXI.DisplayObject.prototype, 'filters', {
 
         this._filters = value;
 
-        if (this.blendMode)
+        if (this.blendMode && this.blendMode === PIXI.blendModes.MULTIPLY)
         {
             this.blendMode = PIXI.blendModes.NORMAL;
         }
