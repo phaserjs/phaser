@@ -121,7 +121,7 @@ If you'd like to try coding in Phaser right now, with nothing more than your web
 
 ### Koding
 
-Want to try Phaser without downloading anything? [Clone Phaser in Koding](https://koding.com/Teamwork?import=https://github.com/photonstorm/phaser/archive/master.zip&c=git1) and start working right away in their web based development system.
+Want to try Phaser without downloading anything? The site [Koding](https://koding.com) offer a complete browser-based virtual machine to work in, allowing you to clone the Phaser repo and start work immediately.
 
 ### License
 
@@ -306,6 +306,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * Video.stop now removes the 'playing' event listener, which stop Videos set to loop from throwing errors after being destroyed.
 * Tilemap.createFromObjects has been strengthened so that will only create Sprites for matching gids/ids/names. It also only sets the Sprite width and height values if they are present in the Tiled data (thanks @pparke #2012)
 * TilingSprite._renderCanvas wasn't correctly allowing for pixel rounding (thanks @ximop #2022)
+* Cache.addSpriteSheet didn't include default values for the `frameMax`, `margin` and `spacing` arguments (thanks @vladkens #2017 #2018)
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 

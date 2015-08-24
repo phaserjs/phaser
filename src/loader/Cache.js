@@ -559,6 +559,10 @@ Phaser.Cache.prototype = {
     */
     addSpriteSheet: function (key, url, data, frameWidth, frameHeight, frameMax, margin, spacing) {
 
+        if (frameMax === undefined) { frameMax = -1; }
+        if (margin === undefined) { margin = 0; }
+        if (spacing === undefined) { spacing = 0; }
+
         var obj = {
             key: key,
             url: url,
