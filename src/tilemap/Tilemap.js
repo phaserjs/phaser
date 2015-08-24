@@ -1796,7 +1796,7 @@ Phaser.Tilemap.prototype = {
             }
         }
 
-        Phaser.Utils.shuffle(indexes);
+        Phaser.ArrayUtils.shuffle(indexes);
 
         for (var i = 1; i < this._results.length; i++)
         {
