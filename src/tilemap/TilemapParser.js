@@ -217,17 +217,19 @@ Phaser.TilemapParser = {
                 continue;
             }
 
+            var curl = json.layers[i];
+
             var layer = {
 
-                name: json.layers[i].name,
-                x: json.layers[i].x,
-                y: json.layers[i].y,
-                width: json.layers[i].width,
-                height: json.layers[i].height,
-                widthInPixels: json.layers[i].width * json.tilewidth,
-                heightInPixels: json.layers[i].height * json.tileheight,
-                alpha: json.layers[i].opacity,
-                visible: json.layers[i].visible,
+                name: curl.name,
+                x: curl.x,
+                y: curl.y,
+                width: curl.width,
+                height: curl.height,
+                widthInPixels: curl.width * json.tilewidth,
+                heightInPixels: curl.height * json.tileheight,
+                alpha: curl.opacity,
+                visible: curl.visible,
                 properties: {},
                 indexes: [],
                 callbacks: [],
@@ -235,9 +237,9 @@ Phaser.TilemapParser = {
 
             };
 
-            if (json.layers[i].properties)
+            if (curl.properties)
             {
-                layer.properties = json.layers[i].properties;
+                layer.properties = curl.properties;
             }
 
             var x = 0;
@@ -251,11 +253,11 @@ Phaser.TilemapParser = {
             //  If the map contains multiple tilesets then the indexes are relative to that which the set starts from.
             //  Need to set which tileset in the cache = which tileset in the JSON, if you do this manually it means you can use the same map data but a new tileset.
 
-            for (var t = 0, len = json.layers[i].data.length; t < len; t++)
+            for (var t = 0, len = curl.data.length; t < len; t++)
             {
                 rotation = 0;
                 flipped = false;
-                gid = json.layers[i].data[t];
+                gid = curl.data[t];
 
                 //  If true the current tile is flipped or rotated (Tiled TMX format) 
                 if (gid > 0x20000000)
@@ -322,12 +324,14 @@ Phaser.TilemapParser = {
                 }
                 else
                 {
-                    row.push(new Phaser.Tile(layer, -1, x, output.length, json.tilewidth, json.tileheight));
+                    //  Null option
+                    // row.push(new Phaser.Tile(layer, -1, x, output.length, json.tilewidth, json.tileheight));
+                    row.push(null);
                 }
 
                 x++;
 
-                if (x === json.layers[i].width)
+                if (x === curl.width)
                 {
                     output.push(row);
                     x = 0;
@@ -353,21 +357,23 @@ Phaser.TilemapParser = {
                 continue;
             }
 
+            var curi = json.layers[i];
+
             var image = {
 
-                name: json.layers[i].name,
-                image: json.layers[i].image,
-                x: json.layers[i].x,
-                y: json.layers[i].y,
-                alpha: json.layers[i].opacity,
-                visible: json.layers[i].visible,
+                name: curi.name,
+                image: curi.image,
+                x: curi.x,
+                y: curi.y,
+                alpha: curi.opacity,
+                visible: curi.visible,
                 properties: {}
 
             };
 
-            if (json.layers[i].properties)
+            if (curi.properties)
             {
-                image.properties = json.layers[i].properties;
+                image.properties = curi.properties;
             }
 
             images.push(image);
@@ -446,95 +452,97 @@ Phaser.TilemapParser = {
                 continue;
             }
 
-            objects[json.layers[i].name] = [];
-            collision[json.layers[i].name] = [];
+            var curo = json.layers[i];
 
-            for (var v = 0, len = json.layers[i].objects.length; v < len; v++)
+            objects[curo.name] = [];
+            collision[curo.name] = [];
+
+            for (var v = 0, len = curo.objects.length; v < len; v++)
             {
                 //  Object Tiles
-                if (json.layers[i].objects[v].gid)
+                if (curo.objects[v].gid)
                 {
                     var object = {
 
-                        gid: json.layers[i].objects[v].gid,
-                        name: json.layers[i].objects[v].name,
-                        type: json.layers[i].objects[v].hasOwnProperty("type") ? json.layers[i].objects[v].type : "",
-                        x: json.layers[i].objects[v].x,
-                        y: json.layers[i].objects[v].y,
-                        visible: json.layers[i].objects[v].visible,
-                        properties: json.layers[i].objects[v].properties
+                        gid: curo.objects[v].gid,
+                        name: curo.objects[v].name,
+                        type: curo.objects[v].hasOwnProperty("type") ? curo.objects[v].type : "",
+                        x: curo.objects[v].x,
+                        y: curo.objects[v].y,
+                        visible: curo.objects[v].visible,
+                        properties: curo.objects[v].properties
 
                     };
 
-                    if (json.layers[i].objects[v].rotation)
+                    if (curo.objects[v].rotation)
                     {
-                        object.rotation = json.layers[i].objects[v].rotation;
+                        object.rotation = curo.objects[v].rotation;
                     }
 
-                    objects[json.layers[i].name].push(object);
+                    objects[curo.name].push(object);
                 }
-                else if (json.layers[i].objects[v].polyline)
+                else if (curo.objects[v].polyline)
                 {
                     var object = {
 
-                        name: json.layers[i].objects[v].name,
-                        type: json.layers[i].objects[v].type,
-                        x: json.layers[i].objects[v].x,
-                        y: json.layers[i].objects[v].y,
-                        width: json.layers[i].objects[v].width,
-                        height: json.layers[i].objects[v].height,
-                        visible: json.layers[i].objects[v].visible,
-                        properties: json.layers[i].objects[v].properties
+                        name: curo.objects[v].name,
+                        type: curo.objects[v].type,
+                        x: curo.objects[v].x,
+                        y: curo.objects[v].y,
+                        width: curo.objects[v].width,
+                        height: curo.objects[v].height,
+                        visible: curo.objects[v].visible,
+                        properties: curo.objects[v].properties
 
                     };
 
-                    if (json.layers[i].objects[v].rotation)
+                    if (curo.objects[v].rotation)
                     {
-                        object.rotation = json.layers[i].objects[v].rotation;
+                        object.rotation = curo.objects[v].rotation;
                     }
 
                     object.polyline = [];
 
                     //  Parse the polyline into an array
-                    for (var p = 0; p < json.layers[i].objects[v].polyline.length; p++)
+                    for (var p = 0; p < curo.objects[v].polyline.length; p++)
                     {
-                        object.polyline.push([ json.layers[i].objects[v].polyline[p].x, json.layers[i].objects[v].polyline[p].y ]);
+                        object.polyline.push([ curo.objects[v].polyline[p].x, curo.objects[v].polyline[p].y ]);
                     }
 
-                    collision[json.layers[i].name].push(object);
-                    objects[json.layers[i].name].push(object);
+                    collision[curo.name].push(object);
+                    objects[curo.name].push(object);
                 }
                 // polygon
-                else if (json.layers[i].objects[v].polygon)
+                else if (curo.objects[v].polygon)
                 {
-                    var object = slice(json.layers[i].objects[v],
+                    var object = slice(curo.objects[v],
                                        ["name", "type", "x", "y", "visible", "rotation", "properties" ]);
 
                     //  Parse the polygon into an array
                     object.polygon = [];
 
-                    for (var p = 0; p < json.layers[i].objects[v].polygon.length; p++)
+                    for (var p = 0; p < curo.objects[v].polygon.length; p++)
                     {
-                        object.polygon.push([ json.layers[i].objects[v].polygon[p].x, json.layers[i].objects[v].polygon[p].y ]);
+                        object.polygon.push([ curo.objects[v].polygon[p].x, curo.objects[v].polygon[p].y ]);
                     }
 
-                    objects[json.layers[i].name].push(object);
+                    objects[curo.name].push(object);
 
                 }
                 // ellipse
-                else if (json.layers[i].objects[v].ellipse)
+                else if (curo.objects[v].ellipse)
                 {
-                    var object = slice(json.layers[i].objects[v],
+                    var object = slice(curo.objects[v],
                                        ["name", "type", "ellipse", "x", "y", "width", "height", "visible", "rotation", "properties" ]);
-                    objects[json.layers[i].name].push(object);
+                    objects[curo.name].push(object);
                 }
                 // otherwise it's a rectangle
                 else
                 {
-                    var object = slice(json.layers[i].objects[v],
+                    var object = slice(curo.objects[v],
                                        ["name", "type", "x", "y", "width", "height", "visible", "rotation", "properties" ]);
                     object.rectangle = true;
-                    objects[json.layers[i].name].push(object);
+                    objects[curo.name].push(object);
                 }
             }
         }
@@ -611,7 +619,7 @@ Phaser.TilemapParser = {
                 {
                     tile = row[k];
 
-                    if (tile.index < 0)
+                    if (tile === null || tile.index < 0)
                     {
                         continue;
                     }
