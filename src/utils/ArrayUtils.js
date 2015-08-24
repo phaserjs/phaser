@@ -16,7 +16,7 @@ Phaser.ArrayUtils = {
     * Fetch a random entry from the given array.
     *
     * Will return null if there are no array items that fall within the specified range
-    * or if there is no item for the randomly choosen index.
+    * or if there is no item for the randomly chosen index.
     *
     * @method
     * @param {any[]} objects - An array of objects.
@@ -26,14 +26,12 @@ Phaser.ArrayUtils = {
     */
     getRandomItem: function (objects, startIndex, length) {
 
-        if (objects == null) { // undefined or null
-            return null;
-        }
-
+        if (objects === null) { return null; }
         if (startIndex === undefined) { startIndex = 0; }
         if (length === undefined) { length = objects.length; }
 
         var randomIndex = startIndex + Math.floor(Math.random() * length);
+
         return objects[randomIndex] === undefined ? null : objects[randomIndex];
 
     },
@@ -42,7 +40,7 @@ Phaser.ArrayUtils = {
     * Removes a random object from the given array and returns it.
     *
     * Will return null if there are no array items that fall within the specified range
-    * or if there is no item for the randomly choosen index.
+    * or if there is no item for the randomly chosen index.
     *
     * @method
     * @param {any[]} objects - An array of objects.
@@ -128,7 +126,7 @@ Phaser.ArrayUtils = {
     *
     * @method
     * @param {Array<any[]>} matrix - The array to rotate; this matrix _may_ be altered.
-    * @param {number|string} direction - The amount to rotate: the roation in degrees (90, -90, 270, -270, 180) or a string command ('rotateLeft', 'rotateRight' or 'rotate180').
+    * @param {number|string} direction - The amount to rotate: the rotation in degrees (90, -90, 270, -270, 180) or a string command ('rotateLeft', 'rotateRight' or 'rotate180').
     * @return {Array<any[]>} The rotated matrix. The source matrix should be discarded for the returned matrix.
     */
     rotateMatrix: function (matrix, direction) {
