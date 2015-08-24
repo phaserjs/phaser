@@ -239,12 +239,7 @@ PIXI.TilingSprite.prototype._renderCanvas = function(renderSession)
     var wt = this.worldTransform;
     var resolution = renderSession.resolution;
 
-    context.setTransform(wt.a * resolution,
-                         wt.b * resolution,
-                         wt.c * resolution,
-                         wt.d * resolution,
-                         wt.tx * resolution,
-                         wt.ty * resolution);
+    context.setTransform(wt.a * resolution, wt.b * resolution, wt.c * resolution, wt.d * resolution, wt.tx * resolution, wt.ty * resolution);
 
     if (this.refreshTexture)
     {
@@ -289,10 +284,10 @@ PIXI.TilingSprite.prototype._renderCanvas = function(renderSession)
     //  Allow for pixel rounding
     if (renderSession.roundPixels)
     {
-        tx | 0;
-        ty | 0;
-        tw | 0;
-        th | 0;
+        tx |= 0;
+        ty |= 0;
+        tw |= 0;
+        th |= 0;
     }
 
     context.fillRect(tx, ty, tw, th);

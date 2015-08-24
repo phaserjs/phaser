@@ -408,8 +408,8 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession, matrix)
         if (renderSession.roundPixels)
         {
             renderSession.context.setTransform(wt.a, wt.b, wt.c, wt.d, (wt.tx * renderSession.resolution) | 0, (wt.ty * renderSession.resolution) | 0);
-            dx = dx | 0;
-            dy = dy | 0;
+            dx |= 0;
+            dy |= 0;
         }
         else
         {
