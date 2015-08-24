@@ -38,14 +38,14 @@ Phaser.Canvas = {
             var canvas = document.createElement('canvas');
         }
 
-        canvas.width = width;
-        canvas.height = height;
-
         if (typeof id === 'string' && id !== '')
         {
             canvas.id = id;
-            canvas.style.display = 'block';
         }
+
+        canvas.width = width;
+        canvas.height = height;
+        canvas.style.display = 'block';
 
         return canvas;
 
