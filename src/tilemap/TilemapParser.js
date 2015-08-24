@@ -8,8 +8,21 @@
 * Phaser.TilemapParser parses data objects from Phaser.Loader that need more preparation before they can be inserted into a Tilemap.
 *
 * @class Phaser.TilemapParser
+* @static
 */
 Phaser.TilemapParser = {
+
+    /**
+     * When scanning the Tiled map data the TilemapParser can either insert a null value (true) or 
+     * a Phaser.Tile instance with an index of -1 (false, the default). Depending on your game type
+     * depends how this should be configured. If you've a large sparsely populated map and the tile
+     * data doesn't need to change then setting this value to `true` will help with memory consumption.
+     * However if your map is small, or you need to update the tiles (perhaps the map dynamically changes
+     * during the game) then leave the default value set.
+     *
+     * @type {boolean}
+     */
+    INSERT_NULL: false,
 
     /**
     * Parse tilemap data from the cache and creates a Tilemap object.
@@ -324,9 +337,14 @@ Phaser.TilemapParser = {
                 }
                 else
                 {
-                    //  Null option
-                    // row.push(new Phaser.Tile(layer, -1, x, output.length, json.tilewidth, json.tileheight));
-                    row.push(null);
+                    if (Phaser.TilemapParser.INSERT_NULL)
+                    {
+                        row.push(null);
+                    }
+                    else
+                    {
+                        row.push(new Phaser.Tile(layer, -1, x, output.length, json.tilewidth, json.tileheight));
+                    }
                 }
 
                 x++;
