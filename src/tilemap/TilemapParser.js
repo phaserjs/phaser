@@ -20,6 +20,7 @@ Phaser.TilemapParser = {
      * However if your map is small, or you need to update the tiles (perhaps the map dynamically changes
      * during the game) then leave the default value set.
      *
+     * @constant
      * @type {boolean}
      */
     INSERT_NULL: false,

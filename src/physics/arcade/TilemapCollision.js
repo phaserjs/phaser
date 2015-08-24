@@ -4,17 +4,14 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
-Phaser.Physics.Arcade.TilemapCollision = function () {
-
-};
-
 /**
-* The Arcade Physics tilemap collision methods.
+* The Arcade Physics Tile map collision methods.
 *
 * @class Phaser.Physics.Arcade.TilemapCollision
 * @constructor
-* @param {Phaser.Game} game - reference to the current game instance.
 */
+Phaser.Physics.Arcade.TilemapCollision = function () {};
+
 Phaser.Physics.Arcade.TilemapCollision.prototype = {
 
     /**

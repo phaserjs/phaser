@@ -401,7 +401,7 @@
 						</li>
 						
 						<li class="class-depth-3">
-							<a href="Phaser.Physics.Arcade.html#TilemapCollision">TilemapCollision</a>
+							<a href="Phaser.Physics.Arcade.TilemapCollision.html">TilemapCollision</a>
 						</li>
 						
 						<li class="class-depth-2">
@@ -674,6 +674,10 @@
 						
 						<li class="class-depth-1">
 							<a href="PIXI.CanvasMaskManager.html">CanvasMaskManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.CanvasPool.html">CanvasPool</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -1573,8 +1577,10 @@ rather than figuring out the dimensions of the displayObject each frame you can 
     
     <div class="description">
         <p>Sets the filters for the displayObject.
-IMPORTANT: This is a webGL only feature and will be ignored by the canvas renderer.
-To remove filters simply set this property to 'null'</p>
+IMPORTANT: This is a webGL only feature and will be ignored by the Canvas renderer.</p>
+<p>To remove filters simply set this property to 'null'.</p>
+<p>You cannot have a filter and a multiply blend mode active at the same time. Setting a filter will reset
+this objects blend mode to NORMAL.</p>
     </div>
     
     
@@ -3095,7 +3101,7 @@ This value is updated at the end of updateTransform and takes all parent transfo
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-726">line 726</a>
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-740">line 740</a>
     </dt>
     
 
@@ -3156,7 +3162,7 @@ This value is updated at the end of updateTransform and takes all parent transfo
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-744">line 744</a>
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-758">line 758</a>
     </dt>
     
 
@@ -4372,7 +4378,7 @@ Removes all references to transformCallbacks, its parent, the stage, filters, bo
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-1116">line 1116</a>
+    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-1117">line 1117</a>
     </dt>
     
 
@@ -5469,7 +5475,7 @@ Removes all references to transformCallbacks, its parent, the stage, filters, bo
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-1127">line 1127</a>
+    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-1128">line 1128</a>
     </dt>
     
 
@@ -6780,7 +6786,7 @@ The current drawing position is then set to (x, y).</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-540">line 540</a>
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-554">line 554</a>
     </dt>
     
 
@@ -8061,7 +8067,7 @@ Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-583">line 583</a>
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-597">line 597</a>
     </dt>
     
 
@@ -8248,7 +8254,7 @@ Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-597">line 597</a>
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-611">line 611</a>
     </dt>
     
 
@@ -8323,7 +8329,7 @@ Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-573">line 573</a>
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-587">line 587</a>
     </dt>
     
 
@@ -8393,7 +8399,7 @@ Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-940">line 940</a>
+    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-941">line 941</a>
     </dt>
     
 
@@ -8441,8 +8447,8 @@ Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier
 					<br />
 					
 		<span class="jsdoc-message">
-		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha10</a>
-		on Wed Jul 29 2015 14:58:02 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
+		on Mon Aug 24 2015 15:36:57 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

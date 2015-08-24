@@ -401,7 +401,7 @@
 						</li>
 						
 						<li class="class-depth-3">
-							<a href="Phaser.Physics.Arcade.html#TilemapCollision">TilemapCollision</a>
+							<a href="Phaser.Physics.Arcade.TilemapCollision.html">TilemapCollision</a>
 						</li>
 						
 						<li class="class-depth-2">
@@ -674,6 +674,10 @@
 						
 						<li class="class-depth-1">
 							<a href="PIXI.CanvasMaskManager.html">CanvasMaskManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.CanvasPool.html">CanvasPool</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -2043,7 +2047,7 @@ Does not affect single lines of text. For that please see <code>setTextBounds</c
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1462">line 1462</a>
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1566">line 1566</a>
     </dt>
     
 
@@ -2433,9 +2437,6 @@ or you have tested performance and find it acceptable.</p>
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
@@ -2493,13 +2494,10 @@ You may wish to enable this if you want to remove the effect of sub-pixel aliasi
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-99">line 99</a>
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-118">line 118</a>
     </dt>
     
 
@@ -2528,6 +2526,7 @@ You may wish to enable this if you want to remove the effect of sub-pixel aliasi
     
     <div class="description">
         <p>The blend mode to be applied to the sprite. Set to PIXI.blendModes.NORMAL to remove any blend mode.</p>
+<p>Warning: You cannot have a blend mode and a filter active on the same Sprite. Doing so will render the sprite invisible.</p>
     </div>
     
     
@@ -2647,9 +2646,6 @@ so the physics body is centered on the Game Object.</p>
 
     
 
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
     
 
     
@@ -2772,7 +2768,7 @@ This is the same as <code>y + height - offsetY</code>.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1538">line 1538</a>
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1642">line 1642</a>
     </dt>
     
 
@@ -2828,7 +2824,7 @@ This is the same as <code>y + height - offsetY</code>.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1561">line 1561</a>
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1665">line 1665</a>
     </dt>
     
 
@@ -2891,7 +2887,7 @@ To remove simply set this property to 'null'</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-366">line 366</a>
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-376">line 376</a>
     </dt>
     
 
@@ -3009,7 +3005,7 @@ To remove simply set this property to 'null'</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-76">line 76</a>
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-85">line 85</a>
     </dt>
     
 
@@ -3072,9 +3068,6 @@ or you have tested performance and find it acceptable.</p>
 
     
 
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
     
 
     
@@ -3206,7 +3199,7 @@ or you have tested performance and find it acceptable.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-86">line 86</a>
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-95">line 95</a>
     </dt>
     
 
@@ -3330,7 +3323,7 @@ or you have tested performance and find it acceptable.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-81">line 81</a>
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-90">line 90</a>
     </dt>
     
 
@@ -3389,9 +3382,6 @@ If you modify this property directly you must call <code>updateCrop</code> in or
 
     
 
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
     
 
     
@@ -3455,7 +3445,7 @@ that unlike using <code>setStyle</code> this will not change any current font fi
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1274">line 1274</a>
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1378">line 1378</a>
     </dt>
     
 
@@ -3574,9 +3564,6 @@ that unlike using <code>setStyle</code> this will not change any current font fi
 
     
 
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
     
 
     
@@ -4019,7 +4006,7 @@ It will also set the <code>visible</code> property to <code>true</code>.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1440">line 1440</a>
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1544">line 1544</a>
     </dt>
     
 
@@ -4110,8 +4097,10 @@ rather than figuring out the dimensions of the displayObject each frame you can 
     
     <div class="description">
         <p>Sets the filters for the displayObject.
-IMPORTANT: This is a webGL only feature and will be ignored by the canvas renderer.
-To remove filters simply set this property to 'null'</p>
+IMPORTANT: This is a webGL only feature and will be ignored by the Canvas renderer.</p>
+<p>To remove filters simply set this property to 'null'.</p>
+<p>You cannot have a filter and a multiply blend mode active at the same time. Setting a filter will reset
+this objects blend mode to NORMAL.</p>
     </div>
     
     
@@ -4281,7 +4270,7 @@ regardless where in the world the camera is.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1300">line 1300</a>
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1404">line 1404</a>
     </dt>
     
 
@@ -4352,7 +4341,7 @@ the font size in pixels is returned; otherwise the value with CSS unit is return
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1335">line 1335</a>
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1439">line 1439</a>
     </dt>
     
 
@@ -4408,7 +4397,63 @@ the font size in pixels is returned; otherwise the value with CSS unit is return
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1398">line 1398</a>
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1502">line 1502</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="fontStyles"><span class="type-signature"></span>fontStyles<span class="type-signature"> :array</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>An array of the font styles values as specified by <a href="Phaser.Text.html#addFontStyle">addFontStyle</a>.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-105">line 105</a>
     </dt>
     
 
@@ -4464,7 +4509,7 @@ the font size in pixels is returned; otherwise the value with CSS unit is return
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1419">line 1419</a>
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1523">line 1523</a>
     </dt>
     
 
@@ -4520,7 +4565,63 @@ the font size in pixels is returned; otherwise the value with CSS unit is return
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1377">line 1377</a>
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1481">line 1481</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="fontWeights"><span class="type-signature"></span>fontWeights<span class="type-signature"> :array</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>An array of the font weights values as specified by <a href="Phaser.Text.html#addFontWeight">addFontWeight</a>.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-110">line 110</a>
     </dt>
     
 
@@ -4957,7 +5058,7 @@ This property is mostly used internally by the physics systems, but is exposed f
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1856">line 1856</a>
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1960">line 1960</a>
     </dt>
     
 
@@ -5039,69 +5140,6 @@ Setting it is a neat way of optimising the hitTest function that the interaction
     
     <dt class="tag-source">Source -
     <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-81">line 81</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="inCamera"><span class="type-signature">&lt;readonly> </span>inCamera<span class="type-signature"> :boolean</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Checks if this Game Objects bounds intersects with the Game Cameras bounds.</p>
-<p>It will be <code>true</code> if they intersect, or <code>false</code> if the Game Object is fully outside of the Cameras bounds.</p>
-<p>An object outside the bounds can be considered for camera culling if it has the AutoCull component.</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Component.InCamera.html#inCamera">Phaser.Component.InCamera#inCamera</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_gameobjects_components_InCamera.js.html">gameobjects/components/InCamera.js</a>, <a href="src_gameobjects_components_InCamera.js.html#sunlight-1-line-26">line 26</a>
     </dt>
     
 
@@ -5576,9 +5614,6 @@ When it reaches zero it will call the <code>kill</code> method.</p>
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
@@ -5638,7 +5673,7 @@ When it reaches zero it will call the <code>kill</code> method.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1672">line 1672</a>
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1776">line 1776</a>
     </dt>
     
 
@@ -6012,9 +6047,6 @@ It will only be &gt; 0 if anchor.y is not equal to zero.</p>
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
@@ -6075,7 +6107,7 @@ ALlows you to add extra spacing if Phaser is unable to accurately determine the 
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-63">line 63</a>
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-72">line 72</a>
     </dt>
     
 
@@ -6256,7 +6288,7 @@ such as with Buttons or other Input events.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-56">line 56</a>
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-65">line 65</a>
     </dt>
     
 
@@ -6680,7 +6712,7 @@ This defaults to match the resolution of the renderer, but can be changed on a p
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1487">line 1487</a>
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1591">line 1591</a>
     </dt>
     
 
@@ -7054,7 +7086,7 @@ This is the same as <code>x + width - offsetX</code>.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_Sprite.js.html">pixi/display/Sprite.js</a>, <a href="src_pixi_display_Sprite.js.html#sunlight-1-line-96">line 96</a>
+    <a href="src_pixi_display_Sprite.js.html">pixi/display/Sprite.js</a>, <a href="src_pixi_display_Sprite.js.html#sunlight-1-line-98">line 98</a>
     </dt>
     
 
@@ -7110,7 +7142,7 @@ This is the same as <code>x + width - offsetX</code>.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1765">line 1765</a>
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1869">line 1869</a>
     </dt>
     
 
@@ -7166,7 +7198,7 @@ This is the same as <code>x + width - offsetX</code>.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1743">line 1743</a>
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1847">line 1847</a>
     </dt>
     
 
@@ -7222,7 +7254,7 @@ This is the same as <code>x + width - offsetX</code>.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1809">line 1809</a>
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1913">line 1913</a>
     </dt>
     
 
@@ -7278,7 +7310,7 @@ This is the same as <code>x + width - offsetX</code>.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1699">line 1699</a>
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1803">line 1803</a>
     </dt>
     
 
@@ -7334,7 +7366,7 @@ This is the same as <code>x + width - offsetX</code>.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1721">line 1721</a>
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1825">line 1825</a>
     </dt>
     
 
@@ -7390,7 +7422,7 @@ This is the same as <code>x + width - offsetX</code>.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1787">line 1787</a>
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1891">line 1891</a>
     </dt>
     
 
@@ -7570,7 +7602,7 @@ This is the same as <code>x + width - offsetX</code>.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1584">line 1584</a>
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1688">line 1688</a>
     </dt>
     
 
@@ -7626,7 +7658,7 @@ This is the same as <code>x + width - offsetX</code>.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-91">line 91</a>
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-100">line 100</a>
     </dt>
     
 
@@ -7682,7 +7714,7 @@ This is the same as <code>x + width - offsetX</code>.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1606">line 1606</a>
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1710">line 1710</a>
     </dt>
     
 
@@ -7754,7 +7786,7 @@ If you set tabs to be <code>[100,200]</code> then it will set the first tab at 1
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1511">line 1511</a>
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1615">line 1615</a>
     </dt>
     
 
@@ -7812,7 +7844,7 @@ The text will be rendered with any style currently set.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1243">line 1243</a>
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1347">line 1347</a>
     </dt>
     
 
@@ -7869,7 +7901,7 @@ See <code>Text.setTextBounds</code> for more details.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-71">line 71</a>
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-80">line 80</a>
     </dt>
     
 
@@ -8203,67 +8235,6 @@ This ability allows you to check any of the matrix values and perform actions su
             
 <dt>
     <h4 class="name "
-        id="transformCallback"><span class="type-signature"></span>transformCallback<span class="type-signature"> :function</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>The callback that will apply any scale limiting to the worldTransform.</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Component.ScaleMinMax.html#transformCallback">Phaser.Component.ScaleMinMax#transformCallback</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_gameobjects_components_ScaleMinMax.js.html">gameobjects/components/ScaleMinMax.js</a>, <a href="src_gameobjects_components_ScaleMinMax.js.html#sunlight-1-line-20">line 20</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
         id="transformCallbackContext"><span class="type-signature"></span>transformCallbackContext<span class="type-signature"> :Object</span></h4>
     
     
@@ -8325,67 +8296,6 @@ This ability allows you to check any of the matrix values and perform actions su
             
 <dt>
     <h4 class="name "
-        id="transformCallbackContext"><span class="type-signature"></span>transformCallbackContext<span class="type-signature"> :object</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>The context under which <code>transformCallback</code> is called.</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Component.ScaleMinMax.html#transformCallbackContext">Phaser.Component.ScaleMinMax#transformCallbackContext</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_gameobjects_components_ScaleMinMax.js.html">gameobjects/components/ScaleMinMax.js</a>, <a href="src_gameobjects_components_ScaleMinMax.js.html#sunlight-1-line-26">line 26</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
         id="type"><span class="type-signature"></span>type<span class="type-signature"> :number</span></h4>
     
     
@@ -8423,7 +8333,7 @@ This ability allows you to check any of the matrix values and perform actions su
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-50">line 50</a>
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-59">line 59</a>
     </dt>
     
 
@@ -8540,7 +8450,7 @@ This ability allows you to check any of the matrix values and perform actions su
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1831">line 1831</a>
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1935">line 1935</a>
     </dt>
     
 
@@ -8596,7 +8506,7 @@ This ability allows you to check any of the matrix values and perform actions su
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1628">line 1628</a>
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1732">line 1732</a>
     </dt>
     
 
@@ -8652,7 +8562,7 @@ This ability allows you to check any of the matrix values and perform actions su
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1650">line 1650</a>
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1754">line 1754</a>
     </dt>
     
 
@@ -9042,67 +8952,6 @@ This value is updated at the end of updateTransform and takes all parent transfo
             
 <dt>
     <h4 class="name "
-        id="x"><span class="type-signature"></span>x<span class="type-signature"> :number</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>The position of the Game Object on the x axis relative to the local coordinates of the parent.</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Component.PhysicsBody.html#x">Phaser.Component.PhysicsBody#x</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_gameobjects_components_PhysicsBody.js.html">gameobjects/components/PhysicsBody.js</a>, <a href="src_gameobjects_components_PhysicsBody.js.html#sunlight-1-line-98">line 98</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
         id="x"><span class="type-signature"></span>x<span class="type-signature"> :Number</span></h4>
     
     
@@ -9145,7 +8994,7 @@ This value is updated at the end of updateTransform and takes all parent transfo
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-726">line 726</a>
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-740">line 740</a>
     </dt>
     
 
@@ -9206,68 +9055,7 @@ This value is updated at the end of updateTransform and takes all parent transfo
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-744">line 744</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="y"><span class="type-signature"></span>y<span class="type-signature"> :number</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>The position of the Game Object on the y axis relative to the local coordinates of the parent.</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Component.PhysicsBody.html#y">Phaser.Component.PhysicsBody#y</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_gameobjects_components_PhysicsBody.js.html">gameobjects/components/PhysicsBody.js</a>, <a href="src_gameobjects_components_PhysicsBody.js.html#sunlight-1-line-124">line 124</a>
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-758">line 758</a>
     </dt>
     
 
@@ -9806,7 +9594,341 @@ For example if the Text was <code>Photon Storm</code> and you did <code>Text.add
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-662">line 662</a>
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-716">line 716</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+       
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="addFontStyle"><span class="type-signature"></span>addFontStyle<span class="signature">(style, position)</span><span class="type-signature"> &rarr; {<a href="Phaser.Text.html">Phaser.Text</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Set specific font styles for certain characters within the Text.</p>
+<p>It works by taking a font style value, which is a typical string such as <code>normal</code>, <code>italic</code> or <code>oblique</code>.
+The position value is the index of the character in the Text string to start applying this font style to.
+Once set the font style remains in use until either another font style or the end of the string is encountered.
+For example if the Text was <code>Photon Storm</code> and you did <code>Text.addFontStyle('italic', 6)</code> it would font style in the word <code>Storm</code> in italic.</p>
+<p>If you wish to change the text font weight see addFontWeight instead.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>style</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>A canvas font-style that will be used on the text style eg <code>normal</code>, <code>italic</code>, <code>oblique</code>.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>position</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The index of the character in the string to start applying this font style value from.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+
+    
+    <h5>Returns:</h5>
+    <div class="returns">
+        
+            
+    
+        <div class="returns-type">
+        
+<span class="param-type"><a href="Phaser.Text.html">Phaser.Text</a></span>
+
+ -
+        </div>
+    
+    <div class="returns-desc param-desc">
+        <p>This Text instance.</p>
+    </div>
+
+
+        
+    </div>
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-766">line 766</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+       
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="addFontWeight"><span class="type-signature"></span>addFontWeight<span class="signature">(style, position)</span><span class="type-signature"> &rarr; {<a href="Phaser.Text.html">Phaser.Text</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Set specific font weights for certain characters within the Text.</p>
+<p>It works by taking a font weight value, which is a typical string such as <code>normal</code>, <code>bold</code>, <code>bolder</code>, etc.
+The position value is the index of the character in the Text string to start applying this font weight to.
+Once set the font weight remains in use until either another font weight or the end of the string is encountered.
+For example if the Text was <code>Photon Storm</code> and you did <code>Text.addFontWeight('bold', 6)</code> it would font weight in the word <code>Storm</code> in bold.</p>
+<p>If you wish to change the text font style see addFontStyle instead.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>style</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>A canvas font-weight that will be used on the text weight eg <code>normal</code>, <code>bold</code>, <code>bolder</code>, <code>lighter</code>, etc.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>position</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The index of the character in the string to start applying this font weight value from.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+
+    
+    <h5>Returns:</h5>
+    <div class="returns">
+        
+            
+    
+        <div class="returns-type">
+        
+<span class="param-type"><a href="Phaser.Text.html">Phaser.Text</a></span>
+
+ -
+        </div>
+    
+    <div class="returns-desc param-desc">
+        <p>This Text instance.</p>
+    </div>
+
+
+        
+    </div>
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-790">line 790</a>
     </dt>
     
 
@@ -9974,7 +10096,7 @@ For example if the Text was <code>Photon Storm</code> and you did <code>Text.add
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-686">line 686</a>
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-740">line 740</a>
     </dt>
     
 
@@ -10162,7 +10284,97 @@ because the World is the root Group from which all Game Objects descend.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-646">line 646</a>
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-684">line 684</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+       
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="clearFontValues"><span class="type-signature"></span>clearFontValues<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="Phaser.Text.html">Phaser.Text</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Clears any text styles or weights font that were set by <code>addFontStyle</code> or <code>addFontWeight</code>.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+
+    
+    <h5>Returns:</h5>
+    <div class="returns">
+        
+            
+    
+        <div class="returns-type">
+        
+<span class="param-type"><a href="Phaser.Text.html">Phaser.Text</a></span>
+
+ -
+        </div>
+    
+    <div class="returns-desc param-desc">
+        <p>This Text instance.</p>
+    </div>
+
+
+        
+    </div>
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-700">line 700</a>
     </dt>
     
 
@@ -10487,7 +10699,7 @@ in which case the values are duplicated to a local object.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-184">line 184</a>
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-203">line 203</a>
     </dt>
     
 
@@ -10681,7 +10893,7 @@ This can be quite useful if your displayObject is static / complicated and needs
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-549">line 549</a>
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-563">line 563</a>
     </dt>
     
 
@@ -10821,7 +11033,7 @@ The bounds calculation takes the worldTransform into account.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1223">line 1223</a>
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1327">line 1327</a>
     </dt>
     
 
@@ -12041,7 +12253,7 @@ This is mostly used when you want to display external data using tab stops.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-880">line 880</a>
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-982">line 982</a>
     </dt>
     
 
@@ -12480,7 +12692,7 @@ If you need to reset an already running animation do so directly on the Animatio
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-157">line 157</a>
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-176">line 176</a>
     </dt>
     
 
@@ -14583,7 +14795,7 @@ To remove a shadow already in place you can call this method with no parameters 
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-208">line 208</a>
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-229">line 229</a>
     </dt>
     
 
@@ -15479,7 +15691,7 @@ To remove a shadow already in place you can call this method with no parameters 
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-244">line 244</a>
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-265">line 265</a>
     </dt>
     
 
@@ -15632,7 +15844,7 @@ The text will be rendered with any style currently set.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-862">line 862</a>
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-964">line 964</a>
     </dt>
     
 
@@ -15897,7 +16109,7 @@ you either cannot use <code>setTextBounds</code> or you must place the Text obje
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-941">line 941</a>
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-1043">line 1043</a>
     </dt>
     
 
@@ -15924,7 +16136,7 @@ you either cannot use <code>setTextBounds</code> or you must place the Text obje
             
 <dt>
     <h4 class="name "
-        id="setTexture"><span class="type-signature"></span>setTexture<span class="signature">(texture)</span><span class="type-signature"></span></h4>
+        id="setTexture"><span class="type-signature"></span>setTexture<span class="signature">(texture, <span class="optional">destroy</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -15933,7 +16145,8 @@ you either cannot use <code>setTextBounds</code> or you must place the Text obje
 
     
     <div class="description">
-        <p>Sets the texture of the sprite</p>
+        <p>Sets the texture of the sprite. Be warned that this doesn't remove or destroy the previous
+texture this Sprite was using.</p>
     </div>
     
 
@@ -15955,7 +16168,11 @@ you either cannot use <code>setTextBounds</code> or you must place the Text obje
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -15980,10 +16197,61 @@ you either cannot use <code>setTextBounds</code> or you must place the Text obje
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>The PIXI texture that is displayed by the sprite</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>destroy</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>Call Texture.destroy on the current texture before replacing it with the new one?</p></td>
         </tr>
 
 	
@@ -16021,7 +16289,7 @@ you either cannot use <code>setTextBounds</code> or you must place the Text obje
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_Sprite.js.html">pixi/display/Sprite.js</a>, <a href="src_pixi_display_Sprite.js.html#sunlight-1-line-156">line 156</a>
+    <a href="src_pixi_display_Sprite.js.html">pixi/display/Sprite.js</a>, <a href="src_pixi_display_Sprite.js.html#sunlight-1-line-158">line 158</a>
     </dt>
     
 
@@ -16312,7 +16580,7 @@ you either cannot use <code>setTextBounds</code> or you must place the Text obje
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-583">line 583</a>
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-597">line 597</a>
     </dt>
     
 
@@ -16499,7 +16767,7 @@ you either cannot use <code>setTextBounds</code> or you must place the Text obje
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-597">line 597</a>
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-611">line 611</a>
     </dt>
     
 
@@ -16576,7 +16844,7 @@ you either cannot use <code>setTextBounds</code> or you must place the Text obje
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-174">line 174</a>
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-193">line 193</a>
     </dt>
     
 
@@ -16651,7 +16919,7 @@ you either cannot use <code>setTextBounds</code> or you must place the Text obje
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-573">line 573</a>
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-587">line 587</a>
     </dt>
     
 
@@ -16847,7 +17115,7 @@ This is called automatically by Text.updateText.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-579">line 579</a>
+    <a href="src_gameobjects_Text.js.html">gameobjects/Text.js</a>, <a href="src_gameobjects_Text.js.html#sunlight-1-line-600">line 600</a>
     </dt>
     
 
@@ -16895,8 +17163,8 @@ This is called automatically by Text.updateText.</p>
 					<br />
 					
 		<span class="jsdoc-message">
-		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha10</a>
-		on Wed Jul 29 2015 14:58:00 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
+		on Mon Aug 24 2015 15:36:55 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

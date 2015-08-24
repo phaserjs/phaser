@@ -753,8 +753,12 @@ declare module PIXI {
 
         /**
         * Sets the filters for the displayObject.
-        * IMPORTANT: This is a webGL only feature and will be ignored by the canvas renderer.
-        * To remove filters simply set this property to 'null'
+        * IMPORTANT: This is a webGL only feature and will be ignored by the Canvas renderer.
+        * 
+        * To remove filters simply set this property to 'null'.
+        * 
+        * You cannot have a filter and a multiply blend mode active at the same time. Setting a filter will reset
+        * this objects blend mode to NORMAL.
         */
         filters: AbstractFilter[];
 
@@ -2013,6 +2017,8 @@ declare module PIXI {
 
         /**
         * The blend mode to be applied to the sprite. Set to PIXI.blendModes.NORMAL to remove any blend mode.
+        * 
+        * Warning: You cannot have a blend mode and a filter active on the same Sprite. Doing so will render the sprite invisible.
         * Default: PIXI.blendModes.NORMAL;
         */
         blendMode: blendModes;
@@ -2036,9 +2042,11 @@ declare module PIXI {
 
 
         /**
-        * Sets the texture of the sprite
+        * Sets the texture of the sprite. Be warned that this doesn't remove or destroy the previous
+        * texture this Sprite was using.
         * 
         * @param texture The PIXI texture that is displayed by the sprite
+        * @param destroy Call Texture.destroy on the current texture before replacing it with the new one? - Default: false
         */
         setTexture(texture: Texture): void;
 
@@ -2435,9 +2443,11 @@ declare module PIXI {
         generateTilingTexture(forcePowerOfTwo?: boolean): void;
 
         /**
-        * Sets the texture of the sprite
+        * Sets the texture of the sprite. Be warned that this doesn't remove or destroy the previous
+        * texture this Sprite was using.
         * 
         * @param texture The PIXI texture that is displayed by the sprite
+        * @param destroy Call Texture.destroy on the current texture before replacing it with the new one? - Default: false
         */
         setTexture(texture: Texture): void;
 

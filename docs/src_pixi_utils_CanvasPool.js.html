@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Phaser Class: TilemapCollision</title>
+	<title>Phaser Source: src/pixi/utils/CanvasPool.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -401,7 +401,7 @@
 						</li>
 						
 						<li class="class-depth-3">
-							<a href="Phaser.Physics.Arcade.html#TilemapCollision">TilemapCollision</a>
+							<a href="Phaser.Physics.Arcade.TilemapCollision.html">TilemapCollision</a>
 						</li>
 						
 						<li class="class-depth-2">
@@ -674,6 +674,10 @@
 						
 						<li class="class-depth-1">
 							<a href="PIXI.CanvasMaskManager.html">CanvasMaskManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.CanvasPool.html">CanvasPool</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -1080,230 +1084,200 @@
 	<div class="row-fluid">
 
 		
-		<div class="span8">
-			
+			<div class="span12">
+				
 				<div id="main">
 					
 
 
-	<!--<h1 class="page-title">Class: TilemapCollision</h1>-->
-<section>
-
-<header>
-    <h2>
-        <span class="ancestors"><a href="Phaser.html">Phaser</a><a href="Phaser.Physics.html">.Physics</a><a href="Phaser.Physics.Arcade.html">.Arcade</a>.</span>
-    
-    TilemapCollision
-    </h2>
-    
-</header>
-
-<article>
-    <div class="container-overview">
-    
-
-    
-        
-<dt>
-    <h4 class="name "
-        id="TilemapCollision"><span class="type-signature"></span>new TilemapCollision<span class="signature">(game)</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>The Arcade Physics tilemap collision methods.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>game</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Game.html">Phaser.Game</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>reference to the current game instance.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_physics_arcade_TilemapCollision.js.html">physics/arcade/TilemapCollision.js</a>, <a href="src_physics_arcade_TilemapCollision.js.html#sunlight-1-line-18">line 18</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-    
-    </div>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Members</h3>
-
-        <dl>
-            
-<dt>
-    <h4 class="name "
-        id="TILE_BIAS"><span class="type-signature">&lt;static> </span>TILE_BIAS<span class="type-signature"> :number</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>A value added to the delta values during collision with tiles. Adjust this if you get tunneling.</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_physics_arcade_TilemapCollision.js.html">physics/arcade/TilemapCollision.js</a>, <a href="src_physics_arcade_TilemapCollision.js.html#sunlight-1-line-23">line 23</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        </dl>
-    
-
-    
-
-    
-
-    
-</article>
+		<h1 class="page-title">Source: src/pixi/utils/CanvasPool.js</h1>
+    
+    <section>
+        <article>
+            <pre class="sunlight-highlight-javascript linenums">/**
+* @author       Richard Davey &lt;rich@photonstorm.com>
+* @copyright    2015 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
+* The CanvasPool is a global static object that allows Pixi and Phaser to pool canvas DOM elements.
+*
+* @class CanvasPool
+* @static
+*/
+PIXI.CanvasPool = {
+
+    /**
+    * Creates a new Canvas DOM element, or pulls one from the pool if free.
+    * 
+    * @method create
+    * @static
+    * @param parent {any} The parent of the canvas element.
+    * @param width {number} The width of the canvas element.
+    * @param height {number} The height of the canvas element.
+    * @return {HTMLCanvasElement} The canvas element.
+    */
+    create: function (parent, width, height) {
+
+        var idx = PIXI.CanvasPool.getFirst();
+        var canvas;
+
+        if (idx === -1)
+        {
+            var container = {
+                parent: parent,
+                canvas: document.createElement('canvas')
+            }
+
+            PIXI.CanvasPool.pool.push(container);
+
+            canvas = container.canvas;
+        }
+        else
+        {
+            PIXI.CanvasPool.pool[idx].parent = parent;
+
+            canvas = PIXI.CanvasPool.pool[idx].canvas;
+        }
+
+        if (width !== undefined)
+        {
+            canvas.width = width;
+            canvas.height = height;
+        }
+
+        return canvas;
+
+    },
+
+    /**
+    * Gets the first free canvas index from the pool.
+    * 
+    * @method getFirst
+    * @static
+    * @return {number}
+    */
+    getFirst: function () {
+
+        var pool = PIXI.CanvasPool.pool;
+
+        for (var i = 0; i &lt; pool.length; i++)
+        {
+            if (pool[i].parent === null)
+            {
+                return i;
+            }
+        }
+
+        return -1;
+
+    },
+
+    /**
+    * Removes the parent from a canvas element from the pool, freeing it up for re-use.
+    * 
+    * @method remove
+    * @param parent {any} The parent of the canvas element.
+    * @static
+    */
+    remove: function (parent) {
+
+        var pool = PIXI.CanvasPool.pool;
+
+        for (var i = 0; i &lt; pool.length; i++)
+        {
+            if (pool[i].parent === parent)
+            {
+                pool[i].parent = null;
+            }
+        }
+
+    },
+
+    /**
+    * Removes the parent from a canvas element from the pool, freeing it up for re-use.
+    * 
+    * @method removeByCanvas
+    * @param canvas {HTMLCanvasElement} The canvas element to remove
+    * @static
+    */
+    removeByCanvas: function (canvas) {
+
+        var pool = PIXI.CanvasPool.pool;
+
+        for (var i = 0; i &lt; pool.length; i++)
+        {
+            if (pool[i].canvas === canvas)
+            {
+                pool[i].parent = null;
+            }
+        }
+
+    },
+
+    /**
+    * Gets the total number of used canvas elements in the pool.
+    * 
+    * @method getTotal
+    * @static
+    * @return {number} The number of in-use (parented) canvas elements in the pool.
+    */
+    getTotal: function () {
+
+        var pool = PIXI.CanvasPool.pool;
+        var c = 0;
+
+        for (var i = 0; i &lt; pool.length; i++)
+        {
+            if (pool[i].parent !== null)
+            {
+                c++;
+            }
+        }
+
+        return c;
+
+    },
+
+    /**
+    * Gets the total number of free canvas elements in the pool.
+    * 
+    * @method getFree
+    * @static
+    * @return {number} The number of free (un-parented) canvas elements in the pool.
+    */
+    getFree: function () {
+
+        var pool = PIXI.CanvasPool.pool;
+        var c = 0;
+
+        for (var i = 0; i &lt; pool.length; i++)
+        {
+            if (pool[i].parent === null)
+            {
+                c++;
+            }
+        }
+
+        return c;
+
+    }
+
+};
+
+/**
+ * The pool into which the canvas dom elements are placed.
+ *
+ * @property pool
+ * @type Array
+ * @static
+ */
+PIXI.CanvasPool.pool = [];
+</pre>
+        </article>
+    </section>
 
-</section>
 
 
 
@@ -1320,16 +1294,12 @@
 					<br />
 					
 		<span class="jsdoc-message">
-		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha10</a>
-		on Wed Jul 29 2015 14:57:57 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
+		on Mon Aug 24 2015 15:36:45 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
 
-			
-			<div class="span3">
-				<div id="toc"></div>
-			</div>
 			
 			<br clear="both">
 		</div>

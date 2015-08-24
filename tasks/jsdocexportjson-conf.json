@@ -21,8 +21,7 @@
             "./src/tilemap/", 
             "./src/time/", 
             "./src/tween/",
-			"./src/utils/",
-			"./out/plugins/"
+			"./src/utils/"
         ],
         "exclude": [
             "./src/physics/p2/p2.js"

@@ -401,7 +401,7 @@
 						</li>
 						
 						<li class="class-depth-3">
-							<a href="Phaser.Physics.Arcade.html#TilemapCollision">TilemapCollision</a>
+							<a href="Phaser.Physics.Arcade.TilemapCollision.html">TilemapCollision</a>
 						</li>
 						
 						<li class="class-depth-2">
@@ -674,6 +674,10 @@
 						
 						<li class="class-depth-1">
 							<a href="PIXI.CanvasMaskManager.html">CanvasMaskManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.CanvasPool.html">CanvasPool</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -1108,7 +1112,7 @@ Phaser.ArrayUtils = {
     * Fetch a random entry from the given array.
     *
     * Will return null if there are no array items that fall within the specified range
-    * or if there is no item for the randomly choosen index.
+    * or if there is no item for the randomly chosen index.
     *
     * @method
     * @param {any[]} objects - An array of objects.
@@ -1118,14 +1122,12 @@ Phaser.ArrayUtils = {
     */
     getRandomItem: function (objects, startIndex, length) {
 
-        if (objects == null) { // undefined or null
-            return null;
-        }
-
+        if (objects === null) { return null; }
         if (startIndex === undefined) { startIndex = 0; }
         if (length === undefined) { length = objects.length; }
 
         var randomIndex = startIndex + Math.floor(Math.random() * length);
+
         return objects[randomIndex] === undefined ? null : objects[randomIndex];
 
     },
@@ -1134,7 +1136,7 @@ Phaser.ArrayUtils = {
     * Removes a random object from the given array and returns it.
     *
     * Will return null if there are no array items that fall within the specified range
-    * or if there is no item for the randomly choosen index.
+    * or if there is no item for the randomly chosen index.
     *
     * @method
     * @param {any[]} objects - An array of objects.
@@ -1220,7 +1222,7 @@ Phaser.ArrayUtils = {
     *
     * @method
     * @param {Array&lt;any[]>} matrix - The array to rotate; this matrix _may_ be altered.
-    * @param {number|string} direction - The amount to rotate: the roation in degrees (90, -90, 270, -270, 180) or a string command ('rotateLeft', 'rotateRight' or 'rotate180').
+    * @param {number|string} direction - The amount to rotate: the rotation in degrees (90, -90, 270, -270, 180) or a string command ('rotateLeft', 'rotateRight' or 'rotate180').
     * @return {Array&lt;any[]>} The rotated matrix. The source matrix should be discarded for the returned matrix.
     */
     rotateMatrix: function (matrix, direction) {
@@ -1329,14 +1331,14 @@ Phaser.ArrayUtils = {
     * Create an array of numbers (positive and/or negative) progressing from `start`
     * up to but not including `end` by advancing by `step`.
     *
-    * If `start` is less than `stop` a zero-length range is created unless a negative `step` is specified.
+    * If `start` is less than `end` a zero-length range is created unless a negative `step` is specified.
     *
     * Certain values for `start` and `end` (eg. NaN/undefined/null) are currently coerced to 0;
     * for forward compatibility make sure to pass in actual numbers.
     *
     * @method Phaser.ArrayUtils#numberArrayStep
     * @param {number} start - The start of the range.
-    * @param {number} end - The end of the range.
+    * @param {number} [end] - The end of the range.
     * @param {number} [step=1] - The value to increment or decrement by.
     * @returns {Array} Returns the new array of numbers.
     * @example
@@ -1358,39 +1360,24 @@ Phaser.ArrayUtils = {
     * Phaser.ArrayUtils.numberArrayStep(0);
     * // => []
     */
-    numberArrayStep: function(start, end, step) {
+    numberArrayStep: function (start, end, step) {
 
-        start = +start || 0;
+        if (start === undefined || start === null) { start = 0; }
 
-        // enables use as a callback for functions like `_.map`
-        var type = typeof end;
-
-        if ((type === 'number' || type === 'string') &amp;&amp; step &amp;&amp; step[end] === start)
-        {
-            end = step = null;
-        }
-
-        step = step == null ? 1 : (+step || 0);
-
-        if (end === null)
+        if (end === undefined || end === null)
         {
             end = start;
             start = 0;
         }
-        else
-        {
-            end = +end || 0;
-        }
 
-        // use `Array(length)` so engines like Chakra and V8 avoid slower modes
-        // http://youtu.be/XAqIpGU8ZZk#t=17m25s
-        var index = -1;
-        var length = Math.max(Phaser.Math.roundAwayFromZero((end - start) / (step || 1)), 0);
-        var result = new Array(length);
+        if (step === undefined) { step = 1; }
 
-        while (++index &lt; length)
+        var result = [];
+        var total = Math.max(Phaser.Math.roundAwayFromZero((end - start) / (step || 1)), 0);
+
+        for (var i = 0; i &lt; total; i++)
         {
-            result[index] = start;
+            result.push(start);
             start += step;
         }
 
@@ -1419,8 +1406,8 @@ Phaser.ArrayUtils = {
 					<br />
 					
 		<span class="jsdoc-message">
-		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha10</a>
-		on Wed Jul 29 2015 14:57:51 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
+		on Mon Aug 24 2015 15:36:45 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

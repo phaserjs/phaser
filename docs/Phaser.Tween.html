@@ -401,7 +401,7 @@
 						</li>
 						
 						<li class="class-depth-3">
-							<a href="Phaser.Physics.Arcade.html#TilemapCollision">TilemapCollision</a>
+							<a href="Phaser.Physics.Arcade.TilemapCollision.html">TilemapCollision</a>
 						</li>
 						
 						<li class="class-depth-2">
@@ -674,6 +674,10 @@
 						
 						<li class="class-depth-1">
 							<a href="PIXI.CanvasMaskManager.html">CanvasMaskManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.CanvasPool.html">CanvasPool</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -1381,13 +1385,72 @@ are played through in sequence. You can use Tween.timeScale and Tween.reverse to
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
     <a href="src_tween_Tween.js.html">tween/Tween.js</a>, <a href="src_tween_Tween.js.html#sunlight-1-line-119">line 119</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="frameBased"><span class="type-signature"></span>frameBased<span class="type-signature"> :boolean</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Is this Tween frame or time based? A frame based tween will use the physics elapsed timer when updating. This means
+it will retain the same consistent frame rate, regardless of the speed of the device. The duration value given should
+be given in frames.</p>
+<p>If the Tween uses a time based update (which is the default) then the duration is given in milliseconds.
+In this situation a 2000ms tween will last exactly 2 seconds, regardless of the device and how many visual updates the tween
+has actually been through. For very short tweens you may wish to experiment with a frame based update instead.</p>
+<p>The default value is whatever you've set in TweenManager.frameBased.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_tween_Tween.js.html">tween/Tween.js</a>, <a href="src_tween_Tween.js.html#sunlight-1-line-151">line 151</a>
     </dt>
     
 
@@ -1496,9 +1559,6 @@ are played through in sequence. You can use Tween.timeScale and Tween.reverse to
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
@@ -1554,9 +1614,6 @@ are played through in sequence. You can use Tween.timeScale and Tween.reverse to
 
     
 
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
     
 
     
@@ -1956,9 +2013,6 @@ It will be sent 2 parameters: the target object and this tween.</p>
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
@@ -2128,9 +2182,6 @@ If there are child tweens then all child tweens will play in reverse from the cu
 
     
 
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
     
 
     
@@ -2363,7 +2414,7 @@ If a tweens duration is 1 second but timeScale is 0.5 then it will take 2 second
 
     
     <dt class="tag-source">Source -
-    <a href="src_tween_Tween.js.html">tween/Tween.js</a>, <a href="src_tween_Tween.js.html#sunlight-1-line-878">line 878</a>
+    <a href="src_tween_Tween.js.html">tween/Tween.js</a>, <a href="src_tween_Tween.js.html#sunlight-1-line-894">line 894</a>
     </dt>
     
 
@@ -2518,7 +2569,7 @@ Any previously chained tweens that may have been set will be overwritten.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_tween_Tween.js.html">tween/Tween.js</a>, <a href="src_tween_Tween.js.html#sunlight-1-line-549">line 549</a>
+    <a href="src_tween_Tween.js.html">tween/Tween.js</a>, <a href="src_tween_Tween.js.html#sunlight-1-line-565">line 565</a>
     </dt>
     
 
@@ -2715,7 +2766,7 @@ If you have child tweens and pass -1 as the index value it sets the delay across
 
     
     <dt class="tag-source">Source -
-    <a href="src_tween_Tween.js.html">tween/Tween.js</a>, <a href="src_tween_Tween.js.html#sunlight-1-line-390">line 390</a>
+    <a href="src_tween_Tween.js.html">tween/Tween.js</a>, <a href="src_tween_Tween.js.html#sunlight-1-line-406">line 406</a>
     </dt>
     
 
@@ -2915,7 +2966,7 @@ If you have child tweens and pass -1 as the index value it sets the easing funct
 
     
     <dt class="tag-source">Source -
-    <a href="src_tween_Tween.js.html">tween/Tween.js</a>, <a href="src_tween_Tween.js.html#sunlight-1-line-486">line 486</a>
+    <a href="src_tween_Tween.js.html">tween/Tween.js</a>, <a href="src_tween_Tween.js.html#sunlight-1-line-502">line 502</a>
     </dt>
     
 
@@ -3059,7 +3110,7 @@ The ease function allows you define the rate of change. You can pass either a fu
                 </td>
             
 
-            <td class="description last"><p>Duration of this tween in ms.</p></td>
+            <td class="description last"><p>Duration of this tween in ms. Or if <code>Tween.frameBased</code> is true this represents the number of frames that should elapse.</p></td>
         </tr>
 
 	
@@ -3310,7 +3361,7 @@ The ease function allows you define the rate of change. You can pass either a fu
 
     
     <dt class="tag-source">Source -
-    <a href="src_tween_Tween.js.html">tween/Tween.js</a>, <a href="src_tween_Tween.js.html#sunlight-1-line-220">line 220</a>
+    <a href="src_tween_Tween.js.html">tween/Tween.js</a>, <a href="src_tween_Tween.js.html#sunlight-1-line-236">line 236</a>
     </dt>
     
 
@@ -3509,7 +3560,7 @@ Just one play through of the tween data is returned, including yoyo if set.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_tween_Tween.js.html">tween/Tween.js</a>, <a href="src_tween_Tween.js.html#sunlight-1-line-820">line 820</a>
+    <a href="src_tween_Tween.js.html">tween/Tween.js</a>, <a href="src_tween_Tween.js.html#sunlight-1-line-836">line 836</a>
     </dt>
     
 
@@ -3743,7 +3794,7 @@ If you have child tweens and pass -1 as the index value and it will set the inte
 
     
     <dt class="tag-source">Source -
-    <a href="src_tween_Tween.js.html">tween/Tween.js</a>, <a href="src_tween_Tween.js.html#sunlight-1-line-508">line 508</a>
+    <a href="src_tween_Tween.js.html">tween/Tween.js</a>, <a href="src_tween_Tween.js.html#sunlight-1-line-524">line 524</a>
     </dt>
     
 
@@ -3910,7 +3961,7 @@ game.add.tween(p).to({ x: 700 }, 1000, Phaser.Easing.Linear.None, true)
 
     
     <dt class="tag-source">Source -
-    <a href="src_tween_Tween.js.html">tween/Tween.js</a>, <a href="src_tween_Tween.js.html#sunlight-1-line-583">line 583</a>
+    <a href="src_tween_Tween.js.html">tween/Tween.js</a>, <a href="src_tween_Tween.js.html#sunlight-1-line-599">line 599</a>
     </dt>
     
 
@@ -4072,7 +4123,7 @@ game.add.tween(p).to({ x: 700 }, 1000, Phaser.Easing.Linear.None, true)
 
     
     <dt class="tag-source">Source -
-    <a href="src_tween_Tween.js.html">tween/Tween.js</a>, <a href="src_tween_Tween.js.html#sunlight-1-line-615">line 615</a>
+    <a href="src_tween_Tween.js.html">tween/Tween.js</a>, <a href="src_tween_Tween.js.html#sunlight-1-line-631">line 631</a>
     </dt>
     
 
@@ -4142,7 +4193,7 @@ game.add.tween(p).to({ x: 700 }, 1000, Phaser.Easing.Linear.None, true)
 
     
     <dt class="tag-source">Source -
-    <a href="src_tween_Tween.js.html">tween/Tween.js</a>, <a href="src_tween_Tween.js.html#sunlight-1-line-632">line 632</a>
+    <a href="src_tween_Tween.js.html">tween/Tween.js</a>, <a href="src_tween_Tween.js.html#sunlight-1-line-648">line 648</a>
     </dt>
     
 
@@ -4378,7 +4429,7 @@ If you wish to define how many times this Tween and all children will repeat see
 
     
     <dt class="tag-source">Source -
-    <a href="src_tween_Tween.js.html">tween/Tween.js</a>, <a href="src_tween_Tween.js.html#sunlight-1-line-407">line 407</a>
+    <a href="src_tween_Tween.js.html">tween/Tween.js</a>, <a href="src_tween_Tween.js.html#sunlight-1-line-423">line 423</a>
     </dt>
     
 
@@ -4519,7 +4570,7 @@ When all child tweens have completed Tween.onLoop will be dispatched.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_tween_Tween.js.html">tween/Tween.js</a>, <a href="src_tween_Tween.js.html#sunlight-1-line-530">line 530</a>
+    <a href="src_tween_Tween.js.html">tween/Tween.js</a>, <a href="src_tween_Tween.js.html#sunlight-1-line-546">line 546</a>
     </dt>
     
 
@@ -4716,7 +4767,7 @@ If you have child tweens and pass -1 as the index value it sets the repeatDelay 
 
     
     <dt class="tag-source">Source -
-    <a href="src_tween_Tween.js.html">tween/Tween.js</a>, <a href="src_tween_Tween.js.html#sunlight-1-line-429">line 429</a>
+    <a href="src_tween_Tween.js.html">tween/Tween.js</a>, <a href="src_tween_Tween.js.html#sunlight-1-line-445">line 445</a>
     </dt>
     
 
@@ -4786,7 +4837,7 @@ If you have child tweens and pass -1 as the index value it sets the repeatDelay 
 
     
     <dt class="tag-source">Source -
-    <a href="src_tween_Tween.js.html">tween/Tween.js</a>, <a href="src_tween_Tween.js.html#sunlight-1-line-664">line 664</a>
+    <a href="src_tween_Tween.js.html">tween/Tween.js</a>, <a href="src_tween_Tween.js.html#sunlight-1-line-680">line 680</a>
     </dt>
     
 
@@ -4947,7 +4998,7 @@ If the Tween has a delay set then nothing will start tweening until the delay ha
 
     
     <dt class="tag-source">Source -
-    <a href="src_tween_Tween.js.html">tween/Tween.js</a>, <a href="src_tween_Tween.js.html#sunlight-1-line-267">line 267</a>
+    <a href="src_tween_Tween.js.html">tween/Tween.js</a>, <a href="src_tween_Tween.js.html#sunlight-1-line-283">line 283</a>
     </dt>
     
 
@@ -5108,7 +5159,7 @@ If you just wish to pause a tween then use Tween.pause instead.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_tween_Tween.js.html">tween/Tween.js</a>, <a href="src_tween_Tween.js.html#sunlight-1-line-323">line 323</a>
+    <a href="src_tween_Tween.js.html">tween/Tween.js</a>, <a href="src_tween_Tween.js.html#sunlight-1-line-339">line 339</a>
     </dt>
     
 
@@ -5252,7 +5303,7 @@ The ease function allows you define the rate of change. You can pass either a fu
                 </td>
             
 
-            <td class="description last"><p>Duration of this tween in ms.</p></td>
+            <td class="description last"><p>Duration of this tween in ms. Or if <code>Tween.frameBased</code> is true this represents the number of frames that should elapse.</p></td>
         </tr>
 
 	
@@ -5503,7 +5554,7 @@ The ease function allows you define the rate of change. You can pass either a fu
 
     
     <dt class="tag-source">Source -
-    <a href="src_tween_Tween.js.html">tween/Tween.js</a>, <a href="src_tween_Tween.js.html#sunlight-1-line-173">line 173</a>
+    <a href="src_tween_Tween.js.html">tween/Tween.js</a>, <a href="src_tween_Tween.js.html#sunlight-1-line-189">line 189</a>
     </dt>
     
 
@@ -5642,7 +5693,7 @@ The ease function allows you define the rate of change. You can pass either a fu
 
     
     <dt class="tag-source">Source -
-    <a href="src_tween_Tween.js.html">tween/Tween.js</a>, <a href="src_tween_Tween.js.html#sunlight-1-line-706">line 706</a>
+    <a href="src_tween_Tween.js.html">tween/Tween.js</a>, <a href="src_tween_Tween.js.html#sunlight-1-line-722">line 722</a>
     </dt>
     
 
@@ -5876,7 +5927,7 @@ The property is not checked, so if you pass an invalid one you'll generate a run
 
     
     <dt class="tag-source">Source -
-    <a href="src_tween_Tween.js.html">tween/Tween.js</a>, <a href="src_tween_Tween.js.html#sunlight-1-line-357">line 357</a>
+    <a href="src_tween_Tween.js.html">tween/Tween.js</a>, <a href="src_tween_Tween.js.html#sunlight-1-line-373">line 373</a>
     </dt>
     
 
@@ -6113,7 +6164,7 @@ If you wish to yoyo this Tween and all of its children then see Tween.yoyoAll.</
 
     
     <dt class="tag-source">Source -
-    <a href="src_tween_Tween.js.html">tween/Tween.js</a>, <a href="src_tween_Tween.js.html#sunlight-1-line-446">line 446</a>
+    <a href="src_tween_Tween.js.html">tween/Tween.js</a>, <a href="src_tween_Tween.js.html#sunlight-1-line-462">line 462</a>
     </dt>
     
 
@@ -6310,7 +6361,7 @@ If you have child tweens and pass -1 as the index value it sets the repeatDelay 
 
     
     <dt class="tag-source">Source -
-    <a href="src_tween_Tween.js.html">tween/Tween.js</a>, <a href="src_tween_Tween.js.html#sunlight-1-line-469">line 469</a>
+    <a href="src_tween_Tween.js.html">tween/Tween.js</a>, <a href="src_tween_Tween.js.html#sunlight-1-line-485">line 485</a>
     </dt>
     
 
@@ -6358,8 +6409,8 @@ If you have child tweens and pass -1 as the index value it sets the repeatDelay 
 					<br />
 					
 		<span class="jsdoc-message">
-		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha10</a>
-		on Wed Jul 29 2015 14:58:01 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
+		on Mon Aug 24 2015 15:36:56 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

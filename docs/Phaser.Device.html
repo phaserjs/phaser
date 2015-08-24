@@ -401,7 +401,7 @@
 						</li>
 						
 						<li class="class-depth-3">
-							<a href="Phaser.Physics.Arcade.html#TilemapCollision">TilemapCollision</a>
+							<a href="Phaser.Physics.Arcade.TilemapCollision.html">TilemapCollision</a>
 						</li>
 						
 						<li class="class-depth-2">
@@ -674,6 +674,10 @@
 						
 						<li class="class-depth-1">
 							<a href="PIXI.CanvasMaskManager.html">CanvasMaskManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.CanvasPool.html">CanvasPool</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -1096,12 +1100,12 @@
     Device
     </h2>
     
-        <div class="class-description"><p>Detects device support capabilities and is responsible for device intialization - see <a href="Phaser.Device.html#whenReady">whenReady</a>.</p>
+        <div class="class-description"><p>Detects device support capabilities and is responsible for device intialization - see <a href="Phaser.Device.html#.whenReady">whenReady</a>.</p>
 <p>This class represents a singleton object that can be accessed directly as <code>game.device</code>
 (or, as a fallback, <code>Phaser.Device</code> when a game instance is not available) without the need to instantiate it.</p>
 <p>Unless otherwise noted the device capabilities are only guaranteed after initialization. Initialization
 occurs automatically and is guaranteed complete before <a href="Phaser.Game.html">Phaser.Game</a> begins its &quot;boot&quot; phase.
-Feature detection can be modified in the <a href="Phaser.Device.html#onInitialized">onInitialized</a> signal.</p>
+Feature detection can be modified in the <a href="Phaser.Device.html#.onInitialized">onInitialized</a> signal.</p>
 <p>When checking features using the exposed properties only the <em>truth-iness</em> of the value should be relied upon
 unless the documentation states otherwise: properties may return <code>false</code>, <code>''</code>, <code>null</code>, or even <code>undefined</code>
 when indicating the lack of a feature.</p>
@@ -1210,7 +1214,7 @@ when indicating the lack of a feature.</p>
             
 <dt>
     <h4 class="name "
-        id="onInitialized"><span class="type-signature">&lt;static, nullable> </span>onInitialized<span class="type-signature"> :<a href="Phaser.Signal.html">Phaser.Signal</a></span></h4>
+        id=".onInitialized"><span class="type-signature">&lt;static, nullable> </span>onInitialized<span class="type-signature"> :<a href="Phaser.Signal.html">Phaser.Signal</a></span></h4>
     
     
 </dt>
@@ -1220,7 +1224,7 @@ when indicating the lack of a feature.</p>
     
     <div class="description">
         <p>This signal is dispatched after device initialization occurs but before any of the ready
-callbacks (see <a href="Phaser.Device.html#whenReady">whenReady</a>) have been invoked.</p>
+callbacks (see <a href="Phaser.Device.html#.whenReady">whenReady</a>) have been invoked.</p>
 <p>Local &quot;patching&quot; for a particular device can/should be done in this event.</p>
 <p><em>Note</em>: This signal is removed after the device has been readied; if a handler has not been
 added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.</p>
@@ -1304,9 +1308,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
@@ -1363,9 +1364,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
@@ -1421,9 +1419,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
 
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
     
 
     
@@ -1537,9 +1532,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
@@ -1595,9 +1587,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
 
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
     
 
     
@@ -1655,9 +1644,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
@@ -1713,9 +1699,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
 
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
     
 
     
@@ -1773,9 +1756,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
@@ -1831,9 +1811,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
 
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
     
 
     
@@ -1891,9 +1868,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
@@ -1949,9 +1923,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
 
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
     
 
     
@@ -2009,9 +1980,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
@@ -2068,9 +2036,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
@@ -2126,9 +2091,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
 
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
     
 
     
@@ -2249,9 +2211,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
@@ -2307,9 +2266,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
 
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
     
 
     
@@ -2367,9 +2323,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
@@ -2425,9 +2378,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
 
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
     
 
     
@@ -2485,9 +2435,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
@@ -2543,9 +2490,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
 
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
     
 
     
@@ -2603,9 +2547,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
@@ -2662,9 +2603,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
@@ -2720,9 +2658,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
 
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
     
 
     
@@ -2839,9 +2774,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
@@ -2897,9 +2829,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
 
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
     
 
     
@@ -2957,9 +2886,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
@@ -3015,9 +2941,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
 
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
     
 
     
@@ -3138,9 +3061,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
@@ -3196,9 +3116,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
 
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
     
 
     
@@ -3256,9 +3173,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
@@ -3314,9 +3228,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
 
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
     
 
     
@@ -3374,9 +3285,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
@@ -3432,9 +3340,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
 
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
     
 
     
@@ -3492,9 +3397,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
@@ -3550,9 +3452,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
 
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
     
 
     
@@ -3610,9 +3509,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
@@ -3668,9 +3564,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
 
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
     
 
     
@@ -3728,9 +3621,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
@@ -3786,9 +3676,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
 
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
     
 
     
@@ -3846,9 +3733,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
@@ -3904,9 +3788,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
 
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
     
 
     
@@ -3964,9 +3845,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
@@ -4022,9 +3900,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
 
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
     
 
     
@@ -4082,9 +3957,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
@@ -4140,9 +4012,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
 
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
     
 
     
@@ -4200,9 +4069,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
@@ -4258,9 +4124,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
 
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
     
 
     
@@ -4318,9 +4181,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
@@ -4376,9 +4236,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
 
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
     
 
     
@@ -4436,9 +4293,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
@@ -4494,9 +4348,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
 
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
     
 
     
@@ -4610,9 +4461,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
@@ -4668,9 +4516,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
 
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
     
 
     
@@ -4728,9 +4573,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
@@ -4786,9 +4628,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
 
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
     
 
     
@@ -4846,9 +4685,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
@@ -4904,9 +4740,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
 
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
     
 
     
@@ -4964,9 +4797,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
@@ -5022,9 +4852,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
 
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
     
 
     
@@ -5082,9 +4909,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
@@ -5140,9 +4964,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
 
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
     
 
     
@@ -5200,9 +5021,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
@@ -5258,9 +5076,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
 
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
     
 
     
@@ -5318,9 +5133,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
@@ -5377,9 +5189,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
@@ -5435,9 +5244,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
 
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
     
 
     
@@ -5560,9 +5366,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
@@ -5618,9 +5421,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
 
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
     
 
     
@@ -5678,9 +5478,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
@@ -5737,9 +5534,6 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
@@ -5768,7 +5562,7 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
             
 <dt>
     <h4 class="name "
-        id="whenReady"><span class="type-signature">&lt;static> </span>whenReady<span class="signature">(handler, <span class="optional">context</span>, <span class="optional">nonPrimer</span>)</span><span class="type-signature"></span></h4>
+        id=".whenReady"><span class="type-signature">&lt;static> </span>whenReady<span class="signature">(handler, <span class="optional">context</span>, <span class="optional">nonPrimer</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -6095,7 +5889,7 @@ if the device is already &quot;ready&quot;. See <a href="Phaser.Device.html#devi
 
     
     <dt class="tag-source">Source -
-    <a href="src_system_Device.js.html">system/Device.js</a>, <a href="src_system_Device.js.html#sunlight-1-line-1192">line 1192</a>
+    <a href="src_system_Device.js.html">system/Device.js</a>, <a href="src_system_Device.js.html#sunlight-1-line-1194">line 1194</a>
     </dt>
     
 
@@ -6234,7 +6028,7 @@ if the device is already &quot;ready&quot;. See <a href="Phaser.Device.html#devi
 
     
     <dt class="tag-source">Source -
-    <a href="src_system_Device.js.html">system/Device.js</a>, <a href="src_system_Device.js.html#sunlight-1-line-1231">line 1231</a>
+    <a href="src_system_Device.js.html">system/Device.js</a>, <a href="src_system_Device.js.html#sunlight-1-line-1233">line 1233</a>
     </dt>
     
 
@@ -6306,7 +6100,7 @@ This is available before the device &quot;ready&quot; event.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_system_Device.js.html">system/Device.js</a>, <a href="src_system_Device.js.html#sunlight-1-line-1297">line 1297</a>
+    <a href="src_system_Device.js.html">system/Device.js</a>, <a href="src_system_Device.js.html#sunlight-1-line-1299">line 1299</a>
     </dt>
     
 
@@ -6384,7 +6178,7 @@ It used to work in Chrome, but then they removed the ability: <a href="http://sr
 
     
     <dt class="tag-source">Source -
-    <a href="src_system_Device.js.html">system/Device.js</a>, <a href="src_system_Device.js.html#sunlight-1-line-1262">line 1262</a>
+    <a href="src_system_Device.js.html">system/Device.js</a>, <a href="src_system_Device.js.html#sunlight-1-line-1264">line 1264</a>
     </dt>
     
 
@@ -6432,8 +6226,8 @@ It used to work in Chrome, but then they removed the ability: <a href="http://sr
 					<br />
 					
 		<span class="jsdoc-message">
-		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha10</a>
-		on Wed Jul 29 2015 14:57:54 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
+		on Mon Aug 24 2015 15:36:48 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

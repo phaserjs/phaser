@@ -401,7 +401,7 @@
 						</li>
 						
 						<li class="class-depth-3">
-							<a href="Phaser.Physics.Arcade.html#TilemapCollision">TilemapCollision</a>
+							<a href="Phaser.Physics.Arcade.TilemapCollision.html">TilemapCollision</a>
 						</li>
 						
 						<li class="class-depth-2">
@@ -674,6 +674,10 @@
 						
 						<li class="class-depth-1">
 							<a href="PIXI.CanvasMaskManager.html">CanvasMaskManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.CanvasPool.html">CanvasPool</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -1819,9 +1823,6 @@ or you have tested performance and find it acceptable.</p>
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
@@ -1974,9 +1975,6 @@ so the physics body is centered on the Game Object.</p>
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
@@ -2105,7 +2103,7 @@ To remove simply set this property to 'null'</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-366">line 366</a>
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-376">line 376</a>
     </dt>
     
 
@@ -2291,9 +2289,6 @@ or you have tested performance and find it acceptable.</p>
 
     
 
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
     
 
     
@@ -2556,9 +2551,6 @@ or you have tested performance and find it acceptable.</p>
 
     
 
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
     
 
     
@@ -2851,8 +2843,10 @@ rather than figuring out the dimensions of the displayObject each frame you can 
     
     <div class="description">
         <p>Sets the filters for the displayObject.
-IMPORTANT: This is a webGL only feature and will be ignored by the canvas renderer.
-To remove filters simply set this property to 'null'</p>
+IMPORTANT: This is a webGL only feature and will be ignored by the Canvas renderer.</p>
+<p>To remove filters simply set this property to 'null'.</p>
+<p>You cannot have a filter and a multiply blend mode active at the same time. Setting a filter will reset
+this objects blend mode to NORMAL.</p>
     </div>
     
     
@@ -3372,67 +3366,6 @@ This property is mostly used internally by the physics systems, but is exposed f
 
     
     <div class="description">
-        <p>The height of the TilingSprite, setting this will actually modify the scale to achieve the value set</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="PIXI.TilingSprite.html#height">PIXI.TilingSprite#height</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_pixi_extras_TilingSprite.js.html">pixi/extras/TilingSprite.js</a>, <a href="src_pixi_extras_TilingSprite.js.html#sunlight-1-line-532">line 532</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="height"><span class="type-signature"></span>height<span class="type-signature"> :Number</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
         <p>The height of the tiling sprite</p>
     </div>
     
@@ -3610,69 +3543,6 @@ Returns <code>true</code> if they do, otherwise <code>false</code> if fully outs
     
     <dt class="tag-source">Source -
     <a href="src_gameobjects_components_AutoCull.js.html">gameobjects/components/AutoCull.js</a>, <a href="src_gameobjects_components_AutoCull.js.html#sunlight-1-line-37">line 37</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="inCamera"><span class="type-signature">&lt;readonly> </span>inCamera<span class="type-signature"> :boolean</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Checks if this Game Objects bounds intersects with the Game Cameras bounds.</p>
-<p>It will be <code>true</code> if they intersect, or <code>false</code> if the Game Object is fully outside of the Cameras bounds.</p>
-<p>An object outside the bounds can be considered for camera culling if it has the AutoCull component.</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Component.InCamera.html#inCamera">Phaser.Component.InCamera#inCamera</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_gameobjects_components_InCamera.js.html">gameobjects/components/InCamera.js</a>, <a href="src_gameobjects_components_InCamera.js.html#sunlight-1-line-26">line 26</a>
     </dt>
     
 
@@ -4085,9 +3955,6 @@ When it reaches zero it will call the <code>kill</code> method.</p>
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
@@ -4464,9 +4331,6 @@ It will only be &gt; 0 if anchor.y is not equal to zero.</p>
 
     
 
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
     
 
     
@@ -5335,7 +5199,7 @@ This is the same as <code>x + width - offsetX</code>.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_Sprite.js.html">pixi/display/Sprite.js</a>, <a href="src_pixi_display_Sprite.js.html#sunlight-1-line-96">line 96</a>
+    <a href="src_pixi_display_Sprite.js.html">pixi/display/Sprite.js</a>, <a href="src_pixi_display_Sprite.js.html#sunlight-1-line-98">line 98</a>
     </dt>
     
 
@@ -6347,67 +6211,6 @@ This ability allows you to check any of the matrix values and perform actions su
 
     
     <div class="description">
-        <p>The width of the sprite, setting this will actually modify the scale to achieve the value set</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="PIXI.TilingSprite.html#width">PIXI.TilingSprite#width</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_pixi_extras_TilingSprite.js.html">pixi/extras/TilingSprite.js</a>, <a href="src_pixi_extras_TilingSprite.js.html#sunlight-1-line-514">line 514</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="width"><span class="type-signature"></span>width<span class="type-signature"> :Number</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
         <p>The width of the tiling sprite</p>
     </div>
     
@@ -6831,67 +6634,6 @@ This value is updated at the end of updateTransform and takes all parent transfo
             
 <dt>
     <h4 class="name "
-        id="x"><span class="type-signature"></span>x<span class="type-signature"> :number</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>The position of the Game Object on the x axis relative to the local coordinates of the parent.</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Component.PhysicsBody.html#x">Phaser.Component.PhysicsBody#x</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_gameobjects_components_PhysicsBody.js.html">gameobjects/components/PhysicsBody.js</a>, <a href="src_gameobjects_components_PhysicsBody.js.html#sunlight-1-line-98">line 98</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
         id="x"><span class="type-signature"></span>x<span class="type-signature"> :Number</span></h4>
     
     
@@ -6934,7 +6676,7 @@ This value is updated at the end of updateTransform and takes all parent transfo
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-726">line 726</a>
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-740">line 740</a>
     </dt>
     
 
@@ -6995,68 +6737,7 @@ This value is updated at the end of updateTransform and takes all parent transfo
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-744">line 744</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="y"><span class="type-signature"></span>y<span class="type-signature"> :number</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>The position of the Game Object on the y axis relative to the local coordinates of the parent.</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Component.PhysicsBody.html#y">Phaser.Component.PhysicsBody#y</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_gameobjects_components_PhysicsBody.js.html">gameobjects/components/PhysicsBody.js</a>, <a href="src_gameobjects_components_PhysicsBody.js.html#sunlight-1-line-124">line 124</a>
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-758">line 758</a>
     </dt>
     
 
@@ -8005,7 +7686,7 @@ This can be quite useful if your displayObject is static / complicated and needs
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-549">line 549</a>
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-563">line 563</a>
     </dt>
     
 
@@ -8125,7 +7806,7 @@ This can be quite useful if your displayObject is static / complicated and needs
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_extras_TilingSprite.js.html">pixi/extras/TilingSprite.js</a>, <a href="src_pixi_extras_TilingSprite.js.html#sunlight-1-line-335">line 335</a>
+    <a href="src_pixi_extras_TilingSprite.js.html">pixi/extras/TilingSprite.js</a>, <a href="src_pixi_extras_TilingSprite.js.html#sunlight-1-line-330">line 330</a>
     </dt>
     
 
@@ -8220,7 +7901,7 @@ This can be quite useful if your displayObject is static / complicated and needs
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_extras_TilingSprite.js.html">pixi/extras/TilingSprite.js</a>, <a href="src_pixi_extras_TilingSprite.js.html#sunlight-1-line-420">line 420</a>
+    <a href="src_pixi_extras_TilingSprite.js.html">pixi/extras/TilingSprite.js</a>, <a href="src_pixi_extras_TilingSprite.js.html#sunlight-1-line-415">line 415</a>
     </dt>
     
 
@@ -11325,7 +11006,7 @@ because the World is the root Group from which all Game Objects descend.</p>
             
 <dt>
     <h4 class="name "
-        id="setTexture"><span class="type-signature"></span>setTexture<span class="signature">(texture)</span><span class="type-signature"></span></h4>
+        id="setTexture"><span class="type-signature"></span>setTexture<span class="signature">(texture, <span class="optional">destroy</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -11334,7 +11015,8 @@ because the World is the root Group from which all Game Objects descend.</p>
 
     
     <div class="description">
-        <p>Sets the texture of the sprite</p>
+        <p>Sets the texture of the sprite. Be warned that this doesn't remove or destroy the previous
+texture this Sprite was using.</p>
     </div>
     
 
@@ -11356,7 +11038,11 @@ because the World is the root Group from which all Game Objects descend.</p>
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -11381,10 +11067,61 @@ because the World is the root Group from which all Game Objects descend.</p>
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>The PIXI texture that is displayed by the sprite</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>destroy</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>Call Texture.destroy on the current texture before replacing it with the new one?</p></td>
         </tr>
 
 	
@@ -11422,7 +11159,7 @@ because the World is the root Group from which all Game Objects descend.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_Sprite.js.html">pixi/display/Sprite.js</a>, <a href="src_pixi_display_Sprite.js.html#sunlight-1-line-156">line 156</a>
+    <a href="src_pixi_display_Sprite.js.html">pixi/display/Sprite.js</a>, <a href="src_pixi_display_Sprite.js.html#sunlight-1-line-158">line 158</a>
     </dt>
     
 
@@ -11783,7 +11520,7 @@ because the World is the root Group from which all Game Objects descend.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-583">line 583</a>
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-597">line 597</a>
     </dt>
     
 
@@ -11970,7 +11707,7 @@ because the World is the root Group from which all Game Objects descend.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-597">line 597</a>
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-611">line 611</a>
     </dt>
     
 
@@ -12122,7 +11859,7 @@ Remember if this Game Object has any children you should call update on those to
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-573">line 573</a>
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-587">line 587</a>
     </dt>
     
 
@@ -12170,8 +11907,8 @@ Remember if this Game Object has any children you should call update on those to
 					<br />
 					
 		<span class="jsdoc-message">
-		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha10</a>
-		on Wed Jul 29 2015 14:58:01 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
+		on Mon Aug 24 2015 15:36:55 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

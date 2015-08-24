@@ -401,7 +401,7 @@
 						</li>
 						
 						<li class="class-depth-3">
-							<a href="Phaser.Physics.Arcade.html#TilemapCollision">TilemapCollision</a>
+							<a href="Phaser.Physics.Arcade.TilemapCollision.html">TilemapCollision</a>
 						</li>
 						
 						<li class="class-depth-2">
@@ -674,6 +674,10 @@
 						
 						<li class="class-depth-1">
 							<a href="PIXI.CanvasMaskManager.html">CanvasMaskManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.CanvasPool.html">CanvasPool</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -1149,7 +1153,7 @@
 
     
     <dt class="tag-source">Source -
-    <a href="src_tilemap_TilemapParser.js.html">tilemap/TilemapParser.js</a>, <a href="src_tilemap_TilemapParser.js.html#sunlight-1-line-12">line 12</a>
+    <a href="src_tilemap_TilemapParser.js.html">tilemap/TilemapParser.js</a>, <a href="src_tilemap_TilemapParser.js.html#sunlight-1-line-13">line 13</a>
     </dt>
     
 
@@ -1186,6 +1190,71 @@
     
 
     
+        <h3 class="subsection-title">Members</h3>
+
+        <dl>
+            
+<dt>
+    <h4 class="name "
+        id=".INSERT_NULL"><span class="type-signature">&lt;static, constant> </span>INSERT_NULL<span class="type-signature"> :boolean</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>When scanning the Tiled map data the TilemapParser can either insert a null value (true) or 
+a Phaser.Tile instance with an index of -1 (false, the default). Depending on your game type
+depends how this should be configured. If you've a large sparsely populated map and the tile
+data doesn't need to change then setting this value to <code>true</code> will help with memory consumption.
+However if your map is small, or you need to update the tiles (perhaps the map dynamically changes
+during the game) then leave the default value set.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_tilemap_TilemapParser.js.html">tilemap/TilemapParser.js</a>, <a href="src_tilemap_TilemapParser.js.html#sunlight-1-line-26">line 26</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        </dl>
+    
 
     
         <h3 class="subsection-title">Methods</h3>
@@ -1194,7 +1263,7 @@
             
 <dt>
     <h4 class="name "
-        id="getEmptyData"><span class="type-signature">&lt;static> </span>getEmptyData<span class="signature">()</span><span class="type-signature"> &rarr; {object}</span></h4>
+        id=".getEmptyData"><span class="type-signature">&lt;static> </span>getEmptyData<span class="signature">()</span><span class="type-signature"> &rarr; {object}</span></h4>
     
     
 </dt>
@@ -1257,7 +1326,7 @@
 
     
     <dt class="tag-source">Source -
-    <a href="src_tilemap_TilemapParser.js.html">tilemap/TilemapParser.js</a>, <a href="src_tilemap_TilemapParser.js.html#sunlight-1-line-120">line 120</a>
+    <a href="src_tilemap_TilemapParser.js.html">tilemap/TilemapParser.js</a>, <a href="src_tilemap_TilemapParser.js.html#sunlight-1-line-134">line 134</a>
     </dt>
     
 
@@ -1284,7 +1353,7 @@
             
 <dt>
     <h4 class="name "
-        id="parse"><span class="type-signature">&lt;static> </span>parse<span class="signature">(game, key, <span class="optional">tileWidth</span>, <span class="optional">tileHeight</span>, <span class="optional">width</span>, <span class="optional">height</span>)</span><span class="type-signature"> &rarr; {object}</span></h4>
+        id=".parse"><span class="type-signature">&lt;static> </span>parse<span class="signature">(game, key, <span class="optional">tileWidth</span>, <span class="optional">tileHeight</span>, <span class="optional">width</span>, <span class="optional">height</span>)</span><span class="type-signature"> &rarr; {object}</span></h4>
     
     
 </dt>
@@ -1603,7 +1672,7 @@
 
     
     <dt class="tag-source">Source -
-    <a href="src_tilemap_TilemapParser.js.html">tilemap/TilemapParser.js</a>, <a href="src_tilemap_TilemapParser.js.html#sunlight-1-line-14">line 14</a>
+    <a href="src_tilemap_TilemapParser.js.html">tilemap/TilemapParser.js</a>, <a href="src_tilemap_TilemapParser.js.html#sunlight-1-line-28">line 28</a>
     </dt>
     
 
@@ -1630,7 +1699,7 @@
             
 <dt>
     <h4 class="name "
-        id="parseCSV"><span class="type-signature">&lt;static> </span>parseCSV<span class="signature">(data, <span class="optional">tileWidth</span>, <span class="optional">tileHeight</span>)</span><span class="type-signature"> &rarr; {object}</span></h4>
+        id=".parseCSV"><span class="type-signature">&lt;static> </span>parseCSV<span class="signature">(data, <span class="optional">tileWidth</span>, <span class="optional">tileHeight</span>)</span><span class="type-signature"> &rarr; {object}</span></h4>
     
     
 </dt>
@@ -1836,7 +1905,7 @@
 
     
     <dt class="tag-source">Source -
-    <a href="src_tilemap_TilemapParser.js.html">tilemap/TilemapParser.js</a>, <a href="src_tilemap_TilemapParser.js.html#sunlight-1-line-63">line 63</a>
+    <a href="src_tilemap_TilemapParser.js.html">tilemap/TilemapParser.js</a>, <a href="src_tilemap_TilemapParser.js.html#sunlight-1-line-77">line 77</a>
     </dt>
     
 
@@ -1863,7 +1932,7 @@
             
 <dt>
     <h4 class="name "
-        id="parseJSON"><span class="type-signature">&lt;static> </span>parseJSON<span class="signature">(json)</span><span class="type-signature"> &rarr; {object}</span></h4>
+        id=".parseJSON"><span class="type-signature">&lt;static> </span>parseJSON<span class="signature">(json)</span><span class="type-signature"> &rarr; {object}</span></h4>
     
     
 </dt>
@@ -1975,7 +2044,7 @@
 
     
     <dt class="tag-source">Source -
-    <a href="src_tilemap_TilemapParser.js.html">tilemap/TilemapParser.js</a>, <a href="src_tilemap_TilemapParser.js.html#sunlight-1-line-182">line 182</a>
+    <a href="src_tilemap_TilemapParser.js.html">tilemap/TilemapParser.js</a>, <a href="src_tilemap_TilemapParser.js.html#sunlight-1-line-196">line 196</a>
     </dt>
     
 
@@ -2023,8 +2092,8 @@
 					<br />
 					
 		<span class="jsdoc-message">
-		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha10</a>
-		on Wed Jul 29 2015 14:58:01 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
+		on Mon Aug 24 2015 15:36:55 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

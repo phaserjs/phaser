@@ -401,7 +401,7 @@
 						</li>
 						
 						<li class="class-depth-3">
-							<a href="Phaser.Physics.Arcade.html#TilemapCollision">TilemapCollision</a>
+							<a href="Phaser.Physics.Arcade.TilemapCollision.html">TilemapCollision</a>
 						</li>
 						
 						<li class="class-depth-2">
@@ -674,6 +674,10 @@
 						
 						<li class="class-depth-1">
 							<a href="PIXI.CanvasMaskManager.html">CanvasMaskManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.CanvasPool.html">CanvasPool</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -1246,6 +1250,67 @@ Please see https://github.com/sole/tween.js for a full list of contributors.</p>
             
 <dt>
     <h4 class="name "
+        id="frameBased"><span class="type-signature"></span>frameBased<span class="type-signature"> :boolean</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Are all newly created Tweens frame or time based? A frame based tween will use the physics elapsed timer when updating. This means
+it will retain the same consistent frame rate, regardless of the speed of the device. The duration value given should
+be given in frames.</p>
+<p>If the Tween uses a time based update (which is the default) then the duration is given in milliseconds.
+In this situation a 2000ms tween will last exactly 2 seconds, regardless of the device and how many visual updates the tween
+has actually been through. For very short tweens you may wish to experiment with a frame based update instead.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_tween_TweenManager.js.html">tween/TweenManager.js</a>, <a href="src_tween_TweenManager.js.html#sunlight-1-line-38">line 38</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
         id="game"><span class="type-signature"></span>game<span class="type-signature"> :<a href="Phaser.Game.html">Phaser.Game</a></span></h4>
     
     
@@ -1420,7 +1485,7 @@ Please see https://github.com/sole/tween.js for a full list of contributors.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_tween_TweenManager.js.html">tween/TweenManager.js</a>, <a href="src_tween_TweenManager.js.html#sunlight-1-line-176">line 176</a>
+    <a href="src_tween_TweenManager.js.html">tween/TweenManager.js</a>, <a href="src_tween_TweenManager.js.html#sunlight-1-line-189">line 189</a>
     </dt>
     
 
@@ -1559,7 +1624,7 @@ Please see https://github.com/sole/tween.js for a full list of contributors.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_tween_TweenManager.js.html">tween/TweenManager.js</a>, <a href="src_tween_TweenManager.js.html#sunlight-1-line-190">line 190</a>
+    <a href="src_tween_TweenManager.js.html">tween/TweenManager.js</a>, <a href="src_tween_TweenManager.js.html#sunlight-1-line-203">line 203</a>
     </dt>
     
 
@@ -1649,7 +1714,7 @@ Please see https://github.com/sole/tween.js for a full list of contributors.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_tween_TweenManager.js.html">tween/TweenManager.js</a>, <a href="src_tween_TweenManager.js.html#sunlight-1-line-101">line 101</a>
+    <a href="src_tween_TweenManager.js.html">tween/TweenManager.js</a>, <a href="src_tween_TweenManager.js.html#sunlight-1-line-114">line 114</a>
     </dt>
     
 
@@ -1788,7 +1853,7 @@ Please see https://github.com/sole/tween.js for a full list of contributors.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_tween_TweenManager.js.html">tween/TweenManager.js</a>, <a href="src_tween_TweenManager.js.html#sunlight-1-line-272">line 272</a>
+    <a href="src_tween_TweenManager.js.html">tween/TweenManager.js</a>, <a href="src_tween_TweenManager.js.html#sunlight-1-line-285">line 285</a>
     </dt>
     
 
@@ -1858,7 +1923,7 @@ Please see https://github.com/sole/tween.js for a full list of contributors.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_tween_TweenManager.js.html">tween/TweenManager.js</a>, <a href="src_tween_TweenManager.js.html#sunlight-1-line-317">line 317</a>
+    <a href="src_tween_TweenManager.js.html">tween/TweenManager.js</a>, <a href="src_tween_TweenManager.js.html#sunlight-1-line-330">line 330</a>
     </dt>
     
 
@@ -1977,7 +2042,7 @@ Please see https://github.com/sole/tween.js for a full list of contributors.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_tween_TweenManager.js.html">tween/TweenManager.js</a>, <a href="src_tween_TweenManager.js.html#sunlight-1-line-203">line 203</a>
+    <a href="src_tween_TweenManager.js.html">tween/TweenManager.js</a>, <a href="src_tween_TweenManager.js.html#sunlight-1-line-216">line 216</a>
     </dt>
     
 
@@ -2047,7 +2112,7 @@ Please see https://github.com/sole/tween.js for a full list of contributors.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_tween_TweenManager.js.html">tween/TweenManager.js</a>, <a href="src_tween_TweenManager.js.html#sunlight-1-line-112">line 112</a>
+    <a href="src_tween_TweenManager.js.html">tween/TweenManager.js</a>, <a href="src_tween_TweenManager.js.html#sunlight-1-line-125">line 125</a>
     </dt>
     
 
@@ -2227,7 +2292,7 @@ Please see https://github.com/sole/tween.js for a full list of contributors.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_tween_TweenManager.js.html">tween/TweenManager.js</a>, <a href="src_tween_TweenManager.js.html#sunlight-1-line-127">line 127</a>
+    <a href="src_tween_TweenManager.js.html">tween/TweenManager.js</a>, <a href="src_tween_TweenManager.js.html#sunlight-1-line-140">line 140</a>
     </dt>
     
 
@@ -2297,7 +2362,7 @@ Please see https://github.com/sole/tween.js for a full list of contributors.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_tween_TweenManager.js.html">tween/TweenManager.js</a>, <a href="src_tween_TweenManager.js.html#sunlight-1-line-331">line 331</a>
+    <a href="src_tween_TweenManager.js.html">tween/TweenManager.js</a>, <a href="src_tween_TweenManager.js.html#sunlight-1-line-344">line 344</a>
     </dt>
     
 
@@ -2387,7 +2452,7 @@ Please see https://github.com/sole/tween.js for a full list of contributors.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_tween_TweenManager.js.html">tween/TweenManager.js</a>, <a href="src_tween_TweenManager.js.html#sunlight-1-line-229">line 229</a>
+    <a href="src_tween_TweenManager.js.html">tween/TweenManager.js</a>, <a href="src_tween_TweenManager.js.html#sunlight-1-line-242">line 242</a>
     </dt>
     
 
@@ -2435,8 +2500,8 @@ Please see https://github.com/sole/tween.js for a full list of contributors.</p>
 					<br />
 					
 		<span class="jsdoc-message">
-		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha10</a>
-		on Wed Jul 29 2015 14:58:01 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
+		on Mon Aug 24 2015 15:36:56 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

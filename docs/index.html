@@ -401,7 +401,7 @@
 						</li>
 						
 						<li class="class-depth-3">
-							<a href="Phaser.Physics.Arcade.html#TilemapCollision">TilemapCollision</a>
+							<a href="Phaser.Physics.Arcade.TilemapCollision.html">TilemapCollision</a>
 						</li>
 						
 						<li class="class-depth-2">
@@ -674,6 +674,10 @@
 						
 						<li class="class-depth-1">
 							<a href="PIXI.CanvasMaskManager.html">CanvasMaskManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.CanvasPool.html">CanvasPool</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -1118,7 +1122,7 @@
 <ul>
 <li><strong>Visit:</strong> The <a href="http://phaser.io">Phaser website</a> and follow on <a href="https://twitter.com/photonstorm">Twitter</a> (#phaserjs)</li>
 <li><strong>Learn:</strong> <a href="http://phaser.io/docs">API Documentation</a>, <a href="http://www.html5gamedevs.com/forum/14-phaser/">Support Forum</a> and <a href="http://stackoverflow.com/questions/tagged/phaser-framework">StackOverflow</a></li>
-<li><strong>Code:</strong> 500+ <a href="http://phaser.io/examples">Source Examples</a> (also available in this <a href="https://github.com/photonstorm/phaser-examples">git repo</a>)</li>
+<li><strong>Code:</strong> 550+ <a href="http://phaser.io/examples">Source Examples</a> (also available in this <a href="https://github.com/photonstorm/phaser-examples">git repo</a>)</li>
 <li><strong>Read:</strong> Subscribe to the <a href="https://confirmsubscription.com/h/r/369DE48E3E86AF1E">Newsletter</a> and grab our <a href="http://phaser.io/shop">Phaser Books</a></li>
 <li><strong>Chat:</strong> <a href="http://www.html5gamedevs.com/topic/4470-official-phaserio-irc-channel-phaserio-on-freenode/">#phaserio IRC channel</a> on freenode</li>
 <li><strong>Extend:</strong> With <a href="https://github.com/photonstorm/phaser-plugins">Phaser Plugins</a></li>
@@ -1139,16 +1143,14 @@
 </ul>
 
 <p><a name="whats-new"></a></p>
-<h2>What's new in Phaser 2.4.2</h2><div align="center"><img src="http://phaser.io/images/github/news.jpg"></div>
+<h2>What's new in Phaser 2.4.3</h2><div align="center"><img src="http://phaser.io/images/github/news.jpg"></div>
 
 <blockquote>
-<p>29th July 2015</p>
+<p>24th August 2015</p>
 </blockquote>
-<p>Phaser 2.4 is another huge update. We had to bump the version number from 2.3 directly to 2.4 because of some API adjustments, all of which are fully detailed in the <a href="#change-log">Change Log</a>. While it's true we could have released it over a few smaller point releases, that just isn't how the cookie crumbled this time. <em>Be sure to pay attention to the previous deprecated API calls that have been removed in 2.4.</em></p>
-<p>So although you had to wait for it a couple months more than usual, Phaser 2.4 is quite simply an <strong>epic release</strong> - there is no two ways about it! Brand new video component? Check. Support for fully boned Creature animations? Check. Brand new Cache and Loader updates? Check. Dynamic sprite and gradient generator? Check. Literally hundreds of updates, enhancements and fixes across the entire codebase? Yup, those too! The Change Log seems to scroll on forever, yet the overall package size continues to come down as we optimise and streamline our code too (this release actually builds smaller than 2.3 did, just 80KB min + gz)</p>
-<p>Make sure you check out the Phaser web site. We are going to be adding in stacks of new examples and features in the coming weeks.</p>
-<p>Also we'd be extremely grateful if you could get involved with our <a href="https://www.patreon.com/photonstorm">Patreon campaign</a>. We've got some really ambitious plans for how we'd like to see Phaser evolve in the future. Hopefully together we can reach that goal faster.</p>
-<p>But that's all for now. I hope you enjoy Phaser 2.4.</p>
+<p>The release of Phaser 2.4.3 continues our work with bug fixes, new features and continued optimizations. As before it's a point-release, making it a safe upgrade for anyone using a previous 2.4 build.</p>
+<p>As well as working on this release we've also been busily writing tutorials for the first issue of <a href="http://phaser.io/interphase/">Interphase</a>, our new publication for Phaser developers. Packed full of exclusive content we've been coding games, writing tutorials and authoring deep-dive articles for the first issue. It's been a blast so far and I'm excited for it's release in early September - and if you <a href="http://phaser.io/interphase">pre-order now</a> with the discount code 'earlybird' you can save 15% on the cover price.</p>
+<p>Finally we'd be extremely grateful if you could get involved with our <a href="https://www.patreon.com/photonstorm">Phaser Patreon campaign</a>. The uptake so far has been fantastic. Thank you to everyone who now supports Phaser development and shares our belief in the future of HTML5 gaming and Phasers role in that.</p>
 <p>Happy coding everyone! See you on the forums.</p>
 <p>Cheers,</p>
 <p>Rich - <a href="https://twitter.com/photonstorm">@photonstorm</a></p>
@@ -1156,13 +1158,18 @@
 
 <p><a name="patreon"></a></p>
 <h2>Support Phaser on Patreon</h2><p><img src="http://www.phaser.io/images/patreon.png" alt="patreon"></p>
-<p>Please help support the future development of Phaser through our <a href="https://www.patreon.com/photonstorm">Patreon campaign</a>. We've some exciting plans and there's so much we'd like to do - let's see if we can all work together to make this possible.</p>
+<p>Please help support the future development of Phaser through our <a href="https://www.patreon.com/photonstorm">Patreon campaign</a>. We've some exciting plans and there's so much we'd like to do. Let's see if we can all work together to make this possible.</p>
+<h3>Phaser Sponsors</h3><p>Phaser is <a href="https://www.patreon.com/photonstorm">sponsored</a> by the following great companies:</p>
+<p><img src="http://www.phaser.io/images/sponsors/qici-100.png" alt="qici"></p>
+<p>QICI Engine: <a href="http://www.qiciengine.com/">A powerful one-stop integrated Phaser game editor</a></p>
+<p><img src="http://www.phaser.io/images/sponsors/zenva-100.png" alt="zenva"></p>
+<p>Zenva Academy: <a href="https://academy.zenva.com/?zva_src=phaserpatreon">Online courses on Phaser, HTML5 and native app development</a></p>
 <p><a name="download"></a></p>
 <h2>Download Phaser</h2><p>Phaser is <a href="https://github.com/photonstorm/phaser">hosted on Github</a>. There are a number of ways to download it:</p>
 <ul>
 <li>Clone the git repository via <a href="https://github.com/photonstorm/phaser.git">https</a>, <a href="git@github.com:photonstorm/phaser.git">ssh</a> or with the Github <a href="github-windows://openRepo/https://github.com/photonstorm/phaser">Windows</a> or <a href="github-mac://openRepo/https://github.com/photonstorm/phaser">Mac</a> clients.</li>
-<li>Download as <a href="https://github.com/photonstorm/phaser/archive/v2.3.0.zip">zip</a> or <a href="https://github.com/photonstorm/phaser/archive/v2.3.0.tar.gz">tar.gz</a></li>
-<li>Download just the build files: <a href="https://github.com/photonstorm/phaser/releases/download/v2.3.0/phaser.js">phaser.js</a> and <a href="https://github.com/photonstorm/phaser/releases/download/v2.3.0/phaser.min.js">phaser.min.js</a></li>
+<li>Download as <a href="https://github.com/photonstorm/phaser/archive/v2.4.3.zip">zip</a> or <a href="https://github.com/photonstorm/phaser/archive/v2.4.3.tar.gz">tar.gz</a></li>
+<li>Download just the build files: <a href="https://github.com/photonstorm/phaser/releases/download/v2.4.3/phaser.js">phaser.js</a> and <a href="https://github.com/photonstorm/phaser/releases/download/v2.4.3/phaser.min.js">phaser.min.js</a></li>
 <li>Checkout with <a href="https://github.com/photonstorm/phaser">svn</a></li>
 </ul>
 <h3>Bower / npm</h3><p>Install via <a href="http://bower.io">bower</a></p>
@@ -1170,13 +1177,13 @@
 <p>Install via <a href="https://www.npmjs.com">npm</a></p>
 <p><code>npm install phaser</code></p>
 <h3>CDN</h3><p><a href="http://www.jsdelivr.com/#!phaser">jsDelivr</a> is a &quot;super-fast CDN for developers&quot;. Include the following in your html:</p>
-<p><code>&lt;script src=&quot;//cdn.jsdelivr.net/phaser/2.4.2/phaser.js&quot;&gt;&lt;/script&gt;</code></p>
+<p><code>&lt;script src=&quot;//cdn.jsdelivr.net/phaser/2.4.3/phaser.js&quot;&gt;&lt;/script&gt;</code></p>
 <p>or the minified version:</p>
-<p><code>&lt;script src=&quot;//cdn.jsdelivr.net/phaser/2.4.2/phaser.min.js&quot;&gt;&lt;/script&gt;</code></p>
+<p><code>&lt;script src=&quot;//cdn.jsdelivr.net/phaser/2.4.3/phaser.min.js&quot;&gt;&lt;/script&gt;</code></p>
 <p><a href="https://cdnjs.com/libraries/phaser">cdnjs.com</a> also offers a free CDN service. They have all versions of Phaser and even the custom builds:</p>
-<p><code>&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/phaser/2.4.2/phaser.js&quot;&gt;&lt;/script&gt;</code></p>
+<p><code>&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/phaser/2.4.3/phaser.js&quot;&gt;&lt;/script&gt;</code></p>
 <h3>Phaser Sandbox</h3><p>If you'd like to try coding in Phaser right now, with nothing more than your web browser then you can head over to the <a href="http://phaser.io/sandbox">Phaser Sandbox</a>. You'll find Quick Start templates and a user-friendly editor filled with handy code-completion features.</p>
-<h3>Koding</h3><p>Want to try Phaser without downloading anything? <a href="https://koding.com/Teamwork?import=https://github.com/photonstorm/phaser/archive/master.zip&amp;c=git1">Clone Phaser in Koding</a> and start working right away in their web based development system.</p>
+<h3>Koding</h3><p>Want to try Phaser without downloading anything? The site <a href="https://koding.com">Koding</a> offer a complete browser-based virtual machine to work in, allowing you to clone the Phaser repo and start work immediately.</p>
 <h3>License</h3><p>Phaser is released under the <a href="http://opensource.org/licenses/MIT">MIT License</a>.</p>
 
 <p><a name="getting-started"></a></p>
@@ -1207,7 +1214,7 @@
 <p>Run <code>grunt</code> to perform a default build to the <code>dist</code> folder.</p>
 
 <p><a name="games"></a></p>
-<h2>Games made with Phaser</h2><p>Thousands of games have been made in Phaser. From game jam entries to titles by some of the largest entertainment brands in the world. This is just a tiny sample:</p>
+<h2>Games made with Phaser</h2><p>Thousands of games have been made in Phaser. From game jam entries to titles by some of the largest entertainment brands in the world. Here is a tiny sample:</p>
 <p><a href="http://phaser.io/news/2015/06/bubble-academy"><img src="http://phaser.io/images/github/241/bubble-academy.png" alt="Game"></a>
 <a href="http://phaser.io/news/2015/07/woodventure"><img src="http://phaser.io/images/github/241/woodventure.png" alt="Game"></a>
 <a href="http://phaser.io/news/2015/04/hopsop-journey-to-the-top"><img src="http://phaser.io/images/github/241/hopsop.png" alt="Game"></a>
@@ -1227,7 +1234,7 @@
 <a href="http://www.gamepix.com/project/footchinko/"><img src="http://phaser.io/images/github/shot8.jpg" alt="Game"></a>
 <a href="http://orcattack.thehobbit.com"><img src="http://phaser.io/images/github/shot9.jpg" alt="Game"></a></p>
 <p>Artwork copyright their respective owners.</p>
-<p>We add <a href="http://phaser.io/news/category/game">new games</a> to the Phaser site regularly, be sure to send us yours when it's finished!</p>
+<p>We add <a href="http://phaser.io/news/category/game">new games</a> to the Phaser site weekly, so be sure to send us yours when it's finished!</p>
 
 <p><a name="requirements"></a></p>
 <h2>Requirements</h2><p>Phaser requires a web browser that supports the <a href="http://caniuse.com/#feat=canvas">canvas tag</a>. This includes Internet Explorer 9+, Firefox, Chrome, Safari and Opera on desktop. iOS Safari, Android Browser and Chrome for Android are supported on mobile.</p>
@@ -1244,23 +1251,53 @@
 <p>If you are an exceptional JavaScript developer and would like to join the Phaser 3 development team then let us know. We have a limited budget available to pay towards your time.</p>
 
 <p><a name="change-log"></a></p>
-<h2>Change Log</h2><h2>Version 2.4.2 - &quot;Altara&quot; - 29th July 2015</h2><h3>Updates</h3><ul>
-<li>TypeScript definitions fixes and updates (thanks @clark-stevenson @shivinsky)</li>
-<li>JSDoc typo fixes (thanks @DrkSephy)</li>
-<li>TilemapLayer - Fixed unmatched <code>context.save</code> and <code>context.restore</code> calls (thanks @MortimerGoro #1934)</li>
-<li>Cache.getFrame has a new <code>cache</code> parameter (that defaults to the Image cache, but can be changed to any other)</li>
-<li>Cache.getFrameCount has a new <code>cache</code> parameter (that defaults to the Image cache, but can be changed to any other)</li>
-<li>Cache.getFrameData has a new <code>cache</code> parameter (that defaults to the Image cache, but can be changed to any other)</li>
-<li>Cache.hasFrameData has a new <code>cache</code> parameter (that defaults to the Image cache, but can be changed to any other)</li>
-<li>Cache.getFrameByIndex has a new <code>cache</code> parameter (that defaults to the Image cache, but can be changed to any other)</li>
-<li>Cache.getFrameByName has a new <code>cache</code> parameter (that defaults to the Image cache, but can be changed to any other)</li>
-<li>Device.canPlayVideo now checks for <code>ogv</code> as a valid file extension for OGG video files (thanks @JB-Tellez #1928)</li>
-<li>Phaser.Sound will now automatically check the Cache to see if the audio file it is using is still there or not. If not then it will automatically called <code>Sound.destroy</code> on itself. If you do not desire this result then you should ensure that you undertake all house-keeping yourself, and properly destroy Sound objects <em>before</em> calling <code>Cache.removeSound</code> (#1946)</li>
+<h2>Change Log</h2><h2>Version 2.4.3 - &quot;Coramen&quot; - 24th August 2014</h2><h3>New Features</h3><ul>
+<li>Loader.images is a new method that allows you to pass an array of image keys, and optionally the URLs to the Loader and have them all added to the load queue in one go.</li>
+<li>TweenManager.frameBased allows you to control if all newly created Tweens update based on the physics step (i.e. frame based) or the system clock (time based). A frame based tween will use the physics elapsed timer when updating. This means it will retain the same consistent frame rate, regardless of the speed of the device. The duration value given should be given in frames. If the Tween uses a time based update (which is the default) then the duration is given in milliseconds. In this situation a 2000ms tween will last exactly 2 seconds, regardless of the device and how many visual updates the tween has actually been through.</li>
+<li>Tween.frameBased does the same as TweenManager.frameBased but allows you to set the value on a per-tween basis.</li>
+<li>BitmapText.smoothed is a new boolean property that allows you to set texture smoothing on a bitmap font or not. By default smoothing is always on, but you can turn it off which helps for bitmap fonts created from pixel art style character sets.</li>
+<li>Text.addFontStyle and Text.addFontWeight allow you to apply font weights and styles to specific characters in a Text object. For example you can now include bold or italics within single Text objects (thanks @jdnichollsc #1950)</li>
+<li>PIXI.CanvasPool is a new static global created to deal with the issue of resource leaks and continuous DOM node build-up when creating lots of Text or BitmapData objects, or when calling <code>generateTexture</code> on any display object. The CanvasPool will do its best to re-use out dated canvas elements rather than filling up the DOM with new ones.</li>
+<li>Sprite.setTexture has a new <code>destroyBase</code> parameter - set this to <code>true</code> if you know the base used a generated texture that isn't being used by any other sprites. This will free-up the canvas for further re-use by other calls to <code>generateTexture</code> or Text objects.</li>
+<li>Line.midPoint will return a Point object where the <code>x</code> and <code>y</code> values correspond to the center (or midpoint) of the Line segment.</li>
+<li>Line.rotateAround allows you to rotate a Line around the given coordinates (in world space)</li>
+<li>Line.centerOn will position the Line so that its midpoint lays on the coordinates given.</li>
+<li>BitmapData.line draws a line to the BitmapData in the color and thickness specified.</li>
+<li>BitmapData.op is a handy short-code to get and set the canvas global composite operator.</li>
+<li>BitmapData.drawFull draws the given Game Object or Group to a BitmapData and then recursively iterates through all of its children, including children of Game Objects and Groups. It can draw Text, BitmapText, Sprites, Images, Emitters and Graphics objects. It's perfectly valid to pass in <code>game.world</code> as the parent object, and it will iterate through the entire display list.</li>
+<li>Phaser.TilemapParser.INSERT_NULL is a new boolean that controls what happens when the parser encounters an empty tile: When scanning the Tiled map data the TilemapParser can either insert a null value (true) or a <code>Phaser.Tile</code> instance with an index of -1 (false, the default). Depending on your game type depends how this should be configured. If you've a large sparsely populated map and the tile data doesn't need to change then setting this value to <code>true</code> will help with memory consumption. However if your map is small, or you need to update the tiles (perhaps the map dynamically changes during the game) then leave the default value set (thanks #1982)</li>
+</ul>
+<h3>Updates</h3><ul>
+<li>TypeScript definitions fixes and updates (thanks @clark-stevenson @vrecluse @yahiko00 @cloakedninjas @qdrj)</li>
+<li>JSDoc typo fixes (thanks @Cowa @yahiko00 @qdrj @STuFF)</li>
+<li>VideoStream.active = false is used if the browser supports it, otherwise it falls back to VideoStream.stop.</li>
+<li>Text can now accept <code>undefined</code> or <code>null</code> as the <code>text</code> argument in the constructor and will cast it as an empty string.</li>
+<li>Point.rotate uses a faster and simpler rotation function when no distance argument is specified.</li>
+<li>Setting a P2.Body from Static or Kinematic to Dynamic will now automatically adjust the Body.mass to be 1 (thanks @wayfu #2005)</li>
+<li>Pointer.withinGame is no longer automatically set to <code>false</code> in the <code>Pointer.stop</code> method. Instead it will check if the Pointer actually is within the stage bounds and only set <code>withinGame</code> to <code>false</code> if it's outside the bounds.</li>
+<li>MSPointer now has an <code>onPointerUpGlobal</code> handler for when the pointer is released outside of the canvas, but still within the browser window. This means that in IE11 a Sprites <code>onInputUp</code> event will now trigger even when outside the canvas (thanks @bvargish #2000)</li>
+<li>MSPointer now has handlers for the pointer being over and outside of the canvas element, which sets the <code>Pointer.withinGame</code> booleans accordingly. It also triggers the <code>Mouse.mouseOutCallback</code> and <code>Mouse.mouseOverCallback</code> callbacks respectively.</li>
+<li>The MSPointer event listeners have been renamed to all lower-case, i.e. 'pointerDown' is now 'pointerdown'.</li>
 </ul>
 <h3>Bug Fixes</h3><ul>
-<li>DeviceButton would try to set <code>altKey</code>, <code>shiftKey</code> and <code>ctrlKey</code> even for Joypads (thanks @zatch #1939)</li>
-<li>Pointer.move would accidentally reset the <code>isDown</code> status of the Pointer on touch devices, which broke things like Sprite input events when built to native apps or run locally (#1932 #1943)</li>
-<li>Pointer.onDown (and input enabled items like Buttons) would fail on FireFox / Linux and CocoonJS (#1944 #1945)</li>
+<li>Pointer.isDown was reset before the <code>Input.onUp</code> event, meaning you couldn't get the Pointer duration from within the event.</li>
+<li>Pointer.isDown was reset before the Input tap calculations, meaning <code>onTap</code> wouldn't dispatch (thanks @stovenator #1953)</li>
+<li>InputHandler.pointerOver would get stuck in an 'isOver' state if the Sprite changed its visibility during an <code>onUp</code> callback (thanks @Cristy94 #1955)</li>
+<li>If you override the P2 mpx functions, to define your own px to meters values, the P2 Debug Bodies would ignore it (thanks @vrecluse #1957)</li>
+<li>ArrayUtils.numberArrayStep would return an empty array if a single parameter was given, instead of a single step array (thanks @pooya72 #1958)</li>
+<li>Text with tints applied wouldn't update properly in Canvas mode.</li>
+<li>Removed use of the deprecated <code>enterFullScreen</code> and <code>leaveFullScreen</code> signals from the Scale Manager (thanks @mmanlod #1972)</li>
+<li>BitmapText with tints applied wouldn't update properly in Canvas mode (thanks @Pajamaman #1969)</li>
+<li>Group.cacheAsBitmap would be incorrectly offset in Canvas mode (thanks @mkristo #1925)</li>
+<li>Text.setTextBounds didn't add the x and y values to the width and height offsets.</li>
+<li>Line.rotate used a calculation method which resulted in the line growing (or shrinking) in length over time the more it was rotated. The new method never changes the lines length.</li>
+<li>BitmapText.font failed to pull the new font from the Phaser Cache, stopping it from updating properly (thanks @AbrahamAlcaina #2001)</li>
+<li>Video.stop now removes the 'playing' event listener, which stop Videos set to loop from throwing errors after being destroyed.</li>
+<li>Tilemap.createFromObjects has been strengthened so that will only create Sprites for matching gids/ids/names. It also only sets the Sprite width and height values if they are present in the Tiled data (thanks @pparke #2012)</li>
+<li>TilingSprite._renderCanvas wasn't correctly allowing for pixel rounding (thanks @ximop #2022)</li>
+<li>Cache.addSpriteSheet didn't include default values for the <code>frameMax</code>, <code>margin</code> and <code>spacing</code> arguments (thanks @vladkens #2017 #2018)</li>
+<li>Tilemap.shuffle was calling the deprecated Phaser.Utils.shuffle, which has now moved to Phaser.ArrayUtils.shuffle.</li>
+<li>Enabling a filter on a display object that had a multiply blend mode set would cause the object to become invisible. The two cannot be combined, so when you set a filter on a display object it now automatically resets the blend mode to <code>NORMAL</code>. The same does not happen in reverse however, so if you've got a filter set and then change the blend mode to multiply it will still break. Be careful to capture this yourself (thanks @wayfu #1994)</li>
 </ul>
 <p>For changes in previous releases please see the extensive <a href="https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md">Version History</a>.</p>
 
@@ -1304,8 +1341,8 @@
 					<br />
 					
 		<span class="jsdoc-message">
-		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha10</a>
-		on Wed Jul 29 2015 14:57:51 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
+		on Mon Aug 24 2015 15:36:46 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

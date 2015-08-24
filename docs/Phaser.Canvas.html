@@ -401,7 +401,7 @@
 						</li>
 						
 						<li class="class-depth-3">
-							<a href="Phaser.Physics.Arcade.html#TilemapCollision">TilemapCollision</a>
+							<a href="Phaser.Physics.Arcade.TilemapCollision.html">TilemapCollision</a>
 						</li>
 						
 						<li class="class-depth-2">
@@ -674,6 +674,10 @@
 						
 						<li class="class-depth-1">
 							<a href="PIXI.CanvasMaskManager.html">CanvasMaskManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.CanvasPool.html">CanvasPool</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -1115,7 +1119,8 @@
 
     
     <div class="description">
-        <p>The Canvas class handles everything related to creating the <code>canvas</code> DOM tag that Phaser will use, including styles, offset and aspect ratio.</p>
+        <p>The Canvas class handles everything related to creating the <code>canvas</code> DOM tag that Phaser will use, 
+including styles, offset and aspect ratio.</p>
     </div>
     
 
@@ -1149,7 +1154,7 @@
 
     
     <dt class="tag-source">Source -
-    <a href="src_system_Canvas.js.html">system/Canvas.js</a>, <a href="src_system_Canvas.js.html#sunlight-1-line-13">line 13</a>
+    <a href="src_system_Canvas.js.html">system/Canvas.js</a>, <a href="src_system_Canvas.js.html#sunlight-1-line-14">line 14</a>
     </dt>
     
 
@@ -1194,7 +1199,7 @@
             
 <dt>
     <h4 class="name "
-        id="addToDOM"><span class="type-signature">&lt;static> </span>addToDOM<span class="signature">(canvas, parent, <span class="optional">overflowHidden</span>)</span><span class="type-signature"> &rarr; {HTMLCanvasElement}</span></h4>
+        id=".addToDOM"><span class="type-signature">&lt;static> </span>addToDOM<span class="signature">(canvas, parent, <span class="optional">overflowHidden</span>)</span><span class="type-signature"> &rarr; {HTMLCanvasElement}</span></h4>
     
     
 </dt>
@@ -1400,7 +1405,7 @@ If no parent is given it will be added as a child of the document.body.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_system_Canvas.js.html">system/Canvas.js</a>, <a href="src_system_Canvas.js.html#sunlight-1-line-107">line 107</a>
+    <a href="src_system_Canvas.js.html">system/Canvas.js</a>, <a href="src_system_Canvas.js.html#sunlight-1-line-116">line 116</a>
     </dt>
     
 
@@ -1427,7 +1432,7 @@ If no parent is given it will be added as a child of the document.body.</p>
             
 <dt>
     <h4 class="name "
-        id="create"><span class="type-signature">&lt;static> </span>create<span class="signature">(<span class="optional">width</span>, <span class="optional">height</span>, <span class="optional">id</span>)</span><span class="type-signature"> &rarr; {HTMLCanvasElement}</span></h4>
+        id=".create"><span class="type-signature">&lt;static> </span>create<span class="signature">(parent, <span class="optional">width</span>, <span class="optional">height</span>, <span class="optional">id</span>, <span class="optional">skipPool</span>)</span><span class="type-signature"> &rarr; {HTMLCanvasElement}</span></h4>
     
     
 </dt>
@@ -1470,6 +1475,41 @@ If no parent is given it will be added as a child of the document.body.</p>
 	</thead>
 
 	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>parent</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The object that will own the canvas that is created.</p></td>
+        </tr>
+
 	
 
         <tr>
@@ -1588,6 +1628,45 @@ If no parent is given it will be added as a child of the document.body.</p>
         </tr>
 
 	
+
+        <tr>
+            
+                <td class="name"><code>skipPool</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>If <code>true</code> the canvas will not be placed in the CanvasPool global.</p></td>
+        </tr>
+
+	
 	</tbody>
 </table>
 
@@ -1637,7 +1716,7 @@ If no parent is given it will be added as a child of the document.body.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_system_Canvas.js.html">system/Canvas.js</a>, <a href="src_system_Canvas.js.html#sunlight-1-line-15">line 15</a>
+    <a href="src_system_Canvas.js.html">system/Canvas.js</a>, <a href="src_system_Canvas.js.html#sunlight-1-line-16">line 16</a>
     </dt>
     
 
@@ -1664,7 +1743,7 @@ If no parent is given it will be added as a child of the document.body.</p>
             
 <dt>
     <h4 class="name "
-        id="getSmoothingEnabled"><span class="type-signature">&lt;static> </span>getSmoothingEnabled<span class="signature">(context)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+        id=".getSmoothingEnabled"><span class="type-signature">&lt;static> </span>getSmoothingEnabled<span class="signature">(context)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
     
     
 </dt>
@@ -1776,7 +1855,7 @@ If no parent is given it will be added as a child of the document.body.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_system_Canvas.js.html">system/Canvas.js</a>, <a href="src_system_Canvas.js.html#sunlight-1-line-221">line 221</a>
+    <a href="src_system_Canvas.js.html">system/Canvas.js</a>, <a href="src_system_Canvas.js.html#sunlight-1-line-230">line 230</a>
     </dt>
     
 
@@ -1803,7 +1882,7 @@ If no parent is given it will be added as a child of the document.body.</p>
             
 <dt>
     <h4 class="name "
-        id="removeFromDOM"><span class="type-signature">&lt;static> </span>removeFromDOM<span class="signature">(canvas)</span><span class="type-signature"></span></h4>
+        id=".removeFromDOM"><span class="type-signature">&lt;static> </span>removeFromDOM<span class="signature">(canvas)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1895,7 +1974,7 @@ If no parent is given it will be added as a child of the document.body.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_system_Canvas.js.html">system/Canvas.js</a>, <a href="src_system_Canvas.js.html#sunlight-1-line-154">line 154</a>
+    <a href="src_system_Canvas.js.html">system/Canvas.js</a>, <a href="src_system_Canvas.js.html#sunlight-1-line-163">line 163</a>
     </dt>
     
 
@@ -1922,7 +2001,7 @@ If no parent is given it will be added as a child of the document.body.</p>
             
 <dt>
     <h4 class="name "
-        id="setBackgroundColor"><span class="type-signature">&lt;static> </span>setBackgroundColor<span class="signature">(canvas, <span class="optional">color</span>)</span><span class="type-signature"> &rarr; {HTMLCanvasElement}</span></h4>
+        id=".setBackgroundColor"><span class="type-signature">&lt;static> </span>setBackgroundColor<span class="signature">(canvas, <span class="optional">color</span>)</span><span class="type-signature"> &rarr; {HTMLCanvasElement}</span></h4>
     
     
 </dt>
@@ -2077,7 +2156,7 @@ If no parent is given it will be added as a child of the document.body.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_system_Canvas.js.html">system/Canvas.js</a>, <a href="src_system_Canvas.js.html#sunlight-1-line-45">line 45</a>
+    <a href="src_system_Canvas.js.html">system/Canvas.js</a>, <a href="src_system_Canvas.js.html#sunlight-1-line-54">line 54</a>
     </dt>
     
 
@@ -2104,7 +2183,7 @@ If no parent is given it will be added as a child of the document.body.</p>
             
 <dt>
     <h4 class="name "
-        id="setImageRenderingBicubic"><span class="type-signature">&lt;static> </span>setImageRenderingBicubic<span class="signature">(canvas)</span><span class="type-signature"> &rarr; {HTMLCanvasElement}</span></h4>
+        id=".setImageRenderingBicubic"><span class="type-signature">&lt;static> </span>setImageRenderingBicubic<span class="signature">(canvas)</span><span class="type-signature"> &rarr; {HTMLCanvasElement}</span></h4>
     
     
 </dt>
@@ -2217,7 +2296,7 @@ Note that if this doesn't given the desired result then see the CanvasUtils.setS
 
     
     <dt class="tag-source">Source -
-    <a href="src_system_Canvas.js.html">system/Canvas.js</a>, <a href="src_system_Canvas.js.html#sunlight-1-line-256">line 256</a>
+    <a href="src_system_Canvas.js.html">system/Canvas.js</a>, <a href="src_system_Canvas.js.html#sunlight-1-line-265">line 265</a>
     </dt>
     
 
@@ -2244,7 +2323,7 @@ Note that if this doesn't given the desired result then see the CanvasUtils.setS
             
 <dt>
     <h4 class="name "
-        id="setImageRenderingCrisp"><span class="type-signature">&lt;static> </span>setImageRenderingCrisp<span class="signature">(canvas)</span><span class="type-signature"> &rarr; {HTMLCanvasElement}</span></h4>
+        id=".setImageRenderingCrisp"><span class="type-signature">&lt;static> </span>setImageRenderingCrisp<span class="signature">(canvas)</span><span class="type-signature"> &rarr; {HTMLCanvasElement}</span></h4>
     
     
 </dt>
@@ -2357,7 +2436,7 @@ Note that if this doesn't given the desired result then see the setSmoothingEnab
 
     
     <dt class="tag-source">Source -
-    <a href="src_system_Canvas.js.html">system/Canvas.js</a>, <a href="src_system_Canvas.js.html#sunlight-1-line-234">line 234</a>
+    <a href="src_system_Canvas.js.html">system/Canvas.js</a>, <a href="src_system_Canvas.js.html#sunlight-1-line-243">line 243</a>
     </dt>
     
 
@@ -2384,7 +2463,7 @@ Note that if this doesn't given the desired result then see the setSmoothingEnab
             
 <dt>
     <h4 class="name "
-        id="setSmoothingEnabled"><span class="type-signature">&lt;static> </span>setSmoothingEnabled<span class="signature">(context, value)</span><span class="type-signature"> &rarr; {CanvasRenderingContext2D}</span></h4>
+        id=".setSmoothingEnabled"><span class="type-signature">&lt;static> </span>setSmoothingEnabled<span class="signature">(context, value)</span><span class="type-signature"> &rarr; {CanvasRenderingContext2D}</span></h4>
     
     
 </dt>
@@ -2523,7 +2602,7 @@ patchy on earlier browsers, especially on mobile.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_system_Canvas.js.html">system/Canvas.js</a>, <a href="src_system_Canvas.js.html#sunlight-1-line-190">line 190</a>
+    <a href="src_system_Canvas.js.html">system/Canvas.js</a>, <a href="src_system_Canvas.js.html#sunlight-1-line-199">line 199</a>
     </dt>
     
 
@@ -2550,7 +2629,7 @@ patchy on earlier browsers, especially on mobile.</p>
             
 <dt>
     <h4 class="name "
-        id="setTouchAction"><span class="type-signature">&lt;static> </span>setTouchAction<span class="signature">(canvas, <span class="optional">value</span>)</span><span class="type-signature"> &rarr; {HTMLCanvasElement}</span></h4>
+        id=".setTouchAction"><span class="type-signature">&lt;static> </span>setTouchAction<span class="signature">(canvas, <span class="optional">value</span>)</span><span class="type-signature"> &rarr; {HTMLCanvasElement}</span></h4>
     
     
 </dt>
@@ -2705,7 +2784,7 @@ patchy on earlier browsers, especially on mobile.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_system_Canvas.js.html">system/Canvas.js</a>, <a href="src_system_Canvas.js.html#sunlight-1-line-63">line 63</a>
+    <a href="src_system_Canvas.js.html">system/Canvas.js</a>, <a href="src_system_Canvas.js.html#sunlight-1-line-72">line 72</a>
     </dt>
     
 
@@ -2732,7 +2811,7 @@ patchy on earlier browsers, especially on mobile.</p>
             
 <dt>
     <h4 class="name "
-        id="setTransform"><span class="type-signature">&lt;static> </span>setTransform<span class="signature">(context, translateX, translateY, scaleX, scaleY, skewX, skewY)</span><span class="type-signature"> &rarr; {CanvasRenderingContext2D}</span></h4>
+        id=".setTransform"><span class="type-signature">&lt;static> </span>setTransform<span class="signature">(context, translateX, translateY, scaleX, scaleY, skewX, skewY)</span><span class="type-signature"> &rarr; {CanvasRenderingContext2D}</span></h4>
     
     
 </dt>
@@ -2982,7 +3061,7 @@ patchy on earlier browsers, especially on mobile.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_system_Canvas.js.html">system/Canvas.js</a>, <a href="src_system_Canvas.js.html#sunlight-1-line-169">line 169</a>
+    <a href="src_system_Canvas.js.html">system/Canvas.js</a>, <a href="src_system_Canvas.js.html#sunlight-1-line-178">line 178</a>
     </dt>
     
 
@@ -3009,7 +3088,7 @@ patchy on earlier browsers, especially on mobile.</p>
             
 <dt>
     <h4 class="name "
-        id="setUserSelect"><span class="type-signature">&lt;static> </span>setUserSelect<span class="signature">(canvas, <span class="optional">value</span>)</span><span class="type-signature"> &rarr; {HTMLCanvasElement}</span></h4>
+        id=".setUserSelect"><span class="type-signature">&lt;static> </span>setUserSelect<span class="signature">(canvas, <span class="optional">value</span>)</span><span class="type-signature"> &rarr; {HTMLCanvasElement}</span></h4>
     
     
 </dt>
@@ -3164,7 +3243,7 @@ patchy on earlier browsers, especially on mobile.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_system_Canvas.js.html">system/Canvas.js</a>, <a href="src_system_Canvas.js.html#sunlight-1-line-83">line 83</a>
+    <a href="src_system_Canvas.js.html">system/Canvas.js</a>, <a href="src_system_Canvas.js.html#sunlight-1-line-92">line 92</a>
     </dt>
     
 
@@ -3212,8 +3291,8 @@ patchy on earlier browsers, especially on mobile.</p>
 					<br />
 					
 		<span class="jsdoc-message">
-		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha10</a>
-		on Wed Jul 29 2015 14:57:52 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
+		on Mon Aug 24 2015 15:36:47 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

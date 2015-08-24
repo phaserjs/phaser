@@ -401,7 +401,7 @@
 						</li>
 						
 						<li class="class-depth-3">
-							<a href="Phaser.Physics.Arcade.html#TilemapCollision">TilemapCollision</a>
+							<a href="Phaser.Physics.Arcade.TilemapCollision.html">TilemapCollision</a>
 						</li>
 						
 						<li class="class-depth-2">
@@ -674,6 +674,10 @@
 						
 						<li class="class-depth-1">
 							<a href="PIXI.CanvasMaskManager.html">CanvasMaskManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.CanvasPool.html">CanvasPool</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -1831,9 +1835,6 @@ or you have tested performance and find it acceptable.</p>
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
@@ -1900,7 +1901,7 @@ To remove simply set this property to 'null'</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-366">line 366</a>
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-376">line 376</a>
     </dt>
     
 
@@ -2348,9 +2349,6 @@ To remove simply set this property to 'null'</p>
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
@@ -2642,8 +2640,10 @@ rather than figuring out the dimensions of the displayObject each frame you can 
     
     <div class="description">
         <p>Sets the filters for the displayObject.
-IMPORTANT: This is a webGL only feature and will be ignored by the canvas renderer.
-To remove filters simply set this property to 'null'</p>
+IMPORTANT: This is a webGL only feature and will be ignored by the Canvas renderer.</p>
+<p>To remove filters simply set this property to 'null'.</p>
+<p>You cannot have a filter and a multiply blend mode active at the same time. Setting a filter will reset
+this objects blend mode to NORMAL.</p>
     </div>
     
     
@@ -3344,9 +3344,6 @@ When it reaches zero it will call the <code>kill</code> method.</p>
 
     
 
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
     
 
     
@@ -5239,7 +5236,7 @@ This value is updated at the end of updateTransform and takes all parent transfo
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-726">line 726</a>
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-740">line 740</a>
     </dt>
     
 
@@ -5300,7 +5297,7 @@ This value is updated at the end of updateTransform and takes all parent transfo
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-744">line 744</a>
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-758">line 758</a>
     </dt>
     
 
@@ -5797,152 +5794,6 @@ because the World is the root Group from which all Game Objects descend.</p>
             
 <dt>
     <h4 class="name "
-        id="destroy"><span class="type-signature"></span>destroy<span class="signature">(<span class="optional">destroyChildren</span>)</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Destroys the Game Object. This removes it from its parent group, destroys the input, event and animation handlers if present
-and nulls its reference to <code>game</code>, freeing it up for garbage collection.</p>
-<p>If this Game Object has the Events component it will also dispatch the <code>onDestroy</code> event.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-		<th>Argument</th>
-		
-
-		
-		<th>Default</th>
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>destroyChildren</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    true
-                
-                </td>
-            
-
-            <td class="description last"><p>Should every child of this object have its destroy method called as well?</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Component.Destroy.html#destroy">Phaser.Component.Destroy#destroy</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_gameobjects_components_Destroy.js.html">gameobjects/components/Destroy.js</a>, <a href="src_gameobjects_components_Destroy.js.html#sunlight-1-line-33">line 33</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
         id="destroy"><span class="type-signature"></span>destroy<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
@@ -6186,7 +6037,7 @@ This can be quite useful if your displayObject is static / complicated and needs
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-549">line 549</a>
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-563">line 563</a>
     </dt>
     
 
@@ -9013,7 +8864,7 @@ because the World is the root Group from which all Game Objects descend.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-583">line 583</a>
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-597">line 597</a>
     </dt>
     
 
@@ -9200,7 +9051,7 @@ because the World is the root Group from which all Game Objects descend.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-597">line 597</a>
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-611">line 611</a>
     </dt>
     
 
@@ -9352,7 +9203,7 @@ Remember if this Game Object has any children you should call update on those to
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-573">line 573</a>
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-587">line 587</a>
     </dt>
     
 
@@ -9400,8 +9251,8 @@ Remember if this Game Object has any children you should call update on those to
 					<br />
 					
 		<span class="jsdoc-message">
-		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha10</a>
-		on Wed Jul 29 2015 14:57:54 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
+		on Mon Aug 24 2015 15:36:48 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

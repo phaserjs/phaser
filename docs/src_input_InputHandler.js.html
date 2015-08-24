@@ -401,7 +401,7 @@
 						</li>
 						
 						<li class="class-depth-3">
-							<a href="Phaser.Physics.Arcade.html#TilemapCollision">TilemapCollision</a>
+							<a href="Phaser.Physics.Arcade.TilemapCollision.html">TilemapCollision</a>
 						</li>
 						
 						<li class="class-depth-2">
@@ -674,6 +674,10 @@
 						
 						<li class="class-depth-1">
 							<a href="PIXI.CanvasMaskManager.html">CanvasMaskManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.CanvasPool.html">CanvasPool</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -1775,7 +1779,10 @@ Phaser.InputHandler.prototype = {
         //  Need to pass it a temp point, in case we need it again for the pixel check
         if (this.game.input.hitTest(this.sprite, pointer, this._tempPoint))
         {
-            if (fastTest === undefined) { fastTest = false; }
+            if (fastTest === undefined)
+            {
+                fastTest = false;
+            }
 
             if (!fastTest &amp;&amp; this.pixelPerfectClick)
             {
@@ -1810,7 +1817,10 @@ Phaser.InputHandler.prototype = {
         //  Need to pass it a temp point, in case we need it again for the pixel check
         if (this.game.input.hitTest(this.sprite, pointer, this._tempPoint))
         {
-            if (fastTest === undefined) { fastTest = false; }
+            if (fastTest === undefined)
+            {
+                fastTest = false;
+            }
 
             if (!fastTest &amp;&amp; this.pixelPerfectOver)
             {
@@ -1950,15 +1960,17 @@ Phaser.InputHandler.prototype = {
             return;
         }
 
-        if (this._pointerData[pointer.id].isOver === false || pointer.dirty)
-        {
-            this._pointerData[pointer.id].isOver = true;
-            this._pointerData[pointer.id].isOut = false;
-            this._pointerData[pointer.id].timeOver = this.game.time.time;
-            this._pointerData[pointer.id].x = pointer.x - this.sprite.x;
-            this._pointerData[pointer.id].y = pointer.y - this.sprite.y;
+        var data = this._pointerData[pointer.id];
 
-            if (this.useHandCursor &amp;&amp; this._pointerData[pointer.id].isDragged === false)
+        if (data.isOver === false || pointer.dirty)
+        {
+            data.isOver = true;
+            data.isOut = false;
+            data.timeOver = this.game.time.time;
+            data.x = pointer.x - this.sprite.x;
+            data.y = pointer.y - this.sprite.y;
+
+            if (this.useHandCursor &amp;&amp; data.isDragged === false)
             {
                 this.game.canvas.style.cursor = "pointer";
                 this._setHandCursor = true;
@@ -1987,11 +1999,13 @@ Phaser.InputHandler.prototype = {
             return;
         }
 
-        this._pointerData[pointer.id].isOver = false;
-        this._pointerData[pointer.id].isOut = true;
-        this._pointerData[pointer.id].timeOut = this.game.time.time;
+        var data = this._pointerData[pointer.id];
 
-        if (this.useHandCursor &amp;&amp; this._pointerData[pointer.id].isDragged === false)
+        data.isOver = false;
+        data.isOut = true;
+        data.timeOut = this.game.time.time;
+
+        if (this.useHandCursor &amp;&amp; data.isDragged === false)
         {
             this.game.canvas.style.cursor = "default";
             this._setHandCursor = false;
@@ -2019,16 +2033,18 @@ Phaser.InputHandler.prototype = {
             return;
         }
 
-        if (!this._pointerData[pointer.id].isDown &amp;&amp; this._pointerData[pointer.id].isOver)
+        var data = this._pointerData[pointer.id];
+
+        if (!data.isDown &amp;&amp; data.isOver)
         {
             if (this.pixelPerfectClick &amp;&amp; !this.checkPixel(null, null, pointer))
             {
                 return;
             }
 
-            this._pointerData[pointer.id].isDown = true;
-            this._pointerData[pointer.id].isUp = false;
-            this._pointerData[pointer.id].timeDown = this.game.time.time;
+            data.isDown = true;
+            data.isUp = false;
+            data.timeDown = this.game.time.time;
 
             if (this.sprite &amp;&amp; this.sprite.events)
             {
@@ -2069,40 +2085,39 @@ Phaser.InputHandler.prototype = {
             return;
         }
 
+        var data = this._pointerData[pointer.id];
+
         //  If was previously touched by this Pointer, check if still is AND still over this item
-        if (this._pointerData[pointer.id].isDown &amp;&amp; pointer.isUp)
+        if (data.isDown &amp;&amp; pointer.isUp)
         {
-            this._pointerData[pointer.id].isDown = false;
-            this._pointerData[pointer.id].isUp = true;
-            this._pointerData[pointer.id].timeUp = this.game.time.time;
-            this._pointerData[pointer.id].downDuration = this._pointerData[pointer.id].timeUp - this._pointerData[pointer.id].timeDown;
+            data.isDown = false;
+            data.isUp = true;
+            data.timeUp = this.game.time.time;
+            data.downDuration = data.timeUp - data.timeDown;
 
             //  Only release the InputUp signal if the pointer is still over this sprite
-            if (this.checkPointerOver(pointer))
+            var isOver = this.checkPointerOver(pointer);
+
+            if (this.sprite &amp;&amp; this.sprite.events)
             {
-                //  Release the inputUp signal and provide optional parameter if pointer is still over the sprite or not
-                if (this.sprite &amp;&amp; this.sprite.events)
+                this.sprite.events.onInputUp$dispatch(this.sprite, pointer, isOver);
+
+                //  The onInputUp event may have changed the sprite so that checkPointerOver is no longer true, so update it.
+                if (isOver)
                 {
-                    this.sprite.events.onInputUp$dispatch(this.sprite, pointer, true);
+                    isOver = this.checkPointerOver(pointer);
                 }
             }
-            else
-            {
-                //  Release the inputUp signal and provide optional parameter if pointer is still over the sprite or not
-                if (this.sprite &amp;&amp; this.sprite.events)
-                {
-                    this.sprite.events.onInputUp$dispatch(this.sprite, pointer, false);
-                }
+            
+            data.isOver = isOver;
 
-                //  Pointer outside the sprite? Reset the cursor
-                if (this.useHandCursor)
-                {
-                    this.game.canvas.style.cursor = "default";
-                    this._setHandCursor = false;
-                }
+            if (!isOver &amp;&amp; this.useHandCursor)
+            {
+                this.game.canvas.style.cursor = "default";
+                this._setHandCursor = false;
             }
 
-            //  It's possible the onInputUp event created a new Sprite that is on-top of this one, so we ought to force a Pointer update
+            //  It's possible the onInputUp event created a new Sprite that is on-top of this one, so force a Pointer update
             pointer.dirty = true;
 
             //  Stop drag
@@ -2681,8 +2696,8 @@ Phaser.InputHandler.prototype.constructor = Phaser.InputHandler;
 					<br />
 					
 		<span class="jsdoc-message">
-		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha10</a>
-		on Wed Jul 29 2015 14:57:51 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
+		on Mon Aug 24 2015 15:36:45 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
