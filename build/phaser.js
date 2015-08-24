@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.4.3 "Coramen" - Built: Fri Aug 21 2015 16:23:04
+* v2.4.3 "Coramen" - Built: Mon Aug 24 2015 13:54:08
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -14090,8 +14090,13 @@ Object.defineProperty(PIXI.DisplayObject.prototype, 'mask', {
 
 /**
  * Sets the filters for the displayObject.
- * * IMPORTANT: This is a webGL only feature and will be ignored by the canvas renderer.
- * To remove filters simply set this property to 'null'
+ * IMPORTANT: This is a webGL only feature and will be ignored by the Canvas renderer.
+ * 
+ * To remove filters simply set this property to 'null'.
+ * 
+ * You cannot have a filter and a multiply blend mode active at the same time. Setting a filter will reset
+ * this objects blend mode to NORMAL.
+ * 
  * @property filters
  * @type Array(Filter)
  */
@@ -14123,6 +14128,11 @@ Object.defineProperty(PIXI.DisplayObject.prototype, 'filters', {
         }
 
         this._filters = value;
+
+        if (this.blendMode && this.blendMode === PIXI.blendModes.MULTIPLY)
+        {
+            this.blendMode = PIXI.blendModes.NORMAL;
+        }
     }
 });
 
@@ -15127,6 +15137,8 @@ PIXI.Sprite = function(texture)
     /**
      * The blend mode to be applied to the sprite. Set to PIXI.blendModes.NORMAL to remove any blend mode.
      *
+     * Warning: You cannot have a blend mode and a filter active on the same Sprite. Doing so will render the sprite invisible.
+     *
      * @property blendMode
      * @type Number
      * @default PIXI.blendModes.NORMAL;
@@ -15448,8 +15460,8 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession, matrix)
         if (renderSession.roundPixels)
         {
             renderSession.context.setTransform(wt.a, wt.b, wt.c, wt.d, (wt.tx * renderSession.resolution) | 0, (wt.ty * renderSession.resolution) | 0);
-            dx = dx | 0;
-            dy = dy | 0;
+            dx |= 0;
+            dy |= 0;
         }
         else
         {
@@ -23824,12 +23836,7 @@ PIXI.TilingSprite.prototype._renderCanvas = function(renderSession)
     var wt = this.worldTransform;
     var resolution = renderSession.resolution;
 
-    context.setTransform(wt.a * resolution,
-                         wt.b * resolution,
-                         wt.c * resolution,
-                         wt.d * resolution,
-                         wt.tx * resolution,
-                         wt.ty * resolution);
+    context.setTransform(wt.a * resolution, wt.b * resolution, wt.c * resolution, wt.d * resolution, wt.tx * resolution, wt.ty * resolution);
 
     if (this.refreshTexture)
     {
@@ -23874,10 +23881,10 @@ PIXI.TilingSprite.prototype._renderCanvas = function(renderSession)
     //  Allow for pixel rounding
     if (renderSession.roundPixels)
     {
-        tx | 0;
-        ty | 0;
-        tw | 0;
-        th | 0;
+        tx |= 0;
+        ty |= 0;
+        tw |= 0;
+        th |= 0;
     }
 
     context.fillRect(tx, ty, tw, th);
@@ -24178,7 +24185,7 @@ var Phaser = Phaser || {
     * @constant
     * @type {string}
     */
-    VERSION: '2.4.3-RC1',
+    VERSION: '2.4.3',
 
     /**
     * An array of Phaser game instances.
@@ -61595,14 +61602,14 @@ Phaser.Canvas = {
             var canvas = document.createElement('canvas');
         }
 
-        canvas.width = width;
-        canvas.height = height;
-
         if (typeof id === 'string' && id !== '')
         {
             canvas.id = id;
-            canvas.style.display = 'block';
         }
+
+        canvas.width = width;
+        canvas.height = height;
+        canvas.style.display = 'block';
 
         return canvas;
 
@@ -70448,6 +70455,10 @@ Phaser.Cache.prototype = {
     */
     addSpriteSheet: function (key, url, data, frameWidth, frameHeight, frameMax, margin, spacing) {
 
+        if (frameMax === undefined) { frameMax = -1; }
+        if (margin === undefined) { margin = 0; }
+        if (spacing === undefined) { spacing = 0; }
+
         var obj = {
             key: key,
             url: url,
@@ -78282,7 +78293,7 @@ Phaser.ArrayUtils = {
     * Fetch a random entry from the given array.
     *
     * Will return null if there are no array items that fall within the specified range
-    * or if there is no item for the randomly choosen index.
+    * or if there is no item for the randomly chosen index.
     *
     * @method
     * @param {any[]} objects - An array of objects.
@@ -78292,14 +78303,12 @@ Phaser.ArrayUtils = {
     */
     getRandomItem: function (objects, startIndex, length) {
 
-        if (objects == null) { // undefined or null
-            return null;
-        }
-
+        if (objects === null) { return null; }
         if (startIndex === undefined) { startIndex = 0; }
         if (length === undefined) { length = objects.length; }
 
         var randomIndex = startIndex + Math.floor(Math.random() * length);
+
         return objects[randomIndex] === undefined ? null : objects[randomIndex];
 
     },
@@ -78308,7 +78317,7 @@ Phaser.ArrayUtils = {
     * Removes a random object from the given array and returns it.
     *
     * Will return null if there are no array items that fall within the specified range
-    * or if there is no item for the randomly choosen index.
+    * or if there is no item for the randomly chosen index.
     *
     * @method
     * @param {any[]} objects - An array of objects.
@@ -78394,7 +78403,7 @@ Phaser.ArrayUtils = {
     *
     * @method
     * @param {Array<any[]>} matrix - The array to rotate; this matrix _may_ be altered.
-    * @param {number|string} direction - The amount to rotate: the roation in degrees (90, -90, 270, -270, 180) or a string command ('rotateLeft', 'rotateRight' or 'rotate180').
+    * @param {number|string} direction - The amount to rotate: the rotation in degrees (90, -90, 270, -270, 180) or a string command ('rotateLeft', 'rotateRight' or 'rotate180').
     * @return {Array<any[]>} The rotated matrix. The source matrix should be discarded for the returned matrix.
     */
     rotateMatrix: function (matrix, direction) {
@@ -91192,7 +91201,7 @@ Phaser.Tilemap.prototype = {
             }
         }
 
-        Phaser.Utils.shuffle(indexes);
+        Phaser.ArrayUtils.shuffle(indexes);
 
         for (var i = 1; i < this._results.length; i++)
         {
@@ -92626,8 +92635,21 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, "collisionHeight", {
 * Phaser.TilemapParser parses data objects from Phaser.Loader that need more preparation before they can be inserted into a Tilemap.
 *
 * @class Phaser.TilemapParser
+* @static
 */
 Phaser.TilemapParser = {
+
+    /**
+     * When scanning the Tiled map data the TilemapParser can either insert a null value (true) or 
+     * a Phaser.Tile instance with an index of -1 (false, the default). Depending on your game type
+     * depends how this should be configured. If you've a large sparsely populated map and the tile
+     * data doesn't need to change then setting this value to `true` will help with memory consumption.
+     * However if your map is small, or you need to update the tiles (perhaps the map dynamically changes
+     * during the game) then leave the default value set.
+     *
+     * @type {boolean}
+     */
+    INSERT_NULL: false,
 
     /**
     * Parse tilemap data from the cache and creates a Tilemap object.
@@ -92835,17 +92857,19 @@ Phaser.TilemapParser = {
                 continue;
             }
 
+            var curl = json.layers[i];
+
             var layer = {
 
-                name: json.layers[i].name,
-                x: json.layers[i].x,
-                y: json.layers[i].y,
-                width: json.layers[i].width,
-                height: json.layers[i].height,
-                widthInPixels: json.layers[i].width * json.tilewidth,
-                heightInPixels: json.layers[i].height * json.tileheight,
-                alpha: json.layers[i].opacity,
-                visible: json.layers[i].visible,
+                name: curl.name,
+                x: curl.x,
+                y: curl.y,
+                width: curl.width,
+                height: curl.height,
+                widthInPixels: curl.width * json.tilewidth,
+                heightInPixels: curl.height * json.tileheight,
+                alpha: curl.opacity,
+                visible: curl.visible,
                 properties: {},
                 indexes: [],
                 callbacks: [],
@@ -92853,9 +92877,9 @@ Phaser.TilemapParser = {
 
             };
 
-            if (json.layers[i].properties)
+            if (curl.properties)
             {
-                layer.properties = json.layers[i].properties;
+                layer.properties = curl.properties;
             }
 
             var x = 0;
@@ -92869,11 +92893,11 @@ Phaser.TilemapParser = {
             //  If the map contains multiple tilesets then the indexes are relative to that which the set starts from.
             //  Need to set which tileset in the cache = which tileset in the JSON, if you do this manually it means you can use the same map data but a new tileset.
 
-            for (var t = 0, len = json.layers[i].data.length; t < len; t++)
+            for (var t = 0, len = curl.data.length; t < len; t++)
             {
                 rotation = 0;
                 flipped = false;
-                gid = json.layers[i].data[t];
+                gid = curl.data[t];
 
                 //  If true the current tile is flipped or rotated (Tiled TMX format) 
                 if (gid > 0x20000000)
@@ -92940,12 +92964,19 @@ Phaser.TilemapParser = {
                 }
                 else
                 {
-                    row.push(new Phaser.Tile(layer, -1, x, output.length, json.tilewidth, json.tileheight));
+                    if (Phaser.TilemapParser.INSERT_NULL)
+                    {
+                        row.push(null);
+                    }
+                    else
+                    {
+                        row.push(new Phaser.Tile(layer, -1, x, output.length, json.tilewidth, json.tileheight));
+                    }
                 }
 
                 x++;
 
-                if (x === json.layers[i].width)
+                if (x === curl.width)
                 {
                     output.push(row);
                     x = 0;
@@ -92971,21 +93002,23 @@ Phaser.TilemapParser = {
                 continue;
             }
 
+            var curi = json.layers[i];
+
             var image = {
 
-                name: json.layers[i].name,
-                image: json.layers[i].image,
-                x: json.layers[i].x,
-                y: json.layers[i].y,
-                alpha: json.layers[i].opacity,
-                visible: json.layers[i].visible,
+                name: curi.name,
+                image: curi.image,
+                x: curi.x,
+                y: curi.y,
+                alpha: curi.opacity,
+                visible: curi.visible,
                 properties: {}
 
             };
 
-            if (json.layers[i].properties)
+            if (curi.properties)
             {
-                image.properties = json.layers[i].properties;
+                image.properties = curi.properties;
             }
 
             images.push(image);
@@ -93064,95 +93097,97 @@ Phaser.TilemapParser = {
                 continue;
             }
 
-            objects[json.layers[i].name] = [];
-            collision[json.layers[i].name] = [];
+            var curo = json.layers[i];
 
-            for (var v = 0, len = json.layers[i].objects.length; v < len; v++)
+            objects[curo.name] = [];
+            collision[curo.name] = [];
+
+            for (var v = 0, len = curo.objects.length; v < len; v++)
             {
                 //  Object Tiles
-                if (json.layers[i].objects[v].gid)
+                if (curo.objects[v].gid)
                 {
                     var object = {
 
-                        gid: json.layers[i].objects[v].gid,
-                        name: json.layers[i].objects[v].name,
-                        type: json.layers[i].objects[v].hasOwnProperty("type") ? json.layers[i].objects[v].type : "",
-                        x: json.layers[i].objects[v].x,
-                        y: json.layers[i].objects[v].y,
-                        visible: json.layers[i].objects[v].visible,
-                        properties: json.layers[i].objects[v].properties
+                        gid: curo.objects[v].gid,
+                        name: curo.objects[v].name,
+                        type: curo.objects[v].hasOwnProperty("type") ? curo.objects[v].type : "",
+                        x: curo.objects[v].x,
+                        y: curo.objects[v].y,
+                        visible: curo.objects[v].visible,
+                        properties: curo.objects[v].properties
 
                     };
 
-                    if (json.layers[i].objects[v].rotation)
+                    if (curo.objects[v].rotation)
                     {
-                        object.rotation = json.layers[i].objects[v].rotation;
+                        object.rotation = curo.objects[v].rotation;
                     }
 
-                    objects[json.layers[i].name].push(object);
+                    objects[curo.name].push(object);
                 }
-                else if (json.layers[i].objects[v].polyline)
+                else if (curo.objects[v].polyline)
                 {
                     var object = {
 
-                        name: json.layers[i].objects[v].name,
-                        type: json.layers[i].objects[v].type,
-                        x: json.layers[i].objects[v].x,
-                        y: json.layers[i].objects[v].y,
-                        width: json.layers[i].objects[v].width,
-                        height: json.layers[i].objects[v].height,
-                        visible: json.layers[i].objects[v].visible,
-                        properties: json.layers[i].objects[v].properties
+                        name: curo.objects[v].name,
+                        type: curo.objects[v].type,
+                        x: curo.objects[v].x,
+                        y: curo.objects[v].y,
+                        width: curo.objects[v].width,
+                        height: curo.objects[v].height,
+                        visible: curo.objects[v].visible,
+                        properties: curo.objects[v].properties
 
                     };
 
-                    if (json.layers[i].objects[v].rotation)
+                    if (curo.objects[v].rotation)
                     {
-                        object.rotation = json.layers[i].objects[v].rotation;
+                        object.rotation = curo.objects[v].rotation;
                     }
 
                     object.polyline = [];
 
                     //  Parse the polyline into an array
-                    for (var p = 0; p < json.layers[i].objects[v].polyline.length; p++)
+                    for (var p = 0; p < curo.objects[v].polyline.length; p++)
                     {
-                        object.polyline.push([ json.layers[i].objects[v].polyline[p].x, json.layers[i].objects[v].polyline[p].y ]);
+                        object.polyline.push([ curo.objects[v].polyline[p].x, curo.objects[v].polyline[p].y ]);
                     }
 
-                    collision[json.layers[i].name].push(object);
-                    objects[json.layers[i].name].push(object);
+                    collision[curo.name].push(object);
+                    objects[curo.name].push(object);
                 }
                 // polygon
-                else if (json.layers[i].objects[v].polygon)
+                else if (curo.objects[v].polygon)
                 {
-                    var object = slice(json.layers[i].objects[v],
+                    var object = slice(curo.objects[v],
                                        ["name", "type", "x", "y", "visible", "rotation", "properties" ]);
 
                     //  Parse the polygon into an array
                     object.polygon = [];
 
-                    for (var p = 0; p < json.layers[i].objects[v].polygon.length; p++)
+                    for (var p = 0; p < curo.objects[v].polygon.length; p++)
                     {
-                        object.polygon.push([ json.layers[i].objects[v].polygon[p].x, json.layers[i].objects[v].polygon[p].y ]);
+                        object.polygon.push([ curo.objects[v].polygon[p].x, curo.objects[v].polygon[p].y ]);
                     }
 
-                    objects[json.layers[i].name].push(object);
+                    objects[curo.name].push(object);
 
                 }
                 // ellipse
-                else if (json.layers[i].objects[v].ellipse)
+                else if (curo.objects[v].ellipse)
                 {
-                    var object = slice(json.layers[i].objects[v],
+                    var object = slice(curo.objects[v],
                                        ["name", "type", "ellipse", "x", "y", "width", "height", "visible", "rotation", "properties" ]);
-                    objects[json.layers[i].name].push(object);
+                    objects[curo.name].push(object);
                 }
                 // otherwise it's a rectangle
                 else
                 {
-                    var object = slice(json.layers[i].objects[v],
+                    var object = slice(curo.objects[v],
                                        ["name", "type", "x", "y", "width", "height", "visible", "rotation", "properties" ]);
                     object.rectangle = true;
-                    objects[json.layers[i].name].push(object);
+                    objects[curo.name].push(object);
                 }
             }
         }
@@ -93229,7 +93264,7 @@ Phaser.TilemapParser = {
                 {
                     tile = row[k];
 
-                    if (tile.index < 0)
+                    if (tile === null || tile.index < 0)
                     {
                         continue;
                     }

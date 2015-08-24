@@ -1,7 +1,7 @@
 /// <reference path="pixi.d.ts" />
 /// <reference path="p2.d.ts" />
 
-// Type definitions for Phaser 2.4.3 2015-Aug-20
+// Type definitions for Phaser 2.4.3 2015-Aug-24
 // Project: https://github.com/photonstorm/phaser
 
 declare class Phaser {
@@ -4833,6 +4833,8 @@ declare module Phaser {
     }
 
     class TilemapParser {
+
+        static INSERT_NULL: boolean;
 
         static getEmptyData(tileWidth?: number, tileHeight?: number, width?: number, height?: number): any;
         static parse(game: Phaser.Game, key: string, tileWidth?: number, tileHeight?: number, width?: number, height?: number): any;

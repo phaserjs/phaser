@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.4.3 "Coramen" - Built: Fri Aug 21 2015 16:23:33
+* v2.4.3 "Coramen" - Built: Mon Aug 24 2015 13:54:37
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -477,8 +477,13 @@ Object.defineProperty(PIXI.DisplayObject.prototype, 'mask', {
 
 /**
  * Sets the filters for the displayObject.
- * * IMPORTANT: This is a webGL only feature and will be ignored by the canvas renderer.
- * To remove filters simply set this property to 'null'
+ * IMPORTANT: This is a webGL only feature and will be ignored by the Canvas renderer.
+ * 
+ * To remove filters simply set this property to 'null'.
+ * 
+ * You cannot have a filter and a multiply blend mode active at the same time. Setting a filter will reset
+ * this objects blend mode to NORMAL.
+ * 
  * @property filters
  * @type Array(Filter)
  */
@@ -510,6 +515,11 @@ Object.defineProperty(PIXI.DisplayObject.prototype, 'filters', {
         }
 
         this._filters = value;
+
+        if (this.blendMode && this.blendMode === PIXI.blendModes.MULTIPLY)
+        {
+            this.blendMode = PIXI.blendModes.NORMAL;
+        }
     }
 });
 
@@ -1514,6 +1524,8 @@ PIXI.Sprite = function(texture)
     /**
      * The blend mode to be applied to the sprite. Set to PIXI.blendModes.NORMAL to remove any blend mode.
      *
+     * Warning: You cannot have a blend mode and a filter active on the same Sprite. Doing so will render the sprite invisible.
+     *
      * @property blendMode
      * @type Number
      * @default PIXI.blendModes.NORMAL;
@@ -1835,8 +1847,8 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession, matrix)
         if (renderSession.roundPixels)
         {
             renderSession.context.setTransform(wt.a, wt.b, wt.c, wt.d, (wt.tx * renderSession.resolution) | 0, (wt.ty * renderSession.resolution) | 0);
-            dx = dx | 0;
-            dy = dy | 0;
+            dx |= 0;
+            dy |= 0;
         }
         else
         {
@@ -9369,7 +9381,7 @@ var Phaser = Phaser || {
     * @constant
     * @type {string}
     */
-    VERSION: '2.4.3-RC1',
+    VERSION: '2.4.3',
 
     /**
     * An array of Phaser game instances.
@@ -36956,14 +36968,14 @@ Phaser.Canvas = {
             var canvas = document.createElement('canvas');
         }
 
-        canvas.width = width;
-        canvas.height = height;
-
         if (typeof id === 'string' && id !== '')
         {
             canvas.id = id;
-            canvas.style.display = 'block';
         }
+
+        canvas.width = width;
+        canvas.height = height;
+        canvas.style.display = 'block';
 
         return canvas;
 
@@ -43269,6 +43281,10 @@ Phaser.Cache.prototype = {
     */
     addSpriteSheet: function (key, url, data, frameWidth, frameHeight, frameMax, margin, spacing) {
 
+        if (frameMax === undefined) { frameMax = -1; }
+        if (margin === undefined) { margin = 0; }
+        if (spacing === undefined) { spacing = 0; }
+
         var obj = {
             key: key,
             url: url,
@@ -48241,7 +48257,7 @@ Phaser.ArrayUtils = {
     * Fetch a random entry from the given array.
     *
     * Will return null if there are no array items that fall within the specified range
-    * or if there is no item for the randomly choosen index.
+    * or if there is no item for the randomly chosen index.
     *
     * @method
     * @param {any[]} objects - An array of objects.
@@ -48251,14 +48267,12 @@ Phaser.ArrayUtils = {
     */
     getRandomItem: function (objects, startIndex, length) {
 
-        if (objects == null) { // undefined or null
-            return null;
-        }
-
+        if (objects === null) { return null; }
         if (startIndex === undefined) { startIndex = 0; }
         if (length === undefined) { length = objects.length; }
 
         var randomIndex = startIndex + Math.floor(Math.random() * length);
+
         return objects[randomIndex] === undefined ? null : objects[randomIndex];
 
     },
@@ -48267,7 +48281,7 @@ Phaser.ArrayUtils = {
     * Removes a random object from the given array and returns it.
     *
     * Will return null if there are no array items that fall within the specified range
-    * or if there is no item for the randomly choosen index.
+    * or if there is no item for the randomly chosen index.
     *
     * @method
     * @param {any[]} objects - An array of objects.
@@ -48353,7 +48367,7 @@ Phaser.ArrayUtils = {
     *
     * @method
     * @param {Array<any[]>} matrix - The array to rotate; this matrix _may_ be altered.
-    * @param {number|string} direction - The amount to rotate: the roation in degrees (90, -90, 270, -270, 180) or a string command ('rotateLeft', 'rotateRight' or 'rotate180').
+    * @param {number|string} direction - The amount to rotate: the rotation in degrees (90, -90, 270, -270, 180) or a string command ('rotateLeft', 'rotateRight' or 'rotate180').
     * @return {Array<any[]>} The rotated matrix. The source matrix should be discarded for the returned matrix.
     */
     rotateMatrix: function (matrix, direction) {
