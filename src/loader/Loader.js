@@ -1278,15 +1278,15 @@ Phaser.Loader.prototype = {
     * 
     * If the textureURL isn't specified then the Loader will take the key and create a filename from that.
     * For example if the key is "megaFont" and textureURL is null then the Loader will set the URL to be "megaFont.png".
-    * The same is true for the xmlURL. If xmlURL isn't specified and no xmlData has been provided then the Loader will
-    * set the xmlURL to be the key. For example if the key is "megaFont" the xmlURL will be set to "megaFont.xml".
+    * The same is true for the atlasURL. If atlasURL isn't specified and no atlasData has been provided then the Loader will
+    * set the atlasURL to be the key. For example if the key is "megaFont" the atlasURL will be set to "megaFont.xml".
     * 
     * If you do not desire this action then provide URLs and / or a data object.
     *
     * @method Phaser.Loader#bitmapFont
     * @param {string} key - Unique asset key of the bitmap font.
     * @param {string} textureURL -  URL of the Bitmap Font texture file. If undefined or `null` the url will be set to `<key>.png`, i.e. if `key` was "megaFont" then the URL will be "megaFont.png".
-    * @param {string} atlasURL - URL of the Bitmap Font atlas file (xml/json).
+    * @param {string} atlasURL - URL of the Bitmap Font atlas file (xml/json). If undefined or `null` AND `atlasData` is null, the url will be set to `<key>.xml`, i.e. if `key` was "megaFont" then the URL will be "megaFont.xml".
     * @param {object} atlasData - An optional Bitmap Font atlas in string form (stringified xml/json).
     * @param {number} [xSpacing=0] - If you'd like to add additional horizontal spacing between the characters then set the pixel value here.
     * @param {number} [ySpacing=0] - If you'd like to add additional vertical spacing between the lines then set the pixel value here.
@@ -1301,6 +1301,12 @@ Phaser.Loader.prototype = {
 
         if (atlasURL === undefined) { atlasURL = null; }
         if (atlasData === undefined) { atlasData = null; }
+
+        if (atlasURL === null && atlasData === null)
+        {
+            atlasURL = key + '.xml';
+        }
+
         if (xSpacing === undefined) { xSpacing = 0; }
         if (ySpacing === undefined) { ySpacing = 0; }
 
@@ -1336,6 +1342,7 @@ Phaser.Loader.prototype = {
         }
 
         return this;
+
     },
 
     /**

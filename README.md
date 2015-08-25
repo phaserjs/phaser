@@ -265,6 +265,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 
 ### Bug Fixes
 
+* Loader.bitmapFont wouldn't automatically set the `atlasURL` value if just the key was given.
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
