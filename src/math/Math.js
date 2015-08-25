@@ -70,7 +70,7 @@ Phaser.Math = {
     *
     * @param {number} val
     * @param {number} [epsilon=(small value)]
-    * @return {boolean} ceiling(val-epsilon)
+    * @return {number} ceiling(val-epsilon)
     */
     fuzzyCeil: function (val, epsilon) {
         if (epsilon === undefined) { epsilon = 0.0001; }
@@ -82,7 +82,7 @@ Phaser.Math = {
     *
     * @param {number} val
     * @param {number} [epsilon=(small value)]
-    * @return {boolean} floor(val-epsilon)
+    * @return {number} floor(val+epsilon)
     */
     fuzzyFloor: function (val, epsilon) {
         if (epsilon === undefined) { epsilon = 0.0001; }
