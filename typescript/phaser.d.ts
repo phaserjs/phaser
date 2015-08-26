@@ -1,7 +1,7 @@
 /// <reference path="pixi.d.ts" />
 /// <reference path="p2.d.ts" />
 
-// Type definitions for Phaser 2.4.3 2015-Aug-24
+// Type definitions for Phaser 2.4.4+ 2015-Aug-25
 // Project: https://github.com/photonstorm/phaser
 
 declare class Phaser {
@@ -250,6 +250,7 @@ declare module Phaser {
         copy(source?: any, x?: number, y?: number, width?: number, height?: number, tx?: number, ty?: number, newWidth?: number, newHeight?: number, rotate?: number, anchorX?: number, anchorY?: number, scaleX?: number, scaleY?: number, alpha?: number, blendMode?: number, roundPx?: boolean): Phaser.BitmapData;
         copyPixels(source: any, area: Phaser.Rectangle, x: number, y: number, alpha?: number): void;
         copyRect(source: any, area: Phaser.Rectangle, x?: number, y?: number, alpha?: number, blendMode?: number, roundPx?: boolean): Phaser.BitmapData;
+        destroy(): void;
         draw(source: any, x?: number, y?: number, width?: number, height?: number, blendMode?: number, roundPx?: boolean): Phaser.BitmapData;
         drawFull(parent: any, blendMode?: number, roundPx?: boolean): Phaser.BitmapData;
         drawGroup(group: Phaser.Group, blendMode?: number, roundPx?: boolean): Phaser.BitmapData;
@@ -582,7 +583,7 @@ declare module Phaser {
     class Canvas {
 
         static addToDOM(canvas: HTMLCanvasElement, parent: HTMLElement, overflowHidden?: boolean): HTMLCanvasElement;
-        static create(width?: number, height?: number, id?: string): HTMLCanvasElement;
+        static create(parent: HTMLDivElement, width?: number, height?: number, id?: string, skipPool?: boolean): HTMLCanvasElement;
         static getSmoothngEnabled(context: CanvasRenderingContext2D): boolean;
         static removeFromDOM(canvas: HTMLCanvasElement): void;
         static setBackgroundColor(canvas: HTMLCanvasElement, color: string): HTMLCanvasElement;
@@ -4817,6 +4818,7 @@ declare module Phaser {
         type: number;
         wrap: boolean;
 
+        destroy(): void;
         getRayCastTiles(line: Phaser.Line, stepRate?: number, collides?: boolean, interestingFace?: boolean): Phaser.Tile[];
         getTiles(x: number, y: number, width: number, height: number, collides?: boolean, interestingFace?: boolean): Phaser.Tile[];
         getTileX(x: number): number;
@@ -5208,6 +5210,7 @@ declare module Phaser {
             box2dBody(body: Phaser.Sprite, color?: string): void;
             box2dWorld(): void;
             cameraInfo(camera: Phaser.Camera, x: number, y: number, color?: string): void;
+            destroy(): void;
             geom(object: any, color?: string, fiiled?: boolean, forceType?: number): void;
             inputInfo(x: number, y: number, color?: string): void;
             lineInfo(line: Phaser.Line, x: number, y: number, color?: string): void;
