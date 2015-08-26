@@ -2012,7 +2012,8 @@ Phaser.Loader.prototype = {
 
     /**
     * Transforms the asset URL.
-    * The default implementation prepends the baseURL if the url doesn't being with http or //
+    * 
+    * The default implementation prepends the baseURL if the url doesn't begin with http or //
     *
     * @method Phaser.Loader#transformUrl
     * @protected
