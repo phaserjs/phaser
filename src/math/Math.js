@@ -70,7 +70,7 @@ Phaser.Math = {
     *
     * @param {number} val
     * @param {number} [epsilon=(small value)]
-    * @return {boolean} ceiling(val-epsilon)
+    * @return {number} ceiling(val-epsilon)
     */
     fuzzyCeil: function (val, epsilon) {
         if (epsilon === undefined) { epsilon = 0.0001; }
@@ -82,7 +82,7 @@ Phaser.Math = {
     *
     * @param {number} val
     * @param {number} [epsilon=(small value)]
-    * @return {boolean} floor(val-epsilon)
+    * @return {number} floor(val+epsilon)
     */
     fuzzyFloor: function (val, epsilon) {
         if (epsilon === undefined) { epsilon = 0.0001; }
@@ -98,13 +98,14 @@ Phaser.Math = {
     */
     average: function () {
 
-        var sum = 0;
+        var sum = 0,
+            argumentsLength = arguments.length;
 
-        for (var i = 0; i < arguments.length; i++) {
+        for (var i = 0; i < argumentsLength; i++) {
             sum += (+arguments[i]);
         }
 
-        return sum / arguments.length;
+        return sum / argumentsLength;
 
     },
 
@@ -146,7 +147,7 @@ Phaser.Math = {
     /**
     * Snap a value to nearest grid slice, using floor.
     *
-    * Example: if you have an interval gap of 5 and a position of 12... you will snap to 10. 
+    * Example: if you have an interval gap of 5 and a position of 12... you will snap to 10.
     * As will 14 snap to 10... but 16 will snap to 15.
     *
     * @method Phaser.Math#snapToFloor
