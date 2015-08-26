@@ -27,66 +27,83 @@ Phaser.Math = {
     * Two number are fuzzyEqual if their difference is less than epsilon.
     *
     * @method Phaser.Math#fuzzyEqual
-    * @param {number} a
-    * @param {number} b
-    * @param {number} [epsilon=(small value)]
+    * @param {number} a - The first number to compare.
+    * @param {number} b - The second number to compare.
+    * @param {number} [epsilon=0.0001] - The epsilon (a small value used in the calculation)
     * @return {boolean} True if |a-b|<epsilon
     */
     fuzzyEqual: function (a, b, epsilon) {
+
         if (epsilon === undefined) { epsilon = 0.0001; }
+
         return Math.abs(a - b) < epsilon;
+
     },
 
     /**
     * `a` is fuzzyLessThan `b` if it is less than b + epsilon.
     *
     * @method Phaser.Math#fuzzyLessThan
-    * @param {number} a
-    * @param {number} b
-    * @param {number} [epsilon=(small value)]
+    * @param {number} a - The first number to compare.
+    * @param {number} b - The second number to compare.
+    * @param {number} [epsilon=0.0001] - The epsilon (a small value used in the calculation)
     * @return {boolean} True if a<b+epsilon
     */
     fuzzyLessThan: function (a, b, epsilon) {
+
         if (epsilon === undefined) { epsilon = 0.0001; }
+
         return a < b + epsilon;
+
     },
 
     /**
     * `a` is fuzzyGreaterThan `b` if it is more than b - epsilon.
     *
     * @method Phaser.Math#fuzzyGreaterThan
-    * @param {number} a
-    * @param {number} b
-    * @param {number} [epsilon=(small value)]
+    * @param {number} a - The first number to compare.
+    * @param {number} b - The second number to compare.
+    * @param {number} [epsilon=0.0001] - The epsilon (a small value used in the calculation)
     * @return {boolean} True if a>b+epsilon
     */
     fuzzyGreaterThan: function (a, b, epsilon) {
+
         if (epsilon === undefined) { epsilon = 0.0001; }
+
         return a > b - epsilon;
+
     },
 
     /**
+    * Applies a fuzzy ceil to the given value.
+    * 
     * @method Phaser.Math#fuzzyCeil
-    *
-    * @param {number} val
-    * @param {number} [epsilon=(small value)]
+    * @param {number} val - The value to ceil.
+    * @param {number} [epsilon=0.0001] - The epsilon (a small value used in the calculation)
     * @return {number} ceiling(val-epsilon)
     */
     fuzzyCeil: function (val, epsilon) {
+
         if (epsilon === undefined) { epsilon = 0.0001; }
+
         return Math.ceil(val - epsilon);
+
     },
 
     /**
+    * Applies a fuzzy floor to the given value.
+    * 
     * @method Phaser.Math#fuzzyFloor
-    *
-    * @param {number} val
-    * @param {number} [epsilon=(small value)]
+    * @param {number} val - The value to floor.
+    * @param {number} [epsilon=0.0001] - The epsilon (a small value used in the calculation)
     * @return {number} floor(val+epsilon)
     */
     fuzzyFloor: function (val, epsilon) {
+
         if (epsilon === undefined) { epsilon = 0.0001; }
+
         return Math.floor(val + epsilon);
+
     },
 
     /**
@@ -98,14 +115,15 @@ Phaser.Math = {
     */
     average: function () {
 
-        var sum = 0,
-            argumentsLength = arguments.length;
+        var sum = 0;
+        var len = arguments.length;
 
-        for (var i = 0; i < argumentsLength; i++) {
+        for (var i = 0; i < len; i++)
+        {
             sum += (+arguments[i]);
         }
 
-        return sum / argumentsLength;
+        return sum / len;
 
     },
 

@@ -260,8 +260,9 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 
 ### Updates
 
-* TypeScript definitions fixes and updates (thanks @clark-stevenson)
-* JSDoc typo fixes (thanks )
+* TypeScript definitions fixes and updates (thanks @clark-stevenson @milkey-mouse)
+* JSDoc typo fixes (thanks @rwrountree)
+* Math.average has been optimized (thanks @rwrountree #2025)
 
 ### Bug Fixes
 
