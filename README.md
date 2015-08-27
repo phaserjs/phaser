@@ -258,11 +258,14 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 
 ### New Features
 
+* Emitter.emitParticle now has 4 new optional arguments: `x`, `y`, `key` and `frame`. These allow you to override whatever the Emitter default values may be and emit the particle from the given coordinates and with a new texture.
+
 ### Updates
 
-* TypeScript definitions fixes and updates (thanks @clark-stevenson @milkey-mouse)
+* TypeScript definitions fixes and updates (thanks @clark-stevenson @milkey-mouse @timotei @qdrj)
 * JSDoc typo fixes (thanks @rwrountree)
 * Math.average has been optimized (thanks @rwrountree #2025)
+* Change splice.call(arguments, ..) to use slice instead (thanks @pnstickne  #2034 #2032)
 
 ### Bug Fixes
 
