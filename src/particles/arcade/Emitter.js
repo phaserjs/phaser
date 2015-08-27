@@ -561,6 +561,8 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function (x, y, key, fr
         return false;
     }
 
+    var rnd = this.game.rnd;
+
     if (key !== undefined && frame !== undefined)
     {
         particle.loadTexture(key, frame);
@@ -569,9 +571,6 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function (x, y, key, fr
     {
         particle.loadTexture(key);
     }
-
-    var rndInt = this.game.rnd.between;
-    var rndFloat = this.game.rnd.realInRange;
 
     var emitX = this.emitX;
     var emitY = this.emitY;
@@ -582,7 +581,7 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function (x, y, key, fr
     }
     else if (this.width > 1)
     {
-        emitX = rndInt(this.left, this.right);
+        emitX = rnd.between(this.left, this.right);
     }
 
     if (y !== null)
@@ -591,7 +590,7 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function (x, y, key, fr
     }
     else if (this.height > 1)
     {
-        emitY = rndInt(this.top, this.bottom);
+        emitY = rnd.between(this.top, this.bottom);
     }
 
     particle.reset(this.emitX, this.emitY);
@@ -614,11 +613,11 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function (x, y, key, fr
     }
     else if (this.minParticleScale !== 1 || this.maxParticleScale !== 1)
     {
-        particle.scale.set(rndFloat(this.minParticleScale, this.maxParticleScale));
+        particle.scale.set(rnd.float(this.minParticleScale, this.maxParticleScale));
     }
     else if ((this._minParticleScale.x !== this._maxParticleScale.x) || (this._minParticleScale.y !== this._maxParticleScale.y))
     {
-        particle.scale.set(rndFloat(this._minParticleScale.x, this._maxParticleScale.x), rndFloat(this._minParticleScale.y, this._maxParticleScale.y));
+        particle.scale.set(rnd.float(this._minParticleScale.x, this._maxParticleScale.x), rnd.float(this._minParticleScale.y, this._maxParticleScale.y));
     }
 
     if (frame === undefined)
@@ -639,7 +638,7 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function (x, y, key, fr
     }
     else
     {
-        particle.alpha = rndFloat(this.minParticleAlpha, this.maxParticleAlpha);
+        particle.alpha = rnd.float(this.minParticleAlpha, this.maxParticleAlpha);
     }
 
     particle.blendMode = this.blendMode;
@@ -651,9 +650,9 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function (x, y, key, fr
     // body.bounce.setTo(this.bounce.x, this.bounce.y);
     body.bounce.copyFrom(this.bounce);
 
-    body.velocity.x = rndInt(this.minParticleSpeed.x, this.maxParticleSpeed.x);
-    body.velocity.y = rndInt(this.minParticleSpeed.y, this.maxParticleSpeed.y);
-    body.angularVelocity = rndInt(this.minRotation, this.maxRotation);
+    body.velocity.x = rnd.between(this.minParticleSpeed.x, this.maxParticleSpeed.x);
+    body.velocity.y = rnd.between(this.minParticleSpeed.y, this.maxParticleSpeed.y);
+    body.angularVelocity = rnd.between(this.minRotation, this.maxRotation);
 
     body.gravity.y = this.gravity;
 
