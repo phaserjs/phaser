@@ -2092,7 +2092,7 @@ declare module Phaser {
 
         addCallbacks(context: any, onDown?: Function, onUp?: Function, onPress?: Function): void;
         addKey(keycode: number): Phaser.Key;
-        addKeys(keys: any[]): any;
+        addKeys(keys: any): any;
         addKeyCapture(keycode: any): void;
         createCursorKeys(): Phaser.CursorKeys;
         clearCaptures(): void;
