@@ -205,21 +205,6 @@ Phaser.RandomDataGenerator.prototype = {
 
     /**
     * Returns a random real number between min and max.
-    * This method is an alias for RandomDataGenerator.realInRange.
-    *
-    * @method Phaser.RandomDataGenerator#float
-    * @param {number} min - The minimum value in the range.
-    * @param {number} max - The maximum value in the range.
-    * @return {number} A random number between min and max.
-    */
-    float: function (min, max) {
-
-        return this.realInRange(min, max);
-
-    },
-
-    /**
-    * Returns a random real number between min and max.
     *
     * @method Phaser.RandomDataGenerator#realInRange
     * @param {number} min - The minimum value in the range.

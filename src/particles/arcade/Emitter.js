@@ -613,11 +613,11 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function (x, y, key, fr
     }
     else if (this.minParticleScale !== 1 || this.maxParticleScale !== 1)
     {
-        particle.scale.set(rnd.float(this.minParticleScale, this.maxParticleScale));
+        particle.scale.set(rnd.realInRange(this.minParticleScale, this.maxParticleScale));
     }
     else if ((this._minParticleScale.x !== this._maxParticleScale.x) || (this._minParticleScale.y !== this._maxParticleScale.y))
     {
-        particle.scale.set(rnd.float(this._minParticleScale.x, this._maxParticleScale.x), rnd.float(this._minParticleScale.y, this._maxParticleScale.y));
+        particle.scale.set(rnd.realInRange(this._minParticleScale.x, this._maxParticleScale.x), rnd.realInRange(this._minParticleScale.y, this._maxParticleScale.y));
     }
 
     if (frame === undefined)
@@ -638,7 +638,7 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function (x, y, key, fr
     }
     else
     {
-        particle.alpha = rnd.float(this.minParticleAlpha, this.maxParticleAlpha);
+        particle.alpha = rnd.realInRange(this.minParticleAlpha, this.maxParticleAlpha);
     }
 
     particle.blendMode = this.blendMode;
