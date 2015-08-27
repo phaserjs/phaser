@@ -242,7 +242,7 @@ Phaser.Timer.prototype = {
     */
     add: function (delay, callback, callbackContext) {
 
-        return this.create(delay, false, 0, callback, callbackContext, Array.prototype.splice.call(arguments, 3));
+        return this.create(delay, false, 0, callback, callbackContext, Array.prototype.slice.call(arguments, 3));
 
     },
 
@@ -264,7 +264,7 @@ Phaser.Timer.prototype = {
     */
     repeat: function (delay, repeatCount, callback, callbackContext) {
 
-        return this.create(delay, false, repeatCount, callback, callbackContext, Array.prototype.splice.call(arguments, 4));
+        return this.create(delay, false, repeatCount, callback, callbackContext, Array.prototype.slice.call(arguments, 4));
 
     },
 
@@ -285,7 +285,7 @@ Phaser.Timer.prototype = {
     */
     loop: function (delay, callback, callbackContext) {
 
-        return this.create(delay, true, 0, callback, callbackContext, Array.prototype.splice.call(arguments, 3));
+        return this.create(delay, true, 0, callback, callbackContext, Array.prototype.slice.call(arguments, 3));
 
     },
 

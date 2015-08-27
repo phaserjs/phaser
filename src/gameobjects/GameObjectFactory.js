@@ -531,7 +531,7 @@ Phaser.GameObjectFactory.prototype = {
     */
     filter: function (filter) {
 
-        var args = Array.prototype.splice.call(arguments, 1);
+        var args = Array.prototype.slice.call(arguments, 1);
 
         var filter = new Phaser.Filter[filter](this.game);
 
