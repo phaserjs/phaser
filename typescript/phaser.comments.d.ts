@@ -11114,7 +11114,7 @@ declare module Phaser {
         * @param keys A key mapping object, i.e. `{ 'up': Phaser.Keyboard.W, 'down': Phaser.Keyboard.S }` or `{ 'up': 52, 'down': 53 }`.
         * @return An object containing user selected properties
         */
-        addKeys(keys: any[]): any;
+        addKeys(keys: any): any;
 
         /**
         * By default when a key is pressed Phaser will not stop the event from propagating up to the browser.
