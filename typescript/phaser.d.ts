@@ -523,12 +523,12 @@ declare module Phaser {
 
     interface CachedImage {
 
-        key: string,
-        url: string,
-        data: HTMLImageElement,
-        base: PIXI.BaseTexture,
-        frame: Phaser.Frame,
-        frameData: Phaser.FrameData
+        key: string;
+        url: string;
+        data: HTMLImageElement;
+        base: PIXI.BaseTexture;
+        frame: Phaser.Frame;
+        frameData: Phaser.FrameData;
 
     }
 
@@ -1377,7 +1377,7 @@ declare module Phaser {
         audio(key: string, volume?: number, loop?: boolean, connect?: boolean): Phaser.Sound;
         audioSprite(key: string): Phaser.AudioSprite;
         bitmapData(width?: number, height?: number, key?: string, addToCache?: boolean): Phaser.BitmapData;
-        bitmapText(x: number, y: number, font: string, text?: string, size?: number, align?: string, group?: Phaser.Group): Phaser.BitmapText;
+        bitmapText(x: number, y: number, font: string, text?: string, size?: number, group?: Phaser.Group): Phaser.BitmapText;
         button(x?: number, y?: number, key?: string, callback?: Function, callbackContext?: any, overFrame?: any, outFrame?: any, downFrame?: any, upFrame?: any, group?: Phaser.Group): Phaser.Button;
         emitter(x?: number, y?: number, maxParticles?: number): Phaser.Particles.Arcade.Emitter;
         existing(object: any): any;
@@ -1692,7 +1692,7 @@ declare module Phaser {
 
     class Image extends PIXI.Sprite {
 
-        constructor(game: Phaser.Game, x: number, y: number, key: string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture, frame: string|number);
+        constructor(game: Phaser.Game, x: number, y: number, key: string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture, frame?: string|number);
 
         alive: boolean;
         angle: number;
