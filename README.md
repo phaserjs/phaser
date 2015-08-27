@@ -266,6 +266,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * JSDoc typo fixes (thanks @rwrountree)
 * Math.average has been optimized (thanks @rwrountree #2025)
 * Change splice.call(arguments, ..) to use slice instead (thanks @pnstickne  #2034 #2032)
+* RandomDataGenerator.float is a new alias for the method 'realInRange' and takes the same arguments.
 
 ### Bug Fixes
 
