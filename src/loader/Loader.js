@@ -2028,7 +2028,7 @@ Phaser.Loader.prototype = {
             return false;
         }
 
-        if (url.substr(0, 4) === 'http' || url.substr(0, 2) === '//')
+        if (url.substr(0, 5) === 'data:' || url.substr(0, 4) === 'http' || url.substr(0, 2) === '//')
         {
             return url;
         }
