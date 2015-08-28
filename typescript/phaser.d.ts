@@ -3998,7 +3998,7 @@ declare module Phaser {
         top: number;
         type: number;
         transformCallback: Function;
-        transformCallbackContent: any;
+        transformCallbackContext: any;
         scaleMin: Phaser.Point;
         scaleMax: Phaser.Point;
         updateAnimation: Function;
@@ -4279,7 +4279,7 @@ declare module Phaser {
         type: number;
         tintedTexture: HTMLCanvasElement;
         transformCallback: Function;
-        transformCallbackContent: any;
+        transformCallbackContext: any;
         world: Phaser.Point;
         x: number;
         y: number;
