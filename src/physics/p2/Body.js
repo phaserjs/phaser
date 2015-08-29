@@ -373,7 +373,7 @@ Phaser.Physics.P2.Body.prototype = {
     *
     * @method Phaser.Physics.P2.Body#removeCollisionGroup
     * @param {Phaser.Physics.CollisionGroup|array} group - The Collision Group or Array of Collision Groups that this Bodies shapes should not collide with anymore.
-    * @param {boolean} [clearCallback=false] - Clear the callback that will be triggered when this Body impacts with the given Group?
+    * @param {boolean} [clearCallback=true] - Clear the callback that will be triggered when this Body impacts with the given Group?
     * @param {p2.Shape} [shape] - An optional Shape. If not provided the updated collision mask will be added to all Shapes in this Body.
     */
     removeCollisionGroup: function (group, clearCallback, shape) {
