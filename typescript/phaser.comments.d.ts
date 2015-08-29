@@ -1525,7 +1525,7 @@ declare module Phaser {
         * @param region The area to perform the search over. If not given it will replace over the whole BitmapData.
         * @return This BitmapData object for method chaining.
         */
-        replaceRGB(r1: number, g1: number, b1: number, a1: number, r2: number, g2: number, b2: number, a2: number, region: Phaser.Rectangle): Phaser.BitmapData;
+        replaceRGB(r1: number, g1: number, b1: number, a1: number, r2: number, g2: number, b2: number, a2: number, region?: Phaser.Rectangle): Phaser.BitmapData;
 
         /**
         * Resizes the BitmapData. This changes the size of the underlying canvas and refreshes the buffer.

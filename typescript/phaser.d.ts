@@ -1390,7 +1390,7 @@ declare module Phaser {
         renderTexture(width?: number, height?: number, key?: string, addToCache?: boolean): Phaser.RenderTexture;
         retroFont(font: string, characterWidth: number, characterHeight: number, chars: string, charsPerRow: number, xSpacing?: number, ySpacing?: number, xOffset?: number, yOffset?: number): Phaser.RetroFont;
         rope(x: number, y: number, key: any, frame?: any, points?: Phaser.Point[]): Phaser.Rope;
-        sound(key: string, volume?: number, loop?: number, connect?: boolean): Phaser.Sound;
+        sound(key: string, volume?: number, loop?: boolean, connect?: boolean): Phaser.Sound;
         sprite(x: number, y: number, key?: any, frame?: any, group?: Phaser.Group): Phaser.Sprite;
         spriteBatch(parent: any, name?: string, addToStage?: boolean): Phaser.Group;
         text(x: number, y: number, text: string, style: any, group?: Phaser.Group): Phaser.Text;
@@ -2750,6 +2750,7 @@ declare module Phaser {
                 gravity: Phaser.Point;
                 halfWidth: number;
                 halfHeight: number;
+                height: number;
                 immovable: boolean;
                 mass: number;
                 maxAngular: number;
@@ -4558,9 +4559,10 @@ declare module Phaser {
         tab?: number;
         tabs?: number;
 
+        fontSize?: number;
         fontStyle?: string;
         fontVariant?: string;
-        fontWeight?: string;
+        fontWeight?: string|number;
         backgroundColor?: string;
         boundsAlignH?: string;
         boundsAlignV?: string;
@@ -4595,8 +4597,8 @@ declare module Phaser {
         fontStyle: string;
         fontStyles: string[];
         fontVariant: string;
-        fontWeight: string;
-        fontWeights: string[];
+        fontWeight: string|number;
+        fontWeights: (string|number)[];
         game: Phaser.Game;
         input: Phaser.InputHandler;
         inputEnabled: boolean;
@@ -5178,7 +5180,7 @@ declare module Phaser {
         static parseDimension(size: any, dimension: number): number;
         static pad(str: string, len?: number, pad?: string, dir?: number): string;
         static isPlainObject(object: any): boolean;
-        static extend(deep: boolean, target: any): any;
+        static extend(deep: boolean, target: any, ...args: any[]): any;
         static mixinPrototype(target: any, mixin: any, replace?: boolean): void;
         static mixin<T>(from: T, to: any): T;
 
