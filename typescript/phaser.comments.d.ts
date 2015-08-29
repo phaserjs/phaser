@@ -3425,12 +3425,12 @@ declare module Phaser {
 
     interface CachedImage {
 
-        key: string,
-        url: string,
-        data: HTMLImageElement,
-        base: PIXI.BaseTexture,
-        frame: Phaser.Frame,
-        frameData: Phaser.FrameData
+        key: string;
+        url: string;
+        data: HTMLImageElement;
+        base: PIXI.BaseTexture;
+        frame: Phaser.Frame;
+        frameData: Phaser.FrameData;
 
     }
 
