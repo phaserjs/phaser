@@ -17975,6 +17975,15 @@ declare module Phaser {
                 postUpdate(): void;
 
                 /**
+                * Removes the given CollisionGroup, or array of CollisionGroups, from the list of groups that this body will collide with and updates the collision masks.
+                *
+                * @param group The Collision Group or Array of Collision Groups that this Bodies shapes should not collide with anymore.
+                * @param clearCallback Clear the callback that will be triggered when this Body impacts with the given Group? - Default: true
+                * @param shape An optional Shape. If not provided the updated collision mask will be added to all Shapes in this Body.
+                */
+                removeCollisionGroup(group: any, clearCallback?: boolean, shape?: p2.Shape): void;
+
+                /**
                 * Removes this physics body from the world.
                 */
                 removeFromWorld(): void;
