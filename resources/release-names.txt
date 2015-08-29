@@ -1,8 +1,9 @@
 Wheel of Time
-
-Nations of the Westlands
+-------------
 
 Anything marked * has been used as a release name already.
+
+Nations of the Westlands
 
 Altara *
 
@@ -12,7 +13,7 @@ POI: River Eldar, Sea of Storms
 
 Amadicia *
 
-Capital: Amador
+Capital: Amador *
 Cities: Abila, Bellon, Jeramel, Mardecin, Sienda
 POI: Mountains of Mist, River Eldar, River Sharia, Shadow Coast
 

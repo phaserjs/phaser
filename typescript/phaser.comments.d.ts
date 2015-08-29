@@ -11114,7 +11114,7 @@ declare module Phaser {
         * @param keys A key mapping object, i.e. `{ 'up': Phaser.Keyboard.W, 'down': Phaser.Keyboard.S }` or `{ 'up': 52, 'down': 53 }`.
         * @return An object containing user selected properties
         */
-        addKeys(keys: any[]): any;
+        addKeys(keys: any): any;
 
         /**
         * By default when a key is pressed Phaser will not stop the event from propagating up to the browser.
@@ -17973,6 +17973,15 @@ declare module Phaser {
                 * Internal method. This is called directly before the sprites are sent to the renderer and after the update function has finished.
                 */
                 postUpdate(): void;
+
+                /**
+                * Removes the given CollisionGroup, or array of CollisionGroups, from the list of groups that this body will collide with and updates the collision masks.
+                *
+                * @param group The Collision Group or Array of Collision Groups that this Bodies shapes should not collide with anymore.
+                * @param clearCallback Clear the callback that will be triggered when this Body impacts with the given Group? - Default: true
+                * @param shape An optional Shape. If not provided the updated collision mask will be added to all Shapes in this Body.
+                */
+                removeCollisionGroup(group: any, clearCallback?: boolean, shape?: p2.Shape): void;
 
                 /**
                 * Removes this physics body from the world.

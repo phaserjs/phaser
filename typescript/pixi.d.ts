@@ -335,8 +335,20 @@ declare module PIXI {
         height: number;
         width: number;
 
+        destroy(): void;
         clear(): void;
         resize(width: number, height: number): void;
+
+    }
+
+    export class CanvasPool {
+
+        static create(parent: HTMLElement, width?: number, height?: number): HTMLCanvasElement;
+        static getFirst(): HTMLCanvasElement;
+        static remove(parent: HTMLElement): void;
+        static removeByCanvas(canvas: HTMLCanvasElement): HTMLCanvasElement;
+        static getTotal(): number;
+        static getFree(): number;
 
     }
 
@@ -1010,7 +1022,7 @@ declare module PIXI {
         texture: Texture;
         tint: number;
 
-        setTexture(texture: Texture): void;
+        setTexture(texture: Texture, destroyBase?: boolean): void;
 
     }
 
