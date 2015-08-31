@@ -3188,6 +3188,7 @@ declare module Phaser {
                 moveUp(speed: number): void;
                 preUpdate(): void;
                 postUpdate(): void;
+                removeCollisionGroup(group: any, clearCallback?: boolean, shape?: p2.Shape): void;
                 removeFromWorld(): void;
                 removeShape(shape: p2.Shape): boolean;
                 reverse(speed: number): void;
