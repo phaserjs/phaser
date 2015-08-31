@@ -21979,7 +21979,7 @@ declare module Phaser {
         * This ability allows you to check any of the matrix values and perform actions such as clamping scale or limiting rotation, regardless of the parent transforms.
         */
         transformCallback: Function;
-        transformCallbackContent: any;
+        transformCallbackContext: any;
 
         /**
         * The minimum scale this Game Object will scale down to.
@@ -23761,7 +23761,7 @@ declare module Phaser {
         * This ability allows you to check any of the matrix values and perform actions such as clamping scale or limiting rotation, regardless of the parent transforms.
         */
         transformCallback: Function;
-        transformCallbackContent: any;
+        transformCallbackContext: any;
 
         /**
         * The world coordinates of this Game Object in pixels.
