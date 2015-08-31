@@ -1,7 +1,7 @@
 /// <reference path="pixi.comments.d.ts" />
 /// <reference path="p2.d.ts" />
 
-// Type definitions for Phaser 2.4.0 2015-Jul-16
+// Type definitions for Phaser 2.4.3 2015-Aug-24
 // Project: https://github.com/photonstorm/phaser
 
 declare class Phaser {
@@ -1227,6 +1227,22 @@ declare module Phaser {
         draw(source: any, x?: number, y?: number, width?: number, height?: number, blendMode?: number, roundPx?: boolean): Phaser.BitmapData;
 
         /**
+        * Draws the Game Object or Group to this BitmapData and then recursively iterates through all of its children.
+        * If a child has an exists property then it (and its children) will be only be drawn if exists is true.
+        * The children will be drawn at their x and y world space coordinates. If this is outside the bounds of the BitmapData they won't be drawn.
+        * Depending on your requirements you may need to resize the BitmapData in advance to match the bounds of the top-level Game Object.
+        * When drawing it will take into account the child's world rotation, scale and alpha values.
+        * It's perfectly valid to pass in game.world as the parent object, and it will iterate through the entire display list.
+        * Note: If you are trying to grab your entire game at the start of a State then you should ensure that at least 1 full update has taken place before doing so,
+        * otherwise all of the objects will render with incorrect positions and scales. You can trigger an update yourself by calling stage.updateTransform() before calling drawFull.
+        * 
+        * @param parent The Game Object to draw onto this BitmapData and then recursively draw all of its children.
+        * @param blendMode The composite blend mode that will be used when drawing. The default is no blend mode at all. This is a Canvas globalCompositeOperation value such as 'lighter' or 'xor'. - Default: null
+        * @param roundPx Should the x and y values be rounded to integers before drawing? This prevents anti-aliasing in some instances. - Default: false
+        */
+        drawFull(parent: Phaser.World|Phaser.Group|Phaser.Sprite|Phaser.Image|Phaser.Text|Phaser.BitmapText, blendMode?: string, roundPx?: boolean): Phaser.BitmapData;
+
+        /**
         * Draws the immediate children of a Phaser.Group to this BitmapData.
         * Children are only drawn if they have their `exists` property set to `true`.
         * The children will be drawn at their `x` and `y` world space coordinates. If this is outside the bounds of the BitmapData they won't be drawn.
@@ -1384,6 +1400,18 @@ declare module Phaser {
         getTransform(translateX: number, translateY: number, scaleX: number, scaleY: number, skewX: number, skewY: number): any;
 
         /**
+        * Draws a line between the coordinates given in the color and thickness specified.
+        * 
+        * @param x1 The x coordinate to start the line from.
+        * @param y1 The y coordinate to start the line from.
+        * @param x2 The x coordinate to draw the line to.
+        * @param y2 The y coordinate to draw the line to.
+        * @param color The stroke color that the line will be drawn in. - Default: '#fff'
+        * @param width The line thickness. - Default: 1
+        */
+        line(x1: number, y1: number, x2: number, y2: number, color?: string, width?: number): Phaser.BitmapData;
+
+        /**
         * Takes the given Game Object, resizes this BitmapData to match it and then draws it into this BitmapDatas canvas, ready for further processing.
         * The source game object is not modified by this operation.
         * If the source object uses a texture as part of a Texture Atlas or Sprite Sheet, only the current frame will be used for sizing.
@@ -1497,7 +1525,7 @@ declare module Phaser {
         * @param region The area to perform the search over. If not given it will replace over the whole BitmapData.
         * @return This BitmapData object for method chaining.
         */
-        replaceRGB(r1: number, g1: number, b1: number, a1: number, r2: number, g2: number, b2: number, a2: number, region: Phaser.Rectangle): Phaser.BitmapData;
+        replaceRGB(r1: number, g1: number, b1: number, a1: number, r2: number, g2: number, b2: number, a2: number, region?: Phaser.Rectangle): Phaser.BitmapData;
 
         /**
         * Resizes the BitmapData. This changes the size of the underlying canvas and refreshes the buffer.
@@ -1999,6 +2027,13 @@ declare module Phaser {
         text: string;
 
         /**
+        * Enable or disable texture smoothing for this BitmapText.
+        * The smoothing is applied to the BaseTexture of this font, which all letters of the text reference.
+        * Smoothing is enabled by default.
+        */
+        smoothed: boolean;
+
+        /**
         * The width in pixels of the overall text area, taking into consideration multi-line text.
         */
         textWidth: number;
@@ -2131,13 +2166,9 @@ declare module Phaser {
         * @return An object containing the parsed characters, total pixel width and x offsets.
         */
 
-                                                            /**
-                                                            * The width of the displayObjectContainer, setting this will actually modify the scale to achieve the value set
-                                                            */
-
-                                                                           /**
-                                                                           * The text to be displayed by this BitmapText object.
-                                                                           */
+        /**
+        * The text to be displayed by this BitmapText object.
+        */
         scanLine(data: any, scale: number, text: string): { width: number; text: string; end: boolean; chars: string[] };
 
         /**
@@ -2563,7 +2594,7 @@ declare module Phaser {
         * @param data Extra image data.
         * @return The full image object that was added to the cache.
         */
-        addImage(key: string, url: string, data: any): void;
+        addImage(key: string, url: string, data: any): Phaser.CachedImage;
 
         /**
         * Add a new json object into the cache.
@@ -2967,7 +2998,7 @@ declare module Phaser {
         * @param full If true the full image object will be returned, if false just the HTML Image object is returned. - Default: false
         * @return The Image object if found in the Cache, otherwise `null`. If `full` was true then a JavaScript object is returned.
         */
-        getImage(key: string, full?: boolean): Phaser.Image;
+        getImage(key: string, full?: boolean): Phaser.CachedImage;
 
         /**
         * Get an item from a cache based on the given key and property.
@@ -3054,7 +3085,7 @@ declare module Phaser {
         * @param key The key of the asset to retrieve from the cache.
         * @return The RenderTexture object.
         */
-        getRenderTexture(key: string): Phaser.RenderTexture;
+        getRenderTexture(key: string): Phaser.CachedRenderTexture;
 
         /**
         * Gets a fragment shader object from the cache.
@@ -3392,6 +3423,25 @@ declare module Phaser {
     }
 
 
+    interface CachedImage {
+
+        key: string;
+        url: string;
+        data: HTMLImageElement;
+        base: PIXI.BaseTexture;
+        frame: Phaser.Frame;
+        frameData: Phaser.FrameData;
+
+    }
+
+    interface CachedRenderTexture {
+
+        frame: Phaser.Frame;
+        texture: Phaser.RenderTexture;
+
+    }
+
+
     /**
     * A Camera is your view into the game world. It has a position and size and renders only those objects within its field of view.
     * The game automatically creates a single Stage sized camera on boot. Move the camera around the world with Phaser.Camera.x/y
@@ -3421,15 +3471,10 @@ declare module Phaser {
         /**
         * Whether this camera is flush with the World Bounds or not.
         */
-
-                   /**
-                   * The Cameras x coordinate. This value is automatically clamped if it falls outside of the World bounds. Gets or sets the cameras x position.
-                   */
-
-                               /**
-                               * The Cameras y coordinate. This value is automatically clamped if it falls outside of the World bounds. Gets or sets the cameras y position.
-                               */
-        atLimit: { x: boolean; y: boolean; };
+        atLimit: {
+            x: boolean;
+            y: boolean;
+        };
 
         /**
         * The Camera is bound to this Rectangle and cannot move outside of it. By default it is enabled and set to the size of the World.
@@ -7512,7 +7557,7 @@ declare module Phaser {
         * @param connect Controls if the created Sound object will connect to the master gainNode of the SoundManager when running under WebAudio. - Default: true
         * @return The newly created sound object.
         */
-        sound(key: string, volume?: number, loop?: number, connect?: boolean): Phaser.Sound;
+        sound(key: string, volume?: number, loop?: boolean, connect?: boolean): Phaser.Sound;
 
         /**
         * Create a new Sprite with specific position and sprite sheet key.
@@ -9165,7 +9210,7 @@ declare module Phaser {
         * @param key The texture used by the Image during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture, BitmapData or PIXI.Texture.
         * @param frame If this Image is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
         */
-        constructor(game: Phaser.Game, x: number, y: number, key: string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture, frame: string|number);
+        constructor(game: Phaser.Game, x: number, y: number, key: string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture, frame?: string|number);
 
 
         /**
@@ -11114,7 +11159,7 @@ declare module Phaser {
         * @param keys A key mapping object, i.e. `{ 'up': Phaser.Keyboard.W, 'down': Phaser.Keyboard.S }` or `{ 'up': 52, 'down': 53 }`.
         * @return An object containing user selected properties
         */
-        addKeys(keys: any): any;
+        addKeys(keys: any[]): any;
 
         /**
         * By default when a key is pressed Phaser will not stop the event from propagating up to the browser.
@@ -11374,6 +11419,17 @@ declare module Phaser {
 
 
         /**
+        * Centers this Line on the given coordinates.
+        * 
+        * The line is centered by positioning the start and end points so that the lines midpoint matches the coordinates given.
+        * 
+        * @param x The x position to center the line on.
+        * @param y The y position to center the line on.
+        * @return This line object
+        */
+        centerOn(x: number, y: number): Phaser.Line;
+
+        /**
         * Returns a new Line object with the same values for the start and end properties as this Line object.
         * 
         * @param output Optional Line object. If given the values will be set into the object, otherwise a brand new Line object will be created and returned.
@@ -11426,6 +11482,14 @@ declare module Phaser {
         intersects(line: Phaser.Line, asSegment?: boolean, result?: Phaser.Point): Phaser.Point;
 
         /**
+        * Returns a Point object where the x and y values correspond to the center (or midpoint) of the Line segment.
+        * 
+        * @param out A Phaser.Point object into which the result will be populated. If not given a new Point object is created.
+        * @return A Phaser.Point object with the x and y values set to the center of the line segment.
+        */
+        midPoint(out?: Phaser.Point): Phaser.Point;
+
+        /**
         * Tests if the given coordinates fall on this line. See pointOnSegment to test against just the line segment.
         * 
         * @param x The line to check against this one.
@@ -11473,6 +11537,19 @@ declare module Phaser {
         * @return This line object
         */
         rotate(angle: number, asDegrees?: boolean): Phaser.Line;
+
+        /**
+        * Rotates the line by the amount specified in `angle`.
+        * 
+        * Rotation takes place around the coordinates given.
+        * 
+        * @param x The x position to rotate the line around.
+        * @param y The y position to rotate the line around.
+        * @param angle The angle in radians (unless asDegrees is true) to rotate the line by.
+        * @param asDegrees Is the given angle in radians (false) or degrees (true)? - Default: false
+        * @return This line object
+        */
+        rotateAround(x: number, y: number, angle: number, asDegrees?: boolean): Phaser.Line;
 
         /**
         * Sets the components of the Line to the specified values.
@@ -12160,6 +12237,31 @@ declare module Phaser {
         * @return This Loader instance.
         */
         image(key: string, url?: string, overwrite?: boolean): Phaser.Loader;
+
+        /**
+        * Adds an array of images to the current load queue.
+        * 
+        * It works by passing each element of the array to the Loader.image method.
+        * 
+        * The files are **not** loaded immediately after calling this method. The files are added to the queue ready to be loaded when the loader starts.
+        * 
+        * Phaser can load all common image types: png, jpg, gif and any other format the browser can natively handle.
+        * 
+        * The keys must be unique Strings. They are used to add the files to the Phaser.Cache upon successful load.
+        * 
+        * Retrieve the images via `Cache.getImage(key)`
+        * 
+        * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
+        * 
+        * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "alien"
+        * and no URL is given then the Loader will set the URL to be "alien.png". It will always add `.png` as the extension.
+        * If you do not desire this action then provide a URL.
+        * 
+        * @param keys An array of unique asset keys of the image files.
+        * @param urls Optional array of URLs. If undefined or `null` the url will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png". If provided the URLs array length must match the keys array length.
+        * @return This Loader instance.
+        */
+        images(keys: string[], urls?: string[]): Phaser.Loader;
 
         /**
         * Adds a JSON file to the current load queue.
@@ -15470,6 +15572,11 @@ declare module Phaser {
                 halfHeight: number;
 
                 /**
+                * The calculated height of the physics body.
+                */
+                height: number;
+
+                /**
                 * An immovable Body will not receive any impacts from other bodies.
                 * Default: false
                 */
@@ -17829,7 +17936,7 @@ declare module Phaser {
                 * @param localX A local point on the body.
                 * @param localY A local point on the body.
                 */
-                applyImpulseLocal(force: number[], localX: number, localY: number): void;
+                applyImpulseLocal(impulse: number[], localX: number, localY: number): void;
 
                 /**
                 * Clears the collision data from the shapes in this Body. Optionally clears Group and/or Mask.
@@ -18166,10 +18273,6 @@ declare module Phaser {
                 * @param body The P2 Body to display debug data for.
                 * @param settings Settings object.
                 */
-
-                                                                                                                                                                    /**
-                                                                                                                                                                    * The alpha value of the group container.
-                                                                                                                                                                    */
                 constructor(game: Phaser.Game, body: Phaser.Physics.P2.Body, settings: { pixelsPerLengthUnit?: number; debugPolygons?: boolean; lineWidth?: number; alpha?: number; });
 
 
@@ -25328,9 +25431,10 @@ declare module Phaser {
         tab?: number;
         tabs?: number;
 
+        fontSize?: number;
         fontStyle?: string;
         fontVariant?: string;
-        fontWeight?: string;
+        fontWeight?: string|number;
         backgroundColor?: string;
         boundsAlignH?: string;
         boundsAlignV?: string;
@@ -25518,19 +25622,29 @@ declare module Phaser {
         fontSize: number|string;
 
         /**
-        * The weight of the font: 'normal', 'bold', or {@link http://www.w3.org/TR/CSS2/fonts.html#propdef-font-weight a valid CSS font weight}.
-        */
-        fontWeight: string;
-
-        /**
         * The style of the font: 'normal', 'italic', 'oblique'
         */
         fontStyle: string;
 
         /**
+        * An array of the font styles values as specified by {@link Phaser.Text#addFontStyle addFontStyle}.
+        */
+        fontStyles: string[];
+
+        /**
         * The variant the font: 'normal', 'small-caps'
         */
         fontVariant: string;
+
+        /**
+        * The weight of the font: 'normal', 'bold', or {@link http://www.w3.org/TR/CSS2/fonts.html#propdef-font-weight a valid CSS font weight}.
+        */
+        fontWeight: string|number;
+
+        /**
+        * An array of the font weights values as specified by {@link Phaser.Text#addFontWeight addFontWeight}.
+        */
+        fontWeights: (string|number)[];
 
         /**
         * A reference to the currently running Game.
@@ -25735,6 +25849,38 @@ declare module Phaser {
         addColor(color: string, position: number): Phaser.Text;
 
         /**
+        * Set specific font styles for certain characters within the Text.
+        * 
+        * It works by taking a font style value, which is a typical string such as `normal`, `italic` or `oblique`.
+        * The position value is the index of the character in the Text string to start applying this font style to.
+        * Once set the font style remains in use until either another font style or the end of the string is encountered.
+        * For example if the Text was `Photon Storm` and you did `Text.addFontStyle('italic', 6)` it would font style in the word `Storm` in italic.
+        * 
+        * If you wish to change the text font weight see addFontWeight instead.
+        * 
+        * @param style A canvas font-style that will be used on the text style eg `normal`, `italic`, `oblique`.
+        * @param position The index of the character in the string to start applying this font style value from.
+        * @return This Text instance.
+        */
+        addFontStyle(style: string, position: number): Phaser.Text;
+
+        /**
+        * Set specific font weights for certain characters within the Text.
+        * 
+        * It works by taking a font weight value, which is a typical string such as `normal`, `bold`, `bolder`, etc.
+        * The position value is the index of the character in the Text string to start applying this font weight to.
+        * Once set the font weight remains in use until either another font weight or the end of the string is encountered.
+        * For example if the Text was `Photon Storm` and you did `Text.addFontWeight('bold', 6)` it would font weight in the word `Storm` in bold.
+        * 
+        * If you wish to change the text font style see addFontStyle instead.
+        * 
+        * @param weight A canvas font-weight that will be used on the text weight eg `normal`, `bold`, `bolder`, `lighter`, etc.
+        * @param position The index of the character in the string to start applying this font weight value from.
+        * @return This Text instance.
+        */
+        addFontWeight(weight: string, position: number): Phaser.Text;
+
+        /**
         * Set specific stroke colors for certain characters within the Text.
         * 
         * It works by taking a color value, which is a typical HTML string such as `#ff0000` or `rgb(255,0,0)` and a position.
@@ -25757,6 +25903,13 @@ declare module Phaser {
         * @return This Text instance.
         */
         clearColors(): Phaser.Text;
+
+        /**
+        * Clears any text styles or weights font that were set by `addFontStyle` or `addFontWeight`.
+        * 
+        * @return This Text instance.
+        */
+        clearFontValues(): Phaser.Text;
 
         /**
         * Converts individual font components (see `fontToComponents`) to a short CSS font string.
@@ -27069,6 +27222,15 @@ declare module Phaser {
     */
     class TilemapParser {
 
+        /**
+        * When scanning the Tiled map data the TilemapParser can either insert a null value (true) or
+        * a Phaser.Tile instance with an index of -1 (false, the default). Depending on your game type
+        * depends how this should be configured. If you've a large sparsely populated map and the tile
+        * data doesn't need to change then setting this value to `true` will help with memory consumption.
+        * However if your map is small, or you need to update the tiles (perhaps the map dynamically changes
+        * during the game) then leave the default value set.
+        */
+        static INSERT_NULL: boolean;
 
         /**
         * Returns an empty map data object.
@@ -28520,6 +28682,19 @@ declare module Phaser {
         current: number;
 
         /**
+        * Are all newly created Tweens frame or time based? A frame based tween will use the physics elapsed timer when updating. This means
+        * it will retain the same consistent frame rate, regardless of the speed of the device. The duration value given should
+        * be given in frames.
+        * 
+        * If the Tween uses a time based update (which is the default) then the duration is given in milliseconds.
+        * In this situation a 2000ms tween will last exactly 2 seconds, regardless of the device and how many visual updates the tween
+        * has actually been through. For very short tweens you may wish to experiment with a frame based update instead.
+        * 
+        * Default: false
+        */
+        frameBased: boolean;
+
+        /**
         * A reference to the currently running Game.
         */
         game: Phaser.Game;
@@ -29076,7 +29251,7 @@ declare module Phaser {
         * @param time A timestamp passed in by the Tween parent.
         * @return The current status of this Tween. One of the Phaser.TweenData constants: PENDING, RUNNING, LOOPED or COMPLETE.
         */
-        update(): number;
+        update(time: number): number;
 
     }
 
@@ -29111,6 +29286,19 @@ declare module Phaser {
         * Local reference to game.
         */
         game: Phaser.Game;
+
+        /**
+        * Are all newly created Tweens frame or time based? A frame based tween will use the physics elapsed timer when updating. This means
+        * it will retain the same consistent frame rate, regardless of the speed of the device. The duration value given should
+        * be given in frames.
+        * 
+        * If the Tween uses a time based update (which is the default) then the duration is given in milliseconds.
+        * In this situation a 2000ms tween will last exactly 2 seconds, regardless of the device and how many visual updates the tween
+        * has actually been through. For very short tweens you may wish to experiment with a frame based update instead.
+        * 
+        * Default: false
+        */
+        frameBased: boolean;
 
 
         /**
@@ -29248,7 +29436,7 @@ declare module Phaser {
         * @param target The target object to copy to.
         * @return The extended object.
         */
-        static extend(deep: boolean, target: any): any;
+        static extend(deep: boolean, target: any, ...args: any[]): any;
 
         /**
         * Mixes in an existing mixin object with the target.
