@@ -296,6 +296,15 @@ Phaser.Loader.TEXTURE_ATLAS_XML_STARLING = 2;
 * @constant
 * @type {number}
 */
+<<<<<<< HEAD
+=======
+Phaser.Loader.TEXTURE_ATLAS_JSON_PYXEL = 3;
+
+/**
+* @constant
+* @type {number}
+*/
+>>>>>>> 247064f... fixed some typos and explicitly setTrim to false
 Phaser.Loader.PHYSICS_LIME_CORONA_JSON = 3;
 
 /**
@@ -2605,7 +2614,7 @@ Phaser.Loader.prototype = {
                     //  Load the JSON or XML before carrying on with the next file
                     loadNext = false;
 
-                    if (file.format == Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY || file.format == Phaser.Loader.TEXTURE_ATLAS_JSON_HASH)
+                    if (file.format == Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY || file.format == Phaser.Loader.TEXTURE_ATLAS_JSON_HASH || file.format == Phaser.Loader.TEXTURE_ATLAS_JSON_PYXEL)
                     {
                         this.xhrLoad(file, this.transformUrl(file.atlasURL, file), 'text', this.jsonLoadComplete);
                     }

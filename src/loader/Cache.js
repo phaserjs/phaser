@@ -604,6 +604,13 @@ Phaser.Cache.prototype = {
         {
             obj.frameData = Phaser.AnimationParser.XMLData(this.game, atlasData, key);
         }
+<<<<<<< HEAD
+=======
+        else if (format === Phaser.Loader.TEXTURE_ATLAS_JSON_PYXEL)
+        {
+            obj.frameData = Phaser.AnimationParser.JSONDataPyxel(this.game, atlasData, key);
+        }
+>>>>>>> 247064f... fixed some typos and explicitly setTrim to false
         else
         {
             //  Let's just work it out from the frames array
