@@ -147,9 +147,7 @@ Phaser.AnimationParser = {
     /**
     * Parse the JSON data and extract the animation frame data from it.
     *
-<<<<<<< HEAD
-=======
-    * @method Phaser.AnimationParser.JSONData
+    * @method Phaser.AnimationParser.JSONDataPyxel
     * @param {Phaser.Game} game - A reference to the currently running game.
     * @param {object} json - The JSON data from the Texture Atlas. Must be in Pyxel JSON format.
     * @return {Phaser.FrameData} A FrameData object containing the parsed frames.
@@ -205,7 +203,6 @@ Phaser.AnimationParser = {
     /**
     * Parse the JSON data and extract the animation frame data from it.
     *
->>>>>>> 247064f... fixed some typos and explicitly setTrim to false
     * @method Phaser.AnimationParser.JSONDataHash
     * @param {Phaser.Game} game - A reference to the currently running game.
     * @param {object} json - The JSON data from the Texture Atlas. Must be in JSON Hash format.
@@ -296,7 +293,7 @@ Phaser.AnimationParser = {
         for (var i = 0; i < frames.length; i++)
         {
             frame = frames[i].attributes;
-            
+
             name = frame.name.value;
             x = parseInt(frame.x.value, 10);
             y = parseInt(frame.y.value, 10);
