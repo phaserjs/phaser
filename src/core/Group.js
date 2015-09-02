@@ -156,7 +156,7 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
     /**
     * If {@link #enableBody} is true this is the type of physics body that is created on new Sprites.
     *
-    * The valid values are {@link Phaser.Physics.ARCADE}, {@link Phaser.Physics.P2}, {@link Phaser.Physics.NINJA}, etc.
+    * The valid values are {@link Phaser.Physics.ARCADE}, {@link Phaser.Physics.P2JS}, {@link Phaser.Physics.NINJA}, etc.
     * @property {integer} physicsBodyType
     */
     this.physicsBodyType = physicsBodyType;
