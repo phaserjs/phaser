@@ -1,7 +1,7 @@
 /// <reference path="pixi.d.ts" />
 /// <reference path="p2.d.ts" />
 
-// Type definitions for Phaser 2.4.4+ 2015-Aug-28
+// Type definitions for Phaser 2.4.4+ 2015-Sep-02
 // Project: https://github.com/photonstorm/phaser
 
 declare class Phaser {
@@ -963,6 +963,7 @@ declare module Phaser {
         uniforms: any;
         width: number;
 
+        addToWorld(x?: number, y?: number, width?: number, height?: number, anchorX?: number, anchorY?: number): Phaser.Image;
         apply(frameBuffer: WebGLFramebuffer): void;
         destroy(): void;
         init(...args: any[]): void;
