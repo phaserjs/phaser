@@ -428,17 +428,17 @@ Phaser.MSPointer.prototype = {
         canvas.removeEventListener('MSPointerDown', this._onMSPointerDown);
         canvas.removeEventListener('MSPointerMove', this._onMSPointerMove);
         canvas.removeEventListener('MSPointerUp', this._onMSPointerUp);
-        canvas.removeEventListener('MSPointerOver', this._onMSPointerOver);
-        canvas.removeEventListener('MSPointerOut', this._onMSPointerOut);
+        canvas.removeEventListener('MSPointerOver', this._onMSPointerOver, true);
+        canvas.removeEventListener('MSPointerOut', this._onMSPointerOut, true);
 
         canvas.removeEventListener('pointerdown', this._onMSPointerDown);
         canvas.removeEventListener('pointermove', this._onMSPointerMove);
         canvas.removeEventListener('pointerup', this._onMSPointerUp);
-        canvas.removeEventListener('pointerover', this._onMSPointerOver);
-        canvas.removeEventListener('pointerout', this._onMSPointerOut);
+        canvas.removeEventListener('pointerover', this._onMSPointerOver, true);
+        canvas.removeEventListener('pointerout', this._onMSPointerOut, true);
 
-        window.removeEventListener('MSPointerUp', this._onMSPointerUpGlobal);
-        window.removeEventListener('pointerup', this._onMSPointerUpGlobal);
+        window.removeEventListener('MSPointerUp', this._onMSPointerUpGlobal, true);
+        window.removeEventListener('pointerup', this._onMSPointerUpGlobal, true);
 
     }
 
