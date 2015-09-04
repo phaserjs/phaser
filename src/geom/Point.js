@@ -902,5 +902,18 @@ Phaser.Point.parse = function(obj, xProp, yProp) {
 
 };
 
+/**
+* Creates an empty point
+*
+* @method Phaser.Point#empty
+* @static
+*/
+Phaser.Point.empty = function() {
+
+    return new Phaser.Point(0, 0);
+}
+
+
+
 //   Because PIXI uses its own Point, we'll replace it with ours to avoid duplicating code or confusion.
 PIXI.Point = Phaser.Point;
