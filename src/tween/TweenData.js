@@ -244,8 +244,8 @@ Phaser.TweenData.prototype = {
         this.realStart = Date.now();
         this.totalElapsedMs = 0;
 
-        console.log('startTime', this.startTime);
-        console.log('realStart', this.realStart);
+        // console.log('startTime', this.startTime);
+        // console.log('realStart', this.realStart);
 
         if (this.parent.reverse)
         {
@@ -386,7 +386,7 @@ Phaser.TweenData.prototype = {
 
         if (this.percent === 1)
         {
-            console.log("ElapsedTime", this.totalElapsedMs, Date.now() - this.realStart);
+            // console.log("ElapsedTime", this.totalElapsedMs, Date.now() - this.realStart);
         }
 
         this.value = this.easingFunction(this.percent);
