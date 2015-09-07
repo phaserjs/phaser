@@ -384,10 +384,10 @@ Phaser.TweenData.prototype = {
 
         this.totalElapsedMs = (this.totalElapsedMs || 0) + this.game.time.elapsedMS;
 
-        if (this.percent === 1)
-        {
+        // if (this.percent === 1)
+        // {
             // console.log("ElapsedTime", this.totalElapsedMs, Date.now() - this.realStart);
-        }
+        // }
 
         this.value = this.easingFunction(this.percent);
 

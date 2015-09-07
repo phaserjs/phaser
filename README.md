@@ -270,7 +270,8 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * JSDoc typo fixes (thanks @rwrountree @yeluoqiuzhi)
 * Math.average has been optimized (thanks @rwrountree #2025)
 * When calling GameObject.revive the `heal` method is called to apply the health value, allowing it to take into consideration a `maxHealth` value if set (thanks @bsparks #2027)
-* Change splice.call(arguments, ..) to use slice instead (thanks @pnstickne  #2034 #2032)
+* Change splice.call(arguments, ..) to use slice instead (thanks @pnstickne #2034 #2032)
+* BitmapData.move, moveH and moveV have a new optional `wrap` argument allowing you to control if the contents of the BitmapData are wrapped around the edges (true) or simply scrolled off (false).
 
 ### Bug Fixes
 
