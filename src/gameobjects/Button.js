@@ -469,11 +469,17 @@ Phaser.Button.prototype.setUpSound = function (sound, marker) {
 * @protected
 * @param {Phaser.Button} sprite - The Button that the event occurred on.
 * @param {Phaser.Pointer} pointer - The Pointer that activated the Button.
+* @param {boolean} fastClick - ignore pointer delay on input over a button if this is true
 */
-Phaser.Button.prototype.onInputOverHandler = function (sprite, pointer) {
+Phaser.Button.prototype.onInputOverHandler = function (sprite, pointer, fastClick) {
+
+    if (fastClick === undefined)
+    {
+        fastClick = false;
+    }
 
     //  If the Pointer was only just released then we don't fire an over event
-    if (pointer.justReleased())
+    if (!fastClick && pointer.justReleased())
     {
         return;
     }
