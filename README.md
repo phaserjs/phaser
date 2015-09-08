@@ -272,6 +272,9 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * When calling GameObject.revive the `heal` method is called to apply the health value, allowing it to take into consideration a `maxHealth` value if set (thanks @bsparks #2027)
 * Change splice.call(arguments, ..) to use slice instead (thanks @pnstickne #2034 #2032)
 * BitmapData.move, moveH and moveV have a new optional `wrap` argument allowing you to control if the contents of the BitmapData are wrapped around the edges (true) or simply scrolled off (false).
+* Time.desiredFps has moved to a getter / setter.
+* Time.physicsElapsed and Time.physicsElapsedMS are no longer calculated every frame, but only when the desiredFps is changed.
+* Time.update has been streamlined and the `updateSetTimeout` and `updateRAF` methods merged and duplicate code removed.
 
 ### Bug Fixes
 
