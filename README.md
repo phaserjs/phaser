@@ -281,6 +281,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * Loader.bitmapFont wouldn't automatically set the `atlasURL` value if just the key was given.
 * The Loader would put the baseURL and/or path in front of `data:` and `blob` URLs (thanks @rblopes #2044)
 * When the Text width was being calculated it would add the `strokeThickness` value twice, causing an alignment offset (thanks @nickryall #2039)
+* Sound.onEndedHandler has a fix for AudioBufferSourceNode listener memory leak (thanks @Pappa #2069)
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
