@@ -104,10 +104,11 @@ Phaser.Time = function (game) {
     *
     * This is used is used to calculate the physic/logic multiplier and how to apply catch-up logic updates.
     *
-    * @property {number} desiredFps
+    * @property {number} _desiredFps
+    * @private
     * @default
     */
-    this.desiredFps = 60;
+    this._desiredFps = 60;
 
     /**
     * The suggested frame rate for your game, based on an averaged real frame rate.
@@ -337,13 +338,35 @@ Phaser.Time.prototype = {
     */
     update: function (time) {
 
+        //  Set to the old Date.now value
+        var previousDateNow = this.time;
+
+        // this.time always holds a Date.now value
+        // 
+        // this.now may hold the RAF high resolution time value if RAF is available (otherwise it also holds Date.now)
+        // 
+        //  With SetTimeout the time argument is always the same as Date.now, so no need to get it again
+        this.time = (this.game.raf._isSetTimeOut) ? time : Date.now();
+
+        //  Adjust accordingly.
+        this.elapsedMS = this.time - previousDateNow;
+
+        // 'now' is currently still holding the time of the last call, move it into prevTime
+        this.prevTime = this.now;
+
+        // update 'now' to hold the current time
+        this.now = time;
+
+        // elapsed time between previous call and now - this could be a high resolution value
+        this.elapsed = this.now - this.prevTime;
+
         if (this.game.raf._isSetTimeOut)
         {
-            this.updateSetTimeout(time);
-        }
-        else
-        {
-            this.updateRAF(time);
+            // time to call this function again in ms in case we're using timers instead of RequestAnimationFrame to update the game
+            this.timeToCall = Math.floor(Math.max(0, (1000.0 / this._desiredFps) - (this.timeCallExpected - time)));
+
+            // time when the next call is expected if using timers
+            this.timeCallExpected = time + this.timeToCall;
         }
 
         if (this.advancedTiming)
@@ -362,82 +385,6 @@ Phaser.Time.prototype = {
                 this.updateTimers();
             }
         }
-
-    },
-
-    /**
-    * setTimeOut specific time update handler.
-    * Called automatically by Time.update.
-    *
-    * @method Phaser.Time#updateSetTimeout
-    * @private
-    * @param {number} time - The current relative timestamp; see {@link Phaser.Time#now now}.
-    */
-    updateSetTimeout: function (time) {
-
-        //  Set to the old Date.now value
-        var previousDateNow = this.time;
-
-        //  With SetTimeout the time value is always the same as Date.now, so no need to get it again
-        this.time = time;
-
-        //  Adjust accordingly.
-        this.elapsedMS = this.time - previousDateNow;
-
-        // 'now' is currently still holding the time of the last call, move it into prevTime
-        this.prevTime = this.now;
-
-        // update 'now' to hold the current time
-        this.now = time;
-
-        // elapsed time between previous call and now
-        this.elapsed = this.now - this.prevTime;
-
-        // time to call this function again in ms in case we're using timers instead of RequestAnimationFrame to update the game
-        this.timeToCall = Math.floor(Math.max(0, (1000.0 / this.desiredFps) - (this.timeCallExpected - time)));
-
-        // time when the next call is expected if using timers
-        this.timeCallExpected = time + this.timeToCall;
-
-        //  Set the physics elapsed time... this will always be 1 / this.desiredFps because we're using fixed time steps in game.update now
-        this.physicsElapsed = 1 / this.desiredFps;
-
-        this.physicsElapsedMS = this.physicsElapsed * 1000;
-
-    },
-
-    /**
-    * raf specific time update handler.
-    * Called automatically by Time.update.
-    *
-    * @method Phaser.Time#updateRAF
-    * @private
-    * @param {number} time - The current relative timestamp; see {@link Phaser.Time#now now}.
-    */
-    updateRAF: function (time) {
-
-        //  Set to the old Date.now value
-        var previousDateNow = this.time;
-
-        // this.time always holds Date.now, this.now may hold the RAF high resolution time value if RAF is available (otherwise it also holds Date.now)
-        this.time = Date.now();
-
-        //  Adjust accordingly.
-        this.elapsedMS = this.time - previousDateNow;
-
-        // 'now' is currently still holding the time of the last call, move it into prevTime
-        this.prevTime = this.now;
-
-        // update 'now' to hold the current time
-        this.now = time;
-
-        // elapsed time between previous call and now
-        this.elapsed = this.now - this.prevTime;
-
-        //  Set the physics elapsed time... this will always be 1 / this.desiredFps because we're using fixed time steps in game.update now
-        this.physicsElapsed = 1 / this.desiredFps;
-
-        this.physicsElapsedMS = this.physicsElapsed * 1000;
 
     },
 
@@ -598,5 +545,35 @@ Phaser.Time.prototype = {
     }
 
 };
+
+/**
+* The desired frame rate of the game.
+*
+* This is used is used to calculate the physic / logic multiplier and how to apply catch-up logic updates.
+* 
+* @name Phaser.Time#desiredFps
+* @property {integer} desiredFps - The desired frame rate of the game. Defaults to 60.
+*/
+Object.defineProperty(Phaser.Time.prototype, "desiredFps", {
+
+    get: function () {
+
+        return this._desiredFps;
+
+    },
+
+    set: function (value) {
+
+        this._desiredFps = value;
+
+        //  Set the physics elapsed time... this will always be 1 / this.desiredFps 
+        //  because we're using fixed time steps in game.update
+        this.physicsElapsed = 1 / value;
+
+        this.physicsElapsedMS = this.physicsElapsed * 1000;
+
+    }
+
+});
 
 Phaser.Time.prototype.constructor = Phaser.Time;
