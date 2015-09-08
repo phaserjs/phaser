@@ -329,6 +329,19 @@ Phaser.Time.prototype = {
 
     },
 
+    refresh: function () {
+
+        //  Set to the old Date.now value
+        var previousDateNow = this.time;
+
+        // this.time always holds a Date.now value
+        this.time = Date.now();
+
+        //  Adjust accordingly.
+        this.elapsedMS = this.time - previousDateNow;
+
+    },
+
     /**
     * Updates the game clock and if enabled the advanced timing data. This is called automatically by Phaser.Game.
     *
@@ -342,11 +355,7 @@ Phaser.Time.prototype = {
         var previousDateNow = this.time;
 
         // this.time always holds a Date.now value
-        // 
-        // this.now may hold the RAF high resolution time value if RAF is available (otherwise it also holds Date.now)
-        // 
-        //  With SetTimeout the time argument is always the same as Date.now, so no need to get it again
-        this.time = (this.game.raf._isSetTimeOut) ? time : Date.now();
+        this.time = Date.now();
 
         //  Adjust accordingly.
         this.elapsedMS = this.time - previousDateNow;
@@ -355,6 +364,7 @@ Phaser.Time.prototype = {
         this.prevTime = this.now;
 
         // update 'now' to hold the current time
+        // this.now may hold the RAF high resolution time value if RAF is available (otherwise it also holds Date.now)
         this.now = time;
 
         // elapsed time between previous call and now - this could be a high resolution value

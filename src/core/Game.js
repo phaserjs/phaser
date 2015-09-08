@@ -853,6 +853,10 @@ Phaser.Game.prototype = {
                 {
                     break;
                 }
+                else
+                {
+                    this.time.refresh();
+                }
             }
 
             // detect spiraling (if the catch-up loop isn't fast enough, the number of iterations will increase constantly)
