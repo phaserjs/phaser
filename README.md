@@ -278,6 +278,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * Time.desiredFpsMult is a pre-calculated multiplier used in Game.update.
 * Time.refresh updates the `Time.time` and `Time.elapsedMS` values and is called automatically by Game.update.
 * DeviceButton was setting a `duration` property on itself, which went against the read only getter of duration (thanks @winstonwolff)
+* Added Node.js v4 stable to Travis config (thanks @phillipalexander #2070)
 
 ### Bug Fixes
 
@@ -286,6 +287,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * When the Text width was being calculated it would add the `strokeThickness` value twice, causing an alignment offset (thanks @nickryall #2039)
 * Sound.onEndedHandler has a fix for AudioBufferSourceNode listener memory leak (thanks @Pappa #2069)
 * Game.update could call `updateLogic` multiple times in a single frame when catching up with slow device frame rates. This would cause Tweens to advance at twice the speed they should have done (thanks @mkristo)
+* Added useCapture flags to removeEventListener in MSPointer class (thanks @pmcmonagle #2055)
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
