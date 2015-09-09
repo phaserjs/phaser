@@ -275,6 +275,8 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * Time.desiredFps has moved to a getter / setter.
 * Time.physicsElapsed and Time.physicsElapsedMS are no longer calculated every frame, but only when the desiredFps is changed.
 * Time.update has been streamlined and the `updateSetTimeout` and `updateRAF` methods merged and duplicate code removed.
+* Time.desiredFpsMult is a pre-calculated multiplier used in Game.update.
+* Time.refresh updates the `Time.time` and `Time.elapsedMS` values and is called automatically by Game.update.
 
 ### Bug Fixes
 
@@ -282,6 +284,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * The Loader would put the baseURL and/or path in front of `data:` and `blob` URLs (thanks @rblopes #2044)
 * When the Text width was being calculated it would add the `strokeThickness` value twice, causing an alignment offset (thanks @nickryall #2039)
 * Sound.onEndedHandler has a fix for AudioBufferSourceNode listener memory leak (thanks @Pappa #2069)
+* Game.update could call `updateLogic` multiple times in a single frame when catching up with slow device frame rates. This would cause Tweens to advance at twice the speed they should have done (thanks @mkristo)
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 

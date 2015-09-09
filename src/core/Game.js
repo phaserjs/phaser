@@ -785,7 +785,7 @@ Phaser.Game.prototype = {
 
         if (this._kickstart)
         {
-            this.updateLogic(1.0 / this.time.desiredFps);
+            this.updateLogic(this.time.desiredFpsMult);
 
             //  Sync the scene graph after _every_ logic update to account for moved game objects                
             this.stage.updateTransform();
@@ -805,7 +805,7 @@ Phaser.Game.prototype = {
             if (this.time.time > this._nextFpsNotification)
             {
                 // only permit one fps notification per 10 seconds
-                this._nextFpsNotification = this.time.time + 1000 * 10;
+                this._nextFpsNotification = this.time.time + 10000;
 
                 // dispatch the notification signal
                 this.fpsProblemNotifier.dispatch();
@@ -842,7 +842,7 @@ Phaser.Game.prototype = {
                 this._deltaTime -= slowStep;
                 this.currentUpdateID = count;
 
-                this.updateLogic(1.0 / this.time.desiredFps);
+                this.updateLogic(this.time.desiredFpsMult);
 
                 //  Sync the scene graph after _every_ logic update to account for moved game objects
                 this.stage.updateTransform();
@@ -904,7 +904,7 @@ Phaser.Game.prototype = {
 
             this.state.update();
             this.stage.update();
-            this.tweens.update(timeStep);
+            this.tweens.update();
             this.sound.update();
             this.input.update();
             this.physics.update();

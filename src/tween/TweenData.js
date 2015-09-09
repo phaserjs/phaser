@@ -240,13 +240,6 @@ Phaser.TweenData.prototype = {
 
         this.startTime = this.game.time.time + this.delay;
 
-        //  DEBUG
-        this.realStart = Date.now();
-        this.totalElapsedMs = 0;
-
-        // console.log('startTime', this.startTime);
-        // console.log('realStart', this.realStart);
-
         if (this.parent.reverse)
         {
             this.dt = this.duration;
@@ -381,13 +374,6 @@ Phaser.TweenData.prototype = {
         }
 
         this.percent = this.dt / this.duration;
-
-        this.totalElapsedMs = (this.totalElapsedMs || 0) + this.game.time.elapsedMS;
-
-        // if (this.percent === 1)
-        // {
-            // console.log("ElapsedTime", this.totalElapsedMs, Date.now() - this.realStart);
-        // }
 
         this.value = this.easingFunction(this.percent);
 

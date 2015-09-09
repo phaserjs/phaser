@@ -100,6 +100,13 @@ Phaser.Time = function (game) {
     this.physicsElapsedMS = 0;
 
     /**
+    * The desiredFps multiplier as used by Game.update.
+    * @property {integer} desiredFpsMult
+    * @protected
+    */
+    this.desiredFpsMult = 1.0 / 60;
+
+    /**
     * The desired frame rate of the game.
     *
     * This is used is used to calculate the physic/logic multiplier and how to apply catch-up logic updates.
@@ -329,6 +336,11 @@ Phaser.Time.prototype = {
 
     },
 
+    /**
+    * Refreshes the Time.time and Time.elapsedMS properties from the system clock.
+    *
+    * @method Phaser.Time#refresh
+    */
     refresh: function () {
 
         //  Set to the old Date.now value
@@ -441,7 +453,7 @@ Phaser.Time.prototype = {
         this._elapsedAccumulator += this.elapsed;
 
         // occasionally recalculate the suggestedFps based on the accumulated elapsed time
-        if (this._frameCount >= this.desiredFps * 2)
+        if (this._frameCount >= this._desiredFps * 2)
         {
             // this formula calculates suggestedFps in multiples of 5 fps
             this.suggestedFps = Math.floor(200 / (this._elapsedAccumulator / this._frameCount)) * 5;
@@ -581,6 +593,8 @@ Object.defineProperty(Phaser.Time.prototype, "desiredFps", {
         this.physicsElapsed = 1 / value;
 
         this.physicsElapsedMS = this.physicsElapsed * 1000;
+
+        this.desiredFpsMult = 1.0 / value;
 
     }
 
