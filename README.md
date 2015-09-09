@@ -277,6 +277,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * Time.update has been streamlined and the `updateSetTimeout` and `updateRAF` methods merged and duplicate code removed.
 * Time.desiredFpsMult is a pre-calculated multiplier used in Game.update.
 * Time.refresh updates the `Time.time` and `Time.elapsedMS` values and is called automatically by Game.update.
+* DeviceButton was setting a `duration` property on itself, which went against the read only getter of duration (thanks @winstonwolff)
 
 ### Bug Fixes
 
