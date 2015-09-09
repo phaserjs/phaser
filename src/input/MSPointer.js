@@ -425,20 +425,23 @@ Phaser.MSPointer.prototype = {
 
         var canvas = this.game.canvas;
 
-        canvas.removeEventListener('MSPointerDown', this._onMSPointerDown);
-        canvas.removeEventListener('MSPointerMove', this._onMSPointerMove);
-        canvas.removeEventListener('MSPointerUp', this._onMSPointerUp);
-        canvas.removeEventListener('MSPointerOver', this._onMSPointerOver);
-        canvas.removeEventListener('MSPointerOut', this._onMSPointerOut);
+        canvas.removeEventListener('MSPointerDown', this._onMSPointerDown, false);
+        canvas.removeEventListener('MSPointerMove', this._onMSPointerMove, false);
+        canvas.removeEventListener('MSPointerUp', this._onMSPointerUp, false);
 
-        canvas.removeEventListener('pointerdown', this._onMSPointerDown);
-        canvas.removeEventListener('pointermove', this._onMSPointerMove);
-        canvas.removeEventListener('pointerup', this._onMSPointerUp);
-        canvas.removeEventListener('pointerover', this._onMSPointerOver);
-        canvas.removeEventListener('pointerout', this._onMSPointerOut);
+        //  IE11+ uses non-prefix events
+        canvas.removeEventListener('pointerdown', this._onMSPointerDown, false);
+        canvas.removeEventListener('pointermove', this._onMSPointerMove, false);
+        canvas.removeEventListener('pointerup', this._onMSPointerUp, false);
 
-        window.removeEventListener('MSPointerUp', this._onMSPointerUpGlobal);
-        window.removeEventListener('pointerup', this._onMSPointerUpGlobal);
+        window.removeEventListener('MSPointerUp', this._onMSPointerUpGlobal, true);
+        canvas.removeEventListener('MSPointerOver', this._onMSPointerOver, true);
+        canvas.removeEventListener('MSPointerOut', this._onMSPointerOut, true);
+
+        //  IE11+ uses non-prefix events
+        window.removeEventListener('pointerup', this._onMSPointerUpGlobal, true);
+        canvas.removeEventListener('pointerover', this._onMSPointerOver, true);
+        canvas.removeEventListener('pointerout', this._onMSPointerOut, true);
 
     }
 
