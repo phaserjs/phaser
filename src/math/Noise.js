@@ -124,13 +124,13 @@ Phaser.Noise.prototype = {
         switch (arguments.length) {
             case 1:
                 return this.simplex2(x, 0);
-                break;
+
             case 2:
                 return this.simplex2(x, y);
-                break;
+
             case 3:
                 return this.simplex3(x, y, z);
-                break;
+
         }
     },
     /**
@@ -341,13 +341,13 @@ Phaser.Noise.prototype = {
         switch (arguments.length) {
             case 1:
                 return this.perlin2(x, 0);
-                break;
+
             case 2:
                 return this.perlin2(x, y);
-                break;
+
             case 3:
                 return this.perlin3(x, y, z);
-                break;
+
         }
     },
     perlin2: function(x, y) {
@@ -424,4 +424,4 @@ Phaser.Noise.prototype = {
                 lerp(n011, n111, u), w),
             v);
     }
-}
+};
