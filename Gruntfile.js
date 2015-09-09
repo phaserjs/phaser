@@ -51,7 +51,7 @@ module.exports = function (grunt) {
             'rope':             { 'description': 'Rope and Strip Game Object',                  'optional': true, 'stub': false },
             'tilesprite':       { 'description': 'Tile Sprite Game Object',                     'optional': true, 'stub': false },
             'system':           { 'description': 'System Classes',                              'optional': false, 'stub': false },
-            'math':             { 'description': 'Math, QuadTree and RND',                      'optional': false, 'stub': false },
+            'math':             { 'description': 'Math, QuadTree, Noise and RND',                      'optional': false, 'stub': false },
             'net':              { 'description': 'Network Class',                               'optional': true, 'stub': true },
             'tweens':           { 'description': 'Tween Manager',                               'optional': true, 'stub': true },
             'time':             { 'description': 'Time and Clock Manager',                      'optional': false, 'stub': false },
