@@ -52,6 +52,7 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
     * The z-depth value of this object within its parent container/Group - the World is a Group as well.
     * This value must be unique for each child in a Group.
     * @property {integer} z
+    * @readOnly
     */
     this.z = 0;
 
