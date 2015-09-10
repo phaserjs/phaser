@@ -90,14 +90,14 @@ Phaser.Time = function (game) {
     *
     * @property {number} physicsElapsed
     */
-    this.physicsElapsed = 0;
+    this.physicsElapsed = 1 / 60;
 
     /**
     * The physics update delta, in milliseconds - equivalent to `physicsElapsed * 1000`.
     *
     * @property {number} physicsElapsedMS
     */
-    this.physicsElapsedMS = 0;
+    this.physicsElapsedMS = (1 / 60) * 1000;
 
     /**
     * The desiredFps multiplier as used by Game.update.
