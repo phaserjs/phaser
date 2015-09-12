@@ -141,24 +141,42 @@ Phaser.Button = function (game, x, y, key, callback, callbackContext, overFrame,
 
     /**
     * The Signal (or event) dispatched when this Button is in an Over state.
+    *
+    * The button *may* be put in the Down visual state instead of the Over visual state even though this event fires.
+    * This occurs when pointer is pressed over the button, moved off the button, and then moved back over the button.
+    * See {#overResumesPressedState} for controlling this behavior.
+    *
+    * Use the {#isPressed} property to determine the actual logical state.
+    *
     * @property {Phaser.Signal} onInputOver
     */
     this.onInputOver = new Phaser.Signal();
 
     /**
-    * The Signal (or event) dispatched when this Button is in an Out state.
+    * The Signal (or event) dispatched when the pointer leaves the button.
+    *
     * @property {Phaser.Signal} onInputOut
     */
     this.onInputOut = new Phaser.Signal();
 
     /**
-    * The Signal (or event) dispatched when this Button is in an Down state.
+    * The Signal (or event) dispatched on a pointer Down event.
+    *
+    * This usualy means that the button is in the 'pressed' of Down visual state.
+    * However the Down visual state may occur even if this event does not fire - see {#onInputOver}.
+    * Use the {#isPressed} property to determine the actual logical state.
+    *
     * @property {Phaser.Signal} onInputDown
     */
     this.onInputDown = new Phaser.Signal();
 
     /**
-    * The Signal (or event) dispatched when this Button is in an Up state.
+    * The Signal (or event) dispatched after a pointer Up event.
+    *
+    * The Up event can be generated even though the pointer is *not* over the button.
+    * Use the `isOver` (3rd) parameter supplied to test for this case.
+    * (The {#isPressed} property cannot be used in this case because the pointer is already Up again.)
+    *
     * @property {Phaser.Signal} onInputUp
     */
     this.onInputUp = new Phaser.Signal();
@@ -170,9 +188,19 @@ Phaser.Button = function (game, x, y, key, callback, callbackContext, overFrame,
     * @default
     */
     this.onOverMouseOnly = false;
+
+    /**
+    * Controls the behavior of pressing the pointer on the button, moving it off the button, and then moving it back on.
+    * If the press is resumed the Down visual state will be entered.
+    *
+    * Valid values are false (never resume), true (resume for all pointer types), and 'cursor-only' (only resume for the mouse).
+    *
+    * @property {boolean|stream} [overResumesPressedState='cursor-only']
+    */
+    this.overResumesPressedState = 'cursor-only';
     
     /**
-    * When true the the texture frame will not be automatically switched on up/down/over/out events.
+    * When true the the texture frame will *not* be automatically switched on up/down/over/out events.
     * @property {boolean} freezeFrames
     * @default
     */
@@ -185,10 +213,24 @@ Phaser.Button = function (game, x, y, key, callback, callbackContext, overFrame,
     */
     this.forceOut = false;
 
+    /**
+    * A bitmask of pointers (by Pointer ID) that entered the down state on this button.
+    * If any of these pointers moves back over the button it will revert to a 'Down' state instead of 'Over'.
+    * @property {integer} _downPointerMask
+    * @private
+    */
+    this._downPointerMask = 0;
+
+    /**
+    * A bitmask of pointers (by Pointer ID) that are currently over the button.
+    * A button is only 'pressed' if there are any pressed-and-over pointers.
+    * @property {integer} _downPointerMask
+    * @private
+    */
+    this._overPointerMask = 0;
+
     this.inputEnabled = true;
-
     this.input.start(0, true);
-
     this.input.useHandCursor = true;
 
     this.setFrames(overFrame, outFrame, downFrame, upFrame);
@@ -463,6 +505,26 @@ Phaser.Button.prototype.setUpSound = function (sound, marker) {
 };
 
 /**
+* True if and only if there is a down pointer that was initially pressed while over the button
+* and the pointer is currently over the button.
+*
+* This should be used to detect the logical 'pressed' state of the button.
+*
+* @name Phaser.Button#isPressed
+* @property {boolean} isPressed
+* @readonly
+*/
+Object.defineProperty(Phaser.Button.prototype, "isPressed", {
+
+    get: function () {
+
+        return (this._overPointerMask & this._downPointerMask) !== 0;
+
+    }
+
+});
+
+/**
 * Internal function that handles input events.
 *
 * @method Phaser.Button#onInputOverHandler
@@ -478,6 +540,21 @@ Phaser.Button.prototype.onInputOverHandler = function (sprite, pointer) {
         return;
     }
 
+    this._overPointerMask |= (1 << pointer.pointerId);
+
+    if ((this._downPointerMask & (1 << pointer.pointerId)) !== 0 &&
+        (this.overResumesPressedState === true || (this.overResumesPressedState === 'cursor-only' && pointer.isMouse)))
+    {
+        // A pressed pointer re-entered the button so go back to 'Down' state, not 'Over'
+        this.changeStateFrame(STATE_DOWN);
+        this.playStateSound(STATE_DOWN);
+        
+        // However it is still an InputOver event that occured
+        this.onInputOver.dispatch(this, pointer);
+
+        return;
+    }
+
     this.changeStateFrame(STATE_OVER);
 
     if (this.onOverMouseOnly && !pointer.isMouse)
@@ -487,10 +564,7 @@ Phaser.Button.prototype.onInputOverHandler = function (sprite, pointer) {
 
     this.playStateSound(STATE_OVER);
 
-    if (this.onInputOver)
-    {
-        this.onInputOver.dispatch(this, pointer);
-    }
+    this.onInputOver.dispatch(this, pointer);
 
 };
 
@@ -504,14 +578,21 @@ Phaser.Button.prototype.onInputOverHandler = function (sprite, pointer) {
 */
 Phaser.Button.prototype.onInputOutHandler = function (sprite, pointer) {
 
+    this._overPointerMask &= ~(1 << pointer.pointerId);
+
+    if (!(this.overResumesPressedState === true || (this.overResumesPressedState === 'cursor-only' && pointer.isMouse)))
+    {
+        // Don't allow pressed-state resuming so also discredit pointer down flag;
+        // otherwise isPressed could still result in a false-positive.
+        this._downPointerMask &= ~(1 << pointer.pointerId);
+    }
+
     this.changeStateFrame(STATE_OUT);
 
     this.playStateSound(STATE_OUT);
 
-    if (this.onInputOut)
-    {
-        this.onInputOut.dispatch(this, pointer);
-    }
+    this.onInputOut.dispatch(this, pointer);
+
 };
 
 /**
@@ -524,14 +605,14 @@ Phaser.Button.prototype.onInputOutHandler = function (sprite, pointer) {
 */
 Phaser.Button.prototype.onInputDownHandler = function (sprite, pointer) {
 
+    this._downPointerMask |= (1 << pointer.pointerId);
+    this._overPointerMask |= (1 << pointer.pointerId);  // Down implies over
+    
     this.changeStateFrame(STATE_DOWN);
 
     this.playStateSound(STATE_DOWN);
 
-    if (this.onInputDown)
-    {
-        this.onInputDown.dispatch(this, pointer);
-    }
+    this.onInputDown.dispatch(this, pointer);
 };
 
 /**
@@ -544,13 +625,25 @@ Phaser.Button.prototype.onInputDownHandler = function (sprite, pointer) {
 */
 Phaser.Button.prototype.onInputUpHandler = function (sprite, pointer, isOver) {
 
+    if (isOver)
+    {
+        // 'Button pressed', for real. Clear multi-touch pressed state.
+        this._downPointerMask = 0;
+    }
+    else
+    {
+        this._downPointerMask &= ~(1 << pointer.pointerId);
+    }
+
+    if (!pointer.isMouse)
+    {
+        this._overPointerMask &= ~(1 << pointer.pointerId);
+    }
+
     this.playStateSound(STATE_UP);
 
     //  Input dispatched early, before state change (but after sound)
-    if (this.onInputUp)
-    {
-        this.onInputUp.dispatch(this, pointer, isOver);
-    }
+    this.onInputUp.dispatch(this, pointer, isOver);
 
     if (this.freezeFrames)
     {
