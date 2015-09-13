@@ -18,6 +18,8 @@
 *
 * Frames can be specified as either an integer (the frame ID) or a string (the frame name); the same values that can be used with a Sprite constructor.
 *
+* If a callback is supplied it is bound to the {#onClick}} signal.
+*
 * @class Phaser.Button
 * @constructor
 * @extends Phaser.Image
@@ -174,12 +176,23 @@ Phaser.Button = function (game, x, y, key, callback, callbackContext, overFrame,
     * The Signal (or event) dispatched after a pointer Up event.
     *
     * The Up event can be generated even though the pointer is *not* over the button.
-    * Use the `isOver` (3rd) parameter supplied to test for this case.
-    * (The {#isPressed} property cannot be used in this case because the pointer is already Up again.)
+    *    
+    * To handle the case when the button is actually clicked it is better to use {#onClick}, as this will only be called on a valid
+    * button click as it verifies both the `isOver` pointer state and the {#isPressed} button state.
     *
     * @property {Phaser.Signal} onInputUp
     */
     this.onInputUp = new Phaser.Signal();
+
+    /**
+    * The Signal (or event) dispatched when a button has been clicked.
+    *
+    * The button is considered clicked *only* when a valid pointer has been released over the button while in a pressed state.
+    * The onClick signal is dispatched *after* any {#onInputUp} listener.
+    *
+    * @property {Phaser.Signal} onClick
+    */
+    this.onClick = new Phaser.Signal();
 
     /**
     * If true then onOver events (such as onOverSound) will only be triggered if the Pointer object causing them was the Mouse Pointer.
@@ -237,7 +250,7 @@ Phaser.Button = function (game, x, y, key, callback, callbackContext, overFrame,
 
     if (callback !== null)
     {
-        this.onInputUp.add(callback, callbackContext);
+        this.onClick.add(callback, callbackContext);
     }
 
     //  Redirect the input events to here so we can handle animation updates, etc
@@ -625,7 +638,18 @@ Phaser.Button.prototype.onInputDownHandler = function (sprite, pointer) {
 */
 Phaser.Button.prototype.onInputUpHandler = function (sprite, pointer, isOver) {
 
-    if (isOver)
+    this.playStateSound(STATE_UP);
+
+    //  Input dispatched early, before state change (but after sound)
+    this.onInputUp.dispatch(this, pointer, isOver);
+
+    if (isOver && this.isPressed)
+    {
+        this.onClick.dispatch(this, pointer);
+    }
+
+    // Reset states after calling signals so `isPressed` remains valid
+    if (isOver && this.isPressed)
     {
         // 'Button pressed', for real. Clear multi-touch pressed state.
         this._downPointerMask = 0;
@@ -637,13 +661,9 @@ Phaser.Button.prototype.onInputUpHandler = function (sprite, pointer, isOver) {
 
     if (!pointer.isMouse)
     {
+        // Touch pointers considered Out when they Up
         this._overPointerMask &= ~(1 << pointer.pointerId);
     }
-
-    this.playStateSound(STATE_UP);
-
-    //  Input dispatched early, before state change (but after sound)
-    this.onInputUp.dispatch(this, pointer, isOver);
 
     if (this.freezeFrames)
     {
