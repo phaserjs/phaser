@@ -236,11 +236,11 @@ Phaser.TilemapParser = {
             // Base64 decode data if necessary
             // NOTE: uncompressed base64 only. 
             if (!curl.compression && curl.encoding && curl.encoding === "base64") {
-                var binary_string =  window.atob(curl.data);
-                var len = binary_string.length;
+                var binaryString =  window.atob(curl.data);
+                var len = binaryString.length;
                 var bytes = new Array( len );
                 for (var i = 0; i < len; i+=4) {
-                    bytes[i/4] = binary_string.charCodeAt(i);
+                    bytes[i/4] = binaryString.charCodeAt(i);
                 }
                 curl.data = bytes;
             }
