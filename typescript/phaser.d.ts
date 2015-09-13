@@ -1,7 +1,7 @@
 /// <reference path="pixi.d.ts" />
 /// <reference path="p2.d.ts" />
 
-// Type definitions for Phaser 2.4.4+ 2015-Sep-02
+// Type definitions for Phaser 2.4.4+ 2015-Sep-10
 // Project: https://github.com/photonstorm/phaser
 
 declare class Phaser {
@@ -266,9 +266,9 @@ declare module Phaser {
         getTransform(translateX: number, translateY: number, scaleX: number, scaleY: number, skewX: number, skewY: number): any;
         line(x1: number, y1: number, x2: number, y2: number, color?: string, width?: number): Phaser.BitmapData;
         load(source: any): Phaser.BitmapData;
-        move(x: number, y: number): Phaser.BitmapData;
-        moveH(distance: number): Phaser.BitmapData;
-        moveV(distance: number): Phaser.BitmapData;
+        move(x: number, y: number, wrap?: boolean): Phaser.BitmapData;
+        moveH(distance: number, wrap?: boolean): Phaser.BitmapData;
+        moveV(distance: number, wrap?: boolean): Phaser.BitmapData;
         processPixel(callback: Function, callbackContext: any, x?: number, y?: Number, width?: number, height?: number): Phaser.BitmapData;
         processPixelRGB(callback: Function, callbackContext: any, x?: number, y?: Number, width?: number, height?: number): Phaser.BitmapData;
         rect(x: number, y: number, width: number, height: number, fillStyle?: string): Phaser.BitmapData;
@@ -817,6 +817,32 @@ declare module Phaser {
 
     }
 
+    class DeviceButton {
+
+        constructor(parent: Phaser.Pointer | Phaser.SinglePad, butonCode: number);
+
+        buttonCode: number;
+        game: Phaser.Game;
+        isDown: boolean;
+        isUp: boolean;
+        onDown: Phaser.Signal;
+        onFloat: Phaser.Signal;
+        onUp: Phaser.Signal;
+        pad: Phaser.Gamepad;
+        repeats: number;
+        timeDown: number;
+        timeUp: number;
+        value: number;
+
+        destroy(): void;
+        justPressed(duration?: number): boolean;
+        justReleased(duration?: number): boolean;
+        processButtonDown(value: number): void;
+        processButtonFloat(value: number): void;
+        processButtonUp(value: number): void;
+        reset(): void;
+
+    }
 
     module Easing {
 
@@ -1504,33 +1530,6 @@ declare module Phaser {
         stop(): void;
         update(): void;
 
-    }
-
-    class GamepadButton {
-
-        constructor(pad: Phaser.SinglePad, buttonCode: number);
-
-        buttonCode: number;
-        duration: number;
-        game: Phaser.Game;
-        isDown: boolean;
-        isUp: boolean;
-        onDown: Phaser.Signal;
-        onFloat: Phaser.Signal;
-        onUp: Phaser.Signal;
-        pad: Phaser.Gamepad;
-        repeats: number;
-        timeDown: number;
-        timeUp: number;
-        value: number;
-
-        destroy(): void;
-        justPressed(duration?: number): boolean;
-        justReleased(duration?: number): boolean;
-        processButtonDown(value: number): void;
-        processButtonFloat(value: number): void;
-        processButtonUp(value: number): void;
-        reset(): void;
     }
 
     class Graphics extends PIXI.Graphics {
@@ -2538,7 +2537,7 @@ declare module Phaser {
                 y: number;
 
                 at(object: any): void;
-                emitParticle(): void;
+                emitParticle(x?: number, y?: number, key?: string|Phaser.RenderTexture|Phaser.BitmapData|Phaser.Video|PIXI.Texture, frame?: string | number): boolean;
                 explode(lifespan?: number, quantity?: number): void;
                 flow(lifespan?: number, frequency?: number, quantity?: number, total?: number, immediate?: boolean): void;
                 kill(): void;
@@ -4110,7 +4109,7 @@ declare module Phaser {
         connect(rawPad: any): void;
         destroy(): void;
         disconnect(): void;
-        getButton(buttonCode: number): Phaser.GamepadButton;
+        getButton(buttonCode: number): Phaser.DeviceButton;
         isDown(buttonCode: number): boolean;
         isUp(buttonCode: number): boolean;
         justPressed(buttonCode: number, duration?: number): boolean;
@@ -4941,6 +4940,7 @@ declare module Phaser {
 
         advancedTiming: boolean;
         desiredFps: number;
+        desiredFpsMult: number;
         elapsed: number;
         events: Phaser.Timer;
         elapsedMS: number;
