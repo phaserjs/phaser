@@ -71,7 +71,7 @@ The order in which items are rendered in the display matches the order in which 
 
 <h3>World Building</h3> 
 
-Under the hood game.add.sprite is creating a new <a href="http://docs.phaser.io/Phaser.Sprite.html">Phaser.Sprite</a> object and adding the sprite to the ìgame worldî. This world is where all your objects live, it can be compared to the Stage in Actionscript3.
+Under the hood game.add.sprite is creating a new <a href="http://docs.phaser.io/Phaser.Sprite.html">Phaser.Sprite</a> object and adding the sprite to the ‚Äúgame world‚Äù. This world is where all your objects live, it can be compared to the Stage in Actionscript3.
 
 <strong>Note:</strong> The game world has no fixed size and extends infinitely in all directions, with 0,0 being the center of it. For convenience Phaser places 0,0 at the top left of your game for you, but by using the built-in Camera you can move around as needed.
 
@@ -287,9 +287,9 @@ var scoreText;</pre>
 
 The scoreText is set-up in the create function:
 
-<pre class="lang:js decode:true">scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });</pre>
+<pre class="lang:js decode:true">scoreText = game.add.text(16, 16, 'Score: 0', { fontSize: '32px', fill: '#000' });</pre>
 
-16x16 is the coordinate to display the text at. 'score: 0' is the default string to display and the object that follows contains a font size and fill colour. By not specifying which font we'll actually use the browser will default, so on Windows it will be Arial. Next we need to modify the collectStar function so that when the player picks-up a star their score increases and the text is updated to reflect this:
+16x16 is the coordinate to display the text at. 'Score: 0' is the default string to display and the object that follows contains a font size and fill colour. By not specifying which font we'll actually use the browser will default, so on Windows it will be Arial. Next we need to modify the collectStar function so that when the player picks-up a star their score increases and the text is updated to reflect this:
 
 <pre class="lang:js decode:true">function collectStar (player, star) {
     
