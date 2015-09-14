@@ -264,11 +264,12 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * P2.Body.removeCollisionGroup allows you to remove the given CollisionGroup, or array of CollisionGroups, from the list of groups that a body will collide with and updates the collision masks (thanks @Garbanas #2047)
 * Filter.addToWorld allows you to quickly create a Phaser.Image object at the given position and size, with the Filter ready applied to it. This can eliminate lots of duplicate code.
 * Tiled 0.13.0 added support for layer data compression when exporting as JSON. This means that any .tmx stored using base64 encoding will start exporting layer data as a base64 encoded string rather than a native array. This update adds in automatic support for this as long as the data isn't compressed. For IE9 support you'll need to use the new polyfill found in the resources folder (thanks @noidexe #2084)
+* You can now load single layer Pyxel Edit TileMaps as an atlas (thanks @joshpmcghee #2050)
 
 ### Updates
 
 * TypeScript definitions fixes and updates (thanks @clark-stevenson @milkey-mouse @timotei @qdrj @Garbanas @cloakedninjas)
-* JSDoc typo fixes (thanks @rwrountree @yeluoqiuzhi)
+* Docs typo fixes (thanks @rwrountree @yeluoqiuzhi @pnstickne @fonsecas72)
 * Math.average has been optimized (thanks @rwrountree #2025)
 * When calling GameObject.revive the `heal` method is called to apply the health value, allowing it to take into consideration a `maxHealth` value if set (thanks @bsparks #2027)
 * Change splice.call(arguments, ..) to use slice instead (thanks @pnstickne #2034 #2032)
