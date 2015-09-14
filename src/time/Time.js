@@ -385,10 +385,10 @@ Phaser.Time.prototype = {
         if (this.game.raf._isSetTimeOut)
         {
             // time to call this function again in ms in case we're using timers instead of RequestAnimationFrame to update the game
-            this.timeToCall = Math.floor(Math.max(0, (1000.0 / this._desiredFps) - (this.timeCallExpected - time)));
+            this.timeToCall = Math.floor(Math.max(0, (1000.0 / this._desiredFps) - (this.timeExpected - time)));
 
             // time when the next call is expected if using timers
-            this.timeCallExpected = time + this.timeToCall;
+            this.timeExpected = time + this.timeToCall;
         }
 
         if (this.advancedTiming)
