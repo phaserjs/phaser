@@ -296,12 +296,6 @@ Phaser.Loader.TEXTURE_ATLAS_XML_STARLING = 2;
 * @constant
 * @type {number}
 */
-Phaser.Loader.TEXTURE_ATLAS_JSON_PYXEL = 3;
-
-/**
-* @constant
-* @type {number}
-*/
 Phaser.Loader.PHYSICS_LIME_CORONA_JSON = 3;
 
 /**
@@ -309,6 +303,12 @@ Phaser.Loader.PHYSICS_LIME_CORONA_JSON = 3;
 * @type {number}
 */
 Phaser.Loader.PHYSICS_PHASER_JSON = 4;
+
+/**
+* @constant
+* @type {number}
+*/
+Phaser.Loader.TEXTURE_ATLAS_JSON_PYXEL = 5;
 
 Phaser.Loader.prototype = {
 
