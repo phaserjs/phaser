@@ -265,6 +265,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * Filter.addToWorld allows you to quickly create a Phaser.Image object at the given position and size, with the Filter ready applied to it. This can eliminate lots of duplicate code.
 * Tiled 0.13.0 added support for layer data compression when exporting as JSON. This means that any .tmx stored using base64 encoding will start exporting layer data as a base64 encoded string rather than a native array. This update adds in automatic support for this as long as the data isn't compressed. For IE9 support you'll need to use the new polyfill found in the resources folder (thanks @noidexe #2084)
 * You can now load single layer Pyxel Edit TileMaps as an atlas (thanks @joshpmcghee #2050)
+* Canvas.getSmoothingPrefix will return the vendor prefixed smoothing enabled value from the context if set, otherwise null.
 
 ### Updates
 
@@ -291,6 +292,10 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * Game.update could call `updateLogic` multiple times in a single frame when catching up with slow device frame rates. This would cause Tweens to advance at twice the speed they should have done (thanks @mkristo)
 * Added useCapture flags to removeEventListener in MSPointer class (thanks @pmcmonagle #2055)
 * Under setTimeOut (or when `forceSetTimeOut` was true) the Time was incorrectly setting `Time.timeExpected` causing game updates to lag (thanks @satan6 #2087)
+
+### Pixi Updates
+
+* CanvasRenderer.mapBlendModes optimised to cut down on file size.
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 

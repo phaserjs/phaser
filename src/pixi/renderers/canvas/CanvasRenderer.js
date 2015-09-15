@@ -8,28 +8,14 @@
  *
  * @class CanvasRenderer
  * @constructor
- * @param [width=800] {Number} the width of the canvas view
- * @param [height=600] {Number} the height of the canvas view
- * @param [options] {Object} The optional renderer parameters
- * @param [options.view] {HTMLCanvasElement} the canvas to use as a view, optional
- * @param [options.transparent=false] {Boolean} If the render view is transparent, default false
- * @param [options.autoResize=false] {Boolean} If the render view is automatically resized, default false
- * @param [options.resolution=1] {Number} the resolution of the renderer retina would be 2
- * @param [options.clearBeforeRender=true] {Boolean} This sets if the CanvasRenderer will clear the canvas or not before the new render pass.
+ * @param game {Phaser.Game} A reference to the Phaser Game instance
  */
-PIXI.CanvasRenderer = function(width, height, options)
-{
-    if (options)
-    {
-        for (var i in PIXI.defaultRenderOptions)
-        {
-            if (options[i] === undefined) options[i] = PIXI.defaultRenderOptions[i];
-        }
-    }
-    else
-    {
-        options = PIXI.defaultRenderOptions;
-    }
+PIXI.CanvasRenderer = function (game) {
+
+    /**
+    * @property {Phaser.Game} game - A reference to the Phaser Game instance.
+    */
+    this.game = game;
 
     if (!PIXI.defaultRenderer)
     {
@@ -50,7 +36,7 @@ PIXI.CanvasRenderer = function(width, height, options)
      * @property resolution
      * @type Number
      */
-    this.resolution = options.resolution;
+    this.resolution = game.resolution;
 
     /**
      * This sets if the CanvasRenderer will clear the canvas or not before the new render pass.
@@ -62,7 +48,7 @@ PIXI.CanvasRenderer = function(width, height, options)
      * @type Boolean
      * @default
      */
-    this.clearBeforeRender = options.clearBeforeRender;
+    this.clearBeforeRender = game.clearBeforeRender;
 
     /**
      * Whether the render view is transparent
@@ -70,7 +56,7 @@ PIXI.CanvasRenderer = function(width, height, options)
      * @property transparent
      * @type Boolean
      */
-    this.transparent = options.transparent;
+    this.transparent = game.transparent;
 
     /**
      * Whether the render view should be resized automatically
@@ -78,7 +64,7 @@ PIXI.CanvasRenderer = function(width, height, options)
      * @property autoResize
      * @type Boolean
      */
-    this.autoResize = options.autoResize || false;
+    this.autoResize = false;
 
     /**
      * The width of the canvas view
@@ -87,7 +73,7 @@ PIXI.CanvasRenderer = function(width, height, options)
      * @type Number
      * @default 800
      */
-    this.width = width || 800;
+    this.width = game.width * this.resolution;
 
     /**
      * The height of the canvas view
@@ -96,10 +82,7 @@ PIXI.CanvasRenderer = function(width, height, options)
      * @type Number
      * @default 600
      */
-    this.height = height || 600;
-
-    this.width *= this.resolution;
-    this.height *= this.resolution;
+    this.height = game.height * this.resolution;
 
     /**
      * The canvas element that everything is drawn to.
@@ -107,7 +90,7 @@ PIXI.CanvasRenderer = function(width, height, options)
      * @property view
      * @type HTMLCanvasElement
      */
-    this.view = options.view || PIXI.CanvasPool.create(this, this.width, this.height);
+    this.view = game.canvas;
 
     /**
      * The canvas 2d context that everything is drawn with
@@ -124,8 +107,9 @@ PIXI.CanvasRenderer = function(width, height, options)
      */
     this.refresh = true;
 
-    this.view.width = this.width * this.resolution;
-    this.view.height = this.height * this.resolution;
+    //  This is already done in the Game.setUpRenderer method.
+    // this.view.width = this.width * this.resolution;
+    // this.view.height = this.height * this.resolution;
 
     /**
      * Internal var.
@@ -151,7 +135,8 @@ PIXI.CanvasRenderer = function(width, height, options)
         context: this.context,
         maskManager: this.maskManager,
         scaleMode: null,
-        smoothProperty: null,
+        smoothProperty: Phaser.Canvas.getSmoothingPrefix(this.context),
+
         /**
          * If true Pixi will Math.floor() x/y values when rendering, stopping pixel interpolation.
          * Handy for crisp pixel art and speed on legacy devices.
@@ -161,18 +146,8 @@ PIXI.CanvasRenderer = function(width, height, options)
 
     this.mapBlendModes();
     
-    this.resize(width, height);
+    this.resize(this.width, this.height);
 
-    if("imageSmoothingEnabled" in this.context)
-        this.renderSession.smoothProperty = "imageSmoothingEnabled";
-    else if("webkitImageSmoothingEnabled" in this.context)
-        this.renderSession.smoothProperty = "webkitImageSmoothingEnabled";
-    else if("mozImageSmoothingEnabled" in this.context)
-        this.renderSession.smoothProperty = "mozImageSmoothingEnabled";
-    else if("oImageSmoothingEnabled" in this.context)
-        this.renderSession.smoothProperty = "oImageSmoothingEnabled";
-    else if ("msImageSmoothingEnabled" in this.context)
-        this.renderSession.smoothProperty = "msImageSmoothingEnabled";
 };
 
 // constructor
@@ -188,7 +163,7 @@ PIXI.CanvasRenderer.prototype.render = function(stage)
 {
     stage.updateTransform();
 
-    this.context.setTransform(1,0,0,1,0,0);
+    this.context.setTransform(1, 0, 0, 1, 0, 0);
 
     this.context.globalAlpha = 1;
 
@@ -209,7 +184,7 @@ PIXI.CanvasRenderer.prototype.render = function(stage)
         }
         else
         {
-            this.context.fillStyle = stage.backgroundColorString;
+            this.context.fillStyle = stage._bgColor.rgba;
             this.context.fillRect(0, 0, this.width , this.height);
         }
     }
@@ -255,7 +230,8 @@ PIXI.CanvasRenderer.prototype.resize = function(width, height)
     this.view.width = this.width;
     this.view.height = this.height;
 
-    if (this.autoResize) {
+    if (this.autoResize)
+    {
         this.view.style.width = this.width / this.resolution + "px";
         this.view.style.height = this.height / this.resolution + "px";
     }
@@ -283,52 +259,33 @@ PIXI.CanvasRenderer.prototype.renderDisplayObject = function(displayObject, cont
  * @method mapBlendModes
  * @private
  */
-PIXI.CanvasRenderer.prototype.mapBlendModes = function()
-{
-    if(!PIXI.blendModesCanvas)
-    {
-        PIXI.blendModesCanvas = [];
+PIXI.CanvasRenderer.prototype.mapBlendModes = function () {
 
-        if(PIXI.canUseNewCanvasBlendModes())
-        {
-            PIXI.blendModesCanvas[PIXI.blendModes.NORMAL]   = "source-over";
-            PIXI.blendModesCanvas[PIXI.blendModes.ADD]      = "lighter"; //IS THIS OK???
-            PIXI.blendModesCanvas[PIXI.blendModes.MULTIPLY] = "multiply";
-            PIXI.blendModesCanvas[PIXI.blendModes.SCREEN]   = "screen";
-            PIXI.blendModesCanvas[PIXI.blendModes.OVERLAY]  = "overlay";
-            PIXI.blendModesCanvas[PIXI.blendModes.DARKEN]   = "darken";
-            PIXI.blendModesCanvas[PIXI.blendModes.LIGHTEN]  = "lighten";
-            PIXI.blendModesCanvas[PIXI.blendModes.COLOR_DODGE] = "color-dodge";
-            PIXI.blendModesCanvas[PIXI.blendModes.COLOR_BURN] = "color-burn";
-            PIXI.blendModesCanvas[PIXI.blendModes.HARD_LIGHT] = "hard-light";
-            PIXI.blendModesCanvas[PIXI.blendModes.SOFT_LIGHT] = "soft-light";
-            PIXI.blendModesCanvas[PIXI.blendModes.DIFFERENCE] = "difference";
-            PIXI.blendModesCanvas[PIXI.blendModes.EXCLUSION] = "exclusion";
-            PIXI.blendModesCanvas[PIXI.blendModes.HUE]       = "hue";
-            PIXI.blendModesCanvas[PIXI.blendModes.SATURATION] = "saturation";
-            PIXI.blendModesCanvas[PIXI.blendModes.COLOR]      = "color";
-            PIXI.blendModesCanvas[PIXI.blendModes.LUMINOSITY] = "luminosity";
-        }
-        else
-        {
-            // this means that the browser does not support the cool new blend modes in canvas "cough" ie "cough"
-            PIXI.blendModesCanvas[PIXI.blendModes.NORMAL]   = "source-over";
-            PIXI.blendModesCanvas[PIXI.blendModes.ADD]      = "lighter"; //IS THIS OK???
-            PIXI.blendModesCanvas[PIXI.blendModes.MULTIPLY] = "source-over";
-            PIXI.blendModesCanvas[PIXI.blendModes.SCREEN]   = "source-over";
-            PIXI.blendModesCanvas[PIXI.blendModes.OVERLAY]  = "source-over";
-            PIXI.blendModesCanvas[PIXI.blendModes.DARKEN]   = "source-over";
-            PIXI.blendModesCanvas[PIXI.blendModes.LIGHTEN]  = "source-over";
-            PIXI.blendModesCanvas[PIXI.blendModes.COLOR_DODGE] = "source-over";
-            PIXI.blendModesCanvas[PIXI.blendModes.COLOR_BURN] = "source-over";
-            PIXI.blendModesCanvas[PIXI.blendModes.HARD_LIGHT] = "source-over";
-            PIXI.blendModesCanvas[PIXI.blendModes.SOFT_LIGHT] = "source-over";
-            PIXI.blendModesCanvas[PIXI.blendModes.DIFFERENCE] = "source-over";
-            PIXI.blendModesCanvas[PIXI.blendModes.EXCLUSION] = "source-over";
-            PIXI.blendModesCanvas[PIXI.blendModes.HUE]       = "source-over";
-            PIXI.blendModesCanvas[PIXI.blendModes.SATURATION] = "source-over";
-            PIXI.blendModesCanvas[PIXI.blendModes.COLOR]      = "source-over";
-            PIXI.blendModesCanvas[PIXI.blendModes.LUMINOSITY] = "source-over";
-        }
+    if (!PIXI.blendModesCanvas)
+    {
+        var b = [];
+        var modes = PIXI.blendModes;
+        var useNew = PIXI.canUseNewCanvasBlendModes();
+
+        b[modes.NORMAL] = 'source-over';
+        b[modes.ADD] = 'lighter';
+        b[modes.MULTIPLY] = (useNew) ? 'multiply' : 'source-over';
+        b[modes.SCREEN] = (useNew) ? 'screen' : 'source-over';
+        b[modes.OVERLAY] = (useNew) ? 'overlay' : 'source-over';
+        b[modes.DARKEN] = (useNew) ? 'darken' : 'source-over';
+        b[modes.LIGHTEN] = (useNew) ? 'lighten' : 'source-over';
+        b[modes.COLOR_DODGE] = (useNew) ? 'color-dodge' : 'source-over';
+        b[modes.COLOR_BURN] = (useNew) ? 'color-burn' : 'source-over';
+        b[modes.HARD_LIGHT] = (useNew) ? 'hard-light' : 'source-over';
+        b[modes.SOFT_LIGHT] = (useNew) ? 'soft-light' : 'source-over';
+        b[modes.DIFFERENCE] = (useNew) ? 'difference' : 'source-over';
+        b[modes.EXCLUSION] = (useNew) ? 'exclusion' : 'source-over';
+        b[modes.HUE] = (useNew) ? 'hue' : 'source-over';
+        b[modes.SATURATION] = (useNew) ? 'saturation' : 'source-over';
+        b[modes.COLOR] = (useNew) ? 'color' : 'source-over';
+        b[modes.LUMINOSITY] = (useNew) ? 'luminosity' : 'source-over';
+
+        PIXI.blendModesCanvas = b;
     }
+
 };
