@@ -108,6 +108,14 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this.preserveDrawingBuffer = false;
 
     /**
+    * The Frame Debugger.
+    * This should never be used in production games and is for debugging during development only.
+    * Start it with `Game.frameDebugger.record(n)` - where n is the number of frames to capture.
+    * @property {Phaser.FrameDebugger} fd
+    */
+    this.fd = null;
+
+    /**
     * @property {PIXI.CanvasRenderer|PIXI.WebGLRenderer} renderer - The Pixi Renderer.
     * @protected
     */
@@ -529,6 +537,8 @@ Phaser.Game.prototype = {
 
         this.isBooted = true;
 
+        this.fd = new Phaser.FrameDebugger(this);
+
         this.math = Phaser.Math;
 
         this.scale = new Phaser.ScaleManager(this, this._width, this._height);
@@ -682,37 +692,20 @@ Phaser.Game.prototype = {
             this.canvas.style['-webkit-full-screen'] = 'width: 100%; height: 100%';
         }
 
-        if (this.device.cocoonJS)
-        {
-            if (this.renderType === Phaser.CANVAS)
-            {
-                this.canvas.screencanvas = true;
-            }
-            else
-            {
-                // Some issue related to scaling arise with Cocoon using screencanvas and webgl renderer.
-                this.canvas.screencanvas = false;
-            }
-        }
-
-        if (this.renderType === Phaser.HEADLESS || this.renderType === Phaser.CANVAS || (this.renderType === Phaser.AUTO && this.device.webGL === false))
+        if (this.renderType === Phaser.HEADLESS || this.renderType === Phaser.CANVAS || (this.renderType === Phaser.AUTO && !this.device.webGL))
         {
             if (this.device.canvas)
             {
-                if (this.renderType === Phaser.AUTO)
-                {
-                    this.renderType = Phaser.CANVAS;
-                }
+                //  They requested Canvas and their browser supports it
+                this.renderType = Phaser.CANVAS;
 
-                this.renderer = new PIXI.CanvasRenderer(this.width, this.height, { "view": this.canvas,
-                                                                                    "transparent": this.transparent,
-                                                                                    "resolution": this.resolution,
-                                                                                    "clearBeforeRender": true });
+                this.renderer = new PIXI.CanvasRenderer(this);
+
                 this.context = this.renderer.context;
             }
             else
             {
-                throw new Error('Phaser.Game - cannot create Canvas or WebGL context, aborting.');
+                throw new Error('Phaser.Game - Cannot create Canvas or WebGL context, aborting.');
             }
         }
         else
@@ -720,15 +713,17 @@ Phaser.Game.prototype = {
             //  They requested WebGL and their browser supports it
             this.renderType = Phaser.WEBGL;
 
-            this.renderer = new PIXI.WebGLRenderer(this.width, this.height, { "view": this.canvas,
-                                                                                "transparent": this.transparent,
-                                                                                "resolution": this.resolution,
-                                                                                "antialias": this.antialias,
-                                                                                "preserveDrawingBuffer": this.preserveDrawingBuffer });
+            this.renderer = new PIXI.WebGLRenderer(this);
+
             this.context = null;
 
             this.canvas.addEventListener('webglcontextlost', this.contextLost.bind(this), false);
             this.canvas.addEventListener('webglcontextrestored', this.contextRestored.bind(this), false);
+        }
+
+        if (this.device.cocoonJS)
+        {
+            this.canvas.screencanvas = (this.renderType === Phaser.CANVAS) ? true : false;
         }
 
         if (this.renderType !== Phaser.HEADLESS)
@@ -946,12 +941,19 @@ Phaser.Game.prototype = {
             return;
         }
 
+        if (this.fd.on) { this.fd.start(); }
+
         this.state.preRender(elapsedTime);
+
         this.renderer.render(this.stage);
 
         this.plugins.render(elapsedTime);
+
         this.state.render(elapsedTime);
+
         this.plugins.postRender(elapsedTime);
+
+        if (this.fd.on) { this.fd.stop(); }
 
     },
 
