@@ -52,7 +52,7 @@ Phaser.FrameDebugger.prototype = {
             this.finish();
         }
 
-    }
+    },
 
     finish: function () {
 
