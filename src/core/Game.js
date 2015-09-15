@@ -108,6 +108,14 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this.preserveDrawingBuffer = false;
 
     /**
+    * Clear the Canvas each frame before rendering the display list.
+    * You can set this to `false` to gain some performance if your game always contains a background that completely fills the display.
+    * @property {boolean} clearBeforeRender
+    * @default
+    */
+    this.clearBeforeRender = true;
+
+    /**
     * The Frame Debugger.
     * This should never be used in production games and is for debugging during development only.
     * Start it with `Game.frameDebugger.record(n)` - where n is the number of frames to capture.
