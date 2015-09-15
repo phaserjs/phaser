@@ -132,6 +132,7 @@ PIXI.CanvasRenderer = function (game) {
      * @type Object
      */
     this.renderSession = {
+        fd: this.game.fd,
         context: this.context,
         maskManager: this.maskManager,
         scaleMode: null,
@@ -159,16 +160,21 @@ PIXI.CanvasRenderer.prototype.constructor = PIXI.CanvasRenderer;
  * @method render
  * @param stage {Stage} the Stage element to be rendered
  */
-PIXI.CanvasRenderer.prototype.render = function(stage)
-{
+PIXI.CanvasRenderer.prototype.render = function (stage) {
+
+    if (this.game.fd.on)
+    {
+        this.game.fd.cr();
+    }
+
     stage.updateTransform();
 
     this.context.setTransform(1, 0, 0, 1, 0, 0);
 
     this.context.globalAlpha = 1;
 
-    this.renderSession.currentBlendMode = PIXI.blendModes.NORMAL;
-    this.context.globalCompositeOperation = PIXI.blendModesCanvas[PIXI.blendModes.NORMAL];
+    this.renderSession.currentBlendMode = 0;
+    this.context.globalCompositeOperation = 'source-over';
 
     if (navigator.isCocoonJS && this.view.screencanvas)
     {
@@ -246,11 +252,12 @@ PIXI.CanvasRenderer.prototype.resize = function(width, height)
  * @param [matrix] {Matrix} Optional matrix to apply to the display object before rendering.
  * @private
  */
-PIXI.CanvasRenderer.prototype.renderDisplayObject = function(displayObject, context, matrix)
-{
+PIXI.CanvasRenderer.prototype.renderDisplayObject = function (displayObject, context, matrix) {
+
     this.renderSession.context = context || this.context;
     this.renderSession.resolution = this.resolution;
     displayObject._renderCanvas(this.renderSession, matrix);
+
 };
 
 /**

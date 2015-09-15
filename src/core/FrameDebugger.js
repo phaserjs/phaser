@@ -33,12 +33,14 @@ Phaser.FrameDebugger = function (game) {
 
 Phaser.FrameDebugger.prototype = {
 
+    //  Called at the start of Game.updateRender
     start: function () {
 
         this.frame = [Date.now()];
 
     },
 
+    //  Called at the end of Game.updateRender
     stop: function () {
 
         this.frame.push(Date.now());
@@ -54,13 +56,33 @@ Phaser.FrameDebugger.prototype = {
 
     },
 
-    finish: function () {
+    cr: function () {
 
-        this.on = false;
+        this.frame.push('Canvas.Render');
 
-        console.log(this.log);
+    },
 
-        debugger;
+    cb: function (mode) {
+
+        this.frame.push('Set Blend Mode', mode);
+
+    },
+
+    cs: function (texture, width, height, res) {
+
+        this.frame.push('Sprite.Render', texture, width, height, res);
+
+    },
+
+    cm: function (mask) {
+
+        this.frame.push('Mask Push', mask);
+
+    },
+
+    cmo: function () {
+
+        this.frame.push('Mask Pop', Date.now());
 
     },
 
@@ -83,6 +105,49 @@ Phaser.FrameDebugger.prototype = {
         this.log = [];
         this.count = 0;
         this.max = 1;
+
+    },
+
+    //  Called at the end of Game.updateRender if count = max
+    finish: function () {
+
+        this.on = false;
+
+        this.win = window.open('about:blank', 'FrameDebugger');
+
+        //  Add a title and a little css
+        this.win.document.title = 'FrameDebugger Output';
+
+        var head = this.win.document.head.style;
+
+        head.backgroundColor = '#383838';
+        head.fontFamily = 'sans';
+        head.fontSize = '14px';
+        head.color = '#b4b4b4';
+
+        var body = this.win.document.body;
+
+        var h1 = document.createElement('h1');
+        h1.textContent = 'FrameDebugger Output';
+
+        body.appendChild(h1);
+
+        for (var f = 0; f < this.log.length; f++)
+        {
+            var h = document.createElement('p');
+            h.textContent = "Frame " + f;
+            body.appendChild(h);
+
+            for (var i = 0; i < this.log[f].length; i++)
+            {
+                var t = document.createElement('p');
+                t.textContent = this.log[f][i];
+                body.appendChild(t);
+            }
+        }
+
+        // console.log(this.log);
+        // debugger;
 
     }
 
