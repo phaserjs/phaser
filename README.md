@@ -282,6 +282,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * Time.refresh updates the `Time.time` and `Time.elapsedMS` values and is called automatically by Game.update.
 * DeviceButton was setting a `duration` property on itself, which went against the read only getter of duration (thanks @winstonwolff)
 * Added Node.js v4 stable to Travis config (thanks @phillipalexander #2070)
+* Optimised Canvas.getSmoothingEnabled, Canvas.setSmoothingEnabled and Canvas.setImageRenderingCrisp.
 
 ### Bug Fixes
 

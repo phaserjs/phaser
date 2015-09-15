@@ -56,7 +56,7 @@ Phaser.Canvas = {
     *
     * @method Phaser.Canvas.setBackgroundColor
     * @param {HTMLCanvasElement} canvas - The canvas to set the background color on.
-    * @param {string} [color] - The color to set. Can be in the format 'rgb(r,g,b)', or '#RRGGBB' or any valid CSS color.
+    * @param {string} [color='rgb(0,0,0)'] - The color to set. Can be in the format 'rgb(r,g,b)', or '#RRGGBB' or any valid CSS color.
     * @return {HTMLCanvasElement} Returns the source canvas.
     */
     setBackgroundColor: function (canvas, color) {
@@ -210,17 +210,11 @@ Phaser.Canvas = {
     */
     setSmoothingEnabled: function (context, value) {
 
-        var vendor = [ 'i', 'webkitI', 'msI', 'mozI', 'oI' ];
+        var s = Phaser.Canvas.getSmoothingPrefix(context);
 
-        for (var prefix in vendor)
+        if (s)
         {
-            var s = vendor[prefix] + 'mageSmoothingEnabled';
-
-            if (s in context)
-            {
-                context[s] = value;
-                return context;
-            }
+            context[s] = value;
         }
 
         return context;
@@ -261,7 +255,12 @@ Phaser.Canvas = {
      */
     getSmoothingEnabled: function (context) {
 
-        return (context['imageSmoothingEnabled'] || context['webkitImageSmoothingEnabled'] || context['msImageSmoothingEnabled'] || context['mozImageSmoothingEnabled'] || context['oImageSmoothingEnabled']);
+        var s = Phaser.Canvas.getSmoothingPrefix(context);
+
+        if (s)
+        {
+            return context[s];
+        }
 
     },
 
@@ -275,12 +274,13 @@ Phaser.Canvas = {
     */
     setImageRenderingCrisp: function (canvas) {
 
-        canvas.style['image-rendering'] = 'optimizeSpeed';
-        canvas.style['image-rendering'] = 'crisp-edges';
-        canvas.style['image-rendering'] = '-moz-crisp-edges';
-        canvas.style['image-rendering'] = '-webkit-optimize-contrast';
-        canvas.style['image-rendering'] = 'optimize-contrast';
-        canvas.style['image-rendering'] = 'pixelated';
+        var types = [ 'optimizeSpeed', 'crisp-edges', '-moz-crisp-edges', '-webkit-optimize-contrast', 'optimize-contrast', 'pixelated' ];
+
+        for (var i = 0; i < types.length; i++)
+        {
+            canvas.style['image-rendering'] = types[i];
+        }
+
         canvas.style.msInterpolationMode = 'nearest-neighbor';
 
         return canvas;
