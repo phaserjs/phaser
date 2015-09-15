@@ -9,7 +9,7 @@
 * It also handles browser visibility handling and the pausing due to loss of focus.
 *
 * @class Phaser.Stage
-* @extends PIXI.Stage
+* @extends PIXI.DisplayObjectContainer
 * @constructor
 * @param {Phaser.Game} game - Game reference to the currently running game.
  */
@@ -20,7 +20,7 @@ Phaser.Stage = function (game) {
     */
     this.game = game;
 
-    PIXI.Stage.call(this, 0x000000);
+    PIXI.DisplayObjectContainer.call(this);
 
     /**
     * @property {string} name - The name of this object.
@@ -39,6 +39,20 @@ Phaser.Stage = function (game) {
     * @default
     */
     this.exists = true;
+
+    /**
+    * @property {PIXI.Matrix} worldTransform - Current transform of the object based on world (parent) factors
+    * @private
+    * @readOnly
+    */
+    this.worldTransform = new PIXI.Matrix();
+
+    /**
+    * @property {Phaser.Stage} stage - The stage reference (the Stage is its own stage)
+    * @private
+    * @readOnly
+    */
+    this.stage = this;
 
     /**
     * @property {number} currentRenderOrderID - Reset each frame, keeps a count of the total number of objects updated.
@@ -63,6 +77,12 @@ Phaser.Stage = function (game) {
     */
     this._backgroundColor = 0x000000;
 
+    //  transparent = 0,0,0,0 - otherwise r,g,b,1
+    this.r = 0;
+    this.g = 0;
+    this.b = 0;
+    this.a = 0;
+
     if (game.config)
     {
         this.parseConfig(game.config);
@@ -70,7 +90,7 @@ Phaser.Stage = function (game) {
 
 };
 
-Phaser.Stage.prototype = Object.create(PIXI.Stage.prototype);
+Phaser.Stage.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
 Phaser.Stage.prototype.constructor = Phaser.Stage;
 
 /**
@@ -313,16 +333,21 @@ Phaser.Stage.prototype.setBackgroundColor = function(backgroundColor)
 {
     var rgb = Phaser.Color.valueToColor(backgroundColor);
 
+    console.log('sb1', rgb);
+
     this._backgroundColor = Phaser.Color.getColor(rgb.r, rgb.g, rgb.b);
 
-    // this.r = rgb.r / 255;
-    // this.g = rgb.g / 255;
-    // this.b = rgb.b / 255;
+    console.log('sb2', this._backgroundColor);
+
+    this.r = rgb.r / 255;
+    this.g = rgb.g / 255;
+    this.b = rgb.b / 255;
+    this.a = 1;
 
     // this.canvasFill = rgb.rgba;
 
-    this.backgroundColorSplit = [ rgb.r / 255, rgb.g / 255, rgb.b / 255 ];
-    this.backgroundColorString = Phaser.Color.RGBtoString(rgb.r, rgb.g, rgb.b, 255, '#');
+    // this.backgroundColorSplit = [ rgb.r / 255, rgb.g / 255, rgb.b / 255 ];
+    // this.backgroundColorString = Phaser.Color.RGBtoString(rgb.r, rgb.g, rgb.b, 255, '#');
 
 };
 
