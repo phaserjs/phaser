@@ -135,6 +135,7 @@ EOL;
     <script src="$path/src/core/FlexGrid.js"></script>
     <script src="$path/src/core/FlexLayer.js"></script>
     <script src="$path/src/core/ScaleManager.js"></script>
+    <script src="$path/src/core/FrameDebugger.js"></script>
     <script src="$path/src/core/Game.js"></script>
 
     <script src="$path/src/input/Input.js"></script>

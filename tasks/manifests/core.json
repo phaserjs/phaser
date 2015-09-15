@@ -14,5 +14,6 @@
     "src/core/FlexGrid.js",
     "src/core/FlexLayer.js",
     "src/core/ScaleManager.js",
+    "src/core/FrameDebugger.js",
     "src/core/Game.js"
 ]
