@@ -5,13 +5,13 @@
 */
 
 /**
-* A Timer is a way to create small re-usable (or disposable) objects that wait for a specific moment in time,
-* and then run the specified callbacks.
+* A Timer is a way to create and manage {@link Phaser.TimerEvent timer events} that wait for a specific duration and then run a callback.
+* Many different timer events, with individual delays, can be added to the same Timer.
 *
-* You can add many events to a Timer, each with their own delays. A Timer uses milliseconds as its unit of time (there are 1000 ms in 1 second).
-* So a delay to 250 would fire the event every quarter of a second.
+* All Timer delays are in milliseconds (there are 1000 ms in 1 second); so a delay value of 250 represents a quarter of a second.
 *
-* Timers are based on real-world (not physics) time, adjusted for game pause durations.
+* Timers are based on real life time, adjusted for game pause durations.
+* That is, *timer events are based on elapsed {@link Phaser.Time game time}* and do *not* take physics time or slow motion into account.
 *
 * @class Phaser.Timer
 * @constructor
@@ -190,10 +190,10 @@ Phaser.Timer.prototype = {
     *
     * @method Phaser.Timer#create
     * @private
-    * @param {number} delay - The number of milliseconds that should elapse before the Timer will call the given callback. This value should be an integer, not a float. Math.round() is applied to it by this method.
+    * @param {integer} delay - The number of milliseconds, in {@link Phaser.Time game time}, before the timer event occurs.
     * @param {boolean} loop - Should the event loop or not?
     * @param {number} repeatCount - The number of times the event will repeat.
-    * @param {function} callback - The callback that will be called when the Timer event occurs.
+    * @param {function} callback - The callback that will be called when the timer event occurs.
     * @param {object} callbackContext - The context in which the callback will be called.
     * @param {any[]} arguments - The values to be sent to your callback function when it is called.
     * @return {Phaser.TimerEvent} The Phaser.TimerEvent object that was created.
@@ -234,8 +234,8 @@ Phaser.Timer.prototype = {
     * Make sure to call {@link Phaser.Timer#start start} after adding all of the Events you require for this Timer.
     *
     * @method Phaser.Timer#add
-    * @param {number} delay - The number of milliseconds that should elapse before the callback is invoked.
-    * @param {function} callback - The callback that will be called when the Timer event occurs.
+    * @param {integer} delay - The number of milliseconds, in {@link Phaser.Time game time}, before the timer event occurs.
+    * @param {function} callback - The callback that will be called when the timer event occurs.
     * @param {object} callbackContext - The context in which the callback will be called.
     * @param {...*} arguments - Additional arguments that will be supplied to the callback.
     * @return {Phaser.TimerEvent} The Phaser.TimerEvent object that was created.
@@ -250,14 +250,15 @@ Phaser.Timer.prototype = {
     * Adds a new TimerEvent that will always play through once and then repeat for the given number of iterations.
     *
     * The event will fire after the given amount of `delay` in milliseconds has passed, once the Timer has started running.
-    * The delay is in relation to when the Timer starts, not the time it was added. If the Timer is already running the delay will be calculated based on the timers current time.
+    * The delay is in relation to when the Timer starts, not the time it was added.
+    * If the Timer is already running the delay will be calculated based on the timers current time.
     *
     * Make sure to call {@link Phaser.Timer#start start} after adding all of the Events you require for this Timer.
     *
     * @method Phaser.Timer#repeat
-    * @param {number} delay - The number of milliseconds that should elapse before the Timer will call the given callback.
+    * @param {integer} delay - The number of milliseconds, in {@link Phaser.Time game time}, before the timer event occurs.
     * @param {number} repeatCount - The number of times the event will repeat once is has finished playback. A repeatCount of 1 means it will repeat itself once, playing the event twice in total.
-    * @param {function} callback - The callback that will be called when the Timer event occurs.
+    * @param {function} callback - The callback that will be called when the timer event occurs.
     * @param {object} callbackContext - The context in which the callback will be called.
     * @param {...*} arguments - Additional arguments that will be supplied to the callback.
     * @return {Phaser.TimerEvent} The Phaser.TimerEvent object that was created.
@@ -277,8 +278,8 @@ Phaser.Timer.prototype = {
     * Make sure to call {@link Phaser.Timer#start start} after adding all of the Events you require for this Timer.
     *
     * @method Phaser.Timer#loop
-    * @param {number} delay - The number of milliseconds that should elapse before the Timer will call the given callback.
-    * @param {function} callback - The callback that will be called when the Timer event occurs.
+    * @param {integer} delay - The number of milliseconds, in {@link Phaser.Time game time}, before the timer event occurs.
+    * @param {function} callback - The callback that will be called when the timer event occurs.
     * @param {object} callbackContext - The context in which the callback will be called.
     * @param {...*} arguments - Additional arguments that will be supplied to the callback.
     * @return {Phaser.TimerEvent} The Phaser.TimerEvent object that was created.
@@ -292,7 +293,7 @@ Phaser.Timer.prototype = {
     /**
     * Starts this Timer running.
     * @method Phaser.Timer#start
-    * @param {number} [delay=0] - The number of milliseconds that should elapse before the Timer will start.
+    * @param {integer} [delay=0] - The number of milliseconds, in {@link Phaser.Time game time}, that should elapse before the Timer will start.
     */
     start: function (delay) {
 
