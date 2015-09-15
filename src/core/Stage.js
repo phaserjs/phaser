@@ -312,7 +312,14 @@ Phaser.Stage.prototype.visibilityChange = function (event) {
 Phaser.Stage.prototype.setBackgroundColor = function(backgroundColor)
 {
     var rgb = Phaser.Color.valueToColor(backgroundColor);
+
     this._backgroundColor = Phaser.Color.getColor(rgb.r, rgb.g, rgb.b);
+
+    // this.r = rgb.r / 255;
+    // this.g = rgb.g / 255;
+    // this.b = rgb.b / 255;
+
+    // this.canvasFill = rgb.rgba;
 
     this.backgroundColorSplit = [ rgb.r / 255, rgb.g / 255, rgb.b / 255 ];
     this.backgroundColorString = Phaser.Color.RGBtoString(rgb.r, rgb.g, rgb.b, 255, '#');

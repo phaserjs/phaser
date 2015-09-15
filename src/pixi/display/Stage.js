@@ -32,10 +32,13 @@ PIXI.Stage = function(backgroundColor)
      */
     this.worldTransform = new PIXI.Matrix();
 
-    //the stage is its own stage
     this.stage = this;
 
-    this.setBackgroundColor(backgroundColor);
+    this.r = 0;
+    this.g = 0;
+    this.b = 0;
+    this.a = 0;
+    // this.setBackgroundColor(backgroundColor);
 };
 
 // constructor
@@ -64,7 +67,6 @@ PIXI.Stage.prototype.updateTransform = function()
  * @method setBackgroundColor
  * @param backgroundColor {Number} the color of the background, easiest way to pass this in is in hex format
  *      like: 0xFFFFFF for white
- */
 PIXI.Stage.prototype.setBackgroundColor = function(backgroundColor)
 {
     this.backgroundColor = backgroundColor || 0x000000;
@@ -73,3 +75,4 @@ PIXI.Stage.prototype.setBackgroundColor = function(backgroundColor)
     hex = '000000'.substr(0, 6 - hex.length) + hex;
     this.backgroundColorString = '#' + hex;
 };
+ */
