@@ -174,6 +174,7 @@ PIXI.WebGLRenderer = function(game) {
      */
     this.renderSession = {};
 
+    //  Needed?
     this.renderSession.game = this.game;
     this.renderSession.gl = this.gl;
     this.renderSession.drawCount = 0;
@@ -191,6 +192,7 @@ PIXI.WebGLRenderer = function(game) {
 
     // map some webGL blend modes..
     this.mapBlendModes();
+
 };
 
 // constructor
@@ -244,7 +246,10 @@ PIXI.WebGLRenderer.prototype.initContext = function()
 PIXI.WebGLRenderer.prototype.render = function(stage)
 {
     // no point rendering if our context has been blown up!
-    if (this.contextLost) return;
+    if (this.contextLost)
+    {
+        return;
+    }
 
     // update the scene graph
     stage.updateTransform();
@@ -257,16 +262,9 @@ PIXI.WebGLRenderer.prototype.render = function(stage)
     // make sure we are bound to the main frame buffer
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
-    if (this.clearBeforeRender)
+    if (this.game.clearBeforeRender)
     {
-        if (this.transparent)
-        {
-            gl.clearColor(0, 0, 0, 0);
-        }
-        else
-        {
-            gl.clearColor(stage.backgroundColorSplit[0],stage.backgroundColorSplit[1],stage.backgroundColorSplit[2], 1);
-        }
+        gl.clearColor(stage.r, stage.g, stage.b, stage.a);
 
         gl.clear(gl.COLOR_BUFFER_BIT);
     }
