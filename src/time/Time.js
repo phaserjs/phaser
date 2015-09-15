@@ -12,6 +12,25 @@
 *
 * To create a general timed event, use the master {@link Phaser.Timer} accessible through {@link Phaser.Time.events events}.
 *
+* There are different *types* of time in Phaser:
+*
+* - ***Game time*** always runs at the speed of time in real life.
+*
+*   Unlike wall-clock time, *game time stops when Phaser is paused*.
+*
+*   Game time is used for {@link Phaser.Timer timer events}.
+*
+* - ***Physics time*** represents the amount of time given to physics calculations.
+*
+*   *When {@link #slowMotion} is in effect physics time runs slower than game time.*
+*   Like game time, physics time stops when Phaser is paused.
+*
+*   Physics time is used for physics calculations and {@link Phaser.Tween tweens}.
+*
+* - {@link https://en.wikipedia.org/wiki/Wall-clock_time ***Wall-clock time***} represents the duration between two events in real life time.
+*
+*   This time is independent of Phaser and always progresses, regardless of if Phaser is paused.
+*
 * @class Phaser.Time
 * @constructor
 * @param {Phaser.Game} game A reference to the currently running game.
