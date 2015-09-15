@@ -22,7 +22,10 @@ PIXI.WebGLRenderer = function(game) {
     */
     this.game = game;
 
-    PIXI.defaultRenderer = this;
+    if (!PIXI.defaultRenderer)
+    {
+        PIXI.defaultRenderer = this;
+    }
 
     /**
      * @property type
@@ -264,9 +267,14 @@ PIXI.WebGLRenderer.prototype.render = function(stage)
 
     if (this.game.clearBeforeRender)
     {
-        gl.clearColor(stage.r, stage.g, stage.b, stage.a);
+        gl.clearColor(stage._bgColor.r, stage._bgColor.g, stage._bgColor.b, stage._bgColor.a);
 
         gl.clear(gl.COLOR_BUFFER_BIT);
+    }
+
+    if (this.game.fd.on)
+    {
+        this.game.fd.record();
     }
 
     this.renderDisplayObject(stage, this.projection);
