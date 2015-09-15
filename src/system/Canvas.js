@@ -210,7 +210,7 @@ Phaser.Canvas = {
     */
     setSmoothingEnabled: function (context, value) {
 
-        var vendor = [ 'i', 'mozI', 'oI', 'webkitI', 'msI' ];
+        var vendor = [ 'i', 'webkitI', 'msI', 'mozI', 'oI' ];
 
         for (var prefix in vendor)
         {
@@ -228,6 +228,31 @@ Phaser.Canvas = {
     },
 
     /**
+    * Gets the Smoothing Enabled vendor prefix being used on the given context, or null if not set.
+    *
+    * @method Phaser.Canvas.getSmoothingPrefix
+    * @param {CanvasRenderingContext2D} context - The context to enable or disable the image smoothing on.
+    * @return {string|null} Returns the smoothingEnabled vendor prefix, or null if not set on the context.
+    */
+    getSmoothingPrefix: function (context) {
+
+        var vendor = [ 'i', 'webkitI', 'msI', 'mozI', 'oI' ];
+
+        for (var prefix in vendor)
+        {
+            var s = vendor[prefix] + 'mageSmoothingEnabled';
+
+            if (s in context)
+            {
+                return s;
+            }
+        }
+
+        return null;
+
+    },
+
+    /**
      * Returns `true` if the given context has image smoothing enabled, otherwise returns `false`.
      *
      * @method Phaser.Canvas.getSmoothingEnabled
@@ -236,7 +261,7 @@ Phaser.Canvas = {
      */
     getSmoothingEnabled: function (context) {
 
-        return (context['imageSmoothingEnabled'] || context['mozImageSmoothingEnabled'] || context['oImageSmoothingEnabled'] || context['webkitImageSmoothingEnabled'] || context['msImageSmoothingEnabled']);
+        return (context['imageSmoothingEnabled'] || context['webkitImageSmoothingEnabled'] || context['msImageSmoothingEnabled'] || context['mozImageSmoothingEnabled'] || context['oImageSmoothingEnabled']);
 
     },
 
