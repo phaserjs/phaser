@@ -781,3 +781,7 @@ Object.defineProperty(Phaser.StateManager.prototype, "created", {
     }
 
 });
+
+/**
+* "It's like nailing jelly to a kitten" - Gary Penn
+*/
