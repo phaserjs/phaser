@@ -19,6 +19,13 @@
 var PIXI = PIXI || {};
 
 /**
+ * A reference to the Phaser Game instance that owns this Pixi renderer.
+ * @property {Phaser.Game} game
+ * @static 
+ */
+PIXI.game = null;
+
+/**
  * @property {Number} WEBGL_RENDERER
  * @protected
  * @static 

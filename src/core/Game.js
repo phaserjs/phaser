@@ -545,6 +545,8 @@ Phaser.Game.prototype = {
 
         this.isBooted = true;
 
+        PIXI.game = this;
+
         this.fd = new Phaser.FrameDebugger(this);
 
         this.math = Phaser.Math;

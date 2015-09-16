@@ -174,7 +174,7 @@ PIXI.TilingSprite.prototype._renderWebGL = function(renderSession)
 
     if (this.refreshTexture)
     {
-        this.generateTilingTexture(true);
+        this.generateTilingTexture(true, renderSession);
 
         if (this.tilingTexture)
         {
@@ -243,7 +243,7 @@ PIXI.TilingSprite.prototype._renderCanvas = function(renderSession)
 
     if (this.refreshTexture)
     {
-        this.generateTilingTexture(false);
+        this.generateTilingTexture(false, renderSession);
     
         if (this.tilingTexture)
         {
@@ -292,6 +292,8 @@ PIXI.TilingSprite.prototype._renderCanvas = function(renderSession)
 
     context.fillRect(tx, ty, tw, th);
 
+    if (renderSession.fd.on) { renderSession.fd.cts(this.tilingTexture, tw, th); }
+
     //  Translate back again
     context.scale(1 / tileScale.x, 1 / tileScale.y);
     context.translate(-tilePosition.x + (this.anchor.x * this._width), -tilePosition.y + (this.anchor.y * this._height));
@@ -332,8 +334,9 @@ PIXI.TilingSprite.prototype.onTextureUpdate = function()
 * @method generateTilingTexture
 * 
 * @param forcePowerOfTwo {Boolean} Whether we want to force the texture to be a power of two
+* @param renderSession {RenderSession} 
 */
-PIXI.TilingSprite.prototype.generateTilingTexture = function(forcePowerOfTwo)
+PIXI.TilingSprite.prototype.generateTilingTexture = function(forcePowerOfTwo, renderSession)
 {
     if (!this.texture.baseTexture.hasLoaded)
     {
@@ -408,6 +411,8 @@ PIXI.TilingSprite.prototype.generateTilingTexture = function(forcePowerOfTwo)
     this.refreshTexture = false;
 
     this.tilingTexture.baseTexture._powerOf2 = true;
+
+    if (renderSession.fd.on) { renderSession.fd.gtt(texture, w, h); }
 
 };
 
