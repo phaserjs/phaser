@@ -29,21 +29,31 @@ Phaser.FrameDebugger = function (game) {
     this.count = 0;
     this.max = 1;
 
+    //  Consts
+    this.START = 0;
+    this.STOP = 1;
+    this.CANVAS_CLEAR = 2;
+    this.CANVAS_BLENDMODE = 3;
+    this.CANVAS_MASK_PUSH = 4;
+    this.CANVAS_MASK_POP = 5;
+    this.CANVAS_RENDER_SPRITE = 6;
+
 };
+
 
 Phaser.FrameDebugger.prototype = {
 
     //  Called at the start of Game.updateRender
     start: function () {
 
-        this.frame = [Date.now()];
+        this.frame = [{ type: this.START, time: Date.now() }];
 
     },
 
     //  Called at the end of Game.updateRender
     stop: function () {
 
-        this.frame.push(Date.now());
+        this.frame.push({ type: this.STOP, time: Date.now() });
 
         this.log.push(this.frame);
 
@@ -58,31 +68,36 @@ Phaser.FrameDebugger.prototype = {
 
     cr: function () {
 
-        this.frame.push('Canvas.Render');
+        this.frame.push({ type: this.CANVAS_CLEAR });
 
     },
 
     cb: function (mode) {
 
-        this.frame.push('Set Blend Mode', mode);
+        this.frame.push({ type: this.CANVAS_BLENDMODE, mode: mode });
 
     },
 
     cs: function (texture, width, height, res) {
 
-        this.frame.push('Sprite.Render', texture, width, height, res);
+        this.frame.push({ 
+            type: this.CANVAS_RENDER_SPRITE, 
+            texture: texture, 
+            width: width, height: height, 
+            resolution: res
+        });
 
     },
 
     cm: function (mask) {
 
-        this.frame.push('Mask Push', mask);
+        this.frame.push({ type: this.CANVAS_MASK_PUSH, mask: mask });
 
     },
 
     cmo: function () {
 
-        this.frame.push('Mask Pop', Date.now());
+        this.frame.push({ type: this.CANVAS_MASK_POP });
 
     },
 
@@ -111,43 +126,98 @@ Phaser.FrameDebugger.prototype = {
     //  Called at the end of Game.updateRender if count = max
     finish: function () {
 
+        console.log(this.log);
+
         this.on = false;
 
         this.win = window.open('about:blank', 'FrameDebugger');
 
-        //  Add a title and a little css
-        this.win.document.title = 'FrameDebugger Output';
+        var content = '<!DOCTYPE html>'
+        + '<head><title>FrameDebugger Output</title>'
+        + '<style>'
+        + 'body {'
+        + ' background: #383838;'
+        + ' color: #b4b4b4;'
+        + ' font-family: sans-serif;'
+        + ' font-size: 12px;'
+        + '}'
+        + 'h2 {'
+        + ' border-top: 1px dashed white;'
+        + ' margin-top: 32px;'
+        + '}'
+        + '.xstrip {'
+        + ' background: #4a4a4a;'
+        + ' display: flex;'
+        + ' flex-flow: row nowrap;'
+        + '}'
+        + '</style>'
+        + '</head>'
+        + '<body>'
+        + '<h1>FrameDebugger</h1>';
+        + '</body></html>';
 
-        var head = this.win.document.head.style;
-
-        head.backgroundColor = '#383838';
-        head.fontFamily = 'sans';
-        head.fontSize = '14px';
-        head.color = '#b4b4b4';
+        this.win.document.open('text/html', 'replace');
+        this.win.document.write(content);
+        this.win.document.close();
 
         var body = this.win.document.body;
 
-        var h1 = document.createElement('h1');
-        h1.textContent = 'FrameDebugger Output';
-
-        body.appendChild(h1);
-
         for (var f = 0; f < this.log.length; f++)
         {
-            var h = document.createElement('p');
-            h.textContent = "Frame " + f;
-            body.appendChild(h);
+            var frame = this.log[f];
 
-            for (var i = 0; i < this.log[f].length; i++)
+            this.addTag(body, 'h2', 'Frame ' + f);
+
+            var box = this.addTag(body, 'ol', null, 'strip');
+
+            for (var i = 0; i < frame.length; i++)
             {
-                var t = document.createElement('p');
-                t.textContent = this.log[f][i];
-                body.appendChild(t);
+                var t = frame[i];
+
+                switch (t.type)
+                {
+                    case this.START:
+                        this.addTag(box, 'li', 'Frame Start @ ' + t.time);
+                        break;
+
+                    case this.CANVAS_RENDER_SPRITE:
+                        this.addTag(box, 'li', 'Sprite (' + t.width + ' x ' + t.height + ')');
+                        break;
+
+                    case this.STOP:
+                        var duration = t.time - frame[0].time;
+                        this.addTag(box, 'li', 'Frame Stop @ ' + t.time);
+                        this.addTag(box, 'li', 'Frame Duration ' + duration + 'ms');
+                        break;
+                }
             }
         }
 
-        // console.log(this.log);
-        // debugger;
+    },
+
+    addImg: function (parent, img) {
+
+        parent.appendChild(img.cloneNode(true));
+
+    },
+
+    addTag: function (parent, tag, content, style) {
+
+        var e = this.win.document.createElement(tag);
+
+        if (content)
+        {
+            e.textContent = content;
+        }
+
+        if (style)
+        {
+            e.className = style;
+        }
+
+        parent.appendChild(e);
+
+        return e;
 
     }
 
