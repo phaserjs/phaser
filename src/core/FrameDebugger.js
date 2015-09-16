@@ -104,20 +104,22 @@ Phaser.FrameDebugger.prototype = {
 
     cts: function (texture, width, height) {
 
-        this.frame.push({ 
-            type: this.CANVAS_RENDER_TILING_SPRITE, 
-            texture: texture, 
-            width: width, height: height
+        this.frame.push({
+            type: this.CANVAS_RENDER_TILING_SPRITE,
+            texture: texture,
+            width: width,
+            height: height
         });
 
     },
 
     gtt: function (texture, width, height) {
 
-        this.frame.push({ 
-            type: this.GENERATE_TILING_TEXTURE, 
-            texture: texture, 
-            width: width, height: height, 
+        this.frame.push({
+            type: this.GENERATE_TILING_TEXTURE,
+            texture: texture,
+            width: width,
+            height: height,
             time: Date.now()
         });
 
@@ -179,10 +181,11 @@ Phaser.FrameDebugger.prototype = {
 
     cgcs1: function (texture, width, height) {
 
-        this.frame.push({ 
-            type: this.GRAPHICS_GENERATE_CACHED_SPRITE_SLOW, 
-            texture: texture, 
-            width: width, height: height, 
+        this.frame.push({
+            type: this.GRAPHICS_GENERATE_CACHED_SPRITE_SLOW,
+            texture: texture,
+            width: width,
+            height: height,
             time: Date.now()
         });
 
@@ -190,10 +193,11 @@ Phaser.FrameDebugger.prototype = {
 
     cgcs2: function (texture, width, height) {
 
-        this.frame.push({ 
-            type: this.GRAPHICS_GENERATE_CACHED_SPRITE_FAST, 
-            texture: texture, 
-            width: width, height: height, 
+        this.frame.push({
+            type: this.GRAPHICS_GENERATE_CACHED_SPRITE_FAST,
+            texture: texture,
+            width: width,
+            height: height,
             time: Date.now()
         });
 
@@ -225,10 +229,11 @@ Phaser.FrameDebugger.prototype = {
 
     csb1: function (texture, width, height, res) {
 
-        this.frame.push({ 
-            type: this.CANVAS_SPRITE_BATCH_RENDER_FAST, 
-            texture: texture, 
-            width: width, height: height, 
+        this.frame.push({
+            type: this.CANVAS_SPRITE_BATCH_RENDER_FAST,
+            texture: texture,
+            width: width,
+            height: height,
             resolution: res
         });
 
@@ -236,10 +241,11 @@ Phaser.FrameDebugger.prototype = {
 
     csb2: function (texture, width, height, res) {
 
-        this.frame.push({ 
-            type: this.CANVAS_SPRITE_BATCH_RENDER_SLOW, 
-            texture: texture, 
-            width: width, height: height, 
+        this.frame.push({
+            type: this.CANVAS_SPRITE_BATCH_RENDER_SLOW,
+            texture: texture,
+            width: width,
+            height: height,
             resolution: res
         });
 
@@ -253,10 +259,11 @@ Phaser.FrameDebugger.prototype = {
 
     ct: function (texture, width, height, res) {
 
-        this.frame.push({ 
-            type: this.CANVAS_RENDER_TEXT, 
-            texture: texture, 
-            width: width, height: height, 
+        this.frame.push({
+            type: this.CANVAS_RENDER_TEXT,
+            texture: texture,
+            width: width,
+            height: height,
             resolution: res
         });
 
@@ -272,10 +279,11 @@ Phaser.FrameDebugger.prototype = {
             return;
         }
 
-        this.frame.push({ 
-            type: this.CANVAS_RENDER_SPRITE, 
-            texture: texture, 
-            width: width, height: height, 
+        this.frame.push({
+            type: this.CANVAS_RENDER_SPRITE,
+            texture: texture,
+            width: width,
+            height: height,
             resolution: res
         });
 
@@ -325,42 +333,42 @@ Phaser.FrameDebugger.prototype = {
 
         this.win = window.open('about:blank', 'FrameDebugger');
 
-        var content = '<!DOCTYPE html>'
-        + '<head><title>Display List Debugger Output</title>'
-        + '<style>'
-        + 'body {'
-        + ' background: #383838;'
-        + ' color: #b4b4b4;'
-        + ' font-family: sans-serif;'
-        + ' font-size: 12px;'
-        + '}'
-        + 'h1 {'
-        + ' float: right;'
-        + ' padding: 0;'
-        + ' margin: 0;'
-        + '}'
-        + 'h2 {'
-        + ' margin-top: 32px;'
-        + '}'
-        + '.thumbs {'
-        + ' float: right;'
-        + ' width: 512px;'
-        + ' height: 512px;'
-        + ' border: 2px solid white;'
-        + '}'
-        + '.strip {'
-        + ' background: #4a4a4a;'
-        + ' padding: 16px 0px 16px 32px;'
-        + '}'
-        + 'li:Hover {'
-        + ' background: #3e5f96;'
-        + ' color: #fff;'
-        + '}'
-        + '</style>'
-        + '</head>'
-        + '<body>'
-        + '<h1>Display List Debugger</h1>';
-        + '</body></html>';
+        var content = '<!DOCTYPE html>' +
+        '<head><title>Display List Debugger Output</title>' +
+        '<style>' +
+        'body {' +
+        ' background: #383838;' +
+        ' color: #b4b4b4;' +
+        ' font-family: sans-serif;' +
+        ' font-size: 12px;' +
+        '}' +
+        'h1 {' +
+        ' float: right;' +
+        ' padding: 0;' +
+        ' margin: 0;' +
+        '}' +
+        'h2 {' +
+        ' margin-top: 32px;' +
+        '}' +
+        '.thumbs {' +
+        ' float: right;' +
+        ' width: 512px;' +
+        ' height: 512px;' +
+        ' border: 2px solid white;' +
+        '}' +
+        '.strip {' +
+        ' background: #4a4a4a;' +
+        ' padding: 16px 0px 16px 32px;' +
+        '}' +
+        'li:Hover {' +
+        ' background: #3e5f96;' +
+        ' color: #fff;' +
+        '}' +
+        '</style>' +
+        '</head>' +
+        '<body>' +
+        '<h1>Display List Debugger</h1>' +
+        '</body></html>';
 
         this.win.document.open('text/html', 'replace');
         this.win.document.write(content);
