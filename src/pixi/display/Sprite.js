@@ -444,9 +444,6 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession, matrix)
             renderSession.context.drawImage(this.texture.baseTexture.source, cx, cy, cw, ch, dx, dy, cw / resolution, ch / resolution);
         }
 
-        // console.log(this.texture.baseTexture.resolution, renderSession.resolution, resolution);
-        // debugger;
-
         if (renderSession.fd.on) { renderSession.fd.cs(this.texture, cw, ch, resolution); }
     }
 

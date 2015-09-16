@@ -20,6 +20,8 @@ Phaser.FrameDebugger = function (game) {
 
     this.on = false;
 
+    this.skipNext = false;
+
     //  Single frame
     this.frame = [];
 
@@ -37,6 +39,9 @@ Phaser.FrameDebugger = function (game) {
     this.CANVAS_MASK_PUSH = 4;
     this.CANVAS_MASK_POP = 5;
     this.CANVAS_RENDER_SPRITE = 6;
+    this.CANVAS_RENDER_TEXT = 7;
+    this.CANVAS_RENDER_BITMAPTEXT = 8;
+    this.UPDATE_TEXT = 9;
 
 };
 
@@ -72,13 +77,38 @@ Phaser.FrameDebugger.prototype = {
 
     },
 
+    tu: function () {
+
+        this.frame.push({ type: this.UPDATE_TEXT, time: Date.now() });
+
+    },
+
     cb: function (mode) {
 
         this.frame.push({ type: this.CANVAS_BLENDMODE, mode: mode });
 
     },
 
+    ct: function (texture, width, height, res) {
+
+        this.frame.push({ 
+            type: this.CANVAS_RENDER_TEXT, 
+            texture: texture, 
+            width: width, height: height, 
+            resolution: res
+        });
+
+        this.skipNext = true;
+
+    },
+
     cs: function (texture, width, height, res) {
+
+        if (this.skipNext)
+        {
+            this.skipNext = false;
+            return;
+        }
 
         this.frame.push({ 
             type: this.CANVAS_RENDER_SPRITE, 
@@ -110,7 +140,8 @@ Phaser.FrameDebugger.prototype = {
 
         this.on = true;
 
-        this.max = max;
+        // this.max = max;
+        this.max = 1;
 
     },
 
@@ -142,13 +173,11 @@ Phaser.FrameDebugger.prototype = {
         + ' font-size: 12px;'
         + '}'
         + 'h2 {'
-        + ' border-top: 1px dashed white;'
         + ' margin-top: 32px;'
         + '}'
-        + '.xstrip {'
+        + '.strip {'
         + ' background: #4a4a4a;'
-        + ' display: flex;'
-        + ' flex-flow: row nowrap;'
+        + ' padding: 16px 0px 16px 48px;'
         + '}'
         + '</style>'
         + '</head>'
@@ -164,34 +193,79 @@ Phaser.FrameDebugger.prototype = {
 
         for (var f = 0; f < this.log.length; f++)
         {
+            var pixels = 0;
             var frame = this.log[f];
+            var textures = {};
 
             this.addTag(body, 'h2', 'Frame ' + f);
+            
+            this.addTag(body, 'p', 'Frame Start @ ' + frame[0].time);
 
             var box = this.addTag(body, 'ol', null, 'strip');
 
-            for (var i = 0; i < frame.length; i++)
+            //  Count sprite batch changes
+            //  Add in TilingSprite, Graphics, etc
+
+            for (var i = 1; i < frame.length - 1; i++)
             {
                 var t = frame[i];
 
                 switch (t.type)
                 {
-                    case this.START:
-                        this.addTag(box, 'li', 'Frame Start @ ' + t.time);
+                    case this.UPDATE_TEXT:
+                        this.addTag(box, 'li', 'Text.updateText @ ' + t.time);
                         break;
 
                     case this.CANVAS_RENDER_SPRITE:
                         this.addTag(box, 'li', 'Sprite (' + t.width + ' x ' + t.height + ')');
+                        pixels += this.addTexture(t, textures);
                         break;
 
-                    case this.STOP:
-                        var duration = t.time - frame[0].time;
-                        this.addTag(box, 'li', 'Frame Stop @ ' + t.time);
-                        this.addTag(box, 'li', 'Frame Duration ' + duration + 'ms');
+                    case this.CANVAS_RENDER_TEXT:
+                        this.addTag(box, 'li', 'Text (' + t.width + ' x ' + t.height + ')');
+                        pixels += this.addTexture(t, textures);
                         break;
                 }
             }
+
+            var t = frame[frame.length - 1];
+            var duration = t.time - frame[0].time;
+            this.addTag(body, 'p', 'Frame Stop @ ' + t.time);
+            this.addTag(body, 'p', 'Frame Duration: ' + duration + 'ms');
+            this.addTag(body, 'p', 'Total pixels rendered: ' + pixels);
+            this.addTag(body, 'p', 'Unique Textures:');
+
+            var textureList = this.addTag(body, 'ol');
+
+            for (var single in textures)
+            {
+                this.addTag(textureList, 'li', single + ' - Times Used: ' + textures[single]);
+            }
+
         }
+
+    },
+
+    addTexture: function (t, textures) {
+
+        var txt = t.texture.baseTexture.source.src;
+
+        if (txt === undefined)
+        {
+            //  It's a canvas
+            txt = t.texture.baseTexture.source._pixiId;
+        }
+
+        if (textures.hasOwnProperty(txt))
+        {
+            textures[txt]++;
+        }
+        else
+        {
+            textures[txt] = 1;
+        }
+
+        return t.width * t.height;
 
     },
 
