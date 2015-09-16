@@ -342,6 +342,12 @@ Phaser.FrameDebugger.prototype = {
         + 'h2 {'
         + ' margin-top: 32px;'
         + '}'
+        + '.thumbs {'
+        + ' float: right;'
+        + ' width: 512px;'
+        + ' height: 512px;'
+        + ' border: 2px solid white;'
+        + '}'
         + '.strip {'
         + ' background: #4a4a4a;'
         + ' padding: 16px 0px 16px 32px;'
@@ -370,7 +376,10 @@ Phaser.FrameDebugger.prototype = {
             var total = 0;
             var primitives = 0;
 
-            // this.addTag(body, 'h2', 'Frame ' + f);
+            this.addTag(body, 'h2', 'Frame ' + f);
+
+            // var thumbs = this.addTag(body, 'div', null, 'thumbs');
+
             this.addTag(body, 'p', 'Frame Start @ ' + frame[0].time);
 
             var root = this.addTag(body, 'ol', null, 'strip');
