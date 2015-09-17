@@ -1282,6 +1282,7 @@ Phaser.Physics.P2.Body.prototype = {
     * @method Phaser.Physics.P2.Body#addPhaserPolygon
     * @param {string} key - The key of the Physics Data file as stored in Game.Cache.
     * @param {string} object - The key of the object within the Physics data file that you wish to load the shape data from.
+    * @returns {Array} A list of created fixtures to be used with Phaser.Physics.P2.FixtureList
     */
     addPhaserPolygon: function (key, object) {
 
