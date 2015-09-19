@@ -492,9 +492,13 @@ PIXI.TilingSprite.prototype.getBounds = function()
 
 PIXI.TilingSprite.prototype.destroy = function () {
 
-    this.canvasBuffer.destroy();
-
     PIXI.Sprite.prototype.destroy.call(this);
+
+    if (this.canvasBuffer)
+    {
+        this.canvasBuffer.destroy();
+        this.canvasBuffer = null;
+    }
 
     this.tileScale = null;
     this.tileScaleOffset = null;
