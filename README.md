@@ -266,6 +266,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * Tiled 0.13.0 added support for layer data compression when exporting as JSON. This means that any .tmx stored using base64 encoding will start exporting layer data as a base64 encoded string rather than a native array. This update adds in automatic support for this as long as the data isn't compressed. For IE9 support you'll need to use the new polyfill found in the resources folder (thanks @noidexe #2084)
 * You can now load single layer Pyxel Edit TileMaps as an atlas (thanks @joshpmcghee #2050)
 * Canvas.getSmoothingPrefix will return the vendor prefixed smoothing enabled value from the context if set, otherwise null.
+* The Random Number Generator can now get and set its state via rnd.state. This allows you to do things like saving the state of the generator to a string that can be part of a save-game file and load it back in again (thanks @luckylooke #2056 #1900)
 
 ### Updates
 
@@ -283,6 +284,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * DeviceButton was setting a `duration` property on itself, which went against the read only getter of duration (thanks @winstonwolff)
 * Added Node.js v4 stable to Travis config (thanks @phillipalexander #2070)
 * Optimised Canvas.getSmoothingEnabled, Canvas.setSmoothingEnabled and Canvas.setImageRenderingCrisp.
+* The Physics Editor Exporter (found in the resources folder of the repo) has had an option to prefix shape names and optimize JSON output added to it (thanks @Garbanas #2093)
 
 ### Bug Fixes
 
@@ -293,6 +295,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * Game.update could call `updateLogic` multiple times in a single frame when catching up with slow device frame rates. This would cause Tweens to advance at twice the speed they should have done (thanks @mkristo)
 * Added useCapture flags to removeEventListener in MSPointer class (thanks @pmcmonagle #2055)
 * Under setTimeOut (or when `forceSetTimeOut` was true) the Time was incorrectly setting `Time.timeExpected` causing game updates to lag (thanks @satan6 #2087)
+* Fixes edge case when TilingSprite is removed before render (thanks @pnstickne #2097 #2092)
 
 ### Pixi Updates
 
