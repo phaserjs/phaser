@@ -18,7 +18,7 @@
 *
 * @class Phaser.RandomDataGenerator
 * @constructor
-* @param {any[]} [seeds] - An array of values to use as the seed.
+* @param {any[]|String} [seeds] - An array of values to use as the seed or a generator state (from {#state}).
 */
 Phaser.RandomDataGenerator = function (seeds) {
 
@@ -48,7 +48,11 @@ Phaser.RandomDataGenerator = function (seeds) {
     */
     this.s2 = 0;
 
-    this.sow(seeds);
+    if((typeof seeds === 'string' || seeds instanceof String) && seeds.match(/^!rnd/)){
+        this.state(seeds);
+    }else{
+        this.sow(seeds);
+    }
 
 };
 
@@ -297,6 +301,26 @@ Phaser.RandomDataGenerator.prototype = {
     angle: function() {
 
         return this.integerInRange(-180, 180);
+
+    },
+
+    /**
+    * Sets or gets state of the generator
+    *
+    * @method Phaser.RandomDataGenerator#state
+    * @param {String} [state] Generator state to be set.
+    * @return {String} Actual generator state.
+    */
+    state: function (state) {
+
+        if(state){
+            state = state.split(',');
+            this.c = parseFloat(state[1]);
+            this.s0 = parseFloat(state[2]);
+            this.s1 = parseFloat(state[3]);
+            this.s2 = parseFloat(state[4]);
+        }
+        return ['!rnd', this.c, this.s0, this.s1, this.s2].join(',');
 
     }
 
