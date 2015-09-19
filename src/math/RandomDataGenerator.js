@@ -326,7 +326,7 @@ Phaser.RandomDataGenerator.prototype = {
     */
     state: function (state) {
 
-        if (typeof state === 'string' && seeds.match(/^!rnd/))
+        if (typeof state === 'string' && state.match(/^!rnd/))
         {
             state = state.split(',');
 
