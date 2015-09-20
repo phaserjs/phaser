@@ -296,6 +296,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * Added useCapture flags to removeEventListener in MSPointer class (thanks @pmcmonagle #2055)
 * Under setTimeOut (or when `forceSetTimeOut` was true) the Time was incorrectly setting `Time.timeExpected` causing game updates to lag (thanks @satan6 #2087)
 * Fixes edge case when TilingSprite is removed before render (thanks @pnstickne #2097 #2092)
+* Camera.setBoundsToWorld only adjusts the bounds if it exists (thanks @prudolfs #2099)
 
 ### Pixi Updates
 
