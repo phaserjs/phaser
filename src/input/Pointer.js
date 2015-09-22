@@ -11,8 +11,9 @@
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
 * @param {number} id - The ID of the Pointer object within the game. Each game can have up to 10 active pointers.
+* @param {Phaser.PointerMode} pointerMode=(CURSOR|CONTACT) - The operational mode of this pointer, eg. CURSOR or TOUCH.
 */
-Phaser.Pointer = function (game, id) {
+Phaser.Pointer = function (game, id, pointerMode) {
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running game.
@@ -47,6 +48,11 @@ Phaser.Pointer = function (game, id) {
     * @default
     */
     this.pointerId = null;
+
+    /**
+    * @property {Phaser.PointerMode} pointerMode - The operational mode of this pointer.
+    */
+    this.pointerMode = pointerMode || (Phaser.PointerMode.CURSOR | Phaser.PointerMode.CONTACT);
 
     /**
     * @property {any} target - The target property of the Pointer as set by the DOM event when this Pointer is started.
@@ -1189,3 +1195,32 @@ Object.defineProperty(Phaser.Pointer.prototype, "worldY", {
     }
 
 });
+
+/**
+* Enumeration categorizing operational modes of pointers.
+*
+* PointerType values represent valid bitmasks.
+* For example, a value representing both Mouse and Touch devices
+* can be expressed as `PointerMode.CURSOR | PointerMode.CONTACT`.
+*
+* Values may be added for future mode categorizations.
+* @class Phaser.PointerMode
+*/
+Phaser.PointerMode = {
+
+    /**
+    * A 'CURSOR' is a pointer with a *passive cursor* such as a mouse, touchpad, watcom stylus, or even TV-control arrow-pad.
+    *
+    * It has the property that a cursor is passively moved without activating the input.
+    * This currently corresponds with {@link Phaser.Pointer#isMouse} property.
+    * @constant
+    */
+    CURSOR: 1 << 0,
+
+    /**
+    * A 'CONTACT' pointer has an *active cursor* that only tracks movement when actived; notably this is a touch-style input.
+    * @constant
+    */
+    CONTACT: 1 << 1
+
+};

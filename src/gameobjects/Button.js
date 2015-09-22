@@ -166,10 +166,20 @@ Phaser.Button = function (game, x, y, key, callback, callbackContext, overFrame,
     /**
     * If true then onOver events (such as onOverSound) will only be triggered if the Pointer object causing them was the Mouse Pointer.
     * The frame will still be changed as applicable.
+    *
     * @property {boolean} onOverMouseOnly
     * @default
     */
     this.onOverMouseOnly = false;
+
+    /**
+    * Suppresse the over event if a pointer was just released and it matches the given {@link Phaser.PointerModer pointer mode bitmask}.
+    *
+    * This behavior was introduced in Phaser 2.3.1; this property is a soft-revert of the change.
+    *
+    * @property {Phaser.PointerMode?} justReleasedPreventsOver=ACTIVE_CURSOR
+    */
+    this.justReleasedPreventsOver = Phaser.PointerMode.TOUCH;
     
     /**
     * When true the the texture frame will not be automatically switched on up/down/over/out events.
@@ -180,7 +190,10 @@ Phaser.Button = function (game, x, y, key, callback, callbackContext, overFrame,
 
     /**
     * When the Button is touched / clicked and then released you can force it to enter a state of "out" instead of "up".
-    * @property {boolean} forceOut
+    *
+    * This can also accept a {@link Phaser.PointerModer pointer mode bitmask} for more refined control.
+    *
+    * @property {boolean|Phaser.PointerMode} forceOut=false
     * @default
     */
     this.forceOut = false;
@@ -472,9 +485,10 @@ Phaser.Button.prototype.setUpSound = function (sound, marker) {
 */
 Phaser.Button.prototype.onInputOverHandler = function (sprite, pointer) {
 
-    //  If the Pointer was only just released then we don't fire an over event
-    if (pointer.justReleased())
+    if (pointer.justReleased() &&
+        (this.justReleasedPreventsOver & pointer.pointerMode) === pointer.pointerMode)
     {
+        //  If the Pointer was only just released then we don't fire an over event
         return;
     }
 
@@ -557,7 +571,7 @@ Phaser.Button.prototype.onInputUpHandler = function (sprite, pointer, isOver) {
         return;
     }
 
-    if (this.forceOut)
+    if (this.forceOut === true || (this.forceOut & pointer.pointerMode) === pointer.pointerMode)
     {
         this.changeStateFrame(STATE_OUT);
     }

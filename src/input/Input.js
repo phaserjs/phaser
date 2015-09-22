@@ -374,7 +374,7 @@ Phaser.Input.prototype = {
     */
     boot: function () {
 
-        this.mousePointer = new Phaser.Pointer(this.game, 0);
+        this.mousePointer = new Phaser.Pointer(this.game, 0, Phaser.PointerMode.CURSOR);
         this.addPointer();
         this.addPointer();
 
@@ -517,7 +517,7 @@ Phaser.Input.prototype = {
         }
 
         var id = this.pointers.length + 1;
-        var pointer = new Phaser.Pointer(this.game, id);
+        var pointer = new Phaser.Pointer(this.game, id, Phaser.PointerMode.TOUCH);
 
         this.pointers.push(pointer);
         this['pointer' + id] = pointer;
