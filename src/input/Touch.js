@@ -28,7 +28,7 @@ Phaser.Touch = function (game) {
     this.enabled = true;
 
     /**
-    * An array of callbacks that will be fired every time a native touch start event is received from the browser.
+    * An array of callbacks that will be fired every time a native touch start or touch end event is received from the browser.
     * This is used internally to handle audio and video unlocking on mobile devices.
     * To add a callback to this array please use `Touch.addTouchLockCallback`.
     * @property {array} touchLockCallbacks
@@ -198,7 +198,7 @@ Phaser.Touch.prototype = {
     },
 
     /**
-    * Adds a callback that is fired when a browser touchstart event is received.
+    * Adds a callback that is fired when a browser touchstart or touchend event is received.
     *
     * This is used internally to handle audio and video unlocking on mobile devices.
     *
@@ -209,10 +209,13 @@ Phaser.Touch.prototype = {
     * @method Phaser.Touch#addTouchLockCallback
     * @param {function} callback - The callback that will be called when a touchstart event is received.
     * @param {object} context - The context in which the callback will be called.
+    * @param {boolean} [onEnd=false] - Will the callback fire on a touchstart (default) or touchend event?
     */
-    addTouchLockCallback: function (callback, context) {
+    addTouchLockCallback: function (callback, context, onEnd) {
 
-        this.touchLockCallbacks.push({ callback: callback, context: context });
+        if (onEnd === undefined) { onEnd = false; }
+
+        this.touchLockCallbacks.push({ callback: callback, context: context, onEnd: onEnd });
 
     },
 
@@ -252,7 +255,9 @@ Phaser.Touch.prototype = {
 
         while (i--)
         {
-            if (this.touchLockCallbacks[i].callback.call(this.touchLockCallbacks[i].context, this, event))
+            var cb = this.touchLockCallbacks[i];
+
+            if (!cb.onEnd && cb.callback.call(cb.context, this, event))
             {
                 this.touchLockCallbacks.splice(i, 1);
             }
@@ -400,6 +405,18 @@ Phaser.Touch.prototype = {
     * @param {TouchEvent} event - The native event from the browser. This gets stored in Touch.event.
     */
     onTouchEnd: function (event) {
+
+        var i = this.touchLockCallbacks.length;
+
+        while (i--)
+        {
+            var cb = this.touchLockCallbacks[i];
+
+            if (cb.onEnd && cb.callback.call(cb.context, this, event))
+            {
+                this.touchLockCallbacks.splice(i, 1);
+            }
+        }
 
         this.event = event;
 
