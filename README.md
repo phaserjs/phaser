@@ -267,6 +267,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * You can now load single layer Pyxel Edit TileMaps as an atlas (thanks @joshpmcghee #2050)
 * Canvas.getSmoothingPrefix will return the vendor prefixed smoothing enabled value from the context if set, otherwise null.
 * The Random Number Generator can now get and set its state via rnd.state. This allows you to do things like saving the state of the generator to a string that can be part of a save-game file and load it back in again (thanks @luckylooke #2056 #1900)
+* Device.iOSVersion now contains the major version number of iOS.
 
 ### Updates
 
@@ -285,6 +286,8 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * Added Node.js v4 stable to Travis config (thanks @phillipalexander #2070)
 * Optimised Canvas.getSmoothingEnabled, Canvas.setSmoothingEnabled and Canvas.setImageRenderingCrisp.
 * The Physics Editor Exporter (found in the resources folder of the repo) has had an option to prefix shape names and optimize JSON output added to it (thanks @Garbanas #2093)
+* Touch.addTouchLockCallback has a new argument `onEnd` which allows the callback to fire either on a touchstart or a touchend event.
+* The SoundManager now detects if the browser is running under iOS9 and uses a touchend callback to unlock the audio subsystem. Previous versions of iOS (and Android) still use touchstart. This fixes Apple's screw-up with regard to changing the way Web Audio should be triggered in Mobile Safari. Thanks Apple (thanks @MyCatCarlos for the heads-up #2095)
 
 ### Bug Fixes
 
