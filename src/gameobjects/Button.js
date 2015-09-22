@@ -170,7 +170,7 @@ Phaser.Button = function (game, x, y, key, callback, callbackContext, overFrame,
     * @property {boolean} onOverMouseOnly
     * @default
     */
-    this.onOverMouseOnly = false;
+    this.onOverMouseOnly = true;
 
     /**
     * Suppresse the over event if a pointer was just released and it matches the given {@link Phaser.PointerModer pointer mode bitmask}.

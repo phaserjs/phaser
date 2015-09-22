@@ -268,6 +268,11 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * Canvas.getSmoothingPrefix will return the vendor prefixed smoothing enabled value from the context if set, otherwise null.
 * The Random Number Generator can now get and set its state via rnd.state. This allows you to do things like saving the state of the generator to a string that can be part of a save-game file and load it back in again (thanks @luckylooke #2056 #1900)
 * Device.iOSVersion now contains the major version number of iOS.
+* The new `PointerMode` enumeration value has been added for better simple input discrimination in the future, between active pointers such as touch screens and passive pointers, such as mouse cursors (thanks @pnstickne #2062)
+* Button.justReleasedPreventsOver controls if a just-release event
+on a pointer prevents it from being able to trigger an over event.
+* Button.forceOut expanded to accept a PointerMode value such that it
+can be controlled per-input mode.
 
 ### Updates
 
@@ -289,6 +294,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * Touch.addTouchLockCallback has a new argument `onEnd` which allows the callback to fire either on a touchstart or a touchend event.
 * The SoundManager now detects if the browser is running under iOS9 and uses a touchend callback to unlock the audio subsystem. Previous versions of iOS (and Android) still use touchstart. This fixes Apple's screw-up with regard to changing the way Web Audio should be triggered in Mobile Safari. Thanks Apple (thanks @MyCatCarlos for the heads-up #2095)
 * InputHandler.validForInput now checks if the game object has `input.enabled` set to `false` and doesn't validate it for input if that's the case.
+* The default Button.onOverMouseOnly value has changed from `false` to `true`. If you used this in your touch enabled games then please be aware of this change (#2083)
 
 ### Bug Fixes
 
@@ -301,10 +307,11 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * Under setTimeOut (or when `forceSetTimeOut` was true) the Time was incorrectly setting `Time.timeExpected` causing game updates to lag (thanks @satan6 #2087)
 * Fixes edge case when TilingSprite is removed before render (thanks @pnstickne #2097 #2092)
 * Camera.setBoundsToWorld only adjusts the bounds if it exists (thanks @prudolfs #2099)
+* 
 
 ### Pixi Updates
 
-Please note that Phaser uses a custom build of Pixi (and always has done), the following changes are those made to our custom build, not to Pixi in general.
+Please note that Phaser uses a custom build of Pixi and always has done. The following changes have been made to our custom build, not to Pixi in general.
 
 * CanvasRenderer.mapBlendModes optimised to cut down on file size.
 * PIXI.WebGLRenderer.updateTexture now returns a boolean depending on if the texture was successfully bound to the gl context or not.
