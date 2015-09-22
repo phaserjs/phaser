@@ -820,9 +820,9 @@ Phaser.Color = {
     *
     * @method Phaser.Color.getRandomColor
     * @static
-    * @param {number} min - The lowest value to use for the color.
-    * @param {number} max - The highest value to use for the color.
-    * @param {number} alpha - The alpha value of the returning color (default 255 = fully opaque).
+    * @param {number} [min=0] - The lowest value to use for the color.
+    * @param {number} [max=255] - The highest value to use for the color.
+    * @param {number} [alpha=255] - The alpha value of the returning color (default 255 = fully opaque).
     * @returns {number} 32-bit color value with alpha.
     */
     getRandomColor: function (min, max, alpha) {

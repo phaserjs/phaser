@@ -163,7 +163,9 @@ Phaser.Component.Core.prototype = {
     * The z depth of this Game Object within its parent Group.
     * No two objects in a Group can have the same z value.
     * This value is adjusted automatically whenever the Group hierarchy changes.
+    * If you wish to re-order the layering of a Game Object then see methods like Group.moveUp or Group.bringToTop.
     * @property {number} z
+    * @readOnly
     */
     z: 0,
 

@@ -9,7 +9,7 @@
 * It also handles browser visibility handling and the pausing due to loss of focus.
 *
 * @class Phaser.Stage
-* @extends PIXI.Stage
+* @extends PIXI.DisplayObjectContainer
 * @constructor
 * @param {Phaser.Game} game - Game reference to the currently running game.
  */
@@ -20,7 +20,7 @@ Phaser.Stage = function (game) {
     */
     this.game = game;
 
-    PIXI.Stage.call(this, 0x000000);
+    PIXI.DisplayObjectContainer.call(this);
 
     /**
     * @property {string} name - The name of this object.
@@ -41,6 +41,20 @@ Phaser.Stage = function (game) {
     this.exists = true;
 
     /**
+    * @property {PIXI.Matrix} worldTransform - Current transform of the object based on world (parent) factors
+    * @private
+    * @readOnly
+    */
+    this.worldTransform = new PIXI.Matrix();
+
+    /**
+    * @property {Phaser.Stage} stage - The stage reference (the Stage is its own stage)
+    * @private
+    * @readOnly
+    */
+    this.stage = this;
+
+    /**
     * @property {number} currentRenderOrderID - Reset each frame, keeps a count of the total number of objects updated.
     */
     this.currentRenderOrderID = 0;
@@ -58,10 +72,16 @@ Phaser.Stage = function (game) {
     this._onChange = null;
 
     /**
-    * @property {number} _backgroundColor - Stage background color.
+    * @property {number} _bgColor - Stage background color object. Populated by setBackgroundColor.
     * @private
     */
-    this._backgroundColor = 0x000000;
+    this._bgColor = { r: 0, g: 0, b: 0, a: 0, color: 0, rgba: '#000000' };
+
+    if (!this.game.transparent)
+    {
+        //  transparent = 0,0,0,0 - otherwise r,g,b,1
+        this._bgColor.a = 1;
+    }
 
     if (game.config)
     {
@@ -70,7 +90,7 @@ Phaser.Stage = function (game) {
 
 };
 
-Phaser.Stage.prototype = Object.create(PIXI.Stage.prototype);
+Phaser.Stage.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
 Phaser.Stage.prototype.constructor = Phaser.Stage;
 
 /**
@@ -89,7 +109,7 @@ Phaser.Stage.prototype.parseConfig = function (config) {
 
     if (config['backgroundColor'])
     {
-        this.backgroundColor = config['backgroundColor'];
+        this.setBackgroundColor(config['backgroundColor']);
     }
 
 };
@@ -306,16 +326,23 @@ Phaser.Stage.prototype.visibilityChange = function (event) {
 *
 * An alpha channel is _not_ supported and will be ignored.
 *
+* If you've set your game to be transparent then calls to setBackgroundColor are ignored.
+*
 * @method Phaser.Stage#setBackgroundColor
-* @param {number|string} backgroundColor - The color of the background.
+* @param {number|string} color - The color of the background.
 */
-Phaser.Stage.prototype.setBackgroundColor = function(backgroundColor)
-{
-    var rgb = Phaser.Color.valueToColor(backgroundColor);
-    this._backgroundColor = Phaser.Color.getColor(rgb.r, rgb.g, rgb.b);
+Phaser.Stage.prototype.setBackgroundColor = function (color) {
 
-    this.backgroundColorSplit = [ rgb.r / 255, rgb.g / 255, rgb.b / 255 ];
-    this.backgroundColorString = Phaser.Color.RGBtoString(rgb.r, rgb.g, rgb.b, 255, '#');
+    if (this.game.transparent) { return; }
+
+    Phaser.Color.valueToColor(color, this._bgColor);
+    Phaser.Color.updateColor(this._bgColor);
+
+    //  For gl.clearColor (canvas uses _bgColor.rgba)
+    this._bgColor.r /= 255;
+    this._bgColor.g /= 255;
+    this._bgColor.b /= 255;
+    this._bgColor.a = 1;
 
 };
 
@@ -347,16 +374,13 @@ Object.defineProperty(Phaser.Stage.prototype, "backgroundColor", {
 
     get: function () {
 
-        return this._backgroundColor;
+        return this._bgColor.color;
 
     },
 
     set: function (color) {
 
-        if (!this.game.transparent)
-        {
-            this.setBackgroundColor(color);
-        }
+        this.setBackgroundColor(color);
 
     }
 

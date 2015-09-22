@@ -139,7 +139,7 @@ Phaser.Animation = function (game, parent, name, frameData, frames, frameRate, l
     this.onUpdate = null;
 
     /**
-    * @property {Phaser.Signal} onComplete - This event is dispatched when this Animation completes playback. If the animation is set to loop this is never fired, listen for onAnimationLoop instead.
+    * @property {Phaser.Signal} onComplete - This event is dispatched when this Animation completes playback. If the animation is set to loop this is never fired, listen for onLoop instead.
     */
     this.onComplete = new Phaser.Signal();
 

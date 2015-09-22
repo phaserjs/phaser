@@ -654,6 +654,8 @@ PIXI.Graphics.prototype.generateTexture = function(resolution, scaleMode)
     canvasBuffer.context.scale(resolution, resolution);
 
     canvasBuffer.context.translate(-bounds.x, -bounds.y);
+
+    //  Call here
     
     PIXI.CanvasGraphics.renderGraphics(this, canvasBuffer.context);
 
@@ -771,12 +773,17 @@ PIXI.Graphics.prototype._renderCanvas = function(renderSession)
         }
 
         this._cachedSprite.alpha = this.alpha;
+
+        if (renderSession.fd.on) { renderSession.fd.cgc(); }
+
         PIXI.Sprite.prototype._renderCanvas.call(this._cachedSprite, renderSession);
 
         return;
     }
     else
     {
+        if (renderSession.fd.on) { renderSession.fd.cg(); }
+
         var context = renderSession.context;
         var transform = this.worldTransform;
         
@@ -1069,10 +1076,14 @@ PIXI.Graphics.prototype._generateCachedSprite = function()
         this._cachedSprite.buffer = canvasBuffer;
 
         this._cachedSprite.worldTransform = this.worldTransform;
+
+        if (PIXI.game.fd.on) { PIXI.game.fd.cgcs1(texture, texture.width, texture.height); }
     }
     else
     {
         this._cachedSprite.buffer.resize(bounds.width, bounds.height);
+
+        if (PIXI.game.fd.on) { PIXI.game.fd.cgcs2(this._cachedSprite.texture, this._cachedSprite.texture.width, this._cachedSprite.texture.height); }
     }
 
     // leverage the anchor to account for the offset of the element

@@ -36,19 +36,19 @@ Phaser.Physics.P2.ContactMaterial = function (materialA, materialB, options) {
 	*/
 
 	/**
-	* @property {number} [stiffness=1e7] - Stiffness of the resulting ContactEquation that this ContactMaterial generate.
+	* @property {number} [stiffness=1e7] - Stiffness of the resulting ContactEquation that this ContactMaterial generates.
 	*/
 
 	/**
-	* @property {number} [relaxation=3] - Relaxation of the resulting ContactEquation that this ContactMaterial generate.
+	* @property {number} [relaxation=3] - Relaxation of the resulting ContactEquation that this ContactMaterial generates.
 	*/
 
 	/**
-	* @property {number} [frictionStiffness=1e7] - Stiffness of the resulting FrictionEquation that this ContactMaterial generate.
+	* @property {number} [frictionStiffness=1e7] - Stiffness of the resulting FrictionEquation that this ContactMaterial generates.
 	*/
 
 	/**
-	* @property {number} [frictionRelaxation=3] - Relaxation of the resulting FrictionEquation that this ContactMaterial generate.
+	* @property {number} [frictionRelaxation=3] - Relaxation of the resulting FrictionEquation that this ContactMaterial generates.
 	*/
 
 	/**

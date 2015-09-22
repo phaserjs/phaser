@@ -23,6 +23,8 @@ PIXI.CanvasGraphics = function()
  */
 PIXI.CanvasGraphics.renderGraphics = function(graphics, context)
 {
+    if (PIXI.game.fd.on) { PIXI.game.fd.rgs(); }
+
     var worldAlpha = graphics.worldAlpha;
 
     if (graphics.dirty)
@@ -78,6 +80,8 @@ PIXI.CanvasGraphics.renderGraphics = function(graphics, context)
                 context.strokeStyle = '#' + ('00000' + ( lineColor | 0).toString(16)).substr(-6);
                 context.stroke();
             }
+
+            if (PIXI.game.fd.on) { PIXI.game.fd.cgpoly(points.length / 2); }
         }
         else if (data.type === PIXI.Graphics.RECT)
         {
@@ -94,6 +98,8 @@ PIXI.CanvasGraphics.renderGraphics = function(graphics, context)
                 context.strokeStyle = '#' + ('00000' + ( lineColor | 0).toString(16)).substr(-6);
                 context.strokeRect(shape.x, shape.y, shape.width, shape.height);
             }
+
+            if (PIXI.game.fd.on) { PIXI.game.fd.cgrect(); }
         }
         else if (data.type === PIXI.Graphics.CIRC)
         {
@@ -115,6 +121,8 @@ PIXI.CanvasGraphics.renderGraphics = function(graphics, context)
                 context.strokeStyle = '#' + ('00000' + ( lineColor | 0).toString(16)).substr(-6);
                 context.stroke();
             }
+
+            if (PIXI.game.fd.on) { PIXI.game.fd.cgcirc(); }
         }
         else if (data.type === PIXI.Graphics.ELIP)
         {
@@ -157,6 +165,8 @@ PIXI.CanvasGraphics.renderGraphics = function(graphics, context)
                 context.strokeStyle = '#' + ('00000' + ( lineColor | 0).toString(16)).substr(-6);
                 context.stroke();
             }
+
+            if (PIXI.game.fd.on) { PIXI.game.fd.cgelip(); }
         }
         else if (data.type === PIXI.Graphics.RREC)
         {
@@ -194,8 +204,13 @@ PIXI.CanvasGraphics.renderGraphics = function(graphics, context)
                 context.strokeStyle = '#' + ('00000' + ( lineColor | 0).toString(16)).substr(-6);
                 context.stroke();
             }
+
+            if (PIXI.game.fd.on) { PIXI.game.fd.cgrrect(); }
         }
     }
+
+    if (PIXI.game.fd.on) { PIXI.game.fd.rgp(); }
+
 };
 
 /*
@@ -323,30 +338,9 @@ PIXI.CanvasGraphics.updateGraphicsTint = function(graphics)
         var fillColor = data.fillColor | 0;
         var lineColor = data.lineColor | 0;
 
-        /*
-        var colorR = (fillColor >> 16 & 0xFF) / 255;
-        var colorG = (fillColor >> 8 & 0xFF) / 255;
-        var colorB = (fillColor & 0xFF) / 255; 
-
-        colorR *= tintR;
-        colorG *= tintG;
-        colorB *= tintB;
-
-        fillColor = ((colorR*255 << 16) + (colorG*255 << 8) + colorB*255);
-
-        colorR = (lineColor >> 16 & 0xFF) / 255;
-        colorG = (lineColor >> 8 & 0xFF) / 255;
-        colorB = (lineColor & 0xFF) / 255; 
-
-        colorR *= tintR;
-        colorG *= tintG;
-        colorB *= tintB;
-
-        lineColor = ((colorR*255 << 16) + (colorG*255 << 8) + colorB*255);   
-        */
-        
         data._fillTint = (((fillColor >> 16 & 0xFF) / 255 * tintR*255 << 16) + ((fillColor >> 8 & 0xFF) / 255 * tintG*255 << 8) +  (fillColor & 0xFF) / 255 * tintB*255);
         data._lineTint = (((lineColor >> 16 & 0xFF) / 255 * tintR*255 << 16) + ((lineColor >> 8 & 0xFF) / 255 * tintG*255 << 8) +  (lineColor & 0xFF) / 255 * tintB*255);
 
     }
+
 };

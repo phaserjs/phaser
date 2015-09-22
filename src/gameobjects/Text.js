@@ -415,9 +415,7 @@ Phaser.Text.prototype.updateText = function () {
         maxLineWidth = Math.max(maxLineWidth, lineWidths[i]);
     }
 
-    var width = maxLineWidth + this.style.strokeThickness;
-
-    this.canvas.width = width * this._res;
+    this.canvas.width = maxLineWidth * this._res;
     
     //  Calculate text height
     var lineHeight = fontProperties.fontSize + this.style.strokeThickness + this.padding.y;
@@ -1197,10 +1195,13 @@ Phaser.Text.prototype._renderCanvas = function (renderSession) {
 
     if (this.dirty)
     {
+        if (renderSession.fd.on) { renderSession.fd.tu(); }
         this.updateText();
         this.dirty = false;
     }
      
+    if (renderSession.fd.on) { renderSession.fd.ct(this.texture, this.texture.width, this.texture.height, this.texture.baseTexture.resolution); }
+
     PIXI.Sprite.prototype._renderCanvas.call(this, renderSession);
 
 };

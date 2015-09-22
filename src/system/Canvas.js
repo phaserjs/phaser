@@ -56,7 +56,7 @@ Phaser.Canvas = {
     *
     * @method Phaser.Canvas.setBackgroundColor
     * @param {HTMLCanvasElement} canvas - The canvas to set the background color on.
-    * @param {string} [color] - The color to set. Can be in the format 'rgb(r,g,b)', or '#RRGGBB' or any valid CSS color.
+    * @param {string} [color='rgb(0,0,0)'] - The color to set. Can be in the format 'rgb(r,g,b)', or '#RRGGBB' or any valid CSS color.
     * @return {HTMLCanvasElement} Returns the source canvas.
     */
     setBackgroundColor: function (canvas, color) {
@@ -210,7 +210,27 @@ Phaser.Canvas = {
     */
     setSmoothingEnabled: function (context, value) {
 
-        var vendor = [ 'i', 'mozI', 'oI', 'webkitI', 'msI' ];
+        var s = Phaser.Canvas.getSmoothingPrefix(context);
+
+        if (s)
+        {
+            context[s] = value;
+        }
+
+        return context;
+
+    },
+
+    /**
+    * Gets the Smoothing Enabled vendor prefix being used on the given context, or null if not set.
+    *
+    * @method Phaser.Canvas.getSmoothingPrefix
+    * @param {CanvasRenderingContext2D} context - The context to enable or disable the image smoothing on.
+    * @return {string|null} Returns the smoothingEnabled vendor prefix, or null if not set on the context.
+    */
+    getSmoothingPrefix: function (context) {
+
+        var vendor = [ 'i', 'webkitI', 'msI', 'mozI', 'oI' ];
 
         for (var prefix in vendor)
         {
@@ -218,12 +238,11 @@ Phaser.Canvas = {
 
             if (s in context)
             {
-                context[s] = value;
-                return context;
+                return s;
             }
         }
 
-        return context;
+        return null;
 
     },
 
@@ -236,7 +255,12 @@ Phaser.Canvas = {
      */
     getSmoothingEnabled: function (context) {
 
-        return (context['imageSmoothingEnabled'] || context['mozImageSmoothingEnabled'] || context['oImageSmoothingEnabled'] || context['webkitImageSmoothingEnabled'] || context['msImageSmoothingEnabled']);
+        var s = Phaser.Canvas.getSmoothingPrefix(context);
+
+        if (s)
+        {
+            return context[s];
+        }
 
     },
 
@@ -250,12 +274,13 @@ Phaser.Canvas = {
     */
     setImageRenderingCrisp: function (canvas) {
 
-        canvas.style['image-rendering'] = 'optimizeSpeed';
-        canvas.style['image-rendering'] = 'crisp-edges';
-        canvas.style['image-rendering'] = '-moz-crisp-edges';
-        canvas.style['image-rendering'] = '-webkit-optimize-contrast';
-        canvas.style['image-rendering'] = 'optimize-contrast';
-        canvas.style['image-rendering'] = 'pixelated';
+        var types = [ 'optimizeSpeed', 'crisp-edges', '-moz-crisp-edges', '-webkit-optimize-contrast', 'optimize-contrast', 'pixelated' ];
+
+        for (var i = 0; i < types.length; i++)
+        {
+            canvas.style['image-rendering'] = types[i];
+        }
+
         canvas.style.msInterpolationMode = 'nearest-neighbor';
 
         return canvas;
