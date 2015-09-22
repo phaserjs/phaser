@@ -443,9 +443,7 @@ Phaser.Physics.Arcade.Body.prototype = {
         this.embedded = false;
 
         this.updateBounds();
-
-        // Changed this.sprite.world.xy to just this.sprite.xy.  This prevents this Body being
-        // dependent on the scale of the Sprite's parent groups or the Phaser Camera.
+        
         this.position.x = (this.sprite.x - (this.sprite.anchor.x * this.width)) + this.offset.x;
         this.position.y = (this.sprite.y - (this.sprite.anchor.y * this.height)) + this.offset.y;
         
