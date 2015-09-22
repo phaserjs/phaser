@@ -664,7 +664,7 @@ Phaser.Device._initialize = function () {
         else if (/iP[ao]d|iPhone/i.test(ua))
         {
             device.iOS = true;
-            var v = (navigator.appVersion).match(/OS (\d+)/);
+            (navigator.appVersion).match(/OS (\d+)/);
             device.iOSVersion = parseInt(RegExp.$1, 10);
         }
         else if (/Linux/.test(ua))
