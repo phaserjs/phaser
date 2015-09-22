@@ -348,12 +348,13 @@ PIXI.WebGLRenderer.prototype.resize = function(width, height)
  *
  * @method updateTexture
  * @param texture {Texture} the texture to update
+ * @return {boolean} True if the texture was successfully bound, otherwise false.
  */
 PIXI.WebGLRenderer.prototype.updateTexture = function(texture)
 {
     if (!texture.hasLoaded)
     {
-        return;
+        return false;
     }
 
     var gl = this.gl;
@@ -394,7 +395,8 @@ PIXI.WebGLRenderer.prototype.updateTexture = function(texture)
 
     texture._dirty[gl.id] = false;
 
-    return  texture._glTextures[gl.id];
+    // return texture._glTextures[gl.id];
+    return true;
 
 };
 

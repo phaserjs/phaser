@@ -304,7 +304,11 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 
 ### Pixi Updates
 
+Please note that Phaser uses a custom build of Pixi (and always has done), the following changes are those made to our custom build, not to Pixi in general.
+
 * CanvasRenderer.mapBlendModes optimised to cut down on file size.
+* PIXI.WebGLRenderer.updateTexture now returns a boolean depending on if the texture was successfully bound to the gl context or not.
+* PIXI.WebGLSpriteBatch.renderBatch would still try and render a texture even if `updateTexture` failed to bind it. It now checks the return value from `updateTexture` and ignores failed binds.
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
