@@ -833,7 +833,7 @@ Phaser.Pointer.prototype = {
 
         var currentNode = this.game.input.interactiveItems.first;
 
-        while(currentNode)
+        while (currentNode)
         {
             if (!currentNode.checked &&
                 currentNode.validForInput(highestInputPriorityID, highestRenderOrderID, true))

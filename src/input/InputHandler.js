@@ -438,7 +438,7 @@ Phaser.InputHandler.prototype = {
 
         if (includePixelPerfect === undefined) { includePixelPerfect = true; }
 
-        if (this.sprite.scale.x === 0 || this.sprite.scale.y === 0 || this.priorityID < this.game.input.minPriorityID)
+        if (!this.enabled || this.sprite.scale.x === 0 || this.sprite.scale.y === 0 || this.priorityID < this.game.input.minPriorityID)
         {
             return false;
         }
