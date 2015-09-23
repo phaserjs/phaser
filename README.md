@@ -307,6 +307,7 @@ can be controlled per-input mode.
 * Under setTimeOut (or when `forceSetTimeOut` was true) the Time was incorrectly setting `Time.timeExpected` causing game updates to lag (thanks @satan6 #2087)
 * Fixes edge case when TilingSprite is removed before render (thanks @pnstickne #2097 #2092)
 * Camera.setBoundsToWorld only adjusts the bounds if it exists (thanks @prudolfs #2099)
+* Keyboard.addCallbacks didn't check to see if the arguments were `null`, only if they were `undefined` making the jsdocs misleading.
 
 ### Pixi Updates
 

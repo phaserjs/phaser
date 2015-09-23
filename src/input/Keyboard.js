@@ -120,17 +120,17 @@ Phaser.Keyboard.prototype = {
 
         this.callbackContext = context;
 
-        if (typeof onDown !== 'undefined')
+        if (onDown !== undefined && onDown !== null)
         {
             this.onDownCallback = onDown;
         }
 
-        if (typeof onUp !== 'undefined')
+        if (onUp !== undefined && onUp !== null)
         {
             this.onUpCallback = onUp;
         }
 
-        if (typeof onPress !== 'undefined')
+        if (onPress !== undefined && onPress !== null)
         {
             this.onPressCallback = onPress;
         }
