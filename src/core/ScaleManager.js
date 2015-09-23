@@ -2097,7 +2097,7 @@ Object.defineProperty(Phaser.ScaleManager.prototype, "boundingParent", {
 *   <dt>{@link Phaser.ScaleManager.EXACT_FIT}</dt>
 *   <dd>
 *       The Game display area will be _stretched_ to fill the entire size of the canvas's parent element and/or screen.
-*       Proportions are not mainted.
+*       Proportions are not maintained.
 *   </dd>
 *   <dt>{@link Phaser.ScaleManager.SHOW_ALL}</dt>
 *   <dd>
