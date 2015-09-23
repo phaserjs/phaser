@@ -277,7 +277,7 @@ can be controlled per-input mode.
 ### Updates
 
 * TypeScript definitions fixes and updates (thanks @clark-stevenson @milkey-mouse @timotei @qdrj @Garbanas @cloakedninjas)
-* Docs typo fixes (thanks @rwrountree @yeluoqiuzhi @pnstickne @fonsecas72)
+* Docs typo fixes (thanks @rwrountree @yeluoqiuzhi @pnstickne @fonsecas72 @JackMorganNZ)
 * Math.average has been optimized (thanks @rwrountree #2025)
 * When calling GameObject.revive the `heal` method is called to apply the health value, allowing it to take into consideration a `maxHealth` value if set (thanks @bsparks #2027)
 * Change splice.call(arguments, ..) to use slice instead (thanks @pnstickne #2034 #2032)
@@ -307,7 +307,6 @@ can be controlled per-input mode.
 * Under setTimeOut (or when `forceSetTimeOut` was true) the Time was incorrectly setting `Time.timeExpected` causing game updates to lag (thanks @satan6 #2087)
 * Fixes edge case when TilingSprite is removed before render (thanks @pnstickne #2097 #2092)
 * Camera.setBoundsToWorld only adjusts the bounds if it exists (thanks @prudolfs #2099)
-* 
 
 ### Pixi Updates
 
