@@ -439,6 +439,7 @@ Phaser.Cache.prototype = {
     * @param {string} url - The URL the asset was loaded from. If the asset was not loaded externally set to `null`.
     * @param {object} data - Extra font data.
     * @param {object} atlasData - Texture atlas frames data.
+    * @param {string} [atlasType='xml'] - The format of the texture atlas ( 'json' or 'xml' ).
     * @param {number} [xSpacing=0] - If you'd like to add additional horizontal spacing between the characters then set the pixel value here.
     * @param {number} [ySpacing=0] - If you'd like to add additional vertical spacing between the lines then set the pixel value here.
     */
