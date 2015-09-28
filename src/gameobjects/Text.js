@@ -212,16 +212,6 @@ Phaser.Text.prototype.destroy = function (destroyChildren) {
 
     PIXI.CanvasPool.remove(this);
 
-    // if (this.canvas && this.canvas.parentNode)
-    // {
-    //     this.canvas.parentNode.removeChild(this.canvas);
-    // }
-    // else
-    // {
-    //     this.canvas = null;
-    //     this.context = null;
-    // }
-
     Phaser.Component.Destroy.prototype.destroy.call(this, destroyChildren);
 
 };
