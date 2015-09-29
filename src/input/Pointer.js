@@ -578,6 +578,8 @@ Phaser.Pointer.prototype = {
     */
     start: function (event) {
 
+        var input = this.game.input;
+
         if (event['pointerId'])
         {
             this.pointerId = event.pointerId;
@@ -615,18 +617,19 @@ Phaser.Pointer.prototype = {
         // x and y are the old values here?
         this.positionDown.setTo(this.x, this.y);
 
-        if (this.game.input.multiInputOverride === Phaser.Input.MOUSE_OVERRIDES_TOUCH ||
-            this.game.input.multiInputOverride === Phaser.Input.MOUSE_TOUCH_COMBINE ||
-            (this.game.input.multiInputOverride === Phaser.Input.TOUCH_OVERRIDES_MOUSE && this.game.input.totalActivePointers === 0))
+        if (input.multiInputOverride === Phaser.Input.MOUSE_OVERRIDES_TOUCH ||
+            input.multiInputOverride === Phaser.Input.MOUSE_TOUCH_COMBINE ||
+            (input.multiInputOverride === Phaser.Input.TOUCH_OVERRIDES_MOUSE && input.totalActivePointers === 0))
         {
-            this.game.input.x = this.x;
-            this.game.input.y = this.y;
-            this.game.input.position.setTo(this.x, this.y);
-            this.game.input.onDown.dispatch(this, event);
-            this.game.input.resetSpeed(this.x, this.y);
+            input.x = this.x;
+            input.y = this.y;
+            input.position.setTo(this.x, this.y);
+            input.onDown.dispatch(this, event);
+            input.resetSpeed(this.x, this.y);
         }
 
         this._stateReset = false;
+
         this.totalTouches++;
 
         if (this.targetObject !== null)
@@ -644,12 +647,14 @@ Phaser.Pointer.prototype = {
     */
     update: function () {
 
+        var input = this.game.input;
+
         if (this.active)
         {
             //  Force a check?
             if (this.dirty)
             {
-                if (this.game.input.interactiveItems.total > 0)
+                if (input.interactiveItems.total > 0)
                 {
                     this.processInteractiveObjects(false);
                 }
@@ -657,29 +662,29 @@ Phaser.Pointer.prototype = {
                 this.dirty = false;
             }
 
-            if (this._holdSent === false && this.duration >= this.game.input.holdRate)
+            if (this._holdSent === false && this.duration >= input.holdRate)
             {
-                if (this.game.input.multiInputOverride === Phaser.Input.MOUSE_OVERRIDES_TOUCH ||
-                    this.game.input.multiInputOverride === Phaser.Input.MOUSE_TOUCH_COMBINE ||
-                    (this.game.input.multiInputOverride === Phaser.Input.TOUCH_OVERRIDES_MOUSE && this.game.input.totalActivePointers === 0))
+                if (input.multiInputOverride === Phaser.Input.MOUSE_OVERRIDES_TOUCH ||
+                    input.multiInputOverride === Phaser.Input.MOUSE_TOUCH_COMBINE ||
+                    (input.multiInputOverride === Phaser.Input.TOUCH_OVERRIDES_MOUSE && input.totalActivePointers === 0))
                 {
-                    this.game.input.onHold.dispatch(this);
+                    input.onHold.dispatch(this);
                 }
 
                 this._holdSent = true;
             }
 
             //  Update the droppings history
-            if (this.game.input.recordPointerHistory && this.game.time.time >= this._nextDrop)
+            if (input.recordPointerHistory && this.game.time.time >= this._nextDrop)
             {
-                this._nextDrop = this.game.time.time + this.game.input.recordRate;
+                this._nextDrop = this.game.time.time + input.recordRate;
 
                 this._history.push({
                     x: this.position.x,
                     y: this.position.y
                 });
 
-                if (this._history.length > this.game.input.recordLimit)
+                if (this._history.length > input.recordLimit)
                 {
                     this._history.shift();
                 }
@@ -916,6 +921,8 @@ Phaser.Pointer.prototype = {
     */
     stop: function (event) {
 
+        var input = this.game.input;
+
         if (this._stateReset && this.withinGame)
         {
             event.preventDefault();
@@ -924,25 +931,25 @@ Phaser.Pointer.prototype = {
 
         this.timeUp = this.game.time.time;
 
-        if (this.game.input.multiInputOverride === Phaser.Input.MOUSE_OVERRIDES_TOUCH ||
-            this.game.input.multiInputOverride === Phaser.Input.MOUSE_TOUCH_COMBINE ||
-            (this.game.input.multiInputOverride === Phaser.Input.TOUCH_OVERRIDES_MOUSE && this.game.input.totalActivePointers === 0))
+        if (input.multiInputOverride === Phaser.Input.MOUSE_OVERRIDES_TOUCH ||
+            input.multiInputOverride === Phaser.Input.MOUSE_TOUCH_COMBINE ||
+            (input.multiInputOverride === Phaser.Input.TOUCH_OVERRIDES_MOUSE && input.totalActivePointers === 0))
         {
-            this.game.input.onUp.dispatch(this, event);
+            input.onUp.dispatch(this, event);
 
             //  Was it a tap?
-            if (this.duration >= 0 && this.duration <= this.game.input.tapRate)
+            if (this.duration >= 0 && this.duration <= input.tapRate)
             {
                 //  Was it a double-tap?
-                if (this.timeUp - this.previousTapTime < this.game.input.doubleTapRate)
+                if (this.timeUp - this.previousTapTime < input.doubleTapRate)
                 {
                     //  Yes, let's dispatch the signal then with the 2nd parameter set to true
-                    this.game.input.onTap.dispatch(this, true);
+                    input.onTap.dispatch(this, true);
                 }
                 else
                 {
                     //  Wasn't a double-tap, so dispatch a single tap signal
-                    this.game.input.onTap.dispatch(this, false);
+                    input.onTap.dispatch(this, false);
                 }
 
                 this.previousTapTime = this.timeUp;
@@ -973,10 +980,10 @@ Phaser.Pointer.prototype = {
         
         if (this.isMouse === false)
         {
-            this.game.input.currentPointers--;
+            input.currentPointers--;
         }
 
-        this.game.input.interactiveItems.callAll('_releasedHandler', this);
+        input.interactiveItems.callAll('_releasedHandler', this);
 
         if (this._clickTrampolines)
         {
