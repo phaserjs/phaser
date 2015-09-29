@@ -295,6 +295,7 @@ can be controlled per-input mode.
 * The SoundManager now detects if the browser is running under iOS9 and uses a touchend callback to unlock the audio subsystem. Previous versions of iOS (and Android) still use touchstart. This fixes Apple's screw-up with regard to changing the way Web Audio should be triggered in Mobile Safari. Thanks Apple (thanks @MyCatCarlos for the heads-up #2095)
 * InputHandler.validForInput now checks if the game object has `input.enabled` set to `false` and doesn't validate it for input if that's the case.
 * The default Button.onOverMouseOnly value has changed from `false` to `true`. If you used this in your touch enabled games then please be aware of this change (#2083)
+* BitmapData.clear now automatically calls BitmapData.update at the end of it.
 
 ### Bug Fixes
 

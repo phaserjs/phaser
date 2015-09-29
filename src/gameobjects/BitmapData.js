@@ -457,6 +457,8 @@ Phaser.BitmapData.prototype = {
 
         this.context.clearRect(x, y, width, height);
 
+        this.update();
+
         this.dirty = true;
 
         return this;
