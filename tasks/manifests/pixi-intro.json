@@ -8,7 +8,6 @@
     "src/pixi/display/SpriteBatch.js",
 
     "src/pixi/utils/Utils.js",
-    "src/pixi/utils/Polyk.js",
     "src/pixi/utils/CanvasPool.js",
 
     "src/pixi/renderers/webgl/utils/WebGLShaderUtils.js",
@@ -17,7 +16,6 @@
     "src/pixi/renderers/webgl/shaders/StripShader.js",
     "src/pixi/renderers/webgl/shaders/PrimitiveShader.js",
     "src/pixi/renderers/webgl/shaders/ComplexPrimitiveShader.js",
-    "src/pixi/renderers/webgl/utils/WebGLGraphics.js",
     "src/pixi/renderers/webgl/WebGLRenderer.js",
     "src/pixi/renderers/webgl/utils/WebGLBlendModeManager.js",
     "src/pixi/renderers/webgl/utils/WebGLMaskManager.js",
@@ -31,7 +29,6 @@
     "src/pixi/renderers/canvas/utils/CanvasMaskManager.js",
     "src/pixi/renderers/canvas/utils/CanvasTinter.js",
     "src/pixi/renderers/canvas/CanvasRenderer.js",
-    "src/pixi/renderers/canvas/CanvasGraphics.js",
 
     "src/pixi/textures/BaseTexture.js",
     "src/pixi/textures/Texture.js",

@@ -43,7 +43,7 @@ module.exports = function (grunt) {
             'components':       { 'description': 'Game Object Components',                      'optional': false, 'stub': false },
             'gameobjects':      { 'description': 'Core Game Objects',                           'optional': false, 'stub': false },
             'bitmapdata':       { 'description': 'BitmapData Game Object',                      'optional': true, 'stub': false },
-            'graphics':         { 'description': 'Graphics Game Object',                        'optional': true, 'stub': false },
+            'graphics':         { 'description': 'Graphics and PIXI Mask Support',              'optional': true, 'stub': false },
             'rendertexture':    { 'description': 'RenderTexture Game Object',                   'optional': true, 'stub': false },
             'text':             { 'description': 'Text Game Object (inc. Web Font Support)',    'optional': true, 'stub': false },
             'bitmaptext':       { 'description': 'BitmapText Game Object',                      'optional': true, 'stub': false },
