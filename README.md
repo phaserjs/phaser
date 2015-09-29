@@ -296,6 +296,9 @@ can be controlled per-input mode.
 * InputHandler.validForInput now checks if the game object has `input.enabled` set to `false` and doesn't validate it for input if that's the case.
 * The default Button.onOverMouseOnly value has changed from `false` to `true`. If you used this in your touch enabled games then please be aware of this change (#2083)
 * BitmapData.clear now automatically calls BitmapData.update at the end of it.
+* New Color stub added for the custom build process. Contains just the bare minimum of functions that Phaser needs to work. Cuts file size from 48.7KB to 7.4KB. Note: Do not stub this out if using BitmapData objects.
+* New DOM stub added for the custom build process. Contains just the bare minimum of functions that Phaser needs to work. Cuts file size from 14.8KB to 2.4KB. Note: Do not stub this out if using the full Scale Manager.
+* New Scale Manager stub added. Removes all Scale Manager handling from Phaser! But saves 75KB in the process. If you know you don't need to scale the Phaser canvas, or are handling that externally, then you can safely stub it out in a custom build.
 
 ### Bug Fixes
 
