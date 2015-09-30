@@ -275,6 +275,26 @@ module.exports = {
         dest: '<%= modules_dir %>/tilesprite.js'
     },
 
+    tilespriteStub: {
+        src: require('../manifests/tilesprite.stub'),
+        dest: '<%= modules_dir %>/tilesprite.js'
+    },
+
+    create: {
+        src: require('../manifests/create'),
+        dest: '<%= modules_dir %>/create.js'
+    },
+
+    createStub: {
+        src: require('../manifests/create.stub'),
+        dest: '<%= modules_dir %>/create.js'
+    },
+
+    flexgrid: {
+        src: require('../manifests/flexgrid'),
+        dest: '<%= modules_dir %>/flexgrid.js'
+    },
+
     outro: {
         src: require('../manifests/outro'),
         dest: '<%= modules_dir %>/outro.js'
