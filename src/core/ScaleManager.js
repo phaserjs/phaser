@@ -718,7 +718,10 @@ Phaser.ScaleManager.prototype = {
         // Don't use updateOrientationState so events are not fired
         this.screenOrientation = this.dom.getScreenOrientation(this.compatibility.orientationFallback);
 
-        this.grid = new Phaser.FlexGrid(this, this.width, this.height);
+        if (Phaser.FlexGrid)
+        {
+            this.grid = new Phaser.FlexGrid(this, this.width, this.height);
+        }
 
         this._booted = true;
 
@@ -958,7 +961,10 @@ Phaser.ScaleManager.prototype = {
             this._lastReportedCanvasSize.setTo(0, 0, width, height);
             this._lastReportedGameSize.setTo(0, 0, this.game.width, this.game.height);
 
-            this.grid.onResize(width, height);
+            if (this.grid)
+            {
+                this.grid.onResize(width, height);
+            }
 
             this.onSizeChange.dispatch(this, width, height);
 
@@ -1622,7 +1628,7 @@ Phaser.ScaleManager.prototype = {
     */
     reset: function (clearWorld) {
 
-        if (clearWorld)
+        if (clearWorld && this.grid)
         {
             this.grid.reset();
         }
