@@ -25,17 +25,17 @@ Phaser.Create = function (game) {
     /**
     * @property {Phaser.BitmapData} bmd - The internal BitmapData Create uses to generate textures from.
     */
-    this.bmd = game.make.bitmapData();
+    this.bmd = null;
 
     /**
     * @property {HTMLCanvasElement} canvas - The canvas the BitmapData uses.
     */
-    this.canvas = this.bmd.canvas;
+    this.canvas = null;
 
     /**
     * @property {CanvasRenderingContext2D} context - The 2d context of the canvas.
     */
-    this.ctx = this.bmd.context;
+    this.ctx = null;
 
     /**
     * @property {array} palettes - A range of 16 color palettes for use with sprite generation.
@@ -127,6 +127,14 @@ Phaser.Create.prototype = {
         var w = data[0].length * pixelWidth;
         var h = data.length * pixelHeight;
 
+        //  No bmd? Let's make one
+        if (this.bmd === null)
+        {
+            this.bmd = game.make.bitmapData();
+            this.canvas = this.bmd.canvas;
+            this.ctx = this.bmd.context;
+        }
+
         this.bmd.resize(w, h);
         this.bmd.clear();
 
@@ -164,6 +172,14 @@ Phaser.Create.prototype = {
      * @return {PIXI.Texture} The newly generated texture.
      */
     grid: function (key, width, height, cellWidth, cellHeight, color) {
+
+        //  No bmd? Let's make one
+        if (this.bmd === null)
+        {
+            this.bmd = game.make.bitmapData();
+            this.canvas = this.bmd.canvas;
+            this.ctx = this.bmd.context;
+        }
 
         this.bmd.resize(width, height);
 
