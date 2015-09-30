@@ -300,6 +300,10 @@ can be controlled per-input mode.
 * New DOM stub added for the custom build process. Contains just the bare minimum of functions that Phaser needs to work. Cuts file size from 14.8KB to 2.4KB. Note: Do not stub this out if using the full Scale Manager.
 * New Scale Manager stub added. Removes all Scale Manager handling from Phaser! But saves 75KB in the process. If you know you don't need to scale the Phaser canvas, or are handling that externally, then you can safely stub it out in a custom build.
 * Added the PIXI.PolyK, PIXI.WebGLGraphics and PIXI.CanvasGraphics files to the Graphics custom build option. They weren't used anyway and this removes an extra 40.2KB from the build size.
+* Phaser.Create no longer automatically creates a BitmapData object when it starts. It now only does it when you first make a texture or grid.
+* New Create stub added for the custom build process. Cuts file size by 8KB.
+* You can now exclude the FlexGrid from custom builds, saving 15KB.
+* The ScaleManager no longer creates a Phaser.FlexGrid if the class isn't available (i.e. excluded via a custom build)
 
 ### Bug Fixes
 
