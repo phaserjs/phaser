@@ -1421,8 +1421,9 @@ Phaser.ScaleManager.prototype = {
         {
             // Ref. http://msdn.microsoft.com/en-us/library/hh781509(v=vs.85).aspx for getBoundingClientRect
             var clientRect = parentNode.getBoundingClientRect();
+            var parentRect = parentNode.offsetParent.getBoundingClientRect();
 
-            bounds.setTo(clientRect.left, clientRect.top, clientRect.width, clientRect.height);
+            bounds.setTo(clientRect.left - parentRect.left, clientRect.top - parentRect.top, clientRect.width, clientRect.height);
 
             var wc = this.windowConstraints;
 
