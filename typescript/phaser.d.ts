@@ -3575,6 +3575,10 @@ declare module Phaser {
         }
     }
 
+    interface PluginConstructorOf<T> {
+        new (...parameters: any[]): T;
+    }
+
     class PluginManager implements IStateCycle {
 
         constructor(game: Phaser.Game);
@@ -3582,7 +3586,7 @@ declare module Phaser {
         game: Phaser.Game;
         plugins: Phaser.Plugin[];
 
-        add(plugin: Phaser.Plugin | typeof Phaser.Plugin, ...parameter: any[]): Phaser.Plugin;
+        add<T extends Phaser.Plugin>(plugin: PluginConstructorOf<T>, ...parameters: any[]): T;
         destroy(): void;
         postRender(): void;
         postUpdate(): void;
