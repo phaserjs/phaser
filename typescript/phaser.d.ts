@@ -4442,6 +4442,7 @@ declare module Phaser {
         scaleSprite(sprite: Image, width?: number, height?: number, letterBox?: boolean): Sprite;
         startFullScreen(antialias?: boolean, allowTrampoline?: boolean): boolean;
         stopFullScreen(): boolean;
+        updateLayout(): void;
 
     }
 
