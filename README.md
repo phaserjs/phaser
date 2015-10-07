@@ -317,6 +317,7 @@ can be controlled per-input mode.
 * Fixes edge case when TilingSprite is removed before render (thanks @pnstickne #2097 #2092)
 * Camera.setBoundsToWorld only adjusts the bounds if it exists (thanks @prudolfs #2099)
 * Keyboard.addCallbacks didn't check to see if the arguments were `null`, only if they were `undefined` making the jsdocs misleading.
+* ScaleManager.getParentBounds now takes any transforms into account to get the correct parent bounds (thanks @jdnichollsc #2111 #2098)
 
 ### Pixi Updates
 
