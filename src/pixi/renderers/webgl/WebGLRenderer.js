@@ -179,6 +179,7 @@ PIXI.WebGLRenderer = function(game) {
 
     //  Needed?
     this.renderSession.game = this.game;
+    this.renderSession.fd = this.game.fd;
     this.renderSession.gl = this.gl;
     this.renderSession.drawCount = 0;
     this.renderSession.shaderManager = this.shaderManager;
