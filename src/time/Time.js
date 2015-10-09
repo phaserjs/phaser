@@ -113,12 +113,13 @@ Phaser.Time = function (game) {
     * The suggested frame rate for your game, based on an averaged real frame rate.
     * This value is only populated if `Time.advancedTiming` is enabled.
     *
-    * _Note:_ This is not available until after a few frames have passed; use it after a few seconds (eg. after the menus)
+    * _Note:_ This is not available until after a few frames have passed; until then
+    * it's set to the same value as desiredFps.
     *
     * @property {number} suggestedFps
     * @default
     */
-    this.suggestedFps = null;
+    this.suggestedFps = this.desiredFps;
 
     /**
     * Scaling factor to make the game move smoothly in slow motion
