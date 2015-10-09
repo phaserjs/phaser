@@ -473,7 +473,7 @@ Phaser.Keyboard.prototype = {
     /**
     * Returns `true` if the Key was pressed down within the `duration` value given, or `false` if it either isn't down,
     * or was pressed down longer ago than then given duration.
-    * 
+    *
     * @method Phaser.Keyboard#downDuration
     * @param {number} keycode - The keycode of the key to check, i.e. Phaser.Keyboard.UP or Phaser.Keyboard.SPACEBAR
     * @param {number} [duration=50] - The duration within which the key is considered as being just pressed. Given in ms.
@@ -495,7 +495,7 @@ Phaser.Keyboard.prototype = {
     /**
     * Returns `true` if the Key was pressed down within the `duration` value given, or `false` if it either isn't down,
     * or was pressed down longer ago than then given duration.
-    * 
+    *
     * @method Phaser.Keyboard#upDuration
     * @param {number} keycode - The keycode of the key to check, i.e. Phaser.Keyboard.UP or Phaser.Keyboard.SPACEBAR
     * @param {number} [duration=50] - The duration within which the key is considered as being just released. Given in ms.
@@ -577,105 +577,614 @@ Object.defineProperty(Phaser.Keyboard.prototype, "lastKey", {
 
 Phaser.Keyboard.prototype.constructor = Phaser.Keyboard;
 
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.A = "A".charCodeAt(0);
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.B = "B".charCodeAt(0);
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.C = "C".charCodeAt(0);
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.D = "D".charCodeAt(0);
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.E = "E".charCodeAt(0);
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.F = "F".charCodeAt(0);
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.G = "G".charCodeAt(0);
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.H = "H".charCodeAt(0);
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.I = "I".charCodeAt(0);
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.J = "J".charCodeAt(0);
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.K = "K".charCodeAt(0);
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.L = "L".charCodeAt(0);
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.M = "M".charCodeAt(0);
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.N = "N".charCodeAt(0);
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.O = "O".charCodeAt(0);
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.P = "P".charCodeAt(0);
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.Q = "Q".charCodeAt(0);
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.R = "R".charCodeAt(0);
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.S = "S".charCodeAt(0);
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.T = "T".charCodeAt(0);
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.U = "U".charCodeAt(0);
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.V = "V".charCodeAt(0);
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.W = "W".charCodeAt(0);
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.X = "X".charCodeAt(0);
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.Y = "Y".charCodeAt(0);
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.Z = "Z".charCodeAt(0);
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.ZERO = "0".charCodeAt(0);
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.ONE = "1".charCodeAt(0);
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.TWO = "2".charCodeAt(0);
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.THREE = "3".charCodeAt(0);
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.FOUR = "4".charCodeAt(0);
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.FIVE = "5".charCodeAt(0);
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.SIX = "6".charCodeAt(0);
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.SEVEN = "7".charCodeAt(0);
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.EIGHT = "8".charCodeAt(0);
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.NINE = "9".charCodeAt(0);
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.NUMPAD_0 = 96;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.NUMPAD_1 = 97;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.NUMPAD_2 = 98;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.NUMPAD_3 = 99;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.NUMPAD_4 = 100;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.NUMPAD_5 = 101;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.NUMPAD_6 = 102;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.NUMPAD_7 = 103;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.NUMPAD_8 = 104;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.NUMPAD_9 = 105;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.NUMPAD_MULTIPLY = 106;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.NUMPAD_ADD = 107;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.NUMPAD_ENTER = 108;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.NUMPAD_SUBTRACT = 109;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.NUMPAD_DECIMAL = 110;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.NUMPAD_DIVIDE = 111;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.F1 = 112;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.F2 = 113;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.F3 = 114;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.F4 = 115;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.F5 = 116;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.F6 = 117;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.F7 = 118;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.F8 = 119;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.F9 = 120;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.F10 = 121;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.F11 = 122;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.F12 = 123;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.F13 = 124;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.F14 = 125;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.F15 = 126;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.COLON = 186;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.EQUALS = 187;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.COMMA = 188;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.UNDERSCORE = 189;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.PERIOD = 190;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.QUESTION_MARK = 191;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.TILDE = 192;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.OPEN_BRACKET = 219;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.BACKWARD_SLASH = 220;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.CLOSED_BRACKET = 221;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.QUOTES = 222;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.BACKSPACE = 8;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.TAB = 9;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.CLEAR = 12;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.ENTER = 13;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.SHIFT = 16;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.CONTROL = 17;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.ALT = 18;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.CAPS_LOCK = 20;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.ESC = 27;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.SPACEBAR = 32;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.PAGE_UP = 33;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.PAGE_DOWN = 34;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.END = 35;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.HOME = 36;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.LEFT = 37;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.UP = 38;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.RIGHT = 39;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.DOWN = 40;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.PLUS = 43;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.MINUS = 44;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.INSERT = 45;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.DELETE = 46;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.HELP = 47;
+
+/**
+* @constant
+* @type {integer}
+*/
 Phaser.Keyboard.NUM_LOCK = 144;
