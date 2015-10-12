@@ -1185,13 +1185,10 @@ Phaser.Text.prototype._renderCanvas = function (renderSession) {
 
     if (this.dirty)
     {
-        if (renderSession.fd.on) { renderSession.fd.tu(); }
         this.updateText();
         this.dirty = false;
     }
      
-    if (renderSession.fd.on) { renderSession.fd.ct(this.texture, this.texture.width, this.texture.height, this.texture.baseTexture.resolution); }
-
     PIXI.Sprite.prototype._renderCanvas.call(this, renderSession);
 
 };

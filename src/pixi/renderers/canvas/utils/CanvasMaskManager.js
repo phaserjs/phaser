@@ -23,8 +23,6 @@ PIXI.CanvasMaskManager.prototype.constructor = PIXI.CanvasMaskManager;
  */
 PIXI.CanvasMaskManager.prototype.pushMask = function(maskData, renderSession) {
 
-    if (renderSession.fd.on) { renderSession.fd.cm(maskData); }
-
 	var context = renderSession.context;
 
     context.save();
@@ -57,6 +55,4 @@ PIXI.CanvasMaskManager.prototype.pushMask = function(maskData, renderSession) {
 PIXI.CanvasMaskManager.prototype.popMask = function(renderSession)
 {
     renderSession.context.restore();
-
-    if (renderSession.fd.on) { renderSession.fd.cmo(); }
 };

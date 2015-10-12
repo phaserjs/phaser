@@ -114,8 +114,6 @@ PIXI.SpriteBatch.prototype._renderCanvas = function(renderSession)
        
     var isRotated = true;
 
-    if (renderSession.fd.on) { renderSession.fd.csbs(); }
-
     for (var i = 0; i < this.children.length; i++)
     {
         var child = this.children[i];
@@ -145,8 +143,6 @@ PIXI.SpriteBatch.prototype._renderCanvas = function(renderSession)
                                  ((child.anchor.y) * (-frame.height * child.scale.y) + child.position.y  + 0.5) | 0,
                                  frame.width * child.scale.x,
                                  frame.height * child.scale.y);
-
-            if (renderSession.fd.on) { renderSession.fd.csb1(texture, frame.width, frame.height, texture.baseTexture.resolution); }
         }
         else
         {
@@ -176,11 +172,7 @@ PIXI.SpriteBatch.prototype._renderCanvas = function(renderSession)
                                  ((child.anchor.y) * (-frame.height) + 0.5) | 0,
                                  frame.width,
                                  frame.height);
-            
-            if (renderSession.fd.on) { renderSession.fd.csb2(texture, frame.width, frame.height, texture.baseTexture.resolution); }
         }
     }
-
-    if (renderSession.fd.on) { renderSession.fd.csbp(); }
 
 };

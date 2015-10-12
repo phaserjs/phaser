@@ -292,8 +292,6 @@ PIXI.TilingSprite.prototype._renderCanvas = function(renderSession)
 
     context.fillRect(tx, ty, tw, th);
 
-    if (renderSession.fd.on) { renderSession.fd.cts(this.tilingTexture, tw, th); }
-
     //  Translate back again
     context.scale(1 / tileScale.x, 1 / tileScale.y);
     context.translate(-tilePosition.x + (this.anchor.x * this._width), -tilePosition.y + (this.anchor.y * this._height));
@@ -411,8 +409,6 @@ PIXI.TilingSprite.prototype.generateTilingTexture = function(forcePowerOfTwo, re
     this.refreshTexture = false;
 
     this.tilingTexture.baseTexture._powerOf2 = true;
-
-    if (renderSession.fd.on) { renderSession.fd.gtt(texture, w, h); }
 
 };
 

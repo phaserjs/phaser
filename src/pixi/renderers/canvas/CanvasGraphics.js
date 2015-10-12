@@ -23,8 +23,6 @@ PIXI.CanvasGraphics = function()
  */
 PIXI.CanvasGraphics.renderGraphics = function(graphics, context)
 {
-    if (PIXI.game.fd.on) { PIXI.game.fd.rgs(); }
-
     var worldAlpha = graphics.worldAlpha;
 
     if (graphics.dirty)
@@ -80,8 +78,6 @@ PIXI.CanvasGraphics.renderGraphics = function(graphics, context)
                 context.strokeStyle = '#' + ('00000' + ( lineColor | 0).toString(16)).substr(-6);
                 context.stroke();
             }
-
-            if (PIXI.game.fd.on) { PIXI.game.fd.cgpoly(points.length / 2); }
         }
         else if (data.type === PIXI.Graphics.RECT)
         {
@@ -98,8 +94,6 @@ PIXI.CanvasGraphics.renderGraphics = function(graphics, context)
                 context.strokeStyle = '#' + ('00000' + ( lineColor | 0).toString(16)).substr(-6);
                 context.strokeRect(shape.x, shape.y, shape.width, shape.height);
             }
-
-            if (PIXI.game.fd.on) { PIXI.game.fd.cgrect(); }
         }
         else if (data.type === PIXI.Graphics.CIRC)
         {
@@ -121,8 +115,6 @@ PIXI.CanvasGraphics.renderGraphics = function(graphics, context)
                 context.strokeStyle = '#' + ('00000' + ( lineColor | 0).toString(16)).substr(-6);
                 context.stroke();
             }
-
-            if (PIXI.game.fd.on) { PIXI.game.fd.cgcirc(); }
         }
         else if (data.type === PIXI.Graphics.ELIP)
         {
@@ -165,8 +157,6 @@ PIXI.CanvasGraphics.renderGraphics = function(graphics, context)
                 context.strokeStyle = '#' + ('00000' + ( lineColor | 0).toString(16)).substr(-6);
                 context.stroke();
             }
-
-            if (PIXI.game.fd.on) { PIXI.game.fd.cgelip(); }
         }
         else if (data.type === PIXI.Graphics.RREC)
         {
@@ -204,12 +194,8 @@ PIXI.CanvasGraphics.renderGraphics = function(graphics, context)
                 context.strokeStyle = '#' + ('00000' + ( lineColor | 0).toString(16)).substr(-6);
                 context.stroke();
             }
-
-            if (PIXI.game.fd.on) { PIXI.game.fd.cgrrect(); }
         }
     }
-
-    if (PIXI.game.fd.on) { PIXI.game.fd.rgp(); }
 
 };
 

@@ -488,8 +488,6 @@ PIXI.DisplayObjectContainer.prototype._renderCanvas = function(renderSession)
 {
     if (this.visible === false || this.alpha === 0) return;
 
-    if (renderSession.fd.on) { renderSession.fd.cdcs(); }
-
     if (this._cacheAsBitmap)
     {
         this._renderCachedSprite(renderSession);
@@ -510,7 +508,5 @@ PIXI.DisplayObjectContainer.prototype._renderCanvas = function(renderSession)
     {
         renderSession.maskManager.popMask(renderSession);
     }
-
-    if (renderSession.fd.on) { renderSession.fd.cdcp(); }
 
 };

@@ -179,7 +179,6 @@ PIXI.WebGLRenderer = function(game) {
 
     //  Needed?
     this.renderSession.game = this.game;
-    this.renderSession.fd = this.game.fd;
     this.renderSession.gl = this.gl;
     this.renderSession.drawCount = 0;
     this.renderSession.shaderManager = this.shaderManager;
@@ -271,11 +270,6 @@ PIXI.WebGLRenderer.prototype.render = function(stage)
         gl.clearColor(stage._bgColor.r, stage._bgColor.g, stage._bgColor.b, stage._bgColor.a);
 
         gl.clear(gl.COLOR_BUFFER_BIT);
-    }
-
-    if (this.game.fd.on)
-    {
-        this.game.fd.record();
     }
 
     this.renderDisplayObject(stage, this.projection);

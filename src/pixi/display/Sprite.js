@@ -381,8 +381,6 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession, matrix)
     {
         renderSession.currentBlendMode = this.blendMode;
         renderSession.context.globalCompositeOperation = PIXI.blendModesCanvas[renderSession.currentBlendMode];
-
-        if (renderSession.fd.on) { renderSession.fd.cb(this.blendMode); }
     }
 
     if (this._mask)
@@ -443,8 +441,6 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession, matrix)
             var cy = this.texture.crop.y;
             renderSession.context.drawImage(this.texture.baseTexture.source, cx, cy, cw, ch, dx, dy, cw / resolution, ch / resolution);
         }
-
-        if (renderSession.fd.on) { renderSession.fd.cs(this.texture, cw, ch, resolution); }
     }
 
     for (var i = 0; i < this.children.length; i++)

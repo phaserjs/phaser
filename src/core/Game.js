@@ -116,14 +116,6 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this.clearBeforeRender = true;
 
     /**
-    * The Frame Debugger.
-    * This should never be used in production games and is for debugging during development only.
-    * Start it with `Game.frameDebugger.record(n)` - where n is the number of frames to capture.
-    * @property {Phaser.FrameDebugger} fd
-    */
-    this.fd = null;
-
-    /**
     * @property {PIXI.CanvasRenderer|PIXI.WebGLRenderer} renderer - The Pixi Renderer.
     * @protected
     */
@@ -547,8 +539,6 @@ Phaser.Game.prototype = {
 
         PIXI.game = this;
 
-        this.fd = new Phaser.FrameDebugger(this);
-
         this.math = Phaser.Math;
 
         this.scale = new Phaser.ScaleManager(this, this._width, this._height);
@@ -951,8 +941,6 @@ Phaser.Game.prototype = {
             return;
         }
 
-        if (this.fd.on) { this.fd.start(); }
-
         this.state.preRender(elapsedTime);
 
         this.renderer.render(this.stage);
@@ -962,8 +950,6 @@ Phaser.Game.prototype = {
         this.state.render(elapsedTime);
 
         this.plugins.postRender(elapsedTime);
-
-        if (this.fd.on) { this.fd.stop(); }
 
     },
 

@@ -132,7 +132,6 @@ PIXI.CanvasRenderer = function (game) {
      * @type Object
      */
     this.renderSession = {
-        fd: this.game.fd,
         context: this.context,
         maskManager: this.maskManager,
         scaleMode: null,
@@ -161,11 +160,6 @@ PIXI.CanvasRenderer.prototype.constructor = PIXI.CanvasRenderer;
  * @param stage {Stage} the Stage element to be rendered
  */
 PIXI.CanvasRenderer.prototype.render = function (stage) {
-
-    if (this.game.fd.on)
-    {
-        this.game.fd.cr();
-    }
 
     stage.updateTransform();
 
