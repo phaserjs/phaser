@@ -130,7 +130,7 @@ Phaser.Create.prototype = {
         //  No bmd? Let's make one
         if (this.bmd === null)
         {
-            this.bmd = game.make.bitmapData();
+            this.bmd = this.game.make.bitmapData();
             this.canvas = this.bmd.canvas;
             this.ctx = this.bmd.context;
         }
@@ -176,7 +176,7 @@ Phaser.Create.prototype = {
         //  No bmd? Let's make one
         if (this.bmd === null)
         {
-            this.bmd = game.make.bitmapData();
+            this.bmd = this.game.make.bitmapData();
             this.canvas = this.bmd.canvas;
             this.ctx = this.bmd.context;
         }
