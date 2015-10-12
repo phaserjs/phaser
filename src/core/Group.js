@@ -765,7 +765,7 @@ Phaser.Group.prototype.xy = function (index, x, y) {
 /**
 * Reverses all children in this group.
 *
-* This operaation applies only to immediate children and does not propagate to subgroups.
+* This operation applies only to immediate children and does not propagate to subgroups.
 *
 * @method Phaser.Group#reverse
 */
