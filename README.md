@@ -307,6 +307,7 @@ can be controlled per-input mode.
 * The ScaleManager no longer creates a Phaser.FlexGrid if the class isn't available (i.e. excluded via a custom build)
 * Time.suggestedFps is now defaulted to Time.desiredFps for the first few frames until things have settled down (previously it was `null`) (thanks @noidexe #2130)
 * Text with anchor 0.5 and word wrap would have an extra space added to its width calculations, this is now adjusted for (thanks @nickryall #2052 #1990)
+* ScaleManager.getParentBounds now checks if `parentNode` has an `offsetParent` before calling `getBoundingClientRect` on it (thanks @McFarts #2134)
 
 ### Bug Fixes
 
