@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.4.4 "Amador" - Built: Tue Oct 13 2015 14:09:50
+* v2.4.4 "Amador" - Built: Tue Oct 13 2015 14:22:27
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -62937,6 +62937,7 @@ Phaser.Time.prototype = {
         this._started = Date.now();
         this.time = Date.now();
         this.events.start();
+        this.timeExpected = this.time;
 
     },
 
@@ -63040,11 +63041,15 @@ Phaser.Time.prototype = {
 
         if (this.game.raf._isSetTimeOut)
         {
+            // console.log('Time isSet', this._desiredFps, 'te', this.timeExpected, 'time', time);
+
             // time to call this function again in ms in case we're using timers instead of RequestAnimationFrame to update the game
             this.timeToCall = Math.floor(Math.max(0, (1000.0 / this._desiredFps) - (this.timeExpected - time)));
 
             // time when the next call is expected if using timers
             this.timeExpected = time + this.timeToCall;
+
+            // console.log('Time expect', this.timeExpected);
         }
 
         if (this.advancedTiming)
