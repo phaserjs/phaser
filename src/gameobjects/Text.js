@@ -364,6 +364,12 @@ Phaser.Text.prototype.updateText = function () {
         {
             //  Simple layout (no tabs)
             var lineWidth = this.context.measureText(lines[i]).width + this.style.strokeThickness + this.padding.x;
+
+            // Adjust for wrapped text
+            if (this.style.wordWrap)
+            {
+                lineWidth -= this.context.measureText(' ').width;
+            }
         }
         else
         {
