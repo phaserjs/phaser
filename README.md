@@ -273,11 +273,12 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 on a pointer prevents it from being able to trigger an over event.
 * Button.forceOut expanded to accept a PointerMode value such that it
 can be controlled per-input mode.
+* Phaser.KeyCode is a new pseudo-type used by the Keyboard class (and your code) to allow for separation of all the Keyboard constants to their own file. This stops the JSDocs from becoming 'polluted' and allows for easier future expansion (thanks @pnstickne #2118 #2031)
 
 ### Updates
 
 * TypeScript definitions fixes and updates (thanks @clark-stevenson @milkey-mouse @timotei @qdrj @Garbanas @cloakedninjas)
-* Docs typo fixes (thanks @rwrountree @yeluoqiuzhi @pnstickne @fonsecas72 @JackMorganNZ)
+* Docs typo fixes (thanks @rwrountree @yeluoqiuzhi @pnstickne @fonsecas72 @JackMorganNZ @caryanne)
 * Math.average has been optimized (thanks @rwrountree #2025)
 * When calling GameObject.revive the `heal` method is called to apply the health value, allowing it to take into consideration a `maxHealth` value if set (thanks @bsparks #2027)
 * Change splice.call(arguments, ..) to use slice instead (thanks @pnstickne #2034 #2032)
@@ -304,6 +305,8 @@ can be controlled per-input mode.
 * New Create stub added for the custom build process. Cuts file size by 8KB.
 * You can now exclude the FlexGrid from custom builds, saving 15KB.
 * The ScaleManager no longer creates a Phaser.FlexGrid if the class isn't available (i.e. excluded via a custom build)
+* Time.suggestedFps is now defaulted to Time.desiredFps for the first few frames until things have settled down (previously it was `null`) (thanks @noidexe #2130)
+* Text with anchor 0.5 and word wrap would have an extra space added to its width calculations, this is now adjusted for (thanks @nickryall #2052 #1990)
 
 ### Bug Fixes
 
@@ -318,6 +321,7 @@ can be controlled per-input mode.
 * Camera.setBoundsToWorld only adjusts the bounds if it exists (thanks @prudolfs #2099)
 * Keyboard.addCallbacks didn't check to see if the arguments were `null`, only if they were `undefined` making the jsdocs misleading.
 * ScaleManager.getParentBounds now takes any transforms into account to get the correct parent bounds (thanks @jdnichollsc #2111 #2098)
+* Cache.addBitmapFont now applies a default value for the x and y spacing if the arguments are omitted (thanks @nlotz #2128)
 
 ### Pixi Updates
 

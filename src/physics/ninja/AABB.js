@@ -128,7 +128,7 @@ Phaser.Physics.Ninja.AABB.prototype = {
     /**
      * Process a collision partner-agnostic collision response and apply the resulting forces.
      * 
-     * @method Phaser.Phyiscs.Ninja.AABB#reportCollision
+     * @method Phaser.Physics.Ninja.AABB#reportCollision
      * @param {number} px - The tangent velocity
      * @param {number} py - The tangent velocity
      * @param {number} dx - Collision normal
@@ -213,6 +213,9 @@ Phaser.Physics.Ninja.AABB.prototype = {
         this.reportCollision(px,py,dx,dy);
     },
 
+    /**
+    * @method Phaser.Physics.Ninja.AABB#reverse
+    */
     reverse: function () {
 
         var vx = this.pos.x - this.oldpos.x;
