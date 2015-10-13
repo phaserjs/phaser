@@ -224,8 +224,21 @@ PIXI.Sprite.prototype.getBounds = function(matrix)
     if (b === 0 && c === 0)
     {
         // scale may be negative!
-        if (a < 0) a *= -1;
-        if (d < 0) d *= -1;
+        if (a < 0)
+        {
+            a *= -1;
+            var temp = w0;
+            w0 = -w1;
+            w1 = -temp; 
+        }
+
+        if (d < 0)
+        {
+            d *= -1;
+            var temp = h0;
+            h0 = -h1;
+            h1 = -temp; 
+        }
 
         // this means there is no rotation going on right? RIGHT?
         // if thats the case then we can avoid checking the bound values! yay         

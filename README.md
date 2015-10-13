@@ -305,7 +305,7 @@ can be controlled per-input mode.
 * New Create stub added for the custom build process. Cuts file size by 8KB.
 * You can now exclude the FlexGrid from custom builds, saving 15KB.
 * The ScaleManager no longer creates a Phaser.FlexGrid if the class isn't available (i.e. excluded via a custom build)
-* Time.suggestedFps is now defaulted to Time.desiredFps for the first few frames until things have settled down (previously it was `null`) (thanks @noidexe #2130)
+* Time.suggestedFps is now defaulted to `Time.desiredFps` for the first few frames until things have settled down (previously it was `null`) (thanks @noidexe #2130)
 * Text with anchor 0.5 and word wrap would have an extra space added to its width calculations, this is now adjusted for (thanks @nickryall #2052 #1990)
 * ScaleManager.getParentBounds now checks if `parentNode` has an `offsetParent` before calling `getBoundingClientRect` on it (thanks @McFarts #2134)
 
@@ -333,6 +333,7 @@ Please note that Phaser uses a custom build of Pixi and always has done. The fol
 * PIXI.WebGLRenderer.updateTexture now returns a boolean depending on if the texture was successfully bound to the gl context or not.
 * PIXI.WebGLSpriteBatch.renderBatch would still try and render a texture even if `updateTexture` failed to bind it. It now checks the return value from `updateTexture` and ignores failed binds.
 * WebGLRenderer.mapBlendModes optimised to cut down on file size.
+* Sprite.getBounds would report an inaccurate value if the sprite was negatively scaled (causing things like generateTexture to be cut off) (thanks @DavidAPC #2108)
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
