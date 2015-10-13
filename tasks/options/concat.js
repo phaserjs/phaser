@@ -230,6 +230,36 @@ module.exports = {
         dest: '<%= modules_dir %>/particles.js'
     },
 
+    scale: {
+        src: require('../manifests/scale'),
+        dest: '<%= modules_dir %>/scale.js'
+    },
+
+    scaleStub: {
+        src: require('../manifests/scale.stub'),
+        dest: '<%= modules_dir %>/scale.js'
+    },
+
+    dom: {
+        src: require('../manifests/dom'),
+        dest: '<%= modules_dir %>/dom.js'
+    },
+
+    domStub: {
+        src: require('../manifests/dom.stub'),
+        dest: '<%= modules_dir %>/dom.js'
+    },
+
+    color: {
+        src: require('../manifests/color'),
+        dest: '<%= modules_dir %>/color.js'
+    },
+
+    colorStub: {
+        src: require('../manifests/color.stub'),
+        dest: '<%= modules_dir %>/color.js'
+    },
+
     video: {
         src: require('../manifests/video'),
         dest: '<%= modules_dir %>/video.js'
@@ -243,6 +273,26 @@ module.exports = {
     tilesprite: {
         src: require('../manifests/tilesprite'),
         dest: '<%= modules_dir %>/tilesprite.js'
+    },
+
+    tilespriteStub: {
+        src: require('../manifests/tilesprite.stub'),
+        dest: '<%= modules_dir %>/tilesprite.js'
+    },
+
+    create: {
+        src: require('../manifests/create'),
+        dest: '<%= modules_dir %>/create.js'
+    },
+
+    createStub: {
+        src: require('../manifests/create.stub'),
+        dest: '<%= modules_dir %>/create.js'
+    },
+
+    flexgrid: {
+        src: require('../manifests/flexgrid'),
+        dest: '<%= modules_dir %>/flexgrid.js'
     },
 
     outro: {

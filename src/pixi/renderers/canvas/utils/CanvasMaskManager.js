@@ -21,8 +21,8 @@ PIXI.CanvasMaskManager.prototype.constructor = PIXI.CanvasMaskManager;
  * @param maskData {Object} the maskData that will be pushed
  * @param renderSession {Object} The renderSession whose context will be used for this mask manager.
  */
-PIXI.CanvasMaskManager.prototype.pushMask = function(maskData, renderSession)
-{
+PIXI.CanvasMaskManager.prototype.pushMask = function(maskData, renderSession) {
+
 	var context = renderSession.context;
 
     context.save();

@@ -212,16 +212,6 @@ Phaser.Text.prototype.destroy = function (destroyChildren) {
 
     PIXI.CanvasPool.remove(this);
 
-    // if (this.canvas && this.canvas.parentNode)
-    // {
-    //     this.canvas.parentNode.removeChild(this.canvas);
-    // }
-    // else
-    // {
-    //     this.canvas = null;
-    //     this.context = null;
-    // }
-
     Phaser.Component.Destroy.prototype.destroy.call(this, destroyChildren);
 
 };
@@ -415,9 +405,7 @@ Phaser.Text.prototype.updateText = function () {
         maxLineWidth = Math.max(maxLineWidth, lineWidths[i]);
     }
 
-    var width = maxLineWidth + this.style.strokeThickness;
-
-    this.canvas.width = width * this._res;
+    this.canvas.width = maxLineWidth * this._res;
     
     //  Calculate text height
     var lineHeight = fontProperties.fontSize + this.style.strokeThickness + this.padding.y;

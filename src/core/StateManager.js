@@ -308,7 +308,7 @@ Phaser.StateManager.prototype = {
 
         if (arguments.length > 2)
         {
-            this._args = Array.prototype.splice.call(arguments, 2);
+            this._args = Array.prototype.slice.call(arguments, 2);
         }
 
     },
@@ -781,3 +781,7 @@ Object.defineProperty(Phaser.StateManager.prototype, "created", {
     }
 
 });
+
+/**
+* "It's like nailing jelly to a kitten" - Gary Penn
+*/

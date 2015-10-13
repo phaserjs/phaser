@@ -232,6 +232,24 @@ Phaser.TilemapParser = {
             }
 
             var curl = json.layers[i];
+            
+            // Base64 decode data if necessary
+            // NOTE: uncompressed base64 only. 
+            if (!curl.compression && curl.encoding && curl.encoding === "base64") {
+                var binaryString =  window.atob(curl.data);
+                var len = binaryString.length;
+                var bytes = new Array( len );
+                // Interpret binaryString as an array of bytes representing
+                // little-endian encoded uint32 values. 
+                for (var i = 0; i < len; i+=4) {
+                    bytes[i/4] = (binaryString.charCodeAt(i) |
+                                 binaryString.charCodeAt(i+1) << 8 |
+                                 binaryString.charCodeAt(i+2) << 16 |
+                                 binaryString.charCodeAt(i+3) << 24) >>> 0;
+                }
+                curl.data = bytes;
+            }
+
 
             var layer = {
 

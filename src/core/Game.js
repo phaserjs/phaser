@@ -108,6 +108,14 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this.preserveDrawingBuffer = false;
 
     /**
+    * Clear the Canvas each frame before rendering the display list.
+    * You can set this to `false` to gain some performance if your game always contains a background that completely fills the display.
+    * @property {boolean} clearBeforeRender
+    * @default
+    */
+    this.clearBeforeRender = true;
+
+    /**
     * @property {PIXI.CanvasRenderer|PIXI.WebGLRenderer} renderer - The Pixi Renderer.
     * @protected
     */
@@ -529,6 +537,8 @@ Phaser.Game.prototype = {
 
         this.isBooted = true;
 
+        PIXI.game = this;
+
         this.math = Phaser.Math;
 
         this.scale = new Phaser.ScaleManager(this, this._width, this._height);
@@ -682,37 +692,20 @@ Phaser.Game.prototype = {
             this.canvas.style['-webkit-full-screen'] = 'width: 100%; height: 100%';
         }
 
-        if (this.device.cocoonJS)
-        {
-            if (this.renderType === Phaser.CANVAS)
-            {
-                this.canvas.screencanvas = true;
-            }
-            else
-            {
-                // Some issue related to scaling arise with Cocoon using screencanvas and webgl renderer.
-                this.canvas.screencanvas = false;
-            }
-        }
-
-        if (this.renderType === Phaser.HEADLESS || this.renderType === Phaser.CANVAS || (this.renderType === Phaser.AUTO && this.device.webGL === false))
+        if (this.renderType === Phaser.HEADLESS || this.renderType === Phaser.CANVAS || (this.renderType === Phaser.AUTO && !this.device.webGL))
         {
             if (this.device.canvas)
             {
-                if (this.renderType === Phaser.AUTO)
-                {
-                    this.renderType = Phaser.CANVAS;
-                }
+                //  They requested Canvas and their browser supports it
+                this.renderType = Phaser.CANVAS;
 
-                this.renderer = new PIXI.CanvasRenderer(this.width, this.height, { "view": this.canvas,
-                                                                                    "transparent": this.transparent,
-                                                                                    "resolution": this.resolution,
-                                                                                    "clearBeforeRender": true });
+                this.renderer = new PIXI.CanvasRenderer(this);
+
                 this.context = this.renderer.context;
             }
             else
             {
-                throw new Error('Phaser.Game - cannot create Canvas or WebGL context, aborting.');
+                throw new Error('Phaser.Game - Cannot create Canvas or WebGL context, aborting.');
             }
         }
         else
@@ -720,15 +713,17 @@ Phaser.Game.prototype = {
             //  They requested WebGL and their browser supports it
             this.renderType = Phaser.WEBGL;
 
-            this.renderer = new PIXI.WebGLRenderer(this.width, this.height, { "view": this.canvas,
-                                                                                "transparent": this.transparent,
-                                                                                "resolution": this.resolution,
-                                                                                "antialias": this.antialias,
-                                                                                "preserveDrawingBuffer": this.preserveDrawingBuffer });
+            this.renderer = new PIXI.WebGLRenderer(this);
+
             this.context = null;
 
             this.canvas.addEventListener('webglcontextlost', this.contextLost.bind(this), false);
             this.canvas.addEventListener('webglcontextrestored', this.contextRestored.bind(this), false);
+        }
+
+        if (this.device.cocoonJS)
+        {
+            this.canvas.screencanvas = (this.renderType === Phaser.CANVAS) ? true : false;
         }
 
         if (this.renderType !== Phaser.HEADLESS)
@@ -785,7 +780,7 @@ Phaser.Game.prototype = {
 
         if (this._kickstart)
         {
-            this.updateLogic(1.0 / this.time.desiredFps);
+            this.updateLogic(this.time.desiredFpsMult);
 
             //  Sync the scene graph after _every_ logic update to account for moved game objects                
             this.stage.updateTransform();
@@ -805,7 +800,7 @@ Phaser.Game.prototype = {
             if (this.time.time > this._nextFpsNotification)
             {
                 // only permit one fps notification per 10 seconds
-                this._nextFpsNotification = this.time.time + 1000 * 10;
+                this._nextFpsNotification = this.time.time + 10000;
 
                 // dispatch the notification signal
                 this.fpsProblemNotifier.dispatch();
@@ -842,7 +837,7 @@ Phaser.Game.prototype = {
                 this._deltaTime -= slowStep;
                 this.currentUpdateID = count;
 
-                this.updateLogic(1.0 / this.time.desiredFps);
+                this.updateLogic(this.time.desiredFpsMult);
 
                 //  Sync the scene graph after _every_ logic update to account for moved game objects
                 this.stage.updateTransform();
@@ -852,6 +847,10 @@ Phaser.Game.prototype = {
                 if (this.forceSingleUpdate && count === 1)
                 {
                     break;
+                }
+                else
+                {
+                    this.time.refresh();
                 }
             }
 
@@ -900,7 +899,7 @@ Phaser.Game.prototype = {
 
             this.state.update();
             this.stage.update();
-            this.tweens.update(timeStep);
+            this.tweens.update();
             this.sound.update();
             this.input.update();
             this.physics.update();
@@ -943,10 +942,13 @@ Phaser.Game.prototype = {
         }
 
         this.state.preRender(elapsedTime);
+
         this.renderer.render(this.stage);
 
         this.plugins.render(elapsedTime);
+
         this.state.render(elapsedTime);
+
         this.plugins.postRender(elapsedTime);
 
     },

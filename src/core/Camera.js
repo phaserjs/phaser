@@ -315,7 +315,10 @@ Phaser.Camera.prototype = {
     */
     setBoundsToWorld: function () {
 
-        this.bounds.copyFrom(this.game.world.bounds);
+        if (this.bounds)
+        {
+            this.bounds.copyFrom(this.game.world.bounds);
+        }
 
     },
 

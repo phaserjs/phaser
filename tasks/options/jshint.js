@@ -9,7 +9,8 @@ module.exports = {
             '!src/physics/p2/p2.js',
             '!src/animation/creature/gl-matrix.js',
             '!src/animation/creature/CreatureMeshBone.js',
-            '!src/gameobjects/Creature.js'
+            '!src/gameobjects/Creature.js',
+            '!src/stubs/*.js'
         ],
         options: { jshintrc: '.jshintrc' }
     },

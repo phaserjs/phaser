@@ -618,7 +618,11 @@ PIXI.WebGLSpriteBatch.prototype.renderBatch = function(texture, size, startIndex
     // check if a texture is dirty..
     if (texture._dirty[gl.id])
     {
-        this.renderSession.renderer.updateTexture(texture);
+        if (!this.renderSession.renderer.updateTexture(texture))
+        {
+            //  If updateTexture returns false then we cannot render it, so bail out now
+            return;
+        }
     }
     else
     {

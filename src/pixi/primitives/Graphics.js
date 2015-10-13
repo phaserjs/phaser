@@ -654,6 +654,8 @@ PIXI.Graphics.prototype.generateTexture = function(resolution, scaleMode)
     canvasBuffer.context.scale(resolution, resolution);
 
     canvasBuffer.context.translate(-bounds.x, -bounds.y);
+
+    //  Call here
     
     PIXI.CanvasGraphics.renderGraphics(this, canvasBuffer.context);
 
@@ -771,6 +773,7 @@ PIXI.Graphics.prototype._renderCanvas = function(renderSession)
         }
 
         this._cachedSprite.alpha = this.alpha;
+
         PIXI.Sprite.prototype._renderCanvas.call(this._cachedSprite, renderSession);
 
         return;

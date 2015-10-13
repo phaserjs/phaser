@@ -718,7 +718,10 @@ Phaser.ScaleManager.prototype = {
         // Don't use updateOrientationState so events are not fired
         this.screenOrientation = this.dom.getScreenOrientation(this.compatibility.orientationFallback);
 
-        this.grid = new Phaser.FlexGrid(this, this.width, this.height);
+        if (Phaser.FlexGrid)
+        {
+            this.grid = new Phaser.FlexGrid(this, this.width, this.height);
+        }
 
         this._booted = true;
 
@@ -958,7 +961,10 @@ Phaser.ScaleManager.prototype = {
             this._lastReportedCanvasSize.setTo(0, 0, width, height);
             this._lastReportedGameSize.setTo(0, 0, this.game.width, this.game.height);
 
-            this.grid.onResize(width, height);
+            if (this.grid)
+            {
+                this.grid.onResize(width, height);
+            }
 
             this.onSizeChange.dispatch(this, width, height);
 
@@ -1415,8 +1421,9 @@ Phaser.ScaleManager.prototype = {
         {
             // Ref. http://msdn.microsoft.com/en-us/library/hh781509(v=vs.85).aspx for getBoundingClientRect
             var clientRect = parentNode.getBoundingClientRect();
+            var parentRect = parentNode.offsetParent.getBoundingClientRect();
 
-            bounds.setTo(clientRect.left, clientRect.top, clientRect.width, clientRect.height);
+            bounds.setTo(clientRect.left - parentRect.left, clientRect.top - parentRect.top, clientRect.width, clientRect.height);
 
             var wc = this.windowConstraints;
 
@@ -1622,7 +1629,7 @@ Phaser.ScaleManager.prototype = {
     */
     reset: function (clearWorld) {
 
-        if (clearWorld)
+        if (clearWorld && this.grid)
         {
             this.grid.reset();
         }
@@ -2097,7 +2104,7 @@ Object.defineProperty(Phaser.ScaleManager.prototype, "boundingParent", {
 *   <dt>{@link Phaser.ScaleManager.EXACT_FIT}</dt>
 *   <dd>
 *       The Game display area will be _stretched_ to fill the entire size of the canvas's parent element and/or screen.
-*       Proportions are not mainted.
+*       Proportions are not maintained.
 *   </dd>
 *   <dt>{@link Phaser.ScaleManager.SHOW_ALL}</dt>
 *   <dd>
