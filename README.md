@@ -324,6 +324,7 @@ can be controlled per-input mode.
 * ScaleManager.getParentBounds now takes any transforms into account to get the correct parent bounds (thanks @jdnichollsc #2111 #2098)
 * Cache.addBitmapFont now applies a default value for the x and y spacing if the arguments are omitted (thanks @nlotz #2128)
 * Removed use of the `tilePosition` property in the Phaser.Rope class as it isn't implemented and caused calls to `Rope.reset` to crash (thanks @spayton #2135)
+* ScaleMin and ScaleMax stopped working in Phaser 2.3.0 due to an incorrect transform callback scope (thanks @brianbunch #2132)
 
 ### Pixi Updates
 
@@ -334,6 +335,7 @@ Please note that Phaser uses a custom build of Pixi and always has done. The fol
 * PIXI.WebGLSpriteBatch.renderBatch would still try and render a texture even if `updateTexture` failed to bind it. It now checks the return value from `updateTexture` and ignores failed binds.
 * WebGLRenderer.mapBlendModes optimised to cut down on file size.
 * Sprite.getBounds would report an inaccurate value if the sprite was negatively scaled (causing things like generateTexture to be cut off) (thanks @DavidAPC #2108)
+* Removed DisplayObject.transformCallback as it's a Game Object component.
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 

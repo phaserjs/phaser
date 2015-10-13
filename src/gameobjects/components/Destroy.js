@@ -123,9 +123,13 @@ Phaser.Component.Destroy.prototype = {
         //  In case Pixi is still going to try and render it even though destroyed
         this.renderable = false;
 
+        if (this.transformCallback)
+        {
+            this.transformCallback = null;
+            this.transformCallbackContext = null;
+        }
+
         //  Pixi level DisplayObject destroy
-        this.transformCallback = null;
-        this.transformCallbackContext = null;
         this.hitArea = null;
         this.parent = null;
         this.stage = null;
@@ -134,8 +138,6 @@ Phaser.Component.Destroy.prototype = {
         this._bounds = null;
         this._currentBounds = null;
         this._mask = null;
-
-
 
         this._destroyCachedSprite();
 
