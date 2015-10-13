@@ -12,11 +12,11 @@ Thousands of developers worldwide use it. From indies and multi-national digital
 
 * **Visit:** The [Phaser website](http://phaser.io) and follow on [Twitter](https://twitter.com/photonstorm) (#phaserjs)
 * **Learn:** [API Documentation](http://phaser.io/docs), [Support Forum][forum] and [StackOverflow](http://stackoverflow.com/questions/tagged/phaser-framework)
-* **Code:** 550+ [Source Examples](http://phaser.io/examples) (also available in this [git repo][examples])
+* **Code:** 700+ [Source Examples](http://phaser.io/examples) (also available in this [git repo][examples])
 * **Read:** Subscribe to the [Newsletter](https://confirmsubscription.com/h/r/369DE48E3E86AF1E) and grab our [Phaser Books](http://phaser.io/shop)
-* **Chat:** [#phaserio IRC channel](http://www.html5gamedevs.com/topic/4470-official-phaserio-irc-channel-phaserio-on-freenode/) on freenode
-* **Extend:** With [Phaser Plugins](https://github.com/photonstorm/phaser-plugins)
-* **Be awesome:** Support the future of Phaser on [Patreon](https://www.patreon.com/photonstorm) or by buying our [books](http://phaser.io/shop/books) and [plugins](http://phaser.io/shop/plugins)
+* **Chat:** [#phaserio IRC channel](http://www.html5gamedevs.com/topic/4470-official-phaserio-irc-channel-phaserio-on-freenode/) or our [Slack Channel](http://phaser.io/news/2015/08/phaser-slack-channel)
+* **Extend:** With [Phaser Plugins](http://phaser.io/shop/plugins)
+* **Be awesome:** Support the future of Phaser on [Patreon](https://www.patreon.com/photonstorm) or by buying our [books](http://phaser.io/shop/books)
 
 ![div](http://www.phaser.io/images/github/div.png)
 
@@ -40,11 +40,17 @@ Thousands of developers worldwide use it. From indies and multi-national digital
 
 <div align="center"><img src="http://phaser.io/images/github/news.jpg"></div>
 
-> 24th August 2015
+> 13th October 2015
 
-The release of Phaser 2.4.4 continues our work with bug fixes, new features and continued optimizations. As before it's a point-release, making it a safe upgrade for anyone using a previous 2.4 build.
+The release of Phaser 2.4.4 continues our work with bug fixes, new features and optimizations. As with the previous version it's a point-release, making it a safe upgrade for anyone using an earlier 2.4 build.
 
-As well as working on this release we've also been busily writing tutorials for the first issue of [Interphase](http://phaser.io/interphase/), our new publication for Phaser developers. Packed full of exclusive content we've been coding games, writing tutorials and authoring deep-dive articles for the first issue. It's been a blast so far and I'm excited for it's release in early September - and if you [pre-order now](http://phaser.io/interphase) with the discount code 'earlybird' you can save 15% on the cover price.
+Internally here at Phaser HQ we have been busy with several new projects. 
+
+First we released [Interphase](http://phaser.io/interphase/), a new 400-page publication for Phaser developers. Packed full of exclusive content including 8 complete games, tutorials and a deep dive into the Phaser State Manager. It's been a blast to write and we have been really encouraged by the response from readers. We're planning on releasing Interphase 2 before the end of the year.
+
+We've also released [Particle Storm](http://phaser.io/shop/plugins/particlestorm). An advanced particle system allowing you to easily create stunning special effects in your games with just a few lines of code. Our primary design goal was to create a particle system that was extremely flexible. It was important that you should be able to easily integrate the effects into your games. Particles are constructed through easy-to-understand JavaScript objects with multiple properties and options to let you quickly put together complex visuals with minimum effort.
+
+As we close in towards the end of 2015 there are still a couple of new releases on the horizon, as well as Phaser 2.4.5. We're also getting very close to a fully working build of Phaser 2 using our new renderer. As always, keep you eyes on the Phaser web site or [Twitter](https://twitter.com/photonstorm) for the latest news.
 
 Finally we'd be extremely grateful if you could get involved with our [Phaser Patreon campaign](https://www.patreon.com/photonstorm). The uptake so far has been fantastic. Thank you to everyone who now supports Phaser development and shares our belief in the future of HTML5 gaming and Phasers role in that.
 
@@ -140,20 +146,21 @@ Using Phaser with **TypeScript**? Check out this great series of [Game From Scra
 
 ### Source Code Examples
 
-Ever since we started Phaser we've been growing and expanding our extensive set of source code examples. Currently there are over 500 of them!
+Ever since we started Phaser we've been growing and expanding our extensive set of source code examples. Currently there are over 700 of them!
 
 Browse the [Phaser Examples](http://phaser.io/examples) or clone the [examples repo][examples] and eat your heart out!
 
-### Phaser Books
+### Interphase
 
-<div align="center"><img src="http://phaser.io/images/github/books.jpg"></div>
+<div align="center"><img src="http://phaser.io/content/interphase/1/images/editorial/pages.jpg"></div>
 
-We've been busy writing books about Phaser. Available now:
+[Interphase](http://phaser.io/interphase) is a new book for Phaser developers of all skill levels.
 
-* [A Guide to the Phaser Tween Manager](https://leanpub.com/phasertweenmanager) Book + Code Bundle
-* [A Guide to the Phaser Scale Manager](https://leanpub.com/phaserscalemanager)
+With 400 pages of content you'll find detailed articles, game development "Making Of" guides and tutorials. All were written using the latest version of Phaser, so you won't be learning any out-dated tricks here.
 
-With more on the way. [Vote on the next title](http://www.html5gamedevs.com/topic/10962-which-phaser-book-would-you-like-to-see-next/) to be written.
+As well as the book you get all the source code, graphics and assets to go with it, as well as lots of extras too.
+
+[Read More](http://phaser.io/interphase)
 
 ### Game Mechanic Explorer
 
