@@ -343,6 +343,7 @@ Please note that Phaser uses a custom build of Pixi and always has done. The fol
 * WebGLRenderer.mapBlendModes optimised to cut down on file size.
 * Sprite.getBounds would report an inaccurate value if the sprite was negatively scaled (causing things like generateTexture to be cut off) (thanks @DavidAPC #2108)
 * Removed DisplayObject.transformCallback as it's a Game Object component.
+* BaseTexture.skipRender is a new boolean that can be set to skip the rendering phase in the WebGL Sprite Batch. You may want to do this if you have a parent Sprite with no visible texture (i.e. uses the internal `__default` texture) that has children that you do want to render, without causing a batch flush in the process.
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 

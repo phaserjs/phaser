@@ -119,6 +119,17 @@ PIXI.BaseTexture = function(source, scaleMode)
     }
 
     /**
+     * A BaseTexture can be set to skip the rendering phase in the WebGL Sprite Batch.
+     * 
+     * You may want to do this if you have a parent Sprite with no visible texture (i.e. uses the internal `__default` texture)
+     * that has children that you do want to render, without causing a batch flush in the process.
+     * 
+     * @property skipRender
+     * @type Boolean
+     */
+    this.skipRender = false;
+
+    /**
      * @property imageUrl
      * @type String
      */

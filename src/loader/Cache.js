@@ -282,6 +282,9 @@ Phaser.Cache.prototype = {
 
         var obj = this.addImage('__default', null, img);
 
+        //  Because we don't want to invalidate the sprite batch for an invisible texture
+        obj.base.skipRender = true;
+
         PIXI.TextureCache['__default'] = new PIXI.Texture(obj.base);
 
     },
