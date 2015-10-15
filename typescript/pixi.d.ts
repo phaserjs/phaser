@@ -265,6 +265,7 @@ declare module PIXI {
         premultipliedAlpha: boolean;
         resolution: number;
         scaleMode: scaleModes;
+        skipRender: boolean;
         source: HTMLImageElement;
         width: number;
 

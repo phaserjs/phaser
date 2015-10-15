@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Phaser Class: Body</title>
+	<title>Phaser Namespace: KeyCode</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -1094,14 +1094,14 @@
 					
 
 
-	<!--<h1 class="page-title">Class: Body</h1>-->
+	<!--<h1 class="page-title">Namespace: KeyCode</h1>-->
 <section>
 
 <header>
     <h2>
-        <span class="ancestors"><a href="Phaser.html">Phaser</a><a href="Phaser.Physics.html">.Physics</a><a href="Phaser.Physics.Ninja.html">.Ninja</a>.</span>
+        <span class="ancestors"><a href="Phaser.html">Phaser</a>.</span>
     
-    Body
+    KeyCode
     </h2>
     
 </header>
@@ -1112,404 +1112,17 @@
 
     
         
-<dt>
-    <h4 class="name "
-        id="Body"><span class="type-signature"></span>new Body<span class="signature">(system, sprite, <span class="optional">type</span>, <span class="optional">id</span>, <span class="optional">radius</span>, <span class="optional">x</span>, <span class="optional">y</span>, <span class="optional">width</span>, <span class="optional">height</span>)</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>The Physics Body is linked to a single Sprite. All physics operations should be performed against the body rather than
-the Sprite itself. For example you can set the velocity, bounce values etc all on the Body.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
+            <div class="description"><p>A key code represents a physical key on a keyboard.</p>
+<p>The KeyCode class contains commonly supported keyboard key codes which can be used
+as keycode`-parameters in several <a href="Phaser.Keyboard.html">Phaser.Keyboard</a> and <a href="Phaser.Key.html">Phaser.Key</a> methods.</p>
+<p><em>Note</em>: These values should only be used indirectly, eg. as <code>Phaser.KeyCode.KEY</code>.
+Future versions may replace the actual values, such that they remain compatible with <code>keycode</code>-parameters.
+The current implementation maps to the <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/keyCode">KeyboardEvent.keyCode</a> property.</p>
+<p><em>Note</em>: Use <code>Phaser.KeyCode.KEY</code> instead of <code>Phaser.Keyboard.KEY</code> to refer to a key code;
+the latter approach is supported for compatibility.</p></div>
         
 
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-		<th>Argument</th>
-		
-
-		
-		<th>Default</th>
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>system</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Physics.Ninja.html">Phaser.Physics.Ninja</a></span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"><p>The physics system this Body belongs to.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>sprite</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Sprite.html">Phaser.Sprite</a></span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"><p>The Sprite object this physics body belongs to.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>type</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    1
-                
-                </td>
-            
-
-            <td class="description last"><p>The type of Ninja shape to create. 1 = AABB, 2 = Circle or 3 = Tile.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>id</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    1
-                
-                </td>
-            
-
-            <td class="description last"><p>If this body is using a Tile shape, you can set the Tile id here, i.e. Phaser.Physics.Ninja.Tile.SLOPE_45DEGpn, Phaser.Physics.Ninja.Tile.CONVEXpp, etc.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>radius</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    16
-                
-                </td>
-            
-
-            <td class="description last"><p>If this body is using a Circle shape this controls the radius.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>x</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    0
-                
-                </td>
-            
-
-            <td class="description last"><p>The x coordinate of this Body. This is only used if a sprite is not provided.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>y</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    0
-                
-                </td>
-            
-
-            <td class="description last"><p>The y coordinate of this Body. This is only used if a sprite is not provided.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>width</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    0
-                
-                </td>
-            
-
-            <td class="description last"><p>The width of this Body. This is only used if a sprite is not provided.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>height</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    0
-                
-                </td>
-            
-
-            <td class="description last"><p>The height of this Body. This is only used if a sprite is not provided.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-
-    
-    
-    
+        
 <dl class="details">
     
 
@@ -1531,7 +1144,7 @@ the Sprite itself. For example you can set the velocity, bounce values etc all o
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_ninja_Body.js.html">physics/ninja/Body.js</a>, <a href="src_physics_ninja_Body.js.html#sunlight-1-line-23">line 23</a>
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-601">line 601</a>
     </dt>
     
 
@@ -1542,18 +1155,8 @@ the Sprite itself. For example you can set the velocity, bounce values etc all o
     
 </dl>
 
-    
-    
 
-    
-
-    
-    
-       
-    
-    
-</dd>
-
+        
     
     </div>
 
@@ -1574,17 +1177,13 @@ the Sprite itself. For example you can set the velocity, bounce values etc all o
             
 <dt>
     <h4 class="name "
-        id="aabb"><span class="type-signature"></span>aabb<span class="type-signature"> :<a href="Phaser.Physics.Ninja.AABB.html">Phaser.Physics.Ninja.AABB</a></span></h4>
+        id=".A"><span class="type-signature">&lt;static> </span>A<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
     
 
-    
-    <div class="description">
-        <p>The AABB object this body is using for collision.</p>
-    </div>
     
     
     
@@ -1611,7 +1210,7 @@ the Sprite itself. For example you can set the velocity, bounce values etc all o
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_ninja_Body.js.html">physics/ninja/Body.js</a>, <a href="src_physics_ninja_Body.js.html#sunlight-1-line-54">line 54</a>
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-603">line 603</a>
     </dt>
     
 
@@ -1630,17 +1229,13 @@ the Sprite itself. For example you can set the velocity, bounce values etc all o
             
 <dt>
     <h4 class="name "
-        id="angle"><span class="type-signature">&lt;readonly> </span>angle<span class="type-signature"> :number</span></h4>
+        id=".ALT"><span class="type-signature">&lt;static> </span>ALT<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
     
 
-    
-    <div class="description">
-        <p>The angle of this Body</p>
-    </div>
     
     
     
@@ -1667,7 +1262,7 @@ the Sprite itself. For example you can set the velocity, bounce values etc all o
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_ninja_Body.js.html">physics/ninja/Body.js</a>, <a href="src_physics_ninja_Body.js.html#sunlight-1-line-535">line 535</a>
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-771">line 771</a>
     </dt>
     
 
@@ -1686,17 +1281,13 @@ the Sprite itself. For example you can set the velocity, bounce values etc all o
             
 <dt>
     <h4 class="name "
-        id="bottom"><span class="type-signature">&lt;readonly> </span>bottom<span class="type-signature"> :number</span></h4>
+        id=".B"><span class="type-signature">&lt;static> </span>B<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
     
 
-    
-    <div class="description">
-        <p>The bottom value of this Body (same as Body.y + Body.height)</p>
-    </div>
     
     
     
@@ -1723,7 +1314,7 @@ the Sprite itself. For example you can set the velocity, bounce values etc all o
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_ninja_Body.js.html">physics/ninja/Body.js</a>, <a href="src_physics_ninja_Body.js.html#sunlight-1-line-496">line 496</a>
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-605">line 605</a>
     </dt>
     
 
@@ -1742,17 +1333,13 @@ the Sprite itself. For example you can set the velocity, bounce values etc all o
             
 <dt>
     <h4 class="name "
-        id="bounce"><span class="type-signature"></span>bounce<span class="type-signature"> :number</span></h4>
+        id=".BACKSPACE"><span class="type-signature">&lt;static> </span>BACKSPACE<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
     
 
-    
-    <div class="description">
-        <p>The bounciness of this object when it collides. A value between 0 and 1. We recommend setting it to 0.999 to avoid jittering.</p>
-    </div>
     
     
     
@@ -1776,13 +1363,10 @@ the Sprite itself. For example you can set the velocity, bounce values etc all o
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>0.3</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_ninja_Body.js.html">physics/ninja/Body.js</a>, <a href="src_physics_ninja_Body.js.html#sunlight-1-line-95">line 95</a>
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-759">line 759</a>
     </dt>
     
 
@@ -1801,18 +1385,13 @@ the Sprite itself. For example you can set the velocity, bounce values etc all o
             
 <dt>
     <h4 class="name "
-        id="checkCollision"><span class="type-signature"></span>checkCollision<span class="type-signature"> :object</span></h4>
+        id=".BACKWARD_SLASH"><span class="type-signature">&lt;static> </span>BACKWARD_SLASH<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
     
 
-    
-    <div class="description">
-        <p>Set the checkCollision properties to control which directions collision is processed for this Body.
-For example checkCollision.up = false means it won't collide when the collision happened while moving up. An object containing allowed collision.</p>
-    </div>
     
     
     
@@ -1839,7 +1418,7 @@ For example checkCollision.up = false means it won't collide when the collision 
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_ninja_Body.js.html">physics/ninja/Body.js</a>, <a href="src_physics_ninja_Body.js.html#sunlight-1-line-125">line 125</a>
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-753">line 753</a>
     </dt>
     
 
@@ -1858,17 +1437,13 @@ For example checkCollision.up = false means it won't collide when the collision 
             
 <dt>
     <h4 class="name "
-        id="circle"><span class="type-signature"></span>circle<span class="type-signature"> :<a href="Phaser.Physics.Ninja.Circle.html">Phaser.Physics.Ninja.Circle</a></span></h4>
+        id=".C"><span class="type-signature">&lt;static> </span>C<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
     
 
-    
-    <div class="description">
-        <p>The Circle object this body is using for collision.</p>
-    </div>
     
     
     
@@ -1895,7 +1470,7 @@ For example checkCollision.up = false means it won't collide when the collision 
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_ninja_Body.js.html">physics/ninja/Body.js</a>, <a href="src_physics_ninja_Body.js.html#sunlight-1-line-64">line 64</a>
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-607">line 607</a>
     </dt>
     
 
@@ -1914,17 +1489,13 @@ For example checkCollision.up = false means it won't collide when the collision 
             
 <dt>
     <h4 class="name "
-        id="collideWorldBounds"><span class="type-signature"></span>collideWorldBounds<span class="type-signature"> :boolean</span></h4>
+        id=".CAPS_LOCK"><span class="type-signature">&lt;static> </span>CAPS_LOCK<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
     
 
-    
-    <div class="description">
-        <p>A Body can be set to collide against the World bounds automatically and rebound back into the World if this is set to true. Otherwise it will leave the World. Should the Body collide with the World bounds?</p>
-    </div>
     
     
     
@@ -1951,7 +1522,7 @@ For example checkCollision.up = false means it won't collide when the collision 
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_ninja_Body.js.html">physics/ninja/Body.js</a>, <a href="src_physics_ninja_Body.js.html#sunlight-1-line-118">line 118</a>
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-773">line 773</a>
     </dt>
     
 
@@ -1970,17 +1541,13 @@ For example checkCollision.up = false means it won't collide when the collision 
             
 <dt>
     <h4 class="name "
-        id="drag"><span class="type-signature"></span>drag<span class="type-signature"> :number</span></h4>
+        id=".CLEAR"><span class="type-signature">&lt;static> </span>CLEAR<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
     
 
-    
-    <div class="description">
-        <p>The drag applied to this object as it moves.</p>
-    </div>
     
     
     
@@ -2004,13 +1571,10 @@ For example checkCollision.up = false means it won't collide when the collision 
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>1</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_ninja_Body.js.html">physics/ninja/Body.js</a>, <a href="src_physics_ninja_Body.js.html#sunlight-1-line-77">line 77</a>
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-763">line 763</a>
     </dt>
     
 
@@ -2029,17 +1593,13 @@ For example checkCollision.up = false means it won't collide when the collision 
             
 <dt>
     <h4 class="name "
-        id="facing"><span class="type-signature"></span>facing<span class="type-signature"> :number</span></h4>
+        id=".CLOSED_BRACKET"><span class="type-signature">&lt;static> </span>CLOSED_BRACKET<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
     
 
-    
-    <div class="description">
-        <p>A const reference to the direction the Body is traveling or facing.</p>
-    </div>
     
     
     
@@ -2066,7 +1626,7 @@ For example checkCollision.up = false means it won't collide when the collision 
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_ninja_Body.js.html">physics/ninja/Body.js</a>, <a href="src_physics_ninja_Body.js.html#sunlight-1-line-106">line 106</a>
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-755">line 755</a>
     </dt>
     
 
@@ -2085,17 +1645,13 @@ For example checkCollision.up = false means it won't collide when the collision 
             
 <dt>
     <h4 class="name "
-        id="friction"><span class="type-signature"></span>friction<span class="type-signature"> :number</span></h4>
+        id=".COLON"><span class="type-signature">&lt;static> </span>COLON<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
     
 
-    
-    <div class="description">
-        <p>The friction applied to this object as it moves.</p>
-    </div>
     
     
     
@@ -2119,13 +1675,10 @@ For example checkCollision.up = false means it won't collide when the collision 
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>0.05</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_ninja_Body.js.html">physics/ninja/Body.js</a>, <a href="src_physics_ninja_Body.js.html#sunlight-1-line-83">line 83</a>
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-737">line 737</a>
     </dt>
     
 
@@ -2144,17 +1697,13 @@ For example checkCollision.up = false means it won't collide when the collision 
             
 <dt>
     <h4 class="name "
-        id="game"><span class="type-signature"></span>game<span class="type-signature"> :<a href="Phaser.Game.html">Phaser.Game</a></span></h4>
+        id=".COMMA"><span class="type-signature">&lt;static> </span>COMMA<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
     
 
-    
-    <div class="description">
-        <p>Local reference to game.</p>
-    </div>
     
     
     
@@ -2181,7 +1730,7 @@ For example checkCollision.up = false means it won't collide when the collision 
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_ninja_Body.js.html">physics/ninja/Body.js</a>, <a href="src_physics_ninja_Body.js.html#sunlight-1-line-39">line 39</a>
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-741">line 741</a>
     </dt>
     
 
@@ -2200,17 +1749,13 @@ For example checkCollision.up = false means it won't collide when the collision 
             
 <dt>
     <h4 class="name "
-        id="gravityScale"><span class="type-signature"></span>gravityScale<span class="type-signature"> :number</span></h4>
+        id=".CONTROL"><span class="type-signature">&lt;static> </span>CONTROL<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
     
 
-    
-    <div class="description">
-        <p>How much of the world gravity should be applied to this object? 1 = all of it, 0.5 = 50%, etc.</p>
-    </div>
     
     
     
@@ -2234,13 +1779,10 @@ For example checkCollision.up = false means it won't collide when the collision 
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>1</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_ninja_Body.js.html">physics/ninja/Body.js</a>, <a href="src_physics_ninja_Body.js.html#sunlight-1-line-89">line 89</a>
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-769">line 769</a>
     </dt>
     
 
@@ -2259,17 +1801,13 @@ For example checkCollision.up = false means it won't collide when the collision 
             
 <dt>
     <h4 class="name "
-        id="height"><span class="type-signature">&lt;readonly> </span>height<span class="type-signature"> :number</span></h4>
+        id=".D"><span class="type-signature">&lt;static> </span>D<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
     
 
-    
-    <div class="description">
-        <p>The height of this Body</p>
-    </div>
     
     
     
@@ -2296,7 +1834,7 @@ For example checkCollision.up = false means it won't collide when the collision 
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_ninja_Body.js.html">physics/ninja/Body.js</a>, <a href="src_physics_ninja_Body.js.html#sunlight-1-line-483">line 483</a>
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-609">line 609</a>
     </dt>
     
 
@@ -2315,17 +1853,13 @@ For example checkCollision.up = false means it won't collide when the collision 
             
 <dt>
     <h4 class="name "
-        id="immovable"><span class="type-signature"></span>immovable<span class="type-signature"> :boolean</span></h4>
+        id=".DELETE"><span class="type-signature">&lt;static> </span>DELETE<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
     
 
-    
-    <div class="description">
-        <p>An immovable Body will not receive any impacts from other bodies. Not fully implemented.</p>
-    </div>
     
     
     
@@ -2352,7 +1886,7 @@ For example checkCollision.up = false means it won't collide when the collision 
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_ninja_Body.js.html">physics/ninja/Body.js</a>, <a href="src_physics_ninja_Body.js.html#sunlight-1-line-112">line 112</a>
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-801">line 801</a>
     </dt>
     
 
@@ -2371,17 +1905,13 @@ For example checkCollision.up = false means it won't collide when the collision 
             
 <dt>
     <h4 class="name "
-        id="maxSpeed"><span class="type-signature"></span>maxSpeed<span class="type-signature"> :number</span></h4>
+        id=".DOWN"><span class="type-signature">&lt;static> </span>DOWN<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
     
 
-    
-    <div class="description">
-        <p>The maximum speed this body can travel at (taking drag and friction into account)</p>
-    </div>
     
     
     
@@ -2405,13 +1935,10 @@ For example checkCollision.up = false means it won't collide when the collision 
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>8</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_ninja_Body.js.html">physics/ninja/Body.js</a>, <a href="src_physics_ninja_Body.js.html#sunlight-1-line-144">line 144</a>
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-793">line 793</a>
     </dt>
     
 
@@ -2430,17 +1957,13 @@ For example checkCollision.up = false means it won't collide when the collision 
             
 <dt>
     <h4 class="name "
-        id="right"><span class="type-signature">&lt;readonly> </span>right<span class="type-signature"> :number</span></h4>
+        id=".E"><span class="type-signature">&lt;static> </span>E<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
     
 
-    
-    <div class="description">
-        <p>The right value of this Body (same as Body.x + Body.width)</p>
-    </div>
     
     
     
@@ -2467,7 +1990,7 @@ For example checkCollision.up = false means it won't collide when the collision 
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_ninja_Body.js.html">physics/ninja/Body.js</a>, <a href="src_physics_ninja_Body.js.html#sunlight-1-line-509">line 509</a>
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-611">line 611</a>
     </dt>
     
 
@@ -2486,17 +2009,13 @@ For example checkCollision.up = false means it won't collide when the collision 
             
 <dt>
     <h4 class="name "
-        id="shape"><span class="type-signature"></span>shape<span class="type-signature"> :object</span></h4>
+        id=".EIGHT"><span class="type-signature">&lt;static> </span>EIGHT<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
     
 
-    
-    <div class="description">
-        <p>A local reference to the body shape.</p>
-    </div>
     
     
     
@@ -2523,7 +2042,7 @@ For example checkCollision.up = false means it won't collide when the collision 
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_ninja_Body.js.html">physics/ninja/Body.js</a>, <a href="src_physics_ninja_Body.js.html#sunlight-1-line-69">line 69</a>
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-671">line 671</a>
     </dt>
     
 
@@ -2542,17 +2061,13 @@ For example checkCollision.up = false means it won't collide when the collision 
             
 <dt>
     <h4 class="name "
-        id="speed"><span class="type-signature">&lt;readonly> </span>speed<span class="type-signature"> :number</span></h4>
+        id=".END"><span class="type-signature">&lt;static> </span>END<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
     
 
-    
-    <div class="description">
-        <p>The speed of this Body</p>
-    </div>
     
     
     
@@ -2579,7 +2094,7 @@ For example checkCollision.up = false means it won't collide when the collision 
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_ninja_Body.js.html">physics/ninja/Body.js</a>, <a href="src_physics_ninja_Body.js.html#sunlight-1-line-522">line 522</a>
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-783">line 783</a>
     </dt>
     
 
@@ -2598,17 +2113,13 @@ For example checkCollision.up = false means it won't collide when the collision 
             
 <dt>
     <h4 class="name "
-        id="sprite"><span class="type-signature"></span>sprite<span class="type-signature"> :<a href="Phaser.Sprite.html">Phaser.Sprite</a></span></h4>
+        id=".ENTER"><span class="type-signature">&lt;static> </span>ENTER<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
     
 
-    
-    <div class="description">
-        <p>Reference to the parent Sprite.</p>
-    </div>
     
     
     
@@ -2635,7 +2146,7 @@ For example checkCollision.up = false means it won't collide when the collision 
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_ninja_Body.js.html">physics/ninja/Body.js</a>, <a href="src_physics_ninja_Body.js.html#sunlight-1-line-34">line 34</a>
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-765">line 765</a>
     </dt>
     
 
@@ -2654,17 +2165,13 @@ For example checkCollision.up = false means it won't collide when the collision 
             
 <dt>
     <h4 class="name "
-        id="system"><span class="type-signature"></span>system<span class="type-signature"> :<a href="Phaser.Physics.Ninja.html">Phaser.Physics.Ninja</a></span></h4>
+        id=".EQUALS"><span class="type-signature">&lt;static> </span>EQUALS<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
     
 
-    
-    <div class="description">
-        <p>The parent physics system.</p>
-    </div>
     
     
     
@@ -2691,7 +2198,7 @@ For example checkCollision.up = false means it won't collide when the collision 
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_ninja_Body.js.html">physics/ninja/Body.js</a>, <a href="src_physics_ninja_Body.js.html#sunlight-1-line-49">line 49</a>
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-739">line 739</a>
     </dt>
     
 
@@ -2710,17 +2217,13 @@ For example checkCollision.up = false means it won't collide when the collision 
             
 <dt>
     <h4 class="name "
-        id="tile"><span class="type-signature"></span>tile<span class="type-signature"> :<a href="Phaser.Physics.Ninja.Tile.html">Phaser.Physics.Ninja.Tile</a></span></h4>
+        id=".ESC"><span class="type-signature">&lt;static> </span>ESC<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
     
 
-    
-    <div class="description">
-        <p>The Tile object this body is using for collision.</p>
-    </div>
     
     
     
@@ -2747,7 +2250,7 @@ For example checkCollision.up = false means it won't collide when the collision 
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_ninja_Body.js.html">physics/ninja/Body.js</a>, <a href="src_physics_ninja_Body.js.html#sunlight-1-line-59">line 59</a>
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-775">line 775</a>
     </dt>
     
 
@@ -2766,18 +2269,13 @@ For example checkCollision.up = false means it won't collide when the collision 
             
 <dt>
     <h4 class="name "
-        id="touching"><span class="type-signature"></span>touching<span class="type-signature"> :object</span></h4>
+        id=".F"><span class="type-signature">&lt;static> </span>F<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
     
 
-    
-    <div class="description">
-        <p>This object is populated with boolean values when the Body collides with another.
-touching.up = true means the collision happened to the top of this Body for example. An object containing touching results.</p>
-    </div>
     
     
     
@@ -2804,7 +2302,7 @@ touching.up = true means the collision happened to the top of this Body for exam
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_ninja_Body.js.html">physics/ninja/Body.js</a>, <a href="src_physics_ninja_Body.js.html#sunlight-1-line-132">line 132</a>
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-613">line 613</a>
     </dt>
     
 
@@ -2823,17 +2321,13 @@ touching.up = true means the collision happened to the top of this Body for exam
             
 <dt>
     <h4 class="name "
-        id="type"><span class="type-signature"></span>type<span class="type-signature"> :number</span></h4>
+        id=".F1"><span class="type-signature">&lt;static> </span>F1<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
     
 
-    
-    <div class="description">
-        <p>The type of physics system this body belongs to.</p>
-    </div>
     
     
     
@@ -2860,7 +2354,7 @@ touching.up = true means the collision happened to the top of this Body for exam
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_ninja_Body.js.html">physics/ninja/Body.js</a>, <a href="src_physics_ninja_Body.js.html#sunlight-1-line-44">line 44</a>
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-707">line 707</a>
     </dt>
     
 
@@ -2879,17 +2373,13 @@ touching.up = true means the collision happened to the top of this Body for exam
             
 <dt>
     <h4 class="name "
-        id="velocity"><span class="type-signature"></span>velocity<span class="type-signature"> :<a href="Phaser.Point.html">Phaser.Point</a></span></h4>
+        id=".F2"><span class="type-signature">&lt;static> </span>F2<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
     
 
-    
-    <div class="description">
-        <p>The velocity in pixels per second sq. of the Body.</p>
-    </div>
     
     
     
@@ -2916,7 +2406,7 @@ touching.up = true means the collision happened to the top of this Body for exam
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_ninja_Body.js.html">physics/ninja/Body.js</a>, <a href="src_physics_ninja_Body.js.html#sunlight-1-line-100">line 100</a>
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-709">line 709</a>
     </dt>
     
 
@@ -2935,17 +2425,13 @@ touching.up = true means the collision happened to the top of this Body for exam
             
 <dt>
     <h4 class="name "
-        id="wasTouching"><span class="type-signature"></span>wasTouching<span class="type-signature"> :object</span></h4>
+        id=".F3"><span class="type-signature">&lt;static> </span>F3<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
     
 
-    
-    <div class="description">
-        <p>This object is populated with previous touching values from the bodies previous collision. An object containing previous touching results.</p>
-    </div>
     
     
     
@@ -2972,7 +2458,7 @@ touching.up = true means the collision happened to the top of this Body for exam
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_ninja_Body.js.html">physics/ninja/Body.js</a>, <a href="src_physics_ninja_Body.js.html#sunlight-1-line-138">line 138</a>
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-711">line 711</a>
     </dt>
     
 
@@ -2991,17 +2477,13 @@ touching.up = true means the collision happened to the top of this Body for exam
             
 <dt>
     <h4 class="name "
-        id="width"><span class="type-signature">&lt;readonly> </span>width<span class="type-signature"> :number</span></h4>
+        id=".F4"><span class="type-signature">&lt;static> </span>F4<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
     
 
-    
-    <div class="description">
-        <p>The width of this Body</p>
-    </div>
     
     
     
@@ -3028,7 +2510,7 @@ touching.up = true means the collision happened to the top of this Body for exam
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_ninja_Body.js.html">physics/ninja/Body.js</a>, <a href="src_physics_ninja_Body.js.html#sunlight-1-line-470">line 470</a>
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-713">line 713</a>
     </dt>
     
 
@@ -3047,17 +2529,13 @@ touching.up = true means the collision happened to the top of this Body for exam
             
 <dt>
     <h4 class="name "
-        id="x"><span class="type-signature"></span>x<span class="type-signature"> :number</span></h4>
+        id=".F5"><span class="type-signature">&lt;static> </span>F5<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
     
 
-    
-    <div class="description">
-        <p>The x position.</p>
-    </div>
     
     
     
@@ -3084,7 +2562,7 @@ touching.up = true means the collision happened to the top of this Body for exam
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_ninja_Body.js.html">physics/ninja/Body.js</a>, <a href="src_physics_ninja_Body.js.html#sunlight-1-line-438">line 438</a>
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-715">line 715</a>
     </dt>
     
 
@@ -3103,17 +2581,13 @@ touching.up = true means the collision happened to the top of this Body for exam
             
 <dt>
     <h4 class="name "
-        id="y"><span class="type-signature"></span>y<span class="type-signature"> :number</span></h4>
+        id=".F6"><span class="type-signature">&lt;static> </span>F6<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
     
 
-    
-    <div class="description">
-        <p>The y position.</p>
-    </div>
     
     
     
@@ -3140,7 +2614,3855 @@ touching.up = true means the collision happened to the top of this Body for exam
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_ninja_Body.js.html">physics/ninja/Body.js</a>, <a href="src_physics_ninja_Body.js.html#sunlight-1-line-454">line 454</a>
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-717">line 717</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".F7"><span class="type-signature">&lt;static> </span>F7<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-719">line 719</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".F8"><span class="type-signature">&lt;static> </span>F8<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-721">line 721</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".F9"><span class="type-signature">&lt;static> </span>F9<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-723">line 723</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".F10"><span class="type-signature">&lt;static> </span>F10<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-725">line 725</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".F11"><span class="type-signature">&lt;static> </span>F11<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-727">line 727</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".F12"><span class="type-signature">&lt;static> </span>F12<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-729">line 729</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".F13"><span class="type-signature">&lt;static> </span>F13<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-731">line 731</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".F14"><span class="type-signature">&lt;static> </span>F14<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-733">line 733</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".F15"><span class="type-signature">&lt;static> </span>F15<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-735">line 735</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".FIVE"><span class="type-signature">&lt;static> </span>FIVE<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-665">line 665</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".FOUR"><span class="type-signature">&lt;static> </span>FOUR<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-663">line 663</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".G"><span class="type-signature">&lt;static> </span>G<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-615">line 615</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".H"><span class="type-signature">&lt;static> </span>H<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-617">line 617</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".HELP"><span class="type-signature">&lt;static> </span>HELP<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-803">line 803</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".HOME"><span class="type-signature">&lt;static> </span>HOME<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-785">line 785</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".I"><span class="type-signature">&lt;static> </span>I<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-619">line 619</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".INSERT"><span class="type-signature">&lt;static> </span>INSERT<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-799">line 799</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".J"><span class="type-signature">&lt;static> </span>J<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-621">line 621</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".K"><span class="type-signature">&lt;static> </span>K<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-623">line 623</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".L"><span class="type-signature">&lt;static> </span>L<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-625">line 625</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".LEFT"><span class="type-signature">&lt;static> </span>LEFT<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-787">line 787</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".M"><span class="type-signature">&lt;static> </span>M<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-627">line 627</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".MINUS"><span class="type-signature">&lt;static> </span>MINUS<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-797">line 797</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".N"><span class="type-signature">&lt;static> </span>N<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-629">line 629</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".NINE"><span class="type-signature">&lt;static> </span>NINE<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-673">line 673</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".NUM_LOCK"><span class="type-signature">&lt;static> </span>NUM_LOCK<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-805">line 805</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".NUMPAD_0"><span class="type-signature">&lt;static> </span>NUMPAD_0<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-675">line 675</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".NUMPAD_1"><span class="type-signature">&lt;static> </span>NUMPAD_1<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-677">line 677</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".NUMPAD_2"><span class="type-signature">&lt;static> </span>NUMPAD_2<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-679">line 679</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".NUMPAD_3"><span class="type-signature">&lt;static> </span>NUMPAD_3<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-681">line 681</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".NUMPAD_4"><span class="type-signature">&lt;static> </span>NUMPAD_4<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-683">line 683</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".NUMPAD_5"><span class="type-signature">&lt;static> </span>NUMPAD_5<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-685">line 685</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".NUMPAD_6"><span class="type-signature">&lt;static> </span>NUMPAD_6<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-687">line 687</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".NUMPAD_7"><span class="type-signature">&lt;static> </span>NUMPAD_7<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-689">line 689</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".NUMPAD_8"><span class="type-signature">&lt;static> </span>NUMPAD_8<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-691">line 691</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".NUMPAD_9"><span class="type-signature">&lt;static> </span>NUMPAD_9<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-693">line 693</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".NUMPAD_ADD"><span class="type-signature">&lt;static> </span>NUMPAD_ADD<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-697">line 697</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".NUMPAD_DECIMAL"><span class="type-signature">&lt;static> </span>NUMPAD_DECIMAL<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-703">line 703</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".NUMPAD_DIVIDE"><span class="type-signature">&lt;static> </span>NUMPAD_DIVIDE<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-705">line 705</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".NUMPAD_ENTER"><span class="type-signature">&lt;static> </span>NUMPAD_ENTER<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-699">line 699</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".NUMPAD_MULTIPLY"><span class="type-signature">&lt;static> </span>NUMPAD_MULTIPLY<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-695">line 695</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".NUMPAD_SUBTRACT"><span class="type-signature">&lt;static> </span>NUMPAD_SUBTRACT<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-701">line 701</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".O"><span class="type-signature">&lt;static> </span>O<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-631">line 631</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".ONE"><span class="type-signature">&lt;static> </span>ONE<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-657">line 657</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".OPEN_BRACKET"><span class="type-signature">&lt;static> </span>OPEN_BRACKET<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-751">line 751</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".P"><span class="type-signature">&lt;static> </span>P<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-633">line 633</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".PAGE_DOWN"><span class="type-signature">&lt;static> </span>PAGE_DOWN<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-781">line 781</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".PAGE_UP"><span class="type-signature">&lt;static> </span>PAGE_UP<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-779">line 779</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".PERIOD"><span class="type-signature">&lt;static> </span>PERIOD<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-745">line 745</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".PLUS"><span class="type-signature">&lt;static> </span>PLUS<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-795">line 795</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".Q"><span class="type-signature">&lt;static> </span>Q<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-635">line 635</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".QUESTION_MARK"><span class="type-signature">&lt;static> </span>QUESTION_MARK<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-747">line 747</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".QUOTES"><span class="type-signature">&lt;static> </span>QUOTES<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-757">line 757</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".R"><span class="type-signature">&lt;static> </span>R<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-637">line 637</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".RIGHT"><span class="type-signature">&lt;static> </span>RIGHT<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-791">line 791</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".S"><span class="type-signature">&lt;static> </span>S<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-639">line 639</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".SEVEN"><span class="type-signature">&lt;static> </span>SEVEN<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-669">line 669</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".SHIFT"><span class="type-signature">&lt;static> </span>SHIFT<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-767">line 767</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".SIX"><span class="type-signature">&lt;static> </span>SIX<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-667">line 667</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".SPACEBAR"><span class="type-signature">&lt;static> </span>SPACEBAR<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-777">line 777</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".T"><span class="type-signature">&lt;static> </span>T<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-641">line 641</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".TAB"><span class="type-signature">&lt;static> </span>TAB<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-761">line 761</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".THREE"><span class="type-signature">&lt;static> </span>THREE<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-661">line 661</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".TILDE"><span class="type-signature">&lt;static> </span>TILDE<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-749">line 749</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".TWO"><span class="type-signature">&lt;static> </span>TWO<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-659">line 659</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".U"><span class="type-signature">&lt;static> </span>U<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-643">line 643</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".UNDERSCORE"><span class="type-signature">&lt;static> </span>UNDERSCORE<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-743">line 743</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".UP"><span class="type-signature">&lt;static> </span>UP<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-789">line 789</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".V"><span class="type-signature">&lt;static> </span>V<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-645">line 645</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".W"><span class="type-signature">&lt;static> </span>W<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-647">line 647</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".X"><span class="type-signature">&lt;static> </span>X<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-649">line 649</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".Y"><span class="type-signature">&lt;static> </span>Y<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-651">line 651</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".Z"><span class="type-signature">&lt;static> </span>Z<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-653">line 653</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".ZERO"><span class="type-signature">&lt;static> </span>ZERO<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-655">line 655</a>
     </dt>
     
 
@@ -3158,982 +6480,6 @@ touching.up = true means the collision happened to the top of this Body for exam
         </dl>
     
 
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        <dl>
-            
-<dt>
-    <h4 class="name "
-        id="deltaAbsX"><span class="type-signature"></span>deltaAbsX<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Returns the absolute delta x value.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-
-    
-    <h5>Returns:</h5>
-    <div class="returns">
-        
-            
-    
-        <div class="returns-type">
-        
-<span class="param-type">number</span>
-
- -
-        </div>
-    
-    <div class="returns-desc param-desc">
-        <p>The absolute delta value.</p>
-    </div>
-
-
-        
-    </div>
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_physics_ninja_Body.js.html">physics/ninja/Body.js</a>, <a href="src_physics_ninja_Body.js.html#sunlight-1-line-381">line 381</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="deltaAbsY"><span class="type-signature"></span>deltaAbsY<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Returns the absolute delta y value.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-
-    
-    <h5>Returns:</h5>
-    <div class="returns">
-        
-            
-    
-        <div class="returns-type">
-        
-<span class="param-type">number</span>
-
- -
-        </div>
-    
-    <div class="returns-desc param-desc">
-        <p>The absolute delta value.</p>
-    </div>
-
-
-        
-    </div>
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_physics_ninja_Body.js.html">physics/ninja/Body.js</a>, <a href="src_physics_ninja_Body.js.html#sunlight-1-line-391">line 391</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="deltaX"><span class="type-signature"></span>deltaX<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Returns the delta x value. The difference between Body.x now and in the previous step.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-
-    
-    <h5>Returns:</h5>
-    <div class="returns">
-        
-            
-    
-        <div class="returns-type">
-        
-<span class="param-type">number</span>
-
- -
-        </div>
-    
-    <div class="returns-desc param-desc">
-        <p>The delta value. Positive if the motion was to the right, negative if to the left.</p>
-    </div>
-
-
-        
-    </div>
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_physics_ninja_Body.js.html">physics/ninja/Body.js</a>, <a href="src_physics_ninja_Body.js.html#sunlight-1-line-401">line 401</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="deltaY"><span class="type-signature"></span>deltaY<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Returns the delta y value. The difference between Body.y now and in the previous step.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-
-    
-    <h5>Returns:</h5>
-    <div class="returns">
-        
-            
-    
-        <div class="returns-type">
-        
-<span class="param-type">number</span>
-
- -
-        </div>
-    
-    <div class="returns-desc param-desc">
-        <p>The delta value. Positive if the motion was downwards, negative if upwards.</p>
-    </div>
-
-
-        
-    </div>
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_physics_ninja_Body.js.html">physics/ninja/Body.js</a>, <a href="src_physics_ninja_Body.js.html#sunlight-1-line-411">line 411</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="destroy"><span class="type-signature"></span>destroy<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Destroys this body's reference to the sprite and system, and destroys its shape.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_physics_ninja_Body.js.html">physics/ninja/Body.js</a>, <a href="src_physics_ninja_Body.js.html#sunlight-1-line-421">line 421</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="postUpdate"><span class="type-signature">&lt;internal> </span>postUpdate<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Internal method.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-        <dt class="important tag-deprecated">Internal:</dt>
-        <dd class="tag-deprecated"><ul>
-        
-            <li>This member is <em>internal (protected)</em> and may be modified or removed in the future.</li>
-        
-        </ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_physics_ninja_Body.js.html">physics/ninja/Body.js</a>, <a href="src_physics_ninja_Body.js.html#sunlight-1-line-214">line 214</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="preUpdate"><span class="type-signature">&lt;internal> </span>preUpdate<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Internal method.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-        <dt class="important tag-deprecated">Internal:</dt>
-        <dd class="tag-deprecated"><ul>
-        
-            <li>This member is <em>internal (protected)</em> and may be modified or removed in the future.</li>
-        
-        </ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_physics_ninja_Body.js.html">physics/ninja/Body.js</a>, <a href="src_physics_ninja_Body.js.html#sunlight-1-line-184">line 184</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="render"><span class="type-signature"></span>render<span class="signature">(context, body, <span class="optional">color</span>, <span class="optional">filled</span>)</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Render Sprite's Body.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-		<th>Argument</th>
-		
-
-		
-		<th>Default</th>
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>context</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"><p>The context to render to.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>body</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Physics.Ninja.Body.html">Phaser.Physics.Ninja.Body</a></span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"><p>The Body to render.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>color</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    'rgba(0,255,0,0.4)'
-                
-                </td>
-            
-
-            <td class="description last"><p>color of the debug shape to be rendered. (format is css color string).</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>filled</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    true
-                
-                </td>
-            
-
-            <td class="description last"><p>Render the shape as a filled (default, true) or a stroked (false)</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_physics_ninja_Body.js.html">physics/ninja/Body.js</a>, <a href="src_physics_ninja_Body.js.html#sunlight-1-line-548">line 548</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="reset"><span class="type-signature"></span>reset<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Resets all Body values and repositions on the Sprite.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_physics_ninja_Body.js.html">physics/ninja/Body.js</a>, <a href="src_physics_ninja_Body.js.html#sunlight-1-line-365">line 365</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="setZeroVelocity"><span class="type-signature"></span>setZeroVelocity<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Stops all movement of this body.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_physics_ninja_Body.js.html">physics/ninja/Body.js</a>, <a href="src_physics_ninja_Body.js.html#sunlight-1-line-257">line 257</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        </dl>
     
 
     
@@ -4159,7 +6505,7 @@ touching.up = true means the collision happened to the top of this Body for exam
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
-		on Thu Oct 15 2015 12:05:03 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Thu Oct 15 2015 12:05:01 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

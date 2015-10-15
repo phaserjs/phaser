@@ -39,6 +39,10 @@
 						</li>
 						
 						<li class="class-depth-0">
+							<a href="Phaser.KeyCode.html">KeyCode</a>
+						</li>
+						
+						<li class="class-depth-0">
 							<a href="PIXI.html">PIXI</a>
 						</li>
 						
@@ -505,6 +509,10 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="Phaser.PointerMode.html">PointerMode</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="Phaser.Polygon.html">Polygon</a>
 						</li>
 						
@@ -754,10 +762,6 @@
 						
 						<li class="class-depth-1">
 							<a href="PIXI.SpriteBatch.html">SpriteBatch</a>
-						</li>
-						
-						<li class="class-depth-1">
-							<a href="PIXI.Stage.html">Stage</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -2329,7 +2333,7 @@ then used as an asset store.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-396">line 396</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-399">line 399</a>
     </dt>
     
 
@@ -2561,7 +2565,7 @@ then used as an asset store.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-409">line 409</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-412">line 412</a>
     </dt>
     
 
@@ -2588,7 +2592,7 @@ then used as an asset store.</p>
             
 <dt>
     <h4 class="name "
-        id="addBitmapFont"><span class="type-signature"></span>addBitmapFont<span class="signature">(key, url, data, atlasData, <span class="optional">xSpacing</span>, <span class="optional">ySpacing</span>)</span><span class="type-signature"></span></h4>
+        id="addBitmapFont"><span class="type-signature"></span>addBitmapFont<span class="signature">(key, url, data, atlasData, <span class="optional">atlasType</span>, <span class="optional">xSpacing</span>, <span class="optional">ySpacing</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -2775,6 +2779,45 @@ then used as an asset store.</p>
 
         <tr>
             
+                <td class="name"><code>atlasType</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    'xml'
+                
+                </td>
+            
+
+            <td class="description last"><p>The format of the texture atlas ( 'json' or 'xml' ).</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
                 <td class="name"><code>xSpacing</code></td>
             
 
@@ -2879,7 +2922,7 @@ then used as an asset store.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-434">line 434</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-437">line 437</a>
     </dt>
     
 
@@ -3503,7 +3546,7 @@ If an image already exists in the cache with the same key then it is removed and
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-469">line 469</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-476">line 476</a>
     </dt>
     
 
@@ -3583,7 +3626,7 @@ This image is skipped when <code>Cache.destroy</code> is called due to its inter
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-289">line 289</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-292">line 292</a>
     </dt>
     
 
@@ -3771,7 +3814,7 @@ This image is skipped when <code>Cache.destroy</code> is called due to its inter
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-362">line 362</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-365">line 365</a>
     </dt>
     
 
@@ -3913,7 +3956,7 @@ This image is skipped when <code>Cache.destroy</code> is called due to its inter
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-534">line 534</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-541">line 541</a>
     </dt>
     
 
@@ -4078,7 +4121,7 @@ This image is skipped when <code>Cache.destroy</code> is called due to its inter
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-518">line 518</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-525">line 525</a>
     </dt>
     
 
@@ -4289,7 +4332,7 @@ This image is skipped when <code>Cache.destroy</code> is called due to its inter
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-310">line 310</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-313">line 313</a>
     </dt>
     
 
@@ -4681,7 +4724,7 @@ This image is skipped when <code>Cache.destroy</code> is called due to its inter
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-547">line 547</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-554">line 554</a>
     </dt>
     
 
@@ -4846,7 +4889,7 @@ This image is skipped when <code>Cache.destroy</code> is called due to its inter
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-346">line 346</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-349">line 349</a>
     </dt>
     
 
@@ -5057,7 +5100,7 @@ This image is skipped when <code>Cache.destroy</code> is called due to its inter
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-584">line 584</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-591">line 591</a>
     </dt>
     
 
@@ -5245,7 +5288,7 @@ This image is skipped when <code>Cache.destroy</code> is called due to its inter
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-379">line 379</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-382">line 382</a>
     </dt>
     
 
@@ -5433,7 +5476,7 @@ This image is skipped when <code>Cache.destroy</code> is called due to its inter
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-501">line 501</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-508">line 508</a>
     </dt>
     
 
@@ -5598,7 +5641,7 @@ This image is skipped when <code>Cache.destroy</code> is called due to its inter
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-485">line 485</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-492">line 492</a>
     </dt>
     
 
@@ -5737,7 +5780,7 @@ This image is skipped when <code>Cache.destroy</code> is called due to its inter
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-879">line 879</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-890">line 890</a>
     </dt>
     
 
@@ -5876,7 +5919,7 @@ This image is skipped when <code>Cache.destroy</code> is called due to its inter
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-892">line 892</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-903">line 903</a>
     </dt>
     
 
@@ -6015,7 +6058,7 @@ This image is skipped when <code>Cache.destroy</code> is called due to its inter
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-905">line 905</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-916">line 916</a>
     </dt>
     
 
@@ -6154,7 +6197,7 @@ This image is skipped when <code>Cache.destroy</code> is called due to its inter
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-788">line 788</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-799">line 799</a>
     </dt>
     
 
@@ -6293,7 +6336,7 @@ This image is skipped when <code>Cache.destroy</code> is called due to its inter
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-801">line 801</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-812">line 812</a>
     </dt>
     
 
@@ -6432,7 +6475,7 @@ This image is skipped when <code>Cache.destroy</code> is called due to its inter
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-918">line 918</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-929">line 929</a>
     </dt>
     
 
@@ -6594,7 +6637,7 @@ This image is skipped when <code>Cache.destroy</code> is called due to its inter
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-748">line 748</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-759">line 759</a>
     </dt>
     
 
@@ -6733,7 +6776,7 @@ This image is skipped when <code>Cache.destroy</code> is called due to its inter
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-853">line 853</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-864">line 864</a>
     </dt>
     
 
@@ -6872,7 +6915,7 @@ This image is skipped when <code>Cache.destroy</code> is called due to its inter
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-970">line 970</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-981">line 981</a>
     </dt>
     
 
@@ -7011,7 +7054,7 @@ This image is skipped when <code>Cache.destroy</code> is called due to its inter
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-957">line 957</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-968">line 968</a>
     </dt>
     
 
@@ -7150,7 +7193,7 @@ This image is skipped when <code>Cache.destroy</code> is called due to its inter
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-827">line 827</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-838">line 838</a>
     </dt>
     
 
@@ -7289,7 +7332,7 @@ This image is skipped when <code>Cache.destroy</code> is called due to its inter
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-840">line 840</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-851">line 851</a>
     </dt>
     
 
@@ -7428,7 +7471,7 @@ This image is skipped when <code>Cache.destroy</code> is called due to its inter
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-814">line 814</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-825">line 825</a>
     </dt>
     
 
@@ -7567,7 +7610,7 @@ This image is skipped when <code>Cache.destroy</code> is called due to its inter
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-866">line 866</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-877">line 877</a>
     </dt>
     
 
@@ -7709,7 +7752,7 @@ which may cause double-load instances.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-767">line 767</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-778">line 778</a>
     </dt>
     
 
@@ -7848,7 +7891,7 @@ which may cause double-load instances.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-944">line 944</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-955">line 955</a>
     </dt>
     
 
@@ -7987,7 +8030,7 @@ which may cause double-load instances.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-931">line 931</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-942">line 942</a>
     </dt>
     
 
@@ -8065,7 +8108,7 @@ This is called automatically when the WebGL context is lost and then restored.</
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1926">line 1926</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1937">line 1937</a>
     </dt>
     
 
@@ -8207,7 +8250,7 @@ This is called automatically when the WebGL context is lost and then restored.</
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-690">line 690</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-701">line 701</a>
     </dt>
     
 
@@ -8278,7 +8321,7 @@ If an object in the cache has a <code>destroy</code> method it will also be call
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1976">line 1976</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1987">line 1987</a>
     </dt>
     
 
@@ -8472,7 +8515,7 @@ If an object in the cache has a <code>destroy</code> method it will also be call
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1390">line 1390</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1401">line 1401</a>
     </dt>
     
 
@@ -8613,7 +8656,7 @@ If an object in the cache has a <code>destroy</code> method it will also be call
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1230">line 1230</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1241">line 1241</a>
     </dt>
     
 
@@ -8754,7 +8797,7 @@ If an object in the cache has a <code>destroy</code> method it will also be call
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1247">line 1247</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1258">line 1258</a>
     </dt>
     
 
@@ -8895,7 +8938,7 @@ If an object in the cache has a <code>destroy</code> method it will also be call
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1264">line 1264</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1275">line 1275</a>
     </dt>
     
 
@@ -9036,7 +9079,7 @@ If an object in the cache has a <code>destroy</code> method it will also be call
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1025">line 1025</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1036">line 1036</a>
     </dt>
     
 
@@ -9230,7 +9273,7 @@ If an object in the cache has a <code>destroy</code> method it will also be call
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1406">line 1406</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1417">line 1417</a>
     </dt>
     
 
@@ -9459,7 +9502,7 @@ If an object in the cache has a <code>destroy</code> method it will also be call
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1500">line 1500</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1511">line 1511</a>
     </dt>
     
 
@@ -9688,7 +9731,7 @@ If an object in the cache has a <code>destroy</code> method it will also be call
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1524">line 1524</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1535">line 1535</a>
     </dt>
     
 
@@ -9882,7 +9925,7 @@ If an object in the cache has a <code>destroy</code> method it will also be call
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1422">line 1422</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1433">line 1433</a>
     </dt>
     
 
@@ -10078,7 +10121,7 @@ If an object in the cache has a <code>destroy</code> method it will also be call
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1445">line 1445</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1456">line 1456</a>
     </dt>
     
 
@@ -10278,7 +10321,7 @@ If an object in the cache has a <code>destroy</code> method it will also be call
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1042">line 1042</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1053">line 1053</a>
     </dt>
     
 
@@ -10526,7 +10569,7 @@ publicly for your own use as well.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-987">line 987</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-998">line 998</a>
     </dt>
     
 
@@ -10724,7 +10767,7 @@ of it by setting the <code>clone</code> argument to <code>true</code>.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1281">line 1281</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1292">line 1292</a>
     </dt>
     
 
@@ -10883,7 +10926,7 @@ of it by setting the <code>clone</code> argument to <code>true</code>.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1638">line 1638</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1649">line 1649</a>
     </dt>
     
 
@@ -11115,7 +11158,7 @@ of it by setting the <code>clone</code> argument to <code>true</code>.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1151">line 1151</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1162">line 1162</a>
     </dt>
     
 
@@ -11266,7 +11309,7 @@ of it by setting the <code>clone</code> argument to <code>true</code>.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1581">line 1581</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1592">line 1592</a>
     </dt>
     
 
@@ -11418,7 +11461,7 @@ creates a new PIXI.Texture object which is then returned.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1548">line 1548</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1559">line 1559</a>
     </dt>
     
 
@@ -11559,7 +11602,7 @@ creates a new PIXI.Texture object which is then returned.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1369">line 1369</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1380">line 1380</a>
     </dt>
     
 
@@ -11700,7 +11743,7 @@ creates a new PIXI.Texture object which is then returned.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1352">line 1352</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1363">line 1363</a>
     </dt>
     
 
@@ -11841,7 +11884,7 @@ creates a new PIXI.Texture object which is then returned.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1100">line 1100</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1111">line 1111</a>
     </dt>
     
 
@@ -11982,7 +12025,7 @@ creates a new PIXI.Texture object which is then returned.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1117">line 1117</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1128">line 1128</a>
     </dt>
     
 
@@ -12123,7 +12166,7 @@ creates a new PIXI.Texture object which is then returned.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1134">line 1134</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1145">line 1145</a>
     </dt>
     
 
@@ -12263,7 +12306,7 @@ creates a new PIXI.Texture object which is then returned.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1085">line 1085</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1096">line 1096</a>
     </dt>
     
 
@@ -12404,7 +12447,7 @@ creates a new PIXI.Texture object which is then returned.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1213">line 1213</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1224">line 1224</a>
     </dt>
     
 
@@ -12545,7 +12588,7 @@ Be aware that every call to this function makes a DOM src query, so use carefull
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1613">line 1613</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1624">line 1624</a>
     </dt>
     
 
@@ -12686,7 +12729,7 @@ Be aware that every call to this function makes a DOM src query, so use carefull
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1335">line 1335</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1346">line 1346</a>
     </dt>
     
 
@@ -12827,7 +12870,7 @@ Be aware that every call to this function makes a DOM src query, so use carefull
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1318">line 1318</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1329">line 1329</a>
     </dt>
     
 
@@ -13021,7 +13064,7 @@ Be aware that every call to this function makes a DOM src query, so use carefull
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1465">line 1465</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1476">line 1476</a>
     </dt>
     
 
@@ -13160,7 +13203,7 @@ Be aware that every call to this function makes a DOM src query, so use carefull
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-707">line 707</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-718">line 718</a>
     </dt>
     
 
@@ -13300,7 +13343,7 @@ A sound is considered ready when it has finished decoding and the device is no l
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-725">line 725</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-736">line 736</a>
     </dt>
     
 
@@ -13419,7 +13462,7 @@ A sound is considered ready when it has finished decoding and the device is no l
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-630">line 630</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-641">line 641</a>
     </dt>
     
 
@@ -13538,7 +13581,7 @@ A sound is considered ready when it has finished decoding and the device is no l
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-655">line 655</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-666">line 666</a>
     </dt>
     
 
@@ -13659,7 +13702,7 @@ then it will persist in memory.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1776">line 1776</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1787">line 1787</a>
     </dt>
     
 
@@ -13780,7 +13823,7 @@ then it will persist in memory.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1791">line 1791</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1802">line 1802</a>
     </dt>
     
 
@@ -13901,7 +13944,7 @@ then it will persist in memory.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1806">line 1806</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1817">line 1817</a>
     </dt>
     
 
@@ -14022,7 +14065,7 @@ then it will persist in memory.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1670">line 1670</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1681">line 1681</a>
     </dt>
     
 
@@ -14199,7 +14242,7 @@ then it will persist in memory.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1685">line 1685</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1696">line 1696</a>
     </dt>
     
 
@@ -14320,7 +14363,7 @@ then it will persist in memory.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1821">line 1821</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1832">line 1832</a>
     </dt>
     
 
@@ -14441,7 +14484,7 @@ then it will persist in memory.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1746">line 1746</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1757">line 1757</a>
     </dt>
     
 
@@ -14562,7 +14605,7 @@ then it will persist in memory.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1881">line 1881</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1892">line 1892</a>
     </dt>
     
 
@@ -14683,7 +14726,7 @@ then it will persist in memory.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1866">line 1866</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1877">line 1877</a>
     </dt>
     
 
@@ -14807,7 +14850,7 @@ then it will persist in memory.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1712">line 1712</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1723">line 1723</a>
     </dt>
     
 
@@ -14928,7 +14971,7 @@ then it will persist in memory.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1896">line 1896</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1907">line 1907</a>
     </dt>
     
 
@@ -15049,7 +15092,7 @@ then it will persist in memory.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1731">line 1731</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1742">line 1742</a>
     </dt>
     
 
@@ -15170,7 +15213,7 @@ then it will persist in memory.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1911">line 1911</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1922">line 1922</a>
     </dt>
     
 
@@ -15291,7 +15334,7 @@ then it will persist in memory.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1761">line 1761</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1772">line 1772</a>
     </dt>
     
 
@@ -15412,7 +15455,7 @@ then it will persist in memory.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1851">line 1851</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1862">line 1862</a>
     </dt>
     
 
@@ -15533,7 +15576,7 @@ then it will persist in memory.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1836">line 1836</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1847">line 1847</a>
     </dt>
     
 
@@ -15742,7 +15785,7 @@ then it will persist in memory.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1481">line 1481</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-1492">line 1492</a>
     </dt>
     
 
@@ -15861,7 +15904,7 @@ then it will persist in memory.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-673">line 673</a>
+    <a href="src_loader_Cache.js.html">loader/Cache.js</a>, <a href="src_loader_Cache.js.html#sunlight-1-line-684">line 684</a>
     </dt>
     
 
@@ -15910,7 +15953,7 @@ then it will persist in memory.</p>
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
-		on Mon Aug 24 2015 15:36:47 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Thu Oct 15 2015 12:04:58 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

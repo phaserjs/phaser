@@ -39,6 +39,10 @@
 						</li>
 						
 						<li class="class-depth-0">
+							<a href="Phaser.KeyCode.html">KeyCode</a>
+						</li>
+						
+						<li class="class-depth-0">
 							<a href="PIXI.html">PIXI</a>
 						</li>
 						
@@ -505,6 +509,10 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="Phaser.PointerMode.html">PointerMode</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="Phaser.Polygon.html">Polygon</a>
 						</li>
 						
@@ -754,10 +762,6 @@
 						
 						<li class="class-depth-1">
 							<a href="PIXI.SpriteBatch.html">SpriteBatch</a>
-						</li>
-						
-						<li class="class-depth-1">
-							<a href="PIXI.Stage.html">Stage</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -1148,6 +1152,7 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
     * The z-depth value of this object within its parent container/Group - the World is a Group as well.
     * This value must be unique for each child in a Group.
     * @property {integer} z
+    * @readOnly
     */
     this.z = 0;
 
@@ -1252,7 +1257,7 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
     /**
     * If {@link #enableBody} is true this is the type of physics body that is created on new Sprites.
     *
-    * The valid values are {@link Phaser.Physics.ARCADE}, {@link Phaser.Physics.P2}, {@link Phaser.Physics.NINJA}, etc.
+    * The valid values are {@link Phaser.Physics.ARCADE}, {@link Phaser.Physics.P2JS}, {@link Phaser.Physics.NINJA}, etc.
     * @property {integer} physicsBodyType
     */
     this.physicsBodyType = physicsBodyType;
@@ -1561,13 +1566,13 @@ Phaser.Group.prototype.getAt = function (index) {
 /**
 * Creates a new Phaser.Sprite object and adds it to the top of this group.
 *
-* Use {@link #classType} to change the type of object creaded.
+* Use {@link #classType} to change the type of object created.
 *
 * @method Phaser.Group#create
 * @param {number} x - The x coordinate to display the newly created Sprite at. The value is in relation to the group.x point.
 * @param {number} y - The y coordinate to display the newly created Sprite at. The value is in relation to the group.y point.
-* @param {string} key - The Game.cache key of the image that this Sprite will use.
-* @param {integer|string} [frame] - If the Sprite image contains multiple frames you can specify which one to use here.
+* @param {string|Phaser.RenderTexture|Phaser.BitmapData|Phaser.Video|PIXI.Texture} [key] - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache Image entry, or an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
+* @param {string|number} [frame] - If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
 * @param {boolean} [exists=true] - The default exists state of the Sprite.
 * @return {DisplayObject} The child that was created: will be a {@link Phaser.Sprite} unless {@link #classType} has been changed.
 */
@@ -2869,47 +2874,134 @@ Phaser.Group.prototype.iterate = function (key, value, returnType, callback, cal
 
 /**
 * Get the first display object that exists, or doesn't exist.
+* 
+* You can use the optional argument `createIfNull` to create a new Game Object if none matching your exists argument were found in this Group.
+*
+* It works by calling `Group.create` passing it the parameters given to this method, and returning the new child.
+*
+* If a child *was* found , `createIfNull` is `false` and you provided the additional arguments then the child
+* will be reset and/or have a new texture loaded on it. This is handled by `Group.resetChild`.
 *
 * @method Phaser.Group#getFirstExists
 * @param {boolean} [exists=true] - If true, find the first existing child; otherwise find the first non-existing child.
-* @return {any} The first child, or null if none found.
+* @param {boolean} [createIfNull=false] - If `true` and no alive children are found a new one is created.
+* @param {number} [x] - The x coordinate to reset the child to. The value is in relation to the group.x point.
+* @param {number} [y] - The y coordinate to reset the child to. The value is in relation to the group.y point.
+* @param {string|Phaser.RenderTexture|Phaser.BitmapData|Phaser.Video|PIXI.Texture} [key] - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache Image entry, or an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
+* @param {string|number} [frame] - If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
+* @return {DisplayObject} The first child, or `null` if none found and `createIfNull` was false.
 */
-Phaser.Group.prototype.getFirstExists = function (exists) {
+Phaser.Group.prototype.getFirstExists = function (exists, createIfNull, x, y, key, frame) {
+
+    if (createIfNull === undefined) { createIfNull = false; }
 
     if (typeof exists !== 'boolean')
     {
         exists = true;
     }
 
-    return this.iterate('exists', exists, Phaser.Group.RETURN_CHILD);
+    var child = this.iterate('exists', exists, Phaser.Group.RETURN_CHILD);
+
+    return (child === null &amp;&amp; createIfNull) ? this.create(x, y, key, frame) : this.resetChild(child, x, y, key, frame);
 
 };
 
 /**
 * Get the first child that is alive (`child.alive === true`).
 *
-* This is handy for checking if everything has been wiped out, or choosing a squad leader, etc.
+* This is handy for choosing a squad leader, etc.
+*
+* You can use the optional argument `createIfNull` to create a new Game Object if no alive ones were found in this Group.
+*
+* It works by calling `Group.create` passing it the parameters given to this method, and returning the new child.
+*
+* If a child *was* found , `createIfNull` is `false` and you provided the additional arguments then the child
+* will be reset and/or have a new texture loaded on it. This is handled by `Group.resetChild`.
 *
 * @method Phaser.Group#getFirstAlive
-* @return {any} The first alive child, or null if none found.
+* @param {boolean} [createIfNull=false] - If `true` and no alive children are found a new one is created.
+* @param {number} [x] - The x coordinate to reset the child to. The value is in relation to the group.x point.
+* @param {number} [y] - The y coordinate to reset the child to. The value is in relation to the group.y point.
+* @param {string|Phaser.RenderTexture|Phaser.BitmapData|Phaser.Video|PIXI.Texture} [key] - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache Image entry, or an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
+* @param {string|number} [frame] - If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
+* @return {DisplayObject} The alive dead child, or `null` if none found and `createIfNull` was false.
 */
-Phaser.Group.prototype.getFirstAlive = function () {
+Phaser.Group.prototype.getFirstAlive = function (createIfNull, x, y, key, frame) {
 
-    return this.iterate('alive', true, Phaser.Group.RETURN_CHILD);
+    if (createIfNull === undefined) { createIfNull = false; }
+
+    var child = this.iterate('alive', true, Phaser.Group.RETURN_CHILD);
+
+    return (child === null &amp;&amp; createIfNull) ? this.create(x, y, key, frame) : this.resetChild(child, x, y, key, frame);
 
 };
 
 /**
 * Get the first child that is dead (`child.alive === false`).
 *
-* This is handy for checking if everything has been wiped out, or choosing a squad leader, etc.
+* This is handy for checking if everything has been wiped out and adding to the pool as needed.
+*
+* You can use the optional argument `createIfNull` to create a new Game Object if no dead ones were found in this Group.
+*
+* It works by calling `Group.create` passing it the parameters given to this method, and returning the new child.
+*
+* If a child *was* found , `createIfNull` is `false` and you provided the additional arguments then the child
+* will be reset and/or have a new texture loaded on it. This is handled by `Group.resetChild`.
 *
 * @method Phaser.Group#getFirstDead
-* @return {any} The first dead child, or null if none found.
+* @param {boolean} [createIfNull=false] - If `true` and no dead children are found a new one is created.
+* @param {number} [x] - The x coordinate to reset the child to. The value is in relation to the group.x point.
+* @param {number} [y] - The y coordinate to reset the child to. The value is in relation to the group.y point.
+* @param {string|Phaser.RenderTexture|Phaser.BitmapData|Phaser.Video|PIXI.Texture} [key] - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache Image entry, or an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
+* @param {string|number} [frame] - If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
+* @return {DisplayObject} The first dead child, or `null` if none found and `createIfNull` was false.
 */
-Phaser.Group.prototype.getFirstDead = function () {
+Phaser.Group.prototype.getFirstDead = function (createIfNull, x, y, key, frame) {
 
-    return this.iterate('alive', false, Phaser.Group.RETURN_CHILD);
+    if (createIfNull === undefined) { createIfNull = false; }
+
+    var child = this.iterate('alive', false, Phaser.Group.RETURN_CHILD);
+
+    return (child === null &amp;&amp; createIfNull) ? this.create(x, y, key, frame) : this.resetChild(child, x, y, key, frame);
+
+};
+
+/**
+* Takes a child and if the `x` and `y` arguments are given it calls `child.reset(x, y)` on it.
+*
+* If the `key` and optionally the `frame` arguments are given, it calls `child.loadTexture(key, frame)` on it.
+*
+* The two operations are separate. For example if you just wish to load a new texture then pass `null` as the x and y values.
+*
+* @method Phaser.Group#resetChild
+* @param {DisplayObject} child - The child to reset and/or load the texture on.
+* @param {number} [x] - The x coordinate to reset the child to. The value is in relation to the group.x point.
+* @param {number} [y] - The y coordinate to reset the child to. The value is in relation to the group.y point.
+* @param {string|Phaser.RenderTexture|Phaser.BitmapData|Phaser.Video|PIXI.Texture} [key] - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache Image entry, or an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
+* @param {string|number} [frame] - If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
+* @return {DisplayObject} The child that was reset: usually a {@link Phaser.Sprite}.
+*/
+Phaser.Group.prototype.resetChild = function (child, x, y, key, frame) {
+
+    if (child === null)
+    {
+        return null;
+    }
+
+    if (x === undefined) { x = null; }
+    if (y === undefined) { y = null; }
+
+    if (x !== null &amp;&amp; y !== null)
+    {
+        child.reset(x, y);
+    }
+
+    if (key !== undefined)
+    {
+        child.loadTexture(key, frame);
+    }
+
+    return child;
 
 };
 
@@ -3332,7 +3424,7 @@ Object.defineProperty(Phaser.Group.prototype, "angle", {
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
-		on Mon Aug 24 2015 15:36:45 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Thu Oct 15 2015 12:04:56 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

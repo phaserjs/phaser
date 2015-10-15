@@ -39,6 +39,10 @@
 						</li>
 						
 						<li class="class-depth-0">
+							<a href="Phaser.KeyCode.html">KeyCode</a>
+						</li>
+						
+						<li class="class-depth-0">
 							<a href="PIXI.html">PIXI</a>
 						</li>
 						
@@ -505,6 +509,10 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="Phaser.PointerMode.html">PointerMode</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="Phaser.Polygon.html">Polygon</a>
 						</li>
 						
@@ -754,10 +762,6 @@
 						
 						<li class="class-depth-1">
 							<a href="PIXI.SpriteBatch.html">SpriteBatch</a>
-						</li>
-						
-						<li class="class-depth-1">
-							<a href="PIXI.Stage.html">Stage</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -4220,6 +4224,147 @@ game.add.tween(p).to({ x: 700 }, 1000, Phaser.Easing.Linear.None, true)
             
 <dt>
     <h4 class="name "
+        id="repeat"><span class="type-signature"></span>repeat<span class="signature">(total)</span><span class="type-signature"> &rarr; {<a href="Phaser.Tween.html">Phaser.Tween</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Set how many times this tween and all of its children will repeat.
+A tween (A) with 3 children (B,C,D) with a <code>repeatAll</code> value of 2 would play as: ABCDABCD before completing.
+When all child tweens have completed Tween.onLoop will be dispatched.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>total</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>How many times this tween and all children should repeat before completing. Set to zero to remove an active repeat. Set to -1 to repeat forever.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+
+    
+    <h5>Returns:</h5>
+    <div class="returns">
+        
+            
+    
+        <div class="returns-type">
+        
+<span class="param-type"><a href="Phaser.Tween.html">Phaser.Tween</a></span>
+
+ -
+        </div>
+    
+    <div class="returns-desc param-desc">
+        <p>This tween. Useful for method chaining.</p>
+    </div>
+
+
+        
+    </div>
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_tween_Tween.js.html">tween/Tween.js</a>, <a href="src_tween_Tween.js.html#sunlight-1-line-546">line 546</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+       
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
         id="repeat"><span class="type-signature"></span>repeat<span class="signature">(total, <span class="optional">repeat</span>, <span class="optional">index</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.Tween.html">Phaser.Tween</a>}</span></h4>
     
     
@@ -4430,147 +4575,6 @@ If you wish to define how many times this Tween and all children will repeat see
     
     <dt class="tag-source">Source -
     <a href="src_tween_Tween.js.html">tween/Tween.js</a>, <a href="src_tween_Tween.js.html#sunlight-1-line-423">line 423</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="repeat"><span class="type-signature"></span>repeat<span class="signature">(total)</span><span class="type-signature"> &rarr; {<a href="Phaser.Tween.html">Phaser.Tween</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Set how many times this tween and all of its children will repeat.
-A tween (A) with 3 children (B,C,D) with a <code>repeatAll</code> value of 2 would play as: ABCDABCD before completing.
-When all child tweens have completed Tween.onLoop will be dispatched.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>total</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>How many times this tween and all children should repeat before completing. Set to zero to remove an active repeat. Set to -1 to repeat forever.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-
-    
-    <h5>Returns:</h5>
-    <div class="returns">
-        
-            
-    
-        <div class="returns-type">
-        
-<span class="param-type"><a href="Phaser.Tween.html">Phaser.Tween</a></span>
-
- -
-        </div>
-    
-    <div class="returns-desc param-desc">
-        <p>This tween. Useful for method chaining.</p>
-    </div>
-
-
-        
-    </div>
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_tween_Tween.js.html">tween/Tween.js</a>, <a href="src_tween_Tween.js.html#sunlight-1-line-546">line 546</a>
     </dt>
     
 
@@ -6410,7 +6414,7 @@ If you have child tweens and pass -1 as the index value it sets the repeatDelay 
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
-		on Mon Aug 24 2015 15:36:56 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Thu Oct 15 2015 12:05:07 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

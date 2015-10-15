@@ -39,6 +39,10 @@
 						</li>
 						
 						<li class="class-depth-0">
+							<a href="Phaser.KeyCode.html">KeyCode</a>
+						</li>
+						
+						<li class="class-depth-0">
 							<a href="PIXI.html">PIXI</a>
 						</li>
 						
@@ -505,6 +509,10 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="Phaser.PointerMode.html">PointerMode</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="Phaser.Polygon.html">Polygon</a>
 						</li>
 						
@@ -754,10 +762,6 @@
 						
 						<li class="class-depth-1">
 							<a href="PIXI.SpriteBatch.html">SpriteBatch</a>
-						</li>
-						
-						<li class="class-depth-1">
-							<a href="PIXI.Stage.html">Stage</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -1515,7 +1519,7 @@
 
     
     <dt class="tag-source">Source -
-    <a href="src_core_Filter.js.html">core/Filter.js</a>, <a href="src_core_Filter.js.html#sunlight-1-line-176">line 176</a>
+    <a href="src_core_Filter.js.html">core/Filter.js</a>, <a href="src_core_Filter.js.html#sunlight-1-line-230">line 230</a>
     </dt>
     
 
@@ -1795,7 +1799,7 @@
 
     
     <dt class="tag-source">Source -
-    <a href="src_core_Filter.js.html">core/Filter.js</a>, <a href="src_core_Filter.js.html#sunlight-1-line-160">line 160</a>
+    <a href="src_core_Filter.js.html">core/Filter.js</a>, <a href="src_core_Filter.js.html#sunlight-1-line-214">line 214</a>
     </dt>
     
 
@@ -1817,6 +1821,360 @@
         <h3 class="subsection-title">Methods</h3>
 
         <dl>
+            
+<dt>
+    <h4 class="name "
+        id="addToWorld"><span class="type-signature"></span>addToWorld<span class="signature">(<span class="optional">x</span>, <span class="optional">y</span>, <span class="optional">width</span>, <span class="optional">height</span>, <span class="optional">anchorX</span>, <span class="optional">anchorY</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.Image.html">Phaser.Image</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Creates a new Phaser.Image object using a blank texture and assigns 
+this Filter to it. The image is then added to the world.</p>
+<p>If you don't provide width and height values then Filter.width and Filter.height are used.</p>
+<p>If you do provide width and height values then this filter will be resized to match those
+values.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+		<th>Default</th>
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>x</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"><p>The x coordinate to place the Image at.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>y</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"><p>The y coordinate to place the Image at.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>width</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The width of the Image. If not specified (or null) it will use Filter.width. If specified Filter.width will be set to this value.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>height</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The height of the Image. If not specified (or null) it will use Filter.height. If specified Filter.height will be set to this value.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>anchorX</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"><p>Set the x anchor point of the Image. A value between 0 and 1, where 0 is the top-left and 1 is bottom-right.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>anchorY</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"><p>Set the y anchor point of the Image. A value between 0 and 1, where 0 is the top-left and 1 is bottom-right.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+
+    
+    <h5>Returns:</h5>
+    <div class="returns">
+        
+            
+    
+        <div class="returns-type">
+        
+<span class="param-type"><a href="Phaser.Image.html">Phaser.Image</a></span>
+
+ -
+        </div>
+    
+    <div class="returns-desc param-desc">
+        <p>The newly added Image object.</p>
+    </div>
+
+
+        
+    </div>
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_core_Filter.js.html">core/Filter.js</a>, <a href="src_core_Filter.js.html#sunlight-1-line-146">line 146</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+       
+    
+    
+</dd>
+
+        
             
 <dt>
     <h4 class="name "
@@ -1863,7 +2221,7 @@
 
     
     <dt class="tag-source">Source -
-    <a href="src_core_Filter.js.html">core/Filter.js</a>, <a href="src_core_Filter.js.html#sunlight-1-line-146">line 146</a>
+    <a href="src_core_Filter.js.html">core/Filter.js</a>, <a href="src_core_Filter.js.html#sunlight-1-line-200">line 200</a>
     </dt>
     
 
@@ -2255,7 +2613,7 @@
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
-		on Mon Aug 24 2015 15:36:49 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Thu Oct 15 2015 12:05:00 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

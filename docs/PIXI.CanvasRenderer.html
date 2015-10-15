@@ -39,6 +39,10 @@
 						</li>
 						
 						<li class="class-depth-0">
+							<a href="Phaser.KeyCode.html">KeyCode</a>
+						</li>
+						
+						<li class="class-depth-0">
 							<a href="PIXI.html">PIXI</a>
 						</li>
 						
@@ -505,6 +509,10 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="Phaser.PointerMode.html">PointerMode</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="Phaser.Polygon.html">Polygon</a>
 						</li>
 						
@@ -754,10 +762,6 @@
 						
 						<li class="class-depth-1">
 							<a href="PIXI.SpriteBatch.html">SpriteBatch</a>
-						</li>
-						
-						<li class="class-depth-1">
-							<a href="PIXI.Stage.html">Stage</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -1110,7 +1114,7 @@
         
 <dt>
     <h4 class="name "
-        id="CanvasRenderer"><span class="type-signature"></span>new CanvasRenderer<span class="signature">(<span class="optional">width</span>, <span class="optional">height</span>, <span class="optional">options</span>)</span><span class="type-signature"></span></h4>
+        id="CanvasRenderer"><span class="type-signature"></span>new CanvasRenderer<span class="signature">(game)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1142,11 +1146,7 @@ Don't forget to add the CanvasRenderer.view to your DOM or you will not see anyt
 		<th>Type</th>
 
 		
-		<th>Argument</th>
-		
 
-		
-		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -1158,115 +1158,23 @@ Don't forget to add the CanvasRenderer.view to your DOM or you will not see anyt
 
         <tr>
             
-                <td class="name"><code>width</code></td>
+                <td class="name"><code>game</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Number</span>
+<span class="param-type">PhaserGame</span>
 
 
             
             </td>
 
             
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
 
             
-                <td class="default">
-                
-                    800
-                
-                </td>
-            
 
-            <td class="description last"><p>the width of the canvas view</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>height</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    600
-                
-                </td>
-            
-
-            <td class="description last"><p>the height of the canvas view</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>options</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"><p>The optional renderer parameters</p></td>
+            <td class="description last"><p>A reference to the Phaser Game instance</p></td>
         </tr>
 
 	
@@ -1379,7 +1287,7 @@ Don't forget to add the CanvasRenderer.view to your DOM or you will not see anyt
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html">pixi/renderers/canvas/CanvasRenderer.js</a>, <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html#sunlight-1-line-75">line 75</a>
+    <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html">pixi/renderers/canvas/CanvasRenderer.js</a>, <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html#sunlight-1-line-61">line 61</a>
     </dt>
     
 
@@ -1435,7 +1343,7 @@ Don't forget to add the CanvasRenderer.view to your DOM or you will not see anyt
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html">pixi/renderers/canvas/CanvasRenderer.js</a>, <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html#sunlight-1-line-138">line 138</a>
+    <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html">pixi/renderers/canvas/CanvasRenderer.js</a>, <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html#sunlight-1-line-122">line 122</a>
     </dt>
     
 
@@ -1494,7 +1402,7 @@ Disable this by setting this to false. For example if your game has a canvas fil
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html">pixi/renderers/canvas/CanvasRenderer.js</a>, <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html#sunlight-1-line-55">line 55</a>
+    <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html">pixi/renderers/canvas/CanvasRenderer.js</a>, <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html#sunlight-1-line-41">line 41</a>
     </dt>
     
 
@@ -1550,7 +1458,7 @@ Disable this by setting this to false. For example if your game has a canvas fil
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html">pixi/renderers/canvas/CanvasRenderer.js</a>, <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html#sunlight-1-line-112">line 112</a>
+    <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html">pixi/renderers/canvas/CanvasRenderer.js</a>, <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html#sunlight-1-line-95">line 95</a>
     </dt>
     
 
@@ -1606,7 +1514,59 @@ Disable this by setting this to false. For example if your game has a canvas fil
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html">pixi/renderers/canvas/CanvasRenderer.js</a>, <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html#sunlight-1-line-130">line 130</a>
+    <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html">pixi/renderers/canvas/CanvasRenderer.js</a>, <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html#sunlight-1-line-114">line 114</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="game"><span class="type-signature"></span>game<span class="type-signature"> :PhaserGame</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html">pixi/renderers/canvas/CanvasRenderer.js</a>, <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html#sunlight-1-line-15">line 15</a>
     </dt>
     
 
@@ -1665,7 +1625,7 @@ Disable this by setting this to false. For example if your game has a canvas fil
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html">pixi/renderers/canvas/CanvasRenderer.js</a>, <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html#sunlight-1-line-92">line 92</a>
+    <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html">pixi/renderers/canvas/CanvasRenderer.js</a>, <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html#sunlight-1-line-78">line 78</a>
     </dt>
     
 
@@ -1721,7 +1681,7 @@ Disable this by setting this to false. For example if your game has a canvas fil
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html">pixi/renderers/canvas/CanvasRenderer.js</a>, <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html#sunlight-1-line-119">line 119</a>
+    <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html">pixi/renderers/canvas/CanvasRenderer.js</a>, <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html#sunlight-1-line-102">line 102</a>
     </dt>
     
 
@@ -1777,7 +1737,7 @@ Disable this by setting this to false. For example if your game has a canvas fil
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html">pixi/renderers/canvas/CanvasRenderer.js</a>, <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html#sunlight-1-line-145">line 145</a>
+    <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html">pixi/renderers/canvas/CanvasRenderer.js</a>, <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html#sunlight-1-line-129">line 129</a>
     </dt>
     
 
@@ -1833,7 +1793,7 @@ Disable this by setting this to false. For example if your game has a canvas fil
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html">pixi/renderers/canvas/CanvasRenderer.js</a>, <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html#sunlight-1-line-47">line 47</a>
+    <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html">pixi/renderers/canvas/CanvasRenderer.js</a>, <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html#sunlight-1-line-33">line 33</a>
     </dt>
     
 
@@ -1889,7 +1849,7 @@ Disable this by setting this to false. For example if your game has a canvas fil
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html">pixi/renderers/canvas/CanvasRenderer.js</a>, <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html#sunlight-1-line-67">line 67</a>
+    <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html">pixi/renderers/canvas/CanvasRenderer.js</a>, <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html#sunlight-1-line-53">line 53</a>
     </dt>
     
 
@@ -1945,7 +1905,7 @@ Disable this by setting this to false. For example if your game has a canvas fil
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html">pixi/renderers/canvas/CanvasRenderer.js</a>, <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html#sunlight-1-line-39">line 39</a>
+    <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html">pixi/renderers/canvas/CanvasRenderer.js</a>, <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html#sunlight-1-line-25">line 25</a>
     </dt>
     
 
@@ -2001,7 +1961,7 @@ Disable this by setting this to false. For example if your game has a canvas fil
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html">pixi/renderers/canvas/CanvasRenderer.js</a>, <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html#sunlight-1-line-104">line 104</a>
+    <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html">pixi/renderers/canvas/CanvasRenderer.js</a>, <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html#sunlight-1-line-87">line 87</a>
     </dt>
     
 
@@ -2060,7 +2020,7 @@ Disable this by setting this to false. For example if your game has a canvas fil
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html">pixi/renderers/canvas/CanvasRenderer.js</a>, <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html#sunlight-1-line-83">line 83</a>
+    <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html">pixi/renderers/canvas/CanvasRenderer.js</a>, <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html#sunlight-1-line-69">line 69</a>
     </dt>
     
 
@@ -2197,7 +2157,7 @@ Disable this by setting this to false. For example if your game has a canvas fil
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html">pixi/renderers/canvas/CanvasRenderer.js</a>, <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html#sunlight-1-line-221">line 221</a>
+    <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html">pixi/renderers/canvas/CanvasRenderer.js</a>, <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html#sunlight-1-line-196">line 196</a>
     </dt>
     
 
@@ -2273,7 +2233,7 @@ Disable this by setting this to false. For example if your game has a canvas fil
             <td class="type">
             
                 
-<span class="param-type"><a href="PIXI.Stage.html">PIXI.Stage</a></span>
+<span class="param-type">Stage</span>
 
 
             
@@ -2316,7 +2276,7 @@ Disable this by setting this to false. For example if your game has a canvas fil
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html">pixi/renderers/canvas/CanvasRenderer.js</a>, <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html#sunlight-1-line-181">line 181</a>
+    <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html">pixi/renderers/canvas/CanvasRenderer.js</a>, <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html#sunlight-1-line-156">line 156</a>
     </dt>
     
 
@@ -2458,7 +2418,7 @@ Disable this by setting this to false. For example if your game has a canvas fil
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html">pixi/renderers/canvas/CanvasRenderer.js</a>, <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html#sunlight-1-line-243">line 243</a>
+    <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html">pixi/renderers/canvas/CanvasRenderer.js</a>, <a href="src_pixi_renderers_canvas_CanvasRenderer.js.html#sunlight-1-line-218">line 218</a>
     </dt>
     
 
@@ -2507,7 +2467,7 @@ Disable this by setting this to false. For example if your game has a canvas fil
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
-		on Mon Aug 24 2015 15:36:57 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Thu Oct 15 2015 12:05:08 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

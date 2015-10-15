@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Phaser Source: src/pixi/display/Stage.js</title>
+	<title>Phaser Class: PointerMode</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -36,6 +36,10 @@
 						
 						<li class="class-depth-0">
 							<a href="Phaser.html">Phaser</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="Phaser.KeyCode.html">KeyCode</a>
 						</li>
 						
 						<li class="class-depth-0">
@@ -505,6 +509,10 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="Phaser.PointerMode.html">PointerMode</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="Phaser.Polygon.html">Polygon</a>
 						</li>
 						
@@ -754,10 +762,6 @@
 						
 						<li class="class-depth-1">
 							<a href="PIXI.SpriteBatch.html">SpriteBatch</a>
-						</li>
-						
-						<li class="class-depth-1">
-							<a href="PIXI.Stage.html">Stage</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -1084,95 +1088,243 @@
 	<div class="row-fluid">
 
 		
-			<div class="span12">
-				
+		<div class="span8">
+			
 				<div id="main">
 					
 
 
-		<h1 class="page-title">Source: src/pixi/display/Stage.js</h1>
+	<!--<h1 class="page-title">Class: PointerMode</h1>-->
+<section>
+
+<header>
+    <h2>
+        <span class="ancestors"><a href="Phaser.html">Phaser</a>.</span>
     
-    <section>
-        <article>
-            <pre class="sunlight-highlight-javascript linenums">/**
- * @author Mat Groves http://matgroves.com/ @Doormat23
- */
+    PointerMode
+    </h2>
+    
+</header>
 
-/**
- * A Stage represents the root of the display tree. Everything connected to the stage is rendered
- *
- * @class Stage
- * @extends DisplayObjectContainer
- * @constructor
- * @param backgroundColor {Number} the background color of the stage, you have to pass this in is in hex format
- *      like: 0xFFFFFF for white
- * 
- * Creating a stage is a mandatory process when you use Pixi, which is as simple as this : 
- * var stage = new PIXI.Stage(0xFFFFFF);
- * where the parameter given is the background colour of the stage, in hex
- * you will use this stage instance to add your sprites to it and therefore to the renderer
- * Here is how to add a sprite to the stage : 
- * stage.addChild(sprite);
- */
-PIXI.Stage = function(backgroundColor)
-{
-    PIXI.DisplayObjectContainer.call( this );
+<article>
+    <div class="container-overview">
+    
 
-    /**
-     * [read-only] Current transform of the object based on world (parent) factors
-     *
-     * @property worldTransform
-     * @type Matrix
-     * @readOnly
-     * @private
-     */
-    this.worldTransform = new PIXI.Matrix();
+    
+        
+<dt>
+    <h4 class="name "
+        id="PointerMode"><span class="type-signature"></span>new PointerMode<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
 
-    //the stage is its own stage
-    this.stage = this;
+    
+    <div class="description">
+        <p>Enumeration categorizing operational modes of pointers.</p>
+<p>PointerType values represent valid bitmasks.
+For example, a value representing both Mouse and Touch devices
+can be expressed as <code>PointerMode.CURSOR | PointerMode.CONTACT</code>.</p>
+<p>Values may be added for future mode categorizations.</p>
+    </div>
+    
 
-    this.setBackgroundColor(backgroundColor);
-};
+    
+    
+    
+    
+    
 
-// constructor
-PIXI.Stage.prototype = Object.create( PIXI.DisplayObjectContainer.prototype );
-PIXI.Stage.prototype.constructor = PIXI.Stage;
+    
+    
+    
+<dl class="details">
+    
 
-/*
- * Updates the object transform for rendering
- *
- * @method updateTransform
- * @private
- */
-PIXI.Stage.prototype.updateTransform = function()
-{
-    this.worldAlpha = 1;
+    
 
-    for (var i = 0; i &lt; this.children.length; i++)
-    {
-        this.children[i].updateTransform();
-    }
-};
+    
 
-/**
- * Sets the background color for the stage
- *
- * @method setBackgroundColor
- * @param backgroundColor {Number} the color of the background, easiest way to pass this in is in hex format
- *      like: 0xFFFFFF for white
- */
-PIXI.Stage.prototype.setBackgroundColor = function(backgroundColor)
-{
-    this.backgroundColor = backgroundColor || 0x000000;
-    this.backgroundColorSplit = PIXI.hex2rgb(this.backgroundColor);
-    var hex = this.backgroundColor.toString(16);
-    hex = '000000'.substr(0, 6 - hex.length) + hex;
-    this.backgroundColorString = '#' + hex;
-};
-</pre>
-        </article>
-    </section>
+    
 
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Pointer.js.html">input/Pointer.js</a>, <a href="src_input_Pointer.js.html#sunlight-1-line-1216">line 1216</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+       
+    
+    
+</dd>
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        <dl>
+            
+<dt>
+    <h4 class="name "
+        id=".CONTACT"><span class="type-signature">&lt;static, constant> </span>CONTACT<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>A 'CONTACT' pointer has an <em>active cursor</em> that only tracks movement when actived; notably this is a touch-style input.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Pointer.js.html">input/Pointer.js</a>, <a href="src_input_Pointer.js.html#sunlight-1-line-1231">line 1231</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".CURSOR"><span class="type-signature">&lt;static, constant> </span>CURSOR<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>A 'CURSOR' is a pointer with a <em>passive cursor</em> such as a mouse, touchpad, watcom stylus, or even TV-control arrow-pad.</p>
+<p>It has the property that a cursor is passively moved without activating the input.
+This currently corresponds with <a href="Phaser.Pointer.html#isMouse">Phaser.Pointer#isMouse</a> property.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Pointer.js.html">input/Pointer.js</a>, <a href="src_input_Pointer.js.html#sunlight-1-line-1225">line 1225</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        </dl>
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 
@@ -1190,11 +1342,15 @@ PIXI.Stage.prototype.setBackgroundColor = function(backgroundColor)
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
-		on Mon Aug 24 2015 15:36:45 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Thu Oct 15 2015 12:05:04 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
 
+			
+			<div class="span3">
+				<div id="toc"></div>
+			</div>
 			
 			<br clear="both">
 		</div>

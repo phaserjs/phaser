@@ -39,6 +39,10 @@
 						</li>
 						
 						<li class="class-depth-0">
+							<a href="Phaser.KeyCode.html">KeyCode</a>
+						</li>
+						
+						<li class="class-depth-0">
 							<a href="PIXI.html">PIXI</a>
 						</li>
 						
@@ -505,6 +509,10 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="Phaser.PointerMode.html">PointerMode</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="Phaser.Polygon.html">Polygon</a>
 						</li>
 						
@@ -754,10 +762,6 @@
 						
 						<li class="class-depth-1">
 							<a href="PIXI.SpriteBatch.html">SpriteBatch</a>
-						</li>
-						
-						<li class="class-depth-1">
-							<a href="PIXI.Stage.html">Stage</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -1120,8 +1124,8 @@
     
     <div class="description">
         <p>The Keyboard class monitors keyboard input and dispatches keyboard events.</p>
-<p><em>Be aware</em> that many keyboards are unable to process certain combinations of keys due to hardware
-limitations known as ghosting. Full details here: http://www.html5gamedevs.com/topic/4876-impossible-to-use-more-than-2-keyboard-input-buttons-at-the-same-time/</p>
+<p><em>Note</em>: many keyboards are unable to process certain combinations of keys due to hardware limitations known as ghosting.
+See http://www.html5gamedevs.com/topic/4876-impossible-to-use-more-than-2-keyboard-input-buttons-at-the-same-time/ for more details.</p>
     </div>
     
 
@@ -1511,7 +1515,7 @@ limitations known as ghosting. Full details here: http://www.html5gamedevs.com/t
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-539">line 539</a>
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-545">line 545</a>
     </dt>
     
 
@@ -1567,7 +1571,7 @@ limitations known as ghosting. Full details here: http://www.html5gamedevs.com/t
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-562">line 562</a>
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-568">line 568</a>
     </dt>
     
 
@@ -2118,7 +2122,7 @@ The Key object can then be polled, have events attached to it, etc.</p>
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">integer</span>
 
 
             
@@ -2128,7 +2132,7 @@ The Key object can then be polled, have events attached to it, etc.</p>
 
             
 
-            <td class="description last"><p>The keycode of the key, i.e. Phaser.Keyboard.UP or Phaser.Keyboard.SPACEBAR</p></td>
+            <td class="description last"><p>The <a href="Phaser.KeyCode.html">keycode</a> of the key.</p></td>
         </tr>
 
 	
@@ -2218,9 +2222,10 @@ The Key object can then be polled, have events attached to it, etc.</p>
     
     <div class="description">
         <p>By default when a key is pressed Phaser will not stop the event from propagating up to the browser.
-There are some keys this can be annoying for, like the arrow keys or space bar, which make the browser window scroll.
-You can use addKeyCapture to consume the keyboard event for specific keys so it doesn't bubble up to the the browser.
-Pass in either a single keycode or an array/hash of keycodes.</p>
+There are some keys this can be annoying for, like the arrow keys or space bar, which make the browser window scroll.</p>
+<p>The <code>addKeyCapture</code> method enables consuming keyboard event for specific keys so it doesn't bubble up to the the browser
+and cause the default browser behavior.</p>
+<p>Pass in either a single keycode or an array/hash of keycodes.</p>
     </div>
     
 
@@ -2260,10 +2265,10 @@ Pass in either a single keycode or an array/hash of keycodes.</p>
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">integer</span>
 |
 
-<span class="param-type">array</span>
+<span class="param-type">Array.&lt;integer></span>
 |
 
 <span class="param-type">object</span>
@@ -2276,7 +2281,7 @@ Pass in either a single keycode or an array/hash of keycodes.</p>
 
             
 
-            <td class="description last"><p>Either a single numeric keycode or an array/hash of keycodes: [65, 67, 68].</p></td>
+            <td class="description last"><p>Either a single <a href="Phaser.KeyCode.html">keycode</a> or an array/hash of keycodes such as <code>[65, 67, 68]</code>.</p></td>
         </tr>
 
 	
@@ -2309,7 +2314,7 @@ Pass in either a single keycode or an array/hash of keycodes.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-287">line 287</a>
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-290">line 290</a>
     </dt>
     
 
@@ -2346,8 +2351,8 @@ Pass in either a single keycode or an array/hash of keycodes.</p>
     
     <div class="description">
         <p>A practical way to create an object containing user selected hotkeys.</p>
-<p>For example: <code>addKeys( { 'up': Phaser.Keyboard.W, 'down': Phaser.Keyboard.S, 'left': Phaser.Keyboard.A, 'right': Phaser.Keyboard.D } );</code></p>
-<p>Would return an object containing the properties <code>up</code>, <code>down</code>, <code>left</code> and <code>right</code> that you could poll just like a Phaser.Key object.</p>
+<p>For example,</p>
+<pre class="prettyprint source"><code>addKeys( { 'up': Phaser.KeyCode.W, 'down': Phaser.KeyCode.S, 'left': Phaser.KeyCode.A, 'right': Phaser.KeyCode.D } );</code></pre><p>would return an object containing properties (<code>up</code>, <code>down</code>, <code>left</code> and <code>right</code>) referring to <a href="Phaser.Key.html">Phaser.Key</a> object.</p>
     </div>
     
 
@@ -2397,7 +2402,7 @@ Pass in either a single keycode or an array/hash of keycodes.</p>
 
             
 
-            <td class="description last"><p>A key mapping object, i.e. <code>{ 'up': Phaser.Keyboard.W, 'down': Phaser.Keyboard.S }</code> or <code>{ 'up': 52, 'down': 53 }</code>.</p></td>
+            <td class="description last"><p>A key mapping object, i.e. <code>{ 'up': Phaser.KeyCode.W, 'down': Phaser.KeyCode.S }</code> or <code>{ 'up': 52, 'down': 53 }</code>.</p></td>
         </tr>
 
 	
@@ -2420,7 +2425,7 @@ Pass in either a single keycode or an array/hash of keycodes.</p>
         </div>
     
     <div class="returns-desc param-desc">
-        <p>An object containing user selected properties</p>
+        <p>An object containing the properties mapped to <a href="Phaser.Key.html">Phaser.Key</a> values.</p>
     </div>
 
 
@@ -2520,7 +2525,7 @@ Pass in either a single keycode or an array/hash of keycodes.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-323">line 323</a>
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-329">line 329</a>
     </dt>
     
 
@@ -2580,7 +2585,7 @@ Pass in either a single keycode or an array/hash of keycodes.</p>
         </div>
     
     <div class="returns-desc param-desc">
-        <p>An object containing properties: up, down, left and right. Which can be polled like any other Phaser.Key object.</p>
+        <p>An object containing properties: <code>up</code>, <code>down</code>, <code>left</code> and <code>right</code> of <a href="Phaser.Key.html">Phaser.Key</a> objects.</p>
     </div>
 
 
@@ -2610,7 +2615,7 @@ Pass in either a single keycode or an array/hash of keycodes.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-202">line 202</a>
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-204">line 204</a>
     </dt>
     
 
@@ -2681,7 +2686,7 @@ Also clears all key captures and currently created Key objects.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-270">line 270</a>
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-273">line 273</a>
     </dt>
     
 
@@ -2762,7 +2767,7 @@ or was pressed down longer ago than then given duration.</p>
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">integer</span>
 
 
             
@@ -2784,7 +2789,7 @@ or was pressed down longer ago than then given duration.</p>
                 </td>
             
 
-            <td class="description last"><p>The keycode of the key to check, i.e. Phaser.Keyboard.UP or Phaser.Keyboard.SPACEBAR</p></td>
+            <td class="description last"><p>The <a href="Phaser.KeyCode.html">keycode</a> of the key to check: i.e. Phaser.KeyCode.UP or Phaser.KeyCode.SPACEBAR.</p></td>
         </tr>
 
 	
@@ -2876,7 +2881,7 @@ or was pressed down longer ago than then given duration.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-473">line 473</a>
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-479">line 479</a>
     </dt>
     
 
@@ -2952,7 +2957,7 @@ or was pressed down longer ago than then given duration.</p>
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">integer</span>
 
 
             
@@ -2962,7 +2967,7 @@ or was pressed down longer ago than then given duration.</p>
 
             
 
-            <td class="description last"><p>The keycode of the key to check, i.e. Phaser.Keyboard.UP or Phaser.Keyboard.SPACEBAR</p></td>
+            <td class="description last"><p>The <a href="Phaser.KeyCode.html">keycode</a> of the key to check: i.e. Phaser.KeyCode.UP or Phaser.KeyCode.SPACEBAR.</p></td>
         </tr>
 
 	
@@ -3015,7 +3020,7 @@ or was pressed down longer ago than then given duration.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-517">line 517</a>
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-523">line 523</a>
     </dt>
     
 
@@ -3141,7 +3146,7 @@ or was pressed down longer ago than then given duration.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-353">line 353</a>
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-359">line 359</a>
     </dt>
     
 
@@ -3267,7 +3272,7 @@ or was pressed down longer ago than then given duration.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-391">line 391</a>
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-397">line 397</a>
     </dt>
     
 
@@ -3393,7 +3398,7 @@ or was pressed down longer ago than then given duration.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-414">line 414</a>
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-420">line 420</a>
     </dt>
     
 
@@ -3469,7 +3474,7 @@ or was pressed down longer ago than then given duration.</p>
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">integer</span>
 
 
             
@@ -3479,7 +3484,7 @@ or was pressed down longer ago than then given duration.</p>
 
             
 
-            <td class="description last"><p>The keycode of the key to remove, i.e. Phaser.Keyboard.UP or Phaser.Keyboard.SPACEBAR</p></td>
+            <td class="description last"><p>The <a href="Phaser.KeyCode.html">keycode</a> of the key to remove.</p></td>
         </tr>
 
 	
@@ -3512,7 +3517,7 @@ or was pressed down longer ago than then given duration.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-185">line 185</a>
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-187">line 187</a>
     </dt>
     
 
@@ -3588,7 +3593,7 @@ or was pressed down longer ago than then given duration.</p>
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">integer</span>
 
 
             
@@ -3598,7 +3603,7 @@ or was pressed down longer ago than then given duration.</p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>The <a href="Phaser.KeyCode.html">keycode</a> to remove capturing of.</p></td>
         </tr>
 
 	
@@ -3631,7 +3636,7 @@ or was pressed down longer ago than then given duration.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-311">line 311</a>
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-317">line 317</a>
     </dt>
     
 
@@ -3770,7 +3775,7 @@ or was pressed down longer ago than then given duration.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-449">line 449</a>
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-455">line 455</a>
     </dt>
     
 
@@ -3797,7 +3802,7 @@ or was pressed down longer ago than then given duration.</p>
             
 <dt>
     <h4 class="name "
-        id="start"><span class="type-signature"></span>start<span class="signature">()</span><span class="type-signature"></span></h4>
+        id="start"><span class="type-signature">&lt;internal> </span>start<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -3830,6 +3835,13 @@ This is called automatically by Phaser.Input and should not normally be invoked 
     
 
     
+        <dt class="important tag-deprecated">Internal:</dt>
+        <dd class="tag-deprecated"><ul>
+        
+            <li>This member is <em>internal (protected)</em> and may be modified or removed in the future.</li>
+        
+        </ul></dd>
+    
 
     
 
@@ -3841,7 +3853,7 @@ This is called automatically by Phaser.Input and should not normally be invoked 
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-214">line 214</a>
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-216">line 216</a>
     </dt>
     
 
@@ -3911,7 +3923,7 @@ This is called automatically by Phaser.Input and should not normally be invoked 
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-253">line 253</a>
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-256">line 256</a>
     </dt>
     
 
@@ -3981,7 +3993,7 @@ This is called automatically by Phaser.Input and should not normally be invoked 
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-334">line 334</a>
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-340">line 340</a>
     </dt>
     
 
@@ -4062,7 +4074,10 @@ or was pressed down longer ago than then given duration.</p>
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type"><a href="Phaser.KeyCode.html">Phaser.KeyCode</a></span>
+|
+
+<span class="param-type">integer</span>
 
 
             
@@ -4084,7 +4099,7 @@ or was pressed down longer ago than then given duration.</p>
                 </td>
             
 
-            <td class="description last"><p>The keycode of the key to check, i.e. Phaser.Keyboard.UP or Phaser.Keyboard.SPACEBAR</p></td>
+            <td class="description last"><p>The keycode of the key to check, i.e. Phaser.KeyCode.UP or Phaser.KeyCode.SPACEBAR.</p></td>
         </tr>
 
 	
@@ -4176,7 +4191,7 @@ or was pressed down longer ago than then given duration.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-495">line 495</a>
+    <a href="src_input_Keyboard.js.html">input/Keyboard.js</a>, <a href="src_input_Keyboard.js.html#sunlight-1-line-501">line 501</a>
     </dt>
     
 
@@ -4225,7 +4240,7 @@ or was pressed down longer ago than then given duration.</p>
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
-		on Mon Aug 24 2015 15:36:50 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Thu Oct 15 2015 12:05:01 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

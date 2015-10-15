@@ -40,7 +40,7 @@ Thousands of developers worldwide use it. From indies and multi-national digital
 
 <div align="center"><img src="http://phaser.io/images/github/news.jpg"></div>
 
-> 13th October 2015
+> 15th October 2015
 
 The release of Phaser 2.4.4 continues our work with bug fixes, new features and optimizations. As with the previous version it's a point-release, making it a safe upgrade for anyone using an earlier 2.4 build.
 
@@ -245,7 +245,7 @@ If you code with [TypeScript](http://www.typescriptlang.org/) there are comprehe
 <a name="road-map"></a>
 ## Road Map
 
-All Phaser development is now taking place on the Phaser 3 project. The Phaser 2 branch will still be supported and issues fixed, but roadmap features have been migrated over to Phaser 3.
+The majority of Phaser development is now taking place on the Phaser 3 project. The Phaser 2 branch will still be supported and issues fixed, but roadmap features have been migrated over to Phaser 3.
 
 <a name="phaser3"></a>
 ## Phaser 3
@@ -256,12 +256,16 @@ There is still plenty of time to add your suggestions and feedback in [this foru
 
 If you are an exceptional JavaScript developer and would like to join the Phaser 3 development team then let us know. We have a limited budget available to pay towards your time.
 
+## Phaser Nano
+
+[Phaser Nano](https://github.com/photonstorm/phaser-nano) is a cut-down and optimized build of Phaser designed specifically for super low file-size environments such as banner ads and interstitials. It still uses the same friendly API as Phaser but in a much smaller footprint. The current release being just 8.3KB.
+
 ![div](http://www.phaser.io/images/github/div.png)
 
 <a name="change-log"></a>
 ## Change Log
 
-## Version 2.4.4 - "Amador" - in dev
+## Version 2.4.4 - "Amador" - 15th October 2015
 
 ### New Features
 

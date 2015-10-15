@@ -39,6 +39,10 @@
 						</li>
 						
 						<li class="class-depth-0">
+							<a href="Phaser.KeyCode.html">KeyCode</a>
+						</li>
+						
+						<li class="class-depth-0">
 							<a href="PIXI.html">PIXI</a>
 						</li>
 						
@@ -505,6 +509,10 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="Phaser.PointerMode.html">PointerMode</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="Phaser.Polygon.html">Polygon</a>
 						</li>
 						
@@ -754,10 +762,6 @@
 						
 						<li class="class-depth-1">
 							<a href="PIXI.SpriteBatch.html">SpriteBatch</a>
-						</li>
-						
-						<li class="class-depth-1">
-							<a href="PIXI.Stage.html">Stage</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -2943,7 +2947,7 @@ stop this from happening by controlling the priorityID value. The higher the val
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1464">line 1464</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1487">line 1487</a>
     </dt>
     
 
@@ -3013,7 +3017,7 @@ stop this from happening by controlling the priorityID value. The higher the val
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1513">line 1513</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1537">line 1537</a>
     </dt>
     
 
@@ -3227,7 +3231,7 @@ It compares the alpha value of the pixel and if &gt;= InputHandler.pixelPerfectA
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-743">line 743</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-750">line 750</a>
     </dt>
     
 
@@ -3422,7 +3426,7 @@ Use the <code>fastTest</code> flag is to quickly check just the bounding hit are
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-667">line 667</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-674">line 674</a>
     </dt>
     
 
@@ -3617,7 +3621,7 @@ Use the <code>fastTest</code> flag is to quickly check just the bounding hit are
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-705">line 705</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-712">line 712</a>
     </dt>
     
 
@@ -3723,7 +3727,8 @@ Use the <code>fastTest</code> flag is to quickly check just the bounding hit are
 
     
     <div class="description">
-        <p>Stops this sprite from being able to be dragged. If it is currently the target of an active drag it will be stopped immediately. Also disables any set callbacks.</p>
+        <p>Stops this sprite from being able to be dragged.
+If it is currently the target of an active drag it will be stopped immediately; also disables any set callbacks.</p>
     </div>
     
 
@@ -3757,7 +3762,7 @@ Use the <code>fastTest</code> flag is to quickly check just the bounding hit are
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1268">line 1268</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1282">line 1282</a>
     </dt>
     
 
@@ -3827,7 +3832,7 @@ Use the <code>fastTest</code> flag is to quickly check just the bounding hit are
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1452">line 1452</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1474">line 1474</a>
     </dt>
     
 
@@ -3854,7 +3859,7 @@ Use the <code>fastTest</code> flag is to quickly check just the bounding hit are
             
 <dt>
     <h4 class="name "
-        id="downDuration"><span class="type-signature"></span>downDuration<span class="signature">(pointer)</span><span class="type-signature"> &rarr; {number}</span></h4>
+        id="downDuration"><span class="type-signature"></span>downDuration<span class="signature">(<span class="optional">pointerId</span>)</span><span class="type-signature"> &rarr; {number}</span></h4>
     
     
 </dt>
@@ -3885,7 +3890,11 @@ Use the <code>fastTest</code> flag is to quickly check just the bounding hit are
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -3897,20 +3906,36 @@ Use the <code>fastTest</code> flag is to quickly check just the bounding hit are
 
         <tr>
             
-                <td class="name"><code>pointer</code></td>
+                <td class="name"><code>pointerId</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="Phaser.Pointer.html">Phaser.Pointer</a></span>
+<span class="param-type">integer</span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
             
 
             <td class="description last"></td>
@@ -3966,7 +3991,7 @@ Use the <code>fastTest</code> flag is to quickly check just the bounding hit are
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1201">line 1201</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1214">line 1214</a>
     </dt>
     
 
@@ -4304,7 +4329,7 @@ changes position and moves. The event sends 5 parameters: <code>sprite</code>, <
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1220">line 1220</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1234">line 1234</a>
     </dt>
     
 
@@ -4631,7 +4656,7 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1425">line 1425</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1446">line 1446</a>
     </dt>
     
 
@@ -4750,7 +4775,7 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1340">line 1340</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1357">line 1357</a>
     </dt>
     
 
@@ -4869,7 +4894,7 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1357">line 1357</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1375">line 1375</a>
     </dt>
     
 
@@ -4986,7 +5011,7 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
             
 <dt>
     <h4 class="name "
-        id="justOut"><span class="type-signature"></span>justOut<span class="signature">(pointer, delay)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+        id="justOut"><span class="type-signature"></span>justOut<span class="signature">(<span class="optional">pointerId</span>, delay)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
     
     
 </dt>
@@ -5017,7 +5042,11 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -5029,20 +5058,36 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 
         <tr>
             
-                <td class="name"><code>pointer</code></td>
+                <td class="name"><code>pointerId</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="Phaser.Pointer.html">Phaser.Pointer</a></span>
+<span class="param-type">integer</span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
             
 
             <td class="description last"></td>
@@ -5065,7 +5110,19 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>The time below which the pointer is considered as just out.</p></td>
@@ -5121,7 +5178,7 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1134">line 1134</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1143">line 1143</a>
     </dt>
     
 
@@ -5148,7 +5205,7 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
             
 <dt>
     <h4 class="name "
-        id="justOver"><span class="type-signature"></span>justOver<span class="signature">(pointer, delay)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+        id="justOver"><span class="type-signature"></span>justOver<span class="signature">(<span class="optional">pointerId</span>, delay)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
     
     
 </dt>
@@ -5179,7 +5236,11 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -5191,20 +5252,36 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 
         <tr>
             
-                <td class="name"><code>pointer</code></td>
+                <td class="name"><code>pointerId</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="Phaser.Pointer.html">Phaser.Pointer</a></span>
+<span class="param-type">integer</span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
             
 
             <td class="description last"></td>
@@ -5227,7 +5304,19 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>The time below which the pointer is considered as just over.</p></td>
@@ -5283,7 +5372,7 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1118">line 1118</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1126">line 1126</a>
     </dt>
     
 
@@ -5310,7 +5399,7 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
             
 <dt>
     <h4 class="name "
-        id="justPressed"><span class="type-signature"></span>justPressed<span class="signature">(pointer, delay)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+        id="justPressed"><span class="type-signature"></span>justPressed<span class="signature">(<span class="optional">pointerId</span>, delay)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
     
     
 </dt>
@@ -5341,7 +5430,11 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -5353,20 +5446,36 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 
         <tr>
             
-                <td class="name"><code>pointer</code></td>
+                <td class="name"><code>pointerId</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="Phaser.Pointer.html">Phaser.Pointer</a></span>
+<span class="param-type">integer</span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
             
 
             <td class="description last"></td>
@@ -5389,7 +5498,19 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>The time below which the pointer is considered as just over.</p></td>
@@ -5445,7 +5566,7 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1150">line 1150</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1160">line 1160</a>
     </dt>
     
 
@@ -5472,7 +5593,7 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
             
 <dt>
     <h4 class="name "
-        id="justReleased"><span class="type-signature"></span>justReleased<span class="signature">(pointer, delay)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+        id="justReleased"><span class="type-signature"></span>justReleased<span class="signature">(<span class="optional">pointerId</span>, delay)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
     
     
 </dt>
@@ -5503,7 +5624,11 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -5515,20 +5640,36 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 
         <tr>
             
-                <td class="name"><code>pointer</code></td>
+                <td class="name"><code>pointerId</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="Phaser.Pointer.html">Phaser.Pointer</a></span>
+<span class="param-type">integer</span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
             
 
             <td class="description last"></td>
@@ -5551,7 +5692,19 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>The time below which the pointer is considered as just out.</p></td>
@@ -5607,7 +5760,7 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1166">line 1166</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1177">line 1177</a>
     </dt>
     
 
@@ -5634,7 +5787,7 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
             
 <dt>
     <h4 class="name "
-        id="overDuration"><span class="type-signature"></span>overDuration<span class="signature">(pointer)</span><span class="type-signature"> &rarr; {number}</span></h4>
+        id="overDuration"><span class="type-signature"></span>overDuration<span class="signature">(<span class="optional">pointerId</span>)</span><span class="type-signature"> &rarr; {number}</span></h4>
     
     
 </dt>
@@ -5665,7 +5818,11 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -5677,20 +5834,36 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 
         <tr>
             
-                <td class="name"><code>pointer</code></td>
+                <td class="name"><code>pointerId</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="Phaser.Pointer.html">Phaser.Pointer</a></span>
+<span class="param-type">integer</span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
             
 
             <td class="description last"></td>
@@ -5746,7 +5919,7 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1182">line 1182</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1194">line 1194</a>
     </dt>
     
 
@@ -5773,7 +5946,7 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
             
 <dt>
     <h4 class="name "
-        id="pointerDown"><span class="type-signature"></span>pointerDown<span class="signature">(pointer)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+        id="pointerDown"><span class="type-signature"></span>pointerDown<span class="signature">(<span class="optional">pointerId</span>)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
     
     
 </dt>
@@ -5782,7 +5955,8 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 
     
     <div class="description">
-        <p>If the Pointer is down this returns true. Please note that it only checks if the Pointer is down, not if it's down over any specific Sprite.</p>
+        <p>If the Pointer is down this returns true.
+This <em>only</em> checks if the Pointer is down, not if it's down over any specific Sprite.</p>
     </div>
     
 
@@ -5804,7 +5978,11 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -5816,23 +5994,39 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 
         <tr>
             
-                <td class="name"><code>pointer</code></td>
+                <td class="name"><code>pointerId</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">integer</span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"><p>The index of the pointer to check. You can get this from Phaser.Pointer.id.</p></td>
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"></td>
         </tr>
 
 	
@@ -5914,7 +6108,7 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
             
 <dt>
     <h4 class="name "
-        id="pointerDragged"><span class="type-signature"></span>pointerDragged<span class="signature">(pointer)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+        id="pointerDragged"><span class="type-signature"></span>pointerDragged<span class="signature">(<span class="optional">pointerId</span>)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
     
     
 </dt>
@@ -5945,7 +6139,11 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -5957,20 +6155,36 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 
         <tr>
             
-                <td class="name"><code>pointer</code></td>
+                <td class="name"><code>pointerId</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="Phaser.Pointer.html">Phaser.Pointer</a></span>
+<span class="param-type">integer</span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
             
 
             <td class="description last"></td>
@@ -6026,7 +6240,7 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-653">line 653</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-659">line 659</a>
     </dt>
     
 
@@ -6053,7 +6267,7 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
             
 <dt>
     <h4 class="name "
-        id="pointerOut"><span class="type-signature"></span>pointerOut<span class="signature">(<span class="optional">index</span>)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+        id="pointerOut"><span class="type-signature"></span>pointerOut<span class="signature">(<span class="optional">pointerId</span>)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
     
     
 </dt>
@@ -6088,6 +6302,8 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 		
 
 		
+		<th>Default</th>
+		
 
 		<th class="last">Description</th>
 	</tr>
@@ -6098,13 +6314,13 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 
         <tr>
             
-                <td class="name"><code>index</code></td>
+                <td class="name"><code>pointerId</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">integer</span>
 
 
             
@@ -6122,6 +6338,12 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
                 </td>
             
 
+            
+                <td class="default">
+                
+                    (check all)
+                
+                </td>
             
 
             <td class="description last"><p>The ID number of a Pointer to check. If you don't provide a number it will check all Pointers.</p></td>
@@ -6177,7 +6399,7 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-595">line 595</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-598">line 598</a>
     </dt>
     
 
@@ -6204,7 +6426,7 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
             
 <dt>
     <h4 class="name "
-        id="pointerOver"><span class="type-signature"></span>pointerOver<span class="signature">(<span class="optional">index</span>)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+        id="pointerOver"><span class="type-signature"></span>pointerOver<span class="signature">(<span class="optional">pointerId</span>)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
     
     
 </dt>
@@ -6239,6 +6461,8 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 		
 
 		
+		<th>Default</th>
+		
 
 		<th class="last">Description</th>
 	</tr>
@@ -6249,13 +6473,13 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 
         <tr>
             
-                <td class="name"><code>index</code></td>
+                <td class="name"><code>pointerId</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">integer</span>
 
 
             
@@ -6273,6 +6497,12 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
                 </td>
             
 
+            
+                <td class="default">
+                
+                    (check all)
+                
+                </td>
             
 
             <td class="description last"><p>The ID number of a Pointer to check. If you don't provide a number it will check all Pointers.</p></td>
@@ -6330,7 +6560,7 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-564">line 564</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-567">line 567</a>
     </dt>
     
 
@@ -6357,7 +6587,7 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
             
 <dt>
     <h4 class="name "
-        id="pointerTimeDown"><span class="type-signature"></span>pointerTimeDown<span class="signature">(pointer)</span><span class="type-signature"> &rarr; {number}</span></h4>
+        id="pointerTimeDown"><span class="type-signature"></span>pointerTimeDown<span class="signature">(<span class="optional">pointerId</span>)</span><span class="type-signature"> &rarr; {number}</span></h4>
     
     
 </dt>
@@ -6388,7 +6618,11 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -6400,159 +6634,36 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 
         <tr>
             
-                <td class="name"><code>pointer</code></td>
+                <td class="name"><code>pointerId</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">integer</span>
 
 
             
             </td>
 
             
-
-            
-
-            <td class="description last"><p>The index of the pointer to check. You can get this from Phaser.Pointer.id.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-
-    
-    <h5>Returns:</h5>
-    <div class="returns">
-        
-            
-    
-        <div class="returns-type">
-        
-<span class="param-type">number</span>
-
- -
-        </div>
-    
-    <div class="returns-desc param-desc">
-        
-    </div>
-
-
-        
-    </div>
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-535">line 535</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="pointerTimeOut"><span class="type-signature"></span>pointerTimeOut<span class="signature">(pointer)</span><span class="type-signature"> &rarr; {number}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>A timestamp representing when the Pointer left the touchscreen.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>pointer</code></td>
-            
-
-            <td class="type">
-            
+                <td class="attributes">
                 
-<span class="param-type"><a href="Phaser.Pointer.html">Phaser.Pointer</a></span>
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
+            
 
             
-            </td>
-
-            
-
+                <td class="default">
+                
+                    (check all)
+                
+                </td>
             
 
             <td class="description last"></td>
@@ -6608,7 +6719,7 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-639">line 639</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-537">line 537</a>
     </dt>
     
 
@@ -6635,7 +6746,166 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
             
 <dt>
     <h4 class="name "
-        id="pointerTimeOver"><span class="type-signature"></span>pointerTimeOver<span class="signature">(pointer)</span><span class="type-signature"> &rarr; {number}</span></h4>
+        id="pointerTimeOut"><span class="type-signature"></span>pointerTimeOut<span class="signature">(<span class="optional">pointerId</span>)</span><span class="type-signature"> &rarr; {number}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>A timestamp representing when the Pointer left the touchscreen.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+		<th>Default</th>
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>pointerId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">integer</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+
+    
+    <h5>Returns:</h5>
+    <div class="returns">
+        
+            
+    
+        <div class="returns-type">
+        
+<span class="param-type">number</span>
+
+ -
+        </div>
+    
+    <div class="returns-desc param-desc">
+        
+    </div>
+
+
+        
+    </div>
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-644">line 644</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+       
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="pointerTimeOver"><span class="type-signature"></span>pointerTimeOver<span class="signature">(<span class="optional">pointerId</span>)</span><span class="type-signature"> &rarr; {number}</span></h4>
     
     
 </dt>
@@ -6666,7 +6936,11 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -6678,20 +6952,36 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 
         <tr>
             
-                <td class="name"><code>pointer</code></td>
+                <td class="name"><code>pointerId</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="Phaser.Pointer.html">Phaser.Pointer</a></span>
+<span class="param-type">integer</span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
             
 
             <td class="description last"></td>
@@ -6747,7 +7037,7 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-625">line 625</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-629">line 629</a>
     </dt>
     
 
@@ -6774,7 +7064,7 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
             
 <dt>
     <h4 class="name "
-        id="pointerTimeUp"><span class="type-signature"></span>pointerTimeUp<span class="signature">(pointer)</span><span class="type-signature"> &rarr; {number}</span></h4>
+        id="pointerTimeUp"><span class="type-signature"></span>pointerTimeUp<span class="signature">(<span class="optional">pointerId</span>)</span><span class="type-signature"> &rarr; {number}</span></h4>
     
     
 </dt>
@@ -6805,7 +7095,11 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -6817,20 +7111,36 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 
         <tr>
             
-                <td class="name"><code>pointer</code></td>
+                <td class="name"><code>pointerId</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="Phaser.Pointer.html">Phaser.Pointer</a></span>
+<span class="param-type">integer</span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
             
 
             <td class="description last"></td>
@@ -6886,7 +7196,7 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-550">line 550</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-552">line 552</a>
     </dt>
     
 
@@ -6913,7 +7223,7 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
             
 <dt>
     <h4 class="name "
-        id="pointerUp"><span class="type-signature"></span>pointerUp<span class="signature">(pointer)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+        id="pointerUp"><span class="type-signature"></span>pointerUp<span class="signature">(<span class="optional">pointerId</span>)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
     
     
 </dt>
@@ -6922,7 +7232,8 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 
     
     <div class="description">
-        <p>If the Pointer is up this returns true. Please note that it only checks if the Pointer is up, not if it's up over any specific Sprite.</p>
+        <p>If the Pointer is up this returns true.
+This <em>only</em> checks if the Pointer is up, not if it's up over any specific Sprite.</p>
     </div>
     
 
@@ -6944,7 +7255,11 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -6956,23 +7271,39 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 
         <tr>
             
-                <td class="name"><code>pointer</code></td>
+                <td class="name"><code>pointerId</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">integer</span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"><p>The index of the pointer to check. You can get this from Phaser.Pointer.id.</p></td>
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"></td>
         </tr>
 
 	
@@ -7027,7 +7358,7 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-520">line 520</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-521">line 521</a>
     </dt>
     
 
@@ -7054,7 +7385,7 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
             
 <dt>
     <h4 class="name "
-        id="pointerX"><span class="type-signature"></span>pointerX<span class="signature">(pointer)</span><span class="type-signature"> &rarr; {number}</span></h4>
+        id="pointerX"><span class="type-signature"></span>pointerX<span class="signature">(<span class="optional">pointerId</span>)</span><span class="type-signature"> &rarr; {number}</span></h4>
     
     
 </dt>
@@ -7086,7 +7417,11 @@ This value is only set when the pointer is over this Sprite.</p>
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -7098,23 +7433,39 @@ This value is only set when the pointer is over this Sprite.</p>
 
         <tr>
             
-                <td class="name"><code>pointer</code></td>
+                <td class="name"><code>pointerId</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">integer</span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"><p>The index of the pointer to check. You can get this from Phaser.Pointer.id.</p></td>
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"></td>
         </tr>
 
 	
@@ -7194,7 +7545,7 @@ This value is only set when the pointer is over this Sprite.</p>
             
 <dt>
     <h4 class="name "
-        id="pointerY"><span class="type-signature"></span>pointerY<span class="signature">(pointer)</span><span class="type-signature"> &rarr; {number}</span></h4>
+        id="pointerY"><span class="type-signature"></span>pointerY<span class="signature">(<span class="optional">pointerId</span>)</span><span class="type-signature"> &rarr; {number}</span></h4>
     
     
 </dt>
@@ -7226,7 +7577,11 @@ This value is only set when the pointer is over this Sprite.</p>
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -7238,23 +7593,39 @@ This value is only set when the pointer is over this Sprite.</p>
 
         <tr>
             
-                <td class="name"><code>pointer</code></td>
+                <td class="name"><code>pointerId</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">integer</span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"><p>The index of the pointer to check. You can get this from Phaser.Pointer.id.</p></td>
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"></td>
         </tr>
 
 	
@@ -7555,7 +7926,7 @@ This value is only set when the pointer is over this Sprite.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1409">line 1409</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1429">line 1429</a>
     </dt>
     
 
@@ -7836,7 +8207,7 @@ This value is only set when the pointer is over this Sprite.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1288">line 1288</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1304">line 1304</a>
     </dt>
     
 
@@ -8025,7 +8396,7 @@ This value is only set when the pointer is over this Sprite.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1374">line 1374</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1393">line 1393</a>
     </dt>
     
 
@@ -8151,7 +8522,7 @@ This value is only set when the pointer is over this Sprite.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-811">line 811</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-819">line 819</a>
     </dt>
     
 
@@ -8290,7 +8661,7 @@ This value is only set when the pointer is over this Sprite.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1036">line 1036</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1044">line 1044</a>
     </dt>
     
 
@@ -8576,7 +8947,7 @@ This is called by Phaser.Pointer and shouldn't typically be called directly.</p>
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
-		on Mon Aug 24 2015 15:36:50 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Thu Oct 15 2015 12:05:01 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

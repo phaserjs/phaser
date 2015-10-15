@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.4.4 "Amador" - Built: Tue Oct 13 2015 14:22:27
+* v2.4.4 "Amador" - Built: Thu Oct 15 2015 11:52:26
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -18600,7 +18600,7 @@ PIXI.WebGLSpriteBatch.prototype.flush = function()
         blendSwap = currentBlendMode !== nextBlendMode;
         shaderSwap = currentShader !== nextShader; // should I use _UIDS???
 
-        if (currentBaseTexture !== nextTexture || blendSwap || shaderSwap)
+        if ((currentBaseTexture !== nextTexture && !nextTexture.skipRender) || blendSwap || shaderSwap)
         {
             this.renderBatch(currentBaseTexture, batchSize, start);
 
@@ -18949,7 +18949,7 @@ PIXI.WebGLFastSpriteBatch.prototype.renderSprite = function(sprite)
     if(!sprite.visible)return;
     
     // TODO trim??
-    if(sprite.texture.baseTexture !== this.currentBaseTexture)
+    if(sprite.texture.baseTexture !== this.currentBaseTexture && !sprite.texture.baseTexture.skipRender)
     {
         this.flush();
         this.currentBaseTexture = sprite.texture.baseTexture;
@@ -20453,6 +20453,17 @@ PIXI.BaseTexture = function(source, scaleMode)
         this.height = this.source.naturalHeight || this.source.height;
         this.dirty();
     }
+
+    /**
+     * A BaseTexture can be set to skip the rendering phase in the WebGL Sprite Batch.
+     * 
+     * You may want to do this if you have a parent Sprite with no visible texture (i.e. uses the internal `__default` texture)
+     * that has children that you do want to render, without causing a batch flush in the process.
+     * 
+     * @property skipRender
+     * @type Boolean
+     */
+    this.skipRender = false;
 
     /**
      * @property imageUrl
@@ -22674,7 +22685,7 @@ var Phaser = Phaser || {
     * @constant
     * @type {string}
     */
-    VERSION: '2.4.4-RC1',
+    VERSION: '2.4.4',
 
     /**
     * An array of Phaser game instances.
@@ -66608,6 +66619,9 @@ Phaser.Cache.prototype = {
         img.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgAQMAAABJtOi3AAAAA1BMVEX///+nxBvIAAAAAXRSTlMAQObYZgAAABVJREFUeF7NwIEAAAAAgKD9qdeocAMAoAABm3DkcAAAAABJRU5ErkJggg==";
 
         var obj = this.addImage('__default', null, img);
+
+        //  Because we don't want to invalidate the sprite batch for an invisible texture
+        obj.base.skipRender = true;
 
         PIXI.TextureCache['__default'] = new PIXI.Texture(obj.base);
 

@@ -39,6 +39,10 @@
 						</li>
 						
 						<li class="class-depth-0">
+							<a href="Phaser.KeyCode.html">KeyCode</a>
+						</li>
+						
+						<li class="class-depth-0">
 							<a href="PIXI.html">PIXI</a>
 						</li>
 						
@@ -505,6 +509,10 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="Phaser.PointerMode.html">PointerMode</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="Phaser.Polygon.html">Polygon</a>
 						</li>
 						
@@ -754,10 +762,6 @@
 						
 						<li class="class-depth-1">
 							<a href="PIXI.SpriteBatch.html">SpriteBatch</a>
-						</li>
-						
-						<li class="class-depth-1">
-							<a href="PIXI.Stage.html">Stage</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -1119,11 +1123,11 @@
 
     
     <div class="description">
-        <p>A Timer is a way to create small re-usable (or disposable) objects that wait for a specific moment in time,
-and then run the specified callbacks.</p>
-<p>You can add many events to a Timer, each with their own delays. A Timer uses milliseconds as its unit of time (there are 1000 ms in 1 second).
-So a delay to 250 would fire the event every quarter of a second.</p>
-<p>Timers are based on real-world (not physics) time, adjusted for game pause durations.</p>
+        <p>A Timer is a way to create and manage <a href="Phaser.TimerEvent.html">timer events</a> that wait for a specific duration and then run a callback.
+Many different timer events, with individual delays, can be added to the same Timer.</p>
+<p>All Timer delays are in milliseconds (there are 1000 ms in 1 second); so a delay value of 250 represents a quarter of a second.</p>
+<p>Timers are based on real life time, adjusted for game pause durations.
+That is, <em>timer events are based on elapsed <a href="Phaser.Time.html">game time</a></em> and do <em>not</em> take physics time or slow motion into account.</p>
     </div>
     
 
@@ -1621,7 +1625,7 @@ So a delay to 250 would fire the event every quarter of a second.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_time_Timer.js.html">time/Timer.js</a>, <a href="src_time_Timer.js.html#sunlight-1-line-676">line 676</a>
+    <a href="src_time_Timer.js.html">time/Timer.js</a>, <a href="src_time_Timer.js.html#sunlight-1-line-677">line 677</a>
     </dt>
     
 
@@ -1925,7 +1929,7 @@ So a delay to 250 would fire the event every quarter of a second.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_time_Timer.js.html">time/Timer.js</a>, <a href="src_time_Timer.js.html#sunlight-1-line-698">line 698</a>
+    <a href="src_time_Timer.js.html">time/Timer.js</a>, <a href="src_time_Timer.js.html#sunlight-1-line-699">line 699</a>
     </dt>
     
 
@@ -1981,7 +1985,7 @@ So a delay to 250 would fire the event every quarter of a second.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_time_Timer.js.html">time/Timer.js</a>, <a href="src_time_Timer.js.html#sunlight-1-line-711">line 711</a>
+    <a href="src_time_Timer.js.html">time/Timer.js</a>, <a href="src_time_Timer.js.html#sunlight-1-line-712">line 712</a>
     </dt>
     
 
@@ -2037,7 +2041,7 @@ So a delay to 250 would fire the event every quarter of a second.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_time_Timer.js.html">time/Timer.js</a>, <a href="src_time_Timer.js.html#sunlight-1-line-663">line 663</a>
+    <a href="src_time_Timer.js.html">time/Timer.js</a>, <a href="src_time_Timer.js.html#sunlight-1-line-664">line 664</a>
     </dt>
     
 
@@ -2326,7 +2330,7 @@ So a delay to 250 would fire the event every quarter of a second.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_time_Timer.js.html">time/Timer.js</a>, <a href="src_time_Timer.js.html#sunlight-1-line-733">line 733</a>
+    <a href="src_time_Timer.js.html">time/Timer.js</a>, <a href="src_time_Timer.js.html#sunlight-1-line-734">line 734</a>
     </dt>
     
 
@@ -2461,7 +2465,7 @@ The delay is in relation to when the Timer starts, not the time it was added. If
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">integer</span>
 
 
             
@@ -2479,7 +2483,7 @@ The delay is in relation to when the Timer starts, not the time it was added. If
 
             
 
-            <td class="description last"><p>The number of milliseconds that should elapse before the callback is invoked.</p></td>
+            <td class="description last"><p>The number of milliseconds, in <a href="Phaser.Time.html">game time</a>, before the timer event occurs.</p></td>
         </tr>
 
 	
@@ -2510,7 +2514,7 @@ The delay is in relation to when the Timer starts, not the time it was added. If
 
             
 
-            <td class="description last"><p>The callback that will be called when the Timer event occurs.</p></td>
+            <td class="description last"><p>The callback that will be called when the timer event occurs.</p></td>
         </tr>
 
 	
@@ -2704,7 +2708,7 @@ The delay is in relation to when the Timer starts, not the time it was added. If
 
     
     <dt class="tag-source">Source -
-    <a href="src_time_Timer.js.html">time/Timer.js</a>, <a href="src_time_Timer.js.html#sunlight-1-line-551">line 551</a>
+    <a href="src_time_Timer.js.html">time/Timer.js</a>, <a href="src_time_Timer.js.html#sunlight-1-line-552">line 552</a>
     </dt>
     
 
@@ -2781,7 +2785,7 @@ The delay is in relation to when the Timer starts, not the time it was added. If
 
     
     <dt class="tag-source">Source -
-    <a href="src_time_Timer.js.html">time/Timer.js</a>, <a href="src_time_Timer.js.html#sunlight-1-line-391">line 391</a>
+    <a href="src_time_Timer.js.html">time/Timer.js</a>, <a href="src_time_Timer.js.html#sunlight-1-line-392">line 392</a>
     </dt>
     
 
@@ -2852,7 +2856,7 @@ The onComplete callbacks won't be called.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_time_Timer.js.html">time/Timer.js</a>, <a href="src_time_Timer.js.html#sunlight-1-line-645">line 645</a>
+    <a href="src_time_Timer.js.html">time/Timer.js</a>, <a href="src_time_Timer.js.html#sunlight-1-line-646">line 646</a>
     </dt>
     
 
@@ -2933,7 +2937,7 @@ The delay is in relation to when the Timer starts, not the time it was added. If
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">integer</span>
 
 
             
@@ -2951,7 +2955,7 @@ The delay is in relation to when the Timer starts, not the time it was added. If
 
             
 
-            <td class="description last"><p>The number of milliseconds that should elapse before the Timer will call the given callback.</p></td>
+            <td class="description last"><p>The number of milliseconds, in <a href="Phaser.Time.html">game time</a>, before the timer event occurs.</p></td>
         </tr>
 
 	
@@ -2982,7 +2986,7 @@ The delay is in relation to when the Timer starts, not the time it was added. If
 
             
 
-            <td class="description last"><p>The callback that will be called when the Timer event occurs.</p></td>
+            <td class="description last"><p>The callback that will be called when the timer event occurs.</p></td>
         </tr>
 
 	
@@ -3099,7 +3103,7 @@ The delay is in relation to when the Timer starts, not the time it was added. If
 
     
     <dt class="tag-source">Source -
-    <a href="src_time_Timer.js.html">time/Timer.js</a>, <a href="src_time_Timer.js.html#sunlight-1-line-271">line 271</a>
+    <a href="src_time_Timer.js.html">time/Timer.js</a>, <a href="src_time_Timer.js.html#sunlight-1-line-272">line 272</a>
     </dt>
     
 
@@ -3177,7 +3181,7 @@ This is called automatically when new events are created.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_time_Timer.js.html">time/Timer.js</a>, <a href="src_time_Timer.js.html#sunlight-1-line-353">line 353</a>
+    <a href="src_time_Timer.js.html">time/Timer.js</a>, <a href="src_time_Timer.js.html#sunlight-1-line-354">line 354</a>
     </dt>
     
 
@@ -3247,7 +3251,7 @@ This is called automatically when new events are created.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_time_Timer.js.html">time/Timer.js</a>, <a href="src_time_Timer.js.html#sunlight-1-line-509">line 509</a>
+    <a href="src_time_Timer.js.html">time/Timer.js</a>, <a href="src_time_Timer.js.html#sunlight-1-line-510">line 510</a>
     </dt>
     
 
@@ -3366,7 +3370,7 @@ This is called automatically when new events are created.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_time_Timer.js.html">time/Timer.js</a>, <a href="src_time_Timer.js.html#sunlight-1-line-333">line 333</a>
+    <a href="src_time_Timer.js.html">time/Timer.js</a>, <a href="src_time_Timer.js.html#sunlight-1-line-334">line 334</a>
     </dt>
     
 
@@ -3436,7 +3440,7 @@ This is called automatically when new events are created.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_time_Timer.js.html">time/Timer.js</a>, <a href="src_time_Timer.js.html#sunlight-1-line-630">line 630</a>
+    <a href="src_time_Timer.js.html">time/Timer.js</a>, <a href="src_time_Timer.js.html#sunlight-1-line-631">line 631</a>
     </dt>
     
 
@@ -3474,7 +3478,8 @@ This is called automatically when new events are created.</p>
     <div class="description">
         <p>Adds a new TimerEvent that will always play through once and then repeat for the given number of iterations.</p>
 <p>The event will fire after the given amount of <code>delay</code> in milliseconds has passed, once the Timer has started running.
-The delay is in relation to when the Timer starts, not the time it was added. If the Timer is already running the delay will be calculated based on the timers current time.</p>
+The delay is in relation to when the Timer starts, not the time it was added.
+If the Timer is already running the delay will be calculated based on the timers current time.</p>
 <p>Make sure to call <a href="Phaser.Timer.html#start">start</a> after adding all of the Events you require for this Timer.</p>
     </div>
     
@@ -3517,7 +3522,7 @@ The delay is in relation to when the Timer starts, not the time it was added. If
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">integer</span>
 
 
             
@@ -3535,7 +3540,7 @@ The delay is in relation to when the Timer starts, not the time it was added. If
 
             
 
-            <td class="description last"><p>The number of milliseconds that should elapse before the Timer will call the given callback.</p></td>
+            <td class="description last"><p>The number of milliseconds, in <a href="Phaser.Time.html">game time</a>, before the timer event occurs.</p></td>
         </tr>
 
 	
@@ -3597,7 +3602,7 @@ The delay is in relation to when the Timer starts, not the time it was added. If
 
             
 
-            <td class="description last"><p>The callback that will be called when the Timer event occurs.</p></td>
+            <td class="description last"><p>The callback that will be called when the timer event occurs.</p></td>
         </tr>
 
 	
@@ -3784,7 +3789,7 @@ The delay is in relation to when the Timer starts, not the time it was added. If
 
     
     <dt class="tag-source">Source -
-    <a href="src_time_Timer.js.html">time/Timer.js</a>, <a href="src_time_Timer.js.html#sunlight-1-line-589">line 589</a>
+    <a href="src_time_Timer.js.html">time/Timer.js</a>, <a href="src_time_Timer.js.html#sunlight-1-line-590">line 590</a>
     </dt>
     
 
@@ -3864,7 +3869,7 @@ The delay is in relation to when the Timer starts, not the time it was added. If
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">integer</span>
 
 
             
@@ -3890,7 +3895,7 @@ The delay is in relation to when the Timer starts, not the time it was added. If
                 </td>
             
 
-            <td class="description last"><p>The number of milliseconds that should elapse before the Timer will start.</p></td>
+            <td class="description last"><p>The number of milliseconds, in <a href="Phaser.Time.html">game time</a>, that should elapse before the Timer will start.</p></td>
         </tr>
 
 	
@@ -3923,7 +3928,7 @@ The delay is in relation to when the Timer starts, not the time it was added. If
 
     
     <dt class="tag-source">Source -
-    <a href="src_time_Timer.js.html">time/Timer.js</a>, <a href="src_time_Timer.js.html#sunlight-1-line-292">line 292</a>
+    <a href="src_time_Timer.js.html">time/Timer.js</a>, <a href="src_time_Timer.js.html#sunlight-1-line-293">line 293</a>
     </dt>
     
 
@@ -4062,7 +4067,7 @@ The delay is in relation to when the Timer starts, not the time it was added. If
 
     
     <dt class="tag-source">Source -
-    <a href="src_time_Timer.js.html">time/Timer.js</a>, <a href="src_time_Timer.js.html#sunlight-1-line-315">line 315</a>
+    <a href="src_time_Timer.js.html">time/Timer.js</a>, <a href="src_time_Timer.js.html#sunlight-1-line-316">line 316</a>
     </dt>
     
 
@@ -4208,7 +4213,7 @@ The delay is in relation to when the Timer starts, not the time it was added. If
 
     
     <dt class="tag-source">Source -
-    <a href="src_time_Timer.js.html">time/Timer.js</a>, <a href="src_time_Timer.js.html#sunlight-1-line-414">line 414</a>
+    <a href="src_time_Timer.js.html">time/Timer.js</a>, <a href="src_time_Timer.js.html#sunlight-1-line-415">line 415</a>
     </dt>
     
 
@@ -4257,7 +4262,7 @@ The delay is in relation to when the Timer starts, not the time it was added. If
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
-		on Mon Aug 24 2015 15:36:56 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Thu Oct 15 2015 12:05:07 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
