@@ -170,6 +170,8 @@ PIXI.Sprite.prototype.setTexture = function(texture, destroyBase)
         this.texture.baseTexture.destroy();
     }
 
+    //  Over-ridden by loadTexture as needed
+    this.texture.baseTexture.skipRender = false;
     this.texture = texture;
     this.texture.valid = true;
 };

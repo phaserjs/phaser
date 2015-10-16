@@ -539,7 +539,14 @@ PIXI.WebGLSpriteBatch.prototype.flush = function()
         blendSwap = currentBlendMode !== nextBlendMode;
         shaderSwap = currentShader !== nextShader; // should I use _UIDS???
 
-        if ((currentBaseTexture !== nextTexture && !nextTexture.skipRender) || blendSwap || shaderSwap)
+        var skip = nextTexture.skipRender;
+
+        if (skip && sprite.children.length > 0)
+        {
+            skip = false;
+        }
+
+        if ((currentBaseTexture !== nextTexture && !skip) || blendSwap || shaderSwap)
         {
             this.renderBatch(currentBaseTexture, batchSize, start);
 

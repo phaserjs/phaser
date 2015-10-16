@@ -93,6 +93,15 @@ Phaser.Component.LoadTexture.prototype = {
             this.key = img.key;
             this.setTexture(new PIXI.Texture(img.base));
 
+            if (key === '__default')
+            {
+                this.texture.baseTexture.skipRender = true;
+            }
+            else
+            {
+                this.texture.baseTexture.skipRender = false;
+            }
+
             setFrame = !this.animations.loadFrameData(img.frameData, frame);
         }
         
