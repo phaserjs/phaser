@@ -1,7 +1,7 @@
 /* jshint camelcase: false */
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -14,7 +14,6 @@
 * Note: This class could be massively optimised and reduced in size. I leave that challenge up to you.
 *
 * @class Phaser.Physics.Ninja.Tile
-* @classdesc The Ninja Physics Tile class. Based on code by Metanet Software.
 * @constructor
 * @param {Phaser.Physics.Ninja.Body} body - The body that owns this shape.
 * @param {number} x - The x coordinate to create this shape at.
@@ -25,7 +24,7 @@
 */
 Phaser.Physics.Ninja.Tile = function (body, x, y, width, height, type) {
 
-    if (typeof type === 'undefined') { type = Phaser.Physics.Ninja.Tile.EMPTY; }
+    if (type === undefined) { type = Phaser.Physics.Ninja.Tile.EMPTY; }
 
     /**
     * @property {Phaser.Physics.Ninja.Body} system - A reference to the body that owns this shape.

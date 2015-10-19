@@ -1,52 +1,66 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
 /**
-* Creates a new BitmapText object.
+* BitmapText objects work by taking a texture file and an XML or JSON file that describes the font structure.
+* It then generates a new Sprite object for each letter of the text, proportionally spaced out and aligned to 
+* match the font structure.
+* 
+* BitmapText objects are less flexible than Text objects, in that they have less features such as shadows, fills and the ability 
+* to use Web Fonts, however you trade this flexibility for rendering speed. You can also create visually compelling BitmapTexts by
+* processing the font texture in an image editor, applying fills and any other effects required.
+*
+* To create multi-line text insert \r, \n or \r\n escape codes into the text string.
+*
+* If you are having performance issues due to the volume of sprites being rendered, and do not require the text to be constantly
+* updating, you can use BitmapText.generateTexture to create a static texture from this BitmapText.
+*
+* To create a BitmapText data files you can use:
+*
+* BMFont (Windows, free): http://www.angelcode.com/products/bmfont/
+* Glyph Designer (OS X, commercial): http://www.71squared.com/en/glyphdesigner
+* Littera (Web-based, free): http://kvazars.com/littera/
+*
+* For most use cases it is recommended to use XML. If you wish to use JSON, the formatting should be equal to the result of
+* converting a valid XML file through the popular X2JS library. An online tool for conversion can be found here: http://codebeautify.org/xmltojson
+*
+* If you were using an older version of Phaser (< 2.4) and using the DOMish parser hack, please remove this. It isn't required any longer.
 *
 * @class Phaser.BitmapText
-*
-* @classdesc BitmapText objects work by taking a texture file and an XML file that describes the font layout.
-*
-* On Windows you can use the free app BMFont: http://www.angelcode.com/products/bmfont/
-* On OS X we recommend Glyph Designer: http://www.71squared.com/en/glyphdesigner
-* For Web there is the great Littera: http://kvazars.com/littera/
-*
 * @constructor
+* @extends PIXI.DisplayObjectContainer
+* @extends Phaser.Component.Core
+* @extends Phaser.Component.Angle
+* @extends Phaser.Component.AutoCull
+* @extends Phaser.Component.Bounds
+* @extends Phaser.Component.Destroy
+* @extends Phaser.Component.FixedToCamera
+* @extends Phaser.Component.InputEnabled
+* @extends Phaser.Component.InWorld
+* @extends Phaser.Component.LifeSpan
+* @extends Phaser.Component.PhysicsBody
+* @extends Phaser.Component.Reset
 * @param {Phaser.Game} game - A reference to the currently running game.
-* @param {number} x - X position of the new bitmapText object.
-* @param {number} y - Y position of the new bitmapText object.
-* @param {string} font - The key of the BitmapFont as stored in Game.Cache.
-* @param {string} [text=''] - The actual text that will be rendered. Can be set later via BitmapText.text.
-* @param {number} [size=32] - The size the font will be rendered in, in pixels.
+* @param {number} x - X coordinate to display the BitmapText object at.
+* @param {number} y - Y coordinate to display the BitmapText object at.
+* @param {string} font - The key of the BitmapText as stored in Phaser.Cache.
+* @param {string} [text=''] - The text that will be rendered. This can also be set later via BitmapText.text.
+* @param {number} [size=32] - The size the font will be rendered at in pixels.
+* @param {string} [align='left'] - The alignment of multi-line text. Has no effect if there is only one line of text.
 */
-Phaser.BitmapText = function (game, x, y, font, text, size) {
+Phaser.BitmapText = function (game, x, y, font, text, size, align) {
 
     x = x || 0;
     y = y || 0;
     font = font || '';
     text = text || '';
     size = size || 32;
+    align = align || 'left';
 
-    /**
-    * @property {Phaser.Game} game - A reference to the currently running Game.
-    */
-    this.game = game;
-
-    /**
-    * @property {boolean} exists - If exists = false then the Sprite isn't updated by the core game loop or physics subsystem at all.
-    * @default
-    */
-    this.exists = true;
-
-    /**
-    * @property {string} name - The user defined name given to this BitmapText.
-    * @default
-    */
-    this.name = '';
+    PIXI.DisplayObjectContainer.call(this);
 
     /**
     * @property {number} type - The const type of this object.
@@ -55,20 +69,57 @@ Phaser.BitmapText = function (game, x, y, font, text, size) {
     this.type = Phaser.BITMAPTEXT;
 
     /**
-    * @property {number} z - The z-depth value of this object within its Group (remember the World is a Group as well). No two objects in a Group can have the same z value.
+    * @property {number} physicsType - The const physics body type of this object.
+    * @readonly
     */
-    this.z = 0;
+    this.physicsType = Phaser.SPRITE;
 
     /**
-    * @property {Phaser.Point} world - The world coordinates of this Sprite. This differs from the x/y coordinates which are relative to the Sprites container.
+    * @property {number} textWidth - The width in pixels of the overall text area, taking into consideration multi-line text.
+    * @readOnly
     */
-    this.world = new Phaser.Point(x, y);
+    this.textWidth = 0;
+
+    /**
+    * @property {number} textHeight - The height in pixels of the overall text area, taking into consideration multi-line text.
+    * @readOnly
+    */
+    this.textHeight = 0;
+
+    /**
+    * @property {Phaser.Point} anchor - The anchor value of this BitmapText.
+    */
+    this.anchor = new Phaser.Point();
+
+    /**
+    * @property {Phaser.Point} _prevAnchor - The previous anchor value.
+    * @private
+    */
+    this._prevAnchor = new Phaser.Point();
+
+    /**
+    * @property {array} _glyphs - Private tracker for the letter sprite pool.
+    * @private
+    */
+    this._glyphs = [];
+
+    /**
+    * @property {number} _maxWidth - Internal cache var.
+    * @private
+    */
+    this._maxWidth = 0;
 
     /**
     * @property {string} _text - Internal cache var.
     * @private
     */
     this._text = text;
+
+    /**
+    * @property {string} _data - Internal cache var.
+    * @private
+    */
+    this._data = game.cache.getBitmapFont(font);
 
     /**
     * @property {string} _font - Internal cache var.
@@ -86,7 +137,7 @@ Phaser.BitmapText = function (game, x, y, font, text, size) {
     * @property {string} _align - Internal cache var.
     * @private
     */
-    this._align = 'left';
+    this._align = align;
 
     /**
     * @property {number} _tint - Internal cache var.
@@ -94,179 +145,331 @@ Phaser.BitmapText = function (game, x, y, font, text, size) {
     */
     this._tint = 0xFFFFFF;
 
-    /**
-    * @property {Phaser.Events} events - The Events you can subscribe to that are dispatched when certain things happen on this Sprite or its components.
-    */
-    this.events = new Phaser.Events(this);
+    this.updateText();
 
     /**
-    * @property {Phaser.InputHandler|null} input - The Input Handler for this object. Needs to be enabled with image.inputEnabled = true before you can use it.
+    * @property {boolean} dirty - The dirty state of this object.
     */
-    this.input = null;
+    this.dirty = false;
 
-    /**
-    * @property {Phaser.Point} cameraOffset - If this object is fixedToCamera then this stores the x/y offset that its drawn at, from the top-left of the camera view.
-    */
-    this.cameraOffset = new Phaser.Point();
-
-    PIXI.BitmapText.call(this, text);
-
-    this.position.set(x, y);
-
-    /**
-    * A small internal cache:
-    * 0 = previous position.x
-    * 1 = previous position.y
-    * 2 = previous rotation
-    * 3 = renderID
-    * 4 = fresh? (0 = no, 1 = yes)
-    * 5 = outOfBoundsFired (0 = no, 1 = yes)
-    * 6 = exists (0 = no, 1 = yes)
-    * 7 = fixed to camera (0 = no, 1 = yes)
-    * 8 = destroy phase? (0 = no, 1 = yes)
-    * @property {Array} _cache
-    * @private
-    */
-    this._cache = [0, 0, 0, 0, 1, 0, 1, 0, 0];
+    Phaser.Component.Core.init.call(this, game, x, y, '', null);
 
 };
 
-Phaser.BitmapText.prototype = Object.create(PIXI.BitmapText.prototype);
+Phaser.BitmapText.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
 Phaser.BitmapText.prototype.constructor = Phaser.BitmapText;
 
-/**
-* @method Phaser.BitmapText.prototype.setStyle
-* @private
-*/
-Phaser.BitmapText.prototype.setStyle = function() {
+Phaser.Component.Core.install.call(Phaser.BitmapText.prototype, [
+    'Angle',
+    'AutoCull',
+    'Bounds',
+    'Destroy',
+    'FixedToCamera',
+    'InputEnabled',
+    'InWorld',
+    'LifeSpan',
+    'PhysicsBody',
+    'Reset'
+]);
 
-    this.style = { align: this._align };
-    this.fontName = this._font;
-    this.fontSize = this._fontSize;
-    this.dirty = true;
+Phaser.BitmapText.prototype.preUpdatePhysics = Phaser.Component.PhysicsBody.preUpdate;
+Phaser.BitmapText.prototype.preUpdateLifeSpan = Phaser.Component.LifeSpan.preUpdate;
+Phaser.BitmapText.prototype.preUpdateInWorld = Phaser.Component.InWorld.preUpdate;
+Phaser.BitmapText.prototype.preUpdateCore = Phaser.Component.Core.preUpdate;
+
+/**
+* Automatically called by World.preUpdate.
+*
+* @method
+* @memberof Phaser.BitmapText
+* @return {boolean} True if the BitmapText was rendered, otherwise false.
+*/
+Phaser.BitmapText.prototype.preUpdate = function () {
+
+    if (!this.preUpdatePhysics() || !this.preUpdateLifeSpan() || !this.preUpdateInWorld())
+    {
+        return false;
+    }
+
+    return this.preUpdateCore();
 
 };
 
 /**
 * Automatically called by World.preUpdate.
-* @method Phaser.BitmapText.prototype.preUpdate
-*/
-Phaser.BitmapText.prototype.preUpdate = function () {
-
-    this._cache[0] = this.world.x;
-    this._cache[1] = this.world.y;
-    this._cache[2] = this.rotation;
-
-    if (!this.exists || !this.parent.exists)
-    {
-        this.renderOrderID = -1;
-        return false;
-    }
-
-    if (this.autoCull)
-    {
-        //  Won't get rendered but will still get its transform updated
-        this.renderable = this.game.world.camera.screenView.intersects(this.getBounds());
-    }
-
-    this.world.setTo(this.game.camera.x + this.worldTransform.tx, this.game.camera.y + this.worldTransform.ty);
-
-    if (this.visible)
-    {
-        this._cache[3] = this.game.stage.currentRenderOrderID++;
-    }
-
-    return true;
-
-};
-
-/**
-* Override and use this function in your own custom objects to handle any update requirements you may have.
-*
-* @method Phaser.BitmapText.prototype.update
-*/
-Phaser.BitmapText.prototype.update = function() {
-
-};
-
-/**
-* Automatically called by World.postUpdate.
 * @method Phaser.BitmapText.prototype.postUpdate
 */
 Phaser.BitmapText.prototype.postUpdate = function () {
 
-    //  Fixed to Camera?
-    if (this._cache[7] === 1)
+    Phaser.Component.PhysicsBody.postUpdate.call(this);
+    Phaser.Component.FixedToCamera.postUpdate.call(this);
+
+    if (this.body && this.body.type === Phaser.Physics.ARCADE)
     {
-        this.position.x = (this.game.camera.view.x + this.cameraOffset.x) / this.game.camera.scale.x;
-        this.position.y = (this.game.camera.view.y + this.cameraOffset.y) / this.game.camera.scale.y;
+        if ((this.textWidth !== this.body.sourceWidth) || (this.textHeight !== this.body.sourceHeight))
+        {
+            this.body.setSize(this.textWidth, this.textHeight);
+        }
     }
 
 };
 
 /**
-* Destroy this BitmapText instance. This will remove any filters and un-parent any children.
-* @method Phaser.BitmapText.prototype.destroy
-* @param {boolean} [destroyChildren=true] - Should every child of this object have its destroy method called?
+* The text to be displayed by this BitmapText object.
+* 
+* It's faster to use `BitmapText.text = string`, but this is kept for backwards compatibility.
+*
+* @method Phaser.BitmapText.prototype.setText
+* @param {string} text - The text to be displayed by this BitmapText object.
 */
-Phaser.BitmapText.prototype.destroy = function(destroyChildren) {
+Phaser.BitmapText.prototype.setText = function (text) {
 
-    if (this.game === null || this.destroyPhase) { return; }
+    this.text = text;
 
-    if (typeof destroyChildren === 'undefined') { destroyChildren = true; }
+};
 
-    this._cache[8] = 1;
+/**
+* Given the input text this will scan the characters until either a newline is encountered, 
+* or the line exceeds maxWidth, taking into account kerning, character widths and scaling.
+* 
+* @method Phaser.BitmapText.prototype.scanLine
+* @private
+* @param {object} data - A reference to the font object in the Phaser.Cache.
+* @param {float} scale - The scale of the font in relation to the texture.
+* @param {string} text - The text to parse.
+* @return {object} An object containing the parsed characters, total pixel width and x offsets.
+*/
+Phaser.BitmapText.prototype.scanLine = function (data, scale, text) {
 
-    if (this.parent)
+    var x = 0;
+    var w = 0;
+    var lastSpace = -1;
+    var prevCharCode = null;
+    var maxWidth = (this._maxWidth > 0) ? this._maxWidth : null;
+    var chars = [];
+
+    //  Let's scan the text and work out if any of the lines are > maxWidth
+    for (var i = 0; i < text.length; i++)
     {
-        if (this.parent instanceof Phaser.Group)
+        var end = (i === text.length - 1) ? true : false;
+
+        if (/(?:\r\n|\r|\n)/.test(text.charAt(i)))
         {
-            this.parent.remove(this);
+            return { width: w, text: text.substr(0, i), end: end, chars: chars };
         }
         else
         {
-            this.parent.removeChild(this);
-        }
-    }
+            var charCode = text.charCodeAt(i);
+            var charData = data.chars[charCode];
 
-    var i = this.children.length;
+            var c = 0;
 
-    if (destroyChildren)
-    {
-        while (i--)
-        {
-            if (this.children[i].destroy)
+            if (!charData)
             {
-                this.children[i].destroy(destroyChildren);
+                // Skip a character not found in the font data
+                continue;
+            }
+
+            //  Adjust for kerning from previous character to this one
+            var kerning = (prevCharCode && charData.kerning[prevCharCode]) ? charData.kerning[prevCharCode] : 0;
+
+            //  Record the last space in the string
+            lastSpace = /(\s)/.test(text.charAt(i)) ? i : lastSpace;
+
+            //  What will the line width be if we add this character to it?
+            c = (kerning + charData.texture.width + charData.xOffset) * scale;
+
+            //  Do we need to line-wrap?
+            if (maxWidth && ((w + c) >= maxWidth) && lastSpace > -1)
+            {
+                //  The last space was at "lastSpace" which was "i - lastSpace" characters ago
+                return { width: w, text: text.substr(0, i - (i - lastSpace)), end: end, chars: chars };
             }
             else
             {
-                this.removeChild(this.children[i]);
+                w += charData.xAdvance * scale;
+
+                chars.push(x + (charData.xOffset * scale));
+
+                x += charData.xAdvance * scale;
+
+                prevCharCode = charCode;
             }
         }
     }
-    else
+
+    return { width: w, text: text, end: end, chars: chars };
+
+};
+
+/**
+* Renders text and updates it when needed.
+*
+* @method Phaser.BitmapText.prototype.updateText
+* @private
+*/
+Phaser.BitmapText.prototype.updateText = function () {
+
+    var data = this._data.font;
+
+    if (!data)
     {
-        while (i--)
+        return;
+    }
+
+    var text = this.text;
+    var scale = this._fontSize / data.size;
+    var lines = [];
+
+    var y = 0;
+
+    this.textWidth = 0;
+
+    do
+    {
+        var line = this.scanLine(data, scale, text);
+
+        line.y = y;
+
+        lines.push(line);
+
+        if (line.width > this.textWidth)
         {
-            this.removeChild(this.children[i]);
+            this.textWidth = line.width;
+        }
+
+        y += (data.lineHeight * scale);
+
+        text = text.substr(line.text.length + 1);
+        
+    } while (line.end === false);
+
+    this.textHeight = y;
+
+    var t = 0;
+    var align = 0;
+    var ax = this.textWidth * this.anchor.x;
+    var ay = this.textHeight * this.anchor.y;
+
+    for (var i = 0; i < lines.length; i++)
+    {
+        var line = lines[i];
+
+        if (this._align === 'right')
+        {
+            align = this.textWidth - line.width;
+        }
+        else if (this._align === 'center')
+        {
+            align = (this.textWidth - line.width) / 2;
+        }
+
+        for (var c = 0; c < line.text.length; c++)
+        {
+            var charCode = line.text.charCodeAt(c);
+            var charData = data.chars[charCode];
+
+            var g = this._glyphs[t];
+
+            if (g)
+            {
+                //  Sprite already exists in the glyphs pool, so we'll reuse it for this letter
+                g.texture = charData.texture;
+            }
+            else
+            {
+                //  We need a new sprite as the pool is empty or exhausted
+                g = new PIXI.Sprite(charData.texture);
+                g.name = line.text[c];
+                this._glyphs.push(g);
+            }
+
+            g.position.x = (line.chars[c] + align) - ax;
+            g.position.y = (line.y + (charData.yOffset * scale)) - ay;
+
+            g.scale.set(scale);
+            g.tint = this.tint;
+            g.texture.requiresReTint = true;
+
+            if (!g.parent)
+            {
+                this.addChild(g);
+            }
+
+            t++;
         }
     }
 
-    this.exists = false;
-    this.visible = false;
+    //  Remove unnecessary children
+    //  This moves them from the display list (children array) but retains them in the _glyphs pool
+    for (i = t; i < this._glyphs.length; i++)
+    {
+        this.removeChild(this._glyphs[i]);
+    }
 
-    this.filters = null;
-    this.mask = null;
-    this.game = null;
+};
 
-    this._cache[8] = 0;
+/**
+* If a BitmapText changes from having a large number of characters to having very few characters it will cause lots of
+* Sprites to be retained in the BitmapText._glyphs array. Although they are not attached to the display list they
+* still take up memory while sat in the glyphs pool waiting to be re-used in the future.
+*
+* If you know that the BitmapText will not grow any larger then you can purge out the excess glyphs from the pool 
+* by calling this method.
+*
+* Calling this doesn't prevent you from increasing the length of the text again in the future.
+*
+* @method Phaser.BitmapText.prototype.purgeGlyphs
+* @return {integer} The amount of glyphs removed from the pool.
+*/
+Phaser.BitmapText.prototype.purgeGlyphs = function () {
+
+    var len = this._glyphs.length;
+    var kept = [];
+
+    for (var i = 0; i < this._glyphs.length; i++)
+    {
+        if (this._glyphs[i].parent !== this)
+        {
+            this._glyphs[i].destroy();
+        }
+        else
+        {
+            kept.push(this._glyphs[i]);
+        }
+    }
+
+    this._glyphs = [];
+    this._glyphs = kept;
+
+    this.updateText();
+
+    return len - kept.length;
+
+};
+
+/**
+* Updates the transform of this object.
+*
+* @method Phaser.BitmapText.prototype.updateTransform
+* @private
+*/
+Phaser.BitmapText.prototype.updateTransform = function () {
+
+    if (this.dirty || !this.anchor.equals(this._prevAnchor))
+    {
+        this.updateText();
+        this.dirty = false;
+        this._prevAnchor.copyFrom(this.anchor);
+    }
+
+    PIXI.DisplayObjectContainer.prototype.updateTransform.call(this);
 
 };
 
 /**
 * @name Phaser.BitmapText#align
-* @property {string} align - Alignment for multiline text ('left', 'center' or 'right'), does not affect single line text.
+* @property {string} align - Alignment for multi-line text ('left', 'center' or 'right'), does not affect single lines of text.
 */
 Object.defineProperty(Phaser.BitmapText.prototype, 'align', {
 
@@ -276,10 +479,10 @@ Object.defineProperty(Phaser.BitmapText.prototype, 'align', {
 
     set: function(value) {
 
-        if (value !== this._align)
+        if (value !== this._align && (value === 'left' || value === 'center' || value === 'right'))
         {
             this._align = value;
-            this.setStyle();
+            this.updateText();
         }
 
     }
@@ -301,28 +504,9 @@ Object.defineProperty(Phaser.BitmapText.prototype, 'tint', {
         if (value !== this._tint)
         {
             this._tint = value;
-            this.dirty = true;
+            this.updateText();
         }
 
-    }
-
-});
-
-/**
-* Indicates the rotation of the Text, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
-* Values outside this range are added to or subtracted from 360 to obtain a value within the range. For example, the statement player.angle = 450 is the same as player.angle = 90.
-* If you wish to work in radians instead of degrees use the property Sprite.rotation instead.
-* @name Phaser.BitmapText#angle
-* @property {number} angle - Gets or sets the angle of rotation in degrees.
-*/
-Object.defineProperty(Phaser.BitmapText.prototype, 'angle', {
-
-    get: function() {
-        return Phaser.Math.radToDeg(this.rotation);
-    },
-
-    set: function(value) {
-        this.rotation = Phaser.Math.degToRad(value);
     }
 
 });
@@ -342,8 +526,8 @@ Object.defineProperty(Phaser.BitmapText.prototype, 'font', {
         if (value !== this._font)
         {
             this._font = value.trim();
-            this.style.font = this._fontSize + "px '" + this._font + "'";
-            this.dirty = true;
+            this._data = this.game.cache.getBitmapFont(this._font);
+            this.updateText();
         }
 
     }
@@ -364,11 +548,10 @@ Object.defineProperty(Phaser.BitmapText.prototype, 'fontSize', {
 
         value = parseInt(value, 10);
 
-        if (value !== this._fontSize)
+        if (value !== this._fontSize && value > 0)
         {
             this._fontSize = value;
-            this.style.font = this._fontSize + "px '" + this._font + "'";
-            this.dirty = true;
+            this.updateText();
         }
 
     }
@@ -376,9 +559,8 @@ Object.defineProperty(Phaser.BitmapText.prototype, 'fontSize', {
 });
 
 /**
-* The text string to be displayed by this Text object, taking into account the style settings.
 * @name Phaser.BitmapText#text
-* @property {string} text - The text string to be displayed by this Text object, taking into account the style settings.
+* @property {string} text - The text to be displayed by this BitmapText object.
 */
 Object.defineProperty(Phaser.BitmapText.prototype, 'text', {
 
@@ -390,8 +572,8 @@ Object.defineProperty(Phaser.BitmapText.prototype, 'text', {
 
         if (value !== this._text)
         {
-            this._text = value.toString() || ' ';
-            this.dirty = true;
+            this._text = value.toString() || '';
+            this.updateText();
         }
 
     }
@@ -399,40 +581,32 @@ Object.defineProperty(Phaser.BitmapText.prototype, 'text', {
 });
 
 /**
-* By default a Text object won't process any input events at all. By setting inputEnabled to true the Phaser.InputHandler is
-* activated for this object and it will then start to process click/touch events and more.
-*
-* @name Phaser.BitmapText#inputEnabled
-* @property {boolean} inputEnabled - Set to true to allow this object to receive input events.
+* The maximum display width of this BitmapText in pixels.
+* 
+* If BitmapText.text is longer than maxWidth then the lines will be automatically wrapped 
+* based on the last whitespace character found in the line.
+* 
+* If no whitespace was found then no wrapping will take place and consequently the maxWidth value will not be honored.
+* 
+* Disable maxWidth by setting the value to 0.
+* 
+* @name Phaser.BitmapText#maxWidth
+* @property {number} maxWidth - The maximum width of this BitmapText in pixels.
 */
-Object.defineProperty(Phaser.BitmapText.prototype, "inputEnabled", {
+Object.defineProperty(Phaser.BitmapText.prototype, 'maxWidth', {
 
-    get: function () {
+    get: function() {
 
-        return (this.input && this.input.enabled);
+        return this._maxWidth;
 
     },
 
-    set: function (value) {
+    set: function(value) {
 
-        if (value)
+        if (value !== this._maxWidth)
         {
-            if (this.input === null)
-            {
-                this.input = new Phaser.InputHandler(this);
-                this.input.start();
-            }
-            else if (this.input && !this.input.enabled)
-            {
-                this.input.start();
-            }
-        }
-        else
-        {
-            if (this.input && this.input.enabled)
-            {
-                this.input.stop();
-            }
+            this._maxWidth = value;
+            this.updateText();
         }
 
     }
@@ -440,45 +614,33 @@ Object.defineProperty(Phaser.BitmapText.prototype, "inputEnabled", {
 });
 
 /**
-* An BitmapText that is fixed to the camera uses its x/y coordinates as offsets from the top left of the camera. These are stored in BitmapText.cameraOffset.
-* Note that the cameraOffset values are in addition to any parent in the display list.
-* So if this BitmapText was in a Group that has x: 200, then this will be added to the cameraOffset.x
+* Enable or disable texture smoothing for this BitmapText.
 *
-* @name Phaser.BitmapText#fixedToCamera
-* @property {boolean} fixedToCamera - Set to true to fix this BitmapText to the Camera at its current world coordinates.
+* The smoothing is applied to the BaseTexture of this font, which all letters of the text reference.
+* 
+* Smoothing is enabled by default.
+* 
+* @name Phaser.BitmapText#smoothed
+* @property {boolean} smoothed
 */
-Object.defineProperty(Phaser.BitmapText.prototype, "fixedToCamera", {
+Object.defineProperty(Phaser.BitmapText.prototype, 'smoothed', {
 
-    get: function () {
+    get: function() {
 
-        return !!this._cache[7];
+        return !this._data.base.scaleMode;
 
     },
 
-    set: function (value) {
+    set: function(value) {
 
         if (value)
         {
-            this._cache[7] = 1;
-            this.cameraOffset.set(this.x, this.y);
+            this._data.base.scaleMode = 0;
         }
         else
         {
-            this._cache[7] = 0;
+            this._data.base.scaleMode = 1;
         }
-    }
-
-});
-
-/**
-* @name Phaser.BitmapText#destroyPhase
-* @property {boolean} destroyPhase - True if this object is currently being destroyed.
-*/
-Object.defineProperty(Phaser.BitmapText.prototype, "destroyPhase", {
-
-    get: function () {
-
-        return !!this._cache[8];
 
     }
 

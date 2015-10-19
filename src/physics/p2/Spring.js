@@ -1,14 +1,13 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
 /**
-* Creates a spring, connecting two bodies. A spring can have a resting length, a stiffness and damping.
+* Creates a linear spring, connecting two bodies. A spring can have a resting length, a stiffness and damping.
 *
 * @class Phaser.Physics.P2.Spring
-* @classdesc Physics Spring Constructor
 * @constructor
 * @param {Phaser.Physics.P2} world - A reference to the P2 World.
 * @param {p2.Body} bodyA - First connected body.
@@ -33,9 +32,9 @@ Phaser.Physics.P2.Spring = function (world, bodyA, bodyB, restLength, stiffness,
     */
     this.world = world;
 
-    if (typeof restLength === 'undefined') { restLength = 1; }
-    if (typeof stiffness === 'undefined') { stiffness = 100; }
-    if (typeof damping === 'undefined') { damping = 1; }
+    if (restLength === undefined) { restLength = 1; }
+    if (stiffness === undefined) { stiffness = 100; }
+    if (damping === undefined) { damping = 1; }
 
     restLength = world.pxm(restLength);
 
@@ -65,9 +64,13 @@ Phaser.Physics.P2.Spring = function (world, bodyA, bodyB, restLength, stiffness,
         options.localAnchorB = [ world.pxm(localB[0]), world.pxm(localB[1]) ];
     }
 
-    p2.Spring.call(this, bodyA, bodyB, options);
+    /**
+    * @property {p2.LinearSpring} data - The actual p2 spring object.
+    */
+    this.data = new p2.LinearSpring(bodyA, bodyB, options);
+
+    this.data.parent = this;
 
 };
 
-Phaser.Physics.P2.Spring.prototype = Object.create(p2.Spring.prototype);
 Phaser.Physics.P2.Spring.prototype.constructor = Phaser.Physics.P2.Spring;

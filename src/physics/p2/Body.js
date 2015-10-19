@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -13,7 +13,6 @@
 * Note: When a game object is given a P2 body it has its anchor x/y set to 0.5, so it becomes centered.
 *
 * @class Phaser.Physics.P2.Body
-* @classdesc Physics Body Constructor
 * @constructor
 * @param {Phaser.Game} game - Game reference to the currently running game.
 * @param {Phaser.Sprite} [sprite] - The Sprite object this physics body belongs to.
@@ -26,7 +25,7 @@ Phaser.Physics.P2.Body = function (game, sprite, x, y, mass) {
     sprite = sprite || null;
     x = x || 0;
     y = y || 0;
-    if (typeof mass === 'undefined') { mass = 1; }
+    if (mass === undefined) { mass = 1; }
 
     /**
     * @property {Phaser.Game} game - Local reference to game.
@@ -62,12 +61,12 @@ Phaser.Physics.P2.Body = function (game, sprite, x, y, mass) {
     this.data.parent = this;
 
     /**
-    * @property {Phaser.InversePointProxy} velocity - The velocity of the body. Set velocity.x to a negative value to move to the left, position to the right. velocity.y negative values move up, positive move down.
+    * @property {Phaser.Physics.P2.InversePointProxy} velocity - The velocity of the body. Set velocity.x to a negative value to move to the left, position to the right. velocity.y negative values move up, positive move down.
     */
     this.velocity = new Phaser.Physics.P2.InversePointProxy(this.world, this.data.velocity);
 
     /**
-    * @property {Phaser.InversePointProxy} force - The force applied to the body.
+    * @property {Phaser.Physics.P2.InversePointProxy} force - The force applied to the body.
     */
     this.force = new Phaser.Physics.P2.InversePointProxy(this.world, this.data.force);
 
@@ -77,15 +76,32 @@ Phaser.Physics.P2.Body = function (game, sprite, x, y, mass) {
     this.gravity = new Phaser.Point();
 
     /**
-    * Dispatched when a first contact is created between shapes in two bodies. This event is fired during the step, so collision has already taken place.
-    * The event will be sent 4 parameters: The body it is in contact with, the shape from this body that caused the contact, the shape from the contact body and the contact equation data array.
+    * Dispatched when a first contact is created between shapes in two bodies. 
+    * This event is fired during the step, so collision has already taken place.
+    * 
+    * The event will be sent 5 arguments in this order:
+    * 
+    * The Phaser.Physics.P2.Body it is in contact with. *This might be null* if the Body was created directly in the p2 world.
+    * The p2.Body this Body is in contact with.
+    * The Shape from this body that caused the contact.
+    * The Shape from the contact body.
+    * The Contact Equation data array.
+    * 
     * @property {Phaser.Signal} onBeginContact
     */
     this.onBeginContact = new Phaser.Signal();
 
     /**
-    * Dispatched when contact ends between shapes in two bodies. This event is fired during the step, so collision has already taken place.
-    * The event will be sent 3 parameters: The body it is in contact with, the shape from this body that caused the contact and the shape from the contact body.
+    * Dispatched when contact ends between shapes in two bodies.
+    * This event is fired during the step, so collision has already taken place.
+    * 
+    * The event will be sent 4 arguments in this order:
+    * 
+    * The Phaser.Physics.P2.Body it is in contact with. *This might be null* if the Body was created directly in the p2 world.
+    * The p2.Body this Body has ended contact with.
+    * The Shape from this body that caused the original contact.
+    * The Shape from the contact body.
+    * 
     * @property {Phaser.Signal} onEndContact
     */
     this.onEndContact = new Phaser.Signal();
@@ -104,6 +120,11 @@ Phaser.Physics.P2.Body = function (game, sprite, x, y, mass) {
     * @property {Phaser.Physics.P2.BodyDebug} debugBody - Reference to the debug body.
     */
     this.debugBody = null;
+
+    /**
+    * @property {boolean} dirty - Internally used by Sprite.x/y
+    */
+    this.dirty = false;
 
     /**
     * @property {boolean} _collideWorldBounds - Internal var that determines if this Body collides with the world bounds or not.
@@ -134,6 +155,12 @@ Phaser.Physics.P2.Body = function (game, sprite, x, y, mass) {
     * @private
     */
     this._groupCallbackContext = {};
+
+    /**
+    * @property {boolean} _reset - Internal var.
+    * @private
+    */
+    this._reset = false;
 
     //  Set-up the default shape
     if (sprite)
@@ -207,7 +234,7 @@ Phaser.Physics.P2.Body.prototype = {
         if (callback === null)
         {
             delete (this._groupCallbacks[group.mask]);
-            delete (this._groupCallbacksContext[group.mask]);
+            delete (this._groupCallbackContext[group.mask]);
         }
         else
         {
@@ -251,7 +278,7 @@ Phaser.Physics.P2.Body.prototype = {
 
         var mask = this.getCollisionMask();
 
-        if (typeof shape === 'undefined')
+        if (shape === undefined)
         {
             for (var i = this.data.shapes.length - 1; i >= 0; i--)
             {
@@ -277,7 +304,7 @@ Phaser.Physics.P2.Body.prototype = {
 
         var mask = this.getCollisionMask();
 
-        if (typeof shape === 'undefined')
+        if (shape === undefined)
         {
             for (var i = this.data.shapes.length - 1; i >= 0; i--)
             {
@@ -303,7 +330,10 @@ Phaser.Physics.P2.Body.prototype = {
     */
     clearCollision: function (clearGroup, clearMask, shape) {
 
-        if (typeof shape === 'undefined')
+        if (clearGroup === undefined) { clearGroup = true; }
+        if (clearMask === undefined) { clearMask = true; }
+
+        if (shape === undefined)
         {
             for (var i = this.data.shapes.length - 1; i >= 0; i--)
             {
@@ -334,6 +364,70 @@ Phaser.Physics.P2.Body.prototype = {
         if (clearGroup)
         {
             this.collidesWith.length = 0;
+        }
+
+    },
+
+    /**
+    * Removes the given CollisionGroup, or array of CollisionGroups, from the list of groups that this body will collide with and updates the collision masks.
+    *
+    * @method Phaser.Physics.P2.Body#removeCollisionGroup
+    * @param {Phaser.Physics.CollisionGroup|array} group - The Collision Group or Array of Collision Groups that this Bodies shapes should not collide with anymore.
+    * @param {boolean} [clearCallback=true] - Clear the callback that will be triggered when this Body impacts with the given Group?
+    * @param {p2.Shape} [shape] - An optional Shape. If not provided the updated collision mask will be added to all Shapes in this Body.
+    */
+    removeCollisionGroup: function (group, clearCallback, shape) {
+
+        if (clearCallback === undefined) { clearCallback = true; }
+
+        var index;
+
+        if (Array.isArray(group))
+        {
+            for (var i = 0; i < group.length; i++)
+            {
+                index = this.collidesWith.indexOf(group[i]);
+
+                if (index > -1)
+                {
+                    this.collidesWith.splice(index, 1);
+
+                    if (clearCallback)
+                    {
+                        delete (this._groupCallbacks[group.mask]);
+                        delete (this._groupCallbackContext[group.mask]);
+                    }
+                }
+            }
+        }
+        else
+        {
+            index = this.collidesWith.indexOf(group);
+
+            if (index > -1)
+            {
+                this.collidesWith.splice(index, 1);
+
+                if (clearCallback)
+                {
+                    delete (this._groupCallbacks[group.mask]);
+                    delete (this._groupCallbackContext[group.mask]);
+                }
+            }
+        }
+
+        var mask = this.getCollisionMask();
+
+        if (shape === undefined)
+        {
+            for (var i = this.data.shapes.length - 1; i >= 0; i--)
+            {
+                this.data.shapes[i].collisionMask = mask;
+            }
+        }
+        else
+        {
+            shape.collisionMask = mask;
         }
 
     },
@@ -379,7 +473,7 @@ Phaser.Physics.P2.Body.prototype = {
 
         var mask = this.getCollisionMask();
 
-        if (typeof shape === 'undefined')
+        if (shape === undefined)
         {
             for (var i = this.data.shapes.length - 1; i >= 0; i--)
             {
@@ -401,6 +495,21 @@ Phaser.Physics.P2.Body.prototype = {
     adjustCenterOfMass: function () {
 
         this.data.adjustCenterOfMass();
+        this.shapeChanged();
+
+    },
+
+    /**
+    * Gets the velocity of a point in the body.
+    *
+    * @method Phaser.Physics.P2.Body#getVelocityAtPoint
+    * @param {Array} result - A vector to store the result in.
+    * @param {Array} relativePoint - A world oriented vector, indicating the position of the point to get the velocity from.
+    * @return {Array} The result vector.
+    */
+    getVelocityAtPoint: function (result, relativePoint) {
+
+        return this.data.getVelocityAtPoint(result, relativePoint);
 
     },
 
@@ -417,7 +526,43 @@ Phaser.Physics.P2.Body.prototype = {
     },
 
     /**
-    * Apply force to a world point. This could for example be a point on the RigidBody surface. Applying force this way will add to Body.force and Body.angularForce.
+    * Apply impulse to a point relative to the body.
+    * This could for example be a point on the Body surface. An impulse is a force added to a body during a short 
+    * period of time (impulse = force * time). Impulses will be added to Body.velocity and Body.angularVelocity.
+    *
+    * @method Phaser.Physics.P2.Body#applyImpulse
+    * @param {Float32Array|Array} impulse - The impulse vector to add, oriented in world space.
+    * @param {number} worldX - A point relative to the body in world space. If not given, it is set to zero and all of the impulse will be exerted on the center of mass.
+    * @param {number} worldY - A point relative to the body in world space. If not given, it is set to zero and all of the impulse will be exerted on the center of mass.
+    */
+    applyImpulse: function (impulse, worldX, worldY) {
+
+        this.data.applyImpulse(impulse, [this.world.pxmi(worldX), this.world.pxmi(worldY)]);
+
+    },
+
+    /**
+    * Apply impulse to a point local to the body.
+    * 
+    * This could for example be a point on the Body surface. An impulse is a force added to a body during a short 
+    * period of time (impulse = force * time). Impulses will be added to Body.velocity and Body.angularVelocity.
+    *
+    * @method Phaser.Physics.P2.Body#applyImpulseLocal
+    * @param {Float32Array|Array} impulse - The impulse vector to add, oriented in world space.
+    * @param {number} localX - A local point on the body.
+    * @param {number} localY - A local point on the body.
+    */
+    applyImpulseLocal: function (impulse, localX, localY) {
+
+        this.data.applyImpulseLocal(impulse, [this.world.pxmi(localX), this.world.pxmi(localY)]);
+
+    },
+
+    /**
+    * Apply force to a world point.
+    * 
+    * This could for example be a point on the RigidBody surface. Applying force 
+    * this way will add to Body.force and Body.angularForce.
     *
     * @method Phaser.Physics.P2.Body#applyForce
     * @param {Float32Array|Array} force - The force vector to add.
@@ -654,6 +799,8 @@ Phaser.Physics.P2.Body.prototype = {
     */
     preUpdate: function () {
 
+        this.dirty = true;
+
         if (this.removeNextStep)
         {
             this.removeFromWorld();
@@ -678,6 +825,13 @@ Phaser.Physics.P2.Body.prototype = {
             this.sprite.rotation = this.data.angle;
         }
 
+        if (this.debugBody)
+        {
+            this.debugBody.updateSpriteTransform();
+        }
+
+        this.dirty = false;
+
     },
 
     /**
@@ -691,8 +845,8 @@ Phaser.Physics.P2.Body.prototype = {
     */
     reset: function (x, y, resetDamping, resetMass) {
 
-        if (typeof resetDamping === 'undefined') { resetDamping = false; }
-        if (typeof resetMass === 'undefined') { resetMass = false; }
+        if (resetDamping === undefined) { resetDamping = false; }
+        if (resetMass === undefined) { resetMass = false; }
 
         this.setZeroForce();
         this.setZeroVelocity();
@@ -730,7 +884,7 @@ Phaser.Physics.P2.Body.prototype = {
                 }
             }
         }
-        
+
         if (this.data.world !== this.game.physics.p2.world)
         {
             this.game.physics.p2.addBody(this);
@@ -770,12 +924,16 @@ Phaser.Physics.P2.Body.prototype = {
 
         if (this.debugBody)
         {
-            this.debugBody.destroy();
+            this.debugBody.destroy(true, true);
         }
 
         this.debugBody = null;
 
-        this.sprite = null;
+        if (this.sprite)
+        {
+            this.sprite.body = null;
+            this.sprite = null;
+        }
 
     },
 
@@ -800,6 +958,7 @@ Phaser.Physics.P2.Body.prototype = {
     /**
     * Add a shape to the body. You can pass a local transform when adding a shape, so that the shape gets an offset and an angle relative to the body center of mass.
     * Will automatically update the mass properties and bounding radius.
+    * If this Body had a previously set Collision Group you will need to re-apply it to the new Shape this creates.
     *
     * @method Phaser.Physics.P2.Body#addShape
     * @param {p2.Shape} shape - The shape to add to the body.
@@ -810,9 +969,9 @@ Phaser.Physics.P2.Body.prototype = {
     */
     addShape: function (shape, offsetX, offsetY, rotation) {
 
-        if (typeof offsetX === 'undefined') { offsetX = 0; }
-        if (typeof offsetY === 'undefined') { offsetY = 0; }
-        if (typeof rotation === 'undefined') { rotation = 0; }
+        if (offsetX === undefined) { offsetX = 0; }
+        if (offsetY === undefined) { offsetY = 0; }
+        if (rotation === undefined) { rotation = 0; }
 
         this.data.addShape(shape, [this.world.pxmi(offsetX), this.world.pxmi(offsetY)], rotation);
         this.shapeChanged();
@@ -833,7 +992,7 @@ Phaser.Physics.P2.Body.prototype = {
     */
     addCircle: function (radius, offsetX, offsetY, rotation) {
 
-        var shape = new p2.Circle(this.world.pxm(radius));
+        var shape = new p2.Circle({ radius: this.world.pxm(radius) });
 
         return this.addShape(shape, offsetX, offsetY, rotation);
 
@@ -848,11 +1007,11 @@ Phaser.Physics.P2.Body.prototype = {
     * @param {number} [offsetX=0] - Local horizontal offset of the shape relative to the body center of mass.
     * @param {number} [offsetY=0] - Local vertical offset of the shape relative to the body center of mass.
     * @param {number} [rotation=0] - Local rotation of the shape relative to the body center of mass, specified in radians.
-    * @return {p2.Rectangle} The Rectangle shape that was added to the Body.
+    * @return {p2.Box} The shape that was added to the Body.
     */
     addRectangle: function (width, height, offsetX, offsetY, rotation) {
 
-        var shape = new p2.Rectangle(this.world.pxm(width), this.world.pxm(height));
+        var shape = new p2.Box({ width: this.world.pxm(width), height: this.world.pxm(height)});
 
         return this.addShape(shape, offsetX, offsetY, rotation);
 
@@ -906,7 +1065,7 @@ Phaser.Physics.P2.Body.prototype = {
     */
     addLine: function (length, offsetX, offsetY, rotation) {
 
-        var shape = new p2.Line(this.world.pxm(length));
+        var shape = new p2.Line({ length: this.world.pxm(length)});
 
         return this.addShape(shape, offsetX, offsetY, rotation);
 
@@ -918,7 +1077,7 @@ Phaser.Physics.P2.Body.prototype = {
     *
     * @method Phaser.Physics.P2.Body#addCapsule
     * @param {number} length - The distance between the end points in pixels.
-    * @param {number} radius - Radius of the capsule in radians.
+    * @param {number} radius - Radius of the capsule in pixels.
     * @param {number} [offsetX=0] - Local horizontal offset of the shape relative to the body center of mass.
     * @param {number} [offsetY=0] - Local vertical offset of the shape relative to the body center of mass.
     * @param {number} [rotation=0] - Local rotation of the shape relative to the body center of mass, specified in radians.
@@ -926,7 +1085,7 @@ Phaser.Physics.P2.Body.prototype = {
     */
     addCapsule: function (length, radius, offsetX, offsetY, rotation) {
 
-        var shape = new p2.Capsule(this.world.pxm(length), radius);
+        var shape = new p2.Capsule({ length: this.world.pxm(length), radius: this.world.pxm(radius) });
 
         return this.addShape(shape, offsetX, offsetY, rotation);
 
@@ -950,7 +1109,8 @@ Phaser.Physics.P2.Body.prototype = {
 
         options = options || {};
 
-        if (!Array.isArray(points)) {
+        if (!Array.isArray(points))
+        {
             points = Array.prototype.slice.call(arguments, 1);
         }
 
@@ -963,7 +1123,7 @@ Phaser.Physics.P2.Body.prototype = {
         }
         else if (Array.isArray(points[0]))
         {
-            path = points[0].slice(0);
+            path = points.slice();
         }
         else if (typeof points[0] === 'number')
         {
@@ -1007,14 +1167,15 @@ Phaser.Physics.P2.Body.prototype = {
     removeShape: function (shape) {
 
 		var result = this.data.removeShape(shape);
-	
+
 		this.shapeChanged();
-	
+
         return result;
     },
 
     /**
     * Clears any previously set shapes. Then creates a new Circle shape and adds it to this Body.
+    * If this Body had a previously set Collision Group you will need to re-apply it to the new Shape this creates.
     *
     * @method Phaser.Physics.P2.Body#setCircle
     * @param {number} radius - The radius of this circle (in pixels)
@@ -1033,6 +1194,7 @@ Phaser.Physics.P2.Body.prototype = {
     /**
     * Clears any previously set shapes. The creates a new Rectangle shape at the given size and offset, and adds it to this Body.
     * If you wish to create a Rectangle to match the size of a Sprite or Image see Body.setRectangleFromSprite.
+    * If this Body had a previously set Collision Group you will need to re-apply it to the new Shape this creates.
     *
     * @method Phaser.Physics.P2.Body#setRectangle
     * @param {number} [width=16] - The width of the rectangle in pixels.
@@ -1044,8 +1206,8 @@ Phaser.Physics.P2.Body.prototype = {
     */
     setRectangle: function (width, height, offsetX, offsetY, rotation) {
 
-        if (typeof width === 'undefined') { width = 16; }
-        if (typeof height === 'undefined') { height = 16; }
+        if (width === undefined) { width = 16; }
+        if (height === undefined) { height = 16; }
 
         this.clearShapes();
 
@@ -1057,6 +1219,7 @@ Phaser.Physics.P2.Body.prototype = {
     * Clears any previously set shapes.
     * Then creates a Rectangle shape sized to match the dimensions and orientation of the Sprite given.
     * If no Sprite is given it defaults to using the parent of this Body.
+    * If this Body had a previously set Collision Group you will need to re-apply it to the new Shape this creates.
     *
     * @method Phaser.Physics.P2.Body#setRectangleFromSprite
     * @param {Phaser.Sprite|Phaser.Image} [sprite] - The Sprite on which the Rectangle will get its dimensions.
@@ -1064,7 +1227,7 @@ Phaser.Physics.P2.Body.prototype = {
     */
     setRectangleFromSprite: function (sprite) {
 
-        if (typeof sprite === 'undefined') { sprite = this.sprite; }
+        if (sprite === undefined) { sprite = this.sprite; }
 
         this.clearShapes();
 
@@ -1082,7 +1245,7 @@ Phaser.Physics.P2.Body.prototype = {
     */
     setMaterial: function (material, shape) {
 
-        if (typeof shape === 'undefined')
+        if (shape === undefined)
         {
             for (var i = this.data.shapes.length - 1; i >= 0; i--)
             {
@@ -1112,11 +1275,14 @@ Phaser.Physics.P2.Body.prototype = {
 
     /**
     * Reads the shape data from a physics data file stored in the Game.Cache and adds it as a polygon to this Body.
-    * The shape data format is based on the custom phaser export in.
+    * The shape data format is based on the output of the
+    * {@link https://github.com/photonstorm/phaser/tree/master/resources/PhysicsEditor%20Exporter|custom phaser exporter} for
+    * {@link https://www.codeandweb.com/physicseditor|PhysicsEditor}
     *
     * @method Phaser.Physics.P2.Body#addPhaserPolygon
     * @param {string} key - The key of the Physics Data file as stored in Game.Cache.
     * @param {string} object - The key of the object within the Physics data file that you wish to load the shape data from.
+    * @returns {Array} A list of created fixtures to be used with Phaser.Physics.P2.FixtureList
     */
     addPhaserPolygon: function (key, object) {
 
@@ -1160,7 +1326,7 @@ Phaser.Physics.P2.Body.prototype = {
 
         if (fixtureData.circle)
         {
-            var shape = new p2.Circle(this.world.pxm(fixtureData.circle.radius));
+            var shape = new p2.Circle({ radius: this.world.pxm(fixtureData.circle.radius) });
             shape.collisionGroup = fixtureData.filter.categoryBits;
             shape.collisionMask = fixtureData.filter.maskBits;
             shape.sensor = fixtureData.isSensor;
@@ -1187,7 +1353,7 @@ Phaser.Physics.P2.Body.prototype = {
                     vertices.push([ this.world.pxmi(shapes[s]), this.world.pxmi(shapes[s + 1]) ]);
                 }
 
-                var shape = new p2.Convex(vertices);
+                var shape = new p2.Convex({ vertices: vertices });
 
                 //  Move all vertices so its center of mass is in the local center of the convex
                 for (var j = 0; j !== shape.vertices.length; j++)
@@ -1221,15 +1387,29 @@ Phaser.Physics.P2.Body.prototype = {
 
     /**
     * Reads the shape data from a physics data file stored in the Game.Cache and adds it as a polygon to this Body.
+    * 
+    * As well as reading the data from the Cache you can also pass `null` as the first argument and a
+    * physics data object as the second. When doing this you must ensure the structure of the object is correct in advance.
+    * 
+    * For more details see the format of the Lime / Corona Physics Editor export.
     *
     * @method Phaser.Physics.P2.Body#loadPolygon
-    * @param {string} key - The key of the Physics Data file as stored in Game.Cache.
-    * @param {string} object - The key of the object within the Physics data file that you wish to load the shape data from.
+    * @param {string} key - The key of the Physics Data file as stored in Game.Cache. Alternatively set to `null` and pass the 
+    *     data as the 2nd argument.
+    * @param {string|object} object - The key of the object within the Physics data file that you wish to load the shape data from, 
+    *     or if key is null pass the actual physics data object itself as this parameter.
     * @return {boolean} True on success, else false.
     */
     loadPolygon: function (key, object) {
 
-        var data = this.game.cache.getPhysicsData(key, object);
+        if (key === null)
+        {
+            var data = object;
+        }
+        else
+        {
+            var data = this.game.cache.getPhysicsData(key, object);
+        }
 
         //  We've multiple Convex shapes, they should be CCW automatically
         var cm = p2.vec2.create();
@@ -1243,7 +1423,7 @@ Phaser.Physics.P2.Body.prototype = {
                 vertices.push([ this.world.pxmi(data[i].shape[s]), this.world.pxmi(data[i].shape[s + 1]) ]);
             }
 
-            var c = new p2.Convex(vertices);
+            var c = new p2.Convex({ vertices: vertices });
 
             // Move all vertices so its center of mass is in the local center of the convex
             for (var j = 0; j !== c.vertices.length; j++)
@@ -1269,28 +1449,6 @@ Phaser.Physics.P2.Body.prototype = {
 
         return true;
 
-    },
-
-    /**
-    * DEPRECATED: This method will soon be removed from the API. Please avoid using.
-    * Reads the physics data from a physics data file stored in the Game.Cache.
-    * It will add the shape data to this Body, as well as set the density (mass).
-    *
-    * @method Phaser.Physics.P2.Body#loadData
-    * @param {string} key - The key of the Physics Data file as stored in Game.Cache.
-    * @param {string} object - The key of the object within the Physics data file that you wish to load the shape data from.
-    * @return {boolean} True on success, else false.
-    */
-    loadData: function (key, object) {
-
-        var data = this.game.cache.getPhysicsData(key, object);
-
-        if (data && data.shape)
-        {
-            this.mass = data.density;
-            return this.loadPolygon(key, object);
-        }
-
     }
 
 };
@@ -1298,7 +1456,7 @@ Phaser.Physics.P2.Body.prototype = {
 Phaser.Physics.P2.Body.prototype.constructor = Phaser.Physics.P2.Body;
 
 /**
- * Dynamic body.
+ * Dynamic body. Dynamic bodies body can move and respond to collisions and forces.
  * @property DYNAMIC
  * @type {Number}
  * @static
@@ -1306,7 +1464,7 @@ Phaser.Physics.P2.Body.prototype.constructor = Phaser.Physics.P2.Body;
 Phaser.Physics.P2.Body.DYNAMIC = 1;
 
 /**
- * Static body.
+ * Static body. Static bodies do not move, and they do not respond to forces or collision.
  * @property STATIC
  * @type {Number}
  * @static
@@ -1314,7 +1472,7 @@ Phaser.Physics.P2.Body.DYNAMIC = 1;
 Phaser.Physics.P2.Body.STATIC = 2;
 
 /**
- * Kinematic body.
+ * Kinematic body. Kinematic bodies only moves according to its .velocity, and does not respond to collisions or force.
  * @property KINEMATIC
  * @type {Number}
  * @static
@@ -1329,25 +1487,21 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "static", {
 
     get: function () {
 
-        return (this.data.motionState === Phaser.Physics.P2.Body.STATIC);
+        return (this.data.type === Phaser.Physics.P2.Body.STATIC);
 
     },
 
     set: function (value) {
 
-        if (value && this.data.motionState !== Phaser.Physics.P2.Body.STATIC)
+        if (value && this.data.type !== Phaser.Physics.P2.Body.STATIC)
         {
-            this.data.motionState = Phaser.Physics.P2.Body.STATIC;
+            this.data.type = Phaser.Physics.P2.Body.STATIC;
             this.mass = 0;
         }
-        else if (!value && this.data.motionState === Phaser.Physics.P2.Body.STATIC)
+        else if (!value && this.data.type === Phaser.Physics.P2.Body.STATIC)
         {
-            this.data.motionState = Phaser.Physics.P2.Body.DYNAMIC;
-
-            if (this.mass === 0)
-            {
-                this.mass = 1;
-            }
+            this.data.type = Phaser.Physics.P2.Body.DYNAMIC;
+            this.mass = 1;
         }
 
     }
@@ -1362,24 +1516,20 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "dynamic", {
 
     get: function () {
 
-        return (this.data.motionState === Phaser.Physics.P2.Body.DYNAMIC);
+        return (this.data.type === Phaser.Physics.P2.Body.DYNAMIC);
 
     },
 
     set: function (value) {
 
-        if (value && this.data.motionState !== Phaser.Physics.P2.Body.DYNAMIC)
+        if (value && this.data.type !== Phaser.Physics.P2.Body.DYNAMIC)
         {
-            this.data.motionState = Phaser.Physics.P2.Body.DYNAMIC;
-
-            if (this.mass === 0)
-            {
-                this.mass = 1;
-            }
+            this.data.type = Phaser.Physics.P2.Body.DYNAMIC;
+            this.mass = 1;
         }
-        else if (!value && this.data.motionState === Phaser.Physics.P2.Body.DYNAMIC)
+        else if (!value && this.data.type === Phaser.Physics.P2.Body.DYNAMIC)
         {
-            this.data.motionState = Phaser.Physics.P2.Body.STATIC;
+            this.data.type = Phaser.Physics.P2.Body.STATIC;
             this.mass = 0;
         }
 
@@ -1395,20 +1545,20 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "kinematic", {
 
     get: function () {
 
-        return (this.data.motionState === Phaser.Physics.P2.Body.KINEMATIC);
+        return (this.data.type === Phaser.Physics.P2.Body.KINEMATIC);
 
     },
 
     set: function (value) {
 
-        if (value && this.data.motionState !== Phaser.Physics.P2.Body.KINEMATIC)
+        if (value && this.data.type !== Phaser.Physics.P2.Body.KINEMATIC)
         {
-            this.data.motionState = Phaser.Physics.P2.Body.KINEMATIC;
+            this.data.type = Phaser.Physics.P2.Body.KINEMATIC;
             this.mass = 4;
         }
-        else if (!value && this.data.motionState === Phaser.Physics.P2.Body.KINEMATIC)
+        else if (!value && this.data.type === Phaser.Physics.P2.Body.KINEMATIC)
         {
-            this.data.motionState = Phaser.Physics.P2.Body.STATIC;
+            this.data.type = Phaser.Physics.P2.Body.STATIC;
             this.mass = 0;
         }
 
@@ -1590,7 +1740,7 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "inertia", {
 
 /**
 * @name Phaser.Physics.P2.Body#mass
-* @property {number} mass -
+* @property {number} mass - The mass of the body.
 */
 Object.defineProperty(Phaser.Physics.P2.Body.prototype, "mass", {
 
@@ -1620,15 +1770,15 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "motionState", {
 
     get: function () {
 
-        return this.data.motionState;
+        return this.data.type;
 
     },
 
     set: function (value) {
 
-        if (value !== this.data.motionState)
+        if (value !== this.data.type)
         {
-            this.data.motionState = value;
+            this.data.type = value;
         }
 
     }
@@ -1765,6 +1915,8 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "debug", {
 /**
 * A Body can be set to collide against the World bounds automatically if this is set to true. Otherwise it will leave the World.
 * Note that this only applies if your World has bounds! The response to the collision should be managed via CollisionMaterials.
+* Also note that when you set this it will only effect Body shapes that already exist. If you then add further shapes to your Body
+* after setting this it will *not* proactively set them to collide with the bounds.
 *
 * @name Phaser.Physics.P2.Body#collideWorldBounds
 * @property {boolean} collideWorldBounds - Should the Body collide with the World bounds?

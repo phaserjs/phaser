@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -8,11 +8,10 @@
 * Defines a physics material
 *
 * @class Phaser.Physics.P2.ContactMaterial
-* @classdesc Physics ContactMaterial Constructor
 * @constructor
-* @param {Phaser.Physics.P2.Material} materialA
-* @param {Phaser.Physics.P2.Material} materialB
-* @param {object} [options]
+* @param {Phaser.Physics.P2.Material} materialA - First material participating in the contact material.
+* @param {Phaser.Physics.P2.Material} materialB - Second material participating in the contact material.
+* @param {object} [options] - Additional configuration options.
 */
 Phaser.Physics.P2.ContactMaterial = function (materialA, materialB, options) {
 
@@ -25,7 +24,7 @@ Phaser.Physics.P2.ContactMaterial = function (materialA, materialB, options) {
 	*/
 
 	/**
-	* @property {Phaser.Physics.P2.Material} materialB - First second participating in the contact material.
+	* @property {Phaser.Physics.P2.Material} materialB - Second material participating in the contact material.
 	*/
 
 	/**
@@ -37,19 +36,19 @@ Phaser.Physics.P2.ContactMaterial = function (materialA, materialB, options) {
 	*/
 
 	/**
-	* @property {number} [stiffness=1e7] - Stiffness of the resulting ContactEquation that this ContactMaterial generate.
+	* @property {number} [stiffness=1e7] - Stiffness of the resulting ContactEquation that this ContactMaterial generates.
 	*/
 
 	/**
-	* @property {number} [relaxation=3] - Relaxation of the resulting ContactEquation that this ContactMaterial generate.
+	* @property {number} [relaxation=3] - Relaxation of the resulting ContactEquation that this ContactMaterial generates.
 	*/
 
 	/**
-	* @property {number} [frictionStiffness=1e7] - Stiffness of the resulting FrictionEquation that this ContactMaterial generate.
+	* @property {number} [frictionStiffness=1e7] - Stiffness of the resulting FrictionEquation that this ContactMaterial generates.
 	*/
 
 	/**
-	* @property {number} [frictionRelaxation=3] - Relaxation of the resulting FrictionEquation that this ContactMaterial generate.
+	* @property {number} [frictionRelaxation=3] - Relaxation of the resulting FrictionEquation that this ContactMaterial generates.
 	*/
 
 	/**

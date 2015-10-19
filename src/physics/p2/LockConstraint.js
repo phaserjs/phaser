@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -8,7 +8,6 @@
 * Locks the relative position between two bodies.
 *
 * @class Phaser.Physics.P2.LockConstraint
-* @classdesc Physics LockConstraint Constructor
 * @constructor
 * @param {Phaser.Physics.P2} world - A reference to the P2 World.
 * @param {p2.Body} bodyA - First connected body.
@@ -19,9 +18,9 @@
 */
 Phaser.Physics.P2.LockConstraint = function (world, bodyA, bodyB, offset, angle, maxForce) {
 
-    if (typeof offset === 'undefined') { offset = [0, 0]; }
-    if (typeof angle === 'undefined') { angle = 0; }
-    if (typeof maxForce === 'undefined') { maxForce = Number.MAX_VALUE; }
+    if (offset === undefined) { offset = [0, 0]; }
+    if (angle === undefined) { angle = 0; }
+    if (maxForce === undefined) { maxForce = Number.MAX_VALUE; }
 
     /**
     * @property {Phaser.Game} game - Local reference to game.

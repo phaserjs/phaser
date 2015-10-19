@@ -1,0 +1,3536 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Phaser Source: src/core/ScaleManager.js</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+
+	<link type="text/css" rel="stylesheet" href="styles/default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	
+	<link type="text/css" rel="stylesheet" href="styles/site.cerulean.css">
+	
+</head>
+
+<body>
+
+<div class="container-fluid">
+	<div class="navbar navbar-fixed-top navbar-inverse">
+		<div style="position: absolute; width: 143px; height: 31px; right: 10px; top: 10px; z-index: 1050"><a href="http://phaser.io"><img src="img/phaser.png" border="0" /></a></div>
+		<div class="navbar-inner">
+			<a class="brand" href="index.html">Phaser API</a>
+			<ul class="nav">
+
+				
+				<li class="dropdown">
+					<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+						
+						<li class="class-depth-0">
+							<a href="Phaser.html">Phaser</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="Phaser.KeyCode.html">KeyCode</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="PIXI.html">PIXI</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
+				<li class="dropdown">
+					<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Animation.html">Animation</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.AnimationManager.html">AnimationManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.AnimationParser.html">AnimationParser</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.ArraySet.html">ArraySet</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.ArrayUtils.html">ArrayUtils</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.AudioSprite.html">AudioSprite</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.BitmapData.html">BitmapData</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.BitmapText.html">BitmapText</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Button.html">Button</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Cache.html">Cache</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Camera.html">Camera</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Canvas.html">Canvas</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Circle.html">Circle</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Color.html">Color</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Angle.html">Angle</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Animation.html">Animation</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.AutoCull.html">AutoCull</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Bounds.html">Bounds</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.BringToTop.html">BringToTop</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Core.html">Core</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Crop.html">Crop</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Delta.html">Delta</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Destroy.html">Destroy</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.FixedToCamera.html">FixedToCamera</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Health.html">Health</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.InCamera.html">InCamera</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.InputEnabled.html">InputEnabled</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.InWorld.html">InWorld</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.LifeSpan.html">LifeSpan</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.LoadTexture.html">LoadTexture</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Overlap.html">Overlap</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.PhysicsBody.html">PhysicsBody</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Reset.html">Reset</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.ScaleMinMax.html">ScaleMinMax</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Smoothed.html">Smoothed</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Create.html">Create</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Creature.html">Creature</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Device.html">Device</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.DeviceButton.html">DeviceButton</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.DOM.html">DOM</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Easing.html">Easing</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Back.html">Back</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Bounce.html">Bounce</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Circular.html">Circular</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Cubic.html">Cubic</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Elastic.html">Elastic</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Exponential.html">Exponential</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Linear.html">Linear</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Quadratic.html">Quadratic</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Quartic.html">Quartic</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Quintic.html">Quintic</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Sinusoidal.html">Sinusoidal</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Ellipse.html">Ellipse</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Events.html">Events</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Filter.html">Filter</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.FlexGrid.html">FlexGrid</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.FlexLayer.html">FlexLayer</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Frame.html">Frame</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.FrameData.html">FrameData</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Game.html">Game</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.GameObjectCreator.html">GameObjectCreator</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.GameObjectFactory.html">GameObjectFactory</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Gamepad.html">Gamepad</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Graphics.html">Graphics</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Group.html">Group</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Image.html">Image</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.ImageCollection.html">ImageCollection</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Input.html">Input</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.InputHandler.html">InputHandler</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Key.html">Key</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Keyboard.html">Keyboard</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Line.html">Line</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.LinkedList.html">LinkedList</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Loader.html">Loader</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.LoaderParser.html">LoaderParser</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Math.html">Math</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Matrix.html">Matrix</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Mouse.html">Mouse</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.MSPointer.html">MSPointer</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Net.html">Net</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Particle.html">Particle</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Particles.html">Particles</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Particles.Arcade.html">Arcade</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Particles.Arcade.Emitter.html">Emitter</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Physics.html">Physics</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Physics.Arcade.html">Arcade</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.Arcade.Body.html">Body</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.Arcade.TilemapCollision.html">TilemapCollision</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Physics.Ninja.html">Ninja</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.Ninja.AABB.html">AABB</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.Ninja.Body.html">Body</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.Ninja.Circle.html">Circle</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.Ninja.Tile.html">Tile</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Physics.P2.html">P2</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.Body.html">Body</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.BodyDebug.html">BodyDebug</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.CollisionGroup.html">CollisionGroup</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.ContactMaterial.html">ContactMaterial</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.DistanceConstraint.html">DistanceConstraint</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.FixtureList.html">FixtureList</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.GearConstraint.html">GearConstraint</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.InversePointProxy.html">InversePointProxy</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.LockConstraint.html">LockConstraint</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.Material.html">Material</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.PointProxy.html">PointProxy</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.PrismaticConstraint.html">PrismaticConstraint</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.RevoluteConstraint.html">RevoluteConstraint</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.RotationalSpring.html">RotationalSpring</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.Spring.html">Spring</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Plugin.html">Plugin</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.PluginManager.html">PluginManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Point.html">Point</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Pointer.html">Pointer</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.PointerMode.html">PointerMode</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Polygon.html">Polygon</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.QuadTree.html">QuadTree</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.RandomDataGenerator.html">RandomDataGenerator</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Rectangle.html">Rectangle</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.RenderTexture.html">RenderTexture</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.RequestAnimationFrame.html">RequestAnimationFrame</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.RetroFont.html">RetroFont</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Rope.html">Rope</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.RoundedRectangle.html">RoundedRectangle</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.ScaleManager.html">ScaleManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Signal.html">Signal</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.SignalBinding.html">SignalBinding</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.SinglePad.html">SinglePad</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Sound.html">Sound</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.SoundManager.html">SoundManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Sprite.html">Sprite</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.SpriteBatch.html">SpriteBatch</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Stage.html">Stage</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.State.html">State</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.StateManager.html">StateManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Text.html">Text</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Tile.html">Tile</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Tilemap.html">Tilemap</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.TilemapLayer.html">TilemapLayer</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.TilemapParser.html">TilemapParser</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Tileset.html">Tileset</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.TileSprite.html">TileSprite</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Time.html">Time</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Timer.html">Timer</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.TimerEvent.html">TimerEvent</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Touch.html">Touch</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Tween.html">Tween</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.TweenData.html">TweenData</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.TweenManager.html">TweenManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Utils.html">Utils</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Utils.Debug.html">Debug</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Video.html">Video</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.World.html">World</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.AbstractFilter.html">AbstractFilter</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.BaseTexture.html">BaseTexture</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.CanvasBuffer.html">CanvasBuffer</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.CanvasGraphics.html">CanvasGraphics</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.CanvasMaskManager.html">CanvasMaskManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.CanvasPool.html">CanvasPool</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.CanvasRenderer.html">CanvasRenderer</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.CanvasTinter.html">CanvasTinter</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.ComplexPrimitiveShader.html">ComplexPrimitiveShader</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.DisplayObject.html">DisplayObject</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.DisplayObjectContainer.html">DisplayObjectContainer</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.Event.html">Event</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.EventTarget.html">EventTarget</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.FilterTexture.html">FilterTexture</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.Graphics.html">Graphics</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.GraphicsData.html">GraphicsData</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.PIXI.html">PIXI</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.PixiFastShader.html">PixiFastShader</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.PixiShader.html">PixiShader</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.PolyK.html">PolyK</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.PrimitiveShader.html">PrimitiveShader</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.RenderTexture.html">RenderTexture</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.Rope.html">Rope</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.Sprite.html">Sprite</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.SpriteBatch.html">SpriteBatch</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.Strip.html">Strip</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.StripShader.html">StripShader</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.Texture.html">Texture</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.TilingSprite.html">TilingSprite</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.WebGLBlendModeManager.html">WebGLBlendModeManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.WebGLFastSpriteBatch.html">WebGLFastSpriteBatch</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.WebGLFilterManager.html">WebGLFilterManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.WebGLRenderer.html">WebGLRenderer</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
+				<li class="dropdown">
+					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+						
+						<li class="class-depth-0">
+							<a href="global.html#AUTO">AUTO</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#BITMAPDATA">BITMAPDATA</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#BITMAPTEXT">BITMAPTEXT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#blendModes">blendModes</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#BUTTON">BUTTON</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#CANVAS">CANVAS</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#CANVAS_FILTER">CANVAS_FILTER</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#CIRCLE">CIRCLE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#CREATURE">CREATURE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#DOWN">DOWN</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ELLIPSE">ELLIPSE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#EMITTER">EMITTER</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#GAMES">GAMES</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#GRAPHICS">GRAPHICS</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#GROUP">GROUP</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#HEADLESS">HEADLESS</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#IMAGE">IMAGE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#LEFT">LEFT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#LINE">LINE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#MATRIX">MATRIX</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#NONE">NONE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#POINT">POINT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#POINTER">POINTER</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#POLYGON">POLYGON</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#RECTANGLE">RECTANGLE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#RENDERTEXTURE">RENDERTEXTURE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#RETROFONT">RETROFONT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#RIGHT">RIGHT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ROPE">ROPE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ROUNDEDRECTANGLE">ROUNDEDRECTANGLE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#scaleModes">scaleModes</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#SPRITE">SPRITE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#SPRITEBATCH">SPRITEBATCH</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#TEXT">TEXT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#TILEMAP">TILEMAP</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#TILEMAPLAYER">TILEMAPLAYER</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#TILESPRITE">TILESPRITE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#UP">UP</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#VERSION">VERSION</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#VIDEO">VIDEO</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#WEBGL">WEBGL</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#WEBGL_FILTER">WEBGL_FILTER</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
+
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Core<b class="caret"></b></a>
+					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.Game.html">Game</a></li>
+						<li class="class-depth-1"><a href="Phaser.Group.html">Group</a></li>
+						<li class="class-depth-1"><a href="Phaser.World.html">World</a></li>
+						<li class="class-depth-1"><a href="Phaser.Loader.html">Loader</a></li>
+						<li class="class-depth-1"><a href="Phaser.Cache.html">Cache</a></li>
+						<li class="class-depth-1"><a href="Phaser.Time.html">Time</a></li>
+						<li class="class-depth-1"><a href="Phaser.Camera.html">Camera</a></li>
+						<li class="class-depth-1"><a href="Phaser.StateManager.html">State Manager</a></li>
+						<li class="class-depth-1"><a href="Phaser.TweenManager.html">Tween Manager</a></li>
+						<li class="class-depth-1"><a href="Phaser.SoundManager.html">Sound Manager</a></li>
+						<li class="class-depth-1"><a href="Phaser.Input.html">Input Manager</a></li>
+						<li class="class-depth-1"><a href="Phaser.ScaleManager.html">Scale Manager</a></li>
+					</ul>
+				</li>
+
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Game Objects<b class="caret"></b></a>
+					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.GameObjectFactory.html">Factory (game.add)</a></li>
+						<li class="class-depth-1"><a href="Phaser.GameObjectCreator.html">Creator (game.make)</a></li>
+						<li class="class-depth-1"><a href="Phaser.Sprite.html">Sprite</a></li>
+						<li class="class-depth-1"><a href="Phaser.Image.html">Image</a></li>
+						<li class="class-depth-1"><a href="Phaser.Sound.html">Sound</a></li>
+						<li class="class-depth-1"><a href="Phaser.Video.html">Video</a></li>
+						<li class="class-depth-1"><a href="Phaser.Particles.Arcade.Emitter.html">Particle Emitter</a></li>
+						<li class="class-depth-1"><a href="Phaser.Particle.html">Particle</a></li>
+						<li class="class-depth-1"><a href="Phaser.Text.html">Text</a></li>
+						<li class="class-depth-1"><a href="Phaser.Tween.html">Tween</a></li>
+						<li class="class-depth-1"><a href="Phaser.BitmapText.html">BitmapText</a></li>
+						<li class="class-depth-1"><a href="Phaser.Tilemap.html">Tilemap</a></li>
+						<li class="class-depth-1"><a href="Phaser.BitmapData.html">BitmapData</a></li>
+						<li class="class-depth-1"><a href="Phaser.RetroFont.html">RetroFont</a></li>
+						<li class="class-depth-1"><a href="Phaser.Button.html">Button</a></li>
+						<li class="class-depth-1"><a href="Phaser.Animation.html">Animation</a></li>
+						<li class="class-depth-1"><a href="Phaser.Graphics.html">Graphics</a></li>
+						<li class="class-depth-1"><a href="Phaser.RenderTexture.html">RenderTexture</a></li>
+						<li class="class-depth-1"><a href="Phaser.TileSprite.html">TileSprite</a></li>
+					</ul>
+				</li>
+
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Geometry<b class="caret"></b></a>
+					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.Circle.html">Circle</a></li>
+						<li class="class-depth-1"><a href="Phaser.Ellipse.html">Ellipse</a></li>
+						<li class="class-depth-1"><a href="Phaser.Line.html">Line</a></li>
+						<li class="class-depth-1"><a href="Phaser.Matrix.html">Matrix</a></li>
+						<li class="class-depth-1"><a href="Phaser.Point.html">Point</a></li>
+						<li class="class-depth-1"><a href="Phaser.Polygon.html">Polygon</a></li>
+						<li class="class-depth-1"><a href="Phaser.Rectangle.html">Rectangle</a></li>
+						<li class="class-depth-1"><a href="Phaser.RoundedRectangle.html">Rounded Rectangle</a></li>
+					</ul>
+				</li>
+
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Physics<b class="caret"></b></a>
+					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.Physics.Arcade.html">Arcade Physics</a></li>
+						<li class="class-depth-2"><a href="Phaser.Physics.Arcade.Body.html">Body</a></li>
+						<li class="class-depth-1"><a href="Phaser.Physics.P2.html">P2 Physics</a></li>
+						<li class="class-depth-2"><a href="Phaser.Physics.P2.Body.html">Body</a></li>
+						<li class="class-depth-2"><a href="Phaser.Physics.P2.Spring.html">Spring</a></li>
+						<li class="class-depth-2"><a href="Phaser.Physics.P2.CollisionGroup.html">CollisionGroup</a></li>
+						<li class="class-depth-2"><a href="Phaser.Physics.P2.ContactMaterial.html">ContactMaterial</a></li>
+						<li class="class-depth-1"><a href="Phaser.Physics.Ninja.html">Ninja Physics</a></li>
+						<li class="class-depth-2"><a href="Phaser.Physics.Body.html">Body</a></li>
+					</ul>
+				</li>
+
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Input<b class="caret"></b></a>
+					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.InputHandler.html">Input Handler</a></li>
+						<li class="class-depth-1"><a href="Phaser.Pointer.html">Pointer</a></li>
+						<li class="class-depth-1"><a href="Phaser.DeviceButton.html">Device Button</a></li>
+						<li class="class-depth-1"><a href="Phaser.Mouse.html">Mouse</a></li>
+						<li class="class-depth-1"><a href="Phaser.Keyboard.html">Keyboard</a></li>
+						<li class="class-depth-1"><a href="Phaser.Key.html">Key</a></li>
+						<li class="class-depth-1"><a href="Phaser.Gamepad.html">Gamepad</a></li>
+					</ul>
+				</li>
+
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Community<b class="caret"></b></a>
+					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="http://phaser.io">Phaser Web Site</a></li>
+						<li class="class-depth-1"><a href="https://github.com/photonstorm/phaser">Phaser Github</a></li>
+						<li class="class-depth-1"><a href="http://phaser.io/examples">Phaser Examples</a></li>
+						<li class="class-depth-1"><a href="https://github.com/photonstorm/phaser-plugins">Phaser Plugins</a></li>
+						<li class="class-depth-1"><a href="http://www.html5gamedevs.com/forum/14-phaser/">Forum</a></li>
+						<li class="class-depth-1"><a href="http://stackoverflow.com/questions/tagged/phaser-framework">Stack Overflow</a></li>
+						<li class="class-depth-1"><a href="http://phaser.io/learn">Tutorials</a></li>
+						<li class="class-depth-1"><a href="https://confirmsubscription.com/h/r/369DE48E3E86AF1E">Newsletter</a></li>
+						<li class="class-depth-1"><a href="http://phaser.io/community/twitter">Twitter</a></li>
+						<li class="class-depth-1"><a href="http://phaser.io/community/irc">IRC</a></li>
+						<li class="class-depth-1"><a href="https://www.codeandweb.com/texturepacker/phaser">Texture Packer</a></li>
+					</ul>
+				</li>
+
+			</ul>
+		</div>
+	</div>
+
+	<div class="row-fluid">
+
+		
+			<div class="span12">
+				
+				<div id="main">
+					
+
+
+		<h1 class="page-title">Source: src/core/ScaleManager.js</h1>
+    
+    <section>
+        <article>
+            <pre class="sunlight-highlight-javascript linenums">/**
+* @author       Richard Davey &lt;rich@photonstorm.com>
+* @copyright    2015 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
+* @classdesc
+* The ScaleManager object handles the the scaling, resizing, and alignment of the
+* Game size and the game Display canvas.
+*
+* The Game size is the logical size of the game; the Display canvas has size as an HTML element.
+*
+* The calculations of these are heavily influenced by the bounding Parent size which is the computed
+* dimensions of the Display canvas's Parent container/element - the _effective CSS rules of the
+* canvas's Parent element play an important role_ in the operation of the ScaleManager. 
+*
+* The Display canvas - or Game size, depending {@link #scaleMode} - is updated to best utilize the Parent size.
+* When in Fullscreen mode or with {@link #parentIsWindow} the Parent size is that of the visual viewport (see {@link Phaser.ScaleManager#getParentBounds getParentBounds}).
+*
+* Parent and Display canvas containment guidelines:
+*
+* - Style the Parent element (of the game canvas) to control the Parent size and
+*   thus the Display canvas's size and layout.
+*
+* - The Parent element's CSS styles should _effectively_ apply maximum (and minimum) bounding behavior.
+*
+* - The Parent element should _not_ apply a padding as this is not accounted for.
+*   If a padding is required apply it to the Parent's parent or apply a margin to the Parent.
+*   If you need to add a border, margin or any other CSS around your game container, then use a parent element and
+*   apply the CSS to this instead, otherwise you'll be constantly resizing the shape of the game container.
+*
+* - The Display canvas layout CSS styles (i.e. margins, size) should not be altered/specified as
+*   they may be updated by the ScaleManager.
+*
+* @description
+* Create a new ScaleManager object - this is done automatically by {@link Phaser.Game}
+*
+* The `width` and `height` constructor parameters can either be a number which represents pixels or a string that represents a percentage: e.g. `800` (for 800 pixels) or `"80%"` for 80%.
+*
+* @class
+* @param {Phaser.Game} game - A reference to the currently running game.
+* @param {number|string} width - The width of the game. See above.
+* @param {number|string} height - The height of the game. See above.
+*/
+Phaser.ScaleManager = function (game, width, height) {
+
+    /**
+    * A reference to the currently running game.
+    * @property {Phaser.Game} game
+    * @protected
+    * @readonly
+    */
+    this.game = game;
+
+    /**
+    * Provides access to some cross-device DOM functions.
+    * @property {Phaser.DOM} dom
+    * @protected
+    * @readonly
+    */
+    this.dom = Phaser.DOM;
+
+    /**
+    * _EXPERIMENTAL:_ A responsive grid on which you can align game objects.
+    * @property {Phaser.FlexGrid} grid
+    * @public
+    */
+    this.grid = null;
+
+    /**
+    * Target width (in pixels) of the Display canvas.
+    * @property {number} width
+    * @readonly
+    */
+    this.width = 0;
+
+    /**
+    * Target height (in pixels) of the Display canvas.
+    * @property {number} height
+    * @readonly
+    */
+    this.height = 0;
+
+    /**
+    * Minimum width the canvas should be scaled to (in pixels).
+    * Change with {@link #setMinMax}.
+    * @property {?number} minWidth
+    * @readonly
+    * @protected
+    */
+    this.minWidth = null;
+
+    /**
+    * Maximum width the canvas should be scaled to (in pixels).
+    * If null it will scale to whatever width the browser can handle.
+    * Change with {@link #setMinMax}.
+    * @property {?number} maxWidth
+    * @readonly
+    * @protected
+    */
+    this.maxWidth = null;
+
+    /**
+    * Minimum height the canvas should be scaled to (in pixels).
+    * Change with {@link #setMinMax}.
+    * @property {?number} minHeight
+    * @readonly
+    * @protected
+    */
+    this.minHeight = null;
+
+    /**
+    * Maximum height the canvas should be scaled to (in pixels).
+    * If null it will scale to whatever height the browser can handle.
+    * Change with {@link #setMinMax}.
+    * @property {?number} maxHeight
+    * @readonly
+    * @protected
+    */
+    this.maxHeight = null;
+
+    /**
+    * The offset coordinates of the Display canvas from the top-left of the browser window.
+    * The is used internally by Phaser.Pointer (for Input) and possibly other types.
+    * @property {Phaser.Point} offset
+    * @readonly
+    * @protected
+    */
+    this.offset = new Phaser.Point();
+
+    /**
+    * If true, the game should only run in a landscape orientation.
+    * Change with {@link #forceOrientation}.
+    * @property {boolean} forceLandscape
+    * @readonly
+    * @default
+    * @protected
+    */
+    this.forceLandscape = false;
+
+    /**
+    * If true, the game should only run in a portrait 
+    * Change with {@link #forceOrientation}.
+    * @property {boolean} forcePortrait
+    * @readonly
+    * @default
+    * @protected
+    */
+    this.forcePortrait = false;
+
+    /**
+    * True if {@link #forceLandscape} or {@link #forcePortrait} are set and do not agree with the browser orientation.
+    *
+    * This value is not updated immediately.
+    *
+    * @property {boolean} incorrectOrientation    
+    * @readonly
+    * @protected
+    */
+    this.incorrectOrientation = false;
+
+    /**
+    * See {@link #pageAlignHorizontally}.
+    * @property {boolean} _pageAlignHorizontally
+    * @private
+    */
+    this._pageAlignHorizontally = false;
+
+    /**
+    * See {@link #pageAlignVertically}.
+    * @property {boolean} _pageAlignVertically
+    * @private
+    */
+    this._pageAlignVertically = false;
+
+    /**
+    * This signal is dispatched when the orientation changes _or_ the validity of the current orientation changes.
+    * 
+    * The signal is supplied with the following arguments:
+    * - `scale` - the ScaleManager object
+    * - `prevOrientation`, a string - The previous orientation as per {@link Phaser.ScaleManager#screenOrientation screenOrientation}.
+    * - `wasIncorrect`, a boolean - True if the previous orientation was last determined to be incorrect.
+    *
+    * Access the current orientation and validity with `scale.screenOrientation` and `scale.incorrectOrientation`.
+    * Thus the following tests can be done:
+    *
+    *     // The orientation itself changed:
+    *     scale.screenOrientation !== prevOrientation
+    *     // The orientation just became incorrect:
+    *     scale.incorrectOrientation &amp;&amp; !wasIncorrect
+    *
+    * It is possible that this signal is triggered after {@link #forceOrientation} so the orientation
+    * correctness changes even if the orientation itself does not change.
+    *
+    * This is signaled from `preUpdate` (or `pauseUpdate`) _even when_ the game is paused.
+    *
+    * @property {Phaser.Signal} onOrientationChange
+    * @public
+    */
+    this.onOrientationChange = new Phaser.Signal();
+
+    /**
+    * This signal is dispatched when the browser enters an incorrect orientation, as defined by {@link #forceOrientation}.
+    *
+    * This is signaled from `preUpdate` (or `pauseUpdate`) _even when_ the game is paused.
+    *
+    * @property {Phaser.Signal} enterIncorrectOrientation
+    * @public
+    */
+    this.enterIncorrectOrientation = new Phaser.Signal();
+
+    /**
+    * This signal is dispatched when the browser leaves an incorrect orientation, as defined by {@link #forceOrientation}.
+    *
+    * This is signaled from `preUpdate` (or `pauseUpdate`) _even when_ the game is paused.
+    *
+    * @property {Phaser.Signal} leaveIncorrectOrientation
+    * @public
+    */
+    this.leaveIncorrectOrientation = new Phaser.Signal();
+
+    /**
+    * If specified, this is the DOM element on which the Fullscreen API enter request will be invoked.
+    * The target element must have the correct CSS styling and contain the Display canvas.
+    *
+    * The elements style will be modified (ie. the width and height might be set to 100%)
+    * but it will not be added to, removed from, or repositioned within the DOM.
+    * An attempt is made to restore relevant style changes when fullscreen mode is left.
+    *
+    * For pre-2.2.0 behavior set `game.scale.fullScreenTarget = game.canvas`.
+    *
+    * @property {?DOMElement} fullScreenTarget
+    * @default
+    */
+    this.fullScreenTarget = null;
+
+    /**
+    * The fullscreen target, as created by {@link #createFullScreenTarget}.
+    * This is not set if {@link #fullScreenTarget} is used and is cleared when fullscreen mode ends.
+    * @property {?DOMElement} _createdFullScreenTarget
+    * @private
+    */
+    this._createdFullScreenTarget = null;
+
+    /**
+    * This signal is dispatched when fullscreen mode is ready to be initialized but
+    * before the fullscreen request.
+    *
+    * The signal is passed two arguments: `scale` (the ScaleManager), and an object in the form `{targetElement: DOMElement}`.
+    *
+    * The `targetElement` is the {@link #fullScreenTarget} element,
+    * if such is assigned, or a new element created by {@link #createFullScreenTarget}.
+    *
+    * Custom CSS styling or resets can be applied to `targetElement` as required.
+    *
+    * If `targetElement` is _not_ the same element as {@link #fullScreenTarget}:
+    * - After initialization the Display canvas is moved onto the `targetElement` for
+    *   the duration of the fullscreen mode, and restored to it's original DOM location when fullscreen is exited.
+    * - The `targetElement` is moved/re-parented within the DOM and may have its CSS styles updated.
+    *
+    * The behavior of a pre-assigned target element is covered in {@link Phaser.ScaleManager#fullScreenTarget fullScreenTarget}.
+    *
+    * @property {Phaser.Signal} onFullScreenInit
+    * @public
+    */
+    this.onFullScreenInit = new Phaser.Signal();
+
+    /**
+    * This signal is dispatched when the browser enters or leaves fullscreen mode, if supported.
+    *
+    * The signal is supplied with a single argument: `scale` (the ScaleManager). Use `scale.isFullScreen` to determine
+    * if currently running in Fullscreen mode.
+    *
+    * @property {Phaser.Signal} onFullScreenChange
+    * @public    
+    */
+    this.onFullScreenChange = new Phaser.Signal();
+
+    /**
+    * This signal is dispatched when the browser fails to enter fullscreen mode;
+    * or if the device does not support fullscreen mode and `startFullScreen` is invoked.
+    *
+    * The signal is supplied with a single argument: `scale` (the ScaleManager).
+    *
+    * @property {Phaser.Signal} onFullScreenError
+    * @public
+    */
+    this.onFullScreenError = new Phaser.Signal();
+
+    /**
+    * The _last known_ orientation of the screen, as defined in the Window Screen Web API.
+    * See {@link Phaser.DOM.getScreenOrientation} for possible values.
+    *
+    * @property {string} screenOrientation
+    * @readonly
+    * @public
+    */
+    this.screenOrientation = this.dom.getScreenOrientation();
+
+    /**
+    * The _current_ scale factor based on the game dimensions vs. the scaled dimensions.
+    * @property {Phaser.Point} scaleFactor
+    * @readonly
+    */
+    this.scaleFactor = new Phaser.Point(1, 1);
+
+    /**
+    * The _current_ inversed scale factor. The displayed dimensions divided by the game dimensions.
+    * @property {Phaser.Point} scaleFactorInversed
+    * @readonly
+    * @protected
+    */
+    this.scaleFactorInversed = new Phaser.Point(1, 1);
+
+    /**
+    * The Display canvas is aligned by adjusting the margins; the last margins are stored here.
+    *
+    * @property {Bounds-like} margin
+    * @readonly
+    * @protected
+    */
+    this.margin = {left: 0, top: 0, right: 0, bottom: 0, x: 0, y: 0};
+
+    /**
+    * The bounds of the scaled game. The x/y will match the offset of the canvas element and the width/height the scaled width and height.
+    * @property {Phaser.Rectangle} bounds
+    * @readonly
+    */
+    this.bounds = new Phaser.Rectangle();
+
+    /**
+    * The aspect ratio of the scaled Display canvas.
+    * @property {number} aspectRatio
+    * @readonly
+    */
+    this.aspectRatio = 0;
+
+    /**
+    * The aspect ratio of the original game dimensions.
+    * @property {number} sourceAspectRatio
+    * @readonly
+    */
+    this.sourceAspectRatio = 0;
+
+    /**
+    * The native browser events from Fullscreen API changes.
+    * @property {any} event
+    * @readonly
+    * @private
+    */
+    this.event = null;
+
+    /**
+    * The edges on which to constrain the game Display/canvas in _addition_ to the restrictions of the parent container.
+    *
+    * The properties are strings and can be '', 'visual', 'layout', or 'layout-soft'.
+    * - If 'visual', the edge will be constrained to the Window / displayed screen area
+    * - If 'layout', the edge will be constrained to the CSS Layout bounds
+    * - An invalid value is treated as 'visual'
+    *
+    * @member
+    * @property {string} bottom
+    * @property {string} right
+    * @default
+    */
+    this.windowConstraints = {
+        right: 'layout',
+        bottom: ''
+    };
+
+    /**
+    * Various compatibility settings.
+    * A value of "(auto)" indicates the setting is configured based on device and runtime information.
+    *
+    * A {@link #refresh} may need to be performed after making changes.
+    *
+    * @protected
+    * 
+    * @property {boolean} [supportsFullscreen=(auto)] - True only if fullscreen support will be used. (Changing to fullscreen still might not work.)
+    *
+    * @property {boolean} [orientationFallback=(auto)] - See {@link Phaser.DOM.getScreenOrientation}.
+    *
+    * @property {boolean} [noMargins=false] - If true then the Display canvas's margins will not be updated anymore: existing margins must be manually cleared. Disabling margins prevents automatic canvas alignment/centering, possibly in fullscreen.
+    *
+    * @property {?Phaser.Point} [scrollTo=(auto)] - If specified the window will be scrolled to this position on every refresh.
+    *
+    * @property {boolean} [forceMinimumDocumentHeight=false] - If enabled the document elements minimum height is explicitly set on updates.
+    *    The height set varies by device and may either be the height of the window or the viewport.
+    *
+    * @property {boolean} [canExpandParent=true] - If enabled then SHOW_ALL and USER_SCALE modes can try and expand the parent element. It may be necessary for the parent element to impose CSS width/height restrictions.
+    *
+    * @property {string} [clickTrampoline=(auto)] - On certain browsers (eg. IE) FullScreen events need to be triggered via 'click' events.
+    *     A value of 'when-not-mouse' uses a click trampoline when a pointer that is not the primary mouse is used.
+    *     Any other string value (including the empty string) prevents using click trampolines.
+    *     For more details on click trampolines see {@link Phaser.Pointer#addClickTrampoline}.
+    */
+    this.compatibility = {
+        supportsFullScreen: false,
+        orientationFallback: null,
+        noMargins: false,
+        scrollTo: null,
+        forceMinimumDocumentHeight: false,
+        canExpandParent: true,
+        clickTrampoline: ''
+    };
+
+    /**
+    * Scale mode to be used when not in fullscreen.
+    * @property {number} _scaleMode
+    * @private
+    */
+    this._scaleMode = Phaser.ScaleManager.NO_SCALE;
+
+    /*
+    * Scale mode to be used in fullscreen.
+    * @property {number} _fullScreenScaleMode
+    * @private
+    */
+    this._fullScreenScaleMode = Phaser.ScaleManager.NO_SCALE;
+
+    /**
+    * If the parent container of the Game canvas is the browser window itself (i.e. document.body),
+    * rather than another div, this should set to `true`.
+    *
+    * The {@link #parentNode} property is generally ignored while this is in effect.
+    *
+    * @property {boolean} parentIsWindow
+    */
+    this.parentIsWindow = false;
+
+    /**
+    * The _original_ DOM element for the parent of the Display canvas.
+    * This may be different in fullscreen - see {@link #createFullScreenTarget}.
+    *
+    * This should only be changed after moving the Game canvas to a different DOM parent.
+    *
+    * @property {?DOMElement} parentNode
+    */
+    this.parentNode = null;
+
+    /**
+    * The scale of the game in relation to its parent container.
+    * @property {Phaser.Point} parentScaleFactor
+    * @readonly
+    */
+    this.parentScaleFactor = new Phaser.Point(1, 1);
+
+    /**
+    * The maximum time (in ms) between dimension update checks for the Canvas's parent element (or window).
+    * Update checks normally happen quicker in response to other events.
+    *
+    * @property {integer} trackParentInterval
+    * @default
+    * @protected
+    * @see {@link Phaser.ScaleManager#refresh refresh}
+    */
+    this.trackParentInterval = 2000;
+
+    /**
+    * This signal is dispatched when the size of the Display canvas changes _or_ the size of the Game changes. 
+    * When invoked this is done _after_ the Canvas size/position have been updated.
+    *
+    * This signal is _only_ called when a change occurs and a reflow may be required.
+    * For example, if the canvas does not change sizes because of CSS settings (such as min-width)
+    * then this signal will _not_ be triggered.
+    *
+    * Use this to handle responsive game layout options.
+    *
+    * This is signaled from `preUpdate` (or `pauseUpdate`) _even when_ the game is paused.
+    *
+    * @property {Phaser.Signal} onSizeChange
+    * @todo Formalize the arguments, if any, supplied to this signal.
+    */
+    this.onSizeChange = new Phaser.Signal();
+
+    /**
+    * The callback that will be called each the parent container resizes.
+    * @property {function} onResize
+    * @private
+    */
+    this.onResize = null;
+
+    /**
+    * The context in which the {@link #onResize} callback will be called.
+    * @property {object} onResizeContext
+    * @private
+    */
+    this.onResizeContext = null;
+
+    /**
+    * @property {integer} _pendingScaleMode - Used to retain the scale mode if set from config before Boot.
+    * @private
+    */
+    this._pendingScaleMode = null;
+
+    /**
+    * Information saved when fullscreen mode is started.
+    * @property {?object} _fullScreenRestore
+    * @private
+    */
+    this._fullScreenRestore = null;
+
+    /**
+    * The _actual_ game dimensions, as initially set or set by {@link #setGameSize}.
+    * @property {Phaser.Rectangle} _gameSize
+    * @private
+    */
+    this._gameSize = new Phaser.Rectangle();
+
+    /**
+    * The user-supplied scale factor, used with the USER_SCALE scaling mode.
+    * @property {Phaser.Point} _userScaleFactor
+    * @private
+    */
+    this._userScaleFactor = new Phaser.Point(1, 1);
+
+    /**
+    * The user-supplied scale trim, used with the USER_SCALE scaling mode.
+    * @property {Phaser.Point} _userScaleTrim
+    * @private
+    */
+    this._userScaleTrim = new Phaser.Point(0, 0);
+
+    /**
+    * The last time the bounds were checked in `preUpdate`.
+    * @property {number} _lastUpdate
+    * @private
+    */
+    this._lastUpdate = 0;
+
+    /**
+    * Size checks updates are delayed according to the throttle.
+    * The throttle increases to `trackParentInterval` over time and is used to more
+    * rapidly detect changes in certain browsers (eg. IE) while providing back-off safety.
+    * @property {integer} _updateThrottle
+    * @private
+    */
+    this._updateThrottle = 0;
+
+    /**
+    * The minimum throttle allowed until it has slowed down sufficiently.
+    * @property {integer} _updateThrottleReset   
+    * @private
+    */
+    this._updateThrottleReset = 100;
+
+    /**
+    * The cached result of the parent (possibly window) bounds; used to invalidate sizing.
+    * @property {Phaser.Rectangle} _parentBounds
+    * @private
+    */
+    this._parentBounds = new Phaser.Rectangle();
+
+    /**
+    * Temporary bounds used for internal work to cut down on new objects created.
+    * @property {Phaser.Rectangle} _parentBounds
+    * @private
+    */
+    this._tempBounds = new Phaser.Rectangle();
+
+    /**
+    * The Canvas size at which the last onSizeChange signal was triggered.
+    * @property {Phaser.Rectangle} _lastReportedCanvasSize
+    * @private
+    */
+    this._lastReportedCanvasSize = new Phaser.Rectangle();
+
+    /**
+    * The Game size at which the last onSizeChange signal was triggered.
+    * @property {Phaser.Rectangle} _lastReportedGameSize
+    * @private
+    */
+    this._lastReportedGameSize = new Phaser.Rectangle();
+
+    /**
+    * @property {boolean} _booted - ScaleManager booted state.
+    * @private
+    */
+    this._booted = false;
+
+    if (game.config)
+    {
+        this.parseConfig(game.config);
+    }
+
+    this.setupScale(width, height);
+
+};
+
+/**
+* A scale mode that stretches content to fill all available space - see {@link Phaser.ScaleManager#scaleMode scaleMode}.
+*
+* @constant
+* @type {integer}
+*/
+Phaser.ScaleManager.EXACT_FIT = 0;
+
+/**
+* A scale mode that prevents any scaling - see {@link Phaser.ScaleManager#scaleMode scaleMode}.
+*
+* @constant
+* @type {integer}
+*/
+Phaser.ScaleManager.NO_SCALE = 1;
+
+/**
+* A scale mode that shows the entire game while maintaining proportions - see {@link Phaser.ScaleManager#scaleMode scaleMode}.
+*
+* @constant
+* @type {integer}
+*/
+Phaser.ScaleManager.SHOW_ALL = 2;
+
+/**
+* A scale mode that causes the Game size to change - see {@link Phaser.ScaleManager#scaleMode scaleMode}.
+*
+* @constant
+* @type {integer}
+*/
+Phaser.ScaleManager.RESIZE = 3;
+
+/**
+* A scale mode that allows a custom scale factor - see {@link Phaser.ScaleManager#scaleMode scaleMode}.
+*
+* @constant
+* @type {integer}
+*/
+Phaser.ScaleManager.USER_SCALE = 4;
+
+Phaser.ScaleManager.prototype = {
+
+    /**
+    * Start the ScaleManager.
+    * 
+    * @method Phaser.ScaleManager#boot
+    * @protected
+    */
+    boot: function () {
+
+        // Configure device-dependent compatibility
+
+        var compat = this.compatibility;
+        
+        compat.supportsFullScreen = this.game.device.fullscreen &amp;&amp; !this.game.device.cocoonJS;
+
+        //  We can't do anything about the status bars in iPads, web apps or desktops
+        if (!this.game.device.iPad &amp;&amp; !this.game.device.webApp &amp;&amp; !this.game.device.desktop)
+        {
+            if (this.game.device.android &amp;&amp; !this.game.device.chrome)
+            {
+                compat.scrollTo = new Phaser.Point(0, 1);
+            }
+            else
+            {
+                compat.scrollTo = new Phaser.Point(0, 0);
+            }
+        }
+
+        if (this.game.device.desktop)
+        {
+            compat.orientationFallback = 'screen';
+            compat.clickTrampoline = 'when-not-mouse';
+        }
+        else
+        {
+            compat.orientationFallback = '';
+            compat.clickTrampoline = '';
+        }
+
+        // Configure event listeners
+
+        var _this = this;
+
+        this._orientationChange = function(event) {
+            return _this.orientationChange(event);
+        };
+
+        this._windowResize = function(event) {
+            return _this.windowResize(event);
+        };
+
+        // This does not appear to be on the standards track
+        window.addEventListener('orientationchange', this._orientationChange, false);
+        window.addEventListener('resize', this._windowResize, false);
+
+        if (this.compatibility.supportsFullScreen)
+        {
+            this._fullScreenChange = function(event) {
+                return _this.fullScreenChange(event);
+            };
+
+            this._fullScreenError = function(event) {
+                return _this.fullScreenError(event);
+            };
+
+            document.addEventListener('webkitfullscreenchange', this._fullScreenChange, false);
+            document.addEventListener('mozfullscreenchange', this._fullScreenChange, false);
+            document.addEventListener('MSFullscreenChange', this._fullScreenChange, false);
+            document.addEventListener('fullscreenchange', this._fullScreenChange, false);
+
+            document.addEventListener('webkitfullscreenerror', this._fullScreenError, false);
+            document.addEventListener('mozfullscreenerror', this._fullScreenError, false);
+            document.addEventListener('MSFullscreenError', this._fullScreenError, false);
+            document.addEventListener('fullscreenerror', this._fullScreenError, false);
+        }
+
+        this.game.onResume.add(this._gameResumed, this);
+
+        // Initialize core bounds
+
+        this.dom.getOffset(this.game.canvas, this.offset);
+
+        this.bounds.setTo(this.offset.x, this.offset.y, this.width, this.height);
+
+        this.setGameSize(this.game.width, this.game.height);
+
+        // Don't use updateOrientationState so events are not fired
+        this.screenOrientation = this.dom.getScreenOrientation(this.compatibility.orientationFallback);
+
+        if (Phaser.FlexGrid)
+        {
+            this.grid = new Phaser.FlexGrid(this, this.width, this.height);
+        }
+
+        this._booted = true;
+
+        if (this._pendingScaleMode)
+        {
+            this.scaleMode = this._pendingScaleMode;
+            this._pendingScaleMode = null;
+        }
+
+    },
+
+    /**
+    * Load configuration settings.
+    * 
+    * @method Phaser.ScaleManager#parseConfig
+    * @protected
+    * @param {object} config - The game configuration object.
+    */
+    parseConfig: function (config) {
+
+        if (config['scaleMode'])
+        {
+            if (this._booted)
+            {
+                this.scaleMode = config['scaleMode'];
+            }
+            else
+            {
+                this._pendingScaleMode = config['scaleMode'];
+            }
+        }
+
+        if (config['fullScreenScaleMode'])
+        {
+            this.fullScreenScaleMode = config['fullScreenScaleMode'];
+        }
+
+        if (config['fullScreenTarget'])
+        {
+            this.fullScreenTarget = config['fullScreenTarget'];
+        }
+
+    },
+
+    /**
+    * Calculates and sets the game dimensions based on the given width and height.
+    *
+    * This should _not_ be called when in fullscreen mode.
+    * 
+    * @method Phaser.ScaleManager#setupScale
+    * @protected
+    * @param {number|string} width - The width of the game.
+    * @param {number|string} height - The height of the game.
+    */
+    setupScale: function (width, height) {
+
+        var target;
+        var rect = new Phaser.Rectangle();
+
+        if (this.game.parent !== '')
+        {
+            if (typeof this.game.parent === 'string')
+            {
+                // hopefully an element ID
+                target = document.getElementById(this.game.parent);
+            }
+            else if (this.game.parent &amp;&amp; this.game.parent.nodeType === 1)
+            {
+                // quick test for a HTMLelement
+                target = this.game.parent;
+            }
+        }
+
+        // Fallback, covers an invalid ID and a non HTMLelement object
+        if (!target)
+        {
+            //  Use the full window
+            this.parentNode = null;
+            this.parentIsWindow = true;
+
+            rect.width = this.dom.visualBounds.width;
+            rect.height = this.dom.visualBounds.height;
+
+            this.offset.set(0, 0);
+        }
+        else
+        {
+            this.parentNode = target;
+            this.parentIsWindow = false;
+
+            this.getParentBounds(this._parentBounds);
+
+            rect.width = this._parentBounds.width;
+            rect.height = this._parentBounds.height;
+
+            this.offset.set(this._parentBounds.x, this._parentBounds.y);
+        }
+
+        var newWidth = 0;
+        var newHeight = 0;
+
+        if (typeof width === 'number')
+        {
+            newWidth = width;
+        }
+        else
+        {
+            //  Percentage based
+            this.parentScaleFactor.x = parseInt(width, 10) / 100;
+            newWidth = rect.width * this.parentScaleFactor.x;
+        }
+
+        if (typeof height === 'number')
+        {
+            newHeight = height;
+        }
+        else
+        {
+            //  Percentage based
+            this.parentScaleFactor.y = parseInt(height, 10) / 100;
+            newHeight = rect.height * this.parentScaleFactor.y;
+        }
+
+        this._gameSize.setTo(0, 0, newWidth, newHeight);
+
+        this.updateDimensions(newWidth, newHeight, false);
+
+    },
+
+    /**
+    * Invoked when the game is resumed.
+    * 
+    * @method Phaser.ScaleManager#_gameResumed
+    * @private
+    */
+    _gameResumed: function () {
+
+        this.queueUpdate(true);
+
+    },
+
+    /**
+    * Set the actual Game size.
+    * Use this instead of directly changing `game.width` or `game.height`.
+    *
+    * The actual physical display (Canvas element size) depends on various settings including
+    * - Scale mode
+    * - Scaling factor
+    * - Size of Canvas's parent element or CSS rules such as min-height/max-height;
+    * - The size of the Window
+    *
+    * @method Phaser.ScaleManager#setGameSize
+    * @public
+    * @param {integer} width - _Game width_, in pixels.
+    * @param {integer} height - _Game height_, in pixels.
+    */
+    setGameSize: function (width, height) {
+
+        this._gameSize.setTo(0, 0, width, height);
+        
+        if (this.currentScaleMode !== Phaser.ScaleManager.RESIZE)
+        {
+            this.updateDimensions(width, height, true);
+        }
+
+        this.queueUpdate(true);
+
+    },
+
+    /**
+    * Set a User scaling factor used in the USER_SCALE scaling mode.
+    *
+    * The target canvas size is computed by:
+    *
+    *     canvas.width = (game.width * hScale) - hTrim
+    *     canvas.height = (game.height * vScale) - vTrim
+    *
+    * This method can be used in the {@link Phaser.ScaleManager#setResizeCallback resize callback}.
+    *
+    * @method Phaser.ScaleManager#setUserScale
+    * @param {number} hScale - Horizontal scaling factor.
+    * @param {numer} vScale - Vertical scaling factor.
+    * @param {integer} [hTrim=0] - Horizontal trim, applied after scaling.
+    * @param {integer} [vTrim=0] - Vertical trim, applied after scaling.
+    */
+    setUserScale: function (hScale, vScale, hTrim, vTrim) {
+
+        this._userScaleFactor.setTo(hScale, vScale);
+        this._userScaleTrim.setTo(hTrim | 0, vTrim | 0);
+        this.queueUpdate(true);
+
+    },
+
+    /**
+    * Sets the callback that will be invoked before sizing calculations.
+    *
+    * This is the appropriate place to call {@link #setUserScale} if needing custom dynamic scaling.
+    *
+    * The callback is supplied with two arguments `scale` and `parentBounds` where `scale` is the ScaleManager
+    * and `parentBounds`, a Phaser.Rectangle, is the size of the Parent element.
+    *
+    * This callback
+    * - May be invoked even though the parent container or canvas sizes have not changed
+    * - Unlike {@link #onSizeChange}, it runs _before_ the canvas is guaranteed to be updated
+    * - Will be invoked from `preUpdate`, _even when_ the game is paused    
+    *
+    * See {@link #onSizeChange} for a better way of reacting to layout updates.
+    * 
+    * @method Phaser.ScaleManager#setResizeCallback
+    * @public
+    * @param {function} callback - The callback that will be called each time a window.resize event happens or if set, the parent container resizes.
+    * @param {object} context - The context in which the callback will be called.
+    */
+    setResizeCallback: function (callback, context) {
+
+        this.onResize = callback;
+        this.onResizeContext = context;
+
+    },
+
+    /**
+    * Signals a resize - IF the canvas or Game size differs from the last signal.
+    *
+    * This also triggers updates on {@link #grid} (FlexGrid) and, if in a RESIZE mode, `game.state` (StateManager).
+    *
+    * @method Phaser.ScaleManager#signalSizeChange
+    * @private
+    */
+    signalSizeChange: function () {
+
+        if (!Phaser.Rectangle.sameDimensions(this, this._lastReportedCanvasSize) ||
+            !Phaser.Rectangle.sameDimensions(this.game, this._lastReportedGameSize))
+        {
+            var width = this.width;
+            var height = this.height;
+
+            this._lastReportedCanvasSize.setTo(0, 0, width, height);
+            this._lastReportedGameSize.setTo(0, 0, this.game.width, this.game.height);
+
+            if (this.grid)
+            {
+                this.grid.onResize(width, height);
+            }
+
+            this.onSizeChange.dispatch(this, width, height);
+
+            // Per StateManager#onResizeCallback, it only occurs when in RESIZE mode.
+            if (this.currentScaleMode === Phaser.ScaleManager.RESIZE)
+            {
+                this.game.state.resize(width, height);
+                this.game.load.resize(width, height);
+            }
+        }
+
+    },
+
+    /**
+    * Set the min and max dimensions for the Display canvas.
+    * 
+    * _Note:_ The min/max dimensions are only applied in some cases
+    * - When the device is not in an incorrect orientation; or
+    * - The scale mode is EXACT_FIT when not in fullscreen
+    *
+    * @method Phaser.ScaleManager#setMinMax
+    * @public
+    * @param {number} minWidth - The minimum width the game is allowed to scale down to.
+    * @param {number} minHeight - The minimum height the game is allowed to scale down to.
+    * @param {number} [maxWidth] - The maximum width the game is allowed to scale up to; only changed if specified.
+    * @param {number} [maxHeight] - The maximum height the game is allowed to scale up to; only changed if specified.
+    * @todo These values are only sometimes honored.
+    */
+    setMinMax: function (minWidth, minHeight, maxWidth, maxHeight) {
+
+        this.minWidth = minWidth;
+        this.minHeight = minHeight;
+
+        if (typeof maxWidth !== 'undefined')
+        {
+            this.maxWidth = maxWidth;
+        }
+
+        if (typeof maxHeight !== 'undefined')
+        {
+            this.maxHeight = maxHeight;
+        }
+
+    },
+
+    /**
+    * The ScaleManager.preUpdate is called automatically by the core Game loop.
+    * 
+    * @method Phaser.ScaleManager#preUpdate
+    * @protected
+    */
+    preUpdate: function () {
+
+        if (this.game.time.time &lt; (this._lastUpdate + this._updateThrottle))
+        {
+            return;
+        }
+
+        var prevThrottle = this._updateThrottle;
+        this._updateThrottleReset = prevThrottle >= 400 ? 0 : 100;
+
+        this.dom.getOffset(this.game.canvas, this.offset);
+
+        var prevWidth = this._parentBounds.width;
+        var prevHeight = this._parentBounds.height;
+        var bounds = this.getParentBounds(this._parentBounds);
+
+        var boundsChanged = bounds.width !== prevWidth || bounds.height !== prevHeight;
+
+        // Always invalidate on a newly detected orientation change
+        var orientationChanged = this.updateOrientationState();
+
+        if (boundsChanged || orientationChanged)
+        {
+            if (this.onResize)
+            {
+                this.onResize.call(this.onResizeContext, this, bounds);
+            }
+
+            this.updateLayout();
+
+            this.signalSizeChange();
+        }
+
+        // Next throttle, eg. 25, 50, 100, 200..
+        var throttle = this._updateThrottle * 2;
+
+        // Don't let an update be too eager about resetting the throttle.
+        if (this._updateThrottle &lt; prevThrottle)
+        {
+            throttle = Math.min(prevThrottle, this._updateThrottleReset);
+        }
+
+        this._updateThrottle = Phaser.Math.clamp(throttle, 25, this.trackParentInterval);
+        this._lastUpdate = this.game.time.time;
+
+    },
+
+    /**
+    * Update method while paused.
+    *
+    * @method Phaser.ScaleManager#pauseUpdate
+    * @private
+    */
+    pauseUpdate: function () {
+
+        this.preUpdate();
+
+        // Updates at slowest.
+        this._updateThrottle = this.trackParentInterval;
+        
+    },
+
+    /**
+    * Update the dimensions taking the parent scaling factor into account.
+    *
+    * @method Phaser.ScaleManager#updateDimensions
+    * @private
+    * @param {number} width - The new width of the parent container.
+    * @param {number} height - The new height of the parent container.
+    * @param {boolean} resize - True if the renderer should be resized, otherwise false to just update the internal vars.
+    */
+    updateDimensions: function (width, height, resize) {
+
+        this.width = width * this.parentScaleFactor.x;
+        this.height = height * this.parentScaleFactor.y;
+
+        this.game.width = this.width;
+        this.game.height = this.height;
+
+        this.sourceAspectRatio = this.width / this.height;
+        this.updateScalingAndBounds();
+
+        if (resize)
+        {
+            //  Resize the renderer (which in turn resizes the Display canvas!)
+            this.game.renderer.resize(this.width, this.height);
+
+            //  The Camera can never be smaller than the Game size
+            this.game.camera.setSize(this.width, this.height);
+
+            //  This should only happen if the world is smaller than the new canvas size
+            this.game.world.resize(this.width, this.height);
+        }
+
+    },
+
+    /**
+    * Update relevant scaling values based on the ScaleManager dimension and game dimensions,
+    * which should already be set. This does not change {@link #sourceAspectRatio}.
+    * 
+    * @method Phaser.ScaleManager#updateScalingAndBounds
+    * @private
+    */
+    updateScalingAndBounds: function () {
+
+        this.scaleFactor.x = this.game.width / this.width;
+        this.scaleFactor.y = this.game.height / this.height;
+
+        this.scaleFactorInversed.x = this.width / this.game.width;
+        this.scaleFactorInversed.y = this.height / this.game.height;
+
+        this.aspectRatio = this.width / this.height;
+
+        // This can be invoked in boot pre-canvas
+        if (this.game.canvas)
+        {
+            this.dom.getOffset(this.game.canvas, this.offset);
+        }
+
+        this.bounds.setTo(this.offset.x, this.offset.y, this.width, this.height);
+
+        // Can be invoked in boot pre-input
+        if (this.game.input &amp;&amp; this.game.input.scale)
+        {
+            this.game.input.scale.setTo(this.scaleFactor.x, this.scaleFactor.y);
+        }
+
+    },
+
+    /**
+    * Force the game to run in only one orientation.
+    *
+    * This enables generation of incorrect orientation signals and affects resizing but does not otherwise rotate or lock the orientation.
+    *
+    * Orientation checks are performed via the Screen Orientation API, if available in browser. This means it will check your monitor
+    * orientation on desktop, or your device orientation on mobile, rather than comparing actual game dimensions. If you need to check the 
+    * viewport dimensions instead and bypass the Screen Orientation API then set: `ScaleManager.compatibility.orientationFallback = 'viewport'`
+    * 
+    * @method Phaser.ScaleManager#forceOrientation
+    * @public
+    * @param {boolean} forceLandscape - true if the game should run in landscape mode only.
+    * @param {boolean} [forcePortrait=false] - true if the game should run in portrait mode only.
+    */
+    forceOrientation: function (forceLandscape, forcePortrait) {
+
+        if (forcePortrait === undefined) { forcePortrait = false; }
+
+        this.forceLandscape = forceLandscape;
+        this.forcePortrait = forcePortrait;
+
+        this.queueUpdate(true);
+
+    },
+
+    /**
+    * Classify the orientation, per `getScreenOrientation`.
+    * 
+    * @method Phaser.ScaleManager#classifyOrientation
+    * @private
+    * @param {string} orientation - The orientation string, e.g. 'portrait-primary'.
+    * @return {?string} The classified orientation: 'portrait', 'landscape`, or null.
+    */
+    classifyOrientation: function (orientation) {
+
+        if (orientation === 'portrait-primary' || orientation === 'portrait-secondary')
+        {
+            return 'portrait';
+        }
+        else if (orientation === 'landscape-primary' || orientation === 'landscape-secondary')
+        {
+            return 'landscape';
+        }
+        else
+        {
+            return null;
+        }
+
+    },
+
+    /**
+    * Updates the current orientation and dispatches orientation change events.
+    * 
+    * @method Phaser.ScaleManager#updateOrientationState
+    * @private
+    * @return {boolean} True if the orientation state changed which means a forced update is likely required.
+    */
+    updateOrientationState: function () {
+
+        var previousOrientation = this.screenOrientation;
+        var previouslyIncorrect = this.incorrectOrientation;
+        
+        this.screenOrientation = this.dom.getScreenOrientation(this.compatibility.orientationFallback);
+
+        this.incorrectOrientation = (this.forceLandscape &amp;&amp; !this.isLandscape) ||
+            (this.forcePortrait &amp;&amp; !this.isPortrait);
+
+        var changed = previousOrientation !== this.screenOrientation;
+        var correctnessChanged = previouslyIncorrect !== this.incorrectOrientation;
+
+        if (correctnessChanged)
+        {
+            if (this.incorrectOrientation)
+            {
+                this.enterIncorrectOrientation.dispatch();
+            }
+            else
+            {
+                this.leaveIncorrectOrientation.dispatch();
+            }
+        }
+
+        if (changed || correctnessChanged)
+        {
+            this.onOrientationChange.dispatch(this, previousOrientation, previouslyIncorrect);
+        }
+
+        return changed || correctnessChanged;
+
+    },
+
+    /**
+    * window.orientationchange event handler.
+    * 
+    * @method Phaser.ScaleManager#orientationChange
+    * @private
+    * @param {Event} event - The orientationchange event data.
+    */
+    orientationChange: function (event) {
+
+        this.event = event;
+
+        this.queueUpdate(true);
+
+    },
+
+    /**
+    * window.resize event handler.
+    * 
+    * @method Phaser.ScaleManager#windowResize
+    * @private
+    * @param {Event} event - The resize event data.
+    */
+    windowResize: function (event) {
+
+        this.event = event;
+
+        this.queueUpdate(true);
+
+    },
+
+    /**
+    * Scroll to the top - in some environments. See `compatibility.scrollTo`.
+    * 
+    * @method Phaser.ScaleManager#scrollTop
+    * @private
+    */
+    scrollTop: function () {
+
+        var scrollTo = this.compatibility.scrollTo;
+
+        if (scrollTo)
+        {
+            window.scrollTo(scrollTo.x, scrollTo.y);
+        }
+
+    },
+
+    /**
+    * The "refresh" methods informs the ScaleManager that a layout refresh is required.
+    *
+    * The ScaleManager automatically queues a layout refresh (eg. updates the Game size or Display canvas layout)
+    * when the browser is resized, the orientation changes, or when there is a detected change
+    * of the Parent size. Refreshing is also done automatically when public properties,
+    * such as {@link #scaleMode}, are updated or state-changing methods are invoked.
+    *
+    * The "refresh" method _may_ need to be used in a few (rare) situtations when
+    *
+    * - a device change event is not correctly detected; or
+    * - the Parent size changes (and an immediate reflow is desired); or
+    * - the ScaleManager state is updated by non-standard means; or
+    * - certain {@link #compatibility} properties are manually changed.
+    *
+    * The queued layout refresh is not immediate but will run promptly in an upcoming `preRender`.
+    * 
+    * @method Phaser.ScaleManager#refresh
+    * @public
+    */
+    refresh: function () {
+
+        this.scrollTop();
+        this.queueUpdate(true);
+
+    },
+
+    /**
+    * Updates the game / canvas position and size.
+    *
+    * @method Phaser.ScaleManager#updateLayout
+    * @private
+    */
+    updateLayout: function () {
+
+        var scaleMode = this.currentScaleMode;
+
+        if (scaleMode === Phaser.ScaleManager.RESIZE)
+        {
+            this.reflowGame();
+            return;
+        }
+
+        this.scrollTop();
+
+        if (this.compatibility.forceMinimumDocumentHeight)
+        {
+            // (This came from older code, by why is it here?)
+            // Set minimum height of content to new window height
+            document.documentElement.style.minHeight = window.innerHeight + 'px';
+        }
+        
+        if (this.incorrectOrientation)
+        {
+            this.setMaximum();
+        }
+        else
+        {
+            if (scaleMode === Phaser.ScaleManager.EXACT_FIT)
+            {
+                this.setExactFit();
+            }
+            else if (scaleMode === Phaser.ScaleManager.SHOW_ALL)
+            {
+                if (!this.isFullScreen &amp;&amp; this.boundingParent &amp;&amp;
+                    this.compatibility.canExpandParent)
+                {
+                    // Try to expand parent out, but choosing maximizing dimensions.                    
+                    // Then select minimize dimensions which should then honor parent
+                    // maximum bound applications.
+                    this.setShowAll(true);
+                    this.resetCanvas();
+                    this.setShowAll();
+                }
+                else
+                {
+                    this.setShowAll();
+                }
+            }
+            else if (scaleMode === Phaser.ScaleManager.NO_SCALE)
+            {
+                this.width = this.game.width;
+                this.height = this.game.height;
+            }
+            else if (scaleMode === Phaser.ScaleManager.USER_SCALE)
+            {
+                this.width = (this.game.width * this._userScaleFactor.x) - this._userScaleTrim.x;
+                this.height = (this.game.height * this._userScaleFactor.y) - this._userScaleTrim.y;
+            }
+        }
+
+        if (!this.compatibility.canExpandParent &amp;&amp;
+            (scaleMode === Phaser.ScaleManager.SHOW_ALL || scaleMode === Phaser.ScaleManager.USER_SCALE))
+        {
+            var bounds = this.getParentBounds(this._tempBounds);
+            this.width = Math.min(this.width, bounds.width);
+            this.height = Math.min(this.height, bounds.height);
+        }
+
+        // Always truncate / force to integer
+        this.width = this.width | 0;
+        this.height = this.height | 0;
+
+        this.reflowCanvas();
+
+    },
+
+    /**
+    * Returns the computed Parent size/bounds that the Display canvas is allowed/expected to fill.
+    *
+    * If in fullscreen mode or without parent (see {@link #parentIsWindow}),
+    * this will be the bounds of the visual viewport itself.
+    *
+    * This function takes the {@link #windowConstraints} into consideration - if the parent is partially outside
+    * the viewport then this function may return a smaller than expected size.
+    *
+    * Values are rounded to the nearest pixel.
+    *
+    * @method Phaser.ScaleManager#getParentBounds
+    * @protected
+    * @param {Phaser.Rectangle} [target=(new Rectangle)] - The rectangle to update; a new one is created as needed.
+    * @return {Phaser.Rectangle} The established parent bounds.
+    */
+    getParentBounds: function (target) {
+
+        var bounds = target || new Phaser.Rectangle();
+        var parentNode = this.boundingParent;
+        var visualBounds = this.dom.visualBounds;
+        var layoutBounds = this.dom.layoutBounds;
+
+        if (!parentNode)
+        {
+            bounds.setTo(0, 0, visualBounds.width, visualBounds.height);
+        }
+        else
+        {
+            // Ref. http://msdn.microsoft.com/en-us/library/hh781509(v=vs.85).aspx for getBoundingClientRect
+            var clientRect = parentNode.getBoundingClientRect();
+            var parentRect = (parentNode.offsetParent) ? parentNode.offsetParent.getBoundingClientRect() : parentNode.getBoundingClientRect();
+
+            bounds.setTo(clientRect.left - parentRect.left, clientRect.top - parentRect.top, clientRect.width, clientRect.height);
+
+            var wc = this.windowConstraints;
+
+            if (wc.right)
+            {
+                var windowBounds = wc.right === 'layout' ? layoutBounds : visualBounds;
+                bounds.right = Math.min(bounds.right, windowBounds.width);
+            }
+
+            if (wc.bottom)
+            {
+                var windowBounds = wc.bottom === 'layout' ? layoutBounds : visualBounds;
+                bounds.bottom = Math.min(bounds.bottom, windowBounds.height);
+            }
+        }
+
+        bounds.setTo(
+            Math.round(bounds.x), Math.round(bounds.y),
+            Math.round(bounds.width), Math.round(bounds.height));
+
+        return bounds;
+
+    },
+
+    /**
+    * Update the canvas position/margins - for alignment within the parent container.
+    *
+    * The canvas margins _must_ be reset/cleared prior to invoking this.
+    *
+    * @method Phaser.ScaleManager#alignCanvas
+    * @private
+    * @param {boolean} horizontal - Align horizontally?
+    * @param {boolean} vertical - Align vertically?
+    */
+    alignCanvas: function (horizontal, vertical) {
+
+        var parentBounds = this.getParentBounds(this._tempBounds);
+        var canvas = this.game.canvas;
+        var margin = this.margin;
+
+        if (horizontal)
+        {
+            margin.left = margin.right = 0;
+
+            var canvasBounds = canvas.getBoundingClientRect();
+
+            if (this.width &lt; parentBounds.width &amp;&amp; !this.incorrectOrientation)
+            {
+                var currentEdge = canvasBounds.left - parentBounds.x;
+                var targetEdge = (parentBounds.width / 2) - (this.width / 2);
+
+                targetEdge = Math.max(targetEdge, 0);
+
+                var offset = targetEdge - currentEdge;
+
+                margin.left = Math.round(offset);
+            }
+
+            canvas.style.marginLeft = margin.left + 'px';
+
+            if (margin.left !== 0)
+            {
+                margin.right = -(parentBounds.width - canvasBounds.width - margin.left);
+                canvas.style.marginRight = margin.right + 'px';
+            }
+        }
+
+        if (vertical)
+        {
+            margin.top = margin.bottom = 0;
+
+            var canvasBounds = canvas.getBoundingClientRect();
+            
+            if (this.height &lt; parentBounds.height &amp;&amp; !this.incorrectOrientation)
+            {
+                var currentEdge = canvasBounds.top - parentBounds.y;
+                var targetEdge = (parentBounds.height / 2) - (this.height / 2);
+
+                targetEdge = Math.max(targetEdge, 0);
+                
+                var offset = targetEdge - currentEdge;
+                margin.top = Math.round(offset);
+            }
+
+            canvas.style.marginTop = margin.top + 'px';
+
+            if (margin.top !== 0)
+            {
+                margin.bottom = -(parentBounds.height - canvasBounds.height - margin.top);
+                canvas.style.marginBottom = margin.bottom + 'px';
+            }
+        }
+
+        // Silly backwards compatibility..
+        margin.x = margin.left;
+        margin.y = margin.top;
+
+    },
+
+    /**
+    * Updates the Game state / size.
+    *
+    * The canvas margins may always be adjusted, even if alignment is not in effect.
+    * 
+    * @method Phaser.ScaleManager#reflowGame
+    * @private
+    */
+    reflowGame: function () {
+
+        this.resetCanvas('', '');
+
+        var bounds = this.getParentBounds(this._tempBounds);
+        this.updateDimensions(bounds.width, bounds.height, true);
+
+    },
+
+    /**
+    * Updates the Display canvas size.
+    *
+    * The canvas margins may always be adjusted, even alignment is not in effect.
+    * 
+    * @method Phaser.ScaleManager#reflowCanvas
+    * @private
+    */
+    reflowCanvas: function () {
+
+        if (!this.incorrectOrientation)
+        {
+            this.width = Phaser.Math.clamp(this.width, this.minWidth || 0, this.maxWidth || this.width);
+            this.height = Phaser.Math.clamp(this.height, this.minHeight || 0, this.maxHeight || this.height);
+        }
+
+        this.resetCanvas();
+
+        if (!this.compatibility.noMargins)
+        {
+            if (this.isFullScreen &amp;&amp; this._createdFullScreenTarget)
+            {
+                this.alignCanvas(true, true);
+            }
+            else
+            {
+                this.alignCanvas(this.pageAlignHorizontally, this.pageAlignVertically);
+            }
+        }
+
+        this.updateScalingAndBounds();
+
+    },
+
+    /**
+    * "Reset" the Display canvas and set the specified width/height.
+    *
+    * @method Phaser.ScaleManager#resetCanvas
+    * @private
+    * @param {string} [cssWidth=(current width)] - The css width to set.
+    * @param {string} [cssHeight=(current height)] - The css height to set.
+    */
+    resetCanvas: function (cssWidth, cssHeight) {
+
+        if (cssWidth === undefined) { cssWidth = this.width + 'px'; }
+        if (cssHeight === undefined) { cssHeight = this.height + 'px'; }
+
+        var canvas = this.game.canvas;
+
+        if (!this.compatibility.noMargins)
+        {
+            canvas.style.marginLeft = '';
+            canvas.style.marginTop = '';
+            canvas.style.marginRight = '';
+            canvas.style.marginBottom = '';
+        }
+
+        canvas.style.width = cssWidth;
+        canvas.style.height = cssHeight;
+
+    },
+
+    /**
+    * Queues/marks a size/bounds check as needing to occur (from `preUpdate`).
+    *
+    * @method Phaser.ScaleManager#queueUpdate
+    * @private
+    * @param {boolean} force - If true resets the parent bounds to ensure the check is dirty.
+    */
+    queueUpdate: function (force) {
+
+        if (force)
+        {
+            this._parentBounds.width = 0;
+            this._parentBounds.height = 0;
+        }
+
+        this._updateThrottle = this._updateThrottleReset;
+
+    },
+
+    /**
+    * Reset internal data/state.
+    *
+    * @method Phaser.ScaleManager#reset
+    * @private
+    */
+    reset: function (clearWorld) {
+
+        if (clearWorld &amp;&amp; this.grid)
+        {
+            this.grid.reset();
+        }
+
+    },
+
+    /**
+    * Updates the width/height to that of the window.
+    * 
+    * @method Phaser.ScaleManager#setMaximum
+    * @private
+    */
+    setMaximum: function () {
+
+        this.width = this.dom.visualBounds.width;
+        this.height = this.dom.visualBounds.height;
+
+    },
+
+    /**
+    * Updates the width/height such that the game is scaled proportionally.
+    * 
+    * @method Phaser.ScaleManager#setShowAll
+    * @private
+    * @param {boolean} expanding - If true then the maximizing dimension is chosen.
+    */
+    setShowAll: function (expanding) {
+
+        var bounds = this.getParentBounds(this._tempBounds);
+        var width = bounds.width;
+        var height = bounds.height;
+
+        var multiplier;
+
+        if (expanding)
+        {
+            multiplier = Math.max((height / this.game.height), (width / this.game.width));
+        }
+        else
+        {
+            multiplier = Math.min((height / this.game.height), (width / this.game.width));
+        }
+
+        this.width = Math.round(this.game.width * multiplier);
+        this.height = Math.round(this.game.height * multiplier);
+
+    },
+
+    /**
+    * Updates the width/height such that the game is stretched to the available size.
+    * Honors {@link #maxWidth} and {@link #maxHeight} when _not_ in fullscreen.
+    *
+    * @method Phaser.ScaleManager#setExactFit
+    * @private
+    */
+    setExactFit: function () {
+
+        var bounds = this.getParentBounds(this._tempBounds);
+
+        this.width = bounds.width;
+        this.height = bounds.height;
+
+        if (this.isFullScreen)
+        {
+            // Max/min not honored fullscreen
+            return;
+        }
+
+        if (this.maxWidth)
+        {
+            this.width = Math.min(this.width, this.maxWidth);
+        }
+
+        if (this.maxHeight)
+        {
+            this.height = Math.min(this.height, this.maxHeight);
+        }
+
+    },
+
+    /**
+    * Creates a fullscreen target. This is called automatically as as needed when entering
+    * fullscreen mode and the resulting element is supplied to {@link #onFullScreenInit}.
+    *
+    * Use {@link #onFullScreenInit} to customize the created object.
+    *
+    * @method Phaser.ScaleManager#createFullScreenTarget
+    * @protected
+    */
+    createFullScreenTarget: function () {
+
+        var fsTarget = document.createElement('div');
+
+        fsTarget.style.margin = '0';
+        fsTarget.style.padding = '0';
+        fsTarget.style.background = '#000';
+
+        return fsTarget;
+
+    },
+
+    /**
+    * Start the browsers fullscreen mode - this _must_ be called from a user input Pointer or Mouse event.
+    *
+    * The Fullscreen API must be supported by the browser for this to work - it is not the same as setting
+    * the game size to fill the browser window. See {@link Phaser.ScaleManager#compatibility compatibility.supportsFullScreen} to check if the current
+    * device is reported to support fullscreen mode.
+    *
+    * The {@link #fullScreenFailed} signal will be dispatched if the fullscreen change request failed or the game does not support the Fullscreen API.
+    *
+    * @method Phaser.ScaleManager#startFullScreen
+    * @public
+    * @param {boolean} [antialias] - Changes the anti-alias feature of the canvas before jumping in to fullscreen (false = retain pixel art, true = smooth art). If not specified then no change is made. Only works in CANVAS mode.
+    * @param {boolean} [allowTrampoline=undefined] - Internal argument. If `false` click trampolining is suppressed.
+    * @return {boolean} Returns true if the device supports fullscreen mode and fullscreen mode was attempted to be started. (It might not actually start, wait for the signals.)
+    */
+    startFullScreen: function (antialias, allowTrampoline) {
+
+        if (this.isFullScreen)
+        {
+            return false;
+        }
+
+        if (!this.compatibility.supportsFullScreen)
+        {
+            // Error is called in timeout to emulate the real fullscreenerror event better
+            var _this = this;
+            setTimeout(function () {
+                _this.fullScreenError();
+            }, 10);
+            return;
+        }
+
+        if (this.compatibility.clickTrampoline === 'when-not-mouse')
+        {
+            var input = this.game.input;
+
+            if (input.activePointer &amp;&amp;
+                input.activePointer !== input.mousePointer &amp;&amp;
+                (allowTrampoline || allowTrampoline !== false))
+            {
+                input.activePointer.addClickTrampoline("startFullScreen", this.startFullScreen, this, [antialias, false]);
+                return;
+            }
+        }
+
+        if (typeof antialias !== 'undefined' &amp;&amp; this.game.renderType === Phaser.CANVAS)
+        {
+            this.game.stage.smoothed = antialias;
+        }
+
+        var fsTarget = this.fullScreenTarget;
+        
+        if (!fsTarget)
+        {
+            this.cleanupCreatedTarget();
+
+            this._createdFullScreenTarget = this.createFullScreenTarget();
+            fsTarget = this._createdFullScreenTarget;
+        }
+
+        var initData = {
+            targetElement: fsTarget
+        };
+
+        this.onFullScreenInit.dispatch(this, initData);
+
+        if (this._createdFullScreenTarget)
+        {
+            // Move the Display canvas inside of the target and add the target to the DOM
+            // (The target has to be added for the Fullscreen API to work.)
+            var canvas = this.game.canvas;
+            var parent = canvas.parentNode;
+            parent.insertBefore(fsTarget, canvas);
+            fsTarget.appendChild(canvas);
+        }
+
+        if (this.game.device.fullscreenKeyboard)
+        {
+            fsTarget[this.game.device.requestFullscreen](Element.ALLOW_KEYBOARD_INPUT);
+        }
+        else
+        {
+            fsTarget[this.game.device.requestFullscreen]();
+        }
+
+        return true;
+
+    },
+
+    /**
+    * Stops / exits fullscreen mode, if active.
+    *
+    * @method Phaser.ScaleManager#stopFullScreen
+    * @public
+    * @return {boolean} Returns true if the browser supports fullscreen mode and fullscreen mode will be exited.
+    */
+    stopFullScreen: function () {
+
+        if (!this.isFullScreen || !this.compatibility.supportsFullScreen)
+        {
+            return false;
+        }
+
+        document[this.game.device.cancelFullscreen]();
+
+        return true;
+
+    },
+
+    /**
+    * Cleans up the previous fullscreen target, if such was automatically created.
+    * This ensures the canvas is restored to its former parent, assuming the target didn't move.
+    *
+    * @method Phaser.ScaleManager#cleanupCreatedTarget
+    * @private
+    */
+    cleanupCreatedTarget: function () {
+
+        var fsTarget = this._createdFullScreenTarget;
+
+        if (fsTarget &amp;&amp; fsTarget.parentNode)
+        {
+            // Make sure to cleanup synthetic target for sure;
+            // swap the canvas back to the parent.
+            var parent = fsTarget.parentNode;
+            parent.insertBefore(this.game.canvas, fsTarget);
+            parent.removeChild(fsTarget);
+        }
+
+        this._createdFullScreenTarget = null;
+
+    },
+
+    /**
+    * Used to prepare/restore extra fullscreen mode settings.
+    * (This does move any elements within the DOM tree.)
+    *
+    * @method Phaser.ScaleManager#prepScreenMode
+    * @private
+    * @param {boolean} enteringFullscreen - True if _entering_ fullscreen, false if _leaving_.
+    */
+    prepScreenMode: function (enteringFullscreen) {
+
+        var createdTarget = !!this._createdFullScreenTarget;
+        var fsTarget = this._createdFullScreenTarget || this.fullScreenTarget;
+
+        if (enteringFullscreen)
+        {
+            if (createdTarget || this.fullScreenScaleMode === Phaser.ScaleManager.EXACT_FIT)
+            {
+                // Resize target, as long as it's not the canvas
+                if (fsTarget !== this.game.canvas)
+                {
+                    this._fullScreenRestore = {
+                        targetWidth: fsTarget.style.width,
+                        targetHeight: fsTarget.style.height
+                    };
+
+                    fsTarget.style.width = '100%';
+                    fsTarget.style.height = '100%';
+                }
+            }
+        }
+        else
+        {
+            // Have restore information
+            if (this._fullScreenRestore)
+            {
+                fsTarget.style.width = this._fullScreenRestore.targetWidth;
+                fsTarget.style.height = this._fullScreenRestore.targetHeight;
+
+                this._fullScreenRestore = null;
+            }
+
+            // Always reset to game size
+            this.updateDimensions(this._gameSize.width, this._gameSize.height, true);
+            this.resetCanvas();
+        }
+
+    },
+
+    /**
+    * Called automatically when the browser enters of leaves fullscreen mode.
+    *
+    * @method Phaser.ScaleManager#fullScreenChange
+    * @private
+    * @param {Event} [event=undefined] - The fullscreenchange event
+    */
+    fullScreenChange: function (event) {
+
+        this.event = event;
+
+        if (this.isFullScreen)
+        {
+            this.prepScreenMode(true);
+
+            this.updateLayout();
+            this.queueUpdate(true);
+        }
+        else
+        {
+            this.prepScreenMode(false);
+
+            this.cleanupCreatedTarget();
+
+            this.updateLayout();
+            this.queueUpdate(true);
+        }
+
+        this.onFullScreenChange.dispatch(this, this.width, this.height);
+
+    },
+
+    /**
+    * Called automatically when the browser fullscreen request fails;
+    * or called when a fullscreen request is made on a device for which it is not supported.
+    *
+    * @method Phaser.ScaleManager#fullScreenError
+    * @private
+    * @param {Event} [event=undefined] - The fullscreenerror event; undefined if invoked on a device that does not support the Fullscreen API.
+    */
+    fullScreenError: function (event) {
+
+        this.event = event;
+
+        this.cleanupCreatedTarget();
+
+        console.warn('Phaser.ScaleManager: requestFullscreen failed or device does not support the Fullscreen API');
+
+        this.onFullScreenError.dispatch(this);
+
+    },
+
+    /**
+    * Takes a Sprite or Image object and scales it to fit the given dimensions.
+    * Scaling happens proportionally without distortion to the sprites texture.
+    * The letterBox parameter controls if scaling will produce a letter-box effect or zoom the
+    * sprite until it fills the given values. Note that with letterBox set to false the scaled sprite may spill out over either
+    * the horizontal or vertical sides of the target dimensions. If you wish to stop this you can crop the Sprite.
+    *
+    * @method Phaser.ScaleManager#scaleSprite
+    * @protected
+    * @param {Phaser.Sprite|Phaser.Image} sprite - The sprite we want to scale.
+    * @param {integer} [width] - The target width that we want to fit the sprite in to. If not given it defaults to ScaleManager.width.
+    * @param {integer} [height] - The target height that we want to fit the sprite in to. If not given it defaults to ScaleManager.height.
+    * @param {boolean} [letterBox=false] - True if we want the `fitted` mode. Otherwise, the function uses the `zoom` mode.
+    * @return {Phaser.Sprite|Phaser.Image} The scaled sprite.
+    */
+    scaleSprite: function (sprite, width, height, letterBox) {
+
+        if (width === undefined) { width = this.width; }
+        if (height === undefined) { height = this.height; }
+        if (letterBox === undefined) { letterBox = false; }
+
+        if (!sprite || !sprite['scale'])
+        {
+            return sprite;
+        }
+
+        sprite.scale.x = 1;
+        sprite.scale.y = 1;
+
+        if ((sprite.width &lt;= 0) || (sprite.height &lt;= 0) || (width &lt;= 0) || (height &lt;= 0))
+        {
+            return sprite;
+        }
+
+        var scaleX1 = width;
+        var scaleY1 = (sprite.height * width) / sprite.width;
+
+        var scaleX2 = (sprite.width * height) / sprite.height;
+        var scaleY2 = height;
+
+        var scaleOnWidth = (scaleX2 > width);
+
+        if (scaleOnWidth)
+        {
+            scaleOnWidth = letterBox;
+        }
+        else
+        {
+            scaleOnWidth = !letterBox;
+        }
+
+        if (scaleOnWidth)
+        {
+            sprite.width = Math.floor(scaleX1);
+            sprite.height = Math.floor(scaleY1);
+        }
+        else
+        {
+            sprite.width = Math.floor(scaleX2);
+            sprite.height = Math.floor(scaleY2);
+        }
+
+        //  Enable at some point?
+        // sprite.x = Math.floor((width - sprite.width) / 2);
+        // sprite.y = Math.floor((height - sprite.height) / 2);
+
+        return sprite;
+
+    },
+
+    /**
+    * Destroys the ScaleManager and removes any event listeners.
+    * This should probably only be called when the game is destroyed.
+    *
+    * @method Phaser.ScaleManager#destroy
+    * @protected
+    */
+    destroy: function () {
+
+        this.game.onResume.remove(this._gameResumed, this);
+
+        window.removeEventListener('orientationchange', this._orientationChange, false);
+        window.removeEventListener('resize', this._windowResize, false);
+
+        if (this.compatibility.supportsFullScreen)
+        {
+            document.removeEventListener('webkitfullscreenchange', this._fullScreenChange, false);
+            document.removeEventListener('mozfullscreenchange', this._fullScreenChange, false);
+            document.removeEventListener('MSFullscreenChange', this._fullScreenChange, false);
+            document.removeEventListener('fullscreenchange', this._fullScreenChange, false);
+
+            document.removeEventListener('webkitfullscreenerror', this._fullScreenError, false);
+            document.removeEventListener('mozfullscreenerror', this._fullScreenError, false);
+            document.removeEventListener('MSFullscreenError', this._fullScreenError, false);
+            document.removeEventListener('fullscreenerror', this._fullScreenError, false);
+        }
+
+    }
+
+};
+
+Phaser.ScaleManager.prototype.constructor = Phaser.ScaleManager;
+
+/**
+* The DOM element that is considered the Parent bounding element, if any.
+*
+* This `null` if {@link #parentIsWindow} is true or if fullscreen mode is entered and {@link #fullScreenTarget} is specified.
+* It will also be null if there is no game canvas or if the game canvas has no parent.
+*
+* @name Phaser.ScaleManager#boundingParent
+* @property {?DOMElement} boundingParent
+* @readonly
+*/
+Object.defineProperty(Phaser.ScaleManager.prototype, "boundingParent", {
+
+    get: function () {
+        if (this.parentIsWindow ||
+            (this.isFullScreen &amp;&amp; !this._createdFullScreenTarget))
+        {
+            return null;
+        }
+
+        var parentNode = this.game.canvas &amp;&amp; this.game.canvas.parentNode;
+        return parentNode || null;
+    }
+
+});
+
+/**
+* The scaling method used by the ScaleManager when not in fullscreen.
+* 
+* &lt;dl>
+*   &lt;dt>{@link Phaser.ScaleManager.NO_SCALE}&lt;/dt>
+*   &lt;dd>
+*       The Game display area will not be scaled - even if it is too large for the canvas/screen.
+*       This mode _ignores_ any applied scaling factor and displays the canvas at the Game size.
+*   &lt;/dd>
+*   &lt;dt>{@link Phaser.ScaleManager.EXACT_FIT}&lt;/dt>
+*   &lt;dd>
+*       The Game display area will be _stretched_ to fill the entire size of the canvas's parent element and/or screen.
+*       Proportions are not maintained.
+*   &lt;/dd>
+*   &lt;dt>{@link Phaser.ScaleManager.SHOW_ALL}&lt;/dt>
+*   &lt;dd>
+*       Show the entire game display area while _maintaining_ the original aspect ratio.
+*   &lt;/dd>
+*   &lt;dt>{@link Phaser.ScaleManager.RESIZE}&lt;/dt>
+*   &lt;dd>
+*       The dimensions of the game display area are changed to match the size of the parent container.
+*       That is, this mode _changes the Game size_ to match the display size.
+*       &lt;p>
+*       Any manually set Game size (see {@link #setGameSize}) is ignored while in effect.
+*   &lt;/dd>
+*   &lt;dt>{@link Phaser.ScaleManager.USER_SCALE}&lt;/dt>
+*   &lt;dd>
+*       The game Display is scaled according to the user-specified scale set by {@link Phaser.ScaleManager#setUserScale setUserScale}.
+*       &lt;p>
+*       This scale can be adjusted in the {@link Phaser.ScaleManager#setResizeCallback resize callback}
+*       for flexible custom-sizing needs.
+*   &lt;/dd>
+* &lt;/dl>
+*
+* @name Phaser.ScaleManager#scaleMode
+* @property {integer} scaleMode
+*/
+Object.defineProperty(Phaser.ScaleManager.prototype, "scaleMode", {
+
+    get: function () {
+
+        return this._scaleMode;
+
+    },
+
+    set: function (value) {
+
+        if (value !== this._scaleMode)
+        {
+            if (!this.isFullScreen)
+            {
+                this.updateDimensions(this._gameSize.width, this._gameSize.height, true);
+                this.queueUpdate(true);
+            }
+
+            this._scaleMode = value;
+        }
+
+        return this._scaleMode;
+
+    }
+
+});
+
+/**
+* The scaling method used by the ScaleManager when in fullscreen.
+*
+* See {@link Phaser.ScaleManager#scaleMode scaleMode} for the different modes allowed.
+*
+* @name Phaser.ScaleManager#fullScreenScaleMode
+* @property {integer} fullScreenScaleMode
+*/
+Object.defineProperty(Phaser.ScaleManager.prototype, "fullScreenScaleMode", {
+
+    get: function () {
+
+        return this._fullScreenScaleMode;
+
+    },
+
+    set: function (value) {
+
+        if (value !== this._fullScreenScaleMode)
+        {
+            // If in fullscreen then need a wee bit more work
+            if (this.isFullScreen)
+            {
+                this.prepScreenMode(false);
+                this._fullScreenScaleMode = value;
+                this.prepScreenMode(true);
+
+                this.queueUpdate(true);
+            }
+            else
+            {
+                this._fullScreenScaleMode = value;
+            }
+        }
+
+        return this._fullScreenScaleMode;
+
+    }
+
+});
+
+/**
+* Returns the current scale mode - for normal or fullscreen operation.
+*
+* See {@link Phaser.ScaleManager#scaleMode scaleMode} for the different modes allowed.
+*
+* @name Phaser.ScaleManager#currentScaleMode
+* @property {number} currentScaleMode
+* @protected
+* @readonly
+*/
+Object.defineProperty(Phaser.ScaleManager.prototype, "currentScaleMode", {
+
+    get: function () {
+
+        return this.isFullScreen ? this._fullScreenScaleMode : this._scaleMode;
+
+    }
+
+});
+
+/**
+* When enabled the Display canvas will be horizontally-aligned _in the Parent container_ (or {@link Phaser.ScaleManager#parentIsWindow window}).
+*
+* To align horizontally across the page the Display canvas should be added directly to page;
+* or the parent container should itself be horizontally aligned.
+*
+* Horizontal alignment is not applicable with the {@link .RESIZE} scaling mode.
+*
+* @name Phaser.ScaleManager#pageAlignHorizontally
+* @property {boolean} pageAlignHorizontally
+* @default false
+*/
+Object.defineProperty(Phaser.ScaleManager.prototype, "pageAlignHorizontally", {
+
+    get: function () {
+
+        return this._pageAlignHorizontally;
+
+    },
+
+    set: function (value) {
+
+        if (value !== this._pageAlignHorizontally)
+        {
+            this._pageAlignHorizontally = value;
+            this.queueUpdate(true);
+        }
+
+    }
+
+});
+
+/**
+* When enabled the Display canvas will be vertically-aligned _in the Parent container_ (or {@link Phaser.ScaleManager#parentIsWindow window}).
+*
+* To align vertically the Parent element should have a _non-collapsible_ height, such that it will maintain
+* a height _larger_ than the height of the contained Game canvas - the game canvas will then be scaled vertically
+* _within_ the remaining available height dictated by the Parent element.
+*
+* One way to prevent the parent from collapsing is to add an absolute "min-height" CSS property to the parent element.
+* If specifying a relative "min-height/height" or adjusting margins, the Parent height must still be non-collapsible (see note).
+*
+* _Note_: In version 2.2 the minimum document height is _not_ automatically set to the viewport/window height.
+* To automatically update the minimum document height set {@link Phaser.ScaleManager#compatibility compatibility.forceMinimumDocumentHeight} to true.
+*
+* Vertical alignment is not applicable with the {@link .RESIZE} scaling mode.
+*
+* @name Phaser.ScaleManager#pageAlignVertically
+* @property {boolean} pageAlignVertically
+* @default false
+*/
+Object.defineProperty(Phaser.ScaleManager.prototype, "pageAlignVertically", {
+
+    get: function () {
+
+        return this._pageAlignVertically;
+
+    },
+
+    set: function (value) {
+
+        if (value !== this._pageAlignVertically)
+        {
+            this._pageAlignVertically = value;
+            this.queueUpdate(true);
+        }
+
+    }
+
+});
+
+/**
+* Returns true if the browser is in fullscreen mode, otherwise false.
+* @name Phaser.ScaleManager#isFullScreen
+* @property {boolean} isFullScreen
+* @readonly
+*/
+Object.defineProperty(Phaser.ScaleManager.prototype, "isFullScreen", {
+
+    get: function () {
+        return !!(document['fullscreenElement'] ||
+            document['webkitFullscreenElement'] ||
+            document['mozFullScreenElement'] ||
+            document['msFullscreenElement']);
+    }
+
+});
+
+/**
+* Returns true if the screen orientation is in portrait mode.
+*
+* @name Phaser.ScaleManager#isPortrait
+* @property {boolean} isPortrait
+* @readonly
+*/
+Object.defineProperty(Phaser.ScaleManager.prototype, "isPortrait", {
+
+    get: function () {
+        return this.classifyOrientation(this.screenOrientation) === 'portrait';
+    }
+
+});
+
+/**
+* Returns true if the screen orientation is in landscape mode.
+*
+* @name Phaser.ScaleManager#isLandscape
+* @property {boolean} isLandscape
+* @readonly
+*/
+Object.defineProperty(Phaser.ScaleManager.prototype, "isLandscape", {
+
+    get: function () {
+        return this.classifyOrientation(this.screenOrientation) === 'landscape';
+    }
+
+});
+
+/**
+* Returns true if the game dimensions are portrait (height > width).
+* This is especially useful to check when using the RESIZE scale mode 
+* but wanting to maintain game orientation on desktop browsers, 
+* where typically the screen orientation will always be landscape regardless of the browser viewport.
+*
+* @name Phaser.ScaleManager#isGamePortrait
+* @property {boolean} isGamePortrait
+* @readonly
+*/
+Object.defineProperty(Phaser.ScaleManager.prototype, "isGamePortrait", {
+
+    get: function () {
+        return (this.height > this.width);
+    }
+
+});
+
+/**
+* Returns true if the game dimensions are landscape (width > height).
+* This is especially useful to check when using the RESIZE scale mode 
+* but wanting to maintain game orientation on desktop browsers, 
+* where typically the screen orientation will always be landscape regardless of the browser viewport.
+*
+* @name Phaser.ScaleManager#isGameLandscape
+* @property {boolean} isGameLandscape
+* @readonly
+*/
+Object.defineProperty(Phaser.ScaleManager.prototype, "isGameLandscape", {
+
+    get: function () {
+        return (this.width > this.height);
+    }
+
+});
+</pre>
+        </article>
+    </section>
+
+
+
+
+
+				</div>
+
+				<div class="clearfix"></div>
+				<footer>
+					
+					
+		<span class="copyright">
+		Phaser Copyright © 2012-2015 Photon Storm Ltd.
+		</span>
+					<br />
+					
+		<span class="jsdoc-message">
+		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
+		on Thu Oct 15 2015 12:04:56 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		</span>
+				</footer>
+			</div>
+
+			
+			<br clear="both">
+		</div>
+
+	</div>
+	<script src="scripts/sunlight.js"></script>
+	<script src="scripts/sunlight.javascript.js"></script>
+	<script src="scripts/sunlight-plugin.doclinks.js"></script>
+	<script src="scripts/sunlight-plugin.linenumbers.js"></script>
+	<script src="scripts/sunlight-plugin.menu.js"></script>
+	<script src="scripts/jquery.min.js"></script>
+	<script src="scripts/jquery.scrollTo.js"></script>
+	<script src="scripts/jquery.localScroll.js"></script>
+	<script src="scripts/bootstrap-dropdown.js"></script>
+	<script src="scripts/toc.js"></script>
+
+	<script>  Sunlight.highlightAll({lineNumbers:true,  showMenu: true, enableDoclinks :true}); </script>
+
+	<script>
+		$( function () {
+			$( "#toc" ).toc( {
+				anchorName  : function(i, heading, prefix) {
+					return $(heading).attr("id") || ( prefix + i );
+				},
+				selectors   : "h1,h2,h3,h4",
+				showAndHide : false,
+				scrollTo    : 60
+			} );
+			$( "#toc>ul" ).addClass( "nav nav-pills nav-stacked" );
+			$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+
+		} );
+	</script>
+
+	
+
+</body>
+</html>

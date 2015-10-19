@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -58,9 +58,9 @@ Phaser.Color = {
     */
     unpackPixel: function (rgba, out, hsl, hsv) {
 
-        if (typeof out === 'undefined' || out === null) { out = Phaser.Color.createColor(); }
-        if (typeof hsl === 'undefined' || hsl === null) { hsl = false; }
-        if (typeof hsv === 'undefined' || hsv === null) { hsv = false; }
+        if (out === undefined || out === null) { out = Phaser.Color.createColor(); }
+        if (hsl === undefined || hsl === null) { hsl = false; }
+        if (hsv === undefined || hsv === null) { hsv = false; }
 
         if (Phaser.Device.LITTLE_ENDIAN)
         {
@@ -323,7 +323,7 @@ Phaser.Color = {
     */
     HSVtoRGB: function (h, s, v, out) {
 
-        if (typeof out === 'undefined') { out = Phaser.Color.createColor(0, 0, 0, 1, h, s, 0, v); }
+        if (out === undefined) { out = Phaser.Color.createColor(0, 0, 0, 1, h, s, 0, v); }
 
         var r, g, b;
         var i = Math.floor(h * 6);
@@ -439,11 +439,9 @@ Phaser.Color = {
     */
     createColor: function (r, g, b, a, h, s, l, v) {
 
-        var out = { r: r || 0, g: g || 0, b: b || 0, a: a || 1, h: h || 0, s: s || 0, l: l || 0, v: v || 0, color: 0 };
+        var out = { r: r || 0, g: g || 0, b: b || 0, a: a || 1, h: h || 0, s: s || 0, l: l || 0, v: v || 0, color: 0, color32: 0, rgba: '' };
 
-        out.rgba = 'rgba(' + out.r + ',' + out.g + ',' + out.b + ',' + out.a + ')';
-
-        return out;
+        return Phaser.Color.updateColor(out);
 
     },
 
@@ -457,7 +455,9 @@ Phaser.Color = {
     */
     updateColor: function (out) {
 
-        out.rgba = 'rgba(' + out.r + ',' + out.g + ',' + out.b + ',' + out.a + ')';
+        out.rgba = 'rgba(' + out.r.toString() + ',' + out.g.toString() + ',' + out.b.toString() + ',' + out.a.toString() + ')';
+        out.color = Phaser.Color.getColor(out.r, out.g, out.b);
+        out.color32 = Phaser.Color.getColor32(out.a, out.r, out.g, out.b);
 
         return out;
 
@@ -511,8 +511,8 @@ Phaser.Color = {
     */
     RGBtoString: function (r, g, b, a, prefix) {
 
-        if (typeof a === 'undefined') { a = 255; }
-        if (typeof prefix === 'undefined') { prefix = '#'; }
+        if (a === undefined) { a = 255; }
+        if (prefix === undefined) { prefix = '#'; }
 
         if (prefix === '#')
         {
@@ -547,36 +547,130 @@ Phaser.Color = {
     /**
     * Converts a hex string into a Phaser Color object.
     *
+    * The hex string can supplied as `'#0033ff'` or the short-hand format of `'#03f'`; it can begin with an optional "#" or "0x", or be unprefixed.    
+    *
+    * An alpha channel is _not_ supported.
+    *
     * @method Phaser.Color.hexToColor
     * @static
-    * @param {string} hex - The hex string to convert. Can be in the short-hand format `#03f` or `#0033ff`.
-    * @param {object} [out] - An object into which 3 properties will be created: r, g and b. If not provided a new object will be created.
+    * @param {string} hex - The color string in a hex format.
+    * @param {object} [out] - An object into which 3 properties will be created or set: r, g and b. If not provided a new object will be created.
     * @return {object} An object with the red, green and blue values set in the r, g and b properties.
     */
     hexToColor: function (hex, out) {
+
+        // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
+        hex = hex.replace(/^(?:#|0x)?([a-f\d])([a-f\d])([a-f\d])$/i, function(m, r, g, b) {
+            return r + r + g + g + b + b;
+        });
+
+        var result = /^(?:#|0x)?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+
+        if (result)
+        {
+            var r = parseInt(result[1], 16);
+            var g = parseInt(result[2], 16);
+            var b = parseInt(result[3], 16);
+
+            if (!out)
+            {
+                out = Phaser.Color.createColor(r, g, b);
+            }
+            else
+            {
+                out.r = r;
+                out.g = g;
+                out.b = b;
+            }
+        }
+
+        return out;
+
+    },
+
+    /**
+    * Converts a CSS 'web' string into a Phaser Color object.
+    *
+    * The web string can be in the format `'rgb(r,g,b)'` or `'rgba(r,g,b,a)'` where r/g/b are in the range [0..255] and a is in the range [0..1].
+    *
+    * @method Phaser.Color.webToColor
+    * @static
+    * @param {string} web - The color string in CSS 'web' format.
+    * @param {object} [out] - An object into which 4 properties will be created: r, g, b and a. If not provided a new object will be created.
+    * @return {object} An object with the red, green, blue and alpha values set in the r, g, b and a properties.
+    */
+    webToColor: function (web, out) {
 
         if (!out)
         {
             out = Phaser.Color.createColor();
         }
 
-        // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
-        var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-
-        hex = hex.replace(shorthandRegex, function(m, r, g, b) {
-            return r + r + g + g + b + b;
-        });
-
-        var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        var result = /^rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(?:,\s*(\d+(?:\.\d+)?))?\s*\)$/.exec(web);
 
         if (result)
         {
-            out.r = parseInt(result[1], 16);
-            out.g = parseInt(result[2], 16);
-            out.b = parseInt(result[3], 16);
+            out.r = parseInt(result[1], 10);
+            out.g = parseInt(result[2], 10);
+            out.b = parseInt(result[3], 10);
+            out.a = result[4] !== undefined ? parseFloat(result[4]) : 1;
+            Phaser.Color.updateColor(out);
         }
 
         return out;
+
+    },
+
+    /**
+    * Converts a value - a "hex" string, a "CSS 'web' string", or a number - into red, green, blue, and alpha components.
+    *
+    * The value can be a string (see `hexToColor` and `webToColor` for the supported formats) or a packed integer (see `getRGB`).
+    *
+    * An alpha channel is _not_ supported when specifying a hex string.
+    *
+    * @method Phaser.Color.valueToColor
+    * @static
+    * @param {string|number} value - The color expressed as a recognized string format or a packed integer.
+    * @param {object} [out] - The object to use for the output. If not provided a new object will be created.
+    * @return {object} The (`out`) object with the red, green, blue, and alpha values set as the r/g/b/a properties.
+    */
+    valueToColor: function (value, out) {
+
+        //  The behavior is not consistent between hexToColor/webToColor on invalid input.
+        //  This unifies both by returning a new object, but returning null may be better.
+        if (!out)
+        {
+            out = Phaser.Color.createColor();
+        }
+
+        if (typeof value === 'string')
+        {
+            if (value.indexOf('rgb') === 0)
+            {
+                return Phaser.Color.webToColor(value, out);
+            }
+            else
+            {
+                //  `hexToColor` does not support alpha; match `createColor`.
+                out.a = 1;
+                return Phaser.Color.hexToColor(value, out);
+            }
+        }
+        else if (typeof value === 'number')
+        {
+            //  `getRGB` does not take optional object to modify;
+            //  alpha is also adjusted to match `createColor`.
+            var tempColor = Phaser.Color.getRGB(value);
+            out.r = tempColor.r;
+            out.g = tempColor.g;
+            out.b = tempColor.b;
+            out.a = tempColor.a / 255;
+            return out;
+        }
+        else
+        {
+            return out;
+        }
 
     },
 
@@ -606,8 +700,8 @@ Phaser.Color = {
     */
     HSVColorWheel: function (s, v) {
 
-        if (typeof s === 'undefined') { s = 1.0; }
-        if (typeof v === 'undefined') { v = 1.0; }
+        if (s === undefined) { s = 1.0; }
+        if (v === undefined) { v = 1.0; }
 
         var colors = [];
 
@@ -631,8 +725,8 @@ Phaser.Color = {
     */
     HSLColorWheel: function (s, l) {
 
-        if (typeof s === 'undefined') { s = 0.5; }
-        if (typeof l === 'undefined') { l = 0.5; }
+        if (s === undefined) { s = 0.5; }
+        if (l === undefined) { l = 0.5; }
 
         var colors = [];
 
@@ -659,7 +753,7 @@ Phaser.Color = {
     */
     interpolateColor: function (color1, color2, steps, currentStep, alpha) {
 
-        if (typeof alpha === "undefined") { alpha = 255; }
+        if (alpha === undefined) { alpha = 255; }
 
         var src1 = Phaser.Color.getRGB(color1);
         var src2 = Phaser.Color.getRGB(color2);
@@ -726,16 +820,16 @@ Phaser.Color = {
     *
     * @method Phaser.Color.getRandomColor
     * @static
-    * @param {number} min - The lowest value to use for the color.
-    * @param {number} max - The highest value to use for the color.
-    * @param {number} alpha - The alpha value of the returning color (default 255 = fully opaque).
+    * @param {number} [min=0] - The lowest value to use for the color.
+    * @param {number} [max=255] - The highest value to use for the color.
+    * @param {number} [alpha=255] - The alpha value of the returning color (default 255 = fully opaque).
     * @returns {number} 32-bit color value with alpha.
     */
     getRandomColor: function (min, max, alpha) {
 
-        if (typeof min === "undefined") { min = 0; }
-        if (typeof max === "undefined") { max = 255; }
-        if (typeof alpha === "undefined") { alpha = 255; }
+        if (min === undefined) { min = 0; }
+        if (max === undefined) { max = 255; }
+        if (alpha === undefined) { alpha = 255; }
 
         //  Sanity checks
         if (max > 255 || min > max)
@@ -875,83 +969,371 @@ Phaser.Color = {
         return color & 0xFF;
     },
 
-    //   The following are all DEPRECATED
-
     /**
-    * DEPRECATED: This method will be removed in Phaser 2.1.
-    * Returns a string containing handy information about the given color including string hex value,
-    * RGB format information. Each section starts on a newline, 3 lines in total.
+    * Blends the source color, ignoring the backdrop.
     *
-    * @method Phaser.Color.getColorInfo
+    * @method Phaser.Color.blendNormal
     * @static
-    * @param {number} color - A color value in the format 0xAARRGGBB.
-    * @returns {string} String containing the 3 lines of information.
+    * @param {integer} a - The source color to blend, in the range 1 to 255.
+    * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
+    * @returns {integer} The blended color value, in the range 1 to 255.
     */
-    getColorInfo: function (color) {
-
-        var argb = Phaser.Color.getRGB(color);
-
-        //  Hex format
-        var result = Phaser.Color.RGBtoHexstring(color) + "\n";
-
-        //  RGB format
-        result = result.concat("Alpha: " + argb.alpha + " Red: " + argb.red + " Green: " + argb.green + " Blue: " + argb.blue) + "\n";
-
-        return result;
-
+    blendNormal: function (a) {
+        return a;
     },
 
     /**
-    * DEPRECATED: This method will be removed in Phaser 2.1. Please use Phaser.Color.RGBtoString instead.
-    * Return a string representation of the color in the format 0xAARRGGBB.
+    * Selects the lighter of the backdrop and source colors.
     *
-    * @method Phaser.Color.RGBtoHexstring
+    * @method Phaser.Color.blendLighten
     * @static
-    * @param {number} color - The color to get the string representation for
-    * @returns {string} A string of length 10 characters in the format 0xAARRGGBB
+    * @param {integer} a - The source color to blend, in the range 1 to 255.
+    * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
+    * @returns {integer} The blended color value, in the range 1 to 255.
     */
-    RGBtoHexstring: function (color) {
-
-        var argb = Phaser.Color.getRGB(color);
-
-        return "0x" + Phaser.Color.colorToHexstring(argb.alpha) + Phaser.Color.colorToHexstring(argb.red) + Phaser.Color.colorToHexstring(argb.green) + Phaser.Color.colorToHexstring(argb.blue);
-
+    blendLighten: function (a, b) {
+        return (b > a) ? b : a;
     },
 
     /**
-    * DEPRECATED: This method will be removed in Phaser 2.1. Please use Phaser.Color.RGBtoString instead.
-    * Return a string representation of the color in the format #RRGGBB.
+    * Selects the darker of the backdrop and source colors.
     *
-    * @method Phaser.Color.RGBtoWebstring
+    * @method Phaser.Color.blendDarken
     * @static
-    * @param {number} color - The color to get the string representation for.
-    * @returns {string} A string of length 10 characters in the format 0xAARRGGBB.
+    * @param {integer} a - The source color to blend, in the range 1 to 255.
+    * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
+    * @returns {integer} The blended color value, in the range 1 to 255.
     */
-    RGBtoWebstring: function (color) {
-
-        var argb = Phaser.Color.getRGB(color);
-
-        return "#" + Phaser.Color.colorToHexstring(argb.red) + Phaser.Color.colorToHexstring(argb.green) + Phaser.Color.colorToHexstring(argb.blue);
-
+    blendDarken: function (a, b) {
+        return (b > a) ? a : b;
     },
 
     /**
-    * DEPRECATED: This method will be removed in Phaser 2.1. Please use Phaser.Color.componentToHex instead.
-    * Return a string containing a hex representation of the given color.
+    * Multiplies the backdrop and source color values.
+    * The result color is always at least as dark as either of the two constituent
+    * colors. Multiplying any color with black produces black;
+    * multiplying with white leaves the original color unchanged.
     *
-    * @method Phaser.Color.colorToHexstring
+    * @method Phaser.Color.blendMultiply
     * @static
-    * @param {number} color - The color channel to get the hex value for, must be a value between 0 and 255).
-    * @returns {string} A string of length 2 characters, i.e. 255 = FF, 0 = 00.
+    * @param {integer} a - The source color to blend, in the range 1 to 255.
+    * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
+    * @returns {integer} The blended color value, in the range 1 to 255.
     */
-    colorToHexstring: function (color) {
+    blendMultiply: function (a, b) {
+        return (a * b) / 255;
+    },
 
-        var digits = "0123456789ABCDEF";
-        var lsd = color % 16;
-        var msd = (color - lsd) / 16;
-        var hexified = digits.charAt(msd) + digits.charAt(lsd);
-        return hexified;
+    /**
+    * Takes the average of the source and backdrop colors.
+    *
+    * @method Phaser.Color.blendAverage
+    * @static
+    * @param {integer} a - The source color to blend, in the range 1 to 255.
+    * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
+    * @returns {integer} The blended color value, in the range 1 to 255.
+    */
+    blendAverage: function (a, b) {
+        return (a + b) / 2;
+    },
 
+    /**
+    * Adds the source and backdrop colors together and returns the value, up to a maximum of 255.
+    *
+    * @method Phaser.Color.blendAdd
+    * @static
+    * @param {integer} a - The source color to blend, in the range 1 to 255.
+    * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
+    * @returns {integer} The blended color value, in the range 1 to 255.
+    */
+    blendAdd: function (a, b) {
+        return Math.min(255, a + b);
+    },
+
+    /**
+    * Combines the source and backdrop colors and returns their value minus 255.
+    *
+    * @method Phaser.Color.blendSubtract
+    * @static
+    * @param {integer} a - The source color to blend, in the range 1 to 255.
+    * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
+    * @returns {integer} The blended color value, in the range 1 to 255.
+    */
+    blendSubtract: function (a, b) {
+        return Math.max(0, a + b - 255);
+    },
+
+    /**
+    * Subtracts the darker of the two constituent colors from the lighter.
+    * 
+    * Painting with white inverts the backdrop color; painting with black produces no change. 
+    *
+    * @method Phaser.Color.blendDifference
+    * @static
+    * @param {integer} a - The source color to blend, in the range 1 to 255.
+    * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
+    * @returns {integer} The blended color value, in the range 1 to 255.
+    */
+    blendDifference: function (a, b) {
+        return Math.abs(a - b);
+    },
+
+    /**
+    * Negation blend mode.
+    *
+    * @method Phaser.Color.blendNegation
+    * @static
+    * @param {integer} a - The source color to blend, in the range 1 to 255.
+    * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
+    * @returns {integer} The blended color value, in the range 1 to 255.
+    */
+    blendNegation: function (a, b) {
+        return 255 - Math.abs(255 - a - b);
+    },
+
+    /**
+    * Multiplies the complements of the backdrop and source color values, then complements the result.
+    * The result color is always at least as light as either of the two constituent colors. 
+    * Screening any color with white produces white; screening with black leaves the original color unchanged. 
+    *
+    * @method Phaser.Color.blendScreen
+    * @static
+    * @param {integer} a - The source color to blend, in the range 1 to 255.
+    * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
+    * @returns {integer} The blended color value, in the range 1 to 255.
+    */
+    blendScreen: function (a, b) {
+        return 255 - (((255 - a) * (255 - b)) >> 8);
+    },
+
+    /**
+    * Produces an effect similar to that of the Difference mode, but lower in contrast. 
+    * Painting with white inverts the backdrop color; painting with black produces no change. 
+    *
+    * @method Phaser.Color.blendExclusion
+    * @static
+    * @param {integer} a - The source color to blend, in the range 1 to 255.
+    * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
+    * @returns {integer} The blended color value, in the range 1 to 255.
+    */
+    blendExclusion: function (a, b) {
+        return a + b - 2 * a * b / 255;
+    },
+
+    /**
+    * Multiplies or screens the colors, depending on the backdrop color.
+    * Source colors overlay the backdrop while preserving its highlights and shadows. 
+    * The backdrop color is not replaced, but is mixed with the source color to reflect the lightness or darkness of the backdrop.
+    *
+    * @method Phaser.Color.blendOverlay
+    * @static
+    * @param {integer} a - The source color to blend, in the range 1 to 255.
+    * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
+    * @returns {integer} The blended color value, in the range 1 to 255.
+    */
+    blendOverlay: function (a, b) {
+        return b < 128 ? (2 * a * b / 255) : (255 - 2 * (255 - a) * (255 - b) / 255);
+    },
+
+    /**
+    * Darkens or lightens the colors, depending on the source color value. 
+    * 
+    * If the source color is lighter than 0.5, the backdrop is lightened, as if it were dodged; 
+    * this is useful for adding highlights to a scene. 
+    * 
+    * If the source color is darker than 0.5, the backdrop is darkened, as if it were burned in. 
+    * The degree of lightening or darkening is proportional to the difference between the source color and 0.5; 
+    * if it is equal to 0.5, the backdrop is unchanged.
+    * 
+    * Painting with pure black or white produces a distinctly darker or lighter area, but does not result in pure black or white. 
+    * The effect is similar to shining a diffused spotlight on the backdrop. 
+    *
+    * @method Phaser.Color.blendSoftLight
+    * @static
+    * @param {integer} a - The source color to blend, in the range 1 to 255.
+    * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
+    * @returns {integer} The blended color value, in the range 1 to 255.
+    */
+    blendSoftLight: function (a, b) {
+        return b < 128 ? (2 * ((a >> 1) + 64)) * (b / 255) : 255 - (2 * (255 - ((a >> 1) + 64)) * (255 - b) / 255);
+    },
+
+    /**
+    * Multiplies or screens the colors, depending on the source color value. 
+    * 
+    * If the source color is lighter than 0.5, the backdrop is lightened, as if it were screened; 
+    * this is useful for adding highlights to a scene. 
+    * 
+    * If the source color is darker than 0.5, the backdrop is darkened, as if it were multiplied; 
+    * this is useful for adding shadows to a scene. 
+    * 
+    * The degree of lightening or darkening is proportional to the difference between the source color and 0.5; 
+    * if it is equal to 0.5, the backdrop is unchanged.
+    * 
+    * Painting with pure black or white produces pure black or white. The effect is similar to shining a harsh spotlight on the backdrop. 
+    *
+    * @method Phaser.Color.blendHardLight
+    * @static
+    * @param {integer} a - The source color to blend, in the range 1 to 255.
+    * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
+    * @returns {integer} The blended color value, in the range 1 to 255.
+    */
+    blendHardLight: function (a, b) {
+        return Phaser.Color.blendOverlay(b, a);
+    },
+
+    /**
+    * Brightens the backdrop color to reflect the source color. 
+    * Painting with black produces no change.
+    *
+    * @method Phaser.Color.blendColorDodge
+    * @static
+    * @param {integer} a - The source color to blend, in the range 1 to 255.
+    * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
+    * @returns {integer} The blended color value, in the range 1 to 255.
+    */
+    blendColorDodge: function (a, b) {
+        return b === 255 ? b : Math.min(255, ((a << 8) / (255 - b)));
+    },
+
+    /**
+    * Darkens the backdrop color to reflect the source color.
+    * Painting with white produces no change. 
+    *
+    * @method Phaser.Color.blendColorBurn
+    * @static
+    * @param {integer} a - The source color to blend, in the range 1 to 255.
+    * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
+    * @returns {integer} The blended color value, in the range 1 to 255.
+    */
+    blendColorBurn: function (a, b) {
+        return b === 0 ? b : Math.max(0, (255 - ((255 - a) << 8) / b));
+    },
+
+    /**
+    * An alias for blendAdd, it simply sums the values of the two colors.
+    *
+    * @method Phaser.Color.blendLinearDodge
+    * @static
+    * @param {integer} a - The source color to blend, in the range 1 to 255.
+    * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
+    * @returns {integer} The blended color value, in the range 1 to 255.
+    */
+    blendLinearDodge: function (a, b) {
+        return Phaser.Color.blendAdd(a, b);
+    },
+
+    /**
+    * An alias for blendSubtract, it simply sums the values of the two colors and subtracts 255.
+    *
+    * @method Phaser.Color.blendLinearBurn
+    * @static
+    * @param {integer} a - The source color to blend, in the range 1 to 255.
+    * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
+    * @returns {integer} The blended color value, in the range 1 to 255.
+    */
+    blendLinearBurn: function (a, b) {
+        return Phaser.Color.blendSubtract(a, b);
+    },
+
+    /**
+    * This blend mode combines Linear Dodge and Linear Burn (rescaled so that neutral colors become middle gray).
+    * Dodge applies to values of top layer lighter than middle gray, and burn to darker values.
+    * The calculation simplifies to the sum of bottom layer and twice the top layer, subtract 128. The contrast decreases.
+    *
+    * @method Phaser.Color.blendLinearLight
+    * @static
+    * @param {integer} a - The source color to blend, in the range 1 to 255.
+    * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
+    * @returns {integer} The blended color value, in the range 1 to 255.
+    */
+    blendLinearLight: function (a, b) {
+        return b < 128 ? Phaser.Color.blendLinearBurn(a, 2 * b) : Phaser.Color.blendLinearDodge(a, (2 * (b - 128)));
+    },
+
+    /**
+    * This blend mode combines Color Dodge and Color Burn (rescaled so that neutral colors become middle gray).
+    * Dodge applies when values in the top layer are lighter than middle gray, and burn to darker values.
+    * The middle gray is the neutral color. When color is lighter than this, this effectively moves the white point of the bottom 
+    * layer down by twice the difference; when it is darker, the black point is moved up by twice the difference. The perceived contrast increases.
+    *
+    * @method Phaser.Color.blendVividLight
+    * @static
+    * @param {integer} a - The source color to blend, in the range 1 to 255.
+    * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
+    * @returns {integer} The blended color value, in the range 1 to 255.
+    */
+    blendVividLight: function (a, b) {
+        return b < 128 ? Phaser.Color.blendColorBurn(a, 2 * b) : Phaser.Color.blendColorDodge(a, (2 * (b - 128)));
+    },
+
+    /**
+    * If the backdrop color (light source) is lighter than 50%, the blendDarken mode is used, and colors lighter than the backdrop color do not change.
+    * If the backdrop color is darker than 50% gray, colors lighter than the blend color are replaced, and colors darker than the blend color do not change.
+    *
+    * @method Phaser.Color.blendPinLight
+    * @static
+    * @param {integer} a - The source color to blend, in the range 1 to 255.
+    * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
+    * @returns {integer} The blended color value, in the range 1 to 255.
+    */
+    blendPinLight: function (a, b) {
+        return b < 128 ? Phaser.Color.blendDarken(a, 2 * b) : Phaser.Color.blendLighten(a, (2 * (b - 128)));
+    },
+
+    /**
+    * Runs blendVividLight on the source and backdrop colors.
+    * If the resulting color is 128 or more, it receives a value of 255; if less than 128, a value of 0.
+    * Therefore, all blended pixels have red, green, and blue channel values of either 0 or 255.
+    * This changes all pixels to primary additive colors (red, green, or blue), white, or black.
+    *
+    * @method Phaser.Color.blendHardMix
+    * @static
+    * @param {integer} a - The source color to blend, in the range 1 to 255.
+    * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
+    * @returns {integer} The blended color value, in the range 1 to 255.
+    */
+    blendHardMix: function (a, b) {
+        return Phaser.Color.blendVividLight(a, b) < 128 ? 0 : 255;
+    },
+
+    /**
+    * Reflect blend mode. This mode is useful when adding shining objects or light zones to images. 
+    *
+    * @method Phaser.Color.blendReflect
+    * @static
+    * @param {integer} a - The source color to blend, in the range 1 to 255.
+    * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
+    * @returns {integer} The blended color value, in the range 1 to 255.
+    */
+    blendReflect: function (a, b) {
+        return b === 255 ? b : Math.min(255, (a * a / (255 - b)));
+    },
+
+    /**
+    * Glow blend mode. This mode is a variation of reflect mode with the source and backdrop colors swapped.
+    *
+    * @method Phaser.Color.blendGlow
+    * @static
+    * @param {integer} a - The source color to blend, in the range 1 to 255.
+    * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
+    * @returns {integer} The blended color value, in the range 1 to 255.
+    */
+    blendGlow: function (a, b) {
+        return Phaser.Color.blendReflect(b, a);
+    },
+
+    /**
+    * Phoenix blend mode. This subtracts the lighter color from the darker color, and adds 255, giving a bright result.
+    *
+    * @method Phaser.Color.blendPhoenix
+    * @static
+    * @param {integer} a - The source color to blend, in the range 1 to 255.
+    * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
+    * @returns {integer} The blended color value, in the range 1 to 255.
+    */
+    blendPhoenix: function (a, b) {
+        return Math.min(a, b) - Math.max(a, b) + 255;
     }
 
 };

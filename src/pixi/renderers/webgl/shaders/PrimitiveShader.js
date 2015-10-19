@@ -9,6 +9,11 @@
 */
 PIXI.PrimitiveShader = function(gl)
 {
+    /**
+     * @property _UID
+     * @type Number
+     * @private
+     */
     this._UID = PIXI._UID++;
  
     /**
@@ -18,11 +23,14 @@ PIXI.PrimitiveShader = function(gl)
     this.gl = gl;
 
     /**
-    * @property {any} program - The WebGL program.
-    */
+     * The WebGL program.
+     * @property program
+     * @type Any
+     */
     this.program = null;
 
     /**
+     * The fragment shader.
      * @property fragmentSrc
      * @type Array
      */
@@ -36,6 +44,7 @@ PIXI.PrimitiveShader = function(gl)
     ];
 
     /**
+     * The vertex shader.
      * @property vertexSrc
      * @type Array
      */
@@ -46,13 +55,14 @@ PIXI.PrimitiveShader = function(gl)
         'uniform vec2 projectionVector;',
         'uniform vec2 offsetVector;',
         'uniform float alpha;',
+        'uniform float flipY;',
         'uniform vec3 tint;',
         'varying vec4 vColor;',
 
         'void main(void) {',
         '   vec3 v = translationMatrix * vec3(aVertexPosition , 1.0);',
         '   v -= offsetVector.xyx;',
-        '   gl_Position = vec4( v.x / projectionVector.x -1.0, v.y / -projectionVector.y + 1.0 , 0.0, 1.0);',
+        '   gl_Position = vec4( v.x / projectionVector.x -1.0, (v.y / projectionVector.y * -flipY) + flipY , 0.0, 1.0);',
         '   vColor = aColor * vec4(tint * alpha, alpha);',
         '}'
     ];
@@ -60,14 +70,15 @@ PIXI.PrimitiveShader = function(gl)
     this.init();
 };
 
+PIXI.PrimitiveShader.prototype.constructor = PIXI.PrimitiveShader;
+
 /**
-* Initialises the shader
+* Initialises the shader.
+* 
 * @method init
-*
 */
 PIXI.PrimitiveShader.prototype.init = function()
 {
-
     var gl = this.gl;
 
     var program = PIXI.compileProgram(gl, this.vertexSrc, this.fragmentSrc);
@@ -77,7 +88,7 @@ PIXI.PrimitiveShader.prototype.init = function()
     this.projectionVector = gl.getUniformLocation(program, 'projectionVector');
     this.offsetVector = gl.getUniformLocation(program, 'offsetVector');
     this.tintColor = gl.getUniformLocation(program, 'tint');
-
+    this.flipY = gl.getUniformLocation(program, 'flipY');
 
     // get and store the attributes
     this.aVertexPosition = gl.getAttribLocation(program, 'aVertexPosition');
@@ -92,9 +103,9 @@ PIXI.PrimitiveShader.prototype.init = function()
 };
 
 /**
-* Destroys the shader
+* Destroys the shader.
+* 
 * @method destroy
-*
 */
 PIXI.PrimitiveShader.prototype.destroy = function()
 {
@@ -102,5 +113,5 @@ PIXI.PrimitiveShader.prototype.destroy = function()
     this.uniforms = null;
     this.gl = null;
 
-    this.attribute = null;
+    this.attributes = null;
 };

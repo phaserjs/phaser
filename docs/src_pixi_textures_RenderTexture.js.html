@@ -1,0 +1,1516 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Phaser Source: src/pixi/textures/RenderTexture.js</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+
+	<link type="text/css" rel="stylesheet" href="styles/default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	
+	<link type="text/css" rel="stylesheet" href="styles/site.cerulean.css">
+	
+</head>
+
+<body>
+
+<div class="container-fluid">
+	<div class="navbar navbar-fixed-top navbar-inverse">
+		<div style="position: absolute; width: 143px; height: 31px; right: 10px; top: 10px; z-index: 1050"><a href="http://phaser.io"><img src="img/phaser.png" border="0" /></a></div>
+		<div class="navbar-inner">
+			<a class="brand" href="index.html">Phaser API</a>
+			<ul class="nav">
+
+				
+				<li class="dropdown">
+					<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+						
+						<li class="class-depth-0">
+							<a href="Phaser.html">Phaser</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="Phaser.KeyCode.html">KeyCode</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="PIXI.html">PIXI</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
+				<li class="dropdown">
+					<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Animation.html">Animation</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.AnimationManager.html">AnimationManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.AnimationParser.html">AnimationParser</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.ArraySet.html">ArraySet</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.ArrayUtils.html">ArrayUtils</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.AudioSprite.html">AudioSprite</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.BitmapData.html">BitmapData</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.BitmapText.html">BitmapText</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Button.html">Button</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Cache.html">Cache</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Camera.html">Camera</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Canvas.html">Canvas</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Circle.html">Circle</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Color.html">Color</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Angle.html">Angle</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Animation.html">Animation</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.AutoCull.html">AutoCull</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Bounds.html">Bounds</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.BringToTop.html">BringToTop</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Core.html">Core</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Crop.html">Crop</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Delta.html">Delta</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Destroy.html">Destroy</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.FixedToCamera.html">FixedToCamera</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Health.html">Health</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.InCamera.html">InCamera</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.InputEnabled.html">InputEnabled</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.InWorld.html">InWorld</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.LifeSpan.html">LifeSpan</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.LoadTexture.html">LoadTexture</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Overlap.html">Overlap</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.PhysicsBody.html">PhysicsBody</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Reset.html">Reset</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.ScaleMinMax.html">ScaleMinMax</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Smoothed.html">Smoothed</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Create.html">Create</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Creature.html">Creature</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Device.html">Device</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.DeviceButton.html">DeviceButton</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.DOM.html">DOM</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Easing.html">Easing</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Back.html">Back</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Bounce.html">Bounce</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Circular.html">Circular</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Cubic.html">Cubic</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Elastic.html">Elastic</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Exponential.html">Exponential</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Linear.html">Linear</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Quadratic.html">Quadratic</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Quartic.html">Quartic</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Quintic.html">Quintic</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Sinusoidal.html">Sinusoidal</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Ellipse.html">Ellipse</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Events.html">Events</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Filter.html">Filter</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.FlexGrid.html">FlexGrid</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.FlexLayer.html">FlexLayer</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Frame.html">Frame</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.FrameData.html">FrameData</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Game.html">Game</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.GameObjectCreator.html">GameObjectCreator</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.GameObjectFactory.html">GameObjectFactory</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Gamepad.html">Gamepad</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Graphics.html">Graphics</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Group.html">Group</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Image.html">Image</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.ImageCollection.html">ImageCollection</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Input.html">Input</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.InputHandler.html">InputHandler</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Key.html">Key</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Keyboard.html">Keyboard</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Line.html">Line</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.LinkedList.html">LinkedList</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Loader.html">Loader</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.LoaderParser.html">LoaderParser</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Math.html">Math</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Matrix.html">Matrix</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Mouse.html">Mouse</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.MSPointer.html">MSPointer</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Net.html">Net</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Particle.html">Particle</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Particles.html">Particles</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Particles.Arcade.html">Arcade</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Particles.Arcade.Emitter.html">Emitter</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Physics.html">Physics</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Physics.Arcade.html">Arcade</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.Arcade.Body.html">Body</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.Arcade.TilemapCollision.html">TilemapCollision</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Physics.Ninja.html">Ninja</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.Ninja.AABB.html">AABB</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.Ninja.Body.html">Body</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.Ninja.Circle.html">Circle</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.Ninja.Tile.html">Tile</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Physics.P2.html">P2</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.Body.html">Body</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.BodyDebug.html">BodyDebug</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.CollisionGroup.html">CollisionGroup</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.ContactMaterial.html">ContactMaterial</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.DistanceConstraint.html">DistanceConstraint</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.FixtureList.html">FixtureList</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.GearConstraint.html">GearConstraint</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.InversePointProxy.html">InversePointProxy</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.LockConstraint.html">LockConstraint</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.Material.html">Material</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.PointProxy.html">PointProxy</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.PrismaticConstraint.html">PrismaticConstraint</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.RevoluteConstraint.html">RevoluteConstraint</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.RotationalSpring.html">RotationalSpring</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.Spring.html">Spring</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Plugin.html">Plugin</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.PluginManager.html">PluginManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Point.html">Point</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Pointer.html">Pointer</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.PointerMode.html">PointerMode</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Polygon.html">Polygon</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.QuadTree.html">QuadTree</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.RandomDataGenerator.html">RandomDataGenerator</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Rectangle.html">Rectangle</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.RenderTexture.html">RenderTexture</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.RequestAnimationFrame.html">RequestAnimationFrame</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.RetroFont.html">RetroFont</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Rope.html">Rope</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.RoundedRectangle.html">RoundedRectangle</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.ScaleManager.html">ScaleManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Signal.html">Signal</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.SignalBinding.html">SignalBinding</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.SinglePad.html">SinglePad</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Sound.html">Sound</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.SoundManager.html">SoundManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Sprite.html">Sprite</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.SpriteBatch.html">SpriteBatch</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Stage.html">Stage</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.State.html">State</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.StateManager.html">StateManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Text.html">Text</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Tile.html">Tile</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Tilemap.html">Tilemap</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.TilemapLayer.html">TilemapLayer</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.TilemapParser.html">TilemapParser</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Tileset.html">Tileset</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.TileSprite.html">TileSprite</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Time.html">Time</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Timer.html">Timer</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.TimerEvent.html">TimerEvent</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Touch.html">Touch</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Tween.html">Tween</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.TweenData.html">TweenData</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.TweenManager.html">TweenManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Utils.html">Utils</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Utils.Debug.html">Debug</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Video.html">Video</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.World.html">World</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.AbstractFilter.html">AbstractFilter</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.BaseTexture.html">BaseTexture</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.CanvasBuffer.html">CanvasBuffer</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.CanvasGraphics.html">CanvasGraphics</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.CanvasMaskManager.html">CanvasMaskManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.CanvasPool.html">CanvasPool</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.CanvasRenderer.html">CanvasRenderer</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.CanvasTinter.html">CanvasTinter</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.ComplexPrimitiveShader.html">ComplexPrimitiveShader</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.DisplayObject.html">DisplayObject</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.DisplayObjectContainer.html">DisplayObjectContainer</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.Event.html">Event</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.EventTarget.html">EventTarget</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.FilterTexture.html">FilterTexture</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.Graphics.html">Graphics</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.GraphicsData.html">GraphicsData</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.PIXI.html">PIXI</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.PixiFastShader.html">PixiFastShader</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.PixiShader.html">PixiShader</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.PolyK.html">PolyK</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.PrimitiveShader.html">PrimitiveShader</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.RenderTexture.html">RenderTexture</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.Rope.html">Rope</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.Sprite.html">Sprite</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.SpriteBatch.html">SpriteBatch</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.Strip.html">Strip</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.StripShader.html">StripShader</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.Texture.html">Texture</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.TilingSprite.html">TilingSprite</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.WebGLBlendModeManager.html">WebGLBlendModeManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.WebGLFastSpriteBatch.html">WebGLFastSpriteBatch</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.WebGLFilterManager.html">WebGLFilterManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.WebGLRenderer.html">WebGLRenderer</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
+				<li class="dropdown">
+					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+						
+						<li class="class-depth-0">
+							<a href="global.html#AUTO">AUTO</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#BITMAPDATA">BITMAPDATA</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#BITMAPTEXT">BITMAPTEXT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#blendModes">blendModes</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#BUTTON">BUTTON</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#CANVAS">CANVAS</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#CANVAS_FILTER">CANVAS_FILTER</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#CIRCLE">CIRCLE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#CREATURE">CREATURE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#DOWN">DOWN</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ELLIPSE">ELLIPSE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#EMITTER">EMITTER</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#GAMES">GAMES</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#GRAPHICS">GRAPHICS</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#GROUP">GROUP</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#HEADLESS">HEADLESS</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#IMAGE">IMAGE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#LEFT">LEFT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#LINE">LINE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#MATRIX">MATRIX</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#NONE">NONE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#POINT">POINT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#POINTER">POINTER</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#POLYGON">POLYGON</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#RECTANGLE">RECTANGLE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#RENDERTEXTURE">RENDERTEXTURE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#RETROFONT">RETROFONT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#RIGHT">RIGHT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ROPE">ROPE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ROUNDEDRECTANGLE">ROUNDEDRECTANGLE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#scaleModes">scaleModes</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#SPRITE">SPRITE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#SPRITEBATCH">SPRITEBATCH</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#TEXT">TEXT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#TILEMAP">TILEMAP</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#TILEMAPLAYER">TILEMAPLAYER</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#TILESPRITE">TILESPRITE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#UP">UP</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#VERSION">VERSION</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#VIDEO">VIDEO</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#WEBGL">WEBGL</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#WEBGL_FILTER">WEBGL_FILTER</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
+
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Core<b class="caret"></b></a>
+					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.Game.html">Game</a></li>
+						<li class="class-depth-1"><a href="Phaser.Group.html">Group</a></li>
+						<li class="class-depth-1"><a href="Phaser.World.html">World</a></li>
+						<li class="class-depth-1"><a href="Phaser.Loader.html">Loader</a></li>
+						<li class="class-depth-1"><a href="Phaser.Cache.html">Cache</a></li>
+						<li class="class-depth-1"><a href="Phaser.Time.html">Time</a></li>
+						<li class="class-depth-1"><a href="Phaser.Camera.html">Camera</a></li>
+						<li class="class-depth-1"><a href="Phaser.StateManager.html">State Manager</a></li>
+						<li class="class-depth-1"><a href="Phaser.TweenManager.html">Tween Manager</a></li>
+						<li class="class-depth-1"><a href="Phaser.SoundManager.html">Sound Manager</a></li>
+						<li class="class-depth-1"><a href="Phaser.Input.html">Input Manager</a></li>
+						<li class="class-depth-1"><a href="Phaser.ScaleManager.html">Scale Manager</a></li>
+					</ul>
+				</li>
+
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Game Objects<b class="caret"></b></a>
+					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.GameObjectFactory.html">Factory (game.add)</a></li>
+						<li class="class-depth-1"><a href="Phaser.GameObjectCreator.html">Creator (game.make)</a></li>
+						<li class="class-depth-1"><a href="Phaser.Sprite.html">Sprite</a></li>
+						<li class="class-depth-1"><a href="Phaser.Image.html">Image</a></li>
+						<li class="class-depth-1"><a href="Phaser.Sound.html">Sound</a></li>
+						<li class="class-depth-1"><a href="Phaser.Video.html">Video</a></li>
+						<li class="class-depth-1"><a href="Phaser.Particles.Arcade.Emitter.html">Particle Emitter</a></li>
+						<li class="class-depth-1"><a href="Phaser.Particle.html">Particle</a></li>
+						<li class="class-depth-1"><a href="Phaser.Text.html">Text</a></li>
+						<li class="class-depth-1"><a href="Phaser.Tween.html">Tween</a></li>
+						<li class="class-depth-1"><a href="Phaser.BitmapText.html">BitmapText</a></li>
+						<li class="class-depth-1"><a href="Phaser.Tilemap.html">Tilemap</a></li>
+						<li class="class-depth-1"><a href="Phaser.BitmapData.html">BitmapData</a></li>
+						<li class="class-depth-1"><a href="Phaser.RetroFont.html">RetroFont</a></li>
+						<li class="class-depth-1"><a href="Phaser.Button.html">Button</a></li>
+						<li class="class-depth-1"><a href="Phaser.Animation.html">Animation</a></li>
+						<li class="class-depth-1"><a href="Phaser.Graphics.html">Graphics</a></li>
+						<li class="class-depth-1"><a href="Phaser.RenderTexture.html">RenderTexture</a></li>
+						<li class="class-depth-1"><a href="Phaser.TileSprite.html">TileSprite</a></li>
+					</ul>
+				</li>
+
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Geometry<b class="caret"></b></a>
+					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.Circle.html">Circle</a></li>
+						<li class="class-depth-1"><a href="Phaser.Ellipse.html">Ellipse</a></li>
+						<li class="class-depth-1"><a href="Phaser.Line.html">Line</a></li>
+						<li class="class-depth-1"><a href="Phaser.Matrix.html">Matrix</a></li>
+						<li class="class-depth-1"><a href="Phaser.Point.html">Point</a></li>
+						<li class="class-depth-1"><a href="Phaser.Polygon.html">Polygon</a></li>
+						<li class="class-depth-1"><a href="Phaser.Rectangle.html">Rectangle</a></li>
+						<li class="class-depth-1"><a href="Phaser.RoundedRectangle.html">Rounded Rectangle</a></li>
+					</ul>
+				</li>
+
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Physics<b class="caret"></b></a>
+					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.Physics.Arcade.html">Arcade Physics</a></li>
+						<li class="class-depth-2"><a href="Phaser.Physics.Arcade.Body.html">Body</a></li>
+						<li class="class-depth-1"><a href="Phaser.Physics.P2.html">P2 Physics</a></li>
+						<li class="class-depth-2"><a href="Phaser.Physics.P2.Body.html">Body</a></li>
+						<li class="class-depth-2"><a href="Phaser.Physics.P2.Spring.html">Spring</a></li>
+						<li class="class-depth-2"><a href="Phaser.Physics.P2.CollisionGroup.html">CollisionGroup</a></li>
+						<li class="class-depth-2"><a href="Phaser.Physics.P2.ContactMaterial.html">ContactMaterial</a></li>
+						<li class="class-depth-1"><a href="Phaser.Physics.Ninja.html">Ninja Physics</a></li>
+						<li class="class-depth-2"><a href="Phaser.Physics.Body.html">Body</a></li>
+					</ul>
+				</li>
+
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Input<b class="caret"></b></a>
+					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.InputHandler.html">Input Handler</a></li>
+						<li class="class-depth-1"><a href="Phaser.Pointer.html">Pointer</a></li>
+						<li class="class-depth-1"><a href="Phaser.DeviceButton.html">Device Button</a></li>
+						<li class="class-depth-1"><a href="Phaser.Mouse.html">Mouse</a></li>
+						<li class="class-depth-1"><a href="Phaser.Keyboard.html">Keyboard</a></li>
+						<li class="class-depth-1"><a href="Phaser.Key.html">Key</a></li>
+						<li class="class-depth-1"><a href="Phaser.Gamepad.html">Gamepad</a></li>
+					</ul>
+				</li>
+
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Community<b class="caret"></b></a>
+					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="http://phaser.io">Phaser Web Site</a></li>
+						<li class="class-depth-1"><a href="https://github.com/photonstorm/phaser">Phaser Github</a></li>
+						<li class="class-depth-1"><a href="http://phaser.io/examples">Phaser Examples</a></li>
+						<li class="class-depth-1"><a href="https://github.com/photonstorm/phaser-plugins">Phaser Plugins</a></li>
+						<li class="class-depth-1"><a href="http://www.html5gamedevs.com/forum/14-phaser/">Forum</a></li>
+						<li class="class-depth-1"><a href="http://stackoverflow.com/questions/tagged/phaser-framework">Stack Overflow</a></li>
+						<li class="class-depth-1"><a href="http://phaser.io/learn">Tutorials</a></li>
+						<li class="class-depth-1"><a href="https://confirmsubscription.com/h/r/369DE48E3E86AF1E">Newsletter</a></li>
+						<li class="class-depth-1"><a href="http://phaser.io/community/twitter">Twitter</a></li>
+						<li class="class-depth-1"><a href="http://phaser.io/community/irc">IRC</a></li>
+						<li class="class-depth-1"><a href="https://www.codeandweb.com/texturepacker/phaser">Texture Packer</a></li>
+					</ul>
+				</li>
+
+			</ul>
+		</div>
+	</div>
+
+	<div class="row-fluid">
+
+		
+			<div class="span12">
+				
+				<div id="main">
+					
+
+
+		<h1 class="page-title">Source: src/pixi/textures/RenderTexture.js</h1>
+    
+    <section>
+        <article>
+            <pre class="sunlight-highlight-javascript linenums">/**
+ * @author Mat Groves http://matgroves.com/ @Doormat23
+ */
+
+/**
+ * A RenderTexture is a special texture that allows any Pixi display object to be rendered to it.
+ *
+ * __Hint__: All DisplayObjects (i.e. Sprites) that render to a RenderTexture should be preloaded otherwise black rectangles will be drawn instead.
+ *
+ * A RenderTexture takes a snapshot of any Display Object given to its render method. The position and rotation of the given Display Objects is ignored. For example:
+ *
+ *    var renderTexture = new PIXI.RenderTexture(800, 600);
+ *    var sprite = PIXI.Sprite.fromImage("spinObj_01.png");
+ *    sprite.position.x = 800/2;
+ *    sprite.position.y = 600/2;
+ *    sprite.anchor.x = 0.5;
+ *    sprite.anchor.y = 0.5;
+ *    renderTexture.render(sprite);
+ *
+ * The Sprite in this case will be rendered to a position of 0,0. To render this sprite at its actual position a DisplayObjectContainer should be used:
+ *
+ *    var doc = new PIXI.DisplayObjectContainer();
+ *    doc.addChild(sprite);
+ *    renderTexture.render(doc);  // Renders to center of renderTexture
+ *
+ * @class RenderTexture
+ * @extends Texture
+ * @constructor
+ * @param width {Number} The width of the render texture
+ * @param height {Number} The height of the render texture
+ * @param renderer {CanvasRenderer|WebGLRenderer} The renderer used for this RenderTexture
+ * @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
+ * @param resolution {Number} The resolution of the texture being generated
+ */
+PIXI.RenderTexture = function(width, height, renderer, scaleMode, resolution)
+{
+    /**
+     * The with of the render texture
+     *
+     * @property width
+     * @type Number
+     */
+    this.width = width || 100;
+
+    /**
+     * The height of the render texture
+     *
+     * @property height
+     * @type Number
+     */
+    this.height = height || 100;
+
+    /**
+     * The Resolution of the texture.
+     *
+     * @property resolution
+     * @type Number
+     */
+    this.resolution = resolution || 1;
+
+    /**
+     * The framing rectangle of the render texture
+     *
+     * @property frame
+     * @type Rectangle
+     */
+    this.frame = new PIXI.Rectangle(0, 0, this.width * this.resolution, this.height * this.resolution);
+
+    /**
+     * This is the area of the BaseTexture image to actually copy to the Canvas / WebGL when rendering,
+     * irrespective of the actual frame size or placement (which can be influenced by trimmed texture atlases)
+     *
+     * @property crop
+     * @type Rectangle
+     */
+    this.crop = new PIXI.Rectangle(0, 0, this.width * this.resolution, this.height * this.resolution);
+
+    /**
+     * The base texture object that this texture uses
+     *
+     * @property baseTexture
+     * @type BaseTexture
+     */
+    this.baseTexture = new PIXI.BaseTexture();
+    this.baseTexture.width = this.width * this.resolution;
+    this.baseTexture.height = this.height * this.resolution;
+    this.baseTexture._glTextures = [];
+    this.baseTexture.resolution = this.resolution;
+
+    this.baseTexture.scaleMode = scaleMode || PIXI.scaleModes.DEFAULT;
+
+    this.baseTexture.hasLoaded = true;
+
+    PIXI.Texture.call(this,
+        this.baseTexture,
+        new PIXI.Rectangle(0, 0, this.width * this.resolution, this.height * this.resolution)
+    );
+
+    /**
+     * The renderer this RenderTexture uses. A RenderTexture can only belong to one renderer at the moment if its webGL.
+     *
+     * @property renderer
+     * @type CanvasRenderer|WebGLRenderer
+     */
+    this.renderer = renderer || PIXI.defaultRenderer;
+
+    if (this.renderer.type === PIXI.WEBGL_RENDERER)
+    {
+        var gl = this.renderer.gl;
+        this.baseTexture._dirty[gl.id] = false;
+
+        this.textureBuffer = new PIXI.FilterTexture(gl, this.width, this.height, this.baseTexture.scaleMode);
+        this.baseTexture._glTextures[gl.id] =  this.textureBuffer.texture;
+
+        this.render = this.renderWebGL;
+        this.projection = new PIXI.Point(this.width * 0.5, -this.height * 0.5);
+    }
+    else
+    {
+        this.render = this.renderCanvas;
+        this.textureBuffer = new PIXI.CanvasBuffer(this.width * this.resolution, this.height * this.resolution);
+        this.baseTexture.source = this.textureBuffer.canvas;
+    }
+
+    /**
+     * @property valid
+     * @type Boolean
+     */
+    this.valid = true;
+
+    this.tempMatrix = new Phaser.Matrix();
+
+    this._updateUvs();
+};
+
+PIXI.RenderTexture.prototype = Object.create(PIXI.Texture.prototype);
+PIXI.RenderTexture.prototype.constructor = PIXI.RenderTexture;
+
+/**
+ * Resizes the RenderTexture.
+ *
+ * @method resize
+ * @param width {Number} The width to resize to.
+ * @param height {Number} The height to resize to.
+ * @param updateBase {Boolean} Should the baseTexture.width and height values be resized as well?
+ */
+PIXI.RenderTexture.prototype.resize = function(width, height, updateBase)
+{
+    if (width === this.width &amp;&amp; height === this.height)return;
+
+    this.valid = (width > 0 &amp;&amp; height > 0);
+
+    this.width = width;
+    this.height = height;
+    this.frame.width = this.crop.width = width * this.resolution;
+    this.frame.height = this.crop.height = height * this.resolution;
+
+    if (updateBase)
+    {
+        this.baseTexture.width = this.width * this.resolution;
+        this.baseTexture.height = this.height * this.resolution;
+    }
+
+    if (this.renderer.type === PIXI.WEBGL_RENDERER)
+    {
+        this.projection.x = this.width / 2;
+        this.projection.y = -this.height / 2;
+    }
+
+    if(!this.valid)return;
+
+    this.textureBuffer.resize(this.width, this.height);
+};
+
+/**
+ * Clears the RenderTexture.
+ *
+ * @method clear
+ */
+PIXI.RenderTexture.prototype.clear = function()
+{
+    if (!this.valid)
+    {
+        return;
+    }
+
+    if (this.renderer.type === PIXI.WEBGL_RENDERER)
+    {
+        this.renderer.gl.bindFramebuffer(this.renderer.gl.FRAMEBUFFER, this.textureBuffer.frameBuffer);
+    }
+
+    this.textureBuffer.clear();
+};
+
+/**
+ * This function will draw the display object to the texture.
+ *
+ * @method renderWebGL
+ * @param displayObject {DisplayObject} The display object to render this texture on
+ * @param [matrix] {Matrix} Optional matrix to apply to the display object before rendering.
+ * @param [clear] {Boolean} If true the texture will be cleared before the displayObject is drawn
+ * @private
+ */
+PIXI.RenderTexture.prototype.renderWebGL = function(displayObject, matrix, clear)
+{
+    if (!this.valid || displayObject.alpha === 0)
+    {
+        return;
+    }
+   
+    //  Let's create a nice matrix to apply to our display object.
+    //  Frame buffers come in upside down so we need to flip the matrix.
+    var wt = displayObject.worldTransform;
+    wt.identity();
+    wt.translate(0, this.projection.y * 2);
+
+    if (matrix)
+    {
+        wt.append(matrix);
+    }
+
+    wt.scale(1, -1);
+
+    //  Time to update all the children of the displayObject with the new matrix.
+    for (var i = 0; i &lt; displayObject.children.length; i++)
+    {
+        displayObject.children[i].updateTransform();
+    }
+    
+    //  Time for the webGL fun stuff!
+    var gl = this.renderer.gl;
+
+    gl.viewport(0, 0, this.width * this.resolution, this.height * this.resolution);
+
+    gl.bindFramebuffer(gl.FRAMEBUFFER, this.textureBuffer.frameBuffer );
+
+    if (clear)
+    {
+        this.textureBuffer.clear();
+    }
+
+    this.renderer.spriteBatch.dirty = true;
+
+    this.renderer.renderDisplayObject(displayObject, this.projection, this.textureBuffer.frameBuffer, matrix);
+
+    this.renderer.spriteBatch.dirty = true;
+
+};
+
+/**
+ * This function will draw the display object to the texture.
+ *
+ * @method renderCanvas
+ * @param displayObject {DisplayObject} The display object to render this texture on
+ * @param [matrix] {Matrix} Optional matrix to apply to the display object before rendering.
+ * @param [clear] {Boolean} If true the texture will be cleared before the displayObject is drawn
+ * @private
+ */
+PIXI.RenderTexture.prototype.renderCanvas = function(displayObject, matrix, clear)
+{
+    if (!this.valid || displayObject.alpha === 0)
+    {
+        return;
+    }
+
+    //  Let's create a nice matrix to apply to our display object.
+    //  Frame buffers come in upside down so we need to flip the matrix.
+    var wt = displayObject.worldTransform;
+    wt.identity();
+
+    if (matrix)
+    {
+        wt.append(matrix);
+    }
+
+    // Time to update all the children of the displayObject with the new matrix (what new matrix? there isn't one!)
+    for (var i = 0; i &lt; displayObject.children.length; i++)
+    {
+        displayObject.children[i].updateTransform();
+    }
+
+    if (clear)
+    {
+        this.textureBuffer.clear();
+    }
+
+    var realResolution = this.renderer.resolution;
+
+    this.renderer.resolution = this.resolution;
+
+    this.renderer.renderDisplayObject(displayObject, this.textureBuffer.context, matrix);
+
+    this.renderer.resolution = realResolution;
+};
+
+/**
+ * Will return a HTML Image of the texture
+ *
+ * @method getImage
+ * @return {Image}
+ */
+PIXI.RenderTexture.prototype.getImage = function()
+{
+    var image = new Image();
+    image.src = this.getBase64();
+    return image;
+};
+
+/**
+ * Will return a base64 encoded string of this texture. It works by calling RenderTexture.getCanvas and then running toDataURL on that.
+ *
+ * @method getBase64
+ * @return {String} A base64 encoded string of the texture.
+ */
+PIXI.RenderTexture.prototype.getBase64 = function()
+{
+    return this.getCanvas().toDataURL();
+};
+
+/**
+ * Creates a Canvas element, renders this RenderTexture to it and then returns it.
+ *
+ * @method getCanvas
+ * @return {HTMLCanvasElement} A Canvas element with the texture rendered on.
+ */
+PIXI.RenderTexture.prototype.getCanvas = function()
+{
+    if (this.renderer.type === PIXI.WEBGL_RENDERER)
+    {
+        var gl =  this.renderer.gl;
+        var width = this.textureBuffer.width;
+        var height = this.textureBuffer.height;
+
+        var webGLPixels = new Uint8Array(4 * width * height);
+
+        gl.bindFramebuffer(gl.FRAMEBUFFER, this.textureBuffer.frameBuffer);
+        gl.readPixels(0, 0, width, height, gl.RGBA, gl.UNSIGNED_BYTE, webGLPixels);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
+        var tempCanvas = new PIXI.CanvasBuffer(width, height);
+        var canvasData = tempCanvas.context.getImageData(0, 0, width, height);
+        canvasData.data.set(webGLPixels);
+
+        tempCanvas.context.putImageData(canvasData, 0, 0);
+
+        return tempCanvas.canvas;
+    }
+    else
+    {
+        return this.textureBuffer.canvas;
+    }
+};
+</pre>
+        </article>
+    </section>
+
+
+
+
+
+				</div>
+
+				<div class="clearfix"></div>
+				<footer>
+					
+					
+		<span class="copyright">
+		Phaser Copyright © 2012-2015 Photon Storm Ltd.
+		</span>
+					<br />
+					
+		<span class="jsdoc-message">
+		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
+		on Thu Oct 15 2015 12:04:56 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		</span>
+				</footer>
+			</div>
+
+			
+			<br clear="both">
+		</div>
+
+	</div>
+	<script src="scripts/sunlight.js"></script>
+	<script src="scripts/sunlight.javascript.js"></script>
+	<script src="scripts/sunlight-plugin.doclinks.js"></script>
+	<script src="scripts/sunlight-plugin.linenumbers.js"></script>
+	<script src="scripts/sunlight-plugin.menu.js"></script>
+	<script src="scripts/jquery.min.js"></script>
+	<script src="scripts/jquery.scrollTo.js"></script>
+	<script src="scripts/jquery.localScroll.js"></script>
+	<script src="scripts/bootstrap-dropdown.js"></script>
+	<script src="scripts/toc.js"></script>
+
+	<script>  Sunlight.highlightAll({lineNumbers:true,  showMenu: true, enableDoclinks :true}); </script>
+
+	<script>
+		$( function () {
+			$( "#toc" ).toc( {
+				anchorName  : function(i, heading, prefix) {
+					return $(heading).attr("id") || ( prefix + i );
+				},
+				selectors   : "h1,h2,h3,h4",
+				showAndHide : false,
+				scrollTo    : 60
+			} );
+			$( "#toc>ul" ).addClass( "nav nav-pills nav-stacked" );
+			$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+
+		} );
+	</script>
+
+	
+
+</body>
+</html>

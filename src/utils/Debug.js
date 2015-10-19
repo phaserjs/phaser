@@ -1,13 +1,14 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
 /**
 * A collection of methods for displaying debug information about game objects.
 * If your game is running in WebGL then Debug will create a Sprite that is placed at the top of the Stage display list and bind a canvas texture
-* to it, which must be uploaded every frame. Be advised: this is expenive.
+* to it, which must be uploaded every frame. Be advised: this is very expensive, especially in browsers like Firefox. So please only enable Debug
+* in WebGL mode if you really need it (or your desktop can cope with it well) and disable it for production!
 * If your game is using a Canvas renderer then the debug information is literally drawn on the top of the active game canvas and no Sprite is used.
 *
 * @class Phaser.Utils.Debug
@@ -22,29 +23,19 @@ Phaser.Utils.Debug = function (game) {
     this.game = game;
 
     /**
-    * @property {PIXI.Sprite} sprite - If debugging in WebGL mode we need this.
+    * @property {Phaser.Image} sprite - If debugging in WebGL mode we need this.
     */
     this.sprite = null;
 
     /**
-    * @property {HTMLCanvasElement} canvas - The canvas to which this BitmapData draws.
+    * @property {Phaser.BitmapData} bmd - In WebGL mode this BitmapData contains a copy of the debug canvas.
+    */
+    this.bmd = null;
+
+    /**
+    * @property {HTMLCanvasElement} canvas - The canvas to which Debug calls draws.
     */
     this.canvas = null;
-
-    /**
-    * @property {PIXI.BaseTexture} baseTexture - Required Pixi var.
-    */
-    this.baseTexture = null;
-
-    /**
-    * @property {PIXI.Texture} texture - Required Pixi var.
-    */
-    this.texture = null;
-
-    /**
-    * @property {Phaser.Frame} textureFrame - Dimensions of the renderable area.
-    */
-    this.textureFrame = null;
 
     /**
     * @property {CanvasRenderingContext2D} context - The 2d context of the canvas.
@@ -73,7 +64,7 @@ Phaser.Utils.Debug = function (game) {
     this.renderShadow = true;
 
     /**
-    * @property {Context} currentX - The current X position the debug information will be rendered at.
+    * @property {number} currentX - The current X position the debug information will be rendered at.
     * @default
     */
     this.currentX = 0;
@@ -85,7 +76,7 @@ Phaser.Utils.Debug = function (game) {
     this.currentY = 0;
 
     /**
-    * @property {number} currentAlpha - The current alpha the debug information will be rendered at.
+    * @property {number} currentAlpha - The alpha of the Debug context, set before all debug information is rendered to it.
     * @default
     */
     this.currentAlpha = 1;
@@ -113,13 +104,12 @@ Phaser.Utils.Debug.prototype = {
         }
         else
         {
-            this.canvas = Phaser.Canvas.create(this.game.width, this.game.height, '', true);
-            this.context = this.canvas.getContext('2d');
-            this.baseTexture = new PIXI.BaseTexture(this.canvas);
-            this.texture = new PIXI.Texture(this.baseTexture);
-            this.textureFrame = new Phaser.Frame(0, 0, 0, this.game.width, this.game.height, 'debug', this.game.rnd.uuid());
-            this.sprite = this.game.make.image(0, 0, this.texture, this.textureFrame);
+            this.bmd = this.game.make.bitmapData(this.game.width, this.game.height);
+            this.sprite = this.game.make.image(0, 0, this.bmd);
             this.game.stage.addChild(this.sprite);
+
+            this.canvas = PIXI.CanvasPool.create(this, this.game.width, this.game.height);
+            this.context = this.canvas.getContext('2d');
         }
 
     },
@@ -133,8 +123,30 @@ Phaser.Utils.Debug.prototype = {
 
         if (this.dirty && this.sprite)
         {
+            this.bmd.clear();
+            this.bmd.draw(this.canvas, 0, 0);
+
             this.context.clearRect(0, 0, this.game.width, this.game.height);
             this.dirty = false;
+        }
+
+    },
+
+    /**
+    * Clears the Debug canvas.
+    *
+    * @method Phaser.Utils.Debug#reset
+    */
+    reset: function () {
+
+        if (this.context)
+        {
+            this.context.clearRect(0, 0, this.game.width, this.game.height);
+        }
+
+        if (this.sprite)
+        {
+            this.bmd.clear();
         }
 
     },
@@ -154,25 +166,21 @@ Phaser.Utils.Debug.prototype = {
         if (typeof x !== 'number') { x = 0; }
         if (typeof y !== 'number') { y = 0; }
         color = color || 'rgb(255,255,255)';
-        if (typeof columnWidth === 'undefined') { columnWidth = 0; }
+        if (columnWidth === undefined) { columnWidth = 0; }
 
         this.currentX = x;
         this.currentY = y;
         this.currentColor = color;
-        this.currentAlpha = this.context.globalAlpha;
         this.columnWidth = columnWidth;
 
-        if (this.sprite)
-        {
-            this.dirty = true;
-        }
+        this.dirty = true;
 
         this.context.save();
         this.context.setTransform(1, 0, 0, 1, 0, 0);
         this.context.strokeStyle = color;
         this.context.fillStyle = color;
         this.context.font = this.font;
-        this.context.globalAlpha = 1;
+        this.context.globalAlpha = this.currentAlpha;
 
     },
 
@@ -185,12 +193,6 @@ Phaser.Utils.Debug.prototype = {
     stop: function () {
 
         this.context.restore();
-        this.context.globalAlpha = this.currentAlpha;
-
-        if (this.sprite)
-        {
-            PIXI.updateWebGLTexture(this.baseTexture, this.game.renderer.gl);
-        }
 
     },
 
@@ -267,8 +269,15 @@ Phaser.Utils.Debug.prototype = {
         this.start(x, y, color);
         this.line('Camera (' + camera.width + ' x ' + camera.height + ')');
         this.line('X: ' + camera.x + ' Y: ' + camera.y);
-        this.line('Bounds x: ' + camera.bounds.x + ' Y: ' + camera.bounds.y + ' w: ' + camera.bounds.width + ' h: ' + camera.bounds.height);
+
+        if (camera.bounds)
+        {
+            this.line('Bounds x: ' + camera.bounds.x + ' Y: ' + camera.bounds.y + ' w: ' + camera.bounds.width + ' h: ' + camera.bounds.height);
+        }
+
         this.line('View x: ' + camera.view.x + ' Y: ' + camera.view.y + ' w: ' + camera.view.width + ' h: ' + camera.view.height);
+        // this.line('Screen View x: ' + camera.screenView.x + ' Y: ' + camera.screenView.y + ' w: ' + camera.screenView.width + ' h: ' + camera.screenView.height);
+        this.line('Total in view: ' + camera.totalInView);
         this.stop();
 
     },
@@ -309,7 +318,7 @@ Phaser.Utils.Debug.prototype = {
             return;
         }
 
-        if (typeof hideIfUp === 'undefined') { hideIfUp = false; }
+        if (hideIfUp === undefined) { hideIfUp = false; }
         downColor = downColor || 'rgba(0,255,0,0.5)';
         upColor = upColor || 'rgba(255,0,0,0.5)';
 
@@ -345,7 +354,7 @@ Phaser.Utils.Debug.prototype = {
         //  Render the text
         this.line('ID: ' + pointer.id + " Active: " + pointer.active);
         this.line('World X: ' + pointer.worldX + " World Y: " + pointer.worldY);
-        this.line('Screen X: ' + pointer.x + " Screen Y: " + pointer.y);
+        this.line('Screen X: ' + pointer.x + " Screen Y: " + pointer.y + " In: " + pointer.withinGame);
         this.line('Duration: ' + pointer.duration + " ms");
         this.line('is Down: ' + pointer.isDown + " is Up: " + pointer.isUp);
         this.stop();
@@ -387,7 +396,7 @@ Phaser.Utils.Debug.prototype = {
         this.start(x, y, color, 150);
 
         this.line('Key:', key.keyCode, 'isDown:', key.isDown);
-        this.line('justPressed:', key.justPressed(), 'justReleased:', key.justReleased());
+        this.line('justDown:', key.justDown, 'justUp:', key.justUp);
         this.line('Time Down:', key.timeDown.toFixed(0), 'duration:', key.duration.toFixed(0));
 
         this.stop();
@@ -434,6 +443,26 @@ Phaser.Utils.Debug.prototype = {
     },
 
     /**
+    * Renders the Rope's segments. Note: This is really expensive as it has to calculate new segments every time you call it
+    *
+    * @method Phaser.Utils.Debug#ropeSegments
+    * @param {Phaser.Rope} rope - The rope to display the segments of.
+    * @param {string} [color] - Color of the debug info to be rendered (format is css color string).
+    * @param {boolean} [filled=true] - Render the rectangle as a fillRect (default, true) or a strokeRect (false)
+    */
+    ropeSegments: function (rope, color, filled) {
+
+        var segments = rope.segments;
+
+        var self = this;
+
+        segments.forEach(function(segment) {
+            self.rectangle(segment, color, filled);
+        }, this);
+
+    },
+
+    /**
     * Render debug infos (including name, bounds info, position and some other properties) about the Sprite.
     *
     * @method Phaser.Utils.Debug#spriteInfo
@@ -450,6 +479,7 @@ Phaser.Utils.Debug.prototype = {
         this.line('x: ' + sprite.x.toFixed(1) + ' y: ' + sprite.y.toFixed(1));
         this.line('angle: ' + sprite.angle.toFixed(1) + ' rotation: ' + sprite.rotation.toFixed(1));
         this.line('visible: ' + sprite.visible + ' in camera: ' + sprite.inCamera);
+        this.line('bounds x: ' + sprite._bounds.x.toFixed(1) + ' y: ' + sprite._bounds.y.toFixed(1) + ' w: ' + sprite._bounds.width.toFixed(1) + ' h: ' + sprite._bounds.height.toFixed(1));
 
         this.stop();
 
@@ -531,8 +561,8 @@ Phaser.Utils.Debug.prototype = {
     */
     geom: function (object, color, filled, forceType) {
 
-        if (typeof filled === 'undefined') { filled = true; }
-        if (typeof forceType === 'undefined') { forceType = 0; }
+        if (filled === undefined) { filled = true; }
+        if (forceType === undefined) { forceType = 0; }
 
         color = color || 'rgba(0,255,0,0.4)';
 
@@ -595,7 +625,7 @@ Phaser.Utils.Debug.prototype = {
     */
     rectangle: function (object, color, filled) {
 
-        if (typeof filled === 'undefined') { filled = true; }
+        if (filled === undefined) { filled = true; }
 
         color = color || 'rgba(0, 255, 0, 0.4)';
 
@@ -688,31 +718,35 @@ Phaser.Utils.Debug.prototype = {
     },
 
     /**
-    * Render a Sprites Physics body if it has one set. Note this only works for Arcade and
-    * Ninja (AABB, circle only) Physics.
-    * To display a P2 body you should enable debug mode on the body when creating it.
+    * Render a Sprites Physics body if it has one set. The body is rendered as a filled or stroked rectangle.
+    * This only works for Arcade Physics, Ninja Physics (AABB and Circle only) and Box2D Physics bodies.
+    * To display a P2 Physics body you should enable debug mode on the body when creating it.
     *
     * @method Phaser.Utils.Debug#body
-    * @param {Phaser.Sprite} sprite - The sprite whos body will be rendered.
-    * @param {string} [color='rgba(0,255,0,0.4)'] - color of the debug info to be rendered. (format is css color string).
-    * @param {boolean} [filled=true] - Render the objected as a filled (default, true) or a stroked (false)
+    * @param {Phaser.Sprite} sprite - The Sprite who's body will be rendered.
+    * @param {string} [color='rgba(0,255,0,0.4)'] - Color of the debug rectangle to be rendered. The format is a CSS color string such as '#ff0000' or 'rgba(255,0,0,0.5)'.
+    * @param {boolean} [filled=true] - Render the body as a filled rectangle (true) or a stroked rectangle (false)
     */
     body: function (sprite, color, filled) {
 
         if (sprite.body)
         {
+            this.start();
+
             if (sprite.body.type === Phaser.Physics.ARCADE)
             {
-                this.start();
                 Phaser.Physics.Arcade.Body.render(this.context, sprite.body, color, filled);
-                this.stop();
             }
             else if (sprite.body.type === Phaser.Physics.NINJA)
             {
-                this.start();
                 Phaser.Physics.Ninja.Body.render(this.context, sprite.body, color, filled);
-                this.stop();
             }
+            else if (sprite.body.type === Phaser.Physics.BOX2D)
+            {
+                Phaser.Physics.Box2D.renderBody(this.context, sprite.body, color);
+            }
+
+            this.stop();
         }
 
     },
@@ -730,13 +764,64 @@ Phaser.Utils.Debug.prototype = {
 
         if (sprite.body)
         {
+            this.start(x, y, color, 210);
+
             if (sprite.body.type === Phaser.Physics.ARCADE)
             {
-                this.start(x, y, color, 210);
                 Phaser.Physics.Arcade.Body.renderBodyInfo(this, sprite.body);
-                this.stop();
             }
+            else if (sprite.body.type === Phaser.Physics.BOX2D)
+            {
+                this.game.physics.box2d.renderBodyInfo(this, sprite.body);
+            }
+
+            this.stop();
         }
+
+    },
+
+    /**
+    * Renders 'debug draw' data for the Box2D world if it exists.
+    * This uses the standard debug drawing feature of Box2D, so colors will be decided by
+    * the Box2D engine.
+    *
+    * @method Phaser.Utils.Debug#box2dWorld
+    */
+    box2dWorld: function () {
+    
+        this.start();
+        
+        this.context.translate(-this.game.camera.view.x, -this.game.camera.view.y, 0);
+        this.game.physics.box2d.renderDebugDraw(this.context);
+        
+        this.stop();
+
+    },
+
+    /**
+    * Renders 'debug draw' data for the given Box2D body.
+    * This uses the standard debug drawing feature of Box2D, so colors will be decided by the Box2D engine.
+    *
+    * @method Phaser.Utils.Debug#box2dBody
+    * @param {Phaser.Sprite} sprite - The sprite whos body will be rendered.
+    * @param {string} [color='rgb(0,255,0)'] - color of the debug info to be rendered. (format is css color string).
+    */
+    box2dBody: function (body, color) {
+    
+        this.start();
+        Phaser.Physics.Box2D.renderBody(this.context, body, color);
+        this.stop();
+
+    },
+
+    /**
+    * Destroy this object.
+    *
+    * @method Phaser.Utils.Debug#destroy
+    */
+    destroy: function () {
+    
+        PIXI.CanvasPool.remove(this);
 
     }
 

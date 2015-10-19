@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -64,8 +64,8 @@ Phaser.Net.prototype = {
     */
     updateQueryString: function (key, value, redirect, url) {
 
-        if (typeof redirect === "undefined") { redirect = false; }
-        if (typeof url === "undefined" || url === '') { url = window.location.href; }
+        if (redirect === undefined) { redirect = false; }
+        if (url === undefined || url === '') { url = window.location.href; }
 
         var output = '';
         var re = new RegExp("([?|&])" + key + "=.*?(&|#|$)(.*)", "gi");
@@ -123,7 +123,7 @@ Phaser.Net.prototype = {
     */
     getQueryString: function (parameter) {
 
-        if (typeof parameter === "undefined") { parameter = ''; }
+        if (parameter === undefined) { parameter = ''; }
 
         var output = {};
         var keyValues = location.search.substring(1).split('&');

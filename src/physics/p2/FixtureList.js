@@ -3,7 +3,7 @@
 /**
 * @author       Georgios Kaleadis https://github.com/georgiee
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -17,7 +17,6 @@
 * during runtime (to remove parts, set masks, categories & sensor properties)
 *
 * @class Phaser.Physics.P2.FixtureList
-* @classdesc Collection for generated P2 fixtures 
 * @constructor
 * @param {Array} list - A list of fixtures (from Phaser.Physics.P2.Body#addPhaserPolygon)
 */

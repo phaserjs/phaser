@@ -1,0 +1,1993 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Phaser Source: src/sound/SoundManager.js</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+
+	<link type="text/css" rel="stylesheet" href="styles/default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	
+	<link type="text/css" rel="stylesheet" href="styles/site.cerulean.css">
+	
+</head>
+
+<body>
+
+<div class="container-fluid">
+	<div class="navbar navbar-fixed-top navbar-inverse">
+		<div style="position: absolute; width: 143px; height: 31px; right: 10px; top: 10px; z-index: 1050"><a href="http://phaser.io"><img src="img/phaser.png" border="0" /></a></div>
+		<div class="navbar-inner">
+			<a class="brand" href="index.html">Phaser API</a>
+			<ul class="nav">
+
+				
+				<li class="dropdown">
+					<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+						
+						<li class="class-depth-0">
+							<a href="Phaser.html">Phaser</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="Phaser.KeyCode.html">KeyCode</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="PIXI.html">PIXI</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
+				<li class="dropdown">
+					<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Animation.html">Animation</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.AnimationManager.html">AnimationManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.AnimationParser.html">AnimationParser</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.ArraySet.html">ArraySet</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.ArrayUtils.html">ArrayUtils</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.AudioSprite.html">AudioSprite</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.BitmapData.html">BitmapData</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.BitmapText.html">BitmapText</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Button.html">Button</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Cache.html">Cache</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Camera.html">Camera</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Canvas.html">Canvas</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Circle.html">Circle</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Color.html">Color</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Angle.html">Angle</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Animation.html">Animation</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.AutoCull.html">AutoCull</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Bounds.html">Bounds</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.BringToTop.html">BringToTop</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Core.html">Core</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Crop.html">Crop</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Delta.html">Delta</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Destroy.html">Destroy</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.FixedToCamera.html">FixedToCamera</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Health.html">Health</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.InCamera.html">InCamera</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.InputEnabled.html">InputEnabled</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.InWorld.html">InWorld</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.LifeSpan.html">LifeSpan</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.LoadTexture.html">LoadTexture</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Overlap.html">Overlap</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.PhysicsBody.html">PhysicsBody</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Reset.html">Reset</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.ScaleMinMax.html">ScaleMinMax</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Smoothed.html">Smoothed</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Create.html">Create</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Creature.html">Creature</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Device.html">Device</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.DeviceButton.html">DeviceButton</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.DOM.html">DOM</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Easing.html">Easing</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Back.html">Back</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Bounce.html">Bounce</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Circular.html">Circular</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Cubic.html">Cubic</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Elastic.html">Elastic</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Exponential.html">Exponential</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Linear.html">Linear</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Quadratic.html">Quadratic</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Quartic.html">Quartic</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Quintic.html">Quintic</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Sinusoidal.html">Sinusoidal</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Ellipse.html">Ellipse</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Events.html">Events</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Filter.html">Filter</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.FlexGrid.html">FlexGrid</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.FlexLayer.html">FlexLayer</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Frame.html">Frame</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.FrameData.html">FrameData</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Game.html">Game</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.GameObjectCreator.html">GameObjectCreator</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.GameObjectFactory.html">GameObjectFactory</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Gamepad.html">Gamepad</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Graphics.html">Graphics</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Group.html">Group</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Image.html">Image</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.ImageCollection.html">ImageCollection</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Input.html">Input</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.InputHandler.html">InputHandler</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Key.html">Key</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Keyboard.html">Keyboard</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Line.html">Line</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.LinkedList.html">LinkedList</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Loader.html">Loader</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.LoaderParser.html">LoaderParser</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Math.html">Math</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Matrix.html">Matrix</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Mouse.html">Mouse</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.MSPointer.html">MSPointer</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Net.html">Net</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Particle.html">Particle</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Particles.html">Particles</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Particles.Arcade.html">Arcade</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Particles.Arcade.Emitter.html">Emitter</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Physics.html">Physics</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Physics.Arcade.html">Arcade</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.Arcade.Body.html">Body</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.Arcade.TilemapCollision.html">TilemapCollision</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Physics.Ninja.html">Ninja</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.Ninja.AABB.html">AABB</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.Ninja.Body.html">Body</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.Ninja.Circle.html">Circle</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.Ninja.Tile.html">Tile</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Physics.P2.html">P2</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.Body.html">Body</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.BodyDebug.html">BodyDebug</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.CollisionGroup.html">CollisionGroup</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.ContactMaterial.html">ContactMaterial</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.DistanceConstraint.html">DistanceConstraint</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.FixtureList.html">FixtureList</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.GearConstraint.html">GearConstraint</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.InversePointProxy.html">InversePointProxy</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.LockConstraint.html">LockConstraint</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.Material.html">Material</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.PointProxy.html">PointProxy</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.PrismaticConstraint.html">PrismaticConstraint</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.RevoluteConstraint.html">RevoluteConstraint</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.RotationalSpring.html">RotationalSpring</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.Spring.html">Spring</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Plugin.html">Plugin</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.PluginManager.html">PluginManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Point.html">Point</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Pointer.html">Pointer</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.PointerMode.html">PointerMode</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Polygon.html">Polygon</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.QuadTree.html">QuadTree</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.RandomDataGenerator.html">RandomDataGenerator</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Rectangle.html">Rectangle</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.RenderTexture.html">RenderTexture</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.RequestAnimationFrame.html">RequestAnimationFrame</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.RetroFont.html">RetroFont</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Rope.html">Rope</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.RoundedRectangle.html">RoundedRectangle</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.ScaleManager.html">ScaleManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Signal.html">Signal</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.SignalBinding.html">SignalBinding</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.SinglePad.html">SinglePad</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Sound.html">Sound</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.SoundManager.html">SoundManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Sprite.html">Sprite</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.SpriteBatch.html">SpriteBatch</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Stage.html">Stage</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.State.html">State</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.StateManager.html">StateManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Text.html">Text</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Tile.html">Tile</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Tilemap.html">Tilemap</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.TilemapLayer.html">TilemapLayer</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.TilemapParser.html">TilemapParser</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Tileset.html">Tileset</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.TileSprite.html">TileSprite</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Time.html">Time</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Timer.html">Timer</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.TimerEvent.html">TimerEvent</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Touch.html">Touch</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Tween.html">Tween</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.TweenData.html">TweenData</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.TweenManager.html">TweenManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Utils.html">Utils</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Utils.Debug.html">Debug</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Video.html">Video</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.World.html">World</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.AbstractFilter.html">AbstractFilter</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.BaseTexture.html">BaseTexture</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.CanvasBuffer.html">CanvasBuffer</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.CanvasGraphics.html">CanvasGraphics</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.CanvasMaskManager.html">CanvasMaskManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.CanvasPool.html">CanvasPool</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.CanvasRenderer.html">CanvasRenderer</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.CanvasTinter.html">CanvasTinter</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.ComplexPrimitiveShader.html">ComplexPrimitiveShader</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.DisplayObject.html">DisplayObject</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.DisplayObjectContainer.html">DisplayObjectContainer</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.Event.html">Event</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.EventTarget.html">EventTarget</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.FilterTexture.html">FilterTexture</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.Graphics.html">Graphics</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.GraphicsData.html">GraphicsData</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.PIXI.html">PIXI</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.PixiFastShader.html">PixiFastShader</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.PixiShader.html">PixiShader</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.PolyK.html">PolyK</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.PrimitiveShader.html">PrimitiveShader</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.RenderTexture.html">RenderTexture</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.Rope.html">Rope</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.Sprite.html">Sprite</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.SpriteBatch.html">SpriteBatch</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.Strip.html">Strip</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.StripShader.html">StripShader</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.Texture.html">Texture</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.TilingSprite.html">TilingSprite</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.WebGLBlendModeManager.html">WebGLBlendModeManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.WebGLFastSpriteBatch.html">WebGLFastSpriteBatch</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.WebGLFilterManager.html">WebGLFilterManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.WebGLRenderer.html">WebGLRenderer</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
+				<li class="dropdown">
+					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+						
+						<li class="class-depth-0">
+							<a href="global.html#AUTO">AUTO</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#BITMAPDATA">BITMAPDATA</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#BITMAPTEXT">BITMAPTEXT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#blendModes">blendModes</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#BUTTON">BUTTON</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#CANVAS">CANVAS</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#CANVAS_FILTER">CANVAS_FILTER</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#CIRCLE">CIRCLE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#CREATURE">CREATURE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#DOWN">DOWN</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ELLIPSE">ELLIPSE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#EMITTER">EMITTER</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#GAMES">GAMES</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#GRAPHICS">GRAPHICS</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#GROUP">GROUP</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#HEADLESS">HEADLESS</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#IMAGE">IMAGE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#LEFT">LEFT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#LINE">LINE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#MATRIX">MATRIX</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#NONE">NONE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#POINT">POINT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#POINTER">POINTER</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#POLYGON">POLYGON</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#RECTANGLE">RECTANGLE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#RENDERTEXTURE">RENDERTEXTURE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#RETROFONT">RETROFONT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#RIGHT">RIGHT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ROPE">ROPE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ROUNDEDRECTANGLE">ROUNDEDRECTANGLE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#scaleModes">scaleModes</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#SPRITE">SPRITE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#SPRITEBATCH">SPRITEBATCH</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#TEXT">TEXT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#TILEMAP">TILEMAP</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#TILEMAPLAYER">TILEMAPLAYER</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#TILESPRITE">TILESPRITE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#UP">UP</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#VERSION">VERSION</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#VIDEO">VIDEO</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#WEBGL">WEBGL</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#WEBGL_FILTER">WEBGL_FILTER</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
+
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Core<b class="caret"></b></a>
+					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.Game.html">Game</a></li>
+						<li class="class-depth-1"><a href="Phaser.Group.html">Group</a></li>
+						<li class="class-depth-1"><a href="Phaser.World.html">World</a></li>
+						<li class="class-depth-1"><a href="Phaser.Loader.html">Loader</a></li>
+						<li class="class-depth-1"><a href="Phaser.Cache.html">Cache</a></li>
+						<li class="class-depth-1"><a href="Phaser.Time.html">Time</a></li>
+						<li class="class-depth-1"><a href="Phaser.Camera.html">Camera</a></li>
+						<li class="class-depth-1"><a href="Phaser.StateManager.html">State Manager</a></li>
+						<li class="class-depth-1"><a href="Phaser.TweenManager.html">Tween Manager</a></li>
+						<li class="class-depth-1"><a href="Phaser.SoundManager.html">Sound Manager</a></li>
+						<li class="class-depth-1"><a href="Phaser.Input.html">Input Manager</a></li>
+						<li class="class-depth-1"><a href="Phaser.ScaleManager.html">Scale Manager</a></li>
+					</ul>
+				</li>
+
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Game Objects<b class="caret"></b></a>
+					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.GameObjectFactory.html">Factory (game.add)</a></li>
+						<li class="class-depth-1"><a href="Phaser.GameObjectCreator.html">Creator (game.make)</a></li>
+						<li class="class-depth-1"><a href="Phaser.Sprite.html">Sprite</a></li>
+						<li class="class-depth-1"><a href="Phaser.Image.html">Image</a></li>
+						<li class="class-depth-1"><a href="Phaser.Sound.html">Sound</a></li>
+						<li class="class-depth-1"><a href="Phaser.Video.html">Video</a></li>
+						<li class="class-depth-1"><a href="Phaser.Particles.Arcade.Emitter.html">Particle Emitter</a></li>
+						<li class="class-depth-1"><a href="Phaser.Particle.html">Particle</a></li>
+						<li class="class-depth-1"><a href="Phaser.Text.html">Text</a></li>
+						<li class="class-depth-1"><a href="Phaser.Tween.html">Tween</a></li>
+						<li class="class-depth-1"><a href="Phaser.BitmapText.html">BitmapText</a></li>
+						<li class="class-depth-1"><a href="Phaser.Tilemap.html">Tilemap</a></li>
+						<li class="class-depth-1"><a href="Phaser.BitmapData.html">BitmapData</a></li>
+						<li class="class-depth-1"><a href="Phaser.RetroFont.html">RetroFont</a></li>
+						<li class="class-depth-1"><a href="Phaser.Button.html">Button</a></li>
+						<li class="class-depth-1"><a href="Phaser.Animation.html">Animation</a></li>
+						<li class="class-depth-1"><a href="Phaser.Graphics.html">Graphics</a></li>
+						<li class="class-depth-1"><a href="Phaser.RenderTexture.html">RenderTexture</a></li>
+						<li class="class-depth-1"><a href="Phaser.TileSprite.html">TileSprite</a></li>
+					</ul>
+				</li>
+
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Geometry<b class="caret"></b></a>
+					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.Circle.html">Circle</a></li>
+						<li class="class-depth-1"><a href="Phaser.Ellipse.html">Ellipse</a></li>
+						<li class="class-depth-1"><a href="Phaser.Line.html">Line</a></li>
+						<li class="class-depth-1"><a href="Phaser.Matrix.html">Matrix</a></li>
+						<li class="class-depth-1"><a href="Phaser.Point.html">Point</a></li>
+						<li class="class-depth-1"><a href="Phaser.Polygon.html">Polygon</a></li>
+						<li class="class-depth-1"><a href="Phaser.Rectangle.html">Rectangle</a></li>
+						<li class="class-depth-1"><a href="Phaser.RoundedRectangle.html">Rounded Rectangle</a></li>
+					</ul>
+				</li>
+
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Physics<b class="caret"></b></a>
+					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.Physics.Arcade.html">Arcade Physics</a></li>
+						<li class="class-depth-2"><a href="Phaser.Physics.Arcade.Body.html">Body</a></li>
+						<li class="class-depth-1"><a href="Phaser.Physics.P2.html">P2 Physics</a></li>
+						<li class="class-depth-2"><a href="Phaser.Physics.P2.Body.html">Body</a></li>
+						<li class="class-depth-2"><a href="Phaser.Physics.P2.Spring.html">Spring</a></li>
+						<li class="class-depth-2"><a href="Phaser.Physics.P2.CollisionGroup.html">CollisionGroup</a></li>
+						<li class="class-depth-2"><a href="Phaser.Physics.P2.ContactMaterial.html">ContactMaterial</a></li>
+						<li class="class-depth-1"><a href="Phaser.Physics.Ninja.html">Ninja Physics</a></li>
+						<li class="class-depth-2"><a href="Phaser.Physics.Body.html">Body</a></li>
+					</ul>
+				</li>
+
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Input<b class="caret"></b></a>
+					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.InputHandler.html">Input Handler</a></li>
+						<li class="class-depth-1"><a href="Phaser.Pointer.html">Pointer</a></li>
+						<li class="class-depth-1"><a href="Phaser.DeviceButton.html">Device Button</a></li>
+						<li class="class-depth-1"><a href="Phaser.Mouse.html">Mouse</a></li>
+						<li class="class-depth-1"><a href="Phaser.Keyboard.html">Keyboard</a></li>
+						<li class="class-depth-1"><a href="Phaser.Key.html">Key</a></li>
+						<li class="class-depth-1"><a href="Phaser.Gamepad.html">Gamepad</a></li>
+					</ul>
+				</li>
+
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Community<b class="caret"></b></a>
+					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="http://phaser.io">Phaser Web Site</a></li>
+						<li class="class-depth-1"><a href="https://github.com/photonstorm/phaser">Phaser Github</a></li>
+						<li class="class-depth-1"><a href="http://phaser.io/examples">Phaser Examples</a></li>
+						<li class="class-depth-1"><a href="https://github.com/photonstorm/phaser-plugins">Phaser Plugins</a></li>
+						<li class="class-depth-1"><a href="http://www.html5gamedevs.com/forum/14-phaser/">Forum</a></li>
+						<li class="class-depth-1"><a href="http://stackoverflow.com/questions/tagged/phaser-framework">Stack Overflow</a></li>
+						<li class="class-depth-1"><a href="http://phaser.io/learn">Tutorials</a></li>
+						<li class="class-depth-1"><a href="https://confirmsubscription.com/h/r/369DE48E3E86AF1E">Newsletter</a></li>
+						<li class="class-depth-1"><a href="http://phaser.io/community/twitter">Twitter</a></li>
+						<li class="class-depth-1"><a href="http://phaser.io/community/irc">IRC</a></li>
+						<li class="class-depth-1"><a href="https://www.codeandweb.com/texturepacker/phaser">Texture Packer</a></li>
+					</ul>
+				</li>
+
+			</ul>
+		</div>
+	</div>
+
+	<div class="row-fluid">
+
+		
+			<div class="span12">
+				
+				<div id="main">
+					
+
+
+		<h1 class="page-title">Source: src/sound/SoundManager.js</h1>
+    
+    <section>
+        <article>
+            <pre class="sunlight-highlight-javascript linenums">/**
+* @author       Richard Davey &lt;rich@photonstorm.com>
+* @copyright    2015 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
+* The Sound Manager is responsible for playing back audio via either the Legacy HTML Audio tag or via Web Audio if the browser supports it.
+* Note: On Firefox 25+ on Linux if you have media.gstreamer disabled in about:config then it cannot play back mp3 or m4a files.
+* The audio file type and the encoding of those files are extremely important. Not all browsers can play all audio formats.
+* There is a good guide to what's supported here: http://hpr.dogphilosophy.net/test/
+*
+* If you are reloading a Phaser Game on a page that never properly refreshes (such as in an AngularJS project) then you will quickly run out
+* of AudioContext nodes. If this is the case create a global var called PhaserGlobal on the window object before creating the game. The active
+* AudioContext will then be saved to window.PhaserGlobal.audioContext when the Phaser game is destroyed, and re-used when it starts again.
+*
+* Mobile warning: There are some mobile devices (certain iPad 2 and iPad Mini revisions) that cannot play 48000 Hz audio.
+* When they try to play the audio becomes extremely distorted and buzzes, eventually crashing the sound system.
+* The solution is to use a lower encoding rate such as 44100 Hz.
+*
+* @class Phaser.SoundManager
+* @constructor
+* @param {Phaser.Game} game - Reference to the current game instance.
+*/
+Phaser.SoundManager = function (game) {
+
+    /**
+    * @property {Phaser.Game} game - Local reference to game.
+    */
+    this.game = game;
+
+    /**
+    * @property {Phaser.Signal} onSoundDecode - The event dispatched when a sound decodes (typically only for mp3 files)
+    */
+    this.onSoundDecode = new Phaser.Signal();
+
+    /**
+    * This signal is dispatched whenever the global volume changes. The new volume is passed as the only parameter to your callback.
+    * @property {Phaser.Signal} onVolumeChange
+    */
+    this.onVolumeChange = new Phaser.Signal();
+
+    /**
+    * This signal is dispatched when the SoundManager is globally muted, either directly via game code or as a result of the game pausing.
+    * @property {Phaser.Signal} onMute
+    */
+    this.onMute = new Phaser.Signal();
+
+    /**
+    * This signal is dispatched when the SoundManager is globally un-muted, either directly via game code or as a result of the game resuming from a pause.
+    * @property {Phaser.Signal} onUnMute
+    */
+    this.onUnMute = new Phaser.Signal();
+
+    /**
+    * @property {AudioContext} context - The AudioContext being used for playback.
+    * @default
+    */
+    this.context = null;
+
+    /**
+    * @property {boolean} usingWebAudio - True the SoundManager and device are both using Web Audio.
+    * @readonly
+    */
+    this.usingWebAudio = false;
+
+    /**
+    * @property {boolean} usingAudioTag - True the SoundManager and device are both using the Audio tag instead of Web Audio.
+    * @readonly
+    */
+    this.usingAudioTag = false;
+
+    /**
+    * @property {boolean} noAudio - True if audio been disabled via the PhaserGlobal (useful if you need to use a 3rd party audio library) or the device doesn't support any audio.
+    * @default
+    */
+    this.noAudio = false;
+
+    /**
+    * @property {boolean} connectToMaster - Used in conjunction with Sound.externalNode this allows you to stop a Sound node being connected to the SoundManager master gain node.
+    * @default
+    */
+    this.connectToMaster = true;
+
+    /**
+    * @property {boolean} touchLocked - true if the audio system is currently locked awaiting a touch event.
+    * @default
+    */
+    this.touchLocked = false;
+
+    /**
+    * @property {number} channels - The number of audio channels to use in playback.
+    * @default
+    */
+    this.channels = 32;
+
+    /**
+    * @property {boolean} _codeMuted - Internal mute tracking var.
+    * @private
+    * @default
+    */
+    this._codeMuted = false;
+
+    /**
+    * @property {boolean} _muted - Internal mute tracking var.
+    * @private
+    * @default
+    */
+    this._muted = false;
+
+    /**
+    * @property {AudioContext} _unlockSource - Internal unlock tracking var.
+    * @private
+    * @default
+    */
+    this._unlockSource = null;
+
+    /**
+    * @property {number} _volume - The global audio volume. A value between 0 (silence) and 1 (full volume).
+    * @private
+    * @default
+    */
+    this._volume = 1;
+
+    /**
+    * @property {array} _sounds - An array containing all the sounds
+    * @private
+    */
+    this._sounds = [];
+
+    /**
+    * @property {Phaser.ArraySet} _watchList - An array set containing all the sounds being monitored for decoding status.
+    * @private
+    */
+    this._watchList = new Phaser.ArraySet();
+
+    /**
+    * @property {boolean} _watching - Is the SoundManager monitoring the watchList?
+    * @private
+    */
+    this._watching = false;
+
+    /**
+    * @property {function} _watchCallback - The callback to invoke once the watchlist is clear.
+    * @private
+    */
+    this._watchCallback = null;
+
+    /**
+    * @property {object} _watchContext - The context in which to call the watchlist callback.
+    * @private
+    */
+    this._watchContext = null;
+
+};
+
+Phaser.SoundManager.prototype = {
+
+    /**
+    * Initialises the sound manager.
+    * @method Phaser.SoundManager#boot
+    * @protected
+    */
+    boot: function () {
+
+        if (this.game.device.iOS &amp;&amp; this.game.device.webAudio === false)
+        {
+            this.channels = 1;
+        }
+
+        //  PhaserGlobal overrides
+        if (window['PhaserGlobal'])
+        {
+            //  Check to see if all audio playback is disabled (i.e. handled by a 3rd party class)
+            if (window['PhaserGlobal'].disableAudio === true)
+            {
+                this.noAudio = true;
+                this.touchLocked = false;
+                return;
+            }
+
+            //  Check if the Web Audio API is disabled (for testing Audio Tag playback during development)
+            if (window['PhaserGlobal'].disableWebAudio === true)
+            {
+                this.usingAudioTag = true;
+                this.touchLocked = false;
+                return;
+            }
+        }
+
+        if (window['PhaserGlobal'] &amp;&amp; window['PhaserGlobal'].audioContext)
+        {
+            this.context = window['PhaserGlobal'].audioContext;
+        }
+        else
+        {
+            if (!!window['AudioContext'])
+            {
+                try {
+                    this.context = new window['AudioContext']();
+                } catch (error) {
+                    this.context = null;
+                    this.usingWebAudio = false;
+                    this.touchLocked = false;
+                }
+            }
+            else if (!!window['webkitAudioContext'])
+            {
+                try {
+                    this.context = new window['webkitAudioContext']();
+                } catch (error) {
+                    this.context = null;
+                    this.usingWebAudio = false;
+                    this.touchLocked = false;
+                }
+            }
+        }
+
+        if (this.context === null)
+        {
+            //  No Web Audio support - how about legacy Audio?
+            if (window['Audio'] === undefined)
+            {
+                this.noAudio = true;
+                return;
+            }
+            else
+            {
+                this.usingAudioTag = true;
+            }
+        }
+        else
+        {
+            this.usingWebAudio = true;
+
+            if (this.context.createGain === undefined)
+            {
+                this.masterGain = this.context.createGainNode();
+            }
+            else
+            {
+                this.masterGain = this.context.createGain();
+            }
+
+            this.masterGain.gain.value = 1;
+            this.masterGain.connect(this.context.destination);
+        }
+
+        if (!this.noAudio)
+        {
+            //  On mobile we need a native touch event before we can play anything, so capture it here
+            if (!this.game.device.cocoonJS &amp;&amp; this.game.device.iOS || (window['PhaserGlobal'] &amp;&amp; window['PhaserGlobal'].fakeiOSTouchLock))
+            {
+                this.setTouchLock();
+            }
+        }
+
+    },
+
+    /**
+    * Sets the Input Manager touch callback to be SoundManager.unlock.
+    * Required for iOS audio device unlocking. Mostly just used internally.
+    * 
+    * @method Phaser.SoundManager#setTouchLock
+    */
+    setTouchLock: function () {
+
+        if (this.game.device.iOSVersion > 8)
+        {
+            this.game.input.touch.addTouchLockCallback(this.unlock, this, true);
+        }
+        else
+        {
+            this.game.input.touch.addTouchLockCallback(this.unlock, this);
+        }
+
+        this.touchLocked = true;
+
+    },
+
+    /**
+    * Enables the audio, usually after the first touch.
+    * 
+    * @method Phaser.SoundManager#unlock
+    * @return {boolean} True if the callback should be removed, otherwise false.
+    */
+    unlock: function () {
+
+        if (this.noAudio || !this.touchLocked || this._unlockSource !== null)
+        {
+            return true;
+        }
+
+        //  Global override (mostly for Audio Tag testing)
+        if (this.usingAudioTag)
+        {
+            this.touchLocked = false;
+            this._unlockSource = null;
+        }
+        else if (this.usingWebAudio)
+        {
+            // Create empty buffer and play it
+            // The SoundManager.update loop captures the state of it and then resets touchLocked to false
+
+            var buffer = this.context.createBuffer(1, 1, 22050);
+            this._unlockSource = this.context.createBufferSource();
+            this._unlockSource.buffer = buffer;
+            this._unlockSource.connect(this.context.destination);
+
+            if (this._unlockSource.start === undefined)
+            {
+                this._unlockSource.noteOn(0);
+            }
+            else
+            {
+                this._unlockSource.start(0);
+            }
+        }
+
+        //  We can remove the event because we've done what we needed (started the unlock sound playing)
+        return true;
+
+    },
+
+    /**
+    * Stops all the sounds in the game.
+    *
+    * @method Phaser.SoundManager#stopAll
+    */
+    stopAll: function () {
+
+        if (this.noAudio)
+        {
+            return;
+        }
+
+        for (var i = 0; i &lt; this._sounds.length; i++)
+        {
+            if (this._sounds[i])
+            {
+                this._sounds[i].stop();
+            }
+        }
+
+    },
+
+    /**
+    * Pauses all the sounds in the game.
+    *
+    * @method Phaser.SoundManager#pauseAll
+    */
+    pauseAll: function () {
+
+        if (this.noAudio)
+        {
+            return;
+        }
+
+        for (var i = 0; i &lt; this._sounds.length; i++)
+        {
+            if (this._sounds[i])
+            {
+                this._sounds[i].pause();
+            }
+        }
+
+    },
+
+    /**
+    * Resumes every sound in the game.
+    *
+    * @method Phaser.SoundManager#resumeAll
+    */
+    resumeAll: function () {
+
+        if (this.noAudio)
+        {
+            return;
+        }
+
+        for (var i = 0; i &lt; this._sounds.length; i++)
+        {
+            if (this._sounds[i])
+            {
+                this._sounds[i].resume();
+            }
+        }
+
+    },
+
+    /**
+    * Decode a sound by its asset key.
+    *
+    * @method Phaser.SoundManager#decode
+    * @param {string} key - Assets key of the sound to be decoded.
+    * @param {Phaser.Sound} [sound] - Its buffer will be set to decoded data.
+    */
+    decode: function (key, sound) {
+
+        sound = sound || null;
+
+        var soundData = this.game.cache.getSoundData(key);
+
+        if (soundData)
+        {
+            if (this.game.cache.isSoundDecoded(key) === false)
+            {
+                this.game.cache.updateSound(key, 'isDecoding', true);
+
+                var _this = this;
+
+                try {
+                    this.context.decodeAudioData(soundData, function (buffer) {
+
+                        if (buffer)
+                        {
+                            _this.game.cache.decodedSound(key, buffer);
+                            _this.onSoundDecode.dispatch(key, sound);
+                        }
+                    });
+                }
+                catch (e) {}
+            }
+        }
+
+    },
+
+    /**
+     * This method allows you to give the SoundManager a list of Sound files, or keys, and a callback.
+     * Once all of the Sound files have finished decoding the callback will be invoked.
+     * The amount of time spent decoding depends on the codec used and file size.
+     * If all of the files given have already decoded the callback is triggered immediately.
+     *
+     * @method Phaser.SoundManager#setDecodedCallback
+     * @param {string|array} files - An array containing either Phaser.Sound objects or their key strings as found in the Phaser.Cache.
+     * @param {Function} callback - The callback which will be invoked once all files have finished decoding.
+     * @param {Object} callbackContext - The context in which the callback will run.
+     */
+    setDecodedCallback: function (files, callback, callbackContext) {
+
+        if (typeof files === 'string')
+        {
+            files = [ files ];
+        }
+
+        this._watchList.reset();
+
+        for (var i = 0; i &lt; files.length; i++)
+        {
+            if (files[i] instanceof Phaser.Sound)
+            {
+                if (!this.game.cache.isSoundDecoded(files[i].key))
+                {
+                    this._watchList.add(files[i].key);
+                }
+            }
+            else if (!this.game.cache.isSoundDecoded(files[i]))
+            {
+                this._watchList.add(files[i]);
+            }
+        }
+
+        //  All decoded already?
+        if (this._watchList.total === 0)
+        {
+            this._watching = false;
+            callback.call(callbackContext);
+        }
+        else
+        {
+            this._watching = true;
+            this._watchCallback = callback;
+            this._watchContext = callbackContext;
+        }
+
+    },
+
+    /**
+    * Updates every sound in the game, checks for audio unlock on mobile and monitors the decoding watch list.
+    *
+    * @method Phaser.SoundManager#update
+    * @protected
+    */
+    update: function () {
+
+        if (this.noAudio)
+        {
+            return;
+        }
+
+        if (this.touchLocked &amp;&amp; this._unlockSource !== null &amp;&amp; (this._unlockSource.playbackState === this._unlockSource.PLAYING_STATE || this._unlockSource.playbackState === this._unlockSource.FINISHED_STATE))
+        {
+            this.touchLocked = false;
+            this._unlockSource = null;
+        }
+
+        for (var i = 0; i &lt; this._sounds.length; i++)
+        {
+            this._sounds[i].update();
+        }
+
+        if (this._watching)
+        {
+            var key = this._watchList.first;
+
+            while (key)
+            {
+                if (this.game.cache.isSoundDecoded(key))
+                {
+                    this._watchList.remove(key);
+                }
+
+                key = this._watchList.next;
+            }
+
+            if (this._watchList.total === 0)
+            {
+                this._watching = false;
+                this._watchCallback.call(this._watchContext);
+            }
+        }
+
+    },
+
+    /**
+    * Adds a new Sound into the SoundManager.
+    *
+    * @method Phaser.SoundManager#add
+    * @param {string} key - Asset key for the sound.
+    * @param {number} [volume=1] - Default value for the volume.
+    * @param {boolean} [loop=false] - Whether or not the sound will loop.
+    * @param {boolean} [connect=true] - Controls if the created Sound object will connect to the master gainNode of the SoundManager when running under WebAudio.
+    * @return {Phaser.Sound} The new sound instance.
+    */
+    add: function (key, volume, loop, connect) {
+
+        if (volume === undefined) { volume = 1; }
+        if (loop === undefined) { loop = false; }
+        if (connect === undefined) { connect = this.connectToMaster; }
+
+        var sound = new Phaser.Sound(this.game, key, volume, loop, connect);
+
+        this._sounds.push(sound);
+
+        return sound;
+
+    },
+
+    /**
+     * Adds a new AudioSprite into the SoundManager.
+     *
+     * @method Phaser.SoundManager#addSprite
+     * @param {string} key - Asset key for the sound.
+     * @return {Phaser.AudioSprite} The new AudioSprite instance.
+     */
+    addSprite: function(key) {
+
+        var audioSprite = new Phaser.AudioSprite(this.game, key);
+
+        return audioSprite;
+
+    },
+
+    /**
+    * Removes a Sound from the SoundManager. The removed Sound is destroyed before removal.
+    *
+    * @method Phaser.SoundManager#remove
+    * @param {Phaser.Sound} sound - The sound object to remove.
+    * @return {boolean} True if the sound was removed successfully, otherwise false.
+    */
+    remove: function (sound) {
+
+        var i = this._sounds.length;
+
+        while (i--)
+        {
+            if (this._sounds[i] === sound)
+            {
+                this._sounds[i].destroy(false);
+                this._sounds.splice(i, 1);
+                return true;
+            }
+        }
+
+        return false;
+
+    },
+
+    /**
+    * Removes all Sounds from the SoundManager that have an asset key matching the given value.
+    * The removed Sounds are destroyed before removal.
+    *
+    * @method Phaser.SoundManager#removeByKey
+    * @param {string} key - The key to match when removing sound objects.
+    * @return {number} The number of matching sound objects that were removed.
+    */
+    removeByKey: function (key) {
+
+        var i = this._sounds.length;
+        var removed = 0;
+
+        while (i--)
+        {
+            if (this._sounds[i].key === key)
+            {
+                this._sounds[i].destroy(false);
+                this._sounds.splice(i, 1);
+                removed++;
+            }
+        }
+
+        return removed;
+
+    },
+
+    /**
+    * Adds a new Sound into the SoundManager and starts it playing.
+    *
+    * @method Phaser.SoundManager#play
+    * @param {string} key - Asset key for the sound.
+    * @param {number} [volume=1] - Default value for the volume.
+    * @param {boolean} [loop=false] - Whether or not the sound will loop.
+    * @return {Phaser.Sound} The new sound instance.
+    */
+    play: function (key, volume, loop) {
+
+        if (this.noAudio)
+        {
+            return;
+        }
+
+        var sound = this.add(key, volume, loop);
+
+        sound.play();
+
+        return sound;
+
+    },
+
+    /**
+    * Internal mute handler called automatically by the SoundManager.mute setter.
+    *
+    * @method Phaser.SoundManager#setMute
+    * @private
+    */
+    setMute: function () {
+
+        if (this._muted)
+        {
+            return;
+        }
+
+        this._muted = true;
+
+        if (this.usingWebAudio)
+        {
+            this._muteVolume = this.masterGain.gain.value;
+            this.masterGain.gain.value = 0;
+        }
+
+        //  Loop through sounds
+        for (var i = 0; i &lt; this._sounds.length; i++)
+        {
+            if (this._sounds[i].usingAudioTag)
+            {
+                this._sounds[i].mute = true;
+            }
+        }
+
+        this.onMute.dispatch();
+
+    },
+
+    /**
+    * Internal mute handler called automatically by the SoundManager.mute setter.
+    *
+    * @method Phaser.SoundManager#unsetMute
+    * @private
+    */
+    unsetMute: function () {
+
+        if (!this._muted || this._codeMuted)
+        {
+            return;
+        }
+
+        this._muted = false;
+
+        if (this.usingWebAudio)
+        {
+            this.masterGain.gain.value = this._muteVolume;
+        }
+
+        //  Loop through sounds
+        for (var i = 0; i &lt; this._sounds.length; i++)
+        {
+            if (this._sounds[i].usingAudioTag)
+            {
+                this._sounds[i].mute = false;
+            }
+        }
+
+        this.onUnMute.dispatch();
+
+    },
+
+    /**
+    * Stops all the sounds in the game, then destroys them and finally clears up any callbacks.
+    *
+    * @method Phaser.SoundManager#destroy
+    */
+    destroy: function () {
+
+        this.stopAll();
+
+        for (var i = 0; i &lt; this._sounds.length; i++)
+        {
+            if (this._sounds[i])
+            {
+                this._sounds[i].destroy();
+            }
+        }
+
+        this._sounds = [];
+
+        this.onSoundDecode.dispose();
+
+        if (this.context &amp;&amp; window['PhaserGlobal'])
+        {
+            //  Store this in the PhaserGlobal window var, if set, to allow for re-use if the game is created again without the page refreshing
+            window['PhaserGlobal'].audioContext = this.context;
+        }
+
+    }
+
+};
+
+Phaser.SoundManager.prototype.constructor = Phaser.SoundManager;
+
+/**
+* @name Phaser.SoundManager#mute
+* @property {boolean} mute - Gets or sets the muted state of the SoundManager. This effects all sounds in the game.
+*/
+Object.defineProperty(Phaser.SoundManager.prototype, "mute", {
+
+    get: function () {
+
+        return this._muted;
+
+    },
+
+    set: function (value) {
+
+        value = value || false;
+
+        if (value)
+        {
+            if (this._muted)
+            {
+                return;
+            }
+
+            this._codeMuted = true;
+            this.setMute();
+        }
+        else
+        {
+            if (!this._muted)
+            {
+                return;
+            }
+
+            this._codeMuted = false;
+            this.unsetMute();
+        }
+    }
+
+});
+
+/**
+* @name Phaser.SoundManager#volume
+* @property {number} volume - Gets or sets the global volume of the SoundManager, a value between 0 and 1. The value given is clamped to the range 0 to 1.
+*/
+Object.defineProperty(Phaser.SoundManager.prototype, "volume", {
+
+    get: function () {
+
+        return this._volume;
+
+    },
+
+    set: function (value) {
+
+        if (value &lt; 0)
+        {
+            value = 0;
+        }
+        else if (value > 1)
+        {
+            value = 1;
+        }
+
+        if (this._volume !== value)
+        {
+            this._volume = value;
+
+            if (this.usingWebAudio)
+            {
+                this.masterGain.gain.value = value;
+            }
+            else
+            {
+                //  Loop through the sound cache and change the volume of all html audio tags
+                for (var i = 0; i &lt; this._sounds.length; i++)
+                {
+                    if (this._sounds[i].usingAudioTag)
+                    {
+                        this._sounds[i].volume = this._sounds[i].volume * value;
+                    }
+                }
+            }
+
+            this.onVolumeChange.dispatch(value);
+
+        }
+
+    }
+
+});
+</pre>
+        </article>
+    </section>
+
+
+
+
+
+				</div>
+
+				<div class="clearfix"></div>
+				<footer>
+					
+					
+		<span class="copyright">
+		Phaser Copyright © 2012-2015 Photon Storm Ltd.
+		</span>
+					<br />
+					
+		<span class="jsdoc-message">
+		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
+		on Thu Oct 15 2015 12:04:56 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		</span>
+				</footer>
+			</div>
+
+			
+			<br clear="both">
+		</div>
+
+	</div>
+	<script src="scripts/sunlight.js"></script>
+	<script src="scripts/sunlight.javascript.js"></script>
+	<script src="scripts/sunlight-plugin.doclinks.js"></script>
+	<script src="scripts/sunlight-plugin.linenumbers.js"></script>
+	<script src="scripts/sunlight-plugin.menu.js"></script>
+	<script src="scripts/jquery.min.js"></script>
+	<script src="scripts/jquery.scrollTo.js"></script>
+	<script src="scripts/jquery.localScroll.js"></script>
+	<script src="scripts/bootstrap-dropdown.js"></script>
+	<script src="scripts/toc.js"></script>
+
+	<script>  Sunlight.highlightAll({lineNumbers:true,  showMenu: true, enableDoclinks :true}); </script>
+
+	<script>
+		$( function () {
+			$( "#toc" ).toc( {
+				anchorName  : function(i, heading, prefix) {
+					return $(heading).attr("id") || ( prefix + i );
+				},
+				selectors   : "h1,h2,h3,h4",
+				showAndHide : false,
+				scrollTo    : 60
+			} );
+			$( "#toc>ul" ).addClass( "nav nav-pills nav-stacked" );
+			$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+
+		} );
+	</script>
+
+	
+
+</body>
+</html>

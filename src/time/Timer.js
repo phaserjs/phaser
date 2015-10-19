@@ -1,37 +1,46 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
 /**
-* A Timer is a way to create small re-usable or disposable objects that do nothing but wait for a specific moment in time, and then dispatch an event.
-* You can add as many events to a Timer as you like, each with their own delays. A Timer uses milliseconds as its unit of time. There are 1000 ms in 1 second.
-* So if you want to fire an event every quarter of a second you'd need to set the delay to 250.
+* A Timer is a way to create and manage {@link Phaser.TimerEvent timer events} that wait for a specific duration and then run a callback.
+* Many different timer events, with individual delays, can be added to the same Timer.
+*
+* All Timer delays are in milliseconds (there are 1000 ms in 1 second); so a delay value of 250 represents a quarter of a second.
+*
+* Timers are based on real life time, adjusted for game pause durations.
+* That is, *timer events are based on elapsed {@link Phaser.Time game time}* and do *not* take physics time or slow motion into account.
 *
 * @class Phaser.Timer
-* @classdesc A Timer is a way to create small re-usable or disposable objects that do nothing but wait for a specific moment in time, and then dispatch an event.
 * @constructor
-* @param {Phaser.Game} game A reference to the currently running game.
-* @param {boolean} [autoDestroy=true] - A Timer that is set to automatically destroy itself will do so after all of its events have been dispatched (assuming no looping events).
+* @param {Phaser.Game} game - A reference to the currently running game.
+* @param {boolean} [autoDestroy=true] - If true, the timer will automatically destroy itself after all the events have been dispatched (assuming no looping events).
 */
 Phaser.Timer = function (game, autoDestroy) {
 
-    if (typeof autoDestroy === 'undefined') { autoDestroy = true; }
+    if (autoDestroy === undefined) { autoDestroy = true; }
 
     /**
     * @property {Phaser.Game} game - Local reference to game.
+    * @protected
     */
     this.game = game;
 
     /**
-    * @property {boolean} running - True if the Timer is actively running. Do not switch this boolean, if you wish to pause the timer then use Timer.pause() instead.
+    * True if the Timer is actively running.
+    *
+    * Do not modify this boolean - use {@link Phaser.Timer#pause pause} (and {@link Phaser.Timer#resume resume}) to pause the timer.
+    * @property {boolean} running
     * @default
+    * @readonly
     */
     this.running = false;
 
     /**
-    * @property {boolean} autoDestroy - A Timer that is set to automatically destroy itself will do so after all of its events have been dispatched (assuming no looping events).
+    * If true, the timer will automatically destroy itself after all the events have been dispatched (assuming no looping events).
+    * @property {boolean} autoDestroy
     */
     this.autoDestroy = autoDestroy;
 
@@ -49,12 +58,16 @@ Phaser.Timer = function (game, autoDestroy) {
     this.elapsed = 0;
 
     /**
-    * @property {array<Phaser.TimerEvent>} events - An array holding all of this timers Phaser.TimerEvent objects. Use the methods add, repeat and loop to populate it.
+    * @property {Phaser.TimerEvent[]} events - An array holding all of this timers Phaser.TimerEvent objects. Use the methods add, repeat and loop to populate it.
     */
     this.events = [];
 
     /**
-    * @property {Phaser.Signal} onComplete - This signal will be dispatched when this Timer has completed, meaning there are no more events in the queue.
+    * This signal will be dispatched when this Timer has completed which means that there are no more events in the queue.
+    *
+    * The signal is supplied with one argument, `timer`, which is this Timer object.
+    *
+    * @property {Phaser.Signal} onComplete
     */
     this.onComplete = new Phaser.Signal();
 
@@ -141,50 +154,59 @@ Phaser.Timer = function (game, autoDestroy) {
 };
 
 /**
+* Number of milliseconds in a minute.
 * @constant
-* @type {number}
+* @type {integer}
 */
 Phaser.Timer.MINUTE = 60000;
 
 /**
+* Number of milliseconds in a second.
 * @constant
-* @type {number}
+* @type {integer}
 */
 Phaser.Timer.SECOND = 1000;
 
 /**
+* Number of milliseconds in half a second.
 * @constant
-* @type {number}
+* @type {integer}
 */
 Phaser.Timer.HALF = 500;
 
 /**
+* Number of milliseconds in a quarter of a second.
 * @constant
-* @type {number}
+* @type {integer}
 */
 Phaser.Timer.QUARTER = 250;
 
 Phaser.Timer.prototype = {
 
     /**
-    * Creates a new TimerEvent on this Timer. Use the methods add, repeat or loop instead of this.
+    * Creates a new TimerEvent on this Timer.
+    *
+    * Use {@link Phaser.Timer#add}, {@link Phaser.Timer#add}, or {@link Phaser.Timer#add} methods to create a new event.
+    *
     * @method Phaser.Timer#create
     * @private
-    * @param {number} delay - The number of milliseconds that should elapse before the Timer will call the given callback.
+    * @param {integer} delay - The number of milliseconds, in {@link Phaser.Time game time}, before the timer event occurs.
     * @param {boolean} loop - Should the event loop or not?
     * @param {number} repeatCount - The number of times the event will repeat.
-    * @param {function} callback - The callback that will be called when the Timer event occurs.
+    * @param {function} callback - The callback that will be called when the timer event occurs.
     * @param {object} callbackContext - The context in which the callback will be called.
-    * @param {array} arguments - The values to be sent to your callback function when it is called.
+    * @param {any[]} arguments - The values to be sent to your callback function when it is called.
     * @return {Phaser.TimerEvent} The Phaser.TimerEvent object that was created.
     */
     create: function (delay, loop, repeatCount, callback, callbackContext, args) {
+
+        delay = Math.round(delay);
 
         var tick = delay;
 
         if (this._now === 0)
         {
-            tick += this.game.time.now;
+            tick += this.game.time.time;
         }
         else
         {
@@ -204,66 +226,74 @@ Phaser.Timer.prototype = {
     },
 
     /**
-    * Adds a new Event to this Timer. The event will fire after the given amount of 'delay' in milliseconds has passed, once the Timer has started running.
-    * Call Timer.start() once you have added all of the Events you require for this Timer. The delay is in relation to when the Timer starts, not the time it was added.
-    * If the Timer is already running the delay will be calculated based on the timers current time.
+    * Adds a new Event to this Timer.
+    *
+    * The event will fire after the given amount of `delay` in milliseconds has passed, once the Timer has started running.
+    * The delay is in relation to when the Timer starts, not the time it was added. If the Timer is already running the delay will be calculated based on the timers current time.
+    *
+    * Make sure to call {@link Phaser.Timer#start start} after adding all of the Events you require for this Timer.
     *
     * @method Phaser.Timer#add
-    * @param {number} delay - The number of milliseconds that should elapse before the Timer will call the given callback.
-    * @param {function} callback - The callback that will be called when the Timer event occurs.
+    * @param {integer} delay - The number of milliseconds, in {@link Phaser.Time game time}, before the timer event occurs.
+    * @param {function} callback - The callback that will be called when the timer event occurs.
     * @param {object} callbackContext - The context in which the callback will be called.
-    * @param {...*} arguments - The values to be sent to your callback function when it is called.
+    * @param {...*} arguments - Additional arguments that will be supplied to the callback.
     * @return {Phaser.TimerEvent} The Phaser.TimerEvent object that was created.
     */
     add: function (delay, callback, callbackContext) {
 
-        return this.create(delay, false, 0, callback, callbackContext, Array.prototype.splice.call(arguments, 3));
+        return this.create(delay, false, 0, callback, callbackContext, Array.prototype.slice.call(arguments, 3));
 
     },
 
     /**
     * Adds a new TimerEvent that will always play through once and then repeat for the given number of iterations.
-    * The event will fire after the given amount of 'delay' milliseconds has passed once the Timer has started running.
-    * Call Timer.start() once you have added all of the Events you require for this Timer. The delay is in relation to when the Timer starts, not the time it was added.
+    *
+    * The event will fire after the given amount of `delay` in milliseconds has passed, once the Timer has started running.
+    * The delay is in relation to when the Timer starts, not the time it was added.
     * If the Timer is already running the delay will be calculated based on the timers current time.
     *
+    * Make sure to call {@link Phaser.Timer#start start} after adding all of the Events you require for this Timer.
+    *
     * @method Phaser.Timer#repeat
-    * @param {number} delay - The number of milliseconds that should elapse before the Timer will call the given callback.
+    * @param {integer} delay - The number of milliseconds, in {@link Phaser.Time game time}, before the timer event occurs.
     * @param {number} repeatCount - The number of times the event will repeat once is has finished playback. A repeatCount of 1 means it will repeat itself once, playing the event twice in total.
-    * @param {function} callback - The callback that will be called when the Timer event occurs.
+    * @param {function} callback - The callback that will be called when the timer event occurs.
     * @param {object} callbackContext - The context in which the callback will be called.
-    * @param {...*} arguments - The values to be sent to your callback function when it is called.
+    * @param {...*} arguments - Additional arguments that will be supplied to the callback.
     * @return {Phaser.TimerEvent} The Phaser.TimerEvent object that was created.
     */
     repeat: function (delay, repeatCount, callback, callbackContext) {
 
-        return this.create(delay, false, repeatCount, callback, callbackContext, Array.prototype.splice.call(arguments, 4));
+        return this.create(delay, false, repeatCount, callback, callbackContext, Array.prototype.slice.call(arguments, 4));
 
     },
 
     /**
     * Adds a new looped Event to this Timer that will repeat forever or until the Timer is stopped.
-    * The event will fire after the given amount of 'delay' milliseconds has passed once the Timer has started running.
-    * Call Timer.start() once you have added all of the Events you require for this Timer. The delay is in relation to when the Timer starts, not the time it was added.
-    * If the Timer is already running the delay will be calculated based on the timers current time.
+    *
+    * The event will fire after the given amount of `delay` in milliseconds has passed, once the Timer has started running.
+    * The delay is in relation to when the Timer starts, not the time it was added. If the Timer is already running the delay will be calculated based on the timers current time.
+    *
+    * Make sure to call {@link Phaser.Timer#start start} after adding all of the Events you require for this Timer.
     *
     * @method Phaser.Timer#loop
-    * @param {number} delay - The number of milliseconds that should elapse before the Timer will call the given callback.
-    * @param {function} callback - The callback that will be called when the Timer event occurs.
+    * @param {integer} delay - The number of milliseconds, in {@link Phaser.Time game time}, before the timer event occurs.
+    * @param {function} callback - The callback that will be called when the timer event occurs.
     * @param {object} callbackContext - The context in which the callback will be called.
-    * @param {...*} arguments - The values to be sent to your callback function when it is called.
+    * @param {...*} arguments - Additional arguments that will be supplied to the callback.
     * @return {Phaser.TimerEvent} The Phaser.TimerEvent object that was created.
     */
     loop: function (delay, callback, callbackContext) {
 
-        return this.create(delay, true, 0, callback, callbackContext, Array.prototype.splice.call(arguments, 3));
+        return this.create(delay, true, 0, callback, callbackContext, Array.prototype.slice.call(arguments, 3));
 
     },
 
     /**
     * Starts this Timer running.
     * @method Phaser.Timer#start
-    * @param {number} [delay=0] - The number of milliseconds that should elapse before the Timer will start.
+    * @param {integer} [delay=0] - The number of milliseconds, in {@link Phaser.Time game time}, that should elapse before the Timer will start.
     */
     start: function (delay) {
 
@@ -272,7 +302,7 @@ Phaser.Timer.prototype = {
             return;
         }
 
-        this._started = this.game.time.now + (delay || 0);
+        this._started = this.game.time.time + (delay || 0);
 
         this.running = true;
 
@@ -292,7 +322,7 @@ Phaser.Timer.prototype = {
 
         this.running = false;
 
-        if (typeof clearEvents === 'undefined') { clearEvents = true; }
+        if (clearEvents === undefined) { clearEvents = true; }
 
         if (clearEvents)
         {
@@ -322,8 +352,10 @@ Phaser.Timer.prototype = {
     },
 
     /**
-    * Orders the events on this Timer so they are in tick order. This is called automatically when new events are created.
+    * Orders the events on this Timer so they are in tick order.
+    * This is called automatically when new events are created.
     * @method Phaser.Timer#order
+    * @protected
     */
     order: function () {
 
@@ -340,7 +372,7 @@ Phaser.Timer.prototype = {
     /**
     * Sort handler used by Phaser.Timer.order.
     * @method Phaser.Timer#sortHandler
-    * @protected
+    * @private
     */
     sortHandler: function (a, b) {
 
@@ -361,6 +393,7 @@ Phaser.Timer.prototype = {
     * Clears any events from the Timer which have pendingDelete set to true and then resets the private _len and _i values.
     *
     * @method Phaser.Timer#clearPendingEvents
+    * @protected
     */
     clearPendingEvents: function () {
 
@@ -415,7 +448,7 @@ Phaser.Timer.prototype = {
         {
             while (this._i < this._len && this.running)
             {
-                if (this._now >= this.events[this._i].tick)
+                if (this._now >= this.events[this._i].tick && !this.events[this._i].pendingDelete)
                 {
                     //  (now + delay) - (time difference from last tick to now)
                     this._newTick = (this._now + this.events[this._i].delay) - (this._now - this.events[this._i].tick);
@@ -492,14 +525,14 @@ Phaser.Timer.prototype = {
             return;
         }
 
-        this._pauseStarted = this.game.time.now;
+        this._pauseStarted = this.game.time.time;
 
         this.paused = true;
 
     },
 
     /**
-    * This is called by the core Game loop. Do not call it directly, instead use Timer.pause.
+    * Internal pause/resume control - user code should use Timer.pause instead.
     * @method Phaser.Timer#_pause
     * @private
     */
@@ -510,7 +543,7 @@ Phaser.Timer.prototype = {
             return;
         }
 
-        this._pauseStarted = this.game.time.now;
+        this._pauseStarted = this.game.time.time;
 
         this.paused = true;
 
@@ -520,6 +553,7 @@ Phaser.Timer.prototype = {
     * Adjusts the time of all pending events and the nextTick by the given baseTime.
     *
     * @method Phaser.Timer#adjustEvents
+    * @protected
     */
     adjustEvents: function (baseTime) {
 
@@ -565,7 +599,7 @@ Phaser.Timer.prototype = {
             return;
         }
 
-        var now = this.game.time.now;
+        var now = this.game.time.time;
         this._pauseTotal += now - this._now;
         this._now = now;
 
@@ -577,7 +611,7 @@ Phaser.Timer.prototype = {
     },
 
     /**
-    * This is called by the core Game loop. Do not call it directly, instead use Timer.pause.
+    * Internal pause/resume control - user code should use Timer.resume instead.
     * @method Phaser.Timer#_resume
     * @private
     */
@@ -595,7 +629,7 @@ Phaser.Timer.prototype = {
     },
 
     /**
-    * Removes all Events from this Timer and all callbacks linked to onComplete, but leaves the Timer running.
+    * Removes all Events from this Timer and all callbacks linked to onComplete, but leaves the Timer running.    
     * The onComplete callbacks won't be called.
     *
     * @method Phaser.Timer#removeAll

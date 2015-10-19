@@ -1,14 +1,15 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
 /**
 * Phaser.Touch handles touch events with your game. Note: Android 2.x only supports 1 touch event at once, no multi-touch.
 *
+* You should not normally access this class directly, but instead use a Phaser.Pointer object which normalises all game input for you.
+*
 * @class Phaser.Touch
-* @classdesc The Touch class handles touch interactions with the game and the resulting Pointer objects.
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
 */
@@ -20,13 +21,23 @@ Phaser.Touch = function (game) {
     this.game = game;
 
     /**
-    * @property {boolean} disabled - You can disable all Touch events by setting disabled = true. While set all new touch events will be ignored.
-    * @return {boolean}
+    * Touch events will only be processed if enabled.
+    * @property {boolean} enabled
+    * @default
     */
-    this.disabled = false;
+    this.enabled = true;
 
     /**
-    * @property {Object} callbackContext - The context under which callbacks are called.
+    * An array of callbacks that will be fired every time a native touch start or touch end event is received from the browser.
+    * This is used internally to handle audio and video unlocking on mobile devices.
+    * To add a callback to this array please use `Touch.addTouchLockCallback`.
+    * @property {array} touchLockCallbacks
+    * @protected
+    */
+    this.touchLockCallbacks = [];
+
+    /**
+    * @property {object} callbackContext - The context under which callbacks are called.
     */
     this.callbackContext = this.game;
 
@@ -187,22 +198,81 @@ Phaser.Touch.prototype = {
     },
 
     /**
+    * Adds a callback that is fired when a browser touchstart or touchend event is received.
+    *
+    * This is used internally to handle audio and video unlocking on mobile devices.
+    *
+    * If the callback returns 'true' then the callback is automatically deleted once invoked.
+    *
+    * The callback is added to the Phaser.Touch.touchLockCallbacks array and should be removed with Phaser.Touch.removeTouchLockCallback.
+    * 
+    * @method Phaser.Touch#addTouchLockCallback
+    * @param {function} callback - The callback that will be called when a touchstart event is received.
+    * @param {object} context - The context in which the callback will be called.
+    * @param {boolean} [onEnd=false] - Will the callback fire on a touchstart (default) or touchend event?
+    */
+    addTouchLockCallback: function (callback, context, onEnd) {
+
+        if (onEnd === undefined) { onEnd = false; }
+
+        this.touchLockCallbacks.push({ callback: callback, context: context, onEnd: onEnd });
+
+    },
+
+    /**
+    * Removes the callback at the defined index from the Phaser.Touch.touchLockCallbacks array
+    * 
+    * @method Phaser.Touch#removeTouchLockCallback
+    * @param {function} callback - The callback to be removed.
+    * @param {object} context - The context in which the callback exists.
+    * @return {boolean} True if the callback was deleted, otherwise false.
+    */
+    removeTouchLockCallback: function (callback, context) {
+
+        var i = this.touchLockCallbacks.length;
+
+        while (i--)
+        {
+            if (this.touchLockCallbacks[i].callback === callback && this.touchLockCallbacks[i].context === context)
+            {
+                this.touchLockCallbacks.splice(i, 1);
+                return true;
+            }
+        }
+
+        return false;
+
+    },
+
+    /**
     * The internal method that handles the touchstart event from the browser.
     * @method Phaser.Touch#onTouchStart
     * @param {TouchEvent} event - The native event from the browser. This gets stored in Touch.event.
     */
     onTouchStart: function (event) {
 
+        var i = this.touchLockCallbacks.length;
+
+        while (i--)
+        {
+            var cb = this.touchLockCallbacks[i];
+
+            if (!cb.onEnd && cb.callback.call(cb.context, this, event))
+            {
+                this.touchLockCallbacks.splice(i, 1);
+            }
+        }
+
         this.event = event;
+
+        if (!this.game.input.enabled || !this.enabled)
+        {
+            return;
+        }
 
         if (this.touchStartCallback)
         {
             this.touchStartCallback.call(this.callbackContext, event);
-        }
-
-        if (this.game.input.disabled || this.disabled)
-        {
-            return;
         }
 
         if (this.preventDefault)
@@ -235,7 +305,7 @@ Phaser.Touch.prototype = {
             this.touchCancelCallback.call(this.callbackContext, event);
         }
 
-        if (this.game.input.disabled || this.disabled)
+        if (!this.game.input.enabled || !this.enabled)
         {
             return;
         }
@@ -269,7 +339,7 @@ Phaser.Touch.prototype = {
             this.touchEnterCallback.call(this.callbackContext, event);
         }
 
-        if (this.game.input.disabled || this.disabled)
+        if (!this.game.input.enabled || !this.enabled)
         {
             return;
         }
@@ -335,6 +405,18 @@ Phaser.Touch.prototype = {
     * @param {TouchEvent} event - The native event from the browser. This gets stored in Touch.event.
     */
     onTouchEnd: function (event) {
+
+        var i = this.touchLockCallbacks.length;
+
+        while (i--)
+        {
+            var cb = this.touchLockCallbacks[i];
+
+            if (cb.onEnd && cb.callback.call(cb.context, this, event))
+            {
+                this.touchLockCallbacks.splice(i, 1);
+            }
+        }
 
         this.event = event;
 

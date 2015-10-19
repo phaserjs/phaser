@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -8,7 +8,6 @@
 * Connects two bodies at given offset points, letting them rotate relative to each other around this point.
 *
 * @class Phaser.Physics.P2.GearConstraint
-* @classdesc Physics GearConstraint Constructor
 * @constructor
 * @param {Phaser.Physics.P2} world - A reference to the P2 World.
 * @param {p2.Body} bodyA - First connected body.
@@ -18,8 +17,8 @@
 */
 Phaser.Physics.P2.GearConstraint = function (world, bodyA, bodyB, angle, ratio) {
 
-    if (typeof angle === 'undefined') { angle = 0; }
-    if (typeof ratio === 'undefined') { ratio = 1; }
+    if (angle === undefined) { angle = 0; }
+    if (ratio === undefined) { ratio = 1; }
 
     /**
     * @property {Phaser.Game} game - Local reference to game.

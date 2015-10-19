@@ -1,11 +1,12 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
 /**
 * An Animation instance contains a single animation and the controls to play it.
+* 
 * It is created by the AnimationManager, consists of Animation.Frame objects and belongs to a single Game Object such as a Sprite.
 *
 * @class Phaser.Animation
@@ -14,11 +15,14 @@
 * @param {Phaser.Sprite} parent - A reference to the owner of this Animation.
 * @param {string} name - The unique name for this animation, used in playback commands.
 * @param {Phaser.FrameData} frameData - The FrameData object that contains all frames used by this Animation.
-* @param {(Array.<number>|Array.<string>)} frames - An array of numbers or strings indicating which frames to play in which order.
-* @param {number} delay - The time between each frame of the animation, given in ms.
+* @param {number[]|string[]} frames - An array of numbers or strings indicating which frames to play in which order.
+* @param {number} [frameRate=60] - The speed at which the animation should play. The speed is given in frames per second.
+* @param {boolean} [loop=false] - Whether or not the animation is looped or just plays once.
 * @param {boolean} loop - Should this animation loop when it reaches the end or play through once.
 */
-Phaser.Animation = function (game, parent, name, frameData, frames, delay, loop) {
+Phaser.Animation = function (game, parent, name, frameData, frames, frameRate, loop) {
+
+    if (loop === undefined) { loop = false; }
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running Game.
@@ -50,9 +54,9 @@ Phaser.Animation = function (game, parent, name, frameData, frames, delay, loop)
     this._frames = this._frames.concat(frames);
 
     /**
-    * @property {number} delay - The delay in ms between each frame of the Animation.
+    * @property {number} delay - The delay in ms between each frame of the Animation, based on the given frameRate.
     */
-    this.delay = 1000 / delay;
+    this.delay = 1000 / frameRate;
 
     /**
     * @property {boolean} loop - The loop state of the Animation.
@@ -127,7 +131,15 @@ Phaser.Animation = function (game, parent, name, frameData, frames, delay, loop)
     this.onStart = new Phaser.Signal();
 
     /**
-    * @property {Phaser.Signal} onComplete - This event is dispatched when this Animation completes playback. If the animation is set to loop this is never fired, listen for onAnimationLoop instead.
+    * This event is dispatched when the Animation changes frame. 
+    * By default this event is disabled due to its intensive nature. Enable it with: `Animation.enableUpdate = true`.
+    * @property {Phaser.Signal|null} onUpdate
+    * @default
+    */
+    this.onUpdate = null;
+
+    /**
+    * @property {Phaser.Signal} onComplete - This event is dispatched when this Animation completes playback. If the animation is set to loop this is never fired, listen for onLoop instead.
     */
     this.onComplete = new Phaser.Signal();
 
@@ -178,25 +190,18 @@ Phaser.Animation.prototype = {
         this.paused = false;
         this.loopCount = 0;
 
-        this._timeLastFrame = this.game.time.now;
-        this._timeNextFrame = this.game.time.now + this.delay;
+        this._timeLastFrame = this.game.time.time;
+        this._timeNextFrame = this.game.time.time + this.delay;
 
         this._frameIndex = 0;
+        this.updateCurrentFrame(false, true);
 
-        this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
-
-        this._parent.setFrame(this.currentFrame);
-
-        //  TODO: Double check if required
-        if (this._parent.__tilePattern)
-        {
-            this._parent.__tilePattern = false;
-            this._parent.tilingTexture = false;
-        }
-
-        this._parent.events.onAnimationStart.dispatch(this._parent, this);
+        this._parent.events.onAnimationStart$dispatch(this._parent, this);
 
         this.onStart.dispatch(this._parent, this);
+
+        this._parent.animations.currentAnim = this;
+        this._parent.animations.currentFrame = this.currentFrame;
 
         return this;
 
@@ -214,14 +219,17 @@ Phaser.Animation.prototype = {
         this.paused = false;
         this.loopCount = 0;
 
-        this._timeLastFrame = this.game.time.now;
-        this._timeNextFrame = this.game.time.now + this.delay;
+        this._timeLastFrame = this.game.time.time;
+        this._timeNextFrame = this.game.time.time + this.delay;
 
         this._frameIndex = 0;
 
         this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
 
         this._parent.setFrame(this.currentFrame);
+
+        this._parent.animations.currentAnim = this;
+        this._parent.animations.currentFrame = this.currentFrame;
 
         this.onStart.dispatch(this._parent, this);
 
@@ -238,7 +246,7 @@ Phaser.Animation.prototype = {
 
         var frameIndex;
 
-        if (typeof useLocalFrameIndex === 'undefined')
+        if (useLocalFrameIndex === undefined)
         {
             useLocalFrameIndex = false;
         }
@@ -264,7 +272,7 @@ Phaser.Animation.prototype = {
             {
                 for (var i = 0; i < this._frames.length; i++)
                 {
-                    if (this.frames[i] === frameIndex)
+                    if (this._frames[i] === frameIndex)
                     {
                         frameIndex = i;
                     }
@@ -278,7 +286,7 @@ Phaser.Animation.prototype = {
             this._frameIndex = frameIndex - 1;
 
             //  Make the animation update at next update
-            this._timeNextFrame = this.game.time.now;
+            this._timeNextFrame = this.game.time.time;
 
             this.update();
         }
@@ -295,8 +303,8 @@ Phaser.Animation.prototype = {
     */
     stop: function (resetFrame, dispatchComplete) {
 
-        if (typeof resetFrame === 'undefined') { resetFrame = false; }
-        if (typeof dispatchComplete === 'undefined') { dispatchComplete = false; }
+        if (resetFrame === undefined) { resetFrame = false; }
+        if (dispatchComplete === undefined) { dispatchComplete = false; }
 
         this.isPlaying = false;
         this.isFinished = true;
@@ -310,7 +318,7 @@ Phaser.Animation.prototype = {
 
         if (dispatchComplete)
         {
-            this._parent.events.onAnimationComplete.dispatch(this._parent, this);
+            this._parent.events.onAnimationComplete$dispatch(this._parent, this);
             this.onComplete.dispatch(this._parent, this);
         }
 
@@ -325,7 +333,7 @@ Phaser.Animation.prototype = {
 
         if (this.isPlaying)
         {
-            this._frameDiff = this._timeNextFrame - this.game.time.now;
+            this._frameDiff = this._timeNextFrame - this.game.time.time;
         }
 
     },
@@ -339,7 +347,7 @@ Phaser.Animation.prototype = {
 
         if (this.isPlaying)
         {
-            this._timeNextFrame = this.game.time.now + this._frameDiff;
+            this._timeNextFrame = this.game.time.time + this._frameDiff;
         }
 
     },
@@ -356,14 +364,14 @@ Phaser.Animation.prototype = {
             return false;
         }
 
-        if (this.isPlaying && this.game.time.now >= this._timeNextFrame)
+        if (this.isPlaying && this.game.time.time >= this._timeNextFrame)
         {
             this._frameSkip = 1;
 
             //  Lagging?
-            this._frameDiff = this.game.time.now - this._timeNextFrame;
+            this._frameDiff = this.game.time.time - this._timeNextFrame;
 
-            this._timeLastFrame = this.game.time.now;
+            this._timeLastFrame = this.game.time.time;
 
             if (this._frameDiff > this.delay)
             {
@@ -373,7 +381,7 @@ Phaser.Animation.prototype = {
             }
 
             //  And what's left now?
-            this._timeNextFrame = this.game.time.now + (this.delay - this._frameDiff);
+            this._timeNextFrame = this.game.time.time + (this.delay - this._frameDiff);
 
             this._frameIndex += this._frameSkip;
 
@@ -381,35 +389,91 @@ Phaser.Animation.prototype = {
             {
                 if (this.loop)
                 {
+                    // Update current state before event callback
                     this._frameIndex %= this._frames.length;
                     this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
+
+                    //  Instead of calling updateCurrentFrame we do it here instead
+                    if (this.currentFrame)
+                    {
+                        this._parent.setFrame(this.currentFrame);
+                    }
+
                     this.loopCount++;
-                    this._parent.events.onAnimationLoop.dispatch(this._parent, this);
+                    this._parent.events.onAnimationLoop$dispatch(this._parent, this);
                     this.onLoop.dispatch(this._parent, this);
+
+                    if (this.onUpdate)
+                    {
+                        this.onUpdate.dispatch(this, this.currentFrame);
+
+                        // False if the animation was destroyed from within a callback
+                        return !!this._frameData;
+                    }
+                    else
+                    {
+                        return true;
+                    }
                 }
                 else
                 {
                     this.complete();
+                    return false;
                 }
             }
-
-            this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
-
-            if (this.currentFrame)
+            else
             {
-                this._parent.setFrame(this.currentFrame);
-
-                if (this._parent.__tilePattern)
-                {
-                    this._parent.__tilePattern = false;
-                    this._parent.tilingTexture = false;
-                }
+                return this.updateCurrentFrame(true);
             }
-
-            return true;
         }
 
         return false;
+
+    },
+
+    /**
+    * Changes the currentFrame per the _frameIndex, updates the display state,
+    * and triggers the update signal.
+    *
+    * Returns true if the current frame update was 'successful', false otherwise.
+    *
+    * @method Phaser.Animation#updateCurrentFrame
+    * @private
+    * @param {boolean} signalUpdate - If true the `Animation.onUpdate` signal will be dispatched.
+    * @param {boolean} fromPlay - Was this call made from the playing of a new animation?
+    * @return {boolean} True if the current frame was updated, otherwise false.
+    */
+    updateCurrentFrame: function (signalUpdate, fromPlay) {
+
+        if (fromPlay === undefined) { fromPlay = false; }
+
+        if (!this._frameData)
+        {
+            // The animation is already destroyed, probably from a callback
+            return false;
+        }
+            
+        //  Previous index
+        var idx = this.currentFrame.index;
+
+        this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
+
+        if (this.currentFrame && (fromPlay || (!fromPlay && idx !== this.currentFrame.index)))
+        {
+            this._parent.setFrame(this.currentFrame);
+        }
+
+        if (this.onUpdate && signalUpdate)
+        {
+            this.onUpdate.dispatch(this, this.currentFrame);
+
+            // False if the animation was destroyed from within a callback
+            return !!this._frameData;
+        }
+        else
+        {
+            return true;
+        }
 
     },
 
@@ -421,7 +485,7 @@ Phaser.Animation.prototype = {
     */
     next: function (quantity) {
 
-        if (typeof quantity === 'undefined') { quantity = 1; }
+        if (quantity === undefined) { quantity = 1; }
 
         var frame = this._frameIndex + quantity;
 
@@ -440,19 +504,7 @@ Phaser.Animation.prototype = {
         if (frame !== this._frameIndex)
         {
             this._frameIndex = frame;
-
-            this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
-
-            if (this.currentFrame)
-            {
-                this._parent.setFrame(this.currentFrame);
-
-                if (this._parent.__tilePattern)
-                {
-                    this._parent.__tilePattern = false;
-                    this._parent.tilingTexture = false;
-                }
-            }
+            this.updateCurrentFrame(true);
         }
 
     },
@@ -465,7 +517,7 @@ Phaser.Animation.prototype = {
     */
     previous: function (quantity) {
 
-        if (typeof quantity === 'undefined') { quantity = 1; }
+        if (quantity === undefined) { quantity = 1; }
 
         var frame = this._frameIndex - quantity;
 
@@ -484,19 +536,7 @@ Phaser.Animation.prototype = {
         if (frame !== this._frameIndex)
         {
             this._frameIndex = frame;
-
-            this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
-
-            if (this.currentFrame)
-            {
-                this._parent.setFrame(this.currentFrame);
-
-                if (this._parent.__tilePattern)
-                {
-                    this._parent.__tilePattern = false;
-                    this._parent.tilingTexture = false;
-                }
-            }
+            this.updateCurrentFrame(true);
         }
 
     },
@@ -521,9 +561,15 @@ Phaser.Animation.prototype = {
     */
     destroy: function () {
 
+        if (!this._frameData)
+        {
+            // Already destroyed
+            return;
+        }
+
         this.game.onPause.remove(this.onPause, this);
         this.game.onResume.remove(this.onResume, this);
-        
+
         this.game = null;
         this._parent = null;
         this._frames = null;
@@ -535,6 +581,11 @@ Phaser.Animation.prototype = {
         this.onLoop.dispose();
         this.onComplete.dispose();
 
+        if (this.onUpdate)
+        {
+            this.onUpdate.dispose();
+        }
+
     },
 
     /**
@@ -545,11 +596,14 @@ Phaser.Animation.prototype = {
     */
     complete: function () {
 
+        this._frameIndex = this._frames.length - 1;
+        this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
+
         this.isPlaying = false;
         this.isFinished = true;
         this.paused = false;
 
-        this._parent.events.onAnimationComplete.dispatch(this._parent, this);
+        this._parent.events.onAnimationComplete$dispatch(this._parent, this);
 
         this.onComplete.dispatch(this._parent, this);
 
@@ -583,14 +637,14 @@ Object.defineProperty(Phaser.Animation.prototype, 'paused', {
         if (value)
         {
             //  Paused
-            this._pauseStartTime = this.game.time.now;
+            this._pauseStartTime = this.game.time.time;
         }
         else
         {
             //  Un-paused
             if (this.isPlaying)
             {
-                this._timeNextFrame = this.game.time.now + this.delay;
+                this._timeNextFrame = this.game.time.time + this.delay;
             }
         }
 
@@ -638,6 +692,11 @@ Object.defineProperty(Phaser.Animation.prototype, 'frame', {
         {
             this._frameIndex = value;
             this._parent.setFrame(this.currentFrame);
+
+            if (this.onUpdate)
+            {
+                this.onUpdate.dispatch(this, this.currentFrame);
+            }
         }
 
     }
@@ -646,7 +705,7 @@ Object.defineProperty(Phaser.Animation.prototype, 'frame', {
 
 /**
 * @name Phaser.Animation#speed
-* @property {number} speed - Gets or sets the current speed of the animation, the time between each frame of the animation, given in ms. Takes effect from the NEXT frame. Minimum value is 1.
+* @property {number} speed - Gets or sets the current speed of the animation in frames per second. Changing this in a playing animation will take effect from the next frame. Minimum value is 1.
 */
 Object.defineProperty(Phaser.Animation.prototype, 'speed', {
 
@@ -668,21 +727,50 @@ Object.defineProperty(Phaser.Animation.prototype, 'speed', {
 });
 
 /**
+* @name Phaser.Animation#enableUpdate
+* @property {boolean} enableUpdate - Gets or sets if this animation will dispatch the onUpdate events upon changing frame.
+*/
+Object.defineProperty(Phaser.Animation.prototype, 'enableUpdate', {
+
+    get: function () {
+
+        return (this.onUpdate !== null);
+
+    },
+
+    set: function (value) {
+
+        if (value && this.onUpdate === null)
+        {
+            this.onUpdate = new Phaser.Signal();
+        }
+        else if (!value && this.onUpdate !== null)
+        {
+            this.onUpdate.dispose();
+            this.onUpdate = null;
+        }
+
+    }
+
+});
+
+/**
 * Really handy function for when you are creating arrays of animation data but it's using frame names and not numbers.
 * For example imagine you've got 30 frames named: 'explosion_0001-large' to 'explosion_0030-large'
 * You could use this function to generate those by doing: Phaser.Animation.generateFrameNames('explosion_', 1, 30, '-large', 4);
 *
 * @method Phaser.Animation.generateFrameNames
+* @static
 * @param {string} prefix - The start of the filename. If the filename was 'explosion_0001-large' the prefix would be 'explosion_'.
 * @param {number} start - The number to start sequentially counting from. If your frames are named 'explosion_0001' to 'explosion_0034' the start is 1.
 * @param {number} stop - The number to count to. If your frames are named 'explosion_0001' to 'explosion_0034' the stop value is 34.
 * @param {string} [suffix=''] - The end of the filename. If the filename was 'explosion_0001-large' the prefix would be '-large'.
-* @param {number} [zeroPad=0] - The number of zeroes to pad the min and max values with. If your frames are named 'explosion_0001' to 'explosion_0034' then the zeroPad is 4.
-* @return {array} An array of framenames.
+* @param {number} [zeroPad=0] - The number of zeros to pad the min and max values with. If your frames are named 'explosion_0001' to 'explosion_0034' then the zeroPad is 4.
+* @return {string[]} An array of framenames.
 */
 Phaser.Animation.generateFrameNames = function (prefix, start, stop, suffix, zeroPad) {
 
-    if (typeof suffix == 'undefined') { suffix = ''; }
+    if (suffix === undefined) { suffix = ''; }
 
     var output = [];
     var frame = '';
@@ -691,7 +779,7 @@ Phaser.Animation.generateFrameNames = function (prefix, start, stop, suffix, zer
     {
         for (var i = start; i <= stop; i++)
         {
-            if (typeof zeroPad == 'number')
+            if (typeof zeroPad === 'number')
             {
                 //  str, len, pad, dir
                 frame = Phaser.Utils.pad(i.toString(), zeroPad, '0', 1);
@@ -710,7 +798,7 @@ Phaser.Animation.generateFrameNames = function (prefix, start, stop, suffix, zer
     {
         for (var i = start; i >= stop; i--)
         {
-            if (typeof zeroPad == 'number')
+            if (typeof zeroPad === 'number')
             {
                 //  str, len, pad, dir
                 frame = Phaser.Utils.pad(i.toString(), zeroPad, '0', 1);

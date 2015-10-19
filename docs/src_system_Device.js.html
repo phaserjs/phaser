@@ -1,0 +1,2488 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Phaser Source: src/system/Device.js</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+
+	<link type="text/css" rel="stylesheet" href="styles/default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	
+	<link type="text/css" rel="stylesheet" href="styles/site.cerulean.css">
+	
+</head>
+
+<body>
+
+<div class="container-fluid">
+	<div class="navbar navbar-fixed-top navbar-inverse">
+		<div style="position: absolute; width: 143px; height: 31px; right: 10px; top: 10px; z-index: 1050"><a href="http://phaser.io"><img src="img/phaser.png" border="0" /></a></div>
+		<div class="navbar-inner">
+			<a class="brand" href="index.html">Phaser API</a>
+			<ul class="nav">
+
+				
+				<li class="dropdown">
+					<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+						
+						<li class="class-depth-0">
+							<a href="Phaser.html">Phaser</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="Phaser.KeyCode.html">KeyCode</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="PIXI.html">PIXI</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
+				<li class="dropdown">
+					<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Animation.html">Animation</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.AnimationManager.html">AnimationManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.AnimationParser.html">AnimationParser</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.ArraySet.html">ArraySet</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.ArrayUtils.html">ArrayUtils</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.AudioSprite.html">AudioSprite</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.BitmapData.html">BitmapData</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.BitmapText.html">BitmapText</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Button.html">Button</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Cache.html">Cache</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Camera.html">Camera</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Canvas.html">Canvas</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Circle.html">Circle</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Color.html">Color</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Angle.html">Angle</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Animation.html">Animation</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.AutoCull.html">AutoCull</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Bounds.html">Bounds</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.BringToTop.html">BringToTop</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Core.html">Core</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Crop.html">Crop</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Delta.html">Delta</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Destroy.html">Destroy</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.FixedToCamera.html">FixedToCamera</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Health.html">Health</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.InCamera.html">InCamera</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.InputEnabled.html">InputEnabled</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.InWorld.html">InWorld</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.LifeSpan.html">LifeSpan</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.LoadTexture.html">LoadTexture</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Overlap.html">Overlap</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.PhysicsBody.html">PhysicsBody</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Reset.html">Reset</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.ScaleMinMax.html">ScaleMinMax</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Smoothed.html">Smoothed</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Create.html">Create</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Creature.html">Creature</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Device.html">Device</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.DeviceButton.html">DeviceButton</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.DOM.html">DOM</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Easing.html">Easing</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Back.html">Back</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Bounce.html">Bounce</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Circular.html">Circular</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Cubic.html">Cubic</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Elastic.html">Elastic</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Exponential.html">Exponential</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Linear.html">Linear</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Quadratic.html">Quadratic</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Quartic.html">Quartic</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Quintic.html">Quintic</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Sinusoidal.html">Sinusoidal</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Ellipse.html">Ellipse</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Events.html">Events</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Filter.html">Filter</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.FlexGrid.html">FlexGrid</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.FlexLayer.html">FlexLayer</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Frame.html">Frame</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.FrameData.html">FrameData</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Game.html">Game</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.GameObjectCreator.html">GameObjectCreator</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.GameObjectFactory.html">GameObjectFactory</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Gamepad.html">Gamepad</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Graphics.html">Graphics</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Group.html">Group</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Image.html">Image</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.ImageCollection.html">ImageCollection</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Input.html">Input</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.InputHandler.html">InputHandler</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Key.html">Key</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Keyboard.html">Keyboard</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Line.html">Line</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.LinkedList.html">LinkedList</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Loader.html">Loader</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.LoaderParser.html">LoaderParser</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Math.html">Math</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Matrix.html">Matrix</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Mouse.html">Mouse</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.MSPointer.html">MSPointer</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Net.html">Net</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Particle.html">Particle</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Particles.html">Particles</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Particles.Arcade.html">Arcade</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Particles.Arcade.Emitter.html">Emitter</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Physics.html">Physics</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Physics.Arcade.html">Arcade</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.Arcade.Body.html">Body</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.Arcade.TilemapCollision.html">TilemapCollision</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Physics.Ninja.html">Ninja</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.Ninja.AABB.html">AABB</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.Ninja.Body.html">Body</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.Ninja.Circle.html">Circle</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.Ninja.Tile.html">Tile</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Physics.P2.html">P2</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.Body.html">Body</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.BodyDebug.html">BodyDebug</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.CollisionGroup.html">CollisionGroup</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.ContactMaterial.html">ContactMaterial</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.DistanceConstraint.html">DistanceConstraint</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.FixtureList.html">FixtureList</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.GearConstraint.html">GearConstraint</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.InversePointProxy.html">InversePointProxy</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.LockConstraint.html">LockConstraint</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.Material.html">Material</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.PointProxy.html">PointProxy</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.PrismaticConstraint.html">PrismaticConstraint</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.RevoluteConstraint.html">RevoluteConstraint</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.RotationalSpring.html">RotationalSpring</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.Spring.html">Spring</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Plugin.html">Plugin</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.PluginManager.html">PluginManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Point.html">Point</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Pointer.html">Pointer</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.PointerMode.html">PointerMode</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Polygon.html">Polygon</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.QuadTree.html">QuadTree</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.RandomDataGenerator.html">RandomDataGenerator</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Rectangle.html">Rectangle</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.RenderTexture.html">RenderTexture</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.RequestAnimationFrame.html">RequestAnimationFrame</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.RetroFont.html">RetroFont</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Rope.html">Rope</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.RoundedRectangle.html">RoundedRectangle</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.ScaleManager.html">ScaleManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Signal.html">Signal</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.SignalBinding.html">SignalBinding</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.SinglePad.html">SinglePad</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Sound.html">Sound</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.SoundManager.html">SoundManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Sprite.html">Sprite</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.SpriteBatch.html">SpriteBatch</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Stage.html">Stage</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.State.html">State</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.StateManager.html">StateManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Text.html">Text</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Tile.html">Tile</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Tilemap.html">Tilemap</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.TilemapLayer.html">TilemapLayer</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.TilemapParser.html">TilemapParser</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Tileset.html">Tileset</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.TileSprite.html">TileSprite</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Time.html">Time</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Timer.html">Timer</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.TimerEvent.html">TimerEvent</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Touch.html">Touch</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Tween.html">Tween</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.TweenData.html">TweenData</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.TweenManager.html">TweenManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Utils.html">Utils</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Utils.Debug.html">Debug</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Video.html">Video</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.World.html">World</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.AbstractFilter.html">AbstractFilter</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.BaseTexture.html">BaseTexture</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.CanvasBuffer.html">CanvasBuffer</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.CanvasGraphics.html">CanvasGraphics</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.CanvasMaskManager.html">CanvasMaskManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.CanvasPool.html">CanvasPool</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.CanvasRenderer.html">CanvasRenderer</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.CanvasTinter.html">CanvasTinter</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.ComplexPrimitiveShader.html">ComplexPrimitiveShader</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.DisplayObject.html">DisplayObject</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.DisplayObjectContainer.html">DisplayObjectContainer</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.Event.html">Event</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.EventTarget.html">EventTarget</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.FilterTexture.html">FilterTexture</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.Graphics.html">Graphics</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.GraphicsData.html">GraphicsData</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.PIXI.html">PIXI</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.PixiFastShader.html">PixiFastShader</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.PixiShader.html">PixiShader</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.PolyK.html">PolyK</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.PrimitiveShader.html">PrimitiveShader</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.RenderTexture.html">RenderTexture</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.Rope.html">Rope</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.Sprite.html">Sprite</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.SpriteBatch.html">SpriteBatch</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.Strip.html">Strip</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.StripShader.html">StripShader</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.Texture.html">Texture</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.TilingSprite.html">TilingSprite</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.WebGLBlendModeManager.html">WebGLBlendModeManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.WebGLFastSpriteBatch.html">WebGLFastSpriteBatch</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.WebGLFilterManager.html">WebGLFilterManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.WebGLRenderer.html">WebGLRenderer</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
+				<li class="dropdown">
+					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+						
+						<li class="class-depth-0">
+							<a href="global.html#AUTO">AUTO</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#BITMAPDATA">BITMAPDATA</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#BITMAPTEXT">BITMAPTEXT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#blendModes">blendModes</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#BUTTON">BUTTON</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#CANVAS">CANVAS</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#CANVAS_FILTER">CANVAS_FILTER</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#CIRCLE">CIRCLE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#CREATURE">CREATURE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#DOWN">DOWN</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ELLIPSE">ELLIPSE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#EMITTER">EMITTER</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#GAMES">GAMES</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#GRAPHICS">GRAPHICS</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#GROUP">GROUP</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#HEADLESS">HEADLESS</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#IMAGE">IMAGE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#LEFT">LEFT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#LINE">LINE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#MATRIX">MATRIX</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#NONE">NONE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#POINT">POINT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#POINTER">POINTER</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#POLYGON">POLYGON</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#RECTANGLE">RECTANGLE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#RENDERTEXTURE">RENDERTEXTURE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#RETROFONT">RETROFONT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#RIGHT">RIGHT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ROPE">ROPE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ROUNDEDRECTANGLE">ROUNDEDRECTANGLE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#scaleModes">scaleModes</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#SPRITE">SPRITE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#SPRITEBATCH">SPRITEBATCH</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#TEXT">TEXT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#TILEMAP">TILEMAP</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#TILEMAPLAYER">TILEMAPLAYER</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#TILESPRITE">TILESPRITE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#UP">UP</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#VERSION">VERSION</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#VIDEO">VIDEO</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#WEBGL">WEBGL</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#WEBGL_FILTER">WEBGL_FILTER</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
+
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Core<b class="caret"></b></a>
+					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.Game.html">Game</a></li>
+						<li class="class-depth-1"><a href="Phaser.Group.html">Group</a></li>
+						<li class="class-depth-1"><a href="Phaser.World.html">World</a></li>
+						<li class="class-depth-1"><a href="Phaser.Loader.html">Loader</a></li>
+						<li class="class-depth-1"><a href="Phaser.Cache.html">Cache</a></li>
+						<li class="class-depth-1"><a href="Phaser.Time.html">Time</a></li>
+						<li class="class-depth-1"><a href="Phaser.Camera.html">Camera</a></li>
+						<li class="class-depth-1"><a href="Phaser.StateManager.html">State Manager</a></li>
+						<li class="class-depth-1"><a href="Phaser.TweenManager.html">Tween Manager</a></li>
+						<li class="class-depth-1"><a href="Phaser.SoundManager.html">Sound Manager</a></li>
+						<li class="class-depth-1"><a href="Phaser.Input.html">Input Manager</a></li>
+						<li class="class-depth-1"><a href="Phaser.ScaleManager.html">Scale Manager</a></li>
+					</ul>
+				</li>
+
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Game Objects<b class="caret"></b></a>
+					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.GameObjectFactory.html">Factory (game.add)</a></li>
+						<li class="class-depth-1"><a href="Phaser.GameObjectCreator.html">Creator (game.make)</a></li>
+						<li class="class-depth-1"><a href="Phaser.Sprite.html">Sprite</a></li>
+						<li class="class-depth-1"><a href="Phaser.Image.html">Image</a></li>
+						<li class="class-depth-1"><a href="Phaser.Sound.html">Sound</a></li>
+						<li class="class-depth-1"><a href="Phaser.Video.html">Video</a></li>
+						<li class="class-depth-1"><a href="Phaser.Particles.Arcade.Emitter.html">Particle Emitter</a></li>
+						<li class="class-depth-1"><a href="Phaser.Particle.html">Particle</a></li>
+						<li class="class-depth-1"><a href="Phaser.Text.html">Text</a></li>
+						<li class="class-depth-1"><a href="Phaser.Tween.html">Tween</a></li>
+						<li class="class-depth-1"><a href="Phaser.BitmapText.html">BitmapText</a></li>
+						<li class="class-depth-1"><a href="Phaser.Tilemap.html">Tilemap</a></li>
+						<li class="class-depth-1"><a href="Phaser.BitmapData.html">BitmapData</a></li>
+						<li class="class-depth-1"><a href="Phaser.RetroFont.html">RetroFont</a></li>
+						<li class="class-depth-1"><a href="Phaser.Button.html">Button</a></li>
+						<li class="class-depth-1"><a href="Phaser.Animation.html">Animation</a></li>
+						<li class="class-depth-1"><a href="Phaser.Graphics.html">Graphics</a></li>
+						<li class="class-depth-1"><a href="Phaser.RenderTexture.html">RenderTexture</a></li>
+						<li class="class-depth-1"><a href="Phaser.TileSprite.html">TileSprite</a></li>
+					</ul>
+				</li>
+
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Geometry<b class="caret"></b></a>
+					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.Circle.html">Circle</a></li>
+						<li class="class-depth-1"><a href="Phaser.Ellipse.html">Ellipse</a></li>
+						<li class="class-depth-1"><a href="Phaser.Line.html">Line</a></li>
+						<li class="class-depth-1"><a href="Phaser.Matrix.html">Matrix</a></li>
+						<li class="class-depth-1"><a href="Phaser.Point.html">Point</a></li>
+						<li class="class-depth-1"><a href="Phaser.Polygon.html">Polygon</a></li>
+						<li class="class-depth-1"><a href="Phaser.Rectangle.html">Rectangle</a></li>
+						<li class="class-depth-1"><a href="Phaser.RoundedRectangle.html">Rounded Rectangle</a></li>
+					</ul>
+				</li>
+
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Physics<b class="caret"></b></a>
+					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.Physics.Arcade.html">Arcade Physics</a></li>
+						<li class="class-depth-2"><a href="Phaser.Physics.Arcade.Body.html">Body</a></li>
+						<li class="class-depth-1"><a href="Phaser.Physics.P2.html">P2 Physics</a></li>
+						<li class="class-depth-2"><a href="Phaser.Physics.P2.Body.html">Body</a></li>
+						<li class="class-depth-2"><a href="Phaser.Physics.P2.Spring.html">Spring</a></li>
+						<li class="class-depth-2"><a href="Phaser.Physics.P2.CollisionGroup.html">CollisionGroup</a></li>
+						<li class="class-depth-2"><a href="Phaser.Physics.P2.ContactMaterial.html">ContactMaterial</a></li>
+						<li class="class-depth-1"><a href="Phaser.Physics.Ninja.html">Ninja Physics</a></li>
+						<li class="class-depth-2"><a href="Phaser.Physics.Body.html">Body</a></li>
+					</ul>
+				</li>
+
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Input<b class="caret"></b></a>
+					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.InputHandler.html">Input Handler</a></li>
+						<li class="class-depth-1"><a href="Phaser.Pointer.html">Pointer</a></li>
+						<li class="class-depth-1"><a href="Phaser.DeviceButton.html">Device Button</a></li>
+						<li class="class-depth-1"><a href="Phaser.Mouse.html">Mouse</a></li>
+						<li class="class-depth-1"><a href="Phaser.Keyboard.html">Keyboard</a></li>
+						<li class="class-depth-1"><a href="Phaser.Key.html">Key</a></li>
+						<li class="class-depth-1"><a href="Phaser.Gamepad.html">Gamepad</a></li>
+					</ul>
+				</li>
+
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Community<b class="caret"></b></a>
+					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="http://phaser.io">Phaser Web Site</a></li>
+						<li class="class-depth-1"><a href="https://github.com/photonstorm/phaser">Phaser Github</a></li>
+						<li class="class-depth-1"><a href="http://phaser.io/examples">Phaser Examples</a></li>
+						<li class="class-depth-1"><a href="https://github.com/photonstorm/phaser-plugins">Phaser Plugins</a></li>
+						<li class="class-depth-1"><a href="http://www.html5gamedevs.com/forum/14-phaser/">Forum</a></li>
+						<li class="class-depth-1"><a href="http://stackoverflow.com/questions/tagged/phaser-framework">Stack Overflow</a></li>
+						<li class="class-depth-1"><a href="http://phaser.io/learn">Tutorials</a></li>
+						<li class="class-depth-1"><a href="https://confirmsubscription.com/h/r/369DE48E3E86AF1E">Newsletter</a></li>
+						<li class="class-depth-1"><a href="http://phaser.io/community/twitter">Twitter</a></li>
+						<li class="class-depth-1"><a href="http://phaser.io/community/irc">IRC</a></li>
+						<li class="class-depth-1"><a href="https://www.codeandweb.com/texturepacker/phaser">Texture Packer</a></li>
+					</ul>
+				</li>
+
+			</ul>
+		</div>
+	</div>
+
+	<div class="row-fluid">
+
+		
+			<div class="span12">
+				
+				<div id="main">
+					
+
+
+		<h1 class="page-title">Source: src/system/Device.js</h1>
+    
+    <section>
+        <article>
+            <pre class="sunlight-highlight-javascript linenums">/**
+* @author       Richard Davey &lt;rich@photonstorm.com>
+* @copyright    2015 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
+* @classdesc
+* Detects device support capabilities and is responsible for device intialization - see {@link Phaser.Device.whenReady whenReady}.
+*
+* This class represents a singleton object that can be accessed directly as `game.device`
+* (or, as a fallback, `Phaser.Device` when a game instance is not available) without the need to instantiate it.
+*
+* Unless otherwise noted the device capabilities are only guaranteed after initialization. Initialization
+* occurs automatically and is guaranteed complete before {@link Phaser.Game} begins its "boot" phase.
+* Feature detection can be modified in the {@link Phaser.Device.onInitialized onInitialized} signal.
+*
+* When checking features using the exposed properties only the *truth-iness* of the value should be relied upon
+* unless the documentation states otherwise: properties may return `false`, `''`, `null`, or even `undefined`
+* when indicating the lack of a feature.
+*
+* Uses elements from System.js by MrDoob and Modernizr
+*
+* @description
+* It is not possible to instantiate the Device class manually.
+*
+* @class
+* @protected
+*/
+Phaser.Device = function () {
+
+    /**
+    * The time the device became ready.
+    * @property {integer} deviceReadyAt
+    * @protected
+    */
+    this.deviceReadyAt = 0;
+
+    /**
+    * The time as which initialization has completed.
+    * @property {boolean} initialized
+    * @protected
+    */
+    this.initialized = false;
+
+    //  Browser / Host / Operating System
+
+    /**
+    * @property {boolean} desktop - Is running on a desktop?
+    * @default
+    */
+    this.desktop = false;
+
+    /**
+    * @property {boolean} iOS - Is running on iOS?
+    * @default
+    */
+    this.iOS = false;
+
+    /**
+    * @property {number} iOSVersion - If running in iOS this will contain the major version number.
+    * @default
+    */
+    this.iOSVersion = 0;
+
+    /**
+    * @property {boolean} cocoonJS - Is the game running under CocoonJS?
+    * @default
+    */
+    this.cocoonJS = false;
+    
+    /**
+    * @property {boolean} cocoonJSApp - Is this game running with CocoonJS.App?
+    * @default
+    */
+    this.cocoonJSApp = false;
+    
+    /**
+    * @property {boolean} cordova - Is the game running under Apache Cordova?
+    * @default
+    */
+    this.cordova = false;
+    
+    /**
+    * @property {boolean} node - Is the game running under Node.js?
+    * @default
+    */
+    this.node = false;
+    
+    /**
+    * @property {boolean} nodeWebkit - Is the game running under Node-Webkit?
+    * @default
+    */
+    this.nodeWebkit = false;
+    
+    /**
+    * @property {boolean} electron - Is the game running under GitHub Electron?
+    * @default
+    */
+    this.electron = false;
+    
+    /**
+    * @property {boolean} ejecta - Is the game running under Ejecta?
+    * @default
+    */
+    this.ejecta = false;
+
+    /**
+    * @property {boolean} crosswalk - Is the game running under the Intel Crosswalk XDK?
+    * @default
+    */
+    this.crosswalk = false;
+
+    /**
+    * @property {boolean} android - Is running on android?
+    * @default
+    */
+    this.android = false;
+
+    /**
+    * @property {boolean} chromeOS - Is running on chromeOS?
+    * @default
+    */
+    this.chromeOS = false;
+
+    /**
+    * @property {boolean} linux - Is running on linux?
+    * @default
+    */
+    this.linux = false;
+
+    /**
+    * @property {boolean} macOS - Is running on macOS?
+    * @default
+    */
+    this.macOS = false;
+
+    /**
+    * @property {boolean} windows - Is running on windows?
+    * @default
+    */
+    this.windows = false;
+
+    /**
+    * @property {boolean} windowsPhone - Is running on a Windows Phone?
+    * @default
+    */
+    this.windowsPhone = false;
+
+    //  Features
+
+    /**
+    * @property {boolean} canvas - Is canvas available?
+    * @default
+    */
+    this.canvas = false;
+
+    /**
+    * @property {?boolean} canvasBitBltShift - True if canvas supports a 'copy' bitblt onto itself when the source and destination regions overlap.
+    * @default
+    */
+    this.canvasBitBltShift = null;
+
+    /**
+    * @property {boolean} webGL - Is webGL available?
+    * @default
+    */
+    this.webGL = false;
+
+    /**
+    * @property {boolean} file - Is file available?
+    * @default
+    */
+    this.file = false;
+
+    /**
+    * @property {boolean} fileSystem - Is fileSystem available?
+    * @default
+    */
+    this.fileSystem = false;
+
+    /**
+    * @property {boolean} localStorage - Is localStorage available?
+    * @default
+    */
+    this.localStorage = false;
+
+    /**
+    * @property {boolean} worker - Is worker available?
+    * @default
+    */
+    this.worker = false;
+
+    /**
+    * @property {boolean} css3D - Is css3D available?
+    * @default
+    */
+    this.css3D = false;
+
+    /**
+    * @property {boolean} pointerLock - Is Pointer Lock available?
+    * @default
+    */
+    this.pointerLock = false;
+
+    /**
+    * @property {boolean} typedArray - Does the browser support TypedArrays?
+    * @default
+    */
+    this.typedArray = false;
+
+    /**
+    * @property {boolean} vibration - Does the device support the Vibration API?
+    * @default
+    */
+    this.vibration = false;
+
+    /**
+    * @property {boolean} getUserMedia - Does the device support the getUserMedia API?
+    * @default
+    */
+    this.getUserMedia = true;
+
+    /**
+    * @property {boolean} quirksMode - Is the browser running in strict mode (false) or quirks mode? (true)
+    * @default
+    */
+    this.quirksMode = false;
+
+    //  Input
+
+    /**
+    * @property {boolean} touch - Is touch available?
+    * @default
+    */
+    this.touch = false;
+
+    /**
+    * @property {boolean} mspointer - Is mspointer available?
+    * @default
+    */
+    this.mspointer = false;
+
+    /**
+    * @property {?string} wheelType - The newest type of Wheel/Scroll event supported: 'wheel', 'mousewheel', 'DOMMouseScroll'
+    * @default
+    * @protected
+    */
+    this.wheelEvent = null;
+
+    //  Browser
+
+    /**
+    * @property {boolean} arora - Set to true if running in Arora.
+    * @default
+    */
+    this.arora = false;
+
+    /**
+    * @property {boolean} chrome - Set to true if running in Chrome.
+    * @default
+    */
+    this.chrome = false;
+
+    /**
+    * @property {number} chromeVersion - If running in Chrome this will contain the major version number.
+    * @default
+    */
+    this.chromeVersion = 0;
+
+    /**
+    * @property {boolean} epiphany - Set to true if running in Epiphany.
+    * @default
+    */
+    this.epiphany = false;
+
+    /**
+    * @property {boolean} firefox - Set to true if running in Firefox.
+    * @default
+    */
+    this.firefox = false;
+
+    /**
+    * @property {number} firefoxVersion - If running in Firefox this will contain the major version number.
+    * @default
+    */
+    this.firefoxVersion = 0;
+
+    /**
+    * @property {boolean} ie - Set to true if running in Internet Explorer.
+    * @default
+    */
+    this.ie = false;
+
+    /**
+    * @property {number} ieVersion - If running in Internet Explorer this will contain the major version number. Beyond IE10 you should use Device.trident and Device.tridentVersion.
+    * @default
+    */
+    this.ieVersion = 0;
+
+    /**
+    * @property {boolean} trident - Set to true if running a Trident version of Internet Explorer (IE11+)
+    * @default
+    */
+    this.trident = false;
+
+    /**
+    * @property {number} tridentVersion - If running in Internet Explorer 11 this will contain the major version number. See {@link http://msdn.microsoft.com/en-us/library/ie/ms537503(v=vs.85).aspx}
+    * @default
+    */
+    this.tridentVersion = 0;
+
+    /**
+    * @property {boolean} mobileSafari - Set to true if running in Mobile Safari.
+    * @default
+    */
+    this.mobileSafari = false;
+
+    /**
+    * @property {boolean} midori - Set to true if running in Midori.
+    * @default
+    */
+    this.midori = false;
+
+    /**
+    * @property {boolean} opera - Set to true if running in Opera.
+    * @default
+    */
+    this.opera = false;
+
+    /**
+    * @property {boolean} safari - Set to true if running in Safari.
+    * @default
+    */
+    this.safari = false;
+
+    /**
+    * @property {boolean} webApp - Set to true if running as a WebApp, i.e. within a WebView
+    * @default
+    */
+    this.webApp = false;
+
+    /**
+    * @property {boolean} silk - Set to true if running in the Silk browser (as used on the Amazon Kindle)
+    * @default
+    */
+    this.silk = false;
+
+    //  Audio
+
+    /**
+    * @property {boolean} audioData - Are Audio tags available?
+    * @default
+    */
+    this.audioData = false;
+
+    /**
+    * @property {boolean} webAudio - Is the WebAudio API available?
+    * @default
+    */
+    this.webAudio = false;
+
+    /**
+    * @property {boolean} ogg - Can this device play ogg files?
+    * @default
+    */
+    this.ogg = false;
+
+    /**
+    * @property {boolean} opus - Can this device play opus files?
+    * @default
+    */
+    this.opus = false;
+
+    /**
+    * @property {boolean} mp3 - Can this device play mp3 files?
+    * @default
+    */
+    this.mp3 = false;
+
+    /**
+    * @property {boolean} wav - Can this device play wav files?
+    * @default
+    */
+    this.wav = false;
+
+    /**
+    * Can this device play m4a files?
+    * @property {boolean} m4a - True if this device can play m4a files.
+    * @default
+    */
+    this.m4a = false;
+
+    /**
+    * @property {boolean} webm - Can this device play webm files?
+    * @default
+    */
+    this.webm = false;
+
+    //  Video
+
+    /**
+    * @property {boolean} oggVideo - Can this device play ogg video files?
+    * @default
+    */
+    this.oggVideo = false;
+
+    /**
+    * @property {boolean} h264Video - Can this device play h264 mp4 video files?
+    * @default
+    */
+    this.h264Video = false;
+
+    /**
+    * @property {boolean} mp4Video - Can this device play h264 mp4 video files?
+    * @default
+    */
+    this.mp4Video = false;
+
+    /**
+    * @property {boolean} webmVideo - Can this device play webm video files?
+    * @default
+    */
+    this.webmVideo = false;
+
+    /**
+    * @property {boolean} vp9Video - Can this device play vp9 video files?
+    * @default
+    */
+    this.vp9Video = false;
+
+    /**
+    * @property {boolean} hlsVideo - Can this device play hls video files?
+    * @default
+    */
+    this.hlsVideo = false;
+
+    //  Device
+
+    /**
+    * @property {boolean} iPhone - Is running on iPhone?
+    * @default
+    */
+    this.iPhone = false;
+
+    /**
+    * @property {boolean} iPhone4 - Is running on iPhone4?
+    * @default
+    */
+    this.iPhone4 = false;
+
+    /**
+    * @property {boolean} iPad - Is running on iPad?
+    * @default
+    */
+    this.iPad = false;
+
+    // Device features
+
+    /**
+    * @property {number} pixelRatio - PixelRatio of the host device?
+    * @default
+    */
+    this.pixelRatio = 0;
+
+    /**
+    * @property {boolean} littleEndian - Is the device big or little endian? (only detected if the browser supports TypedArrays)
+    * @default
+    */
+    this.littleEndian = false;
+
+    /**
+    * @property {boolean} LITTLE_ENDIAN - Same value as `littleEndian`.
+    * @default
+    */
+    this.LITTLE_ENDIAN = false;
+
+    /**
+    * @property {boolean} support32bit - Does the device context support 32bit pixel manipulation using array buffer views?
+    * @default
+    */
+    this.support32bit = false;
+
+    /**
+    * @property {boolean} fullscreen - Does the browser support the Full Screen API?
+    * @default
+    */
+    this.fullscreen = false;
+
+    /**
+    * @property {string} requestFullscreen - If the browser supports the Full Screen API this holds the call you need to use to activate it.
+    * @default
+    */
+    this.requestFullscreen = '';
+
+    /**
+    * @property {string} cancelFullscreen - If the browser supports the Full Screen API this holds the call you need to use to cancel it.
+    * @default
+    */
+    this.cancelFullscreen = '';
+
+    /**
+    * @property {boolean} fullscreenKeyboard - Does the browser support access to the Keyboard during Full Screen mode?
+    * @default
+    */
+    this.fullscreenKeyboard = false;
+
+};
+
+// Device is really a singleton/static entity; instantiate it
+// and add new methods directly sans-prototype.
+Phaser.Device = new Phaser.Device();
+
+/**
+* This signal is dispatched after device initialization occurs but before any of the ready
+* callbacks (see {@link Phaser.Device.whenReady whenReady}) have been invoked.
+*
+* Local "patching" for a particular device can/should be done in this event.
+*
+* _Note_: This signal is removed after the device has been readied; if a handler has not been
+* added _before_ `new Phaser.Game(..)` it is probably too late.
+*
+* @type {?Phaser.Signal}
+* @static
+*/
+Phaser.Device.onInitialized = new Phaser.Signal();
+
+/**
+* Add a device-ready handler and ensure the device ready sequence is started.
+*
+* Phaser.Device will _not_ activate or initialize until at least one `whenReady` handler is added,
+* which is normally done automatically be calling `new Phaser.Game(..)`.
+*
+* The handler is invoked when the device is considered "ready", which may be immediately
+* if the device is already "ready". See {@link Phaser.Device#deviceReadyAt deviceReadyAt}.
+*
+* @method
+* @param {function} handler - Callback to invoke when the device is ready. It is invoked with the given context the Phaser.Device object is supplied as the first argument.
+* @param {object} [context] - Context in which to invoke the handler
+* @param {boolean} [nonPrimer=false] - If true the device ready check will not be started.
+*/
+Phaser.Device.whenReady = function (callback, context, nonPrimer) {
+
+    var readyCheck = this._readyCheck;
+
+    if (this.deviceReadyAt || !readyCheck)
+    {
+        callback.call(context, this);
+    }
+    else if (readyCheck._monitor || nonPrimer)
+    {
+        readyCheck._queue = readyCheck._queue || [];
+        readyCheck._queue.push([callback, context]);
+    }
+    else
+    {
+        readyCheck._monitor = readyCheck.bind(this);
+        readyCheck._queue = readyCheck._queue || [];
+        readyCheck._queue.push([callback, context]);
+        
+        var cordova = typeof window.cordova !== 'undefined';
+        var cocoonJS = navigator['isCocoonJS'];
+
+        if (document.readyState === 'complete' || document.readyState === 'interactive')
+        {
+            // Why is there an additional timeout here?
+            window.setTimeout(readyCheck._monitor, 0);
+        }
+        else if (cordova &amp;&amp; !cocoonJS)
+        {
+            // Ref. http://docs.phonegap.com/en/3.5.0/cordova_events_events.md.html#deviceready
+            //  Cordova, but NOT Cocoon?
+            document.addEventListener('deviceready', readyCheck._monitor, false);
+        }
+        else
+        {
+            document.addEventListener('DOMContentLoaded', readyCheck._monitor, false);
+            window.addEventListener('load', readyCheck._monitor, false);
+        }
+    }
+
+};
+
+/**
+* Internal method used for checking when the device is ready.
+* This function is removed from Phaser.Device when the device becomes ready.
+*
+* @method
+* @private
+*/
+Phaser.Device._readyCheck = function () {
+
+    var readyCheck = this._readyCheck;
+
+    if (!document.body)
+    {
+        window.setTimeout(readyCheck._monitor, 20);
+    }
+    else if (!this.deviceReadyAt)
+    {
+        this.deviceReadyAt = Date.now();
+
+        document.removeEventListener('deviceready', readyCheck._monitor);
+        document.removeEventListener('DOMContentLoaded', readyCheck._monitor);
+        window.removeEventListener('load', readyCheck._monitor);
+
+        this._initialize();
+        this.initialized = true;
+
+        this.onInitialized.dispatch(this);
+
+        var item;
+        while ((item = readyCheck._queue.shift()))
+        {
+            var callback = item[0];
+            var context = item[1];
+            callback.call(context, this);
+        }
+
+        // Remove no longer useful methods and properties.
+        this._readyCheck = null;
+        this._initialize = null;
+        this.onInitialized = null;
+    }
+
+};
+
+/**
+* Internal method to initialize the capability checks.
+* This function is removed from Phaser.Device once the device is initialized.
+*
+* @method
+* @private
+*/
+Phaser.Device._initialize = function () {
+
+    var device = this;
+
+    /**
+    * Check which OS is game running on.
+    */
+    function _checkOS () {
+
+        var ua = navigator.userAgent;
+
+        if (/Playstation Vita/.test(ua))
+        {
+            device.vita = true;
+        }
+        else if (/Kindle/.test(ua) || /\bKF[A-Z][A-Z]+/.test(ua) || /Silk.*Mobile Safari/.test(ua))
+        {
+            device.kindle = true;
+            // This will NOT detect early generations of Kindle Fire, I think there is no reliable way...
+            // E.g. "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_3; en-us; Silk/1.1.0-80) AppleWebKit/533.16 (KHTML, like Gecko) Version/5.0 Safari/533.16 Silk-Accelerated=true"
+        }
+        else if (/Android/.test(ua))
+        {
+            device.android = true;
+        }
+        else if (/CrOS/.test(ua))
+        {
+            device.chromeOS = true;
+        }
+        else if (/iP[ao]d|iPhone/i.test(ua))
+        {
+            device.iOS = true;
+            (navigator.appVersion).match(/OS (\d+)/);
+            device.iOSVersion = parseInt(RegExp.$1, 10);
+        }
+        else if (/Linux/.test(ua))
+        {
+            device.linux = true;
+        }
+        else if (/Mac OS/.test(ua))
+        {
+            device.macOS = true;
+        }
+        else if (/Windows/.test(ua))
+        {
+            device.windows = true;
+        }
+
+        if (/Windows Phone/i.test(ua) || /IEMobile/i.test(ua))
+        {
+            device.android = false;
+            device.iOS = false;
+            device.macOS = false;
+            device.windows = true;
+            device.windowsPhone = true;
+        }
+
+        var silk = /Silk/.test(ua); // detected in browsers
+
+        if (device.windows || device.macOS || (device.linux &amp;&amp; !silk) || device.chromeOS)
+        {
+            device.desktop = true;
+        }
+
+        //  Windows Phone / Table reset
+        if (device.windowsPhone || ((/Windows NT/i.test(ua)) &amp;&amp; (/Touch/i.test(ua))))
+        {
+            device.desktop = false;
+        }
+
+    }
+
+    /**
+    * Check HTML5 features of the host environment.
+    */
+    function _checkFeatures () {
+
+        device.canvas = !!window['CanvasRenderingContext2D'] || device.cocoonJS;
+
+        try {
+            device.localStorage = !!localStorage.getItem;
+        } catch (error) {
+            device.localStorage = false;
+        }
+
+        device.file = !!window['File'] &amp;&amp; !!window['FileReader'] &amp;&amp; !!window['FileList'] &amp;&amp; !!window['Blob'];
+        device.fileSystem = !!window['requestFileSystem'];
+
+        device.webGL = ( function () { try { var canvas = document.createElement( 'canvas' ); /*Force screencanvas to false*/ canvas.screencanvas = false; return !! window.WebGLRenderingContext &amp;&amp; ( canvas.getContext( 'webgl' ) || canvas.getContext( 'experimental-webgl' ) ); } catch( e ) { return false; } } )();
+        device.webGL = !!device.webGL;
+
+        device.worker = !!window['Worker'];
+
+        device.pointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
+
+        device.quirksMode = (document.compatMode === 'CSS1Compat') ? false : true;
+
+        navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
+
+        window.URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
+
+        device.getUserMedia = device.getUserMedia &amp;&amp; !!navigator.getUserMedia &amp;&amp; !!window.URL;
+
+        // Older versions of firefox (&lt; 21) apparently claim support but user media does not actually work
+        if (device.firefox &amp;&amp; device.firefoxVersion &lt; 21)
+        {
+            device.getUserMedia = false;
+        }
+
+        // TODO: replace canvasBitBltShift detection with actual feature check
+
+        // Excludes iOS versions as they generally wrap UIWebView (eg. Safari WebKit) and it
+        // is safer to not try and use the fast copy-over method.
+        if (!device.iOS &amp;&amp; (device.ie || device.firefox || device.chrome))
+        {
+            device.canvasBitBltShift = true;
+        }
+
+        // Known not to work
+        if (device.safari || device.mobileSafari)
+        {
+            device.canvasBitBltShift = false;
+        }
+
+    }
+
+    /**
+    * Checks/configures various input.
+    */
+    function _checkInput () {
+
+        if ('ontouchstart' in document.documentElement || (window.navigator.maxTouchPoints &amp;&amp; window.navigator.maxTouchPoints >= 1))
+        {
+            device.touch = true;
+        }
+
+        if (window.navigator.msPointerEnabled || window.navigator.pointerEnabled)
+        {
+            device.mspointer = true;
+        }
+
+        if (!device.cocoonJS)
+        {
+            // See https://developer.mozilla.org/en-US/docs/Web/Events/wheel
+            if ('onwheel' in window || (device.ie &amp;&amp; 'WheelEvent' in window))
+            {
+                // DOM3 Wheel Event: FF 17+, IE 9+, Chrome 31+, Safari 7+
+                device.wheelEvent = 'wheel';
+            }
+            else if ('onmousewheel' in window)
+            {
+                // Non-FF legacy: IE 6-9, Chrome 1-31, Safari 5-7.
+                device.wheelEvent = 'mousewheel';
+            }
+            else if (device.firefox &amp;&amp; 'MouseScrollEvent' in window)
+            {
+                // FF prior to 17. This should probably be scrubbed.
+                device.wheelEvent = 'DOMMouseScroll';
+            }
+        }
+
+    }
+
+    /**
+    * Checks for support of the Full Screen API.
+    */
+    function _checkFullScreenSupport () {
+
+        var fs = [
+            'requestFullscreen',
+            'requestFullScreen',
+            'webkitRequestFullscreen',
+            'webkitRequestFullScreen',
+            'msRequestFullscreen',
+            'msRequestFullScreen',
+            'mozRequestFullScreen',
+            'mozRequestFullscreen'
+        ];
+
+        var element = document.createElement('div');
+
+        for (var i = 0; i &lt; fs.length; i++)
+        {
+            if (element[fs[i]])
+            {
+                device.fullscreen = true;
+                device.requestFullscreen = fs[i];
+                break;
+            }
+        }
+
+        var cfs = [
+            'cancelFullScreen',
+            'exitFullscreen',
+            'webkitCancelFullScreen',
+            'webkitExitFullscreen',
+            'msCancelFullScreen',
+            'msExitFullscreen',
+            'mozCancelFullScreen',
+            'mozExitFullscreen'
+        ];
+
+        if (device.fullscreen)
+        {
+            for (var i = 0; i &lt; cfs.length; i++)
+            {
+                if (document[cfs[i]])
+                {
+                    device.cancelFullscreen = cfs[i];
+                    break;
+                }
+            }
+        }
+
+        //  Keyboard Input?
+        if (window['Element'] &amp;&amp; Element['ALLOW_KEYBOARD_INPUT'])
+        {
+            device.fullscreenKeyboard = true;
+        }
+
+    }
+
+    /**
+    * Check what browser is game running in.
+    */
+    function _checkBrowser () {
+
+        var ua = navigator.userAgent;
+
+        if (/Arora/.test(ua))
+        {
+            device.arora = true;
+        }
+        else if (/Chrome\/(\d+)/.test(ua) &amp;&amp; !device.windowsPhone)
+        {
+            device.chrome = true;
+            device.chromeVersion = parseInt(RegExp.$1, 10);
+        }
+        else if (/Epiphany/.test(ua))
+        {
+            device.epiphany = true;
+        }
+        else if (/Firefox\D+(\d+)/.test(ua))
+        {
+            device.firefox = true;
+            device.firefoxVersion = parseInt(RegExp.$1, 10);
+        }
+        else if (/AppleWebKit/.test(ua) &amp;&amp; device.iOS)
+        {
+            device.mobileSafari = true;
+        }
+        else if (/MSIE (\d+\.\d+);/.test(ua))
+        {
+            device.ie = true;
+            device.ieVersion = parseInt(RegExp.$1, 10);
+        }
+        else if (/Midori/.test(ua))
+        {
+            device.midori = true;
+        }
+        else if (/Opera/.test(ua))
+        {
+            device.opera = true;
+        }
+        else if (/Safari/.test(ua) &amp;&amp; !device.windowsPhone)
+        {
+            device.safari = true;
+        }
+        else if (/Trident\/(\d+\.\d+)(.*)rv:(\d+\.\d+)/.test(ua))
+        {
+            device.ie = true;
+            device.trident = true;
+            device.tridentVersion = parseInt(RegExp.$1, 10);
+            device.ieVersion = parseInt(RegExp.$3, 10);
+        }
+
+        //  Silk gets its own if clause because its ua also contains 'Safari'
+        if (/Silk/.test(ua))
+        {
+            device.silk = true;
+        }
+
+        //  WebApp mode in iOS
+        if (navigator['standalone'])
+        {
+            device.webApp = true;
+        }
+        
+        if (typeof window.cordova !== "undefined")
+        {
+            device.cordova = true;
+        }
+        
+        if (typeof process !== "undefined" &amp;&amp; typeof require !== "undefined")
+        {
+            device.node = true;
+        }
+        
+        if (device.node &amp;&amp; typeof process.versions === 'object')
+        {
+            device.nodeWebkit = !!process.versions['node-webkit'];
+            
+            device.electron = !!process.versions.electron;
+        }
+        
+        if (navigator['isCocoonJS'])
+        {
+            device.cocoonJS = true;
+        }
+        
+        if (device.cocoonJS)
+        {
+            try {
+                device.cocoonJSApp = (typeof CocoonJS !== "undefined");
+            }
+            catch(error)
+            {
+                device.cocoonJSApp = false;
+            }
+        }
+
+        if (typeof window.ejecta !== "undefined")
+        {
+            device.ejecta = true;
+        }
+
+        if (/Crosswalk/.test(ua))
+        {
+            device.crosswalk = true;
+        }
+
+    }
+
+    /**
+    * Check video support.
+    */
+    function _checkVideo () {
+
+        var videoElement = document.createElement("video");
+        var result = false;
+
+        try {
+            if (result = !!videoElement.canPlayType)
+            {
+                if (videoElement.canPlayType('video/ogg; codecs="theora"').replace(/^no$/, ''))
+                {
+                    device.oggVideo = true;
+                }
+
+                if (videoElement.canPlayType('video/mp4; codecs="avc1.42E01E"').replace(/^no$/, ''))
+                {
+                    // Without QuickTime, this value will be `undefined`. github.com/Modernizr/Modernizr/issues/546
+                    device.h264Video = true;
+                    device.mp4Video = true;
+                }
+
+                if (videoElement.canPlayType('video/webm; codecs="vp8, vorbis"').replace(/^no$/, ''))
+                {
+                    device.webmVideo = true;
+                }
+
+                if (videoElement.canPlayType('video/webm; codecs="vp9"').replace(/^no$/, ''))
+                {
+                    device.vp9Video = true;
+                }
+
+                if (videoElement.canPlayType('application/x-mpegURL; codecs="avc1.42E01E"').replace(/^no$/, ''))
+                {
+                    device.hlsVideo = true;
+                }
+            }
+        } catch (e) {}
+    }
+
+    /**
+    * Check audio support.
+    */
+    function _checkAudio () {
+
+        device.audioData = !!(window['Audio']);
+        device.webAudio = !!(window['AudioContext'] || window['webkitAudioContext']);
+        var audioElement = document.createElement('audio');
+        var result = false;
+
+        try {
+            if (result = !!audioElement.canPlayType)
+            {
+                if (audioElement.canPlayType('audio/ogg; codecs="vorbis"').replace(/^no$/, ''))
+                {
+                    device.ogg = true;
+                }
+
+                if (audioElement.canPlayType('audio/ogg; codecs="opus"').replace(/^no$/, '') || audioElement.canPlayType('audio/opus;').replace(/^no$/, ''))
+                {
+                    device.opus = true;
+                }
+
+                if (audioElement.canPlayType('audio/mpeg;').replace(/^no$/, ''))
+                {
+                    device.mp3 = true;
+                }
+
+                // Mimetypes accepted:
+                //   developer.mozilla.org/En/Media_formats_supported_by_the_audio_and_video_elements
+                //   bit.ly/iphoneoscodecs
+                if (audioElement.canPlayType('audio/wav; codecs="1"').replace(/^no$/, ''))
+                {
+                    device.wav = true;
+                }
+
+                if (audioElement.canPlayType('audio/x-m4a;') || audioElement.canPlayType('audio/aac;').replace(/^no$/, ''))
+                {
+                    device.m4a = true;
+                }
+
+                if (audioElement.canPlayType('audio/webm; codecs="vorbis"').replace(/^no$/, ''))
+                {
+                    device.webm = true;
+                }
+            }
+        } catch (e) {
+        }
+
+    }
+
+    /**
+    * Check PixelRatio, iOS device, Vibration API, ArrayBuffers and endianess.
+    */
+    function _checkDevice () {
+
+        device.pixelRatio = window['devicePixelRatio'] || 1;
+        device.iPhone = navigator.userAgent.toLowerCase().indexOf('iphone') != -1;
+        device.iPhone4 = (device.pixelRatio == 2 &amp;&amp; device.iPhone);
+        device.iPad = navigator.userAgent.toLowerCase().indexOf('ipad') != -1;
+
+        if (typeof Int8Array !== 'undefined')
+        {
+            device.typedArray = true;
+        }
+        else
+        {
+            device.typedArray = false;
+        }
+
+        if (typeof ArrayBuffer !== 'undefined' &amp;&amp; typeof Uint8Array !== 'undefined' &amp;&amp; typeof Uint32Array !== 'undefined')
+        {
+            device.littleEndian = _checkIsLittleEndian();
+            device.LITTLE_ENDIAN = device.littleEndian;
+        }
+
+        device.support32bit = (typeof ArrayBuffer !== "undefined" &amp;&amp; typeof Uint8ClampedArray !== "undefined" &amp;&amp; typeof Int32Array !== "undefined" &amp;&amp; device.littleEndian !== null &amp;&amp; _checkIsUint8ClampedImageData());
+
+        navigator.vibrate = navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate;
+
+        if (navigator.vibrate)
+        {
+            device.vibration = true;
+        }
+
+    }
+
+    /**
+    * Check Little or Big Endian system.
+    *
+    * @author Matt DesLauriers (@mattdesl)
+    */
+    function _checkIsLittleEndian () {
+
+        var a = new ArrayBuffer(4);
+        var b = new Uint8Array(a);
+        var c = new Uint32Array(a);
+
+        b[0] = 0xa1;
+        b[1] = 0xb2;
+        b[2] = 0xc3;
+        b[3] = 0xd4;
+
+        if (c[0] == 0xd4c3b2a1)
+        {
+            return true;
+        }
+
+        if (c[0] == 0xa1b2c3d4)
+        {
+            return false;
+        }
+        else
+        {
+            //  Could not determine endianness
+            return null;
+        }
+
+    }
+
+    /**
+    * Test to see if ImageData uses CanvasPixelArray or Uint8ClampedArray.
+    *
+    * @author Matt DesLauriers (@mattdesl)
+    */
+    function _checkIsUint8ClampedImageData () {
+
+        if (Uint8ClampedArray === undefined)
+        {
+            return false;
+        }
+
+        var elem = PIXI.CanvasPool.create(this, 1, 1);
+        var ctx = elem.getContext('2d');
+
+        if (!ctx)
+        {
+            return false;
+        }
+
+        var image = ctx.createImageData(1, 1);
+
+        PIXI.CanvasPool.remove(this);
+
+        return image.data instanceof Uint8ClampedArray;
+
+    }
+
+    /**
+    * Check whether the host environment support 3D CSS.
+    */
+    function _checkCSS3D () {
+
+        var el = document.createElement('p');
+        var has3d;
+        var transforms = {
+            'webkitTransform': '-webkit-transform',
+            'OTransform': '-o-transform',
+            'msTransform': '-ms-transform',
+            'MozTransform': '-moz-transform',
+            'transform': 'transform'
+        };
+
+        // Add it to the body to get the computed style.
+        document.body.insertBefore(el, null);
+
+        for (var t in transforms)
+        {
+            if (el.style[t] !== undefined)
+            {
+                el.style[t] = "translate3d(1px,1px,1px)";
+                has3d = window.getComputedStyle(el).getPropertyValue(transforms[t]);
+            }
+        }
+
+        document.body.removeChild(el);
+        device.css3D = (has3d !== undefined &amp;&amp; has3d.length > 0 &amp;&amp; has3d !== "none");
+
+    }
+
+    //  Run the checks
+    _checkOS();
+    _checkAudio();
+    _checkVideo();
+    _checkBrowser();
+    _checkCSS3D();
+    _checkDevice();
+    _checkFeatures();
+    _checkFullScreenSupport();
+    _checkInput();
+
+};
+
+/**
+* Check whether the host environment can play audio.
+*
+* @method canPlayAudio
+* @memberof Phaser.Device.prototype
+* @param {string} type - One of 'mp3, 'ogg', 'm4a', 'wav', 'webm' or 'opus'.
+* @return {boolean} True if the given file type is supported by the browser, otherwise false.
+*/
+Phaser.Device.canPlayAudio = function (type) {
+
+    if (type === 'mp3' &amp;&amp; this.mp3)
+    {
+        return true;
+    }
+    else if (type === 'ogg' &amp;&amp; (this.ogg || this.opus))
+    {
+        return true;
+    }
+    else if (type === 'm4a' &amp;&amp; this.m4a)
+    {
+        return true;
+    }
+    else if (type === 'opus' &amp;&amp; this.opus)
+    {
+        return true;
+    }
+    else if (type === 'wav' &amp;&amp; this.wav)
+    {
+        return true;
+    }
+    else if (type === 'webm' &amp;&amp; this.webm)
+    {
+        return true;
+    }
+
+    return false;
+
+};
+
+/**
+* Check whether the host environment can play video files.
+*
+* @method canPlayVideo
+* @memberof Phaser.Device.prototype
+* @param {string} type - One of 'mp4, 'ogg', 'webm' or 'mpeg'.
+* @return {boolean} True if the given file type is supported by the browser, otherwise false.
+*/
+Phaser.Device.canPlayVideo = function (type) {
+
+    if (type === 'webm' &amp;&amp; (this.webmVideo || this.vp9Video))
+    {
+        return true;
+    }
+    else if (type === 'mp4' &amp;&amp; (this.mp4Video || this.h264Video))
+    {
+        return true;
+    }
+    else if ((type === 'ogg' || type === 'ogv') &amp;&amp; this.oggVideo)
+    {
+        return true;
+    }
+    else if (type === 'mpeg' &amp;&amp; this.hlsVideo)
+    {
+        return true;
+    }
+
+    return false;
+
+};
+
+/**
+* Check whether the console is open.
+* Note that this only works in Firefox with Firebug and earlier versions of Chrome.
+* It used to work in Chrome, but then they removed the ability: {@link http://src.chromium.org/viewvc/blink?view=revision&amp;revision=151136}
+*
+* @method isConsoleOpen
+* @memberof Phaser.Device.prototype
+*/
+Phaser.Device.isConsoleOpen = function () {
+
+    if (window.console &amp;&amp; window.console['firebug'])
+    {
+        return true;
+    }
+
+    if (window.console)
+    {
+        console.profile();
+        console.profileEnd();
+
+        if (console.clear)
+        {
+            console.clear();
+        }
+
+        if (console['profiles'])
+        {
+            return console['profiles'].length > 0;
+        }
+    }
+
+    return false;
+
+};
+
+/**
+* Detect if the host is a an Android Stock browser.
+* This is available before the device "ready" event.
+*
+* Authors might want to scale down on effects and switch to the CANVAS rendering method on those devices.
+*
+* @example
+* var defaultRenderingMode = Phaser.Device.isAndroidStockBrowser() ? Phaser.CANVAS : Phaser.AUTO;
+* 
+* @method isAndroidStockBrowser
+* @memberof Phaser.Device.prototype
+*/
+Phaser.Device.isAndroidStockBrowser = function () {
+
+    var matches = window.navigator.userAgent.match(/Android.*AppleWebKit\/([\d.]+)/);
+    return matches &amp;&amp; matches[1] &lt; 537;
+
+};
+</pre>
+        </article>
+    </section>
+
+
+
+
+
+				</div>
+
+				<div class="clearfix"></div>
+				<footer>
+					
+					
+		<span class="copyright">
+		Phaser Copyright © 2012-2015 Photon Storm Ltd.
+		</span>
+					<br />
+					
+		<span class="jsdoc-message">
+		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
+		on Thu Oct 15 2015 12:04:56 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		</span>
+				</footer>
+			</div>
+
+			
+			<br clear="both">
+		</div>
+
+	</div>
+	<script src="scripts/sunlight.js"></script>
+	<script src="scripts/sunlight.javascript.js"></script>
+	<script src="scripts/sunlight-plugin.doclinks.js"></script>
+	<script src="scripts/sunlight-plugin.linenumbers.js"></script>
+	<script src="scripts/sunlight-plugin.menu.js"></script>
+	<script src="scripts/jquery.min.js"></script>
+	<script src="scripts/jquery.scrollTo.js"></script>
+	<script src="scripts/jquery.localScroll.js"></script>
+	<script src="scripts/bootstrap-dropdown.js"></script>
+	<script src="scripts/toc.js"></script>
+
+	<script>  Sunlight.highlightAll({lineNumbers:true,  showMenu: true, enableDoclinks :true}); </script>
+
+	<script>
+		$( function () {
+			$( "#toc" ).toc( {
+				anchorName  : function(i, heading, prefix) {
+					return $(heading).attr("id") || ( prefix + i );
+				},
+				selectors   : "h1,h2,h3,h4",
+				showAndHide : false,
+				scrollTo    : 60
+			} );
+			$( "#toc>ul" ).addClass( "nav nav-pills nav-stacked" );
+			$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+
+		} );
+	</script>
+
+	
+
+</body>
+</html>

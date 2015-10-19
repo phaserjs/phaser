@@ -1,0 +1,51 @@
+{
+    "tags": {
+        "allowUnknownTags": true
+    },
+    "source": {
+        "include": [ 
+            "./docs/pixi-jsdoc.js",
+            "./src/Phaser.js", 
+            "./src/animation/", 
+            "./src/core/", 
+            "./src/gameobjects/", 
+            "./src/geom/", 
+            "./src/input/", 
+            "./src/loader/", 
+            "./src/math/", 
+            "./src/net/", 
+            "./src/particles/", 
+            "./src/physics/", 
+            "./src/sound/", 
+            "./src/system/", 
+            "./src/tilemap/", 
+            "./src/time/", 
+            "./src/tween/",
+			"./src/utils/"
+        ],
+        "exclude": [
+            "./src/physics/p2/p2.js"
+        ],
+        "includePattern": ".+\\.js(doc)?$",
+        "excludePattern": "(^|\\/|\\\\)_"
+    },
+    "plugins": [
+        "./tasks/jsdoc-plugins/namealias",
+        "./tasks/jsdoc-plugins/filterpixi",
+        "./tasks/jsdoc-plugins/proptomember",
+        "./tasks/jsdoc-plugins/shortlinks",
+        "./tasks/jsdoc-plugins/p2completeclass"
+    ],
+    "markdown"  : {
+        "parser"   : "gfm",
+        "hardwrap" : true
+    },
+    "opts": {
+        "encoding": "utf8",
+        "recurse": true,
+        "private": true,
+        "lenient": true,
+        "destination": "./out/docs.json",
+        "template": "./resources/jsdoc Export JSON/template"
+    }
+}

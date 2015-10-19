@@ -1,0 +1,3469 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Phaser Source: src/core/Group.js</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+
+	<link type="text/css" rel="stylesheet" href="styles/default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	
+	<link type="text/css" rel="stylesheet" href="styles/site.cerulean.css">
+	
+</head>
+
+<body>
+
+<div class="container-fluid">
+	<div class="navbar navbar-fixed-top navbar-inverse">
+		<div style="position: absolute; width: 143px; height: 31px; right: 10px; top: 10px; z-index: 1050"><a href="http://phaser.io"><img src="img/phaser.png" border="0" /></a></div>
+		<div class="navbar-inner">
+			<a class="brand" href="index.html">Phaser API</a>
+			<ul class="nav">
+
+				
+				<li class="dropdown">
+					<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+						
+						<li class="class-depth-0">
+							<a href="Phaser.html">Phaser</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="Phaser.KeyCode.html">KeyCode</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="PIXI.html">PIXI</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
+				<li class="dropdown">
+					<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Animation.html">Animation</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.AnimationManager.html">AnimationManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.AnimationParser.html">AnimationParser</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.ArraySet.html">ArraySet</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.ArrayUtils.html">ArrayUtils</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.AudioSprite.html">AudioSprite</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.BitmapData.html">BitmapData</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.BitmapText.html">BitmapText</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Button.html">Button</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Cache.html">Cache</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Camera.html">Camera</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Canvas.html">Canvas</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Circle.html">Circle</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Color.html">Color</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Angle.html">Angle</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Animation.html">Animation</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.AutoCull.html">AutoCull</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Bounds.html">Bounds</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.BringToTop.html">BringToTop</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Core.html">Core</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Crop.html">Crop</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Delta.html">Delta</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Destroy.html">Destroy</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.FixedToCamera.html">FixedToCamera</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Health.html">Health</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.InCamera.html">InCamera</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.InputEnabled.html">InputEnabled</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.InWorld.html">InWorld</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.LifeSpan.html">LifeSpan</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.LoadTexture.html">LoadTexture</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Overlap.html">Overlap</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.PhysicsBody.html">PhysicsBody</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Reset.html">Reset</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.ScaleMinMax.html">ScaleMinMax</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Component.Smoothed.html">Smoothed</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Create.html">Create</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Creature.html">Creature</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Device.html">Device</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.DeviceButton.html">DeviceButton</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.DOM.html">DOM</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Easing.html">Easing</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Back.html">Back</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Bounce.html">Bounce</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Circular.html">Circular</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Cubic.html">Cubic</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Elastic.html">Elastic</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Exponential.html">Exponential</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Linear.html">Linear</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Quadratic.html">Quadratic</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Quartic.html">Quartic</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Quintic.html">Quintic</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Easing.Sinusoidal.html">Sinusoidal</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Ellipse.html">Ellipse</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Events.html">Events</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Filter.html">Filter</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.FlexGrid.html">FlexGrid</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.FlexLayer.html">FlexLayer</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Frame.html">Frame</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.FrameData.html">FrameData</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Game.html">Game</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.GameObjectCreator.html">GameObjectCreator</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.GameObjectFactory.html">GameObjectFactory</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Gamepad.html">Gamepad</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Graphics.html">Graphics</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Group.html">Group</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Image.html">Image</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.ImageCollection.html">ImageCollection</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Input.html">Input</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.InputHandler.html">InputHandler</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Key.html">Key</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Keyboard.html">Keyboard</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Line.html">Line</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.LinkedList.html">LinkedList</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Loader.html">Loader</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.LoaderParser.html">LoaderParser</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Math.html">Math</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Matrix.html">Matrix</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Mouse.html">Mouse</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.MSPointer.html">MSPointer</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Net.html">Net</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Particle.html">Particle</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Particles.html">Particles</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Particles.Arcade.html">Arcade</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Particles.Arcade.Emitter.html">Emitter</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Physics.html">Physics</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Physics.Arcade.html">Arcade</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.Arcade.Body.html">Body</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.Arcade.TilemapCollision.html">TilemapCollision</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Physics.Ninja.html">Ninja</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.Ninja.AABB.html">AABB</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.Ninja.Body.html">Body</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.Ninja.Circle.html">Circle</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.Ninja.Tile.html">Tile</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Physics.P2.html">P2</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.Body.html">Body</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.BodyDebug.html">BodyDebug</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.CollisionGroup.html">CollisionGroup</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.ContactMaterial.html">ContactMaterial</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.DistanceConstraint.html">DistanceConstraint</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.FixtureList.html">FixtureList</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.GearConstraint.html">GearConstraint</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.InversePointProxy.html">InversePointProxy</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.LockConstraint.html">LockConstraint</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.Material.html">Material</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.PointProxy.html">PointProxy</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.PrismaticConstraint.html">PrismaticConstraint</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.RevoluteConstraint.html">RevoluteConstraint</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.RotationalSpring.html">RotationalSpring</a>
+						</li>
+						
+						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.Spring.html">Spring</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Plugin.html">Plugin</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.PluginManager.html">PluginManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Point.html">Point</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Pointer.html">Pointer</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.PointerMode.html">PointerMode</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Polygon.html">Polygon</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.QuadTree.html">QuadTree</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.RandomDataGenerator.html">RandomDataGenerator</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Rectangle.html">Rectangle</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.RenderTexture.html">RenderTexture</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.RequestAnimationFrame.html">RequestAnimationFrame</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.RetroFont.html">RetroFont</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Rope.html">Rope</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.RoundedRectangle.html">RoundedRectangle</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.ScaleManager.html">ScaleManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Signal.html">Signal</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.SignalBinding.html">SignalBinding</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.SinglePad.html">SinglePad</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Sound.html">Sound</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.SoundManager.html">SoundManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Sprite.html">Sprite</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.SpriteBatch.html">SpriteBatch</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Stage.html">Stage</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.State.html">State</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.StateManager.html">StateManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Text.html">Text</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Tile.html">Tile</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Tilemap.html">Tilemap</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.TilemapLayer.html">TilemapLayer</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.TilemapParser.html">TilemapParser</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Tileset.html">Tileset</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.TileSprite.html">TileSprite</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Time.html">Time</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Timer.html">Timer</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.TimerEvent.html">TimerEvent</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Touch.html">Touch</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Tween.html">Tween</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.TweenData.html">TweenData</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.TweenManager.html">TweenManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Utils.html">Utils</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Utils.Debug.html">Debug</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Video.html">Video</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.World.html">World</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.AbstractFilter.html">AbstractFilter</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.BaseTexture.html">BaseTexture</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.CanvasBuffer.html">CanvasBuffer</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.CanvasGraphics.html">CanvasGraphics</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.CanvasMaskManager.html">CanvasMaskManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.CanvasPool.html">CanvasPool</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.CanvasRenderer.html">CanvasRenderer</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.CanvasTinter.html">CanvasTinter</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.ComplexPrimitiveShader.html">ComplexPrimitiveShader</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.DisplayObject.html">DisplayObject</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.DisplayObjectContainer.html">DisplayObjectContainer</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.Event.html">Event</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.EventTarget.html">EventTarget</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.FilterTexture.html">FilterTexture</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.Graphics.html">Graphics</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.GraphicsData.html">GraphicsData</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.PIXI.html">PIXI</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.PixiFastShader.html">PixiFastShader</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.PixiShader.html">PixiShader</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.PolyK.html">PolyK</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.PrimitiveShader.html">PrimitiveShader</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.RenderTexture.html">RenderTexture</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.Rope.html">Rope</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.Sprite.html">Sprite</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.SpriteBatch.html">SpriteBatch</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.Strip.html">Strip</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.StripShader.html">StripShader</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.Texture.html">Texture</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.TilingSprite.html">TilingSprite</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.WebGLBlendModeManager.html">WebGLBlendModeManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.WebGLFastSpriteBatch.html">WebGLFastSpriteBatch</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.WebGLFilterManager.html">WebGLFilterManager</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="PIXI.WebGLRenderer.html">WebGLRenderer</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
+				<li class="dropdown">
+					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+						
+						<li class="class-depth-0">
+							<a href="global.html#AUTO">AUTO</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#BITMAPDATA">BITMAPDATA</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#BITMAPTEXT">BITMAPTEXT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#blendModes">blendModes</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#BUTTON">BUTTON</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#CANVAS">CANVAS</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#CANVAS_FILTER">CANVAS_FILTER</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#CIRCLE">CIRCLE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#CREATURE">CREATURE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#DOWN">DOWN</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ELLIPSE">ELLIPSE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#EMITTER">EMITTER</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#GAMES">GAMES</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#GRAPHICS">GRAPHICS</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#GROUP">GROUP</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#HEADLESS">HEADLESS</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#IMAGE">IMAGE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#LEFT">LEFT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#LINE">LINE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#MATRIX">MATRIX</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#NONE">NONE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#POINT">POINT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#POINTER">POINTER</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#POLYGON">POLYGON</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#RECTANGLE">RECTANGLE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#RENDERTEXTURE">RENDERTEXTURE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#RETROFONT">RETROFONT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#RIGHT">RIGHT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ROPE">ROPE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ROUNDEDRECTANGLE">ROUNDEDRECTANGLE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#scaleModes">scaleModes</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#SPRITE">SPRITE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#SPRITEBATCH">SPRITEBATCH</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#TEXT">TEXT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#TILEMAP">TILEMAP</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#TILEMAPLAYER">TILEMAPLAYER</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#TILESPRITE">TILESPRITE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#UP">UP</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#VERSION">VERSION</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#VIDEO">VIDEO</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#WEBGL">WEBGL</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#WEBGL_FILTER">WEBGL_FILTER</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
+
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Core<b class="caret"></b></a>
+					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.Game.html">Game</a></li>
+						<li class="class-depth-1"><a href="Phaser.Group.html">Group</a></li>
+						<li class="class-depth-1"><a href="Phaser.World.html">World</a></li>
+						<li class="class-depth-1"><a href="Phaser.Loader.html">Loader</a></li>
+						<li class="class-depth-1"><a href="Phaser.Cache.html">Cache</a></li>
+						<li class="class-depth-1"><a href="Phaser.Time.html">Time</a></li>
+						<li class="class-depth-1"><a href="Phaser.Camera.html">Camera</a></li>
+						<li class="class-depth-1"><a href="Phaser.StateManager.html">State Manager</a></li>
+						<li class="class-depth-1"><a href="Phaser.TweenManager.html">Tween Manager</a></li>
+						<li class="class-depth-1"><a href="Phaser.SoundManager.html">Sound Manager</a></li>
+						<li class="class-depth-1"><a href="Phaser.Input.html">Input Manager</a></li>
+						<li class="class-depth-1"><a href="Phaser.ScaleManager.html">Scale Manager</a></li>
+					</ul>
+				</li>
+
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Game Objects<b class="caret"></b></a>
+					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.GameObjectFactory.html">Factory (game.add)</a></li>
+						<li class="class-depth-1"><a href="Phaser.GameObjectCreator.html">Creator (game.make)</a></li>
+						<li class="class-depth-1"><a href="Phaser.Sprite.html">Sprite</a></li>
+						<li class="class-depth-1"><a href="Phaser.Image.html">Image</a></li>
+						<li class="class-depth-1"><a href="Phaser.Sound.html">Sound</a></li>
+						<li class="class-depth-1"><a href="Phaser.Video.html">Video</a></li>
+						<li class="class-depth-1"><a href="Phaser.Particles.Arcade.Emitter.html">Particle Emitter</a></li>
+						<li class="class-depth-1"><a href="Phaser.Particle.html">Particle</a></li>
+						<li class="class-depth-1"><a href="Phaser.Text.html">Text</a></li>
+						<li class="class-depth-1"><a href="Phaser.Tween.html">Tween</a></li>
+						<li class="class-depth-1"><a href="Phaser.BitmapText.html">BitmapText</a></li>
+						<li class="class-depth-1"><a href="Phaser.Tilemap.html">Tilemap</a></li>
+						<li class="class-depth-1"><a href="Phaser.BitmapData.html">BitmapData</a></li>
+						<li class="class-depth-1"><a href="Phaser.RetroFont.html">RetroFont</a></li>
+						<li class="class-depth-1"><a href="Phaser.Button.html">Button</a></li>
+						<li class="class-depth-1"><a href="Phaser.Animation.html">Animation</a></li>
+						<li class="class-depth-1"><a href="Phaser.Graphics.html">Graphics</a></li>
+						<li class="class-depth-1"><a href="Phaser.RenderTexture.html">RenderTexture</a></li>
+						<li class="class-depth-1"><a href="Phaser.TileSprite.html">TileSprite</a></li>
+					</ul>
+				</li>
+
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Geometry<b class="caret"></b></a>
+					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.Circle.html">Circle</a></li>
+						<li class="class-depth-1"><a href="Phaser.Ellipse.html">Ellipse</a></li>
+						<li class="class-depth-1"><a href="Phaser.Line.html">Line</a></li>
+						<li class="class-depth-1"><a href="Phaser.Matrix.html">Matrix</a></li>
+						<li class="class-depth-1"><a href="Phaser.Point.html">Point</a></li>
+						<li class="class-depth-1"><a href="Phaser.Polygon.html">Polygon</a></li>
+						<li class="class-depth-1"><a href="Phaser.Rectangle.html">Rectangle</a></li>
+						<li class="class-depth-1"><a href="Phaser.RoundedRectangle.html">Rounded Rectangle</a></li>
+					</ul>
+				</li>
+
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Physics<b class="caret"></b></a>
+					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.Physics.Arcade.html">Arcade Physics</a></li>
+						<li class="class-depth-2"><a href="Phaser.Physics.Arcade.Body.html">Body</a></li>
+						<li class="class-depth-1"><a href="Phaser.Physics.P2.html">P2 Physics</a></li>
+						<li class="class-depth-2"><a href="Phaser.Physics.P2.Body.html">Body</a></li>
+						<li class="class-depth-2"><a href="Phaser.Physics.P2.Spring.html">Spring</a></li>
+						<li class="class-depth-2"><a href="Phaser.Physics.P2.CollisionGroup.html">CollisionGroup</a></li>
+						<li class="class-depth-2"><a href="Phaser.Physics.P2.ContactMaterial.html">ContactMaterial</a></li>
+						<li class="class-depth-1"><a href="Phaser.Physics.Ninja.html">Ninja Physics</a></li>
+						<li class="class-depth-2"><a href="Phaser.Physics.Body.html">Body</a></li>
+					</ul>
+				</li>
+
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Input<b class="caret"></b></a>
+					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.InputHandler.html">Input Handler</a></li>
+						<li class="class-depth-1"><a href="Phaser.Pointer.html">Pointer</a></li>
+						<li class="class-depth-1"><a href="Phaser.DeviceButton.html">Device Button</a></li>
+						<li class="class-depth-1"><a href="Phaser.Mouse.html">Mouse</a></li>
+						<li class="class-depth-1"><a href="Phaser.Keyboard.html">Keyboard</a></li>
+						<li class="class-depth-1"><a href="Phaser.Key.html">Key</a></li>
+						<li class="class-depth-1"><a href="Phaser.Gamepad.html">Gamepad</a></li>
+					</ul>
+				</li>
+
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Community<b class="caret"></b></a>
+					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="http://phaser.io">Phaser Web Site</a></li>
+						<li class="class-depth-1"><a href="https://github.com/photonstorm/phaser">Phaser Github</a></li>
+						<li class="class-depth-1"><a href="http://phaser.io/examples">Phaser Examples</a></li>
+						<li class="class-depth-1"><a href="https://github.com/photonstorm/phaser-plugins">Phaser Plugins</a></li>
+						<li class="class-depth-1"><a href="http://www.html5gamedevs.com/forum/14-phaser/">Forum</a></li>
+						<li class="class-depth-1"><a href="http://stackoverflow.com/questions/tagged/phaser-framework">Stack Overflow</a></li>
+						<li class="class-depth-1"><a href="http://phaser.io/learn">Tutorials</a></li>
+						<li class="class-depth-1"><a href="https://confirmsubscription.com/h/r/369DE48E3E86AF1E">Newsletter</a></li>
+						<li class="class-depth-1"><a href="http://phaser.io/community/twitter">Twitter</a></li>
+						<li class="class-depth-1"><a href="http://phaser.io/community/irc">IRC</a></li>
+						<li class="class-depth-1"><a href="https://www.codeandweb.com/texturepacker/phaser">Texture Packer</a></li>
+					</ul>
+				</li>
+
+			</ul>
+		</div>
+	</div>
+
+	<div class="row-fluid">
+
+		
+			<div class="span12">
+				
+				<div id="main">
+					
+
+
+		<h1 class="page-title">Source: src/core/Group.js</h1>
+    
+    <section>
+        <article>
+            <pre class="sunlight-highlight-javascript linenums">/**
+* @author       Richard Davey &lt;rich@photonstorm.com>
+* @copyright    2015 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
+* A Group is a container for {@link DisplayObject display objects} including {@link Phaser.Sprite Sprites} and {@link Phaser.Image Images}.
+*
+* Groups form the logical tree structure of the display/scene graph where local transformations are applied to children.
+* For instance, all children are also moved/rotated/scaled when the group is moved/rotated/scaled.
+*
+* In addition, Groups provides support for fast pooling and object recycling.
+*
+* Groups are also display objects and can be nested as children within other Groups.
+* 
+* @class Phaser.Group
+* @extends PIXI.DisplayObjectContainer
+* @param {Phaser.Game} game - A reference to the currently running game.
+* @param {DisplayObject|null} [parent=(game world)] - The parent Group (or other {@link DisplayObject}) that this group will be added to.
+*     If undefined/unspecified the Group will be added to the {@link Phaser.Game#world Game World}; if null the Group will not be added to any parent.
+* @param {string} [name='group'] - A name for this group. Not used internally but useful for debugging.
+* @param {boolean} [addToStage=false] - If true this group will be added directly to the Game.Stage instead of Game.World.
+* @param {boolean} [enableBody=false] - If true all Sprites created with {@link #create} or {@link #createMulitple} will have a physics body created on them. Change the body type with {@link #physicsBodyType}.
+* @param {integer} [physicsBodyType=0] - The physics body type to use when physics bodies are automatically added. See {@link #physicsBodyType} for values.
+*/
+Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBodyType) {
+
+    if (addToStage === undefined) { addToStage = false; }
+    if (enableBody === undefined) { enableBody = false; }
+    if (physicsBodyType === undefined) { physicsBodyType = Phaser.Physics.ARCADE; }
+
+    /**
+    * A reference to the currently running Game.
+    * @property {Phaser.Game} game
+    * @protected
+    */
+    this.game = game;
+
+    if (parent === undefined)
+    {
+        parent = game.world;
+    }
+
+    /**
+    * A name for this group. Not used internally but useful for debugging.
+    * @property {string} name
+    */
+    this.name = name || 'group';
+
+    /**
+    * The z-depth value of this object within its parent container/Group - the World is a Group as well.
+    * This value must be unique for each child in a Group.
+    * @property {integer} z
+    * @readOnly
+    */
+    this.z = 0;
+
+    PIXI.DisplayObjectContainer.call(this);
+
+    if (addToStage)
+    {
+        this.game.stage.addChild(this);
+        this.z = this.game.stage.children.length;
+    }
+    else
+    {
+        if (parent)
+        {
+            parent.addChild(this);
+            this.z = parent.children.length;
+        }
+    }
+
+    /**
+    * Internal Phaser Type value.
+    * @property {integer} type
+    * @protected
+    */
+    this.type = Phaser.GROUP;
+
+    /**
+    * @property {number} physicsType - The const physics body type of this object.
+    * @readonly
+    */
+    this.physicsType = Phaser.GROUP;
+
+    /**
+    * The alive property is useful for Groups that are children of other Groups and need to be included/excluded in checks like forEachAlive.
+    * @property {boolean} alive
+    * @default
+    */
+    this.alive = true;
+
+    /**
+    * If exists is true the group is updated, otherwise it is skipped.
+    * @property {boolean} exists
+    * @default
+    */
+    this.exists = true;
+
+    /**
+    * A group with `ignoreDestroy` set to `true` ignores all calls to its `destroy` method.
+    * @property {boolean} ignoreDestroy
+    * @default
+    */
+    this.ignoreDestroy = false;
+
+    /**
+    * A Group is that has `pendingDestroy` set to `true` is flagged to have its destroy method 
+    * called on the next logic update.
+    * You can set it directly to flag the Group to be destroyed on its next update.
+    * 
+    * This is extremely useful if you wish to destroy a Group from within one of its own callbacks 
+    * or a callback of one of its children.
+    * 
+    * @property {boolean} pendingDestroy
+    */
+    this.pendingDestroy = false;
+
+    /**
+    * The type of objects that will be created when using {@link #create} or {@link #createMultiple}.
+    *
+    * Any object may be used but it should extend either Sprite or Image and accept the same constructor arguments:
+    * when a new object is created it is passed the following parameters to its constructor: `(game, x, y, key, frame)`.
+    *
+    * @property {object} classType
+    * @default {@link Phaser.Sprite}
+    */
+    this.classType = Phaser.Sprite;
+
+    /**
+    * The current display object that the group cursor is pointing to, if any. (Can be set manually.)
+    *
+    * The cursor is a way to iterate through the children in a Group using {@link #next} and {@link #previous}.
+    * @property {?DisplayObject} cursor
+    */
+    this.cursor = null;
+
+    /**
+    * If true all Sprites created by, or added to this group, will have a physics body enabled on them.
+    *
+    * The default body type is controlled with {@link #physicsBodyType}.
+    * @property {boolean} enableBody
+    */
+    this.enableBody = enableBody;
+
+    /**
+    * If true when a physics body is created (via {@link #enableBody}) it will create a physics debug object as well.
+    *
+    * This only works for P2 bodies.
+    * @property {boolean} enableBodyDebug
+    * @default
+    */
+    this.enableBodyDebug = false;
+
+    /**
+    * If {@link #enableBody} is true this is the type of physics body that is created on new Sprites.
+    *
+    * The valid values are {@link Phaser.Physics.ARCADE}, {@link Phaser.Physics.P2JS}, {@link Phaser.Physics.NINJA}, etc.
+    * @property {integer} physicsBodyType
+    */
+    this.physicsBodyType = physicsBodyType;
+
+    /**
+    * If this Group contains Arcade Physics Sprites you can set a custom sort direction via this property.
+    * 
+    * It should be set to one of the Phaser.Physics.Arcade sort direction constants: 
+    * 
+    * Phaser.Physics.Arcade.SORT_NONE
+    * Phaser.Physics.Arcade.LEFT_RIGHT
+    * Phaser.Physics.Arcade.RIGHT_LEFT
+    * Phaser.Physics.Arcade.TOP_BOTTOM
+    * Phaser.Physics.Arcade.BOTTOM_TOP
+    *
+    * If set to `null` the Group will use whatever Phaser.Physics.Arcade.sortDirection is set to. This is the default behavior.
+    * 
+    * @property {integer} physicsSortDirection
+    * @default
+    */
+    this.physicsSortDirection = null;
+
+    /**
+    * This signal is dispatched when the group is destroyed.
+    * @property {Phaser.Signal} onDestroy
+    */
+    this.onDestroy = new Phaser.Signal();
+
+    /**
+    * @property {integer} cursorIndex - The current index of the Group cursor. Advance it with Group.next.
+    * @readOnly
+    */
+    this.cursorIndex = 0;
+
+    /**
+    * A Group that is fixed to the camera uses its x/y coordinates as offsets from the top left of the camera. These are stored in Group.cameraOffset.
+    * 
+    * Note that the cameraOffset values are in addition to any parent in the display list.
+    * So if this Group was in a Group that has x: 200, then this will be added to the cameraOffset.x
+    * 
+    * @property {boolean} fixedToCamera
+    */
+    this.fixedToCamera = false;
+
+    /**
+    * If this object is {@link #fixedToCamera} then this stores the x/y position offset relative to the top-left of the camera view.
+    * If the parent of this Group is also `fixedToCamera` then the offset here is in addition to that and should typically be disabled.
+    * @property {Phaser.Point} cameraOffset
+    */
+    this.cameraOffset = new Phaser.Point();
+
+    /**
+    * The hash array is an array belonging to this Group into which you can add any of its children via Group.addToHash and Group.removeFromHash.
+    * 
+    * Only children of this Group can be added to and removed from the hash.
+    * 
+    * This hash is used automatically by Phaser Arcade Physics in order to perform non z-index based destructive sorting.
+    * However if you don't use Arcade Physics, or this isn't a physics enabled Group, then you can use the hash to perform your own
+    * sorting and filtering of Group children without touching their z-index (and therefore display draw order)
+    * 
+    * @property {array} hash
+    */
+    this.hash = [];
+
+    /**
+    * The property on which children are sorted.
+    * @property {string} _sortProperty
+    * @private
+    */
+    this._sortProperty = 'z';
+
+};
+
+Phaser.Group.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
+Phaser.Group.prototype.constructor = Phaser.Group;
+
+/**
+* A returnType value, as specified in {@link #iterate} eg.
+* @constant
+* @type {integer}
+*/
+Phaser.Group.RETURN_NONE = 0;
+
+/**
+* A returnType value, as specified in {@link #iterate} eg.
+* @constant
+* @type {integer}
+*/
+Phaser.Group.RETURN_TOTAL = 1;
+
+/**
+* A returnType value, as specified in {@link #iterate} eg.
+* @constant
+* @type {integer}
+*/
+Phaser.Group.RETURN_CHILD = 2;
+
+/**
+* A sort ordering value, as specified in {@link #sort} eg.
+* @constant
+* @type {integer}
+*/
+Phaser.Group.SORT_ASCENDING = -1;
+
+/**
+* A sort ordering value, as specified in {@link #sort} eg.
+* @constant
+* @type {integer}
+*/
+Phaser.Group.SORT_DESCENDING = 1;
+
+/**
+* Adds an existing object as the top child in this group.
+*
+* The child is automatically added to the top of the group and is displayed on top of every previous child.
+*
+* If Group.enableBody is set then a physics body will be created on the object, so long as one does not already exist.
+*
+* Use {@link #addAt} to control where a child is added. Use {@link #create} to create and add a new child.
+*
+* @method Phaser.Group#add
+* @param {DisplayObject} child - The display object to add as a child.
+* @param {boolean} [silent=false] - If true the child will not dispatch the `onAddedToGroup` event.
+* @return {DisplayObject} The child that was added to the group.
+*/
+Phaser.Group.prototype.add = function (child, silent) {
+
+    if (silent === undefined) { silent = false; }
+
+    if (child.parent !== this)
+    {
+        this.addChild(child);
+
+        child.z = this.children.length;
+
+        if (this.enableBody &amp;&amp; child.body === null)
+        {
+            this.game.physics.enable(child, this.physicsBodyType);
+        }
+        else if (child.body)
+        {
+            this.addToHash(child);
+        }
+
+        if (!silent &amp;&amp; child.events)
+        {
+            child.events.onAddedToGroup$dispatch(child, this);
+        }
+
+        if (this.cursor === null)
+        {
+            this.cursor = child;
+        }
+    }
+
+    return child;
+
+};
+
+/**
+* Adds a child of this Group into the hash array.
+* This call will return false if the child is not a child of this Group, or is already in the hash.
+*
+* @method Phaser.Group#addToHash
+* @param {DisplayObject} child - The display object to add to this Groups hash. Must be a member of this Group already and not present in the hash.
+* @return {boolean} True if the child was successfully added to the hash, otherwise false.
+*/
+Phaser.Group.prototype.addToHash = function (child) {
+
+    if (child.parent === this)
+    {
+        var index = this.hash.indexOf(child);
+
+        if (index === -1)
+        {
+            this.hash.push(child);
+            return true;
+        }
+    }
+
+    return false;
+
+};
+
+/**
+* Removes a child of this Group from the hash array.
+* This call will return false if the child is not in the hash.
+*
+* @method Phaser.Group#removeFromHash
+* @param {DisplayObject} child - The display object to remove from this Groups hash. Must be a member of this Group and in the hash.
+* @return {boolean} True if the child was successfully removed from the hash, otherwise false.
+*/
+Phaser.Group.prototype.removeFromHash = function (child) {
+
+    if (child)
+    {
+        var index = this.hash.indexOf(child);
+
+        if (index !== -1)
+        {
+            this.hash.splice(index, 1);
+            return true;
+        }
+    }
+
+    return false;
+
+};
+
+/**
+* Adds an array of existing Display Objects to this Group.
+*
+* The Display Objects are automatically added to the top of this Group, and will render on-top of everything already in this Group.
+*
+* As well as an array you can also pass another Group as the first argument. In this case all of the children from that
+* Group will be removed from it and added into this Group.
+*
+* @method Phaser.Group#addMultiple
+* @param {DisplayObject[]|Phaser.Group} children - An array of display objects or a Phaser.Group. If a Group is given then *all* children will be moved from it.
+* @param {boolean} [silent=false] - If true the children will not dispatch the `onAddedToGroup` event.
+* @return {DisplayObject[]|Phaser.Group} The array of children or Group of children that were added to this Group.
+*/
+Phaser.Group.prototype.addMultiple = function (children, silent) {
+
+    if (children instanceof Phaser.Group)
+    {
+        children.moveAll(this, silent);
+    }
+    else if (Array.isArray(children))
+    {
+        for (var i = 0; i &lt; children.length; i++)
+        {
+            this.add(children[i], silent);
+        }
+    }
+
+    return children;
+
+};
+
+/**
+* Adds an existing object to this group.
+*
+* The child is added to the group at the location specified by the index value, this allows you to control child ordering.
+*
+* @method Phaser.Group#addAt
+* @param {DisplayObject} child - The display object to add as a child.
+* @param {integer} [index=0] - The index within the group to insert the child to.
+* @param {boolean} [silent=false] - If true the child will not dispatch the `onAddedToGroup` event.
+* @return {DisplayObject} The child that was added to the group.
+*/
+Phaser.Group.prototype.addAt = function (child, index, silent) {
+
+    if (silent === undefined) { silent = false; }
+
+    if (child.parent !== this)
+    {
+        this.addChildAt(child, index);
+
+        this.updateZ();
+
+        if (this.enableBody &amp;&amp; child.body === null)
+        {
+            this.game.physics.enable(child, this.physicsBodyType);
+        }
+        else if (child.body)
+        {
+            this.addToHash(child);
+        }
+
+        if (!silent &amp;&amp; child.events)
+        {
+            child.events.onAddedToGroup$dispatch(child, this);
+        }
+
+        if (this.cursor === null)
+        {
+            this.cursor = child;
+        }
+    }
+
+    return child;
+
+};
+
+/**
+* Returns the child found at the given index within this group.
+*
+* @method Phaser.Group#getAt
+* @param {integer} index - The index to return the child from.
+* @return {DisplayObject|integer} The child that was found at the given index, or -1 for an invalid index.
+*/
+Phaser.Group.prototype.getAt = function (index) {
+
+    if (index &lt; 0 || index >= this.children.length)
+    {
+        return -1;
+    }
+    else
+    {
+        return this.getChildAt(index);
+    }
+
+};
+
+/**
+* Creates a new Phaser.Sprite object and adds it to the top of this group.
+*
+* Use {@link #classType} to change the type of object created.
+*
+* @method Phaser.Group#create
+* @param {number} x - The x coordinate to display the newly created Sprite at. The value is in relation to the group.x point.
+* @param {number} y - The y coordinate to display the newly created Sprite at. The value is in relation to the group.y point.
+* @param {string|Phaser.RenderTexture|Phaser.BitmapData|Phaser.Video|PIXI.Texture} [key] - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache Image entry, or an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
+* @param {string|number} [frame] - If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
+* @param {boolean} [exists=true] - The default exists state of the Sprite.
+* @return {DisplayObject} The child that was created: will be a {@link Phaser.Sprite} unless {@link #classType} has been changed.
+*/
+Phaser.Group.prototype.create = function (x, y, key, frame, exists) {
+
+    if (exists === undefined) { exists = true; }
+
+    var child = new this.classType(this.game, x, y, key, frame);
+
+    child.exists = exists;
+    child.visible = exists;
+    child.alive = exists;
+
+    this.addChild(child);
+
+    child.z = this.children.length;
+
+    if (this.enableBody)
+    {
+        this.game.physics.enable(child, this.physicsBodyType, this.enableBodyDebug);
+    }
+
+    if (child.events)
+    {
+        child.events.onAddedToGroup$dispatch(child, this);
+    }
+
+    if (this.cursor === null)
+    {
+        this.cursor = child;
+    }
+
+    return child;
+
+};
+
+/**
+* Creates multiple Phaser.Sprite objects and adds them to the top of this group.
+*
+* Useful if you need to quickly generate a pool of identical sprites, such as bullets.
+*
+* By default the sprites will be set to not exist and will be positioned at 0, 0 (relative to the group.x/y).
+* Use {@link #classType} to change the type of object created.
+*
+* @method Phaser.Group#createMultiple
+* @param {integer} quantity - The number of Sprites to create.
+* @param {string} key - The Game.cache key of the image that this Sprite will use.
+* @param {integer|string} [frame] - If the Sprite image contains multiple frames you can specify which one to use here.
+* @param {boolean} [exists=false] - The default exists state of the Sprite.
+*/
+Phaser.Group.prototype.createMultiple = function (quantity, key, frame, exists) {
+
+    if (exists === undefined) { exists = false; }
+
+    for (var i = 0; i &lt; quantity; i++)
+    {
+        this.create(0, 0, key, frame, exists);
+    }
+
+};
+
+/**
+* Internal method that re-applies all of the children's Z values.
+*
+* This must be called whenever children ordering is altered so that their `z` indices are correctly updated.
+*
+* @method Phaser.Group#updateZ
+* @protected
+*/
+Phaser.Group.prototype.updateZ = function () {
+
+    var i = this.children.length;
+
+    while (i--)
+    {
+        this.children[i].z = i;
+    }
+
+};
+
+/**
+* Sets the group cursor to the first child in the group.
+*
+* If the optional index parameter is given it sets the cursor to the object at that index instead.
+*
+* @method Phaser.Group#resetCursor
+* @param {integer} [index=0] - Set the cursor to point to a specific index.
+* @return {any} The child the cursor now points to.
+*/
+Phaser.Group.prototype.resetCursor = function (index) {
+
+    if (index === undefined) { index = 0; }
+
+    if (index > this.children.length - 1)
+    {
+        index = 0;
+    }
+
+    if (this.cursor)
+    {
+        this.cursorIndex = index;
+        this.cursor = this.children[this.cursorIndex];
+        return this.cursor;
+    }
+
+};
+
+/**
+* Advances the group cursor to the next (higher) object in the group.
+*
+* If the cursor is at the end of the group (top child) it is moved the start of the group (bottom child).
+*
+* @method Phaser.Group#next
+* @return {any} The child the cursor now points to.
+*/
+Phaser.Group.prototype.next = function () {
+
+    if (this.cursor)
+    {
+        //  Wrap the cursor?
+        if (this.cursorIndex >= this.children.length - 1)
+        {
+            this.cursorIndex = 0;
+        }
+        else
+        {
+            this.cursorIndex++;
+        }
+
+        this.cursor = this.children[this.cursorIndex];
+
+        return this.cursor;
+    }
+
+};
+
+/**
+* Moves the group cursor to the previous (lower) child in the group.
+*
+* If the cursor is at the start of the group (bottom child) it is moved to the end (top child).
+*
+* @method Phaser.Group#previous
+* @return {any} The child the cursor now points to.
+*/
+Phaser.Group.prototype.previous = function () {
+
+    if (this.cursor)
+    {
+        //  Wrap the cursor?
+        if (this.cursorIndex === 0)
+        {
+            this.cursorIndex = this.children.length - 1;
+        }
+        else
+        {
+            this.cursorIndex--;
+        }
+
+        this.cursor = this.children[this.cursorIndex];
+
+        return this.cursor;
+    }
+
+};
+
+/**
+* Swaps the position of two children in this group.
+*
+* Both children must be in this group, a child cannot be swapped with itself, and unparented children cannot be swapped.
+*
+* @method Phaser.Group#swap
+* @param {any} child1 - The first child to swap.
+* @param {any} child2 - The second child to swap.
+*/
+Phaser.Group.prototype.swap = function (child1, child2) {
+
+    this.swapChildren(child1, child2);
+    this.updateZ();
+
+};
+
+/**
+* Brings the given child to the top of this group so it renders above all other children.
+*
+* @method Phaser.Group#bringToTop
+* @param {any} child - The child to bring to the top of this group.
+* @return {any} The child that was moved.
+*/
+Phaser.Group.prototype.bringToTop = function (child) {
+
+    if (child.parent === this &amp;&amp; this.getIndex(child) &lt; this.children.length)
+    {
+        this.remove(child, false, true);
+        this.add(child, true);
+    }
+
+    return child;
+
+};
+
+/**
+* Sends the given child to the bottom of this group so it renders below all other children.
+*
+* @method Phaser.Group#sendToBack
+* @param {any} child - The child to send to the bottom of this group.
+* @return {any} The child that was moved.
+*/
+Phaser.Group.prototype.sendToBack = function (child) {
+
+    if (child.parent === this &amp;&amp; this.getIndex(child) > 0)
+    {
+        this.remove(child, false, true);
+        this.addAt(child, 0, true);
+    }
+
+    return child;
+
+};
+
+/**
+* Moves the given child up one place in this group unless it's already at the top.
+*
+* @method Phaser.Group#moveUp
+* @param {any} child - The child to move up in the group.
+* @return {any} The child that was moved.
+*/
+Phaser.Group.prototype.moveUp = function (child) {
+
+    if (child.parent === this &amp;&amp; this.getIndex(child) &lt; this.children.length - 1)
+    {
+        var a = this.getIndex(child);
+        var b = this.getAt(a + 1);
+
+        if (b)
+        {
+            this.swap(child, b);
+        }
+    }
+
+    return child;
+
+};
+
+/**
+* Moves the given child down one place in this group unless it's already at the bottom.
+*
+* @method Phaser.Group#moveDown
+* @param {any} child - The child to move down in the group.
+* @return {any} The child that was moved.
+*/
+Phaser.Group.prototype.moveDown = function (child) {
+
+    if (child.parent === this &amp;&amp; this.getIndex(child) > 0)
+    {
+        var a = this.getIndex(child);
+        var b = this.getAt(a - 1);
+
+        if (b)
+        {
+            this.swap(child, b);
+        }
+    }
+
+    return child;
+
+};
+
+/**
+* Positions the child found at the given index within this group to the given x and y coordinates.
+*
+* @method Phaser.Group#xy
+* @param {integer} index - The index of the child in the group to set the position of.
+* @param {number} x - The new x position of the child.
+* @param {number} y - The new y position of the child.
+*/
+Phaser.Group.prototype.xy = function (index, x, y) {
+
+    if (index &lt; 0 || index > this.children.length)
+    {
+        return -1;
+    }
+    else
+    {
+        this.getChildAt(index).x = x;
+        this.getChildAt(index).y = y;
+    }
+
+};
+
+/**
+* Reverses all children in this group.
+*
+* This operaation applies only to immediate children and does not propagate to subgroups.
+*
+* @method Phaser.Group#reverse
+*/
+Phaser.Group.prototype.reverse = function () {
+
+    this.children.reverse();
+    this.updateZ();
+
+};
+
+/**
+* Get the index position of the given child in this group, which should match the child's `z` property.
+*
+* @method Phaser.Group#getIndex
+* @param {any} child - The child to get the index for.
+* @return {integer} The index of the child or -1 if it's not a member of this group.
+*/
+Phaser.Group.prototype.getIndex = function (child) {
+
+    return this.children.indexOf(child);
+
+};
+
+/**
+* Replaces a child of this group with the given newChild. The newChild cannot be a member of this group.
+*
+* @method Phaser.Group#replace
+* @param {any} oldChild - The child in this group that will be replaced.
+* @param {any} newChild - The child to be inserted into this group.
+* @return {any} Returns the oldChild that was replaced within this group.
+*/
+Phaser.Group.prototype.replace = function (oldChild, newChild) {
+
+    var index = this.getIndex(oldChild);
+
+    if (index !== -1)
+    {
+        if (newChild.parent)
+        {
+            if (newChild.parent instanceof Phaser.Group)
+            {
+                newChild.parent.remove(newChild);
+            }
+            else
+            {
+                newChild.parent.removeChild(newChild);
+            }
+        }
+
+        this.remove(oldChild);
+
+        this.addAt(newChild, index);
+
+        return oldChild;
+    }
+
+};
+
+/**
+* Checks if the child has the given property.
+*
+* Will scan up to 4 levels deep only.
+*
+* @method Phaser.Group#hasProperty
+* @param {any} child - The child to check for the existance of the property on.
+* @param {string[]} key - An array of strings that make up the property.
+* @return {boolean} True if the child has the property, otherwise false.
+*/
+Phaser.Group.prototype.hasProperty = function (child, key) {
+
+    var len = key.length;
+
+    if (len === 1 &amp;&amp; key[0] in child)
+    {
+        return true;
+    }
+    else if (len === 2 &amp;&amp; key[0] in child &amp;&amp; key[1] in child[key[0]])
+    {
+        return true;
+    }
+    else if (len === 3 &amp;&amp; key[0] in child &amp;&amp; key[1] in child[key[0]] &amp;&amp; key[2] in child[key[0]][key[1]])
+    {
+        return true;
+    }
+    else if (len === 4 &amp;&amp; key[0] in child &amp;&amp; key[1] in child[key[0]] &amp;&amp; key[2] in child[key[0]][key[1]] &amp;&amp; key[3] in child[key[0]][key[1]][key[2]])
+    {
+        return true;
+    }
+
+    return false;
+
+};
+
+/**
+* Sets a property to the given value on the child. The operation parameter controls how the value is set.
+*
+* The operations are:
+* - 0: set the existing value to the given value; if force is `true` a new property will be created if needed
+* - 1: will add the given value to the value already present.
+* - 2: will subtract the given value from the value already present.
+* - 3: will multiply the value already present by the given value.
+* - 4: will divide the value already present by the given value.
+*
+* @method Phaser.Group#setProperty
+* @param {any} child - The child to set the property value on.
+* @param {array} key - An array of strings that make up the property that will be set.
+* @param {any} value - The value that will be set.
+* @param {integer} [operation=0] - Controls how the value is assigned. A value of 0 replaces the value with the new one. A value of 1 adds it, 2 subtracts it, 3 multiplies it and 4 divides it.
+* @param {boolean} [force=false] - If `force` is true then the property will be set on the child regardless if it already exists or not. If false and the property doesn't exist, nothing will be set.
+* @return {boolean} True if the property was set, false if not.
+*/
+Phaser.Group.prototype.setProperty = function (child, key, value, operation, force) {
+
+    if (force === undefined) { force = false; }
+
+    operation = operation || 0;
+
+    //  As ugly as this approach looks, and although it's limited to a depth of only 4, it's much faster than a for loop or object iteration.
+
+    //  0 = Equals
+    //  1 = Add
+    //  2 = Subtract
+    //  3 = Multiply
+    //  4 = Divide
+
+    //  We can't force a property in and the child doesn't have it, so abort.
+    //  Equally we can't add, subtract, multiply or divide a property value if it doesn't exist, so abort in those cases too.
+    if (!this.hasProperty(child, key) &amp;&amp; (!force || operation > 0))
+    {
+        return false;
+    }
+
+    var len = key.length;
+
+    if (len === 1)
+    {
+        if (operation === 0) { child[key[0]] = value; }
+        else if (operation == 1) { child[key[0]] += value; }
+        else if (operation == 2) { child[key[0]] -= value; }
+        else if (operation == 3) { child[key[0]] *= value; }
+        else if (operation == 4) { child[key[0]] /= value; }
+    }
+    else if (len === 2)
+    {
+        if (operation === 0) { child[key[0]][key[1]] = value; }
+        else if (operation == 1) { child[key[0]][key[1]] += value; }
+        else if (operation == 2) { child[key[0]][key[1]] -= value; }
+        else if (operation == 3) { child[key[0]][key[1]] *= value; }
+        else if (operation == 4) { child[key[0]][key[1]] /= value; }
+    }
+    else if (len === 3)
+    {
+        if (operation === 0) { child[key[0]][key[1]][key[2]] = value; }
+        else if (operation == 1) { child[key[0]][key[1]][key[2]] += value; }
+        else if (operation == 2) { child[key[0]][key[1]][key[2]] -= value; }
+        else if (operation == 3) { child[key[0]][key[1]][key[2]] *= value; }
+        else if (operation == 4) { child[key[0]][key[1]][key[2]] /= value; }
+    }
+    else if (len === 4)
+    {
+        if (operation === 0) { child[key[0]][key[1]][key[2]][key[3]] = value; }
+        else if (operation == 1) { child[key[0]][key[1]][key[2]][key[3]] += value; }
+        else if (operation == 2) { child[key[0]][key[1]][key[2]][key[3]] -= value; }
+        else if (operation == 3) { child[key[0]][key[1]][key[2]][key[3]] *= value; }
+        else if (operation == 4) { child[key[0]][key[1]][key[2]][key[3]] /= value; }
+    }
+
+    return true;
+
+};
+
+/**
+* Checks a property for the given value on the child.
+*
+* @method Phaser.Group#checkProperty
+* @param {any} child - The child to check the property value on.
+* @param {array} key - An array of strings that make up the property that will be set.
+* @param {any} value - The value that will be checked.
+* @param {boolean} [force=false] - If `force` is true then the property will be checked on the child regardless if it already exists or not. If true and the property doesn't exist, false will be returned.
+* @return {boolean} True if the property was was equal to value, false if not.
+*/
+Phaser.Group.prototype.checkProperty = function (child, key, value, force) {
+
+    if (force === undefined) { force = false; }
+
+    //  We can't force a property in and the child doesn't have it, so abort.
+    if (!Phaser.Utils.getProperty(child, key) &amp;&amp; force)
+    {
+        return false;
+    }
+
+    if (Phaser.Utils.getProperty(child, key) !== value)
+    {
+        return false;
+    }
+
+    return true;
+
+};
+
+/**
+* Quickly set a property on a single child of this group to a new value.
+*
+* The operation parameter controls how the new value is assigned to the property, from simple replacement to addition and multiplication.
+*
+* @method Phaser.Group#set
+* @param {Phaser.Sprite} child - The child to set the property on.
+* @param {string} key - The property, as a string, to be set. For example: 'body.velocity.x'
+* @param {any} value - The value that will be set.
+* @param {boolean} [checkAlive=false] - If set then the child will only be updated if alive=true.
+* @param {boolean} [checkVisible=false] - If set then the child will only be updated if visible=true.
+* @param {integer} [operation=0] - Controls how the value is assigned. A value of 0 replaces the value with the new one. A value of 1 adds it, 2 subtracts it, 3 multiplies it and 4 divides it.
+* @param {boolean} [force=false] - If `force` is true then the property will be set on the child regardless if it already exists or not. If false and the property doesn't exist, nothing will be set.
+* @return {boolean} True if the property was set, false if not.
+*/
+Phaser.Group.prototype.set = function (child, key, value, checkAlive, checkVisible, operation, force) {
+
+    if (force === undefined) { force = false; }
+
+    key = key.split('.');
+
+    if (checkAlive === undefined) { checkAlive = false; }
+    if (checkVisible === undefined) { checkVisible = false; }
+
+    if ((checkAlive === false || (checkAlive &amp;&amp; child.alive)) &amp;&amp; (checkVisible === false || (checkVisible &amp;&amp; child.visible)))
+    {
+        return this.setProperty(child, key, value, operation, force);
+    }
+
+};
+
+/**
+* Quickly set the same property across all children of this group to a new value.
+*
+* This call doesn't descend down children, so if you have a Group inside of this group, the property will be set on the group but not its children.
+* If you need that ability please see `Group.setAllChildren`.
+*
+* The operation parameter controls how the new value is assigned to the property, from simple replacement to addition and multiplication.
+*
+* @method Phaser.Group#setAll
+* @param {string} key - The property, as a string, to be set. For example: 'body.velocity.x'
+* @param {any} value - The value that will be set.
+* @param {boolean} [checkAlive=false] - If set then only children with alive=true will be updated. This includes any Groups that are children.
+* @param {boolean} [checkVisible=false] - If set then only children with visible=true will be updated. This includes any Groups that are children.
+* @param {integer} [operation=0] - Controls how the value is assigned. A value of 0 replaces the value with the new one. A value of 1 adds it, 2 subtracts it, 3 multiplies it and 4 divides it.
+* @param {boolean} [force=false] - If `force` is true then the property will be set on the child regardless if it already exists or not. If false and the property doesn't exist, nothing will be set.
+*/
+Phaser.Group.prototype.setAll = function (key, value, checkAlive, checkVisible, operation, force) {
+
+    if (checkAlive === undefined) { checkAlive = false; }
+    if (checkVisible === undefined) { checkVisible = false; }
+    if (force === undefined) { force = false; }
+
+    key = key.split('.');
+    operation = operation || 0;
+
+    for (var i = 0; i &lt; this.children.length; i++)
+    {
+        if ((!checkAlive || (checkAlive &amp;&amp; this.children[i].alive)) &amp;&amp; (!checkVisible || (checkVisible &amp;&amp; this.children[i].visible)))
+        {
+            this.setProperty(this.children[i], key, value, operation, force);
+        }
+    }
+
+};
+
+/**
+* Quickly set the same property across all children of this group, and any child Groups, to a new value.
+*
+* If this group contains other Groups then the same property is set across their children as well, iterating down until it reaches the bottom.
+* Unlike with `setAll` the property is NOT set on child Groups itself.
+*
+* The operation parameter controls how the new value is assigned to the property, from simple replacement to addition and multiplication.
+*
+* @method Phaser.Group#setAllChildren
+* @param {string} key - The property, as a string, to be set. For example: 'body.velocity.x'
+* @param {any} value - The value that will be set.
+* @param {boolean} [checkAlive=false] - If set then only children with alive=true will be updated. This includes any Groups that are children.
+* @param {boolean} [checkVisible=false] - If set then only children with visible=true will be updated. This includes any Groups that are children.
+* @param {integer} [operation=0] - Controls how the value is assigned. A value of 0 replaces the value with the new one. A value of 1 adds it, 2 subtracts it, 3 multiplies it and 4 divides it.
+* @param {boolean} [force=false] - If `force` is true then the property will be set on the child regardless if it already exists or not. If false and the property doesn't exist, nothing will be set.
+*/
+Phaser.Group.prototype.setAllChildren = function (key, value, checkAlive, checkVisible, operation, force) {
+
+    if (checkAlive === undefined) { checkAlive = false; }
+    if (checkVisible === undefined) { checkVisible = false; }
+    if (force === undefined) { force = false; }
+
+    operation = operation || 0;
+
+    for (var i = 0; i &lt; this.children.length; i++)
+    {
+        if ((!checkAlive || (checkAlive &amp;&amp; this.children[i].alive)) &amp;&amp; (!checkVisible || (checkVisible &amp;&amp; this.children[i].visible)))
+        {
+            if (this.children[i] instanceof Phaser.Group)
+            {
+                this.children[i].setAllChildren(key, value, checkAlive, checkVisible, operation, force);
+            }
+            else
+            {
+                this.setProperty(this.children[i], key.split('.'), value, operation, force);
+            }
+        }
+    }
+
+};
+
+/**
+* Quickly check that the same property across all children of this group is equal to the given value.
+*
+* This call doesn't descend down children, so if you have a Group inside of this group, the property will be checked on the group but not its children.
+*
+* @method Phaser.Group#checkAll
+* @param {string} key - The property, as a string, to be set. For example: 'body.velocity.x'
+* @param {any} value - The value that will be checked.
+* @param {boolean} [checkAlive=false] - If set then only children with alive=true will be checked. This includes any Groups that are children.
+* @param {boolean} [checkVisible=false] - If set then only children with visible=true will be checked. This includes any Groups that are children.
+* @param {boolean} [force=false] - If `force` is true then the property will be checked on the child regardless if it already exists or not. If true and the property doesn't exist, false will be returned.
+*/
+Phaser.Group.prototype.checkAll = function (key, value, checkAlive, checkVisible, force) {
+
+    if (checkAlive === undefined) { checkAlive = false; }
+    if (checkVisible === undefined) { checkVisible = false; }
+    if (force === undefined) { force = false; }
+
+    for (var i = 0; i &lt; this.children.length; i++)
+    {
+        if ((!checkAlive || (checkAlive &amp;&amp; this.children[i].alive)) &amp;&amp; (!checkVisible || (checkVisible &amp;&amp; this.children[i].visible)))
+        {
+            if (!this.checkProperty(this.children[i], key, value, force))
+            {
+                return false;
+            }
+        }
+    }
+
+    return true;
+
+};
+
+/**
+* Adds the amount to the given property on all children in this group.
+*
+* `Group.addAll('x', 10)` will add 10 to the child.x value for each child.
+*
+* @method Phaser.Group#addAll
+* @param {string} property - The property to increment, for example 'body.velocity.x' or 'angle'.
+* @param {number} amount - The amount to increment the property by. If child.x = 10 then addAll('x', 40) would make child.x = 50.
+* @param {boolean} checkAlive - If true the property will only be changed if the child is alive.
+* @param {boolean} checkVisible - If true the property will only be changed if the child is visible.
+*/
+Phaser.Group.prototype.addAll = function (property, amount, checkAlive, checkVisible) {
+
+    this.setAll(property, amount, checkAlive, checkVisible, 1);
+
+};
+
+/**
+* Subtracts the amount from the given property on all children in this group.
+*
+* `Group.subAll('x', 10)` will minus 10 from the child.x value for each child.
+*
+* @method Phaser.Group#subAll
+* @param {string} property - The property to decrement, for example 'body.velocity.x' or 'angle'.
+* @param {number} amount - The amount to subtract from the property. If child.x = 50 then subAll('x', 40) would make child.x = 10.
+* @param {boolean} checkAlive - If true the property will only be changed if the child is alive.
+* @param {boolean} checkVisible - If true the property will only be changed if the child is visible.
+*/
+Phaser.Group.prototype.subAll = function (property, amount, checkAlive, checkVisible) {
+
+    this.setAll(property, amount, checkAlive, checkVisible, 2);
+
+};
+
+/**
+* Multiplies the given property by the amount on all children in this group.
+*
+* `Group.multiplyAll('x', 2)` will x2 the child.x value for each child.
+*
+* @method Phaser.Group#multiplyAll
+* @param {string} property - The property to multiply, for example 'body.velocity.x' or 'angle'.
+* @param {number} amount - The amount to multiply the property by. If child.x = 10 then multiplyAll('x', 2) would make child.x = 20.
+* @param {boolean} checkAlive - If true the property will only be changed if the child is alive.
+* @param {boolean} checkVisible - If true the property will only be changed if the child is visible.
+*/
+Phaser.Group.prototype.multiplyAll = function (property, amount, checkAlive, checkVisible) {
+
+    this.setAll(property, amount, checkAlive, checkVisible, 3);
+
+};
+
+/**
+* Divides the given property by the amount on all children in this group.
+*
+* `Group.divideAll('x', 2)` will half the child.x value for each child.
+*
+* @method Phaser.Group#divideAll
+* @param {string} property - The property to divide, for example 'body.velocity.x' or 'angle'.
+* @param {number} amount - The amount to divide the property by. If child.x = 100 then divideAll('x', 2) would make child.x = 50.
+* @param {boolean} checkAlive - If true the property will only be changed if the child is alive.
+* @param {boolean} checkVisible - If true the property will only be changed if the child is visible.
+*/
+Phaser.Group.prototype.divideAll = function (property, amount, checkAlive, checkVisible) {
+
+    this.setAll(property, amount, checkAlive, checkVisible, 4);
+
+};
+
+/**
+* Calls a function, specified by name, on all children in the group who exist (or do not exist).
+*
+* After the existsValue parameter you can add as many parameters as you like, which will all be passed to the child callback.
+*
+* @method Phaser.Group#callAllExists
+* @param {string} callback - Name of the function on the children to call.
+* @param {boolean} existsValue - Only children with exists=existsValue will be called.
+* @param {...any} parameter - Additional parameters that will be passed to the callback.
+*/
+Phaser.Group.prototype.callAllExists = function (callback, existsValue) {
+
+    var args;
+
+    if (arguments.length > 2)
+    {
+        args = [];
+
+        for (var i = 2; i &lt; arguments.length; i++)
+        {
+            args.push(arguments[i]);
+        }
+    }
+
+    for (var i = 0; i &lt; this.children.length; i++)
+    {
+        if (this.children[i].exists === existsValue &amp;&amp; this.children[i][callback])
+        {
+            this.children[i][callback].apply(this.children[i], args);
+        }
+    }
+
+};
+
+/**
+* Returns a reference to a function that exists on a child of the group based on the given callback array.
+*
+* @method Phaser.Group#callbackFromArray
+* @param {object} child - The object to inspect.
+* @param {array} callback - The array of function names.
+* @param {integer} length - The size of the array (pre-calculated in callAll).
+* @protected
+*/
+Phaser.Group.prototype.callbackFromArray = function (child, callback, length) {
+
+    //  Kinda looks like a Christmas tree
+
+    if (length == 1)
+    {
+        if (child[callback[0]])
+        {
+            return child[callback[0]];
+        }
+    }
+    else if (length == 2)
+    {
+        if (child[callback[0]][callback[1]])
+        {
+            return child[callback[0]][callback[1]];
+        }
+    }
+    else if (length == 3)
+    {
+        if (child[callback[0]][callback[1]][callback[2]])
+        {
+            return child[callback[0]][callback[1]][callback[2]];
+        }
+    }
+    else if (length == 4)
+    {
+        if (child[callback[0]][callback[1]][callback[2]][callback[3]])
+        {
+            return child[callback[0]][callback[1]][callback[2]][callback[3]];
+        }
+    }
+    else
+    {
+        if (child[callback])
+        {
+            return child[callback];
+        }
+    }
+
+    return false;
+
+};
+
+/**
+* Calls a function, specified by name, on all on children.
+*
+* The function is called for all children regardless if they are dead or alive (see callAllExists for different options).
+* After the method parameter and context you can add as many extra parameters as you like, which will all be passed to the child.
+*
+* @method Phaser.Group#callAll
+* @param {string} method - Name of the function on the child to call. Deep property lookup is supported.
+* @param {string} [context=null] - A string containing the context under which the method will be executed. Set to null to default to the child.
+* @param {...any} args - Additional parameters that will be passed to the method.
+*/
+Phaser.Group.prototype.callAll = function (method, context) {
+
+    if (method === undefined)
+    {
+        return;
+    }
+
+    //  Extract the method into an array
+    method = method.split('.');
+
+    var methodLength = method.length;
+
+    if (context === undefined || context === null || context === '')
+    {
+        context = null;
+    }
+    else
+    {
+        //  Extract the context into an array
+        if (typeof context === 'string')
+        {
+            context = context.split('.');
+            var contextLength = context.length;
+        }
+    }
+
+    var args;
+
+    if (arguments.length > 2)
+    {
+        args = [];
+
+        for (var i = 2; i &lt; arguments.length; i++)
+        {
+            args.push(arguments[i]);
+        }
+    }
+
+    var callback = null;
+    var callbackContext = null;
+
+    for (var i = 0; i &lt; this.children.length; i++)
+    {
+        callback = this.callbackFromArray(this.children[i], method, methodLength);
+
+        if (context &amp;&amp; callback)
+        {
+            callbackContext = this.callbackFromArray(this.children[i], context, contextLength);
+
+            if (callback)
+            {
+                callback.apply(callbackContext, args);
+            }
+        }
+        else if (callback)
+        {
+            callback.apply(this.children[i], args);
+        }
+    }
+
+};
+
+/**
+* The core preUpdate - as called by World.
+* @method Phaser.Group#preUpdate
+* @protected
+*/
+Phaser.Group.prototype.preUpdate = function () {
+
+    if (this.pendingDestroy)
+    {
+        this.destroy();
+        return false;
+    }
+
+    if (!this.exists || !this.parent.exists)
+    {
+        this.renderOrderID = -1;
+        return false;
+    }
+
+    var i = this.children.length;
+
+    while (i--)
+    {
+        this.children[i].preUpdate();
+    }
+
+    return true;
+
+};
+
+/**
+* The core update - as called by World.
+* @method Phaser.Group#update
+* @protected
+*/
+Phaser.Group.prototype.update = function () {
+
+    var i = this.children.length;
+
+    while (i--)
+    {
+        this.children[i].update();
+    }
+
+};
+
+/**
+* The core postUpdate - as called by World.
+* @method Phaser.Group#postUpdate
+* @protected
+*/
+Phaser.Group.prototype.postUpdate = function () {
+
+    //  Fixed to Camera?
+    if (this.fixedToCamera)
+    {
+        this.x = this.game.camera.view.x + this.cameraOffset.x;
+        this.y = this.game.camera.view.y + this.cameraOffset.y;
+    }
+
+    var i = this.children.length;
+
+    while (i--)
+    {
+        this.children[i].postUpdate();
+    }
+
+};
+
+
+/**
+* Find children matching a certain predicate.
+*
+* For example:
+*
+*     var healthyList = Group.filter(function(child, index, children) {
+*         return child.health > 10 ? true : false;
+*     }, true);
+*     healthyList.callAll('attack');
+*
+* Note: Currently this will skip any children which are Groups themselves.
+*
+* @method Phaser.Group#filter
+* @param {function} predicate - The function that each child will be evaluated against. Each child of the group will be passed to it as its first parameter, the index as the second, and the entire child array as the third
+* @param {boolean} [checkExists=false] - If true, only existing can be selected; otherwise all children can be selected and will be passed to the predicate.
+* @return {Phaser.ArraySet} Returns an array list containing all the children that the predicate returned true for
+*/
+Phaser.Group.prototype.filter = function (predicate, checkExists) {
+
+    var index = -1;
+    var length = this.children.length;
+    var results = [];
+
+    while (++index &lt; length)
+    {
+        var child = this.children[index];
+
+        if (!checkExists || (checkExists &amp;&amp; child.exists))
+        {
+            if (predicate(child, index, this.children))
+            {
+                results.push(child);
+            }
+        }
+    }
+
+    return new Phaser.ArraySet(results);
+
+};
+
+/**
+* Call a function on each child in this group.
+*
+* Additional arguments for the callback can be specified after the `checkExists` parameter. For example,
+*
+*     Group.forEach(awardBonusGold, this, true, 100, 500)
+*
+* would invoke `awardBonusGold` function with the parameters `(child, 100, 500)`.
+*
+* Note: This check will skip any children which are Groups themselves.
+*
+* @method Phaser.Group#forEach
+* @param {function} callback - The function that will be called for each applicable child. The child will be passed as the first argument.
+* @param {object} callbackContext - The context in which the function should be called (usually 'this').
+* @param {boolean} [checkExists=false] - If set only children matching for which `exists` is true will be passed to the callback, otherwise all children will be passed.
+* @param {...any} [args=(none)] - Additional arguments to pass to the callback function, after the child item.
+*/
+Phaser.Group.prototype.forEach = function (callback, callbackContext, checkExists) {
+
+    if (checkExists === undefined) { checkExists = false; }
+
+    if (arguments.length &lt;= 3)
+    {
+        for (var i = 0; i &lt; this.children.length; i++)
+        {
+            if (!checkExists || (checkExists &amp;&amp; this.children[i].exists))
+            {
+                callback.call(callbackContext, this.children[i]);
+            }
+        }
+    }
+    else
+    {
+        // Assigning to arguments properties causes Extreme Deoptimization in Chrome, FF, and IE.
+        // Using an array and pushing each element (not a slice!) is _significantly_ faster.
+        var args = [null];
+
+        for (var i = 3; i &lt; arguments.length; i++)
+        {
+            args.push(arguments[i]);
+        }
+
+        for (var i = 0; i &lt; this.children.length; i++)
+        {
+            if (!checkExists || (checkExists &amp;&amp; this.children[i].exists))
+            {
+                args[0] = this.children[i];
+                callback.apply(callbackContext, args);
+            }
+        }
+    }
+
+};
+
+/**
+* Call a function on each existing child in this group.
+*
+* See {@link Phaser.Group#forEach forEach} for details.
+*
+* @method Phaser.Group#forEachExists
+* @param {function} callback - The function that will be called for each applicable child. The child will be passed as the first argument.
+* @param {object} callbackContext - The context in which the function should be called (usually 'this').
+* @param {...any} [args=(none)] - Additional arguments to pass to the callback function, after the child item.
+*/
+Phaser.Group.prototype.forEachExists = function (callback, callbackContext) {
+
+    var args;
+
+    if (arguments.length > 2)
+    {
+        args = [null];
+
+        for (var i = 2; i &lt; arguments.length; i++)
+        {
+            args.push(arguments[i]);
+        }
+    }
+
+    this.iterate('exists', true, Phaser.Group.RETURN_TOTAL, callback, callbackContext, args);
+
+};
+
+/**
+* Call a function on each alive child in this group.
+*
+* See {@link Phaser.Group#forEach forEach} for details.
+*
+* @method Phaser.Group#forEachAlive
+* @param {function} callback - The function that will be called for each applicable child. The child will be passed as the first argument.
+* @param {object} callbackContext - The context in which the function should be called (usually 'this').
+* @param {...any} [args=(none)] - Additional arguments to pass to the callback function, after the child item.
+*/
+Phaser.Group.prototype.forEachAlive = function (callback, callbackContext) {
+
+    var args;
+
+    if (arguments.length > 2)
+    {
+        args = [null];
+
+        for (var i = 2; i &lt; arguments.length; i++)
+        {
+            args.push(arguments[i]);
+        }
+    }
+
+    this.iterate('alive', true, Phaser.Group.RETURN_TOTAL, callback, callbackContext, args);
+
+};
+
+/**
+* Call a function on each dead child in this group.
+*
+* See {@link Phaser.Group#forEach forEach} for details.
+*
+* @method Phaser.Group#forEachDead
+* @param {function} callback - The function that will be called for each applicable child. The child will be passed as the first argument.
+* @param {object} callbackContext - The context in which the function should be called (usually 'this').
+* @param {...any} [args=(none)] - Additional arguments to pass to the callback function, after the child item.
+*/
+Phaser.Group.prototype.forEachDead = function (callback, callbackContext) {
+
+    var args;
+
+    if (arguments.length > 2)
+    {
+        args = [null];
+
+        for (var i = 2; i &lt; arguments.length; i++)
+        {
+            args.push(arguments[i]);
+        }
+    }
+
+    this.iterate('alive', false, Phaser.Group.RETURN_TOTAL, callback, callbackContext, args);
+
+};
+
+/**
+* Sort the children in the group according to a particular key and ordering.
+*
+* Call this function to sort the group according to a particular key value and order.
+* For example to depth sort Sprites for Zelda-style game you might call `group.sort('y', Phaser.Group.SORT_ASCENDING)` at the bottom of your `State.update()`.
+*
+* @method Phaser.Group#sort
+* @param {string} [key='z'] - The name of the property to sort on. Defaults to the objects z-depth value.
+* @param {integer} [order=Phaser.Group.SORT_ASCENDING] - Order ascending ({@link Phaser.Group.SORT_ASCENDING SORT_ASCENDING}) or descending ({@link Phaser.Group.SORT_DESCENDING SORT_DESCENDING}).
+*/
+Phaser.Group.prototype.sort = function (key, order) {
+
+    if (this.children.length &lt; 2)
+    {
+        //  Nothing to swap
+        return;
+    }
+
+    if (key === undefined) { key = 'z'; }
+    if (order === undefined) { order = Phaser.Group.SORT_ASCENDING; }
+
+    this._sortProperty = key;
+
+    if (order === Phaser.Group.SORT_ASCENDING)
+    {
+        this.children.sort(this.ascendingSortHandler.bind(this));
+    }
+    else
+    {
+        this.children.sort(this.descendingSortHandler.bind(this));
+    }
+
+    this.updateZ();
+
+};
+
+/**
+* Sort the children in the group according to custom sort function.
+*
+* The `sortHandler` is provided the two parameters: the two children involved in the comparison (a and b).
+* It should return -1 if `a > b`, 1 if `a &lt; b` or 0 if `a === b`.
+*
+* @method Phaser.Group#customSort
+* @param {function} sortHandler - The custom sort function.
+* @param {object} [context=undefined] - The context in which the sortHandler is called.
+*/
+Phaser.Group.prototype.customSort = function (sortHandler, context) {
+
+    if (this.children.length &lt; 2)
+    {
+        //  Nothing to swap
+        return;
+    }
+
+    this.children.sort(sortHandler.bind(context));
+
+    this.updateZ();
+
+};
+
+/**
+* An internal helper function for the sort process.
+*
+* @method Phaser.Group#ascendingSortHandler
+* @protected
+* @param {object} a - The first object being sorted.
+* @param {object} b - The second object being sorted.
+*/
+Phaser.Group.prototype.ascendingSortHandler = function (a, b) {
+
+    if (a[this._sortProperty] &lt; b[this._sortProperty])
+    {
+        return -1;
+    }
+    else if (a[this._sortProperty] > b[this._sortProperty])
+    {
+        return 1;
+    }
+    else
+    {
+        if (a.z &lt; b.z)
+        {
+            return -1;
+        }
+        else
+        {
+            return 1;
+        }
+    }
+
+};
+
+/**
+* An internal helper function for the sort process.
+*
+* @method Phaser.Group#descendingSortHandler
+* @protected
+* @param {object} a - The first object being sorted.
+* @param {object} b - The second object being sorted.
+*/
+Phaser.Group.prototype.descendingSortHandler = function (a, b) {
+
+    if (a[this._sortProperty] &lt; b[this._sortProperty])
+    {
+        return 1;
+    }
+    else if (a[this._sortProperty] > b[this._sortProperty])
+    {
+        return -1;
+    }
+    else
+    {
+        return 0;
+    }
+
+};
+
+/**
+* Iterates over the children of the group performing one of several actions for matched children.
+*
+* A child is considered a match when it has a property, named `key`, whose value is equal to `value`
+* according to a strict equality comparison.
+*
+* The result depends on the `returnType`:
+*
+* - {@link Phaser.Group.RETURN_TOTAL RETURN_TOTAL}:
+*     The callback, if any, is applied to all matching children. The number of matched children is returned.
+* - {@link Phaser.Group.RETURN_NONE RETURN_NONE}:
+*     The callback, if any, is applied to all matching children. No value is returned.
+* - {@link Phaser.Group.RETURN_CHILD RETURN_CHILD}:
+*     The callback, if any, is applied to the *first* matching child and the *first* matched child is returned.
+*     If there is no matching child then null is returned.
+*
+* If `args` is specified it must be an array. The matched child will be assigned to the first
+* element and the entire array will be applied to the callback function.
+*
+* @method Phaser.Group#iterate
+* @param {string} key - The child property to check, i.e. 'exists', 'alive', 'health'
+* @param {any} value - A child matches if `child[key] === value` is true.
+* @param {integer} returnType - How to iterate the children and what to return.
+* @param {function} [callback=null] - Optional function that will be called on each matching child. The matched child is supplied as the first argument.
+* @param {object} [callbackContext] - The context in which the function should be called (usually 'this').
+* @param {any[]} [args=(none)] - The arguments supplied to to the callback; the first array index (argument) will be replaced with the matched child.
+* @return {any} Returns either an integer (for RETURN_TOTAL), the first matched child (for RETURN_CHILD), or null.
+*/
+Phaser.Group.prototype.iterate = function (key, value, returnType, callback, callbackContext, args) {
+
+    if (returnType === Phaser.Group.RETURN_TOTAL &amp;&amp; this.children.length === 0)
+    {
+        return 0;
+    }
+
+    var total = 0;
+
+    for (var i = 0; i &lt; this.children.length; i++)
+    {
+        if (this.children[i][key] === value)
+        {
+            total++;
+
+            if (callback)
+            {
+                if (args)
+                {
+                    args[0] = this.children[i];
+                    callback.apply(callbackContext, args);
+                }
+                else
+                {
+                    callback.call(callbackContext, this.children[i]);
+                }
+            }
+
+            if (returnType === Phaser.Group.RETURN_CHILD)
+            {
+                return this.children[i];
+            }
+        }
+    }
+
+    if (returnType === Phaser.Group.RETURN_TOTAL)
+    {
+        return total;
+    }
+
+    // RETURN_CHILD or RETURN_NONE
+    return null;
+
+};
+
+/**
+* Get the first display object that exists, or doesn't exist.
+* 
+* You can use the optional argument `createIfNull` to create a new Game Object if none matching your exists argument were found in this Group.
+*
+* It works by calling `Group.create` passing it the parameters given to this method, and returning the new child.
+*
+* If a child *was* found , `createIfNull` is `false` and you provided the additional arguments then the child
+* will be reset and/or have a new texture loaded on it. This is handled by `Group.resetChild`.
+*
+* @method Phaser.Group#getFirstExists
+* @param {boolean} [exists=true] - If true, find the first existing child; otherwise find the first non-existing child.
+* @param {boolean} [createIfNull=false] - If `true` and no alive children are found a new one is created.
+* @param {number} [x] - The x coordinate to reset the child to. The value is in relation to the group.x point.
+* @param {number} [y] - The y coordinate to reset the child to. The value is in relation to the group.y point.
+* @param {string|Phaser.RenderTexture|Phaser.BitmapData|Phaser.Video|PIXI.Texture} [key] - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache Image entry, or an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
+* @param {string|number} [frame] - If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
+* @return {DisplayObject} The first child, or `null` if none found and `createIfNull` was false.
+*/
+Phaser.Group.prototype.getFirstExists = function (exists, createIfNull, x, y, key, frame) {
+
+    if (createIfNull === undefined) { createIfNull = false; }
+
+    if (typeof exists !== 'boolean')
+    {
+        exists = true;
+    }
+
+    var child = this.iterate('exists', exists, Phaser.Group.RETURN_CHILD);
+
+    return (child === null &amp;&amp; createIfNull) ? this.create(x, y, key, frame) : this.resetChild(child, x, y, key, frame);
+
+};
+
+/**
+* Get the first child that is alive (`child.alive === true`).
+*
+* This is handy for choosing a squad leader, etc.
+*
+* You can use the optional argument `createIfNull` to create a new Game Object if no alive ones were found in this Group.
+*
+* It works by calling `Group.create` passing it the parameters given to this method, and returning the new child.
+*
+* If a child *was* found , `createIfNull` is `false` and you provided the additional arguments then the child
+* will be reset and/or have a new texture loaded on it. This is handled by `Group.resetChild`.
+*
+* @method Phaser.Group#getFirstAlive
+* @param {boolean} [createIfNull=false] - If `true` and no alive children are found a new one is created.
+* @param {number} [x] - The x coordinate to reset the child to. The value is in relation to the group.x point.
+* @param {number} [y] - The y coordinate to reset the child to. The value is in relation to the group.y point.
+* @param {string|Phaser.RenderTexture|Phaser.BitmapData|Phaser.Video|PIXI.Texture} [key] - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache Image entry, or an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
+* @param {string|number} [frame] - If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
+* @return {DisplayObject} The alive dead child, or `null` if none found and `createIfNull` was false.
+*/
+Phaser.Group.prototype.getFirstAlive = function (createIfNull, x, y, key, frame) {
+
+    if (createIfNull === undefined) { createIfNull = false; }
+
+    var child = this.iterate('alive', true, Phaser.Group.RETURN_CHILD);
+
+    return (child === null &amp;&amp; createIfNull) ? this.create(x, y, key, frame) : this.resetChild(child, x, y, key, frame);
+
+};
+
+/**
+* Get the first child that is dead (`child.alive === false`).
+*
+* This is handy for checking if everything has been wiped out and adding to the pool as needed.
+*
+* You can use the optional argument `createIfNull` to create a new Game Object if no dead ones were found in this Group.
+*
+* It works by calling `Group.create` passing it the parameters given to this method, and returning the new child.
+*
+* If a child *was* found , `createIfNull` is `false` and you provided the additional arguments then the child
+* will be reset and/or have a new texture loaded on it. This is handled by `Group.resetChild`.
+*
+* @method Phaser.Group#getFirstDead
+* @param {boolean} [createIfNull=false] - If `true` and no dead children are found a new one is created.
+* @param {number} [x] - The x coordinate to reset the child to. The value is in relation to the group.x point.
+* @param {number} [y] - The y coordinate to reset the child to. The value is in relation to the group.y point.
+* @param {string|Phaser.RenderTexture|Phaser.BitmapData|Phaser.Video|PIXI.Texture} [key] - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache Image entry, or an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
+* @param {string|number} [frame] - If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
+* @return {DisplayObject} The first dead child, or `null` if none found and `createIfNull` was false.
+*/
+Phaser.Group.prototype.getFirstDead = function (createIfNull, x, y, key, frame) {
+
+    if (createIfNull === undefined) { createIfNull = false; }
+
+    var child = this.iterate('alive', false, Phaser.Group.RETURN_CHILD);
+
+    return (child === null &amp;&amp; createIfNull) ? this.create(x, y, key, frame) : this.resetChild(child, x, y, key, frame);
+
+};
+
+/**
+* Takes a child and if the `x` and `y` arguments are given it calls `child.reset(x, y)` on it.
+*
+* If the `key` and optionally the `frame` arguments are given, it calls `child.loadTexture(key, frame)` on it.
+*
+* The two operations are separate. For example if you just wish to load a new texture then pass `null` as the x and y values.
+*
+* @method Phaser.Group#resetChild
+* @param {DisplayObject} child - The child to reset and/or load the texture on.
+* @param {number} [x] - The x coordinate to reset the child to. The value is in relation to the group.x point.
+* @param {number} [y] - The y coordinate to reset the child to. The value is in relation to the group.y point.
+* @param {string|Phaser.RenderTexture|Phaser.BitmapData|Phaser.Video|PIXI.Texture} [key] - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache Image entry, or an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
+* @param {string|number} [frame] - If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
+* @return {DisplayObject} The child that was reset: usually a {@link Phaser.Sprite}.
+*/
+Phaser.Group.prototype.resetChild = function (child, x, y, key, frame) {
+
+    if (child === null)
+    {
+        return null;
+    }
+
+    if (x === undefined) { x = null; }
+    if (y === undefined) { y = null; }
+
+    if (x !== null &amp;&amp; y !== null)
+    {
+        child.reset(x, y);
+    }
+
+    if (key !== undefined)
+    {
+        child.loadTexture(key, frame);
+    }
+
+    return child;
+
+};
+
+/**
+* Return the child at the top of this group.
+*
+* The top child is the child displayed (rendered) above every other child.
+*
+* @method Phaser.Group#getTop
+* @return {any} The child at the top of the Group.
+*/
+Phaser.Group.prototype.getTop = function () {
+
+    if (this.children.length > 0)
+    {
+        return this.children[this.children.length - 1];
+    }
+
+};
+
+/**
+* Returns the child at the bottom of this group.
+*
+* The bottom child the child being displayed (rendered) below every other child.
+*
+* @method Phaser.Group#getBottom
+* @return {any} The child at the bottom of the Group.
+*/
+Phaser.Group.prototype.getBottom = function () {
+
+    if (this.children.length > 0)
+    {
+        return this.children[0];
+    }
+
+};
+
+/**
+* Get the number of living children in this group.
+*
+* @method Phaser.Group#countLiving
+* @return {integer} The number of children flagged as alive.
+*/
+Phaser.Group.prototype.countLiving = function () {
+
+    return this.iterate('alive', true, Phaser.Group.RETURN_TOTAL);
+
+};
+
+/**
+* Get the number of dead children in this group.
+*
+* @method Phaser.Group#countDead
+* @return {integer} The number of children flagged as dead.
+*/
+Phaser.Group.prototype.countDead = function () {
+
+    return this.iterate('alive', false, Phaser.Group.RETURN_TOTAL);
+
+};
+
+/**
+* Returns a random child from the group.
+*
+* @method Phaser.Group#getRandom
+* @param {integer} [startIndex=0] - Offset from the front of the front of the group (lowest child).
+* @param {integer} [length=(to top)] - Restriction on the number of values you want to randomly select from.
+* @return {any} A random child of this Group.
+*/
+Phaser.Group.prototype.getRandom = function (startIndex, length) {
+
+    if (this.children.length === 0)
+    {
+        return null;
+    }
+
+    startIndex = startIndex || 0;
+    length = length || this.children.length;
+
+    return Phaser.ArrayUtils.getRandomItem(this.children, startIndex, length);
+
+};
+
+/**
+* Removes the given child from this group.
+*
+* This will dispatch an `onRemovedFromGroup` event from the child (if it has one), and optionally destroy the child.
+*
+* If the group cursor was referring to the removed child it is updated to refer to the next child.
+*
+* @method Phaser.Group#remove
+* @param {any} child - The child to remove.
+* @param {boolean} [destroy=false] - If true `destroy` will be invoked on the removed child.
+* @param {boolean} [silent=false] - If true the the child will not dispatch the `onRemovedFromGroup` event.
+* @return {boolean} true if the child was removed from this group, otherwise false.
+*/
+Phaser.Group.prototype.remove = function (child, destroy, silent) {
+
+    if (destroy === undefined) { destroy = false; }
+    if (silent === undefined) { silent = false; }
+
+    if (this.children.length === 0 || this.children.indexOf(child) === -1)
+    {
+        return false;
+    }
+
+    if (!silent &amp;&amp; child.events &amp;&amp; !child.destroyPhase)
+    {
+        child.events.onRemovedFromGroup$dispatch(child, this);
+    }
+
+    var removed = this.removeChild(child);
+
+    this.removeFromHash(child);
+
+    this.updateZ();
+
+    if (this.cursor === child)
+    {
+        this.next();
+    }
+
+    if (destroy &amp;&amp; removed)
+    {
+        removed.destroy(true);
+    }
+
+    return true;
+
+};
+
+/**
+* Moves all children from this Group to the Group given.
+*
+* @method Phaser.Group#moveAll
+* @param {Phaser.Group} group - The new Group to which the children will be moved to.
+* @param {boolean} [silent=false] - If true the children will not dispatch the `onAddedToGroup` event for the new Group.
+* @return {Phaser.Group} The Group to which all the children were moved.
+*/
+Phaser.Group.prototype.moveAll = function (group, silent) {
+
+    if (silent === undefined) { silent = false; }
+
+    if (this.children.length > 0 &amp;&amp; group instanceof Phaser.Group)
+    {
+        do
+        {
+            group.add(this.children[0], silent);
+        }
+        while (this.children.length > 0);
+
+        this.hash = [];
+
+        this.cursor = null;
+    }
+
+    return group;
+
+};
+
+/**
+* Removes all children from this group, but does not remove the group from its parent.
+*
+* @method Phaser.Group#removeAll
+* @param {boolean} [destroy=false] - If true `destroy` will be invoked on each removed child.
+* @param {boolean} [silent=false] - If true the children will not dispatch their `onRemovedFromGroup` events.
+*/
+Phaser.Group.prototype.removeAll = function (destroy, silent) {
+
+    if (destroy === undefined) { destroy = false; }
+    if (silent === undefined) { silent = false; }
+
+    if (this.children.length === 0)
+    {
+        return;
+    }
+
+    do
+    {
+        if (!silent &amp;&amp; this.children[0].events)
+        {
+            this.children[0].events.onRemovedFromGroup$dispatch(this.children[0], this);
+        }
+
+        var removed = this.removeChild(this.children[0]);
+
+        this.removeFromHash(removed);
+
+        if (destroy &amp;&amp; removed)
+        {
+            removed.destroy(true);
+        }
+    }
+    while (this.children.length > 0);
+
+    this.hash = [];
+
+    this.cursor = null;
+
+};
+
+/**
+* Removes all children from this group whose index falls beteen the given startIndex and endIndex values.
+*
+* @method Phaser.Group#removeBetween
+* @param {integer} startIndex - The index to start removing children from.
+* @param {integer} [endIndex] - The index to stop removing children at. Must be higher than startIndex. If undefined this method will remove all children between startIndex and the end of the group.
+* @param {boolean} [destroy=false] - If true `destroy` will be invoked on each removed child.
+* @param {boolean} [silent=false] - If true the children will not dispatch their `onRemovedFromGroup` events.
+*/
+Phaser.Group.prototype.removeBetween = function (startIndex, endIndex, destroy, silent) {
+
+    if (endIndex === undefined) { endIndex = this.children.length - 1; }
+    if (destroy === undefined) { destroy = false; }
+    if (silent === undefined) { silent = false; }
+
+    if (this.children.length === 0)
+    {
+        return;
+    }
+
+    if (startIndex > endIndex || startIndex &lt; 0 || endIndex > this.children.length)
+    {
+        return false;
+    }
+
+    var i = endIndex;
+
+    while (i >= startIndex)
+    {
+        if (!silent &amp;&amp; this.children[i].events)
+        {
+            this.children[i].events.onRemovedFromGroup$dispatch(this.children[i], this);
+        }
+
+        var removed = this.removeChild(this.children[i]);
+
+        this.removeFromHash(removed);
+
+        if (destroy &amp;&amp; removed)
+        {
+            removed.destroy(true);
+        }
+
+        if (this.cursor === this.children[i])
+        {
+            this.cursor = null;
+        }
+
+        i--;
+    }
+
+    this.updateZ();
+
+};
+
+/**
+* Destroys this group.
+*
+* Removes all children, then removes this group from its parent and nulls references.
+*
+* @method Phaser.Group#destroy
+* @param {boolean} [destroyChildren=true] - If true `destroy` will be invoked on each removed child.
+* @param {boolean} [soft=false] - A 'soft destroy' (set to true) doesn't remove this group from its parent or null the game reference. Set to false and it does.
+*/
+Phaser.Group.prototype.destroy = function (destroyChildren, soft) {
+
+    if (this.game === null || this.ignoreDestroy) { return; }
+
+    if (destroyChildren === undefined) { destroyChildren = true; }
+    if (soft === undefined) { soft = false; }
+
+    this.onDestroy.dispatch(this, destroyChildren, soft);
+
+    this.removeAll(destroyChildren);
+
+    this.cursor = null;
+    this.filters = null;
+    this.pendingDestroy = false;
+
+    if (!soft)
+    {
+        if (this.parent)
+        {
+            this.parent.removeChild(this);
+        }
+
+        this.game = null;
+        this.exists = false;
+    }
+
+};
+
+/**
+* Total number of existing children in the group.
+*
+* @name Phaser.Group#total
+* @property {integer} total
+* @readonly
+*/
+Object.defineProperty(Phaser.Group.prototype, "total", {
+
+    get: function () {
+
+        return this.iterate('exists', true, Phaser.Group.RETURN_TOTAL);
+
+    }
+
+});
+
+/**
+* Total number of children in this group, regardless of exists/alive status.
+*
+* @name Phaser.Group#length
+* @property {integer} length 
+* @readonly
+*/
+Object.defineProperty(Phaser.Group.prototype, "length", {
+
+    get: function () {
+
+        return this.children.length;
+
+    }
+
+});
+
+/**
+* The angle of rotation of the group container, in degrees.
+*
+* This adjusts the group itself by modifying its local rotation transform.
+*
+* This has no impact on the rotation/angle properties of the children, but it will update their worldTransform
+* and on-screen orientation and position.
+*
+* @name Phaser.Group#angle
+* @property {number} angle
+*/
+Object.defineProperty(Phaser.Group.prototype, "angle", {
+
+    get: function() {
+        return Phaser.Math.radToDeg(this.rotation);
+    },
+
+    set: function(value) {
+        this.rotation = Phaser.Math.degToRad(value);
+    }
+
+});
+
+/**
+* A display object is any object that can be rendered in the Phaser/pixi.js scene graph.
+*
+* This includes {@link Phaser.Group} (groups are display objects!),
+* {@link Phaser.Sprite}, {@link Phaser.Button}, {@link Phaser.Text}
+* as well as {@link PIXI.DisplayObject} and all derived types.
+*
+* @typedef {object} DisplayObject
+*/
+// Documentation stub for linking.
+
+/**
+* The x coordinate of the group container.
+*
+* You can adjust the group container itself by modifying its coordinates.
+* This will have no impact on the x/y coordinates of its children, but it will update their worldTransform and on-screen position.
+* @name Phaser.Group#x
+* @property {number} x
+*/
+
+/**
+* The y coordinate of the group container.
+*
+* You can adjust the group container itself by modifying its coordinates.
+* This will have no impact on the x/y coordinates of its children, but it will update their worldTransform and on-screen position.
+* @name Phaser.Group#y
+* @property {number} y
+*/
+
+/**
+* The angle of rotation of the group container, in radians.
+*
+* This will adjust the group container itself by modifying its rotation.
+* This will have no impact on the rotation value of its children, but it will update their worldTransform and on-screen position.
+* @name Phaser.Group#rotation
+* @property {number} rotation
+*/
+
+/**
+* The visible state of the group. Non-visible Groups and all of their children are not rendered.
+*
+* @name Phaser.Group#visible
+* @property {boolean} visible
+*/
+
+/**
+* The alpha value of the group container.
+*
+* @name Phaser.Group#alpha
+* @property {number} alpha
+*/
+</pre>
+        </article>
+    </section>
+
+
+
+
+
+				</div>
+
+				<div class="clearfix"></div>
+				<footer>
+					
+					
+		<span class="copyright">
+		Phaser Copyright © 2012-2015 Photon Storm Ltd.
+		</span>
+					<br />
+					
+		<span class="jsdoc-message">
+		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
+		on Thu Oct 15 2015 12:04:56 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		</span>
+				</footer>
+			</div>
+
+			
+			<br clear="both">
+		</div>
+
+	</div>
+	<script src="scripts/sunlight.js"></script>
+	<script src="scripts/sunlight.javascript.js"></script>
+	<script src="scripts/sunlight-plugin.doclinks.js"></script>
+	<script src="scripts/sunlight-plugin.linenumbers.js"></script>
+	<script src="scripts/sunlight-plugin.menu.js"></script>
+	<script src="scripts/jquery.min.js"></script>
+	<script src="scripts/jquery.scrollTo.js"></script>
+	<script src="scripts/jquery.localScroll.js"></script>
+	<script src="scripts/bootstrap-dropdown.js"></script>
+	<script src="scripts/toc.js"></script>
+
+	<script>  Sunlight.highlightAll({lineNumbers:true,  showMenu: true, enableDoclinks :true}); </script>
+
+	<script>
+		$( function () {
+			$( "#toc" ).toc( {
+				anchorName  : function(i, heading, prefix) {
+					return $(heading).attr("id") || ( prefix + i );
+				},
+				selectors   : "h1,h2,h3,h4",
+				showAndHide : false,
+				scrollTo    : 60
+			} );
+			$( "#toc>ul" ).addClass( "nav nav-pills nav-stacked" );
+			$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+
+		} );
+	</script>
+
+	
+
+</body>
+</html>

@@ -1,7 +1,7 @@
 /* jshint camelcase: false */
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -10,7 +10,6 @@
 * Note: This class could be massively optimised and reduced in size. I leave that challenge up to you.
 *
 * @class Phaser.Physics.Ninja.AABB
-* @classdesc Arcade Physics Constructor
 * @constructor
 * @param {Phaser.Physics.Ninja.Body} body - The body that owns this shape.
 * @param {number} x - The x coordinate to create this shape at.
@@ -125,18 +124,17 @@ Phaser.Physics.Ninja.AABB.prototype = {
         this.oldpos.set(px, py);
 
     },
-
+    
     /**
-    * Process a world collision and apply the resulting forces.
-    *
-    * @method Phaser.Physics.Ninja.AABB#reportCollisionVsWorld
-    * @param {number} px - The tangent velocity
-    * @param {number} py - The tangent velocity
-    * @param {number} dx - Collision normal
-    * @param {number} dy - Collision normal
-    * @param {number} obj - Object this AABB collided with
-    */
-    reportCollisionVsWorld: function (px, py, dx, dy) {
+     * Process a collision partner-agnostic collision response and apply the resulting forces.
+     * 
+     * @method Phaser.Physics.Ninja.AABB#reportCollision
+     * @param {number} px - The tangent velocity
+     * @param {number} py - The tangent velocity
+     * @param {number} dx - Collision normal
+     * @param {number} dy - Collision normal
+     */
+    reportCollision: function(px, py, dx, dy) {
 
         var p = this.pos;
         var o = this.oldpos;
@@ -151,7 +149,7 @@ Phaser.Physics.Ninja.AABB.prototype = {
 
         var ny = dp * dy;   //nx,ny is normal velocity
 
-        var tx = vx - nx;   //px,py is tangent velocity
+        var tx = vx - nx;   //tx,ty is tangent velocity
         var ty = vy - ny;
 
         //  We only want to apply collision response forces if the object is travelling into, and not out of, the collision
@@ -201,6 +199,23 @@ Phaser.Physics.Ninja.AABB.prototype = {
 
     },
 
+    /**
+    * Process a world collision and apply the resulting forces.
+    *
+    * @method Phaser.Physics.Ninja.AABB#reportCollisionVsWorld
+    * @param {number} px - The tangent velocity
+    * @param {number} py - The tangent velocity
+    * @param {number} dx - Collision normal
+    * @param {number} dy - Collision normal
+    */
+    reportCollisionVsWorld: function (px, py, dx, dy) {
+
+        this.reportCollision(px,py,dx,dy);
+    },
+
+    /**
+    * @method Phaser.Physics.Ninja.AABB#reverse
+    */
     reverse: function () {
 
         var vx = this.pos.x - this.oldpos.x;
@@ -242,10 +257,6 @@ Phaser.Physics.Ninja.AABB.prototype = {
     */
     reportCollisionVsBody: function (px, py, dx, dy, obj) {
 
-        var vx1 = this.pos.x - this.oldpos.x;   //  Calc velocity of this object
-        var vy1 = this.pos.y - this.oldpos.y;
-        var dp1 = (vx1 * dx + vy1 * dy);         //  Find component of velocity parallel to collision normal
-
         //  We only want to apply collision response forces if the object is travelling into, and not out of, the collision
         if (this.body.immovable && obj.body.immovable)
         {
@@ -267,32 +278,16 @@ Phaser.Physics.Ninja.AABB.prototype = {
             px *= 0.5;
             py *= 0.5;
 
-            this.pos.add(px, py);
-            obj.pos.subtract(px, py);
-
-            if (dp1 < 0)
-            {
-                this.reverse();
-                obj.reverse();
-            }
+            this.reportCollision(px, py, dx, dy);
+            obj.reportCollision(-px, -py, -dx, -dy);
         }
         else if (!this.body.immovable)
         {
-            this.pos.subtract(px, py);
-
-            if (dp1 < 0)
-            {
-                this.reverse();
-            }
+            this.reportCollision(px,py,dx,dy);
         }
         else if (!obj.body.immovable)
         {
-            obj.pos.subtract(px, py);
-
-            if (dp1 < 0)
-            {
-                obj.reverse();
-            }
+            obj.reportCollision(-px, -py, -dx, -dy);
         }
 
     },

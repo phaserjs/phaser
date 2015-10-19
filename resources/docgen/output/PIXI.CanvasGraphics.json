@@ -1,0 +1,1 @@
+{"class":{"name":"PIXI.CanvasGraphics","extends":"","static":true,"constructor":false,"parameters":[],"help":"A set of functions used by the canvas renderer to draw the primitive graphics data."},"consts":[],"methods":{"public":[],"protected":[],"private":[],"static":[]},"properties":{"public":[],"protected":[],"private":[]}}

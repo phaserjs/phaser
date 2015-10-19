@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -23,9 +23,8 @@
 * Feel free to attempt any of the above and submit a Pull Request with your code! Be sure to include test cases proving they work.
 *
 * @class Phaser.Physics.Ninja
-* @classdesc Ninja Physics Constructor
 * @constructor
-* @param {Phaser.Game} game reference to the current game instance.
+* @param {Phaser.Game} game - reference to the current game instance.
 */
 Phaser.Physics.Ninja = function (game) {
 
@@ -63,6 +62,9 @@ Phaser.Physics.Ninja = function (game) {
     * @property {Phaser.QuadTree} quadTree - The world QuadTree.
     */
     this.quadTree = new Phaser.QuadTree(this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height, this.maxObjects, this.maxLevels);
+
+    // By default we want the bounds the same size as the world bounds
+    this.setBoundsToWorld();
 
 };
 
@@ -129,10 +131,10 @@ Phaser.Physics.Ninja.prototype = {
     */
     enable: function (object, type, id, radius, children) {
 
-        if (typeof type === 'undefined') { type = 1; }
-        if (typeof id === 'undefined') { id = 1; }
-        if (typeof radius === 'undefined') { radius = 0; }
-        if (typeof children === 'undefined') { children = true; }
+        if (type === undefined) { type = 1; }
+        if (id === undefined) { id = 1; }
+        if (radius === undefined) { radius = 0; }
+        if (children === undefined) { children = true; }
 
         if (Array.isArray(object))
         {
@@ -256,8 +258,8 @@ Phaser.Physics.Ninja.prototype = {
     *
     * @method Phaser.Physics.Ninja#convertTilemap
     * @param {Phaser.Tilemap} map - The Tilemap to get the map data from.
-    * @param {number|string|Phaser.TilemapLayer} [layer] - The layer to operate on. If not given will default to map.currentLayer.
-    * @param {object} [slopeMap] - The tilemap index to Tile ID map.
+    * @param {number|string|Phaser.TilemapLayer} layer - The layer to operate on. If not given will default to map.currentLayer.
+    * @param {object} slopeMap - The tilemap index to Tile ID map.
     * @return {array} An array of the Phaser.Physics.Ninja.Tile objects that were created.
     */
     convertTilemap: function (map, layer, slopeMap) {
@@ -334,8 +336,8 @@ Phaser.Physics.Ninja.prototype = {
     * The collideCallback is an optional function that is only called if two sprites collide. If a processCallback has been set then it needs to return true for collideCallback to be called.
     *
     * @method Phaser.Physics.Ninja#collide
-    * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter|Phaser.Tilemap} object1 - The first object to check. Can be an instance of Phaser.Sprite, Phaser.Group, Phaser.Particles.Emitter, or Phaser.Tilemap.
-    * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter|Phaser.Tilemap|array} object2 - The second object or array of objects to check. Can be Phaser.Sprite, Phaser.Group, Phaser.Particles.Emitter or Phaser.Tilemap.
+    * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter|Phaser.TilemapLayer} object1 - The first object to check. Can be an instance of Phaser.Sprite, Phaser.Group, Phaser.Particles.Emitter, or Phaser.TilemapLayer.
+    * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter|Phaser.TilemapLayer|array} object2 - The second object or array of objects to check. Can be Phaser.Sprite, Phaser.Group, Phaser.Particles.Emitter or Phaser.TilemapLayer.
     * @param {function} [collideCallback=null] - An optional callback function that is called if the objects collide. The two objects will be passed to this function in the same order in which you specified them.
     * @param {function} [processCallback=null] - A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then collision will only happen if processCallback returns true. The two objects will be passed to this function in the same order in which you specified them.
     * @param {object} [callbackContext] - The context in which to run the callbacks.
@@ -371,8 +373,8 @@ Phaser.Physics.Ninja.prototype = {
     *
     * @method Phaser.Physics.Ninja#collideHandler
     * @private
-    * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter|Phaser.Tilemap} object1 - The first object to check. Can be an instance of Phaser.Sprite, Phaser.Group, Phaser.Particles.Emitter, or Phaser.Tilemap.
-    * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter|Phaser.Tilemap} object2 - The second object to check. Can be an instance of Phaser.Sprite, Phaser.Group, Phaser.Particles.Emitter or Phaser.Tilemap. Can also be an array of objects to check.
+    * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter|Phaser.TilemapLayer} object1 - The first object to check. Can be an instance of Phaser.Sprite, Phaser.Group, Phaser.Particles.Emitter, or Phaser.TilemapLayer.
+    * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter|Phaser.TilemapLayer} object2 - The second object to check. Can be an instance of Phaser.Sprite, Phaser.Group, Phaser.Particles.Emitter or Phaser.TilemapLayer. Can also be an array of objects to check.
     * @param {function} collideCallback - An optional callback function that is called if the objects collide. The two objects will be passed to this function in the same order in which you specified them.
     * @param {function} processCallback - A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then collision will only happen if processCallback returns true. The two objects will be passed to this function in the same order in which you specified them.
     * @param {object} callbackContext - The context in which to run the callbacks.
@@ -381,7 +383,7 @@ Phaser.Physics.Ninja.prototype = {
     collideHandler: function (object1, object2, collideCallback, processCallback, callbackContext, overlapOnly) {
 
         //  Only collide valid objects
-        if (typeof object2 === 'undefined' && (object1.type === Phaser.GROUP || object1.type === Phaser.EMITTER))
+        if (object2 === undefined && (object1.type === Phaser.GROUP || object1.type === Phaser.EMITTER))
         {
             this.collideGroupVsSelf(object1, collideCallback, processCallback, callbackContext, overlapOnly);
             return;

@@ -2,12 +2,12 @@
 
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
 /**
-* A collection of easing methods defining ease-in ease-out curves.
+* A collection of easing methods defining ease-in and ease-out curves.
 *
 * @class Phaser.Easing
 */
@@ -21,11 +21,11 @@ Phaser.Easing = {
     Linear: {
 
         /**
-        * Ease-in.
+        * Linear Easing (no variation).
         *
-        * @method Phaser.Easing.Linear#In
+        * @method Phaser.Easing.Linear#None
         * @param {number} k - The value to be tweened.
-        * @returns {number} k^2.
+        * @returns {number} k.
         */
         None: function ( k ) {
 
@@ -247,6 +247,8 @@ Phaser.Easing = {
         */
         In: function ( k ) {
 
+            if (k === 0) return 0;
+            if (k === 1) return 1;
             return 1 - Math.cos( k * Math.PI / 2 );
 
         },
@@ -260,6 +262,8 @@ Phaser.Easing = {
         */
         Out: function ( k ) {
 
+            if (k === 0) return 0;
+            if (k === 1) return 1;
             return Math.sin( k * Math.PI / 2 );
 
         },
@@ -273,6 +277,8 @@ Phaser.Easing = {
         */
         InOut: function ( k ) {
 
+            if (k === 0) return 0;
+            if (k === 1) return 1;
             return 0.5 * ( 1 - Math.cos( Math.PI * k ) );
 
         }
@@ -561,3 +567,10 @@ Phaser.Easing = {
     }
 
 };
+
+Phaser.Easing.Default = Phaser.Easing.Linear.None;
+Phaser.Easing.Power0 = Phaser.Easing.Linear.None;
+Phaser.Easing.Power1 = Phaser.Easing.Quadratic.Out;
+Phaser.Easing.Power2 = Phaser.Easing.Cubic.Out;
+Phaser.Easing.Power3 = Phaser.Easing.Quartic.Out;
+Phaser.Easing.Power4 = Phaser.Easing.Quintic.Out;

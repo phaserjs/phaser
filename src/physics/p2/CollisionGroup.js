@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -8,8 +8,8 @@
 * Collision Group
 *
 * @class Phaser.Physics.P2.CollisionGroup
-* @classdesc Physics Collision Group Constructor
 * @constructor
+* @param {number} bitmask - The CollisionGroup bitmask.
 */
 Phaser.Physics.P2.CollisionGroup = function (bitmask) {
 

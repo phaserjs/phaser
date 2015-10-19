@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -10,10 +10,12 @@
         }
         exports.Phaser = Phaser;
     } else if (typeof define !== 'undefined' && define.amd) {
-        define('Phaser', (function() { return root.Phaser = Phaser; }) ());
+        define('Phaser', (function() { return root.Phaser = Phaser; })() );
     } else {
         root.Phaser = Phaser;
     }
+
+    return Phaser;
 }).call(this);
 
 /*

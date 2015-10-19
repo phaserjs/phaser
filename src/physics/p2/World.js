@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -9,8 +9,10 @@ p2.Body.prototype.parent = null;
 p2.Spring.prototype.parent = null;
 
 /**
+* This is your main access to the P2 Physics World.
+* From here you can create materials, listen for events and add bodies into the physics simulation.
+* 
 * @class Phaser.Physics.P2
-* @classdesc Physics World Constructor
 * @constructor
 * @param {Phaser.Game} game - Reference to the current game instance.
 * @param {object} [config] - Physics configuration object passed in from the game constructor.
@@ -22,16 +24,34 @@ Phaser.Physics.P2 = function (game, config) {
     */
     this.game = game;
 
-    if (typeof config === 'undefined' || !config.hasOwnProperty('gravity') || !config.hasOwnProperty('broadphase'))
+    if (config === undefined)
     {
         config = { gravity: [0, 0], broadphase: new p2.SAPBroadphase() };
     }
+    else
+    {
+        if (!config.hasOwnProperty('gravity'))
+        {
+            config.gravity = [0, 0];
+        }
+
+        if (!config.hasOwnProperty('broadphase'))
+        {
+            config.broadphase = new p2.SAPBroadphase();
+        }
+    }
+
+    /**
+    * @property {object} config - The p2 World configuration object.
+    * @protected
+    */
+    this.config = config;
 
     /**
     * @property {p2.World} world - The p2 World in which the simulation is run.
     * @protected
     */
-    this.world = new p2.World(config);
+    this.world = new p2.World(this.config);
 
     /**
     * @property {number} frameRate - The frame rate the world will be stepped at. Defaults to 1 / 60, but you can change here. Also see useElapsedTime property.
@@ -68,42 +88,74 @@ Phaser.Physics.P2 = function (game, config) {
     this.walls = { left: null, right: null, top: null, bottom: null };
 
     /**
-    * @property {Phaser.Signal} onBodyAdded - Dispatched when a new Body is added to the World.
+    * This signal is dispatched when a new Body is added to the World.
+    *
+    * It sends 1 argument: `body` which is the `Phaser.Physics.P2.Body` that was added to the world.
+    * 
+    * @property {Phaser.Signal} onBodyAdded
     */
     this.onBodyAdded = new Phaser.Signal();
 
     /**
-    * @property {Phaser.Signal} onBodyRemoved - Dispatched when a Body is removed from the World.
+    * This signal is dispatched when a Body is removed to the World.
+    *
+    * It sends 1 argument: `body` which is the `Phaser.Physics.P2.Body` that was removed from the world.
+    * 
+    * @property {Phaser.Signal} onBodyRemoved
     */
     this.onBodyRemoved = new Phaser.Signal();
 
     /**
-    * @property {Phaser.Signal} onSpringAdded - Dispatched when a new Spring is added to the World.
+    * This signal is dispatched when a Spring is added to the World.
+    *
+    * It sends 1 argument: `spring` which is either a `Phaser.Physics.P2.Spring`, `p2.LinearSpring` or `p2.RotationalSpring` that was added to the world.
+    * 
+    * @property {Phaser.Signal} onSpringAdded
     */
     this.onSpringAdded = new Phaser.Signal();
 
     /**
-    * @property {Phaser.Signal} onSpringRemoved - Dispatched when a Spring is removed from the World.
+    * This signal is dispatched when a Spring is removed from the World.
+    *
+    * It sends 1 argument: `spring` which is either a `Phaser.Physics.P2.Spring`, `p2.LinearSpring` or `p2.RotationalSpring` that was removed from the world.
+    * 
+    * @property {Phaser.Signal} onSpringRemoved
     */
     this.onSpringRemoved = new Phaser.Signal();
 
     /**
-    * @property {Phaser.Signal} onConstraintAdded - Dispatched when a new Constraint is added to the World.
+    * This signal is dispatched when a Constraint is added to the World.
+    *
+    * It sends 1 argument: `constraint` which is the `Phaser.Physics.P2.Constraint` that was added to the world.
+    * 
+    * @property {Phaser.Signal} onConstraintAdded
     */
     this.onConstraintAdded = new Phaser.Signal();
 
     /**
-    * @property {Phaser.Signal} onConstraintRemoved - Dispatched when a Constraint is removed from the World.
+    * This signal is dispatched when a Constraint is removed from the World.
+    *
+    * It sends 1 argument: `constraint` which is the `Phaser.Physics.P2.Constraint` that was removed from the world.
+    * 
+    * @property {Phaser.Signal} onConstraintRemoved
     */
     this.onConstraintRemoved = new Phaser.Signal();
 
     /**
-    * @property {Phaser.Signal} onContactMaterialAdded - Dispatched when a new ContactMaterial is added to the World.
+    * This signal is dispatched when a Contact Material is added to the World.
+    *
+    * It sends 1 argument: `material` which is the `Phaser.Physics.P2.ContactMaterial` that was added to the world.
+    * 
+    * @property {Phaser.Signal} onContactMaterialAdded
     */
     this.onContactMaterialAdded = new Phaser.Signal();
 
     /**
-    * @property {Phaser.Signal} onContactMaterialRemoved - Dispatched when a ContactMaterial is removed from the World.
+    * This signal is dispatched when a Contact Material is removed from the World.
+    *
+    * It sends 1 argument: `material` which is the `Phaser.Physics.P2.ContactMaterial` that was removed from the world.
+    * 
+    * @property {Phaser.Signal} onContactMaterialRemoved
     */
     this.onContactMaterialRemoved = new Phaser.Signal();
 
@@ -118,12 +170,26 @@ Phaser.Physics.P2 = function (game, config) {
     this.callbackContext = null;
 
     /**
-    * @property {Phaser.Signal} onBeginContact - Dispatched when a first contact is created between two bodies. This event is fired before the step has been done.
+    * This Signal is dispatched when a first contact is created between two bodies. This happens *before* the step has been done.
+    * 
+    * It sends 5 arguments: `bodyA`, `bodyB`, `shapeA`, `shapeB` and `contactEquations`.
+    * 
+    * It is possible that in certain situations the `bodyA` or `bodyB` values are `null`. You should check for this
+    * in your own code to avoid processing potentially null physics bodies.
+    * 
+    * @property {Phaser.Signal} onBeginContact
     */
     this.onBeginContact = new Phaser.Signal();
 
     /**
-    * @property {Phaser.Signal} onEndContact - Dispatched when final contact occurs between two bodies. This event is fired before the step has been done.
+    * This Signal is dispatched when final contact occurs between two bodies. This happens *before* the step has been done.
+    * 
+    * It sends 4 arguments: `bodyA`, `bodyB`, `shapeA` and `shapeB`.
+    * 
+    * It is possible that in certain situations the `bodyA` or `bodyB` values are `null`. You should check for this
+    * in your own code to avoid processing potentially null physics bodies.
+    * 
+    * @property {Phaser.Signal} onEndContact
     */
     this.onEndContact = new Phaser.Signal();
 
@@ -177,6 +243,36 @@ Phaser.Physics.P2 = function (game, config) {
     */
     this._collisionGroupID = 2;
 
+    /**
+    * @property {boolean} _boundsLeft - Internal var that keeps track of world bounds settings.
+    * @private
+    */
+    this._boundsLeft = true;
+
+    /**
+    * @property {boolean} _boundsRight - Internal var that keeps track of world bounds settings.
+    * @private
+    */
+    this._boundsRight = true;
+
+    /**
+    * @property {boolean} _boundsTop - Internal var that keeps track of world bounds settings.
+    * @private
+    */
+    this._boundsTop = true;
+
+    /**
+    * @property {boolean} _boundsBottom - Internal var that keeps track of world bounds settings.
+    * @private
+    */
+    this._boundsBottom = true;
+
+    /**
+    * @property {boolean} _boundsOwnGroup - Internal var that keeps track of world bounds settings.
+    * @private
+    */
+    this._boundsOwnGroup = false;
+
     //  By default we want everything colliding with everything
     this.setBoundsToWorld(true, true, true, true, false);
 
@@ -226,8 +322,8 @@ Phaser.Physics.P2.prototype = {
     */
     enable: function (object, debug, children) {
 
-        if (typeof debug === 'undefined') { debug = false; }
-        if (typeof children === 'undefined') { children = true; }
+        if (debug === undefined) { debug = false; }
+        if (children === undefined) { children = true; }
 
         var i = 1;
 
@@ -287,7 +383,9 @@ Phaser.Physics.P2.prototype = {
         {
             object.body = new Phaser.Physics.P2.Body(this.game, object, object.x, object.y, 1);
             object.body.debug = debug;
-            object.anchor.set(0.5);
+			if (typeof object.anchor !== 'undefined') {
+				object.anchor.set(0.5);
+			}
         }
 
     },
@@ -347,16 +445,16 @@ Phaser.Physics.P2.prototype = {
     */
     postBroadphaseHandler: function (event) {
 
-        if (this.postBroadphaseCallback)
+        if (!this.postBroadphaseCallback || event.pairs.length === 0)
         {
-            var i = event.pairs.length;
+            return;
+        }
 
-            while (i -= 2)
+        for (var i = event.pairs.length - 2; i >= 0; i -= 2)
+        {
+            if (event.pairs[i].parent && event.pairs[i+1].parent && !this.postBroadphaseCallback.call(this.callbackContext, event.pairs[i].parent, event.pairs[i+1].parent))
             {
-                if (event.pairs[i].parent && event.pairs[i+1].parent && !this.postBroadphaseCallback.call(this.callbackContext, event.pairs[i].parent, event.pairs[i+1].parent))
-                {
-                    event.pairs.splice(i, 2);
-                }
+                event.pairs.splice(i, 2);
             }
         }
 
@@ -409,16 +507,19 @@ Phaser.Physics.P2.prototype = {
     */
     beginContactHandler: function (event) {
 
-        this.onBeginContact.dispatch(event.bodyA, event.bodyB, event.shapeA, event.shapeB, event.contactEquations);
-
-        if (event.bodyA.parent)
+        if (event.bodyA && event.bodyB)
         {
-            event.bodyA.parent.onBeginContact.dispatch(event.bodyB.parent, event.shapeA, event.shapeB, event.contactEquations);
-        }
+            this.onBeginContact.dispatch(event.bodyA, event.bodyB, event.shapeA, event.shapeB, event.contactEquations);
 
-        if (event.bodyB.parent)
-        {
-            event.bodyB.parent.onBeginContact.dispatch(event.bodyA.parent, event.shapeB, event.shapeA, event.contactEquations);
+            if (event.bodyA.parent)
+            {
+                event.bodyA.parent.onBeginContact.dispatch(event.bodyB.parent, event.bodyB, event.shapeA, event.shapeB, event.contactEquations);
+            }
+
+            if (event.bodyB.parent)
+            {
+                event.bodyB.parent.onBeginContact.dispatch(event.bodyA.parent, event.bodyA, event.shapeB, event.shapeA, event.contactEquations);
+            }
         }
 
     },
@@ -431,16 +532,19 @@ Phaser.Physics.P2.prototype = {
     */
     endContactHandler: function (event) {
 
-        this.onEndContact.dispatch(event.bodyA, event.bodyB, event.shapeA, event.shapeB);
-
-        if (event.bodyA.parent)
+        if (event.bodyA && event.bodyB)
         {
-            event.bodyA.parent.onEndContact.dispatch(event.bodyB.parent, event.shapeA, event.shapeB);
-        }
+            this.onEndContact.dispatch(event.bodyA, event.bodyB, event.shapeA, event.shapeB);
 
-        if (event.bodyB.parent)
-        {
-            event.bodyB.parent.onEndContact.dispatch(event.bodyA.parent, event.shapeB, event.shapeA);
+            if (event.bodyA.parent)
+            {
+                event.bodyA.parent.onEndContact.dispatch(event.bodyB.parent, event.bodyB, event.shapeA, event.shapeB);
+            }
+
+            if (event.bodyB.parent)
+            {
+                event.bodyB.parent.onEndContact.dispatch(event.bodyA.parent, event.bodyA, event.shapeB, event.shapeA);
+            }
         }
 
     },
@@ -474,10 +578,10 @@ Phaser.Physics.P2.prototype = {
     */
     setWorldMaterial: function (material, left, right, top, bottom) {
 
-        if (typeof left === 'undefined') { left = true; }
-        if (typeof right === 'undefined') { right = true; }
-        if (typeof top === 'undefined') { top = true; }
-        if (typeof bottom === 'undefined') { bottom = true; }
+        if (left === undefined) { left = true; }
+        if (right === undefined) { right = true; }
+        if (top === undefined) { top = true; }
+        if (bottom === undefined) { bottom = true; }
 
         if (left && this.walls.left)
         {
@@ -513,7 +617,7 @@ Phaser.Physics.P2.prototype = {
 
         var mask = this.everythingCollisionGroup.mask;
 
-        if (typeof setCollisionGroup === 'undefined') { mask = this.boundsCollisionGroup.mask; }
+        if (setCollisionGroup === undefined) { mask = this.boundsCollisionGroup.mask; }
 
         if (this.walls.left)
         {
@@ -540,6 +644,10 @@ Phaser.Physics.P2.prototype = {
     /**
     * Sets the bounds of the Physics world to match the given world pixel dimensions.
     * You can optionally set which 'walls' to create: left, right, top or bottom.
+    * If none of the walls are given it will default to use the walls settings it had previously.
+    * I.e. if you previously told it to not have the left or right walls, and you then adjust the world size
+    * the newly created bounds will also not have the left and right walls.
+    * Explicitly state them in the parameters to override this.
     *
     * @method Phaser.Physics.P2#setBounds
     * @param {number} x - The x coordinate of the top-left corner of the bounds.
@@ -554,11 +662,11 @@ Phaser.Physics.P2.prototype = {
     */
     setBounds: function (x, y, width, height, left, right, top, bottom, setCollisionGroup) {
 
-        if (typeof left === 'undefined') { left = true; }
-        if (typeof right === 'undefined') { right = true; }
-        if (typeof top === 'undefined') { top = true; }
-        if (typeof bottom === 'undefined') { bottom = true; }
-        if (typeof setCollisionGroup === 'undefined') { setCollisionGroup = true; }
+        if (left === undefined) { left = this._boundsLeft; }
+        if (right === undefined) { right = this._boundsRight; }
+        if (top === undefined) { top = this._boundsTop; }
+        if (bottom === undefined) { bottom = this._boundsBottom; }
+        if (setCollisionGroup === undefined) { setCollisionGroup = this._boundsOwnGroup; }
 
         if (this.walls.left)
         {
@@ -632,6 +740,13 @@ Phaser.Physics.P2.prototype = {
             this.world.addBody(this.walls.bottom);
         }
 
+        //  Remember the bounds settings in case they change later on via World.setBounds
+        this._boundsLeft = left;
+        this._boundsRight = right;
+        this._boundsTop = top;
+        this._boundsBottom = bottom;
+        this._boundsOwnGroup = setCollisionGroup;
+
     },
 
     /**
@@ -663,7 +778,7 @@ Phaser.Physics.P2.prototype = {
     */
     update: function () {
 
-        // Do nothing when the pysics engine was paused before
+        // Do nothing if the physics engine was paused before
         if (this.paused)
         {
             return;
@@ -681,13 +796,83 @@ Phaser.Physics.P2.prototype = {
     },
 
     /**
+    * Called by Phaser.Physics when a State swap occurs.
+    * Starts the begin and end Contact listeners again.
+    *
+    * @method Phaser.Physics.P2#reset
+    */
+    reset: function () {
+
+        this.world.on("beginContact", this.beginContactHandler, this);
+        this.world.on("endContact", this.endContactHandler, this);
+
+        this.nothingCollisionGroup = new Phaser.Physics.P2.CollisionGroup(1);
+        this.boundsCollisionGroup = new Phaser.Physics.P2.CollisionGroup(2);
+        this.everythingCollisionGroup = new Phaser.Physics.P2.CollisionGroup(2147483648);
+
+        this._collisionGroupID = 2;
+
+        this.setBoundsToWorld(true, true, true, true, false);
+
+    },
+
+    /**
     * Clears all bodies from the simulation, resets callbacks and resets the collision bitmask.
+    * 
+    * The P2 world is also cleared:
+    * 
+    * * Removes all solver equations
+    * * Removes all constraints
+    * * Removes all bodies
+    * * Removes all springs
+    * * Removes all contact materials
+    * 
+    * This is called automatically when you switch state.
     *
     * @method Phaser.Physics.P2#clear
     */
     clear: function () {
 
-        this.world.clear();
+        this.world.time = 0;
+        this.world.fixedStepTime = 0;
+
+        // Remove all solver equations
+        if (this.world.solver && this.world.solver.equations.length)
+        {
+            this.world.solver.removeAllEquations();
+        }
+
+        // Remove all constraints
+        var cs = this.world.constraints;
+
+        for (var i = cs.length - 1; i >= 0; i--)
+        {
+            this.world.removeConstraint(cs[i]);
+        }
+
+        // Remove all bodies
+        var bodies = this.world.bodies;
+
+        for (var i = bodies.length - 1; i >= 0; i--)
+        {
+            this.world.removeBody(bodies[i]);
+        }
+
+        // Remove all springs
+        var springs = this.world.springs;
+
+        for (var i = springs.length - 1; i >= 0; i--)
+        {
+            this.world.removeSpring(springs[i]);
+        }
+
+        // Remove all contact materials
+        var cms = this.world.contactMaterials;
+
+        for (var i = cms.length - 1; i >= 0; i--)
+        {
+            this.world.removeContactMaterial(cms[i]);
+        }
 
         this.world.off("beginContact", this.beginContactHandler, this);
         this.world.off("endContact", this.endContactHandler, this);
@@ -698,7 +883,6 @@ Phaser.Physics.P2.prototype = {
 
         this.collisionGroups = [];
         this._toRemove = [];
-        this._collisionGroupID = 2;
         this.boundsCollidesWith = [];
 
     },
@@ -764,12 +948,19 @@ Phaser.Physics.P2.prototype = {
     * Adds a Spring to the world.
     *
     * @method Phaser.Physics.P2#addSpring
-    * @param {Phaser.Physics.P2.Spring} spring - The Spring to add to the World.
+    * @param {Phaser.Physics.P2.Spring|p2.LinearSpring|p2.RotationalSpring} spring - The Spring to add to the World.
     * @return {Phaser.Physics.P2.Spring} The Spring that was added.
     */
     addSpring: function (spring) {
 
-        this.world.addSpring(spring);
+        if (spring instanceof Phaser.Physics.P2.Spring || spring instanceof Phaser.Physics.P2.RotationalSpring)
+        {
+            this.world.addSpring(spring.data);
+        }
+        else
+        {
+            this.world.addSpring(spring);
+        }
 
         this.onSpringAdded.dispatch(spring);
 
@@ -786,7 +977,14 @@ Phaser.Physics.P2.prototype = {
     */
     removeSpring: function (spring) {
 
-        this.world.removeSpring(spring);
+        if (spring instanceof Phaser.Physics.P2.Spring || spring instanceof Phaser.Physics.P2.RotationalSpring)
+        {
+            this.world.removeSpring(spring.data);
+        }
+        else
+        {
+            this.world.removeSpring(spring);
+        }
 
         this.onSpringRemoved.dispatch(spring);
 
@@ -801,10 +999,12 @@ Phaser.Physics.P2.prototype = {
     * @param {Phaser.Sprite|Phaser.Physics.P2.Body|p2.Body} bodyA - First connected body.
     * @param {Phaser.Sprite|Phaser.Physics.P2.Body|p2.Body} bodyB - Second connected body.
     * @param {number} distance - The distance to keep between the bodies.
+    * @param {Array} [localAnchorA] - The anchor point for bodyA, defined locally in bodyA frame. Defaults to [0,0].
+    * @param {Array} [localAnchorB] - The anchor point for bodyB, defined locally in bodyB frame. Defaults to [0,0].
     * @param {number} [maxForce] - The maximum force that should be applied to constrain the bodies.
     * @return {Phaser.Physics.P2.DistanceConstraint} The constraint
     */
-    createDistanceConstraint: function (bodyA, bodyB, distance, maxForce) {
+    createDistanceConstraint: function (bodyA, bodyB, distance, localAnchorA, localAnchorB, maxForce) {
 
         bodyA = this.getBody(bodyA);
         bodyB = this.getBody(bodyB);
@@ -815,7 +1015,7 @@ Phaser.Physics.P2.prototype = {
         }
         else
         {
-            return this.addConstraint(new Phaser.Physics.P2.DistanceConstraint(this, bodyA, bodyB, distance, maxForce));
+            return this.addConstraint(new Phaser.Physics.P2.DistanceConstraint(this, bodyA, bodyB, distance, localAnchorA, localAnchorB, maxForce));
         }
 
     },
@@ -856,9 +1056,10 @@ Phaser.Physics.P2.prototype = {
     * @param {Phaser.Sprite|Phaser.Physics.P2.Body|p2.Body} bodyB - Second connected body.
     * @param {Array} pivotB - The point relative to the center of mass of bodyB which bodyB is constrained to. The value is an array with 2 elements matching x and y, i.e: [32, 32].
     * @param {number} [maxForce=0] - The maximum force that should be applied to constrain the bodies.
+    * @param {Float32Array} [worldPivot=null] - A pivot point given in world coordinates. If specified, localPivotA and localPivotB are automatically computed from this value.
     * @return {Phaser.Physics.P2.RevoluteConstraint} The constraint
     */
-    createRevoluteConstraint: function (bodyA, pivotA, bodyB, pivotB, maxForce) {
+    createRevoluteConstraint: function (bodyA, pivotA, bodyB, pivotB, maxForce, worldPivot) {
 
         bodyA = this.getBody(bodyA);
         bodyB = this.getBody(bodyB);
@@ -869,7 +1070,7 @@ Phaser.Physics.P2.prototype = {
         }
         else
         {
-            return this.addConstraint(new Phaser.Physics.P2.RevoluteConstraint(this, bodyA, pivotA, bodyB, pivotB, maxForce));
+            return this.addConstraint(new Phaser.Physics.P2.RevoluteConstraint(this, bodyA, pivotA, bodyB, pivotB, maxForce, worldPivot));
         }
 
     },
@@ -1069,8 +1270,8 @@ Phaser.Physics.P2.prototype = {
     */
     createContactMaterial: function (materialA, materialB, options) {
 
-        if (typeof materialA === 'undefined') { materialA = this.createMaterial(); }
-        if (typeof materialB === 'undefined') { materialB = this.createMaterial(); }
+        if (materialA === undefined) { materialA = this.createMaterial(); }
+        if (materialB === undefined) { materialB = this.createMaterial(); }
 
         var contact = new Phaser.Physics.P2.ContactMaterial(materialA, materialB, options);
 
@@ -1149,6 +1350,8 @@ Phaser.Physics.P2.prototype = {
 
     /**
     * Populates and returns an array of all current Constraints in the world.
+    * You will get an array of p2 constraints back. This can be of mixed types, for example the array may contain
+    * PrismaticConstraints, RevoluteConstraints or any other valid p2 constraint type.
     *
     * @method Phaser.Physics.P2#getConstraints
     * @return {array<Phaser.Physics.P2.Constraint>} An array containing all current Constraints in the world.
@@ -1160,7 +1363,7 @@ Phaser.Physics.P2.prototype = {
 
         while (i--)
         {
-            output.push(this.world.constraints[i].parent);
+            output.push(this.world.constraints[i]);
         }
 
         return output;
@@ -1180,9 +1383,9 @@ Phaser.Physics.P2.prototype = {
     */
     hitTest: function (worldPoint, bodies, precision, filterStatic) {
 
-        if (typeof bodies === 'undefined') { bodies = this.world.bodies; }
-        if (typeof precision === 'undefined') { precision = 5; }
-        if (typeof filterStatic === 'undefined') { filterStatic = false; }
+        if (bodies === undefined) { bodies = this.world.bodies; }
+        if (precision === undefined) { precision = 5; }
+        if (filterStatic === undefined) { filterStatic = false; }
 
         var physicsPosition = [ this.pxmi(worldPoint.x), this.pxmi(worldPoint.y) ];
 
@@ -1191,15 +1394,15 @@ Phaser.Physics.P2.prototype = {
 
         while (i--)
         {
-            if (bodies[i] instanceof Phaser.Physics.P2.Body && !(filterStatic && bodies[i].data.motionState === p2.Body.STATIC))
+            if (bodies[i] instanceof Phaser.Physics.P2.Body && !(filterStatic && bodies[i].data.type === p2.Body.STATIC))
             {
                 query.push(bodies[i].data);
             }
-            else if (bodies[i] instanceof p2.Body && bodies[i].parent && !(filterStatic && bodies[i].motionState === p2.Body.STATIC))
+            else if (bodies[i] instanceof p2.Body && bodies[i].parent && !(filterStatic && bodies[i].type === p2.Body.STATIC))
             {
                 query.push(bodies[i]);
             }
-            else if (bodies[i] instanceof Phaser.Sprite && bodies[i].hasOwnProperty('body') && !(filterStatic && bodies[i].body.data.motionState === p2.Body.STATIC))
+            else if (bodies[i] instanceof Phaser.Sprite && bodies[i].hasOwnProperty('body') && !(filterStatic && bodies[i].body.data.type === p2.Body.STATIC))
             {
                 query.push(bodies[i].body.data);
             }
@@ -1295,14 +1498,11 @@ Phaser.Physics.P2.prototype = {
     },
 
     /**
-    * Creates a spring, connecting two bodies. A spring can have a resting length, a stiffness and damping.
+    * Creates a linear spring, connecting two bodies. A spring can have a resting length, a stiffness and damping.
     *
     * @method Phaser.Physics.P2#createSpring
     * @param {Phaser.Sprite|Phaser.Physics.P2.Body|p2.Body} bodyA - First connected body.
     * @param {Phaser.Sprite|Phaser.Physics.P2.Body|p2.Body} bodyB - Second connected body.
-    * @param {number} [restLength=1] - Rest length of the spring. A number > 0.
-    * @param {number} [stiffness=100] - Stiffness of the spring. A number >= 0.
-    * @param {number} [damping=1] - Damping of the spring. A number >= 0.
     * @param {number} [restLength=1] - Rest length of the spring. A number > 0.
     * @param {number} [stiffness=100] - Stiffness of the spring. A number >= 0.
     * @param {number} [damping=1] - Damping of the spring. A number >= 0.
@@ -1329,6 +1529,33 @@ Phaser.Physics.P2.prototype = {
     },
 
     /**
+    * Creates a rotational spring, connecting two bodies. A spring can have a resting length, a stiffness and damping.
+    *
+    * @method Phaser.Physics.P2#createRotationalSpring
+    * @param {Phaser.Sprite|Phaser.Physics.P2.Body|p2.Body} bodyA - First connected body.
+    * @param {Phaser.Sprite|Phaser.Physics.P2.Body|p2.Body} bodyB - Second connected body.
+    * @param {number} [restAngle] - The relative angle of bodies at which the spring is at rest. If not given, it's set to the current relative angle between the bodies.
+    * @param {number} [stiffness=100] - Stiffness of the spring. A number >= 0.
+    * @param {number} [damping=1] - Damping of the spring. A number >= 0.
+    * @return {Phaser.Physics.P2.RotationalSpring} The spring
+    */
+    createRotationalSpring: function (bodyA, bodyB, restAngle, stiffness, damping) {
+
+        bodyA = this.getBody(bodyA);
+        bodyB = this.getBody(bodyB);
+
+        if (!bodyA || !bodyB)
+        {
+            console.warn('Cannot create Rotational Spring, invalid body objects given');
+        }
+        else
+        {
+            return this.addSpring(new Phaser.Physics.P2.RotationalSpring(this, bodyA, bodyB, restAngle, stiffness, damping));
+        }
+
+    },
+
+    /**
     * Creates a new Body and adds it to the World.
     *
     * @method Phaser.Physics.P2#createBody
@@ -1347,7 +1574,7 @@ Phaser.Physics.P2.prototype = {
     */
     createBody: function (x, y, mass, addToWorld, options, data) {
 
-        if (typeof addToWorld === 'undefined') { addToWorld = false; }
+        if (addToWorld === undefined) { addToWorld = false; }
 
         var body = new Phaser.Physics.P2.Body(this.game, null, x, y, mass);
 
@@ -1388,7 +1615,7 @@ Phaser.Physics.P2.prototype = {
     */
     createParticle: function (x, y, mass, addToWorld, options, data) {
 
-        if (typeof addToWorld === 'undefined') { addToWorld = false; }
+        if (addToWorld === undefined) { addToWorld = false; }
 
         var body = new Phaser.Physics.P2.Body(this.game, null, x, y, mass);
 
@@ -1423,7 +1650,7 @@ Phaser.Physics.P2.prototype = {
     */
     convertCollisionObjects: function (map, layer, addToWorld) {
 
-        if (typeof addToWorld === 'undefined') { addToWorld = true; }
+        if (addToWorld === undefined) { addToWorld = true; }
 
         var output = [];
 
@@ -1491,8 +1718,8 @@ Phaser.Physics.P2.prototype = {
 
         layer = map.getLayer(layer);
 
-        if (typeof addToWorld === 'undefined') { addToWorld = true; }
-        if (typeof optimize === 'undefined') { optimize = true; }
+        if (addToWorld === undefined) { addToWorld = true; }
+        if (optimize === undefined) { optimize = true; }
 
         //  If the bodies array is already populated we need to nuke it
         this.clearTilemapLayerBodies(map, layer);
@@ -1646,50 +1873,10 @@ Object.defineProperty(Phaser.Physics.P2.prototype, "friction", {
 });
 
 /**
-* @name Phaser.Physics.P2#defaultFriction
-* @property {number} defaultFriction - DEPRECATED: Use World.friction instead.
-*/
-Object.defineProperty(Phaser.Physics.P2.prototype, "defaultFriction", {
-
-    get: function () {
-
-        return this.world.defaultContactMaterial.friction;
-
-    },
-
-    set: function (value) {
-
-        this.world.defaultContactMaterial.friction = value;
-
-    }
-
-});
-
-/**
 * @name Phaser.Physics.P2#restitution
 * @property {number} restitution - Default coefficient of restitution between colliding bodies. This value is used if no matching ContactMaterial is found for a Material pair.
 */
 Object.defineProperty(Phaser.Physics.P2.prototype, "restitution", {
-
-    get: function () {
-
-        return this.world.defaultContactMaterial.restitution;
-
-    },
-
-    set: function (value) {
-
-        this.world.defaultContactMaterial.restitution = value;
-
-    }
-
-});
-
-/**
-* @name Phaser.Physics.P2#defaultRestitution
-* @property {number} defaultRestitution - DEPRECATED: Use World.restitution instead.
-*/
-Object.defineProperty(Phaser.Physics.P2.prototype, "defaultRestitution", {
 
     get: function () {
 
@@ -1841,20 +2028,22 @@ Object.defineProperty(Phaser.Physics.P2.prototype, "emitImpactEvent", {
 });
 
 /**
-* @name Phaser.Physics.P2#enableBodySleeping
-* @property {boolean} enableBodySleeping - Enable / disable automatic body sleeping.
+* How to deactivate bodies during simulation. Possible modes are: World.NO_SLEEPING, World.BODY_SLEEPING and World.ISLAND_SLEEPING.
+* If sleeping is enabled, you might need to wake up the bodies if they fall asleep when they shouldn't. If you want to enable sleeping in the world, but want to disable it for a particular body, see Body.allowSleep.
+* @name Phaser.Physics.P2#sleepMode
+* @property {number} sleepMode
 */
-Object.defineProperty(Phaser.Physics.P2.prototype, "enableBodySleeping", {
+Object.defineProperty(Phaser.Physics.P2.prototype, "sleepMode", {
 
     get: function () {
 
-        return this.world.enableBodySleeping;
+        return this.world.sleepMode;
 
     },
 
     set: function (value) {
 
-        this.world.enableBodySleeping = value;
+        this.world.sleepMode = value;
 
     }
 

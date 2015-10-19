@@ -38,6 +38,13 @@
             "overwrite": false
         },
         {
+            //   Loads a generic XML document
+            "type": "xml",
+            "key": "level-01-definitions",
+            "url": "assets/data/level-01-definitions.xml",
+            "overwrite": false
+        },
+        {
             //   Loads a JavaScript File with optional callback
             "type": "script",
             "key": "webfonts",
@@ -63,10 +70,25 @@
             "spacing": 0
         },
         {
+            //   Loads a Video File
+            "type": "video",
+            "key": "chrome",
+            "urls": [ "assets/video/chrome.webm", "assets/video/chrome.m4v" ]
+        },
+        {
             //   Loads an Audio File
             "type": "audio",
             "key": "boden",
             "urls": ["assets/audio/bodenstaendig_2000_in_rock_4bit.mp3", "assets/audio/bodenstaendig_2000_in_rock_4bit.ogg"],
+            "autoDecode": true
+        },
+        {
+            //   Loads an Audiosprite file and its metadata
+            "type": "audiosprite",
+            "key": "dialog",
+            "urls": [ "assets/audiosprites/dialog.m4a", "assets/audiosprites/dialog.oga" ],
+            "jsonURL": "assets/audiosprites/dialog.json",
+            "jsonData": null,
             "autoDecode": true
         },
         {
@@ -99,10 +121,10 @@
         {
             //   Loads a Bitmap Font File.
             "type": "bitmapFont",
-            "key": "ship",
-            "textureURL": "assets/tilemaps/ship_physics.json",
-            "xmlURL": "assets/tilemaps/ship_physics.json",
-            "xmlData": null,
+            "key": "desyrel",
+            "textureURL": "assets/fonts/bitmapFonts/desyrel.png",
+            "atlasURL": "assets/fonts/bitmapFonts/desyrel.xml",
+            "atlasData": null,
             "xSpacing": 0,
             "ySpacing": 0
         },

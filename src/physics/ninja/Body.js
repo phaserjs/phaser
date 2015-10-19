@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -9,7 +9,6 @@
 * the Sprite itself. For example you can set the velocity, bounce values etc all on the Body.
 *
 * @class Phaser.Physics.Ninja.Body
-* @classdesc Ninja Physics Body Constructor
 * @constructor
 * @param {Phaser.Physics.Ninja} system - The physics system this Body belongs to.
 * @param {Phaser.Sprite} sprite - The Sprite object this physics body belongs to.
@@ -25,9 +24,9 @@ Phaser.Physics.Ninja.Body = function (system, sprite, type, id, radius, x, y, wi
 
     sprite = sprite || null;
 
-    if (typeof type === 'undefined') { type = 1; }
-    if (typeof id === 'undefined') { id = 1; }
-    if (typeof radius === 'undefined') { radius = 16; }
+    if (type === undefined) { type = 1; }
+    if (id === undefined) { id = 1; }
+    if (radius === undefined) { radius = 16; }
 
     /**
     * @property {Phaser.Sprite} sprite - Reference to the parent Sprite.
@@ -558,7 +557,7 @@ Object.defineProperty(Phaser.Physics.Ninja.Body.prototype, "angle", {
 Phaser.Physics.Ninja.Body.render = function(context, body, color, filled) {
     color = color || 'rgba(0,255,0,0.4)';
 
-    if (typeof filled === 'undefined')
+    if (filled === undefined)
     {
         filled = true;
     }

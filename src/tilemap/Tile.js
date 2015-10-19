@@ -1,14 +1,13 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
 /**
-* Create a new `Tile` object.
+* A Tile is a representation of a single tile within the Tilemap.
 *
 * @class Phaser.Tile
-* @classdesc A Tile is a representation of a single tile within the Tilemap.
 * @constructor
 * @param {object} layer - The layer in the Tilemap data that this tile belongs to.
 * @param {number} index - The index of this tile type in the core map data.
@@ -38,7 +37,17 @@ Phaser.Tile = function (layer, index, x, y, width, height) {
     * @property {number} y - The y map coordinate of this tile.
     */
     this.y = y;
+    
+    /**
+    * @property {number} rotation - The rotation angle of this tile.
+    */
+    this.rotation = 0;
 
+    /**
+    * @property {boolean} flipped - Whether this tile is flipped (mirrored) or not.
+    */
+    this.flipped = false;
+    
     /**
     * @property {number} x - The x map coordinate of this tile.
     */
@@ -222,7 +231,7 @@ Phaser.Tile.prototype = {
     },
 
     /**
-    * Set collision settings on this tile.
+    * Sets the collision flags for each side of this tile and updates the interesting faces list.
     *
     * @method Phaser.Tile#setCollision
     * @param {boolean} left - Indicating collide with any object on the left.
@@ -236,6 +245,11 @@ Phaser.Tile.prototype = {
         this.collideRight = right;
         this.collideUp = up;
         this.collideDown = down;
+
+        this.faceLeft = left;
+        this.faceRight = right;
+        this.faceTop = up;
+        this.faceBottom = down;
 
     },
 

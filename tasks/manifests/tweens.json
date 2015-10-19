@@ -1,0 +1,6 @@
+[
+    "src/tween/TweenManager.js",
+    "src/tween/Tween.js",
+    "src/tween/TweenData.js",
+    "src/tween/Easing.js"
+]

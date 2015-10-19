@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -39,20 +39,16 @@ Phaser.Camera = function (game, id, x, y, width, height) {
     * Camera view.
     * The view into the world we wish to render (by default the game dimensions).
     * The x/y values are in world coordinates, not screen coordinates, the width/height is how many pixels to render.
-    * Objects outside of this view are not rendered if set to camera cull.
+    * Sprites outside of this view are not rendered if Sprite.autoCull is set to `true`. Otherwise they are always rendered.
     * @property {Phaser.Rectangle} view
     */
     this.view = new Phaser.Rectangle(x, y, width, height);
 
     /**
-    * @property {Phaser.Rectangle} screenView - Used by Sprites to work out Camera culling.
-    */
-    this.screenView = new Phaser.Rectangle(x, y, width, height);
-
-    /**
     * The Camera is bound to this Rectangle and cannot move outside of it. By default it is enabled and set to the size of the World.
     * The Rectangle can be located anywhere in the world and updated as often as you like. If you don't wish the Camera to be bound
-    * at all then set this to null. The values can be anything and are in World coordinates, with 0,0 being the center of the world.
+    * at all then set this to null. The values can be anything and are in World coordinates, with 0,0 being the top-left of the world.
+    * 
     * @property {Phaser.Rectangle} bounds - The Rectangle in which the Camera is bounded. Set to null to allow for movement anywhere.
     */
     this.bounds = new Phaser.Rectangle(x, y, width, height);
@@ -69,6 +65,12 @@ Phaser.Camera = function (game, id, x, y, width, height) {
     this.visible = true;
 
     /**
+    * @property {boolean} roundPx - If a Camera has roundPx set to `true` it will call `view.floor` as part of its update loop, keeping its boundary to integer values. Set this to `false` to disable this from happening.
+    * @default
+    */
+    this.roundPx = true;
+
+    /**
     * @property {boolean} atLimit - Whether this camera is flush with the World Bounds or not.
     */
     this.atLimit = { x: false, y: false };
@@ -80,13 +82,6 @@ Phaser.Camera = function (game, id, x, y, width, height) {
     this.target = null;
 
     /**
-    * @property {number} edge - Edge property.
-    * @private
-    * @default
-    */
-    this._edge = 0;
-
-    /**
     * @property {PIXI.DisplayObject} displayObject - The display object to which all game objects are added. Set by World.boot
     */
     this.displayObject = null;
@@ -95,6 +90,32 @@ Phaser.Camera = function (game, id, x, y, width, height) {
     * @property {Phaser.Point} scale - The scale of the display object to which all game objects are added. Set by World.boot
     */
     this.scale = null;
+
+    /**
+    * @property {number} totalInView - The total number of Sprites with `autoCull` set to `true` that are visible by this Camera.
+    * @readonly
+    */
+    this.totalInView = 0;
+
+    /**
+    * @property {Phaser.Point} _targetPosition - Internal point used to calculate target position
+    * @private
+    */
+    this._targetPosition = new Phaser.Point();
+
+    /**
+    * @property {number} edge - Edge property.
+    * @private
+    * @default
+    */
+    this._edge = 0;
+
+    /**
+    * @property {Phaser.Point} position - Current position of the camera in world.
+    * @private
+    * @default
+    */
+    this._position = new Phaser.Point();
 
 };
 
@@ -125,14 +146,29 @@ Phaser.Camera.FOLLOW_TOPDOWN_TIGHT = 3;
 Phaser.Camera.prototype = {
 
     /**
-    * Tells this camera which sprite to follow.
+    * Camera preUpdate. Sets the total view counter to zero.
+    *
+    * @method Phaser.Camera#preUpdate
+    */
+    preUpdate: function () {
+
+        this.totalInView = 0;
+
+    },
+
+    /**
+    * Tell the camera which sprite to follow.
+    * 
+    * If you find you're getting a slight "jitter" effect when following a Sprite it's probably to do with sub-pixel rendering of the Sprite position.
+    * This can be disabled by setting `game.renderer.renderSession.roundPixels = true` to force full pixel rendering.
+    * 
     * @method Phaser.Camera#follow
     * @param {Phaser.Sprite|Phaser.Image|Phaser.Text} target - The object you want the camera to track. Set to null to not follow anything.
     * @param {number} [style] - Leverage one of the existing "deadzone" presets. If you use a custom deadzone, ignore this parameter and manually specify the deadzone after calling follow().
     */
     follow: function (target, style) {
 
-        if (typeof style === "undefined") { style = Phaser.Camera.FOLLOW_LOCKON; }
+        if (style === undefined) { style = Phaser.Camera.FOLLOW_LOCKON; }
 
         this.target = target;
 
@@ -217,6 +253,11 @@ Phaser.Camera.prototype = {
             this.checkBounds();
         }
 
+        if (this.roundPx)
+        {
+            this.view.floor();
+        }
+
         this.displayObject.position.x = -this.view.x;
         this.displayObject.position.y = -this.view.y;
 
@@ -229,34 +270,41 @@ Phaser.Camera.prototype = {
     */
     updateTarget: function () {
 
+        this._targetPosition.copyFrom(this.target);
+
+        if (this.target.parent)
+        {
+            this._targetPosition.multiply(this.target.parent.worldTransform.a, this.target.parent.worldTransform.d);
+        }
+
         if (this.deadzone)
         {
-            this._edge = this.target.x - this.view.x;
+            this._edge = this._targetPosition.x - this.view.x;
 
             if (this._edge < this.deadzone.left)
             {
-                this.view.x = this.target.x - this.deadzone.left;
+                this.view.x = this._targetPosition.x - this.deadzone.left;
             }
             else if (this._edge > this.deadzone.right)
             {
-                this.view.x = this.target.x - this.deadzone.right;
+                this.view.x = this._targetPosition.x - this.deadzone.right;
             }
 
-            this._edge = this.target.y - this.view.y;
+            this._edge = this._targetPosition.y - this.view.y;
 
             if (this._edge < this.deadzone.top)
             {
-                this.view.y = this.target.y - this.deadzone.top;
+                this.view.y = this._targetPosition.y - this.deadzone.top;
             }
             else if (this._edge > this.deadzone.bottom)
             {
-                this.view.y = this.target.y - this.deadzone.bottom;
+                this.view.y = this._targetPosition.y - this.deadzone.bottom;
             }
         }
         else
         {
-            this.view.x = this.target.x - this.view.halfWidth;
-            this.view.y = this.target.y - this.view.halfHeight;
+            this.view.x = this._targetPosition.x - this.view.halfWidth;
+            this.view.y = this._targetPosition.y - this.view.halfHeight;
         }
 
     },
@@ -267,13 +315,16 @@ Phaser.Camera.prototype = {
     */
     setBoundsToWorld: function () {
 
-        this.bounds.setTo(this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height);
+        if (this.bounds)
+        {
+            this.bounds.copyFrom(this.game.world.bounds);
+        }
 
     },
 
     /**
     * Method called to ensure the camera doesn't venture outside of the game world.
-    * @method Phaser.Camera#checkWorldBounds
+    * @method Phaser.Camera#checkBounds
     */
     checkBounds: function () {
 
@@ -304,8 +355,6 @@ Phaser.Camera.prototype = {
             this.atLimit.y = true;
             this.view.y = this.bounds.bottom - this.height;
         }
-
-        this.view.floor();
 
     },
 
@@ -397,6 +446,31 @@ Object.defineProperty(Phaser.Camera.prototype, "y", {
     set: function (value) {
 
         this.view.y = value;
+
+        if (this.bounds)
+        {
+            this.checkBounds();
+        }
+    }
+
+});
+
+/**
+* The Cameras position. This value is automatically clamped if it falls outside of the World bounds.
+* @name Phaser.Camera#position
+* @property {Phaser.Point} position - Gets or sets the cameras xy position using Phaser.Point object.
+*/
+Object.defineProperty(Phaser.Camera.prototype, "position", {
+
+    get: function () {
+        this._position.set(this.view.centerX, this.view.centerY);
+        return this._position;
+    },
+
+    set: function (value) {
+
+        if (typeof value.x !== "undefined") { this.view.x = value.x; }
+        if (typeof value.y !== "undefined") { this.view.y = value.y; }
 
         if (this.bounds)
         {

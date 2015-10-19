@@ -1,10 +1,13 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
 /**
+* A Retro Font is similar to a BitmapFont, in that it uses a texture to render the text. However unlike a BitmapFont every character in a RetroFont
+* is the same size. This makes it similar to a sprite sheet. You typically find font sheets like this from old 8/16-bit games and demos.
+* 
 * @class Phaser.RetroFont
 * @extends Phaser.RenderTexture
 * @constructor
@@ -26,7 +29,7 @@ Phaser.RetroFont = function (game, key, characterWidth, characterHeight, chars, 
         return false;
     }
 
-    if (typeof charsPerRow === 'undefined' || charsPerRow === null)
+    if (charsPerRow === undefined || charsPerRow === null)
     {
         charsPerRow = game.cache.getImage(key).width / characterWidth;
     }
@@ -105,7 +108,7 @@ Phaser.RetroFont = function (game, key, characterWidth, characterHeight, chars, 
     this.fixedWidth = 0;
 
     /**
-    * @property {HTMLImage} fontSet - A reference to the image stored in the Game.Cache that contains the font.
+    * @property {Image} fontSet - A reference to the image stored in the Game.Cache that contains the font.
     */
     this.fontSet = game.cache.getImage(key);
 
@@ -121,30 +124,25 @@ Phaser.RetroFont = function (game, key, characterWidth, characterHeight, chars, 
     */
     this.grabData = [];
 
+    /**
+    * @property {Phaser.FrameData} frameData - The FrameData representing this Retro Font.
+    */
+    this.frameData = new Phaser.FrameData();
+
     //  Now generate our rects for faster copying later on
     var currentX = this.offsetX;
     var currentY = this.offsetY;
     var r = 0;
-    var data = new Phaser.FrameData();
 
     for (var c = 0; c < chars.length; c++)
     {
-        var uuid = game.rnd.uuid();
-
-        var frame = data.addFrame(new Phaser.Frame(c, currentX, currentY, this.characterWidth, this.characterHeight, '', uuid));
+        var frame = this.frameData.addFrame(new Phaser.Frame(c, currentX, currentY, this.characterWidth, this.characterHeight));
 
         this.grabData[chars.charCodeAt(c)] = frame.index;
 
-        PIXI.TextureCache[uuid] = new PIXI.Texture(PIXI.BaseTextureCache[key], {
-            x: currentX,
-            y: currentY,
-            width: this.characterWidth,
-            height: this.characterHeight
-        });
-
         r++;
 
-        if (r == this.characterPerRow)
+        if (r === this.characterPerRow)
         {
             r = 0;
             currentX = this.offsetX;
@@ -156,7 +154,7 @@ Phaser.RetroFont = function (game, key, characterWidth, characterHeight, chars, 
         }
     }
 
-    game.cache.updateFrameData(key, data);
+    game.cache.updateFrameData(key, this.frameData);
 
     /**
     * @property {Phaser.Image} stamp - The image that is stamped to the RenderTexture for each character in the font.
@@ -198,21 +196,21 @@ Phaser.RetroFont.ALIGN_RIGHT = "right";
 Phaser.RetroFont.ALIGN_CENTER = "center";
 
 /**
-* Text Set 1 = !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+* Text Set 1 =  !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
 * @constant
 * @type {string}
 */
 Phaser.RetroFont.TEXT_SET1 = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
 
 /**
-* Text Set 2 =  !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ
+* Text Set 2 =  !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ
 * @constant
 * @type {string}
 */
 Phaser.RetroFont.TEXT_SET2 = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 /**
-* Text Set 3 = ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789
+* Text Set 3 = ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 
 * @constant
 * @type {string}
 */
@@ -233,14 +231,14 @@ Phaser.RetroFont.TEXT_SET4 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789";
 Phaser.RetroFont.TEXT_SET5 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ.,/() '!?-*:0123456789";
 
 /**
-* Text Set 6 = ABCDEFGHIJKLMNOPQRSTUVWXYZ!?:;0123456789\"(),-.'
+* Text Set 6 = ABCDEFGHIJKLMNOPQRSTUVWXYZ!?:;0123456789"(),-.' 
 * @constant
 * @type {string}
 */
 Phaser.RetroFont.TEXT_SET6 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ!?:;0123456789\"(),-.' ";
 
 /**
-* Text Set 7 = AGMSY+:4BHNTZ!;5CIOU.?06DJPV,(17EKQW\")28FLRX-'39
+* Text Set 7 = AGMSY+:4BHNTZ!;5CIOU.?06DJPV,(17EKQW")28FLRX-'39
 * @constant
 * @type {string}
 */
@@ -254,7 +252,7 @@ Phaser.RetroFont.TEXT_SET7 = "AGMSY+:4BHNTZ!;5CIOU.?06DJPV,(17EKQW\")28FLRX-'39"
 Phaser.RetroFont.TEXT_SET8 = "0123456789 .ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 /**
-* Text Set 9 = ABCDEFGHIJKLMNOPQRSTUVWXYZ()-0123456789.:,'\"?!
+* Text Set 9 = ABCDEFGHIJKLMNOPQRSTUVWXYZ()-0123456789.:,'"?!
 * @constant
 * @type {string}
 */
@@ -268,7 +266,7 @@ Phaser.RetroFont.TEXT_SET9 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ()-0123456789.:,'\"?!";
 Phaser.RetroFont.TEXT_SET10 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 /**
-* Text Set 11 = ABCDEFGHIJKLMNOPQRSTUVWXYZ.,\"-+!?()':;0123456789
+* Text Set 11 = ABCDEFGHIJKLMNOPQRSTUVWXYZ.,"-+!?()':;0123456789
 * @constant
 * @type {string}
 */
@@ -285,7 +283,7 @@ Phaser.RetroFont.TEXT_SET11 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ.,\"-+!?()':;0123456789
 */
 Phaser.RetroFont.prototype.setFixedWidth = function (width, lineAlignment) {
 
-    if (typeof lineAlignment === 'undefined') { lineAlignment = 'left'; }
+    if (lineAlignment === undefined) { lineAlignment = 'left'; }
 
     this.fixedWidth = width;
     this.align = lineAlignment;
@@ -338,6 +336,7 @@ Phaser.RetroFont.prototype.buildRetroFontText = function () {
     var cx = 0;
     var cy = 0;
 
+    //  Clears the textureBuffer
     this.clear();
 
     if (this.multiLine)
@@ -356,21 +355,18 @@ Phaser.RetroFont.prototype.buildRetroFontText = function () {
         //  Loop through each line of text
         for (var i = 0; i < lines.length; i++)
         {
+            //  Phaser.RetroFont.ALIGN_LEFT
+            cx = 0;
+
             //  This line of text is held in lines[i] - need to work out the alignment
-            switch (this.align)
+            if (this.align === Phaser.RetroFont.ALIGN_RIGHT)
             {
-                case Phaser.RetroFont.ALIGN_LEFT:
-                    cx = 0;
-                    break;
-
-                case Phaser.RetroFont.ALIGN_RIGHT:
-                    cx = this.width - (lines[i].length * (this.characterWidth + this.customSpacingX));
-                    break;
-
-                case Phaser.RetroFont.ALIGN_CENTER:
-                    cx = (this.width / 2) - ((lines[i].length * (this.characterWidth + this.customSpacingX)) / 2);
-                    cx += this.customSpacingX / 2;
-                    break;
+                cx = this.width - (lines[i].length * (this.characterWidth + this.customSpacingX));
+            }
+            else if (this.align === Phaser.RetroFont.ALIGN_CENTER)
+            {
+                cx = (this.width / 2) - ((lines[i].length * (this.characterWidth + this.customSpacingX)) / 2);
+                cx += this.customSpacingX / 2;
             }
 
             //  Sanity checks
@@ -395,26 +391,29 @@ Phaser.RetroFont.prototype.buildRetroFontText = function () {
             this.resize(this._text.length * (this.characterWidth + this.customSpacingX), this.characterHeight, true);
         }
 
-        switch (this.align)
+        //  Phaser.RetroFont.ALIGN_LEFT
+        cx = 0;
+
+        if (this.align === Phaser.RetroFont.ALIGN_RIGHT)
         {
-            case Phaser.RetroFont.ALIGN_LEFT:
-                cx = 0;
-                break;
-
-            case Phaser.RetroFont.ALIGN_RIGHT:
-                cx = this.width - (this._text.length * (this.characterWidth + this.customSpacingX));
-                break;
-
-            case Phaser.RetroFont.ALIGN_CENTER:
-                cx = (this.width / 2) - ((this._text.length * (this.characterWidth + this.customSpacingX)) / 2);
-                cx += this.customSpacingX / 2;
-                break;
+            cx = this.width - (this._text.length * (this.characterWidth + this.customSpacingX));
+        }
+        else if (this.align === Phaser.RetroFont.ALIGN_CENTER)
+        {
+            cx = (this.width / 2) - ((this._text.length * (this.characterWidth + this.customSpacingX)) / 2);
+            cx += this.customSpacingX / 2;
         }
 
-        this.textureBuffer.clear();
+        //  Sanity checks
+        if (cx < 0)
+        {
+            cx = 0;
+        }
 
         this.pasteLine(this._text, cx, 0, this.customSpacingX);
     }
+
+    this.requiresReTint = true;
 
 };
 
@@ -431,12 +430,10 @@ Phaser.RetroFont.prototype.buildRetroFontText = function () {
 */
 Phaser.RetroFont.prototype.pasteLine = function (line, x, y, customSpacingX) {
 
-    var p = new Phaser.Point();
-
     for (var c = 0; c < line.length; c++)
     {
         //  If it's a space then there is no point copying, so leave a blank space
-        if (line.charAt(c) == " ")
+        if (line.charAt(c) === " ")
         {
             x += this.characterWidth + customSpacingX;
         }
@@ -446,8 +443,7 @@ Phaser.RetroFont.prototype.pasteLine = function (line, x, y, customSpacingX) {
             if (this.grabData[line.charCodeAt(c)] >= 0)
             {
                 this.stamp.frame = this.grabData[line.charCodeAt(c)];
-                p.set(x, y);
-                this.render(this.stamp, p, false);
+                this.renderXY(this.stamp, x, y, false);
 
                 x += this.characterWidth + customSpacingX;
 
@@ -542,8 +538,6 @@ Phaser.RetroFont.prototype.updateOffset = function (x, y) {
     {
         frames[i].x += diffX;
         frames[i].y += diffY;
-        PIXI.TextureCache[frames[i].uuid].frame.x = frames[i].x;
-        PIXI.TextureCache[frames[i].uuid].frame.y = frames[i].y;
     }
 
     this.buildRetroFontText();
@@ -551,7 +545,7 @@ Phaser.RetroFont.prototype.updateOffset = function (x, y) {
 };
 
 /**
-* @name Phaser.BitmapText#text
+* @name Phaser.RetroFont#text
 * @property {string} text - Set this value to update the text in this sprite. Carriage returns are automatically stripped out if multiLine is false. Text is converted to upper case if autoUpperCase is true.
 */
 Object.defineProperty(Phaser.RetroFont.prototype, "text", {
@@ -589,7 +583,7 @@ Object.defineProperty(Phaser.RetroFont.prototype, "text", {
 });
 
 /**
-* @name Phaser.BitmapText#smoothed
+* @name Phaser.RetroFont#smoothed
 * @property {string} text - Set this value to update the text in this sprite. Carriage returns are automatically stripped out if multiLine is false. Text is converted to upper case if autoUpperCase is true.
 */
 Object.defineProperty(Phaser.RetroFont.prototype, "smoothed", {

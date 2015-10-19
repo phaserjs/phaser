@@ -5,18 +5,19 @@
         baseUrl: "src/",
         
         paths: {
-        	phaser:   'libs/phaser/phaser.min',
+            //  Edit the below path to point to where-ever you have placed the phaser.min.js file
+            phaser: 'libs/phaser/phaser.min'
         },
 
         shim: {
-        	'phaser': {
-        		exports: 'Phaser'
-        	}
+            'phaser': {
+                exports: 'Phaser'
+            }
         }
     });
  
     require(['phaser', 'game'], function (Phaser, Game) {
-		var game = new Game();
-		game.start();
+        var game = new Game();
+        game.start();
     });
 }());

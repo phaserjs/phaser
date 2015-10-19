@@ -1,52 +1,56 @@
 
 module.exports = {
-    p2: {
+
+    custom: {
+
         options: {
-            banner: '/* p2.js custom build for Phaser v<%= package.version %> - http://phaser.io - @photonstorm - (c) 2014 Photon Storm Ltd. */\n'
+            sourceMap: '<%= sourcemap %>',
+            sourceMapName: '<%= compile_dir %>/<%= filename %>.map',
+            banner: '/* Phaser v<%= package.version %> - http://phaser.io - @photonstorm - (c) 2015 Photon Storm Ltd. */\n'
         },
-        src: ['<%= concat.p2.dest %>'],
-        dest: '<%= compile_dir %>/p2.min.js'
+
+        src: ['<%= concat.custom.dest %>'],
+        dest: '<%= compile_dir %>/<%= filename %>.min.js'
+
     },
 
     pixi: {
+
         options: {
-            banner: '/* Pixi.js custom build for Phaser v<%= package.version %> - http://phaser.io - @photonstorm - (c) 2014 Photon Storm Ltd. */\n'
+            sourceMap: '<%= sourcemap %>',
+            sourceMapName: '<%= compile_dir %>/pixi.map',
+            banner: '/* Phaser v<%= package.version %> PIXI Build - http://phaser.io - @photonstorm - (c) 2015 Photon Storm Ltd. */\n'
         },
+
         src: ['<%= concat.pixi.dest %>'],
         dest: '<%= compile_dir %>/pixi.min.js'
+
     },
 
-    ninja: {
+    creature: {
+
         options: {
-            banner: '/* Ninja Physics for Phaser v<%= package.version %> - http://phaser.io - @photonstorm - (c) 2014 Photon Storm Ltd. */\n'
+            sourceMap: '<%= sourcemap %>',
+            sourceMapName: '<%= compile_dir %>/creature.map',
+            banner: '/* Phaser v<%= package.version %> Creature Build - http://phaser.io - @photonstorm - (c) 2015 Photon Storm Ltd. */\n'
         },
-        src: ['<%= concat.ninja.dest %>'],
-        dest: '<%= compile_dir %>/ninja.min.js'
+
+        src: ['<%= concat.creatureGlobalSplit.dest %>'],
+        dest: '<%= compile_dir %>/creature.min.js'
+
     },
 
-    phaser: {
-        options: {
-            banner: '/* Phaser (no libs) v<%= package.version %> - http://phaser.io - @photonstorm - (c) 2014 Photon Storm Ltd. */\n'
-        },
-        src: ['<%= concat.phaser.dest %>'],
-        dest: '<%= compile_dir %>/phaser-no-libs.min.js'
-    },
+    p2: {
 
-    phaserArcadePhysics: {
         options: {
-            banner: '/* Phaser (AP) v<%= package.version %> - http://phaser.io - @photonstorm - (c) 2014 Photon Storm Ltd. */\n'
+            sourceMap: '<%= sourcemap %>',
+            sourceMapName: '<%= compile_dir %>/p2.map',
+            banner: '/* Phaser v<%= package.version %> P2.JS Build - http://phaser.io - @photonstorm - (c) 2015 Photon Storm Ltd. */\n'
         },
-        src: ['<%= concat.phaserArcadePhysics.dest %>'],
-        dest: '<%= compile_dir %>/phaser-arcade-physics.min.js'
-    },
 
-    standalone: {
-        options: {
-            sourceMap: true,
-            sourceMapName: '<%= compile_dir %>/phaser.map',
-            banner: '/* Phaser v<%= package.version %> - http://phaser.io - @photonstorm - (c) 2014 Photon Storm Ltd. */\n'
-        },
-        src: ['<%= concat.standalone.dest %>'],
-        dest: '<%= compile_dir %>/phaser.min.js'
+        src: ['<%= concat.p2GlobalSplit.dest %>'],
+        dest: '<%= compile_dir %>/p2.min.js'
+
     }
+
 };

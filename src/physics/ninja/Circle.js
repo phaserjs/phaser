@@ -1,7 +1,7 @@
 /* jshint camelcase: false */
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -10,7 +10,6 @@
 * Note: This class could be massively optimised and reduced in size. I leave that challenge up to you.
 *
 * @class Phaser.Physics.Ninja.Circle
-* @classdesc Arcade Physics Constructor
 * @constructor
 * @param {Phaser.Physics.Ninja.Body} body - The body that owns this shape.
 * @param {number} x - The x coordinate to create this shape at.

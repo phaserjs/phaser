@@ -2,7 +2,6 @@
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
 
-
 /**
  * A DisplayObjectContainer represents a collection of display objects.
  * It is the base class of all display objects that act as a container for other objects.
@@ -13,16 +12,17 @@
  */
 PIXI.DisplayObjectContainer = function()
 {
-    PIXI.DisplayObject.call( this );
+    PIXI.DisplayObject.call(this);
 
     /**
      * [read-only] The array of children of this container.
      *
      * @property children
-     * @type Array<DisplayObject>
+     * @type Array(DisplayObject)
      * @readOnly
      */
     this.children = [];
+    
 };
 
 // constructor
@@ -35,30 +35,28 @@ PIXI.DisplayObjectContainer.prototype.constructor = PIXI.DisplayObjectContainer;
  * @property width
  * @type Number
  */
-
- 
 Object.defineProperty(PIXI.DisplayObjectContainer.prototype, 'width', {
+
     get: function() {
         return this.scale.x * this.getLocalBounds().width;
     },
+
     set: function(value) {
         
         var width = this.getLocalBounds().width;
 
-        if(width !== 0)
+        if (width !== 0)
         {
-            this.scale.x = value / ( width/this.scale.x );
+            this.scale.x = value / width;
         }
         else
         {
             this.scale.x = 1;
         }
-
         
         this._width = value;
     }
 });
-
 
 /**
  * The height of the displayObjectContainer, setting this will actually modify the scale to achieve the value set
@@ -66,18 +64,19 @@ Object.defineProperty(PIXI.DisplayObjectContainer.prototype, 'width', {
  * @property height
  * @type Number
  */
-
 Object.defineProperty(PIXI.DisplayObjectContainer.prototype, 'height', {
+
     get: function() {
         return  this.scale.y * this.getLocalBounds().height;
     },
+
     set: function(value) {
 
         var height = this.getLocalBounds().height;
 
-        if(height !== 0)
+        if (height !== 0)
         {
-            this.scale.y = value / ( height/this.scale.y );
+            this.scale.y = value / height;
         }
         else
         {
@@ -86,14 +85,15 @@ Object.defineProperty(PIXI.DisplayObjectContainer.prototype, 'height', {
 
         this._height = value;
     }
-});
 
+});
 
 /**
  * Adds a child to the container.
  *
  * @method addChild
  * @param child {DisplayObject} The DisplayObject to add to the container
+ * @return {DisplayObject} The child that was added.
  */
 PIXI.DisplayObjectContainer.prototype.addChild = function(child)
 {
@@ -106,6 +106,7 @@ PIXI.DisplayObjectContainer.prototype.addChild = function(child)
  * @method addChildAt
  * @param child {DisplayObject} The child to add
  * @param index {Number} The index to place the child in
+ * @return {DisplayObject} The child that was added.
  */
 PIXI.DisplayObjectContainer.prototype.addChildAt = function(child, index)
 {
@@ -126,17 +127,16 @@ PIXI.DisplayObjectContainer.prototype.addChildAt = function(child, index)
     }
     else
     {
-        throw new Error(child + ' The index '+ index +' supplied is out of bounds ' + this.children.length);
+        throw new Error(child + 'addChildAt: The index '+ index +' supplied is out of bounds ' + this.children.length);
     }
 };
 
 /**
- * [NYI] Swaps the depth of 2 displayObjects
+ * Swaps the position of 2 Display Objects within this container.
  *
  * @method swapChildren
  * @param child {DisplayObject}
  * @param child2 {DisplayObject}
- * @private
  */
 PIXI.DisplayObjectContainer.prototype.swapChildren = function(child, child2)
 {
@@ -144,8 +144,8 @@ PIXI.DisplayObjectContainer.prototype.swapChildren = function(child, child2)
         return;
     }
 
-    var index1 = this.children.indexOf(child);
-    var index2 = this.children.indexOf(child2);
+    var index1 = this.getChildIndex(child);
+    var index2 = this.getChildIndex(child2);
 
     if(index1 < 0 || index2 < 0) {
         throw new Error('swapChildren: Both the supplied DisplayObjects must be a child of the caller.');
@@ -153,7 +153,42 @@ PIXI.DisplayObjectContainer.prototype.swapChildren = function(child, child2)
 
     this.children[index1] = child2;
     this.children[index2] = child;
-    
+
+};
+
+/**
+ * Returns the index position of a child DisplayObject instance
+ *
+ * @method getChildIndex
+ * @param child {DisplayObject} The DisplayObject instance to identify
+ * @return {Number} The index position of the child display object to identify
+ */
+PIXI.DisplayObjectContainer.prototype.getChildIndex = function(child)
+{
+    var index = this.children.indexOf(child);
+    if (index === -1)
+    {
+        throw new Error('The supplied DisplayObject must be a child of the caller');
+    }
+    return index;
+};
+
+/**
+ * Changes the position of an existing child in the display object container
+ *
+ * @method setChildIndex
+ * @param child {DisplayObject} The child DisplayObject instance for which you want to change the index number
+ * @param index {Number} The resulting index number for the child display object
+ */
+PIXI.DisplayObjectContainer.prototype.setChildIndex = function(child, index)
+{
+    if (index < 0 || index >= this.children.length)
+    {
+        throw new Error('The supplied index is out of bounds');
+    }
+    var currentIndex = this.getChildIndex(child);
+    this.children.splice(currentIndex, 1); //remove from old position
+    this.children.splice(index, 0, child); //add at new position
 };
 
 /**
@@ -161,17 +196,16 @@ PIXI.DisplayObjectContainer.prototype.swapChildren = function(child, child2)
  *
  * @method getChildAt
  * @param index {Number} The index to get the child from
+ * @return {DisplayObject} The child at the given index, if any.
  */
 PIXI.DisplayObjectContainer.prototype.getChildAt = function(index)
 {
-    if(index >= 0 && index < this.children.length)
+    if (index < 0 || index >= this.children.length)
     {
-        return this.children[index];
+        throw new Error('getChildAt: Supplied index '+ index +' does not exist in the child list, or the supplied DisplayObject must be a child of the caller');
     }
-    else
-    {
-        throw new Error('Supplied index does not exist in the child list, or the supplied DisplayObject must be a child of the caller');
-    }
+    return this.children[index];
+    
 };
 
 /**
@@ -179,17 +213,22 @@ PIXI.DisplayObjectContainer.prototype.getChildAt = function(index)
  *
  * @method removeChild
  * @param child {DisplayObject} The DisplayObject to remove
+ * @return {DisplayObject} The child that was removed.
  */
 PIXI.DisplayObjectContainer.prototype.removeChild = function(child)
 {
-    return this.removeChildAt( this.children.indexOf( child ) );
+    var index = this.children.indexOf( child );
+    if(index === -1)return;
+    
+    return this.removeChildAt( index );
 };
 
 /**
- * Removes a child from the specified index position in the child list of the container.
+ * Removes a child from the specified index position.
  *
  * @method removeChildAt
  * @param index {Number} The index to get the child from
+ * @return {DisplayObject} The child that was removed.
  */
 PIXI.DisplayObjectContainer.prototype.removeChildAt = function(index)
 {
@@ -203,11 +242,11 @@ PIXI.DisplayObjectContainer.prototype.removeChildAt = function(index)
 };
 
 /**
-* Removes all child instances from the child list of the container.
+* Removes all children from this container that are within the begin and end indexes.
 *
 * @method removeChildren
-* @param beginIndex {Number} The beginning position. Predefined value is 0.
-* @param endIndex {Number} The ending position. Predefined value is children's array length.
+* @param beginIndex {Number} The beginning position. Default value is 0.
+* @param endIndex {Number} The ending position. Default value is size of the container.
 */
 PIXI.DisplayObjectContainer.prototype.removeChildren = function(beginIndex, endIndex)
 {
@@ -226,52 +265,56 @@ PIXI.DisplayObjectContainer.prototype.removeChildren = function(beginIndex, endI
         }
         return removed;
     }
+    else if (range === 0 && this.children.length === 0)
+    {
+        return [];
+    }
     else
     {
-        throw new Error( 'Range Error, numeric values are outside the acceptable range' );
+        throw new Error( 'removeChildren: Range Error, numeric values are outside the acceptable range' );
     }
 };
 
 /*
- * Updates the container's childrens transform for rendering
+ * Updates the transform on all children of this container for rendering
  *
  * @method updateTransform
  * @private
  */
 PIXI.DisplayObjectContainer.prototype.updateTransform = function()
 {
-    //this._currentBounds = null;
+    if (!this.visible)
+    {
+        return;
+    }
 
-    if(!this.visible)return;
+    this.displayObjectUpdateTransform();
 
-    PIXI.DisplayObject.prototype.updateTransform.call( this );
+    if (this._cacheAsBitmap)
+    {
+        return;
+    }
 
-    if(this._cacheAsBitmap)return;
-
-    for(var i=0,j=this.children.length; i<j; i++)
+    for (var i = 0; i < this.children.length; i++)
     {
         this.children[i].updateTransform();
     }
 };
 
+// performance increase to avoid using call.. (10x faster)
+PIXI.DisplayObjectContainer.prototype.displayObjectContainerUpdateTransform = PIXI.DisplayObjectContainer.prototype.updateTransform;
+
 /**
- * Retrieves the bounds of the displayObjectContainer as a rectangle object
+ * Retrieves the bounds of the displayObjectContainer as a rectangle. The bounds calculation takes all visible children into consideration.
  *
  * @method getBounds
- * @return {Rectangle} the rectangular bounding area
+ * @return {Rectangle} The rectangular bounding area
  */
-PIXI.DisplayObjectContainer.prototype.getBounds = function(matrix)
+PIXI.DisplayObjectContainer.prototype.getBounds = function()
 {
     if(this.children.length === 0)return PIXI.EmptyRectangle;
 
     // TODO the bounds have already been calculated this render session so return what we have
-    if(matrix)
-    {
-        var matrixCache = this.worldTransform;
-        this.worldTransform = matrix;
-        this.updateTransform();
-        this.worldTransform = matrixCache;
-    }
 
     var minX = Infinity;
     var minY = Infinity;
@@ -293,7 +336,7 @@ PIXI.DisplayObjectContainer.prototype.getBounds = function(matrix)
 
         childVisible = true;
 
-        childBounds = this.children[i].getBounds( matrix );
+        childBounds = this.children[i].getBounds();
      
         minX = minX < childBounds.x ? minX : childBounds.x;
         minY = minY < childBounds.y ? minY : childBounds.y;
@@ -321,6 +364,12 @@ PIXI.DisplayObjectContainer.prototype.getBounds = function(matrix)
     return bounds;
 };
 
+/**
+ * Retrieves the non-global local bounds of the displayObjectContainer as a rectangle. The calculation takes all visible children into consideration.
+ *
+ * @method getLocalBounds
+ * @return {Rectangle} The rectangular bounding area
+ */
 PIXI.DisplayObjectContainer.prototype.getLocalBounds = function()
 {
     var matrixCache = this.worldTransform;
@@ -340,7 +389,7 @@ PIXI.DisplayObjectContainer.prototype.getLocalBounds = function()
 };
 
 /**
- * Sets the container's stage reference, the stage this object is connected to
+ * Sets the containers Stage reference. This is the Stage that this object, and all of its children, is connected to.
  *
  * @method setStageReference
  * @param stage {Stage} the stage that the container will have as its current stage reference
@@ -348,31 +397,25 @@ PIXI.DisplayObjectContainer.prototype.getLocalBounds = function()
 PIXI.DisplayObjectContainer.prototype.setStageReference = function(stage)
 {
     this.stage = stage;
-    if(this._interactive)this.stage.dirty = true;
-
-    for(var i=0,j=this.children.length; i<j; i++)
+    
+    for (var i=0; i < this.children.length; i++)
     {
-        var child = this.children[i];
-        child.setStageReference(stage);
+        this.children[i].setStageReference(stage)
     }
 };
 
 /**
- * removes the current stage reference of the container
+ * Removes the current stage reference from the container and all of its children.
  *
  * @method removeStageReference
  */
 PIXI.DisplayObjectContainer.prototype.removeStageReference = function()
 {
-
-    for(var i=0,j=this.children.length; i<j; i++)
+    for (var i = 0; i < this.children.length; i++)
     {
-        var child = this.children[i];
-        child.removeStageReference();
+        this.children[i].removeStageReference();
     }
 
-    if(this._interactive)this.stage.dirty = true;
-    
     this.stage = null;
 };
 
@@ -385,27 +428,26 @@ PIXI.DisplayObjectContainer.prototype.removeStageReference = function()
 */
 PIXI.DisplayObjectContainer.prototype._renderWebGL = function(renderSession)
 {
-    if(!this.visible || this.alpha <= 0)return;
+    if (!this.visible || this.alpha <= 0) return;
     
-    if(this._cacheAsBitmap)
+    if (this._cacheAsBitmap)
     {
         this._renderCachedSprite(renderSession);
         return;
     }
     
-    var i,j;
+    var i;
 
-    if(this._mask || this._filters)
+    if (this._mask || this._filters)
     {
-        
         // push filter first as we need to ensure the stencil buffer is correct for any masking
-        if(this._filters)
+        if (this._filters)
         {
             renderSession.spriteBatch.flush();
             renderSession.filterManager.pushFilter(this._filterBlock);
         }
 
-        if(this._mask)
+        if (this._mask)
         {
             renderSession.spriteBatch.stop();
             renderSession.maskManager.pushMask(this.mask, renderSession);
@@ -413,22 +455,22 @@ PIXI.DisplayObjectContainer.prototype._renderWebGL = function(renderSession)
         }
 
         // simple render children!
-        for(i=0,j=this.children.length; i<j; i++)
+        for (i = 0; i < this.children.length; i++)
         {
             this.children[i]._renderWebGL(renderSession);
         }
 
         renderSession.spriteBatch.stop();
 
-        if(this._mask)renderSession.maskManager.popMask(this._mask, renderSession);
-        if(this._filters)renderSession.filterManager.popFilter();
+        if (this._mask) renderSession.maskManager.popMask(this._mask, renderSession);
+        if (this._filters) renderSession.filterManager.popFilter();
         
         renderSession.spriteBatch.start();
     }
     else
     {
         // simple render children!
-        for(i=0,j=this.children.length; i<j; i++)
+        for (i = 0; i < this.children.length; i++)
         {
             this.children[i]._renderWebGL(renderSession);
         }
@@ -444,28 +486,27 @@ PIXI.DisplayObjectContainer.prototype._renderWebGL = function(renderSession)
 */
 PIXI.DisplayObjectContainer.prototype._renderCanvas = function(renderSession)
 {
-    if(this.visible === false || this.alpha === 0)return;
+    if (this.visible === false || this.alpha === 0) return;
 
-    if(this._cacheAsBitmap)
+    if (this._cacheAsBitmap)
     {
-
         this._renderCachedSprite(renderSession);
         return;
     }
 
-    if(this._mask)
+    if (this._mask)
     {
-        renderSession.maskManager.pushMask(this._mask, renderSession.context);
+        renderSession.maskManager.pushMask(this._mask, renderSession);
     }
 
-    for(var i=0,j=this.children.length; i<j; i++)
+    for (var i = 0; i < this.children.length; i++)
     {
-        var child = this.children[i];
-        child._renderCanvas(renderSession);
+        this.children[i]._renderCanvas(renderSession);
     }
 
-    if(this._mask)
+    if (this._mask)
     {
-        renderSession.maskManager.popMask(renderSession.context);
+        renderSession.maskManager.popMask(renderSession);
     }
+
 };

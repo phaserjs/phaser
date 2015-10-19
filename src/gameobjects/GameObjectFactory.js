@@ -1,11 +1,14 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
 /**
-* The Game Object Factory is a quick way to create all of the different sorts of core objects that Phaser uses.
+* The GameObjectFactory is a quick way to create many common game objects
+* using {@linkcode Phaser.Game#add `game.add`}.
+*
+* Created objects are _automatically added_ to the appropriate Manager, World, or manually specified parent Group.
 *
 * @class Phaser.GameObjectFactory
 * @constructor
@@ -15,11 +18,13 @@ Phaser.GameObjectFactory = function (game) {
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running Game.
+    * @protected
     */
     this.game = game;
 
     /**
     * @property {Phaser.World} world - A reference to the game world.
+    * @protected
     */
     this.world = this.game.world;
 
@@ -28,10 +33,11 @@ Phaser.GameObjectFactory = function (game) {
 Phaser.GameObjectFactory.prototype = {
 
     /**
-    * Adds an existing object to the game world.
+    * Adds an existing display object to the game world.
+    * 
     * @method Phaser.GameObjectFactory#existing
-    * @param {*} object - An instance of Phaser.Sprite, Phaser.Button or any other display object..
-    * @return {*} The child that was added to the Group.
+    * @param {any} object - An instance of Phaser.Sprite, Phaser.Button or any other display object.
+    * @return {any} The child that was added to the World.
     */
     existing: function (object) {
 
@@ -40,20 +46,24 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-    * Create a new `Image` object. An Image is a light-weight object you can use to display anything that doesn't need physics or animation.
-    * It can still rotate, scale, crop and receive input events. This makes it perfect for logos, backgrounds, simple buttons and other non-Sprite graphics.
+    * Create a new `Image` object.
+    * 
+    * An Image is a light-weight object you can use to display anything that doesn't need physics or animation.
+    * 
+    * It can still rotate, scale, crop and receive input events. 
+    * This makes it perfect for logos, backgrounds, simple buttons and other non-Sprite graphics.
     *
     * @method Phaser.GameObjectFactory#image
-    * @param {number} x - X position of the image.
-    * @param {number} y - Y position of the image.
-    * @param {string|Phaser.RenderTexture|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
-    * @param {string|number} [frame] - If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
+    * @param {number} [x=0] - The x coordinate of the Image. The coordinate is relative to any parent container this Image may be in.
+    * @param {number} [y=0] - The y coordinate of the Image. The coordinate is relative to any parent container this Image may be in.
+    * @param {string|Phaser.RenderTexture|Phaser.BitmapData|Phaser.Video|PIXI.Texture} [key] - The image used as a texture by this display object during rendering. If a string Phaser will get for an entry in the Image Cache. Or it can be an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
+    * @param {string|number} [frame] - If a Texture Atlas or Sprite Sheet is used this allows you to specify the frame to be used. Use either an integer for a Frame ID or a string for a frame name.
     * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
-    * @returns {Phaser.Sprite} the newly created sprite object.
+    * @returns {Phaser.Image} The newly created Image object.
     */
     image: function (x, y, key, frame, group) {
 
-        if (typeof group === 'undefined') { group = this.world; }
+        if (group === undefined) { group = this.world; }
 
         return group.add(new Phaser.Image(this.game, x, y, key, frame));
 
@@ -62,32 +72,71 @@ Phaser.GameObjectFactory.prototype = {
     /**
     * Create a new Sprite with specific position and sprite sheet key.
     *
+    * At its most basic a Sprite consists of a set of coordinates and a texture that is used when rendered.
+    * They also contain additional properties allowing for physics motion (via Sprite.body), input handling (via Sprite.input),
+    * events (via Sprite.events), animation (via Sprite.animations), camera culling and more. Please see the Examples for use cases.
+    *
     * @method Phaser.GameObjectFactory#sprite
-    * @param {number} x - X position of the new sprite.
-    * @param {number} y - Y position of the new sprite.
-    * @param {string|Phaser.RenderTexture|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
-    * @param {string|number} [frame] - If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
+    * @param {number} [x=0] - The x coordinate of the sprite. The coordinate is relative to any parent container this sprite may be in.
+    * @param {number} [y=0] - The y coordinate of the sprite. The coordinate is relative to any parent container this sprite may be in.
+    * @param {string|Phaser.RenderTexture|Phaser.BitmapData|Phaser.Video|PIXI.Texture} [key] - The image used as a texture by this display object during rendering. If a string Phaser will get for an entry in the Image Cache. Or it can be an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
+    * @param {string|number} [frame] - If a Texture Atlas or Sprite Sheet is used this allows you to specify the frame to be used. Use either an integer for a Frame ID or a string for a frame name.
     * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
-    * @returns {Phaser.Sprite} the newly created sprite object.
+    * @returns {Phaser.Sprite} The newly created Sprite object.
     */
     sprite: function (x, y, key, frame, group) {
 
-        if (typeof group === 'undefined') { group = this.world; }
+        if (group === undefined) { group = this.world; }
 
         return group.create(x, y, key, frame);
 
     },
 
     /**
-    * Create a tween on a specific object. The object can be any JavaScript object or Phaser object such as Sprite.
+    * Create a new Creature Animation object.
+    *
+    * Creature is a custom Game Object used in conjunction with the Creature Runtime libraries by Kestrel Moon Studios.
+    * 
+    * It allows you to display animated Game Objects that were created with the [Creature Automated Animation Tool](http://www.kestrelmoon.com/creature/).
+    * 
+    * Note 1: You can only use Phaser.Creature objects in WebGL enabled games. They do not work in Canvas mode games.
+    *
+    * Note 2: You must use a build of Phaser that includes the CreatureMeshBone.js runtime and gl-matrix.js, or have them
+    * loaded before your Phaser game boots.
+    * 
+    * See the Phaser custom build process for more details.
+    *
+    * @method Phaser.GameObjectFactory#creature
+    * @param {number} [x=0] - The x coordinate of the creature. The coordinate is relative to any parent container this creature may be in.
+    * @param {number} [y=0] - The y coordinate of the creature. The coordinate is relative to any parent container this creature may be in.
+    * @param {string|PIXI.Texture} [key] - The image used as a texture by this creature object during rendering. If a string Phaser will get for an entry in the Image Cache. Or it can be an instance of a PIXI.Texture.
+    * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
+    * @returns {Phaser.Creature} The newly created Sprite object.
+    */
+    creature: function (x, y, key, mesh, group) {
+
+        if (group === undefined) { group = this.world; }
+
+        var obj = new Phaser.Creature(this.game, x, y, key, mesh);
+
+        group.add(obj);
+
+        return obj;
+
+    },
+
+    /**
+    * Create a tween on a specific object.
+    * 
+    * The object can be any JavaScript object or Phaser object such as Sprite.
     *
     * @method Phaser.GameObjectFactory#tween
-    * @param {object} obj - Object the tween will be run on.
+    * @param {object} object - Object the tween will be run on.
     * @return {Phaser.Tween} The newly created Phaser.Tween object.
     */
-    tween: function (obj) {
+    tween: function (object) {
 
-        return this.game.tweens.create(obj);
+        return this.game.tweens.create(object);
 
     },
 
@@ -100,7 +149,7 @@ Phaser.GameObjectFactory.prototype = {
     * @param {boolean} [addToStage=false] - If set to true this Group will be added directly to the Game.Stage instead of Game.World.
     * @param {boolean} [enableBody=false] - If true all Sprites created with `Group.create` or `Group.createMulitple` will have a physics body created on them. Change the body type with physicsBodyType.
     * @param {number} [physicsBodyType=0] - If enableBody is true this is the type of physics body that is created on new Sprites. Phaser.Physics.ARCADE, Phaser.Physics.P2, Phaser.Physics.NINJA, etc.
-    * @return {Phaser.Group} The newly created group.
+    * @return {Phaser.Group} The newly created Group.
     */
     group: function (parent, name, addToStage, enableBody, physicsBodyType) {
 
@@ -110,15 +159,16 @@ Phaser.GameObjectFactory.prototype = {
 
     /**
     * A Group is a container for display objects that allows for fast pooling, recycling and collision checks.
+    * 
     * A Physics Group is the same as an ordinary Group except that is has enableBody turned on by default, so any Sprites it creates
     * are automatically given a physics body.
     *
     * @method Phaser.GameObjectFactory#physicsGroup
-    * @param {number} [physicsBodyType=Phaser.Physics.ARCADE] - If enableBody is true this is the type of physics body that is created on new Sprites. Phaser.Physics.ARCADE, Phaser.Physics.P2, Phaser.Physics.NINJA, etc.
+    * @param {number} [physicsBodyType=Phaser.Physics.ARCADE] - If enableBody is true this is the type of physics body that is created on new Sprites. Phaser.Physics.ARCADE, Phaser.Physics.P2JS, Phaser.Physics.NINJA, etc.
     * @param {any} [parent] - The parent Group or DisplayObjectContainer that will hold this group, if any. If set to null the Group won't be added to the display list. If undefined it will be added to World by default.
     * @param {string} [name='group'] - A name for this Group. Not used internally but useful for debugging.
     * @param {boolean} [addToStage=false] - If set to true this Group will be added directly to the Game.Stage instead of Game.World.
-    * @return {Phaser.Group} The newly created group.
+    * @return {Phaser.Group} The newly created Group.
     */
     physicsGroup: function (physicsBodyType, parent, name, addToStage) {
 
@@ -135,13 +185,13 @@ Phaser.GameObjectFactory.prototype = {
     * @param {Phaser.Group|null} parent - The parent Group that will hold this Sprite Batch. Set to `undefined` or `null` to add directly to game.world.
     * @param {string} [name='group'] - A name for this Sprite Batch. Not used internally but useful for debugging.
     * @param {boolean} [addToStage=false] - If set to true this Sprite Batch will be added directly to the Game.Stage instead of the parent.
-    * @return {Phaser.Group} The newly created group.
+    * @return {Phaser.SpriteBatch} The newly created Sprite Batch.
     */
     spriteBatch: function (parent, name, addToStage) {
 
-        if (typeof parent === 'undefined') { parent = null; }
-        if (typeof name === 'undefined') { name = 'group'; }
-        if (typeof addToStage === 'undefined') { addToStage = false; }
+        if (parent === undefined) { parent = null; }
+        if (name === undefined) { name = 'group'; }
+        if (addToStage === undefined) { addToStage = false; }
 
         return new Phaser.SpriteBatch(this.game, parent, name, addToStage);
 
@@ -155,7 +205,7 @@ Phaser.GameObjectFactory.prototype = {
     * @param {number} [volume=1] - The volume at which the sound will be played.
     * @param {boolean} [loop=false] - Whether or not the sound will loop.
     * @param {boolean} [connect=true] - Controls if the created Sound object will connect to the master gainNode of the SoundManager when running under WebAudio.
-    * @return {Phaser.Sound} The newly created text object.
+    * @return {Phaser.Sound} The newly created sound object.
     */
     audio: function (key, volume, loop, connect) {
 
@@ -171,7 +221,7 @@ Phaser.GameObjectFactory.prototype = {
     * @param {number} [volume=1] - The volume at which the sound will be played.
     * @param {boolean} [loop=false] - Whether or not the sound will loop.
     * @param {boolean} [connect=true] - Controls if the created Sound object will connect to the master gainNode of the SoundManager when running under WebAudio.
-    * @return {Phaser.Sound} The newly created text object.
+    * @return {Phaser.Sound} The newly created sound object.
     */
     sound: function (key, volume, loop, connect) {
 
@@ -180,23 +230,58 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
+     * Creates a new AudioSprite object.
+     *
+     * @method Phaser.GameObjectFactory#audioSprite
+     * @param {string} key - The Game.cache key of the sound that this object will use.
+     * @return {Phaser.AudioSprite} The newly created AudioSprite object.
+     */
+    audioSprite: function (key) {
+
+        return this.game.sound.addSprite(key);
+
+    },
+
+    /**
     * Creates a new TileSprite object.
     *
     * @method Phaser.GameObjectFactory#tileSprite
-    * @param {number} x - The x coordinate (in world space) to position the TileSprite at.
-    * @param {number} y - The y coordinate (in world space) to position the TileSprite at.
+    * @param {number} x - The x coordinate of the TileSprite. The coordinate is relative to any parent container this TileSprite may be in.
+    * @param {number} y - The y coordinate of the TileSprite. The coordinate is relative to any parent container this TileSprite may be in.
     * @param {number} width - The width of the TileSprite.
     * @param {number} height - The height of the TileSprite.
-    * @param {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the TileSprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
-    * @param {string|number} frame - If this TileSprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
+    * @param {string|Phaser.RenderTexture|Phaser.BitmapData|Phaser.Video|PIXI.Texture} key - The image used as a texture by this display object during rendering. If a string Phaser will get for an entry in the Image Cache. Or it can be an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
+    * @param {string|number} [frame] - If a Texture Atlas or Sprite Sheet is used this allows you to specify the frame to be used. Use either an integer for a Frame ID or a string for a frame name.
     * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
-    * @return {Phaser.TileSprite} The newly created tileSprite object.
+    * @return {Phaser.TileSprite} The newly created TileSprite object.
     */
     tileSprite: function (x, y, width, height, key, frame, group) {
 
-        if (typeof group === 'undefined') { group = this.world; }
+        if (group === undefined) { group = this.world; }
 
         return group.add(new Phaser.TileSprite(this.game, x, y, width, height, key, frame));
+
+    },
+
+    /**
+    * Creates a new Rope object.
+    *
+    * Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/demo.js
+    *
+    * @method Phaser.GameObjectFactory#rope
+    * @param {number} [x=0] - The x coordinate of the Rope. The coordinate is relative to any parent container this rope may be in.
+    * @param {number} [y=0] - The y coordinate of the Rope. The coordinate is relative to any parent container this rope may be in.
+    * @param {string|Phaser.RenderTexture|Phaser.BitmapData|Phaser.Video|PIXI.Texture} [key] - The image used as a texture by this display object during rendering. If a string Phaser will get for an entry in the Image Cache. Or it can be an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
+    * @param {string|number} [frame] - If a Texture Atlas or Sprite Sheet is used this allows you to specify the frame to be used. Use either an integer for a Frame ID or a string for a frame name.
+    * @param {Array} points - An array of {Phaser.Point}.
+    * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
+    * @return {Phaser.Rope} The newly created Rope object.
+    */
+    rope: function (x, y, key, frame, points, group) {
+
+        if (group === undefined) { group = this.world; }
+
+        return group.add(new Phaser.Rope(this.game, x, y, key, frame, points));
 
     },
 
@@ -204,16 +289,16 @@ Phaser.GameObjectFactory.prototype = {
     * Creates a new Text object.
     *
     * @method Phaser.GameObjectFactory#text
-    * @param {number} x - X position of the new text object.
-    * @param {number} y - Y position of the new text object.
-    * @param {string} text - The actual text that will be written.
-    * @param {object} style - The style object containing style attributes like font, font size , etc.
+    * @param {number} [x=0] - The x coordinate of the Text. The coordinate is relative to any parent container this text may be in.
+    * @param {number} [y=0] - The y coordinate of the Text. The coordinate is relative to any parent container this text may be in.
+    * @param {string} [text=''] - The text string that will be displayed.
+    * @param {object} [style] - The style object containing style attributes like font, font size , etc.
     * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
     * @return {Phaser.Text} The newly created text object.
     */
     text: function (x, y, text, style, group) {
 
-        if (typeof group === 'undefined') { group = this.world; }
+        if (group === undefined) { group = this.world; }
 
         return group.add(new Phaser.Text(this.game, x, y, text, style));
 
@@ -223,21 +308,21 @@ Phaser.GameObjectFactory.prototype = {
     * Creates a new Button object.
     *
     * @method Phaser.GameObjectFactory#button
-    * @param {number} [x] X position of the new button object.
-    * @param {number} [y] Y position of the new button object.
-    * @param {string} [key] The image key as defined in the Game.Cache to use as the texture for this button.
-    * @param {function} [callback] The function to call when this button is pressed
-    * @param {object} [callbackContext] The context in which the callback will be called (usually 'this')
-    * @param {string|number} [overFrame] This is the frame or frameName that will be set when this button is in an over state. Give either a number to use a frame ID or a string for a frame name.
-    * @param {string|number} [outFrame] This is the frame or frameName that will be set when this button is in an out state. Give either a number to use a frame ID or a string for a frame name.
-    * @param {string|number} [downFrame] This is the frame or frameName that will be set when this button is in a down state. Give either a number to use a frame ID or a string for a frame name.
-    * @param {string|number} [upFrame] This is the frame or frameName that will be set when this button is in an up state. Give either a number to use a frame ID or a string for a frame name.
+    * @param {number} [x=0] - The x coordinate of the Button. The coordinate is relative to any parent container this button may be in.
+    * @param {number} [y=0] - The y coordinate of the Button. The coordinate is relative to any parent container this button may be in.
+    * @param {string} [key] - The image key as defined in the Game.Cache to use as the texture for this button.
+    * @param {function} [callback] - The function to call when this button is pressed
+    * @param {object} [callbackContext] - The context in which the callback will be called (usually 'this')
+    * @param {string|number} [overFrame] - This is the frame or frameName that will be set when this button is in an over state. Give either a number to use a frame ID or a string for a frame name.
+    * @param {string|number} [outFrame] - This is the frame or frameName that will be set when this button is in an out state. Give either a number to use a frame ID or a string for a frame name.
+    * @param {string|number} [downFrame] - This is the frame or frameName that will be set when this button is in a down state. Give either a number to use a frame ID or a string for a frame name.
+    * @param {string|number} [upFrame] - This is the frame or frameName that will be set when this button is in an up state. Give either a number to use a frame ID or a string for a frame name.
     * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
-    * @return {Phaser.Button} The newly created button object.
+    * @return {Phaser.Button} The newly created Button object.
     */
     button: function (x, y, key, callback, callbackContext, overFrame, outFrame, downFrame, upFrame, group) {
 
-        if (typeof group === 'undefined') { group = this.world; }
+        if (group === undefined) { group = this.world; }
 
         return group.add(new Phaser.Button(this.game, x, y, key, callback, callbackContext, overFrame, outFrame, downFrame, upFrame));
 
@@ -247,29 +332,31 @@ Phaser.GameObjectFactory.prototype = {
     * Creates a new Graphics object.
     *
     * @method Phaser.GameObjectFactory#graphics
-    * @param {number} x - X position of the new graphics object.
-    * @param {number} y - Y position of the new graphics object.
+    * @param {number} [x=0] - The x coordinate of the Graphic. The coordinate is relative to any parent container this object may be in.
+    * @param {number} [y=0] - The y coordinate of the Graphic. The coordinate is relative to any parent container this object may be in.
     * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
     * @return {Phaser.Graphics} The newly created graphics object.
     */
     graphics: function (x, y, group) {
 
-        if (typeof group === 'undefined') { group = this.world; }
+        if (group === undefined) { group = this.world; }
 
         return group.add(new Phaser.Graphics(this.game, x, y));
 
     },
 
     /**
-    * Emitter is a lightweight particle emitter. It can be used for one-time explosions or for
+    * Create a new Emitter.
+    *
+    * A particle emitter can be used for one-time explosions or for
     * continuous effects like rain and fire. All it really does is launch Particle objects out
-    * at set intervals, and fixes their positions and velocities accorindgly.
+    * at set intervals, and fixes their positions and velocities accordingly.
     *
     * @method Phaser.GameObjectFactory#emitter
     * @param {number} [x=0] - The x coordinate within the Emitter that the particles are emitted from.
     * @param {number} [y=0] - The y coordinate within the Emitter that the particles are emitted from.
     * @param {number} [maxParticles=50] - The total number of particles in this emitter.
-    * @return {Phaser.Emitter} The newly created emitter object.
+    * @return {Phaser.Particles.Arcade.Emitter} The newly created emitter object.
     */
     emitter: function (x, y, maxParticles) {
 
@@ -278,7 +365,9 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-    * Create a new RetroFont object to be used as a texture for an Image or Sprite and optionally add it to the Cache.
+    * Create a new RetroFont object.
+    *
+    * A RetroFont can be used as a texture for an Image or Sprite and optionally add it to the Cache.
     * A RetroFont uses a bitmap which contains fixed with characters for the font set. You use character spacing to define the set.
     * If you need variable width character support then use a BitmapText object instead. The main difference between a RetroFont and a BitmapText
     * is that a RetroFont creates a single texture that you can apply to a game object, where-as a BitmapText creates one Sprite object per letter of text.
@@ -306,25 +395,43 @@ Phaser.GameObjectFactory.prototype = {
     /**
     * Create a new BitmapText object.
     *
+    * BitmapText objects work by taking a texture file and an XML file that describes the font structure.
+    * It then generates a new Sprite object for each letter of the text, proportionally spaced out and aligned to 
+    * match the font structure.
+    * 
+    * BitmapText objects are less flexible than Text objects, in that they have less features such as shadows, fills and the ability 
+    * to use Web Fonts. However you trade this flexibility for pure rendering speed. You can also create visually compelling BitmapTexts by 
+    * processing the font texture in an image editor first, applying fills and any other effects required.
+    *
+    * To create multi-line text insert \r, \n or \r\n escape codes into the text string.
+    *
+    * To create a BitmapText data files you can use:
+    *
+    * BMFont (Windows, free): http://www.angelcode.com/products/bmfont/
+    * Glyph Designer (OS X, commercial): http://www.71squared.com/en/glyphdesigner
+    * Littera (Web-based, free): http://kvazars.com/littera/
+    *
     * @method Phaser.GameObjectFactory#bitmapText
-    * @param {number} x - X position of the new bitmapText object.
-    * @param {number} y - Y position of the new bitmapText object.
-    * @param {string} font - The key of the BitmapText font as stored in Game.Cache.
-    * @param {string} [text] - The actual text that will be rendered. Can be set later via BitmapText.text.
-    * @param {number} [size] - The size the font will be rendered in, in pixels.
+    * @param {number} x - X coordinate to display the BitmapText object at.
+    * @param {number} y - Y coordinate to display the BitmapText object at.
+    * @param {string} font - The key of the BitmapText as stored in Phaser.Cache.
+    * @param {string} [text=''] - The text that will be rendered. This can also be set later via BitmapText.text.
+    * @param {number} [size=32] - The size the font will be rendered at in pixels.
     * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
     * @return {Phaser.BitmapText} The newly created bitmapText object.
     */
     bitmapText: function (x, y, font, text, size, group) {
 
-        if (typeof group === 'undefined') { group = this.world; }
+        if (group === undefined) { group = this.world; }
 
         return group.add(new Phaser.BitmapText(this.game, x, y, font, text, size));
 
     },
 
     /**
-    * Creates a new Phaser.Tilemap object. The map can either be populated with data from a Tiled JSON file or from a CSV file.
+    * Creates a new Phaser.Tilemap object.
+    *
+    * The map can either be populated with data from a Tiled JSON file or from a CSV file.
     * To do this pass the Cache key as the first parameter. When using Tiled data you need only provide the key.
     * When using CSV data you must provide the key and the tileWidth and tileHeight parameters.
     * If creating a blank tilemap to be populated later, you can either specify no parameters at all and then use `Tilemap.create` or pass the map and tile dimensions here.
@@ -356,8 +463,8 @@ Phaser.GameObjectFactory.prototype = {
     */
     renderTexture: function (width, height, key, addToCache) {
 
-        if (typeof key === 'undefined' || key === '') { key = this.game.rnd.uuid(); }
-        if (typeof addToCache === 'undefined') { addToCache = false; }
+        if (key === undefined || key === '') { key = this.game.rnd.uuid(); }
+        if (addToCache === undefined) { addToCache = false; }
 
         var texture = new Phaser.RenderTexture(this.game, width, height, key);
 
@@ -371,19 +478,37 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-    * A BitmapData object which can be manipulated and drawn to like a traditional Canvas object and used to texture Sprites.
+    * Create a Video object.
+    *
+    * This will return a Phaser.Video object which you can pass to a Sprite to be used as a texture.
+    *
+    * @method Phaser.GameObjectFactory#video
+    * @param {string|null} [key=null] - The key of the video file in the Phaser.Cache that this Video object will play. Set to `null` or leave undefined if you wish to use a webcam as the source. See `startMediaStream` to start webcam capture.
+    * @param {string|null} [url=null] - If the video hasn't been loaded then you can provide a full URL to the file here (make sure to set key to null)
+    * @return {Phaser.Video} The newly created Video object.
+    */
+    video: function (key, url) {
+
+        return new Phaser.Video(this.game, key, url);
+
+    },
+
+    /**
+    * Create a BitmapData object.
+    *
+    * A BitmapData object can be manipulated and drawn to like a traditional Canvas object and used to texture Sprites.
     *
     * @method Phaser.GameObjectFactory#bitmapData
-    * @param {number} [width=100] - The width of the BitmapData in pixels.
-    * @param {number} [height=100] - The height of the BitmapData in pixels.
+    * @param {number} [width=256] - The width of the BitmapData in pixels.
+    * @param {number} [height=256] - The height of the BitmapData in pixels.
     * @param {string} [key=''] - Asset key for the BitmapData when stored in the Cache (see addToCache parameter).
     * @param {boolean} [addToCache=false] - Should this BitmapData be added to the Game.Cache? If so you can retrieve it with Cache.getBitmapData(key)
     * @return {Phaser.BitmapData} The newly created BitmapData object.
     */
     bitmapData: function (width, height, key, addToCache) {
 
-        if (typeof addToCache === 'undefined') { addToCache = false; }
-        if (typeof key === 'undefined' || key === '') { key = this.game.rnd.uuid(); }
+        if (addToCache === undefined) { addToCache = false; }
+        if (key === undefined || key === '') { key = this.game.rnd.uuid(); }
 
         var texture = new Phaser.BitmapData(this.game, key, width, height);
 
@@ -406,7 +531,7 @@ Phaser.GameObjectFactory.prototype = {
     */
     filter: function (filter) {
 
-        var args = Array.prototype.splice.call(arguments, 1);
+        var args = Array.prototype.slice.call(arguments, 1);
 
         var filter = new Phaser.Filter[filter](this.game);
 
@@ -418,7 +543,8 @@ Phaser.GameObjectFactory.prototype = {
 
     /**
     * Add a new Plugin into the PluginManager.
-    * The Plugin must have 2 properties: game and parent. Plugin.game is set to the game reference the PluginManager uses, and parent is set to the PluginManager.
+    *
+    * The Plugin must have 2 properties: `game` and `parent`. Plugin.game is set to the game reference the PluginManager uses, and parent is set to the PluginManager.
     *
     * @method Phaser.GameObjectFactory#plugin
     * @param {object|Phaser.Plugin} plugin - The Plugin to add into the PluginManager. This can be a function or an existing object.
@@ -430,8 +556,6 @@ Phaser.GameObjectFactory.prototype = {
         return this.game.plugins.add(plugin);
 
     }
-
-
 
 };
 

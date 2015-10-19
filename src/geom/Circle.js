@@ -1,18 +1,18 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
 /**
-* Creates a new Circle object with the center coordinate specified by the x and y parameters and the diameter specified by the diameter parameter. If you call this function without parameters, a circle with x, y, diameter and radius properties set to 0 is created.
-* @class Circle
-* @classdesc Phaser - Circle
+* Creates a new Circle object with the center coordinate specified by the x and y parameters and the diameter specified by the diameter parameter.
+* If you call this function without parameters, a circle with x, y, diameter and radius properties set to 0 is created.
+* 
+* @class Phaser.Circle
 * @constructor
 * @param {number} [x=0] - The x coordinate of the center of the circle.
 * @param {number} [y=0] - The y coordinate of the center of the circle.
 * @param {number} [diameter=0] - The diameter of the circle.
-* @return {Phaser.Circle} This circle object
 */
 Phaser.Circle = function (x, y, diameter) {
 
@@ -36,18 +36,22 @@ Phaser.Circle = function (x, y, diameter) {
     */
     this._diameter = diameter;
 
+    /**
+   * @property {number} _radius - The radius of the circle.
+   * @private
+   */
+    this._radius = 0;
+
     if (diameter > 0)
     {
-        /**
-       * @property {number} _radius - The radius of the circle.
-       * @private
-       */
         this._radius = diameter * 0.5;
     }
-    else
-    {
-        this._radius = 0;
-    }
+
+    /**
+    * @property {number} type - The const type of this object.
+    * @readonly
+    */
+    this.type = Phaser.CIRCLE;
 
 };
 
@@ -55,11 +59,51 @@ Phaser.Circle.prototype = {
 
     /**
     * The circumference of the circle.
+    * 
     * @method Phaser.Circle#circumference
-    * @return {number}
+    * @return {number} The circumference of the circle.
     */
     circumference: function () {
+
         return 2 * (Math.PI * this._radius);
+
+    },
+
+    /**
+    * Returns a uniformly distributed random point from anywhere within this Circle.
+    * 
+    * @method Phaser.Circle#random
+    * @param {Phaser.Point|object} [out] - A Phaser.Point, or any object with public x/y properties, that the values will be set in.
+    *     If no object is provided a new Phaser.Point object will be created. In high performance areas avoid this by re-using an existing object.
+    * @return {Phaser.Point} An object containing the random point in its `x` and `y` properties.
+    */
+    random: function (out) {
+
+        if (out === undefined) { out = new Phaser.Point(); }
+
+        var t = 2 * Math.PI * Math.random();
+        var u = Math.random() + Math.random();
+        var r = (u > 1) ? 2 - u : u;
+        var x = r * Math.cos(t);
+        var y = r * Math.sin(t);
+
+        out.x = this.x + (x * this.radius);
+        out.y = this.y + (y * this.radius);
+
+        return out;
+
+    },
+
+    /**
+    * Returns the framing rectangle of the circle as a Phaser.Rectangle object.
+    * 
+    * @method Phaser.Circle#getBounds
+    * @return {Phaser.Rectangle} The bounds of the Circle.
+    */
+    getBounds: function () {
+
+        return new Phaser.Rectangle(this.x - this.radius, this.y - this.radius, this.diameter, this.diameter);
+
     },
 
     /**
@@ -67,7 +111,7 @@ Phaser.Circle.prototype = {
     * @method Phaser.Circle#setTo
     * @param {number} x - The x coordinate of the center of the circle.
     * @param {number} y - The y coordinate of the center of the circle.
-    * @param {number} diameter - The diameter of the circle in pixels.
+    * @param {number} diameter - The diameter of the circle.
     * @return {Circle} This circle object.
     */
     setTo: function (x, y, diameter) {
@@ -97,7 +141,7 @@ Phaser.Circle.prototype = {
     * Copies the x, y and diameter properties from this Circle to any given object.
     * @method Phaser.Circle#copyTo
     * @param {any} dest - The object to copy to.
-    * @return {Object} This dest object.
+    * @return {object} This dest object.
     */
     copyTo: function (dest) {
 
@@ -114,42 +158,34 @@ Phaser.Circle.prototype = {
     * (can be Circle, Point or anything with x/y properties)
     * @method Phaser.Circle#distance
     * @param {object} dest - The target object. Must have visible x and y properties that represent the center of the object.
-    * @param {boolean} [round] - Round the distance to the nearest integer (default false).
+    * @param {boolean} [round=false] - Round the distance to the nearest integer.
     * @return {number} The distance between this Point object and the destination Point object.
     */
     distance: function (dest, round) {
 
-        if (typeof round === "undefined") { round = false; }
-
-        if (round)
-        {
-            return Phaser.Math.distanceRounded(this.x, this.y, dest.x, dest.y);
-        }
-        else
-        {
-            return Phaser.Math.distance(this.x, this.y, dest.x, dest.y);
-        }
+        var distance = Phaser.Math.distance(this.x, this.y, dest.x, dest.y);
+        return round ? Math.round(distance) : distance;
 
     },
 
     /**
     * Returns a new Circle object with the same values for the x, y, width, and height properties as this Circle object.
     * @method Phaser.Circle#clone
-    * @param {Phaser.Circle} out - Optional Circle object. If given the values will be set into the object, otherwise a brand new Circle object will be created and returned.
+    * @param {Phaser.Circle} output - Optional Circle object. If given the values will be set into the object, otherwise a brand new Circle object will be created and returned.
     * @return {Phaser.Circle} The cloned Circle object.
     */
-    clone: function (out) {
+    clone: function (output) {
 
-        if (typeof out === "undefined")
+        if (output === undefined || output === null)
         {
-            out = new Phaser.Circle(this.x, this.y, this.diameter);
+            output = new Phaser.Circle(this.x, this.y, this.diameter);
         }
         else
         {
-            out.setTo(this.x, this.y, this.diameter);
+            output.setTo(this.x, this.y, this.diameter);
         }
 
-        return out;
+        return output;
 
     },
 
@@ -221,6 +257,7 @@ Phaser.Circle.prototype.constructor = Phaser.Circle;
 
 /**
 * The largest distance between any two points on the circle. The same as the radius * 2.
+* 
 * @name Phaser.Circle#diameter
 * @property {number} diameter - Gets or sets the diameter of the circle.
 */
@@ -477,8 +514,8 @@ Phaser.Circle.intersects = function (a, b) {
 */
 Phaser.Circle.circumferencePoint = function (a, angle, asDegrees, out) {
 
-    if (typeof asDegrees === "undefined") { asDegrees = false; }
-    if (typeof out === "undefined") { out = new Phaser.Point(); }
+    if (asDegrees === undefined) { asDegrees = false; }
+    if (out === undefined) { out = new Phaser.Point(); }
 
     if (asDegrees === true)
     {
