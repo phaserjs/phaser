@@ -190,6 +190,38 @@ declare module Phaser {
 
     }
 
+    interface BitmapFont {
+
+        base: PIXI.BaseTexture;
+        data: HTMLImageElement;
+        font: Phaser.BMFont;
+        url: string;
+
+    }
+
+    interface BMFont {
+
+        chars: Phaser.BMFontChar[];
+        font: string;
+        lineHeight: number;
+        size: number;
+
+    }
+
+    interface BMFontChar {
+
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+        xOffset: number;
+        yOffset: number;
+        xAdvance: number;
+        kerning: number[];
+        texture: PIXI.BaseTexture;
+
+    }
+
     class BitmapData {
 
         constructor(game: Phaser.Game, key: string, width?: number, height?: number);
@@ -473,7 +505,7 @@ declare module Phaser {
         getBaseTexture(key: string, cache?: number): PIXI.BaseTexture;
         getBinary(key: string): any;
         getBitmapData(key: string): Phaser.BitmapData;
-        getBitmapFont(key: string): Phaser.RetroFont;
+        getBitmapFont(key: string): Phaser.BitmapFont;
         getCanvas(key: string): HTMLCanvasElement;
         getFrame(key: string, cache?: number): Phaser.Frame;
         getFrameByIndex(key: string, index: number, cache?: number): Phaser.Frame;
