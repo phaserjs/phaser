@@ -2,6 +2,7 @@
 
 declare module PIXI {
 
+    export var game: Phaser.Game;
     export var WEBGL_RENDERER: number;
     export var CANVAS_RENDERER: number;
     export var VERSION: string;
@@ -101,7 +102,7 @@ declare module PIXI {
         width: number;
 
         destroy(): void;
-        render(stage: Stage): void;
+        render(stage: DisplayObjectContainer): void;
         resize(width: number, height: number): void;
 
     }
@@ -362,25 +363,26 @@ declare module PIXI {
 
     export class CanvasRenderer implements PixiRenderer {
 
-        constructor(width?: number, height?: number, options?: PixiRendererOptions);
+        constructor(game: Phaser.Game);
 
-        autoResize: boolean;
-        clearBeforeRender: boolean;
-        context: CanvasRenderingContext2D;
-        count: number;
-        height: number;
-        maskManager: CanvasMaskManager;
-        refresh: boolean;
-        renderSession: RenderSession;
-        resolution: number;
-        transparent: boolean;
+        game: Phaser.Game;
         type: number;
-        view: HTMLCanvasElement;
+        resolution: number;
+        clearBeforeRender: boolean;
+        transparent: boolean;
+        autoResize: boolean;
         width: number;
+        height: number;
+        view: HTMLCanvasElement;
+        context: CanvasRenderingContext2D;
+        refresh: boolean;
+        count: number;
+        maskManager: CanvasMaskManager;
+        renderSession: RenderSession;
 
-        destroy(removeView?: boolean): void;
-        render(stage: Stage): void;
+        render(stage: DisplayObjectContainer): void;
         resize(width: number, height: number): void;
+        destroy(removeView?: boolean): void;
 
     }
 
@@ -472,7 +474,7 @@ declare module PIXI {
         renderable: boolean;
         rotation: number;
         scale: Point;
-        stage: Stage;
+        stage: DisplayObjectContainer;
         visible: boolean;
         worldAlpha: number;
         worldPosition: PIXI.Point;
@@ -497,7 +499,7 @@ declare module PIXI {
         rightdown(e: InteractionData): void;
         rightup(e: InteractionData): void;
         rightupoutside(e: InteractionData): void;
-        setStageReference(stage: Stage): void;
+        setStageReference(stage: DisplayObjectContainer): void;
         tap(e: InteractionData): void;
         toGlobal(position: Point): Point;
         toLocal(position: Point, from: DisplayObject): Point;
@@ -693,10 +695,10 @@ declare module PIXI {
         onTouchMove: Function;
         pool: InteractionData[];
         resolution: number;
-        stage: Stage;
+        stage: DisplayObjectContainer;
         touches: { [id: string]: InteractionData };
 
-        constructor(stage: Stage);
+        constructor(stage: DisplayObjectContainer);
     }
 
     export class InvertFilter extends AbstractFilter {
@@ -1061,18 +1063,6 @@ declare module PIXI {
 
     }
 
-    export class Stage extends DisplayObjectContainer {
-
-        constructor(backgroundColor: number);
-
-        interactionManager: InteractionManager;
-
-        getMousePosition(): Point;
-        setBackgroundColor(backgroundColor: number): void;
-        setInteractionDelegate(domElement: HTMLElement): void;
-
-    }
-
     export class Strip extends DisplayObjectContainer {
 
         static DrawModes: {
@@ -1328,39 +1318,35 @@ declare module PIXI {
 
         static createWebGLTexture(texture: Texture, gl: WebGLRenderingContext): void;
 
-        constructor(width?: number, height?: number, options?: PixiRendererOptions);
+        constructor(game: Phaser.Game);
 
-        autoResize: boolean;
-        clearBeforeRender: boolean;
-        contextLost: boolean;
-        contextLostBound: Function;
-        contextRestoreLost: boolean;
-        contextRestoredBound: Function;
-        height: number;
-        gl: WebGLRenderingContext;
-        offset: Point;
-        preserveDrawingBuffer: boolean;
-        projection: Point;
+        game: Phaser.Game;
+        type: number;
         resolution: number;
-        renderSession: RenderSession;
+        transparent: boolean;
+        autoResize: boolean;
+        preserveDrawingBuffer: boolean;
+        clearBeforeRender: boolean;
+        width: number;
+        height: number;
+        view: HTMLCanvasElement;
+        projection: Point;
+        offset: Point;
         shaderManager: WebGLShaderManager;
         spriteBatch: WebGLSpriteBatch;
         maskManager: WebGLMaskManager;
         filterManager: WebGLFilterManager;
         stencilManager: WebGLStencilManager;
         blendModeManager: WebGLBlendModeManager;
-        transparent: boolean;
-        type: number;
-        view: HTMLCanvasElement;
-        width: number;
+        renderSession: RenderSession;
 
-        destroy(): void;
         initContext(): void;
-        mapBlendModes(): void;
-        render(stage: Stage): void;
+        render(stage: DisplayObjectContainer): void;
         renderDisplayObject(displayObject: DisplayObject, projection: Point, buffer: WebGLBuffer): void;
         resize(width: number, height: number): void;
         updateTexture(texture: Texture): void;
+        destroy(): void;
+        mapBlendModes(): void;
 
     }
 
