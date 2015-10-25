@@ -138,6 +138,10 @@ Phaser.SinglePad.prototype = {
             this.onFloatCallback = (typeof callbacks.onFloat === 'function') ? callbacks.onFloat : this.onFloatCallback;
         }
 
+        if (typeof context !== 'undefined')
+        {
+            this.callbackContext = context;
+        }
     },
 
     /**
