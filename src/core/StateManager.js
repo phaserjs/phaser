@@ -575,7 +575,7 @@ Phaser.StateManager.prototype = {
      * Gets the current State.
      *
      * @method Phaser.StateManager#getCurrentState
-     * @return Phaser.State
+     * @return {Phaser.State}
      * @public
      */
     getCurrentState: function() {

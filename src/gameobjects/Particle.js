@@ -148,7 +148,7 @@ Phaser.Particle.prototype.setScaleData = function(data) {
 * @param {number} x - The x coordinate (in world space) to position the Particle at.
 * @param {number} y - The y coordinate (in world space) to position the Particle at.
 * @param {number} [health=1] - The health to give the Particle.
-* @return (Phaser.Particle) This instance.
+* @return {Phaser.Particle} This instance.
 */
 Phaser.Particle.prototype.reset = function(x, y, health) {
 
