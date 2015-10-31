@@ -34,6 +34,13 @@ Phaser.Component.LoadTexture.prototype = {
     * 
     * Calling this method causes a WebGL texture update, so use sparingly or in low-intensity portions of your game, or if you know the new texture is already on the GPU.
     *
+    * You can use the new const `Phaser.PENDING_ATLAS` as the texture key for any sprite. 
+    * Doing this then sets the key to be the `frame` argument (the frame is set to zero). 
+    * 
+    * This allows you to create sprites using `load.image` during development, and then change them 
+    * to use a Texture Atlas later in development by simply searching your code for 'PENDING_ATLAS' 
+    * and swapping it to be the key of the atlas data.
+    *
     * @method
     * @param {string|Phaser.RenderTexture|Phaser.BitmapData|Phaser.Video|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache Image entry, or an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
     * @param {string|number} [frame] - If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
@@ -41,7 +48,15 @@ Phaser.Component.LoadTexture.prototype = {
     */
     loadTexture: function (key, frame, stopAnimation) {
 
-        frame = frame || 0;
+        if (key === Phaser.PENDING_ATLAS)
+        {
+            key = frame;
+            frame = 0;
+        }
+        else
+        {
+            frame = frame || 0;
+        }
 
         if ((stopAnimation || stopAnimation === undefined) && this.animations)
         {

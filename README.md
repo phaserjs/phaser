@@ -269,6 +269,8 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 
 ### New Features
 
+* You can use the new const `Phaser.PENDING_ATLAS` as the texture key for any sprite. Doing this then sets the key to be the `frame` argument (the frame is set to zero). This allows you to create sprites using `load.image` during development, and then change them to use a Texture Atlas later in development by simply searching your code for 'PENDING_ATLAS' and swapping it to be the key of the atlas data.
+
 ### Updates
 
 * TypeScript definitions fixes and updates (thanks @clark-stevenson)

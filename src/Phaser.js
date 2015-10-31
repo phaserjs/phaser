@@ -291,6 +291,13 @@ var Phaser = Phaser || {
     VIDEO: 28,
 
     /**
+    * Game Object type.
+    * @constant
+    * @type {integer}
+    */
+    PENDING_ATLAS: -1,
+
+    /**
      * Various blend modes supported by Pixi.
      * 
      * IMPORTANT: The WebGL renderer only supports the NORMAL, ADD, MULTIPLY and SCREEN blend modes.
