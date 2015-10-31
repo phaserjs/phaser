@@ -547,9 +547,10 @@ Phaser.Particles.Arcade.Emitter.prototype.start = function (explode, lifespan, f
 * @param {number} [y] - The y coordinate to emit the particle from. If `null` or `undefined` it will use `Emitter.emitY` or if the Emitter has a height > 1 a random value between `Emitter.top` and `Emitter.bottom`.
 * @param {string|Phaser.RenderTexture|Phaser.BitmapData|Phaser.Video|PIXI.Texture} [key] - This is the image or texture used by the Particle during rendering. It can be a string which is a reference to the Cache Image entry, or an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
 * @param {string|number} [frame] - If this Particle is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
+* @param {number} [lifespan] - The lifespan of the particle to emit.
 * @return {boolean} True if a particle was emitted, otherwise false.
 */
-Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function (x, y, key, frame) {
+Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function (x, y, key, frame, lifespan) {
 
     if (x === undefined) { x = null; }
     if (y === undefined) { y = null; }
@@ -596,7 +597,7 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function (x, y, key, fr
     particle.reset(emitX, emitY);
 
     particle.angle = 0;
-    particle.lifespan = this.lifespan;
+    particle.lifespan = (lifespan !== undefined) ? lifespan : this.lifespan;
 
     if (this.particleBringToTop)
     {
