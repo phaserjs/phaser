@@ -1,4 +1,4 @@
-/// <binding />
+/// <binding BeforeBuild='default' />
 module.exports = function (grunt) {
 
     var loadConfig = require('load-grunt-config');
@@ -32,7 +32,6 @@ module.exports = function (grunt) {
     grunt.registerTask('custom', 'Build a custom version of Phaser', function(arg) {
 
         var modules = {
-
             'intro':            { 'description': 'Phaser UMD wrapper',                          'optional': true, 'stub': false },
             'phaser':           { 'description': 'Phaser Globals',                              'optional': false, 'stub': false },
             'geom':             { 'description': 'Geometry Classes',                            'optional': false, 'stub': false },
@@ -73,8 +72,8 @@ module.exports = function (grunt) {
             'particles':        { 'description': 'Arcade Physics Particle System',              'optional': true, 'stub': true },
             'creature':         { 'description': 'Creature Animation Tool Support',             'optional': true, 'stub': false },
             'video':            { 'description': 'Video Game Object',                           'optional': true, 'stub': false },
+            'pixidefs':         { 'description': 'Pixi defaults',                               'optional': true, 'stub': false },
             'outro':            { 'description': 'Phaser UMD closure',                          'optional': true, 'stub': false }
-
         };
 
         grunt.log.writeln("---------------------");
@@ -220,9 +219,16 @@ module.exports = function (grunt) {
                 //  3) PIXI
 
                 grunt.log.writeln("-> PIXI");
-                tasks.push('concat:pixiIntro');
-                pixiFilelist.push('<%= modules_dir %>/pixi-intro.js');
+                
+                if (!excludedKeys['intro'])
+                {
+                    tasks.push('concat:pixiIntro');
+                    pixiFilelist.push('<%= modules_dir %>/pixi-intro.js');
+                }
 
+                tasks.push('concat:pixiMain');
+                pixiFilelist.push('<%= modules_dir %>/pixi-main.js');
+                
                 //  Optional Rope
                 if (!excludedKeys['rope'])
                 {
@@ -240,8 +246,11 @@ module.exports = function (grunt) {
                 }
 
                 //  PIXI Outro
-                tasks.push('concat:pixiOutro');
-                pixiFilelist.push('<%= modules_dir %>/pixi-outro.js');
+                if (!excludedKeys['outro'])
+                {
+                    tasks.push('concat:pixiOutro');
+                    pixiFilelist.push('<%= modules_dir %>/pixi-outro.js');
+                }
 
                 grunt.config.set('pixiFilelist', pixiFilelist);
 
@@ -283,9 +292,16 @@ module.exports = function (grunt) {
                 //  3) PIXI
 
                 grunt.log.writeln("-> PIXI");
-                tasks.push('concat:pixiIntro');
-                filelist.push('<%= modules_dir %>/pixi-intro.js');
+                
+                if (!excludedKeys['intro'])
+                {
+                    tasks.push('concat:pixiIntro');
+                    filelist.push('<%= modules_dir %>/pixi-intro.js');
+                }
 
+                tasks.push('concat:pixiMain');
+                filelist.push('<%= modules_dir %>/pixi-main.js');
+                
                 //  Optional Rope
                 if (!excludedKeys['rope'])
                 {
@@ -303,8 +319,11 @@ module.exports = function (grunt) {
                 }
 
                 //  PIXI Outro
-                tasks.push('concat:pixiOutro');
-                filelist.push('<%= modules_dir %>/pixi-outro.js');
+                if (!excludedKeys['outro'])
+                {
+                    tasks.push('concat:pixiOutro');
+                    filelist.push('<%= modules_dir %>/pixi-outro.js');
+                }
             }
 
             //  And now for Phaser
