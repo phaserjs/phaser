@@ -347,6 +347,14 @@ declare module PIXI {
         scaleMode: scaleModes;
 
         /**
+        * A BaseTexture can be set to skip the rendering phase in the WebGL Sprite Batch.
+        * 
+        * You may want to do this if you have a parent Sprite with no visible texture (i.e. uses the internal `__default` texture)
+        * that has children that you do want to render, without causing a batch flush in the process.
+        */
+        skipRender: boolean;
+
+        /**
         * The image source that is used to create the texture.
         */
         source: HTMLImageElement;
@@ -480,6 +488,11 @@ declare module PIXI {
 
 
         /**
+        * Frees the canvas up for use again.
+        */
+        destroy(): void;
+
+        /**
         * Clears the canvas that was created by the CanvasBuffer class.
         */
         clear(): void;
@@ -491,6 +504,56 @@ declare module PIXI {
         * @param height the new height of the canvas
         */
         resize(width: number, height: number): void;
+
+    }
+
+
+    /**
+    * The CanvasPool is a global static object that allows Pixi and Phaser to pool canvas DOM elements.
+    */
+    export class CanvasPool {
+
+
+        /**
+        * Creates a new Canvas DOM element, or pulls one from the pool if free.
+        * 
+        * @param parent The parent of the canvas element.
+        * @param width The width of the canvas element.
+        * @param height The height of the canvas element.
+        * @return The canvas element.
+        */
+        static create(parent: HTMLElement, width?: number, height?: number): HTMLCanvasElement;
+
+        /**
+        * Gets the first free canvas index from the pool.
+        */
+        static getFirst(): HTMLCanvasElement;
+
+        /**
+        * Removes the parent from a canvas element from the pool, freeing it up for re-use.
+        * 
+        * @param parent The parent of the canvas element.
+        */
+        static remove(parent: HTMLElement): void;
+
+        /**
+        * Removes the parent from a canvas element from the pool, freeing it up for re-use.
+        * 
+        * @param canvas The canvas element to remove
+        */
+        static removeByCanvas(canvas: HTMLCanvasElement): HTMLCanvasElement;
+
+        /**
+        * Gets the total number of used canvas elements in the pool.
+        * @return The number of in-use (parented) canvas elements in the pool.
+        */
+        static getTotal(): number;
+
+        /**
+        * Gets the total number of free canvas elements in the pool.
+        * @return The number of free (un-parented) canvas elements in the pool.
+        */
+        static getFree(): number;
 
     }
 
@@ -530,9 +593,7 @@ declare module PIXI {
         * The CanvasRenderer draws the Stage and all its content onto a 2d canvas. This renderer should be used for browsers that do not support webGL.
         * Don't forget to add the CanvasRenderer.view to your DOM or you will not see anything :)
         * 
-        * @param width the width of the canvas view - Default: 800
-        * @param height the height of the canvas view - Default: 600
-        * @param options The optional renderer parameters
+        * @param game A reference to the Phaser Game instance
         */
         constructor(width?: number, height?: number, options?: PixiRendererOptions);
 
@@ -2046,9 +2107,9 @@ declare module PIXI {
         * texture this Sprite was using.
         * 
         * @param texture The PIXI texture that is displayed by the sprite
-        * @param destroy Call Texture.destroy on the current texture before replacing it with the new one? - Default: false
+        * @param destroy Call Texture.destroy on the current texture before replacing it with the new one?
         */
-        setTexture(texture: Texture): void;
+        setTexture(texture: Texture, destroyBase?: boolean): void;
 
     }
 
@@ -2122,38 +2183,13 @@ declare module PIXI {
 
     }
 
-
-    /**
-    * A Stage represents the root of the display tree. Everything connected to the stage is rendered
-    */
     export class Stage extends DisplayObjectContainer {
 
-
-        /**
-        * A Stage represents the root of the display tree. Everything connected to the stage is rendered
-        * 
-        * @param backgroundColor the background color of the stage, you have to pass this in is in hex format
-        *                        like: 0xFFFFFF for white
-        * 
-        *                        Creating a stage is a mandatory process when you use Pixi, which is as simple as this :
-        *                        var stage = new PIXI.Stage(0xFFFFFF);
-        *                        where the parameter given is the background colour of the stage, in hex
-        *                        you will use this stage instance to add your sprites to it and therefore to the renderer
-        *                        Here is how to add a sprite to the stage :
-        *                        stage.addChild(sprite);
-        */
         constructor(backgroundColor: number);
 
         interactionManager: InteractionManager;
 
         getMousePosition(): Point;
-
-        /**
-        * Sets the background color for the stage
-        * 
-        * @param backgroundColor the color of the background, easiest way to pass this in is in hex format
-        *                        like: 0xFFFFFF for white
-        */
         setBackgroundColor(backgroundColor: number): void;
         setInteractionDelegate(domElement: HTMLElement): void;
 
@@ -2439,6 +2475,7 @@ declare module PIXI {
         * 
         * 
         * @param forcePowerOfTwo Whether we want to force the texture to be a power of two
+        * @param renderSession -
         */
         generateTilingTexture(forcePowerOfTwo?: boolean): void;
 
@@ -2447,7 +2484,7 @@ declare module PIXI {
         * texture this Sprite was using.
         * 
         * @param texture The PIXI texture that is displayed by the sprite
-        * @param destroy Call Texture.destroy on the current texture before replacing it with the new one? - Default: false
+        * @param destroy Call Texture.destroy on the current texture before replacing it with the new one?
         */
         setTexture(texture: Texture): void;
 
@@ -2832,9 +2869,7 @@ declare module PIXI {
         * So no need for Sprite Batches or Sprite Clouds.
         * Don't forget to add the view to your DOM or you will not see anything :)
         * 
-        * @param width the width of the canvas view - Default: 0
-        * @param height the height of the canvas view - Default: 0
-        * @param options The optional renderer parameters
+        * @param game A reference to the Phaser Game instance
         */
         constructor(width?: number, height?: number, options?: PixiRendererOptions);
 
@@ -2858,7 +2893,6 @@ declare module PIXI {
 
         /**
         * The height of the canvas view
-        * Default: 600
         */
         height: number;
         gl: WebGLRenderingContext;
@@ -2875,10 +2909,6 @@ declare module PIXI {
         * Default: 1
         */
         resolution: number;
-
-        /**
-        * TODO remove
-        */
         renderSession: RenderSession;
 
         /**
@@ -2924,7 +2954,6 @@ declare module PIXI {
 
         /**
         * The width of the canvas view
-        * Default: 800
         */
         width: number;
 
@@ -2968,6 +2997,7 @@ declare module PIXI {
         * Updates and Creates a WebGL texture for the renderers context.
         * 
         * @param texture the texture to update
+        * @return True if the texture was successfully bound, otherwise false.
         */
         updateTexture(texture: Texture): void;
 
