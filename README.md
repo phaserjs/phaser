@@ -279,6 +279,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 ### Bug Fixes
 
 * Buttons (or any Sprites) that don't have a texture, but have children, would incorrectly render the children under WebGL due to the baseTexture.skipRender property (thanks @puzzud #2141)
+* TilemapParser accidentally redeclared `i` when parsing the ImageCollections which would cause an infinite loop (thanks DanHett)
 
 ### Pixi Updates
 
