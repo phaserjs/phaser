@@ -657,7 +657,7 @@ Phaser.Loader.prototype = {
 
             if (!file || (!file.loaded && !file.loading && file.type !== 'packfile'))
             {
-                this._fileList.splice(i, 1, pack);
+                this._fileList.splice(i, 0, pack);
                 this._totalPackCount++;
                 break;
             }
