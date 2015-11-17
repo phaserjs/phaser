@@ -78,6 +78,7 @@ Phaser.TilemapParser = {
     * Parses a CSV file into valid map data.
     *
     * @method Phaser.TilemapParser.parseCSV
+    * @param {string} key - The name you want to give the map data.
     * @param {string} data - The CSV file data.
     * @param {number} [tileWidth=32] - The pixel width of a single map tile. If using CSV data you must specify this. Not required if using Tiled map data.
     * @param {number} [tileHeight=32] - The pixel height of a single map tile. If using CSV data you must specify this. Not required if using Tiled map data.
