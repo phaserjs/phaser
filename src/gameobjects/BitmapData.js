@@ -441,6 +441,9 @@ Phaser.BitmapData.prototype = {
     * You can optionally define the area to clear.
     * If the arguments are left empty it will clear the entire canvas.
     *
+    * You may need to call BitmapData.update after this in order to clear out the pixel data, 
+    * but Phaser will not do this automatically for you.
+    *
     * @method Phaser.BitmapData#clear
     * @param {number} [x=0] - The x coordinate of the top-left of the area to clear.
     * @param {number} [y=0] - The y coordinate of the top-left of the area to clear.
@@ -456,8 +459,6 @@ Phaser.BitmapData.prototype = {
         if (height === undefined) { height = this.height; }
 
         this.context.clearRect(x, y, width, height);
-
-        this.update();
 
         this.dirty = true;
 
@@ -566,6 +567,8 @@ Phaser.BitmapData.prototype = {
     * This re-creates the BitmapData.imageData from the current context.
     * It then re-builds the ArrayBuffer, the data Uint8ClampedArray reference and the pixels Int32Array.
     * If not given the dimensions defaults to the full size of the context.
+    *
+    * Warning: This is a very expensive operation, so use it sparingly.
     *
     * @method Phaser.BitmapData#update
     * @param {number} [x=0] - The x coordinate of the top-left of the image data area to grab from.
