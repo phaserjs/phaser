@@ -3690,7 +3690,7 @@ declare module Phaser {
         isDown: boolean;
         isMouse: boolean;
         isUp: boolean;
-        leftButton:  Phaser.DeviceButton;
+        leftButton: Phaser.DeviceButton;
         middleButton: boolean;
         movementX: number;
         movementY: number;
