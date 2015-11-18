@@ -12,7 +12,7 @@
 * @extends Phaser.RenderTexture
 * @constructor
 * @param {Phaser.Game} game - Current game instance.
-* @param {string} key - The font set graphic set as stored in the Game.Cache.
+* @param {string | Phaser.Image} key - The font set graphic set's key as stored in the Game.Cache, or an image to use for the graphic set.
 * @param {number} characterWidth - The width of each character in the font set.
 * @param {number} characterHeight - The height of each character in the font set.
 * @param {string} chars - The characters used in the font set, in display order. You can use the TEXT_SET consts for common font set arrangements.
@@ -24,14 +24,27 @@
 */
 Phaser.RetroFont = function (game, key, characterWidth, characterHeight, chars, charsPerRow, xSpacing, ySpacing, xOffset, yOffset) {
 
-    if (!game.cache.checkImageKey(key))
+     /**
+    * @property {Image} fontSet - A reference to the image stored in the Game.Cache that contains the font.
+    */
+    this.fontSet = null;
+
+    if(typeof key === Phaser.Image)
+    {
+        this.fontSet = key;
+    }
+    else if (!game.cache.checkImageKey(key))
     {
         return false;
+    }
+    else
+    {
+        this.fontSet = game.cache.getImage(key);
     }
 
     if (charsPerRow === undefined || charsPerRow === null)
     {
-        charsPerRow = game.cache.getImage(key).width / characterWidth;
+        charsPerRow = this.fontSet.width / characterWidth;
     }
 
     /**
@@ -106,11 +119,6 @@ Phaser.RetroFont = function (game, key, characterWidth, characterHeight, chars, 
     * @property {number} fixedWidth
     */
     this.fixedWidth = 0;
-
-    /**
-    * @property {Image} fontSet - A reference to the image stored in the Game.Cache that contains the font.
-    */
-    this.fontSet = game.cache.getImage(key);
 
     /**
     * @property {string} _text - The text of the font image.
