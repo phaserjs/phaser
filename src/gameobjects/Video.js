@@ -1135,7 +1135,7 @@ Phaser.Video.prototype = {
 };
 
 /**
-* @memberof Phaser.Video
+* @name Phaser.Video#currentTime
 * @property {number} currentTime - The current time of the video in seconds. If set the video will attempt to seek to that point in time.
 */
 Object.defineProperty(Phaser.Video.prototype, "currentTime", {
@@ -1155,7 +1155,7 @@ Object.defineProperty(Phaser.Video.prototype, "currentTime", {
 });
 
 /**
-* @memberof Phaser.Video
+* @name Phaser.Video#duration
 * @property {number} duration - The duration of the video in seconds.
 * @readOnly
 */
@@ -1170,7 +1170,7 @@ Object.defineProperty(Phaser.Video.prototype, "duration", {
 });
 
 /**
-* @memberof Phaser.Video
+* @name Phaser.Video#progress
 * @property {number} progress - The progress of this video. This is a value between 0 and 1, where 0 is the start and 1 is the end of the video.
 * @readOnly
 */

@@ -344,6 +344,8 @@ PIXI.TilingSprite.prototype.generateTilingTexture = function(forcePowerOfTwo, re
     var texture = this.texture;
     var frame = texture.frame;
 
+    console.log('generateTilingTexture', texture, frame);
+
     var targetWidth = this._frame.sourceSizeW;
     var targetHeight = this._frame.sourceSizeH;
 
