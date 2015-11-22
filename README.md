@@ -44,7 +44,7 @@ Thousands of developers worldwide use it. From indies and multi-national digital
 
 The release of Phaser 2.4.4 continues our work with bug fixes, new features and optimizations. As with the previous version it's a point-release, making it a safe upgrade for anyone using an earlier 2.4 build.
 
-Internally here at Phaser HQ we have been busy with several new projects. 
+Internally here at Phaser HQ we have been busy with several new projects.
 
 First we released [Interphase](http://phaser.io/interphase/), a new 400-page publication for Phaser developers. Packed full of exclusive content including 8 complete games, tutorials and a deep dive into the Phaser State Manager. It's been a blast to write and we have been really encouraged by the response from readers. We're planning on releasing Interphase 2 before the end of the year.
 
@@ -184,6 +184,44 @@ Starting from Phaser 2.3.0 we now include a brand new build system which allows 
 As a result of this work the minimum build size of Phaser is now just 80KB minified and gzipped.
 
 See the [Creating a Custom Phaser Build](http://phaser.io/tutorials/creating-custom-phaser-builds) tutorial for details.
+
+### Webpack
+
+Starting from Phaser 2.4.5 we now include a custom build for Webpack.
+
+You need to add `p2` as a dependency.
+
+###### Webpack config
+```
+var path = require('path');
+var webpack = require('webpack');
+
+var phaserModule = path.join(__dirname, '/node_modules/phaser/');
+var phaser = path.join(phaserModule, 'build/custom/phaser-split.js'),
+  pixi = path.join(phaserModule, 'build/custom/pixi.js');
+
+module.exports = {
+    ...
+    module: {
+        loaders: [
+            { test: /pixi.js/, loader: "script" },
+        ]
+    },
+    resolve: {
+        alias: {
+            'phaser': phaser,
+            'pixi.js': pixi,
+        }
+    }
+    ...
+}
+```
+###### Main js file
+```
+require('pixi.js');
+require('p2');
+require('phaser');
+```
 
 ### Building from source
 
