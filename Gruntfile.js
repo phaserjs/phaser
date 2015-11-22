@@ -381,6 +381,7 @@ module.exports = function (grunt) {
         grunt.task.run('arcadephysics');
         grunt.task.run('nophysics');
         grunt.task.run('minimum');
+        grunt.task.run('split');
 
     });
 
@@ -424,9 +425,10 @@ module.exports = function (grunt) {
     grunt.registerTask('split', 'Compile Phaser to dist folder and splits the globals into single files', function() {
 
         grunt.option('exclude', 'ninja,creature');
-        grunt.option('filename', 'phaser');
+        grunt.option('filename', 'phaser-split');
         grunt.option('sourcemap', true);
         grunt.option('copy', false);
+        grunt.option('copycustom', true);
         grunt.option('uglify', true);
         grunt.option('split', true);
 
