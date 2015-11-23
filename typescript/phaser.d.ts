@@ -3940,7 +3940,7 @@ declare module Phaser {
         multiLine: boolean;
         offsetX: number;
         offsetY: number;
-        smoothed: string;
+        smoothed: boolean;
         stamp: Phaser.Image;
         text: string;
 
