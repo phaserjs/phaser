@@ -782,9 +782,10 @@ Phaser.BitmapData.prototype = {
     * @return {Phaser.BitmapData} This BitmapData object for method chaining.
     */
     setHSL: function (h, s, l, region) {
-        var bHaveH = typeof(h) === "number",
-            bHaveS = typeof(s) === "number",
-            bHaveL = typeof(l) === "number";
+        
+        var bHaveH = h || h === 0;
+        var bHaveS = s || s === 0;
+        var bHaveL = l || l === 0;
 
         if (!bHaveH && !bHaveS && !bHaveL)
         {
