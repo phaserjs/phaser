@@ -242,11 +242,11 @@ Phaser.TilemapParser = {
                 var bytes = new Array( len );
                 // Interpret binaryString as an array of bytes representing
                 // little-endian encoded uint32 values. 
-                for (var i = 0; i < len; i+=4) {
-                    bytes[i/4] = (binaryString.charCodeAt(i) |
-                                 binaryString.charCodeAt(i+1) << 8 |
-                                 binaryString.charCodeAt(i+2) << 16 |
-                                 binaryString.charCodeAt(i+3) << 24) >>> 0;
+                for (var j = 0; j < len; j+=4) {
+                    bytes[j/4] = (binaryString.charCodeAt(j) |
+                                 binaryString.charCodeAt(j+1) << 8 |
+                                 binaryString.charCodeAt(j+2) << 16 |
+                                 binaryString.charCodeAt(j+3) << 24) >>> 0;
                 }
                 curl.data = bytes;
             }
