@@ -2308,9 +2308,12 @@ Phaser.Loader.prototype = {
         xhr.onload = function () {
 
             try {
-
-                return onload.call(_this, file, xhr);
-
+                if (xhr.readyState == 4 && xhr.status >= 400 && xhr.status <= 599) { // Handle HTTP status codes of 4xx and 5xx as errors, even if xhr.onerror was not called.
+                    return onerror.call(_this, file, xhr);
+                }
+                else {
+                    return onload.call(_this, file, xhr);
+                }
             } catch (e) {
 
                 //  If this was the last file in the queue and an error is thrown in the create method
@@ -2419,6 +2422,12 @@ Phaser.Loader.prototype = {
 
         xhr.onload = function () {
             try {
+                if (xhr.readyState == 4 && xhr.status >= 400 && xhr.status <= 599) { // Handle HTTP status codes of 4xx and 5xx as errors, even if xhr.onerror was not called.
+                    return onerror.call(_this, file, xhr);
+                }
+                else {
+                    return onload.call(_this, file, xhr);
+                }
                 return onload.call(_this, file, xhr);
             } catch (e) {
                 _this.asyncComplete(file, e.message || 'Exception');
