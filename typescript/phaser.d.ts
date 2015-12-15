@@ -3,6 +3,9 @@
 
 // Type definitions for Phaser 2.4.4+ 2015-Sep-10
 // Project: https://github.com/photonstorm/phaser
+declare module "phaser" {
+    export = Phaser;
+}
 
 declare class Phaser {
 
