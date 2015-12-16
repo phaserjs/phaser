@@ -2113,7 +2113,7 @@ Phaser.Loader.prototype = {
 
             case 'json':
 
-                this.xhrLoad(file, this.transformUrl(file.url, file), 'text', this.jsonLoadComplete);
+                this.xhrLoad(file, this.transformUrl(file.url, file), 'json', this.jsonLoadComplete);
                 break;
 
             case 'xml':
@@ -2300,6 +2300,11 @@ Phaser.Loader.prototype = {
         var xhr = new XMLHttpRequest();
         xhr.open("GET", url, true);
         xhr.responseType = type;
+        if (type === 'json') {
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhr.responseType = text;
+        }
+
 
         onerror = onerror || this.fileError;
 
