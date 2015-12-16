@@ -2301,8 +2301,8 @@ Phaser.Loader.prototype = {
         xhr.open("GET", url, true);
         xhr.responseType = type;
         if (type === 'json') {
-            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-            xhr.responseType = text;
+            xhr.setRequestHeader("Accept", "application/json");
+            xhr.responseType = 'text';
         }
 
 
