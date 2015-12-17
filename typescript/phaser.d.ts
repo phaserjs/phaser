@@ -2524,7 +2524,7 @@ declare module Phaser {
                 on: boolean;
                 particleBringToTop: boolean;
                 particleSendToBack: boolean;
-                particleClass: Phaser.Sprite;
+                particleClass: any;
                 particleDrag: Phaser.Point;
                 physicsType: number;
                 position: Phaser.Point;
@@ -2541,6 +2541,7 @@ declare module Phaser {
                 explode(lifespan?: number, quantity?: number): void;
                 flow(lifespan?: number, frequency?: number, quantity?: number, total?: number, immediate?: boolean): void;
                 kill(): void;
+                makeParticles();
                 makeParticles(keys: any, frames?: any, quantity?: number, collide?: boolean, collideWorldBounds?: boolean): Phaser.Particles.Arcade.Emitter;
                 reset(x: number, y: number, health?: number): Phaser.Particles;
                 setAlpha(min?: number, max?: number, rate?: number, ease?: (k: number) => number, yoyo?: boolean): void;
