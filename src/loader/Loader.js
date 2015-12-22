@@ -2162,7 +2162,7 @@ Phaser.Loader.prototype = {
         file.data = new Image();
         file.data.name = file.key;
 
-        if (this.crossOrigin)
+        if (this.crossOrigin && file.url.match(/^(?:blob:|data:|http:\/\/|https:\/\/|\/\/)/))
         {
             file.data.crossOrigin = this.crossOrigin;
         }
