@@ -145,7 +145,7 @@ Phaser.Keyboard.prototype = {
      */
     setFocus: function(callback) {
 
-        if (callback != undefined) 
+        if (callback !== undefined)
         {
             this.keyboardFocusCallback = callback;
         }
@@ -404,7 +404,7 @@ Phaser.Keyboard.prototype = {
             event.preventDefault();
         }
 
-        if (this.keyboardFocusCallback) 
+        if (this.keyboardFocusCallback)
         {
             this.keyboardFocusCallback(event);
             return;
@@ -442,7 +442,7 @@ Phaser.Keyboard.prototype = {
             return;
         }
 
-        if (this.keyboardFocusCallback) 
+        if (this.keyboardFocusCallback)
         {
             this.keyboardFocusCallback(event);
             return;
