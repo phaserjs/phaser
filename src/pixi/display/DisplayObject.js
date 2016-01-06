@@ -295,11 +295,19 @@ Object.defineProperty(PIXI.DisplayObject.prototype, 'mask', {
 
     set: function(value) {
 
-        if (this._mask) this._mask.isMask = false;
+        if (this._mask)
+        {
+            this._mask.isMask = false;
+        }
 
         this._mask = value;
 
-        if (this._mask) this._mask.isMask = true;
+        if (this._mask)
+        {
+            this._mask.isMask = true;
+            // mask needs to be dirty on the first iteration
+            this._mask.dirty = true;
+        }
     }
 
 });
