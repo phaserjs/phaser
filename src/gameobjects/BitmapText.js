@@ -340,7 +340,7 @@ Phaser.BitmapText.prototype.cleanText = function (text, replace) {
 
             if (charData)
             {
-                output = output.concat(text[i])
+                output = output.concat(text[i]);
             }
             else
             {
