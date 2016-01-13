@@ -145,6 +145,8 @@ Phaser.BitmapText = function (game, x, y, font, text, size, align) {
     */
     this._tint = 0xFFFFFF;
 
+    this._text = this.cleanText(text);
+
     this.updateText();
 
     /**
