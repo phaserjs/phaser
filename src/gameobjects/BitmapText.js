@@ -303,6 +303,55 @@ Phaser.BitmapText.prototype.scanLine = function (data, scale, text) {
 };
 
 /**
+* Given a text string this will scan each character in the string to ensure it exists
+* in the BitmapText font data. If it doesn't the character is removed, or replaced with the `replace` argument.
+*
+* If no font data has been loaded at all this returns an empty string.
+* 
+* @method Phaser.BitmapText.prototype.cleanText
+* @param {string} text - The text to parse.
+* @param {string} [replace=''] - The replacement string for any missing characters.
+* @return {string} The cleaned text string.
+*/
+Phaser.BitmapText.prototype.cleanText = function (text, replace) {
+
+    if (replace === undefined)
+    {
+        replace = '';
+    }
+
+    var data = this._data.font;
+
+    if (!data)
+    {
+        return '';
+    }
+
+    var output = '';
+
+    for (var i = 0; i < text.length; i++)
+    {
+        if (!/(?:\r\n|\r|\n)/.test(text.charAt(i)))
+        {
+            var charCode = text.charCodeAt(i);
+            var charData = data.chars[charCode];
+
+            if (charData)
+            {
+                output = output.concat(text[i])
+            }
+            else
+            {
+                output = output.concat(' ');
+            }
+        }
+    }
+
+    return output;
+
+};
+
+/**
 * Renders text and updates it when needed.
 *
 * @method Phaser.BitmapText.prototype.updateText
@@ -572,7 +621,7 @@ Object.defineProperty(Phaser.BitmapText.prototype, 'text', {
 
         if (value !== this._text)
         {
-            this._text = value.toString() || '';
+            this._text = this.cleanText(value.toString()) || '';
             this.updateText();
         }
 
