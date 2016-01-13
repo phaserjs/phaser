@@ -270,6 +270,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 ### New Features
 
 * You can use the new const `Phaser.PENDING_ATLAS` as the texture key for any sprite. Doing this then sets the key to be the `frame` argument (the frame is set to zero). This allows you to create sprites using `load.image` during development, and then change them to use a Texture Atlas later in development by simply searching your code for 'PENDING_ATLAS' and swapping it to be the key of the atlas data.
+* BitmapText.cleanText is a new method that will scan the given text and either remove or replace all characters that are not present in the font data. It is called automatically by `BitmapText.updateText`.
 
 ### Updates
 
@@ -282,6 +283,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * TilemapParser accidentally redeclared `i` when parsing the ImageCollections which would cause an infinite loop (thanks DanHett)
 * BitmapData.update causes a snowballing memory leak under WebGL due to a Context.getImageData call. BitmapData.clear used to call update automatically but no longer does. This resolves the issue of the Debug class causing excessive memory build-up in Chrome. Firefox and IE were unaffected (thanks @kingjerod #2208)
 * Pausing a Sound that used a Marker for playback would fire the `onMarkerComplete` signal by mistake as well as stop the fadeTween. This Signal is now only dispatched if Sound.stop is called and the Sound isn't paused (thanks Corin)
+* BitmapText.text would throw an undefined Texture error if you used a character in your text string that didn't exist in the font data.
 
 ### Pixi Updates
 

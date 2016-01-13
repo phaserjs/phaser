@@ -306,7 +306,7 @@ Phaser.BitmapText.prototype.scanLine = function (data, scale, text) {
 * Given a text string this will scan each character in the string to ensure it exists
 * in the BitmapText font data. If it doesn't the character is removed, or replaced with the `replace` argument.
 *
-* If no font data has been loaded at all this returns an empty string.
+* If no font data has been loaded at all this returns an empty string, as nothing can be rendered.
 * 
 * @method Phaser.BitmapText.prototype.cleanText
 * @param {string} text - The text to parse.
