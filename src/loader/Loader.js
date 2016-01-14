@@ -1883,9 +1883,9 @@ Phaser.Loader.prototype = {
 
         this.onLoadComplete.dispatch();
 
-        this.reset();
-
         this.game.state.loadComplete();
+
+        this.reset();
 
     },
 
