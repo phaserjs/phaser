@@ -589,7 +589,7 @@ Phaser.StateManager.prototype = {
     loadComplete: function () {
 
         //  Make sure to do load-update one last time before state is set to _created
-        if(this.onLoadUpdateCallback)
+        if (this._created === false && this.onLoadUpdateCallback)
         {
             this.onLoadUpdateCallback.call(this.callbackContext, this.game);
         }
