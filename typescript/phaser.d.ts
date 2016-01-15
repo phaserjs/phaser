@@ -2785,12 +2785,12 @@ declare module Phaser {
                 deltaX(): number;
                 deltaY(): number;
                 deltaZ(): number;
-                deltaAbsX(): void;
-                deltaAbsY(): void;
+                deltaAbsX(): number;
+                deltaAbsY(): number;
                 destroy(): void;
                 hitTest(x: number, y: number): boolean;
-                onFloor(): void;
-                onWall(): void;
+                onFloor(): boolean;
+                onWall(): boolean;
                 preUpdate(): void;
                 postUpdate(): void;
                 render(context: any, body: Phaser.Physics.Arcade.Body, color?: string, filled?: boolean): void;

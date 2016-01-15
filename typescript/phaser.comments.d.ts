@@ -15758,13 +15758,13 @@ declare module Phaser {
                 * Returns the absolute delta x value.
                 * @return The absolute delta value.
                 */
-                deltaAbsX(): void;
+                deltaAbsX(): number;
 
                 /**
                 * Returns the absolute delta y value.
                 * @return The absolute delta value.
                 */
-                deltaAbsY(): void;
+                deltaAbsY(): number;
 
                 /**
                 * Removes this bodys reference to its parent sprite, freeing it up for gc.
@@ -15784,13 +15784,13 @@ declare module Phaser {
                 * Returns true if the bottom of this Body is in contact with either the world bounds or a tile.
                 * @return True if in contact with either the world bounds or a tile.
                 */
-                onFloor(): void;
+                onFloor(): boolean;
 
                 /**
                 * Returns true if either side of this Body is in contact with either the world bounds or a tile.
                 * @return True if in contact with either the world bounds or a tile.
                 */
-                onWall(): void;
+                onWall(): boolean;
 
                 /**
                 * Internal method.
