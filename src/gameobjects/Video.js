@@ -93,6 +93,11 @@ Phaser.Video = function (game, key, url) {
     this.onComplete = new Phaser.Signal();
 
     /**
+     * @property {function} endedEventFunction - This is a function that is called when the Video completes playback. It's stored so that on playback end it's possible to remove the event listener.
+     */
+    this.endedEventFunction = null;
+
+    /**
     * @property {Phaser.Signal} onAccess - This signal is dispatched if the user allows access to their webcam.
     */
     this.onAccess = new Phaser.Signal();
@@ -644,7 +649,8 @@ Phaser.Video.prototype = {
         this.game.onPause.add(this.setPause, this);
         this.game.onResume.add(this.setResume, this);
 
-        this.video.addEventListener('ended', this.complete.bind(this), true);
+        this.endedEventFunction = this.complete.bind(this);
+        this.video.addEventListener('ended', this.endedEventFunction, true);
 
         if (loop)
         {
@@ -754,7 +760,8 @@ Phaser.Video.prototype = {
         }
         else
         {
-            this.video.removeEventListener('ended', this.complete.bind(this), true);
+            this.video.removeEventListener('ended', this.endedEventFunction, true);
+            this.endedEventFunction = null;
             this.video.removeEventListener('playing', this.playHandler.bind(this), true);
 
             if (this.touchLocked)
