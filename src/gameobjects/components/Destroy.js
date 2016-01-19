@@ -129,6 +129,7 @@ Phaser.Component.Destroy.prototype = {
             this.transformCallbackContext = null;
         }
         if (this.key.type == 13) {
+            this.key.texture.destroy(true);
             this.key.destroy();
         }
 
