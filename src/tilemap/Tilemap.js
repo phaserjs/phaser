@@ -1219,9 +1219,10 @@ Phaser.Tilemap.prototype = {
     hasTile: function (x, y, layer) {
 
         layer = this.getLayer(layer);
-
+        if (this.layers[layer].data[y] === undefined || this.layers[layer].data[y][x] === undefined) {
+            return false;
+        }
         return (this.layers[layer].data[y][x].index > -1);
-
     },
 
     /**
