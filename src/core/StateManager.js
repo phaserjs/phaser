@@ -431,20 +431,15 @@ Phaser.StateManager.prototype = {
 
         if (this.states[key])
         {
-            var valid = false;
-
             if (this.states[key]['preload'] || this.states[key]['create'] || this.states[key]['update'] || this.states[key]['render'])
             {
-                valid = true;
+                return true;
             }
-
-            if (valid === false)
+            else
             {
                 console.warn("Invalid Phaser State object given. Must contain at least a one of the required functions: preload, create, update or render");
                 return false;
             }
-
-            return true;
         }
         else
         {
