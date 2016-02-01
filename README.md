@@ -283,6 +283,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * The TypeScript definitions now have Phaser exported as a module in the header. This allows you to import / require the Phaser TypeScript defs (thanks @PixelWaffles #2255)
 * BitmapData.setHSL now accepts 0 as a valid parameter (thanks @FracturedShader #2209)
 * Force the usage of typescript 1.4.1 in the package.json so that the TypeScript defs with comments is rebuilt properly again (thanks @vulvulune #2198)
+* A tiny logic update in the StateManager (thanks @jaminscript #2151)
 
 ### Bug Fixes
 
@@ -297,6 +298,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * Loader.binary would return a success even if the xhr'd file returned a 404 or similar (thanks @milkey-mouse @mhstar89 #2251 #2250)
 * When loading audio or video from blob or data URIs, the local variable was replaced too soon, throwing errors in `getAudioURL` and `getVideoURL` (thanks @milkey-mouse @jackfreak #2236 #2234)
 * Tween.hasStarted parameter was set to `false` when the tween was created, but not set again when the tween was stopped or ends. If `Tween.start` is used more than once the `onStart` callback is called only the first time (thanks @javivi91 #2199)
+* During a WebGL context loss the Phaser Cache was referencing the wrong local object (thanks @allenevans #2285)
 
 ### Pixi Updates
 
