@@ -784,12 +784,12 @@ Phaser.BitmapData.prototype = {
     * @return {Phaser.BitmapData} This BitmapData object for method chaining.
     */
     setHSL: function (h, s, l, region) {
+        
+        var bHaveH = h || h === 0;
+        var bHaveS = s || s === 0;
+        var bHaveL = l || l === 0;
 
-        if (h === undefined || h === null) { h = false; }
-        if (s === undefined || s === null) { s = false; }
-        if (l === undefined || l === null) { l = false; }
-
-        if (!h && !s && !l)
+        if (!bHaveH && !bHaveS && !bHaveL)
         {
             return;
         }
@@ -807,17 +807,17 @@ Phaser.BitmapData.prototype = {
             {
                 Phaser.Color.unpackPixel(this.getPixel32(x, y), pixel, true);
 
-                if (h)
+                if (bHaveH)
                 {
                     pixel.h = h;
                 }
 
-                if (s)
+                if (bHaveS)
                 {
                     pixel.s = s;
                 }
 
-                if (l)
+                if (bHaveL)
                 {
                     pixel.l = l;
                 }
