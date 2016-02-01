@@ -291,6 +291,8 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * BitmapText.text would throw an undefined Texture error if you used a character in your text string that didn't exist in the font data.
 * Animation.stop will now stop the named animation only if the `name` argument is passed and matches the currently running animation (thanks @samme #2299 #2301)
 * TilemapParser accidentally redeclared `i` when parsing Tilemap Layers (thanks @ttencate and @aweber1  #2244 #2233 #2281)
+* Added `removeAll` to TweenManagers stub, so the call from the StageManager doesn't throw an error in a custom build (thanks @RetrocadeNet #2284)
+* Loader.binary would return a success even if the xhr'd file returned a 404 or similar (thanks @milkey-mouse @mhstar89 #2251 #2250)
 
 ### Pixi Updates
 
