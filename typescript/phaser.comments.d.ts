@@ -1193,7 +1193,7 @@ declare module Phaser {
         * @param roundPx Should the x and y values be rounded to integers before drawing? This prevents anti-aliasing in some instances. - Default: false
         * @return This BitmapData object for method chaining.
         */
-        copy(source?: any, x?: number, y?: number, width?: number, height?: number, tx?: number, ty?: number, newWidth?: number, newHeight?: number, rotate?: number, anchorX?: number, anchorY?: number, scaleX?: number, scaleY?: number, alpha?: number, blendMode?: number, roundPx?: boolean): Phaser.BitmapData;
+        copy(source?: any, x?: number, y?: number, width?: number, height?: number, tx?: number, ty?: number, newWidth?: number, newHeight?: number, rotate?: number, anchorX?: number, anchorY?: number, scaleX?: number, scaleY?: number, alpha?: number, blendMode?: string, roundPx?: boolean): Phaser.BitmapData;
         copyPixels(source: any, area: Phaser.Rectangle, x: number, y: number, alpha?: number): void;
 
         /**
@@ -1208,7 +1208,7 @@ declare module Phaser {
         * @param roundPx Should the x and y values be rounded to integers before drawing? This prevents anti-aliasing in some instances. - Default: false
         * @return This BitmapData object for method chaining.
         */
-        copyRect(source: any, area: Phaser.Rectangle, x?: number, y?: number, alpha?: number, blendMode?: number, roundPx?: boolean): Phaser.BitmapData;
+        copyRect(source: any, area: Phaser.Rectangle, x?: number, y?: number, alpha?: number, blendMode?: string, roundPx?: boolean): Phaser.BitmapData;
 
         /**
         * Draws the given Phaser.Sprite, Phaser.Image or Phaser.Text to this BitmapData at the coordinates specified.
@@ -1224,7 +1224,7 @@ declare module Phaser {
         * @param roundPx Should the x and y values be rounded to integers before drawing? This prevents anti-aliasing in some instances. - Default: false
         * @return This BitmapData object for method chaining.
         */
-        draw(source: any, x?: number, y?: number, width?: number, height?: number, blendMode?: number, roundPx?: boolean): Phaser.BitmapData;
+        draw(source: any, x?: number, y?: number, width?: number, height?: number, blendMode?: string, roundPx?: boolean): Phaser.BitmapData;
 
         /**
         * Draws the Game Object or Group to this BitmapData and then recursively iterates through all of its children.
@@ -1254,7 +1254,7 @@ declare module Phaser {
         * @param roundPx Should the x and y values be rounded to integers before drawing? This prevents anti-aliasing in some instances. - Default: false
         * @return This BitmapData object for method chaining.
         */
-        drawGroup(group: Phaser.Group, blendMode?: number, roundPx?: boolean): Phaser.BitmapData;
+        drawGroup(group: Phaser.Group, blendMode?: string, roundPx?: boolean): Phaser.BitmapData;
 
         /**
         * Scans this BitmapData for all pixels matching the given r,g,b values and then draws them into the given destination BitmapData.
