@@ -528,6 +528,8 @@ Phaser.BitmapData.prototype = {
     * Resizes the BitmapData. This changes the size of the underlying canvas and refreshes the buffer.
     *
     * @method Phaser.BitmapData#resize
+    * @param {integer} width - The new width of the BitmapData.
+    * @param {integer} height - The new height of the BitmapData.
     * @return {Phaser.BitmapData} This BitmapData object for method chaining.
     */
     resize: function (width, height) {

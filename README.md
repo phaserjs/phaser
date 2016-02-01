@@ -275,7 +275,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 ### Updates
 
 * TypeScript definitions fixes and updates (thanks @zimpy @iamfreee @milkey-mouse )
-* Docs typo fixes (thanks @zeterain @staff0rd @milkey-mouse )
+* Docs typo fixes (thanks @zeterain @staff0rd @milkey-mouse @dick-clark)
 * Emitter methods `at`, `explode`, `flow`, `kill`, `revive`, `setAlpha`, `setRotation`, `setScale`, `setSize`, `setXSpeed`, `setYSpeed` and `start` now return the Emitter instance for better method chaining (thanks @samme #2308)
 * Tilemap.hasTile will now return `false` if the Tile doesn't exist in the coordinates given (which can happen if the coordinates are out of bounds) (thanks @cy-ryo-fujiwara #2304)
 * Update FrameData to check if both the numeric index was set and exists. Should fix Phaser Tiled integration as a result (thanks @Weedshaker #2298)
