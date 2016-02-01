@@ -2527,7 +2527,7 @@ declare module Phaser {
                 on: boolean;
                 particleBringToTop: boolean;
                 particleSendToBack: boolean;
-                particleClass: Phaser.Sprite;
+                particleClass: any;
                 particleDrag: Phaser.Point;
                 physicsType: number;
                 position: Phaser.Point;
@@ -2539,22 +2539,22 @@ declare module Phaser {
                 x: number;
                 y: number;
 
-                at(object: any): void;
+                at(object: any): Phaser.Particles.Arcade.Emitter;
                 emitParticle(x?: number, y?: number, key?: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture, frame?: string | number): boolean;
-                explode(lifespan?: number, quantity?: number): void;
-                flow(lifespan?: number, frequency?: number, quantity?: number, total?: number, immediate?: boolean): void;
-                kill(): void;
+                explode(lifespan?: number, quantity?: number): Phaser.Particles.Arcade.Emitter;
+                flow(lifespan?: number, frequency?: number, quantity?: number, total?: number, immediate?: boolean): Phaser.Particles.Arcade.Emitter;
+                kill(): Phaser.Particles.Arcade.Emitter;
                 makeParticles(keys: any, frames?: any, quantity?: number, collide?: boolean, collideWorldBounds?: boolean): Phaser.Particles.Arcade.Emitter;
                 reset(x: number, y: number, health?: number): Phaser.Particles;
-                setAlpha(min?: number, max?: number, rate?: number, ease?: (k: number) => number, yoyo?: boolean): void;
-                setRotation(min?: number, max?: number): void;
-                setScale(minX?: number, maxX?: number, minY?: number, maxY?: number, rate?: number, ease?: (k: number) => number, yoyo?: boolean): void;
-                setSize(width: number, height: number): void;
-                setXSpeed(min: number, max: number): void;
-                setYSpeed(min: number, max: number): void;
-                start(explode?: boolean, lifespan?: number, frequency?: number, quantity?: number, forceQuantity?: boolean): void;
+                setAlpha(min?: number, max?: number, rate?: number, ease?: (k: number) => number, yoyo?: boolean): Phaser.Particles.Arcade.Emitter;
+                setRotation(min?: number, max?: number): Phaser.Particles.Arcade.Emitter;
+                setScale(minX?: number, maxX?: number, minY?: number, maxY?: number, rate?: number, ease?: (k: number) => number, yoyo?: boolean): Phaser.Particles.Arcade.Emitter;
+                setSize(width: number, height: number): Phaser.Particles.Arcade.Emitter;
+                setXSpeed(min: number, max: number): Phaser.Particles.Arcade.Emitter;
+                setYSpeed(min: number, max: number): Phaser.Particles.Arcade.Emitter;
+                start(explode?: boolean, lifespan?: number, frequency?: number, quantity?: number, forceQuantity?: boolean): Phaser.Particles.Arcade.Emitter;
                 update(): void;
-                revive(): void;
+                revive(): Phaser.Particles.Arcade.Emitter;
 
             }
         }

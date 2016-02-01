@@ -274,9 +274,13 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 
 ### Updates
 
-* TypeScript definitions fixes and updates (thanks @clark-stevenson)
-* Docs typo fixes (thanks ...)
+* TypeScript definitions fixes and updates (thanks @zimpy @iamfreee)
+* Docs typo fixes (thanks @zeterain @staff0rd )
 * Emitter methods `at`, `explode`, `flow`, `kill`, `revive`, `setAlpha`, `setRotation`, `setScale`, `setSize`, `setXSpeed`, `setYSpeed` and `start` now return the Emitter instance for better method chaining (thanks @samme #2308)
+* Tilemap.hasTile will now return `false` if the Tile doesn't exist in the coordinates given (which can happen if the coordinates are out of bounds) (thanks @cy-ryo-fujiwara #2304)
+* Update FrameData to check if both the numeric index was set and exists. Should fix Phaser Tiled integration as a result (thanks @Weedshaker #2298)
+* Loader.loadUpdate now gets one final call when the loading is complete (before it would end and then call loadComplete, but if you had a callback bound to loadUpdate you'd never get that final 100% load event). (thanks @nexiuhm @McFarts #2297 #2296)
+* The TypeScript definitions now have Phaser exported as a module in the header. This allows you to import / require the Phaser TypeScript defs (thanks @PixelWaffles #2255)
 
 ### Bug Fixes
 
@@ -285,6 +289,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * BitmapData.update causes a snowballing memory leak under WebGL due to a Context.getImageData call. BitmapData.clear used to call update automatically but no longer does. This resolves the issue of the Debug class causing excessive memory build-up in Chrome. Firefox and IE were unaffected (thanks @kingjerod #2208)
 * Pausing a Sound that used a Marker for playback would fire the `onMarkerComplete` signal by mistake as well as stop the fadeTween. This Signal is now only dispatched if Sound.stop is called and the Sound isn't paused (thanks Corin)
 * BitmapText.text would throw an undefined Texture error if you used a character in your text string that didn't exist in the font data.
+* Animation.stop will now stop the named animation only if the `name` argument is passed and matches the currently running animation (thanks @samme #2299 #2301)
 
 ### Pixi Updates
 
