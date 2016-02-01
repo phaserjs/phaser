@@ -274,7 +274,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 
 ### Updates
 
-* TypeScript definitions fixes and updates (thanks @zimpy @iamfreee @milkey-mouse )
+* TypeScript definitions fixes and updates (thanks @zimpy @iamfreee @milkey-mouse @juanmirod @danzel)
 * Docs typo fixes (thanks @zeterain @staff0rd @milkey-mouse @dick-clark)
 * Emitter methods `at`, `explode`, `flow`, `kill`, `revive`, `setAlpha`, `setRotation`, `setScale`, `setSize`, `setXSpeed`, `setYSpeed` and `start` now return the Emitter instance for better method chaining (thanks @samme #2308)
 * Tilemap.hasTile will now return `false` if the Tile doesn't exist in the coordinates given (which can happen if the coordinates are out of bounds) (thanks @cy-ryo-fujiwara #2304)
@@ -293,6 +293,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * TilemapParser accidentally redeclared `i` when parsing Tilemap Layers (thanks @ttencate and @aweber1  #2244 #2233 #2281)
 * Added `removeAll` to TweenManagers stub, so the call from the StageManager doesn't throw an error in a custom build (thanks @RetrocadeNet #2284)
 * Loader.binary would return a success even if the xhr'd file returned a 404 or similar (thanks @milkey-mouse @mhstar89 #2251 #2250)
+* When loading audio or video from blob or data URIs, the local variable was replaced too soon, throwing errors in `getAudioURL` and `getVideoURL` (thanks @milkey-mouse @jackfreak #2236 #2234)
 
 ### Pixi Updates
 
