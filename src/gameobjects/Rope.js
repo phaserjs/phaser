@@ -131,7 +131,7 @@ Phaser.Rope.prototype.update = function() {
 * @memberof Phaser.Rope
 * @param {number} x - The x coordinate (in world space) to position the Sprite at.
 * @param {number} y - The y coordinate (in world space) to position the Sprite at.
-* @return (Phaser.Rope) This instance.
+* @return {Phaser.Rope} This instance.
 */
 Phaser.Rope.prototype.reset = function(x, y) {
 
