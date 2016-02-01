@@ -3678,16 +3678,16 @@ declare module Phaser {
         static ERASER_BUTTON: number;
 
         active: boolean;
-        backButton: boolean;
+        backButton: Phaser.DeviceButton;
         button: any;
         circle: Phaser.Circle;
         clientX: number;
         clientY: number;
         dirty: boolean;
         duration: number;
-        eraserButton: boolean;
+        eraserButton: Phaser.DeviceButton;
         exists: boolean;
-        forwardButton: boolean;
+        forwardButton: Phaser.DeviceButton;
         game: Phaser.Game;
         id: number;
         identifier: number;
@@ -3695,7 +3695,7 @@ declare module Phaser {
         isMouse: boolean;
         isUp: boolean;
         leftButton: Phaser.DeviceButton;
-        middleButton: boolean;
+        middleButton: Phaser.DeviceButton;
         movementX: number;
         movementY: number;
         msSinceLastClick: number;
