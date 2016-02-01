@@ -274,8 +274,8 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 
 ### Updates
 
-* TypeScript definitions fixes and updates (thanks @zimpy @iamfreee)
-* Docs typo fixes (thanks @zeterain @staff0rd )
+* TypeScript definitions fixes and updates (thanks @zimpy @iamfreee @milkey-mouse )
+* Docs typo fixes (thanks @zeterain @staff0rd @milkey-mouse )
 * Emitter methods `at`, `explode`, `flow`, `kill`, `revive`, `setAlpha`, `setRotation`, `setScale`, `setSize`, `setXSpeed`, `setYSpeed` and `start` now return the Emitter instance for better method chaining (thanks @samme #2308)
 * Tilemap.hasTile will now return `false` if the Tile doesn't exist in the coordinates given (which can happen if the coordinates are out of bounds) (thanks @cy-ryo-fujiwara #2304)
 * Update FrameData to check if both the numeric index was set and exists. Should fix Phaser Tiled integration as a result (thanks @Weedshaker #2298)
@@ -290,6 +290,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * Pausing a Sound that used a Marker for playback would fire the `onMarkerComplete` signal by mistake as well as stop the fadeTween. This Signal is now only dispatched if Sound.stop is called and the Sound isn't paused (thanks Corin)
 * BitmapText.text would throw an undefined Texture error if you used a character in your text string that didn't exist in the font data.
 * Animation.stop will now stop the named animation only if the `name` argument is passed and matches the currently running animation (thanks @samme #2299 #2301)
+* TilemapParser accidentally redeclared `i` when parsing Tilemap Layers (thanks @ttencate and @aweber1  #2244 #2233 #2281)
 
 ### Pixi Updates
 

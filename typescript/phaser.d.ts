@@ -1,8 +1,9 @@
 /// <reference path="pixi.d.ts" />
 /// <reference path="p2.d.ts" />
 
-// Type definitions for Phaser 2.4.4+ 2015-Sep-10
+// Type definitions for Phaser 2.4.5
 // Project: https://github.com/photonstorm/phaser
+
 declare module "phaser" {
     export = Phaser;
 }
