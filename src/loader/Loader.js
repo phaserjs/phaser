@@ -2464,8 +2464,8 @@ Phaser.Loader.prototype = {
 
             if (url.uri) // {uri: .., type: ..} pair
             {
-                url = url.uri;
                 videoType = url.type;
+                url = url.uri;
             }
             else
             {
@@ -2487,7 +2487,7 @@ Phaser.Loader.prototype = {
 
             if (this.game.device.canPlayVideo(videoType))
             {
-                return urls[i];
+                return url;
             }
         }
 
@@ -2519,8 +2519,8 @@ Phaser.Loader.prototype = {
 
             if (url.uri) // {uri: .., type: ..} pair
             {
-                url = url.uri;
                 audioType = url.type;
+                url = url.uri;
             }
             else
             {
@@ -2542,7 +2542,7 @@ Phaser.Loader.prototype = {
 
             if (this.game.device.canPlayAudio(audioType))
             {
-                return urls[i];
+                return url;
             }
         }
 
