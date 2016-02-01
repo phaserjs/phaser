@@ -276,6 +276,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 
 * TypeScript definitions fixes and updates (thanks @clark-stevenson)
 * Docs typo fixes (thanks ...)
+* Emitter methods `at`, `explode`, `flow`, `kill`, `revive`, `setAlpha`, `setRotation`, `setScale`, `setSize`, `setXSpeed`, `setYSpeed` and `start` now return the Emitter instance for better method chaining (thanks @samme #2308)
 
 ### Bug Fixes
 
