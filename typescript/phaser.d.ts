@@ -3694,7 +3694,7 @@ declare module Phaser {
         isDown: boolean;
         isMouse: boolean;
         isUp: boolean;
-        leftButton: boolean;
+        leftButton: Phaser.DeviceButton;
         middleButton: boolean;
         movementX: number;
         movementY: number;
@@ -3708,7 +3708,7 @@ declare module Phaser {
         previousTapTime: number;
         rawMovementX: number;
         rawMovementY: number;
-        rightButton: boolean;
+        rightButton: Phaser.DeviceButton;
         screenX: number;
         screenY: number;
         target: any;
