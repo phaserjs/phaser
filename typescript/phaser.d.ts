@@ -3803,7 +3803,7 @@ declare module Phaser {
         real(): number;
         realInRange(min: number, max: number): number;
         sow(seeds: number[]): void;
-        state(state: string): string;
+        state(state?: string): string;
         timestamp(min: number, max: number): number;
         uuid(): number;
         weightedPick<T>(ary: T[]): T;

@@ -20528,7 +20528,7 @@ declare module Phaser {
         * @param state Generator state to be set.
         * @return The current state of the generator.
         */
-        state(state: string): string;
+        state(state?: string): string;
 
         /**
         * Returns a random timestamp between min and max, or between the beginning of 2000 and the end of 2020 if min and max aren't specified.
