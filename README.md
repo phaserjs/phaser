@@ -270,7 +270,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 ### New Features
 
 * You can use the new const `Phaser.PENDING_ATLAS` as the texture key for any sprite. Doing this then sets the key to be the `frame` argument (the frame is set to zero). This allows you to create sprites using `load.image` during development, and then change them to use a Texture Atlas later in development by simply searching your code for 'PENDING_ATLAS' and swapping it to be the key of the atlas data.
-* BitmapText.cleanText is a new method that will scan the given text and either remove or replace all characters that are not present in the font data. It is called automatically by `BitmapText.updateText`.
+* BitmapText.cleanText is a new method that will scan the given text and either remove or replace all characters that are not present in the font data.
 * ArcadePhysics.Body.onCeiling is a new complementary method to go with onFloor (thanks @yigitozdemir #1610)
 
 ### Updates
@@ -308,6 +308,8 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * BitmapData.shiftHSL incorrectly used Math.limitValue, now updated to use Math.clamp (thanks @FracturedShader #2222)
 * The Loader was deleting the next waiting file from the queue if an asset pack was added after the load had started (thanks @tfelix #2203 #2204)
 * Specifying Phaser.ScaleManager.EXACT_FIT as the scaleMode in a game config object would fail to use the scale mode (thanks @06wj #2248)
+* BitmapText would crash if it tried to render a character that didn't exist in the font set. Any character that doesn't exist in the font set now renders a space character instead.
+* BitmapText would load and parse the kerning data from the font, but would never use it when rendering. The kerning values are now applied on rendering as well (thanks @veu #2165)
 
 ### Pixi Updates
 
