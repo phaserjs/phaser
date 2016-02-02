@@ -1,7 +1,7 @@
 /// <reference path="pixi.d.ts" />
 /// <reference path="p2.d.ts" />
 
-// Type definitions for Phaser 2.4.5
+// Type definitions for Phaser 2.4.5 - 2nd February 2015
 // Project: https://github.com/photonstorm/phaser
 
 declare module "phaser" {
@@ -135,6 +135,7 @@ declare module Phaser {
 
         static JSONData(game: Phaser.Game, json: any): Phaser.FrameData;
         static JSONDataHash(game: Phaser.Game, json: any): Phaser.FrameData;
+        static JSONDataPyxel(game: Phaser.Game, json: any): Phaser.FrameData;
         static spriteSheet(game: Phaser.Game, key: string, frameWidth: number, frameHeight: number, frameMax?: number, margin?: number, spacing?: number): Phaser.FrameData;
         static XMLData(game: Phaser.Game, xml: any): Phaser.FrameData;
 
@@ -190,6 +191,38 @@ declare module Phaser {
         static rotate(array: any[]): any;
         static numberArray(start: number, end: number): number[];
         static numberArrayStep(start: number, end: number, step?: number): number[];
+
+    }
+
+    interface BitmapFont {
+
+        base: PIXI.BaseTexture;
+        data: HTMLImageElement;
+        font: Phaser.BMFont;
+        url: string;
+
+    }
+
+    interface BMFont {
+
+        chars: Phaser.BMFontChar[];
+        font: string;
+        lineHeight: number;
+        size: number;
+
+    }
+
+    interface BMFontChar {
+
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+        xOffset: number;
+        yOffset: number;
+        xAdvance: number;
+        kerning: number[];
+        texture: PIXI.BaseTexture;
 
     }
 
@@ -400,6 +433,13 @@ declare module Phaser {
 
     }
 
+    class PointerMode {
+
+        static CURSOR: number;
+        static CONTACT: number;
+
+    }
+
     class Cache {
 
         constructor(game: Phaser.Game);
@@ -432,7 +472,7 @@ declare module Phaser {
         addBitmapFont(key: string, url: string, data: any, atlasData: any, atlasType: string, xSpacing?: number, ySpacing?: number): void;
         addCanvas(key: string, canvas: HTMLCanvasElement, context?: CanvasRenderingContext2D): void;
         addDefaultImage(): void;
-        addImage(key: string, url: string, data: any): Phaser.CachedImage;
+        addImage(key: string, url: string, data: any): HTMLImageElement;
         addJSON(key: string, urL: string, data: any): void;
         addMissingImage(): void;
         addPhysicsData(key: string, url: string, JSONData: any, format: number): void;
@@ -469,14 +509,14 @@ declare module Phaser {
         getBaseTexture(key: string, cache?: number): PIXI.BaseTexture;
         getBinary(key: string): any;
         getBitmapData(key: string): Phaser.BitmapData;
-        getBitmapFont(key: string): Phaser.RetroFont;
+        getBitmapFont(key: string): Phaser.BitmapFont;
         getCanvas(key: string): HTMLCanvasElement;
         getFrame(key: string, cache?: number): Phaser.Frame;
         getFrameByIndex(key: string, index: number, cache?: number): Phaser.Frame;
         getFrameByName(key: string, name: string, cache?: number): Phaser.Frame;
         getFrameCount(key: string, cache?: number): number;
         getFrameData(key: string, cache?: number): Phaser.FrameData;
-        getImage(key: string, full?: boolean): Phaser.CachedImage;
+        getImage(key: string, full?: boolean): HTMLImageElement;
         getItem(key: string, cache: number, method?: string, property?: string): any;
         getJSON(key: string, clone?: boolean): any;
         getKeys(cache: number): string[];
@@ -522,17 +562,6 @@ declare module Phaser {
         removeVideo(key: string): void;
         updateFrameData(key: string, frameData: any, cache?: number): void;
         updateSound(key: string, property: string, value: Phaser.Sound): void;
-
-    }
-
-    interface CachedImage {
-
-        key: string;
-        url: string;
-        data: HTMLImageElement;
-        base: PIXI.BaseTexture;
-        frame: Phaser.Frame;
-        frameData: Phaser.FrameData;
 
     }
 
@@ -588,7 +617,8 @@ declare module Phaser {
 
         static addToDOM(canvas: HTMLCanvasElement, parent: HTMLElement, overflowHidden?: boolean): HTMLCanvasElement;
         static create(parent: HTMLDivElement, width?: number, height?: number, id?: string, skipPool?: boolean): HTMLCanvasElement;
-        static getSmoothngEnabled(context: CanvasRenderingContext2D): boolean;
+        static getSmoothingEnabled(context: CanvasRenderingContext2D): boolean;
+        static getSmoothingPrefix(context: CanvasRenderingContext2D): string;
         static removeFromDOM(canvas: HTMLCanvasElement): void;
         static setBackgroundColor(canvas: HTMLCanvasElement, color: string): HTMLCanvasElement;
         static setImageRenderingBicubic(canvas: HTMLCanvasElement): HTMLCanvasElement;
@@ -773,6 +803,7 @@ declare module Phaser {
         ie: boolean;
         ieVersion: number;
         iOS: boolean;
+        iOSVersion: number;
         initialized: boolean;
         iPad: boolean;
         iPhone: boolean;
@@ -1300,6 +1331,7 @@ declare module Phaser {
         cache: Phaser.Cache;
         camera: Phaser.Camera;
         canvas: HTMLCanvasElement;
+        clearBeforeRender: boolean;
         config: IGameConfig;
         context: CanvasRenderingContext2D;
         count: number;
@@ -1910,26 +1942,26 @@ declare module Phaser {
         destroy(): void;
         disableDrag(): void;
         disableSnap(): void;
-        downDuration(pointer: Phaser.Pointer): number;
+        downDuration(pointerId?: number): number;
         enableDrag(lockCenter?: boolean, bringToTop?: boolean, pixelPerfect?: boolean, alphaThreshold?: number, boundsRect?: Phaser.Rectangle, boundsSprite?: Phaser.Sprite): void;
         enableSnap(snapX: number, snapY: number, onDrag?: boolean, onRelease?: boolean, snapOffsetX?: number, snapOffsetY?: number): void;
         isPixelPerfect(): boolean;
-        justOut(pointer: number, delay: number): boolean;
-        justOver(pointer: number, delay: number): boolean;
-        justPressed(pointer: number, delay: number): boolean;
-        justReleased(pointer: number, delay: number): boolean;
-        overDuration(pointer: Phaser.Pointer): number;
-        pointerDown(pointer: number): boolean;
-        pointerDragged(pointer: Phaser.Pointer): boolean;
-        pointerOut(index: number): boolean;
-        pointerOver(index: number): boolean;
-        pointerTimeDown(pointer: Phaser.Pointer): number;
-        pointerTimeOut(pointer: Phaser.Pointer): number;
-        pointerTimeOver(pointer: number): number;
-        pointerTimeUp(pointer: number): number;
-        pointerUp(pointer: number): boolean;
-        pointerX(pointer: number): number;
-        pointerY(pointer: number): number;
+        justOut(pointerId?: number, delay?: number): boolean;
+        justOver(pointerId?: number, delay?: number): boolean;
+        justPressed(pointerId?: number, delay?: number): boolean;
+        justReleased(pointerId?: number, delay?: number): boolean;
+        overDuration(pointerId?: number): number;
+        pointerDown(pointerId?: number): boolean;
+        pointerDragged(pointerId?: number): boolean;
+        pointerOut(pointerId?: number): boolean;
+        pointerOver(pointerId?: number): boolean;
+        pointerTimeDown(pointerId?: number): number;
+        pointerTimeOut(pointerId?: number): number;
+        pointerTimeOver(pointerId?: number): number;
+        pointerTimeUp(pointerId?: number): number;
+        pointerUp(pointerId?: number): boolean;
+        pointerX(pointerId?: number): number;
+        pointerY(pointerId?: number): number;
         reset(): void;
         setDragLock(allowHorizontal?: boolean, allowVertical?: boolean): void;
         start(priority: number, useHandCursor: boolean): Phaser.Sprite;
@@ -2117,6 +2149,113 @@ declare module Phaser {
 
     }
 
+    class KeyCode {
+
+        static A: number;
+        static B: number;
+        static C: number;
+        static D: number;
+        static E: number;
+        static F: number;
+        static G: number;
+        static H: number;
+        static I: number;
+        static J: number;
+        static K: number;
+        static L: number;
+        static M: number;
+        static N: number;
+        static O: number;
+        static P: number;
+        static Q: number;
+        static R: number;
+        static S: number;
+        static T: number;
+        static U: number;
+        static V: number;
+        static W: number;
+        static X: number;
+        static Y: number;
+        static Z: number;
+        static ZERO: number;
+        static ONE: number;
+        static TWO: number;
+        static THREE: number;
+        static FOUR: number;
+        static FIVE: number;
+        static SIX: number;
+        static SEVEN: number;
+        static EIGHT: number;
+        static NINE: number;
+        static NUMPAD_0: number;
+        static NUMPAD_1: number;
+        static NUMPAD_2: number;
+        static NUMPAD_3: number;
+        static NUMPAD_4: number;
+        static NUMPAD_5: number;
+        static NUMPAD_6: number;
+        static NUMPAD_7: number;
+        static NUMPAD_8: number;
+        static NUMPAD_9: number;
+        static NUMPAD_MULTIPLY: number;
+        static NUMPAD_ADD: number;
+        static NUMPAD_ENTER: number;
+        static NUMPAD_SUBTRACT: number;
+        static NUMPAD_DECIMAL: number;
+        static NUMPAD_DIVIDE: number;
+        static F1: number;
+        static F2: number;
+        static F3: number;
+        static F4: number;
+        static F5: number;
+        static F6: number;
+        static F7: number;
+        static F8: number;
+        static F9: number;
+        static F10: number;
+        static F11: number;
+        static F12: number;
+        static F13: number;
+        static F14: number;
+        static F15: number;
+        static COLON: number;
+        static EQUALS: number;
+        static COMMA: number;
+        static UNDERSCORE: number;
+        static PERIOD: number;
+        static QUESTION_MARK: number;
+        static TILDE: number;
+        static OPEN_BRACKET: number;
+        static BACKWARD_SLASH: number;
+        static CLOSED_BRACKET: number;
+        static QUOTES: number;
+        static BACKSPACE: number;
+        static TAB: number;
+        static CLEAR: number;
+        static ENTER: number;
+        static SHIFT: number;
+        static CONTROL: number;
+        static ALT: number;
+        static CAPS_LOCK: number;
+        static ESC: number;
+        static SPACEBAR: number;
+        static PAGE_UP: number;
+        static PAGE_DOWN: number;
+        static END: number;
+        static HOME: number;
+        static LEFT: number;
+        static UP: number;
+        static RIGHT: number;
+        static DOWN: number;
+        static INSERT: number;
+        static DELETE: number;
+        static HELP: number;
+        static NUM_LOCK: number;
+        static PLUS: number;
+        static MINUS: number;
+
+    }
+
     class Line {
 
         constructor(x1?: number, y1?: number, x2?: number, y2?: number);
@@ -2184,6 +2323,7 @@ declare module Phaser {
         static TEXTURE_ATLAS_JSON_ARRAY: number;
         static TEXTURE_ATLAS_JSON_HASH: number;
         static TEXTURE_ATLAS_XML_STARLING: number;
+        static TEXTURE_ATLAS_JSON_PYXEL: number;
 
         baseURL: string;
         cache: Phaser.Cache;
@@ -3667,7 +3807,7 @@ declare module Phaser {
 
     class Pointer {
 
-        constructor(game: Phaser.Game, id: number);
+        constructor(game: Phaser.Game, id: number, pointerMode?: number);
 
         static NO_BUTTON: number;
         static LEFT_BUTTON: number;
@@ -3687,8 +3827,10 @@ declare module Phaser {
         duration: number;
         eraserButton: Phaser.DeviceButton;
         exists: boolean;
+        forceOut: boolean;
         forwardButton: Phaser.DeviceButton;
         game: Phaser.Game;
+        justReleasePreventsOver: boolean | number;
         id: number;
         identifier: number;
         isDown: boolean;
@@ -3791,7 +3933,7 @@ declare module Phaser {
 
     class RandomDataGenerator {
 
-        constructor(seeds: number[]|string);
+        constructor(seeds: any[] | string);
 
         angle(): number;
         between(min: number, max: number): number;
@@ -4332,28 +4474,27 @@ declare module Phaser {
 
     }
 
-    class Stage extends PIXI.Stage {
+    class Stage extends PIXI.DisplayObjectContainer {
 
         constructor(game: Phaser.Game);
 
-        backgroundColor: any;
-        currentRenderOrderID: number;
-        disableVisibilityChange: boolean;
-        exists: boolean;
         game: Phaser.Game;
         name: string;
+        disableVisibilityChange: boolean;
+        exists: boolean;
+        currentRenderOrderID: number;
+        backgroundColor: any;
         smoothed: boolean;
 
-        boot(): void;
-        checkVisibility(): void;
-        destroy(): void;
         parseConfig(config: any): void;
-        postUpdate(): void;
         preUpdate(): void;
-        setBackgroundColor(backgroundColor: number | string): void;
         update(): void;
+        postUpdate(): void;
         updateTransform(): void;
+        checkVisibility(): void;
         visibilityChange(event: Event): void;
+        setBackgroundColor(backgroundColor: number | string): void;
+        destroy(): void;
 
     }
 
@@ -5058,7 +5199,7 @@ declare module Phaser {
         touchStartCallback: Function;
         touchLockCallbacks: Function[];
 
-        addTouchLockCallback(callback: Function, context?: any): void;
+        addTouchLockCallback(callback: Function, context?: any, onEnd?: Function): void;
         removeTouchLockCallback(callback: Function, context?: any): boolean;
         consumeTouchMove(): void;
         onTouchCancel(event: any): void;
