@@ -806,19 +806,25 @@ Phaser.Text.prototype.addFontWeight = function (weight, position) {
 };
 
 /**
-* Precalculates word wrap for a given text based on the Text object configuration.
+* Runs the given text through the Text.runWordWrap function and returns
+* the results as an array, where each element of the array corresponds to a wrapped
+* line of text.
 *
-* It may be useful is the developer wants to control pagination on long pieces of content.
+* Useful if you wish to control pagination on long pieces of content.
 *
 * @method Phaser.Text#precalculateWordWrap
-* @param {string} text - The text for which the wrapping will be precalculated.
+* @param {string} text - The text for which the wrapping will be calculated.
 * @return {array} An array of strings with the pieces of wrapped text.
 */
 Phaser.Text.prototype.precalculateWordWrap = function (text) {
+
     this.texture.baseTexture.resolution = this._res;
     this.context.font = this.style.font;
+
     var wrappedLines = this.runWordWrap(text);
+
     return wrappedLines.split(/(?:\r\n|\r|\n)/);
+
 };
 
 /**

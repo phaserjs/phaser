@@ -4794,6 +4794,7 @@ declare module Phaser {
         fontToComponents(font: string): any;
         postUpdate(): void;
         parseList(list: any[]): Phaser.Text;
+        precalculateWordWrap(text: string): string[];
         preUpdate(): void;
         renderTabLine(line: string, x: number, y: number, fill?: boolean): void;
         setShadow(x?: number, y?: number, color?: any, blur?: number, shadowStroke?: boolean, shadowFill?: boolean): Phaser.Text;
