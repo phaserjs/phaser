@@ -287,6 +287,8 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * A tiny logic update in the StateManager (thanks @jaminscript #2151)
 * The Style object passed in to Phaser.Text is now cloned instead of referenced. This means you can adjust single Text instances without invaliding other Text objects using the same style object (thanks @asyncanup #2267)
 * Added a typescript section to the bower and npm configs to support `tsd link` (thanks @mjohnsonengr #2189 #2180)
+* SoundManager.destroy now calls AudioContext.close (thanks @stoneman1 #2237)
+* Sound.onEndedHandler now sets Sound.currentTime to be Sound.durationMS (thanks @stoneman1 #2237)
 
 ### Bug Fixes
 
