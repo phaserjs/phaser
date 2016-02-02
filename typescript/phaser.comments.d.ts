@@ -20513,6 +20513,24 @@ declare module Phaser {
         sow(seeds: number[]): void;
 
         /**
+        * Gets or Sets the state of the generator. This allows you to retain the values
+        * that the generator is using between games, i.e. in a game save file.
+        * 
+        * To seed this generator with a previously saved state you can pass it as the 
+        * `seed` value in your game config, or call this method directly after Phaser has booted.
+        *
+        * Call this method with no parameters to return the current state.
+        * 
+        * If providing a state it should match the same format that this method
+        * returns, which is a string with a header `!rnd` followed by the `c`,
+        * `s0`, `s1` and `s2` values respectively, each comma-delimited. 
+        *
+        * @param state Generator state to be set.
+        * @return The current state of the generator.
+        */
+        state(state: string): string;
+
+        /**
         * Returns a random timestamp between min and max, or between the beginning of 2000 and the end of 2020 if min and max aren't specified.
         * 
         * @param min The minimum value in the range.
