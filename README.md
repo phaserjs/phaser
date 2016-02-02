@@ -276,7 +276,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 ### Updates
 
 * TypeScript definitions fixes and updates (thanks @zimpy @iamfreee @milkey-mouse @juanmirod @danzel)
-* Docs typo fixes (thanks @zeterain @staff0rd @milkey-mouse @dick-clark @nlotz)
+* Docs typo fixes (thanks @zeterain @staff0rd @milkey-mouse @dick-clark @nlotz @s4wny)
 * Emitter methods `at`, `explode`, `flow`, `kill`, `revive`, `setAlpha`, `setRotation`, `setScale`, `setSize`, `setXSpeed`, `setYSpeed` and `start` now return the Emitter instance for better method chaining (thanks @samme #2308)
 * Tilemap.hasTile will now return `false` if the Tile doesn't exist in the coordinates given (which can happen if the coordinates are out of bounds) (thanks @cy-ryo-fujiwara #2304)
 * Update FrameData to check if both the numeric index was set and exists. Should fix Phaser Tiled integration as a result (thanks @Weedshaker #2298)
@@ -286,6 +286,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * Force the usage of typescript 1.4.1 in the package.json so that the TypeScript defs with comments is rebuilt properly again (thanks @vulvulune #2198)
 * A tiny logic update in the StateManager (thanks @jaminscript #2151)
 * The Style object passed in to Phaser.Text is now cloned instead of referenced. This means you can adjust single Text instances without invaliding other Text objects using the same style object (thanks @asyncanup #2267)
+* Added a typescript section to the bower and npm configs to support `tsd link` (thanks @mjohnsonengr #2189 #2180)
 
 ### Bug Fixes
 
