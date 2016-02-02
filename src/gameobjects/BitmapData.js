@@ -877,12 +877,12 @@ Phaser.BitmapData.prototype = {
 
                 if (s)
                 {
-                    pixel.s = this.game.math.limitValue(pixel.s + s, 0, 1);
+                    pixel.s = this.game.math.clamp(pixel.s + s, 0, 1);
                 }
 
                 if (l)
                 {
-                    pixel.l = this.game.math.limitValue(pixel.l + l, 0, 1);
+                    pixel.l = this.game.math.clamp(pixel.l + l, 0, 1);
                 }
 
                 Phaser.Color.HSLtoRGB(pixel.h, pixel.s, pixel.l, pixel);
