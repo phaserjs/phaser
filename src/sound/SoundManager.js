@@ -725,6 +725,8 @@ Phaser.SoundManager.prototype = {
 
         this.onSoundDecode.dispose();
 
+        this.context.close();
+
         if (this.context && window['PhaserGlobal'])
         {
             //  Store this in the PhaserGlobal window var, if set, to allow for re-use if the game is created again without the page refreshing
