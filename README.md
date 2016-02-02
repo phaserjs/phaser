@@ -271,6 +271,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 
 * You can use the new const `Phaser.PENDING_ATLAS` as the texture key for any sprite. Doing this then sets the key to be the `frame` argument (the frame is set to zero). This allows you to create sprites using `load.image` during development, and then change them to use a Texture Atlas later in development by simply searching your code for 'PENDING_ATLAS' and swapping it to be the key of the atlas data.
 * BitmapText.cleanText is a new method that will scan the given text and either remove or replace all characters that are not present in the font data. It is called automatically by `BitmapText.updateText`.
+* ArcadePhysics.Body.onCeiling is a new complementary method to go with onFloor (thanks @yigitozdemir #1610)
 
 ### Updates
 
@@ -299,6 +300,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * When loading audio or video from blob or data URIs, the local variable was replaced too soon, throwing errors in `getAudioURL` and `getVideoURL` (thanks @milkey-mouse @jackfreak #2236 #2234)
 * Tween.hasStarted parameter was set to `false` when the tween was created, but not set again when the tween was stopped or ends. If `Tween.start` is used more than once the `onStart` callback is called only the first time (thanks @javivi91 #2199)
 * During a WebGL context loss the Phaser Cache was referencing the wrong local object (thanks @allenevans #2285)
+* The Video game object used an anonymous bound function for both the 'ended' and 'playing' event listeners, meaning that they were never removed properly (thanks @ramalhovfc #2303)
 
 ### Pixi Updates
 

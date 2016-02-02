@@ -205,6 +205,18 @@ Phaser.Video = function (game, key, url) {
     */
     this._autoplay = false;
 
+    /**
+    * @property {function} _endCallback - The addEventListener ended function.
+    * @private
+    */
+    this._endCallback = null;
+
+    /**
+    * @property {function} _playCallback - The addEventListener playing function.
+    * @private
+    */
+    this._playCallback = null;
+
     if (key && this.game.cache.checkVideoKey(key))
     {
         var _video = this.game.cache.getVideo(key);
@@ -644,7 +656,9 @@ Phaser.Video.prototype = {
         this.game.onPause.add(this.setPause, this);
         this.game.onResume.add(this.setResume, this);
 
-        this.video.addEventListener('ended', this.complete.bind(this), true);
+        this._endCallback = this.complete.bind(this);
+
+        this.video.addEventListener('ended', this._endCallback, true);
 
         if (loop)
         {
@@ -674,7 +688,8 @@ Phaser.Video.prototype = {
                 }
                 else
                 {
-                    this.video.addEventListener('playing', this.playHandler.bind(this), true);
+                    this._playCallback = this.playHandler.bind(this);
+                    this.video.addEventListener('playing', this._playCallback, true);
                 }
             }
 
@@ -695,7 +710,7 @@ Phaser.Video.prototype = {
      */
     playHandler: function () {
 
-        this.video.removeEventListener('playing', this.playHandler.bind(this));
+        this.video.removeEventListener('playing', this._playCallback, true);
 
         this.updateTexture();
 
@@ -754,8 +769,8 @@ Phaser.Video.prototype = {
         }
         else
         {
-            this.video.removeEventListener('ended', this.complete.bind(this), true);
-            this.video.removeEventListener('playing', this.playHandler.bind(this), true);
+            this.video.removeEventListener('ended', this._endCallback, true);
+            this.video.removeEventListener('playing', this._playCallback, true);
 
             if (this.touchLocked)
             {
