@@ -145,8 +145,6 @@ Phaser.BitmapText = function (game, x, y, font, text, size, align) {
     */
     this._tint = 0xFFFFFF;
 
-    this._text = this.cleanText(text);
-
     this.updateText();
 
     /**
@@ -266,10 +264,12 @@ Phaser.BitmapText.prototype.scanLine = function (data, scale, text) {
 
             var c = 0;
 
-            if (!charData)
+            //  If the character data isn't found in the data array 
+            //  then we replace it with a blank space
+            if (charData === undefined)
             {
-                // Skip a character not found in the font data
-                continue;
+                charCode = 32;
+                charData = data.chars[charCode];
             }
 
             //  Adjust for kerning from previous character to this one
@@ -289,11 +289,11 @@ Phaser.BitmapText.prototype.scanLine = function (data, scale, text) {
             }
             else
             {
-                w += charData.xAdvance * scale;
+                w += (charData.xAdvance + kerning) * scale;
 
-                chars.push(x + (charData.xOffset * scale));
+                chars.push(x + (charData.xOffset + kerning) * scale);
 
-                x += charData.xAdvance * scale;
+                x += (charData.xAdvance + kerning) * scale;
 
                 prevCharCode = charCode;
             }
@@ -329,27 +329,30 @@ Phaser.BitmapText.prototype.cleanText = function (text, replace) {
         return '';
     }
 
-    var output = '';
+    var re = /\r\n|\n\r|\n|\r/g;
+    var lines = text.replace(re, "\n").split("\n");
 
-    for (var i = 0; i < text.length; i++)
+    for (var i = 0; i < lines.length; i++)
     {
-        if (!/(?:\r\n|\r|\n)/.test(text.charAt(i)))
-        {
-            var charCode = text.charCodeAt(i);
-            var charData = data.chars[charCode];
+        var output = '';
+        var line = lines[i];
 
-            if (charData)
+        for (var c = 0; c < line.length; c++)
+        {
+            if (data.chars[line.charCodeAt(c)])
             {
-                output = output.concat(text[i]);
+                output = output.concat(line[c]);
             }
             else
             {
-                output = output.concat(' ');
+                output = output.concat(replace);
             }
         }
+
+        lines[i] = output;
     }
 
-    return output;
+    return lines.join("\n");
 
 };
 
@@ -419,6 +422,12 @@ Phaser.BitmapText.prototype.updateText = function () {
         {
             var charCode = line.text.charCodeAt(c);
             var charData = data.chars[charCode];
+
+            if (charData === undefined)
+            {
+                charCode = 32;
+                charData = data.chars[charCode];
+            }
 
             var g = this._glyphs[t];
 
@@ -623,7 +632,7 @@ Object.defineProperty(Phaser.BitmapText.prototype, 'text', {
 
         if (value !== this._text)
         {
-            this._text = this.cleanText(value.toString()) || '';
+            this._text = value.toString() || '';
             this.updateText();
         }
 
