@@ -20434,7 +20434,7 @@ declare module Phaser {
         * 
         * @param seeds An array of values to use as the seed, or a generator state (from {#state}).
         */
-        constructor(seeds: number[]|string);
+        constructor(seeds: any[]|string);
 
 
         /**
@@ -20510,7 +20510,7 @@ declare module Phaser {
         * 
         * @param seeds The array of seeds: the `toString()` of each value is used.
         */
-        sow(seeds: number[]): void;
+        sow(seeds: any[]): void;
 
         /**
         * Gets or Sets the state of the generator. This allows you to retain the values

@@ -3791,7 +3791,7 @@ declare module Phaser {
 
     class RandomDataGenerator {
 
-        constructor(seeds: number[]|string);
+        constructor(seeds: any[]|string);
 
         angle(): number;
         between(min: number, max: number): number;
@@ -3802,7 +3802,7 @@ declare module Phaser {
         pick<T>(ary: T[]): T;
         real(): number;
         realInRange(min: number, max: number): number;
-        sow(seeds: number[]): void;
+        sow(seeds: any[]): void;
         state(state?: string): string;
         timestamp(min: number, max: number): number;
         uuid(): number;
