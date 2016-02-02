@@ -2113,7 +2113,7 @@ Phaser.Loader.prototype = {
 
             case 'json':
 
-                this.xhrLoad(file, this.transformUrl(file.url, file), 'text', this.jsonLoadComplete);
+                this.xhrLoad(file, this.transformUrl(file.url, file), 'json', this.jsonLoadComplete);
                 break;
 
             case 'xml':
@@ -2162,7 +2162,7 @@ Phaser.Loader.prototype = {
         file.data = new Image();
         file.data.name = file.key;
 
-        if (this.crossOrigin)
+        if (this.crossOrigin && file.url.match(/^(?:blob:|data:|http:\/\/|https:\/\/|\/\/)/))
         {
             file.data.crossOrigin = this.crossOrigin;
         }
@@ -2300,6 +2300,11 @@ Phaser.Loader.prototype = {
         var xhr = new XMLHttpRequest();
         xhr.open("GET", url, true);
         xhr.responseType = type;
+        if (type === 'json') {
+            xhr.setRequestHeader("Accept", "application/json");
+            xhr.responseType = 'text';
+        }
+
 
         onerror = onerror || this.fileError;
 

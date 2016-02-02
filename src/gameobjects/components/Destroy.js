@@ -14,7 +14,7 @@ Phaser.Component.Destroy = function () {};
 Phaser.Component.Destroy.prototype = {
 
     /**
-    * As a Game Object runs through its destroy method this flag is set to true, 
+    * As a Game Object runs through its destroy method this flag is set to true,
     * and can be checked in any sub-systems or plugins it is being destroyed from.
     * @property {boolean} destroyPhase
     * @readOnly
@@ -24,7 +24,7 @@ Phaser.Component.Destroy.prototype = {
     /**
     * Destroys the Game Object. This removes it from its parent group, destroys the input, event and animation handlers if present
     * and nulls its reference to `game`, freeing it up for garbage collection.
-    * 
+    *
     * If this Game Object has the Events component it will also dispatch the `onDestroy` event.
     *
     * @method
@@ -127,6 +127,10 @@ Phaser.Component.Destroy.prototype = {
         {
             this.transformCallback = null;
             this.transformCallbackContext = null;
+        }
+        if (this.key.type == 13) {
+            this.key.texture.destroy(true);
+            this.key.destroy();
         }
 
         //  Pixi level DisplayObject destroy
