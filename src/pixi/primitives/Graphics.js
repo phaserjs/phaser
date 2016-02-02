@@ -828,13 +828,13 @@ PIXI.Graphics.prototype.getBounds = function(matrix)
 {
     if (!this._currentBounds)
     {
-        //  Return an empty object if the item is a mask!
         if (!this.renderable)
         {
             return PIXI.EmptyRectangle;
         }
 
-        if (this.dirty)
+        // If it's a mask dont make it dirty since it crash in maskManager.pushMask()
+        if (!this.isMask && this.dirty)
         {
             this.updateLocalBounds();
             this.webGLDirty = true;
