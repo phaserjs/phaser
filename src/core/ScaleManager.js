@@ -725,7 +725,7 @@ Phaser.ScaleManager.prototype = {
 
         this._booted = true;
 
-        if (this._pendingScaleMode)
+        if (this._pendingScaleMode !== null)
         {
             this.scaleMode = this._pendingScaleMode;
             this._pendingScaleMode = null;
@@ -742,7 +742,7 @@ Phaser.ScaleManager.prototype = {
     */
     parseConfig: function (config) {
 
-        if (config['scaleMode'])
+        if (config['scaleMode'] !== undefined)
         {
             if (this._booted)
             {
@@ -754,7 +754,7 @@ Phaser.ScaleManager.prototype = {
             }
         }
 
-        if (config['fullScreenScaleMode'])
+        if (config['fullScreenScaleMode'] !== undefined)
         {
             this.fullScreenScaleMode = config['fullScreenScaleMode'];
         }
