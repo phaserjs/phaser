@@ -133,6 +133,8 @@ Phaser.Line.prototype = {
     * Rotation takes place around the coordinates given.
     * 
     * @method Phaser.Line#rotateAround
+    * @param {number} x - The x coordinate to offset the rotation from.
+    * @param {number} y - The y coordinate to offset the rotation from.
     * @param {number} angle - The angle in radians (unless asDegrees is true) to rotate the line by.
     * @param {boolean} [asDegrees=false] - Is the given angle in radians (false) or degrees (true)?
     * @return {Phaser.Line} This line object

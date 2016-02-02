@@ -253,8 +253,8 @@ Phaser.Tilemap.prototype = {
     *     You can also pass in a BitmapData which can be used instead of an Image.
     * @param {number} [tileWidth=32] - The width of the tiles in the Tileset Image. If not given it will default to the map.tileWidth value, if that isn't set then 32.
     * @param {number} [tileHeight=32] - The height of the tiles in the Tileset Image. If not given it will default to the map.tileHeight value, if that isn't set then 32.
-    * @param {number} [tileMargin=0] - The width of the tiles in the Tileset Image. If not given it will default to the map.tileWidth value.
-    * @param {number} [tileSpacing=0] - The height of the tiles in the Tileset Image. If not given it will default to the map.tileHeight value.
+    * @param {number} [tileMargin=0] - The width of the tiles in the Tileset Image.
+    * @param {number} [tileSpacing=0] - The height of the tiles in the Tileset Image.
     * @param {number} [gid=0] - If adding multiple tilesets to a blank/dynamic map, specify the starting GID the set will use here.
     * @return {Phaser.Tileset} Returns the Tileset object that was created or updated, or null if it failed.
     */
