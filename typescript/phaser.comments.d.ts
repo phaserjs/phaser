@@ -20434,7 +20434,7 @@ declare module Phaser {
         * 
         * @param seeds An array of values to use as the seed, or a generator state (from {#state}).
         */
-        constructor(seeds: number[]);
+        constructor(seeds: any[]);
 
 
         /**
@@ -20510,7 +20510,7 @@ declare module Phaser {
         * 
         * @param seeds The array of seeds: the `toString()` of each value is used.
         */
-        sow(seeds: number[]): void;
+        sow(seeds: any[]): void;
 
         /**
         * Returns a random timestamp between min and max, or between the beginning of 2000 and the end of 2020 if min and max aren't specified.
