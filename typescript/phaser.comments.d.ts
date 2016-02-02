@@ -20434,7 +20434,7 @@ declare module Phaser {
         * 
         * @param seeds An array of values to use as the seed, or a generator state (from {#state}).
         */
-        constructor(seeds: number[]);
+        constructor(seeds: number[]|string);
 
 
         /**
