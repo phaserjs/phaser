@@ -275,8 +275,8 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 
 ### Updates
 
-* TypeScript definitions fixes and updates (thanks @zimpy @iamfreee @milkey-mouse @juanmirod @danzel)
-* Docs typo fixes (thanks @zeterain @staff0rd @milkey-mouse @dick-clark @nlotz @s4wny)
+* TypeScript definitions fixes and updates (thanks @zimpy @iamfreee @milkey-mouse @juanmirod @danzel @staff0rd)
+* Docs typo fixes (thanks @zeterain @staff0rd @milkey-mouse @dick-clark @nlotz @s4wny @jonjanisch @Alaxe)
 * Emitter methods `at`, `explode`, `flow`, `kill`, `revive`, `setAlpha`, `setRotation`, `setScale`, `setSize`, `setXSpeed`, `setYSpeed` and `start` now return the Emitter instance for better method chaining (thanks @samme #2308)
 * Tilemap.hasTile will now return `false` if the Tile doesn't exist in the coordinates given (which can happen if the coordinates are out of bounds) (thanks @cy-ryo-fujiwara #2304)
 * Update FrameData to check if both the numeric index was set and exists. Should fix Phaser Tiled integration as a result (thanks @Weedshaker #2298)
@@ -306,6 +306,8 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * During a WebGL context loss the Phaser Cache was referencing the wrong local object (thanks @allenevans #2285)
 * The Video game object used an anonymous bound function for both the 'ended' and 'playing' event listeners, meaning that they were never removed properly (thanks @ramalhovfc #2303)
 * BitmapData.shiftHSL incorrectly used Math.limitValue, now updated to use Math.clamp (thanks @FracturedShader #2222)
+* The Loader was deleting the next waiting file from the queue if an asset pack was added after the load had started (thanks @tfelix #2203 #2204)
+* Specifying Phaser.ScaleManager.EXACT_FIT as the scaleMode in a game config object would fail to use the scale mode (thanks @06wj #2248)
 
 ### Pixi Updates
 
