@@ -132,6 +132,9 @@ Phaser.Animation = function (game, parent, name, frameData, frames, frameRate, l
     /**
     * This event is dispatched when the Animation changes frame. 
     * By default this event is disabled due to its intensive nature. Enable it with: `Animation.enableUpdate = true`.
+    * Note that the event is only dispatched with the current frame. In a low-FPS environment Animations
+    * will automatically frame-skip to try and claw back time, so do not base your code on expecting to 
+    * receive a perfectly sequential set of frames from this event.
     * @property {Phaser.Signal|null} onUpdate
     * @default
     */
