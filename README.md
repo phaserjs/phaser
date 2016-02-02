@@ -302,6 +302,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * Tween.hasStarted parameter was set to `false` when the tween was created, but not set again when the tween was stopped or ends. If `Tween.start` is used more than once the `onStart` callback is called only the first time (thanks @javivi91 #2199)
 * During a WebGL context loss the Phaser Cache was referencing the wrong local object (thanks @allenevans #2285)
 * The Video game object used an anonymous bound function for both the 'ended' and 'playing' event listeners, meaning that they were never removed properly (thanks @ramalhovfc #2303)
+* BitmapData.shiftHSL incorrectly used Math.limitValue, now updated to use Math.clamp (thanks @FracturedShader #2222)
 
 ### Pixi Updates
 
