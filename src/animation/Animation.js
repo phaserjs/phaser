@@ -18,7 +18,6 @@
 * @param {number[]|string[]} frames - An array of numbers or strings indicating which frames to play in which order.
 * @param {number} [frameRate=60] - The speed at which the animation should play. The speed is given in frames per second.
 * @param {boolean} [loop=false] - Whether or not the animation is looped or just plays once.
-* @param {boolean} loop - Should this animation loop when it reaches the end or play through once.
 */
 Phaser.Animation = function (game, parent, name, frameData, frames, frameRate, loop) {
 
@@ -133,6 +132,9 @@ Phaser.Animation = function (game, parent, name, frameData, frames, frameRate, l
     /**
     * This event is dispatched when the Animation changes frame. 
     * By default this event is disabled due to its intensive nature. Enable it with: `Animation.enableUpdate = true`.
+    * Note that the event is only dispatched with the current frame. In a low-FPS environment Animations
+    * will automatically frame-skip to try and claw back time, so do not base your code on expecting to 
+    * receive a perfectly sequential set of frames from this event.
     * @property {Phaser.Signal|null} onUpdate
     * @default
     */

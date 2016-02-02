@@ -657,7 +657,7 @@ Phaser.Loader.prototype = {
 
             if (!file || (!file.loaded && !file.loading && file.type !== 'packfile'))
             {
-                this._fileList.splice(i, 1, pack);
+                this._fileList.splice(i, 0, pack);
                 this._totalPackCount++;
                 break;
             }
@@ -1883,9 +1883,9 @@ Phaser.Loader.prototype = {
 
         this.onLoadComplete.dispatch();
 
-        this.reset();
-
         this.game.state.loadComplete();
+
+        this.reset();
 
     },
 
@@ -2308,9 +2308,12 @@ Phaser.Loader.prototype = {
         xhr.onload = function () {
 
             try {
-
-                return onload.call(_this, file, xhr);
-
+                if (xhr.readyState == 4 && xhr.status >= 400 && xhr.status <= 599) { // Handle HTTP status codes of 4xx and 5xx as errors, even if xhr.onerror was not called.
+                    return onerror.call(_this, file, xhr);
+                }
+                else {
+                    return onload.call(_this, file, xhr);
+                }
             } catch (e) {
 
                 //  If this was the last file in the queue and an error is thrown in the create method
@@ -2419,6 +2422,12 @@ Phaser.Loader.prototype = {
 
         xhr.onload = function () {
             try {
+                if (xhr.readyState == 4 && xhr.status >= 400 && xhr.status <= 599) { // Handle HTTP status codes of 4xx and 5xx as errors, even if xhr.onerror was not called.
+                    return onerror.call(_this, file, xhr);
+                }
+                else {
+                    return onload.call(_this, file, xhr);
+                }
                 return onload.call(_this, file, xhr);
             } catch (e) {
                 _this.asyncComplete(file, e.message || 'Exception');
@@ -2455,8 +2464,8 @@ Phaser.Loader.prototype = {
 
             if (url.uri) // {uri: .., type: ..} pair
             {
-                url = url.uri;
                 videoType = url.type;
+                url = url.uri;
             }
             else
             {
@@ -2478,7 +2487,7 @@ Phaser.Loader.prototype = {
 
             if (this.game.device.canPlayVideo(videoType))
             {
-                return urls[i];
+                return url;
             }
         }
 
@@ -2510,8 +2519,8 @@ Phaser.Loader.prototype = {
 
             if (url.uri) // {uri: .., type: ..} pair
             {
-                url = url.uri;
                 audioType = url.type;
+                url = url.uri;
             }
             else
             {
@@ -2533,7 +2542,7 @@ Phaser.Loader.prototype = {
 
             if (this.game.device.canPlayAudio(audioType))
             {
-                return urls[i];
+                return url;
             }
         }
 
@@ -2838,7 +2847,7 @@ Phaser.Loader.prototype = {
     /**
     * Parses string data as XML.
     *
-    * @method parseXml
+    * @method Phaser.Loader#parseXml
     * @private
     * @param {string} data - The XML text to parse
     * @return {?XMLDocument} Returns the xml document, or null if such could not parsed to a valid document.

@@ -394,6 +394,7 @@ Phaser.Sound.prototype = {
 
         this._sound.onended = null;
         this.isPlaying = false;
+        this.currentTime = this.durationMS;
         this.stop();
 
     },
@@ -877,22 +878,23 @@ Phaser.Sound.prototype = {
 
         this.pendingPlayback = false;
         this.isPlaying = false;
-        var prevMarker = this.currentMarker;
-
-        if (this.currentMarker !== '')
-        {
-            this.onMarkerComplete.dispatch(this.currentMarker, this);
-        }
-
-        this.currentMarker = '';
-
-        if (this.fadeTween !== null)
-        {
-            this.fadeTween.stop();
-        }
 
         if (!this.paused)
         {
+            var prevMarker = this.currentMarker;
+
+            if (this.currentMarker !== '')
+            {
+                this.onMarkerComplete.dispatch(this.currentMarker, this);
+            }
+
+            this.currentMarker = '';
+
+            if (this.fadeTween !== null)
+            {
+                this.fadeTween.stop();
+            }
+
             this.onStop.dispatch(this, prevMarker);
         }
 

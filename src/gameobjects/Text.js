@@ -50,7 +50,7 @@ Phaser.Text = function (game, x, y, text, style) {
         text = text.toString();
     }
 
-    style = style || {};
+    style = Phaser.Utils.extend({}, style);
 
     /**
     * @property {number} type - The const type of this object.
@@ -802,6 +802,28 @@ Phaser.Text.prototype.addFontWeight = function (weight, position) {
     this.dirty = true;
 
     return this;
+
+};
+
+/**
+* Runs the given text through the Text.runWordWrap function and returns
+* the results as an array, where each element of the array corresponds to a wrapped
+* line of text.
+*
+* Useful if you wish to control pagination on long pieces of content.
+*
+* @method Phaser.Text#precalculateWordWrap
+* @param {string} text - The text for which the wrapping will be calculated.
+* @return {array} An array of strings with the pieces of wrapped text.
+*/
+Phaser.Text.prototype.precalculateWordWrap = function (text) {
+
+    this.texture.baseTexture.resolution = this._res;
+    this.context.font = this.style.font;
+
+    var wrappedLines = this.runWordWrap(text);
+
+    return wrappedLines.split(/(?:\r\n|\r|\n)/);
 
 };
 

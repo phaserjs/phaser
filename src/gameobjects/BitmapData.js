@@ -441,6 +441,9 @@ Phaser.BitmapData.prototype = {
     * You can optionally define the area to clear.
     * If the arguments are left empty it will clear the entire canvas.
     *
+    * You may need to call BitmapData.update after this in order to clear out the pixel data, 
+    * but Phaser will not do this automatically for you.
+    *
     * @method Phaser.BitmapData#clear
     * @param {number} [x=0] - The x coordinate of the top-left of the area to clear.
     * @param {number} [y=0] - The y coordinate of the top-left of the area to clear.
@@ -456,8 +459,6 @@ Phaser.BitmapData.prototype = {
         if (height === undefined) { height = this.height; }
 
         this.context.clearRect(x, y, width, height);
-
-        this.update();
 
         this.dirty = true;
 
@@ -527,6 +528,8 @@ Phaser.BitmapData.prototype = {
     * Resizes the BitmapData. This changes the size of the underlying canvas and refreshes the buffer.
     *
     * @method Phaser.BitmapData#resize
+    * @param {integer} width - The new width of the BitmapData.
+    * @param {integer} height - The new height of the BitmapData.
     * @return {Phaser.BitmapData} This BitmapData object for method chaining.
     */
     resize: function (width, height) {
@@ -566,6 +569,8 @@ Phaser.BitmapData.prototype = {
     * This re-creates the BitmapData.imageData from the current context.
     * It then re-builds the ArrayBuffer, the data Uint8ClampedArray reference and the pixels Int32Array.
     * If not given the dimensions defaults to the full size of the context.
+    *
+    * Warning: This is a very expensive operation, so use it sparingly.
     *
     * @method Phaser.BitmapData#update
     * @param {number} [x=0] - The x coordinate of the top-left of the image data area to grab from.
@@ -779,12 +784,12 @@ Phaser.BitmapData.prototype = {
     * @return {Phaser.BitmapData} This BitmapData object for method chaining.
     */
     setHSL: function (h, s, l, region) {
+        
+        var bHaveH = h || h === 0;
+        var bHaveS = s || s === 0;
+        var bHaveL = l || l === 0;
 
-        if (h === undefined || h === null) { h = false; }
-        if (s === undefined || s === null) { s = false; }
-        if (l === undefined || l === null) { l = false; }
-
-        if (!h && !s && !l)
+        if (!bHaveH && !bHaveS && !bHaveL)
         {
             return;
         }
@@ -802,17 +807,17 @@ Phaser.BitmapData.prototype = {
             {
                 Phaser.Color.unpackPixel(this.getPixel32(x, y), pixel, true);
 
-                if (h)
+                if (bHaveH)
                 {
                     pixel.h = h;
                 }
 
-                if (s)
+                if (bHaveS)
                 {
                     pixel.s = s;
                 }
 
-                if (l)
+                if (bHaveL)
                 {
                     pixel.l = l;
                 }
@@ -872,12 +877,12 @@ Phaser.BitmapData.prototype = {
 
                 if (s)
                 {
-                    pixel.s = this.game.math.limitValue(pixel.s + s, 0, 1);
+                    pixel.s = this.game.math.clamp(pixel.s + s, 0, 1);
                 }
 
                 if (l)
                 {
-                    pixel.l = this.game.math.limitValue(pixel.l + l, 0, 1);
+                    pixel.l = this.game.math.clamp(pixel.l + l, 0, 1);
                 }
 
                 Phaser.Color.HSLtoRGB(pixel.h, pixel.s, pixel.l, pixel);

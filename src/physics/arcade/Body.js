@@ -705,6 +705,16 @@ Phaser.Physics.Arcade.Body.prototype = {
     onFloor: function () {
         return this.blocked.down;
     },
+    
+    /**
+    * Returns true if the top of this Body is in contact with either the world bounds or a tile.
+    *
+    * @method Phaser.Physics.Arcade.Body#onTop
+    * @return {boolean} True if in contact with either the world bounds or a tile.
+    */
+    onCeiling: function(){
+        return this.blocked.up;
+    },
 
     /**
     * Returns true if either side of this Body is in contact with either the world bounds or a tile.
