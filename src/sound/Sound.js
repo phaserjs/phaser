@@ -394,6 +394,7 @@ Phaser.Sound.prototype = {
 
         this._sound.onended = null;
         this.isPlaying = false;
+        this.currentTime = this.durationMS;
         this.stop();
 
     },
