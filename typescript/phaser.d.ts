@@ -3793,7 +3793,6 @@ declare module Phaser {
 
         constructor(seeds: any[]|string);
 
-
         angle(): number;
         between(min: number, max: number): number;
         frac(): number;
