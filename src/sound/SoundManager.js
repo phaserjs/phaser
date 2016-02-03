@@ -265,6 +265,11 @@ Phaser.SoundManager.prototype = {
     */
     setTouchLock: function () {
 
+        if (this.noAudio || window['PhaserGlobal'].disableAudio === true)
+        {
+            return;
+        }
+
         if (this.game.device.iOSVersion > 8)
         {
             this.game.input.touch.addTouchLockCallback(this.unlock, this, true);
