@@ -298,6 +298,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * Tilemap.getObjectIndex has been removed as it didn't work correctly in most cases, and it's easier to just scan the Tilemap.objects object directly anyway (#2242)
 * GameObject.revive will now set the health amount to 100 instead of 1, bringing it in-line with the `maxHealth` default value.
 * Moved the Sound.disconnect after the Sound.stop call in Web Audio (#2280)
+* BitmapData.drawGroup can now handle drawing Emitters and BitmapText objects that are part of the Group.
 
 ### Bug Fixes
 

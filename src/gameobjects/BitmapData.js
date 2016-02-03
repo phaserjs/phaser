@@ -1427,7 +1427,7 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Draws the immediate children of a Phaser.Group to this BitmapData.
-    * Children are only drawn if they have their `exists` property set to `true`.
+    * Children are only drawn if they have their `exists` property set to `true` and have image based Textures.
     * The children will be drawn at their `x` and `y` world space coordinates. If this is outside the bounds of the BitmapData they won't be drawn.
     * When drawing it will take into account the child's rotation, scale and alpha values.
     * No iteration takes place. Groups nested inside other Groups will not be iterated through.
@@ -1442,10 +1442,35 @@ Phaser.BitmapData.prototype = {
 
         if (group.total > 0)
         {
-            group.forEachExists(this.copy, this, null, null, null, null, null, null, null, null, null, null, null, null, null, null, blendMode, roundPx);
+            group.forEachExists(this.drawGroupProxy, this, blendMode, roundPx);
         }
 
         return this;
+
+    },
+
+    /**
+    * A proxy for drawGroup that handles child iteration for more complex Game Objects.
+    * 
+    * @method Phaser.BitmapData#drawGroupProxy
+    * @private
+    * @param {Phaser.Sprite|Phaser.Image|Phaser.BitmapText} child - The child to draw.
+    * @param {string} [blendMode=null] - The composite blend mode that will be used when drawing. The default is no blend mode at all. This is a Canvas globalCompositeOperation value such as 'lighter' or 'xor'.
+    * @param {boolean} [roundPx=false] - Should the x and y values be rounded to integers before drawing? This prevents anti-aliasing in some instances.
+    */
+    drawGroupProxy: function (child, blendMode, roundPx) {
+
+        if (child.type === Phaser.EMITTER || child.type === Phaser.BITMAPTEXT)
+        {
+            for (var i = 0; i < child.children.length; i++)
+            {
+                this.copy(child.children[i], null, null, null, null, null, null, null, null, null, null, null, null, null, null, blendMode, roundPx);
+            }
+        }
+        else
+        {
+            this.copy(child, null, null, null, null, null, null, null, null, null, null, null, null, null, null, blendMode, roundPx);
+        }
 
     },
 
