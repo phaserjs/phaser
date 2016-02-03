@@ -53,6 +53,8 @@ Phaser.Keyboard = function (game) {
     */
     this.onPressCallback = null;
 
+    this.keyboardFocusCallback = null;
+
     /**
     * @property {function} onUpCallback - This callback is invoked every time a key is released.
     */
@@ -135,6 +137,26 @@ Phaser.Keyboard.prototype = {
             this.onPressCallback = onPress;
         }
 
+    },
+
+    /**
+     * If you want to have temporary control of all keyboard input.
+     * Useful for text input etc. Make sure to release the focus when no longer needed.
+     */
+    setFocus: function(callback) {
+
+        if (callback !== undefined)
+        {
+            this.keyboardFocusCallback = callback;
+        }
+    },
+
+    /**
+     * Removes the keyboard focus callback. Any input will now be processed normally.
+     */
+    clearFocus: function() {
+
+        this.keyboardFocusCallback = null;
     },
 
     /**
@@ -267,7 +289,6 @@ Phaser.Keyboard.prototype = {
         this._onKeyDown = null;
         this._onKeyUp = null;
         this._onKeyPress = null;
-
     },
 
     /**
@@ -344,6 +365,11 @@ Phaser.Keyboard.prototype = {
     */
     update: function () {
 
+        if(this.keyboardFocusCallback)
+        {
+            return;
+        }
+
         this._i = this._keys.length;
 
         while (this._i--)
@@ -378,6 +404,12 @@ Phaser.Keyboard.prototype = {
             event.preventDefault();
         }
 
+        if (this.keyboardFocusCallback)
+        {
+            this.keyboardFocusCallback(event);
+            return;
+        }
+
         if (!this._keys[event.keyCode])
         {
             this._keys[event.keyCode] = new Phaser.Key(this.game, event.keyCode);
@@ -410,6 +442,12 @@ Phaser.Keyboard.prototype = {
             return;
         }
 
+        if (this.keyboardFocusCallback)
+        {
+            this.keyboardFocusCallback(event);
+            return;
+        }
+
         if (this.onPressCallback)
         {
             this.onPressCallback.call(this.callbackContext, String.fromCharCode(event.charCode), event);
@@ -436,6 +474,12 @@ Phaser.Keyboard.prototype = {
         if (this._capture[event.keyCode])
         {
             event.preventDefault();
+        }
+
+        if (this.keyboardFocusCallback)
+        {
+            this.keyboardFocusCallback(event);
+            return;
         }
 
         if (!this._keys[event.keyCode])
