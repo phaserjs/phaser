@@ -45,7 +45,6 @@ Phaser.BitmapData = function (game, key, width, height) {
     * @property {HTMLCanvasElement} canvas - The canvas to which this BitmapData draws.
     * @default
     */
-    // this.canvas = Phaser.Canvas.create(width, height, '', true);
     this.canvas = PIXI.CanvasPool.create(this, width, height);
 
     /**
@@ -213,10 +212,10 @@ Phaser.BitmapData = function (game, key, width, height) {
     this._circle = new Phaser.Circle();
 
     /**
-    * @property {HTMLCanvasElement} _swapCanvas - A swap canvas.
+    * @property {HTMLCanvasElement} _swapCanvas - A swap canvas. Used by moveH and moveV, created in those methods.
     * @private
     */
-    this._swapCanvas = PIXI.CanvasPool.create(this, width, height);
+    this._swapCanvas = undefined;
 
 };
 
@@ -262,6 +261,11 @@ Phaser.BitmapData.prototype = {
     moveH: function (distance, wrap) {
 
         if (wrap === undefined) { wrap = true; }
+
+        if (this._swapCanvas === undefined)
+        {
+            this._swapCanvas = PIXI.CanvasPool.create(this, this.width, this.height);
+        }
 
         var c = this._swapCanvas;
         var ctx = c.getContext('2d');
@@ -320,6 +324,11 @@ Phaser.BitmapData.prototype = {
     moveV: function (distance, wrap) {
 
         if (wrap === undefined) { wrap = true; }
+
+        if (this._swapCanvas === undefined)
+        {
+            this._swapCanvas = PIXI.CanvasPool.create(this, this.width, this.height);
+        }
 
         var c = this._swapCanvas;
         var ctx = c.getContext('2d');
@@ -542,8 +551,11 @@ Phaser.BitmapData.prototype = {
             this.canvas.width = width;
             this.canvas.height = height;
 
-            this._swapCanvas.width = width;
-            this._swapCanvas.height = height;
+            if (this._swapCanvas !== undefined)
+            {
+                this._swapCanvas.width = width;
+                this._swapCanvas.height = height;
+            }
 
             this.baseTexture.width = width;
             this.baseTexture.height = height;
