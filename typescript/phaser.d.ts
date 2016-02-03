@@ -4565,8 +4565,8 @@ declare module Phaser {
         trackParentInterval: number;
         width: number;
         windowConstraints: {
-            bottom: boolean;
-            right: boolean;
+            bottom: string;
+            right: string;
         };
 
         boot(): void;
