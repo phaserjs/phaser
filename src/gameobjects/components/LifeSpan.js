@@ -72,20 +72,20 @@ Phaser.Component.LifeSpan.prototype = {
     * It will dispatch the `onRevived` event. Listen to `events.onRevived` for the signal.
     *
     * @method
-    * @param {number} [health=1] - The health to give the Game Object. Only set if the GameObject has the Health component.
+    * @param {number} [health=100] - The health to give the Game Object. Only set if the GameObject has the Health component.
     * @return {PIXI.DisplayObject} This instance.
     */
     revive: function (health) {
 
-        if (health === undefined) { health = 1; }
+        if (health === undefined) { health = 100; }
 
         this.alive = true;
         this.exists = true;
         this.visible = true;
 
-        if (typeof this.heal === 'function')
+        if (typeof this.setHealth === 'function')
         {
-            this.heal(health);
+            this.setHealth(health);
         }
 
         if (this.events)
