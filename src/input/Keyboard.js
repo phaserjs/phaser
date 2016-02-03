@@ -59,6 +59,11 @@ Phaser.Keyboard = function (game) {
     this.onUpCallback = null;
 
     /**
+     * @property {function} captureKeyboardCallback  - Redirects all input to this callback until its unset with clearCapture()
+     */
+    this.captureKeyboardCallback = null;
+
+    /**
     * @property {array<Phaser.Key>} _keys - The array the Phaser.Key objects are stored in.
     * @private
     */
@@ -69,27 +74,6 @@ Phaser.Keyboard = function (game) {
     * @private
     */
     this._capture = [];
-
-    /**
-    * @property {function} _onKeyDown
-    * @private
-    * @default
-    */
-    this._onKeyDown = null;
-
-    /**
-    * @property {function} _onKeyPress
-    * @private
-    * @default
-    */
-    this._onKeyPress = null;
-
-    /**
-    * @property {function} _onKeyUp
-    * @private
-    * @default
-    */
-    this._onKeyUp = null;
 
     /**
     * @property {number} _i - Internal cache var
@@ -227,29 +211,47 @@ Phaser.Keyboard.prototype = {
             return;
         }
 
-        if (this._onKeyDown !== null)
+        window.addEventListener('keydown', this._processKeyEvent.bind(this), false);
+        window.addEventListener('keyup', this._processKeyEvent.bind(this), false);
+        window.addEventListener('keypress', this._processKeyEvent.bind(this), false);
+
+    },
+
+    /**
+    * Keyboard input dispatcher. All key events goes through this function
+    * @param  {[type]} event [description]
+    * @return {[type]}       [description]
+    */
+    _processKeyEvent: function(event) {
+        
+        if (!this.game.input.enabled || !this.enabled)
         {
-            //  Avoid setting multiple listeners
             return;
         }
 
-        var _this = this;
+        this.event = event;
 
-        this._onKeyDown = function (event) {
-            return _this.processKeyDown(event);
-        };
+        // If a input redirect callback exists run that istead.
+        if(this.captureKeyboardCallback) 
+        {
+            this.captureKeyboardCallback.call(this.callbackContext,event);
+            return;
+        }
 
-        this._onKeyUp = function (event) {
-            return _this.processKeyUp(event);
-        };
+        // Route the event to the correct handler
+        switch(event.type) {
+            case "keydown":
+                this._processKeyDown(event);
+                break;
 
-        this._onKeyPress = function (event) {
-            return _this.processKeyPress(event);
-        };
+            case "keypress":
+                this._processKeyPress(event);
+                break;
 
-        window.addEventListener('keydown', this._onKeyDown, false);
-        window.addEventListener('keyup', this._onKeyUp, false);
-        window.addEventListener('keypress', this._onKeyPress, false);
+            case "keyup":
+                this._processKeyUp(event);
+                break;
+        }
 
     },
 
@@ -260,13 +262,9 @@ Phaser.Keyboard.prototype = {
     */
     stop: function () {
 
-        window.removeEventListener('keydown', this._onKeyDown);
-        window.removeEventListener('keyup', this._onKeyUp);
-        window.removeEventListener('keypress', this._onKeyPress);
-
-        this._onKeyDown = null;
-        this._onKeyUp = null;
-        this._onKeyPress = null;
+        window.removeEventListener('keydown', this._processKeyEvent);
+        window.removeEventListener('keyup', this._processKeyEvent);
+        window.removeEventListener('keypress', this._processKeyEvent);
 
     },
 
@@ -284,6 +282,29 @@ Phaser.Keyboard.prototype = {
 
         this._keys.length = 0;
         this._i = 0;
+
+    },
+
+    /**
+     * Clears the current input redirect callback if any.
+     * @return {[type]} [description]
+     */
+    clearCapture: function () {
+        this.captureKeyboardCallback = null;
+    },
+
+    /**
+     * Redirects all key events to the given callback function.
+     * Useful when you need to ignore all other input callbacks, i.e when wanting to do text input.
+     * To remove the redirect use clearRedirect()
+     * @param {Function} callback
+     */
+    setCapture: function (callback) {
+
+        if(typeof callback === 'function')
+        {
+            this.captureKeyboardCallback = callback;
+        }
 
     },
 
@@ -344,6 +365,12 @@ Phaser.Keyboard.prototype = {
     */
     update: function () {
 
+        // No need to update the keys if a redirect callback is currently active.
+        if(this.captureKeyboardCallback)
+        {
+            return;
+        }
+
         this._i = this._keys.length;
 
         while (this._i--)
@@ -363,14 +390,7 @@ Phaser.Keyboard.prototype = {
     * @param {KeyboardEvent} event
     * @protected
     */
-    processKeyDown: function (event) {
-
-        this.event = event;
-
-        if (!this.game.input.enabled || !this.enabled)
-        {
-            return;
-        }
+    _processKeyDown: function (event) {
 
         //   The event is being captured but another hotkey may need it
         if (this._capture[event.keyCode])
@@ -401,14 +421,7 @@ Phaser.Keyboard.prototype = {
     * @param {KeyboardEvent} event
     * @protected
     */
-    processKeyPress: function (event) {
-
-        this.pressEvent = event;
-
-        if (!this.game.input.enabled || !this.enabled)
-        {
-            return;
-        }
+    _processKeyPress: function (event) {
 
         if (this.onPressCallback)
         {
@@ -424,14 +437,7 @@ Phaser.Keyboard.prototype = {
     * @param {KeyboardEvent} event
     * @protected
     */
-    processKeyUp: function (event) {
-
-        this.event = event;
-
-        if (!this.game.input.enabled || !this.enabled)
-        {
-            return;
-        }
+    _processKeyUp: function (event) {
 
         if (this._capture[event.keyCode])
         {
