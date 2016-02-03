@@ -232,7 +232,7 @@ Phaser.Keyboard.prototype = {
         this.event = event;
 
         // If a input redirect callback exists run that istead.
-        if(this.captureKeyboardCallback) 
+        if(this.captureKeyboardCallback)
         {
             this.captureKeyboardCallback.call(this.callbackContext,event);
             return;
