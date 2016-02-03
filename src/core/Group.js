@@ -289,6 +289,11 @@ Phaser.Group.prototype.add = function (child, silent) {
 
     if (child.parent !== this)
     {
+        if (child.body)
+        {
+            child.parent.removeFromHash(child);
+        }
+
         this.addChild(child);
 
         child.z = this.children.length;
@@ -415,6 +420,11 @@ Phaser.Group.prototype.addAt = function (child, index, silent) {
 
     if (child.parent !== this)
     {
+        if (child.body)
+        {
+            child.parent.removeFromHash(child);
+        }
+
         this.addChildAt(child, index);
 
         this.updateZ();
