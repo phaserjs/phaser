@@ -530,6 +530,13 @@ Phaser.Game.prototype = {
             return;
         }
 
+        //  The game width / height must be an integer
+        this.width = Math.floor(this.width);
+        this.height = Math.floor(this.height);
+
+        this._width = Math.floor(this._width);
+        this._height = Math.floor(this._height);
+
         this.onPause = new Phaser.Signal();
         this.onResume = new Phaser.Signal();
         this.onBlur = new Phaser.Signal();
