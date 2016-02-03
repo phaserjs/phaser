@@ -734,19 +734,6 @@ Phaser.Tilemap.prototype = {
     },
 
     /**
-    * Gets the object index based on its name.
-    *
-    * @method Phaser.Tilemap#getObjectIndex
-    * @param {string} name - The name of the object to get.
-    * @return {number} The index of the object in this tilemap, or null if not found.
-    */
-    getObjectIndex: function (name) {
-
-        return this.getIndex(this.objects, name);
-
-    },
-
-    /**
     * Sets a global collision callback for the given tile index within the layer. This will affect all tiles on this layer that have the same index.
     * If a callback is already set for the tile index it will be replaced. Set the callback to null to remove it.
     * If you want to set a callback for a tile at a specific location on the map then see setTileLocationCallback.
