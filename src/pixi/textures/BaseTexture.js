@@ -180,11 +180,11 @@ PIXI.BaseTexture.prototype.destroy = function()
 
         if (!navigator.isCocoonJS) this.source.src = '';
     }
-    else if (this.source && this.source._pixiId)
+    else if (this.source)
     {
         PIXI.CanvasPool.removeByCanvas(this.source);
 
-        delete PIXI.BaseTextureCache[this.source._pixiId];
+        delete PIXI.BaseTextureCache[this.source];
     }
 
     this.source = null;
