@@ -315,6 +315,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * BitmapText would crash if it tried to render a character that didn't exist in the font set. Any character that doesn't exist in the font set now renders a space character instead.
 * BitmapText would load and parse the kerning data from the font, but would never use it when rendering. The kerning values are now applied on rendering as well (thanks @veu #2165)
 * SinglePad.callbackContext is now set through addCallbacks method (thanks @puzzud #2161)
+* Both `transparent` and `antialias` were ignored if set to `false` in a Game configuration object, as the `parseConfig` method didn't check for falsey values (thanks @amadeus #2302)
 
 ### Pixi Updates
 
