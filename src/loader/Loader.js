@@ -1032,7 +1032,7 @@ Phaser.Loader.prototype = {
     *    Audio files can't be played until they are decoded and, if specified, this enables immediate decoding. Decoding is a non-blocking async process, however it consumes huge amounts of CPU time on mobiles especially.
     * @return {Phaser.Loader} This Loader instance.
     */
-    audiosprite: function(key, urls, jsonURL, jsonData, autoDecode) {
+    audioSprite: function (key, urls, jsonURL, jsonData, autoDecode) {
 
         if (this.game.sound.noAudio)
         {
@@ -1067,6 +1067,23 @@ Phaser.Loader.prototype = {
 
     },
 
+    /**
+    * A legacy alias for Loader.audioSprite. Please see that method for documentation.
+    *
+    * @method Phaser.Loader#audiosprite
+    * @param {string} key - Unique asset key of the audio file.
+    * @param {Array|string} urls - An array containing the URLs of the audio files, i.e.: [ 'audiosprite.mp3', 'audiosprite.ogg', 'audiosprite.m4a' ] or a single string containing just one URL.
+    * @param {string} [jsonURL=null] - The URL of the audiosprite configuration JSON object. If you wish to pass the data directly set this parameter to null.
+    * @param {string|object} [jsonData=null] - A JSON object or string containing the audiosprite configuration data. This is ignored if jsonURL is not null.
+    * @param {boolean} [autoDecode=true] - When using Web Audio the audio files can either be decoded at load time or run-time.
+    *    Audio files can't be played until they are decoded and, if specified, this enables immediate decoding. Decoding is a non-blocking async process, however it consumes huge amounts of CPU time on mobiles especially.
+    * @return {Phaser.Loader} This Loader instance.
+    */
+    audiosprite: function (key, urls, jsonURL, jsonData, autoDecode) {
+
+        return this.audioSprite(key, urls, jsonURL, jsonData, autoDecode);
+
+    },
 
     /**
     * Adds a video file to the current load queue.

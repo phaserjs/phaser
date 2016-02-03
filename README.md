@@ -300,6 +300,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * Moved the Sound.disconnect after the Sound.stop call in Web Audio (#2280)
 * BitmapData.drawGroup can now handle drawing Emitters and BitmapText objects that are part of the Group.
 * SoundManager.setTouchLock is no longer set if `SoundManager.noAudio` is true, or if the PhaserGlobal setting `disableAudio` is true (thanks @bcjordan #2206)
+* Loader.audiosprite is renamed to Loader.audioSprite (the old one still works for legacy reasons) (thanks @epaezrubio #2145)
 
 ### Bug Fixes
 
