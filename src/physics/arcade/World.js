@@ -1696,7 +1696,7 @@ Phaser.Physics.Arcade.prototype = {
 
         return Math.atan2(dy, dx);
 
-    }
+    },
 
     /**
     * Find the angle in radians between a display object (like a Sprite) and a Pointer, 
@@ -1709,7 +1709,7 @@ Phaser.Physics.Arcade.prototype = {
     */
     worldAngleToPointer: function (displayObject, pointer) {
 
-        pointer = pointer || game.input.activePointer;
+        pointer = pointer || this.game.input.activePointer;
 
         var dx = pointer.worldX - displayObject.world.x;
         var dy = pointer.worldY - displayObject.world.y;
