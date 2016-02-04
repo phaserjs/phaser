@@ -1200,8 +1200,10 @@ Object.defineProperty(PIXI.Graphics.prototype, "cacheAsBitmap", {
         else
         {
             this.destroyCachedSprite();
-            this.dirty = true;
         }
+
+        this.dirty = true;
+        this.webGLDirty = true;
 
     }
 });
