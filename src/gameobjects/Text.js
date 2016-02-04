@@ -118,6 +118,19 @@ Phaser.Text = function (game, x, y, text, style) {
     this.autoRound = false;
 
     /**
+    * Will this Text object use Basic or Advanced Word Wrapping?
+    * 
+    * Advanced wrapping breaks long words if they are the first of a line, and repeats the process as necessary.
+    * White space is condensed (e.g., consecutive spaces are replaced with one).
+    * Lines are trimmed of white space before processing.
+    * 
+    * It throws an error if wordWrapWidth is less than a single character.
+    * @property {boolean} useAdvancedWrap
+    * @default
+    */
+    this.useAdvancedWrap = false;
+
+    /**
      * @property {number} _res - Internal canvas resolution var.
      * @private
      */
@@ -835,6 +848,150 @@ Phaser.Text.prototype.precalculateWordWrap = function (text) {
 * @private
 */
 Phaser.Text.prototype.runWordWrap = function (text) {
+
+    if (this.useAdvancedWrap)
+    {
+        return this.advancedWordWrap(text);
+    }
+    else
+    {
+        return this.basicWordWrap(text);
+    }
+
+};
+
+/**
+* Advanced wrapping algorithm that will wrap words as the line grows longer than its horizontal bounds.
+* White space is condensed (e.g., consecutive spaces are replaced with one).
+* Lines are trimmed of white space before processing.
+* Throws an error if the user was smart enough to specify a wordWrapWidth less than a single character.
+*
+* @method Phaser.Text#advancedWordWrap
+* @param {string} text - The text to perform word wrap detection against.
+* @private
+*/
+Phaser.Text.prototype.advancedWordWrap = function (text) {
+
+    var context = this.context;
+    var wordWrapWidth = this.style.wordWrapWidth;
+
+    var output = '';
+
+    // (1) condense whitespace
+    // (2) split into lines
+    var lines = text
+        .replace(/ +/gi, ' ')
+        .split(/\r?\n/gi);
+
+    var linesCount = lines.length;
+
+    for (var i = 0; i < linesCount; i++)
+    {
+        var line = lines[i];
+        var out = '';
+
+        // trim whitespace
+        line = line.replace(/^ *|\s*$/gi, '');
+
+        // if entire line is less than wordWrapWidth
+        // append the entire line and exit early
+        var lineWidth = context.measureText(line).width;
+
+        if (lineWidth < wordWrapWidth)
+        {
+            output += line + '\n';
+            continue;
+        }
+
+        // otherwise, calculate new lines
+        var currentLineWidth = wordWrapWidth;
+
+        // split into words
+        var words = line.split(' ');
+
+        for (var j = 0; j < words.length; j++)
+        {
+            var word = words[j];
+            var wordWithSpace = word + ' ';
+            var wordWidth = context.measureText(wordWithSpace).width;
+
+            if (wordWidth > currentLineWidth)
+            {
+                // break word
+                if (j === 0)
+                {
+                    // shave off letters from word until it's small enough
+                    var newWord = wordWithSpace;
+
+                    while (newWord.length)
+                    {
+                        newWord = newWord.slice(0, -1);
+                        wordWidth = context.measureText(newWord).width;
+
+                        if (wordWidth <= currentLineWidth)
+                        {
+                            break;
+                        }
+                    }
+
+                    // if wordWrapWidth is too small for even a single
+                    // letter, shame user failure with a fatal error
+                    if (!newWord.length)
+                    {
+                        throw new Error('This text\'s wordWrapWidth setting is less than a single character!');
+                    }
+
+                    // replace current word in array with remainder
+                    var secondPart = word.substr(newWord.length);
+
+                    words[j] = secondPart;
+
+                    // append first piece to output
+                    out += newWord;
+                }
+
+                // if existing word length is 0, don't include it
+                var offset = (words[j].length) ? j : j + 1;
+
+                // collapse rest of sentence
+                var remainder = words.slice(offset).join(' ')
+                // remove any trailing white space
+                .replace(/[ \n]*$/gi, '');
+
+                // prepend remainder to next line
+                lines[i + 1] = remainder + ' ' + (lines[i + 1] || '');
+                linesCount = lines.length;
+
+                break; // processing on this line
+
+                // append word with space to output
+            }
+            else
+            {
+                out += wordWithSpace;
+                currentLineWidth -= wordWidth;
+            }
+        }
+
+        // append processed line to output
+        output += out.replace(/[ \n]*$/gi, '') + '\n';
+    }
+
+    // trim the end of the string
+    output = output.replace(/[\s|\n]*$/gi, '');
+
+    return output;
+
+};
+
+/**
+* Greedy wrapping algorithm that will wrap words as the line grows longer than its horizontal bounds.
+*
+* @method Phaser.Text#basicWordWrap
+* @param {string} text - The text to perform word wrap detection against.
+* @private
+*/
+Phaser.Text.prototype.basicWordWrap = function (text) {
 
     var result = '';
     var lines = text.split('\n');

@@ -4778,6 +4778,7 @@ declare module Phaser {
         text: string;
         textBounds: Phaser.Rectangle;
         type: number;
+        useAdvancedWrap: boolean;
         world: Phaser.Point;
         wordWrap: boolean;
         wordWrapWidth: number;

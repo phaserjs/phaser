@@ -275,6 +275,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * Text.precalculateWordWrap allows you to run your text through the Text word wrap function, which is handy if you need to handle pagination on longer pieces of text (thanks @slashman #2277)
 * Sprite (and all Game Objects) have a new argument in their destroy method: `destroyTexture`. This boolean (which is false by default) controls if the BaseTexture of the Game Object should be destroyed or not. This is extremely useful in situations where you've got a lot of dynamic assets you no longer need, such as textures created from BitmapDatas. You must set the `destroyTexture` argument yourself. This can be done in a custom Game Object destroy method or as part of your state shutdown (#2261)
 * The Health Game Object component has a new method: `setHealth` which allows you to set the exact health amount. This is now used by the `revive` function.
+* Text.useAdvancedWrap allows you to swap between the Basic and the Advanced word wrapping functions. In Advanced it will wrap long-words and condense and trim excess white space (thanks @soldoutactivist #1811)
 
 ### Updates
 
@@ -337,7 +338,7 @@ Please note that Phaser uses a custom build of Pixi and always has done. The fol
 * We have replaced the PolyK Triangulation calls within Pixi with EarCut 2.0.8. This allows for faster polygon triangulation, and also deals with more complex polygons that PolyK would crash on.
 * Graphics.arc has a new argument `segments` that allows you to control how many segments are created when the arc is drawn. The default is 40. Use a higher number for more fidelity, i.e. if you find that reversed arcs are not joining up fully (#2064)
 * PIXI.WebGLMaskManager.pushMask and popMask are now more robust in checking that they have been given valid mask data (#2152)
-* PIXI.WebGLGraphics.stencilBufferLimit is a new integer that allows you to define how many points exist in a Graphics object before Pixi swaps to using the Stencil Buffer to render it. The default is now 64 (originally 6). This fixes issues with things like Quadratic curves not rendering as masks in WebGL.
+* PIXI.WebGLGraphics.stencilBufferLimit is a new integer that allows you to define how many points exist in a Graphics object before Pixi swaps to using the Stencil Buffer to render it. The default is 6 but can be increased. This fixes issues with things like Quadratic curves not rendering as masks in WebGL.
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
