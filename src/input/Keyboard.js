@@ -222,8 +222,9 @@ Phaser.Keyboard.prototype = {
 
     /**
     * Keyboard input dispatcher. All key events goes through this function
-    * @param  {[type]} event [description]
-    * @return {[type]}       [description]
+    * @method Phaser.Keyboard#processKeyEvent
+    * @param {KeyboardEvent} event
+    * @protected
     */
     _processKeyEvent: function(event) {
         
@@ -289,19 +290,21 @@ Phaser.Keyboard.prototype = {
     },
 
     /**
-     * Clears the current input redirect callback if any.
-     * @return {[type]} [description]
-     */
+    * Clears the current keyboard capture callback added by setCapture()
+    * @method Phaser.Keyboard#clearCapture
+    */
     clearCapture: function () {
         this.captureKeyboardCallback = null;
     },
 
     /**
-     * Redirects all key events to the given callback function.
-     * Useful when you need to ignore all other input callbacks, i.e when wanting to do text input.
-     * To remove the redirect use clearRedirect()
-     * @param {Function} callback
-     */
+    * Redirects all key events to the given callback function.
+    * Useful when you need to ignore all other input callbacks, i.e when wanting to do text input.
+    * To remove the capture use clearCapture()
+    * 
+    * @method Phaser.Keyboard#setCapture
+    * @param {function} callback
+    */
     setCapture: function (callback) {
 
         if(typeof callback === 'function')
