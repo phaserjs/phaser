@@ -154,7 +154,7 @@ PIXI.TilingSprite.prototype.setTexture = function(texture)
 */
 PIXI.TilingSprite.prototype._renderWebGL = function(renderSession)
 {
-    if (this.visible === false || this.alpha === 0)
+    if (!this.visible || !this.renderable || this.alpha === 0)
     {
         return;
     }
@@ -222,7 +222,7 @@ PIXI.TilingSprite.prototype._renderWebGL = function(renderSession)
 */
 PIXI.TilingSprite.prototype._renderCanvas = function(renderSession)
 {
-    if (this.visible === false || this.alpha === 0)
+    if (!this.visible || !this.renderable || this.alpha === 0)
     {
         return;
     }
