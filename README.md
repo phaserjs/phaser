@@ -308,6 +308,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * Camera.checkBounds now takes the scale of the Camera into account (thanks @ForGorNorPor #2263)
 * InputHandler.consumePointerEvent has been removed, as it was never used internally anyway, so was misleading (thanks @GregoryAveryWeir #2227)
 * Events.onDragUpdate has a new 6th property `fromStart` which is a boolean. You can determine if the event was the result of the start of a drag movement or not by polling it (#2155)
+* SinglePad.onDownCallback has been moved to the end of the method, so that DeviceButton.start is now called before the callback fires, meaning if you check the status of the button in the onDownCallback it will now be fully activated (thanks @suicidepills #2159)
 
 ### Bug Fixes
 
