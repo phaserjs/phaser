@@ -54,7 +54,8 @@
     <script src="$path/src/pixi/display/SpriteBatch.js"></script>
 
     <script src="$path/src/pixi/utils/Utils.js"></script>
-    <script src="$path/src/pixi/utils/Polyk.js"></script>
+    <script src="$path/src/pixi/utils/PolyK.js"></script>
+    <script src="$path/src/pixi/utils/EarCut.js"></script>
     <script src="$path/src/pixi/utils/CanvasPool.js"></script>
 
     <script src="$path/src/pixi/renderers/webgl/utils/WebGLShaderUtils.js"></script>
