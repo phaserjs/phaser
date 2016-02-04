@@ -2139,9 +2139,6 @@ declare module Phaser {
         destroy(): void;
         downDuration(keycode: number, duration?: number): boolean;
         isDown(keycode: number): boolean;
-        processKeyDown(event: KeyboardEvent): void;
-        processKeyPress(event: KeyboardEvent): void;
-        processKeyUp(event: KeyboardEvent): void;
         removeKey(keycode: number): void;
         reset(hard?: boolean): void;
         start(): void;
