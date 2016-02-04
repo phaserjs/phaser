@@ -2128,11 +2128,14 @@ declare module Phaser {
         pressEvent: any;
 
         addCallbacks(context: any, onDown?: Function, onUp?: Function, onPress?: Function): void;
+        setCapture(callback: Function): void;
+        clearCapture(): void;
         addKey(keycode: number): Phaser.Key;
         addKeys(keys: any): any;
         addKeyCapture(keycode: any): void;
+        removeKeyCapture(keycode: number): void;
         createCursorKeys(): Phaser.CursorKeys;
-        clearCaptures(): void;
+        clearKeyCaptures(): void;
         destroy(): void;
         downDuration(keycode: number, duration?: number): boolean;
         isDown(keycode: number): boolean;
@@ -2140,7 +2143,6 @@ declare module Phaser {
         processKeyPress(event: KeyboardEvent): void;
         processKeyUp(event: KeyboardEvent): void;
         removeKey(keycode: number): void;
-        removeKeyCapture(keycode: number): void;
         reset(hard?: boolean): void;
         start(): void;
         stop(): void;

@@ -232,14 +232,14 @@ Phaser.Keyboard.prototype = {
         this.event = event;
 
         // If a input redirect callback exists run that istead.
-        if(this.captureKeyboardCallback)
+        if (this.captureKeyboardCallback)
         {
             this.captureKeyboardCallback.call(this.callbackContext,event);
             return;
         }
 
         // Route the event to the correct handler
-        switch(event.type) {
+        switch (event.type) {
             case "keydown":
                 this._processKeyDown(event);
                 break;
@@ -278,7 +278,7 @@ Phaser.Keyboard.prototype = {
 
         this.stop();
 
-        this.clearCaptures();
+        this.clearKeyCaptures();
 
         this._keys.length = 0;
         this._i = 0;
@@ -350,9 +350,9 @@ Phaser.Keyboard.prototype = {
     /**
     * Clear all set key captures.
     *
-    * @method Phaser.Keyboard#clearCaptures
+    * @method Phaser.Keyboard#clearKeyCaptures
     */
-    clearCaptures: function () {
+    clearKeyCaptures: function () {
 
         this._capture = {};
 
