@@ -1908,7 +1908,6 @@ declare module Phaser {
         boundsRect: Phaser.Rectangle;
         boundsSprite: Phaser.Sprite;
         bringToTop: boolean;
-        consumePointerEvent: boolean;
         dragOffset: Phaser.Point;
         dragFromCenter: boolean;
         draggable: boolean;

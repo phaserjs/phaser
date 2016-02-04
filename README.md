@@ -306,6 +306,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * Loader.audiosprite is renamed to Loader.audioSprite (the old one still works for legacy reasons) (thanks @epaezrubio #2145)
 * EarCut now replaces PolyK, which fixes advanced Graphics mask triangulation issues such as #1941
 * Camera.checkBounds now takes the scale of the Camera into account (thanks @ForGorNorPor #2263)
+* InputHandler.consumePointerEvent has been removed, as it was never used internally anyway, so was misleading (thanks @GregoryAveryWeir #2227)
 
 ### Bug Fixes
 
@@ -331,6 +332,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * Both `transparent` and `antialias` were ignored if set to `false` in a Game configuration object, as the `parseConfig` method didn't check for falsey values (thanks @amadeus #2302)
 * GameObject.revive used to add the health amount given to the Game Object (via `heal`) instead of setting it as the new health amount. It now calls `setHealth` instead, giving it the exact amount (thanks @netgfx #2231)
 * Group.add and Group.addAt would forget to remove the child from the hash of its previous Group if it had a physics body enabled, causing unbounded hash increase (thanks @strawlion @McIntozh #2232)
+* On Retina and High DPI displays (such as a Macbook) going in to Full Screen was showing at double the scale (thanks @nickryall #1993)
 
 ### Pixi Updates
 
