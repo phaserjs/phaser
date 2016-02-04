@@ -211,6 +211,9 @@ Phaser.Keyboard.prototype = {
             return;
         }
 
+        //Avoid setting multiple listeners
+        this.stop();
+
         window.addEventListener('keydown', this._processKeyEvent.bind(this), false);
         window.addEventListener('keyup', this._processKeyEvent.bind(this), false);
         window.addEventListener('keypress', this._processKeyEvent.bind(this), false);
