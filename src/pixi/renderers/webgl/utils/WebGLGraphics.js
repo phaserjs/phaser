@@ -18,7 +18,7 @@ PIXI.WebGLGraphics = function()
  *
  * @type {number}
  */
-PIXI.WebGLGraphics.stencilBufferLimit = 64;
+PIXI.WebGLGraphics.stencilBufferLimit = 6;
 
 /**
  * Renders the graphics object
@@ -747,7 +747,7 @@ PIXI.WebGLGraphics.buildComplexPoly = function(graphicsData, webGLData)
 {
     //TODO - no need to copy this as it gets turned into a FLoat32Array anyways..
     var points = graphicsData.points.slice();
-    if(points.length < PIXI.WebGLGraphics.stencilBufferLimit)return;
+    if(points.length < 6)return;
 
     // get first and last point.. figure out the middle!
     var indices = webGLData.indices;
@@ -809,7 +809,7 @@ PIXI.WebGLGraphics.buildPoly = function(graphicsData, webGLData)
 {
     var points = graphicsData.points;
 
-    if(points.length < PIXI.WebGLGraphics.stencilBufferLimit)return;
+    if(points.length < 6)return;
     // get first and last point.. figure out the middle!
     var verts = webGLData.points;
     var indices = webGLData.indices;
