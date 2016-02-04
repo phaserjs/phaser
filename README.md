@@ -305,6 +305,7 @@ If you are an exceptional JavaScript developer and would like to join the Phaser
 * SoundManager.setTouchLock is no longer set if `SoundManager.noAudio` is true, or if the PhaserGlobal setting `disableAudio` is true (thanks @bcjordan #2206)
 * Loader.audiosprite is renamed to Loader.audioSprite (the old one still works for legacy reasons) (thanks @epaezrubio #2145)
 * EarCut now replaces PolyK, which fixes advanced Graphics mask triangulation issues such as #1941
+* Camera.checkBounds now takes the scale of the Camera into account (thanks @ForGorNorPor #2263)
 
 ### Bug Fixes
 

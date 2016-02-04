@@ -332,28 +332,28 @@ Phaser.Camera.prototype = {
         this.atLimit.y = false;
 
         //  Make sure we didn't go outside the cameras bounds
-        if (this.view.x <= this.bounds.x)
+        if (this.view.x <= this.bounds.x * this.scale.x)
         {
             this.atLimit.x = true;
-            this.view.x = this.bounds.x;
+            this.view.x = this.bounds.x * this.scale.x;
         }
 
-        if (this.view.right >= this.bounds.right)
+        if (this.view.right >= this.bounds.right * this.scale.x)
         {
             this.atLimit.x = true;
-            this.view.x = this.bounds.right - this.width;
+            this.view.x = (this.bounds.right * this.scale.x) - this.width;
         }
 
-        if (this.view.y <= this.bounds.top)
+        if (this.view.y <= this.bounds.top * this.scale.y)
         {
             this.atLimit.y = true;
-            this.view.y = this.bounds.top;
+            this.view.y = this.bounds.top * this.scale.y;
         }
 
-        if (this.view.bottom >= this.bounds.bottom)
+        if (this.view.bottom >= this.bounds.bottom * this.scale.y)
         {
             this.atLimit.y = true;
-            this.view.y = this.bounds.bottom - this.height;
+            this.view.y = (this.bounds.bottom * this.scale.y) - this.height;
         }
 
     },
