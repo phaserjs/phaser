@@ -183,7 +183,7 @@ Phaser.Loader = function (game) {
     *
     * To disable all parallel downloads this must be set to false prior to any resource being loaded.
     *
-    * @property {integer} enableParallel
+    * @property {boolean} enableParallel
     */
     this.enableParallel = true;
 
