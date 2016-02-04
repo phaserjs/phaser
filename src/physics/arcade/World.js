@@ -1699,20 +1699,23 @@ Phaser.Physics.Arcade.prototype = {
     }
 
     /**
-    * Find the angle in radians between a display object (like a Sprite) and a Pointer, taking their x/y and center into account relative to the world.
+    * Find the angle in radians between a display object (like a Sprite) and a Pointer, 
+    * taking their x/y and center into account relative to the world.
     *
     * @method Phaser.Physics.Arcade#worldAngleToPointer
     * @param {any} displayObject - The DisplayObjerct to test from.
     * @param {Phaser.Pointer} [pointer] - The Phaser.Pointer to test to. If none is given then Input.activePointer is used.
-    * @return {number} The angle in radians between displayObject.x/y to Pointer.x/y
+    * @return {number} The angle in radians between displayObject.world.x/y to Pointer.worldX / worldY
     */
-     worldAngleToPointer: function (displayObject, pointer) {
+    worldAngleToPointer: function (displayObject, pointer) {
+
         pointer = pointer || game.input.activePointer;
 
         var dx = pointer.worldX - displayObject.world.x;
         var dy = pointer.worldY - displayObject.world.y;
 
         return Math.atan2(dy, dx);
+
     }
 
 };
