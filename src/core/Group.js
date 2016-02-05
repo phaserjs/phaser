@@ -289,7 +289,7 @@ Phaser.Group.prototype.add = function (child, silent) {
 
     if (child.parent !== this)
     {
-        if (child.body)
+        if (child.body && child.parent)
         {
             child.parent.removeFromHash(child);
         }
@@ -420,7 +420,7 @@ Phaser.Group.prototype.addAt = function (child, index, silent) {
 
     if (child.parent !== this)
     {
-        if (child.body)
+        if (child.body && child.parent)
         {
             child.parent.removeFromHash(child);
         }
