@@ -93,11 +93,11 @@ PIXI.WebGLFilterManager.prototype.pushFilter = function(filterBlock)
     var texture = this.texturePool.pop();
     if(!texture)
     {
-        texture = new PIXI.FilterTexture(this.gl, this.width, this.height);
+        texture = new PIXI.FilterTexture(this.gl, this.width * this.renderSession.resolution, this.height * this.renderSession.resolution);
     }
     else
     {
-        texture.resize(this.width, this.height);
+        texture.resize(this.width * this.renderSession.resolution, this.height * this.renderSession.resolution);
     }
 
     gl.bindTexture(gl.TEXTURE_2D,  texture.texture);
@@ -120,7 +120,7 @@ PIXI.WebGLFilterManager.prototype.pushFilter = function(filterBlock)
     gl.bindFramebuffer(gl.FRAMEBUFFER, texture.frameBuffer);
 
     // set view port
-    gl.viewport(0, 0, filterArea.width, filterArea.height);
+    gl.viewport(0, 0, filterArea.width * this.renderSession.resolution, filterArea.height * this.renderSession.resolution);
 
     projection.x = filterArea.width/2;
     projection.y = -filterArea.height/2;
