@@ -845,6 +845,9 @@ Phaser.ScaleManager.prototype = {
             newHeight = rect.height * this.parentScaleFactor.y;
         }
 
+        newWidth = Math.floor(newWidth);
+        newHeight = Math.floor(newHeight);
+
         this._gameSize.setTo(0, 0, newWidth, newHeight);
 
         this.updateDimensions(newWidth, newHeight, false);
