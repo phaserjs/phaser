@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Phaser Source: src/tween/TweenData.js</title>
+	<title>Phaser Source: src/pixi/utils/EarCut.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -1102,581 +1102,634 @@
 					
 
 
-		<h1 class="page-title">Source: src/tween/TweenData.js</h1>
+		<h1 class="page-title">Source: src/pixi/utils/EarCut.js</h1>
     
     <section>
         <article>
-            <pre class="sunlight-highlight-javascript linenums">/**
-* @author       Richard Davey &lt;rich@photonstorm.com>
-* @copyright    2015 Photon Storm Ltd.
-* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+            <pre class="sunlight-highlight-javascript linenums">/*
+Copyright (c) 2016, Mapbox
+
+Permission to use, copy, modify, and/or distribute this software for any purpose
+with or without fee is hereby granted, provided that the above copyright notice
+and this permission notice appear in all copies.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
+OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
+TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
+THIS SOFTWARE.
 */
 
 /**
-* A Phaser.Tween contains at least one TweenData object. It contains all of the tween data values, such as the
-* starting and ending values, the ease function, interpolation and duration. The Tween acts as a timeline manager for
-* TweenData objects and can contain multiple TweenData objects.
-*
-* @class Phaser.TweenData
-* @constructor
-* @param {Phaser.Tween} parent - The Tween that owns this TweenData object.
+* @class EarCut
 */
-Phaser.TweenData = function (parent) {
+PIXI.EarCut = {};
 
-    /**
-    * @property {Phaser.Tween} parent - The Tween which owns this TweenData.
-    */
-    this.parent = parent;
+PIXI.EarCut.Triangulate = function (data, holeIndices, dim) {
 
-    /**
-    * @property {Phaser.Game} game - A reference to the currently running Game.
-    */
-    this.game = parent.game;
+    dim = dim || 2;
 
-    /**
-    * @property {object} vStart - An object containing the values at the start of the tween.
-    * @private
-    */
-    this.vStart = {};
+    var hasHoles = holeIndices &amp;&amp; holeIndices.length,
+        outerLen = hasHoles ? holeIndices[0] * dim : data.length,
+        outerNode = PIXI.EarCut.linkedList(data, 0, outerLen, dim, true),
+        triangles = [];
 
-    /**
-    * @property {object} vStartCache - Cached starting values.
-    * @private
-    */
-    this.vStartCache = {};
+    if (!outerNode) return triangles;
 
-    /**
-    * @property {object} vEnd - An object containing the values at the end of the tween.
-    * @private
-    */
-    this.vEnd = {};
+    var minX, minY, maxX, maxY, x, y, size;
 
-    /**
-    * @property {object} vEndCache - Cached ending values.
-    * @private
-    */
-    this.vEndCache = {};
+    if (hasHoles) outerNode = PIXI.EarCut.eliminateHoles(data, holeIndices, outerNode, dim);
 
-    /**
-    * @property {number} duration - The duration of the tween in ms.
-    * @default
-    */
-    this.duration = 1000;
+    // if the shape is not too simple, we'll use z-order curve hash later; calculate polygon bbox
+    if (data.length > 80 * dim) {
+        minX = maxX = data[0];
+        minY = maxY = data[1];
 
-    /**
-    * @property {number} percent - A value between 0 and 1 that represents how far through the duration this tween is.
-    * @readonly
-    */
-    this.percent = 0;
-
-    /**
-    * @property {number} value - The current calculated value.
-    * @readonly
-    */
-    this.value = 0;
-
-    /**
-    * @property {number} repeatCounter - If the Tween is set to repeat this contains the current repeat count.
-    */
-    this.repeatCounter = 0;
-
-    /**
-    * @property {number} repeatDelay - The amount of time in ms between repeats of this tween.
-    */
-    this.repeatDelay = 0;
-
-    /**
-    * @property {boolean} interpolate - True if the Tween will use interpolation (i.e. is an Array to Array tween)
-    * @default
-    */
-    this.interpolate = false;
-
-    /**
-    * @property {boolean} yoyo - True if the Tween is set to yoyo, otherwise false.
-    * @default
-    */
-    this.yoyo = false;
-
-    /**
-    * @property {number} yoyoDelay - The amount of time in ms between yoyos of this tween.
-    */
-    this.yoyoDelay = 0;
-
-    /**
-    * @property {boolean} inReverse - When a Tween is yoyoing this value holds if it's currently playing forwards (false) or in reverse (true).
-    * @default
-    */
-    this.inReverse = false;
-
-    /**
-    * @property {number} delay - The amount to delay by until the Tween starts (in ms). Only applies to the start, use repeatDelay to handle repeats.
-    * @default
-    */
-    this.delay = 0;
-
-    /**
-    * @property {number} dt - Current time value.
-    */
-    this.dt = 0;
-
-    /**
-    * @property {number} startTime - The time the Tween started or null if it hasn't yet started.
-    */
-    this.startTime = null;
-
-    /**
-    * @property {function} easingFunction - The easing function used for the Tween.
-    * @default Phaser.Easing.Default
-    */
-    this.easingFunction = Phaser.Easing.Default;
-
-    /**
-    * @property {function} interpolationFunction - The interpolation function used for the Tween.
-    * @default Phaser.Math.linearInterpolation
-    */
-    this.interpolationFunction = Phaser.Math.linearInterpolation;
-
-    /**
-    * @property {object} interpolationContext - The interpolation function context used for the Tween.
-    * @default Phaser.Math
-    */
-    this.interpolationContext = Phaser.Math;
-
-    /**
-    * @property {boolean} isRunning - If the tween is running this is set to `true`. Unless Phaser.Tween a TweenData that is waiting for a delay to expire is *not* considered as running.
-    * @default
-    */
-    this.isRunning = false;
-
-    /**
-    * @property {boolean} isFrom - Is this a from tween or a to tween?
-    * @default
-    */
-    this.isFrom = false;
-
-};
-
-/**
-* @constant
-* @type {number}
-*/
-Phaser.TweenData.PENDING = 0;
-
-/**
-* @constant
-* @type {number}
-*/
-Phaser.TweenData.RUNNING = 1;
-
-/**
-* @constant
-* @type {number}
-*/
-Phaser.TweenData.LOOPED = 2;
-
-/**
-* @constant
-* @type {number}
-*/
-Phaser.TweenData.COMPLETE = 3;
-
-Phaser.TweenData.prototype = {
-
-    /**
-    * Sets this tween to be a `to` tween on the properties given. A `to` tween starts at the current value and tweens to the destination value given.
-    * For example a Sprite with an `x` coordinate of 100 could be tweened to `x` 200 by giving a properties object of `{ x: 200 }`.
-    *
-    * @method Phaser.TweenData#to
-    * @param {object} properties - The properties you want to tween, such as `Sprite.x` or `Sound.volume`. Given as a JavaScript object.
-    * @param {number} [duration=1000] - Duration of this tween in ms.
-    * @param {function} [ease=null] - Easing function. If not set it will default to Phaser.Easing.Default, which is Phaser.Easing.Linear.None by default but can be over-ridden at will.
-    * @param {number} [delay=0] - Delay before this tween will start, defaults to 0 (no delay). Value given is in ms.
-    * @param {number} [repeat=0] - Should the tween automatically restart once complete? If you want it to run forever set as -1. This ignores any chained tweens.
-    * @param {boolean} [yoyo=false] - A tween that yoyos will reverse itself and play backwards automatically. A yoyo'd tween doesn't fire the Tween.onComplete event, so listen for Tween.onLoop instead.
-    * @return {Phaser.TweenData} This Tween object.
-    */
-    to: function (properties, duration, ease, delay, repeat, yoyo) {
-
-        this.vEnd = properties;
-        this.duration = duration;
-        this.easingFunction = ease;
-        this.delay = delay;
-        this.repeatCounter = repeat;
-        this.yoyo = yoyo;
-
-        this.isFrom = false;
-
-        return this;
-
-    },
-
-    /**
-    * Sets this tween to be a `from` tween on the properties given. A `from` tween sets the target to the destination value and tweens to its current value.
-    * For example a Sprite with an `x` coordinate of 100 tweened from `x` 500 would be set to `x` 500 and then tweened to `x` 100 by giving a properties object of `{ x: 500 }`.
-    *
-    * @method Phaser.TweenData#from
-    * @param {object} properties - The properties you want to tween, such as `Sprite.x` or `Sound.volume`. Given as a JavaScript object.
-    * @param {number} [duration=1000] - Duration of this tween in ms.
-    * @param {function} [ease=null] - Easing function. If not set it will default to Phaser.Easing.Default, which is Phaser.Easing.Linear.None by default but can be over-ridden at will.
-    * @param {number} [delay=0] - Delay before this tween will start, defaults to 0 (no delay). Value given is in ms.
-    * @param {number} [repeat=0] - Should the tween automatically restart once complete? If you want it to run forever set as -1. This ignores any chained tweens.
-    * @param {boolean} [yoyo=false] - A tween that yoyos will reverse itself and play backwards automatically. A yoyo'd tween doesn't fire the Tween.onComplete event, so listen for Tween.onLoop instead.
-    * @return {Phaser.TweenData} This Tween object.
-    */
-    from: function (properties, duration, ease, delay, repeat, yoyo) {
-
-        this.vEnd = properties;
-        this.duration = duration;
-        this.easingFunction = ease;
-        this.delay = delay;
-        this.repeatCounter = repeat;
-        this.yoyo = yoyo;
-
-        this.isFrom = true;
-
-        return this;
-
-    },
-
-    /**
-    * Starts the Tween running.
-    *
-    * @method Phaser.TweenData#start
-    * @return {Phaser.TweenData} This Tween object.
-    */
-    start: function () {
-
-        this.startTime = this.game.time.time + this.delay;
-
-        if (this.parent.reverse)
-        {
-            this.dt = this.duration;
-        }
-        else
-        {
-            this.dt = 0;
+        for (var i = dim; i &lt; outerLen; i += dim) {
+            x = data[i];
+            y = data[i + 1];
+            if (x &lt; minX) minX = x;
+            if (y &lt; minY) minY = y;
+            if (x > maxX) maxX = x;
+            if (y > maxY) maxY = y;
         }
 
-        if (this.delay > 0)
-        {
-            this.isRunning = false;
-        }
-        else
-        {
-            this.isRunning = true;
-        }
-
-        if (this.isFrom)
-        {
-            //  Reverse them all and instant set them
-            for (var property in this.vStartCache)
-            {
-                this.vStart[property] = this.vEndCache[property];
-                this.vEnd[property] = this.vStartCache[property];
-                this.parent.target[property] = this.vStart[property];
-            }
-        }
-
-        this.value = 0;
-        this.yoyoCounter = 0;
-
-        return this;
-
-    },
-
-    /**
-    * Loads the values from the target object into this Tween.
-    *
-    * @private
-    * @method Phaser.TweenData#loadValues
-    * @return {Phaser.TweenData} This Tween object.
-    */
-    loadValues: function () {
-
-        for (var property in this.parent.properties)
-        {
-            //  Load the property from the parent object
-            this.vStart[property] = this.parent.properties[property];
-
-            //  Check if an Array was provided as property value
-            if (Array.isArray(this.vEnd[property]))
-            {
-                if (this.vEnd[property].length === 0)
-                {
-                    continue;
-                }
-
-                if (this.percent === 0)
-                {
-                    //  Put the start value at the beginning of the array
-                    //  but we only want to do this once, if the Tween hasn't run before
-                    this.vEnd[property] = [this.vStart[property]].concat(this.vEnd[property]);
-                }
-            }
-
-            if (typeof this.vEnd[property] !== 'undefined')
-            {
-                if (typeof this.vEnd[property] === 'string')
-                {
-                    //  Parses relative end values with start as base (e.g.: +10, -3)
-                    this.vEnd[property] = this.vStart[property] + parseFloat(this.vEnd[property], 10);
-                }
-
-                this.parent.properties[property] = this.vEnd[property];
-            }
-            else
-            {
-                //  Null tween
-                this.vEnd[property] = this.vStart[property];
-            }
-
-            this.vStartCache[property] = this.vStart[property];
-            this.vEndCache[property] = this.vEnd[property];
-        }
-
-        return this;
-
-    },
-
-    /**
-    * Updates this Tween. This is called automatically by Phaser.Tween.
-    *
-    * @protected
-    * @method Phaser.TweenData#update
-    * @param {number} time - A timestamp passed in by the Tween parent.
-    * @return {number} The current status of this Tween. One of the Phaser.TweenData constants: PENDING, RUNNING, LOOPED or COMPLETE.
-    */
-    update: function (time) {
-
-        if (!this.isRunning)
-        {
-            if (time >= this.startTime)
-            {
-                this.isRunning = true;
-            }
-            else
-            {
-                return Phaser.TweenData.PENDING;
-            }
-        }
-        else
-        {
-            //  Is Running, but is waiting to repeat
-            if (time &lt; this.startTime)
-            {
-                return Phaser.TweenData.RUNNING;
-            }
-        }
-
-        var ms = (this.parent.frameBased) ? this.game.time.physicsElapsedMS : this.game.time.elapsedMS;
-
-        if (this.parent.reverse)
-        {
-            this.dt -= ms * this.parent.timeScale;
-            this.dt = Math.max(this.dt, 0);
-        }
-        else
-        {
-            this.dt += ms * this.parent.timeScale;
-            this.dt = Math.min(this.dt, this.duration);
-        }
-
-        this.percent = this.dt / this.duration;
-
-        this.value = this.easingFunction(this.percent);
-
-        for (var property in this.vEnd)
-        {
-            var start = this.vStart[property];
-            var end = this.vEnd[property];
-
-            if (Array.isArray(end))
-            {
-                this.parent.target[property] = this.interpolationFunction.call(this.interpolationContext, end, this.value);
-            }
-            else
-            {
-                this.parent.target[property] = start + ((end - start) * this.value);
-            }
-        }
-
-        if ((!this.parent.reverse &amp;&amp; this.percent === 1) || (this.parent.reverse &amp;&amp; this.percent === 0))
-        {
-            return this.repeat();
-        }
-        
-        return Phaser.TweenData.RUNNING;
-
-    },
-
-    /**
-    * This will generate an array populated with the tweened object values from start to end.
-    * It works by running the tween simulation at the given frame rate based on the values set-up in Tween.to and Tween.from.
-    * Just one play through of the tween data is returned, including yoyo if set.
-    *
-    * @method Phaser.TweenData#generateData
-    * @param {number} [frameRate=60] - The speed in frames per second that the data should be generated at. The higher the value, the larger the array it creates.
-    * @return {array} An array of tweened values.
-    */
-    generateData: function (frameRate) {
-
-        if (this.parent.reverse)
-        {
-            this.dt = this.duration;
-        }
-        else
-        {
-            this.dt = 0;
-        }
-
-        var data = [];
-        var complete = false;
-        var fps = (1 / frameRate) * 1000;
-
-        do
-        {
-            if (this.parent.reverse)
-            {
-                this.dt -= fps;
-                this.dt = Math.max(this.dt, 0);
-            }
-            else
-            {
-                this.dt += fps;
-                this.dt = Math.min(this.dt, this.duration);
-            }
-
-            this.percent = this.dt / this.duration;
-
-            this.value = this.easingFunction(this.percent);
-
-            var blob = {};
-
-            for (var property in this.vEnd)
-            {
-                var start = this.vStart[property];
-                var end = this.vEnd[property];
-
-                if (Array.isArray(end))
-                {
-                    blob[property] = this.interpolationFunction(end, this.value);
-                }
-                else
-                {
-                    blob[property] = start + ((end - start) * this.value);
-                }
-            }
-
-            data.push(blob);
-
-            if ((!this.parent.reverse &amp;&amp; this.percent === 1) || (this.parent.reverse &amp;&amp; this.percent === 0))
-            {
-                complete = true;
-            }
-
-        } while (!complete);
-
-        if (this.yoyo)
-        {
-            var reversed = data.slice();
-            reversed.reverse();
-            data = data.concat(reversed);
-        }
-
-        return data;
-
-    },
-
-    /**
-    * Checks if this Tween is meant to repeat or yoyo and handles doing so.
-    *
-    * @private
-    * @method Phaser.TweenData#repeat
-    * @return {number} Either Phaser.TweenData.LOOPED or Phaser.TweenData.COMPLETE.
-    */
-    repeat: function () {
-
-        //  If not a yoyo and repeatCounter = 0 then we're done
-        if (this.yoyo)
-        {
-            //  We're already in reverse mode, which means the yoyo has finished and there's no repeats, so end
-            if (this.inReverse &amp;&amp; this.repeatCounter === 0)
-            {
-                //  Restore the properties
-                for (var property in this.vStartCache)
-                {
-                    this.vStart[property] = this.vStartCache[property];
-                    this.vEnd[property] = this.vEndCache[property];
-                }
-
-                this.inReverse = false;
-
-                return Phaser.TweenData.COMPLETE;
-            }
-
-            this.inReverse = !this.inReverse;
-        }
-        else
-        {
-            if (this.repeatCounter === 0)
-            {
-                return Phaser.TweenData.COMPLETE;
-            }
-        }
-
-        if (this.inReverse)
-        {
-            //  If inReverse we're going from vEnd to vStartCache
-            for (var property in this.vStartCache)
-            {
-                this.vStart[property] = this.vEndCache[property];
-                this.vEnd[property] = this.vStartCache[property];
-            }
-        }
-        else
-        {
-            //  If not inReverse we're just repopulating the cache again
-            for (var property in this.vStartCache)
-            {
-                this.vStart[property] = this.vStartCache[property];
-                this.vEnd[property] = this.vEndCache[property];
-            }
-
-            //  -1 means repeat forever, otherwise decrement the repeatCounter
-            //  We only decrement this counter if the tween isn't doing a yoyo, as that doesn't count towards the repeat total
-            if (this.repeatCounter > 0)
-            {
-                this.repeatCounter--;
-            }
-        }
-
-        this.startTime = this.game.time.time;
-
-        if (this.yoyo &amp;&amp; this.inReverse)
-        {
-            this.startTime += this.yoyoDelay;
-        }
-        else if (!this.inReverse)
-        {
-            this.startTime += this.repeatDelay;
-        }
-
-        if (this.parent.reverse)
-        {
-            this.dt = this.duration;
-        }
-        else
-        {
-            this.dt = 0;
-        }
-
-        return Phaser.TweenData.LOOPED;
-
+        // minX, minY and size are later used to transform coords into integers for z-order calculation
+        size = Math.max(maxX - minX, maxY - minY);
     }
 
-};
+    PIXI.EarCut.earcutLinked(outerNode, triangles, dim, minX, minY, size);
 
-Phaser.TweenData.prototype.constructor = Phaser.TweenData;
+    return triangles;
+}
+
+// create a circular doubly linked list from polygon points in the specified winding order
+
+PIXI.EarCut.linkedList = function (data, start, end, dim, clockwise) {
+    var sum = 0,
+        i, j, last;
+
+    // calculate original winding order of a polygon ring
+    for (i = start, j = end - dim; i &lt; end; i += dim) {
+        sum += (data[j] - data[i]) * (data[i + 1] + data[j + 1]);
+        j = i;
+    }
+
+    // link points into circular doubly-linked list in the specified winding order
+    if (clockwise === (sum > 0)) {
+        for (i = start; i &lt; end; i += dim) last = PIXI.EarCut.insertNode(i, data[i], data[i + 1], last);
+    } else {
+        for (i = end - dim; i >= start; i -= dim) last = PIXI.EarCut.insertNode(i, data[i], data[i + 1], last);
+    }
+
+    return last;
+}
+
+// eliminate colinear or duplicate points
+
+PIXI.EarCut.filterPoints = function (start, end) {
+    if (!start) return start;
+    if (!end) end = start;
+
+    var p = start,
+        again;
+    do {
+        again = false;
+
+        if (!p.steiner &amp;&amp; (PIXI.EarCut.equals(p, p.next) || PIXI.EarCut.area(p.prev, p, p.next) === 0)) {
+            PIXI.EarCut.removeNode(p);
+            p = end = p.prev;
+            if (p === p.next) return null;
+            again = true;
+
+        } else {
+            p = p.next;
+        }
+    } while (again || p !== end);
+
+    return end;
+}
+
+// main ear slicing loop which triangulates a polygon (given as a linked list)
+
+PIXI.EarCut.earcutLinked = function (ear, triangles, dim, minX, minY, size, pass) {
+    if (!ear) return;
+
+    // interlink polygon nodes in z-order
+    if (!pass &amp;&amp; size) PIXI.EarCut.indexCurve(ear, minX, minY, size);
+
+    var stop = ear,
+        prev, next;
+
+    // iterate through ears, slicing them one by one
+    while (ear.prev !== ear.next) {
+        prev = ear.prev;
+        next = ear.next;
+
+        if (size ? PIXI.EarCut.isEarHashed(ear, minX, minY, size) : PIXI.EarCut.isEar(ear)) {
+            // cut off the triangle
+            triangles.push(prev.i / dim);
+            triangles.push(ear.i / dim);
+            triangles.push(next.i / dim);
+
+            PIXI.EarCut.removeNode(ear);
+
+            // skipping the next vertice leads to less sliver triangles
+            ear = next.next;
+            stop = next.next;
+
+            continue;
+        }
+
+        ear = next;
+
+        // if we looped through the whole remaining polygon and can't find any more ears
+        if (ear === stop) {
+            // try filtering points and slicing again
+            if (!pass) {
+                PIXI.EarCut.earcutLinked(PIXI.EarCut.filterPoints(ear), triangles, dim, minX, minY, size, 1);
+
+                // if this didn't work, try curing all small self-intersections locally
+            } else if (pass === 1) {
+                ear = PIXI.EarCut.cureLocalIntersections(ear, triangles, dim);
+                PIXI.EarCut.earcutLinked(ear, triangles, dim, minX, minY, size, 2);
+
+                // as a last resort, try splitting the remaining polygon into two
+            } else if (pass === 2) {
+                PIXI.EarCut.splitEarcut(ear, triangles, dim, minX, minY, size);
+            }
+
+            break;
+        }
+    }
+}
+
+// check whether a polygon node forms a valid ear with adjacent nodes
+
+PIXI.EarCut.isEar = function (ear) {
+    var a = ear.prev,
+        b = ear,
+        c = ear.next;
+
+    if (PIXI.EarCut.area(a, b, c) >= 0) return false; // reflex, can't be an ear
+
+    // now make sure we don't have other points inside the potential ear
+    var p = ear.next.next;
+
+    while (p !== ear.prev) {
+        if (PIXI.EarCut.pointInTriangle(a.x, a.y, b.x, b.y, c.x, c.y, p.x, p.y) &amp;&amp;
+            PIXI.EarCut.area(p.prev, p, p.next) >= 0) return false;
+        p = p.next;
+    }
+
+    return true;
+}
+
+PIXI.EarCut.isEarHashed = function (ear, minX, minY, size) {
+    var a = ear.prev,
+        b = ear,
+        c = ear.next;
+
+    if (PIXI.EarCut.area(a, b, c) >= 0) return false; // reflex, can't be an ear
+
+    // triangle bbox; min &amp; max are calculated like this for speed
+    var minTX = a.x &lt; b.x ? (a.x &lt; c.x ? a.x : c.x) : (b.x &lt; c.x ? b.x : c.x),
+        minTY = a.y &lt; b.y ? (a.y &lt; c.y ? a.y : c.y) : (b.y &lt; c.y ? b.y : c.y),
+        maxTX = a.x > b.x ? (a.x > c.x ? a.x : c.x) : (b.x > c.x ? b.x : c.x),
+        maxTY = a.y > b.y ? (a.y > c.y ? a.y : c.y) : (b.y > c.y ? b.y : c.y);
+
+    // z-order range for the current triangle bbox;
+    var minZ = PIXI.EarCut.zOrder(minTX, minTY, minX, minY, size),
+        maxZ = PIXI.EarCut.zOrder(maxTX, maxTY, minX, minY, size);
+
+    // first look for points inside the triangle in increasing z-order
+    var p = ear.nextZ;
+
+    while (p &amp;&amp; p.z &lt;= maxZ) {
+        if (p !== ear.prev &amp;&amp; p !== ear.next &amp;&amp;
+            PIXI.EarCut.pointInTriangle(a.x, a.y, b.x, b.y, c.x, c.y, p.x, p.y) &amp;&amp;
+            PIXI.EarCut.area(p.prev, p, p.next) >= 0) return false;
+        p = p.nextZ;
+    }
+
+    // then look for points in decreasing z-order
+    p = ear.prevZ;
+
+    while (p &amp;&amp; p.z >= minZ) {
+        if (p !== ear.prev &amp;&amp; p !== ear.next &amp;&amp;
+            PIXI.EarCut.pointInTriangle(a.x, a.y, b.x, b.y, c.x, c.y, p.x, p.y) &amp;&amp;
+            PIXI.EarCut.area(p.prev, p, p.next) >= 0) return false;
+        p = p.prevZ;
+    }
+
+    return true;
+}
+
+// go through all polygon nodes and cure small local self-intersections
+
+PIXI.EarCut.cureLocalIntersections = function (start, triangles, dim) {
+    var p = start;
+    do {
+        var a = p.prev,
+            b = p.next.next;
+
+        // a self-intersection where edge (v[i-1],v[i]) intersects (v[i+1],v[i+2])
+        if (PIXI.EarCut.intersects(a, p, p.next, b) &amp;&amp; PIXI.EarCut.locallyInside(a, b) &amp;&amp; PIXI.EarCut.locallyInside(b, a)) {
+
+            triangles.push(a.i / dim);
+            triangles.push(p.i / dim);
+            triangles.push(b.i / dim);
+
+            // remove two nodes involved
+            PIXI.EarCut.removeNode(p);
+            PIXI.EarCut.removeNode(p.next);
+
+            p = start = b;
+        }
+        p = p.next;
+    } while (p !== start);
+
+    return p;
+}
+
+// try splitting polygon into two and triangulate them independently
+
+PIXI.EarCut.splitEarcut = function (start, triangles, dim, minX, minY, size) {
+    // look for a valid diagonal that divides the polygon into two
+    var a = start;
+    do {
+        var b = a.next.next;
+        while (b !== a.prev) {
+            if (a.i !== b.i &amp;&amp; PIXI.EarCut.isValidDiagonal(a, b)) {
+                // split the polygon in two by the diagonal
+                var c = PIXI.EarCut.splitPolygon(a, b);
+
+                // filter colinear points around the cuts
+                a = PIXI.EarCut.filterPoints(a, a.next);
+                c = PIXI.EarCut.filterPoints(c, c.next);
+
+                // run earcut on each half
+                PIXI.EarCut.earcutLinked(a, triangles, dim, minX, minY, size);
+                PIXI.EarCut.earcutLinked(c, triangles, dim, minX, minY, size);
+                return;
+            }
+            b = b.next;
+        }
+        a = a.next;
+    } while (a !== start);
+}
+
+// link every hole into the outer loop, producing a single-ring polygon without holes
+
+PIXI.EarCut.eliminateHoles = function (data, holeIndices, outerNode, dim) {
+    var queue = [],
+        i, len, start, end, list;
+
+    for (i = 0, len = holeIndices.length; i &lt; len; i++) {
+        start = holeIndices[i] * dim;
+        end = i &lt; len - 1 ? holeIndices[i + 1] * dim : data.length;
+        list = PIXI.EarCut.linkedList(data, start, end, dim, false);
+        if (list === list.next) list.steiner = true;
+        queue.push(PIXI.EarCut.getLeftmost(list));
+    }
+
+    queue.sort(compareX);
+
+    // process holes from left to right
+    for (i = 0; i &lt; queue.length; i++) {
+        PIXI.EarCut.eliminateHole(queue[i], outerNode);
+        outerNode = PIXI.EarCut.filterPoints(outerNode, outerNode.next);
+    }
+
+    return outerNode;
+}
+
+PIXI.EarCut.compareX = function (a, b) {
+    return a.x - b.x;
+}
+
+// find a bridge between vertices that connects hole with an outer ring and and link it
+
+PIXI.EarCut.eliminateHole = function (hole, outerNode) {
+    outerNode = PIXI.EarCut.findHoleBridge(hole, outerNode);
+    if (outerNode) {
+        var b = PIXI.EarCut.splitPolygon(outerNode, hole);
+        PIXI.EarCut.filterPoints(b, b.next);
+    }
+}
+
+// David Eberly's algorithm for finding a bridge between hole and outer polygon
+
+PIXI.EarCut.findHoleBridge = function (hole, outerNode) {
+    var p = outerNode,
+        hx = hole.x,
+        hy = hole.y,
+        qx = -Infinity,
+        m;
+
+    // find a segment intersected by a ray from the hole's leftmost point to the left;
+    // segment's endpoint with lesser x will be potential connection point
+    do {
+        if (hy &lt;= p.y &amp;&amp; hy >= p.next.y) {
+            var x = p.x + (hy - p.y) * (p.next.x - p.x) / (p.next.y - p.y);
+            if (x &lt;= hx &amp;&amp; x > qx) {
+                qx = x;
+                m = p.x &lt; p.next.x ? p : p.next;
+            }
+        }
+        p = p.next;
+    } while (p !== outerNode);
+
+    if (!m) return null;
+
+    if (hole.x === m.x) return m.prev; // hole touches outer segment; pick lower endpoint
+
+    // look for points inside the triangle of hole point, segment intersection and endpoint;
+    // if there are no points found, we have a valid connection;
+    // otherwise choose the point of the minimum angle with the ray as connection point
+
+    var stop = m,
+        tanMin = Infinity,
+        tan;
+
+    p = m.next;
+
+    while (p !== stop) {
+        if (hx >= p.x &amp;&amp; p.x >= m.x &amp;&amp;
+            PIXI.EarCut.pointInTriangle(hy &lt; m.y ? hx : qx, hy, m.x, m.y, hy &lt; m.y ? qx : hx, hy, p.x, p.y)) {
+
+            tan = Math.abs(hy - p.y) / (hx - p.x); // tangential
+
+            if ((tan &lt; tanMin || (tan === tanMin &amp;&amp; p.x > m.x)) &amp;&amp; PIXI.EarCut.locallyInside(p, hole)) {
+                m = p;
+                tanMin = tan;
+            }
+        }
+
+        p = p.next;
+    }
+
+    return m;
+}
+
+// interlink polygon nodes in z-order
+
+PIXI.EarCut.indexCurve = function (start, minX, minY, size) {
+    var p = start;
+    do {
+        if (p.z === null) p.z = PIXI.EarCut.zOrder(p.x, p.y, minX, minY, size);
+        p.prevZ = p.prev;
+        p.nextZ = p.next;
+        p = p.next;
+    } while (p !== start);
+
+    p.prevZ.nextZ = null;
+    p.prevZ = null;
+
+    PIXI.EarCut.sortLinked(p);
+}
+
+// Simon Tatham's linked list merge sort algorithm
+// http://www.chiark.greenend.org.uk/~sgtatham/algorithms/listsort.html
+
+PIXI.EarCut.sortLinked = function (list) {
+    var i, p, q, e, tail, numMerges, pSize, qSize,
+        inSize = 1;
+
+    do {
+        p = list;
+        list = null;
+        tail = null;
+        numMerges = 0;
+
+        while (p) {
+            numMerges++;
+            q = p;
+            pSize = 0;
+            for (i = 0; i &lt; inSize; i++) {
+                pSize++;
+                q = q.nextZ;
+                if (!q) break;
+            }
+
+            qSize = inSize;
+
+            while (pSize > 0 || (qSize > 0 &amp;&amp; q)) {
+
+                if (pSize === 0) {
+                    e = q;
+                    q = q.nextZ;
+                    qSize--;
+                } else if (qSize === 0 || !q) {
+                    e = p;
+                    p = p.nextZ;
+                    pSize--;
+                } else if (p.z &lt;= q.z) {
+                    e = p;
+                    p = p.nextZ;
+                    pSize--;
+                } else {
+                    e = q;
+                    q = q.nextZ;
+                    qSize--;
+                }
+
+                if (tail) tail.nextZ = e;
+                else list = e;
+
+                e.prevZ = tail;
+                tail = e;
+            }
+
+            p = q;
+        }
+
+        tail.nextZ = null;
+        inSize *= 2;
+
+    } while (numMerges > 1);
+
+    return list;
+}
+
+// z-order of a point given coords and size of the data bounding box
+
+PIXI.EarCut.zOrder = function (x, y, minX, minY, size) {
+    // coords are transformed into non-negative 15-bit integer range
+    x = 32767 * (x - minX) / size;
+    y = 32767 * (y - minY) / size;
+
+    x = (x | (x &lt;&lt; 8)) &amp; 0x00FF00FF;
+    x = (x | (x &lt;&lt; 4)) &amp; 0x0F0F0F0F;
+    x = (x | (x &lt;&lt; 2)) &amp; 0x33333333;
+    x = (x | (x &lt;&lt; 1)) &amp; 0x55555555;
+
+    y = (y | (y &lt;&lt; 8)) &amp; 0x00FF00FF;
+    y = (y | (y &lt;&lt; 4)) &amp; 0x0F0F0F0F;
+    y = (y | (y &lt;&lt; 2)) &amp; 0x33333333;
+    y = (y | (y &lt;&lt; 1)) &amp; 0x55555555;
+
+    return x | (y &lt;&lt; 1);
+}
+
+// find the leftmost node of a polygon ring
+
+PIXI.EarCut.getLeftmost = function (start) {
+    var p = start,
+        leftmost = start;
+    do {
+        if (p.x &lt; leftmost.x) leftmost = p;
+        p = p.next;
+    } while (p !== start);
+
+    return leftmost;
+}
+
+// check if a point lies within a convex triangle
+
+PIXI.EarCut.pointInTriangle = function (ax, ay, bx, by, cx, cy, px, py) {
+    return (cx - px) * (ay - py) - (ax - px) * (cy - py) >= 0 &amp;&amp;
+        (ax - px) * (by - py) - (bx - px) * (ay - py) >= 0 &amp;&amp;
+        (bx - px) * (cy - py) - (cx - px) * (by - py) >= 0;
+}
+
+// check if a diagonal between two polygon nodes is valid (lies in polygon interior)
+
+PIXI.EarCut.isValidDiagonal = function (a, b) {
+    return PIXI.EarCut.equals(a, b) || a.next.i !== b.i &amp;&amp; a.prev.i !== b.i &amp;&amp; !PIXI.EarCut.intersectsPolygon(a, b) &amp;&amp;
+        PIXI.EarCut.locallyInside(a, b) &amp;&amp; PIXI.EarCut.locallyInside(b, a) &amp;&amp; PIXI.EarCut.middleInside(a, b);
+}
+
+// signed area of a triangle
+
+PIXI.EarCut.area = function (p, q, r) {
+    return (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
+}
+
+// check if two points are equal
+
+PIXI.EarCut.equals = function (p1, p2) {
+    return p1.x === p2.x &amp;&amp; p1.y === p2.y;
+}
+
+// check if two segments intersect
+
+PIXI.EarCut.intersects = function (p1, q1, p2, q2) {
+    return PIXI.EarCut.area(p1, q1, p2) > 0 !== PIXI.EarCut.area(p1, q1, q2) > 0 &amp;&amp;
+        PIXI.EarCut.area(p2, q2, p1) > 0 !== PIXI.EarCut.area(p2, q2, q1) > 0;
+}
+
+// check if a polygon diagonal intersects any polygon segments
+
+PIXI.EarCut.intersectsPolygon = function (a, b) {
+    var p = a;
+    do {
+        if (p.i !== a.i &amp;&amp; p.next.i !== a.i &amp;&amp; p.i !== b.i &amp;&amp; p.next.i !== b.i &amp;&amp;
+            PIXI.EarCut.intersects(p, p.next, a, b)) return true;
+        p = p.next;
+    } while (p !== a);
+
+    return false;
+}
+
+// check if a polygon diagonal is locally inside the polygon
+
+PIXI.EarCut.locallyInside = function (a, b) {
+    return PIXI.EarCut.area(a.prev, a, a.next) &lt; 0 ?
+        PIXI.EarCut.area(a, b, a.next) >= 0 &amp;&amp; PIXI.EarCut.area(a, a.prev, b) >= 0 :
+        PIXI.EarCut.area(a, b, a.prev) &lt; 0 || PIXI.EarCut.area(a, a.next, b) &lt; 0;
+}
+
+// check if the middle point of a polygon diagonal is inside the polygon
+
+PIXI.EarCut.middleInside = function (a, b) {
+    var p = a,
+        inside = false,
+        px = (a.x + b.x) / 2,
+        py = (a.y + b.y) / 2;
+    do {
+        if (((p.y > py) !== (p.next.y > py)) &amp;&amp; (px &lt; (p.next.x - p.x) * (py - p.y) / (p.next.y - p.y) + p.x))
+            inside = !inside;
+        p = p.next;
+    } while (p !== a);
+
+    return inside;
+}
+
+// link two polygon vertices with a bridge; if the vertices belong to the same ring, it splits polygon into two;
+// if one belongs to the outer ring and another to a hole, it merges it into a single ring
+
+PIXI.EarCut.splitPolygon = function (a, b) {
+    var a2 = new PIXI.EarCut.Node(a.i, a.x, a.y),
+        b2 = new PIXI.EarCut.Node(b.i, b.x, b.y),
+        an = a.next,
+        bp = b.prev;
+
+    a.next = b;
+    b.prev = a;
+
+    a2.next = an;
+    an.prev = a2;
+
+    b2.next = a2;
+    a2.prev = b2;
+
+    bp.next = b2;
+    b2.prev = bp;
+
+    return b2;
+}
+
+// create a node and optionally link it with previous one (in a circular doubly linked list)
+
+PIXI.EarCut.insertNode = function (i, x, y, last) {
+    var p = new PIXI.EarCut.Node(i, x, y);
+
+    if (!last) {
+        p.prev = p;
+        p.next = p;
+
+    } else {
+        p.next = last.next;
+        p.prev = last;
+        last.next.prev = p;
+        last.next = p;
+    }
+    return p;
+}
+
+PIXI.EarCut.removeNode = function (p) {
+    p.next.prev = p.prev;
+    p.prev.next = p.next;
+
+    if (p.prevZ) p.prevZ.nextZ = p.nextZ;
+    if (p.nextZ) p.nextZ.prevZ = p.prevZ;
+}
+
+PIXI.EarCut.Node = function (i, x, y) {
+    // vertice index in coordinates array
+    this.i = i;
+
+    // vertex coordinates
+    this.x = x;
+    this.y = y;
+
+    // previous and next vertice nodes in a polygon ring
+    this.prev = null;
+    this.next = null;
+
+    // z-order curve value
+    this.z = null;
+
+    // previous and next nodes in z-order
+    this.prevZ = null;
+    this.nextZ = null;
+
+    // indicates whether this is a steiner point
+    this.steiner = false;
+}
 </pre>
         </article>
     </section>
