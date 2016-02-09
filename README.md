@@ -374,7 +374,6 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * Both `transparent` and `antialias` were ignored if set to `false` in a Game configuration object, as the `parseConfig` method didn't check for falsey values (thanks @amadeus #2302)
 * GameObject.revive used to add the health amount given to the Game Object (via `heal`) instead of setting it as the new health amount. It now calls `setHealth` instead, giving it the exact amount (thanks @netgfx #2231)
 * Group.add and Group.addAt would forget to remove the child from the hash of its previous Group if it had a physics body enabled, causing unbounded hash increase (thanks @strawlion @McIntozh #2232)
-* On Retina and High DPI displays (such as a Macbook) going in to Full Screen was showing at double the scale (thanks @nickryall #1993)
 
 ### Pixi Updates
 
