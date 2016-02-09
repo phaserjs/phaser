@@ -294,9 +294,9 @@ Phaser.Group.prototype.add = function (child, silent) {
             child.parent.removeFromHash(child);
         }
 
-        this.addChild(child);
-
         child.z = this.children.length;
+
+        this.addChild(child);
 
         if (this.enableBody && child.body === null)
         {
@@ -496,9 +496,9 @@ Phaser.Group.prototype.create = function (x, y, key, frame, exists) {
     child.visible = exists;
     child.alive = exists;
 
-    this.addChild(child);
-
     child.z = this.children.length;
+
+    this.addChild(child);
 
     if (this.enableBody)
     {

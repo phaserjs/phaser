@@ -312,6 +312,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * Text.useAdvancedWrap allows you to swap between the Basic and the Advanced word wrapping functions. In Advanced it will wrap long-words and condense and trim excess white space (thanks @soldoutactivist #1811)
 * The Grunt script has been updated to enhance the intro / outro and Pixi defaults. Pixi has been split into intro / outro and main blocks, so you can exclude its intro cleanly. The excludes are now bound, so if you exclude the Phaser UMD it will do the same for Pixi as well (thanks @spayton #2192)
 * ArcadePhysics.worldAngleToPointer will get the angle (in radians) between a display object and the pointer, taking all parent rotations into account (thanks @mattrick16 #2171)
+* There is new documentation on building Phaser for Webpack and a new custom build grunt option (thanks @deiga #2331)
 
 ### Updates
 
@@ -343,6 +344,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * InputHandler.consumePointerEvent has been removed, as it was never used internally anyway, so was misleading (thanks @GregoryAveryWeir #2227)
 * Events.onDragUpdate has a new 6th property `fromStart` which is a boolean. You can determine if the event was the result of the start of a drag movement or not by polling it (#2155)
 * SinglePad.onDownCallback has been moved to the end of the method, so that DeviceButton.start is now called before the callback fires, meaning if you check the status of the button in the onDownCallback it will now be fully activated (thanks @suicidepills #2159)
+* The `z` property assigned to children of a Group now starts from zero instead of 1, this is an internal change mostly but if you relied on the `z` property for some reason then please be aware of this (thanks pantoninho)
 
 ### Bug Fixes
 
