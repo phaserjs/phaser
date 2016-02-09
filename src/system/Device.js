@@ -311,6 +311,12 @@ Phaser.Device = function () {
     this.tridentVersion = 0;
 
     /**
+    * @property {boolean} edge - Set to true if running in Microsoft Edge browser.
+    * @default
+    */
+    this.edge = false;
+
+    /**
     * @property {boolean} mobileSafari - Set to true if running in Mobile Safari.
     * @default
     */
@@ -333,6 +339,12 @@ Phaser.Device = function () {
     * @default
     */
     this.safari = false;
+
+    /**
+    * @property {number} safariVersion - If running in Safari this will contain the major version number.
+    * @default
+    */
+    this.safariVersion = 0;
 
     /**
     * @property {boolean} webApp - Set to true if running as a WebApp, i.e. within a WebView
@@ -396,6 +408,12 @@ Phaser.Device = function () {
     * @default
     */
     this.webm = false;
+
+    /**
+    * @property {boolean} dolby - Can this device play EC-3 Dolby Digital Plus files?
+    * @default
+    */
+    this.dolby = false;
 
     //  Video
 
@@ -896,9 +914,14 @@ Phaser.Device._initialize = function () {
         {
             device.opera = true;
         }
-        else if (/Safari/.test(ua) && !device.windowsPhone)
+        else if (/Safari\/(\d+)/.test(ua) && !device.windowsPhone)
         {
             device.safari = true;
+
+            if (/Version\/(\d+)\./.test(ua))
+            {
+                device.safariVersion = parseInt(RegExp.$1, 10);
+            }
         }
         else if (/Trident\/(\d+\.\d+)(.*)rv:(\d+\.\d+)/.test(ua))
         {
@@ -906,6 +929,10 @@ Phaser.Device._initialize = function () {
             device.trident = true;
             device.tridentVersion = parseInt(RegExp.$1, 10);
             device.ieVersion = parseInt(RegExp.$3, 10);
+        }
+        else if (/Edge\/\d+/.test(ua))
+        {
+            device.edge = true;
         }
 
         //  Silk gets its own if clause because its ua also contains 'Safari'
@@ -1051,6 +1078,29 @@ Phaser.Device._initialize = function () {
                 {
                     device.webm = true;
                 }
+
+                if (audioElement.canPlayType('audio/mp4;codecs="ec-3"') !== '')
+                {
+                    if (device.edge)
+                    {
+                        device.dolby = true;
+                    }
+                    else if (device.safari && device.safariVersion >= 9)
+                    {
+                        var ua = navigator.userAgent;
+
+                        if (/Mac OS X (\d+)_(\d+)/.test(navigator.userAgent))
+                        {
+                            var major = parseInt(RegExp.$1, 10);
+                            var minor = parseInt(RegExp.$2, 10);
+
+                            if ((major === 10 && minor >= 11) || major > 10)
+                            {
+                                device.dolby = true;
+                            }
+                        }
+                    }
+                }
             }
         } catch (e) {
         }
@@ -1188,9 +1238,9 @@ Phaser.Device._initialize = function () {
 
     //  Run the checks
     _checkOS();
+    _checkBrowser();
     _checkAudio();
     _checkVideo();
-    _checkBrowser();
     _checkCSS3D();
     _checkDevice();
     _checkFeatures();
@@ -1230,6 +1280,10 @@ Phaser.Device.canPlayAudio = function (type) {
         return true;
     }
     else if (type === 'webm' && this.webm)
+    {
+        return true;
+    }
+    else if (type === 'mp4' && this.dolby)
     {
         return true;
     }

@@ -313,6 +313,10 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * The Grunt script has been updated to enhance the intro / outro and Pixi defaults. Pixi has been split into intro / outro and main blocks, so you can exclude its intro cleanly. The excludes are now bound, so if you exclude the Phaser UMD it will do the same for Pixi as well (thanks @spayton #2192)
 * ArcadePhysics.worldAngleToPointer will get the angle (in radians) between a display object and the pointer, taking all parent rotations into account (thanks @mattrick16 #2171)
 * There is new documentation on building Phaser for Webpack and a new custom build grunt option (thanks @deiga #2331)
+* Device.safariVersion now holds the major version of the Safari browser.
+* Device.edge is a boolean that is set if running under the Microsoft Edge browser.
+* Device.dolby is a boolean that is set if the browser can play EC-3 Dolby Digital Plus files
+* The Loader and SoundManager can now play Dolby Digital Plus files on supported devices.
 
 ### Updates
 
