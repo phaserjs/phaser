@@ -1367,8 +1367,8 @@ Phaser.ScaleManager.prototype = {
             }
             else if (scaleMode === Phaser.ScaleManager.NO_SCALE)
             {
-                this.width = this.game.width / this.game.device.pixelRatio;
-                this.height = this.game.height / this.game.device.pixelRatio;
+                this.width = this.game.width;
+                this.height = this.game.height;
             }
             else if (scaleMode === Phaser.ScaleManager.USER_SCALE)
             {
