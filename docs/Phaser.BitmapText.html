@@ -709,6 +709,10 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="PIXI.EarCut.html">EarCut</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="PIXI.Event.html">Event</a>
 						</li>
 						
@@ -888,6 +892,10 @@
 						
 						<li class="class-depth-0">
 							<a href="global.html#NONE">NONE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#PENDING_ATLAS">PENDING_ATLAS</a>
 						</li>
 						
 						<li class="class-depth-0">
@@ -1567,7 +1575,7 @@ converting a valid XML file through the popular X2JS library. An online tool for
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="src_gameobjects_BitmapText.js.html#sunlight-1-line-470">line 470</a>
+    <a href="src_gameobjects_BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="src_gameobjects_BitmapText.js.html#sunlight-1-line-530">line 530</a>
     </dt>
     
 
@@ -3008,7 +3016,7 @@ regardless where in the world the camera is.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="src_gameobjects_BitmapText.js.html#sunlight-1-line-514">line 514</a>
+    <a href="src_gameobjects_BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="src_gameobjects_BitmapText.js.html#sunlight-1-line-574">line 574</a>
     </dt>
     
 
@@ -3064,7 +3072,7 @@ regardless where in the world the camera is.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="src_gameobjects_BitmapText.js.html#sunlight-1-line-537">line 537</a>
+    <a href="src_gameobjects_BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="src_gameobjects_BitmapText.js.html#sunlight-1-line-597">line 597</a>
     </dt>
     
 
@@ -3930,7 +3938,7 @@ based on the last whitespace character found in the line.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="src_gameobjects_BitmapText.js.html#sunlight-1-line-583">line 583</a>
+    <a href="src_gameobjects_BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="src_gameobjects_BitmapText.js.html#sunlight-1-line-643">line 643</a>
     </dt>
     
 
@@ -4969,7 +4977,7 @@ This is the same as <code>x + width - offsetX</code>.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="src_gameobjects_BitmapText.js.html#sunlight-1-line-616">line 616</a>
+    <a href="src_gameobjects_BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="src_gameobjects_BitmapText.js.html#sunlight-1-line-676">line 676</a>
     </dt>
     
 
@@ -5086,7 +5094,7 @@ This is the same as <code>x + width - offsetX</code>.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="src_gameobjects_BitmapText.js.html#sunlight-1-line-561">line 561</a>
+    <a href="src_gameobjects_BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="src_gameobjects_BitmapText.js.html#sunlight-1-line-621">line 621</a>
     </dt>
     
 
@@ -5254,7 +5262,7 @@ This is the same as <code>x + width - offsetX</code>.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="src_gameobjects_BitmapText.js.html#sunlight-1-line-492">line 492</a>
+    <a href="src_gameobjects_BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="src_gameobjects_BitmapText.js.html#sunlight-1-line-552">line 552</a>
     </dt>
     
 
@@ -6387,6 +6395,202 @@ If you wish to re-order the layering of a Game Object then see methods like Grou
             
 <dt>
     <h4 class="name "
+        id="cleanText"><span class="type-signature"></span>cleanText<span class="signature">(text, <span class="optional">replace</span>)</span><span class="type-signature"> &rarr; {string}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Given a text string this will scan each character in the string to ensure it exists
+in the BitmapText font data. If it doesn't the character is removed, or replaced with the <code>replace</code> argument.</p>
+<p>If no font data has been loaded at all this returns an empty string, as nothing can be rendered.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+		<th>Default</th>
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>text</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The text to parse.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>replace</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    ''
+                
+                </td>
+            
+
+            <td class="description last"><p>The replacement string for any missing characters.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+
+    
+    <h5>Returns:</h5>
+    <div class="returns">
+        
+            
+    
+        <div class="returns-type">
+        
+<span class="param-type">string</span>
+
+ -
+        </div>
+    
+    <div class="returns-desc param-desc">
+        <p>The cleaned text string.</p>
+    </div>
+
+
+        
+    </div>
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_gameobjects_BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="src_gameobjects_BitmapText.js.html#sunlight-1-line-307">line 307</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+       
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
         id="destroy"><span class="type-signature"></span>destroy<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
@@ -7462,7 +7666,7 @@ by calling this method.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="src_gameobjects_BitmapText.js.html#sunlight-1-line-412">line 412</a>
+    <a href="src_gameobjects_BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="src_gameobjects_BitmapText.js.html#sunlight-1-line-472">line 472</a>
     </dt>
     
 
@@ -8313,7 +8517,7 @@ by calling this method.</p>
             
                 <td class="default">
                 
-                    1
+                    100
                 
                 </td>
             
@@ -9446,7 +9650,7 @@ Remember if this Game Object has any children you should call update on those to
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
-		on Thu Oct 15 2015 12:04:57 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Mon Feb 08 2016 17:00:51 GMT+0000 (GMT Standard Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

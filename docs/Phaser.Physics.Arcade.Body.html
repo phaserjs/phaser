@@ -709,6 +709,10 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="PIXI.EarCut.html">EarCut</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="PIXI.Event.html">Event</a>
 						</li>
 						
@@ -888,6 +892,10 @@
 						
 						<li class="class-depth-0">
 							<a href="global.html#NONE">NONE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#PENDING_ATLAS">PENDING_ATLAS</a>
 						</li>
 						
 						<li class="class-depth-0">
@@ -1742,7 +1750,7 @@ For example if blocked.up is true then the Body cannot move up. An object contai
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_arcade_Body.js.html">physics/arcade/Body.js</a>, <a href="src_physics_arcade_Body.js.html#sunlight-1-line-771">line 771</a>
+    <a href="src_physics_arcade_Body.js.html">physics/arcade/Body.js</a>, <a href="src_physics_arcade_Body.js.html#sunlight-1-line-781">line 781</a>
     </dt>
     
 
@@ -3495,7 +3503,7 @@ If you want the physics system to move the body around, then set moves to true. 
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_arcade_Body.js.html">physics/arcade/Body.js</a>, <a href="src_physics_arcade_Body.js.html#sunlight-1-line-784">line 784</a>
+    <a href="src_physics_arcade_Body.js.html">physics/arcade/Body.js</a>, <a href="src_physics_arcade_Body.js.html#sunlight-1-line-794">line 794</a>
     </dt>
     
 
@@ -4285,7 +4293,7 @@ touching.up = true means the collision happened to the top of this Body for exam
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_arcade_Body.js.html">physics/arcade/Body.js</a>, <a href="src_physics_arcade_Body.js.html#sunlight-1-line-797">line 797</a>
+    <a href="src_physics_arcade_Body.js.html">physics/arcade/Body.js</a>, <a href="src_physics_arcade_Body.js.html#sunlight-1-line-807">line 807</a>
     </dt>
     
 
@@ -4341,7 +4349,7 @@ touching.up = true means the collision happened to the top of this Body for exam
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_arcade_Body.js.html">physics/arcade/Body.js</a>, <a href="src_physics_arcade_Body.js.html#sunlight-1-line-814">line 814</a>
+    <a href="src_physics_arcade_Body.js.html">physics/arcade/Body.js</a>, <a href="src_physics_arcade_Body.js.html#sunlight-1-line-824">line 824</a>
     </dt>
     
 
@@ -4506,7 +4514,7 @@ touching.up = true means the collision happened to the top of this Body for exam
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_arcade_Body.js.html">physics/arcade/Body.js</a>, <a href="src_physics_arcade_Body.js.html#sunlight-1-line-719">line 719</a>
+    <a href="src_physics_arcade_Body.js.html">physics/arcade/Body.js</a>, <a href="src_physics_arcade_Body.js.html#sunlight-1-line-729">line 729</a>
     </dt>
     
 
@@ -4596,7 +4604,7 @@ touching.up = true means the collision happened to the top of this Body for exam
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_arcade_Body.js.html">physics/arcade/Body.js</a>, <a href="src_physics_arcade_Body.js.html#sunlight-1-line-729">line 729</a>
+    <a href="src_physics_arcade_Body.js.html">physics/arcade/Body.js</a>, <a href="src_physics_arcade_Body.js.html#sunlight-1-line-739">line 739</a>
     </dt>
     
 
@@ -4686,7 +4694,7 @@ touching.up = true means the collision happened to the top of this Body for exam
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_arcade_Body.js.html">physics/arcade/Body.js</a>, <a href="src_physics_arcade_Body.js.html#sunlight-1-line-739">line 739</a>
+    <a href="src_physics_arcade_Body.js.html">physics/arcade/Body.js</a>, <a href="src_physics_arcade_Body.js.html#sunlight-1-line-749">line 749</a>
     </dt>
     
 
@@ -4776,7 +4784,7 @@ touching.up = true means the collision happened to the top of this Body for exam
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_arcade_Body.js.html">physics/arcade/Body.js</a>, <a href="src_physics_arcade_Body.js.html#sunlight-1-line-749">line 749</a>
+    <a href="src_physics_arcade_Body.js.html">physics/arcade/Body.js</a>, <a href="src_physics_arcade_Body.js.html#sunlight-1-line-759">line 759</a>
     </dt>
     
 
@@ -4866,7 +4874,7 @@ touching.up = true means the collision happened to the top of this Body for exam
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_arcade_Body.js.html">physics/arcade/Body.js</a>, <a href="src_physics_arcade_Body.js.html#sunlight-1-line-759">line 759</a>
+    <a href="src_physics_arcade_Body.js.html">physics/arcade/Body.js</a>, <a href="src_physics_arcade_Body.js.html#sunlight-1-line-769">line 769</a>
     </dt>
     
 
@@ -5215,6 +5223,96 @@ touching.up = true means the collision happened to the top of this Body for exam
             
 <dt>
     <h4 class="name "
+        id="onTop"><span class="type-signature"></span>onTop<span class="signature">()</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Returns true if the top of this Body is in contact with either the world bounds or a tile.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+
+    
+    <h5>Returns:</h5>
+    <div class="returns">
+        
+            
+    
+        <div class="returns-type">
+        
+<span class="param-type">boolean</span>
+
+ -
+        </div>
+    
+    <div class="returns-desc param-desc">
+        <p>True if in contact with either the world bounds or a tile.</p>
+    </div>
+
+
+        
+    </div>
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_physics_arcade_Body.js.html">physics/arcade/Body.js</a>, <a href="src_physics_arcade_Body.js.html#sunlight-1-line-709">line 709</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+       
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
         id="onWall"><span class="type-signature"></span>onWall<span class="signature">()</span><span class="type-signature"> &rarr; {boolean}</span></h4>
     
     
@@ -5278,7 +5376,7 @@ touching.up = true means the collision happened to the top of this Body for exam
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_arcade_Body.js.html">physics/arcade/Body.js</a>, <a href="src_physics_arcade_Body.js.html#sunlight-1-line-709">line 709</a>
+    <a href="src_physics_arcade_Body.js.html">physics/arcade/Body.js</a>, <a href="src_physics_arcade_Body.js.html#sunlight-1-line-719">line 719</a>
     </dt>
     
 
@@ -5680,7 +5778,7 @@ touching.up = true means the collision happened to the top of this Body for exam
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_arcade_Body.js.html">physics/arcade/Body.js</a>, <a href="src_physics_arcade_Body.js.html#sunlight-1-line-832">line 832</a>
+    <a href="src_physics_arcade_Body.js.html">physics/arcade/Body.js</a>, <a href="src_physics_arcade_Body.js.html#sunlight-1-line-842">line 842</a>
     </dt>
     
 
@@ -5924,7 +6022,7 @@ touching.up = true means the collision happened to the top of this Body for exam
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_arcade_Body.js.html">physics/arcade/Body.js</a>, <a href="src_physics_arcade_Body.js.html#sunlight-1-line-860">line 860</a>
+    <a href="src_physics_arcade_Body.js.html">physics/arcade/Body.js</a>, <a href="src_physics_arcade_Body.js.html#sunlight-1-line-870">line 870</a>
     </dt>
     
 
@@ -6420,7 +6518,7 @@ is the position of the Body relative to the top-left of the Sprite.</p>
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
-		on Thu Oct 15 2015 12:05:03 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Mon Feb 08 2016 17:00:55 GMT+0000 (GMT Standard Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

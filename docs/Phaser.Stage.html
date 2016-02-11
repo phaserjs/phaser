@@ -709,6 +709,10 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="PIXI.EarCut.html">EarCut</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="PIXI.Event.html">Event</a>
 						</li>
 						
@@ -888,6 +892,10 @@
 						
 						<li class="class-depth-0">
 							<a href="global.html#NONE">NONE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#PENDING_ATLAS">PENDING_ATLAS</a>
 						</li>
 						
 						<li class="class-depth-0">
@@ -1367,7 +1375,7 @@ It also handles browser visibility handling and the pausing due to loss of focus
 
     
     <dt class="tag-source">Source -
-    <a href="src_core_Stage.js.html">core/Stage.js</a>, <a href="src_core_Stage.js.html#sunlight-1-line-369">line 369</a>
+    <a href="src_core_Stage.js.html">core/Stage.js</a>, <a href="src_core_Stage.js.html#sunlight-1-line-374">line 374</a>
     </dt>
     
 
@@ -1557,7 +1565,7 @@ To remove simply set this property to 'null'</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_core_Stage.js.html">core/Stage.js</a>, <a href="src_core_Stage.js.html#sunlight-1-line-60">line 60</a>
+    <a href="src_core_Stage.js.html">core/Stage.js</a>, <a href="src_core_Stage.js.html#sunlight-1-line-65">line 65</a>
     </dt>
     
 
@@ -1585,7 +1593,11 @@ To remove simply set this property to 'null'</p>
 
     
     <div class="description">
-        <p>By default if the browser tab loses focus the game will pause. You can stop that behaviour by setting this property to true.</p>
+        <p>By default if the browser tab loses focus the game will pause.
+You can stop that behavior by setting this property to true.
+Note that the browser can still elect to pause your game if it wishes to do so,
+for example swapping to another browser tab. This will cause the RAF callback to halt,
+effectively pausing your game, even though no in-game pause event is triggered if you enable this property.</p>
     </div>
     
     
@@ -1613,7 +1625,7 @@ To remove simply set this property to 'null'</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_core_Stage.js.html">core/Stage.js</a>, <a href="src_core_Stage.js.html#sunlight-1-line-35">line 35</a>
+    <a href="src_core_Stage.js.html">core/Stage.js</a>, <a href="src_core_Stage.js.html#sunlight-1-line-40">line 40</a>
     </dt>
     
 
@@ -1672,7 +1684,7 @@ To remove simply set this property to 'null'</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_core_Stage.js.html">core/Stage.js</a>, <a href="src_core_Stage.js.html#sunlight-1-line-41">line 41</a>
+    <a href="src_core_Stage.js.html">core/Stage.js</a>, <a href="src_core_Stage.js.html#sunlight-1-line-46">line 46</a>
     </dt>
     
 
@@ -2551,7 +2563,7 @@ To remove a mask, set this property to null.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_core_Stage.js.html">core/Stage.js</a>, <a href="src_core_Stage.js.html#sunlight-1-line-389">line 389</a>
+    <a href="src_core_Stage.js.html">core/Stage.js</a>, <a href="src_core_Stage.js.html#sunlight-1-line-394">line 394</a>
     </dt>
     
 
@@ -3483,7 +3495,7 @@ Also listens for window.onblur and window.onfocus.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_core_Stage.js.html">core/Stage.js</a>, <a href="src_core_Stage.js.html#sunlight-1-line-224">line 224</a>
+    <a href="src_core_Stage.js.html">core/Stage.js</a>, <a href="src_core_Stage.js.html#sunlight-1-line-229">line 229</a>
     </dt>
     
 
@@ -3553,7 +3565,7 @@ Also listens for window.onblur and window.onfocus.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_core_Stage.js.html">core/Stage.js</a>, <a href="src_core_Stage.js.html#sunlight-1-line-349">line 349</a>
+    <a href="src_core_Stage.js.html">core/Stage.js</a>, <a href="src_core_Stage.js.html#sunlight-1-line-354">line 354</a>
     </dt>
     
 
@@ -4351,7 +4363,7 @@ This can be quite useful if your displayObject is static / complicated and needs
 
     
     <dt class="tag-source">Source -
-    <a href="src_core_Stage.js.html">core/Stage.js</a>, <a href="src_core_Stage.js.html#sunlight-1-line-96">line 96</a>
+    <a href="src_core_Stage.js.html">core/Stage.js</a>, <a href="src_core_Stage.js.html#sunlight-1-line-101">line 101</a>
     </dt>
     
 
@@ -4424,7 +4436,7 @@ The only exception to this is if the camera is following an object, in which cas
 
     
     <dt class="tag-source">Source -
-    <a href="src_core_Stage.js.html">core/Stage.js</a>, <a href="src_core_Stage.js.html#sunlight-1-line-167">line 167</a>
+    <a href="src_core_Stage.js.html">core/Stage.js</a>, <a href="src_core_Stage.js.html#sunlight-1-line-172">line 172</a>
     </dt>
     
 
@@ -4495,7 +4507,7 @@ Most objects have preUpdate methods and it's where initial movement and position
 
     
     <dt class="tag-source">Source -
-    <a href="src_core_Stage.js.html">core/Stage.js</a>, <a href="src_core_Stage.js.html#sunlight-1-line-133">line 133</a>
+    <a href="src_core_Stage.js.html">core/Stage.js</a>, <a href="src_core_Stage.js.html#sunlight-1-line-138">line 138</a>
     </dt>
     
 
@@ -5130,7 +5142,7 @@ Most objects have preUpdate methods and it's where initial movement and position
 
     
     <dt class="tag-source">Source -
-    <a href="src_core_Stage.js.html">core/Stage.js</a>, <a href="src_core_Stage.js.html#sunlight-1-line-322">line 322</a>
+    <a href="src_core_Stage.js.html">core/Stage.js</a>, <a href="src_core_Stage.js.html#sunlight-1-line-327">line 327</a>
     </dt>
     
 
@@ -5949,7 +5961,7 @@ Most objects have preUpdate methods and it's where initial movement and position
 
     
     <dt class="tag-source">Source -
-    <a href="src_core_Stage.js.html">core/Stage.js</a>, <a href="src_core_Stage.js.html#sunlight-1-line-151">line 151</a>
+    <a href="src_core_Stage.js.html">core/Stage.js</a>, <a href="src_core_Stage.js.html#sunlight-1-line-156">line 156</a>
     </dt>
     
 
@@ -6095,7 +6107,7 @@ This overrides the Pixi default as we don't need the interactionManager, but do 
 
     
     <dt class="tag-source">Source -
-    <a href="src_core_Stage.js.html">core/Stage.js</a>, <a href="src_core_Stage.js.html#sunlight-1-line-207">line 207</a>
+    <a href="src_core_Stage.js.html">core/Stage.js</a>, <a href="src_core_Stage.js.html#sunlight-1-line-212">line 212</a>
     </dt>
     
 
@@ -6214,7 +6226,7 @@ This overrides the Pixi default as we don't need the interactionManager, but do 
 
     
     <dt class="tag-source">Source -
-    <a href="src_core_Stage.js.html">core/Stage.js</a>, <a href="src_core_Stage.js.html#sunlight-1-line-284">line 284</a>
+    <a href="src_core_Stage.js.html">core/Stage.js</a>, <a href="src_core_Stage.js.html#sunlight-1-line-289">line 289</a>
     </dt>
     
 
@@ -6263,7 +6275,7 @@ This overrides the Pixi default as we don't need the interactionManager, but do 
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
-		on Thu Oct 15 2015 12:05:06 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Mon Feb 08 2016 17:00:58 GMT+0000 (GMT Standard Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

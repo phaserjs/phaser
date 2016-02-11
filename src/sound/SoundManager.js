@@ -265,7 +265,7 @@ Phaser.SoundManager.prototype = {
     */
     setTouchLock: function () {
 
-        if (this.noAudio || window['PhaserGlobal'].disableAudio === true)
+        if (this.noAudio || (window['PhaserGlobal'] && window['PhaserGlobal'].disableAudio === true))
         {
             return;
         }

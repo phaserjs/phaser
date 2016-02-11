@@ -709,6 +709,10 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="PIXI.EarCut.html">EarCut</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="PIXI.Event.html">Event</a>
 						</li>
 						
@@ -888,6 +892,10 @@
 						
 						<li class="class-depth-0">
 							<a href="global.html#NONE">NONE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#PENDING_ATLAS">PENDING_ATLAS</a>
 						</li>
 						
 						<li class="class-depth-0">
@@ -3377,7 +3385,7 @@ This value is updated at the end of updateTransform and takes all parent transfo
             
 <dt>
     <h4 class="name "
-        id="arc"><span class="type-signature"></span>arc<span class="signature">(cx, cy, radius, startAngle, endAngle, anticlockwise)</span><span class="type-signature"> &rarr; {<a href="PIXI.Graphics.html">PIXI.Graphics</a>}</span></h4>
+        id="arc"><span class="type-signature"></span>arc<span class="signature">(cx, cy, radius, startAngle, endAngle, anticlockwise, segments)</span><span class="type-signature"> &rarr; {<a href="PIXI.Graphics.html">PIXI.Graphics</a>}</span></h4>
     
     
 </dt>
@@ -3552,6 +3560,29 @@ This value is updated at the end of updateTransform and takes all parent transfo
             
 
             <td class="description last"><p>Optional. Specifies whether the drawing should be counterclockwise or clockwise. False is default, and indicates clockwise, while true indicates counter-clockwise.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>segments</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Optional. The number of segments to use when calculating the arc. The default is 40. If you need more fidelity use a higher number.</p></td>
         </tr>
 
 	
@@ -3767,7 +3798,7 @@ This value is updated at the end of updateTransform and takes all parent transfo
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-474">line 474</a>
+    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-476">line 476</a>
     </dt>
     
 
@@ -4111,7 +4142,7 @@ This value is updated at the end of updateTransform and takes all parent transfo
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-616">line 616</a>
+    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-618">line 618</a>
     </dt>
     
 
@@ -4257,7 +4288,7 @@ Removes all references to transformCallbacks, its parent, the stage, filters, bo
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-1120">line 1120</a>
+    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-1122">line 1122</a>
     </dt>
     
 
@@ -4442,7 +4473,7 @@ Removes all references to transformCallbacks, its parent, the stage, filters, bo
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-548">line 548</a>
+    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-550">line 550</a>
     </dt>
     
 
@@ -4650,7 +4681,7 @@ Removes all references to transformCallbacks, its parent, the stage, filters, bo
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-564">line 564</a>
+    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-566">line 566</a>
     </dt>
     
 
@@ -4792,7 +4823,7 @@ Removes all references to transformCallbacks, its parent, the stage, filters, bo
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-581">line 581</a>
+    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-583">line 583</a>
     </dt>
     
 
@@ -4996,7 +5027,7 @@ Removes all references to transformCallbacks, its parent, the stage, filters, bo
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-517">line 517</a>
+    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-519">line 519</a>
     </dt>
     
 
@@ -5203,7 +5234,7 @@ Removes all references to transformCallbacks, its parent, the stage, filters, bo
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-533">line 533</a>
+    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-535">line 535</a>
     </dt>
     
 
@@ -5354,7 +5385,7 @@ Removes all references to transformCallbacks, its parent, the stage, filters, bo
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-1131">line 1131</a>
+    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-1133">line 1133</a>
     </dt>
     
 
@@ -5444,7 +5475,7 @@ Removes all references to transformCallbacks, its parent, the stage, filters, bo
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-502">line 502</a>
+    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-504">line 504</a>
     </dt>
     
 
@@ -5607,7 +5638,7 @@ This can be quite useful if your geometry is complicated and needs to be reused 
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-634">line 634</a>
+    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-636">line 636</a>
     </dt>
     
 
@@ -5697,7 +5728,7 @@ This can be quite useful if your geometry is complicated and needs to be reused 
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-821">line 821</a>
+    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-823">line 823</a>
     </dt>
     
 
@@ -8278,7 +8309,7 @@ Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-944">line 944</a>
+    <a href="src_pixi_primitives_Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="src_pixi_primitives_Graphics.js.html#sunlight-1-line-946">line 946</a>
     </dt>
     
 
@@ -8327,7 +8358,7 @@ Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
-		on Thu Oct 15 2015 12:05:08 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Mon Feb 08 2016 17:01:00 GMT+0000 (GMT Standard Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

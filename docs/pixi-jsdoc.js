@@ -630,7 +630,7 @@ texture this Sprite was using.
 * @param {} event - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\Sprite.js
-* @sourceline 177
+* @sourceline 179
 */
 /**
 * @description Returns the bounds of the Sprite as a rectangle. The bounds calculation takes the worldTransform into account.
@@ -638,7 +638,7 @@ texture this Sprite was using.
 * @param {Matrix} matrix - the transformation matrix of the sprite
 * @return {Rectangle} the framing rectangle
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\Sprite.js
-* @sourceline 191
+* @sourceline 193
 */
 /**
 * @description Renders the object using the WebGL renderer
@@ -647,7 +647,7 @@ texture this Sprite was using.
 * @param {Matrix} [matrix] - - Optional matrix. If provided the Display Object will be rendered using this matrix, otherwise it will use its worldTransform.
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\Sprite.js
-* @sourceline 299
+* @sourceline 301
 */
 /**
 * @description Renders the object using the Canvas renderer
@@ -656,7 +656,7 @@ texture this Sprite was using.
 * @param {Matrix} [matrix] - - Optional matrix. If provided the Display Object will be rendered using this matrix, otherwise it will use its worldTransform.
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\Sprite.js
-* @sourceline 369
+* @sourceline 371
 */
 /**
 * @description Helper function that creates a sprite that will contain a texture from the TextureCache based on the frameId
@@ -665,7 +665,7 @@ texture this Sprite was using.
 * @param {String} frameId - The frame Id of the texture in the cache
 * @return {PIXI.Sprite} A new Sprite using a texture from the texture cache matching the frameId
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\Sprite.js
-* @sourceline 473
+* @sourceline 475
 */
 /**
 * @description Helper function that creates a sprite that will contain a texture based on an image url
@@ -674,7 +674,7 @@ texture this Sprite was using.
 * @param {String} imageId - The image url of the texture
 * @return {PIXI.Sprite} A new Sprite using a texture from the texture cache matching the image id
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\Sprite.js
-* @sourceline 492
+* @sourceline 494
 */
 /**
 * @fileoverview
@@ -956,21 +956,21 @@ This is set by the likes of Phaser.LoadTexture.setFrame.
 * @method PIXI.TilingSprite#getBounds
 * @return {Rectangle} the framing rectangle
 * @sourcefile d:\wamp\www\phaser\src\pixi\extras\TilingSprite.js
-* @sourceline 415
+* @sourceline 417
 */
 /**
 * @description The width of the sprite, setting this will actually modify the scale to achieve the value set
 * @member PIXI.TilingSprite#width
 * @type {Number}
 * @sourcefile d:\wamp\www\phaser\src\pixi\extras\TilingSprite.js
-* @sourceline 515
+* @sourceline 517
 */
 /**
 * @description The height of the TilingSprite, setting this will actually modify the scale to achieve the value set
 * @member PIXI.TilingSprite#height
 * @type {Number}
 * @sourcefile d:\wamp\www\phaser\src\pixi\extras\TilingSprite.js
-* @sourceline 533
+* @sourceline 535
 */
 /**
 * @fileoverview
@@ -1211,6 +1211,7 @@ Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier
 * @param {Number} startAngle - The starting angle, in radians (0 is at the 3 o'clock position of the arc's circle)
 * @param {Number} endAngle - The ending angle, in radians
 * @param {Boolean} anticlockwise - Optional. Specifies whether the drawing should be counterclockwise or clockwise. False is default, and indicates clockwise, while true indicates counter-clockwise.
+* @param {Number} segments - Optional. The number of segments to use when calculating the arc. The default is 40. If you need more fidelity use a higher number.
 * @return {PIXI.Graphics} 
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
 * @sourceline 391
@@ -1223,14 +1224,14 @@ Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier
 * @param {Number} alpha - the alpha of the fill
 * @return {PIXI.Graphics} 
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 474
+* @sourceline 476
 */
 /**
 * @description Applies a fill to the lines and shapes that were added since the last call to the beginFill() method.
 * @method PIXI.Graphics#endFill
 * @return {PIXI.Graphics} 
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 502
+* @sourceline 504
 */
 /**
 * @method PIXI.Graphics#drawRect
@@ -1240,7 +1241,7 @@ Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier
 * @param {Number} height - The height of the rectangle
 * @return {PIXI.Graphics} 
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 517
+* @sourceline 519
 */
 /**
 * @method PIXI.Graphics#drawRoundedRect
@@ -1250,7 +1251,7 @@ Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier
 * @param {Number} height - The height of the rectangle
 * @param {Number} radius - Radius of the rectangle corners. In WebGL this must be a value between 0 and 9.
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 533
+* @sourceline 535
 */
 /**
 * @description Draws a circle.
@@ -1260,7 +1261,7 @@ Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier
 * @param {Number} diameter - The diameter of the circle
 * @return {PIXI.Graphics} 
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 548
+* @sourceline 550
 */
 /**
 * @description Draws an ellipse.
@@ -1271,7 +1272,7 @@ Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier
 * @param {Number} height - The half height of the ellipse
 * @return {PIXI.Graphics} 
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 564
+* @sourceline 566
 */
 /**
 * @description Draws a polygon using the given path.
@@ -1279,14 +1280,14 @@ Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier
 * @param {(Array|PhaserPolygon)} path - The path data used to construct the polygon. Can either be an array of points or a Phaser.Polygon object.
 * @return {PIXI.Graphics} 
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 581
+* @sourceline 583
 */
 /**
 * @description Clears the graphics that were drawn to this Graphics object, and resets fill and line style settings.
 * @method PIXI.Graphics#clear
 * @return {PIXI.Graphics} 
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 616
+* @sourceline 618
 */
 /**
 * @description Useful function that returns a texture of the graphics object that can then be used to create sprites
@@ -1296,7 +1297,7 @@ This can be quite useful if your geometry is complicated and needs to be reused 
 * @param {Number} scaleMode - Should be one of the PIXI.scaleMode consts
 * @return {PIXI.Texture} a texture of the graphics object
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 634
+* @sourceline 636
 */
 /**
 * @description Renders the object using the WebGL renderer
@@ -1304,7 +1305,7 @@ This can be quite useful if your geometry is complicated and needs to be reused 
 * @param {RenderSession} renderSession - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 665
+* @sourceline 667
 */
 /**
 * @description Renders the object using the Canvas renderer
@@ -1312,41 +1313,41 @@ This can be quite useful if your geometry is complicated and needs to be reused 
 * @param {RenderSession} renderSession - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 744
+* @sourceline 746
 */
 /**
 * @description Retrieves the bounds of the graphic shape as a rectangle object
 * @method PIXI.Graphics#getBounds
 * @return {Rectangle} the rectangular bounding area
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 821
+* @sourceline 823
 */
 
 /**
 * @description Update the bounds of the object
 * @method PIXI.Graphics#updateLocalBounds
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 944
+* @sourceline 946
 */
 /**
 * @description Generates the cached sprite when the sprite has cacheAsBitmap = true
 * @method PIXI.Graphics#_generateCachedSprite
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 1056
+* @sourceline 1058
 */
 /**
 * @description Updates texture size based on canvas size
 * @method PIXI.Graphics#updateCachedSpriteTexture
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 1096
+* @sourceline 1098
 */
 /**
 * @description Destroys a previous cached sprite.
 * @method PIXI.Graphics#destroyCachedSprite
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 1120
+* @sourceline 1122
 */
 /**
 * @description Draws the given shape to this Graphics object. Can be any of Circle, Rectangle, Ellipse, Line or Polygon.
@@ -1354,7 +1355,7 @@ This can be quite useful if your geometry is complicated and needs to be reused 
 * @param {(Circle|Rectangle|Ellipse|Line|Polygon)} shape - The Shape object to draw.
 * @return {PIXI.GraphicsData} The generated GraphicsData object.
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 1131
+* @sourceline 1133
 */
 /**
 * @description When cacheAsBitmap is set to true the graphics object will be rendered as if it was a sprite.
@@ -1366,7 +1367,7 @@ This is not recommended if you are constantly redrawing the graphics element.
 * @default false
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 1173
+* @sourceline 1175
 */
 /**
 * @class PIXI.GraphicsData
@@ -2366,7 +2367,7 @@ https://github.com/libgdx/libgdx/blob/master/gdx/src/com/badlogic/gdx/graphics/g
 * @description Removes the last filter from the filter stack and doesn't return it.
 * @method PIXI.WebGLFilterManager#popFilter
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLFilterManager.js
-* @sourceline 138
+* @sourceline 145
 */
 /**
 * @description Applies the filter to the specified area.
@@ -2376,19 +2377,19 @@ https://github.com/libgdx/libgdx/blob/master/gdx/src/com/badlogic/gdx/graphics/g
 * @param {Number} width - the horizontal range of the filter
 * @param {Number} height - the vertical range of the filter
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLFilterManager.js
-* @sourceline 315
+* @sourceline 336
 */
 /**
 * @description Initialises the shader buffers.
 * @method PIXI.WebGLFilterManager#initShaderBuffers
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLFilterManager.js
-* @sourceline 376
+* @sourceline 397
 */
 /**
 * @description Destroys the filter and removes it from the filter stack.
 * @method PIXI.WebGLFilterManager#destroy
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLFilterManager.js
-* @sourceline 424
+* @sourceline 445
 */
 /**
 * @fileoverview
@@ -2403,6 +2404,7 @@ https://github.com/libgdx/libgdx/blob/master/gdx/src/com/badlogic/gdx/graphics/g
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLGraphics.js
 * @sourceline 5
 */
+
 /**
 * @description Renders the graphics object
 * @method PIXI.WebGLGraphics.renderGraphics
@@ -2410,7 +2412,7 @@ https://github.com/libgdx/libgdx/blob/master/gdx/src/com/badlogic/gdx/graphics/g
 * @param {Object} renderSession - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLGraphics.js
-* @sourceline 16
+* @sourceline 23
 */
 /**
 * @description Updates the graphics object
@@ -2419,7 +2421,7 @@ https://github.com/libgdx/libgdx/blob/master/gdx/src/com/badlogic/gdx/graphics/g
 * @param {WebGLContext} gl - the current WebGL drawing context
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLGraphics.js
-* @sourceline 86
+* @sourceline 93
 */
 /**
 * @method PIXI.WebGLGraphics.switchMode
@@ -2427,7 +2429,7 @@ https://github.com/libgdx/libgdx/blob/master/gdx/src/com/badlogic/gdx/graphics/g
 * @param {Number} type - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLGraphics.js
-* @sourceline 211
+* @sourceline 218
 */
 /**
 * @description Builds a rectangle to draw
@@ -2436,7 +2438,7 @@ https://github.com/libgdx/libgdx/blob/master/gdx/src/com/badlogic/gdx/graphics/g
 * @param {Object} webGLData - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLGraphics.js
-* @sourceline 245
+* @sourceline 252
 */
 /**
 * @description Builds a rounded rectangle to draw
@@ -2445,7 +2447,7 @@ https://github.com/libgdx/libgdx/blob/master/gdx/src/com/badlogic/gdx/graphics/g
 * @param {Object} webGLData - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLGraphics.js
-* @sourceline 313
+* @sourceline 320
 */
 /**
 * @description Calculate the points for a quadratic bezier curve. (helper function..)
@@ -2460,7 +2462,7 @@ Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier
 * @return {Array<Number>} 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLGraphics.js
-* @sourceline 384
+* @sourceline 390
 */
 /**
 * @description Builds a circle to draw
@@ -2469,7 +2471,7 @@ Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier
 * @param {Object} webGLData - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLGraphics.js
-* @sourceline 436
+* @sourceline 442
 */
 /**
 * @description Builds a line to draw
@@ -2478,7 +2480,7 @@ Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier
 * @param {Object} webGLData - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLGraphics.js
-* @sourceline 519
+* @sourceline 525
 */
 /**
 * @description Builds a complex polygon to draw
@@ -2487,7 +2489,7 @@ Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier
 * @param {Object} webGLData - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLGraphics.js
-* @sourceline 731
+* @sourceline 737
 */
 /**
 * @description Builds a polygon to draw
@@ -2496,23 +2498,23 @@ Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier
 * @param {Object} webGLData - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLGraphics.js
-* @sourceline 793
+* @sourceline 799
 */
 /**
 * @class PIXI.WebGLGraphicsData
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLGraphics.js
-* @sourceline 848
+* @sourceline 854
 */
 /**
 * @method PIXI.WebGLGraphicsData#reset
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLGraphics.js
-* @sourceline 868
+* @sourceline 874
 */
 /**
 * @method PIXI.WebGLGraphicsData#upload
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLGraphics.js
-* @sourceline 877
+* @sourceline 883
 */
 /**
 * @fileoverview
@@ -2547,13 +2549,13 @@ Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier
 * @param {Array} maskData - 
 * @param {Object} renderSession - an object containing all the useful parameters
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLMaskManager.js
-* @sourceline 48
+* @sourceline 51
 */
 /**
 * @description Destroys the mask stack.
 * @method PIXI.WebGLMaskManager#destroy
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLMaskManager.js
-* @sourceline 61
+* @sourceline 71
 */
 /**
 * @fileoverview
@@ -2816,23 +2818,23 @@ Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier
 * @param {Number} size - 
 * @param {Number} startIndex - 
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLSpriteBatch.js
-* @sourceline 603
+* @sourceline 610
 */
 /**
 * @method PIXI.WebGLSpriteBatch#stop
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLSpriteBatch.js
-* @sourceline 640
+* @sourceline 647
 */
 /**
 * @method PIXI.WebGLSpriteBatch#start
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLSpriteBatch.js
-* @sourceline 649
+* @sourceline 656
 */
 /**
 * @description Destroys the SpriteBatch.
 * @method PIXI.WebGLSpriteBatch#destroy
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLSpriteBatch.js
-* @sourceline 657
+* @sourceline 664
 */
 /**
 * @fileoverview
@@ -3246,7 +3248,7 @@ If the image is not in the base texture cache it will be created and loaded.
 * @param {String} imageUrl - The image url of the texture
 * @param {Boolean} crossorigin - 
 * @param {Number} scaleMode - See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
-* @return BaseTexture
+* @return {PIXI.BaseTexture} 
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\BaseTexture.js
 * @sourceline 249
 */
@@ -3255,7 +3257,7 @@ If the image is not in the base texture cache it will be created and loaded.
 * @method PIXI.BaseTexture.fromCanvas
 * @param {Canvas} canvas - The canvas element source of the texture
 * @param {Number} scaleMode - See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
-* @return BaseTexture
+* @return {PIXI.BaseTexture} 
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\BaseTexture.js
 * @sourceline 292
 */
@@ -3546,7 +3548,7 @@ If the image is not in the texture cache it will be  created and loaded.
 * @param {String} imageUrl - The image url of the texture
 * @param {Boolean} crossorigin - Whether requests should be treated as crossorigin
 * @param {Number} scaleMode - See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
-* @return Texture
+* @return {PIXI.Texture} 
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\Texture.js
 * @sourceline 254
 */
@@ -3555,7 +3557,7 @@ If the image is not in the texture cache it will be  created and loaded.
 If the frame id is not in the texture cache an error will be thrown.
 * @method PIXI.Texture.fromFrame
 * @param {String} frameId - The frame id of the texture
-* @return Texture
+* @return {PIXI.Texture} 
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\Texture.js
 * @sourceline 278
 */
@@ -3564,7 +3566,7 @@ If the frame id is not in the texture cache an error will be thrown.
 * @method PIXI.Texture.fromCanvas
 * @param {Canvas} canvas - The canvas element source of the texture
 * @param {Number} scaleMode - See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
-* @return Texture
+* @return {PIXI.Texture} 
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\Texture.js
 * @sourceline 294
 */
@@ -3647,6 +3649,11 @@ If the frame id is not in the texture cache an error will be thrown.
 * @type {Array}
 * @sourcefile d:\wamp\www\phaser\src\pixi\utils\CanvasPool.js
 * @sourceline 173
+*/
+/**
+* @class PIXI.EarCut
+* @sourcefile d:\wamp\www\phaser\src\pixi\utils\EarCut.js
+* @sourceline 17
 */
 /**
 * @fileoverview

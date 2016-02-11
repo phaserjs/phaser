@@ -183,6 +183,46 @@ As a result of this work the minimum build size of Phaser is now just 80KB minif
 
 See the [Creating a Custom Phaser Build](http://phaser.io/tutorials/creating-custom-phaser-builds) tutorial for details.
 
+### Webpack
+
+Starting from Phaser 2.4.5 we now include a custom build for Webpack.
+
+You need to add `p2` as a dependency.
+
+###### Webpack config
+```
+var path = require('path');
+var webpack = require('webpack');
+
+var phaserModule = path.join(__dirname, '/node_modules/phaser/');
+var phaser = path.join(phaserModule, 'build/custom/phaser-split.js'),
+  pixi = path.join(phaserModule, 'build/custom/pixi.js'),
+  p2 = path.join(phaserModule, 'build/custom/p2.js');
+
+module.exports = {
+    ...
+    module: {
+        loaders: [
+            { test: /pixi.js/, loader: "script" },
+        ]
+    },
+    resolve: {
+        alias: {
+            'phaser': phaser,
+            'pixi.js': pixi,
+            'p2': p2,
+        }
+    }
+    ...
+}
+```
+###### Main js file
+```
+require('pixi.js');
+require('p2');
+require('phaser');
+```
+
 ### Building from source
 
 Should you wish to build Phaser from source you can take advantage of the provided [Grunt](http://gruntjs.com/) scripts. Ensure you have the required packages by running `npm install` first.
@@ -272,6 +312,11 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * Text.useAdvancedWrap allows you to swap between the Basic and the Advanced word wrapping functions. In Advanced it will wrap long-words and condense and trim excess white space (thanks @soldoutactivist #1811)
 * The Grunt script has been updated to enhance the intro / outro and Pixi defaults. Pixi has been split into intro / outro and main blocks, so you can exclude its intro cleanly. The excludes are now bound, so if you exclude the Phaser UMD it will do the same for Pixi as well (thanks @spayton #2192)
 * ArcadePhysics.worldAngleToPointer will get the angle (in radians) between a display object and the pointer, taking all parent rotations into account (thanks @mattrick16 #2171)
+* There is new documentation on building Phaser for Webpack and a new custom build grunt option (thanks @deiga #2331)
+* Device.safariVersion now holds the major version of the Safari browser.
+* Device.edge is a boolean that is set if running under the Microsoft Edge browser.
+* Device.dolby is a boolean that is set if the browser can play EC-3 Dolby Digital Plus files
+* The Loader and SoundManager can now play Dolby Digital Plus files on supported devices.
 
 ### Updates
 
@@ -303,6 +348,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * InputHandler.consumePointerEvent has been removed, as it was never used internally anyway, so was misleading (thanks @GregoryAveryWeir #2227)
 * Events.onDragUpdate has a new 6th property `fromStart` which is a boolean. You can determine if the event was the result of the start of a drag movement or not by polling it (#2155)
 * SinglePad.onDownCallback has been moved to the end of the method, so that DeviceButton.start is now called before the callback fires, meaning if you check the status of the button in the onDownCallback it will now be fully activated (thanks @suicidepills #2159)
+* The `z` property assigned to children of a Group now starts from zero instead of 1, this is an internal change mostly but if you relied on the `z` property for some reason then please be aware of this (thanks pantoninho)
 
 ### Bug Fixes
 
@@ -328,7 +374,6 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * Both `transparent` and `antialias` were ignored if set to `false` in a Game configuration object, as the `parseConfig` method didn't check for falsey values (thanks @amadeus #2302)
 * GameObject.revive used to add the health amount given to the Game Object (via `heal`) instead of setting it as the new health amount. It now calls `setHealth` instead, giving it the exact amount (thanks @netgfx #2231)
 * Group.add and Group.addAt would forget to remove the child from the hash of its previous Group if it had a physics body enabled, causing unbounded hash increase (thanks @strawlion @McIntozh #2232)
-* On Retina and High DPI displays (such as a Macbook) going in to Full Screen was showing at double the scale (thanks @nickryall #1993)
 
 ### Pixi Updates
 
@@ -341,6 +386,7 @@ Please note that Phaser uses a custom build of Pixi and always has done. The fol
 * PIXI.WebGLMaskManager.pushMask and popMask are now more robust in checking that they have been given valid mask data (#2152)
 * PIXI.WebGLGraphics.stencilBufferLimit is a new integer that allows you to define how many points exist in a Graphics object before Pixi swaps to using the Stencil Buffer to render it. The default is 6 but can be increased. This fixes issues with things like Quadratic curves not rendering as masks in WebGL.
 * If a Display Object with a mask contained a child with a Filter, then the child would not render. The WebGLFilterManager now retains state and creates a new stencil buffer as required (thanks @hightopo #1842)
+* The Filter Texture and GL Viewport are now properly resized, fixing issues with custom resolutions and filters (thanks @englercj @amadeus #2326 #2320)
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 

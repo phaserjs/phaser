@@ -709,6 +709,10 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="PIXI.EarCut.html">EarCut</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="PIXI.Event.html">Event</a>
 						</li>
 						
@@ -888,6 +892,10 @@
 						
 						<li class="class-depth-0">
 							<a href="global.html#NONE">NONE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#PENDING_ATLAS">PENDING_ATLAS</a>
 						</li>
 						
 						<li class="class-depth-0">
@@ -2823,7 +2831,7 @@ for example: <code>player.frame = 4</code>.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_components_LoadTexture.js.html">gameobjects/components/LoadTexture.js</a>, <a href="src_gameobjects_components_LoadTexture.js.html#sunlight-1-line-218">line 218</a>
+    <a href="src_gameobjects_components_LoadTexture.js.html">gameobjects/components/LoadTexture.js</a>, <a href="src_gameobjects_components_LoadTexture.js.html#sunlight-1-line-242">line 242</a>
     </dt>
     
 
@@ -2889,7 +2897,7 @@ for example: <code>player.frameName = &quot;idle&quot;</code>.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_components_LoadTexture.js.html">gameobjects/components/LoadTexture.js</a>, <a href="src_gameobjects_components_LoadTexture.js.html#sunlight-1-line-243">line 243</a>
+    <a href="src_gameobjects_components_LoadTexture.js.html">gameobjects/components/LoadTexture.js</a>, <a href="src_gameobjects_components_LoadTexture.js.html#sunlight-1-line-267">line 267</a>
     </dt>
     
 
@@ -6679,7 +6687,7 @@ This can be quite useful if your displayObject is static / complicated and needs
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_Sprite.js.html">pixi/display/Sprite.js</a>, <a href="src_pixi_display_Sprite.js.html#sunlight-1-line-191">line 191</a>
+    <a href="src_pixi_display_Sprite.js.html">pixi/display/Sprite.js</a>, <a href="src_pixi_display_Sprite.js.html#sunlight-1-line-193">line 193</a>
     </dt>
     
 
@@ -7201,6 +7209,11 @@ it doesn't destroy the object or free it up from memory.</p>
 <p>If your Game Object is using a frame from a texture atlas and you just wish to change to another frame, then see the <code>frame</code> or <code>frameName</code> properties instead.</p>
 <p>You should only use <code>loadTexture</code> if you want to replace the base texture entirely.</p>
 <p>Calling this method causes a WebGL texture update, so use sparingly or in low-intensity portions of your game, or if you know the new texture is already on the GPU.</p>
+<p>You can use the new const <code>Phaser.PENDING_ATLAS</code> as the texture key for any sprite. 
+Doing this then sets the key to be the <code>frame</code> argument (the frame is set to zero). </p>
+<p>This allows you to create sprites using <code>load.image</code> during development, and then change them 
+to use a Texture Atlas later in development by simply searching your code for 'PENDING_ATLAS' 
+and swapping it to be the key of the atlas data.</p>
     </div>
     
 
@@ -7395,7 +7408,7 @@ it doesn't destroy the object or free it up from memory.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_components_LoadTexture.js.html">gameobjects/components/LoadTexture.js</a>, <a href="src_gameobjects_components_LoadTexture.js.html#sunlight-1-line-42">line 42</a>
+    <a href="src_gameobjects_components_LoadTexture.js.html">gameobjects/components/LoadTexture.js</a>, <a href="src_gameobjects_components_LoadTexture.js.html#sunlight-1-line-49">line 49</a>
     </dt>
     
 
@@ -9006,7 +9019,7 @@ If you need to reset an already running animation do so directly on the Animatio
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_components_LoadTexture.js.html">gameobjects/components/LoadTexture.js</a>, <a href="src_gameobjects_components_LoadTexture.js.html#sunlight-1-line-196">line 196</a>
+    <a href="src_gameobjects_components_LoadTexture.js.html">gameobjects/components/LoadTexture.js</a>, <a href="src_gameobjects_components_LoadTexture.js.html#sunlight-1-line-220">line 220</a>
     </dt>
     
 
@@ -9178,7 +9191,7 @@ it can be useful to adjust the dimensions directly in this way.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_components_LoadTexture.js.html">gameobjects/components/LoadTexture.js</a>, <a href="src_gameobjects_components_LoadTexture.js.html#sunlight-1-line-184">line 184</a>
+    <a href="src_gameobjects_components_LoadTexture.js.html">gameobjects/components/LoadTexture.js</a>, <a href="src_gameobjects_components_LoadTexture.js.html#sunlight-1-line-208">line 208</a>
     </dt>
     
 
@@ -9281,7 +9294,7 @@ it can be useful to adjust the dimensions directly in this way.</p>
             
                 <td class="default">
                 
-                    1
+                    100
                 
                 </td>
             
@@ -9714,7 +9727,7 @@ because the World is the root Group from which all Game Objects descend.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_components_LoadTexture.js.html">gameobjects/components/LoadTexture.js</a>, <a href="src_gameobjects_components_LoadTexture.js.html#sunlight-1-line-119">line 119</a>
+    <a href="src_gameobjects_components_LoadTexture.js.html">gameobjects/components/LoadTexture.js</a>, <a href="src_gameobjects_components_LoadTexture.js.html#sunlight-1-line-143">line 143</a>
     </dt>
     
 
@@ -10773,7 +10786,7 @@ or the rectangle it references, then you need to update the crop frame by callin
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
-		on Thu Oct 15 2015 12:05:01 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Mon Feb 08 2016 17:00:54 GMT+0000 (GMT Standard Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
