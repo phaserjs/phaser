@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.4.5 "Sienda" - Built: Fri Feb 05 2016 11:51:33
+* v2.4.5 "Sienda" - Built: Fri Feb 12 2016 15:59:51
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -5662,11 +5662,11 @@ PIXI.WebGLFilterManager.prototype.pushFilter = function(filterBlock)
     var texture = this.texturePool.pop();
     if(!texture)
     {
-        texture = new PIXI.FilterTexture(this.gl, this.width, this.height);
+        texture = new PIXI.FilterTexture(this.gl, this.width * this.renderSession.resolution, this.height * this.renderSession.resolution);
     }
     else
     {
-        texture.resize(this.width, this.height);
+        texture.resize(this.width * this.renderSession.resolution, this.height * this.renderSession.resolution);
     }
 
     gl.bindTexture(gl.TEXTURE_2D,  texture.texture);
@@ -5689,7 +5689,7 @@ PIXI.WebGLFilterManager.prototype.pushFilter = function(filterBlock)
     gl.bindFramebuffer(gl.FRAMEBUFFER, texture.frameBuffer);
 
     // set view port
-    gl.viewport(0, 0, filterArea.width, filterArea.height);
+    gl.viewport(0, 0, filterArea.width * this.renderSession.resolution, filterArea.height * this.renderSession.resolution);
 
     projection.x = filterArea.width/2;
     projection.y = -filterArea.height/2;
@@ -5727,7 +5727,7 @@ PIXI.WebGLFilterManager.prototype.popFilter = function()
 
     if(filterBlock.filterPasses.length > 1)
     {
-        gl.viewport(0, 0, filterArea.width, filterArea.height);
+        gl.viewport(0, 0, filterArea.width * this.renderSession.resolution, filterArea.height * this.renderSession.resolution);
 
         gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
 
@@ -5756,8 +5756,8 @@ PIXI.WebGLFilterManager.prototype.popFilter = function()
 
         var inputTexture = texture;
         var outputTexture = this.texturePool.pop();
-        if(!outputTexture)outputTexture = new PIXI.FilterTexture(this.gl, this.width, this.height);
-        outputTexture.resize(this.width, this.height);
+        if(!outputTexture)outputTexture = new PIXI.FilterTexture(this.gl, this.width * this.renderSession.resolution, this.height * this.renderSession.resolution);
+        outputTexture.resize(this.width * this.renderSession.resolution, this.height * this.renderSession.resolution);
 
         // need to clear this FBO as it may have some left over elements from a previous filter.
         gl.bindFramebuffer(gl.FRAMEBUFFER, outputTexture.frameBuffer );
@@ -7917,7 +7917,7 @@ var Phaser = Phaser || {
     * @constant
     * @type {string}
     */
-    VERSION: '2.4.5-dev',
+    VERSION: '2.4.5-RC2',
 
     /**
     * An array of Phaser game instances.
@@ -8503,7 +8503,7 @@ Phaser.Utils = {
     * Returns true or false based on the chance value (default 50%). For example if you wanted a player to have a 30% chance
     * of getting a bonus, call chanceRoll(30) - true means the chance passed, false means it failed.
     *
-    * @method Phaser.Math#chanceRoll
+    * @method Phaser.Utils#chanceRoll
     * @param {number} chance - The chance of receiving the value. A number between 0 and 100 (effectively 0% to 100%).
     * @return {boolean} True if the roll passed, or false otherwise.
     */
@@ -16654,9 +16654,9 @@ Phaser.Group.prototype.add = function (child, silent) {
             child.parent.removeFromHash(child);
         }
 
-        this.addChild(child);
-
         child.z = this.children.length;
+
+        this.addChild(child);
 
         if (this.enableBody && child.body === null)
         {
@@ -16856,9 +16856,9 @@ Phaser.Group.prototype.create = function (x, y, key, frame, exists) {
     child.visible = exists;
     child.alive = exists;
 
-    this.addChild(child);
-
     child.z = this.children.length;
+
+    this.addChild(child);
 
     if (this.enableBody)
     {
@@ -19572,13 +19572,6 @@ Phaser.Game.prototype = {
         {
             return;
         }
-
-        //  The game width / height must be an integer
-        this.width = Math.floor(this.width);
-        this.height = Math.floor(this.height);
-
-        this._width = Math.floor(this._width);
-        this._height = Math.floor(this._height);
 
         this.onPause = new Phaser.Signal();
         this.onResume = new Phaser.Signal();
@@ -30787,6 +30780,12 @@ Phaser.Device = function () {
     this.tridentVersion = 0;
 
     /**
+    * @property {boolean} edge - Set to true if running in Microsoft Edge browser.
+    * @default
+    */
+    this.edge = false;
+
+    /**
     * @property {boolean} mobileSafari - Set to true if running in Mobile Safari.
     * @default
     */
@@ -30809,6 +30808,12 @@ Phaser.Device = function () {
     * @default
     */
     this.safari = false;
+
+    /**
+    * @property {number} safariVersion - If running in Safari this will contain the major version number.
+    * @default
+    */
+    this.safariVersion = 0;
 
     /**
     * @property {boolean} webApp - Set to true if running as a WebApp, i.e. within a WebView
@@ -30872,6 +30877,12 @@ Phaser.Device = function () {
     * @default
     */
     this.webm = false;
+
+    /**
+    * @property {boolean} dolby - Can this device play EC-3 Dolby Digital Plus files?
+    * @default
+    */
+    this.dolby = false;
 
     //  Video
 
@@ -31372,9 +31383,14 @@ Phaser.Device._initialize = function () {
         {
             device.opera = true;
         }
-        else if (/Safari/.test(ua) && !device.windowsPhone)
+        else if (/Safari\/(\d+)/.test(ua) && !device.windowsPhone)
         {
             device.safari = true;
+
+            if (/Version\/(\d+)\./.test(ua))
+            {
+                device.safariVersion = parseInt(RegExp.$1, 10);
+            }
         }
         else if (/Trident\/(\d+\.\d+)(.*)rv:(\d+\.\d+)/.test(ua))
         {
@@ -31382,6 +31398,10 @@ Phaser.Device._initialize = function () {
             device.trident = true;
             device.tridentVersion = parseInt(RegExp.$1, 10);
             device.ieVersion = parseInt(RegExp.$3, 10);
+        }
+        else if (/Edge\/\d+/.test(ua))
+        {
+            device.edge = true;
         }
 
         //  Silk gets its own if clause because its ua also contains 'Safari'
@@ -31527,6 +31547,29 @@ Phaser.Device._initialize = function () {
                 {
                     device.webm = true;
                 }
+
+                if (audioElement.canPlayType('audio/mp4;codecs="ec-3"') !== '')
+                {
+                    if (device.edge)
+                    {
+                        device.dolby = true;
+                    }
+                    else if (device.safari && device.safariVersion >= 9)
+                    {
+                        var ua = navigator.userAgent;
+
+                        if (/Mac OS X (\d+)_(\d+)/.test(navigator.userAgent))
+                        {
+                            var major = parseInt(RegExp.$1, 10);
+                            var minor = parseInt(RegExp.$2, 10);
+
+                            if ((major === 10 && minor >= 11) || major > 10)
+                            {
+                                device.dolby = true;
+                            }
+                        }
+                    }
+                }
             }
         } catch (e) {
         }
@@ -31664,9 +31707,9 @@ Phaser.Device._initialize = function () {
 
     //  Run the checks
     _checkOS();
+    _checkBrowser();
     _checkAudio();
     _checkVideo();
-    _checkBrowser();
     _checkCSS3D();
     _checkDevice();
     _checkFeatures();
@@ -31706,6 +31749,10 @@ Phaser.Device.canPlayAudio = function (type) {
         return true;
     }
     else if (type === 'webm' && this.webm)
+    {
+        return true;
+    }
+    else if (type === 'mp4' && this.dolby)
     {
         return true;
     }
@@ -43836,6 +43883,9 @@ Phaser.ScaleManager.prototype = {
             newHeight = rect.height * this.parentScaleFactor.y;
         }
 
+        newWidth = Math.floor(newWidth);
+        newHeight = Math.floor(newHeight);
+
         this._gameSize.setTo(0, 0, newWidth, newHeight);
 
         this.updateDimensions(newWidth, newHeight, false);
@@ -44355,8 +44405,8 @@ Phaser.ScaleManager.prototype = {
             }
             else if (scaleMode === Phaser.ScaleManager.NO_SCALE)
             {
-                this.width = this.game.width / this.game.device.pixelRatio;
-                this.height = this.game.height / this.game.device.pixelRatio;
+                this.width = this.game.width;
+                this.height = this.game.height;
             }
             else if (scaleMode === Phaser.ScaleManager.USER_SCALE)
             {

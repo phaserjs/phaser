@@ -1221,7 +1221,34 @@
 <h3>Custom Builds</h3><p>Starting from Phaser 2.3.0 we now include a brand new build system which allows you to strip out lots of additional features you may not require, saving hundreds of KB in the process. Don't use any Sound in your game? Then you can now exclude the entire sound system. Don't need Keyboard support? That can be stripped out too.</p>
 <p>As a result of this work the minimum build size of Phaser is now just 80KB minified and gzipped.</p>
 <p>See the <a href="http://phaser.io/tutorials/creating-custom-phaser-builds">Creating a Custom Phaser Build</a> tutorial for details.</p>
-<h3>Building from source</h3><p>Should you wish to build Phaser from source you can take advantage of the provided <a href="http://gruntjs.com/">Grunt</a> scripts. Ensure you have the required packages by running <code>npm install</code> first.</p>
+<h3>Webpack</h3><p>Starting from Phaser 2.4.5 we now include a custom build for Webpack.</p>
+<p>You need to add <code>p2</code> as a dependency.</p>
+<h6>Webpack config</h6><pre class="prettyprint source"><code>var path = require('path');
+var webpack = require('webpack');
+
+var phaserModule = path.join(__dirname, '/node_modules/phaser/');
+var phaser = path.join(phaserModule, 'build/custom/phaser-split.js'),
+  pixi = path.join(phaserModule, 'build/custom/pixi.js'),
+  p2 = path.join(phaserModule, 'build/custom/p2.js');
+
+module.exports = {
+    ...
+    module: {
+        loaders: [
+            { test: /pixi.js/, loader: &quot;script&quot; },
+        ]
+    },
+    resolve: {
+        alias: {
+            'phaser': phaser,
+            'pixi.js': pixi,
+            'p2': p2,
+        }
+    }
+    ...
+}</code></pre><h6>Main js file</h6><pre class="prettyprint source"><code>require('pixi.js');
+require('p2');
+require('phaser');</code></pre><h3>Building from source</h3><p>Should you wish to build Phaser from source you can take advantage of the provided <a href="http://gruntjs.com/">Grunt</a> scripts. Ensure you have the required packages by running <code>npm install</code> first.</p>
 <p>Run <code>grunt</code> to perform a default build to the <code>dist</code> folder.</p>
 
 <p><a name="games"></a></p>
@@ -1272,6 +1299,11 @@
 <li>Text.useAdvancedWrap allows you to swap between the Basic and the Advanced word wrapping functions. In Advanced it will wrap long-words and condense and trim excess white space (thanks @soldoutactivist #1811)</li>
 <li>The Grunt script has been updated to enhance the intro / outro and Pixi defaults. Pixi has been split into intro / outro and main blocks, so you can exclude its intro cleanly. The excludes are now bound, so if you exclude the Phaser UMD it will do the same for Pixi as well (thanks @spayton #2192)</li>
 <li>ArcadePhysics.worldAngleToPointer will get the angle (in radians) between a display object and the pointer, taking all parent rotations into account (thanks @mattrick16 #2171)</li>
+<li>There is new documentation on building Phaser for Webpack and a new custom build grunt option (thanks @deiga #2331)</li>
+<li>Device.safariVersion now holds the major version of the Safari browser.</li>
+<li>Device.edge is a boolean that is set if running under the Microsoft Edge browser.</li>
+<li>Device.dolby is a boolean that is set if the browser can play EC-3 Dolby Digital Plus files</li>
+<li>The Loader and SoundManager can now play Dolby Digital Plus files on supported devices.</li>
 </ul>
 <h3>Updates</h3><ul>
 <li>TypeScript definitions fixes and updates (thanks @clark-stevenson @zimpy @iamfreee @milkey-mouse @juanmirod @danzel @staff0rd @sanchopancho13)</li>
@@ -1302,6 +1334,7 @@
 <li>InputHandler.consumePointerEvent has been removed, as it was never used internally anyway, so was misleading (thanks @GregoryAveryWeir #2227)</li>
 <li>Events.onDragUpdate has a new 6th property <code>fromStart</code> which is a boolean. You can determine if the event was the result of the start of a drag movement or not by polling it (#2155)</li>
 <li>SinglePad.onDownCallback has been moved to the end of the method, so that DeviceButton.start is now called before the callback fires, meaning if you check the status of the button in the onDownCallback it will now be fully activated (thanks @suicidepills #2159)</li>
+<li>The <code>z</code> property assigned to children of a Group now starts from zero instead of 1, this is an internal change mostly but if you relied on the <code>z</code> property for some reason then please be aware of this (thanks pantoninho)</li>
 </ul>
 <h3>Bug Fixes</h3><ul>
 <li>Buttons (or any Sprites) that don't have a texture, but have children, would incorrectly render the children under WebGL due to the baseTexture.skipRender property (thanks @puzzud #2141)</li>
@@ -1326,7 +1359,6 @@
 <li>Both <code>transparent</code> and <code>antialias</code> were ignored if set to <code>false</code> in a Game configuration object, as the <code>parseConfig</code> method didn't check for falsey values (thanks @amadeus #2302)</li>
 <li>GameObject.revive used to add the health amount given to the Game Object (via <code>heal</code>) instead of setting it as the new health amount. It now calls <code>setHealth</code> instead, giving it the exact amount (thanks @netgfx #2231)</li>
 <li>Group.add and Group.addAt would forget to remove the child from the hash of its previous Group if it had a physics body enabled, causing unbounded hash increase (thanks @strawlion @McIntozh #2232)</li>
-<li>On Retina and High DPI displays (such as a Macbook) going in to Full Screen was showing at double the scale (thanks @nickryall #1993)</li>
 </ul>
 <h3>Pixi Updates</h3><p>Please note that Phaser uses a custom build of Pixi and always has done. The following changes have been made to our custom build, not to Pixi in general.</p>
 <ul>
@@ -1382,7 +1414,7 @@
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
-		on Mon Feb 08 2016 17:00:50 GMT+0000 (GMT Standard Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Feb 12 2016 15:56:35 GMT+0000 (GMT Standard Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
