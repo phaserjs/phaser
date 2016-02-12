@@ -80,7 +80,7 @@ Phaser.Utils = {
     * Returns true or false based on the chance value (default 50%). For example if you wanted a player to have a 30% chance
     * of getting a bonus, call chanceRoll(30) - true means the chance passed, false means it failed.
     *
-    * @method Phaser.Math#chanceRoll
+    * @method Phaser.Utils#chanceRoll
     * @param {number} chance - The chance of receiving the value. A number between 0 and 100 (effectively 0% to 100%).
     * @return {boolean} True if the roll passed, or false otherwise.
     */
