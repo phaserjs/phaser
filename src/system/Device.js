@@ -1087,8 +1087,6 @@ Phaser.Device._initialize = function () {
                     }
                     else if (device.safari && device.safariVersion >= 9)
                     {
-                        var ua = navigator.userAgent;
-
                         if (/Mac OS X (\d+)_(\d+)/.test(navigator.userAgent))
                         {
                             var major = parseInt(RegExp.$1, 10);
