@@ -557,6 +557,7 @@ Phaser.Pointer.prototype = {
 
         if (event.ctrlKey && this.leftButton.isDown)
         {
+            this.leftButton.stop(event);
             this.rightButton.start(event);
         }
 

@@ -245,6 +245,10 @@ Phaser.Mouse.prototype = {
             return _this.onMouseUpGlobal(event);
         };
 
+        this._onMouseOutGlobal = function (event) {
+            return _this.onMouseOutGlobal(event);
+        };
+
         this._onMouseOut = function (event) {
             return _this.onMouseOut(event);
         };
@@ -266,6 +270,7 @@ Phaser.Mouse.prototype = {
         if (!this.game.device.cocoonJS)
         {
             window.addEventListener('mouseup', this._onMouseUpGlobal, true);
+            window.addEventListener('mouseout', this._onMouseOutGlobal, true);
             canvas.addEventListener('mouseover', this._onMouseOver, true);
             canvas.addEventListener('mouseout', this._onMouseOut, true);
         }
@@ -397,6 +402,42 @@ Phaser.Mouse.prototype = {
 
             this.input.mousePointer.stop(event);
         }
+
+    },
+
+    /**
+    * The internal method that handles the mouse out event from the window.
+    * 
+    * @method Phaser.Mouse#onMouseOutGlobal
+    * @param {MouseEvent} event - The native event from the browser. This gets stored in Mouse.event.
+    */
+    onMouseOutGlobal: function (event) {
+
+        this.event = event;
+
+        if (this.capture)
+        {
+            event.preventDefault();
+        }
+
+        this.input.mousePointer.withinGame = false;
+
+        if (!this.input.enabled || !this.enabled)
+        {
+            return;
+        }
+
+        //  If we get a mouseout event from the window then basically
+        //  something serious has gone down, usually along the lines of
+        //  the browser opening a context-menu or similar.
+        //  On OS X Chrome especially this is bad news, as it blocks
+        //  us then getting a mouseup event, so we need to force that through.
+        //  
+        //  No matter what, we must cancel the left and right buttons
+
+        this.input.mousePointer.stop(event);
+        this.input.mousePointer.leftButton.stop(event);
+        this.input.mousePointer.rightButton.stop(event);
 
     },
 
