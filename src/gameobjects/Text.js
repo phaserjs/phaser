@@ -439,8 +439,7 @@ Phaser.Text.prototype.updateText = function () {
     //  Adjust for line spacing
     if (lineSpacing !== 0)
     {
-        var diff = lineSpacing * (lines.length - 1);
-        height += diff;
+        height += lineSpacing * lines.length;
     }
 
     this.canvas.height = height * this._res;

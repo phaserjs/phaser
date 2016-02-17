@@ -379,6 +379,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * If the Mouse was over a Sprite and you then clicked it, it would dispatch another Over event. This is now surpressed if the Over event has already been dispatched previously (thanks @McFarts #2133)
 * InputHandler.pointerOver could fail to return anything in some instances, now always returns a boolean.
 * Tween.onLoop would be fired when a Tween repeated and Tween.onRepeat would be fired when a Tween looped. These are now reversed to fire correctly (thanks @vladkens #2024)
+* Text with lineSpacing set wouldn't apply the lineSpacing to the final line of text in the Text string, or to text with just single lines. This could lead to incorrect height calculations for further layout and unwanted padding at the bottom of Text objects (thanks @Lopdo #2137)
 
 ### Pixi Updates
 
