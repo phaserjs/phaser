@@ -883,6 +883,10 @@ Phaser.Device._initialize = function () {
         {
             device.arora = true;
         }
+        else if (/Edge\/\d+/.test(ua))
+        {
+            device.edge = true;
+        }
         else if (/Chrome\/(\d+)/.test(ua) && !device.windowsPhone)
         {
             device.chrome = true;
@@ -929,10 +933,6 @@ Phaser.Device._initialize = function () {
             device.trident = true;
             device.tridentVersion = parseInt(RegExp.$1, 10);
             device.ieVersion = parseInt(RegExp.$3, 10);
-        }
-        else if (/Edge\/\d+/.test(ua))
-        {
-            device.edge = true;
         }
 
         //  Silk gets its own if clause because its ua also contains 'Safari'
