@@ -1128,7 +1128,7 @@
     <section>
         <article>
 <h1>Phaser</h1><p><img src="http://phaser.io/images/github/jump.jpg" align="right"></p>
-<p>Phaser is a fast, free and fun open source HTML5 game framework. It uses <a href="https://github.com/GoodBoyDigital/pixi.js/">Pixi.js</a> for WebGL and Canvas rendering across desktop and mobile web browsers. Games can be compiled to iOS and Android apps via 3rd party tools.</p>
+<p>Phaser is a fast, free and fun open source HTML5 game framework. It uses a custom build of <a href="https://github.com/GoodBoyDigital/pixi.js/">Pixi.js</a> for WebGL and Canvas rendering across desktop and mobile web browsers. Games can be compiled to iOS, Android and desktop apps via 3rd party tools like Cocoon, Cordova and Electron.</p>
 <p>Along with the fantastic open source community Phaser is actively developed and maintained by <a href="http://www.photonstorm.com">Photon Storm Limited</a>. As a result of rapid support and a developer friendly API Phaser is currently one of the <a href="https://github.com/showcases/javascript-game-engines">most starred</a> game frameworks on Github.</p>
 <p>Thousands of developers worldwide use it. From indies and multi-national digital agencies to schools and Universities. Each creating their own incredible games. Grab the source and join in the fun!</p>
 <ul>
@@ -1144,6 +1144,7 @@
 <h2>Index</h2><ul>
 <li><a href="#whats-new">What's New?</a></li>
 <li><a href="#patreon">Support Phaser</a></li>
+<li><a href="#phaserworld">Phaser World</a></li>
 <li><a href="#download">Download Phaser</a></li>
 <li><a href="#getting-started">Getting Started</a></li>
 <li><a href="#using-phaser">Using Phaser</a></li>
@@ -1158,9 +1159,10 @@
 <h2>What's new in Phaser 2.4.5</h2><div align="center"><img src="http://phaser.io/images/github/news.jpg"></div>
 
 <blockquote>
-<p>February 2016</p>
+<p>17th February 2016</p>
 </blockquote>
-<p>Phaser 2.4.5 is our first release in 2016 and represents several months of fixes and optimizations. As a point release it's a safe upgrade from a previous 2.4 build.</p>
+<p>Phaser 2.4.5 is our first release in 2016 and represents several months of fixes and optimizations. As a point release it's a safe update from a previous 2.4 build, but as always please test first before upgrading, and be sure to skim through the extensive change log. There are some great new features including Dolby Digital sound support, loads of updates to Pixi and a new Webpack bundle.</p>
+<p>Due to on-going development of Lazer (previously known as Phaser 3) Phaser is soon to enter the LTS (<a href="https://en.wikipedia.org/wiki/Long-term_support">long-term support</a>) stage of its life. This is when we impose a feature freeze, locking the API down and responding only to bugs. This is a necessary step to allow us to focus on Lazer while still ensuring Phaser is given the support it deserves. Thousands of developers use Phaser and we've no intention of ignoring that. However with the release of 2.4.5 we will now be moderating issues opened on GitHub to this effect.</p>
 <p>As always, keep you eyes on the Phaser web site or <a href="https://twitter.com/photonstorm">Twitter</a> for the latest news.</p>
 <p>Finally we'd be extremely grateful if you could get involved with our <a href="https://www.patreon.com/photonstorm">Phaser Patreon campaign</a>. The uptake so far has been fantastic. Thank you to everyone who now supports Phaser development and shares our belief in the future of HTML5 gaming and Phasers role in that.</p>
 <p>Happy coding everyone! See you on the forums.</p>
@@ -1170,12 +1172,20 @@
 
 <p><a name="patreon"></a></p>
 <h2>Support Phaser on Patreon</h2><p><img src="http://www.phaser.io/images/patreon.png" alt="patreon"></p>
-<p>Please help support the future development of Phaser through our <a href="https://www.patreon.com/photonstorm">Patreon campaign</a>. We've some exciting plans and there's so much we'd like to do. Let's see if we can all work together to make this possible.</p>
+<p>Please help support the future development of Phaser / Lazer through our <a href="https://www.patreon.com/photonstorm">Patreon campaign</a>. We've some exciting plans and there's so much we'd like to do.</p>
 <h3>Phaser Sponsors</h3><p>Phaser is <a href="https://www.patreon.com/photonstorm">sponsored</a> by the following great companies:</p>
 <p><img src="http://www.phaser.io/images/sponsors/qici-100.png" alt="qici"></p>
 <p>QICI Engine: <a href="http://www.qiciengine.com/">A powerful one-stop integrated Phaser game editor</a></p>
 <p><img src="http://www.phaser.io/images/sponsors/zenva-100.png" alt="zenva"></p>
 <p>Zenva Academy: <a href="https://academy.zenva.com/?zva_src=phaserpatreon">Online courses on Phaser, HTML5 and native app development</a></p>
+<p><img src="http://www.phaser.io/images/sponsors/abra-100.png" alt="abra"></p>
+<p>Abra: <a href="https://aurifexlabs.com/">Complete browser based game development</a></p>
+
+<p><a name="phaserworld"></a></p>
+<h2>Phaser World</h2><div align="center"><img src="http://phaser.io/images/github/phaser-world.png"></div>
+
+<p><a href="http://phaser.io/community/newsletter">Phaser World</a> is our free weekly newsletter published every Friday. It contains a concise round-up of all the news posted to the Phaser site that week. Including new games, tutorials, videos, occasional special offers and more.</p>
+
 <p><a name="download"></a></p>
 <h2>Download Phaser</h2><p>Phaser is <a href="https://github.com/photonstorm/phaser">hosted on Github</a>. There are a number of ways to download it:</p>
 <ul>
@@ -1212,7 +1222,6 @@
 <p>With 400 pages of content you'll find detailed articles, game development &quot;Making Of&quot; guides and tutorials. All were written using the latest version of Phaser, so you won't be learning any out-dated tricks here.</p>
 <p>As well as the book you get all the source code, graphics and assets to go with it, as well as lots of extras too.</p>
 <p><a href="http://phaser.io/interphase">Read More</a></p>
-<h3>Phaser World</h3><p><a href="http://phaser.io/community/newsletter">Phaser World</a> is our free weekly newsletter, published every Friday. It's a summary of all the new content added to the Phaser site over the previous 7 days. From new game releases to tutorials, videos, conferences, special offers and more.</p>
 <h3>Game Mechanic Explorer</h3><p>The <a href="http://gamemechanicexplorer.com">Game Mechanic Explorer</a> is a great interactive way to learn how to develop specific game mechanics in Phaser. Well worth exploring once you've got your dev environment set-up.</p>
 <h3>Mighty Editor - Visual Game Editor</h3><p><a href="http://mightyfingers.com/">MightyEditor</a> is a browser-based visual Phaser game editor. Create your maps with ease, position objects and share them in seconds. It also exports to native Phaser code. Excellent for quickly setting-up levels and scenes.</p>
 
@@ -1223,7 +1232,7 @@
 <p>See the <a href="http://phaser.io/tutorials/creating-custom-phaser-builds">Creating a Custom Phaser Build</a> tutorial for details.</p>
 <h3>Webpack</h3><p>Starting from Phaser 2.4.5 we now include a custom build for Webpack.</p>
 <p>You need to add <code>p2</code> as a dependency.</p>
-<h6>Webpack config</h6><pre class="prettyprint source"><code>var path = require('path');
+<h5>Webpack Config</h5><pre class="prettyprint source"><code>var path = require('path');
 var webpack = require('webpack');
 
 var phaserModule = path.join(__dirname, '/node_modules/phaser/');
@@ -1246,7 +1255,7 @@ module.exports = {
         }
     }
     ...
-}</code></pre><h6>Main js file</h6><pre class="prettyprint source"><code>require('pixi.js');
+}</code></pre><h5>Main js file</h5><pre class="prettyprint source"><code>require('pixi.js');
 require('p2');
 require('phaser');</code></pre><h3>Building from source</h3><p>Should you wish to build Phaser from source you can take advantage of the provided <a href="http://gruntjs.com/">Grunt</a> scripts. Ensure you have the required packages by running <code>npm install</code> first.</p>
 <p>Run <code>grunt</code> to perform a default build to the <code>dist</code> folder.</p>
@@ -1289,7 +1298,7 @@ require('phaser');</code></pre><h3>Building from source</h3><p>Should you wish t
 <p>You can read all about the philosophy behind Lazer <a href="http://phaser.io/news/2016/01/phaser-in-2015-and-beyond">here</a> or join the Google Groups <a href="https://groups.google.com/d/forum/phaser3-dev">mailing list</a> where progress on a regular basis.</p>
 
 <p><a name="change-log"></a></p>
-<h2>Change Log</h2><h2>Version 2.4.5 - &quot;Sienda&quot; - in dev</h2><h3>New Features</h3><ul>
+<h2>Change Log</h2><h2>Version 2.4.5 - &quot;Sienda&quot; - 17th February 2016</h2><h3>New Features</h3><ul>
 <li>You can use the new const <code>Phaser.PENDING_ATLAS</code> as the texture key for any sprite. Doing this then sets the key to be the <code>frame</code> argument (the frame is set to zero). This allows you to create sprites using <code>load.image</code> during development, and then change them to use a Texture Atlas later in development by simply searching your code for 'PENDING_ATLAS' and swapping it to be the key of the atlas data.</li>
 <li>BitmapText.cleanText is a new method that will scan the given text and either remove or replace all characters that are not present in the font data.</li>
 <li>ArcadePhysics.Body.onCeiling is a new complementary method to go with onFloor (thanks @yigitozdemir #1610)</li>
@@ -1359,6 +1368,14 @@ require('phaser');</code></pre><h3>Building from source</h3><p>Should you wish t
 <li>Both <code>transparent</code> and <code>antialias</code> were ignored if set to <code>false</code> in a Game configuration object, as the <code>parseConfig</code> method didn't check for falsey values (thanks @amadeus #2302)</li>
 <li>GameObject.revive used to add the health amount given to the Game Object (via <code>heal</code>) instead of setting it as the new health amount. It now calls <code>setHealth</code> instead, giving it the exact amount (thanks @netgfx #2231)</li>
 <li>Group.add and Group.addAt would forget to remove the child from the hash of its previous Group if it had a physics body enabled, causing unbounded hash increase (thanks @strawlion @McIntozh #2232)</li>
+<li>Fixed a really nasty bug in Chrome OS X where a ctrl + click (i.e. simulated right-click) on a trackpad would lock up the Pointer leftButton, causing future clicks to fail. This is now handled by way of a mouseout listener on the window object, sadly the only way to force a mouseup in Chrome (thanks @KyleU #2286)</li>
+<li>ctrl + click is now only considered a right-click if event.buttons = 1, this should allow you to use ctrl as a key modifier on Windows (and any device with a multi-button mouse attached) and still use ctrl + click on OS X / trackpads for a right-click (thanks @yuvalsv #2167)</li>
+<li>If the Mouse was over a Sprite and you then clicked it, it would dispatch another Over event. This is now surpressed if the Over event has already been dispatched previously (thanks @McFarts #2133)</li>
+<li>InputHandler.pointerOver could fail to return anything in some instances, now always returns a boolean.</li>
+<li>Tween.onLoop would be fired when a Tween repeated and Tween.onRepeat would be fired when a Tween looped. These are now reversed to fire correctly (thanks @vladkens #2024)</li>
+<li>Text with lineSpacing set wouldn't apply the lineSpacing to the final line of text in the Text string, or to text with just single lines. This could lead to incorrect height calculations for further layout and unwanted padding at the bottom of Text objects (thanks @Lopdo #2137)</li>
+<li>SpriteBatch incorrectly applied the PIXI SpriteBatch prototype over the top of Phaser.Group meaning that Sprites with animations wouldn't render correctly (thanks @qdrj #1951)</li>
+<li>Color.updateColor would pass <code>color.a</code> to the <code>getColor32</code> method without first putting the value into the range 0 - 255 (thanks @mainpsyhos #2327)</li>
 </ul>
 <h3>Pixi Updates</h3><p>Please note that Phaser uses a custom build of Pixi and always has done. The following changes have been made to our custom build, not to Pixi in general.</p>
 <ul>
@@ -1370,6 +1387,8 @@ require('phaser');</code></pre><h3>Building from source</h3><p>Should you wish t
 <li>PIXI.WebGLGraphics.stencilBufferLimit is a new integer that allows you to define how many points exist in a Graphics object before Pixi swaps to using the Stencil Buffer to render it. The default is 6 but can be increased. This fixes issues with things like Quadratic curves not rendering as masks in WebGL.</li>
 <li>If a Display Object with a mask contained a child with a Filter, then the child would not render. The WebGLFilterManager now retains state and creates a new stencil buffer as required (thanks @hightopo #1842)</li>
 <li>The Filter Texture and GL Viewport are now properly resized, fixing issues with custom resolutions and filters (thanks @englercj @amadeus #2326 #2320)</li>
+<li>Graphics.generateTexture has a new argument <code>padding</code> which allows you to add extra spacing onto the generated texture. This is useful for small Graphics objects where you find a few pixels getting sliced off the edges due to rounding issues (#1933)</li>
+<li>DisplayObject._generateCachedSprite (which is called from <code>updateCache</code> or when <code>cacheAsBitmap</code> is enabled) would bitwise | 1 the bounds width and height. This would often lead to incorrect rounding (heights of 4 would become 5, while heights of 5 would remain 5). This has now been removed and the width and height are passed through Mail.ceil and then checked to make sure they aren't less than 1 pixel in either direction (thanks @alesdotio #2078)</li>
 </ul>
 <p>For changes in previous releases please see the extensive <a href="https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md">Version History</a>.</p>
 
@@ -1414,7 +1433,7 @@ require('phaser');</code></pre><h3>Building from source</h3><p>Should you wish t
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
-		on Fri Feb 12 2016 15:56:35 GMT+0000 (GMT Standard Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Feb 17 2016 13:24:45 GMT+0000 (GMT Standard Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

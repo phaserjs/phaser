@@ -4,7 +4,7 @@
 
 <img src="http://phaser.io/images/github/jump.jpg" align="right">
 
-Phaser is a fast, free and fun open source HTML5 game framework. It uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) for WebGL and Canvas rendering across desktop and mobile web browsers. Games can be compiled to iOS and Android apps via 3rd party tools.
+Phaser is a fast, free and fun open source HTML5 game framework. It uses a custom build of [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) for WebGL and Canvas rendering across desktop and mobile web browsers. Games can be compiled to iOS, Android and desktop apps via 3rd party tools like Cocoon, Cordova and Electron.
 
 Along with the fantastic open source community Phaser is actively developed and maintained by [Photon Storm Limited](http://www.photonstorm.com). As a result of rapid support and a developer friendly API Phaser is currently one of the [most starred](https://github.com/showcases/javascript-game-engines) game frameworks on Github.
 
@@ -24,6 +24,7 @@ Thousands of developers worldwide use it. From indies and multi-national digital
 
 - [What's New?](#whats-new)
 - [Support Phaser](#patreon)
+- [Phaser World](#phaserworld)
 - [Download Phaser](#download)
 - [Getting Started](#getting-started)
 - [Using Phaser](#using-phaser)
@@ -40,9 +41,11 @@ Thousands of developers worldwide use it. From indies and multi-national digital
 
 <div align="center"><img src="http://phaser.io/images/github/news.jpg"></div>
 
-> February 2016
+> 17th February 2016
 
-Phaser 2.4.5 is our first release in 2016 and represents several months of fixes and optimizations. As a point release it's a safe upgrade from a previous 2.4 build.
+Phaser 2.4.5 is our first release in 2016 and represents several months of fixes and optimizations. As a point release it's a safe update from a previous 2.4 build, but as always please test first before upgrading, and be sure to skim through the extensive change log. There are some great new features including Dolby Digital sound support, loads of updates to Pixi and a new Webpack bundle.
+
+Due to on-going development of Lazer (previously known as Phaser 3) Phaser is soon to enter the LTS ([long-term support](https://en.wikipedia.org/wiki/Long-term_support)) stage of its life. This is when we impose a feature freeze, locking the API down and responding only to bugs. This is a necessary step to allow us to focus on Lazer while still ensuring Phaser is given the support it deserves. Thousands of developers use Phaser and we've no intention of ignoring that. However with the release of 2.4.5 we will now be moderating issues opened on GitHub to this effect.
 
 As always, keep you eyes on the Phaser web site or [Twitter](https://twitter.com/photonstorm) for the latest news.
 
@@ -63,7 +66,7 @@ Rich - [@photonstorm](https://twitter.com/photonstorm)
 
 ![patreon](http://www.phaser.io/images/patreon.png)
 
-Please help support the future development of Phaser through our [Patreon campaign](https://www.patreon.com/photonstorm). We've some exciting plans and there's so much we'd like to do. Let's see if we can all work together to make this possible.
+Please help support the future development of Phaser / Lazer through our [Patreon campaign](https://www.patreon.com/photonstorm). We've some exciting plans and there's so much we'd like to do.
 
 ### Phaser Sponsors
 
@@ -76,6 +79,21 @@ QICI Engine: [A powerful one-stop integrated Phaser game editor](http://www.qici
 ![zenva](http://www.phaser.io/images/sponsors/zenva-100.png)
 
 Zenva Academy: [Online courses on Phaser, HTML5 and native app development](https://academy.zenva.com/?zva_src=phaserpatreon)
+
+![abra](http://www.phaser.io/images/sponsors/abra-100.png)
+
+Abra: [Complete browser based game development](https://aurifexlabs.com/)
+
+![div](http://www.phaser.io/images/github/div.png)
+
+<a name="phaserworld"></a>
+## Phaser World
+
+<div align="center"><img src="http://phaser.io/images/github/phaser-world.png"></div>
+
+[Phaser World](http://phaser.io/community/newsletter) is our free weekly newsletter published every Friday. It contains a concise round-up of all the news posted to the Phaser site that week. Including new games, tutorials, videos, occasional special offers and more.
+
+![div](http://www.phaser.io/images/github/div.png)
 
 <a name="download"></a>
 ## Download Phaser
@@ -156,10 +174,6 @@ As well as the book you get all the source code, graphics and assets to go with 
 
 [Read More](http://phaser.io/interphase)
 
-### Phaser World
-
-[Phaser World](http://phaser.io/community/newsletter) is our free weekly newsletter, published every Friday. It's a summary of all the new content added to the Phaser site over the previous 7 days. From new game releases to tutorials, videos, conferences, special offers and more.
-
 ### Game Mechanic Explorer
 
 The [Game Mechanic Explorer](http://gamemechanicexplorer.com) is a great interactive way to learn how to develop specific game mechanics in Phaser. Well worth exploring once you've got your dev environment set-up.
@@ -189,7 +203,8 @@ Starting from Phaser 2.4.5 we now include a custom build for Webpack.
 
 You need to add `p2` as a dependency.
 
-###### Webpack config
+##### Webpack Config
+
 ```
 var path = require('path');
 var webpack = require('webpack');
@@ -216,7 +231,9 @@ module.exports = {
     ...
 }
 ```
-###### Main js file
+
+##### Main js file
+
 ```
 require('pixi.js');
 require('p2');
@@ -299,7 +316,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 <a name="change-log"></a>
 ## Change Log
 
-## Version 2.4.5 - "Sienda" - in dev
+## Version 2.4.5 - "Sienda" - 17th February 2016
 
 ### New Features
 

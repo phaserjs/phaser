@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.4.5 "Sienda" - Built: Fri Feb 12 2016 15:59:25
+* v2.4.5 "Sienda" - Built: Wed Feb 17 2016 13:25:37
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -14411,17 +14411,21 @@ PIXI.DisplayObject.prototype._generateCachedSprite = function()
 
     var bounds = this.getLocalBounds();
 
+    //  Round it off and force non-zero dimensions
+    bounds.width = Math.max(1, Math.ceil(bounds.width));
+    bounds.height = Math.max(1, Math.ceil(bounds.height));
+
     this.updateTransform();
 
     if (!this._cachedSprite)
     {
-        var renderTexture = new PIXI.RenderTexture(bounds.width | 1, bounds.height | 1);
+        var renderTexture = new PIXI.RenderTexture(bounds.width, bounds.height);
         this._cachedSprite = new PIXI.Sprite(renderTexture);
         this._cachedSprite.worldTransform = this.worldTransform;
     }
     else
     {
-        this._cachedSprite.texture.resize(bounds.width | 1, bounds.height | 1);
+        this._cachedSprite.texture.resize(bounds.width, bounds.height);
     }
 
     //  Remove filters
@@ -14434,8 +14438,8 @@ PIXI.DisplayObject.prototype._generateCachedSprite = function()
     PIXI.DisplayObject._tempMatrix.ty = -bounds.y;
 
     this._cachedSprite.texture.render(this, PIXI.DisplayObject._tempMatrix, true);
-    this._cachedSprite.anchor.x = -( bounds.x / bounds.width );
-    this._cachedSprite.anchor.y = -( bounds.y / bounds.height );
+    this._cachedSprite.anchor.x = -(bounds.x / bounds.width);
+    this._cachedSprite.anchor.y = -(bounds.y / bounds.height);
 
     this._filters = tempFilters;
 
@@ -22727,7 +22731,7 @@ var Phaser = Phaser || {
     * @constant
     * @type {string}
     */
-    VERSION: '2.4.5-RC2',
+    VERSION: '2.4.5',
 
     /**
     * An array of Phaser game instances.
@@ -36357,6 +36361,10 @@ Phaser.Mouse.prototype = {
             return _this.onMouseUpGlobal(event);
         };
 
+        this._onMouseOutGlobal = function (event) {
+            return _this.onMouseOutGlobal(event);
+        };
+
         this._onMouseOut = function (event) {
             return _this.onMouseOut(event);
         };
@@ -36378,6 +36386,7 @@ Phaser.Mouse.prototype = {
         if (!this.game.device.cocoonJS)
         {
             window.addEventListener('mouseup', this._onMouseUpGlobal, true);
+            window.addEventListener('mouseout', this._onMouseOutGlobal, true);
             canvas.addEventListener('mouseover', this._onMouseOver, true);
             canvas.addEventListener('mouseout', this._onMouseOut, true);
         }
@@ -36509,6 +36518,42 @@ Phaser.Mouse.prototype = {
 
             this.input.mousePointer.stop(event);
         }
+
+    },
+
+    /**
+    * The internal method that handles the mouse out event from the window.
+    * 
+    * @method Phaser.Mouse#onMouseOutGlobal
+    * @param {MouseEvent} event - The native event from the browser. This gets stored in Mouse.event.
+    */
+    onMouseOutGlobal: function (event) {
+
+        this.event = event;
+
+        if (this.capture)
+        {
+            event.preventDefault();
+        }
+
+        this.input.mousePointer.withinGame = false;
+
+        if (!this.input.enabled || !this.enabled)
+        {
+            return;
+        }
+
+        //  If we get a mouseout event from the window then basically
+        //  something serious has gone down, usually along the lines of
+        //  the browser opening a context-menu or similar.
+        //  On OS X Chrome especially this is bad news, as it blocks
+        //  us then getting a mouseup event, so we need to force that through.
+        //  
+        //  No matter what, we must cancel the left and right buttons
+
+        this.input.mousePointer.stop(event);
+        this.input.mousePointer.leftButton.stop(event);
+        this.input.mousePointer.rightButton.stop(event);
 
     },
 
@@ -38116,10 +38161,12 @@ Phaser.Pointer.prototype = {
         }
 
         //  On OS X (and other devices with trackpads) you have to press CTRL + the pad
-        //  to initiate a right-click event, so we'll check for that here
+        //  to initiate a right-click event, so we'll check for that here ONLY if
+        //  event.buttons = 1 (i.e. they only have a 1 button mouse or trackpad)
 
-        if (event.ctrlKey && this.leftButton.isDown)
+        if (event.buttons === 1 && event.ctrlKey && this.leftButton.isDown)
         {
+            this.leftButton.stop(event);
             this.rightButton.start(event);
         }
 
@@ -39840,6 +39887,8 @@ Phaser.InputHandler.prototype = {
                     return true;
                 }
             }
+
+            return false;
         }
         else
         {
@@ -40129,6 +40178,8 @@ Phaser.InputHandler.prototype = {
 
         if (data.isOver === false || pointer.dirty)
         {
+            var sendEvent = (data.isOver === false);
+
             data.isOver = true;
             data.isOut = false;
             data.timeOver = this.game.time.time;
@@ -40141,7 +40192,7 @@ Phaser.InputHandler.prototype = {
                 this._setHandCursor = true;
             }
 
-            if (this.sprite && this.sprite.events)
+            if (sendEvent && this.sprite && this.sprite.events)
             {
                 this.sprite.events.onInputOver$dispatch(this.sprite, pointer);
             }
@@ -47669,7 +47720,7 @@ Phaser.SpriteBatch = function (game, parent, name, addToStage) {
 
 };
 
-Phaser.SpriteBatch.prototype = Phaser.Utils.extend(true, Phaser.SpriteBatch.prototype, Phaser.Group.prototype, PIXI.SpriteBatch.prototype);
+Phaser.SpriteBatch.prototype = Phaser.Utils.extend(true, Phaser.SpriteBatch.prototype, PIXI.SpriteBatch.prototype, Phaser.Group.prototype);
 
 Phaser.SpriteBatch.prototype.constructor = Phaser.SpriteBatch;
 
@@ -50579,19 +50630,26 @@ PIXI.Graphics.prototype.clear = function()
  * This can be quite useful if your geometry is complicated and needs to be reused multiple times.
  *
  * @method generateTexture
- * @param resolution {Number} The resolution of the texture being generated
- * @param scaleMode {Number} Should be one of the PIXI.scaleMode consts
+ * @param [resolution=1] {Number} The resolution of the texture being generated
+ * @param [scaleMode=0] {Number} Should be one of the PIXI.scaleMode consts
+ * @param [padding=0] {Number} Add optional extra padding to the generated texture (default 0)
  * @return {Texture} a texture of the graphics object
  */
-PIXI.Graphics.prototype.generateTexture = function(resolution, scaleMode)
+PIXI.Graphics.prototype.generateTexture = function(resolution, scaleMode, padding)
 {
-    resolution = resolution || 1;
+    if (resolution === undefined) { resolution = 1; }
+    if (scaleMode === undefined) { scaleMode = PIXI.scaleModes.DEFAULT; }
+    if (padding === undefined) { padding = 0; }
 
     var bounds = this.getBounds();
+
+    bounds.width += padding;
+    bounds.height += padding;
    
     var canvasBuffer = new PIXI.CanvasBuffer(bounds.width * resolution, bounds.height * resolution);
     
     var texture = PIXI.Texture.fromCanvas(canvasBuffer.canvas, scaleMode);
+
     texture.baseTexture.resolution = resolution;
 
     canvasBuffer.context.scale(resolution, resolution);
@@ -54094,8 +54152,7 @@ Phaser.Text.prototype.updateText = function () {
     //  Adjust for line spacing
     if (lineSpacing !== 0)
     {
-        var diff = lineSpacing * (lines.length - 1);
-        height += diff;
+        height += lineSpacing * lines.length;
     }
 
     this.canvas.height = height * this._res;
@@ -58642,8 +58699,6 @@ Phaser.Device._initialize = function () {
                     }
                     else if (device.safari && device.safariVersion >= 9)
                     {
-                        var ua = navigator.userAgent;
-
                         if (/Mac OS X (\d+)_(\d+)/.test(navigator.userAgent))
                         {
                             var major = parseInt(RegExp.$1, 10);
@@ -61884,7 +61939,7 @@ Phaser.Tween.prototype = {
     * @param {function|string} [ease=null] - Easing function. If not set it will default to Phaser.Easing.Default, which is Phaser.Easing.Linear.None by default but can be over-ridden.
     * @param {boolean} [autoStart=false] - Set to `true` to allow this tween to start automatically. Otherwise call Tween.start().
     * @param {number} [delay=0] - Delay before this tween will start in milliseconds. Defaults to 0, no delay.
-    * @param {number} [repeat=0] - Should the tween automatically restart once complete? If you want it to run forever set as -1. This only effects this induvidual tween, not any chained tweens.
+    * @param {number} [repeat=0] - Should the tween automatically restart once complete? If you want it to run forever set as -1. This only effects this individual tween, not any chained tweens.
     * @param {boolean} [yoyo=false] - A tween that yoyos will reverse itself and play backwards automatically. A yoyo'd tween doesn't fire the Tween.onComplete event, so listen for Tween.onLoop instead.
     * @return {Phaser.Tween} This Tween object.
     */
@@ -61931,7 +61986,7 @@ Phaser.Tween.prototype = {
     * @param {function|string} [ease=null] - Easing function. If not set it will default to Phaser.Easing.Default, which is Phaser.Easing.Linear.None by default but can be over-ridden.
     * @param {boolean} [autoStart=false] - Set to `true` to allow this tween to start automatically. Otherwise call Tween.start().
     * @param {number} [delay=0] - Delay before this tween will start in milliseconds. Defaults to 0, no delay.
-    * @param {number} [repeat=0] - Should the tween automatically restart once complete? If you want it to run forever set as -1. This only effects this induvidual tween, not any chained tweens.
+    * @param {number} [repeat=0] - Should the tween automatically restart once complete? If you want it to run forever set as -1. This only effects this individual tween, not any chained tweens.
     * @param {boolean} [yoyo=false] - A tween that yoyos will reverse itself and play backwards automatically. A yoyo'd tween doesn't fire the Tween.onComplete event, so listen for Tween.onLoop instead.
     * @return {Phaser.Tween} This Tween object.
     */
@@ -62449,7 +62504,14 @@ Phaser.Tween.prototype = {
         }
         else if (status === Phaser.TweenData.LOOPED)
         {
-            this.onLoop.dispatch(this.target, this);
+            if (this.repeatCounter === -1)
+            {
+                this.onLoop.dispatch(this.target, this);
+            }
+            else
+            {
+                this.onRepeat.dispatch(this.target, this);
+            }
             return true;
         }
         else if (status === Phaser.TweenData.COMPLETE)
@@ -62484,7 +62546,7 @@ Phaser.Tween.prototype = {
                 if (this.repeatCounter === -1)
                 {
                     this.timeline[this.current].start();
-                    this.onRepeat.dispatch(this.target, this);
+                    this.onLoop.dispatch(this.target, this);
                     return true;
                 }
                 else if (this.repeatCounter > 0)
@@ -80271,7 +80333,7 @@ Phaser.Color = {
     },
 
     /**
-    * Takes a color object and updates the rgba property.
+    * Takes a color object and updates the rgba, color and color32 properties.
     *
     * @method Phaser.Color.updateColor
     * @static
@@ -80282,7 +80344,7 @@ Phaser.Color = {
 
         out.rgba = 'rgba(' + out.r.toString() + ',' + out.g.toString() + ',' + out.b.toString() + ',' + out.a.toString() + ')';
         out.color = Phaser.Color.getColor(out.r, out.g, out.b);
-        out.color32 = Phaser.Color.getColor32(out.a, out.r, out.g, out.b);
+        out.color32 = Phaser.Color.getColor32(out.a * 255, out.r, out.g, out.b);
 
         return out;
 

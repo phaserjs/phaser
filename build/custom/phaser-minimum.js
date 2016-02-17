@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.4.5 "Sienda" - Built: Fri Feb 12 2016 15:59:51
+* v2.4.5 "Sienda" - Built: Wed Feb 17 2016 13:26:05
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -798,17 +798,21 @@ PIXI.DisplayObject.prototype._generateCachedSprite = function()
 
     var bounds = this.getLocalBounds();
 
+    //  Round it off and force non-zero dimensions
+    bounds.width = Math.max(1, Math.ceil(bounds.width));
+    bounds.height = Math.max(1, Math.ceil(bounds.height));
+
     this.updateTransform();
 
     if (!this._cachedSprite)
     {
-        var renderTexture = new PIXI.RenderTexture(bounds.width | 1, bounds.height | 1);
+        var renderTexture = new PIXI.RenderTexture(bounds.width, bounds.height);
         this._cachedSprite = new PIXI.Sprite(renderTexture);
         this._cachedSprite.worldTransform = this.worldTransform;
     }
     else
     {
-        this._cachedSprite.texture.resize(bounds.width | 1, bounds.height | 1);
+        this._cachedSprite.texture.resize(bounds.width, bounds.height);
     }
 
     //  Remove filters
@@ -821,8 +825,8 @@ PIXI.DisplayObject.prototype._generateCachedSprite = function()
     PIXI.DisplayObject._tempMatrix.ty = -bounds.y;
 
     this._cachedSprite.texture.render(this, PIXI.DisplayObject._tempMatrix, true);
-    this._cachedSprite.anchor.x = -( bounds.x / bounds.width );
-    this._cachedSprite.anchor.y = -( bounds.y / bounds.height );
+    this._cachedSprite.anchor.x = -(bounds.x / bounds.width);
+    this._cachedSprite.anchor.y = -(bounds.y / bounds.height);
 
     this._filters = tempFilters;
 
@@ -7917,7 +7921,7 @@ var Phaser = Phaser || {
     * @constant
     * @type {string}
     */
-    VERSION: '2.4.5-RC2',
+    VERSION: '2.4.5',
 
     /**
     * An array of Phaser game instances.
@@ -21547,6 +21551,10 @@ Phaser.Mouse.prototype = {
             return _this.onMouseUpGlobal(event);
         };
 
+        this._onMouseOutGlobal = function (event) {
+            return _this.onMouseOutGlobal(event);
+        };
+
         this._onMouseOut = function (event) {
             return _this.onMouseOut(event);
         };
@@ -21568,6 +21576,7 @@ Phaser.Mouse.prototype = {
         if (!this.game.device.cocoonJS)
         {
             window.addEventListener('mouseup', this._onMouseUpGlobal, true);
+            window.addEventListener('mouseout', this._onMouseOutGlobal, true);
             canvas.addEventListener('mouseover', this._onMouseOver, true);
             canvas.addEventListener('mouseout', this._onMouseOut, true);
         }
@@ -21699,6 +21708,42 @@ Phaser.Mouse.prototype = {
 
             this.input.mousePointer.stop(event);
         }
+
+    },
+
+    /**
+    * The internal method that handles the mouse out event from the window.
+    * 
+    * @method Phaser.Mouse#onMouseOutGlobal
+    * @param {MouseEvent} event - The native event from the browser. This gets stored in Mouse.event.
+    */
+    onMouseOutGlobal: function (event) {
+
+        this.event = event;
+
+        if (this.capture)
+        {
+            event.preventDefault();
+        }
+
+        this.input.mousePointer.withinGame = false;
+
+        if (!this.input.enabled || !this.enabled)
+        {
+            return;
+        }
+
+        //  If we get a mouseout event from the window then basically
+        //  something serious has gone down, usually along the lines of
+        //  the browser opening a context-menu or similar.
+        //  On OS X Chrome especially this is bad news, as it blocks
+        //  us then getting a mouseup event, so we need to force that through.
+        //  
+        //  No matter what, we must cancel the left and right buttons
+
+        this.input.mousePointer.stop(event);
+        this.input.mousePointer.leftButton.stop(event);
+        this.input.mousePointer.rightButton.stop(event);
 
     },
 
@@ -23306,10 +23351,12 @@ Phaser.Pointer.prototype = {
         }
 
         //  On OS X (and other devices with trackpads) you have to press CTRL + the pad
-        //  to initiate a right-click event, so we'll check for that here
+        //  to initiate a right-click event, so we'll check for that here ONLY if
+        //  event.buttons = 1 (i.e. they only have a 1 button mouse or trackpad)
 
-        if (event.ctrlKey && this.leftButton.isDown)
+        if (event.buttons === 1 && event.ctrlKey && this.leftButton.isDown)
         {
+            this.leftButton.stop(event);
             this.rightButton.start(event);
         }
 
@@ -25030,6 +25077,8 @@ Phaser.InputHandler.prototype = {
                     return true;
                 }
             }
+
+            return false;
         }
         else
         {
@@ -25319,6 +25368,8 @@ Phaser.InputHandler.prototype = {
 
         if (data.isOver === false || pointer.dirty)
         {
+            var sendEvent = (data.isOver === false);
+
             data.isOver = true;
             data.isOut = false;
             data.timeOver = this.game.time.time;
@@ -25331,7 +25382,7 @@ Phaser.InputHandler.prototype = {
                 this._setHandCursor = true;
             }
 
-            if (this.sprite && this.sprite.events)
+            if (sendEvent && this.sprite && this.sprite.events)
             {
                 this.sprite.events.onInputOver$dispatch(this.sprite, pointer);
             }
@@ -30462,7 +30513,7 @@ Phaser.SpriteBatch = function (game, parent, name, addToStage) {
 
 };
 
-Phaser.SpriteBatch.prototype = Phaser.Utils.extend(true, Phaser.SpriteBatch.prototype, Phaser.Group.prototype, PIXI.SpriteBatch.prototype);
+Phaser.SpriteBatch.prototype = Phaser.Utils.extend(true, Phaser.SpriteBatch.prototype, PIXI.SpriteBatch.prototype, Phaser.Group.prototype);
 
 Phaser.SpriteBatch.prototype.constructor = Phaser.SpriteBatch;
 
@@ -31556,8 +31607,6 @@ Phaser.Device._initialize = function () {
                     }
                     else if (device.safari && device.safariVersion >= 9)
                     {
-                        var ua = navigator.userAgent;
-
                         if (/Mac OS X (\d+)_(\d+)/.test(navigator.userAgent))
                         {
                             var major = parseInt(RegExp.$1, 10);
@@ -47755,7 +47804,7 @@ Phaser.Color = {
     },
 
     /**
-    * Takes a color object and updates the rgba property.
+    * Takes a color object and updates the rgba, color and color32 properties.
     *
     * @method Phaser.Color.updateColor
     * @static
@@ -47766,7 +47815,7 @@ Phaser.Color = {
 
         out.rgba = 'rgba(' + out.r.toString() + ',' + out.g.toString() + ',' + out.b.toString() + ',' + out.a.toString() + ')';
         out.color = Phaser.Color.getColor(out.r, out.g, out.b);
-        out.color32 = Phaser.Color.getColor32(out.a, out.r, out.g, out.b);
+        out.color32 = Phaser.Color.getColor32(out.a * 255, out.r, out.g, out.b);
 
         return out;
 
