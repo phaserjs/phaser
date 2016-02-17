@@ -446,7 +446,7 @@ Phaser.Color = {
     },
 
     /**
-    * Takes a color object and updates the rgba property.
+    * Takes a color object and updates the rgba, color and color32 properties.
     *
     * @method Phaser.Color.updateColor
     * @static
@@ -457,7 +457,7 @@ Phaser.Color = {
 
         out.rgba = 'rgba(' + out.r.toString() + ',' + out.g.toString() + ',' + out.b.toString() + ',' + out.a.toString() + ')';
         out.color = Phaser.Color.getColor(out.r, out.g, out.b);
-        out.color32 = Phaser.Color.getColor32(out.a, out.r, out.g, out.b);
+        out.color32 = Phaser.Color.getColor32(out.a * 255, out.r, out.g, out.b);
 
         return out;
 
