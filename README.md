@@ -378,6 +378,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * ctrl + click is now only considered a right-click if event.buttons = 1, this should allow you to use ctrl as a key modifier on Windows (and any device with a multi-button mouse attached) and still use ctrl + click on OS X / trackpads for a right-click (thanks @yuvalsv #2167)
 * If the Mouse was over a Sprite and you then clicked it, it would dispatch another Over event. This is now surpressed if the Over event has already been dispatched previously (thanks @McFarts #2133)
 * InputHandler.pointerOver could fail to return anything in some instances, now always returns a boolean.
+* Tween.onLoop would be fired when a Tween repeated and Tween.onRepeat would be fired when a Tween looped. These are now reversed to fire correctly (thanks @vladkens #2024)
 
 ### Pixi Updates
 
