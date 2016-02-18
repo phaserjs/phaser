@@ -3227,20 +3227,20 @@ Important for when you don't want to modify the source object by forcing in `com
 * @method PIXI.BaseTexture#updateSourceImage
 * @param {String} newSrc - the path of the image
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\BaseTexture.js
-* @sourceline 195
+* @sourceline 198
 */
 /**
 * @description Sets all glTextures to be dirty.
 * @method PIXI.BaseTexture#dirty
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\BaseTexture.js
-* @sourceline 208
+* @sourceline 211
 */
 /**
 * @description Removes the base texture from the GPU, useful for managing resources on the GPU.
 Atexture is still 100% usable and will simply be reuploaded if there is a sprite on screen that is using it.
 * @method PIXI.BaseTexture#unloadFromGPU
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\BaseTexture.js
-* @sourceline 221
+* @sourceline 224
 */
 /**
 * @description Helper function that creates a base texture from the given image url.
@@ -3251,7 +3251,7 @@ If the image is not in the base texture cache it will be created and loaded.
 * @param {Number} scaleMode - See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
 * @return {PIXI.BaseTexture} 
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\BaseTexture.js
-* @sourceline 249
+* @sourceline 252
 */
 /**
 * @description Helper function that creates a base texture from the given canvas element.
@@ -3260,7 +3260,7 @@ If the image is not in the base texture cache it will be created and loaded.
 * @param {Number} scaleMode - See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
 * @return {PIXI.BaseTexture} 
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\BaseTexture.js
-* @sourceline 292
+* @sourceline 295
 */
 /**
 * @fileoverview

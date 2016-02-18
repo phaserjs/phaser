@@ -2528,200 +2528,6 @@ onConnectCallback, onDisconnectCallback, onDownCallback, onUpCallback, onAxisCal
 
     
     <div class="description">
-        <p>Returns the &quot;just released&quot; state of a button from ANY gamepad connected. Just released is considered as being true if the button was released within the duration given (default 250ms).</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-		<th>Argument</th>
-		
-
-		
-		<th>Default</th>
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>buttonCode</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"><p>The buttonCode of the button to check for.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>duration</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    250
-                
-                </td>
-            
-
-            <td class="description last"><p>The duration below which the button is considered as being just released.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-
-    
-    <h5>Returns:</h5>
-    <div class="returns">
-        
-            
-    
-        <div class="returns-type">
-        
-<span class="param-type">boolean</span>
-
- -
-        </div>
-    
-    <div class="returns-desc param-desc">
-        <p>True if the button is just released otherwise false.</p>
-    </div>
-
-
-        
-    </div>
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_input_Gamepad.js.html">input/Gamepad.js</a>, <a href="src_input_Gamepad.js.html#sunlight-1-line-426">line 426</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="justPressed"><span class="type-signature"></span>justPressed<span class="signature">(buttonCode, <span class="optional">duration</span>)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
         <p>Returns the &quot;just pressed&quot; state of a button from ANY gamepad connected. Just pressed is considered true if the button was pressed down within the duration given (default 250ms).</p>
     </div>
     
@@ -2881,6 +2687,200 @@ onConnectCallback, onDisconnectCallback, onDownCallback, onUpCallback, onAxisCal
     
     <dt class="tag-source">Source -
     <a href="src_input_Gamepad.js.html">input/Gamepad.js</a>, <a href="src_input_Gamepad.js.html#sunlight-1-line-405">line 405</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+       
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="justPressed"><span class="type-signature"></span>justPressed<span class="signature">(buttonCode, <span class="optional">duration</span>)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Returns the &quot;just released&quot; state of a button from ANY gamepad connected. Just released is considered as being true if the button was released within the duration given (default 250ms).</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+		<th>Default</th>
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>buttonCode</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The buttonCode of the button to check for.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>duration</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    250
+                
+                </td>
+            
+
+            <td class="description last"><p>The duration below which the button is considered as being just released.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+
+    
+    <h5>Returns:</h5>
+    <div class="returns">
+        
+            
+    
+        <div class="returns-type">
+        
+<span class="param-type">boolean</span>
+
+ -
+        </div>
+    
+    <div class="returns-desc param-desc">
+        <p>True if the button is just released otherwise false.</p>
+    </div>
+
+
+        
+    </div>
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_Gamepad.js.html">input/Gamepad.js</a>, <a href="src_input_Gamepad.js.html#sunlight-1-line-426">line 426</a>
     </dt>
     
 
@@ -3287,7 +3287,7 @@ This MUST be called manually before Phaser will start polling the Gamepad API.</
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
-		on Wed Feb 17 2016 13:24:49 GMT+0000 (GMT Standard Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Thu Feb 18 2016 14:41:02 GMT+0000 (GMT Standard Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

@@ -2,6 +2,7 @@
 
 declare module PIXI {
 
+    export var game: Phaser.Game;
     export var WEBGL_RENDERER: number;
     export var CANVAS_RENDERER: number;
     export var VERSION: string;
@@ -101,7 +102,7 @@ declare module PIXI {
         width: number;
 
         destroy(): void;
-        render(stage: Stage): void;
+        render(stage: DisplayObjectContainer): void;
         resize(width: number, height: number): void;
 
     }
@@ -282,7 +283,6 @@ declare module PIXI {
         * @param imageUrl The image url of the texture
         * @param crossorigin -
         * @param scaleMode See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
-        * @return BaseTexture
         */
         static fromImage(imageUrl: string, crossorigin?: boolean, scaleMode?: scaleModes): BaseTexture;
 
@@ -291,7 +291,6 @@ declare module PIXI {
         * 
         * @param canvas The canvas element source of the texture
         * @param scaleMode See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
-        * @return BaseTexture
         */
         static fromCanvas(canvas: HTMLCanvasElement, scaleMode?: scaleModes): BaseTexture;
 
@@ -595,13 +594,19 @@ declare module PIXI {
         * 
         * @param game A reference to the Phaser Game instance
         */
-        constructor(width?: number, height?: number, options?: PixiRendererOptions);
+        constructor(game: Phaser.Game);
 
+        game: Phaser.Game;
 
         /**
-        * Whether the render view should be resized automatically
+        * The renderer type.
         */
-        autoResize: boolean;
+        type: number;
+
+        /**
+        * The resolution of the canvas.
+        */
+        resolution: number;
 
         /**
         * This sets if the CanvasRenderer will clear the canvas or not before the new render pass.
@@ -612,51 +617,14 @@ declare module PIXI {
         clearBeforeRender: boolean;
 
         /**
-        * The canvas 2d context that everything is drawn with
-        */
-        context: CanvasRenderingContext2D;
-
-        /**
-        * Internal var.
-        */
-        count: number;
-
-        /**
-        * The height of the canvas view
-        * Default: 600
-        */
-        height: number;
-        maskManager: CanvasMaskManager;
-
-        /**
-        * Boolean flag controlling canvas refresh.
-        */
-        refresh: boolean;
-
-        /**
-        * The render session is just a bunch of parameter used for rendering
-        */
-        renderSession: RenderSession;
-
-        /**
-        * The resolution of the canvas.
-        */
-        resolution: number;
-
-        /**
         * Whether the render view is transparent
         */
         transparent: boolean;
 
         /**
-        * The renderer type.
+        * Whether the render view should be resized automatically
         */
-        type: number;
-
-        /**
-        * The canvas element that everything is drawn to.
-        */
-        view: HTMLCanvasElement;
+        autoResize: boolean;
 
         /**
         * The width of the canvas view
@@ -664,20 +632,45 @@ declare module PIXI {
         */
         width: number;
 
+        /**
+        * The height of the canvas view
+        * Default: 600
+        */
+        height: number;
 
         /**
-        * Removes everything from the renderer and optionally removes the Canvas DOM element.
-        * 
-        * @param removeView Removes the Canvas element from the DOM. - Default: true
+        * The canvas element that everything is drawn to.
         */
-        destroy(removeView?: boolean): void;
+        view: HTMLCanvasElement;
+
+        /**
+        * The canvas 2d context that everything is drawn with
+        */
+        context: CanvasRenderingContext2D;
+
+        /**
+        * Boolean flag controlling canvas refresh.
+        */
+        refresh: boolean;
+
+        /**
+        * Internal var.
+        */
+        count: number;
+        maskManager: CanvasMaskManager;
+
+        /**
+        * The render session is just a bunch of parameter used for rendering
+        */
+        renderSession: RenderSession;
+
 
         /**
         * Renders the Stage to this canvas view
         * 
         * @param stage the Stage element to be rendered
         */
-        render(stage: Stage): void;
+        render(stage: DisplayObjectContainer): void;
 
         /**
         * Resizes the canvas view to the specified width and height
@@ -686,6 +679,13 @@ declare module PIXI {
         * @param height the new height of the canvas view
         */
         resize(width: number, height: number): void;
+
+        /**
+        * Removes everything from the renderer and optionally removes the Canvas DOM element.
+        * 
+        * @param removeView Removes the Canvas element from the DOM. - Default: true
+        */
+        destroy(removeView?: boolean): void;
 
     }
 
@@ -870,7 +870,7 @@ declare module PIXI {
         /**
         * [read-only] The stage the display object is connected to, or undefined if it is not connected to the stage.
         */
-        stage: Stage;
+        stage: DisplayObjectContainer;
 
         /**
         * The visibility of the object.
@@ -958,7 +958,7 @@ declare module PIXI {
         * 
         * @param stage the stage that the object will have as its current stage reference
         */
-        setStageReference(stage: Stage): void;
+        setStageReference(stage: DisplayObjectContainer): void;
         tap(e: InteractionData): void;
 
         /**
@@ -1320,6 +1320,7 @@ declare module PIXI {
         * @param startAngle The starting angle, in radians (0 is at the 3 o'clock position of the arc's circle)
         * @param endAngle The ending angle, in radians
         * @param anticlockwise Optional. Specifies whether the drawing should be counterclockwise or clockwise. False is default, and indicates clockwise, while true indicates counter-clockwise.
+        * @param segments Optional. The number of segments to use when calculating the arc. The default is 40. If you need more fidelity use a higher number.
         */
         arc(cx: number, cy: number, radius: number, startAngle: number, endAngle: number, anticlockwise: boolean): Graphics;
         arcTo(x1: number, y1: number, x2: number, y2: number, radius: number): Graphics;
@@ -1443,8 +1444,9 @@ declare module PIXI {
         * Useful function that returns a texture of the graphics object that can then be used to create sprites
         * This can be quite useful if your geometry is complicated and needs to be reused multiple times.
         * 
-        * @param resolution The resolution of the texture being generated
+        * @param resolution The resolution of the texture being generated - Default: 1
         * @param scaleMode Should be one of the PIXI.scaleMode consts
+        * @param padding Add optional extra padding to the generated texture (default 0)
         * @return a texture of the graphics object
         */
         generateTexture(resolution?: number, scaleMode?: number): Texture;
@@ -1540,10 +1542,10 @@ declare module PIXI {
         onTouchMove: Function;
         pool: InteractionData[];
         resolution: number;
-        stage: Stage;
+        stage: DisplayObjectContainer;
         touches: { [id: string]: InteractionData };
 
-        constructor(stage: Stage);
+        constructor(stage: DisplayObjectContainer);
     }
 
     export class InvertFilter extends AbstractFilter {
@@ -2183,18 +2185,6 @@ declare module PIXI {
 
     }
 
-    export class Stage extends DisplayObjectContainer {
-
-        constructor(backgroundColor: number);
-
-        interactionManager: InteractionManager;
-
-        getMousePosition(): Point;
-        setBackgroundColor(backgroundColor: number): void;
-        setInteractionDelegate(domElement: HTMLElement): void;
-
-    }
-
     export class Strip extends DisplayObjectContainer {
 
         static DrawModes: {
@@ -2266,7 +2256,6 @@ declare module PIXI {
         * 
         * @param canvas The canvas element source of the texture
         * @param scaleMode See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
-        * @return Texture
         */
         static fromCanvas(canvas: HTMLCanvasElement, scaleMode?: scaleModes): Texture;
 
@@ -2275,7 +2264,6 @@ declare module PIXI {
         * If the frame id is not in the texture cache an error will be thrown.
         * 
         * @param frameId The frame id of the texture
-        * @return Texture
         */
         static fromFrame(frameId: string): Texture;
 
@@ -2286,7 +2274,6 @@ declare module PIXI {
         * @param imageUrl The image url of the texture
         * @param crossorigin Whether requests should be treated as crossorigin
         * @param scaleMode See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
-        * @return Texture
         */
         static fromImage(imageUrl: string, crossorigin?: boolean, scaleMode?: scaleModes): Texture;
 
@@ -2871,13 +2858,31 @@ declare module PIXI {
         * 
         * @param game A reference to the Phaser Game instance
         */
-        constructor(width?: number, height?: number, options?: PixiRendererOptions);
+        constructor(game: Phaser.Game);
 
+        game: Phaser.Game;
+        type: number;
+
+        /**
+        * The resolution of the renderer
+        * Default: 1
+        */
+        resolution: number;
+
+        /**
+        * Whether the render view is transparent
+        */
+        transparent: boolean;
 
         /**
         * Whether the render view should be resized automatically
         */
         autoResize: boolean;
+
+        /**
+        * The value of the preserveDrawingBuffer flag affects whether or not the contents of the stencil buffer is retained after rendering.
+        */
+        preserveDrawingBuffer: boolean;
 
         /**
         * This sets if the WebGLRenderer will clear the context texture or not before the new render pass. If true:
@@ -2886,30 +2891,23 @@ declare module PIXI {
         * Disable this by setting this to false. For example: if your game has a canvas filling background image, you often don't need this set.
         */
         clearBeforeRender: boolean;
-        contextLost: boolean;
-        contextLostBound: Function;
-        contextRestoreLost: boolean;
-        contextRestoredBound: Function;
+
+        /**
+        * The width of the canvas view
+        */
+        width: number;
 
         /**
         * The height of the canvas view
         */
         height: number;
-        gl: WebGLRenderingContext;
-        offset: Point;
 
         /**
-        * The value of the preserveDrawingBuffer flag affects whether or not the contents of the stencil buffer is retained after rendering.
+        * The canvas element that everything is drawn to
         */
-        preserveDrawingBuffer: boolean;
+        view: HTMLCanvasElement;
         projection: Point;
-
-        /**
-        * The resolution of the renderer
-        * Default: 1
-        */
-        resolution: number;
-        renderSession: RenderSession;
+        offset: Point;
 
         /**
         * Deals with managing the shader programs and their attribs
@@ -2940,41 +2938,16 @@ declare module PIXI {
         * Manages the blendModes
         */
         blendModeManager: WebGLBlendModeManager;
+        renderSession: RenderSession;
 
-        /**
-        * Whether the render view is transparent
-        */
-        transparent: boolean;
-        type: number;
-
-        /**
-        * The canvas element that everything is drawn to
-        */
-        view: HTMLCanvasElement;
-
-        /**
-        * The width of the canvas view
-        */
-        width: number;
-
-
-        /**
-        * Removes everything from the renderer (event listeners, spritebatch, etc...)
-        */
-        destroy(): void;
         initContext(): void;
-
-        /**
-        * Maps Pixi blend modes to WebGL blend modes.
-        */
-        mapBlendModes(): void;
 
         /**
         * Renders the stage to its webGL view
         * 
         * @param stage the Stage element to be rendered
         */
-        render(stage: Stage): void;
+        render(stage: DisplayObjectContainer): void;
 
         /**
         * Renders a Display Object.
@@ -3000,6 +2973,16 @@ declare module PIXI {
         * @return True if the texture was successfully bound, otherwise false.
         */
         updateTexture(texture: Texture): void;
+
+        /**
+        * Removes everything from the renderer (event listeners, spritebatch, etc...)
+        */
+        destroy(): void;
+
+        /**
+        * Maps Pixi blend modes to WebGL blend modes.
+        */
+        mapBlendModes(): void;
 
     }
 

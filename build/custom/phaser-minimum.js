@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.4.5 "Sienda" - Built: Wed Feb 17 2016 13:36:56
+* v2.4.6 "Baerlon" - Built: Thu Feb 18 2016 14:40:18
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -6951,7 +6951,10 @@ PIXI.BaseTexture.prototype.destroy = function()
     {
         PIXI.CanvasPool.removeByCanvas(this.source);
 
-        delete PIXI.BaseTextureCache[this.source];
+        if (this.source._pixiId)
+        {
+            delete PIXI.BaseTextureCache[this.source._pixiId];
+        }
     }
 
     this.source = null;
@@ -7921,7 +7924,7 @@ var Phaser = Phaser || {
     * @constant
     * @type {string}
     */
-    VERSION: '2.4.5',
+    VERSION: '2.4.6',
 
     /**
     * An array of Phaser game instances.
@@ -14243,7 +14246,7 @@ Phaser.StateManager.prototype = {
             {
                 this.game.world.shutdown();
 
-                if (this._clearCache === true)
+                if (this._clearCache)
                 {
                     this.game.cache.destroy();
                 }
@@ -14571,6 +14574,9 @@ Phaser.StateManager.prototype = {
     * @method Phaser.StateManager#destroy
     */
     destroy: function () {
+
+        this._clearWorld = true;
+        this._clearCache = true;
 
         this.clearCurrentState();
 
@@ -16653,7 +16659,7 @@ Phaser.Group.prototype.add = function (child, silent) {
 
     if (child.parent !== this)
     {
-        if (child.body)
+        if (child.body && child.parent)
         {
             child.parent.removeFromHash(child);
         }
@@ -16784,7 +16790,7 @@ Phaser.Group.prototype.addAt = function (child, index, silent) {
 
     if (child.parent !== this)
     {
-        if (child.body)
+        if (child.body && child.parent)
         {
             child.parent.removeFromHash(child);
         }
@@ -33691,6 +33697,18 @@ Phaser.RandomDataGenerator.prototype = {
     },
 
     /**
+    * Returns a sign to be used with multiplication operator.
+    *
+    * @method Phaser.RandomDataGenerator#sign
+    * @return {number} -1 or +1.
+    */
+    sign: function () {
+
+        return this.pick([-1, 1]);
+
+    },
+
+    /**
     * Returns a random member of `array`, favoring the earlier entries.
     *
     * @method Phaser.RandomDataGenerator#weightedPick
@@ -42353,6 +42371,11 @@ Phaser.Loader.prototype = {
             {
                 videoType = url.type;
                 url = url.uri;
+
+                if (this.game.device.canPlayVideo(videoType))
+                {
+                    return url;
+                }
             }
             else
             {
@@ -42370,11 +42393,11 @@ Phaser.Loader.prototype = {
                 var extension = url.substr((Math.max(0, url.lastIndexOf(".")) || Infinity) + 1);
 
                 videoType = extension.toLowerCase();
-            }
 
-            if (this.game.device.canPlayVideo(videoType))
-            {
-                return url;
+                if (this.game.device.canPlayVideo(videoType))
+                {
+                    return urls[i];
+                }
             }
         }
 
@@ -42408,6 +42431,11 @@ Phaser.Loader.prototype = {
             {
                 audioType = url.type;
                 url = url.uri;
+
+                if (this.game.device.canPlayAudio(audioType))
+                {
+                    return url;
+                }
             }
             else
             {
@@ -42425,11 +42453,11 @@ Phaser.Loader.prototype = {
                 var extension = url.substr((Math.max(0, url.lastIndexOf(".")) || Infinity) + 1);
 
                 audioType = extension.toLowerCase();
-            }
 
-            if (this.game.device.canPlayAudio(audioType))
-            {
-                return url;
+                if (this.game.device.canPlayAudio(audioType))
+                {
+                    return urls[i];
+                }
             }
         }
 

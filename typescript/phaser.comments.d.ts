@@ -1,8 +1,12 @@
 /// <reference path="pixi.comments.d.ts" />
 /// <reference path="p2.d.ts" />
 
-// Type definitions for Phaser 2.4.4+ 2015-Sep-10
+// Type definitions for Phaser 2.4.6 - 18th February 2015
 // Project: https://github.com/photonstorm/phaser
+
+declare module "phaser" {
+    export = Phaser;
+}
 
 declare class Phaser {
 
@@ -76,7 +80,6 @@ declare module Phaser {
         * @param frames An array of numbers or strings indicating which frames to play in which order.
         * @param frameRate The speed at which the animation should play. The speed is given in frames per second. - Default: 60
         * @param loop Whether or not the animation is looped or just plays once.
-        * @param loop Should this animation loop when it reaches the end or play through once.
         */
         constructor(game: Phaser.Game, parent: Phaser.Sprite, name: string, frameData: Phaser.FrameData, frames: number[] | string[], frameRate?: number, loop?: boolean);
 
@@ -164,6 +167,9 @@ declare module Phaser {
         /**
         * This event is dispatched when the Animation changes frame.
         * By default this event is disabled due to its intensive nature. Enable it with: `Animation.enableUpdate = true`.
+        * Note that the event is only dispatched with the current frame. In a low-FPS environment Animations
+        * will automatically frame-skip to try and claw back time, so do not base your code on expecting to
+        * receive a perfectly sequential set of frames from this event.
         */
         onUpdate: Phaser.Signal;
 
@@ -485,6 +491,15 @@ declare module Phaser {
         * @return A FrameData object containing the parsed frames.
         */
         static JSONDataHash(game: Phaser.Game, json: any): Phaser.FrameData;
+
+        /**
+        * Parse the JSON data and extract the animation frame data from it.
+        * 
+        * @param game A reference to the currently running game.
+        * @param json The JSON data from the Texture Atlas. Must be in Pyxel JSON format.
+        * @return A FrameData object containing the parsed frames.
+        */
+        static JSONDataPyxel(game: Phaser.Game, json: any): Phaser.FrameData;
 
         /**
         * Parse a Sprite Sheet and extract the animation frame data from it.
@@ -820,19 +835,59 @@ declare module Phaser {
 
     }
 
+    interface BitmapFont {
+
+        base: PIXI.BaseTexture;
+        data: HTMLImageElement;
+        font: Phaser.BMFont;
+        url: string;
+
+    }
+
+    interface BMFont {
+
+        chars: Phaser.BMFontChar[];
+        font: string;
+        lineHeight: number;
+        size: number;
+
+    }
+
+    interface BMFontChar {
+
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+        xOffset: number;
+        yOffset: number;
+        xAdvance: number;
+        kerning: number[];
+        texture: PIXI.BaseTexture;
+
+    }
+
 
     /**
     * A BitmapData object contains a Canvas element to which you can draw anything you like via normal Canvas context operations.
-    * A single BitmapData can be used as the texture for one or many Images/Sprites.
+    * A single BitmapData can be used as the texture for one or many Images / Sprites.
     * So if you need to dynamically create a Sprite texture then they are a good choice.
+    * 
+    * Important note: Every BitmapData creates its own Canvas element. Because BitmapData's are now Game Objects themselves, and don't
+    * live on the display list, they are NOT automatically cleared when you change State. Therefore you _must_ call BitmapData.destroy
+    * in your State's shutdown method if you wish to free-up the resources the BitmapData used, it will not happen for you.
     */
     class BitmapData {
 
 
         /**
         * A BitmapData object contains a Canvas element to which you can draw anything you like via normal Canvas context operations.
-        * A single BitmapData can be used as the texture for one or many Images/Sprites.
+        * A single BitmapData can be used as the texture for one or many Images / Sprites.
         * So if you need to dynamically create a Sprite texture then they are a good choice.
+        * 
+        * Important note: Every BitmapData creates its own Canvas element. Because BitmapData's are now Game Objects themselves, and don't
+        * live on the display list, they are NOT automatically cleared when you change State. Therefore you _must_ call BitmapData.destroy
+        * in your State's shutdown method if you wish to free-up the resources the BitmapData used, it will not happen for you.
         * 
         * @param game A reference to the currently running game.
         * @param key Internal Phaser reference key for the BitmapData.
@@ -1149,6 +1204,9 @@ declare module Phaser {
         * You can optionally define the area to clear.
         * If the arguments are left empty it will clear the entire canvas.
         * 
+        * You may need to call BitmapData.update after this in order to clear out the pixel data,
+        * but Phaser will not do this automatically for you.
+        * 
         * @param x The x coordinate of the top-left of the area to clear.
         * @param y The y coordinate of the top-left of the area to clear.
         * @param width The width of the area to clear. If undefined it will use BitmapData.width.
@@ -1250,11 +1308,11 @@ declare module Phaser {
         * @param roundPx Should the x and y values be rounded to integers before drawing? This prevents anti-aliasing in some instances.
         * @return This BitmapData object for method chaining.
         */
-        drawFull(parent: any, blendMode?: number, roundPx?: boolean): Phaser.BitmapData;
+        drawFull(parent: any, blendMode?: string, roundPx?: boolean): Phaser.BitmapData;
 
         /**
         * Draws the immediate children of a Phaser.Group to this BitmapData.
-        * Children are only drawn if they have their `exists` property set to `true`.
+        * Children are only drawn if they have their `exists` property set to `true` and have image based Textures.
         * The children will be drawn at their `x` and `y` world space coordinates. If this is outside the bounds of the BitmapData they won't be drawn.
         * When drawing it will take into account the child's rotation, scale and alpha values.
         * No iteration takes place. Groups nested inside other Groups will not be iterated through.
@@ -1543,6 +1601,9 @@ declare module Phaser {
 
         /**
         * Resizes the BitmapData. This changes the size of the underlying canvas and refreshes the buffer.
+        * 
+        * @param width The new width of the BitmapData.
+        * @param height The new height of the BitmapData.
         * @return This BitmapData object for method chaining.
         */
         resize(width: number, height: number): Phaser.BitmapData;
@@ -1641,6 +1702,8 @@ declare module Phaser {
         * This re-creates the BitmapData.imageData from the current context.
         * It then re-builds the ArrayBuffer, the data Uint8ClampedArray reference and the pixels Int32Array.
         * If not given the dimensions defaults to the full size of the context.
+        * 
+        * Warning: This is a very expensive operation, so use it sparingly.
         * 
         * @param x The x coordinate of the top-left of the image data area to grab from.
         * @param y The y coordinate of the top-left of the image data area to grab from.
@@ -2161,7 +2224,7 @@ declare module Phaser {
         * 
         * It will dispatch the `onRevived` event. Listen to `events.onRevived` for the signal.
         * 
-        * @param health The health to give the Game Object. Only set if the GameObject has the Health component. - Default: 1
+        * @param health The health to give the Game Object. Only set if the GameObject has the Health component. - Default: 100
         * @return This instance.
         */
         revive(health?: number): Phaser.BitmapText;
@@ -2453,6 +2516,34 @@ declare module Phaser {
 
 
     /**
+    * Enumeration categorizing operational modes of pointers.
+    * 
+    * PointerType values represent valid bitmasks.
+    * For example, a value representing both Mouse and Touch devices
+    * can be expressed as `PointerMode.CURSOR | PointerMode.CONTACT`.
+    * 
+    * Values may be added for future mode categorizations.
+    */
+    class PointerMode {
+
+
+        /**
+        * A 'CURSOR' is a pointer with a *passive cursor* such as a mouse, touchpad, watcom stylus, or even TV-control arrow-pad.
+        * 
+        * It has the property that a cursor is passively moved without activating the input.
+        * This currently corresponds with {@link Phaser.Pointer#isMouse} property.
+        */
+        static CURSOR: number;
+
+        /**
+        * A 'CONTACT' pointer has an *active cursor* that only tracks movement when actived; notably this is a touch-style input.
+        */
+        static CONTACT: number;
+
+    }
+
+
+    /**
     * Phaser has one single cache in which it stores all assets.
     * 
     * The cache is split up into sections, such as images, sounds, video, json, etc. All assets are stored using
@@ -2610,7 +2701,7 @@ declare module Phaser {
         * @param data Extra image data.
         * @return The full image object that was added to the cache.
         */
-        addImage(key: string, url: string, data: any): Phaser.CachedImage;
+        addImage(key: string, url: string, data: any): HTMLImageElement;
 
         /**
         * Add a new json object into the cache.
@@ -2934,7 +3025,7 @@ declare module Phaser {
         * @param key The key of the asset to retrieve from the cache.
         * @return The requested BitmapFont object if found, or null if not.
         */
-        getBitmapFont(key: string): Phaser.RetroFont;
+        getBitmapFont(key: string): Phaser.BitmapFont;
 
         /**
         * Gets a Canvas object from the cache.
@@ -3014,7 +3105,7 @@ declare module Phaser {
         * @param full If true the full image object will be returned, if false just the HTML Image object is returned.
         * @return The Image object if found in the Cache, otherwise `null`. If `full` was true then a JavaScript object is returned.
         */
-        getImage(key: string, full?: boolean): Phaser.CachedImage;
+        getImage(key: string, full?: boolean): HTMLImageElement;
 
         /**
         * Get an item from a cache based on the given key and property.
@@ -3438,17 +3529,6 @@ declare module Phaser {
 
     }
 
-    interface CachedImage {
-
-        key: string;
-        url: string;
-        data: HTMLImageElement;
-        base: PIXI.BaseTexture;
-        frame: Phaser.Frame;
-        frameData: Phaser.FrameData;
-
-    }
-
     interface CachedRenderTexture {
 
         frame: Phaser.Frame;
@@ -3689,7 +3769,22 @@ declare module Phaser {
         * @return The newly created canvas element.
         */
         static create(parent: HTMLDivElement, width?: number, height?: number, id?: string, skipPool?: boolean): HTMLCanvasElement;
-        static getSmoothngEnabled(context: CanvasRenderingContext2D): boolean;
+
+        /**
+        * Returns `true` if the given context has image smoothing enabled, otherwise returns `false`.
+        * 
+        * @param context The context to check for smoothing on.
+        * @return True if the given context has image smoothing enabled, otherwise false.
+        */
+        static getSmoothingEnabled(context: CanvasRenderingContext2D): boolean;
+
+        /**
+        * Gets the Smoothing Enabled vendor prefix being used on the given context, or null if not set.
+        * 
+        * @param context The context to enable or disable the image smoothing on.
+        * @return Returns the smoothingEnabled vendor prefix, or null if not set on the context.
+        */
+        static getSmoothingPrefix(context: CanvasRenderingContext2D): string;
 
         /**
         * Removes the given canvas element from the DOM.
@@ -4336,7 +4431,7 @@ declare module Phaser {
         static unpackPixel(rgba: number, out?: any, hsl?: boolean, hsv?: boolean): any;
 
         /**
-        * Takes a color object and updates the rgba property.
+        * Takes a color object and updates the rgba, color and color32 properties.
         * 
         * @param out The color object to update.
         * @return A native color value integer (format: 0xAARRGGBB).
@@ -4977,6 +5072,11 @@ declare module Phaser {
         * Is running on iOS?
         */
         iOS: boolean;
+
+        /**
+        * If running in iOS this will contain the major version number.
+        */
+        iOSVersion: number;
 
         /**
         * The time as which initialization has completed.
@@ -5948,12 +6048,18 @@ declare module Phaser {
 
     /**
     * This is a base Filter class to use for any Phaser filter development.
+    * 
+    * The vast majority of filters (including all of those that ship with Phaser) use fragment shaders, and
+    * therefore only work in WebGL and are not supported by Canvas at all.
     */
     class Filter extends PIXI.AbstractFilter {
 
 
         /**
         * This is a base Filter class to use for any Phaser filter development.
+        * 
+        * The vast majority of filters (including all of those that ship with Phaser) use fragment shaders, and
+        * therefore only work in WebGL and are not supported by Canvas at all.
         * 
         * @param game A reference to the currently running game.
         * @param uniforms Uniform mappings object
@@ -6756,6 +6862,13 @@ declare module Phaser {
         * A handy reference to renderer.view, the canvas that the game is being rendered in to.
         */
         canvas: HTMLCanvasElement;
+
+        /**
+        * Clear the Canvas each frame before rendering the display list.
+        * You can set this to `false` to gain some performance if your game always contains a background that completely fills the display.
+        * Default: true
+        */
+        clearBeforeRender: boolean;
 
         /**
         * The Phaser.Game configuration object.
@@ -8376,7 +8489,7 @@ declare module Phaser {
         * 
         * It will dispatch the `onRevived` event. Listen to `events.onRevived` for the signal.
         * 
-        * @param health The health to give the Game Object. Only set if the GameObject has the Health component. - Default: 1
+        * @param health The health to give the Game Object. Only set if the GameObject has the Health component. - Default: 100
         * @return This instance.
         */
         revive(health?: number): Phaser.Graphics;
@@ -9194,7 +9307,7 @@ declare module Phaser {
         /**
         * Reverses all children in this group.
         * 
-        * This operaation applies only to immediate children and does not propagate to subgroups.
+        * This operation applies only to immediate children and does not propagate to subgroups.
         */
         reverse(): void;
 
@@ -9279,7 +9392,11 @@ declare module Phaser {
         * Sort the children in the group according to a particular key and ordering.
         * 
         * Call this function to sort the group according to a particular key value and order.
+        * 
         * For example to depth sort Sprites for Zelda-style game you might call `group.sort('y', Phaser.Group.SORT_ASCENDING)` at the bottom of your `State.update()`.
+        * 
+        * Internally this uses a standard JavaScript Array sort, so everything that applies there also applies here, including
+        * alphabetical sorting, mixing strings and numbers, and Unicode sorting. See MDN for more details.
         * 
         * @param key The name of the property to sort on. Defaults to the objects z-depth value. - Default: 'z'
         * @param order Order ascending ({@link Phaser.Group.SORT_ASCENDING SORT_ASCENDING}) or descending ({@link Phaser.Group.SORT_DESCENDING SORT_DESCENDING}). - Default: Phaser.Group.SORT_ASCENDING
@@ -9726,6 +9843,13 @@ declare module Phaser {
         * 
         * Calling this method causes a WebGL texture update, so use sparingly or in low-intensity portions of your game, or if you know the new texture is already on the GPU.
         * 
+        * You can use the new const `Phaser.PENDING_ATLAS` as the texture key for any sprite.
+        * Doing this then sets the key to be the `frame` argument (the frame is set to zero).
+        * 
+        * This allows you to create sprites using `load.image` during development, and then change them
+        * to use a Texture Atlas later in development by simply searching your code for 'PENDING_ATLAS'
+        * and swapping it to be the key of the atlas data.
+        * 
         * @param key This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache Image entry, or an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
         * @param frame If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
         * @param stopAnimation If an animation is already playing on this Sprite you can choose to stop it or let it carry on playing. - Default: true
@@ -9833,7 +9957,7 @@ declare module Phaser {
         * 
         * It will dispatch the `onRevived` event. Listen to `events.onRevived` for the signal.
         * 
-        * @param health The health to give the Game Object. Only set if the GameObject has the Health component. - Default: 1
+        * @param health The health to give the Game Object. Only set if the GameObject has the Health component. - Default: 100
         * @return This instance.
         */
         revive(health?: number): Phaser.Image;
@@ -10464,12 +10588,6 @@ declare module Phaser {
         bringToTop: boolean;
 
         /**
-        * If this object is set to consume the pointer event then it will stop all propagation from this object on.
-        * For example if you had a stack of 6 sprites with the same priority IDs and one consumed the event, none of the others would receive it.
-        */
-        consumePointerEvent: boolean;
-
-        /**
         * The offset from the Sprites position that dragging takes place from.
         */
         dragOffset: Phaser.Point;
@@ -10665,7 +10783,7 @@ declare module Phaser {
         * @param pointerId
         * @return The number of milliseconds the pointer has been pressed down on the Sprite, or -1 if not over.
         */
-        downDuration(pointer: Phaser.Pointer): number;
+        downDuration(pointerId?: number): number;
 
         /**
         * Allow this Sprite to be dragged by any valid pointer.
@@ -10711,7 +10829,7 @@ declare module Phaser {
         * @param pointerId
         * @param delay The time below which the pointer is considered as just out.
         */
-        justOut(pointer: number, delay: number): boolean;
+        justOut(pointerId?: number, delay?: number): boolean;
 
         /**
         * Returns true if the pointer has entered the Sprite within the specified delay time (defaults to 500ms, half a second)
@@ -10719,7 +10837,7 @@ declare module Phaser {
         * @param pointerId
         * @param delay The time below which the pointer is considered as just over.
         */
-        justOver(pointer: number, delay: number): boolean;
+        justOver(pointerId?: number, delay?: number): boolean;
 
         /**
         * Returns true if the pointer has touched or clicked on the Sprite within the specified delay time (defaults to 500ms, half a second)
@@ -10727,7 +10845,7 @@ declare module Phaser {
         * @param pointerId
         * @param delay The time below which the pointer is considered as just over.
         */
-        justPressed(pointer: number, delay: number): boolean;
+        justPressed(pointerId?: number, delay?: number): boolean;
 
         /**
         * Returns true if the pointer was touching this Sprite, but has been released within the specified delay time (defaults to 500ms, half a second)
@@ -10735,7 +10853,7 @@ declare module Phaser {
         * @param pointerId
         * @param delay The time below which the pointer is considered as just out.
         */
-        justReleased(pointer: number, delay: number): boolean;
+        justReleased(pointerId?: number, delay?: number): boolean;
 
         /**
         * If the pointer is currently over this Sprite this returns how long it has been there for in milliseconds.
@@ -10743,7 +10861,7 @@ declare module Phaser {
         * @param pointerId
         * @return The number of milliseconds the pointer has been over the Sprite, or -1 if not over.
         */
-        overDuration(pointer: Phaser.Pointer): number;
+        overDuration(pointerId?: number): number;
 
         /**
         * If the Pointer is down this returns true.
@@ -10752,7 +10870,7 @@ declare module Phaser {
         * @param pointerId
         * @return - True if the given pointer is down, otherwise false.
         */
-        pointerDown(pointer: number): boolean;
+        pointerDown(pointerId?: number): boolean;
 
         /**
         * Is this sprite being dragged by the mouse or not?
@@ -10760,7 +10878,7 @@ declare module Phaser {
         * @param pointerId
         * @return True if the pointer is dragging an object, otherwise false.
         */
-        pointerDragged(pointer: Phaser.Pointer): boolean;
+        pointerDragged(pointerId?: number): boolean;
 
         /**
         * Is the Pointer outside of this Sprite?
@@ -10768,7 +10886,7 @@ declare module Phaser {
         * @param pointerId The ID number of a Pointer to check. If you don't provide a number it will check all Pointers. - Default: (check all)
         * @return True if the given pointer (if a index was given, or any pointer if not) is out of this object.
         */
-        pointerOut(index: number): boolean;
+        pointerOut(pointerId?: number): boolean;
 
         /**
         * Is the Pointer over this Sprite?
@@ -10776,35 +10894,35 @@ declare module Phaser {
         * @param pointerId The ID number of a Pointer to check. If you don't provide a number it will check all Pointers. - Default: (check all)
         * @return - True if the given pointer (if a index was given, or any pointer if not) is over this object.
         */
-        pointerOver(index: number): boolean;
+        pointerOver(pointerId?: number): boolean;
 
         /**
         * A timestamp representing when the Pointer first touched the touchscreen.
         * 
         * @param pointerId  - Default: (check all)
         */
-        pointerTimeDown(pointer: Phaser.Pointer): number;
+        pointerTimeDown(pointerId?: number): number;
 
         /**
         * A timestamp representing when the Pointer left the touchscreen.
         * 
         * @param pointerId
         */
-        pointerTimeOut(pointer: Phaser.Pointer): number;
+        pointerTimeOut(pointerId?: number): number;
 
         /**
         * A timestamp representing when the Pointer first touched the touchscreen.
         * 
         * @param pointerId
         */
-        pointerTimeOver(pointer: number): number;
+        pointerTimeOver(pointerId?: number): number;
 
         /**
         * A timestamp representing when the Pointer left the touchscreen.
         * 
         * @param pointerId
         */
-        pointerTimeUp(pointer: number): number;
+        pointerTimeUp(pointerId?: number): number;
 
         /**
         * If the Pointer is up this returns true.
@@ -10813,7 +10931,7 @@ declare module Phaser {
         * @param pointerId
         * @return - True if the given pointer is up, otherwise false.
         */
-        pointerUp(pointer: number): boolean;
+        pointerUp(pointerId?: number): boolean;
 
         /**
         * The x coordinate of the Input pointer, relative to the top-left of the parent Sprite.
@@ -10822,7 +10940,7 @@ declare module Phaser {
         * @param pointerId
         * @return The x coordinate of the Input pointer.
         */
-        pointerX(pointer: number): number;
+        pointerX(pointerId?: number): number;
 
         /**
         * The y coordinate of the Input pointer, relative to the top-left of the parent Sprite
@@ -10831,7 +10949,7 @@ declare module Phaser {
         * @param pointerId
         * @return The y coordinate of the Input pointer.
         */
-        pointerY(pointer: number): number;
+        pointerY(pointerId?: number): number;
 
         /**
         * Resets the Input Handler and disables it.
@@ -11389,6 +11507,113 @@ declare module Phaser {
 
     }
 
+    class KeyCode {
+
+        static A: number;
+        static B: number;
+        static C: number;
+        static D: number;
+        static E: number;
+        static F: number;
+        static G: number;
+        static H: number;
+        static I: number;
+        static J: number;
+        static K: number;
+        static L: number;
+        static M: number;
+        static N: number;
+        static O: number;
+        static P: number;
+        static Q: number;
+        static R: number;
+        static S: number;
+        static T: number;
+        static U: number;
+        static V: number;
+        static W: number;
+        static X: number;
+        static Y: number;
+        static Z: number;
+        static ZERO: number;
+        static ONE: number;
+        static TWO: number;
+        static THREE: number;
+        static FOUR: number;
+        static FIVE: number;
+        static SIX: number;
+        static SEVEN: number;
+        static EIGHT: number;
+        static NINE: number;
+        static NUMPAD_0: number;
+        static NUMPAD_1: number;
+        static NUMPAD_2: number;
+        static NUMPAD_3: number;
+        static NUMPAD_4: number;
+        static NUMPAD_5: number;
+        static NUMPAD_6: number;
+        static NUMPAD_7: number;
+        static NUMPAD_8: number;
+        static NUMPAD_9: number;
+        static NUMPAD_MULTIPLY: number;
+        static NUMPAD_ADD: number;
+        static NUMPAD_ENTER: number;
+        static NUMPAD_SUBTRACT: number;
+        static NUMPAD_DECIMAL: number;
+        static NUMPAD_DIVIDE: number;
+        static F1: number;
+        static F2: number;
+        static F3: number;
+        static F4: number;
+        static F5: number;
+        static F6: number;
+        static F7: number;
+        static F8: number;
+        static F9: number;
+        static F10: number;
+        static F11: number;
+        static F12: number;
+        static F13: number;
+        static F14: number;
+        static F15: number;
+        static COLON: number;
+        static EQUALS: number;
+        static COMMA: number;
+        static UNDERSCORE: number;
+        static PERIOD: number;
+        static QUESTION_MARK: number;
+        static TILDE: number;
+        static OPEN_BRACKET: number;
+        static BACKWARD_SLASH: number;
+        static CLOSED_BRACKET: number;
+        static QUOTES: number;
+        static BACKSPACE: number;
+        static TAB: number;
+        static CLEAR: number;
+        static ENTER: number;
+        static SHIFT: number;
+        static CONTROL: number;
+        static ALT: number;
+        static CAPS_LOCK: number;
+        static ESC: number;
+        static SPACEBAR: number;
+        static PAGE_UP: number;
+        static PAGE_DOWN: number;
+        static END: number;
+        static HOME: number;
+        static LEFT: number;
+        static UP: number;
+        static RIGHT: number;
+        static DOWN: number;
+        static INSERT: number;
+        static DELETE: number;
+        static HELP: number;
+        static NUM_LOCK: number;
+        static PLUS: number;
+        static MINUS: number;
+
+    }
+
 
     /**
     * Creates a new Line object with a start and an end point.
@@ -11658,6 +11883,8 @@ declare module Phaser {
         * 
         * Rotation takes place around the coordinates given.
         * 
+        * @param x The x coordinate to offset the rotation from.
+        * @param y The y coordinate to offset the rotation from.
         * @param angle The angle in radians (unless asDegrees is true) to rotate the line by.
         * @param asDegrees Is the given angle in radians (false) or degrees (true)?
         * @return This line object
@@ -11780,6 +12007,7 @@ declare module Phaser {
         static TEXTURE_ATLAS_JSON_ARRAY: number;
         static TEXTURE_ATLAS_JSON_HASH: number;
         static TEXTURE_ATLAS_XML_STARLING: number;
+        static TEXTURE_ATLAS_JSON_PYXEL: number;
 
 
         /**
@@ -12439,6 +12667,13 @@ declare module Phaser {
         * @return This Loader instance.
         */
         pack(key: string, url?: string, data?: any, callbackContext?: any): Phaser.Loader;
+
+        /**
+        * Parses string data as XML.
+        * 
+        * @param data The XML text to parse
+        * @return Returns the xml document, or null if such could not parsed to a valid document.
+        */
         parseXml(data: string): XMLDocument;
 
         /**
@@ -14057,7 +14292,7 @@ declare module Phaser {
         * @param x The x coordinate (in world space) to position the Particle at.
         * @param y The y coordinate (in world space) to position the Particle at.
         * @param health The health to give the Particle. - Default: 1
-        * @return (Phaser.Particle) This instance.
+        * @return This instance.
         */
         reset(x: number, y: number, health?: number): Phaser.Particle;
 
@@ -14307,7 +14542,7 @@ declare module Phaser {
                 /**
                 * For emitting your own particle class types. They must extend Phaser.Particle.
                 */
-                particleClass: Phaser.Sprite;
+                particleClass: any;
 
                 /**
                 * The X and Y drag component of particles launched from the emitter.
@@ -14365,8 +14600,9 @@ declare module Phaser {
                 * If the object doesn't have a center property it will be set to object.x + object.width / 2
                 * 
                 * @param object The object that you wish to match the center with.
+                * @return This Emitter instance.
                 */
-                at(object: any): void;
+                at(object: any): Phaser.Particles.Arcade.Emitter;
 
                 /**
                 * This function is used internally to emit the next particle in the queue.
@@ -14388,8 +14624,9 @@ declare module Phaser {
                 * 
                 * @param lifespan How long each particle lives once emitted in ms. 0 = forever.
                 * @param quantity How many particles to launch.
+                * @return This Emitter instance.
                 */
-                explode(lifespan?: number, quantity?: number): void;
+                explode(lifespan?: number, quantity?: number): Phaser.Particles.Arcade.Emitter;
 
                 /**
                 * Call this function to start emitting a flow of particles at the given frequency.
@@ -14403,13 +14640,15 @@ declare module Phaser {
                 * @param quantity How many particles to launch each time the frequency is met. Can never be > Emitter.maxParticles. - Default: 1
                 * @param total How many particles to launch in total. If -1 it will carry on indefinitely. - Default: -1
                 * @param immediate Should the flow start immediately (true) or wait until the first frequency event? (false) - Default: true
+                * @return This Emitter instance.
                 */
-                flow(lifespan?: number, frequency?: number, quantity?: number, total?: number, immediate?: boolean): void;
+                flow(lifespan?: number, frequency?: number, quantity?: number, total?: number, immediate?: boolean): Phaser.Particles.Arcade.Emitter;
 
                 /**
                 * Call this function to turn off all the particles and the emitter.
+                * @return This Emitter instance.
                 */
-                kill(): void;
+                kill(): Phaser.Particles.Arcade.Emitter;
 
                 /**
                 * This function generates a new set of particles for use by this emitter.
@@ -14435,16 +14674,18 @@ declare module Phaser {
                 * @param rate The rate (in ms) at which the particles will change in alpha from min to max, or set to zero to pick a random alpha between the two.
                 * @param ease If you've set a rate > 0 this is the easing formula applied between the min and max values. - Default: Phaser.Easing.Linear.None
                 * @param yoyo If you've set a rate > 0 you can set if the ease will yoyo or not (i.e. ease back to its original values)
+                * @return This Emitter instance.
                 */
-                setAlpha(min?: number, max?: number, rate?: number, ease?: (k: number) => number, yoyo?: boolean): void;
+                setAlpha(min?: number, max?: number, rate?: number, ease?: (k: number) => number, yoyo?: boolean): Phaser.Particles.Arcade.Emitter;
 
                 /**
                 * A more compact way of setting the angular velocity constraints of the particles.
                 * 
                 * @param min The minimum value for this range.
                 * @param max The maximum value for this range.
+                * @return This Emitter instance.
                 */
-                setRotation(min?: number, max?: number): void;
+                setRotation(min?: number, max?: number): Phaser.Particles.Arcade.Emitter;
 
                 /**
                 * A more compact way of setting the scale constraints of the particles.
@@ -14458,32 +14699,36 @@ declare module Phaser {
                 * @param rate The rate (in ms) at which the particles will change in scale from min to max, or set to zero to pick a random size between the two.
                 * @param ease If you've set a rate > 0 this is the easing formula applied between the min and max values. - Default: Phaser.Easing.Linear.None
                 * @param yoyo If you've set a rate > 0 you can set if the ease will yoyo or not (i.e. ease back to its original values)
+                * @return This Emitter instance.
                 */
-                setScale(minX?: number, maxX?: number, minY?: number, maxY?: number, rate?: number, ease?: (k: number) => number, yoyo?: boolean): void;
+                setScale(minX?: number, maxX?: number, minY?: number, maxY?: number, rate?: number, ease?: (k: number) => number, yoyo?: boolean): Phaser.Particles.Arcade.Emitter;
 
                 /**
                 * A more compact way of setting the width and height of the emitter.
                 * 
                 * @param width The desired width of the emitter (particles are spawned randomly within these dimensions).
                 * @param height The desired height of the emitter.
+                * @return This Emitter instance.
                 */
-                setSize(width: number, height: number): void;
+                setSize(width: number, height: number): Phaser.Particles.Arcade.Emitter;
 
                 /**
                 * A more compact way of setting the X velocity range of the emitter.
                 * 
                 * @param min The minimum value for this range.
                 * @param max The maximum value for this range.
+                * @return This Emitter instance.
                 */
-                setXSpeed(min: number, max: number): void;
+                setXSpeed(min: number, max: number): Phaser.Particles.Arcade.Emitter;
 
                 /**
                 * A more compact way of setting the Y velocity range of the emitter.
                 * 
                 * @param min The minimum value for this range.
                 * @param max The maximum value for this range.
+                * @return This Emitter instance.
                 */
-                setYSpeed(min: number, max: number): void;
+                setYSpeed(min: number, max: number): Phaser.Particles.Arcade.Emitter;
 
                 /**
                 * Call this function to start emitting particles.
@@ -14493,8 +14738,9 @@ declare module Phaser {
                 * @param frequency Ignored if Explode is set to true. Frequency is how often to emit 1 particle. Value given in ms. - Default: 250
                 * @param quantity How many particles to launch. 0 = "all of the particles" which will keep emitting until Emitter.maxParticles is reached.
                 * @param forceQuantity If `true` and creating a particle flow, the quantity emitted will be forced to the be quantity given in this call. This can never exceed Emitter.maxParticles.
+                * @return This Emitter instance.
                 */
-                start(explode?: boolean, lifespan?: number, frequency?: number, quantity?: number, forceQuantity?: boolean): void;
+                start(explode?: boolean, lifespan?: number, frequency?: number, quantity?: number, forceQuantity?: boolean): Phaser.Particles.Arcade.Emitter;
 
                 /**
                 * Called automatically by the game loop, decides when to launch particles and when to "die".
@@ -14503,8 +14749,9 @@ declare module Phaser {
 
                 /**
                 * Handy for bringing game objects "back to life". Just sets alive and exists back to true.
+                * @return This Emitter instance.
                 */
-                revive(): void;
+                revive(): Phaser.Particles.Arcade.Emitter;
 
             }
         }
@@ -14724,8 +14971,20 @@ declare module Phaser {
         disableTextureUpload: boolean;
         dirty: boolean;
 
+
+        /**
+        * The current time of the video in seconds. If set the video will attempt to seek to that point in time.
+        */
         currentTime: number;
+
+        /**
+        * The duration of the video in seconds.
+        */
         duration: number;
+
+        /**
+        * The progress of this video. This is a value between 0 and 1, where 0 is the start and 1 is the end of the video.
+        */
         progress: number;
 
         /**
@@ -15252,7 +15511,7 @@ declare module Phaser {
             * @param object1 The first object or array of objects to check. Can be Phaser.Sprite, Phaser.Group, Phaser.Particles.Emitter, or Phaser.TilemapLayer.
             * @param object2 The second object or array of objects to check. Can be Phaser.Sprite, Phaser.Group, Phaser.Particles.Emitter or Phaser.TilemapLayer.
             * @param collideCallback An optional callback function that is called if the objects collide. The two objects will be passed to this function in the same order in which you specified them, unless you are colliding Group vs. Sprite, in which case Sprite will always be the first parameter.
-            * @param processCallback A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then collision will only happen if processCallback returns true. The two objects will be passed to this function in the same order in which you specified them.
+            * @param processCallback A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then collision will only happen if processCallback returns true. The two objects will be passed to this function in the same order in which you specified them, unless you are colliding Group vs. Sprite, in which case Sprite will always be the first parameter.
             * @param callbackContext The context in which to run the callbacks.
             * @return True if a collision occurred otherwise false.
             */
@@ -18039,7 +18298,7 @@ declare module Phaser {
                 * This could for example be a point on the Body surface. An impulse is a force added to a body during a short
                 * period of time (impulse = force * time). Impulses will be added to Body.velocity and Body.angularVelocity.
                 * 
-                * @param impulse The impulse vector to add, oriented in world space.
+                * @param impulse The impulse vector to add, oriented in local space.
                 * @param localX A local point on the body.
                 * @param localY A local point on the body.
                 */
@@ -19705,7 +19964,7 @@ declare module Phaser {
         * @param id The ID of the Pointer object within the game. Each game can have up to 10 active pointers.
         * @param pointerMode The operational mode of this pointer, eg. CURSOR or TOUCH. - Default: (CURSOR|CONTACT)
         */
-        constructor(game: Phaser.Game, id: number);
+        constructor(game: Phaser.Game, id: number, pointerMode?: number);
 
 
         /**
@@ -19759,7 +20018,7 @@ declare module Phaser {
         * 
         * Please see the DeviceButton docs for details on browser button limitations.
         */
-        backButton: boolean;
+        backButton: Phaser.DeviceButton;
 
         /**
         * The button property of the most recent DOM event when this Pointer is started.
@@ -19804,13 +20063,14 @@ declare module Phaser {
         * 
         * Please see the DeviceButton docs for details on browser button limitations.
         */
-        eraserButton: boolean;
+        eraserButton: Phaser.DeviceButton;
 
         /**
         * A Pointer object that exists is allowed to be checked for physics collisions and overlaps.
         * Default: true
         */
         exists: boolean;
+        forceOut: boolean;
 
         /**
         * If this Pointer is a Mouse or Pen / Stylus then you can access its X2 (forward) button directly through this property.
@@ -19820,12 +20080,13 @@ declare module Phaser {
         * 
         * Please see the DeviceButton docs for details on browser button limitations.
         */
-        forwardButton: boolean;
+        forwardButton: Phaser.DeviceButton;
 
         /**
         * A reference to the currently running game.
         */
         game: Phaser.Game;
+        justReleasePreventsOver: boolean | number;
 
         /**
         * The ID of the Pointer object within the game. Each game can have up to 10 active pointers.
@@ -19861,7 +20122,7 @@ declare module Phaser {
         * The DeviceButton has its own properties such as `isDown`, `duration` and methods like `justReleased` for more fine-grained
         * button control.
         */
-        leftButton: boolean;
+        leftButton: Phaser.DeviceButton;
 
         /**
         * If this Pointer is a Mouse or Pen / Stylus then you can access its middle button directly through this property.
@@ -19871,7 +20132,7 @@ declare module Phaser {
         * 
         * Please see the DeviceButton docs for details on browser button limitations.
         */
-        middleButton: boolean;
+        middleButton: Phaser.DeviceButton;
 
         /**
         * The horizontal processed relative movement of the Pointer in pixels since last event.
@@ -19941,7 +20202,7 @@ declare module Phaser {
         * 
         * Please see the DeviceButton docs for details on browser button limitations.
         */
-        rightButton: boolean;
+        rightButton: Phaser.DeviceButton;
 
         /**
         * The horizontal coordinate of the Pointer relative to the screen.
@@ -20434,7 +20695,7 @@ declare module Phaser {
         * 
         * @param seeds An array of values to use as the seed, or a generator state (from {#state}).
         */
-        constructor(seeds: number[]|string);
+        constructor(seeds: any[] | string);
 
 
         /**
@@ -20504,27 +20765,33 @@ declare module Phaser {
         realInRange(min: number, max: number): number;
 
         /**
+        * Returns a sign to be used with multiplication operator.
+        * @return -1 or +1.
+        */
+        sign(): number;
+
+        /**
         * Reset the seed of the random data generator.
         * 
         * _Note_: the seed array is only processed up to the first `undefined` (or `null`) value, should such be present.
         * 
         * @param seeds The array of seeds: the `toString()` of each value is used.
         */
-        sow(seeds: number[]): void;
+        sow(seeds: any[]): void;
 
         /**
         * Gets or Sets the state of the generator. This allows you to retain the values
         * that the generator is using between games, i.e. in a game save file.
         * 
-        * To seed this generator with a previously saved state you can pass it as the 
+        * To seed this generator with a previously saved state you can pass it as the
         * `seed` value in your game config, or call this method directly after Phaser has booted.
-        *
+        * 
         * Call this method with no parameters to return the current state.
         * 
         * If providing a state it should match the same format that this method
         * returns, which is a string with a header `!rnd` followed by the `c`,
-        * `s0`, `s1` and `s2` values respectively, each comma-delimited. 
-        *
+        * `s0`, `s1` and `s2` values respectively, each comma-delimited.
+        * 
         * @param state Generator state to be set.
         * @return The current state of the generator.
         */
@@ -21348,9 +21615,9 @@ declare module Phaser {
         offsetY: number;
 
         /**
-        * Set this value to update the text in this sprite. Carriage returns are automatically stripped out if multiLine is false. Text is converted to upper case if autoUpperCase is true.
+        * Sets if the stamp is smoothed or not.
         */
-        smoothed: string;
+        smoothed: boolean;
 
         /**
         * The image that is stamped to the RenderTexture for each character in the font.
@@ -21925,6 +22192,13 @@ declare module Phaser {
         * 
         * Calling this method causes a WebGL texture update, so use sparingly or in low-intensity portions of your game, or if you know the new texture is already on the GPU.
         * 
+        * You can use the new const `Phaser.PENDING_ATLAS` as the texture key for any sprite.
+        * Doing this then sets the key to be the `frame` argument (the frame is set to zero).
+        * 
+        * This allows you to create sprites using `load.image` during development, and then change them
+        * to use a Texture Atlas later in development by simply searching your code for 'PENDING_ATLAS'
+        * and swapping it to be the key of the atlas data.
+        * 
         * @param key This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache Image entry, or an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
         * @param frame If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
         * @param stopAnimation If an animation is already playing on this Sprite you can choose to stop it or let it carry on playing. - Default: true
@@ -21984,7 +22258,7 @@ declare module Phaser {
         * 
         * @param x The x coordinate (in world space) to position the Sprite at.
         * @param y The y coordinate (in world space) to position the Sprite at.
-        * @return (Phaser.Rope) This instance.
+        * @return This instance.
         */
         reset(x: number, y: number, health?: number): Phaser.Rope;
 
@@ -22012,7 +22286,7 @@ declare module Phaser {
         * 
         * It will dispatch the `onRevived` event. Listen to `events.onRevived` for the signal.
         * 
-        * @param health The health to give the Game Object. Only set if the GameObject has the Health component. - Default: 1
+        * @param health The health to give the Game Object. Only set if the GameObject has the Health component. - Default: 100
         * @return This instance.
         */
         revive(health?: number): Phaser.Rope;
@@ -23673,6 +23947,13 @@ declare module Phaser {
         * 
         * Calling this method causes a WebGL texture update, so use sparingly or in low-intensity portions of your game, or if you know the new texture is already on the GPU.
         * 
+        * You can use the new const `Phaser.PENDING_ATLAS` as the texture key for any sprite.
+        * Doing this then sets the key to be the `frame` argument (the frame is set to zero).
+        * 
+        * This allows you to create sprites using `load.image` during development, and then change them
+        * to use a Texture Atlas later in development by simply searching your code for 'PENDING_ATLAS'
+        * and swapping it to be the key of the atlas data.
+        * 
         * @param key This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache Image entry, or an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
         * @param frame If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
         * @param stopAnimation If an animation is already playing on this Sprite you can choose to stop it or let it carry on playing. - Default: true
@@ -23781,7 +24062,7 @@ declare module Phaser {
         * 
         * It will dispatch the `onRevived` event. Listen to `events.onRevived` for the signal.
         * 
-        * @param health The health to give the Game Object. Only set if the GameObject has the Health component. - Default: 1
+        * @param health The health to give the Game Object. Only set if the GameObject has the Health component. - Default: 100
         * @return This instance.
         */
         revive(health?: number): Phaser.Sprite;
@@ -23886,7 +24167,7 @@ declare module Phaser {
     * The Stage controls root level display objects upon which everything is displayed.
     * It also handles browser visibility handling and the pausing due to loss of focus.
     */
-    class Stage extends PIXI.Stage {
+    class Stage extends PIXI.DisplayObjectContainer {
 
 
         /**
@@ -23897,27 +24178,6 @@ declare module Phaser {
         */
         constructor(game: Phaser.Game);
 
-
-        /**
-        * Gets and sets the background color of the stage. The color can be given as a number: 0xff0000 or a hex string: '#ff0000'
-        */
-        backgroundColor: any;
-
-        /**
-        * Reset each frame, keeps a count of the total number of objects updated.
-        */
-        currentRenderOrderID: number;
-
-        /**
-        * By default if the browser tab loses focus the game will pause. You can stop that behaviour by setting this property to true.
-        */
-        disableVisibilityChange: boolean;
-
-        /**
-        * If exists is true the Stage and all children are updated, otherwise it is skipped.
-        * Default: true
-        */
-        exists: boolean;
 
         /**
         * A reference to the currently running Game.
@@ -23931,26 +24191,35 @@ declare module Phaser {
         name: string;
 
         /**
+        * By default if the browser tab loses focus the game will pause.
+        * You can stop that behavior by setting this property to true.
+        * Note that the browser can still elect to pause your game if it wishes to do so,
+        * for example swapping to another browser tab. This will cause the RAF callback to halt,
+        * effectively pausing your game, even though no in-game pause event is triggered if you enable this property.
+        */
+        disableVisibilityChange: boolean;
+
+        /**
+        * If exists is true the Stage and all children are updated, otherwise it is skipped.
+        * Default: true
+        */
+        exists: boolean;
+
+        /**
+        * Reset each frame, keeps a count of the total number of objects updated.
+        */
+        currentRenderOrderID: number;
+
+        /**
+        * Gets and sets the background color of the stage. The color can be given as a number: 0xff0000 or a hex string: '#ff0000'
+        */
+        backgroundColor: any;
+
+        /**
         * Enable or disable texture smoothing for all objects on this Stage. Only works for bitmap/image textures. Smoothing is enabled by default. Set to true to smooth all sprites rendered on this Stage, or false to disable smoothing (great for pixel art)
         */
         smoothed: boolean;
 
-
-        /**
-        * Initialises the stage and adds the event listeners.
-        */
-        boot(): void;
-
-        /**
-        * Starts a page visibility event listener running, or window.onpagehide/onpageshow if not supported by the browser.
-        * Also listens for window.onblur and window.onfocus.
-        */
-        checkVisibility(): void;
-
-        /**
-        * Destroys the Stage and removes event listeners.
-        */
-        destroy(): void;
 
         /**
         * Parses a Game configuration object.
@@ -23958,6 +24227,17 @@ declare module Phaser {
         * @param config The configuration object to parse.
         */
         parseConfig(config: any): void;
+
+        /**
+        * This is called automatically after the plugins preUpdate and before the State.update.
+        * Most objects have preUpdate methods and it's where initial movement and positioning is done.
+        */
+        preUpdate(): void;
+
+        /**
+        * This is called automatically after the State.update, but before particles or plugins update.
+        */
+        update(): void;
 
         /**
         * This is called automatically before the renderer runs and after the plugins have updated.
@@ -23968,10 +24248,23 @@ declare module Phaser {
         postUpdate(): void;
 
         /**
-        * This is called automatically after the plugins preUpdate and before the State.update.
-        * Most objects have preUpdate methods and it's where initial movement and positioning is done.
+        * Updates the transforms for all objects on the display list.
+        * This overrides the Pixi default as we don't need the interactionManager, but do need the game property check.
         */
-        preUpdate(): void;
+        updateTransform(): void;
+
+        /**
+        * Starts a page visibility event listener running, or window.onpagehide/onpageshow if not supported by the browser.
+        * Also listens for window.onblur and window.onfocus.
+        */
+        checkVisibility(): void;
+
+        /**
+        * This method is called when the document visibility is changed.
+        * 
+        * @param event Its type will be used to decide whether the game should be paused or not.
+        */
+        visibilityChange(event: Event): void;
 
         /**
         * Sets the background color for the Stage.
@@ -23987,22 +24280,9 @@ declare module Phaser {
         setBackgroundColor(backgroundColor: number | string): void;
 
         /**
-        * This is called automatically after the State.update, but before particles or plugins update.
+        * Destroys the Stage and removes event listeners.
         */
-        update(): void;
-
-        /**
-        * Updates the transforms for all objects on the display list.
-        * This overrides the Pixi default as we don't need the interactionManager, but do need the game property check.
-        */
-        updateTransform(): void;
-
-        /**
-        * This method is called when the document visibility is changed.
-        * 
-        * @param event Its type will be used to decide whether the game should be paused or not.
-        */
-        visibilityChange(event: Event): void;
+        destroy(): void;
 
     }
 
@@ -24467,8 +24747,8 @@ declare module Phaser {
         * Default: {"right":"layout","bottom":""}
         */
         windowConstraints: {
-            bottom: boolean;
-            right: boolean;
+            bottom: string;
+            right: string;
         };
 
 
@@ -24993,7 +25273,7 @@ declare module Phaser {
         /**
         * The update method is left empty for your own use.
         * It is called during the core game loop AFTER debug, physics, plugins and the Stage have had their preUpdate methods called.
-        * If is called BEFORE Stage, Tweens, Sounds, Input, Physics, Particles and Plugins have had their postUpdate methods called.
+        * It is called BEFORE Stage, Tweens, Sounds, Input, Physics, Particles and Plugins have had their postUpdate methods called.
         */
         update(): void;
 
@@ -25155,7 +25435,6 @@ declare module Phaser {
 
         /**
         * Gets the current State.
-        * @return Phaser.State
         */
         getCurrentState(): Phaser.State;
 
@@ -25611,6 +25890,17 @@ declare module Phaser {
         type: number;
 
         /**
+        * Will this Text object use Basic or Advanced Word Wrapping?
+        * 
+        * Advanced wrapping breaks long words if they are the first of a line, and repeats the process as necessary.
+        * White space is condensed (e.g., consecutive spaces are replaced with one).
+        * Lines are trimmed of white space before processing.
+        * 
+        * It throws an error if wordWrapWidth is less than a single character.
+        */
+        useAdvancedWrap: boolean;
+
+        /**
         * The world coordinates of this Game Object in pixels.
         * Depending on where in the display list this Game Object is placed this value can differ from `position`,
         * which contains the x/y coordinates relative to the Game Objects parent.
@@ -25761,6 +26051,18 @@ declare module Phaser {
         * @return This Text instance.
         */
         parseList(list: any[]): Phaser.Text;
+
+        /**
+        * Runs the given text through the Text.runWordWrap function and returns
+        * the results as an array, where each element of the array corresponds to a wrapped
+        * line of text.
+        * 
+        * Useful if you wish to control pagination on long pieces of content.
+        * 
+        * @param text The text for which the wrapping will be calculated.
+        * @return An array of strings with the pieces of wrapped text.
+        */
+        precalculateWordWrap(text: string): string[];
 
         /**
         * Automatically called by World.preUpdate.
@@ -26284,8 +26586,8 @@ declare module Phaser {
         *            You can also pass in a BitmapData which can be used instead of an Image.
         * @param tileWidth The width of the tiles in the Tileset Image. If not given it will default to the map.tileWidth value, if that isn't set then 32. - Default: 32
         * @param tileHeight The height of the tiles in the Tileset Image. If not given it will default to the map.tileHeight value, if that isn't set then 32. - Default: 32
-        * @param tileMargin The width of the tiles in the Tileset Image. If not given it will default to the map.tileWidth value.
-        * @param tileSpacing The height of the tiles in the Tileset Image. If not given it will default to the map.tileHeight value.
+        * @param tileMargin The width of the tiles in the Tileset Image.
+        * @param tileSpacing The height of the tiles in the Tileset Image.
         * @param gid If adding multiple tilesets to a blank/dynamic map, specify the starting GID the set will use here.
         * @return Returns the Tileset object that was created or updated, or null if it failed.
         */
@@ -26452,13 +26754,6 @@ declare module Phaser {
         * @return The index of the layer in this tilemap, or null if not found.
         */
         getLayerIndex(name: string): number;
-
-        /**
-        * Gets the object index based on its name.
-        * 
-        * @param name The name of the object to get.
-        * @return The index of the object in this tilemap, or null if not found.
-        */
         getObjectIndex(name: string): number;
 
         /**
@@ -27008,7 +27303,7 @@ declare module Phaser {
         resetTilesetCache(): void;
 
         /**
-        * This method will set the scale of the tilemap as well as update the underlying block data of this layer
+        * This method will set the scale of the tilemap as well as update the underlying block data of this layer.
         * 
         * @param xScale The scale factor along the X-plane - Default: 1
         * @param yScale The scale factor along the Y-plane
@@ -27058,6 +27353,7 @@ declare module Phaser {
         /**
         * Parses a CSV file into valid map data.
         * 
+        * @param key The name you want to give the map data.
         * @param data The CSV file data.
         * @param tileWidth The pixel width of a single map tile. If using CSV data you must specify this. Not required if using Tiled map data. - Default: 32
         * @param tileHeight The pixel height of a single map tile. If using CSV data you must specify this. Not required if using Tiled map data. - Default: 32
@@ -27608,6 +27904,13 @@ declare module Phaser {
         * 
         * Calling this method causes a WebGL texture update, so use sparingly or in low-intensity portions of your game, or if you know the new texture is already on the GPU.
         * 
+        * You can use the new const `Phaser.PENDING_ATLAS` as the texture key for any sprite.
+        * Doing this then sets the key to be the `frame` argument (the frame is set to zero).
+        * 
+        * This allows you to create sprites using `load.image` during development, and then change them
+        * to use a Texture Atlas later in development by simply searching your code for 'PENDING_ATLAS'
+        * and swapping it to be the key of the atlas data.
+        * 
         * @param key This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache Image entry, or an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
         * @param frame If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
         * @param stopAnimation If an animation is already playing on this Sprite you can choose to stop it or let it carry on playing. - Default: true
@@ -27661,7 +27964,7 @@ declare module Phaser {
         * 
         * @param x The x coordinate (in world space) to position the Sprite at.
         * @param y The y coordinate (in world space) to position the Sprite at.
-        * @return (Phaser.TileSprite) This instance.
+        * @return This instance.
         */
         reset(x: number, y: number, health?: number): Phaser.TileSprite;
 
@@ -28411,7 +28714,7 @@ declare module Phaser {
         * @param context The context in which the callback will be called.
         * @param onEnd Will the callback fire on a touchstart (default) or touchend event?
         */
-        addTouchLockCallback(callback: Function, context?: any): void;
+        addTouchLockCallback(callback: Function, context?: any, onEnd?: Function): void;
 
         /**
         * Removes the callback at the defined index from the Phaser.Touch.touchLockCallbacks array
@@ -28691,7 +28994,7 @@ declare module Phaser {
         * @param ease Easing function. If not set it will default to Phaser.Easing.Default, which is Phaser.Easing.Linear.None by default but can be over-ridden.
         * @param autoStart Set to `true` to allow this tween to start automatically. Otherwise call Tween.start().
         * @param delay Delay before this tween will start in milliseconds. Defaults to 0, no delay.
-        * @param repeat Should the tween automatically restart once complete? If you want it to run forever set as -1. This only effects this induvidual tween, not any chained tweens.
+        * @param repeat Should the tween automatically restart once complete? If you want it to run forever set as -1. This only effects this individual tween, not any chained tweens.
         * @param yoyo A tween that yoyos will reverse itself and play backwards automatically. A yoyo'd tween doesn't fire the Tween.onComplete event, so listen for Tween.onLoop instead.
         * @return This Tween object.
         */
@@ -28708,7 +29011,7 @@ declare module Phaser {
         * @param ease Easing function. If not set it will default to Phaser.Easing.Default, which is Phaser.Easing.Linear.None by default but can be over-ridden.
         * @param autoStart Set to `true` to allow this tween to start automatically. Otherwise call Tween.start().
         * @param delay Delay before this tween will start in milliseconds. Defaults to 0, no delay.
-        * @param repeat Should the tween automatically restart once complete? If you want it to run forever set as -1. This only effects this induvidual tween, not any chained tweens.
+        * @param repeat Should the tween automatically restart once complete? If you want it to run forever set as -1. This only effects this individual tween, not any chained tweens.
         * @param yoyo A tween that yoyos will reverse itself and play backwards automatically. A yoyo'd tween doesn't fire the Tween.onComplete event, so listen for Tween.onLoop instead.
         * @return This Tween object.
         */
@@ -28832,7 +29135,7 @@ declare module Phaser {
         * @param ease Easing function. If not set it will default to Phaser.Easing.Default, which is Phaser.Easing.Linear.None by default but can be over-ridden.
         * @param autoStart Set to `true` to allow this tween to start automatically. Otherwise call Tween.start().
         * @param delay Delay before this tween will start in milliseconds. Defaults to 0, no delay.
-        * @param repeat Should the tween automatically restart once complete? If you want it to run forever set as -1. This only effects this induvidual tween, not any chained tweens.
+        * @param repeat Should the tween automatically restart once complete? If you want it to run forever set as -1. This only effects this individual tween, not any chained tweens.
         * @param yoyo A tween that yoyos will reverse itself and play backwards automatically. A yoyo'd tween doesn't fire the Tween.onComplete event, so listen for Tween.onLoop instead.
         * @return This Tween object.
         */
@@ -28849,7 +29152,7 @@ declare module Phaser {
         * @param ease Easing function. If not set it will default to Phaser.Easing.Default, which is Phaser.Easing.Linear.None by default but can be over-ridden.
         * @param autoStart Set to `true` to allow this tween to start automatically. Otherwise call Tween.start().
         * @param delay Delay before this tween will start in milliseconds. Defaults to 0, no delay.
-        * @param repeat Should the tween automatically restart once complete? If you want it to run forever set as -1. This only effects this induvidual tween, not any chained tweens.
+        * @param repeat Should the tween automatically restart once complete? If you want it to run forever set as -1. This only effects this individual tween, not any chained tweens.
         * @param yoyo A tween that yoyos will reverse itself and play backwards automatically. A yoyo'd tween doesn't fire the Tween.onComplete event, so listen for Tween.onLoop instead.
         * @return This Tween object.
         */
@@ -29215,6 +29518,16 @@ declare module Phaser {
         * @return The object on which the property was set.
         */
         static setProperty(obj: any, prop: string, value: any): any;
+
+        /**
+        * Generate a random bool result based on the chance value.
+        * 
+        * Returns true or false based on the chance value (default 50%). For example if you wanted a player to have a 30% chance
+        * of getting a bonus, call chanceRoll(30) - true means the chance passed, false means it failed.
+        * 
+        * @param chance The chance of receiving the value. A number between 0 and 100 (effectively 0% to 100%).
+        * @return True if the roll passed, or false otherwise.
+        */
         static chanceRoll(chance: number): boolean;
 
         /**
@@ -29733,7 +30046,11 @@ declare module Phaser {
         * Sort the children in the group according to a particular key and ordering.
         * 
         * Call this function to sort the group according to a particular key value and order.
+        * 
         * For example to depth sort Sprites for Zelda-style game you might call `group.sort('y', Phaser.Group.SORT_ASCENDING)` at the bottom of your `State.update()`.
+        * 
+        * Internally this uses a standard JavaScript Array sort, so everything that applies there also applies here, including
+        * alphabetical sorting, mixing strings and numbers, and Unicode sorting. See MDN for more details.
         * 
         * @param key The name of the property to sort on. Defaults to the objects z-depth value. - Default: 'z'
         * @param order Order ascending ({@link Phaser.Group.SORT_ASCENDING SORT_ASCENDING}) or descending ({@link Phaser.Group.SORT_DESCENDING SORT_DESCENDING}). - Default: Phaser.Group.SORT_ASCENDING
@@ -29744,7 +30061,11 @@ declare module Phaser {
         * Sort the children in the group according to a particular key and ordering.
         * 
         * Call this function to sort the group according to a particular key value and order.
+        * 
         * For example to depth sort Sprites for Zelda-style game you might call `group.sort('y', Phaser.Group.SORT_ASCENDING)` at the bottom of your `State.update()`.
+        * 
+        * Internally this uses a standard JavaScript Array sort, so everything that applies there also applies here, including
+        * alphabetical sorting, mixing strings and numbers, and Unicode sorting. See MDN for more details.
         * 
         * @param key The name of the property to sort on. Defaults to the objects z-depth value. - Default: 'z'
         * @param order Order ascending ({@link Phaser.Group.SORT_ASCENDING SORT_ASCENDING}) or descending ({@link Phaser.Group.SORT_DESCENDING SORT_DESCENDING}). - Default: Phaser.Group.SORT_ASCENDING

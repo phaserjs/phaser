@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.4.5 "Sienda" - Built: Wed Feb 17 2016 13:37:04
+* v2.4.6 "Baerlon" - Built: Thu Feb 18 2016 14:40:27
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -55,7 +55,7 @@ var Phaser = Phaser || {
     * @constant
     * @type {string}
     */
-    VERSION: '2.4.5',
+    VERSION: '2.4.6',
 
     /**
     * An array of Phaser game instances.
@@ -6377,7 +6377,7 @@ Phaser.StateManager.prototype = {
             {
                 this.game.world.shutdown();
 
-                if (this._clearCache === true)
+                if (this._clearCache)
                 {
                     this.game.cache.destroy();
                 }
@@ -6705,6 +6705,9 @@ Phaser.StateManager.prototype = {
     * @method Phaser.StateManager#destroy
     */
     destroy: function () {
+
+        this._clearWorld = true;
+        this._clearCache = true;
 
         this.clearCurrentState();
 
@@ -8787,7 +8790,7 @@ Phaser.Group.prototype.add = function (child, silent) {
 
     if (child.parent !== this)
     {
-        if (child.body)
+        if (child.body && child.parent)
         {
             child.parent.removeFromHash(child);
         }
@@ -8918,7 +8921,7 @@ Phaser.Group.prototype.addAt = function (child, index, silent) {
 
     if (child.parent !== this)
     {
-        if (child.body)
+        if (child.body && child.parent)
         {
             child.parent.removeFromHash(child);
         }
@@ -25056,8 +25059,12 @@ Phaser.SpriteBatch.prototype.constructor = Phaser.SpriteBatch;
 
 /**
 * A BitmapData object contains a Canvas element to which you can draw anything you like via normal Canvas context operations.
-* A single BitmapData can be used as the texture for one or many Images/Sprites. 
+* A single BitmapData can be used as the texture for one or many Images / Sprites. 
 * So if you need to dynamically create a Sprite texture then they are a good choice.
+*
+* Important note: Every BitmapData creates its own Canvas element. Because BitmapData's are now Game Objects themselves, and don't
+* live on the display list, they are NOT automatically cleared when you change State. Therefore you _must_ call BitmapData.destroy
+* in your State's shutdown method if you wish to free-up the resources the BitmapData used, it will not happen for you.
 *
 * @class Phaser.BitmapData
 * @constructor
@@ -26902,6 +26909,8 @@ Phaser.BitmapData.prototype = {
     * @method Phaser.BitmapData#destroy
     */
     destroy: function () {
+
+        this.texture.destroy(true);
 
         PIXI.CanvasPool.remove(this);
 
@@ -38103,6 +38112,18 @@ Phaser.RandomDataGenerator.prototype = {
     pick: function (ary) {
 
         return ary[this.integerInRange(0, ary.length - 1)];
+
+    },
+
+    /**
+    * Returns a sign to be used with multiplication operator.
+    *
+    * @method Phaser.RandomDataGenerator#sign
+    * @return {number} -1 or +1.
+    */
+    sign: function () {
+
+        return this.pick([-1, 1]);
 
     },
 
@@ -49326,6 +49347,11 @@ Phaser.Loader.prototype = {
             {
                 videoType = url.type;
                 url = url.uri;
+
+                if (this.game.device.canPlayVideo(videoType))
+                {
+                    return url;
+                }
             }
             else
             {
@@ -49343,11 +49369,11 @@ Phaser.Loader.prototype = {
                 var extension = url.substr((Math.max(0, url.lastIndexOf(".")) || Infinity) + 1);
 
                 videoType = extension.toLowerCase();
-            }
 
-            if (this.game.device.canPlayVideo(videoType))
-            {
-                return url;
+                if (this.game.device.canPlayVideo(videoType))
+                {
+                    return urls[i];
+                }
             }
         }
 
@@ -49381,6 +49407,11 @@ Phaser.Loader.prototype = {
             {
                 audioType = url.type;
                 url = url.uri;
+
+                if (this.game.device.canPlayAudio(audioType))
+                {
+                    return url;
+                }
             }
             else
             {
@@ -49398,11 +49429,11 @@ Phaser.Loader.prototype = {
                 var extension = url.substr((Math.max(0, url.lastIndexOf(".")) || Infinity) + 1);
 
                 audioType = extension.toLowerCase();
-            }
 
-            if (this.game.device.canPlayAudio(audioType))
-            {
-                return url;
+                if (this.game.device.canPlayAudio(audioType))
+                {
+                    return urls[i];
+                }
             }
         }
 

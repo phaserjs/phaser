@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.4.5 "Sienda" - Built: Wed Feb 17 2016 13:37:03
+* v2.4.6 "Baerlon" - Built: Thu Feb 18 2016 14:40:25
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -6951,7 +6951,10 @@ PIXI.BaseTexture.prototype.destroy = function()
     {
         PIXI.CanvasPool.removeByCanvas(this.source);
 
-        delete PIXI.BaseTextureCache[this.source];
+        if (this.source._pixiId)
+        {
+            delete PIXI.BaseTextureCache[this.source._pixiId];
+        }
     }
 
     this.source = null;
