@@ -323,6 +323,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 
 * TypeScript definitions fixes and updates (thanks @clark-stevenson)
 * Docs typo fixes (thanks )
+* StateManager.destroy now sets `clearCache` and `clearWorld` internally before clearing the current state, as otherwise they would have been left untouched, such as from Game.destroy (thanks @i-dimitrov #2138)
 
 ### Bug Fixes
 
