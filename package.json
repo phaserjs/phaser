@@ -1,7 +1,7 @@
 {
   "name": "phaser",
-  "version": "2.4.6",
-  "release": "Baerlon",
+  "version": "2.4.7",
+  "release": "Hinderstap",
   "description": "A fast, free and fun HTML5 Game Framework for Desktop and Mobile web browsers.",
   "author": "Richard Davey <rdavey@gmail.com> (http://www.photonstorm.com)",
   "logo": "https://raw.github.com/photonstorm/phaser/master/phaser-logo-small.png",
