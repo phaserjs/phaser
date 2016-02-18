@@ -315,6 +315,10 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 ## Version 2.4.6 - "Baerlon" - in dev
 
 
+### New Features
+
+* Added RandomDataGenerator.sign, which returns a -1 or 1 (thanks @taylankasap #2328)
+
 ### Updates
 
 * TypeScript definitions fixes and updates (thanks @clark-stevenson)

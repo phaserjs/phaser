@@ -1,7 +1,7 @@
 /// <reference path="pixi.d.ts" />
 /// <reference path="p2.d.ts" />
 
-// Type definitions for Phaser 2.4.5 - 2nd February 2015
+// Type definitions for Phaser 2.4.6 - 18th February 2015
 // Project: https://github.com/photonstorm/phaser
 
 declare module "phaser" {
@@ -3943,6 +3943,7 @@ declare module Phaser {
         pick<T>(ary: T[]): T;
         real(): number;
         realInRange(min: number, max: number): number;
+        sign(): number;
         sow(seeds: any[]): void;
         state(state?: string): string;
         timestamp(min: number, max: number): number;
