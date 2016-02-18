@@ -322,7 +322,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 
 ### Bug Fixes
 
-*
+* Groups now check for `child.parent` before calling `removeFromHash` (thanks @spayton #2323 #2338)
 
 ### Pixi Updates
 
