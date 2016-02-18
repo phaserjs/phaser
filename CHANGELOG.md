@@ -1,5 +1,23 @@
 # Change Log
 
+## Version 2.4.6 - "Baerlon" - 18th February 2016
+
+2.4.6 is a point release that addresses 2 severe bugs, and should be used in place of 2.4.5 in all instances. The 2.4.5 change log appears after this one.
+
+### New Features
+
+* Added RandomDataGenerator.sign, which returns a -1 or 1 (thanks @taylankasap #2328)
+
+### Updates
+
+* StateManager.destroy now sets `clearCache` and `clearWorld` internally before clearing the current state, as otherwise they would have been left untouched, such as from Game.destroy (thanks @i-dimitrov #2138)
+
+### Bug Fixes
+
+* Groups now check for `child.parent` before calling `removeFromHash` (thanks @spayton #2323 #2338)
+* BaseTexture.destroy wasn't correctly removing the texture from the BaseTextureCache if it was a cached CanvasPool entry (such as Text objects use), causing drawImage errors in Canvas mode, and just blank textures in WebGL (thanks @civet #2339)
+* Loader.getAudioURL and Loader.getVideoURL were hardened to support query string file URLs and still work with uri pairs and data/blobs.
+
 ## Version 2.4.5 - "Sienda" - 17th February 2016
 
 ### New Features
