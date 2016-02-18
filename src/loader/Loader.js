@@ -2483,6 +2483,11 @@ Phaser.Loader.prototype = {
             {
                 videoType = url.type;
                 url = url.uri;
+
+                if (this.game.device.canPlayVideo(videoType))
+                {
+                    return url;
+                }
             }
             else
             {
@@ -2500,11 +2505,11 @@ Phaser.Loader.prototype = {
                 var extension = url.substr((Math.max(0, url.lastIndexOf(".")) || Infinity) + 1);
 
                 videoType = extension.toLowerCase();
-            }
 
-            if (this.game.device.canPlayVideo(videoType))
-            {
-                return url;
+                if (this.game.device.canPlayVideo(videoType))
+                {
+                    return urls[i];
+                }
             }
         }
 
@@ -2538,6 +2543,11 @@ Phaser.Loader.prototype = {
             {
                 audioType = url.type;
                 url = url.uri;
+
+                if (this.game.device.canPlayAudio(audioType))
+                {
+                    return url;
+                }
             }
             else
             {
@@ -2555,11 +2565,11 @@ Phaser.Loader.prototype = {
                 var extension = url.substr((Math.max(0, url.lastIndexOf(".")) || Infinity) + 1);
 
                 audioType = extension.toLowerCase();
-            }
 
-            if (this.game.device.canPlayAudio(audioType))
-            {
-                return url;
+                if (this.game.device.canPlayAudio(audioType))
+                {
+                    return urls[i];
+                }
             }
         }
 
