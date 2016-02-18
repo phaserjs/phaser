@@ -323,6 +323,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 ### Bug Fixes
 
 * Groups now check for `child.parent` before calling `removeFromHash` (thanks @spayton #2323 #2338)
+* BaseTexture.destroy wasn't correctly removing the texture from the BaseTextureCache if it was a cached CanvasPool entry (such as Text objects use), causing drawImage errors in Canvas mode, and just blank textures in WebGL (thanks @civet #2339)
 
 ### Pixi Updates
 

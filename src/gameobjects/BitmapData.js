@@ -6,8 +6,12 @@
 
 /**
 * A BitmapData object contains a Canvas element to which you can draw anything you like via normal Canvas context operations.
-* A single BitmapData can be used as the texture for one or many Images/Sprites. 
+* A single BitmapData can be used as the texture for one or many Images / Sprites. 
 * So if you need to dynamically create a Sprite texture then they are a good choice.
+*
+* Important note: Every BitmapData creates its own Canvas element. Because BitmapData's are now Game Objects themselves, and don't
+* live on the display list, they are NOT automatically cleared when you change State. Therefore you _must_ call BitmapData.destroy
+* in your State's shutdown method if you wish to free-up the resources the BitmapData used, it will not happen for you.
 *
 * @class Phaser.BitmapData
 * @constructor
@@ -1852,6 +1856,8 @@ Phaser.BitmapData.prototype = {
     * @method Phaser.BitmapData#destroy
     */
     destroy: function () {
+
+        this.texture.destroy(true);
 
         PIXI.CanvasPool.remove(this);
 

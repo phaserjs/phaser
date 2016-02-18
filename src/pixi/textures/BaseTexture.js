@@ -184,7 +184,10 @@ PIXI.BaseTexture.prototype.destroy = function()
     {
         PIXI.CanvasPool.removeByCanvas(this.source);
 
-        delete PIXI.BaseTextureCache[this.source];
+        if (this.source._pixiId)
+        {
+            delete PIXI.BaseTextureCache[this.source._pixiId];
+        }
     }
 
     this.source = null;
