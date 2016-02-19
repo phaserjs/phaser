@@ -324,8 +324,11 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 
 * TypeScript definitions fixes and updates (thanks @clark-stevenson)
 * Docs typo fixes (thanks)
+* Removed a console.log from the TilingSprite generator.
 
 ### Bug Fixes
+
+* The `mouseoutglobal` event listener wasn't removed when the game was destroyed (thanks @stoneman1 #2345 #2344 #2342)
 
 ### Pixi Updates
 
