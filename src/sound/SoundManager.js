@@ -260,7 +260,7 @@ Phaser.SoundManager.prototype = {
     /**
     * Sets the Input Manager touch callback to be SoundManager.unlock.
     * Required for iOS audio device unlocking. Mostly just used internally.
-    * 
+    *
     * @method Phaser.SoundManager#setTouchLock
     */
     setTouchLock: function () {
@@ -285,7 +285,7 @@ Phaser.SoundManager.prototype = {
 
     /**
     * Enables the audio, usually after the first touch.
-    * 
+    *
     * @method Phaser.SoundManager#unlock
     * @return {boolean} True if the callback should be removed, otherwise false.
     */
@@ -729,8 +729,10 @@ Phaser.SoundManager.prototype = {
         this._sounds = [];
 
         this.onSoundDecode.dispose();
+        if (this.context) {
+            this.context.close();
+        }
 
-        this.context.close();
 
         if (this.context && window['PhaserGlobal'])
         {
