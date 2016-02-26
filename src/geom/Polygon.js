@@ -163,6 +163,7 @@ Phaser.Polygon.prototype = {
      * - An array of Point objects: `[new Phaser.Point(x1, y1), ...]`
      * - An array of objects with public x/y properties: `[obj1, obj2, ...]`
      * - An array of paired numbers that represent point coordinates: `[x1,y1, x2,y2, ...]`
+     * - An array of arrays with two elements representing x/y coordinates: `[[x1, y1], [x2, y2], ...]`
      * - As separate Point arguments: `setTo(new Phaser.Point(x1, y1), ...)`
      * - As separate objects with public x/y properties arguments: `setTo(obj1, obj2, ...)`
      * - As separate arguments representing point coordinates: `setTo(x1,y1, x2,y2, ...)`
@@ -195,6 +196,10 @@ Phaser.Polygon.prototype = {
                 {
                     var p = new PIXI.Point(points[i], points[i + 1]);
                     i++;
+                }
+                else if (Array.isArray(points[i])
+                {
+                    var p = new PIXI.Point(points[i][0], points[i][1]);
                 }
                 else
                 {
