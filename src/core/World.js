@@ -299,7 +299,7 @@ Object.defineProperty(Phaser.World.prototype, "height", {
 Object.defineProperty(Phaser.World.prototype, "centerX", {
 
     get: function () {
-        return this.bounds.halfWidth;
+        return this.bounds.halfWidth + this.bounds.x;
     }
 
 });
@@ -312,7 +312,7 @@ Object.defineProperty(Phaser.World.prototype, "centerX", {
 Object.defineProperty(Phaser.World.prototype, "centerY", {
 
     get: function () {
-        return this.bounds.halfHeight;
+        return this.bounds.halfHeight + this.bounds.y;
     }
 
 });
