@@ -60,7 +60,7 @@ Phaser.Signal.prototype = {
     * @property {function} _boundDispatch - The bound dispatch function, if any.
     * @private
     */
-    _boundDispatch: true,
+    _boundDispatch: false,
 
     /**
     * @method Phaser.Signal#validateListener
