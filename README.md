@@ -331,6 +331,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * The `mouseoutglobal` event listener wasn't removed when the game was destroyed (thanks @stoneman1 #2345 #2344 #2342)
 * Fixed issue with IE crashing on this.context.close in the Sound Manager (thanks @stoneman1 #2349)
 * Phaser.World.centerX and Phaser.World.centerY only worked if the bounds had an origin of 0, 0. They now take into account the actual origin (thanks @fillmoreb #2353)
+* SoundManager.close now validates that context.close is a valid function before calling it (thanks @brianbunch #2355)
 
 ### Pixi Updates
 

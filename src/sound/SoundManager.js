@@ -729,10 +729,11 @@ Phaser.SoundManager.prototype = {
         this._sounds = [];
 
         this.onSoundDecode.dispose();
-        if (this.context) {
+
+        if (this.context && this.context.close)
+        {
             this.context.close();
         }
-
 
         if (this.context && window['PhaserGlobal'])
         {
