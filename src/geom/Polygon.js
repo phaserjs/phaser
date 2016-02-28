@@ -197,7 +197,7 @@ Phaser.Polygon.prototype = {
                     var p = new PIXI.Point(points[i], points[i + 1]);
                     i++;
                 }
-                else if (Array.isArray(points[i])
+                else if (Array.isArray(points[i]))
                 {
                     var p = new PIXI.Point(points[i][0], points[i][1]);
                 }
