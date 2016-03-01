@@ -27,14 +27,19 @@ Phaser.Component.Destroy.prototype = {
     * 
     * If this Game Object has the Events component it will also dispatch the `onDestroy` event.
     *
+    * You can optionally also destroy the BaseTexture this Game Object is using. Be careful if you've
+    * more than one Game Object sharing the same BaseTexture.
+    *
     * @method
     * @param {boolean} [destroyChildren=true] - Should every child of this object have its destroy method called as well?
+    * @param {boolean} [destroyTexture=false] - Destroy the BaseTexture this Game Object is using? Note that if another Game Object is sharing the same BaseTexture it will invalidate it.
     */
-    destroy: function (destroyChildren) {
+    destroy: function (destroyChildren, destroyTexture) {
 
         if (this.game === null || this.destroyPhase) { return; }
 
         if (destroyChildren === undefined) { destroyChildren = true; }
+        if (destroyTexture === undefined) { destroyTexture = false; }
 
         this.destroyPhase = true;
 
@@ -140,6 +145,12 @@ Phaser.Component.Destroy.prototype = {
         this._mask = null;
 
         this._destroyCachedSprite();
+
+        //  Texture?
+        if (destroyTexture)
+        {
+            this.texture.destroy(true);
+        }
 
         this.destroyPhase = false;
         this.pendingDestroy = false;

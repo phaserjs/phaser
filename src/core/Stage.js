@@ -29,7 +29,12 @@ Phaser.Stage = function (game) {
     this.name = '_stage_root';
 
     /**
-    * @property {boolean} disableVisibilityChange - By default if the browser tab loses focus the game will pause. You can stop that behaviour by setting this property to true.
+    * By default if the browser tab loses focus the game will pause.
+    * You can stop that behavior by setting this property to true.
+    * Note that the browser can still elect to pause your game if it wishes to do so,
+    * for example swapping to another browser tab. This will cause the RAF callback to halt,
+    * effectively pausing your game, even though no in-game pause event is triggered if you enable this property.
+    * @property {boolean} disableVisibilityChange
     * @default
     */
     this.disableVisibilityChange = false;

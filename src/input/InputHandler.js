@@ -167,14 +167,6 @@ Phaser.InputHandler = function (sprite) {
     this.boundsSprite = null;
 
     /**
-    * If this object is set to consume the pointer event then it will stop all propagation from this object on.
-    * For example if you had a stack of 6 sprites with the same priority IDs and one consumed the event, none of the others would receive it.
-    * @property {boolean} consumePointerEvent
-    * @default
-    */
-    this.consumePointerEvent = false;
-
-    /**
     * @property {boolean} scaleLayer - EXPERIMENTAL: Please do not use this property unless you know what it does. Likely to change in the future.
     */
     this.scaleLayer = false;
@@ -587,6 +579,8 @@ Phaser.InputHandler.prototype = {
                     return true;
                 }
             }
+
+            return false;
         }
         else
         {
@@ -876,6 +870,8 @@ Phaser.InputHandler.prototype = {
 
         if (data.isOver === false || pointer.dirty)
         {
+            var sendEvent = (data.isOver === false);
+
             data.isOver = true;
             data.isOut = false;
             data.timeOver = this.game.time.time;
@@ -888,7 +884,7 @@ Phaser.InputHandler.prototype = {
                 this._setHandCursor = true;
             }
 
-            if (this.sprite && this.sprite.events)
+            if (sendEvent && this.sprite && this.sprite.events)
             {
                 this.sprite.events.onInputOver$dispatch(this.sprite, pointer);
             }
@@ -978,9 +974,6 @@ Phaser.InputHandler.prototype = {
             }
         }
 
-        //  Consume the event?
-        return this.consumePointerEvent;
-
     },
 
     /**
@@ -1047,12 +1040,17 @@ Phaser.InputHandler.prototype = {
     * @param {Phaser.Pointer} pointer
     * @return {boolean}
     */
-    updateDrag: function (pointer) {
+    updateDrag: function (pointer, fromStart) {
 
         if (pointer.isUp)
         {
             this.stopDrag(pointer);
             return false;
+        }
+
+        if (fromStart === undefined)
+        {
+            fromStart = false;
         }
 
         var px = this.globalToLocalX(pointer.x) + this._dragPoint.x + this.dragOffset.x;
@@ -1117,7 +1115,7 @@ Phaser.InputHandler.prototype = {
             }
         }
 
-        this.sprite.events.onDragUpdate.dispatch(this.sprite, pointer, px, py, this.snapPoint);
+        this.sprite.events.onDragUpdate.dispatch(this.sprite, pointer, px, py, this.snapPoint, fromStart);
 
         return true;
 
@@ -1341,7 +1339,7 @@ Phaser.InputHandler.prototype = {
             this._dragPoint.setTo(this.sprite.x - this.globalToLocalX(pointer.x), this.sprite.y - this.globalToLocalY(pointer.y));
         }
 
-        this.updateDrag(pointer);
+        this.updateDrag(pointer, true);
 
         if (this.bringToTop)
         {

@@ -641,17 +641,21 @@ PIXI.DisplayObject.prototype._generateCachedSprite = function()
 
     var bounds = this.getLocalBounds();
 
+    //  Round it off and force non-zero dimensions
+    bounds.width = Math.max(1, Math.ceil(bounds.width));
+    bounds.height = Math.max(1, Math.ceil(bounds.height));
+
     this.updateTransform();
 
     if (!this._cachedSprite)
     {
-        var renderTexture = new PIXI.RenderTexture(bounds.width | 1, bounds.height | 1);
+        var renderTexture = new PIXI.RenderTexture(bounds.width, bounds.height);
         this._cachedSprite = new PIXI.Sprite(renderTexture);
         this._cachedSprite.worldTransform = this.worldTransform;
     }
     else
     {
-        this._cachedSprite.texture.resize(bounds.width | 1, bounds.height | 1);
+        this._cachedSprite.texture.resize(bounds.width, bounds.height);
     }
 
     //  Remove filters
@@ -664,8 +668,8 @@ PIXI.DisplayObject.prototype._generateCachedSprite = function()
     PIXI.DisplayObject._tempMatrix.ty = -bounds.y;
 
     this._cachedSprite.texture.render(this, PIXI.DisplayObject._tempMatrix, true);
-    this._cachedSprite.anchor.x = -( bounds.x / bounds.width );
-    this._cachedSprite.anchor.y = -( bounds.y / bounds.height );
+    this._cachedSprite.anchor.x = -(bounds.x / bounds.width);
+    this._cachedSprite.anchor.y = -(bounds.y / bounds.height);
 
     this._filters = tempFilters;
 

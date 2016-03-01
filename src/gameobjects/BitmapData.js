@@ -6,8 +6,12 @@
 
 /**
 * A BitmapData object contains a Canvas element to which you can draw anything you like via normal Canvas context operations.
-* A single BitmapData can be used as the texture for one or many Images/Sprites. 
+* A single BitmapData can be used as the texture for one or many Images / Sprites. 
 * So if you need to dynamically create a Sprite texture then they are a good choice.
+*
+* Important note: Every BitmapData creates its own Canvas element. Because BitmapData's are now Game Objects themselves, and don't
+* live on the display list, they are NOT automatically cleared when you change State. Therefore you _must_ call BitmapData.destroy
+* in your State's shutdown method if you wish to free-up the resources the BitmapData used, it will not happen for you.
 *
 * @class Phaser.BitmapData
 * @constructor
@@ -45,7 +49,6 @@ Phaser.BitmapData = function (game, key, width, height) {
     * @property {HTMLCanvasElement} canvas - The canvas to which this BitmapData draws.
     * @default
     */
-    // this.canvas = Phaser.Canvas.create(width, height, '', true);
     this.canvas = PIXI.CanvasPool.create(this, width, height);
 
     /**
@@ -213,10 +216,10 @@ Phaser.BitmapData = function (game, key, width, height) {
     this._circle = new Phaser.Circle();
 
     /**
-    * @property {HTMLCanvasElement} _swapCanvas - A swap canvas.
+    * @property {HTMLCanvasElement} _swapCanvas - A swap canvas. Used by moveH and moveV, created in those methods.
     * @private
     */
-    this._swapCanvas = PIXI.CanvasPool.create(this, width, height);
+    this._swapCanvas = undefined;
 
 };
 
@@ -262,6 +265,11 @@ Phaser.BitmapData.prototype = {
     moveH: function (distance, wrap) {
 
         if (wrap === undefined) { wrap = true; }
+
+        if (this._swapCanvas === undefined)
+        {
+            this._swapCanvas = PIXI.CanvasPool.create(this, this.width, this.height);
+        }
 
         var c = this._swapCanvas;
         var ctx = c.getContext('2d');
@@ -320,6 +328,11 @@ Phaser.BitmapData.prototype = {
     moveV: function (distance, wrap) {
 
         if (wrap === undefined) { wrap = true; }
+
+        if (this._swapCanvas === undefined)
+        {
+            this._swapCanvas = PIXI.CanvasPool.create(this, this.width, this.height);
+        }
 
         var c = this._swapCanvas;
         var ctx = c.getContext('2d');
@@ -441,6 +454,9 @@ Phaser.BitmapData.prototype = {
     * You can optionally define the area to clear.
     * If the arguments are left empty it will clear the entire canvas.
     *
+    * You may need to call BitmapData.update after this in order to clear out the pixel data, 
+    * but Phaser will not do this automatically for you.
+    *
     * @method Phaser.BitmapData#clear
     * @param {number} [x=0] - The x coordinate of the top-left of the area to clear.
     * @param {number} [y=0] - The y coordinate of the top-left of the area to clear.
@@ -456,8 +472,6 @@ Phaser.BitmapData.prototype = {
         if (height === undefined) { height = this.height; }
 
         this.context.clearRect(x, y, width, height);
-
-        this.update();
 
         this.dirty = true;
 
@@ -527,6 +541,8 @@ Phaser.BitmapData.prototype = {
     * Resizes the BitmapData. This changes the size of the underlying canvas and refreshes the buffer.
     *
     * @method Phaser.BitmapData#resize
+    * @param {integer} width - The new width of the BitmapData.
+    * @param {integer} height - The new height of the BitmapData.
     * @return {Phaser.BitmapData} This BitmapData object for method chaining.
     */
     resize: function (width, height) {
@@ -539,8 +555,11 @@ Phaser.BitmapData.prototype = {
             this.canvas.width = width;
             this.canvas.height = height;
 
-            this._swapCanvas.width = width;
-            this._swapCanvas.height = height;
+            if (this._swapCanvas !== undefined)
+            {
+                this._swapCanvas.width = width;
+                this._swapCanvas.height = height;
+            }
 
             this.baseTexture.width = width;
             this.baseTexture.height = height;
@@ -566,6 +585,8 @@ Phaser.BitmapData.prototype = {
     * This re-creates the BitmapData.imageData from the current context.
     * It then re-builds the ArrayBuffer, the data Uint8ClampedArray reference and the pixels Int32Array.
     * If not given the dimensions defaults to the full size of the context.
+    *
+    * Warning: This is a very expensive operation, so use it sparingly.
     *
     * @method Phaser.BitmapData#update
     * @param {number} [x=0] - The x coordinate of the top-left of the image data area to grab from.
@@ -779,12 +800,12 @@ Phaser.BitmapData.prototype = {
     * @return {Phaser.BitmapData} This BitmapData object for method chaining.
     */
     setHSL: function (h, s, l, region) {
+        
+        var bHaveH = h || h === 0;
+        var bHaveS = s || s === 0;
+        var bHaveL = l || l === 0;
 
-        if (h === undefined || h === null) { h = false; }
-        if (s === undefined || s === null) { s = false; }
-        if (l === undefined || l === null) { l = false; }
-
-        if (!h && !s && !l)
+        if (!bHaveH && !bHaveS && !bHaveL)
         {
             return;
         }
@@ -802,17 +823,17 @@ Phaser.BitmapData.prototype = {
             {
                 Phaser.Color.unpackPixel(this.getPixel32(x, y), pixel, true);
 
-                if (h)
+                if (bHaveH)
                 {
                     pixel.h = h;
                 }
 
-                if (s)
+                if (bHaveS)
                 {
                     pixel.s = s;
                 }
 
-                if (l)
+                if (bHaveL)
                 {
                     pixel.l = l;
                 }
@@ -872,12 +893,12 @@ Phaser.BitmapData.prototype = {
 
                 if (s)
                 {
-                    pixel.s = this.game.math.limitValue(pixel.s + s, 0, 1);
+                    pixel.s = this.game.math.clamp(pixel.s + s, 0, 1);
                 }
 
                 if (l)
                 {
-                    pixel.l = this.game.math.limitValue(pixel.l + l, 0, 1);
+                    pixel.l = this.game.math.clamp(pixel.l + l, 0, 1);
                 }
 
                 Phaser.Color.HSLtoRGB(pixel.h, pixel.s, pixel.l, pixel);
@@ -1410,7 +1431,7 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Draws the immediate children of a Phaser.Group to this BitmapData.
-    * Children are only drawn if they have their `exists` property set to `true`.
+    * Children are only drawn if they have their `exists` property set to `true` and have image based Textures.
     * The children will be drawn at their `x` and `y` world space coordinates. If this is outside the bounds of the BitmapData they won't be drawn.
     * When drawing it will take into account the child's rotation, scale and alpha values.
     * No iteration takes place. Groups nested inside other Groups will not be iterated through.
@@ -1425,10 +1446,35 @@ Phaser.BitmapData.prototype = {
 
         if (group.total > 0)
         {
-            group.forEachExists(this.copy, this, null, null, null, null, null, null, null, null, null, null, null, null, null, null, blendMode, roundPx);
+            group.forEachExists(this.drawGroupProxy, this, blendMode, roundPx);
         }
 
         return this;
+
+    },
+
+    /**
+    * A proxy for drawGroup that handles child iteration for more complex Game Objects.
+    * 
+    * @method Phaser.BitmapData#drawGroupProxy
+    * @private
+    * @param {Phaser.Sprite|Phaser.Image|Phaser.BitmapText} child - The child to draw.
+    * @param {string} [blendMode=null] - The composite blend mode that will be used when drawing. The default is no blend mode at all. This is a Canvas globalCompositeOperation value such as 'lighter' or 'xor'.
+    * @param {boolean} [roundPx=false] - Should the x and y values be rounded to integers before drawing? This prevents anti-aliasing in some instances.
+    */
+    drawGroupProxy: function (child, blendMode, roundPx) {
+
+        if (child.type === Phaser.EMITTER || child.type === Phaser.BITMAPTEXT)
+        {
+            for (var i = 0; i < child.children.length; i++)
+            {
+                this.copy(child.children[i], null, null, null, null, null, null, null, null, null, null, null, null, null, null, blendMode, roundPx);
+            }
+        }
+        else
+        {
+            this.copy(child, null, null, null, null, null, null, null, null, null, null, null, null, null, null, blendMode, roundPx);
+        }
 
     },
 
@@ -1810,6 +1856,8 @@ Phaser.BitmapData.prototype = {
     * @method Phaser.BitmapData#destroy
     */
     destroy: function () {
+
+        this.texture.destroy(true);
 
         PIXI.CanvasPool.remove(this);
 

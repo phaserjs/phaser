@@ -1,0 +1,37 @@
+[
+    "src/pixi/Pixi.js",
+    "src/pixi/display/DisplayObject.js",
+    "src/pixi/display/DisplayObjectContainer.js",
+    "src/pixi/display/Sprite.js",
+    "src/pixi/display/SpriteBatch.js",
+
+    "src/pixi/utils/Utils.js",
+    "src/pixi/utils/CanvasPool.js",
+
+    "src/pixi/renderers/webgl/utils/WebGLShaderUtils.js",
+    "src/pixi/renderers/webgl/shaders/PixiShader.js",
+    "src/pixi/renderers/webgl/shaders/PixiFastShader.js",
+    "src/pixi/renderers/webgl/shaders/StripShader.js",
+    "src/pixi/renderers/webgl/shaders/PrimitiveShader.js",
+    "src/pixi/renderers/webgl/shaders/ComplexPrimitiveShader.js",
+    "src/pixi/renderers/webgl/WebGLRenderer.js",
+    "src/pixi/renderers/webgl/utils/WebGLBlendModeManager.js",
+    "src/pixi/renderers/webgl/utils/WebGLMaskManager.js",
+    "src/pixi/renderers/webgl/utils/WebGLStencilManager.js",
+    "src/pixi/renderers/webgl/utils/WebGLShaderManager.js",
+    "src/pixi/renderers/webgl/utils/WebGLSpriteBatch.js",
+    "src/pixi/renderers/webgl/utils/WebGLFastSpriteBatch.js",
+    "src/pixi/renderers/webgl/utils/WebGLFilterManager.js",
+    "src/pixi/renderers/webgl/utils/FilterTexture.js",
+    "src/pixi/renderers/canvas/utils/CanvasBuffer.js",
+    "src/pixi/renderers/canvas/utils/CanvasMaskManager.js",
+    "src/pixi/renderers/canvas/utils/CanvasTinter.js",
+    "src/pixi/renderers/canvas/CanvasRenderer.js",
+
+    "src/pixi/textures/BaseTexture.js",
+    "src/pixi/textures/Texture.js",
+    "src/pixi/textures/RenderTexture.js",
+
+    "src/pixi/filters/AbstractFilter.js"
+
+]

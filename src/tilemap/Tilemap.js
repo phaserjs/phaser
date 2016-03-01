@@ -253,8 +253,8 @@ Phaser.Tilemap.prototype = {
     *     You can also pass in a BitmapData which can be used instead of an Image.
     * @param {number} [tileWidth=32] - The width of the tiles in the Tileset Image. If not given it will default to the map.tileWidth value, if that isn't set then 32.
     * @param {number} [tileHeight=32] - The height of the tiles in the Tileset Image. If not given it will default to the map.tileHeight value, if that isn't set then 32.
-    * @param {number} [tileMargin=0] - The width of the tiles in the Tileset Image. If not given it will default to the map.tileWidth value.
-    * @param {number} [tileSpacing=0] - The height of the tiles in the Tileset Image. If not given it will default to the map.tileHeight value.
+    * @param {number} [tileMargin=0] - The width of the tiles in the Tileset Image.
+    * @param {number} [tileSpacing=0] - The height of the tiles in the Tileset Image.
     * @param {number} [gid=0] - If adding multiple tilesets to a blank/dynamic map, specify the starting GID the set will use here.
     * @return {Phaser.Tileset} Returns the Tileset object that was created or updated, or null if it failed.
     */
@@ -304,7 +304,7 @@ Phaser.Tilemap.prototype = {
 
         if (idx === null && this.format === Phaser.Tilemap.TILED_JSON)
         {
-            console.warn('Phaser.Tilemap.addTilesetImage: No data found in the JSON matching the tileset name: "' + key + '"');
+            console.warn('Phaser.Tilemap.addTilesetImage: No data found in the JSON matching the tileset name: "' + tileset + '"');
             return null;
         }
 
@@ -730,19 +730,6 @@ Phaser.Tilemap.prototype = {
     getImageIndex: function (name) {
 
         return this.getIndex(this.images, name);
-
-    },
-
-    /**
-    * Gets the object index based on its name.
-    *
-    * @method Phaser.Tilemap#getObjectIndex
-    * @param {string} name - The name of the object to get.
-    * @return {number} The index of the object in this tilemap, or null if not found.
-    */
-    getObjectIndex: function (name) {
-
-        return this.getIndex(this.objects, name);
 
     },
 
@@ -1219,9 +1206,10 @@ Phaser.Tilemap.prototype = {
     hasTile: function (x, y, layer) {
 
         layer = this.getLayer(layer);
-
+        if (this.layers[layer].data[y] === undefined || this.layers[layer].data[y][x] === undefined) {
+            return false;
+        }
         return (this.layers[layer].data[y][x].index > -1);
-
     },
 
     /**

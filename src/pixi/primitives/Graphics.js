@@ -398,9 +398,10 @@ PIXI.Graphics.prototype.arcTo = function(x1, y1, x2, y2, radius)
  * @param startAngle {Number} The starting angle, in radians (0 is at the 3 o'clock position of the arc's circle)
  * @param endAngle {Number} The ending angle, in radians
  * @param anticlockwise {Boolean} Optional. Specifies whether the drawing should be counterclockwise or clockwise. False is default, and indicates clockwise, while true indicates counter-clockwise.
+ * @param segments {Number} Optional. The number of segments to use when calculating the arc. The default is 40. If you need more fidelity use a higher number.
  * @return {Graphics}
  */
-PIXI.Graphics.prototype.arc = function(cx, cy, radius, startAngle, endAngle, anticlockwise)
+PIXI.Graphics.prototype.arc = function(cx, cy, radius, startAngle, endAngle, anticlockwise, segments)
 {
     //  If we do this we can never draw a full circle
     if (startAngle === endAngle)
@@ -409,6 +410,7 @@ PIXI.Graphics.prototype.arc = function(cx, cy, radius, startAngle, endAngle, ant
     }
 
     if (anticlockwise === undefined) { anticlockwise = false; }
+    if (segments === undefined) { segments = 40; }
 
     if (!anticlockwise && endAngle <= startAngle)
     {
@@ -420,7 +422,7 @@ PIXI.Graphics.prototype.arc = function(cx, cy, radius, startAngle, endAngle, ant
     }
 
     var sweep = anticlockwise ? (startAngle - endAngle) * -1 : (endAngle - startAngle);
-    var segs =  Math.ceil(Math.abs(sweep) / (Math.PI * 2)) * 40;
+    var segs =  Math.ceil(Math.abs(sweep) / (Math.PI * 2)) * segments;
 
     //  Sweep check - moved here because we don't want to do the moveTo below if the arc fails
     if (sweep === 0)
@@ -636,19 +638,26 @@ PIXI.Graphics.prototype.clear = function()
  * This can be quite useful if your geometry is complicated and needs to be reused multiple times.
  *
  * @method generateTexture
- * @param resolution {Number} The resolution of the texture being generated
- * @param scaleMode {Number} Should be one of the PIXI.scaleMode consts
+ * @param [resolution=1] {Number} The resolution of the texture being generated
+ * @param [scaleMode=0] {Number} Should be one of the PIXI.scaleMode consts
+ * @param [padding=0] {Number} Add optional extra padding to the generated texture (default 0)
  * @return {Texture} a texture of the graphics object
  */
-PIXI.Graphics.prototype.generateTexture = function(resolution, scaleMode)
+PIXI.Graphics.prototype.generateTexture = function(resolution, scaleMode, padding)
 {
-    resolution = resolution || 1;
+    if (resolution === undefined) { resolution = 1; }
+    if (scaleMode === undefined) { scaleMode = PIXI.scaleModes.DEFAULT; }
+    if (padding === undefined) { padding = 0; }
 
     var bounds = this.getBounds();
+
+    bounds.width += padding;
+    bounds.height += padding;
    
     var canvasBuffer = new PIXI.CanvasBuffer(bounds.width * resolution, bounds.height * resolution);
     
     var texture = PIXI.Texture.fromCanvas(canvasBuffer.canvas, scaleMode);
+
     texture.baseTexture.resolution = resolution;
 
     canvasBuffer.context.scale(resolution, resolution);
@@ -1198,8 +1207,10 @@ Object.defineProperty(PIXI.Graphics.prototype, "cacheAsBitmap", {
         else
         {
             this.destroyCachedSprite();
-            this.dirty = true;
         }
+
+        this.dirty = true;
+        this.webGLDirty = true;
 
     }
 });

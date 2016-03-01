@@ -472,12 +472,12 @@ Phaser.Game.prototype = {
             this.parent = config['parent'];
         }
 
-        if (config['transparent'])
+        if (config['transparent'] !== undefined)
         {
             this.transparent = config['transparent'];
         }
 
-        if (config['antialias'])
+        if (config['antialias'] !== undefined)
         {
             this.antialias = config['antialias'];
         }
@@ -487,7 +487,7 @@ Phaser.Game.prototype = {
             this.resolution = config['resolution'];
         }
 
-        if (config['preserveDrawingBuffer'])
+        if (config['preserveDrawingBuffer'] !== undefined)
         {
             this.preserveDrawingBuffer = config['preserveDrawingBuffer'];
         }

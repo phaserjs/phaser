@@ -411,7 +411,7 @@ Phaser.StateManager.prototype = {
             {
                 this.game.world.shutdown();
 
-                if (this._clearCache === true)
+                if (this._clearCache)
                 {
                     this.game.cache.destroy();
                 }
@@ -431,20 +431,15 @@ Phaser.StateManager.prototype = {
 
         if (this.states[key])
         {
-            var valid = false;
-
             if (this.states[key]['preload'] || this.states[key]['create'] || this.states[key]['update'] || this.states[key]['render'])
             {
-                valid = true;
+                return true;
             }
-
-            if (valid === false)
+            else
             {
                 console.warn("Invalid Phaser State object given. Must contain at least a one of the required functions: preload, create, update or render");
                 return false;
             }
-
-            return true;
         }
         else
         {
@@ -575,7 +570,7 @@ Phaser.StateManager.prototype = {
      * Gets the current State.
      *
      * @method Phaser.StateManager#getCurrentState
-     * @return Phaser.State
+     * @return {Phaser.State}
      * @public
      */
     getCurrentState: function() {
@@ -587,6 +582,12 @@ Phaser.StateManager.prototype = {
     * @protected
     */
     loadComplete: function () {
+
+        //  Make sure to do load-update one last time before state is set to _created
+        if (this._created === false && this.onLoadUpdateCallback)
+        {
+            this.onLoadUpdateCallback.call(this.callbackContext, this.game);
+        }
 
         if (this._created === false && this.onCreateCallback)
         {
@@ -738,6 +739,9 @@ Phaser.StateManager.prototype = {
     * @method Phaser.StateManager#destroy
     */
     destroy: function () {
+
+        this._clearWorld = true;
+        this._clearCache = true;
 
         this.clearCurrentState();
 

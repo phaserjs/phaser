@@ -1,7 +1,7 @@
 {
   "name": "phaser",
-  "version": "2.4.4",
-  "release": "Amador",
+  "version": "2.4.6",
+  "release": "Baerlon",
   "description": "A fast, free and fun HTML5 Game Framework for Desktop and Mobile web browsers.",
   "author": "Richard Davey <rdavey@gmail.com> (http://www.photonstorm.com)",
   "logo": "https://raw.github.com/photonstorm/phaser/master/phaser-logo-small.png",
@@ -44,7 +44,14 @@
     "grunt-text-replace": "^0.3.11",
     "jsdoc": "~3.3.0-alpha10",
     "load-grunt-config": "~0.7.2",
-    "typescript": "^1.4.1",
+    "typescript": "1.4.1",
     "yuidocjs": "^0.3.50"
+  },
+  "typescript": {
+    "definitions": [
+      "typescript/p2.d.ts",
+      "typescript/phaser.comments.d.ts",
+      "typescript/pixi.comments.d.ts"
+    ]
   }
 }

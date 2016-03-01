@@ -584,7 +584,7 @@ Object.defineProperty(Phaser.RetroFont.prototype, "text", {
 
 /**
 * @name Phaser.RetroFont#smoothed
-* @property {string} text - Set this value to update the text in this sprite. Carriage returns are automatically stripped out if multiLine is false. Text is converted to upper case if autoUpperCase is true.
+* @property {boolean} smoothed - Sets if the stamp is smoothed or not.
 */
 Object.defineProperty(Phaser.RetroFont.prototype, "smoothed", {
 

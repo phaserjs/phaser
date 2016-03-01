@@ -269,6 +269,18 @@ Phaser.RandomDataGenerator.prototype = {
     },
 
     /**
+    * Returns a sign to be used with multiplication operator.
+    *
+    * @method Phaser.RandomDataGenerator#sign
+    * @return {number} -1 or +1.
+    */
+    sign: function () {
+
+        return this.pick([-1, 1]);
+
+    },
+
+    /**
     * Returns a random member of `array`, favoring the earlier entries.
     *
     * @method Phaser.RandomDataGenerator#weightedPick

@@ -1943,9 +1943,9 @@ Phaser.Cache.prototype = {
     */
     clearGLTextures: function () {
 
-        for (var key in this.cache.image)
+        for (var key in this._cache.image)
         {
-            this.cache.image[key].base._glTextures = [];
+            this._cache.image[key].base._glTextures = [];
         }
 
     },

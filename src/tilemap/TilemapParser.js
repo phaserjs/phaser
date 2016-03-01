@@ -78,6 +78,7 @@ Phaser.TilemapParser = {
     * Parses a CSV file into valid map data.
     *
     * @method Phaser.TilemapParser.parseCSV
+    * @param {string} key - The name you want to give the map data.
     * @param {string} data - The CSV file data.
     * @param {number} [tileWidth=32] - The pixel width of a single map tile. If using CSV data you must specify this. Not required if using Tiled map data.
     * @param {number} [tileHeight=32] - The pixel height of a single map tile. If using CSV data you must specify this. Not required if using Tiled map data.
@@ -241,11 +242,11 @@ Phaser.TilemapParser = {
                 var bytes = new Array( len );
                 // Interpret binaryString as an array of bytes representing
                 // little-endian encoded uint32 values. 
-                for (var i = 0; i < len; i+=4) {
-                    bytes[i/4] = (binaryString.charCodeAt(i) |
-                                 binaryString.charCodeAt(i+1) << 8 |
-                                 binaryString.charCodeAt(i+2) << 16 |
-                                 binaryString.charCodeAt(i+3) << 24) >>> 0;
+                for (var j = 0; j < len; j+=4) {
+                    bytes[j/4] = (binaryString.charCodeAt(j) |
+                                 binaryString.charCodeAt(j+1) << 8 |
+                                 binaryString.charCodeAt(j+2) << 16 |
+                                 binaryString.charCodeAt(j+3) << 24) >>> 0;
                 }
                 curl.data = bytes;
             }
@@ -446,10 +447,10 @@ Phaser.TilemapParser = {
             {
                 var newCollection = new Phaser.ImageCollection(set.name, set.firstgid, set.tilewidth, set.tileheight, set.margin, set.spacing, set.properties);
                 
-                for (var i in set.tiles)
+                for (var ti in set.tiles)
                 {
-                    var image = set.tiles[i].image;
-                    var gid = set.firstgid + parseInt(i, 10);
+                    var image = set.tiles[ti].image;
+                    var gid = set.firstgid + parseInt(ti, 10);
                     newCollection.addImage(gid, image);
                 }
 

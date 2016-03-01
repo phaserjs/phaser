@@ -2,6 +2,7 @@
     "src/pixi/primitives/Graphics.js",
     "src/pixi/primitives/GraphicsData.js",
     "src/pixi/utils/Polyk.js",
+    "src/pixi/utils/EarCut.js",
     "src/pixi/renderers/webgl/utils/WebGLGraphics.js",
     "src/pixi/renderers/canvas/CanvasGraphics.js",
     "src/gameobjects/Graphics.js"

@@ -30,6 +30,11 @@ module.exports = {
         dest: '<%= modules_dir %>/pixi-intro.js'
     },
 
+    pixiMain: {
+        src: require('../manifests/pixi-main'),
+        dest: '<%= modules_dir %>/pixi-main.js'
+    },
+    
     pixiRope: {
         src: require('../manifests/pixi-rope'),
         dest: '<%= modules_dir %>/pixi-rope.js'
@@ -295,6 +300,11 @@ module.exports = {
         dest: '<%= modules_dir %>/flexgrid.js'
     },
 
+    pixidefs: {
+        src: require('../manifests/pixidefs'),
+        dest: '<%= modules_dir %>/pixidefs.js'
+    },
+    
     outro: {
         src: require('../manifests/outro'),
         dest: '<%= modules_dir %>/outro.js'

@@ -548,7 +548,7 @@ Phaser.Physics.P2.Body.prototype = {
     * period of time (impulse = force * time). Impulses will be added to Body.velocity and Body.angularVelocity.
     *
     * @method Phaser.Physics.P2.Body#applyImpulseLocal
-    * @param {Float32Array|Array} impulse - The impulse vector to add, oriented in world space.
+    * @param {Float32Array|Array} impulse - The impulse vector to add, oriented in local space.
     * @param {number} localX - A local point on the body.
     * @param {number} localY - A local point on the body.
     */

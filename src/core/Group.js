@@ -289,9 +289,14 @@ Phaser.Group.prototype.add = function (child, silent) {
 
     if (child.parent !== this)
     {
-        this.addChild(child);
+        if (child.body && child.parent)
+        {
+            child.parent.removeFromHash(child);
+        }
 
         child.z = this.children.length;
+
+        this.addChild(child);
 
         if (this.enableBody && child.body === null)
         {
@@ -415,6 +420,11 @@ Phaser.Group.prototype.addAt = function (child, index, silent) {
 
     if (child.parent !== this)
     {
+        if (child.body && child.parent)
+        {
+            child.parent.removeFromHash(child);
+        }
+
         this.addChildAt(child, index);
 
         this.updateZ();
@@ -486,9 +496,9 @@ Phaser.Group.prototype.create = function (x, y, key, frame, exists) {
     child.visible = exists;
     child.alive = exists;
 
-    this.addChild(child);
-
     child.z = this.children.length;
+
+    this.addChild(child);
 
     if (this.enableBody)
     {
@@ -765,7 +775,7 @@ Phaser.Group.prototype.xy = function (index, x, y) {
 /**
 * Reverses all children in this group.
 *
-* This operaation applies only to immediate children and does not propagate to subgroups.
+* This operation applies only to immediate children and does not propagate to subgroups.
 *
 * @method Phaser.Group#reverse
 */
@@ -1586,7 +1596,11 @@ Phaser.Group.prototype.forEachDead = function (callback, callbackContext) {
 * Sort the children in the group according to a particular key and ordering.
 *
 * Call this function to sort the group according to a particular key value and order.
+* 
 * For example to depth sort Sprites for Zelda-style game you might call `group.sort('y', Phaser.Group.SORT_ASCENDING)` at the bottom of your `State.update()`.
+*
+* Internally this uses a standard JavaScript Array sort, so everything that applies there also applies here, including
+* alphabetical sorting, mixing strings and numbers, and Unicode sorting. See MDN for more details.
 *
 * @method Phaser.Group#sort
 * @param {string} [key='z'] - The name of the property to sort on. Defaults to the objects z-depth value.

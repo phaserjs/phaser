@@ -15,7 +15,7 @@ var Phaser = Phaser || {
     * @constant
     * @type {string}
     */
-    VERSION: '2.4.4',
+    VERSION: '2.4.6',
 
     /**
     * An array of Phaser game instances.
@@ -289,6 +289,13 @@ var Phaser = Phaser || {
     * @type {integer}
     */
     VIDEO: 28,
+
+    /**
+    * Game Object type.
+    * @constant
+    * @type {integer}
+    */
+    PENDING_ATLAS: -1,
 
     /**
      * Various blend modes supported by Pixi.

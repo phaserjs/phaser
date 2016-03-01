@@ -386,7 +386,7 @@ Phaser.Physics.Arcade.prototype = {
     * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter|Phaser.TilemapLayer|array} object1 - The first object or array of objects to check. Can be Phaser.Sprite, Phaser.Group, Phaser.Particles.Emitter, or Phaser.TilemapLayer.
     * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter|Phaser.TilemapLayer|array} object2 - The second object or array of objects to check. Can be Phaser.Sprite, Phaser.Group, Phaser.Particles.Emitter or Phaser.TilemapLayer.
     * @param {function} [collideCallback=null] - An optional callback function that is called if the objects collide. The two objects will be passed to this function in the same order in which you specified them, unless you are colliding Group vs. Sprite, in which case Sprite will always be the first parameter.
-    * @param {function} [processCallback=null] - A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then collision will only happen if processCallback returns true. The two objects will be passed to this function in the same order in which you specified them.
+    * @param {function} [processCallback=null] - A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then collision will only happen if processCallback returns true. The two objects will be passed to this function in the same order in which you specified them, unless you are colliding Group vs. Sprite, in which case Sprite will always be the first parameter.
     * @param {object} [callbackContext] - The context in which to run the callbacks.
     * @return {boolean} True if a collision occurred otherwise false.
     */
@@ -1693,6 +1693,26 @@ Phaser.Physics.Arcade.prototype = {
 
         var dx = pointer.worldX - displayObject.x;
         var dy = pointer.worldY - displayObject.y;
+
+        return Math.atan2(dy, dx);
+
+    },
+
+    /**
+    * Find the angle in radians between a display object (like a Sprite) and a Pointer, 
+    * taking their x/y and center into account relative to the world.
+    *
+    * @method Phaser.Physics.Arcade#worldAngleToPointer
+    * @param {any} displayObject - The DisplayObjerct to test from.
+    * @param {Phaser.Pointer} [pointer] - The Phaser.Pointer to test to. If none is given then Input.activePointer is used.
+    * @return {number} The angle in radians between displayObject.world.x/y to Pointer.worldX / worldY
+    */
+    worldAngleToPointer: function (displayObject, pointer) {
+
+        pointer = pointer || this.game.input.activePointer;
+
+        var dx = pointer.worldX - displayObject.world.x;
+        var dy = pointer.worldY - displayObject.world.y;
 
         return Math.atan2(dy, dx);
 

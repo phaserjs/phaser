@@ -661,7 +661,7 @@ Phaser.TilemapLayer.prototype.resetTilesetCache = function () {
 };
 
 /**
- * This method will set the scale of the tilemap as well as update the underlying block data of this layer
+ * This method will set the scale of the tilemap as well as update the underlying block data of this layer.
  * 
  * @method Phaser.TilemapLayer#setScale
  * @param {number} [xScale=1] - The scale factor along the X-plane 
