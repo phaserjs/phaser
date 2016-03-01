@@ -320,6 +320,9 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 
 ### New Features
 
+* Added P2.Body.thrustLeft which will move the Body to the left by the speed given (thanks James Pryor)
+* Added P2.Body.thrustRight which will move the Body to the right by the speed given (thanks James Pryor)
+
 ### Updates
 
 * TypeScript definitions fixes and updates (thanks @clark-stevenson)

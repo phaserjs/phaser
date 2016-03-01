@@ -1,7 +1,7 @@
 /// <reference path="pixi.d.ts" />
 /// <reference path="p2.d.ts" />
 
-// Type definitions for Phaser 2.4.6 - 18th February 2015
+// Type definitions for Phaser 2.4.7 - 1st March 2016
 // Project: https://github.com/photonstorm/phaser
 
 declare module "phaser" {
@@ -3351,6 +3351,8 @@ declare module Phaser {
                 setZeroVelocity(): void;
                 toLocalFrame(out: number[], worldPoint: number[]): void;
                 thrust(speed: number): void;
+                thrustLeft(speed: number): void;
+                thrustRight(speed: number): void;
                 toWorldFrame(out: number[], localPoint: number[]): void;
                 updateCollisionMask(shape?: p2.Shape): void;
 
