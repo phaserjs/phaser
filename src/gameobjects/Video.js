@@ -760,9 +760,17 @@ Phaser.Video.prototype = {
                 }
                 else
                 {
-                    this.videoStream.getTracks().forEach(function (track) {
-                        track.stop();
-                    });
+                    if (this.videoStream.getTracks)
+                    {
+                        this.videoStream.getTracks().forEach(function (track) {
+                            track.stop();
+                        });
+                    }
+                    else
+                    {
+                        this.videoStream.stop();
+                    }
+
                 }
             }
 
