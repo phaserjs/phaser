@@ -458,7 +458,7 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
         var hex;
         hex = c.toString(16);
 
-        if (hex.len === 2)
+        if (hex.length === 2)
         {
             return hex;
         }
