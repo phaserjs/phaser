@@ -174,6 +174,7 @@ PIXI.Sprite.prototype.setTexture = function(texture, destroyBase)
     this.texture.baseTexture.skipRender = false;
     this.texture = texture;
     this.texture.valid = true;
+    this.cachedTint = -1;
 };
 
 /**
