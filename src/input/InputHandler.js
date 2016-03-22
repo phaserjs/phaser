@@ -957,6 +957,11 @@ Phaser.InputHandler.prototype = {
             if (this.sprite && this.sprite.events)
             {
                 this.sprite.events.onInputDown$dispatch(this.sprite, pointer);
+                //  The onInputDown event might have destroyed this sprite.
+                if (this.sprite === null)
+                {
+                    return;
+                }
             }
 
             //  It's possible the onInputDown event created a new Sprite that is on-top of this one, so we ought to force a Pointer update
