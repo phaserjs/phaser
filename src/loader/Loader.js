@@ -2316,6 +2316,7 @@ Phaser.Loader.prototype = {
 
         var xhr = new XMLHttpRequest();
         xhr.open("GET", url, true);
+        xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
         xhr.responseType = type;
 
         onerror = onerror || this.fileError;
