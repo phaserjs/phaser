@@ -40,6 +40,12 @@ Phaser.Component.InWorld.preUpdate = function () {
             else
             {
                 this.renderable = false;
+
+                if (this.outOfCameraBoundsKill)
+                {
+                    this.kill();
+                    return false;
+                }
             }
         }
 
@@ -98,6 +104,15 @@ Phaser.Component.InWorld.prototype = {
     * @default
     */
     outOfBoundsKill: false,
+
+    /**
+     * If this and the `autoCull` property are both set to `true`, then the `kill` method
+     * is called as soon as the Game Object leaves the camera bounds.
+     *
+     * @property {boolean} outOfCameraBoundsKill
+     * @default
+     */
+    outOfCameraBoundsKill: false,
 
     /**
     * @property {boolean} _outOfBoundsFired - Internal state var.
