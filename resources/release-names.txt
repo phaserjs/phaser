@@ -60,7 +60,7 @@ POI: Plain of Lances, Blight
 Murandy
 
 Capital: Lugard
-Cities: Hinderstap, Inishlinn, Mindea, Trustair
+Cities: Hinderstap *, Inishlinn, Mindea, Trustair
 
 Saldaea *
 
