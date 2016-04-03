@@ -13,7 +13,7 @@
 Phaser.TilemapParser = {
 
     /**
-     * When scanning the Tiled map data the TilemapParser can either insert a null value (true) or 
+     * When scanning the Tiled map data the TilemapParser can either insert a null value (true) or
      * a Phaser.Tile instance with an index of -1 (false, the default). Depending on your game type
      * depends how this should be configured. If you've a large sparsely populated map and the tile
      * data doesn't need to change then setting this value to `true` will help with memory consumption.
@@ -233,15 +233,15 @@ Phaser.TilemapParser = {
             }
 
             var curl = json.layers[i];
-            
+
             // Base64 decode data if necessary
-            // NOTE: uncompressed base64 only. 
+            // NOTE: uncompressed base64 only.
             if (!curl.compression && curl.encoding && curl.encoding === "base64") {
                 var binaryString =  window.atob(curl.data);
                 var len = binaryString.length;
                 var bytes = new Array( len );
                 // Interpret binaryString as an array of bytes representing
-                // little-endian encoded uint32 values. 
+                // little-endian encoded uint32 values.
                 for (var j = 0; j < len; j+=4) {
                     bytes[j/4] = (binaryString.charCodeAt(j) |
                                  binaryString.charCodeAt(j+1) << 8 |
@@ -249,6 +249,10 @@ Phaser.TilemapParser = {
                                  binaryString.charCodeAt(j+3) << 24) >>> 0;
                 }
                 curl.data = bytes;
+            }
+            else if(curl.compression){
+                console.warn('TilemapParser.parseTiledJSON - Layer compression is unsupported, skipping layer \'' + curl.name + '\'');
+                continue;
             }
 
 
@@ -292,7 +296,7 @@ Phaser.TilemapParser = {
                 flipped = false;
                 gid = curl.data[t];
 
-                //  If true the current tile is flipped or rotated (Tiled TMX format) 
+                //  If true the current tile is flipped or rotated (Tiled TMX format)
                 if (gid > 0x20000000)
                 {
                     flippedVal = 0;
@@ -317,7 +321,7 @@ Phaser.TilemapParser = {
                         gid -= 0x20000000;
                         flippedVal += 1;
                     }
-                   
+
                     switch (flippedVal)
                     {
                         case 5:
@@ -446,7 +450,7 @@ Phaser.TilemapParser = {
             else
             {
                 var newCollection = new Phaser.ImageCollection(set.name, set.firstgid, set.tilewidth, set.tileheight, set.margin, set.spacing, set.properties);
-                
+
                 for (var ti in set.tiles)
                 {
                     var image = set.tiles[ti].image;
