@@ -34,6 +34,7 @@
 * @param {number} [style.strokeThickness=0] - A number that represents the thickness of the stroke. Default is 0 (no stroke).
 * @param {boolean} [style.wordWrap=false] - Indicates if word wrap should be used.
 * @param {number} [style.wordWrapWidth=100] - The width in pixels at which text will wrap.
+* @param {number} [style.maxLines=0] - The maximum number of lines to be shown for wrapped text.
 * @param {number} [style.tabs=0] - The size (in pixels) of the tabs, for when text includes tab characters. 0 disables. Can be an array of varying tab sizes, one per tab stop.
 */
 Phaser.Text = function (game, x, y, text, style) {
@@ -284,6 +285,7 @@ Phaser.Text.prototype.setShadow = function (x, y, color, blur, shadowStroke, sha
 * @param {number} [style.strokeThickness=0] - A number that represents the thickness of the stroke. Default is 0 (no stroke).
 * @param {boolean} [style.wordWrap=false] - Indicates if word wrap should be used.
 * @param {number} [style.wordWrapWidth=100] - The width in pixels at which text will wrap.
+* @param {number} [style.maxLines=0] - The maximum number of lines to be shown for wrapped text.
 * @param {number|array} [style.tabs=0] - The size (in pixels) of the tabs, for when text includes tab characters. 0 disables. Can be an array of varying tab sizes, one per tab stop.
 * @return {Phaser.Text} This Text instance.
 */
@@ -300,6 +302,7 @@ Phaser.Text.prototype.setStyle = function (style) {
     style.strokeThickness = style.strokeThickness || 0;
     style.wordWrap = style.wordWrap || false;
     style.wordWrapWidth = style.wordWrapWidth || 100;
+    style.maxLines = style.maxLines || 0;
     style.shadowOffsetX = style.shadowOffsetX || 0;
     style.shadowOffsetY = style.shadowOffsetY || 0;
     style.shadowColor = style.shadowColor || 'rgba(0,0,0,0)';
@@ -371,7 +374,13 @@ Phaser.Text.prototype.updateText = function () {
     var maxLineWidth = 0;
     var fontProperties = this.determineFontProperties(this.style.font);
 
-    for (var i = 0; i < lines.length; i++)
+    var drawnLines = lines.length;
+    if (this.style.maxLines > 0 && this.style.maxLines < lines.length)
+    {
+        drawnLines = this.style.maxLines;
+    }
+
+    for (var i = 0; i < drawnLines; i++)
     {
         if (tabs === 0)
         {
@@ -428,7 +437,7 @@ Phaser.Text.prototype.updateText = function () {
     
     //  Calculate text height
     var lineHeight = fontProperties.fontSize + this.style.strokeThickness + this.padding.y;
-    var height = lineHeight * lines.length;
+    var height = lineHeight * drawnLines;
     var lineSpacing = this._lineSpacing;
 
     if (lineSpacing < 0 && Math.abs(lineSpacing) > lineHeight)
@@ -439,7 +448,7 @@ Phaser.Text.prototype.updateText = function () {
     //  Adjust for line spacing
     if (lineSpacing !== 0)
     {
-        height += lineSpacing * lines.length;
+        height += lineSpacing * drawnLines;
     }
 
     this.canvas.height = height * this._res;
@@ -472,7 +481,7 @@ Phaser.Text.prototype.updateText = function () {
     this._charCount = 0;
 
     //  Draw text line by line
-    for (i = 0; i < lines.length; i++)
+    for (i = 0; i < drawnLines; i++)
     {
         //  Split the line by
 
