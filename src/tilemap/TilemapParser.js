@@ -249,6 +249,7 @@ Phaser.TilemapParser = {
                                  binaryString.charCodeAt(j+3) << 24) >>> 0;
                 }
                 curl.data = bytes;
+                delete curl.encoding;
             }
             else if(curl.compression){
                 console.warn('TilemapParser.parseTiledJSON - Layer compression is unsupported, skipping layer \'' + curl.name + '\'');
