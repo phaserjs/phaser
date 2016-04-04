@@ -335,6 +335,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * The Tiled parser only supports un-compressed layer data. Previously it would silently fail, now it detects if layer compression is used and displays a console warning instead (thanks @MannyC #2413)
 * The Tiled parser now removes the `encoding` parameter so that a subsequent process doesn't try to decode the data again (thanks @MannyC #2412)
 * Ensure a parent container is a Group before removing from its hash (thanks @rblopes #2397)
+* PIXI.CanvasRenderer.resize now applies the `renderSession.smoothProperty` to the Canvas context when it resizes. This should help with unwanted canvas smoothing (thanks @sergey7c4 #2395 #2317)
 
 ### Bug Fixes
 
