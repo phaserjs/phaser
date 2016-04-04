@@ -13,5 +13,6 @@ Phaser.TweenManager = function () {};
 
 Phaser.TweenManager.prototype.update = function () {};
 Phaser.TweenManager.prototype.removeAll = function () {};
+Phaser.TweenManager.prototype.removeFrom = function () {};
 
 Phaser.TweenManager.prototype.constructor = Phaser.TweenManager;

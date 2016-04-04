@@ -80,6 +80,8 @@ Phaser.Component.Destroy.prototype = {
             this.events.destroy();
         }
 
+        this.game.tweens.removeFrom(this);
+
         var i = this.children.length;
 
         if (destroyChildren)

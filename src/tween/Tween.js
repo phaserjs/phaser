@@ -729,7 +729,7 @@ Phaser.Tween.prototype = {
     */
     update: function (time) {
 
-        if (this.pendingDelete)
+        if (this.pendingDelete || !this.target)
         {
             return false;
         }
