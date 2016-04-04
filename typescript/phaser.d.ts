@@ -4704,6 +4704,7 @@ declare module Phaser {
         strokeThickness?: number;
         wordWrap?: boolean;
         wordWrapWidth?: number;
+        maxLines?: number;
         shadowOffsetX?: number;
         shadowOffsetY?: number;
         shadowColor?: string;
