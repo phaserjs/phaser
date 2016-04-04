@@ -323,6 +323,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * Added P2.Body.thrustLeft which will move the Body to the left by the speed given (thanks James Pryor)
 * Added P2.Body.thrustRight which will move the Body to the right by the speed given (thanks James Pryor)
 * Polygon now takes an array of arrays as a new type when constructing it: `[[x1, y1], [x2, y2]]` (thanks @ShimShamSam #2360)
+* Text has a new property `maxLines` which is the maximum number of lines to be shown for wrapped text. If set to 0 (the default) there is limit. This prevents wrapped text from overflowing on a fixed layout (thanks @slashman #2410)
 
 ### Updates
 
@@ -333,6 +334,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * The default state of the internal property `_boundDispatch` in Phaser.Signal is now `false`, which allows for use of boundDispatches (thanks @alvinlao #2346)
 * The Tiled parser only supports un-compressed layer data. Previously it would silently fail, now it detects if layer compression is used and displays a console warning instead (thanks @MannyC #2413)
 * The Tiled parser now removes the `encoding` parameter so that a subsequent process doesn't try to decode the data again (thanks @MannyC #2412)
+* Ensure a parent container is a Group before removing from its hash (thanks @rblopes #2397)
 
 ### Bug Fixes
 
