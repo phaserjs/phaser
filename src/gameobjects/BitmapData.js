@@ -1255,6 +1255,7 @@ Phaser.BitmapData.prototype = {
                 }
 
                 this._image = source.tintedTexture;
+                this._pos.set(0);
             }
         }
         else
