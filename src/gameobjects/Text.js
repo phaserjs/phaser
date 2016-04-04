@@ -339,6 +339,7 @@ Phaser.Text.prototype.setStyle = function (style) {
     this._fontComponents = components;
 
     style.font = this.componentsToFont(this._fontComponents);
+
     this.style = style;
     this.dirty = true;
 
@@ -1087,18 +1088,27 @@ Phaser.Text.prototype.fontToComponents = function (font) {
 
     if (m)
     {
+        var family = m[5].trim();
+
+        // If it looks like the value should be quoted, but isn't, then quote it.
+        if (!/^(?:inherit|serif|sans-serif|cursive|fantasy|monospace)$/.exec(family) && !/['",]/.exec(family))
+        {
+            family = "'" + family + "'";
+        }
+
         return {
             font: font,
             fontStyle: m[1] || 'normal',
             fontVariant: m[2] || 'normal',
             fontWeight: m[3] || 'normal',
             fontSize: m[4] || 'medium',
-            fontFamily: m[5]
+            fontFamily: family
         };
     }
     else
     {
         console.warn("Phaser.Text - unparsable CSS font: " + font);
+
         return {
             font: font
         };
