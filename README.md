@@ -327,10 +327,12 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 ### Updates
 
 * TypeScript definitions fixes and updates (thanks @clark-stevenson)
-* Docs typo fixes (thanks)
-* Removed a console.log from the TilingSprite generator.
+* Docs typo fixes (thanks @thiagojobson)
+* Removed a `console.log` from the TilingSprite generator.
 * Sound.position can no longer become negative, meaning calls to AudioContextNode.start with negative position offsets will no longer throw errors (thanks @Weedshaker #2351)
 * The default state of the internal property `_boundDispatch` in Phaser.Signal is now `false`, which allows for use of boundDispatches (thanks @alvinlao #2346)
+* The Tiled parser only supports un-compressed layer data. Previously it would silently fail, now it detects if layer compression is used and displays a console warning instead (thanks @MannyC #2413)
+* The Tiled parser now removes the `encoding` parameter so that a subsequent process doesn't try to decode the data again (thanks @MannyC #2412)
 
 ### Bug Fixes
 
@@ -339,6 +341,8 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * Phaser.World.centerX and Phaser.World.centerY only worked if the bounds had an origin of 0, 0. They now take into account the actual origin (thanks @fillmoreb #2353)
 * SoundManager.destroy now validates that context.close is a valid function before calling it (thanks @brianbunch #2355)
 * SoundManager.destroy doesn't close the context if it's being stored in PhaserGlobal (thanks @brianbunch #2356)
+* Fix typo in p2 BodyDebug.componentToHex that made most debug bodies appear reddish in color (thanks @englercj #2381)
+* Previously when a sprite was tinted and a new texture was loaded then the tint did not apply to the texture and the old tinted texture was used (thanks @CptSelewin #2383)
 
 ### Pixi Updates
 
