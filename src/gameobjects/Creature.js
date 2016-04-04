@@ -1,7 +1,7 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
 * @author       Kestrel Moon Studios <creature@kestrelmoon.com>
-* @copyright    2015 Photon Storm Ltd and Kestrel Moon Studios
+* @copyright    2016 Photon Storm Ltd and Kestrel Moon Studios
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 

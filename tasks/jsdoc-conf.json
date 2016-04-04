@@ -46,7 +46,7 @@
         },
         "systemName"      : "Phaser",
         "footer"          : "",
-        "copyright"       : "Phaser Copyright © 2012-2015 Photon Storm Ltd.",
+        "copyright"       : "Phaser Copyright © 2012-2016 Photon Storm Ltd.",
         "navType"         : "vertical",
         "theme"           : "cerulean",
         "linenums"        : true,
