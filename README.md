@@ -336,6 +336,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * The Tiled parser now removes the `encoding` parameter so that a subsequent process doesn't try to decode the data again (thanks @MannyC #2412)
 * Ensure a parent container is a Group before removing from its hash (thanks @rblopes #2397)
 * PIXI.CanvasRenderer.resize now applies the `renderSession.smoothProperty` to the Canvas context when it resizes. This should help with unwanted canvas smoothing (thanks @sergey7c4 #2395 #2317)
+* The Game Object Input Handler now checks to see if the Object was destroyed during the `onInputDown` phase, and bails out early if so (thanks @zeterain #2394)
 
 ### Bug Fixes
 
@@ -346,6 +347,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * SoundManager.destroy doesn't close the context if it's being stored in PhaserGlobal (thanks @brianbunch #2356)
 * Fix typo in p2 BodyDebug.componentToHex that made most debug bodies appear reddish in color (thanks @englercj #2381)
 * Previously when a sprite was tinted and a new texture was loaded then the tint did not apply to the texture and the old tinted texture was used (thanks @CptSelewin #2383)
+* Negative lineSpacing in Text objects will no longer crop the bottom pixels off lines of text (thanks @gaelenh #2379 #2374)
 
 ### Pixi Updates
 
