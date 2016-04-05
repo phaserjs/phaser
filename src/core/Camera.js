@@ -458,7 +458,7 @@ Object.defineProperty(Phaser.Camera.prototype, "y", {
 Object.defineProperty(Phaser.Camera.prototype, "position", {
 
     get: function () {
-        this._position.set(this.view.centerX, this.view.centerY);
+        this._position.set(this.view.x, this.view.y);
         return this._position;
     },
 

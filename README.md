@@ -360,6 +360,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * Text that used fonts which had numbers in their names wouldn't be correctly rendered unless you explicitly set the font property after creation. You can now pass font names with numbers in them as the font style object correctly (thanks @And-0 #2390)
 * Tween.update wouldn't dispatch an `onLoop` signal for Tweens with just one child, such as those created via Tween.to with -1 as the repeat value (thanks @ForgeableSum #2407)
 * Arcade.Body's speed property was only set when the body moved, it now updates regardless (thanks @mark-henry #2417)
+* Camera.position would return the view rectangles centerX/Y coordinates, instead of view.x/y (which is what Camera.x/y returns), so it has been updated to return view.x/y instead (thanks @kamparR #2120)
 
 ### Pixi Updates
 
