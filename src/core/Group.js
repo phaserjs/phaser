@@ -800,6 +800,29 @@ Phaser.Group.prototype.getIndex = function (child) {
 };
 
 /**
+* Searches the Group for the first instance of a child with the `name`
+* property matching the given argument. Should more than one child have
+* the same name only the first instance is returned.
+*
+* @method Phaser.Group#getByName
+* @param {string} name - The name to search for.
+* @return {any} The first child with a matching name, or null if none were found.
+*/
+Phaser.Group.prototype.getByName = function (name) {
+
+    for (var i = 0; i < this.children.length; i++)
+    {
+        if (this.children[i].name === name)
+        {
+            return this.children[i];
+        }
+    }
+
+    return null;
+
+};
+
+/**
 * Replaces a child of this group with the given newChild. The newChild cannot be a member of this group.
 *
 * @method Phaser.Group#replace
