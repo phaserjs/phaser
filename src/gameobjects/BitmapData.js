@@ -123,10 +123,15 @@ Phaser.BitmapData = function (game, key, width, height) {
     this.texture = new PIXI.Texture(this.baseTexture);
 
     /**
+    * @property {Phaser.FrameData} frameData - The FrameData container this BitmapData uses for rendering.
+    */
+    this.frameData = new Phaser.FrameData();
+
+    /**
     * @property {Phaser.Frame} textureFrame - The Frame this BitmapData uses for rendering.
     * @default
     */
-    this.textureFrame = new Phaser.Frame(0, 0, 0, width, height, 'bitmapData');
+    this.textureFrame = this.frameData.addFrame(new Phaser.Frame(0, 0, 0, width, height, 'bitmapData'));
 
     this.texture.frame = this.textureFrame;
 
@@ -1857,6 +1862,8 @@ Phaser.BitmapData.prototype = {
     * @method Phaser.BitmapData#destroy
     */
     destroy: function () {
+
+        this.frameData.destroy();
 
         this.texture.destroy(true);
 
