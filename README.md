@@ -356,6 +356,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * BitmapData.copy, and by extension draw, drawFull, drawGroup, etc, would incorrectly handle drawing a tinted Sprite if it was using a frame from a texture atlas (thanks @PhaserDebugger #2405)
 * Text that used fonts which had numbers in their names wouldn't be correctly rendered unless you explicitly set the font property after creation. You can now pass font names with numbers in them as the font style object correctly (thanks @And-0 #2390)
 * Tween.update wouldn't dispatch an `onLoop` signal for Tweens with just one child, such as those created via Tween.to with -1 as the repeat value (thanks @ForgeableSum #2407)
+* Arcade.Body's speed property was only set when the body moved, it now updates regardless (thanks @mark-henry #2417)
 
 ### Pixi Updates
 
