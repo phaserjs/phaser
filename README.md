@@ -343,6 +343,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * The Debug canvas now listens for the ScaleManager.onSizeChange signal and resizes itself accordingly when running under WebGL. This means if your game size changes the Debug canvas won't be clipped off (thanks @francisberesford #1919)
 * Camera.follow now uses the Targets `world` property to seed the camera coordinates from, rather than its local position. This means Sprites that are members of offset Groups, or transformed display lists, should now be followed more accurately (thanks @rbozan #2106)
 * PluginManager.destroy is now called by Game.destroy.
+* Game.forceSingleUpdate is now `true` by default.
 
 ### Bug Fixes
 
