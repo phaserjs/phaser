@@ -246,6 +246,18 @@ Phaser.FrameData.prototype = {
 
         return output;
 
+    },
+
+    /**
+    * Destroys this FrameData collection by nulling the _frames and _frameNames arrays.
+    *
+    * @method Phaser.FrameData#destroy
+    */
+    destroy: function () {
+
+        this._frames = null;
+        this._frameNames = null;
+
     }
 
 };
