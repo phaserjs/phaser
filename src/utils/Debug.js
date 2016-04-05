@@ -108,6 +108,8 @@ Phaser.Utils.Debug.prototype = {
             this.sprite = this.game.make.image(0, 0, this.bmd);
             this.game.stage.addChild(this.sprite);
 
+            this.game.scale.onSizeChange.add(this.resize, this);
+
             this.canvas = PIXI.CanvasPool.create(this, this.game.width, this.game.height);
             this.context = this.canvas.getContext('2d');
         }
@@ -115,9 +117,29 @@ Phaser.Utils.Debug.prototype = {
     },
 
     /**
+    * Internal method that resizes the BitmapData and Canvas.
+    * Called by ScaleManager.onSizeChange only in WebGL mode.
+    *
+    * @method Phaser.Utils.Debug#resize
+    * @protected
+    * @param {Phaser.ScaleManager} scaleManager - The Phaser ScaleManager.
+    * @param {number} width - The new width of the game.
+    * @param {number} height - The new height of the game.
+    */
+    resize: function (scaleManager, width, height) {
+
+        this.bmd.resize(width, height);
+
+        this.canvas.width = width;
+        this.canvas.height = height;
+
+    },
+
+    /**
     * Internal method that clears the canvas (if a Sprite) ready for a new debug session.
     *
     * @method Phaser.Utils.Debug#preUpdate
+    * @protected
     */
     preUpdate: function () {
 
