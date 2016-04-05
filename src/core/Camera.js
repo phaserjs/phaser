@@ -270,12 +270,7 @@ Phaser.Camera.prototype = {
     */
     updateTarget: function () {
 
-        this._targetPosition.copyFrom(this.target);
-
-        if (this.target.parent)
-        {
-            this._targetPosition.multiply(this.target.parent.worldTransform.a, this.target.parent.worldTransform.d);
-        }
+        this._targetPosition.copyFrom(this.target.world);
 
         if (this.deadzone)
         {

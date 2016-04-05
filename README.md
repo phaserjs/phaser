@@ -341,6 +341,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * Tween.update will now return `false` (flagging the Tween for destruction) should the Tween.target property every become falsey. This can happen if the object the Tween was tracking is destroyed, nulled or generally removed.
 * TweenData.repeatTotal is a new property that keeps track of the total number of times the Tween should repeat. If TweenData.start is called, as a result of the Tween repeatCount being > 0 then the child tween resets its total before re-starting.
 * The Debug canvas now listens for the ScaleManager.onSizeChange signal and resizes itself accordingly when running under WebGL. This means if your game size changes the Debug canvas won't be clipped off (thanks @francisberesford #1919)
+* Camera.follow now uses the Targets `world` property to seed the camera coordinates from, rather than its local position. This means Sprites that are members of offset Groups, or transformed display lists, should now be followed more accurately (thanks @rbozan #2106)
 
 ### Bug Fixes
 
