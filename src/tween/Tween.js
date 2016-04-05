@@ -77,8 +77,9 @@ Phaser.Tween = function (target, game, manager) {
     this.onStart = new Phaser.Signal();
 
     /**
-    * The onLoop event is fired if the Tween or any child tween loops.
+    * The onLoop event is fired if the Tween, or any child tweens loop.
     * It will be sent 2 parameters: the target object and this tween.
+    * 
     * @property {Phaser.Signal} onLoop
     */
     this.onLoop = new Phaser.Signal();
@@ -547,10 +548,9 @@ Phaser.Tween.prototype = {
     /**
     * Set how many times this tween and all of its children will repeat.
     * A tween (A) with 3 children (B,C,D) with a `repeatAll` value of 2 would play as: ABCDABCD before completing.
-    * When all child tweens have completed Tween.onLoop will be dispatched.
     *
-    * @method Phaser.Tween#repeat
-    * @param {number} total - How many times this tween and all children should repeat before completing. Set to zero to remove an active repeat. Set to -1 to repeat forever.
+    * @method Phaser.Tween#repeatAll
+    * @param {number} [total=0] - How many times this tween and all children should repeat before completing. Set to zero to remove an active repeat. Set to -1 to repeat forever.
     * @return {Phaser.Tween} This tween. Useful for method chaining.
     */
     repeatAll: function (total) {
@@ -598,7 +598,8 @@ Phaser.Tween.prototype = {
     },
 
     /**
-    * Enables the looping of this tween and all child tweens. If this tween has no children this setting has no effect.
+    * Enables the looping of this tween. The tween will loop forever, and onComplete will never fire.
+    *
     * If `value` is `true` then this is the same as setting `Tween.repeatAll(-1)`.
     * If `value` is `false` it is the same as setting `Tween.repeatAll(0)` and will reset the `repeatCounter` to zero.
     *
@@ -609,21 +610,14 @@ Phaser.Tween.prototype = {
     * .to({ y: 0 }, 1000, Phaser.Easing.Linear.None)
     * .loop();
     * @method Phaser.Tween#loop
-    * @param {boolean} [value=true] - If `true` this tween and any child tweens will loop once they reach the end. Set to `false` to remove an active loop.
+    * @param {boolean} [value=true] - If `true` this tween will loop once it reaches the end. Set to `false` to remove an active loop.
     * @return {Phaser.Tween} This tween. Useful for method chaining.
     */
     loop: function (value) {
 
         if (value === undefined) { value = true; }
 
-        if (value)
-        {
-            this.repeatAll(-1);
-        }
-        else
-        {
-            this.repeatCounter = 0;
-        }
+        this.repeatCounter = (value) ? -1 : 0;
 
         return this;
 
@@ -763,14 +757,15 @@ Phaser.Tween.prototype = {
         }
         else if (status === Phaser.TweenData.LOOPED)
         {
-            if (this.repeatCounter === -1)
+            if (this.timeline[this.current].repeatCounter === -1)
             {
                 this.onLoop.dispatch(this.target, this);
             }
-            else
+            else if (this.timeline[this.current].repeatCounter > 0)
             {
                 this.onRepeat.dispatch(this.target, this);
             }
+
             return true;
         }
         else if (status === Phaser.TweenData.COMPLETE)
@@ -860,13 +855,8 @@ Phaser.Tween.prototype = {
             return null;
         }
 
-        if (frameRate === undefined) {
-            frameRate = 60;
-        }
-
-        if (data === undefined) {
-            data = [];
-        }
+        if (frameRate === undefined) { frameRate = 60; }
+        if (data === undefined) { data = []; }
 
         //  Populate the tween data
         for (var i = 0; i < this.timeline.length; i++)

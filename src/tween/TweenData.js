@@ -78,6 +78,12 @@ Phaser.TweenData = function (parent) {
     this.repeatDelay = 0;
 
     /**
+    * @property {number} repeatTotal - The total number of times this Tween will repeat.
+    * @readonly
+    */
+    this.repeatTotal = 0;
+
+    /**
     * @property {boolean} interpolate - True if the Tween will use interpolation (i.e. is an Array to Array tween)
     * @default
     */
@@ -193,7 +199,7 @@ Phaser.TweenData.prototype = {
         this.duration = duration;
         this.easingFunction = ease;
         this.delay = delay;
-        this.repeatCounter = repeat;
+        this.repeatTotal = repeat;
         this.yoyo = yoyo;
 
         this.isFrom = false;
@@ -221,7 +227,7 @@ Phaser.TweenData.prototype = {
         this.duration = duration;
         this.easingFunction = ease;
         this.delay = delay;
-        this.repeatCounter = repeat;
+        this.repeatTotal = repeat;
         this.yoyo = yoyo;
 
         this.isFrom = true;
@@ -271,6 +277,7 @@ Phaser.TweenData.prototype = {
 
         this.value = 0;
         this.yoyoCounter = 0;
+        this.repeatCounter = this.repeatTotal;
 
         return this;
 
