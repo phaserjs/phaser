@@ -761,7 +761,7 @@ Phaser.Tween.prototype = {
             {
                 this.onLoop.dispatch(this.target, this);
             }
-            else if (this.timeline[this.current].repeatCounter > 0)
+            else
             {
                 this.onRepeat.dispatch(this.target, this);
             }
