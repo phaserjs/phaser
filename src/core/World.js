@@ -176,6 +176,9 @@ Phaser.World.prototype.shutdown = function () {
 * If they do it will reposition the object to the opposite side of the world, creating a wrap-around effect.
 * If sprite has a P2 body then the body (sprite.body) should be passed as first parameter to the function.
 *
+* Please understand there are limitations to this method. For example if you have scaled the World
+* then objects won't always be re-positioned correctly, and you'll need to employ your own wrapping function.
+*
 * @method Phaser.World#wrap
 * @param {Phaser.Sprite|Phaser.Image|Phaser.TileSprite|Phaser.Text} sprite - The object you wish to wrap around the world bounds.
 * @param {number} [padding=0] - Extra padding added equally to the sprite.x and y coordinates before checking if within the world bounds. Ignored if useBounds is true.
