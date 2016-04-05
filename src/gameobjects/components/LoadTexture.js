@@ -85,6 +85,10 @@ Phaser.Component.LoadTexture.prototype = {
             {
                 setFrame = !this.animations.loadFrameData(cache.getFrameData(key.key, Phaser.Cache.BITMAPDATA), frame);
             }
+            else
+            {
+                setFrame = !this.animations.loadFrameData(key.frameData, 0);
+            }
         }
         else if (Phaser.Video && key instanceof Phaser.Video)
         {
