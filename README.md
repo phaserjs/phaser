@@ -347,6 +347,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * Camera.follow now uses the Targets `world` property to seed the camera coordinates from, rather than its local position. This means Sprites that are members of offset Groups, or transformed display lists, should now be followed more accurately (thanks @rbozan #2106)
 * PluginManager.destroy is now called by Game.destroy.
 * Game.forceSingleUpdate is now `true` by default.
+* Video now uses MediaStreamTrack.stop() instead of MediaStream.stop() where possible, as the later is now deprecated in some browsers (thanks @stoneman1 #2371)
 
 ### Bug Fixes
 
@@ -364,6 +365,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * Arcade.Body's speed property was only set when the body moved, it now updates regardless (thanks @mark-henry #2417)
 * Camera.position would return the view rectangles centerX/Y coordinates, instead of view.x/y (which is what Camera.x/y returns), so it has been updated to return view.x/y instead (thanks @kamparR #2120)
 * Passing a BitmapData to a TileSprite as a texture would fail if the BitmapData had not been previously added to the cache. It now uses the new frameData property (thanks @mzamateo @lucap86 #2380)
+* When setting a global volume for the SoundManager it would previously incorrectly calculate the volumes of AudioTag based Sound objects that were not played at volume 1. The new approach uses Sound.updateGlobalVolume which adjusts the Sound volume to be a percentage of the global volume. So if the global volume is 0.5 and the Sound volume is 0.5, the Sound will play with an actual volume of 0.25 (thanks @VitaZheltyakov #2325)
 
 ### Pixi Updates
 
