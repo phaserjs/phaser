@@ -348,6 +348,8 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * PluginManager.destroy is now called by Game.destroy.
 * Game.forceSingleUpdate is now `true` by default.
 * Video now uses MediaStreamTrack.stop() instead of MediaStream.stop() where possible, as the later is now deprecated in some browsers (thanks @stoneman1 #2371)
+* The Physics Manager will now throw a console warning if you try to enable a physics body using an unknown physics engine type (thanks @jakewilson #2415)
+* The Tileset class will tell you the name of the tileset image throwing the uneven size error (thanks @jakewilson #2415)
 
 ### Bug Fixes
 
