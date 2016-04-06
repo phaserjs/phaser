@@ -41,6 +41,8 @@ Phaser.Component.LoadTexture.prototype = {
     * to use a Texture Atlas later in development by simply searching your code for 'PENDING_ATLAS' 
     * and swapping it to be the key of the atlas data.
     *
+    * Note: You cannot use a RenderTexture as a texture for a TileSprite.
+    *
     * @method
     * @param {string|Phaser.RenderTexture|Phaser.BitmapData|Phaser.Video|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache Image entry, or an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
     * @param {string|number} [frame] - If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
