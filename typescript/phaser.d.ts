@@ -1,7 +1,7 @@
 /// <reference path="pixi.d.ts" />
 /// <reference path="p2.d.ts" />
 
-// Type definitions for Phaser 2.4.7 - 1st March 2016
+// Type definitions for Phaser 2.4.7 - 6th April 2016
 // Project: https://github.com/photonstorm/phaser
 
 declare module "phaser" {
@@ -1689,6 +1689,7 @@ declare module Phaser {
         filter(predicate: Function, checkExists?: boolean): ArraySet;
         getAt(index: number): PIXI.DisplayObject | number;
         getBottom(): any;
+        getByName(name: string): any;
         getFirstAlive(createIfNull?: boolean, x?: number, y?: number, key?: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture, frame?: string | number): any;
         getFirstDead(createIfNull?: boolean, x?: number, y?: number, key?: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture, frame?: string | number): any;
         getFirstExists(exists: boolean, createIfNull?: boolean, x?: number, y?: number, key?: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture, frame?: string | number): any;
@@ -4350,6 +4351,7 @@ declare module Phaser {
         context: any;
         game: Phaser.Game;
         mute: boolean;
+        muteOnPause: boolean;
         noAudio: boolean;
         onSoundDecode: Phaser.Signal;
         onVolumeChange: Phaser.Signal;

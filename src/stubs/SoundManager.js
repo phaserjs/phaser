@@ -9,7 +9,9 @@
 * It allows you to exclude the default Sound Manager from your build, without making Game crash.
 */
 
-Phaser.SoundManager = function () {};
+Phaser.SoundManager = function () {
+    this.muteOnPause = false;
+};
 
 Phaser.SoundManager.prototype.boot = function () {};
 Phaser.SoundManager.prototype.update = function () {};
