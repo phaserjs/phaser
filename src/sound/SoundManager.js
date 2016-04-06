@@ -830,7 +830,7 @@ Object.defineProperty(Phaser.SoundManager.prototype, "volume", {
                 {
                     if (this._sounds[i].usingAudioTag)
                     {
-                        this._sounds[i].volume = this._sounds[i].volume * value;
+                        this._sounds[i].volume = value;
                     }
                 }
             }
