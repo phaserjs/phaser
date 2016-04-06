@@ -42,6 +42,12 @@ Phaser.Graphics = function (game, x, y) {
     */
     this.physicsType = Phaser.SPRITE;
 
+    /**
+    * @property {Phaser.Point} anchor - Required for a Graphics shape to work as a Physics body, do not modify this value.
+    * @private
+    */
+    this.anchor = new Phaser.Point();
+
     PIXI.Graphics.call(this);
 
     Phaser.Component.Core.init.call(this, game, x, y, '', null);
