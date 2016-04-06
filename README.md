@@ -350,6 +350,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * Video now uses MediaStreamTrack.stop() instead of MediaStream.stop() where possible, as the later is now deprecated in some browsers (thanks @stoneman1 #2371)
 * The Physics Manager will now throw a console warning if you try to enable a physics body using an unknown physics engine type (thanks @jakewilson #2415)
 * The Tileset class will tell you the name of the tileset image throwing the uneven size error (thanks @jakewilson #2415)
+* Emitter.start when used with a false `explode` parameter would cummulatively add particles to the current total. With quantity 10 the first call would emit 10 particles, the next 20, and so on. Calls to start will now reset the quantity each time. This is a behaviour change from earlier versions, so if you relied on the old way please account for it in your code (thanks @BdR76 #2187)
 
 ### Bug Fixes
 
@@ -368,6 +369,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * Camera.position would return the view rectangles centerX/Y coordinates, instead of view.x/y (which is what Camera.x/y returns), so it has been updated to return view.x/y instead (thanks @kamparR #2120)
 * Passing a BitmapData to a TileSprite as a texture would fail if the BitmapData had not been previously added to the cache. It now uses the new frameData property (thanks @mzamateo @lucap86 #2380)
 * When setting a global volume for the SoundManager it would previously incorrectly calculate the volumes of AudioTag based Sound objects that were not played at volume 1. The new approach uses Sound.updateGlobalVolume which adjusts the Sound volume to be a percentage of the global volume. So if the global volume is 0.5 and the Sound volume is 0.5, the Sound will play with an actual volume of 0.25 (thanks @VitaZheltyakov #2325)
+* Sound.play when using an AudioTag would ignore the muted state of the SoundManager and play regardless. It now checks the SoundManager.mute state on play, and sets the volume accorindingly (thanks @brianbunch #2139)
 
 ### Pixi Updates
 

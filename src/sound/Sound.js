@@ -695,7 +695,7 @@ Phaser.Sound.prototype = {
                     this._sound.currentTime = this.position;
                     this._sound.muted = this._muted;
 
-                    if (this._muted)
+                    if (this._muted || this.game.sound.mute)
                     {
                         this._sound.volume = 0;
                     }
