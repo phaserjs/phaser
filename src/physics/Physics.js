@@ -250,6 +250,10 @@ Phaser.Physics.prototype = {
         {
             this.matter.enable(object);
         }
+        else
+        {
+            console.warn(object.key + ' is attempting to enable a physics body using an unknown physics system.');
+        }
 
     },
 
