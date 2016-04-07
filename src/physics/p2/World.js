@@ -639,6 +639,8 @@ Phaser.Physics.P2.prototype = {
             this.walls.bottom.shapes[0].collisionGroup = mask;
         }
 
+        this._boundsOwnGroup = setCollisionGroup;
+
     },
 
     /**
