@@ -896,16 +896,29 @@ Phaser.Math = {
     },
 
     /**
-    * Force a value within the boundaries by clamping `x` to the range `[a, b]`.
+    * Force a value within the boundaries by clamping it to the range `min`, `max`.
     *
     * @method Phaser.Math#clamp
-    * @param {number} x
-    * @param {number} a
-    * @param {number} b
-    * @return {number}
+    * @param {float} v - The value to be clamped.
+    * @param {float} min - The minimum bounds.
+    * @param {float} max - The maximum bounds.
+    * @return {number} The clamped value.
     */
-    clamp: function (x, a, b) {
-        return ( x < a ) ? a : ( ( x > b ) ? b : x );
+    clamp: function (v, min, max) {
+
+        if (v < min)
+        {
+            return min;
+        }
+        else if (max < v)
+        {
+            return max;
+        }
+        else
+        {
+            return v;
+        }
+
     },
 
     /**
