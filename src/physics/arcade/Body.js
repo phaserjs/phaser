@@ -1000,6 +1000,9 @@ Phaser.Physics.Arcade.Body.render = function (context, body, color, filled) {
             context.stroke();
         }
 
+        context.strokeStyle = '#ffff00';
+        context.strokeRect(body.position.x - body.game.camera.x, body.position.y - body.game.camera.y, body.width, body.height);
+
         context.restore();
     }
     else

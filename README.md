@@ -333,11 +333,13 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 
 ### New Arcade Physics Features
 
-* Body has two new properties: `left` and `top`. These are the same as `Body.x` and `Body.y` but allow you to pass the Body to geometry level functions such as Circle.contains.
 * Body.setCircle allows you to define a Body as using a circle to collide with instead of a rectangle. You can set the radius of the collision circle and an offset.
 * Body.render now renders both circle and rectangle body shapes to the Debug canvas.
 * World.intersects has been updated to support both circle and rectangle body shapes, and supports quick-paths for circle vs. circle and rect vs. rect checks.
 * World.circleBodyIntersects is a new method that checks for intersection between a Body that has been defined as a circle, and a normal rectangle based Body. This is used internally by World.intersects, but exposed for direct calls as well.
+* Body has two new properties: `left` and `top`. These are the same as `Body.x` and `Body.y` but allow you to pass the Body to geometry level functions such as Circle.contains.
+* World.separate has been optimized to cut down on the number of calls to `intersect` from 3 calls per Game Object collision check, to 2. So if you were colliding 50 sprites it will reduce the call count from 150 to 100 per frame. It also reduces the calls made to `seperateX` and `seperateY` by the same factor.
+* Two immovable bodies would never set their overlap data, even if an overlap only check was being made. As this is useful data to have this has been changed. Two immovable bodies will still never separate from each other, but they _will_ have their `overlapX` and `overlapY` properties calculated now.
 
 
 ### Updates
