@@ -331,6 +331,15 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * SoundManager.muteOnPause is a new boolean that allows you to control if the Sound system gets muted automatically when a Phaser game pauses, such as when it loses focus. You may need to set this to `false` if you wish to control the audio system from outside of your Phaser game, i.e. from DOM buttons or similar (#2382)
 * You can now pass a TilemapLayer as a Texture to a TileSprite. A limitation of this is that if you pass it to a TileSprite it will make a fill pattern from the TilemapLayer at that instant it's passed, and it won't keep track of the layer in future should it update (thanks @jdnichollsc #1989)
 
+### New Arcade Physics Features
+
+* Body has two new properties: `left` and `top`. These are the same as `Body.x` and `Body.y` but allow you to pass the Body to geometry level functions such as Circle.contains.
+* Body.setCircle allows you to define a Body as using a circle to collide with instead of a rectangle. You can set the radius of the collision circle and an offset.
+* Body.render now renders both circle and rectangle body shapes to the Debug canvas.
+* World.intersects has been updated to support both circle and rectangle body shapes, and supports quick-paths for circle vs. circle and rect vs. rect checks.
+* World.circleBodyIntersects is a new method that checks for intersection between a Body that has been defined as a circle, and a normal rectangle based Body. This is used internally by World.intersects, but exposed for direct calls as well.
+
+
 ### Updates
 
 * TypeScript definitions fixes and updates (thanks @clark-stevenson)
@@ -352,7 +361,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * Video now uses MediaStreamTrack.stop() instead of MediaStream.stop() where possible, as the later is now deprecated in some browsers (thanks @stoneman1 #2371)
 * The Physics Manager will now throw a console warning if you try to enable a physics body using an unknown physics engine type (thanks @jakewilson #2415)
 * The Tileset class will tell you the name of the tileset image throwing the uneven size error (thanks @jakewilson #2415)
-* Emitter.start when used with a false `explode` parameter would cummulatively add particles to the current total. With quantity 10 the first call would emit 10 particles, the next 20, and so on. Calls to start will now reset the quantity each time. This is a behaviour change from earlier versions, so if you relied on the old way please account for it in your code (thanks @BdR76 #2187)
+* Emitter.start when used with a false `explode` parameter would cummulatively add particles to the current total. With quantity 10 the first call would emit 10 particles, the next 20, and so on. Calls to start will now reset the quantity each time. This is a behavior change from earlier versions, so if you relied on the old way please account for it in your code (thanks @BdR76 #2187)
 
 ### Bug Fixes
 

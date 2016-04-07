@@ -977,33 +977,78 @@ Phaser.Physics.Arcade.prototype = {
     * Check for intersection against two bodies.
     *
     * @method Phaser.Physics.Arcade#intersects
-    * @param {Phaser.Physics.Arcade.Body} body1 - The Body object to check.
-    * @param {Phaser.Physics.Arcade.Body} body2 - The Body object to check.
+    * @param {Phaser.Physics.Arcade.Body} body1 - The first Body object to check.
+    * @param {Phaser.Physics.Arcade.Body} body2 - The second Body object to check.
     * @return {boolean} True if they intersect, otherwise false.
     */
     intersects: function (body1, body2) {
 
-        if (body1.right <= body2.position.x)
+        if (body1.isCircle)
         {
-            return false;
+            if (body2.isCircle)
+            {
+                //  Circle vs. Circle
+                return Phaser.Math.distance(body1.center.x, body1.center.y, body2.center.x, body2.center.y) <= (body1.radius + body2.radius);
+            }
+            else
+            {
+                //  Circle vs. Rect
+                return this.circleBodyIntersects(body1, body2);
+            }
+        }
+        else
+        {
+            if (body2.isCircle)
+            {
+                //  Rect vs. Circle
+                return this.circleBodyIntersects(body2, body1);
+            }
+            else
+            {
+                //  Rect vs. Rect
+                if (body1.right <= body2.position.x)
+                {
+                    return false;
+                }
+
+                if (body1.bottom <= body2.position.y)
+                {
+                    return false;
+                }
+
+                if (body1.position.x >= body2.right)
+                {
+                    return false;
+                }
+
+                if (body1.position.y >= body2.bottom)
+                {
+                    return false;
+                }
+
+                return true;
+            }
         }
 
-        if (body1.bottom <= body2.position.y)
-        {
-            return false;
-        }
+    },
 
-        if (body1.position.x >= body2.right)
-        {
-            return false;
-        }
+    /**
+    * Checks to see if a circular Body intersects with a Rectangular Body.
+    *
+    * @method Phaser.Physics.Arcade#circleBodyIntersects
+    * @param {Phaser.Physics.Arcade.Body} circle - The Body with `isCircle` set.
+    * @param {Phaser.Physics.Arcade.Body} body - The Body with `isCircle` not set (i.e. uses Rectangle shape)
+    * @return {boolean} Returns true if the bodies intersect, otherwise false.
+    */
+    circleBodyIntersects: function (circle, body) {
 
-        if (body1.position.y >= body2.bottom)
-        {
-            return false;
-        }
+        var x = Phaser.Math.clamp(circle.center.x, body.left, body.right);
+        var y = Phaser.Math.clamp(circle.center.y, body.top, body.bottom);
 
-        return true;
+        var dx = (circle.center.x - x) * (circle.center.x - x);
+        var dy = (circle.center.y - y) * (circle.center.y - y);
+
+        return (dx + dy) <= (circle.radius * circle.radius);
 
     },
 
