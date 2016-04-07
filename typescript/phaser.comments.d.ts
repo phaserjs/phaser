@@ -1,10 +1,11 @@
 /// <reference path="pixi.comments.d.ts" />
 /// <reference path="p2.d.ts" />
 
-// Type definitions for Phaser 2.4.6 - 18th February 2015
+// Type definitions for Phaser 2.4.6 - 27th March 2015
 // Project: https://github.com/photonstorm/phaser
 
 declare module "phaser" {
+    import {PIXI} from 'pixi';
     export class Phaser {
 
         static VERSION: string;
@@ -24987,7 +24988,7 @@ declare module "phaser" {
 
             /**
             * The bounds of the Visual viewport, as discussed in
-            * {@link http://www.quirksmode.org/mobile/viewports.html A tale of two viewports â€” part one}
+            * {@link http://www.quirksmode.org/mobile/viewports.html A tale of two viewports — part one}
             * with one difference: the viewport size _excludes_ scrollbars, as found on some desktop browsers.
             * 
             * Supported mobile:
@@ -24999,7 +25000,7 @@ declare module "phaser" {
 
             /**
             * The bounds of the Layout viewport, as discussed in
-            * {@link http://www.quirksmode.org/mobile/viewports2.html A tale of two viewports â€” part two};
+            * {@link http://www.quirksmode.org/mobile/viewports2.html A tale of two viewports — part two};
             * but honoring the constraints as specified applicable viewport meta-tag.
             * 
             * The bounds returned are not guaranteed to be fully aligned with CSS media queries (see

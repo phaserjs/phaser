@@ -1,6 +1,9 @@
 // Type definitions for PIXI with Phaser Deviations. 
 
-declare module PIXI {
+declare module "pixi"
+{
+    import {Phaser} from 'phaser';
+    export module PIXI {
 
     export var game: Phaser.Game;
     export var WEBGL_RENDERER: number;
