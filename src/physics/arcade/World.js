@@ -947,6 +947,12 @@ Phaser.Physics.Arcade.prototype = {
             return false;
         }
 
+        //  Circle vs. Circle quick bail out
+        if (body1.isCircle && body2.isCircle)
+        {
+            return this.separateCircle(body1, body2, overlapOnly);
+        }
+
         var resultX = false;
         var resultY = false;
 
@@ -1052,6 +1058,59 @@ Phaser.Physics.Arcade.prototype = {
         var dy = (circle.center.y - y) * (circle.center.y - y);
 
         return (dx + dy) <= (circle.radius * circle.radius);
+
+    },
+
+    separateCircle: function (body1, body2, overlapOnly) {
+
+        //  Get the angle between the two circles
+        var dx = body2.center.x - body1.center.x;
+        var dy = body2.center.y - body1.center.y;
+
+        var angle = Math.atan2(dy, dx);
+        var sin = Math.sin(angle);
+        var cos = Math.cos(angle);
+
+        var x0 = 0;
+        var y0 = 0;
+
+        var x1 = dx * cos + dy * sin;
+        var y1 = dy * cos - dx * sin;
+
+        var vx0 = body1.velocity.x * cos + body1.velocity.y * sin;
+        var vy0 = body1.velocity.y * cos - body1.velocity.x * sin;
+
+        var vx1 = body2.velocity.x * cos + body2.velocity.y * sin;
+        var vy1 = body2.velocity.y * cos - body2.velocity.x * sin;
+
+        var vxTotal = vx0 - vx1;
+
+        vx0 = ((body1.mass - body2.mass) * vx0 + 2 * body2.mass * vx1) / (body1.mass + body2.mass);
+        vx1 = vxTotal + vx0;
+
+        x0 += vx0;
+        x1 += vx1;
+
+        var x0Final = x0 * cos - y0 * sin;
+        var y0Final = y0 * cos + x0 * sin;
+        var x1Final = x1 * cos - y1 * sin;
+        var y1Final = y1 * cos + x1 * sin;
+
+        body2.x = body1.x + x1Final;
+        body2.y = body1.y + y1Final;
+
+        body1.x = body1.x + x0Final;
+        body1.y = body1.y + y0Final;
+
+        console.log('final', x0Final, y0Final, x1Final, y1Final);
+
+        body1.velocity.x = vx0 * cos - vy0 * sin;
+        body1.velocity.y = vy0 * cos + vx0 * sin;
+
+        body2.velocity.x = vx1 * cos - vy1 * sin;
+        body2.velocity.y = vy1 * cos + vx1 * sin;
+
+        return true;
 
     },
 
