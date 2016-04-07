@@ -615,9 +615,9 @@ Phaser.Physics.P2.prototype = {
     */
     updateBoundsCollisionGroup: function (setCollisionGroup) {
 
-        var mask = this.everythingCollisionGroup.mask;
+        if (setCollisionGroup === undefined) { setCollisionGroup = true; }
 
-        if (setCollisionGroup === undefined) { mask = this.boundsCollisionGroup.mask; }
+        var mask = (setCollisionGroup) ? this.boundsCollisionGroup.mask : this.everythingCollisionGroup.mask;
 
         if (this.walls.left)
         {
