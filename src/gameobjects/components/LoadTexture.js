@@ -103,6 +103,12 @@ Phaser.Component.LoadTexture.prototype = {
             key.onChangeSource.add(this.resizeFrame, this);
             this.texture.valid = valid;
         }
+        else if (Phaser.Tilemap && key instanceof Phaser.TilemapLayer)
+        {
+            // this.customRender = true;
+
+            this.setTexture(PIXI.Texture.fromCanvas(key.canvas));
+        }
         else if (key instanceof PIXI.Texture)
         {
             this.setTexture(key);
