@@ -670,77 +670,10 @@ Phaser.Physics.P2.prototype = {
         if (bottom === undefined) { bottom = this._boundsBottom; }
         if (setCollisionGroup === undefined) { setCollisionGroup = this._boundsOwnGroup; }
 
-        if (this.walls.left)
-        {
-            this.world.removeBody(this.walls.left);
-        }
-
-        if (this.walls.right)
-        {
-            this.world.removeBody(this.walls.right);
-        }
-
-        if (this.walls.top)
-        {
-            this.world.removeBody(this.walls.top);
-        }
-
-        if (this.walls.bottom)
-        {
-            this.world.removeBody(this.walls.bottom);
-        }
-
-        if (left)
-        {
-            this.walls.left = new p2.Body({ mass: 0, position: [ this.pxmi(x), this.pxmi(y) ], angle: 1.5707963267948966 });
-            this.walls.left.addShape(new p2.Plane());
-
-            if (setCollisionGroup)
-            {
-                this.walls.left.shapes[0].collisionGroup = this.boundsCollisionGroup.mask;
-            }
-
-            this.world.addBody(this.walls.left);
-        }
-
-        if (right)
-        {
-            this.walls.right = new p2.Body({ mass: 0, position: [ this.pxmi(x + width), this.pxmi(y) ], angle: -1.5707963267948966 });
-            this.walls.right.addShape(new p2.Plane());
-
-            if (setCollisionGroup)
-            {
-                this.walls.right.shapes[0].collisionGroup = this.boundsCollisionGroup.mask;
-            }
-
-            this.world.addBody(this.walls.right);
-        }
-
-        if (top)
-        {
-            this.walls.top = new p2.Body({ mass: 0, position: [ this.pxmi(x), this.pxmi(y) ], angle: -3.141592653589793 });
-            this.walls.top.addShape(new p2.Plane());
-
-            if (setCollisionGroup)
-            {
-                this.walls.top.shapes[0].collisionGroup = this.boundsCollisionGroup.mask;
-            }
-
-            this.world.addBody(this.walls.top);
-        }
-
-        if (bottom)
-        {
-            this.walls.bottom = new p2.Body({ mass: 0, position: [ this.pxmi(x), this.pxmi(y + height) ] });
-            this.walls.bottom.addShape(new p2.Plane());
-
-            if (setCollisionGroup)
-            {
-                this.walls.bottom.shapes[0].collisionGroup = this.boundsCollisionGroup.mask;
-            }
-
-            this.world.addBody(this.walls.bottom);
-        }
+        this.setupWall(left, 'left', x, y, 1.5707963267948966, setCollisionGroup);
+        this.setupWall(right, 'right', x + width, y, -1.5707963267948966, setCollisionGroup);
+        this.setupWall(top, 'top', x, y, -3.141592653589793, setCollisionGroup);
+        this.setupWall(bottom, 'bottom', x, y + height, 0, setCollisionGroup);
 
         //  Remember the bounds settings in case they change later on via World.setBounds
         this._boundsLeft = left;
@@ -748,6 +681,52 @@ Phaser.Physics.P2.prototype = {
         this._boundsTop = top;
         this._boundsBottom = bottom;
         this._boundsOwnGroup = setCollisionGroup;
+
+    },
+
+    /**
+    * Internal method called by setBounds. Responsible for creating, updating or 
+    * removing the wall body shapes.
+    *
+    * @method Phaser.Physics.P2#setupWall
+    * @private
+    * @param {boolean} create - True to create the wall shape, false to remove it.
+    * @param {string} wall - The wall segment to update.
+    * @param {number} x - The x coordinate of the wall.
+    * @param {number} y - The y coordinate of the wall.
+    * @param {float} angle - The angle of the wall.
+    * @param {boolean} [setCollisionGroup=true] - If true the Bounds will be set to use its own Collision Group.
+    */
+    setupWall: function (create, wall, x, y, angle, setCollisionGroup) {
+
+        if (create)
+        {
+            //  We need a left wall. Do we have one already?
+            if (this.walls[wall])
+            {
+                this.walls[wall].position = [ this.pxmi(x), this.pxmi(y) ];
+            }
+            else
+            {
+                this.walls[wall] = new p2.Body({ mass: 0, position: [ this.pxmi(x), this.pxmi(y) ], angle: angle });
+                this.walls[wall].addShape(new p2.Plane());
+
+                if (setCollisionGroup)
+                {
+                    this.walls[wall].shapes[0].collisionGroup = this.boundsCollisionGroup.mask;
+                }
+
+                this.world.addBody(this.walls[wall]);
+            }
+        }
+        else
+        {
+            if (this.walls[wall])
+            {
+                this.world.removeBody(this.walls[wall]);
+                this.walls[wall] = null;
+            }
+        }
 
     },
 
