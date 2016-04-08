@@ -1061,6 +1061,78 @@ Phaser.Physics.Arcade.prototype = {
 
     },
 
+    separateCircleFull: function (body1, body2, overlapOnly) {
+
+        var dx = body2.center.x - body1.center.x;
+        var dy = body2.center.y - body1.center.y;
+
+        var angle = Math.atan2(dy, dx);
+        var sin = Math.sin(angle);
+        var cos = Math.cos(angle);
+
+        //  Rotate the first body
+        var pos0 = new Phaser.Point(0, 0);
+        var pos1 = this.rotate(dx, dy, sin, cos, true);
+
+        var vel0 = this.rotate(body1.velocity.x, body1.velocity.y, sin, cos, true);
+        var vel1 = this.rotate(body2.velocity.x, body2.velocity.y, sin, cos, true);
+
+        var vxTotal = vel0.x - vel1.x;
+
+        vel0.x = ((body1.mass - body2.mass) * vel0.x +
+            2 * body2.mass * vel1.x) /
+            (body1.mass + body2.mass);
+        vel1.x = vxTotal + vel0.x;
+
+        //  Same mass swap optimisation
+        // var temp = vel0;
+        // vel0 = vel1;
+        // vel1 = temp;
+
+        pos0.x += vel0.x * this.game.time.physicsElapsed;
+        pos1.x += vel1.x * this.game.time.physicsElapsed;
+
+        var pos0F = this.rotate(pos0.x, pos0.y, sin, cos, false);
+        var pos1F = this.rotate(pos1.x, pos1.y, sin, cos, false);
+
+        body2.x = body1.x + pos1F.x;
+        body2.y = body1.y + pos1F.y;
+
+        body1.x = body1.x + pos0F.x;
+        body1.y = body1.y + pos0F.y;
+
+        var vel0F = this.rotate(vel0.x, vel0.y, sin, cos, false);
+        var vel1F = this.rotate(vel1.x, vel1.y, sin, cos, false);
+
+        body1.velocity.x = vel0F.x;
+        body1.velocity.y = vel0F.y;
+
+        body2.velocity.x = vel1F.x;
+        body2.velocity.y = vel1F.y;
+
+        return true;
+
+    },
+
+    rotate: function (x, y, sin, cos, reverse) {
+
+        var result = new Phaser.Point();
+
+        if (reverse)
+        {
+            result.x = x * cos + y * sin;
+            result.y = y * cos - x * sin;
+        }
+        else
+        {
+            result.x = x * cos - y * sin;
+            result.y = y * cos + x * sin;
+        }
+
+        return result;
+
+    },
+
     separateCircle: function (body1, body2, overlapOnly) {
 
         //  Get the angle between the two circles
@@ -1071,39 +1143,51 @@ Phaser.Physics.Arcade.prototype = {
         var sin = Math.sin(angle);
         var cos = Math.cos(angle);
 
+        //  Rotate body1 (our origin)
         var x0 = 0;
         var y0 = 0;
 
+        //  Rotate body2
         var x1 = dx * cos + dy * sin;
         var y1 = dy * cos - dx * sin;
 
+        //  Rotate velocities
         var vx0 = body1.velocity.x * cos + body1.velocity.y * sin;
         var vy0 = body1.velocity.y * cos - body1.velocity.x * sin;
 
         var vx1 = body2.velocity.x * cos + body2.velocity.y * sin;
         var vy1 = body2.velocity.y * cos - body2.velocity.x * sin;
 
+        //  Separation
         var vxTotal = vx0 - vx1;
 
         vx0 = ((body1.mass - body2.mass) * vx0 + 2 * body2.mass * vx1) / (body1.mass + body2.mass);
         vx1 = vxTotal + vx0;
 
-        x0 += vx0;
-        x1 += vx1;
+        var absV = Math.abs(vx0) + Math.abs(vx1);
+        var overlap = (body1.radius + body2.radius) - Math.abs(x0 - x1);
 
+        // x0 += vx0 / absV * overlap;
+        // x1 += vx1 / absV * overlap;
+
+        x0 += vx0 * this.game.time.physicsElapsed;
+        x1 += vx1 * this.game.time.physicsElapsed;
+
+        //  Rotate positions back
         var x0Final = x0 * cos - y0 * sin;
         var y0Final = y0 * cos + x0 * sin;
+
         var x1Final = x1 * cos - y1 * sin;
         var y1Final = y1 * cos + x1 * sin;
 
+        //  Get new position (based on body1 being the pivot point of the system)
         body2.x = body1.x + x1Final;
         body2.y = body1.y + y1Final;
 
         body1.x = body1.x + x0Final;
         body1.y = body1.y + y0Final;
 
-        console.log('final', x0Final, y0Final, x1Final, y1Final);
-
+        //  Set new velocities
         body1.velocity.x = vx0 * cos - vy0 * sin;
         body1.velocity.y = vy0 * cos + vx0 * sin;
 
@@ -1189,7 +1273,7 @@ Phaser.Physics.Arcade.prototype = {
         {
             overlap *= 0.5;
 
-            body1.x = body1.x - overlap;
+            body1.x -= overlap;
             body2.x += overlap;
 
             var nv1 = Math.sqrt((v2 * v2 * body2.mass) / body1.mass) * ((v2 > 0) ? 1 : -1);
@@ -1204,7 +1288,7 @@ Phaser.Physics.Arcade.prototype = {
         }
         else if (!body1.immovable)
         {
-            body1.x = body1.x - overlap;
+            body1.x -= overlap;
             body1.velocity.x = v2 - v1 * body1.bounce.x;
 
             //  This is special case code that handles things like vertically moving platforms you can ride
@@ -1305,7 +1389,7 @@ Phaser.Physics.Arcade.prototype = {
         {
             overlap *= 0.5;
 
-            body1.y = body1.y - overlap;
+            body1.y -= overlap;
             body2.y += overlap;
 
             var nv1 = Math.sqrt((v2 * v2 * body2.mass) / body1.mass) * ((v2 > 0) ? 1 : -1);
@@ -1320,7 +1404,7 @@ Phaser.Physics.Arcade.prototype = {
         }
         else if (!body1.immovable)
         {
-            body1.y = body1.y - overlap;
+            body1.y -= overlap;
             body1.velocity.y = v2 - v1 * body1.bounce.y;
 
             //  This is special case code that handles things like horizontal moving platforms you can ride
