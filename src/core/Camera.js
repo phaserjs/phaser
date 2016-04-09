@@ -128,6 +128,17 @@ Phaser.Camera = function (game, id, x, y, width, height) {
     */
     this._position = new Phaser.Point();
 
+    this._shake = {
+        intensity: 0,
+        duration: 0,
+        horizontal: false,
+        vertical: false,
+        x: 0,
+        y: 0
+    };
+
+    this.shakeOnComplete = new Phaser.Signal();
+
 };
 
 /**
@@ -153,6 +164,24 @@ Phaser.Camera.FOLLOW_TOPDOWN = 2;
 * @type {number}
 */
 Phaser.Camera.FOLLOW_TOPDOWN_TIGHT = 3;
+
+/**
+* @constant
+* @type {number}
+*/
+Phaser.Camera.SHAKE_BOTH = 4;
+
+/**
+* @constant
+* @type {number}
+*/
+Phaser.Camera.SHAKE_HORIZONTAL = 5;
+
+/**
+* @constant
+* @type {number}
+*/
+Phaser.Camera.SHAKE_VERTICAL = 6;
 
 Phaser.Camera.prototype = {
 
@@ -267,6 +296,11 @@ Phaser.Camera.prototype = {
             this.updateTarget();
         }
 
+        if (this._shake.duration > 0)
+        {
+            this.updateShake();
+        }
+
         if (this.bounds)
         {
             this.checkBounds();
@@ -277,8 +311,57 @@ Phaser.Camera.prototype = {
             this.view.floor();
         }
 
-        this.displayObject.position.x = -this.view.x;
-        this.displayObject.position.y = -this.view.y;
+        this.displayObject.position.x = -this.view.x + this._shake.x;
+        this.displayObject.position.y = -this.view.y + this._shake.y;
+
+    },
+
+    updateShake: function () {
+
+        this._shake.duration -= this.game.time.elapsedMS;
+
+        if (this._shake.duration <= 0)
+        {
+            this.shakeOnComplete.dispatch();
+            this._shake.x = 0;
+            this._shake.y = 0;
+        }
+        else
+        {
+            if (this._shake.horizontal)
+            {
+                this._shake.x = this.game.rnd.frac() * this._shake.intensity * this.view.width * 2 - this._shake.intensity * this.view.width;
+            }
+
+            if (this._shake.vertical)
+            {
+                this._shake.y = this.game.rnd.frac() * this._shake.intensity * this.view.height * 2 - this._shake.intensity * this.view.height;
+            }
+        }
+
+    },
+
+    shake: function (intensity, duration, force, direction) {
+
+        if (intensity === undefined) { intensity = 0.05; }
+        if (duration === undefined) { duration = 500; }
+        if (force === undefined) { force = true; }
+        if (direction === undefined) { direction = Phaser.Camera.SHAKE_BOTH; }
+
+        if (!force && this._shake.duration > 0)
+        {
+            //  Can't reset an already running shake
+            return;
+        }
+
+        this._shake.intensity = intensity;
+        this._shake.duration = duration;
+
+        this._shake.x = 0;
+        this._shake.y = 0;
+
+        this._shake.horizontal = (direction === Phaser.Camera.SHAKE_BOTH || direction === Phaser.Camera.SHAKE_HORIZONTAL);
+        this._shake.vertical = (direction === Phaser.Camera.SHAKE_BOTH || direction === Phaser.Camera.SHAKE_VERTICAL);
 
     },
 
