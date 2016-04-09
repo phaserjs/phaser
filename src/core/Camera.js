@@ -82,12 +82,12 @@ Phaser.Camera = function (game, id, x, y, width, height) {
     this.target = null;
 
     /**
-    * @property {PIXI.DisplayObject} displayObject - The display object to which all game objects are added. Set by World.boot
+    * @property {PIXI.DisplayObject} displayObject - The display object to which all game objects are added. Set by World.boot.
     */
     this.displayObject = null;
 
     /**
-    * @property {Phaser.Point} scale - The scale of the display object to which all game objects are added. Set by World.boot
+    * @property {Phaser.Point} scale - The scale of the display object to which all game objects are added. Set by World.boot.
     */
     this.scale = null;
 
@@ -109,9 +109,30 @@ Phaser.Camera = function (game, id, x, y, width, height) {
     this.lerp = new Phaser.Point(1, 1);
 
     /**
-    * @property {Phaser.Signal} shakeOnComplete - This signal is dispatched when the camera shake effect completes.
+    * @property {Phaser.Signal} onShakeComplete - This signal is dispatched when the camera shake effect completes.
     */
-    this.shakeOnComplete = new Phaser.Signal();
+    this.onShakeComplete = new Phaser.Signal();
+
+    /**
+    * @property {Phaser.Signal} onFlashComplete - This signal is dispatched when the camera flash effect completes.
+    */
+    this.onFlashComplete = new Phaser.Signal();
+
+    /**
+    * This signal is dispatched when the camera fade effect completes.
+    * When the fade effect completes you will be left with the screen black (or whatever
+    * color you faded to). In order to reset this call `Camera.resetFX`. This is called
+    * automatically when you change State.
+    * @property {Phaser.Signal} onFadeComplete
+    */
+    this.onFadeComplete = new Phaser.Signal();
+
+    /**
+    * The Graphics object used to handle camera fx such as fade and flash.
+    * @property {Phaser.Graphics} fx
+    * @protected
+    */
+    this.fx = null;
 
     /**
     * @property {Phaser.Point} _targetPosition - Internal point used to calculate target position.
@@ -146,6 +167,18 @@ Phaser.Camera = function (game, id, x, y, width, height) {
         x: 0,
         y: 0
     };
+
+    /**
+    * @property {number} _fxDuration - FX duration timer.
+    * @private
+    */
+    this._fxDuration = 0;
+
+    /**
+    * @property {number} _fxType - The FX type running.
+    * @private
+    */
+    this._fxType = 0;
 
 };
 
@@ -191,7 +224,36 @@ Phaser.Camera.SHAKE_HORIZONTAL = 5;
 */
 Phaser.Camera.SHAKE_VERTICAL = 6;
 
+/**
+* @constant
+* @type {boolean}
+*/
+Phaser.Camera.ENABLE_FX = true;
+
 Phaser.Camera.prototype = {
+
+    /**
+    * Called automatically by Phaser.World.
+    *
+    * @method Phaser.Camera#boot
+    * @private
+    */
+    boot: function () {
+
+        this.displayObject = this.game.world;
+
+        this.scale = this.game.world.scale;
+
+        this.game.camera = this;
+
+        if (Phaser.Graphics && Phaser.Camera.ENABLE_FX)
+        {
+            this.fx = new Phaser.Graphics(this.game);
+
+            this.game.stage.addChild(this.fx);
+        }
+
+    },
 
     /**
     * Camera preUpdate. Sets the total view counter to zero.
@@ -298,7 +360,7 @@ Phaser.Camera.prototype = {
     * spacing on the x and y axis each frame. You can control the intensity and duration
     * of the effect, and if it should effect both axis or just one.
     *
-    * When the shake effect ends the signal Camera.shakeOnComplete is dispatched.
+    * When the shake effect ends the signal Camera.onShakeComplete is dispatched.
     *
     * @method Phaser.Camera#shake
     * @param {float} [intensity=0.05] - The intensity of the camera shake. Given as a percentage of the camera size representing the maximum distance that the camera can move while shaking.
@@ -337,12 +399,102 @@ Phaser.Camera.prototype = {
     },
 
     /**
+    * This creates a camera flash effect. It works by filling the game with the solid fill
+    * color specified, and then fading it away to alpha 0 over the duration given.
+    *
+    * You can use this for things such as hit feedback effects.
+    *
+    * When the effect ends the signal Camera.onFlashComplete is dispatched.
+    *
+    * @method Phaser.Camera#flash
+    * @param {numer} [color=0xffffff] - The color of the flash effect. I.e. 0xffffff for white, 0xff0000 for red, etc.
+    * @param {number} [duration=500] - The duration of the flash effect in milliseconds.
+    * @param {boolean} [force=false] - If a camera flash or fade effect is already running and force is true it will replace the previous effect, resetting the duration.
+    * @return {boolean} True if the effect was started, otherwise false.
+    */
+    flash: function (color, duration, force) {
+
+        if (color === undefined) { color = 0xffffff; }
+        if (duration === undefined) { duration = 500; }
+        if (force === undefined) { force = false; }
+
+        if (!this.fx || (!force && this._fxDuration > 0))
+        {
+            return false;
+        }
+
+        this.fx.clear();
+
+        this.fx.beginFill(color);
+        this.fx.drawRect(0, 0, this.width, this.height);
+        this.fx.endFill();
+
+        this.fx.alpha = 1;
+
+        this._fxDuration = duration;
+        this._fxType = 0;
+
+        return true;
+
+    },
+
+    /**
+    * This creates a camera fade effect. It works by filling the game with the 
+    * color specified, over the duration given, ending with a solid fill.
+    *
+    * You can use this for things such as transitioning to a new scene.
+    *
+    * The game will be left 'filled' at the end of this effect, likely obscuring
+    * everything. In order to reset it you can call `Camera.resetFX` and it will clear the
+    * fade. Or you can call `Camera.flash` with the same color as the fade, and it will
+    * reverse the process, bringing the game back into view again.
+    *
+    * When the effect ends the signal Camera.onFadeComplete is dispatched.
+    *
+    * @method Phaser.Camera#fade
+    * @param {numer} [color=0x000000] - The color the game will fade to. I.e. 0x000000 for black, 0xff0000 for red, etc.
+    * @param {number} [duration=500] - The duration of the fade in milliseconds.
+    * @param {boolean} [force=false] - If a camera flash or fade effect is already running and force is true it will replace the previous effect, resetting the duration.
+    * @return {boolean} True if the effect was started, otherwise false.
+    */
+    fade: function (color, duration, force) {
+
+        if (color === undefined) { color = 0x000000; }
+        if (duration === undefined) { duration = 500; }
+        if (force === undefined) { force = false; }
+
+        if (!this.fx || (!force && this._fxDuration > 0))
+        {
+            return false;
+        }
+
+        this.fx.clear();
+
+        this.fx.beginFill(color);
+        this.fx.drawRect(0, 0, this.width, this.height);
+        this.fx.endFill();
+
+        this.fx.alpha = 0;
+
+        this._fxDuration = duration;
+        this._fxType = 1;
+
+        return true;
+
+    },
+
+    /**
     * The camera update loop. This is called automatically by the core game loop.
     *
     * @method Phaser.Camera#update
     * @protected
     */
     update: function () {
+
+        if (this._fxDuration > 0)
+        {
+            this.updateFX();
+        }
 
         if (this.target)
         {
@@ -372,6 +524,41 @@ Phaser.Camera.prototype = {
     },
 
     /**
+    * Update the camera flash and fade effects.
+    *
+    * @method Phaser.Camera#updateFX
+    * @private
+    */
+    updateFX: function () {
+
+        if (this._fxType === 0)
+        {
+            //  flash
+            this.fx.alpha -= this.game.time.elapsedMS / this._fxDuration;
+
+            if (this.fx.alpha <= 0)
+            {
+                this._fxDuration = 0;
+                this.fx.alpha = 0;
+                this.onFlashComplete.dispatch();
+            }
+        }
+        else
+        {
+            //  fade
+            this.fx.alpha += this.game.time.elapsedMS / this._fxDuration;
+
+            if (this.fx.alpha >= 1)
+            {
+                this._fxDuration = 0;
+                this.fx.alpha = 1;
+                this.onFadeComplete.dispatch();
+            }
+        }
+
+    },
+
+    /**
     * Update the camera shake effect.
     *
     * @method Phaser.Camera#updateShake
@@ -383,7 +570,7 @@ Phaser.Camera.prototype = {
 
         if (this._shake.duration <= 0)
         {
-            this.shakeOnComplete.dispatch();
+            this.onShakeComplete.dispatch();
             this._shake.x = 0;
             this._shake.y = 0;
         }
@@ -562,14 +749,37 @@ Phaser.Camera.prototype = {
 
     /**
     * Resets the camera back to 0,0 and un-follows any object it may have been tracking.
+    * Also immediately resets any camera effects that may have been running such as
+    * shake, flash or fade.
     *
     * @method Phaser.Camera#reset
     */
     reset: function () {
 
         this.target = null;
+
         this.view.x = 0;
         this.view.y = 0;
+
+        this._shake.duration = 0;
+
+        this.resetFX();
+
+    },
+
+    /**
+    * Resets any active FX, such as a fade or flash and immediately clears it.
+    * Useful to calling after a fade in order to remove the fade from the Stage.
+    *
+    * @method Phaser.Camera#resetFX
+    */
+    resetFX: function () {
+
+        this.fx.clear();
+
+        this.fx.alpha = 0;
+
+        this._fxDuration = 0;
 
     }
 

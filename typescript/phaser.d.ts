@@ -583,19 +583,23 @@ declare module Phaser {
         static SHAKE_BOTH: number;
         static SHAKE_HORIZONTAL: number;
         static SHAKE_VERTICAL: number;
+        static ENABLE_FX: number;
 
         atLimit: { x: boolean; y: boolean; };
         bounds: Phaser.Rectangle;
         deadzone: Phaser.Rectangle;
         displayObject: PIXI.DisplayObject;
         id: number;
+        fx: Phaser.Graphics;
         game: Phaser.Game;
         height: number;
         lerp: Phaser.Point;
         position: Phaser.Point;
         roundPx: boolean;
         scale: Phaser.Point;
-        shakeOnComplete: Phaser.Signal;
+        onFadeComplete: Phaser.Signal;
+        onFlashComplete: Phaser.Signal;
+        onShakeComplete: Phaser.Signal;
         target: Phaser.Sprite;
         totalInView: number;
         view: Phaser.Rectangle;
@@ -606,10 +610,13 @@ declare module Phaser {
         y: number;
 
         checkBounds(): void;
+        fade(color?: number, duration?: number, force?: boolean): boolean;
+        flash(color?: number, duration?: number, force?: boolean): boolean;
         focusOn(displayObject: PIXI.DisplayObject): void;
         focusOnXY(x: number, y: number): void;
         follow(target: Phaser.Sprite, style?: number, lerpX?: number, lerpY?: number): void;
         reset(): void;
+        resetFX(): void;
         setBoundsToWorld(): void;
         setPosition(x: number, y: number): void;
         setSize(width: number, height: number): void;
