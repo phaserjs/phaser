@@ -98,6 +98,17 @@ Phaser.Camera = function (game, id, x, y, width, height) {
     this.totalInView = 0;
 
     /**
+    * The linear interpolation value to use when following a target.
+    * The default values of 1 means the camera will instantly snap to the target coordinates.
+    * A lower value, such as 0.1 means the camera will more slowly track the target, giving
+    * a smooth transition. You can set the horizontal and vertical values independently, and also
+    * adjust this value in real-time during your game.
+    * @property {Phaser.Point} lerp
+    * @default
+    */
+    this.lerp = Phaser.Point(1, 1);
+
+    /**
     * @property {Phaser.Point} _targetPosition - Internal point used to calculate target position
     * @private
     */
@@ -158,6 +169,9 @@ Phaser.Camera.prototype = {
 
     /**
     * Tell the camera which sprite to follow.
+    *
+    * You can set the follow type and a linear interpolation value.
+    * Use low lerp values (such as 0.1) to automatically smooth the camera motion.
     * 
     * If you find you're getting a slight "jitter" effect when following a Sprite it's probably to do with sub-pixel rendering of the Sprite position.
     * This can be disabled by setting `game.renderer.renderSession.roundPixels = true` to force full pixel rendering.
@@ -165,12 +179,17 @@ Phaser.Camera.prototype = {
     * @method Phaser.Camera#follow
     * @param {Phaser.Sprite|Phaser.Image|Phaser.Text} target - The object you want the camera to track. Set to null to not follow anything.
     * @param {number} [style] - Leverage one of the existing "deadzone" presets. If you use a custom deadzone, ignore this parameter and manually specify the deadzone after calling follow().
+    * @param {float} [lerpX=1] - A value between 0 and 1. This value specifies the amount of linear interpolation to use when horizontally tracking the target. The closer the value to 1, the faster the camera will track.
+    * @param {float} [lerpY=1] - A value between 0 and 1. This value specifies the amount of linear interpolation to use when vertically tracking the target. The closer the value to 1, the faster the camera will track.
     */
-    follow: function (target, style) {
+    follow: function (target, style, lerpX, lerpY) {
 
         if (style === undefined) { style = Phaser.Camera.FOLLOW_LOCKON; }
+        if (lerpX === undefined) { lerpX = 1; }
+        if (lerpY === undefined) { lerpY = 1; }
 
         this.target = target;
+        this.lerp.set(lerpX, lerpY);
 
         var helper;
 
@@ -278,28 +297,28 @@ Phaser.Camera.prototype = {
 
             if (this._edge < this.deadzone.left)
             {
-                this.view.x = this._targetPosition.x - this.deadzone.left;
+                this.view.x = this.game.math.linear(this.view.x, this._targetPosition.x - this.deadzone.left, this.lerp.x);
             }
             else if (this._edge > this.deadzone.right)
             {
-                this.view.x = this._targetPosition.x - this.deadzone.right;
+                this.view.x = this.game.math.linear(this.view.x, this._targetPosition.x - this.deadzone.right, this.lerp.x);
             }
 
             this._edge = this._targetPosition.y - this.view.y;
 
             if (this._edge < this.deadzone.top)
             {
-                this.view.y = this._targetPosition.y - this.deadzone.top;
+                this.view.y = this.game.math.linear(this.view.y, this._targetPosition.y - this.deadzone.top, this.lerp.y);
             }
             else if (this._edge > this.deadzone.bottom)
             {
-                this.view.y = this._targetPosition.y - this.deadzone.bottom;
+                this.view.y = this.game.math.linear(this.view.y, this._targetPosition.y - this.deadzone.bottom, this.lerp.y);
             }
         }
         else
         {
-            this.view.x = this._targetPosition.x - this.view.halfWidth;
-            this.view.y = this._targetPosition.y - this.view.halfHeight;
+            this.view.x = this.game.math.linear(this.view.x, this._targetPosition.x - this.view.halfWidth, this.lerp.x);
+            this.view.y = this.game.math.linear(this.view.y, this._targetPosition.y - this.view.halfHeight, this.lerp.y);
         }
 
     },
