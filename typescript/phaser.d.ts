@@ -580,6 +580,9 @@ declare module Phaser {
         static FOLLOW_PLATFORMER: number;
         static FOLLOW_TOPDOWN: number;
         static FOLLOW_TOPDOWN_TIGHT: number;
+        static SHAKE_BOTH: number;
+        static SHAKE_HORIZONTAL: number;
+        static SHAKE_VERTICAL: number;
 
         atLimit: { x: boolean; y: boolean; };
         bounds: Phaser.Rectangle;
@@ -588,6 +591,7 @@ declare module Phaser {
         id: number;
         game: Phaser.Game;
         height: number;
+        lerp: Phaser.Point;
         position: Phaser.Point;
         roundPx: boolean;
         scale: Phaser.Point;
@@ -603,7 +607,7 @@ declare module Phaser {
         checkBounds(): void;
         focusOn(displayObject: PIXI.DisplayObject): void;
         focusOnXY(x: number, y: number): void;
-        follow(target: Phaser.Sprite, style?: number): void;
+        follow(target: Phaser.Sprite, style?: number, lerpX?: number, lerpY?: number): void;
         reset(): void;
         setBoundsToWorld(): void;
         setPosition(x: number, y: number): void;
