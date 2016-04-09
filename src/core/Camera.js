@@ -109,6 +109,11 @@ Phaser.Camera = function (game, id, x, y, width, height) {
     this.lerp = new Phaser.Point(1, 1);
 
     /**
+    * @property {Phaser.Signal} shakeOnComplete - This signal is dispatched when the camera shake effect completes.
+    */
+    this.shakeOnComplete = new Phaser.Signal();
+
+    /**
     * @property {Phaser.Point} _targetPosition - Internal point used to calculate target position.
     * @private
     */
@@ -128,6 +133,10 @@ Phaser.Camera = function (game, id, x, y, width, height) {
     */
     this._position = new Phaser.Point();
 
+    /**
+    * @property {Object} _shake - The shake effect container.
+    * @private
+    */
     this._shake = {
         intensity: 0,
         duration: 0,
@@ -137,8 +146,6 @@ Phaser.Camera = function (game, id, x, y, width, height) {
         x: 0,
         y: 0
     };
-
-    this.shakeOnComplete = new Phaser.Signal();
 
 };
 
@@ -299,6 +306,7 @@ Phaser.Camera.prototype = {
     * @param {boolean} [force=true] - If a camera shake effect is already running and force is true it will replace the previous effect, resetting the duration.
     * @param {number} [direction=Phaser.Camera.SHAKE_BOTH] - The directions in which the camera can shake. Either Phaser.Camera.SHAKE_BOTH, Phaser.Camera.SHAKE_HORIZONTAL or Phaser.Camera.SHAKE_VERTICAL.
     * @param {boolean} [shakeBounds=true] - Is the effect allowed to shake the camera beyond its bounds (if set?).
+    * @return {boolean} True if the shake effect was started, otherwise false.
     */
     shake: function (intensity, duration, force, direction, shakeBounds) {
 
@@ -311,7 +319,7 @@ Phaser.Camera.prototype = {
         if (!force && this._shake.duration > 0)
         {
             //  Can't reset an already running shake
-            return;
+            return false;
         }
 
         this._shake.intensity = intensity;
@@ -324,11 +332,15 @@ Phaser.Camera.prototype = {
         this._shake.horizontal = (direction === Phaser.Camera.SHAKE_BOTH || direction === Phaser.Camera.SHAKE_HORIZONTAL);
         this._shake.vertical = (direction === Phaser.Camera.SHAKE_BOTH || direction === Phaser.Camera.SHAKE_VERTICAL);
 
+        return true;
+
     },
 
     /**
-    * Update focusing and scrolling.
+    * The camera update loop. This is called automatically by the core game loop.
+    *
     * @method Phaser.Camera#update
+    * @protected
     */
     update: function () {
 
@@ -359,6 +371,12 @@ Phaser.Camera.prototype = {
 
     },
 
+    /**
+    * Update the camera shake effect.
+    *
+    * @method Phaser.Camera#updateShake
+    * @private
+    */
     updateShake: function () {
 
         this._shake.duration -= this.game.time.elapsedMS;
@@ -385,7 +403,8 @@ Phaser.Camera.prototype = {
     },
 
     /**
-    * Internal method
+    * Internal method that handles tracking a sprite.
+    *
     * @method Phaser.Camera#updateTarget
     * @private
     */
@@ -427,6 +446,7 @@ Phaser.Camera.prototype = {
 
     /**
     * Update the Camera bounds to match the game world.
+    *
     * @method Phaser.Camera#setBoundsToWorld
     */
     setBoundsToWorld: function () {
@@ -440,7 +460,10 @@ Phaser.Camera.prototype = {
 
     /**
     * Method called to ensure the camera doesn't venture outside of the game world.
+    * Called automatically by Camera.update.
+    *
     * @method Phaser.Camera#checkBounds
+    * @protected
     */
     checkBounds: function () {
 
@@ -562,7 +585,9 @@ Phaser.Camera.prototype.constructor = Phaser.Camera;
 Object.defineProperty(Phaser.Camera.prototype, "x", {
 
     get: function () {
+
         return this.view.x;
+
     },
 
     set: function (value) {
@@ -585,7 +610,9 @@ Object.defineProperty(Phaser.Camera.prototype, "x", {
 Object.defineProperty(Phaser.Camera.prototype, "y", {
 
     get: function () {
+
         return this.view.y;
+
     },
 
     set: function (value) {
@@ -608,8 +635,11 @@ Object.defineProperty(Phaser.Camera.prototype, "y", {
 Object.defineProperty(Phaser.Camera.prototype, "position", {
 
     get: function () {
+
         this._position.set(this.view.x, this.view.y);
+
         return this._position;
+
     },
 
     set: function (value) {
@@ -633,11 +663,15 @@ Object.defineProperty(Phaser.Camera.prototype, "position", {
 Object.defineProperty(Phaser.Camera.prototype, "width", {
 
     get: function () {
+
         return this.view.width;
+
     },
 
     set: function (value) {
+
         this.view.width = value;
+
     }
 
 });
@@ -650,11 +684,15 @@ Object.defineProperty(Phaser.Camera.prototype, "width", {
 Object.defineProperty(Phaser.Camera.prototype, "height", {
 
     get: function () {
+
         return this.view.height;
+
     },
 
     set: function (value) {
+
         this.view.height = value;
+
     }
 
 });

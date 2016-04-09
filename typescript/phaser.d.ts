@@ -595,6 +595,7 @@ declare module Phaser {
         position: Phaser.Point;
         roundPx: boolean;
         scale: Phaser.Point;
+        shakeOnComplete: Phaser.Signal;
         target: Phaser.Sprite;
         totalInView: number;
         view: Phaser.Rectangle;
@@ -612,6 +613,7 @@ declare module Phaser {
         setBoundsToWorld(): void;
         setPosition(x: number, y: number): void;
         setSize(width: number, height: number): void;
+        shake(intensity?: number, duration?: number, force?: boolean, direction?: number, shakeBounds?: boolean): boolean;
         unfollow(): void;
         update(): void;
 
