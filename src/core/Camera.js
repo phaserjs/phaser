@@ -109,7 +109,7 @@ Phaser.Camera = function (game, id, x, y, width, height) {
     this.lerp = new Phaser.Point(1, 1);
 
     /**
-    * @property {Phaser.Point} _targetPosition - Internal point used to calculate target position
+    * @property {Phaser.Point} _targetPosition - Internal point used to calculate target position.
     * @private
     */
     this._targetPosition = new Phaser.Point();
@@ -133,6 +133,7 @@ Phaser.Camera = function (game, id, x, y, width, height) {
         duration: 0,
         horizontal: false,
         vertical: false,
+        shakeBounds: true,
         x: 0,
         y: 0
     };
@@ -286,6 +287,46 @@ Phaser.Camera.prototype = {
     },
 
     /**
+    * This creates a camera shake effect. It works by applying a random amount of additional
+    * spacing on the x and y axis each frame. You can control the intensity and duration
+    * of the effect, and if it should effect both axis or just one.
+    *
+    * When the shake effect ends the signal Camera.shakeOnComplete is dispatched.
+    *
+    * @method Phaser.Camera#shake
+    * @param {float} [intensity=0.05] - The intensity of the camera shake. Given as a percentage of the camera size representing the maximum distance that the camera can move while shaking.
+    * @param {number} [duration=500] - The duration of the shake effect in milliseconds.
+    * @param {boolean} [force=true] - If a camera shake effect is already running and force is true it will replace the previous effect, resetting the duration.
+    * @param {number} [direction=Phaser.Camera.SHAKE_BOTH] - The directions in which the camera can shake. Either Phaser.Camera.SHAKE_BOTH, Phaser.Camera.SHAKE_HORIZONTAL or Phaser.Camera.SHAKE_VERTICAL.
+    * @param {boolean} [shakeBounds=true] - Is the effect allowed to shake the camera beyond its bounds (if set?).
+    */
+    shake: function (intensity, duration, force, direction, shakeBounds) {
+
+        if (intensity === undefined) { intensity = 0.05; }
+        if (duration === undefined) { duration = 500; }
+        if (force === undefined) { force = true; }
+        if (direction === undefined) { direction = Phaser.Camera.SHAKE_BOTH; }
+        if (shakeBounds === undefined) { shakeBounds = true; }
+
+        if (!force && this._shake.duration > 0)
+        {
+            //  Can't reset an already running shake
+            return;
+        }
+
+        this._shake.intensity = intensity;
+        this._shake.duration = duration;
+        this._shake.shakeBounds = shakeBounds;
+
+        this._shake.x = 0;
+        this._shake.y = 0;
+
+        this._shake.horizontal = (direction === Phaser.Camera.SHAKE_BOTH || direction === Phaser.Camera.SHAKE_HORIZONTAL);
+        this._shake.vertical = (direction === Phaser.Camera.SHAKE_BOTH || direction === Phaser.Camera.SHAKE_VERTICAL);
+
+    },
+
+    /**
     * Update focusing and scrolling.
     * @method Phaser.Camera#update
     */
@@ -309,10 +350,12 @@ Phaser.Camera.prototype = {
         if (this.roundPx)
         {
             this.view.floor();
+            this._shake.x = Math.floor(this._shake.x);
+            this._shake.y = Math.floor(this._shake.y);
         }
 
-        this.displayObject.position.x = -this.view.x + this._shake.x;
-        this.displayObject.position.y = -this.view.y + this._shake.y;
+        this.displayObject.position.x = -(this.view.x + this._shake.x);
+        this.displayObject.position.y = -(this.view.y + this._shake.y);
 
     },
 
@@ -338,30 +381,6 @@ Phaser.Camera.prototype = {
                 this._shake.y = this.game.rnd.frac() * this._shake.intensity * this.view.height * 2 - this._shake.intensity * this.view.height;
             }
         }
-
-    },
-
-    shake: function (intensity, duration, force, direction) {
-
-        if (intensity === undefined) { intensity = 0.05; }
-        if (duration === undefined) { duration = 500; }
-        if (force === undefined) { force = true; }
-        if (direction === undefined) { direction = Phaser.Camera.SHAKE_BOTH; }
-
-        if (!force && this._shake.duration > 0)
-        {
-            //  Can't reset an already running shake
-            return;
-        }
-
-        this._shake.intensity = intensity;
-        this._shake.duration = duration;
-
-        this._shake.x = 0;
-        this._shake.y = 0;
-
-        this._shake.horizontal = (direction === Phaser.Camera.SHAKE_BOTH || direction === Phaser.Camera.SHAKE_HORIZONTAL);
-        this._shake.vertical = (direction === Phaser.Camera.SHAKE_BOTH || direction === Phaser.Camera.SHAKE_VERTICAL);
 
     },
 
@@ -428,29 +447,58 @@ Phaser.Camera.prototype = {
         this.atLimit.x = false;
         this.atLimit.y = false;
 
+        var vx = this.view.x + this._shake.x;
+        var vw = this.view.right + this._shake.x;
+        var vy = this.view.y + this._shake.y;
+        var vh = this.view.bottom + this._shake.y;
+
         //  Make sure we didn't go outside the cameras bounds
-        if (this.view.x <= this.bounds.x * this.scale.x)
+        if (vx <= this.bounds.x * this.scale.x)
         {
             this.atLimit.x = true;
             this.view.x = this.bounds.x * this.scale.x;
+
+            if (!this._shake.shakeBounds)
+            {
+                //  The camera is up against the bounds, so reset the shake
+                this._shake.x = 0;
+            }
         }
 
-        if (this.view.right >= this.bounds.right * this.scale.x)
+        if (vw >= this.bounds.right * this.scale.x)
         {
             this.atLimit.x = true;
             this.view.x = (this.bounds.right * this.scale.x) - this.width;
+
+            if (!this._shake.shakeBounds)
+            {
+                //  The camera is up against the bounds, so reset the shake
+                this._shake.x = 0;
+            }
         }
 
-        if (this.view.y <= this.bounds.top * this.scale.y)
+        if (vy <= this.bounds.top * this.scale.y)
         {
             this.atLimit.y = true;
             this.view.y = this.bounds.top * this.scale.y;
+
+            if (!this._shake.shakeBounds)
+            {
+                //  The camera is up against the bounds, so reset the shake
+                this._shake.y = 0;
+            }
         }
 
-        if (this.view.bottom >= this.bounds.bottom * this.scale.y)
+        if (vh >= this.bounds.bottom * this.scale.y)
         {
             this.atLimit.y = true;
             this.view.y = (this.bounds.bottom * this.scale.y) - this.height;
+
+            if (!this._shake.shakeBounds)
+            {
+                //  The camera is up against the bounds, so reset the shake
+                this._shake.y = 0;
+            }
         }
 
     },
