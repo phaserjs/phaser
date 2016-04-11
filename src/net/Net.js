@@ -150,8 +150,8 @@ Phaser.Net.prototype = {
     },
 
     /**
-    * Returns the Query String as an object.
-    * If you specify a parameter it will return just the value of that parameter, should it exist.
+    * Takes a Uniform Resource Identifier (URI) component (previously created by encodeURIComponent or by a similar routine) and
+    * decodes it, replacing \ with spaces in the return. Used internally by the Net classes.
     *
     * @method Phaser.Net#decodeURI
     * @param {string} value - The URI component to be decoded.
