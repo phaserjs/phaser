@@ -1327,6 +1327,7 @@ declare module Phaser {
         parent?: any;
         transparent?: boolean;
         antialias?: boolean;
+        resolution?: number;
         preserveDrawingBuffer?: boolean;
         physicsConfig?: any;
         seed?: string;
