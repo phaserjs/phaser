@@ -82,6 +82,14 @@ Phaser.Physics.Arcade = function (game) {
     */
     this._total = 0;
 
+    this._pos1 = { x: 0, y: 0 };
+    this._pos2 = { x: 0, y: 0 };
+
+    this._vel1 = { x: 0, y: 0 };
+    this._vel2 = { x: 0, y: 0 };
+
+    this._velF = { x1: 0, y1: 0, x2: 0, y2: 0 };
+
     // By default we want the bounds the same size as the world bounds
     this.setBoundsToWorld();
 
@@ -1061,7 +1069,108 @@ Phaser.Physics.Arcade.prototype = {
 
     },
 
-    separateCircleFull: function (body1, body2, overlapOnly) {
+    separateCircle: function (body1, body2, overlapOnly) {
+
+        //   body1 = paddle (lower)
+        //   body2 = ball (top)
+
+        //  Set the bounding box overlap values
+        // this.getOverlapX(body1, body2);
+        // this.getOverlapY(body1, body2);
+
+        var collisionDistance = body1.radius + body2.radius;
+        var actualDistance = Phaser.Math.distance(body1.center.x, body1.center.y, body2.center.x, body2.center.y);
+        var overlap = (collisionDistance - actualDistance) + this.OVERLAP_BIAS;
+
+        if (overlap > 0)
+        {
+            var collNormalAngle = Math.atan2(body2.center.y - body1.center.y, body2.center.x - body1.center.x);
+
+            var sin = Math.sin(collNormalAngle);
+            var cos = Math.cos(collNormalAngle);
+
+            // console.log('col', collisionDistance, 'actual', actualDistance, 'overlap', overlap);
+            // console.log('normal', collNormalAngle, sin, cos);
+
+            var move1 = overlap * (body2.mass / (body1.mass + body2.mass));
+            var move2 = overlap * (body1.mass / (body1.mass + body2.mass));
+
+            // console.log('paddle', body1.x, body1.y, body1.top, body1.bottom);
+            // console.log('ball', body2.x, body2.y, body2.top, body2.bottom);
+
+            body1.x += move1 * Math.cos(collNormalAngle + 3.141592653589793);
+            body1.y += move1 * Math.sin(collNormalAngle + 3.141592653589793);
+
+            body2.x += move2 * cos;
+            body2.y += move2 * sin;
+
+            // console.log('paddle', body1.x, body1.y, body1.top, body1.bottom);
+            // console.log('ball', body2.x, body2.y, body2.top, body2.bottom);
+
+            // console.log('move', move1, move2);
+
+            // ' COLLISION RESPONSE
+            // ' n = vector connecting the centers of the balls.
+            // ' we are finding the components of the normalised vector n
+            var nX = cos;
+            var nY = sin;
+
+            // ' now find the length of the components of each movement vectors
+            // ' along n, by using dot product.
+            var a1 = body1.velocity.x * nX + body1.velocity.y * nY;
+            var a2 = body2.velocity.x * nX + body2.velocity.y * nY;
+            var optimisedP = (2.0 * (a1 - a2)) / (body1.mass + body2.mass);
+
+            // ' now find out the resultant vectors
+            // '' Local r1% = c1.v - optimisedP * mass2 * n
+
+            // console.log('v1', body1.velocity.y);
+            // console.log('v2', body2.velocity.y);
+
+            //  Full exchange of velocity from one to the other (snooker ball style)
+
+            body1.velocity.x -= (optimisedP * body2.mass * nX);
+            body1.velocity.y -= (optimisedP * body2.mass * nY);
+
+            // '' Local r2% = c2.v - optimisedP * mass1 * n
+            body2.velocity.x += (optimisedP * body1.mass * nX);
+            body2.velocity.y += (optimisedP * body1.mass * nY);
+
+            // console.log('av1', body1.velocity.y);
+            // console.log('av2', body2.velocity.y);
+
+            // body1.center.setTo(body1.position.x + body1.halfWidth, body1.position.y + body1.halfHeight);
+            // body2.center.setTo(body2.position.x + body2.halfWidth, body2.position.y + body2.halfHeight);
+            // console.log('still intersects?', this.intersects(body1, body2));
+
+            // console.log('paddle', body1.x, body1.y, body1.top, body1.bottom);
+            // console.log('ball', body2.x, body2.y, body2.top, body2.bottom);
+            // debugger;
+
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
+    },
+
+    /**
+    * The core separation function to separate two circular physics bodies.
+    *
+    * @method Phaser.Physics.Arcade#separateCircle
+    * @private
+    * @param {Phaser.Physics.Arcade.Body} body1 - The first Body to separate. Must have `Body.isCircle` true and a positive `radius`.
+    * @param {Phaser.Physics.Arcade.Body} body2 - The second Body to separate. Must have `Body.isCircle` true and a positive `radius`.
+    * @param {boolean} overlapOnly - If true the bodies will only have their overlap data set, no separation or exchange of velocity will take place.
+    * @return {boolean} Returns true if the bodies were separated or overlap, otherwise false.
+    */
+    DseparateCircle: function (body1, body2, overlapOnly) {
+
+        //  Set the bounding box overlap values
+        this.getOverlapX(body1, body2);
+        this.getOverlapY(body1, body2);
 
         var dx = body2.center.x - body1.center.x;
         var dy = body2.center.y - body1.center.y;
@@ -1070,53 +1179,154 @@ Phaser.Physics.Arcade.prototype = {
         var sin = Math.sin(angle);
         var cos = Math.cos(angle);
 
-        //  Rotate the first body
-        var pos0 = new Phaser.Point(0, 0);
-        var pos1 = this.rotate(dx, dy, sin, cos, true);
+        this._pos1.x = 0;
+        this._pos1.y = 0;
 
-        var vel0 = this.rotate(body1.velocity.x, body1.velocity.y, sin, cos, true);
-        var vel1 = this.rotate(body2.velocity.x, body2.velocity.y, sin, cos, true);
+        //  Rotate the second body to the angle of the first
+        this.rotate(this._pos2, dx, dy, sin, cos, true);
 
-        var vxTotal = vel0.x - vel1.x;
+        //  Rotate the velocities
+        this.rotate(this._vel1, body1.velocity.x, body1.velocity.y, sin, cos, true);
+        this.rotate(this._vel2, body2.velocity.x, body2.velocity.y, sin, cos, true);
 
-        vel0.x = ((body1.mass - body2.mass) * vel0.x +
-            2 * body2.mass * vel1.x) /
-            (body1.mass + body2.mass);
-        vel1.x = vxTotal + vel0.x;
+        //  Calculate overlap
+        if (body1.mass === body2.mass)
+        {
+            //  Swap 'em
+            var tempX = this._vel1.x;
+            var tempY = this._vel1.y;
 
-        //  Same mass swap optimisation
-        // var temp = vel0;
-        // vel0 = vel1;
-        // vel1 = temp;
+            this._vel1.x = this._vel2.x;
+            this._vel1.y = this._vel2.y;
 
-        pos0.x += vel0.x * this.game.time.physicsElapsed;
-        pos1.x += vel1.x * this.game.time.physicsElapsed;
+            this._vel2.x = tempX;
+            this._vel2.y = tempY;
+        }
+        else
+        {
+            //  Mass based exchange
+            var vxTotal = this._vel1.x - this._vel2.x;
 
-        var pos0F = this.rotate(pos0.x, pos0.y, sin, cos, false);
-        var pos1F = this.rotate(pos1.x, pos1.y, sin, cos, false);
+            this._vel1.x = ((body1.mass - body2.mass) * this._vel1.x + 2 * body2.mass * this._vel2.x) / (body1.mass + body2.mass);
+            this._vel2.x = vxTotal + this._vel1.x;
+        }
 
-        body2.x = body1.x + pos1F.x;
-        body2.y = body1.y + pos1F.y;
+        // var absV = Math.abs(this._vel1.x) + Math.abs(this._vel2.x);
+        // var overlap = (body1.radius + body2.radius) - Math.abs(body1.center.x - body2.center.x);
+        var overlap = (body1.radius + body2.radius) - Phaser.Math.distance(body1.center.x, body1.center.y, body2.center.x, body2.center.y);
 
-        body1.x = body1.x + pos0F.x;
-        body1.y = body1.y + pos0F.y;
+        //  Resets the overlapR to zero if there is no overlap, or to the actual pixel value if there is
+        // body1.overlapR = (this._vel1.x / absV * overlap);
+        // body2.overlapR = (this._vel2.x / absV * overlap);
 
-        var vel0F = this.rotate(vel0.x, vel0.y, sin, cos, false);
-        var vel1F = this.rotate(vel1.x, vel1.y, sin, cos, false);
+        body1.overlapR = overlap * 0.5;
+        body2.overlapR = overlap * 0.5;
 
-        body1.velocity.x = vel0F.x;
-        body1.velocity.y = vel0F.y;
+        // console.log('overlapR', overlap, 'r', body1.overlapR, body2.overlapR);
 
-        body2.velocity.x = vel1F.x;
-        body2.velocity.y = vel1F.y;
+        //  Can't separate two immovable bodies, or a body with its own custom separation logic
+        if (overlapOnly || overlap === 0 || (body1.immovable && body2.immovable) || body1.customSeparateX || body2.customSeparateX)
+        {
+            //  return true if there was some overlap, otherwise false
+            return (overlap !== 0);
+        }
+
+        //  Adjust their positions and velocities accordingly (if there was any overlap)
+        if (!body1.immovable && !body2.immovable)
+        {
+            //  Equal separation
+            this._pos1.x += (this._vel1.x + body1.overlapR) * this.game.time.physicsElapsed;
+            this._pos2.x += (this._vel2.x + body2.overlapR) * this.game.time.physicsElapsed;
+
+            this._vel1.x = this._velF.x1 * body1.bounce.x;
+            this._vel1.y = this._velF.y1 * body1.bounce.y;
+
+            this._vel2.x = this._velF.x2 * body2.bounce.x;
+            this._vel2.y = this._velF.y2 * body2.bounce.y;
+        }
+        else if (body1.immovable)
+        {
+            this._pos2.x += (this._vel2.x * this.game.time.physicsElapsed) + overlap;
+            this._pos2.y += (this._vel2.y * this.game.time.physicsElapsed) + overlap;
+        }
+        else
+        {
+            this._pos1.x += (this._vel1.x * this.game.time.physicsElapsed) + overlap;
+            this._pos1.y += (this._vel1.y * this.game.time.physicsElapsed) + overlap;
+        }
+
+        //  Rotate positions back again
+        this.rotate(this._pos1, this._pos1.x, this._pos1.y, sin, cos, false);
+        this.rotate(this._pos2, this._pos2.x, this._pos2.y, sin, cos, false);
+
+        //  Rotate velocity back again
+        this.rotate(this._vel1, this._vel1.x, this._vel1.y, sin, cos, false);
+        this.rotate(this._vel2, this._vel2.x, this._vel2.y, sin, cos, false);
+
+        //  Apply to bodies
+
+        // console.log('current pos1', body1.y);
+        // console.log('current pos2', body2.y);
+
+        body2.x = body1.x + this._pos2.x;
+        body2.y = body1.y + this._pos2.y;
+
+        body1.x = body1.x + this._pos1.x;
+        body1.y = body1.y + this._pos1.y;
+
+        // console.log('after pos1', body1.y);
+        // console.log('after pos2', body2.y);
+
+        if (!body1.immovable && !body2.immovable)
+        {
+            body1.velocity.x = this._vel1.x;
+            body1.velocity.y = this._vel1.y;
+
+            body2.velocity.x = this._vel2.x;
+            body2.velocity.y = this._vel2.y;
+        }
+        else if (body1.immovable)
+        {
+            //  Only move body2
+
+            // console.log('current vel1', body1.velocity.y);
+            // console.log('current vel2', body2.velocity.y);
+
+            body2.velocity.x = body1.velocity.x - body2.velocity.x * body2.bounce.x;
+            body2.velocity.y = body1.velocity.y - body2.velocity.y * body2.bounce.y;
+
+            // console.log('new vel1', body1.velocity.y - body2.velocity.y * body2.bounce.y);
+            // console.log('new vel2', body2.velocity.y);
+        }
+        else
+        {
+            //  Only move body1
+
+            body1.velocity.x = body2.velocity.x - body1.velocity.x * body1.bounce.x;
+            body1.velocity.y = body2.velocity.y - body1.velocity.y * body1.bounce.y;
+        }
+
+        // console.log('still intersects?', this.intersects(body1, body2));
+        // debugger;
 
         return true;
 
     },
 
-    rotate: function (x, y, sin, cos, reverse) {
-
-        var result = new Phaser.Point();
+    /**
+    * Point rotation method, used by circle separation.
+    *
+    * @method Phaser.Physics.Arcade#rotate
+    * @private
+    * @param {Object|Phaser.Point} result - The Point-like object in which to store the calculation results.
+    * @param {float} x - The x component.
+    * @param {float} y - The y component.
+    * @param {float} sin - The sin of the rotation.
+    * @param {float} cos - The cos of the rotation.
+    * @param {boolean} reverse - True to rotate back, false to rotate forward.
+    * @return {Object|Phaser.Point} The result object.
+    */
+    rotate: function (result, x, y, sin, cos, reverse) {
 
         if (reverse)
         {
@@ -1133,82 +1343,7 @@ Phaser.Physics.Arcade.prototype = {
 
     },
 
-    separateCircle: function (body1, body2, overlapOnly) {
-
-        //  Get the angle between the two circles
-        var dx = body2.center.x - body1.center.x;
-        var dy = body2.center.y - body1.center.y;
-
-        var angle = Math.atan2(dy, dx);
-        var sin = Math.sin(angle);
-        var cos = Math.cos(angle);
-
-        //  Rotate body1 (our origin)
-        var x0 = 0;
-        var y0 = 0;
-
-        //  Rotate body2
-        var x1 = dx * cos + dy * sin;
-        var y1 = dy * cos - dx * sin;
-
-        //  Rotate velocities
-        var vx0 = body1.velocity.x * cos + body1.velocity.y * sin;
-        var vy0 = body1.velocity.y * cos - body1.velocity.x * sin;
-
-        var vx1 = body2.velocity.x * cos + body2.velocity.y * sin;
-        var vy1 = body2.velocity.y * cos - body2.velocity.x * sin;
-
-        //  Separation
-        var vxTotal = vx0 - vx1;
-
-        vx0 = ((body1.mass - body2.mass) * vx0 + 2 * body2.mass * vx1) / (body1.mass + body2.mass);
-        vx1 = vxTotal + vx0;
-
-        var absV = Math.abs(vx0) + Math.abs(vx1);
-        var overlap = (body1.radius + body2.radius) - Math.abs(x0 - x1);
-
-        // x0 += vx0 / absV * overlap;
-        // x1 += vx1 / absV * overlap;
-
-        x0 += vx0 * this.game.time.physicsElapsed;
-        x1 += vx1 * this.game.time.physicsElapsed;
-
-        //  Rotate positions back
-        var x0Final = x0 * cos - y0 * sin;
-        var y0Final = y0 * cos + x0 * sin;
-
-        var x1Final = x1 * cos - y1 * sin;
-        var y1Final = y1 * cos + x1 * sin;
-
-        //  Get new position (based on body1 being the pivot point of the system)
-        body2.x = body1.x + x1Final;
-        body2.y = body1.y + y1Final;
-
-        body1.x = body1.x + x0Final;
-        body1.y = body1.y + y0Final;
-
-        //  Set new velocities
-        body1.velocity.x = vx0 * cos - vy0 * sin;
-        body1.velocity.y = vy0 * cos + vx0 * sin;
-
-        body2.velocity.x = vx1 * cos - vy1 * sin;
-        body2.velocity.y = vy1 * cos + vx1 * sin;
-
-        return true;
-
-    },
-
-    /**
-    * The core separation function to separate two physics bodies on the x axis.
-    *
-    * @private
-    * @method Phaser.Physics.Arcade#separateX
-    * @param {Phaser.Physics.Arcade.Body} body1 - The first Body to separate.
-    * @param {Phaser.Physics.Arcade.Body} body2 - The second Body to separate.
-    * @param {boolean} overlapOnly - If true the bodies will only have their overlap data set, no separation or exchange of velocity will take place.
-    * @return {boolean} Returns true if the bodies were separated or overlap, otherwise false.
-    */
-    separateX: function (body1, body2, overlapOnly) {
+    getOverlapX: function (body1, body2) {
 
         var overlap = 0;
         var maxOverlap = body1.deltaAbsX() + body2.deltaAbsX() + this.OVERLAP_BIAS;
@@ -1258,73 +1393,11 @@ Phaser.Physics.Arcade.prototype = {
         body1.overlapX = overlap;
         body2.overlapX = overlap;
 
-        //  Can't separate two immovable bodies, or a body with its own custom separation logic
-        if (overlapOnly || overlap === 0 || (body1.immovable && body2.immovable) || body1.customSeparateX || body2.customSeparateX)
-        {
-            //  return true if there was some overlap, otherwise false
-            return (overlap !== 0);
-        }
-
-        //  Adjust their positions and velocities accordingly (if there was any overlap)
-        var v1 = body1.velocity.x;
-        var v2 = body2.velocity.x;
-
-        if (!body1.immovable && !body2.immovable)
-        {
-            overlap *= 0.5;
-
-            body1.x -= overlap;
-            body2.x += overlap;
-
-            var nv1 = Math.sqrt((v2 * v2 * body2.mass) / body1.mass) * ((v2 > 0) ? 1 : -1);
-            var nv2 = Math.sqrt((v1 * v1 * body1.mass) / body2.mass) * ((v1 > 0) ? 1 : -1);
-            var avg = (nv1 + nv2) * 0.5;
-
-            nv1 -= avg;
-            nv2 -= avg;
-
-            body1.velocity.x = avg + nv1 * body1.bounce.x;
-            body2.velocity.x = avg + nv2 * body2.bounce.x;
-        }
-        else if (!body1.immovable)
-        {
-            body1.x -= overlap;
-            body1.velocity.x = v2 - v1 * body1.bounce.x;
-
-            //  This is special case code that handles things like vertically moving platforms you can ride
-            if (body2.moves)
-            {
-                body1.y += (body2.y - body2.prev.y) * body2.friction.y;
-            }
-        }
-        else if (!body2.immovable)
-        {
-            body2.x += overlap;
-            body2.velocity.x = v1 - v2 * body2.bounce.x;
-
-            //  This is special case code that handles things like vertically moving platforms you can ride
-            if (body1.moves)
-            {
-                body2.y += (body1.y - body1.prev.y) * body1.friction.y;
-            }
-        }
-
-        //  If we got this far then there WAS overlap, and separation is complete, so return true
-        return true;
+        return overlap;
 
     },
 
-    /**
-    * The core separation function to separate two physics bodies on the y axis.
-    *
-    * @private
-    * @method Phaser.Physics.Arcade#separateY
-    * @param {Phaser.Physics.Arcade.Body} body1 - The first Body to separate.
-    * @param {Phaser.Physics.Arcade.Body} body2 - The second Body to separate.
-    * @param {boolean} overlapOnly - If true the bodies will only have their overlap data set, no separation or exchange of velocity will take place.
-    * @return {boolean} Returns true if the bodies were separated or overlap, otherwise false.
-    */
-    separateY: function (body1, body2, overlapOnly) {
+    getOverlapY: function (body1, body2) {
 
         var overlap = 0;
         var maxOverlap = body1.deltaAbsY() + body2.deltaAbsY() + this.OVERLAP_BIAS;
@@ -1374,6 +1447,94 @@ Phaser.Physics.Arcade.prototype = {
         body1.overlapY = overlap;
         body2.overlapY = overlap;
 
+        return overlap;
+
+    },
+
+    /**
+    * The core separation function to separate two physics bodies on the x axis.
+    *
+    * @method Phaser.Physics.Arcade#separateX
+    * @private
+    * @param {Phaser.Physics.Arcade.Body} body1 - The first Body to separate.
+    * @param {Phaser.Physics.Arcade.Body} body2 - The second Body to separate.
+    * @param {boolean} overlapOnly - If true the bodies will only have their overlap data set, no separation or exchange of velocity will take place.
+    * @return {boolean} Returns true if the bodies were separated or overlap, otherwise false.
+    */
+    separateX: function (body1, body2, overlapOnly) {
+
+        var overlap = this.getOverlapX(body1, body2);
+
+        //  Can't separate two immovable bodies, or a body with its own custom separation logic
+        if (overlapOnly || overlap === 0 || (body1.immovable && body2.immovable) || body1.customSeparateX || body2.customSeparateX)
+        {
+            //  return true if there was some overlap, otherwise false
+            return (overlap !== 0);
+        }
+
+        //  Adjust their positions and velocities accordingly (if there was any overlap)
+        var v1 = body1.velocity.x;
+        var v2 = body2.velocity.x;
+
+        if (!body1.immovable && !body2.immovable)
+        {
+            overlap *= 0.5;
+
+            body1.x -= overlap;
+            body2.x += overlap;
+
+            var nv1 = Math.sqrt((v2 * v2 * body2.mass) / body1.mass) * ((v2 > 0) ? 1 : -1);
+            var nv2 = Math.sqrt((v1 * v1 * body1.mass) / body2.mass) * ((v1 > 0) ? 1 : -1);
+            var avg = (nv1 + nv2) * 0.5;
+
+            nv1 -= avg;
+            nv2 -= avg;
+
+            body1.velocity.x = avg + nv1 * body1.bounce.x;
+            body2.velocity.x = avg + nv2 * body2.bounce.x;
+        }
+        else if (!body1.immovable)
+        {
+            body1.x -= overlap;
+            body1.velocity.x = v2 - v1 * body1.bounce.x;
+
+            //  This is special case code that handles things like vertically moving platforms you can ride
+            if (body2.moves)
+            {
+                body1.y += (body2.y - body2.prev.y) * body2.friction.y;
+            }
+        }
+        else
+        {
+            body2.x += overlap;
+            body2.velocity.x = v1 - v2 * body2.bounce.x;
+
+            //  This is special case code that handles things like vertically moving platforms you can ride
+            if (body1.moves)
+            {
+                body2.y += (body1.y - body1.prev.y) * body1.friction.y;
+            }
+        }
+
+        //  If we got this far then there WAS overlap, and separation is complete, so return true
+        return true;
+
+    },
+
+    /**
+    * The core separation function to separate two physics bodies on the y axis.
+    *
+    * @private
+    * @method Phaser.Physics.Arcade#separateY
+    * @param {Phaser.Physics.Arcade.Body} body1 - The first Body to separate.
+    * @param {Phaser.Physics.Arcade.Body} body2 - The second Body to separate.
+    * @param {boolean} overlapOnly - If true the bodies will only have their overlap data set, no separation or exchange of velocity will take place.
+    * @return {boolean} Returns true if the bodies were separated or overlap, otherwise false.
+    */
+    separateY: function (body1, body2, overlapOnly) {
+
+        var overlap = this.getOverlapY(body1, body2);
+
         //  Can't separate two immovable bodies, or a body with its own custom separation logic
         if (overlapOnly || overlap === 0 || (body1.immovable && body2.immovable) || body1.customSeparateY || body2.customSeparateY)
         {
@@ -1413,7 +1574,7 @@ Phaser.Physics.Arcade.prototype = {
                 body1.x += (body2.x - body2.prev.x) * body2.friction.x;
             }
         }
-        else if (!body2.immovable)
+        else
         {
             body2.y += overlap;
             body2.velocity.y = v1 - v2 * body2.bounce.y;

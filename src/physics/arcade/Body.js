@@ -283,6 +283,12 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.overlapY = 0;
 
     /**
+    * If `Body.isCircle` is true, and this body collides with another circular body, the amount of overlap is stored here.
+    * @property {number} overlapR - The amount of overlap during the collision.
+    */
+    this.overlapR = 0;
+
+    /**
     * If a body is overlapping with another body, but neither of them are moving (maybe they spawned on-top of each other?) this is set to true.
     * @property {boolean} embedded - Body embed value.
     */

@@ -347,11 +347,10 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * World.separate has been optimized to cut down on the number of calls to `intersect` from 3 calls per Game Object collision check, to 2. So if you were colliding 50 sprites it will reduce the call count from 150 to 100 per frame. It also reduces the calls made to `seperateX` and `seperateY` by the same factor.
 * Two immovable bodies would never set their overlap data, even if an overlap only check was being made. As this is useful data to have this has been changed. Two immovable bodies will still never separate from each other, but they _will_ have their `overlapX` and `overlapY` properties calculated now.
 
-
 ### Updates
 
 * TypeScript definitions fixes and updates (thanks @clark-stevenson)
-* Docs typo fixes (thanks @thiagojobson)
+* Docs typo fixes (thanks @thiagojobson @hayesmaker)
 * Removed a `console.log` from the TilingSprite generator.
 * Sound.position can no longer become negative, meaning calls to AudioContextNode.start with negative position offsets will no longer throw errors (thanks @Weedshaker #2351 #2368)
 * The default state of the internal property `_boundDispatch` in Phaser.Signal is now `false`, which allows for use of boundDispatches (thanks @alvinlao #2346)
