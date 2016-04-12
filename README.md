@@ -349,7 +349,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 
 ### Updates
 
-* TypeScript definitions fixes and updates (thanks @clark-stevenson)
+* TypeScript definitions fixes and updates (thanks @jamesgroat)
 * Docs typo fixes (thanks @thiagojobson @hayesmaker)
 * Removed a `console.log` from the TilingSprite generator.
 * Sound.position can no longer become negative, meaning calls to AudioContextNode.start with negative position offsets will no longer throw errors (thanks @Weedshaker #2351 #2368)
