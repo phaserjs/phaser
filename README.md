@@ -350,7 +350,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 ### Updates
 
 * TypeScript definitions fixes and updates (thanks @jamesgroat)
-* Docs typo fixes (thanks @thiagojobson @hayesmaker)
+* Docs typo fixes (thanks @thiagojobson @hayesmaker @EJanuszewski)
 * Removed a `console.log` from the TilingSprite generator.
 * Sound.position can no longer become negative, meaning calls to AudioContextNode.start with negative position offsets will no longer throw errors (thanks @Weedshaker #2351 #2368)
 * The default state of the internal property `_boundDispatch` in Phaser.Signal is now `false`, which allows for use of boundDispatches (thanks @alvinlao #2346)
