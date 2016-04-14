@@ -1069,93 +1069,6 @@ Phaser.Physics.Arcade.prototype = {
 
     },
 
-    separateCircle: function (body1, body2, overlapOnly) {
-
-        //   body1 = paddle (lower)
-        //   body2 = ball (top)
-
-        //  Set the bounding box overlap values
-        // this.getOverlapX(body1, body2);
-        // this.getOverlapY(body1, body2);
-
-        var collisionDistance = body1.radius + body2.radius;
-        var actualDistance = Phaser.Math.distance(body1.center.x, body1.center.y, body2.center.x, body2.center.y);
-        var overlap = (collisionDistance - actualDistance) + this.OVERLAP_BIAS;
-
-        if (overlap > 0)
-        {
-            var collNormalAngle = Math.atan2(body2.center.y - body1.center.y, body2.center.x - body1.center.x);
-
-            var sin = Math.sin(collNormalAngle);
-            var cos = Math.cos(collNormalAngle);
-
-            // console.log('col', collisionDistance, 'actual', actualDistance, 'overlap', overlap);
-            // console.log('normal', collNormalAngle, sin, cos);
-
-            var move1 = overlap * (body2.mass / (body1.mass + body2.mass));
-            var move2 = overlap * (body1.mass / (body1.mass + body2.mass));
-
-            // console.log('paddle', body1.x, body1.y, body1.top, body1.bottom);
-            // console.log('ball', body2.x, body2.y, body2.top, body2.bottom);
-
-            body1.x += move1 * Math.cos(collNormalAngle + 3.141592653589793);
-            body1.y += move1 * Math.sin(collNormalAngle + 3.141592653589793);
-
-            body2.x += move2 * cos;
-            body2.y += move2 * sin;
-
-            // console.log('paddle', body1.x, body1.y, body1.top, body1.bottom);
-            // console.log('ball', body2.x, body2.y, body2.top, body2.bottom);
-
-            // console.log('move', move1, move2);
-
-            // ' COLLISION RESPONSE
-            // ' n = vector connecting the centers of the balls.
-            // ' we are finding the components of the normalised vector n
-            var nX = cos;
-            var nY = sin;
-
-            // ' now find the length of the components of each movement vectors
-            // ' along n, by using dot product.
-            var a1 = body1.velocity.x * nX + body1.velocity.y * nY;
-            var a2 = body2.velocity.x * nX + body2.velocity.y * nY;
-            var optimisedP = (2.0 * (a1 - a2)) / (body1.mass + body2.mass);
-
-            // ' now find out the resultant vectors
-            // '' Local r1% = c1.v - optimisedP * mass2 * n
-
-            // console.log('v1', body1.velocity.y);
-            // console.log('v2', body2.velocity.y);
-
-            //  Full exchange of velocity from one to the other (snooker ball style)
-
-            body1.velocity.x -= (optimisedP * body2.mass * nX);
-            body1.velocity.y -= (optimisedP * body2.mass * nY);
-
-            // '' Local r2% = c2.v - optimisedP * mass1 * n
-            body2.velocity.x += (optimisedP * body1.mass * nX);
-            body2.velocity.y += (optimisedP * body1.mass * nY);
-
-            // console.log('av1', body1.velocity.y);
-            // console.log('av2', body2.velocity.y);
-
-            // body1.center.setTo(body1.position.x + body1.halfWidth, body1.position.y + body1.halfHeight);
-            // body2.center.setTo(body2.position.x + body2.halfWidth, body2.position.y + body2.halfHeight);
-            // console.log('still intersects?', this.intersects(body1, body2));
-
-            // console.log('paddle', body1.x, body1.y, body1.top, body1.bottom);
-            // console.log('ball', body2.x, body2.y, body2.top, body2.bottom);
-            // debugger;
-
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-
-    },
-
     /**
     * The core separation function to separate two circular physics bodies.
     *
@@ -1166,7 +1079,7 @@ Phaser.Physics.Arcade.prototype = {
     * @param {boolean} overlapOnly - If true the bodies will only have their overlap data set, no separation or exchange of velocity will take place.
     * @return {boolean} Returns true if the bodies were separated or overlap, otherwise false.
     */
-    DseparateCircle: function (body1, body2, overlapOnly) {
+    separateCircle: function (body1, body2, overlapOnly) {
 
         //  Set the bounding box overlap values
         this.getOverlapX(body1, body2);
