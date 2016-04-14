@@ -199,7 +199,7 @@ See the [Creating a Custom Phaser Build](http://phaser.io/tutorials/creating-cus
 
 ### Browserify / CJS
 
-Phaser was never written to be modular. Everything exists under one single namespace, and you cannot include 'parts' of it into your builds. It expects 3 global vars to exist in order to work properly: `Phaser`, `PIXI` and `p2`. In order to 'require' Phaser from Browserify you'll need to use the following approach:
+Phaser was never written to be modular. Everything exists under one single global namespace, and you cannot `require` selected parts of it into your builds. It expects 3 global vars to exist in order to work properly: `Phaser`, `PIXI` and `p2`. The following is one way of doing this:
 
 ```
 window.PIXI = require('phaser/build/custom/pixi')
@@ -209,7 +209,7 @@ window.Phaser = require('phaser/build/custom/phaser-split')
 
 If you build a custom version of Phaser (see above) it will split the 3 core libs out into their own files, allowing you to require them as above.
 
-We appreciate this is just a band-aid and not a proper use of modules, but please understand it was never built to be used this way. You're trying to fit a square peg in a round browserify-shaped hole, so compromises have to be made. Please don't open GitHub issues about it, as we've no intention of changing Phaser at this stage of its life. Proper module based development is being undertaken in Lazer.
+We appreciate this is just a band-aid and not a proper use of modules, but please understand it was never built to be used this way. You're trying to fit a square peg in a round browserify-shaped hole, so compromises have to be made. Please don't open GitHub issues about it. We've no intention of changing Phaser at this stage of its life. Full module based development is being undertaken in Lazer.
 
 ### Webpack
 
