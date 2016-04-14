@@ -1124,18 +1124,11 @@ Phaser.Physics.Arcade.prototype = {
             this._vel2.x = vxTotal + this._vel1.x;
         }
 
-        // var absV = Math.abs(this._vel1.x) + Math.abs(this._vel2.x);
-        // var overlap = (body1.radius + body2.radius) - Math.abs(body1.center.x - body2.center.x);
         var overlap = (body1.radius + body2.radius) - Phaser.Math.distance(body1.center.x, body1.center.y, body2.center.x, body2.center.y);
 
         //  Resets the overlapR to zero if there is no overlap, or to the actual pixel value if there is
-        // body1.overlapR = (this._vel1.x / absV * overlap);
-        // body2.overlapR = (this._vel2.x / absV * overlap);
-
         body1.overlapR = overlap * 0.5;
         body2.overlapR = overlap * 0.5;
-
-        // console.log('overlapR', overlap, 'r', body1.overlapR, body2.overlapR);
 
         //  Can't separate two immovable bodies, or a body with its own custom separation logic
         if (overlapOnly || overlap === 0 || (body1.immovable && body2.immovable) || body1.customSeparateX || body2.customSeparateX)
@@ -1144,29 +1137,8 @@ Phaser.Physics.Arcade.prototype = {
             return (overlap !== 0);
         }
 
-        //  Adjust their positions and velocities accordingly (if there was any overlap)
-        if (!body1.immovable && !body2.immovable)
-        {
-            //  Equal separation
-            this._pos1.x += (this._vel1.x + body1.overlapR) * this.game.time.physicsElapsed;
-            this._pos2.x += (this._vel2.x + body2.overlapR) * this.game.time.physicsElapsed;
-
-            this._vel1.x = this._velF.x1 * body1.bounce.x;
-            this._vel1.y = this._velF.y1 * body1.bounce.y;
-
-            this._vel2.x = this._velF.x2 * body2.bounce.x;
-            this._vel2.y = this._velF.y2 * body2.bounce.y;
-        }
-        else if (body1.immovable)
-        {
-            this._pos2.x += (this._vel2.x * this.game.time.physicsElapsed) + overlap;
-            this._pos2.y += (this._vel2.y * this.game.time.physicsElapsed) + overlap;
-        }
-        else
-        {
-            this._pos1.x += (this._vel1.x * this.game.time.physicsElapsed) + overlap;
-            this._pos1.y += (this._vel1.y * this.game.time.physicsElapsed) + overlap;
-        }
+        this._pos1.x += (this._vel1.x * this.game.time.physicsElapsed) + overlap;
+        this._pos2.x += (this._vel2.x * this.game.time.physicsElapsed) + overlap;
 
         //  Rotate positions back again
         this.rotate(this._pos1, this._pos1.x, this._pos1.y, sin, cos, false);
@@ -1178,49 +1150,17 @@ Phaser.Physics.Arcade.prototype = {
 
         //  Apply to bodies
 
-        // console.log('current pos1', body1.y);
-        // console.log('current pos2', body2.y);
-
         body2.x = body1.x + this._pos2.x;
         body2.y = body1.y + this._pos2.y;
 
         body1.x = body1.x + this._pos1.x;
         body1.y = body1.y + this._pos1.y;
 
-        // console.log('after pos1', body1.y);
-        // console.log('after pos2', body2.y);
+        body1.velocity.x = this._vel1.x;
+        body1.velocity.y = this._vel1.y;
 
-        if (!body1.immovable && !body2.immovable)
-        {
-            body1.velocity.x = this._vel1.x;
-            body1.velocity.y = this._vel1.y;
-
-            body2.velocity.x = this._vel2.x;
-            body2.velocity.y = this._vel2.y;
-        }
-        else if (body1.immovable)
-        {
-            //  Only move body2
-
-            // console.log('current vel1', body1.velocity.y);
-            // console.log('current vel2', body2.velocity.y);
-
-            body2.velocity.x = body1.velocity.x - body2.velocity.x * body2.bounce.x;
-            body2.velocity.y = body1.velocity.y - body2.velocity.y * body2.bounce.y;
-
-            // console.log('new vel1', body1.velocity.y - body2.velocity.y * body2.bounce.y);
-            // console.log('new vel2', body2.velocity.y);
-        }
-        else
-        {
-            //  Only move body1
-
-            body1.velocity.x = body2.velocity.x - body1.velocity.x * body1.bounce.x;
-            body1.velocity.y = body2.velocity.y - body1.velocity.y * body1.bounce.y;
-        }
-
-        // console.log('still intersects?', this.intersects(body1, body2));
-        // debugger;
+        body2.velocity.x = this._vel2.x;
+        body2.velocity.y = this._vel2.y;
 
         return true;
 
