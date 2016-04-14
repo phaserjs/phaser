@@ -681,7 +681,14 @@ Phaser.Game.prototype = {
     */
     setUpRenderer: function () {
 
-        this.canvas = Phaser.Canvas.create(this, this.width, this.height, this.config['canvasID'], true);
+        if (this.config['canvas'])
+        {
+            this.canvas = this.config['canvas'];
+        }
+        else
+        {
+            this.canvas = Phaser.Canvas.create(this, this.width, this.height, this.config['canvasID'], true);
+        }
 
         if (this.config['canvasStyle'])
         {
