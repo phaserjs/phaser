@@ -82,14 +82,6 @@ Phaser.Physics.Arcade = function (game) {
     */
     this._total = 0;
 
-    this._pos1 = { x: 0, y: 0 };
-    this._pos2 = { x: 0, y: 0 };
-
-    this._vel1 = { x: 0, y: 0 };
-    this._vel2 = { x: 0, y: 0 };
-
-    this._velF = { x1: 0, y1: 0, x2: 0, y2: 0 };
-
     // By default we want the bounds the same size as the world bounds
     this.setBoundsToWorld();
 
@@ -955,12 +947,6 @@ Phaser.Physics.Arcade.prototype = {
             return false;
         }
 
-        //  Circle vs. Circle quick bail out
-        if (body1.isCircle && body2.isCircle)
-        {
-            return this.separateCircle(body1, body2, overlapOnly);
-        }
-
         var resultX = false;
         var resultY = false;
 
@@ -994,8 +980,8 @@ Phaser.Physics.Arcade.prototype = {
     * Check for intersection against two bodies.
     *
     * @method Phaser.Physics.Arcade#intersects
-    * @param {Phaser.Physics.Arcade.Body} body1 - The first Body object to check.
-    * @param {Phaser.Physics.Arcade.Body} body2 - The second Body object to check.
+    * @param {Phaser.Physics.Arcade.Body} body1 - The Body object to check.
+    * @param {Phaser.Physics.Arcade.Body} body2 - The Body object to check.
     * @return {boolean} True if they intersect, otherwise false.
     */
     intersects: function (body1, body2) {
@@ -1050,152 +1036,14 @@ Phaser.Physics.Arcade.prototype = {
     },
 
     /**
-    * Checks to see if a circular Body intersects with a Rectangular Body.
+    * Calculates the horizontal overlap between two Bodies and sets their properties accordingly, including:
+    * `touching.left`, `touching.right` and `overlapX`.
     *
-    * @method Phaser.Physics.Arcade#circleBodyIntersects
-    * @param {Phaser.Physics.Arcade.Body} circle - The Body with `isCircle` set.
-    * @param {Phaser.Physics.Arcade.Body} body - The Body with `isCircle` not set (i.e. uses Rectangle shape)
-    * @return {boolean} Returns true if the bodies intersect, otherwise false.
+    * @method Phaser.Physics.Arcade#getOverlapX
+    * @param {Phaser.Physics.Arcade.Body} body1 - The first Body to separate.
+    * @param {Phaser.Physics.Arcade.Body} body2 - The second Body to separate.
+    * @return {float} Returns the amount of horizontal overlap between the two bodies.
     */
-    circleBodyIntersects: function (circle, body) {
-
-        var x = Phaser.Math.clamp(circle.center.x, body.left, body.right);
-        var y = Phaser.Math.clamp(circle.center.y, body.top, body.bottom);
-
-        var dx = (circle.center.x - x) * (circle.center.x - x);
-        var dy = (circle.center.y - y) * (circle.center.y - y);
-
-        return (dx + dy) <= (circle.radius * circle.radius);
-
-    },
-
-    /**
-    * The core separation function to separate two circular physics bodies.
-    *
-    * @method Phaser.Physics.Arcade#separateCircle
-    * @private
-    * @param {Phaser.Physics.Arcade.Body} body1 - The first Body to separate. Must have `Body.isCircle` true and a positive `radius`.
-    * @param {Phaser.Physics.Arcade.Body} body2 - The second Body to separate. Must have `Body.isCircle` true and a positive `radius`.
-    * @param {boolean} overlapOnly - If true the bodies will only have their overlap data set, no separation or exchange of velocity will take place.
-    * @return {boolean} Returns true if the bodies were separated or overlap, otherwise false.
-    */
-    separateCircle: function (body1, body2, overlapOnly) {
-
-        //  Set the bounding box overlap values
-        this.getOverlapX(body1, body2);
-        this.getOverlapY(body1, body2);
-
-        var dx = body2.center.x - body1.center.x;
-        var dy = body2.center.y - body1.center.y;
-
-        var angle = Math.atan2(dy, dx);
-        var sin = Math.sin(angle);
-        var cos = Math.cos(angle);
-
-        this._pos1.x = 0;
-        this._pos1.y = 0;
-
-        //  Rotate the second body to the angle of the first
-        this.rotate(this._pos2, dx, dy, sin, cos, true);
-
-        //  Rotate the velocities
-        this.rotate(this._vel1, body1.velocity.x, body1.velocity.y, sin, cos, true);
-        this.rotate(this._vel2, body2.velocity.x, body2.velocity.y, sin, cos, true);
-
-        //  Calculate overlap
-        if (body1.mass === body2.mass)
-        {
-            //  Swap 'em
-            var tempX = this._vel1.x;
-            var tempY = this._vel1.y;
-
-            this._vel1.x = this._vel2.x;
-            this._vel1.y = this._vel2.y;
-
-            this._vel2.x = tempX;
-            this._vel2.y = tempY;
-        }
-        else
-        {
-            //  Mass based exchange
-            var vxTotal = this._vel1.x - this._vel2.x;
-
-            this._vel1.x = ((body1.mass - body2.mass) * this._vel1.x + 2 * body2.mass * this._vel2.x) / (body1.mass + body2.mass);
-            this._vel2.x = vxTotal + this._vel1.x;
-        }
-
-        var overlap = (body1.radius + body2.radius) - Phaser.Math.distance(body1.center.x, body1.center.y, body2.center.x, body2.center.y);
-
-        //  Resets the overlapR to zero if there is no overlap, or to the actual pixel value if there is
-        body1.overlapR = overlap * 0.5;
-        body2.overlapR = overlap * 0.5;
-
-        //  Can't separate two immovable bodies, or a body with its own custom separation logic
-        if (overlapOnly || overlap === 0 || (body1.immovable && body2.immovable) || body1.customSeparateX || body2.customSeparateX)
-        {
-            //  return true if there was some overlap, otherwise false
-            return (overlap !== 0);
-        }
-
-        this._pos1.x += (this._vel1.x * this.game.time.physicsElapsed) + overlap;
-        this._pos2.x += (this._vel2.x * this.game.time.physicsElapsed) + overlap;
-
-        //  Rotate positions back again
-        this.rotate(this._pos1, this._pos1.x, this._pos1.y, sin, cos, false);
-        this.rotate(this._pos2, this._pos2.x, this._pos2.y, sin, cos, false);
-
-        //  Rotate velocity back again
-        this.rotate(this._vel1, this._vel1.x, this._vel1.y, sin, cos, false);
-        this.rotate(this._vel2, this._vel2.x, this._vel2.y, sin, cos, false);
-
-        //  Apply to bodies
-
-        body2.x = body1.x + this._pos2.x;
-        body2.y = body1.y + this._pos2.y;
-
-        body1.x = body1.x + this._pos1.x;
-        body1.y = body1.y + this._pos1.y;
-
-        body1.velocity.x = this._vel1.x;
-        body1.velocity.y = this._vel1.y;
-
-        body2.velocity.x = this._vel2.x;
-        body2.velocity.y = this._vel2.y;
-
-        return true;
-
-    },
-
-    /**
-    * Point rotation method, used by circle separation.
-    *
-    * @method Phaser.Physics.Arcade#rotate
-    * @private
-    * @param {Object|Phaser.Point} result - The Point-like object in which to store the calculation results.
-    * @param {float} x - The x component.
-    * @param {float} y - The y component.
-    * @param {float} sin - The sin of the rotation.
-    * @param {float} cos - The cos of the rotation.
-    * @param {boolean} reverse - True to rotate back, false to rotate forward.
-    * @return {Object|Phaser.Point} The result object.
-    */
-    rotate: function (result, x, y, sin, cos, reverse) {
-
-        if (reverse)
-        {
-            result.x = x * cos + y * sin;
-            result.y = y * cos - x * sin;
-        }
-        else
-        {
-            result.x = x * cos - y * sin;
-            result.y = y * cos + x * sin;
-        }
-
-        return result;
-
-    },
-
     getOverlapX: function (body1, body2) {
 
         var overlap = 0;
@@ -1250,6 +1098,15 @@ Phaser.Physics.Arcade.prototype = {
 
     },
 
+    /**
+    * Calculates the vertical overlap between two Bodies and sets their properties accordingly, including:
+    * `touching.up`, `touching.down` and `overlapY`.
+    *
+    * @method Phaser.Physics.Arcade#getOverlapY
+    * @param {Phaser.Physics.Arcade.Body} body1 - The first Body to separate.
+    * @param {Phaser.Physics.Arcade.Body} body2 - The second Body to separate.
+    * @return {float} Returns the amount of vertical overlap between the two bodies.
+    */
     getOverlapY: function (body1, body2) {
 
         var overlap = 0;

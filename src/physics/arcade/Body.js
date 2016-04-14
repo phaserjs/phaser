@@ -36,25 +36,6 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.enable = true;
 
     /**
-    * If `true` this Body is using circular collision detection. If `false` it is using rectangular.
-    * Use `Body.setCircle` to control the collision shape this Body uses.
-    * @property {boolean} isCircle
-    * @default
-    * @readOnly
-    */
-    this.isCircle = false;
-
-    /**
-    * The radius of the circular collision shape this Body is using if Body.setCircle has been enabled.
-    * If you wish to change the radius then call `setCircle` again with the new value.
-    * If you wish to stop the Body using a circle then call `setCircle` with a radius of zero (or undefined).
-    * @property {float} radius
-    * @default
-    * @readOnly
-    */
-    this.radius = 0;
-
-    /**
     * @property {Phaser.Point} offset - The offset of the Physics Body from the Sprite x/y position.
     */
     this.offset = new Phaser.Point();
@@ -281,12 +262,6 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     * @property {number} overlapY - The amount of vertical overlap during the collision.
     */
     this.overlapY = 0;
-
-    /**
-    * If `Body.isCircle` is true, and this body collides with another circular body, the amount of overlap is stored here.
-    * @property {number} overlapR - The amount of overlap during the collision.
-    */
-    this.overlapR = 0;
 
     /**
     * If a body is overlapping with another body, but neither of them are moving (maybe they spawned on-top of each other?) this is set to true.
@@ -986,43 +961,15 @@ Phaser.Physics.Arcade.Body.render = function (context, body, color, filled) {
 
     color = color || 'rgba(0,255,0,0.4)';
 
-    if (body.isCircle)
+    if (filled)
     {
-        context.save();
-        context.setTransform(1, 0, 0, 1, 0, 0);
-
-        context.beginPath();
-        context.arc(body.center.x - body.game.camera.x, body.center.y - body.game.camera.y, body.radius, 0, 2 * Math.PI);
-        context.closePath();
-
-        if (filled)
-        {
-            context.fillStyle = color;
-            context.fill();
-        }
-        else
-        {
-            context.strokeStyle = color;
-            context.stroke();
-        }
-
-        // context.strokeStyle = '#ffff00';
-        // context.strokeRect(body.position.x - body.game.camera.x, body.position.y - body.game.camera.y, body.width, body.height);
-
-        context.restore();
+        context.fillStyle = color;
+        context.fillRect(body.position.x - body.game.camera.x, body.position.y - body.game.camera.y, body.width, body.height);
     }
     else
     {
-        if (filled)
-        {
-            context.fillStyle = color;
-            context.fillRect(body.position.x - body.game.camera.x, body.position.y - body.game.camera.y, body.width, body.height);
-        }
-        else
-        {
-            context.strokeStyle = color;
-            context.strokeRect(body.position.x - body.game.camera.x, body.position.y - body.game.camera.y, body.width, body.height);
-        }
+        context.strokeStyle = color;
+        context.strokeRect(body.position.x - body.game.camera.x, body.position.y - body.game.camera.y, body.width, body.height);
     }
 
 };
