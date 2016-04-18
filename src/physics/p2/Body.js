@@ -851,8 +851,8 @@ Phaser.Physics.P2.Body.prototype = {
     */
     postUpdate: function () {
 
-        this.sprite.x = this.world.mpxi(this.data.position[0]);
-        this.sprite.y = this.world.mpxi(this.data.position[1]);
+        this.sprite.x = this.world.mpxi(this.data.position[0]) + this.offset.x;
+        this.sprite.y = this.world.mpxi(this.data.position[1]) + this.offset.y;
 
         if (!this.fixedRotation)
         {

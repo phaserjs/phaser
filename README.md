@@ -353,6 +353,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * The Arcade Physics Body has two new properties: `left` and `top`. These are the same as `Body.x` and `Body.y` but allow you to pass the Body to geometry level functions such as Circle.contains.
 * World.separate has been optimized to cut down on the number of calls to `intersect` from 3 calls per Game Object collision check, to 2. So if you were colliding 50 sprites it will reduce the call count from 150 to 100 per frame. It also reduces the calls made to `seperateX` and `seperateY` by the same factor.
 * Two immovable bodies would never set their overlap data, even if an overlap only check was being made. As this is useful data to have this has been changed. Two immovable bodies will still never separate from each other, but they _will_ have their `overlapX` and `overlapY` properties calculated now.
+* P2.Body.offset is now used and applied to the Sprite position during rendering. The values given are normal pixel values, and offset the P2 Body from the center of the Sprite (thanks @Mourtz #2430)
 
 ### Updates
 
