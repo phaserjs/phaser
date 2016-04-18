@@ -377,6 +377,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * The Tileset class will tell you the name of the tileset image throwing the uneven size error (thanks @jakewilson #2415)
 * Emitter.start when used with a false `explode` parameter would cumulatively add particles to the current total. With quantity 10 the first call would emit 10 particles, the next 20, and so on. Calls to start will now reset the quantity each time. This is a behavior change from earlier versions, so if you relied on the old way please account for it in your code (thanks @BdR76 #2187)
 * You can now pass in your own Canvas element to Phaser and it will use that instead of creating one itself. To do so you must pass a Game Configuration object to Phaser when you instantiate it, and set the `canvas` property of the config object to be the DOM element you wish to use, i.e.: `{ canvas: document.getElementById('yourCanvas') }` (thanks @Friksel #2311)
+* When loading Video with the `asBlob` argument set it now uses a 'blob' type for the XHR loader, and doesn't cast the resulting file as a Blob upon load. This fixes loading videos as blobs on Chrome for Android (thanks @JuCarr #2433)
 
 ### Bug Fixes
 
