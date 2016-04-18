@@ -980,58 +980,34 @@ Phaser.Physics.Arcade.prototype = {
     * Check for intersection against two bodies.
     *
     * @method Phaser.Physics.Arcade#intersects
-    * @param {Phaser.Physics.Arcade.Body} body1 - The Body object to check.
-    * @param {Phaser.Physics.Arcade.Body} body2 - The Body object to check.
+    * @param {Phaser.Physics.Arcade.Body} body1 - The first Body object to check.
+    * @param {Phaser.Physics.Arcade.Body} body2 - The second Body object to check.
     * @return {boolean} True if they intersect, otherwise false.
     */
     intersects: function (body1, body2) {
 
-        if (body1.isCircle)
+        //  Rect vs. Rect
+        if (body1.right <= body2.position.x)
         {
-            if (body2.isCircle)
-            {
-                //  Circle vs. Circle
-                return Phaser.Math.distance(body1.center.x, body1.center.y, body2.center.x, body2.center.y) <= (body1.radius + body2.radius);
-            }
-            else
-            {
-                //  Circle vs. Rect
-                return this.circleBodyIntersects(body1, body2);
-            }
+            return false;
         }
-        else
+
+        if (body1.bottom <= body2.position.y)
         {
-            if (body2.isCircle)
-            {
-                //  Rect vs. Circle
-                return this.circleBodyIntersects(body2, body1);
-            }
-            else
-            {
-                //  Rect vs. Rect
-                if (body1.right <= body2.position.x)
-                {
-                    return false;
-                }
-
-                if (body1.bottom <= body2.position.y)
-                {
-                    return false;
-                }
-
-                if (body1.position.x >= body2.right)
-                {
-                    return false;
-                }
-
-                if (body1.position.y >= body2.bottom)
-                {
-                    return false;
-                }
-
-                return true;
-            }
+            return false;
         }
+
+        if (body1.position.x >= body2.right)
+        {
+            return false;
+        }
+
+        if (body1.position.y >= body2.bottom)
+        {
+            return false;
+        }
+
+        return true;
 
     },
 
