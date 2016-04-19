@@ -1436,7 +1436,6 @@ Phaser.Group.prototype.postUpdate = function () {
 
 };
 
-
 /**
 * Find children matching a certain predicate.
 *
