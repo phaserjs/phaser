@@ -225,6 +225,8 @@ Phaser.InputHandler = function (sprite) {
         id: 0,
         x: 0,
         y: 0,
+        camX: 0,
+        camY: 0,
         isDown: false,
         isUp: false,
         isOver: false,
@@ -1093,14 +1095,17 @@ Phaser.InputHandler.prototype = {
         }
         else
         {
+            var cx = this.game.camera.x - this._pointerData[pointer.id].camX;
+            var cy = this.game.camera.y - this._pointerData[pointer.id].camY;
+
             if (this.allowHorizontalDrag)
             {
-                this.sprite.x = px;
+                this.sprite.x = px + cx;
             }
 
             if (this.allowVerticalDrag)
             {
-                this.sprite.y = py;
+                this.sprite.y = py + cy;
             }
 
             if (this.boundsRect)
@@ -1318,6 +1323,10 @@ Phaser.InputHandler.prototype = {
 
         this.isDragged = true;
         this._draggedPointerID = pointer.id;
+
+        this._pointerData[pointer.id].camX = this.game.camera.x;
+        this._pointerData[pointer.id].camY = this.game.camera.y;
+
         this._pointerData[pointer.id].isDragged = true;
 
         if (this.sprite.fixedToCamera)
