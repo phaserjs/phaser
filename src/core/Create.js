@@ -9,7 +9,7 @@
 * quickly and easily, without the need for any external files. You can create textures for sprites and in
 * coming releases we'll add dynamic sound effect generation support as well (like sfxr).
 *
-* Access this via `State.create` (or `this.create` from within a State object)
+* Access this via `Game.create` (`this.game.create` from within a State object)
 * 
 * @class Phaser.Create
 * @constructor
