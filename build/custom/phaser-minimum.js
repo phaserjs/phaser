@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.4.7 "Hinderstap" - Built: Fri Apr 22 2016 14:44:28
+* v2.4.7 "Hinderstap" - Built: Fri Apr 22 2016 15:08:53
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -7954,7 +7954,7 @@ var Phaser = Phaser || {
     * @constant
     * @type {string}
     */
-    VERSION: '2.4.7 RC2',
+    VERSION: '2.4.7',
 
     /**
     * An array of Phaser game instances.

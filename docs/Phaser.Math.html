@@ -3075,7 +3075,7 @@ down the screen.</p>
             
 <dt>
     <h4 class="name "
-        id="clamp"><span class="type-signature"></span>clamp<span class="signature">(x, a, b)</span><span class="type-signature"> &rarr; {number}</span></h4>
+        id="clamp"><span class="type-signature"></span>clamp<span class="signature">(v, min, max)</span><span class="type-signature"> &rarr; {number}</span></h4>
     
     
 </dt>
@@ -3084,7 +3084,7 @@ down the screen.</p>
 
     
     <div class="description">
-        <p>Force a value within the boundaries by clamping <code>x</code> to the range <code>[a, b]</code>.</p>
+        <p>Force a value within the boundaries by clamping it to the range <code>min</code>, <code>max</code>.</p>
     </div>
     
 
@@ -3118,13 +3118,13 @@ down the screen.</p>
 
         <tr>
             
-                <td class="name"><code>x</code></td>
+                <td class="name"><code>v</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">float</span>
 
 
             
@@ -3134,20 +3134,20 @@ down the screen.</p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>The value to be clamped.</p></td>
         </tr>
 
 	
 
         <tr>
             
-                <td class="name"><code>a</code></td>
+                <td class="name"><code>min</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">float</span>
 
 
             
@@ -3157,20 +3157,20 @@ down the screen.</p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>The minimum bounds.</p></td>
         </tr>
 
 	
 
         <tr>
             
-                <td class="name"><code>b</code></td>
+                <td class="name"><code>max</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">float</span>
 
 
             
@@ -3180,7 +3180,7 @@ down the screen.</p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>The maximum bounds.</p></td>
         </tr>
 
 	
@@ -3203,7 +3203,7 @@ down the screen.</p>
         </div>
     
     <div class="returns-desc param-desc">
-        
+        <p>The clamped value.</p>
     </div>
 
 
@@ -3396,7 +3396,7 @@ Roughly the same as <code>Math.max(x, a)</code>, except for NaN handling.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_math_Math.js.html">math/Math.js</a>, <a href="src_math_Math.js.html#sunlight-1-line-911">line 911</a>
+    <a href="src_math_Math.js.html">math/Math.js</a>, <a href="src_math_Math.js.html#sunlight-1-line-924">line 924</a>
     </dt>
     
 
@@ -3535,7 +3535,7 @@ Roughly the same as <code>Math.max(x, a)</code>, except for NaN handling.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_math_Math.js.html">math/Math.js</a>, <a href="src_math_Math.js.html#sunlight-1-line-1027">line 1027</a>
+    <a href="src_math_Math.js.html">math/Math.js</a>, <a href="src_math_Math.js.html#sunlight-1-line-1045">line 1045</a>
     </dt>
     
 
@@ -6660,7 +6660,7 @@ coordinates (cuts out a square root operation before returning).</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_math_Math.js.html">math/Math.js</a>, <a href="src_math_Math.js.html#sunlight-1-line-938">line 938</a>
+    <a href="src_math_Math.js.html">math/Math.js</a>, <a href="src_math_Math.js.html#sunlight-1-line-951">line 951</a>
     </dt>
     
 
@@ -7776,7 +7776,7 @@ It will find the lowest matching property value from the given objects.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_math_Math.js.html">math/Math.js</a>, <a href="src_math_Math.js.html#sunlight-1-line-994">line 994</a>
+    <a href="src_math_Math.js.html">math/Math.js</a>, <a href="src_math_Math.js.html#sunlight-1-line-1012">line 1012</a>
     </dt>
     
 
@@ -7812,7 +7812,7 @@ It will find the lowest matching property value from the given objects.</p>
 
     
     <div class="description">
-        <p>Convert degrees to radians.</p>
+        <p>Convert radians to degrees.</p>
     </div>
     
 
@@ -7915,7 +7915,7 @@ It will find the lowest matching property value from the given objects.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_math_Math.js.html">math/Math.js</a>, <a href="src_math_Math.js.html#sunlight-1-line-1038">line 1038</a>
+    <a href="src_math_Math.js.html">math/Math.js</a>, <a href="src_math_Math.js.html#sunlight-1-line-1056">line 1056</a>
     </dt>
     
 
@@ -8676,7 +8676,7 @@ because we are rounding 100011.1011011011011011 which rounds up.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_math_Math.js.html">math/Math.js</a>, <a href="src_math_Math.js.html#sunlight-1-line-981">line 981</a>
+    <a href="src_math_Math.js.html">math/Math.js</a>, <a href="src_math_Math.js.html#sunlight-1-line-999">line 999</a>
     </dt>
     
 
@@ -8914,7 +8914,7 @@ Code based on research by Franky of scene.at</p>
             
 <dt>
     <h4 class="name "
-        id="smootherstep"><span class="type-signature"></span>smootherstep<span class="signature">(x, min, max)</span><span class="type-signature"> &rarr; {number}</span></h4>
+        id="smootherstep"><span class="type-signature"></span>smootherstep<span class="signature">(x, min, max)</span><span class="type-signature"> &rarr; {float}</span></h4>
     
     
 </dt>
@@ -8963,7 +8963,7 @@ Code based on research by Franky of scene.at</p>
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">float</span>
 
 
             
@@ -8973,7 +8973,7 @@ Code based on research by Franky of scene.at</p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>The input value.</p></td>
         </tr>
 
 	
@@ -8986,7 +8986,7 @@ Code based on research by Franky of scene.at</p>
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">float</span>
 
 
             
@@ -8996,7 +8996,7 @@ Code based on research by Franky of scene.at</p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>The left edge. Should be smaller than the right edge.</p></td>
         </tr>
 
 	
@@ -9009,7 +9009,7 @@ Code based on research by Franky of scene.at</p>
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">float</span>
 
 
             
@@ -9019,7 +9019,7 @@ Code based on research by Franky of scene.at</p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>The right edge.</p></td>
         </tr>
 
 	
@@ -9036,13 +9036,13 @@ Code based on research by Franky of scene.at</p>
     
         <div class="returns-type">
         
-<span class="param-type">number</span>
+<span class="param-type">float</span>
 
  -
         </div>
     
     <div class="returns-desc param-desc">
-        
+        <p>A value between 0 and 1.</p>
     </div>
 
 
@@ -9072,7 +9072,7 @@ Code based on research by Franky of scene.at</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_math_Math.js.html">math/Math.js</a>, <a href="src_math_Math.js.html#sunlight-1-line-967">line 967</a>
+    <a href="src_math_Math.js.html">math/Math.js</a>, <a href="src_math_Math.js.html#sunlight-1-line-985">line 985</a>
     </dt>
     
 
@@ -9099,7 +9099,7 @@ Code based on research by Franky of scene.at</p>
             
 <dt>
     <h4 class="name "
-        id="smoothstep"><span class="type-signature"></span>smoothstep<span class="signature">(x, min, max)</span><span class="type-signature"> &rarr; {number}</span></h4>
+        id="smoothstep"><span class="type-signature"></span>smoothstep<span class="signature">(x, min, max)</span><span class="type-signature"> &rarr; {float}</span></h4>
     
     
 </dt>
@@ -9148,7 +9148,7 @@ Code based on research by Franky of scene.at</p>
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">float</span>
 
 
             
@@ -9158,7 +9158,7 @@ Code based on research by Franky of scene.at</p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>The input value.</p></td>
         </tr>
 
 	
@@ -9171,7 +9171,7 @@ Code based on research by Franky of scene.at</p>
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">float</span>
 
 
             
@@ -9181,7 +9181,7 @@ Code based on research by Franky of scene.at</p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>The left edge. Should be smaller than the right edge.</p></td>
         </tr>
 
 	
@@ -9194,7 +9194,7 @@ Code based on research by Franky of scene.at</p>
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">float</span>
 
 
             
@@ -9204,7 +9204,7 @@ Code based on research by Franky of scene.at</p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>The right edge.</p></td>
         </tr>
 
 	
@@ -9221,13 +9221,13 @@ Code based on research by Franky of scene.at</p>
     
         <div class="returns-type">
         
-<span class="param-type">number</span>
+<span class="param-type">float</span>
 
  -
         </div>
     
     <div class="returns-desc param-desc">
-        
+        <p>A value between 0 and 1.</p>
     </div>
 
 
@@ -9257,7 +9257,7 @@ Code based on research by Franky of scene.at</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_math_Math.js.html">math/Math.js</a>, <a href="src_math_Math.js.html#sunlight-1-line-953">line 953</a>
+    <a href="src_math_Math.js.html">math/Math.js</a>, <a href="src_math_Math.js.html#sunlight-1-line-966">line 966</a>
     </dt>
     
 
@@ -10086,7 +10086,7 @@ As will 14 snap to 10... but 16 will snap to 15.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_math_Math.js.html">math/Math.js</a>, <a href="src_math_Math.js.html#sunlight-1-line-924">line 924</a>
+    <a href="src_math_Math.js.html">math/Math.js</a>, <a href="src_math_Math.js.html#sunlight-1-line-937">line 937</a>
     </dt>
     
 
@@ -10702,13 +10702,13 @@ As will 14 snap to 10... but 16 will snap to 15.</p>
 					
 					
 		<span class="copyright">
-		Phaser Copyright © 2012-2015 Photon Storm Ltd.
+		Phaser Copyright © 2012-2016 Photon Storm Ltd.
 		</span>
 					<br />
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
-		on Thu Feb 18 2016 14:41:03 GMT+0000 (GMT Standard Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Apr 22 2016 15:11:51 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

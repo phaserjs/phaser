@@ -1,7 +1,7 @@
 /// <reference path="pixi.d.ts" />
 /// <reference path="p2.d.ts" />
 
-// Type definitions for Phaser 2.4.7 - 6th April 2016
+// Type definitions for Phaser 2.4.7 - 22nd April 2016
 // Project: https://github.com/photonstorm/phaser
 
 declare module "phaser" {

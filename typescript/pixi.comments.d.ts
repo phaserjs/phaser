@@ -181,6 +181,7 @@ declare module PIXI {
 
     /**
     * This is the base class for creating a PIXI filter. Currently only webGL supports filters.
+    * 
     * If you want to make a custom filter this should be your base class.
     */
     export class AbstractFilter {
@@ -188,6 +189,7 @@ declare module PIXI {
 
         /**
         * This is the base class for creating a PIXI filter. Currently only webGL supports filters.
+        * 
         * If you want to make a custom filter this should be your base class.
         * 
         * @param fragmentSrc The fragment source in an array of strings.
@@ -278,6 +280,7 @@ declare module PIXI {
 
         /**
         * Helper function that creates a base texture from the given image url.
+        * 
         * If the image is not in the base texture cache it will be created and loaded.
         * 
         * @param imageUrl The image url of the texture
@@ -324,6 +327,7 @@ declare module PIXI {
 
         /**
         * Set this to true if a mipmap of this texture needs to be generated. This value needs to be set before the texture is used
+        * 
         * Also the texture must be a power of two size to work
         */
         mipmap: boolean;
@@ -348,7 +352,10 @@ declare module PIXI {
         /**
         * A BaseTexture can be set to skip the rendering phase in the WebGL Sprite Batch.
         * 
+        * 
+        * 
         * You may want to do this if you have a parent Sprite with no visible texture (i.e. uses the internal `__default` texture)
+        * 
         * that has children that you do want to render, without causing a batch flush in the process.
         */
         skipRender: boolean;
@@ -374,7 +381,9 @@ declare module PIXI {
 
         /**
         * Forces this BaseTexture to be set as loaded, with the given width and height.
+        * 
         * Then calls BaseTexture.dirty.
+        * 
         * Important for when you don't want to modify the source object by forcing in `complete` or dimension properties it may not have.
         * 
         * @param width - The new width to force the BaseTexture to be.
@@ -401,6 +410,7 @@ declare module PIXI {
 
         /**
         * Removes the base texture from the GPU, useful for managing resources on the GPU.
+        * 
         * Atexture is still 100% usable and will simply be reuploaded if there is a sprite on screen that is using it.
         */
         unloadFromGPU(): void;
@@ -583,6 +593,7 @@ declare module PIXI {
 
     /**
     * The CanvasRenderer draws the Stage and all its content onto a 2d canvas. This renderer should be used for browsers that do not support webGL.
+    * 
     * Don't forget to add the CanvasRenderer.view to your DOM or you will not see anything :)
     */
     export class CanvasRenderer implements PixiRenderer {
@@ -590,6 +601,7 @@ declare module PIXI {
 
         /**
         * The CanvasRenderer draws the Stage and all its content onto a 2d canvas. This renderer should be used for browsers that do not support webGL.
+        * 
         * Don't forget to add the CanvasRenderer.view to your DOM or you will not see anything :)
         * 
         * @param game A reference to the Phaser Game instance
@@ -610,8 +622,11 @@ declare module PIXI {
 
         /**
         * This sets if the CanvasRenderer will clear the canvas or not before the new render pass.
+        * 
         * If the Stage is NOT transparent Pixi will use a canvas sized fillRect operation every frame to set the canvas background color.
+        * 
         * If the Stage is transparent Pixi will use clearRect to clear the canvas every frame.
+        * 
         * Disable this by setting this to false. For example if your game has a canvas filling background image you often don't need this set.
         */
         clearBeforeRender: boolean;
@@ -787,6 +802,7 @@ declare module PIXI {
 
     /**
     * The base class for all objects that are rendered on the screen.
+    * 
     * This is an abstract class and should not be used on its own rather it should be extended.
     */
     export class DisplayObject {
@@ -800,7 +816,9 @@ declare module PIXI {
 
         /**
         * Set if this display object is cached as a bitmap.
+        * 
         * This basically takes a snap shot of the display object as it is at that moment. It can provide a performance benefit for complex static displayObjects.
+        * 
         * To remove simply set this property to 'null'
         */
         cacheAsBitmap: boolean;
@@ -808,23 +826,31 @@ declare module PIXI {
 
         /**
         * The area the filter is applied to like the hitArea this is used as more of an optimisation
+        * 
         * rather than figuring out the dimensions of the displayObject each frame you can set this rectangle
         */
         filterArea: Rectangle;
 
         /**
         * Sets the filters for the displayObject.
+        * 
         * IMPORTANT: This is a webGL only feature and will be ignored by the Canvas renderer.
+        * 
+        * 
         * 
         * To remove filters simply set this property to 'null'.
         * 
+        * 
+        * 
         * You cannot have a filter and a multiply blend mode active at the same time. Setting a filter will reset
+        * 
         * this objects blend mode to NORMAL.
         */
         filters: AbstractFilter[];
 
         /**
         * This is the defined area that will pick up mouse / touch events. It is null by default.
+        * 
         * Setting it is a neat way of optimising the hitTest function that the interactionManager will use (as it will not need to hit test all the children)
         */
         hitArea: HitArea;
@@ -832,7 +858,9 @@ declare module PIXI {
 
         /**
         * Sets a mask for the displayObject. A mask is an object that limits the visibility of an object to the shape of the mask applied to it.
+        * 
         * In PIXI a regular mask must be a PIXI.Graphics object. This allows for much faster masking in canvas as it utilises shape clipping.
+        * 
         * To remove a mask, set this property to null.
         */
         mask: Graphics;
@@ -884,18 +912,21 @@ declare module PIXI {
 
         /**
         * The position of the Display Object based on the world transform.
+        * 
         * This value is updated at the end of updateTransform and takes all parent transforms into account.
         */
         worldPosition: PIXI.Point;
 
         /**
         * The scale of the Display Object based on the world transform.
+        * 
         * This value is updated at the end of updateTransform and takes all parent transforms into account.
         */
         worldScale: PIXI.Point;
 
         /**
         * The rotation of the Display Object, in radians, based on the world transform.
+        * 
         * This value is updated at the end of updateTransform and takes all parent transforms into account.
         */
         worldRotation: number;
@@ -934,6 +965,7 @@ declare module PIXI {
 
         /**
         * Useful function that returns a texture of the displayObject object that can then be used to create sprites
+        * 
         * This can be quite useful if your displayObject is static / complicated and needs to be reused multiple times.
         * 
         * @param resolution The resolution of the texture being generated
@@ -988,6 +1020,7 @@ declare module PIXI {
 
     /**
     * A DisplayObjectContainer represents a collection of display objects.
+    * 
     * It is the base class of all display objects that act as a container for other objects.
     */
     export class DisplayObjectContainer extends DisplayObject {
@@ -995,6 +1028,7 @@ declare module PIXI {
 
         /**
         * A DisplayObjectContainer represents a collection of display objects.
+        * 
         * It is the base class of all display objects that act as a container for other objects.
         */
         constructor();
@@ -1327,6 +1361,7 @@ declare module PIXI {
 
         /**
         * Specifies a simple one-color fill that subsequent calls to other Graphics methods
+        * 
         * (such as lineTo() or drawCircle()) use when drawing.
         * 
         * @param color the color of the fill
@@ -1442,6 +1477,7 @@ declare module PIXI {
 
         /**
         * Useful function that returns a texture of the graphics object that can then be used to create sprites
+        * 
         * This can be quite useful if your geometry is complicated and needs to be reused multiple times.
         * 
         * @param resolution The resolution of the texture being generated - Default: 1
@@ -1462,6 +1498,7 @@ declare module PIXI {
 
         /**
         * Draws a line using the current line style from the current drawing position to (x, y);
+        * 
         * The current drawing position is then set to (x, y).
         * 
         * @param x the X coordinate to draw to
@@ -1479,6 +1516,7 @@ declare module PIXI {
 
         /**
         * Calculate the points for a quadratic bezier curve and then draws it.
+        * 
         * Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier-curve-in-c
         * 
         * @param cpX Control point x
@@ -1722,7 +1760,10 @@ declare module PIXI {
         /**
         * Initialises the shader uniform values.
         * 
+        * 
+        * 
         * Uniforms are specified in the GLSL_ES Specification: http://www.khronos.org/registry/webgl/specs/latest/1.0/
+        * 
         * http://www.khronos.org/registry/gles/specs/2.0/GLSL_ES_Specification_1.0.17.pdf
         */
         initUniforms(): void;
@@ -2040,6 +2081,7 @@ declare module PIXI {
 
         /**
         * Helper function that creates a sprite that will contain a texture from the TextureCache based on the frameId
+        * 
         *  The frame ids are created when a Texture packer file has been loaded
         * 
         * @param frameId The frame Id of the texture in the cache
@@ -2049,6 +2091,7 @@ declare module PIXI {
 
         /**
         * Helper function that creates a sprite that will contain a texture based on an image url
+        * 
         *  If the image is not in the texture cache it will be loaded
         * 
         * @param imageId The image url of the texture
@@ -2062,9 +2105,14 @@ declare module PIXI {
         * 
         * @param texture The texture for this sprite
         * 
+        * 
+        * 
         *                A sprite can be created directly from an image like this :
+        * 
         *                var sprite = new PIXI.Sprite.fromImage('assets/image.png');
+        * 
         *                yourStage.addChild(sprite);
+        * 
         *                then obviously don't forget to add it to the stage you have already created
         */
         constructor(texture: Texture);
@@ -2072,14 +2120,19 @@ declare module PIXI {
 
         /**
         * The anchor sets the origin point of the texture.
+        * 
         * The default is 0,0 this means the texture's origin is the top left
+        * 
         * Setting than anchor to 0.5,0.5 means the textures origin is centered
+        * 
         * Setting the anchor to 1,1 would mean the textures origin points will be the bottom right corner
         */
         anchor: Point;
 
         /**
         * The blend mode to be applied to the sprite. Set to PIXI.blendModes.NORMAL to remove any blend mode.
+        * 
+        * 
         * 
         * Warning: You cannot have a blend mode and a filter active on the same Sprite. Doing so will render the sprite invisible.
         * Default: PIXI.blendModes.NORMAL;
@@ -2106,6 +2159,7 @@ declare module PIXI {
 
         /**
         * Sets the texture of the sprite. Be warned that this doesn't remove or destroy the previous
+        * 
         * texture this Sprite was using.
         * 
         * @param texture The PIXI texture that is displayed by the sprite
@@ -2118,18 +2172,31 @@ declare module PIXI {
 
     /**
     * The SpriteBatch class is a really fast version of the DisplayObjectContainer
+    * 
     * built solely for speed, so use when you need a lot of sprites or particles.
+    * 
     * And it's extremely easy to use :
+    * 
+    * 
     * 
     *    var container = new PIXI.SpriteBatch();
     * 
+    * 
+    * 
     *    stage.addChild(container);
     * 
+    * 
+    * 
     *    for(var i  = 0; i < 100; i++)
+    * 
     *    {
+    * 
     *        var sprite = new PIXI.Sprite.fromImage("myImage.png");
+    * 
     *        container.addChild(sprite);
+    * 
     *    }
+    * 
     * And here you have a hundred sprites that will be renderer at the speed of light
     */
     export class SpriteBatch extends DisplayObjectContainer {
@@ -2137,18 +2204,31 @@ declare module PIXI {
 
         /**
         * The SpriteBatch class is a really fast version of the DisplayObjectContainer
+        * 
         * built solely for speed, so use when you need a lot of sprites or particles.
+        * 
         * And it's extremely easy to use :
+        * 
+        * 
         * 
         *    var container = new PIXI.SpriteBatch();
         * 
+        * 
+        * 
         *    stage.addChild(container);
         * 
+        * 
+        * 
         *    for(var i  = 0; i < 100; i++)
+        * 
         *    {
+        * 
         *        var sprite = new PIXI.Sprite.fromImage("myImage.png");
+        * 
         *        container.addChild(sprite);
+        * 
         *    }
+        * 
         * And here you have a hundred sprites that will be renderer at the speed of light
         * 
         * @param texture -
@@ -2244,6 +2324,7 @@ declare module PIXI {
 
     /**
     * A texture stores the information that represents an image or part of an image. It cannot be added
+    * 
     * to the display list directly. Instead use it as the texture for a PIXI.Sprite. If no frame is provided then the whole image is used.
     */
     export class Texture implements Mixin {
@@ -2261,6 +2342,7 @@ declare module PIXI {
 
         /**
         * Helper function that returns a Texture objected based on the given frame id.
+        * 
         * If the frame id is not in the texture cache an error will be thrown.
         * 
         * @param frameId The frame id of the texture
@@ -2269,6 +2351,7 @@ declare module PIXI {
 
         /**
         * Helper function that creates a Texture object from the given image url.
+        * 
         * If the image is not in the texture cache it will be  created and loaded.
         * 
         * @param imageUrl The image url of the texture
@@ -2296,6 +2379,7 @@ declare module PIXI {
 
         /**
         * A texture stores the information that represents an image or part of an image. It cannot be added
+        * 
         * to the display list directly. Instead use it as the texture for a PIXI.Sprite. If no frame is provided then the whole image is used.
         * 
         * @param baseTexture The base texture source to create the texture from
@@ -2313,6 +2397,7 @@ declare module PIXI {
 
         /**
         * This is the area of the BaseTexture image to actually copy to the Canvas / WebGL when rendering,
+        * 
         * irrespective of the actual frame size or placement (which can be influenced by trimmed texture atlases)
         */
         crop: Rectangle;
@@ -2409,6 +2494,7 @@ declare module PIXI {
 
         /**
         * If true the TilingSprite will run generateTexture on its **next** render pass.
+        * 
         * This is set by the likes of Phaser.LoadTexture.setFrame.
         * Default: true
         */
@@ -2421,6 +2507,7 @@ declare module PIXI {
 
         /**
         * If enabled a green rectangle will be drawn behind the generated tiling texture, allowing you to visually
+        * 
         * debug the texture being used.
         */
         textureDebug: boolean;
@@ -2454,6 +2541,7 @@ declare module PIXI {
 
         /**
         * Destroy this DisplayObject.
+        * 
         * Removes all references to transformCallbacks, its parent, the stage, filters, bounds, mask and cached Sprites.
         */
         destroy(): void;
@@ -2468,6 +2556,7 @@ declare module PIXI {
 
         /**
         * Sets the texture of the sprite. Be warned that this doesn't remove or destroy the previous
+        * 
         * texture this Sprite was using.
         * 
         * @param texture The PIXI texture that is displayed by the sprite
@@ -2737,6 +2826,7 @@ declare module PIXI {
 
         /**
         * Calculate the points for a quadratic bezier curve. (helper function..)
+        * 
         * Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier-curve-in-c
         * 
         * @param fromX Origin point x
@@ -2841,8 +2931,11 @@ declare module PIXI {
 
     /**
     * The WebGLRenderer draws the stage and all its content onto a webGL enabled canvas. This renderer
+    * 
     * should be used for browsers that support webGL. This Render works by automatically managing webGLBatchs.
+    * 
     * So no need for Sprite Batches or Sprite Clouds.
+    * 
     * Don't forget to add the view to your DOM or you will not see anything :)
     */
     export class WebGLRenderer implements PixiRenderer {
@@ -2852,8 +2945,11 @@ declare module PIXI {
 
         /**
         * The WebGLRenderer draws the stage and all its content onto a webGL enabled canvas. This renderer
+        * 
         * should be used for browsers that support webGL. This Render works by automatically managing webGLBatchs.
+        * 
         * So no need for Sprite Batches or Sprite Clouds.
+        * 
         * Don't forget to add the view to your DOM or you will not see anything :)
         * 
         * @param game A reference to the Phaser Game instance
@@ -2886,8 +2982,11 @@ declare module PIXI {
 
         /**
         * This sets if the WebGLRenderer will clear the context texture or not before the new render pass. If true:
+        * 
         * If the Stage is NOT transparent, Pixi will clear to alpha (0, 0, 0, 0).
+        * 
         * If the Stage is transparent, Pixi will clear to the target Stage's background color.
+        * 
         * Disable this by setting this to false. For example: if your game has a canvas filling background image, you often don't need this set.
         */
         clearBeforeRender: boolean;
@@ -3160,22 +3259,40 @@ declare module PIXI {
     /**
     * A RenderTexture is a special texture that allows any Pixi display object to be rendered to it.
     * 
+    * 
+    * 
     * __Hint__: All DisplayObjects (i.e. Sprites) that render to a RenderTexture should be preloaded otherwise black rectangles will be drawn instead.
+    * 
+    * 
     * 
     * A RenderTexture takes a snapshot of any Display Object given to its render method. The position and rotation of the given Display Objects is ignored. For example:
     * 
+    * 
+    * 
     *    var renderTexture = new PIXI.RenderTexture(800, 600);
+    * 
     *    var sprite = PIXI.Sprite.fromImage("spinObj_01.png");
+    * 
     *    sprite.position.x = 800/2;
+    * 
     *    sprite.position.y = 600/2;
+    * 
     *    sprite.anchor.x = 0.5;
+    * 
     *    sprite.anchor.y = 0.5;
+    * 
     *    renderTexture.render(sprite);
+    * 
+    * 
     * 
     * The Sprite in this case will be rendered to a position of 0,0. To render this sprite at its actual position a DisplayObjectContainer should be used:
     * 
+    * 
+    * 
     *    var doc = new PIXI.DisplayObjectContainer();
+    * 
     *    doc.addChild(sprite);
+    * 
     *    renderTexture.render(doc);  // Renders to center of renderTexture
     */
     export class RenderTexture extends Texture {
@@ -3184,22 +3301,40 @@ declare module PIXI {
         /**
         * A RenderTexture is a special texture that allows any Pixi display object to be rendered to it.
         * 
+        * 
+        * 
         * __Hint__: All DisplayObjects (i.e. Sprites) that render to a RenderTexture should be preloaded otherwise black rectangles will be drawn instead.
+        * 
+        * 
         * 
         * A RenderTexture takes a snapshot of any Display Object given to its render method. The position and rotation of the given Display Objects is ignored. For example:
         * 
+        * 
+        * 
         *    var renderTexture = new PIXI.RenderTexture(800, 600);
+        * 
         *    var sprite = PIXI.Sprite.fromImage("spinObj_01.png");
+        * 
         *    sprite.position.x = 800/2;
+        * 
         *    sprite.position.y = 600/2;
+        * 
         *    sprite.anchor.x = 0.5;
+        * 
         *    sprite.anchor.y = 0.5;
+        * 
         *    renderTexture.render(sprite);
+        * 
+        * 
         * 
         * The Sprite in this case will be rendered to a position of 0,0. To render this sprite at its actual position a DisplayObjectContainer should be used:
         * 
+        * 
+        * 
         *    var doc = new PIXI.DisplayObjectContainer();
+        * 
         *    doc.addChild(sprite);
+        * 
         *    renderTexture.render(doc);  // Renders to center of renderTexture
         * 
         * @param width The width of the render texture

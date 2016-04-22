@@ -41,15 +41,21 @@ Thousands of developers worldwide use it. From indies and multi-national digital
 
 <div align="center"><img src="http://phaser.io/images/github/news.jpg"></div>
 
-> TBA
+> 22nd April 2016
 
-Phaser 2.4.7 is our second release in 2016 and represents several months of fixes and optimizations. As a point release it's a safe update from a previous 2.4 build, but as always please test first before upgrading, and be sure to skim through the extensive change log. There are some great new features including Dolby Digital sound support, loads of updates to Pixi and a new Webpack bundle.
+We're pleased to announce the release of Phaser 2.4.7. This version encompasses another raft of fixes, updates and new features. Many hours of hard work were put in to diligently working through the GitHub issues list, and fixing and closing down as many issues as we possibly could.
 
-Due to on-going development of Lazer (previously known as Phaser 3) Phaser is soon to enter the LTS (long-term support) stage of its life. This is when we impose a feature freeze, locking the API down and responding only to bugs. This is a necessary step to allow us to focus on Lazer while still ensuring Phaser is given the support it deserves. Thousands of developers use Phaser and we've no intention of ignoring that. However with the release of 2.4.5 we will now be moderating issues opened on GitHub to this effect.
+My thanks to all those who contributed to this release, either by way of telling us about an issue, providing a fix, or just testing out the release candidate.
 
-As always, keep you eyes on the Phaser web site or [Twitter](https://twitter.com/photonstorm) for the latest news.
+There are a few internal changes in 2.4.7, nothing that breaks the public-facing API, but if you do some deep-dive work in Phasers guts then you may want to check out the change log, and commit history, to be sure it doesn't impact your own code.
 
-Finally we'd be extremely grateful if you could get involved with our [Phaser Patreon campaign](https://www.patreon.com/photonstorm). The uptake so far has been fantastic. Thank you to everyone who now supports Phaser development and shares our belief in the future of HTML5 gaming and Phasers role in that.
+We are now splitting our time between development of Lazer, and Phaser 2.5. We decided, after much discussion with the community, that we owed it to Phaser to go out on a high, so 2.5 will be the version in which we do just that. After this Phaser will enter the LTS (long-term support) stage of its life. 
+
+This is when we impose a feature freeze, locking the API down and responding only to bugs. This is a necessary step to allow us to focus on Lazer while still ensuring Phaser is given the support it deserves.
+
+As always, keep you eyes on the Phaser web site, our weekly newsletter, or follow me on [Twitter](https://twitter.com/photonstorm) for the latest updates.
+
+We'd be extremely grateful if you could get involved with our [Phaser Patreon campaign](https://www.patreon.com/photonstorm). The uptake so far has been fantastic. Thank you to everyone who now supports Phaser development and shares our belief in the future of HTML5 gaming, and Phasers role in that.
 
 Happy coding everyone! See you on the forums.
 
@@ -91,7 +97,7 @@ Abra: [Complete browser based game development](https://aurifexlabs.com/)
 
 <div align="center"><img src="http://phaser.io/images/github/phaser-world.png"></div>
 
-[Phaser World](http://phaser.io/community/newsletter) is our free weekly newsletter published every Friday. It contains a summary of the news posted to the Phaser site that week. This includes new games, lots of tutorials, videos, talks and occasionally special offers.
+Every Friday we publish our newsletter: [Phaser World](http://phaser.io/community/newsletter). It's packed full of the latest Phaser games, tutorials, videos, meet-ups, conference talks and more. We also post regular development updates, and occasionally special offers.
 
 ![div](http://www.phaser.io/images/github/div.png)
 
@@ -114,6 +120,8 @@ Install via [bower](http://bower.io)
 Install via [npm](https://www.npmjs.com)
 
 `npm install phaser`
+
+Using Browserify? Please [read this](#browserify).
 
 ### CDN
 
@@ -174,6 +182,10 @@ As well as the book you get all the source code, graphics and assets to go with 
 
 [Read More](http://phaser.io/interphase)
 
+### Phaser Editor - A complete Phaser Editor
+
+[Phaser Editor](http://phasereditor.boniatillo.com/) is a brand new Eclipse based editor that offers lots of built-in tools specifically for Phaser developers. Handy features include Smart code auto-completion, built-in web server, documentation search, asset management, texture atlas creator, audio sprite creator, asset previews and lots more.
+
 ### Game Mechanic Explorer
 
 The [Game Mechanic Explorer](http://gamemechanicexplorer.com) is a great interactive way to learn how to develop specific game mechanics in Phaser. Well worth exploring once you've got your dev environment set-up.
@@ -197,6 +209,7 @@ As a result of this work the minimum build size of Phaser is now just 80KB minif
 
 See the [Creating a Custom Phaser Build](http://phaser.io/tutorials/creating-custom-phaser-builds) tutorial for details.
 
+<a name="browserify"></a>
 ### Browserify / CJS
 
 Phaser was never written to be modular. Everything exists under one single global namespace, and you cannot `require` selected parts of it into your builds. It expects 3 global vars to exist in order to work properly: `Phaser`, `PIXI` and `p2`. The following is one way of doing this:
@@ -330,7 +343,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 <a name="change-log"></a>
 ## Change Log
 
-## Version 2.4.7 - "Hinderstap" - In Development
+## Version 2.4.7 - "Hinderstap" - 22nd April 2016
 
 ### New Features
 

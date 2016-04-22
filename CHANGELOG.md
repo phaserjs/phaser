@@ -1,5 +1,89 @@
 # Change Log
 
+## Version 2.4.7 - "Hinderstap" - 22nd April 2016
+
+### New Features
+
+* Added P2.Body.thrustLeft which will move the Body to the left by the speed given (thanks James Pryor)
+* Added P2.Body.thrustRight which will move the Body to the right by the speed given (thanks James Pryor)
+* Polygon now takes an array of arrays as a new type when constructing it: `[[x1, y1], [x2, y2]]` (thanks @ShimShamSam #2360)
+* Text has a new property `maxLines` which is the maximum number of lines to be shown for wrapped text. If set to 0 (the default) there is limit. This prevents wrapped text from overflowing on a fixed layout (thanks @slashman #2410)
+* `outOfCameraBoundsKill` is a new boolean property that all Game Objects with the `InWorld` component has. If `autoCull` and this property are both `true` then the Object will be automatically killed if it leaves the camera bounds (thanks @jakewilson #2402)
+* Group.getByName searches the Group for the first instance of a child with the `name` property matching the given argument. Should more than one child have the same name only the first instance is returned.
+* BitmapData has a new property `frameData` which is a Phaser.FrameData container instance. It contains a single Frame by default, matching the dimensions of the entire BitmapData, but can be populated with additional frames should you wish to create animations from dynamic BitmapData textures.
+* FrameData.destroy will nullify the local arrays used to contain Frame instances.
+* SoundManager.muteOnPause is a new boolean that allows you to control if the Sound system gets muted automatically when a Phaser game pauses, such as when it loses focus. You may need to set this to `false` if you wish to control the audio system from outside of your Phaser game, i.e. from DOM buttons or similar (#2382)
+* You can now pass a TilemapLayer as a Texture to a TileSprite. A limitation of this is that if you pass it to a TileSprite it will make a fill pattern from the TilemapLayer at that instant it's passed, and it won't keep track of the layer in future should it update (thanks @jdnichollsc #1989)
+* Camera has a new property: `lerp`. This is a Point object, that allows you to control the amount of horizontal and vertical smoothing to be applied to the camera when it tracks a Sprite. It works both with and without deadzones, and is turned off by default. Set it to low values such as 0.1 for really smooth motion tracking (thanks to @WombatTurkey for the idea of adding this)
+* Camera.shake is a new function that creates a camera shake effect. You can specify the intensity, duration and direction of the effect. You can also set if it should shake the camera out of bounds or not.
+* Camera.flash is a new function that makes the camera 'flash' over the top of your game. It works by filling the game with the solid fill color specified, and then fading it away to alpha 0 over the duration given. This is great for things like hit effects. You can listen for the Camera.onflashComplete Signal.
+* Camera.fade is a new function that makes the camera fade to the color given, over the course of the duration specified. This is great for things like transitioning from one State to another. You can listen for the Camera.onFadeComplete Signal.
+* Camera.resetFX resets any active FX, such as a fade or flash and immediately clears it. Useful for calling after a fade in order to remove the fade from the Stage.
+* Phaser.Camera.ENABLE_FX is a const that controls if the Camera FX are available or not. It's `true` by default, but if you set it to `false` before boot then it won't create the Graphics object required to process the effects.
+* The Arcade Physics Body has two new properties: `left` and `top`. These are the same as `Body.x` and `Body.y` but allow you to pass the Body to geometry level functions such as Circle.contains.
+* World.separate has been optimized to cut down on the number of calls to `intersect` from 3 calls per Game Object collision check, to 2. So if you were colliding 50 sprites it will reduce the call count from 150 to 100 per frame. It also reduces the calls made to `seperateX` and `seperateY` by the same factor.
+* Two immovable bodies would never set their overlap data, even if an overlap only check was being made. As this is useful data to have this has been changed. Two immovable bodies will still never separate from each other, but they _will_ have their `overlapX` and `overlapY` properties calculated now.
+* P2.Body.offset is now used and applied to the Sprite position during rendering. The values given are normal pixel values, and offset the P2 Body from the center of the Sprite (thanks @Mourtz #2430)
+
+### Updates
+
+* TypeScript definitions fixes and updates (thanks @jamesgroat @kiswa)
+* Docs typo fixes (thanks @thiagojobson @hayesmaker @EJanuszewski)
+* Removed a `console.log` from the TilingSprite generator.
+* Sound.position can no longer become negative, meaning calls to AudioContextNode.start with negative position offsets will no longer throw errors (thanks @Weedshaker #2351 #2368)
+* The default state of the internal property `_boundDispatch` in Phaser.Signal is now `false`, which allows for use of boundDispatches (thanks @alvinlao #2346)
+* The Tiled parser only supports uncompressed layer data. Previously it would silently fail, now it detects if layer compression is used and displays a console warning instead (thanks @MannyC #2413)
+* The Tiled parser now removes the `encoding` parameter so that a subsequent process doesn't try to decode the data again (thanks @MannyC #2412)
+* Ensure a parent container is a Group before removing from its hash (thanks @rblopes #2397)
+* The Game Object Input Handler now checks to see if the Object was destroyed during the `onInputDown` phase, and bails out early if so (thanks @zeterain #2394)
+* The Destroy component will now call TweenManager.removeFrom, removing any active tweens from the TweenManager upon the Game Objects destructions (thanks @PokemonAshLovesMyTurkeyAndILikeYouTwo #2408)
+* Tween.update will now return `false` (flagging the Tween for destruction) should the Tween.target property every become falsey. This can happen if the object the Tween was tracking is destroyed, nulled or generally removed.
+* TweenData.repeatTotal is a new property that keeps track of the total number of times the Tween should repeat. If TweenData.start is called, as a result of the Tween repeatCount being > 0 then the child tween resets its total before re-starting.
+* The Debug canvas now listens for the ScaleManager.onSizeChange signal and resizes itself accordingly when running under WebGL. This means if your game size changes the Debug canvas won't be clipped off (thanks @francisberesford #1919)
+* Camera.follow now uses the Targets `world` property to seed the camera coordinates from, rather than its local position. This means Sprites that are members of offset Groups, or transformed display lists, should now be followed more accurately (thanks @rbozan #2106)
+* PluginManager.destroy is now called by Game.destroy.
+* Game.forceSingleUpdate is now `true` by default.
+* Video now uses MediaStreamTrack.stop() instead of MediaStream.stop() where possible, as the later is now deprecated in some browsers (thanks @stoneman1 #2371)
+* The Physics Manager will now throw a console warning if you try to enable a physics body using an unknown physics engine type (thanks @jakewilson #2415)
+* The Tileset class will tell you the name of the tileset image throwing the uneven size error (thanks @jakewilson #2415)
+* Emitter.start when used with a false `explode` parameter would cumulatively add particles to the current total. With quantity 10 the first call would emit 10 particles, the next 20, and so on. Calls to start will now reset the quantity each time. This is a behavior change from earlier versions, so if you relied on the old way please account for it in your code (thanks @BdR76 #2187)
+* You can now pass in your own Canvas element to Phaser and it will use that instead of creating one itself. To do so you must pass a Game Configuration object to Phaser when you instantiate it, and set the `canvas` property of the config object to be the DOM element you wish to use, i.e.: `{ canvas: document.getElementById('yourCanvas') }` (thanks @Friksel #2311)
+* When loading Video with the `asBlob` argument set it now uses a 'blob' type for the XHR loader, and doesn't cast the resulting file as a Blob upon load. This fixes loading videos as blobs on Chrome for Android (thanks @JuCarr #2433)
+* When the Loader loads audio via the Audio tag, instead of Web Audio, it used to use `Phaser.GAMES[_this.game.id].load` as the callback handler, which would stop it from working if you had multiple Loaders set-up within Phaser. It now uses a local reference to `_this` instead (thanks @SBCGames #2435)
+
+### Bug Fixes
+
+* The `mouseoutglobal` event listener wasn't removed when the game was destroyed (thanks @stoneman1 #2345 #2344 #2342)
+* Fixed issue with IE crashing on this.context.close in the Sound Manager (thanks @stoneman1 #2349)
+* Phaser.World.centerX and Phaser.World.centerY only worked if the bounds had an origin of 0, 0. They now take into account the actual origin (thanks @fillmoreb #2353)
+* SoundManager.destroy now validates that context.close is a valid function before calling it (thanks @brianbunch #2355)
+* SoundManager.destroy doesn't close the context if it's being stored in PhaserGlobal (thanks @brianbunch #2356)
+* Fix typo in p2 BodyDebug.componentToHex that made most debug bodies appear reddish in color (thanks @englercj #2381)
+* Previously when a sprite was tinted and a new texture was loaded then the tint did not apply to the texture and the old tinted texture was used (thanks @CptSelewin #2383)
+* Negative lineSpacing in Text objects will no longer crop the bottom pixels off lines of text (thanks @gaelenh #2379 #2374)
+* BitmapData.copy, and by extension draw, drawFull, drawGroup, etc, would incorrectly handle drawing a tinted Sprite if it was using a frame from a texture atlas (thanks @PhaserDebugger #2405)
+* Text that used fonts which had numbers in their names wouldn't be correctly rendered unless you explicitly set the font property after creation. You can now pass font names with numbers in them as the font style object correctly (thanks @And-0 #2390)
+* Tween.update wouldn't dispatch an `onLoop` signal for Tweens with just one child, such as those created via Tween.to with -1 as the repeat value (thanks @ForgeableSum #2407)
+* Arcade.Body's speed property was only set when the body moved, it now updates regardless (thanks @mark-henry #2417)
+* Camera.position would return the view rectangles centerX/Y coordinates, instead of view.x/y (which is what Camera.x/y returns), so it has been updated to return view.x/y instead (thanks @kamparR #2120)
+* Passing a BitmapData to a TileSprite as a texture would fail if the BitmapData had not been previously added to the cache. It now uses the new frameData property (thanks @mzamateo @lucap86 #2380)
+* When setting a global volume for the SoundManager it would previously incorrectly calculate the volumes of AudioTag based Sound objects that were not played at volume 1. The new approach uses Sound.updateGlobalVolume which adjusts the Sound volume to be a percentage of the global volume. So if the global volume is 0.5 and the Sound volume is 0.5, the Sound will play with an actual volume of 0.25 (thanks @VitaZheltyakov #2325)
+* Sound.play when using an AudioTag would ignore the muted state of the SoundManager and play regardless. It now checks the SoundManager.mute state on play, and sets the volume accordingly (thanks @brianbunch #2139)
+* Graphics objects can now have a Physics Body directly attached to them, where-as before it would throw an error due to a lack of anchor property (thanks @NLilley #2400)
+* A Game Object with `fixedToCamera = true` that was then set for Input, and enabled for dragging from its center (`input.enableDrag(true)`) would throw an error upon being dragged (thanks @solusipse #2367)
+* P2.World.updateBoundsCollisionGroup wouldn't use the `boundsCollisionGroup` mask if you passed `true` as the argument, only if it was left undefined.
+* P2.World.updateBoundsCollisionGroup didn't set the `_boundsOwnGroup` private var, meaning the `World.setBounds` method wasn't able to restore previously set collision masks automatically (thanks @jmp909 #2183)
+* P2.World.setBounds has been re-written completely. If the World is resized it no longer removes the P2 body instances and re-creates them. Instead it checks to see which walls are required and then just moves the position of the shapes instead, or updates them, or creates or destroys them as required. This is far more efficient, especially in a game which sees a lot of world bounds changes (i.e. resizes responsively in browser)
+* BitmapText would throw an error if you passed in a number as the text property to the constructor. It worked if you used the text accessor directly because it cast the value to a string, but the constructor missed out this step (thanks @lewispollard #2429)
+* Dragging a Sprite while the camera was moving would slowly cause the Sprite position to become out of sync the further the camera moved. A Sprite being dragged now tracks the camera position during the drag update and adjusts accordingly (thanks @jeroenverfallie #1044)
+
+### Pixi Updates
+
+Please note that Phaser uses a custom build of Pixi and always has done. The following changes have been made to our custom build, not to Pixi in general.
+
+* DisplayObjectContainer.getLocalBounds destroys the worldTransforms on children until the next `stage.updateTransform()` call. This can make a number of things break including mouse input if width, height or getLocalBounds methods are called inside of an update or preUpdate method. This is now fixed in our Pixi build (thanks @st0nerhat #2357)
+* PIXI.CanvasRenderer.resize now applies the `renderSession.smoothProperty` to the Canvas context when it resizes. This should help with unwanted canvas smoothing (thanks @sergey7c4 #2395 #2317)
+
 ## Version 2.4.6 - "Baerlon" - 18th February 2016
 
 2.4.6 is a point release that addresses 2 severe bugs, and should be used in place of 2.4.5 in all instances. The 2.4.5 change log appears after this one.

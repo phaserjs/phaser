@@ -1131,8 +1131,34 @@
 
     
     <div class="description">
-        <p>A Signal is an event dispatch mechanism that supports broadcasting to multiple listeners.</p>
-<p>Event listeners are uniquely identified by the listener/callback function and the context.</p>
+        <p>Signals are what Phaser uses to handle events and event dispatching.
+You can listen for a Signal by binding a callback / function to it.
+This is done by using either <code>Signal.add</code> or <code>Signal.addOnce</code>.</p>
+<p>For example you can listen for a touch or click event from the Input Manager 
+by using its <code>onDown</code> Signal:</p>
+<p><code>game.input.onDown.add(function() { ... });</code></p>
+<p>Rather than inline your function, you can pass a reference:</p>
+<p><code>game.input.onDown.add(clicked, this);</code>
+<code>function clicked () { ... }</code></p>
+<p>In this case the second argument (<code>this</code>) is the context in which your function should be called.</p>
+<p>Now every time the InputManager dispatches the <code>onDown</code> signal (or event), your function
+will be called.</p>
+<p>Very often a Signal will send arguments to your function.
+This is specific to the Signal itself.
+If you're unsure then check the documentation, or failing that simply do:</p>
+<p><code>Signal.add(function() { console.log(arguments); })</code></p>
+<p>and it will log all of the arguments your function received from the Signal.</p>
+<p>Sprites have lots of default signals you can listen to in their Events class, such as:</p>
+<p><code>sprite.events.onKilled</code></p>
+<p>Which is called automatically whenever the Sprite is killed.
+There are lots of other events, see the Events component for a list.</p>
+<p>As well as listening to pre-defined Signals you can also create your own:</p>
+<p><code>var mySignal = new Phaser.Signal();</code></p>
+<p>This creates a new Signal. You can bind a callback to it:</p>
+<p><code>mySignal.add(myCallback, this);</code></p>
+<p>and then finally when ready you can dispatch the Signal:</p>
+<p><code>mySignal.dispatch(your arguments);</code></p>
+<p>And your callback will be invoked. See the dispatch method for more details.</p>
     </div>
     
 
@@ -1166,7 +1192,7 @@
 
     
     <dt class="tag-source">Source -
-    <a href="src_core_Signal.js.html">core/Signal.js</a>, <a href="src_core_Signal.js.html#sunlight-1-line-16">line 16</a>
+    <a href="src_core_Signal.js.html">core/Signal.js</a>, <a href="src_core_Signal.js.html#sunlight-1-line-60">line 60</a>
     </dt>
     
 
@@ -1250,7 +1276,7 @@
 
     
     <dt class="tag-source">Source -
-    <a href="src_core_Signal.js.html">core/Signal.js</a>, <a href="src_core_Signal.js.html#sunlight-1-line-57">line 57</a>
+    <a href="src_core_Signal.js.html">core/Signal.js</a>, <a href="src_core_Signal.js.html#sunlight-1-line-100">line 100</a>
     </dt>
     
 
@@ -1308,7 +1334,7 @@ Use <a href="Phaser.Signal.html#forget">forget</a> to clear any currently memori
 
     
     <dt class="tag-source">Source -
-    <a href="src_core_Signal.js.html">core/Signal.js</a>, <a href="src_core_Signal.js.html#sunlight-1-line-41">line 41</a>
+    <a href="src_core_Signal.js.html">core/Signal.js</a>, <a href="src_core_Signal.js.html#sunlight-1-line-84">line 84</a>
     </dt>
     
 
@@ -1584,7 +1610,7 @@ and the value 100 were the custom arguments given in the call to 'add'.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_core_Signal.js.html">core/Signal.js</a>, <a href="src_core_Signal.js.html#sunlight-1-line-189">line 189</a>
+    <a href="src_core_Signal.js.html">core/Signal.js</a>, <a href="src_core_Signal.js.html#sunlight-1-line-232">line 232</a>
     </dt>
     
 
@@ -1856,7 +1882,7 @@ the listener will be removed immediately.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_core_Signal.js.html">core/Signal.js</a>, <a href="src_core_Signal.js.html#sunlight-1-line-231">line 231</a>
+    <a href="src_core_Signal.js.html">core/Signal.js</a>, <a href="src_core_Signal.js.html#sunlight-1-line-274">line 274</a>
     </dt>
     
 
@@ -1988,7 +2014,7 @@ the listener will be removed immediately.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_core_Signal.js.html">core/Signal.js</a>, <a href="src_core_Signal.js.html#sunlight-1-line-352">line 352</a>
+    <a href="src_core_Signal.js.html">core/Signal.js</a>, <a href="src_core_Signal.js.html#sunlight-1-line-395">line 395</a>
     </dt>
     
 
@@ -2060,7 +2086,7 @@ Calling methods on a disposed objects results in undefined behavior.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_core_Signal.js.html">core/Signal.js</a>, <a href="src_core_Signal.js.html#sunlight-1-line-408">line 408</a>
+    <a href="src_core_Signal.js.html">core/Signal.js</a>, <a href="src_core_Signal.js.html#sunlight-1-line-451">line 451</a>
     </dt>
     
 
@@ -2130,7 +2156,7 @@ Calling methods on a disposed objects results in undefined behavior.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_core_Signal.js.html">core/Signal.js</a>, <a href="src_core_Signal.js.html#sunlight-1-line-394">line 394</a>
+    <a href="src_core_Signal.js.html">core/Signal.js</a>, <a href="src_core_Signal.js.html#sunlight-1-line-437">line 437</a>
     </dt>
     
 
@@ -2220,7 +2246,7 @@ Calling methods on a disposed objects results in undefined behavior.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_core_Signal.js.html">core/Signal.js</a>, <a href="src_core_Signal.js.html#sunlight-1-line-326">line 326</a>
+    <a href="src_core_Signal.js.html">core/Signal.js</a>, <a href="src_core_Signal.js.html#sunlight-1-line-369">line 369</a>
     </dt>
     
 
@@ -2292,7 +2318,7 @@ See <a href="Phaser.Signal.html#active">active</a> to enable/disable the signal 
 
     
     <dt class="tag-source">Source -
-    <a href="src_core_Signal.js.html">core/Signal.js</a>, <a href="src_core_Signal.js.html#sunlight-1-line-338">line 338</a>
+    <a href="src_core_Signal.js.html">core/Signal.js</a>, <a href="src_core_Signal.js.html#sunlight-1-line-381">line 381</a>
     </dt>
     
 
@@ -2474,7 +2500,7 @@ See <a href="Phaser.Signal.html#active">active</a> to enable/disable the signal 
 
     
     <dt class="tag-source">Source -
-    <a href="src_core_Signal.js.html">core/Signal.js</a>, <a href="src_core_Signal.js.html#sunlight-1-line-175">line 175</a>
+    <a href="src_core_Signal.js.html">core/Signal.js</a>, <a href="src_core_Signal.js.html#sunlight-1-line-218">line 218</a>
     </dt>
     
 
@@ -2668,7 +2694,7 @@ See <a href="Phaser.Signal.html#active">active</a> to enable/disable the signal 
 
     
     <dt class="tag-source">Source -
-    <a href="src_core_Signal.js.html">core/Signal.js</a>, <a href="src_core_Signal.js.html#sunlight-1-line-262">line 262</a>
+    <a href="src_core_Signal.js.html">core/Signal.js</a>, <a href="src_core_Signal.js.html#sunlight-1-line-305">line 305</a>
     </dt>
     
 
@@ -2807,7 +2833,7 @@ See <a href="Phaser.Signal.html#active">active</a> to enable/disable the signal 
 
     
     <dt class="tag-source">Source -
-    <a href="src_core_Signal.js.html">core/Signal.js</a>, <a href="src_core_Signal.js.html#sunlight-1-line-286">line 286</a>
+    <a href="src_core_Signal.js.html">core/Signal.js</a>, <a href="src_core_Signal.js.html#sunlight-1-line-329">line 329</a>
     </dt>
     
 
@@ -2897,7 +2923,7 @@ See <a href="Phaser.Signal.html#active">active</a> to enable/disable the signal 
 
     
     <dt class="tag-source">Source -
-    <a href="src_core_Signal.js.html">core/Signal.js</a>, <a href="src_core_Signal.js.html#sunlight-1-line-428">line 428</a>
+    <a href="src_core_Signal.js.html">core/Signal.js</a>, <a href="src_core_Signal.js.html#sunlight-1-line-471">line 471</a>
     </dt>
     
 
@@ -2940,13 +2966,13 @@ See <a href="Phaser.Signal.html#active">active</a> to enable/disable the signal 
 					
 					
 		<span class="copyright">
-		Phaser Copyright © 2012-2015 Photon Storm Ltd.
+		Phaser Copyright © 2012-2016 Photon Storm Ltd.
 		</span>
 					<br />
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
-		on Thu Feb 18 2016 14:41:06 GMT+0000 (GMT Standard Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Apr 22 2016 15:11:55 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
