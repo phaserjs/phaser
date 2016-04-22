@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.4.7 "Hinderstap" - Built: Thu Apr 14 2016 13:21:56
+* v2.4.7 "Hinderstap" - Built: Fri Apr 22 2016 14:44:37
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -55,7 +55,7 @@ var Phaser = Phaser || {
     * @constant
     * @type {string}
     */
-    VERSION: '2.4.7 RC1',
+    VERSION: '2.4.7 RC2',
 
     /**
     * An array of Phaser game instances.
@@ -5746,8 +5746,10 @@ Phaser.Camera.prototype = {
             this._shake.y = Math.floor(this._shake.y);
         }
 
-        this.displayObject.position.x = -(this.view.x + this._shake.x);
-        this.displayObject.position.y = -(this.view.y + this._shake.y);
+        // this.displayObject.position.x = -(this.view.x + this._shake.x);
+        // this.displayObject.position.y = -(this.view.y + this._shake.y);
+        this.displayObject.position.x = -this.view.x;
+        this.displayObject.position.y = -this.view.y;
 
     },
 
@@ -8692,7 +8694,7 @@ Phaser.Stage.prototype.update = function () {
 
 /**
 * This is called automatically before the renderer runs and after the plugins have updated.
-* In postUpdate this is where all the final physics calculatations and object positioning happens.
+* In postUpdate this is where all the final physics calculations and object positioning happens.
 * The objects are processed in the order of the display list.
 * The only exception to this is if the camera is following an object, in which case that is updated first.
 *
@@ -8877,7 +8879,7 @@ Phaser.Stage.prototype.setBackgroundColor = function (color) {
 *
 * @method Phaser.Stage#destroy
 */
-Phaser.Stage.prototype.destroy  = function () {
+Phaser.Stage.prototype.destroy = function () {
 
     if (this._hiddenVar)
     {
@@ -10377,7 +10379,6 @@ Phaser.Group.prototype.postUpdate = function () {
     }
 
 };
-
 
 /**
 * Find children matching a certain predicate.
@@ -17350,6 +17351,8 @@ Phaser.InputHandler = function (sprite) {
         id: 0,
         x: 0,
         y: 0,
+        camX: 0,
+        camY: 0,
         isDown: false,
         isUp: false,
         isOver: false,
@@ -18218,14 +18221,17 @@ Phaser.InputHandler.prototype = {
         }
         else
         {
+            var cx = this.game.camera.x - this._pointerData[pointer.id].camX;
+            var cy = this.game.camera.y - this._pointerData[pointer.id].camY;
+
             if (this.allowHorizontalDrag)
             {
-                this.sprite.x = px;
+                this.sprite.x = px + cx;
             }
 
             if (this.allowVerticalDrag)
             {
-                this.sprite.y = py;
+                this.sprite.y = py + cy;
             }
 
             if (this.boundsRect)
@@ -18443,6 +18449,10 @@ Phaser.InputHandler.prototype = {
 
         this.isDragged = true;
         this._draggedPointerID = pointer.id;
+
+        this._pointerData[pointer.id].camX = this.game.camera.x;
+        this._pointerData[pointer.id].camY = this.game.camera.y;
+
         this._pointerData[pointer.id].isDragged = true;
 
         if (this.sprite.fixedToCamera)
@@ -28666,13 +28676,15 @@ PIXI.Graphics.prototype._renderCanvas = function(renderSession)
         }
 
         var resolution = renderSession.resolution;
+        var tx = (transform.tx * renderSession.resolution) + renderSession.shakeX;
+        var ty = (transform.ty * renderSession.resolution) + renderSession.shakeY;
 
         context.setTransform(transform.a * resolution,
                              transform.b * resolution,
                              transform.c * resolution,
                              transform.d * resolution,
-                             transform.tx * resolution,
-                             transform.ty * resolution);
+                             tx,
+                             ty);
 
         PIXI.CanvasGraphics.renderGraphics(this, context);
 
@@ -49569,7 +49581,7 @@ Phaser.Loader.prototype = {
                 {
                     if (file.asBlob)
                     {
-                        this.xhrLoad(file, this.transformUrl(file.url, file), 'arraybuffer', this.fileComplete);
+                        this.xhrLoad(file, this.transformUrl(file.url, file), 'blob', this.fileComplete);
                     }
                     else
                     {
@@ -49730,9 +49742,9 @@ Phaser.Loader.prototype = {
             var playThroughEvent = function () {
                 file.data.removeEventListener('canplaythrough', playThroughEvent, false);
                 file.data.onerror = null;
-                // Why does this cycle through games?
-                Phaser.GAMES[_this.game.id].load.fileComplete(file);
+                _this.fileComplete(file);
             };
+
             file.data.onerror = function () {
                 file.data.removeEventListener('canplaythrough', playThroughEvent, false);
                 file.data.onerror = null;
@@ -50156,7 +50168,7 @@ Phaser.Loader.prototype = {
                 {
                     try
                     {
-                        file.data = new Blob([new Uint8Array(xhr.response)]);
+                        file.data = xhr.response;
                     }
                     catch (e)
                     {
@@ -57254,7 +57266,7 @@ Phaser.LinkedList.prototype.constructor = Phaser.LinkedList;
 * quickly and easily, without the need for any external files. You can create textures for sprites and in
 * coming releases we'll add dynamic sound effect generation support as well (like sfxr).
 *
-* Access this via `State.create` (or `this.create` from within a State object)
+* Access this via `Game.create` (`this.game.create` from within a State object)
 * 
 * @class Phaser.Create
 * @constructor
@@ -60646,58 +60658,34 @@ Phaser.Physics.Arcade.prototype = {
     * Check for intersection against two bodies.
     *
     * @method Phaser.Physics.Arcade#intersects
-    * @param {Phaser.Physics.Arcade.Body} body1 - The Body object to check.
-    * @param {Phaser.Physics.Arcade.Body} body2 - The Body object to check.
+    * @param {Phaser.Physics.Arcade.Body} body1 - The first Body object to check.
+    * @param {Phaser.Physics.Arcade.Body} body2 - The second Body object to check.
     * @return {boolean} True if they intersect, otherwise false.
     */
     intersects: function (body1, body2) {
 
-        if (body1.isCircle)
+        //  Rect vs. Rect
+        if (body1.right <= body2.position.x)
         {
-            if (body2.isCircle)
-            {
-                //  Circle vs. Circle
-                return Phaser.Math.distance(body1.center.x, body1.center.y, body2.center.x, body2.center.y) <= (body1.radius + body2.radius);
-            }
-            else
-            {
-                //  Circle vs. Rect
-                return this.circleBodyIntersects(body1, body2);
-            }
+            return false;
         }
-        else
+
+        if (body1.bottom <= body2.position.y)
         {
-            if (body2.isCircle)
-            {
-                //  Rect vs. Circle
-                return this.circleBodyIntersects(body2, body1);
-            }
-            else
-            {
-                //  Rect vs. Rect
-                if (body1.right <= body2.position.x)
-                {
-                    return false;
-                }
-
-                if (body1.bottom <= body2.position.y)
-                {
-                    return false;
-                }
-
-                if (body1.position.x >= body2.right)
-                {
-                    return false;
-                }
-
-                if (body1.position.y >= body2.bottom)
-                {
-                    return false;
-                }
-
-                return true;
-            }
+            return false;
         }
+
+        if (body1.position.x >= body2.right)
+        {
+            return false;
+        }
+
+        if (body1.position.y >= body2.bottom)
+        {
+            return false;
+        }
+
+        return true;
 
     },
 
@@ -66165,8 +66153,8 @@ Phaser.Physics.P2.Body.prototype = {
     */
     postUpdate: function () {
 
-        this.sprite.x = this.world.mpxi(this.data.position[0]);
-        this.sprite.y = this.world.mpxi(this.data.position[1]);
+        this.sprite.x = this.world.mpxi(this.data.position[0]) + this.offset.x;
+        this.sprite.y = this.world.mpxi(this.data.position[1]) + this.offset.y;
 
         if (!this.fixedRotation)
         {
