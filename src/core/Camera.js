@@ -48,7 +48,7 @@ Phaser.Camera = function (game, id, x, y, width, height) {
     * The Camera is bound to this Rectangle and cannot move outside of it. By default it is enabled and set to the size of the World.
     * The Rectangle can be located anywhere in the world and updated as often as you like. If you don't wish the Camera to be bound
     * at all then set this to null. The values can be anything and are in World coordinates, with 0,0 being the top-left of the world.
-    * 
+    *
     * @property {Phaser.Rectangle} bounds - The Rectangle in which the Camera is bounded. Set to null to allow for movement anywhere.
     */
     this.bounds = new Phaser.Rectangle(x, y, width, height);
@@ -271,10 +271,10 @@ Phaser.Camera.prototype = {
     *
     * You can set the follow type and a linear interpolation value.
     * Use low lerp values (such as 0.1) to automatically smooth the camera motion.
-    * 
+    *
     * If you find you're getting a slight "jitter" effect when following a Sprite it's probably to do with sub-pixel rendering of the Sprite position.
     * This can be disabled by setting `game.renderer.renderSession.roundPixels = true` to force full pixel rendering.
-    * 
+    *
     * @method Phaser.Camera#follow
     * @param {Phaser.Sprite|Phaser.Image|Phaser.Text} target - The object you want the camera to track. Set to null to not follow anything.
     * @param {number} [style] - Leverage one of the existing "deadzone" presets. If you use a custom deadzone, ignore this parameter and manually specify the deadzone after calling follow().
@@ -439,7 +439,7 @@ Phaser.Camera.prototype = {
     },
 
     /**
-    * This creates a camera fade effect. It works by filling the game with the 
+    * This creates a camera fade effect. It works by filling the game with the
     * color specified, over the duration given, ending with a solid fill.
     *
     * You can use this for things such as transitioning to a new scene.
@@ -904,6 +904,28 @@ Object.defineProperty(Phaser.Camera.prototype, "height", {
     set: function (value) {
 
         this.view.height = value;
+
+    }
+
+});
+
+
+/**
+* The Cameras shake intensity.
+* @name Phaser.Camera#shakeIntensity
+* @property {number} shakeIntensity - Gets or sets the cameras shake intensity.
+*/
+Object.defineProperty(Phaser.Camera.prototype, "shakeIntensity", {
+
+    get: function () {
+
+        return this._shake.intensity;
+
+    },
+
+    set: function (value) {
+
+        this._shake.intensity = value;
 
     }
 
