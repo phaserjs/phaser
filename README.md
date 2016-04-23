@@ -347,8 +347,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 
 * TypeScript definitions fixes and updates (thanks )
 * Docs typo fixes (thanks )
-*
-*
+* You can now access the intensity of the Camera shake effect via the getter / setter `Camera.shakeIntensity`. Useful if you wish to tween the intensity while running. (thanks @drhayes #2443)
 
 ### Bug Fixes
 
