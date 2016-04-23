@@ -3507,6 +3507,13 @@ declare module Phaser {
     }
 
     module Plugin {
+        
+        class SaveCPU extends Phaser.Plugin { 
+
+            renderOnFPS: boolean;
+            renderOnPointerChange: boolean;
+            forceRender(): void;
+        }
 
         class AStar extends Phaser.Plugin {
 

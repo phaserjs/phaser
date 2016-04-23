@@ -18941,6 +18941,33 @@ declare module Phaser {
     }
 
     module Plugin {
+        
+        class SaveCPU extends Phaser.Plugin { 
+            
+            /**
+            * Constrains maximum FPS to value set. 
+            * Reasonable values from 0 to 60 
+            * Default value 30
+            * Set value to 0 disable rendering based on FPS
+            * and use methods described below.
+            */
+            renderOnFPS: boolean;
+            
+            /**
+            * Render when pointer movement detected.
+            * Possible values  "true" or "false"
+            * Default: false
+            * Note that renderOnFPS must be set to 0
+            */
+            renderOnPointerChange: boolean;
+            
+            /**
+            * Forces rendering during core game loop
+            * Can be called independently or in tandem with above properties.
+            * Should be called inside update function.
+            */
+            forceRender(): void;
+        }
 
         class AStar extends Phaser.Plugin {
 
