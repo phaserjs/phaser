@@ -18951,7 +18951,7 @@ declare module Phaser {
             * Set value to 0 disable rendering based on FPS
             * and use methods described below.
             */
-            renderOnFPS: boolean;
+            renderOnFPS: number;
             
             /**
             * Render when pointer movement detected.

@@ -3510,7 +3510,7 @@ declare module Phaser {
         
         class SaveCPU extends Phaser.Plugin { 
 
-            renderOnFPS: boolean;
+            renderOnFPS: number;
             renderOnPointerChange: boolean;
             forceRender(): void;
         }
