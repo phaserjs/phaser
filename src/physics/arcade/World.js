@@ -1018,9 +1018,10 @@ Phaser.Physics.Arcade.prototype = {
     * @method Phaser.Physics.Arcade#getOverlapX
     * @param {Phaser.Physics.Arcade.Body} body1 - The first Body to separate.
     * @param {Phaser.Physics.Arcade.Body} body2 - The second Body to separate.
+    * @param {boolean} overlapOnly - Is this an overlap only check, or part of separation?
     * @return {float} Returns the amount of horizontal overlap between the two bodies.
     */
-    getOverlapX: function (body1, body2) {
+    getOverlapX: function (body1, body2, overlapOnly) {
 
         var overlap = 0;
         var maxOverlap = body1.deltaAbsX() + body2.deltaAbsX() + this.OVERLAP_BIAS;
@@ -1036,7 +1037,7 @@ Phaser.Physics.Arcade.prototype = {
             //  Body1 is moving right and / or Body2 is moving left
             overlap = body1.right - body2.x;
 
-            if ((overlap > maxOverlap) || body1.checkCollision.right === false || body2.checkCollision.left === false)
+            if ((overlap > maxOverlap && !overlapOnly) || body1.checkCollision.right === false || body2.checkCollision.left === false)
             {
                 overlap = 0;
             }
@@ -1053,7 +1054,7 @@ Phaser.Physics.Arcade.prototype = {
             //  Body1 is moving left and/or Body2 is moving right
             overlap = body1.x - body2.width - body2.x;
 
-            if ((-overlap > maxOverlap) || body1.checkCollision.left === false || body2.checkCollision.right === false)
+            if ((-overlap > maxOverlap && !overlapOnly) || body1.checkCollision.left === false || body2.checkCollision.right === false)
             {
                 overlap = 0;
             }
@@ -1081,9 +1082,10 @@ Phaser.Physics.Arcade.prototype = {
     * @method Phaser.Physics.Arcade#getOverlapY
     * @param {Phaser.Physics.Arcade.Body} body1 - The first Body to separate.
     * @param {Phaser.Physics.Arcade.Body} body2 - The second Body to separate.
+    * @param {boolean} overlapOnly - Is this an overlap only check, or part of separation?
     * @return {float} Returns the amount of vertical overlap between the two bodies.
     */
-    getOverlapY: function (body1, body2) {
+    getOverlapY: function (body1, body2, overlapOnly) {
 
         var overlap = 0;
         var maxOverlap = body1.deltaAbsY() + body2.deltaAbsY() + this.OVERLAP_BIAS;
@@ -1099,7 +1101,7 @@ Phaser.Physics.Arcade.prototype = {
             //  Body1 is moving down and/or Body2 is moving up
             overlap = body1.bottom - body2.y;
 
-            if ((overlap > maxOverlap) || body1.checkCollision.down === false || body2.checkCollision.up === false)
+            if ((overlap > maxOverlap && !overlapOnly) || body1.checkCollision.down === false || body2.checkCollision.up === false)
             {
                 overlap = 0;
             }
@@ -1116,7 +1118,7 @@ Phaser.Physics.Arcade.prototype = {
             //  Body1 is moving up and/or Body2 is moving down
             overlap = body1.y - body2.bottom;
 
-            if ((-overlap > maxOverlap) || body1.checkCollision.up === false || body2.checkCollision.down === false)
+            if ((-overlap > maxOverlap && !overlapOnly) || body1.checkCollision.up === false || body2.checkCollision.down === false)
             {
                 overlap = 0;
             }
@@ -1149,13 +1151,13 @@ Phaser.Physics.Arcade.prototype = {
     */
     separateX: function (body1, body2, overlapOnly) {
 
-        var overlap = this.getOverlapX(body1, body2);
+        var overlap = this.getOverlapX(body1, body2, overlapOnly);
 
         //  Can't separate two immovable bodies, or a body with its own custom separation logic
         if (overlapOnly || overlap === 0 || (body1.immovable && body2.immovable) || body1.customSeparateX || body2.customSeparateX)
         {
             //  return true if there was some overlap, otherwise false
-            return (overlap !== 0);
+            return (overlap !== 0) || (body1.embedded && body2.embedded);
         }
 
         //  Adjust their positions and velocities accordingly (if there was any overlap)
@@ -1219,13 +1221,13 @@ Phaser.Physics.Arcade.prototype = {
     */
     separateY: function (body1, body2, overlapOnly) {
 
-        var overlap = this.getOverlapY(body1, body2);
+        var overlap = this.getOverlapY(body1, body2, overlapOnly);
 
         //  Can't separate two immovable bodies, or a body with its own custom separation logic
         if (overlapOnly || overlap === 0 || (body1.immovable && body2.immovable) || body1.customSeparateY || body2.customSeparateY)
         {
             //  return true if there was some overlap, otherwise false
-            return (overlap !== 0);
+            return (overlap !== 0) || (body1.embedded && body2.embedded);
         }
 
         //  Adjust their positions and velocities accordingly (if there was any overlap)
