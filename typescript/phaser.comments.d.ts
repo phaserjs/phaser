@@ -1,4 +1,4 @@
-/// <reference path="pixi.d.ts" />
+/// <reference path="pixi.comments.d.ts" />
 /// <reference path="p2.d.ts" />
 
 // Type definitions for Phaser 2.4.7 - 22nd April 2016
@@ -2159,7 +2159,6 @@ declare module Phaser {
 
         /**
         * Destroy this DisplayObject.
-        * 
         * Removes all references to transformCallbacks, its parent, the stage, filters, bounds, mask and cached Sprites.
         */
         destroy(destroyChildren?: boolean): void;
@@ -9609,11 +9608,8 @@ declare module Phaser {
 
         /**
         * The anchor sets the origin point of the texture.
-        * 
         * The default is 0,0 this means the texture's origin is the top left
-        * 
         * Setting than anchor to 0.5,0.5 means the textures origin is centered
-        * 
         * Setting the anchor to 1,1 would mean the textures origin points will be the bottom right corner
         */
         anchor: Phaser.Point;
@@ -9933,7 +9929,6 @@ declare module Phaser {
 
         /**
         * Destroy this DisplayObject.
-        * 
         * Removes all references to transformCallbacks, its parent, the stage, filters, bounds, mask and cached Sprites.
         */
         destroy(destroyChildren?: boolean): void;
@@ -21465,7 +21460,6 @@ declare module Phaser {
 
         /**
         * This is the area of the BaseTexture image to actually copy to the Canvas / WebGL when rendering,
-        * 
         * irrespective of the actual frame size or placement (which can be influenced by trimmed texture atlases)
         */
         crop: PIXI.Rectangle;
@@ -22322,7 +22316,6 @@ declare module Phaser {
 
         /**
         * Destroy this DisplayObject.
-        * 
         * Removes all references to transformCallbacks, its parent, the stage, filters, bounds, mask and cached Sprites.
         */
         destroy(destroyChildren?: boolean): void;
@@ -23666,11 +23659,8 @@ declare module Phaser {
 
         /**
         * The anchor sets the origin point of the texture.
-        * 
         * The default is 0,0 this means the texture's origin is the top left
-        * 
         * Setting than anchor to 0.5,0.5 means the textures origin is centered
-        * 
         * Setting the anchor to 1,1 would mean the textures origin points will be the bottom right corner
         */
         anchor: Phaser.Point;
@@ -24135,7 +24125,6 @@ declare module Phaser {
 
         /**
         * Destroy this DisplayObject.
-        * 
         * Removes all references to transformCallbacks, its parent, the stage, filters, bounds, mask and cached Sprites.
         */
         destroy(destroyChildren?: boolean): void;
