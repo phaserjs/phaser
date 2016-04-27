@@ -461,7 +461,12 @@ Phaser.Input.prototype = {
     /**
     * Adds a callback that is fired every time the activePointer receives a DOM move event such as a mousemove or touchmove.
     *
-    * The callback will be sent 4 parameters: The Pointer that moved, the x position of the pointer, the y position and the down state.
+    * The callback will be sent 4 parameters:
+    * 
+    * A reference to the Phaser.Pointer object that moved,
+    * The x position of the pointer,
+    * The y position,
+    * A boolean indicating if the movement was the result of a 'click' event (such as a mouse click or touch down).
     * 
     * It will be called every time the activePointer moves, which in a multi-touch game can be a lot of times, so this is best
     * to only use if you've limited input to a single pointer (i.e. mouse or touch).
