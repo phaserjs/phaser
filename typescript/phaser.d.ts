@@ -2847,7 +2847,7 @@ declare module Phaser {
             angleBetween(source: any, target: any): number;
             angleToPointer(displayObject: any, pointer?: Phaser.Pointer): number;
             angleToXY(displayObject: any, x: number, y: number): number;
-            collide(object1: any, object2: any, collideCallback?: Function, processCallback?: Function, callbackContext?: any): boolean;
+            collide(object1: any, object2?: any, collideCallback?: Function, processCallback?: Function, callbackContext?: any): boolean;
             computeVelocity(axis: number, body: Phaser.Physics.Arcade.Body, velocity: number, acceleration: number, drag: number, max?: number): number;
             distanceBetween(source: any, target: any): number;
             distanceToPointer(displayObject: any, pointer?: Phaser.Pointer): number;
