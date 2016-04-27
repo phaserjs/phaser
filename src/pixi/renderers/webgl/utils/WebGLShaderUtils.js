@@ -87,6 +87,7 @@ PIXI.compileProgram = function(gl, vertexSrc, fragmentSrc)
 
     if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS))
     {
+        window.console.log(gl.getProgramInfoLog(shaderProgram));
         window.console.log("Could not initialise shaders");
     }
 
