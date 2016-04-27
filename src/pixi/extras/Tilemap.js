@@ -39,7 +39,7 @@ PIXI.Tilemap = function(texture)
 
     this.colors = new PIXI.Float32Array([1, 1, 1, 1]);
 
-    this.indices = new PIXI.Uint16Array([0, 1, 2, 3]);
+    this.indices = new PIXI.Uint16Array([0, 1, 2, 0, 2, 3]);
 
 };
 
@@ -126,6 +126,6 @@ PIXI.Tilemap.prototype._renderTilemap = function(renderSession)
 
     // dont need to upload!
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._indexBuffer);
-    gl.drawElements(PIXI.Strip.DrawModes.TRIANGLE_STRIP, this.indices.length, gl.UNSIGNED_SHORT, 0);
+    gl.drawElements(gl.TRIANGLES, this.indices.length, gl.UNSIGNED_SHORT, 0);
 
 };

@@ -93,7 +93,7 @@ PIXI.TilemapShader.prototype.init = function()
     this.projectionVector = gl.getUniformLocation(program, 'projectionVector');
     this.offsetVector = gl.getUniformLocation(program, 'offsetVector');
     this.dimensions = gl.getUniformLocation(program, 'dimensions');
-    // this.uMatrix = gl.getUniformLocation(program, 'uMatrix');
+    this.uMatrix = gl.getUniformLocation(program, 'uMatrix');
 
     // get and store the attributes
     this.aVertexPosition = gl.getAttribLocation(program, 'aVertexPosition');
