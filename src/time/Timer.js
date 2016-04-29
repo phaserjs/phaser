@@ -186,7 +186,7 @@ Phaser.Timer.prototype = {
     /**
     * Creates a new TimerEvent on this Timer.
     *
-    * Use {@link Phaser.Timer#add}, {@link Phaser.Timer#add}, or {@link Phaser.Timer#add} methods to create a new event.
+    * Use {@link Phaser.Timer#add}, {@link Phaser.Timer#repeat}, or {@link Phaser.Timer#loop} methods to create a new event.
     *
     * @method Phaser.Timer#create
     * @private
