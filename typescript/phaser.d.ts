@@ -1,7 +1,7 @@
 /// <reference path="pixi.d.ts" />
 /// <reference path="p2.d.ts" />
 
-// Type definitions for Phaser 2.4.8 - 22nd April 2016
+// Type definitions for Phaser 2.4.8 - 29th April 2016
 // Project: https://github.com/photonstorm/phaser
 
 declare module "phaser" {
@@ -1350,6 +1350,7 @@ declare module Phaser {
         config: IGameConfig;
         context: CanvasRenderingContext2D;
         count: number;
+        create: Phaser.Create;
         debug: Phaser.Utils.Debug;
         device: Phaser.Device;
         forceSingleUpdate: boolean;
