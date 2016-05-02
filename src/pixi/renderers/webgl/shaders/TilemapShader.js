@@ -1,3 +1,6 @@
+/**
+ * @author Mat Groves http://matgroves.com/ @Doormat23
+ */
 
 /**
 * @class TilemapShader
@@ -46,17 +49,17 @@ PIXI.TilemapShader = function(gl)
      * @type Array
      */
     this.vertexSrc = [
+        "  uniform vec2 uScreenPosition;",
         "  attribute vec4 aPosition;",
         "  uniform mat3 uProjectionMatrix;",
-        "  uniform mat3 uModelMatrix;",
         "  varying vec2 vTexCoord;",
         "  void main(void) {",
-        "    vec3 pos = uProjectionMatrix * uModelMatrix * vec3(aPosition.xy, 1);",
+        "    vec3 pos = uProjectionMatrix * (vec3(aPosition.xy, 1) + vec3(uScreenPosition, 0));",
         "    gl_Position = vec4(pos.xy, 1, 1);",
         "    vTexCoord = aPosition.zw;",
         "  }"
-    ];  
-      
+    ];
+
     /**
      * A local texture counter for multi-texture shaders.
      * @property textureCount
@@ -84,10 +87,10 @@ PIXI.TilemapShader.prototype.init = function()
     // get and store the attributes
     this.aPosition = gl.getAttribLocation(program, 'aPosition');
     this.uProjectionMatrix = gl.getUniformLocation(program, 'uProjectionMatrix');
-    this.uModelMatrix = gl.getUniformLocation(program, 'uModelMatrix');
+    this.uScreenPosition = gl.getUniformLocation(program, 'uScreenPosition');
     this.uSampler = gl.getUniformLocation(program, 'uImageSampler');
 
-    this.attributes = [this.aPosition, this.uProjectionMatrix, this.uModelMatrix, this.uSampler];
+    this.attributes = [this.aScreenPosition, this.aPosition, this.uProjectionMatrix, this.uSampler];
 
     this.program = program;
 };
