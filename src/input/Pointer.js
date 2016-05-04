@@ -1176,7 +1176,7 @@ Object.defineProperty(Phaser.Pointer.prototype, "duration", {
 /**
 * Gets the X value of this Pointer in world coordinates based on the world camera.
 * @name Phaser.Pointer#worldX
-* @property {number} duration - The X value of this Pointer in world coordinates based on the world camera.
+* @property {number} worldX - The X value of this Pointer in world coordinates based on the world camera.
 * @readonly
 */
 Object.defineProperty(Phaser.Pointer.prototype, "worldX", {
@@ -1192,7 +1192,7 @@ Object.defineProperty(Phaser.Pointer.prototype, "worldX", {
 /**
 * Gets the Y value of this Pointer in world coordinates based on the world camera.
 * @name Phaser.Pointer#worldY
-* @property {number} duration - The Y value of this Pointer in world coordinates based on the world camera.
+* @property {number} worldY - The Y value of this Pointer in world coordinates based on the world camera.
 * @readonly
 */
 Object.defineProperty(Phaser.Pointer.prototype, "worldY", {
