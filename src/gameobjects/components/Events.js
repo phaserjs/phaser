@@ -6,12 +6,19 @@
 
 /**
 * The Events component is a collection of events fired by the parent game object.
+* 
+* Phaser uses what are known as 'Signals' for all event handling. All of the events in
+* this class are signals you can subscribe to, much in the same way you'd "listen" for
+* an event.
 *
-* For example to tell when a Sprite has been added to a new group:
+* For example to tell when a Sprite has been added to a new group, you can bind a function
+* to the `onAddedToGroup` signal:
 *
 * `sprite.events.onAddedToGroup.add(yourFunction, this);`
 *
 * Where `yourFunction` is the function you want called when this event occurs.
+* 
+* For more details about how signals work please see the Phaser.Signal class.
 *
 * The Input-related events will only be dispatched if the Sprite has had `inputEnabled` set to `true`
 * and the Animation-related events only apply to game objects with animations like {@link Phaser.Sprite}.
