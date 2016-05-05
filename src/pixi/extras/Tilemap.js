@@ -270,7 +270,8 @@ PIXI.Tilemap.prototype._renderTile = function(gl, shader, x, y, tile)
   gl.bufferData( gl.ARRAY_BUFFER, this.buffer, gl.STATIC_DRAW );
   gl.vertexAttribPointer( shader.aPosition, 4, gl.FLOAT, false, 0, 0 );
 
-  gl.uniform2f(shader.uScreenPosition, x, y);
+  // draw the tile after applying the base coordinates (scrolling offset)
+  gl.uniform2f(shader.uScreenPosition, x - this.x, y - this.y);
   gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 };
 
