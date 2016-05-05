@@ -408,6 +408,7 @@ EOL;
     <script src="$path/src/tilemap/Tile.js"></script>
     <script src="$path/src/tilemap/Tilemap.js"></script>
     <script src="$path/src/tilemap/TilemapLayer.js"></script>
+    <script src="$path/src/tilemap/TilemapLayerGL.js"></script>
     <script src="$path/src/tilemap/TilemapParser.js"></script>
     <script src="$path/src/tilemap/Tileset.js"></script>
 
