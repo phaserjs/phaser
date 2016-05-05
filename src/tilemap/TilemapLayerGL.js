@@ -219,35 +219,36 @@ Phaser.TilemapLayerGL = function (game, tilemap, index, width, height) {
         this.renderSettings.copyCanvas = Phaser.TilemapLayerGL.ensureSharedCopyCanvas();
     }
 
-    //this.fixedToCamera = true;
-
     var baseTexture = new PIXI.BaseTexture(this.map.tilesets[0].image);
     PIXI.Tilemap.call(this, new PIXI.Texture(baseTexture), this.map.width, this.map.height, this.map.tileWidth, this.map.tileHeight, this.layer);
 
     Phaser.Component.Core.init.call(this, game, 0, 0, null, null);
+
+    // must be called after the Core.init
+    this.fixedToCamera = true;
 };
 
 Phaser.TilemapLayerGL.prototype = Object.create(PIXI.Tilemap.prototype);
 Phaser.TilemapLayerGL.prototype.constructor = Phaser.TilemapLayerGL;
 
 Phaser.Component.Core.install.call(Phaser.TilemapLayerGL.prototype, [
-    'Angle',
-    'Animation',
-    'AutoCull',
-    'Bounds',
-    'BringToTop',
-    'Destroy',
-    'FixedToCamera',
-    'Health',
-    'InCamera',
-    'InputEnabled',
-    'InWorld',
-    'LifeSpan',
-    'LoadTexture',
-    'Overlap',
-    'PhysicsBody',
-    'Reset',
-    'Smoothed'
+    //'Angle',
+    //'Animation',
+    //'AutoCull',
+    //'Bounds',
+    //'BringToTop',
+    //'Destroy',
+    'FixedToCamera'
+    //'Health',
+    //'InCamera',
+    //'InputEnabled',
+    //'InWorld',
+    //'LifeSpan',
+    //'LoadTexture',
+    //'Overlap',
+    //'PhysicsBody',
+    //'Reset',
+    //'Smoothed'
 ]);
 
 Phaser.TilemapLayerGL.prototype.preUpdateCore = Phaser.Component.Core.preUpdate;
@@ -715,6 +716,8 @@ Phaser.TilemapLayerGL.prototype.setScale = function (xScale, yScale) {
 * @param {integer} y
 */
 Phaser.TilemapLayerGL.prototype.shiftCanvas = function (context, x, y) {
+
+    return;
 
     var canvas = context.canvas;
     var copyW = canvas.width - Math.abs(x);
