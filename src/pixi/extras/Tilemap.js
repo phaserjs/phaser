@@ -1,6 +1,11 @@
 
-
-PIXI.Tilemap = function(texture, map)
+/**
+ * Tilemap - constructor
+ * 
+ * @param {Array} layer - layer data from the map, arranged in mapheight lists of mapwidth Phaser.Tile objects (2d array)
+ * 
+ */
+PIXI.Tilemap = function(texture, mapwidth, mapheight, tilewidth, tileheight, layer)
 {
     PIXI.DisplayObjectContainer.call(this);
 
@@ -12,17 +17,11 @@ PIXI.Tilemap = function(texture, map)
      */
     this.texture = texture;
 
-    /**
-     * The tilemap object
-     *
-     * @property map
-     * @type Object
-     */
-    this.map = map;
-
     // faster access to the tile dimensions
-    this.tileWide = this.map.tilewidth;
-    this.tileHigh = this.map.tileheight;
+    this.tileWide = tilewidth;
+    this.tileHigh = tileheight;
+    this.mapWide = mapwidth;
+    this.mapHigh = mapheight;
 
     // precalculate the width of the source texture in entire tile units
     this.texTilesWide = Math.ceil(this.texture.width / this.tileWide);
@@ -33,8 +32,10 @@ PIXI.Tilemap = function(texture, map)
     this.sy = this.tileHigh / this.texture.height;
 
     // TODO: switch here to create DisplayObjectContainer at correct size for the render mode
-    this.width = this.map.width * this.tileWide;
-    this.height = this.map.height * this.tileHigh;
+    this.width = this.mapWide * this.tileWide;
+    this.height = this.mapHigh * this.tileHigh;
+
+    this.layer = layer;
 
     /**
      * Remember last tile drawn to avoid unnecessary set-up
@@ -216,33 +217,26 @@ PIXI.Tilemap.prototype._renderWholeTilemap = function(renderSession)
   // bind the source buffer
   gl.bindBuffer( gl.ARRAY_BUFFER, this.positionBuffer );
 
-  // draw all map layers
-  for(var l = 0; l < this.map.layers.length; l++)
-  {
-    // draw an entire map layer
-    this._renderLayer(l, renderSession);
-  }
+  // draw the entire map layer
+  this._renderLayer(this.layer, renderSession);
 };
 
 
-PIXI.Tilemap.prototype._renderLayer = function( _which, renderSession )
+PIXI.Tilemap.prototype._renderLayer = function( _layer, renderSession )
 {
   var gl = renderSession.gl;
   var shader = renderSession.shaderManager.tilemapShader;
 
-  var layer = this.map.layers[_which];
-  if ( layer )
+  var wide = _layer.width, high = _layer.height;
+  for(var y = 0; y < high; y++)
   {
-    var wide = layer.width, high = layer.height;
-    for(var y = 0; y < high; y++)
+    var layerRow = _layer.data[y];
+    for(var x = 0; x < wide; x++)
     {
-      for(var x = 0; x < wide; x++)
-      {
-        this._renderTile(gl, shader, x * this.tileWide, y * this.tileHigh, layer.data[x + y * wide] - 1);
-      }
+      this._renderTile(gl, shader, x * this.tileWide, y * this.tileHigh, layerRow[x].index - 1);
     }
-
   }
+
 };
 
 
@@ -326,9 +320,9 @@ PIXI.Tilemap.prototype.getBounds = function(matrix)
 
     var vertices = [
       0, 0,
-      this.map.width * this.tileWide, 0,
-      this.map.width * this.tileWide, this.map.height * this.tileHigh,
-      0, this.map.height * this.tileHigh
+      this.mapWide * this.tileWide, 0,
+      this.mapWide * this.tileWide, this.mapHigh * this.tileHigh,
+      0, this.mapHigh * this.tileHigh
     ];
     for (var i = 0, n = vertices.length; i < n; i += 2)
     {
