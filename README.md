@@ -413,7 +413,7 @@ All rights reserved.
 [phaser]: https://github.com/photonstorm/phaser
 [issues]: https://github.com/photonstorm/phaser/issues
 [examples]: https://github.com/photonstorm/phaser-examples
-[contribute]: https://github.com/photonstorm/phaser/blob/master/CONTRIBUTING.md
+[contribute]: https://github.com/photonstorm/phaser/blob/master/.github/CONTRIBUTING.md
 [forum]: http://www.html5gamedevs.com/forum/14-phaser/
 
 [game1]: https://www.prodigygame.com/Fun-Math-Games/
