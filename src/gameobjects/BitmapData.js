@@ -526,13 +526,16 @@ Phaser.BitmapData.prototype = {
     * @return {PIXI.Texture} The newly generated texture.
     */
     generateTexture: function(key) {
-        var copyCanvas = PIXI.CanvasPool.create(this, this.ctx.width, this.ctx.height);
-        var copyContext = newCanvas.getContext('2d', { alpha: true });
-        var imageData = this.ctx.getImageData(0, 0, width, height);
+        var copyCanvas = PIXI.CanvasPool.create(this, this.width, this.height);
+
+        var copyContext = copyCanvas.getContext('2d', { alpha: true });
+
+        var imageData = this.ctx.getImageData(0, 0, this.width, this.height);
+
         copyContext.putImageData(imageData, 0, 0);
 
         return PIXI.Texture.fromCanvas(copyCanvas);
-    }
+    },
 
     /**
     * Resizes the BitmapData. This changes the size of the underlying canvas and refreshes the buffer.
