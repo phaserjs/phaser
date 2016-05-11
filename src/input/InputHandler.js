@@ -678,14 +678,14 @@ Phaser.InputHandler.prototype = {
     */
     checkPointerDown: function (pointer, fastTest) {
 
-        if (!pointer.isDown || 
-            !this.enabled || 
-            !this.sprite || 
-            !this.sprite.parent || 
-            !this.sprite.visible || 
-            !this.sprite.parent.visible ||
-            this.sprite.worldTransform.a === 0 ||
-            this.sprite.worldTransform.d === 0)
+        if (!pointer.isDown ||
+            !this.enabled ||
+            !this.sprite ||
+            !this.sprite.parent ||
+            !this.sprite.visible ||
+            !this.sprite.parent.visible |
+            this.sprite.worldScale.x === 0 ||
+            this.sprite.worldScale.y === 0)
         {
             return false;
         }
@@ -723,14 +723,14 @@ Phaser.InputHandler.prototype = {
     */
     checkPointerOver: function (pointer, fastTest) {
 
-        if (!pointer.isDown || 
-            !this.enabled || 
-            !this.sprite || 
-            !this.sprite.parent || 
-            !this.sprite.visible || 
-            !this.sprite.parent.visible ||
-            this.sprite.worldTransform.a === 0 ||
-            this.sprite.worldTransform.d === 0)
+        if (!pointer.isDown ||
+            !this.enabled ||
+            !this.sprite ||
+            !this.sprite.parent ||
+            !this.sprite.visible ||
+            !this.sprite.parent.visible |
+            this.sprite.worldScale.x === 0 ||
+            this.sprite.worldScale.y === 0)
         {
             return false;
         }
