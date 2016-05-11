@@ -6,7 +6,7 @@
 
 /**
 * @classdesc
-* Detects device support capabilities and is responsible for device intialization - see {@link Phaser.Device.whenReady whenReady}.
+* Detects device support capabilities and is responsible for device initialization - see {@link Phaser.Device.whenReady whenReady}.
 *
 * This class represents a singleton object that can be accessed directly as `game.device`
 * (or, as a fallback, `Phaser.Device` when a game instance is not available) without the need to instantiate it.
