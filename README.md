@@ -354,7 +354,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 ### Bug Fixes
 
 * Fixed an issue in the Arcade Physics overlap method where it would only detect overlaps up to the max bias threshold and no further (thanks @rgk #2441)
-*
+* InputHandler.checkPointerDown and checkPointerOver will now test the worldTransform scale property of a Sprite. If zero it will fast return, where-as before it would incorrectly report an up event (thanks @jaapaurelio #2466)
 *
 
 ### Pixi Updates

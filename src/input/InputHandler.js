@@ -678,7 +678,14 @@ Phaser.InputHandler.prototype = {
     */
     checkPointerDown: function (pointer, fastTest) {
 
-        if (!pointer.isDown || !this.enabled || !this.sprite || !this.sprite.parent || !this.sprite.visible || !this.sprite.parent.visible)
+        if (!pointer.isDown || 
+            !this.enabled || 
+            !this.sprite || 
+            !this.sprite.parent || 
+            !this.sprite.visible || 
+            !this.sprite.parent.visible ||
+            this.sprite.worldTransform.a === 0 ||
+            this.sprite.worldTransform.d === 0)
         {
             return false;
         }
@@ -716,10 +723,18 @@ Phaser.InputHandler.prototype = {
     */
     checkPointerOver: function (pointer, fastTest) {
 
-        if (!this.enabled || !this.sprite || !this.sprite.parent || !this.sprite.visible || !this.sprite.parent.visible)
+        if (!pointer.isDown || 
+            !this.enabled || 
+            !this.sprite || 
+            !this.sprite.parent || 
+            !this.sprite.visible || 
+            !this.sprite.parent.visible ||
+            this.sprite.worldTransform.a === 0 ||
+            this.sprite.worldTransform.d === 0)
         {
             return false;
         }
+
 
         //  Need to pass it a temp point, in case we need it again for the pixel check
         if (this.game.input.hitTest(this.sprite, pointer, this._tempPoint))

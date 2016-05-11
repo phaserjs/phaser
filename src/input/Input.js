@@ -956,7 +956,7 @@ Phaser.Input.prototype = {
 
         //  Didn't hit the parent, does it have any children?
 
-        for (var i = 0, len = displayObject.children.length; i < len; i++)
+        for (var i = 0; i < displayObject.children.length; i++)
         {
             if (this.hitTest(displayObject.children[i], pointer, localPoint))
             {
