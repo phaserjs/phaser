@@ -35,7 +35,6 @@ Phaser.Tilemap = function (game, key, tileWidth, tileHeight, width, height) {
     this.key = key;
 
     var data = Phaser.TilemapParser.parse(this.game, key, tileWidth, tileHeight, width, height);
-    this.data = data;
 
     if (data === null)
     {

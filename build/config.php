@@ -64,7 +64,6 @@
     <script src="$path/src/pixi/renderers/webgl/shaders/StripShader.js"></script>
     <script src="$path/src/pixi/renderers/webgl/shaders/PrimitiveShader.js"></script>
     <script src="$path/src/pixi/renderers/webgl/shaders/ComplexPrimitiveShader.js"></script>
-    <script src="$path/src/pixi/renderers/webgl/shaders/TilemapShader.js"></script>
     <script src="$path/src/pixi/renderers/webgl/utils/WebGLGraphics.js"></script>
     <script src="$path/src/pixi/renderers/webgl/WebGLRenderer.js"></script>
     <script src="$path/src/pixi/renderers/webgl/utils/WebGLBlendModeManager.js"></script>
@@ -84,9 +83,6 @@
 
     <script src="$path/src/pixi/primitives/Graphics.js"></script>
     <script src="$path/src/pixi/primitives/GraphicsData.js"></script>
-
-    <script src="$path/src/pixi/extras/Tilemap.js"></script>
-
 
 EOL;
 
@@ -408,7 +404,6 @@ EOL;
     <script src="$path/src/tilemap/Tile.js"></script>
     <script src="$path/src/tilemap/Tilemap.js"></script>
     <script src="$path/src/tilemap/TilemapLayer.js"></script>
-    <script src="$path/src/tilemap/TilemapLayerGL.js"></script>
     <script src="$path/src/tilemap/TilemapParser.js"></script>
     <script src="$path/src/tilemap/Tileset.js"></script>
 
