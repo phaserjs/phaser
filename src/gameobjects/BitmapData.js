@@ -1470,16 +1470,21 @@ Phaser.BitmapData.prototype = {
     */
     drawGroupProxy: function (child, blendMode, roundPx) {
 
-        if (child.type === Phaser.EMITTER || child.type === Phaser.BITMAPTEXT)
+        //  Draw base Object
+        if (child.hasOwnProperty('texture'))
         {
+            this.copy(child, null, null, null, null, child.worldPosition.x, child.worldPosition.y, null, null, child.worldRotation, null, null, child.worldScale.x, child.worldScale.y, child.worldAlpha, blendMode, roundPx);
+        }
+
+        if (child.hasOwnProperty('children') && child.children.length > 0)
+        {
+            var c;
+
             for (var i = 0; i < child.children.length; i++)
             {
-                this.copy(child.children[i], null, null, null, null, null, null, null, null, null, null, null, null, null, null, blendMode, roundPx);
+                c = child.children[i];
+                this.copy(c, null, null, null, null, c.worldPosition.x, c.worldPosition.y, null, null, c.worldRotation, null, null, c.worldScale.x, c.worldScale.y, child.worldAlpha, blendMode, roundPx);
             }
-        }
-        else
-        {
-            this.copy(child, null, null, null, null, null, null, null, null, null, null, null, null, null, null, blendMode, roundPx);
         }
 
     },
