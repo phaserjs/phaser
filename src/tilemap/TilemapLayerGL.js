@@ -194,6 +194,14 @@ Phaser.TilemapLayerGL = function (game, tilemap, index, width, height) {
     };
 
     /**
+     * The rendering mode (used by PIXI.Tilemap).  Modes are: 0 - render entire screen of tiles, 1 - render entire map of tiles
+     * TODO: make some constants for the rendering modes
+     * @property {number} _renderMode
+     * @private
+     */
+    this._renderMode = 0;
+
+    /**
     * The current canvas left after scroll is applied.
     * @property {number} _scrollX
     * @private
@@ -590,10 +598,11 @@ Phaser.TilemapLayerGL.prototype.getTiles = function (x, y, width, height, collid
     var tw = Math.ceil((x + width) / (this._mc.cw * this.scale.x)) - tx;
     var th = Math.ceil((y + height) / (this._mc.ch * this.scale.y)) - ty;
 
-    while (this._results.length)
-    {
-        this._results.pop();
-    }
+    this._results = [];
+    // while (this._results.length)
+    // {
+    //     this._results.pop();
+    // }
 
     for (var wy = ty; wy < ty + th; wy++)
     {
@@ -1036,8 +1045,8 @@ Phaser.TilemapLayerGL.prototype.render = function () {
         redrawAll = true;
     }
 
-    var renderWidth = 800;  //this.canvas.width; // Use Sprite.width/height?
-    var renderHeight = 600; //this.canvas.height;
+    var renderWidth = this.game.width;
+    var renderHeight = this.game.height;
 
     //  Scrolling bias; whole pixels only
     var scrollX = this._scrollX | 0;
