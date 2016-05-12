@@ -122,8 +122,16 @@ PIXI.Tilemap.prototype._renderWebGL = function(renderSession)
 
     renderSession.shaderManager.setShader(renderSession.shaderManager.tilemapShader);
 
-    // TODO: switch to the appropriate rendering mode function here (rebuild all, part, edges, none)
-    this._renderWholeTilemap(renderSession);
+    switch( this._renderMode )
+    {
+      case 0:
+        this._renderVisibleTiles(renderSession);
+        break;
+
+      case 1:
+        this._renderWholeTilemap(renderSession);
+        break;
+    }
 
     renderSession.spriteBatch.start();
 };
@@ -181,6 +189,65 @@ PIXI.Tilemap.prototype.makeTransform = function(_x, _y, _angleInRadians, _scaleX
   m[7] = _y;
   m[8] = 1;
   return m;
+};
+
+
+/**
+ * render only the visible portion of the tilemap, one layer at a time, one tile at a time
+ * using a fast webgl tile render
+ *
+ * @param  {[type]} renderSession [description]
+ */
+PIXI.Tilemap.prototype._renderVisibleTiles = function(renderSession)
+{
+  var gl = renderSession.gl;
+  var shader = renderSession.shaderManager.tilemapShader;
+
+  renderSession.blendModeManager.setBlendMode(this.blendMode);
+
+  // set the uniforms and texture
+  gl.uniformMatrix3fv( shader.uProjectionMatrix, false, this.makeProjection(gl.drawingBufferWidth, gl.drawingBufferHeight) );
+  gl.uniform1i( shader.uImageSampler, 0 );
+  gl.activeTexture(gl.TEXTURE0);
+  gl.uniform2f(shader.uTileSize, this.tileWide, this.tileHigh);
+
+  // check if a texture is dirty..
+  if(this.texture.baseTexture._dirty[gl.id])
+  {
+      renderSession.renderer.updateTexture(this.texture.baseTexture);
+  }
+  else
+  {
+      // bind the current texture
+      gl.bindTexture(gl.TEXTURE_2D, this.texture.baseTexture._glTextures[gl.id]);
+  }
+
+  // bind the source buffer
+  gl.bindBuffer( gl.ARRAY_BUFFER, this.positionBuffer );
+
+  // draw the entire map layer
+  this._renderVisibleLayer(this.layer, renderSession);
+};
+
+
+PIXI.Tilemap.prototype._renderVisibleLayer = function( _layer, renderSession )
+{
+  var gl = renderSession.gl;
+  var shader = renderSession.shaderManager.tilemapShader;
+  var firstX = Math.max(Math.floor(this._scrollX / this.tileWide), 0);
+  var firstY = Math.max(Math.floor(this._scrollY / this.tileHigh), 0);
+  var lastX = Math.min(firstX + Math.ceil(this.game.width / this.tileWide) + 1, this.mapWide);
+  var lastY = Math.min(firstY + Math.ceil(this.game.height / this.tileHigh) + 1, this.mapHigh);
+
+  for(var y = firstY; y < lastY; y++)
+  {
+    var layerRow = _layer.data[y];
+    for(var x = firstX; x < lastX; x++)
+    {
+      this._renderTile(gl, shader, x * this.tileWide, y * this.tileHigh, layerRow[x].index - 1);
+    }
+  }
+
 };
 
 
