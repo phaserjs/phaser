@@ -234,8 +234,8 @@ PIXI.Tilemap.prototype._renderVisibleLayer = function( _layer, renderSession )
 {
   var gl = renderSession.gl;
   var shader = renderSession.shaderManager.tilemapShader;
-  var firstX = Math.max(Math.floor(this._scrollX / this.tileWide), 0);
-  var firstY = Math.max(Math.floor(this._scrollY / this.tileHigh), 0);
+  var firstX = Math.max(Math.floor(this.scrollX / this.tileWide), 0);
+  var firstY = Math.max(Math.floor(this.scrollY / this.tileHigh), 0);
   var lastX = Math.min(firstX + Math.ceil(this.game.width / this.tileWide) + 1, this.mapWide);
   var lastY = Math.min(firstY + Math.ceil(this.game.height / this.tileHigh) + 1, this.mapHigh);
 
@@ -346,7 +346,7 @@ PIXI.Tilemap.prototype._renderTile = function(gl, shader, x, y, tile)
   gl.vertexAttribPointer( shader.aPosition, 4, gl.FLOAT, false, 0, 0 );
 
   // draw the tile after applying the base coordinates (scrolling offset)
-  gl.uniform2f(shader.uScreenPosition, x - this.x, y - this.y);
+  gl.uniform2f(shader.uScreenPosition, x - this.scrollX, y - this.scrollY);
   gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 };
 
