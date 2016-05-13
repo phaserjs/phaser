@@ -245,9 +245,9 @@ PIXI.Tilemap.prototype._renderVisibleLayer = function( _layer, renderSession )
     for(var x = firstX; x < lastX; x++)
     {
       var tile = layerRow[x].index - 1;
-      if ( tile > 0 )
+      if ( tile >= 0 )
       {
-        this._renderTile(gl, shader, x * this.tileWide, y * this.tileHigh, tile - 1);
+        this._renderTile(gl, shader, x * this.tileWide, y * this.tileHigh, tile);
       }
     }
   }
@@ -304,10 +304,10 @@ PIXI.Tilemap.prototype._renderLayer = function( _layer, renderSession )
     var layerRow = _layer.data[y];
     for(var x = 0; x < wide; x++)
     {
-      var tile = layerRow[x].index - 1;
-      if ( tile > 0 )
+      var tile = layerRow[x].index;
+      if ( tile >= 0 )
       {
-        this._renderTile(gl, shader, x * this.tileWide, y * this.tileHigh, tile - 1);
+        this._renderTile(gl, shader, x * this.tileWide, y * this.tileHigh, tile);
       }
     }
   }
