@@ -569,6 +569,7 @@ Phaser.Tilemap.prototype = {
 
         //  Add Buffer support for the left of the canvas
 
+        if (pixiTest === undefined) { pixiTest = true; }     // TODO: disable test of TilemapLayerGL unless requested
         if (width === undefined) { width = this.game.width; }
         if (height === undefined) { height = this.game.height; }
         if (group === undefined) { group = this.game.world; }
@@ -607,8 +608,9 @@ Phaser.Tilemap.prototype = {
     * @param {Phaser.Group} [group] - Optional Group to add the layer to. If not specified it will be added to the World group.
     * @return {Phaser.TilemapLayer} The TilemapLayer object. This is an extension of Phaser.Image and can be moved around the display list accordingly.
     */
-    createBlankLayer: function (name, width, height, tileWidth, tileHeight, group) {
+    createBlankLayer: function (name, width, height, tileWidth, tileHeight, group, pixiTest) {
 
+        if (pixiTest === undefined) { pixiTest = true; }     // TODO: disable test of TilemapLayerGL unless requested
         if (group === undefined) { group = this.game.world; }
 
         if (this.getLayerIndex(name) !== null)
@@ -671,7 +673,15 @@ Phaser.Tilemap.prototype = {
             h = this.game.height;
         }
 
-        var output = new Phaser.TilemapLayer(this.game, this, this.layers.length - 1, w, h);
+        var output;
+        if ( pixiTest )
+        {
+            output = new Phaser.TilemapLayerGL(this.game, this, this.layers.length - 1, w, h);
+        }
+        else
+        {
+            output = new Phaser.TilemapLayer(this.game, this, this.layers.length - 1, w, h);
+        }
         output.name = name;
 
         return group.add(output);
@@ -997,6 +1007,10 @@ Phaser.Tilemap.prototype = {
             layer = this.getLayerIndex(layer);
         }
         else if (layer instanceof Phaser.TilemapLayer)
+        {
+            layer = layer.index;
+        }
+        else if (layer instanceof Phaser.TilemapLayerGL)
         {
             layer = layer.index;
         }
