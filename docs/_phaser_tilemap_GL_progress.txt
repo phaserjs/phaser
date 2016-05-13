@@ -1,0 +1,46 @@
+Phaser/PIXI Tilemap modifications
+
+day one:
+
+Background/comprehension - understanding the existing system
+Experiments in PIXI - adjusting the first test code
+Rewriting the PIXI component - created a new shader and handling code
+Tile-mapping - added a single "tile" drawer using the "mario" test images, extended it to draw the whole map full of tiles
+Optimised the code to reduce unneccesary webgl initialisation
+
+
+day two:
+
+Modify TilemapLayer to create and use PIXI.TileSprite using pixiTest flag (carried through Phaser.Tilemap.createLayer)
+Tests indicate that the PIXI.TileSprite drawing isn't properly embedded in the draw list.
+Created a new TilemapLayerGL class which extends PIXI.Tilemap in the same way that Phaser.TileSprite extends PIXI.TilingSprite.  Used pixiTest flag in createLayer to branch and create the appropriate version.  Adjusted sci-fly demo to use the new TilemapLayerGL class and tested.
+We've now got a running demo with the ship over the map.  It's running very slowly (profiling indicates 87% of the time is spent drawing tiles, so that will have to be modified to only draw the visible area) and it doesn't scroll when the ship hits the edges.
+I think the scrolling might be related to the inability to set this.fixedToCamera (which blows up because there is no this.position value when it tries to establish the fixed position).  Modified PIXI.Tilemap to extend PIXI.Sprite instead, but that didn't fix either problem.  Realised that the problem was with lack of Core functions, so copied code from TileSprite to create core and experimented turning off the various mixins that it included.  Successful test with only 'FixedToCamera' provided that this.fixedToCamera is set after the Core.init call.
+Modified Pixi.TilingSprite to use this.x and this.y when drawing tiles, which has provided a scrolling map surface.
+It's still very slow - probably because it's rebuilding the entire PIXI surface (2560x704 pixels) from 16x16 pixel tiles.
+
+TODO: modify PIXI.Tilemap to create a surface only the size of the visible screen.  Render only that part of the map into the new smaller surface.
+
+day three:
+
+Step through full process to ensure that slow-down is not caused by multiple draw-over (e.g. if a prior layer had multiple copies of a tile layer, or was calling render too many times).  It isn't, so it must simply be too much work to draw the entire map each frame.
+
+Add TilemapLayerGL modes to optionally draw only the visible on-screen tiles each frame.  This fixed the frame-rate issues entirely, it all runs smoothly in this mode.
+Did first-pass clean-up on TilemapLayerGL to get rid of all the legacy code from the original canvas implementation and correct the comments accordingly.
+Modified Phaser.Tilemap to temporarily default to testing (pixiText = true) so that I can test the other examples/tilemaps demos and fix incompatibilities with the GL layer code.
+
+Quick test results:
+blank tilemap - draws tiles at top and runs, but newly drawn (by hand) tiles don't appear in the layers
+create from objects - draws arrow and coins but not the map background
+csv map - draws a map but with many white squares in it, doesn't feel very smooth either
+csv map collide - draws a character but no map
+csv map with p2 - same again
+features test - draws brown background and green arrow, has a very few tiles but mostly blank brown
+
+I'll start with "blank tilemap" and then retest the others in case it's all caused by one set of problems...
+Ok, turns out that the examples are mostly set to Canvas mode... having overwritten that setting we get much better results (the examples are hardwired to use the GL tile layers at the moment, so Canvas logic + GL drawing == examples fail weirdly).
+I have the blank tilemap example working, but there seems to be a difference in the way tiles are represented... for "sci fly" we have to subtract one from the tile index values (I'm assuming they're '1' based tile indices accessing a '0' based tilemap with the '0' tile index representing a blank tile).  In the 'blank tilemap' example the tile indices are '0' based with '-1' representing a blank tile.
+
+
+
+
