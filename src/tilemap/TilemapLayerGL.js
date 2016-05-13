@@ -5,9 +5,9 @@
 */
 
 /**
-* A TilemapLayerGL is a Phaser.Image/Sprite that renders a specific TileLayer of a Tilemap.
+* A TilemapLayerGL is a PIXI.Tilemap that renders a specific TileLayer of a Tilemap.
 *
-* Since a TilemapLayerGL is a Sprite it can be moved around the display, added to other groups or display objects, etc.
+* Since a PIXI.Tilemap is a PIXI.DisplayObjectContainer it can be moved around the display, added to other groups or display objects, etc.
 *
 * By default TilemapLayers have fixedToCamera set to `true`. Changing this will break Camera follow and scrolling behavior.
 *
@@ -26,8 +26,6 @@ Phaser.TilemapLayerGL = function (game, tilemap, index, width, height) {
 
     width |= 0;
     height |= 0;
-
-    //Phaser.Sprite.call(this, game, 0, 0);
 
     /**
     * The Tilemap to which this layer is bound.
@@ -222,11 +220,6 @@ Phaser.TilemapLayerGL = function (game, tilemap, index, width, height) {
     */
     this._results = [];
 
-    if (!game.device.canvasBitBltShift)
-    {
-        this.renderSettings.copyCanvas = Phaser.TilemapLayerGL.ensureSharedCopyCanvas();
-    }
-
     var baseTexture = new PIXI.BaseTexture(this.map.tilesets[0].image);
     PIXI.Tilemap.call(this, new PIXI.Texture(baseTexture), this.map.width, this.map.height, this.map.tileWidth, this.map.tileHeight, this.layer);
 
@@ -240,23 +233,7 @@ Phaser.TilemapLayerGL.prototype = Object.create(PIXI.Tilemap.prototype);
 Phaser.TilemapLayerGL.prototype.constructor = Phaser.TilemapLayerGL;
 
 Phaser.Component.Core.install.call(Phaser.TilemapLayerGL.prototype, [
-    //'Angle',
-    //'Animation',
-    //'AutoCull',
-    //'Bounds',
-    //'BringToTop',
-    //'Destroy',
     'FixedToCamera'
-    //'Health',
-    //'InCamera',
-    //'InputEnabled',
-    //'InWorld',
-    //'LifeSpan',
-    //'LoadTexture',
-    //'Overlap',
-    //'PhysicsBody',
-    //'Reset',
-    //'Smoothed'
 ]);
 
 Phaser.TilemapLayerGL.prototype.preUpdateCore = Phaser.Component.Core.preUpdate;
@@ -265,33 +242,6 @@ Phaser.TileSprite.prototype.preUpdateLifeSpan = Phaser.Component.LifeSpan.preUpd
 Phaser.TileSprite.prototype.preUpdateInWorld = Phaser.Component.InWorld.preUpdate;
 Phaser.TileSprite.prototype.preUpdateCore = Phaser.Component.Core.preUpdate;
 
-/**
-* The shared double-copy canvas, created as needed.
-*
-* @private
-* @static
-*/
-Phaser.TilemapLayerGL.sharedCopyCanvas = null;
-
-/**
-* Create if needed (and return) a shared copy canvas that is shared across all TilemapLayers.
-*
-* Code that uses the canvas is responsible to ensure the dimensions and save/restore state as appropriate.
-*
-* @method Phaser.TilemapLayerGL#ensureSharedCopyCanvas
-* @protected
-* @static
-*/
-Phaser.TilemapLayerGL.ensureSharedCopyCanvas = function () {
-
-    if (!this.sharedCopyCanvas)
-    {
-        this.sharedCopyCanvas = Phaser.Canvas.create(2, 2);
-    }
-
-    return this.sharedCopyCanvas;
-
-};
 
 /**
 * Automatically called by World.preUpdate.
@@ -305,7 +255,7 @@ Phaser.TilemapLayerGL.prototype.preUpdate = function() {
 };
 
 /**
-* Automatically called by World.postUpdate. Handles cache updates.
+* Automatically called by World.postUpdate. Handles camera scrolling.
 *
 * @method Phaser.TilemapLayerGL#postUpdate
 * @protected
@@ -319,8 +269,6 @@ Phaser.TilemapLayerGL.prototype.postUpdate = function () {
 
     this.scrollX = camera.x * this.scrollFactorX / this.scale.x;
     this.scrollY = camera.y * this.scrollFactorY / this.scale.y;
-
-    this.render();
 
 };
 
@@ -338,7 +286,7 @@ Phaser.TilemapLayerGL.prototype.destroy = function() {
 };
 
 /**
-* Resizes the internal canvas and texture frame used by this TilemapLayerGL.
+* Resizes the internal dimensions and texture frame used by this TilemapLayerGL.
 *
 * This is an expensive call, so don't bind it to a window resize event! But instead call it at carefully
 * selected times.
@@ -598,11 +546,8 @@ Phaser.TilemapLayerGL.prototype.getTiles = function (x, y, width, height, collid
     var tw = Math.ceil((x + width) / (this._mc.cw * this.scale.x)) - tx;
     var th = Math.ceil((y + height) / (this._mc.ch * this.scale.y)) - ty;
 
+    //  Discard old results before storing the new ones
     this._results = [];
-    // while (this._results.length)
-    // {
-    //     this._results.pop();
-    // }
 
     for (var wy = ty; wy < ty + th; wy++)
     {
@@ -674,6 +619,7 @@ Phaser.TilemapLayerGL.prototype.resetTilesetCache = function () {
 
     var tilesets = this._mc.tilesets;
 
+    // TODO: why not just set this._mc.tilesets = []; ??
     while (tilesets.length)
     {
         tilesets.pop();
@@ -713,510 +659,6 @@ Phaser.TilemapLayerGL.prototype.setScale = function (xScale, yScale) {
 
 };
 
-/**
-* Shifts the contents of the canvas - does extra math so that different browsers agree on the result.
-*
-* The specified (x/y) will be shifted to (0,0) after the copy and the newly exposed canvas area will need to be filled in.
-*
-* @method Phaser.TilemapLayerGL#shiftCanvas
-* @private
-* @param {CanvasRenderingContext2D} context - The context to shift
-* @param {integer} x
-* @param {integer} y
-*/
-Phaser.TilemapLayerGL.prototype.shiftCanvas = function (context, x, y) {
-
-    return;
-
-    var canvas = context.canvas;
-    var copyW = canvas.width - Math.abs(x);
-    var copyH = canvas.height - Math.abs(y);
-
-    //  When x/y non-negative
-    var dx = 0;
-    var dy = 0;
-    var sx = x;
-    var sy = y;
-
-    if (x < 0)
-    {
-        dx = -x;
-        sx = 0;
-    }
-
-    if (y < 0)
-    {
-        dy = -y;
-        sy = 0;
-    }
-
-    var copyCanvas = this.renderSettings.copyCanvas;
-
-    if (copyCanvas)
-    {
-        // Use a second copy buffer, without slice support, for Safari .. again.
-        // Ensure copy canvas is large enough
-        if (copyCanvas.width < copyW || copyCanvas.height < copyH)
-        {
-            copyCanvas.width = copyW;
-            copyCanvas.height = copyH;
-        }
-
-        var copyContext = copyCanvas.getContext('2d');
-        copyContext.clearRect(0, 0, copyW, copyH);
-        copyContext.drawImage(canvas, dx, dy, copyW, copyH, 0, 0, copyW, copyH);
-        // clear allows default 'source-over' semantics
-        context.clearRect(sx, sy, copyW, copyH);
-        context.drawImage(copyCanvas, 0, 0, copyW, copyH, sx, sy, copyW, copyH);
-    }
-    else
-    {
-        // Avoids a second copy but flickers in Safari / Safari Mobile
-        // Ref. https://github.com/photonstorm/phaser/issues/1439
-        context.save();
-        context.globalCompositeOperation = 'copy';
-        context.drawImage(canvas, dx, dy, copyW, copyH, sx, sy, copyW, copyH);
-        context.restore();
-    }
-    
-};
-
-/**
-* Render tiles in the given area given by the virtual tile coordinates biased by the given scroll factor.
-* This will constrain the tile coordinates based on wrapping but not physical coordinates.
-*
-* @method Phaser.TilemapLayerGL#renderRegion
-* @private
-* @param {integer} scrollX - Render x offset/scroll.
-* @param {integer} scrollY - Render y offset/scroll.
-* @param {integer} left - Leftmost column to render.
-* @param {integer} top - Topmost row to render.
-* @param {integer} right - Rightmost column to render.
-* @param {integer} bottom - Bottommost row to render.
-*/
-Phaser.TilemapLayerGL.prototype.renderRegion = function (scrollX, scrollY, left, top, right, bottom) {
-
-return;
-
-    var context = this.context;
-
-    var width = this.layer.width;
-    var height = this.layer.height;
-    var tw = this._mc.tileWidth;
-    var th = this._mc.tileHeight;
-
-    var tilesets = this._mc.tilesets;
-    var lastAlpha = NaN;
-
-    if (!this._wrap)
-    {
-        if (left <= right) // Only adjust if going to render
-        {
-            left = Math.max(0, left);
-            right = Math.min(width - 1, right);
-        }
-        if (top <= bottom)
-        {
-            top = Math.max(0, top);
-            bottom = Math.min(height - 1, bottom);
-        }
-    }
-   
-    // top-left pixel of top-left cell
-    var baseX = (left * tw) - scrollX;
-    var baseY = (top * th) - scrollY;
-
-    // Fix normStartX/normStartY such it is normalized [0..width/height). This allows a simple conditional and decrement to always keep in range [0..width/height) during the loop. The major offset bias is to take care of negative values.
-    var normStartX = (left + ((1 << 20) * width)) % width;
-    var normStartY = (top + ((1 << 20) * height)) % height;
-
-    // tx/ty - are pixel coordinates where tile is drawn
-    // x/y - is cell location, normalized [0..width/height) in loop
-    // xmax/ymax - remaining cells to render on column/row
-    var tx, ty, x, y, xmax, ymax;
-
-    context.fillStyle = this.tileColor;
-
-    for (y = normStartY, ymax = bottom - top, ty = baseY;
-        ymax >= 0;
-        y++, ymax--, ty += th)
-    {
-
-        if (y >= height) { y -= height; }
-
-        var row = this.layer.data[y];
-
-        for (x = normStartX, xmax = right - left, tx = baseX;
-            xmax >= 0;
-            x++, xmax--, tx += tw)
-        {
-
-            if (x >= width) { x -= width; }
-
-            var tile = row[x];
-
-            if (!tile || tile.index < 0)
-            {
-                continue;
-            }
-
-            var index = tile.index;
-
-            var set = tilesets[index];
-
-            if (set === undefined)
-            {
-                set = this.resolveTileset(index);
-            }
-
-            //  Setting the globalAlpha is "surprisingly expensive" in Chrome (38)
-            if (tile.alpha !== lastAlpha && !this.debug)
-            {
-                context.globalAlpha = tile.alpha;
-                lastAlpha = tile.alpha;
-            }
-
-            if (set)
-            {
-                if (tile.rotation || tile.flipped)
-                {
-                    context.save();
-                    context.translate(tx + tile.centerX, ty + tile.centerY);
-                    context.rotate(tile.rotation);
-
-                    if (tile.flipped)
-                    {
-                        context.scale(-1, 1);
-                    }
-
-                    set.draw(context, -tile.centerX, -tile.centerY, index);
-                    context.restore();
-                }
-                else
-                {
-                    set.draw(context, tx, ty, index);
-                }
-            }
-            else if (this.debugSettings.missingImageFill)
-            {
-                context.fillStyle = this.debugSettings.missingImageFill;
-                context.fillRect(tx, ty, tw, th);
-            }
-
-            if (tile.debug && this.debugSettings.debuggedTileOverfill)
-            {
-                context.fillStyle = this.debugSettings.debuggedTileOverfill;
-                context.fillRect(tx, ty, tw, th);
-            }
-           
-        }
-
-    }
-
-};
-
-/**
-* Shifts the canvas and render damaged edge tiles.
-*
-* @method Phaser.TilemapLayerGL#renderDeltaScroll
-* @private
-*/
-Phaser.TilemapLayerGL.prototype.renderDeltaScroll = function (shiftX, shiftY) {
-
-return;
-
-    var scrollX = this._mc.scrollX;
-    var scrollY = this._mc.scrollY;
-
-    //var renderW = this.canvas.width;
-    //var renderH = this.canvas.height;
-
-    var tw = this._mc.tileWidth;
-    var th = this._mc.tileHeight;
-
-    // Only cells with coordinates in the "plus" formed by `left <= x <= right` OR `top <= y <= bottom` are drawn. These coordinates may be outside the layer bounds.
-
-    // Start in pixels
-    var left = 0;
-    var right = -tw;
-    var top = 0;
-    var bottom = -th;
-
-    if (shiftX < 0) // layer moving left, damage right
-    {
-        left = renderW + shiftX; // shiftX neg.
-        right = renderW - 1;
-    }
-    else if (shiftX > 0)
-    {
-        // left -> 0
-        right = shiftX;
-    }
-
-    if (shiftY < 0) // layer moving down, damage top
-    {
-        top = renderH + shiftY; // shiftY neg.
-        bottom = renderH - 1;
-    }
-    else if (shiftY > 0)
-    {
-        // top -> 0
-        bottom = shiftY;
-    }
-
-    this.shiftCanvas(this.context, shiftX, shiftY);
-
-    // Transform into tile-space
-    left = Math.floor((left + scrollX) / tw);
-    right = Math.floor((right + scrollX) / tw);
-    top = Math.floor((top + scrollY) / th);
-    bottom = Math.floor((bottom + scrollY) / th);
-
-    if (left <= right)
-    {
-        // Clear left or right edge
-        this.context.clearRect(((left * tw) - scrollX), 0, (right - left + 1) * tw, renderH);
-
-        var trueTop = Math.floor((0 + scrollY) / th);
-        var trueBottom = Math.floor((renderH - 1 + scrollY) / th);
-        this.renderRegion(scrollX, scrollY, left, trueTop, right, trueBottom);
-    }
-
-    if (top <= bottom)
-    {
-        // Clear top or bottom edge
-        this.context.clearRect(0, ((top * th) - scrollY), renderW, (bottom - top + 1) * th);
-
-        var trueLeft = Math.floor((0 + scrollX) / tw);
-        var trueRight = Math.floor((renderW - 1 + scrollX) / tw);
-        this.renderRegion(scrollX, scrollY, trueLeft, top, trueRight, bottom);
-    }
-
-};
-
-/**
-* Clear and render the entire canvas.
-*
-* @method Phaser.TilemapLayerGL#renderFull
-* @private
-*/
-Phaser.TilemapLayerGL.prototype.renderFull = function () {
-
-return;
-
-    var scrollX = this._mc.scrollX;
-    var scrollY = this._mc.scrollY;
-
-    //var renderW = this.canvas.width;
-    //var renderH = this.canvas.height;
-
-    var tw = this._mc.tileWidth;
-    var th = this._mc.tileHeight;
-
-    var left = Math.floor(scrollX / tw);
-    var right = Math.floor((renderW - 1 + scrollX) / tw);
-    var top = Math.floor(scrollY / th);
-    var bottom = Math.floor((renderH - 1 + scrollY) / th);
-
-    this.context.clearRect(0, 0, renderW, renderH);
-
-    this.renderRegion(scrollX, scrollY, left, top, right, bottom);
-
-};
-
-/**
-* Renders the tiles to the layer canvas and pushes to the display.
-*
-* @method Phaser.TilemapLayerGL#render
-* @protected
-*/
-Phaser.TilemapLayerGL.prototype.render = function () {
-
-    var redrawAll = false;
-
-    if (!this.visible)
-    {
-        return;
-    }
-
-    if (this.dirty || this.layer.dirty)
-    {
-        this.layer.dirty = false;
-        redrawAll = true;
-    }
-
-    var renderWidth = this.game.width;
-    var renderHeight = this.game.height;
-
-    //  Scrolling bias; whole pixels only
-    var scrollX = this._scrollX | 0;
-    var scrollY = this._scrollY | 0;
-
-    var mc = this._mc;
-    var shiftX = mc.scrollX - scrollX; // Negative when scrolling right/down
-    var shiftY = mc.scrollY - scrollY;
-
-    if (!redrawAll &&
-        shiftX === 0 && shiftY === 0 &&
-        mc.renderWidth === renderWidth && mc.renderHeight === renderHeight)
-    {
-        //  No reason to redraw map, looking at same thing and not invalidated.
-        return;
-    }
-
-//    this.context.save();
-    
-    mc.scrollX = scrollX;
-    mc.scrollY = scrollY;
-
-    if (mc.renderWidth !== renderWidth || mc.renderHeight !== renderHeight)
-    {
-        //  Could support automatic canvas resizing
-        mc.renderWidth = renderWidth;
-        mc.renderHeight = renderHeight;
-    }
-
-    if (this.debug)
-    {
-        //this.context.globalAlpha = this.debugSettings.debugAlpha;
-
-        if (this.debugSettings.forceFullRedraw)
-        {
-            redrawAll = true;
-        }
-    }
-
-    if (!redrawAll &&
-        this.renderSettings.enableScrollDelta &&
-        (Math.abs(shiftX) + Math.abs(shiftY)) < Math.min(renderWidth, renderHeight))
-    {
-        this.renderDeltaScroll(shiftX, shiftY);
-    }
-    else
-    {
-        // Too much change or otherwise requires full render
-        this.renderFull();
-    }
-
-    if (this.debug)
-    {
-        //this.context.globalAlpha = 1;
-        this.renderDebug();
-    }
-
-    this.texture.baseTexture.dirty();
-
-    this.dirty = false;
-
-    //this.context.restore();
-
-    return true;
-
-};
-
-/**
-* Renders a debug overlay on-top of the canvas. Called automatically by render when `debug` is true.
-*
-* See `debugSettings` for assorted configuration options.
-*
-* @method Phaser.TilemapLayerGL#renderDebug
-* @private
-*/
-Phaser.TilemapLayerGL.prototype.renderDebug = function () {
-
-return;
-
-    var scrollX = this._mc.scrollX;
-    var scrollY = this._mc.scrollY;
-
-    var context = this.context;
-    var renderW = this.canvas.width;
-    var renderH = this.canvas.height;
-
-    var width = this.layer.width;
-    var height = this.layer.height;
-    var tw = this._mc.tileWidth;
-    var th = this._mc.tileHeight;
-
-    var left = Math.floor(scrollX / tw);
-    var right = Math.floor((renderW - 1 + scrollX) / tw);
-    var top = Math.floor(scrollY / th);
-    var bottom = Math.floor((renderH - 1 + scrollY) / th);
-
-    var baseX = (left * tw) - scrollX;
-    var baseY = (top * th) - scrollY;
-
-    var normStartX = (left + ((1 << 20) * width)) % width;
-    var normStartY = (top + ((1 << 20) * height)) % height;
-
-    var tx, ty, x, y, xmax, ymax;
-
-    context.strokeStyle = this.debugSettings.facingEdgeStroke;
-
-    for (y = normStartY, ymax = bottom - top, ty = baseY;
-        ymax >= 0;
-        y++, ymax--, ty += th)
-    {
-
-        if (y >= height) { y -= height; }
-
-        var row = this.layer.data[y];
-
-        for (x = normStartX, xmax = right - left, tx = baseX;
-            xmax >= 0;
-            x++, xmax--, tx += tw)
-        {
-
-            if (x >= width) { x -= width; }
-
-            var tile = row[x];
-            if (!tile || tile.index < 0 || !tile.collides)
-            {
-                continue;
-            }
-
-            if (this.debugSettings.collidingTileOverfill)
-            {
-                context.fillStyle = this.debugSettings.collidingTileOverfill;
-                context.fillRect(tx, ty, this._mc.cw, this._mc.ch);
-            }
-
-            if (this.debugSettings.facingEdgeStroke)
-            {
-                context.beginPath();
-
-                if (tile.faceTop)
-                {
-                    context.moveTo(tx, ty);
-                    context.lineTo(tx + this._mc.cw, ty);
-                }
-
-                if (tile.faceBottom)
-                {
-                    context.moveTo(tx, ty + this._mc.ch);
-                    context.lineTo(tx + this._mc.cw, ty + this._mc.ch);
-                }
-
-                if (tile.faceLeft)
-                {
-                    context.moveTo(tx, ty);
-                    context.lineTo(tx, ty + this._mc.ch);
-                }
-
-                if (tile.faceRight)
-                {
-                    context.moveTo(tx + this._mc.cw, ty);
-                    context.lineTo(tx + this._mc.cw, ty + this._mc.ch);
-                }
-
-                context.stroke();
-            }
-           
-        }
-
-    }
-
-};
 
 /**
 * Flag controlling if the layer tiles wrap at the edges. Only works if the World size matches the Map size.
