@@ -41,6 +41,29 @@ I'll start with "blank tilemap" and then retest the others in case it's all caus
 Ok, turns out that the examples are mostly set to Canvas mode... having overwritten that setting we get much better results (the examples are hardwired to use the GL tile layers at the moment, so Canvas logic + GL drawing == examples fail weirdly).
 I have the blank tilemap example working, but there seems to be a difference in the way tiles are represented... for "sci fly" we have to subtract one from the tile index values (I'm assuming they're '1' based tile indices accessing a '0' based tilemap with the '0' tile index representing a blank tile).  In the 'blank tilemap' example the tile indices are '0' based with '-1' representing a blank tile.
 
+Retests:
+blank tilemap - works, but tile numbers are out by one (click on the second tile picture to draw the first tile, etc) and there's no alpha blending when layers are not focused
+* create from objects - draws arrow, coins, and map, but doesn't draw 'objects' like the signs
+csv map (all three demos) - work but tile numbers are out by one
+* features test - works but doesn't draw 'objects' like the torches and signs
+fill tiles - appears to work, tile numbers are out by one
+map bounce - works perfectly
+map collide - works perfectly
+* mario - works but 'wrap' is not repeating the map data down the screen
+paint tiles - works, tiles out by one
+randomise tiles - works, tiles out by one
+replace tiles - works, tiles out by one
+* resize map - draws map but doesn't visibly resize
+sci fly - works perfectly
+shuffle tiles - works perfectly
+swap tiles - works perfectly
+* tile callbacks - draws map but not coins, blobs where coins should be don't vanish (so callbacks might not be working)
+tile properties - works perfectly
+* tilemap ray cast - draws map but not debug layer, impossible to tell if raycast is working without debug
+tileset from bitmapdata - works perfectly
+
+* demos that fail for other reasons that 'tiles out by one'
+
 
 
 
