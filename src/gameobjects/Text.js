@@ -287,9 +287,12 @@ Phaser.Text.prototype.setShadow = function (x, y, color, blur, shadowStroke, sha
 * @param {number} [style.wordWrapWidth=100] - The width in pixels at which text will wrap.
 * @param {number} [style.maxLines=0] - The maximum number of lines to be shown for wrapped text.
 * @param {number|array} [style.tabs=0] - The size (in pixels) of the tabs, for when text includes tab characters. 0 disables. Can be an array of varying tab sizes, one per tab stop.
+* @param {boolean} [update=false] - Immediately update the Text object after setting the new style? Or wait for the next frame.
 * @return {Phaser.Text} This Text instance.
 */
-Phaser.Text.prototype.setStyle = function (style) {
+Phaser.Text.prototype.setStyle = function (style, update) {
+
+    if (update === undefined) { update = false; }
 
     style = style || {};
     style.font = style.font || 'bold 20pt Arial';
@@ -342,6 +345,11 @@ Phaser.Text.prototype.setStyle = function (style) {
 
     this.style = style;
     this.dirty = true;
+
+    if (update)
+    {
+        this.updateText();
+    }
 
     return this;
 

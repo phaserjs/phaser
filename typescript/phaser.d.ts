@@ -1,7 +1,7 @@
 /// <reference path="pixi.d.ts" />
 /// <reference path="p2.d.ts" />
 
-// Type definitions for Phaser 2.4.8 - 29th April 2016
+// Type definitions for Phaser 2.4.8 - 16th May 2016
 // Project: https://github.com/photonstorm/phaser
 
 declare module "phaser" {
@@ -4827,7 +4827,7 @@ declare module Phaser {
         preUpdate(): void;
         renderTabLine(line: string, x: number, y: number, fill?: boolean): void;
         setShadow(x?: number, y?: number, color?: any, blur?: number, shadowStroke?: boolean, shadowFill?: boolean): Phaser.Text;
-        setStyle(style?: PhaserTextStyle): Phaser.Text;
+        setStyle(style?: PhaserTextStyle, update?: boolean): Phaser.Text;
         setText(text: string): Phaser.Text;
         setTextBounds(x?: number, y?: number, width?: number, height?: number): Phaser.Text;
         update(): void;
