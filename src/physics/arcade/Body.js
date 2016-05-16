@@ -713,8 +713,8 @@ Phaser.Physics.Arcade.Body.prototype = {
         this.angularVelocity = 0;
         this.angularAcceleration = 0;
 
-        this.position.x = (x - (this.sprite.anchor.x * this.width)) + this.offset.x;
-        this.position.y = (y - (this.sprite.anchor.y * this.height)) + this.offset.y;
+        this.position.x = (x - (this.sprite.anchor.x * this.sprite.width)) + this.offset.x;
+        this.position.y = (y - (this.sprite.anchor.y * this.sprite.height)) + this.offset.y;
 
         this.prev.x = this.position.x;
         this.prev.y = this.position.y;
