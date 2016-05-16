@@ -973,7 +973,7 @@ declare module PIXI {
         * @param renderer The renderer used to generate the texture.
         * @return a texture of the graphics object
         */
-        generateTexture(resolution?: number, scaleMode?: number, renderer?: PixiRenderer): Texture;
+        generateTexture(resolution?: number, scaleMode?: number, renderer?: PixiRenderer): RenderTexture;
         mousedown(e: InteractionData): void;
         mouseout(e: InteractionData): void;
         mouseover(e: InteractionData): void;

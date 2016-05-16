@@ -547,7 +547,7 @@ PIXI.DisplayObject.prototype.preUpdate = function()
  * @param resolution {Number} The resolution of the texture being generated
  * @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
  * @param renderer {CanvasRenderer|WebGLRenderer} The renderer used to generate the texture.
- * @return {Texture} a texture of the graphics object
+ * @return {RenderTexture} a texture of the graphics object
  */
 PIXI.DisplayObject.prototype.generateTexture = function(resolution, scaleMode, renderer)
 {
