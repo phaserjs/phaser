@@ -359,6 +359,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * InputHandler.checkPointerDown and checkPointerOver will now test the worldTransform scale property of a Sprite. If zero it will fast return, where-as before it would incorrectly report an up event (thanks @jaapaurelio #2466)
 * Fixed a bug in Arcade Physics Body.preUpdate which would incorrectly apply the position of an offset Body (one which has had Body.setSize used on it) when combined with a Sprite with a non-zero anchor (thanks @SBCGames #2470)
 * If you set Game.renderType to `Phaser.HEADLESS` it will no longer render the output to the canvas. The canvas is still created (although not added to the DOM), as it's required internally, but no rendering now takes place on it (thanks @ForgeableSum #2464)
+* Sounds played using the Audio tag, that were paused and then resumed again (either directly in code, or via a game pause event) would not resume from the point at which they paused (thanks @rroylance #2473)
 
 ### Pixi Updates
 

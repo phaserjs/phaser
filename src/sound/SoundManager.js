@@ -846,7 +846,6 @@ Object.defineProperty(Phaser.SoundManager.prototype, "volume", {
             }
 
             this.onVolumeChange.dispatch(value);
-
         }
 
     }

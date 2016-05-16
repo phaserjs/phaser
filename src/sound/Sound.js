@@ -301,6 +301,12 @@ Phaser.Sound = function (game, key, volume, loop, connect) {
     this._tempVolume = 0;
 
     /**
+    * @property {number} _tempPause - Internal marker var.
+    * @private
+    */
+    this._tempPause = 0;
+
+    /**
     * @property {number} _muteVolume - Internal cache var.
     * @private
     */
@@ -753,6 +759,7 @@ Phaser.Sound.prototype = {
             this.paused = true;
             this.pausedPosition = this.currentTime;
             this.pausedTime = this.game.time.time;
+            this._tempPause = this._sound.currentTime;
             this.onPause.dispatch(this);
             this.stop();
         }
@@ -823,6 +830,7 @@ Phaser.Sound.prototype = {
             }
             else
             {
+                this._sound.currentTime = this._tempPause;
                 this._sound.play();
             }
 
