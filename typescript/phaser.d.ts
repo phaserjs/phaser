@@ -1687,7 +1687,7 @@ declare module Phaser {
         addToHash(child: PIXI.DisplayObject): boolean;
         bringToTop(child: any): any;
         callAll(method: string, context: any, ...parameters: any[]): void;
-        callAllExists(callback: Function, existsValue: boolean, ...parameters: any[]): void;
+        callAllExists(callback: string, existsValue: boolean, ...parameters: any[]): void;
         callbackFromArray(child: any, callback: Function, length: number): void;
         checkAll(key: string[], value: any, checkAlive?: boolean, checkVisible?: boolean, force?: boolean): boolean;
         checkProperty(child: any, key: string[], value: any, force?: boolean): boolean;
