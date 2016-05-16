@@ -950,11 +950,14 @@ Phaser.Game.prototype = {
 
         this.state.preRender(elapsedTime);
 
-        this.renderer.render(this.stage);
+        if (this.renderType !== Phaser.HEADLESS)
+        {
+            this.renderer.render(this.stage);
 
-        this.plugins.render(elapsedTime);
+            this.plugins.render(elapsedTime);
 
-        this.state.render(elapsedTime);
+            this.state.render(elapsedTime);
+        }
 
         this.plugins.postRender(elapsedTime);
 
