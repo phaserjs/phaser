@@ -162,6 +162,14 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.bounce = new Phaser.Point();
 
     /**
+    * The elasticity of the Body when colliding with the World bounds.
+    * By default this property is `null`, in which case `Body.bounce` is used instead. Set this property
+    * to a Phaser.Point object in order to enable a World bounds specific bounce value.
+    * @property {Phaser.Point} worldBounce
+    */
+    this.worldBounce = null;
+
+    /**
     * @property {Phaser.Point} maxVelocity - The maximum velocity in pixels per second sq. that the Body can reach.
     * @default
     */
@@ -581,29 +589,32 @@ Phaser.Physics.Arcade.Body.prototype = {
         var bounds = this.game.physics.arcade.bounds;
         var check = this.game.physics.arcade.checkCollision;
 
+        var bx = (this.worldBounce) ? -this.worldBounce.x : -this.bounce.x;
+        var by = (this.worldBounce) ? -this.worldBounce.y : -this.bounce.y;
+
         if (pos.x < bounds.x && check.left)
         {
             pos.x = bounds.x;
-            this.velocity.x *= -this.bounce.x;
+            this.velocity.x *= bx;
             this.blocked.left = true;
         }
         else if (this.right > bounds.right && check.right)
         {
             pos.x = bounds.right - this.width;
-            this.velocity.x *= -this.bounce.x;
+            this.velocity.x *= bx;
             this.blocked.right = true;
         }
 
         if (pos.y < bounds.y && check.up)
         {
             pos.y = bounds.y;
-            this.velocity.y *= -this.bounce.y;
+            this.velocity.y *= by;
             this.blocked.up = true;
         }
         else if (this.bottom > bounds.bottom && check.down)
         {
             pos.y = bounds.bottom - this.height;
-            this.velocity.y *= -this.bounce.y;
+            this.velocity.y *= by;
             this.blocked.down = true;
         }
 

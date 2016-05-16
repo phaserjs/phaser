@@ -2937,6 +2937,7 @@ declare module Phaser {
                 type: number;
                 wasTouching: FaceChoices;
                 width: number;
+                worldBounce: Phaser.Point;
                 velocity: Phaser.Point;
                 x: number;
                 y: number;
