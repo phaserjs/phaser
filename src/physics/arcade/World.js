@@ -1601,15 +1601,22 @@ Phaser.Physics.Arcade.prototype = {
     /**
     * Find the distance between two display objects (like Sprites).
     *
+    * The optional `world` argument allows you to return the result based on the Game Objects `world` property,
+    * instead of its `x` and `y` values. This is useful of the object has been nested inside an offset Group,
+    * or parent Game Object.
+    *
     * @method Phaser.Physics.Arcade#distanceBetween
     * @param {any} source - The Display Object to test from.
     * @param {any} target - The Display Object to test to.
+    * @param {boolean} [world=false] - Calculate the distance using World coordinates (true), or Object coordinates (false, the default)
     * @return {number} The distance between the source and target objects.
     */
-    distanceBetween: function (source, target) {
+    distanceBetween: function (source, target, world) {
 
-        var dx = source.x - target.x;
-        var dy = source.y - target.y;
+        if (world === undefined) { world = false; }
+
+        var dx = (world) ? source.world.x - target.world.x : source.x - target.x;
+        var dy = (world) ? source.world.y - target.world.y : source.y - target.y;
 
         return Math.sqrt(dx * dx + dy * dy);
 
@@ -1620,16 +1627,23 @@ Phaser.Physics.Arcade.prototype = {
     * The calculation is made from the display objects x/y coordinate. This may be the top-left if its anchor hasn't been changed.
     * If you need to calculate from the center of a display object instead use the method distanceBetweenCenters()
     *
+    * The optional `world` argument allows you to return the result based on the Game Objects `world` property,
+    * instead of its `x` and `y` values. This is useful of the object has been nested inside an offset Group,
+    * or parent Game Object.
+    *
     * @method Phaser.Physics.Arcade#distanceToXY
     * @param {any} displayObject - The Display Object to test from.
     * @param {number} x - The x coordinate to move towards.
     * @param {number} y - The y coordinate to move towards.
+    * @param {boolean} [world=false] - Calculate the distance using World coordinates (true), or Object coordinates (false, the default)
     * @return {number} The distance between the object and the x/y coordinates.
     */
-    distanceToXY: function (displayObject, x, y) {
+    distanceToXY: function (displayObject, x, y, world) {
 
-        var dx = displayObject.x - x;
-        var dy = displayObject.y - y;
+        if (world === undefined) { world = false; }
+
+        var dx = (world) ? displayObject.world.x - x : displayObject.x - x;
+        var dy = (world) ? displayObject.world.y - y : displayObject.y - y;
 
         return Math.sqrt(dx * dx + dy * dy);
 
@@ -1639,19 +1653,24 @@ Phaser.Physics.Arcade.prototype = {
     * Find the distance between a display object (like a Sprite) and a Pointer. If no Pointer is given the Input.activePointer is used.
     * The calculation is made from the display objects x/y coordinate. This may be the top-left if its anchor hasn't been changed.
     * If you need to calculate from the center of a display object instead use the method distanceBetweenCenters()
-    * The distance to the Pointer is returned in screen space, not world space.
+    *
+    * The optional `world` argument allows you to return the result based on the Game Objects `world` property,
+    * instead of its `x` and `y` values. This is useful of the object has been nested inside an offset Group,
+    * or parent Game Object.
     *
     * @method Phaser.Physics.Arcade#distanceToPointer
     * @param {any} displayObject - The Display Object to test from.
     * @param {Phaser.Pointer} [pointer] - The Phaser.Pointer to test to. If none is given then Input.activePointer is used.
+    * @param {boolean} [world=false] - Calculate the distance using World coordinates (true), or Object coordinates (false, the default)
     * @return {number} The distance between the object and the Pointer.
     */
-    distanceToPointer: function (displayObject, pointer) {
+    distanceToPointer: function (displayObject, pointer, world) {
 
-        pointer = pointer || this.game.input.activePointer;
+        if (pointer === undefined) { pointer = this.game.input.activePointer; }
+        if (world === undefined) { world = false; }
 
-        var dx = displayObject.x - pointer.worldX;
-        var dy = displayObject.y - pointer.worldY;
+        var dx = (world) ? displayObject.world.x - pointer.worldX : displayObject.x - pointer.worldX;
+        var dy = (world) ? displayObject.world.y - pointer.worldY : displayObject.y - pointer.worldY;
 
         return Math.sqrt(dx * dx + dy * dy);
 
@@ -1660,54 +1679,86 @@ Phaser.Physics.Arcade.prototype = {
     /**
     * Find the angle in radians between two display objects (like Sprites).
     *
+    * The optional `world` argument allows you to return the result based on the Game Objects `world` property,
+    * instead of its `x` and `y` values. This is useful of the object has been nested inside an offset Group,
+    * or parent Game Object.
+    *
     * @method Phaser.Physics.Arcade#angleBetween
     * @param {any} source - The Display Object to test from.
     * @param {any} target - The Display Object to test to.
+    * @param {boolean} [world=false] - Calculate the angle using World coordinates (true), or Object coordinates (false, the default)
     * @return {number} The angle in radians between the source and target display objects.
     */
-    angleBetween: function (source, target) {
+    angleBetween: function (source, target, world) {
 
-        var dx = target.x - source.x;
-        var dy = target.y - source.y;
+        if (world === undefined) { world = false; }
 
-        return Math.atan2(dy, dx);
+        if (world)
+        {
+            return Math.atan2(target.world.y - source.world.y, target.world.x - source.world.x);
+        }
+        else
+        {
+            return Math.atan2(target.y - source.y, target.x - source.x);
+        }
 
     },
 
     /**
     * Find the angle in radians between a display object (like a Sprite) and the given x/y coordinate.
     *
+    * The optional `world` argument allows you to return the result based on the Game Objects `world` property,
+    * instead of its `x` and `y` values. This is useful of the object has been nested inside an offset Group,
+    * or parent Game Object.
+    *
     * @method Phaser.Physics.Arcade#angleToXY
     * @param {any} displayObject - The Display Object to test from.
     * @param {number} x - The x coordinate to get the angle to.
     * @param {number} y - The y coordinate to get the angle to.
+    * @param {boolean} [world=false] - Calculate the angle using World coordinates (true), or Object coordinates (false, the default)
     * @return {number} The angle in radians between displayObject.x/y to Pointer.x/y
     */
-    angleToXY: function (displayObject, x, y) {
+    angleToXY: function (displayObject, x, y, world) {
 
-        var dx = x - displayObject.x;
-        var dy = y - displayObject.y;
+        if (world === undefined) { world = false; }
 
-        return Math.atan2(dy, dx);
+        if (world)
+        {
+            return Math.atan2(y - displayObject.world.y, x - displayObject.world.x);
+        }
+        else
+        {
+            return Math.atan2(y - displayObject.y, x - displayObject.x);
+        }
 
     },
 
     /**
     * Find the angle in radians between a display object (like a Sprite) and a Pointer, taking their x/y and center into account.
     *
+    * The optional `world` argument allows you to return the result based on the Game Objects `world` property,
+    * instead of its `x` and `y` values. This is useful of the object has been nested inside an offset Group,
+    * or parent Game Object.
+    *
     * @method Phaser.Physics.Arcade#angleToPointer
     * @param {any} displayObject - The Display Object to test from.
     * @param {Phaser.Pointer} [pointer] - The Phaser.Pointer to test to. If none is given then Input.activePointer is used.
+    * @param {boolean} [world=false] - Calculate the angle using World coordinates (true), or Object coordinates (false, the default)
     * @return {number} The angle in radians between displayObject.x/y to Pointer.x/y
     */
-    angleToPointer: function (displayObject, pointer) {
+    angleToPointer: function (displayObject, pointer, world) {
 
-        pointer = pointer || this.game.input.activePointer;
+        if (pointer === undefined) { pointer = this.game.input.activePointer; }
+        if (world === undefined) { world = false; }
 
-        var dx = pointer.worldX - displayObject.x;
-        var dy = pointer.worldY - displayObject.y;
-
-        return Math.atan2(dy, dx);
+        if (world)
+        {
+            return Math.atan2(pointer.worldY - displayObject.world.y, pointer.worldX - displayObject.world.x);
+        }
+        else
+        {
+            return Math.atan2(pointer.worldY - displayObject.y, pointer.worldX - displayObject.x);
+        }
 
     },
 
@@ -1722,12 +1773,7 @@ Phaser.Physics.Arcade.prototype = {
     */
     worldAngleToPointer: function (displayObject, pointer) {
 
-        pointer = pointer || this.game.input.activePointer;
-
-        var dx = pointer.worldX - displayObject.world.x;
-        var dy = pointer.worldY - displayObject.world.y;
-
-        return Math.atan2(dy, dx);
+        return this.angleToPointer(displayObject, pointer, true);
 
     }
 

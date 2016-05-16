@@ -340,8 +340,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 ### New Features
 
 * BitmapData.copy, and by extension any method that uses it, including BitmapData.draw, drawGroup and drawFull, now all support drawing RenderTexture objects. These can either be passed directly, or be the textures of Sprites, such as from a call to generateTexture.
-*
-*
+* Arcade Physics has had a new `world` argument added to the following functions: `distanceBetween`, `distanceToXY`, `distanceToPointer`, `angleBetween`, `angleToXY` and `angleToPointer`. The argument (which is false by default), when enabled will calculate the angles or distances based on the Game Objects `world` property, instead of its `x` and `y` properties. This allows it to work for objects that are placed in offset Groups, or are children of other display objects (thanks @Skeptron for the thread #2463)
 
 ### Updates
 
