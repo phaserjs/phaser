@@ -78,10 +78,6 @@ QICI Engine: [A powerful one-stop integrated Phaser game editor](http://www.qici
 
 Zenva Academy: [Online courses on Phaser, HTML5 and native app development](https://academy.zenva.com/?zva_src=phaserpatreon)
 
-![abra](http://www.phaser.io/images/sponsors/abra-100.png)
-
-Abra: [Complete browser based game development](https://aurifexlabs.com/)
-
 ![div](http://www.phaser.io/images/github/div.png)
 
 <a name="phaserworld"></a>
@@ -319,16 +315,16 @@ If you code with [TypeScript](http://www.typescriptlang.org/) there are comprehe
 <a name="road-map"></a>
 ## Road Map
 
-The majority of Phaser development is now taking place on the Lazer (Phaser 3) project. The Phaser 2 branch will still be supported and issues fixed, but roadmap features have been migrated over.
+The majority of Phaser development is now taking place on the [Lazer](https://github.com/photonstorm/lazer) (Phaser 3) project. The Phaser 2 branch will still be supported and issues fixed, but roadmap features have been migrated over.
 
 <a name="phaser3"></a>
 ## Lazer (Phaser 3)
 
-Lazer is the new name for Phaser 3.
+[Lazer](https://github.com/photonstorm/lazer) is the next generation of the Phaser game framework, and was previously called Phaser 3. Using a completely ES6 base it is renderer agnostic, allowing for DOM, SVG, Canvas and WebGL rendering, across desktop and mobile web browsers.
 
-Lazer is the next generation of the Phaser game framework. Using a completely ES6 base it is renderer agnostic, allowing for DOM, SVG, Canvas and WebGL rendering, across desktop and mobile web browsers.
+**Lazer is in active development but is not yet ready for production use.**
 
-You can read all about the philosophy behind Lazer [here](http://phaser.io/news/2016/01/phaser-in-2015-and-beyond) or join the Google Groups [mailing list](https://groups.google.com/d/forum/phaser3-dev) where progress reports are posted on a regular basis.
+You can read all about the philosophy behind Lazer [here](http://phaser.io/news/2016/01/phaser-in-2015-and-beyond) or join the Google Group [mailing list](https://groups.google.com/d/forum/phaser3-dev) where progress reports are posted. You can also follow progress in the Phaser World newsletter.
 
 ![div](http://www.phaser.io/images/github/div.png)
 
@@ -360,6 +356,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * Fixed a bug in Arcade Physics Body.preUpdate which would incorrectly apply the position of an offset Body (one which has had Body.setSize used on it) when combined with a Sprite with a non-zero anchor (thanks @SBCGames #2470)
 * If you set Game.renderType to `Phaser.HEADLESS` it will no longer render the output to the canvas. The canvas is still created (although not added to the DOM), as it's required internally, but no rendering now takes place on it (thanks @ForgeableSum #2464)
 * Sounds played using the Audio tag, that were paused and then resumed again (either directly in code, or via a game pause event) would not resume from the point at which they paused (thanks @rroylance #2473)
+* Sounds played using the Audio tag, set to loop, would get caught in an endless pause-play loop cycle (thanks @rroylance #2473)
 
 ### Pixi Updates
 

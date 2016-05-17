@@ -443,6 +443,9 @@ Phaser.Sound.prototype = {
                         //  won't work with markers, needs to reset the position
                         this.onLoop.dispatch(this);
 
+                        //  Gets reset by the play function
+                        this.isPlaying = false;
+
                         if (this.currentMarker === '')
                         {
                             this.currentTime = 0;
@@ -468,6 +471,16 @@ Phaser.Sound.prototype = {
                     if (this.loop)
                     {
                         this.onLoop.dispatch(this);
+
+                        if (this.currentMarker === '')
+                        {
+                            this.currentTime = 0;
+                            this.startTime = this.game.time.time;
+                        }
+
+                        //  Gets reset by the play function
+                        this.isPlaying = false;
+
                         this.play(this.currentMarker, 0, this.volume, true, true);
                     }
                     else
@@ -714,6 +727,7 @@ Phaser.Sound.prototype = {
                     this.startTime = this.game.time.time;
                     this.currentTime = 0;
                     this.stopTime = this.startTime + this.durationMS;
+
                     this.onPlay.dispatch(this);
                 }
                 else
