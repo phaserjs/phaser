@@ -194,7 +194,7 @@ Phaser.Component.LoadTexture.prototype = {
         {
             this.updateCrop();
         }
-
+        
         this.texture.requiresReTint = true;
         
         this.texture._updateUvs();

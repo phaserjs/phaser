@@ -458,6 +458,7 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession, matrix)
                 this.tintedTexture = PIXI.CanvasTinter.getTintedTexture(this, this.tint);
 
                 this.cachedTint = this.tint;
+                this.texture.requiresReTint = false;
             }
 
             renderSession.context.drawImage(this.tintedTexture, 0, 0, cw, ch, dx, dy, cw / resolution, ch / resolution);

@@ -112,11 +112,6 @@ Phaser.Component.Core.preUpdate = function () {
         this.renderOrderID = this.game.stage.currentRenderOrderID++;
     }
 
-    if (this.texture)
-    {
-        this.texture.requiresReTint = false;
-    }
-
     if (this.animations)
     {
         this.animations.update();
