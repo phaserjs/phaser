@@ -38,19 +38,13 @@ Thousands of developers worldwide use it. From indies and multi-national digital
 ![div](http://www.phaser.io/images/github/div.png)
 
 <a name="whats-new"></a>
-## What's new in Phaser 2.4.8
+## What's new in Phaser 2.5.0
 
 <div align="center"><img src="http://phaser.io/images/github/news.jpg"></div>
 
-> 19th May 2016
+> In Development
 
-The release of Phaser 2.4.8 continues our commitment to rapid turn-around of bug fixes and enhancements. Scan through the [Change Log](#change-log) for comprehensive details about what is new and updated in this version.
-
-As always, my thanks to all of you who contributed towards this release. Either by opening an issue on GitHub, providing a fix, or just giving encouragement to the dev team.
-
-We are now splitting our time between development of [Lazer](#lazer), and Phaser 2.5. We decided, after much discussion with the community, that we owed it to Phaser to go out on a high, so 2.5 will be the version in which we do just that. After this Phaser will enter the LTS (long-term support) stage of its life.
-
-This is when we impose a feature freeze, locking the API down and responding only to bugs. This is a necessary step to allow us to focus on Lazer while still ensuring Phaser is given the support it deserves. Don't worry, we aren't going to abandon you! We've got your backs.
+The release of Phaser 2.5.0 is currently in development. This README will be updated as development continues.
 
 As always, keep you eyes on the Phaser web site and read our weekly [newsletter](#phaserworld). You can also follow me on [Twitter](https://twitter.com/photonstorm) or chat to me in the Phaser [Slack](http://phaser.io/news/2015/08/phaser-slack-channel) channel.
 
@@ -122,15 +116,15 @@ Using Browserify? Please [read this](#browserify).
 
 [jsDelivr](http://www.jsdelivr.com/#!phaser) is a "super-fast CDN for developers". Include the following in your html:
 
-`<script src="//cdn.jsdelivr.net/phaser/2.4.8/phaser.js"></script>`
+`<script src="//cdn.jsdelivr.net/phaser/2.5.0/phaser.js"></script>`
 
 or the minified version:
 
-`<script src="//cdn.jsdelivr.net/phaser/2.4.8/phaser.min.js"></script>`
+`<script src="//cdn.jsdelivr.net/phaser/2.5.0/phaser.min.js"></script>`
 
 [cdnjs.com](https://cdnjs.com/libraries/phaser) also offers a free CDN service. They have all versions of Phaser and even the custom builds:
 
-`<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/2.4.8/phaser.js"></script>`
+`<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/2.5.0/phaser.js"></script>`
 
 ### Phaser Sandbox
 
@@ -338,38 +332,35 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 <a name="change-log"></a>
 ## Change Log
 
-## Version 2.4.8 - "Watch Hill" - 19th May 2016
+## Version 2.5.0 - "Shadow Coast" - In Development
 
 ### New Features
 
-* BitmapData.copy, and by extension any method that uses it, including BitmapData.draw, drawGroup and drawFull, now all support drawing RenderTexture objects. These can either be passed directly, or be the textures of Sprites, such as from a call to generateTexture.
-* Arcade Physics has had a new `world` argument added to the following functions: `distanceBetween`, `distanceToXY`, `distanceToPointer`, `angleBetween`, `angleToXY` and `angleToPointer`. The argument (which is false by default), when enabled will calculate the angles or distances based on the Game Objects `world` property, instead of its `x` and `y` properties. This allows it to work for objects that are placed in offset Groups, or are children of other display objects (thanks @Skeptron for the thread #2463)
-* Arcade Physics Body has a new property `worldBounce`. This controls the elasticity of the Body specifically when colliding with the World bounds. By default this property is `null`, in which case Body.bounce is used instead. Set this property to a Phaser.Point object in order to enable a World bounds specific bounce value (thanks @VitaZheltyakov #2465)
+*
+*
+*
 
 ### Updates
 
-* TypeScript definitions fixes and updates (thanks @osev7 @staff0rd @galen-manuel)
-* Docs typo fixes (thanks @dedoubleyou1 @mortonfox @zeterain)
-* You can now access the intensity of the Camera shake effect via the getter / setter `Camera.shakeIntensity`. Useful if you wish to tween the intensity while running. (thanks @drhayes #2443)
-* The Arcade Physics overlap method would return false if two bodies were overlapping but neither had any velocity (i.e. they were embedded into each other)
-* PIXI.defaultRenderer is now set to `null` in Game.destroy, allowing it to be reset if a new Game instance is created on the same page (thanks @xtforgame ##2474)
-* BitmapData.drawGroupProxy is now capable of iterating through Sprites that have children, and also now uses the world positions for drawing instead. This change updates the functionality of BitmapData.drawGroup.
-* Text.setStyle has a new argument `update` which will optionally automatically call `updateText` after setting the new style (thanks @staff0rd  #2478)
+* TypeScript definitions fixes and updates (thanks )
+* Docs typo fixes (thanks )
+*
+*
+*
 
 ### Bug Fixes
 
-* Fixed an issue in the Arcade Physics overlap method where it would only detect overlaps up to the max bias threshold and no further (thanks @rgk #2441)
-* InputHandler.checkPointerDown and checkPointerOver will now test the worldTransform scale property of a Sprite. If zero it will fast return, where-as before it would incorrectly report an up event (thanks @jaapaurelio #2466)
-* Fixed a bug in Arcade Physics Body.preUpdate which would incorrectly apply the position of an offset Body (one which has had Body.setSize used on it) when combined with a Sprite with a non-zero anchor (thanks @SBCGames #2470)
-* If you set Game.renderType to `Phaser.HEADLESS` it will no longer render the output to the canvas. The canvas is still created (although not added to the DOM), as it's required internally, but no rendering now takes place on it (thanks @ForgeableSum #2464)
-* Sounds played using the Audio tag, that were paused and then resumed again (either directly in code, or via a game pause event) would not resume from the point at which they paused (thanks @rroylance #2473)
-* Sounds played using the Audio tag, set to loop, would get caught in an endless pause-play loop cycle (thanks @rroylance #2473)
+*
+*
+*
 
 ### Pixi Updates
 
 Please note that Phaser uses a custom build of Pixi and always has done. The following changes have been made to our custom build, not to Pixi in general.
 
-* Sprites that had a tint on them, that then had their frame changed via either `Sprite.frame` or `Sprite.frameName` wouldn't re-tint the new frame, and would become stuck on the old frame in Canvas mode (thaks @spayton #2453)
+*
+*
+*
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
@@ -408,10 +399,10 @@ All rights reserved.
 
 [![Analytics](https://ga-beacon.appspot.com/UA-44006568-2/phaser/index)](https://github.com/igrigorik/ga-beacon)
 
-[get-js]: https://github.com/photonstorm/phaser/releases/download/v2.4.8/phaser.js
-[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v2.4.8/phaser.min.js
-[get-zip]: https://github.com/photonstorm/phaser/archive/v2.4.8.zip
-[get-tgz]: https://github.com/photonstorm/phaser/archive/v2.4.8.tar.gz
+[get-js]: https://github.com/photonstorm/phaser/releases/download/v2.5.0/phaser.js
+[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v2.5.0/phaser.min.js
+[get-zip]: https://github.com/photonstorm/phaser/archive/v2.5.0.zip
+[get-tgz]: https://github.com/photonstorm/phaser/archive/v2.5.0.tar.gz
 [clone-http]: https://github.com/photonstorm/phaser.git
 [clone-ssh]: git@github.com:photonstorm/phaser.git
 [clone-svn]: https://github.com/photonstorm/phaser

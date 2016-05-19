@@ -1,7 +1,7 @@
 {
   "name": "phaser",
-  "version": "2.4.8",
-  "release": "Watch Hill",
+  "version": "2.5.0",
+  "release": "Shadow Coast",
   "description": "A fast, free and fun HTML5 Game Framework for Desktop and Mobile web browsers.",
   "author": "Richard Davey <rdavey@gmail.com> (http://www.photonstorm.com)",
   "logo": "https://raw.github.com/photonstorm/phaser/master/phaser-logo-small.png",
@@ -15,7 +15,6 @@
     "url": "https://photonstorm@github.com/photonstorm/phaser.git"
   },
   "scripts": {
-    "prepublish": "grunt build",
     "test": "NODE_ENV=test grunt jshint"
   },
   "keywords": [
