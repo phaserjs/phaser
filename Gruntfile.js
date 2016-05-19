@@ -404,6 +404,20 @@ module.exports = function (grunt) {
 
     });
 
+    grunt.registerTask('release', 'Compile all Phaser versions to the build folder and update docs and defs', function() {
+
+        grunt.task.run('clean:release');
+        grunt.task.run('full');
+        grunt.task.run('arcadephysics');
+        grunt.task.run('nophysics');
+        grunt.task.run('minimum');
+        grunt.task.run('split');
+        grunt.task.run('creature');
+        grunt.task.run('docs');
+        grunt.task.run('tsdocs');
+
+    });
+
     grunt.registerTask('build', 'Compile all Phaser versions just to the dist folder', function() {
 
         grunt.option('exclude', 'ninja,creature');

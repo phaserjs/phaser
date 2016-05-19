@@ -1082,9 +1082,9 @@
 						<li class="class-depth-1"><a href="http://www.html5gamedevs.com/forum/14-phaser/">Forum</a></li>
 						<li class="class-depth-1"><a href="http://stackoverflow.com/questions/tagged/phaser-framework">Stack Overflow</a></li>
 						<li class="class-depth-1"><a href="http://phaser.io/learn">Tutorials</a></li>
-						<li class="class-depth-1"><a href="https://confirmsubscription.com/h/r/369DE48E3E86AF1E">Newsletter</a></li>
+						<li class="class-depth-1"><a href="http://phaser.io/community/newsletter">Newsletter</a></li>
 						<li class="class-depth-1"><a href="http://phaser.io/community/twitter">Twitter</a></li>
-						<li class="class-depth-1"><a href="http://phaser.io/community/irc">IRC</a></li>
+						<li class="class-depth-1"><a href="http://phaser.io/news/2015/08/phaser-slack-channel">Slack</a></li>
 						<li class="class-depth-1"><a href="https://www.codeandweb.com/texturepacker/phaser">Texture Packer</a></li>
 					</ul>
 				</li>
@@ -1132,9 +1132,14 @@
     
     <div class="description">
         <p>The Events component is a collection of events fired by the parent game object.</p>
-<p>For example to tell when a Sprite has been added to a new group:</p>
+<p>Phaser uses what are known as 'Signals' for all event handling. All of the events in
+this class are signals you can subscribe to, much in the same way you'd &quot;listen&quot; for
+an event.</p>
+<p>For example to tell when a Sprite has been added to a new group, you can bind a function
+to the <code>onAddedToGroup</code> signal:</p>
 <p><code>sprite.events.onAddedToGroup.add(yourFunction, this);</code></p>
 <p>Where <code>yourFunction</code> is the function you want called when this event occurs.</p>
+<p>For more details about how signals work please see the Phaser.Signal class.</p>
 <p>The Input-related events will only be dispatched if the Sprite has had <code>inputEnabled</code> set to <code>true</code>
 and the Animation-related events only apply to game objects with animations like <a href="Phaser.Sprite.html">Phaser.Sprite</a>.</p>
     </div>
@@ -1219,7 +1224,7 @@ and the Animation-related events only apply to game objects with animations like
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_components_Events.js.html">gameobjects/components/Events.js</a>, <a href="src_gameobjects_components_Events.js.html#sunlight-1-line-23">line 23</a>
+    <a href="src_gameobjects_components_Events.js.html">gameobjects/components/Events.js</a>, <a href="src_gameobjects_components_Events.js.html#sunlight-1-line-30">line 30</a>
     </dt>
     
 
@@ -1299,7 +1304,7 @@ and the Animation-related events only apply to game objects with animations like
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_components_Events.js.html">gameobjects/components/Events.js</a>, <a href="src_gameobjects_components_Events.js.html#sunlight-1-line-73">line 73</a>
+    <a href="src_gameobjects_components_Events.js.html">gameobjects/components/Events.js</a>, <a href="src_gameobjects_components_Events.js.html#sunlight-1-line-80">line 80</a>
     </dt>
     
 
@@ -1355,7 +1360,7 @@ and the Animation-related events only apply to game objects with animations like
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_components_Events.js.html">gameobjects/components/Events.js</a>, <a href="src_gameobjects_components_Events.js.html#sunlight-1-line-153">line 153</a>
+    <a href="src_gameobjects_components_Events.js.html">gameobjects/components/Events.js</a>, <a href="src_gameobjects_components_Events.js.html#sunlight-1-line-160">line 160</a>
     </dt>
     
 
@@ -1411,7 +1416,7 @@ and the Animation-related events only apply to game objects with animations like
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_components_Events.js.html">gameobjects/components/Events.js</a>, <a href="src_gameobjects_components_Events.js.html#sunlight-1-line-158">line 158</a>
+    <a href="src_gameobjects_components_Events.js.html">gameobjects/components/Events.js</a>, <a href="src_gameobjects_components_Events.js.html#sunlight-1-line-165">line 165</a>
     </dt>
     
 
@@ -1467,7 +1472,7 @@ and the Animation-related events only apply to game objects with animations like
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_components_Events.js.html">gameobjects/components/Events.js</a>, <a href="src_gameobjects_components_Events.js.html#sunlight-1-line-148">line 148</a>
+    <a href="src_gameobjects_components_Events.js.html">gameobjects/components/Events.js</a>, <a href="src_gameobjects_components_Events.js.html#sunlight-1-line-155">line 155</a>
     </dt>
     
 
@@ -1523,7 +1528,7 @@ and the Animation-related events only apply to game objects with animations like
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_components_Events.js.html">gameobjects/components/Events.js</a>, <a href="src_gameobjects_components_Events.js.html#sunlight-1-line-88">line 88</a>
+    <a href="src_gameobjects_components_Events.js.html">gameobjects/components/Events.js</a>, <a href="src_gameobjects_components_Events.js.html#sunlight-1-line-95">line 95</a>
     </dt>
     
 
@@ -1579,7 +1584,7 @@ and the Animation-related events only apply to game objects with animations like
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_components_Events.js.html">gameobjects/components/Events.js</a>, <a href="src_gameobjects_components_Events.js.html#sunlight-1-line-133">line 133</a>
+    <a href="src_gameobjects_components_Events.js.html">gameobjects/components/Events.js</a>, <a href="src_gameobjects_components_Events.js.html#sunlight-1-line-140">line 140</a>
     </dt>
     
 
@@ -1635,7 +1640,7 @@ and the Animation-related events only apply to game objects with animations like
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_components_Events.js.html">gameobjects/components/Events.js</a>, <a href="src_gameobjects_components_Events.js.html#sunlight-1-line-143">line 143</a>
+    <a href="src_gameobjects_components_Events.js.html">gameobjects/components/Events.js</a>, <a href="src_gameobjects_components_Events.js.html#sunlight-1-line-150">line 150</a>
     </dt>
     
 
@@ -1691,7 +1696,7 @@ and the Animation-related events only apply to game objects with animations like
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_components_Events.js.html">gameobjects/components/Events.js</a>, <a href="src_gameobjects_components_Events.js.html#sunlight-1-line-138">line 138</a>
+    <a href="src_gameobjects_components_Events.js.html">gameobjects/components/Events.js</a>, <a href="src_gameobjects_components_Events.js.html#sunlight-1-line-145">line 145</a>
     </dt>
     
 
@@ -1747,7 +1752,7 @@ and the Animation-related events only apply to game objects with animations like
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_components_Events.js.html">gameobjects/components/Events.js</a>, <a href="src_gameobjects_components_Events.js.html#sunlight-1-line-108">line 108</a>
+    <a href="src_gameobjects_components_Events.js.html">gameobjects/components/Events.js</a>, <a href="src_gameobjects_components_Events.js.html#sunlight-1-line-115">line 115</a>
     </dt>
     
 
@@ -1803,7 +1808,7 @@ and the Animation-related events only apply to game objects with animations like
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_components_Events.js.html">gameobjects/components/Events.js</a>, <a href="src_gameobjects_components_Events.js.html#sunlight-1-line-123">line 123</a>
+    <a href="src_gameobjects_components_Events.js.html">gameobjects/components/Events.js</a>, <a href="src_gameobjects_components_Events.js.html#sunlight-1-line-130">line 130</a>
     </dt>
     
 
@@ -1859,7 +1864,7 @@ and the Animation-related events only apply to game objects with animations like
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_components_Events.js.html">gameobjects/components/Events.js</a>, <a href="src_gameobjects_components_Events.js.html#sunlight-1-line-118">line 118</a>
+    <a href="src_gameobjects_components_Events.js.html">gameobjects/components/Events.js</a>, <a href="src_gameobjects_components_Events.js.html#sunlight-1-line-125">line 125</a>
     </dt>
     
 
@@ -1915,7 +1920,7 @@ and the Animation-related events only apply to game objects with animations like
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_components_Events.js.html">gameobjects/components/Events.js</a>, <a href="src_gameobjects_components_Events.js.html#sunlight-1-line-113">line 113</a>
+    <a href="src_gameobjects_components_Events.js.html">gameobjects/components/Events.js</a>, <a href="src_gameobjects_components_Events.js.html#sunlight-1-line-120">line 120</a>
     </dt>
     
 
@@ -1971,7 +1976,7 @@ and the Animation-related events only apply to game objects with animations like
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_components_Events.js.html">gameobjects/components/Events.js</a>, <a href="src_gameobjects_components_Events.js.html#sunlight-1-line-128">line 128</a>
+    <a href="src_gameobjects_components_Events.js.html">gameobjects/components/Events.js</a>, <a href="src_gameobjects_components_Events.js.html#sunlight-1-line-135">line 135</a>
     </dt>
     
 
@@ -2027,7 +2032,7 @@ and the Animation-related events only apply to game objects with animations like
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_components_Events.js.html">gameobjects/components/Events.js</a>, <a href="src_gameobjects_components_Events.js.html#sunlight-1-line-93">line 93</a>
+    <a href="src_gameobjects_components_Events.js.html">gameobjects/components/Events.js</a>, <a href="src_gameobjects_components_Events.js.html#sunlight-1-line-100">line 100</a>
     </dt>
     
 
@@ -2083,7 +2088,7 @@ and the Animation-related events only apply to game objects with animations like
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_components_Events.js.html">gameobjects/components/Events.js</a>, <a href="src_gameobjects_components_Events.js.html#sunlight-1-line-103">line 103</a>
+    <a href="src_gameobjects_components_Events.js.html">gameobjects/components/Events.js</a>, <a href="src_gameobjects_components_Events.js.html#sunlight-1-line-110">line 110</a>
     </dt>
     
 
@@ -2139,7 +2144,7 @@ and the Animation-related events only apply to game objects with animations like
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_components_Events.js.html">gameobjects/components/Events.js</a>, <a href="src_gameobjects_components_Events.js.html#sunlight-1-line-78">line 78</a>
+    <a href="src_gameobjects_components_Events.js.html">gameobjects/components/Events.js</a>, <a href="src_gameobjects_components_Events.js.html#sunlight-1-line-85">line 85</a>
     </dt>
     
 
@@ -2195,7 +2200,7 @@ and the Animation-related events only apply to game objects with animations like
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_components_Events.js.html">gameobjects/components/Events.js</a>, <a href="src_gameobjects_components_Events.js.html#sunlight-1-line-83">line 83</a>
+    <a href="src_gameobjects_components_Events.js.html">gameobjects/components/Events.js</a>, <a href="src_gameobjects_components_Events.js.html#sunlight-1-line-90">line 90</a>
     </dt>
     
 
@@ -2251,7 +2256,7 @@ and the Animation-related events only apply to game objects with animations like
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_components_Events.js.html">gameobjects/components/Events.js</a>, <a href="src_gameobjects_components_Events.js.html#sunlight-1-line-98">line 98</a>
+    <a href="src_gameobjects_components_Events.js.html">gameobjects/components/Events.js</a>, <a href="src_gameobjects_components_Events.js.html#sunlight-1-line-105">line 105</a>
     </dt>
     
 
@@ -2307,7 +2312,7 @@ and the Animation-related events only apply to game objects with animations like
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_components_Events.js.html">gameobjects/components/Events.js</a>, <a href="src_gameobjects_components_Events.js.html#sunlight-1-line-28">line 28</a>
+    <a href="src_gameobjects_components_Events.js.html">gameobjects/components/Events.js</a>, <a href="src_gameobjects_components_Events.js.html#sunlight-1-line-35">line 35</a>
     </dt>
     
 
@@ -2375,7 +2380,7 @@ and the Animation-related events only apply to game objects with animations like
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_components_Events.js.html">gameobjects/components/Events.js</a>, <a href="src_gameobjects_components_Events.js.html#sunlight-1-line-36">line 36</a>
+    <a href="src_gameobjects_components_Events.js.html">gameobjects/components/Events.js</a>, <a href="src_gameobjects_components_Events.js.html#sunlight-1-line-43">line 43</a>
     </dt>
     
 
@@ -2424,7 +2429,7 @@ and the Animation-related events only apply to game objects with animations like
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
-		on Fri Apr 22 2016 15:11:49 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Thu May 19 2016 12:35:40 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

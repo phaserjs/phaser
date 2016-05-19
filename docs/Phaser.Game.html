@@ -1082,9 +1082,9 @@
 						<li class="class-depth-1"><a href="http://www.html5gamedevs.com/forum/14-phaser/">Forum</a></li>
 						<li class="class-depth-1"><a href="http://stackoverflow.com/questions/tagged/phaser-framework">Stack Overflow</a></li>
 						<li class="class-depth-1"><a href="http://phaser.io/learn">Tutorials</a></li>
-						<li class="class-depth-1"><a href="https://confirmsubscription.com/h/r/369DE48E3E86AF1E">Newsletter</a></li>
+						<li class="class-depth-1"><a href="http://phaser.io/community/newsletter">Newsletter</a></li>
 						<li class="class-depth-1"><a href="http://phaser.io/community/twitter">Twitter</a></li>
-						<li class="class-depth-1"><a href="http://phaser.io/community/irc">IRC</a></li>
+						<li class="class-depth-1"><a href="http://phaser.io/news/2015/08/phaser-slack-channel">Slack</a></li>
 						<li class="class-depth-1"><a href="https://www.codeandweb.com/texturepacker/phaser">Texture Packer</a></li>
 					</ul>
 				</li>
@@ -3315,7 +3315,7 @@ When a game is paused the onPause event is dispatched. When it is resumed the on
 
     
     <dt class="tag-source">Source -
-    <a href="src_core_Game.js.html">core/Game.js</a>, <a href="src_core_Game.js.html#sunlight-1-line-1148">line 1148</a>
+    <a href="src_core_Game.js.html">core/Game.js</a>, <a href="src_core_Game.js.html#sunlight-1-line-1158">line 1158</a>
     </dt>
     
 
@@ -3762,7 +3762,7 @@ When a game is paused the onPause event is dispatched. When it is resumed the on
 
     
     <div class="description">
-        <p>The Renderer this game will use. Either Phaser.AUTO, Phaser.CANVAS or Phaser.WEBGL.</p>
+        <p>The Renderer this game will use. Either Phaser.AUTO, Phaser.CANVAS, Phaser.WEBGL, or Phaser.HEADLESS.</p>
     </div>
     
     
@@ -4700,6 +4700,9 @@ When a game is paused the onPause event is dispatched. When it is resumed the on
     
     <div class="description">
         <p>Nukes the entire game from orbit.</p>
+<p>Calls destroy on Game.state, Game.sound, Game.scale, Game.stage, Game.input, Game.physics and Game.plugins.</p>
+<p>Then sets all of those local handlers to null, destroys the renderer, removes the canvas from the DOM
+and resets the PIXI default renderer.</p>
     </div>
     
 
@@ -4733,7 +4736,7 @@ When a game is paused the onPause event is dispatched. When it is resumed the on
 
     
     <dt class="tag-source">Source -
-    <a href="src_core_Game.js.html">core/Game.js</a>, <a href="src_core_Game.js.html#sunlight-1-line-1002">line 1002</a>
+    <a href="src_core_Game.js.html">core/Game.js</a>, <a href="src_core_Game.js.html#sunlight-1-line-1005">line 1005</a>
     </dt>
     
 
@@ -4803,7 +4806,7 @@ When a game is paused the onPause event is dispatched. When it is resumed the on
 
     
     <dt class="tag-source">Source -
-    <a href="src_core_Game.js.html">core/Game.js</a>, <a href="src_core_Game.js.html#sunlight-1-line-977">line 977</a>
+    <a href="src_core_Game.js.html">core/Game.js</a>, <a href="src_core_Game.js.html#sunlight-1-line-980">line 980</a>
     </dt>
     
 
@@ -4874,7 +4877,7 @@ Calling step will advance the game loop by one frame. This is extremely useful f
 
     
     <dt class="tag-source">Source -
-    <a href="src_core_Game.js.html">core/Game.js</a>, <a href="src_core_Game.js.html#sunlight-1-line-963">line 963</a>
+    <a href="src_core_Game.js.html">core/Game.js</a>, <a href="src_core_Game.js.html#sunlight-1-line-966">line 966</a>
     </dt>
     
 
@@ -5000,7 +5003,7 @@ Calling step will advance the game loop by one frame. This is extremely useful f
 
     
     <dt class="tag-source">Source -
-    <a href="src_core_Game.js.html">core/Game.js</a>, <a href="src_core_Game.js.html#sunlight-1-line-1126">line 1126</a>
+    <a href="src_core_Game.js.html">core/Game.js</a>, <a href="src_core_Game.js.html#sunlight-1-line-1136">line 1136</a>
     </dt>
     
 
@@ -5126,7 +5129,7 @@ Calling step will advance the game loop by one frame. This is extremely useful f
 
     
     <dt class="tag-source">Source -
-    <a href="src_core_Game.js.html">core/Game.js</a>, <a href="src_core_Game.js.html#sunlight-1-line-1108">line 1108</a>
+    <a href="src_core_Game.js.html">core/Game.js</a>, <a href="src_core_Game.js.html#sunlight-1-line-1118">line 1118</a>
     </dt>
     
 
@@ -5252,7 +5255,7 @@ Calling step will advance the game loop by one frame. This is extremely useful f
 
     
     <dt class="tag-source">Source -
-    <a href="src_core_Game.js.html">core/Game.js</a>, <a href="src_core_Game.js.html#sunlight-1-line-1042">line 1042</a>
+    <a href="src_core_Game.js.html">core/Game.js</a>, <a href="src_core_Game.js.html#sunlight-1-line-1052">line 1052</a>
     </dt>
     
 
@@ -5378,7 +5381,7 @@ Calling step will advance the game loop by one frame. This is extremely useful f
 
     
     <dt class="tag-source">Source -
-    <a href="src_core_Game.js.html">core/Game.js</a>, <a href="src_core_Game.js.html#sunlight-1-line-1074">line 1074</a>
+    <a href="src_core_Game.js.html">core/Game.js</a>, <a href="src_core_Game.js.html#sunlight-1-line-1084">line 1084</a>
     </dt>
     
 
@@ -5680,7 +5683,7 @@ This is extremely useful to hard to track down errors! Use the internal stepCoun
 
     
     <dt class="tag-source">Source -
-    <a href="src_core_Game.js.html">core/Game.js</a>, <a href="src_core_Game.js.html#sunlight-1-line-989">line 989</a>
+    <a href="src_core_Game.js.html">core/Game.js</a>, <a href="src_core_Game.js.html#sunlight-1-line-992">line 992</a>
     </dt>
     
 
@@ -6115,7 +6118,7 @@ Phaser will only render when this boolean is <code>false</code>.</p>
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
-		on Fri Apr 22 2016 15:11:49 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Thu May 19 2016 12:35:41 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

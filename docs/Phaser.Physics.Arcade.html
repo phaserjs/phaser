@@ -1082,9 +1082,9 @@
 						<li class="class-depth-1"><a href="http://www.html5gamedevs.com/forum/14-phaser/">Forum</a></li>
 						<li class="class-depth-1"><a href="http://stackoverflow.com/questions/tagged/phaser-framework">Stack Overflow</a></li>
 						<li class="class-depth-1"><a href="http://phaser.io/learn">Tutorials</a></li>
-						<li class="class-depth-1"><a href="https://confirmsubscription.com/h/r/369DE48E3E86AF1E">Newsletter</a></li>
+						<li class="class-depth-1"><a href="http://phaser.io/community/newsletter">Newsletter</a></li>
 						<li class="class-depth-1"><a href="http://phaser.io/community/twitter">Twitter</a></li>
-						<li class="class-depth-1"><a href="http://phaser.io/community/irc">IRC</a></li>
+						<li class="class-depth-1"><a href="http://phaser.io/news/2015/08/phaser-slack-channel">Slack</a></li>
 						<li class="class-depth-1"><a href="https://www.codeandweb.com/texturepacker/phaser">Texture Packer</a></li>
 					</ul>
 				</li>
@@ -2526,7 +2526,7 @@ Note: The display object doesn't stop moving once it reaches the destination coo
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_arcade_World.js.html">physics/arcade/World.js</a>, <a href="src_physics_arcade_World.js.html#sunlight-1-line-1510">line 1510</a>
+    <a href="src_physics_arcade_World.js.html">physics/arcade/World.js</a>, <a href="src_physics_arcade_World.js.html#sunlight-1-line-1512">line 1512</a>
     </dt>
     
 
@@ -2838,7 +2838,7 @@ Note: The display object doesn't stop moving once it reaches the destination coo
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_arcade_World.js.html">physics/arcade/World.js</a>, <a href="src_physics_arcade_World.js.html#sunlight-1-line-1539">line 1539</a>
+    <a href="src_physics_arcade_World.js.html">physics/arcade/World.js</a>, <a href="src_physics_arcade_World.js.html#sunlight-1-line-1541">line 1541</a>
     </dt>
     
 
@@ -3183,7 +3183,7 @@ Note: The display object doesn't stop moving once it reaches the destination coo
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_arcade_World.js.html">physics/arcade/World.js</a>, <a href="src_physics_arcade_World.js.html#sunlight-1-line-1569">line 1569</a>
+    <a href="src_physics_arcade_World.js.html">physics/arcade/World.js</a>, <a href="src_physics_arcade_World.js.html#sunlight-1-line-1571">line 1571</a>
     </dt>
     
 
@@ -3420,7 +3420,7 @@ One way to use this is: accelerationFromRotation(rotation, 200, sprite.accelerat
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_arcade_World.js.html">physics/arcade/World.js</a>, <a href="src_physics_arcade_World.js.html#sunlight-1-line-1491">line 1491</a>
+    <a href="src_physics_arcade_World.js.html">physics/arcade/World.js</a>, <a href="src_physics_arcade_World.js.html#sunlight-1-line-1493">line 1493</a>
     </dt>
     
 
@@ -3447,7 +3447,7 @@ One way to use this is: accelerationFromRotation(rotation, 200, sprite.accelerat
             
 <dt>
     <h4 class="name "
-        id="angleBetween"><span class="type-signature"></span>angleBetween<span class="signature">(source, target)</span><span class="type-signature"> &rarr; {number}</span></h4>
+        id="angleBetween"><span class="type-signature"></span>angleBetween<span class="signature">(source, target, <span class="optional">world</span>)</span><span class="type-signature"> &rarr; {number}</span></h4>
     
     
 </dt>
@@ -3457,6 +3457,9 @@ One way to use this is: accelerationFromRotation(rotation, 200, sprite.accelerat
     
     <div class="description">
         <p>Find the angle in radians between two display objects (like Sprites).</p>
+<p>The optional <code>world</code> argument allows you to return the result based on the Game Objects <code>world</code> property,
+instead of its <code>x</code> and <code>y</code> values. This is useful of the object has been nested inside an offset Group,
+or parent Game Object.</p>
     </div>
     
 
@@ -3478,7 +3481,11 @@ One way to use this is: accelerationFromRotation(rotation, 200, sprite.accelerat
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -3503,7 +3510,19 @@ One way to use this is: accelerationFromRotation(rotation, 200, sprite.accelerat
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>The Display Object to test from.</p></td>
@@ -3526,10 +3545,61 @@ One way to use this is: accelerationFromRotation(rotation, 200, sprite.accelerat
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>The Display Object to test to.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>world</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>Calculate the angle using World coordinates (true), or Object coordinates (false, the default)</p></td>
         </tr>
 
 	
@@ -3582,7 +3652,7 @@ One way to use this is: accelerationFromRotation(rotation, 200, sprite.accelerat
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_arcade_World.js.html">physics/arcade/World.js</a>, <a href="src_physics_arcade_World.js.html#sunlight-1-line-1658">line 1658</a>
+    <a href="src_physics_arcade_World.js.html">physics/arcade/World.js</a>, <a href="src_physics_arcade_World.js.html#sunlight-1-line-1679">line 1679</a>
     </dt>
     
 
@@ -3609,7 +3679,7 @@ One way to use this is: accelerationFromRotation(rotation, 200, sprite.accelerat
             
 <dt>
     <h4 class="name "
-        id="angleToPointer"><span class="type-signature"></span>angleToPointer<span class="signature">(displayObject, <span class="optional">pointer</span>)</span><span class="type-signature"> &rarr; {number}</span></h4>
+        id="angleToPointer"><span class="type-signature"></span>angleToPointer<span class="signature">(displayObject, <span class="optional">pointer</span>, <span class="optional">world</span>)</span><span class="type-signature"> &rarr; {number}</span></h4>
     
     
 </dt>
@@ -3619,6 +3689,9 @@ One way to use this is: accelerationFromRotation(rotation, 200, sprite.accelerat
     
     <div class="description">
         <p>Find the angle in radians between a display object (like a Sprite) and a Pointer, taking their x/y and center into account.</p>
+<p>The optional <code>world</code> argument allows you to return the result based on the Game Objects <code>world</code> property,
+instead of its <code>x</code> and <code>y</code> values. This is useful of the object has been nested inside an offset Group,
+or parent Game Object.</p>
     </div>
     
 
@@ -3643,6 +3716,8 @@ One way to use this is: accelerationFromRotation(rotation, 200, sprite.accelerat
 		<th>Argument</th>
 		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -3676,6 +3751,10 @@ One way to use this is: accelerationFromRotation(rotation, 200, sprite.accelerat
                 </td>
             
 
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>The Display Object to test from.</p></td>
@@ -3710,8 +3789,51 @@ One way to use this is: accelerationFromRotation(rotation, 200, sprite.accelerat
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
             <td class="description last"><p>The Phaser.Pointer to test to. If none is given then Input.activePointer is used.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>world</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>Calculate the angle using World coordinates (true), or Object coordinates (false, the default)</p></td>
         </tr>
 
 	
@@ -3764,7 +3886,7 @@ One way to use this is: accelerationFromRotation(rotation, 200, sprite.accelerat
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_arcade_World.js.html">physics/arcade/World.js</a>, <a href="src_physics_arcade_World.js.html#sunlight-1-line-1693">line 1693</a>
+    <a href="src_physics_arcade_World.js.html">physics/arcade/World.js</a>, <a href="src_physics_arcade_World.js.html#sunlight-1-line-1736">line 1736</a>
     </dt>
     
 
@@ -3791,7 +3913,7 @@ One way to use this is: accelerationFromRotation(rotation, 200, sprite.accelerat
             
 <dt>
     <h4 class="name "
-        id="angleToXY"><span class="type-signature"></span>angleToXY<span class="signature">(displayObject, x, y)</span><span class="type-signature"> &rarr; {number}</span></h4>
+        id="angleToXY"><span class="type-signature"></span>angleToXY<span class="signature">(displayObject, x, y, <span class="optional">world</span>)</span><span class="type-signature"> &rarr; {number}</span></h4>
     
     
 </dt>
@@ -3801,6 +3923,9 @@ One way to use this is: accelerationFromRotation(rotation, 200, sprite.accelerat
     
     <div class="description">
         <p>Find the angle in radians between a display object (like a Sprite) and the given x/y coordinate.</p>
+<p>The optional <code>world</code> argument allows you to return the result based on the Game Objects <code>world</code> property,
+instead of its <code>x</code> and <code>y</code> values. This is useful of the object has been nested inside an offset Group,
+or parent Game Object.</p>
     </div>
     
 
@@ -3822,7 +3947,11 @@ One way to use this is: accelerationFromRotation(rotation, 200, sprite.accelerat
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -3847,7 +3976,19 @@ One way to use this is: accelerationFromRotation(rotation, 200, sprite.accelerat
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>The Display Object to test from.</p></td>
@@ -3870,7 +4011,19 @@ One way to use this is: accelerationFromRotation(rotation, 200, sprite.accelerat
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>The x coordinate to get the angle to.</p></td>
@@ -3893,10 +4046,61 @@ One way to use this is: accelerationFromRotation(rotation, 200, sprite.accelerat
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>The y coordinate to get the angle to.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>world</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>Calculate the angle using World coordinates (true), or Object coordinates (false, the default)</p></td>
         </tr>
 
 	
@@ -3949,7 +4153,7 @@ One way to use this is: accelerationFromRotation(rotation, 200, sprite.accelerat
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_arcade_World.js.html">physics/arcade/World.js</a>, <a href="src_physics_arcade_World.js.html#sunlight-1-line-1675">line 1675</a>
+    <a href="src_physics_arcade_World.js.html">physics/arcade/World.js</a>, <a href="src_physics_arcade_World.js.html#sunlight-1-line-1707">line 1707</a>
     </dt>
     
 
@@ -4647,7 +4851,7 @@ Based on a function in Flixel by @ADAMATOMIC</p>
             
 <dt>
     <h4 class="name "
-        id="distanceBetween"><span class="type-signature"></span>distanceBetween<span class="signature">(source, target)</span><span class="type-signature"> &rarr; {number}</span></h4>
+        id="distanceBetween"><span class="type-signature"></span>distanceBetween<span class="signature">(source, target, <span class="optional">world</span>)</span><span class="type-signature"> &rarr; {number}</span></h4>
     
     
 </dt>
@@ -4657,6 +4861,9 @@ Based on a function in Flixel by @ADAMATOMIC</p>
     
     <div class="description">
         <p>Find the distance between two display objects (like Sprites).</p>
+<p>The optional <code>world</code> argument allows you to return the result based on the Game Objects <code>world</code> property,
+instead of its <code>x</code> and <code>y</code> values. This is useful of the object has been nested inside an offset Group,
+or parent Game Object.</p>
     </div>
     
 
@@ -4678,7 +4885,11 @@ Based on a function in Flixel by @ADAMATOMIC</p>
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -4703,7 +4914,19 @@ Based on a function in Flixel by @ADAMATOMIC</p>
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>The Display Object to test from.</p></td>
@@ -4726,10 +4949,61 @@ Based on a function in Flixel by @ADAMATOMIC</p>
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>The Display Object to test to.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>world</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>Calculate the distance using World coordinates (true), or Object coordinates (false, the default)</p></td>
         </tr>
 
 	
@@ -4782,7 +5056,7 @@ Based on a function in Flixel by @ADAMATOMIC</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_arcade_World.js.html">physics/arcade/World.js</a>, <a href="src_physics_arcade_World.js.html#sunlight-1-line-1599">line 1599</a>
+    <a href="src_physics_arcade_World.js.html">physics/arcade/World.js</a>, <a href="src_physics_arcade_World.js.html#sunlight-1-line-1601">line 1601</a>
     </dt>
     
 
@@ -4809,7 +5083,7 @@ Based on a function in Flixel by @ADAMATOMIC</p>
             
 <dt>
     <h4 class="name "
-        id="distanceToPointer"><span class="type-signature"></span>distanceToPointer<span class="signature">(displayObject, <span class="optional">pointer</span>)</span><span class="type-signature"> &rarr; {number}</span></h4>
+        id="distanceToPointer"><span class="type-signature"></span>distanceToPointer<span class="signature">(displayObject, <span class="optional">pointer</span>, <span class="optional">world</span>)</span><span class="type-signature"> &rarr; {number}</span></h4>
     
     
 </dt>
@@ -4820,8 +5094,10 @@ Based on a function in Flixel by @ADAMATOMIC</p>
     <div class="description">
         <p>Find the distance between a display object (like a Sprite) and a Pointer. If no Pointer is given the Input.activePointer is used.
 The calculation is made from the display objects x/y coordinate. This may be the top-left if its anchor hasn't been changed.
-If you need to calculate from the center of a display object instead use the method distanceBetweenCenters()
-The distance to the Pointer is returned in screen space, not world space.</p>
+If you need to calculate from the center of a display object instead use the method distanceBetweenCenters()</p>
+<p>The optional <code>world</code> argument allows you to return the result based on the Game Objects <code>world</code> property,
+instead of its <code>x</code> and <code>y</code> values. This is useful of the object has been nested inside an offset Group,
+or parent Game Object.</p>
     </div>
     
 
@@ -4846,6 +5122,8 @@ The distance to the Pointer is returned in screen space, not world space.</p>
 		<th>Argument</th>
 		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -4880,6 +5158,10 @@ The distance to the Pointer is returned in screen space, not world space.</p>
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
             <td class="description last"><p>The Display Object to test from.</p></td>
         </tr>
@@ -4913,8 +5195,51 @@ The distance to the Pointer is returned in screen space, not world space.</p>
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
             <td class="description last"><p>The Phaser.Pointer to test to. If none is given then Input.activePointer is used.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>world</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>Calculate the distance using World coordinates (true), or Object coordinates (false, the default)</p></td>
         </tr>
 
 	
@@ -4967,7 +5292,7 @@ The distance to the Pointer is returned in screen space, not world space.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_arcade_World.js.html">physics/arcade/World.js</a>, <a href="src_physics_arcade_World.js.html#sunlight-1-line-1636">line 1636</a>
+    <a href="src_physics_arcade_World.js.html">physics/arcade/World.js</a>, <a href="src_physics_arcade_World.js.html#sunlight-1-line-1652">line 1652</a>
     </dt>
     
 
@@ -4994,7 +5319,7 @@ The distance to the Pointer is returned in screen space, not world space.</p>
             
 <dt>
     <h4 class="name "
-        id="distanceToXY"><span class="type-signature"></span>distanceToXY<span class="signature">(displayObject, x, y)</span><span class="type-signature"> &rarr; {number}</span></h4>
+        id="distanceToXY"><span class="type-signature"></span>distanceToXY<span class="signature">(displayObject, x, y, <span class="optional">world</span>)</span><span class="type-signature"> &rarr; {number}</span></h4>
     
     
 </dt>
@@ -5006,6 +5331,9 @@ The distance to the Pointer is returned in screen space, not world space.</p>
         <p>Find the distance between a display object (like a Sprite) and the given x/y coordinates.
 The calculation is made from the display objects x/y coordinate. This may be the top-left if its anchor hasn't been changed.
 If you need to calculate from the center of a display object instead use the method distanceBetweenCenters()</p>
+<p>The optional <code>world</code> argument allows you to return the result based on the Game Objects <code>world</code> property,
+instead of its <code>x</code> and <code>y</code> values. This is useful of the object has been nested inside an offset Group,
+or parent Game Object.</p>
     </div>
     
 
@@ -5027,7 +5355,11 @@ If you need to calculate from the center of a display object instead use the met
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -5052,7 +5384,19 @@ If you need to calculate from the center of a display object instead use the met
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>The Display Object to test from.</p></td>
@@ -5075,7 +5419,19 @@ If you need to calculate from the center of a display object instead use the met
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>The x coordinate to move towards.</p></td>
@@ -5098,10 +5454,61 @@ If you need to calculate from the center of a display object instead use the met
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>The y coordinate to move towards.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>world</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>Calculate the distance using World coordinates (true), or Object coordinates (false, the default)</p></td>
         </tr>
 
 	
@@ -5154,7 +5561,7 @@ If you need to calculate from the center of a display object instead use the met
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_arcade_World.js.html">physics/arcade/World.js</a>, <a href="src_physics_arcade_World.js.html#sunlight-1-line-1616">line 1616</a>
+    <a href="src_physics_arcade_World.js.html">physics/arcade/World.js</a>, <a href="src_physics_arcade_World.js.html#sunlight-1-line-1625">line 1625</a>
     </dt>
     
 
@@ -5768,7 +6175,7 @@ Note that the children are not checked for depth order, but simply if they overl
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_arcade_World.js.html">physics/arcade/World.js</a>, <a href="src_physics_arcade_World.js.html#sunlight-1-line-1303">line 1303</a>
+    <a href="src_physics_arcade_World.js.html">physics/arcade/World.js</a>, <a href="src_physics_arcade_World.js.html#sunlight-1-line-1305">line 1305</a>
     </dt>
     
 
@@ -6016,7 +6423,7 @@ Note that the children are not checked for depth order, but simply if they overl
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_arcade_World.js.html">physics/arcade/World.js</a>, <a href="src_physics_arcade_World.js.html#sunlight-1-line-1280">line 1280</a>
+    <a href="src_physics_arcade_World.js.html">physics/arcade/World.js</a>, <a href="src_physics_arcade_World.js.html#sunlight-1-line-1282">line 1282</a>
     </dt>
     
 
@@ -6043,7 +6450,7 @@ Note that the children are not checked for depth order, but simply if they overl
             
 <dt>
     <h4 class="name "
-        id="getOverlapX"><span class="type-signature"></span>getOverlapX<span class="signature">(body1, body2)</span><span class="type-signature"> &rarr; {float}</span></h4>
+        id="getOverlapX"><span class="type-signature"></span>getOverlapX<span class="signature">(body1, body2, overlapOnly)</span><span class="type-signature"> &rarr; {float}</span></h4>
     
     
 </dt>
@@ -6130,6 +6537,29 @@ Note that the children are not checked for depth order, but simply if they overl
         </tr>
 
 	
+
+        <tr>
+            
+                <td class="name"><code>overlapOnly</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Is this an overlap only check, or part of separation?</p></td>
+        </tr>
+
+	
 	</tbody>
 </table>
 
@@ -6206,7 +6636,7 @@ Note that the children are not checked for depth order, but simply if they overl
             
 <dt>
     <h4 class="name "
-        id="getOverlapY"><span class="type-signature"></span>getOverlapY<span class="signature">(body1, body2)</span><span class="type-signature"> &rarr; {float}</span></h4>
+        id="getOverlapY"><span class="type-signature"></span>getOverlapY<span class="signature">(body1, body2, overlapOnly)</span><span class="type-signature"> &rarr; {float}</span></h4>
     
     
 </dt>
@@ -6293,6 +6723,29 @@ Note that the children are not checked for depth order, but simply if they overl
         </tr>
 
 	
+
+        <tr>
+            
+                <td class="name"><code>overlapOnly</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Is this an overlap only check, or part of separation?</p></td>
+        </tr>
+
+	
 	</tbody>
 </table>
 
@@ -6342,7 +6795,7 @@ Note that the children are not checked for depth order, but simply if they overl
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_arcade_World.js.html">physics/arcade/World.js</a>, <a href="src_physics_arcade_World.js.html#sunlight-1-line-1077">line 1077</a>
+    <a href="src_physics_arcade_World.js.html">physics/arcade/World.js</a>, <a href="src_physics_arcade_World.js.html#sunlight-1-line-1078">line 1078</a>
     </dt>
     
 
@@ -6777,7 +7230,7 @@ Note: Doesn't take into account acceleration, maxVelocity or drag (if you've set
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_arcade_World.js.html">physics/arcade/World.js</a>, <a href="src_physics_arcade_World.js.html#sunlight-1-line-1347">line 1347</a>
+    <a href="src_physics_arcade_World.js.html">physics/arcade/World.js</a>, <a href="src_physics_arcade_World.js.html#sunlight-1-line-1349">line 1349</a>
     </dt>
     
 
@@ -7051,7 +7504,7 @@ Note: The display object doesn't stop moving once it reaches the destination coo
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_arcade_World.js.html">physics/arcade/World.js</a>, <a href="src_physics_arcade_World.js.html#sunlight-1-line-1382">line 1382</a>
+    <a href="src_physics_arcade_World.js.html">physics/arcade/World.js</a>, <a href="src_physics_arcade_World.js.html#sunlight-1-line-1384">line 1384</a>
     </dt>
     
 
@@ -7359,7 +7812,7 @@ Note: Doesn't take into account acceleration, maxVelocity or drag (if you've set
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_arcade_World.js.html">physics/arcade/World.js</a>, <a href="src_physics_arcade_World.js.html#sunlight-1-line-1417">line 1417</a>
+    <a href="src_physics_arcade_World.js.html">physics/arcade/World.js</a>, <a href="src_physics_arcade_World.js.html#sunlight-1-line-1419">line 1419</a>
     </dt>
     
 
@@ -9118,7 +9571,7 @@ One way to use this is: velocityFromAngle(angle, 200, sprite.velocity) which wil
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_arcade_World.js.html">physics/arcade/World.js</a>, <a href="src_physics_arcade_World.js.html#sunlight-1-line-1453">line 1453</a>
+    <a href="src_physics_arcade_World.js.html">physics/arcade/World.js</a>, <a href="src_physics_arcade_World.js.html#sunlight-1-line-1455">line 1455</a>
     </dt>
     
 
@@ -9355,7 +9808,7 @@ One way to use this is: velocityFromRotation(rotation, 200, sprite.velocity) whi
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_arcade_World.js.html">physics/arcade/World.js</a>, <a href="src_physics_arcade_World.js.html#sunlight-1-line-1472">line 1472</a>
+    <a href="src_physics_arcade_World.js.html">physics/arcade/World.js</a>, <a href="src_physics_arcade_World.js.html#sunlight-1-line-1474">line 1474</a>
     </dt>
     
 
@@ -9538,7 +9991,7 @@ taking their x/y and center into account relative to the world.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_physics_arcade_World.js.html">physics/arcade/World.js</a>, <a href="src_physics_arcade_World.js.html#sunlight-1-line-1712">line 1712</a>
+    <a href="src_physics_arcade_World.js.html">physics/arcade/World.js</a>, <a href="src_physics_arcade_World.js.html#sunlight-1-line-1765">line 1765</a>
     </dt>
     
 
@@ -9587,7 +10040,7 @@ taking their x/y and center into account relative to the world.</p>
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
-		on Fri Apr 22 2016 15:11:52 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Thu May 19 2016 12:35:43 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

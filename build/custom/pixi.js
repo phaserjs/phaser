@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.4.7 "Hinderstap" - Built: Fri Apr 22 2016 15:09:00
+* v2.4.8 "Watch Hill" - Built: Thu May 19 2016 12:22:49
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -635,8 +635,8 @@ PIXI.DisplayObject.prototype.updateTransform = function(parent)
     this.worldAlpha = this.alpha * p.worldAlpha;
 
     this.worldPosition.set(wt.tx, wt.ty);
-    this.worldScale.set(Math.sqrt(wt.a * wt.a + wt.b * wt.b), Math.sqrt(wt.c * wt.c + wt.d * wt.d));
-    this.worldRotation = Math.atan2(-wt.c, wt.d);
+    this.worldScale.set(wt.a, wt.d);
+    this.worldRotation = Math.atan2(wt.c, wt.d);
 
     // reset the bounds each time this is called!
     this._currentBounds = null;
@@ -704,7 +704,7 @@ PIXI.DisplayObject.prototype.preUpdate = function()
  * @param resolution {Number} The resolution of the texture being generated
  * @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
  * @param renderer {CanvasRenderer|WebGLRenderer} The renderer used to generate the texture.
- * @return {Texture} a texture of the graphics object
+ * @return {RenderTexture} a texture of the graphics object
  */
 PIXI.DisplayObject.prototype.generateTexture = function(resolution, scaleMode, renderer)
 {
@@ -1894,6 +1894,7 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession, matrix)
                 this.tintedTexture = PIXI.CanvasTinter.getTintedTexture(this, this.tint);
 
                 this.cachedTint = this.tint;
+                this.texture.requiresReTint = false;
             }
 
             renderSession.context.drawImage(this.tintedTexture, 0, 0, cw, ch, dx, dy, cw / resolution, ch / resolution);
@@ -2502,6 +2503,7 @@ PIXI.compileProgram = function(gl, vertexSrc, fragmentSrc)
 
     if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS))
     {
+        window.console.log(gl.getProgramInfoLog(shaderProgram));
         window.console.log("Could not initialise shaders");
     }
 
@@ -4397,6 +4399,7 @@ PIXI.WebGLShaderManager.prototype.setContext = function(gl)
 
     // the next one is used for rendering triangle strips
     this.stripShader = new PIXI.StripShader(gl);
+
     this.setShader(this.defaultShader);
 };
 

@@ -1082,9 +1082,9 @@
 						<li class="class-depth-1"><a href="http://www.html5gamedevs.com/forum/14-phaser/">Forum</a></li>
 						<li class="class-depth-1"><a href="http://stackoverflow.com/questions/tagged/phaser-framework">Stack Overflow</a></li>
 						<li class="class-depth-1"><a href="http://phaser.io/learn">Tutorials</a></li>
-						<li class="class-depth-1"><a href="https://confirmsubscription.com/h/r/369DE48E3E86AF1E">Newsletter</a></li>
+						<li class="class-depth-1"><a href="http://phaser.io/community/newsletter">Newsletter</a></li>
 						<li class="class-depth-1"><a href="http://phaser.io/community/twitter">Twitter</a></li>
-						<li class="class-depth-1"><a href="http://phaser.io/community/irc">IRC</a></li>
+						<li class="class-depth-1"><a href="http://phaser.io/news/2015/08/phaser-slack-channel">Slack</a></li>
 						<li class="class-depth-1"><a href="https://www.codeandweb.com/texturepacker/phaser">Texture Packer</a></li>
 					</ul>
 				</li>
@@ -3512,7 +3512,7 @@ The properties <code>pointer1..N</code> are aliases for <code>pointers[0..N-1]</
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_Input.js.html">input/Input.js</a>, <a href="src_input_Input.js.html#sunlight-1-line-1019">line 1019</a>
+    <a href="src_input_Input.js.html">input/Input.js</a>, <a href="src_input_Input.js.html#sunlight-1-line-1024">line 1024</a>
     </dt>
     
 
@@ -4085,7 +4085,7 @@ such as from a State change, are ignored.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_Input.js.html">input/Input.js</a>, <a href="src_input_Input.js.html#sunlight-1-line-1047">line 1047</a>
+    <a href="src_input_Input.js.html">input/Input.js</a>, <a href="src_input_Input.js.html#sunlight-1-line-1052">line 1052</a>
     </dt>
     
 
@@ -4141,7 +4141,7 @@ such as from a State change, are ignored.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_Input.js.html">input/Input.js</a>, <a href="src_input_Input.js.html#sunlight-1-line-1033">line 1033</a>
+    <a href="src_input_Input.js.html">input/Input.js</a>, <a href="src_input_Input.js.html#sunlight-1-line-1038">line 1038</a>
     </dt>
     
 
@@ -4255,7 +4255,7 @@ which normalizes all the input values for you, regardless of browser.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_Input.js.html">input/Input.js</a>, <a href="src_input_Input.js.html#sunlight-1-line-1061">line 1061</a>
+    <a href="src_input_Input.js.html">input/Input.js</a>, <a href="src_input_Input.js.html#sunlight-1-line-1066">line 1066</a>
     </dt>
     
 
@@ -4311,7 +4311,7 @@ which normalizes all the input values for you, regardless of browser.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_Input.js.html">input/Input.js</a>, <a href="src_input_Input.js.html#sunlight-1-line-1075">line 1075</a>
+    <a href="src_input_Input.js.html">input/Input.js</a>, <a href="src_input_Input.js.html#sunlight-1-line-1080">line 1080</a>
     </dt>
     
 
@@ -4368,7 +4368,7 @@ This value takes game scaling into account automatically. See Pointer.screenX/cl
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_Input.js.html">input/Input.js</a>, <a href="src_input_Input.js.html#sunlight-1-line-983">line 983</a>
+    <a href="src_input_Input.js.html">input/Input.js</a>, <a href="src_input_Input.js.html#sunlight-1-line-988">line 988</a>
     </dt>
     
 
@@ -4425,7 +4425,7 @@ This value takes game scaling into account automatically. See Pointer.screenY/cl
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_Input.js.html">input/Input.js</a>, <a href="src_input_Input.js.html#sunlight-1-line-1001">line 1001</a>
+    <a href="src_input_Input.js.html">input/Input.js</a>, <a href="src_input_Input.js.html#sunlight-1-line-1006">line 1006</a>
     </dt>
     
 
@@ -4460,7 +4460,11 @@ This value takes game scaling into account automatically. See Pointer.screenY/cl
     
     <div class="description">
         <p>Adds a callback that is fired every time the activePointer receives a DOM move event such as a mousemove or touchmove.</p>
-<p>The callback will be sent 4 parameters: The Pointer that moved, the x position of the pointer, the y position and the down state.</p>
+<p>The callback will be sent 4 parameters:</p>
+<p>A reference to the Phaser.Pointer object that moved,
+The x position of the pointer,
+The y position,
+A boolean indicating if the movement was the result of a 'click' event (such as a mouse click or touch down).</p>
 <p>It will be called every time the activePointer moves, which in a multi-touch game can be a lot of times, so this is best
 to only use if you've limited input to a single pointer (i.e. mouse or touch).</p>
 <p>The callback is added to the Phaser.Input.moveCallbacks array and should be removed with Phaser.Input.deleteMoveCallback.</p>
@@ -4664,7 +4668,7 @@ This method adds an additional pointer, up to a maximum of Phaser.Input.MAX_POIN
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_Input.js.html">input/Input.js</a>, <a href="src_input_Input.js.html#sunlight-1-line-503">line 503</a>
+    <a href="src_input_Input.js.html">input/Input.js</a>, <a href="src_input_Input.js.html#sunlight-1-line-508">line 508</a>
     </dt>
     
 
@@ -4883,7 +4887,7 @@ This method adds an additional pointer, up to a maximum of Phaser.Input.MAX_POIN
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_Input.js.html">input/Input.js</a>, <a href="src_input_Input.js.html#sunlight-1-line-481">line 481</a>
+    <a href="src_input_Input.js.html">input/Input.js</a>, <a href="src_input_Input.js.html#sunlight-1-line-486">line 486</a>
     </dt>
     
 
@@ -5118,7 +5122,7 @@ This method adds an additional pointer, up to a maximum of Phaser.Input.MAX_POIN
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_Input.js.html">input/Input.js</a>, <a href="src_input_Input.js.html#sunlight-1-line-856">line 856</a>
+    <a href="src_input_Input.js.html">input/Input.js</a>, <a href="src_input_Input.js.html#sunlight-1-line-861">line 861</a>
     </dt>
     
 
@@ -5277,7 +5281,7 @@ This method adds an additional pointer, up to a maximum of Phaser.Input.MAX_POIN
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_Input.js.html">input/Input.js</a>, <a href="src_input_Input.js.html#sunlight-1-line-778">line 778</a>
+    <a href="src_input_Input.js.html">input/Input.js</a>, <a href="src_input_Input.js.html#sunlight-1-line-783">line 783</a>
     </dt>
     
 
@@ -5418,7 +5422,7 @@ Also it can change every time you press the pointer down if the browser recycles
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_Input.js.html">input/Input.js</a>, <a href="src_input_Input.js.html#sunlight-1-line-830">line 830</a>
+    <a href="src_input_Input.js.html">input/Input.js</a>, <a href="src_input_Input.js.html#sunlight-1-line-835">line 835</a>
     </dt>
     
 
@@ -5560,7 +5564,7 @@ Note: Not all browsers set the identifier property and it's not part of the W3C 
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_Input.js.html">input/Input.js</a>, <a href="src_input_Input.js.html#sunlight-1-line-803">line 803</a>
+    <a href="src_input_Input.js.html">input/Input.js</a>, <a href="src_input_Input.js.html#sunlight-1-line-808">line 808</a>
     </dt>
     
 
@@ -5725,7 +5729,7 @@ Note: Not all browsers set the identifier property and it's not part of the W3C 
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_Input.js.html">input/Input.js</a>, <a href="src_input_Input.js.html#sunlight-1-line-878">line 878</a>
+    <a href="src_input_Input.js.html">input/Input.js</a>, <a href="src_input_Input.js.html#sunlight-1-line-883">line 883</a>
     </dt>
     
 
@@ -5867,7 +5871,7 @@ To control control the reset manually set Phaser.InputManager.resetLocked to <co
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_Input.js.html">input/Input.js</a>, <a href="src_input_Input.js.html#sunlight-1-line-568">line 568</a>
+    <a href="src_input_Input.js.html">input/Input.js</a>, <a href="src_input_Input.js.html#sunlight-1-line-573">line 573</a>
     </dt>
     
 
@@ -6009,7 +6013,7 @@ To control control the reset manually set Phaser.InputManager.resetLocked to <co
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_Input.js.html">input/Input.js</a>, <a href="src_input_Input.js.html#sunlight-1-line-627">line 627</a>
+    <a href="src_input_Input.js.html">input/Input.js</a>, <a href="src_input_Input.js.html#sunlight-1-line-632">line 632</a>
     </dt>
     
 
@@ -6156,7 +6160,7 @@ This is called automatically by Phaser.Touch and Phaser.MSPointer.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_Input.js.html">input/Input.js</a>, <a href="src_input_Input.js.html#sunlight-1-line-641">line 641</a>
+    <a href="src_input_Input.js.html">input/Input.js</a>, <a href="src_input_Input.js.html#sunlight-1-line-646">line 646</a>
     </dt>
     
 
@@ -6302,7 +6306,7 @@ This is called automatically by Phaser.Touch and Phaser.MSPointer.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_Input.js.html">input/Input.js</a>, <a href="src_input_Input.js.html#sunlight-1-line-716">line 716</a>
+    <a href="src_input_Input.js.html">input/Input.js</a>, <a href="src_input_Input.js.html#sunlight-1-line-721">line 721</a>
     </dt>
     
 
@@ -6379,7 +6383,7 @@ This is called automatically by Phaser.Touch and Phaser.MSPointer.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_Input.js.html">input/Input.js</a>, <a href="src_input_Input.js.html#sunlight-1-line-529">line 529</a>
+    <a href="src_input_Input.js.html">input/Input.js</a>, <a href="src_input_Input.js.html#sunlight-1-line-534">line 534</a>
     </dt>
     
 
@@ -6526,7 +6530,7 @@ This is called automatically and should not normally need to be invoked.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_Input.js.html">input/Input.js</a>, <a href="src_input_Input.js.html#sunlight-1-line-681">line 681</a>
+    <a href="src_input_Input.js.html">input/Input.js</a>, <a href="src_input_Input.js.html#sunlight-1-line-686">line 686</a>
     </dt>
     
 
@@ -6575,7 +6579,7 @@ This is called automatically and should not normally need to be invoked.</p>
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
-		on Fri Apr 22 2016 15:11:50 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Thu May 19 2016 12:35:41 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

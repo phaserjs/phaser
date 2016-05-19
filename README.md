@@ -13,8 +13,8 @@ Thousands of developers worldwide use it. From indies and multi-national digital
 * **Visit:** The [Phaser website](http://phaser.io) and follow on [Twitter](https://twitter.com/photonstorm) (#phaserjs)
 * **Learn:** [API Documentation](http://phaser.io/docs), [Support Forum][forum] and [StackOverflow](http://stackoverflow.com/questions/tagged/phaser-framework)
 * **Code:** 700+ [Source Examples](http://phaser.io/examples) (also available in this [git repo][examples])
-* **Read:** Subscribe to the weekly [Phaser World Newsletter](http://phaser.io/community/newsletter)
-* **Chat:** [#phaserio IRC channel](http://www.html5gamedevs.com/topic/4470-official-phaserio-irc-channel-phaserio-on-freenode/) or our [Slack Channel](http://phaser.io/news/2015/08/phaser-slack-channel)
+* **Read:** Subscribe to the weekly [Phaser World Newsletter](#phaserworld)
+* **Chat:** Join our [Slack Channel](http://phaser.io/news/2015/08/phaser-slack-channel), or [#phaserio IRC channel](http://www.html5gamedevs.com/topic/4470-official-phaserio-irc-channel-phaserio-on-freenode/)
 * **Extend:** With [Phaser Plugins](http://phaser.io/shop/plugins)
 * **Be awesome:** Support the future of Phaser on [Patreon](https://www.patreon.com/photonstorm) or by buying our [books](http://phaser.io/shop/books)
 
@@ -32,6 +32,7 @@ Thousands of developers worldwide use it. From indies and multi-national digital
 - [Requirements](#requirements)
 - [Road Map](#road-map)
 - [Change Log](#change-log)
+- [Lazer](#lazer)
 - [Contributing](#contributing)
 
 ![div](http://www.phaser.io/images/github/div.png)
@@ -41,11 +42,17 @@ Thousands of developers worldwide use it. From indies and multi-national digital
 
 <div align="center"><img src="http://phaser.io/images/github/news.jpg"></div>
 
-> 22nd April 2016
+> 19th May 2016
 
-Phaser 2.4.8 is now in development. This file will be updated as work progresses.
+The release of Phaser 2.4.8 continues our commitment to rapid turn-around of bug fixes and enhancements. Scan through the [Change Log](#change-log) for comprehensive details about what is new and updated in this version.
 
-As always, keep you eyes on the Phaser web site, our weekly newsletter, or follow me on [Twitter](https://twitter.com/photonstorm) for the latest updates.
+As always, my thanks to all of you who contributed towards this release. Either by opening an issue on GitHub, providing a fix, or just giving encouragement to the dev team.
+
+We are now splitting our time between development of [Lazer](#lazer), and Phaser 2.5. We decided, after much discussion with the community, that we owed it to Phaser to go out on a high, so 2.5 will be the version in which we do just that. After this Phaser will enter the LTS (long-term support) stage of its life.
+
+This is when we impose a feature freeze, locking the API down and responding only to bugs. This is a necessary step to allow us to focus on Lazer while still ensuring Phaser is given the support it deserves. Don't worry, we aren't going to abandon you! We've got your backs.
+
+As always, keep you eyes on the Phaser web site and read our weekly [newsletter](#phaserworld). You can also follow me on [Twitter](https://twitter.com/photonstorm) or chat to me in the Phaser [Slack](http://phaser.io/news/2015/08/phaser-slack-channel) channel.
 
 We'd be extremely grateful if you could get involved with our [Phaser Patreon campaign](https://www.patreon.com/photonstorm). The uptake so far has been fantastic. Thank you to everyone who now supports Phaser development and shares our belief in the future of HTML5 gaming, and Phasers role in that.
 
@@ -162,7 +169,7 @@ Browse the [Phaser Examples](http://phaser.io/examples) or clone the [examples r
 
 <div align="center"><img src="http://phaser.io/content/interphase/1/images/editorial/pages.jpg"></div>
 
-[Interphase](http://phaser.io/interphase) is a new book for Phaser developers of all skill levels.
+[Interphase](http://phaser.io/interphase) is a programming book for Phaser developers of all skill levels.
 
 With 400 pages of content you'll find detailed articles, game development "Making Of" guides and tutorials. All were written using the latest version of Phaser, so you won't be learning any out-dated tricks here.
 
@@ -317,8 +324,8 @@ If you code with [TypeScript](http://www.typescriptlang.org/) there are comprehe
 
 The majority of Phaser development is now taking place on the [Lazer](https://github.com/photonstorm/lazer) (Phaser 3) project. The Phaser 2 branch will still be supported and issues fixed, but roadmap features have been migrated over.
 
-<a name="phaser3"></a>
-## Lazer (Phaser 3)
+<a name="lazer"></a>
+## Lazer
 
 [Lazer](https://github.com/photonstorm/lazer) is the next generation of the Phaser game framework, and was previously called Phaser 3. Using a completely ES6 base it is renderer agnostic, allowing for DOM, SVG, Canvas and WebGL rendering, across desktop and mobile web browsers.
 
@@ -331,7 +338,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 <a name="change-log"></a>
 ## Change Log
 
-## Version 2.4.8 - "Watch Hill" - in dev
+## Version 2.4.8 - "Watch Hill" - 19th May 2016
 
 ### New Features
 
@@ -342,7 +349,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 ### Updates
 
 * TypeScript definitions fixes and updates (thanks @osev7 @staff0rd @galen-manuel)
-* Docs typo fixes (thanks @dedoubleyou1 @mortonfox)
+* Docs typo fixes (thanks @dedoubleyou1 @mortonfox @zeterain)
 * You can now access the intensity of the Camera shake effect via the getter / setter `Camera.shakeIntensity`. Useful if you wish to tween the intensity while running. (thanks @drhayes #2443)
 * The Arcade Physics overlap method would return false if two bodies were overlapping but neither had any velocity (i.e. they were embedded into each other)
 * PIXI.defaultRenderer is now set to `null` in Game.destroy, allowing it to be reset if a new Game instance is created on the same page (thanks @xtforgame ##2474)
@@ -357,15 +364,12 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * If you set Game.renderType to `Phaser.HEADLESS` it will no longer render the output to the canvas. The canvas is still created (although not added to the DOM), as it's required internally, but no rendering now takes place on it (thanks @ForgeableSum #2464)
 * Sounds played using the Audio tag, that were paused and then resumed again (either directly in code, or via a game pause event) would not resume from the point at which they paused (thanks @rroylance #2473)
 * Sounds played using the Audio tag, set to loop, would get caught in an endless pause-play loop cycle (thanks @rroylance #2473)
-* Sprites that had a tint on them, that then had their frame changed via either `Sprite.frame` or `Sprite.frameName` wouldn't re-tint the new frame, and would become stuck on the old frame in Canvas mode (thaks @spayton #2453)
 
 ### Pixi Updates
 
 Please note that Phaser uses a custom build of Pixi and always has done. The following changes have been made to our custom build, not to Pixi in general.
 
-*
-*
-*
+* Sprites that had a tint on them, that then had their frame changed via either `Sprite.frame` or `Sprite.frameName` wouldn't re-tint the new frame, and would become stuck on the old frame in Canvas mode (thaks @spayton #2453)
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 

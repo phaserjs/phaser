@@ -15,7 +15,7 @@ var Phaser = Phaser || {
     * @constant
     * @type {string}
     */
-    VERSION: '2.4.8-dev',
+    VERSION: '2.4.8',
 
     /**
     * An array of Phaser game instances.

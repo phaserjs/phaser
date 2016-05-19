@@ -1,7 +1,7 @@
-/// <reference path="pixi.d.ts" />
+/// <reference path="pixi.comments.d.ts" />
 /// <reference path="p2.d.ts" />
 
-// Type definitions for Phaser 2.4.7 - 22nd April 2016
+// Type definitions for Phaser 2.4.8 - 16th May 2016
 // Project: https://github.com/photonstorm/phaser
 
 declare module "phaser" {
@@ -2159,7 +2159,6 @@ declare module Phaser {
 
         /**
         * Destroy this DisplayObject.
-        * 
         * Removes all references to transformCallbacks, its parent, the stage, filters, bounds, mask and cached Sprites.
         */
         destroy(destroyChildren?: boolean): void;
@@ -3644,6 +3643,11 @@ declare module Phaser {
         scale: Phaser.Point;
 
         /**
+        * The Cameras shake intensity. Gets or sets the cameras shake intensity.
+        */
+        shakeIntensity: number;
+
+        /**
         * This signal is dispatched when the camera fade effect completes.
         * When the fade effect completes you will be left with the screen black (or whatever
         * color you faded to). In order to reset this call `Camera.resetFX`. This is called
@@ -4966,7 +4970,7 @@ declare module Phaser {
 
 
     /**
-    * Detects device support capabilities and is responsible for device intialization - see {@link Phaser.Device.whenReady whenReady}.
+    * Detects device support capabilities and is responsible for device initialization - see {@link Phaser.Device.whenReady whenReady}.
     * 
     * This class represents a singleton object that can be accessed directly as `game.device`
     * (or, as a fallback, `Phaser.Device` when a game instance is not available) without the need to instantiate it.
@@ -6015,11 +6019,18 @@ declare module Phaser {
     /**
     * The Events component is a collection of events fired by the parent game object.
     * 
-    * For example to tell when a Sprite has been added to a new group:
+    * Phaser uses what are known as 'Signals' for all event handling. All of the events in
+    * this class are signals you can subscribe to, much in the same way you'd "listen" for
+    * an event.
+    * 
+    * For example to tell when a Sprite has been added to a new group, you can bind a function
+    * to the `onAddedToGroup` signal:
     * 
     * `sprite.events.onAddedToGroup.add(yourFunction, this);`
     * 
     * Where `yourFunction` is the function you want called when this event occurs.
+    * 
+    * For more details about how signals work please see the Phaser.Signal class.
     * 
     * The Input-related events will only be dispatched if the Sprite has had `inputEnabled` set to `true`
     * and the Animation-related events only apply to game objects with animations like {@link Phaser.Sprite}.
@@ -6030,11 +6041,18 @@ declare module Phaser {
         /**
         * The Events component is a collection of events fired by the parent game object.
         * 
-        * For example to tell when a Sprite has been added to a new group:
+        * Phaser uses what are known as 'Signals' for all event handling. All of the events in
+        * this class are signals you can subscribe to, much in the same way you'd "listen" for
+        * an event.
+        * 
+        * For example to tell when a Sprite has been added to a new group, you can bind a function
+        * to the `onAddedToGroup` signal:
         * 
         * `sprite.events.onAddedToGroup.add(yourFunction, this);`
         * 
         * Where `yourFunction` is the function you want called when this event occurs.
+        * 
+        * For more details about how signals work please see the Phaser.Signal class.
         * 
         * The Input-related events will only be dispatched if the Sprite has had `inputEnabled` set to `true`
         * and the Animation-related events only apply to game objects with animations like {@link Phaser.Sprite}.
@@ -6985,6 +7003,11 @@ declare module Phaser {
         count: number;
 
         /**
+        * The Asset Generator.
+        */
+        create: Phaser.Create;
+
+        /**
         * A set of useful debug utilities.
         */
         debug: Phaser.Utils.Debug;
@@ -7132,7 +7155,7 @@ declare module Phaser {
         renderer: PIXI.CanvasRenderer | PIXI.WebGLRenderer;
 
         /**
-        * The Renderer this game will use. Either Phaser.AUTO, Phaser.CANVAS or Phaser.WEBGL.
+        * The Renderer this game will use. Either Phaser.AUTO, Phaser.CANVAS, Phaser.WEBGL, or Phaser.HEADLESS.
         */
         renderType: number;
 
@@ -7225,6 +7248,11 @@ declare module Phaser {
 
         /**
         * Nukes the entire game from orbit.
+        * 
+        * Calls destroy on Game.state, Game.sound, Game.scale, Game.stage, Game.input, Game.physics and Game.plugins.
+        * 
+        * Then sets all of those local handlers to null, destroys the renderer, removes the canvas from the DOM
+        * and resets the PIXI default renderer.
         */
         destroy(): void;
 
@@ -8947,7 +8975,7 @@ declare module Phaser {
         * @param existsValue Only children with exists=existsValue will be called.
         * @param parameter Additional parameters that will be passed to the callback.
         */
-        callAllExists(callback: Function, existsValue: boolean, ...parameters: any[]): void;
+        callAllExists(callback: string, existsValue: boolean, ...parameters: any[]): void;
 
         /**
         * Returns a reference to a function that exists on a child of the group based on the given callback array.
@@ -9609,11 +9637,8 @@ declare module Phaser {
 
         /**
         * The anchor sets the origin point of the texture.
-        * 
         * The default is 0,0 this means the texture's origin is the top left
-        * 
         * Setting than anchor to 0.5,0.5 means the textures origin is centered
-        * 
         * Setting the anchor to 1,1 would mean the textures origin points will be the bottom right corner
         */
         anchor: Phaser.Point;
@@ -9933,7 +9958,6 @@ declare module Phaser {
 
         /**
         * Destroy this DisplayObject.
-        * 
         * Removes all references to transformCallbacks, its parent, the stage, filters, bounds, mask and cached Sprites.
         */
         destroy(destroyChildren?: boolean): void;
@@ -10532,7 +10556,12 @@ declare module Phaser {
         /**
         * Adds a callback that is fired every time the activePointer receives a DOM move event such as a mousemove or touchmove.
         * 
-        * The callback will be sent 4 parameters: The Pointer that moved, the x position of the pointer, the y position and the down state.
+        * The callback will be sent 4 parameters:
+        * 
+        * A reference to the Phaser.Pointer object that moved,
+        * The x position of the pointer,
+        * The y position,
+        * A boolean indicating if the movement was the result of a 'click' event (such as a mouse click or touch down).
         * 
         * It will be called every time the activePointer moves, which in a multi-touch game can be a lot of times, so this is best
         * to only use if you've limited input to a single pointer (i.e. mouse or touch).
@@ -15603,30 +15632,45 @@ declare module Phaser {
             /**
             * Find the angle in radians between two display objects (like Sprites).
             * 
+            * The optional `world` argument allows you to return the result based on the Game Objects `world` property,
+            * instead of its `x` and `y` values. This is useful of the object has been nested inside an offset Group,
+            * or parent Game Object.
+            * 
             * @param source The Display Object to test from.
             * @param target The Display Object to test to.
+            * @param world Calculate the angle using World coordinates (true), or Object coordinates (false, the default)
             * @return The angle in radians between the source and target display objects.
             */
-            angleBetween(source: any, target: any): number;
+            angleBetween(source: any, target: any, world?: boolean): number;
 
             /**
             * Find the angle in radians between a display object (like a Sprite) and a Pointer, taking their x/y and center into account.
             * 
+            * The optional `world` argument allows you to return the result based on the Game Objects `world` property,
+            * instead of its `x` and `y` values. This is useful of the object has been nested inside an offset Group,
+            * or parent Game Object.
+            * 
             * @param displayObject The Display Object to test from.
             * @param pointer The Phaser.Pointer to test to. If none is given then Input.activePointer is used.
+            * @param world Calculate the angle using World coordinates (true), or Object coordinates (false, the default)
             * @return The angle in radians between displayObject.x/y to Pointer.x/y
             */
-            angleToPointer(displayObject: any, pointer?: Phaser.Pointer): number;
+            angleToPointer(displayObject: any, pointer?: Phaser.Pointer, world?: boolean): number;
 
             /**
             * Find the angle in radians between a display object (like a Sprite) and the given x/y coordinate.
             * 
+            * The optional `world` argument allows you to return the result based on the Game Objects `world` property,
+            * instead of its `x` and `y` values. This is useful of the object has been nested inside an offset Group,
+            * or parent Game Object.
+            * 
             * @param displayObject The Display Object to test from.
             * @param x The x coordinate to get the angle to.
             * @param y The y coordinate to get the angle to.
+            * @param world Calculate the angle using World coordinates (true), or Object coordinates (false, the default)
             * @return The angle in radians between displayObject.x/y to Pointer.x/y
             */
-            angleToXY(displayObject: any, x: number, y: number): number;
+            angleToXY(displayObject: any, x: number, y: number, world?: boolean): number;
 
             /**
             * Checks for collision between two game objects. You can perform Sprite vs. Sprite, Sprite vs. Group, Group vs. Group, Sprite vs. Tilemap Layer or Group vs. Tilemap Layer collisions.
@@ -15645,7 +15689,7 @@ declare module Phaser {
             * @param callbackContext The context in which to run the callbacks.
             * @return True if a collision occurred otherwise false.
             */
-            collide(object1: any, object2: any, collideCallback?: Function, processCallback?: Function, callbackContext?: any): boolean;
+            collide(object1: any, object2?: any, collideCallback?: Function, processCallback?: Function, callbackContext?: any): boolean;
 
             /**
             * A tween-like function that takes a starting velocity and some other factors and returns an altered velocity.
@@ -15664,35 +15708,49 @@ declare module Phaser {
             /**
             * Find the distance between two display objects (like Sprites).
             * 
+            * The optional `world` argument allows you to return the result based on the Game Objects `world` property,
+            * instead of its `x` and `y` values. This is useful of the object has been nested inside an offset Group,
+            * or parent Game Object.
+            * 
             * @param source The Display Object to test from.
             * @param target The Display Object to test to.
+            * @param world Calculate the distance using World coordinates (true), or Object coordinates (false, the default)
             * @return The distance between the source and target objects.
             */
-            distanceBetween(source: any, target: any): number;
+            distanceBetween(source: any, target: any, world?: boolean): number;
 
             /**
             * Find the distance between a display object (like a Sprite) and a Pointer. If no Pointer is given the Input.activePointer is used.
             * The calculation is made from the display objects x/y coordinate. This may be the top-left if its anchor hasn't been changed.
             * If you need to calculate from the center of a display object instead use the method distanceBetweenCenters()
-            * The distance to the Pointer is returned in screen space, not world space.
+            * 
+            * The optional `world` argument allows you to return the result based on the Game Objects `world` property,
+            * instead of its `x` and `y` values. This is useful of the object has been nested inside an offset Group,
+            * or parent Game Object.
             * 
             * @param displayObject The Display Object to test from.
             * @param pointer The Phaser.Pointer to test to. If none is given then Input.activePointer is used.
+            * @param world Calculate the distance using World coordinates (true), or Object coordinates (false, the default)
             * @return The distance between the object and the Pointer.
             */
-            distanceToPointer(displayObject: any, pointer?: Phaser.Pointer): number;
+            distanceToPointer(displayObject: any, pointer?: Phaser.Pointer, world?: boolean): number;
 
             /**
             * Find the distance between a display object (like a Sprite) and the given x/y coordinates.
             * The calculation is made from the display objects x/y coordinate. This may be the top-left if its anchor hasn't been changed.
             * If you need to calculate from the center of a display object instead use the method distanceBetweenCenters()
             * 
+            * The optional `world` argument allows you to return the result based on the Game Objects `world` property,
+            * instead of its `x` and `y` values. This is useful of the object has been nested inside an offset Group,
+            * or parent Game Object.
+            * 
             * @param displayObject The Display Object to test from.
             * @param x The x coordinate to move towards.
             * @param y The y coordinate to move towards.
+            * @param world Calculate the distance using World coordinates (true), or Object coordinates (false, the default)
             * @return The distance between the object and the x/y coordinates.
             */
-            distanceToXY(displayObject: any, x: number, y: number): number;
+            distanceToXY(displayObject: any, x: number, y: number, world?: boolean): number;
 
             /**
             * This will create an Arcade Physics body on the given game object or array of game objects.
@@ -16197,6 +16255,13 @@ declare module Phaser {
                 * The calculated width of the physics body.
                 */
                 width: number;
+
+                /**
+                * The elasticity of the Body when colliding with the World bounds.
+                * By default this property is `null`, in which case `Body.bounce` is used instead. Set this property
+                * to a Phaser.Point object in order to enable a World bounds specific bounce value.
+                */
+                worldBounce: Phaser.Point;
 
                 /**
                 * The velocity, or rate of change in speed of the Body. Measured in pixels per second.
@@ -19354,29 +19419,9 @@ declare module Phaser {
     module Plugin {
         
         class SaveCPU extends Phaser.Plugin { 
-            
-            /**
-            * Constrains maximum FPS to value set. 
-            * Reasonable values from 0 to 60 
-            * Default value 30
-            * Set value to 0 disable rendering based on FPS
-            * and use methods described below.
-            */
+
             renderOnFPS: number;
-            
-            /**
-            * Render when pointer movement detected.
-            * Possible values  "true" or "false"
-            * Default: false
-            * Note that renderOnFPS must be set to 0
-            */
             renderOnPointerChange: boolean;
-            
-            /**
-            * Forces rendering during core game loop
-            * Can be called independently or in tandem with above properties.
-            * Should be called inside update function.
-            */
             forceRender(): void;
         }
 
@@ -21492,7 +21537,6 @@ declare module Phaser {
 
         /**
         * This is the area of the BaseTexture image to actually copy to the Canvas / WebGL when rendering,
-        * 
         * irrespective of the actual frame size or placement (which can be influenced by trimmed texture atlases)
         */
         crop: PIXI.Rectangle;
@@ -22349,7 +22393,6 @@ declare module Phaser {
 
         /**
         * Destroy this DisplayObject.
-        * 
         * Removes all references to transformCallbacks, its parent, the stage, filters, bounds, mask and cached Sprites.
         */
         destroy(destroyChildren?: boolean): void;
@@ -23693,11 +23736,8 @@ declare module Phaser {
 
         /**
         * The anchor sets the origin point of the texture.
-        * 
         * The default is 0,0 this means the texture's origin is the top left
-        * 
         * Setting than anchor to 0.5,0.5 means the textures origin is centered
-        * 
         * Setting the anchor to 1,1 would mean the textures origin points will be the bottom right corner
         */
         anchor: Phaser.Point;
@@ -24162,7 +24202,6 @@ declare module Phaser {
 
         /**
         * Destroy this DisplayObject.
-        * 
         * Removes all references to transformCallbacks, its parent, the stage, filters, bounds, mask and cached Sprites.
         */
         destroy(destroyChildren?: boolean): void;
@@ -26364,9 +26403,10 @@ declare module Phaser {
         * @param style.wordWrapWidth The width in pixels at which text will wrap. - Default: 100
         * @param style.maxLines The maximum number of lines to be shown for wrapped text.
         * @param style.tabs The size (in pixels) of the tabs, for when text includes tab characters. 0 disables. Can be an array of varying tab sizes, one per tab stop.
+        * @param update Immediately update the Text object after setting the new style? Or wait for the next frame.
         * @return This Text instance.
         */
-        setStyle(style?: PhaserTextStyle): Phaser.Text;
+        setStyle(style?: PhaserTextStyle, update?: boolean): Phaser.Text;
 
         /**
         * The text to be displayed by this Text object.
@@ -26931,6 +26971,7 @@ declare module Phaser {
         * @param width The rendered width of the layer, should never be wider than Game.width. If not given it will be set to Game.width.
         * @param height The rendered height of the layer, should never be wider than Game.height. If not given it will be set to Game.height.
         * @param group Optional Group to add the object to. If not specified it will be added to the World group.
+        * @param pixiTest Temporary additional flag to enable tests of the PIXI.Tilemap renderer
         * @return The TilemapLayer object. This is an extension of Phaser.Sprite and can be moved around the display list accordingly.
         */
         createLayer(layer: any, width?: number, height?: number, group?: Phaser.Group): Phaser.TilemapLayer;

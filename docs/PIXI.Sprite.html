@@ -1082,9 +1082,9 @@
 						<li class="class-depth-1"><a href="http://www.html5gamedevs.com/forum/14-phaser/">Forum</a></li>
 						<li class="class-depth-1"><a href="http://stackoverflow.com/questions/tagged/phaser-framework">Stack Overflow</a></li>
 						<li class="class-depth-1"><a href="http://phaser.io/learn">Tutorials</a></li>
-						<li class="class-depth-1"><a href="https://confirmsubscription.com/h/r/369DE48E3E86AF1E">Newsletter</a></li>
+						<li class="class-depth-1"><a href="http://phaser.io/community/newsletter">Newsletter</a></li>
 						<li class="class-depth-1"><a href="http://phaser.io/community/twitter">Twitter</a></li>
-						<li class="class-depth-1"><a href="http://phaser.io/community/irc">IRC</a></li>
+						<li class="class-depth-1"><a href="http://phaser.io/news/2015/08/phaser-slack-channel">Slack</a></li>
 						<li class="class-depth-1"><a href="https://www.codeandweb.com/texturepacker/phaser">Texture Packer</a></li>
 					</ul>
 				</li>
@@ -3244,7 +3244,7 @@ This value is updated at the end of updateTransform and takes all parent transfo
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_Sprite.js.html">pixi/display/Sprite.js</a>, <a href="src_pixi_display_Sprite.js.html#sunlight-1-line-475">line 475</a>
+    <a href="src_pixi_display_Sprite.js.html">pixi/display/Sprite.js</a>, <a href="src_pixi_display_Sprite.js.html#sunlight-1-line-488">line 488</a>
     </dt>
     
 
@@ -3384,7 +3384,7 @@ This value is updated at the end of updateTransform and takes all parent transfo
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_Sprite.js.html">pixi/display/Sprite.js</a>, <a href="src_pixi_display_Sprite.js.html#sunlight-1-line-494">line 494</a>
+    <a href="src_pixi_display_Sprite.js.html">pixi/display/Sprite.js</a>, <a href="src_pixi_display_Sprite.js.html#sunlight-1-line-507">line 507</a>
     </dt>
     
 
@@ -3798,7 +3798,7 @@ Removes all references to transformCallbacks, its parent, the stage, filters, bo
             
 <dt>
     <h4 class="name "
-        id="generateTexture"><span class="type-signature"></span>generateTexture<span class="signature">(resolution, scaleMode, renderer)</span><span class="type-signature"> &rarr; {<a href="PIXI.Texture.html">PIXI.Texture</a>}</span></h4>
+        id="generateTexture"><span class="type-signature"></span>generateTexture<span class="signature">(resolution, scaleMode, renderer)</span><span class="type-signature"> &rarr; {<a href="PIXI.RenderTexture.html">PIXI.RenderTexture</a>}</span></h4>
     
     
 </dt>
@@ -3924,7 +3924,7 @@ This can be quite useful if your displayObject is static / complicated and needs
     
         <div class="returns-type">
         
-<span class="param-type"><a href="PIXI.Texture.html">PIXI.Texture</a></span>
+<span class="param-type"><a href="PIXI.RenderTexture.html">PIXI.RenderTexture</a></span>
 
  -
         </div>
@@ -4001,7 +4001,14 @@ This can be quite useful if your displayObject is static / complicated and needs
 
     
     <div class="description">
-        <p>Returns the bounds of the Sprite as a rectangle. The bounds calculation takes the worldTransform into account.</p>
+        <p>Returns the bounds of the Sprite as a rectangle.
+The bounds calculation takes the worldTransform into account.</p>
+<p>It is important to note that the transform is not updated when you call this method.
+So if this Sprite is the child of a Display Object which has had its transform
+updated since the last render pass, those changes will not yet have been applied
+to this Sprites worldTransform. If you need to ensure that all parent transforms
+are factored into this getBounds operation then you should call <code>updateTransform</code>
+on the root most object in this Sprites display list first.</p>
     </div>
     
 
@@ -4104,7 +4111,7 @@ This can be quite useful if your displayObject is static / complicated and needs
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_Sprite.js.html">pixi/display/Sprite.js</a>, <a href="src_pixi_display_Sprite.js.html#sunlight-1-line-193">line 193</a>
+    <a href="src_pixi_display_Sprite.js.html">pixi/display/Sprite.js</a>, <a href="src_pixi_display_Sprite.js.html#sunlight-1-line-194">line 194</a>
     </dt>
     
 
@@ -4487,7 +4494,7 @@ This can be quite useful if your displayObject is static / complicated and needs
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObjectContainer.js.html">pixi/display/DisplayObjectContainer.js</a>, <a href="src_pixi_display_DisplayObjectContainer.js.html#sunlight-1-line-367">line 367</a>
+    <a href="src_pixi_display_DisplayObjectContainer.js.html">pixi/display/DisplayObjectContainer.js</a>, <a href="src_pixi_display_DisplayObjectContainer.js.html#sunlight-1-line-370">line 370</a>
     </dt>
     
 
@@ -5072,7 +5079,7 @@ This can be quite useful if your displayObject is static / complicated and needs
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObjectContainer.js.html">pixi/display/DisplayObjectContainer.js</a>, <a href="src_pixi_display_DisplayObjectContainer.js.html#sunlight-1-line-407">line 407</a>
+    <a href="src_pixi_display_DisplayObjectContainer.js.html">pixi/display/DisplayObjectContainer.js</a>, <a href="src_pixi_display_DisplayObjectContainer.js.html#sunlight-1-line-415">line 415</a>
     </dt>
     
 
@@ -5343,7 +5350,7 @@ This can be quite useful if your displayObject is static / complicated and needs
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObjectContainer.js.html">pixi/display/DisplayObjectContainer.js</a>, <a href="src_pixi_display_DisplayObjectContainer.js.html#sunlight-1-line-391">line 391</a>
+    <a href="src_pixi_display_DisplayObjectContainer.js.html">pixi/display/DisplayObjectContainer.js</a>, <a href="src_pixi_display_DisplayObjectContainer.js.html#sunlight-1-line-399">line 399</a>
     </dt>
     
 
@@ -6120,7 +6127,7 @@ texture this Sprite was using.</p>
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
-		on Fri Apr 22 2016 15:11:59 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Thu May 19 2016 12:35:49 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
