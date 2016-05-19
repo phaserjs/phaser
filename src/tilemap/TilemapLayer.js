@@ -374,14 +374,14 @@ Phaser.TilemapLayer.prototype.resizeWorld = function () {
 */
 Phaser.TilemapLayer.prototype._fixX = function (x) {
 
-    if (x < 0)
-    {
-        x = 0;
-    }
-
-    if (this.scrollFactorX === 1)
+    if (this.scrollFactorX === 1 || (this.scrollFactorX === 0 && this.position.x === 0))
     {
         return x;
+    }
+    
+    //This executes if the scrollFactorX is 0 and the x position of the tilemap is off from standard.
+    if(this.scrollFactorX === 0 && this.position.x !== 0) {
+        return x - this.position.x;
     }
 
     return this._scrollX + (x - (this._scrollX / this.scrollFactorX));
@@ -417,16 +417,17 @@ Phaser.TilemapLayer.prototype._unfixX = function (x) {
 */
 Phaser.TilemapLayer.prototype._fixY = function (y) {
 
-    if (y < 0)
-    {
-        y = 0;
-    }
-
-    if (this.scrollFactorY === 1)
+    if (this.scrollFactorY === 1 || (this.scrollFactorY === 0 && this.position.y === 0))
     {
         return y;
     }
-
+    
+    //This executes if the scrollFactorY is 0 and the y position of the tilemap is off from standard.
+    if(this.scrollFactorY === 0 && this.position.y !== 0) 
+    {
+        return y - this.position.y
+    }
+    
     return this._scrollY + (y - (this._scrollY / this.scrollFactorY));
 
 };
