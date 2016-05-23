@@ -342,15 +342,15 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 
 ### Updates
 
-* TypeScript definitions fixes and updates (thanks )
+* TypeScript definitions fixes and updates (thanks @wingyplus @monagames)
 * Docs typo fixes (thanks )
-*
+* The TypeScript defs ambient declaration has been updated to make it compatible with the SystemJS loader (thanks @monagames)
 *
 *
 
 ### Bug Fixes
 
-*
+* Arcade Physics Body incorrectly positioned if the Sprite had a negative scale (see http://www.html5gamedevs.com/topic/22695-247-248-body-anchoring-any-migration-tips/) (thanks @SBCGames @icameron @Nuuf @EvolViper #2488 #2490)
 *
 *
 
