@@ -38,13 +38,13 @@ Thousands of developers worldwide use it. From indies and multi-national digital
 ![div](http://www.phaser.io/images/github/div.png)
 
 <a name="whats-new"></a>
-## What's new in Phaser 2.5.0
+## What's new in Phaser 2.4.9
 
 <div align="center"><img src="http://phaser.io/images/github/news.jpg"></div>
 
 > In Development
 
-The release of Phaser 2.5.0 is currently in development. This README will be updated as development continues.
+The release of Phaser 2.4.9 is currently in development. This README will be updated as development continues.
 
 As always, keep you eyes on the Phaser web site and read our weekly [newsletter](#phaserworld). You can also follow me on [Twitter](https://twitter.com/photonstorm) or chat to me in the Phaser [Slack](http://phaser.io/news/2015/08/phaser-slack-channel) channel.
 
@@ -116,15 +116,15 @@ Using Browserify? Please [read this](#browserify).
 
 [jsDelivr](http://www.jsdelivr.com/#!phaser) is a "super-fast CDN for developers". Include the following in your html:
 
-`<script src="//cdn.jsdelivr.net/phaser/2.5.0/phaser.js"></script>`
+`<script src="//cdn.jsdelivr.net/phaser/2.4.9/phaser.js"></script>`
 
 or the minified version:
 
-`<script src="//cdn.jsdelivr.net/phaser/2.5.0/phaser.min.js"></script>`
+`<script src="//cdn.jsdelivr.net/phaser/2.4.9/phaser.min.js"></script>`
 
 [cdnjs.com](https://cdnjs.com/libraries/phaser) also offers a free CDN service. They have all versions of Phaser and even the custom builds:
 
-`<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/2.5.0/phaser.js"></script>`
+`<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/2.4.9/phaser.js"></script>`
 
 ### Phaser Sandbox
 
@@ -332,7 +332,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 <a name="change-log"></a>
 ## Change Log
 
-## Version 2.5.0 - "Shadow Coast" - In Development
+## Version 2.4.9 - "Four Kings" - In Development
 
 ### New Features
 
@@ -399,10 +399,10 @@ All rights reserved.
 
 [![Analytics](https://ga-beacon.appspot.com/UA-44006568-2/phaser/index)](https://github.com/igrigorik/ga-beacon)
 
-[get-js]: https://github.com/photonstorm/phaser/releases/download/v2.5.0/phaser.js
-[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v2.5.0/phaser.min.js
-[get-zip]: https://github.com/photonstorm/phaser/archive/v2.5.0.zip
-[get-tgz]: https://github.com/photonstorm/phaser/archive/v2.5.0.tar.gz
+[get-js]: https://github.com/photonstorm/phaser/releases/download/v2.4.9/phaser.js
+[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v2.4.9/phaser.min.js
+[get-zip]: https://github.com/photonstorm/phaser/archive/v2.4.9.zip
+[get-tgz]: https://github.com/photonstorm/phaser/archive/v2.4.9.tar.gz
 [clone-http]: https://github.com/photonstorm/phaser.git
 [clone-ssh]: git@github.com:photonstorm/phaser.git
 [clone-svn]: https://github.com/photonstorm/phaser
