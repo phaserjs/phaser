@@ -646,11 +646,6 @@ Phaser.Physics.Arcade.Body.prototype = {
     */
     setSize: function (width, height, offsetX, offsetY) {
 
-        if (this.isCircle)
-        {
-            return;
-        }
-
         if (offsetX === undefined) { offsetX = this.offset.x; }
         if (offsetY === undefined) { offsetY = this.offset.y; }
 
@@ -711,7 +706,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     */
     hitTest: function (x, y) {
 
-        return (this.isCircle) ? Phaser.Circle.contains(this, x, y) : Phaser.Rectangle.contains(this, x, y);
+        return Phaser.Rectangle.contains(this, x, y);
 
     },
 
