@@ -40,45 +40,15 @@ PIXI.TilemapShader = function(gl)
 
     this.vertexSrc = [
         "  precision lowp float;",
+        "  uniform vec2 uScrollOffset;",
         "  attribute vec4 aPosition;",
         "  varying vec2 vTexCoord;",
         "  void main(void) {",
         "    gl_Position.zw = vec2(1, 1);",
-        "    gl_Position.xy = aPosition.xy;",
+        "    gl_Position.xy = aPosition.xy - uScrollOffset;",
         "    vTexCoord = aPosition.zw;",
         "  }"
         ];
-
-    /**
-     * The fragment shader.
-     * @property fragmentSrc
-     * @type Array
-    this.fragmentSrc = [
-        "  precision mediump float;",
-        "  uniform sampler2D uImageSampler;",
-        "  varying vec2 vTexCoord;",
-        "  void main(void) {",
-        "    gl_FragColor = texture2D(uImageSampler, vTexCoord);",
-        "  }"
-    ];
-     */
-    
-    /**
-     * The vertex shader.
-     * @property vertexSrc
-     * @type Array
-    this.vertexSrc = [
-        "  uniform vec2 uScreenPosition;",
-        "  attribute vec4 aPosition;",
-        "  uniform mat3 uProjectionMatrix;",
-        "  varying vec2 vTexCoord;",
-        "  void main(void) {",
-        "    vec3 pos = uProjectionMatrix * (vec3(aPosition.xy, 1) + vec3(uScreenPosition, 0));",
-        "    gl_Position = vec4(pos.xy, 1, 1);",
-        "    vTexCoord = aPosition.zw;",
-        "  }"
-    ];
-     */
 
     /**
      * A local texture counter for multi-texture shaders.
@@ -107,12 +77,11 @@ PIXI.TilemapShader.prototype.init = function()
 
     // get and store the attributes
     this.aPosition = gl.getAttribLocation(program, 'aPosition');
-    // this.uProjectionMatrix = gl.getUniformLocation(program, 'uProjectionMatrix');
-    // this.uScreenPosition = gl.getUniformLocation(program, 'uScreenPosition');
     this.uSampler = gl.getUniformLocation(program, 'uImageSampler');
+    this.uScrollOffset = gl.getUniformLocation(program, 'uScrollOffset');
 
-//    this.attributes = [this.aScreenPosition, this.aPosition, this.uProjectionMatrix, this.uSampler];
     this.attributes = [this.aPosition, this.uSampler];
+    this.uniforms = [this.uScrollOffset];
 
     this.program = program;
 };

@@ -235,14 +235,14 @@ PIXI.Tilemap.prototype._renderVisibleLayer = function( _layer, renderSession )
 {
   var gl = renderSession.gl;
   var shader = renderSession.shaderManager.tilemapShader;
-//  this.shaders.setProgram(this.shaders.blitShaderProgram, _textureNumber);
 
+  // calculate visible tile extents
   var firstX = Math.max(Math.floor(this.scrollX / this.tileWide), 0);
   var lastX = Math.min(firstX + Math.ceil(this.game.width / this.tileWide) + 1, this.mapWide);
   var firstY = Math.max(Math.floor(this.scrollY / this.tileHigh), 0);
   var lastY = Math.min(firstY + Math.ceil(this.game.height / this.tileHigh) + 1, this.mapHigh);
-  var len = (lastX - firstX) * (lastY - firstY);
 
+  // TODO: switch to game.width or PIXI equivalent
   var screenWide2 = gl.drawingBufferWidth * 0.5;
   var screenHigh2 = gl.drawingBufferHeight * 0.5;
 
@@ -250,60 +250,69 @@ PIXI.Tilemap.prototype._renderVisibleLayer = function( _layer, renderSession )
   var iWide = 1.0 / screenWide2;
   var iHigh = 1.0 / screenHigh2;
 
-  var scale = 1.0;
-  var wide = this.tileWide * scale * 0.5 / screenWide2;
-  var high = this.tileHigh * scale * 0.5 / screenHigh2;
+  // scale tile dimensions for drawing surface size (this shader doesn't do any conversion)
+  var wide = this.tileWide * 0.5 / screenWide2;
+  var high = this.tileHigh * 0.5 / screenHigh2;
 
-  var old_t;
-  var old_r;
-
-  var c = 0;
   var buffer = this.buffer;
+  var oldT, oldR;
+  var c = 0;
+
+  // for all tiles in the visible screen area
   for(var ty = firstY; ty < lastY; ty++)
   {
+    // local row pointer to speed up x access
     var layerRow = _layer.data[ty];
-    var sy = ty * this.tileHigh;
+
+    // calculate screen position of centre of this tile (in pixels)
+    var sy = ty * this.tileHigh + this.tileHigh * 0.5;
 
     for(var tx = firstX; tx < lastX; tx++)
     {
+      // get the tile index from the map
       var tile = layerRow[tx].index - 1;
 
+      // if it's not an empty tile...
       if ( tile >= 0 )
       {
-        var sx = tx * this.tileWide;
+        var sx = tx * this.tileWide + this.tileWide * 0.5;
 
+        // calculate the source position of this tile index (in whole tiles)
         var tmx = tile % this.texTilesWide;
         var tmy = Math.floor(tile / this.texTilesWide);
 
-        // from blitSimpleDrawAnimImages
+        // calculate the uv values for each corner of the tile in the source
         var uvl = tmx * this.scalex;
         var uvr = uvl + this.scalex;
         var uvt = tmy * this.scaley;
         var uvb = uvt + this.scaley;
 
-        //this._renderTile(gl, shader, bi, x * this.tileWide, y * this.tileHigh, tile);
-
+        // calculate the destination location of the tile in screen units (-1..1)
         var x = sx * iWide - 1;
         var y = 1 - sy * iHigh;
+
+        // calculate the bottom-left corner of the tile in screen units
         var l = x - wide;
         var b = y + high;
 
+        // for every tile except the first one...
         if ( c > 0 )
         {
-          // degenerate triangle: repeat the last vertex
-          buffer[ c     ] = old_r;
-          buffer[ c + 1 ] = old_t;
-          // repeat the next vertex
+          // add a degenerate triangle: repeat the last vertex
+          buffer[ c     ] = oldR;
+          buffer[ c + 1 ] = oldT;
+          // then repeat the next vertex
           buffer[ c + 4 ] = l;
           buffer[ c + 5 ] = b;
-          // texture coordinates
+          // pad with texture coordinates (probably not needed)
           buffer[ c + 2 ] = buffer[ c + 6 ] = uvl;
           buffer[ c + 3 ] = buffer[ c + 7 ] = uvt;
 
+          // advance the buffer index
           c += 8;
         }
 
-        // screen destination position
+        // screen destination into the VBO
         // l, b,    0,1
         // l, t,    4,5
         // r, b,    8,9
@@ -311,10 +320,10 @@ PIXI.Tilemap.prototype._renderVisibleLayer = function( _layer, renderSession )
 
         buffer[ c     ] = buffer[ c + 4 ] = l;
         buffer[ c + 1 ] = buffer[ c + 9 ] = b;
-        buffer[ c + 8 ] = buffer[ c + 12] = old_r = x + wide;
-        buffer[ c + 5 ] = buffer[ c + 13] = old_t = y - high;
+        buffer[ c + 8 ] = buffer[ c + 12] = oldR = x + wide;
+        buffer[ c + 5 ] = buffer[ c + 13] = oldT = y - high;
 
-        // texture source position
+        // texture source position into the VBO
         // l, b,    2,3
         // l, t,    6,7
         // r, b,    10,11
@@ -324,14 +333,23 @@ PIXI.Tilemap.prototype._renderVisibleLayer = function( _layer, renderSession )
         buffer[ c + 10] = buffer[ c + 14] = uvr;    // r
         buffer[ c + 7 ] = buffer[ c + 15] = uvb;    // b
 
+        // advance the buffer index
         c += 16;
       }
     }
   }
 
+  // set the scroll offset (in screen units)
+  gl.uniform2f( shader.uScrollOffset, this.scrollX * iWide, -this.scrollY * iHigh );
+
+  // upload the VBO
   gl.bufferData( gl.ARRAY_BUFFER, buffer, gl.STATIC_DRAW );
+
+  // prepare the shader attributes
   gl.vertexAttribPointer( shader.aPosition, 4, gl.FLOAT, false, 0, 0 );
-  gl.drawArrays(gl.TRIANGLE_STRIP, 0, len * 6 - 2);
+
+  // draw the entire VBO in one call
+  gl.drawArrays(gl.TRIANGLE_STRIP, 0, (lastX - firstX) * (lastY - firstY) * 6 - 2);   // 4 + 2 (vertices + degenerates)
 };
 
 
