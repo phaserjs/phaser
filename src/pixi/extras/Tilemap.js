@@ -28,8 +28,8 @@ PIXI.Tilemap = function(texture, mapwidth, mapheight, tilewidth, tileheight, lay
     this.texTilesHigh = Math.ceil(this.texture.height / this.tileHigh);
 
     // proportion of texture used by one tile (uv coordinate scales)
-    this.sx = this.tileWide / this.texture.width;
-    this.sy = this.tileHigh / this.texture.height;
+    this.scalex = this.tileWide / this.texture.width;
+    this.scaley = this.tileHigh / this.texture.height;
 
     // TODO: switch here to create DisplayObjectContainer at correct size for the render mode
     this.width = this.mapWide * this.tileWide;
@@ -61,8 +61,11 @@ PIXI.Tilemap = function(texture, mapwidth, mapheight, tilewidth, tileheight, lay
      */
     this.blendMode = PIXI.blendModes.NORMAL;
 
+    // calculate size of map
+    var mapSize = mapwidth * mapheight * 16;
+
     // create buffer with all data required by shader to draw this object
-    this.buffer = new PIXI.Float32Array(16);
+    this.buffer = new PIXI.Float32Array( mapSize * 16 );
 
     /**
      * create buffer data for the webgl rendering of this tile
@@ -80,20 +83,18 @@ PIXI.Tilemap = function(texture, mapwidth, mapheight, tilewidth, tileheight, lay
     var t = 0;
     var b = t + this.tileHigh;
 
-    this.buffer[ 0 ] = this.buffer[ 4 ] = l;
-    this.buffer[ 1 ] = this.buffer[ 9 ] = b;
-    this.buffer[ 8 ] = this.buffer[ 12] = r;
-    this.buffer[ 5 ] = this.buffer[ 13] = t;
-
-    // texture source position for the whole texture (uv coordinates adjusted for each tile)
-    // l, b,    2,3
-    // l, t,    6,7
-    // r, b,    10,11
-    // r, t,    14,15
-    this.buffer[ 2 ] = this.buffer[ 6 ] = 0;
-    this.buffer[ 3 ] = this.buffer[ 11] = 1;
-    this.buffer[ 10] = this.buffer[ 14] = 1;
-    this.buffer[ 7 ] = this.buffer[ 15] = 0;
+    for(var i = 0; i < mapSize; i++)
+    {
+      var b = i * 16;
+      this.buffer[ b +  0 ] = this.buffer[ b +  4 ] = l;
+      this.buffer[ b +  1 ] = this.buffer[ b +  9 ] = b;
+      this.buffer[ b +  8 ] = this.buffer[ b +  12] = r;
+      this.buffer[ b +  5 ] = this.buffer[ b +  13] = t;
+      this.buffer[ b +  2 ] = this.buffer[ b +  6 ] = 0;
+      this.buffer[ b +  3 ] = this.buffer[ b +  11] = 1;
+      this.buffer[ b +  10] = this.buffer[ b +  14] = 1;
+      this.buffer[ b +  7 ] = this.buffer[ b +  15] = 0;
+    }
 };
 
 // constructor
@@ -225,7 +226,7 @@ PIXI.Tilemap.prototype._renderVisibleTiles = function(renderSession)
   // bind the source buffer
   gl.bindBuffer( gl.ARRAY_BUFFER, this.positionBuffer );
 
-  // draw the entire map layer
+  // draw the visible portion of the map layer
   this._renderVisibleLayer(this.layer, renderSession);
 };
 
@@ -234,24 +235,103 @@ PIXI.Tilemap.prototype._renderVisibleLayer = function( _layer, renderSession )
 {
   var gl = renderSession.gl;
   var shader = renderSession.shaderManager.tilemapShader;
-  var firstX = Math.max(Math.floor(this.scrollX / this.tileWide), 0);
-  var firstY = Math.max(Math.floor(this.scrollY / this.tileHigh), 0);
-  var lastX = Math.min(firstX + Math.ceil(this.game.width / this.tileWide) + 1, this.mapWide);
-  var lastY = Math.min(firstY + Math.ceil(this.game.height / this.tileHigh) + 1, this.mapHigh);
+//  this.shaders.setProgram(this.shaders.blitShaderProgram, _textureNumber);
 
-  for(var y = firstY; y < lastY; y++)
+  var firstX = Math.max(Math.floor(this.scrollX / this.tileWide), 0);
+  var lastX = Math.min(firstX + Math.ceil(this.game.width / this.tileWide) + 1, this.mapWide);
+  var firstY = Math.max(Math.floor(this.scrollY / this.tileHigh), 0);
+  var lastY = Math.min(firstY + Math.ceil(this.game.height / this.tileHigh) + 1, this.mapHigh);
+  var len = (lastX - firstX) * (lastY - firstY);
+
+  var screenWide2 = gl.drawingBufferWidth * 0.5;
+  var screenHigh2 = gl.drawingBufferHeight * 0.5;
+
+  // calculate inverse to avoid division in loop
+  var iWide = 1.0 / screenWide2;
+  var iHigh = 1.0 / screenHigh2;
+
+  var scale = 1.0;
+  var wide = this.tileWide * scale * 0.5 / screenWide2;
+  var high = this.tileHigh * scale * 0.5 / screenHigh2;
+
+  var old_t;
+  var old_r;
+
+  var c = 0;
+  var buffer = this.buffer;
+  for(var ty = firstY; ty < lastY; ty++)
   {
-    var layerRow = _layer.data[y];
-    for(var x = firstX; x < lastX; x++)
+    var layerRow = _layer.data[ty];
+    var sy = ty * this.tileHigh;
+
+    for(var tx = firstX; tx < lastX; tx++)
     {
-      var tile = layerRow[x].index - 1;
+      var tile = layerRow[tx].index - 1;
+
       if ( tile >= 0 )
       {
-        this._renderTile(gl, shader, x * this.tileWide, y * this.tileHigh, tile);
+        var sx = tx * this.tileWide;
+
+        var tmx = tile % this.texTilesWide;
+        var tmy = Math.floor(tile / this.texTilesWide);
+
+        // from blitSimpleDrawAnimImages
+        var uvl = tmx * this.scalex;
+        var uvr = uvl + this.scalex;
+        var uvt = tmy * this.scaley;
+        var uvb = uvt + this.scaley;
+
+        //this._renderTile(gl, shader, bi, x * this.tileWide, y * this.tileHigh, tile);
+
+        var x = sx * iWide - 1;
+        var y = 1 - sy * iHigh;
+        var l = x - wide;
+        var b = y + high;
+
+        if ( c > 0 )
+        {
+          // degenerate triangle: repeat the last vertex
+          buffer[ c     ] = old_r;
+          buffer[ c + 1 ] = old_t;
+          // repeat the next vertex
+          buffer[ c + 4 ] = l;
+          buffer[ c + 5 ] = b;
+          // texture coordinates
+          buffer[ c + 2 ] = buffer[ c + 6 ] = uvl;
+          buffer[ c + 3 ] = buffer[ c + 7 ] = uvt;
+
+          c += 8;
+        }
+
+        // screen destination position
+        // l, b,    0,1
+        // l, t,    4,5
+        // r, b,    8,9
+        // r, t,    12,13
+
+        buffer[ c     ] = buffer[ c + 4 ] = l;
+        buffer[ c + 1 ] = buffer[ c + 9 ] = b;
+        buffer[ c + 8 ] = buffer[ c + 12] = old_r = x + wide;
+        buffer[ c + 5 ] = buffer[ c + 13] = old_t = y - high;
+
+        // texture source position
+        // l, b,    2,3
+        // l, t,    6,7
+        // r, b,    10,11
+        // r, t,    14,15
+        buffer[ c + 2 ] = buffer[ c + 6 ] = uvl;    // l
+        buffer[ c + 3 ] = buffer[ c + 11] = uvt;    // t
+        buffer[ c + 10] = buffer[ c + 14] = uvr;    // r
+        buffer[ c + 7 ] = buffer[ c + 15] = uvb;    // b
+
+        c += 16;
       }
     }
   }
 
+  gl.bufferData( gl.ARRAY_BUFFER, buffer, gl.STATIC_DRAW );
+  gl.vertexAttribPointer( shader.aPosition, 4, gl.FLOAT, false, 0, 0 );
+  gl.drawArrays(gl.TRIANGLE_STRIP, 0, len * 6 - 2);
 };
 
 
@@ -297,6 +377,7 @@ PIXI.Tilemap.prototype._renderLayer = function( _layer, renderSession )
 {
   var gl = renderSession.gl;
   var shader = renderSession.shaderManager.tilemapShader;
+  var bi = 0;
 
   var wide = _layer.width, high = _layer.height;
   for(var y = 0; y < high; y++)
@@ -307,7 +388,8 @@ PIXI.Tilemap.prototype._renderLayer = function( _layer, renderSession )
       var tile = layerRow[x].index;
       if ( tile >= 0 )
       {
-        this._renderTile(gl, shader, x * this.tileWide, y * this.tileHigh, tile);
+        this._renderTile(gl, shader, bi, x * this.tileWide, y * this.tileHigh, tile);
+        bi += 16;
       }
     }
   }
@@ -315,7 +397,7 @@ PIXI.Tilemap.prototype._renderLayer = function( _layer, renderSession )
 };
 
 
-PIXI.Tilemap.prototype._renderTile = function(gl, shader, x, y, tile)
+PIXI.Tilemap.prototype._renderTile = function(gl, shader, bufferIndex, x, y, tile)
 {
   // if repeating same tile, skip almost everything...
   if ( tile != this.lastTile )

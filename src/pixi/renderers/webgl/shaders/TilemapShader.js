@@ -29,11 +29,30 @@ PIXI.TilemapShader = function(gl)
      */
     this.program = null;
 
+    this.fragmentSrc = [
+        "  precision lowp float;",
+        "  uniform sampler2D uImageSampler;",
+        "  varying vec2 vTexCoord;",
+        "  void main(void) {",
+        "    gl_FragColor = texture2D(uImageSampler, vTexCoord);",
+        "  }"
+        ];
+
+    this.vertexSrc = [
+        "  precision lowp float;",
+        "  attribute vec4 aPosition;",
+        "  varying vec2 vTexCoord;",
+        "  void main(void) {",
+        "    gl_Position.zw = vec2(1, 1);",
+        "    gl_Position.xy = aPosition.xy;",
+        "    vTexCoord = aPosition.zw;",
+        "  }"
+        ];
+
     /**
      * The fragment shader.
      * @property fragmentSrc
      * @type Array
-     */
     this.fragmentSrc = [
         "  precision mediump float;",
         "  uniform sampler2D uImageSampler;",
@@ -42,12 +61,12 @@ PIXI.TilemapShader = function(gl)
         "    gl_FragColor = texture2D(uImageSampler, vTexCoord);",
         "  }"
     ];
+     */
     
     /**
      * The vertex shader.
      * @property vertexSrc
      * @type Array
-     */
     this.vertexSrc = [
         "  uniform vec2 uScreenPosition;",
         "  attribute vec4 aPosition;",
@@ -59,6 +78,7 @@ PIXI.TilemapShader = function(gl)
         "    vTexCoord = aPosition.zw;",
         "  }"
     ];
+     */
 
     /**
      * A local texture counter for multi-texture shaders.
@@ -69,6 +89,7 @@ PIXI.TilemapShader = function(gl)
 
     this.init();
 };
+
 
 PIXI.TilemapShader.prototype.constructor = PIXI.TilemapShader;
 
@@ -86,11 +107,12 @@ PIXI.TilemapShader.prototype.init = function()
 
     // get and store the attributes
     this.aPosition = gl.getAttribLocation(program, 'aPosition');
-    this.uProjectionMatrix = gl.getUniformLocation(program, 'uProjectionMatrix');
-    this.uScreenPosition = gl.getUniformLocation(program, 'uScreenPosition');
+    // this.uProjectionMatrix = gl.getUniformLocation(program, 'uProjectionMatrix');
+    // this.uScreenPosition = gl.getUniformLocation(program, 'uScreenPosition');
     this.uSampler = gl.getUniformLocation(program, 'uImageSampler');
 
-    this.attributes = [this.aScreenPosition, this.aPosition, this.uProjectionMatrix, this.uSampler];
+//    this.attributes = [this.aScreenPosition, this.aPosition, this.uProjectionMatrix, this.uSampler];
+    this.attributes = [this.aPosition, this.uSampler];
 
     this.program = program;
 };

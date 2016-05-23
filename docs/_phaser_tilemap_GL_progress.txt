@@ -62,8 +62,19 @@ tile properties - works perfectly
 * tilemap ray cast - draws map but not debug layer, impossible to tell if raycast is working without debug
 tileset from bitmapdata - works perfectly
 
-* demos that fail for other reasons that 'tiles out by one'
+* demos that fail for other reasons than 'tiles out by one'
+
+create from objects: looks like the actual 'createFromObjects' call is working perfectly (coins).  The failure is due to the lack of ability to handle multiple tile source images per tilemap.  Looking at features_test.json (the map source) it appears that there are multiple layers with different sources... I'll start by supporting multiple layers.
+With some help from Rich, finally discovered the Tileset class and it's firstgid value.  Also discovered the 'draw' function in there which is hard-wired to Canvas drawing.  Options: spin off TilesetGl class, or create drawGl function and branch on every draw call, or duplicate the firstgid logic in my new GL drawing code.  I prefer the third option.  At some point that draw in Tileset should be moved because Tileset is a data-holder class and shouldn't really contain drawing logic (despite how convenient it is to put it there to access firstgid etc from Tileset).  My rationale for this separation is that rendering for browsers is very similar to writing game for old-school consoles - we separated the code that touches hardware from the logic code, because then we could convert the game to a different platform easily.  In this case the 'different platform' is webgl but the approach should be the same.
 
 
+
+day four:
+
+Read through the new PIXI 4 tilemap code to see another approach to this task.  It looks very similar (beautiful code though, mine is still very rough).  They're using TRIANGLE rather than TRIANGLE_STRIP which I believe will give this implementation a slight speed edge when I add proper batching.  There's an anim x,y property which is passed to the shaders, I'll need to look at their shader code to see how that's being used... might be a clever way of allowing map tile animations and passing most of the work off to the GPU.
+
+Ran a profiler on my code using FireFox which runs the sci-fly demo extremely slowly (6 fps).  As expected 95% of the time is locked in the _renderTile function, I'm virtually certain that the GPU is blocking because I'm only sending pairs in my TRIANGLE_STRIP at the moment.  I shall prioritise the batch processing then re-run those tests to make sure the problem is solved.  It would be very interesting to find out why Chrome and Canary on my computer do not suffer from the same problem (after all, it's the same GPU!). But I suspect I won't ever be able to answer that question in light of Rich's results (it ran slowly on his Chrome browser with a more powerful GPU...)
+
+The batch changes are in, in a very rough form.  The entire visible screen is now drawn with a single gl.drawArrays call after the JS sets up a large VBO with degenerate tris to separate the individual tiles from each other.  This approach was hugely successful at drawing in the "pbRenderer" (now called "Beam"), however it is still choking FireFox.  Further investigation is needed including: test the old pbRenderer demos to make sure they don't choke FireFox, if it does then check the PIXI 4 tilemap renderer to see if that does too.  If the old demos work properly, then compare them with this new implementation line-by-line to find out what's causing the problem now.
 
 
