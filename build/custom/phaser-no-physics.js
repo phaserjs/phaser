@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.4.8 "Watch Hill" - Built: Thu May 19 2016 12:22:36
+* v2.4.9 "Four Kings" - Built: Mon May 23 2016 13:17:48
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -635,7 +635,7 @@ PIXI.DisplayObject.prototype.updateTransform = function(parent)
     this.worldAlpha = this.alpha * p.worldAlpha;
 
     this.worldPosition.set(wt.tx, wt.ty);
-    this.worldScale.set(wt.a, wt.d);
+    this.worldScale.set(Math.sqrt(wt.a * wt.a + wt.b * wt.b), Math.sqrt(wt.c * wt.c + wt.d * wt.d));
     this.worldRotation = Math.atan2(wt.c, wt.d);
 
     // reset the bounds each time this is called!
@@ -9157,7 +9157,7 @@ var Phaser = Phaser || {
     * @constant
     * @type {string}
     */
-    VERSION: '2.4.8',
+    VERSION: '2.4.9-dev',
 
     /**
     * An array of Phaser game instances.
@@ -26948,7 +26948,7 @@ Phaser.InputHandler.prototype = {
             !this.sprite ||
             !this.sprite.parent ||
             !this.sprite.visible ||
-            !this.sprite.parent.visible |
+            !this.sprite.parent.visible ||
             this.sprite.worldScale.x === 0 ||
             this.sprite.worldScale.y === 0)
         {
@@ -26988,18 +26988,16 @@ Phaser.InputHandler.prototype = {
     */
     checkPointerOver: function (pointer, fastTest) {
 
-        if (!pointer.isDown ||
-            !this.enabled ||
+        if (!this.enabled ||
             !this.sprite ||
             !this.sprite.parent ||
             !this.sprite.visible ||
-            !this.sprite.parent.visible |
+            !this.sprite.parent.visible ||
             this.sprite.worldScale.x === 0 ||
             this.sprite.worldScale.y === 0)
         {
             return false;
         }
-
 
         //  Need to pass it a temp point, in case we need it again for the pixel check
         if (this.game.input.hitTest(this.sprite, pointer, this._tempPoint))

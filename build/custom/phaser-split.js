@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.4.8 "Watch Hill" - Built: Thu May 19 2016 12:22:51
+* v2.4.9 "Four Kings" - Built: Mon May 23 2016 13:18:04
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -55,7 +55,7 @@ var Phaser = Phaser || {
     * @constant
     * @type {string}
     */
-    VERSION: '2.4.8',
+    VERSION: '2.4.9-dev',
 
     /**
     * An array of Phaser game instances.
@@ -17846,7 +17846,7 @@ Phaser.InputHandler.prototype = {
             !this.sprite ||
             !this.sprite.parent ||
             !this.sprite.visible ||
-            !this.sprite.parent.visible |
+            !this.sprite.parent.visible ||
             this.sprite.worldScale.x === 0 ||
             this.sprite.worldScale.y === 0)
         {
@@ -17886,18 +17886,16 @@ Phaser.InputHandler.prototype = {
     */
     checkPointerOver: function (pointer, fastTest) {
 
-        if (!pointer.isDown ||
-            !this.enabled ||
+        if (!this.enabled ||
             !this.sprite ||
             !this.sprite.parent ||
             !this.sprite.visible ||
-            !this.sprite.parent.visible |
+            !this.sprite.parent.visible ||
             this.sprite.worldScale.x === 0 ||
             this.sprite.worldScale.y === 0)
         {
             return false;
         }
-
 
         //  Need to pass it a temp point, in case we need it again for the pixel check
         if (this.game.input.hitTest(this.sprite, pointer, this._tempPoint))
@@ -62012,8 +62010,11 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         this.updateBounds();
 
-        this.position.x = (this.sprite.world.x - (this.sprite.anchor.x * this.sprite.width)) + this.offset.x;
-        this.position.y = (this.sprite.world.y - (this.sprite.anchor.y * this.sprite.height)) + this.offset.y;
+        this.position.x = (this.sprite.world.x - (this.sprite.anchor.x * this.sprite.width)) + this.sprite.scale.x * this.offset.x;
+        this.position.x -= this.sprite.scale.x < 0 ? this.width : 0;
+
+        this.position.y = (this.sprite.world.y - (this.sprite.anchor.y * this.sprite.height)) + this.sprite.scale.y * this.offset.y;
+        this.position.y -= this.sprite.scale.y < 0 ? this.height : 0;
 
         this.rotation = this.sprite.angle;
 
@@ -62182,17 +62183,24 @@ Phaser.Physics.Arcade.Body.prototype = {
 
     /**
     * You can modify the size of the physics Body to be any dimension you need.
-    * So it could be smaller or larger than the parent Sprite. You can also control the x and y offset, which
-    * is the position of the Body relative to the top-left of the Sprite.
+    * This allows you to make it smaller, or larger, than the parent Sprite.
+    * You can also control the x and y offset of the Body. This is the position of the
+    * Body relative to the top-left of the Sprite _texture_.
     *
-    * Calling `setSize` will have no effect if you have previously used `Body.setCircle`. To change a collision
-    * circle use `setCircle` instead.
+    * For example: If you have a Sprite with a texture that is 80x100 in size,
+    * and you want the physics body to be 32x32 pixels in the middle of the texture, you would do:
+    *
+    * `setSize(32, 32, 24, 34)`
+    *
+    * Where the first two parameters is the new Body size (32x32 pixels).
+    * 24 is the horizontal offset of the Body from the top-left of the Sprites texture, and 34
+    * is the vertical offset.
     *
     * @method Phaser.Physics.Arcade.Body#setSize
     * @param {number} width - The width of the Body.
     * @param {number} height - The height of the Body.
-    * @param {number} [offsetX] - The X offset of the Body from the Sprite position.
-    * @param {number} [offsetY] - The Y offset of the Body from the Sprite position.
+    * @param {number} [offsetX] - The X offset of the Body from the top-left of the Sprites texture.
+    * @param {number} [offsetY] - The Y offset of the Body from the top-left of the Sprites texture.
     */
     setSize: function (width, height, offsetX, offsetY) {
 
@@ -62217,47 +62225,6 @@ Phaser.Physics.Arcade.Body.prototype = {
     },
 
     /**
-    * Sets this Body as using a circle, of the given radius, for all collision detection instead of a rectangle.
-    * The radius is given in pixels and is the distance from the center of the circle to the edge.
-    * 
-    * You can also control the x and y offset, which is the position of the Body relative to the top-left of the Sprite.
-    *
-    * @method Phaser.Physics.Arcade.Body#setCircle
-    * @param {number} [radius] - The radius of the Body in pixels. Pass a value of zero / undefined, to stop the Body using a circle for collision.
-    * @param {number} [offsetX] - The X offset of the Body from the Sprite position.
-    * @param {number} [offsetY] - The Y offset of the Body from the Sprite position.
-    */
-    setCircle: function (radius, offsetX, offsetY) {
-
-        if (offsetX === undefined) { offsetX = this.offset.x; }
-        if (offsetY === undefined) { offsetY = this.offset.y; }
-
-        if (radius > 0)
-        {
-            this.isCircle = true;
-            this.radius = radius;
-
-            this.sourceWidth = radius * 2;
-            this.sourceHeight = radius * 2;
-
-            this.width = this.sourceWidth * this._sx;
-            this.height = this.sourceHeight * this._sy;
-
-            this.halfWidth = Math.floor(this.width / 2);
-            this.halfHeight = Math.floor(this.height / 2);
-
-            this.offset.setTo(offsetX, offsetY);
-
-            this.center.setTo(this.position.x + this.halfWidth, this.position.y + this.halfHeight);
-        }
-        else
-        {
-            this.isCircle = false;
-        }
-
-    },
-
-    /**
     * Resets all Body values (velocity, acceleration, rotation, etc)
     *
     * @method Phaser.Physics.Arcade.Body#reset
@@ -62273,8 +62240,11 @@ Phaser.Physics.Arcade.Body.prototype = {
         this.angularVelocity = 0;
         this.angularAcceleration = 0;
 
-        this.position.x = (x - (this.sprite.anchor.x * this.sprite.width)) + this.offset.x;
-        this.position.y = (y - (this.sprite.anchor.y * this.sprite.height)) + this.offset.y;
+        this.position.x = (x - (this.sprite.anchor.x * this.sprite.width)) + this.sprite.scale.x * this.offset.x;
+        this.position.x -= this.sprite.scale.x < 0 ? this.width : 0;
+
+        this.position.y = (y - (this.sprite.anchor.y * this.sprite.height)) + this.sprite.scale.y * this.offset.y;
+        this.position.y -= this.sprite.scale.y < 0 ? this.height : 0;
 
         this.prev.x = this.position.x;
         this.prev.y = this.position.y;
