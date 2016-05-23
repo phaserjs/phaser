@@ -351,7 +351,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 ### Bug Fixes
 
 * Arcade Physics Body incorrectly positioned if the Sprite had a negative scale (see http://www.html5gamedevs.com/topic/22695-247-248-body-anchoring-any-migration-tips/) (thanks @SBCGames @icameron @Nuuf @EvolViper #2488 #2490)
-*
+* InputHandler.checkPointerDown had an incorrect single pipe character |, instead of an OR check ||, and an `isDown` check, causing Button Over events to fail (thanks @pengchuan #2486)
 *
 
 ### Pixi Updates
