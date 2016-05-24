@@ -2294,6 +2294,7 @@ declare module "phaser" {
 
             static intersectsPoints(a: Phaser.Point, b: Phaser.Point, e: Phaser.Point, f: Phaser.Point, asSegment?: boolean, result?: Phaser.Point): Phaser.Point;
             static intersects(a: Phaser.Line, b: Phaser.Line, asSegment?: boolean, result?: Phaser.Point): Phaser.Point;
+            static intersectsRectangle(line: Phaser.Line, rect: Phaser.Rectangle): boolean;
             static reflect(a: Phaser.Line, b: Phaser.Line): number;
 
             centerOn(x: number, y: number): Phaser.Line;
