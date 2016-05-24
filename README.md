@@ -336,7 +336,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 
 ### New Features
 
-*
+* Phaser.Line.intersectsRectangle checks for intersection between a Line and a Rectangle, or any Rectangle-like object such as a Sprite or Body.
 *
 *
 
