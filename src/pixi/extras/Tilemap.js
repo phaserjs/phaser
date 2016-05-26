@@ -270,7 +270,8 @@ PIXI.Tilemap.prototype._renderVisibleLayer = function( _layer, renderSession )
     for(var tx = firstX; tx < lastX; tx++)
     {
       // get the tile index from the map
-      var tile = layerRow[tx].index - 1;
+      // TODO: hardwired to the first tileset, should use TilemapLayerGL.resolveTileset to work out the correct one(?)
+      var tile = layerRow[tx].index - this.map.tilesets[0].firstgid;
 
       // if it's not an empty tile...
       if ( tile >= 0 )
@@ -339,17 +340,20 @@ PIXI.Tilemap.prototype._renderVisibleLayer = function( _layer, renderSession )
     }
   }
 
-  // set the scroll offset (in screen units)
-  gl.uniform2f( shader.uScrollOffset, this.scrollX * iWide, -this.scrollY * iHigh );
+  if ( c > 0 )
+  {
+    // set the scroll offset (in screen units)
+    gl.uniform2f( shader.uScrollOffset, this.scrollX * iWide, -this.scrollY * iHigh );
 
-  // upload the VBO
-  gl.bufferData( gl.ARRAY_BUFFER, buffer, gl.STATIC_DRAW );
+    // upload the VBO
+    gl.bufferData( gl.ARRAY_BUFFER, buffer, gl.STATIC_DRAW );
 
-  // prepare the shader attributes
-  gl.vertexAttribPointer( shader.aPosition, 4, gl.FLOAT, false, 0, 0 );
+    // prepare the shader attributes
+    gl.vertexAttribPointer( shader.aPosition, 4, gl.FLOAT, false, 0, 0 );
 
-  // draw the entire VBO in one call
-  gl.drawArrays(gl.TRIANGLE_STRIP, 0, (lastX - firstX) * (lastY - firstY) * 6 - 2);   // 4 + 2 (vertices + degenerates)
+    // draw the entire VBO in one call
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, Math.floor(c / 4));
+  }
 };
 
 
