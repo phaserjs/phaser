@@ -617,14 +617,7 @@ Phaser.TilemapLayerGL.prototype.resolveTileset = function (tileIndex) {
 */
 Phaser.TilemapLayerGL.prototype.resetTilesetCache = function () {
 
-    var tilesets = this._mc.tilesets;
-
-    // TODO: why not just set this._mc.tilesets = []; ??
-    while (tilesets.length)
-    {
-        tilesets.pop();
-    }
-
+    this._mc.tilesets = [];
 };
 
 /**
