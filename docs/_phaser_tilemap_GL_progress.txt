@@ -81,3 +81,13 @@ False alarm? After a restart FireFox is now running the new demo correctly (60 f
 Added the scroll offsets and gave the code a cursory first-pass clean up.  I've noticed that when switching from Chrome to FireFox it runs slowly for a few seconds before settling in to the solid 60 fps... I think this might be some webgl feature not being cleaned up immediately after Chrome closes because it's very consistent.
 
 Next coding task is to modify the Tileset class to remove the 'draw' function, and use it's firstgid value so that more of the Phaser tileset examples will work correctly.
+Rich tested on his lap-top and the frame-rate issues were generally gone.
+However testing other demos shows a large corrupt tile in the ones which use the brown tile-set (create from objects, features test, map bounce, etc) and the green tiles (csv map collide, csv map with p2, etc).  Some of these demos run slowly on his lap-top so I'll prioritise fixing the corrupt tile (maybe a firstgid issue?)
+
+
+day five:
+
+I can reference firstgid (in Phaser.Tileset) through PIXI.Tilemap.map.tilesets[X].firstgid.  Currently I'm limited to one tileset per map so I've hardwired this to tilesets[0].firstgid and it's working for many examples.
+Test results show that most of the demos which previously had "out by one" errors are working properly now.  The exceptions are "fill tiles" and anything else using that desert tileset.  I'll need to investigate that further, it still looks like an 'out by one' error so maybe it's using a second tileset and I'm grabbing the wrong firstgid value.
+The large corrupt tile was caused by drawing a VBO with insufficient data.  I've found two possible cases where this can happen and fixed them.  I'll need to get Rich to test again to see if the previously slow demos with corrupt tiles are now working smoothly on his rig.
+
