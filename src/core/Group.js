@@ -1976,6 +1976,60 @@ Phaser.Group.prototype.getBottom = function () {
 };
 
 /**
+* Get the closest child to given Object/Point/Sprite/Image
+*
+* @method Phaser.Group#getClosestTo
+* @return {any} The child closest to given Object/Point/Sprite/Image
+*/
+Phaser.Group.prototype.getClosestTo = function (object) {
+	
+	if (this.children.length !== 0) { 
+			var distance = Number.MAX_VALUE,
+			tempDistance = 0,
+			returnee;
+		this.forEachAlive(function(e) {
+			
+			tempDistance = Math.abs(Phaser.Point.distance(object, e));
+			
+			if (tempDistance < distance) {
+				distance = tempDistance;
+				returnee = e;
+			}
+		});
+		
+		if (returnee) return returnee;
+	}
+	
+};
+
+/**
+* Get the farthest child to given Object/Point/Sprite/Image
+*
+* @method Phaser.Group#getFarthestFrom
+* @return {any} The child farthest from given Object/Point/Sprite/Image
+*/
+Phaser.Group.prototype.getFarthestFrom = function (object) {
+	
+	if (this.children.length !== 0) {
+			var distance = 0,
+			tempDistance = 0,
+			returnee;
+		this.forEachAlive(function(e) {
+			
+			tempDistance = Math.abs(Phaser.Point.distance(object, e));
+			
+			if (tempDistance > distance) {
+				distance = tempDistance;
+				returnee = e;
+			}
+		});
+		
+		if (returnee) return returnee;
+	}
+	
+};
+
+/**
 * Get the number of living children in this group.
 *
 * @method Phaser.Group#countLiving
