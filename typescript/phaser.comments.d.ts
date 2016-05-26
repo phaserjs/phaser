@@ -130,6 +130,11 @@ declare module Phaser {
         isPlaying: boolean;
 
         /**
+        * The playing direction of the Animation.
+        */
+        isReversed: boolean;
+
+        /**
         * Should the parent of this Animation be killed when the animation completes?
         */
         killOnComplete: boolean;
@@ -177,6 +182,11 @@ declare module Phaser {
         * Gets and sets the paused state of this Animation.
         */
         paused: boolean;
+
+        /**
+        * Gets and sets the reversed state of this Animation.
+        */
+        reversed: boolean;
 
         /**
         * Gets or sets the current speed of the animation in frames per second. Changing this in a playing animation will take effect from the next frame. Minimum value is 1.

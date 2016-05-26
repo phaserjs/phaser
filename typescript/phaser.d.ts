@@ -81,6 +81,7 @@ declare module Phaser {
         onStart: Phaser.Signal;
         onUpdate: Phaser.Signal;
         paused: boolean;
+        reversed: boolean;
         speed: number;
 
         complete(): void;
@@ -3527,8 +3528,8 @@ declare module Phaser {
     }
 
     module Plugin {
-        
-        class SaveCPU extends Phaser.Plugin { 
+
+        class SaveCPU extends Phaser.Plugin {
 
             renderOnFPS: number;
             renderOnPointerChange: boolean;
