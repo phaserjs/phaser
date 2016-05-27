@@ -79,6 +79,7 @@ declare module "phaser" {
             onStart: Phaser.Signal;
             onUpdate: Phaser.Signal;
             paused: boolean;
+            reversed: boolean;
             speed: number;
 
             complete(): void;

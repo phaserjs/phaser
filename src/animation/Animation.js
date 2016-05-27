@@ -6,7 +6,7 @@
 
 /**
 * An Animation instance contains a single animation and the controls to play it.
-* 
+*
 * It is created by the AnimationManager, consists of Animation.Frame objects and belongs to a single Game Object such as a Sprite.
 *
 * @class Phaser.Animation
@@ -130,10 +130,10 @@ Phaser.Animation = function (game, parent, name, frameData, frames, frameRate, l
     this.onStart = new Phaser.Signal();
 
     /**
-    * This event is dispatched when the Animation changes frame. 
+    * This event is dispatched when the Animation changes frame.
     * By default this event is disabled due to its intensive nature. Enable it with: `Animation.enableUpdate = true`.
     * Note that the event is only dispatched with the current frame. In a low-FPS environment Animations
-    * will automatically frame-skip to try and claw back time, so do not base your code on expecting to 
+    * will automatically frame-skip to try and claw back time, so do not base your code on expecting to
     * receive a perfectly sequential set of frames from this event.
     * @property {Phaser.Signal|null} onUpdate
     * @default
@@ -149,6 +149,12 @@ Phaser.Animation = function (game, parent, name, frameData, frames, frameRate, l
     * @property {Phaser.Signal} onLoop - This event is dispatched when this Animation loops.
     */
     this.onLoop = new Phaser.Signal();
+
+    /**
+     * @property {boolean} isReversed - Indicates if the animation will play backwards.
+     * @default
+     */
+    this.isReversed = false;
 
     //  Set-up some event listeners
     this.game.onPause.add(this.onPause, this);
@@ -385,14 +391,23 @@ Phaser.Animation.prototype = {
             //  And what's left now?
             this._timeNextFrame = this.game.time.time + (this.delay - this._frameDiff);
 
-            this._frameIndex += this._frameSkip;
+            if (this.isReversed){
+                this._frameIndex -= this._frameSkip;
+            }else{
+                this._frameIndex += this._frameSkip;
+            }
 
-            if (this._frameIndex >= this._frames.length)
+            if (!this.isReversed && this._frameIndex >= this._frames.length || this.isReversed && this._frameIndex <= 0)
             {
                 if (this.loop)
                 {
                     // Update current state before event callback
-                    this._frameIndex %= this._frames.length;
+                    this._frameIndex = Math.abs(this._frameIndex) % this._frames.length;
+
+                    if (this.isReversed){
+                        this._frameIndex = this._frames.length - 1 - this._frameIndex;
+                    }
+
                     this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
 
                     //  Instead of calling updateCurrentFrame we do it here instead
@@ -454,7 +469,7 @@ Phaser.Animation.prototype = {
             // The animation is already destroyed, probably from a callback
             return false;
         }
-            
+
         //  Previous index
         var idx = this.currentFrame.index;
 
@@ -649,6 +664,26 @@ Object.defineProperty(Phaser.Animation.prototype, 'paused', {
                 this._timeNextFrame = this.game.time.time + this.delay;
             }
         }
+
+    }
+
+});
+
+/**
+* @name Phaser.Animation#isReversed
+* @property {boolean} isReversed - Gets and sets the isReversed state of this Animation.
+*/
+Object.defineProperty(Phaser.Animation.prototype, 'isReversed', {
+
+    get: function () {
+
+        return this.isReversed;
+
+    },
+
+    set: function (value) {
+
+        this.isReversed = value;
 
     }
 
