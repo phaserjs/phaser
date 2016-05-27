@@ -253,6 +253,19 @@ Phaser.Animation.prototype = {
     },
 
     /**
+     * Reverses the animation direction for the current/next animation only
+     * Once the onComplete event is called this method will be called again and revert
+     * the reversed state.
+     *
+     * @method Phaser.Animation#reverseOnce
+     * */
+    reverseOnce: function () {
+        this.reverse();
+
+        this.onComplete.addOnce(this.reverse.bind(this))
+    },
+
+    /**
     * Sets this animations playback to a given frame with the given ID.
     *
     * @method Phaser.Animation#setFrame
