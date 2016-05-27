@@ -419,7 +419,7 @@ Phaser.Animation.prototype = {
                 this._frameIndex += this._frameSkip;
             }
 
-            if (!this.isReversed && this._frameIndex >= this._frames.length || this.isReversed && this._frameIndex <= 0)
+            if (!this.isReversed && this._frameIndex >= this._frames.length || this.isReversed && this._frameIndex <= -1)
             {
                 if (this.loop)
                 {
