@@ -92,6 +92,7 @@ declare module "phaser" {
             previous(quantity?: number): void;
             restart(): void;
             reverse(): void;
+            reverseOnce(): void;
             setFrame(frameId?: string | number, useLocalFrameIndex?: boolean): void;
             stop(resetFrame?: boolean, dispatchComplete?: boolean): void;
             update(): boolean;

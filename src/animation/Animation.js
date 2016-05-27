@@ -262,7 +262,7 @@ Phaser.Animation.prototype = {
     reverseOnce: function () {
         this.reverse();
 
-        this.onComplete.addOnce(this.reverse.bind(this))
+        this.onComplete.addOnce(this.reverse.bind(this));
     },
 
     /**

@@ -263,6 +263,14 @@ declare module "phaser" {
             reverse(): void;
 
             /**
+             * Reverses the animation direction for the current/next animation only
+             * Once the onComplete event is called this method will be called again and revert
+             * the reversed state.
+             */
+            reverseOnce(): void;
+
+
+            /**
             * Sets this animations playback to a given frame with the given ID.
             *
             * @param frameId The identifier of the frame to set. Can be the name of the frame, the sprite index of the frame, or the animation-local frame index.
