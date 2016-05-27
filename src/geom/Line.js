@@ -6,7 +6,7 @@
 
 /**
 * Creates a new Line object with a start and an end point.
-* 
+*
 * @class Phaser.Line
 * @constructor
 * @param {number} [x1=0] - The x coordinate of the start of the line.
@@ -43,7 +43,7 @@ Phaser.Line.prototype = {
 
     /**
     * Sets the components of the Line to the specified values.
-    * 
+    *
     * @method Phaser.Line#setTo
     * @param {number} [x1=0] - The x coordinate of the start of the line.
     * @param {number} [y1=0] - The y coordinate of the start of the line.
@@ -63,7 +63,7 @@ Phaser.Line.prototype = {
     /**
     * Sets the line to match the x/y coordinates of the two given sprites.
     * Can optionally be calculated from their center coordinates.
-    * 
+    *
     * @method Phaser.Line#fromSprite
     * @param {Phaser.Sprite} startSprite - The coordinates of this Sprite will be set to the Line.start point.
     * @param {Phaser.Sprite} endSprite - The coordinates of this Sprite will be set to the Line.start point.
@@ -85,7 +85,7 @@ Phaser.Line.prototype = {
 
     /**
     * Sets this line to start at the given `x` and `y` coordinates and for the segment to extend at `angle` for the given `length`.
-    * 
+    *
     * @method Phaser.Line#fromAngle
     * @param {number} x - The x coordinate of the start of the line.
     * @param {number} y - The y coordinate of the start of the line.
@@ -104,12 +104,12 @@ Phaser.Line.prototype = {
 
     /**
     * Rotates the line by the amount specified in `angle`.
-    * 
+    *
     * Rotation takes place from the center of the line.
     * If you wish to rotate around a different point see Line.rotateAround.
-    * 
+    *
     * If you wish to rotate the ends of the Line then see Line.start.rotate or Line.end.rotate.
-    * 
+    *
     * @method Phaser.Line#rotate
     * @param {number} angle - The angle in radians (unless asDegrees is true) to rotate the line by.
     * @param {boolean} [asDegrees=false] - Is the given angle in radians (false) or degrees (true)?
@@ -129,9 +129,9 @@ Phaser.Line.prototype = {
 
     /**
     * Rotates the line by the amount specified in `angle`.
-    * 
+    *
     * Rotation takes place around the coordinates given.
-    * 
+    *
     * @method Phaser.Line#rotateAround
     * @param {number} x - The x coordinate to offset the rotation from.
     * @param {number} y - The y coordinate to offset the rotation from.
@@ -181,7 +181,7 @@ Phaser.Line.prototype = {
 
     /**
     * Returns a Point object where the x and y values correspond to the center (or midpoint) of the Line segment.
-    * 
+    *
     * @method Phaser.Line#midPoint
     * @param {Phaser.Point} [out] - A Phaser.Point object into which the result will be populated. If not given a new Point object is created.
     * @return {Phaser.Point} A Phaser.Point object with the x and y values set to the center of the line segment.
@@ -199,10 +199,10 @@ Phaser.Line.prototype = {
 
     /**
     * Centers this Line on the given coordinates.
-    * 
+    *
     * The line is centered by positioning the start and end points so that the lines midpoint matches
     * the coordinates given.
-    * 
+    *
     * @method Phaser.Line#centerOn
     * @param {number} x - The x position to center the line on.
     * @param {number} y - The y position to center the line on.
@@ -223,7 +223,7 @@ Phaser.Line.prototype = {
 
     /**
     * Tests if the given coordinates fall on this line. See pointOnSegment to test against just the line segment.
-    * 
+    *
     * @method Phaser.Line#pointOnLine
     * @param {number} x - The line to check against this one.
     * @param {number} y - The line to check against this one.
@@ -237,7 +237,7 @@ Phaser.Line.prototype = {
 
     /**
     * Tests if the given coordinates fall on this line and within the segment. See pointOnLine to test against just the line.
-    * 
+    *
     * @method Phaser.Line#pointOnSegment
     * @param {number} x - The line to check against this one.
     * @param {number} y - The line to check against this one.
@@ -256,7 +256,7 @@ Phaser.Line.prototype = {
 
     /**
     * Picks a random point from anywhere on the Line segment and returns it.
-    * 
+    *
     * @method Phaser.Line#random
     * @param {Phaser.Point|object} [out] - A Phaser.Point, or any object with public x/y properties, that the values will be set in.
     *     If no object is provided a new Phaser.Point object will be created. In high performance areas avoid this by re-using an object.
@@ -630,12 +630,12 @@ Phaser.Line.intersects = function (a, b, asSegment, result) {
 /**
 * Checks for intersection between the Line and a Rectangle shape, or a rectangle-like
 * object, with public `x`, `y`, `right` and `bottom` properties, such as a Sprite or Body.
-* 
+*
 * An intersection is considered valid if:
-* 
+*
 * The line starts within, or ends within, the Rectangle.
 * The line segment intersects one of the 4 rectangle edges.
-* 
+*
 * The for the purposes of this function rectangles are considered 'solid'.
 *
 * @method intersectsRectangle
@@ -667,7 +667,7 @@ Phaser.Line.intersectsRectangle = function (line, rect) {
     //  If the start or end of the line is inside the rect then we assume
     //  collision, as rects are solid for our use-case.
 
-    if ((x1 >= bx1 && x1 <= bx2 && y1 >= by1 && y1 <= by2) || 
+    if ((x1 >= bx1 && x1 <= bx2 && y1 >= by1 && y1 <= by2) ||
         (x2 >= bx1 && x2 <= bx2 && y2 >= by1 && y2 <= by2))
     {
         return true;
