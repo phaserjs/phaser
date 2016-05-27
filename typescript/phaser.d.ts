@@ -91,6 +91,7 @@ declare module "phaser" {
             play(frameRate?: number, loop?: boolean, killOnComplete?: boolean): Phaser.Animation;
             previous(quantity?: number): void;
             restart(): void;
+            reverse(): void;
             setFrame(frameId?: string | number, useLocalFrameIndex?: boolean): void;
             stop(resetFrame?: boolean, dispatchComplete?: boolean): void;
             update(): boolean;

@@ -244,6 +244,15 @@ Phaser.Animation.prototype = {
     },
 
     /**
+     * Reverses the animation direction
+     *
+     * @method Phaser.Animation#reverse
+     * */
+    reverse: function () {
+        this.reversed = !this.reversed;
+    },
+
+    /**
     * Sets this animations playback to a given frame with the given ID.
     *
     * @method Phaser.Animation#setFrame
