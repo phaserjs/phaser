@@ -670,10 +670,10 @@ Object.defineProperty(Phaser.Animation.prototype, 'paused', {
 });
 
 /**
-* @name Phaser.Animation#isReversed
-* @property {boolean} isReversed - Gets and sets the isReversed state of this Animation.
+* @name Phaser.Animation#reversed
+* @property {boolean} reversed - Gets and sets the isReversed state of this Animation.
 */
-Object.defineProperty(Phaser.Animation.prototype, 'isReversed', {
+Object.defineProperty(Phaser.Animation.prototype, 'reversed', {
 
     get: function () {
 
