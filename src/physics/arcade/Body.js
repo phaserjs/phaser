@@ -347,7 +347,7 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     /**
     * If true the Body will check itself against the Sprite.getBounds() dimensions and adjust its width and height accordingly.
     * If false it will compare its dimensions against the Sprite scale instead, and adjust its width height if the scale has changed.
-    * Typically you would need to enable syncBounds if your sprite is the child of a responsive display object such as a FlexLayer, 
+    * Typically you would need to enable syncBounds if your sprite is the child of a responsive display object such as a FlexLayer,
     * or in any situation where the Sprite scale doesn't change, but its parents scale is effecting the dimensions regardless.
     * @property {boolean} syncBounds
     * @default
@@ -605,30 +605,70 @@ Phaser.Physics.Arcade.Body.prototype = {
         var bounds = this.game.physics.arcade.bounds;
         var check = this.game.physics.arcade.checkCollision;
 
-        if (pos.x < bounds.x && check.left)
-        {
-            pos.x = bounds.x;
-            this.velocity.x *= -this.bounce.x;
-            this.blocked.left = true;
-        }
-        else if (this.right > bounds.right && check.right)
-        {
-            pos.x = bounds.right - this.width;
-            this.velocity.x *= -this.bounce.x;
-            this.blocked.right = true;
-        }
+        var bx = (this.worldBounce) ? -this.worldBounce.x : -this.bounce.x;
+        var by = (this.worldBounce) ? -this.worldBounce.y : -this.bounce.y;
 
-        if (pos.y < bounds.y && check.up)
+        if (this.isCircle)
         {
-            pos.y = bounds.y;
-            this.velocity.y *= -this.bounce.y;
-            this.blocked.up = true;
+            var bodyBounds = {};
+            bodyBounds.x = this.center.x - this.radius;
+            bodyBounds.y = this.center.y - this.radius;
+            bodyBounds.right = this.center.x + this.radius;
+            bodyBounds.bottom = this.center.y + this.radius;
+
+            if (bodyBounds.x < bounds.x && check.left)
+            {
+                pos.x = bounds.x - this.halfWidth + this.radius;
+                this.velocity.x *= bx;
+                this.blocked.left = true;
+            }
+            else if (bodyBounds.right > bounds.right && check.right)
+            {
+                pos.x = bounds.right - this.halfWidth - this.radius;
+                this.velocity.x *= bx;
+                this.blocked.right = true;
+            }
+
+            if (bodyBounds.y < bounds.y && check.up)
+            {
+                pos.y = bounds.y - this.halfHeight + this.radius;
+                this.velocity.y *= by;
+                this.blocked.up = true;
+            }
+            else if (bodyBounds.bottom > bounds.bottom && check.down)
+            {
+                pos.y = bounds.bottom  - this.halfHeight - this.radius;
+                this.velocity.y *= by;
+                this.blocked.down = true;
+            }
         }
-        else if (this.bottom > bounds.bottom && check.down)
+        else
         {
-            pos.y = bounds.bottom - this.height;
-            this.velocity.y *= -this.bounce.y;
-            this.blocked.down = true;
+            if (pos.x < bounds.x && check.left)
+            {
+                pos.x = bounds.x;
+                this.velocity.x *= bx;
+                this.blocked.left = true;
+            }
+            else if (this.right > bounds.right && check.right)
+            {
+                pos.x = bounds.right - this.width;
+                this.velocity.x *= bx;
+                this.blocked.right = true;
+            }
+
+            if (pos.y < bounds.y && check.up)
+            {
+                pos.y = bounds.y;
+                this.velocity.y *= by;
+                this.blocked.up = true;
+            }
+            else if (this.bottom > bounds.bottom && check.down)
+            {
+                pos.y = bounds.bottom - this.height;
+                this.velocity.y *= by;
+                this.blocked.down = true;
+            }
         }
 
     },
@@ -672,7 +712,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     /**
     * Sets this Body as using a circle, of the given radius, for all collision detection instead of a rectangle.
     * The radius is given in pixels and is the distance from the center of the circle to the edge.
-    * 
+    *
     * You can also control the x and y offset, which is the position of the Body relative to the top-left of the Sprite.
     *
     * @method Phaser.Physics.Arcade.Body#setCircle
@@ -767,7 +807,7 @@ Phaser.Physics.Arcade.Body.prototype = {
         return this.blocked.down;
 
     },
-    
+
     /**
     * Returns true if the top of this Body is in contact with either the world bounds or a tile.
     *
@@ -854,7 +894,7 @@ Phaser.Physics.Arcade.Body.prototype = {
 
     /**
     * Destroys this Body.
-    * 
+    *
     * First it calls Group.removeFromHash if the Game Object this Body belongs to is part of a Group.
     * Then it nulls the Game Objects body reference, and nulls this Body.sprite reference.
     *
