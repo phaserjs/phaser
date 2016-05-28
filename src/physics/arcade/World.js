@@ -82,14 +82,6 @@ Phaser.Physics.Arcade = function (game) {
     */
     this._total = 0;
 
-    this._pos1 = { x: 0, y: 0 };
-    this._pos2 = { x: 0, y: 0 };
-
-    this._vel1 = { x: 0, y: 0 };
-    this._vel2 = { x: 0, y: 0 };
-
-    this._velF = { x1: 0, y1: 0, x2: 0, y2: 0 };
-
     // By default we want the bounds the same size as the world bounds
     this.setBoundsToWorld();
 
@@ -223,7 +215,7 @@ Phaser.Physics.Arcade.prototype = {
 
     /**
     * Creates an Arcade Physics body on the given game object.
-    * 
+    *
     * A game object can only have 1 physics body active at any one time, and it can't be changed until the body is nulled.
     *
     * When you add an Arcade Physics body to an object it will automatically add the object into its parent Groups hash array.
@@ -707,12 +699,10 @@ Phaser.Physics.Arcade.prototype = {
     */
     collideSpriteVsGroup: function (sprite, group, collideCallback, processCallback, callbackContext, overlapOnly) {
 
-        if (group.length === 0 || !sprite.body)
+         if (group.length === 0 || !sprite.body)
         {
             return;
         }
-
-        var body;
 
         if (this.skipQuadTree || sprite.body.skipQuadTree)
         {
@@ -724,7 +714,11 @@ Phaser.Physics.Arcade.prototype = {
                     continue;
                 }
 
-                body = group.hash[i].body;
+                var body = {};
+                body.x = (group.hash[i].body.isCircle) ? (group.hash[i].body.center.x - group.hash[i].body.radius) : group.hash[i].body.x;
+                body.y = (group.hash[i].body.isCircle) ? (group.hash[i].body.center.y - group.hash[i].body.radius) : group.hash[i].body.y;
+                body.right = (group.hash[i].body.isCircle) ? (group.hash[i].body.center.x + group.hash[i].body.radius) : group.hash[i].body.right;
+                body.bottom = (group.hash[i].body.isCircle) ? (group.hash[i].body.center.y + group.hash[i].body.radius) : group.hash[i].body.bottom;
 
                 //  Skip items either side of the sprite
                 if (this.sortDirection === Phaser.Physics.Arcade.LEFT_RIGHT)
@@ -771,7 +765,7 @@ Phaser.Physics.Arcade.prototype = {
                         continue;
                     }
                 }
-                
+
                 this.collideSpriteVsSprite(sprite, group.hash[i], collideCallback, processCallback, callbackContext, overlapOnly);
             }
         }
@@ -830,7 +824,12 @@ Phaser.Physics.Arcade.prototype = {
                 continue;
             }
 
-            var object1 = group.hash[i];
+            var object1 = {};
+            object1.x = (group.hash[i].body.isCircle) ? (group.hash[i].body.center.x - group.hash[i].body.radius) : group.hash[i].body.x;
+            object1.y = (group.hash[i].body.isCircle) ? (group.hash[i].body.center.y - group.hash[i].body.radius) : group.hash[i].body.y;
+            object1.right = (group.hash[i].body.isCircle) ? (group.hash[i].body.center.x + group.hash[i].body.radius) : group.hash[i].body.right;
+            object1.bottom = (group.hash[i].body.isCircle) ? (group.hash[i].body.center.y + group.hash[i].body.radius) : group.hash[i].body.bottom;
+            object1.ref = group.hash[i];
 
             for (var j = i + 1; j < group.hash.length; j++)
             {
@@ -840,55 +839,60 @@ Phaser.Physics.Arcade.prototype = {
                     continue;
                 }
 
-                var object2 = group.hash[j];
+                var object2 = {};
+                object2.x = (group.hash[j].body.isCircle) ? (group.hash[j].body.center.x - group.hash[j].body.radius) : group.hash[j].body.x;
+                object2.y = (group.hash[j].body.isCircle) ? (group.hash[j].body.center.y - group.hash[j].body.radius) : group.hash[j].body.y;
+                object2.right = (group.hash[j].body.isCircle) ? (group.hash[j].body.center.x + group.hash[j].body.radius) : group.hash[j].body.right;
+                object2.bottom = (group.hash[j].body.isCircle) ? (group.hash[j].body.center.y + group.hash[j].body.radius) : group.hash[j].body.bottom;
+                object2.ref = group.hash[j];
 
                 //  Skip items either side of the sprite
                 if (this.sortDirection === Phaser.Physics.Arcade.LEFT_RIGHT)
                 {
-                    if (object1.body.right < object2.body.x)
+                    if (object1.right < object2.x)
                     {
                         break;
                     }
-                    else if (object2.body.right < object1.body.x)
+                    else if (object2.right < object1.x)
                     {
                         continue;
                     }
                 }
                 else if (this.sortDirection === Phaser.Physics.Arcade.RIGHT_LEFT)
                 {
-                    if (object1.body.x > object2.body.right)
+                    if (object1.x > object2.right)
                     {
                         continue;
                     }
-                    else if (object2.body.x > object1.body.right)
+                    else if (object2.x > object1.right)
                     {
                         break;
                     }
                 }
                 else if (this.sortDirection === Phaser.Physics.Arcade.TOP_BOTTOM)
                 {
-                    if (object1.body.bottom < object2.body.y)
+                    if (object1.bottom < object2.y)
                     {
                         continue;
                     }
-                    else if (object2.body.bottom < object1.body.y)
+                    else if (object2.bottom < object1.y)
                     {
                         break;
                     }
                 }
                 else if (this.sortDirection === Phaser.Physics.Arcade.BOTTOM_TOP)
                 {
-                    if (object1.body.y > object2.body.bottom)
+                    if (object1.y > object2.bottom)
                     {
                         continue;
                     }
-                    else if (object2.body.y > object1.body.bottom)
+                    else if (object2.y > object1.bottom)
                     {
                         break;
                     }
                 }
-                
-                this.collideSpriteVsSprite(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly);
+
+                this.collideSpriteVsSprite(object1.ref, object2.ref, collideCallback, processCallback, callbackContext, overlapOnly);
             }
         }
 
@@ -955,8 +959,40 @@ Phaser.Physics.Arcade.prototype = {
             return false;
         }
 
+        // We define the behavior of bodies in a collision circle and rectangle
+        // If a collision occurs in the corner points of the rectangle, the body behave like circles
+        var collisionAsCircle = false;
+        if (body1.isCircle !== body2.isCircle)
+        {
+            var rect = {};
+            rect.x = (body2.isCircle) ? body1.position.x : body2.position.x;
+            rect.y = (body2.isCircle) ? body1.position.y : body2.position.y;
+            rect.right = (body2.isCircle) ? body1.right : body2.right;
+            rect.bottom = (body2.isCircle) ? body1.bottom : body2.bottom;
+            var circle = {};
+            circle.x = (body1.isCircle) ? (body1.position.x + body1.radius) : (body2.position.x + body2.radius);
+            circle.y = (body1.isCircle) ? (body1.position.y + body1.radius) : (body2.position.y + body2.radius);
+
+            if (circle.y < rect.y)
+            {
+                if (circle.x < rect.x)
+                     collisionAsCircle = true;
+
+                if (circle.x > rect.right)
+                     collisionAsCircle = true;
+            }
+            if (circle.y > rect.bottom)
+            {
+                if (circle.x < rect.x)
+                    collisionAsCircle = true;
+
+                if (circle.x > rect.right)
+                    collisionAsCircle = true;
+            }
+        }
+
         //  Circle vs. Circle quick bail out
-        if (body1.isCircle && body2.isCircle)
+        if ( ((body1.isCircle)&&(body2.isCircle)) || collisionAsCircle )
         {
             return this.separateCircle(body1, body2, overlapOnly);
         }
@@ -1085,50 +1121,39 @@ Phaser.Physics.Arcade.prototype = {
         this.getOverlapX(body1, body2);
         this.getOverlapY(body1, body2);
 
-        var dx = body2.center.x - body1.center.x;
-        var dy = body2.center.y - body1.center.y;
+        var angleCollision = this.angleBetweenCenters(body1, body2);
 
-        var angle = Math.atan2(dy, dx);
-        var sin = Math.sin(angle);
-        var cos = Math.cos(angle);
-
-        this._pos1.x = 0;
-        this._pos1.y = 0;
-
-        //  Rotate the second body to the angle of the first
-        this.rotate(this._pos2, dx, dy, sin, cos, true);
-
-        //  Rotate the velocities
-        this.rotate(this._vel1, body1.velocity.x, body1.velocity.y, sin, cos, true);
-        this.rotate(this._vel2, body2.velocity.x, body2.velocity.y, sin, cos, true);
-
-        //  Calculate overlap
-        if (body1.mass === body2.mass)
+        var overlap = 0;
+        if (body1.isCircle !== body2.isCircle)
         {
-            //  Swap 'em
-            var tempX = this._vel1.x;
-            var tempY = this._vel1.y;
+            var rect = {};
+            rect.x = (body2.isCircle) ? body1.position.x : body2.position.x;
+            rect.y = (body2.isCircle) ? body1.position.y : body2.position.y;
+            rect.right = (body2.isCircle) ? body1.right : body2.right;
+            rect.bottom = (body2.isCircle) ? body1.bottom: body2.bottom;
+            var circle = {};
+            circle.x = (body1.isCircle) ? (body1.position.x + body1.radius) : (body2.position.x + body2.radius);
+            circle.y = (body1.isCircle) ? (body1.position.y + body1.radius) : (body2.position.y + body2.radius);
+            circle.radius = (body1.isCircle) ? body1.radius : body2.radius;
 
-            this._vel1.x = this._vel2.x;
-            this._vel1.y = this._vel2.y;
+            if ( circle.y < rect.y)
+            {
+                if (circle.x < rect.x)
+                     overlap = Phaser.Math.distance(circle.x, circle.y, rect.x, rect.y) - circle.radius;
 
-            this._vel2.x = tempX;
-            this._vel2.y = tempY;
+                if (circle.x > rect.right)
+                     overlap = Phaser.Math.distance(circle.x, circle.y, rect.right, rect.y) - circle.radius;
+            }
+            if (circle.y > rect.bottom)
+            {
+                if (circle.x < rect.x)
+                    overlap = Phaser.Math.distance(circle.x, circle.y, rect.x, rect.bottom) - circle.radius;
+                if (circle.x > rect.right)
+                    overlap = Phaser.Math.distance(circle.x, circle.y, rect.right, rect.bottom) - circle.radius;
+            }
+            overlap *= -1;
         }
-        else
-        {
-            //  Mass based exchange
-            var vxTotal = this._vel1.x - this._vel2.x;
-
-            this._vel1.x = ((body1.mass - body2.mass) * this._vel1.x + 2 * body2.mass * this._vel2.x) / (body1.mass + body2.mass);
-            this._vel2.x = vxTotal + this._vel1.x;
-        }
-
-        var overlap = (body1.radius + body2.radius) - Phaser.Math.distance(body1.center.x, body1.center.y, body2.center.x, body2.center.y);
-
-        //  Resets the overlapR to zero if there is no overlap, or to the actual pixel value if there is
-        body1.overlapR = overlap * 0.5;
-        body2.overlapR = overlap * 0.5;
+        else overlap = (body1.radius + body2.radius) - Phaser.Math.distance(body1.center.x, body1.center.y, body2.center.x, body2.center.y);
 
         //  Can't separate two immovable bodies, or a body with its own custom separation logic
         if (overlapOnly || overlap === 0 || (body1.immovable && body2.immovable) || body1.customSeparateX || body2.customSeparateX)
@@ -1137,62 +1162,75 @@ Phaser.Physics.Arcade.prototype = {
             return (overlap !== 0);
         }
 
-        this._pos1.x += (this._vel1.x * this.game.time.physicsElapsed) + overlap;
-        this._pos2.x += (this._vel2.x * this.game.time.physicsElapsed) + overlap;
+        // Transform the velocity vector to the coordinate system oriented along the direction of impact. This is done to eliminate the vertical component of the velocity
+        var v1 = {
+            x : body1.velocity.x * Math.cos(angleCollision) + body1.velocity.y * Math.sin(angleCollision),
+            y : body1.velocity.x * Math.sin(angleCollision) - body1.velocity.y * Math.cos(angleCollision)
+        }
+        var v2 = {
+            x : body2.velocity.x * Math.cos(angleCollision) + body2.velocity.y * Math.sin(angleCollision),
+            y : body2.velocity.x * Math.sin(angleCollision) - body2.velocity.y * Math.cos(angleCollision)
+        }
 
-        //  Rotate positions back again
-        this.rotate(this._pos1, this._pos1.x, this._pos1.y, sin, cos, false);
-        this.rotate(this._pos2, this._pos2.x, this._pos2.y, sin, cos, false);
+        // We expect the new velocity after impact
+        var tempVel1 = ((body1.mass - body2.mass) * v1.x + 2 * body2.mass * v2.x) / (body1.mass + body2.mass);
+        var tempVel2 = (2 * body1.mass * v1.x + (body2.mass - body1.mass) * v2.x) / (body1.mass + body2.mass);
 
-        //  Rotate velocity back again
-        this.rotate(this._vel1, this._vel1.x, this._vel1.y, sin, cos, false);
-        this.rotate(this._vel2, this._vel2.x, this._vel2.y, sin, cos, false);
+        // We convert the vector to the original coordinate system and multiplied by factor of rebound
+        if (!body1.immovable)
+        {
+            body1.velocity.x = (tempVel1 * Math.cos(angleCollision) - v1.y * Math.sin(angleCollision)) * body1.bounce.x;
+            body1.velocity.y = (v1.y * Math.cos(angleCollision) + tempVel1 * Math.sin(angleCollision)) * body1.bounce.y;
+        }
+        if (!body2.immovable)
+        {
+            body2.velocity.x = (tempVel2 * Math.cos(angleCollision) - v2.y * Math.sin(angleCollision)) * body2.bounce.x;
+            body2.velocity.y = (v2.y * Math.cos(angleCollision) + tempVel2 * Math.sin(angleCollision)) * body2.bounce.y;
+        }
 
-        //  Apply to bodies
+        // When the collision angle almost perpendicular to the total initial velocity vector (collision on a tangent) vector direction can be determined incorrectly.
+        // This code fixes the problem
+        if (angleCollision > 0)
+        {
+            if (Math.abs(angleCollision) < Math.PI/2)
+            {
+                if ((body1.velocity.x > 0)&&(!body1.immovable)) body1.velocity.x *= -1;
+                else if ((body2.velocity.x < 0)&&(!body2.immovable)) body2.velocity.x *= -1;
+                else if ((body1.velocity.y > 0)&&(!body1.immovable)) body1.velocity.y *= -1;
+                else if ((body2.velocity.y < 0)&&(!body2.immovable)) body2.velocity.y *= -1;
+            }
+            else if (Math.abs(angleCollision) > Math.PI/2)
+            {
+                if ((body1.velocity.x < 0)&&(!body1.immovable)) body1.velocity.x *= -1;
+                else if ((body2.velocity.x > 0)&&(!body2.immovable)) body2.velocity.x *= -1;
+                else if ((body1.velocity.y < 0)&&(!body1.immovable)) body1.velocity.y *= -1;
+                else if ((body2.velocity.y > 0)&&(!body2.immovable)) body2.velocity.y *= -1;
+            }
+        }
+        if (angleCollision < 0)
+        {
+            if (Math.abs(angleCollision) < Math.PI/2)
+            {
+                if ((body1.velocity.x > 0)&&(!body1.immovable)) body1.velocity.x *= -1;
+                else if ((body2.velocity.x < 0)&&(!body2.immovable)) body2.velocity.x *= -1;
+                else if ((body1.velocity.y > 0)&&(!body1.immovable)) body1.velocity.y *= -1;
+                else if ((body2.velocity.y < 0)&&(!body2.immovable)) body2.velocity.y *= -1;
+            }
+            else if (Math.abs(angleCollision) > Math.PI/2)
+            {
+                if ((body1.velocity.x < 0)&&(!body1.immovable)) body1.velocity.x *= -1;
+                else if ((body2.velocity.x > 0)&&(!body2.immovable)) body2.velocity.x *= -1;
+                else if ((body1.velocity.y < 0)&&(!body1.immovable)) body1.velocity.y *= -1;
+                else if ((body2.velocity.y > 0)&&(!body2.immovable)) body2.velocity.y *= -1;
+            }
+        }
 
-        body2.x = body1.x + this._pos2.x;
-        body2.y = body1.y + this._pos2.y;
-
-        body1.x = body1.x + this._pos1.x;
-        body1.y = body1.y + this._pos1.y;
-
-        body1.velocity.x = this._vel1.x;
-        body1.velocity.y = this._vel1.y;
-
-        body2.velocity.x = this._vel2.x;
-        body2.velocity.y = this._vel2.y;
+        if (!body1.immovable) body1.x += (body1.velocity.x * this.game.time.physicsElapsed) - overlap*Math.cos(angleCollision);
+        if (!body2.immovable) body2.x += (body2.velocity.x * this.game.time.physicsElapsed) + overlap*Math.cos(angleCollision);
+        if (!body1.immovable) body1.y += (body1.velocity.y * this.game.time.physicsElapsed) - overlap*Math.sin(angleCollision);
+        if (!body2.immovable) body2.y += (body2.velocity.y * this.game.time.physicsElapsed) + overlap*Math.sin(angleCollision);
 
         return true;
-
-    },
-
-    /**
-    * Point rotation method, used by circle separation.
-    *
-    * @method Phaser.Physics.Arcade#rotate
-    * @private
-    * @param {Object|Phaser.Point} result - The Point-like object in which to store the calculation results.
-    * @param {float} x - The x component.
-    * @param {float} y - The y component.
-    * @param {float} sin - The sin of the rotation.
-    * @param {float} cos - The cos of the rotation.
-    * @param {boolean} reverse - True to rotate back, false to rotate forward.
-    * @return {Object|Phaser.Point} The result object.
-    */
-    rotate: function (result, x, y, sin, cos, reverse) {
-
-        if (reverse)
-        {
-            result.x = x * cos + y * sin;
-            result.y = y * cos - x * sin;
-        }
-        else
-        {
-            result.x = x * cos - y * sin;
-            result.y = y * cos + x * sin;
-        }
-
-        return result;
 
     },
 
@@ -1508,7 +1546,7 @@ Phaser.Physics.Arcade.prototype = {
         }
 
         return output;
-        
+
     },
 
     /**
@@ -1840,6 +1878,23 @@ Phaser.Physics.Arcade.prototype = {
     },
 
     /**
+    * Find the angle in radians between centers of two display objects (like Sprites).
+    *
+    * @method Phaser.Physics.Arcade#angleBetweenCenters
+    * @param {any} source - The Display Object to test from.
+    * @param {any} target - The Display Object to test to.
+    * @return {number} The angle in radians between the source and target display objects.
+    */
+    angleBetweenCenters: function (source, target) {
+
+        var dx = target.center.x - source.center.x;
+        var dy = target.center.y - source.center.y;
+
+        return Math.atan2(dy, dx);
+
+    },
+
+    /**
     * Find the angle in radians between a display object (like a Sprite) and the given x/y coordinate.
     *
     * @method Phaser.Physics.Arcade#angleToXY
@@ -1877,7 +1932,7 @@ Phaser.Physics.Arcade.prototype = {
     },
 
     /**
-    * Find the angle in radians between a display object (like a Sprite) and a Pointer, 
+    * Find the angle in radians between a display object (like a Sprite) and a Pointer,
     * taking their x/y and center into account relative to the world.
     *
     * @method Phaser.Physics.Arcade#worldAngleToPointer
