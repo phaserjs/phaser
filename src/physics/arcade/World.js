@@ -1190,39 +1190,19 @@ Phaser.Physics.Arcade.prototype = {
 
         // When the collision angle almost perpendicular to the total initial velocity vector (collision on a tangent) vector direction can be determined incorrectly.
         // This code fixes the problem
-        if (angleCollision > 0)
+        if (Math.abs(angleCollision) < Math.PI/2)
         {
-            if (Math.abs(angleCollision) < Math.PI/2)
-            {
-                if ((body1.velocity.x > 0)&&(!body1.immovable)) body1.velocity.x *= -1;
-                else if ((body2.velocity.x < 0)&&(!body2.immovable)) body2.velocity.x *= -1;
-                else if ((body1.velocity.y > 0)&&(!body1.immovable)) body1.velocity.y *= -1;
-                else if ((body2.velocity.y < 0)&&(!body2.immovable)) body2.velocity.y *= -1;
-            }
-            else if (Math.abs(angleCollision) > Math.PI/2)
-            {
-                if ((body1.velocity.x < 0)&&(!body1.immovable)) body1.velocity.x *= -1;
-                else if ((body2.velocity.x > 0)&&(!body2.immovable)) body2.velocity.x *= -1;
-                else if ((body1.velocity.y < 0)&&(!body1.immovable)) body1.velocity.y *= -1;
-                else if ((body2.velocity.y > 0)&&(!body2.immovable)) body2.velocity.y *= -1;
-            }
+            if ((body1.velocity.x > 0)&&(!body1.immovable)&&(body2.velocity.x > body1.velocity.x)) body1.velocity.x *= -1;
+            else if ((body2.velocity.x < 0)&&(!body2.immovable)&&(body1.velocity.x < body2.velocity.x)) body2.velocity.x *= -1;
+            else if ((body1.velocity.y > 0)&&(!body1.immovable)&&(body2.velocity.y > body1.velocity.y)) body1.velocity.y *= -1;
+            else if ((body2.velocity.y < 0)&&(!body2.immovable)&&(body1.velocity.y < body2.velocity.y)) body2.velocity.y *= -1;
         }
-        if (angleCollision < 0)
+        else if (Math.abs(angleCollision) > Math.PI/2)
         {
-            if (Math.abs(angleCollision) < Math.PI/2)
-            {
-                if ((body1.velocity.x > 0)&&(!body1.immovable)) body1.velocity.x *= -1;
-                else if ((body2.velocity.x < 0)&&(!body2.immovable)) body2.velocity.x *= -1;
-                else if ((body1.velocity.y > 0)&&(!body1.immovable)) body1.velocity.y *= -1;
-                else if ((body2.velocity.y < 0)&&(!body2.immovable)) body2.velocity.y *= -1;
-            }
-            else if (Math.abs(angleCollision) > Math.PI/2)
-            {
-                if ((body1.velocity.x < 0)&&(!body1.immovable)) body1.velocity.x *= -1;
-                else if ((body2.velocity.x > 0)&&(!body2.immovable)) body2.velocity.x *= -1;
-                else if ((body1.velocity.y < 0)&&(!body1.immovable)) body1.velocity.y *= -1;
-                else if ((body2.velocity.y > 0)&&(!body2.immovable)) body2.velocity.y *= -1;
-            }
+            if ((body1.velocity.x < 0)&&(!body1.immovable)&&(body2.velocity.x < body1.velocity.x)) body1.velocity.x *= -1;
+            else if ((body2.velocity.x > 0)&&(!body2.immovable)&&(body1.velocity.x > body2.velocity.x)) body2.velocity.x *= -1;
+            else if ((body1.velocity.y < 0)&&(!body1.immovable)&&(body2.velocity.y < body1.velocity.y)) body1.velocity.y *= -1;
+            else if ((body2.velocity.y > 0)&&(!body2.immovable)&&(body1.velocity.x > body2.velocity.y)) body2.velocity.y *= -1;
         }
 
         if (!body1.immovable) body1.x += (body1.velocity.x * this.game.time.physicsElapsed) - overlap*Math.cos(angleCollision);
