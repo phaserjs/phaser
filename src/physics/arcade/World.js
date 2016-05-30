@@ -1036,6 +1036,8 @@ Phaser.Physics.Arcade.prototype = {
     */
     intersects: function (body1, body2) {
 
+        if (body1 === body2) return false;
+
         if (body1.isCircle)
         {
             if (body2.isCircle)
