@@ -251,6 +251,8 @@ Phaser.Animation.prototype = {
      * */
     reverse: function () {
         this.reversed = !this.reversed;
+
+        return this;
     },
 
     /**
@@ -262,9 +264,9 @@ Phaser.Animation.prototype = {
      * @return {Phaser.Animation} The animation instance.
      * */
     reverseOnce: function () {
-        this.reverse();
-
         this.onComplete.addOnce(this.reverse.bind(this));
+
+        return this.reverse();
     },
 
     /**
