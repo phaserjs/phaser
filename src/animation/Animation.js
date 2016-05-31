@@ -247,6 +247,7 @@ Phaser.Animation.prototype = {
      * Reverses the animation direction
      *
      * @method Phaser.Animation#reverse
+     * @return {Phaser.Animation} The animation instance.
      * */
     reverse: function () {
         this.reversed = !this.reversed;
@@ -258,6 +259,7 @@ Phaser.Animation.prototype = {
      * the reversed state.
      *
      * @method Phaser.Animation#reverseOnce
+     * @return {Phaser.Animation} The animation instance.
      * */
     reverseOnce: function () {
         this.reverse();

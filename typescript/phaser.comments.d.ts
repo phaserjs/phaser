@@ -260,14 +260,14 @@ declare module "phaser" {
             /**
              * Toggels the animation direction
              */
-            reverse(): void;
+            reverse(): Animation;
 
             /**
              * Reverses the animation direction for the current/next animation only
              * Once the onComplete event is called this method will be called again and revert
              * the reversed state.
              */
-            reverseOnce(): void;
+            reverseOnce(): Animation;
 
 
             /**
