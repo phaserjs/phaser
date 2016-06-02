@@ -599,7 +599,8 @@ Phaser.Camera.prototype = {
     */
     updateTarget: function () {
 
-        this._targetPosition.copyFrom(this.target.world);
+        this._targetPosition.x = this.view.x + this.target.worldPosition.x;
+        this._targetPosition.y = this.view.y + this.target.worldPosition.y;
 
         if (this.deadzone)
         {

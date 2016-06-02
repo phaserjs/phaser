@@ -341,6 +341,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * Group.getFarthestFrom will return the child farthest away from the given point (thanks @Nuuf #2504)
 * Animation.reverse will reverse the currently playing animation direction (thanks @gotenxds #2505)
 * Animation.reverseOnce will reverse the animation direction for the current, or next animation only (thanks @gotenxds #2505)
+* The way the display list updates and Camera movements are handled has been completely revamped, which should result is significantly smoother motion when the Camera is following tweened or physics controlled sprites. The `Stage.postUpdate` function is now vastly reduced in complexity. It takes control over updating the display list (calling `updateTransform` on itself), rather than letting the Canvas or WebGL renderers do this. Because of this change, the `Camera.updateTarget` function uses the Sprites `worldPosition` property instead, which is now frame accurate (thanks @whig @Upperfoot @Whoisnt @hexus #2482)
 
 ### Updates
 

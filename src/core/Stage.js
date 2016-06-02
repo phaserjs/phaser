@@ -179,33 +179,16 @@ Phaser.Stage.prototype.update = function () {
 */
 Phaser.Stage.prototype.postUpdate = function () {
 
-    if (this.game.world.camera.target)
+    var i = this.children.length;
+
+    while (i--)
     {
-        this.game.world.camera.target.postUpdate();
-
-        this.game.world.camera.update();
-
-        var i = this.children.length;
-
-        while (i--)
-        {
-            if (this.children[i] !== this.game.world.camera.target)
-            {
-                this.children[i].postUpdate();
-            }
-        }
+        this.children[i].postUpdate();
     }
-    else
-    {
-        this.game.world.camera.update();
 
-        var i = this.children.length;
+    this.updateTransform();
 
-        while (i--)
-        {
-            this.children[i].postUpdate();
-        }
-    }
+    this.game.world.camera.update();
 
 };
 
