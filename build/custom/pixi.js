@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.4.9 "Four Kings" - Built: Mon May 23 2016 13:18:03
+* v2.4.9 "Four Kings" - Built: Thu Jun 02 2016 16:39:21
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -3676,9 +3676,6 @@ PIXI.WebGLRenderer.prototype.render = function(stage)
         return;
     }
 
-    // update the scene graph
-    stage.updateTransform();
-
     var gl = this.gl;
 
     // -- Does this need to be set every frame? -- //
@@ -6658,8 +6655,6 @@ PIXI.CanvasRenderer.prototype.constructor = PIXI.CanvasRenderer;
  * @param stage {Stage} the Stage element to be rendered
  */
 PIXI.CanvasRenderer.prototype.render = function (stage) {
-
-    stage.updateTransform();
 
     this.context.setTransform(1, 0, 0, 1, 0, 0);
 

@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.4.9 "Four Kings" - Built: Mon May 23 2016 13:17:39
+* v2.4.9 "Four Kings" - Built: Thu Jun 02 2016 16:38:57
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -3676,9 +3676,6 @@ PIXI.WebGLRenderer.prototype.render = function(stage)
         return;
     }
 
-    // update the scene graph
-    stage.updateTransform();
-
     var gl = this.gl;
 
     // -- Does this need to be set every frame? -- //
@@ -6658,8 +6655,6 @@ PIXI.CanvasRenderer.prototype.constructor = PIXI.CanvasRenderer;
  * @param stage {Stage} the Stage element to be rendered
  */
 PIXI.CanvasRenderer.prototype.render = function (stage) {
-
-    stage.updateTransform();
 
     this.context.setTransform(1, 0, 0, 1, 0, 0);
 
@@ -10977,7 +10972,7 @@ PIXI.Ellipse = Phaser.Ellipse;
 
 /**
 * Creates a new Line object with a start and an end point.
-* 
+*
 * @class Phaser.Line
 * @constructor
 * @param {number} [x1=0] - The x coordinate of the start of the line.
@@ -11014,7 +11009,7 @@ Phaser.Line.prototype = {
 
     /**
     * Sets the components of the Line to the specified values.
-    * 
+    *
     * @method Phaser.Line#setTo
     * @param {number} [x1=0] - The x coordinate of the start of the line.
     * @param {number} [y1=0] - The y coordinate of the start of the line.
@@ -11034,7 +11029,7 @@ Phaser.Line.prototype = {
     /**
     * Sets the line to match the x/y coordinates of the two given sprites.
     * Can optionally be calculated from their center coordinates.
-    * 
+    *
     * @method Phaser.Line#fromSprite
     * @param {Phaser.Sprite} startSprite - The coordinates of this Sprite will be set to the Line.start point.
     * @param {Phaser.Sprite} endSprite - The coordinates of this Sprite will be set to the Line.start point.
@@ -11056,7 +11051,7 @@ Phaser.Line.prototype = {
 
     /**
     * Sets this line to start at the given `x` and `y` coordinates and for the segment to extend at `angle` for the given `length`.
-    * 
+    *
     * @method Phaser.Line#fromAngle
     * @param {number} x - The x coordinate of the start of the line.
     * @param {number} y - The y coordinate of the start of the line.
@@ -11075,12 +11070,12 @@ Phaser.Line.prototype = {
 
     /**
     * Rotates the line by the amount specified in `angle`.
-    * 
+    *
     * Rotation takes place from the center of the line.
     * If you wish to rotate around a different point see Line.rotateAround.
-    * 
+    *
     * If you wish to rotate the ends of the Line then see Line.start.rotate or Line.end.rotate.
-    * 
+    *
     * @method Phaser.Line#rotate
     * @param {number} angle - The angle in radians (unless asDegrees is true) to rotate the line by.
     * @param {boolean} [asDegrees=false] - Is the given angle in radians (false) or degrees (true)?
@@ -11100,9 +11095,9 @@ Phaser.Line.prototype = {
 
     /**
     * Rotates the line by the amount specified in `angle`.
-    * 
+    *
     * Rotation takes place around the coordinates given.
-    * 
+    *
     * @method Phaser.Line#rotateAround
     * @param {number} x - The x coordinate to offset the rotation from.
     * @param {number} y - The y coordinate to offset the rotation from.
@@ -11152,7 +11147,7 @@ Phaser.Line.prototype = {
 
     /**
     * Returns a Point object where the x and y values correspond to the center (or midpoint) of the Line segment.
-    * 
+    *
     * @method Phaser.Line#midPoint
     * @param {Phaser.Point} [out] - A Phaser.Point object into which the result will be populated. If not given a new Point object is created.
     * @return {Phaser.Point} A Phaser.Point object with the x and y values set to the center of the line segment.
@@ -11170,10 +11165,10 @@ Phaser.Line.prototype = {
 
     /**
     * Centers this Line on the given coordinates.
-    * 
+    *
     * The line is centered by positioning the start and end points so that the lines midpoint matches
     * the coordinates given.
-    * 
+    *
     * @method Phaser.Line#centerOn
     * @param {number} x - The x position to center the line on.
     * @param {number} y - The y position to center the line on.
@@ -11194,7 +11189,7 @@ Phaser.Line.prototype = {
 
     /**
     * Tests if the given coordinates fall on this line. See pointOnSegment to test against just the line segment.
-    * 
+    *
     * @method Phaser.Line#pointOnLine
     * @param {number} x - The line to check against this one.
     * @param {number} y - The line to check against this one.
@@ -11208,7 +11203,7 @@ Phaser.Line.prototype = {
 
     /**
     * Tests if the given coordinates fall on this line and within the segment. See pointOnLine to test against just the line.
-    * 
+    *
     * @method Phaser.Line#pointOnSegment
     * @param {number} x - The line to check against this one.
     * @param {number} y - The line to check against this one.
@@ -11227,7 +11222,7 @@ Phaser.Line.prototype = {
 
     /**
     * Picks a random point from anywhere on the Line segment and returns it.
-    * 
+    *
     * @method Phaser.Line#random
     * @param {Phaser.Point|object} [out] - A Phaser.Point, or any object with public x/y properties, that the values will be set in.
     *     If no object is provided a new Phaser.Point object will be created. In high performance areas avoid this by re-using an object.
@@ -11595,6 +11590,98 @@ Phaser.Line.intersectsPoints = function (a, b, e, f, asSegment, result) {
 Phaser.Line.intersects = function (a, b, asSegment, result) {
 
     return Phaser.Line.intersectsPoints(a.start, a.end, b.start, b.end, asSegment, result);
+
+};
+
+/**
+* Checks for intersection between the Line and a Rectangle shape, or a rectangle-like
+* object, with public `x`, `y`, `right` and `bottom` properties, such as a Sprite or Body.
+*
+* An intersection is considered valid if:
+*
+* The line starts within, or ends within, the Rectangle.
+* The line segment intersects one of the 4 rectangle edges.
+*
+* The for the purposes of this function rectangles are considered 'solid'.
+*
+* @method intersectsRectangle
+* @param {Phaser.Line} line - The line to check for intersection with.
+* @param {Phaser.Rectangle|object} rect - The rectangle, or rectangle-like object, to check for intersection with.
+* @return {boolean} True if the line intersects with the rectangle edges, or starts or ends within the rectangle.
+*/
+Phaser.Line.intersectsRectangle = function (line, rect) {
+
+    //  Quick bail out of the Line and Rect bounds don't intersect
+    if (!Phaser.Rectangle.intersects(line, rect))
+    {
+        return false;
+    }
+
+    var x1 = line.start.x;
+    var y1 = line.start.y;
+
+    var x2 = line.end.x;
+    var y2 = line.end.y;
+
+    var bx1 = rect.x;
+    var by1 = rect.y;
+    var bx2 = rect.right;
+    var by2 = rect.bottom;
+
+    var t = 0;
+
+    //  If the start or end of the line is inside the rect then we assume
+    //  collision, as rects are solid for our use-case.
+
+    if ((x1 >= bx1 && x1 <= bx2 && y1 >= by1 && y1 <= by2) ||
+        (x2 >= bx1 && x2 <= bx2 && y2 >= by1 && y2 <= by2))
+    {
+        return true;
+    }
+
+    if (x1 < bx1 && x2 >= bx1)
+    {
+        //  Left edge
+        t = y1 + (y2 - y1) * (bx1 - x1) / (x2 - x1);
+
+        if (t > by1 && t <= by2)
+        {
+            return true;
+        }
+    }
+    else if (x1 > bx2 && x2 <= bx2)
+    {
+        //  Right edge
+        t = y1 + (y2 - y1) * (bx2 - x1) / (x2 - x1);
+
+        if (t >= by1 && t <= by2)
+        {
+            return true;
+        }
+    }
+
+    if (y1 < by1 && y2 >= by1)
+    {
+        //  Top edge
+        t = x1 + (x2 - x1) * (by1 - y1) / (y2 - y1);
+
+        if (t >= bx1 && t <= bx2)
+        {
+            return true;
+        }
+    }
+    else if (y1 > by2 && y2 <= by2)
+    {
+        //  Bottom edge
+        t = x1 + (x2 - x1) * (by2 - y1) / (y2 - y1);
+
+        if (t >= bx1 && t <= bx2)
+        {
+            return true;
+        }
+    }
+
+    return false;
 
 };
 
@@ -14929,7 +15016,8 @@ Phaser.Camera.prototype = {
     */
     updateTarget: function () {
 
-        this._targetPosition.copyFrom(this.target.world);
+        this._targetPosition.x = this.view.x + this.target.worldPosition.x;
+        this._targetPosition.y = this.view.y + this.target.worldPosition.y;
 
         if (this.deadzone)
         {
@@ -15335,6 +15423,11 @@ Phaser.State = function () {
     * @property {Phaser.Stage} stage - A reference to the Stage.
     */
     this.stage = null;
+
+    /**
+    * @property {Phaser.StateManager} stage - A reference to the State Manager, which controls state changes.
+    */
+    this.state = null;
 
     /**
     * @property {Phaser.Time} time - A reference to the game clock and timed events system.
@@ -17826,33 +17919,16 @@ Phaser.Stage.prototype.update = function () {
 */
 Phaser.Stage.prototype.postUpdate = function () {
 
-    if (this.game.world.camera.target)
+    var i = this.children.length;
+
+    while (i--)
     {
-        this.game.world.camera.target.postUpdate();
-
-        this.game.world.camera.update();
-
-        var i = this.children.length;
-
-        while (i--)
-        {
-            if (this.children[i] !== this.game.world.camera.target)
-            {
-                this.children[i].postUpdate();
-            }
-        }
+        this.children[i].postUpdate();
     }
-    else
-    {
-        this.game.world.camera.update();
 
-        var i = this.children.length;
+    this.updateTransform();
 
-        while (i--)
-        {
-            this.children[i].postUpdate();
-        }
-    }
+    this.game.world.camera.update();
 
 };
 
@@ -18081,7 +18157,7 @@ Object.defineProperty(Phaser.Stage.prototype, "smoothed", {
 * In addition, Groups provides support for fast pooling and object recycling.
 *
 * Groups are also display objects and can be nested as children within other Groups.
-* 
+*
 * @class Phaser.Group
 * @extends PIXI.DisplayObjectContainer
 * @param {Phaser.Game} game - A reference to the currently running game.
@@ -18175,13 +18251,13 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
     this.ignoreDestroy = false;
 
     /**
-    * A Group is that has `pendingDestroy` set to `true` is flagged to have its destroy method 
+    * A Group is that has `pendingDestroy` set to `true` is flagged to have its destroy method
     * called on the next logic update.
     * You can set it directly to flag the Group to be destroyed on its next update.
-    * 
-    * This is extremely useful if you wish to destroy a Group from within one of its own callbacks 
+    *
+    * This is extremely useful if you wish to destroy a Group from within one of its own callbacks
     * or a callback of one of its children.
-    * 
+    *
     * @property {boolean} pendingDestroy
     */
     this.pendingDestroy = false;
@@ -18232,7 +18308,7 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
 
     /**
     * If this Group contains Arcade Physics Sprites you can set a custom sort direction via this property.
-    * 
+    *
     * It should be set to one of the Phaser.Physics.Arcade sort direction constants: 
     * 
     * Phaser.Physics.Arcade.SORT_NONE
@@ -20040,6 +20116,80 @@ Phaser.Group.prototype.getBottom = function () {
     {
         return this.children[0];
     }
+
+};
+
+/**
+* Get the closest child to given Object.
+*
+* This can be a Sprite, Group, Image or any object with public x and y properties.
+*
+* 'close' is determined by the distance from the objects `x` and `y` properties compared to the childs `x` and `y` properties.
+*
+* @method Phaser.Group#getClosestTo
+* @param {any} object - The object used to determine the distance. This can be a Sprite, Group, Image or any object with public x and y properties.
+* @return {any} The child closest to given object, or null if no child was found.
+*/
+Phaser.Group.prototype.getClosestTo = function (object) {
+
+    var distance = Number.MAX_VALUE;
+    var tempDistance = 0;
+    var result = null;
+
+    for (var i = 0; i < this.children.length; i++)
+    {
+        var child = this.children[i];
+
+        if (child.exists)
+        {
+            tempDistance = Math.abs(Phaser.Point.distance(object, child));
+
+            if (tempDistance < distance)
+            {
+                distance = tempDistance;
+                result = child;
+            }
+        }
+    }
+
+    return result;
+
+};
+
+/**
+* Get the child furthest away from the given Object.
+*
+* This can be a Sprite, Group, Image or any object with public x and y properties.
+*
+* 'furthest away' is determined by the distance from the objects `x` and `y` properties compared to the childs `x` and `y` properties.
+*
+* @method Phaser.Group#getFarthestFrom
+* @param {any} object - The object used to determine the distance. This can be a Sprite, Group, Image or any object with public x and y properties.
+* @return {any} The child furthest from the given object, or null if no child was found.
+*/
+Phaser.Group.prototype.getFarthestFrom = function (object) {
+
+    var distance = 0;
+    var tempDistance = 0;
+    var result = null;
+
+    for (var i = 0; i < this.children.length; i++)
+    {
+        var child = this.children[i];
+
+        if (child.exists)
+        {
+            tempDistance = Math.abs(Phaser.Point.distance(object, child));
+
+            if (tempDistance > distance)
+            {
+                distance = tempDistance;
+                result = child;
+            }
+        }
+    }
+
+    return result;
 
 };
 
@@ -28151,6 +28301,11 @@ Phaser.Gamepad.prototype = {
     */
     _pollGamepads: function () {
 
+        if (!this._active)
+        {
+            return;
+        }
+
         if (navigator['getGamepads'])
         {
             var rawGamepads = navigator.getGamepads();
@@ -28188,6 +28343,11 @@ Phaser.Gamepad.prototype = {
                 {
                     break;
                 }
+            }
+
+            for (var g = 0; g < this._gamepads.length; g++)
+            {
+                this._gamepads[g]._rawPad = this._rawPads[g];
             }
 
             if (gamepadsChanged)
@@ -41163,12 +41323,23 @@ Phaser.Text.prototype.updateText = function () {
         drawnLines = this.style.maxLines;
     }
 
+    this._charCount = 0;
+
     for (var i = 0; i < drawnLines; i++)
     {
         if (tabs === 0)
         {
             //  Simple layout (no tabs)
-            var lineWidth = this.context.measureText(lines[i]).width + this.style.strokeThickness + this.padding.x;
+            var lineWidth =  this.style.strokeThickness + this.padding.x;
+
+            if (this.colors.length > 0 || this.strokeColors.length > 0 || this.fontWeights.length > 0 || this.fontStyles.length > 0)
+            {
+                lineWidth += this.measureLine(lines[i]);
+            }
+            else
+            {
+                lineWidth += this.context.measureText(lines[i]).width;
+            }
 
             // Adjust for wrapped text
             if (this.style.wordWrap)
@@ -41188,7 +41359,16 @@ Phaser.Text.prototype.updateText = function () {
 
                 for (var c = 0; c < line.length; c++)
                 {
-                    var section = Math.ceil(this.context.measureText(line[c]).width);
+                    var section = 0;
+
+                    if (this.colors.length > 0 || this.strokeColors.length > 0 || this.fontWeights.length > 0 || this.fontStyles.length > 0)
+                    {
+                        section = this.measureLine(line[c]);
+                    }
+                    else
+                    {
+                        section = Math.ceil(this.context.measureText(line[c]).width);
+                    }
 
                     if (c > 0)
                     {
@@ -41203,7 +41383,14 @@ Phaser.Text.prototype.updateText = function () {
                 for (var c = 0; c < line.length; c++)
                 {
                     //  How far to the next tab?
-                    lineWidth += Math.ceil(this.context.measureText(line[c]).width);
+                    if (this.colors.length > 0 || this.strokeColors.length > 0 || this.fontWeights.length > 0 || this.fontStyles.length > 0)
+                    {
+                        lineWidth += this.measureLine(line[c]);
+                    }
+                    else
+                    {
+                        lineWidth += Math.ceil(this.context.measureText(line[c]).width);
+                    }
 
                     var diff = this.game.math.snapToCeil(lineWidth, tabs) - lineWidth;
 
@@ -41419,6 +41606,67 @@ Phaser.Text.prototype.updateShadow = function (state) {
         this.context.shadowBlur = 0;
     }
 
+};
+
+/**
+* Measures a line of text character by character taking into the account the specified character styles.
+*
+* @method Phaser.Text#measureLine
+* @private
+* @param {string} line - The line of text to measure.
+* @return {integer} length of the line.
+*/
+Phaser.Text.prototype.measureLine = function (line) {
+
+    var lineLength = 0;
+
+    for (var i = 0; i < line.length; i++)
+    {
+        var letter = line[i];
+
+        if (this.fontWeights.length > 0 || this.fontStyles.length > 0)
+        {
+            var components = this.fontToComponents(this.context.font);
+
+            if (this.fontStyles[this._charCount])
+            {
+                components.fontStyle = this.fontStyles[this._charCount];
+            }
+
+            if (this.fontWeights[this._charCount])
+            {
+                components.fontWeight = this.fontWeights[this._charCount];
+            }
+
+            this.context.font = this.componentsToFont(components);
+        }
+
+        if (this.style.stroke && this.style.strokeThickness)
+        {
+            if (this.strokeColors[this._charCount])
+            {
+                this.context.strokeStyle = this.strokeColors[this._charCount];
+            }
+
+            this.updateShadow(this.style.shadowStroke);
+        }
+
+        if (this.style.fill)
+        {
+            if (this.colors[this._charCount])
+            {
+                this.context.fillStyle = this.colors[this._charCount];
+            }
+
+            this.updateShadow(this.style.shadowFill);
+        }
+
+        lineLength += this.context.measureText(letter).width;
+
+        this._charCount++;
+    }
+
+    return Math.ceil(lineLength);
 };
 
 /**
@@ -43206,6 +43454,7 @@ Phaser.BitmapText.prototype.scanLine = function (data, scale, text) {
     var x = 0;
     var w = 0;
     var lastSpace = -1;
+    var wrappedWidth = 0;
     var prevCharCode = null;
     var maxWidth = (this._maxWidth > 0) ? this._maxWidth : null;
     var chars = [];
@@ -43237,9 +43486,12 @@ Phaser.BitmapText.prototype.scanLine = function (data, scale, text) {
             //  Adjust for kerning from previous character to this one
             var kerning = (prevCharCode && charData.kerning[prevCharCode]) ? charData.kerning[prevCharCode] : 0;
 
-            //  Record the last space in the string
-            lastSpace = /(\s)/.test(text.charAt(i)) ? i : lastSpace;
-
+            //  Record the last space in the string and the current width
+            if (/(\s)/.test(text.charAt(i))) {
+                lastSpace = i;
+                wrappedWidth = w;
+            }
+            
             //  What will the line width be if we add this character to it?
             c = (kerning + charData.texture.width + charData.xOffset) * scale;
 
@@ -43247,7 +43499,7 @@ Phaser.BitmapText.prototype.scanLine = function (data, scale, text) {
             if (maxWidth && ((w + c) >= maxWidth) && lastSpace > -1)
             {
                 //  The last space was at "lastSpace" which was "i - lastSpace" characters ago
-                return { width: w, text: text.substr(0, i - (i - lastSpace)), end: end, chars: chars };
+                return { width: wrappedWidth || w, text: text.substr(0, i - (i - lastSpace)), end: end, chars: chars };
             }
             else
             {
@@ -52970,7 +53222,7 @@ Object.defineProperty(Phaser.AnimationManager.prototype, 'frameName', {
 
 /**
 * An Animation instance contains a single animation and the controls to play it.
-* 
+*
 * It is created by the AnimationManager, consists of Animation.Frame objects and belongs to a single Game Object such as a Sprite.
 *
 * @class Phaser.Animation
@@ -53094,10 +53346,10 @@ Phaser.Animation = function (game, parent, name, frameData, frames, frameRate, l
     this.onStart = new Phaser.Signal();
 
     /**
-    * This event is dispatched when the Animation changes frame. 
+    * This event is dispatched when the Animation changes frame.
     * By default this event is disabled due to its intensive nature. Enable it with: `Animation.enableUpdate = true`.
     * Note that the event is only dispatched with the current frame. In a low-FPS environment Animations
-    * will automatically frame-skip to try and claw back time, so do not base your code on expecting to 
+    * will automatically frame-skip to try and claw back time, so do not base your code on expecting to
     * receive a perfectly sequential set of frames from this event.
     * @property {Phaser.Signal|null} onUpdate
     * @default
@@ -53113,6 +53365,12 @@ Phaser.Animation = function (game, parent, name, frameData, frames, frameRate, l
     * @property {Phaser.Signal} onLoop - This event is dispatched when this Animation loops.
     */
     this.onLoop = new Phaser.Signal();
+
+    /**
+     * @property {boolean} isReversed - Indicates if the animation will play backwards.
+     * @default
+     */
+    this.isReversed = false;
 
     //  Set-up some event listeners
     this.game.onPause.add(this.onPause, this);
@@ -53159,7 +53417,7 @@ Phaser.Animation.prototype = {
         this._timeLastFrame = this.game.time.time;
         this._timeNextFrame = this.game.time.time + this.delay;
 
-        this._frameIndex = 0;
+        this._frameIndex = this.isReversed ? this._frames.length - 1 : 0;
         this.updateCurrentFrame(false, true);
 
         this._parent.events.onAnimationStart$dispatch(this._parent, this);
@@ -53199,6 +53457,32 @@ Phaser.Animation.prototype = {
 
         this.onStart.dispatch(this._parent, this);
 
+    },
+
+    /**
+     * Reverses the animation direction
+     *
+     * @method Phaser.Animation#reverse
+     * @return {Phaser.Animation} The animation instance.
+     * */
+    reverse: function () {
+        this.reversed = !this.reversed;
+
+        return this;
+    },
+
+    /**
+     * Reverses the animation direction for the current/next animation only
+     * Once the onComplete event is called this method will be called again and revert
+     * the reversed state.
+     *
+     * @method Phaser.Animation#reverseOnce
+     * @return {Phaser.Animation} The animation instance.
+     * */
+    reverseOnce: function () {
+        this.onComplete.addOnce(this.reverse.bind(this));
+
+        return this.reverse();
     },
 
     /**
@@ -53349,14 +53633,23 @@ Phaser.Animation.prototype = {
             //  And what's left now?
             this._timeNextFrame = this.game.time.time + (this.delay - this._frameDiff);
 
-            this._frameIndex += this._frameSkip;
+            if (this.isReversed){
+                this._frameIndex -= this._frameSkip;
+            }else{
+                this._frameIndex += this._frameSkip;
+            }
 
-            if (this._frameIndex >= this._frames.length)
+            if (!this.isReversed && this._frameIndex >= this._frames.length || this.isReversed && this._frameIndex <= -1)
             {
                 if (this.loop)
                 {
                     // Update current state before event callback
-                    this._frameIndex %= this._frames.length;
+                    this._frameIndex = Math.abs(this._frameIndex) % this._frames.length;
+
+                    if (this.isReversed){
+                        this._frameIndex = this._frames.length - 1 - this._frameIndex;
+                    }
+
                     this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
 
                     //  Instead of calling updateCurrentFrame we do it here instead
@@ -53418,7 +53711,7 @@ Phaser.Animation.prototype = {
             // The animation is already destroyed, probably from a callback
             return false;
         }
-            
+
         //  Previous index
         var idx = this.currentFrame.index;
 
@@ -53613,6 +53906,26 @@ Object.defineProperty(Phaser.Animation.prototype, 'paused', {
                 this._timeNextFrame = this.game.time.time + this.delay;
             }
         }
+
+    }
+
+});
+
+/**
+* @name Phaser.Animation#reversed
+* @property {boolean} reversed - Gets and sets the isReversed state of this Animation.
+*/
+Object.defineProperty(Phaser.Animation.prototype, 'reversed', {
+
+    get: function () {
+
+        return this.isReversed;
+
+    },
+
+    set: function (value) {
+
+        this.isReversed = value;
 
     }
 
@@ -60340,12 +60653,13 @@ Phaser.Sound.prototype = {
     * @method Phaser.Sound#addMarker
     * @param {string} name - A unique name for this marker, i.e. 'explosion', 'gunshot', etc.
     * @param {number} start - The start point of this marker in the audio file, given in seconds. 2.5 = 2500ms, 0.5 = 500ms, etc.
-    * @param {number} duration - The duration of the marker in seconds. 2.5 = 2500ms, 0.5 = 500ms, etc.
+    * @param {number} [duration=1] - The duration of the marker in seconds. 2.5 = 2500ms, 0.5 = 500ms, etc.
     * @param {number} [volume=1] - The volume the sound will play back at, between 0 (silent) and 1 (full volume).
     * @param {boolean} [loop=false] - Sets if the sound will loop or not.
     */
     addMarker: function (name, start, duration, volume, loop) {
 
+        if (duration === undefined || duration === null) { duration = 1; }
         if (volume === undefined || volume === null) { volume = 1; }
         if (loop === undefined) { loop = false; }
 
@@ -69865,6 +70179,11 @@ Phaser.Physics.Arcade.prototype = {
     */
     intersects: function (body1, body2) {
 
+        if (body1 === body2)
+        {
+            return false;
+        }
+        
         //  Rect vs. Rect
         if (body1.right <= body2.position.x)
         {
@@ -71306,11 +71625,6 @@ Phaser.Physics.Arcade.Body.prototype = {
     */
     setSize: function (width, height, offsetX, offsetY) {
 
-        if (this.isCircle)
-        {
-            return;
-        }
-
         if (offsetX === undefined) { offsetX = this.offset.x; }
         if (offsetY === undefined) { offsetY = this.offset.y; }
 
@@ -71371,7 +71685,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     */
     hitTest: function (x, y) {
 
-        return (this.isCircle) ? Phaser.Circle.contains(this, x, y) : Phaser.Rectangle.contains(this, x, y);
+        return Phaser.Rectangle.contains(this, x, y);
 
     },
 
@@ -78043,6 +78357,9 @@ Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "bottom", {
 * Small screen devices, especially iPod and iPhone will launch the video in its own native video player,
 * outside of the Safari browser. There is no way to avoid this, it's a device imposed limitation.
 *
+* Note: On iOS if you need to detect when the user presses the 'Done' button (before the video ends)
+* then you need to add your own event listener
+*
 * @class Phaser.Video
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
@@ -78105,7 +78422,7 @@ Phaser.Video = function (game, key, url) {
     this.onChangeSource = new Phaser.Signal();
 
     /**
-    * @property {Phaser.Signal} onComplete - This signal is dispatched when the Video completes playback, i.e. enters an 'ended' state. Videos set to loop will never dispatch this signal.
+    * @property {Phaser.Signal} onComplete - This signal is dispatched when the Video completes playback, i.e. enters an 'ended' state. On iOS specifically it also fires if the user hits the 'Done' button at any point during playback. Videos set to loop will never dispatch this signal.
     */
     this.onComplete = new Phaser.Signal();
 
@@ -78676,6 +78993,7 @@ Phaser.Video.prototype = {
         this._endCallback = this.complete.bind(this);
 
         this.video.addEventListener('ended', this._endCallback, true);
+        this.video.addEventListener('webkitendfullscreen', this._endCallback, true);
 
         if (loop)
         {
@@ -78797,6 +79115,7 @@ Phaser.Video.prototype = {
         else
         {
             this.video.removeEventListener('ended', this._endCallback, true);
+            this.video.removeEventListener('webkitendfullscreen', this._endCallback, true);
             this.video.removeEventListener('playing', this._playCallback, true);
 
             if (this.touchLocked)
