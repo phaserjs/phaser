@@ -13,7 +13,7 @@
 * In addition, Groups provides support for fast pooling and object recycling.
 *
 * Groups are also display objects and can be nested as children within other Groups.
-* 
+*
 * @class Phaser.Group
 * @extends PIXI.DisplayObjectContainer
 * @param {Phaser.Game} game - A reference to the currently running game.
@@ -107,13 +107,13 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
     this.ignoreDestroy = false;
 
     /**
-    * A Group is that has `pendingDestroy` set to `true` is flagged to have its destroy method 
+    * A Group is that has `pendingDestroy` set to `true` is flagged to have its destroy method
     * called on the next logic update.
     * You can set it directly to flag the Group to be destroyed on its next update.
-    * 
-    * This is extremely useful if you wish to destroy a Group from within one of its own callbacks 
+    *
+    * This is extremely useful if you wish to destroy a Group from within one of its own callbacks
     * or a callback of one of its children.
-    * 
+    *
     * @property {boolean} pendingDestroy
     */
     this.pendingDestroy = false;
@@ -164,7 +164,7 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
 
     /**
     * If this Group contains Arcade Physics Sprites you can set a custom sort direction via this property.
-    * 
+    *
     * It should be set to one of the Phaser.Physics.Arcade sort direction constants: 
     * 
     * Phaser.Physics.Arcade.SORT_NONE
@@ -1971,6 +1971,63 @@ Phaser.Group.prototype.getBottom = function () {
     if (this.children.length > 0)
     {
         return this.children[0];
+    }
+
+};
+
+/**
+ * Get the closest child to given Object/Point/Sprite/Image
+ *
+ * @method Phaser.Group#getClosestTo
+ * @return {any} The child closest to given Object/Point/Sprite/Image
+ */
+Phaser.Group.prototype.getClosestTo = function(object) {
+
+    if (this.children.length !== 0) {
+        var distance = Number.MAX_VALUE,
+            tempDistance = 0,
+            returnee;
+        this.forEachAlive(function(e) {
+
+            tempDistance = Math.abs(Phaser.Point.distance(object, e));
+
+            if (tempDistance < distance) {
+                distance = tempDistance;
+                returnee = e;
+            }
+        });
+
+        if (returnee) {
+            return returnee
+        };
+    }
+
+};
+
+/**
+ * Get the farthest child from given Object/Point/Sprite/Image
+ *
+ * @method Phaser.Group#getFarthestFrom
+ * @return {any} The child farthest from given Object/Point/Sprite/Image
+ */
+Phaser.Group.prototype.getFarthestFrom = function(object) {
+
+    if (this.children.length !== 0) {
+        var distance = 0,
+            tempDistance = 0,
+            returnee;
+        this.forEachAlive(function(e) {
+
+            tempDistance = Math.abs(Phaser.Point.distance(object, e));
+
+            if (tempDistance > distance) {
+                distance = tempDistance;
+                returnee = e;
+            }
+        });
+        if (returnee) {
+            return returnee
+        };
     }
 
 };
