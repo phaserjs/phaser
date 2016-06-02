@@ -403,7 +403,7 @@ Phaser.Text.prototype.updateText = function () {
             {
                 lineWidth += this.measureLine(lines[i]);
             }
-            else 
+            else
             {
                 lineWidth += this.context.measureText(lines[i]).width;
             }
