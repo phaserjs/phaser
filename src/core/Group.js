@@ -1976,59 +1976,76 @@ Phaser.Group.prototype.getBottom = function () {
 };
 
 /**
- * Get the closest child to given Object/Point/Sprite/Image
- *
- * @method Phaser.Group#getClosestTo
- * @return {any} The child closest to given Object/Point/Sprite/Image
- */
-Phaser.Group.prototype.getClosestTo = function(object) {
+* Get the closest child to given Object.
+*
+* This can be a Sprite, Group, Image or any object with public x and y properties.
+*
+* 'close' is determined by the distance from the objects `x` and `y` properties compared to the childs `x` and `y` properties.
+*
+* @method Phaser.Group#getClosestTo
+* @param {any} object - The object used to determine the distance. This can be a Sprite, Group, Image or any object with public x and y properties.
+* @return {any} The child closest to given object, or null if no child was found.
+*/
+Phaser.Group.prototype.getClosestTo = function (object) {
 
-    if (this.children.length !== 0) {
-        var distance = Number.MAX_VALUE,
-            tempDistance = 0,
-            returnee;
-        this.forEachAlive(function(e) {
+    var distance = Number.MAX_VALUE;
+    var tempDistance = 0;
+    var result = null;
 
-            tempDistance = Math.abs(Phaser.Point.distance(object, e));
+    for (var i = 0; i < this.children.length; i++)
+    {
+        var child = this.children[i];
 
-            if (tempDistance < distance) {
+        if (child.exists)
+        {
+            tempDistance = Math.abs(Phaser.Point.distance(object, child));
+
+            if (tempDistance < distance)
+            {
                 distance = tempDistance;
-                returnee = e;
+                result = child;
             }
-        });
-
-        if (returnee) {
-            return returnee
-        };
+        }
     }
+
+    return result;
 
 };
 
 /**
- * Get the farthest child from given Object/Point/Sprite/Image
- *
- * @method Phaser.Group#getFarthestFrom
- * @return {any} The child farthest from given Object/Point/Sprite/Image
- */
-Phaser.Group.prototype.getFarthestFrom = function(object) {
+* Get the child furthest away from the given Object.
+*
+* This can be a Sprite, Group, Image or any object with public x and y properties.
+*
+* 'furthest away' is determined by the distance from the objects `x` and `y` properties compared to the childs `x` and `y` properties.
+*
+* @method Phaser.Group#getFarthestFrom
+* @param {any} object - The object used to determine the distance. This can be a Sprite, Group, Image or any object with public x and y properties.
+* @return {any} The child furthest from the given object, or null if no child was found.
+*/
+Phaser.Group.prototype.getFarthestFrom = function (object) {
 
-    if (this.children.length !== 0) {
-        var distance = 0,
-            tempDistance = 0,
-            returnee;
-        this.forEachAlive(function(e) {
+    var distance = 0;
+    var tempDistance = 0;
+    var result = null;
 
-            tempDistance = Math.abs(Phaser.Point.distance(object, e));
+    for (var i = 0; i < this.children.length; i++)
+    {
+        var child = this.children[i];
 
-            if (tempDistance > distance) {
+        if (child.exists)
+        {
+            tempDistance = Math.abs(Phaser.Point.distance(object, child));
+
+            if (tempDistance > distance)
+            {
                 distance = tempDistance;
-                returnee = e;
+                result = child;
             }
-        });
-        if (returnee) {
-            return returnee
-        };
+        }
     }
+
+    return result;
 
 };
 

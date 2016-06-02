@@ -1707,9 +1707,11 @@ declare module "phaser" {
             getAt(index: number): PIXI.DisplayObject | number;
             getBottom(): any;
             getByName(name: string): any;
+            getClosestTo(object: any): any;
             getFirstAlive(createIfNull?: boolean, x?: number, y?: number, key?: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture, frame?: string | number): any;
             getFirstDead(createIfNull?: boolean, x?: number, y?: number, key?: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture, frame?: string | number): any;
             getFirstExists(exists: boolean, createIfNull?: boolean, x?: number, y?: number, key?: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture, frame?: string | number): any;
+            getFurthestFrom(object: any): any;
             getIndex(child: any): number;
             getRandom(startIndex?: number, length?: number): any;
             getTop(): any;
