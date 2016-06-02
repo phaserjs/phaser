@@ -187,9 +187,6 @@ Phaser.Stage.prototype.postUpdate = function () {
 
     if (this.game.camera.target)
     {
-        //  The side-effect of this is that the Target may move into a tilemap
-        //  (or colliding object?) and then get pushed out for one render pass
-        //  which causes a weird jittering effect.
         this.game.camera.updateTarget();
     }
 

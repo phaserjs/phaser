@@ -916,8 +916,9 @@ Phaser.Game.prototype = {
             this.scale.pauseUpdate();
             this.state.pauseUpdate();
             this.debug.preUpdate();
-            this.stage.updateTransform();
         }
+
+        this.stage.updateTransform();
 
     },
 
