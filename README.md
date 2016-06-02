@@ -350,6 +350,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * You can no longer intersect check a Body against itself (thanks @VitaZheltyakov #2514)
 * The mobile template has been updated (thanks @cryptographer #2518)
 * Video.onComplete wouldn't fire on iOS if the user hit the 'Done' button before the video had finished playing. It now uses the `webkitendfullscreen` event to detect this, and dispatches the `onComplete` signal should that event fire (thanks @kelu-smiley #2498)
+* Sound.addMarker now has a default value for the `duration` argument (1 second) to avoid the DOM Exception 11 error if you accidentally miss it out (thanks @mari8i #2508)
 
 ### Bug Fixes
 
