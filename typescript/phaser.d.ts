@@ -2860,6 +2860,8 @@ declare module "phaser" {
                 enable(object: any, children?: Boolean): void;
                 enableBody(object: any): void;
                 getObjectsAtLocation(x: number, y: number, group: Phaser.Group, callback?: (callbackArg: any, object: any) => void, callbackContext?: any, callbackArg?: any): Sprite[];
+                getOverlapX(body1: Phaser.Physics.Arcade.Body, body2: Phaser.Physics.Arcade.Body): number;
+                getOverlapY(body1: Phaser.Physics.Arcade.Body, body2: Phaser.Physics.Arcade.Body): number;
                 intersects(body1: Phaser.Physics.Arcade.Body, body2: Phaser.Physics.Arcade.Body): boolean;
                 moveToObject(displayObject: any, destination: any, speed?: number, maxTime?: number): number;
                 moveToPointer(displayObject: any, speed?: number, pointer?: Phaser.Pointer, maxTime?: number): number;
