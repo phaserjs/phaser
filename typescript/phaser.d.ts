@@ -4719,7 +4719,7 @@ declare module "phaser" {
             render(): void;
             remove(key: string): void;
             resume(): void;
-            restart(clearWorld?: boolean, clearCache?: boolean): void;
+            restart(clearWorld?: boolean, clearCache?: boolean, ...args: any[]): void;
             resize(width: number, height: number): void;
             start(key: string, clearWorld?: boolean, clearCache?: boolean, ...args: any[]): void;
             update(): void;
