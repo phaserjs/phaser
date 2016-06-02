@@ -26,6 +26,9 @@
 * Small screen devices, especially iPod and iPhone will launch the video in its own native video player,
 * outside of the Safari browser. There is no way to avoid this, it's a device imposed limitation.
 *
+* Note: On iOS if you need to detect when the user presses the 'Done' button (before the video ends)
+* then you need to add your own event listener
+*
 * @class Phaser.Video
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
@@ -88,7 +91,7 @@ Phaser.Video = function (game, key, url) {
     this.onChangeSource = new Phaser.Signal();
 
     /**
-    * @property {Phaser.Signal} onComplete - This signal is dispatched when the Video completes playback, i.e. enters an 'ended' state. Videos set to loop will never dispatch this signal.
+    * @property {Phaser.Signal} onComplete - This signal is dispatched when the Video completes playback, i.e. enters an 'ended' state. On iOS specifically it also fires if the user hits the 'Done' button at any point during playback. Videos set to loop will never dispatch this signal.
     */
     this.onComplete = new Phaser.Signal();
 
@@ -659,6 +662,7 @@ Phaser.Video.prototype = {
         this._endCallback = this.complete.bind(this);
 
         this.video.addEventListener('ended', this._endCallback, true);
+        this.video.addEventListener('webkitendfullscreen', this._endCallback, true);
 
         if (loop)
         {
@@ -780,6 +784,7 @@ Phaser.Video.prototype = {
         else
         {
             this.video.removeEventListener('ended', this._endCallback, true);
+            this.video.removeEventListener('webkitendfullscreen', this._endCallback, true);
             this.video.removeEventListener('playing', this._playCallback, true);
 
             if (this.touchLocked)

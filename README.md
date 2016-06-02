@@ -344,17 +344,18 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 
 ### Updates
 
-* TypeScript definitions fixes and updates (thanks @wingyplus @monagames)
+* TypeScript definitions fixes and updates (thanks @wingyplus @monagames @marineorganism @obamor)
 * Docs typo fixes (thanks )
 * The TypeScript defs ambient declaration has been updated to make it compatible with the SystemJS loader (thanks @monagames)
 * You can no longer intersect check a Body against itself (thanks @VitaZheltyakov #2514)
 * The mobile template has been updated (thanks @cryptographer #2518)
+* Video.onComplete wouldn't fire on iOS if the user hit the 'Done' button before the video had finished playing. It now uses the `webkitendfullscreen` event to detect this, and dispatches the `onComplete` signal should that event fire (thanks @kelu-smiley #2498)
 
 ### Bug Fixes
 
 * Arcade Physics Body incorrectly positioned if the Sprite had a negative scale (see http://www.html5gamedevs.com/topic/22695-247-248-body-anchoring-any-migration-tips/) (thanks @SBCGames @icameron @Nuuf @EvolViper #2488 #2490)
 * InputHandler.checkPointerDown had an incorrect single pipe character |, instead of an OR check ||, and an `isDown` check, causing Button Over events to fail (thanks @pengchuan #2486)
-* BitmapText objects with lines greater than `maxWidth` now handle alignment values correctly, causing them to properly center align (thanks @kevinleedrum  #2499)
+* BitmapText objects with lines greater than `maxWidth` now handle alignment values correctly, causing them to properly center align (thanks @kevinleedrum  #2499 @crippledcactus #2496)
 * Text has a new private method `measureLine` which is used to calculate the final Text line length, after factoring in color stops and other style changes. This should prevent characters from becoming truncated (thanks @TadejZupancic #2519 #2512)
 
 ### Pixi Updates
