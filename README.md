@@ -337,22 +337,25 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 ### New Features
 
 * Phaser.Line.intersectsRectangle checks for intersection between a Line and a Rectangle, or any Rectangle-like object such as a Sprite or Body.
-*
-*
+* Group.getClosestTo will return the child closest to the given point (thanks @Nuuf #2504)
+* Group.getFarthestFrom will return the child farthest away from the given point (thanks @Nuuf #2504)
+* Animation.reverse will reverse the currently playing animation direction (thanks @gotenxds #2505)
+* Animation.reverseOnce will reverse the animation direction for the current, or next animation only (thanks @gotenxds #2505)
 
 ### Updates
 
 * TypeScript definitions fixes and updates (thanks @wingyplus @monagames)
 * Docs typo fixes (thanks )
 * The TypeScript defs ambient declaration has been updated to make it compatible with the SystemJS loader (thanks @monagames)
-*
-*
+* You can no longer intersect check a Body against itself (thanks @VitaZheltyakov #2514)
+* The mobile template has been updated (thanks @cryptographer #2518)
 
 ### Bug Fixes
 
 * Arcade Physics Body incorrectly positioned if the Sprite had a negative scale (see http://www.html5gamedevs.com/topic/22695-247-248-body-anchoring-any-migration-tips/) (thanks @SBCGames @icameron @Nuuf @EvolViper #2488 #2490)
 * InputHandler.checkPointerDown had an incorrect single pipe character |, instead of an OR check ||, and an `isDown` check, causing Button Over events to fail (thanks @pengchuan #2486)
-*
+* BitmapText objects with lines greater than `maxWidth` now handle alignment values correctly, causing them to properly center align (thanks @kevinleedrum  #2499)
+* Text has a new private method `measureLine` which is used to calculate the final Text line length, after factoring in color stops and other style changes. This should prevent characters from becoming truncated (thanks @TadejZupancic #2519 #2512)
 
 ### Pixi Updates
 
