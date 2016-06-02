@@ -986,6 +986,8 @@ Phaser.Physics.Arcade.prototype = {
     */
     intersects: function (body1, body2) {
 
+        if (body1 === body2) return false;
+        
         //  Rect vs. Rect
         if (body1.right <= body2.position.x)
         {
