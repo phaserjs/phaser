@@ -789,9 +789,6 @@ Phaser.Game.prototype = {
         {
             this.updateLogic(this.time.desiredFpsMult);
 
-            //  Sync the scene graph after _every_ logic update to account for moved game objects                
-            this.stage.updateTransform();
-
             // call the game render update exactly once every frame
             this.updateRender(this.time.slowMotion * this.time.desiredFps);
 
@@ -846,9 +843,6 @@ Phaser.Game.prototype = {
 
                 this.updateLogic(this.time.desiredFpsMult);
 
-                //  Sync the scene graph after _every_ logic update to account for moved game objects
-                this.stage.updateTransform();
-
                 count++;
 
                 if (this.forceSingleUpdate && count === 1)
@@ -898,7 +892,7 @@ Phaser.Game.prototype = {
 
             this.scale.preUpdate();
             this.debug.preUpdate();
-            this.world.camera.preUpdate();
+            this.camera.preUpdate();
             this.physics.preUpdate();
             this.state.preUpdate(timeStep);
             this.plugins.preUpdate(timeStep);
@@ -922,6 +916,7 @@ Phaser.Game.prototype = {
             this.scale.pauseUpdate();
             this.state.pauseUpdate();
             this.debug.preUpdate();
+            this.stage.updateTransform();
         }
 
     },
