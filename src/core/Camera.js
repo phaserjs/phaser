@@ -496,11 +496,6 @@ Phaser.Camera.prototype = {
             this.updateFX();
         }
 
-        if (this.target)
-        {
-            this.updateTarget();
-        }
-
         if (this._shake.duration > 0)
         {
             this.updateShake();
@@ -518,8 +513,6 @@ Phaser.Camera.prototype = {
             this._shake.y = Math.floor(this._shake.y);
         }
 
-        // this.displayObject.position.x = -(this.view.x + this._shake.x);
-        // this.displayObject.position.y = -(this.view.y + this._shake.y);
         this.displayObject.position.x = -this.view.x;
         this.displayObject.position.y = -this.view.y;
 
@@ -631,6 +624,19 @@ Phaser.Camera.prototype = {
             this.view.x = this.game.math.linear(this.view.x, this._targetPosition.x - this.view.halfWidth, this.lerp.x);
             this.view.y = this.game.math.linear(this.view.y, this._targetPosition.y - this.view.halfHeight, this.lerp.y);
         }
+
+        if (this.bounds)
+        {
+            this.checkBounds();
+        }
+
+        if (this.roundPx)
+        {
+            this.view.floor();
+        }
+
+        this.displayObject.position.x = -this.view.x;
+        this.displayObject.position.y = -this.view.y;
 
     },
 
