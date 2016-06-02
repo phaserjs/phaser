@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.4.9 "Four Kings" - Built: Thu Jun 02 2016 16:39:22
+* v2.4.9 "Four Kings" - Built: Thu Jun 02 2016 23:22:02
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -55,7 +55,7 @@ var Phaser = Phaser || {
     * @constant
     * @type {string}
     */
-    VERSION: '2.4.9-dev',
+    VERSION: '2.4.9 RC1',
 
     /**
     * An array of Phaser game instances.
@@ -5816,11 +5816,6 @@ Phaser.Camera.prototype = {
             this.updateFX();
         }
 
-        if (this.target)
-        {
-            this.updateTarget();
-        }
-
         if (this._shake.duration > 0)
         {
             this.updateShake();
@@ -5838,8 +5833,6 @@ Phaser.Camera.prototype = {
             this._shake.y = Math.floor(this._shake.y);
         }
 
-        // this.displayObject.position.x = -(this.view.x + this._shake.x);
-        // this.displayObject.position.y = -(this.view.y + this._shake.y);
         this.displayObject.position.x = -this.view.x;
         this.displayObject.position.y = -this.view.y;
 
@@ -5951,6 +5944,19 @@ Phaser.Camera.prototype = {
             this.view.x = this.game.math.linear(this.view.x, this._targetPosition.x - this.view.halfWidth, this.lerp.x);
             this.view.y = this.game.math.linear(this.view.y, this._targetPosition.y - this.view.halfHeight, this.lerp.y);
         }
+
+        if (this.bounds)
+        {
+            this.checkBounds();
+        }
+
+        if (this.roundPx)
+        {
+            this.view.floor();
+        }
+
+        this.displayObject.position.x = -this.view.x;
+        this.displayObject.position.y = -this.view.y;
 
     },
 
@@ -8788,7 +8794,6 @@ Phaser.Stage.prototype.preUpdate = function () {
 
     this.currentRenderOrderID = 0;
 
-    //  This can't loop in reverse, we need the orderID to be in sequence
     for (var i = 0; i < this.children.length; i++)
     {
         this.children[i].preUpdate();
@@ -8803,9 +8808,7 @@ Phaser.Stage.prototype.preUpdate = function () {
 */
 Phaser.Stage.prototype.update = function () {
 
-    var i = this.children.length;
-
-    while (i--)
+    for (var i = 0; i < this.children.length; i++)
     {
         this.children[i].update();
     }
@@ -8816,22 +8819,25 @@ Phaser.Stage.prototype.update = function () {
 * This is called automatically before the renderer runs and after the plugins have updated.
 * In postUpdate this is where all the final physics calculations and object positioning happens.
 * The objects are processed in the order of the display list.
-* The only exception to this is if the camera is following an object, in which case that is updated first.
 *
 * @method Phaser.Stage#postUpdate
 */
 Phaser.Stage.prototype.postUpdate = function () {
 
-    var i = this.children.length;
+    //  Apply the camera shake, fade, bounds, etc
+    this.game.camera.update();
 
-    while (i--)
+    for (var i = 0; i < this.children.length; i++)
     {
         this.children[i].postUpdate();
     }
 
     this.updateTransform();
 
-    this.game.world.camera.update();
+    if (this.game.camera.target)
+    {
+        this.game.camera.updateTarget();
+    }
 
 };
 
@@ -12614,9 +12620,6 @@ Phaser.Game.prototype = {
         {
             this.updateLogic(this.time.desiredFpsMult);
 
-            //  Sync the scene graph after _every_ logic update to account for moved game objects                
-            this.stage.updateTransform();
-
             // call the game render update exactly once every frame
             this.updateRender(this.time.slowMotion * this.time.desiredFps);
 
@@ -12671,9 +12674,6 @@ Phaser.Game.prototype = {
 
                 this.updateLogic(this.time.desiredFpsMult);
 
-                //  Sync the scene graph after _every_ logic update to account for moved game objects
-                this.stage.updateTransform();
-
                 count++;
 
                 if (this.forceSingleUpdate && count === 1)
@@ -12723,7 +12723,7 @@ Phaser.Game.prototype = {
 
             this.scale.preUpdate();
             this.debug.preUpdate();
-            this.world.camera.preUpdate();
+            this.camera.preUpdate();
             this.physics.preUpdate();
             this.state.preUpdate(timeStep);
             this.plugins.preUpdate(timeStep);
@@ -12748,6 +12748,8 @@ Phaser.Game.prototype = {
             this.state.pauseUpdate();
             this.debug.preUpdate();
         }
+
+        this.stage.updateTransform();
 
     },
 
@@ -71450,15 +71452,53 @@ Phaser.TilemapLayer.prototype.preUpdate = function() {
 */
 Phaser.TilemapLayer.prototype.postUpdate = function () {
 
-    Phaser.Component.FixedToCamera.postUpdate.call(this);
+    this.position.x = (this.game.camera.view.x + this.cameraOffset.x) / this.game.camera.scale.x;
+    this.position.y = (this.game.camera.view.y + this.cameraOffset.y) / this.game.camera.scale.y;
 
-    //  Stops you being able to auto-scroll the camera if it's not following a sprite
-    var camera = this.game.camera;
+    this._scrollX = this.game.camera.view.x * this.scrollFactorX / this.scale.x;
+    this._scrollY = this.game.camera.view.y * this.scrollFactorY / this.scale.y;
 
-    this.scrollX = camera.x * this.scrollFactorX / this.scale.x;
-    this.scrollY = camera.y * this.scrollFactorY / this.scale.y;
+};
+
+/**
+* Automatically called by the Canvas Renderer.
+* Overrides the Sprite._renderCanvas function.
+*
+* @method Phaser.TilemapLayer#_renderCanvas
+* @private
+*/
+Phaser.TilemapLayer.prototype._renderCanvas = function (renderSession) {
+
+    this.position.x = (this.game.camera.view.x + this.cameraOffset.x) / this.game.camera.scale.x;
+    this.position.y = (this.game.camera.view.y + this.cameraOffset.y) / this.game.camera.scale.y;
+
+    this._scrollX = this.game.camera.view.x * this.scrollFactorX / this.scale.x;
+    this._scrollY = this.game.camera.view.y * this.scrollFactorY / this.scale.y;
 
     this.render();
+
+    PIXI.Sprite.prototype._renderCanvas.call(this, renderSession);
+
+};
+
+/**
+* Automatically called by the Canvas Renderer.
+* Overrides the Sprite._renderWebGL function.
+*
+* @method Phaser.TilemapLayer#_renderWebGL
+* @private
+*/
+Phaser.TilemapLayer.prototype._renderWebGL = function (renderSession) {
+
+    this.position.x = (this.game.camera.view.x + this.cameraOffset.x) / this.game.camera.scale.x;
+    this.position.y = (this.game.camera.view.y + this.cameraOffset.y) / this.game.camera.scale.y;
+
+    this._scrollX = this.game.camera.view.x * this.scrollFactorX / this.scale.x;
+    this._scrollY = this.game.camera.view.y * this.scrollFactorY / this.scale.y;
+
+    this.render();
+
+    PIXI.Sprite.prototype._renderWebGL.call(this, renderSession);
 
 };
 
