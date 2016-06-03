@@ -200,6 +200,8 @@ EOL;
     <script src="$path/src/gameobjects/SpriteBatch.js"></script>
     <script src="$path/src/gameobjects/Particle.js"></script>
 
+    <script src="$path/src/plugins/weapon/WeaponPlugin.js"></script>
+    <script src="$path/src/plugins/weapon/Bullet.js"></script>
 
 EOL;
 

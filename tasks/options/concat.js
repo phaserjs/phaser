@@ -205,6 +205,11 @@ module.exports = {
         dest: '<%= modules_dir %>/arcade.js'
     },
 
+    weapon: {
+        src: require('../manifests/physics.arcade.weapon'),
+        dest: '<%= modules_dir %>/arcadeWeapon.js'
+    },
+
     arcadeTilemaps: {
         src: require('../manifests/physics.arcade.tilemaps'),
         dest: '<%= modules_dir %>/arcadeTilemaps.js'
