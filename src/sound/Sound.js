@@ -451,6 +451,7 @@ Phaser.Sound.prototype = {
                         {
                             this.currentTime = 0;
                             this.startTime = this.game.time.time;
+                            this.isPlaying = true; // play not called again in this case
                         }
                         else
                         {
