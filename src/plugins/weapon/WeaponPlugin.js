@@ -92,11 +92,11 @@ Phaser.Weapon = function (game, parent) {
     this.fireFrom = new Phaser.Rectangle(0, 0, 1, 1);
 
     /**
-     * The angle at which the bullets are fired. This can be a const such as Phaser.Weapon.BULLET_UP 
+     * The angle at which the bullets are fired. This can be a const such as Phaser.ANGLE_UP 
      * or it can be any number from 0 to 360 inclusive, where 0 degrees is to the right.
      * @type {integer}
      */
-    this.fireAngle = Phaser.Weapon.BULLET_UP;
+    this.fireAngle = Phaser.ANGLE_UP;
 
     /**
      * When a Bullet is fired it can optionally inherit the velocity of the `trackedSprite` if set.
@@ -422,17 +422,8 @@ Phaser.Weapon.KILL_WORLD_BOUNDS = 5;
 */
 Phaser.Weapon.KILL_STATIC_BOUNDS = 6;
 
-Phaser.Weapon.BULLET_UP = 270;
-Phaser.Weapon.BULLET_DOWN = 90;
-Phaser.Weapon.BULLET_LEFT = 180;
-Phaser.Weapon.BULLET_RIGHT = 0;
-Phaser.Weapon.BULLET_NORTH_EAST = 315;
-Phaser.Weapon.BULLET_NORTH_WEST = 225;
-Phaser.Weapon.BULLET_SOUTH_EAST = 45;
-Phaser.Weapon.BULLET_SOUTH_WEST = 135;
-
 /**
-* 
+* This 
 *
 * @method Phaser.Group#createBullets
 * @param {integer} [quantity=1] - The quantity of bullets to seed the Weapon with. If -1 it will set the pool to automatically expand.
