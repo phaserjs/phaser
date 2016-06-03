@@ -56,7 +56,7 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
             {
                 if (processCallback.call(callbackContext, sprite, mapData[i]))
                 {
-                    if (this.separateTile(i, sprite.body, mapData[i], overlapOnly))
+                    if (this.separateTile(i, sprite.body, mapData[i], tilemapLayer, overlapOnly))
                     {
                         this._total++;
 
@@ -69,7 +69,7 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
             }
             else
             {
-                if (this.separateTile(i, sprite.body, mapData[i], overlapOnly))
+                if (this.separateTile(i, sprite.body, mapData[i], tilemapLayer, overlapOnly))
                 {
                     this._total++;
 
@@ -121,7 +121,7 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
     * @param {Phaser.Tile} tile - The tile to collide against.
     * @return {boolean} Returns true if the body was separated, otherwise false.
     */
-    separateTile: function (i, body, tile, overlapOnly) {
+    separateTile: function (i, body, tile, tilemapLayer, overlapOnly) {
 
         if (!body.enable)
         {
@@ -129,7 +129,7 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
         }
 
         //  We re-check for collision in case body was separated in a previous step
-        if (!tile.intersects(body.position.x, body.position.y, body.right, body.bottom))
+        if (!tile.intersects((body.position.x - tilemapLayer.position.x), (body.position.y - tilemapLayer.position.y), (body.right - tilemapLayer.position.x), (body.bottom - tilemapLayer.position.y)))
         {
             //  no collision so bail out (separated in a previous step)
             return false;
@@ -148,7 +148,7 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
             //  If it returns true then we can carry on, otherwise we should abort.
             return false;
         }
-        else if (tile.layer.callbacks[tile.index] && !tile.layer.callbacks[tile.index].callback.call(tile.layer.callbacks[tile.index].callbackContext, body.sprite, tile))
+        else if (typeof tile.layer.callbacks !== 'undefined' && tile.layer.callbacks[tile.index] && !tile.layer.callbacks[tile.index].callback.call(tile.layer.callbacks[tile.index].callbackContext, body.sprite, tile))
         {
             //  If it returns true then we can carry on, otherwise we should abort.
             return false;
@@ -180,8 +180,8 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
         if (body.deltaX() !== 0 && body.deltaY() !== 0 && (tile.faceLeft || tile.faceRight) && (tile.faceTop || tile.faceBottom))
         {
             //  We only need do this if both axis have checking faces AND we're moving in both directions
-            minX = Math.min(Math.abs(body.position.x - tile.right), Math.abs(body.right - tile.left));
-            minY = Math.min(Math.abs(body.position.y - tile.bottom), Math.abs(body.bottom - tile.top));
+            minX = Math.min(Math.abs((body.position.x - tilemapLayer.position.x) - tile.right), Math.abs((body.right - tilemapLayer.position.x) - tile.left));
+            minY = Math.min(Math.abs((body.position.y - tilemapLayer.position.y) - tile.bottom), Math.abs((body.bottom - tilemapLayer.position.y) - tile.top));
         }
 
         if (minX < minY)
@@ -191,7 +191,7 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
                 ox = this.tileCheckX(body, tile);
 
                 //  That's horizontal done, check if we still intersects? If not then we can return now
-                if (ox !== 0 && !tile.intersects(body.position.x, body.position.y, body.right, body.bottom))
+                if (ox !== 0 && !tile.intersects((body.position.x - tilemapLayer.position.x), (body.position.y - tilemapLayer.position.y), (body.right - tilemapLayer.position.x), (body.bottom - tilemapLayer.position.y)))
                 {
                     return true;
                 }
@@ -209,7 +209,7 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
                 oy = this.tileCheckY(body, tile);
 
                 //  That's vertical done, check if we still intersects? If not then we can return now
-                if (oy !== 0 && !tile.intersects(body.position.x, body.position.y, body.right, body.bottom))
+                if (oy !== 0 && !tile.intersects((body.position.x - tilemapLayer.position.x), (body.position.y - tilemapLayer.position.y), (body.right - tilemapLayer.position.x), (body.bottom - tilemapLayer.position.y)))
                 {
                     return true;
                 }
@@ -234,16 +234,16 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
     * @param {Phaser.Tile} tile - The tile to check.
     * @return {number} The amount of separation that occurred.
     */
-    tileCheckX: function (body, tile) {
+    tileCheckX: function (body, tile, tilemapLayer) {
 
         var ox = 0;
 
         if (body.deltaX() < 0 && !body.blocked.left && tile.collideRight && body.checkCollision.left)
         {
             //  Body is moving LEFT
-            if (tile.faceRight && body.x < tile.right)
+            if (tile.faceRight && (body.x - tilemapLayer.position.x)  < tile.right)
             {
-                ox = body.x - tile.right;
+                ox = (body.x - tilemapLayer.position.x)  - tile.right;
 
                 if (ox < -this.TILE_BIAS)
                 {
@@ -254,9 +254,9 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
         else if (body.deltaX() > 0 && !body.blocked.right && tile.collideLeft && body.checkCollision.right)
         {
             //  Body is moving RIGHT
-            if (tile.faceLeft && body.right > tile.left)
+            if (tile.faceLeft && (body.right - tilemapLayer.position.y)  > tile.left)
             {
-                ox = body.right - tile.left;
+                ox = (body.right - tilemapLayer.position.x)  - tile.left;
 
                 if (ox > this.TILE_BIAS)
                 {
@@ -290,16 +290,16 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
     * @param {Phaser.Tile} tile - The tile to check.
     * @return {number} The amount of separation that occurred.
     */
-    tileCheckY: function (body, tile) {
+    tileCheckY: function (body, tile, tilemapLayer) {
 
         var oy = 0;
 
         if (body.deltaY() < 0 && !body.blocked.up && tile.collideDown && body.checkCollision.up)
         {
             //  Body is moving UP
-            if (tile.faceBottom && body.y < tile.bottom)
+            if (tile.faceBottom && (body.y - tilemapLayer.position.y) < tile.bottom)
             {
-                oy = body.y - tile.bottom;
+                oy = (body.y - tilemapLayer.position.y) - tile.bottom;
 
                 if (oy < -this.TILE_BIAS)
                 {
@@ -310,9 +310,9 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
         else if (body.deltaY() > 0 && !body.blocked.down && tile.collideUp && body.checkCollision.down)
         {
             //  Body is moving DOWN
-            if (tile.faceTop && body.bottom > tile.top)
+            if (tile.faceTop && (body.bottom - tilemapLayer.position.y)  > tile.top)
             {
-                oy = body.bottom - tile.top;
+                oy = (body.bottom - tilemapLayer.position.y)  - tile.top;
 
                 if (oy > this.TILE_BIAS)
                 {
