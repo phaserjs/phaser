@@ -423,13 +423,30 @@ Phaser.Weapon.KILL_WORLD_BOUNDS = 5;
 Phaser.Weapon.KILL_STATIC_BOUNDS = 6;
 
 /**
-* This 
+* This method performs two actions: First it will check to see if the `Weapon.bullets` Group exists or not,
+* and if not it creates it, adding it the `group` given as the 4th argument.
 *
-* @method Phaser.Group#createBullets
+* Then it will seed the bullet pool with the `quantity` number of Bullets, using the texture key and frame
+* provided (if any).
+*
+* If for example you set the quantity to be 10, then this Weapon will only ever be able to have 10 bullets
+* in-flight simultaneously. If you try to fire an 11th bullet then nothing will happen until one, or more, of
+* the in-flight bullets have been killed, freeing them up for use by the Weapon again.
+*
+* If you do not wish to have a limit set, then pass in -1 as the quantity. In this instance the Weapon will
+* keep increasing the size of the bullet pool as needed. It will never reduce the size of the pool however,
+* so be careful it doesn't grow too large.
+*
+* You can either set the texture key and frame here, or via the `Weapon.bulletKey` and `Weapon.bulletFrame`
+* properties. You can also animate bullets, or set them to use random frames. All Bullets belonging to a 
+* single Weapon instance must share the same texture key however.
+*
+* @method Phaser.Weapon#createBullets
 * @param {integer} [quantity=1] - The quantity of bullets to seed the Weapon with. If -1 it will set the pool to automatically expand.
 * @param {string} [key] - The Game.cache key of the image that this Sprite will use.
 * @param {integer|string} [frame] - If the Sprite image contains multiple frames you can specify which one to use here.
 * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
+* @return {Phaser.Weapon} This Weapon instance.
 */
 Phaser.Weapon.prototype.createBullets = function (quantity, key, frame, group) {
 
@@ -462,52 +479,82 @@ Phaser.Weapon.prototype.createBullets = function (quantity, key, frame, group) {
 
 };
 
-Phaser.Weapon.prototype.init = function (x, y) {
-
-    if (x === undefined) { x = 0; }
-    if (y === undefined) { y = 0; }
-
-    this.fireFrom.x = x;
-    this.fireFrom.y = y;
-
-};
-
 /**
-* Call a function on each existing child in this group.
+* Call a function on each in-flight bullet in this Weapon.
 *
-* See {@link Phaser.Group#forEach forEach} for details.
+* See {@link Phaser.Group#forEachExists forEachExists} for more details.
 *
-* @method Phaser.Group#forEachExists
+* @method Phaser.Weapon#forEach
 * @param {function} callback - The function that will be called for each applicable child. The child will be passed as the first argument.
 * @param {object} callbackContext - The context in which the function should be called (usually 'this').
 * @param {...any} [args=(none)] - Additional arguments to pass to the callback function, after the child item.
+* @return {Phaser.Weapon} This Weapon instance.
 */
 Phaser.Weapon.prototype.forEach = function (callback, callbackContext) {
 
     this.bullets.forEachExists(callback, callbackContext, arguments);
 
+    return this;
+
 };
 
+/**
+* Sets `Body.enable` to `false` on each bullet in this Weapon.
+* This has the effect of stopping them in-flight should they be moving.
+* It also stops them being able to be checked for collision.
+*
+* @method Phaser.Weapon#pauseAll
+* @return {Phaser.Weapon} This Weapon instance.
+*/
 Phaser.Weapon.prototype.pauseAll = function () {
 
     this.bullets.setAll('body.enable', false);
 
+    return this;
+
 };
 
+/**
+* Sets `Body.enable` to `true` on each bullet in this Weapon.
+* This has the effect of resuming their motion should they be in-flight.
+* It also enables them for collision checks again.
+*
+* @method Phaser.Weapon#resumeAll
+* @return {Phaser.Weapon} This Weapon instance.
+*/
 Phaser.Weapon.prototype.resumeAll = function () {
 
     this.bullets.setAll('body.enable', true);
 
+    return this;
+
 };
 
+/**
+* Calls `Bullet.kill` on every in-flight bullet in this Weapon.
+* Also re-enables their physics bodies, should they have been disabled via `pauseAll`.
+*
+* @method Phaser.Weapon#killAll
+* @return {Phaser.Weapon} This Weapon instance.
+*/
 Phaser.Weapon.prototype.killAll = function () {
 
     this.bullets.callAllExists('kill', true);
 
     this.bullets.setAll('body.enable', true);
 
+    return this;
+
 };
 
+/**
+* Resets the `Weapon.shots` counter back to zero. This is used when you've set
+* `Weapon.fireLimit`, and have hit (or just wish to reset) your limit.
+*
+* @method Phaser.Weapon#resetShots
+* @param {integer} [newLimit] - Optionally set a new `Weapon.fireLimit`.
+* @return {Phaser.Weapon} This Weapon instance.
+*/
 Phaser.Weapon.prototype.resetShots = function (newLimit) {
 
     this.shots = 0;
@@ -517,9 +564,19 @@ Phaser.Weapon.prototype.resetShots = function (newLimit) {
         this.fireLimit = newLimit;
     }
 
+    return this;
+
 };
 
+/**
+* Destroys this Weapon. It removes itself from the PluginManager, destroys
+* the bullets Group, and nulls internal references.
+*
+* @method Phaser.Weapon#destroy
+*/
 Phaser.Weapon.prototype.destroy = function () {
+
+    this.parent.remove(this, false);
 
     this.bullets.destroy();
 
@@ -530,6 +587,11 @@ Phaser.Weapon.prototype.destroy = function () {
 
 };
 
+/**
+* Internal update method, called by the PluginManager.
+*
+* @method Phaser.Weapon#update
+*/
 Phaser.Weapon.prototype.update = function () {
 
     if (this._bulletKillType === Phaser.Weapon.KILL_WEAPON_BOUNDS)
@@ -552,6 +614,23 @@ Phaser.Weapon.prototype.update = function () {
 
 };
 
+/**
+* Sets this Weapon to track the given Sprite, or any Object with a public `world` Point object.
+* When a Weapon tracks a Sprite it will automatically update its `fireFrom` value to match the Sprites
+* position within the Game World, adjusting the coordinates based on the offset arguments.
+*
+* This allows you to lock a Weapon to a Sprite, so that bullets are always launched from its location.
+*
+* Calling `trackSprite` will reset `Weapon.trackedPointer` to null, should it have been set, as you can
+* only track _either_ a Sprite, or a Pointer, at once, but not both.
+*
+* @method Phaser.Weapon#trackSprite
+* @param {Phaser.Sprite|Object} sprite - The Sprite to track the position of.
+* @param {integer} [offsetX=0] - The horizontal offset from the Sprites position to be applied to the Weapon.
+* @param {integer} [offsetY=0] - The vertical offset from the Sprites position to be applied to the Weapon.
+* @param {boolean} [trackRotation=false] - Should the Weapon also track the Sprites rotation?
+* @return {Phaser.Weapon} This Weapon instance.
+*/
 Phaser.Weapon.prototype.trackSprite = function (sprite, offsetX, offsetY, trackRotation) {
 
     if (offsetX === undefined) { offsetX = 0; }
@@ -564,8 +643,26 @@ Phaser.Weapon.prototype.trackSprite = function (sprite, offsetX, offsetY, trackR
 
     this.trackOffset.set(offsetX, offsetY);
 
+    return this;
+
 };
 
+/**
+* Sets this Weapon to track the given Pointer.
+* When a Weapon tracks a Pointer it will automatically update its `fireFrom` value to match the Pointers
+* position within the Game World, adjusting the coordinates based on the offset arguments.
+*
+* This allows you to lock a Weapon to a Pointer, so that bullets are always launched from its location.
+*
+* Calling `trackPointer` will reset `Weapon.trackedSprite` to null, should it have been set, as you can
+* only track _either_ a Pointer, or a Sprite, at once, but not both.
+*
+* @method Phaser.Weapon#trackPointer
+* @param {Phaser.Pointer} [pointer] - The Pointer to track the position of. Defaults to `Input.activePointer` if not specified.
+* @param {integer} [offsetX=0] - The horizontal offset from the Pointers position to be applied to the Weapon.
+* @param {integer} [offsetY=0] - The vertical offset from the Pointers position to be applied to the Weapon.
+* @return {Phaser.Weapon} This Weapon instance.
+*/
 Phaser.Weapon.prototype.trackPointer = function (pointer, offsetX, offsetY) {
 
     if (pointer === undefined) { pointer = this.game.input.activePointer; }
@@ -577,6 +674,8 @@ Phaser.Weapon.prototype.trackPointer = function (pointer, offsetX, offsetY) {
     this.trackRotation = false;
 
     this.trackOffset.set(offsetX, offsetY);
+
+    return this;
 
 };
 
