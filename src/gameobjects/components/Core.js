@@ -148,6 +148,16 @@ Phaser.Component.Core.prototype = {
     name: '',
 
     /**
+    * An empty Object that belongs to this Game Object.
+    * This value isn't ever used internally by Phaser, but may be used by your own code, or
+    * by Phaser Plugins, to store data that needs to be associated with the Game Object,
+    * without polluting the Game Object directly.
+    * @property {Object} data
+    * @default
+    */
+    data: {},
+
+    /**
     * The components this Game Object has installed.
     * @property {object} components
     * @protected

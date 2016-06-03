@@ -342,6 +342,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * Animation.reverse will reverse the currently playing animation direction (thanks @gotenxds #2505)
 * Animation.reverseOnce will reverse the animation direction for the current, or next animation only (thanks @gotenxds #2505)
 * The way the display list updates and Camera movements are handled has been completely revamped, which should result is significantly smoother motion when the Camera is following tweened or physics controlled sprites. The `Stage.postUpdate` function is now vastly reduced in complexity. It takes control over updating the display list (calling `updateTransform` on itself), rather than letting the Canvas or WebGL renderers do this. Because of this change, the `Camera.updateTarget` function uses the Sprites `worldPosition` property instead, which is now frame accurate (thanks @whig @Upperfoot @Whoisnt @hexus #2482)
+* Game Objects including Sprite, Image, Particle, TilemapLayer, Text, BitmapText and TileSprite have a new property called `data`. This is an empty Object that Phaser will never touch internally, but your own code, or Phaser Plugins, can store Game Object specific data within it. This allows you to associate data with a Game Object without having to pollute or change its class shape.
 
 ### Updates
 

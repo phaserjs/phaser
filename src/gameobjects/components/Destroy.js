@@ -127,6 +127,8 @@ Phaser.Component.Destroy.prototype = {
         this.mask = null;
         this.game = null;
 
+        this.data = {};
+
         //  In case Pixi is still going to try and render it even though destroyed
         this.renderable = false;
 

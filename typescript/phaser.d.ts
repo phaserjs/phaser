@@ -339,6 +339,7 @@ declare module "phaser" {
             bottom: number;
             cameraOffset: Phaser.Point;
             checkWorldBounds: boolean;
+            data: any;
             destroyPhase: boolean;
             debug: boolean;
             dirty: boolean;
@@ -1598,6 +1599,7 @@ declare module "phaser" {
             cameraOffset: Phaser.Point;
             checkWorldBounds: boolean;
             components: any;
+            data: any;
             debug: boolean;
             destroyPhase: boolean;
             exists: boolean;
@@ -1761,6 +1763,7 @@ declare module "phaser" {
             components: any;
             cropRect: Phaser.Rectangle;
             customRender: boolean;
+            data: any;
             debug: boolean;
             deltaX: number;
             deltaY: number;
@@ -4426,6 +4429,7 @@ declare module "phaser" {
             components: any;
             cropRect: Phaser.Rectangle;
             customRender: boolean;
+            data: any;
             debug: boolean;
             deltaX: number;
             deltaY: number;
@@ -4986,6 +4990,7 @@ declare module "phaser" {
             collisionHeight: number;
             collisionWidth: number;
             context: CanvasRenderingContext2D;
+            data: any;
             debug: boolean;
             debugAlpha: number;
             debugCallbackColor: string;
@@ -5073,6 +5078,7 @@ declare module "phaser" {
             checkWorldBounds: boolean;
             components: any;
             customRender: boolean;
+            data: any;
             debug: boolean;
             destroyPhase: boolean;
             events: Phaser.Events;
