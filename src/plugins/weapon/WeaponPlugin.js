@@ -680,13 +680,25 @@ Phaser.Weapon.prototype.trackPointer = function (pointer, offsetX, offsetY) {
 };
 
 /**
-* Fire a single bullet
+* Attempts to fire a single Bullet. If there are no more bullets available in the pool, and the pool cannot be extended,
+* then this method returns `false`. It will also return false if not enough time has expired since the last time
+* the Weapon was fired, as defined in the `Weapon.fireRate` property.
+* 
+* Otherwise the first available bullet is selected and launched.
 *
-* @method fire
-* @param {Sprite} [from] - Fire from this position
-* @param {number} [x] - The position to fire the bullet towards (in world space)
-* @param {number} [y] - The position to fire the bullet towards (in world space)
-* @return {boolean} true if a bullet was fired, otherwise false
+* The arguments are all optional, but allow you to control both where the bullet is launched from, and aimed at.
+*
+* If you don't provide any of the arguments then it uses those set via properties such as `Weapon.trackedSprite`,
+* `Weapon.bulletAngle` and so on.
+*
+* When the bullet is launched it has its texture and frame updated, as required. The velocity of the bullet is
+* calculated based on Weapon properties like `bulletSpeed`.
+*
+* @method Phaser.Weapon#fire
+* @param {Phaser.Sprite|Phaser.Point|Object} [from] - Optionally fires the bullet **from** the `x` and `y` properties of this object. If set this overrides `Weapon.trackedSprite` or `trackedPointer`. Pass `null` to ignore it.
+* @param {number} [x] - The x coordinate, in world space, to fire the bullet **towards**. If left as `undefined` the bullet direction is based on its angle.
+* @param {number} [y] - The y coordinate, in world space, to fire the bullet **towards**. If left as `undefined` the bullet direction is based on its angle.
+* @return {boolean} True if a bullet was successfully fired, otherwise false.
 */
 Phaser.Weapon.prototype.fire = function (from, x, y) {
 
@@ -700,7 +712,7 @@ Phaser.Weapon.prototype.fire = function (from, x, y) {
     //  Apply +- speed variance
     if (this.bulletSpeedVariance !== 0)
     {
-        speed += this.between(-this.bulletSpeedVariance, this.bulletSpeedVariance);
+        speed += Phaser.Math.between(-this.bulletSpeedVariance, this.bulletSpeedVariance);
     }
 
     if (from)
@@ -759,7 +771,7 @@ Phaser.Weapon.prototype.fire = function (from, x, y) {
     //  Apply +- angle variance
     if (this.bulletAngleVariance !== 0)
     {
-        angle += this.between(-this.bulletAngleVariance, this.bulletAngleVariance);
+        angle += Phaser.Math.between(-this.bulletAngleVariance, this.bulletAngleVariance);
     }
 
     var moveX = 0;
@@ -871,6 +883,14 @@ Phaser.Weapon.prototype.fire = function (from, x, y) {
 
 };
 
+/**
+* Fires a bullet **at** the given Pointer. The bullet will be launched from the `Weapon.fireFrom` position,
+* or from a Tracked Sprite or Pointer, if you have one set.
+*
+* @method Phaser.Weapon#fireAtPointer
+* @param {Phaser.Pointer} [pointer] - The Pointer to fire the bullet towards.
+* @return {boolean} True if a bullet was successfully fired, otherwise false.
+*/
 Phaser.Weapon.prototype.fireAtPointer = function (pointer) {
 
     if (pointer === undefined) { pointer = this.game.input.activePointer; }
@@ -879,12 +899,29 @@ Phaser.Weapon.prototype.fireAtPointer = function (pointer) {
 
 };
 
+/**
+* Fires a bullet **at** the given Sprite. The bullet will be launched from the `Weapon.fireFrom` position,
+* or from a Tracked Sprite or Pointer, if you have one set.
+*
+* @method Phaser.Weapon#fireAtSprite
+* @param {Phaser.Sprite} [sprite] - The Sprite to fire the bullet towards.
+* @return {boolean} True if a bullet was successfully fired, otherwise false.
+*/
 Phaser.Weapon.prototype.fireAtSprite = function (sprite) {
 
     return this.fire(null, sprite.world.x, sprite.world.y);
 
 };
 
+/**
+* Fires a bullet **at** the given coordinates. The bullet will be launched from the `Weapon.fireFrom` position,
+* or from a Tracked Sprite or Pointer, if you have one set.
+*
+* @method Phaser.Weapon#fireAtXY
+* @param {number} [x] - The x coordinate, in world space, to fire the bullet towards.
+* @param {number} [y] - The y coordinate, in world space, to fire the bullet towards.
+* @return {boolean} True if a bullet was successfully fired, otherwise false.
+*/
 Phaser.Weapon.prototype.fireAtXY = function (x, y) {
 
     return this.fire(null, x, y);
@@ -929,14 +966,27 @@ Phaser.Weapon.prototype.setBulletBodyOffset = function (width, height, offsetX, 
     this.bullets.setAll('data.bodyDirty', false);
 
     return this;
-};
-
-Phaser.Weapon.prototype.between = function (min, max) {
-
-    return Math.floor(Math.random() * (max - min + 1) + min);
 
 };
 
+/**
+* Sets the texture frames that the bullets can use when being launched.
+* 
+* This is intended for use when you've got numeric based frames, such as those loaded via a Sprite Sheet.
+* 
+* It works by calling `Phaser.ArrayUtils.numberArray` internally, using the min and max values
+* provided. Then it sets the frame index to be zero.
+* 
+* You can optionally set the cycle and random booleans, to allow bullets to cycle through the frames
+* when they're fired, or pick one at random.
+*
+* @method Phaser.Weapon#setBulletFrames
+* @param {integer} min - The minimum value the frame can be. Usually zero.
+* @param {integer} max - The maximum value the frame can be.
+* @param {boolean} [cycle=true] - Should the bullet frames cycle as they are fired?
+* @param {boolean} [random=false] - Should the bullet frames be picked at random as they are fired?
+* @return {Phaser.Weapon} The Weapon Plugin.
+*/
 Phaser.Weapon.prototype.setBulletFrames = function (min, max, cycle, random) {
 
     if (cycle === undefined) { cycle = true; }
@@ -949,19 +999,28 @@ Phaser.Weapon.prototype.setBulletFrames = function (min, max, cycle, random) {
     this.bulletFrameCycle = cycle;
     this.bulletFrameRandom = random;
 
+    return this;
+
 };
 
 /**
 * Adds a new animation under the given key. Optionally set the frames, frame rate and loop.
-* Animations added in this way are played back with the play function.
+* The arguments are all the same as for `Animation.add`, and work in the same way.
 *
-* @method addBulletAnimation
+* `Weapon.bulletAnimation` will be set to this animation after it's created. From that point on, all
+* bullets fired will play using this animation. You can swap between animations by calling this method
+* several times, and then just changing the `Weapon.bulletAnimation` property to the name of the animation
+* you wish to play for the next launched bullet.
+*
+* If you wish to stop using animations at all, set `Weapon.bulletAnimation` to '' (an empty string).
+*
+* @method Phaser.Weapon#addBulletAnimation
 * @param {string} name - The unique (within the Weapon instance) name for the animation, i.e. "fire", "blast".
 * @param {Array} [frames=null] - An array of numbers/strings that correspond to the frames to add to this animation and in which order. e.g. [1, 2, 3] or ['run0', 'run1', run2]). If null then all frames will be used.
 * @param {number} [frameRate=60] - The speed at which the animation should play. The speed is given in frames per second.
 * @param {boolean} [loop=false] - Whether or not the animation is looped or just plays once.
 * @param {boolean} [useNumericIndex=true] - Are the given frames using numeric indexes (default) or strings?
-* @return {Phaser.Animation} The Animation object that was created.
+* @return {Phaser.Weapon} The Weapon Plugin.
 */
 Phaser.Weapon.prototype.addBulletAnimation = function (name, frames, frameRate, loop, useNumericIndex) {
 
@@ -978,8 +1037,19 @@ Phaser.Weapon.prototype.addBulletAnimation = function (name, frames, frameRate, 
 
     this.bulletAnimation = name;
 
+    return this;
+
 };
 
+/**
+* Uses `Game.Debug` to draw some useful information about this Weapon, including the number of bullets
+* both in-flight, and available. And optionally the physics debug bodies of the bullets.
+*
+* @method Phaser.Weapon#debug
+* @param {integer} [x=16] - The coordinate, in screen space, at which to draw the Weapon debug data.
+* @param {integer} [y=32] - The coordinate, in screen space, at which to draw the Weapon debug data.
+* @param {boolean} [debugBodies=false] - Optionally draw the physics body of every bullet in-flight.
+*/
 Phaser.Weapon.prototype.debug = function (x, y, debugBodies) {
 
     if (x === undefined) { x = 16; }
@@ -996,6 +1066,13 @@ Phaser.Weapon.prototype.debug = function (x, y, debugBodies) {
 
 };
 
+/**
+* The Class of the bullets that are launched by this Weapon. Defaults `Phaser.Bullet`, but can be
+* overridden before calling `createBullets` and set to your own class type.
+*
+* @name Phaser.Weapon#bulletClass
+* @property {Object} bulletClass
+*/
 Object.defineProperty(Phaser.Weapon.prototype, "bulletClass", {
 
     get: function () {
@@ -1014,6 +1091,37 @@ Object.defineProperty(Phaser.Weapon.prototype, "bulletClass", {
 
 });
 
+/**
+* This controls how the bullets will be killed. The default is `Phaser.Weapon.KILL_WORLD_BOUNDS`.
+*
+* There are 7 different "kill types" available:
+*
+* * `Phaser.Weapon.KILL_NEVER`
+* The bullets are never destroyed by the Weapon. It's up to you to destroy them via your own code.
+*
+* * `Phaser.Weapon.KILL_LIFESPAN`
+* The bullets are automatically killed when their `bulletLifespan` amount expires.
+* 
+* * `Phaser.Weapon.KILL_DISTANCE`
+* The bullets are automatically killed when they exceed `bulletDistance` pixels away from their original launch position.
+* 
+* * `Phaser.Weapon.KILL_WEAPON_BOUNDS`
+* The bullets are automatically killed when they no longer intersect with the `Weapon.bounds` rectangle.
+*
+* * `Phaser.Weapon.KILL_CAMERA_BOUNDS`
+* The bullets are automatically killed when they no longer intersect with the `Camera.bounds` rectangle.
+*
+* * `Phaser.Weapon.KILL_WORLD_BOUNDS`
+* The bullets are automatically killed when they no longer intersect with the `World.bounds` rectangle.
+*
+* * `Phaser.Weapon.KILL_STATIC_BOUNDS`
+* The bullets are automatically killed when they no longer intersect with the `Weapon.bounds` rectangle.
+* The difference between static bounds and weapon bounds, is that a static bounds will never be adjusted to
+* match the position of a tracked sprite or pointer.
+*
+* @name Phaser.Weapon#bulletKillType
+* @property {integer} bulletKillType
+*/
 Object.defineProperty(Phaser.Weapon.prototype, "bulletKillType", {
 
     get: function () {
@@ -1046,6 +1154,12 @@ Object.defineProperty(Phaser.Weapon.prototype, "bulletKillType", {
 
 });
 
+/**
+* Should bullets collide with the World bounds or not?
+*
+* @name Phaser.Weapon#bulletCollideWorldBounds
+* @property {boolean} bulletCollideWorldBounds
+*/
 Object.defineProperty(Phaser.Weapon.prototype, "bulletCollideWorldBounds", {
 
     get: function () {
@@ -1065,6 +1179,13 @@ Object.defineProperty(Phaser.Weapon.prototype, "bulletCollideWorldBounds", {
 
 });
 
+/**
+* The x coordinate from which bullets are fired. This is the same as `Weapon.fireFrom.x`, and
+* can be overridden by the `Weapon.fire` arguments.
+*
+* @name Phaser.Weapon#x
+* @property {number} x
+*/
 Object.defineProperty(Phaser.Weapon.prototype, "x", {
 
     get: function () {
@@ -1080,6 +1201,13 @@ Object.defineProperty(Phaser.Weapon.prototype, "x", {
 
 });
 
+/**
+* The y coordinate from which bullets are fired. This is the same as `Weapon.fireFrom.y`, and
+* can be overridden by the `Weapon.fire` arguments.
+*
+* @name Phaser.Weapon#y
+* @property {number} y
+*/
 Object.defineProperty(Phaser.Weapon.prototype, "y", {
 
     get: function () {
@@ -1094,4 +1222,3 @@ Object.defineProperty(Phaser.Weapon.prototype, "y", {
     }
 
 });
-
