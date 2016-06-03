@@ -423,8 +423,9 @@ Phaser.TilemapLayer.prototype._fixX = function (x) {
         return x;
     }
     
-    //This executes if the scrollFactorX is 0 and the x position of the tilemap is off from standard.
-    if(this.scrollFactorX === 0 && this.position.x !== 0) {
+    //  This executes if the scrollFactorX is 0 and the x position of the tilemap is off from standard.
+    if (this.scrollFactorX === 0 && this.position.x !== 0)
+    {
         return x - this.position.x;
     }
 
@@ -466,10 +467,10 @@ Phaser.TilemapLayer.prototype._fixY = function (y) {
         return y;
     }
     
-    //This executes if the scrollFactorY is 0 and the y position of the tilemap is off from standard.
-    if(this.scrollFactorY === 0 && this.position.y !== 0) 
+    //  This executes if the scrollFactorY is 0 and the y position of the tilemap is off from standard.
+    if (this.scrollFactorY === 0 && this.position.y !== 0)
     {
-        return y - this.position.y
+        return y - this.position.y;
     }
     
     return this._scrollY + (y - (this._scrollY / this.scrollFactorY));
