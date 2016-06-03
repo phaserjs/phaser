@@ -1,3 +1,22 @@
+/**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2016 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
+* Create a new `Bullet` object. Bullets are used by the `Phaser.Weapon` class, and are normal Sprites,
+* with a few extra properties in the data object to handle Weapon specific features.
+* 
+* @class Phaser.Bullet
+* @constructor
+* @extends Phaser.Sprite
+* @param {Phaser.Game} game - A reference to the currently running game.
+* @param {number} x - The x coordinate (in world space) to position the Particle at.
+* @param {number} y - The y coordinate (in world space) to position the Particle at.
+* @param {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the Particle during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
+* @param {string|number} frame - If this Particle is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
+*/
 Phaser.Bullet = function (game, x, y, key, frame) {
 
     Phaser.Sprite.call(this, game, x, y, key, frame);
@@ -19,6 +38,13 @@ Phaser.Bullet = function (game, x, y, key, frame) {
 Phaser.Bullet.prototype = Object.create(Phaser.Sprite.prototype);
 Phaser.Bullet.prototype.constructor = Phaser.Bullet;
 
+/**
+* Kills the Bullet, freeing it up for re-use by the Weapon bullet pool.
+* Also dispatches the `Weapon.onKill` signal.
+*
+* @method Phaser.Bullet#kill
+* @memberof Phaser.Bullet
+*/
 Phaser.Bullet.prototype.kill = function () {
 
     this.alive = false;
@@ -31,6 +57,12 @@ Phaser.Bullet.prototype.kill = function () {
 
 };
 
+/**
+* Updates the Bullet, killing as required.
+*
+* @method Phaser.Bullet#kill
+* @memberof Phaser.Bullet
+*/
 Phaser.Bullet.prototype.update = function () {
 
     if (!this.exists)
