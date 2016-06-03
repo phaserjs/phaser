@@ -24,6 +24,20 @@ Phaser.Math = {
     PI2: Math.PI * 2,
 
     /**
+    * Returns a number between the `min` and `max` values.
+    *
+    * @method Phaser.Math#between
+    * @param {number} min - The minimum value. Must be positive, and less than 'max'.
+    * @param {number} max - The maximum value. Must be position, and greater than 'min'.
+    * @return {number} A value between the range min to max.
+    */
+    between: function (min, max) {
+
+        return Math.floor(Math.random() * (max - min + 1) + min);
+
+    },
+
+    /**
     * Two number are fuzzyEqual if their difference is less than epsilon.
     *
     * @method Phaser.Math#fuzzyEqual
