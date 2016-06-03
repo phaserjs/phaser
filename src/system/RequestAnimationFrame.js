@@ -103,14 +103,16 @@ Phaser.RequestAnimationFrame.prototype = {
     /**
     * The update method for the requestAnimationFrame
     * @method Phaser.RequestAnimationFrame#updateRAF
-    * 
     */
     updateRAF: function (rafTime) {
 
-        // floor the rafTime to make it equivalent to the Date.now() provided by updateSetTimeout (just below)
-        this.game.update(Math.floor(rafTime));
+        if (this.isRunning)
+        {
+            // floor the rafTime to make it equivalent to the Date.now() provided by updateSetTimeout (just below)
+            this.game.update(Math.floor(rafTime));
 
-        this._timeOutID = window.requestAnimationFrame(this._onLoop);
+            this._timeOutID = window.requestAnimationFrame(this._onLoop);
+        }
 
     },
 
@@ -120,9 +122,12 @@ Phaser.RequestAnimationFrame.prototype = {
     */
     updateSetTimeout: function () {
 
-        this.game.update(Date.now());
+        if (this.isRunning)
+        {
+            this.game.update(Date.now());
 
-        this._timeOutID = window.setTimeout(this._onLoop, this.game.time.timeToCall);
+            this._timeOutID = window.setTimeout(this._onLoop, this.game.time.timeToCall);
+        }
 
     },
 
