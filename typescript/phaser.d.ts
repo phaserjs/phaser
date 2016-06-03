@@ -53,6 +53,15 @@ declare module "phaser" {
         static UP: number;
         static DOWN: number;
 
+        static ANGLE_UP: number;
+        static ANGLE_DOWN: number;
+        static ANGLE_LEFT: number;
+        static ANGLE_RIGHT: number;
+        static ANGLE_NORTH_EAST: number;
+        static ANGLE_NORTH_WEST: number;
+        static ANGLE_SOUTH_EAST: number;
+        static ANGLE_SOUTH_WEST: number;
+
     }
 
     export module Phaser {
