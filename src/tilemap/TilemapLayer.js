@@ -289,8 +289,11 @@ Phaser.TilemapLayer.prototype.preUpdate = function() {
 */
 Phaser.TilemapLayer.prototype.postUpdate = function () {
 
-    this.position.x = (this.game.camera.view.x + this.cameraOffset.x) / this.game.camera.scale.x;
-    this.position.y = (this.game.camera.view.y + this.cameraOffset.y) / this.game.camera.scale.y;
+    if (this.fixedToCamera)
+    {
+        this.position.x = (this.game.camera.view.x + this.cameraOffset.x) / this.game.camera.scale.x;
+        this.position.y = (this.game.camera.view.y + this.cameraOffset.y) / this.game.camera.scale.y;
+    }
 
     this._scrollX = this.game.camera.view.x * this.scrollFactorX / this.scale.x;
     this._scrollY = this.game.camera.view.y * this.scrollFactorY / this.scale.y;
@@ -306,8 +309,11 @@ Phaser.TilemapLayer.prototype.postUpdate = function () {
 */
 Phaser.TilemapLayer.prototype._renderCanvas = function (renderSession) {
 
-    this.position.x = (this.game.camera.view.x + this.cameraOffset.x) / this.game.camera.scale.x;
-    this.position.y = (this.game.camera.view.y + this.cameraOffset.y) / this.game.camera.scale.y;
+    if (this.fixedToCamera)
+    {
+        this.position.x = (this.game.camera.view.x + this.cameraOffset.x) / this.game.camera.scale.x;
+        this.position.y = (this.game.camera.view.y + this.cameraOffset.y) / this.game.camera.scale.y;
+    }
 
     this._scrollX = this.game.camera.view.x * this.scrollFactorX / this.scale.x;
     this._scrollY = this.game.camera.view.y * this.scrollFactorY / this.scale.y;
