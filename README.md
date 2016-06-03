@@ -348,7 +348,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 ### Updates
 
 * TypeScript definitions fixes and updates (thanks @wingyplus @monagames @marineorganism @obamor)
-* Docs typo fixes (thanks )
+* Docs typo fixes (thanks @seanirby)
 * The TypeScript defs ambient declaration has been updated to make it compatible with the SystemJS loader (thanks @monagames)
 * You can no longer intersect check a Body against itself (thanks @VitaZheltyakov #2514)
 * The mobile template has been updated (thanks @cryptographer #2518)
