@@ -1728,7 +1728,7 @@ declare module "phaser" {
             preUpdate(): void;
             previous(): void;
             remove(child: any, destroy?: boolean, silent?: boolean): boolean;
-            removeAll(destroy?: boolean, silent?: boolean): void;
+            removeAll(destroy?: boolean, silent?: boolean, destroyTexture?: boolean): void;
             removeBetween(startIndex: number, endIndex?: number, destroy?: boolean, silent?: boolean): void;
             removeFromHash(child: PIXI.DisplayObject): boolean;
             replace(oldChild: any, newChild: any): any;
