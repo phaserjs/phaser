@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.4.9 "Four Kings" - Built: Thu Jun 02 2016 23:21:16
+* v2.4.9 "Four Kings" - Built: Fri Jun 03 2016 18:45:26
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -22765,7 +22765,7 @@ var Phaser = Phaser || {
     * @constant
     * @type {string}
     */
-    VERSION: '2.4.9 RC1',
+    VERSION: '2.4.9 RC2',
 
     /**
     * An array of Phaser game instances.
@@ -23046,6 +23046,62 @@ var Phaser = Phaser || {
     * @type {integer}
     */
     PENDING_ATLAS: -1,
+
+    /**
+    * The Angle (in degrees) a Game Object needs to be set to in order to face up.
+    * @constant
+    * @type {integer}
+    */
+    ANGLE_UP: 270,
+
+    /**
+    * The Angle (in degrees) a Game Object needs to be set to in order to face down.
+    * @constant
+    * @type {integer}
+    */
+    ANGLE_DOWN: 90,
+
+    /**
+    * The Angle (in degrees) a Game Object needs to be set to in order to face left.
+    * @constant
+    * @type {integer}
+    */
+    ANGLE_LEFT: 180,
+
+    /**
+    * The Angle (in degrees) a Game Object needs to be set to in order to face right.
+    * @constant
+    * @type {integer}
+    */
+    ANGLE_RIGHT: 0,
+
+    /**
+    * The Angle (in degrees) a Game Object needs to be set to in order to face north east.
+    * @constant
+    * @type {integer}
+    */
+    ANGLE_NORTH_EAST: 315,
+
+    /**
+    * The Angle (in degrees) a Game Object needs to be set to in order to face north west.
+    * @constant
+    * @type {integer}
+    */
+    ANGLE_NORTH_WEST: 225,
+
+    /**
+    * The Angle (in degrees) a Game Object needs to be set to in order to face south east.
+    * @constant
+    * @type {integer}
+    */
+    ANGLE_SOUTH_EAST: 45,
+
+    /**
+    * The Angle (in degrees) a Game Object needs to be set to in order to face south west.
+    * @constant
+    * @type {integer}
+    */
+    ANGLE_SOUTH_WEST: 135,
 
     /**
      * Various blend modes supported by Pixi.
@@ -31202,8 +31258,11 @@ Phaser.PluginManager.prototype = {
     *
     * @method Phaser.PluginManager#remove
     * @param {Phaser.Plugin} plugin - The plugin to be removed.
+    * @param {boolean} [destroy=true] - Call destroy on the plugin that is removed?
     */
-    remove: function (plugin) {
+    remove: function (plugin, destroy) {
+
+        if (destroy === undefined) { destroy = true; }
 
         this._i = this._len;
 
@@ -31211,7 +31270,11 @@ Phaser.PluginManager.prototype = {
         {
             if (this.plugins[this._i] === plugin)
             {
-                plugin.destroy();
+                if (destroy)
+                {
+                    plugin.destroy();
+                }
+
                 this.plugins.splice(this._i, 1);
                 this._len--;
                 return;
@@ -33936,16 +33999,23 @@ Phaser.Group.prototype.moveAll = function (group, silent) {
 };
 
 /**
-* Removes all children from this group, but does not remove the group from its parent.
+* Removes all children from this Group, but does not remove the group from its parent.
+*
+* The children can be optionally destroyed as they are removed.
+* 
+* You can also optionally also destroy the BaseTexture the Child is using. Be careful if you've
+* more than one Game Object sharing the same BaseTexture.
 *
 * @method Phaser.Group#removeAll
 * @param {boolean} [destroy=false] - If true `destroy` will be invoked on each removed child.
 * @param {boolean} [silent=false] - If true the children will not dispatch their `onRemovedFromGroup` events.
+* @param {boolean} [destroyTexture=false] - If true, and if the `destroy` argument is also true, the BaseTexture belonging to the Child is also destroyed. Note that if another Game Object is sharing the same BaseTexture it will invalidate it.
 */
-Phaser.Group.prototype.removeAll = function (destroy, silent) {
+Phaser.Group.prototype.removeAll = function (destroy, silent, destroyTexture) {
 
     if (destroy === undefined) { destroy = false; }
     if (silent === undefined) { silent = false; }
+    if (destroyTexture === undefined) { destroyTexture = false; }
 
     if (this.children.length === 0)
     {
@@ -33965,7 +34035,7 @@ Phaser.Group.prototype.removeAll = function (destroy, silent) {
 
         if (destroy && removed)
         {
-            removed.destroy(true);
+            removed.destroy(true, destroyTexture);
         }
     }
     while (this.children.length > 0);
@@ -44591,6 +44661,16 @@ Phaser.Component.Core.prototype = {
     name: '',
 
     /**
+    * An empty Object that belongs to this Game Object.
+    * This value isn't ever used internally by Phaser, but may be used by your own code, or
+    * by Phaser Plugins, to store data that needs to be associated with the Game Object,
+    * without polluting the Game Object directly.
+    * @property {Object} data
+    * @default
+    */
+    data: {},
+
+    /**
     * The components this Game Object has installed.
     * @property {object} components
     * @protected
@@ -45107,6 +45187,8 @@ Phaser.Component.Destroy.prototype = {
         this.filters = null;
         this.mask = null;
         this.game = null;
+
+        this.data = {};
 
         //  In case Pixi is still going to try and render it even though destroyed
         this.renderable = false;
@@ -46722,6 +46804,36 @@ Phaser.GameObjectFactory.prototype = {
     existing: function (object) {
 
         return this.world.add(object);
+
+    },
+
+    /**
+    * Weapons provide the ability to easily create a bullet pool and manager.
+    *
+    * Weapons fire Phaser.Bullet objects, which are essentially Sprites with a few extra properties.
+    * The Bullets are enabled for Arcade Physics. They do not currently work with P2 Physics.
+    *
+    * The Bullets are created inside of `Weapon.bullets`, which is a Phaser.Group instance. Anything you
+    * can usually do with a Group, such as move it around the display list, iterate it, etc can be done
+    * to the bullets Group too.
+    *
+    * Bullets can have textures and even animations. You can control the speed at which they are fired,
+    * the firing rate, the firing angle, and even set things like gravity for them.
+    *
+    * @method Phaser.GameObjectFactory#weapon
+    * @param {integer} [quantity=1] - The quantity of bullets to seed the Weapon with. If -1 it will set the pool to automatically expand.
+    * @param {string|Phaser.RenderTexture|Phaser.BitmapData|Phaser.Video|PIXI.Texture} [key] - The image used as a texture by the bullets during rendering. If a string Phaser will get for an entry in the Image Cache. Or it can be an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
+    * @param {string|number} [frame] - If a Texture Atlas or Sprite Sheet is used this allows you to specify the frame to be used by the bullets. Use either an integer for a Frame ID or a string for a frame name.
+    * @param {Phaser.Group} [group] - Optional Group to add the Weapon to. If not specified it will be added to the World group.
+    * @returns {Phaser.Weapon} A Weapon instance.
+    */
+    weapon: function (quantity, key, frame, group) {
+
+        var weapon = this.game.plugins.add(Phaser.Weapon);
+
+        weapon.createBullets(quantity, key, frame, group);
+
+        return weapon;
 
     },
 
@@ -60355,14 +60467,16 @@ Phaser.RequestAnimationFrame.prototype = {
     /**
     * The update method for the requestAnimationFrame
     * @method Phaser.RequestAnimationFrame#updateRAF
-    * 
     */
     updateRAF: function (rafTime) {
 
-        // floor the rafTime to make it equivalent to the Date.now() provided by updateSetTimeout (just below)
-        this.game.update(Math.floor(rafTime));
+        if (this.isRunning)
+        {
+            // floor the rafTime to make it equivalent to the Date.now() provided by updateSetTimeout (just below)
+            this.game.update(Math.floor(rafTime));
 
-        this._timeOutID = window.requestAnimationFrame(this._onLoop);
+            this._timeOutID = window.requestAnimationFrame(this._onLoop);
+        }
 
     },
 
@@ -60372,9 +60486,12 @@ Phaser.RequestAnimationFrame.prototype = {
     */
     updateSetTimeout: function () {
 
-        this.game.update(Date.now());
+        if (this.isRunning)
+        {
+            this.game.update(Date.now());
 
-        this._timeOutID = window.setTimeout(this._onLoop, this.game.time.timeToCall);
+            this._timeOutID = window.setTimeout(this._onLoop, this.game.time.timeToCall);
+        }
 
     },
 
@@ -60443,6 +60560,20 @@ Phaser.Math = {
     * @default ~6.283
     */
     PI2: Math.PI * 2,
+
+    /**
+    * Returns a number between the `min` and `max` values.
+    *
+    * @method Phaser.Math#between
+    * @param {number} min - The minimum value. Must be positive, and less than 'max'.
+    * @param {number} max - The maximum value. Must be position, and greater than 'min'.
+    * @return {number} A value between the range min to max.
+    */
+    between: function (min, max) {
+
+        return Math.floor(Math.random() * (max - min + 1) + min);
+
+    },
 
     /**
     * Two number are fuzzyEqual if their difference is less than epsilon.
@@ -66192,7 +66323,9 @@ Phaser.Timer.prototype.constructor = Phaser.Timer;
 *
 * It consists of a delay, which is a value in milliseconds after which the event will fire.
 * When the event fires it calls a specific callback with the specified arguments.
-*
+* 
+* TimerEvents are removed by their parent timer once finished firing or repeating.
+* 
 * Use {@link Phaser.Timer#add}, {@link Phaser.Timer#repeat}, or {@link Phaser.Timer#loop} methods to create a new event.
 *
 * @class Phaser.TimerEvent
@@ -69006,10 +69139,10 @@ Phaser.Cache.prototype = {
             font: null,
             base: new PIXI.BaseTexture(data)
         };
-        
+
         if (xSpacing === undefined) { xSpacing = 0; }
         if (ySpacing === undefined) { ySpacing = 0; }
-        
+
         if (atlasType === 'json')
         {
             obj.font = Phaser.LoaderParser.jsonBitmapFont(atlasData, obj.base, xSpacing, ySpacing);
@@ -69864,7 +69997,7 @@ Phaser.Cache.prototype = {
         {
             if (clone)
             {
-                return Phaser.Utils.extend(true, data);
+                return Phaser.Utils.extend(true, {}, data);
             }
             else
             {
@@ -85627,7 +85760,7 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
             {
                 if (processCallback.call(callbackContext, sprite, mapData[i]))
                 {
-                    if (this.separateTile(i, sprite.body, mapData[i], overlapOnly))
+                    if (this.separateTile(i, sprite.body, mapData[i], tilemapLayer, overlapOnly))
                     {
                         this._total++;
 
@@ -85640,7 +85773,7 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
             }
             else
             {
-                if (this.separateTile(i, sprite.body, mapData[i], overlapOnly))
+                if (this.separateTile(i, sprite.body, mapData[i], tilemapLayer, overlapOnly))
                 {
                     this._total++;
 
@@ -85692,7 +85825,7 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
     * @param {Phaser.Tile} tile - The tile to collide against.
     * @return {boolean} Returns true if the body was separated, otherwise false.
     */
-    separateTile: function (i, body, tile, overlapOnly) {
+    separateTile: function (i, body, tile, tilemapLayer, overlapOnly) {
 
         if (!body.enable)
         {
@@ -85700,7 +85833,7 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
         }
 
         //  We re-check for collision in case body was separated in a previous step
-        if (!tile.intersects(body.position.x, body.position.y, body.right, body.bottom))
+        if (!tile.intersects((body.position.x - tilemapLayer.position.x), (body.position.y - tilemapLayer.position.y), (body.right - tilemapLayer.position.x), (body.bottom - tilemapLayer.position.y)))
         {
             //  no collision so bail out (separated in a previous step)
             return false;
@@ -85719,7 +85852,7 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
             //  If it returns true then we can carry on, otherwise we should abort.
             return false;
         }
-        else if (tile.layer.callbacks[tile.index] && !tile.layer.callbacks[tile.index].callback.call(tile.layer.callbacks[tile.index].callbackContext, body.sprite, tile))
+        else if (typeof tile.layer.callbacks !== 'undefined' && tile.layer.callbacks[tile.index] && !tile.layer.callbacks[tile.index].callback.call(tile.layer.callbacks[tile.index].callbackContext, body.sprite, tile))
         {
             //  If it returns true then we can carry on, otherwise we should abort.
             return false;
@@ -85751,8 +85884,8 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
         if (body.deltaX() !== 0 && body.deltaY() !== 0 && (tile.faceLeft || tile.faceRight) && (tile.faceTop || tile.faceBottom))
         {
             //  We only need do this if both axis have checking faces AND we're moving in both directions
-            minX = Math.min(Math.abs(body.position.x - tile.right), Math.abs(body.right - tile.left));
-            minY = Math.min(Math.abs(body.position.y - tile.bottom), Math.abs(body.bottom - tile.top));
+            minX = Math.min(Math.abs((body.position.x - tilemapLayer.position.x) - tile.right), Math.abs((body.right - tilemapLayer.position.x) - tile.left));
+            minY = Math.min(Math.abs((body.position.y - tilemapLayer.position.y) - tile.bottom), Math.abs((body.bottom - tilemapLayer.position.y) - tile.top));
         }
 
         if (minX < minY)
@@ -85762,7 +85895,7 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
                 ox = this.tileCheckX(body, tile);
 
                 //  That's horizontal done, check if we still intersects? If not then we can return now
-                if (ox !== 0 && !tile.intersects(body.position.x, body.position.y, body.right, body.bottom))
+                if (ox !== 0 && !tile.intersects((body.position.x - tilemapLayer.position.x), (body.position.y - tilemapLayer.position.y), (body.right - tilemapLayer.position.x), (body.bottom - tilemapLayer.position.y)))
                 {
                     return true;
                 }
@@ -85780,7 +85913,7 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
                 oy = this.tileCheckY(body, tile);
 
                 //  That's vertical done, check if we still intersects? If not then we can return now
-                if (oy !== 0 && !tile.intersects(body.position.x, body.position.y, body.right, body.bottom))
+                if (oy !== 0 && !tile.intersects((body.position.x - tilemapLayer.position.x), (body.position.y - tilemapLayer.position.y), (body.right - tilemapLayer.position.x), (body.bottom - tilemapLayer.position.y)))
                 {
                     return true;
                 }
@@ -85805,16 +85938,16 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
     * @param {Phaser.Tile} tile - The tile to check.
     * @return {number} The amount of separation that occurred.
     */
-    tileCheckX: function (body, tile) {
+    tileCheckX: function (body, tile, tilemapLayer) {
 
         var ox = 0;
 
         if (body.deltaX() < 0 && !body.blocked.left && tile.collideRight && body.checkCollision.left)
         {
             //  Body is moving LEFT
-            if (tile.faceRight && body.x < tile.right)
+            if (tile.faceRight && (body.x - tilemapLayer.position.x)  < tile.right)
             {
-                ox = body.x - tile.right;
+                ox = (body.x - tilemapLayer.position.x)  - tile.right;
 
                 if (ox < -this.TILE_BIAS)
                 {
@@ -85825,9 +85958,9 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
         else if (body.deltaX() > 0 && !body.blocked.right && tile.collideLeft && body.checkCollision.right)
         {
             //  Body is moving RIGHT
-            if (tile.faceLeft && body.right > tile.left)
+            if (tile.faceLeft && (body.right - tilemapLayer.position.y)  > tile.left)
             {
-                ox = body.right - tile.left;
+                ox = (body.right - tilemapLayer.position.x)  - tile.left;
 
                 if (ox > this.TILE_BIAS)
                 {
@@ -85861,16 +85994,16 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
     * @param {Phaser.Tile} tile - The tile to check.
     * @return {number} The amount of separation that occurred.
     */
-    tileCheckY: function (body, tile) {
+    tileCheckY: function (body, tile, tilemapLayer) {
 
         var oy = 0;
 
         if (body.deltaY() < 0 && !body.blocked.up && tile.collideDown && body.checkCollision.up)
         {
             //  Body is moving UP
-            if (tile.faceBottom && body.y < tile.bottom)
+            if (tile.faceBottom && (body.y - tilemapLayer.position.y) < tile.bottom)
             {
-                oy = body.y - tile.bottom;
+                oy = (body.y - tilemapLayer.position.y) - tile.bottom;
 
                 if (oy < -this.TILE_BIAS)
                 {
@@ -85881,9 +86014,9 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
         else if (body.deltaY() > 0 && !body.blocked.down && tile.collideUp && body.checkCollision.down)
         {
             //  Body is moving DOWN
-            if (tile.faceTop && body.bottom > tile.top)
+            if (tile.faceTop && (body.bottom - tilemapLayer.position.y)  > tile.top)
             {
-                oy = body.bottom - tile.top;
+                oy = (body.bottom - tilemapLayer.position.y)  - tile.top;
 
                 if (oy > this.TILE_BIAS)
                 {
@@ -94162,8 +94295,11 @@ Phaser.TilemapLayer.prototype.preUpdate = function() {
 */
 Phaser.TilemapLayer.prototype.postUpdate = function () {
 
-    this.position.x = (this.game.camera.view.x + this.cameraOffset.x) / this.game.camera.scale.x;
-    this.position.y = (this.game.camera.view.y + this.cameraOffset.y) / this.game.camera.scale.y;
+    if (this.fixedToCamera)
+    {
+        this.position.x = (this.game.camera.view.x + this.cameraOffset.x) / this.game.camera.scale.x;
+        this.position.y = (this.game.camera.view.y + this.cameraOffset.y) / this.game.camera.scale.y;
+    }
 
     this._scrollX = this.game.camera.view.x * this.scrollFactorX / this.scale.x;
     this._scrollY = this.game.camera.view.y * this.scrollFactorY / this.scale.y;
@@ -94179,8 +94315,11 @@ Phaser.TilemapLayer.prototype.postUpdate = function () {
 */
 Phaser.TilemapLayer.prototype._renderCanvas = function (renderSession) {
 
-    this.position.x = (this.game.camera.view.x + this.cameraOffset.x) / this.game.camera.scale.x;
-    this.position.y = (this.game.camera.view.y + this.cameraOffset.y) / this.game.camera.scale.y;
+    if (this.fixedToCamera)
+    {
+        this.position.x = (this.game.camera.view.x + this.cameraOffset.x) / this.game.camera.scale.x;
+        this.position.y = (this.game.camera.view.y + this.cameraOffset.y) / this.game.camera.scale.y;
+    }
 
     this._scrollX = this.game.camera.view.x * this.scrollFactorX / this.scale.x;
     this._scrollY = this.game.camera.view.y * this.scrollFactorY / this.scale.y;
@@ -94200,9 +94339,12 @@ Phaser.TilemapLayer.prototype._renderCanvas = function (renderSession) {
 */
 Phaser.TilemapLayer.prototype._renderWebGL = function (renderSession) {
 
-    this.position.x = (this.game.camera.view.x + this.cameraOffset.x) / this.game.camera.scale.x;
-    this.position.y = (this.game.camera.view.y + this.cameraOffset.y) / this.game.camera.scale.y;
-
+    if (this.fixedToCamera)
+    {
+        this.position.x = (this.game.camera.view.x + this.cameraOffset.x) / this.game.camera.scale.x;
+        this.position.y = (this.game.camera.view.y + this.cameraOffset.y) / this.game.camera.scale.y;
+    }
+    
     this._scrollX = this.game.camera.view.x * this.scrollFactorX / this.scale.x;
     this._scrollY = this.game.camera.view.y * this.scrollFactorY / this.scale.y;
 
@@ -94285,14 +94427,15 @@ Phaser.TilemapLayer.prototype.resizeWorld = function () {
 */
 Phaser.TilemapLayer.prototype._fixX = function (x) {
 
-    if (x < 0)
-    {
-        x = 0;
-    }
-
-    if (this.scrollFactorX === 1)
+    if (this.scrollFactorX === 1 || (this.scrollFactorX === 0 && this.position.x === 0))
     {
         return x;
+    }
+    
+    //  This executes if the scrollFactorX is 0 and the x position of the tilemap is off from standard.
+    if (this.scrollFactorX === 0 && this.position.x !== 0)
+    {
+        return x - this.position.x;
     }
 
     return this._scrollX + (x - (this._scrollX / this.scrollFactorX));
@@ -94328,16 +94471,17 @@ Phaser.TilemapLayer.prototype._unfixX = function (x) {
 */
 Phaser.TilemapLayer.prototype._fixY = function (y) {
 
-    if (y < 0)
-    {
-        y = 0;
-    }
-
-    if (this.scrollFactorY === 1)
+    if (this.scrollFactorY === 1 || (this.scrollFactorY === 0 && this.position.y === 0))
     {
         return y;
     }
-
+    
+    //  This executes if the scrollFactorY is 0 and the y position of the tilemap is off from standard.
+    if (this.scrollFactorY === 0 && this.position.y !== 0)
+    {
+        return y - this.position.y;
+    }
+    
     return this._scrollY + (y - (this._scrollY / this.scrollFactorY));
 
 };

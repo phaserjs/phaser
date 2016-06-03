@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.4.9 "Four Kings" - Built: Thu Jun 02 2016 23:21:52
+* v2.4.9 "Four Kings" - Built: Fri Jun 03 2016 18:45:58
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -7952,7 +7952,7 @@ var Phaser = Phaser || {
     * @constant
     * @type {string}
     */
-    VERSION: '2.4.9 RC1',
+    VERSION: '2.4.9 RC2',
 
     /**
     * An array of Phaser game instances.
@@ -8233,6 +8233,62 @@ var Phaser = Phaser || {
     * @type {integer}
     */
     PENDING_ATLAS: -1,
+
+    /**
+    * The Angle (in degrees) a Game Object needs to be set to in order to face up.
+    * @constant
+    * @type {integer}
+    */
+    ANGLE_UP: 270,
+
+    /**
+    * The Angle (in degrees) a Game Object needs to be set to in order to face down.
+    * @constant
+    * @type {integer}
+    */
+    ANGLE_DOWN: 90,
+
+    /**
+    * The Angle (in degrees) a Game Object needs to be set to in order to face left.
+    * @constant
+    * @type {integer}
+    */
+    ANGLE_LEFT: 180,
+
+    /**
+    * The Angle (in degrees) a Game Object needs to be set to in order to face right.
+    * @constant
+    * @type {integer}
+    */
+    ANGLE_RIGHT: 0,
+
+    /**
+    * The Angle (in degrees) a Game Object needs to be set to in order to face north east.
+    * @constant
+    * @type {integer}
+    */
+    ANGLE_NORTH_EAST: 315,
+
+    /**
+    * The Angle (in degrees) a Game Object needs to be set to in order to face north west.
+    * @constant
+    * @type {integer}
+    */
+    ANGLE_NORTH_WEST: 225,
+
+    /**
+    * The Angle (in degrees) a Game Object needs to be set to in order to face south east.
+    * @constant
+    * @type {integer}
+    */
+    ANGLE_SOUTH_EAST: 45,
+
+    /**
+    * The Angle (in degrees) a Game Object needs to be set to in order to face south west.
+    * @constant
+    * @type {integer}
+    */
+    ANGLE_SOUTH_WEST: 135,
 
     /**
      * Various blend modes supported by Pixi.
@@ -16389,8 +16445,11 @@ Phaser.PluginManager.prototype = {
     *
     * @method Phaser.PluginManager#remove
     * @param {Phaser.Plugin} plugin - The plugin to be removed.
+    * @param {boolean} [destroy=true] - Call destroy on the plugin that is removed?
     */
-    remove: function (plugin) {
+    remove: function (plugin, destroy) {
+
+        if (destroy === undefined) { destroy = true; }
 
         this._i = this._len;
 
@@ -16398,7 +16457,11 @@ Phaser.PluginManager.prototype = {
         {
             if (this.plugins[this._i] === plugin)
             {
-                plugin.destroy();
+                if (destroy)
+                {
+                    plugin.destroy();
+                }
+
                 this.plugins.splice(this._i, 1);
                 this._len--;
                 return;
@@ -19123,16 +19186,23 @@ Phaser.Group.prototype.moveAll = function (group, silent) {
 };
 
 /**
-* Removes all children from this group, but does not remove the group from its parent.
+* Removes all children from this Group, but does not remove the group from its parent.
+*
+* The children can be optionally destroyed as they are removed.
+* 
+* You can also optionally also destroy the BaseTexture the Child is using. Be careful if you've
+* more than one Game Object sharing the same BaseTexture.
 *
 * @method Phaser.Group#removeAll
 * @param {boolean} [destroy=false] - If true `destroy` will be invoked on each removed child.
 * @param {boolean} [silent=false] - If true the children will not dispatch their `onRemovedFromGroup` events.
+* @param {boolean} [destroyTexture=false] - If true, and if the `destroy` argument is also true, the BaseTexture belonging to the Child is also destroyed. Note that if another Game Object is sharing the same BaseTexture it will invalidate it.
 */
-Phaser.Group.prototype.removeAll = function (destroy, silent) {
+Phaser.Group.prototype.removeAll = function (destroy, silent, destroyTexture) {
 
     if (destroy === undefined) { destroy = false; }
     if (silent === undefined) { silent = false; }
+    if (destroyTexture === undefined) { destroyTexture = false; }
 
     if (this.children.length === 0)
     {
@@ -19152,7 +19222,7 @@ Phaser.Group.prototype.removeAll = function (destroy, silent) {
 
         if (destroy && removed)
         {
-            removed.destroy(true);
+            removed.destroy(true, destroyTexture);
         }
     }
     while (this.children.length > 0);
@@ -27367,6 +27437,16 @@ Phaser.Component.Core.prototype = {
     name: '',
 
     /**
+    * An empty Object that belongs to this Game Object.
+    * This value isn't ever used internally by Phaser, but may be used by your own code, or
+    * by Phaser Plugins, to store data that needs to be associated with the Game Object,
+    * without polluting the Game Object directly.
+    * @property {Object} data
+    * @default
+    */
+    data: {},
+
+    /**
     * The components this Game Object has installed.
     * @property {object} components
     * @protected
@@ -27883,6 +27963,8 @@ Phaser.Component.Destroy.prototype = {
         this.filters = null;
         this.mask = null;
         this.game = null;
+
+        this.data = {};
 
         //  In case Pixi is still going to try and render it even though destroyed
         this.renderable = false;
@@ -29498,6 +29580,36 @@ Phaser.GameObjectFactory.prototype = {
     existing: function (object) {
 
         return this.world.add(object);
+
+    },
+
+    /**
+    * Weapons provide the ability to easily create a bullet pool and manager.
+    *
+    * Weapons fire Phaser.Bullet objects, which are essentially Sprites with a few extra properties.
+    * The Bullets are enabled for Arcade Physics. They do not currently work with P2 Physics.
+    *
+    * The Bullets are created inside of `Weapon.bullets`, which is a Phaser.Group instance. Anything you
+    * can usually do with a Group, such as move it around the display list, iterate it, etc can be done
+    * to the bullets Group too.
+    *
+    * Bullets can have textures and even animations. You can control the speed at which they are fired,
+    * the firing rate, the firing angle, and even set things like gravity for them.
+    *
+    * @method Phaser.GameObjectFactory#weapon
+    * @param {integer} [quantity=1] - The quantity of bullets to seed the Weapon with. If -1 it will set the pool to automatically expand.
+    * @param {string|Phaser.RenderTexture|Phaser.BitmapData|Phaser.Video|PIXI.Texture} [key] - The image used as a texture by the bullets during rendering. If a string Phaser will get for an entry in the Image Cache. Or it can be an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
+    * @param {string|number} [frame] - If a Texture Atlas or Sprite Sheet is used this allows you to specify the frame to be used by the bullets. Use either an integer for a Frame ID or a string for a frame name.
+    * @param {Phaser.Group} [group] - Optional Group to add the Weapon to. If not specified it will be added to the World group.
+    * @returns {Phaser.Weapon} A Weapon instance.
+    */
+    weapon: function (quantity, key, frame, group) {
+
+        var weapon = this.game.plugins.add(Phaser.Weapon);
+
+        weapon.createBullets(quantity, key, frame, group);
+
+        return weapon;
 
     },
 
@@ -33086,14 +33198,16 @@ Phaser.RequestAnimationFrame.prototype = {
     /**
     * The update method for the requestAnimationFrame
     * @method Phaser.RequestAnimationFrame#updateRAF
-    * 
     */
     updateRAF: function (rafTime) {
 
-        // floor the rafTime to make it equivalent to the Date.now() provided by updateSetTimeout (just below)
-        this.game.update(Math.floor(rafTime));
+        if (this.isRunning)
+        {
+            // floor the rafTime to make it equivalent to the Date.now() provided by updateSetTimeout (just below)
+            this.game.update(Math.floor(rafTime));
 
-        this._timeOutID = window.requestAnimationFrame(this._onLoop);
+            this._timeOutID = window.requestAnimationFrame(this._onLoop);
+        }
 
     },
 
@@ -33103,9 +33217,12 @@ Phaser.RequestAnimationFrame.prototype = {
     */
     updateSetTimeout: function () {
 
-        this.game.update(Date.now());
+        if (this.isRunning)
+        {
+            this.game.update(Date.now());
 
-        this._timeOutID = window.setTimeout(this._onLoop, this.game.time.timeToCall);
+            this._timeOutID = window.setTimeout(this._onLoop, this.game.time.timeToCall);
+        }
 
     },
 
@@ -33174,6 +33291,20 @@ Phaser.Math = {
     * @default ~6.283
     */
     PI2: Math.PI * 2,
+
+    /**
+    * Returns a number between the `min` and `max` values.
+    *
+    * @method Phaser.Math#between
+    * @param {number} min - The minimum value. Must be positive, and less than 'max'.
+    * @param {number} max - The maximum value. Must be position, and greater than 'min'.
+    * @return {number} A value between the range min to max.
+    */
+    between: function (min, max) {
+
+        return Math.floor(Math.random() * (max - min + 1) + min);
+
+    },
 
     /**
     * Two number are fuzzyEqual if their difference is less than epsilon.
@@ -36370,7 +36501,9 @@ Phaser.Timer.prototype.constructor = Phaser.Timer;
 *
 * It consists of a delay, which is a value in milliseconds after which the event will fire.
 * When the event fires it calls a specific callback with the specified arguments.
-*
+* 
+* TimerEvents are removed by their parent timer once finished firing or repeating.
+* 
 * Use {@link Phaser.Timer#add}, {@link Phaser.Timer#repeat}, or {@link Phaser.Timer#loop} methods to create a new event.
 *
 * @class Phaser.TimerEvent
@@ -39184,10 +39317,10 @@ Phaser.Cache.prototype = {
             font: null,
             base: new PIXI.BaseTexture(data)
         };
-        
+
         if (xSpacing === undefined) { xSpacing = 0; }
         if (ySpacing === undefined) { ySpacing = 0; }
-        
+
         if (atlasType === 'json')
         {
             obj.font = Phaser.LoaderParser.jsonBitmapFont(atlasData, obj.base, xSpacing, ySpacing);
@@ -40042,7 +40175,7 @@ Phaser.Cache.prototype = {
         {
             if (clone)
             {
-                return Phaser.Utils.extend(true, data);
+                return Phaser.Utils.extend(true, {}, data);
             }
             else
             {

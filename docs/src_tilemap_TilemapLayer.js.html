@@ -811,6 +811,38 @@
 					<ul class="dropdown-menu ">
 						
 						<li class="class-depth-0">
+							<a href="global.html#ANGLE_DOWN">ANGLE_DOWN</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ANGLE_LEFT">ANGLE_LEFT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ANGLE_NORTH_EAST">ANGLE_NORTH_EAST</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ANGLE_NORTH_WEST">ANGLE_NORTH_WEST</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ANGLE_RIGHT">ANGLE_RIGHT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ANGLE_SOUTH_EAST">ANGLE_SOUTH_EAST</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ANGLE_SOUTH_WEST">ANGLE_SOUTH_WEST</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ANGLE_UP">ANGLE_UP</a>
+						</li>
+						
+						<li class="class-depth-0">
 							<a href="global.html#AUTO">AUTO</a>
 						</li>
 						
@@ -876,6 +908,10 @@
 						
 						<li class="class-depth-0">
 							<a href="global.html#IMAGE">IMAGE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#intersectsRectangle">intersectsRectangle</a>
 						</li>
 						
 						<li class="class-depth-0">
@@ -1397,15 +1433,62 @@ Phaser.TilemapLayer.prototype.preUpdate = function() {
 */
 Phaser.TilemapLayer.prototype.postUpdate = function () {
 
-    Phaser.Component.FixedToCamera.postUpdate.call(this);
+    if (this.fixedToCamera)
+    {
+        this.position.x = (this.game.camera.view.x + this.cameraOffset.x) / this.game.camera.scale.x;
+        this.position.y = (this.game.camera.view.y + this.cameraOffset.y) / this.game.camera.scale.y;
+    }
 
-    //  Stops you being able to auto-scroll the camera if it's not following a sprite
-    var camera = this.game.camera;
+    this._scrollX = this.game.camera.view.x * this.scrollFactorX / this.scale.x;
+    this._scrollY = this.game.camera.view.y * this.scrollFactorY / this.scale.y;
 
-    this.scrollX = camera.x * this.scrollFactorX / this.scale.x;
-    this.scrollY = camera.y * this.scrollFactorY / this.scale.y;
+};
+
+/**
+* Automatically called by the Canvas Renderer.
+* Overrides the Sprite._renderCanvas function.
+*
+* @method Phaser.TilemapLayer#_renderCanvas
+* @private
+*/
+Phaser.TilemapLayer.prototype._renderCanvas = function (renderSession) {
+
+    if (this.fixedToCamera)
+    {
+        this.position.x = (this.game.camera.view.x + this.cameraOffset.x) / this.game.camera.scale.x;
+        this.position.y = (this.game.camera.view.y + this.cameraOffset.y) / this.game.camera.scale.y;
+    }
+
+    this._scrollX = this.game.camera.view.x * this.scrollFactorX / this.scale.x;
+    this._scrollY = this.game.camera.view.y * this.scrollFactorY / this.scale.y;
 
     this.render();
+
+    PIXI.Sprite.prototype._renderCanvas.call(this, renderSession);
+
+};
+
+/**
+* Automatically called by the Canvas Renderer.
+* Overrides the Sprite._renderWebGL function.
+*
+* @method Phaser.TilemapLayer#_renderWebGL
+* @private
+*/
+Phaser.TilemapLayer.prototype._renderWebGL = function (renderSession) {
+
+    if (this.fixedToCamera)
+    {
+        this.position.x = (this.game.camera.view.x + this.cameraOffset.x) / this.game.camera.scale.x;
+        this.position.y = (this.game.camera.view.y + this.cameraOffset.y) / this.game.camera.scale.y;
+    }
+    
+    this._scrollX = this.game.camera.view.x * this.scrollFactorX / this.scale.x;
+    this._scrollY = this.game.camera.view.y * this.scrollFactorY / this.scale.y;
+
+    this.render();
+
+    PIXI.Sprite.prototype._renderWebGL.call(this, renderSession);
 
 };
 
@@ -1482,14 +1565,15 @@ Phaser.TilemapLayer.prototype.resizeWorld = function () {
 */
 Phaser.TilemapLayer.prototype._fixX = function (x) {
 
-    if (x &lt; 0)
-    {
-        x = 0;
-    }
-
-    if (this.scrollFactorX === 1)
+    if (this.scrollFactorX === 1 || (this.scrollFactorX === 0 &amp;&amp; this.position.x === 0))
     {
         return x;
+    }
+    
+    //  This executes if the scrollFactorX is 0 and the x position of the tilemap is off from standard.
+    if (this.scrollFactorX === 0 &amp;&amp; this.position.x !== 0)
+    {
+        return x - this.position.x;
     }
 
     return this._scrollX + (x - (this._scrollX / this.scrollFactorX));
@@ -1525,16 +1609,17 @@ Phaser.TilemapLayer.prototype._unfixX = function (x) {
 */
 Phaser.TilemapLayer.prototype._fixY = function (y) {
 
-    if (y &lt; 0)
-    {
-        y = 0;
-    }
-
-    if (this.scrollFactorY === 1)
+    if (this.scrollFactorY === 1 || (this.scrollFactorY === 0 &amp;&amp; this.position.y === 0))
     {
         return y;
     }
-
+    
+    //  This executes if the scrollFactorY is 0 and the y position of the tilemap is off from standard.
+    if (this.scrollFactorY === 0 &amp;&amp; this.position.y !== 0)
+    {
+        return y - this.position.y;
+    }
+    
     return this._scrollY + (y - (this._scrollY / this.scrollFactorY));
 
 };
@@ -2414,7 +2499,7 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, "collisionHeight", {
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
-		on Thu May 19 2016 12:35:37 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Jun 03 2016 18:46:47 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
