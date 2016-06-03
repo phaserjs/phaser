@@ -3779,7 +3779,7 @@ declare module "phaser" {
             postRender(): void;
             postUpdate(): void;
             preUpdate(): void;
-            remove(plugin: Phaser.Plugin): void;
+            remove(plugin: Phaser.Plugin, destroy?: boolean): void;
             removeAll(): void;
             render(): void;
             update(): void;
