@@ -591,6 +591,7 @@ Phaser.Weapon.prototype.destroy = function () {
 * Internal update method, called by the PluginManager.
 *
 * @method Phaser.Weapon#update
+* @protected
 */
 Phaser.Weapon.prototype.update = function () {
 

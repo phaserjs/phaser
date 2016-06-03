@@ -1,7 +1,7 @@
 /// <reference path="pixi.d.ts" />
 /// <reference path="p2.d.ts" />
 
-// Type definitions for Phaser 2.4.8 - 16th May 2016
+// Type definitions for Phaser 2.4.9 - 3rd June 2016
 // Project: https://github.com/photonstorm/phaser
 
 declare module "phaser" {
@@ -403,6 +403,15 @@ declare module "phaser" {
             update(): void;
             updateText(): void;
             updateTransform(): void;
+
+        }
+
+        class Bullet extends Phaser.Sprite {
+
+            constructor(game: Phaser.Game, x: number, y: number, key?: any, frame?: any);
+
+            kill(): void;
+            update(): void;
 
         }
 
@@ -1487,8 +1496,8 @@ declare module "phaser" {
             tilemap(key?: string, tileWidth?: number, tileHeight?: number, width?: number, height?: number): Phaser.Tilemap;
             tileSprite(x: number, y: number, width: number, height: number, key?: any, frame?: any, group?: Phaser.Group): Phaser.TileSprite;
             tween(obj: any): Phaser.Tween;
+            weapon(quantity?: number, key?: any, frame?: any, group?: Phaser.Group): Phaser.Weapon;
             video(key?: string, url?: string): Phaser.Video;
-            videoSprite(): void; //todo not sure?
 
         }
 
@@ -3525,7 +3534,7 @@ declare module "phaser" {
 
         class Plugin implements IStateCycle {
 
-            constructor(game: Phaser.Game, parent: PIXI.DisplayObject);
+            constructor(game: Phaser.Game, parent: Phaser.PluginManager);
 
             active: boolean;
             game: Phaser.Game;
@@ -5442,6 +5451,78 @@ declare module "phaser" {
                 timer(timer: Phaser.Timer, x: number, y: number, color?: string): void;
 
             }
+
+        }
+
+        class Weapon extends Phaser.Plugin {
+
+            constructor(game: Phaser.Game, parent: Phaser.PluginManager);
+
+            static KILL_NEVER: number;
+            static KILL_LIFESPAN: number;
+            static KILL_DISTANCE: number;
+            static KILL_WEAPON_BOUNDS: number;
+            static KILL_CAMERA_BOUNDS: number;
+            static KILL_WORLD_BOUNDS: number;
+            static KILL_STATIC_BOUNDS: number;
+
+            autoExpandBulletsGroup: boolean;
+            autofire: boolean;
+            bounds: Phaser.Rectangle;
+            bulletAngleOffset: number;
+            bulletAngleVariance: number;
+            bulletAnimation: string;
+            bulletClass: any;
+            bulletCollideWorldBounds: boolean;
+            bulletFrame: string;
+            bulletFrameCycle: boolean;
+            bulletFrameRandom: boolean;
+            bulletFrames:  any[];
+            bulletGravity: Phaser.Point;
+            bulletInheritSpriteSpeed: boolean;
+            bulletKey: string;
+            bulletKillDistance: number;
+            bulletKillType: number;
+            bulletLifespan: number;
+            bulletRotateToVelocity: boolean;
+            bullets: Phaser.Group;
+            bulletSpeed: number;
+            bulletSpeedVariance: number;
+            bulletWorldWrap: boolean;
+            bulletWorldWrapPadding: number;
+            fireAngle: number;
+            fireFrom: Phaser.Rectangle;
+            fireLimit: number;
+            fireRate: number;
+            fireRateVariance: number;
+            onFire: Phaser.Signal;
+            onFireLimit: Phaser.Signal;
+            onKill: Phaser.Signal;
+            shots: number;
+            trackedPointer: Phaser.Pointer;
+            trackedSprite: any;
+            trackOffset: Phaser.Point;
+            trackRotation: boolean;
+            x: number;
+            y: number;
+
+            addBulletAnimation(name: string, frames?: number[] | string[], frameRate?: number, loop?: boolean, useNumericIndex?: boolean): Phaser.Weapon;
+            createBullets(quantity?: number, key?: any, frame?: any, group?: Phaser.Group): Phaser.Weapon;
+            debug(x?: number, y?: number, debugBodies?: boolean): void;
+            destroy(): void;
+            fire(from: any, x?: number, y?: number): boolean;
+            fireAtPointer(pointer: Phaser.Pointer): boolean;
+            fireAtSprite(sprite: Phaser.Sprite): boolean;
+            fireAtXY(x: number, y: number): boolean;
+            forEach(callback: any, callbackContext: any): Phaser.Weapon;
+            killAll(): Phaser.Weapon;
+            pauseAll(): Phaser.Weapon;
+            resetShots(newLimit?: number): Phaser.Weapon;
+            resumeAll(): Phaser.Weapon;
+            setBulletBodyOffset(width: number, height: number, offsetX?: number, offsetY?: number): Phaser.Weapon;
+            setBulletFrames(min: number, max: number, cycle?: boolean, random?: boolean): Phaser.Weapon;
+            trackPointer(pointer: Phaser.Pointer, offsetX?: number, offsetY?: number): Phaser.Weapon;
+            trackSprite(sprite: Phaser.Sprite, offsetX?: number, offsetY?: number, trackRotation?: boolean): Phaser.Weapon;
 
         }
 
