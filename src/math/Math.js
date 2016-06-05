@@ -1095,7 +1095,7 @@ Phaser.Math.radToDeg = function radToDeg (radians) {
 * @example "Spread the x value of 5 images from 100 with a margin of 5"
 * var objects = [Phaser.Image, Phaser.Image, Phaser.Image, Phaser.Image, Phaser.Image];
 * for (var i = 0; i < objects.length; i++) {
-* 	objects[i].x = Phaser.Math.spread(100, objects.length, 5, i);
+* objects[i].x = Phaser.Math.spread(100, objects.length, 5, i);
 * }	
 */
 Phaser.Math.spread = function (startValue, amount, margin, iterator) {
