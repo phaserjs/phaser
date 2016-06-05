@@ -250,7 +250,7 @@ Phaser.Sound = function (game, key, volume, loop, connect) {
     this.onStop = new Phaser.Signal();
 
     /**
-    * @property {Phaser.Signal} onMute - The onMouse event is dispatched when this sound is muted.
+    * @property {Phaser.Signal} onMute - The onMute event is dispatched when this sound is muted.
     */
     this.onMute = new Phaser.Signal();
 
