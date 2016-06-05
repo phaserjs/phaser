@@ -2019,11 +2019,11 @@ Phaser.Group.prototype.getClosestTo = function (object) {
 *
 * 'furthest away' is determined by the distance from the objects `x` and `y` properties compared to the childs `x` and `y` properties.
 *
-* @method Phaser.Group#getFarthestFrom
+* @method Phaser.Group#getFurthestFrom
 * @param {any} object - The object used to determine the distance. This can be a Sprite, Group, Image or any object with public x and y properties.
 * @return {any} The child furthest from the given object, or null if no child was found.
 */
-Phaser.Group.prototype.getFarthestFrom = function (object) {
+Phaser.Group.prototype.getFurthestFrom = function (object) {
 
     var distance = 0;
     var tempDistance = 0;
