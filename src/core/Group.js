@@ -2050,6 +2050,32 @@ Phaser.Group.prototype.getFarthestFrom = function (object) {
 };
 
 /**
+* Spreads the children
+*
+* @method Phaser.Group#spreadOut
+* @param {number} x - The center/starting x value
+* @param {number} y - The center/starting y value
+* @param {number} marginX - The margin between x values
+* @param {number} marginY - The margin between y values
+* @return {none}
+*/
+Phaser.Group.prototype.spreadOut = function(x, y, marginX, marginY) {
+	
+	var amount = this.children.length;
+	
+	for (var i = 0; i < amount; ++i)
+	{
+		var child = this.children[i];
+		
+		if (child.exists)
+		{
+			if (x && marginX) child.x = Phaser.Math.spread(x, amount, marginX, i);
+			if (y && marginY) child.y = Phaser.Math.spread(y, amount, marginY, i);
+		}
+	}
+};
+
+/**
 * Get the number of living children in this group.
 *
 * @method Phaser.Group#countLiving
