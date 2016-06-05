@@ -1101,3 +1101,4 @@ Phaser.Math.radToDeg = function radToDeg (radians) {
 Phaser.Math.spread = function (startValue, amount, margin, iterator) {
 	return startValue - (margin * (amount - 1) * 0.5) + (iterator * margin);
 };
+
