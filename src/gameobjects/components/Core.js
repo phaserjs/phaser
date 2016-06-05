@@ -57,6 +57,8 @@ Phaser.Component.Core.init = function (game, x, y, key, frame) {
 
     this.key = key;
 
+    this.data = {};
+
     this.position.set(x, y);
     this.world = new Phaser.Point(x, y);
     this.previousPosition = new Phaser.Point(x, y);
