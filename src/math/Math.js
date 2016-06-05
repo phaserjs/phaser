@@ -1077,3 +1077,27 @@ Phaser.Math.degToRad = function degToRad (degrees) {
 Phaser.Math.radToDeg = function radToDeg (radians) {
     return radians * radianToDegreesFactor;
 };
+
+/**
+* Spread values
+*
+* @method Phaser.math#spread
+* @param {number} startValue - value from where to spread
+* @param {number} amount - how many values to spread
+* @param {number} margin - the margin of the spread
+* @param {number} iterator - the iterator
+* @return {number} the value
+* @example "Spread 5 left and 5 right from 100 with a margin of 5"
+* Phaser.Math.spread(100, 10, 5, 0); returns 77.5
+* Phaser.Math.spread(100, 10, 5, 1); returns 82.5
+* Phaser.Math.spread(100, 10, 5, 8); returns 117.5
+* Phaser.Math.spread(100, 10, 5, 9); returns 122.5
+* @example "Spread the x value of 5 images from 100 with a margin of 5"
+* var objects = [Phaser.Image, Phaser.Image, Phaser.Image, Phaser.Image, Phaser.Image];
+* for (var i = 0; i < objects.length; i++) {
+* 	objects[i].x = Phaser.Math.spread(100, objects.length, 5, i);
+* }	
+*/
+Phaser.Math.spread = function (startValue, amount, margin, iterator) {
+	return startValue - (margin * (amount - 1) * 0.5) + (iterator * margin);
+};
