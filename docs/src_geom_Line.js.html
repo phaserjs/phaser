@@ -811,6 +811,38 @@
 					<ul class="dropdown-menu ">
 						
 						<li class="class-depth-0">
+							<a href="global.html#ANGLE_DOWN">ANGLE_DOWN</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ANGLE_LEFT">ANGLE_LEFT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ANGLE_NORTH_EAST">ANGLE_NORTH_EAST</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ANGLE_NORTH_WEST">ANGLE_NORTH_WEST</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ANGLE_RIGHT">ANGLE_RIGHT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ANGLE_SOUTH_EAST">ANGLE_SOUTH_EAST</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ANGLE_SOUTH_WEST">ANGLE_SOUTH_WEST</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ANGLE_UP">ANGLE_UP</a>
+						</li>
+						
+						<li class="class-depth-0">
 							<a href="global.html#AUTO">AUTO</a>
 						</li>
 						
@@ -876,6 +908,10 @@
 						
 						<li class="class-depth-0">
 							<a href="global.html#IMAGE">IMAGE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#intersectsRectangle">intersectsRectangle</a>
 						</li>
 						
 						<li class="class-depth-0">
@@ -1114,7 +1150,7 @@
 
 /**
 * Creates a new Line object with a start and an end point.
-* 
+*
 * @class Phaser.Line
 * @constructor
 * @param {number} [x1=0] - The x coordinate of the start of the line.
@@ -1151,7 +1187,7 @@ Phaser.Line.prototype = {
 
     /**
     * Sets the components of the Line to the specified values.
-    * 
+    *
     * @method Phaser.Line#setTo
     * @param {number} [x1=0] - The x coordinate of the start of the line.
     * @param {number} [y1=0] - The y coordinate of the start of the line.
@@ -1171,7 +1207,7 @@ Phaser.Line.prototype = {
     /**
     * Sets the line to match the x/y coordinates of the two given sprites.
     * Can optionally be calculated from their center coordinates.
-    * 
+    *
     * @method Phaser.Line#fromSprite
     * @param {Phaser.Sprite} startSprite - The coordinates of this Sprite will be set to the Line.start point.
     * @param {Phaser.Sprite} endSprite - The coordinates of this Sprite will be set to the Line.start point.
@@ -1193,7 +1229,7 @@ Phaser.Line.prototype = {
 
     /**
     * Sets this line to start at the given `x` and `y` coordinates and for the segment to extend at `angle` for the given `length`.
-    * 
+    *
     * @method Phaser.Line#fromAngle
     * @param {number} x - The x coordinate of the start of the line.
     * @param {number} y - The y coordinate of the start of the line.
@@ -1212,12 +1248,12 @@ Phaser.Line.prototype = {
 
     /**
     * Rotates the line by the amount specified in `angle`.
-    * 
+    *
     * Rotation takes place from the center of the line.
     * If you wish to rotate around a different point see Line.rotateAround.
-    * 
+    *
     * If you wish to rotate the ends of the Line then see Line.start.rotate or Line.end.rotate.
-    * 
+    *
     * @method Phaser.Line#rotate
     * @param {number} angle - The angle in radians (unless asDegrees is true) to rotate the line by.
     * @param {boolean} [asDegrees=false] - Is the given angle in radians (false) or degrees (true)?
@@ -1237,9 +1273,9 @@ Phaser.Line.prototype = {
 
     /**
     * Rotates the line by the amount specified in `angle`.
-    * 
+    *
     * Rotation takes place around the coordinates given.
-    * 
+    *
     * @method Phaser.Line#rotateAround
     * @param {number} x - The x coordinate to offset the rotation from.
     * @param {number} y - The y coordinate to offset the rotation from.
@@ -1289,7 +1325,7 @@ Phaser.Line.prototype = {
 
     /**
     * Returns a Point object where the x and y values correspond to the center (or midpoint) of the Line segment.
-    * 
+    *
     * @method Phaser.Line#midPoint
     * @param {Phaser.Point} [out] - A Phaser.Point object into which the result will be populated. If not given a new Point object is created.
     * @return {Phaser.Point} A Phaser.Point object with the x and y values set to the center of the line segment.
@@ -1307,10 +1343,10 @@ Phaser.Line.prototype = {
 
     /**
     * Centers this Line on the given coordinates.
-    * 
+    *
     * The line is centered by positioning the start and end points so that the lines midpoint matches
     * the coordinates given.
-    * 
+    *
     * @method Phaser.Line#centerOn
     * @param {number} x - The x position to center the line on.
     * @param {number} y - The y position to center the line on.
@@ -1331,7 +1367,7 @@ Phaser.Line.prototype = {
 
     /**
     * Tests if the given coordinates fall on this line. See pointOnSegment to test against just the line segment.
-    * 
+    *
     * @method Phaser.Line#pointOnLine
     * @param {number} x - The line to check against this one.
     * @param {number} y - The line to check against this one.
@@ -1345,7 +1381,7 @@ Phaser.Line.prototype = {
 
     /**
     * Tests if the given coordinates fall on this line and within the segment. See pointOnLine to test against just the line.
-    * 
+    *
     * @method Phaser.Line#pointOnSegment
     * @param {number} x - The line to check against this one.
     * @param {number} y - The line to check against this one.
@@ -1364,7 +1400,7 @@ Phaser.Line.prototype = {
 
     /**
     * Picks a random point from anywhere on the Line segment and returns it.
-    * 
+    *
     * @method Phaser.Line#random
     * @param {Phaser.Point|object} [out] - A Phaser.Point, or any object with public x/y properties, that the values will be set in.
     *     If no object is provided a new Phaser.Point object will be created. In high performance areas avoid this by re-using an object.
@@ -1736,6 +1772,98 @@ Phaser.Line.intersects = function (a, b, asSegment, result) {
 };
 
 /**
+* Checks for intersection between the Line and a Rectangle shape, or a rectangle-like
+* object, with public `x`, `y`, `right` and `bottom` properties, such as a Sprite or Body.
+*
+* An intersection is considered valid if:
+*
+* The line starts within, or ends within, the Rectangle.
+* The line segment intersects one of the 4 rectangle edges.
+*
+* The for the purposes of this function rectangles are considered 'solid'.
+*
+* @method intersectsRectangle
+* @param {Phaser.Line} line - The line to check for intersection with.
+* @param {Phaser.Rectangle|object} rect - The rectangle, or rectangle-like object, to check for intersection with.
+* @return {boolean} True if the line intersects with the rectangle edges, or starts or ends within the rectangle.
+*/
+Phaser.Line.intersectsRectangle = function (line, rect) {
+
+    //  Quick bail out of the Line and Rect bounds don't intersect
+    if (!Phaser.Rectangle.intersects(line, rect))
+    {
+        return false;
+    }
+
+    var x1 = line.start.x;
+    var y1 = line.start.y;
+
+    var x2 = line.end.x;
+    var y2 = line.end.y;
+
+    var bx1 = rect.x;
+    var by1 = rect.y;
+    var bx2 = rect.right;
+    var by2 = rect.bottom;
+
+    var t = 0;
+
+    //  If the start or end of the line is inside the rect then we assume
+    //  collision, as rects are solid for our use-case.
+
+    if ((x1 >= bx1 &amp;&amp; x1 &lt;= bx2 &amp;&amp; y1 >= by1 &amp;&amp; y1 &lt;= by2) ||
+        (x2 >= bx1 &amp;&amp; x2 &lt;= bx2 &amp;&amp; y2 >= by1 &amp;&amp; y2 &lt;= by2))
+    {
+        return true;
+    }
+
+    if (x1 &lt; bx1 &amp;&amp; x2 >= bx1)
+    {
+        //  Left edge
+        t = y1 + (y2 - y1) * (bx1 - x1) / (x2 - x1);
+
+        if (t > by1 &amp;&amp; t &lt;= by2)
+        {
+            return true;
+        }
+    }
+    else if (x1 > bx2 &amp;&amp; x2 &lt;= bx2)
+    {
+        //  Right edge
+        t = y1 + (y2 - y1) * (bx2 - x1) / (x2 - x1);
+
+        if (t >= by1 &amp;&amp; t &lt;= by2)
+        {
+            return true;
+        }
+    }
+
+    if (y1 &lt; by1 &amp;&amp; y2 >= by1)
+    {
+        //  Top edge
+        t = x1 + (x2 - x1) * (by1 - y1) / (y2 - y1);
+
+        if (t >= bx1 &amp;&amp; t &lt;= bx2)
+        {
+            return true;
+        }
+    }
+    else if (y1 > by2 &amp;&amp; y2 &lt;= by2)
+    {
+        //  Bottom edge
+        t = x1 + (x2 - x1) * (by2 - y1) / (y2 - y1);
+
+        if (t >= bx1 &amp;&amp; t &lt;= bx2)
+        {
+            return true;
+        }
+    }
+
+    return false;
+
+};
+
+/**
 * Returns the reflected angle between two lines.
 * This is the outgoing angle based on the angle of Line 1 and the normalAngle of Line 2.
 *
@@ -1770,7 +1898,7 @@ Phaser.Line.reflect = function (a, b) {
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
-		on Thu May 19 2016 12:35:37 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Jun 03 2016 18:46:47 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

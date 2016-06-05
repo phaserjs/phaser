@@ -38,19 +38,13 @@ Thousands of developers worldwide use it. From indies and multi-national digital
 ![div](http://www.phaser.io/images/github/div.png)
 
 <a name="whats-new"></a>
-## What's new in Phaser 2.4.8
+## What's new in Phaser 2.4.9
 
 <div align="center"><img src="http://phaser.io/images/github/news.jpg"></div>
 
-> 19th May 2016
+> In Development
 
-The release of Phaser 2.4.8 continues our commitment to rapid turn-around of bug fixes and enhancements. Scan through the [Change Log](#change-log) for comprehensive details about what is new and updated in this version.
-
-As always, my thanks to all of you who contributed towards this release. Either by opening an issue on GitHub, providing a fix, or just giving encouragement to the dev team.
-
-We are now splitting our time between development of [Lazer](#lazer), and Phaser 2.5. We decided, after much discussion with the community, that we owed it to Phaser to go out on a high, so 2.5 will be the version in which we do just that. After this Phaser will enter the LTS (long-term support) stage of its life.
-
-This is when we impose a feature freeze, locking the API down and responding only to bugs. This is a necessary step to allow us to focus on Lazer while still ensuring Phaser is given the support it deserves. Don't worry, we aren't going to abandon you! We've got your backs.
+The release of Phaser 2.4.9 is currently in development. This README will be updated as development continues.
 
 As always, keep you eyes on the Phaser web site and read our weekly [newsletter](#phaserworld). You can also follow me on [Twitter](https://twitter.com/photonstorm) or chat to me in the Phaser [Slack](http://phaser.io/news/2015/08/phaser-slack-channel) channel.
 
@@ -122,15 +116,15 @@ Using Browserify? Please [read this](#browserify).
 
 [jsDelivr](http://www.jsdelivr.com/#!phaser) is a "super-fast CDN for developers". Include the following in your html:
 
-`<script src="//cdn.jsdelivr.net/phaser/2.4.8/phaser.js"></script>`
+`<script src="//cdn.jsdelivr.net/phaser/2.4.9/phaser.js"></script>`
 
 or the minified version:
 
-`<script src="//cdn.jsdelivr.net/phaser/2.4.8/phaser.min.js"></script>`
+`<script src="//cdn.jsdelivr.net/phaser/2.4.9/phaser.min.js"></script>`
 
 [cdnjs.com](https://cdnjs.com/libraries/phaser) also offers a free CDN service. They have all versions of Phaser and even the custom builds:
 
-`<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/2.4.8/phaser.js"></script>`
+`<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/2.4.9/phaser.js"></script>`
 
 ### Phaser Sandbox
 
@@ -338,38 +332,53 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 <a name="change-log"></a>
 ## Change Log
 
-## Version 2.4.8 - "Watch Hill" - 19th May 2016
+## Version 2.4.9 - "Four Kings" - In Development
 
 ### New Features
 
-* BitmapData.copy, and by extension any method that uses it, including BitmapData.draw, drawGroup and drawFull, now all support drawing RenderTexture objects. These can either be passed directly, or be the textures of Sprites, such as from a call to generateTexture.
-* Arcade Physics has had a new `world` argument added to the following functions: `distanceBetween`, `distanceToXY`, `distanceToPointer`, `angleBetween`, `angleToXY` and `angleToPointer`. The argument (which is false by default), when enabled will calculate the angles or distances based on the Game Objects `world` property, instead of its `x` and `y` properties. This allows it to work for objects that are placed in offset Groups, or are children of other display objects (thanks @Skeptron for the thread #2463)
-* Arcade Physics Body has a new property `worldBounce`. This controls the elasticity of the Body specifically when colliding with the World bounds. By default this property is `null`, in which case Body.bounce is used instead. Set this property to a Phaser.Point object in order to enable a World bounds specific bounce value (thanks @VitaZheltyakov #2465)
+* Phaser.Line.intersectsRectangle checks for intersection between a Line and a Rectangle, or any Rectangle-like object such as a Sprite or Body.
+* Group.getClosestTo will return the child closest to the given point (thanks @Nuuf #2504)
+* Group.getFarthestFrom will return the child farthest away from the given point (thanks @Nuuf #2504)
+* Animation.reverse will reverse the currently playing animation direction (thanks @gotenxds #2505)
+* Animation.reverseOnce will reverse the animation direction for the current, or next animation only (thanks @gotenxds #2505)
+* The way the display list updates and Camera movements are handled has been completely revamped, which should result is significantly smoother motion when the Camera is following tweened or physics controlled sprites. The `Stage.postUpdate` function is now vastly reduced in complexity. It takes control over updating the display list (calling `updateTransform` on itself), rather than letting the Canvas or WebGL renderers do this. Because of this change, the `Camera.updateTarget` function uses the Sprites `worldPosition` property instead, which is now frame accurate (thanks @whig @Upperfoot @Whoisnt @hexus #2482)
+* Game Objects including Sprite, Image, Particle, TilemapLayer, Text, BitmapText and TileSprite have a new property called `data`. This is an empty Object that Phaser will never touch internally, but your own code, or Phaser Plugins, can store Game Object specific data within it. This allows you to associate data with a Game Object without having to pollute or change its class shape.
+* TilemapLayers will now collide properly when they have a position that isn't set to 0x0. For example if you're stitching together several maps, one after the other, and manually adjust their `scrollX/Y` properties (thanks @Upperfoot #2522)
+* There are a bunch of new Phaser consts available to help with setting the angle of a Game Object. They are `Phaser.ANGLE_UP`, `ANGLE_DOWN`, `ANGLE_LEFT`, `ANGLE_RIGHT`, `ANGLE_NORTH_EAST`, `ANGLE_NORTH_WEST`, `ANGLE_SOUTH_EAST` and `ANGLE_SOUTH_WEST`.
+* Math.between will return a value between the given `min` and `max` values.
 
 ### Updates
 
-* TypeScript definitions fixes and updates (thanks @osev7 @staff0rd @galen-manuel)
-* Docs typo fixes (thanks @dedoubleyou1 @mortonfox @zeterain)
-* You can now access the intensity of the Camera shake effect via the getter / setter `Camera.shakeIntensity`. Useful if you wish to tween the intensity while running. (thanks @drhayes #2443)
-* The Arcade Physics overlap method would return false if two bodies were overlapping but neither had any velocity (i.e. they were embedded into each other)
-* PIXI.defaultRenderer is now set to `null` in Game.destroy, allowing it to be reset if a new Game instance is created on the same page (thanks @xtforgame ##2474)
-* BitmapData.drawGroupProxy is now capable of iterating through Sprites that have children, and also now uses the world positions for drawing instead. This change updates the functionality of BitmapData.drawGroup.
-* Text.setStyle has a new argument `update` which will optionally automatically call `updateText` after setting the new style (thanks @staff0rd  #2478)
+* TypeScript definitions fixes and updates (thanks @wingyplus @monagames @marineorganism @obamor)
+* Docs typo fixes (thanks @seanirby)
+* The TypeScript defs ambient declaration has been updated to make it compatible with the SystemJS loader (thanks @monagames)
+* You can no longer intersect check a Body against itself (thanks @VitaZheltyakov #2514)
+* The mobile template has been updated (thanks @cryptographer #2518)
+* Video.onComplete wouldn't fire on iOS if the user hit the 'Done' button before the video had finished playing. It now uses the `webkitendfullscreen` event to detect this, and dispatches the `onComplete` signal should that event fire (thanks @kelu-smiley #2498)
+* Sound.addMarker now has a default value for the `duration` argument (1 second) to avoid the DOM Exception 11 error if you accidentally miss it out (thanks @mari8i #2508)
+* Removed the `Stage.updateTransform` calls from the main game loop, because it happens automatically as part of `Game.updateLogic` anyway, so was duplicating the workload for no reason.
+* TilemapLayer.postUpdate could potentially be called several times per frame (depending on device frame rate), which would cause multiple texture redraws, even though only the last texture is used during rendering. This has now been modified so that the local TilemapLayer canvas is only re-rendered once per frame, during the rendering phase, and not during the logic update phase.
+* Stage has had all of its core update loops modified, so they now iterate through the display list forwards, instead of in reverse. Stage.postUpdate is now also a lot smaller, with no conditional branching if there is a Camera Target or not.
+* Within RequestAnimationFrame both `updateRAF` and `updateSetTimeout` now only call `game.update` if `isRunning` is true. This should avoid asynchronous Game destroy errors under environments like Angular (thanks @flogvit #2521)
+* Group.removeAll has a new argument `destroyTexture` which allows you to optionally destroy the BaseTexture of each child, as it is removed from the Group (thanks @stoneman1 #2487)
+* PluginManager.remove has a new argument `destroy` (defaults to `true`) which will let you optionally called the `destroy` method of the Plugin being removed.
+* Cache.getJSON used to incorrectly bring back a deep-copy of the Phaser.Utils object, instead of just a clone of the JSON object requested (thanks @drhayes #2524 #2526)
 
 ### Bug Fixes
 
-* Fixed an issue in the Arcade Physics overlap method where it would only detect overlaps up to the max bias threshold and no further (thanks @rgk #2441)
-* InputHandler.checkPointerDown and checkPointerOver will now test the worldTransform scale property of a Sprite. If zero it will fast return, where-as before it would incorrectly report an up event (thanks @jaapaurelio #2466)
-* Fixed a bug in Arcade Physics Body.preUpdate which would incorrectly apply the position of an offset Body (one which has had Body.setSize used on it) when combined with a Sprite with a non-zero anchor (thanks @SBCGames #2470)
-* If you set Game.renderType to `Phaser.HEADLESS` it will no longer render the output to the canvas. The canvas is still created (although not added to the DOM), as it's required internally, but no rendering now takes place on it (thanks @ForgeableSum #2464)
-* Sounds played using the Audio tag, that were paused and then resumed again (either directly in code, or via a game pause event) would not resume from the point at which they paused (thanks @rroylance #2473)
-* Sounds played using the Audio tag, set to loop, would get caught in an endless pause-play loop cycle (thanks @rroylance #2473)
+* Arcade Physics Body incorrectly positioned if the Sprite had a negative scale (see http://www.html5gamedevs.com/topic/22695-247-248-body-anchoring-any-migration-tips/) (thanks @SBCGames @icameron @Nuuf @EvolViper #2488 #2490)
+* InputHandler.checkPointerDown had an incorrect single pipe character |, instead of an OR check ||, and an `isDown` check, causing Button Over events to fail (thanks @pengchuan #2486)
+* BitmapText objects with lines greater than `maxWidth` now handle alignment values correctly, causing them to properly center align (thanks @kevinleedrum  #2499 @crippledcactus #2496)
+* Text has a new private method `measureLine` which is used to calculate the final Text line length, after factoring in color stops and other style changes. This should prevent characters from becoming truncated (thanks @TadejZupancic #2519 #2512)
+* Sometimes the browser would cause a race condition where any connected Game Pads were being detected before the callback had a chance to be established. Also sometimes the rawPad references would become stale, and are now checked constantly (thanks @cwleonard #2471)
 
 ### Pixi Updates
 
 Please note that Phaser uses a custom build of Pixi and always has done. The following changes have been made to our custom build, not to Pixi in general.
 
-* Sprites that had a tint on them, that then had their frame changed via either `Sprite.frame` or `Sprite.frameName` wouldn't re-tint the new frame, and would become stuck on the old frame in Canvas mode (thaks @spayton #2453)
+*
+*
+*
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
@@ -408,10 +417,10 @@ All rights reserved.
 
 [![Analytics](https://ga-beacon.appspot.com/UA-44006568-2/phaser/index)](https://github.com/igrigorik/ga-beacon)
 
-[get-js]: https://github.com/photonstorm/phaser/releases/download/v2.4.8/phaser.js
-[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v2.4.8/phaser.min.js
-[get-zip]: https://github.com/photonstorm/phaser/archive/v2.4.8.zip
-[get-tgz]: https://github.com/photonstorm/phaser/archive/v2.4.8.tar.gz
+[get-js]: https://github.com/photonstorm/phaser/releases/download/v2.4.9/phaser.js
+[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v2.4.9/phaser.min.js
+[get-zip]: https://github.com/photonstorm/phaser/archive/v2.4.9.zip
+[get-tgz]: https://github.com/photonstorm/phaser/archive/v2.4.9.tar.gz
 [clone-http]: https://github.com/photonstorm/phaser.git
 [clone-ssh]: git@github.com:photonstorm/phaser.git
 [clone-svn]: https://github.com/photonstorm/phaser

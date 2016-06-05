@@ -811,6 +811,38 @@
 					<ul class="dropdown-menu ">
 						
 						<li class="class-depth-0">
+							<a href="global.html#ANGLE_DOWN">ANGLE_DOWN</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ANGLE_LEFT">ANGLE_LEFT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ANGLE_NORTH_EAST">ANGLE_NORTH_EAST</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ANGLE_NORTH_WEST">ANGLE_NORTH_WEST</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ANGLE_RIGHT">ANGLE_RIGHT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ANGLE_SOUTH_EAST">ANGLE_SOUTH_EAST</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ANGLE_SOUTH_WEST">ANGLE_SOUTH_WEST</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#ANGLE_UP">ANGLE_UP</a>
+						</li>
+						
+						<li class="class-depth-0">
 							<a href="global.html#AUTO">AUTO</a>
 						</li>
 						
@@ -876,6 +908,10 @@
 						
 						<li class="class-depth-0">
 							<a href="global.html#IMAGE">IMAGE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#intersectsRectangle">intersectsRectangle</a>
 						</li>
 						
 						<li class="class-depth-0">
@@ -1157,15 +1193,12 @@
 </ul>
 
 <p><a name="whats-new"></a></p>
-<h2>What's new in Phaser 2.4.8</h2><div align="center"><img src="http://phaser.io/images/github/news.jpg"></div>
+<h2>What's new in Phaser 2.4.9</h2><div align="center"><img src="http://phaser.io/images/github/news.jpg"></div>
 
 <blockquote>
-<p>19th May 2016</p>
+<p>In Development</p>
 </blockquote>
-<p>The release of Phaser 2.4.8 continues our commitment to rapid turn-around of bug fixes and enhancements. Scan through the <a href="#change-log">Change Log</a> for comprehensive details about what is new and updated in this version.</p>
-<p>As always, my thanks to all of you who contributed towards this release. Either by opening an issue on GitHub, providing a fix, or just giving encouragement to the dev team.</p>
-<p>We are now splitting our time between development of <a href="#lazer">Lazer</a>, and Phaser 2.5. We decided, after much discussion with the community, that we owed it to Phaser to go out on a high, so 2.5 will be the version in which we do just that. After this Phaser will enter the LTS (long-term support) stage of its life.</p>
-<p>This is when we impose a feature freeze, locking the API down and responding only to bugs. This is a necessary step to allow us to focus on Lazer while still ensuring Phaser is given the support it deserves. Don't worry, we aren't going to abandon you! We've got your backs.</p>
+<p>The release of Phaser 2.4.9 is currently in development. This README will be updated as development continues.</p>
 <p>As always, keep you eyes on the Phaser web site and read our weekly <a href="#phaserworld">newsletter</a>. You can also follow me on <a href="https://twitter.com/photonstorm">Twitter</a> or chat to me in the Phaser <a href="http://phaser.io/news/2015/08/phaser-slack-channel">Slack</a> channel.</p>
 <p>We'd be extremely grateful if you could get involved with our <a href="https://www.patreon.com/photonstorm">Phaser Patreon campaign</a>. The uptake so far has been fantastic. Thank you to everyone who now supports Phaser development and shares our belief in the future of HTML5 gaming, and Phasers role in that.</p>
 <p>Happy coding everyone! See you on the forums.</p>
@@ -1191,8 +1224,8 @@
 <h2>Download Phaser</h2><p>Phaser is <a href="https://github.com/photonstorm/phaser">hosted on Github</a>. There are a number of ways to download it:</p>
 <ul>
 <li>Clone the git repository via <a href="https://github.com/photonstorm/phaser.git">https</a>, <a href="git@github.com:photonstorm/phaser.git">ssh</a> or with the Github <a href="github-windows://openRepo/https://github.com/photonstorm/phaser">Windows</a> or <a href="github-mac://openRepo/https://github.com/photonstorm/phaser">Mac</a> clients.</li>
-<li>Download as <a href="https://github.com/photonstorm/phaser/archive/v2.4.8.zip">zip</a> or <a href="https://github.com/photonstorm/phaser/archive/v2.4.8.tar.gz">tar.gz</a></li>
-<li>Download just the build files: <a href="https://github.com/photonstorm/phaser/releases/download/v2.4.8/phaser.js">phaser.js</a> and <a href="https://github.com/photonstorm/phaser/releases/download/v2.4.8/phaser.min.js">phaser.min.js</a></li>
+<li>Download as <a href="https://github.com/photonstorm/phaser/archive/v2.4.9.zip">zip</a> or <a href="https://github.com/photonstorm/phaser/archive/v2.4.9.tar.gz">tar.gz</a></li>
+<li>Download just the build files: <a href="https://github.com/photonstorm/phaser/releases/download/v2.4.9/phaser.js">phaser.js</a> and <a href="https://github.com/photonstorm/phaser/releases/download/v2.4.9/phaser.min.js">phaser.min.js</a></li>
 <li>Checkout with <a href="https://github.com/photonstorm/phaser">svn</a></li>
 </ul>
 <h3>Bower / npm</h3><p>Install via <a href="http://bower.io">bower</a></p>
@@ -1201,11 +1234,11 @@
 <p><code>npm install phaser</code></p>
 <p>Using Browserify? Please <a href="#browserify">read this</a>.</p>
 <h3>CDN</h3><p><a href="http://www.jsdelivr.com/#!phaser">jsDelivr</a> is a &quot;super-fast CDN for developers&quot;. Include the following in your html:</p>
-<p><code>&lt;script src=&quot;//cdn.jsdelivr.net/phaser/2.4.8/phaser.js&quot;&gt;&lt;/script&gt;</code></p>
+<p><code>&lt;script src=&quot;//cdn.jsdelivr.net/phaser/2.4.9/phaser.js&quot;&gt;&lt;/script&gt;</code></p>
 <p>or the minified version:</p>
-<p><code>&lt;script src=&quot;//cdn.jsdelivr.net/phaser/2.4.8/phaser.min.js&quot;&gt;&lt;/script&gt;</code></p>
+<p><code>&lt;script src=&quot;//cdn.jsdelivr.net/phaser/2.4.9/phaser.min.js&quot;&gt;&lt;/script&gt;</code></p>
 <p><a href="https://cdnjs.com/libraries/phaser">cdnjs.com</a> also offers a free CDN service. They have all versions of Phaser and even the custom builds:</p>
-<p><code>&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/phaser/2.4.8/phaser.js&quot;&gt;&lt;/script&gt;</code></p>
+<p><code>&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/phaser/2.4.9/phaser.js&quot;&gt;&lt;/script&gt;</code></p>
 <h3>Phaser Sandbox</h3><p>If you'd like to try coding in Phaser right now, with nothing more than your web browser, then you can head over to the <a href="http://phaser.io/sandbox">Phaser Sandbox</a>. You'll find Quick Start templates and a user-friendly editor filled with handy code-completion features.</p>
 <h3>Koding</h3><p>Want to try Phaser without downloading anything? The site <a href="https://koding.com">Koding</a> offer a complete browser-based virtual machine to work in, allowing you to clone the Phaser repo and start work immediately.</p>
 <h3>License</h3><p>Phaser is released under the <a href="http://opensource.org/licenses/MIT">MIT License</a>.</p>
@@ -1307,32 +1340,45 @@ require('phaser');</code></pre><h3>Building from source</h3><p>Should you wish t
 <p>You can read all about the philosophy behind Lazer <a href="http://phaser.io/news/2016/01/phaser-in-2015-and-beyond">here</a> or join the Google Group <a href="https://groups.google.com/d/forum/phaser3-dev">mailing list</a> where progress reports are posted. You can also follow progress in the Phaser World newsletter.</p>
 
 <p><a name="change-log"></a></p>
-<h2>Change Log</h2><h2>Version 2.4.8 - &quot;Watch Hill&quot; - 19th May 2016</h2><h3>New Features</h3><ul>
-<li>BitmapData.copy, and by extension any method that uses it, including BitmapData.draw, drawGroup and drawFull, now all support drawing RenderTexture objects. These can either be passed directly, or be the textures of Sprites, such as from a call to generateTexture.</li>
-<li>Arcade Physics has had a new <code>world</code> argument added to the following functions: <code>distanceBetween</code>, <code>distanceToXY</code>, <code>distanceToPointer</code>, <code>angleBetween</code>, <code>angleToXY</code> and <code>angleToPointer</code>. The argument (which is false by default), when enabled will calculate the angles or distances based on the Game Objects <code>world</code> property, instead of its <code>x</code> and <code>y</code> properties. This allows it to work for objects that are placed in offset Groups, or are children of other display objects (thanks @Skeptron for the thread #2463)</li>
-<li>Arcade Physics Body has a new property <code>worldBounce</code>. This controls the elasticity of the Body specifically when colliding with the World bounds. By default this property is <code>null</code>, in which case Body.bounce is used instead. Set this property to a Phaser.Point object in order to enable a World bounds specific bounce value (thanks @VitaZheltyakov #2465)</li>
+<h2>Change Log</h2><h2>Version 2.4.9 - &quot;Four Kings&quot; - In Development</h2><h3>New Features</h3><ul>
+<li>Phaser.Line.intersectsRectangle checks for intersection between a Line and a Rectangle, or any Rectangle-like object such as a Sprite or Body.</li>
+<li>Group.getClosestTo will return the child closest to the given point (thanks @Nuuf #2504)</li>
+<li>Group.getFarthestFrom will return the child farthest away from the given point (thanks @Nuuf #2504)</li>
+<li>Animation.reverse will reverse the currently playing animation direction (thanks @gotenxds #2505)</li>
+<li>Animation.reverseOnce will reverse the animation direction for the current, or next animation only (thanks @gotenxds #2505)</li>
+<li>The way the display list updates and Camera movements are handled has been completely revamped, which should result is significantly smoother motion when the Camera is following tweened or physics controlled sprites. The <code>Stage.postUpdate</code> function is now vastly reduced in complexity. It takes control over updating the display list (calling <code>updateTransform</code> on itself), rather than letting the Canvas or WebGL renderers do this. Because of this change, the <code>Camera.updateTarget</code> function uses the Sprites <code>worldPosition</code> property instead, which is now frame accurate (thanks @whig @Upperfoot @Whoisnt @hexus #2482)</li>
+<li>Game Objects including Sprite, Image, Particle, TilemapLayer, Text, BitmapText and TileSprite have a new property called <code>data</code>. This is an empty Object that Phaser will never touch internally, but your own code, or Phaser Plugins, can store Game Object specific data within it. This allows you to associate data with a Game Object without having to pollute or change its class shape.</li>
+<li>TilemapLayers will now collide properly when they have a position that isn't set to 0x0. For example if you're stitching together several maps, one after the other, and manually adjust their <code>scrollX/Y</code> properties (thanks @Upperfoot #2522)</li>
+<li>There are a bunch of new Phaser consts available to help with setting the angle of a Game Object. They are <code>Phaser.ANGLE_UP</code>, <code>ANGLE_DOWN</code>, <code>ANGLE_LEFT</code>, <code>ANGLE_RIGHT</code>, <code>ANGLE_NORTH_EAST</code>, <code>ANGLE_NORTH_WEST</code>, <code>ANGLE_SOUTH_EAST</code> and <code>ANGLE_SOUTH_WEST</code>.</li>
+<li>Math.between will return a value between the given <code>min</code> and <code>max</code> values.</li>
 </ul>
 <h3>Updates</h3><ul>
-<li>TypeScript definitions fixes and updates (thanks @osev7 @staff0rd @galen-manuel)</li>
-<li>Docs typo fixes (thanks @dedoubleyou1 @mortonfox @zeterain)</li>
-<li>You can now access the intensity of the Camera shake effect via the getter / setter <code>Camera.shakeIntensity</code>. Useful if you wish to tween the intensity while running. (thanks @drhayes #2443)</li>
-<li>The Arcade Physics overlap method would return false if two bodies were overlapping but neither had any velocity (i.e. they were embedded into each other)</li>
-<li>PIXI.defaultRenderer is now set to <code>null</code> in Game.destroy, allowing it to be reset if a new Game instance is created on the same page (thanks @xtforgame ##2474)</li>
-<li>BitmapData.drawGroupProxy is now capable of iterating through Sprites that have children, and also now uses the world positions for drawing instead. This change updates the functionality of BitmapData.drawGroup.</li>
-<li>Text.setStyle has a new argument <code>update</code> which will optionally automatically call <code>updateText</code> after setting the new style (thanks @staff0rd  #2478)</li>
+<li>TypeScript definitions fixes and updates (thanks @wingyplus @monagames @marineorganism @obamor)</li>
+<li>Docs typo fixes (thanks @seanirby)</li>
+<li>The TypeScript defs ambient declaration has been updated to make it compatible with the SystemJS loader (thanks @monagames)</li>
+<li>You can no longer intersect check a Body against itself (thanks @VitaZheltyakov #2514)</li>
+<li>The mobile template has been updated (thanks @cryptographer #2518)</li>
+<li>Video.onComplete wouldn't fire on iOS if the user hit the 'Done' button before the video had finished playing. It now uses the <code>webkitendfullscreen</code> event to detect this, and dispatches the <code>onComplete</code> signal should that event fire (thanks @kelu-smiley #2498)</li>
+<li>Sound.addMarker now has a default value for the <code>duration</code> argument (1 second) to avoid the DOM Exception 11 error if you accidentally miss it out (thanks @mari8i #2508)</li>
+<li>Removed the <code>Stage.updateTransform</code> calls from the main game loop, because it happens automatically as part of <code>Game.updateLogic</code> anyway, so was duplicating the workload for no reason.</li>
+<li>TilemapLayer.postUpdate could potentially be called several times per frame (depending on device frame rate), which would cause multiple texture redraws, even though only the last texture is used during rendering. This has now been modified so that the local TilemapLayer canvas is only re-rendered once per frame, during the rendering phase, and not during the logic update phase.</li>
+<li>Stage has had all of its core update loops modified, so they now iterate through the display list forwards, instead of in reverse. Stage.postUpdate is now also a lot smaller, with no conditional branching if there is a Camera Target or not.</li>
+<li>Within RequestAnimationFrame both <code>updateRAF</code> and <code>updateSetTimeout</code> now only call <code>game.update</code> if <code>isRunning</code> is true. This should avoid asynchronous Game destroy errors under environments like Angular (thanks @flogvit #2521)</li>
+<li>Group.removeAll has a new argument <code>destroyTexture</code> which allows you to optionally destroy the BaseTexture of each child, as it is removed from the Group (thanks @stoneman1 #2487)</li>
+<li>PluginManager.remove has a new argument <code>destroy</code> (defaults to <code>true</code>) which will let you optionally called the <code>destroy</code> method of the Plugin being removed.</li>
+<li>Cache.getJSON used to incorrectly bring back a deep-copy of the Phaser.Utils object, instead of just a clone of the JSON object requested (thanks @drhayes #2524 #2526)</li>
 </ul>
 <h3>Bug Fixes</h3><ul>
-<li>Fixed an issue in the Arcade Physics overlap method where it would only detect overlaps up to the max bias threshold and no further (thanks @rgk #2441)</li>
-<li>InputHandler.checkPointerDown and checkPointerOver will now test the worldTransform scale property of a Sprite. If zero it will fast return, where-as before it would incorrectly report an up event (thanks @jaapaurelio #2466)</li>
-<li>Fixed a bug in Arcade Physics Body.preUpdate which would incorrectly apply the position of an offset Body (one which has had Body.setSize used on it) when combined with a Sprite with a non-zero anchor (thanks @SBCGames #2470)</li>
-<li>If you set Game.renderType to <code>Phaser.HEADLESS</code> it will no longer render the output to the canvas. The canvas is still created (although not added to the DOM), as it's required internally, but no rendering now takes place on it (thanks @ForgeableSum #2464)</li>
-<li>Sounds played using the Audio tag, that were paused and then resumed again (either directly in code, or via a game pause event) would not resume from the point at which they paused (thanks @rroylance #2473)</li>
-<li>Sounds played using the Audio tag, set to loop, would get caught in an endless pause-play loop cycle (thanks @rroylance #2473)</li>
+<li>Arcade Physics Body incorrectly positioned if the Sprite had a negative scale (see http://www.html5gamedevs.com/topic/22695-247-248-body-anchoring-any-migration-tips/) (thanks @SBCGames @icameron @Nuuf @EvolViper #2488 #2490)</li>
+<li>InputHandler.checkPointerDown had an incorrect single pipe character |, instead of an OR check ||, and an <code>isDown</code> check, causing Button Over events to fail (thanks @pengchuan #2486)</li>
+<li>BitmapText objects with lines greater than <code>maxWidth</code> now handle alignment values correctly, causing them to properly center align (thanks @kevinleedrum  #2499 @crippledcactus #2496)</li>
+<li>Text has a new private method <code>measureLine</code> which is used to calculate the final Text line length, after factoring in color stops and other style changes. This should prevent characters from becoming truncated (thanks @TadejZupancic #2519 #2512)</li>
+<li>Sometimes the browser would cause a race condition where any connected Game Pads were being detected before the callback had a chance to be established. Also sometimes the rawPad references would become stale, and are now checked constantly (thanks @cwleonard #2471)</li>
 </ul>
 <h3>Pixi Updates</h3><p>Please note that Phaser uses a custom build of Pixi and always has done. The following changes have been made to our custom build, not to Pixi in general.</p>
-<ul>
-<li>Sprites that had a tint on them, that then had their frame changed via either <code>Sprite.frame</code> or <code>Sprite.frameName</code> wouldn't re-tint the new frame, and would become stuck on the old frame in Canvas mode (thaks @spayton #2453)</li>
-</ul>
+<p><em>
+</em>
+*</p>
 <p>For changes in previous releases please see the extensive <a href="https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md">Version History</a>.</p>
 
 <p><a name="contributing"></a></p>
@@ -1376,7 +1422,7 @@ require('phaser');</code></pre><h3>Building from source</h3><p>Should you wish t
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
-		on Thu May 19 2016 12:35:38 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Jun 03 2016 18:46:47 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

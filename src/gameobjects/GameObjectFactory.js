@@ -46,6 +46,36 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
+    * Weapons provide the ability to easily create a bullet pool and manager.
+    *
+    * Weapons fire Phaser.Bullet objects, which are essentially Sprites with a few extra properties.
+    * The Bullets are enabled for Arcade Physics. They do not currently work with P2 Physics.
+    *
+    * The Bullets are created inside of `Weapon.bullets`, which is a Phaser.Group instance. Anything you
+    * can usually do with a Group, such as move it around the display list, iterate it, etc can be done
+    * to the bullets Group too.
+    *
+    * Bullets can have textures and even animations. You can control the speed at which they are fired,
+    * the firing rate, the firing angle, and even set things like gravity for them.
+    *
+    * @method Phaser.GameObjectFactory#weapon
+    * @param {integer} [quantity=1] - The quantity of bullets to seed the Weapon with. If -1 it will set the pool to automatically expand.
+    * @param {string|Phaser.RenderTexture|Phaser.BitmapData|Phaser.Video|PIXI.Texture} [key] - The image used as a texture by the bullets during rendering. If a string Phaser will get for an entry in the Image Cache. Or it can be an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
+    * @param {string|number} [frame] - If a Texture Atlas or Sprite Sheet is used this allows you to specify the frame to be used by the bullets. Use either an integer for a Frame ID or a string for a frame name.
+    * @param {Phaser.Group} [group] - Optional Group to add the Weapon to. If not specified it will be added to the World group.
+    * @returns {Phaser.Weapon} A Weapon instance.
+    */
+    weapon: function (quantity, key, frame, group) {
+
+        var weapon = this.game.plugins.add(Phaser.Weapon);
+
+        weapon.createBullets(quantity, key, frame, group);
+
+        return weapon;
+
+    },
+
+    /**
     * Create a new `Image` object.
     * 
     * An Image is a light-weight object you can use to display anything that doesn't need physics or animation.

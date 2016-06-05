@@ -13,7 +13,7 @@
 * In addition, Groups provides support for fast pooling and object recycling.
 *
 * Groups are also display objects and can be nested as children within other Groups.
-* 
+*
 * @class Phaser.Group
 * @extends PIXI.DisplayObjectContainer
 * @param {Phaser.Game} game - A reference to the currently running game.
@@ -107,13 +107,13 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
     this.ignoreDestroy = false;
 
     /**
-    * A Group is that has `pendingDestroy` set to `true` is flagged to have its destroy method 
+    * A Group is that has `pendingDestroy` set to `true` is flagged to have its destroy method
     * called on the next logic update.
     * You can set it directly to flag the Group to be destroyed on its next update.
-    * 
-    * This is extremely useful if you wish to destroy a Group from within one of its own callbacks 
+    *
+    * This is extremely useful if you wish to destroy a Group from within one of its own callbacks
     * or a callback of one of its children.
-    * 
+    *
     * @property {boolean} pendingDestroy
     */
     this.pendingDestroy = false;
@@ -164,7 +164,7 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
 
     /**
     * If this Group contains Arcade Physics Sprites you can set a custom sort direction via this property.
-    * 
+    *
     * It should be set to one of the Phaser.Physics.Arcade sort direction constants: 
     * 
     * Phaser.Physics.Arcade.SORT_NONE
@@ -1976,6 +1976,80 @@ Phaser.Group.prototype.getBottom = function () {
 };
 
 /**
+* Get the closest child to given Object.
+*
+* This can be a Sprite, Group, Image or any object with public x and y properties.
+*
+* 'close' is determined by the distance from the objects `x` and `y` properties compared to the childs `x` and `y` properties.
+*
+* @method Phaser.Group#getClosestTo
+* @param {any} object - The object used to determine the distance. This can be a Sprite, Group, Image or any object with public x and y properties.
+* @return {any} The child closest to given object, or null if no child was found.
+*/
+Phaser.Group.prototype.getClosestTo = function (object) {
+
+    var distance = Number.MAX_VALUE;
+    var tempDistance = 0;
+    var result = null;
+
+    for (var i = 0; i < this.children.length; i++)
+    {
+        var child = this.children[i];
+
+        if (child.exists)
+        {
+            tempDistance = Math.abs(Phaser.Point.distance(object, child));
+
+            if (tempDistance < distance)
+            {
+                distance = tempDistance;
+                result = child;
+            }
+        }
+    }
+
+    return result;
+
+};
+
+/**
+* Get the child furthest away from the given Object.
+*
+* This can be a Sprite, Group, Image or any object with public x and y properties.
+*
+* 'furthest away' is determined by the distance from the objects `x` and `y` properties compared to the childs `x` and `y` properties.
+*
+* @method Phaser.Group#getFarthestFrom
+* @param {any} object - The object used to determine the distance. This can be a Sprite, Group, Image or any object with public x and y properties.
+* @return {any} The child furthest from the given object, or null if no child was found.
+*/
+Phaser.Group.prototype.getFarthestFrom = function (object) {
+
+    var distance = 0;
+    var tempDistance = 0;
+    var result = null;
+
+    for (var i = 0; i < this.children.length; i++)
+    {
+        var child = this.children[i];
+
+        if (child.exists)
+        {
+            tempDistance = Math.abs(Phaser.Point.distance(object, child));
+
+            if (tempDistance > distance)
+            {
+                distance = tempDistance;
+                result = child;
+            }
+        }
+    }
+
+    return result;
+
+};
+
+/**
 * Get the number of living children in this group.
 *
 * @method Phaser.Group#countLiving
@@ -2099,16 +2173,23 @@ Phaser.Group.prototype.moveAll = function (group, silent) {
 };
 
 /**
-* Removes all children from this group, but does not remove the group from its parent.
+* Removes all children from this Group, but does not remove the group from its parent.
+*
+* The children can be optionally destroyed as they are removed.
+* 
+* You can also optionally also destroy the BaseTexture the Child is using. Be careful if you've
+* more than one Game Object sharing the same BaseTexture.
 *
 * @method Phaser.Group#removeAll
 * @param {boolean} [destroy=false] - If true `destroy` will be invoked on each removed child.
 * @param {boolean} [silent=false] - If true the children will not dispatch their `onRemovedFromGroup` events.
+* @param {boolean} [destroyTexture=false] - If true, and if the `destroy` argument is also true, the BaseTexture belonging to the Child is also destroyed. Note that if another Game Object is sharing the same BaseTexture it will invalidate it.
 */
-Phaser.Group.prototype.removeAll = function (destroy, silent) {
+Phaser.Group.prototype.removeAll = function (destroy, silent, destroyTexture) {
 
     if (destroy === undefined) { destroy = false; }
     if (silent === undefined) { silent = false; }
+    if (destroyTexture === undefined) { destroyTexture = false; }
 
     if (this.children.length === 0)
     {
@@ -2128,7 +2209,7 @@ Phaser.Group.prototype.removeAll = function (destroy, silent) {
 
         if (destroy && removed)
         {
-            removed.destroy(true);
+            removed.destroy(true, destroyTexture);
         }
     }
     while (this.children.length > 0);

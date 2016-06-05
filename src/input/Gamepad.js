@@ -252,6 +252,11 @@ Phaser.Gamepad.prototype = {
     */
     _pollGamepads: function () {
 
+        if (!this._active)
+        {
+            return;
+        }
+
         if (navigator['getGamepads'])
         {
             var rawGamepads = navigator.getGamepads();
@@ -289,6 +294,11 @@ Phaser.Gamepad.prototype = {
                 {
                     break;
                 }
+            }
+
+            for (var g = 0; g < this._gamepads.length; g++)
+            {
+                this._gamepads[g]._rawPad = this._rawPads[g];
             }
 
             if (gamepadsChanged)

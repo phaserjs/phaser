@@ -20,7 +20,7 @@ POI: Mountains of Mist, River Eldar, River Sharia, Shadow Coast * (2.5.0)
 Andor
 
 Capital: Caemlyn
-Cities: Arien, Aringill, Baerlon *, Breen's Spring, Buryhill, Carysford, Comfrey, Cullen's Crossing, Damelien, Danabar *, Deven Ride, Emond's Field, Forel Market, Four Kings, Harlon Bridge, Jornhill *, Kore Springs, Market Sheran, New Braem, Sheldyn, Taren Ferry, Watch Hill *, Whitebridge *
+Cities: Arien, Aringill, Baerlon *, Breen's Spring, Buryhill, Carysford, Comfrey, Cullen's Crossing, Damelien, Danabar *, Deven Ride, Emond's Field, Forel Market, Four Kings *, Harlon Bridge, Jornhill *, Kore Springs, Market Sheran, New Braem, Sheldyn, Taren Ferry, Watch Hill *, Whitebridge *
 POI: Mountains of Mist, Tower of Ghenjei, Two Rivers, Whitebridge *
 
 Arad Doman

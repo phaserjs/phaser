@@ -740,9 +740,11 @@ declare module PIXI {
     }
 
     export class ColorMatrixFilter extends AbstractFilter {
-
-        matrix: Matrix;
-
+        
+        constructor();
+        
+        matrix: number[];
+        
     }
 
     export class ColorStepFilter extends AbstractFilter {
@@ -1449,7 +1451,7 @@ declare module PIXI {
         * @param padding Add optional extra padding to the generated texture (default 0)
         * @return a texture of the graphics object
         */
-        generateTexture(resolution?: number, scaleMode?: number): Texture;
+        generateTexture(resolution?: number, scaleMode?: number, padding?: number): RenderTexture;
 
         /**
         * Specifies the line style used for subsequent calls to Graphics methods such as the lineTo() method or the drawCircle() method.

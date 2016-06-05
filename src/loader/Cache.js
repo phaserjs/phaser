@@ -454,10 +454,10 @@ Phaser.Cache.prototype = {
             font: null,
             base: new PIXI.BaseTexture(data)
         };
-        
+
         if (xSpacing === undefined) { xSpacing = 0; }
         if (ySpacing === undefined) { ySpacing = 0; }
-        
+
         if (atlasType === 'json')
         {
             obj.font = Phaser.LoaderParser.jsonBitmapFont(atlasData, obj.base, xSpacing, ySpacing);
@@ -1312,7 +1312,7 @@ Phaser.Cache.prototype = {
         {
             if (clone)
             {
-                return Phaser.Utils.extend(true, data);
+                return Phaser.Utils.extend(true, {}, data);
             }
             else
             {

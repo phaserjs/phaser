@@ -1695,7 +1695,7 @@ Disable this by setting this to false. For example if your game has a canvas fil
 * @method PIXI.CanvasRenderer#destroy
 * @param {Boolean} [removeView=true] - Removes the Canvas element from the DOM.
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\canvas\CanvasRenderer.js
-* @sourceline 195
+* @sourceline 193
 */
 /**
 * @description Resizes the canvas view to the specified width and height
@@ -1703,7 +1703,7 @@ Disable this by setting this to false. For example if your game has a canvas fil
 * @param {Number} width - the new width of the canvas view
 * @param {Number} height - the new height of the canvas view
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\canvas\CanvasRenderer.js
-* @sourceline 217
+* @sourceline 215
 */
 /**
 * @description Renders a display object
@@ -1713,14 +1713,14 @@ Disable this by setting this to false. For example if your game has a canvas fil
 * @param {Matrix} [matrix] - Optional matrix to apply to the display object before rendering.
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\canvas\CanvasRenderer.js
-* @sourceline 245
+* @sourceline 243
 */
 /**
 * @description Maps Pixi blend modes to canvas blend modes.
 * @method PIXI.CanvasRenderer#mapBlendModes
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\canvas\CanvasRenderer.js
-* @sourceline 262
+* @sourceline 260
 */
 /**
 * @fileoverview
@@ -3071,7 +3071,7 @@ Disable this by setting this to false. For example: if your game has a canvas fi
 * @param {Point} projection - The projection
 * @param {Array} buffer - a standard WebGL buffer
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\WebGLRenderer.js
-* @sourceline 281
+* @sourceline 278
 */
 /**
 * @description Resizes the webGL view to the specified width and height.
@@ -3079,7 +3079,7 @@ Disable this by setting this to false. For example: if your game has a canvas fi
 * @param {Number} width - the new width of the webGL view
 * @param {Number} height - the new height of the webGL view
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\WebGLRenderer.js
-* @sourceline 318
+* @sourceline 315
 */
 /**
 * @description Updates and Creates a WebGL texture for the renderers context.
@@ -3087,19 +3087,19 @@ Disable this by setting this to false. For example: if your game has a canvas fi
 * @param {PIXI.Texture} texture - the texture to update
 * @return {Boolean} True if the texture was successfully bound, otherwise false.
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\WebGLRenderer.js
-* @sourceline 344
+* @sourceline 341
 */
 /**
 * @description Removes everything from the renderer (event listeners, spritebatch, etc...)
 * @method PIXI.WebGLRenderer#destroy
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\WebGLRenderer.js
-* @sourceline 401
+* @sourceline 398
 */
 /**
 * @description Maps Pixi blend modes to WebGL blend modes.
 * @method PIXI.WebGLRenderer#mapBlendModes
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\WebGLRenderer.js
-* @sourceline 433
+* @sourceline 430
 */
 /**
 * @fileoverview

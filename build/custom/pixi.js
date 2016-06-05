@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.4.8 "Watch Hill" - Built: Thu May 19 2016 12:22:49
+* v2.4.9 "Four Kings" - Built: Fri Jun 03 2016 18:46:05
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -635,7 +635,7 @@ PIXI.DisplayObject.prototype.updateTransform = function(parent)
     this.worldAlpha = this.alpha * p.worldAlpha;
 
     this.worldPosition.set(wt.tx, wt.ty);
-    this.worldScale.set(wt.a, wt.d);
+    this.worldScale.set(Math.sqrt(wt.a * wt.a + wt.b * wt.b), Math.sqrt(wt.c * wt.c + wt.d * wt.d));
     this.worldRotation = Math.atan2(wt.c, wt.d);
 
     // reset the bounds each time this is called!
@@ -1855,7 +1855,7 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession, matrix)
 
         renderSession.context.globalAlpha = this.worldAlpha;
 
-         //  If smoothingEnabled is supported and we need to change the smoothing property for this texture
+        //  If smoothingEnabled is supported and we need to change the smoothing property for this texture
         if (renderSession.smoothProperty && renderSession.scaleMode !== this.texture.baseTexture.scaleMode)
         {
             renderSession.scaleMode = this.texture.baseTexture.scaleMode;
@@ -3675,9 +3675,6 @@ PIXI.WebGLRenderer.prototype.render = function(stage)
     {
         return;
     }
-
-    // update the scene graph
-    stage.updateTransform();
 
     var gl = this.gl;
 
@@ -6658,8 +6655,6 @@ PIXI.CanvasRenderer.prototype.constructor = PIXI.CanvasRenderer;
  * @param stage {Stage} the Stage element to be rendered
  */
 PIXI.CanvasRenderer.prototype.render = function (stage) {
-
-    stage.updateTransform();
 
     this.context.setTransform(1, 0, 0, 1, 0, 0);
 
