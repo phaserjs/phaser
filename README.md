@@ -350,7 +350,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 ### Updates
 
 * TypeScript definitions fixes and updates (thanks @wingyplus @monagames @marineorganism @obamor)
-* Docs typo fixes (thanks @seanirby)
+* Docs typo fixes (thanks @seanirby @johnrees)
 * The TypeScript defs ambient declaration has been updated to make it compatible with the SystemJS loader (thanks @monagames)
 * You can no longer intersect check a Body against itself (thanks @VitaZheltyakov #2514)
 * The mobile template has been updated (thanks @cryptographer #2518)
@@ -371,6 +371,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * BitmapText objects with lines greater than `maxWidth` now handle alignment values correctly, causing them to properly center align (thanks @kevinleedrum  #2499 @crippledcactus #2496)
 * Text has a new private method `measureLine` which is used to calculate the final Text line length, after factoring in color stops and other style changes. This should prevent characters from becoming truncated (thanks @TadejZupancic #2519 #2512)
 * Sometimes the browser would cause a race condition where any connected Game Pads were being detected before the callback had a chance to be established. Also sometimes the rawPad references would become stale, and are now checked constantly (thanks @cwleonard #2471)
+* Sound.isPlaying was set to false when doing an audio loop, but never set back to true if it's a sound not using a marker (thanks @TheJasonReynolds #2529)
 
 ### Pixi Updates
 
