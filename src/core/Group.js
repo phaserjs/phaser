@@ -2069,8 +2069,14 @@ Phaser.Group.prototype.spreadOut = function(x, y, marginX, marginY) {
 		
 		if (child.exists)
 		{
-			if (x && marginX) child.x = Phaser.Math.spread(x, amount, marginX, i);
-			if (y && marginY) child.y = Phaser.Math.spread(y, amount, marginY, i);
+			if (x && marginX) 
+			{
+			    child.x = Phaser.Math.spread(x, amount, marginX, i);
+			}
+			if (y && marginY)
+			{
+			    child.y = Phaser.Math.spread(y, amount, marginY, i);
+			}
 		}
 	}
 };
