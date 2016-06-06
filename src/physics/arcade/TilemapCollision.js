@@ -254,7 +254,7 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
         else if (body.deltaX() > 0 && !body.blocked.right && tile.collideLeft && body.checkCollision.right)
         {
             //  Body is moving RIGHT
-            if (tile.faceLeft && (body.right - tilemapLayer.position.y)  > tile.left)
+            if (tile.faceLeft && (body.right - tilemapLayer.position.x)  > tile.left)
             {
                 ox = (body.right - tilemapLayer.position.x)  - tile.left;
 
