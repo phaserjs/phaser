@@ -298,6 +298,34 @@ var Phaser = Phaser || {
     PENDING_ATLAS: -1,
 
     /**
+    * A horizontal orientation
+    * @constant
+    * @type {integer}
+    */
+    HORIZONTAL: 0,
+
+    /**
+    * A vertical orientation
+    * @constant
+    * @type {integer}
+    */
+    VERTICAL: 1,
+
+    /**
+    * A landscape orientation
+    * @constant
+    * @type {integer}
+    */
+    LANDSCAPE: 0,
+
+    /**
+    * A portrait orientation
+    * @constant
+    * @type {integer}
+    */
+    PORTRAIT: 1,
+
+    /**
     * The Angle (in degrees) a Game Object needs to be set to in order to face up.
     * @constant
     * @type {integer}

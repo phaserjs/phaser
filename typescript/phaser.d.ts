@@ -53,6 +53,11 @@ declare module "phaser" {
         static UP: number;
         static DOWN: number;
 
+        static HORIZONTAL: number;
+        static VERTICAL: number;
+        static LANDSCAPE: number;
+        static PORTRAIT: number;
+
         static ANGLE_UP: number;
         static ANGLE_DOWN: number;
         static ANGLE_LEFT: number;
