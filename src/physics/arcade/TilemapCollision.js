@@ -119,6 +119,7 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
     * @method Phaser.Physics.Arcade#separateTile
     * @param {Phaser.Physics.Arcade.Body} body - The Body object to separate.
     * @param {Phaser.Tile} tile - The tile to collide against.
+    * @param {Phaser.TilemapLayer} tilemapLayer - The tilemapLayer to collide against.
     * @return {boolean} Returns true if the body was separated, otherwise false.
     */
     separateTile: function (i, body, tile, tilemapLayer, overlapOnly) {
@@ -188,7 +189,7 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
         {
             if (tile.faceLeft || tile.faceRight)
             {
-                ox = this.tileCheckX(body, tile);
+                ox = this.tileCheckX(body, tile, tilemapLayer);
 
                 //  That's horizontal done, check if we still intersects? If not then we can return now
                 if (ox !== 0 && !tile.intersects((body.position.x - tilemapLayer.position.x), (body.position.y - tilemapLayer.position.y), (body.right - tilemapLayer.position.x), (body.bottom - tilemapLayer.position.y)))
@@ -199,14 +200,14 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
 
             if (tile.faceTop || tile.faceBottom)
             {
-                oy = this.tileCheckY(body, tile);
+                oy = this.tileCheckY(body, tile, tilemapLayer);
             }
         }
         else
         {
             if (tile.faceTop || tile.faceBottom)
             {
-                oy = this.tileCheckY(body, tile);
+                oy = this.tileCheckY(body, tile, tilemapLayer);
 
                 //  That's vertical done, check if we still intersects? If not then we can return now
                 if (oy !== 0 && !tile.intersects((body.position.x - tilemapLayer.position.x), (body.position.y - tilemapLayer.position.y), (body.right - tilemapLayer.position.x), (body.bottom - tilemapLayer.position.y)))
@@ -217,7 +218,7 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
 
             if (tile.faceLeft || tile.faceRight)
             {
-                ox = this.tileCheckX(body, tile);
+                ox = this.tileCheckX(body, tile, tilemapLayer);
             }
         }
 
@@ -232,6 +233,7 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
     * @method Phaser.Physics.Arcade#tileCheckX
     * @param {Phaser.Physics.Arcade.Body} body - The Body object to separate.
     * @param {Phaser.Tile} tile - The tile to check.
+    * @param {Phaser.TilemapLayer} tilemapLayer - The tilemapLayer to collide against.
     * @return {number} The amount of separation that occurred.
     */
     tileCheckX: function (body, tile, tilemapLayer) {
@@ -288,6 +290,7 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
     * @method Phaser.Physics.Arcade#tileCheckY
     * @param {Phaser.Physics.Arcade.Body} body - The Body object to separate.
     * @param {Phaser.Tile} tile - The tile to check.
+    * @param {Phaser.TilemapLayer} tilemapLayer - The tilemapLayer to collide against.
     * @return {number} The amount of separation that occurred.
     */
     tileCheckY: function (body, tile, tilemapLayer) {
