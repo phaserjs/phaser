@@ -1949,10 +1949,13 @@ declare module "phaser" {
             boundsRect: Phaser.Rectangle;
             boundsSprite: Phaser.Sprite;
             bringToTop: boolean;
+            downPoint: Phaser.Point;
+            dragDistanceThreshold: number;
             dragOffset: Phaser.Point;
             dragFromCenter: boolean;
             draggable: boolean;
             dragStartPoint: Phaser.Point;
+            dragTimeThreshold: number;
             enabled: boolean;
             game: Phaser.Game;
             globalToLocalX(x: number): number;
