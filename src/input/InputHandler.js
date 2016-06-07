@@ -1446,9 +1446,6 @@ Phaser.InputHandler.prototype = {
 
         this._pointerData[pointer.id].isDragged = true;
 
-        var px = pointer.x;
-        var py = pointer.y;
-
         if (this.sprite.fixedToCamera)
         {
             if (this.dragFromCenter)
