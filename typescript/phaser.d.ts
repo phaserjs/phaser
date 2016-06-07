@@ -1960,6 +1960,7 @@ declare module "phaser" {
             dragFromCenter: boolean;
             draggable: boolean;
             dragStartPoint: Phaser.Point;
+            dragStopBlocksInputUp: boolean;
             dragTimeThreshold: number;
             enabled: boolean;
             game: Phaser.Game;
