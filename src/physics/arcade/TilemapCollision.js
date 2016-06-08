@@ -128,9 +128,12 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
         {
             return false;
         }
+        
+        var tilemapLayerOffsetX = (!tilemapLayer.fixedToCamera ? tilemapLayer.position.x : 0);
+        var tilemapLayerOffsetY = (!tilemapLayer.fixedToCamera ? tilemapLayer.position.y : 0);
 
         //  We re-check for collision in case body was separated in a previous step
-        if (!tile.intersects((body.position.x - tilemapLayer.position.x), (body.position.y - tilemapLayer.position.y), (body.right - tilemapLayer.position.x), (body.bottom - tilemapLayer.position.y)))
+        if (!tile.intersects((body.position.x - tilemapLayerOffsetX), (body.position.y - tilemapLayerOffsetY), (body.right - tilemapLayerOffsetX), (body.bottom - tilemapLayerOffsetY)))
         {
             //  no collision so bail out (separated in a previous step)
             return false;
@@ -181,8 +184,8 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
         if (body.deltaX() !== 0 && body.deltaY() !== 0 && (tile.faceLeft || tile.faceRight) && (tile.faceTop || tile.faceBottom))
         {
             //  We only need do this if both axis have checking faces AND we're moving in both directions
-            minX = Math.min(Math.abs((body.position.x - tilemapLayer.position.x) - tile.right), Math.abs((body.right - tilemapLayer.position.x) - tile.left));
-            minY = Math.min(Math.abs((body.position.y - tilemapLayer.position.y) - tile.bottom), Math.abs((body.bottom - tilemapLayer.position.y) - tile.top));
+            minX = Math.min(Math.abs((body.position.x - tilemapLayerOffsetX) - tile.right), Math.abs((body.right - tilemapLayerOffsetX) - tile.left));
+            minY = Math.min(Math.abs((body.position.y - tilemapLayerOffsetY) - tile.bottom), Math.abs((body.bottom - tilemapLayerOffsetY) - tile.top));
         }
 
         if (minX < minY)
@@ -192,7 +195,7 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
                 ox = this.tileCheckX(body, tile, tilemapLayer);
 
                 //  That's horizontal done, check if we still intersects? If not then we can return now
-                if (ox !== 0 && !tile.intersects((body.position.x - tilemapLayer.position.x), (body.position.y - tilemapLayer.position.y), (body.right - tilemapLayer.position.x), (body.bottom - tilemapLayer.position.y)))
+                if (ox !== 0 && !tile.intersects((body.position.x - tilemapLayerOffsetX), (body.position.y - tilemapLayerOffsetY), (body.right - tilemapLayerOffsetX), (body.bottom - tilemapLayerOffsetY)))
                 {
                     return true;
                 }
@@ -210,7 +213,7 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
                 oy = this.tileCheckY(body, tile, tilemapLayer);
 
                 //  That's vertical done, check if we still intersects? If not then we can return now
-                if (oy !== 0 && !tile.intersects((body.position.x - tilemapLayer.position.x), (body.position.y - tilemapLayer.position.y), (body.right - tilemapLayer.position.x), (body.bottom - tilemapLayer.position.y)))
+                if (oy !== 0 && !tile.intersects((body.position.x - tilemapLayerOffsetX), (body.position.y - tilemapLayerOffsetY), (body.right - tilemapLayerOffsetX), (body.bottom - tilemapLayerOffsetY)))
                 {
                     return true;
                 }
@@ -239,13 +242,14 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
     tileCheckX: function (body, tile, tilemapLayer) {
 
         var ox = 0;
+        var tilemapLayerOffsetX = (!tilemapLayer.fixedToCamera ? tilemapLayer.position.x : 0);
 
         if (body.deltaX() < 0 && !body.blocked.left && tile.collideRight && body.checkCollision.left)
         {
             //  Body is moving LEFT
-            if (tile.faceRight && (body.x - tilemapLayer.position.x)  < tile.right)
+            if (tile.faceRight && (body.x - tilemapLayerOffsetX)  < tile.right)
             {
-                ox = (body.x - tilemapLayer.position.x)  - tile.right;
+                ox = (body.x - tilemapLayerOffsetX)  - tile.right;
 
                 if (ox < -this.TILE_BIAS)
                 {
@@ -256,9 +260,9 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
         else if (body.deltaX() > 0 && !body.blocked.right && tile.collideLeft && body.checkCollision.right)
         {
             //  Body is moving RIGHT
-            if (tile.faceLeft && (body.right - tilemapLayer.position.x)  > tile.left)
+            if (tile.faceLeft && (body.right - tilemapLayerOffsetX)  > tile.left)
             {
-                ox = (body.right - tilemapLayer.position.x)  - tile.left;
+                ox = (body.right - tilemapLayerOffsetX)  - tile.left;
 
                 if (ox > this.TILE_BIAS)
                 {
@@ -296,13 +300,14 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
     tileCheckY: function (body, tile, tilemapLayer) {
 
         var oy = 0;
+        var tilemapLayerOffsetY = (!tilemapLayer.fixedToCamera ? tilemapLayer.position.y : 0);
 
         if (body.deltaY() < 0 && !body.blocked.up && tile.collideDown && body.checkCollision.up)
         {
             //  Body is moving UP
-            if (tile.faceBottom && (body.y - tilemapLayer.position.y) < tile.bottom)
+            if (tile.faceBottom && (body.y - tilemapLayerOffsetY) < tile.bottom)
             {
-                oy = (body.y - tilemapLayer.position.y) - tile.bottom;
+                oy = (body.y - tilemapLayerOffsetY) - tile.bottom;
 
                 if (oy < -this.TILE_BIAS)
                 {
@@ -313,9 +318,9 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
         else if (body.deltaY() > 0 && !body.blocked.down && tile.collideUp && body.checkCollision.down)
         {
             //  Body is moving DOWN
-            if (tile.faceTop && (body.bottom - tilemapLayer.position.y)  > tile.top)
+            if (tile.faceTop && (body.bottom - tilemapLayerOffsetY)  > tile.top)
             {
-                oy = (body.bottom - tilemapLayer.position.y)  - tile.top;
+                oy = (body.bottom - tilemapLayerOffsetY)  - tile.top;
 
                 if (oy > this.TILE_BIAS)
                 {
