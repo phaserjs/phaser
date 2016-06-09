@@ -1,7 +1,7 @@
 /// <reference path="pixi.d.ts" />
 /// <reference path="p2.d.ts" />
 
-// Type definitions for Phaser 2.4.9 - 3rd June 2016
+// Type definitions for Phaser 2.4.9 - 9th June 2016
 // Project: https://github.com/photonstorm/phaser
 
 declare module "phaser" {
@@ -1691,8 +1691,13 @@ declare module "phaser" {
             game: Phaser.Game;
             hash: PIXI.DisplayObject[];
             ignoreDestroy: boolean;
+            inputEnableChildren: boolean;
             length: number;
             name: string;
+            onChildInputDown: Phaser.Signal;
+            onChildInputUp: Phaser.Signal;
+            onChildInputOver: Phaser.Signal;
+            onChildInputOut: Phaser.Signal;
             onDestroy: Phaser.Signal;
             pendingDestroy: boolean;
             physicsBodyType: number;
@@ -1706,7 +1711,7 @@ declare module "phaser" {
             visible: boolean;
             z: number;
 
-            add(child: any, silent?: boolean): any;
+            add(child: any, silent?: boolean, index?: number): any;
             addAll(property: string, amount: number, checkAlive: boolean, checkVisible: boolean): void;
             addAt(child: any, index: number, silent?: boolean): any;
             addMultiple(children: any[], silent?: boolean): any[];
@@ -1719,8 +1724,8 @@ declare module "phaser" {
             checkProperty(child: any, key: string[], value: any, force?: boolean): boolean;
             countDead(): number;
             countLiving(): number;
-            create(x: number, y: number, key?: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture, frame?: string | number, exists?: boolean): any;
-            createMultiple(quantity: number, key: string, frame?: any, exists?: boolean): void;
+            create(x: number, y: number, key?: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture, frame?: string | number, exists?: boolean, index?: number): any;
+            createMultiple(quantity: number, key: string, frame?: any, exists?: boolean): any[];
             customSort(sortHandler: Function, context?: any): void;
             destroy(destroyChildren?: boolean, soft?: boolean): void;
             divideAll(property: string, amount: number, checkAlive?: boolean, checkVisible?: boolean): void;
@@ -1938,6 +1943,7 @@ declare module "phaser" {
             hitTest(displayObject: PIXI.DisplayObject, pointer: Phaser.Pointer, localPoint: Phaser.Point): void;
             reset(hard?: boolean): void;
             resetSpeed(x: number, y: number): void;
+            setInteractiveCandidateHandler(callback: Function, context?: any): void;
             startPointer(event: any): Phaser.Pointer;
             stopPointer(event: any): Phaser.Pointer;
             update(): void;
@@ -3896,6 +3902,7 @@ declare module "phaser" {
             justReleasePreventsOver: boolean | number;
             id: number;
             identifier: number;
+            interactiveCandidates: Phaser.InputHandler[];
             isDown: boolean;
             isMouse: boolean;
             isUp: boolean;
@@ -3938,6 +3945,7 @@ declare module "phaser" {
             resetMovement(): void;
             start(event: any): void;
             stop(event: any): void;
+            swapTarget(newTarget: Phaser.InputHandler, silent?: boolean): void;
             update(): void;
             updateButtons(event: MouseEvent): void;
 

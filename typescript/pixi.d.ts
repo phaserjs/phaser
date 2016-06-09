@@ -520,6 +520,7 @@ declare module PIXI {
         children: DisplayObject[];
         height: number;
         width: number;
+        ignoreChildInput: boolean;
 
         addChild(child: DisplayObject): DisplayObject;
         addChildAt(child: DisplayObject, index: number): DisplayObject;
