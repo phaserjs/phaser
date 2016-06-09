@@ -872,6 +872,11 @@ Phaser.Pointer.prototype = {
             currentNode = this.game.input.interactiveItems.next;
         }
 
+        if (this.game.input.customCandidateHandler)
+        {
+            candidateTarget = this.game.input.customCandidateHandler.call(this.game.input.customCandidateHandlerContext, this, this.interactiveCandidates, candidateTarget);
+        }
+
         this.swapTarget(candidateTarget, false);
 
         return (this.targetObject !== null);
