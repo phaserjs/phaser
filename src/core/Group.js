@@ -331,7 +331,7 @@ Phaser.Group.prototype.add = function (child, silent, index) {
         this.updateZ();
     }
 
-    if (this.enableBody && child.hasProperty('body') && child.body === null)
+    if (this.enableBody && child.hasOwnProperty('body') && child.body === null)
     {
         this.game.physics.enable(child, this.physicsBodyType);
     }
@@ -340,7 +340,7 @@ Phaser.Group.prototype.add = function (child, silent, index) {
         this.addToHash(child);
     }
 
-    if (this.inputEnableChildren && child.hasProperty('input') && !child.inputEnabled)
+    if (this.inputEnableChildren && !child.inputEnabled)
     {
         child.inputEnabled = true;
     }
