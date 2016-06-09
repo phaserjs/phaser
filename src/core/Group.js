@@ -138,7 +138,20 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
     this.cursor = null;
 
     /**
+    * A Group with `inputEnableChildren` set to `true` will automatically call `inputEnabled = true` 
+    * on any children _added_ to, or _created by_, this Group.
+    * 
+    * If there are children already in the Group at the time you set this property, they are not changed.
+    * 
+    * @property {boolean} inputEnableChildren
+    * @default
+    */
+    this.inputEnableChildren = false;
+
+    /**
     * If true all Sprites created by, or added to this group, will have a physics body enabled on them.
+    *
+    * If there are children already in the Group at the time you set this property, they are not changed.
     *
     * The default body type is controlled with {@link #physicsBodyType}.
     * @property {boolean} enableBody
@@ -272,53 +285,98 @@ Phaser.Group.SORT_DESCENDING = 1;
 /**
 * Adds an existing object as the top child in this group.
 *
-* The child is automatically added to the top of the group and is displayed on top of every previous child.
+* The child is automatically added to the top of the group, and is displayed above every previous child.
 *
-* If Group.enableBody is set then a physics body will be created on the object, so long as one does not already exist.
+* Or if the _optional_ index is specified, the child is added at the location specified by the index value, 
+* this allows you to control child ordering.
+*
+* If the child was already in this Group, it is simply returned, and nothing else happens to it.
+*
+* If `Group.enableBody` is set, then a physics body will be created on the object, so long as one does not already exist.
+*
+* If `Group.inputEnableChildren` is set, then an Input Handler will be created on the object, so long as one does not already exist.
 *
 * Use {@link #addAt} to control where a child is added. Use {@link #create} to create and add a new child.
 *
 * @method Phaser.Group#add
 * @param {DisplayObject} child - The display object to add as a child.
 * @param {boolean} [silent=false] - If true the child will not dispatch the `onAddedToGroup` event.
+* @param {integer} [index] - The index within the group to insert the child to. Where 0 is the bottom of the Group.
 * @return {DisplayObject} The child that was added to the group.
 */
-Phaser.Group.prototype.add = function (child, silent) {
+Phaser.Group.prototype.add = function (child, silent, index) {
 
     if (silent === undefined) { silent = false; }
 
-    if (child.parent !== this)
+    if (child.parent === this)
     {
-        if (child.body && child.parent && child.parent.hash)
-        {
-            child.parent.removeFromHash(child);
-        }
+        return child;
+    }
 
+    if (child.body && child.parent && child.parent.hash)
+    {
+        child.parent.removeFromHash(child);
+    }
+
+    if (index === undefined)
+    {
         child.z = this.children.length;
 
         this.addChild(child);
+    }
+    else
+    {
+        this.addChildAt(child, index);
 
-        if (this.enableBody && child.body === null)
-        {
-            this.game.physics.enable(child, this.physicsBodyType);
-        }
-        else if (child.body)
-        {
-            this.addToHash(child);
-        }
+        this.updateZ();
+    }
 
-        if (!silent && child.events)
-        {
-            child.events.onAddedToGroup$dispatch(child, this);
-        }
+    if (this.enableBody && child.hasProperty('body') && child.body === null)
+    {
+        this.game.physics.enable(child, this.physicsBodyType);
+    }
+    else if (child.body)
+    {
+        this.addToHash(child);
+    }
 
-        if (this.cursor === null)
-        {
-            this.cursor = child;
-        }
+    if (this.inputEnableChildren && child.hasProperty('input') && !child.inputEnabled)
+    {
+        child.inputEnabled = true;
+    }
+
+    if (!silent && child.events)
+    {
+        child.events.onAddedToGroup$dispatch(child, this);
+    }
+
+    if (this.cursor === null)
+    {
+        this.cursor = child;
     }
 
     return child;
+
+};
+
+/**
+* Adds an existing object to this group.
+*
+* The child is added to the group at the location specified by the index value, this allows you to control child ordering.
+* 
+* If `Group.enableBody` is set, then a physics body will be created on the object, so long as one does not already exist.
+*
+* If `Group.inputEnableChildren` is set, then an Input Handler will be created on the object, so long as one does not already exist.
+*
+* @method Phaser.Group#addAt
+* @param {DisplayObject} child - The display object to add as a child.
+* @param {integer} [index=0] - The index within the group to insert the child to.
+* @param {boolean} [silent=false] - If true the child will not dispatch the `onAddedToGroup` event.
+* @return {DisplayObject} The child that was added to the group.
+*/
+Phaser.Group.prototype.addAt = function (child, index, silent) {
+
+    this.add(child, silent, index);
 
 };
 
@@ -379,6 +437,10 @@ Phaser.Group.prototype.removeFromHash = function (child) {
 *
 * As well as an array you can also pass another Group as the first argument. In this case all of the children from that
 * Group will be removed from it and added into this Group.
+* 
+* If `Group.enableBody` is set, then a physics body will be created on the objects, so long as one does not already exist.
+*
+* If `Group.inputEnableChildren` is set, then an Input Handler will be created on the objects, so long as one does not already exist.
 *
 * @method Phaser.Group#addMultiple
 * @param {DisplayObject[]|Phaser.Group} children - An array of display objects or a Phaser.Group. If a Group is given then *all* children will be moved from it.
@@ -400,56 +462,6 @@ Phaser.Group.prototype.addMultiple = function (children, silent) {
     }
 
     return children;
-
-};
-
-/**
-* Adds an existing object to this group.
-*
-* The child is added to the group at the location specified by the index value, this allows you to control child ordering.
-*
-* @method Phaser.Group#addAt
-* @param {DisplayObject} child - The display object to add as a child.
-* @param {integer} [index=0] - The index within the group to insert the child to.
-* @param {boolean} [silent=false] - If true the child will not dispatch the `onAddedToGroup` event.
-* @return {DisplayObject} The child that was added to the group.
-*/
-Phaser.Group.prototype.addAt = function (child, index, silent) {
-
-    if (silent === undefined) { silent = false; }
-
-    if (child.parent !== this)
-    {
-        if (child.body && child.parent)
-        {
-            child.parent.removeFromHash(child);
-        }
-
-        this.addChildAt(child, index);
-
-        this.updateZ();
-
-        if (this.enableBody && child.body === null)
-        {
-            this.game.physics.enable(child, this.physicsBodyType);
-        }
-        else if (child.body)
-        {
-            this.addToHash(child);
-        }
-
-        if (!silent && child.events)
-        {
-            child.events.onAddedToGroup$dispatch(child, this);
-        }
-
-        if (this.cursor === null)
-        {
-            this.cursor = child;
-        }
-    }
-
-    return child;
 
 };
 
@@ -477,6 +489,15 @@ Phaser.Group.prototype.getAt = function (index) {
 * Creates a new Phaser.Sprite object and adds it to the top of this group.
 *
 * Use {@link #classType} to change the type of object created.
+* 
+* The child is automatically added to the top of the group, and is displayed above every previous child.
+*
+* Or if the _optional_ index is specified, the child is added at the location specified by the index value, 
+* this allows you to control child ordering.
+* 
+* If `Group.enableBody` is set, then a physics body will be created on the object, so long as one does not already exist.
+*
+* If `Group.inputEnableChildren` is set, then an Input Handler will be created on the object, so long as one does not already exist.
 *
 * @method Phaser.Group#create
 * @param {number} x - The x coordinate to display the newly created Sprite at. The value is in relation to the group.x point.
@@ -484,9 +505,10 @@ Phaser.Group.prototype.getAt = function (index) {
 * @param {string|Phaser.RenderTexture|Phaser.BitmapData|Phaser.Video|PIXI.Texture} [key] - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache Image entry, or an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
 * @param {string|number} [frame] - If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
 * @param {boolean} [exists=true] - The default exists state of the Sprite.
+* @param {integer} [index] - The index within the group to insert the child to. Where 0 is the bottom of the Group.
 * @return {DisplayObject} The child that was created: will be a {@link Phaser.Sprite} unless {@link #classType} has been changed.
 */
-Phaser.Group.prototype.create = function (x, y, key, frame, exists) {
+Phaser.Group.prototype.create = function (x, y, key, frame, exists, index) {
 
     if (exists === undefined) { exists = true; }
 
@@ -496,51 +518,43 @@ Phaser.Group.prototype.create = function (x, y, key, frame, exists) {
     child.visible = exists;
     child.alive = exists;
 
-    child.z = this.children.length;
-
-    this.addChild(child);
-
-    if (this.enableBody)
-    {
-        this.game.physics.enable(child, this.physicsBodyType, this.enableBodyDebug);
-    }
-
-    if (child.events)
-    {
-        child.events.onAddedToGroup$dispatch(child, this);
-    }
-
-    if (this.cursor === null)
-    {
-        this.cursor = child;
-    }
-
-    return child;
+    return this.add(child, false, index);
 
 };
 
 /**
-* Creates multiple Phaser.Sprite objects and adds them to the top of this group.
+* Creates multiple Phaser.Sprite objects and adds them to the top of this Group.
 *
-* Useful if you need to quickly generate a pool of identical sprites, such as bullets.
-*
-* By default the sprites will be set to not exist and will be positioned at 0, 0 (relative to the group.x/y).
 * Use {@link #classType} to change the type of object created.
+*
+* This method is useful if you need to quickly generate a pool of identical sprites, such as bullets.
+*
+* By default the Sprites will have their `exists` property set to `false`, and they will be 
+* positioned at 0x0, relative to the `Group.x / y` values.
+* 
+* If `Group.enableBody` is set, then a physics body will be created on the objects, so long as one does not already exist.
+*
+* If `Group.inputEnableChildren` is set, then an Input Handler will be created on the objects, so long as one does not already exist.
 *
 * @method Phaser.Group#createMultiple
 * @param {integer} quantity - The number of Sprites to create.
 * @param {string} key - The Game.cache key of the image that this Sprite will use.
 * @param {integer|string} [frame] - If the Sprite image contains multiple frames you can specify which one to use here.
 * @param {boolean} [exists=false] - The default exists state of the Sprite.
+* @return {array} An array containing all of the Sprites that were created.
 */
 Phaser.Group.prototype.createMultiple = function (quantity, key, frame, exists) {
 
     if (exists === undefined) { exists = false; }
 
+    var children = [];
+
     for (var i = 0; i < quantity; i++)
     {
-        this.create(0, 0, key, frame, exists);
+        children.push(this.create(0, 0, key, frame, exists));
     }
+
+    return children;
 
 };
 
@@ -823,7 +837,11 @@ Phaser.Group.prototype.getByName = function (name) {
 };
 
 /**
-* Replaces a child of this group with the given newChild. The newChild cannot be a member of this group.
+* Replaces a child of this Group with the given newChild. The newChild cannot be a member of this Group.
+*
+* If `Group.enableBody` is set, then a physics body will be created on the object, so long as one does not already exist.
+*
+* If `Group.inputEnableChildren` is set, then an Input Handler will be created on the object, so long as one does not already exist.
 *
 * @method Phaser.Group#replace
 * @param {any} oldChild - The child in this group that will be replaced.
@@ -863,7 +881,7 @@ Phaser.Group.prototype.replace = function (oldChild, newChild) {
 * Will scan up to 4 levels deep only.
 *
 * @method Phaser.Group#hasProperty
-* @param {any} child - The child to check for the existance of the property on.
+* @param {any} child - The child to check for the existence of the property on.
 * @param {string[]} key - An array of strings that make up the property.
 * @return {boolean} True if the child has the property, otherwise false.
 */
