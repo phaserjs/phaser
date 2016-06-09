@@ -363,7 +363,7 @@ Phaser.Keyboard.prototype = {
     /**
     * Normalises the keyCode value from the browser and returns it.
     *
-    * This is based on browser support. It first checks for `event.key`, then `event.keyIdentifier` 
+    * This is based on browser support. It first checks for `event.key`, then `event.keyIdentifier`
     * and finally `event.keyCode`
     *
     * @method Phaser.Keyboard#getKeyCode
@@ -518,7 +518,7 @@ Phaser.Keyboard.prototype = {
     /**
     * Returns `true` if the Key was pressed down within the `duration` value given, or `false` if it either isn't down,
     * or was pressed down longer ago than then given duration.
-    * 
+    *
     * @method Phaser.Keyboard#downDuration
     * @param {integer} keycode - The {@link Phaser.KeyCode keycode} of the key to check: i.e. Phaser.KeyCode.UP or Phaser.KeyCode.SPACEBAR.
     * @param {number} [duration=50] - The duration within which the key is considered as being just pressed. Given in ms.
@@ -540,7 +540,7 @@ Phaser.Keyboard.prototype = {
     /**
     * Returns `true` if the Key was pressed down within the `duration` value given, or `false` if it either isn't down,
     * or was pressed down longer ago than then given duration.
-    * 
+    *
     * @method Phaser.Keyboard#upDuration
     * @param {Phaser.KeyCode|integer} keycode - The keycode of the key to check, i.e. Phaser.KeyCode.UP or Phaser.KeyCode.SPACEBAR.
     * @param {number} [duration=50] - The duration within which the key is considered as being just released. Given in ms.
