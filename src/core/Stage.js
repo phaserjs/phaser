@@ -182,19 +182,22 @@ Phaser.Stage.prototype.postUpdate = function () {
     //  Apply the camera shake, fade, bounds, etc
     this.game.camera.update();
 
-    var i = this.children.length;
+    //  Camera target first?
+    if (this.game.camera.target)
+    {
+        this.game.camera.target.postUpdate();
 
-    while (i--)
+        this.updateTransform();
+
+        this.game.camera.updateTarget();
+    }
+
+    for (var i = 0; i < this.children.length; i++)
     {
         this.children[i].postUpdate();
     }
 
     this.updateTransform();
-
-    if (this.game.camera.target)
-    {
-        this.game.camera.updateTarget();
-    }
 
 };
 
