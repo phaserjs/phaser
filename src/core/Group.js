@@ -149,6 +149,55 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
     this.inputEnableChildren = false;
 
     /**
+    * This Signal is dispatched whenever a child of this Group emits an onInputDown signal as a result
+    * of having been interacted with by a Pointer. You can bind functions to this Signal instead of to
+    * every child Sprite.
+    * 
+    * This Signal is sent 2 arguments: A reference to the Sprite that triggered the signal, and
+    * a reference to the Pointer that caused it.
+    * 
+    * @property {Phaser.Signal} onChildInputDown
+    */
+    this.onChildInputDown = new Phaser.Signal();
+
+    /**
+    * This Signal is dispatched whenever a child of this Group emits an onInputUp signal as a result
+    * of having been interacted with by a Pointer. You can bind functions to this Signal instead of to
+    * every child Sprite.
+    * 
+    * This Signal is sent 3 arguments: A reference to the Sprite that triggered the signal, 
+    * a reference to the Pointer that caused it, and a boolean value `isOver` that tells you if the Pointer
+    * is still over the Sprite or not.
+    * 
+    * @property {Phaser.Signal} onChildInputUp
+    */
+    this.onChildInputUp = new Phaser.Signal();
+
+    /**
+    * This Signal is dispatched whenever a child of this Group emits an onInputOver signal as a result
+    * of having been interacted with by a Pointer. You can bind functions to this Signal instead of to
+    * every child Sprite.
+    * 
+    * This Signal is sent 2 arguments: A reference to the Sprite that triggered the signal, and
+    * a reference to the Pointer that caused it.
+    * 
+    * @property {Phaser.Signal} onChildInputOver
+    */
+    this.onChildInputOver = new Phaser.Signal();
+
+    /**
+    * This Signal is dispatched whenever a child of this Group emits an onInputOut signal as a result
+    * of having been interacted with by a Pointer. You can bind functions to this Signal instead of to
+    * every child Sprite.
+    * 
+    * This Signal is sent 2 arguments: A reference to the Sprite that triggered the signal, and
+    * a reference to the Pointer that caused it.
+    * 
+    * @property {Phaser.Signal} onChildInputOut
+    */
+    this.onChildInputOut = new Phaser.Signal();
+
+    /**
     * If true all Sprites created by, or added to this group, will have a physics body enabled on them.
     *
     * If there are children already in the Group at the time you set this property, they are not changed.

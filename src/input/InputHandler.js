@@ -962,6 +962,11 @@ Phaser.InputHandler.prototype = {
             {
                 this.sprite.events.onInputOver$dispatch(this.sprite, pointer);
             }
+
+            if (this.sprite.parent && this.sprite.parent.type === Phaser.GROUP)
+            {
+                this.sprite.parent.onChildInputOver.dispatch(this.sprite, pointer);
+            }
         }
 
     },
@@ -997,6 +1002,11 @@ Phaser.InputHandler.prototype = {
         if (!silent && this.sprite && this.sprite.events)
         {
             this.sprite.events.onInputOut$dispatch(this.sprite, pointer);
+
+            if (this.sprite && this.sprite.parent && this.sprite.parent.type === Phaser.GROUP)
+            {
+                this.sprite.parent.onChildInputOut.dispatch(this.sprite, pointer);
+            }
         }
 
     },
@@ -1038,7 +1048,13 @@ Phaser.InputHandler.prototype = {
             {
                 this.sprite.events.onInputDown$dispatch(this.sprite, pointer);
 
-                //  The onInputDown event might have destroyed this sprite.
+                //  The event above might have destroyed this sprite.
+                if (this.sprite && this.sprite.parent && this.sprite.parent.type === Phaser.GROUP)
+                {
+                    this.sprite.parent.onChildInputDown.dispatch(this.sprite, pointer);
+                }
+
+                //  The events might have destroyed this sprite.
                 if (this.sprite === null)
                 {
                     return;
@@ -1132,6 +1148,11 @@ Phaser.InputHandler.prototype = {
                     this.dragStopBlocksInputUp && !(this.draggable && this.isDragged && this._draggedPointerID === pointer.id))
                 {
                     this.sprite.events.onInputUp$dispatch(this.sprite, pointer, isOver);
+                }
+
+                if (this.sprite && this.sprite.parent && this.sprite.parent.type === Phaser.GROUP)
+                {
+                    this.sprite.parent.onChildInputUp.dispatch(this.sprite, pointer, isOver);
                 }
 
                 //  The onInputUp event may have changed the sprite so that checkPointerOver is no longer true, so update it.
