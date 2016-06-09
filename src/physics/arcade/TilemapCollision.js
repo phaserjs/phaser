@@ -129,8 +129,8 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
             return false;
         }
         
-        var tilemapLayerOffsetX = (!tilemapLayer.fixedToCamera ? tilemapLayer.position.x : 0);
-        var tilemapLayerOffsetY = (!tilemapLayer.fixedToCamera ? tilemapLayer.position.y : 0);
+        var tilemapLayerOffsetX = (!tilemapLayer.fixedToCamera) ? tilemapLayer.position.x : 0;
+        var tilemapLayerOffsetY = (!tilemapLayer.fixedToCamera) ? tilemapLayer.position.y : 0;
 
         //  We re-check for collision in case body was separated in a previous step
         if (!tile.intersects((body.position.x - tilemapLayerOffsetX), (body.position.y - tilemapLayerOffsetY), (body.right - tilemapLayerOffsetX), (body.bottom - tilemapLayerOffsetY)))
@@ -242,14 +242,14 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
     tileCheckX: function (body, tile, tilemapLayer) {
 
         var ox = 0;
-        var tilemapLayerOffsetX = (!tilemapLayer.fixedToCamera ? tilemapLayer.position.x : 0);
+        var tilemapLayerOffsetX = (!tilemapLayer.fixedToCamera) ? tilemapLayer.position.x : 0;
 
         if (body.deltaX() < 0 && !body.blocked.left && tile.collideRight && body.checkCollision.left)
         {
             //  Body is moving LEFT
-            if (tile.faceRight && (body.x - tilemapLayerOffsetX)  < tile.right)
+            if (tile.faceRight && (body.x - tilemapLayerOffsetX) < tile.right)
             {
-                ox = (body.x - tilemapLayerOffsetX)  - tile.right;
+                ox = (body.x - tilemapLayerOffsetX) - tile.right;
 
                 if (ox < -this.TILE_BIAS)
                 {
@@ -260,9 +260,9 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
         else if (body.deltaX() > 0 && !body.blocked.right && tile.collideLeft && body.checkCollision.right)
         {
             //  Body is moving RIGHT
-            if (tile.faceLeft && (body.right - tilemapLayerOffsetX)  > tile.left)
+            if (tile.faceLeft && (body.right - tilemapLayerOffsetX) > tile.left)
             {
-                ox = (body.right - tilemapLayerOffsetX)  - tile.left;
+                ox = (body.right - tilemapLayerOffsetX) - tile.left;
 
                 if (ox > this.TILE_BIAS)
                 {
@@ -300,7 +300,7 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
     tileCheckY: function (body, tile, tilemapLayer) {
 
         var oy = 0;
-        var tilemapLayerOffsetY = (!tilemapLayer.fixedToCamera ? tilemapLayer.position.y : 0);
+        var tilemapLayerOffsetY = (!tilemapLayer.fixedToCamera) ? tilemapLayer.position.y : 0;
 
         if (body.deltaY() < 0 && !body.blocked.up && tile.collideDown && body.checkCollision.up)
         {
@@ -318,9 +318,9 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
         else if (body.deltaY() > 0 && !body.blocked.down && tile.collideUp && body.checkCollision.down)
         {
             //  Body is moving DOWN
-            if (tile.faceTop && (body.bottom - tilemapLayerOffsetY)  > tile.top)
+            if (tile.faceTop && (body.bottom - tilemapLayerOffsetY) > tile.top)
             {
-                oy = (body.bottom - tilemapLayerOffsetY)  - tile.top;
+                oy = (body.bottom - tilemapLayerOffsetY) - tile.top;
 
                 if (oy > this.TILE_BIAS)
                 {
