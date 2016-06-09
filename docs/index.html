@@ -879,6 +879,10 @@
 						</li>
 						
 						<li class="class-depth-0">
+							<a href="global.html#displayList">displayList</a>
+						</li>
+						
+						<li class="class-depth-0">
 							<a href="global.html#DOWN">DOWN</a>
 						</li>
 						
@@ -907,11 +911,19 @@
 						</li>
 						
 						<li class="class-depth-0">
+							<a href="global.html#HORIZONTAL">HORIZONTAL</a>
+						</li>
+						
+						<li class="class-depth-0">
 							<a href="global.html#IMAGE">IMAGE</a>
 						</li>
 						
 						<li class="class-depth-0">
 							<a href="global.html#intersectsRectangle">intersectsRectangle</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#LANDSCAPE">LANDSCAPE</a>
 						</li>
 						
 						<li class="class-depth-0">
@@ -944,6 +956,10 @@
 						
 						<li class="class-depth-0">
 							<a href="global.html#POLYGON">POLYGON</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#PORTRAIT">PORTRAIT</a>
 						</li>
 						
 						<li class="class-depth-0">
@@ -1004,6 +1020,10 @@
 						
 						<li class="class-depth-0">
 							<a href="global.html#VERSION">VERSION</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#VERTICAL">VERTICAL</a>
 						</li>
 						
 						<li class="class-depth-0">
@@ -1343,7 +1363,7 @@ require('phaser');</code></pre><h3>Building from source</h3><p>Should you wish t
 <h2>Change Log</h2><h2>Version 2.4.9 - &quot;Four Kings&quot; - In Development</h2><h3>New Features</h3><ul>
 <li>Phaser.Line.intersectsRectangle checks for intersection between a Line and a Rectangle, or any Rectangle-like object such as a Sprite or Body.</li>
 <li>Group.getClosestTo will return the child closest to the given point (thanks @Nuuf #2504)</li>
-<li>Group.getFarthestFrom will return the child farthest away from the given point (thanks @Nuuf #2504)</li>
+<li>Group.getFurthestFrom will return the child farthest away from the given point (thanks @Nuuf #2504)</li>
 <li>Animation.reverse will reverse the currently playing animation direction (thanks @gotenxds #2505)</li>
 <li>Animation.reverseOnce will reverse the animation direction for the current, or next animation only (thanks @gotenxds #2505)</li>
 <li>The way the display list updates and Camera movements are handled has been completely revamped, which should result is significantly smoother motion when the Camera is following tweened or physics controlled sprites. The <code>Stage.postUpdate</code> function is now vastly reduced in complexity. It takes control over updating the display list (calling <code>updateTransform</code> on itself), rather than letting the Canvas or WebGL renderers do this. Because of this change, the <code>Camera.updateTarget</code> function uses the Sprites <code>worldPosition</code> property instead, which is now frame accurate (thanks @whig @Upperfoot @Whoisnt @hexus #2482)</li>
@@ -1351,10 +1371,25 @@ require('phaser');</code></pre><h3>Building from source</h3><p>Should you wish t
 <li>TilemapLayers will now collide properly when they have a position that isn't set to 0x0. For example if you're stitching together several maps, one after the other, and manually adjust their <code>scrollX/Y</code> properties (thanks @Upperfoot #2522)</li>
 <li>There are a bunch of new Phaser consts available to help with setting the angle of a Game Object. They are <code>Phaser.ANGLE_UP</code>, <code>ANGLE_DOWN</code>, <code>ANGLE_LEFT</code>, <code>ANGLE_RIGHT</code>, <code>ANGLE_NORTH_EAST</code>, <code>ANGLE_NORTH_WEST</code>, <code>ANGLE_SOUTH_EAST</code> and <code>ANGLE_SOUTH_WEST</code>.</li>
 <li>Math.between will return a value between the given <code>min</code> and <code>max</code> values.</li>
+<li>InputHandler.dragDistanceThreshold gives you more fine control over when a Sprite Drag event will start. It allows you to specify a distance, in pixels, that the pointer must have moved before the drag will begin.</li>
+<li>InputHandler.dragTimeThreshold gives you more fine control over when a Sprite Drag event will start. It allows you to specify a time, in ms that the pointer must have been held down for, before the drag will begin.</li>
+<li>InputHandler.downPoint is a new Point object that contains the coordinates of the Pointer when it was first pressed down on the Sprite.</li>
+<li>There are two new Phaser consts available, for help with orientation of games or Game Objects. They are <code>Phaser.HORIZONTAL</code>, <code>Phaser.VERTICAL</code>, <code>Phaser.LANDSCAPE</code> and <code>Phaser.PORTRAIT</code>.</li>
+<li>InputHandler.dragStopBlocksInputUp is a boolean that allows you to control what happens with the input events. If <code>false</code> (the default) then both the <code>onInputUp</code> and <code>onDragStop</code> events will get dispatched when a Sprite stops being dragged. If <code>true</code> then only the <code>onDragStop</code> event is dispatched, and the <code>onInputUp</code> is skipped.</li>
+<li>Group.inputEnableChildren is a new property. If set to <code>true</code> will automatically call <code>inputEnabled = true</code> on any children <em>added</em> to, or <em>created</em> by, the Group.</li>
+<li>PIXI.DisplayObjectContainer.ignoreChildInput is a new property. If <code>true</code> then the children will <em>not</em> be considered as valid for Input events. Because this has been applied to <code>DisplayObjectContainer</code> it means it's available in Group, Sprite and any other display level object. Using this boolean you can disable input events for all children in an entire Group, without having to iterate anything or deep-set flags.</li>
+<li>InputHandler._pointerOverHandler and _pointerOutHandler have new arguments <code>silent</code> - if <code>true</code> then they will not dispatch any Signals from the parent Sprite.</li>
+<li>Pointer.interactiveCandidates is a new Array that is erased and re-populated every time this Pointer is updated. It contains references to all of the Game Objects that were considered as being valid for processing by this Pointer, during the most recent update. To be valid they must have suitable a <code>priorityID</code>, be Input enabled, be visible and actually have the Pointer over them. You can check the contents of this array in events such as <code>onInputDown</code>, but beware: it is reset every update.</li>
+<li>Pointer.swapTarget allows you to change the <code>Pointer.targetObject</code> object to be the one provided. This allows you to have fine-grained control over which object the Pointer is targeting.</li>
+<li>Input.setInteractiveCandidateHandler allows you to add a callback that is fired every time <code>Pointer.processInteractiveObjects</code> is called. The purpose of <code>processInteractiveObjects</code> is to work out which Game Object the Pointer is going to interact with. It works by polling all of the valid game objects, and then slowly discounting those that don't meet the criteria (i.e. they aren't under the Pointer, are disabled, invisible, etc). Eventually a short-list of 'candidates' is created. These are all of the Game Objects which are valid for input and overlap with the Pointer. If you need fine-grained control over which of the items is selected then you can use this callback to do so. The callback will be sent 3 parameters: 1) A reference to the Phaser.Pointer object that is processing the Items. 2) An array containing all potential interactive candidates. This is an array of <code>InputHandler</code> objects, not Sprites. 3) The current 'favorite' candidate, based on its priorityID and position in the display list. Your callback MUST return one of the candidates sent to it.</li>
+<li>Group.onChildInputDown is a new Signal that you can listen to. It will be dispatched whenever any immediate child of the Group emits an <code>onInputDown</code> signal itself. This allows you to listen for a Signal from the Group, rather than every Sprite within it.</li>
+<li>Group.onChildInputUp is a new Signal that you can listen to. It will be dispatched whenever any immediate child of the Group emits an <code>onInputUp</code> signal itself. This allows you to listen for a Signal from the Group, rather than every Sprite within it.</li>
+<li>Group.onChildInputOver is a new Signal that you can listen to. It will be dispatched whenever any immediate child of the Group emits an <code>onInputOver</code> signal itself. This allows you to listen for a Signal from the Group, rather than every Sprite within it.</li>
+<li>Group.onChildInputOut is a new Signal that you can listen to. It will be dispatched whenever any immediate child of the Group emits an <code>onInputOut</code> signal itself. This allows you to listen for a Signal from the Group, rather than every Sprite within it.</li>
 </ul>
 <h3>Updates</h3><ul>
-<li>TypeScript definitions fixes and updates (thanks @wingyplus @monagames @marineorganism @obamor)</li>
-<li>Docs typo fixes (thanks @seanirby)</li>
+<li>TypeScript definitions fixes and updates (thanks @wingyplus @monagames @marineorganism @obamor @BaroqueEngine)</li>
+<li>Docs typo fixes (thanks @seanirby @johnrees)</li>
 <li>The TypeScript defs ambient declaration has been updated to make it compatible with the SystemJS loader (thanks @monagames)</li>
 <li>You can no longer intersect check a Body against itself (thanks @VitaZheltyakov #2514)</li>
 <li>The mobile template has been updated (thanks @cryptographer #2518)</li>
@@ -1362,11 +1397,19 @@ require('phaser');</code></pre><h3>Building from source</h3><p>Should you wish t
 <li>Sound.addMarker now has a default value for the <code>duration</code> argument (1 second) to avoid the DOM Exception 11 error if you accidentally miss it out (thanks @mari8i #2508)</li>
 <li>Removed the <code>Stage.updateTransform</code> calls from the main game loop, because it happens automatically as part of <code>Game.updateLogic</code> anyway, so was duplicating the workload for no reason.</li>
 <li>TilemapLayer.postUpdate could potentially be called several times per frame (depending on device frame rate), which would cause multiple texture redraws, even though only the last texture is used during rendering. This has now been modified so that the local TilemapLayer canvas is only re-rendered once per frame, during the rendering phase, and not during the logic update phase.</li>
-<li>Stage has had all of its core update loops modified, so they now iterate through the display list forwards, instead of in reverse. Stage.postUpdate is now also a lot smaller, with no conditional branching if there is a Camera Target or not.</li>
+<li>Group.preUpdate now iterate through the display list forwards, instead of in reverse, to match it with how <code>Stage.preUpdate</code> works.</li>
+<li>Stage.postUpdate is now a lot smaller, with no conditional branching if there is a Camera Target or not.</li>
 <li>Within RequestAnimationFrame both <code>updateRAF</code> and <code>updateSetTimeout</code> now only call <code>game.update</code> if <code>isRunning</code> is true. This should avoid asynchronous Game destroy errors under environments like Angular (thanks @flogvit #2521)</li>
 <li>Group.removeAll has a new argument <code>destroyTexture</code> which allows you to optionally destroy the BaseTexture of each child, as it is removed from the Group (thanks @stoneman1 #2487)</li>
 <li>PluginManager.remove has a new argument <code>destroy</code> (defaults to <code>true</code>) which will let you optionally called the <code>destroy</code> method of the Plugin being removed.</li>
 <li>Cache.getJSON used to incorrectly bring back a deep-copy of the Phaser.Utils object, instead of just a clone of the JSON object requested (thanks @drhayes #2524 #2526)</li>
+<li>The <code>DisplayObject.renderOrderID</code> used to run in reverse. I.e. in a display list with 10 sprites on it, the first sprite (at the bottom of the list, rendering behind all the others) would have a <code>renderOrderID</code> of 9, where-as the top-most sprite, rendering above all others, would have a <code>renderOrderID</code> of 0. While this didn't cause any side-effects internally, it's arguably illogical. So the process has been reversed, and <code>renderOrderID</code>s are now accumulative, starting at zero each frame, and increasing as it iterates down the display list. So the higher the ID, the more &quot;on-top&quot; of the output the object is.</li>
+<li><code>InputHandler.validForInput</code> and <code>Pointer.processInteractiveObjects</code> have been updated to reflect the new <code>renderOrderID</code> sequence (see above).</li>
+<li>Group.add has a new optional argument <code>index</code> which controls the index within the group to insert the child to. Where 0 is the bottom of the Group.</li>
+<li>Group.addAt has been refactored to be a simple call to <code>Group.add</code>, removing lots of duplicate code in the process.</li>
+<li>Group.create has a new optional argument <code>index</code> which controls the index within the group to insert the child to. Where 0 is the bottom of the Group. It also now makes proper use of <code>Group.add</code>, cutting down on more duplicate code.</li>
+<li>Group.createMultiple now returns an Array containing references to all of the children that the method created.</li>
+<li>Keyboard now uses a new internal method <code>getKeyCode</code> to normalize the key code value based on browser support. It first checks for <code>event.key</code>, then <code>event.keyIdentifier</code> and finally <code>event.keyCode</code> (thanks @SVasilev #2542)</li>
 </ul>
 <h3>Bug Fixes</h3><ul>
 <li>Arcade Physics Body incorrectly positioned if the Sprite had a negative scale (see http://www.html5gamedevs.com/topic/22695-247-248-body-anchoring-any-migration-tips/) (thanks @SBCGames @icameron @Nuuf @EvolViper #2488 #2490)</li>
@@ -1374,6 +1417,8 @@ require('phaser');</code></pre><h3>Building from source</h3><p>Should you wish t
 <li>BitmapText objects with lines greater than <code>maxWidth</code> now handle alignment values correctly, causing them to properly center align (thanks @kevinleedrum  #2499 @crippledcactus #2496)</li>
 <li>Text has a new private method <code>measureLine</code> which is used to calculate the final Text line length, after factoring in color stops and other style changes. This should prevent characters from becoming truncated (thanks @TadejZupancic #2519 #2512)</li>
 <li>Sometimes the browser would cause a race condition where any connected Game Pads were being detected before the callback had a chance to be established. Also sometimes the rawPad references would become stale, and are now checked constantly (thanks @cwleonard #2471)</li>
+<li>Sound.isPlaying was set to false when doing an audio loop, but never set back to true if it's a sound not using a marker (thanks @TheJasonReynolds #2529)</li>
+<li>Phaser.Rectangle.aabb would fail if the Rectangles used negative offsets. It now calculates the bounds accurately (thanks @fillmoreb #2545)</li>
 </ul>
 <h3>Pixi Updates</h3><p>Please note that Phaser uses a custom build of Pixi and always has done. The following changes have been made to our custom build, not to Pixi in general.</p>
 <p><em>
@@ -1422,7 +1467,7 @@ require('phaser');</code></pre><h3>Building from source</h3><p>Should you wish t
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
-		on Fri Jun 03 2016 18:46:47 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Thu Jun 09 2016 17:12:12 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

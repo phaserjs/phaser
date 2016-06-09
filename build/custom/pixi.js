@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.4.9 "Four Kings" - Built: Fri Jun 03 2016 18:46:05
+* v2.4.9 "Four Kings" - Built: Thu Jun 09 2016 17:11:32
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -937,6 +937,17 @@ PIXI.DisplayObjectContainer = function()
      * @readOnly
      */
     this.children = [];
+
+    /**
+    * If `ignoreChildInput`  is `false` it will allow this objects _children_ to be considered as valid for Input events.
+    * 
+    * If this property is `true` then the children will _not_ be considered as valid for Input events.
+    * 
+    * Note that this property isn't recursive: only immediate children are influenced, it doesn't scan further down.
+    * @property {boolean} ignoreChildInput
+    * @default
+    */
+    this.ignoreChildInput = false;
     
 };
 

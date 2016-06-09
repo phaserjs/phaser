@@ -879,6 +879,10 @@
 						</li>
 						
 						<li class="class-depth-0">
+							<a href="global.html#displayList">displayList</a>
+						</li>
+						
+						<li class="class-depth-0">
 							<a href="global.html#DOWN">DOWN</a>
 						</li>
 						
@@ -907,11 +911,19 @@
 						</li>
 						
 						<li class="class-depth-0">
+							<a href="global.html#HORIZONTAL">HORIZONTAL</a>
+						</li>
+						
+						<li class="class-depth-0">
 							<a href="global.html#IMAGE">IMAGE</a>
 						</li>
 						
 						<li class="class-depth-0">
 							<a href="global.html#intersectsRectangle">intersectsRectangle</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#LANDSCAPE">LANDSCAPE</a>
 						</li>
 						
 						<li class="class-depth-0">
@@ -944,6 +956,10 @@
 						
 						<li class="class-depth-0">
 							<a href="global.html#POLYGON">POLYGON</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#PORTRAIT">PORTRAIT</a>
 						</li>
 						
 						<li class="class-depth-0">
@@ -1004,6 +1020,10 @@
 						
 						<li class="class-depth-0">
 							<a href="global.html#VERSION">VERSION</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#VERTICAL">VERTICAL</a>
 						</li>
 						
 						<li class="class-depth-0">
@@ -1642,6 +1662,118 @@
             
 <dt>
     <h4 class="name "
+        id="downPoint"><span class="type-signature"></span>downPoint<span class="type-signature"> :<a href="Phaser.Point.html">Phaser.Point</a></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>A Point object containing the coordinates of the Pointer when it was first pressed down onto this Sprite.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-207">line 207</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="dragDistanceThreshold"><span class="type-signature"></span>dragDistanceThreshold<span class="type-signature"> :integer</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>The distance, in pixels, the pointer has to move while being held down, before the Sprite thinks it is being dragged.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-197">line 197</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
         id="dragFromCenter"><span class="type-signature"></span>dragFromCenter<span class="type-signature"> :boolean</span></h4>
     
     
@@ -1847,7 +1979,119 @@
 
     
     <dt class="tag-source">Source -
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-192">line 192</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="dragStopBlocksInputUp"><span class="type-signature"></span>dragStopBlocksInputUp<span class="type-signature"> :boolean</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>If enabled, when the Sprite stops being dragged, it will only dispatch the <code>onDragStop</code> event, and not the <code>onInputUp</code> event. If set to <code>false</code> it will dispatch both events.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
     <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-187">line 187</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="dragTimeThreshold"><span class="type-signature"></span>dragTimeThreshold<span class="type-signature"> :integer</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>The amount of time, in ms, the pointer has to be held down over the Sprite before it thinks it is being dragged.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-202">line 202</a>
     </dt>
     
 
@@ -2642,7 +2886,7 @@ stop this from happening by controlling the priorityID value. The higher the val
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-192">line 192</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-212">line 212</a>
     </dt>
     
 
@@ -2934,7 +3178,7 @@ stop this from happening by controlling the priorityID value. The higher the val
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1513">line 1513</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1657">line 1657</a>
     </dt>
     
 
@@ -3004,7 +3248,7 @@ stop this from happening by controlling the priorityID value. The higher the val
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1563">line 1563</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1707">line 1707</a>
     </dt>
     
 
@@ -3218,7 +3462,7 @@ It compares the alpha value of the pixel and if &gt;= InputHandler.pixelPerfectA
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-759">line 759</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-801">line 801</a>
     </dt>
     
 
@@ -3413,7 +3657,7 @@ Use the <code>fastTest</code> flag is to quickly check just the bounding hit are
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-670">line 670</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-712">line 712</a>
     </dt>
     
 
@@ -3608,7 +3852,7 @@ Use the <code>fastTest</code> flag is to quickly check just the bounding hit are
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-715">line 715</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-757">line 757</a>
     </dt>
     
 
@@ -3678,7 +3922,7 @@ Use the <code>fastTest</code> flag is to quickly check just the bounding hit are
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-394">line 394</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-432">line 432</a>
     </dt>
     
 
@@ -3749,7 +3993,7 @@ If it is currently the target of an active drag it will be stopped immediately; 
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1304">line 1304</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1443">line 1443</a>
     </dt>
     
 
@@ -3819,7 +4063,7 @@ If it is currently the target of an active drag it will be stopped immediately; 
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1500">line 1500</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1644">line 1644</a>
     </dt>
     
 
@@ -3978,7 +4222,7 @@ If it is currently the target of an active drag it will be stopped immediately; 
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1236">line 1236</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1365">line 1365</a>
     </dt>
     
 
@@ -4017,6 +4261,12 @@ If it is currently the target of an active drag it will be stopped immediately; 
         <p>Allow this Sprite to be dragged by any valid pointer.</p>
 <p>When the drag begins the Sprite.events.onDragStart event will be dispatched.</p>
 <p>When the drag completes by way of the user letting go of the pointer that was dragging the sprite, the Sprite.events.onDragStop event is dispatched.</p>
+<p>You can control the thresholds over when a drag starts via the properties:</p>
+<p><code>Pointer.dragDistanceThreshold</code> the distance, in pixels, that the pointer has to move
+before the drag will start.</p>
+<p><code>Pointer.dragTimeThreshold</code> the time, in ms, that the pointer must be held down on
+the Sprite before the drag will start.</p>
+<p>You can set either (or both) of these properties after enabling a Sprite for drag.</p>
 <p>For the duration of the drag the Sprite.events.onDragUpdate event is dispatched. This event is only dispatched when the pointer actually
 changes position and moves. The event sends 5 parameters: <code>sprite</code>, <code>pointer</code>, <code>dragX</code>, <code>dragY</code> and <code>snapPoint</code>.</p>
     </div>
@@ -4316,7 +4566,7 @@ changes position and moves. The event sends 5 parameters: <code>sprite</code>, <
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1256">line 1256</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1385">line 1385</a>
     </dt>
     
 
@@ -4643,7 +4893,7 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1472">line 1472</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1616">line 1616</a>
     </dt>
     
 
@@ -4762,7 +5012,7 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1383">line 1383</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1526">line 1526</a>
     </dt>
     
 
@@ -4881,7 +5131,7 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1401">line 1401</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1544">line 1544</a>
     </dt>
     
 
@@ -4971,7 +5221,7 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-455">line 455</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-497">line 497</a>
     </dt>
     
 
@@ -5165,7 +5415,7 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1165">line 1165</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1294">line 1294</a>
     </dt>
     
 
@@ -5359,7 +5609,7 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1148">line 1148</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1277">line 1277</a>
     </dt>
     
 
@@ -5553,7 +5803,7 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1182">line 1182</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1311">line 1311</a>
     </dt>
     
 
@@ -5747,7 +5997,7 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1199">line 1199</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1328">line 1328</a>
     </dt>
     
 
@@ -5906,7 +6156,7 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1216">line 1216</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1345">line 1345</a>
     </dt>
     
 
@@ -6068,7 +6318,7 @@ This <em>only</em> checks if the Pointer is down, not if it's down over any spec
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-499">line 499</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-541">line 541</a>
     </dt>
     
 
@@ -6227,7 +6477,7 @@ This <em>only</em> checks if the Pointer is down, not if it's down over any spec
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-655">line 655</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-697">line 697</a>
     </dt>
     
 
@@ -6386,7 +6636,7 @@ This <em>only</em> checks if the Pointer is down, not if it's down over any spec
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-594">line 594</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-636">line 636</a>
     </dt>
     
 
@@ -6547,7 +6797,7 @@ This <em>only</em> checks if the Pointer is down, not if it's down over any spec
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-561">line 561</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-603">line 603</a>
     </dt>
     
 
@@ -6706,7 +6956,7 @@ This <em>only</em> checks if the Pointer is down, not if it's down over any spec
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-531">line 531</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-573">line 573</a>
     </dt>
     
 
@@ -6865,7 +7115,7 @@ This <em>only</em> checks if the Pointer is down, not if it's down over any spec
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-640">line 640</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-682">line 682</a>
     </dt>
     
 
@@ -7024,7 +7274,7 @@ This <em>only</em> checks if the Pointer is down, not if it's down over any spec
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-625">line 625</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-667">line 667</a>
     </dt>
     
 
@@ -7183,7 +7433,7 @@ This <em>only</em> checks if the Pointer is down, not if it's down over any spec
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-546">line 546</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-588">line 588</a>
     </dt>
     
 
@@ -7345,7 +7595,7 @@ This <em>only</em> checks if the Pointer is up, not if it's up over any specific
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-515">line 515</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-557">line 557</a>
     </dt>
     
 
@@ -7505,7 +7755,7 @@ This value is only set when the pointer is over this Sprite.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-467">line 467</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-509">line 509</a>
     </dt>
     
 
@@ -7665,7 +7915,7 @@ This value is only set when the pointer is over this Sprite.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-483">line 483</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-525">line 525</a>
     </dt>
     
 
@@ -7735,7 +7985,7 @@ This value is only set when the pointer is over this Sprite.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-345">line 345</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-383">line 383</a>
     </dt>
     
 
@@ -7913,7 +8163,7 @@ This value is only set when the pointer is over this Sprite.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1455">line 1455</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1599">line 1599</a>
     </dt>
     
 
@@ -8075,7 +8325,7 @@ This value is only set when the pointer is over this Sprite.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-246">line 246</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-284">line 284</a>
     </dt>
     
 
@@ -8194,7 +8444,7 @@ This value is only set when the pointer is over this Sprite.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1326">line 1326</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1466">line 1466</a>
     </dt>
     
 
@@ -8264,7 +8514,7 @@ This value is only set when the pointer is over this Sprite.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-374">line 374</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-412">line 412</a>
     </dt>
     
 
@@ -8383,7 +8633,7 @@ This value is only set when the pointer is over this Sprite.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1419">line 1419</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1562">line 1562</a>
     </dt>
     
 
@@ -8410,7 +8660,7 @@ This value is only set when the pointer is over this Sprite.</p>
             
 <dt>
     <h4 class="name "
-        id="update"><span class="type-signature">&lt;internal> </span>update<span class="signature">(pointer)</span><span class="type-signature"></span></h4>
+        id="update"><span class="type-signature">&lt;internal> </span>update<span class="signature">(pointer)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
     
     
 </dt>
@@ -8419,7 +8669,8 @@ This value is only set when the pointer is over this Sprite.</p>
 
     
     <div class="description">
-        <p>Update.</p>
+        <p>Internal Update method. This is called automatically and handles the Pointer
+and drag update loops.</p>
     </div>
     
 
@@ -8479,6 +8730,26 @@ This value is only set when the pointer is over this Sprite.</p>
     
 
     
+    <h5>Returns:</h5>
+    <div class="returns">
+        
+            
+    
+        <div class="returns-type">
+        
+<span class="param-type">boolean</span>
+
+ -
+        </div>
+    
+    <div class="returns-desc param-desc">
+        <p>True if the pointer is still active, otherwise false.</p>
+    </div>
+
+
+        
+    </div>
+    
     
     
 <dl class="details">
@@ -8509,7 +8780,7 @@ This value is only set when the pointer is over this Sprite.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-828">line 828</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-870">line 870</a>
     </dt>
     
 
@@ -8648,7 +8919,7 @@ This value is only set when the pointer is over this Sprite.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1058">line 1058</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-1187">line 1187</a>
     </dt>
     
 
@@ -8885,7 +9156,7 @@ This is called by Phaser.Pointer and shouldn't typically be called directly.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-420">line 420</a>
+    <a href="src_input_InputHandler.js.html">input/InputHandler.js</a>, <a href="src_input_InputHandler.js.html#sunlight-1-line-458">line 458</a>
     </dt>
     
 
@@ -8934,7 +9205,7 @@ This is called by Phaser.Pointer and shouldn't typically be called directly.</p>
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
-		on Fri Jun 03 2016 18:46:51 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Thu Jun 09 2016 17:12:16 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
