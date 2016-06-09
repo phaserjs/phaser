@@ -361,37 +361,6 @@ Phaser.Keyboard.prototype = {
     },
 
     /**
-    * Normalises the keyCode value from the browser and returns it.
-    *
-    * This is based on browser support. It first checks for `event.key`, then `event.keyIdentifier` 
-    * and finally `event.keyCode`
-    *
-    * @method Phaser.Keyboard#getKeyCode
-    * @param {KeyboardEvent} event
-    * @private
-    */
-    getKeyCode: function (event) {
-
-        if (event.key !== undefined)
-        {
-            return event.key;
-        }
-        else if (event.keyIdentifier !== undefined)
-        {
-            return event.keyIdentifier;
-        }
-        else if (event.keyCode !== undefined)
-        {
-            return event.keyCode;
-        }
-        else
-        {
-            return 0;
-        }
-
-    },
-
-    /**
     * Process the keydown event.
     *
     * @method Phaser.Keyboard#processKeyDown
@@ -407,7 +376,7 @@ Phaser.Keyboard.prototype = {
             return;
         }
 
-        var key = this.getKeyCode(event);
+        var key = event.keyCode;
 
         //   The event is being captured but another hotkey may need it
         if (this._capture[key])
@@ -470,7 +439,7 @@ Phaser.Keyboard.prototype = {
             return;
         }
 
-        var key = this.getKeyCode(event);
+        var key = event.keyCode;
 
         if (this._capture[key])
         {

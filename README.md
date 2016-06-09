@@ -385,7 +385,6 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * Group.addAt has been refactored to be a simple call to `Group.add`, removing lots of duplicate code in the process.
 * Group.create has a new optional argument `index` which controls the index within the group to insert the child to. Where 0 is the bottom of the Group. It also now makes proper use of `Group.add`, cutting down on more duplicate code.
 * Group.createMultiple now returns an Array containing references to all of the children that the method created.
-* Keyboard now uses a new internal method `getKeyCode` to normalize the key code value based on browser support. It first checks for `event.key`, then `event.keyIdentifier` and finally `event.keyCode` (thanks @SVasilev #2542)
 
 ### Bug Fixes
 
