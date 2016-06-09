@@ -361,6 +361,37 @@ Phaser.Keyboard.prototype = {
     },
 
     /**
+    * Normalises the keyCode value from the browser and returns it.
+    *
+    * This is based on browser support. It first checks for `event.key`, then `event.keyIdentifier` 
+    * and finally `event.keyCode`
+    *
+    * @method Phaser.Keyboard#getKeyCode
+    * @param {KeyboardEvent} event
+    * @private
+    */
+    getKeyCode: function (event) {
+
+        if (event.key !== undefined)
+        {
+            return event.key;
+        }
+        else if (event.keyIdentifier !== undefined)
+        {
+            return event.keyIdentifier;
+        }
+        else if (event.keyCode !== undefined)
+        {
+            return  event.keyCode;
+        }
+        else
+        {
+            return 0;
+        }
+
+    },
+
+    /**
     * Process the keydown event.
     *
     * @method Phaser.Keyboard#processKeyDown
@@ -376,20 +407,22 @@ Phaser.Keyboard.prototype = {
             return;
         }
 
+        var key = this.getKeyCode();
+
         //   The event is being captured but another hotkey may need it
-        if (this._capture[event.keyCode])
+        if (this._capture[key])
         {
             event.preventDefault();
         }
 
-        if (!this._keys[event.keyCode])
+        if (!this._keys[key])
         {
-            this._keys[event.keyCode] = new Phaser.Key(this.game, event.keyCode);
+            this._keys[key] = new Phaser.Key(this.game, key);
         }
 
-        this._keys[event.keyCode].processKeyDown(event);
+        this._keys[key].processKeyDown(event);
 
-        this._k = event.keyCode;
+        this._k = key;
 
         if (this.onDownCallback)
         {
@@ -437,17 +470,19 @@ Phaser.Keyboard.prototype = {
             return;
         }
 
-        if (this._capture[event.keyCode])
+        var key = this.getKeyCode();
+
+        if (this._capture[key])
         {
             event.preventDefault();
         }
 
-        if (!this._keys[event.keyCode])
+        if (!this._keys[key])
         {
-            this._keys[event.keyCode] = new Phaser.Key(this.game, event.keyCode);
+            this._keys[key] = new Phaser.Key(this.game, key);
         }
 
-        this._keys[event.keyCode].processKeyUp(event);
+        this._keys[key].processKeyUp(event);
 
         if (this.onUpCallback)
         {
