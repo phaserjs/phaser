@@ -377,6 +377,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * Text has a new private method `measureLine` which is used to calculate the final Text line length, after factoring in color stops and other style changes. This should prevent characters from becoming truncated (thanks @TadejZupancic #2519 #2512)
 * Sometimes the browser would cause a race condition where any connected Game Pads were being detected before the callback had a chance to be established. Also sometimes the rawPad references would become stale, and are now checked constantly (thanks @cwleonard #2471)
 * Sound.isPlaying was set to false when doing an audio loop, but never set back to true if it's a sound not using a marker (thanks @TheJasonReynolds #2529)
+* Phaser.Rectangle.aabb would fail if the Rectangles used negative offsets. It now calculates the bounds accurately (thanks @fillmoreb #2545)
 
 ### Pixi Updates
 
