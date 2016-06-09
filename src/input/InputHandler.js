@@ -481,7 +481,7 @@ Phaser.InputHandler.prototype = {
             return false;
         }
 
-        if (this.priorityID > highestID || (this.priorityID === highestID && this.sprite.renderOrderID < highestRenderID))
+        if (this.priorityID > highestID || (this.priorityID === highestID && this.sprite.renderOrderID > highestRenderID))
         {
             return true;
         }

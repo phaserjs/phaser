@@ -1386,9 +1386,7 @@ Phaser.Group.prototype.preUpdate = function () {
         return false;
     }
 
-    var i = this.children.length;
-
-    while (i--)
+    for (var i = 0; i < this.children.length; i++)
     {
         this.children[i].preUpdate();
     }
@@ -1404,6 +1402,7 @@ Phaser.Group.prototype.preUpdate = function () {
 */
 Phaser.Group.prototype.update = function () {
 
+    //  Goes in reverse, because it's highly likely the child will destroy itself in `update`
     var i = this.children.length;
 
     while (i--)
@@ -1427,6 +1426,7 @@ Phaser.Group.prototype.postUpdate = function () {
         this.y = this.game.camera.view.y + this.cameraOffset.y;
     }
 
+    //  Goes in reverse to match the Stage postUpdate cycle, also again children may destroy themselves here.
     var i = this.children.length;
 
     while (i--)

@@ -145,6 +145,7 @@ Phaser.Stage.prototype.preUpdate = function () {
 
     this.currentRenderOrderID = 0;
 
+    //  This can't loop in reverse, we need the renderOrderID to be in sequence
     for (var i = 0; i < this.children.length; i++)
     {
         this.children[i].preUpdate();
@@ -159,7 +160,10 @@ Phaser.Stage.prototype.preUpdate = function () {
 */
 Phaser.Stage.prototype.update = function () {
 
-    for (var i = 0; i < this.children.length; i++)
+    //  Goes in reverse, because it's highly likely the child will destroy itself in `update`
+    var i = this.children.length;
+
+    while (i--)
     {
         this.children[i].update();
     }
@@ -178,7 +182,9 @@ Phaser.Stage.prototype.postUpdate = function () {
     //  Apply the camera shake, fade, bounds, etc
     this.game.camera.update();
 
-    for (var i = 0; i < this.children.length; i++)
+    var i = this.children.length;
+
+    while (i--)
     {
         this.children[i].postUpdate();
     }

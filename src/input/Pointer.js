@@ -803,7 +803,7 @@ Phaser.Pointer.prototype = {
     processInteractiveObjects: function (fromClick) {
 
         //  Work out which object is on the top
-        var highestRenderOrderID = Number.MAX_VALUE;
+        var highestRenderOrderID = 0;
         var highestInputPriorityID = -1;
         var candidateTarget = null;
 
