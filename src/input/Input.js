@@ -40,6 +40,18 @@ Phaser.Input = function (game) {
     this.moveCallbacks = [];
 
     /**
+    * @property {function} customCandidateHandler - See Input.setInteractiveCandidateHandler.
+    * @private
+    */
+    this.customCandidateHandler = null;
+
+    /**
+    * @property {object} customCandidateHandlerContext - See Input.setInteractiveCandidateHandler.
+    * @private
+    */
+    this.customCandidateHandlerContext = null;
+
+    /**
     * @property {number} pollRate - How often should the input pointers be checked for updates? A value of 0 means every single frame (60fps); a value of 1 means every other frame (30fps) and so on.
     * @default
     */
@@ -459,7 +471,7 @@ Phaser.Input.prototype = {
     },
 
     /**
-    * Adds a callback that is fired every time 'Pointer.processInteractiveObjects' is called.
+    * Adds a callback that is fired every time `Pointer.processInteractiveObjects` is called.
     * The purpose of `processInteractiveObjects` is to work out which Game Object the Pointer is going to
     * interact with. It works by polling all of the valid game objects, and then slowly discounting those
     * that don't meet the criteria (i.e. they aren't under the Pointer, are disabled, invisible, etc).
