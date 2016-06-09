@@ -470,7 +470,11 @@ Phaser.InputHandler.prototype = {
 
         if (includePixelPerfect === undefined) { includePixelPerfect = true; }
 
-        if (!this.enabled || this.sprite.scale.x === 0 || this.sprite.scale.y === 0 || this.priorityID < this.game.input.minPriorityID)
+        if (!this.enabled ||
+            this.sprite.scale.x === 0 ||
+            this.sprite.scale.y === 0 ||
+            this.priorityID < this.game.input.minPriorityID ||
+            (this.sprite.parent && this.sprite.parent.ignoreChildInput))
         {
             return false;
         }
@@ -926,8 +930,9 @@ Phaser.InputHandler.prototype = {
     * @method Phaser.InputHandler#_pointerOverHandler
     * @private
     * @param {Phaser.Pointer} pointer - The pointer that triggered the event
+    * @param {boolean} [silent=false] - If silent is `true` then this method will not dispatch any Signals from the parent Sprite.
     */
-    _pointerOverHandler: function (pointer) {
+    _pointerOverHandler: function (pointer, silent) {
 
         if (this.sprite === null)
         {
@@ -953,7 +958,7 @@ Phaser.InputHandler.prototype = {
                 this._setHandCursor = true;
             }
 
-            if (sendEvent && this.sprite && this.sprite.events)
+            if (!silent && sendEvent && this.sprite && this.sprite.events)
             {
                 this.sprite.events.onInputOver$dispatch(this.sprite, pointer);
             }
@@ -967,8 +972,9 @@ Phaser.InputHandler.prototype = {
     * @method Phaser.InputHandler#_pointerOutHandler
     * @private
     * @param {Phaser.Pointer} pointer - The pointer that triggered the event.
+    * @param {boolean} [silent=false] - If silent is `true` then this method will not dispatch any Signals from the parent Sprite.
     */
-    _pointerOutHandler: function (pointer) {
+    _pointerOutHandler: function (pointer, silent) {
 
         if (this.sprite === null)
         {
@@ -988,7 +994,7 @@ Phaser.InputHandler.prototype = {
             this._setHandCursor = false;
         }
 
-        if (this.sprite && this.sprite.events)
+        if (!silent && this.sprite && this.sprite.events)
         {
             this.sprite.events.onInputOut$dispatch(this.sprite, pointer);
         }
