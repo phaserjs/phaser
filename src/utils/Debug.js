@@ -837,15 +837,15 @@ Phaser.Utils.Debug.prototype = {
     },
 
     /**
-     * Call this function from the Dev Tools console.
-     * 
-     * It will scan the display list and output all of the Objects it finds, and their renderOrderIDs.
-     *
-     * **Note** Requires a browser that supports console.group and console.groupEnd (such as Chrome)
-     *
-     * @method displayList
-     * @param {Object} [displayObject] - The displayObject level display object to start from. Defaults to the World.
-     */
+    * Call this function from the Dev Tools console.
+    * 
+    * It will scan the display list and output all of the Objects it finds, and their renderOrderIDs.
+    *
+    * **Note** Requires a browser that supports console.group and console.groupEnd (such as Chrome)
+    *
+    * @method displayList
+    * @param {Object} [displayObject] - The displayObject level display object to start from. Defaults to the World.
+    */
     displayList: function (displayObject) {
 
         if (displayObject === undefined) { displayObject = this.game.world; }
