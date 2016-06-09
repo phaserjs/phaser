@@ -382,7 +382,7 @@ Phaser.Keyboard.prototype = {
         }
         else if (event.keyCode !== undefined)
         {
-            return  event.keyCode;
+            return event.keyCode;
         }
         else
         {
@@ -407,7 +407,7 @@ Phaser.Keyboard.prototype = {
             return;
         }
 
-        var key = this.getKeyCode();
+        var key = this.getKeyCode(event);
 
         //   The event is being captured but another hotkey may need it
         if (this._capture[key])
@@ -470,7 +470,7 @@ Phaser.Keyboard.prototype = {
             return;
         }
 
-        var key = this.getKeyCode();
+        var key = this.getKeyCode(event);
 
         if (this._capture[key])
         {
