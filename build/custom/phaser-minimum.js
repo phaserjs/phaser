@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.4.9 "Four Kings" - Built: Thu Jun 09 2016 17:11:25
+* v2.4.9 "Four Kings" - Built: Fri Jun 10 2016 16:18:29
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -7963,7 +7963,7 @@ var Phaser = Phaser || {
     * @constant
     * @type {string}
     */
-    VERSION: '2.4.9 RC3',
+    VERSION: '2.4.9 RC4',
 
     /**
     * An array of Phaser game instances.
@@ -16830,19 +16830,22 @@ Phaser.Stage.prototype.postUpdate = function () {
     //  Apply the camera shake, fade, bounds, etc
     this.game.camera.update();
 
-    var i = this.children.length;
+    //  Camera target first?
+    if (this.game.camera.target)
+    {
+        this.game.camera.target.postUpdate();
 
-    while (i--)
+        this.updateTransform();
+
+        this.game.camera.updateTarget();
+    }
+
+    for (var i = 0; i < this.children.length; i++)
     {
         this.children[i].postUpdate();
     }
 
     this.updateTransform();
-
-    if (this.game.camera.target)
-    {
-        this.game.camera.updateTarget();
-    }
 
 };
 
@@ -18551,10 +18554,7 @@ Phaser.Group.prototype.postUpdate = function () {
         this.y = this.game.camera.view.y + this.cameraOffset.y;
     }
 
-    //  Goes in reverse to match the Stage postUpdate cycle, also again children may destroy themselves here.
-    var i = this.children.length;
-
-    while (i--)
+    for (var i = 0; i < this.children.length; i++)
     {
         this.children[i].postUpdate();
     }

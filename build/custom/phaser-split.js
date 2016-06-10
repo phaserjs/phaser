@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.4.9 "Four Kings" - Built: Thu Jun 09 2016 17:11:33
+* v2.4.9 "Four Kings" - Built: Fri Jun 10 2016 16:18:38
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -55,7 +55,7 @@ var Phaser = Phaser || {
     * @constant
     * @type {string}
     */
-    VERSION: '2.4.9 RC3',
+    VERSION: '2.4.9 RC4',
 
     /**
     * An array of Phaser game instances.
@@ -8922,19 +8922,22 @@ Phaser.Stage.prototype.postUpdate = function () {
     //  Apply the camera shake, fade, bounds, etc
     this.game.camera.update();
 
-    var i = this.children.length;
+    //  Camera target first?
+    if (this.game.camera.target)
+    {
+        this.game.camera.target.postUpdate();
 
-    while (i--)
+        this.updateTransform();
+
+        this.game.camera.updateTarget();
+    }
+
+    for (var i = 0; i < this.children.length; i++)
     {
         this.children[i].postUpdate();
     }
 
     this.updateTransform();
-
-    if (this.game.camera.target)
-    {
-        this.game.camera.updateTarget();
-    }
 
 };
 
@@ -10643,10 +10646,7 @@ Phaser.Group.prototype.postUpdate = function () {
         this.y = this.game.camera.view.y + this.cameraOffset.y;
     }
 
-    //  Goes in reverse to match the Stage postUpdate cycle, also again children may destroy themselves here.
-    var i = this.children.length;
-
-    while (i--)
+    for (var i = 0; i < this.children.length; i++)
     {
         this.children[i].postUpdate();
     }
@@ -21286,37 +21286,6 @@ Phaser.Keyboard.prototype = {
     },
 
     /**
-    * Normalises the keyCode value from the browser and returns it.
-    *
-    * This is based on browser support. It first checks for `event.key`, then `event.keyIdentifier` 
-    * and finally `event.keyCode`
-    *
-    * @method Phaser.Keyboard#getKeyCode
-    * @param {KeyboardEvent} event
-    * @private
-    */
-    getKeyCode: function (event) {
-
-        if (event.key !== undefined)
-        {
-            return event.key;
-        }
-        else if (event.keyIdentifier !== undefined)
-        {
-            return event.keyIdentifier;
-        }
-        else if (event.keyCode !== undefined)
-        {
-            return  event.keyCode;
-        }
-        else
-        {
-            return 0;
-        }
-
-    },
-
-    /**
     * Process the keydown event.
     *
     * @method Phaser.Keyboard#processKeyDown
@@ -21332,7 +21301,7 @@ Phaser.Keyboard.prototype = {
             return;
         }
 
-        var key = this.getKeyCode();
+        var key = event.keyCode;
 
         //   The event is being captured but another hotkey may need it
         if (this._capture[key])
@@ -21395,7 +21364,7 @@ Phaser.Keyboard.prototype = {
             return;
         }
 
-        var key = this.getKeyCode();
+        var key = event.keyCode;
 
         if (this._capture[key])
         {
@@ -63502,8 +63471,8 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
             return false;
         }
         
-        var tilemapLayerOffsetX = (!tilemapLayer.fixedToCamera ? tilemapLayer.position.x : 0);
-        var tilemapLayerOffsetY = (!tilemapLayer.fixedToCamera ? tilemapLayer.position.y : 0);
+        var tilemapLayerOffsetX = (!tilemapLayer.fixedToCamera) ? tilemapLayer.position.x : 0;
+        var tilemapLayerOffsetY = (!tilemapLayer.fixedToCamera) ? tilemapLayer.position.y : 0;
 
         //  We re-check for collision in case body was separated in a previous step
         if (!tile.intersects((body.position.x - tilemapLayerOffsetX), (body.position.y - tilemapLayerOffsetY), (body.right - tilemapLayerOffsetX), (body.bottom - tilemapLayerOffsetY)))
@@ -63615,14 +63584,14 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
     tileCheckX: function (body, tile, tilemapLayer) {
 
         var ox = 0;
-        var tilemapLayerOffsetX = (!tilemapLayer.fixedToCamera ? tilemapLayer.position.x : 0);
+        var tilemapLayerOffsetX = (!tilemapLayer.fixedToCamera) ? tilemapLayer.position.x : 0;
 
         if (body.deltaX() < 0 && !body.blocked.left && tile.collideRight && body.checkCollision.left)
         {
             //  Body is moving LEFT
-            if (tile.faceRight && (body.x - tilemapLayerOffsetX)  < tile.right)
+            if (tile.faceRight && (body.x - tilemapLayerOffsetX) < tile.right)
             {
-                ox = (body.x - tilemapLayerOffsetX)  - tile.right;
+                ox = (body.x - tilemapLayerOffsetX) - tile.right;
 
                 if (ox < -this.TILE_BIAS)
                 {
@@ -63633,9 +63602,9 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
         else if (body.deltaX() > 0 && !body.blocked.right && tile.collideLeft && body.checkCollision.right)
         {
             //  Body is moving RIGHT
-            if (tile.faceLeft && (body.right - tilemapLayerOffsetX)  > tile.left)
+            if (tile.faceLeft && (body.right - tilemapLayerOffsetX) > tile.left)
             {
-                ox = (body.right - tilemapLayerOffsetX)  - tile.left;
+                ox = (body.right - tilemapLayerOffsetX) - tile.left;
 
                 if (ox > this.TILE_BIAS)
                 {
@@ -63673,7 +63642,7 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
     tileCheckY: function (body, tile, tilemapLayer) {
 
         var oy = 0;
-        var tilemapLayerOffsetY = (!tilemapLayer.fixedToCamera ? tilemapLayer.position.y : 0);
+        var tilemapLayerOffsetY = (!tilemapLayer.fixedToCamera) ? tilemapLayer.position.y : 0;
 
         if (body.deltaY() < 0 && !body.blocked.up && tile.collideDown && body.checkCollision.up)
         {
@@ -63691,9 +63660,9 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
         else if (body.deltaY() > 0 && !body.blocked.down && tile.collideUp && body.checkCollision.down)
         {
             //  Body is moving DOWN
-            if (tile.faceTop && (body.bottom - tilemapLayerOffsetY)  > tile.top)
+            if (tile.faceTop && (body.bottom - tilemapLayerOffsetY) > tile.top)
             {
-                oy = (body.bottom - tilemapLayerOffsetY)  - tile.top;
+                oy = (body.bottom - tilemapLayerOffsetY) - tile.top;
 
                 if (oy > this.TILE_BIAS)
                 {

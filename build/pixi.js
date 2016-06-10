@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.4.9 "Four Kings" - Built: Thu Jun 09 2016 17:11:44
+* v2.4.9 "Four Kings" - Built: Fri Jun 10 2016 16:18:51
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
