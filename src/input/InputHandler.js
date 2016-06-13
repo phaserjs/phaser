@@ -128,6 +128,12 @@ Phaser.InputHandler = function (sprite) {
     this.useHandCursor = false;
 
     /**
+    * @property {string} overCursor - The custom cursor(CSS property) to appear when pointer moves over the sprite. "pointer" by defaut.
+    * @default
+    */
+    this.overCursor = "pointer";
+
+    /**
     * @property {boolean} _setHandCursor - Did this Sprite trigger the hand cursor?
     * @private
     */
@@ -1109,7 +1115,7 @@ Phaser.InputHandler.prototype = {
 
             if (this.useHandCursor && data.isDragged === false)
             {
-                this.game.canvas.style.cursor = "pointer";
+                this.game.canvas.style.cursor = this.overCursor;
                 this._setHandCursor = true;
             }
         }
