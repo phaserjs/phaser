@@ -670,8 +670,6 @@ Phaser.TilemapLayerGL.prototype.setScale = function (xScale, yScale) {
 */
 Phaser.TilemapLayerGL.prototype.renderRegion = function (scrollX, scrollY, left, top, right, bottom) {
 
-    var context = this.context;
-
     var width = this.layer.width;
     var height = this.layer.height;
     var tw = this._mc.tileWidth;
@@ -741,7 +739,6 @@ Phaser.TilemapLayerGL.prototype.renderRegion = function (scrollX, scrollY, left,
                 set = this.resolveTileset(index);
             }
 
-            //  Setting the globalAlpha is "surprisingly expensive" in Chrome (38)
             if (tile.alpha !== lastAlpha && !this.debug)
             {
                 //context.globalAlpha = tile.alpha;

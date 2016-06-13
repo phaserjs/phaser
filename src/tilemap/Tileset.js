@@ -171,11 +171,6 @@ Phaser.Tileset.prototype = {
         if (coordIndex >= 0 && (coordIndex + 1) < this.drawCoords.length)
         {
             // add the tile to the webgl batch
-            if ( !glBatch )
-            {
-                glBatch = [];
-            }
-
             // source and destination coordinates, in pixel units
             // destination is the centre of the tile
             glBatch.push( {
