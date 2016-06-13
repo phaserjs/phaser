@@ -247,9 +247,6 @@ PIXI.Tilemap.prototype._renderBatch = function( renderSession )
     {
       var shader = renderSession.shaderManager.tilemapShader;
 
-      // set the scroll offset (in screen units)
-      gl.uniform2f( shader.uScrollOffset, this.scrollX * iWide, -this.scrollY * iHigh );
-
       // upload the VBO
       gl.bufferData( gl.ARRAY_BUFFER, buffer, gl.STATIC_DRAW );
 
@@ -281,6 +278,10 @@ PIXI.Tilemap.prototype._renderWholeTilemap = function(renderSession)
   gl.uniform1i( shader.uImageSampler, 0 );
   gl.activeTexture(gl.TEXTURE0);
   gl.uniform2f(shader.uTileSize, this.tileWide, this.tileHigh);
+  // set the base offset (in screen units) (it's zero, scrolling is now handled by the batch buffer values)
+  gl.uniform2f( shader.uScrollOffset, 0, 0 );
+  //gl.uniform2f( shader.uScrollOffset, this.scrollX * iWide, -this.scrollY * iHigh );
+
 
   // check if a texture is dirty..
   if(this.texture.baseTexture._dirty[gl.id])
