@@ -128,3 +128,17 @@ After testing, *all* examples seem to work (with these three restrictions)
 
 Found both bugs, I was effectively applying the scroll twice because the new batch list calculates the offsets internally and I was still applying it as a uniform to the webgl shader.
 
+Remaining Task Summary:
+
+- Change the map parser, so that when additional tilesets are encountered, it creates a new Tilemap Layer for each and keeps data for only one tileset per layer.
+- Store the tileset index or reference in the Tile structure, deprecate resolveTileset and any other related code
+- Add alpha blending to the shader, calculate the 'final' alpha by multiplying the layer's worldAlpha with the tile.alpha
+- Add scaling to the shader, use the layer's worldScale
+- Optimise the drawing to avoid degenerate triangles where possible, e.g. each row should be a single tri-strip without degenerates in it for faster drawing
+
+
+
+
+
+
+
