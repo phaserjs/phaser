@@ -85,9 +85,35 @@ Rich tested on his lap-top and the frame-rate issues were generally gone.
 However testing other demos shows a large corrupt tile in the ones which use the brown tile-set (create from objects, features test, map bounce, etc) and the green tiles (csv map collide, csv map with p2, etc).  Some of these demos run slowly on his lap-top so I'll prioritise fixing the corrupt tile (maybe a firstgid issue?)
 
 
-day five:
+day five (part 1):
 
 I can reference firstgid (in Phaser.Tileset) through PIXI.Tilemap.map.tilesets[X].firstgid.  Currently I'm limited to one tileset per map so I've hardwired this to tilesets[0].firstgid and it's working for many examples.
 Test results show that most of the demos which previously had "out by one" errors are working properly now.  The exceptions are "fill tiles" and anything else using that desert tileset.  I'll need to investigate that further, it still looks like an 'out by one' error so maybe it's using a second tileset and I'm grabbing the wrong firstgid value.
+
 The large corrupt tile was caused by drawing a VBO with insufficient data.  I've found two possible cases where this can happen and fixed them.  I'll need to get Rich to test again to see if the previously slow demos with corrupt tiles are now working smoothly on his rig.
+
+Ok the 'desert' tileset uses a 1 pixel margin and a 1 pixel separation between each tile (which is why filltiles etc were broken).  I don't see an efficient way to support this level of flexibility using WebGL because every time the tileset changes the batching will break, and it's going to impose a ton of extra calculations which are currently being pre-calced into the high-speed VBO creation loop.  Ideally webgl wants to draw a ton of stuff from a single source image in one large batch.
+What we could maybe do is run the canvas tile rendering code to generate a source texture (no margins, no spacing) of all tiles which are the same size.  We'd need a different texture for each tile-size, and they would need to be processed as separate batches.  This would let webgl run at maximum speed, with a memory overhead for the new textures, and an initialisation overhead to generate them.  I'll talk this over with Rich before going any further with these more complicated tileset cases.
+
+(part 2):
+
+Had a chat with Rich and he suggested a number of things that are helpful.
+It *looks* like I can avoid a lot of code duplication by adding an alternative to Phaser.Tileset.draw for drawGl.  If I do things this way I can leverage all of the existing Phaser support for tilesets with margins and separators, plus the code to handle multiple tilesets in a single map (which is currently broken even in canvas if the tilesets aren't the same size, see example "Create From Objects" - the large tiles are messed up).
+My new drawGl function builds a list of data objects with texture coordinates and destination coordinate - exactly like the canvas drawImage function uses... then the tricky bit will be finding a good mechanism for transferring that list over to PIXI such that it draws as part of the PIXI draw loops to maintain layer order with all the other gl drawing.
+My older attempt uses TilemapLayerGL which extends PIXI.Tilemap which extends PIXI.DisplayObject... with this new approach I would like to avoid using TilemapLayerGL (which will mainly be a duplicate of Phaser.TilemapLayer), but I need to dig a bit deeper to see if that will be possible.
+
+
+day six:
+
+After several attempts I can't find a neat way to discard TilemapLayerGL.  In order to make PIXI accept this drawing as part of it's own system it is essential to extend PIXI.Tilemap, and for Canvas drawing TilemapLayer has to extend Phaser.Sprite.
+I've copied over a ton more content from TilemapLayer so that TilemapLayerGL is now a duplicate in all regards except what it extends and the actual tile batch list build and draw stuff.  This should be looked at again in the future because it violates the DRY principle, however I don't want to spend any more time on non-essential work getting this GL tile drawing system up and running.
+There is now a drawGL function in Phaser.Tileset which simply pushes the tile information into a list of Objects.  This information is being added to the TilemapLayerGL this.glBatch list (which extends PIXI.Tilemap and so is visible to the renderer).
+PIXI.Tilemap uses this list to build a GL buffer of TRIANGLE_STRIP with degenerate triangles between each pair of triangles that represent a tile.  It then draws the entire layer in a single GL draw call.
+To test the demos, we currently need to set drawing mode to Phaser.WEBGL (in the Phaser.Game constructor arguments), and pass 'true' as the final argument to map.createLayer (eg. from sci-fly example):
+    map = game.add.tilemap('level3');
+    map.addTilesetImage('CybernoidMap3BG_bank.png', 'tiles');
+    layer = map.createLayer(0, undefined, undefined, undefined, true);		<-- true specifies to use the new PIXI tilemap system
+
+TODO: in the sci-fly demo there is a new problem with collisions when the map has scrolled, I'm guessing this is some sort of scroll offset conflict between the display and the collision system.
+
 
