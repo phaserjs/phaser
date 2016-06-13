@@ -1389,6 +1389,8 @@ Phaser.BitmapData.prototype = {
             ty |= 0;
         }
 
+        //  Doesn't work fully with children, or scale + rotation transforms
+        /*
         ctx.translate(tx, ty);
 
         ctx.scale(this._scale.x, this._scale.y);
@@ -1396,6 +1398,16 @@ Phaser.BitmapData.prototype = {
         ctx.rotate(this._rotate);
 
         ctx.drawImage(this._image, this._pos.x + x, this._pos.y + y, this._size.x, this._size.y, -newWidth * this._anchor.x, -newHeight * this._anchor.y, newWidth, newHeight);
+        */
+
+        //  Works with everything, but needs optimising / including overrides in
+        var m = source.worldTransform.clone();
+
+        ctx.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+
+        ctx.drawImage(this._image, this._pos.x, this._pos.y, this._size.x, this._size.y, -newWidth * this._anchor.x, -newHeight * this._anchor.y, newWidth, newHeight);
+
+        //  Carry on ...
 
         ctx.restore();
 
@@ -1487,6 +1499,7 @@ Phaser.BitmapData.prototype = {
         if (child.hasOwnProperty('texture'))
         {
             this.copy(child, null, null, null, null, child.worldPosition.x, child.worldPosition.y, null, null, child.worldRotation, null, null, child.worldScale.x, child.worldScale.y, child.worldAlpha, blendMode, roundPx);
+            // this.copy(child, null, null, null, null, null, null, null, null, null, null, null, null, null, child.worldAlpha, blendMode, roundPx);
         }
 
         if (child.hasOwnProperty('children') && child.children.length > 0)
