@@ -137,6 +137,7 @@ Phaser.Tileset.prototype = {
 
         if (coordIndex >= 0 && (coordIndex + 1) < this.drawCoords.length)
         {
+            // draw the tile on the canvas
             context.drawImage(
                 this.image,
                 this.drawCoords[coordIndex],
@@ -148,6 +149,45 @@ Phaser.Tileset.prototype = {
                 this.tileWidth,
                 this.tileHeight
             );
+        }
+
+    },
+
+    /**
+    * Draws a tile from this Tileset at the given coordinates.
+    *
+    * @method Phaser.Tileset#draw
+    * @public
+    * @param {Array} glBatch - A list of webgl batch objects to draw later.
+    * @param {number} x - The x coordinate to draw to.
+    * @param {number} y - The y coordinate to draw to.
+    * @param {integer} index - The index of the tile within the set to draw.
+    */
+    drawGl: function (glBatch, x, y, index) {
+
+        // Correct the tile index for the set and bias for interlacing x/y values
+        var coordIndex = (index - this.firstgid) * 2;
+
+        if (coordIndex >= 0 && (coordIndex + 1) < this.drawCoords.length)
+        {
+            // add the tile to the webgl batch
+            if ( !glBatch )
+            {
+                glBatch = [];
+            }
+
+            // source and destination coordinates, in pixel units
+            // destination is the centre of the tile
+            glBatch.push( {
+                sx: this.drawCoords[coordIndex],
+                sy: this.drawCoords[coordIndex + 1],
+                sw: this.tileWidth,
+                sh: this.tileHeight,
+                dx: x + this.tileWidth * 0.5,
+                dy: y + this.tileHeight * 0.5,
+                dw: this.tileWidth,
+                dh: this.tileHeight
+            } );
         }
 
     },
