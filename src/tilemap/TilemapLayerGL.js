@@ -732,12 +732,7 @@ Phaser.TilemapLayerGL.prototype.renderRegion = function (scrollX, scrollY, left,
 
             var index = tile.index;
 
-            var set = tilesets[index];
-
-            if (set === undefined)
-            {
-                set = this.resolveTileset(index);
-            }
+            var set = this.resolveTileset(index);
 
             if (tile.alpha !== lastAlpha && !this.debug)
             {
