@@ -589,6 +589,7 @@ Phaser.Tilemap.prototype = {
 
         if ( pixiTest )
         {
+            // use WebGL variant of TilemapLayer when pixiTest is true
             return group.add(new Phaser.TilemapLayerGL(this.game, this, index, width, height));
         }
 
