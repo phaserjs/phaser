@@ -220,6 +220,7 @@ Phaser.TilemapLayerGL = function (game, tilemap, index, width, height) {
     */
     this._results = [];
 
+    // TODO: need PIXI textures for each tileset source image
     var baseTexture = new PIXI.BaseTexture(this.map.tilesets[0].image);
     PIXI.Tilemap.call(this, new PIXI.Texture(baseTexture), this.map.width, this.map.height, this.map.tileWidth, this.map.tileHeight, this.layer);
 
@@ -269,6 +270,8 @@ Phaser.TilemapLayerGL.prototype.postUpdate = function () {
 
     this.scrollX = camera.x * this.scrollFactorX / this.scale.x;
     this.scrollY = camera.y * this.scrollFactorY / this.scale.y;
+
+    this.render();
 
 };
 
@@ -652,6 +655,212 @@ Phaser.TilemapLayerGL.prototype.setScale = function (xScale, yScale) {
 
 };
 
+/**
+* Render tiles in the given area given by the virtual tile coordinates biased by the given scroll factor.
+* This will constrain the tile coordinates based on wrapping but not physical coordinates.
+*
+* @method Phaser.TilemapLayerGL#renderRegion
+* @private
+* @param {integer} scrollX - Render x offset/scroll.
+* @param {integer} scrollY - Render y offset/scroll.
+* @param {integer} left - Leftmost column to render.
+* @param {integer} top - Topmost row to render.
+* @param {integer} right - Rightmost column to render.
+* @param {integer} bottom - Bottommost row to render.
+*/
+Phaser.TilemapLayerGL.prototype.renderRegion = function (scrollX, scrollY, left, top, right, bottom) {
+
+    var context = this.context;
+
+    var width = this.layer.width;
+    var height = this.layer.height;
+    var tw = this._mc.tileWidth;
+    var th = this._mc.tileHeight;
+
+    var tilesets = this._mc.tilesets;
+    var lastAlpha = NaN;
+
+    if (!this._wrap)
+    {
+        if (left <= right) // Only adjust if going to render
+        {
+            left = Math.max(0, left);
+            right = Math.min(width - 1, right);
+        }
+        if (top <= bottom)
+        {
+            top = Math.max(0, top);
+            bottom = Math.min(height - 1, bottom);
+        }
+    }
+   
+    // top-left pixel of top-left cell
+    var baseX = (left * tw) - scrollX;
+    var baseY = (top * th) - scrollY;
+
+    // Fix normStartX/normStartY such it is normalized [0..width/height). This allows a simple conditional and decrement to always keep in range [0..width/height) during the loop. The major offset bias is to take care of negative values.
+    var normStartX = (left + ((1 << 20) * width)) % width;
+    var normStartY = (top + ((1 << 20) * height)) % height;
+
+    // tx/ty - are pixel coordinates where tile is drawn
+    // x/y - is cell location, normalized [0..width/height) in loop
+    // xmax/ymax - remaining cells to render on column/row
+    var tx, ty, x, y, xmax, ymax;
+
+    //context.fillStyle = this.tileColor;
+
+    for (y = normStartY, ymax = bottom - top, ty = baseY;
+        ymax >= 0;
+        y++, ymax--, ty += th)
+    {
+
+        if (y >= height) { y -= height; }
+
+        var row = this.layer.data[y];
+
+        for (x = normStartX, xmax = right - left, tx = baseX;
+            xmax >= 0;
+            x++, xmax--, tx += tw)
+        {
+
+            if (x >= width) { x -= width; }
+
+            var tile = row[x];
+
+            if (!tile || tile.index < 0)
+            {
+                continue;
+            }
+
+            var index = tile.index;
+
+            var set = tilesets[index];
+
+            if (set === undefined)
+            {
+                set = this.resolveTileset(index);
+            }
+
+            //  Setting the globalAlpha is "surprisingly expensive" in Chrome (38)
+            if (tile.alpha !== lastAlpha && !this.debug)
+            {
+                //context.globalAlpha = tile.alpha;
+                lastAlpha = tile.alpha;
+            }
+
+            if (set)
+            {
+                if (tile.rotation || tile.flipped)
+                {
+                    //context.save();
+                    //context.translate(tx + tile.centerX, ty + tile.centerY);
+                    //context.rotate(tile.rotation);
+
+                    // if (tile.flipped)
+                    // {
+                    //     context.scale(-1, 1);
+                    // }
+
+                    set.drawGl(this.glBatch, -tile.centerX, -tile.centerY, index);
+                    //context.restore();
+                }
+                else
+                {
+                    set.drawGl(this.glBatch, tx, ty, index);
+                }
+            }
+            // else if (this.debugSettings.missingImageFill)
+            // {
+            //     context.fillStyle = this.debugSettings.missingImageFill;
+            //     context.fillRect(tx, ty, tw, th);
+            // }
+
+            // if (tile.debug && this.debugSettings.debuggedTileOverfill)
+            // {
+            //     context.fillStyle = this.debugSettings.debuggedTileOverfill;
+            //     context.fillRect(tx, ty, tw, th);
+            // }
+           
+        }
+
+    }
+
+};
+
+/**
+* Clear and render the entire canvas.
+*
+* @method Phaser.TilemapLayerGL#renderFull
+* @private
+*/
+Phaser.TilemapLayerGL.prototype.renderFull = function () {
+    
+    var scrollX = this._mc.scrollX;
+    var scrollY = this._mc.scrollY;
+
+    var renderW = this.game._width;     //this.canvas.width;
+    var renderH = this.game._height;    //this.canvas.height;
+
+    var tw = this._mc.tileWidth;
+    var th = this._mc.tileHeight;
+
+    var left = Math.floor(scrollX / tw);
+    var right = Math.floor((renderW - 1 + scrollX) / tw);
+    var top = Math.floor(scrollY / th);
+    var bottom = Math.floor((renderH - 1 + scrollY) / th);
+
+    this.glBatch = [];
+    this.renderRegion(scrollX, scrollY, left, top, right, bottom);
+};
+
+/**
+* Renders the tiles to the layer canvas and pushes to the display.
+*
+* @method Phaser.TilemapLayerGL#render
+* @protected
+*/
+Phaser.TilemapLayerGL.prototype.render = function () {
+
+    var redrawAll = false;
+
+    if (!this.visible)
+    {
+        return;
+    }
+
+    if (this.dirty || this.layer.dirty)
+    {
+        this.layer.dirty = false;
+        redrawAll = true;
+    }
+
+    //  Scrolling bias; whole pixels only
+    var scrollX = this._scrollX | 0;
+    var scrollY = this._scrollY | 0;
+
+    var mc = this._mc;
+    var shiftX = mc.scrollX - scrollX; // Negative when scrolling right/down
+    var shiftY = mc.scrollY - scrollY;
+
+    if (!redrawAll &&
+        shiftX === 0 && shiftY === 0)
+    {
+        //  No reason to rebuild batch, looking at same thing and not invalidated.
+        return;
+    }
+
+    mc.scrollX = scrollX;
+    mc.scrollY = scrollY;
+
+    this.renderFull();
+
+    this.texture.baseTexture.dirty();
+
+    this.dirty = false;
+
+    return true;
+
+};
 
 /**
 * Flag controlling if the layer tiles wrap at the edges. Only works if the World size matches the Map size.
