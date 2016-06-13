@@ -5,6 +5,60 @@
 */
 
 /**
+* Enumeration categorizing the hierarchical propagation phases of input events.
+* @class Phaser.InputPropagationPhase
+*/
+Phaser.InputPropagationPhase = {
+
+    /**
+    * The event was triggered on current object, no propagation.
+    * @constant
+    */
+    NORMAL: 0,
+
+    /**
+    * The event was triggered on a descendant of the current object, and propagated in capturing phase (before being handled by the descendant)
+    * @constant
+    */
+    CAPTURING: 1 << 0,
+
+    /**
+    * The event was triggered on a descendant of the current object, and propagated in bubbling phase (after being handled by the descendant)
+    * @constant
+    */
+    BUBBLING: 1 << 1
+
+};
+
+
+/**
+* An event object sent by all input signals.
+*/
+Phaser.InputEvent = function (sprite) {
+
+    /**
+    * The sprite, that this event was originally triggered on.
+    */
+    this.target = sprite;
+
+    /**
+    * @property {number} propagationPhase - The propagation phase of the current input event. See Phaser.InputPropagationPhase.
+    * @default
+    */
+    this.propagationPhase = Phaser.InputPropagationPhase.NORMAL;
+
+    /**
+    * @property {boolean} stopPropagation - If set to true the hierarchical propagation of the current input event will stop.
+    * @default
+    */
+    this.stopPropagation = false;
+
+};
+
+Phaser.InputEvent.constructor = Phaser.InputEvent;
+
+
+/**
 * The Input Handler is bound to a specific Sprite and is responsible for managing all Input events on that Sprite.
 *
 * @class Phaser.InputHandler
@@ -43,6 +97,17 @@ Phaser.InputHandler = function (sprite) {
     * @default
     */
     this.priorityID = 0;
+
+    /**
+    * @property {number} propagationPhases - A flag combination of all hierarchical propagation phases that this input handler should participate in.
+    * Possible flags:
+    * Phaser.InputPropagationPhase.CAPTURING - participate in capturing
+    * Phaser.InputPropagationPhase.BUBBLING - participate in bubbling
+    * Special value (also default):
+    * Phaser.InputPropagationPhase.NORMAL - Don't participate, only accept normal input.
+    * @default
+    */
+    this.propagationPhases = Phaser.InputPropagationPhase.NORMAL;
 
     /**
     * @property {boolean} useHandCursor - On a desktop browser you can set the 'hand' cursor to appear when moving over the Sprite.
@@ -909,6 +974,78 @@ Phaser.InputHandler.prototype = {
         }
     },
 
+    /*
+    * Returns all input enabled ancestors.
+    * @private
+    */
+    _getHierarchy: function () {
+
+        var result = [];
+        var ancestor = this.sprite.parent;
+
+        while (ancestor)
+        {
+            if(ancestor.input && ancestor.input.enabled)
+            {
+                result.push(ancestor.input);
+            }
+            ancestor = ancestor.parent;
+        }
+
+        return result;
+    },
+
+    /*
+     * Calls the callback for all ancestors that participate in capturing, unless propagation is stopped.
+     * @private
+     */
+    _capture: function (hierarchy, event, callback) {
+
+        event.propagationPhase = Phaser.InputPropagationPhase.CAPTURING;
+        for (var i = hierarchy.length; i --> 0;)
+        {
+            var ancestor = hierarchy[i];
+            if(this._applyPropagationCallback(ancestor, event, callback))
+            {
+                break;
+            }
+        }
+    },
+
+    /*
+     * Calls the callback for all ancestors that participate in bubbling, unless propagation is stopped.
+     * @private
+     */
+    _bubble: function (hierarchy, event, callback) {
+
+        if(event.stopPropagation)
+        {
+            return;
+        }
+
+        event.propagationPhase = Phaser.InputPropagationPhase.BUBBLING;
+        for (var i = 0; i < hierarchy.length; ++i)
+        {
+            var ancestor = hierarchy[i];
+            if(this._applyPropagationCallback(ancestor, event, callback))
+            {
+                break;
+            }
+        }
+    },
+
+    /*
+    * A helper method used in hierarchical propagation. Checks if the propagation phases of the ancestor and event match and applies the callback, returns a boolean indicating whether the propagation was stopped or not.
+    * @private
+    */
+    _applyPropagationCallback: function (ancestor, event, callback) {
+        if(ancestor.propagationPhases & event.propagationPhase)
+        {
+            callback(ancestor);
+        }
+        return event.stopPropagation;
+    },
+
     /**
     * Internal method handling the pointer over event.
     *
@@ -933,10 +1070,25 @@ Phaser.InputHandler.prototype = {
 
         var data = this._pointerData[pointer.id];
 
-        if (data.isOver === false || pointer.dirty)
-        {
-            var sendEvent = (data.isOver === false);
+        var event = (data.isOver === false) ? new Phaser.InputEvent(this.sprite) : null;
+        var hierarchy;
 
+        if (!silent && event)
+        {
+            hierarchy = this._getHierarchy();
+
+            this._capture(hierarchy, event, function(input) {
+                input.sprite.events.onInputOver$dispatch(event, pointer);
+            });
+
+            if(event.stopPropagation)
+            {
+                return;
+            }
+        }
+
+        if (event || pointer.dirty)
+        {
             data.isOver = true;
             data.isOut = false;
             data.timeOver = this.game.time.time;
@@ -948,16 +1100,22 @@ Phaser.InputHandler.prototype = {
                 this.game.canvas.style.cursor = "pointer";
                 this._setHandCursor = true;
             }
+        }
 
-            if (!silent && sendEvent && this.sprite && this.sprite.events)
-            {
-                this.sprite.events.onInputOver$dispatch(this.sprite, pointer);
-            }
+        if (!silent && event && this.sprite && this.sprite.events)
+        {
+            event.propagationPhase = Phaser.InputPropagationPhase.NORMAL;
+            this.sprite.events.onInputOver$dispatch(event, pointer);
+
+            this._bubble(hierarchy, event, function(input) {
+                input.sprite.events.onInputOver$dispatch(event, pointer);
+            });
 
             if (this.sprite.parent && this.sprite.parent.type === Phaser.GROUP)
             {
                 this.sprite.parent.onChildInputOver.dispatch(this.sprite, pointer);
             }
+
         }
 
     },
@@ -980,6 +1138,29 @@ Phaser.InputHandler.prototype = {
 
         var data = this._pointerData[pointer.id];
 
+        if(!data.isOver) // how can we get out if we never got in?
+        {
+            return;
+        }
+
+        var hierarchy;
+        var event;
+
+        if(!silent)
+        {
+            hierarchy = this._getHierarchy();
+            event = new Phaser.InputEvent(this.sprite);
+
+            this._capture(hierarchy, event, function(input) {
+                input.sprite.events.onInputOut$dispatch(event, pointer);
+            });
+
+            if(event.stopPropagation)
+            {
+                return;
+            }
+        }
+
         data.isOver = false;
         data.isOut = true;
         data.timeOut = this.game.time.time;
@@ -992,7 +1173,12 @@ Phaser.InputHandler.prototype = {
 
         if (!silent && this.sprite && this.sprite.events)
         {
-            this.sprite.events.onInputOut$dispatch(this.sprite, pointer);
+            event.propagationPhase = Phaser.InputPropagationPhase.NORMAL;
+            this.sprite.events.onInputOut$dispatch(event, pointer);
+
+            this._bubble(hierarchy, event, function(input) {
+                input.sprite.events.onInputOut$dispatch(event, pointer);
+            });
 
             if (this.sprite && this.sprite.parent && this.sprite.parent.type === Phaser.GROUP)
             {
@@ -1023,66 +1209,79 @@ Phaser.InputHandler.prototype = {
             return;
         }
 
-        var data = this._pointerData[pointer.id];
+        var hierarchy = this._getHierarchy();
+        var event = new Phaser.InputEvent(this.sprite);
 
-        if (!data.isDown && data.isOver)
+        this._capture(hierarchy, event, function(input) {
+            input.sprite.events.onInputDown$dispatch(event, pointer);
+        });
+
+        if(event.stopPropagation)
         {
+            return;
+        }
 
-            data.isDown = true;
-            data.isUp = false;
-            data.timeDown = this.game.time.time;
+        var data = this._pointerData[pointer.id];
+        data.isDown = true;
+        data.isUp = false;
+        data.timeDown = this.game.time.time;
 
-            this.downPoint.set(pointer.x, pointer.y);
+        this.downPoint.set(pointer.x, pointer.y);
 
-            //  It's possible the onInputDown event creates a new Sprite that is on-top of this one, so we ought to force a Pointer update
-            pointer.dirty = true;
+        //  It's possible the onInputDown event creates a new Sprite that is on-top of this one, so we ought to force a Pointer update
+        pointer.dirty = true;
 
-            if (this.sprite && this.sprite.events)
+        if (this.sprite && this.sprite.events)
+        {
+            event.propagationPhase = Phaser.InputPropagationPhase.NORMAL;
+            this.sprite.events.onInputDown$dispatch(event, pointer);
+
+            this._bubble(hierarchy, event, function(input) {
+                input.sprite.events.onInputDown$dispatch(event, pointer);
+            });
+
+            //  The event above might have destroyed this sprite.
+            if (this.sprite && this.sprite.parent && this.sprite.parent.type === Phaser.GROUP)
             {
-                this.sprite.events.onInputDown$dispatch(this.sprite, pointer);
-
-                //  The event above might have destroyed this sprite.
-                if (this.sprite && this.sprite.parent && this.sprite.parent.type === Phaser.GROUP)
-                {
-                    this.sprite.parent.onChildInputDown.dispatch(this.sprite, pointer);
-                }
-
-                //  The events might have destroyed this sprite.
-                if (this.sprite === null)
-                {
-                    return;
-                }
+                this.sprite.parent.onChildInputDown.dispatch(this.sprite, pointer);
             }
 
-            //  Start drag
-            if (this.draggable && this.isDragged === false)
+            //  The events might have destroyed this sprite.
+            if (this.sprite === null)
             {
-                if (this.dragTimeThreshold === 0 && this.dragDistanceThreshold === 0)
+                return;
+            }
+
+        }
+
+        //  Start drag
+        if (this.draggable && this.isDragged === false)
+        {
+            if (this.dragTimeThreshold === 0 && this.dragDistanceThreshold === 0)
+            {
+                this.startDrag(pointer);
+            }
+            else
+            {
+                this._pendingDrag = true;
+
+                this._dragDistancePass = (this.dragDistanceThreshold === 0);
+
+                if (this.dragTimeThreshold > 0)
                 {
-                    this.startDrag(pointer);
+                    this._dragTimePass = false;
+                    this.game.time.events.add(this.dragTimeThreshold, this.dragTimeElapsed, this, pointer);
                 }
                 else
                 {
-                    this._pendingDrag = true;
-
-                    this._dragDistancePass = (this.dragDistanceThreshold === 0);
-
-                    if (this.dragTimeThreshold > 0)
-                    {
-                        this._dragTimePass = false;
-                        this.game.time.events.add(this.dragTimeThreshold, this.dragTimeElapsed, this, pointer);
-                    }
-                    else
-                    {
-                        this._dragTimePass = true;
-                    }
+                    this._dragTimePass = true;
                 }
             }
+        }
 
-            if (this.bringToTop)
-            {
-                this.sprite.bringToTop();
-            }
+        if (this.bringToTop)
+        {
+            this.sprite.bringToTop();
         }
 
     },
@@ -1127,20 +1326,46 @@ Phaser.InputHandler.prototype = {
         //  If was previously touched by this Pointer, check if still is AND still over this item
         if (data.isDown && pointer.isUp)
         {
+            var isOver = this.checkPointerOver(pointer);
+
+            var allowInput = !this.dragStopBlocksInputUp ||
+                this.dragStopBlocksInputUp && !(this.draggable && this.isDragged && this._draggedPointerID === pointer.id);
+
+            var event;
+            var hierarchy;
+
+            if (allowInput)
+            {
+                hierarchy = this._getHierarchy();
+                event = new Phaser.InputEvent(this.sprite);
+
+                this._capture(hierarchy, event, function(input) {
+                    input.sprite.events.onInputUp$dispatch(event, pointer, isOver);
+                });
+
+                if(event.stopPropagation)
+                {
+                    return;
+                }
+            }
+
+
             data.isDown = false;
             data.isUp = true;
             data.timeUp = this.game.time.time;
             data.downDuration = data.timeUp - data.timeDown;
 
-            //  Only release the InputUp signal if the pointer is still over this sprite
-            var isOver = this.checkPointerOver(pointer);
 
             if (this.sprite && this.sprite.events)
             {
-                if (!this.dragStopBlocksInputUp ||
-                    this.dragStopBlocksInputUp && !(this.draggable && this.isDragged && this._draggedPointerID === pointer.id))
+                if (allowInput)
                 {
-                    this.sprite.events.onInputUp$dispatch(this.sprite, pointer, isOver);
+                    event.propagationPhase = Phaser.InputPropagationPhase.NORMAL;
+                    this.sprite.events.onInputUp$dispatch(event, pointer, isOver);
+
+                    this._bubble(hierarchy, event, function(input) {
+                        input.sprite.events.onInputUp$dispatch(event, pointer, isOver);
+                    });
                 }
 
                 if (this.sprite && this.sprite.parent && this.sprite.parent.type === Phaser.GROUP)
@@ -1198,6 +1423,18 @@ Phaser.InputHandler.prototype = {
 
         var px = this.globalToLocalX(pointer.x) + this._dragPoint.x + this.dragOffset.x;
         var py = this.globalToLocalY(pointer.y) + this._dragPoint.y + this.dragOffset.y;
+
+        var hierarchy = this._getHierarchy();
+        var event = new Phaser.InputEvent(this.sprite);
+
+        this._capture(hierarchy, event, function(input) {
+            input.sprite.events.onDragUpdate$dispatch(event, pointer, px, py, this.snapPoint, fromStart);
+        });
+
+        if(event.stopPropagation)
+        {
+            return;
+        }
 
         if (this.sprite.fixedToCamera)
         {
@@ -1261,7 +1498,12 @@ Phaser.InputHandler.prototype = {
             }
         }
 
-        this.sprite.events.onDragUpdate.dispatch(this.sprite, pointer, px, py, this.snapPoint, fromStart);
+        event.propagationPhase = Phaser.InputPropagationPhase.NORMAL;
+        this.sprite.events.onDragUpdate$dispatch(event, pointer, px, py, this.snapPoint, fromStart);
+
+        this._bubble(hierarchy, event, function(input) {
+            input.sprite.events.onDragUpdate$dispatch(event, pointer, px, py, this.snapPoint, fromStart);
+        });
 
         return true;
 
@@ -1467,6 +1709,18 @@ Phaser.InputHandler.prototype = {
         var x = this.sprite.x;
         var y = this.sprite.y;
 
+        var hierarchy = this._getHierarchy();
+        var event = new Phaser.InputEvent(this.sprite);
+
+        this._capture(hierarchy, event, function(input) {
+            input.sprite.events.onDragStart$dispatch(event, pointer, x, y);
+        });
+
+        if(event.stopPropagation)
+        {
+            return;
+        }
+
         this.isDragged = true;
         this._draggedPointerID = pointer.id;
 
@@ -1510,7 +1764,12 @@ Phaser.InputHandler.prototype = {
 
         this.dragStartPoint.set(x, y);
 
-        this.sprite.events.onDragStart$dispatch(this.sprite, pointer, x, y);
+        event.propagationPhase = Phaser.InputPropagationPhase.NORMAL;
+        this.sprite.events.onDragStart$dispatch(event, pointer, x, y);
+
+        this._bubble(hierarchy, event, function(input) {
+            input.sprite.events.onDragStart$dispatch(event, pointer, x, y);
+        });
 
         this._pendingDrag = false;
 
@@ -1560,6 +1819,18 @@ Phaser.InputHandler.prototype = {
     */
     stopDrag: function (pointer) {
 
+        var hierarchy = this._getHierarchy();
+        var event = new Phaser.InputEvent(this.sprite);
+
+        this._capture(hierarchy, event, function(input) {
+            input.sprite.events.onDragStop$dispatch(event, pointer);
+        });
+
+        if(event.stopPropagation)
+        {
+            return;
+        }
+
         this.isDragged = false;
         this._draggedPointerID = -1;
         this._pointerData[pointer.id].isDragged = false;
@@ -1580,7 +1851,12 @@ Phaser.InputHandler.prototype = {
             }
         }
 
-        this.sprite.events.onDragStop$dispatch(this.sprite, pointer);
+        event.propagationPhase = Phaser.InputPropagationPhase.NORMAL;
+        this.sprite.events.onDragStop$dispatch(event, pointer);
+
+        this._bubble(hierarchy, event, function(input) {
+            input.sprite.events.onDragStop$dispatch(event, pointer);
+        });
 
         if (this.checkPointerOver(pointer) === false)
         {
