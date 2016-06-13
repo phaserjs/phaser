@@ -65,7 +65,7 @@ PIXI.Tilemap = function(texture, mapwidth, mapheight, tilewidth, tileheight, lay
     var mapSize = mapwidth * mapheight * 16;
 
     // create buffer data for the webgl rendering of this tile
-    this.buffer = new PIXI.Float32Array( mapSize * 16 );
+    this.buffer = new PIXI.Float32Array( mapSize );
 };
 
 
