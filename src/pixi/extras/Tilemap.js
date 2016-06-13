@@ -64,38 +64,10 @@ PIXI.Tilemap = function(texture, mapwidth, mapheight, tilewidth, tileheight, lay
     // calculate size of map
     var mapSize = mapwidth * mapheight * 16;
 
-    // create buffer with all data required by shader to draw this object
+    // create buffer data for the webgl rendering of this tile
     this.buffer = new PIXI.Float32Array( mapSize * 16 );
-
-    /**
-     * create buffer data for the webgl rendering of this tile
-     * the buffer has parts of it overwritten for each tile
-     * but other parts remain constant throughout
-     */
-    
-    // screen destination position of tile corners relative to 0,0 (constant)
-    // l, b,    0,1
-    // l, t,    4,5
-    // r, b,    8,9
-    // r, t,    12,13
-    var l = 0;
-    var r = l + this.tileWide;
-    var t = 0;
-    var b = t + this.tileHigh;
-
-    for(var i = 0; i < mapSize; i++)
-    {
-      var b = i * 16;
-      this.buffer[ b +  0 ] = this.buffer[ b +  4 ] = l;
-      this.buffer[ b +  1 ] = this.buffer[ b +  9 ] = b;
-      this.buffer[ b +  8 ] = this.buffer[ b +  12] = r;
-      this.buffer[ b +  5 ] = this.buffer[ b +  13] = t;
-      this.buffer[ b +  2 ] = this.buffer[ b +  6 ] = 0;
-      this.buffer[ b +  3 ] = this.buffer[ b +  11] = 1;
-      this.buffer[ b +  10] = this.buffer[ b +  14] = 1;
-      this.buffer[ b +  7 ] = this.buffer[ b +  15] = 0;
-    }
 };
+
 
 // constructor
 PIXI.Tilemap.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
@@ -105,6 +77,7 @@ PIXI.Tilemap.prototype.update = function() {};
 PIXI.Tilemap.prototype.postUpdate = function() {};
 
 
+// override PIXI.DisplayObjectContainer _renderWebGL
 PIXI.Tilemap.prototype._renderWebGL = function(renderSession)
 {
     // if the sprite is not visible or the alpha is 0 then no need to render this element
@@ -123,16 +96,7 @@ PIXI.Tilemap.prototype._renderWebGL = function(renderSession)
 
     renderSession.shaderManager.setShader(renderSession.shaderManager.tilemapShader);
 
-    switch( this._renderMode )
-    {
-      case 0:
-        this._renderVisibleTiles(renderSession);
-        break;
-
-      case 1:
-        this._renderWholeTilemap(renderSession);
-        break;
-    }
+    this._renderWholeTilemap(renderSession);
 
     renderSession.spriteBatch.start();
 };
@@ -149,6 +113,7 @@ PIXI.Tilemap.prototype._initWebGL = function(renderSession)
 
     // create a GL buffer to transfer all the vertex position data through
     this.positionBuffer = gl.createBuffer();
+
     // bind the buffer to the RAM resident positionBuffer
     gl.bindBuffer( gl.ARRAY_BUFFER, this.positionBuffer );
     gl.bufferData( gl.ARRAY_BUFFER, this.buffer, gl.STATIC_DRAW );
@@ -191,168 +156,109 @@ PIXI.Tilemap.prototype.makeTransform = function(_x, _y, _angleInRadians, _scaleX
   m[8] = 1;
   return m;
 };
+*/
 
-
-/**
- * render only the visible portion of the tilemap, one layer at a time, one tile at a time
- * using a fast webgl tile render
- *
- * @param  {[type]} renderSession [description]
- */
-PIXI.Tilemap.prototype._renderVisibleTiles = function(renderSession)
+PIXI.Tilemap.prototype._renderBatch = function( renderSession )
 {
-  var gl = renderSession.gl;
-  var shader = renderSession.shaderManager.tilemapShader;
-
-  renderSession.blendModeManager.setBlendMode(this.blendMode);
-
-  // set the uniforms and texture
-  gl.uniformMatrix3fv( shader.uProjectionMatrix, false, this.makeProjection(gl.drawingBufferWidth, gl.drawingBufferHeight) );
-  gl.uniform1i( shader.uImageSampler, 0 );
-  gl.activeTexture(gl.TEXTURE0);
-  gl.uniform2f(shader.uTileSize, this.tileWide, this.tileHigh);
-
-  // check if a texture is dirty..
-  if(this.texture.baseTexture._dirty[gl.id])
+  if ( this.glBatch )
   {
-      renderSession.renderer.updateTexture(this.texture.baseTexture);
-  }
-  else
-  {
-      // bind the current texture
-      gl.bindTexture(gl.TEXTURE_2D, this.texture.baseTexture._glTextures[gl.id]);
-  }
+    var gl = renderSession.gl;
 
-  // bind the source buffer
-  gl.bindBuffer( gl.ARRAY_BUFFER, this.positionBuffer );
+    // TODO: should probably use destination buffer dimensions (halved)
+    var screenWide2 = this.game.width * 0.5;
+    var screenHigh2 = this.game.height * 0.5;
 
-  // draw the visible portion of the map layer
-  this._renderVisibleLayer(this.layer, renderSession);
-};
+    // size of one pixel in the source texture
+    var iTextureWide = 1.0 / this.texture.width;
+    var iTextureHigh = 1.0 / this.texture.height;
 
+    // size of one tile in the source texture
+    var srcWide = this.tileWide * iTextureWide;
+    var srcHigh = this.tileHigh * iTextureHigh;
 
-PIXI.Tilemap.prototype._renderVisibleLayer = function( _layer, renderSession )
-{
-  var gl = renderSession.gl;
-  var shader = renderSession.shaderManager.tilemapShader;
+    // pre-calculate inverse half-buffer dimensions
+    var iWide = 1.0 / screenWide2;
+    var iHigh = 1.0 / screenHigh2;
 
-  // calculate visible tile extents
-  var firstX = Math.max(Math.floor(this.scrollX / this.tileWide), 0);
-  var lastX = Math.min(firstX + Math.ceil(this.game.width / this.tileWide) + 1, this.mapWide);
-  var firstY = Math.max(Math.floor(this.scrollY / this.tileHigh), 0);
-  var lastY = Math.min(firstY + Math.ceil(this.game.height / this.tileHigh) + 1, this.mapHigh);
+    var wide = this.tileWide * 0.5 / screenWide2;
+    var high = this.tileHigh * 0.5 / screenHigh2;
 
-  // TODO: switch to game.width or PIXI equivalent
-  var screenWide2 = gl.drawingBufferWidth * 0.5;
-  var screenHigh2 = gl.drawingBufferHeight * 0.5;
+    var buffer = this.buffer;
+    var oldR, oldT, uvl, uvt;
 
-  // calculate inverse to avoid division in loop
-  var iWide = 1.0 / screenWide2;
-  var iHigh = 1.0 / screenHigh2;
-
-  // scale tile dimensions for drawing surface size (this shader doesn't do any conversion)
-  var wide = this.tileWide * 0.5 / screenWide2;
-  var high = this.tileHigh * 0.5 / screenHigh2;
-
-  var buffer = this.buffer;
-  var oldT, oldR;
-  var c = 0;
-
-  // for all tiles in the visible screen area
-  for(var ty = firstY; ty < lastY; ty++)
-  {
-    // local row pointer to speed up x access
-    var layerRow = _layer.data[ty];
-
-    // calculate screen position of centre of this tile (in pixels)
-    var sy = ty * this.tileHigh + this.tileHigh * 0.5;
-
-    for(var tx = firstX; tx < lastX; tx++)
+    // process entire glBatch into a single webGl draw buffer for a TRIANGLE_STRIP blit
+    var c = 0;
+    for(var i = 0, l = this.glBatch.length; i < l; i++)
     {
-      // get the tile index from the map
-      // TODO: hardwired to the first tileset, should use TilemapLayerGL.resolveTileset to work out the correct one(?)
-      var tile = layerRow[tx].index - this.map.tilesets[0].firstgid;
+      // sx: this.drawCoords[coordIndex],
+      // sy: this.drawCoords[coordIndex + 1],
+      // sw: this.tileWidth,
+      // sh: this.tileHeight,
+      // dx: x,
+      // dy: y,
+      // dw: this.tileWidth,
+      // dh: this.tileHeight
+      var t = this.glBatch[i];
 
-      // if it's not an empty tile...
-      if ( tile >= 0 )
+      var x = t.dx * iWide - 1;
+      var y = 1 - t.dy * iHigh;
+
+      var lft = x - wide;
+      var bot = y + high;
+
+      var uvl = t.sx * iTextureWide;
+      var uvt = t.sy * iTextureHigh; 
+
+      // for every tile except the first one, use degenerate triangle to separate the tiles
+      // TODO: it might be possible to avoid this by drawing triangles more intelligently (e.g. each row with inverting the first/second triangle alternately)
+      if ( c > 0 )
       {
-        var sx = tx * this.tileWide + this.tileWide * 0.5;
-
-        // calculate the source position of this tile index (in whole tiles)
-        var tmx = tile % this.texTilesWide;
-        var tmy = Math.floor(tile / this.texTilesWide);
-
-        // calculate the uv values for each corner of the tile in the source
-        var uvl = tmx * this.scalex;
-        var uvr = uvl + this.scalex;
-        var uvt = tmy * this.scaley;
-        var uvb = uvt + this.scaley;
-
-        // calculate the destination location of the tile in screen units (-1..1)
-        var x = sx * iWide - 1;
-        var y = 1 - sy * iHigh;
-
-        // calculate the bottom-left corner of the tile in screen units
-        var l = x - wide;
-        var b = y + high;
-
-        // for every tile except the first one...
-        if ( c > 0 )
-        {
-          // add a degenerate triangle: repeat the last vertex
-          buffer[ c     ] = oldR;
-          buffer[ c + 1 ] = oldT;
-          // then repeat the next vertex
-          buffer[ c + 4 ] = l;
-          buffer[ c + 5 ] = b;
-          // pad with texture coordinates (probably not needed)
-          buffer[ c + 2 ] = buffer[ c + 6 ] = uvl;
-          buffer[ c + 3 ] = buffer[ c + 7 ] = uvt;
-
-          // advance the buffer index
-          c += 8;
-        }
-
-        // screen destination into the VBO
-        // l, b,    0,1
-        // l, t,    4,5
-        // r, b,    8,9
-        // r, t,    12,13
-
-        buffer[ c     ] = buffer[ c + 4 ] = l;
-        buffer[ c + 1 ] = buffer[ c + 9 ] = b;
-        buffer[ c + 8 ] = buffer[ c + 12] = oldR = x + wide;
-        buffer[ c + 5 ] = buffer[ c + 13] = oldT = y - high;
-
-        // texture source position into the VBO
-        // l, b,    2,3
-        // l, t,    6,7
-        // r, b,    10,11
-        // r, t,    14,15
-        buffer[ c + 2 ] = buffer[ c + 6 ] = uvl;    // l
-        buffer[ c + 3 ] = buffer[ c + 11] = uvt;    // t
-        buffer[ c + 10] = buffer[ c + 14] = uvr;    // r
-        buffer[ c + 7 ] = buffer[ c + 15] = uvb;    // b
+        // add a degenerate triangle: repeat the last vertex
+        buffer[ c     ] = oldR;
+        buffer[ c + 1 ] = oldT;
+        // then repeat the next vertex
+        buffer[ c + 4 ] = lft;
+        buffer[ c + 5 ] = bot;
+        // pad with texture coordinates (probably not needed)
+        buffer[ c + 2 ] = buffer[ c + 6 ] = uvl;
+        buffer[ c + 3 ] = buffer[ c + 7 ] = uvt;
 
         // advance the buffer index
-        c += 16;
+        c += 8;
       }
+
+      // calculate the destination location of the tile in screen units (-1..1)
+      buffer[ c      ] = buffer[ c +  4 ] = lft;
+      buffer[ c +  1 ] = buffer[ c +  9 ] = bot;
+      buffer[ c +  8 ] = buffer[ c +  12] = oldR = x + wide;
+      buffer[ c +  5 ] = buffer[ c +  13] = oldT = y - high;
+
+      // calculate the uv coordinates of the tile source image
+      buffer[ c +  2 ] = buffer[ c +  6 ] = uvl;
+      buffer[ c +  3 ] = buffer[ c +  11] = uvt;
+      buffer[ c +  10] = buffer[ c +  14] = uvl + srcWide;
+      buffer[ c +  7 ] = buffer[ c +  15] = uvt + srcHigh;
+
+      // advance the buffer index
+      c += 16;
     }
-  }
 
-  if ( c > 0 )
-  {
-    // set the scroll offset (in screen units)
-    gl.uniform2f( shader.uScrollOffset, this.scrollX * iWide, -this.scrollY * iHigh );
+    if ( c > 0 )
+    {
+      var shader = renderSession.shaderManager.tilemapShader;
 
-    // upload the VBO
-    gl.bufferData( gl.ARRAY_BUFFER, buffer, gl.STATIC_DRAW );
+      // set the scroll offset (in screen units)
+      gl.uniform2f( shader.uScrollOffset, this.scrollX * iWide, -this.scrollY * iHigh );
 
-    // prepare the shader attributes
-    gl.vertexAttribPointer( shader.aPosition, 4, gl.FLOAT, false, 0, 0 );
+      // upload the VBO
+      gl.bufferData( gl.ARRAY_BUFFER, buffer, gl.STATIC_DRAW );
 
-    // draw the entire VBO in one call
-    gl.drawArrays(gl.TRIANGLE_STRIP, 0, Math.floor(c / 4));
+      // prepare the shader attributes
+      gl.vertexAttribPointer( shader.aPosition, 4, gl.FLOAT, false, 0, 0 );
+
+      // draw the entire VBO in one call
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, Math.floor(c / 4));
+    }
   }
 };
 
@@ -371,7 +277,7 @@ PIXI.Tilemap.prototype._renderWholeTilemap = function(renderSession)
   renderSession.blendModeManager.setBlendMode(this.blendMode);
 
   // set the uniforms and texture
-  gl.uniformMatrix3fv( shader.uProjectionMatrix, false, this.makeProjection(gl.drawingBufferWidth, gl.drawingBufferHeight) );
+  gl.uniformMatrix3fv( shader.uProjectionMatrix, false, this.makeProjection(this.game.width, this.game.height) );
   gl.uniform1i( shader.uImageSampler, 0 );
   gl.activeTexture(gl.TEXTURE0);
   gl.uniform2f(shader.uTileSize, this.tileWide, this.tileHigh);
@@ -390,76 +296,10 @@ PIXI.Tilemap.prototype._renderWholeTilemap = function(renderSession)
   // bind the source buffer
   gl.bindBuffer( gl.ARRAY_BUFFER, this.positionBuffer );
 
-  // draw the entire map layer
-  this._renderLayer(this.layer, renderSession);
+  // draw the batched tile list
+  this._renderBatch( renderSession );
 };
 
-
-PIXI.Tilemap.prototype._renderLayer = function( _layer, renderSession )
-{
-  var gl = renderSession.gl;
-  var shader = renderSession.shaderManager.tilemapShader;
-  var bi = 0;
-
-  var wide = _layer.width, high = _layer.height;
-  for(var y = 0; y < high; y++)
-  {
-    var layerRow = _layer.data[y];
-    for(var x = 0; x < wide; x++)
-    {
-      var tile = layerRow[x].index;
-      if ( tile >= 0 )
-      {
-        this._renderTile(gl, shader, bi, x * this.tileWide, y * this.tileHigh, tile);
-        bi += 16;
-      }
-    }
-  }
-
-};
-
-
-PIXI.Tilemap.prototype._renderTile = function(gl, shader, bufferIndex, x, y, tile)
-{
-  // if repeating same tile, skip almost everything...
-  if ( tile != this.lastTile )
-  {
-    // tile coordinates in the source texture
-    var tx = tile % this.texTilesWide;
-    var ty = Math.floor(tile / this.texTilesWide);
-
-    var l = tx * this.sx;
-    var r = l + this.sx;
-    var t = ty * this.sy;
-    var b = t + this.sy;
-    // texture source position for this tile (uv values)
-    // l, b,    2,3
-    // l, t,    6,7
-    // r, b,    10,11
-    // r, t,    14,15
-    this.buffer[ 2 ] = this.buffer[ 6 ] = l;
-    this.buffer[ 3 ] = this.buffer[ 11] = b;
-    this.buffer[ 10] = this.buffer[ 14] = r;
-    this.buffer[ 7 ] = this.buffer[ 15] = t;
-
-    this.lastTile = tile;
-  }
-
-  // send the latest buffer
-  gl.bufferData( gl.ARRAY_BUFFER, this.buffer, gl.STATIC_DRAW );
-  gl.vertexAttribPointer( shader.aPosition, 4, gl.FLOAT, false, 0, 0 );
-
-  // draw the tile after applying the base coordinates (scrolling offset)
-  gl.uniform2f(shader.uScreenPosition, x - this.scrollX, y - this.scrollY);
-  gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-};
-
-/*
-PIXI.Tilemap.prototype.updateTransform = function()
-{
-  PIXI.DisplayObjectContainer.prototype.updateTransform.call( this );
-};
-*/
 
 /**
  * When the texture is updated, this event will fire to update the scale and frame
