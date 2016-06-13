@@ -71,6 +71,12 @@ Phaser.Events.prototype = {
         if (this._onAnimationComplete) { this._onAnimationComplete.dispose(); }
         if (this._onAnimationLoop)     { this._onAnimationLoop.dispose(); }
 
+        if (this._onFocusIn)           { this._onFocusIn.dispose(); }
+        if (this._onFocusOut)          { this._onFocusOut.dispose(); }
+        if (this._onKeyDown)           { this._onKeyDown.dispose(); }
+        if (this._onKeyPress)          { this._onKeyPress.dispose(); }
+        if (this._onKeyUp)             { this._onKeyUp.dispose(); }
+
     },
 
     // The following properties are sentinels that will be replaced with getters
@@ -268,7 +274,32 @@ Phaser.Events.prototype = {
     * {Phaser.Animation} The Phaser.Animation that looped.
     * @property {Phaser.Signal} onAnimationLoop
     */
-    onAnimationLoop: null
+    onAnimationLoop: null,
+
+    /**
+    * @property {Phaser.Signal} onFocusIn - This signal is dispatched if the parent is inputEnabled and receives input focus.
+    */
+    onFocusIn: null,
+
+    /**
+    * @property {Phaser.Signal} onFocusOut - This signal is dispatched if the parent is inputEnabled and loses input focus.
+    */
+    onFocusOut: null,
+
+    /**
+    * @property {Phaser.Signal} onKeyDown - This signal is dispatched if the parent is inputEnabled, has input focus and the appropriate keyboard event occurred. See {@link Phaser.Keyboard}
+    */
+    onKeyDown: null,
+
+    /**
+    * @property {Phaser.Signal} onKeyPress - This signal is dispatched if the parent is inputEnabled, has input focus and the appropriate keyboard event occurred. See {@link Phaser.Keyboard}
+    */
+    onKeyPress: null,
+
+    /**
+    * @property {Phaser.Signal} onKeyUp - This signal is dispatched if the parent is inputEnabled, has input focus and the appropriate keyboard event occurred. See {@link Phaser.Keyboard}
+    */
+    onKeyUp: null
 
 };
 

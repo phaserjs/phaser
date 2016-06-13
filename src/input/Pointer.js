@@ -686,6 +686,11 @@ Phaser.Pointer.prototype = {
             }
         }
 
+        if(propagated)
+        {
+            input.focusOut();
+        }
+
         return this;
 
     },

@@ -110,6 +110,18 @@ Phaser.InputHandler = function (sprite) {
     this.propagationPhases = Phaser.InputPropagationPhase.NORMAL;
 
     /**
+    * @property {boolean} acceptFocus - Indicates whether this input should accept focus.
+    * @default
+    */
+    this.acceptFocus = false;
+
+    /**
+    * @property {boolean} autoFocus - Indicates whether this input should automatically focus in when a Pointer is pressed over it.
+    * @default
+    */
+    this.autoFocus = true;
+
+    /**
     * @property {boolean} useHandCursor - On a desktop browser you can set the 'hand' cursor to appear when moving over the Sprite.
     * @default
     */
@@ -1284,6 +1296,11 @@ Phaser.InputHandler.prototype = {
             this.sprite.bringToTop();
         }
 
+        if (this.autoFocus)
+        {
+            this.game.input.focusOn(this);
+        }
+
     },
 
     /**
@@ -1400,6 +1417,136 @@ Phaser.InputHandler.prototype = {
             }
         }
 
+    },
+
+    _keyDown: function  (keyEvent) {
+
+        if (this.sprite === null)
+        {
+            //  Abort. We've been destroyed.
+            return;
+        }
+
+        var event = new Phaser.InputEvent(this.sprite);
+
+        var hierarchy = this._getHierarchy();
+
+        this._capture(hierarchy, event, function(input) {
+            input.sprite.events.onKeyDown$dispatch(event, keyEvent);
+        });
+
+        if(event.stopPropagation)
+        {
+            return;
+        }
+
+        this.sprite.events.onKeyDown$dispatch(event, keyEvent);
+
+        this._bubble(hierarchy, event, function(input) {
+            input.sprite.events.onKeyDown$dispatch(event, keyEvent);
+        });
+
+    },
+
+    _keyPress: function (keyEvent) {
+
+        if (this.sprite === null)
+        {
+            //  Abort. We've been destroyed.
+            return;
+        }
+
+        var event = new Phaser.InputEvent(this.sprite);
+
+        var hierarchy = this._getHierarchy();
+
+        this._capture(hierarchy, event, function(input) {
+            input.sprite.events.onKeyPress$dispatch(event, keyEvent);
+        });
+
+        if(event.stopPropagation)
+        {
+            return;
+        }
+
+        this.sprite.events.onKeyPress$dispatch(event, keyEvent);
+
+        this._bubble(hierarchy, event, function(input) {
+            input.sprite.events.onKeyPress$dispatch(event, keyEvent);
+        });
+
+    },
+
+    _keyUp: function (keyEvent) {
+
+        if (this.sprite === null)
+        {
+            //  Abort. We've been destroyed.
+            return;
+        }
+
+        var event = new Phaser.InputEvent(this.sprite);
+
+        var hierarchy = this._getHierarchy();
+
+        this._capture(hierarchy, event, function(input) {
+            input.sprite.events.onKeyUp$dispatch(event, keyEvent);
+        });
+
+        if(event.stopPropagation)
+        {
+            return;
+        }
+
+        this.sprite.events.onKeyUp$dispatch(event, keyEvent);
+
+        this._bubble(hierarchy, event, function(input) {
+            input.sprite.events.onKeyUp$dispatch(event, keyEvent);
+        });
+
+    },
+
+    _focusIn: function () {
+
+        if (this.sprite === null)
+        {
+            //  Abort. We've been destroyed.
+            return;
+        }
+
+        var event = new Phaser.InputEvent(this.sprite);
+        var hierarchy = this._getHierarchy();
+
+        var args = Array.prototype.slice.call(arguments);
+        args.unshift(event);
+        var events = this.sprite.events;
+        var dispatcher = events.onFocusIn$dispatch;
+        dispatcher.apply(events, args);
+
+        this._bubble(hierarchy, event, function(input) {
+            // TODO: use Events object instead of InputHandler to do propagation?
+            events = input.sprite.events;
+            dispatcher = events.onFocusIn$dispatch;
+            dispatcher.apply(events, args);
+        });
+    },
+
+    _focusOut: function (to) {
+
+        if (this.sprite === null)
+        {
+            //  Abort. We've been destroyed.
+            return;
+        }
+
+        var event = new Phaser.InputEvent(this.sprite);
+        var hierarchy = this._getHierarchy();
+
+        this.sprite.events.onFocusOut$dispatch(event, to);
+
+        this._bubble(hierarchy, event, function(input) {
+            input.sprite.events.onFocusOut$dispatch(event, to);
+        });
     },
 
     /**

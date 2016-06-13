@@ -398,6 +398,12 @@ Phaser.Keyboard.prototype = {
             this.onDownCallback.call(this.callbackContext, event);
         }
 
+        var focusedItem = this.game.input.getFocusedItem();
+        if (focusedItem)
+        {
+            focusedItem._keyDown(event);
+        }
+
     },
 
     /**
@@ -419,6 +425,12 @@ Phaser.Keyboard.prototype = {
         if (this.onPressCallback)
         {
             this.onPressCallback.call(this.callbackContext, String.fromCharCode(event.charCode), event);
+        }
+
+        var focusedItem = this.game.input.getFocusedItem();
+        if (focusedItem)
+        {
+            focusedItem._keyPress(event);
         }
 
     },
@@ -458,6 +470,12 @@ Phaser.Keyboard.prototype = {
             this.onUpCallback.call(this.callbackContext, event);
         }
 
+        var focusedItem = this.game.input.getFocusedItem();
+        if (focusedItem)
+        {
+            focusedItem._keyUp(event);
+        }
+
     },
 
     /**
@@ -487,7 +505,7 @@ Phaser.Keyboard.prototype = {
     /**
     * Returns `true` if the Key was pressed down within the `duration` value given, or `false` if it either isn't down,
     * or was pressed down longer ago than then given duration.
-    * 
+    *
     * @method Phaser.Keyboard#downDuration
     * @param {integer} keycode - The {@link Phaser.KeyCode keycode} of the key to check: i.e. Phaser.KeyCode.UP or Phaser.KeyCode.SPACEBAR.
     * @param {number} [duration=50] - The duration within which the key is considered as being just pressed. Given in ms.
@@ -509,7 +527,7 @@ Phaser.Keyboard.prototype = {
     /**
     * Returns `true` if the Key was pressed down within the `duration` value given, or `false` if it either isn't down,
     * or was pressed down longer ago than then given duration.
-    * 
+    *
     * @method Phaser.Keyboard#upDuration
     * @param {Phaser.KeyCode|integer} keycode - The keycode of the key to check, i.e. Phaser.KeyCode.UP or Phaser.KeyCode.SPACEBAR.
     * @param {number} [duration=50] - The duration within which the key is considered as being just released. Given in ms.

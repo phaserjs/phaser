@@ -320,6 +320,12 @@ Phaser.Input = function (game) {
     this.interactiveItems = new Phaser.ArraySet();
 
     /**
+    * @property {Phaser.InputHandler} _focusedItem - The item that currently has input focus.
+    * @private
+    */
+    this._focusedItem = null;
+
+    /**
     * @property {Phaser.Point} _localPoint - Internal cache var.
     * @private
     */
@@ -1001,6 +1007,74 @@ Phaser.Input.prototype = {
         }
 
         return false;
+    },
+
+    /**
+    * Focus on the given object. Will automatically focus out of the previously focused one.
+    *
+    * @method Phaser.Input#focusOut
+    * @param {Phaser.InputHandler} input - The input component of the object to focus on.
+    * @param {any[]} params - Additional parameters to send with onFocusIn signal.
+    * @default
+    */
+    focusOn: function (input) {
+
+        if(!input.acceptFocus || this._focusedItem === input)
+        {
+            return;
+        }
+
+        var params = Array.prototype.slice.call(arguments);
+
+        var from = this._focusOut(input);
+        this._focusedItem = params.shift();
+
+        params.unshift(from);
+        this._focusedItem._focusIn.apply(this._focusedItem, params);
+
+    },
+
+    /**
+    * Focus out of the currently focused object, if any.
+    *
+    * @method Phaser.Input#focusOut
+    * @default
+    */
+    focusOut: function () {
+        this._focusOut(null);
+    },
+
+    /**
+    * Internal function that handles focus out.
+    *
+    * @method Phaser.Input#_focusOut
+    * @param {Phaser.InputHandler} to - The input, if any, that will aquire focus next.
+    * @return {Phaser.InputHnalder} The input, if any, that previously had focus.
+    * @private
+    */
+    _focusOut: function (to) {
+
+        if (this._focusedItem)
+        {
+            var item = this._focusedItem;
+            this._focusedItem._focusOut(to);
+            this._focusedItem = null;
+            return item;
+        }
+
+        return null;
+
+    },
+
+    /**
+    * @method Phaser.Input#getFocusedItem
+    * @return {Phaser.InputHandler} The input component of the object in focus (may be null).
+    * @default
+    */
+    getFocusedItem: function () {
+
+        return this._focusedItem;
+
     },
 
     /**
