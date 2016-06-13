@@ -242,6 +242,18 @@ Phaser.Pointer = function (game, id, pointerMode) {
     this.y = -1;
 
     /**
+    * @property {number} deltaX - The vertical component of the differance between current and previous pointer positions.
+    * @default
+    */
+    this.deltaX = -1;
+
+    /**
+    * @property {number} deltaY - The vertical component of the differance between current and previous pointer positions.
+    * @default
+    */
+    this.deltaY = -1;
+
+    /**
     * @property {boolean} isMouse - If the Pointer is a mouse or pen / stylus this is true, otherwise false.
     */
     this.isMouse = (id === 0);
@@ -793,12 +805,16 @@ Phaser.Pointer.prototype = {
             this.movementY += this.rawMovementY;
         }
 
-        this.x = (this.pageX - this.game.scale.offset.x) * input.scale.x;
-        this.y = (this.pageY - this.game.scale.offset.y) * input.scale.y;
+        var x = (this.pageX - this.game.scale.offset.x) * input.scale.x;
+        var y = (this.pageY - this.game.scale.offset.y) * input.scale.y;
 
-        this.position.setTo(this.x, this.y);
-        this.circle.x = this.x;
-        this.circle.y = this.y;
+        this.deltaX = x - this.x;
+        this.deltaY = y - this.y;
+        this.x = x;
+        this.y = y;
+        this.position.setTo(x,y);
+        this.circle.x = x;
+        this.circle.y = y;
 
         if (input.multiInputOverride === Phaser.Input.MOUSE_OVERRIDES_TOUCH ||
             input.multiInputOverride === Phaser.Input.MOUSE_TOUCH_COMBINE ||
@@ -825,6 +841,19 @@ Phaser.Pointer.prototype = {
         while (i--)
         {
             input.moveCallbacks[i].callback.call(input.moveCallbacks[i].context, this, this.x, this.y, fromClick);
+        }
+
+        if(!fromClick)
+        {
+            var inputHandler = input.interactiveItems.first;
+            while (inputHandler)
+            {
+                if(inputHandler.enabled)
+                {
+                    inputHandler._moveHandler(event, this);
+                }
+                inputHandler = input.interactiveItems.next;
+            }
         }
 
         var dragged = false; // no-object can not be dragged

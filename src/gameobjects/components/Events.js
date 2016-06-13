@@ -77,6 +77,8 @@ Phaser.Events.prototype = {
         if (this._onKeyPress)          { this._onKeyPress.dispose(); }
         if (this._onKeyUp)             { this._onKeyUp.dispose(); }
 
+        if (this._onMove)              { this._onMove.dispose(); }
+
     },
 
     // The following properties are sentinels that will be replaced with getters
@@ -299,7 +301,12 @@ Phaser.Events.prototype = {
     /**
     * @property {Phaser.Signal} onKeyUp - This signal is dispatched if the parent is inputEnabled, has input focus and the appropriate keyboard event occurred. See {@link Phaser.Keyboard}
     */
-    onKeyUp: null
+    onKeyUp: null,
+
+    /**
+    * @property {Phaser.Signal} onMove - This signal is dispatched if the parent is inputEnabled and a pointer is moved.
+    */
+    onMove: null
 
 };
 

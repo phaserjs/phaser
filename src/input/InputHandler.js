@@ -1419,6 +1419,18 @@ Phaser.InputHandler.prototype = {
 
     },
 
+    _moveHandler: function (event, pointer) {
+
+        if (this.sprite === null)
+        {
+            //  Abort. We've been destroyed.
+            return;
+        }
+
+        this.sprite.events.onMove$dispatch(new Phaser.InputEvent(this.sprite), pointer);
+
+    },
+
     _keyDown: function  (keyEvent) {
 
         if (this.sprite === null)
