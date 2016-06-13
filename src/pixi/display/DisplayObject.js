@@ -474,12 +474,11 @@ PIXI.DisplayObject.prototype.updateTransform = function(parent)
         wt.ty = tx * pt.b + ty * pt.d + pt.ty;
     }
 
-    // multiply the alphas..
+    //  Set the World values
     this.worldAlpha = this.alpha * p.worldAlpha;
-
     this.worldPosition.set(wt.tx, wt.ty);
-    this.worldScale.set(Math.sqrt(wt.a * wt.a + wt.b * wt.b), Math.sqrt(wt.c * wt.c + wt.d * wt.d));
-    this.worldRotation = Math.atan2(wt.c, wt.d);
+    this.worldScale.set(this.scale.x * Math.sqrt(wt.a * wt.a + wt.c * wt.c), this.scale.y * Math.sqrt(wt.b * wt.b + wt.d * wt.d));
+    this.worldRotation = Math.atan2(-wt.c, wt.d);
 
     // reset the bounds each time this is called!
     this._currentBounds = null;
