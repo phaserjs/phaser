@@ -6,10 +6,10 @@
 
 /**
 * BitmapText objects work by taking a texture file and an XML or JSON file that describes the font structure.
-* It then generates a new Sprite object for each letter of the text, proportionally spaced out and aligned to 
+* It then generates a new Sprite object for each letter of the text, proportionally spaced out and aligned to
 * match the font structure.
-* 
-* BitmapText objects are less flexible than Text objects, in that they have less features such as shadows, fills and the ability 
+*
+* BitmapText objects are less flexible than Text objects, in that they have less features such as shadows, fills and the ability
 * to use Web Fonts, however you trade this flexibility for rendering speed. You can also create visually compelling BitmapTexts by
 * processing the font texture in an image editor, applying fills and any other effects required.
 *
@@ -98,8 +98,8 @@ Phaser.BitmapText = function (game, x, y, font, text, size, align) {
     this._prevAnchor = new Phaser.Point();
 
     /**
-    * @property {array} _glyphs - Private tracker for the letter sprite pool.
-    * @private
+    * @property {PIXI.Sprite[]} _glyphs - Private tracker for the letter sprite pool.
+    * @protected
     */
     this._glyphs = [];
 
@@ -116,8 +116,8 @@ Phaser.BitmapText = function (game, x, y, font, text, size, align) {
     this._text = text.toString() || '';
 
     /**
-    * @property {string} _data - Internal cache var.
-    * @private
+    * @property {any} _data - Internal cache var.
+    * @protected
     */
     this._data = game.cache.getBitmapFont(font);
 
@@ -216,7 +216,7 @@ Phaser.BitmapText.prototype.postUpdate = function () {
 
 /**
 * The text to be displayed by this BitmapText object.
-* 
+*
 * It's faster to use `BitmapText.text = string`, but this is kept for backwards compatibility.
 *
 * @method Phaser.BitmapText.prototype.setText
@@ -229,9 +229,9 @@ Phaser.BitmapText.prototype.setText = function (text) {
 };
 
 /**
-* Given the input text this will scan the characters until either a newline is encountered, 
+* Given the input text this will scan the characters until either a newline is encountered,
 * or the line exceeds maxWidth, taking into account kerning, character widths and scaling.
-* 
+*
 * @method Phaser.BitmapText.prototype.scanLine
 * @private
 * @param {object} data - A reference to the font object in the Phaser.Cache.
@@ -265,7 +265,7 @@ Phaser.BitmapText.prototype.scanLine = function (data, scale, text) {
 
             var c = 0;
 
-            //  If the character data isn't found in the data array 
+            //  If the character data isn't found in the data array
             //  then we replace it with a blank space
             if (charData === undefined)
             {
@@ -282,7 +282,7 @@ Phaser.BitmapText.prototype.scanLine = function (data, scale, text) {
                 lastSpace = i;
                 wrappedWidth = w;
             }
-            
+
             //  What will the line width be if we add this character to it?
             c = (kerning + charData.texture.width + charData.xOffset) * scale;
 
@@ -314,7 +314,7 @@ Phaser.BitmapText.prototype.scanLine = function (data, scale, text) {
 * in the BitmapText font data. If it doesn't the character is removed, or replaced with the `replace` argument.
 *
 * If no font data has been loaded at all this returns an empty string, as nothing can be rendered.
-* 
+*
 * @method Phaser.BitmapText.prototype.cleanText
 * @param {string} text - The text to parse.
 * @param {string} [replace=''] - The replacement string for any missing characters.
@@ -400,7 +400,7 @@ Phaser.BitmapText.prototype.updateText = function () {
         y += (data.lineHeight * scale);
 
         text = text.substr(line.text.length + 1);
-        
+
     } while (line.end === false);
 
     this.textHeight = y;
@@ -472,14 +472,25 @@ Phaser.BitmapText.prototype.updateText = function () {
         this.removeChild(this._glyphs[i]);
     }
 
+    this.onTextUpdate(lines);
+
 };
+
+/**
+* Called when text is updated. Override to add functionality.
+*
+* @method Phaser.BitmapText.prototype.onTextUpdate
+* @param {any[]} lines - An array of scanned line objects.
+* @protected
+*/
+Phaser.BitmapText.prototype.onTextUpdate = function (lines) { }
 
 /**
 * If a BitmapText changes from having a large number of characters to having very few characters it will cause lots of
 * Sprites to be retained in the BitmapText._glyphs array. Although they are not attached to the display list they
 * still take up memory while sat in the glyphs pool waiting to be re-used in the future.
 *
-* If you know that the BitmapText will not grow any larger then you can purge out the excess glyphs from the pool 
+* If you know that the BitmapText will not grow any larger then you can purge out the excess glyphs from the pool
 * by calling this method.
 *
 * Calling this doesn't prevent you from increasing the length of the text again in the future.
@@ -647,14 +658,14 @@ Object.defineProperty(Phaser.BitmapText.prototype, 'text', {
 
 /**
 * The maximum display width of this BitmapText in pixels.
-* 
-* If BitmapText.text is longer than maxWidth then the lines will be automatically wrapped 
+*
+* If BitmapText.text is longer than maxWidth then the lines will be automatically wrapped
 * based on the last whitespace character found in the line.
-* 
+*
 * If no whitespace was found then no wrapping will take place and consequently the maxWidth value will not be honored.
-* 
+*
 * Disable maxWidth by setting the value to 0.
-* 
+*
 * @name Phaser.BitmapText#maxWidth
 * @property {number} maxWidth - The maximum width of this BitmapText in pixels.
 */
@@ -682,9 +693,9 @@ Object.defineProperty(Phaser.BitmapText.prototype, 'maxWidth', {
 * Enable or disable texture smoothing for this BitmapText.
 *
 * The smoothing is applied to the BaseTexture of this font, which all letters of the text reference.
-* 
+*
 * Smoothing is enabled by default.
-* 
+*
 * @name Phaser.BitmapText#smoothed
 * @property {boolean} smoothed
 */
