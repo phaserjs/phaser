@@ -562,14 +562,12 @@ Phaser.Tilemap.prototype = {
     * @param {number} [width] - The rendered width of the layer, should never be wider than Game.width. If not given it will be set to Game.width.
     * @param {number} [height] - The rendered height of the layer, should never be wider than Game.height. If not given it will be set to Game.height.
     * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
-    * @param {boolean} [pixiTest] - Temporary additional flag to enable tests of the PIXI.Tilemap renderer
     * @return {Phaser.TilemapLayer} The TilemapLayer object. This is an extension of Phaser.Sprite and can be moved around the display list accordingly.
     */
-    createLayer: function (layer, width, height, group, pixiTest) {
+    createLayer: function (layer, width, height, group) {
 
         //  Add Buffer support for the left of the canvas
 
-        if (pixiTest === undefined) { pixiTest = true; }     // TODO: disable test of TilemapLayerGL unless requested
         if (width === undefined) { width = this.game.width; }
         if (height === undefined) { height = this.game.height; }
         if (group === undefined) { group = this.game.world; }
@@ -587,7 +585,7 @@ Phaser.Tilemap.prototype = {
             return;
         }
 
-        if ( pixiTest )
+        if ( this.game.renderType === Phaser.WEBGL )
         {
             // use WebGL variant of TilemapLayer when pixiTest is true
             return group.add(new Phaser.TilemapLayerGL(this.game, this, index, width, height));
