@@ -409,9 +409,6 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
             this.renderType = renderer;
         }
 
-        // TODO: temporary force renderer to WEBGL whilst testing TilemapLayerGL against examples/tilemaps
-        this.renderType = Phaser.WEBGL;
-
         if (typeof parent !== 'undefined')
         {
             this.parent = parent;
