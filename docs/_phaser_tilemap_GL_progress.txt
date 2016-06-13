@@ -114,6 +114,17 @@ To test the demos, we currently need to set drawing mode to Phaser.WEBGL (in the
     map.addTilesetImage('CybernoidMap3BG_bank.png', 'tiles');
     layer = map.createLayer(0, undefined, undefined, undefined, true);		<-- true specifies to use the new PIXI tilemap system
 
-TODO: in the sci-fly demo there is a new problem with collisions when the map has scrolled, I'm guessing this is some sort of scroll offset conflict between the display and the collision system.
+TODO: bug - in the sci-fly demo there is a new problem with collisions when the map has scrolled, I'm guessing this is some sort of scroll offset conflict between the display and the collision system.
 
+Testing the system on tilemaps with borders and tiles with margins ("fill-tiles" example)... it works!  This vindicates the change of approach because that was going to be a real pain to support if I had to recreate all the stuff that Phaser already handles out of the box!
+
+Removed requirement for pixiTest parameter in createLayer by using renderType instead.  I don't need to use WEBGL because it's currently hard-wired in Phaser.Game constructor code (which I had forgotten about) so all examples running locally will be using the new renderer.
+
+TODO: another bug - when scrolling not only are the collisions off, the redrawing tile area gets smaller as we move away from the map origin.  This could be linked to the collisions via the scroll offsets being wrong, however the area of map which is drawn appears to be in the correct place... are there two separate scroll offsets in this system?  There are some calculations for start/end of drawing region, might be a good place to start looking.
+
+TODO: need to make the PIXI.Tilemap access multiple source textures and use tile width and height from the batch buffer data in order to reinstate the Phaser multiple tilesets per map capabilities.
+
+After testing, *all* examples seem to work (with these three restrictions)
+
+Found both bugs, I was effectively applying the scroll twice because the new batch list calculates the offsets internally and I was still applying it as a uniform to the webgl shader.
 
