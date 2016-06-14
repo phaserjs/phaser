@@ -16,12 +16,12 @@
 *
 * @class Phaser.Matrix
 * @constructor
-* @param {number} [a=1]
-* @param {number} [b=0]
-* @param {number} [c=0]
-* @param {number} [d=1]
-* @param {number} [tx=0]
-* @param {number} [ty=0]
+* @param {number} [a=1] - Horizontal scaling
+* @param {number} [b=0] - Horizontal skewing
+* @param {number} [c=0] - Vertical skewing
+* @param {number} [d=1] - Vertical scaling
+* @param {number} [tx=0] - Horizontal translation
+* @param {number} [ty=0] - Vertical translation
 */
 Phaser.Matrix = function (a, b, c, d, tx, ty) {
 
@@ -104,12 +104,12 @@ Phaser.Matrix.prototype = {
     * Sets the values of this Matrix to the given values.
     *
     * @method Phaser.Matrix#setTo
-    * @param {number} a
-    * @param {number} b
-    * @param {number} c
-    * @param {number} d
-    * @param {number} tx
-    * @param {number} ty
+    * @param {number} a - Horizontal scaling
+    * @param {number} b - Horizontal skewing
+    * @param {number} c - Vertical skewing
+    * @param {number} d - Vertical scaling
+    * @param {number} tx - Horizontal translation
+    * @param {number} ty - Vertical translation
     * @return {Phaser.Matrix} This Matrix object.
     */
     setTo: function (a, b, c, d, tx, ty) {
