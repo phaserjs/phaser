@@ -1312,7 +1312,8 @@ Phaser.Cache.prototype = {
         {
             if (clone)
             {
-                return Phaser.Utils.extend(true, {}, data);
+                var base = Array.isArray(data) ? [] : {};
+                return Phaser.Utils.extend(true, base, data);
             }
             else
             {
