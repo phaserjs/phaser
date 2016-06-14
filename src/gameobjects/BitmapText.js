@@ -483,7 +483,8 @@ Phaser.BitmapText.prototype.updateText = function () {
 * @param {any[]} lines - An array of scanned line objects.
 * @protected
 */
-Phaser.BitmapText.prototype.onTextUpdate = function (lines) { }
+Phaser.BitmapText.prototype.onTextUpdate = function (lines)
+{ /* jshint unused:vars */ };
 
 /**
 * If a BitmapText changes from having a large number of characters to having very few characters it will cause lots of
