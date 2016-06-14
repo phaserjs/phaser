@@ -1,7 +1,7 @@
 /// <reference path="pixi.d.ts" />
 /// <reference path="p2.d.ts" />
 
-// Type definitions for Phaser 2.4.9 - 9th June 2016
+// Type definitions for Phaser 2.4.9 - 14th June 2016
 // Project: https://github.com/photonstorm/phaser
 
 declare module "phaser" {
@@ -260,6 +260,7 @@ declare module "phaser" {
             op: string;
             pixels: Uint32Array;
             smoothed: boolean;
+            smoothProperty: string;
             texture: PIXI.Texture;
             textureFrame: Phaser.Frame;
             type: number;
@@ -302,6 +303,7 @@ declare module "phaser" {
             copy(source?: any, x?: number, y?: number, width?: number, height?: number, tx?: number, ty?: number, newWidth?: number, newHeight?: number, rotate?: number, anchorX?: number, anchorY?: number, scaleX?: number, scaleY?: number, alpha?: number, blendMode?: string, roundPx?: boolean): Phaser.BitmapData;
             copyPixels(source: any, area: Phaser.Rectangle, x: number, y: number, alpha?: number): void;
             copyRect(source: any, area: Phaser.Rectangle, x?: number, y?: number, alpha?: number, blendMode?: string, roundPx?: boolean): Phaser.BitmapData;
+            copyTransform(source: any, blendMode?: string, roundPx?: boolean): Phaser.BitmapData;
             destroy(): void;
             draw(source: any, x?: number, y?: number, width?: number, height?: number, blendMode?: string, roundPx?: boolean): Phaser.BitmapData;
             drawFull(parent: any, blendMode?: string, roundPx?: boolean): Phaser.BitmapData;
