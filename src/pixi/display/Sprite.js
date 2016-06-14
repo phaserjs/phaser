@@ -104,6 +104,15 @@ PIXI.Sprite = function(texture)
      */
     this.shader = null;
 
+    /**
+    * Controls if this Sprite is processed by the core Phaser game loops and Group loops.
+    *
+    * @property exists
+    * @type Boolean
+    * @default true
+    */
+    this.exists = true;
+
     if (this.texture.baseTexture.hasLoaded)
     {
         this.onTextureUpdate();
