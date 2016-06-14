@@ -365,7 +365,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 
 ### Updates
 
-* TypeScript definitions fixes and updates (thanks @wingyplus @monagames @marineorganism @obamor @BaroqueEngine)
+* TypeScript definitions fixes and updates (thanks @wingyplus @monagames @marineorganism @obamor @BaroqueEngine @danzel)
 * Docs typo fixes (thanks @seanirby @johnrees)
 * The TypeScript defs ambient declaration has been updated to make it compatible with the SystemJS loader (thanks @monagames)
 * You can no longer intersect check a Body against itself (thanks @VitaZheltyakov #2514)
@@ -386,6 +386,8 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * Group.addAt has been refactored to be a simple call to `Group.add`, removing lots of duplicate code in the process.
 * Group.create has a new optional argument `index` which controls the index within the group to insert the child to. Where 0 is the bottom of the Group. It also now makes proper use of `Group.add`, cutting down on more duplicate code.
 * Group.createMultiple now returns an Array containing references to all of the children that the method created.
+* Cache.getJSON will now return an Array if the `key` you provided points to an array instead of an Object (thanks @drhayes #2552 #2551)
+* Phaser.Matrix if passed a 0 value would consider it falsy, and replace it with the default by mistake. It now checks if the arguments are `undefined` or `null` and only then sets the defaults (thanks mmcs)
 
 ### Bug Fixes
 

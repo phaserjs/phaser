@@ -25,12 +25,12 @@
 */
 Phaser.Matrix = function (a, b, c, d, tx, ty) {
 
-    a = a || 1;
-    b = b || 0;
-    c = c || 0;
-    d = d || 1;
-    tx = tx || 0;
-    ty = ty || 0;
+    if (a === undefined || a === null) { a = 1; }
+    if (b === undefined || b === null) { b = 0; }
+    if (c === undefined || c === null) { c = 0; }
+    if (d === undefined || d === null) { d = 1; }
+    if (tx === undefined || tx === null) { tx = 0; }
+    if (ty === undefined || ty === null) { ty = 0; }
 
     /**
     * @property {number} a
