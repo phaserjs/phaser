@@ -3914,6 +3914,7 @@ declare module "phaser" {
             pageX: number;
             pageY: number;
             pointerId: number;
+            pointerMode: number;
             position: Phaser.Point;
             positionDown: Phaser.Point;
             positionUp: Phaser.Point;
