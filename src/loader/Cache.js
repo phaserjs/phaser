@@ -1302,7 +1302,7 @@ Phaser.Cache.prototype = {
     * @method Phaser.Cache#getJSON
     * @param {string} key - The key of the asset to retrieve from the cache.
     * @param {boolean} [clone=false] - Return a clone of the original object (true) or a reference to it? (false)
-    * @return {object} The JSON object.
+    * @return {object} The JSON object, or an Array if the key points to an Array property. If the property wasn't found, it returns null.
     */
     getJSON: function (key, clone) {
 
@@ -1312,8 +1312,7 @@ Phaser.Cache.prototype = {
         {
             if (clone)
             {
-                var base = Array.isArray(data) ? [] : {};
-                return Phaser.Utils.extend(true, base, data);
+                return Phaser.Utils.extend(true, Array.isArray(data) ? [] : {}, data);
             }
             else
             {
