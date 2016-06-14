@@ -337,6 +337,13 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     */
     this.syncBounds = false;
 
+    this.isMoving = false;
+    this.target = new Phaser.Line();
+    this._v = { x: 0, y: 0 };
+    this.moveDistance = 0;
+    this.moveEnd = new Phaser.Point();
+    this.onMoveComplete = new Phaser.Signal();
+
     /**
     * @property {boolean} _reset - Internal cache var.
     * @private
@@ -503,6 +510,36 @@ Phaser.Physics.Arcade.Body.prototype = {
     /**
     * Internal method.
     *
+    * @method Phaser.Physics.Arcade.Body#updateMovement
+    * @protected
+    */
+    updateMovement: function () {
+
+        this.target.end.setTo(this.position.x, this.position.y);
+
+        if (this.target.length >= this.moveDistance || this.overlapX !== 0 || this.overlapY !== 0)
+        {
+            if (this.overlapX === 0 && this.overlapY === 0)
+            {
+                this.velocity.set(0);
+                this.position.x = this.moveEnd.x;
+                this.position.y = this.moveEnd.y;
+            }
+
+            this.isMoving = false;
+
+            this.onMoveComplete.dispatch(this.sprite, this.moveDistance);
+
+            return true;
+        }
+
+        return false;
+
+    },
+
+    /**
+    * Internal method.
+    *
     * @method Phaser.Physics.Arcade.Body#postUpdate
     * @protected
     */
@@ -512,6 +549,12 @@ Phaser.Physics.Arcade.Body.prototype = {
         if (!this.enable || !this.dirty)
         {
             return;
+        }
+
+        //  Moving?
+        if (this.isMoving)
+        {
+            this.updateMovement();
         }
 
         this.dirty = false;
@@ -620,6 +663,46 @@ Phaser.Physics.Arcade.Body.prototype = {
             this.velocity.y *= by;
             this.blocked.down = true;
         }
+
+    },
+
+    move: function (direction, distance, duration) {
+
+        //  Apply constant velocity to get the Body to move the distance required
+        //  over the duration required (unless it hits something), then cancel
+        //  the velocity. Overrides any currently set velocity.
+
+        var angle = this.game.math.degToRad(direction);
+        var speed = distance / (duration / 1000);
+
+        this.moveDistance = distance;
+
+        this.target.fromAngle(this.position.x, this.position.y, angle, distance);
+
+        this.moveEnd.set(this.target.end.x, this.target.end.y);
+
+        this.target.setTo(this.x, this.y, this.x, this.y);
+
+        console.log('distance', distance, 'duration', duration, 'speed', speed);
+
+        //  Avoid sin/cos for right-angled shots
+        if (direction === 0 || direction === 180)
+        {
+            this.velocity.set(Math.cos(angle) * speed, 0);
+        }
+        else if (direction === 90 || direction === 270)
+        {
+            this.velocity.set(0, Math.sin(angle) * speed);
+        }
+        else
+        {
+            this.velocity.set(Math.cos(angle) * speed, Math.sin(angle) * speed);
+        }
+
+        this._v.x = this.velocity.x;
+        this._v.y = this.velocity.y;
+
+        this.isMoving = true;
 
     },
 
