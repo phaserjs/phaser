@@ -382,6 +382,69 @@ var Phaser = Phaser || {
     ANGLE_SOUTH_WEST: 135,
 
     /**
+    * A constant representing a top-left alignment or position.
+    * @constant
+    * @type {integer}
+    */
+    TOP_LEFT: 50,
+
+    /**
+    * A constant representing a top-center alignment or position.
+    * @constant
+    * @type {integer}
+    */
+    TOP_CENTER: 51,
+
+    /**
+    * A constant representing a top-right alignment or position.
+    * @constant
+    * @type {integer}
+    */
+    TOP_RIGHT: 52,
+
+    /**
+    * A constant representing a middle-left alignment or position.
+    * @constant
+    * @type {integer}
+    */
+    MIDDLE_LEFT: 53,
+
+    /**
+    * A constant representing a middle-center alignment or position.
+    * @constant
+    * @type {integer}
+    */
+    MIDDLE_CENTER: 54,
+
+    /**
+    * A constant representing a middle-right alignment or position.
+    * @constant
+    * @type {integer}
+    */
+    MIDDLE_RIGHT: 55,
+
+    /**
+    * A constant representing a bottom-left alignment or position.
+    * @constant
+    * @type {integer}
+    */
+    BOTTOM_LEFT: 56,
+
+    /**
+    * A constant representing a bottom-center alignment or position.
+    * @constant
+    * @type {integer}
+    */
+    BOTTOM_CENTER: 57,
+
+    /**
+    * A constant representing a bottom-right alignment or position.
+    * @constant
+    * @type {integer}
+    */
+    BOTTOM_RIGHT: 58,
+
+    /**
      * Various blend modes supported by Pixi.
      * 
      * IMPORTANT: The WebGL renderer only supports the NORMAL, ADD, MULTIPLY and SCREEN blend modes.
