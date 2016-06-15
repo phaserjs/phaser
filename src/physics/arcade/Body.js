@@ -337,12 +337,17 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     */
     this.syncBounds = false;
 
+    //  Move to a 'movement' object?
     this.isMoving = false;
-    this.target = new Phaser.Line();
-    this._v = { x: 0, y: 0 };
+    this.stopVelocityOnCollide = true;
+    this.moveTimer = 0;
     this.moveDistance = 0;
+    this.moveDuration = 0;
+    this.moveTarget = new Phaser.Line();
     this.moveEnd = new Phaser.Point();
     this.onMoveComplete = new Phaser.Signal();
+    this.movementCallback = null;
+    this.movementCallbackContext = null;
 
     /**
     * @property {boolean} _reset - Internal cache var.
@@ -515,25 +520,64 @@ Phaser.Physics.Arcade.Body.prototype = {
     */
     updateMovement: function () {
 
-        this.target.end.setTo(this.position.x, this.position.y);
+        var percent = 0;
+        var collided = (this.overlapX !== 0 || this.overlapY !== 0);
 
-        if (this.target.length >= this.moveDistance || this.overlapX !== 0 || this.overlapY !== 0)
+        //  Duration or Distance based?
+
+        if (this.moveDuration > 0)
         {
-            if (this.overlapX === 0 && this.overlapY === 0)
-            {
-                this.velocity.set(0);
-                this.position.x = this.moveEnd.x;
-                this.position.y = this.moveEnd.y;
-            }
+            this.moveTimer += this.game.time.elapsedMS;
 
-            this.isMoving = false;
+            percent = this.moveTimer / this.moveDuration;
+        }
+        else
+        {
+            this.moveTarget.end.set(this.position.x, this.position.y);
 
-            this.onMoveComplete.dispatch(this.sprite, this.moveDistance);
-
-            return true;
+            percent = this.moveTarget.length / this.moveDistance;
         }
 
-        return false;
+        if (this.movementCallback)
+        {
+            var result = this.movementCallback.call(this.movementCallbackContext, this, this.velocity, percent);
+        }
+
+        if (collided || percent >= 1 || (result !== undefined && result !== true))
+        {
+            this.stopMovement((percent >= 1) || (this.stopVelocityOnCollide && collided));
+            return false;
+        }
+
+        return true;
+
+    },
+
+    /**
+    * If this Body is moving as a result of a call to `moveTo` or `moveFrom` (i.e. it
+    * has Body.isMoving true), then calling this method will stop the movement before
+    * either the duration or distance counters expire.
+    *
+    * The `onMoveComplete` signal is dispatched.
+    *
+    * @method Phaser.Physics.Arcade.Body#stopMovement
+    * @param {boolean} [stopVelocity] - Should the Body.velocity be set to zero?
+    */
+    stopMovement: function (stopVelocity) {
+
+        if (this.isMoving)
+        {
+            this.isMoving = false;
+
+            if (stopVelocity)
+            {
+                this.velocity.set(0);
+            }
+
+            //  Send the Sprite this Body belongs to
+            //  and a boolean indicating if it stopped because of a collision or not
+            this.onMoveComplete.dispatch(this.sprite, (this.overlapX !== 0 || this.overlapY !== 0));
+        }
 
     },
 
@@ -666,26 +710,59 @@ Phaser.Physics.Arcade.Body.prototype = {
 
     },
 
-    move: function (direction, distance, duration) {
+    /**
+    * This method moves the Body in the given direction, for the duration specified.
+    * It works by setting the velocity on the Body, and an internal timer, and then
+    * monitoring the duration each frame. When the duration is up the movement is
+    * stopped and the `Body.onMoveComplete` signal is dispatched.
+    *
+    * Movement also stops if the Body collides or overlaps with any other Body.
+    * 
+    * You can control if the velocity should be reset to zero on collision, by using
+    * the property `Body.stopVelocityOnCollide`.
+    *
+    * Stop the movement at any time by calling `Body.stopMovement`.
+    *
+    * You can optionally set a speed in pixels per second. If not specified it
+    * will use the current `Body.speed` value. If this is zero, the function will return false.
+    *
+    * Please note that due to browser timings you should allow for a variance in 
+    * when the duration will actually expire. Depending on system it may be as much as
+    * +- 50ms. Also this method doesn't take into consideration any other forces acting
+    * on the Body, such as Gravity, drag or maxVelocity, all of which may impact the
+    * movement.
+    * 
+    * @method Phaser.Physics.Arcade.Body#moveFrom
+    * @param  {integer} duration  - The duration of the movement, in ms.
+    * @param  {integer} [speed] - The speed of the movement, in pixels per second. If not provided `Body.speed` is used.
+    * @param  {integer} [direction] - The angle of movement. If not provided `Body.angle` is used.
+    * @return {boolean} True if the movement successfully started, otherwise false.
+    */
+    moveFrom: function (duration, speed, direction) {
 
-        //  Apply constant velocity to get the Body to move the distance required
-        //  over the duration required (unless it hits something), then cancel
-        //  the velocity. Overrides any currently set velocity.
+        if (speed === undefined) { speed = this.speed; }
 
-        var angle = this.game.math.degToRad(direction);
-        var speed = distance / (duration / 1000);
+        if (speed === 0)
+        {
+            return false;
+        }
 
-        this.moveDistance = distance;
+        var angle;
 
-        this.target.fromAngle(this.position.x, this.position.y, angle, distance);
+        if (direction === undefined)
+        {
+            angle = this.angle;
+            direction = this.game.math.radToDeg(angle);
+        }
+        else
+        {
+            angle = this.game.math.degToRad(direction);
+        }
 
-        this.moveEnd.set(this.target.end.x, this.target.end.y);
+        this.moveTimer = 0;
+        this.moveDuration = duration;
 
-        this.target.setTo(this.x, this.y, this.x, this.y);
-
-        console.log('distance', distance, 'duration', duration, 'speed', speed);
-
-        //  Avoid sin/cos for right-angled shots
+        //  Avoid sin/cos
         if (direction === 0 || direction === 180)
         {
             this.velocity.set(Math.cos(angle) * speed, 0);
@@ -699,10 +776,88 @@ Phaser.Physics.Arcade.Body.prototype = {
             this.velocity.set(Math.cos(angle) * speed, Math.sin(angle) * speed);
         }
 
-        this._v.x = this.velocity.x;
-        this._v.y = this.velocity.y;
+        this.isMoving = true;
+
+        return true;
+
+    },
+
+    /**
+    * This method moves the Body in the given direction, for the duration specified.
+    * It works by setting the velocity on the Body, and an internal distance counter.
+    * The distance is monitored each frame. When the distance equals the distance
+    * specified in this call, the movement is stopped, and the `Body.onMoveComplete` 
+    * signal is dispatched.
+    *
+    * Movement also stops if the Body collides or overlaps with any other Body.
+    * 
+    * You can control if the velocity should be reset to zero on collision, by using
+    * the property `Body.stopVelocityOnCollide`.
+    *
+    * Stop the movement at any time by calling `Body.stopMovement`.
+    *
+    * Please note that due to browser timings you should allow for a variance in 
+    * when the distance will actually expire.
+    * 
+    * Note: This method doesn't take into consideration any other forces acting
+    * on the Body, such as Gravity, drag or maxVelocity, all of which may impact the
+    * movement.
+    * 
+    * @method Phaser.Physics.Arcade.Body#moveTo
+    * @param  {integer} duration - The duration of the movement, in ms.
+    * @param  {integer} distance - The distance, in pixels, the Body will move.
+    * @param  {integer} [direction] - The angle of movement. If not provided `Body.angle` is used.
+    * @return {boolean} True if the movement successfully started, otherwise false.
+    */
+    moveTo: function (duration, distance, direction) {
+
+        var speed = distance / (duration / 1000);
+
+        if (speed === 0)
+        {
+            return false;
+        }
+
+        var angle;
+
+        if (direction === undefined)
+        {
+            angle = this.angle;
+            direction = this.game.math.radToDeg(angle);
+        }
+        else
+        {
+            angle = this.game.math.degToRad(direction);
+        }
+
+        distance = Math.abs(distance);
+
+        this.moveDuration = 0;
+        this.moveDistance = distance;
+
+        this.moveTarget.fromAngle(this.x, this.y, angle, distance);
+
+        this.moveEnd.set(this.moveTarget.end.x, this.moveTarget.end.y);
+
+        this.moveTarget.setTo(this.x, this.y, this.x, this.y);
+
+        //  Avoid sin/cos
+        if (direction === 0 || direction === 180)
+        {
+            this.velocity.set(Math.cos(angle) * speed, 0);
+        }
+        else if (direction === 90 || direction === 270)
+        {
+            this.velocity.set(0, Math.sin(angle) * speed);
+        }
+        else
+        {
+            this.velocity.set(Math.cos(angle) * speed, Math.sin(angle) * speed);
+        }
 
         this.isMoving = true;
+
+        return true;
 
     },
 
