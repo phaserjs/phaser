@@ -975,10 +975,10 @@ Phaser.Rectangle.aabb = function(points, out) {
         out = new Phaser.Rectangle();
     }
 
-    var xMax = Number.MIN_VALUE,
-        xMin = Number.MAX_VALUE,
-        yMax = Number.MIN_VALUE,
-        yMin = Number.MAX_VALUE;
+    var xMax = Number.NEGATIVE_INFINITY,
+        xMin = Number.POSITIVE_INFINITY,
+        yMax = Number.NEGATIVE_INFINITY,
+        yMin = Number.POSITIVE_INFINITY;
 
     points.forEach(function(point) {
         if (point.x > xMax) {

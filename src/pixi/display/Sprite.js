@@ -104,6 +104,15 @@ PIXI.Sprite = function(texture)
      */
     this.shader = null;
 
+    /**
+    * Controls if this Sprite is processed by the core Phaser game loops and Group loops.
+    *
+    * @property exists
+    * @type Boolean
+    * @default true
+    */
+    this.exists = true;
+
     if (this.texture.baseTexture.hasLoaded)
     {
         this.onTextureUpdate();
@@ -419,7 +428,7 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession, matrix)
 
         renderSession.context.globalAlpha = this.worldAlpha;
 
-         //  If smoothingEnabled is supported and we need to change the smoothing property for this texture
+        //  If smoothingEnabled is supported and we need to change the smoothing property for this texture
         if (renderSession.smoothProperty && renderSession.scaleMode !== this.texture.baseTexture.scaleMode)
         {
             renderSession.scaleMode = this.texture.baseTexture.scaleMode;

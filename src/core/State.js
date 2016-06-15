@@ -74,6 +74,11 @@ Phaser.State = function () {
     this.stage = null;
 
     /**
+    * @property {Phaser.StateManager} stage - A reference to the State Manager, which controls state changes.
+    */
+    this.state = null;
+
+    /**
     * @property {Phaser.Time} time - A reference to the game clock and timed events system.
     */
     this.time = null;

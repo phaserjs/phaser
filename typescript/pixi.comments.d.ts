@@ -740,9 +740,11 @@ declare module PIXI {
     }
 
     export class ColorMatrixFilter extends AbstractFilter {
-
-        matrix: Matrix;
-
+        
+        constructor();
+        
+        matrix: number[];
+        
     }
 
     export class ColorStepFilter extends AbstractFilter {
@@ -1014,6 +1016,15 @@ declare module PIXI {
         * The width of the displayObjectContainer, setting this will actually modify the scale to achieve the value set
         */
         width: number;
+
+        /**
+        * If `ignoreChildInput`  is `false` it will allow this objects _children_ to be considered as valid for Input events.
+        * 
+        * If this property is `true` then the children will _not_ be considered as valid for Input events.
+        * 
+        * Note that this property isn't recursive: only immediate children are influenced, it doesn't scan further down.
+        */
+        ignoreChildInput: boolean;
 
 
         /**
@@ -1449,7 +1460,7 @@ declare module PIXI {
         * @param padding Add optional extra padding to the generated texture (default 0)
         * @return a texture of the graphics object
         */
-        generateTexture(resolution?: number, scaleMode?: number): Texture;
+        generateTexture(resolution?: number, scaleMode?: number, padding?: number): RenderTexture;
 
         /**
         * Specifies the line style used for subsequent calls to Graphics methods such as the lineTo() method or the drawCircle() method.

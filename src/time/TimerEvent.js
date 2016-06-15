@@ -9,7 +9,9 @@
 *
 * It consists of a delay, which is a value in milliseconds after which the event will fire.
 * When the event fires it calls a specific callback with the specified arguments.
-*
+* 
+* TimerEvents are removed by their parent timer once finished firing or repeating.
+* 
 * Use {@link Phaser.Timer#add}, {@link Phaser.Timer#repeat}, or {@link Phaser.Timer#loop} methods to create a new event.
 *
 * @class Phaser.TimerEvent

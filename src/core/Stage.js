@@ -145,7 +145,7 @@ Phaser.Stage.prototype.preUpdate = function () {
 
     this.currentRenderOrderID = 0;
 
-    //  This can't loop in reverse, we need the orderID to be in sequence
+    //  This can't loop in reverse, we need the renderOrderID to be in sequence
     for (var i = 0; i < this.children.length; i++)
     {
         this.children[i].preUpdate();
@@ -160,6 +160,7 @@ Phaser.Stage.prototype.preUpdate = function () {
 */
 Phaser.Stage.prototype.update = function () {
 
+    //  Goes in reverse, because it's highly likely the child will destroy itself in `update`
     var i = this.children.length;
 
     while (i--)
@@ -173,39 +174,30 @@ Phaser.Stage.prototype.update = function () {
 * This is called automatically before the renderer runs and after the plugins have updated.
 * In postUpdate this is where all the final physics calculations and object positioning happens.
 * The objects are processed in the order of the display list.
-* The only exception to this is if the camera is following an object, in which case that is updated first.
 *
 * @method Phaser.Stage#postUpdate
 */
 Phaser.Stage.prototype.postUpdate = function () {
 
-    if (this.game.world.camera.target)
+    //  Apply the camera shake, fade, bounds, etc
+    this.game.camera.update();
+
+    //  Camera target first?
+    if (this.game.camera.target)
     {
-        this.game.world.camera.target.postUpdate();
+        this.game.camera.target.postUpdate();
 
-        this.game.world.camera.update();
+        this.updateTransform();
 
-        var i = this.children.length;
-
-        while (i--)
-        {
-            if (this.children[i] !== this.game.world.camera.target)
-            {
-                this.children[i].postUpdate();
-            }
-        }
+        this.game.camera.updateTarget();
     }
-    else
+
+    for (var i = 0; i < this.children.length; i++)
     {
-        this.game.world.camera.update();
-
-        var i = this.children.length;
-
-        while (i--)
-        {
-            this.children[i].postUpdate();
-        }
+        this.children[i].postUpdate();
     }
+
+    this.updateTransform();
 
 };
 

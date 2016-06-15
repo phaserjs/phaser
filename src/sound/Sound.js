@@ -250,7 +250,7 @@ Phaser.Sound = function (game, key, volume, loop, connect) {
     this.onStop = new Phaser.Signal();
 
     /**
-    * @property {Phaser.Signal} onMute - The onMouse event is dispatched when this sound is muted.
+    * @property {Phaser.Signal} onMute - The onMute event is dispatched when this sound is muted.
     */
     this.onMute = new Phaser.Signal();
 
@@ -357,12 +357,13 @@ Phaser.Sound.prototype = {
     * @method Phaser.Sound#addMarker
     * @param {string} name - A unique name for this marker, i.e. 'explosion', 'gunshot', etc.
     * @param {number} start - The start point of this marker in the audio file, given in seconds. 2.5 = 2500ms, 0.5 = 500ms, etc.
-    * @param {number} duration - The duration of the marker in seconds. 2.5 = 2500ms, 0.5 = 500ms, etc.
+    * @param {number} [duration=1] - The duration of the marker in seconds. 2.5 = 2500ms, 0.5 = 500ms, etc.
     * @param {number} [volume=1] - The volume the sound will play back at, between 0 (silent) and 1 (full volume).
     * @param {boolean} [loop=false] - Sets if the sound will loop or not.
     */
     addMarker: function (name, start, duration, volume, loop) {
 
+        if (duration === undefined || duration === null) { duration = 1; }
         if (volume === undefined || volume === null) { volume = 1; }
         if (loop === undefined) { loop = false; }
 
@@ -450,6 +451,7 @@ Phaser.Sound.prototype = {
                         {
                             this.currentTime = 0;
                             this.startTime = this.game.time.time;
+                            this.isPlaying = true; // play not called again in this case
                         }
                         else
                         {

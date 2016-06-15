@@ -57,6 +57,8 @@ Phaser.Component.Core.init = function (game, x, y, key, frame) {
 
     this.key = key;
 
+    this.data = {};
+
     this.position.set(x, y);
     this.world = new Phaser.Point(x, y);
     this.previousPosition = new Phaser.Point(x, y);
@@ -146,6 +148,16 @@ Phaser.Component.Core.prototype = {
     * @default
     */
     name: '',
+
+    /**
+    * An empty Object that belongs to this Game Object.
+    * This value isn't ever used internally by Phaser, but may be used by your own code, or
+    * by Phaser Plugins, to store data that needs to be associated with the Game Object,
+    * without polluting the Game Object directly.
+    * @property {Object} data
+    * @default
+    */
+    data: {},
 
     /**
     * The components this Game Object has installed.

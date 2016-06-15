@@ -244,6 +244,7 @@ Phaser.BitmapText.prototype.scanLine = function (data, scale, text) {
     var x = 0;
     var w = 0;
     var lastSpace = -1;
+    var wrappedWidth = 0;
     var prevCharCode = null;
     var maxWidth = (this._maxWidth > 0) ? this._maxWidth : null;
     var chars = [];
@@ -275,9 +276,12 @@ Phaser.BitmapText.prototype.scanLine = function (data, scale, text) {
             //  Adjust for kerning from previous character to this one
             var kerning = (prevCharCode && charData.kerning[prevCharCode]) ? charData.kerning[prevCharCode] : 0;
 
-            //  Record the last space in the string
-            lastSpace = /(\s)/.test(text.charAt(i)) ? i : lastSpace;
-
+            //  Record the last space in the string and the current width
+            if (/(\s)/.test(text.charAt(i))) {
+                lastSpace = i;
+                wrappedWidth = w;
+            }
+            
             //  What will the line width be if we add this character to it?
             c = (kerning + charData.texture.width + charData.xOffset) * scale;
 
@@ -285,7 +289,7 @@ Phaser.BitmapText.prototype.scanLine = function (data, scale, text) {
             if (maxWidth && ((w + c) >= maxWidth) && lastSpace > -1)
             {
                 //  The last space was at "lastSpace" which was "i - lastSpace" characters ago
-                return { width: w, text: text.substr(0, i - (i - lastSpace)), end: end, chars: chars };
+                return { width: wrappedWidth || w, text: text.substr(0, i - (i - lastSpace)), end: end, chars: chars };
             }
             else
             {

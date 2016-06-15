@@ -131,8 +131,11 @@ Phaser.PluginManager.prototype = {
     *
     * @method Phaser.PluginManager#remove
     * @param {Phaser.Plugin} plugin - The plugin to be removed.
+    * @param {boolean} [destroy=true] - Call destroy on the plugin that is removed?
     */
-    remove: function (plugin) {
+    remove: function (plugin, destroy) {
+
+        if (destroy === undefined) { destroy = true; }
 
         this._i = this._len;
 
@@ -140,7 +143,11 @@ Phaser.PluginManager.prototype = {
         {
             if (this.plugins[this._i] === plugin)
             {
-                plugin.destroy();
+                if (destroy)
+                {
+                    plugin.destroy();
+                }
+
                 this.plugins.splice(this._i, 1);
                 this._len--;
                 return;

@@ -15,7 +15,7 @@ var Phaser = Phaser || {
     * @constant
     * @type {string}
     */
-    VERSION: '2.4.8',
+    VERSION: '2.4.9 RC4',
 
     /**
     * An array of Phaser game instances.
@@ -296,6 +296,90 @@ var Phaser = Phaser || {
     * @type {integer}
     */
     PENDING_ATLAS: -1,
+
+    /**
+    * A horizontal orientation
+    * @constant
+    * @type {integer}
+    */
+    HORIZONTAL: 0,
+
+    /**
+    * A vertical orientation
+    * @constant
+    * @type {integer}
+    */
+    VERTICAL: 1,
+
+    /**
+    * A landscape orientation
+    * @constant
+    * @type {integer}
+    */
+    LANDSCAPE: 0,
+
+    /**
+    * A portrait orientation
+    * @constant
+    * @type {integer}
+    */
+    PORTRAIT: 1,
+
+    /**
+    * The Angle (in degrees) a Game Object needs to be set to in order to face up.
+    * @constant
+    * @type {integer}
+    */
+    ANGLE_UP: 270,
+
+    /**
+    * The Angle (in degrees) a Game Object needs to be set to in order to face down.
+    * @constant
+    * @type {integer}
+    */
+    ANGLE_DOWN: 90,
+
+    /**
+    * The Angle (in degrees) a Game Object needs to be set to in order to face left.
+    * @constant
+    * @type {integer}
+    */
+    ANGLE_LEFT: 180,
+
+    /**
+    * The Angle (in degrees) a Game Object needs to be set to in order to face right.
+    * @constant
+    * @type {integer}
+    */
+    ANGLE_RIGHT: 0,
+
+    /**
+    * The Angle (in degrees) a Game Object needs to be set to in order to face north east.
+    * @constant
+    * @type {integer}
+    */
+    ANGLE_NORTH_EAST: 315,
+
+    /**
+    * The Angle (in degrees) a Game Object needs to be set to in order to face north west.
+    * @constant
+    * @type {integer}
+    */
+    ANGLE_NORTH_WEST: 225,
+
+    /**
+    * The Angle (in degrees) a Game Object needs to be set to in order to face south east.
+    * @constant
+    * @type {integer}
+    */
+    ANGLE_SOUTH_EAST: 45,
+
+    /**
+    * The Angle (in degrees) a Game Object needs to be set to in order to face south west.
+    * @constant
+    * @type {integer}
+    */
+    ANGLE_SOUTH_WEST: 135,
 
     /**
      * Various blend modes supported by Pixi.

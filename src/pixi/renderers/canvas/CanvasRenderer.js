@@ -157,8 +157,6 @@ PIXI.CanvasRenderer.prototype.constructor = PIXI.CanvasRenderer;
  */
 PIXI.CanvasRenderer.prototype.render = function (stage) {
 
-    stage.updateTransform();
-
     this.context.setTransform(1, 0, 0, 1, 0, 0);
 
     this.context.globalAlpha = 1;

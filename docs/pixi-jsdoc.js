@@ -377,18 +377,30 @@ It is the base class of all display objects that act as a container for other ob
 * @sourceline 17
 */
 /**
+* @description If `ignoreChildInput`  is `false` it will allow this objects _children_ to be considered as valid for Input events.
+
+If this property is `true` then the children will _not_ be considered as valid for Input events.
+
+Note that this property isn't recursive: only immediate children are influenced, it doesn't scan further down.
+* @member PIXI.DisplayObjectContainer#ignoreChildInput
+* @type {Boolean}
+* @default 
+* @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObjectContainer.js
+* @sourceline 26
+*/
+/**
 * @description The width of the displayObjectContainer, setting this will actually modify the scale to achieve the value set
 * @member PIXI.DisplayObjectContainer#width
 * @type {Number}
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObjectContainer.js
-* @sourceline 32
+* @sourceline 43
 */
 /**
 * @description The height of the displayObjectContainer, setting this will actually modify the scale to achieve the value set
 * @member PIXI.DisplayObjectContainer#height
 * @type {Number}
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObjectContainer.js
-* @sourceline 61
+* @sourceline 72
 */
 /**
 * @description Adds a child to the container.
@@ -396,7 +408,7 @@ It is the base class of all display objects that act as a container for other ob
 * @param {PIXI.DisplayObject} child - The DisplayObject to add to the container
 * @return {PIXI.DisplayObject} The child that was added.
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObjectContainer.js
-* @sourceline 91
+* @sourceline 102
 */
 /**
 * @description Adds a child to the container at a specified index. If the index is out of bounds an error will be thrown
@@ -405,7 +417,7 @@ It is the base class of all display objects that act as a container for other ob
 * @param {Number} index - The index to place the child in
 * @return {PIXI.DisplayObject} The child that was added.
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObjectContainer.js
-* @sourceline 103
+* @sourceline 114
 */
 /**
 * @description Swaps the position of 2 Display Objects within this container.
@@ -413,7 +425,7 @@ It is the base class of all display objects that act as a container for other ob
 * @param {PIXI.DisplayObject} child - 
 * @param {PIXI.DisplayObject} child2 - 
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObjectContainer.js
-* @sourceline 134
+* @sourceline 145
 */
 /**
 * @description Returns the index position of a child DisplayObject instance
@@ -421,7 +433,7 @@ It is the base class of all display objects that act as a container for other ob
 * @param {PIXI.DisplayObject} child - The DisplayObject instance to identify
 * @return {Number} The index position of the child display object to identify
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObjectContainer.js
-* @sourceline 159
+* @sourceline 170
 */
 /**
 * @description Changes the position of an existing child in the display object container
@@ -429,7 +441,7 @@ It is the base class of all display objects that act as a container for other ob
 * @param {PIXI.DisplayObject} child - The child DisplayObject instance for which you want to change the index number
 * @param {Number} index - The resulting index number for the child display object
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObjectContainer.js
-* @sourceline 176
+* @sourceline 187
 */
 /**
 * @description Returns the child at the specified index
@@ -437,7 +449,7 @@ It is the base class of all display objects that act as a container for other ob
 * @param {Number} index - The index to get the child from
 * @return {PIXI.DisplayObject} The child at the given index, if any.
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObjectContainer.js
-* @sourceline 194
+* @sourceline 205
 */
 /**
 * @description Removes a child from the container.
@@ -445,7 +457,7 @@ It is the base class of all display objects that act as a container for other ob
 * @param {PIXI.DisplayObject} child - The DisplayObject to remove
 * @return {PIXI.DisplayObject} The child that was removed.
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObjectContainer.js
-* @sourceline 211
+* @sourceline 222
 */
 /**
 * @description Removes a child from the specified index position.
@@ -453,7 +465,7 @@ It is the base class of all display objects that act as a container for other ob
 * @param {Number} index - The index to get the child from
 * @return {PIXI.DisplayObject} The child that was removed.
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObjectContainer.js
-* @sourceline 226
+* @sourceline 237
 */
 /**
 * @description Removes all children from this container that are within the begin and end indexes.
@@ -461,34 +473,34 @@ It is the base class of all display objects that act as a container for other ob
 * @param {Number} beginIndex - The beginning position. Default value is 0.
 * @param {Number} endIndex - The ending position. Default value is size of the container.
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObjectContainer.js
-* @sourceline 244
+* @sourceline 255
 */
 /**
 * @description Retrieves the bounds of the displayObjectContainer as a rectangle. The bounds calculation takes all visible children into consideration.
 * @method PIXI.DisplayObjectContainer#getBounds
 * @return {Rectangle} The rectangular bounding area
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObjectContainer.js
-* @sourceline 307
+* @sourceline 318
 */
 /**
 * @description Retrieves the non-global local bounds of the displayObjectContainer as a rectangle. The calculation takes all visible children into consideration.
 * @method PIXI.DisplayObjectContainer#getLocalBounds
 * @return {Rectangle} The rectangular bounding area
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObjectContainer.js
-* @sourceline 370
+* @sourceline 381
 */
 /**
 * @description Sets the containers Stage reference. This is the Stage that this object, and all of its children, is connected to.
 * @method PIXI.DisplayObjectContainer#setStageReference
 * @param {Stage} stage - the stage that the container will have as its current stage reference
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObjectContainer.js
-* @sourceline 399
+* @sourceline 410
 */
 /**
 * @description Removes the current stage reference from the container and all of its children.
 * @method PIXI.DisplayObjectContainer#removeStageReference
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObjectContainer.js
-* @sourceline 415
+* @sourceline 426
 */
 /**
 * @description Renders the object using the WebGL renderer
@@ -496,7 +508,7 @@ It is the base class of all display objects that act as a container for other ob
 * @param {RenderSession} renderSession - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObjectContainer.js
-* @sourceline 430
+* @sourceline 441
 */
 /**
 * @description Renders the object using the Canvas renderer
@@ -504,7 +516,7 @@ It is the base class of all display objects that act as a container for other ob
 * @param {RenderSession} renderSession - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObjectContainer.js
-* @sourceline 488
+* @sourceline 499
 */
 /**
 * @fileoverview
@@ -1695,7 +1707,7 @@ Disable this by setting this to false. For example if your game has a canvas fil
 * @method PIXI.CanvasRenderer#destroy
 * @param {Boolean} [removeView=true] - Removes the Canvas element from the DOM.
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\canvas\CanvasRenderer.js
-* @sourceline 195
+* @sourceline 193
 */
 /**
 * @description Resizes the canvas view to the specified width and height
@@ -1703,7 +1715,7 @@ Disable this by setting this to false. For example if your game has a canvas fil
 * @param {Number} width - the new width of the canvas view
 * @param {Number} height - the new height of the canvas view
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\canvas\CanvasRenderer.js
-* @sourceline 217
+* @sourceline 215
 */
 /**
 * @description Renders a display object
@@ -1713,14 +1725,14 @@ Disable this by setting this to false. For example if your game has a canvas fil
 * @param {Matrix} [matrix] - Optional matrix to apply to the display object before rendering.
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\canvas\CanvasRenderer.js
-* @sourceline 245
+* @sourceline 243
 */
 /**
 * @description Maps Pixi blend modes to canvas blend modes.
 * @method PIXI.CanvasRenderer#mapBlendModes
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\canvas\CanvasRenderer.js
-* @sourceline 262
+* @sourceline 260
 */
 /**
 * @fileoverview
@@ -3071,7 +3083,7 @@ Disable this by setting this to false. For example: if your game has a canvas fi
 * @param {Point} projection - The projection
 * @param {Array} buffer - a standard WebGL buffer
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\WebGLRenderer.js
-* @sourceline 281
+* @sourceline 278
 */
 /**
 * @description Resizes the webGL view to the specified width and height.
@@ -3079,7 +3091,7 @@ Disable this by setting this to false. For example: if your game has a canvas fi
 * @param {Number} width - the new width of the webGL view
 * @param {Number} height - the new height of the webGL view
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\WebGLRenderer.js
-* @sourceline 318
+* @sourceline 315
 */
 /**
 * @description Updates and Creates a WebGL texture for the renderers context.
@@ -3087,19 +3099,19 @@ Disable this by setting this to false. For example: if your game has a canvas fi
 * @param {PIXI.Texture} texture - the texture to update
 * @return {Boolean} True if the texture was successfully bound, otherwise false.
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\WebGLRenderer.js
-* @sourceline 344
+* @sourceline 341
 */
 /**
 * @description Removes everything from the renderer (event listeners, spritebatch, etc...)
 * @method PIXI.WebGLRenderer#destroy
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\WebGLRenderer.js
-* @sourceline 401
+* @sourceline 398
 */
 /**
 * @description Maps Pixi blend modes to WebGL blend modes.
 * @method PIXI.WebGLRenderer#mapBlendModes
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\WebGLRenderer.js
-* @sourceline 433
+* @sourceline 430
 */
 /**
 * @fileoverview
