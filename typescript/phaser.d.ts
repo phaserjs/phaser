@@ -4090,6 +4090,7 @@ declare module "phaser" {
             equals(b: Phaser.Rectangle): boolean;
             floor(): void;
             floorAll(): void;
+            getPoint(location: number, out: Phaser.Point): Phaser.Point;
             inflate(dx: number, dy: number): Phaser.Rectangle;
             intersection(b: Phaser.Rectangle, out: Phaser.Rectangle): Phaser.Rectangle;
             intersects(b: Phaser.Rectangle, tolerance: number): boolean;
