@@ -54,13 +54,18 @@ Phaser.Component.Bounds.prototype = {
     * This is the same as `x - offsetX`.
     *
     * @property {number} left
-    * @readOnly
     */
     left: {
 
         get: function () {
 
             return this.x - this.offsetX;
+
+        },
+
+        set: function (value) {
+
+            this.x = value + this.offsetX;
 
         }
 
@@ -71,13 +76,18 @@ Phaser.Component.Bounds.prototype = {
     * This is the same as `x + width - offsetX`.
     *
     * @property {number} right
-    * @readOnly
     */
     right: {
 
         get: function () {
 
             return (this.x + this.width) - this.offsetX;
+
+        },
+
+        set: function (value) {
+
+            this.x = value - (this.width) + this.offsetX;
 
         }
 
@@ -88,13 +98,18 @@ Phaser.Component.Bounds.prototype = {
     * This is the same as `y - offsetY`.
     *
     * @property {number} top
-    * @readOnly
     */
     top: {
 
         get: function () {
 
             return this.y - this.offsetY;
+
+        },
+
+        set: function (value) {
+
+            this.y = value + this.offsetY;
 
         }
 
@@ -105,13 +120,18 @@ Phaser.Component.Bounds.prototype = {
     * This is the same as `y + height - offsetY`.
     *
     * @property {number} bottom
-    * @readOnly
     */
     bottom: {
 
         get: function () {
 
             return (this.y + this.height) - this.offsetY;
+
+        },
+
+        set: function (value) {
+
+            this.y = value - (this.height) + this.offsetY;
 
         }
 
