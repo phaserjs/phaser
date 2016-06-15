@@ -26,6 +26,33 @@ Phaser.TilemapParser = {
     INSERT_NULL: false,
 
     /**
+     * A tiled flag that resides within the 32 bit of the object gid and
+     * indicates whether the tiled/object is flipped horizontally.
+     *
+     * @constant
+     * @type {number}
+     */
+    FLIPPED_HORIZONTALLY_FLAG: 0x80000000,
+
+    /**
+     * A tiled flag that resides within the 31 bit of the object gid and
+     * indicates whether the tiled/object is flipped vertically.
+     *
+     * @constant
+     * @type {number}
+     */
+    FLIPPED_VERTICALLY_FLAG: 0x40000000,
+
+    /**
+     * A tiled flag that resides within the 30 bit of the object gid and
+     * indicates whether the tiled/object is flipped diagonally.
+     *
+     * @constant
+     * @type {number}
+     */
+    FLIPPED_DIAGONALLY_FLAG: 0x20000000,
+
+    /**
     * Parse tilemap data from the cache and creates a Tilemap object.
     *
     * @method Phaser.TilemapParser.parse
@@ -505,6 +532,8 @@ Phaser.TilemapParser = {
                 //  Object Tiles
                 if (curo.objects[v].gid)
                 {
+                    var self = this;
+
                     var object = {
 
                         gid: curo.objects[v].gid,
@@ -512,9 +541,13 @@ Phaser.TilemapParser = {
                         type: curo.objects[v].hasOwnProperty("type") ? curo.objects[v].type : "",
                         x: curo.objects[v].x,
                         y: curo.objects[v].y,
+                        width: curo.objects[v].width,
+                        height: curo.objects[v].height,
                         visible: curo.objects[v].visible,
-                        properties: curo.objects[v].properties
-
+                        properties: curo.objects[v].properties,
+                        horizontallyFlipped: curo.objects[v].gid & self.FLIPPED_HORIZONTALLY_FLAG,
+                        verticallyFlipped: curo.objects[v].gid & self.FLIPPED_VERTICALLY_FLAG,
+                        diagonallyFlipped: curo.objects[v].gid & self.FLIPPED_DIAGONALLY_FLAG
                     };
 
                     if (curo.objects[v].rotation)
