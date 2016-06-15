@@ -573,10 +573,36 @@ Phaser.Group.prototype.create = function (x, y, key, frame, exists, index) {
 
 /**
 * Creates multiple Phaser.Sprite objects and adds them to the top of this Group.
+* 
+* This method is useful if you need to quickly generate a pool of sprites, such as bullets.
 *
 * Use {@link #classType} to change the type of object created.
 *
-* This method is useful if you need to quickly generate a pool of identical sprites, such as bullets.
+* You can provide an array as the `key` and / or `frame` arguments. When you do this
+* it will create `quantity` Sprites for every key (and frame) in the arrays.
+* 
+* For example:
+* 
+* `createMultiple(25, ['ball', 'carrot'])`
+*
+* In the above code there are 2 keys (ball and carrot) which means that 50 sprites will be
+* created in total, 25 of each. You can also have the `frame` as an array:
+*
+* `createMultiple(5, 'bricks', [0, 1, 2, 3])`
+*
+* In the above there is one key (bricks), which is a sprite sheet. The frames array tells
+* this method to use frames 0, 1, 2 and 3. So in total it will create 20 sprites, because
+* the quantity was set to 5, so that is 5 brick sprites of frame 0, 5 brick sprites with
+* frame 1, and so on.
+*
+* If you set both the key and frame arguments to be arrays then understand it will create
+* a total quantity of sprites equal to the size of both arrays times each other. I.e.:
+*
+* `createMultiple(20, ['diamonds', 'balls'], [0, 1, 2])`
+*
+* The above will create 20 'diamonds' of frame 0, 20 with frame 1 and 20 with frame 2.
+* It will then create 20 'balls' of frame 0, 20 with frame 1 and 20 with frame 2.
+* In total it will have created 120 sprites.
 *
 * By default the Sprites will have their `exists` property set to `false`, and they will be 
 * positioned at 0x0, relative to the `Group.x / y` values.
@@ -587,21 +613,41 @@ Phaser.Group.prototype.create = function (x, y, key, frame, exists, index) {
 *
 * @method Phaser.Group#createMultiple
 * @param {integer} quantity - The number of Sprites to create.
-* @param {string} key - The Game.cache key of the image that this Sprite will use.
-* @param {integer|string} [frame] - If the Sprite image contains multiple frames you can specify which one to use here.
+* @param {string|array} key - The Cache key of the image that the Sprites will use. Or an Array of keys. See the description for details on how the quantity applies when arrays are used.
+* @param {integer|string|array} [frame=0] - If the Sprite image contains multiple frames you can specify which one to use here. Or an Array of frames. See the description for details on how the quantity applies when arrays are used.
 * @param {boolean} [exists=false] - The default exists state of the Sprite.
 * @return {array} An array containing all of the Sprites that were created.
 */
 Phaser.Group.prototype.createMultiple = function (quantity, key, frame, exists) {
 
+    if (frame === undefined) { frame = 0; }
     if (exists === undefined) { exists = false; }
 
+    if (!Array.isArray(key))
+    {
+        key = [ key ];
+    }
+
+    if (!Array.isArray(frame))
+    {
+        frame = [ frame ];
+    }
+
+    var _this = this;
     var children = [];
 
-    for (var i = 0; i < quantity; i++)
-    {
-        children.push(this.create(0, 0, key, frame, exists));
-    }
+    key.forEach(function(singleKey) {
+
+        frame.forEach(function(singleFrame) {
+
+            for (var i = 0; i < quantity; i++)
+            {
+                children.push(_this.create(0, 0, singleKey, singleFrame, exists));
+            }
+
+        });
+
+    });
 
     return children;
 
@@ -622,6 +668,37 @@ Phaser.Group.prototype.updateZ = function () {
     while (i--)
     {
         this.children[i].z = i;
+    }
+
+};
+
+Phaser.Group.prototype.align = function (rows, columns, cellWidth, cellHeight, alignType) {
+
+    if (this.children.length === 0) { return; }
+
+    var x = 0;
+    var y = 0;
+    var c = 0;
+
+    for (var i = 0; i < this.children.length; i++)
+    {
+        var child = this.children[i];
+
+        var b = child.getBounds();
+
+        //  First let's just align based on the top-left of the child
+        x = c * cellWidth;
+
+        child.x = x;
+        child.y = y;
+
+        c++;
+
+        if (c === rows)
+        {
+            c = 0;
+            y += cellHeight;
+        }
     }
 
 };

@@ -391,6 +391,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * Group.createMultiple now returns an Array containing references to all of the children that the method created.
 * Cache.getJSON will now return an Array if the `key` you provided points to an array instead of an Object (thanks @drhayes #2552 #2551)
 * Phaser.Matrix if passed a 0 value would consider it falsy, and replace it with the default by mistake. It now checks if the arguments are `undefined` or `null` and only then sets the defaults (thanks mmcs)
+* Group.createMultiple can now accept Arrays for both the `key` and `frame` arguments. This allows you to create multiple sprites using each key and/or frame in the arrays, which is a great and quick way to build diverse Groups. See the JSDocs for complete details and code examples.
 
 ### Bug Fixes
 

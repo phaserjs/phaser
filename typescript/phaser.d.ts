@@ -1,7 +1,7 @@
 /// <reference path="pixi.d.ts" />
 /// <reference path="p2.d.ts" />
 
-// Type definitions for Phaser 2.4.9 - 14th June 2016
+// Type definitions for Phaser 2.4.9 - 15th June 2016
 // Project: https://github.com/photonstorm/phaser
 
 declare module "phaser" {
@@ -1727,7 +1727,7 @@ declare module "phaser" {
             countDead(): number;
             countLiving(): number;
             create(x: number, y: number, key?: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture, frame?: string | number, exists?: boolean, index?: number): any;
-            createMultiple(quantity: number, key: string, frame?: any, exists?: boolean): any[];
+            createMultiple(quantity: number, key: string | string[], frame?: any | any[], exists?: boolean): any[];
             customSort(sortHandler: Function, context?: any): void;
             destroy(destroyChildren?: boolean, soft?: boolean): void;
             divideAll(property: string, amount: number, checkAlive?: boolean, checkVisible?: boolean): void;
