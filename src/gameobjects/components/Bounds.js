@@ -206,7 +206,7 @@ Phaser.Component.Bounds.prototype = {
     * The optional `offsetX` and `offsetY` arguments allow you to apply extra spacing to the final
     * aligned position of the Game Object. For example:
     *
-    * `sprite.alignTo(background, Phaser.BOTTOM_RIGHT, -20, -20)`
+    * `sprite.alignIn(background, Phaser.BOTTOM_RIGHT, -20, -20)`
     *
     * Would align the `sprite` to the bottom-right, but moved 20 pixels in from the corner.
     * Think of the offsets as applying an adjustment to the containers bounds before the alignment takes place.
