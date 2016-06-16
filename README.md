@@ -6,7 +6,7 @@ Phaser is a fast, free, and fun open source HTML5 game framework. It uses a cust
 
 Along with the fantastic open source community, Phaser is actively developed and maintained by [Photon Storm](http://www.photonstorm.com). As a result of rapid support, and a developer friendly API, Phaser is currently one of the [most starred](https://github.com/showcases/javascript-game-engines) game frameworks on GitHub.
 
-Thousands of developers worldwide use Phaser. From indies and multi-national digital agencies, to schools and Universities. Each creating their own incredible [games](http://phaser.io/news/games/).
+Thousands of developers worldwide use Phaser. From indies and multi-national digital agencies, to schools and Universities. Each creating their own incredible [games](http://phaser.io/games/).
 
 **Visit:** The [Phaser website](http://phaser.io) and follow on [Twitter](https://twitter.com/photonstorm) (#phaserjs)<br />
 **Learn:** [API Docs](http://phaser.io/docs), [Support Forum][forum] and [StackOverflow](http://stackoverflow.com/questions/tagged/phaser-framework)<br />
@@ -34,7 +34,7 @@ Grab the source and join in the fun!
 - [Contributing](#contributing)
 
 <a name="whats-new"></a>
-## What's new in Phaser 2.4.9
+![div](http://gametest.mobi/github/newdiv124.png)
 
 <div align="center"><img src="http://phaser.io/images/github/news.jpg"></div>
 
@@ -54,23 +54,19 @@ Rich - [@photonstorm](https://twitter.com/photonstorm)
 
 ![boogie](http://www.phaser.io/images/spacedancer.gif)
 
-![div](http://www.phaser.io/images/github/div.png)
-
 <a name="support"></a>
 ## Support Phaser Development
 
-![patreon](http://www.phaser.io/images/patreon.png)
-
-Developing Phaser takes a lot of time, effort, and money. There are monthly running costs; such as the forum and site hosting, which we maintain 100% ad-free. As well as countless hours of development time, community support, and assistance resolving issues. We do this out of our love for Phaser of course, but at the end of the day there are real tangible costs involved.
+Developing Phaser takes a lot of time, effort, and money. There are monthly running costs; such as the forum and site, which we maintain 100% ad-free. As well as countless hours of development time, community support, and assistance resolving issues. We do this out of our love for Phaser of course, but at the end of the day there are real tangible costs involved.
 
 If you have found Phaser useful in your development life. Or have made income as a result of using it, and are in a position to support us financially, without causing any detriment to yourself, then please do. There are a number of ways:
 
 * A monthly contribution via [Patreon](https://www.patreon.com/photonstorm). 
 * A [one-off donation](http://phaser.io/community/donate) via PayPal.
 * Purchase any of our [plugins or books](http://phaser.io/shop).
-* Companies can Sponsor a release of Phaser, or an issue of our newsletter.
+* Companies can sponsor a release of Phaser, or an issue of our newsletter.
  
-It all helps cover our running costs, and genuinely contributes towards the future of Phaser.
+It all helps cover our running costs, and genuinely contributes towards future development.
 
 ### Phaser Sponsors
 
@@ -89,7 +85,7 @@ If you would like to sponsor Phaser then please [get in touch](mailto:support@ph
 ![div](http://www.phaser.io/images/github/div.png)
 
 <a name="phaserworld"></a>
-## Weekly Development Newsletter
+## Weekly Newsletter
 
 <div align="center"><img src="http://phaser.io/images/github/phaser-world.png"></div>
 
@@ -139,10 +135,6 @@ or the minified version:
 
 If you'd like to try coding in Phaser right now, with nothing more than your web browser, then you can head over to the [Phaser Sandbox](http://phaser.io/sandbox). You'll find Quick Start templates and a user-friendly editor filled with handy code-completion features.
 
-### Koding
-
-Want to try Phaser without downloading anything? The site [Koding](https://koding.com) offer a complete browser-based virtual machine to work in, allowing you to clone the Phaser repo and start work immediately.
-
 ### License
 
 Phaser is released under the [MIT License](http://opensource.org/licenses/MIT).
@@ -154,17 +146,17 @@ Phaser is released under the [MIT License](http://opensource.org/licenses/MIT).
 
 <img src="http://phaser.io/images/github/learn.jpg" align="right">
 
-We have a [Getting Started Guide](http://phaser.io/tutorials/getting-started) which covers all you need to begin developing games with Phaser. From setting up a web server, to picking an IDE and coding your first game. Please start here no matter what your game-dev experience, before diving in to the API.
+Our [Getting Started Guide](http://phaser.io/tutorials/getting-started) will get you up to speed quickly. From setting up a web server, to picking an IDE. After which read our [Making your first Game](http://phaser.io/tutorials/making-your-first-phaser-game) tutorial. Please work through this, no matter what your developer experience, to learn how Phaser approaches things.
 
-The single biggest Phaser resource is the [Phaser web site](http://phaser.io/news). It has hundreds of tutorials listed and fresh ones are added every week. Keep coming back to see what's new!
+The single biggest Phaser resource is the [Phaser web site](http://phaser.io/news). You'll find hundreds of tutorials, with new ones added every week. Subscribe to the [Phaser World](http://phaser.io/community/newsletter) newsletter and we'll send you links to all new content, once a week.
 
-Using Phaser with **TypeScript**? Check out this great series of [Game From Scratch](http://www.gamefromscratch.com/page/Adventures-in-Phaser-with-TypeScript-tutorial-series.aspx) tutorials.
+Using Phaser with **TypeScript**? [Game From Scratch](http://www.gamefromscratch.com/page/Adventures-in-Phaser-with-TypeScript-tutorial-series.aspx) has a great series of tutorials covering that.
 
-Prefer **videos** to reading? Lynda.com have published a video based course: [HTML5 Game Development with Phaser](http://www.lynda.com/Phaser-tutorials/HTML5-Game-Development-Phaser/163641-2.html) (requires subscription)
+Prefer **videos**? Zenva have an excellent [Phaser video course](https://academy.zenva.com/product/the-complete-mobile-game-development-course-platinum-edition/?a=13), packed full of hours of great content.
 
 ### Source Code Examples
 
-Ever since we started Phaser we've been growing and expanding our extensive set of source code examples. Currently there are over 700 of them!
+Ever since we started Phaser we've been growing and expanding our extensive set of examples. Currently there are over 700 of them, with the full source code and assets available.
 
 Browse the [Phaser Examples](http://phaser.io/examples) or clone the [examples repo][examples] and eat your heart out!
 
@@ -174,7 +166,7 @@ Browse the [Phaser Examples](http://phaser.io/examples) or clone the [examples r
 
 [Interphase](http://phaser.io/interphase) is a programming book for Phaser developers of all skill levels.
 
-With 400 pages of content you'll find detailed articles, game development "Making Of" guides and tutorials. All were written using the latest version of Phaser, so you won't be learning any out-dated tricks here.
+With 400 pages of content you'll find detailed articles, game development "Making Of" guides and tutorials. All were written using the latest version of Phaser, so you won't be learning any out-dated tricks.
 
 As well as the book you get all the source code, graphics and assets to go with it, and lots of extras too.
 
@@ -276,7 +268,7 @@ Run `grunt` to perform a default build to the `dist` folder.
 <a name="games"></a>
 ## Games made with Phaser
 
-Thousands of games have been made in Phaser. From game jam entries to titles by some of the largest entertainment brands in the world. Here is a tiny sample:
+Thousands of games have been made in Phaser. From game jam entries, to titles by some of the largest entertainment brands in the world. Here is a tiny sample:
 
 [![Game](http://phaser.io/images/github/241/bubble-academy.png)][game10]
 [![Game](http://phaser.io/images/github/241/woodventure.png)][game11]
