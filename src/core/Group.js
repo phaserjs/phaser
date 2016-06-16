@@ -709,7 +709,9 @@ Phaser.Group.prototype.updateZ = function () {
 * all of the children in.
 *
 * The `position` property allows you to control where in each grid cell the child is positioned.
-* This is a constant, such as `Phaser.TOP_RIGHT` or `Phaser.MIDDLE_CENTER`.
+* This is a constant and can be one of `Phaser.TOP_LEFT` (default), `Phaser.TOP_CENTER`, 
+* `Phaser.TOP_RIGHT`, `Phaser.LEFT_CENTER`, `Phaser.CENTER`, `Phaser.RIGHT_CENTER`, 
+* `Phaser.BOTTOM_LEFT`, `Phaser.BOTTOM_CENTER` or `Phaser.BOTTOM_RIGHT`.
 *
 * The final argument; `offset` lets you start the alignment from a specific child index.
 *
@@ -718,7 +720,7 @@ Phaser.Group.prototype.updateZ = function () {
 * @param {integer} columns - The number of columns, or height, of the grid. Set to -1 for a dynamic height.
 * @param {integer} cellWidth - The width of each grid cell, in pixels.
 * @param {integer} cellHeight - The height of each grid cell, in pixels.
-* @param {integer} [position] - The position constant. One of `Phaser.TOP_LEFT` (default), `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.MIDDLE_LEFT`, `Phaser.MIDDLE_CENTER`, `Phaser.MIDDLE_RIGHT`, `Phaser.BOTTOM_LEFT`, `Phaser.BOTTOM_CENTER` or `Phaser.BOTTOM_RIGHT`.
+* @param {integer} [position] - The position constant. One of `Phaser.TOP_LEFT` (default), `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.LEFT_CENTER`, `Phaser.CENTER`, `Phaser.RIGHT_CENTER`, `Phaser.BOTTOM_LEFT`, `Phaser.BOTTOM_CENTER` or `Phaser.BOTTOM_RIGHT`.
 * @param {integer} [offset=0] - Optional index to start the alignment from. Defaults to zero, the first child in the Group, but can be set to any valid child index value.
 */
 Phaser.Group.prototype.align = function (rows, columns, cellWidth, cellHeight, position, offset) {
@@ -739,9 +741,9 @@ Phaser.Group.prototype.align = function (rows, columns, cellWidth, cellHeight, p
     {
         var child = this.children[i];
 
-        if (child['alignTo'])
+        if (child['alignIn'])
         {
-            child.alignTo(r, position);
+            child.alignIn(r, position);
         }
         else
         {

@@ -70,9 +70,17 @@ declare module "phaser" {
         static TOP_LEFT: number;
         static TOP_CENTER: number;
         static TOP_RIGHT: number;
-        static MIDDLE_LEFT: number;
-        static MIDDLE_CENTER: number;
-        static MIDDLE_RIGHT: number;
+
+        static LEFT_TOP: number;
+        static LEFT_CENTER: number;
+        static LEFT_BOTTOM: number;
+
+        static CENTER: number;
+
+        static RIGHT_TOP: number;
+        static RIGHT_CENTER: number;
+        static RIGHT_BOTTOM: number;
+
         static BOTTOM_LEFT: number;
         static BOTTOM_CENTER: number;
         static BOTTOM_RIGHT: number;
@@ -408,6 +416,7 @@ declare module "phaser" {
             y: number;
             z: number;
 
+            alignIn(container: Phaser.Rectangle | Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapText | Phaser.Button | Phaser.Graphics | Phaser.TileSprite, position?: number, offsetX?: number, offsetY?: number): any;
             alignTo(container: Phaser.Rectangle | Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapText | Phaser.Button | Phaser.Graphics | Phaser.TileSprite, position?: number, offsetX?: number, offsetY?: number): any;
             destroy(destroyChildren?: boolean): void;
             kill(): void;
@@ -1668,6 +1677,7 @@ declare module "phaser" {
             width: number;
             z: number;
 
+            alignIn(container: Phaser.Rectangle | Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapText | Phaser.Button | Phaser.Graphics | Phaser.TileSprite, position?: number, offsetX?: number, offsetY?: number): any;
             alignTo(container: Phaser.Rectangle | Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapText | Phaser.Button | Phaser.Graphics | Phaser.TileSprite, position?: number, offsetX?: number, offsetY?: number): any;
             destroy(destroyChildren?: boolean): void;
             drawTriangle(points: Phaser.Point[], cull?: boolean): void;
@@ -1844,6 +1854,7 @@ declare module "phaser" {
             world: Phaser.Point;
             z: number;
 
+            alignIn(container: Phaser.Rectangle | Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapText | Phaser.Button | Phaser.Graphics | Phaser.TileSprite, position?: number, offsetX?: number, offsetY?: number): any;
             alignTo(container: Phaser.Rectangle | Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapText | Phaser.Button | Phaser.Graphics | Phaser.TileSprite, position?: number, offsetX?: number, offsetY?: number): any;
             bringToTop(): Phaser.Image;
             crop(rect: Phaser.Rectangle, copy?: boolean): void;
@@ -2973,12 +2984,16 @@ declare module "phaser" {
                     halfHeight: number;
                     height: number;
                     immovable: boolean;
+                    isMoving: boolean;
                     mass: number;
                     maxAngular: number;
                     maxVelocity: Phaser.Point;
                     moves: boolean;
+                    movementCallback: any;
+                    movementCallbackContext: any;
                     newVelocity: Phaser.Point;
                     offset: Phaser.Point;
+                    onMoveComplete: Phaser.Signal;
                     overlapX: number;
                     overlapY: number;
                     phase: number;
@@ -2992,6 +3007,7 @@ declare module "phaser" {
                     sourceHeight: number;
                     speed: number;
                     sprite: Phaser.Sprite;
+                    stopVelocityOnCollide: boolean;
                     syncBounds: boolean;
                     tilePadding: Phaser.Point;
                     touching: FaceChoices;
@@ -3011,6 +3027,8 @@ declare module "phaser" {
                     deltaAbsY(): number;
                     destroy(): void;
                     hitTest(x: number, y: number): boolean;
+                    moveFrom(duration: number, speed?: number, direction?: number): boolean;
+                    moveTo(duration: number, distance: number, direction?: number): boolean;
                     onFloor(): boolean;
                     onWall(): boolean;
                     preUpdate(): void;
@@ -4096,7 +4114,7 @@ declare module "phaser" {
             equals(b: Phaser.Rectangle): boolean;
             floor(): void;
             floorAll(): void;
-            getPoint(location: number, out: Phaser.Point): Phaser.Point;
+            getPoint(position: number, out: Phaser.Point): Phaser.Point;
             inflate(dx: number, dy: number): Phaser.Rectangle;
             intersection(b: Phaser.Rectangle, out: Phaser.Rectangle): Phaser.Rectangle;
             intersects(b: Phaser.Rectangle, tolerance: number): boolean;
@@ -4535,6 +4553,7 @@ declare module "phaser" {
             y: number;
             z: number;
 
+            alignIn(container: Phaser.Rectangle | Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapText | Phaser.Button | Phaser.Graphics | Phaser.TileSprite, position?: number, offsetX?: number, offsetY?: number): any;
             alignTo(container: Phaser.Rectangle | Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapText | Phaser.Button | Phaser.Graphics | Phaser.TileSprite, position?: number, offsetX?: number, offsetY?: number): any;
             bringToTop(): Phaser.Sprite;
             crop(rect: Phaser.Rectangle, copy: boolean): void;
@@ -4886,6 +4905,7 @@ declare module "phaser" {
             addFontStyle(style: string, position: number): Phaser.Text;
             addFontWeight(weight: string, position: number): Phaser.Text;
             addStrokeColor(color: string, position: number): Phaser.Text;
+            alignIn(container: Phaser.Rectangle | Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapText | Phaser.Button | Phaser.Graphics | Phaser.TileSprite, position?: number, offsetX?: number, offsetY?: number): any;
             alignTo(container: Phaser.Rectangle | Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapText | Phaser.Button | Phaser.Graphics | Phaser.TileSprite, position?: number, offsetX?: number, offsetY?: number): any;
             clearColors(): Phaser.Text;
             clearFontValues(): Phaser.Text;
@@ -5171,6 +5191,7 @@ declare module "phaser" {
             world: Phaser.Point;
             z: number;
 
+            alignIn(container: Phaser.Rectangle | Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapText | Phaser.Button | Phaser.Graphics | Phaser.TileSprite, position?: number, offsetX?: number, offsetY?: number): any;
             alignTo(container: Phaser.Rectangle | Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapText | Phaser.Button | Phaser.Graphics | Phaser.TileSprite, position?: number, offsetX?: number, offsetY?: number): any;
             autoScroll(x: number, y: number): void;
             destroy(destroyChildren?: boolean): void;

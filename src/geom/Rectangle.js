@@ -384,28 +384,26 @@ Phaser.Rectangle.prototype = {
     },
 
     /**
-    * Returns a point based on the given location constant.
+    * Returns a point based on the given position constant, which can be one of:
     * 
-    * Which can be one of:
-    * 
-    * `Phaser.TOP_LEFT`, `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.MIDDLE_LEFT`,
-    * `Phaser.MIDDLE_CENTER`, `Phaser.MIDDLE_RIGHT`, `Phaser.BOTTOM_LEFT`, 
-    * `Phaser.BOTTOM_CENTER` and `Phaser.BOTTOM_RIGHT`.
+    * `Phaser.TOP_LEFT`, `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.LEFT_CENTER`,
+    * `Phaser.CENTER`, `Phaser.RIGHT_CENTER`, `Phaser.BOTTOM_LEFT`, `Phaser.BOTTOM_CENTER` 
+    * and `Phaser.BOTTOM_RIGHT`.
     *
     * This method returns the same values as calling Rectangle.bottomLeft, etc, but those
     * calls always create a new Point object, where-as this one allows you to use your own.
     * 
     * @method Phaser.Rectangle#getPoint
-    * @param {integer} [location] - One of the Phaser location constants, such as `Phaser.TOP_RIGHT`.
+    * @param {integer} [position] - One of the Phaser position constants, such as `Phaser.TOP_RIGHT`.
     * @param {Phaser.Point} [out] - A Phaser.Point that the values will be set in.
     *     If no object is provided a new Phaser.Point object will be created. In high performance areas avoid this by re-using an existing object.
     * @return {Phaser.Point} An object containing the point in its `x` and `y` properties.
     */
-    getPoint: function (location, out) {
+    getPoint: function (position, out) {
 
         if (out === undefined) { out = new Phaser.Point(); }
 
-        switch (location)
+        switch (position)
         {
             default:
             case Phaser.TOP_LEFT:
@@ -417,13 +415,13 @@ Phaser.Rectangle.prototype = {
             case Phaser.TOP_RIGHT:
                 return out.set(this.right, this.y);
 
-            case Phaser.MIDDLE_LEFT:
+            case Phaser.LEFT_CENTER:
                 return out.set(this.x, this.centerY);
 
-            case Phaser.MIDDLE_CENTER:
+            case Phaser.CENTER:
                 return out.set(this.centerX, this.centerY);
 
-            case Phaser.MIDDLE_RIGHT:
+            case Phaser.RIGHT_CENTER:
                 return out.set(this.right, this.centerY);
 
             case Phaser.BOTTOM_LEFT:

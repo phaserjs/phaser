@@ -337,16 +337,59 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     */
     this.syncBounds = false;
 
-    //  Move to a 'movement' object?
+    /**
+    * @property {boolean} isMoving - Set by the `moveTo` and `moveFrom` methods.
+    */
     this.isMoving = false;
+
+    /**
+    * @property {boolean} stopVelocityOnCollide - Set by the `moveTo` and `moveFrom` methods.
+    */
     this.stopVelocityOnCollide = true;
+
+    /**
+    * @property {integer} moveTimer - Internal time used by the `moveTo` and `moveFrom` methods.
+    * @private
+    */
     this.moveTimer = 0;
+
+    /**
+    * @property {integer} moveDistance - Internal distance value, used by the `moveTo` and `moveFrom` methods.
+    * @private
+    */
     this.moveDistance = 0;
+
+    /**
+    * @property {integer} moveDuration - Internal duration value, used by the `moveTo` and `moveFrom` methods.
+    * @private
+    */
     this.moveDuration = 0;
-    this.moveTarget = new Phaser.Line();
-    this.moveEnd = new Phaser.Point();
+
+    /**
+    * @property {Phaser.Line} moveTarget - Set by the `moveTo` method, and updated each frame.
+    * @private
+    */
+    this.moveTarget = null;
+
+    /**
+    * @property {Phaser.Point} moveEnd - Set by the `moveTo` method, and updated each frame.
+    * @private
+    */
+    this.moveEnd = null;
+
+    /**
+    * @property {Phaser.Signal} onMoveComplete - Listen for the completion of `moveTo` or `moveFrom` events.
+    */
     this.onMoveComplete = new Phaser.Signal();
+
+    /**
+    * @property {function} movementCallback - Optional callback. If set, invoked during the running of `moveTo` or `moveFrom` events.
+    */
     this.movementCallback = null;
+
+    /**
+    * @property {object} movementCallbackContext - Context in which to call the movementCallback.
+    */
     this.movementCallbackContext = null;
 
     /**
@@ -711,6 +754,8 @@ Phaser.Physics.Arcade.Body.prototype = {
     },
 
     /**
+    * Note: This method is experimental, and may be changed or removed in a future release.
+    * 
     * This method moves the Body in the given direction, for the duration specified.
     * It works by setting the velocity on the Body, and an internal timer, and then
     * monitoring the duration each frame. When the duration is up the movement is
@@ -783,6 +828,8 @@ Phaser.Physics.Arcade.Body.prototype = {
     },
 
     /**
+    * Note: This method is experimental, and may be changed or removed in a future release.
+    * 
     * This method moves the Body in the given direction, for the duration specified.
     * It works by setting the velocity on the Body, and an internal distance counter.
     * The distance is monitored each frame. When the distance equals the distance
@@ -834,6 +881,12 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         this.moveDuration = 0;
         this.moveDistance = distance;
+
+        if (this.moveTarget === null)
+        {
+            this.moveTarget = new Phaser.Line();
+            this.moveEnd = new Phaser.Point();
+        }
 
         this.moveTarget.fromAngle(this.x, this.y, angle, distance);
 

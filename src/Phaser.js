@@ -386,63 +386,91 @@ var Phaser = Phaser || {
     * @constant
     * @type {integer}
     */
-    TOP_LEFT: 50,
+    TOP_LEFT: 0,
 
     /**
     * A constant representing a top-center alignment or position.
     * @constant
     * @type {integer}
     */
-    TOP_CENTER: 51,
+    TOP_CENTER: 1,
 
     /**
     * A constant representing a top-right alignment or position.
     * @constant
     * @type {integer}
     */
-    TOP_RIGHT: 52,
+    TOP_RIGHT: 2,
 
     /**
-    * A constant representing a middle-left alignment or position.
+    * A constant representing a left-top alignment or position.
     * @constant
     * @type {integer}
     */
-    MIDDLE_LEFT: 53,
+    LEFT_TOP: 3,
 
     /**
-    * A constant representing a middle-center alignment or position.
+    * A constant representing a left-center alignment or position.
     * @constant
     * @type {integer}
     */
-    MIDDLE_CENTER: 54,
+    LEFT_CENTER: 4,
 
     /**
-    * A constant representing a middle-right alignment or position.
+    * A constant representing a left-bottom alignment or position.
     * @constant
     * @type {integer}
     */
-    MIDDLE_RIGHT: 55,
+    LEFT_BOTTOM: 5,
+
+    /**
+    * A constant representing a center alignment or position.
+    * @constant
+    * @type {integer}
+    */
+    CENTER: 6,
+
+    /**
+    * A constant representing a right-top alignment or position.
+    * @constant
+    * @type {integer}
+    */
+    RIGHT_TOP: 7,
+
+    /**
+    * A constant representing a right-center alignment or position.
+    * @constant
+    * @type {integer}
+    */
+    RIGHT_CENTER: 8,
+
+    /**
+    * A constant representing a right-bottom alignment or position.
+    * @constant
+    * @type {integer}
+    */
+    RIGHT_BOTTOM: 9,
 
     /**
     * A constant representing a bottom-left alignment or position.
     * @constant
     * @type {integer}
     */
-    BOTTOM_LEFT: 56,
+    BOTTOM_LEFT: 10,
 
     /**
     * A constant representing a bottom-center alignment or position.
     * @constant
     * @type {integer}
     */
-    BOTTOM_CENTER: 57,
+    BOTTOM_CENTER: 11,
 
     /**
     * A constant representing a bottom-right alignment or position.
     * @constant
     * @type {integer}
     */
-    BOTTOM_RIGHT: 58,
+    BOTTOM_RIGHT: 12,
 
     /**
      * Various blend modes supported by Pixi.
