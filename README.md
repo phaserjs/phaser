@@ -1,6 +1,6 @@
-# Phaser
+# Phaser - HTML5 Game Framework
 
-<img src="http://gametest.mobi/github/cab1217.png" align="right">
+<img src="http://gametest.mobi/github/cab1231.png" align="right">
 
 Phaser is a fast, free and fun open source HTML5 game framework. It uses a custom build of [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) for WebGL and Canvas rendering, across desktop and mobile web browsers. Games can be compiled to iOS, Android and desktop apps via 3rd party tools like Cordova and Electron.
 
@@ -15,6 +15,8 @@ Thousands of developers worldwide use it. From indies and multi-national digital
 **Chat:** [Slack](http://phaser.io/news/2015/08/phaser-slack-channel) and [#phaserio IRC channel](http://www.html5gamedevs.com/topic/4470-official-phaserio-irc-channel-phaserio-on-freenode/)<br />
 **Extend:** With [Phaser Plugins](http://phaser.io/shop/plugins)<br />
 **Be awesome:** [Support](#support) the future of Phaser
+
+------------
 
 ## Contents
 
