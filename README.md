@@ -1,8 +1,6 @@
-![div](http://www.phaser.io/images/github/welcome-div2.png)
-
 # Phaser
 
-<img src="http://phaser.io/images/github/jump.jpg" align="right">
+<img src="http://gametest.mobi/github/cab1211.png" align="right">
 
 Phaser is a fast, free and fun open source HTML5 game framework. It uses a custom build of [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) for WebGL and Canvas rendering across desktop and mobile web browsers. Games can be compiled to iOS, Android and desktop apps via 3rd party tools like Cocoon, Cordova and Electron.
 
@@ -61,15 +59,24 @@ Rich - [@photonstorm](https://twitter.com/photonstorm)
 ![div](http://www.phaser.io/images/github/div.png)
 
 <a name="patreon"></a>
-## Support Phaser on Patreon
+## Support Phaser Development
 
 ![patreon](http://www.phaser.io/images/patreon.png)
 
-Please help support the future development of Phaser / Lazer through our [Patreon campaign](https://www.patreon.com/photonstorm). We've some exciting plans and there's so much we'd like to do.
+Developing Phaser takes a lot of time, effort, and money. There are monthly running costs; such as the forum and site hosting, which we maintain 100% ad-free. As well as countless hours of development time, community support, and assistance resolving issues. We do this out of our love for Phaser of course, but at the end of the day there are real tangible costs involved.
+
+If you have found Phaser useful in your development life. Or have made income as a result of using it, and are in a position to support us financially, without causing any detriment to yourself, then please do. There are a number of ways:
+
+* A monthly contribution via [Patreon](https://www.patreon.com/photonstorm). 
+* A [one-off donation](http://phaser.io/community/donate) via PayPal.
+* Purchase any of our [plugins or books](http://phaser.io/shop).
+* Companies can Sponsor a release of Phaser, or an issue of our newsletter.
+ 
+It all helps cover our running costs, and genuinely contributes towards the future of Phaser.
 
 ### Phaser Sponsors
 
-Phaser is [sponsored](https://www.patreon.com/photonstorm) by the following great companies:
+Phaser is sponsored by the following great companies:
 
 ![qici](http://www.phaser.io/images/sponsors/qici-100.png)
 
@@ -79,14 +86,18 @@ QICI Engine: [A powerful one-stop integrated Phaser game editor](http://www.qici
 
 Zenva Academy: [Online courses on Phaser, HTML5 and native app development](https://academy.zenva.com/?zva_src=phaserpatreon)
 
+If you would like to sponsor Phaser then please [get in touch](mailto:support@phaser.io). We have sponsorship options available on our GitHub repo, web site, and newsletter. All of which receive tens of thousands of eyeballs per day.
+
 ![div](http://www.phaser.io/images/github/div.png)
 
 <a name="phaserworld"></a>
-## Phaser World
+## Weekly Development Newsletter
 
 <div align="center"><img src="http://phaser.io/images/github/phaser-world.png"></div>
 
-Every Friday we publish our newsletter: [Phaser World](http://phaser.io/community/newsletter). It's packed full of the latest Phaser games, tutorials, videos, meet-ups, conference talks and more. We also post regular development updates, and occasionally special offers.
+Every Friday we publish the [Phaser World](http://phaser.io/community/newsletter) newsletter. It's packed full of the latest Phaser games, tutorials, videos, meet-ups, talks, and more. It also contains our weekly Development Progress updates.
+
+Previous issues can found on our [Back Issues](http://phaser.io/community/backissues) page.
 
 ![div](http://www.phaser.io/images/github/div.png)
 
