@@ -672,32 +672,88 @@ Phaser.Group.prototype.updateZ = function () {
 
 };
 
-Phaser.Group.prototype.align = function (rows, columns, cellWidth, cellHeight, alignType) {
+/**
+* This method iterates through all children in the Group (regardless if they are visible or exist)
+* and then changes their position properties so they are arranged in a Grid formation.
+*
+* The grid dimensions are determined by the first four arguments. The rows and columns arguments
+* relate to the width and height of the grid respectively.
+* 
+* You can choose to set 'columns' to -1.
+* If you do this it means it will continue aligning all of the children of the Group
+* 
+*   This is the number of grid cells that exist
+* in total.
+*
+* @method Phaser.Group#align
+* @param {integer} rows - The number of rows to use in the grid alignment.
+* @param {integer} columns - The number of columns to use in the grid alignment.
+* @param {integer} cellWidth - The width of each grid cell, in pixels.
+* @param {integer} cellHeight - The height of each grid cell, in pixels.
+* @param {integer} [position] - The position constant. One of `Phaser.TOP_LEFT` (default), `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.MIDDLE_LEFT`, `Phaser.MIDDLE_CENTER`, `Phaser.MIDDLE_RIGHT`, `Phaser.BOTTOM_LEFT`, `Phaser.BOTTOM_CENTER` or `Phaser.BOTTOM_RIGHT`.
+*/
+Phaser.Group.prototype.align = function (rows, columns, cellWidth, cellHeight, position) {
 
-    if (this.children.length === 0) { return; }
+    if (position === undefined) { position = Phaser.TOP_LEFT; }
 
-    var x = 0;
-    var y = 0;
-    var c = 0;
+    if (this.children.length === 0 || (rows === -1 && columns === -1))
+    {
+        return;
+    }
+
+    var r = new Phaser.Rectangle(0, 0, cellWidth, cellHeight);
+    var w = (rows * cellWidth);
+    var h = (columns * cellHeight);
 
     for (var i = 0; i < this.children.length; i++)
     {
         var child = this.children[i];
 
-        var b = child.getBounds();
-
-        //  First let's just align based on the top-left of the child
-        x = c * cellWidth;
-
-        child.x = x;
-        child.y = y;
-
-        c++;
-
-        if (c === rows)
+        if (child['alignTo'])
         {
-            c = 0;
-            y += cellHeight;
+            child.alignTo(r, position);
+        }
+        else
+        {
+            continue;
+        }
+
+        if (rows === -1)
+        {
+            //  We keep laying them out horizontally until we've done them all
+            r.y += cellHeight;
+
+            if (r.y === h)
+            {
+                r.x += cellWidth;
+                r.y = 0;
+            }
+        }
+        else if (columns === -1)
+        {
+            //  We keep laying them out vertically until we've done them all
+            r.x += cellWidth;
+
+            if (r.x === w)
+            {
+                r.x = 0;
+                r.y += cellHeight;
+            }
+        }
+        else
+        {
+            //  We keep laying them out until we hit the column limit
+            if (r.x === w)
+            {
+                r.x = 0;
+                r.y += cellHeight;
+
+                if (r.y === h)
+                {
+                    //  We've hit the column limit, so return, even if there are children left
+                    return;
+                }
+            }
         }
     }
 
