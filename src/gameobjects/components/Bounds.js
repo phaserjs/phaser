@@ -203,60 +203,78 @@ Phaser.Component.Bounds.prototype = {
     * container, taking into consideration rotation, scale and the anchor property.
     * This allows you to neatly align Game Objects, irrespective of their position value.
     *
+    * The optional `offsetX` and `offsetY` arguments allow you to apply extra spacing to the final
+    * aligned position of the Game Object. For example:
+    *
+    * `sprite.alignTo(background, Phaser.BOTTOM_RIGHT, -20, -20)`
+    *
+    * Would align the `sprite` to the bottom-right, but moved 20 pixels in from the corner.
+    * Think of the offsets as applying an adjustment to the containers bounds before the alignment takes place.
+    * So providing a negative offset will 'shrink' the container bounds by that amount, and providing a positive
+    * one expands it.
+    *
     * @method
     * @param {Phaser.Rectangle|Phaser.Sprite|Phaser.Image|Phaser.Text|Phaser.BitmapText|Phaser.Button|Phaser.Graphics|Phaser.TileSprite} container - The Game Object or Rectangle with which to align this Game Object to. Can also include properties such as `World.bounds` or `Camera.view`.
     * @param {integer} [position] - The position constant. One of `Phaser.TOP_LEFT` (default), `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.MIDDLE_LEFT`, `Phaser.MIDDLE_CENTER`, `Phaser.MIDDLE_RIGHT`, `Phaser.BOTTOM_LEFT`, `Phaser.BOTTOM_CENTER` or `Phaser.BOTTOM_RIGHT`.
+    * @param {integer} [offsetX=0] - A horizontal adjustment of the Containers bounds, applied to the aligned position of the Game Object. Use a negative value to shrink the bounds, positive to increase it.
+    * @param {integer} [offsetY=0] - A vertical adjustment of the Containers bounds, applied to the aligned position of the Game Object. Use a negative value to shrink the bounds, positive to increase it.
+    * @return {Object} This Game Object.
     */
-    alignTo: function (container, position) {
+    alignTo: function (container, position, offsetX, offsetY) {
+
+        if (offsetX === undefined) { offsetX = 0; }
+        if (offsetY === undefined) { offsetY = 0; }
 
         switch (position)
         {
             default:
             case Phaser.TOP_LEFT:
-                this.left = container.left;
-                this.top = container.top;
+                this.left = container.left - offsetX;
+                this.top = container.top - offsetY;
                 break;
 
             case Phaser.TOP_CENTER:
-                this.centerX = container.centerX;
-                this.top = container.top;
+                this.centerX = container.centerX + offsetX;
+                this.top = container.top - offsetY;
                 break;
 
             case Phaser.TOP_RIGHT:
-                this.right = container.right;
-                this.top = container.top;
+                this.right = container.right + offsetX;
+                this.top = container.top - offsetY;
                 break;
 
             case Phaser.MIDDLE_LEFT:
-                this.left = container.left;
-                this.centerY = container.centerY;
+                this.left = container.left - offsetX;
+                this.centerY = container.centerY + offsetY;
                 break;
 
             case Phaser.MIDDLE_CENTER:
-                this.centerX = container.centerX;
-                this.centerY = container.centerY;
+                this.centerX = container.centerX + offsetX;
+                this.centerY = container.centerY + offsetY;
                 break;
 
             case Phaser.MIDDLE_RIGHT:
-                this.right = container.right;
-                this.centerY = container.centerY;
+                this.right = container.right + offsetX;
+                this.centerY = container.centerY + offsetY;
                 break;
 
             case Phaser.BOTTOM_LEFT:
-                this.left = container.left;
-                this.bottom = container.bottom;
+                this.left = container.left - offsetX;
+                this.bottom = container.bottom + offsetY;
                 break;
 
             case Phaser.BOTTOM_CENTER:
-                this.centerX = container.centerX;
-                this.bottom = container.bottom;
+                this.centerX = container.centerX + offsetX;
+                this.bottom = container.bottom + offsetY;
                 break;
 
             case Phaser.BOTTOM_RIGHT:
-                this.right = container.right;
-                this.bottom = container.bottom;
+                this.right = container.right + offsetX;
+                this.bottom = container.bottom + offsetY;
                 break;
         }
+
+        return this;
 
     }
 
