@@ -34,7 +34,7 @@ Grab the source and join in the fun!
 - [Contributing](#contributing)
 
 <a name="whats-new"></a>
-![div](http://gametest.mobi/github/newdiv124.png)
+![div](http://gametest.mobi/github/div-whats-new.png)
 
 <div align="center"><img src="http://phaser.io/images/github/news.jpg"></div>
 
@@ -55,7 +55,7 @@ Rich - [@photonstorm](https://twitter.com/photonstorm)
 ![boogie](http://www.phaser.io/images/spacedancer.gif)
 
 <a name="support"></a>
-## Support Phaser Development
+![div](http://gametest.mobi/github/div-support-phaser.png)
 
 Developing Phaser takes a lot of time, effort, and money. There are monthly running costs; such as the forum and site, which we maintain 100% ad-free. As well as countless hours of development time, community support, and assistance resolving issues. We do this out of our love for Phaser of course, but at the end of the day there are real tangible costs involved.
 
@@ -82,8 +82,7 @@ Zenva Academy: [Online courses on Phaser, HTML5 and native app development](http
 
 If you would like to sponsor Phaser then please [get in touch](mailto:support@phaser.io). We have sponsorship options available on our GitHub repo, web site, and newsletter. All of which receive tens of thousands of eyeballs per day.
 
-![div](http://www.phaser.io/images/github/div.png)
-
+![div](http://gametest.mobi/github/div-newsletter.png)
 <a name="phaserworld"></a>
 ## Weekly Newsletter
 
@@ -93,8 +92,7 @@ Every Friday we publish the [Phaser World](http://phaser.io/community/newsletter
 
 Previous issues can found on our [Back Issues](http://phaser.io/community/backissues) page.
 
-![div](http://www.phaser.io/images/github/div.png)
-
+![div](http://gametest.mobi/github/div-download.png)
 <a name="download"></a>
 ## Download Phaser
 
@@ -139,8 +137,7 @@ If you'd like to try coding in Phaser right now, with nothing more than your web
 
 Phaser is released under the [MIT License](http://opensource.org/licenses/MIT).
 
-![div](http://www.phaser.io/images/github/div.png)
-
+![div](http://gametest.mobi/github/div-getting-started.png)
 <a name="getting-started"></a>
 ## Getting Started
 
@@ -184,8 +181,7 @@ The [Game Mechanic Explorer](http://gamemechanicexplorer.com) is a great interac
 
 [MightyEditor](http://mightyfingers.com/) is a browser-based visual Phaser game editor. Create your maps with ease, position objects and share them in seconds. It also exports to native Phaser code. Excellent for quickly setting-up levels and scenes.
 
-![div](http://www.phaser.io/images/github/div.png)
-
+![div](http://gametest.mobi/github/div-using-phaser.png)
 <a name="using-phaser"></a>
 ## Using Phaser
 
@@ -263,8 +259,7 @@ Should you wish to build Phaser from source you can take advantage of the provid
 
 Run `grunt` to perform a default build to the `dist` folder.
 
-![div](http://www.phaser.io/images/github/div.png)
-
+![div](http://gametest.mobi/github/div-made-with.png)
 <a name="games"></a>
 ## Games made with Phaser
 
@@ -293,8 +288,7 @@ Artwork copyright their respective owners.
 
 We add [new games](http://phaser.io/news/category/game) to the Phaser site weekly, so be sure to send us yours when it's finished!
 
-![div](http://www.phaser.io/images/github/div.png)
-
+![div](http://gametest.mobi/github/div-requirements.png)
 <a name="requirements"></a>
 ## Requirements
 
@@ -312,8 +306,7 @@ Phaser is developed in JavaScript. We've made no assumptions about how you like 
 
 If you code with [TypeScript](http://www.typescriptlang.org/) there are comprehensive definition files in the `typescript` folder. They are for TypeScript 1.4+.
 
-![div](http://www.phaser.io/images/github/div.png)
-
+![div](http://gametest.mobi/github/div-roadmap.png)
 <a name="road-map"></a>
 ## Road Map
 
@@ -328,8 +321,7 @@ The majority of Phaser development is now taking place on the [Lazer](https://gi
 
 You can read all about the philosophy behind Lazer [here](http://phaser.io/news/2016/01/phaser-in-2015-and-beyond) or join the Google Group [mailing list](https://groups.google.com/d/forum/phaser3-dev) where progress reports are posted. You can also follow progress in the Phaser World newsletter.
 
-![div](http://www.phaser.io/images/github/div.png)
-
+![div](http://gametest.mobi/github/div-change-log.png)
 <a name="change-log"></a>
 ## Change Log
 
@@ -412,18 +404,9 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * The `DisplayObject.worldRotation` value didn't sign the `wt.c` value correctly, meaning the rotation would be wrong.
 * The `DisplayObject.worldScale` value didn't multiply the local objects scale into the calculation, meaning the value wasn't a true representation of the objects world scale.
 
-### Pixi Updates
-
-Please note that Phaser uses a custom build of Pixi and always has done. The following changes have been made to our custom build, not to Pixi in general.
-
-*
-*
-*
-
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
-![div](http://www.phaser.io/images/github/div.png)
-
+![div](http://gametest.mobi/github/div-contributing.png)
 <a name="contributing"></a>
 ## Contributing
 
@@ -441,7 +424,7 @@ Written something cool that shows Phaser in use? Please tell us about it in our 
 
 [![Build Status](https://travis-ci.org/photonstorm/phaser.png?branch=dev)](https://travis-ci.org/photonstorm/phaser)
 
-![div](http://www.phaser.io/images/github/div.png)
+![div](http://gametest.mobi/github/div-made-by.png)
 
 ![storm](http://www.phaser.io/images/github/photonstorm-x2.png)
 
