@@ -410,39 +410,30 @@ Phaser.Rectangle.prototype = {
             default:
             case Phaser.TOP_LEFT:
                 return out.set(this.x, this.y);
-                break;
 
             case Phaser.TOP_CENTER:
                 return out.set(this.centerX, this.y);
-                break;
 
             case Phaser.TOP_RIGHT:
                 return out.set(this.right, this.y);
-                break;
 
             case Phaser.MIDDLE_LEFT:
                 return out.set(this.x, this.centerY);
-                break;
 
             case Phaser.MIDDLE_CENTER:
                 return out.set(this.centerX, this.centerY);
-                break;
 
             case Phaser.MIDDLE_RIGHT:
                 return out.set(this.right, this.centerY);
-                break;
 
             case Phaser.BOTTOM_LEFT:
                 return out.set(this.x, this.bottom);
-                break;
 
             case Phaser.BOTTOM_CENTER:
                 return out.set(this.centerX, this.bottom);
-                break;
 
             case Phaser.BOTTOM_RIGHT:
                 return out.set(this.right, this.bottom);
-                break;
         }
 
     },
