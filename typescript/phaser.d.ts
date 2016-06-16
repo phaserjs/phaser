@@ -408,6 +408,7 @@ declare module "phaser" {
             y: number;
             z: number;
 
+            alignTo(container: Phaser.Rectangle | Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapText | Phaser.Button | Phaser.Graphics | Phaser.TileSprite, position?: number): void;
             destroy(destroyChildren?: boolean): void;
             kill(): void;
             postUpdate(): void;
@@ -1667,6 +1668,7 @@ declare module "phaser" {
             width: number;
             z: number;
 
+            alignTo(container: Phaser.Rectangle | Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapText | Phaser.Button | Phaser.Graphics | Phaser.TileSprite, position?: number): void;
             destroy(destroyChildren?: boolean): void;
             drawTriangle(points: Phaser.Point[], cull?: boolean): void;
             drawTriangles(vertices: Phaser.Point[] | number[], indices?: number[], cull?: boolean): void;
@@ -1841,6 +1843,7 @@ declare module "phaser" {
             world: Phaser.Point;
             z: number;
 
+            alignTo(container: Phaser.Rectangle | Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapText | Phaser.Button | Phaser.Graphics | Phaser.TileSprite, position?: number): void;
             bringToTop(): Phaser.Image;
             crop(rect: Phaser.Rectangle, copy?: boolean): void;
             destroy(destroyChildren?: boolean): void;
@@ -4531,6 +4534,7 @@ declare module "phaser" {
             y: number;
             z: number;
 
+            alignTo(container: Phaser.Rectangle | Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapText | Phaser.Button | Phaser.Graphics | Phaser.TileSprite, position?: number): void;
             bringToTop(): Phaser.Sprite;
             crop(rect: Phaser.Rectangle, copy: boolean): void;
             checkTransform(wt: PIXI.Matrix): void;
@@ -4881,6 +4885,7 @@ declare module "phaser" {
             addFontStyle(style: string, position: number): Phaser.Text;
             addFontWeight(weight: string, position: number): Phaser.Text;
             addStrokeColor(color: string, position: number): Phaser.Text;
+            alignTo(container: Phaser.Rectangle | Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapText | Phaser.Button | Phaser.Graphics | Phaser.TileSprite, position?: number): void;
             clearColors(): Phaser.Text;
             clearFontValues(): Phaser.Text;
             componentsToFont(components: any): string;
@@ -5165,6 +5170,7 @@ declare module "phaser" {
             world: Phaser.Point;
             z: number;
 
+            alignTo(container: Phaser.Rectangle | Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapText | Phaser.Button | Phaser.Graphics | Phaser.TileSprite, position?: number): void;
             autoScroll(x: number, y: number): void;
             destroy(destroyChildren?: boolean): void;
             loadTexture(key: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture, frame?: string | number, stopAnimation?: boolean): void;
