@@ -1,28 +1,26 @@
 # Phaser
 
-<img src="http://gametest.mobi/github/cab1211.png" align="right">
+<img src="http://gametest.mobi/github/cab1217.png" align="right">
 
-Phaser is a fast, free and fun open source HTML5 game framework. It uses a custom build of [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) for WebGL and Canvas rendering across desktop and mobile web browsers. Games can be compiled to iOS, Android and desktop apps via 3rd party tools like Cocoon, Cordova and Electron.
+Phaser is a fast, free and fun open source HTML5 game framework. It uses a custom build of [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) for WebGL and Canvas rendering, across desktop and mobile web browsers. Games can be compiled to iOS, Android and desktop apps via 3rd party tools like Cordova and Electron.
 
-Along with the fantastic open source community Phaser is actively developed and maintained by [Photon Storm Limited](http://www.photonstorm.com). As a result of rapid support and a developer friendly API Phaser is currently one of the [most starred](https://github.com/showcases/javascript-game-engines) game frameworks on GitHub.
+Along with the fantastic open source community, Phaser is actively developed and maintained by [Photon Storm](http://www.photonstorm.com). As a result of rapid support, and a developer friendly API, Phaser is currently one of the [most starred](https://github.com/showcases/javascript-game-engines) game frameworks on GitHub.
 
-Thousands of developers worldwide use it. From indies and multi-national digital agencies to schools and Universities. Each creating their own incredible games. Grab the source and join in the fun!
+Thousands of developers worldwide use it. From indies and multi-national digital agencies, to schools and Universities. Each creating their own incredible games. Grab the source and join in the fun!
 
-* **Visit:** The [Phaser website](http://phaser.io) and follow on [Twitter](https://twitter.com/photonstorm) (#phaserjs)
-* **Learn:** [API Documentation](http://phaser.io/docs), [Support Forum][forum] and [StackOverflow](http://stackoverflow.com/questions/tagged/phaser-framework)
-* **Code:** 700+ [Source Examples](http://phaser.io/examples) (also available in this [git repo][examples])
-* **Read:** Subscribe to the weekly [Phaser World Newsletter](#phaserworld)
-* **Chat:** Join our [Slack Channel](http://phaser.io/news/2015/08/phaser-slack-channel), or [#phaserio IRC channel](http://www.html5gamedevs.com/topic/4470-official-phaserio-irc-channel-phaserio-on-freenode/)
-* **Extend:** With [Phaser Plugins](http://phaser.io/shop/plugins)
-* **Be awesome:** Support the future of Phaser on [Patreon](https://www.patreon.com/photonstorm) or by buying our [books](http://phaser.io/shop/books)
+**Visit:** The [Phaser website](http://phaser.io) and follow on [Twitter](https://twitter.com/photonstorm) (#phaserjs)
+**Learn:** [API Docs](http://phaser.io/docs), [Support Forum][forum] and [StackOverflow](http://stackoverflow.com/questions/tagged/phaser-framework)
+**Code:** 700+ [Examples](http://phaser.io/examples) (code available in this [repo][examples])
+**Read:** Weekly [Phaser World Newsletter](#phaserworld)
+**Chat:** [Slack](http://phaser.io/news/2015/08/phaser-slack-channel) and [#phaserio IRC channel](http://www.html5gamedevs.com/topic/4470-official-phaserio-irc-channel-phaserio-on-freenode/)
+**Extend:** With [Phaser Plugins](http://phaser.io/shop/plugins)
+**Be awesome:** [Support](#support) the future of Phaser
 
-![div](http://www.phaser.io/images/github/div.png)
-
-## Index
+## Contents
 
 - [What's New?](#whats-new)
-- [Support Phaser](#patreon)
-- [Phaser World](#phaserworld)
+- [Support Phaser](#support)
+- [Phaser World Newsletter](#phaserworld)
 - [Download Phaser](#download)
 - [Getting Started](#getting-started)
 - [Using Phaser](#using-phaser)
@@ -32,8 +30,6 @@ Thousands of developers worldwide use it. From indies and multi-national digital
 - [Change Log](#change-log)
 - [Lazer](#lazer)
 - [Contributing](#contributing)
-
-![div](http://www.phaser.io/images/github/div.png)
 
 <a name="whats-new"></a>
 ## What's new in Phaser 2.4.9
@@ -58,7 +54,7 @@ Rich - [@photonstorm](https://twitter.com/photonstorm)
 
 ![div](http://www.phaser.io/images/github/div.png)
 
-<a name="patreon"></a>
+<a name="support"></a>
 ## Support Phaser Development
 
 ![patreon](http://www.phaser.io/images/patreon.png)
