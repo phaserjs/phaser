@@ -8,12 +8,12 @@ Along with the fantastic open source community, Phaser is actively developed and
 
 Thousands of developers worldwide use it. From indies and multi-national digital agencies, to schools and Universities. Each creating their own incredible games. Grab the source and join in the fun!
 
-**Visit:** The [Phaser website](http://phaser.io) and follow on [Twitter](https://twitter.com/photonstorm) (#phaserjs)
-**Learn:** [API Docs](http://phaser.io/docs), [Support Forum][forum] and [StackOverflow](http://stackoverflow.com/questions/tagged/phaser-framework)
-**Code:** 700+ [Examples](http://phaser.io/examples) (code available in this [repo][examples])
-**Read:** Weekly [Phaser World Newsletter](#phaserworld)
-**Chat:** [Slack](http://phaser.io/news/2015/08/phaser-slack-channel) and [#phaserio IRC channel](http://www.html5gamedevs.com/topic/4470-official-phaserio-irc-channel-phaserio-on-freenode/)
-**Extend:** With [Phaser Plugins](http://phaser.io/shop/plugins)
+**Visit:** The [Phaser website](http://phaser.io) and follow on [Twitter](https://twitter.com/photonstorm) (#phaserjs)<br />
+**Learn:** [API Docs](http://phaser.io/docs), [Support Forum][forum] and [StackOverflow](http://stackoverflow.com/questions/tagged/phaser-framework)<br />
+**Code:** 700+ [Examples](http://phaser.io/examples) (code available in this [repo][examples])<br />
+**Read:** Weekly [Phaser World Newsletter](#phaserworld)<br />
+**Chat:** [Slack](http://phaser.io/news/2015/08/phaser-slack-channel) and [#phaserio IRC channel](http://www.html5gamedevs.com/topic/4470-official-phaserio-irc-channel-phaserio-on-freenode/)<br />
+**Extend:** With [Phaser Plugins](http://phaser.io/shop/plugins)<br />
 **Be awesome:** [Support](#support) the future of Phaser
 
 ## Contents
