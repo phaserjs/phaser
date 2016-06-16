@@ -50,6 +50,50 @@ Phaser.Component.Bounds.prototype = {
     },
 
     /**
+    * The center x coordinate of the Game Object.
+    * This is the same as `(x - offsetX) + (width / 2)`.
+    *
+    * @property {number} centerX
+    */
+    centerX: {
+
+        get: function () {
+
+            return (this.x - this.offsetX) + (this.width * 0.5);
+
+        },
+
+        set: function (value) {
+
+            this.x = (value + this.offsetX) - (this.width * 0.5);
+
+        }
+
+    },
+
+    /**
+    * The center y coordinate of the Game Object.
+    * This is the same as `(y - offsetY) + (height / 2)`.
+    *
+    * @property {number} centerY
+    */
+    centerY: {
+
+        get: function () {
+
+            return (this.y - this.offsetY) + (this.height * 0.5);
+
+        },
+
+        set: function (value) {
+
+            this.y = (value + this.offsetY) - (this.height * 0.5);
+
+        }
+
+    },
+
+    /**
     * The left coordinate of the Game Object.
     * This is the same as `x - offsetX`.
     *

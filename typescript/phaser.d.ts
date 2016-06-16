@@ -1800,6 +1800,8 @@ declare module "phaser" {
             autoCull: boolean;
             bottom: number;
             cameraOffset: Phaser.Point;
+            centerX: number;
+            centerY: number;
             components: any;
             cropRect: Phaser.Rectangle;
             customRender: boolean;
@@ -4475,6 +4477,8 @@ declare module "phaser" {
             body: Phaser.Physics.Arcade.Body | Phaser.Physics.P2.Body | Phaser.Physics.Ninja.Body | any;
             bottom: number;
             cameraOffset: Phaser.Point;
+            centerX: number;
+            centerY: number;
             checkWorldBounds: boolean;
             components: any;
             cropRect: Phaser.Rectangle;
