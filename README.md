@@ -11,7 +11,7 @@ Thousands of developers worldwide use Phaser. From indies and multi-national dig
 **Visit:** The [Phaser website](http://phaser.io) and follow on [Twitter](https://twitter.com/photonstorm) (#phaserjs)<br />
 **Learn:** [API Docs](http://phaser.io/docs), [Support Forum][forum] and [StackOverflow](http://stackoverflow.com/questions/tagged/phaser-framework)<br />
 **Code:** 700+ [Examples](http://phaser.io/examples) (source available in this [repo][examples])<br />
-**Read:** Weekly [Phaser World](#phaserworld) Newsletter<br />
+**Read:** Weekly [Phaser World](#newsletter) Newsletter<br />
 **Chat:** [Slack](http://phaser.io/community/slack) and [IRC](http://phaser.io/community/irc)<br />
 **Extend:** With [Phaser Plugins](http://phaser.io/shop/plugins)<br />
 **Be awesome:** [Support](#support) the future of Phaser<br />
@@ -22,10 +22,10 @@ Grab the source and join in the fun!
 
 - [What's New?](#whats-new)
 - [Support Phaser](#support)
-- [Phaser World Newsletter](#phaserworld)
+- [Phaser World Newsletter](#newsletter)
 - [Download Phaser](#download)
 - [Getting Started](#getting-started)
-- [Using Phaser](#using-phaser)
+- [Building Phaser](#building-phaser)
 - [Games made with Phaser](#games)
 - [Requirements](#requirements)
 - [Road Map](#road-map)
@@ -34,7 +34,7 @@ Grab the source and join in the fun!
 - [Contributing](#contributing)
 
 <a name="whats-new"></a>
-![div](http://gametest.mobi/github/div-whats-new.png)
+![What's New](http://gametest.mobi/github/div-whats-new.png "What's New")
 
 <div align="center"><img src="http://phaser.io/images/github/news.jpg"></div>
 
@@ -42,7 +42,7 @@ Grab the source and join in the fun!
 
 The release of Phaser 2.4.9 is currently in development. This README will be updated as development continues.
 
-As always, keep you eyes on the Phaser web site and read our weekly [newsletter](#phaserworld). You can also follow me on [Twitter](https://twitter.com/photonstorm) or chat to me in the Phaser [Slack](http://phaser.io/news/2015/08/phaser-slack-channel) channel.
+As always, keep you eyes on the Phaser web site and read our weekly [newsletter](#newsletter). You can also follow me on [Twitter](https://twitter.com/photonstorm) or chat to me in the Phaser [Slack](http://phaser.io/news/2015/08/phaser-slack-channel) channel.
 
 We'd be extremely grateful if you could get involved with our [Phaser Patreon campaign](https://www.patreon.com/photonstorm). The uptake so far has been fantastic. Thank you to everyone who now supports Phaser development and shares our belief in the future of HTML5 gaming, and Phasers role in that.
 
@@ -55,7 +55,7 @@ Rich - [@photonstorm](https://twitter.com/photonstorm)
 ![boogie](http://www.phaser.io/images/spacedancer.gif)
 
 <a name="support"></a>
-![div](http://gametest.mobi/github/div-support-phaser.png)
+![Support Phaser](http://gametest.mobi/github/div-support-phaser.png "Support Phaser")
 
 Developing Phaser takes a lot of time, effort, and money. There are monthly running costs; such as the forum and site, which we maintain 100% ad-free. As well as countless hours of development time, community support, and assistance resolving issues. We do this out of our love for Phaser of course, but at the end of the day there are real tangible costs involved.
 
@@ -82,9 +82,8 @@ Zenva Academy: [Online courses on Phaser, HTML5 and native app development](http
 
 If you would like to sponsor Phaser then please [get in touch](mailto:support@phaser.io). We have sponsorship options available on our GitHub repo, web site, and newsletter. All of which receive tens of thousands of eyeballs per day.
 
-![div](http://gametest.mobi/github/div-newsletter.png)
-<a name="phaserworld"></a>
-## Weekly Newsletter
+![Weekly Newsletter](http://gametest.mobi/github/div-newsletter.png "Weekly Newsletter")
+<a name="newsletter"></a>
 
 <div align="center"><img src="http://phaser.io/images/github/phaser-world.png"></div>
 
@@ -92,9 +91,8 @@ Every Friday we publish the [Phaser World](http://phaser.io/community/newsletter
 
 Previous issues can found on our [Back Issues](http://phaser.io/community/backissues) page.
 
-![div](http://gametest.mobi/github/div-download.png)
+![Download Phaser](http://gametest.mobi/github/div-download.png "Download Phaser")
 <a name="download"></a>
-## Download Phaser
 
 Phaser is [hosted on Github][phaser]. There are a number of ways to download it:
 
@@ -137,9 +135,8 @@ If you'd like to try coding in Phaser right now, with nothing more than your web
 
 Phaser is released under the [MIT License](http://opensource.org/licenses/MIT).
 
-![div](http://gametest.mobi/github/div-getting-started.png)
+![Getting Started](http://gametest.mobi/github/div-getting-started.png "Getting Started")
 <a name="getting-started"></a>
-## Getting Started
 
 <img src="http://phaser.io/images/github/learn.jpg" align="right">
 
@@ -181,9 +178,8 @@ The [Game Mechanic Explorer](http://gamemechanicexplorer.com) is a great interac
 
 [MightyEditor](http://mightyfingers.com/) is a browser-based visual Phaser game editor. Create your maps with ease, position objects and share them in seconds. It also exports to native Phaser code. Excellent for quickly setting-up levels and scenes.
 
-![div](http://gametest.mobi/github/div-using-phaser.png)
-<a name="using-phaser"></a>
-## Using Phaser
+![Building Phaser](http://gametest.mobi/github/div-building-phaser.png "Building Phaser")
+<a name="building-phaser"></a>
 
 Phaser is provided ready compiled in the `build` folder of the repository. There are both plain and minified versions. The plain version is for use during development and the minified version for production.
 
@@ -259,9 +255,8 @@ Should you wish to build Phaser from source you can take advantage of the provid
 
 Run `grunt` to perform a default build to the `dist` folder.
 
-![div](http://gametest.mobi/github/div-made-with.png)
+![Made With Phaser](http://gametest.mobi/github/div-made-with.png "Made With Phaser")
 <a name="games"></a>
-## Games made with Phaser
 
 Thousands of games have been made in Phaser. From game jam entries, to titles by some of the largest entertainment brands in the world. Here is a tiny sample:
 
@@ -288,9 +283,8 @@ Artwork copyright their respective owners.
 
 We add [new games](http://phaser.io/news/category/game) to the Phaser site weekly, so be sure to send us yours when it's finished!
 
-![div](http://gametest.mobi/github/div-requirements.png)
+![Requirements](http://gametest.mobi/github/div-requirements.png "Requirements")
 <a name="requirements"></a>
-## Requirements
 
 Phaser requires a web browser that supports the [canvas tag](http://caniuse.com/#feat=canvas). This includes Internet Explorer 9+, Firefox, Chrome, Safari and Opera on desktop. iOS Safari, Android Browser and Chrome for Android are supported on mobile.
 
@@ -306,7 +300,7 @@ Phaser is developed in JavaScript. We've made no assumptions about how you like 
 
 If you code with [TypeScript](http://www.typescriptlang.org/) there are comprehensive definition files in the `typescript` folder. They are for TypeScript 1.4+.
 
-![div](http://gametest.mobi/github/div-roadmap.png)
+![Road Map](http://gametest.mobi/github/div-roadmap.png "Road Map")
 <a name="road-map"></a>
 ## Road Map
 
@@ -321,11 +315,10 @@ The majority of Phaser development is now taking place on the [Lazer](https://gi
 
 You can read all about the philosophy behind Lazer [here](http://phaser.io/news/2016/01/phaser-in-2015-and-beyond) or join the Google Group [mailing list](https://groups.google.com/d/forum/phaser3-dev) where progress reports are posted. You can also follow progress in the Phaser World newsletter.
 
-![div](http://gametest.mobi/github/div-change-log.png)
+![Change Log](http://gametest.mobi/github/div-change-log.png "Change Log")
 <a name="change-log"></a>
-## Change Log
 
-## Version 2.4.9 - "Four Kings" - In Development
+## Version 2.4.9 - "Four Kings" - 16th June 2016
 
 ### New Features
 
@@ -406,9 +399,8 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
-![div](http://gametest.mobi/github/div-contributing.png)
+![Contributing](http://gametest.mobi/github/div-contributing.png "Contributing")
 <a name="contributing"></a>
-## Contributing
 
 Please read the [Contributors Guide][contribute] for full details on helping with Phaser, but the main points are:
 
@@ -424,7 +416,7 @@ Written something cool that shows Phaser in use? Please tell us about it in our 
 
 [![Build Status](https://travis-ci.org/photonstorm/phaser.png?branch=dev)](https://travis-ci.org/photonstorm/phaser)
 
-![div](http://gametest.mobi/github/div-made-by.png)
+![Created by](http://gametest.mobi/github/div-created-by.png "Created by")
 
 ![storm](http://www.phaser.io/images/github/photonstorm-x2.png)
 
