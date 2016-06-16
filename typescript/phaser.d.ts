@@ -1730,6 +1730,7 @@ declare module "phaser" {
             addAt(child: any, index: number, silent?: boolean): any;
             addMultiple(children: any[], silent?: boolean): any[];
             addToHash(child: PIXI.DisplayObject): boolean;
+            align(rows: number, columns: number, cellWidth: number, cellHeight: number, position?: number, offset?: number): void;
             bringToTop(child: any): any;
             callAll(method: string, context: any, ...parameters: any[]): void;
             callAllExists(callback: string, existsValue: boolean, ...parameters: any[]): void;
