@@ -65,7 +65,7 @@ declare module PIXI {
     export function autoDetectRecommendedRenderer(width?: number, height?: number, options?: PixiRendererOptions): PixiRenderer;
 
     export function canUseNewCanvasBlendModes(): boolean;
-    export function getNextPowerOfTwo(number: number): number;
+    export function getNextPowerOfTwo(value: number): number;
 
     export function AjaxRequest(): XMLHttpRequest;
 
@@ -74,7 +74,7 @@ declare module PIXI {
 
 
     export interface IEventCallback {
-        (e?: IEvent): void
+        (e?: IEvent): void;
     }
 
     export interface IEvent {
@@ -87,7 +87,7 @@ declare module PIXI {
     }
 
     export interface IInteractionDataCallback {
-        (interactionData: InteractionData): void
+        (interactionData: InteractionData): void;
     }
 
     export interface PixiRenderer {
@@ -413,11 +413,11 @@ declare module PIXI {
     }
 
     export class ColorMatrixFilter extends AbstractFilter {
-        
+
         constructor();
-        
+
         matrix: number[];
-        
+
     }
 
     export class ColorStepFilter extends AbstractFilter {
@@ -917,7 +917,7 @@ declare module PIXI {
         constructor(...points: Point[]);
         constructor(...points: number[]);
 
-        points: any[]; //number[] Point[]
+        points: any[];
 
         clone(): Polygon;
         contains(x: number, y: number): boolean;
@@ -1073,7 +1073,7 @@ declare module PIXI {
             TRIANGLE_STRIP: number;
             TRIANGLES: number;
 
-        }
+        };
 
         constructor(texture: Texture);
 
@@ -1274,7 +1274,7 @@ declare module PIXI {
 
         static renderGraphics(graphics: Graphics, renderRession: RenderSession): void;
         static updateGraphics(graphics: Graphics, gl: WebGLRenderingContext): void;
-        static switchMode(webGL: WebGLRenderingContext, type: number): any; //WebGLData
+        static switchMode(webGL: WebGLRenderingContext, type: number): any;
         static buildRectangle(graphicsData: GraphicsData, webGLData: any): void;
         static buildRoundedRectangle(graphicsData: GraphicsData, webGLData: any): void;
         static quadraticBezierCurve(fromX: number, fromY: number, cpX: number, cpY: number, toX: number, toY: number): number[];
@@ -1396,7 +1396,7 @@ declare module PIXI {
         textures: Texture[];
         shaders: IPixiShader[];
         size: number;
-        sprites: any[]; //todo Sprite[]?
+        sprites: any[];
         vertices: number[];
         vertSize: number;
 
@@ -1433,7 +1433,7 @@ declare module PIXI {
 
     }
 
-    //SPINE
+    // SPINE
 
     export class BoneData {
 
@@ -1767,7 +1767,7 @@ declare module PIXI {
             rgb888: number;
             rgba8888: number;
 
-        }
+        };
 
         static TextureFilter: {
 
@@ -1779,7 +1779,7 @@ declare module PIXI {
             mipMapNearestLinear: number;
             mipMapLinearLinear: number;
 
-        }
+        };
 
         static textureWrap: {
 
@@ -1787,7 +1787,7 @@ declare module PIXI {
             clampToEdge: number;
             repeat: number;
 
-        }
+        };
 
         constructor(atlasText: string, textureLoader: AtlasLoader);
 
