@@ -888,13 +888,18 @@ declare module PIXI {
         * The position of the Display Object based on the world transform.
         * This value is updated at the end of updateTransform and takes all parent transforms into account.
         */
-        worldPosition: PIXI.Point;
+        worldPosition: Point;
 
         /**
         * The scale of the Display Object based on the world transform.
         * This value is updated at the end of updateTransform and takes all parent transforms into account.
         */
-        worldScale: PIXI.Point;
+        worldScale: Point;
+
+        /**
+        * [read-only] Current transform of the object based on world (parent) factors
+        */
+        worldTransform: Matrix;
 
         /**
         * The rotation of the Display Object, in radians, based on the world transform.
@@ -943,7 +948,7 @@ declare module PIXI {
         * @param renderer The renderer used to generate the texture.
         * @return a texture of the graphics object
         */
-        generateTexture(resolution?: number, scaleMode?: number, renderer?: PixiRenderer): RenderTexture;
+        generateTexture(resolution?: number, scaleMode?: number, renderer?: PixiRenderer | number): RenderTexture;
         mousedown(e: InteractionData): void;
         mouseout(e: InteractionData): void;
         mouseover(e: InteractionData): void;
@@ -2096,6 +2101,12 @@ declare module PIXI {
         * Default: PIXI.blendModes.NORMAL;
         */
         blendMode: blendModes;
+
+        /**
+        * Controls if this Sprite is processed by the core Phaser game loops and Group loops.
+        * Default: true
+        */
+        exists: boolean;
 
         /**
         * The shader that will be used to render the texture to the stage. Set to null to remove a current shader.

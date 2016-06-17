@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.4.9 "Four Kings" - Built: Thu Jun 16 2016 23:03:25
+* v2.5.0 "Five Kings" - Built: Fri Jun 17 2016 12:45:06
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -18,8 +18,7 @@
 * Phaser uses p2.js for full-body physics, created by Stefan Hedman https://github.com/schteppe/p2.js @schteppe
 * Phaser contains a port of N+ Physics, converted by Richard Davey, original by http://www.metanetsoftware.com
 *
-* Many thanks to Adam Saltsman (@ADAMATOMIC) for releasing Flixel, from which both Phaser
-* and my love of framework development originate.
+* Many thanks to Adam Saltsman (@ADAMATOMIC) for releasing Flixel, from which both Phaser and my love of framework development originate.
 *
 * Follow development at http://phaser.io and on our forum
 *
@@ -7856,6 +7855,7 @@ PIXI.RenderTexture.prototype.getCanvas = function()
 /**
  * This is the base class for creating a PIXI filter. Currently only webGL supports filters.
  * If you want to make a custom filter this should be your base class.
+ * 
  * @class AbstractFilter
  * @constructor
  * @param fragmentSrc {Array} The fragment source in an array of strings.
@@ -7867,14 +7867,14 @@ PIXI.AbstractFilter = function(fragmentSrc, uniforms)
     * An array of passes - some filters contain a few steps this array simply stores the steps in a liniear fashion.
     * For example the blur filter has two passes blurX and blurY.
     * @property passes
-    * @type Array(Filter)
+    * @type Array
     * @private
     */
     this.passes = [this];
 
     /**
     * @property shaders
-    * @type Array(Shader)
+    * @type Array
     * @private
     */
     this.shaders = [];
@@ -7893,7 +7893,7 @@ PIXI.AbstractFilter = function(fragmentSrc, uniforms)
 
     /**
     * @property uniforms
-    * @type object
+    * @type Object
     * @private
     */
     this.uniforms = uniforms || {};
@@ -7921,12 +7921,6 @@ PIXI.AbstractFilter.prototype.syncUniforms = function()
     }
 };
 
-/*
-PIXI.AbstractFilter.prototype.apply = function(frameBuffer)
-{
-    // TODO :)
-};
-*/
 /**
  * @author Mat Groves http://matgroves.com/
  */

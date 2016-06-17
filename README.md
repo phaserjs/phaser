@@ -38,9 +38,9 @@ Grab the source and join in the fun!
 
 <div align="center"><img src="http://phaser.io/images/github/news.jpg"></div>
 
-> 16th June 2016
+> 17th June 2016
 
-Phaser 2.4.9 is the latest version of Phaser, and represents another significant milestone in the evolution of the framework in 2016.
+Phaser 2.5.0 is the latest release of Phaser, and represents another significant milestone in the evolution of the framework in 2016. It was previously released as 2.4.9. However we appreciate that we haven't been following the [semver](http://semver.org/) code strictly enough, and that this version (and most before it!) actually contains some significant MINOR level functionality, not just PATCH level. So we've bumped the version number accordingly.
 
 As well as fixing a number of issues, there are some genuinely useful new features added in this release. Not least of which includes the new Weapons Plugin, making creating bullet pools a couple lines of code. Don't worry, it's also easy to exclude from custom builds too.
 
@@ -125,15 +125,15 @@ Using Browserify? Please [read this](#browserify).
 
 [jsDelivr](http://www.jsdelivr.com/#!phaser) is a "super-fast CDN for developers". Include the following in your html:
 
-`<script src="//cdn.jsdelivr.net/phaser/2.4.9/phaser.js"></script>`
+`<script src="//cdn.jsdelivr.net/phaser/2.5.0/phaser.js"></script>`
 
 or the minified version:
 
-`<script src="//cdn.jsdelivr.net/phaser/2.4.9/phaser.min.js"></script>`
+`<script src="//cdn.jsdelivr.net/phaser/2.5.0/phaser.min.js"></script>`
 
 [cdnjs.com](https://cdnjs.com/libraries/phaser) also offers a free CDN service. They have all versions of Phaser and even the custom builds:
 
-`<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/2.4.9/phaser.js"></script>`
+`<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/2.5.0/phaser.js"></script>`
 
 ### Phaser Sandbox
 
@@ -323,7 +323,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 ![Change Log](http://phaser.io/images/github/div-change-log.png "Change Log")
 <a name="change-log"></a>
 
-## Version 2.4.9 - "Four Kings" - 16th June 2016
+## Version 2.5.0 - "Four Kings" - 17th June 2016
 
 ### New Features
 
@@ -423,9 +423,9 @@ Written something cool in Phaser? Please tell us about it in the [forum][forum],
 
 ![Created by](http://phaser.io/images/github/div-created-by.png "Created by")
 
-Phaser is a [Photon Storm](http://www.photonstorm.com) production.
-
 ![storm](http://www.phaser.io/images/github/photonstorm-x2.png)
+
+Phaser is a [Photon Storm](http://www.photonstorm.com) production.
 
 Created by [Richard Davey](mailto:rich@photonstorm.com). Powered by coffee, anime, pixels and love.
 
@@ -437,10 +437,10 @@ All rights reserved.
 
 [![Analytics](https://ga-beacon.appspot.com/UA-44006568-2/phaser/index)](https://github.com/igrigorik/ga-beacon)
 
-[get-js]: https://github.com/photonstorm/phaser/releases/download/v2.4.9/phaser.js
-[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v2.4.9/phaser.min.js
-[get-zip]: https://github.com/photonstorm/phaser/archive/v2.4.9.zip
-[get-tgz]: https://github.com/photonstorm/phaser/archive/v2.4.9.tar.gz
+[get-js]: https://github.com/photonstorm/phaser/releases/download/v2.5.0/phaser.js
+[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v2.5.0/phaser.min.js
+[get-zip]: https://github.com/photonstorm/phaser/archive/v2.5.0.zip
+[get-tgz]: https://github.com/photonstorm/phaser/archive/v2.5.0.tar.gz
 [clone-http]: https://github.com/photonstorm/phaser.git
 [clone-ssh]: git@github.com:photonstorm/phaser.git
 [clone-svn]: https://github.com/photonstorm/phaser
