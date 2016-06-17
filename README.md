@@ -333,7 +333,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 
 ### Bug Fixes
 
-*
+* Fixed issue in Group.align where the cell wouldn't increase if `rows` was great than -1
 *
 *
 
