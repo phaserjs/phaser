@@ -40,7 +40,7 @@ Grab the source and join in the fun!
 
 > In Development
 
-This is the development branch, where we are building Phaser 2.4.10. Check out the Change Log to see what we've done so far. Or check the master branch for the current stable release.
+This is the development branch, where we are building Phaser 2.5.1. Check the [Change Log](#change-log) to see what we've done so far. Or switch to the master branch for the current stable release.
 
 As always, keep you eyes on the Phaser web site, and subscribe to our weekly [newsletter](#newsletter). You can also follow me on [Twitter](https://twitter.com/photonstorm) or chat to me in the Phaser [Slack](http://phaser.io/community/slack) channel.
 
@@ -117,15 +117,15 @@ Using Browserify? Please [read this](#browserify).
 
 [jsDelivr](http://www.jsdelivr.com/#!phaser) is a "super-fast CDN for developers". Include the following in your html:
 
-`<script src="//cdn.jsdelivr.net/phaser/2.4.9/phaser.js"></script>`
+`<script src="//cdn.jsdelivr.net/phaser/2.5.1/phaser.js"></script>`
 
 or the minified version:
 
-`<script src="//cdn.jsdelivr.net/phaser/2.4.9/phaser.min.js"></script>`
+`<script src="//cdn.jsdelivr.net/phaser/2.5.1/phaser.min.js"></script>`
 
 [cdnjs.com](https://cdnjs.com/libraries/phaser) also offers a free CDN service. They have all versions of Phaser and even the custom builds:
 
-`<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/2.4.9/phaser.js"></script>`
+`<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/2.5.1/phaser.js"></script>`
 
 ### Phaser Sandbox
 
@@ -315,7 +315,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 ![Change Log](http://phaser.io/images/github/div-change-log.png "Change Log")
 <a name="change-log"></a>
 
-## Version 2.4.10 - "Fal Moran" - In Development
+## Version 2.5.1 - "Fal Moran" - In Development
 
 ### New Features
 
@@ -370,10 +370,10 @@ All rights reserved.
 
 [![Analytics](https://ga-beacon.appspot.com/UA-44006568-2/phaser/index)](https://github.com/igrigorik/ga-beacon)
 
-[get-js]: https://github.com/photonstorm/phaser/releases/download/v2.4.9/phaser.js
-[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v2.4.9/phaser.min.js
-[get-zip]: https://github.com/photonstorm/phaser/archive/v2.4.9.zip
-[get-tgz]: https://github.com/photonstorm/phaser/archive/v2.4.9.tar.gz
+[get-js]: https://github.com/photonstorm/phaser/releases/download/v2.5.1/phaser.js
+[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v2.5.1/phaser.min.js
+[get-zip]: https://github.com/photonstorm/phaser/archive/v2.5.1.zip
+[get-tgz]: https://github.com/photonstorm/phaser/archive/v2.5.1.tar.gz
 [clone-http]: https://github.com/photonstorm/phaser.git
 [clone-ssh]: git@github.com:photonstorm/phaser.git
 [clone-svn]: https://github.com/photonstorm/phaser
