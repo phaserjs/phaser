@@ -479,8 +479,9 @@ declare module PIXI {
         stage: DisplayObjectContainer;
         visible: boolean;
         worldAlpha: number;
-        worldPosition: PIXI.Point;
-        worldScale: PIXI.Point;
+        worldPosition: Point;
+        worldScale: Point;
+        worldTransform: Matrix;
         worldRotation: number;
         worldVisible: boolean;
         x: number;
@@ -1024,6 +1025,7 @@ declare module PIXI {
 
         anchor: Point;
         blendMode: blendModes;
+        exists: boolean;
         shader: IPixiShader;
         texture: Texture;
         tint: number;

@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.4.9 "Four Kings" - Built: Thu Jun 16 2016 23:03:11
+* v2.5.0 "Five Kings" - Built: Fri Jun 17 2016 12:44:52
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -18,8 +18,7 @@
 * Phaser uses p2.js for full-body physics, created by Stefan Hedman https://github.com/schteppe/p2.js @schteppe
 * Phaser contains a port of N+ Physics, converted by Richard Davey, original by http://www.metanetsoftware.com
 *
-* Many thanks to Adam Saltsman (@ADAMATOMIC) for releasing Flixel, from which both Phaser
-* and my love of framework development originate.
+* Many thanks to Adam Saltsman (@ADAMATOMIC) for releasing Flixel, from which both Phaser and my love of framework development originate.
 *
 * Follow development at http://phaser.io and on our forum
 *
@@ -55,7 +54,7 @@ var Phaser = Phaser || {
     * @constant
     * @type {string}
     */
-    VERSION: '2.4.9',
+    VERSION: '2.5.0',
 
     /**
     * An array of Phaser game instances.
@@ -12954,12 +12953,12 @@ Phaser.Game.prototype = {
         if (this.device.chrome)
         {
             var args = [
-                '%c %c %c Phaser v' + v + ' | Pixi.js ' + PIXI.VERSION + ' | ' + r + ' | ' + a + '  %c %c ' + '%c http://phaser.io %c\u2665%c\u2665%c\u2665',
-                'background: #9854d8',
-                'background: #6c2ca7',
-                'color: #ffffff; background: #450f78;',
-                'background: #6c2ca7',
-                'background: #9854d8',
+                '%c %c %c Phaser v' + v + ' | Pixi.js | ' + r + ' | ' + a + '  %c %c ' + '%c http://phaser.io %c\u2665%c\u2665%c\u2665',
+                'background: #fb8cb3',
+                'background: #d44a52',
+                'color: #ffffff; background: #871905;',
+                'background: #d44a52',
+                'background: #fb8cb3',
                 'background: #ffffff'
             ];
 

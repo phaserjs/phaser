@@ -1,6 +1,8 @@
 # Change Log
 
-## Version 2.4.9 - "Four Kings" - 16th June 2016
+## Version 2.5.0 - "Five Kings" - 17th June 2016
+
+**Note:** This version was also released as 2.4.9 'Four Kings' on 16th June 2016. The 2.5.0 release marks us moving to a more strict adherence of the Semver rules, and also contains some TypeScript definitions fixes.
 
 ### New Features
 

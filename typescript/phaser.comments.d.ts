@@ -1,7 +1,7 @@
 /// <reference path="pixi.comments.d.ts" />
 /// <reference path="p2.d.ts" />
 
-// Type definitions for Phaser 2.4.9 - 16th June 2016
+// Type definitions for Phaser 2.5.0 - 17th June 2016
 // Project: https://github.com/photonstorm/phaser
 
 declare module "phaser" {
@@ -2453,7 +2453,7 @@ declare module Phaser {
 
         constructor(game: Phaser.Game, x: number, y: number, key?: any, frame?: any);
 
-        kill(): void;
+        kill(): Phaser.Bullet;
         update(): void;
 
     }
