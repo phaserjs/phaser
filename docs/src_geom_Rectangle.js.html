@@ -89,6 +89,10 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="Phaser.Bullet.html">Bullet</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="Phaser.Button.html">Button</a>
 						</li>
 						
@@ -661,6 +665,10 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="Phaser.Weapon.html">Weapon</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="Phaser.World.html">World</a>
 						</li>
 						
@@ -859,6 +867,18 @@
 						</li>
 						
 						<li class="class-depth-0">
+							<a href="global.html#BOTTOM_CENTER">BOTTOM_CENTER</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#BOTTOM_LEFT">BOTTOM_LEFT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#BOTTOM_RIGHT">BOTTOM_RIGHT</a>
+						</li>
+						
+						<li class="class-depth-0">
 							<a href="global.html#BUTTON">BUTTON</a>
 						</li>
 						
@@ -868,6 +888,10 @@
 						
 						<li class="class-depth-0">
 							<a href="global.html#CANVAS_FILTER">CANVAS_FILTER</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#CENTER">CENTER</a>
 						</li>
 						
 						<li class="class-depth-0">
@@ -931,6 +955,18 @@
 						</li>
 						
 						<li class="class-depth-0">
+							<a href="global.html#LEFT_BOTTOM">LEFT_BOTTOM</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#LEFT_CENTER">LEFT_CENTER</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#LEFT_TOP">LEFT_TOP</a>
+						</li>
+						
+						<li class="class-depth-0">
 							<a href="global.html#LINE">LINE</a>
 						</li>
 						
@@ -979,6 +1015,18 @@
 						</li>
 						
 						<li class="class-depth-0">
+							<a href="global.html#RIGHT_BOTTOM">RIGHT_BOTTOM</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#RIGHT_CENTER">RIGHT_CENTER</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#RIGHT_TOP">RIGHT_TOP</a>
+						</li>
+						
+						<li class="class-depth-0">
 							<a href="global.html#ROPE">ROPE</a>
 						</li>
 						
@@ -1012,6 +1060,18 @@
 						
 						<li class="class-depth-0">
 							<a href="global.html#TILESPRITE">TILESPRITE</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#TOP_CENTER">TOP_CENTER</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#TOP_LEFT">TOP_LEFT</a>
+						</li>
+						
+						<li class="class-depth-0">
+							<a href="global.html#TOP_RIGHT">TOP_RIGHT</a>
 						</li>
 						
 						<li class="class-depth-0">
@@ -1105,6 +1165,7 @@
 					<ul class="dropdown-menu ">
 						<li class="class-depth-1"><a href="Phaser.Physics.Arcade.html">Arcade Physics</a></li>
 						<li class="class-depth-2"><a href="Phaser.Physics.Arcade.Body.html">Body</a></li>
+						<li class="class-depth-2"><a href="Phaser.Weapon.html">Weapon</a></li>
 						<li class="class-depth-1"><a href="Phaser.Physics.P2.html">P2 Physics</a></li>
 						<li class="class-depth-2"><a href="Phaser.Physics.P2.Body.html">Body</a></li>
 						<li class="class-depth-2"><a href="Phaser.Physics.P2.Spring.html">Spring</a></li>
@@ -1140,7 +1201,8 @@
 						<li class="class-depth-1"><a href="http://phaser.io/learn">Tutorials</a></li>
 						<li class="class-depth-1"><a href="http://phaser.io/community/newsletter">Newsletter</a></li>
 						<li class="class-depth-1"><a href="http://phaser.io/community/twitter">Twitter</a></li>
-						<li class="class-depth-1"><a href="http://phaser.io/news/2015/08/phaser-slack-channel">Slack</a></li>
+						<li class="class-depth-1"><a href="http://phaser.io/community/slack">Slack</a></li>
+						<li class="class-depth-1"><a href="http://phaser.io/community/donate">Donate</a></li>
 						<li class="class-depth-1"><a href="https://www.codeandweb.com/texturepacker/phaser">Texture Packer</a></li>
 					</ul>
 				</li>
@@ -1544,6 +1606,59 @@ Phaser.Rectangle.prototype = {
         out.y = this.randomY;
 
         return out;
+
+    },
+
+    /**
+    * Returns a point based on the given position constant, which can be one of:
+    * 
+    * `Phaser.TOP_LEFT`, `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.LEFT_CENTER`,
+    * `Phaser.CENTER`, `Phaser.RIGHT_CENTER`, `Phaser.BOTTOM_LEFT`, `Phaser.BOTTOM_CENTER` 
+    * and `Phaser.BOTTOM_RIGHT`.
+    *
+    * This method returns the same values as calling Rectangle.bottomLeft, etc, but those
+    * calls always create a new Point object, where-as this one allows you to use your own.
+    * 
+    * @method Phaser.Rectangle#getPoint
+    * @param {integer} [position] - One of the Phaser position constants, such as `Phaser.TOP_RIGHT`.
+    * @param {Phaser.Point} [out] - A Phaser.Point that the values will be set in.
+    *     If no object is provided a new Phaser.Point object will be created. In high performance areas avoid this by re-using an existing object.
+    * @return {Phaser.Point} An object containing the point in its `x` and `y` properties.
+    */
+    getPoint: function (position, out) {
+
+        if (out === undefined) { out = new Phaser.Point(); }
+
+        switch (position)
+        {
+            default:
+            case Phaser.TOP_LEFT:
+                return out.set(this.x, this.y);
+
+            case Phaser.TOP_CENTER:
+                return out.set(this.centerX, this.y);
+
+            case Phaser.TOP_RIGHT:
+                return out.set(this.right, this.y);
+
+            case Phaser.LEFT_CENTER:
+                return out.set(this.x, this.centerY);
+
+            case Phaser.CENTER:
+                return out.set(this.centerX, this.centerY);
+
+            case Phaser.RIGHT_CENTER:
+                return out.set(this.right, this.centerY);
+
+            case Phaser.BOTTOM_LEFT:
+                return out.set(this.x, this.bottom);
+
+            case Phaser.BOTTOM_CENTER:
+                return out.set(this.centerX, this.bottom);
+
+            case Phaser.BOTTOM_RIGHT:
+                return out.set(this.right, this.bottom);
+        }
 
     },
 
@@ -2189,7 +2304,7 @@ PIXI.EmptyRectangle = new Phaser.Rectangle(0, 0, 0, 0);
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
-		on Fri Jun 10 2016 16:19:18 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Thu Jun 16 2016 23:20:37 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

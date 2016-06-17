@@ -343,7 +343,7 @@ Phaser.Component.Bounds.prototype = {
 
             case Phaser.LEFT_TOP:
                 this.right = parent.left - offsetX;
-                this.top = parent.top + offsetY;
+                this.top = parent.top - offsetY;
                 break;
 
             case Phaser.LEFT_CENTER:
@@ -358,7 +358,7 @@ Phaser.Component.Bounds.prototype = {
 
             case Phaser.RIGHT_TOP:
                 this.left = parent.right + offsetX;
-                this.top = parent.top + offsetY;
+                this.top = parent.top - offsetY;
                 break;
 
             case Phaser.RIGHT_CENTER:

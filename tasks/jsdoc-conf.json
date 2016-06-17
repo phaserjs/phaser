@@ -16,6 +16,7 @@
             "./src/net/", 
             "./src/particles/", 
             "./src/physics/", 
+            "./src/plugins/", 
             "./src/sound/", 
             "./src/system/", 
             "./src/tilemap/", 

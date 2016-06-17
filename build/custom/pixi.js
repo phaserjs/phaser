@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.4.9 "Four Kings" - Built: Fri Jun 10 2016 16:18:37
+* v2.4.9 "Four Kings" - Built: Thu Jun 16 2016 23:03:10
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -631,12 +631,11 @@ PIXI.DisplayObject.prototype.updateTransform = function(parent)
         wt.ty = tx * pt.b + ty * pt.d + pt.ty;
     }
 
-    // multiply the alphas..
+    //  Set the World values
     this.worldAlpha = this.alpha * p.worldAlpha;
-
     this.worldPosition.set(wt.tx, wt.ty);
-    this.worldScale.set(Math.sqrt(wt.a * wt.a + wt.b * wt.b), Math.sqrt(wt.c * wt.c + wt.d * wt.d));
-    this.worldRotation = Math.atan2(wt.c, wt.d);
+    this.worldScale.set(this.scale.x * Math.sqrt(wt.a * wt.a + wt.c * wt.c), this.scale.y * Math.sqrt(wt.b * wt.b + wt.d * wt.d));
+    this.worldRotation = Math.atan2(-wt.c, wt.d);
 
     // reset the bounds each time this is called!
     this._currentBounds = null;
@@ -1550,6 +1549,15 @@ PIXI.Sprite = function(texture)
      * @default null
      */
     this.shader = null;
+
+    /**
+    * Controls if this Sprite is processed by the core Phaser game loops and Group loops.
+    *
+    * @property exists
+    * @type Boolean
+    * @default true
+    */
+    this.exists = true;
 
     if (this.texture.baseTexture.hasLoaded)
     {

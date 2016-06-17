@@ -44,12 +44,15 @@ Phaser 2.4.9 is the latest version of Phaser, and represents another significant
 
 As well as fixing a number of issues, there are some genuinely useful new features added in this release. Not least of which includes the new Weapons Plugin, making creating bullet pools a couple lines of code. Don't worry, it's also easy to exclude from custom builds too.
 
-There are also some subtle but significant updates to Groups. The `createMultiple` method has had a nice overhaul, now able to take Arrays of image keys and frames. `Group.align` allows you to align the children of a Group in a grid formation, with the dimensions and spacing of the grid under your control. Continuing on that theme, all Game Objects (such as Sprites) now have a new method `alignIn`, which allows you to easily align them within another Game Object, or Rectangle. Making it now trivial to do things like placing sprites into the corners of the game world, or each other.
+There are also some subtle but significant updates to Groups. The `createMultiple` method has had a nice overhaul, now able to take Arrays of image keys and frames. `Group.align` allows you to align the children of a Group in a grid formation, with the dimensions and spacing of the grid under your control.
 
+Continuing from that theme: all Game Objects (such as Sprites and Text) now have a two new methods. `alignIn` allows you to easily align Game Objects within another Game Object or Rectangle. This is a great way to easily align a Sprite into the corner of the world, or another Sprite. To go with this is `alignTo`. It works in a similar way, but lets you align Game Objects next to each other.
 
-As always, keep you eyes on the Phaser web site and read our weekly [newsletter](#newsletter). You can also follow me on [Twitter](https://twitter.com/photonstorm) or chat to me in the Phaser [Slack](http://phaser.io/news/2015/08/phaser-slack-channel) channel.
+It's small changes like this that reduce the overall code of your game, and let you focus on just building it quicker. Of course there are _lots_ of other enhancements in this release, so be sure to check the [Change Log](#change-log) to see what else is in store.
 
-We'd be extremely grateful if you could get involved with our [Phaser Patreon campaign](https://www.patreon.com/photonstorm). The uptake so far has been fantastic. Thank you to everyone who now supports Phaser development and shares our belief in the future of HTML5 gaming, and Phasers role in that.
+As always, keep you eyes on the Phaser web site, and subscribe to our weekly [newsletter](#newsletter). You can also follow me on [Twitter](https://twitter.com/photonstorm) or chat to me in the Phaser [Slack](http://phaser.io/community/slack) channel.
+
+There are also now more ways than before to help [support](#support) the development of Phaser. The uptake so far has been fantastic, but this is an on-going mission. Thank you to everyone who supports our development. Who shares our belief in the future of HTML5 gaming, and Phasers role in that.
 
 Happy coding everyone! See you on the forums.
 

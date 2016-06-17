@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.4.9 "Four Kings" - Built: Fri Jun 10 2016 16:18:20
+* v2.4.9 "Four Kings" - Built: Thu Jun 16 2016 23:02:51
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -631,12 +631,11 @@ PIXI.DisplayObject.prototype.updateTransform = function(parent)
         wt.ty = tx * pt.b + ty * pt.d + pt.ty;
     }
 
-    // multiply the alphas..
+    //  Set the World values
     this.worldAlpha = this.alpha * p.worldAlpha;
-
     this.worldPosition.set(wt.tx, wt.ty);
-    this.worldScale.set(Math.sqrt(wt.a * wt.a + wt.b * wt.b), Math.sqrt(wt.c * wt.c + wt.d * wt.d));
-    this.worldRotation = Math.atan2(wt.c, wt.d);
+    this.worldScale.set(this.scale.x * Math.sqrt(wt.a * wt.a + wt.c * wt.c), this.scale.y * Math.sqrt(wt.b * wt.b + wt.d * wt.d));
+    this.worldRotation = Math.atan2(-wt.c, wt.d);
 
     // reset the bounds each time this is called!
     this._currentBounds = null;
@@ -1550,6 +1549,15 @@ PIXI.Sprite = function(texture)
      * @default null
      */
     this.shader = null;
+
+    /**
+    * Controls if this Sprite is processed by the core Phaser game loops and Group loops.
+    *
+    * @property exists
+    * @type Boolean
+    * @default true
+    */
+    this.exists = true;
 
     if (this.texture.baseTexture.hasLoaded)
     {
@@ -9163,7 +9171,7 @@ var Phaser = Phaser || {
     * @constant
     * @type {string}
     */
-    VERSION: '2.4.9 RC4',
+    VERSION: '2.4.9',
 
     /**
     * An array of Phaser game instances.
@@ -9528,6 +9536,97 @@ var Phaser = Phaser || {
     * @type {integer}
     */
     ANGLE_SOUTH_WEST: 135,
+
+    /**
+    * A constant representing a top-left alignment or position.
+    * @constant
+    * @type {integer}
+    */
+    TOP_LEFT: 0,
+
+    /**
+    * A constant representing a top-center alignment or position.
+    * @constant
+    * @type {integer}
+    */
+    TOP_CENTER: 1,
+
+    /**
+    * A constant representing a top-right alignment or position.
+    * @constant
+    * @type {integer}
+    */
+    TOP_RIGHT: 2,
+
+    /**
+    * A constant representing a left-top alignment or position.
+    * @constant
+    * @type {integer}
+    */
+    LEFT_TOP: 3,
+
+    /**
+    * A constant representing a left-center alignment or position.
+    * @constant
+    * @type {integer}
+    */
+    LEFT_CENTER: 4,
+
+    /**
+    * A constant representing a left-bottom alignment or position.
+    * @constant
+    * @type {integer}
+    */
+    LEFT_BOTTOM: 5,
+
+    /**
+    * A constant representing a center alignment or position.
+    * @constant
+    * @type {integer}
+    */
+    CENTER: 6,
+
+    /**
+    * A constant representing a right-top alignment or position.
+    * @constant
+    * @type {integer}
+    */
+    RIGHT_TOP: 7,
+
+    /**
+    * A constant representing a right-center alignment or position.
+    * @constant
+    * @type {integer}
+    */
+    RIGHT_CENTER: 8,
+
+    /**
+    * A constant representing a right-bottom alignment or position.
+    * @constant
+    * @type {integer}
+    */
+    RIGHT_BOTTOM: 9,
+
+    /**
+    * A constant representing a bottom-left alignment or position.
+    * @constant
+    * @type {integer}
+    */
+    BOTTOM_LEFT: 10,
+
+    /**
+    * A constant representing a bottom-center alignment or position.
+    * @constant
+    * @type {integer}
+    */
+    BOTTOM_CENTER: 11,
+
+    /**
+    * A constant representing a bottom-right alignment or position.
+    * @constant
+    * @type {integer}
+    */
+    BOTTOM_RIGHT: 12,
 
     /**
      * Various blend modes supported by Pixi.
@@ -11813,21 +11912,21 @@ Phaser.Line.reflect = function (a, b) {
 *
 * @class Phaser.Matrix
 * @constructor
-* @param {number} [a=1]
-* @param {number} [b=0]
-* @param {number} [c=0]
-* @param {number} [d=1]
-* @param {number} [tx=0]
-* @param {number} [ty=0]
+* @param {number} [a=1] - Horizontal scaling
+* @param {number} [b=0] - Horizontal skewing
+* @param {number} [c=0] - Vertical skewing
+* @param {number} [d=1] - Vertical scaling
+* @param {number} [tx=0] - Horizontal translation
+* @param {number} [ty=0] - Vertical translation
 */
 Phaser.Matrix = function (a, b, c, d, tx, ty) {
 
-    a = a || 1;
-    b = b || 0;
-    c = c || 0;
-    d = d || 1;
-    tx = tx || 0;
-    ty = ty || 0;
+    if (a === undefined || a === null) { a = 1; }
+    if (b === undefined || b === null) { b = 0; }
+    if (c === undefined || c === null) { c = 0; }
+    if (d === undefined || d === null) { d = 1; }
+    if (tx === undefined || tx === null) { tx = 0; }
+    if (ty === undefined || ty === null) { ty = 0; }
 
     /**
     * @property {number} a
@@ -11901,12 +12000,12 @@ Phaser.Matrix.prototype = {
     * Sets the values of this Matrix to the given values.
     *
     * @method Phaser.Matrix#setTo
-    * @param {number} a
-    * @param {number} b
-    * @param {number} c
-    * @param {number} d
-    * @param {number} tx
-    * @param {number} ty
+    * @param {number} a - Horizontal scaling
+    * @param {number} b - Horizontal skewing
+    * @param {number} c - Vertical skewing
+    * @param {number} d - Vertical scaling
+    * @param {number} tx - Horizontal translation
+    * @param {number} ty - Vertical translation
     * @return {Phaser.Matrix} This Matrix object.
     */
     setTo: function (a, b, c, d, tx, ty) {
@@ -13773,6 +13872,59 @@ Phaser.Rectangle.prototype = {
         out.y = this.randomY;
 
         return out;
+
+    },
+
+    /**
+    * Returns a point based on the given position constant, which can be one of:
+    * 
+    * `Phaser.TOP_LEFT`, `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.LEFT_CENTER`,
+    * `Phaser.CENTER`, `Phaser.RIGHT_CENTER`, `Phaser.BOTTOM_LEFT`, `Phaser.BOTTOM_CENTER` 
+    * and `Phaser.BOTTOM_RIGHT`.
+    *
+    * This method returns the same values as calling Rectangle.bottomLeft, etc, but those
+    * calls always create a new Point object, where-as this one allows you to use your own.
+    * 
+    * @method Phaser.Rectangle#getPoint
+    * @param {integer} [position] - One of the Phaser position constants, such as `Phaser.TOP_RIGHT`.
+    * @param {Phaser.Point} [out] - A Phaser.Point that the values will be set in.
+    *     If no object is provided a new Phaser.Point object will be created. In high performance areas avoid this by re-using an existing object.
+    * @return {Phaser.Point} An object containing the point in its `x` and `y` properties.
+    */
+    getPoint: function (position, out) {
+
+        if (out === undefined) { out = new Phaser.Point(); }
+
+        switch (position)
+        {
+            default:
+            case Phaser.TOP_LEFT:
+                return out.set(this.x, this.y);
+
+            case Phaser.TOP_CENTER:
+                return out.set(this.centerX, this.y);
+
+            case Phaser.TOP_RIGHT:
+                return out.set(this.right, this.y);
+
+            case Phaser.LEFT_CENTER:
+                return out.set(this.x, this.centerY);
+
+            case Phaser.CENTER:
+                return out.set(this.centerX, this.centerY);
+
+            case Phaser.RIGHT_CENTER:
+                return out.set(this.right, this.centerY);
+
+            case Phaser.BOTTOM_LEFT:
+                return out.set(this.x, this.bottom);
+
+            case Phaser.BOTTOM_CENTER:
+                return out.set(this.centerX, this.bottom);
+
+            case Phaser.BOTTOM_RIGHT:
+                return out.set(this.right, this.bottom);
+        }
 
     },
 
@@ -18834,10 +18986,36 @@ Phaser.Group.prototype.create = function (x, y, key, frame, exists, index) {
 
 /**
 * Creates multiple Phaser.Sprite objects and adds them to the top of this Group.
+* 
+* This method is useful if you need to quickly generate a pool of sprites, such as bullets.
 *
 * Use {@link #classType} to change the type of object created.
 *
-* This method is useful if you need to quickly generate a pool of identical sprites, such as bullets.
+* You can provide an array as the `key` and / or `frame` arguments. When you do this
+* it will create `quantity` Sprites for every key (and frame) in the arrays.
+* 
+* For example:
+* 
+* `createMultiple(25, ['ball', 'carrot'])`
+*
+* In the above code there are 2 keys (ball and carrot) which means that 50 sprites will be
+* created in total, 25 of each. You can also have the `frame` as an array:
+*
+* `createMultiple(5, 'bricks', [0, 1, 2, 3])`
+*
+* In the above there is one key (bricks), which is a sprite sheet. The frames array tells
+* this method to use frames 0, 1, 2 and 3. So in total it will create 20 sprites, because
+* the quantity was set to 5, so that is 5 brick sprites of frame 0, 5 brick sprites with
+* frame 1, and so on.
+*
+* If you set both the key and frame arguments to be arrays then understand it will create
+* a total quantity of sprites equal to the size of both arrays times each other. I.e.:
+*
+* `createMultiple(20, ['diamonds', 'balls'], [0, 1, 2])`
+*
+* The above will create 20 'diamonds' of frame 0, 20 with frame 1 and 20 with frame 2.
+* It will then create 20 'balls' of frame 0, 20 with frame 1 and 20 with frame 2.
+* In total it will have created 120 sprites.
 *
 * By default the Sprites will have their `exists` property set to `false`, and they will be 
 * positioned at 0x0, relative to the `Group.x / y` values.
@@ -18848,21 +19026,41 @@ Phaser.Group.prototype.create = function (x, y, key, frame, exists, index) {
 *
 * @method Phaser.Group#createMultiple
 * @param {integer} quantity - The number of Sprites to create.
-* @param {string} key - The Game.cache key of the image that this Sprite will use.
-* @param {integer|string} [frame] - If the Sprite image contains multiple frames you can specify which one to use here.
+* @param {string|array} key - The Cache key of the image that the Sprites will use. Or an Array of keys. See the description for details on how the quantity applies when arrays are used.
+* @param {integer|string|array} [frame=0] - If the Sprite image contains multiple frames you can specify which one to use here. Or an Array of frames. See the description for details on how the quantity applies when arrays are used.
 * @param {boolean} [exists=false] - The default exists state of the Sprite.
 * @return {array} An array containing all of the Sprites that were created.
 */
 Phaser.Group.prototype.createMultiple = function (quantity, key, frame, exists) {
 
+    if (frame === undefined) { frame = 0; }
     if (exists === undefined) { exists = false; }
 
+    if (!Array.isArray(key))
+    {
+        key = [ key ];
+    }
+
+    if (!Array.isArray(frame))
+    {
+        frame = [ frame ];
+    }
+
+    var _this = this;
     var children = [];
 
-    for (var i = 0; i < quantity; i++)
-    {
-        children.push(this.create(0, 0, key, frame, exists));
-    }
+    key.forEach(function(singleKey) {
+
+        frame.forEach(function(singleFrame) {
+
+            for (var i = 0; i < quantity; i++)
+            {
+                children.push(_this.create(0, 0, singleKey, singleFrame, exists));
+            }
+
+        });
+
+    });
 
     return children;
 
@@ -18883,6 +19081,125 @@ Phaser.Group.prototype.updateZ = function () {
     while (i--)
     {
         this.children[i].z = i;
+    }
+
+};
+
+/**
+* This method iterates through all children in the Group (regardless if they are visible or exist)
+* and then changes their position so they are arranged in a Grid formation. Children must have
+* the `alignTo` method in order to be positioned by this call. All default Phaser Game Objects have
+* this.
+*
+* The grid dimensions are determined by the first four arguments. The `rows` and `columns` arguments
+* relate to the width and height of the grid respectively.
+*
+* For example if the Group had 100 children in it:
+*
+* `Group.align(10, 10, 32, 32)`
+*
+* This will align all of the children into a grid formation of 10x10, using 32 pixels per
+* grid cell. If you want a wider grid, you could do:
+* 
+* `Group.align(25, 4, 32, 32)`
+*
+* This will align the children into a grid of 25x4, again using 32 pixels per grid cell.
+*
+* You can choose to set _either_ the `rows` or `columns` value to -1. Doing so tells the method
+* to keep on aligning children until there are no children left. For example if this Group had
+* 48 children in it, the following:
+*
+* `Group.align(-1, 8, 32, 32)`
+*
+* ... will align the children so that there are 8 columns vertically (the second argument), 
+* and each row will contain 6 sprites, except the last one, which will contain 5 (totaling 48)
+*
+* You can also do:
+* 
+* `Group.align(10, -1, 32, 32)`
+*
+* In this case it will create a grid 10 wide, and as tall as it needs to be in order to fit
+* all of the children in.
+*
+* The `position` property allows you to control where in each grid cell the child is positioned.
+* This is a constant and can be one of `Phaser.TOP_LEFT` (default), `Phaser.TOP_CENTER`, 
+* `Phaser.TOP_RIGHT`, `Phaser.LEFT_CENTER`, `Phaser.CENTER`, `Phaser.RIGHT_CENTER`, 
+* `Phaser.BOTTOM_LEFT`, `Phaser.BOTTOM_CENTER` or `Phaser.BOTTOM_RIGHT`.
+*
+* The final argument; `offset` lets you start the alignment from a specific child index.
+*
+* @method Phaser.Group#align
+* @param {integer} rows - The number of rows, or width, of the grid. Set to -1 for a dynamic width.
+* @param {integer} columns - The number of columns, or height, of the grid. Set to -1 for a dynamic height.
+* @param {integer} cellWidth - The width of each grid cell, in pixels.
+* @param {integer} cellHeight - The height of each grid cell, in pixels.
+* @param {integer} [position] - The position constant. One of `Phaser.TOP_LEFT` (default), `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.LEFT_CENTER`, `Phaser.CENTER`, `Phaser.RIGHT_CENTER`, `Phaser.BOTTOM_LEFT`, `Phaser.BOTTOM_CENTER` or `Phaser.BOTTOM_RIGHT`.
+* @param {integer} [offset=0] - Optional index to start the alignment from. Defaults to zero, the first child in the Group, but can be set to any valid child index value.
+*/
+Phaser.Group.prototype.align = function (rows, columns, cellWidth, cellHeight, position, offset) {
+
+    if (position === undefined) { position = Phaser.TOP_LEFT; }
+    if (offset === undefined) { offset = 0; }
+
+    if (this.children.length === 0 || offset > this.children.length || (rows === -1 && columns === -1))
+    {
+        return;
+    }
+
+    var r = new Phaser.Rectangle(0, 0, cellWidth, cellHeight);
+    var w = (rows * cellWidth);
+    var h = (columns * cellHeight);
+
+    for (var i = offset; i < this.children.length; i++)
+    {
+        var child = this.children[i];
+
+        if (child['alignIn'])
+        {
+            child.alignIn(r, position);
+        }
+        else
+        {
+            continue;
+        }
+
+        if (rows === -1)
+        {
+            //  We keep laying them out horizontally until we've done them all
+            r.y += cellHeight;
+
+            if (r.y === h)
+            {
+                r.x += cellWidth;
+                r.y = 0;
+            }
+        }
+        else if (columns === -1)
+        {
+            //  We keep laying them out vertically until we've done them all
+            r.x += cellWidth;
+
+            if (r.x === w)
+            {
+                r.x = 0;
+                r.y += cellHeight;
+            }
+        }
+        else
+        {
+            //  We keep laying them out until we hit the column limit
+            if (r.x === w)
+            {
+                r.x = 0;
+                r.y += cellHeight;
+
+                if (r.y === h)
+                {
+                    //  We've hit the column limit, so return, even if there are children left
+                    return;
+                }
+            }
+        }
     }
 
 };
@@ -31055,17 +31372,66 @@ Phaser.Component.Bounds.prototype = {
     },
 
     /**
+    * The center x coordinate of the Game Object.
+    * This is the same as `(x - offsetX) + (width / 2)`.
+    *
+    * @property {number} centerX
+    */
+    centerX: {
+
+        get: function () {
+
+            return (this.x - this.offsetX) + (this.width * 0.5);
+
+        },
+
+        set: function (value) {
+
+            this.x = (value + this.offsetX) - (this.width * 0.5);
+
+        }
+
+    },
+
+    /**
+    * The center y coordinate of the Game Object.
+    * This is the same as `(y - offsetY) + (height / 2)`.
+    *
+    * @property {number} centerY
+    */
+    centerY: {
+
+        get: function () {
+
+            return (this.y - this.offsetY) + (this.height * 0.5);
+
+        },
+
+        set: function (value) {
+
+            this.y = (value + this.offsetY) - (this.height * 0.5);
+
+        }
+
+    },
+
+    /**
     * The left coordinate of the Game Object.
     * This is the same as `x - offsetX`.
     *
     * @property {number} left
-    * @readOnly
     */
     left: {
 
         get: function () {
 
             return this.x - this.offsetX;
+
+        },
+
+        set: function (value) {
+
+            this.x = value + this.offsetX;
 
         }
 
@@ -31076,13 +31442,18 @@ Phaser.Component.Bounds.prototype = {
     * This is the same as `x + width - offsetX`.
     *
     * @property {number} right
-    * @readOnly
     */
     right: {
 
         get: function () {
 
             return (this.x + this.width) - this.offsetX;
+
+        },
+
+        set: function (value) {
+
+            this.x = value - (this.width) + this.offsetX;
 
         }
 
@@ -31093,13 +31464,18 @@ Phaser.Component.Bounds.prototype = {
     * This is the same as `y - offsetY`.
     *
     * @property {number} top
-    * @readOnly
     */
     top: {
 
         get: function () {
 
             return this.y - this.offsetY;
+
+        },
+
+        set: function (value) {
+
+            this.y = value + this.offsetY;
 
         }
 
@@ -31110,7 +31486,6 @@ Phaser.Component.Bounds.prototype = {
     * This is the same as `y + height - offsetY`.
     *
     * @property {number} bottom
-    * @readOnly
     */
     bottom: {
 
@@ -31118,7 +31493,223 @@ Phaser.Component.Bounds.prototype = {
 
             return (this.y + this.height) - this.offsetY;
 
+        },
+
+        set: function (value) {
+
+            this.y = value - (this.height) + this.offsetY;
+
         }
+
+    },
+
+    /**
+    * Aligns this Game Object within another Game Object, or Rectangle, known as the
+    * 'container', to one of 9 possible positions.
+    *
+    * The container must be a Game Object, or Phaser.Rectangle object. This can include properties
+    * such as `World.bounds` or `Camera.view`, for aligning Game Objects within the world 
+    * and camera bounds. Or it can include other Sprites, Images, Text objects, BitmapText,
+    * TileSprites or Buttons.
+    *
+    * Please note that aligning a Sprite to another Game Object does **not** make it a child of
+    * the container. It simply modifies its position coordinates so it aligns with it.
+    * 
+    * The position constants you can use are:
+    * 
+    * `Phaser.TOP_LEFT`, `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.LEFT_CENTER`, 
+    * `Phaser.CENTER`, `Phaser.RIGHT_CENTER`, `Phaser.BOTTOM_LEFT`, 
+    * `Phaser.BOTTOM_CENTER` and `Phaser.BOTTOM_RIGHT`.
+    *
+    * The Game Objects are placed in such a way that their _bounds_ align with the
+    * container, taking into consideration rotation, scale and the anchor property.
+    * This allows you to neatly align Game Objects, irrespective of their position value.
+    *
+    * The optional `offsetX` and `offsetY` arguments allow you to apply extra spacing to the final
+    * aligned position of the Game Object. For example:
+    *
+    * `sprite.alignIn(background, Phaser.BOTTOM_RIGHT, -20, -20)`
+    *
+    * Would align the `sprite` to the bottom-right, but moved 20 pixels in from the corner.
+    * Think of the offsets as applying an adjustment to the containers bounds before the alignment takes place.
+    * So providing a negative offset will 'shrink' the container bounds by that amount, and providing a positive
+    * one expands it.
+    *
+    * @method
+    * @param {Phaser.Rectangle|Phaser.Sprite|Phaser.Image|Phaser.Text|Phaser.BitmapText|Phaser.Button|Phaser.Graphics|Phaser.TileSprite} container - The Game Object or Rectangle with which to align this Game Object to. Can also include properties such as `World.bounds` or `Camera.view`.
+    * @param {integer} [position] - The position constant. One of `Phaser.TOP_LEFT` (default), `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.LEFT_CENTER`, `Phaser.CENTER`, `Phaser.RIGHT_CENTER`, `Phaser.BOTTOM_LEFT`, `Phaser.BOTTOM_CENTER` or `Phaser.BOTTOM_RIGHT`.
+    * @param {integer} [offsetX=0] - A horizontal adjustment of the Containers bounds, applied to the aligned position of the Game Object. Use a negative value to shrink the bounds, positive to increase it.
+    * @param {integer} [offsetY=0] - A vertical adjustment of the Containers bounds, applied to the aligned position of the Game Object. Use a negative value to shrink the bounds, positive to increase it.
+    * @return {Object} This Game Object.
+    */
+    alignIn: function (container, position, offsetX, offsetY) {
+
+        if (offsetX === undefined) { offsetX = 0; }
+        if (offsetY === undefined) { offsetY = 0; }
+
+        switch (position)
+        {
+            default:
+            case Phaser.TOP_LEFT:
+                this.left = container.left - offsetX;
+                this.top = container.top - offsetY;
+                break;
+
+            case Phaser.TOP_CENTER:
+                this.centerX = container.centerX + offsetX;
+                this.top = container.top - offsetY;
+                break;
+
+            case Phaser.TOP_RIGHT:
+                this.right = container.right + offsetX;
+                this.top = container.top - offsetY;
+                break;
+
+            case Phaser.LEFT_CENTER:
+                this.left = container.left - offsetX;
+                this.centerY = container.centerY + offsetY;
+                break;
+
+            case Phaser.CENTER:
+                this.centerX = container.centerX + offsetX;
+                this.centerY = container.centerY + offsetY;
+                break;
+
+            case Phaser.RIGHT_CENTER:
+                this.right = container.right + offsetX;
+                this.centerY = container.centerY + offsetY;
+                break;
+
+            case Phaser.BOTTOM_LEFT:
+                this.left = container.left - offsetX;
+                this.bottom = container.bottom + offsetY;
+                break;
+
+            case Phaser.BOTTOM_CENTER:
+                this.centerX = container.centerX + offsetX;
+                this.bottom = container.bottom + offsetY;
+                break;
+
+            case Phaser.BOTTOM_RIGHT:
+                this.right = container.right + offsetX;
+                this.bottom = container.bottom + offsetY;
+                break;
+        }
+
+        return this;
+
+    },
+
+    /**
+    * Aligns this Game Object to the side of another Game Object, or Rectangle, known as the
+    * 'parent', in one of 11 possible positions.
+    *
+    * The parent must be a Game Object, or Phaser.Rectangle object. This can include properties
+    * such as `World.bounds` or `Camera.view`, for aligning Game Objects within the world 
+    * and camera bounds. Or it can include other Sprites, Images, Text objects, BitmapText,
+    * TileSprites or Buttons.
+    *
+    * Please note that aligning a Sprite to another Game Object does **not** make it a child of
+    * the parent. It simply modifies its position coordinates so it aligns with it.
+    * 
+    * The position constants you can use are:
+    * 
+    * `Phaser.TOP_LEFT` (default), `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.LEFT_TOP`, 
+    * `Phaser.LEFT_CENTER`, `Phaser.LEFT_BOTTOM`, `Phaser.RIGHT_TOP`, `Phaser.RIGHT_CENTER`, 
+    * `Phaser.RIGHT_BOTTOM`, `Phaser.BOTTOM_LEFT`, `Phaser.BOTTOM_CENTER` 
+    * and `Phaser.BOTTOM_RIGHT`.
+    *
+    * The Game Objects are placed in such a way that their _bounds_ align with the
+    * parent, taking into consideration rotation, scale and the anchor property.
+    * This allows you to neatly align Game Objects, irrespective of their position value.
+    *
+    * The optional `offsetX` and `offsetY` arguments allow you to apply extra spacing to the final
+    * aligned position of the Game Object. For example:
+    *
+    * `sprite.alignTo(background, Phaser.BOTTOM_RIGHT, -20, -20)`
+    *
+    * Would align the `sprite` to the bottom-right, but moved 20 pixels in from the corner.
+    * Think of the offsets as applying an adjustment to the parents bounds before the alignment takes place.
+    * So providing a negative offset will 'shrink' the parent bounds by that amount, and providing a positive
+    * one expands it.
+    *
+    * @method
+    * @param {Phaser.Rectangle|Phaser.Sprite|Phaser.Image|Phaser.Text|Phaser.BitmapText|Phaser.Button|Phaser.Graphics|Phaser.TileSprite} parent - The Game Object or Rectangle with which to align this Game Object to. Can also include properties such as `World.bounds` or `Camera.view`.
+    * @param {integer} [position] - The position constant. One of `Phaser.TOP_LEFT`, `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.LEFT_TOP`, `Phaser.LEFT_CENTER`, `Phaser.LEFT_BOTTOM`, `Phaser.RIGHT_TOP`, `Phaser.RIGHT_CENTER`, `Phaser.RIGHT_BOTTOM`, `Phaser.BOTTOM_LEFT`, `Phaser.BOTTOM_CENTER` or `Phaser.BOTTOM_RIGHT`.
+    * @param {integer} [offsetX=0] - A horizontal adjustment of the Containers bounds, applied to the aligned position of the Game Object. Use a negative value to shrink the bounds, positive to increase it.
+    * @param {integer} [offsetY=0] - A vertical adjustment of the Containers bounds, applied to the aligned position of the Game Object. Use a negative value to shrink the bounds, positive to increase it.
+    * @return {Object} This Game Object.
+    */
+    alignTo: function (parent, position, offsetX, offsetY) {
+
+        if (offsetX === undefined) { offsetX = 0; }
+        if (offsetY === undefined) { offsetY = 0; }
+
+        switch (position)
+        {
+            default:
+            case Phaser.TOP_LEFT:
+                this.left = parent.left - offsetX;
+                this.bottom = parent.top - offsetY;
+                break;
+
+            case Phaser.TOP_CENTER:
+                this.centerX = parent.centerX + offsetX;
+                this.bottom = parent.top - offsetY;
+                break;
+
+            case Phaser.TOP_RIGHT:
+                this.right = parent.right + offsetX;
+                this.bottom = parent.top - offsetY;
+                break;
+
+            case Phaser.LEFT_TOP:
+                this.right = parent.left - offsetX;
+                this.top = parent.top - offsetY;
+                break;
+
+            case Phaser.LEFT_CENTER:
+                this.right = parent.left - offsetX;
+                this.centerY = parent.centerY + offsetY;
+                break;
+
+            case Phaser.LEFT_BOTTOM:
+                this.right = parent.left - offsetX;
+                this.bottom = parent.bottom + offsetY;
+                break;
+
+            case Phaser.RIGHT_TOP:
+                this.left = parent.right + offsetX;
+                this.top = parent.top - offsetY;
+                break;
+
+            case Phaser.RIGHT_CENTER:
+                this.left = parent.right + offsetX;
+                this.centerY = parent.centerY + offsetY;
+                break;
+
+            case Phaser.RIGHT_BOTTOM:
+                this.left = parent.right + offsetX;
+                this.bottom = parent.bottom + offsetY;
+                break;
+
+            case Phaser.BOTTOM_LEFT:
+                this.left = parent.left - offsetX;
+                this.top = parent.bottom + offsetY;
+                break;
+
+            case Phaser.BOTTOM_CENTER:
+                this.centerX = parent.centerX + offsetX;
+                this.top = parent.bottom + offsetY;
+                break;
+
+            case Phaser.BOTTOM_RIGHT:
+                this.right = parent.right + offsetX;
+                this.top = parent.bottom + offsetY;
+                break;
+        }
+
+        return this;
 
     }
 
@@ -35408,6 +35999,11 @@ Phaser.BitmapData = function (game, key, width, height) {
     this.ctx = this.context;
 
     /**
+    * @property {string} smoothProperty - The context property needed for smoothing this Canvas.
+    */
+    this.smoothProperty = (game.renderType === Phaser.CANVAS) ? game.renderer.renderSession.smoothProperty : Phaser.Canvas.getSmoothingPrefix(this.context);
+
+    /**
     * @property {ImageData} imageData - The context image data.
     * Please note that a call to BitmapData.draw() or BitmapData.copy() does not update immediately this property for performance reason. Use BitmapData.update() to do so.
     * This property is updated automatically after the first game loop, according to the dirty flag property.
@@ -36542,12 +37138,18 @@ Phaser.BitmapData.prototype = {
 
     /**
      * Copies a rectangular area from the source object to this BitmapData. If you give `null` as the source it will copy from itself.
+     * 
      * You can optionally resize, translate, rotate, scale, alpha or blend as it's drawn.
+     * 
      * All rotation, scaling and drawing takes place around the regions center point by default, but can be changed with the anchor parameters.
+     * 
      * Note that the source image can also be this BitmapData, which can create some interesting effects.
      * 
      * This method has a lot of parameters for maximum control.
      * You can use the more friendly methods like `copyRect` and `draw` to avoid having to remember them all.
+     * 
+     * You may prefer to use `copyTransform` if you're simply trying to draw a Sprite to this BitmapData,
+     * and don't wish to translate, scale or rotate it from its original values.
      *
      * @method Phaser.BitmapData#copy
      * @param {Phaser.Sprite|Phaser.Image|Phaser.Text|Phaser.BitmapData|Phaser.RenderTexture|Image|HTMLCanvasElement|string} [source] - The source to copy from. If you give a string it will try and find the Image in the Game.Cache first. This is quite expensive so try to provide the image itself.
@@ -36734,6 +37336,7 @@ Phaser.BitmapData.prototype = {
             ty |= 0;
         }
 
+        //  Doesn't work fully with children, or nested scale + rotation transforms (see copyTransform)
         ctx.translate(tx, ty);
 
         ctx.scale(this._scale.x, this._scale.y);
@@ -36741,6 +37344,116 @@ Phaser.BitmapData.prototype = {
         ctx.rotate(this._rotate);
 
         ctx.drawImage(this._image, this._pos.x + x, this._pos.y + y, this._size.x, this._size.y, -newWidth * this._anchor.x, -newHeight * this._anchor.y, newWidth, newHeight);
+
+        //  Carry on ...
+
+        ctx.restore();
+
+        ctx.globalAlpha = this._alpha.prev;
+
+        this.dirty = true;
+
+        return this;
+
+    },
+
+    /**
+    * Draws the given `source` Game Object to this BitmapData, using its `worldTransform` property to set the
+    * position, scale and rotation of where it is drawn. This function is used internally by `drawGroup`.
+    * It takes the objects tint and scale mode into consideration before drawing.
+    *
+    * You can optionally specify Blend Mode and Round Pixels arguments.
+    * 
+    * @method Phaser.BitmapData#copyTransform
+    * @param {Phaser.Sprite|Phaser.Image|Phaser.Text|Phaser.BitmapData|Phaser.BitmapText} [source] - The Game Object to draw.
+    * @param {string} [blendMode=null] - The composite blend mode that will be used when drawing. The default is no blend mode at all. This is a Canvas globalCompositeOperation value such as 'lighter' or 'xor'.
+    * @param {boolean} [roundPx=false] - Should the x and y values be rounded to integers before drawing? This prevents anti-aliasing in some instances.
+    * @return {Phaser.BitmapData} This BitmapData object for method chaining.
+    */
+    copyTransform: function (source, blendMode, roundPx) {
+
+        if (blendMode === undefined) { blendMode = null; }
+        if (roundPx === undefined) { roundPx = false; }
+
+        if (!source.hasOwnProperty('worldTransform') || !source.worldVisible || source.worldAlpha === 0)
+        {
+            return this;
+        }
+
+        var wt = source.worldTransform;
+
+        this._pos.set(source.texture.crop.x, source.texture.crop.y);
+        this._size.set(source.texture.crop.width, source.texture.crop.height);
+
+        if (wt.a === 0 || wt.d === 0 || this._size.x === 0 || this._size.y === 0)
+        {
+             // Why bother wasting CPU cycles drawing something you can't see?
+            return this;
+        }
+
+        if (source.texture instanceof Phaser.RenderTexture || source.texture instanceof PIXI.RenderTexture)
+        {
+            this._image = source.texture.getCanvas();
+        }
+        else
+        {
+            this._image = source.texture.baseTexture.source;
+        }
+
+        var tx = wt.tx;
+        var ty = wt.ty;
+
+        if (source.texture.trim)
+        {
+            //  Offset the translation coordinates by the trim amount
+            tx += source.texture.trim.x - source.anchor.x * source.texture.trim.width;
+            ty += source.texture.trim.y - source.anchor.y * source.texture.trim.height;
+        }
+
+        if (source.tint !== 0xFFFFFF)
+        {
+            if (source.cachedTint !== source.tint)
+            {
+                source.cachedTint = source.tint;
+                source.tintedTexture = PIXI.CanvasTinter.getTintedTexture(source, source.tint);
+            }
+
+            this._image = source.tintedTexture;
+            this._pos.set(0);
+        }
+
+        if (roundPx)
+        {
+            tx |= 0;
+            ty |= 0;
+        }
+
+        var ctx = this.context;
+
+        this._alpha.prev = ctx.globalAlpha;
+
+        ctx.save();
+
+        ctx.globalAlpha = this._alpha.current;
+
+        if (blendMode)
+        {
+            this.op = blendMode;
+        }
+
+        ctx[this.smoothProperty] = (source.texture.baseTexture.scaleMode === PIXI.scaleModes.LINEAR);
+
+        ctx.setTransform(wt.a, wt.b, wt.c, wt.d, tx, ty);
+
+        ctx.drawImage(this._image,
+            this._pos.x,
+            this._pos.y,
+            this._size.x,
+            this._size.y,
+            -this._size.x * source.anchor.x,
+            -this._size.y * source.anchor.y,
+            this._size.x,
+            this._size.y);
 
         ctx.restore();
 
@@ -36795,13 +37508,20 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Draws the immediate children of a Phaser.Group to this BitmapData.
-    * Children are only drawn if they have their `exists` property set to `true` and have image based Textures.
-    * The children will be drawn at their `x` and `y` world space coordinates. If this is outside the bounds of the BitmapData they won't be drawn.
-    * When drawing it will take into account the child's rotation, scale and alpha values.
-    * No iteration takes place. Groups nested inside other Groups will not be iterated through.
+    * 
+    * It's perfectly valid to pass in `game.world` as the Group, and it will iterate through the entire display list.
+    * 
+    * Children are drawn _only_ if they have their `exists` property set to `true`, and have image, or RenderTexture, based Textures.
+    * 
+    * The children will be drawn at their `x` and `y` world space coordinates. If this is outside the bounds of the BitmapData they won't be visible.
+    * When drawing it will take into account the rotation, scale, scaleMode, alpha and tint values.
+    * 
+    * Note: You should ensure that at least 1 full update has taken place before calling this, 
+    * otherwise the objects are likely to render incorrectly, if at all.
+    * You can  trigger an update yourself by calling `stage.updateTransform()` before calling `drawGroup`.
     *
     * @method Phaser.BitmapData#drawGroup
-    * @param {Phaser.Group} group - The Group to draw onto this BitmapData.
+    * @param {Phaser.Group} group - The Group to draw onto this BitmapData. Can also be Phaser.World.
     * @param {string} [blendMode=null] - The composite blend mode that will be used when drawing. The default is no blend mode at all. This is a Canvas globalCompositeOperation value such as 'lighter' or 'xor'.
     * @param {boolean} [roundPx=false] - Should the x and y values be rounded to integers before drawing? This prevents anti-aliasing in some instances.
     * @return {Phaser.BitmapData} This BitmapData object for method chaining.
@@ -36828,20 +37548,26 @@ Phaser.BitmapData.prototype = {
     */
     drawGroupProxy: function (child, blendMode, roundPx) {
 
-        //  Draw base Object
         if (child.hasOwnProperty('texture'))
         {
-            this.copy(child, null, null, null, null, child.worldPosition.x, child.worldPosition.y, null, null, child.worldRotation, null, null, child.worldScale.x, child.worldScale.y, child.worldAlpha, blendMode, roundPx);
+            this.copyTransform(child, blendMode, roundPx);
         }
 
-        if (child.hasOwnProperty('children') && child.children.length > 0)
+        if (child.type === Phaser.GROUP && child.exists)
         {
-            var c;
-
-            for (var i = 0; i < child.children.length; i++)
+            this.drawGroup(child, blendMode, roundPx);
+        }
+        else
+        {
+            if (child.hasOwnProperty('children') && child.children.length > 0)
             {
-                c = child.children[i];
-                this.copy(c, null, null, null, null, c.worldPosition.x, c.worldPosition.y, null, null, c.worldRotation, null, null, c.worldScale.x, c.worldScale.y, child.worldAlpha, blendMode, roundPx);
+                for (var i = 0; i < child.children.length; i++)
+                {
+                    if (child.children[i].exists)
+                    {
+                        this.copyTransform(child.children[i], blendMode, roundPx);
+                    }
+                }
             }
         }
 
@@ -56699,7 +57425,7 @@ Phaser.Cache.prototype = {
     * @method Phaser.Cache#getJSON
     * @param {string} key - The key of the asset to retrieve from the cache.
     * @param {boolean} [clone=false] - Return a clone of the original object (true) or a reference to it? (false)
-    * @return {object} The JSON object.
+    * @return {object} The JSON object, or an Array if the key points to an Array property. If the property wasn't found, it returns null.
     */
     getJSON: function (key, clone) {
 
@@ -56709,7 +57435,7 @@ Phaser.Cache.prototype = {
         {
             if (clone)
             {
-                return Phaser.Utils.extend(true, {}, data);
+                return Phaser.Utils.extend(true, Array.isArray(data) ? [] : {}, data);
             }
             else
             {

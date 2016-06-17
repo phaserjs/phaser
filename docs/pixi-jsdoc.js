@@ -246,27 +246,27 @@ To remove simply set this property to 'null'
 * @param {Matrix} matrix - 
 * @return {Rectangle} the rectangular bounding area
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 498
+* @sourceline 497
 */
 /**
 * @description Retrieves the local bounds of the displayObject as a rectangle object
 * @method PIXI.DisplayObject#getLocalBounds
 * @return {Rectangle} the rectangular bounding area
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 511
+* @sourceline 510
 */
 /**
 * @description Sets the object's stage reference, the stage this object is connected to
 * @method PIXI.DisplayObject#setStageReference
 * @param {Stage} stage - the stage that the object will have as its current stage reference
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 522
+* @sourceline 521
 */
 /**
 * @description Empty, to be overridden by classes that require it.
 * @method PIXI.DisplayObject#preUpdate
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 533
+* @sourceline 532
 */
 /**
 * @description Useful function that returns a texture of the displayObject object that can then be used to create sprites
@@ -277,13 +277,13 @@ This can be quite useful if your displayObject is static / complicated and needs
 * @param {(PIXI.CanvasRenderer|PIXI.WebGLRenderer)} renderer - The renderer used to generate the texture.
 * @return {PIXI.RenderTexture} a texture of the graphics object
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 542
+* @sourceline 541
 */
 /**
 * @description Generates and updates the cached sprite for this object.
 * @method PIXI.DisplayObject#updateCache
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 566
+* @sourceline 565
 */
 /**
 * @description Calculates the global position of the display object
@@ -291,7 +291,7 @@ This can be quite useful if your displayObject is static / complicated and needs
 * @param {Point} position - The world origin to calculate from
 * @return {Point} A point object representing the position of this object
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 576
+* @sourceline 575
 */
 /**
 * @description Calculates the local position of the display object relative to another point
@@ -300,7 +300,7 @@ This can be quite useful if your displayObject is static / complicated and needs
 * @param {PIXI.DisplayObject} [from] - The DisplayObject to calculate the global position from
 * @return {Point} A point object representing the position of this object
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 590
+* @sourceline 589
 */
 /**
 * @description Internal method.
@@ -308,21 +308,21 @@ This can be quite useful if your displayObject is static / complicated and needs
 * @param {Object} renderSession - The render session
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 611
+* @sourceline 610
 */
 /**
 * @description Internal method.
 * @method PIXI.DisplayObject#_generateCachedSprite
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 632
+* @sourceline 631
 */
 /**
 * @description Destroys the cached sprite.
 * @method PIXI.DisplayObject#_destroyCachedSprite
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 679
+* @sourceline 678
 */
 /**
 * @description Renders the object using the WebGL renderer
@@ -330,7 +330,7 @@ This can be quite useful if your displayObject is static / complicated and needs
 * @param {RenderSession} renderSession - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 695
+* @sourceline 694
 */
 /**
 * @description Renders the object using the Canvas renderer
@@ -338,21 +338,21 @@ This can be quite useful if your displayObject is static / complicated and needs
 * @param {RenderSession} renderSession - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 709
+* @sourceline 708
 */
 /**
 * @description The position of the displayObject on the x axis relative to the local coordinates of the parent.
 * @member PIXI.DisplayObject#x
 * @type {Number}
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 723
+* @sourceline 722
 */
 /**
 * @description The position of the displayObject on the y axis relative to the local coordinates of the parent.
 * @member PIXI.DisplayObject#y
 * @type {Number}
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 741
+* @sourceline 740
 */
 /**
 * @fileoverview
@@ -614,18 +614,26 @@ Warning: You cannot have a blend mode and a filter active on the same Sprite. Do
 * @sourceline 98
 */
 /**
+* @description Controls if this Sprite is processed by the core Phaser game loops and Group loops.
+* @member PIXI.Sprite#exists
+* @type {Boolean}
+* @default true
+* @sourcefile d:\wamp\www\phaser\src\pixi\display\Sprite.js
+* @sourceline 107
+*/
+/**
 * @description The width of the sprite, setting this will actually modify the scale to achieve the value set
 * @member PIXI.Sprite#width
 * @type {Number}
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\Sprite.js
-* @sourceline 120
+* @sourceline 129
 */
 /**
 * @description The height of the sprite, setting this will actually modify the scale to achieve the value set
 * @member PIXI.Sprite#height
 * @type {Number}
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\Sprite.js
-* @sourceline 139
+* @sourceline 148
 */
 /**
 * @description Sets the texture of the sprite. Be warned that this doesn't remove or destroy the previous
@@ -634,7 +642,7 @@ texture this Sprite was using.
 * @param {PIXI.Texture} texture - The PIXI texture that is displayed by the sprite
 * @param {Boolean} [destroy=false] - Call Texture.destroy on the current texture before replacing it with the new one?
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\Sprite.js
-* @sourceline 158
+* @sourceline 167
 */
 /**
 * @description When the texture is updated, this event will fire to update the scale and frame
@@ -642,7 +650,7 @@ texture this Sprite was using.
 * @param {} event - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\Sprite.js
-* @sourceline 180
+* @sourceline 189
 */
 /**
 * @description Returns the bounds of the Sprite as a rectangle.
@@ -658,7 +666,7 @@ on the root most object in this Sprites display list first.
 * @param {Matrix} matrix - the transformation matrix of the sprite
 * @return {Rectangle} the framing rectangle
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\Sprite.js
-* @sourceline 194
+* @sourceline 203
 */
 /**
 * @description Renders the object using the WebGL renderer
@@ -667,7 +675,7 @@ on the root most object in this Sprites display list first.
 * @param {Matrix} [matrix] - - Optional matrix. If provided the Display Object will be rendered using this matrix, otherwise it will use its worldTransform.
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\Sprite.js
-* @sourceline 310
+* @sourceline 319
 */
 /**
 * @description Renders the object using the Canvas renderer
@@ -676,7 +684,7 @@ on the root most object in this Sprites display list first.
 * @param {Matrix} [matrix] - - Optional matrix. If provided the Display Object will be rendered using this matrix, otherwise it will use its worldTransform.
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\Sprite.js
-* @sourceline 380
+* @sourceline 389
 */
 /**
 * @description Helper function that creates a sprite that will contain a texture from the TextureCache based on the frameId
@@ -685,7 +693,7 @@ on the root most object in this Sprites display list first.
 * @param {String} frameId - The frame Id of the texture in the cache
 * @return {PIXI.Sprite} A new Sprite using a texture from the texture cache matching the frameId
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\Sprite.js
-* @sourceline 488
+* @sourceline 497
 */
 /**
 * @description Helper function that creates a sprite that will contain a texture based on an image url
@@ -694,7 +702,7 @@ on the root most object in this Sprites display list first.
 * @param {String} imageId - The image url of the texture
 * @return {PIXI.Sprite} A new Sprite using a texture from the texture cache matching the image id
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\Sprite.js
-* @sourceline 507
+* @sourceline 516
 */
 /**
 * @fileoverview
@@ -1011,49 +1019,49 @@ If you want to make a custom filter this should be your base class.
 * @description An array of passes - some filters contain a few steps this array simply stores the steps in a liniear fashion.
 For example the blur filter has two passes blurX and blurY.
 * @member PIXI.AbstractFilter#passes
-* @type {Array<Filter>}
+* @type {Array}
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\filters\AbstractFilter.js
-* @sourceline 15
+* @sourceline 16
 */
 /**
 * @member PIXI.AbstractFilter#shaders
-* @type {Array<Shader>}
+* @type {Array}
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\filters\AbstractFilter.js
-* @sourceline 24
+* @sourceline 25
 */
 /**
 * @member PIXI.AbstractFilter#dirty
 * @type {Boolean}
 * @sourcefile d:\wamp\www\phaser\src\pixi\filters\AbstractFilter.js
-* @sourceline 31
+* @sourceline 32
 */
 /**
 * @member PIXI.AbstractFilter#padding
 * @type {Number}
 * @sourcefile d:\wamp\www\phaser\src\pixi\filters\AbstractFilter.js
-* @sourceline 37
+* @sourceline 38
 */
 /**
 * @member PIXI.AbstractFilter#uniforms
-* @type {object}
+* @type {Object}
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\filters\AbstractFilter.js
-* @sourceline 43
+* @sourceline 44
 */
 /**
 * @member PIXI.AbstractFilter#fragmentSrc
 * @type {Array}
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\filters\AbstractFilter.js
-* @sourceline 50
+* @sourceline 51
 */
 /**
 * @description Syncs the uniforms between the class object and the shaders.
 * @method PIXI.AbstractFilter#syncUniforms
 * @sourcefile d:\wamp\www\phaser\src\pixi\filters\AbstractFilter.js
-* @sourceline 60
+* @sourceline 61
 */
 /**
 * @fileoverview
