@@ -439,7 +439,7 @@ declare module Phaser {
 
         constructor(game: Phaser.Game, x: number, y: number, key?: any, frame?: any);
 
-        kill(): void;
+        kill(): Phaser.Bullet;
         update(): void;
 
     }

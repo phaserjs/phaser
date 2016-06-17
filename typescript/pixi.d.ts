@@ -490,7 +490,7 @@ declare module PIXI {
         displayObjectUpdateTransform(): void;
         getBounds(matrix?: Matrix): Rectangle;
         getLocalBounds(): Rectangle;
-        generateTexture(resolution?: number, scaleMode?: number, renderer?: PixiRenderer): RenderTexture;
+        generateTexture(resolution?: number, scaleMode?: number, renderer?: PixiRenderer | number): RenderTexture;
         mousedown(e: InteractionData): void;
         mouseout(e: InteractionData): void;
         mouseover(e: InteractionData): void;

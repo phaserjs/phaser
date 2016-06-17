@@ -13,4 +13,6 @@ If you find any mistakes in these definitions or you feel they can be improved i
 
 ## Note ##
 
-`Creature` and `Box2D` are not yet defined. 
+`Creature` defs are not yet provided.
+
+The Box2D defs come from https://github.com/SBCGames/Phaser-Box2D-Typescript-defs
