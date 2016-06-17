@@ -424,19 +424,19 @@ var TypeScriptDocGenerator = (function () {
             case ts.SyntaxKind.Method:
                 // _grunt.log.writeln("insert4: " + node);
 
-                var t = true;
+                var t2 = true;
 
                 try {
-                    t = node.name.getText();
+                    t2 = node.name.getText();
                 }
                 catch (e)
                 {
-                    t = false;
+                    t2 = false;
                 }
 
-                if (c !== '' && r && t)
+                if (c !== '' && r && t2)
                 {
-                    this.insertComment(this.generateFunctionComments(c, t, r));
+                    this.insertComment(this.generateFunctionComments(c, t2, r));
                 }
 
                 break;
