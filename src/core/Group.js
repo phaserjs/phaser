@@ -2244,6 +2244,52 @@ Phaser.Group.prototype.getClosestTo = function (object) {
 };
 
 /**
+* Get the closest child to given Object that satisfies the filter criteria.
+*
+* This can be a Sprite, Group, Image or any object with public x and y properties.
+*
+* 'close' is determined by the distance from the objects `x` and `y` properties compared to the childs `x` and `y` properties.
+*
+* If filter returns true, the object is considered for closeness. If filter is null, then any child will satisfy the criteria. 
+* 
+* @method Phaser.Group#getClosestToFilter
+* @param {any} object - The object used to determine the distance. This can be a Sprite, Group, Image or any object with public x and y properties.
+* @param {function} filter - The function that each child will be evaluated against. Each child of the group will be passed to it as its first parameter, with the distance as the second.
+* @return {any} The child closest to given object that satisfies the filter criteria, or null if no child was found.
+*/
+Phaser.Group.prototype.getClosestToFilter = function (object, filter) {
+
+    var distance = Number.MAX_VALUE;
+    var tempDistance = 0;
+    var result = null;
+
+    var _filter = filter;
+    if (_filter === null || _filter === undefined)
+    {
+        _filter = function() {return true;};
+    }
+    
+    for (var i = 0; i < this.children.length; i++)
+    {
+        var child = this.children[i];
+
+        if (child.exists)
+        {
+            tempDistance = Math.abs(Phaser.Point.distance(object, child));
+
+            if (tempDistance < distance && _filter(child, tempDistance))
+            {
+                distance = tempDistance;
+                result = child;
+            }
+        }
+    }
+
+    return result;
+
+};
+
+/**
 * Get the child furthest away from the given Object.
 *
 * This can be a Sprite, Group, Image or any object with public x and y properties.
@@ -2269,6 +2315,52 @@ Phaser.Group.prototype.getFurthestFrom = function (object) {
             tempDistance = Math.abs(Phaser.Point.distance(object, child));
 
             if (tempDistance > distance)
+            {
+                distance = tempDistance;
+                result = child;
+            }
+        }
+    }
+
+    return result;
+
+};
+
+/**
+* Get the child furthest away from the given Object that satisfies the filter criteria.
+*
+* This can be a Sprite, Group, Image or any object with public x and y properties.
+*
+* 'furthest away' is determined by the distance from the objects `x` and `y` properties compared to the childs `x` and `y` properties.
+*
+* If filter returns true, the object is considered for closeness. If filter is null, then any child will satisfy the criteria. 
+* 
+* @method Phaser.Group#getFurthestFrom
+* @param {any} object - The object used to determine the distance. This can be a Sprite, Group, Image or any object with public x and y properties.
+* @param {function} filter - The function that each child will be evaluated against. Each child of the group will be passed to it as its first parameter, with the distance as the second.
+* @return {any} The child furthest from the given object, or null if no child was found.
+*/
+Phaser.Group.prototype.getFurthestFromFilter = function (object, filter) {
+
+    var distance = 0;
+    var tempDistance = 0;
+    var result = null;
+
+    var _filter = filter;
+    if (_filter === null || _filter === undefined)
+    {
+        _filter = function() {return true;};
+    }
+
+    for (var i = 0; i < this.children.length; i++)
+    {
+        var child = this.children[i];
+
+        if (child.exists)
+        {
+            tempDistance = Math.abs(Phaser.Point.distance(object, child));
+
+            if (tempDistance > distance && _filter(child, tempDistance))
             {
                 distance = tempDistance;
                 result = child;
