@@ -328,7 +328,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * TypeScript definitions fixes and updates (thanks)
 * Docs typo fixes (thanks @drhayes @)
 * The TilemapParser will now add more data when importing Image object types from Tiled. The extra data available is: image width, image height, and flags to see if the image is flipped either horizontally, vertically or diagonally (thanks @gotenxds #2564 #2554)
-*
+* Removed `PIXI.DisplayObject.prototype._renderWebGL` and `PIXI.DisplayObject.prototype._renderCanvas` as both were only there for ancient jshint tests.
 *
 
 ### Bug Fixes

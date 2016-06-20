@@ -692,34 +692,6 @@ PIXI.DisplayObject.prototype._destroyCachedSprite = function()
 };
 
 /**
-* Renders the object using the WebGL renderer
-*
-* @method _renderWebGL
-* @param renderSession {RenderSession}
-* @private
-*/
-PIXI.DisplayObject.prototype._renderWebGL = function(renderSession)
-{
-    // OVERWRITE;
-    // this line is just here to pass jshinting :)
-    renderSession = renderSession;
-};
-
-/**
-* Renders the object using the Canvas renderer
-*
-* @method _renderCanvas
-* @param renderSession {RenderSession}
-* @private
-*/
-PIXI.DisplayObject.prototype._renderCanvas = function(renderSession)
-{
-    // OVERWRITE;
-    // this line is just here to pass jshinting :)
-    renderSession = renderSession;
-};
-
-/**
  * The position of the displayObject on the x axis relative to the local coordinates of the parent.
  *
  * @property x
