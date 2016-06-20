@@ -114,15 +114,15 @@ To test the demos, we currently need to set drawing mode to Phaser.WEBGL (in the
     map.addTilesetImage('CybernoidMap3BG_bank.png', 'tiles');
     layer = map.createLayer(0, undefined, undefined, undefined, true);		<-- true specifies to use the new PIXI tilemap system
 
-TODO: bug - in the sci-fly demo there is a new problem with collisions when the map has scrolled, I'm guessing this is some sort of scroll offset conflict between the display and the collision system.
+bug - in the sci-fly demo there is a new problem with collisions when the map has scrolled, I'm guessing this is some sort of scroll offset conflict between the display and the collision system.
 
 Testing the system on tilemaps with borders and tiles with margins ("fill-tiles" example)... it works!  This vindicates the change of approach because that was going to be a real pain to support if I had to recreate all the stuff that Phaser already handles out of the box!
 
 Removed requirement for pixiTest parameter in createLayer by using renderType instead.  I don't need to use WEBGL because it's currently hard-wired in Phaser.Game constructor code (which I had forgotten about) so all examples running locally will be using the new renderer.
 
-TODO: another bug - when scrolling not only are the collisions off, the redrawing tile area gets smaller as we move away from the map origin.  This could be linked to the collisions via the scroll offsets being wrong, however the area of map which is drawn appears to be in the correct place... are there two separate scroll offsets in this system?  There are some calculations for start/end of drawing region, might be a good place to start looking.
+another bug - when scrolling not only are the collisions off, the redrawing tile area gets smaller as we move away from the map origin.  This could be linked to the collisions via the scroll offsets being wrong, however the area of map which is drawn appears to be in the correct place... are there two separate scroll offsets in this system?  There are some calculations for start/end of drawing region, might be a good place to start looking.
 
-TODO: need to make the PIXI.Tilemap access multiple source textures and use tile width and height from the batch buffer data in order to reinstate the Phaser multiple tilesets per map capabilities.
+I need to make the PIXI.Tilemap access multiple source textures and use tile width and height from the batch buffer data in order to reinstate the Phaser multiple tilesets per map capabilities.  NOTE: decided this is a stupid approach, see task list below for better idea.
 
 After testing, *all* examples seem to work (with these three restrictions)
 
@@ -130,15 +130,23 @@ Found both bugs, I was effectively applying the scroll twice because the new bat
 
 Remaining Task Summary:
 
-- Change the map parser, so that when additional tilesets are encountered, it creates a new Tilemap Layer for each and keeps data for only one tileset per layer.
+- Change the map parser, so that when additional tilesets are encountered, it creates a new Tilemap Layer for each and keeps data for only one tileset per layer.  (added TODO: comments into TilemapParser.js for one possible approach to this).
 - Store the tileset index or reference in the Tile structure, deprecate resolveTileset and any other related code
 - Add alpha blending to the shader, calculate the 'final' alpha by multiplying the layer's worldAlpha with the tile.alpha
-- Add scaling to the shader, use the layer's worldScale
+- Add scaling to the shader, use the layer's worldScale.  (See if rotation can be easily supported too, while doing this)
 - Optimise the drawing to avoid degenerate triangles where possible, e.g. each row should be a single tri-strip without degenerates in it for faster drawing
 
+Known bugs:
+- Blank Tilemap example isn't drawing, may not handle multiple layers correctly.
 
+Attempted a quick hack to test the new layers approach but got bogged down in the messy class relationship here.
 
+Some notes for later:
+- Tilemap creates TilemapLayer objects (Sprites). It keeps no reference to them after adding them to a group (or the world group), the new layer object gets a 'map' reference.
+- Tilemap contains a layers member variable, it contains bespoke objects (see createBlankLayer) with some information about layers in the map data (which do not correspond to TilemapLayer objects at all)
+- TilemapParser parses raw map data into the Tilemap.data member.  It creates Tileset objects and populates them for each tile set used in the raw map.  It creates Tile objects for each tile in the map data.
+- Tileset contains information about separate tile sources, including the image, the first tile, tile layout in the image.  It contains the draw function to render a tile on the canvas.
+- Tilemap.createLayer is called by Examples after the Tilemap has been created and parsed.
 
-
-
+So, I can't create new TilemapLayer objects in TilemapParser because it will preempt Tilemap.createLayer.  Or maybe I can, these TilemapLayer objects will be internal (hidden)...?  There aren't any later calls in the Examples which I can extend or adapt, so that might have to be the solution.
 
