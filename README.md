@@ -328,7 +328,6 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * TypeScript definitions fixes and updates (thanks)
 * Docs typo fixes (thanks @drhayes @)
 * The TilemapParser will now add more data when importing Image object types from Tiled. The extra data available is: image width, image height, and flags to see if the image is flipped either horizontally, vertically or diagonally (thanks @gotenxds #2564 #2554)
-* Removed `PIXI.DisplayObject.prototype._renderWebGL` and `PIXI.DisplayObject.prototype._renderCanvas` as both were only there for ancient jshint tests.
 *
 
 ### Bug Fixes
@@ -336,6 +335,12 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * Fixed issue in Group.align where the cell wouldn't increase if `rows` was great than -1
 * Sound.volume was accidentally repeated twice in the source (thanks @LoneStranger #2569)
 *
+
+### Pixi Updates
+
+Please note that Phaser uses a custom build of Pixi and always has done. The following changes have been made to our custom build, not to Pixi in general.
+
+* Removed `_renderWebGL`, `_renderCanvas`, `getLocalBounds` and `getBounds` from PIXI.DisplayObject, as they were only there to pass ancient jshint rules.
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
