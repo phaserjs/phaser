@@ -2213,8 +2213,12 @@ Phaser.Group.prototype.getBottom = function () {
 *
 * 'close' is determined by the distance from the objects `x` and `y` properties compared to the childs `x` and `y` properties.
 *
+* If callback returns true, the object is considered for distance. If callback is null, then any child will satisfy the criteria. 
+*
 * @method Phaser.Group#getClosestTo
 * @param {any} object - The object used to determine the distance. This can be a Sprite, Group, Image or any object with public x and y properties.
+* @param {function} [callback=null] - The function that each child will be evaluated against. Each child of the group will be passed to it as its first parameter, with the distance as the second.
+* @param {object} [callbackContext] - The context in which the function should be called (usually 'this').
 * @return {any} The child closest to given object, or null if no child was found.
 */
 Phaser.Group.prototype.getClosestTo = function (object, callback, callbackContext) {
