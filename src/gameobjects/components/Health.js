@@ -20,8 +20,6 @@ Phaser.Component.Health.prototype = {
     * 
     * It can be used in combination with the `damage` method or modified directly.
     * 
-    * If health is taken below or is equal to zero then the `kill` method is called.    
-    *    
     * @property {number} health
     * @default
     */
