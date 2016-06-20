@@ -92,7 +92,7 @@ Phaser.Weapon = function (game, parent) {
     this.fireFrom = new Phaser.Rectangle(0, 0, 1, 1);
 
     /**
-     * The angle at which the bullets are fired. This can be a const such as Phaser.ANGLE_UP 
+     * The angle at which the bullets are fired. This can be a const such as Phaser.ANGLE_UP
      * or it can be any number from 0 to 360 inclusive, where 0 degrees is to the right.
      * @type {integer}
      */
@@ -170,14 +170,14 @@ Phaser.Weapon = function (game, parent) {
 
     /**
      * This is a variance added to the speed of Bullets when they are fired.
-     * If bullets have a `bulletSpeed` value of 200, and a `bulletSpeedVariance` of 50 
+     * If bullets have a `bulletSpeed` value of 200, and a `bulletSpeedVariance` of 50
      * then the actual speed of the Bullets will be between 150 and 250 pixels per second.
      * @type {number}
      */
     this.bulletSpeedVariance = 0;
 
     /**
-     * If you've set `bulletKillType` to `Phaser.Weapon.KILL_LIFESPAN` this controls the amount 
+     * If you've set `bulletKillType` to `Phaser.Weapon.KILL_LIFESPAN` this controls the amount
      * of lifespan the Bullets have set on launch. The value is given in milliseconds.
      * When a Bullet hits its lifespan limit it will be automatically killed.
      * @type {number}
@@ -185,7 +185,7 @@ Phaser.Weapon = function (game, parent) {
     this.bulletLifespan = 0;
 
     /**
-     * If you've set `bulletKillType` to `Phaser.Weapon.KILL_DISTANCE` this controls the distance 
+     * If you've set `bulletKillType` to `Phaser.Weapon.KILL_DISTANCE` this controls the distance
      * the Bullet can travel before it is automatically killed. The distance is given in pixels.
      * @type {number}
      */
@@ -259,7 +259,7 @@ Phaser.Weapon = function (game, parent) {
      * This Rectangle defines the bounds that are used when determining if a Bullet should be killed or not.
      * It's used in combination with `Weapon.bulletKillType` when that is set to either `Phaser.Weapon.KILL_WEAPON_BOUNDS`
      * or `Phaser.Weapon.KILL_STATIC_BOUNDS`. If you are not using either of these kill types then the bounds are ignored.
-     * If you are tracking a Sprite or Point then the bounds are centered on that object every frame. 
+     * If you are tracking a Sprite or Point then the bounds are centered on that object every frame.
      *
      * @type {Phaser.Rectangle}
      */
@@ -298,8 +298,8 @@ Phaser.Weapon = function (game, parent) {
 
     /**
      * The onFire Signal is dispatched each time `Weapon.fire` is called, and a Bullet is
-     * _successfully_ launched. The callback is set two arguments: a reference to the Weapon that fired the bullet,
-     * and a reference to the bullet sprite itself.
+     * _successfully_ launched. The callback is set two arguments: a reference to the bullet sprite itself,
+     * and a reference to the Weapon that fired the bullet.
      *
      * @type {Phaser.Signal}
      */
@@ -387,7 +387,7 @@ Phaser.Weapon.KILL_NEVER = 0;
 Phaser.Weapon.KILL_LIFESPAN = 1;
 
 /**
-* A `bulletKillType` constant that automatically kills the bullets after they 
+* A `bulletKillType` constant that automatically kills the bullets after they
 * exceed the `bulletDistance` from their original firing position.
 * @constant
 * @type {integer}
@@ -438,7 +438,7 @@ Phaser.Weapon.KILL_STATIC_BOUNDS = 6;
 * so be careful it doesn't grow too large.
 *
 * You can either set the texture key and frame here, or via the `Weapon.bulletKey` and `Weapon.bulletFrame`
-* properties. You can also animate bullets, or set them to use random frames. All Bullets belonging to a 
+* properties. You can also animate bullets, or set them to use random frames. All Bullets belonging to a
 * single Weapon instance must share the same texture key however.
 *
 * @method Phaser.Weapon#createBullets
@@ -466,7 +466,7 @@ Phaser.Weapon.prototype.createBullets = function (quantity, key, frame, group) {
             this.autoExpandBulletsGroup = true;
             quantity = 1;
         }
-        
+
         this.bullets.createMultiple(quantity, key, frame);
 
         this.bullets.setAll('data.bulletManager', this);
@@ -684,7 +684,7 @@ Phaser.Weapon.prototype.trackPointer = function (pointer, offsetX, offsetY) {
 * Attempts to fire a single Bullet. If there are no more bullets available in the pool, and the pool cannot be extended,
 * then this method returns `false`. It will also return false if not enough time has expired since the last time
 * the Weapon was fired, as defined in the `Weapon.fireRate` property.
-* 
+*
 * Otherwise the first available bullet is selected and launched.
 *
 * The arguments are all optional, but allow you to control both where the bullet is launched from, and aimed at.
@@ -972,12 +972,12 @@ Phaser.Weapon.prototype.setBulletBodyOffset = function (width, height, offsetX, 
 
 /**
 * Sets the texture frames that the bullets can use when being launched.
-* 
+*
 * This is intended for use when you've got numeric based frames, such as those loaded via a Sprite Sheet.
-* 
+*
 * It works by calling `Phaser.ArrayUtils.numberArray` internally, using the min and max values
 * provided. Then it sets the frame index to be zero.
-* 
+*
 * You can optionally set the cycle and random booleans, to allow bullets to cycle through the frames
 * when they're fired, or pick one at random.
 *
@@ -1102,10 +1102,10 @@ Object.defineProperty(Phaser.Weapon.prototype, "bulletClass", {
 *
 * * `Phaser.Weapon.KILL_LIFESPAN`
 * The bullets are automatically killed when their `bulletLifespan` amount expires.
-* 
+*
 * * `Phaser.Weapon.KILL_DISTANCE`
 * The bullets are automatically killed when they exceed `bulletDistance` pixels away from their original launch position.
-* 
+*
 * * `Phaser.Weapon.KILL_WEAPON_BOUNDS`
 * The bullets are automatically killed when they no longer intersect with the `Weapon.bounds` rectangle.
 *
