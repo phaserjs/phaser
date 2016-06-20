@@ -42,11 +42,6 @@ Phaser.Sound = function (game, key, volume, loop, connect) {
     this.loop = loop;
 
     /**
-    * @property {number} volume - The sound or sound marker volume. A value between 0 (silence) and 1 (full volume).
-    */
-    this.volume = volume;
-
-    /**
     * @property {object} markers - The sound markers.
     */
     this.markers = {};

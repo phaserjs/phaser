@@ -326,15 +326,15 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 ### Updates
 
 * TypeScript definitions fixes and updates (thanks)
-* Docs typo fixes (thanks)
-*
+* Docs typo fixes (thanks @drhayes @)
+* The TilemapParser will now add more data when importing Image object types from Tiled. The extra data available is: image width, image height, and flags to see if the image is flipped either horizontally, vertically or diagonally (thanks @gotenxds #2564 #2554)
 *
 *
 
 ### Bug Fixes
 
 * Fixed issue in Group.align where the cell wouldn't increase if `rows` was great than -1
-*
+* Sound.volume was accidentally repeated twice in the source (thanks @LoneStranger #2569)
 *
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
