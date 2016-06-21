@@ -320,15 +320,16 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 ### New Features
 
 * The Loader has a new property `headers`. This is an object checked by XHR Requests, used to set the Request Header of certain file types. JSON and XML are pre-configured, but you can add to, or modify this property as required (thanks @stoneman1 #2585 #2485)
-*
+* Phaser now has support for Typings, the TypeScript Definition Manager. See the `typescript/readme.md` file for installation instructions (thanks @monagames #2576)
 *
 
 ### Updates
 
-* TypeScript definitions fixes and updates (thanks)
-* Docs typo fixes (thanks @drhayes @)
+* TypeScript definitions fixes and updates (thanks @monagames)
+* Docs typo fixes (thanks @drhayes)
 * The TilemapParser will now add more data when importing Image object types from Tiled. The extra data available is: image width, image height, and flags to see if the image is flipped either horizontally, vertically or diagonally (thanks @gotenxds #2564 #2554)
 * TilemapLayer.renderRegion has had an assignment to the obsolete `tileColor` property removed (thanks @cryptographer #2583)
+* Group.getFurthestFrom and Group.getClosestTo has a new optional argument: `callback`. This allows you to apply your own additional filtering to the distance checks, ultimately influencing the selected child (thanks @LoneStranger #2577)
 
 ### Bug Fixes
 

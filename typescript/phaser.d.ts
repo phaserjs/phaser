@@ -1,7 +1,7 @@
 /// <reference path="pixi.d.ts" />
 /// <reference path="p2.d.ts" />
 
-// Type definitions for Phaser 2.5.0 - 17th June 2016
+// Type definitions for Phaser 2.5.1 - 21st June 2016
 // Project: https://github.com/photonstorm/phaser
 
 declare module "phaser" {
@@ -1764,11 +1764,11 @@ declare module Phaser {
         getAt(index: number): PIXI.DisplayObject | number;
         getBottom(): any;
         getByName(name: string): any;
-        getClosestTo(object: any): any;
+        getClosestTo(object: any, callback?: Function, callbackContext?: any): any;
         getFirstAlive(createIfNull?: boolean, x?: number, y?: number, key?: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture, frame?: string | number): any;
         getFirstDead(createIfNull?: boolean, x?: number, y?: number, key?: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture, frame?: string | number): any;
         getFirstExists(exists: boolean, createIfNull?: boolean, x?: number, y?: number, key?: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture, frame?: string | number): any;
-        getFurthestFrom(object: any): any;
+        getFurthestFrom(object: any, callback?: Function, callbackContext?: any): any;
         getIndex(child: any): number;
         getRandom(startIndex?: number, length?: number): any;
         getTop(): any;
