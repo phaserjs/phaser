@@ -2754,6 +2754,7 @@ declare module Phaser {
                 minRotation: number;
                 name: string;
                 on: boolean;
+                particleAnchor: Phaser.Point;
                 particleBringToTop: boolean;
                 particleSendToBack: boolean;
                 particleClass: any;
