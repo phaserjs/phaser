@@ -335,7 +335,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 
 * Fixed issue in Group.align where the cell wouldn't increase if `rows` was great than -1
 * Sound.volume was accidentally repeated twice in the source (thanks @LoneStranger #2569)
-*
+* Animation.setFrame wouldn't work correctly if the `useLocalFrameIndex` argument was true, and the frame ID was a number (thanks @uboot #2571)
 
 ### Pixi Updates
 
