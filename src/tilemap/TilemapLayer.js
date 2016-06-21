@@ -859,8 +859,6 @@ Phaser.TilemapLayer.prototype.renderRegion = function (scrollX, scrollY, left, t
     // xmax/ymax - remaining cells to render on column/row
     var tx, ty, x, y, xmax, ymax;
 
-    context.fillStyle = this.tileColor;
-
     for (y = normStartY, ymax = bottom - top, ty = baseY;
         ymax >= 0;
         y++, ymax--, ty += th)
