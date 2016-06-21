@@ -6,7 +6,7 @@
 
 /**
 * The Events component is a collection of events fired by the parent Game Object.
-* 
+*
 * Phaser uses what are known as 'Signals' for all event handling. All of the events in
 * this class are signals you can subscribe to, much in the same way you'd "listen" for
 * an event.
@@ -17,7 +17,7 @@
 * `sprite.events.onAddedToGroup.add(yourFunction, this);`
 *
 * Where `yourFunction` is the function you want called when this event occurs.
-* 
+*
 * For more details about how signals work please see the Phaser.Signal class.
 *
 * The Input-related events will only be dispatched if the Sprite has had `inputEnabled` set to `true`
@@ -59,6 +59,7 @@ Phaser.Events.prototype = {
         if (this._onOutOfBounds)       { this._onOutOfBounds.dispose(); }
 
         if (this._onInputOver)         { this._onInputOver.dispose(); }
+        if (this._onInputUpdate)       { this._onInputUpdate.dispose(); }
         if (this._onInputOut)          { this._onInputOut.dispose(); }
         if (this._onInputDown)         { this._onInputDown.dispose(); }
         if (this._onInputUp)           { this._onInputUp.dispose(); }
@@ -146,7 +147,7 @@ Phaser.Events.prototype = {
     onEnterBounds: null,
 
     /**
-    * This signal is dispatched if the Game Object has `inputEnabled` set to `true`, 
+    * This signal is dispatched if the Game Object has `inputEnabled` set to `true`,
     * and receives an over event from a Phaser.Pointer.
     * It is sent two arguments:
     * {any} The Game Object that received the event.
@@ -156,7 +157,13 @@ Phaser.Events.prototype = {
     onInputOver: null,
 
     /**
-    * This signal is dispatched if the Game Object has `inputEnabled` set to `true`, 
+    * @property {Phaser.Signal} onInputUpdate - This signal is dispatched if the parent is inputEnabled and a pointer is moved within it.
+    */
+    onInputUpdate: null,
+
+    /**
+    * @property {Phaser.Signal} onInputOut - This signal is dispatched if the parent is inputEnabled and receives an out event from a Pointer.
+    * This signal is dispatched if the Game Object has `inputEnabled` set to `true`,
     * and receives an out event from a Phaser.Pointer, which was previously over it.
     * It is sent two arguments:
     * {any} The Game Object that received the event.
@@ -166,7 +173,7 @@ Phaser.Events.prototype = {
     onInputOut: null,
 
     /**
-    * This signal is dispatched if the Game Object has `inputEnabled` set to `true`, 
+    * This signal is dispatched if the Game Object has `inputEnabled` set to `true`,
     * and receives a down event from a Phaser.Pointer. This effectively means the Pointer has been
     * pressed down (but not yet released) on the Game Object.
     * It is sent two arguments:
@@ -177,7 +184,7 @@ Phaser.Events.prototype = {
     onInputDown: null,
 
     /**
-    * This signal is dispatched if the Game Object has `inputEnabled` set to `true`, 
+    * This signal is dispatched if the Game Object has `inputEnabled` set to `true`,
     * and receives an up event from a Phaser.Pointer. This effectively means the Pointer had been
     * pressed down, and was then released on the Game Object.
     * It is sent three arguments:
@@ -227,7 +234,7 @@ Phaser.Events.prototype = {
     onDragStop: null,
 
     /**
-    * This signal is dispatched if the Game Object has the AnimationManager component, 
+    * This signal is dispatched if the Game Object has the AnimationManager component,
     * and an Animation has been played.
     * You can also listen to `Animation.onStart` rather than via the Game Objects events.
     * It is sent two arguments:
@@ -238,7 +245,7 @@ Phaser.Events.prototype = {
     onAnimationStart: null,
 
     /**
-    * This signal is dispatched if the Game Object has the AnimationManager component, 
+    * This signal is dispatched if the Game Object has the AnimationManager component,
     * and an Animation has been stopped (via `animation.stop()` and the `dispatchComplete` argument has been set.
     * You can also listen to `Animation.onComplete` rather than via the Game Objects events.
     * It is sent two arguments:
@@ -249,7 +256,7 @@ Phaser.Events.prototype = {
     onAnimationComplete: null,
 
     /**
-    * This signal is dispatched if the Game Object has the AnimationManager component, 
+    * This signal is dispatched if the Game Object has the AnimationManager component,
     * and an Animation has looped playback.
     * You can also listen to `Animation.onLoop` rather than via the Game Objects events.
     * It is sent two arguments:

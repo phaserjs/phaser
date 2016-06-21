@@ -283,7 +283,7 @@ Phaser.InputHandler.prototype = {
 
     /**
     * Starts the Input Handler running. This is called automatically when you enable input on a Sprite, or can be called directly if you need to set a specific priority.
-    * 
+    *
     * @method Phaser.InputHandler#start
     * @param {number} [priority=0] - Higher priority sprites take click priority over low-priority sprites when they are stacked on-top of each other.
     * @param {boolean} [useHandCursor=false] - If true the Sprite will show the hand cursor on mouse-over (doesn't apply to mobile browsers)
@@ -864,7 +864,7 @@ Phaser.InputHandler.prototype = {
         if (this.sprite === null || this.sprite.parent === undefined)
         {
             //  Abort. We've been destroyed.
-            return;
+            return false;
         }
 
         if (!this.enabled || !this.sprite.visible || !this.sprite.parent.visible)
@@ -897,6 +897,7 @@ Phaser.InputHandler.prototype = {
             {
                 this._pointerData[pointer.id].x = pointer.x - this.sprite.x;
                 this._pointerData[pointer.id].y = pointer.y - this.sprite.y;
+                /* return */ this.sprite.events.onInputUpdate.dispatch(this.sprite, pointer);
                 return true;
             }
             else
@@ -1178,7 +1179,7 @@ Phaser.InputHandler.prototype = {
 
     /**
     * Called as a Pointer actively drags this Game Object.
-    * 
+    *
     * @method Phaser.InputHandler#updateDrag
     * @private
     * @param {Phaser.Pointer} pointer - The Pointer causing the drag update.
