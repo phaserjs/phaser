@@ -150,16 +150,16 @@ Phaser.Events.prototype = {
     * This signal is dispatched if the Game Object has `inputEnabled` set to `true`,
     * and receives an over event from a Phaser.Pointer.
     * It is sent two arguments:
-	* {Phaser.InputEvent} The event object.
+    * {Phaser.InputEvent} The event object.
     * {Phaser.Pointer} The Phaser.Pointer object that caused the event.
     * @property {Phaser.Signal} onInputOver
     */
     onInputOver: null,
 
     /**
-	* This signal is dispatched if the parent is inputEnabled and a pointer is moved within it.
+    * This signal is dispatched if the parent is inputEnabled and a pointer is moved within it.
     * It is sent two arguments:
-	* {Phaser.InputEvent} The event object.
+    * {Phaser.InputEvent} The event object.
     * {Phaser.Pointer} The Phaser.Pointer object that caused the event.
     * @property {Phaser.Signal} onInputUpdate
     */
@@ -170,7 +170,7 @@ Phaser.Events.prototype = {
     * This signal is dispatched if the Game Object has `inputEnabled` set to `true`,
     * and receives an out event from a Phaser.Pointer, which was previously over it.
     * It is sent two arguments:
-	* {Phaser.InputEvent} The event object.
+    * {Phaser.InputEvent} The event object.
     * {Phaser.Pointer} The Phaser.Pointer object that caused the event.
     * @property {Phaser.Signal} onInputOut
     */
@@ -181,7 +181,7 @@ Phaser.Events.prototype = {
     * and receives a down event from a Phaser.Pointer. This effectively means the Pointer has been
     * pressed down (but not yet released) on the Game Object.
     * It is sent two arguments:
-	* {Phaser.InputEvent} The event object.
+    * {Phaser.InputEvent} The event object.
     * {Phaser.Pointer} The Phaser.Pointer object that caused the event.
     * @property {Phaser.Signal} onInputDown
     */
@@ -192,7 +192,7 @@ Phaser.Events.prototype = {
     * and receives an up event from a Phaser.Pointer. This effectively means the Pointer had been
     * pressed down, and was then released on the Game Object.
     * It is sent three arguments:
-	* {Phaser.InputEvent} The event object.
+    * {Phaser.InputEvent} The event object.
     * {Phaser.Pointer} The Phaser.Pointer object that caused the event.
     * {boolean} isOver - Is the Pointer still over the Game Object?
     * @property {Phaser.Signal} onInputUp
@@ -204,7 +204,7 @@ Phaser.Events.prototype = {
     * It is sent when a Phaser.Pointer starts to drag the Game Object, taking into consideration the various
     * drag limitations that may be set.
     * It is sent four arguments:
-	* {Phaser.InputEvent} The event object.
+    * {Phaser.InputEvent} The event object.
     * {Phaser.Pointer} The Phaser.Pointer object that caused the event.
     * {number} The x coordinate that the drag started from.
     * {number} The y coordinate that the drag started from.
@@ -217,7 +217,7 @@ Phaser.Events.prototype = {
     * It is sent when a Phaser.Pointer is actively dragging the Game Object.
     * Be warned: This is a high volume Signal. Be careful what you bind to it.
     * It is sent six arguments:
-	* {Phaser.InputEvent} The event object.
+    * {Phaser.InputEvent} The event object.
     * {Phaser.Pointer} The Phaser.Pointer object that caused the event.
     * {number} The new x coordinate of the Game Object.
     * {number} The new y coordinate of the Game Object.
@@ -231,7 +231,7 @@ Phaser.Events.prototype = {
     * This signal is dispatched if the Game Object has been `inputEnabled` and `enableDrag` has been set.
     * It is sent when a Phaser.Pointer stops dragging the Game Object.
     * It is sent two arguments:
-	* {Phaser.InputEvent} The event object.
+    * {Phaser.InputEvent} The event object.
     * {Phaser.Pointer} The Phaser.Pointer object that caused the event.
     * @property {Phaser.Signal} onDragStop
     */
