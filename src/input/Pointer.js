@@ -834,19 +834,22 @@ Phaser.Pointer.prototype = {
                 {
                     this.interactiveCandidates.splice(i,1);
                     this.targetObject = null;
+                    this.propagateThrough();
+                } else {
+                    this.targetObject.sprite.updateTransform();
                 }
-            }
-            propagated = this.triggerPropagation();
-            if(!propagated)
-            {
-                break;
+                propagated = this.triggerPropagation();
+                if(!propagated)
+                {
+                    break;
+                }
             }
         }
 
         if (!(dragged && !propagated) && // if an object was dragged and did not propagate the input, then we can skip processing other objects
                 input.interactiveItems.total > 0)
         {
-            this.processInteractiveObjects(fromClick);
+            this.processInteractiveObjects(fromClick, true);
         }
 
         return this;
@@ -861,7 +864,9 @@ Phaser.Pointer.prototype = {
     * @param {boolean} [fromClick=false] - Was this called from the click event?
     * @return {boolean} True if this method processes an object (i.e. a Sprite becomes the Pointers currentTarget), otherwise false.
     */
-    processInteractiveObjects: function (fromClick) {
+    processInteractiveObjects: function (fromClick, fromMove) {
+
+		if(fromMove === undefined) { fromMove = false; }
 
         var detectedObjects = [];
 
@@ -899,22 +904,28 @@ Phaser.Pointer.prototype = {
             }
             else
             {
-                object.checked = true;
+                object.checked = object.pointerOver(this.id);
             }
         }
 
         this.targetObject = null;
 
         // for currently valid objects if they were valid previously update, otherwise _pointerOverHandler
-        for (var i = detectedObjects.length; i --> 0;)
+        var i = detectedObjects.length;
+        while ( i --> 0 )
         {
             this.targetObject = detectedObjects[i];
             if(this.targetObject.checked)
             {
                 this.targetObject.checked = false;
-                if(this.targetObject.update(this) === false)
+				if(!fromClick && fromMove && this.targetObject.isDragged) // exclude dragged objects as they have been updated previously in move() and, since we are here now, propagated input
+				{
+                    this.propagateThrough();
+				}
+				else if(this.targetObject.update(this) === false)
                 {
                     detectedObjects.splice(i,1);
+                    this.propagateThrough();
                 }
             }
             else
@@ -924,6 +935,16 @@ Phaser.Pointer.prototype = {
             if(!this.triggerPropagation()) // stop if did not propagate
             {
                 break;
+            }
+        }
+
+        // pointer out on all objects that have been obscured
+        while ( i --> 0 )
+        {
+            var object = detectedObjects[i];
+            if(object.checked) {
+                object.checked = false;
+                object._pointerOutHandler(this);
             }
         }
 
