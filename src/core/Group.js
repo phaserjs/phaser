@@ -2050,18 +2050,16 @@ Phaser.Group.prototype.getFarthestFrom = function (object) {
 };
 
 /**
-* Spreads the children
+* Spreads a property of all existing children from a given start value
 *
-* @method Phaser.Group#spreadOut
-* @param {number} x - The center/starting x value
-* @param {number} y - The center/starting y value
-* @param {number} marginX - The margin between x values
-* @param {number} marginY - The margin between y values
+* @method Phaser.Group#spreadProperties
+* @param {number} startValue - The center/starting value
+* @param {number} margin - The margin between values
 * @return {none}
 */
-Phaser.Group.prototype.spreadOut = function(x, y, marginX, marginY) {
-	
-	var amount = this.children.length;
+Phaser.Group.prototype.spreadProperties = function(property, startValue, margin) {
+    
+    var amount = this.children.length;
 	
 	for (var i = 0; i < amount; ++i)
 	{
@@ -2069,16 +2067,33 @@ Phaser.Group.prototype.spreadOut = function(x, y, marginX, marginY) {
 		
 		if (child.exists)
 		{
-			if (x !== null && marginX !== null) 
-			{
-			    child.x = Phaser.Math.spread(x, amount, marginX, i);
-			}
-			if (y !== null && marginY !== null)
-			{
-			    child.y = Phaser.Math.spread(y, amount, marginY, i);
-			}
+	        child[property] = Phaser.Math.spread(startValue, amount, margin, i);
 		}
 	}
+}
+
+/**
+* Spreads the x position of all existing children from a given start value
+*
+* @method Phaser.Group#spreadX
+* @param {number} startValue - The center/starting x value
+* @param {number} margin - The margin between values
+* @return {none}
+*/
+Phaser.Group.prototype.spreadX = function(startValue, margin) {
+    this.spreadProperties('x', startValue, margin);
+};
+
+/**
+* Spreads the y position of all existing children from a given start value
+*
+* @method Phaser.Group#spreadY
+* @param {number} startValue - The center/starting y value
+* @param {number} margin - The margin between values
+* @return {none}
+*/
+Phaser.Group.prototype.spreadY = function(startValue, margin) {
+    this.spreadProperties('y', startValue, margin);
 };
 
 /**
