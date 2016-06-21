@@ -319,7 +319,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 
 ### New Features
 
-*
+* The Loader has a new property `headers`. This is an object checked by XHR Requests, used to set the Request Header of certain file types. JSON and XML are pre-configured, but you can add to, or modify this property as required (thanks @stoneman1 #2585 #2485)
 *
 *
 
@@ -328,7 +328,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * TypeScript definitions fixes and updates (thanks)
 * Docs typo fixes (thanks @drhayes @)
 * The TilemapParser will now add more data when importing Image object types from Tiled. The extra data available is: image width, image height, and flags to see if the image is flipped either horizontally, vertically or diagonally (thanks @gotenxds #2564 #2554)
-*
+* TilemapLayer.renderRegion has had an assignment to the obsolete `tileColor` property removed (thanks @cryptographer #2583)
 
 ### Bug Fixes
 

@@ -102,11 +102,13 @@ Phaser.Loader = function (game) {
     */
     this.path = '';
 
-	/**
-     * @property {object} Headers - Maps file types to accept headers.
-     * @default
-     */
-
+    /**
+    * Used to map the application mime-types to to the Accept header in XHR requests.
+    * If you don't require these mappings, or they cause problems on your server, then
+    * remove them from the headers object and the XHR request will not try to use them.
+    * @property {object} headers
+    * @default
+    */
     this.headers = {
         json: "application/json",
         xml: "application/xml"
@@ -2327,7 +2329,11 @@ Phaser.Loader.prototype = {
         var xhr = new XMLHttpRequest();
         xhr.open("GET", url, true);
         xhr.responseType = type;
-        if (this.headers[file.type]) { xhr.setRequestHeader("Accept", this.headers[file.type]); }
+
+        if (this.headers[file.type])
+        {
+            xhr.setRequestHeader("Accept", this.headers[file.type]);
+        }
 
         onerror = onerror || this.fileError;
 
