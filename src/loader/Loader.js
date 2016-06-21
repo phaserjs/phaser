@@ -102,8 +102,18 @@ Phaser.Loader = function (game) {
     */
     this.path = '';
 
+	/**
+     * @property {object} Headers - Maps file types to accept headers.
+     * @default
+     */
+
+    this.headers = {
+        json: "application/json",
+        xml: "application/xml"
+    };
+
     /**
-    * This event is dispatched when the loading process starts: before the first file has been requested,
+     * This event is dispatched when the loading process starts: before the first file has been requested,
     * but after all the initial packs have been loaded.
     *
     * @property {Phaser.Signal} onLoadStart
@@ -2317,6 +2327,7 @@ Phaser.Loader.prototype = {
         var xhr = new XMLHttpRequest();
         xhr.open("GET", url, true);
         xhr.responseType = type;
+        if (this.headers[file.type]) { xhr.setRequestHeader("Accept", this.headers[file.type]); }
 
         onerror = onerror || this.fileError;
 
