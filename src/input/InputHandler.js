@@ -897,7 +897,7 @@ Phaser.InputHandler.prototype = {
             {
                 this._pointerData[pointer.id].x = pointer.x - this.sprite.x;
                 this._pointerData[pointer.id].y = pointer.y - this.sprite.y;
-                /* return */ this.sprite.events.onInputUpdate.dispatch(this.sprite, pointer);
+                this.sprite.events.onInputUpdate.dispatch(this.sprite, pointer);
                 return true;
             }
             else
