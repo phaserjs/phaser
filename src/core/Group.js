@@ -2238,7 +2238,7 @@ Phaser.Group.prototype.getClosestTo = function (object, callback, callbackContex
         {
             tempDistance = Math.abs(Phaser.Point.distance(object, child));
 
-            if (tempDistance > distance && (!callback || callback.call(callbackContext, child, tempDistance)))
+            if (tempDistance < distance && (!callback || callback.call(callbackContext, child, tempDistance)))
             {
                 distance = tempDistance;
                 result = child;
