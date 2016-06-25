@@ -343,8 +343,8 @@ declare module Phaser {
         move(x: number, y: number, wrap?: boolean): Phaser.BitmapData;
         moveH(distance: number, wrap?: boolean): Phaser.BitmapData;
         moveV(distance: number, wrap?: boolean): Phaser.BitmapData;
-        processPixel(callback: Function, callbackContext: any, x?: number, y?: Number, width?: number, height?: number): Phaser.BitmapData;
-        processPixelRGB(callback: Function, callbackContext: any, x?: number, y?: Number, width?: number, height?: number): Phaser.BitmapData;
+        processPixel(callback: (color: number, x: number, y: number) => void, callbackContext: any, x?: number, y?: Number, width?: number, height?: number): Phaser.BitmapData;
+        processPixelRGB(callback: (color: ColorComponents, x: number, y: number) => void, callbackContext: any, x?: number, y?: Number, width?: number, height?: number): Phaser.BitmapData;
         rect(x: number, y: number, width: number, height: number, fillStyle?: string): Phaser.BitmapData;
         render(): Phaser.BitmapData;
         replaceRGB(r1: number, g1: number, b1: number, a1: number, r2: number, g2: number, b2: number, a2: number, region?: Phaser.Rectangle): Phaser.BitmapData;
@@ -734,8 +734,8 @@ declare module Phaser {
     class Color {
 
         static componentToHex(color: number): string;
-        static createColor(r?: number, g?: number, b?: number, a?: number, h?: number, s?: number, l?: number, v?: number): any;
-        static fromRGBA(rgba: number, out?: any): any;
+        static createColor(r?: number, g?: number, b?: number, a?: number, h?: number, s?: number, l?: number, v?: number): ColorComponents;
+        static fromRGBA(rgba: number, out?: ColorComponents): ColorComponents;
         static getAlpha(color: number): number;
         static getAlphaFloat(color: number): number;
         static getBlue(color: number): number;
@@ -744,27 +744,27 @@ declare module Phaser {
         static getGreen(color: number): number;
         static getRandomColor(min?: number, max?: number, alpha?: number): number;
         static getRed(color: number): number;
-        static getRGB(color: number): any;
-        static getWebRGB(color: any): string;
+        static getRGB(color: number): RGBColor;
+        static getWebRGB(color: number | RGBColor): string;
         static hexToRGB(h: string): number;
-        static hexToColor(hex: string, out?: any): any;
-        static HSLtoRGB(h: number, s: number, l: number, out?: any): any;
-        static HSLColorWheel(s?: number, l?: number): any[];
-        static HSVtoRGB(h: number, s: number, v: number, out?: any): any;
-        static HSVColorWheel(s?: number, v?: number): any[];
+        static hexToColor(hex: string, out?: ColorComponents): ColorComponents;
+        static HSLtoRGB(h: number, s: number, l: number, out?: ColorComponents): ColorComponents;
+        static HSLColorWheel(s?: number, l?: number): ColorComponents[];
+        static HSVtoRGB(h: number, s: number, v: number, out?: ColorComponents): ColorComponents;
+        static HSVColorWheel(s?: number, v?: number): ColorComponents[];
         static hueToColor(p: number, q: number, t: number): number;
         static interpolateColor(color1: number, color2: number, steps: number, currentStep: number, alpha: number): number;
         static interpolateColorWithRGB(color: number, r: number, g: number, b: number, steps: number, currentStep: number): number;
         static interpolateRGB(r1: number, g1: number, b1: number, r2: number, g2: number, b2: number, steps: number, currentStep: number): number;
         static packPixel(r: number, g: number, b: number, a: number): number;
-        static RGBtoHSL(r: number, g: number, b: number, out?: any): any;
-        static RGBtoHSV(r: number, g: number, b: number, out?: any): any;
+        static RGBtoHSL(r: number, g: number, b: number, out?: ColorComponents): ColorComponents;
+        static RGBtoHSV(r: number, g: number, b: number, out?: ColorComponents): ColorComponents;
         static RGBtoString(r: number, g: number, b: number, a?: number, prefix?: string): string;
         static toRGBA(r: number, g: number, b: number, a: number): number;
-        static unpackPixel(rgba: number, out?: any, hsl?: boolean, hsv?: boolean): any;
-        static updateColor(out: any): number;
-        static valueToColor(value: string, out?: any): { r: number; g: number; b: number; a: number; };
-        static webToColor(web: string, out?: any): { r: number; g: number; b: number; a: number; };
+        static unpackPixel(rgba: number, out?: ColorComponents, hsl?: boolean, hsv?: boolean): ColorComponents;
+        static updateColor(out: ColorComponents): ColorComponents;
+        static valueToColor(value: string, out?: ColorComponents): ColorComponents;
+        static webToColor(web: string, out?: ColorComponents): ColorComponents;
         static blendNormal(a: number): number;
         static blendLighten(a: number, b: number): number;
         static blendDarken(a: number, b: number): number;
@@ -791,6 +791,22 @@ declare module Phaser {
         static blendGlow(a: number, b: number): number;
         static blendPhoenix(a: number, b: number): number;
 
+    }
+
+    interface RGBColor {
+        r: number;
+        g: number;
+        b: number;
+        a: number;
+    }
+    interface ColorComponents extends RGBColor {
+        h: number;
+        s: number;
+        v: number;
+        l: number;
+        color: number;
+        color32: number;
+        rgba: string;        
     }
 
     class Create {
