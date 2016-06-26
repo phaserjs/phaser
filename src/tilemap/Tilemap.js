@@ -34,7 +34,7 @@ Phaser.Tilemap = function (game, key, tileWidth, tileHeight, width, height) {
     */
     this.key = key;
 
-    var data = Phaser.TilemapParser.parse(this.game, key, tileWidth, tileHeight, width, height);
+    var data = Phaser.TilemapParser.parse(this.game, key, tileWidth, tileHeight, width, height, this);
     this.data = data;
 
     if (data === null)
@@ -568,6 +568,8 @@ Phaser.Tilemap.prototype = {
 
         //  Add Buffer support for the left of the canvas
 
+        console.log("Tilemap.createLayer", layer, width, height);
+        
         if (width === undefined) { width = this.game.width; }
         if (height === undefined) { height = this.game.height; }
         if (group === undefined) { group = this.game.world; }
@@ -579,7 +581,9 @@ Phaser.Tilemap.prototype = {
             index = this.getLayerIndex(layer);
         }
 
-        if (index === null || index > this.layers.length)
+        // createLayer can be called by TilemapParser.parseTiledJSON so this.layers is undefined because we called parse to populate it
+        // TODO: this creates an ugly circularity in the class relationship, parse/tilemap should be reworked to be cleaner
+        if (index === null || (this.layers && index > this.layers.length))
         {
             console.warn('Tilemap.createLayer: Invalid layer ID given: ' + index);
             return;

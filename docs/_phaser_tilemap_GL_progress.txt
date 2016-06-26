@@ -150,3 +150,9 @@ Some notes for later:
 
 So, I can't create new TilemapLayer objects in TilemapParser because it will preempt Tilemap.createLayer.  Or maybe I can, these TilemapLayer objects will be internal (hidden)...?  There aren't any later calls in the Examples which I can extend or adapt, so that might have to be the solution.
 
+day seven:
+
+Read through the above and took a good look at the code.  It's a messy solution in this context.
+A better idea... parse the map as previously, on return to Tilemap create layers for each 'unique' entry in tilesets array.
+This avoids the circular calls to and from tilemap and parse, allows map to have a populated data member after parse, and still creates the required new layers before the example calls createLayer.
+(Check if this process can be added to createLayer?)

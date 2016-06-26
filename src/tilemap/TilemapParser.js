@@ -26,7 +26,7 @@ Phaser.TilemapParser = {
     INSERT_NULL: false,
 
     /**
-    * Parse tilemap data from the cache and creates a Tilemap object.
+    * Parse tilemap data from the cache and creates data for a Tilemap object.
     *
     * @method Phaser.TilemapParser.parse
     * @param {Phaser.Game} game - Game reference to the currently running game.
@@ -35,14 +35,16 @@ Phaser.TilemapParser = {
     * @param {number} [tileHeight=32] - The pixel height of a single map tile. If using CSV data you must specify this. Not required if using Tiled map data.
     * @param {number} [width=10] - The width of the map in tiles. If this map is created from Tiled or CSV data you don't need to specify this.
     * @param {number} [height=10] - The height of the map in tiles. If this map is created from Tiled or CSV data you don't need to specify this.
+    * @param {Phaser.Tilemap} [tileMap=null] - The Phaser.Tilemap this data is created for (used for createLayer to add new layers when mixed tilesets are used).
     * @return {object} The parsed map object.
     */
-    parse: function (game, key, tileWidth, tileHeight, width, height) {
+    parse: function (game, key, tileWidth, tileHeight, width, height, tileMap) {
 
         if (tileWidth === undefined) { tileWidth = 32; }
         if (tileHeight === undefined) { tileHeight = 32; }
         if (width === undefined) { width = 10; }
         if (height === undefined) { height = 10; }
+        if (tileMap === undefined) { tileMap = null; }
 
         if (key === undefined)
         {
@@ -64,7 +66,7 @@ Phaser.TilemapParser = {
             }
             else if (!map.format || map.format === Phaser.Tilemap.TILED_JSON)
             {
-                return this.parseTiledJSON(map.data);
+                return this.parseTiledJSON(map.data, tileMap);
             }
         }
         else
@@ -198,9 +200,10 @@ Phaser.TilemapParser = {
     * Parses a Tiled JSON file into valid map data.
     * @method Phaser.TilemapParser.parseJSON
     * @param {object} json - The JSON map data.
+    * @param {Phaser.Tilemap} [tileMap=null] - The Phaser.Tilemap object which has the createLayer functionality.
     * @return {object} Generated and parsed map data.
     */
-    parseTiledJSON: function (json) {
+    parseTiledJSON: function (json, tileMap) {
 
         if (json.orientation !== 'orthogonal')
         {
@@ -646,11 +649,14 @@ Phaser.TilemapParser = {
         var tile;
         var sid;
         var set;
+        var setLayers = [];
 
-        // go through each of the map layers
+        // go through each of the map data layers
         for (var i = 0; i < map.layers.length; i++)
         {
             layer = map.layers[i];
+
+            set = null;
 
             // rows of tiles
             for (var j = 0; j < layer.data.length; j++)
@@ -670,7 +676,20 @@ Phaser.TilemapParser = {
                     // find the relevant tileset
 
                     sid = map.tiles[tile.index][2];
+
+                    // if this is a different tileset to the one already being used by this layer...
+                    // TODO: check if the tileset has changed size, we can probably skip this if it's identical
+                    if ( set && set.name !== map.tilesets[sid].name )
+                    {
+                        // if there's no layer for this tileset, create a clone of this layer and attach the tileset to it
+                        if ( !setLayers[set.name] )
+                        {
+                            setLayers[set.name] = tileMap.createLayer();
+                        }
+                        // TODO: add the tile to the layer which holds this tileset, and make it an invalid tile in this layer
+                    }
                     set = map.tilesets[sid];
+
 
                     // if that tile type has any properties, add them to the tile object
 
@@ -678,6 +697,7 @@ Phaser.TilemapParser = {
                     {
                         tile.properties = Phaser.Utils.mixin(set.tileProperties[tile.index - set.firstgid], tile.properties);
                     }
+
                 }
             }
         }
