@@ -638,7 +638,7 @@ Phaser.TilemapLayerGL.prototype.setScale = function (xScale, yScale) {
 * @param {integer} right - Rightmost column to render.
 * @param {integer} bottom - Bottommost row to render.
 */
-Phaser.TilemapLayerGL.prototype.renderRegion = function (scrollX, scrollY, left, top, right, bottom) {
+Phaser.TilemapLayerGL.prototype.renderRegion = function (scrollX, scrollY, left, top, right, bottom, offx, offy) {
 
     var width = this.layer.width;
     var height = this.layer.height;
@@ -647,6 +647,9 @@ Phaser.TilemapLayerGL.prototype.renderRegion = function (scrollX, scrollY, left,
 
     var lastAlpha = NaN;
 
+    offx = offx || 0;
+    offy = offy || 0;
+    
     if (!this._wrap)
     {
         if (left <= right) // Only adjust if going to render
@@ -718,12 +721,12 @@ Phaser.TilemapLayerGL.prototype.renderRegion = function (scrollX, scrollY, left,
                 //     context.scale(-1, 1);
                 // }
 
-                this._mc.tileset.drawGl(this.glBatch, -tile.centerX, -tile.centerY, index);
+                this._mc.tileset.drawGl(this.glBatch, -tile.centerX + offx, -tile.centerY + offy, index);
                 //context.restore();
             }
             else
             {
-                this._mc.tileset.drawGl(this.glBatch, tx, ty, index);
+                this._mc.tileset.drawGl(this.glBatch, tx + offx, ty + offy, index);
             }
             // if (!this._mc.tileset && this.debugSettings.missingImageFill)
             // {
@@ -765,11 +768,11 @@ Phaser.TilemapLayerGL.prototype.renderFull = function () {
 
     var left = Math.floor( (scrollX - (cw - tw)) / tw );
     var right = Math.floor( (renderW - 1 + scrollX) / tw );
-    var top = Math.floor( (scrollY - (ch - th)) / th );
+    var top = Math.floor( scrollY - (ch - th) / th );
     var bottom = Math.floor( (renderH - 1 + scrollY) / th );
 
     this.glBatch = [];
-    this.renderRegion(scrollX, scrollY, left, top, right, bottom);
+    this.renderRegion(scrollX, scrollY, left, top, right, bottom, 0, -(ch - th));
 };
 
 /**

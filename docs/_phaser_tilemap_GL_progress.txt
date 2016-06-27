@@ -172,7 +172,6 @@ Tiles are still turning off too soon at the map edges (exactly like the Canvas v
 
 Fixed tiles vanishing at the edge of the screen by using the difference between the original map tileWidth and the current tileset tileWidth when calculating the redraw region left and top.
 
-
 Removed resolveTileset from TilemapLayerGL as it is no longer needed.
 
 Task list updated:
@@ -180,3 +179,7 @@ Task list updated:
 - Add scaling to the shader, use the layer's worldScale.  (See if rotation can be easily supported too, while doing this)
 - Optimise the drawing to avoid degenerate triangles where possible, e.g. each row should be a single tri-strip without degenerates in it for faster drawing
 - larger tiles are top-left aligned but should be bottom-left aligned to match the way that Tiled places them
+
+Added offset parameters to renderRegion to correctly bottom-left align the large tiles.
+NOTE: the canvas version does not do this and consequently displays the tiles in the wrong positions.
+
