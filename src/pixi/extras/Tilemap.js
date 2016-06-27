@@ -56,7 +56,7 @@ PIXI.Tilemap = function(texture, mapwidth, mapheight, tilewidth, tileheight, lay
     this.dirty = true;
 
     /**
-     * The blend mode to be applied to the sprite. Set to PIXI.blendModes.NORMAL to remove any blend mode.
+     * The blend mode to be applied to the tilemap. Set to PIXI.blendModes.NORMAL to remove any blend mode.
      *
      * @property blendMode
      * @type Number
@@ -91,8 +91,7 @@ PIXI.Tilemap.prototype._renderWebGL = function(renderSession)
 
     renderSession.spriteBatch.stop();
 
-    // init! init!
-    if(!this._vertexBuffer)
+    if (!this._vertexBuffer)
     {
       this._initWebGL(renderSession);
     }

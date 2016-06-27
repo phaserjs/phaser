@@ -190,4 +190,5 @@ Need to talk with Rich about it before proceeding further.
 
 Modified the batch creation code and the batch drawing code to only insert degenerate triangles at the end of rows or when a row is broken (e.g. by some empty tiles which we won't draw at all).  This should speed things up by optimising the draw, and reducing the amount of data required to describe the batch.
 
+Took a look at the PIXI triangle strip shader and noticed that the alpha is being used as a multiplier on the whole colour vector... I was applying it directly to the .a fourth vector value.  Changed the tilemap shader to match and it's working great now!
 

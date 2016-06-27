@@ -35,9 +35,7 @@ PIXI.TilemapShader = function(gl)
         "  uniform float uAlpha;",
         "  varying vec2 vTexCoord;",
         "  void main(void) {",
-        "    vec4 col = texture2D(uImageSampler, vTexCoord);",
-        "    col.a = uAlpha;",
-        "    gl_FragColor = col;",
+        "    gl_FragColor = texture2D(uImageSampler, vTexCoord) * uAlpha;",
         "  }"
         ];
 
