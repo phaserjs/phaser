@@ -171,6 +171,7 @@ Phaser.TilemapLayerGL = function (game, tilemap, index, width, height) {
     * @property {object} _mc
     * @private
     */
+    var tileset =  this.layer.tileset || this.map.tilesets[0];
     this._mc = {
 
         // Used to bypass rendering without reliance on `dirty` and detect changes.
@@ -179,18 +180,23 @@ Phaser.TilemapLayerGL = function (game, tilemap, index, width, height) {
         renderWidth: 0,
         renderHeight: 0,
 
+        // dimensions of tiles in the original tilemap (the one holding all the tile indices)
         tileWidth: tilemap.tileWidth,
         tileHeight: tilemap.tileHeight,
 
         // Collision width/height (pixels)
         // What purpose do these have? Most things use tile width/height directly.
-        // This also only extends collisions right and down.       
-        cw: tilemap.tileWidth,
-        ch: tilemap.tileHeight,
+        // This also only extends collisions right and down.
+
+        // dimensions of tiles in this tileset (may not match the original tilemap)
+        cw: tileset.tileWidth,
+        ch: tileset.tileHeight,
+
+        // the tileset for this layer
+        tileset: tileset,
 
         // Cached tilesets from index -> Tileset
         tilesets: []
-
     };
 
     /**
@@ -223,9 +229,8 @@ Phaser.TilemapLayerGL = function (game, tilemap, index, width, height) {
     this._results = [];
 
     // get PIXI textures for each tileset source image
-    var tileset = this.layer.tileset || this.map.tilesets[0];
     var baseTexture = new PIXI.BaseTexture( tileset.image );
-    PIXI.Tilemap.call(this, new PIXI.Texture(baseTexture), this.map.width, this.map.height, tileset.tileWidth, tileset.tileHeight, this.layer);
+    PIXI.Tilemap.call(this, new PIXI.Texture(baseTexture), this.map.width, this.map.height, this._mc.tileset.tileWidth, this._mc.tileset.tileHeight, this.layer);
 
     Phaser.Component.Core.init.call(this, game, 0, 0, null, null);
 
@@ -678,7 +683,6 @@ Phaser.TilemapLayerGL.prototype.renderRegion = function (scrollX, scrollY, left,
     var tw = this._mc.tileWidth;
     var th = this._mc.tileHeight;
 
-    var tilesets = this._mc.tilesets;
     var lastAlpha = NaN;
 
     if (!this._wrap)
@@ -799,10 +803,13 @@ Phaser.TilemapLayerGL.prototype.renderFull = function () {
     var tw = this._mc.tileWidth;
     var th = this._mc.tileHeight;
 
-    var left = Math.floor(scrollX / tw);
-    var right = Math.floor((renderW - 1 + scrollX) / tw);
-    var top = Math.floor(scrollY / th);
-    var bottom = Math.floor((renderH - 1 + scrollY) / th);
+    var cw = this._mc.cw;
+    var ch = this._mc.ch;
+
+    var left = Math.floor( (scrollX - (cw - tw)) / tw );
+    var right = Math.floor( (renderW - 1 + scrollX) / tw );
+    var top = Math.floor( (scrollY - (ch - th)) / th );
+    var bottom = Math.floor( (renderH - 1 + scrollY) / th );
 
     this.glBatch = [];
     this.renderRegion(scrollX, scrollY, left, top, right, bottom);
