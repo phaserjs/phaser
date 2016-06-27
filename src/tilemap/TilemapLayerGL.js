@@ -704,11 +704,11 @@ Phaser.TilemapLayerGL.prototype.renderRegion = function (scrollX, scrollY, left,
 
             var index = tile.index;
 
-            if (tile.alpha !== lastAlpha && !this.debug)
-            {
-                //context.globalAlpha = tile.alpha;
-                lastAlpha = tile.alpha;
-            }
+            // if (tile.alpha !== lastAlpha && !this.debug)
+            // {
+            //     //context.globalAlpha = tile.alpha;
+            //     lastAlpha = tile.alpha;
+            // }
 
             if (tile.rotation || tile.flipped)
             {
@@ -721,12 +721,12 @@ Phaser.TilemapLayerGL.prototype.renderRegion = function (scrollX, scrollY, left,
                 //     context.scale(-1, 1);
                 // }
 
-                this._mc.tileset.drawGl(this.glBatch, -tile.centerX + offx, -tile.centerY + offy, index);
+                this._mc.tileset.drawGl(this.glBatch, -tile.centerX + offx, -tile.centerY + offy, index, tile.alpha);
                 //context.restore();
             }
             else
             {
-                this._mc.tileset.drawGl(this.glBatch, tx + offx, ty + offy, index);
+                this._mc.tileset.drawGl(this.glBatch, tx + offx, ty + offy, index, tile.alpha);
             }
             // if (!this._mc.tileset && this.debugSettings.missingImageFill)
             // {
@@ -768,7 +768,7 @@ Phaser.TilemapLayerGL.prototype.renderFull = function () {
 
     var left = Math.floor( (scrollX - (cw - tw)) / tw );
     var right = Math.floor( (renderW - 1 + scrollX) / tw );
-    var top = Math.floor( scrollY - (ch - th) / th );
+    var top = Math.floor( (scrollY - (ch - th)) / th );
     var bottom = Math.floor( (renderH - 1 + scrollY) / th );
 
     this.glBatch = [];

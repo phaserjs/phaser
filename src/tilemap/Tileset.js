@@ -162,8 +162,9 @@ Phaser.Tileset.prototype = {
     * @param {number} x - The x coordinate to draw to.
     * @param {number} y - The y coordinate to draw to.
     * @param {integer} index - The index of the tile within the set to draw.
+    * @param {number} alpha - The alpha value to draw this tile with.
     */
-    drawGl: function (glBatch, x, y, index) {
+    drawGl: function (glBatch, x, y, index, alpha) {
 
         // Correct the tile index for the set and bias for interlacing x/y values
         var coordIndex = (index - this.firstgid) * 2;
@@ -181,7 +182,8 @@ Phaser.Tileset.prototype = {
                 dx: x + this.tileWidth * 0.5,
                 dy: y + this.tileHeight * 0.5,
                 dw: this.tileWidth,
-                dh: this.tileHeight
+                dh: this.tileHeight,
+                alpha: alpha
             } );
         }
 
