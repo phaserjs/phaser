@@ -22,6 +22,8 @@
 */
 Phaser.TilemapLayerGL = function (game, tilemap, index, width, height) {
 
+    console.log( "Phaser.TilemapLayerGL", index, width, height);
+
     this.game = game;
 
     width |= 0;
@@ -220,9 +222,10 @@ Phaser.TilemapLayerGL = function (game, tilemap, index, width, height) {
     */
     this._results = [];
 
-    // TODO: need PIXI textures for each tileset source image
-    var baseTexture = new PIXI.BaseTexture(this.map.tilesets[0].image);
-    PIXI.Tilemap.call(this, new PIXI.Texture(baseTexture), this.map.width, this.map.height, this.map.tileWidth, this.map.tileHeight, this.layer);
+    // get PIXI textures for each tileset source image
+    var tileset = this.layer.tileset || this.map.tilesets[0];
+    var baseTexture = new PIXI.BaseTexture( tileset.image );
+    PIXI.Tilemap.call(this, new PIXI.Texture(baseTexture), this.map.width, this.map.height, tileset.tileWidth, tileset.tileHeight, this.layer);
 
     Phaser.Component.Core.init.call(this, game, 0, 0, null, null);
 

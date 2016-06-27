@@ -144,7 +144,7 @@ Attempted a quick hack to test the new layers approach but got bogged down in th
 Some notes for later:
 - Tilemap creates TilemapLayer objects (Sprites). It keeps no reference to them after adding them to a group (or the world group), the new layer object gets a 'map' reference.
 - Tilemap contains a layers member variable, it contains bespoke objects (see createBlankLayer) with some information about layers in the map data (which do not correspond to TilemapLayer objects at all)
-- TilemapParser parses raw map data into the Tilemap.data member.  It creates Tileset objects and populates them for each tile set used in the raw map.  It creates Tile objects for each tile in the map data.
+- TilemapParser parses raw map data into a local 'map' variable which is returned to be set as the Tilemap.data member.  It creates Tileset objects and populates them for each tile set used in the raw map.  It creates Tile objects for each tile in the map data.
 - Tileset contains information about separate tile sources, including the image, the first tile, tile layout in the image.  It contains the draw function to render a tile on the canvas.
 - Tilemap.createLayer is called by Examples after the Tilemap has been created and parsed.
 
@@ -153,6 +153,20 @@ So, I can't create new TilemapLayer objects in TilemapParser because it will pre
 day seven:
 
 Read through the above and took a good look at the code.  It's a messy solution in this context.
-A better idea... parse the map as previously, on return to Tilemap create layers for each 'unique' entry in tilesets array.
+A better idea... parse the map as originally, on return to Tilemap create layers for each 'unique' entry in tilesets array.
 This avoids the circular calls to and from tilemap and parse, allows map to have a populated data member after parse, and still creates the required new layers before the example calls createLayer.
 (Check if this process can be added to createLayer?)
+Added createInternalLayer to Phaser.Tilemap which creates a new internal layer for each non-zero member of the base Tilemap's tilesets list when createLayer is called.  (The zero tileset is drawn by the layer created by createLayer).
+
+The Tile objects have incorrect data... in the "create from objects" example the "tiles2" tiles which are 70x70 pixels have a width/height of 32x32 (the same as the base tiles from the "ground_1x1" set).  I'll take a look at that in a minute after I get this to draw something (the tile used is in the top-left of the image so it should draw even through the sizes are wrong).
+
+The image texture appears to also be incorrect in Tile objects that use different tilesets.  This might explain why we get garbage drawn to screen, however looking at the phaser.io example I'm seeing the correct tiles being drawn.  Need to check all my new code to find how it has got the wrong values.
+
+Bug found in TilemapLayerGL where it sets the PIXI baseTexture.  I'm seeing the top-left corner of the 70x70 tiles.
+
+Added a tileset parameter to the map's layer data objects when creating an 'internal' layer.
+Made TilemapLayerGL grab the tile dimensions from the new tileset parameter instead of relying on the map containing only one size.
+
+First working demo with multiple webgl layers each batching tiles from separate tilesets which were all attached to one map layer in the Tiled program.
+Tiles are still turning off too soon at the map edges (exactly like the Canvas version) but that should be fixable with this 'internal layer' approach.
+

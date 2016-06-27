@@ -38,13 +38,12 @@ Phaser.TilemapParser = {
     * @param {Phaser.Tilemap} [tileMap=null] - The Phaser.Tilemap this data is created for (used for createLayer to add new layers when mixed tilesets are used).
     * @return {object} The parsed map object.
     */
-    parse: function (game, key, tileWidth, tileHeight, width, height, tileMap) {
+    parse: function (game, key, tileWidth, tileHeight, width, height) {
 
         if (tileWidth === undefined) { tileWidth = 32; }
         if (tileHeight === undefined) { tileHeight = 32; }
         if (width === undefined) { width = 10; }
         if (height === undefined) { height = 10; }
-        if (tileMap === undefined) { tileMap = null; }
 
         if (key === undefined)
         {
@@ -66,7 +65,7 @@ Phaser.TilemapParser = {
             }
             else if (!map.format || map.format === Phaser.Tilemap.TILED_JSON)
             {
-                return this.parseTiledJSON(map.data, tileMap);
+                return this.parseTiledJSON(map.data);
             }
         }
         else
@@ -200,10 +199,9 @@ Phaser.TilemapParser = {
     * Parses a Tiled JSON file into valid map data.
     * @method Phaser.TilemapParser.parseJSON
     * @param {object} json - The JSON map data.
-    * @param {Phaser.Tilemap} [tileMap=null] - The Phaser.Tilemap object which has the createLayer functionality.
     * @return {object} Generated and parsed map data.
     */
-    parseTiledJSON: function (json, tileMap) {
+    parseTiledJSON: function (json) {
 
         if (json.orientation !== 'orthogonal')
         {
@@ -649,7 +647,6 @@ Phaser.TilemapParser = {
         var tile;
         var sid;
         var set;
-        var setLayers = [];
 
         // go through each of the map data layers
         for (var i = 0; i < map.layers.length; i++)
@@ -676,18 +673,6 @@ Phaser.TilemapParser = {
                     // find the relevant tileset
 
                     sid = map.tiles[tile.index][2];
-
-                    // if this is a different tileset to the one already being used by this layer...
-                    // TODO: check if the tileset has changed size, we can probably skip this if it's identical
-                    if ( set && set.name !== map.tilesets[sid].name )
-                    {
-                        // if there's no layer for this tileset, create a clone of this layer and attach the tileset to it
-                        if ( !setLayers[set.name] )
-                        {
-                            setLayers[set.name] = tileMap.createLayer();
-                        }
-                        // TODO: add the tile to the layer which holds this tileset, and make it an invalid tile in this layer
-                    }
                     set = map.tilesets[sid];
 
 

@@ -37,6 +37,9 @@ PIXI.Tilemap = function(texture, mapwidth, mapheight, tilewidth, tileheight, lay
 
     this.layer = layer;
 
+    // store the list of batch drawing instructions (for use with WebGL rendering)
+    this.glBatch = null;
+
     /**
      * Remember last tile drawn to avoid unnecessary set-up
      *
