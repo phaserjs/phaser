@@ -284,6 +284,7 @@ PIXI.Tilemap.prototype._renderWholeTilemap = function(renderSession)
   // set the base offset (in screen units) (it's zero, scrolling is now handled by the batch buffer values)
   gl.uniform2f( shader.uScrollOffset, 0, 0 );
   //gl.uniform2f( shader.uScrollOffset, this.scrollX * iWide, -this.scrollY * iHigh );
+  gl.uniform1f( shader.uAlpha, this.alpha );
 
 
   // check if a texture is dirty..

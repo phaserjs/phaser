@@ -32,9 +32,12 @@ PIXI.TilemapShader = function(gl)
     this.fragmentSrc = [
         "  precision lowp float;",
         "  uniform sampler2D uImageSampler;",
+        "  uniform float uAlpha;",
         "  varying vec2 vTexCoord;",
         "  void main(void) {",
-        "    gl_FragColor = texture2D(uImageSampler, vTexCoord);",
+        "    vec4 col = texture2D(uImageSampler, vTexCoord);",
+        "    col.a = uAlpha;",
+        "    gl_FragColor = col;",
         "  }"
         ];
 
@@ -79,9 +82,10 @@ PIXI.TilemapShader.prototype.init = function()
     this.aPosition = gl.getAttribLocation(program, 'aPosition');
     this.uSampler = gl.getUniformLocation(program, 'uImageSampler');
     this.uScrollOffset = gl.getUniformLocation(program, 'uScrollOffset');
+    this.uAlpha = gl.getUniformLocation(program, 'uAlpha');
 
     this.attributes = [this.aPosition, this.uSampler];
-    this.uniforms = [this.uScrollOffset];
+    this.uniforms = [this.uScrollOffset, this.uAlpha];
 
     this.program = program;
 };
