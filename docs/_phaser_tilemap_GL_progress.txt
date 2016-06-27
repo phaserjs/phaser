@@ -183,3 +183,8 @@ Task list updated:
 Added offset parameters to renderRegion to correctly bottom-left align the large tiles.
 NOTE: the canvas version does not do this and consequently displays the tiles in the wrong positions.
 
+Added alpha blending based on TilemapLayerGL.alpha property.  NOTE: this appears to punch holes through the background and blends with the CSS background colour of the web-page.  See: http://webglfundamentals.org/webgl/lessons/webgl-and-alpha.html for list of possible solutions to this... looks like PIXI is currently set to use premultiplied alpha by Phaser (need to find out where, or if this is a default?)
+
+Prepared code to pass each Tile alpha value through to the batch renderer, however realised that implementing this will break the batching!
+Need to talk with Rich about it before proceeding further.
+
