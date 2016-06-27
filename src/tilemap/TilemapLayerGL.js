@@ -171,7 +171,7 @@ Phaser.TilemapLayerGL = function (game, tilemap, index, width, height) {
     * @property {object} _mc
     * @private
     */
-    var tileset =  this.layer.tileset || this.map.tilesets[0];
+    var tileset = this.layer.tileset || this.map.tilesets[0];
     this._mc = {
 
         // Used to bypass rendering without reliance on `dirty` and detect changes.
@@ -581,44 +581,6 @@ Phaser.TilemapLayerGL.prototype.getTiles = function (x, y, width, height, collid
 };
 
 /**
-* Returns the appropriate tileset for the index, updating the internal cache as required.
-* This should only be called if `tilesets[index]` evaluates to undefined.
-*
-* @method Phaser.TilemapLayerGL#resolveTileset
-* @private
-* @param {integer} Tile index
-* @return {Phaser.Tileset|null} Returns the associated tileset or null if there is no such mapping.
-*/
-Phaser.TilemapLayerGL.prototype.resolveTileset = function (tileIndex) {
-
-    var tilesets = this._mc.tilesets;
-
-    //  Try for dense array if reasonable
-    if (tileIndex < 2000)
-    {
-        while (tilesets.length < tileIndex)
-        {
-            tilesets.push(undefined);
-        }
-    }
-
-    var setIndex = this.map.tiles[tileIndex] && this.map.tiles[tileIndex][2];
-
-    if (setIndex != null) // number: not null or undefined
-    {
-        var tileset = this.map.tilesets[setIndex];
-
-        if (tileset && tileset.containsTileIndex(tileIndex))
-        {
-            return (tilesets[tileIndex] = tileset);
-        }
-    }
-
-    return (tilesets[tileIndex] = null);
-
-};
-
-/**
 * The TilemapLayerGL caches tileset look-ups.
 *
 * Call this method of clear the cache if tilesets have been added or updated after the layer has been rendered.
@@ -739,36 +701,31 @@ Phaser.TilemapLayerGL.prototype.renderRegion = function (scrollX, scrollY, left,
 
             var index = tile.index;
 
-            var set = this.resolveTileset(index);
-
             if (tile.alpha !== lastAlpha && !this.debug)
             {
                 //context.globalAlpha = tile.alpha;
                 lastAlpha = tile.alpha;
             }
 
-            if (set)
+            if (tile.rotation || tile.flipped)
             {
-                if (tile.rotation || tile.flipped)
-                {
-                    //context.save();
-                    //context.translate(tx + tile.centerX, ty + tile.centerY);
-                    //context.rotate(tile.rotation);
+                //context.save();
+                //context.translate(tx + tile.centerX, ty + tile.centerY);
+                //context.rotate(tile.rotation);
 
-                    // if (tile.flipped)
-                    // {
-                    //     context.scale(-1, 1);
-                    // }
+                // if (tile.flipped)
+                // {
+                //     context.scale(-1, 1);
+                // }
 
-                    set.drawGl(this.glBatch, -tile.centerX, -tile.centerY, index);
-                    //context.restore();
-                }
-                else
-                {
-                    set.drawGl(this.glBatch, tx, ty, index);
-                }
+                this._mc.tileset.drawGl(this.glBatch, -tile.centerX, -tile.centerY, index);
+                //context.restore();
             }
-            // else if (this.debugSettings.missingImageFill)
+            else
+            {
+                this._mc.tileset.drawGl(this.glBatch, tx, ty, index);
+            }
+            // if (!this._mc.tileset && this.debugSettings.missingImageFill)
             // {
             //     context.fillStyle = this.debugSettings.missingImageFill;
             //     context.fillRect(tx, ty, tw, th);
