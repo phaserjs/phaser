@@ -4934,7 +4934,7 @@ declare module Phaser {
         renderTabLine(line: string, x: number, y: number, fill?: boolean): void;
         setShadow(x?: number, y?: number, color?: any, blur?: number, shadowStroke?: boolean, shadowFill?: boolean): Phaser.Text;
         setStyle(style?: PhaserTextStyle, update?: boolean): Phaser.Text;
-        setText(text: string): Phaser.Text;
+        setText(text: string, immediate?: boolean): Phaser.Text;
         setTextBounds(x?: number, y?: number, width?: number, height?: number): Phaser.Text;
         update(): void;
         updateFont(components: any): void;

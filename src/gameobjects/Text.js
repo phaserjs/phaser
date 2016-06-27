@@ -1250,18 +1250,34 @@ Phaser.Text.prototype.componentsToFont = function (components) {
 };
 
 /**
- * The text to be displayed by this Text object.
- * Use a \n to insert a carriage return and split the text.
- * The text will be rendered with any style currently set.
- *
- * @method Phaser.Text#setText
- * @param {string} [text] - The text to be displayed. Set to an empty string to clear text that is already present.
- * @return {Phaser.Text} This Text instance.
- */
-Phaser.Text.prototype.setText = function (text) {
+* The text to be displayed by this Text object.
+* Use a \n to insert a carriage return and split the text.
+* The text will be rendered with any style currently set.
+*
+* Use the optional `immediate` argument if you need the Text display to update immediately.
+* 
+* If not it will re-create the texture of this Text object during the next time the render
+* loop is called.
+*
+* @method Phaser.Text#setText
+* @param {string} [text] - The text to be displayed. Set to an empty string to clear text that is already present.
+* @param {boolean} [immediate=false] - Update the texture used by this Text object immediately (true) or automatically during the next render loop (false).
+* @return {Phaser.Text} This Text instance.
+*/
+Phaser.Text.prototype.setText = function (text, immediate) {
+
+    if (immediate === undefined) { immediate = false; }
 
     this.text = text.toString() || '';
-    this.dirty = true;
+
+    if (immediate)
+    {
+        this.updateText();
+    }
+    else
+    {
+        this.dirty = true;
+    }
 
     return this;
 
