@@ -336,6 +336,8 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * Fixed issue in Group.align where the cell wouldn't increase if `rows` was great than -1
 * Sound.volume was accidentally repeated twice in the source (thanks @LoneStranger #2569)
 * Animation.setFrame wouldn't work correctly if the `useLocalFrameIndex` argument was true, and the frame ID was a number (thanks @uboot #2571)
+* Polygon.contains would only work with non-flattened Polygon objects. It now works with both flat and non-flat Polygons.
+* Graphics objects enabled for input would fail to do anything if a Phaser Polygon was given to the Graphics object (which it was in nearly all cases), as it wouldn't detect input correctly with flattened polygons (thanks @symbiane #2591)
 
 ### Pixi Updates
 

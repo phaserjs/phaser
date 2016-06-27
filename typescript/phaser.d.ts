@@ -1,7 +1,7 @@
 /// <reference path="pixi.d.ts" />
 /// <reference path="p2.d.ts" />
 
-// Type definitions for Phaser 2.5.1 - 21st June 2016
+// Type definitions for Phaser 2.5.1 - 27th June 2016
 // Project: https://github.com/photonstorm/phaser
 
 declare module "phaser" {
@@ -4009,6 +4009,7 @@ declare module Phaser {
         constructor(...points: number[]);
 
         area: number;
+        flattened: boolean;
         points: number[] | Phaser.Point[];
         type: number;
 
