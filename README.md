@@ -321,7 +321,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 
 * The Loader has a new property `headers`. This is an object checked by XHR Requests, used to set the Request Header of certain file types. JSON and XML are pre-configured, but you can add to, or modify this property as required (thanks @stoneman1 #2585 #2485)
 * Phaser now has support for Typings, the TypeScript Definition Manager. See the `typescript/readme.md` file for installation instructions (thanks @monagames #2576)
-*
+* Phaser.Utils.reverseString will take the given string, reverse it, and then return it.
 
 ### Updates
 

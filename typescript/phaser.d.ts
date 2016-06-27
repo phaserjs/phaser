@@ -5468,6 +5468,7 @@ declare module Phaser {
         static setProperty(obj: any, prop: string, value: any): any;
         static chanceRoll(chance: number): boolean;
         static randomChoice(choice1: string | number, choice2: any): any;
+        static reverseString(string: string): string;
         static parseDimension(size: any, dimension: number): number;
         static pad(str: string, len?: number, pad?: string, dir?: number): string;
         static isPlainObject(object: any): boolean;
