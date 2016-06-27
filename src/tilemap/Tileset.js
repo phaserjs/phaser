@@ -190,6 +190,20 @@ Phaser.Tileset.prototype = {
     },
 
     /**
+     * adds a marker for the batch display to insert a degenerate triangle (eg. at the end of each row of tiles)
+     *
+     * @param {[type]} glBatch [description]
+     */
+    addDegenerate: function( glBatch )
+    {
+        // don't insert multiple degenerate markers in a row
+        if ( glBatch[ glBatch.length - 1] )
+        {
+            glBatch.push( null );
+        }
+    },
+
+    /**
     * Returns true if and only if this tileset contains the given tile index.
     *
     * @method Phaser.Tileset#containsTileIndex

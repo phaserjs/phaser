@@ -645,7 +645,7 @@ Phaser.TilemapLayerGL.prototype.renderRegion = function (scrollX, scrollY, left,
     var tw = this._mc.tileWidth;
     var th = this._mc.tileHeight;
 
-    var lastAlpha = NaN;
+    // var lastAlpha = NaN;
 
     offx = offx || 0;
     offy = offy || 0;
@@ -699,6 +699,8 @@ Phaser.TilemapLayerGL.prototype.renderRegion = function (scrollX, scrollY, left,
 
             if (!tile || tile.index < 0)
             {
+                // skipping some tiles, add a degenerate marker into the batch list
+                this._mc.tileset.addDegenerate( this.glBatch );
                 continue;
             }
 
@@ -742,6 +744,8 @@ Phaser.TilemapLayerGL.prototype.renderRegion = function (scrollX, scrollY, left,
            
         }
 
+        // at end of each row, add a degenerate marker into the batch list
+        this._mc.tileset.addDegenerate( this.glBatch );
     }
 
 };

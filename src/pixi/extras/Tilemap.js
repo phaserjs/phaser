@@ -191,6 +191,7 @@ PIXI.Tilemap.prototype._renderBatch = function( renderSession )
 
     // process entire glBatch into a single webGl draw buffer for a TRIANGLE_STRIP blit
     var c = 0;
+    var degenerate = false;
     for(var i = 0, l = this.glBatch.length; i < l; i++)
     {
       // sx: this.drawCoords[coordIndex],
@@ -203,6 +204,13 @@ PIXI.Tilemap.prototype._renderBatch = function( renderSession )
       // dh: this.tileHeight
       var t = this.glBatch[i];
 
+      if ( !t )
+      {
+        // insert a degenerate triangle when null is found in the list of batch objects
+        degenerate = true;
+        continue;
+      }
+
       var x = t.dx * iWide - 1;
       var y = 1 - t.dy * iHigh;
 
@@ -212,9 +220,8 @@ PIXI.Tilemap.prototype._renderBatch = function( renderSession )
       var uvl = t.sx * iTextureWide;
       var uvt = t.sy * iTextureHigh; 
 
-      // for every tile except the first one, use degenerate triangle to separate the tiles
-      // TODO: it might be possible to avoid this by drawing triangles more intelligently (e.g. each row with inverting the first/second triangle alternately)
-      if ( c > 0 )
+      // insert a degenerate triangle to separate the tiles
+      if ( degenerate )
       {
         // add a degenerate triangle: repeat the last vertex
         buffer[ c     ] = oldR;
@@ -228,6 +235,7 @@ PIXI.Tilemap.prototype._renderBatch = function( renderSession )
 
         // advance the buffer index
         c += 8;
+        degenerate = false;
       }
 
       // calculate the destination location of the tile in screen units (-1..1)

@@ -188,3 +188,6 @@ Added alpha blending based on TilemapLayerGL.alpha property.  NOTE: this appears
 Prepared code to pass each Tile alpha value through to the batch renderer, however realised that implementing this will break the batching!
 Need to talk with Rich about it before proceeding further.
 
+Modified the batch creation code and the batch drawing code to only insert degenerate triangles at the end of rows or when a row is broken (e.g. by some empty tiles which we won't draw at all).  This should speed things up by optimising the draw, and reducing the amount of data required to describe the batch.
+
+
