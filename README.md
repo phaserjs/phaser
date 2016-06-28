@@ -331,6 +331,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * TilemapLayer.renderRegion has had an assignment to the obsolete `tileColor` property removed (thanks @cryptographer #2583)
 * Group.getFurthestFrom and Group.getClosestTo has a new optional argument: `callback`. This allows you to apply your own additional filtering to the distance checks, ultimately influencing the selected child (thanks @LoneStranger #2577)
 * Text.setText has a new optional argument `immediate` which will re-create the texture immediately upon call, rather than wait for the next render pass to do so (thanks @Scraft #2594)
+* Phaser.Utils.pad now calls `toString` on the input given, which means you can pass in common data typs such as numbers and have them padded and returned as strings.
 
 ### Bug Fixes
 
