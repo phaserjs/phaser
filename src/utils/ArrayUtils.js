@@ -193,12 +193,31 @@ Phaser.ArrayUtils = {
     },
 
     /**
+    * Moves the element from the end of the array to the start, shifting all items in the process.
+    * The "rotation" happens to the right.
+    * See also Phaser.ArrayUtils.rotate.
+    *
+    * @method Phaser.ArrayUtils.shift
+    * @param {any[]} array - The array to shift. The array is modified.
+    * @return {any} The shifted value.
+    */
+    shift: function (array) {
+
+        var s = array.pop();
+        array.unshift(s);
+
+        return s;
+
+    },
+
+    /**
     * Moves the element from the start of the array to the end, shifting all items in the process.
     * The "rotation" happens to the left.
+    * See also Phaser.ArrayUtils.shift.
     *
     * @method Phaser.ArrayUtils.rotate
-    * @param {any[]} array - The array to shift/rotate. The array is modified.
-    * @return {any} The shifted value.
+    * @param {any[]} array - The array to rotate. The array is modified.
+    * @return {any} The rotated value.
     */
     rotate: function (array) {
 

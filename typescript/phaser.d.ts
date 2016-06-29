@@ -224,6 +224,7 @@ declare module Phaser {
         static rotateMatrix(matrix: any, direction: number | string): any;
         static findClosest(value: number, arr: number[]): number;
         static rotate(array: any[]): any;
+        static shift(array: any[]): any;
         static numberArray(start: number, end: number): number[];
         static numberArrayStep(start: number, end?: number, step?: number): number[];
 
