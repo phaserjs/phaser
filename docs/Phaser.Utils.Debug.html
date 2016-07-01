@@ -709,10 +709,6 @@
 						</li>
 						
 						<li class="class-depth-1">
-							<a href="PIXI.DisplayObject.html">DisplayObject</a>
-						</li>
-						
-						<li class="class-depth-1">
 							<a href="PIXI.DisplayObjectContainer.html">DisplayObjectContainer</a>
 						</li>
 						
@@ -742,6 +738,10 @@
 						
 						<li class="class-depth-1">
 							<a href="PIXI.PIXI.html">PIXI</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="PIXI.PIXI.DisplayObject.html">DisplayObject</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -1249,11 +1249,14 @@
 
     
     <div class="description">
-        <p>A collection of methods for displaying debug information about game objects.
-If your game is running in WebGL then Debug will create a Sprite that is placed at the top of the Stage display list and bind a canvas texture
+        <p>A collection of methods for displaying debug information about game objects.</p>
+<p>If your game is running in Canvas mode, then you should invoke all of the Debug methods from
+your games <code>render</code> function. This is because they are drawn directly onto the game canvas
+itself, so if you call any debug methods outside of <code>render</code> they are likely to be overwritten
+by the game itself.</p>
+<p>If your game is running in WebGL then Debug will create a Sprite that is placed at the top of the Stage display list and bind a canvas texture
 to it, which must be uploaded every frame. Be advised: this is very expensive, especially in browsers like Firefox. So please only enable Debug
-in WebGL mode if you really need it (or your desktop can cope with it well) and disable it for production!
-If your game is using a Canvas renderer then the debug information is literally drawn on the top of the active game canvas and no Sprite is used.</p>
+in WebGL mode if you really need it (or your desktop can cope with it well) and disable it for production!</p>
     </div>
     
 
@@ -1336,7 +1339,7 @@ If your game is using a Canvas renderer then the debug information is literally 
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-18">line 18</a>
+    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-23">line 23</a>
     </dt>
     
 
@@ -1416,7 +1419,7 @@ If your game is using a Canvas renderer then the debug information is literally 
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-33">line 33</a>
+    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-38">line 38</a>
     </dt>
     
 
@@ -1472,7 +1475,7 @@ If your game is using a Canvas renderer then the debug information is literally 
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-38">line 38</a>
+    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-43">line 43</a>
     </dt>
     
 
@@ -1528,7 +1531,7 @@ If your game is using a Canvas renderer then the debug information is literally 
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-54">line 54</a>
+    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-59">line 59</a>
     </dt>
     
 
@@ -1584,7 +1587,7 @@ If your game is using a Canvas renderer then the debug information is literally 
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-43">line 43</a>
+    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-48">line 48</a>
     </dt>
     
 
@@ -1643,7 +1646,7 @@ If your game is using a Canvas renderer then the debug information is literally 
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-82">line 82</a>
+    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-87">line 87</a>
     </dt>
     
 
@@ -1699,7 +1702,7 @@ If your game is using a Canvas renderer then the debug information is literally 
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-70">line 70</a>
+    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-75">line 75</a>
     </dt>
     
 
@@ -1755,7 +1758,7 @@ If your game is using a Canvas renderer then the debug information is literally 
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-76">line 76</a>
+    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-81">line 81</a>
     </dt>
     
 
@@ -1811,7 +1814,7 @@ If your game is using a Canvas renderer then the debug information is literally 
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-87">line 87</a>
+    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-92">line 92</a>
     </dt>
     
 
@@ -1870,7 +1873,7 @@ If your game is using a Canvas renderer then the debug information is literally 
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-49">line 49</a>
+    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-54">line 54</a>
     </dt>
     
 
@@ -1926,7 +1929,7 @@ If your game is using a Canvas renderer then the debug information is literally 
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-23">line 23</a>
+    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-28">line 28</a>
     </dt>
     
 
@@ -1982,7 +1985,7 @@ If your game is using a Canvas renderer then the debug information is literally 
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-59">line 59</a>
+    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-64">line 64</a>
     </dt>
     
 
@@ -2038,7 +2041,7 @@ If your game is using a Canvas renderer then the debug information is literally 
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-64">line 64</a>
+    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-69">line 69</a>
     </dt>
     
 
@@ -2094,7 +2097,7 @@ If your game is using a Canvas renderer then the debug information is literally 
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-28">line 28</a>
+    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-33">line 33</a>
     </dt>
     
 
@@ -2307,7 +2310,7 @@ To display a P2 Physics body you should enable debug mode on the body when creat
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-742">line 742</a>
+    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-747">line 747</a>
     </dt>
     
 
@@ -2551,7 +2554,7 @@ To display a P2 Physics body you should enable debug mode on the body when creat
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-776">line 776</a>
+    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-781">line 781</a>
     </dt>
     
 
@@ -2628,7 +2631,7 @@ To display a P2 Physics body you should enable debug mode on the body when creat
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-93">line 93</a>
+    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-98">line 98</a>
     </dt>
     
 
@@ -2803,7 +2806,7 @@ This uses the standard debug drawing feature of Box2D, so colors will be decided
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-823">line 823</a>
+    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-828">line 828</a>
     </dt>
     
 
@@ -2875,7 +2878,7 @@ the Box2D engine.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-805">line 805</a>
+    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-810">line 810</a>
     </dt>
     
 
@@ -3119,7 +3122,7 @@ the Box2D engine.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-280">line 280</a>
+    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-285">line 285</a>
     </dt>
     
 
@@ -3189,7 +3192,7 @@ the Box2D engine.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-872">line 872</a>
+    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-877">line 877</a>
     </dt>
     
 
@@ -3448,7 +3451,7 @@ the Box2D engine.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-575">line 575</a>
+    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-580">line 580</a>
     </dt>
     
 
@@ -3662,7 +3665,7 @@ the Box2D engine.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-640">line 640</a>
+    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-645">line 645</a>
     </dt>
     
 
@@ -3871,7 +3874,7 @@ the Box2D engine.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-428">line 428</a>
+    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-433">line 433</a>
     </dt>
     
 
@@ -4115,7 +4118,7 @@ the Box2D engine.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-407">line 407</a>
+    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-412">line 412</a>
     </dt>
     
 
@@ -4192,7 +4195,7 @@ the Box2D engine.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-221">line 221</a>
+    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-226">line 226</a>
     </dt>
     
 
@@ -4436,7 +4439,7 @@ the Box2D engine.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-536">line 536</a>
+    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-541">line 541</a>
     </dt>
     
 
@@ -4682,7 +4685,7 @@ the Box2D engine.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-555">line 555</a>
+    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-560">line 560</a>
     </dt>
     
 
@@ -4973,7 +4976,7 @@ the Box2D engine.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-326">line 326</a>
+    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-331">line 331</a>
     </dt>
     
 
@@ -5050,7 +5053,7 @@ the Box2D engine.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-138">line 138</a>
+    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-143">line 143</a>
     </dt>
     
 
@@ -5192,7 +5195,7 @@ the Box2D engine.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-702">line 702</a>
+    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-707">line 707</a>
     </dt>
     
 
@@ -5262,7 +5265,7 @@ the Box2D engine.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-157">line 157</a>
+    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-162">line 162</a>
     </dt>
     
 
@@ -5435,7 +5438,7 @@ Called by ScaleManager.onSizeChange only in WebGL mode.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-119">line 119</a>
+    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-124">line 124</a>
     </dt>
     
 
@@ -5646,7 +5649,7 @@ Called by ScaleManager.onSizeChange only in WebGL mode.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-467">line 467</a>
+    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-472">line 472</a>
     </dt>
     
 
@@ -5890,7 +5893,7 @@ Called by ScaleManager.onSizeChange only in WebGL mode.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-249">line 249</a>
+    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-254">line 254</a>
     </dt>
     
 
@@ -6104,7 +6107,7 @@ Called by ScaleManager.onSizeChange only in WebGL mode.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-448">line 448</a>
+    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-453">line 453</a>
     </dt>
     
 
@@ -6351,7 +6354,7 @@ Called by ScaleManager.onSizeChange only in WebGL mode.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-510">line 510</a>
+    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-515">line 515</a>
     </dt>
     
 
@@ -6595,7 +6598,7 @@ Called by ScaleManager.onSizeChange only in WebGL mode.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-487">line 487</a>
+    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-492">line 492</a>
     </dt>
     
 
@@ -6842,7 +6845,7 @@ Called by ScaleManager.onSizeChange only in WebGL mode.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-386">line 386</a>
+    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-391">line 391</a>
     </dt>
     
 
@@ -7105,7 +7108,7 @@ Called by ScaleManager.onSizeChange only in WebGL mode.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-176">line 176</a>
+    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-181">line 181</a>
     </dt>
     
 
@@ -7182,7 +7185,7 @@ Called by ScaleManager.onSizeChange only in WebGL mode.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-209">line 209</a>
+    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-214">line 214</a>
     </dt>
     
 
@@ -7439,7 +7442,7 @@ Called by ScaleManager.onSizeChange only in WebGL mode.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-671">line 671</a>
+    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-676">line 676</a>
     </dt>
     
 
@@ -7683,7 +7686,7 @@ Called by ScaleManager.onSizeChange only in WebGL mode.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-307">line 307</a>
+    <a href="src_utils_Debug.js.html">utils/Debug.js</a>, <a href="src_utils_Debug.js.html#sunlight-1-line-312">line 312</a>
     </dt>
     
 
@@ -7732,7 +7735,7 @@ Called by ScaleManager.onSizeChange only in WebGL mode.</p>
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.3</a>
-		on Fri Jun 17 2016 12:45:40 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Jul 01 2016 16:56:01 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

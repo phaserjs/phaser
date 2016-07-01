@@ -709,10 +709,6 @@
 						</li>
 						
 						<li class="class-depth-1">
-							<a href="PIXI.DisplayObject.html">DisplayObject</a>
-						</li>
-						
-						<li class="class-depth-1">
 							<a href="PIXI.DisplayObjectContainer.html">DisplayObjectContainer</a>
 						</li>
 						
@@ -742,6 +738,10 @@
 						
 						<li class="class-depth-1">
 							<a href="PIXI.PIXI.html">PIXI</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="PIXI.PIXI.DisplayObject.html">DisplayObject</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -2001,6 +2001,8 @@ Phaser.Group.prototype.align = function (rows, columns, cellWidth, cellHeight, p
         else
         {
             //  We keep laying them out until we hit the column limit
+            r.x += cellWidth;
+
             if (r.x === w)
             {
                 r.x = 0;
@@ -3431,17 +3433,24 @@ Phaser.Group.prototype.getBottom = function () {
 };
 
 /**
-* Get the closest child to given Object.
+* Get the closest child to given Object, with optional callback to filter children.
 *
 * This can be a Sprite, Group, Image or any object with public x and y properties.
 *
 * 'close' is determined by the distance from the objects `x` and `y` properties compared to the childs `x` and `y` properties.
 *
+* You can use the optional `callback` argument to apply your own filter to the distance checks.
+* If the child is closer then the previous child, it will be sent to `callback` as the first argument,
+* with the distance as the second. The callback should return `true` if it passes your 
+* filtering criteria, otherwise it should return `false`.
+*
 * @method Phaser.Group#getClosestTo
 * @param {any} object - The object used to determine the distance. This can be a Sprite, Group, Image or any object with public x and y properties.
-* @return {any} The child closest to given object, or null if no child was found.
+* @param {function} [callback] - The function that each child will be evaluated against. Each child of the group will be passed to it as its first parameter, with the distance as the second. It should return `true` if the child passes the matching criteria.
+* @param {object} [callbackContext] - The context in which the function should be called (usually 'this').
+* @return {any} The child closest to given object, or `null` if no child was found.
 */
-Phaser.Group.prototype.getClosestTo = function (object) {
+Phaser.Group.prototype.getClosestTo = function (object, callback, callbackContext) {
 
     var distance = Number.MAX_VALUE;
     var tempDistance = 0;
@@ -3455,7 +3464,7 @@ Phaser.Group.prototype.getClosestTo = function (object) {
         {
             tempDistance = Math.abs(Phaser.Point.distance(object, child));
 
-            if (tempDistance &lt; distance)
+            if (tempDistance &lt; distance &amp;&amp; (!callback || callback.call(callbackContext, child, tempDistance)))
             {
                 distance = tempDistance;
                 result = child;
@@ -3468,17 +3477,24 @@ Phaser.Group.prototype.getClosestTo = function (object) {
 };
 
 /**
-* Get the child furthest away from the given Object.
+* Get the child furthest away from the given Object, with optional callback to filter children.
 *
 * This can be a Sprite, Group, Image or any object with public x and y properties.
 *
 * 'furthest away' is determined by the distance from the objects `x` and `y` properties compared to the childs `x` and `y` properties.
 *
+* You can use the optional `callback` argument to apply your own filter to the distance checks.
+* If the child is closer then the previous child, it will be sent to `callback` as the first argument,
+* with the distance as the second. The callback should return `true` if it passes your 
+* filtering criteria, otherwise it should return `false`.
+*
 * @method Phaser.Group#getFurthestFrom
 * @param {any} object - The object used to determine the distance. This can be a Sprite, Group, Image or any object with public x and y properties.
-* @return {any} The child furthest from the given object, or null if no child was found.
+* @param {function} [callback] - The function that each child will be evaluated against. Each child of the group will be passed to it as its first parameter, with the distance as the second. It should return `true` if the child passes the matching criteria.
+* @param {object} [callbackContext] - The context in which the function should be called (usually 'this').
+* @return {any} The child furthest from the given object, or `null` if no child was found.
 */
-Phaser.Group.prototype.getFurthestFrom = function (object) {
+Phaser.Group.prototype.getFurthestFrom = function (object, callback, callbackContext) {
 
     var distance = 0;
     var tempDistance = 0;
@@ -3492,7 +3508,7 @@ Phaser.Group.prototype.getFurthestFrom = function (object) {
         {
             tempDistance = Math.abs(Phaser.Point.distance(object, child));
 
-            if (tempDistance > distance)
+            if (tempDistance > distance &amp;&amp; (!callback || callback.call(callbackContext, child, tempDistance)))
             {
                 distance = tempDistance;
                 result = child;
@@ -3896,7 +3912,7 @@ Object.defineProperty(Phaser.Group.prototype, "angle", {
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.3</a>
-		on Fri Jun 17 2016 12:45:29 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Jul 01 2016 16:55:50 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

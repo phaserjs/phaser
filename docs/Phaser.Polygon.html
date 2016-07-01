@@ -709,10 +709,6 @@
 						</li>
 						
 						<li class="class-depth-1">
-							<a href="PIXI.DisplayObject.html">DisplayObject</a>
-						</li>
-						
-						<li class="class-depth-1">
 							<a href="PIXI.DisplayObjectContainer.html">DisplayObjectContainer</a>
 						</li>
 						
@@ -742,6 +738,10 @@
 						
 						<li class="class-depth-1">
 							<a href="PIXI.PIXI.html">PIXI</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="PIXI.PIXI.DisplayObject.html">DisplayObject</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -1504,6 +1504,62 @@
         
             
 <dt>
+    <h4 class="name "
+        id="flattened"><span class="type-signature"></span>flattened<span class="type-signature"> :boolean</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Has this Polygon been flattened by a call to <code>Polygon.flatten</code> ?</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_geom_Polygon.js.html">geom/Polygon.js</a>, <a href="src_geom_Polygon.js.html#sunlight-1-line-50">line 50</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
     <h4 class="name toc-deprecated"
         id="points"><span class="type-signature"></span>points<span class="type-signature"> :Array.&lt;<a href="Phaser.Point.html">Phaser.Point</a>></span></h4>
     
@@ -1564,7 +1620,7 @@
 
     
     <dt class="tag-source">Source -
-    <a href="src_geom_Polygon.js.html">geom/Polygon.js</a>, <a href="src_geom_Polygon.js.html#sunlight-1-line-266">line 266</a>
+    <a href="src_geom_Polygon.js.html">geom/Polygon.js</a>, <a href="src_geom_Polygon.js.html#sunlight-1-line-294">line 294</a>
     </dt>
     
 
@@ -1620,7 +1676,7 @@
 
     
     <dt class="tag-source">Source -
-    <a href="src_geom_Polygon.js.html">geom/Polygon.js</a>, <a href="src_geom_Polygon.js.html#sunlight-1-line-50">line 50</a>
+    <a href="src_geom_Polygon.js.html">geom/Polygon.js</a>, <a href="src_geom_Polygon.js.html#sunlight-1-line-55">line 55</a>
     </dt>
     
 
@@ -1778,7 +1834,7 @@ This is a deep clone, the resulting copy contains new Phaser.Point objects</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_geom_Polygon.js.html">geom/Polygon.js</a>, <a href="src_geom_Polygon.js.html#sunlight-1-line-100">line 100</a>
+    <a href="src_geom_Polygon.js.html">geom/Polygon.js</a>, <a href="src_geom_Polygon.js.html#sunlight-1-line-109">line 109</a>
     </dt>
     
 
@@ -1940,7 +1996,7 @@ This is a deep clone, the resulting copy contains new Phaser.Point objects</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_geom_Polygon.js.html">geom/Polygon.js</a>, <a href="src_geom_Polygon.js.html#sunlight-1-line-125">line 125</a>
+    <a href="src_geom_Polygon.js.html">geom/Polygon.js</a>, <a href="src_geom_Polygon.js.html#sunlight-1-line-134">line 134</a>
     </dt>
     
 
@@ -1976,7 +2032,9 @@ This is a deep clone, the resulting copy contains new Phaser.Point objects</p>
 
     
     <div class="description">
-        <p>Flattens this Polygon so the points are a sequence of numbers. Any Point objects found are removed and replaced with two numbers.</p>
+        <p>Flattens this Polygon so the points are a sequence of numbers.
+Any Point objects found are removed and replaced with two numbers.
+Also sets the Polygon.flattened property to <code>true</code>.</p>
     </div>
     
 
@@ -2030,7 +2088,7 @@ This is a deep clone, the resulting copy contains new Phaser.Point objects</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_geom_Polygon.js.html">geom/Polygon.js</a>, <a href="src_geom_Polygon.js.html#sunlight-1-line-86">line 86</a>
+    <a href="src_geom_Polygon.js.html">geom/Polygon.js</a>, <a href="src_geom_Polygon.js.html#sunlight-1-line-91">line 91</a>
     </dt>
     
 
@@ -2189,7 +2247,7 @@ This is a deep clone, the resulting copy contains new Phaser.Point objects</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_geom_Polygon.js.html">geom/Polygon.js</a>, <a href="src_geom_Polygon.js.html#sunlight-1-line-158">line 158</a>
+    <a href="src_geom_Polygon.js.html">geom/Polygon.js</a>, <a href="src_geom_Polygon.js.html#sunlight-1-line-186">line 186</a>
     </dt>
     
 
@@ -2340,7 +2398,7 @@ This is a deep clone, the resulting copy contains new Phaser.Point objects</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_geom_Polygon.js.html">geom/Polygon.js</a>, <a href="src_geom_Polygon.js.html#sunlight-1-line-56">line 56</a>
+    <a href="src_geom_Polygon.js.html">geom/Polygon.js</a>, <a href="src_geom_Polygon.js.html#sunlight-1-line-61">line 61</a>
     </dt>
     
 
@@ -2389,7 +2447,7 @@ This is a deep clone, the resulting copy contains new Phaser.Point objects</p>
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.3</a>
-		on Fri Jun 17 2016 12:45:37 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Jul 01 2016 16:55:58 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

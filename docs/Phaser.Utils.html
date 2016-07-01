@@ -709,10 +709,6 @@
 						</li>
 						
 						<li class="class-depth-1">
-							<a href="PIXI.DisplayObject.html">DisplayObject</a>
-						</li>
-						
-						<li class="class-depth-1">
 							<a href="PIXI.DisplayObjectContainer.html">DisplayObjectContainer</a>
 						</li>
 						
@@ -742,6 +738,10 @@
 						
 						<li class="class-depth-1">
 							<a href="PIXI.PIXI.html">PIXI</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="PIXI.PIXI.DisplayObject.html">DisplayObject</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -1473,7 +1473,7 @@
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Utils.js.html">utils/Utils.js</a>, <a href="src_utils_Utils.js.html#sunlight-1-line-225">line 225</a>
+    <a href="src_utils_Utils.js.html">utils/Utils.js</a>, <a href="src_utils_Utils.js.html#sunlight-1-line-258">line 258</a>
     </dt>
     
 
@@ -1635,7 +1635,7 @@
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Utils.js.html">utils/Utils.js</a>, <a href="src_utils_Utils.js.html#sunlight-1-line-13">line 13</a>
+    <a href="src_utils_Utils.js.html">utils/Utils.js</a>, <a href="src_utils_Utils.js.html#sunlight-1-line-27">line 27</a>
     </dt>
     
 
@@ -1777,7 +1777,7 @@ A plain object is an object whose internal class property is [object Object].</p
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Utils.js.html">utils/Utils.js</a>, <a href="src_utils_Utils.js.html#sunlight-1-line-189">line 189</a>
+    <a href="src_utils_Utils.js.html">utils/Utils.js</a>, <a href="src_utils_Utils.js.html#sunlight-1-line-222">line 222</a>
     </dt>
     
 
@@ -1940,7 +1940,7 @@ Based on original code by @mudcube</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Utils.js.html">utils/Utils.js</a>, <a href="src_utils_Utils.js.html#sunlight-1-line-357">line 357</a>
+    <a href="src_utils_Utils.js.html">utils/Utils.js</a>, <a href="src_utils_Utils.js.html#sunlight-1-line-390">line 390</a>
     </dt>
     
 
@@ -2152,7 +2152,7 @@ the result is assigned directly.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Utils.js.html">utils/Utils.js</a>, <a href="src_utils_Utils.js.html#sunlight-1-line-305">line 305</a>
+    <a href="src_utils_Utils.js.html">utils/Utils.js</a>, <a href="src_utils_Utils.js.html#sunlight-1-line-338">line 338</a>
     </dt>
     
 
@@ -2188,7 +2188,16 @@ the result is assigned directly.</p>
 
     
     <div class="description">
-        <p>JavaScript string pad http://www.webtoolkit.info/.</p>
+        <p>Takes the given string and pads it out, to the length required, using the character
+specified. For example if you need a string to be 6 characters long, you can call:</p>
+<p><code>pad('bob', 6, '-', 2)</code></p>
+<p>This would return: <code>bob---</code> as it has padded it out to 6 characters, using the <code>-</code> on the right.</p>
+<p>You can also use it to pad numbers (they are always returned as strings):</p>
+<p><code>pad(512, 6, '0', 1)</code></p>
+<p>Would return: <code>000512</code> with the string padded to the left.</p>
+<p>If you don't specify a direction it'll pad to both sides:</p>
+<p><code>pad('c64', 7, '*')</code></p>
+<p>Would return: <code>**c64**</code></p>
     </div>
     
 
@@ -2254,7 +2263,7 @@ the result is assigned directly.</p>
                 </td>
             
 
-            <td class="description last"><p>The target string.</p></td>
+            <td class="description last"><p>The target string. <code>toString()</code> will be called on the string, which means you can also pass in common data types like numbers.</p></td>
         </tr>
 
 	
@@ -2394,7 +2403,7 @@ the result is assigned directly.</p>
         </div>
     
     <div class="returns-desc param-desc">
-        <p>The padded string</p>
+        <p>The padded string.</p>
     </div>
 
 
@@ -2424,7 +2433,7 @@ the result is assigned directly.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Utils.js.html">utils/Utils.js</a>, <a href="src_utils_Utils.js.html#sunlight-1-line-147">line 147</a>
+    <a href="src_utils_Utils.js.html">utils/Utils.js</a>, <a href="src_utils_Utils.js.html#sunlight-1-line-161">line 161</a>
     </dt>
     
 
@@ -2589,7 +2598,147 @@ the result is assigned directly.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Utils.js.html">utils/Utils.js</a>, <a href="src_utils_Utils.js.html#sunlight-1-line-104">line 104</a>
+    <a href="src_utils_Utils.js.html">utils/Utils.js</a>, <a href="src_utils_Utils.js.html#sunlight-1-line-118">line 118</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+       
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".reverseString"><span class="type-signature">&lt;static> </span>reverseString<span class="signature">(string)</span><span class="type-signature"> &rarr; {string}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Takes the given string and reverses it, returning the reversed string.
+For example if given the string <code>Atari 520ST</code> it would return <code>TS025 iratA</code>.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>string</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The string to be reversed.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+
+    
+    <h5>Returns:</h5>
+    <div class="returns">
+        
+            
+    
+        <div class="returns-type">
+        
+<span class="param-type">string</span>
+
+ -
+        </div>
+    
+    <div class="returns-desc param-desc">
+        <p>The reversed string.</p>
+    </div>
+
+
+        
+    </div>
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_utils_Utils.js.html">utils/Utils.js</a>, <a href="src_utils_Utils.js.html#sunlight-1-line-13">line 13</a>
     </dt>
     
 
@@ -2751,7 +2900,7 @@ the result is assigned directly.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Utils.js.html">utils/Utils.js</a>, <a href="src_utils_Utils.js.html#sunlight-1-line-46">line 46</a>
+    <a href="src_utils_Utils.js.html">utils/Utils.js</a>, <a href="src_utils_Utils.js.html#sunlight-1-line-60">line 60</a>
     </dt>
     
 
@@ -2892,7 +3041,7 @@ of getting a bonus, call chanceRoll(30) - true means the chance passed, false me
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Utils.js.html">utils/Utils.js</a>, <a href="src_utils_Utils.js.html#sunlight-1-line-77">line 77</a>
+    <a href="src_utils_Utils.js.html">utils/Utils.js</a>, <a href="src_utils_Utils.js.html#sunlight-1-line-91">line 91</a>
     </dt>
     
 
@@ -3054,7 +3203,7 @@ of getting a bonus, call chanceRoll(30) - true means the chance passed, false me
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_Utils.js.html">utils/Utils.js</a>, <a href="src_utils_Utils.js.html#sunlight-1-line-92">line 92</a>
+    <a href="src_utils_Utils.js.html">utils/Utils.js</a>, <a href="src_utils_Utils.js.html#sunlight-1-line-106">line 106</a>
     </dt>
     
 
@@ -3103,7 +3252,7 @@ of getting a bonus, call chanceRoll(30) - true means the chance passed, false me
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.3</a>
-		on Fri Jun 17 2016 12:45:40 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Jul 01 2016 16:56:01 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

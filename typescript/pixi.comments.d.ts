@@ -786,168 +786,38 @@ declare module PIXI {
 
     }
 
-
-    /**
-    * The base class for all objects that are rendered on the screen.
-    * This is an abstract class and should not be used on its own rather it should be extended.
-    */
     export class DisplayObject {
 
-
-        /**
-        * The opacity of the object.
-        */
         alpha: number;
         buttonMode: boolean;
-
-        /**
-        * Set if this display object is cached as a bitmap.
-        * This basically takes a snap shot of the display object as it is at that moment. It can provide a performance benefit for complex static displayObjects.
-        * To remove simply set this property to 'null'
-        */
         cacheAsBitmap: boolean;
         defaultCursor: string;
-
-        /**
-        * The area the filter is applied to like the hitArea this is used as more of an optimisation
-        * rather than figuring out the dimensions of the displayObject each frame you can set this rectangle
-        */
         filterArea: Rectangle;
-
-        /**
-        * Sets the filters for the displayObject.
-        * IMPORTANT: This is a webGL only feature and will be ignored by the Canvas renderer.
-        * 
-        * To remove filters simply set this property to 'null'.
-        * 
-        * You cannot have a filter and a multiply blend mode active at the same time. Setting a filter will reset
-        * this objects blend mode to NORMAL.
-        */
         filters: AbstractFilter[];
-
-        /**
-        * This is the defined area that will pick up mouse / touch events. It is null by default.
-        * Setting it is a neat way of optimising the hitTest function that the interactionManager will use (as it will not need to hit test all the children)
-        */
         hitArea: HitArea;
         interactive: boolean;
-
-        /**
-        * Sets a mask for the displayObject. A mask is an object that limits the visibility of an object to the shape of the mask applied to it.
-        * In PIXI a regular mask must be a PIXI.Graphics object. This allows for much faster masking in canvas as it utilises shape clipping.
-        * To remove a mask, set this property to null.
-        */
         mask: Graphics;
-
-        /**
-        * [read-only] The display object container that contains this display object.
-        */
         parent: DisplayObjectContainer;
-
-        /**
-        * The pivot point of the displayObject that it rotates around
-        */
         pivot: Point;
-
-        /**
-        * The coordinate of the object relative to the local coordinates of the parent.
-        */
         position: Point;
-
-        /**
-        * Can this object be rendered
-        */
         renderable: boolean;
-
-        /**
-        * The rotation of the object in radians.
-        */
         rotation: number;
-
-        /**
-        * The scale factor of the object.
-        */
         scale: Point;
-
-        /**
-        * [read-only] The stage the display object is connected to, or undefined if it is not connected to the stage.
-        */
         stage: DisplayObjectContainer;
-
-        /**
-        * The visibility of the object.
-        */
         visible: boolean;
-
-        /**
-        * [read-only] The multiplied alpha of the displayObject
-        */
         worldAlpha: number;
-
-        /**
-        * The position of the Display Object based on the world transform.
-        * This value is updated at the end of updateTransform and takes all parent transforms into account.
-        */
         worldPosition: Point;
-
-        /**
-        * The scale of the Display Object based on the world transform.
-        * This value is updated at the end of updateTransform and takes all parent transforms into account.
-        */
         worldScale: Point;
-
-        /**
-        * [read-only] Current transform of the object based on world (parent) factors
-        */
         worldTransform: Matrix;
-
-        /**
-        * The rotation of the Display Object, in radians, based on the world transform.
-        * This value is updated at the end of updateTransform and takes all parent transforms into account.
-        */
         worldRotation: number;
-
-        /**
-        * [read-only] Indicates if the sprite is globally visible.
-        */
         worldVisible: boolean;
-
-        /**
-        * The position of the displayObject on the x axis relative to the local coordinates of the parent.
-        */
         x: number;
-
-        /**
-        * The position of the displayObject on the y axis relative to the local coordinates of the parent.
-        */
         y: number;
 
         click(e: InteractionData): void;
         displayObjectUpdateTransform(): void;
-
-        /**
-        * Retrieves the bounds of the displayObject as a rectangle object
-        * 
-        * @param matrix -
-        * @return the rectangular bounding area
-        */
         getBounds(matrix?: Matrix): Rectangle;
-
-        /**
-        * Retrieves the local bounds of the displayObject as a rectangle object
-        * @return the rectangular bounding area
-        */
         getLocalBounds(): Rectangle;
-
-        /**
-        * Useful function that returns a texture of the displayObject object that can then be used to create sprites
-        * This can be quite useful if your displayObject is static / complicated and needs to be reused multiple times.
-        * 
-        * @param resolution The resolution of the texture being generated
-        * @param scaleMode See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
-        * @param renderer The renderer used to generate the texture.
-        * @return a texture of the graphics object
-        */
         generateTexture(resolution?: number, scaleMode?: number, renderer?: PixiRenderer | number): RenderTexture;
         mousedown(e: InteractionData): void;
         mouseout(e: InteractionData): void;
@@ -959,30 +829,9 @@ declare module PIXI {
         rightdown(e: InteractionData): void;
         rightup(e: InteractionData): void;
         rightupoutside(e: InteractionData): void;
-
-        /**
-        * Sets the object's stage reference, the stage this object is connected to
-        * 
-        * @param stage the stage that the object will have as its current stage reference
-        */
         setStageReference(stage: DisplayObjectContainer): void;
         tap(e: InteractionData): void;
-
-        /**
-        * Calculates the global position of the display object
-        * 
-        * @param position The world origin to calculate from
-        * @return A point object representing the position of this object
-        */
         toGlobal(position: Point): Point;
-
-        /**
-        * Calculates the local position of the display object relative to another point
-        * 
-        * @param position The world origin to calculate from
-        * @param from The DisplayObject to calculate the global position from
-        * @return A point object representing the position of this object
-        */
         toLocal(position: Point, from: DisplayObject): Point;
         touchend(e: InteractionData): void;
         touchendoutside(e: InteractionData): void;
@@ -1320,10 +1169,6 @@ declare module PIXI {
         * Default: 0xFFFFFF
         */
         tint: number;
-
-        /**
-        * [read-only] The multiplied alpha of the displayObject
-        */
         worldAlpha: number;
 
 
@@ -2473,11 +2318,6 @@ declare module PIXI {
         */
         tileScaleOffset: Point;
 
-
-        /**
-        * Destroy this DisplayObject.
-        * Removes all references to transformCallbacks, its parent, the stage, filters, bounds, mask and cached Sprites.
-        */
         destroy(): void;
 
         /**
