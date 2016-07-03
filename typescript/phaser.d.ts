@@ -1,7 +1,7 @@
 /// <reference path="pixi.d.ts" />
 /// <reference path="p2.d.ts" />
 
-// Type definitions for Phaser 2.5.1 - 27th June 2016
+// Type definitions for Phaser 2.5.1 - 2nd July 2016
 // Project: https://github.com/photonstorm/phaser
 
 declare module "phaser" {
@@ -224,7 +224,8 @@ declare module Phaser {
         static rotateMatrix(matrix: any, direction: number | string): any;
         static findClosest(value: number, arr: number[]): number;
         static rotate(array: any[]): any;
-        static shift(array: any[]): any;
+        static rotateLeft(array: any[]): any;
+        static rotateRight(array: any[]): any;
         static numberArray(start: number, end: number): number[];
         static numberArrayStep(start: number, end?: number, step?: number): number[];
 
@@ -762,6 +763,7 @@ declare module Phaser {
         static RGBtoHSV(r: number, g: number, b: number, out?: ColorComponents): ColorComponents;
         static RGBtoString(r: number, g: number, b: number, a?: number, prefix?: string): string;
         static toRGBA(r: number, g: number, b: number, a: number): number;
+        static toABGR(r: number, g: number, b: number, a: number): number;
         static unpackPixel(rgba: number, out?: ColorComponents, hsl?: boolean, hsv?: boolean): ColorComponents;
         static updateColor(out: ColorComponents): ColorComponents;
         static valueToColor(value: string, out?: ColorComponents): ColorComponents;

@@ -324,6 +324,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * Phaser.Utils.reverseString will take the given string, reverse it, and then return it.
 * Phaser.ArrayUtils.rotateRight is the opposite of ArrayUtils.rotate. It takes an array, removes the element from the end of the array, and inserts it at the start, shifting everything else 1 space in the process.
 * Phaser.ArrayUtils.rotateLeft is the new name for Phaser.ArrayUtils.rotate. The old method is now deprecated (but still available in this release)
+* Phaser.Color.toABGR converts RGBA components to a 32 bit integer in AABBGGRR format.
 
 ### Updates
 
