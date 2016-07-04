@@ -264,7 +264,7 @@ declare module Phaser {
 
     class BitmapData {
 
-        constructor(game: Phaser.Game, key: string, width?: number, height?: number);
+        constructor(game: Phaser.Game, key: string, width?: number, height?: number, skipPool?: boolean);
 
         baseTexture: PIXI.BaseTexture;
         buffer: ArrayBuffer;

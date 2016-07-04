@@ -19,11 +19,13 @@
 * @param {string} key - Internal Phaser reference key for the BitmapData.
 * @param {number} [width=256] - The width of the BitmapData in pixels. If undefined or zero it's set to a default value.
 * @param {number} [height=256] - The height of the BitmapData in pixels. If undefined or zero it's set to a default value.
+* @param {boolean} [skipPool=false] - When this BitmapData generates its internal canvas to use for rendering, it will get the canvas from the CanvasPool if false, or create its own if true.
 */
-Phaser.BitmapData = function (game, key, width, height) {
+Phaser.BitmapData = function (game, key, width, height, skipPool) {
 
     if (width === undefined || width === 0) { width = 256; }
     if (height === undefined || height === 0) { height = 256; }
+    if (skipPool === undefined) { skipPool = false; }
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running game.
@@ -49,7 +51,7 @@ Phaser.BitmapData = function (game, key, width, height) {
     * @property {HTMLCanvasElement} canvas - The canvas to which this BitmapData draws.
     * @default
     */
-    this.canvas = PIXI.CanvasPool.create(this, width, height);
+    this.canvas = Phaser.Canvas.create(this, width, height, null, skipPool);
 
     /**
     * @property {CanvasRenderingContext2D} context - The 2d context of the canvas.
