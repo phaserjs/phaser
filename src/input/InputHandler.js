@@ -1654,7 +1654,6 @@ Phaser.InputHandler.prototype = {
 
     },
 
-
     /**
     * Bounds Rect check for the sprite drag
     *

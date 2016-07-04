@@ -333,6 +333,8 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * Group.getFurthestFrom and Group.getClosestTo has a new optional argument: `callback`. This allows you to apply your own additional filtering to the distance checks, ultimately influencing the selected child (thanks @LoneStranger #2577)
 * Text.setText has a new optional argument `immediate` which will re-create the texture immediately upon call, rather than wait for the next render pass to do so (thanks @Scraft #2594)
 * Phaser.Utils.pad now calls `toString` on the input given, which means you can pass in common data types, such as numbers, and have them padded and returned as strings.
+* The canvas created by Phaser.Debug for use when displaying debug data is no longer stored in the CanvasPool, and is instead a stand-alone canvas, free from ever being re-used by another game object.
+* BitmapData has a new, optional, fifth argument: `skipPool`. By default BitmapData objects will ask for the first free canvas found in the CanvasPool, but this behavior can now be customized on a per object basis.
 
 ### Bug Fixes
 
