@@ -315,7 +315,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 ![Change Log](http://phaser.io/images/github/div-change-log.png "Change Log")
 <a name="change-log"></a>
 
-## Version 2.5.1 - "Fal Moran" - In Development
+## Version 2.6.0 - "Fal Moran" - In Development
 
 ### New Features
 
