@@ -154,7 +154,7 @@ Phaser.Color = {
     */
     toABGR: function (r, g, b, a) {
 
-        return (a << 24) | (b << 16) | (g << 8) | r;
+        return ((a << 24) | (b << 16) | (g << 8) | r) >>> 0;
 
     },
 
