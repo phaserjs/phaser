@@ -671,8 +671,6 @@ PIXI.Graphics.prototype.generateTexture = function(resolution, scaleMode, paddin
 
     canvasBuffer.context.translate(-bounds.x, -bounds.y);
 
-    //  Call here
-    
     PIXI.CanvasGraphics.renderGraphics(this, canvasBuffer.context);
 
     return texture;

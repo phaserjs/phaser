@@ -45,7 +45,7 @@ Phaser.Image = function (game, x, y, key, frame) {
     */
     this.type = Phaser.IMAGE;
 
-    PIXI.Sprite.call(this, PIXI.TextureCache['__default']);
+    PIXI.Sprite.call(this, Phaser.Cache.DEFAULT);
 
     Phaser.Component.Core.init.call(this, game, x, y, key, frame);
 

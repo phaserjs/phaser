@@ -338,6 +338,12 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * The canvas created by Phaser.Debug for use when displaying debug data is no longer stored in the CanvasPool, and is instead a stand-alone canvas, free from ever being re-used by another game object.
 * BitmapData has a new, optional, fifth argument: `skipPool`. By default BitmapData objects will ask for the first free canvas found in the CanvasPool, but this behavior can now be customized on a per object basis.
 * Phaser.ArrayUtils.rotate is now deprecated. Please use Phaser.ArrayUtils.rotateLeft instead.
+* Phaser.Text.fontPropertiesCanvas used to be taken from the CanvasPool, but as it's constantly needed it is now generated directly from the document.
+* The default image texture, for when none is supplied, is now available under `Phaser.Cache.DEFAULT`.
+* The missing image texture, for when an image has failed to load, is now available under `Phaser.Cache.MISSING`.
+* Phaser.Cache.addImage will now check the key given, and if `__default` or `__missing` it will update the new consts `Phaser.Cache.DEFAULT` and `Phaser.Cache.MISSING` accordingly, allowing you to replace the default or missing image textures used by Phaser.
+* Phaser.Cache.getPixiTexture has now been removed, as the Pixi Cache isn't used internally anywhere any longer.
+* Phaser.Cache.getPixiBaseTexture has now been removed, as the Pixi Cache isn't used internally anywhere any longer.
 
 ### Bug Fixes
 
@@ -353,6 +359,22 @@ Please note that Phaser uses a custom build of Pixi and always has done. The fol
 
 * Removed `_renderWebGL`, `_renderCanvas`, `getLocalBounds` and `getBounds` from PIXI.DisplayObject, as they were only there to pass ancient jshint rules.
 * All Pixi.Graphics methods that change the Graphics, i.e. `drawShape`, `lineTo`, `arc`, etc will now all automatically call `Graphics.updateLocalBounds`. This is so that the bounds of the Graphics object are kept updated, allowing you to scale and rotate the Graphics object and still obtain correct dimensions from it (thanks @kelu-smiley #2573)
+* PIXI.CanvasPool no longer _just_ checks for `null` parent comparisons. It will check for all falsey parents, helping free-up canvases when the parent objects have been removed elsewhere.
+* PIXI.CanvasPool.remove and `removeByCanvas` both now set the removed canvas width and height to 1.
+* PIXI.Texture.fromImage, PIXI.BaseTexture.fromImage and PIXI.Sprite.fromImage have all been removed. They should never have actually been used, as they bypass the Phaser Loader, and don't factor in CORs or any other advanced loader settings.
+* The PIXI.BaseTexture.imageUrl property has been removed, as it was never actually populated.
+* The PIXI.BaseTexture._UID property has been removed, as it was never actually used internally.
+* All references to PIXI.BaseTextureCache have been removed (primarily from BaseTexture.destroy and Texture.destroy), as the BaseTextureCache was never used internally by Phaser, or by our custom version of Pixi.
+* PIXI.TextureCache has been removed. It was only ever used by the __default and __missing images that Phaser generates on start-up. It wasn't used internally by Phaser anywhere else, and the only references Pixi has to it have all been removed. If you need it in your own game, please refactor it to avoid it, or re-create the object on the PIXI global object.
+* Canvases created by `BaseTexture.fromCanvas` no longer have the `_pixiId` property attached to them, as this was never used internally by Phaser or Pixi.
+* PIXI.BaseTexture.updateSourceImage is now deprecated. Please use `Sprite.loadTexture` instead.
+* The property PIXI.BaseTextureCacheIdGenerator has been removed, as it is no longer used internally by Phaser or Pixi.
+* PIXI.Texture.addTextureToCache has been removed. The PIXI Texture Cache was never actually used by Phaser, and was leading to complications internally.
+* PIXI.Texture.removeTextureFromCache has been removed. The PIXI Texture Cache was never actually used by Phaser, and was leading to complications internally.
+* PIXI.Texture.fromFrame and PIXI.Sprite.fromFrame have been removed. They relied on the PIXI Texture Cache, which was never actually used by Phaser, and was never used internally by Pixi either.
+* The property PIXI.TextureCacheIdGenerator has been removed, as it was not used internally.
+* The property PIXI.FrameCache has been removed, as it was not used internally.
+
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
