@@ -68,7 +68,7 @@ PIXI.CanvasPool = {
 
         for (var i = 0; i < pool.length; i++)
         {
-            if (pool[i].parent === null)
+            if (!pool[i].parent)
             {
                 return i;
             }
@@ -134,7 +134,7 @@ PIXI.CanvasPool = {
 
         for (var i = 0; i < pool.length; i++)
         {
-            if (pool[i].parent !== null)
+            if (pool[i].parent)
             {
                 c++;
             }
@@ -158,7 +158,7 @@ PIXI.CanvasPool = {
 
         for (var i = 0; i < pool.length; i++)
         {
-            if (pool[i].parent === null)
+            if (!pool[i].parent)
             {
                 c++;
             }
