@@ -513,6 +513,9 @@ declare module Phaser {
         static XML: number;
         static VIDEO: number;
 
+        static DEFAULT: PIXI.Texture;
+        static MISSING: PIXI.Texture;
+
         autoResolveURL: boolean;
         game: Phaser.Game;
         onSoundUnlock: Phaser.Signal;
@@ -571,8 +574,6 @@ declare module Phaser {
         getItem(key: string, cache: number, method?: string, property?: string): any;
         getJSON(key: string, clone?: boolean): any;
         getKeys(cache: number): string[];
-        getPixiTexture(key: string): PIXI.Texture;
-        getPixiBaseTexture(key: string): PIXI.BaseTexture;
         getPhysicsData(key: string, object?: string, fixtureKey?: string): any[];
         getRenderTexture(key: string): Phaser.CachedRenderTexture;
         getShader(key: string): string;

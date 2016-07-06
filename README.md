@@ -375,7 +375,6 @@ Please note that Phaser uses a custom build of Pixi and always has done. The fol
 * The property PIXI.TextureCacheIdGenerator has been removed, as it was not used internally.
 * The property PIXI.FrameCache has been removed, as it was not used internally.
 
-
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
 ![Contributing](http://phaser.io/images/github/div-contributing.png "Contributing")
