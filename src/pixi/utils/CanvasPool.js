@@ -94,6 +94,8 @@ PIXI.CanvasPool = {
             if (pool[i].parent === parent)
             {
                 pool[i].parent = null;
+                pool[i].canvas.width = 1;
+                pool[i].canvas.height = 1;
             }
         }
 
@@ -115,6 +117,8 @@ PIXI.CanvasPool = {
             if (pool[i].canvas === canvas)
             {
                 pool[i].parent = null;
+                pool[i].canvas.width = 1;
+                pool[i].canvas.height = 1;
             }
         }
 
