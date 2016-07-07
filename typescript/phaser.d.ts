@@ -3011,7 +3011,10 @@ declare module Phaser {
                 movementCallbackContext: any;
                 newVelocity: Phaser.Point;
                 offset: Phaser.Point;
+                onCollide: Phaser.Signal;
                 onMoveComplete: Phaser.Signal;
+                onOverlap: Phaser.Signal;
+                onWorldBounds: Phaser.Signal;
                 overlapX: number;
                 overlapY: number;
                 phase: number;

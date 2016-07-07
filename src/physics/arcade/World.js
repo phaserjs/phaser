@@ -1019,7 +1019,37 @@ Phaser.Physics.Arcade.prototype = {
             }
         }
 
-        return (resultX || resultY);
+        var result = (resultX || resultY);
+
+        if (result)
+        {
+            if (overlapOnly)
+            {
+                if (body1.onOverlap)
+                {
+                    body1.onOverlap.dispatch(body1.sprite, body2.sprite);
+                }
+
+                if (body2.onOverlap)
+                {
+                    body2.onOverlap.dispatch(body2.sprite, body1.sprite);
+                }
+            }
+            else
+            {
+                if (body1.onCollide)
+                {
+                    body1.onCollide.dispatch(body1.sprite, body2.sprite);
+                }
+
+                if (body2.onCollide)
+                {
+                    body2.onCollide.dispatch(body2.sprite, body1.sprite);
+                }
+            }
+        }
+
+        return result;
 
     },
 
@@ -1175,6 +1205,19 @@ Phaser.Physics.Arcade.prototype = {
         //  Can't separate two immovable bodies, or a body with its own custom separation logic
         if (overlapOnly || overlap === 0 || (body1.immovable && body2.immovable) || body1.customSeparateX || body2.customSeparateX)
         {
+            if (overlap !== 0)
+            {
+                if (body1.onOverlap)
+                {
+                    body1.onOverlap.dispatch(body1.sprite, body2.sprite);
+                }
+
+                if (body2.onOverlap)
+                {
+                    body2.onOverlap.dispatch(body2.sprite, body1.sprite);
+                }
+            }
+
             //  return true if there was some overlap, otherwise false
             return (overlap !== 0);
         }
@@ -1261,6 +1304,16 @@ Phaser.Physics.Arcade.prototype = {
         {
             body2.x += (body2.velocity.x * this.game.time.physicsElapsed) + overlap * Math.cos(angleCollision);
             body2.y += (body2.velocity.y * this.game.time.physicsElapsed) + overlap * Math.sin(angleCollision);
+        }
+
+        if (body1.onCollide)
+        {
+            body1.onCollide.dispatch(body1.sprite, body2.sprite);
+        }
+
+        if (body2.onCollide)
+        {
+            body2.onCollide.dispatch(body2.sprite, body1.sprite);
         }
 
         return true;

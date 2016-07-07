@@ -191,12 +191,51 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     /**
     * A Signal that is dispatched when this Body collides with the world bounds.
     * Due to the potentially high volume of signals this could create it is disabled by default.
-    * To use this feature set this property to a Phaser.Signal:
-    * `sprite.body.onWorldBounds = new Phaser.Signal()`
+    * To use this feature set this property to a Phaser.Signal: `sprite.body.onWorldBounds = new Phaser.Signal()`
     * and it will be called when a collision happens, passing one argument: the sprite on which it occurred.
     * @property {Phaser.Signal} onWorldBounds
     */
     this.onWorldBounds = null;
+
+    /**
+    * A Signal that is dispatched when this Body collides with another Body.
+    * 
+    * You still need to call `game.physics.arcade.collide` in your `update` method in order
+    * for this signal to be dispatched.
+    *
+    * Usually you'd pass a callback to the `collide` method, but this signal provides for
+    * a different level of notification.
+    * 
+    * Due to the potentially high volume of signals this could create it is disabled by default.
+    * 
+    * To use this feature set this property to a Phaser.Signal: `sprite.body.onCollide = new Phaser.Signal()`
+    * and it will be called when a collision happens, passing two arguments: the sprites which collided.
+    * The first sprite in the argument is always the owner of this Body.
+    * 
+    * If two Bodies with this Signal set collide, both will dispatch the Signal.
+    * @property {Phaser.Signal} onCollide
+    */
+    this.onCollide = null;
+
+    /**
+    * A Signal that is dispatched when this Body overlaps with another Body.
+    * 
+    * You still need to call `game.physics.arcade.overlap` in your `update` method in order
+    * for this signal to be dispatched.
+    *
+    * Usually you'd pass a callback to the `overlap` method, but this signal provides for
+    * a different level of notification.
+    * 
+    * Due to the potentially high volume of signals this could create it is disabled by default.
+    * 
+    * To use this feature set this property to a Phaser.Signal: `sprite.body.onOverlap = new Phaser.Signal()`
+    * and it will be called when a collision happens, passing two arguments: the sprites which collided.
+    * The first sprite in the argument is always the owner of this Body.
+    * 
+    * If two Bodies with this Signal set collide, both will dispatch the Signal.
+    * @property {Phaser.Signal} onOverlap
+    */
+    this.onOverlap = null;
 
     /**
     * @property {Phaser.Point} maxVelocity - The maximum velocity in pixels per second sq. that the Body can reach.
