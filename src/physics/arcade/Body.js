@@ -48,7 +48,7 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     * The radius of the circular collision shape this Body is using if Body.setCircle has been enabled.
     * If you wish to change the radius then call `setCircle` again with the new value.
     * If you wish to stop the Body using a circle then call `setCircle` with a radius of zero (or undefined).
-    * @property {float} radius
+    * @property {number} radius
     * @default
     * @readOnly
     */
@@ -147,12 +147,12 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     * @property {Phaser.Point} newVelocity - The new velocity. Calculated during the Body.preUpdate and applied to its position.
     * @readonly
     */
-    this.newVelocity = new Phaser.Point(0, 0);
+    this.newVelocity = new Phaser.Point();
 
     /**
     * @property {Phaser.Point} deltaMax - The Sprite position is updated based on the delta x/y values. You can set a cap on those (both +-) using deltaMax.
     */
-    this.deltaMax = new Phaser.Point(0, 0);
+    this.deltaMax = new Phaser.Point();
 
     /**
     * @property {Phaser.Point} acceleration - The acceleration is the rate of change of the velocity. Measured in pixels per second squared.
@@ -173,7 +173,7 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     /**
     * @property {Phaser.Point} gravity - A local gravity applied to this Body. If non-zero this over rides any world gravity, unless Body.allowGravity is set to false.
     */
-    this.gravity = new Phaser.Point(0, 0);
+    this.gravity = new Phaser.Point();
 
     /**
     * @property {Phaser.Point} bounce - The elasticity of the Body when colliding. bounce.x/y = 1 means full rebound, bounce.x/y = 0.5 means 50% rebound velocity.
@@ -187,6 +187,16 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     * @property {Phaser.Point} worldBounce
     */
     this.worldBounce = null;
+
+    /**
+    * A Signal that is dispatched when this Body collides with the world bounds.
+    * Due to the potentially high volume of signals this could create it is disabled by default.
+    * To use this feature set this property to a Phaser.Signal:
+    * `sprite.body.onWorldBounds = new Phaser.Signal()`
+    * and it will be called when a collision happens, passing one argument: the sprite on which it occurred.
+    * @property {Phaser.Signal} onWorldBounds
+    */
+    this.onWorldBounds = null;
 
     /**
     * @property {Phaser.Point} maxVelocity - The maximum velocity in pixels per second sq. that the Body can reach.
@@ -569,7 +579,10 @@ Phaser.Physics.Arcade.Body.prototype = {
 
             if (this.collideWorldBounds)
             {
-                this.checkWorldBounds();
+                if (this.checkWorldBounds() && this.onWorldBounds)
+                {
+                    this.onWorldBounds.dispatch(this.sprite);
+                }
             }
         }
 
@@ -740,6 +753,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     *
     * @method Phaser.Physics.Arcade.Body#checkWorldBounds
     * @protected
+    * @return {boolean} True if the Body collided with the world bounds, otherwise false.
     */
     checkWorldBounds: function () {
 
@@ -752,11 +766,12 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         if (this.isCircle)
         {
-            var bodyBounds = {};
-            bodyBounds.x = this.center.x - this.radius;
-            bodyBounds.y = this.center.y - this.radius;
-            bodyBounds.right = this.center.x + this.radius;
-            bodyBounds.bottom = this.center.y + this.radius;
+            var bodyBounds = {
+                x: this.center.x - this.radius,
+                y: this.center.y - this.radius,
+                right: this.center.x + this.radius,
+                bottom: this.center.y + this.radius
+            };
 
             if (bodyBounds.x < bounds.x && check.left)
             {
@@ -812,6 +827,8 @@ Phaser.Physics.Arcade.Body.prototype = {
                 this.blocked.down = true;
             }
         }
+
+        return (this.blocked.up || this.blocked.down || this.blocked.left || this.blocked.right);
 
     },
 
@@ -991,6 +1008,9 @@ Phaser.Physics.Arcade.Body.prototype = {
     * 24 is the horizontal offset of the Body from the top-left of the Sprites texture, and 34
     * is the vertical offset.
     *
+    * Calling `setSize` on a Body that has already had `setCircle` will reset all of the Circle
+    * properties, making this Body rectangular again.
+    *
     * @method Phaser.Physics.Arcade.Body#setSize
     * @param {number} width - The width of the Body.
     * @param {number} height - The height of the Body.
@@ -998,11 +1018,6 @@ Phaser.Physics.Arcade.Body.prototype = {
     * @param {number} [offsetY] - The Y offset of the Body from the top-left of the Sprites texture.
     */
     setSize: function (width, height, offsetX, offsetY) {
-
-        if (this.isCircle)
-        {
-            return;
-        }
 
         if (offsetX === undefined) { offsetX = this.offset.x; }
         if (offsetY === undefined) { offsetY = this.offset.y; }
@@ -1017,6 +1032,9 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         this.center.setTo(this.position.x + this.halfWidth, this.position.y + this.halfHeight);
 
+        this.isCircle = false;
+        this.radius = 0;
+
     },
 
     /**
@@ -1024,6 +1042,11 @@ Phaser.Physics.Arcade.Body.prototype = {
     * The radius is given in pixels and is the distance from the center of the circle to the edge.
     *
     * You can also control the x and y offset, which is the position of the Body relative to the top-left of the Sprite.
+    *
+    * To change a Body back to being rectangular again call `Body.setSize`.
+    *
+    * Note: Circular collision only happens with other Arcade Physics bodies, it does not
+    * work against tile maps, where rectangular collision is the only method supported.
     *
     * @method Phaser.Physics.Arcade.Body#setCircle
     * @param {number} [radius] - The radius of the Body in pixels. Pass a value of zero / undefined, to stop the Body using a circle for collision.
@@ -1097,6 +1120,7 @@ Phaser.Physics.Arcade.Body.prototype = {
 
     /**
     * Returns the bounds of this physics body.
+    * 
     * Only used internally by the World collision methods.
     *
     * @method Phaser.Physics.Arcade.Body#getBounds
@@ -1368,41 +1392,31 @@ Phaser.Physics.Arcade.Body.render = function (context, body, color, filled) {
 
     color = color || 'rgba(0,255,0,0.4)';
 
+    context.fillStyle = color;
+    context.strokeStyle = color;
+
     if (body.isCircle)
     {
-        context.save();
-        context.setTransform(1, 0, 0, 1, 0, 0);
-
         context.beginPath();
         context.arc(body.center.x - body.game.camera.x, body.center.y - body.game.camera.y, body.radius, 0, 2 * Math.PI);
-        context.closePath();
 
         if (filled)
         {
-            context.fillStyle = color;
             context.fill();
         }
         else
         {
-            context.strokeStyle = color;
             context.stroke();
         }
-
-        // context.strokeStyle = '#ffff00';
-        // context.strokeRect(body.position.x - body.game.camera.x, body.position.y - body.game.camera.y, body.width, body.height);
-
-        context.restore();
     }
     else
     {
         if (filled)
         {
-            context.fillStyle = color;
             context.fillRect(body.position.x - body.game.camera.x, body.position.y - body.game.camera.y, body.width, body.height);
         }
         else
         {
-            context.strokeStyle = color;
             context.strokeRect(body.position.x - body.game.camera.x, body.position.y - body.game.camera.y, body.width, body.height);
         }
     }

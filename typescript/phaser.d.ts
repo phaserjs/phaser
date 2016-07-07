@@ -1,7 +1,7 @@
 /// <reference path="pixi.d.ts" />
 /// <reference path="p2.d.ts" />
 
-// Type definitions for Phaser 2.5.1 - 2nd July 2016
+// Type definitions for Phaser 2.6.0 - 7th July 2016
 // Project: https://github.com/photonstorm/phaser
 
 declare module "phaser" {
@@ -3001,6 +3001,7 @@ declare module Phaser {
                 halfHeight: number;
                 height: number;
                 immovable: boolean;
+                isCircle: boolean;
                 isMoving: boolean;
                 mass: number;
                 maxAngular: number;
@@ -3017,6 +3018,7 @@ declare module Phaser {
                 position: Phaser.Point;
                 preRotation: number;
                 prev: Phaser.Point;
+                radius: number;
                 right: number;
                 rotation: number;
                 skipQuadTree: boolean;
@@ -3043,6 +3045,7 @@ declare module Phaser {
                 deltaAbsX(): number;
                 deltaAbsY(): number;
                 destroy(): void;
+                getBounds(obj: any): any;
                 hitTest(x: number, y: number): boolean;
                 moveFrom(duration: number, speed?: number, direction?: number): boolean;
                 moveTo(duration: number, distance: number, direction?: number): boolean;
@@ -3053,6 +3056,7 @@ declare module Phaser {
                 render(context: any, body: Phaser.Physics.Arcade.Body, color?: string, filled?: boolean): void;
                 renderBodyInfo(debug: Phaser.Utils.Debug, body: Phaser.Physics.Arcade.Body): void;
                 reset(x: number, y: number): void;
+                setCircle(radius: number, offsetX?: number, offsetY?: number): void;
                 setSize(width: number, height: number, offsetX?: number, offsetY?: number): void;
                 updateBounds(): boolean;
 

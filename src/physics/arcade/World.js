@@ -710,14 +710,16 @@ Phaser.Physics.Arcade.prototype = {
 
             for (var i = 0; i < group.hash.length; i++)
             {
+                var object1 = group.hash[i];
+
                 //  Skip duff entries - we can't check a non-existent sprite or one with no body
-                if (!group.hash[i] || !group.hash[i].exists || !group.hash[i].body)
+                if (!object1 || !object1.exists || !object1.body)
                 {
                     continue;
                 }
 
                 //  Inject the Body bounds data into the bounds object
-                group.hash[i].body.getBounds(bounds);
+                bounds = object1.body.getBounds(bounds);
 
                 //  Skip items either side of the sprite
                 if (this.sortDirection === Phaser.Physics.Arcade.LEFT_RIGHT)
@@ -765,7 +767,7 @@ Phaser.Physics.Arcade.prototype = {
                     }
                 }
                 
-                this.collideSpriteVsSprite(sprite, group.hash[i], collideCallback, processCallback, callbackContext, overlapOnly);
+                this.collideSpriteVsSprite(sprite, object1, collideCallback, processCallback, callbackContext, overlapOnly);
             }
         }
         else
@@ -827,8 +829,7 @@ Phaser.Physics.Arcade.prototype = {
             }
 
             //  Inject the Body bounds data into the bounds1 object
-            object1.body.getBounds(bounds1);
-            // bounds1.ref = object1;
+            bounds1 = object1.body.getBounds(bounds1);
 
             for (var j = i + 1; j < group.hash.length; j++)
             {
@@ -842,8 +843,7 @@ Phaser.Physics.Arcade.prototype = {
                 }
 
                 //  Inject the Body bounds data into the bounds2 object
-                object2.body.getBounds(bounds2);
-                // bounds2.ref = object2;
+                bounds2 = object2.body.getBounds(bounds2);
 
                 //  Skip items either side of the sprite
                 if (this.sortDirection === Phaser.Physics.Arcade.LEFT_RIGHT)
@@ -967,23 +967,30 @@ Phaser.Physics.Arcade.prototype = {
         // We define the behavior of bodies in a collision circle and rectangle
         // If a collision occurs in the corner points of the rectangle, the body behave like circles
 
+        //  Either body1 or body2 is a circle
         if (body1.isCircle !== body2.isCircle)
         {
+            var bodyRect = (body1.isCircle) ? body2 : body1;
+            var bodyCircle = (body1.isCircle) ? body1 : body2;
+
             var rect = {
-                x: (body2.isCircle) ? body1.position.x : body2.position.x,
-                y: (body2.isCircle) ? body1.position.y : body2.position.y,
-                right: (body2.isCircle) ? body1.right : body2.right,
-                bottom: (body2.isCircle) ? body1.bottom : body2.bottom
+                x: bodyRect.x,
+                y: bodyRect.y,
+                right: bodyRect.right,
+                bottom: bodyRect.bottom
             };
 
             var circle = {
-                x: (body1.isCircle) ? (body1.position.x + body1.radius) : (body2.position.x + body2.radius),
-                y: (body1.isCircle) ? (body1.position.y + body1.radius) : (body2.position.y + body2.radius)
+                x: bodyCircle.x + bodyCircle.radius,
+                y: bodyCircle.y + bodyCircle.radius
             };
 
             if (circle.y < rect.y || circle.y > rect.bottom)
             {
-                return this.separateCircle(body1, body2, overlapOnly);
+                if (circle.x < rect.x || circle.x > rect.right)
+                {
+                    return this.separateCircle(body1, body2, overlapOnly);
+                }
             }
         }
 
@@ -1175,13 +1182,13 @@ Phaser.Physics.Arcade.prototype = {
         // Transform the velocity vector to the coordinate system oriented along the direction of impact.
         // This is done to eliminate the vertical component of the velocity
         var v1 = {
-            x : body1.velocity.x * Math.cos(angleCollision) + body1.velocity.y * Math.sin(angleCollision),
-            y : body1.velocity.x * Math.sin(angleCollision) - body1.velocity.y * Math.cos(angleCollision)
+            x: body1.velocity.x * Math.cos(angleCollision) + body1.velocity.y * Math.sin(angleCollision),
+            y: body1.velocity.x * Math.sin(angleCollision) - body1.velocity.y * Math.cos(angleCollision)
         };
 
         var v2 = {
-            x : body2.velocity.x * Math.cos(angleCollision) + body2.velocity.y * Math.sin(angleCollision),
-            y : body2.velocity.x * Math.sin(angleCollision) - body2.velocity.y * Math.cos(angleCollision)
+            x: body2.velocity.x * Math.cos(angleCollision) + body2.velocity.y * Math.sin(angleCollision),
+            y: body2.velocity.x * Math.sin(angleCollision) - body2.velocity.y * Math.cos(angleCollision)
         };
 
         // We expect the new velocity after impact
@@ -1207,38 +1214,38 @@ Phaser.Physics.Arcade.prototype = {
 
         if (Math.abs(angleCollision) < Math.PI / 2)
         {
-            if (body1.velocity.x > 0 && !body1.immovable && body2.velocity.x > body1.velocity.x)
+            if ((body1.velocity.x > 0) && !body1.immovable && (body2.velocity.x > body1.velocity.x))
             {
                 body1.velocity.x *= -1;
             }
-            else if (body2.velocity.x < 0 && !body2.immovable && body1.velocity.x < body2.velocity.x)
+            else if ((body2.velocity.x < 0) && !body2.immovable && (body1.velocity.x < body2.velocity.x))
             {
                 body2.velocity.x *= -1;
             }
-            else if (body1.velocity.y > 0 && !body1.immovable && body2.velocity.y > body1.velocity.y)
+            else if ((body1.velocity.y > 0) && !body1.immovable && (body2.velocity.y > body1.velocity.y))
             {
                 body1.velocity.y *= -1;
             }
-            else if (body2.velocity.y < 0 && !body2.immovable && body1.velocity.y < body2.velocity.y)
+            else if ((body2.velocity.y < 0) && !body2.immovable && (body1.velocity.y < body2.velocity.y))
             {
                 body2.velocity.y *= -1;
             }
         }
         else if (Math.abs(angleCollision) > Math.PI / 2)
         {
-            if (body1.velocity.x < 0 && !body1.immovable && body2.velocity.x < body1.velocity.x)
+            if ((body1.velocity.x < 0) && !body1.immovable && (body2.velocity.x < body1.velocity.x))
             {
                 body1.velocity.x *= -1;
             }
-            else if (body2.velocity.x > 0 && !body2.immovable && body1.velocity.x > body2.velocity.x)
+            else if ((body2.velocity.x > 0) && !body2.immovable && (body1.velocity.x > body2.velocity.x))
             {
                 body2.velocity.x *= -1;
             }
-            else if (body1.velocity.y < 0 && !body1.immovable && body2.velocity.y < body1.velocity.y)
+            else if ((body1.velocity.y < 0) && !body1.immovable && (body2.velocity.y < body1.velocity.y))
             {
                 body1.velocity.y *= -1;
             }
-            else if (body2.velocity.y > 0 && !body2.immovable && body1.velocity.x > body2.velocity.y)
+            else if ((body2.velocity.y > 0) && !body2.immovable && (body1.velocity.x > body2.velocity.y))
             {
                 body2.velocity.y *= -1;
             }
