@@ -1,7 +1,7 @@
 {
   "name": "phaser",
-  "version": "2.6.0",
-  "release": "Fal Moran",
+  "version": "2.6.1",
+  "release": "Caemlyn",
   "description": "A fast, free and fun HTML5 Game Framework for Desktop and Mobile web browsers.",
   "author": "Richard Davey <rdavey@gmail.com> (http://www.photonstorm.com)",
   "logo": "https://raw.github.com/photonstorm/phaser/master/phaser-logo-small.png",

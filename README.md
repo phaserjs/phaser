@@ -38,17 +38,9 @@ Grab the source and join in the fun!
 
 <div align="center"><img src="http://phaser.io/images/github/news.jpg"></div>
 
-> 8th July 2016
+> In Development
 
-Welcome to Phaser 2.6.0. Our seventh release this year, and another leap forwards since 2.5.0 less than a month ago. This version includes the work undertaken with adding circular body support into Arcade Physics, allowing you to now define physics bodies as being circles instead of rectangles, something that was previously only available in P2 Physics.
-
-Keeping with Arcade Physics for a moment there are now new events you can listen for, including `Body.onWorldBounds`, `Body.onCollide` and `Body.onOverlap`. Phaser.Groups have also been given a shot in the arm. You can now position them, and all of their children, using the new bounds commands such as `left`, `centerX` and `bottom`. They've also gained the `alignTo` and `alignIn` methods from the 2.5 release.
-
-In this release we've undertaken a large amount of work refactoring Pixi. You will find lots of Pixi related methods, that were redundant, removed from the build (such as `fromImage`). All references to the Pixi Texture and Base Texture caches have also been removed, helping close-off some straggling issues, and free-up lingering resources. Please see the Pixi section of the Change Log for complete details. This will not effect you if you're just using Phaser, but if you had any Pixi specific mods or plugins, they may need checking over.
-
-I've also been working hard on the documentation. Tidying-up functions that didn't have parameter descriptions, adding lots more details to areas such as the Game Object events, and starting the huge task of rewriting all of the Pixi documentation into a more friendly and comprehensive format. This is an on-going task, and will be merged into releases from here-on.
-
-Check the [Change Log](#change-log) to see the complete list of what's new in this release.
+This is the development branch, where we are building Phaser 2.5.1. Check the [Change Log](#change-log) to see what we've done so far. Or switch to the master branch for the current stable release.
 
 As always, keep you eyes on the Phaser web site, and subscribe to our weekly [newsletter](#newsletter). You can also follow me on [Twitter](https://twitter.com/photonstorm) or chat to me in the Phaser [Slack](http://phaser.io/community/slack) channel.
 
@@ -311,81 +303,32 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 ![Change Log](http://phaser.io/images/github/div-change-log.png "Change Log")
 <a name="change-log"></a>
 
-## Version 2.6.0 - "Fal Moran" - 8th July 2016
+## Version 2.6.1 - "Caemlyn" - In Development
 
 ### New Features
 
-* The Loader has a new property `headers`. This is an object checked by XHR Requests, used to set the Request Header of certain file types. JSON and XML are pre-configured, but you can add to, or modify this property as required (thanks @stoneman1 #2585 #2485)
-* Phaser now has support for Typings, the TypeScript Definition Manager. See the `typescript/readme.md` file for installation instructions (thanks @monagames #2576)
-* Phaser.Utils.reverseString will take the given string, reverse it, and then return it.
-* Phaser.ArrayUtils.rotateRight is the opposite of ArrayUtils.rotate. It takes an array, removes the element from the end of the array, and inserts it at the start, shifting everything else 1 space in the process.
-* Phaser.ArrayUtils.rotateLeft is the new name for Phaser.ArrayUtils.rotate. The old method is now deprecated (but still available in this release)
-* Phaser.Color.toABGR converts RGBA components to a 32 bit integer in AABBGGRR format.
-* ArcadePhysics.Body.setCircle is a new method that allows you to define an Arcade Physics Body as being a circle instead of a rectangle. You can control the radius of the body and the offset from the parent sprite.
-* ArcadePhysics.World.separateCircle is a new method that handles all circular body collisions internally within Arcade Physics (thanks @VitaZheltyakov)
-* All of the Arcade Physics internal methods, such as `collideGroupVsSelf`, `collideSpriteVsSprite` and so on, have been updated to work with circular body shapes (thanks @VitaZheltyakov)
-* ArcadePhysics.Body.onWorldBounds is a new Signal that is dispatched whenever the Body collides with the world bounds, something that was previously difficult to detect. Due to the potentially high volume of signals this could create it is disabled by default. To use this feature set this property to a Phaser.Signal: `sprite.body.onWorldBounds = new Phaser.Signal()` and it will be called when a collision happens, passing five arguments: the sprite on which it occurred, and 4 booleans mapping to up, down, left and right, indicating on which side of the world the collision occurred.
-* ArcadePhysics.Body.onCollide is a new Signal that is dispatched whenever the Body collides with another Body. Due to the potentially high volume of signals this could create it is disabled by default. To use this feature set this property to a Phaser.Signal: `sprite.body.onCollide = new Phaser.Signal()` and it will be called when a collision happens, passing two arguments: the sprites which collided.
-* ArcadePhysics.Body.onOverlap is a new Signal that is dispatched whenever the Body overlaps with another Body. Due to the potentially high volume of signals this could create it is disabled by default. To use this feature set this property to a Phaser.Signal: `sprite.body.onOverlap = new Phaser.Signal()` and it will be called when an overlap happens, passing two arguments: the sprites which collided.
-* Groups now have the following properties, which are getters and setters: `centerX`, `centerY`, `left`, `right`, `top` and `bottom`. These calculate the bounds of the Group, based on all visible children, and then allow you to apply positioning based on that. This means you can, for example, now get the horizontal center of a Group by called `Group.centerX`. These properties are also setters, so you can position the Groups, and it will take scale and rotation into consideration.
-* Groups have a new method `alignIn`. It allows you to align the Group within another Game Object, or a Rectangle. You can specify one of 9 positions which are the new position constants such as: `Phaser.TOP_LEFT` or `Phaser.CENTER` (see docs for the complete list). The Groups are positioned based on their child bounds, which takes rotation and scaling into consideration. You can easily place Groups into the corners of the screen, or game world, or align them within other Sprites, using this method.
-* Groups have a new method `alignTo`. It allows you to align a Group to the side of another Game Object, or a Rectangle. You can specify one of 11 positions which are the new position constants such as: `Phaser.TOP_LEFT` or `Phaser.LEFT_BOTTOM` (see docs for the complete list). The Groups are positioned based on their child bounds, which takes rotation and scaling into consideration. You can easily align Groups next to other Sprites using this method.
+*
+*
+*
 
 ### Updates
 
-* TypeScript definitions fixes and updates (thanks @monagames)
-* Docs typo fixes (thanks @drhayes)
-* The TilemapParser will now add more data when importing Image object types from Tiled. The extra data available is: image width, image height, and flags to see if the image is flipped either horizontally, vertically or diagonally (thanks @gotenxds #2564 #2554)
-* TilemapLayer.renderRegion has had an assignment to the obsolete `tileColor` property removed (thanks @cryptographer #2583)
-* Group.getFurthestFrom and Group.getClosestTo has a new optional argument: `callback`. This allows you to apply your own additional filtering to the distance checks, ultimately influencing the selected child (thanks @LoneStranger #2577)
-* Text.setText has a new optional argument `immediate` which will re-create the texture immediately upon call, rather than wait for the next render pass to do so (thanks @Scraft #2594)
-* Phaser.Utils.pad now calls `toString` on the input given, which means you can pass in common data types, such as numbers, and have them padded and returned as strings.
-* The canvas created by Phaser.Debug for use when displaying debug data is no longer stored in the CanvasPool, and is instead a stand-alone canvas, free from ever being re-used by another game object.
-* BitmapData has a new, optional, fifth argument: `skipPool`. By default BitmapData objects will ask for the first free canvas found in the CanvasPool, but this behavior can now be customized on a per object basis.
-* Phaser.ArrayUtils.rotate is now deprecated. Please use Phaser.ArrayUtils.rotateLeft instead.
-* Phaser.Text.fontPropertiesCanvas used to be taken from the CanvasPool, but as it's constantly needed it is now generated directly from the document.
-* The default image texture, for when none is supplied, is now available under `Phaser.Cache.DEFAULT`.
-* The missing image texture, for when an image has failed to load, is now available under `Phaser.Cache.MISSING`.
-* Phaser.Cache.addImage will now check the key given, and if `__default` or `__missing` it will update the new consts `Phaser.Cache.DEFAULT` and `Phaser.Cache.MISSING` accordingly, allowing you to replace the default or missing image textures used by Phaser.
-* Phaser.Cache.getPixiTexture has now been removed, as the Pixi Cache isn't used internally anywhere any longer.
-* Phaser.Cache.getPixiBaseTexture has now been removed, as the Pixi Cache isn't used internally anywhere any longer.
-* The second argument to Phaser.Cache.removeImage has been renamed from `removeFromPixi` to `destroyBaseTexture`, as that is fundamentally what the argument always did.
-* AnimationManager.refreshFrame has been removed as it never actually did anything internally.
-* Sound.stop will check to see if `gainNode` exists before trying to disconnect from it (#2597)
+* TypeScript definitions fixes and updates (thanks )
+* Docs typo fixes (thanks )
 
 ### Bug Fixes
 
-* Fixed issue in Group.align where the cell wouldn't increase if `rows` was great than -1
-* Sound.volume was accidentally repeated twice in the source (thanks @LoneStranger #2569)
-* Animation.setFrame wouldn't work correctly if the `useLocalFrameIndex` argument was true, and the frame ID was a number (thanks @uboot #2571)
-* Polygon.contains would only work with non-flattened Polygon objects. It now works with both flat and non-flat Polygons.
-* Graphics objects enabled for input would fail to do anything if a Phaser Polygon was given to the Graphics object (which it was in nearly all cases), as it wouldn't detect input correctly with flattened polygons (thanks @symbiane #2591)
-* P2.World.clear will now clear out the World.walls property, resetting all of the wall bounds to `null`. This allows the walls to be re-created accurately when the P2 World is reset, which happens on a State change or restart (thanks @ewpolly1 @codermua #2574)
+*
+*
+*
 
 ### Pixi Updates
 
 Please note that Phaser uses a custom build of Pixi and always has done. The following changes have been made to our custom build, not to Pixi in general.
 
-* Removed `_renderWebGL`, `_renderCanvas`, `getLocalBounds` and `getBounds` from PIXI.DisplayObject, as they were only there to pass ancient jshint rules.
-* All Pixi.Graphics methods that change the Graphics, i.e. `drawShape`, `lineTo`, `arc`, etc will now all automatically call `Graphics.updateLocalBounds`. This is so that the bounds of the Graphics object are kept updated, allowing you to scale and rotate the Graphics object and still obtain correct dimensions from it (thanks @kelu-smiley #2573)
-* PIXI.CanvasPool no longer _just_ checks for `null` parent comparisons. It will check for all falsey parents, helping free-up canvases when the parent objects have been removed elsewhere.
-* PIXI.CanvasPool.remove and `removeByCanvas` both now set the removed canvas width and height to 1.
-* PIXI.Texture.fromImage, PIXI.BaseTexture.fromImage and PIXI.Sprite.fromImage have all been removed. They should never have actually been used, as they bypass the Phaser Loader, and don't factor in CORs or any other advanced loader settings.
-* The PIXI.BaseTexture.imageUrl property has been removed, as it was never actually populated.
-* The PIXI.BaseTexture._UID property has been removed, as it was never actually used internally.
-* All references to PIXI.BaseTextureCache have been removed (primarily from BaseTexture.destroy and Texture.destroy), as the BaseTextureCache was never used internally by Phaser, or by our custom version of Pixi.
-* PIXI.TextureCache has been removed. It was only ever used by the __default and __missing images that Phaser generates on start-up. It wasn't used internally by Phaser anywhere else, and the only references Pixi has to it have all been removed. If you need it in your own game, please refactor it to avoid it, or re-create the object on the PIXI global object.
-* Canvases created by `BaseTexture.fromCanvas` no longer have the `_pixiId` property attached to them, as this was never used internally by Phaser or Pixi.
-* PIXI.BaseTexture.updateSourceImage is now deprecated. Please use `Sprite.loadTexture` instead.
-* The property PIXI.BaseTextureCacheIdGenerator has been removed, as it is no longer used internally by Phaser or Pixi.
-* PIXI.Texture.addTextureToCache has been removed. The PIXI Texture Cache was never actually used by Phaser, and was leading to complications internally.
-* PIXI.Texture.removeTextureFromCache has been removed. The PIXI Texture Cache was never actually used by Phaser, and was leading to complications internally.
-* PIXI.Texture.fromFrame and PIXI.Sprite.fromFrame have been removed. They relied on the PIXI Texture Cache, which was never actually used by Phaser, and was never used internally by Pixi either.
-* The property PIXI.TextureCacheIdGenerator has been removed, as it was not used internally.
-* The property PIXI.FrameCache has been removed, as it was not used internally.
-* PIXI.DisplayObjectContainer calls `updateTransform` at the start of `getBounds` to help avoid the bounds being out of date.
-
-Thanks to Corin Wilkins at Aardman Digital, for lots of the investigation work, leading to the Pixi changes listed above.
+*
+*
+*
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
