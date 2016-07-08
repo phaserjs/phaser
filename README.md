@@ -355,7 +355,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * Phaser.Cache.getPixiBaseTexture has now been removed, as the Pixi Cache isn't used internally anywhere any longer.
 * The second argument to Phaser.Cache.removeImage has been renamed from `removeFromPixi` to `destroyBaseTexture`, as that is fundamentally what the argument always did.
 * AnimationManager.refreshFrame has been removed as it never actually did anything internally.
-* Sound.stop will check to see if `gainNode` exists before trying to disconnect from it.
+* Sound.stop will check to see if `gainNode` exists before trying to disconnect from it (#2597)
 
 ### Bug Fixes
 
@@ -364,6 +364,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * Animation.setFrame wouldn't work correctly if the `useLocalFrameIndex` argument was true, and the frame ID was a number (thanks @uboot #2571)
 * Polygon.contains would only work with non-flattened Polygon objects. It now works with both flat and non-flat Polygons.
 * Graphics objects enabled for input would fail to do anything if a Phaser Polygon was given to the Graphics object (which it was in nearly all cases), as it wouldn't detect input correctly with flattened polygons (thanks @symbiane #2591)
+* P2.World.clear will now clear out the World.walls property, resetting all of the wall bounds to `null`. This allows the walls to be re-created accurately when the P2 World is reset, which happens on a State change or restart (thanks @ewpolly1 @codermua #2574)
 
 ### Pixi Updates
 
