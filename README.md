@@ -38,9 +38,15 @@ Grab the source and join in the fun!
 
 <div align="center"><img src="http://phaser.io/images/github/news.jpg"></div>
 
-> In Development
+> 8th July 2016
 
-This is the development branch, where we are building Phaser 2.5.1. Check the [Change Log](#change-log) to see what we've done so far. Or switch to the master branch for the current stable release.
+Welcome to Phaser 2.6.0. Our seventh release this year, and another leap forwards since 2.5.0 less than a month ago. This version includes the work undertaken with adding circular body support into Arcade Physics, allowing you to now define physics bodies as being circles instead of rectangles, something that was previously only available in P2 Physics.
+
+Keeping with Arcade Physics for a moment there are now new events you can listen for, including `Body.onWorldBounds`, `Body.onCollide` and `Body.onOverlap`.
+
+I've also been working hard on the documentation. Tidying-up functions that didn't have parameter descriptions, adding lots more details to areas such as the Game Object events, and starting the huge task of rewriting all of the Pixi documentation into a more friendly and comprehensive format. This is an on-going task, and will be merged into releases from here-on.
+
+Check the [Change Log](#change-log) to see the complete list of what's new in this release.
 
 As always, keep you eyes on the Phaser web site, and subscribe to our weekly [newsletter](#newsletter). You can also follow me on [Twitter](https://twitter.com/photonstorm) or chat to me in the Phaser [Slack](http://phaser.io/community/slack) channel.
 
@@ -67,18 +73,6 @@ If you have found Phaser useful in your development life. Or have made income as
 * Companies can sponsor a release of Phaser, or an issue of our newsletter.
  
 It all helps cover our running costs, and genuinely contributes towards future development.
-
-### Phaser Sponsors
-
-Phaser is sponsored by the following great companies:
-
-![qici](http://www.phaser.io/images/sponsors/qici-100.png)
-
-QICI Engine: [A powerful one-stop integrated Phaser game editor](http://www.qiciengine.com/)
-
-![zenva](http://www.phaser.io/images/sponsors/zenva-100.png)
-
-Zenva Academy: [Online courses on Phaser, HTML5 and native app development](https://academy.zenva.com/?zva_src=phaserpatreon)
 
 If you would like to sponsor Phaser then please [get in touch](mailto:support@phaser.io). We have sponsorship options available on our GitHub repo, web site, and newsletter. All of which receive tens of thousands of eyeballs per day.
 
@@ -117,15 +111,15 @@ Using Browserify? Please [read this](#browserify).
 
 [jsDelivr](http://www.jsdelivr.com/#!phaser) is a "super-fast CDN for developers". Include the following in your html:
 
-`<script src="//cdn.jsdelivr.net/phaser/2.5.1/phaser.js"></script>`
+`<script src="//cdn.jsdelivr.net/phaser/2.6.0/phaser.js"></script>`
 
 or the minified version:
 
-`<script src="//cdn.jsdelivr.net/phaser/2.5.1/phaser.min.js"></script>`
+`<script src="//cdn.jsdelivr.net/phaser/2.6.0/phaser.min.js"></script>`
 
 [cdnjs.com](https://cdnjs.com/libraries/phaser) also offers a free CDN service. They have all versions of Phaser and even the custom builds:
 
-`<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/2.5.1/phaser.js"></script>`
+`<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/2.6.0/phaser.js"></script>`
 
 ### Phaser Sandbox
 
@@ -315,7 +309,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 ![Change Log](http://phaser.io/images/github/div-change-log.png "Change Log")
 <a name="change-log"></a>
 
-## Version 2.6.0 - "Fal Moran" - In Development
+## Version 2.6.0 - "Fal Moran" - 8th July 2016
 
 ### New Features
 
@@ -389,6 +383,8 @@ Please note that Phaser uses a custom build of Pixi and always has done. The fol
 * The property PIXI.FrameCache has been removed, as it was not used internally.
 * PIXI.DisplayObjectContainer calls `updateTransform` at the start of `getBounds` to help avoid the bounds being out of date.
 
+Thanks to Corin Wilkins at Aardman Digital, for lots of the investigation work, leading to the Pixi changes listed above.
+
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
 ![Contributing](http://phaser.io/images/github/div-contributing.png "Contributing")
@@ -422,10 +418,10 @@ All rights reserved.
 
 [![Analytics](https://ga-beacon.appspot.com/UA-44006568-2/phaser/index)](https://github.com/igrigorik/ga-beacon)
 
-[get-js]: https://github.com/photonstorm/phaser/releases/download/v2.5.1/phaser.js
-[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v2.5.1/phaser.min.js
-[get-zip]: https://github.com/photonstorm/phaser/archive/v2.5.1.zip
-[get-tgz]: https://github.com/photonstorm/phaser/archive/v2.5.1.tar.gz
+[get-js]: https://github.com/photonstorm/phaser/releases/download/v2.6.0/phaser.js
+[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v2.6.0/phaser.min.js
+[get-zip]: https://github.com/photonstorm/phaser/archive/v2.6.0.zip
+[get-tgz]: https://github.com/photonstorm/phaser/archive/v2.6.0.tar.gz
 [clone-http]: https://github.com/photonstorm/phaser.git
 [clone-ssh]: git@github.com:photonstorm/phaser.git
 [clone-svn]: https://github.com/photonstorm/phaser
