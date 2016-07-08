@@ -192,7 +192,10 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     * A Signal that is dispatched when this Body collides with the world bounds.
     * Due to the potentially high volume of signals this could create it is disabled by default.
     * To use this feature set this property to a Phaser.Signal: `sprite.body.onWorldBounds = new Phaser.Signal()`
-    * and it will be called when a collision happens, passing one argument: the sprite on which it occurred.
+    * and it will be called when a collision happens, passing five arguments:
+    * `onWorldBounds(sprite, up, down, left, right)`
+    * where the Sprite is a reference to the Sprite that owns this Body, and the other arguments are booleans
+    * indicating on which side of the world the Body collided.
     * @property {Phaser.Signal} onWorldBounds
     */
     this.onWorldBounds = null;
@@ -620,7 +623,7 @@ Phaser.Physics.Arcade.Body.prototype = {
             {
                 if (this.checkWorldBounds() && this.onWorldBounds)
                 {
-                    this.onWorldBounds.dispatch(this.sprite);
+                    this.onWorldBounds.dispatch(this.sprite, this.blocked.up, this.blocked.down, this.blocked.left, this.blocked.right);
                 }
             }
         }
