@@ -355,6 +355,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * Phaser.Cache.getPixiBaseTexture has now been removed, as the Pixi Cache isn't used internally anywhere any longer.
 * The second argument to Phaser.Cache.removeImage has been renamed from `removeFromPixi` to `destroyBaseTexture`, as that is fundamentally what the argument always did.
 * AnimationManager.refreshFrame has been removed as it never actually did anything internally.
+* Sound.stop will check to see if `gainNode` exists before trying to disconnect from it.
 
 ### Bug Fixes
 
