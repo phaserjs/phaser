@@ -1275,9 +1275,13 @@
 <div align="center"><img src="http://phaser.io/images/github/news.jpg"></div>
 
 <blockquote>
-<p>In Development</p>
+<p>8th July 2016</p>
 </blockquote>
-<p>This is the development branch, where we are building Phaser 2.5.1. Check the <a href="#change-log">Change Log</a> to see what we've done so far. Or switch to the master branch for the current stable release.</p>
+<p>Welcome to Phaser 2.6.0. Our seventh release this year, and another leap forwards since 2.5.0 less than a month ago. This version includes the work undertaken with adding circular body support into Arcade Physics, allowing you to now define physics bodies as being circles instead of rectangles, something that was previously only available in P2 Physics.</p>
+<p>Keeping with Arcade Physics for a moment there are now new events you can listen for, including <code>Body.onWorldBounds</code>, <code>Body.onCollide</code> and <code>Body.onOverlap</code>. Phaser.Groups have also been given a shot in the arm. You can now position them, and all of their children, using the new bounds commands such as <code>left</code>, <code>centerX</code> and <code>bottom</code>. They've also gained the <code>alignTo</code> and <code>alignIn</code> methods from the 2.5 release.</p>
+<p>In this release we've undertaken a large amount of work refactoring Pixi. You will find lots of Pixi related methods, that were redundant, removed from the build (such as <code>fromImage</code>). All references to the Pixi Texture and Base Texture caches have also been removed, helping close-off some straggling issues, and free-up lingering resources. Please see the Pixi section of the Change Log for complete details. This will not effect you if you're just using Phaser, but if you had any Pixi specific mods or plugins, they may need checking over.</p>
+<p>I've also been working hard on the documentation. Tidying-up functions that didn't have parameter descriptions, adding lots more details to areas such as the Game Object events, and starting the huge task of rewriting all of the Pixi documentation into a more friendly and comprehensive format. This is an on-going task, and will be merged into releases from here-on.</p>
+<p>Check the <a href="#change-log">Change Log</a> to see the complete list of what's new in this release.</p>
 <p>As always, keep you eyes on the Phaser web site, and subscribe to our weekly <a href="#newsletter">newsletter</a>. You can also follow me on <a href="https://twitter.com/photonstorm">Twitter</a> or chat to me in the Phaser <a href="http://phaser.io/community/slack">Slack</a> channel.</p>
 <p>There are also now more ways than before to help <a href="#support">support</a> the development of Phaser. The uptake so far has been fantastic, but this is an on-going mission. Thank you to everyone who supports our development. Who shares our belief in the future of HTML5 gaming, and Phasers role in that.</p>
 <p>Happy coding everyone! See you on the forums.</p>
@@ -1295,11 +1299,6 @@
 <li>Companies can sponsor a release of Phaser, or an issue of our newsletter.</li>
 </ul>
 <p>It all helps cover our running costs, and genuinely contributes towards future development.</p>
-<h3>Phaser Sponsors</h3><p>Phaser is sponsored by the following great companies:</p>
-<p><img src="http://www.phaser.io/images/sponsors/qici-100.png" alt="qici"></p>
-<p>QICI Engine: <a href="http://www.qiciengine.com/">A powerful one-stop integrated Phaser game editor</a></p>
-<p><img src="http://www.phaser.io/images/sponsors/zenva-100.png" alt="zenva"></p>
-<p>Zenva Academy: <a href="https://academy.zenva.com/?zva_src=phaserpatreon">Online courses on Phaser, HTML5 and native app development</a></p>
 <p>If you would like to sponsor Phaser then please <a href="mailto:support@phaser.io">get in touch</a>. We have sponsorship options available on our GitHub repo, web site, and newsletter. All of which receive tens of thousands of eyeballs per day.</p>
 <p><img src="http://phaser.io/images/github/div-newsletter.png" alt="Weekly Newsletter" title="Weekly Newsletter">
 <a name="newsletter"></a></p>
@@ -1312,8 +1311,8 @@
 <p>Phaser is <a href="https://github.com/photonstorm/phaser">hosted on Github</a>. There are a number of ways to download it:</p>
 <ul>
 <li>Clone the git repository via <a href="https://github.com/photonstorm/phaser.git">https</a>, <a href="git@github.com:photonstorm/phaser.git">ssh</a> or with the Github <a href="github-windows://openRepo/https://github.com/photonstorm/phaser">Windows</a> or <a href="github-mac://openRepo/https://github.com/photonstorm/phaser">Mac</a> clients.</li>
-<li>Download as <a href="https://github.com/photonstorm/phaser/archive/v2.5.1.zip">zip</a> or <a href="https://github.com/photonstorm/phaser/archive/v2.5.1.tar.gz">tar.gz</a></li>
-<li>Download just the build files: <a href="https://github.com/photonstorm/phaser/releases/download/v2.5.1/phaser.js">phaser.js</a> and <a href="https://github.com/photonstorm/phaser/releases/download/v2.5.1/phaser.min.js">phaser.min.js</a></li>
+<li>Download as <a href="https://github.com/photonstorm/phaser/archive/v2.6.0.zip">zip</a> or <a href="https://github.com/photonstorm/phaser/archive/v2.6.0.tar.gz">tar.gz</a></li>
+<li>Download just the build files: <a href="https://github.com/photonstorm/phaser/releases/download/v2.6.0/phaser.js">phaser.js</a> and <a href="https://github.com/photonstorm/phaser/releases/download/v2.6.0/phaser.min.js">phaser.min.js</a></li>
 <li>Checkout with <a href="https://github.com/photonstorm/phaser">svn</a></li>
 </ul>
 <h3>Bower / npm</h3><p>Install via <a href="http://bower.io">bower</a></p>
@@ -1322,11 +1321,11 @@
 <p><code>npm install phaser</code></p>
 <p>Using Browserify? Please <a href="#browserify">read this</a>.</p>
 <h3>CDN</h3><p><a href="http://www.jsdelivr.com/#!phaser">jsDelivr</a> is a &quot;super-fast CDN for developers&quot;. Include the following in your html:</p>
-<p><code>&lt;script src=&quot;//cdn.jsdelivr.net/phaser/2.5.1/phaser.js&quot;&gt;&lt;/script&gt;</code></p>
+<p><code>&lt;script src=&quot;//cdn.jsdelivr.net/phaser/2.6.0/phaser.js&quot;&gt;&lt;/script&gt;</code></p>
 <p>or the minified version:</p>
-<p><code>&lt;script src=&quot;//cdn.jsdelivr.net/phaser/2.5.1/phaser.min.js&quot;&gt;&lt;/script&gt;</code></p>
+<p><code>&lt;script src=&quot;//cdn.jsdelivr.net/phaser/2.6.0/phaser.min.js&quot;&gt;&lt;/script&gt;</code></p>
 <p><a href="https://cdnjs.com/libraries/phaser">cdnjs.com</a> also offers a free CDN service. They have all versions of Phaser and even the custom builds:</p>
-<p><code>&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/phaser/2.5.1/phaser.js&quot;&gt;&lt;/script&gt;</code></p>
+<p><code>&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/phaser/2.6.0/phaser.js&quot;&gt;&lt;/script&gt;</code></p>
 <h3>Phaser Sandbox</h3><p>If you'd like to try coding in Phaser right now, with nothing more than your web browser, then head over to the <a href="http://phaser.io/sandbox">Phaser Sandbox</a>. You'll find Quick Start templates, and a user-friendly editor filled with handy code-completion features.</p>
 <h3>License</h3><p>Phaser is released under the <a href="http://opensource.org/licenses/MIT">MIT License</a>.</p>
 <p><img src="http://phaser.io/images/github/div-getting-started.png" alt="Getting Started" title="Getting Started">
@@ -1426,11 +1425,22 @@ require('phaser');</code></pre><h3>Building from source</h3><p>Should you wish t
 <p>You can read all about the philosophy behind Lazer <a href="http://phaser.io/news/2016/01/phaser-in-2015-and-beyond">here</a> or join the Google Group <a href="https://groups.google.com/d/forum/phaser3-dev">mailing list</a> where progress reports are posted. You can also follow progress in the <a href="#newsletter">Phaser World</a> newsletter.</p>
 <p><img src="http://phaser.io/images/github/div-change-log.png" alt="Change Log" title="Change Log">
 <a name="change-log"></a></p>
-<h2>Version 2.5.1 - &quot;Fal Moran&quot; - In Development</h2><h3>New Features</h3><ul>
+<h2>Version 2.6.0 - &quot;Fal Moran&quot; - 8th July 2016</h2><h3>New Features</h3><ul>
 <li>The Loader has a new property <code>headers</code>. This is an object checked by XHR Requests, used to set the Request Header of certain file types. JSON and XML are pre-configured, but you can add to, or modify this property as required (thanks @stoneman1 #2585 #2485)</li>
 <li>Phaser now has support for Typings, the TypeScript Definition Manager. See the <code>typescript/readme.md</code> file for installation instructions (thanks @monagames #2576)</li>
 <li>Phaser.Utils.reverseString will take the given string, reverse it, and then return it.</li>
-<li>Phaser.ArrayUtils.shift is the opposite of ArrayUtils.rotate. It takes an array, removes the element from the end of the array, and inserts it at the start, shifting everything else 1 space in the process.</li>
+<li>Phaser.ArrayUtils.rotateRight is the opposite of ArrayUtils.rotate. It takes an array, removes the element from the end of the array, and inserts it at the start, shifting everything else 1 space in the process.</li>
+<li>Phaser.ArrayUtils.rotateLeft is the new name for Phaser.ArrayUtils.rotate. The old method is now deprecated (but still available in this release)</li>
+<li>Phaser.Color.toABGR converts RGBA components to a 32 bit integer in AABBGGRR format.</li>
+<li>ArcadePhysics.Body.setCircle is a new method that allows you to define an Arcade Physics Body as being a circle instead of a rectangle. You can control the radius of the body and the offset from the parent sprite.</li>
+<li>ArcadePhysics.World.separateCircle is a new method that handles all circular body collisions internally within Arcade Physics (thanks @VitaZheltyakov)</li>
+<li>All of the Arcade Physics internal methods, such as <code>collideGroupVsSelf</code>, <code>collideSpriteVsSprite</code> and so on, have been updated to work with circular body shapes (thanks @VitaZheltyakov)</li>
+<li>ArcadePhysics.Body.onWorldBounds is a new Signal that is dispatched whenever the Body collides with the world bounds, something that was previously difficult to detect. Due to the potentially high volume of signals this could create it is disabled by default. To use this feature set this property to a Phaser.Signal: <code>sprite.body.onWorldBounds = new Phaser.Signal()</code> and it will be called when a collision happens, passing five arguments: the sprite on which it occurred, and 4 booleans mapping to up, down, left and right, indicating on which side of the world the collision occurred.</li>
+<li>ArcadePhysics.Body.onCollide is a new Signal that is dispatched whenever the Body collides with another Body. Due to the potentially high volume of signals this could create it is disabled by default. To use this feature set this property to a Phaser.Signal: <code>sprite.body.onCollide = new Phaser.Signal()</code> and it will be called when a collision happens, passing two arguments: the sprites which collided.</li>
+<li>ArcadePhysics.Body.onOverlap is a new Signal that is dispatched whenever the Body overlaps with another Body. Due to the potentially high volume of signals this could create it is disabled by default. To use this feature set this property to a Phaser.Signal: <code>sprite.body.onOverlap = new Phaser.Signal()</code> and it will be called when an overlap happens, passing two arguments: the sprites which collided.</li>
+<li>Groups now have the following properties, which are getters and setters: <code>centerX</code>, <code>centerY</code>, <code>left</code>, <code>right</code>, <code>top</code> and <code>bottom</code>. These calculate the bounds of the Group, based on all visible children, and then allow you to apply positioning based on that. This means you can, for example, now get the horizontal center of a Group by called <code>Group.centerX</code>. These properties are also setters, so you can position the Groups, and it will take scale and rotation into consideration.</li>
+<li>Groups have a new method <code>alignIn</code>. It allows you to align the Group within another Game Object, or a Rectangle. You can specify one of 9 positions which are the new position constants such as: <code>Phaser.TOP_LEFT</code> or <code>Phaser.CENTER</code> (see docs for the complete list). The Groups are positioned based on their child bounds, which takes rotation and scaling into consideration. You can easily place Groups into the corners of the screen, or game world, or align them within other Sprites, using this method.</li>
+<li>Groups have a new method <code>alignTo</code>. It allows you to align a Group to the side of another Game Object, or a Rectangle. You can specify one of 11 positions which are the new position constants such as: <code>Phaser.TOP_LEFT</code> or <code>Phaser.LEFT_BOTTOM</code> (see docs for the complete list). The Groups are positioned based on their child bounds, which takes rotation and scaling into consideration. You can easily align Groups next to other Sprites using this method.</li>
 </ul>
 <h3>Updates</h3><ul>
 <li>TypeScript definitions fixes and updates (thanks @monagames)</li>
@@ -1440,6 +1450,18 @@ require('phaser');</code></pre><h3>Building from source</h3><p>Should you wish t
 <li>Group.getFurthestFrom and Group.getClosestTo has a new optional argument: <code>callback</code>. This allows you to apply your own additional filtering to the distance checks, ultimately influencing the selected child (thanks @LoneStranger #2577)</li>
 <li>Text.setText has a new optional argument <code>immediate</code> which will re-create the texture immediately upon call, rather than wait for the next render pass to do so (thanks @Scraft #2594)</li>
 <li>Phaser.Utils.pad now calls <code>toString</code> on the input given, which means you can pass in common data types, such as numbers, and have them padded and returned as strings.</li>
+<li>The canvas created by Phaser.Debug for use when displaying debug data is no longer stored in the CanvasPool, and is instead a stand-alone canvas, free from ever being re-used by another game object.</li>
+<li>BitmapData has a new, optional, fifth argument: <code>skipPool</code>. By default BitmapData objects will ask for the first free canvas found in the CanvasPool, but this behavior can now be customized on a per object basis.</li>
+<li>Phaser.ArrayUtils.rotate is now deprecated. Please use Phaser.ArrayUtils.rotateLeft instead.</li>
+<li>Phaser.Text.fontPropertiesCanvas used to be taken from the CanvasPool, but as it's constantly needed it is now generated directly from the document.</li>
+<li>The default image texture, for when none is supplied, is now available under <code>Phaser.Cache.DEFAULT</code>.</li>
+<li>The missing image texture, for when an image has failed to load, is now available under <code>Phaser.Cache.MISSING</code>.</li>
+<li>Phaser.Cache.addImage will now check the key given, and if <code>__default</code> or <code>__missing</code> it will update the new consts <code>Phaser.Cache.DEFAULT</code> and <code>Phaser.Cache.MISSING</code> accordingly, allowing you to replace the default or missing image textures used by Phaser.</li>
+<li>Phaser.Cache.getPixiTexture has now been removed, as the Pixi Cache isn't used internally anywhere any longer.</li>
+<li>Phaser.Cache.getPixiBaseTexture has now been removed, as the Pixi Cache isn't used internally anywhere any longer.</li>
+<li>The second argument to Phaser.Cache.removeImage has been renamed from <code>removeFromPixi</code> to <code>destroyBaseTexture</code>, as that is fundamentally what the argument always did.</li>
+<li>AnimationManager.refreshFrame has been removed as it never actually did anything internally.</li>
+<li>Sound.stop will check to see if <code>gainNode</code> exists before trying to disconnect from it (#2597)</li>
 </ul>
 <h3>Bug Fixes</h3><ul>
 <li>Fixed issue in Group.align where the cell wouldn't increase if <code>rows</code> was great than -1</li>
@@ -1447,12 +1469,30 @@ require('phaser');</code></pre><h3>Building from source</h3><p>Should you wish t
 <li>Animation.setFrame wouldn't work correctly if the <code>useLocalFrameIndex</code> argument was true, and the frame ID was a number (thanks @uboot #2571)</li>
 <li>Polygon.contains would only work with non-flattened Polygon objects. It now works with both flat and non-flat Polygons.</li>
 <li>Graphics objects enabled for input would fail to do anything if a Phaser Polygon was given to the Graphics object (which it was in nearly all cases), as it wouldn't detect input correctly with flattened polygons (thanks @symbiane #2591)</li>
+<li>P2.World.clear will now clear out the World.walls property, resetting all of the wall bounds to <code>null</code>. This allows the walls to be re-created accurately when the P2 World is reset, which happens on a State change or restart (thanks @ewpolly1 @codermua #2574)</li>
 </ul>
 <h3>Pixi Updates</h3><p>Please note that Phaser uses a custom build of Pixi and always has done. The following changes have been made to our custom build, not to Pixi in general.</p>
 <ul>
 <li>Removed <code>_renderWebGL</code>, <code>_renderCanvas</code>, <code>getLocalBounds</code> and <code>getBounds</code> from PIXI.DisplayObject, as they were only there to pass ancient jshint rules.</li>
 <li>All Pixi.Graphics methods that change the Graphics, i.e. <code>drawShape</code>, <code>lineTo</code>, <code>arc</code>, etc will now all automatically call <code>Graphics.updateLocalBounds</code>. This is so that the bounds of the Graphics object are kept updated, allowing you to scale and rotate the Graphics object and still obtain correct dimensions from it (thanks @kelu-smiley #2573)</li>
+<li>PIXI.CanvasPool no longer <em>just</em> checks for <code>null</code> parent comparisons. It will check for all falsey parents, helping free-up canvases when the parent objects have been removed elsewhere.</li>
+<li>PIXI.CanvasPool.remove and <code>removeByCanvas</code> both now set the removed canvas width and height to 1.</li>
+<li>PIXI.Texture.fromImage, PIXI.BaseTexture.fromImage and PIXI.Sprite.fromImage have all been removed. They should never have actually been used, as they bypass the Phaser Loader, and don't factor in CORs or any other advanced loader settings.</li>
+<li>The PIXI.BaseTexture.imageUrl property has been removed, as it was never actually populated.</li>
+<li>The PIXI.BaseTexture._UID property has been removed, as it was never actually used internally.</li>
+<li>All references to PIXI.BaseTextureCache have been removed (primarily from BaseTexture.destroy and Texture.destroy), as the BaseTextureCache was never used internally by Phaser, or by our custom version of Pixi.</li>
+<li>PIXI.TextureCache has been removed. It was only ever used by the <strong>default and </strong>missing images that Phaser generates on start-up. It wasn't used internally by Phaser anywhere else, and the only references Pixi has to it have all been removed. If you need it in your own game, please refactor it to avoid it, or re-create the object on the PIXI global object.</li>
+<li>Canvases created by <code>BaseTexture.fromCanvas</code> no longer have the <code>_pixiId</code> property attached to them, as this was never used internally by Phaser or Pixi.</li>
+<li>PIXI.BaseTexture.updateSourceImage is now deprecated. Please use <code>Sprite.loadTexture</code> instead.</li>
+<li>The property PIXI.BaseTextureCacheIdGenerator has been removed, as it is no longer used internally by Phaser or Pixi.</li>
+<li>PIXI.Texture.addTextureToCache has been removed. The PIXI Texture Cache was never actually used by Phaser, and was leading to complications internally.</li>
+<li>PIXI.Texture.removeTextureFromCache has been removed. The PIXI Texture Cache was never actually used by Phaser, and was leading to complications internally.</li>
+<li>PIXI.Texture.fromFrame and PIXI.Sprite.fromFrame have been removed. They relied on the PIXI Texture Cache, which was never actually used by Phaser, and was never used internally by Pixi either.</li>
+<li>The property PIXI.TextureCacheIdGenerator has been removed, as it was not used internally.</li>
+<li>The property PIXI.FrameCache has been removed, as it was not used internally.</li>
+<li>PIXI.DisplayObjectContainer calls <code>updateTransform</code> at the start of <code>getBounds</code> to help avoid the bounds being out of date.</li>
 </ul>
+<p>Thanks to Corin Wilkins at Aardman Digital, for lots of the investigation work, leading to the Pixi changes listed above.</p>
 <p>For changes in previous releases please see the extensive <a href="https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md">Version History</a>.</p>
 <p><img src="http://phaser.io/images/github/div-contributing.png" alt="Contributing" title="Contributing">
 <a name="contributing"></a></p>
@@ -1495,7 +1535,7 @@ require('phaser');</code></pre><h3>Building from source</h3><p>Should you wish t
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.3</a>
-		on Fri Jul 01 2016 16:55:51 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Jul 08 2016 15:42:35 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

@@ -51,8 +51,6 @@ declare module PIXI {
     export var glContexts: WebGLRenderingContext[];
     export var instances: any[];
 
-    export var BaseTextureCache: { [key: string]: BaseTexture };
-    export var TextureCache: { [key: string]: Texture };
     export var TextureSilentFail: boolean;
     export var BitmapText: { fonts: {} };
 
@@ -277,16 +275,6 @@ declare module PIXI {
 
 
         /**
-        * Helper function that creates a base texture from the given image url.
-        * If the image is not in the base texture cache it will be created and loaded.
-        * 
-        * @param imageUrl The image url of the texture
-        * @param crossorigin -
-        * @param scaleMode See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
-        */
-        static fromImage(imageUrl: string, crossorigin?: boolean, scaleMode?: scaleModes): BaseTexture;
-
-        /**
         * Helper function that creates a base texture from the given canvas element.
         * 
         * @param canvas The canvas element source of the texture
@@ -391,13 +379,6 @@ declare module PIXI {
         * Sets all glTextures to be dirty.
         */
         dirty(): void;
-
-        /**
-        * Changes the source image of the texture
-        * 
-        * @param newSrc the path of the image
-        */
-        updateSourceImage(newSrc: string): void;
 
         /**
         * Removes the base texture from the GPU, useful for managing resources on the GPU.
@@ -1472,28 +1453,6 @@ declare module PIXI {
 
     }
 
-    export class MovieClip extends Sprite {
-
-        static fromFrames(frames: string[]): MovieClip;
-        static fromImages(images: HTMLImageElement[]): HTMLImageElement;
-
-        constructor(textures: Texture[]);
-
-        animationSpeed: number;
-        currentFrame: number;
-        loop: boolean;
-        playing: boolean;
-        textures: Texture[];
-        totalFrames: number;
-
-        gotoAndPlay(frameNumber: number): void;
-        gotoAndStop(frameNumber: number): void;
-        onComplete(): void;
-        play(): void;
-        stop(): void;
-
-    }
-
     export class NoiseFilter extends AbstractFilter {
 
         noise: number;
@@ -1900,25 +1859,6 @@ declare module PIXI {
 
 
         /**
-        * Helper function that creates a sprite that will contain a texture from the TextureCache based on the frameId
-        *  The frame ids are created when a Texture packer file has been loaded
-        * 
-        * @param frameId The frame Id of the texture in the cache
-        * @return A new Sprite using a texture from the texture cache matching the frameId
-        */
-        static fromFrame(frameId: string): Sprite;
-
-        /**
-        * Helper function that creates a sprite that will contain a texture based on an image url
-        *  If the image is not in the texture cache it will be loaded
-        * 
-        * @param imageId The image url of the texture
-        * @return A new Sprite using a texture from the texture cache matching the image id
-        */
-        static fromImage(url: string, crossorigin?: boolean, scaleMode?: scaleModes): Sprite;
-
-
-        /**
         * The Sprite object is the base for all textured objects that are rendered to the screen
         * 
         * @param texture The texture for this sprite
@@ -2125,40 +2065,6 @@ declare module PIXI {
         * @param scaleMode See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
         */
         static fromCanvas(canvas: HTMLCanvasElement, scaleMode?: scaleModes): Texture;
-
-        /**
-        * Helper function that returns a Texture objected based on the given frame id.
-        * If the frame id is not in the texture cache an error will be thrown.
-        * 
-        * @param frameId The frame id of the texture
-        */
-        static fromFrame(frameId: string): Texture;
-
-        /**
-        * Helper function that creates a Texture object from the given image url.
-        * If the image is not in the texture cache it will be  created and loaded.
-        * 
-        * @param imageUrl The image url of the texture
-        * @param crossorigin Whether requests should be treated as crossorigin
-        * @param scaleMode See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
-        */
-        static fromImage(imageUrl: string, crossorigin?: boolean, scaleMode?: scaleModes): Texture;
-
-        /**
-        * Adds a texture to the global PIXI.TextureCache. This cache is shared across the whole PIXI object.
-        * 
-        * @param texture The Texture to add to the cache.
-        * @param id The id that the texture will be stored against.
-        */
-        static addTextureToCache(texture: Texture, id: string): void;
-
-        /**
-        * Remove a texture from the global PIXI.TextureCache.
-        * 
-        * @param id The id of the texture to be removed
-        * @return The texture that was removed
-        */
-        static removeTextureFromCache(id: string): Texture;
 
 
         /**

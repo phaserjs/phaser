@@ -540,20 +540,20 @@ Note that this property isn't recursive: only immediate children are influenced,
 * @method PIXI.DisplayObjectContainer#getLocalBounds
 * @return {Rectangle} The rectangular bounding area
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObjectContainer.js
-* @sourceline 381
+* @sourceline 383
 */
 /**
 * @description Sets the containers Stage reference. This is the Stage that this object, and all of its children, is connected to.
 * @method PIXI.DisplayObjectContainer#setStageReference
 * @param {Stage} stage - the stage that the container will have as its current stage reference
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObjectContainer.js
-* @sourceline 410
+* @sourceline 412
 */
 /**
 * @description Removes the current stage reference from the container and all of its children.
 * @method PIXI.DisplayObjectContainer#removeStageReference
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObjectContainer.js
-* @sourceline 426
+* @sourceline 428
 */
 /**
 * @description Renders the object using the WebGL renderer
@@ -561,7 +561,7 @@ Note that this property isn't recursive: only immediate children are influenced,
 * @param {RenderSession} renderSession - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObjectContainer.js
-* @sourceline 441
+* @sourceline 443
 */
 /**
 * @description Renders the object using the Canvas renderer
@@ -569,7 +569,7 @@ Note that this property isn't recursive: only immediate children are influenced,
 * @param {RenderSession} renderSession - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObjectContainer.js
-* @sourceline 499
+* @sourceline 501
 */
 /**
 * @fileoverview
@@ -738,24 +738,6 @@ on the root most object in this Sprites display list first.
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\Sprite.js
 * @sourceline 389
-*/
-/**
-* @description Helper function that creates a sprite that will contain a texture from the TextureCache based on the frameId
- The frame ids are created when a Texture packer file has been loaded
-* @method PIXI.Sprite.fromFrame
-* @param {String} frameId - The frame Id of the texture in the cache
-* @return {PIXI.Sprite} A new Sprite using a texture from the texture cache matching the frameId
-* @sourcefile d:\wamp\www\phaser\src\pixi\display\Sprite.js
-* @sourceline 497
-*/
-/**
-* @description Helper function that creates a sprite that will contain a texture based on an image url
- If the image is not in the texture cache it will be loaded
-* @method PIXI.Sprite.fromImage
-* @param {String} imageId - The image url of the texture
-* @return {PIXI.Sprite} A new Sprite using a texture from the texture cache matching the image id
-* @sourcefile d:\wamp\www\phaser\src\pixi\display\Sprite.js
-* @sourceline 516
 */
 /**
 * @fileoverview
@@ -1387,7 +1369,7 @@ This can be quite useful if your geometry is complicated and needs to be reused 
 * @param {RenderSession} renderSession - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 681
+* @sourceline 679
 */
 /**
 * @description Renders the object using the Canvas renderer
@@ -1395,41 +1377,41 @@ This can be quite useful if your geometry is complicated and needs to be reused 
 * @param {RenderSession} renderSession - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 760
+* @sourceline 758
 */
 /**
 * @description Retrieves the bounds of the graphic shape as a rectangle object
 * @method PIXI.Graphics#getBounds
 * @return {Rectangle} the rectangular bounding area
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 839
+* @sourceline 837
 */
 
 /**
 * @description Update the bounds of the object
 * @method PIXI.Graphics#updateLocalBounds
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 962
+* @sourceline 960
 */
 /**
 * @description Generates the cached sprite when the sprite has cacheAsBitmap = true
 * @method PIXI.Graphics#_generateCachedSprite
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 1074
+* @sourceline 1072
 */
 /**
 * @description Updates texture size based on canvas size
 * @method PIXI.Graphics#updateCachedSpriteTexture
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 1114
+* @sourceline 1112
 */
 /**
 * @description Destroys a previous cached sprite.
 * @method PIXI.Graphics#destroyCachedSprite
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 1138
+* @sourceline 1136
 */
 /**
 * @description Draws the given shape to this Graphics object. Can be any of Circle, Rectangle, Ellipse, Line or Polygon.
@@ -1437,7 +1419,7 @@ This can be quite useful if your geometry is complicated and needs to be reused 
 * @param {(Circle|Rectangle|Ellipse|Line|Polygon)} shape - The Shape object to draw.
 * @return {PIXI.GraphicsData} The generated GraphicsData object.
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 1149
+* @sourceline 1147
 */
 /**
 * @description When cacheAsBitmap is set to true the graphics object will be rendered as if it was a sprite.
@@ -1449,7 +1431,7 @@ This is not recommended if you are constantly redrawing the graphics element.
 * @default false
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 1194
+* @sourceline 1192
 */
 /**
 * @class PIXI.GraphicsData
@@ -3183,17 +3165,17 @@ Disable this by setting this to false. For example: if your game has a canvas fi
 /**
 * @class PIXI.BaseTexture
 * @description A texture stores the information that represents an image. All textures have a base texture.
-* @param {String} source - the source object (image or canvas)
+* @param {(String|Canvas)} source - the source object (image or canvas)
 * @param {Number} scaleMode - See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\BaseTexture.js
-* @sourceline 9
+* @sourceline 5
 */
 /**
 * @description The Resolution of the texture.
 * @member PIXI.BaseTexture#resolution
 * @type {Number}
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\BaseTexture.js
-* @sourceline 20
+* @sourceline 16
 */
 /**
 * @description [read-only] The width of the base texture set when the image has loaded
@@ -3201,7 +3183,7 @@ Disable this by setting this to false. For example: if your game has a canvas fi
 * @type {Number}
 * @readonly 
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\BaseTexture.js
-* @sourceline 28
+* @sourceline 24
 */
 /**
 * @description [read-only] The height of the base texture set when the image has loaded
@@ -3209,7 +3191,7 @@ Disable this by setting this to false. For example: if your game has a canvas fi
 * @type {Number}
 * @readonly 
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\BaseTexture.js
-* @sourceline 37
+* @sourceline 33
 */
 /**
 * @description The scale mode to apply when scaling this texture
@@ -3217,7 +3199,7 @@ Disable this by setting this to false. For example: if your game has a canvas fi
 * @type {Number}
 * @default PIXI.scaleModes.LINEAR
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\BaseTexture.js
-* @sourceline 46
+* @sourceline 42
 */
 /**
 * @description [read-only] Set to true once the base texture has loaded
@@ -3225,14 +3207,14 @@ Disable this by setting this to false. For example: if your game has a canvas fi
 * @type {Boolean}
 * @readonly 
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\BaseTexture.js
-* @sourceline 55
+* @sourceline 51
 */
 /**
 * @description The image source that is used to create the texture.
 * @member PIXI.BaseTexture#source
 * @type {Image}
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\BaseTexture.js
-* @sourceline 64
+* @sourceline 60
 */
 /**
 * @description Controls if RGB channels should be pre-multiplied by Alpha  (WebGL only)
@@ -3240,14 +3222,14 @@ Disable this by setting this to false. For example: if your game has a canvas fi
 * @type {Boolean}
 * @default true
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\BaseTexture.js
-* @sourceline 74
+* @sourceline 68
 */
 /**
 * @member PIXI.BaseTexture#_glTextures
 * @type {Array}
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\BaseTexture.js
-* @sourceline 85
+* @sourceline 79
 */
 /**
 * @description Set this to true if a mipmap of this texture needs to be generated. This value needs to be set before the texture is used
@@ -3255,14 +3237,14 @@ Also the texture must be a power of two size to work
 * @member PIXI.BaseTexture#mipmap
 * @type {Boolean}
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\BaseTexture.js
-* @sourceline 92
+* @sourceline 86
 */
 /**
 * @member PIXI.BaseTexture#_dirty
 * @type {Array}
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\BaseTexture.js
-* @sourceline 101
+* @sourceline 95
 */
 /**
 * @description A BaseTexture can be set to skip the rendering phase in the WebGL Sprite Batch.
@@ -3272,20 +3254,14 @@ that has children that you do want to render, without causing a batch flush in t
 * @member PIXI.BaseTexture#skipRender
 * @type {Boolean}
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\BaseTexture.js
-* @sourceline 121
-*/
-/**
-* @member PIXI.BaseTexture#imageUrl
-* @type {String}
-* @sourcefile d:\wamp\www\phaser\src\pixi\textures\BaseTexture.js
-* @sourceline 132
+* @sourceline 115
 */
 /**
 * @member PIXI.BaseTexture#_powerOf2
 * @type {Boolean}
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\BaseTexture.js
-* @sourceline 138
+* @sourceline 126
 */
 /**
 * @description Forces this BaseTexture to be set as loaded, with the given width and height.
@@ -3295,44 +3271,34 @@ Important for when you don't want to modify the source object by forcing in `com
 * @param {Number} width - - The new width to force the BaseTexture to be.
 * @param {Number} height - - The new height to force the BaseTexture to be.
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\BaseTexture.js
-* @sourceline 149
+* @sourceline 137
 */
 /**
 * @description Destroys this base texture
 * @method PIXI.BaseTexture#destroy
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\BaseTexture.js
-* @sourceline 167
+* @sourceline 154
 */
 /**
 * @description Changes the source image of the texture
 * @method PIXI.BaseTexture#updateSourceImage
 * @param {String} newSrc - the path of the image
+* @deprecated true
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\BaseTexture.js
-* @sourceline 198
+* @sourceline 171
 */
 /**
 * @description Sets all glTextures to be dirty.
 * @method PIXI.BaseTexture#dirty
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\BaseTexture.js
-* @sourceline 211
+* @sourceline 183
 */
 /**
 * @description Removes the base texture from the GPU, useful for managing resources on the GPU.
 Atexture is still 100% usable and will simply be reuploaded if there is a sprite on screen that is using it.
 * @method PIXI.BaseTexture#unloadFromGPU
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\BaseTexture.js
-* @sourceline 224
-*/
-/**
-* @description Helper function that creates a base texture from the given image url.
-If the image is not in the base texture cache it will be created and loaded.
-* @method PIXI.BaseTexture.fromImage
-* @param {String} imageUrl - The image url of the texture
-* @param {Boolean} crossorigin - 
-* @param {Number} scaleMode - See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
-* @return {PIXI.BaseTexture} 
-* @sourcefile d:\wamp\www\phaser\src\pixi\textures\BaseTexture.js
-* @sourceline 252
+* @sourceline 196
 */
 /**
 * @description Helper function that creates a base texture from the given canvas element.
@@ -3341,7 +3307,7 @@ If the image is not in the base texture cache it will be created and loaded.
 * @param {Number} scaleMode - See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
 * @return {PIXI.BaseTexture} 
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\BaseTexture.js
-* @sourceline 295
+* @sourceline 224
 */
 /**
 * @fileoverview
@@ -3506,7 +3472,7 @@ to the display list directly. Instead use it as the texture for a PIXI.Sprite. I
 * @param {Rectangle} [crop] - The area of original texture
 * @param {Rectangle} [trim] - Trimmed texture rectangle
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\Texture.js
-* @sourceline 19
+* @sourceline 14
 */
 
 /**
@@ -3514,56 +3480,56 @@ to the display list directly. Instead use it as the texture for a PIXI.Sprite. I
 * @member PIXI.Texture#noFrame
 * @type {Boolean}
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\Texture.js
-* @sourceline 33
+* @sourceline 28
 */
 /**
 * @description The base texture that this texture uses.
 * @member PIXI.Texture#baseTexture
 * @type {PIXI.BaseTexture}
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\Texture.js
-* @sourceline 52
+* @sourceline 47
 */
 /**
 * @description The frame specifies the region of the base texture that this texture uses
 * @member PIXI.Texture#frame
 * @type {Rectangle}
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\Texture.js
-* @sourceline 60
+* @sourceline 55
 */
 /**
 * @description The texture trim data.
 * @member PIXI.Texture#trim
 * @type {Rectangle}
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\Texture.js
-* @sourceline 68
+* @sourceline 63
 */
 /**
 * @description This will let the renderer know if the texture is valid. If it's not then it cannot be rendered.
 * @member PIXI.Texture#valid
 * @type {Boolean}
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\Texture.js
-* @sourceline 76
+* @sourceline 71
 */
 /**
 * @description Is this a tiling texture? As used by the likes of a TilingSprite.
 * @member PIXI.Texture#isTiling
 * @type {Boolean}
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\Texture.js
-* @sourceline 84
+* @sourceline 79
 */
 /**
 * @description This will let a renderer know that a texture has been updated (used mainly for webGL uv updates)
 * @member PIXI.Texture#requiresUpdate
 * @type {Boolean}
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\Texture.js
-* @sourceline 92
+* @sourceline 87
 */
 /**
 * @description This will let a renderer know that a tinted parent has updated its texture.
 * @member PIXI.Texture#requiresReTint
 * @type {Boolean}
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\Texture.js
-* @sourceline 100
+* @sourceline 95
 */
 /**
 * @description The WebGL UV data cache.
@@ -3571,21 +3537,21 @@ to the display list directly. Instead use it as the texture for a PIXI.Sprite. I
 * @type {Object}
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\Texture.js
-* @sourceline 108
+* @sourceline 103
 */
 /**
 * @description The width of the Texture in pixels.
 * @member PIXI.Texture#width
 * @type {Number}
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\Texture.js
-* @sourceline 117
+* @sourceline 112
 */
 /**
 * @description The height of the Texture in pixels.
 * @member PIXI.Texture#height
 * @type {Number}
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\Texture.js
-* @sourceline 125
+* @sourceline 120
 */
 /**
 * @description This is the area of the BaseTexture image to actually copy to the Canvas / WebGL when rendering,
@@ -3593,55 +3559,35 @@ irrespective of the actual frame size or placement (which can be influenced by t
 * @member PIXI.Texture#crop
 * @type {Rectangle}
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\Texture.js
-* @sourceline 133
+* @sourceline 128
 */
 /**
 * @description Called when the base texture is loaded
 * @method PIXI.Texture#onBaseTextureLoaded
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\Texture.js
-* @sourceline 152
+* @sourceline 147
 */
 /**
 * @description Destroys this texture
 * @method PIXI.Texture#destroy
 * @param {Boolean} destroyBase - Whether to destroy the base texture as well
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\Texture.js
-* @sourceline 170
+* @sourceline 165
 */
 /**
 * @description Specifies the region of the baseTexture that this texture will use.
 * @method PIXI.Texture#setFrame
 * @param {Rectangle} frame - The frame of the texture to set it to
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\Texture.js
-* @sourceline 183
+* @sourceline 178
 */
 /**
 * @description Updates the internal WebGL UV cache.
 * @method PIXI.Texture#_updateUvs
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\Texture.js
-* @sourceline 227
-*/
-/**
-* @description Helper function that creates a Texture object from the given image url.
-If the image is not in the texture cache it will be  created and loaded.
-* @method PIXI.Texture.fromImage
-* @param {String} imageUrl - The image url of the texture
-* @param {Boolean} crossorigin - Whether requests should be treated as crossorigin
-* @param {Number} scaleMode - See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
-* @return {PIXI.Texture} 
-* @sourcefile d:\wamp\www\phaser\src\pixi\textures\Texture.js
-* @sourceline 254
-*/
-/**
-* @description Helper function that returns a Texture objected based on the given frame id.
-If the frame id is not in the texture cache an error will be thrown.
-* @method PIXI.Texture.fromFrame
-* @param {String} frameId - The frame id of the texture
-* @return {PIXI.Texture} 
-* @sourcefile d:\wamp\www\phaser\src\pixi\textures\Texture.js
-* @sourceline 278
+* @sourceline 222
 */
 /**
 * @description Helper function that creates a new a Texture based on the given canvas element.
@@ -3650,23 +3596,7 @@ If the frame id is not in the texture cache an error will be thrown.
 * @param {Number} scaleMode - See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
 * @return {PIXI.Texture} 
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\Texture.js
-* @sourceline 294
-*/
-/**
-* @description Adds a texture to the global PIXI.TextureCache. This cache is shared across the whole PIXI object.
-* @method PIXI.Texture.addTextureToCache
-* @param {PIXI.Texture} texture - The Texture to add to the cache.
-* @param {String} id - The id that the texture will be stored against.
-* @sourcefile d:\wamp\www\phaser\src\pixi\textures\Texture.js
-* @sourceline 310
-*/
-/**
-* @description Remove a texture from the global PIXI.TextureCache.
-* @method PIXI.Texture.removeTextureFromCache
-* @param {String} id - The id of the texture to be removed
-* @return {PIXI.Texture} The texture that was removed
-* @sourcefile d:\wamp\www\phaser\src\pixi\textures\Texture.js
-* @sourceline 323
+* @sourceline 249
 */
 /**
 * @fileoverview
@@ -3709,28 +3639,28 @@ If the frame id is not in the texture cache an error will be thrown.
 * @method PIXI.CanvasPool.removeByCanvas
 * @param {HTMLCanvasElement} canvas - The canvas element to remove
 * @sourcefile d:\wamp\www\phaser\src\pixi\utils\CanvasPool.js
-* @sourceline 102
+* @sourceline 104
 */
 /**
 * @description Gets the total number of used canvas elements in the pool.
 * @method PIXI.CanvasPool.getTotal
 * @return {Number} The number of in-use (parented) canvas elements in the pool.
 * @sourcefile d:\wamp\www\phaser\src\pixi\utils\CanvasPool.js
-* @sourceline 123
+* @sourceline 127
 */
 /**
 * @description Gets the total number of free canvas elements in the pool.
 * @method PIXI.CanvasPool.getFree
 * @return {Number} The number of free (un-parented) canvas elements in the pool.
 * @sourcefile d:\wamp\www\phaser\src\pixi\utils\CanvasPool.js
-* @sourceline 147
+* @sourceline 151
 */
 /**
 * @description The pool into which the canvas dom elements are placed.
 * @member PIXI.CanvasPool.pool
 * @type {Array}
 * @sourcefile d:\wamp\www\phaser\src\pixi\utils\CanvasPool.js
-* @sourceline 173
+* @sourceline 177
 */
 /**
 * @class PIXI.EarCut

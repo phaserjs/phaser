@@ -1864,8 +1864,162 @@ or if there is no item for the randomly chosen index.</p>
         
             
 <dt>
-    <h4 class="name "
+    <h4 class="name toc-deprecated"
         id=".rotate"><span class="type-signature">&lt;static> </span>rotate<span class="signature">(array)</span><span class="type-signature"> &rarr; {any}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+        <dt class="important deprecated-notice">
+            This method is <em>deprecated</em> and should not be used. It may be removed in the future.
+        </dt>
+    
+
+    
+    <div class="description">
+        <p>Moves the element from the start of the array to the end, shifting all items in the process.
+The &quot;rotation&quot; happens to the left.</p>
+<p>Before: <code>[ A, B, C, D, E, F ]</code>
+After: <code>[ B, C, D, E, F, A ]</code></p>
+<p>See also Phaser.ArrayUtils.rotateRight</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>array</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;any></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The array to rotate. The array is modified.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+
+    
+    <h5>Returns:</h5>
+    <div class="returns">
+        
+            
+    
+        <div class="returns-type">
+        
+<span class="param-type">any</span>
+
+ -
+        </div>
+    
+    <div class="returns-desc param-desc">
+        <p>The rotated value.</p>
+    </div>
+
+
+        
+    </div>
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="important tag-deprecated">Deprecated:</dt>
+        <dd class="tag-deprecated"><ul>
+        
+        
+            <li>Please use Phaser.ArrayUtils.rotate instead.</li>
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_utils_ArrayUtils.js.html">utils/ArrayUtils.js</a>, <a href="src_utils_ArrayUtils.js.html#sunlight-1-line-239">line 239</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+       
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".rotateLeft"><span class="type-signature">&lt;static> </span>rotateLeft<span class="signature">(array)</span><span class="type-signature"> &rarr; {any}</span></h4>
     
     
 </dt>
@@ -1875,8 +2029,10 @@ or if there is no item for the randomly chosen index.</p>
     
     <div class="description">
         <p>Moves the element from the start of the array to the end, shifting all items in the process.
-The &quot;rotation&quot; happens to the left.
-See also Phaser.ArrayUtils.shift.</p>
+The &quot;rotation&quot; happens to the left.</p>
+<p>Before: <code>[ A, B, C, D, E, F ]</code>
+After: <code>[ B, C, D, E, F, A ]</code></p>
+<p>See also Phaser.ArrayUtils.rotateRight</p>
     </div>
     
 
@@ -1979,7 +2135,7 @@ See also Phaser.ArrayUtils.shift.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_ArrayUtils.js.html">utils/ArrayUtils.js</a>, <a href="src_utils_ArrayUtils.js.html#sunlight-1-line-213">line 213</a>
+    <a href="src_utils_ArrayUtils.js.html">utils/ArrayUtils.js</a>, <a href="src_utils_ArrayUtils.js.html#sunlight-1-line-217">line 217</a>
     </dt>
     
 
@@ -2172,7 +2328,7 @@ See also Phaser.ArrayUtils.shift.</p>
             
 <dt>
     <h4 class="name "
-        id=".shift"><span class="type-signature">&lt;static> </span>shift<span class="signature">(array)</span><span class="type-signature"> &rarr; {any}</span></h4>
+        id=".rotateRight"><span class="type-signature">&lt;static> </span>rotateRight<span class="signature">(array)</span><span class="type-signature"> &rarr; {any}</span></h4>
     
     
 </dt>
@@ -2182,8 +2338,10 @@ See also Phaser.ArrayUtils.shift.</p>
     
     <div class="description">
         <p>Moves the element from the end of the array to the start, shifting all items in the process.
-The &quot;rotation&quot; happens to the right.
-See also Phaser.ArrayUtils.rotate.</p>
+The &quot;rotation&quot; happens to the right.</p>
+<p>Before: <code>[ A, B, C, D, E, F ]</code>
+After: <code>[ F, A, B, C, D, E ]</code></p>
+<p>See also Phaser.ArrayUtils.rotateLeft.</p>
     </div>
     
 
@@ -2233,7 +2391,7 @@ See also Phaser.ArrayUtils.rotate.</p>
 
             
 
-            <td class="description last"><p>The array to shift. The array is modified.</p></td>
+            <td class="description last"><p>The array to rotate. The array is modified.</p></td>
         </tr>
 
 	
@@ -2727,7 +2885,7 @@ This is equivalent to <code>numberArrayStep(start, end, 1)</code>.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_ArrayUtils.js.html">utils/ArrayUtils.js</a>, <a href="src_utils_ArrayUtils.js.html#sunlight-1-line-231">line 231</a>
+    <a href="src_utils_ArrayUtils.js.html">utils/ArrayUtils.js</a>, <a href="src_utils_ArrayUtils.js.html#sunlight-1-line-262">line 262</a>
     </dt>
     
 
@@ -2962,7 +3120,7 @@ for forward compatibility make sure to pass in actual numbers.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_ArrayUtils.js.html">utils/ArrayUtils.js</a>, <a href="src_utils_ArrayUtils.js.html#sunlight-1-line-253">line 253</a>
+    <a href="src_utils_ArrayUtils.js.html">utils/ArrayUtils.js</a>, <a href="src_utils_ArrayUtils.js.html#sunlight-1-line-284">line 284</a>
     </dt>
     
 
@@ -3017,7 +3175,7 @@ for forward compatibility make sure to pass in actual numbers.</p>
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.3</a>
-		on Fri Jul 01 2016 16:55:51 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Jul 08 2016 15:42:35 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

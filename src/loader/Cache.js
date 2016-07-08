@@ -208,14 +208,16 @@ Phaser.Cache.SHADER = 14;
 Phaser.Cache.RENDER_TEXTURE = 15;
 
 /**
+* The default image used for a texture when no other is specified.
 * @constant
-* @type {PIXI.Texture} The default image used for a texture when no other is specified.
+* @type {PIXI.Texture}
 */
 Phaser.Cache.DEFAULT = null;
 
 /**
+* The default image used for a texture when the source image is missing.
 * @constant
-* @type {PIXI.Texture} The default image used for a texture when the source image is missing.
+* @type {PIXI.Texture}
 */
 Phaser.Cache.MISSING = null;
 

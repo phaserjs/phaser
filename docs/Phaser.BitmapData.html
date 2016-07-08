@@ -1240,7 +1240,7 @@
         
 <dt>
     <h4 class="name "
-        id="BitmapData"><span class="type-signature"></span>new BitmapData<span class="signature">(game, key, <span class="optional">width</span>, <span class="optional">height</span>)</span><span class="type-signature"></span></h4>
+        id="BitmapData"><span class="type-signature"></span>new BitmapData<span class="signature">(game, key, <span class="optional">width</span>, <span class="optional">height</span>, <span class="optional">skipPool</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1437,6 +1437,45 @@ in your State's shutdown method if you wish to free-up the resources the BitmapD
         </tr>
 
 	
+
+        <tr>
+            
+                <td class="name"><code>skipPool</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>When this BitmapData generates its internal canvas to use for rendering, it will get the canvas from the CanvasPool if false, or create its own if true.</p></td>
+        </tr>
+
+	
 	</tbody>
 </table>
 
@@ -1466,7 +1505,7 @@ in your State's shutdown method if you wish to free-up the resources the BitmapD
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-23">line 23</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-24">line 24</a>
     </dt>
     
 
@@ -1546,7 +1585,7 @@ in your State's shutdown method if you wish to free-up the resources the BitmapD
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-122">line 122</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-124">line 124</a>
     </dt>
     
 
@@ -1602,7 +1641,7 @@ in your State's shutdown method if you wish to free-up the resources the BitmapD
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-52">line 52</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-54">line 54</a>
     </dt>
     
 
@@ -1658,7 +1697,7 @@ in your State's shutdown method if you wish to free-up the resources the BitmapD
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-58">line 58</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-60">line 60</a>
     </dt>
     
 
@@ -1714,7 +1753,7 @@ in your State's shutdown method if you wish to free-up the resources the BitmapD
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-63">line 63</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-65">line 65</a>
     </dt>
     
 
@@ -1771,7 +1810,7 @@ Note that this is unavailable in some browsers (such as Epic Browser due to its 
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-82">line 82</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-84">line 84</a>
     </dt>
     
 
@@ -1827,7 +1866,7 @@ Note that this is unavailable in some browsers (such as Epic Browser due to its 
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-157">line 157</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-159">line 159</a>
     </dt>
     
 
@@ -1883,7 +1922,7 @@ Note that this is unavailable in some browsers (such as Epic Browser due to its 
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-152">line 152</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-154">line 154</a>
     </dt>
     
 
@@ -1939,7 +1978,7 @@ Note that this is unavailable in some browsers (such as Epic Browser due to its 
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-133">line 133</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-135">line 135</a>
     </dt>
     
 
@@ -1995,7 +2034,7 @@ Note that this is unavailable in some browsers (such as Epic Browser due to its 
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-31">line 31</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-33">line 33</a>
     </dt>
     
 
@@ -2051,7 +2090,7 @@ Note that this is unavailable in some browsers (such as Epic Browser due to its 
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-46">line 46</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-48">line 48</a>
     </dt>
     
 
@@ -2109,7 +2148,7 @@ This property is updated automatically after the first game loop, according to t
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-75">line 75</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-77">line 77</a>
     </dt>
     
 
@@ -2165,7 +2204,7 @@ This property is updated automatically after the first game loop, according to t
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-36">line 36</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-38">line 38</a>
     </dt>
     
 
@@ -2221,7 +2260,7 @@ This property is updated automatically after the first game loop, according to t
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-92">line 92</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-94">line 94</a>
     </dt>
     
 
@@ -2277,7 +2316,7 @@ This property is updated automatically after the first game loop, according to t
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-68">line 68</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-70">line 70</a>
     </dt>
     
 
@@ -2333,7 +2372,7 @@ This property is updated automatically after the first game loop, according to t
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-128">line 128</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-130">line 130</a>
     </dt>
     
 
@@ -2389,7 +2428,7 @@ This property is updated automatically after the first game loop, according to t
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-139">line 139</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-141">line 141</a>
     </dt>
     
 
@@ -2445,7 +2484,7 @@ This property is updated automatically after the first game loop, according to t
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-147">line 147</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-149">line 149</a>
     </dt>
     
 
@@ -2501,7 +2540,7 @@ This property is updated automatically after the first game loop, according to t
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-41">line 41</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-43">line 43</a>
     </dt>
     
 
@@ -2753,7 +2792,7 @@ This property is updated automatically after the first game loop, according to t
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2413">line 2413</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2415">line 2415</a>
     </dt>
     
 
@@ -2902,7 +2941,7 @@ This will replace any texture they will currently have set.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-391">line 391</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-393">line 393</a>
     </dt>
     
 
@@ -3256,7 +3295,7 @@ This will replace any texture they will currently have set.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-1177">line 1177</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-1179">line 1179</a>
     </dt>
     
 
@@ -3540,7 +3579,7 @@ This will replace any texture they will currently have set.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-1734">line 1734</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-1736">line 1736</a>
     </dt>
     
 
@@ -3630,7 +3669,7 @@ This will replace any texture they will currently have set.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2163">line 2163</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2165">line 2165</a>
     </dt>
     
 
@@ -3720,7 +3759,7 @@ This will replace any texture they will currently have set.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2345">line 2345</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2347">line 2347</a>
     </dt>
     
 
@@ -3810,7 +3849,7 @@ This will replace any texture they will currently have set.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2254">line 2254</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2256">line 2256</a>
     </dt>
     
 
@@ -3900,7 +3939,7 @@ This will replace any texture they will currently have set.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2241">line 2241</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2243">line 2243</a>
     </dt>
     
 
@@ -3990,7 +4029,7 @@ This will replace any texture they will currently have set.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2215">line 2215</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2217">line 2217</a>
     </dt>
     
 
@@ -4080,7 +4119,7 @@ This will replace any texture they will currently have set.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2137">line 2137</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2139">line 2139</a>
     </dt>
     
 
@@ -4170,7 +4209,7 @@ This will replace any texture they will currently have set.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2111">line 2111</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2113">line 2113</a>
     </dt>
     
 
@@ -4260,7 +4299,7 @@ This will replace any texture they will currently have set.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2124">line 2124</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2126">line 2126</a>
     </dt>
     
 
@@ -4350,7 +4389,7 @@ This will replace any texture they will currently have set.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2098">line 2098</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2100">line 2100</a>
     </dt>
     
 
@@ -4440,7 +4479,7 @@ This will replace any texture they will currently have set.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2293">line 2293</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2295">line 2295</a>
     </dt>
     
 
@@ -4530,7 +4569,7 @@ This will replace any texture they will currently have set.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2306">line 2306</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2308">line 2308</a>
     </dt>
     
 
@@ -4620,7 +4659,7 @@ This will replace any texture they will currently have set.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2267">line 2267</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2269">line 2269</a>
     </dt>
     
 
@@ -4710,7 +4749,7 @@ This will replace any texture they will currently have set.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2319">line 2319</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2321">line 2321</a>
     </dt>
     
 
@@ -4800,7 +4839,7 @@ This will replace any texture they will currently have set.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2228">line 2228</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2230">line 2230</a>
     </dt>
     
 
@@ -4890,7 +4929,7 @@ This will replace any texture they will currently have set.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2358">line 2358</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2360">line 2360</a>
     </dt>
     
 
@@ -4980,7 +5019,7 @@ This will replace any texture they will currently have set.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2176">line 2176</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2178">line 2178</a>
     </dt>
     
 
@@ -5070,7 +5109,7 @@ This will replace any texture they will currently have set.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2202">line 2202</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2204">line 2204</a>
     </dt>
     
 
@@ -5160,7 +5199,7 @@ This will replace any texture they will currently have set.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2033">line 2033</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2035">line 2035</a>
     </dt>
     
 
@@ -5250,7 +5289,7 @@ This will replace any texture they will currently have set.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2332">line 2332</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2334">line 2334</a>
     </dt>
     
 
@@ -5340,7 +5379,7 @@ This will replace any texture they will currently have set.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2189">line 2189</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2191">line 2191</a>
     </dt>
     
 
@@ -5430,7 +5469,7 @@ This will replace any texture they will currently have set.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2280">line 2280</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2282">line 2282</a>
     </dt>
     
 
@@ -5520,7 +5559,7 @@ This will replace any texture they will currently have set.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2085">line 2085</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2087">line 2087</a>
     </dt>
     
 
@@ -5610,7 +5649,7 @@ This will replace any texture they will currently have set.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2059">line 2059</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2061">line 2061</a>
     </dt>
     
 
@@ -5700,7 +5739,7 @@ This will replace any texture they will currently have set.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2072">line 2072</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2074">line 2074</a>
     </dt>
     
 
@@ -5790,7 +5829,7 @@ This will replace any texture they will currently have set.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2046">line 2046</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2048">line 2048</a>
     </dt>
     
 
@@ -5880,7 +5919,7 @@ This will replace any texture they will currently have set.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2150">line 2150</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2152">line 2152</a>
     </dt>
     
 
@@ -6124,7 +6163,7 @@ This will replace any texture they will currently have set.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-1885">line 1885</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-1887">line 1887</a>
     </dt>
     
 
@@ -6400,7 +6439,7 @@ but Phaser will not do this automatically for you.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-461">line 461</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-463">line 463</a>
     </dt>
     
 
@@ -6470,7 +6509,7 @@ but Phaser will not do this automatically for you.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-455">line 455</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-457">line 457</a>
     </dt>
     
 
@@ -7267,7 +7306,7 @@ and don't wish to translate, scale or rotate it from its original values.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-1203">line 1203</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-1205">line 1205</a>
     </dt>
     
 
@@ -7662,7 +7701,7 @@ and don't wish to translate, scale or rotate it from its original values.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-1532">line 1532</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-1534">line 1534</a>
     </dt>
     
 
@@ -7912,7 +7951,7 @@ It takes the objects tint and scale mode into consideration before drawing.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-1424">line 1424</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-1426">line 1426</a>
     </dt>
     
 
@@ -7982,7 +8021,7 @@ It takes the objects tint and scale mode into consideration before drawing.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2018">line 2018</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2020">line 2020</a>
     </dt>
     
 
@@ -8382,7 +8421,7 @@ You can trigger an update yourself by calling <code>stage.updateTransform()</cod
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-1551">line 1551</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-1553">line 1553</a>
     </dt>
     
 
@@ -8639,7 +8678,7 @@ trigger an update yourself by calling <code>stage.updateTransform()</code> befor
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-1646">line 1646</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-1648">line 1648</a>
     </dt>
     
 
@@ -8879,7 +8918,7 @@ You can trigger an update yourself by calling <code>stage.updateTransform()</cod
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-1579">line 1579</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-1581">line 1581</a>
     </dt>
     
 
@@ -9335,7 +9374,7 @@ the color during extraction.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-1768">line 1768</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-1770">line 1770</a>
     </dt>
     
 
@@ -9599,7 +9638,7 @@ the color during extraction.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-492">line 492</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-494">line 494</a>
     </dt>
     
 
@@ -9747,7 +9786,7 @@ key or the texture. First call generateTexture:</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-514">line 514</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-516">line 516</a>
     </dt>
     
 
@@ -9899,7 +9938,7 @@ The rectangle returned will extend from the top-left of the image to the bottom-
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-1149">line 1149</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-1151">line 1151</a>
     </dt>
     
 
@@ -10064,7 +10103,7 @@ It then stops scanning and returns an object containing the color of the pixel i
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-1066">line 1066</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-1068">line 1068</a>
     </dt>
     
 
@@ -10279,7 +10318,7 @@ otherwise this may return out of date color values, or worse - throw a run-time 
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-983">line 983</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-985">line 985</a>
     </dt>
     
 
@@ -10444,7 +10483,7 @@ Note that on little-endian systems the format is 0xAABBGGRR and on big-endian th
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-1014">line 1014</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-1016">line 1016</a>
     </dt>
     
 
@@ -10751,7 +10790,7 @@ otherwise this may return out of date color values, or worse - throw a run-time 
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-1034">line 1034</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-1036">line 1036</a>
     </dt>
     
 
@@ -10890,7 +10929,7 @@ otherwise this may return out of date color values, or worse - throw a run-time 
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-1053">line 1053</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-1055">line 1055</a>
     </dt>
     
 
@@ -11228,7 +11267,7 @@ otherwise this may return out of date color values, or worse - throw a run-time 
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-1914">line 1914</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-1916">line 1916</a>
     </dt>
     
 
@@ -11388,7 +11427,7 @@ If a string is given it will assume it's a cache key and look in Phaser.Cache fo
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-420">line 420</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-422">line 422</a>
     </dt>
     
 
@@ -11618,7 +11657,7 @@ If a string is given it will assume it's a cache key and look in Phaser.Cache fo
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-238">line 238</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-240">line 240</a>
     </dt>
     
 
@@ -11813,7 +11852,7 @@ If a string is given it will assume it's a cache key and look in Phaser.Cache fo
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-265">line 265</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-267">line 267</a>
     </dt>
     
 
@@ -12008,7 +12047,7 @@ If a string is given it will assume it's a cache key and look in Phaser.Cache fo
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-328">line 328</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-330">line 330</a>
     </dt>
     
 
@@ -12354,7 +12393,7 @@ The callback will also be sent the pixels x and y coordinates respectively.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-698">line 698</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-700">line 700</a>
     </dt>
     
 
@@ -12703,7 +12742,7 @@ If a new color object is returned the pixel will be set to the r, g, b and a col
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-640">line 640</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-642">line 642</a>
     </dt>
     
 
@@ -12978,7 +13017,7 @@ If a new color object is returned the pixel will be set to the r, g, b and a col
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-1821">line 1821</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-1823">line 1823</a>
     </dt>
     
 
@@ -13070,7 +13109,7 @@ If you wish to suppress this functionality set BitmapData.disableTextureUpload t
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-1998">line 1998</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-2000">line 2000</a>
     </dt>
     
 
@@ -13470,7 +13509,7 @@ An optional region parameter controls if the replacement happens in just a speci
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-752">line 752</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-754">line 754</a>
     </dt>
     
 
@@ -13632,7 +13671,7 @@ An optional region parameter controls if the replacement happens in just a speci
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-550">line 550</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-552">line 552</a>
     </dt>
     
 
@@ -13906,7 +13945,7 @@ An optional region parameter controls if the replacement happens in just a speci
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-802">line 802</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-804">line 804</a>
     </dt>
     
 
@@ -14240,7 +14279,7 @@ An optional region parameter controls if the replacement happens in just a speci
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-965">line 965</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-967">line 967</a>
     </dt>
     
 
@@ -14609,7 +14648,7 @@ An optional region parameter controls if the replacement happens in just a speci
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-926">line 926</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-928">line 928</a>
     </dt>
     
 
@@ -14883,7 +14922,7 @@ Note: At the time of writing (October 2014) Chrome still doesn't support shadowB
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-1704">line 1704</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-1706">line 1706</a>
     </dt>
     
 
@@ -15159,7 +15198,7 @@ The hue is wrapped to keep it within the range 0 to 1. Saturation and lightness 
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-863">line 863</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-865">line 865</a>
     </dt>
     
 
@@ -15503,7 +15542,7 @@ If you need to do a lot of font work to this BitmapData we'd recommend implement
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-1845">line 1845</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-1847">line 1847</a>
     </dt>
     
 
@@ -15735,7 +15774,7 @@ If you need to do a lot of font work to this BitmapData we'd recommend implement
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-1948">line 1948</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-1950">line 1950</a>
     </dt>
     
 
@@ -16014,7 +16053,7 @@ If not given the dimensions defaults to the full size of the context.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-594">line 594</a>
+    <a href="src_gameobjects_BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="src_gameobjects_BitmapData.js.html#sunlight-1-line-596">line 596</a>
     </dt>
     
 
@@ -16063,7 +16102,7 @@ If not given the dimensions defaults to the full size of the context.</p>
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.3</a>
-		on Fri Jul 01 2016 16:55:52 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Jul 08 2016 15:42:35 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
