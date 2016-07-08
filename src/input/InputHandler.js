@@ -907,7 +907,7 @@ Phaser.InputHandler.prototype = {
         }
         else if (this.draggable && this._draggedPointerID === pointer.id)
         {
-            return this.updateDrag(pointer);
+            return this.updateDrag(pointer, false);
         }
         else if (this._pointerData[pointer.id].isOver)
         {
@@ -1186,22 +1186,22 @@ Phaser.InputHandler.prototype = {
     },
 
     /**
-    * Updates the Pointer drag on this Sprite.
+    * Called as a Pointer actively drags this Game Object.
+    * 
     * @method Phaser.InputHandler#updateDrag
-    * @param {Phaser.Pointer} pointer
+    * @private
+    * @param {Phaser.Pointer} pointer - The Pointer causing the drag update.
+    * @param {boolean} fromStart - True if this is the first update, immediately after the drag has started.
     * @return {boolean}
     */
     updateDrag: function (pointer, fromStart) {
+
+        if (fromStart === undefined) { fromStart = false; }
 
         if (pointer.isUp)
         {
             this.stopDrag(pointer);
             return false;
-        }
-
-        if (fromStart === undefined)
-        {
-            fromStart = false;
         }
 
         var px = this.globalToLocalX(pointer.x) + this._dragPoint.x + this.dragOffset.x;
