@@ -331,6 +331,9 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * ArcadePhysics.Body.onWorldBounds is a new Signal that is dispatched whenever the Body collides with the world bounds, something that was previously difficult to detect. Due to the potentially high volume of signals this could create it is disabled by default. To use this feature set this property to a Phaser.Signal: `sprite.body.onWorldBounds = new Phaser.Signal()` and it will be called when a collision happens, passing one argument: the sprite on which it occurred.
 * ArcadePhysics.Body.onCollide is a new Signal that is dispatched whenever the Body collides with another Body. Due to the potentially high volume of signals this could create it is disabled by default. To use this feature set this property to a Phaser.Signal: `sprite.body.onCollide = new Phaser.Signal()` and it will be called when a collision happens, passing two arguments: the sprites which collided.
 * ArcadePhysics.Body.onOverlap is a new Signal that is dispatched whenever the Body overlaps with another Body. Due to the potentially high volume of signals this could create it is disabled by default. To use this feature set this property to a Phaser.Signal: `sprite.body.onOverlap = new Phaser.Signal()` and it will be called when an overlap happens, passing two arguments: the sprites which collided.
+* Groups now have the following properties, which are getters and setters: `centerX`, `centerY`, `left`, `right`, `top` and `bottom`. These calculate the bounds of the Group, based on all visible children, and then allow you to apply positioning based on that. This means you can, for example, now get the horizontal center of a Group by called `Group.centerX`. These properties are also setters, so you can position the Groups, and it will take scale and rotation into consideration.
+* Groups have a new method `alignIn`. It allows you to align the Group within another Game Object, or a Rectangle. You can specify one of 9 positions which are the new position constants such as: `Phaser.TOP_LEFT` or `Phaser.CENTER` (see docs for the complete list). The Groups are positioned based on their child bounds, which takes rotation and scaling into consideration. You can easily place Groups into the corners of the screen, or game world, or align them within other Sprites, using this method.
+* Groups have a new method `alignTo`. It allows you to align a Group to the side of another Game Object, or a Rectangle. You can specify one of 11 positions which are the new position constants such as: `Phaser.TOP_LEFT` or `Phaser.LEFT_BOTTOM` (see docs for the complete list). The Groups are positioned based on their child bounds, which takes rotation and scaling into consideration. You can easily align Groups next to other Sprites using this method.
 
 ### Updates
 
@@ -382,6 +385,7 @@ Please note that Phaser uses a custom build of Pixi and always has done. The fol
 * PIXI.Texture.fromFrame and PIXI.Sprite.fromFrame have been removed. They relied on the PIXI Texture Cache, which was never actually used by Phaser, and was never used internally by Pixi either.
 * The property PIXI.TextureCacheIdGenerator has been removed, as it was not used internally.
 * The property PIXI.FrameCache has been removed, as it was not used internally.
+* PIXI.DisplayObjectContainer calls `updateTransform` at the start of `getBounds` to help avoid the bounds being out of date.
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 

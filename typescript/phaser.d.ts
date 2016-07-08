@@ -1725,7 +1725,10 @@ declare module Phaser {
         alpha: number;
         angle: number;
         alive: boolean;
+        bottom: number;
         cameraOffset: Phaser.Point;
+        centerX: number;
+        centerY: number;
         classType: any;
         cursor: any;
         cursorIndex: number;
@@ -1737,6 +1740,7 @@ declare module Phaser {
         hash: PIXI.DisplayObject[];
         ignoreDestroy: boolean;
         inputEnableChildren: boolean;
+        left: number;
         length: number;
         name: string;
         onChildInputDown: Phaser.Signal;
@@ -1749,8 +1753,10 @@ declare module Phaser {
         physicsType: number;
         physicsSortDirection: number;
         position: Phaser.Point;
+        right: number;
         rotation: number;
         scale: Phaser.Point;
+        top: number;
         total: number;
         type: number;
         visible: boolean;
@@ -1762,6 +1768,8 @@ declare module Phaser {
         addMultiple(children: any[], silent?: boolean): any[];
         addToHash(child: PIXI.DisplayObject): boolean;
         align(rows: number, columns: number, cellWidth: number, cellHeight: number, position?: number, offset?: number): void;
+        alignIn(container: Phaser.Rectangle | Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapText | Phaser.Button | Phaser.Graphics | Phaser.TileSprite, position?: number, offsetX?: number, offsetY?: number): Phaser.Group;
+        alignTo(container: Phaser.Rectangle | Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapText | Phaser.Button | Phaser.Graphics | Phaser.TileSprite, position?: number, offsetX?: number, offsetY?: number): Phaser.Group;
         bringToTop(child: any): any;
         callAll(method: string, context: any, ...parameters: any[]): void;
         callAllExists(callback: string, existsValue: boolean, ...parameters: any[]): void;
