@@ -318,7 +318,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 
 ### Bug Fixes
 
-*
+* Fixed `Uncaught TypeError: Cannot set property 'x' of undefined` in Body.js (thanks @ErwanErwan #2607)
 *
 *
 

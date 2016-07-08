@@ -706,7 +706,7 @@ Phaser.Physics.Arcade.prototype = {
 
         if (this.skipQuadTree || sprite.body.skipQuadTree)
         {
-            var bounds;
+            var bounds = {};
 
             for (var i = 0; i < group.hash.length; i++)
             {
