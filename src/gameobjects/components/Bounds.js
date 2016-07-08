@@ -392,3 +392,8 @@ Phaser.Component.Bounds.prototype = {
     }
 
 };
+
+//  Phaser.Group extensions
+
+Phaser.Group.prototype.alignIn = Phaser.Component.Bounds.prototype.alignIn;
+Phaser.Group.prototype.alignTo = Phaser.Component.Bounds.prototype.alignTo;

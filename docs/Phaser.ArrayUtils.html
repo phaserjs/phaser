@@ -709,10 +709,6 @@
 						</li>
 						
 						<li class="class-depth-1">
-							<a href="PIXI.DisplayObject.html">DisplayObject</a>
-						</li>
-						
-						<li class="class-depth-1">
 							<a href="PIXI.DisplayObjectContainer.html">DisplayObjectContainer</a>
 						</li>
 						
@@ -742,6 +738,10 @@
 						
 						<li class="class-depth-1">
 							<a href="PIXI.PIXI.html">PIXI</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="PIXI.PIXI.DisplayObject.html">DisplayObject</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -1864,18 +1864,25 @@ or if there is no item for the randomly chosen index.</p>
         
             
 <dt>
-    <h4 class="name "
+    <h4 class="name toc-deprecated"
         id=".rotate"><span class="type-signature">&lt;static> </span>rotate<span class="signature">(array)</span><span class="type-signature"> &rarr; {any}</span></h4>
     
     
 </dt>
 <dd>
     
+        <dt class="important deprecated-notice">
+            This method is <em>deprecated</em> and should not be used. It may be removed in the future.
+        </dt>
+    
 
     
     <div class="description">
         <p>Moves the element from the start of the array to the end, shifting all items in the process.
 The &quot;rotation&quot; happens to the left.</p>
+<p>Before: <code>[ A, B, C, D, E, F ]</code>
+After: <code>[ B, C, D, E, F, A ]</code></p>
+<p>See also Phaser.ArrayUtils.rotateRight</p>
     </div>
     
 
@@ -1925,7 +1932,7 @@ The &quot;rotation&quot; happens to the left.</p>
 
             
 
-            <td class="description last"><p>The array to shift/rotate. The array is modified.</p></td>
+            <td class="description last"><p>The array to rotate. The array is modified.</p></td>
         </tr>
 
 	
@@ -1948,7 +1955,157 @@ The &quot;rotation&quot; happens to the left.</p>
         </div>
     
     <div class="returns-desc param-desc">
-        <p>The shifted value.</p>
+        <p>The rotated value.</p>
+    </div>
+
+
+        
+    </div>
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="important tag-deprecated">Deprecated:</dt>
+        <dd class="tag-deprecated"><ul>
+        
+        
+            <li>Please use Phaser.ArrayUtils.rotate instead.</li>
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_utils_ArrayUtils.js.html">utils/ArrayUtils.js</a>, <a href="src_utils_ArrayUtils.js.html#sunlight-1-line-239">line 239</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+       
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".rotateLeft"><span class="type-signature">&lt;static> </span>rotateLeft<span class="signature">(array)</span><span class="type-signature"> &rarr; {any}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Moves the element from the start of the array to the end, shifting all items in the process.
+The &quot;rotation&quot; happens to the left.</p>
+<p>Before: <code>[ A, B, C, D, E, F ]</code>
+After: <code>[ B, C, D, E, F, A ]</code></p>
+<p>See also Phaser.ArrayUtils.rotateRight</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>array</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;any></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The array to rotate. The array is modified.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+
+    
+    <h5>Returns:</h5>
+    <div class="returns">
+        
+            
+    
+        <div class="returns-type">
+        
+<span class="param-type">any</span>
+
+ -
+        </div>
+    
+    <div class="returns-desc param-desc">
+        <p>The rotated value.</p>
     </div>
 
 
@@ -1978,7 +2135,7 @@ The &quot;rotation&quot; happens to the left.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_ArrayUtils.js.html">utils/ArrayUtils.js</a>, <a href="src_utils_ArrayUtils.js.html#sunlight-1-line-195">line 195</a>
+    <a href="src_utils_ArrayUtils.js.html">utils/ArrayUtils.js</a>, <a href="src_utils_ArrayUtils.js.html#sunlight-1-line-217">line 217</a>
     </dt>
     
 
@@ -2145,6 +2302,149 @@ The &quot;rotation&quot; happens to the left.</p>
     
     <dt class="tag-source">Source -
     <a href="src_utils_ArrayUtils.js.html">utils/ArrayUtils.js</a>, <a href="src_utils_ArrayUtils.js.html#sunlight-1-line-132">line 132</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+       
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".rotateRight"><span class="type-signature">&lt;static> </span>rotateRight<span class="signature">(array)</span><span class="type-signature"> &rarr; {any}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Moves the element from the end of the array to the start, shifting all items in the process.
+The &quot;rotation&quot; happens to the right.</p>
+<p>Before: <code>[ A, B, C, D, E, F ]</code>
+After: <code>[ F, A, B, C, D, E ]</code></p>
+<p>See also Phaser.ArrayUtils.rotateLeft.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>array</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;any></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The array to rotate. The array is modified.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+
+    
+    <h5>Returns:</h5>
+    <div class="returns">
+        
+            
+    
+        <div class="returns-type">
+        
+<span class="param-type">any</span>
+
+ -
+        </div>
+    
+    <div class="returns-desc param-desc">
+        <p>The shifted value.</p>
+    </div>
+
+
+        
+    </div>
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_utils_ArrayUtils.js.html">utils/ArrayUtils.js</a>, <a href="src_utils_ArrayUtils.js.html#sunlight-1-line-195">line 195</a>
     </dt>
     
 
@@ -2585,7 +2885,7 @@ This is equivalent to <code>numberArrayStep(start, end, 1)</code>.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_ArrayUtils.js.html">utils/ArrayUtils.js</a>, <a href="src_utils_ArrayUtils.js.html#sunlight-1-line-212">line 212</a>
+    <a href="src_utils_ArrayUtils.js.html">utils/ArrayUtils.js</a>, <a href="src_utils_ArrayUtils.js.html#sunlight-1-line-262">line 262</a>
     </dt>
     
 
@@ -2820,7 +3120,7 @@ for forward compatibility make sure to pass in actual numbers.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_ArrayUtils.js.html">utils/ArrayUtils.js</a>, <a href="src_utils_ArrayUtils.js.html#sunlight-1-line-234">line 234</a>
+    <a href="src_utils_ArrayUtils.js.html">utils/ArrayUtils.js</a>, <a href="src_utils_ArrayUtils.js.html#sunlight-1-line-284">line 284</a>
     </dt>
     
 
@@ -2843,23 +3143,7 @@ for forward compatibility make sure to pass in actual numbers.</p>
     
         <h5>Example</h5>
         
-    <pre class="sunlight-highlight-javascript">Phaser.ArrayUtils.numberArrayStep(4);
-// => [0, 1, 2, 3]
-
-Phaser.ArrayUtils.numberArrayStep(1, 5);
-// => [1, 2, 3, 4]
-
-Phaser.ArrayUtils.numberArrayStep(0, 20, 5);
-// => [0, 5, 10, 15]
-
-Phaser.ArrayUtils.numberArrayStep(0, -4, -1);
-// => [0, -1, -2, -3]
-
-Phaser.ArrayUtils.numberArrayStep(1, 4, 0);
-// => [1, 1, 1]
-
-Phaser.ArrayUtils.numberArrayStep(0);
-// => []</pre>
+    <pre class="sunlight-highlight-javascript">Phaser.ArrayUtils.numberArrayStep(4);// => [0, 1, 2, 3]Phaser.ArrayUtils.numberArrayStep(1, 5);// => [1, 2, 3, 4]Phaser.ArrayUtils.numberArrayStep(0, 20, 5);// => [0, 5, 10, 15]Phaser.ArrayUtils.numberArrayStep(0, -4, -1);// => [0, -1, -2, -3]Phaser.ArrayUtils.numberArrayStep(1, 4, 0);// => [1, 1, 1]Phaser.ArrayUtils.numberArrayStep(0);// => []</pre>
 
 
     
@@ -2891,7 +3175,7 @@ Phaser.ArrayUtils.numberArrayStep(0);
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.3</a>
-		on Fri Jun 17 2016 12:45:30 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Jul 08 2016 15:42:35 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

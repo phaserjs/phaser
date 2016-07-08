@@ -709,10 +709,6 @@
 						</li>
 						
 						<li class="class-depth-1">
-							<a href="PIXI.DisplayObject.html">DisplayObject</a>
-						</li>
-						
-						<li class="class-depth-1">
 							<a href="PIXI.DisplayObjectContainer.html">DisplayObjectContainer</a>
 						</li>
 						
@@ -742,6 +738,10 @@
 						
 						<li class="class-depth-1">
 							<a href="PIXI.PIXI.html">PIXI</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="PIXI.PIXI.DisplayObject.html">DisplayObject</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -1225,7 +1225,7 @@
 
 <header>
     <h2>
-        <span class="ancestors"><a href="PIXI.html">PIXI</a>.</span>
+        <span class="ancestors"><a href="PIXI.html">PIXI</a><a href="PIXI.PIXI.html">.PIXI</a>.</span>
     
     DisplayObject
     </h2>
@@ -1249,8 +1249,10 @@
 
     
     <div class="description">
-        <p>The base class for all objects that are rendered on the screen.
-This is an abstract class and should not be used on its own rather it should be extended.</p>
+        <p>The base class for all objects that are rendered. Contains properties for position, scaling,
+rotation, masks and cache handling.</p>
+<p>This is an abstract class and should not be used on its own, rather it should be extended.</p>
+<p>It is used internally by the likes of PIXI.Sprite.</p>
     </div>
     
 
@@ -1284,7 +1286,7 @@ This is an abstract class and should not be used on its own rather it should be 
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-5">line 5</a>
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-7">line 7</a>
     </dt>
     
 
@@ -1336,7 +1338,10 @@ This is an abstract class and should not be used on its own rather it should be 
 
     
     <div class="description">
-        <p>The opacity of the object.</p>
+        <p>The alpha value of this DisplayObject. A value of 1 is fully opaque. A value of 0 is transparent.
+Please note that an object with an alpha value of 0 is skipped during the render pass.</p>
+<p>The value of this property does not reflect any alpha values set further up the display list.
+To obtain that value please see the <code>worldAlpha</code> property.</p>
     </div>
     
     
@@ -1364,7 +1369,7 @@ This is an abstract class and should not be used on its own rather it should be 
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-46">line 46</a>
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-63">line 63</a>
     </dt>
     
 
@@ -1392,9 +1397,13 @@ This is an abstract class and should not be used on its own rather it should be 
 
     
     <div class="description">
-        <p>Set if this display object is cached as a bitmap.
-This basically takes a snap shot of the display object as it is at that moment. It can provide a performance benefit for complex static displayObjects.
-To remove simply set this property to 'null'</p>
+        <p>Sets if this DisplayObject should be cached as a bitmap.</p>
+<p>When invoked it will take a snapshot of the DisplayObject, as it is at that moment, and store it 
+in a RenderTexture. This is then used whenever this DisplayObject is rendered. It can provide a
+performance benefit for complex, but static, DisplayObjects. I.e. those with lots of children.</p>
+<p>Cached Bitmaps do not track their parents. If you update a property of this DisplayObject, it will not
+re-generate the cached bitmap automatically. To do that you need to call <code>DisplayObject.updateCache</code>.</p>
+<p>To remove a cached bitmap, set this property to <code>null</code>.</p>
     </div>
     
     
@@ -1422,7 +1431,7 @@ To remove simply set this property to 'null'</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-355">line 355</a>
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-779">line 779</a>
     </dt>
     
 
@@ -1450,8 +1459,7 @@ To remove simply set this property to 'null'</p>
 
     
     <div class="description">
-        <p>The area the filter is applied to like the hitArea this is used as more of an optimisation
-rather than figuring out the dimensions of the displayObject each frame you can set this rectangle</p>
+        <p>The rectangular area used by filters when rendering a shader for this DisplayObject.</p>
     </div>
     
     
@@ -1479,7 +1487,7 @@ rather than figuring out the dimensions of the displayObject each frame you can 
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-164">line 164</a>
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-204">line 204</a>
     </dt>
     
 
@@ -1498,7 +1506,7 @@ rather than figuring out the dimensions of the displayObject each frame you can 
             
 <dt>
     <h4 class="name "
-        id="filters"><span class="type-signature"></span>filters<span class="type-signature"> :Array.&lt;Filter></span></h4>
+        id="filters"><span class="type-signature"></span>filters<span class="type-signature"> :Array</span></h4>
     
     
 </dt>
@@ -1507,24 +1515,15 @@ rather than figuring out the dimensions of the displayObject each frame you can 
 
     
     <div class="description">
-        <p>Sets the filters for the displayObject.
-IMPORTANT: This is a webGL only feature and will be ignored by the Canvas renderer.</p>
-<p>To remove filters simply set this property to 'null'.</p>
-<p>You cannot have a filter and a multiply blend mode active at the same time. Setting a filter will reset
-this objects blend mode to NORMAL.</p>
+        <p>Sets the filters for this DisplayObject. This is a WebGL only feature, and is ignored by the Canvas
+Renderer. A filter is a shader applied to this DisplayObject. You can modify the placement of the filter
+using <code>DisplayObject.filterArea</code>.</p>
+<p>To remove filters, set this property to <code>null</code>.</p>
+<p>Note: You cannot have a filter set, and a MULTIPLY Blend Mode active, at the same time. Setting a 
+filter will reset this DisplayObjects blend mode to NORMAL.</p>
     </div>
     
     
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type">Array.&lt;Filter></span>
-
-
-            </li>
-        </ul>
     
 
     
@@ -1549,7 +1548,7 @@ this objects blend mode to NORMAL.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-307">line 307</a>
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-726">line 726</a>
     </dt>
     
 
@@ -1625,7 +1624,7 @@ Setting it is a neat way of optimising the hitTest function that the interaction
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-62">line 62</a>
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-89">line 89</a>
     </dt>
     
 
@@ -1644,7 +1643,7 @@ Setting it is a neat way of optimising the hitTest function that the interaction
             
 <dt>
     <h4 class="name "
-        id="mask"><span class="type-signature"></span>mask<span class="type-signature"> :<a href="PIXI.Graphics.html">PIXI.Graphics</a></span></h4>
+        id="mask"><span class="type-signature"></span>mask<span class="type-signature"> :PIXIGraphics</span></h4>
     
     
 </dt>
@@ -1653,9 +1652,10 @@ Setting it is a neat way of optimising the hitTest function that the interaction
 
     
     <div class="description">
-        <p>Sets a mask for the displayObject. A mask is an object that limits the visibility of an object to the shape of the mask applied to it.
-In PIXI a regular mask must be a PIXI.Graphics object. This allows for much faster masking in canvas as it utilises shape clipping.
-To remove a mask, set this property to null.</p>
+        <p>Sets a mask for this DisplayObject. A mask is an instance of a Graphics object.
+When applied it limits the visible area of this DisplayObject to the shape of the mask.
+Under a Canvas renderer it uses shape clipping. Under a WebGL renderer it uses a Stencil Buffer.
+To remove a mask, set this property to <code>null</code>.</p>
     </div>
     
     
@@ -1683,7 +1683,7 @@ To remove a mask, set this property to null.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-282">line 282</a>
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-691">line 691</a>
     </dt>
     
 
@@ -1702,7 +1702,7 @@ To remove a mask, set this property to null.</p>
             
 <dt>
     <h4 class="name "
-        id="parent"><span class="type-signature">&lt;readonly> </span>parent<span class="type-signature"> :<a href="PIXI.DisplayObjectContainer.html">PIXI.DisplayObjectContainer</a></span></h4>
+        id="parent"><span class="type-signature">&lt;readonly> </span>parent<span class="type-signature"> :PIXIDisplayObjectContainer</span></h4>
     
     
 </dt>
@@ -1711,7 +1711,10 @@ To remove a mask, set this property to null.</p>
 
     
     <div class="description">
-        <p>[read-only] The display object container that contains this display object.</p>
+        <p>The parent DisplayObjectContainer that this DisplayObject is a child of.
+All DisplayObjects must belong to a parent in order to be rendered.
+The root parent is the Stage object. This property is set automatically when the
+DisplayObject is added to, or removed from, a DisplayObjectContainer.</p>
     </div>
     
     
@@ -1739,7 +1742,7 @@ To remove a mask, set this property to null.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-79">line 79</a>
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-107">line 107</a>
     </dt>
     
 
@@ -1758,7 +1761,7 @@ To remove a mask, set this property to null.</p>
             
 <dt>
     <h4 class="name "
-        id="pivot"><span class="type-signature"></span>pivot<span class="type-signature"> :Point</span></h4>
+        id="pivot"><span class="type-signature"></span>pivot<span class="type-signature"> :PIXIPoint</span></h4>
     
     
 </dt>
@@ -1767,7 +1770,8 @@ To remove a mask, set this property to null.</p>
 
     
     <div class="description">
-        <p>The pivot point of the displayObject that it rotates around</p>
+        <p>The pivot point of this DisplayObject that it rotates around. The values are expressed
+in pixel values.</p>
     </div>
     
     
@@ -1795,7 +1799,7 @@ To remove a mask, set this property to null.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-30">line 30</a>
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-43">line 43</a>
     </dt>
     
 
@@ -1814,7 +1818,7 @@ To remove a mask, set this property to null.</p>
             
 <dt>
     <h4 class="name "
-        id="position"><span class="type-signature"></span>position<span class="type-signature"> :Point</span></h4>
+        id="position"><span class="type-signature"></span>position<span class="type-signature"> :PIXIPoint</span></h4>
     
     
 </dt>
@@ -1823,7 +1827,9 @@ To remove a mask, set this property to null.</p>
 
     
     <div class="description">
-        <p>The coordinate of the object relative to the local coordinates of the parent.</p>
+        <p>The coordinates, in pixels, of this DisplayObject, relative to its parent container.</p>
+<p>The value of this property does not reflect any positioning happening further up the display list.
+To obtain that value please see the <code>worldPosition</code> property.</p>
     </div>
     
     
@@ -1851,7 +1857,7 @@ To remove a mask, set this property to null.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-14">line 14</a>
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-20">line 20</a>
     </dt>
     
 
@@ -1879,7 +1885,8 @@ To remove a mask, set this property to null.</p>
 
     
     <div class="description">
-        <p>Can this object be rendered</p>
+        <p>Should this DisplayObject be rendered by the renderer? An object with a renderable value of
+<code>false</code> is skipped during the render pass.</p>
     </div>
     
     
@@ -1907,7 +1914,7 @@ To remove a mask, set this property to null.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-71">line 71</a>
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-98">line 98</a>
     </dt>
     
 
@@ -1935,7 +1942,10 @@ To remove a mask, set this property to null.</p>
 
     
     <div class="description">
-        <p>The rotation of the object in radians.</p>
+        <p>The rotation of this DisplayObject. The value is given, and expressed, in radians, and is based on
+a right-handed orientation.</p>
+<p>The value of this property does not reflect any rotation happening further up the display list.
+To obtain that value please see the <code>worldRotation</code> property.</p>
     </div>
     
     
@@ -1963,7 +1973,7 @@ To remove a mask, set this property to null.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-38">line 38</a>
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-51">line 51</a>
     </dt>
     
 
@@ -1982,7 +1992,7 @@ To remove a mask, set this property to null.</p>
             
 <dt>
     <h4 class="name "
-        id="scale"><span class="type-signature"></span>scale<span class="type-signature"> :Point</span></h4>
+        id="scale"><span class="type-signature"></span>scale<span class="type-signature"> :PIXIPoint</span></h4>
     
     
 </dt>
@@ -1991,7 +2001,10 @@ To remove a mask, set this property to null.</p>
 
     
     <div class="description">
-        <p>The scale factor of the object.</p>
+        <p>The scale of this DisplayObject. A scale of 1:1 represents the DisplayObject
+at its default size. A value of 0.5 would scale this DisplayObject by half, and so on.</p>
+<p>The value of this property does not reflect any scaling happening further up the display list.
+To obtain that value please see the <code>worldScale</code> property.</p>
     </div>
     
     
@@ -2019,7 +2032,7 @@ To remove a mask, set this property to null.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-22">line 22</a>
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-31">line 31</a>
     </dt>
     
 
@@ -2038,7 +2051,7 @@ To remove a mask, set this property to null.</p>
             
 <dt>
     <h4 class="name "
-        id="stage"><span class="type-signature">&lt;readonly> </span>stage<span class="type-signature"> :Stage</span></h4>
+        id="stage"><span class="type-signature">&lt;readonly> </span>stage<span class="type-signature"> :PIXIStage</span></h4>
     
     
 </dt>
@@ -2047,7 +2060,7 @@ To remove a mask, set this property to null.</p>
 
     
     <div class="description">
-        <p>[read-only] The stage the display object is connected to, or undefined if it is not connected to the stage.</p>
+        <p>The stage that this DisplayObject is connected to.</p>
     </div>
     
     
@@ -2075,7 +2088,7 @@ To remove a mask, set this property to null.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-88">line 88</a>
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-119">line 119</a>
     </dt>
     
 
@@ -2103,7 +2116,12 @@ To remove a mask, set this property to null.</p>
 
     
     <div class="description">
-        <p>The visibility of the object.</p>
+        <p>The visibility of this DisplayObject. A value of <code>false</code> makes the object invisible.
+A value of <code>true</code> makes it visible. Please note that an object with a visible value of
+<code>false</code> is skipped during the render pass. Equally a DisplayObject with visible false will
+not render any of its children.</p>
+<p>The value of this property does not reflect any visible values set further up the display list.
+To obtain that value please see the <code>worldVisible</code> property.</p>
     </div>
     
     
@@ -2131,7 +2149,7 @@ To remove a mask, set this property to null.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-54">line 54</a>
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-75">line 75</a>
     </dt>
     
 
@@ -2159,7 +2177,13 @@ To remove a mask, set this property to null.</p>
 
     
     <div class="description">
-        <p>[read-only] The multiplied alpha of the displayObject</p>
+        <p>The multiplied alpha value of this DisplayObject. A value of 1 is fully opaque. A value of 0 is transparent.
+This value is the calculated total, based on the alpha values of all parents of this DisplayObjects 
+in the display list.</p>
+<p>To obtain, and set, the local alpha value, see the <code>alpha</code> property.</p>
+<p>Note: This property is only updated at the end of the <code>updateTransform</code> call, once per render. Until 
+that happens this property will contain values based on the previous frame. Be mindful of this if
+accessing this property outside of the normal game flow, i.e. from an asynchronous event callback.</p>
     </div>
     
     
@@ -2187,7 +2211,7 @@ To remove a mask, set this property to null.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-97">line 97</a>
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-128">line 128</a>
     </dt>
     
 
@@ -2206,7 +2230,7 @@ To remove a mask, set this property to null.</p>
             
 <dt>
     <h4 class="name "
-        id="worldPosition"><span class="type-signature">&lt;readonly> </span>worldPosition<span class="type-signature"> :Point</span></h4>
+        id="worldPosition"><span class="type-signature">&lt;readonly> </span>worldPosition<span class="type-signature"> :PIXIPoint</span></h4>
     
     
 </dt>
@@ -2215,8 +2239,12 @@ To remove a mask, set this property to null.</p>
 
     
     <div class="description">
-        <p>The position of the Display Object based on the world transform.
-This value is updated at the end of updateTransform and takes all parent transforms into account.</p>
+        <p>The coordinates, in pixels, of this DisplayObject within the world.</p>
+<p>This property contains the calculated total, based on the positions of all parents of this 
+DisplayObject in the display list.</p>
+<p>Note: This property is only updated at the end of the <code>updateTransform</code> call, once per render. Until 
+that happens this property will contain values based on the previous frame. Be mindful of this if
+accessing this property outside of the normal game flow, i.e. from an asynchronous event callback.</p>
     </div>
     
     
@@ -2244,7 +2272,7 @@ This value is updated at the end of updateTransform and takes all parent transfo
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-116">line 116</a>
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-159">line 159</a>
     </dt>
     
 
@@ -2272,8 +2300,12 @@ This value is updated at the end of updateTransform and takes all parent transfo
 
     
     <div class="description">
-        <p>The rotation of the Display Object, in radians, based on the world transform.
-This value is updated at the end of updateTransform and takes all parent transforms into account.</p>
+        <p>The rotation, in radians, of this DisplayObject.</p>
+<p>This property contains the calculated total, based on the rotations of all parents of this 
+DisplayObject in the display list.</p>
+<p>Note: This property is only updated at the end of the <code>updateTransform</code> call, once per render. Until 
+that happens this property will contain values based on the previous frame. Be mindful of this if
+accessing this property outside of the normal game flow, i.e. from an asynchronous event callback.</p>
     </div>
     
     
@@ -2301,7 +2333,7 @@ This value is updated at the end of updateTransform and takes all parent transfo
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-136">line 136</a>
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-189">line 189</a>
     </dt>
     
 
@@ -2320,7 +2352,7 @@ This value is updated at the end of updateTransform and takes all parent transfo
             
 <dt>
     <h4 class="name "
-        id="worldScale"><span class="type-signature">&lt;readonly> </span>worldScale<span class="type-signature"> :Point</span></h4>
+        id="worldScale"><span class="type-signature">&lt;readonly> </span>worldScale<span class="type-signature"> :PIXIPoint</span></h4>
     
     
 </dt>
@@ -2329,8 +2361,12 @@ This value is updated at the end of updateTransform and takes all parent transfo
 
     
     <div class="description">
-        <p>The scale of the Display Object based on the world transform.
-This value is updated at the end of updateTransform and takes all parent transforms into account.</p>
+        <p>The global scale of this DisplayObject.</p>
+<p>This property contains the calculated total, based on the scales of all parents of this 
+DisplayObject in the display list.</p>
+<p>Note: This property is only updated at the end of the <code>updateTransform</code> call, once per render. Until 
+that happens this property will contain values based on the previous frame. Be mindful of this if
+accessing this property outside of the normal game flow, i.e. from an asynchronous event callback.</p>
     </div>
     
     
@@ -2358,7 +2394,68 @@ This value is updated at the end of updateTransform and takes all parent transfo
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-126">line 126</a>
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-174">line 174</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="worldTransform"><span class="type-signature">&lt;readonly> </span>worldTransform<span class="type-signature"> :PIXIMatrix</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>The current transform of this DisplayObject.</p>
+<p>This property contains the calculated total, based on the transforms of all parents of this 
+DisplayObject in the display list.</p>
+<p>Note: This property is only updated at the end of the <code>updateTransform</code> call, once per render. Until 
+that happens this property will contain values based on the previous frame. Be mindful of this if
+accessing this property outside of the normal game flow, i.e. from an asynchronous event callback.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-144">line 144</a>
     </dt>
     
 
@@ -2386,7 +2483,7 @@ This value is updated at the end of updateTransform and takes all parent transfo
 
     
     <div class="description">
-        <p>[read-only] Indicates if the sprite is globally visible.</p>
+        <p>Indicates if this DisplayObject is visible, based on it, and all of its parents, <code>visible</code> property values.</p>
     </div>
     
     
@@ -2414,7 +2511,7 @@ This value is updated at the end of updateTransform and takes all parent transfo
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-258">line 258</a>
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-656">line 656</a>
     </dt>
     
 
@@ -2442,7 +2539,8 @@ This value is updated at the end of updateTransform and takes all parent transfo
 
     
     <div class="description">
-        <p>The position of the displayObject on the x axis relative to the local coordinates of the parent.</p>
+        <p>The horizontal position of the DisplayObject, in pixels, relative to its parent.
+If you need the world position of the DisplayObject, use <code>DisplayObject.worldPosition</code> instead.</p>
     </div>
     
     
@@ -2470,7 +2568,7 @@ This value is updated at the end of updateTransform and takes all parent transfo
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-722">line 722</a>
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-612">line 612</a>
     </dt>
     
 
@@ -2498,7 +2596,8 @@ This value is updated at the end of updateTransform and takes all parent transfo
 
     
     <div class="description">
-        <p>The position of the displayObject on the y axis relative to the local coordinates of the parent.</p>
+        <p>The vertical position of the DisplayObject, in pixels, relative to its parent.
+If you need the world position of the DisplayObject, use <code>DisplayObject.worldPosition</code> instead.</p>
     </div>
     
     
@@ -2526,7 +2625,7 @@ This value is updated at the end of updateTransform and takes all parent transfo
 
     
     <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-740">line 740</a>
+    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-634">line 634</a>
     </dt>
     
 
@@ -2544,1079 +2643,6 @@ This value is updated at the end of updateTransform and takes all parent transfo
         </dl>
     
 
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        <dl>
-            
-<dt>
-    <h4 class="name "
-        id="destroy"><span class="type-signature"></span>destroy<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Destroy this DisplayObject.
-Removes all references to transformCallbacks, its parent, the stage, filters, bounds, mask and cached Sprites.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-223">line 223</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="generateTexture"><span class="type-signature"></span>generateTexture<span class="signature">(resolution, scaleMode, renderer)</span><span class="type-signature"> &rarr; {<a href="PIXI.RenderTexture.html">PIXI.RenderTexture</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Useful function that returns a texture of the displayObject object that can then be used to create sprites
-This can be quite useful if your displayObject is static / complicated and needs to be reused multiple times.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>resolution</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The resolution of the texture being generated</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>scaleMode</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>See {{#crossLink &quot;PIXI/scaleModes:property&quot;}}PIXI.scaleModes{{/crossLink}} for possible values</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>renderer</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="PIXI.CanvasRenderer.html">PIXI.CanvasRenderer</a></span>
-|
-
-<span class="param-type"><a href="PIXI.WebGLRenderer.html">PIXI.WebGLRenderer</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The renderer used to generate the texture.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-
-    
-    <h5>Returns:</h5>
-    <div class="returns">
-        
-            
-    
-        <div class="returns-type">
-        
-<span class="param-type"><a href="PIXI.RenderTexture.html">PIXI.RenderTexture</a></span>
-
- -
-        </div>
-    
-    <div class="returns-desc param-desc">
-        <p>a texture of the graphics object</p>
-    </div>
-
-
-        
-    </div>
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-541">line 541</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="getBounds"><span class="type-signature"></span>getBounds<span class="signature">(matrix)</span><span class="type-signature"> &rarr; {Rectangle}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Retrieves the bounds of the displayObject as a rectangle object</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>matrix</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Matrix</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>-</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-
-    
-    <h5>Returns:</h5>
-    <div class="returns">
-        
-            
-    
-        <div class="returns-type">
-        
-<span class="param-type">Rectangle</span>
-
- -
-        </div>
-    
-    <div class="returns-desc param-desc">
-        <p>the rectangular bounding area</p>
-    </div>
-
-
-        
-    </div>
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-497">line 497</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="getLocalBounds"><span class="type-signature"></span>getLocalBounds<span class="signature">()</span><span class="type-signature"> &rarr; {Rectangle}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Retrieves the local bounds of the displayObject as a rectangle object</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-
-    
-    <h5>Returns:</h5>
-    <div class="returns">
-        
-            
-    
-        <div class="returns-type">
-        
-<span class="param-type">Rectangle</span>
-
- -
-        </div>
-    
-    <div class="returns-desc param-desc">
-        <p>the rectangular bounding area</p>
-    </div>
-
-
-        
-    </div>
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-510">line 510</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="preUpdate"><span class="type-signature"></span>preUpdate<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Empty, to be overridden by classes that require it.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-532">line 532</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="setStageReference"><span class="type-signature"></span>setStageReference<span class="signature">(stage)</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Sets the object's stage reference, the stage this object is connected to</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>stage</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Stage</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>the stage that the object will have as its current stage reference</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-521">line 521</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="toGlobal"><span class="type-signature"></span>toGlobal<span class="signature">(position)</span><span class="type-signature"> &rarr; {Point}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Calculates the global position of the display object</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>position</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Point</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The world origin to calculate from</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-
-    
-    <h5>Returns:</h5>
-    <div class="returns">
-        
-            
-    
-        <div class="returns-type">
-        
-<span class="param-type">Point</span>
-
- -
-        </div>
-    
-    <div class="returns-desc param-desc">
-        <p>A point object representing the position of this object</p>
-    </div>
-
-
-        
-    </div>
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-575">line 575</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="toLocal"><span class="type-signature"></span>toLocal<span class="signature">(position, <span class="optional">from</span>)</span><span class="type-signature"> &rarr; {Point}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Calculates the local position of the display object relative to another point</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-		<th>Argument</th>
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>position</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Point</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last"><p>The world origin to calculate from</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>from</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="PIXI.DisplayObject.html">PIXI.DisplayObject</a></span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last"><p>The DisplayObject to calculate the global position from</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-
-    
-    <h5>Returns:</h5>
-    <div class="returns">
-        
-            
-    
-        <div class="returns-type">
-        
-<span class="param-type">Point</span>
-
- -
-        </div>
-    
-    <div class="returns-desc param-desc">
-        <p>A point object representing the position of this object</p>
-    </div>
-
-
-        
-    </div>
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-589">line 589</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="updateCache"><span class="type-signature"></span>updateCache<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Generates and updates the cached sprite for this object.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_pixi_display_DisplayObject.js.html">pixi/display/DisplayObject.js</a>, <a href="src_pixi_display_DisplayObject.js.html#sunlight-1-line-565">line 565</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        </dl>
     
 
     
@@ -3642,7 +2668,7 @@ This can be quite useful if your displayObject is static / complicated and needs
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.3</a>
-		on Fri Jun 17 2016 12:45:41 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Jul 08 2016 15:42:46 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

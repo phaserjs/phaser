@@ -81,7 +81,7 @@ Phaser.Creature = function (game, x, y, key, mesh, animation) {
 
     if (typeof key === 'string')
     {
-        var texture = game.cache.getPixiTexture(key);
+        var texture = new PIXI.Texture(game.cache.getBaseTexture(key));
     }
     else
     {

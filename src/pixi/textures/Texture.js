@@ -2,9 +2,6 @@
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
 
-PIXI.TextureCache = {};
-PIXI.FrameCache = {};
-
 /**
  * TextureSilentFail is a boolean that defaults to `false`. 
  * If `true` then `PIXI.Texture.setFrame` will no longer throw an error if the texture dimensions are incorrect. 
@@ -13,8 +10,6 @@ PIXI.FrameCache = {};
  * @type {boolean}
  */
 PIXI.TextureSilentFail = false;
-
-PIXI.TextureCacheIdGenerator = 0;
 
 /**
  * A texture stores the information that represents an image or part of an image. It cannot be added
@@ -252,46 +247,6 @@ PIXI.Texture.prototype._updateUvs = function()
 };
 
 /**
- * Helper function that creates a Texture object from the given image url.
- * If the image is not in the texture cache it will be  created and loaded.
- *
- * @static
- * @method fromImage
- * @param imageUrl {String} The image url of the texture
- * @param crossorigin {Boolean} Whether requests should be treated as crossorigin
- * @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
- * @return {Texture}
- */
-PIXI.Texture.fromImage = function(imageUrl, crossorigin, scaleMode)
-{
-    var texture = PIXI.TextureCache[imageUrl];
-
-    if(!texture)
-    {
-        texture = new PIXI.Texture(PIXI.BaseTexture.fromImage(imageUrl, crossorigin, scaleMode));
-        PIXI.TextureCache[imageUrl] = texture;
-    }
-
-    return texture;
-};
-
-/**
- * Helper function that returns a Texture objected based on the given frame id.
- * If the frame id is not in the texture cache an error will be thrown.
- *
- * @static
- * @method fromFrame
- * @param frameId {String} The frame id of the texture
- * @return {Texture}
- */
-PIXI.Texture.fromFrame = function(frameId)
-{
-    var texture = PIXI.TextureCache[frameId];
-    if(!texture) throw new Error('The frameId "' + frameId + '" does not exist in the texture cache ');
-    return texture;
-};
-
-/**
  * Helper function that creates a new a Texture based on the given canvas element.
  *
  * @static
@@ -305,35 +260,6 @@ PIXI.Texture.fromCanvas = function(canvas, scaleMode)
     var baseTexture = PIXI.BaseTexture.fromCanvas(canvas, scaleMode);
 
     return new PIXI.Texture(baseTexture);
-};
-
-/**
- * Adds a texture to the global PIXI.TextureCache. This cache is shared across the whole PIXI object.
- *
- * @static
- * @method addTextureToCache
- * @param texture {Texture} The Texture to add to the cache.
- * @param id {String} The id that the texture will be stored against.
- */
-PIXI.Texture.addTextureToCache = function(texture, id)
-{
-    PIXI.TextureCache[id] = texture;
-};
-
-/**
- * Remove a texture from the global PIXI.TextureCache.
- *
- * @static
- * @method removeTextureFromCache
- * @param id {String} The id of the texture to be removed
- * @return {Texture} The texture that was removed
- */
-PIXI.Texture.removeTextureFromCache = function(id)
-{
-    var texture = PIXI.TextureCache[id];
-    delete PIXI.TextureCache[id];
-    delete PIXI.BaseTextureCache[id];
-    return texture;
 };
 
 PIXI.TextureUvs = function()

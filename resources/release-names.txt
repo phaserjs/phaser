@@ -70,7 +70,7 @@ POI: Plain of Lances, World's End, Banikhan Mountains
 
 Shienar *
 
-Capital: Fal Moran
+Capital: Fal Moran *
 Cities: Ankor Dail, Camron Caan, Fal Dara, Fal Eisen, Fal Sion, Medo, Mos Shirare *
 
 Tarabon
