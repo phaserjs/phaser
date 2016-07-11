@@ -1,5 +1,11 @@
 # Change Log
 
+## Version 2.6.1 - "Caemlyn" - 11th July 2016
+
+### Bug Fixes
+
+* Fixed `Uncaught TypeError: Cannot set property 'x' of undefined` in Body.js (thanks @ErwanErwan #2607)
+
 ## Version 2.6.0 - "Fal Moran" - 8th July 2016
 
 ### New Features

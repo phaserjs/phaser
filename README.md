@@ -38,13 +38,13 @@ Grab the source and join in the fun!
 
 <div align="center"><img src="http://phaser.io/images/github/news.jpg"></div>
 
-> 8th July 2016
+> 11th July 2016
 
-Welcome to Phaser 2.6.0. Our seventh release this year, and another leap forwards since 2.5.0 less than a month ago. This version includes the work undertaken with adding circular body support into Arcade Physics, allowing you to now define physics bodies as being circles instead of rectangles, something that was previously only available in P2 Physics.
+Welcome to Phaser 2.6.1. Our eighth release this year, and another leap forwards since 2.5.0 less than a month ago. This version includes the work undertaken with adding circular body support into Arcade Physics, allowing you to now define physics bodies as being circles instead of rectangles, something that was previously only available in P2 Physics.
 
-Keeping with Arcade Physics for a moment there are now new events you can listen for, including `Body.onWorldBounds`, `Body.onCollide` and `Body.onOverlap`. Phaser.Groups have also been given a shot in the arm. You can now position them, and all of their children, using the new bounds commands such as `left`, `centerX` and `bottom`. They've also gained the `alignTo` and `alignIn` methods from the 2.5 release.
+Keeping with Arcade Physics for a moment there are now new events you can listen for, including Body.onWorldBounds, Body.onCollide and Body.onOverlap. Phaser.Groups have also been given a shot in the arm. You can now position them, and all of their children, using the new bounds commands such as left, centerX and bottom. They've also gained the alignTo and alignIn methods from the 2.5 release.
 
-In this release we've undertaken a large amount of work refactoring Pixi. You will find lots of Pixi related methods, that were redundant, removed from the build (such as `fromImage`). All references to the Pixi Texture and Base Texture caches have also been removed, helping close-off some straggling issues, and free-up lingering resources. Please see the Pixi section of the Change Log for complete details. This will not effect you if you're just using Phaser, but if you had any Pixi specific mods or plugins, they may need checking over.
+In this release we've undertaken a large amount of work refactoring Pixi. You will find lots of Pixi related methods, that were redundant, removed from the build (such as fromImage). All references to the Pixi Texture and Base Texture caches have also been removed, helping close-off some straggling issues, and free-up lingering resources. Please see the Pixi section of the Change Log for complete details. This will not effect you if you're just using Phaser, but if you had any Pixi specific mods or plugins, they may need checking over.
 
 I've also been working hard on the documentation. Tidying-up functions that didn't have parameter descriptions, adding lots more details to areas such as the Game Object events, and starting the huge task of rewriting all of the Pixi documentation into a more friendly and comprehensive format. This is an on-going task, and will be merged into releases from here-on.
 
@@ -113,15 +113,15 @@ Using Browserify? Please [read this](#browserify).
 
 [jsDelivr](http://www.jsdelivr.com/#!phaser) is a "super-fast CDN for developers". Include the following in your html:
 
-`<script src="//cdn.jsdelivr.net/phaser/2.6.0/phaser.js"></script>`
+`<script src="//cdn.jsdelivr.net/phaser/2.6.1/phaser.js"></script>`
 
 or the minified version:
 
-`<script src="//cdn.jsdelivr.net/phaser/2.6.0/phaser.min.js"></script>`
+`<script src="//cdn.jsdelivr.net/phaser/2.6.1/phaser.min.js"></script>`
 
 [cdnjs.com](https://cdnjs.com/libraries/phaser) also offers a free CDN service. They have all versions of Phaser and even the custom builds:
 
-`<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/2.6.0/phaser.js"></script>`
+`<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/2.6.1/phaser.js"></script>`
 
 ### Phaser Sandbox
 
@@ -311,6 +311,12 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 ![Change Log](http://phaser.io/images/github/div-change-log.png "Change Log")
 <a name="change-log"></a>
 
+## Version 2.6.1 - "Caemlyn" - 11th July 2016
+
+### Bug Fixes
+
+* Fixed `Uncaught TypeError: Cannot set property 'x' of undefined` in Body.js (thanks @ErwanErwan #2607)
+
 ## Version 2.6.0 - "Fal Moran" - 8th July 2016
 
 ### New Features
@@ -420,10 +426,10 @@ All rights reserved.
 
 [![Analytics](https://ga-beacon.appspot.com/UA-44006568-2/phaser/index)](https://github.com/igrigorik/ga-beacon)
 
-[get-js]: https://github.com/photonstorm/phaser/releases/download/v2.6.0/phaser.js
-[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v2.6.0/phaser.min.js
-[get-zip]: https://github.com/photonstorm/phaser/archive/v2.6.0.zip
-[get-tgz]: https://github.com/photonstorm/phaser/archive/v2.6.0.tar.gz
+[get-js]: https://github.com/photonstorm/phaser/releases/download/v2.6.1/phaser.js
+[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v2.6.1/phaser.min.js
+[get-zip]: https://github.com/photonstorm/phaser/archive/v2.6.1.zip
+[get-tgz]: https://github.com/photonstorm/phaser/archive/v2.6.1.tar.gz
 [clone-http]: https://github.com/photonstorm/phaser.git
 [clone-ssh]: git@github.com:photonstorm/phaser.git
 [clone-svn]: https://github.com/photonstorm/phaser

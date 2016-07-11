@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.6.0 "Fal Moran" - Built: Fri Jul 08 2016 15:53:28
+* v2.6.1 "Caemlyn" - Built: Mon Jul 11 2016 10:00:12
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *

@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.6.0 "Fal Moran" - Built: Fri Jul 08 2016 15:53:23
+* v2.6.1 "Caemlyn" - Built: Mon Jul 11 2016 10:00:07
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -7843,7 +7843,7 @@ var Phaser = Phaser || {
     * @constant
     * @type {string}
     */
-    VERSION: '2.6.0',
+    VERSION: '2.6.1',
 
     /**
     * An array of Phaser game instances.
