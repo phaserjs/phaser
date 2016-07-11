@@ -317,11 +317,11 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 
 * TypeScript definitions fixes and updates (thanks )
 * Docs typo fixes (thanks )
-* 
+* The InputHandler.flagged property has been removed. It was never used internally, or exposed via the API, so was just overhead.
 
 ### Bug Fixes
 
-*
+* A Group with `inputEnableChildren` set would re-start the Input Handler on a Sprite, even if that handler had been disabled previously.
 *
 *
 
