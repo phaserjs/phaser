@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.6.0 "Fal Moran" - Built: Fri Jul 08 2016 15:53:28
+* v2.6.1 "Caemlyn" - Built: Mon Jul 11 2016 10:00:12
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -54,7 +54,7 @@ var Phaser = Phaser || {
     * @constant
     * @type {string}
     */
-    VERSION: '2.6.0',
+    VERSION: '2.6.1',
 
     /**
     * An array of Phaser game instances.
@@ -62603,7 +62603,7 @@ Phaser.Physics.Arcade.prototype = {
 
         if (this.skipQuadTree || sprite.body.skipQuadTree)
         {
-            var bounds;
+            var bounds = {};
 
             for (var i = 0; i < group.hash.length; i++)
             {
@@ -62716,7 +62716,7 @@ Phaser.Physics.Arcade.prototype = {
 
         for (var i = 0; i < group.hash.length; i++)
         {
-            var bounds1;
+            var bounds1 = {};
             var object1 = group.hash[i];
 
             //  Skip duff entries - we can't check a non-existent sprite or one with no body
@@ -62730,7 +62730,7 @@ Phaser.Physics.Arcade.prototype = {
 
             for (var j = i + 1; j < group.hash.length; j++)
             {
-                var bounds2;
+                var bounds2 = {};
                 var object2 = group.hash[j];
 
                 //  Skip duff entries - we can't check a non-existent sprite or one with no body

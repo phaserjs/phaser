@@ -1275,13 +1275,13 @@
 <div align="center"><img src="http://phaser.io/images/github/news.jpg"></div>
 
 <blockquote>
-<p>8th July 2016</p>
+<p>11th July 2016</p>
 </blockquote>
-<p>Welcome to Phaser 2.6.0. Our seventh release this year, and another leap forwards since 2.5.0 less than a month ago. This version includes the work undertaken with adding circular body support into Arcade Physics, allowing you to now define physics bodies as being circles instead of rectangles, something that was previously only available in P2 Physics.</p>
-<p>Keeping with Arcade Physics for a moment there are now new events you can listen for, including <code>Body.onWorldBounds</code>, <code>Body.onCollide</code> and <code>Body.onOverlap</code>. Phaser.Groups have also been given a shot in the arm. You can now position them, and all of their children, using the new bounds commands such as <code>left</code>, <code>centerX</code> and <code>bottom</code>. They've also gained the <code>alignTo</code> and <code>alignIn</code> methods from the 2.5 release.</p>
-<p>In this release we've undertaken a large amount of work refactoring Pixi. You will find lots of Pixi related methods, that were redundant, removed from the build (such as <code>fromImage</code>). All references to the Pixi Texture and Base Texture caches have also been removed, helping close-off some straggling issues, and free-up lingering resources. Please see the Pixi section of the Change Log for complete details. This will not effect you if you're just using Phaser, but if you had any Pixi specific mods or plugins, they may need checking over.</p>
+<p>Welcome to Phaser 2.6.1. Our eighth release this year, and another leap forwards since 2.5.0 less than a month ago. This version includes the work undertaken with adding circular body support into Arcade Physics, allowing you to now define physics bodies as being circles instead of rectangles, something that was previously only available in P2 Physics.</p>
+<p>Keeping with Arcade Physics for a moment there are now new events you can listen for, including Body.onWorldBounds, Body.onCollide and Body.onOverlap. Phaser.Groups have also been given a shot in the arm. You can now position them, and all of their children, using the new bounds commands such as left, centerX and bottom. They've also gained the alignTo and alignIn methods from the 2.5 release.</p>
+<p>In this release we've undertaken a large amount of work refactoring Pixi. You will find lots of Pixi related methods, that were redundant, removed from the build (such as fromImage). All references to the Pixi Texture and Base Texture caches have also been removed, helping close-off some straggling issues, and free-up lingering resources. Please see the Pixi section of the Change Log for complete details. This will not effect you if you're just using Phaser, but if you had any Pixi specific mods or plugins, they may need checking over.</p>
 <p>I've also been working hard on the documentation. Tidying-up functions that didn't have parameter descriptions, adding lots more details to areas such as the Game Object events, and starting the huge task of rewriting all of the Pixi documentation into a more friendly and comprehensive format. This is an on-going task, and will be merged into releases from here-on.</p>
-<p>Check the <a href="#change-log">Change Log</a> to see the complete list of what's new in this release.</p>
+<p>Check the <a href="#change-log">Change Log</a> to see what we've done so far. Or switch to the master branch for the current stable release.</p>
 <p>As always, keep you eyes on the Phaser web site, and subscribe to our weekly <a href="#newsletter">newsletter</a>. You can also follow me on <a href="https://twitter.com/photonstorm">Twitter</a> or chat to me in the Phaser <a href="http://phaser.io/community/slack">Slack</a> channel.</p>
 <p>There are also now more ways than before to help <a href="#support">support</a> the development of Phaser. The uptake so far has been fantastic, but this is an on-going mission. Thank you to everyone who supports our development. Who shares our belief in the future of HTML5 gaming, and Phasers role in that.</p>
 <p>Happy coding everyone! See you on the forums.</p>
@@ -1311,8 +1311,8 @@
 <p>Phaser is <a href="https://github.com/photonstorm/phaser">hosted on Github</a>. There are a number of ways to download it:</p>
 <ul>
 <li>Clone the git repository via <a href="https://github.com/photonstorm/phaser.git">https</a>, <a href="git@github.com:photonstorm/phaser.git">ssh</a> or with the Github <a href="github-windows://openRepo/https://github.com/photonstorm/phaser">Windows</a> or <a href="github-mac://openRepo/https://github.com/photonstorm/phaser">Mac</a> clients.</li>
-<li>Download as <a href="https://github.com/photonstorm/phaser/archive/v2.6.0.zip">zip</a> or <a href="https://github.com/photonstorm/phaser/archive/v2.6.0.tar.gz">tar.gz</a></li>
-<li>Download just the build files: <a href="https://github.com/photonstorm/phaser/releases/download/v2.6.0/phaser.js">phaser.js</a> and <a href="https://github.com/photonstorm/phaser/releases/download/v2.6.0/phaser.min.js">phaser.min.js</a></li>
+<li>Download as <a href="https://github.com/photonstorm/phaser/archive/v2.6.1.zip">zip</a> or <a href="https://github.com/photonstorm/phaser/archive/v2.6.1.tar.gz">tar.gz</a></li>
+<li>Download just the build files: <a href="https://github.com/photonstorm/phaser/releases/download/v2.6.1/phaser.js">phaser.js</a> and <a href="https://github.com/photonstorm/phaser/releases/download/v2.6.1/phaser.min.js">phaser.min.js</a></li>
 <li>Checkout with <a href="https://github.com/photonstorm/phaser">svn</a></li>
 </ul>
 <h3>Bower / npm</h3><p>Install via <a href="http://bower.io">bower</a></p>
@@ -1321,11 +1321,11 @@
 <p><code>npm install phaser</code></p>
 <p>Using Browserify? Please <a href="#browserify">read this</a>.</p>
 <h3>CDN</h3><p><a href="http://www.jsdelivr.com/#!phaser">jsDelivr</a> is a &quot;super-fast CDN for developers&quot;. Include the following in your html:</p>
-<p><code>&lt;script src=&quot;//cdn.jsdelivr.net/phaser/2.6.0/phaser.js&quot;&gt;&lt;/script&gt;</code></p>
+<p><code>&lt;script src=&quot;//cdn.jsdelivr.net/phaser/2.6.1/phaser.js&quot;&gt;&lt;/script&gt;</code></p>
 <p>or the minified version:</p>
-<p><code>&lt;script src=&quot;//cdn.jsdelivr.net/phaser/2.6.0/phaser.min.js&quot;&gt;&lt;/script&gt;</code></p>
+<p><code>&lt;script src=&quot;//cdn.jsdelivr.net/phaser/2.6.1/phaser.min.js&quot;&gt;&lt;/script&gt;</code></p>
 <p><a href="https://cdnjs.com/libraries/phaser">cdnjs.com</a> also offers a free CDN service. They have all versions of Phaser and even the custom builds:</p>
-<p><code>&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/phaser/2.6.0/phaser.js&quot;&gt;&lt;/script&gt;</code></p>
+<p><code>&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/phaser/2.6.1/phaser.js&quot;&gt;&lt;/script&gt;</code></p>
 <h3>Phaser Sandbox</h3><p>If you'd like to try coding in Phaser right now, with nothing more than your web browser, then head over to the <a href="http://phaser.io/sandbox">Phaser Sandbox</a>. You'll find Quick Start templates, and a user-friendly editor filled with handy code-completion features.</p>
 <h3>License</h3><p>Phaser is released under the <a href="http://opensource.org/licenses/MIT">MIT License</a>.</p>
 <p><img src="http://phaser.io/images/github/div-getting-started.png" alt="Getting Started" title="Getting Started">
@@ -1425,6 +1425,9 @@ require('phaser');</code></pre><h3>Building from source</h3><p>Should you wish t
 <p>You can read all about the philosophy behind Lazer <a href="http://phaser.io/news/2016/01/phaser-in-2015-and-beyond">here</a> or join the Google Group <a href="https://groups.google.com/d/forum/phaser3-dev">mailing list</a> where progress reports are posted. You can also follow progress in the <a href="#newsletter">Phaser World</a> newsletter.</p>
 <p><img src="http://phaser.io/images/github/div-change-log.png" alt="Change Log" title="Change Log">
 <a name="change-log"></a></p>
+<h2>Version 2.6.1 - &quot;Caemlyn&quot; - 11th July 2016</h2><h3>Bug Fixes</h3><ul>
+<li>Fixed <code>Uncaught TypeError: Cannot set property 'x' of undefined</code> in Body.js (thanks @ErwanErwan #2607)</li>
+</ul>
 <h2>Version 2.6.0 - &quot;Fal Moran&quot; - 8th July 2016</h2><h3>New Features</h3><ul>
 <li>The Loader has a new property <code>headers</code>. This is an object checked by XHR Requests, used to set the Request Header of certain file types. JSON and XML are pre-configured, but you can add to, or modify this property as required (thanks @stoneman1 #2585 #2485)</li>
 <li>Phaser now has support for Typings, the TypeScript Definition Manager. See the <code>typescript/readme.md</code> file for installation instructions (thanks @monagames #2576)</li>
@@ -1535,7 +1538,7 @@ require('phaser');</code></pre><h3>Building from source</h3><p>Should you wish t
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.3</a>
-		on Fri Jul 08 2016 15:42:35 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Mon Jul 11 2016 10:06:58 GMT+0100 (GMT Daylight Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
