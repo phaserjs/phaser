@@ -48,7 +48,7 @@ In this release we've undertaken a large amount of work refactoring Pixi. You wi
 
 I've also been working hard on the documentation. Tidying-up functions that didn't have parameter descriptions, adding lots more details to areas such as the Game Object events, and starting the huge task of rewriting all of the Pixi documentation into a more friendly and comprehensive format. This is an on-going task, and will be merged into releases from here-on.
 
-Check the [Change Log](#change-log) to see what we've done so far. Or switch to the master branch for the current stable release.
+Check the [Change Log](#change-log) to see the complete list of what's new in this release.
 
 As always, keep you eyes on the Phaser web site, and subscribe to our weekly [newsletter](#newsletter). You can also follow me on [Twitter](https://twitter.com/photonstorm) or chat to me in the Phaser [Slack](http://phaser.io/community/slack) channel.
 
