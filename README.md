@@ -318,6 +318,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * TypeScript definitions fixes and updates (thanks )
 * Docs typo fixes (thanks )
 * The InputHandler.flagged property has been removed. It was never used internally, or exposed via the API, so was just overhead.
+* The src/system folder has been removed and all files relocated to the src/utils folder. This doesn't change anything from an API point of view, but did change the grunt build scripts slightly.
 
 ### Bug Fixes
 

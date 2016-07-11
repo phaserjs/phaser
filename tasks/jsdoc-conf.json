@@ -18,7 +18,6 @@
             "./src/physics/", 
             "./src/plugins/", 
             "./src/sound/", 
-            "./src/system/", 
             "./src/tilemap/", 
             "./src/time/", 
             "./src/tween/",

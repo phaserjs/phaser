@@ -17,7 +17,6 @@
             "./src/particles/", 
             "./src/physics/", 
             "./src/sound/", 
-            "./src/system/", 
             "./src/tilemap/", 
             "./src/time/", 
             "./src/tween/",
