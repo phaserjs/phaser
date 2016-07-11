@@ -309,9 +309,9 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 
 ### New Features
 
-*
-*
-*
+* Group.getRandomExists will return a random child from the Group that has exists set to true.
+* Group.getAll will return all children in the Group, or a section of the Group, with the optional ability to test if the child has a property matching the given value or not.
+* Group.iterate has a new `returnType`: `RETURN_ALL`. This allows you to return all children that pass the iteration test in an array.
 
 ### Updates
 
