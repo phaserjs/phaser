@@ -2067,7 +2067,8 @@ Phaser.Group.prototype.spreadProperties = function(property, startValue, margin)
 		
 		if (child.exists)
 		{
-	        child[property] = Phaser.Math.spread(startValue, amount, margin, i);
+		    Phaser.Utils.setProperty(child, property, Phaser.Math.spread(startValue, amount, margin, i));
+	        //child[property] = Phaser.Math.spread(startValue, amount, margin, i);
 		}
 	}
 }
