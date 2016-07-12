@@ -1532,7 +1532,7 @@ declare module Phaser {
         graphics(x: number, y: number, group?: Phaser.Group): Phaser.Graphics;
         group(parent?: any, name?: string, addToStage?: boolean, enableBody?: boolean, physicsBodyType?: number): Phaser.Group;
         image(x: number, y: number, key?: any, frame?: any, group?: Phaser.Group): Phaser.Image;
-        physicsGroup(physicsBodyType: number, parent?: any, name?: string, addToStage?: boolean): Phaser.Group;
+        physicsGroup(physicsBodyType?: number, parent?: any, name?: string, addToStage?: boolean): Phaser.Group;
         plugin(plugin: Phaser.Plugin, ...parameter: any[]): Phaser.Plugin;
         renderTexture(width?: number, height?: number, key?: string, addToCache?: boolean): Phaser.RenderTexture;
         retroFont(font: string, characterWidth: number, characterHeight: number, chars: string, charsPerRow: number, xSpacing?: number, ySpacing?: number, xOffset?: number, yOffset?: number): Phaser.RetroFont;
