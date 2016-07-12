@@ -337,6 +337,13 @@ PIXI.Sprite.prototype._renderWebGL = function(renderSession, matrix)
         wt = matrix;
     }
 
+    //  if interpolation
+    if (this.interpolate)
+    {
+        wt.tx = this.prevPosition.x + (this.worldPosition.x - this.prevPosition.x) * renderSession.interpolation;
+        wt.ty = this.prevPosition.y + (this.worldPosition.y - this.prevPosition.y) * renderSession.interpolation;
+    }
+
     //  A quick check to see if this element has a mask or a filter.
     if (this._mask || this._filters)
     {
@@ -441,6 +448,13 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession, matrix)
 
         var tx = (wt.tx * renderSession.resolution) + renderSession.shakeX;
         var ty = (wt.ty * renderSession.resolution) + renderSession.shakeY;
+
+        //  if interpolation
+        if (this.interpolate)
+        {
+            tx = this.prevPosition.x + (this.worldPosition.x - this.prevPosition.x) * renderSession.interpolation;
+            ty = this.prevPosition.y + (this.worldPosition.y - this.prevPosition.y) * renderSession.interpolation;
+        }
 
         //  Allow for pixel rounding
         if (renderSession.roundPixels)

@@ -134,6 +134,7 @@ EOL;
     <script src="$path/src/core/FlexGrid.js"></script>
     <script src="$path/src/core/FlexLayer.js"></script>
     <script src="$path/src/core/ScaleManager.js"></script>
+    <script src="$path/src/core/MainLoop.js"></script>
     <script src="$path/src/core/Game.js"></script>
 
     <script src="$path/src/input/Input.js"></script>
@@ -296,10 +297,10 @@ EOL;
     }
 
     echo <<<EOL
-    <script src="$path/src/system/Device.js"></script>
-    <script src="$path/src/system/DOM.js"></script>
-    <script src="$path/src/system/Canvas.js"></script>
-    <script src="$path/src/system/RequestAnimationFrame.js"></script>
+    <script src="$path/src/utils/Device.js"></script>
+    <script src="$path/src/utils/DOM.js"></script>
+    <script src="$path/src/utils/Canvas.js"></script>
+    <script src="$path/src/utils/RequestAnimationFrame.js"></script>
 
     <script src="$path/src/math/Math.js"></script>
     <script src="$path/src/math/RandomDataGenerator.js"></script>

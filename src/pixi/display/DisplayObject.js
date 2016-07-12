@@ -28,6 +28,8 @@ PIXI.DisplayObject = function() {
     */
     this.position = new PIXI.Point(0, 0);
 
+    this.interpolate = true;
+
     /**
     * The scale of this DisplayObject. A scale of 1:1 represents the DisplayObject
     * at its default size. A value of 0.5 would scale this DisplayObject by half, and so on.
@@ -170,6 +172,8 @@ PIXI.DisplayObject = function() {
     * @readOnly
     */
     this.worldPosition = new PIXI.Point(0, 0);
+
+    this.prevPosition = new PIXI.Point(0, 0);
 
     /**
     * The global scale of this DisplayObject.
