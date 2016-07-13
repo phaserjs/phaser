@@ -35,6 +35,7 @@ PIXI.StripShader = function(gl)
      * @type Array
      */
     this.fragmentSrc = [
+        '//StripShader Fragment Shader.',
         'precision mediump float;',
         'varying vec2 vTextureCoord;',
      //   'varying float vColor;',
@@ -53,6 +54,7 @@ PIXI.StripShader = function(gl)
      * @type Array
      */
     this.vertexSrc  = [
+        '//StripShader Vertex Shader.',
         'attribute vec2 aVertexPosition;',
         'attribute vec2 aTextureCoord;',
         'uniform mat3 translationMatrix;',

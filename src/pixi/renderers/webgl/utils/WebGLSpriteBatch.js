@@ -136,6 +136,7 @@ PIXI.WebGLSpriteBatch = function()
      * @type AbstractFilter
      */
     this.defaultShader = new PIXI.AbstractFilter([
+        '//WebGLSpriteBatch Fragment Shader.',
         'precision lowp float;',
         'varying vec2 vTextureCoord;',
         'varying vec4 vColor;',

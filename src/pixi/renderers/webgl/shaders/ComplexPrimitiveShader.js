@@ -35,7 +35,7 @@ PIXI.ComplexPrimitiveShader = function(gl)
      * @type Array
      */
     this.fragmentSrc = [
-
+        '// ComplexPrimitiveShader Fragment Shader.',
         'precision mediump float;',
 
         'varying vec4 vColor;',
@@ -51,6 +51,7 @@ PIXI.ComplexPrimitiveShader = function(gl)
      * @type Array
      */
     this.vertexSrc  = [
+        '// ComplexPrimitiveShader Vertex Shader.',
         'attribute vec2 aVertexPosition;',
         //'attribute vec4 aColor;',
         'uniform mat3 translationMatrix;',

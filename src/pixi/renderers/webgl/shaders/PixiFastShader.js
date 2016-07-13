@@ -35,6 +35,7 @@ PIXI.PixiFastShader = function(gl)
      * @type Array
      */
     this.fragmentSrc = [
+        '// PixiFastShader Fragment Shader.',
         'precision lowp float;',
         'varying vec2 vTextureCoord;',
         'varying float vColor;',
@@ -50,6 +51,7 @@ PIXI.PixiFastShader = function(gl)
      * @type Array
      */
     this.vertexSrc = [
+        '// PixiFastShader Vertex Shader.',
         'attribute vec2 aVertexPosition;',
         'attribute vec2 aPositionCoord;',
         'attribute vec2 aScale;',

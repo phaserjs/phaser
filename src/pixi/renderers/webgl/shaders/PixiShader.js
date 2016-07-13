@@ -36,12 +36,14 @@ PIXI.PixiShader = function(gl)
      * @type Array
      */
     this.fragmentSrc = [
+        '// PixiShader Fragment Shader.',
         'precision lowp float;',
         'varying vec2 vTextureCoord;',
         'varying vec4 vColor;',
-        'uniform sampler2D uSampler;',
+        'varying float vTextureIndex;',
+        'uniform sampler2D uSamplerArray[16];',
         'void main(void) {',
-        '   gl_FragColor = texture2D(uSampler, vTextureCoord) * vColor ;',
+        '   gl_FragColor = texture2D(uSamplerArray[0], vTextureCoord) * vColor ;',
         '}'
     ];
 
@@ -219,7 +221,8 @@ PIXI.PixiShader.prototype.initSampler2D = function(uniform)
 
     var gl = this.gl;
 
-    gl.activeTexture(gl['TEXTURE' + this.textureCount]);
+    // No need to do string manipulation for this.
+    gl.activeTexture(gl.TEXTURE0 + this.textureCount);
     gl.bindTexture(gl.TEXTURE_2D, uniform.value.baseTexture._glTextures[gl.id]);
 
     //  Extended texture data
@@ -369,15 +372,19 @@ PIXI.PixiShader.prototype.destroy = function()
 * @type String
 */
 PIXI.PixiShader.defaultVertexSrc = [
+    '// Default Vertex Shader',
+    '// With multi-texture rendering',
     'attribute vec2 aVertexPosition;',
     'attribute vec2 aTextureCoord;',
     'attribute vec4 aColor;',
+    'attribute float aTextureIndex;',
 
     'uniform vec2 projectionVector;',
     'uniform vec2 offsetVector;',
 
     'varying vec2 vTextureCoord;',
     'varying vec4 vColor;',
+    'varying float vTextureIndex;',
 
     'const vec2 center = vec2(-1.0, 1.0);',
 
@@ -385,5 +392,6 @@ PIXI.PixiShader.defaultVertexSrc = [
     '   gl_Position = vec4( ((aVertexPosition + offsetVector) / projectionVector) + center , 0.0, 1.0);',
     '   vTextureCoord = aTextureCoord;',
     '   vColor = vec4(aColor.rgb * aColor.a, aColor.a);',
+    '   vTextureIndex = aTextureIndex;',
     '}'
 ];
