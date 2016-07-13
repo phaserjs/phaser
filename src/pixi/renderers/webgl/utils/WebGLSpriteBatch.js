@@ -66,6 +66,14 @@ PIXI.WebGLSpriteBatch = function()
      * @type Uint16Array
      */
     this.indices = new PIXI.Uint16Array(numIndices);
+
+    /**
+     * Holds the texture indices
+     *
+     * @property textureIndices
+     * @type Float32Array
+     */
+    this.textureIndices = new PIXI.Float32Array(numIndices);
     
     /**
      * @property lastIndexCount
@@ -135,16 +143,7 @@ PIXI.WebGLSpriteBatch = function()
      * @property defaultShader
      * @type AbstractFilter
      */
-    this.defaultShader = new PIXI.AbstractFilter([
-        '//WebGLSpriteBatch Fragment Shader.',
-        'precision lowp float;',
-        'varying vec2 vTextureCoord;',
-        'varying vec4 vColor;',
-        'uniform sampler2D uSampler;',
-        'void main(void) {',
-        '   gl_FragColor = texture2D(uSampler, vTextureCoord) * vColor ;',
-        '}'
-    ]);
+    this.defaultShader = null;
 };
 
 /**
@@ -153,11 +152,32 @@ PIXI.WebGLSpriteBatch = function()
 */
 PIXI.WebGLSpriteBatch.prototype.setContext = function(gl)
 {
+    var MAX_TEXTURES = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);
+    var dynamicIfs = '\tif (vTextureIndex == 0.0) gl_FragColor = texture2D(uSamplerArray[0], vTextureCoord) * vColor;\n'
+    for (var index = 1; index < MAX_TEXTURES; ++index)
+    {
+        dynamicIfs += '\telse if (vTextureIndex == ' + 
+                    index + '.0) gl_FragColor = texture2D(uSamplerArray[' + 
+                    index + '], vTextureCoord) * vColor;\n'
+    }
     this.gl = gl;
+    this.defaultShader = new PIXI.AbstractFilter([
+        '//WebGLSpriteBatch Fragment Shader.',
+        'precision lowp float;',
+        'varying vec2 vTextureCoord;',
+        'varying vec4 vColor;',
+        'varying float vTextureIndex;',
+        'uniform sampler2D uSamplerArray[' + MAX_TEXTURES + '];',
+        'void main(void) {',
+        dynamicIfs,
+        '\telse gl_FragColor = texture2D(uSamplerArray[0], vTextureCoord) * vColor;',
+        '}'
+    ]);
 
     // create a couple of buffers
     this.vertexBuffer = gl.createBuffer();
     this.indexBuffer = gl.createBuffer();
+    this.texIndexBuffer = gl.createBuffer();
 
     // 65535 is max index, so 65535 / 6 = 10922.
 
@@ -167,6 +187,9 @@ PIXI.WebGLSpriteBatch.prototype.setContext = function(gl)
 
     gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, this.vertices, gl.DYNAMIC_DRAW);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.texIndexBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, this.textureIndices, gl.DYNAMIC_DRAW);
 
     this.currentBlendMode = 99999;
 
@@ -496,6 +519,10 @@ PIXI.WebGLSpriteBatch.prototype.flush = function()
 
         // color attributes will be interpreted as unsigned bytes and normalized
         gl.vertexAttribPointer(shader.colorAttribute, 4, gl.UNSIGNED_BYTE, true, stride, 4 * 4);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.texIndexBuffer);
+        gl.enableVertexAttribArray(shader.aTextureIndex);
+        gl.vertexAttribPointer(shader.aTextureIndex, 1, gl.FLOAT, gl.FALSE, 0, 0);
     }
 
     // upload the verts to the buffer  
@@ -674,6 +701,7 @@ PIXI.WebGLSpriteBatch.prototype.destroy = function()
     
     this.gl.deleteBuffer(this.vertexBuffer);
     this.gl.deleteBuffer(this.indexBuffer);
+    this.gl.deleteBuffer(this.texIndexBuffer);
     
     this.currentBaseTexture = null;
     

@@ -35,17 +35,7 @@ PIXI.PixiShader = function(gl)
      * @property fragmentSrc
      * @type Array
      */
-    this.fragmentSrc = [
-        '// PixiShader Fragment Shader.',
-        'precision lowp float;',
-        'varying vec2 vTextureCoord;',
-        'varying vec4 vColor;',
-        'varying float vTextureIndex;',
-        'uniform sampler2D uSamplerArray[16];',
-        'void main(void) {',
-        '   gl_FragColor = texture2D(uSamplerArray[0], vTextureCoord) * vColor ;',
-        '}'
-    ];
+    this.fragmentSrc = null;
 
     /**
      * A local texture counter for multi-texture shaders.
@@ -90,13 +80,34 @@ PIXI.PixiShader.prototype.constructor = PIXI.PixiShader;
 PIXI.PixiShader.prototype.init = function()
 {
     var gl = this.gl;
+    var MAX_TEXTURES = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);
+    var dynamicIfs = '\tif (vTextureIndex == 0.0) gl_FragColor = texture2D(uSamplerArray[0], vTextureCoord) * vColor;\n'
+    for (var index = 1; index < MAX_TEXTURES; ++index)
+    {
+        dynamicIfs += '\telse if (vTextureIndex == ' + 
+                    index + '.0) gl_FragColor = texture2D(uSamplerArray[' + 
+                    index + '], vTextureCoord) * vColor;\n'
+    }
+    this.fragmentSrc = [
+        '// PixiShader Fragment Shader.',
+        'precision lowp float;',
+        'varying vec2 vTextureCoord;',
+        'varying vec4 vColor;',
+        'varying float vTextureIndex;',
+        'uniform sampler2D uSamplerArray[' + MAX_TEXTURES + '];',
+        'void main(void) {',
+        dynamicIfs,
+        '\telse gl_FragColor = texture2D(uSamplerArray[0], vTextureCoord) * vColor;',
+        '}'
+    ];
 
     var program = PIXI.compileProgram(gl, this.vertexSrc || PIXI.PixiShader.defaultVertexSrc, this.fragmentSrc);
 
     gl.useProgram(program);
 
     // get and store the uniforms for the shader
-    this.uSampler = gl.getUniformLocation(program, 'uSampler');
+    //this.uSampler = gl.getUniformLocation(program, 'uSampler');
+    this.uSamplerArray = gl.getUniformLocation(program, 'uSamplerArray[0]');
     this.projectionVector = gl.getUniformLocation(program, 'projectionVector');
     this.offsetVector = gl.getUniformLocation(program, 'offsetVector');
     this.dimensions = gl.getUniformLocation(program, 'dimensions');
@@ -105,6 +116,18 @@ PIXI.PixiShader.prototype.init = function()
     this.aVertexPosition = gl.getAttribLocation(program, 'aVertexPosition');
     this.aTextureCoord = gl.getAttribLocation(program, 'aTextureCoord');
     this.colorAttribute = gl.getAttribLocation(program, 'aColor');
+    this.aTextureIndex = gl.getAttribLocation(program, 'aTextureIndex');
+
+    var indices = [];
+    for (var i = 0; i < MAX_TEXTURES; ++i) {
+        indices.push(i);
+    }
+    // NOTE:!!!
+    // If textures are not bound
+    // then we'll get a bunch of warnings like:
+    // "WARNING: there is no texture bound to the unit X"
+    // Don't be scared, everything will be alright.
+    gl.uniform1iv(this.uSamplerArray, indices);
 
     // Begin worst hack eva //
 
@@ -155,6 +178,7 @@ PIXI.PixiShader.prototype.initUniforms = function()
 
         if (type === 'sampler2D')
         {
+            debugger;
             uniform._init = false;
 
             if (uniform.value !== null)
