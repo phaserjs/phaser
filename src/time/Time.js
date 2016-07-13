@@ -403,7 +403,6 @@ Phaser.Time.prototype = {
         // elapsed time between previous call and now - this could be a high resolution value
         this.elapsed = this.now - this.prevTime;
 
-        /*
         if (this.game.raf._isSetTimeOut)
         {
             // console.log('Time isSet', this._desiredFps, 'te', this.timeExpected, 'time', time);
@@ -416,7 +415,6 @@ Phaser.Time.prototype = {
 
             // console.log('Time expect', this.timeExpected);
         }
-        */
 
         if (this.advancedTiming)
         {

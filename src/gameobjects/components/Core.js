@@ -101,9 +101,6 @@ Phaser.Component.Core.preUpdate = function () {
     this.previousPosition.set(this.world.x, this.world.y);
     this.previousRotation = this.rotation;
 
-    //  TEST
-    this.prevPosition.set(this.worldPosition.x, this.worldPosition.y);
-
     if (!this.exists || !this.parent.exists)
     {
         this.renderOrderID = -1;
