@@ -112,6 +112,7 @@ EOL;
 
     <script src="$path/src/geom/Circle.js"></script>
     <script src="$path/src/geom/Ellipse.js"></script>
+    <script src="$path/src/geom/Hermite.js"></script>
     <script src="$path/src/geom/Line.js"></script>
     <script src="$path/src/geom/Matrix.js"></script>
     <script src="$path/src/geom/Point.js"></script>
@@ -202,6 +203,12 @@ EOL;
 
     <script src="$path/src/plugins/weapon/WeaponPlugin.js"></script>
     <script src="$path/src/plugins/weapon/Bullet.js"></script>
+
+    <script src="$path/src/plugins/path/PathManagerPlugin.js"></script>
+    <script src="$path/src/plugins/path/Path.js"></script>
+    <script src="$path/src/plugins/path/PathFollower.js"></script>
+    <script src="$path/src/plugins/path/PathPoint.js"></script>
+    <script src="$path/src/plugins/path/EventTarget.js"></script>
 
 EOL;
 
@@ -296,10 +303,10 @@ EOL;
     }
 
     echo <<<EOL
-    <script src="$path/src/system/Device.js"></script>
-    <script src="$path/src/system/DOM.js"></script>
-    <script src="$path/src/system/Canvas.js"></script>
-    <script src="$path/src/system/RequestAnimationFrame.js"></script>
+    <script src="$path/src/utils/Device.js"></script>
+    <script src="$path/src/utils/DOM.js"></script>
+    <script src="$path/src/utils/Canvas.js"></script>
+    <script src="$path/src/utils/RequestAnimationFrame.js"></script>
 
     <script src="$path/src/math/Math.js"></script>
     <script src="$path/src/math/RandomDataGenerator.js"></script>
