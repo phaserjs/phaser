@@ -119,7 +119,7 @@ PIXI.PixiShader.prototype.init = function()
     this.aTextureIndex = gl.getAttribLocation(program, 'aTextureIndex');
 
     var indices = [];
-    for (var i = 0; i < MAX_TEXTURES; ++i) {
+    for (var i = 0; i < /*MAX_TEXTURES*/2; ++i) {
         indices.push(i);
     }
     // NOTE:!!!

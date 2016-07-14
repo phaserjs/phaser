@@ -358,6 +358,7 @@ PIXI.WebGLRenderer.prototype.updateTexture = function(texture)
     {
         texture._glTextures[gl.id] = gl.createTexture();
     }
+    gl.activeTexture(gl.TEXTURE0 + texture.textureIndex);
 
     gl.bindTexture(gl.TEXTURE_2D, texture._glTextures[gl.id]);
 

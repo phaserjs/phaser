@@ -281,7 +281,9 @@ PIXI.WebGLSpriteBatch.prototype.render = function(sprite, matrix)
     }
 
     var i = this.currentBatchSize * 4 * this.vertSize;
+    var tiOffset = this.currentBatchSize * 4;
     var resolution = texture.baseTexture.resolution;
+    var textureIndex = texture.baseTexture.textureIndex;
 
     var a = wt.a / resolution;
     var b = wt.b / resolution;
@@ -292,6 +294,7 @@ PIXI.WebGLSpriteBatch.prototype.render = function(sprite, matrix)
 
     var colors = this.colors;
     var positions = this.positions;
+    var textureIndices = this.textureIndices;
 
     if (this.renderSession.roundPixels)
     {
@@ -345,6 +348,12 @@ PIXI.WebGLSpriteBatch.prototype.render = function(sprite, matrix)
     // uv
     positions[i+17] = uvs.x3;
     positions[i+18] = uvs.y3;
+
+    // Setup texture index
+    textureIndices[tiOffset + 0] = textureIndex;
+    textureIndices[tiOffset + 1] = textureIndex;
+    textureIndices[tiOffset + 2] = textureIndex;
+    textureIndices[tiOffset + 3] = textureIndex;
 
     // color and alpha
     var tint = sprite.tint;
@@ -503,14 +512,19 @@ PIXI.WebGLSpriteBatch.prototype.flush = function()
     {
         this.dirty = false;
 
+        shader = this.defaultShader.shaders[gl.id];
+        
         // bind the main texture
         gl.activeTexture(gl.TEXTURE0);
+
+        // bind and fill texture index buffer
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.texIndexBuffer);
+        gl.enableVertexAttribArray(shader.aTextureIndex);
+        gl.vertexAttribPointer(shader.aTextureIndex, 1, gl.FLOAT, gl.FALSE, 0, 0);
 
         // bind the buffers
         gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
-
-        shader = this.defaultShader.shaders[gl.id];
 
         // this is the same for each shader?
         var stride = this.vertSize * 4;
@@ -520,9 +534,7 @@ PIXI.WebGLSpriteBatch.prototype.flush = function()
         // color attributes will be interpreted as unsigned bytes and normalized
         gl.vertexAttribPointer(shader.colorAttribute, 4, gl.UNSIGNED_BYTE, true, stride, 4 * 4);
 
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.texIndexBuffer);
-        gl.enableVertexAttribArray(shader.aTextureIndex);
-        gl.vertexAttribPointer(shader.aTextureIndex, 1, gl.FLOAT, gl.FALSE, 0, 0);
+       
     }
 
     // upload the verts to the buffer  
@@ -532,6 +544,11 @@ PIXI.WebGLSpriteBatch.prototype.flush = function()
     }
     else
     {
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.texIndexBuffer);
+        var texIndices = this.textureIndices.subarray(0, this.currentBatchSize * 4);
+        gl.bufferSubData(gl.ARRAY_BUFFER, 0, texIndices);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
         var view = this.positions.subarray(0, this.currentBatchSize * 4 * this.vertSize);
         gl.bufferSubData(gl.ARRAY_BUFFER, 0, view);
     }
@@ -547,6 +564,7 @@ PIXI.WebGLSpriteBatch.prototype.flush = function()
     var blendSwap = false;
     var shaderSwap = false;
     var sprite;
+    var textureIndex = 0;
 
     for (var i = 0, j = this.currentBatchSize; i < j; i++) {
         
@@ -560,7 +578,6 @@ PIXI.WebGLSpriteBatch.prototype.flush = function()
         {
             nextTexture = sprite.texture.baseTexture;
         }
-
         nextBlendMode = sprite.blendMode;
         nextShader = sprite.shader || this.defaultShader;
 
@@ -574,7 +591,7 @@ PIXI.WebGLSpriteBatch.prototype.flush = function()
             skip = false;
         }
 
-        if ((currentBaseTexture !== nextTexture && !skip) || blendSwap || shaderSwap)
+        if ((/*currentBaseTexture !== nextTexture &&*/ !skip) || blendSwap || shaderSwap)
         {
             this.renderBatch(currentBaseTexture, batchSize, start);
 
@@ -661,6 +678,8 @@ PIXI.WebGLSpriteBatch.prototype.renderBatch = function(texture, size, startIndex
     }
     else
     {
+        gl.activeTexture(gl.TEXTURE0 + texture.textureIndex);
+        //console.log(texture.textureIndex);
         // bind the current texture
         gl.bindTexture(gl.TEXTURE_2D, texture._glTextures[gl.id]);
     }
