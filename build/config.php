@@ -112,6 +112,7 @@ EOL;
 
     <script src="$path/src/geom/Circle.js"></script>
     <script src="$path/src/geom/Ellipse.js"></script>
+    <script src="$path/src/geom/Hermite.js"></script>
     <script src="$path/src/geom/Line.js"></script>
     <script src="$path/src/geom/Matrix.js"></script>
     <script src="$path/src/geom/Point.js"></script>
@@ -134,7 +135,6 @@ EOL;
     <script src="$path/src/core/FlexGrid.js"></script>
     <script src="$path/src/core/FlexLayer.js"></script>
     <script src="$path/src/core/ScaleManager.js"></script>
-    <script src="$path/src/core/MainLoop.js"></script>
     <script src="$path/src/core/Game.js"></script>
 
     <script src="$path/src/input/Input.js"></script>
@@ -203,6 +203,12 @@ EOL;
 
     <script src="$path/src/plugins/weapon/WeaponPlugin.js"></script>
     <script src="$path/src/plugins/weapon/Bullet.js"></script>
+
+    <script src="$path/src/plugins/path/PathManagerPlugin.js"></script>
+    <script src="$path/src/plugins/path/Path.js"></script>
+    <script src="$path/src/plugins/path/PathFollower.js"></script>
+    <script src="$path/src/plugins/path/PathPoint.js"></script>
+    <script src="$path/src/plugins/path/EventTarget.js"></script>
 
 EOL;
 

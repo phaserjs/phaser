@@ -145,16 +145,10 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this.isRunning = false;
 
     /**
-    * @property {Phaser.MainLoop} mainloop - Automatically handles the core game loop via requestAnimationFrame or setTimeout.
-    * @protected
-    */
-    this.mainloop = null;
-
-    /**
     * @property {Phaser.RequestAnimationFrame} raf - Automatically handles the core game loop via requestAnimationFrame or setTimeout
     * @protected
     */
-    // this.raf = null;
+    this.raf = null;
 
     /**
     * @property {Phaser.GameObjectFactory} add - Reference to the Phaser.GameObjectFactory.
@@ -589,7 +583,6 @@ Phaser.Game.prototype = {
 
         this.isRunning = true;
 
-        /*
         if (this.config && this.config['forceSetTimeOut'])
         {
             this.raf = new Phaser.RequestAnimationFrame(this, this.config['forceSetTimeOut']);
@@ -600,7 +593,6 @@ Phaser.Game.prototype = {
         }
 
         this._kickstart = true;
-        */
 
         if (window['focus'])
         {
@@ -610,11 +602,7 @@ Phaser.Game.prototype = {
             }
         }
 
-        this.mainloop = new Phaser.MainLoop(this);
-
-        this.mainloop.start();
-
-        // this.raf.start();
+        this.raf.start();
 
     },
 

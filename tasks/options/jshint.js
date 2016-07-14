@@ -6,6 +6,7 @@ module.exports = {
             '!src/Intro.js',
             '!src/Outro.js',
             '!src/pixi/**/*',
+            '!src/plugins/path/*.js',
             '!src/physics/p2/p2.js',
             '!src/animation/creature/gl-matrix.js',
             '!src/animation/creature/CreatureMeshBone.js',
