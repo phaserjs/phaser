@@ -104,13 +104,13 @@ Phaser.Hermite = function (p1x, p1y, p2x, p2y, v1x, v1y, v2x, v2y, accuracy) {
     * @property {Phaser.Point} _temp1 - A local cached Point object.
     * @private
     */
-    this._temp1 = new Phaser.Point;
+    this._temp1 = new Phaser.Point();
 
     /**
     * @property {Phaser.Point} _temp2 - A local cached Point object.
     * @private
     */
-    this._temp2 = new Phaser.Point;
+    this._temp2 = new Phaser.Point();
 
     this.recalculate();
 
@@ -229,8 +229,8 @@ Phaser.Hermite.prototype = {
 
             if (t > 1)
             {
-                t = 1;  
-            } 
+                t = 1;
+            }
         }
 
         var t2 = t * t;
@@ -262,8 +262,8 @@ Phaser.Hermite.prototype = {
 
             if (t > 1)
             {
-                t = 1;  
-            } 
+                t = 1;
+            }
         }
 
         var t2 = t * t;
@@ -293,8 +293,8 @@ Phaser.Hermite.prototype = {
 
         if (t > 1)
         {
-            t = 1;  
-        } 
+            t = 1;
+        }
 
         var t2 = t * t;
         var t3 = t * t2;
@@ -344,8 +344,8 @@ Phaser.Hermite.prototype = {
 
         if (t === undefined) { t = 0; }
 
-        this.getPoint(t - .01, this._temp1);
-        this.getPoint(t + .01, this._temp2);
+        this.getPoint(t - 0.01, this._temp1);
+        this.getPoint(t + 0.01, this._temp2);
 
         return Math.atan2(this._temp2.y - this._temp1.y, this._temp2.x - this._temp1.x);
 
