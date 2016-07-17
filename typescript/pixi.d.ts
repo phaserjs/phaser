@@ -484,9 +484,7 @@ declare module PIXI {
         y: number;
 
         click(e: InteractionData): void;
-        displayObjectUpdateTransform(): void;
-        getBounds(matrix?: Matrix): Rectangle;
-        getLocalBounds(): Rectangle;
+        displayObjectUpdateTransform(targetCoordinateSpace?: PIXI.DisplayObject): void
         generateTexture(resolution?: number, scaleMode?: number, renderer?: PixiRenderer | number): RenderTexture;
         mousedown(e: InteractionData): void;
         mouseout(e: InteractionData): void;
@@ -521,7 +519,7 @@ declare module PIXI {
 
         addChild(child: DisplayObject): DisplayObject;
         addChildAt(child: DisplayObject, index: number): DisplayObject;
-        getBounds(): Rectangle;
+        getBounds(targetCoordinateSpace?: PIXI.DisplayObject | Matrix): Rectangle;
         getChildAt(index: number): DisplayObject;
         getChildIndex(child: DisplayObject): number;
         getLocalBounds(): Rectangle;

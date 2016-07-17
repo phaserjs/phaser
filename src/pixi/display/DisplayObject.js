@@ -313,21 +313,21 @@ PIXI.DisplayObject.prototype = {
     * the new, updated, worldTransform property, along with the parent transform used.
     *
     * @method PIXI.DisplayObject#updateTransform
-    * @param {PIXI.DisplayObject} [parent] - Optional parent to calculate this DisplayObjects transform from.
-    * @return {PIXI.DisplayObject} - A reference to this DisplayObject.
+    * @param {PIXI.DisplayObject} [targetCoordinateSpace] Optional targetCoordinateSpace to calculate this DisplayObjects transform from.
+    * @return {PIXI.DisplayObject} A reference to this DisplayObject.
     */
-    updateTransform: function (parent) {
+    updateTransform: function (targetCoordinateSpace) {
 
-        if (!parent && !this.parent && !this.game)
+        if (!targetCoordinateSpace && !this.parent && !this.game)
         {
             return this;
         }
 
         var p = this.parent;
 
-        if (parent)
+        if (targetCoordinateSpace)
         {
-            p = parent;
+            p = targetCoordinateSpace;
         }
         else if (!this.parent)
         {

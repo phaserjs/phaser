@@ -796,9 +796,7 @@ declare module PIXI {
         y: number;
 
         click(e: InteractionData): void;
-        displayObjectUpdateTransform(): void;
-        getBounds(matrix?: Matrix): Rectangle;
-        getLocalBounds(): Rectangle;
+        displayObjectUpdateTransform(targetCoordinateSpace?: PIXI.DisplayObject): void;
         generateTexture(resolution?: number, scaleMode?: number, renderer?: PixiRenderer | number): RenderTexture;
         mousedown(e: InteractionData): void;
         mouseout(e: InteractionData): void;
@@ -818,7 +816,7 @@ declare module PIXI {
         touchendoutside(e: InteractionData): void;
         touchstart(e: InteractionData): void;
         touchmove(e: InteractionData): void;
-        updateTransform(parent?: PIXI.DisplayObjectContainer): void;
+        updateTransform(targetCoordinateSpace?: PIXI.DisplayObject): void;
 
     }
 
@@ -881,9 +879,10 @@ declare module PIXI {
 
         /**
         * Retrieves the bounds of the displayObjectContainer as a rectangle. The bounds calculation takes all visible children into consideration.
+        * @param targetCoordinateSpace The targetCoordinateSpace to calculate the bounds from.
         * @return The rectangular bounding area
         */
-        getBounds(): Rectangle;
+        getBounds(targetCoordinateSpace?: PIXI.DisplayObject | Matrix): Rectangle;
 
         /**
         * Returns the child at the specified index

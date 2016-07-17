@@ -49,7 +49,7 @@ PIXI.DisplayObjectContainer.prototype.constructor = PIXI.DisplayObjectContainer;
 Object.defineProperty(PIXI.DisplayObjectContainer.prototype, 'width', {
 
     get: function() {
-        return this.scale.x * this.getLocalBounds().width;
+        return this.getLocalBounds().width;
     },
 
     set: function(value) {
@@ -78,7 +78,7 @@ Object.defineProperty(PIXI.DisplayObjectContainer.prototype, 'width', {
 Object.defineProperty(PIXI.DisplayObjectContainer.prototype, 'height', {
 
     get: function() {
-        return  this.scale.y * this.getLocalBounds().height;
+        return this.getLocalBounds().height;
     },
 
     set: function(value) {
@@ -290,16 +290,17 @@ PIXI.DisplayObjectContainer.prototype.removeChildren = function(beginIndex, endI
  * Updates the transform on all children of this container for rendering
  *
  * @method updateTransform
+ * @param {PIXI.DisplayObject} [targetCoordinateSpace] Optional targetCoordinateSpace to calculate this DisplayObjects transform from.
  * @private
  */
-PIXI.DisplayObjectContainer.prototype.updateTransform = function()
+PIXI.DisplayObjectContainer.prototype.updateTransform = function (targetCoordinateSpace)
 {
     if (!this.visible)
     {
         return;
     }
 
-    this.displayObjectUpdateTransform();
+    this.displayObjectUpdateTransform(targetCoordinateSpace);
 
     if (this._cacheAsBitmap)
     {
@@ -319,16 +320,43 @@ PIXI.DisplayObjectContainer.prototype.displayObjectContainerUpdateTransform = PI
  * Retrieves the bounds of the displayObjectContainer as a rectangle. The bounds calculation takes all visible children into consideration.
  *
  * @method getBounds
+ * @param {PIXI.DisplayObject | PIXI.Matrix} [targetCoordinateSpace]
  * @return {Rectangle} The rectangular bounding area
  */
-PIXI.DisplayObjectContainer.prototype.getBounds = function()
+PIXI.DisplayObjectContainer.prototype.getBounds = function (targetCoordinateSpace)
 {
     if (this.children.length === 0)
     {
         return PIXI.EmptyRectangle;
     }
 
-    this.updateTransform();
+    var isTargetCoordinateSpaceDisplayObject = targetCoordinateSpace && targetCoordinateSpace instanceof PIXI.DisplayObject;
+    var i;
+
+    if (isTargetCoordinateSpaceDisplayObject)
+    {
+        var matrixCache = this.worldTransform;
+
+        this.worldTransform = new PIXI.Matrix();
+
+        for (i = 0; i < this.children.length; i++)
+        {
+            this.children[i].updateTransform();
+        }
+
+        var targetCoordinateSpaceMatrixCache = targetCoordinateSpace.worldTransform;
+        targetCoordinateSpace.worldTransform = PIXI.identityMatrix;
+    }
+
+    if (!isTargetCoordinateSpaceDisplayObject || isTargetCoordinateSpaceDisplayObject && targetCoordinateSpace !== this)
+    {
+        this.updateTransform(targetCoordinateSpace);
+    }
+
+    if (isTargetCoordinateSpaceDisplayObject)
+    {
+        targetCoordinateSpace.worldTransform = targetCoordinateSpaceMatrixCache;
+    }
 
     var minX = Infinity;
     var minY = Infinity;
@@ -342,7 +370,7 @@ PIXI.DisplayObjectContainer.prototype.getBounds = function()
 
     var childVisible = false;
 
-    for (var i = 0; i < this.children.length; i++)
+    for (i = 0; i < this.children.length; i++)
     {
         var child = this.children[i];
         
@@ -363,6 +391,16 @@ PIXI.DisplayObjectContainer.prototype.getBounds = function()
 
         maxX = maxX > childMaxX ? maxX : childMaxX;
         maxY = maxY > childMaxY ? maxY : childMaxY;
+    }
+
+    if (isTargetCoordinateSpaceDisplayObject)
+    {
+        this.worldTransform = matrixCache;
+
+        for (i = 0; i < this.children.length; i++)
+        {
+            this.children[i].updateTransform();
+        }
     }
 
     if (!childVisible)
@@ -388,25 +426,7 @@ PIXI.DisplayObjectContainer.prototype.getBounds = function()
  */
 PIXI.DisplayObjectContainer.prototype.getLocalBounds = function()
 {
-    var matrixCache = this.worldTransform;
-
-    this.worldTransform = PIXI.identityMatrix;
-
-    for (var i = 0; i < this.children.length; i++)
-    {
-        this.children[i].updateTransform();
-    }
-
-    var bounds = this.getBounds();
-
-    this.worldTransform = matrixCache;
-	
-    for (i = 0; i < this.children.length; i++)
-    {
-        this.children[i].updateTransform();
-    }	
-
-    return bounds;
+    return this.getBounds(this.parent);
 };
 
 /**
