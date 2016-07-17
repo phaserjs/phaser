@@ -5606,7 +5606,7 @@ declare module Phaser {
         createBullets(quantity?: number, key?: any, frame?: any, group?: Phaser.Group): Phaser.Weapon;
         debug(x?: number, y?: number, debugBodies?: boolean): void;
         destroy(): void;
-        fire(from: any, x?: number, y?: number): boolean;
+        fire(from?: any, x?: number, y?: number): boolean;
         fireAtPointer(pointer: Phaser.Pointer): boolean;
         fireAtSprite(sprite: Phaser.Sprite): boolean;
         fireAtXY(x: number, y: number): boolean;
