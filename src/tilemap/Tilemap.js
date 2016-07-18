@@ -636,7 +636,14 @@ Phaser.Tilemap.prototype = {
     },
 
     /**
-    * Creates a new internal layer on this Tilemap. By default TilemapLayers are fixed to the camera.
+    * Creates a new internal layer on this Tilemap.
+    * Internal layers are used when a Tilemap contains multiple Tilesets with different sized tiles.  The tilesets
+    * each get a separate layer which is only ever referenced internally by the renderer.  This approach permits us
+    * to handle large tiles at screen edges, and with the correct offset relative to the 'base' tileset regardless
+    * of size differences between the tiles.
+    * For WebGl rendering, this approach also permits us to batch the drawing calls efficiently.
+    * 
+    * By default TilemapLayers are fixed to the camera.
     *
     * @method Phaser.Tilemap#createBlankLayer
     * @param {string} name - The name of this layer. Must be unique within the map.
