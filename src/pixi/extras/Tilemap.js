@@ -23,10 +23,6 @@ PIXI.Tilemap = function(texture, mapwidth, mapheight, tilewidth, tileheight, lay
     this.mapWide = mapwidth;
     this.mapHigh = mapheight;
 
-    // precalculate the width of the source texture in entire tile units
-    this.texTilesWide = Math.ceil(this.texture.width / this.tileWide);
-    this.texTilesHigh = Math.ceil(this.texture.height / this.tileHigh);
-
     // TODO: switch here to create DisplayObjectContainer at correct size for the render mode
     this.width = this.mapWide * this.tileWide;
     this.height = this.mapHigh * this.tileHigh;
@@ -60,18 +56,29 @@ PIXI.Tilemap = function(texture, mapwidth, mapheight, tilewidth, tileheight, lay
      */
     this.blendMode = PIXI.blendModes.NORMAL;
 
-    // calculate size of map
-    var mapSize = mapwidth * mapheight * 16;
+    /**
+     * The size of a single data element in the batch drawing.
+     * Each tile requires two triangles, each specified as:
+     * float left, bottom, right, top - screen coordinates
+     * float u, v, wide, high - source texture coordinates
+     *
+     * @type {Number}
+     */
+    this.batchDataElement = 16;
+
+    // calculate total batch data size
+    var dataSize = mapwidth * mapheight * this.batchDataElement;
 
     // create buffer data for the webgl rendering of this tile
-    this.buffer = new PIXI.Float32Array( mapSize );
+    this.buffer = new PIXI.Float32Array( dataSize );
 };
 
 
-// constructor
+// constructor, this class extends PIXI.DisplayObjectContainer
 PIXI.Tilemap.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
 PIXI.Tilemap.prototype.constructor = PIXI.Tilemap;
 
+// unused methods overridden to prevent default behaviour
 PIXI.Tilemap.prototype.update = function() {};
 PIXI.Tilemap.prototype.postUpdate = function() {};
 
@@ -85,6 +92,7 @@ PIXI.Tilemap.prototype._renderWebGL = function(renderSession)
         return;
     }
 
+    // stop current render session batch drawing
     renderSession.spriteBatch.stop();
 
     if (!this._vertexBuffer)
@@ -96,6 +104,7 @@ PIXI.Tilemap.prototype._renderWebGL = function(renderSession)
 
     this._renderWholeTilemap(renderSession);
 
+    // restart batch drawing now that this Tile layer has been rendered
     renderSession.spriteBatch.start();
 };
 
@@ -117,44 +126,6 @@ PIXI.Tilemap.prototype._initWebGL = function(renderSession)
     gl.bufferData( gl.ARRAY_BUFFER, this.buffer, gl.STATIC_DRAW );
 };
 
-
-PIXI.Tilemap.prototype.makeProjection = function(_width, _height)
-{
-  // project coordinates into a 2x2 number range, starting at (-1, 1)
-  var m = new PIXI.Float32Array(9);
-  m[0] = 2 / _width;
-  m[1] = 0;
-  m[2] = 0;
-
-  m[3] = 0;
-  m[4] = -2 / _height;
-  m[5] = 0;
-  
-  m[6] = -1;
-  m[7] = 1;
-  m[8] = 1;
-  return m;
-};
-
-
-/*
-PIXI.Tilemap.prototype.makeTransform = function(_x, _y, _angleInRadians, _scaleX, _scaleY)
-{
-  var c = Math.cos( _angleInRadians );
-  var s = Math.sin( _angleInRadians );
-  var m = new Float32Array(9);
-  m[0] = c * _scaleX;
-  m[1] = -s * _scaleY;
-  m[2] = 0;
-  m[3] = s * _scaleX;
-  m[4] = c * _scaleY;
-  m[5] = 0;
-  m[6] = _x;
-  m[7] = _y;
-  m[8] = 1;
-  return m;
-};
-*/
 
 PIXI.Tilemap.prototype._renderBatch = function( renderSession )
 {
@@ -203,6 +174,7 @@ PIXI.Tilemap.prototype._renderBatch = function( renderSession )
       {
         // insert a degenerate triangle when null is found in the list of batch objects
         degenerate = true;
+        // skip to end of loop, degenerate will be inserted when no more null objects are found
         continue;
       }
 
@@ -228,7 +200,7 @@ PIXI.Tilemap.prototype._renderBatch = function( renderSession )
         buffer[ c + 2 ] = buffer[ c + 6 ] = uvl;
         buffer[ c + 3 ] = buffer[ c + 7 ] = uvt;
 
-        // advance the buffer index
+        // advance the buffer index for one single degenerate triangle
         c += 8;
         degenerate = false;
       }
@@ -249,6 +221,7 @@ PIXI.Tilemap.prototype._renderBatch = function( renderSession )
       c += 16;
     }
 
+    // if there's anything to draw...
     if ( c > 0 )
     {
       var shader = renderSession.shaderManager.tilemapShader;
@@ -265,8 +238,6 @@ PIXI.Tilemap.prototype._renderBatch = function( renderSession )
   }
 };
 
-//  gl.uniformMatrix3fv( shader.uProjectionMatrix, false, this.makeProjection(this.game.width, this.game.height) );
-//  gl.uniform1i( shader.uImageSampler, 0 );
 
 /**
  * render the entire tilemap using a fast webgl batched tile render
