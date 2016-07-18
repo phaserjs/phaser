@@ -154,11 +154,11 @@ Phaser.Tileset.prototype = {
     },
 
     /**
-    * Draws a tile from this Tileset at the given coordinates.
+    * Draws a tile from this Tileset at the given coordinates using a WebGl renderer.
     *
-    * @method Phaser.Tileset#draw
+    * @method Phaser.Tileset#drawGl
     * @public
-    * @param {Array} glBatch - A list of webgl batch objects to draw later.
+    * @param out {Array} glBatch - A list of webgl batch objects to draw later.
     * @param {number} x - The x coordinate to draw to.
     * @param {number} y - The y coordinate to draw to.
     * @param {integer} index - The index of the tile within the set to draw.
@@ -190,7 +190,7 @@ Phaser.Tileset.prototype = {
     },
 
     /**
-     * adds a marker for the batch display to insert a degenerate triangle (eg. at the end of each row of tiles)
+     * adds a marker for the WebGl batch display to insert a degenerate triangle (eg. at the end of each row of tiles)
      *
      * @param {[type]} glBatch [description]
      */
