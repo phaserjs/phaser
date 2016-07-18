@@ -5,8 +5,13 @@
 */
 
 /**
-* A TilemapLayerGL is a PIXI.Tilemap that renders a specific TileLayer of a Tilemap.
+* A TilemapLayerGL is a PIXI.Tilemap that renders a specific TileLayer of a Tilemap using the PIXI WebGl renderer.
+* NOTE: this is a close duplicate of Phaser.TilemapLayer modified to support WebGl rendering, it may be possible to merge the two classes
+* although that will probably incur performance penalties due to some fundamental differences in the set-up before rendering.
+* Ideally it would be great to make this extend Phaser.TilemapLayer and get access to its methods in that way, however as this needs to
+* extend PIXI.Tilemap, and Phaser.TilemapLayer extends Phaser.DisplayObject.  I can't see a way to achieve that merge.
 *
+* 
 * Since a PIXI.Tilemap is a PIXI.DisplayObjectContainer it can be moved around the display, added to other groups or display objects, etc.
 *
 * By default TilemapLayers have fixedToCamera set to `true`. Changing this will break Camera follow and scrolling behavior.
@@ -234,17 +239,23 @@ Phaser.TilemapLayerGL = function (game, tilemap, index, width, height) {
 
     Phaser.Component.Core.init.call(this, game, 0, 0, null, null);
 
-    // must be called after the Core.init
+    // must be set *after* the Core.init
     this.fixedToCamera = true;
 };
 
+
+// constructor: extends PIXI.Tilemap
 Phaser.TilemapLayerGL.prototype = Object.create(PIXI.Tilemap.prototype);
 Phaser.TilemapLayerGL.prototype.constructor = Phaser.TilemapLayerGL;
 
+
+// only one Phaser component used
 Phaser.Component.Core.install.call(Phaser.TilemapLayerGL.prototype, [
     'FixedToCamera'
 ]);
 
+
+// redirect method prototypes (TODO: not needed?  I'm not sure...)
 Phaser.TilemapLayerGL.prototype.preUpdateCore = Phaser.Component.Core.preUpdate;
 Phaser.TileSprite.prototype.preUpdatePhysics = Phaser.Component.PhysicsBody.preUpdate;
 Phaser.TileSprite.prototype.preUpdateLifeSpan = Phaser.Component.LifeSpan.preUpdate;
@@ -706,45 +717,17 @@ Phaser.TilemapLayerGL.prototype.renderRegion = function (scrollX, scrollY, left,
 
             var index = tile.index;
 
-            // if (tile.alpha !== lastAlpha && !this.debug)
-            // {
-            //     //context.globalAlpha = tile.alpha;
-            //     lastAlpha = tile.alpha;
-            // }
-
             if (tile.rotation || tile.flipped)
             {
-                //context.save();
-                //context.translate(tx + tile.centerX, ty + tile.centerY);
-                //context.rotate(tile.rotation);
-
-                // if (tile.flipped)
-                // {
-                //     context.scale(-1, 1);
-                // }
-
                 this._mc.tileset.drawGl(this.glBatch, -tile.centerX + offx, -tile.centerY + offy, index, tile.alpha);
-                //context.restore();
             }
             else
             {
                 this._mc.tileset.drawGl(this.glBatch, tx + offx, ty + offy, index, tile.alpha);
             }
-            // if (!this._mc.tileset && this.debugSettings.missingImageFill)
-            // {
-            //     context.fillStyle = this.debugSettings.missingImageFill;
-            //     context.fillRect(tx, ty, tw, th);
-            // }
-
-            // if (tile.debug && this.debugSettings.debuggedTileOverfill)
-            // {
-            //     context.fillStyle = this.debugSettings.debuggedTileOverfill;
-            //     context.fillRect(tx, ty, tw, th);
-            // }
-           
         }
 
-        // at end of each row, add a degenerate marker into the batch list
+        // at end of each row, add a degenerate marker into the batch drawing list
         this._mc.tileset.addDegenerate( this.glBatch );
     }
 
