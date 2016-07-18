@@ -26,34 +26,7 @@ Phaser.TilemapParser = {
     INSERT_NULL: false,
 
     /**
-     * A tiled flag that resides within the 32 bit of the object gid and
-     * indicates whether the tiled/object is flipped horizontally.
-     *
-     * @constant
-     * @type {number}
-     */
-    FLIPPED_HORIZONTALLY_FLAG: 0x80000000,
-
-    /**
-     * A tiled flag that resides within the 31 bit of the object gid and
-     * indicates whether the tiled/object is flipped vertically.
-     *
-     * @constant
-     * @type {number}
-     */
-    FLIPPED_VERTICALLY_FLAG: 0x40000000,
-
-    /**
-     * A tiled flag that resides within the 30 bit of the object gid and
-     * indicates whether the tiled/object is flipped diagonally.
-     *
-     * @constant
-     * @type {number}
-     */
-    FLIPPED_DIAGONALLY_FLAG: 0x20000000,
-
-    /**
-    * Parse tilemap data from the cache and creates a Tilemap object.
+    * Parse tilemap data from the cache and creates data for a Tilemap object.
     *
     * @method Phaser.TilemapParser.parse
     * @param {Phaser.Game} game - Game reference to the currently running game.
@@ -62,6 +35,7 @@ Phaser.TilemapParser = {
     * @param {number} [tileHeight=32] - The pixel height of a single map tile. If using CSV data you must specify this. Not required if using Tiled map data.
     * @param {number} [width=10] - The width of the map in tiles. If this map is created from Tiled or CSV data you don't need to specify this.
     * @param {number} [height=10] - The height of the map in tiles. If this map is created from Tiled or CSV data you don't need to specify this.
+    * @param {Phaser.Tilemap} [tileMap=null] - The Phaser.Tilemap this data is created for (used for createLayer to add new layers when mixed tilesets are used).
     * @return {object} The parsed map object.
     */
     parse: function (game, key, tileWidth, tileHeight, width, height) {
@@ -532,8 +506,6 @@ Phaser.TilemapParser = {
                 //  Object Tiles
                 if (curo.objects[v].gid)
                 {
-                    var self = this;
-
                     var object = {
 
                         gid: curo.objects[v].gid,
@@ -541,13 +513,9 @@ Phaser.TilemapParser = {
                         type: curo.objects[v].hasOwnProperty("type") ? curo.objects[v].type : "",
                         x: curo.objects[v].x,
                         y: curo.objects[v].y,
-                        width: curo.objects[v].width,
-                        height: curo.objects[v].height,
                         visible: curo.objects[v].visible,
-                        properties: curo.objects[v].properties,
-                        horizontallyFlipped: curo.objects[v].gid & self.FLIPPED_HORIZONTALLY_FLAG,
-                        verticallyFlipped: curo.objects[v].gid & self.FLIPPED_VERTICALLY_FLAG,
-                        diagonallyFlipped: curo.objects[v].gid & self.FLIPPED_DIAGONALLY_FLAG
+                        properties: curo.objects[v].properties
+
                     };
 
                     if (curo.objects[v].rotation)
@@ -680,10 +648,12 @@ Phaser.TilemapParser = {
         var sid;
         var set;
 
-        // go through each of the map layers
+        // go through each of the map data layers
         for (var i = 0; i < map.layers.length; i++)
         {
             layer = map.layers[i];
+
+            set = null;
 
             // rows of tiles
             for (var j = 0; j < layer.data.length; j++)
@@ -705,12 +675,14 @@ Phaser.TilemapParser = {
                     sid = map.tiles[tile.index][2];
                     set = map.tilesets[sid];
 
+
                     // if that tile type has any properties, add them to the tile object
 
                     if (set.tileProperties && set.tileProperties[tile.index - set.firstgid])
                     {
                         tile.properties = Phaser.Utils.mixin(set.tileProperties[tile.index - set.firstgid], tile.properties);
                     }
+
                 }
             }
         }

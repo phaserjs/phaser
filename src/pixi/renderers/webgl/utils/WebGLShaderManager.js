@@ -67,6 +67,9 @@ PIXI.WebGLShaderManager.prototype.setContext = function(gl)
     // the next one is used for rendering triangle strips
     this.stripShader = new PIXI.StripShader(gl);
 
+    // shader for batch drawing tilemap tiles as a set of triangle strips with degenerate triangles between them
+    this.tilemapShader = new PIXI.TilemapShader(gl);
+
     this.setShader(this.defaultShader);
 };
 
@@ -153,6 +156,8 @@ PIXI.WebGLShaderManager.prototype.destroy = function()
     this.fastShader.destroy();
 
     this.stripShader.destroy();
+
+    this.tilemapShader.destroy();
 
     this.gl = null;
 };
