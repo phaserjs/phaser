@@ -35,7 +35,6 @@ Phaser.TilemapParser = {
     * @param {number} [tileHeight=32] - The pixel height of a single map tile. If using CSV data you must specify this. Not required if using Tiled map data.
     * @param {number} [width=10] - The width of the map in tiles. If this map is created from Tiled or CSV data you don't need to specify this.
     * @param {number} [height=10] - The height of the map in tiles. If this map is created from Tiled or CSV data you don't need to specify this.
-    * @param {Phaser.Tilemap} [tileMap=null] - The Phaser.Tilemap this data is created for (used for createLayer to add new layers when mixed tilesets are used).
     * @return {object} The parsed map object.
     */
     parse: function (game, key, tileWidth, tileHeight, width, height) {

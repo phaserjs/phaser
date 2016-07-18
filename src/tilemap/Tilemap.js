@@ -601,8 +601,6 @@ Phaser.Tilemap.prototype = {
         if (height === undefined) { height = this.game.height; }
         if (group === undefined) { group = this.game.world; }
 
-        console.log("Tilemap.createLayer", layer, width, height);
-
         var index = layer;
 
         if (typeof layer === 'string')
@@ -636,15 +634,17 @@ Phaser.Tilemap.prototype = {
 
     /**
     * Creates a new internal layer on this Tilemap.
+    * 
     * Internal layers are used when a Tilemap contains multiple Tilesets with different sized tiles.  The tilesets
     * each get a separate layer which is only ever referenced internally by the renderer.  This approach permits us
     * to handle large tiles at screen edges, and with the correct offset relative to the 'base' tileset regardless
     * of size differences between the tiles.
-    * For WebGl rendering, this approach also permits us to batch the drawing calls efficiently.
+    * 
+    * For WebGL rendering, this approach also permits us to batch the drawing calls efficiently.
     * 
     * By default TilemapLayers are fixed to the camera.
     *
-    * @method Phaser.Tilemap#createBlankLayer
+    * @method Phaser.Tilemap#createInternalLayer
     * @param {string} name - The name of this layer. Must be unique within the map.
     * @param {Phaser.Tileset} tileset - The tileset whose data is to be added to this layer.
     * @param {number} width - The width of the layer in tiles.
@@ -655,8 +655,6 @@ Phaser.Tilemap.prototype = {
     * @return {Phaser.TilemapLayer} The TilemapLayer object. This is an extension of Phaser.Image and can be moved around the display list accordingly.
     */
     createInternalLayer: function (name, tileset, width, height, tileWidth, tileHeight, group) {
-
-        console.log("Tilemap.createInternalLayer", name, width, height);
 
         if (group === undefined) { group = this.game.world; }
 
@@ -762,8 +760,6 @@ Phaser.Tilemap.prototype = {
     * @return {Phaser.TilemapLayer} The TilemapLayer object. This is an extension of Phaser.Image and can be moved around the display list accordingly.
     */
     createBlankLayer: function (name, width, height, tileWidth, tileHeight, group) {
-
-        console.log("Tilemap.createBlankLayer", name, width, height);
 
         if (group === undefined) { group = this.game.world; }
 

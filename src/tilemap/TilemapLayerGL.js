@@ -5,14 +5,12 @@
 */
 
 /**
-* A TilemapLayerGL is a PIXI.Tilemap that renders a specific TileLayer of a Tilemap using the PIXI WebGl renderer.
-* NOTE: this is a close duplicate of Phaser.TilemapLayer modified to support WebGl rendering, it may be possible to merge the two classes
-* although that will probably incur performance penalties due to some fundamental differences in the set-up before rendering.
-* Ideally it would be great to make this extend Phaser.TilemapLayer and get access to its methods in that way, however as this needs to
-* extend PIXI.Tilemap, and Phaser.TilemapLayer extends Phaser.DisplayObject.  I can't see a way to achieve that merge.
-*
+* A TilemapLayerGL is a PIXI.Tilemap that renders a specific TileLayer of a Tilemap using the PIXI WebGL renderer.
 * 
-* Since a PIXI.Tilemap is a PIXI.DisplayObjectContainer it can be moved around the display, added to other groups or display objects, etc.
+* NOTE: This is a close duplicate of Phaser.TilemapLayer class, modified to support WebGL rendering, it may be possible to merge the two classes
+* although that will probably incur performance penalties due to some fundamental differences in the set-up before rendering.
+* 
+* Since a PIXI.Tilemap is a PIXI.DisplayObjectContainer it can be moved around the display list, added to other groups, or display objects, etc.
 *
 * By default TilemapLayers have fixedToCamera set to `true`. Changing this will break Camera follow and scrolling behavior.
 *
@@ -26,8 +24,6 @@
 * @param {integer} height - Height of the renderable area of the layer (in pixels).
 */
 Phaser.TilemapLayerGL = function (game, tilemap, index, width, height) {
-
-    console.log( "Phaser.TilemapLayerGL", index, width, height);
 
     this.game = game;
 
