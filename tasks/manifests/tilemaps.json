@@ -1,8 +1,11 @@
 [
+    "src/pixi/extras/Tilemap.js",
+    "src/pixi/renderers/webgl/shaders/TilemapShader.js",
     "src/tilemap/ImageCollection.js",
     "src/tilemap/Tile.js",
     "src/tilemap/Tilemap.js",
     "src/tilemap/TilemapLayer.js",
+    "src/tilemap/TilemapLayerGL.js",
     "src/tilemap/TilemapParser.js",
     "src/tilemap/Tileset.js"
 ]
