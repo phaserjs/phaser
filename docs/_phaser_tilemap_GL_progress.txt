@@ -192,3 +192,27 @@ Modified the batch creation code and the batch drawing code to only insert degen
 
 Took a look at the PIXI triangle strip shader and noticed that the alpha is being used as a multiplier on the whole colour vector... I was applying it directly to the .a fourth vector value.  Changed the tilemap shader to match and it's working great now!
 
+
+day eight:
+
+Task list updated:
+- calculate the 'final' alpha by multiplying the layer's worldAlpha with the tile.alpha
+Added a TODO note in Tile.js for the unused 'alpha' property.  It is not currently supported in Canvas or WebGL.  Supporting it in WebGL will require the batch processing to change.  Either we add 'alpha' to the gl data buffer for every tile, and modify the shader to apply it.  Or we need to break the Tiles into two processing groups, those with alpha = 1, and those with other (non-zero) alpha values.
+Both renderers currently support one global alpha value applied to each layer.
+- Add scaling to the shader, use the layer's worldScale.  (See if rotation can be easily supported too, while doing this)
+
+Added a uniform to the tile shader for scale factor.  Set it up and modified the 'blank tilemap.js' example to constantly stretch it between 0.5 and 2.0 in x and y at different speeds.  It looks like it's nearly correct, but the anchor point doesn't match the same test in Canvas mode - which is using the top-left corner as the anchor.
+Yes my current GL version is using the centre of the screen as the anchor point.
+Added a uniform for the centreOffset which is (+1, -1) to offset the WebGL screen space before scaling, then applied it again after scaling to draw things where they should go.  The -1 flips the Y coordinates (Canvas coordinates increase down the screen, WebGL coordinates increase up the screen).
+I'm now seeing the same behaviour in WebGL as we get from the Canvas when a Tilemap is scaled.
+
+I think that's it!  Time to clean it all up...
+
+
+
+
+
+
+
+
+
