@@ -41,12 +41,13 @@ PIXI.TilemapShader = function(gl)
 
     this.vertexSrc = [
         "  precision lowp float;",
-        "  uniform vec2 uScrollOffset;",
+        "  uniform vec2 uCentreOffset;",
+        "  uniform vec2 uScale;",
         "  attribute vec4 aPosition;",
         "  varying vec2 vTexCoord;",
         "  void main(void) {",
         "    gl_Position.zw = vec2(1, 1);",
-        "    gl_Position.xy = aPosition.xy - uScrollOffset;",
+        "    gl_Position.xy = (aPosition.xy + uCentreOffset) * uScale - uCentreOffset;",
         "    vTexCoord = aPosition.zw;",
         "  }"
         ];
@@ -79,11 +80,12 @@ PIXI.TilemapShader.prototype.init = function()
     // get and store the attributes
     this.aPosition = gl.getAttribLocation(program, 'aPosition');
     this.uSampler = gl.getUniformLocation(program, 'uImageSampler');
-    this.uScrollOffset = gl.getUniformLocation(program, 'uScrollOffset');
+    this.uCentreOffset = gl.getUniformLocation(program, 'uCentreOffset');
     this.uAlpha = gl.getUniformLocation(program, 'uAlpha');
+    this.uScale = gl.getUniformLocation(program, 'uScale');
 
     this.attributes = [this.aPosition, this.uSampler];
-    this.uniforms = [this.uScrollOffset, this.uAlpha];
+    this.uniforms = [this.uCentreOffset, this.uAlpha, this.uScale];
 
     this.program = program;
 };
