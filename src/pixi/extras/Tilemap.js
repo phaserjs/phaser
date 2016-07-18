@@ -27,10 +27,6 @@ PIXI.Tilemap = function(texture, mapwidth, mapheight, tilewidth, tileheight, lay
     this.texTilesWide = Math.ceil(this.texture.width / this.tileWide);
     this.texTilesHigh = Math.ceil(this.texture.height / this.tileHigh);
 
-    // proportion of texture used by one tile (uv coordinate scales)
-    this.scalex = this.tileWide / this.texture.width;
-    this.scaley = this.tileHigh / this.texture.height;
-
     // TODO: switch here to create DisplayObjectContainer at correct size for the render mode
     this.width = this.mapWide * this.tileWide;
     this.height = this.mapHigh * this.tileHigh;
@@ -269,10 +265,11 @@ PIXI.Tilemap.prototype._renderBatch = function( renderSession )
   }
 };
 
+//  gl.uniformMatrix3fv( shader.uProjectionMatrix, false, this.makeProjection(this.game.width, this.game.height) );
+//  gl.uniform1i( shader.uImageSampler, 0 );
 
 /**
- * render the entire tilemap, one layer at a time, one tile at a time
- * using a fast webgl tile render
+ * render the entire tilemap using a fast webgl batched tile render
  *
  * @param  {[type]} renderSession [description]
  */
@@ -284,15 +281,16 @@ PIXI.Tilemap.prototype._renderWholeTilemap = function(renderSession)
   renderSession.blendModeManager.setBlendMode(this.blendMode);
 
   // set the uniforms and texture
-  gl.uniformMatrix3fv( shader.uProjectionMatrix, false, this.makeProjection(this.game.width, this.game.height) );
-  gl.uniform1i( shader.uImageSampler, 0 );
-  gl.activeTexture(gl.TEXTURE0);
-  gl.uniform2f(shader.uTileSize, this.tileWide, this.tileHigh);
-  // set the base offset (in screen units) (it's zero, scrolling is now handled by the batch buffer values)
-  gl.uniform2f( shader.uScrollOffset, 0, 0 );
-  //gl.uniform2f( shader.uScrollOffset, this.scrollX * iWide, -this.scrollY * iHigh );
-  gl.uniform1f( shader.uAlpha, this.alpha );
 
+  // set the offset in screen units to the centre of the screen
+  // and flip the GL y coordinate to be zero at the top
+  gl.uniform2f( shader.uCentreOffset, 1, -1 );
+  // alpha value for whole batch
+  gl.uniform1f( shader.uAlpha, this.alpha );
+  // scale factors for whole batch
+  gl.uniform2f( shader.uScale, this.worldScale.x, this.worldScale.y );
+  // source texture unit
+  gl.activeTexture(gl.TEXTURE0);
 
   // check if a texture is dirty..
   if(this.texture.baseTexture._dirty[gl.id])
