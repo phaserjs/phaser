@@ -425,7 +425,7 @@ module.exports = function (grunt) {
 
     });
 
-    grunt.registerTask('build', 'Compile all Phaser versions just to the dist folder', function() {
+    grunt.registerTask('build', 'Compile all Phaser versions just to the temporary dist folder', function() {
 
         grunt.option('exclude', 'ninja,creature');
         grunt.option('filename', 'phaser');
