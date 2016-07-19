@@ -31776,10 +31776,6 @@ Phaser.Stage.prototype.checkVisibility = function () {
     {
         this._hiddenVar = 'webkitvisibilitychange';
     }
-    else if (document.mozHidden !== undefined)
-    {
-        this._hiddenVar = 'mozvisibilitychange';
-    }
     else if (document.msHidden !== undefined)
     {
         this._hiddenVar = 'msvisibilitychange';
