@@ -409,10 +409,13 @@ EOL;
     if ($modules['tilemap'])
     {
         echo <<<EOL
+    <script src="$path/src/pixi/extras/Tilemap.js"></script>
+    <script src="$path/src/pixi/renderers/webgl/shaders/TilemapShader.js"></script>
     <script src="$path/src/tilemap/ImageCollection.js"></script>
     <script src="$path/src/tilemap/Tile.js"></script>
     <script src="$path/src/tilemap/Tilemap.js"></script>
     <script src="$path/src/tilemap/TilemapLayer.js"></script>
+    <script src="$path/src/tilemap/TilemapLayerGL.js"></script>
     <script src="$path/src/tilemap/TilemapParser.js"></script>
     <script src="$path/src/tilemap/Tileset.js"></script>
 

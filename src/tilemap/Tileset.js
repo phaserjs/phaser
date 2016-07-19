@@ -137,6 +137,7 @@ Phaser.Tileset.prototype = {
 
         if (coordIndex >= 0 && (coordIndex + 1) < this.drawCoords.length)
         {
+            // draw the tile on the canvas
             context.drawImage(
                 this.image,
                 this.drawCoords[coordIndex],
@@ -150,6 +151,56 @@ Phaser.Tileset.prototype = {
             );
         }
 
+    },
+
+    /**
+    * Draws a tile from this Tileset at the given coordinates using a WebGl renderer.
+    *
+    * @method Phaser.Tileset#drawGl
+    * @public
+    * @param out {Array} glBatch - A list of webgl batch objects to draw later.
+    * @param {number} x - The x coordinate to draw to.
+    * @param {number} y - The y coordinate to draw to.
+    * @param {integer} index - The index of the tile within the set to draw.
+    * @param {number} alpha - The alpha value to draw this tile with.
+    */
+    drawGl: function (glBatch, x, y, index, alpha) {
+
+        // Correct the tile index for the set and bias for interlacing x/y values
+        var coordIndex = (index - this.firstgid) * 2;
+
+        if (coordIndex >= 0 && (coordIndex + 1) < this.drawCoords.length)
+        {
+            // add the tile to the webgl batch
+            // source and destination coordinates, in pixel units
+            // destination is the centre of the tile
+            glBatch.push( {
+                sx: this.drawCoords[coordIndex],
+                sy: this.drawCoords[coordIndex + 1],
+                sw: this.tileWidth,
+                sh: this.tileHeight,
+                dx: x + this.tileWidth * 0.5,
+                dy: y + this.tileHeight * 0.5,
+                dw: this.tileWidth,
+                dh: this.tileHeight,
+                alpha: alpha
+            } );
+        }
+
+    },
+
+    /**
+     * adds a marker for the WebGl batch display to insert a degenerate triangle (eg. at the end of each row of tiles)
+     *
+     * @param {[type]} glBatch [description]
+     */
+    addDegenerate: function( glBatch )
+    {
+        // don't insert multiple degenerate markers in a row
+        if ( glBatch[ glBatch.length - 1] )
+        {
+            glBatch.push( null );
+        }
     },
 
     /**
