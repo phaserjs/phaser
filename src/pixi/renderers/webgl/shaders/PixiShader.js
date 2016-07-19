@@ -396,7 +396,7 @@ PIXI.PixiShader.prototype.destroy = function()
 * @type String
 */
 PIXI.PixiShader.defaultVertexSrc = [
-    '// Default Vertex Shader',
+    '// PixiShader Vertex Shader',
     '// With multi-texture rendering',
     'attribute vec2 aVertexPosition;',
     'attribute vec2 aTextureCoord;',
