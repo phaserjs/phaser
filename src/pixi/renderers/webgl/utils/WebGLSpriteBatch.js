@@ -139,6 +139,12 @@ PIXI.WebGLSpriteBatch = function () {
      * @type AbstractFilter
      */
     this.defaultShader = null;
+
+    /**
+     * @property textureArray
+     * @type Array
+     */
+    this.textureArray = [];
 };
 
 /**
@@ -146,9 +152,9 @@ PIXI.WebGLSpriteBatch = function () {
  * @param gl {WebGLContext} the current WebGL drawing context
  */
 PIXI.WebGLSpriteBatch.prototype.setContext = function (gl) {
-    var MAX_TEXTURES = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);
+    this.MAX_TEXTURES = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);
     var dynamicIfs = '\tif (vTextureIndex == 0.0) gl_FragColor = texture2D(uSamplerArray[0], vTextureCoord) * vColor;\n'
-    for (var index = 1; index < MAX_TEXTURES; ++index) {
+    for (var index = 1; index < this.MAX_TEXTURES; ++index) {
         dynamicIfs += '\telse if (vTextureIndex == ' +
             index + '.0) gl_FragColor = texture2D(uSamplerArray[' +
             index + '], vTextureCoord) * vColor;\n'
@@ -160,7 +166,7 @@ PIXI.WebGLSpriteBatch.prototype.setContext = function (gl) {
         'varying vec2 vTextureCoord;',
         'varying vec4 vColor;',
         'varying float vTextureIndex;',
-        'uniform sampler2D uSamplerArray[' + MAX_TEXTURES + '];',
+        'uniform sampler2D uSamplerArray[' + this.MAX_TEXTURES + '];',
         'void main(void) {',
         dynamicIfs,
         '\telse gl_FragColor = texture2D(uSamplerArray[0], vTextureCoord) * vColor;',
@@ -216,6 +222,14 @@ PIXI.WebGLSpriteBatch.prototype.end = function () {
  */
 PIXI.WebGLSpriteBatch.prototype.render = function (sprite, matrix) {
     var texture = sprite.texture;
+    var baseTexture = texture.baseTexture;
+    var gl = this.gl;
+    if (this.textureArray[baseTexture.textureIndex] != baseTexture) {
+        gl.activeTexture(gl.TEXTURE0 + baseTexture.textureIndex);
+        gl.bindTexture(gl.TEXTURE_2D, baseTexture._glTextures[gl.id]);
+        this.textureArray[baseTexture.textureIndex] = baseTexture;
+        this.flush();
+    }
 
     //  They provided an alternative rendering matrix, so use it
     var wt = sprite.worldTransform;
@@ -260,7 +274,7 @@ PIXI.WebGLSpriteBatch.prototype.render = function (sprite, matrix) {
         h1 = texture.frame.height * -aY;
     }
 
-    var i = this.currentBatchSize * this.vertexSize;//4 * this.vertSize;
+    var i = this.currentBatchSize * this.vertexSize; //4 * this.vertSize;
     var tiOffset = this.currentBatchSize * 4;
     var resolution = texture.baseTexture.resolution;
     var textureIndex = texture.baseTexture.textureIndex;
@@ -347,6 +361,7 @@ PIXI.WebGLSpriteBatch.prototype.render = function (sprite, matrix) {
 PIXI.WebGLSpriteBatch.prototype.renderTilingSprite = function (sprite) {
     var texture = sprite.tilingTexture;
 
+
     // check texture..
     if (this.currentBatchSize >= this.size) {
         this.flush();
@@ -409,7 +424,7 @@ PIXI.WebGLSpriteBatch.prototype.renderTilingSprite = function (sprite) {
     var h0 = height * (1 - aY);
     var h1 = height * -aY;
 
-    var i = this.currentBatchSize * this.vertexSize;//4 * this.vertSize;
+    var i = this.currentBatchSize * this.vertexSize; //4 * this.vertSize;
 
     var resolution = texture.baseTexture.resolution;
 
@@ -538,6 +553,7 @@ PIXI.WebGLSpriteBatch.prototype.flush = function () {
         } else {
             nextTexture = sprite.texture.baseTexture;
         }
+
         nextBlendMode = sprite.blendMode;
         nextShader = sprite.shader || this.defaultShader;
 
@@ -549,8 +565,10 @@ PIXI.WebGLSpriteBatch.prototype.flush = function () {
         if (skip && sprite.children.length > 0) {
             skip = false;
         }
-
-        if (( currentBaseTexture !== nextTexture && !skip) || blendSwap || shaderSwap) {
+        //
+        if (/*(currentBaseTexture != nextTexture && !skip) ||*/
+            blendSwap ||
+            shaderSwap) {
             this.renderBatch(currentBaseTexture, batchSize, start);
 
             start = i;
@@ -627,13 +645,9 @@ PIXI.WebGLSpriteBatch.prototype.renderBatch = function (texture, size, startInde
         }
     } else {
         gl.activeTexture(gl.TEXTURE0 + texture.textureIndex);
-        // bind the current texture
         gl.bindTexture(gl.TEXTURE_2D, texture._glTextures[gl.id]);
     }
-
-    // now draw those suckas!
     gl.drawElements(gl.TRIANGLES, size * 6, gl.UNSIGNED_SHORT, startIndex * 6 * 2);
-
     // increment the draw count
     this.renderSession.drawCount++;
 };

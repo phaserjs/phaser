@@ -80,9 +80,9 @@ PIXI.PixiShader.prototype.constructor = PIXI.PixiShader;
 PIXI.PixiShader.prototype.init = function()
 {
     var gl = this.gl;
-    var MAX_TEXTURES = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);
+    this.MAX_TEXTURES = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);
     var dynamicIfs = '\tif (vTextureIndex == 0.0) gl_FragColor = texture2D(uSamplerArray[0], vTextureCoord) * vColor;\n'
-    for (var index = 1; index < MAX_TEXTURES; ++index)
+    for (var index = 1; index < this.MAX_TEXTURES; ++index)
     {
         dynamicIfs += '\telse if (vTextureIndex == ' + 
                     index + '.0) gl_FragColor = texture2D(uSamplerArray[' + 
@@ -94,7 +94,7 @@ PIXI.PixiShader.prototype.init = function()
         'varying vec2 vTextureCoord;',
         'varying vec4 vColor;',
         'varying float vTextureIndex;',
-        'uniform sampler2D uSamplerArray[' + MAX_TEXTURES + '];',
+        'uniform sampler2D uSamplerArray[' + this.MAX_TEXTURES + '];',
         'const vec4 PINK = vec4(1.0, 0.0, 1.0, 1.0);',
         'const vec4 GREEN = vec4(0.0, 1.0, 0.0, 1.0);',
         'void main(void) {',
@@ -121,7 +121,7 @@ PIXI.PixiShader.prototype.init = function()
     this.aTextureIndex = gl.getAttribLocation(program, 'aTextureIndex');
 
     var indices = [];
-    for (var i = 0; i < MAX_TEXTURES; ++i) {
+    for (var i = 0; i < this.MAX_TEXTURES; ++i) {
         indices.push(i);
     }
     // NOTE:!!!
