@@ -95,9 +95,13 @@ PIXI.PixiShader.prototype.init = function()
         'varying vec4 vColor;',
         'varying float vTextureIndex;',
         'uniform sampler2D uSamplerArray[' + MAX_TEXTURES + '];',
+        'const vec4 PINK = vec4(1.0, 0.0, 1.0, 1.0);',
+        'const vec4 GREEN = vec4(0.0, 1.0, 0.0, 1.0);',
         'void main(void) {',
-        dynamicIfs,
-        '\telse gl_FragColor = texture2D(uSamplerArray[0], vTextureCoord) * vColor;',
+        //dynamicIfs,
+        'if (vTextureIndex == 0.0) gl_FragColor = texture2D(uSamplerArray[0], vTextureCoord) * vColor;',
+        'else if(vTextureIndex == 1.0) gl_FragColor = PINK;',
+        'else gl_FragColor = GREEN;',
         '}'
     ];
 
@@ -119,7 +123,7 @@ PIXI.PixiShader.prototype.init = function()
     this.aTextureIndex = gl.getAttribLocation(program, 'aTextureIndex');
 
     var indices = [];
-    for (var i = 0; i < /*MAX_TEXTURES*/2; ++i) {
+    for (var i = 0; i < MAX_TEXTURES; ++i) {
         indices.push(i);
     }
     // NOTE:!!!

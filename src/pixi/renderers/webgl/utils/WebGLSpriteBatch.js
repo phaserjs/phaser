@@ -260,7 +260,7 @@ PIXI.WebGLSpriteBatch.prototype.render = function (sprite, matrix) {
         h1 = texture.frame.height * -aY;
     }
 
-    var i = this.currentBatchSize * 4 * this.vertSize;
+    var i = this.currentBatchSize * this.vertexSize;//4 * this.vertSize;
     var tiOffset = this.currentBatchSize * 4;
     var resolution = texture.baseTexture.resolution;
     var textureIndex = texture.baseTexture.textureIndex;
@@ -409,7 +409,7 @@ PIXI.WebGLSpriteBatch.prototype.renderTilingSprite = function (sprite) {
     var h0 = height * (1 - aY);
     var h1 = height * -aY;
 
-    var i = this.currentBatchSize * 4 * this.vertSize;
+    var i = this.currentBatchSize * this.vertexSize;//4 * this.vertSize;
 
     var resolution = texture.baseTexture.resolution;
 
@@ -495,9 +495,8 @@ PIXI.WebGLSpriteBatch.prototype.flush = function () {
         // bind the buffers
         gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
-
         // this is the same for each shader?
-        var stride = this.vertexSize;//this.vertSize * 4;
+        var stride = this.vertexSize; //this.vertSize * 4;
         gl.vertexAttribPointer(shader.aVertexPosition, 2, gl.FLOAT, false, stride, 0);
         gl.vertexAttribPointer(shader.aTextureCoord, 2, gl.FLOAT, false, stride, 8);
 
@@ -513,7 +512,7 @@ PIXI.WebGLSpriteBatch.prototype.flush = function () {
         gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.vertices);
     } else {
         gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
-        var view = this.positions.subarray(0, this.currentBatchSize * 4 * this.vertSize);
+        var view = this.positions.subarray(0, this.currentBatchSize * this.vertexSize);
         gl.bufferSubData(gl.ARRAY_BUFFER, 0, view);
     }
 
@@ -551,7 +550,7 @@ PIXI.WebGLSpriteBatch.prototype.flush = function () {
             skip = false;
         }
 
-        if (( /*currentBaseTexture !== nextTexture &&*/ !skip) || blendSwap || shaderSwap) {
+        if (( currentBaseTexture !== nextTexture && !skip) || blendSwap || shaderSwap) {
             this.renderBatch(currentBaseTexture, batchSize, start);
 
             start = i;
@@ -628,7 +627,6 @@ PIXI.WebGLSpriteBatch.prototype.renderBatch = function (texture, size, startInde
         }
     } else {
         gl.activeTexture(gl.TEXTURE0 + texture.textureIndex);
-        //console.log(texture.textureIndex);
         // bind the current texture
         gl.bindTexture(gl.TEXTURE_2D, texture._glTextures[gl.id]);
     }
@@ -666,7 +664,6 @@ PIXI.WebGLSpriteBatch.prototype.destroy = function () {
 
     this.gl.deleteBuffer(this.vertexBuffer);
     this.gl.deleteBuffer(this.indexBuffer);
-    this.gl.deleteBuffer(this.texIndexBuffer);
 
     this.currentBaseTexture = null;
 
