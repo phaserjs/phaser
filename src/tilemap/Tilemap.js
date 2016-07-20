@@ -615,11 +615,11 @@ Phaser.Tilemap.prototype = {
         }
 
         //  Create the internal layers for different tilesets using this one as a base description
-        for (var i = 1, l = this.tilesets.length; i < l; i++)
+        for (var i = 1; i < this.tilesets.length; i++)
         {
             var ts = this.tilesets[i];
             var li = this.layers[index];
-            this.createInternalLayer("_internal" + i.toString(), ts, li.width, li.height, ts.tileWidth, ts.tileHeight, group);
+            this.createInternalLayer('layer' + index + '_internal_' + i.toString(), ts, li.width, li.height, ts.tileWidth, ts.tileHeight, group);
         }
 
         if (this.game.renderType === Phaser.WEBGL)
@@ -692,18 +692,22 @@ Phaser.Tilemap.prototype = {
         for (var y = 0; y < height; y++)
         {
             row = [];
+
             for (var x = 0; x < width; x++)
             {
                 // get the equivalent tile from this Tilemap
                 var tile = this.layers[0].data[y][x];
+
                 // find out which tileset it is in
                 var setIndex = this.tiles[tile.index] && this.tiles[tile.index][2];
                 var ts = this.tilesets[setIndex];
+
                 // is it one of the ones we want to move?
-                if ( ts == tileset )
+                if (ts === tileset)
                 {
                     // move the tile to this new layer
                     row.push( tile );
+
                     // erase it from the original (mixed tileset) layer
                     this.layers[0].data[y][x] = new Phaser.Tile(layer, -1, x, y, tileWidth, tileHeight);
                 }
@@ -735,7 +739,8 @@ Phaser.Tilemap.prototype = {
         }
 
         var output;
-        if ( this.game.renderType === Phaser.WEBGL )
+
+        if (this.game.renderType === Phaser.WEBGL)
         {
             output = new Phaser.TilemapLayerGL(this.game, this, this.layers.length - 1, w, h);
         }
@@ -743,6 +748,7 @@ Phaser.Tilemap.prototype = {
         {
             output = new Phaser.TilemapLayer(this.game, this, this.layers.length - 1, w, h);
         }
+
         output.name = name;
 
         return group.add(output);
