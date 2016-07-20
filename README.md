@@ -325,7 +325,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 ### Bug Fixes
 
 * A Group with `inputEnableChildren` set would re-start the Input Handler on a Sprite, even if that handler had been disabled previously.
-*
+* Weapon.autofire wouldn't fire after the first bullet, or until `fire` was called, neither of which are requirements. If you now set this boolean the Weapon will fire continuously until you toggle it back to false (thanks @alverLopez #2647)
 *
 
 ### Pixi Updates
