@@ -321,7 +321,8 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * The InputHandler.flagged property has been removed. It was never used internally, or exposed via the API, so was just overhead.
 * The src/system folder has been removed and all files relocated to the src/utils folder. This doesn't change anything from an API point of view, but did change the grunt build scripts slightly.
 * BitmapData.shadow and BitmapData.text now both `return this` keeping them in-line with the docs (thanks @greeny #2634)
-* Group.align has had its argument orders swapped, so that it's now `(columns, rows, ...)` instead of `(rows, columns, ...)` (thanks @deargle #2643)
+* Group.align has had its arguments changed so that it's now `(width, height, ...)` instead of `(rows, columns, ...)` (thanks @deargle #2643)
+* Group.align now returns `true` if the Group was aligned, or `false` if not.
 
 ### Bug Fixes
 

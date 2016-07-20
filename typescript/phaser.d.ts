@@ -1719,6 +1719,7 @@ declare module Phaser {
         static RETURN_CHILD: number;
         static RETURN_NONE: number;
         static RETURN_TOTAL: number;
+        static RETURN_ALL: number;
         static SORT_ASCENDING: number;
         static SORT_DESCENDING: number;
 
@@ -1767,7 +1768,7 @@ declare module Phaser {
         addAt(child: any, index: number, silent?: boolean): any;
         addMultiple(children: any[], silent?: boolean): any[];
         addToHash(child: PIXI.DisplayObject): boolean;
-        align(rows: number, columns: number, cellWidth: number, cellHeight: number, position?: number, offset?: number): void;
+        align(width: number, height: number, cellWidth: number, cellHeight: number, position?: number, offset?: number): boolean;
         alignIn(container: Phaser.Rectangle | Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapText | Phaser.Button | Phaser.Graphics | Phaser.TileSprite, position?: number, offsetX?: number, offsetY?: number): Phaser.Group;
         alignTo(container: Phaser.Rectangle | Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapText | Phaser.Button | Phaser.Graphics | Phaser.TileSprite, position?: number, offsetX?: number, offsetY?: number): Phaser.Group;
         bringToTop(child: any): any;
