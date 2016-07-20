@@ -98,10 +98,8 @@ PIXI.PixiShader.prototype.init = function()
         'const vec4 PINK = vec4(1.0, 0.0, 1.0, 1.0);',
         'const vec4 GREEN = vec4(0.0, 1.0, 0.0, 1.0);',
         'void main(void) {',
-        //dynamicIfs,
-        'if (vTextureIndex == 0.0) gl_FragColor = texture2D(uSamplerArray[0], vTextureCoord) * vColor;',
-        'else if(vTextureIndex == 1.0) gl_FragColor = PINK;',
-        'else gl_FragColor = GREEN;',
+        dynamicIfs,
+        'else gl_FragColor = PINK;',
         '}'
     ];
 
@@ -144,7 +142,7 @@ PIXI.PixiShader.prototype.init = function()
         this.colorAttribute = 2;
     }
 
-    this.attributes = [this.aVertexPosition, this.aTextureCoord, this.colorAttribute];
+    this.attributes = [this.aVertexPosition, this.aTextureCoord, this.colorAttribute, this.aTextureIndex];
 
     // End worst hack eva //
 
@@ -417,6 +415,7 @@ PIXI.PixiShader.defaultVertexSrc = [
     'const vec2 center = vec2(-1.0, 1.0);',
 
     'void main(void) {',
+    '   if (aTextureIndex > 0.0) gl_Position = vec4(0.0);',
     '   gl_Position = vec4( ((aVertexPosition + offsetVector) / projectionVector) + center , 0.0, 1.0);',
     '   vTextureCoord = aTextureCoord;',
     '   vColor = vec4(aColor.rgb * aColor.a, aColor.a);',
