@@ -323,6 +323,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * BitmapData.shadow and BitmapData.text now both `return this` keeping them in-line with the docs (thanks @greeny #2634)
 * Group.align has had its arguments changed so that it's now `(width, height, ...)` instead of `(rows, columns, ...)` (thanks @deargle #2643)
 * Group.align now returns `true` if the Group was aligned, or `false` if not.
+* The Loader.headers object has a new property `requestedWith`. By default this is set to `false`, but it can be used to set the `X-Requested-With` header to `XMLHttpRequest` (or any other value you need). To enable this do `this.load.headers.requestedWith = 'XMLHttpRequest'` before adding anything to the Loader.
 
 ### Bug Fixes
 

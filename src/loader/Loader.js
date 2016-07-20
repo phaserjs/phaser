@@ -106,12 +106,23 @@ Phaser.Loader = function (game) {
     * Used to map the application mime-types to to the Accept header in XHR requests.
     * If you don't require these mappings, or they cause problems on your server, then
     * remove them from the headers object and the XHR request will not try to use them.
+    *
+    * This object can also be used to set the `X-Requested-With` header to 
+    * `XMLHttpRequest` (or any other value you need). To enable this do:
+    *
+    * `this.load.headers.requestedWith = 'XMLHttpRequest'`
+    *
+    * before adding anything to the Loader. The XHR loader will then call:
+    *
+    * `setRequestHeader('X-Requested-With', this.headers['requestedWith'])`
+    * 
     * @property {object} headers
     * @default
     */
     this.headers = {
-        json: "application/json",
-        xml: "application/xml"
+        "requestedWith": false,
+        "json": "application/json",
+        "xml": "application/xml"
     };
 
     /**
@@ -2330,9 +2341,14 @@ Phaser.Loader.prototype = {
         xhr.open("GET", url, true);
         xhr.responseType = type;
 
+        if (this.headers['requestedWith'] !== false)
+        {
+            xhr.setRequestHeader('X-Requested-With', this.headers['requestedWith']);
+        }
+
         if (this.headers[file.type])
         {
-            xhr.setRequestHeader("Accept", this.headers[file.type]);
+            xhr.setRequestHeader('Accept', this.headers[file.type]);
         }
 
         onerror = onerror || this.fileError;
