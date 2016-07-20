@@ -2023,8 +2023,8 @@ Phaser.Physics.Arcade.prototype = {
     */
     angleBetweenCenters: function (source, target) {
 
-        var dx = target.center.x - source.center.x;
-        var dy = target.center.y - source.center.y;
+        var dx = target.centerX - source.centerX;
+        var dy = target.centerY - source.centerY;
 
         return Math.atan2(dy, dx);
 
