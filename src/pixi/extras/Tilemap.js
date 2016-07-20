@@ -6,12 +6,18 @@
 */
 
 /**
-* Tilemap - constructor
-* 
-* @param {Array} layer - layer data from the map, arranged in mapheight lists of mapwidth Phaser.Tile objects (2d array)
-* 
-*/
-PIXI.Tilemap = function(texture, mapwidth, mapheight, tilewidth, tileheight, layer) {
+ * A PIXI WebGL Tilemap.
+ *
+ * @class PIXI.Tilemap
+ * @extends {DisplayObjectContainer}
+ * @param {PIXI.Texture} texture - The tilemap texture.
+ * @param {integer} mapwidth - The width of the map.
+ * @param {integer} mapheight - The height of the map.
+ * @param {integer} tilewidth 0- The width of a single tile.
+ * @param {integer} tileheight - The height of a single tile.
+ * @param {Array} layer - Tilemap layer data from the map, arranged in mapheight lists of mapwidth Phaser.Tile objects (2d array).
+ */
+PIXI.Tilemap = function (texture, mapwidth, mapheight, tilewidth, tileheight, layer) {
 
     PIXI.DisplayObjectContainer.call(this);
 
@@ -134,115 +140,119 @@ PIXI.Tilemap.prototype._initWebGL = function (renderSession) {
 
 PIXI.Tilemap.prototype._renderBatch = function (renderSession) {
 
-    if (this.glBatch)
+    if (!this.glBatch)
     {
-        var gl = renderSession.gl;
+        return;
+    }
 
-        // TODO: should probably use destination buffer dimensions (halved)
-        var screenWide2 = this.game.width * 0.5;
-        var screenHigh2 = this.game.height * 0.5;
+    var gl = renderSession.gl;
 
-        // size of one pixel in the source texture
-        var iTextureWide = 1.0 / this.texture.width;
-        var iTextureHigh = 1.0 / this.texture.height;
+    // TODO: should probably use destination buffer dimensions (halved)
+    var screenWide2 = this.game.width * 0.5;
+    var screenHigh2 = this.game.height * 0.5;
 
-        // size of one tile in the source texture
-        var srcWide = this.tileWide * iTextureWide;
-        var srcHigh = this.tileHigh * iTextureHigh;
+    // size of one pixel in the source texture
+    var iTextureWide = 1.0 / this.texture.width;
+    var iTextureHigh = 1.0 / this.texture.height;
 
-        // pre-calculate inverse half-buffer dimensions
-        var iWide = 1.0 / screenWide2;
-        var iHigh = 1.0 / screenHigh2;
+    // size of one tile in the source texture
+    var srcWide = this.tileWide * iTextureWide;
+    var srcHigh = this.tileHigh * iTextureHigh;
 
-        var wide = this.tileWide * 0.5 / screenWide2;
-        var high = this.tileHigh * 0.5 / screenHigh2;
+    // pre-calculate inverse half-buffer dimensions
+    var iWide = 1.0 / screenWide2;
+    var iHigh = 1.0 / screenHigh2;
 
-        var buffer = this.buffer;
-        var oldR, oldT, uvl, uvt;
+    var wide = this.tileWide * 0.5 / screenWide2;
+    var high = this.tileHigh * 0.5 / screenHigh2;
 
-        // process entire glBatch into a single webGl draw buffer for a TRIANGLE_STRIP blit
-        var c = 0;
-        var degenerate = false;
+    var buffer = this.buffer;
+    var oldR, oldT, uvl, uvt;
 
-        for (var i = 0, l = this.glBatch.length; i < l; i++)
+    // process entire glBatch into a single webGl draw buffer for a TRIANGLE_STRIP blit
+    var c = 0;
+    var degenerate = false;
+
+    for (var i = 0, l = this.glBatch.length; i < l; i++)
+    {
+        // sx: this.drawCoords[coordIndex],
+        // sy: this.drawCoords[coordIndex + 1],
+        // sw: this.tileWidth,
+        // sh: this.tileHeight,
+        // dx: x,
+        // dy: y,
+        // dw: this.tileWidth,
+        // dh: this.tileHeight
+
+        var t = this.glBatch[i];
+
+        if (!t)
         {
-            // sx: this.drawCoords[coordIndex],
-            // sy: this.drawCoords[coordIndex + 1],
-            // sw: this.tileWidth,
-            // sh: this.tileHeight,
-            // dx: x,
-            // dy: y,
-            // dw: this.tileWidth,
-            // dh: this.tileHeight
+            // insert a degenerate triangle when null is found in the list of batch objects
+            degenerate = true;
 
-            var t = this.glBatch[i];
-
-            if (!t)
-            {
-                // insert a degenerate triangle when null is found in the list of batch objects
-                degenerate = true;
-
-                // skip to end of loop, degenerate will be inserted when no more null objects are found
-                continue;
-            }
-
-            var x = t.dx * iWide - 1;
-            var y = 1 - t.dy * iHigh;
-
-            var lft = x - wide;
-            var bot = y + high;
-
-            var uvl = t.sx * iTextureWide;
-            var uvt = t.sy * iTextureHigh; 
-
-            // insert a degenerate triangle to separate the tiles
-            if (degenerate)
-            {
-                // add a degenerate triangle: repeat the last vertex
-                buffer[ c     ] = oldR;
-                buffer[ c + 1 ] = oldT;
-                // then repeat the next vertex
-                buffer[ c + 4 ] = lft;
-                buffer[ c + 5 ] = bot;
-                // pad with texture coordinates (probably not needed)
-                buffer[ c + 2 ] = buffer[ c + 6 ] = uvl;
-                buffer[ c + 3 ] = buffer[ c + 7 ] = uvt;
-
-                // advance the buffer index for one single degenerate triangle
-                c += 8;
-                degenerate = false;
-            }
-
-            // calculate the destination location of the tile in screen units (-1..1)
-            buffer[ c      ] = buffer[ c +  4 ] = lft;
-            buffer[ c +  1 ] = buffer[ c +  9 ] = bot;
-            buffer[ c +  8 ] = buffer[ c +  12] = oldR = x + wide;
-            buffer[ c +  5 ] = buffer[ c +  13] = oldT = y - high;
-
-            // calculate the uv coordinates of the tile source image
-            buffer[ c +  2 ] = buffer[ c +  6 ] = uvl;
-            buffer[ c +  3 ] = buffer[ c +  11] = uvt;
-            buffer[ c +  10] = buffer[ c +  14] = uvl + srcWide;
-            buffer[ c +  7 ] = buffer[ c +  15] = uvt + srcHigh;
-
-            // advance the buffer index
-            c += 16;
+            // skip to end of loop, degenerate will be inserted when no more null objects are found
+            continue;
         }
 
-        // if there's anything to draw...
-        if (c > 0)
+        var x = t.dx * iWide - 1;
+        var y = 1 - t.dy * iHigh;
+
+        var lft = x - wide;
+        var bot = y + high;
+
+        var uvl = t.sx * iTextureWide;
+        var uvt = t.sy * iTextureHigh; 
+
+        // insert a degenerate triangle to separate the tiles
+        if (degenerate)
         {
-            var shader = renderSession.shaderManager.tilemapShader;
+            // add a degenerate triangle: repeat the last vertex
+            buffer[ c     ] = oldR;
+            buffer[ c + 1 ] = oldT;
 
-            // upload the VBO
-            gl.bufferData(gl.ARRAY_BUFFER, buffer, gl.STATIC_DRAW);
+            // then repeat the next vertex
+            buffer[ c + 4 ] = lft;
+            buffer[ c + 5 ] = bot;
 
-            // prepare the shader attributes
-            gl.vertexAttribPointer(shader.aPosition, 4, gl.FLOAT, false, 0, 0);
+            // pad with texture coordinates (probably not needed)
+            buffer[ c + 2 ] = buffer[ c + 6 ] = uvl;
+            buffer[ c + 3 ] = buffer[ c + 7 ] = uvt;
 
-            // draw the entire VBO in one call
-            gl.drawArrays(gl.TRIANGLE_STRIP, 0, Math.floor(c / 4));
+            // advance the buffer index for one single degenerate triangle
+            c += 8;
+            degenerate = false;
         }
+
+        // calculate the destination location of the tile in screen units (-1..1)
+        buffer[ c     ] = buffer[ c + 4 ] = lft;
+        buffer[ c + 1 ] = buffer[ c + 9 ] = bot;
+        buffer[ c + 8 ] = buffer[ c + 12] = oldR = x + wide;
+        buffer[ c + 5 ] = buffer[ c + 13] = oldT = y - high;
+
+        // calculate the uv coordinates of the tile source image
+        buffer[ c + 2 ] = buffer[ c + 6 ] = uvl;
+        buffer[ c + 3 ] = buffer[ c + 11] = uvt;
+        buffer[ c + 10] = buffer[ c + 14] = uvl + srcWide;
+        buffer[ c + 7 ] = buffer[ c + 15] = uvt + srcHigh;
+
+        // advance the buffer index
+        c += 16;
+    }
+
+    // if there's anything to draw...
+    if (c > 0)
+    {
+        var shader = renderSession.shaderManager.tilemapShader;
+
+        // upload the VBO
+        gl.bufferData(gl.ARRAY_BUFFER, buffer, gl.STATIC_DRAW);
+
+        // prepare the shader attributes
+        gl.vertexAttribPointer(shader.aPosition, 4, gl.FLOAT, false, 0, 0);
+
+        // draw the entire VBO in one call
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, Math.floor(c / 4));
     }
 
 };

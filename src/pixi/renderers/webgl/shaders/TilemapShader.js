@@ -46,27 +46,27 @@ PIXI.TilemapShader = function (gl) {
     this.program = null;
 
     this.fragmentSrc = [
-        "  precision lowp float;",
-        "  uniform sampler2D uImageSampler;",
-        "  uniform float uAlpha;",
-        "  varying vec2 vTexCoord;",
-        "  void main(void) {",
-        "    gl_FragColor = texture2D(uImageSampler, vTexCoord) * uAlpha;",
-        "  }"
-        ];
+        'precision lowp float;',
+        'uniform sampler2D uImageSampler;',
+        'uniform float uAlpha;',
+        'varying vec2 vTexCoord;',
+        'void main(void) {',
+        '  gl_FragColor = texture2D(uImageSampler, vTexCoord) * uAlpha;',
+        '}'
+    ];
 
     this.vertexSrc = [
-        "  precision lowp float;",
-        "  uniform vec2 uCentreOffset;",
-        "  uniform vec2 uScale;",
-        "  attribute vec4 aPosition;",
-        "  varying vec2 vTexCoord;",
-        "  void main(void) {",
-        "    gl_Position.zw = vec2(1, 1);",
-        "    gl_Position.xy = (aPosition.xy + uCentreOffset) * uScale - uCentreOffset;",
-        "    vTexCoord = aPosition.zw;",
-        "  }"
-        ];
+        'precision lowp float;',
+        'uniform vec2 uCentreOffset;',
+        'uniform vec2 uScale;',
+        'attribute vec4 aPosition;',
+        'varying vec2 vTexCoord;',
+        'void main(void) {',
+        '  gl_Position.zw = vec2(1, 1);',
+        '  gl_Position.xy = (aPosition.xy + uCentreOffset) * uScale - uCentreOffset;',
+        '  vTexCoord = aPosition.zw;',
+        '}'
+    ];
 
     /**
      * A local texture counter for multi-texture shaders.
@@ -76,6 +76,7 @@ PIXI.TilemapShader = function (gl) {
     this.textureCount = 0;
 
     this.init();
+
 };
 
 PIXI.TilemapShader.prototype.constructor = PIXI.TilemapShader;
