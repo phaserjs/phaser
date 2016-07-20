@@ -614,21 +614,23 @@ Phaser.Tilemap.prototype = {
             return;
         }
 
-        // create the internal layers for different tilesets using this one as a base description
+        //  Create the internal layers for different tilesets using this one as a base description
         for (var i = 1, l = this.tilesets.length; i < l; i++)
         {
             var ts = this.tilesets[i];
             var li = this.layers[index];
-            this.createInternalLayer( "_internal" + i.toString(), ts, li.width, li.height, ts.tileWidth, ts.tileHeight, group );
+            this.createInternalLayer("_internal" + i.toString(), ts, li.width, li.height, ts.tileWidth, ts.tileHeight, group);
         }
 
-        if ( this.game.renderType === Phaser.WEBGL )
+        if (this.game.renderType === Phaser.WEBGL)
         {
             // use WebGL variant of TilemapLayer
             return group.add(new Phaser.TilemapLayerGL(this.game, this, index, width, height));
         }
-
-        return group.add(new Phaser.TilemapLayer(this.game, this, index, width, height));
+        else
+        {
+            return group.add(new Phaser.TilemapLayer(this.game, this, index, width, height));
+        }
 
     },
 
@@ -660,7 +662,7 @@ Phaser.Tilemap.prototype = {
 
         if (this.getLayerIndex(name) !== null)
         {
-            console.warn('Tilemap.createBlankLayer: Layer with matching name already exists');
+            console.warn('Tilemap.createInternalLayer: Layer with matching name already exists: ' + name);
             return;
         }
 
@@ -765,7 +767,7 @@ Phaser.Tilemap.prototype = {
 
         if (this.getLayerIndex(name) !== null)
         {
-            console.warn('Tilemap.createBlankLayer: Layer with matching name already exists');
+            console.warn('Tilemap.createBlankLayer: Layer with matching name already exists: ' + name);
             return;
         }
 
