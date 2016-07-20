@@ -484,7 +484,7 @@ declare module PIXI {
         y: number;
 
         click(e: InteractionData): void;
-        displayObjectUpdateTransform(targetCoordinateSpace?: PIXI.DisplayObject): void
+        displayObjectUpdateTransform(parent?: DisplayObjectContainer): void;
         generateTexture(resolution?: number, scaleMode?: number, renderer?: PixiRenderer | number): RenderTexture;
         mousedown(e: InteractionData): void;
         mouseout(e: InteractionData): void;
@@ -504,7 +504,7 @@ declare module PIXI {
         touchendoutside(e: InteractionData): void;
         touchstart(e: InteractionData): void;
         touchmove(e: InteractionData): void;
-        updateTransform(parent?: PIXI.DisplayObjectContainer): void;
+        updateTransform(parent?: DisplayObjectContainer): void;
 
     }
 
@@ -519,7 +519,7 @@ declare module PIXI {
 
         addChild(child: DisplayObject): DisplayObject;
         addChildAt(child: DisplayObject, index: number): DisplayObject;
-        getBounds(targetCoordinateSpace?: PIXI.DisplayObject | Matrix): Rectangle;
+        getBounds(targetCoordinateSpace?: DisplayObject | Matrix): Rectangle;
         getChildAt(index: number): DisplayObject;
         getChildIndex(child: DisplayObject): number;
         getLocalBounds(): Rectangle;
@@ -529,6 +529,7 @@ declare module PIXI {
         removeStageReference(): void;
         setChildIndex(child: DisplayObject, index: number): void;
         swapChildren(child: DisplayObject, child2: DisplayObject): void;
+        contains(child: DisplayObject): boolean;
 
     }
 
