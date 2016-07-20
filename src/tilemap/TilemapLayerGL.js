@@ -1,5 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
+* @author       Pete Baron <pete@photonstorm.com>
 * @copyright    2016 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
@@ -72,63 +73,18 @@ Phaser.TilemapLayerGL = function (game, tilemap, index, width, height) {
     /**
     * Settings that control standard (non-diagnostic) rendering.
     *
-    * @property {boolean} [enableScrollDelta=true] - Delta scroll rendering only draws tiles/edges as they come into view.
-    *     This can greatly improve scrolling rendering performance, especially when there are many small tiles.
-    *     It should only be disabled in rare cases.
-    *
-    * @property {?DOMCanvasElement} [copyCanvas=(auto)] - [Internal] If set, force using a separate (shared) copy canvas.
-    *     Using a canvas bitblt/copy when the source and destinations region overlap produces unexpected behavior
-    *     in some browsers, notably Safari. 
+    * @property {float} [overdrawRatio=0.20] - Over Draw ratio.
     *
     * @default
     */
     this.renderSettings = {
-        enableScrollDelta: false,
-        overdrawRatio: 0.20,
-        copyCanvas: null
+        overdrawRatio: 0.20
     };
-
-    /**
-    * Enable an additional "debug rendering" pass to display collision information.
-    *
-    * @property {boolean} debug
-    * @default
-    */
-    this.debug = false;
 
     /**
     * @property {boolean} exists - Controls if the core game loop and physics update this game object or not.
     */
     this.exists = true;
-
-    /**
-    * Settings used for debugging and diagnostics.
-    *
-    * @property {?string} missingImageFill - A tile is rendered as a rectangle using the following fill if a valid tileset/image cannot be found. A value of `null` prevents additional rendering for tiles without a valid tileset image. _This takes effect even when debug rendering for the layer is not enabled._
-    *
-    * @property {?string} debuggedTileOverfill - If a Tile has `Tile#debug` true then, after normal tile image rendering, a rectangle with the following fill is drawn above/over it. _This takes effect even when debug rendering for the layer is not enabled._
-    *
-    * @property {boolean} forceFullRedraw - When debug rendering (`debug` is true), and this option is enabled, the a full redraw is forced and rendering optimization is suppressed.
-    *
-    * @property {number} debugAlpha - When debug rendering (`debug` is true), the tileset is initially rendered with this alpha level. This can make the tile edges clearer.
-    *
-    * @property {?string} facingEdgeStroke - When debug rendering (`debug` is true), this color/stroke is used to draw "face" edges. A value of `null` disables coloring facing edges.
-    *
-    * @property {?string} collidingTileOverfill - When debug rendering (`debug` is true), this fill is used for tiles that are collidable. A value of `null` disables applying the additional overfill.
-    *
-    */
-    this.debugSettings = {
-
-        missingImageFill: 'rgb(255,255,255)',
-        debuggedTileOverfill: 'rgba(0,255,0,0.4)',
-
-        forceFullRedraw: true,
-
-        debugAlpha: 0.5,
-        facingEdgeStroke: 'rgba(0,255,0,1)',
-        collidingTileOverfill: 'rgba(0,255,0,0.2)'
-
-    };
 
     /**
     * Speed at which this layer scrolls horizontally, relative to the camera (e.g. scrollFactorX of 0.5 scrolls half as quickly as the 'normal' camera-locked layers do).
@@ -173,6 +129,7 @@ Phaser.TilemapLayerGL = function (game, tilemap, index, width, height) {
     * @private
     */
     var tileset = this.layer.tileset || this.map.tilesets[0];
+
     this._mc = {
 
         // Used to bypass rendering without reliance on `dirty` and detect changes.
@@ -198,7 +155,8 @@ Phaser.TilemapLayerGL = function (game, tilemap, index, width, height) {
 
         // Cached tilesets from index -> Tileset
         tilesets: []
-    };
+
+    }
 
     /**
      * The rendering mode (used by PIXI.Tilemap).  Modes are: 0 - render entire screen of tiles, 1 - render entire map of tiles
@@ -230,41 +188,34 @@ Phaser.TilemapLayerGL = function (game, tilemap, index, width, height) {
     this._results = [];
 
     // get PIXI textures for each tileset source image
-    var baseTexture = new PIXI.BaseTexture( tileset.image );
+    var baseTexture = new PIXI.BaseTexture(tileset.image);
+
     PIXI.Tilemap.call(this, new PIXI.Texture(baseTexture), this.map.width, this.map.height, this._mc.tileset.tileWidth, this._mc.tileset.tileHeight, this.layer);
 
     Phaser.Component.Core.init.call(this, game, 0, 0, null, null);
 
     // must be set *after* the Core.init
     this.fixedToCamera = true;
-};
 
+};
 
 // constructor: extends PIXI.Tilemap
 Phaser.TilemapLayerGL.prototype = Object.create(PIXI.Tilemap.prototype);
 Phaser.TilemapLayerGL.prototype.constructor = Phaser.TilemapLayerGL;
 
-
-// only one Phaser component used
+//  Only one Phaser component used
 Phaser.Component.Core.install.call(Phaser.TilemapLayerGL.prototype, [
     'FixedToCamera'
 ]);
 
-
-// redirect method prototypes (TODO: not needed?  I'm not sure...)
 Phaser.TilemapLayerGL.prototype.preUpdateCore = Phaser.Component.Core.preUpdate;
-Phaser.TileSprite.prototype.preUpdatePhysics = Phaser.Component.PhysicsBody.preUpdate;
-Phaser.TileSprite.prototype.preUpdateLifeSpan = Phaser.Component.LifeSpan.preUpdate;
-Phaser.TileSprite.prototype.preUpdateInWorld = Phaser.Component.InWorld.preUpdate;
-Phaser.TileSprite.prototype.preUpdateCore = Phaser.Component.Core.preUpdate;
-
 
 /**
 * Automatically called by World.preUpdate.
 *
 * @method Phaser.TilemapLayerGL#preUpdate
 */
-Phaser.TilemapLayerGL.prototype.preUpdate = function() {
+Phaser.TilemapLayerGL.prototype.preUpdate = function () {
 
     return this.preUpdateCore();
 
@@ -296,8 +247,6 @@ Phaser.TilemapLayerGL.prototype.postUpdate = function () {
 * @method Phaser.TilemapLayerGL#destroy
 */
 Phaser.TilemapLayerGL.prototype.destroy = function() {
-
-    PIXI.CanvasPool.remove(this);
 
     Phaser.Component.Destroy.prototype.destroy.call(this);
 
@@ -520,6 +469,7 @@ Phaser.TilemapLayerGL.prototype.getRayCastTiles = function (line, stepRate, coll
         {
             var tile = tiles[i];
             var coord = coords[t];
+
             if (tile.containsPoint(coord[0], coord[1]))
             {
                 results.push(tile);
@@ -560,6 +510,7 @@ Phaser.TilemapLayerGL.prototype.getTiles = function (x, y, width, height, collid
     //  Convert the pixel values into tile coordinates
     var tx = Math.floor(x / (this._mc.cw * this.scale.x));
     var ty = Math.floor(y / (this._mc.ch * this.scale.y));
+
     //  Don't just use ceil(width/cw) to allow account for x/y diff within cell
     var tw = Math.ceil((x + width) / (this._mc.cw * this.scale.x)) - tx;
     var th = Math.ceil((y + height) / (this._mc.ch * this.scale.y)) - ty;
@@ -598,6 +549,7 @@ Phaser.TilemapLayerGL.prototype.getTiles = function (x, y, width, height, collid
 Phaser.TilemapLayerGL.prototype.resetTilesetCache = function () {
 
     this._mc.tilesets = [];
+
 };
 
 /**
@@ -652,8 +604,6 @@ Phaser.TilemapLayerGL.prototype.renderRegion = function (scrollX, scrollY, left,
     var tw = this._mc.tileWidth;
     var th = this._mc.tileHeight;
 
-    // var lastAlpha = NaN;
-
     offx = offx || 0;
     offy = offy || 0;
     
@@ -664,6 +614,7 @@ Phaser.TilemapLayerGL.prototype.renderRegion = function (scrollX, scrollY, left,
             left = Math.max(0, left);
             right = Math.min(width - 1, right);
         }
+
         if (top <= bottom)
         {
             top = Math.max(0, top);
@@ -684,30 +635,28 @@ Phaser.TilemapLayerGL.prototype.renderRegion = function (scrollX, scrollY, left,
     // xmax/ymax - remaining cells to render on column/row
     var tx, ty, x, y, xmax, ymax;
 
-    //context.fillStyle = this.tileColor;
-
-    for (y = normStartY, ymax = bottom - top, ty = baseY;
-        ymax >= 0;
-        y++, ymax--, ty += th)
+    for (y = normStartY, ymax = bottom - top, ty = baseY; ymax >= 0; y++, ymax--, ty += th)
     {
-
-        if (y >= height) { y -= height; }
+        if (y >= height)
+        {
+            y -= height;
+        }
 
         var row = this.layer.data[y];
 
-        for (x = normStartX, xmax = right - left, tx = baseX;
-            xmax >= 0;
-            x++, xmax--, tx += tw)
+        for (x = normStartX, xmax = right - left, tx = baseX; xmax >= 0; x++, xmax--, tx += tw)
         {
-
-            if (x >= width) { x -= width; }
+            if (x >= width)
+            {
+                x -= width;
+            }
 
             var tile = row[x];
 
             if (!tile || tile.index < 0)
             {
                 // skipping some tiles, add a degenerate marker into the batch list
-                this._mc.tileset.addDegenerate( this.glBatch );
+                this._mc.tileset.addDegenerate(this.glBatch);
                 continue;
             }
 
@@ -724,7 +673,7 @@ Phaser.TilemapLayerGL.prototype.renderRegion = function (scrollX, scrollY, left,
         }
 
         // at end of each row, add a degenerate marker into the batch drawing list
-        this._mc.tileset.addDegenerate( this.glBatch );
+        this._mc.tileset.addDegenerate(this.glBatch);
     }
 
 };
@@ -749,13 +698,14 @@ Phaser.TilemapLayerGL.prototype.renderFull = function () {
     var cw = this._mc.cw;
     var ch = this._mc.ch;
 
-    var left = Math.floor( (scrollX - (cw - tw)) / tw );
-    var right = Math.floor( (renderW - 1 + scrollX) / tw );
-    var top = Math.floor( (scrollY - (ch - th)) / th );
-    var bottom = Math.floor( (renderH - 1 + scrollY) / th );
+    var left = Math.floor((scrollX - (cw - tw)) / tw);
+    var right = Math.floor((renderW - 1 + scrollX) / tw);
+    var top = Math.floor((scrollY - (ch - th)) / th);
+    var bottom = Math.floor((renderH - 1 + scrollY) / th);
 
     this.glBatch = [];
     this.renderRegion(scrollX, scrollY, left, top, right, bottom, 0, -(ch - th));
+
 };
 
 /**
@@ -787,8 +737,7 @@ Phaser.TilemapLayerGL.prototype.render = function () {
     var shiftX = mc.scrollX - scrollX; // Negative when scrolling right/down
     var shiftY = mc.scrollY - scrollY;
 
-    if (!redrawAll &&
-        shiftX === 0 && shiftY === 0)
+    if (!redrawAll && shiftX === 0 && shiftY === 0)
     {
         //  No reason to rebuild batch, looking at same thing and not invalidated.
         return;

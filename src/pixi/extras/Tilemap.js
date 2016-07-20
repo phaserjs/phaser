@@ -132,7 +132,6 @@ PIXI.Tilemap.prototype._initWebGL = function (renderSession) {
 
 };
 
-
 PIXI.Tilemap.prototype._renderBatch = function (renderSession) {
 
     if (this.glBatch)
