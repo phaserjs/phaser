@@ -156,7 +156,7 @@ Phaser.TilemapLayerGL = function (game, tilemap, index, width, height) {
         // Cached tilesets from index -> Tileset
         tilesets: []
 
-    }
+    };
 
     /**
      * The rendering mode (used by PIXI.Tilemap).  Modes are: 0 - render entire screen of tiles, 1 - render entire map of tiles

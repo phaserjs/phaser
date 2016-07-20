@@ -619,7 +619,7 @@ Phaser.Tilemap.prototype = {
         {
             var ts = this.tilesets[i];
             var li = this.layers[index];
-            this.createInternalLayer('layer' + index + '_internal_' + i.toString(), ts, li.width, li.height, ts.tileWidth, ts.tileHeight, group);
+            this.createInternalLayer('layer' + index + '_internal_' + i, ts, li.width, li.height, ts.tileWidth, ts.tileHeight, group);
         }
 
         if (this.game.renderType === Phaser.WEBGL)
@@ -637,8 +637,8 @@ Phaser.Tilemap.prototype = {
     /**
     * Creates a new internal layer on this Tilemap.
     * 
-    * Internal layers are used when a Tilemap contains multiple Tilesets with different sized tiles.  The tilesets
-    * each get a separate layer which is only ever referenced internally by the renderer.  This approach permits us
+    * Internal layers are used when a Tilemap contains multiple Tilesets with different sized tiles. The tilesets
+    * each get a separate layer which is only ever referenced internally by the renderer. This approach permits us
     * to handle large tiles at screen edges, and with the correct offset relative to the 'base' tileset regardless
     * of size differences between the tiles.
     * 
@@ -706,7 +706,7 @@ Phaser.Tilemap.prototype = {
                 if (ts === tileset)
                 {
                     // move the tile to this new layer
-                    row.push( tile );
+                    row.push(tile);
 
                     // erase it from the original (mixed tileset) layer
                     this.layers[0].data[y][x] = new Phaser.Tile(layer, -1, x, y, tileWidth, tileHeight);

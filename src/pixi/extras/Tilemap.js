@@ -76,7 +76,7 @@ PIXI.Tilemap = function(texture, mapwidth, mapheight, tilewidth, tileheight, lay
     var dataSize = mapwidth * mapheight * this.batchDataElement;
 
     // create buffer data for the webgl rendering of this tile
-    this.buffer = new PIXI.Float32Array( dataSize );
+    this.buffer = new PIXI.Float32Array(dataSize);
 
 };
 
@@ -235,10 +235,10 @@ PIXI.Tilemap.prototype._renderBatch = function (renderSession) {
             var shader = renderSession.shaderManager.tilemapShader;
 
             // upload the VBO
-            gl.bufferData( gl.ARRAY_BUFFER, buffer, gl.STATIC_DRAW );
+            gl.bufferData(gl.ARRAY_BUFFER, buffer, gl.STATIC_DRAW);
 
             // prepare the shader attributes
-            gl.vertexAttribPointer( shader.aPosition, 4, gl.FLOAT, false, 0, 0 );
+            gl.vertexAttribPointer(shader.aPosition, 4, gl.FLOAT, false, 0, 0);
 
             // draw the entire VBO in one call
             gl.drawArrays(gl.TRIANGLE_STRIP, 0, Math.floor(c / 4));
@@ -275,7 +275,7 @@ PIXI.Tilemap.prototype._renderWholeTilemap = function (renderSession) {
     // source texture unit
     gl.activeTexture(gl.TEXTURE0);
 
-    // check if a texture is dirty..
+    // check if a texture is dirty...
     if(this.texture.baseTexture._dirty[gl.id])
     {
         renderSession.renderer.updateTexture(this.texture.baseTexture);
