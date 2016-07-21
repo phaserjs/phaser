@@ -316,20 +316,6 @@ Phaser.Tilemap.prototype = {
         if (this.tilesets[idx])
         {
             this.tilesets[idx].setImage(img);
-
-            // create an empty layer for the map parts corresponding to this tileset
-            // if ( !this.tilesetLayers )
-            // {
-            //     // for the first tileset, don't create a layer because createLayer will be called to do that
-            //     this.tilesetLayers = [];
-            // }
-            // else
-            // {
-            //     // for all the rest, go ahead and make a (currently) blank layer
-            //     // name, width, height, tileWidth, tileHeight, group
-            //     this.tilesetLayers.push( this.createBlankLayer( "_internal" + this.tilesetLayers.length.toString() ) );
-            // }
-
             return this.tilesets[idx];
         }
         else
@@ -688,6 +674,7 @@ Phaser.Tilemap.prototype = {
 
         var row;
         var output = [];
+        var emptyFlag = true;
 
         for (var y = 0; y < height; y++)
         {
@@ -705,6 +692,9 @@ Phaser.Tilemap.prototype = {
                 // is it one of the ones we want to move?
                 if (ts === tileset)
                 {
+                    // this layer does have some content...
+                    emptyFlag = false;
+
                     // move the tile to this new layer
                     row.push(tile);
 
@@ -719,6 +709,12 @@ Phaser.Tilemap.prototype = {
             }
 
             output.push(row);
+        }
+
+        if ( emptyFlag )
+        {
+            // none of those tiles are used in this layer, so we don't actually need it
+            return;
         }
 
         layer.data = output;
