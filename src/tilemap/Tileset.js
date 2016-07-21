@@ -163,22 +163,53 @@ Phaser.Tileset.prototype = {
     * @param {number} y - The y coordinate to draw to.
     * @param {integer} index - The index of the tile within the set to draw.
     * @param {number} alpha - The alpha value to draw this tile with.
+    * @param {integer} flippedVal - A bitwise value which indicates how the UV source coordinates should be flipped
     */
-    drawGl: function (glBatch, x, y, index, alpha) {
+    drawGl: function (glBatch, x, y, index, alpha, flippedVal) {
 
         // Correct the tile index for the set and bias for interlacing x/y values
         var coordIndex = (index - this.firstgid) * 2;
 
         if (coordIndex >= 0 && (coordIndex + 1) < this.drawCoords.length)
         {
+            var sx = this.drawCoords[coordIndex];
+            var sy = this.drawCoords[coordIndex + 1];
+            var sw = this.tileWidth;
+            var sh = this.tileHeight;
+            var fd = 0;
+
+            if (flippedVal)
+            {
+                if (flippedVal & 1)
+                {
+                    // flipped diagonally (swap x,y axes)
+                    fd = 1;
+                }
+
+                if (flippedVal & 4)
+                {
+                    // flipped horizontally
+                    sx += sw;
+                    sw = -sw;
+                }
+
+                if (flippedVal & 2)
+                {
+                    // flipped vertically
+                    sy += sh;
+                    sh = -sh;
+                }
+            }
+
             // add the tile to the WebGL batch
             // source and destination coordinates, in pixel units
             // destination is the center of the tile
             glBatch.push({
-                sx: this.drawCoords[coordIndex],
-                sy: this.drawCoords[coordIndex + 1],
-                sw: this.tileWidth,
-                sh: this.tileHeight,
+                sx: sx,
+                sy: sy,
+                sw: sw,
+                sh: sh,
+                fd: fd,
                 dx: x + this.tileWidth * 0.5,
                 dy: y + this.tileHeight * 0.5,
                 dw: this.tileWidth,

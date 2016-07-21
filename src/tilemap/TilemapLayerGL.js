@@ -691,14 +691,7 @@ Phaser.TilemapLayerGL.prototype.renderRegion = function (scrollX, scrollY, left,
 
             var index = tile.index;
 
-            if (tile.rotation || tile.flipped)
-            {
-                this._mc.tileset.drawGl(this.glBatch, -tile.centerX + offx, -tile.centerY + offy, index, tile.alpha);
-            }
-            else
-            {
-                this._mc.tileset.drawGl(this.glBatch, tx + offx, ty + offy, index, tile.alpha);
-            }
+            this._mc.tileset.drawGl(this.glBatch, tx + offx, ty + offy, index, tile.alpha, tile.flippedVal);
         }
 
         // at end of each row, add a degenerate marker into the batch drawing list

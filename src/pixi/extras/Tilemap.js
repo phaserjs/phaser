@@ -231,10 +231,21 @@ PIXI.Tilemap.prototype._renderBatch = function (renderSession) {
         buffer[ c + 5 ] = buffer[ c + 13] = oldT = y - high;
 
         // calculate the uv coordinates of the tile source image
-        buffer[ c + 2 ] = buffer[ c + 6 ] = uvl;
-        buffer[ c + 3 ] = buffer[ c + 11] = uvt;
-        buffer[ c + 10] = buffer[ c + 14] = uvl + srcWide;
-        buffer[ c + 7 ] = buffer[ c + 15] = uvt + srcHigh;
+        if (t.fd === 1)
+        {
+            // flipped diagonally, swap x,y axes
+            buffer[ c + 14] = buffer[ c + 6 ] = uvl;
+            buffer[ c + 15] = buffer[ c + 11] = uvt;
+            buffer[ c + 10] = buffer[ c + 2 ] = uvl + t.sw * iTextureWide;
+            buffer[ c + 7 ] = buffer[ c + 3 ] = uvt + t.sh * iTextureHigh;
+        }
+        else
+        {
+            buffer[ c + 2 ] = buffer[ c + 6 ] = uvl;
+            buffer[ c + 3 ] = buffer[ c + 11] = uvt;
+            buffer[ c + 10] = buffer[ c + 14] = uvl + t.sw * iTextureWide;
+            buffer[ c + 7 ] = buffer[ c + 15] = uvt + t.sh * iTextureHigh;
+        }
 
         // advance the buffer index
         c += 16;
