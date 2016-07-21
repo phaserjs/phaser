@@ -69,7 +69,7 @@ PIXI.TilemapShader = function (gl) {
         'varying vec2 vTexCoord;',
         'void main(void) {',
         '  gl_Position.zw = vec2(1, 1);',
-        '  gl_Position.xy = (aPosition.xy + uClipOffset + uOffset + uCentreOffset) * uScale - uCentreOffset;',
+        '  gl_Position.xy = (aPosition.xy + uOffset + uCentreOffset) * uScale - uCentreOffset + uClipOffset;',
         '  vTexCoord = aPosition.zw;',
         '}'
     ];
