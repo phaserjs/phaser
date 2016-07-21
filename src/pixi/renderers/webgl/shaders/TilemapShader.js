@@ -50,9 +50,11 @@ PIXI.TilemapShader = function (gl) {
         'precision lowp float;',
         'uniform sampler2D uImageSampler;',
         'uniform float uAlpha;',
+        'uniform vec2 uClipping;',
         'varying vec2 vTexCoord;',
         'void main(void) {',
-        '  gl_FragColor = texture2D(uImageSampler, vTexCoord) * uAlpha;',
+        '  if ( gl_FragCoord.x < uClipping.x && gl_FragCoord.y > uClipping.y)',
+        '    gl_FragColor = texture2D(uImageSampler, vTexCoord) * uAlpha;',
         '}'
     ];
 
@@ -98,13 +100,14 @@ PIXI.TilemapShader.prototype.init = function () {
     // get and store the attributes
     this.aPosition = gl.getAttribLocation(program, 'aPosition');
     this.uSampler = gl.getUniformLocation(program, 'uImageSampler');
+    this.uClipping = gl.getUniformLocation(program, 'uClipping');
     this.uOffset = gl.getUniformLocation(program, 'uOffset');
     this.uCentreOffset = gl.getUniformLocation(program, 'uCentreOffset');
     this.uAlpha = gl.getUniformLocation(program, 'uAlpha');
     this.uScale = gl.getUniformLocation(program, 'uScale');
 
     this.attributes = [this.aPosition];
-    this.uniforms = [this.uOffset, this.uCentreOffset, this.uAlpha, this.uScale, this.uSampler];
+    this.uniforms = [this.uClipping, this.uOffset, this.uCentreOffset, this.uAlpha, this.uScale, this.uSampler];
 
     this.program = program;
 
