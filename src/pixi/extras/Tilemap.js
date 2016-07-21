@@ -52,34 +52,34 @@ PIXI.Tilemap = function (texture, displayWidth, displayHeight, mapWidth, mapHeig
     /**
      * The width of a single tile in pixels.
      *
-     * @property tileWide
+     * @property tileWidth
      * @type integer
      */
-    this.tileWide = tileWidth;
+    this.tileWidth = tileWidth;
 
     /**
      * The height of a single tile in pixels.
      *
-     * @property tileHigh
+     * @property tileHeight
      * @type integer
      */
-    this.tileHigh = tileHeight;
+    this.tileHeight = tileHeight;
 
     /**
      * The width of the map in tiles.
      *
-     * @property mapWide
+     * @property mapWidth
      * @type integer
      */
-    this.mapWide = mapWidth;
+    this.mapWidth = mapWidth;
 
     /**
      * The height of the map in tiles.
      *
-     * @property mapHigh
+     * @property mapHeight
      * @type integer
      */
-    this.mapHigh = mapHeight;
+    this.mapHeight = mapHeight;
 
     /**
      * The width of the map in pixels.
@@ -87,7 +87,7 @@ PIXI.Tilemap = function (texture, displayWidth, displayHeight, mapWidth, mapHeig
      * @property width
      * @type integer
      */
-    this.width = this.mapWide * this.tileWide;
+    this.pxWidth = this.mapWidth * this.tileWidth;
 
     /**
      * The height of the map in pixels.
@@ -95,7 +95,7 @@ PIXI.Tilemap = function (texture, displayWidth, displayHeight, mapWidth, mapHeig
      * @property height
      * @type integer
      */
-    this.height = this.mapHigh * this.tileHigh;
+    this.pxHeight = this.mapHeight * this.tileHeight;
 
     /**
      * Tilemap layer data from the map, arranged in mapHeight lists of mapWidth tiles.
@@ -238,8 +238,8 @@ PIXI.Tilemap.prototype._renderBatch = function (renderSession) {
     var iWide = 1.0 / screenWide2;
     var iHigh = 1.0 / screenHigh2;
 
-    var wide = this.tileWide * 0.5 / screenWide2;
-    var high = this.tileHigh * 0.5 / screenHigh2;
+    var wide = this.tileWidth * 0.5 / screenWide2;
+    var high = this.tileHeight * 0.5 / screenHigh2;
 
     var buffer = this.buffer;
     var oldR, oldT, uvl, uvt;

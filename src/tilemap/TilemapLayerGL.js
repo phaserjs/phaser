@@ -827,7 +827,7 @@ Object.defineProperty(Phaser.TilemapLayerGL.prototype, "y", {
 
 });
 
-Object.defineProperty(Phaser.TilemapLayerGL.prototype, "displayWidth", {
+Object.defineProperty(Phaser.TilemapLayerGL.prototype, "width", {
 
     get: function () {
 
@@ -850,7 +850,7 @@ Object.defineProperty(Phaser.TilemapLayerGL.prototype, "displayWidth", {
 
 });
 
-Object.defineProperty(Phaser.TilemapLayerGL.prototype, "displayHeight", {
+Object.defineProperty(Phaser.TilemapLayerGL.prototype, "height", {
 
     get: function () {
 
