@@ -292,7 +292,7 @@ PIXI.DisplayObjectContainer.prototype.removeChildren = function(beginIndex, endI
  * @method updateTransform
  * @private
  */
-PIXI.DisplayObjectContainer.prototype.updateTransform = function ()
+PIXI.DisplayObjectContainer.prototype.updateTransform = function()
 {
     if (!this.visible)
     {
@@ -322,16 +322,21 @@ PIXI.DisplayObjectContainer.prototype.displayObjectContainerUpdateTransform = PI
  * @param {PIXI.DisplayObject|PIXI.Matrix} [targetCoordinateSpace] Returns a rectangle that defines the area of the display object relative to the coordinate system of the targetCoordinateSpace object.
  * @return {Rectangle} The rectangular bounding area
  */
-PIXI.DisplayObjectContainer.prototype.getBounds = function (targetCoordinateSpace)
+PIXI.DisplayObjectContainer.prototype.getBounds = function(targetCoordinateSpace)
 {
     var isTargetCoordinateSpaceDisplayObject = targetCoordinateSpace && targetCoordinateSpace instanceof PIXI.DisplayObject;
     var isTargetCoordinateSpaceThisOrParent = true;
 
-    if (!isTargetCoordinateSpaceDisplayObject) {
+    if (!isTargetCoordinateSpaceDisplayObject) 
+	{
         targetCoordinateSpace = this;
-    } else if (targetCoordinateSpace instanceof PIXI.DisplayObjectContainer) {
+    } 
+	else if (targetCoordinateSpace instanceof PIXI.DisplayObjectContainer) 
+	{
         isTargetCoordinateSpaceThisOrParent = targetCoordinateSpace.contains(this);
-    } else {
+    } 
+	else 
+	{
         isTargetCoordinateSpaceThisOrParent = false;
     }
 
@@ -343,7 +348,8 @@ PIXI.DisplayObjectContainer.prototype.getBounds = function (targetCoordinateSpac
 
         targetCoordinateSpace.worldTransform = PIXI.identityMatrix;
 
-        for (i = 0; i < targetCoordinateSpace.children.length; i++) {
+        for (i = 0; i < targetCoordinateSpace.children.length; i++) 
+		{
             targetCoordinateSpace.children[i].updateTransform();
         }
     }
@@ -383,7 +389,8 @@ PIXI.DisplayObjectContainer.prototype.getBounds = function (targetCoordinateSpac
 
     var bounds = this._bounds;
 
-    if (!childVisible) {
+    if (!childVisible) 
+	{
         bounds = new PIXI.Rectangle();
 
         var w0 = bounds.x;
@@ -441,15 +448,18 @@ PIXI.DisplayObjectContainer.prototype.getBounds = function (targetCoordinateSpac
     bounds.width = maxX - minX;
     bounds.height = maxY - minY;
 
-    if (isTargetCoordinateSpaceDisplayObject) {
+    if (isTargetCoordinateSpaceDisplayObject) 
+	{
         targetCoordinateSpace.worldTransform = matrixCache;
 
-        for (i = 0; i < targetCoordinateSpace.children.length; i++) {
+        for (i = 0; i < targetCoordinateSpace.children.length; i++) 
+		{
             targetCoordinateSpace.children[i].updateTransform();
         }
     }
 
-    if (!isTargetCoordinateSpaceThisOrParent) {
+    if (!isTargetCoordinateSpaceThisOrParent) 
+	{
         var targetCoordinateSpaceBounds = targetCoordinateSpace.getBounds();
 
         bounds.x -= targetCoordinateSpaceBounds.x;
@@ -481,10 +491,12 @@ PIXI.DisplayObjectContainer.prototype.contains = function (child) {
     if (!child)
         return false;
 
-    if (child === this) {
+    if (child === this) 
+	{
         return true;
     }
-    else {
+    else 
+	{
         return this.contains(child.parent);
     }
 }
