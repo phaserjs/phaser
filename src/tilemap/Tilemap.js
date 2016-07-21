@@ -575,8 +575,6 @@ Phaser.Tilemap.prototype = {
     */
     createLayer: function (layer, width, height, group) {
 
-        //  Add Buffer support for the left of the canvas
-
         if (width === undefined) { width = this.game.width; }
         if (height === undefined) { height = this.game.height; }
         if (group === undefined) { group = this.game.world; }
@@ -645,8 +643,8 @@ Phaser.Tilemap.prototype = {
         }
 
         //  Automatically updates all children too
-        rootLayer.displayWidth = width;
-        rootLayer.displayHeight = height;
+        rootLayer.width = width;
+        rootLayer.height = height;
 
         return rootLayer;
 
