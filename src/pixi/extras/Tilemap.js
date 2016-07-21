@@ -9,7 +9,7 @@
  * A PIXI WebGL Tilemap.
  *
  * @class PIXI.Tilemap
- * @extends {DisplayObjectContainer}
+ * @extends {PIXI.DisplayObject}
  * @param {PIXI.Texture} texture - The tilemap texture.
  * @param {integer} displayWidth - The width of the display area. Used as the clipping limit for the shader.
  * @param {integer} displayHeight - The height of the display area. Used as the clipping limit for the shader.
@@ -21,7 +21,7 @@
  */
 PIXI.Tilemap = function (texture, displayWidth, displayHeight, mapWidth, mapHeight, tileWidth, tileHeight, layer) {
 
-    PIXI.DisplayObjectContainer.call(this);
+    PIXI.DisplayObject.call(this);
 
     /**
      * The texture of the Tilemap
@@ -160,12 +160,21 @@ PIXI.Tilemap = function (texture, displayWidth, displayHeight, mapWidth, mapHeig
      */
     this.buffer = new PIXI.Float32Array(mapWidth * mapHeight * this.batchDataElement);
 
+    /**
+     * A required but un-used array.
+     * Do not add objects to this array, Tilemaps cannot have children.
+     *
+     * @property children
+     * @type Array
+     * @private
+     */
+    this.children = [];
+
 };
 
-PIXI.Tilemap.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
+PIXI.Tilemap.prototype = Object.create(PIXI.DisplayObject.prototype);
 PIXI.Tilemap.prototype.constructor = PIXI.Tilemap;
 
-// unused methods overridden to prevent default behavior
 PIXI.Tilemap.prototype.update = function () {};
 PIXI.Tilemap.prototype.postUpdate = function () {};
 
@@ -395,9 +404,10 @@ PIXI.Tilemap.prototype._renderWholeTilemap = function (renderSession) {
  * @method onTextureUpdate
  * @param event
  * @private
- */
 PIXI.Tilemap.prototype.onTextureUpdate = function () {
 
     this.updateFrame = true;
 
 };
+ */
+
