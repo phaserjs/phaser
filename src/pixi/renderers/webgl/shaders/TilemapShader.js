@@ -50,10 +50,11 @@ PIXI.TilemapShader = function (gl) {
         'precision lowp float;',
         'uniform sampler2D uImageSampler;',
         'uniform float uAlpha;',
-        'uniform vec2 uClipping;',
+        'uniform vec2 uClipLoc;',
+        'uniform vec2 uClipLimit;',
         'varying vec2 vTexCoord;',
         'void main(void) {',
-        '  if ( gl_FragCoord.x < uClipping.x && gl_FragCoord.y > uClipping.y)',
+        '  if ( gl_FragCoord.x >= uClipLoc.x && gl_FragCoord.y >= uClipLoc.y && gl_FragCoord.x < uClipLimit.x && gl_FragCoord.y > uClipLimit.y )',
         '    gl_FragColor = texture2D(uImageSampler, vTexCoord) * uAlpha;',
         '}'
     ];
@@ -63,11 +64,12 @@ PIXI.TilemapShader = function (gl) {
         'uniform vec2 uOffset;',
         'uniform vec2 uCentreOffset;',
         'uniform vec2 uScale;',
+        'uniform vec2 uClipOffset;',
         'attribute vec4 aPosition;',
         'varying vec2 vTexCoord;',
         'void main(void) {',
         '  gl_Position.zw = vec2(1, 1);',
-        '  gl_Position.xy = (aPosition.xy + uOffset + uCentreOffset) * uScale - uCentreOffset;',
+        '  gl_Position.xy = (aPosition.xy + uClipOffset + uOffset + uCentreOffset) * uScale - uCentreOffset;',
         '  vTexCoord = aPosition.zw;',
         '}'
     ];
@@ -100,14 +102,29 @@ PIXI.TilemapShader.prototype.init = function () {
     // get and store the attributes
     this.aPosition = gl.getAttribLocation(program, 'aPosition');
     this.uSampler = gl.getUniformLocation(program, 'uImageSampler');
-    this.uClipping = gl.getUniformLocation(program, 'uClipping');
+
+    // clipping uniforms...
+
+    // clipping start location (pixels)
+    this.uClipLoc = gl.getUniformLocation(program, 'uClipLoc');
+    // clipping width/height (pixels)
+    this.uClipLimit = gl.getUniformLocation(program, 'uClipLimit');
+    // clipping start location in webGl coordinates (-1...+1)
+    this.uClipOffset = gl.getUniformLocation(program, 'uClipOffset');
+
+    // offset for screen shake effect etc
     this.uOffset = gl.getUniformLocation(program, 'uOffset');
+
+    // centre of a tile for offset before scaling (so tiles scale from the centre out)
     this.uCentreOffset = gl.getUniformLocation(program, 'uCentreOffset');
-    this.uAlpha = gl.getUniformLocation(program, 'uAlpha');
+    // scale factor for tiles
     this.uScale = gl.getUniformLocation(program, 'uScale');
 
+    // alpha blending
+    this.uAlpha = gl.getUniformLocation(program, 'uAlpha');
+
     this.attributes = [this.aPosition];
-    this.uniforms = [this.uClipping, this.uOffset, this.uCentreOffset, this.uAlpha, this.uScale, this.uSampler];
+    this.uniforms = [this.uClipOffset, this.uClipLoc, this.uClipLimit, this.uOffset, this.uCentreOffset, this.uAlpha, this.uScale, this.uSampler];
 
     this.program = program;
 

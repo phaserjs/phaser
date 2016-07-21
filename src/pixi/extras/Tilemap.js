@@ -350,7 +350,9 @@ PIXI.Tilemap.prototype._renderWholeTilemap = function (renderSession) {
     // set the global offset (e.g. screen shake)
     gl.uniform2f(shader.uOffset, renderSession.offset.x / this.game.width * 2, -renderSession.offset.y / this.game.height * 2);
 
-    // set the clippling limits
+    // set the clipping limits
+    gl.uniform2f(shader.uClipOffset, this.offset.x / this.game.width * 2, this.offset.y / this.game.height * 2);
+    gl.uniform2f(shader.uClipLoc, this.offset.x, this.offset.y);
     gl.uniform2f(shader.uClipping, this.displayWidth, this.game.height - this.displayHeight);
 
     // set the offset in screen units to the center of the screen

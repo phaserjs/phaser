@@ -28,6 +28,9 @@ Phaser.TilemapLayerGL = function (game, tilemap, index, width, height) {
 
     this.game = game;
 
+
+    this.offset = new Phaser.Point();
+    
     /**
     * The Tilemap to which this layer is bound.
     * @property {Phaser.Tilemap} map
