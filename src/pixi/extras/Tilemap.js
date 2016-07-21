@@ -283,6 +283,9 @@ PIXI.Tilemap.prototype._renderWholeTilemap = function (renderSession) {
 
     // set the uniforms and texture
 
+    // set the global offset (e.g. screen shake)
+    gl.uniform2f(shader.uOffset, renderSession.offset.x / this.game.width * 2, -renderSession.offset.y / this.game.height * 2);
+
     // set the offset in screen units to the center of the screen
     // and flip the GL y coordinate to be zero at the top
     gl.uniform2f(shader.uCentreOffset, 1, -1);

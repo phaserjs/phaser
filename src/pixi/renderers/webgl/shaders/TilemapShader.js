@@ -14,6 +14,7 @@
 * Settings available are:
 * 
 * uAlpha - the alpha blending factor for a batch draw
+* uOffset - an offset for all tiles in this batch (e.g. screen shake)
 * uCentreOffset - the offset to the center of the drawing area, in WebGL units (-1...1)
 * uScale - the scaling factor for a batch draw
 * uImageSampler - the source texture containing the tile images
@@ -57,13 +58,14 @@ PIXI.TilemapShader = function (gl) {
 
     this.vertexSrc = [
         'precision lowp float;',
+        'uniform vec2 uOffset;',
         'uniform vec2 uCentreOffset;',
         'uniform vec2 uScale;',
         'attribute vec4 aPosition;',
         'varying vec2 vTexCoord;',
         'void main(void) {',
         '  gl_Position.zw = vec2(1, 1);',
-        '  gl_Position.xy = (aPosition.xy + uCentreOffset) * uScale - uCentreOffset;',
+        '  gl_Position.xy = (aPosition.xy + uOffset + uCentreOffset) * uScale - uCentreOffset;',
         '  vTexCoord = aPosition.zw;',
         '}'
     ];
@@ -96,12 +98,13 @@ PIXI.TilemapShader.prototype.init = function () {
     // get and store the attributes
     this.aPosition = gl.getAttribLocation(program, 'aPosition');
     this.uSampler = gl.getUniformLocation(program, 'uImageSampler');
+    this.uOffset = gl.getUniformLocation(program, 'uOffset');
     this.uCentreOffset = gl.getUniformLocation(program, 'uCentreOffset');
     this.uAlpha = gl.getUniformLocation(program, 'uAlpha');
     this.uScale = gl.getUniformLocation(program, 'uScale');
 
     this.attributes = [this.aPosition];
-    this.uniforms = [this.uCentreOffset, this.uAlpha, this.uScale, this.uSampler];
+    this.uniforms = [this.uOffset, this.uCentreOffset, this.uAlpha, this.uScale, this.uSampler];
 
     this.program = program;
 
