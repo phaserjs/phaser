@@ -17,9 +17,15 @@
  * @param {integer} tileheight - The height of a single tile.
  * @param {Array} layer - Tilemap layer data from the map, arranged in mapheight lists of mapwidth Phaser.Tile objects (2d array).
  */
-PIXI.Tilemap = function (texture, mapwidth, mapheight, tilewidth, tileheight, layer) {
+PIXI.Tilemap = function (texture, displaywidth, displayheight, mapwidth, mapheight, tilewidth, tileheight, layer) {
 
     PIXI.DisplayObjectContainer.call(this);
+
+    /**
+     * the clipping limits for this layer
+     */
+    this.displayWidth = displaywidth;
+    this.displayHeight = displayheight;
 
     /**
      * The texture of the Tilemap
@@ -106,7 +112,7 @@ PIXI.Tilemap.prototype._renderWebGL = function (renderSession) {
     // stop current render session batch drawing
     renderSession.spriteBatch.stop();
 
-    if (!this._vertexBuffer)
+    if (!this.positionBuffer)
     {
         this._initWebGL(renderSession);
     }
@@ -123,11 +129,6 @@ PIXI.Tilemap.prototype._renderWebGL = function (renderSession) {
 PIXI.Tilemap.prototype._initWebGL = function (renderSession) {
 
     var gl = renderSession.gl;
-
-    this._vertexBuffer = gl.createBuffer();
-    this._indexBuffer = gl.createBuffer();
-    this._uvBuffer = gl.createBuffer();
-    this._colorBuffer = gl.createBuffer();
 
     // create a GL buffer to transfer all the vertex position data through
     this.positionBuffer = gl.createBuffer();
@@ -155,10 +156,6 @@ PIXI.Tilemap.prototype._renderBatch = function (renderSession) {
     var iTextureWide = 1.0 / this.texture.width;
     var iTextureHigh = 1.0 / this.texture.height;
 
-    // size of one tile in the source texture
-    var srcWide = this.tileWide * iTextureWide;
-    var srcHigh = this.tileHigh * iTextureHigh;
-
     // pre-calculate inverse half-buffer dimensions
     var iWide = 1.0 / screenWide2;
     var iHigh = 1.0 / screenHigh2;
@@ -175,6 +172,7 @@ PIXI.Tilemap.prototype._renderBatch = function (renderSession) {
 
     for (var i = 0, l = this.glBatch.length; i < l; i++)
     {
+        // each object in this.glBatch has properties:
         // sx: this.drawCoords[coordIndex],
         // sy: this.drawCoords[coordIndex + 1],
         // sw: this.tileWidth,
@@ -183,7 +181,6 @@ PIXI.Tilemap.prototype._renderBatch = function (renderSession) {
         // dy: y,
         // dw: this.tileWidth,
         // dh: this.tileHeight
-
         var t = this.glBatch[i];
 
         if (!t)
@@ -285,6 +282,9 @@ PIXI.Tilemap.prototype._renderWholeTilemap = function (renderSession) {
 
     // set the global offset (e.g. screen shake)
     gl.uniform2f(shader.uOffset, renderSession.offset.x / this.game.width * 2, -renderSession.offset.y / this.game.height * 2);
+
+    // set the clippling limits
+    gl.uniform2f(shader.uClipping, this.displayWidth, this.game.height - this.displayHeight);
 
     // set the offset in screen units to the center of the screen
     // and flip the GL y coordinate to be zero at the top
