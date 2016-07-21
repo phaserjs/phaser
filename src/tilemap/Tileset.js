@@ -217,10 +217,6 @@ Phaser.Tileset.prototype = {
                 alpha: alpha
             });
         }
-        else
-        {
-            console.warn("invalid tile index in drawGl", index, this.firstgid, this.name);
-        }
 
     },
 
