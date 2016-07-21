@@ -1,7 +1,7 @@
 /// <reference path="pixi.d.ts" />
 /// <reference path="p2.d.ts" />
 
-// Type definitions for Phaser 2.6.1 - 11th July 2016
+// Type definitions for Phaser 2.7.0 - 21st July 2016
 // Project: https://github.com/photonstorm/phaser
 
 declare module "phaser" {
@@ -4683,6 +4683,7 @@ declare module Phaser {
         fullScreenTarget: HTMLElement;
         game: Phaser.Game;
         grid: Phaser.FlexGrid;
+        hasPhaserSetFullScreen: boolean;
         height: number;
         incorrectOrientation: boolean;
         isFullScreen: boolean;
