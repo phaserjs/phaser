@@ -28,9 +28,6 @@ Phaser.TilemapLayerGL = function (game, tilemap, index, width, height) {
 
     this.game = game;
 
-    width |= 0;
-    height |= 0;
-
     /**
     * The Tilemap to which this layer is bound.
     * @property {Phaser.Tilemap} map
@@ -219,7 +216,7 @@ Phaser.TilemapLayerGL = function (game, tilemap, index, width, height) {
     // get PIXI textures for each tileset source image
     var baseTexture = new PIXI.BaseTexture(tileset.image);
 
-    PIXI.Tilemap.call(this, new PIXI.Texture(baseTexture), this.map.width, this.map.height, this._mc.tileset.tileWidth, this._mc.tileset.tileHeight, this.layer);
+    PIXI.Tilemap.call(this, new PIXI.Texture(baseTexture), width | 0, height | 0, this.map.width, this.map.height, this._mc.tileset.tileWidth, this._mc.tileset.tileHeight, this.layer);
 
     Phaser.Component.Core.init.call(this, game, 0, 0, null, null);
 
@@ -296,24 +293,9 @@ Phaser.TilemapLayerGL.prototype.destroy = function() {
 */
 Phaser.TilemapLayerGL.prototype.resize = function (width, height) {
 
-    this.texture.frame.resize(width, height);
-
-    this.texture.width = width;
-    this.texture.height = height;
-
-    this.texture.crop.width = width;
-    this.texture.crop.height = height;
-
-    this.texture.baseTexture.width = width;
-    this.texture.baseTexture.height = height;
-
-    this.texture.baseTexture.dirty();
-    this.texture.requiresUpdate = true;
-
-    this.texture._updateUvs();
-
+    this.displayWidth = width;
+    this.displayHeight = height;
     this.dirty = true;
-
 };
 
 /**
