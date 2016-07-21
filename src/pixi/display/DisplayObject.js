@@ -326,10 +326,8 @@ PIXI.DisplayObject.prototype = {
         var p = this.parent;
 
         if (parent)
-
         {
             p = parent;
-
         }
         else if (!this.parent)
         {
