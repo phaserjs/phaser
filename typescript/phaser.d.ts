@@ -5028,6 +5028,7 @@ declare module Phaser {
         collideIndexes: any[];
         currentLayer: number;
         debugMap: any[];
+        enableDebug: boolean;
         format: number;
         game: Phaser.Game;
         height: number;

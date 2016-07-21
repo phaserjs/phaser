@@ -11,21 +11,33 @@
  * @class PIXI.Tilemap
  * @extends {DisplayObjectContainer}
  * @param {PIXI.Texture} texture - The tilemap texture.
- * @param {integer} mapwidth - The width of the map.
- * @param {integer} mapheight - The height of the map.
- * @param {integer} tilewidth 0- The width of a single tile.
- * @param {integer} tileheight - The height of a single tile.
- * @param {Array} layer - Tilemap layer data from the map, arranged in mapheight lists of mapwidth Phaser.Tile objects (2d array).
+ * @param {integer} displayWidth - The width of the display area. Used as the clipping limit for the shader.
+ * @param {integer} displayHeight - The height of the display area. Used as the clipping limit for the shader.
+ * @param {integer} mapWidth - The width of the map.
+ * @param {integer} mapHeight - The height of the map.
+ * @param {integer} tileWidth - The width of a single tile.
+ * @param {integer} tileHeight - The height of a single tile.
+ * @param {Array} layer - Tilemap layer data from the map, arranged in mapHeight lists of mapWidth Phaser.Tile objects (2d array).
  */
-PIXI.Tilemap = function (texture, displaywidth, displayheight, mapwidth, mapheight, tilewidth, tileheight, layer) {
+PIXI.Tilemap = function (texture, displayWidth, displayHeight, mapWidth, mapHeight, tileWidth, tileHeight, layer) {
 
     PIXI.DisplayObjectContainer.call(this);
 
     /**
-     * the clipping limits for this layer
+     * The clipping limit of the display area.
+     *
+     * @property displayWidth
+     * @type integer
      */
-    this.displayWidth = displaywidth;
-    this.displayHeight = displayheight;
+    this.displayWidth = displayWidth;
+
+    /**
+     * The clipping limit of the display area.
+     *
+     * @property displayHeight
+     * @type integer
+     */
+    this.displayHeight = displayHeight;
 
     /**
      * The texture of the Tilemap
@@ -35,41 +47,93 @@ PIXI.Tilemap = function (texture, displaywidth, displayheight, mapwidth, mapheig
      */
     this.texture = texture;
 
-    // faster access to the tile dimensions
-    this.tileWide = tilewidth;
-    this.tileHigh = tileheight;
-    this.mapWide = mapwidth;
-    this.mapHigh = mapheight;
+    /**
+     * The width of a single tile in pixels.
+     *
+     * @property tileWide
+     * @type integer
+     */
+    this.tileWide = tileWidth;
 
-    // TODO: switch here to create DisplayObjectContainer at correct size for the render mode
+    /**
+     * The height of a single tile in pixels.
+     *
+     * @property tileHigh
+     * @type integer
+     */
+    this.tileHigh = tileHeight;
+
+    /**
+     * The width of the map in tiles.
+     *
+     * @property mapWide
+     * @type integer
+     */
+    this.mapWide = mapWidth;
+
+    /**
+     * The height of the map in tiles.
+     *
+     * @property mapHigh
+     * @type integer
+     */
+    this.mapHigh = mapHeight;
+
+    /**
+     * The width of the map in pixels.
+     *
+     * @property width
+     * @type integer
+     */
     this.width = this.mapWide * this.tileWide;
+
+    /**
+     * The height of the map in pixels.
+     *
+     * @property height
+     * @type integer
+     */
     this.height = this.mapHigh * this.tileHigh;
 
+    /**
+     * Tilemap layer data from the map, arranged in mapHeight lists of mapWidth tiles.
+     * Contains Phaser.Tile objects (2d array).
+     *
+     * @property layer
+     * @type Array
+     */
     this.layer = layer;
 
-    // store the list of batch drawing instructions (for use with WebGL rendering)
+    /**
+     * Store the list of batch drawing instructions.
+     *
+     * @property glBatch
+     * @type Array
+     */
     this.glBatch = null;
 
     /**
-     * Remember last tile drawn to avoid unnecessary set-up
+     * Remember last tile drawn to avoid unnecessary set-up.
      *
-     * @type Integer
+     * @property lastTile
+     * @type integer
      */
     this.lastTile = -1;
 
     /**
-     * Whether the Tilemap is dirty or not
+     * Whether the Tilemap is dirty or not.
      *
      * @property dirty
-     * @type Boolean
+     * @type boolean
      */
     this.dirty = true;
 
     /**
-     * The blend mode to be applied to the tilemap. Set to PIXI.blendModes.NORMAL to remove any blend mode.
+     * The blend mode to be applied to the tilemap.
+     * Set to PIXI.blendModes.NORMAL to remove any blend mode.
      *
      * @property blendMode
-     * @type Number
+     * @type integer
      * @default PIXI.blendModes.NORMAL;
      */
     this.blendMode = PIXI.blendModes.NORMAL;
@@ -80,19 +144,22 @@ PIXI.Tilemap = function (texture, displaywidth, displayheight, mapwidth, mapheig
      * float left, bottom, right, top - screen coordinates
      * float u, v, wide, high - source texture coordinates
      *
-     * @type {Number}
+     * @property batchDataElement
+     * @type integer
      */
     this.batchDataElement = 16;
 
-    // calculate total batch data size
-    var dataSize = mapwidth * mapheight * this.batchDataElement;
-
-    // create buffer data for the webgl rendering of this tile
-    this.buffer = new PIXI.Float32Array(dataSize);
+    /**
+     * Create the buffer data for the WebGL rendering of this tilemap.
+     * Calculates the total batch data size.
+     *
+     * @property buffer
+     * @type PIXI.Float32Array
+     */
+    this.buffer = new PIXI.Float32Array(mapWidth * mapHeight * this.batchDataElement);
 
 };
 
-// constructor, this class extends PIXI.DisplayObjectContainer
 PIXI.Tilemap.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
 PIXI.Tilemap.prototype.constructor = PIXI.Tilemap;
 

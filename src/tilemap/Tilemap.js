@@ -137,6 +137,11 @@ Phaser.Tilemap = function (game, key, tileWidth, tileHeight, width, height) {
     this.images = data.images;
 
     /**
+    * @property {boolean} enableDebug - If set then console.log is used to dump out useful layer creation debug data.
+    */
+    this.enableDebug = false;
+
+    /**
     * @property {number} currentLayer - The current layer.
     */
     this.currentLayer = 0;
@@ -589,11 +594,11 @@ Phaser.Tilemap.prototype = {
             return;
         }
 
-        if ( this.game.config.enableDebug )
+        if (this.enableDebug)
         {
-            // incredibly useful when trying to debug multiple layers..
-            // this and the two below describe each layer, tileset, and it's index in the layers list...
-            console.log("createLayer", this.layers[index].name, width, "x", height, "tileset", this.tilesets[0].name, "index =", index);
+            // incredibly useful when trying to debug multiple layers.
+            // this and the two below describe each layer, tileset, and its index in the layers list.
+            console.log('Tilemap.createLayer', this.layers[index].name, width, 'x', height, 'tileset', this.tilesets[0].name, 'index:', index);
         }
 
         // attempt to create internal layers for multiple tilesets in a layer
@@ -603,20 +608,21 @@ Phaser.Tilemap.prototype = {
         {
             var ts = this.tilesets[i];
             var li = this.layers[index];
-            if ( !this.createInternalLayer('layer' + index + '_internal_' + i, ts, li, ts.tileWidth, ts.tileHeight, group) )
+
+            if (!this.createInternalLayer('layer' + index + '_internal_' + i, ts, li, ts.tileWidth, ts.tileHeight, group))
             {
-                if ( this.game.config.enableDebug )
+                if (this.enableDebug)
                 {
                     // we didn't create an internal layer, this tileset isn't used in the base layer
-                    console.log( "tileset", ts.name, "is not used in layer", li.name );
+                    console.log('Tilemap.createLayer: tileset', ts.name, 'is not used in layer', li.name);
                 }
             }
             else
             {
-                if ( this.game.config.enableDebug )
+                if (this.enableDebug)
                 {
                     // we removed all tiles belonging to the tileset in the base layer, and placed them in a new internal layer
-                    console.log( "created internal layer for tileset", ts.name, "from layer", li.name, "index =", this.layers.length - 1 );
+                    console.log('Tilemap.createLayer: Created internal layer for tileset', ts.name, 'from layer', li.name, 'index:', this.layers.length - 1);
                 }
             }
         }

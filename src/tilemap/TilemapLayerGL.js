@@ -279,13 +279,7 @@ Phaser.TilemapLayerGL.prototype.destroy = function() {
 };
 
 /**
-* Resizes the internal dimensions and texture frame used by this TilemapLayerGL.
-*
-* This is an expensive call, so don't bind it to a window resize event! But instead call it at carefully
-* selected times.
-*
-* Be aware that no validation of the new sizes takes place and the current map scroll coordinates are not
-* modified either. You will have to handle both of these things from your game code if required.
+* Resizes the internal dimensions used by this TilemapLayerGL during rendering.
 * 
 * @method Phaser.TilemapLayerGL#resize
 * @param {number} width - The new width of the TilemapLayerGL
@@ -296,6 +290,7 @@ Phaser.TilemapLayerGL.prototype.resize = function (width, height) {
     this.displayWidth = width;
     this.displayHeight = height;
     this.dirty = true;
+
 };
 
 /**
