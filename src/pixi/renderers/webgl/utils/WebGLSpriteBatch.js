@@ -360,7 +360,15 @@ PIXI.WebGLSpriteBatch.prototype.render = function (sprite, matrix) {
  */
 PIXI.WebGLSpriteBatch.prototype.renderTilingSprite = function (sprite) {
     var texture = sprite.tilingTexture;
-
+    var baseTexture = texture.baseTexture;
+    var gl = this.gl;
+    
+    if (this.textureArray[baseTexture.textureIndex] != baseTexture) {
+        gl.activeTexture(gl.TEXTURE0 + baseTexture.textureIndex);
+        gl.bindTexture(gl.TEXTURE_2D, baseTexture._glTextures[gl.id]);
+        this.textureArray[baseTexture.textureIndex] = baseTexture;
+        this.flush();
+    }
 
     // check texture..
     if (this.currentBatchSize >= this.size) {
