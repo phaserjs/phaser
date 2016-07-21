@@ -172,10 +172,11 @@ Phaser.Tileset.prototype = {
 
         if (coordIndex >= 0 && (coordIndex + 1) < this.drawCoords.length)
         {
-            var sx = this.drawCoords[coordIndex];
-            var sy = this.drawCoords[coordIndex + 1];
-            var sw = this.tileWidth;
-            var sh = this.tileHeight;
+            // apply "half-pixel correction" to avoid edge bleeding as much as possible
+            var sx = this.drawCoords[coordIndex] + 0.5;
+            var sy = this.drawCoords[coordIndex + 1] + 0.5;
+            var sw = this.tileWidth - 1.0;
+            var sh = this.tileHeight - 1.0;
             var fd = 0;
 
             if (flippedVal)
