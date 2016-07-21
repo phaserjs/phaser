@@ -419,7 +419,6 @@ Phaser.TilemapLayerGL.prototype._unfixY = function (y) {
 */
 Phaser.TilemapLayerGL.prototype.getTileX = function (x) {
 
-    // var tileWidth = this.tileWidth * this.scale.x;
     return Math.floor(this._fixX(x) / this._mc.tileWidth);
 
 };
@@ -434,7 +433,6 @@ Phaser.TilemapLayerGL.prototype.getTileX = function (x) {
 */
 Phaser.TilemapLayerGL.prototype.getTileY = function (y) {
 
-    // var tileHeight = this.tileHeight * this.scale.y;
     return Math.floor(this._fixY(y) / this._mc.tileHeight);
 
 };
@@ -630,6 +628,8 @@ Phaser.TilemapLayerGL.prototype.setScale = function (xScale, yScale) {
 * @param {integer} top - Topmost row to render.
 * @param {integer} right - Rightmost column to render.
 * @param {integer} bottom - Bottommost row to render.
+* @param {integer} offx - X pixel offset.
+* @param {integer} offy - Y pixel offset.
 */
 Phaser.TilemapLayerGL.prototype.renderRegion = function (scrollX, scrollY, left, top, right, bottom, offx, offy) {
 
@@ -716,8 +716,12 @@ Phaser.TilemapLayerGL.prototype.renderFull = function () {
     var scrollX = this._mc.scrollX;
     var scrollY = this._mc.scrollY;
 
-    var renderW = this.game._width;     //this.canvas.width;
-    var renderH = this.game._height;    //this.canvas.height;
+    // var renderW = this.game._width;
+    // var renderH = this.game._height;
+
+    //  displayWidth surely?
+    var renderW = this.game._width;
+    var renderH = this.game._height;
 
     var tw = this._mc.tileWidth;
     var th = this._mc.tileHeight;
@@ -744,25 +748,19 @@ Phaser.TilemapLayerGL.prototype.renderFull = function () {
 */
 Phaser.TilemapLayerGL.prototype.render = function () {
 
-    var redrawAll = false;
-
     if (!this.visible)
     {
         return;
     }
 
-    if (this.dirty || this.layer.dirty)
-    {
-        this.layer.dirty = false;
-        redrawAll = true;
-    }
+    var redrawAll = (this.dirty || this.layer.dirty);
 
     //  Scrolling bias; whole pixels only
     var scrollX = this._scrollX | 0;
     var scrollY = this._scrollY | 0;
 
     var mc = this._mc;
-    var shiftX = mc.scrollX - scrollX; // Negative when scrolling right/down
+    var shiftX = mc.scrollX - scrollX; // Negative when scrolling right / down
     var shiftY = mc.scrollY - scrollY;
 
     if (!redrawAll && shiftX === 0 && shiftY === 0)
@@ -776,8 +774,7 @@ Phaser.TilemapLayerGL.prototype.render = function () {
 
     this.renderFull();
 
-    this.texture.baseTexture.dirty();
-
+    this.layer.dirty = false;
     this.dirty = false;
 
     return true;
