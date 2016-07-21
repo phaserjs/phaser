@@ -589,12 +589,36 @@ Phaser.Tilemap.prototype = {
             return;
         }
 
-        //  Create the internal layers for different tilesets using this one as a base description
+        if ( this.game.config.enableDebug )
+        {
+            // incredibly useful when trying to debug multiple layers..
+            // this and the two below describe each layer, tileset, and it's index in the layers list...
+            console.log("createLayer", this.layers[index].name, "tileset", this.tilesets[0].name, "index =", index);
+        }
+
+        // attempt to create internal layers for multiple tilesets in a layer
+        // it is currently assumed that each base layer will use tileset[0] (so 'i' starts at 1 in the for loop)
+        // (a 'base' layer is any layer except the so-called 'internal' layers created here)
         for (var i = 1; i < this.tilesets.length; i++)
         {
             var ts = this.tilesets[i];
             var li = this.layers[index];
-            this.createInternalLayer('layer' + index + '_internal_' + i, ts, li.width, li.height, ts.tileWidth, ts.tileHeight, group);
+            if ( !this.createInternalLayer('layer' + index + '_internal_' + i, ts, li, ts.tileWidth, ts.tileHeight, group) )
+            {
+                if ( this.game.config.enableDebug )
+                {
+                    // we didn't create an internal layer, this tileset isn't used in the base layer
+                    console.log( "tileset", ts.name, "is not used in layer", li.name );
+                }
+            }
+            else
+            {
+                if ( this.game.config.enableDebug )
+                {
+                    // we removed all tiles belonging to the tileset in the base layer, and placed them in a new internal layer
+                    console.log( "created internal layer for tileset", ts.name, "from layer", li.name, "index =", this.layers.length - 1 );
+                }
+            }
         }
 
         if (this.game.renderType === Phaser.WEBGL)
@@ -624,14 +648,13 @@ Phaser.Tilemap.prototype = {
     * @method Phaser.Tilemap#createInternalLayer
     * @param {string} name - The name of this layer. Must be unique within the map.
     * @param {Phaser.Tileset} tileset - The tileset whose data is to be added to this layer.
-    * @param {number} width - The width of the layer in tiles.
-    * @param {number} height - The height of the layer in tiles.
+    * @param {Phaser.TilemapLayer/TilemapLayerGL} fromLayer - The layer from which this internal layer is being created.
     * @param {number} tileWidth - The width of the tiles the layer uses for calculations.
     * @param {number} tileHeight - The height of the tiles the layer uses for calculations.
     * @param {Phaser.Group} [group] - Optional Group to add the layer to. If not specified it will be added to the World group.
     * @return {Phaser.TilemapLayer} The TilemapLayer object. This is an extension of Phaser.Image and can be moved around the display list accordingly.
     */
-    createInternalLayer: function (name, tileset, width, height, tileWidth, tileHeight, group) {
+    createInternalLayer: function (name, tileset, fromLayer, tileWidth, tileHeight, group) {
 
         if (group === undefined) { group = this.game.world; }
 
@@ -646,10 +669,10 @@ Phaser.Tilemap.prototype = {
             name: name,
             x: 0,
             y: 0,
-            width: width,
-            height: height,
-            widthInPixels: width * tileWidth,
-            heightInPixels: height * tileHeight,
+            width: fromLayer.width,
+            height: fromLayer.height,
+            widthInPixels: fromLayer.width * tileWidth,
+            heightInPixels: fromLayer.height * tileHeight,
             alpha: 1,
             visible: true,
             properties: {},
@@ -665,14 +688,14 @@ Phaser.Tilemap.prototype = {
         var output = [];
         var emptyFlag = true;
 
-        for (var y = 0; y < height; y++)
+        for (var y = 0; y < fromLayer.height; y++)
         {
             row = [];
 
-            for (var x = 0; x < width; x++)
+            for (var x = 0; x < fromLayer.width; x++)
             {
                 // get the equivalent tile from this Tilemap
-                var tile = this.layers[0].data[y][x];
+                var tile = fromLayer.data[y][x];
 
                 // find out which tileset it is in
                 var setIndex = this.tiles[tile.index] && this.tiles[tile.index][2];
@@ -688,7 +711,7 @@ Phaser.Tilemap.prototype = {
                     row.push(tile);
 
                     // erase it from the original (mixed tileset) layer
-                    this.layers[0].data[y][x] = new Phaser.Tile(layer, -1, x, y, tileWidth, tileHeight);
+                    fromLayer.data[y][x] = new Phaser.Tile(layer, -1, x, y, tileWidth, tileHeight);
                 }
                 else
                 {
