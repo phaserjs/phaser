@@ -364,17 +364,6 @@ Phaser.Tilemap.prototype = {
                 }
             }
 
-            // create an empty layer for the map parts corresponding to this tileset
-            // if ( !this.tilesetLayers )
-            // {
-            //     this.tilesetLayers = [];
-            // }
-            // else
-            // {
-            //     // name, width, height, tileWidth, tileHeight, group
-            //     this.tilesetLayers.push( this.createBlankLayer( "_internal" + this.tilesetLayers.length.toString() ) );
-            // }
-
             return newSet;
 
         }
