@@ -28,8 +28,21 @@ Phaser.TilemapLayerGL = function (game, tilemap, index, width, height) {
 
     this.game = game;
 
+    /**
+    * The rendering offset.
+    * 
+    * @property {Phaser.Point} _offset
+    * @private
+    */
+    this._offset = new Phaser.Point();
 
-    this.offset = new Phaser.Point();
+    /**
+    * An Array of any linked layers.
+    * 
+    * @property {Array} linkedLayers
+    * @private
+    */
+    this.linkedLayers = [];
     
     /**
     * The Tilemap to which this layer is bound.
@@ -290,8 +303,10 @@ Phaser.TilemapLayerGL.prototype.destroy = function() {
 */
 Phaser.TilemapLayerGL.prototype.resize = function (width, height) {
 
+    //  These setters will automatically update any linked children
     this.displayWidth = width;
     this.displayHeight = height;
+
     this.dirty = true;
 
 };
@@ -559,6 +574,11 @@ Phaser.TilemapLayerGL.prototype.resetTilesetCache = function () {
 
     this._mc.tilesets = [];
 
+    for (var i = 0; i < this.linkedLayers.length; i++)
+    {
+        this.linkedLayers[i].resetTilesetCache();
+    }
+
 };
 
 /**
@@ -590,6 +610,11 @@ Phaser.TilemapLayerGL.prototype.setScale = function (xScale, yScale) {
     }
 
     this.scale.setTo(xScale, yScale);
+
+    for (var i = 0; i < this.linkedLayers.length; i++)
+    {
+        this.linkedLayers[i].setScale(xScale, yScale);
+    }
 
 };
 
@@ -706,6 +731,7 @@ Phaser.TilemapLayerGL.prototype.renderFull = function () {
     var bottom = Math.floor((renderH - 1 + scrollY) / th);
 
     this.glBatch = [];
+
     this.renderRegion(scrollX, scrollY, left, top, right, bottom, 0, -(ch - th));
 
 };
@@ -758,6 +784,98 @@ Phaser.TilemapLayerGL.prototype.render = function () {
 
 };
 
+Object.defineProperty(Phaser.TilemapLayerGL.prototype, "x", {
+
+    get: function () {
+
+        return this._offset.x;
+
+    },
+
+    set: function (value) {
+
+        this._offset.x = value;
+
+        for (var i = 0; i < this.linkedLayers.length; i++)
+        {
+            this.linkedLayers[i]._offset.x = value;
+        }
+
+        this.dirty = true;
+
+    }
+
+});
+
+Object.defineProperty(Phaser.TilemapLayerGL.prototype, "y", {
+
+    get: function () {
+
+        return this._offset.y;
+
+    },
+
+    set: function (value) {
+
+        this.offset.y = value;
+
+        for (var i = 0; i < this.linkedLayers.length; i++)
+        {
+            this.linkedLayers[i]._offset.y = value;
+        }
+
+        this.dirty = true;
+
+    }
+
+});
+
+Object.defineProperty(Phaser.TilemapLayerGL.prototype, "displayWidth", {
+
+    get: function () {
+
+        return this._displayWidth;
+
+    },
+
+    set: function (value) {
+
+        this._displayWidth = value;
+
+        for (var i = 0; i < this.linkedLayers.length; i++)
+        {
+            this.linkedLayers[i]._displayWidth = value;
+        }
+
+        this.dirty = true;
+
+    }
+
+});
+
+Object.defineProperty(Phaser.TilemapLayerGL.prototype, "displayHeight", {
+
+    get: function () {
+
+        return this._displayHeight;
+
+    },
+
+    set: function (value) {
+
+        this._displayHeight = value;
+
+        for (var i = 0; i < this.linkedLayers.length; i++)
+        {
+            this.linkedLayers[i]._displayHeight = value;
+        }
+
+        this.dirty = true;
+
+    }
+
+});
+
 /**
 * Flag controlling if the layer tiles wrap at the edges. Only works if the World size matches the Map size.
 *
@@ -769,11 +887,20 @@ Phaser.TilemapLayerGL.prototype.render = function () {
 Object.defineProperty(Phaser.TilemapLayerGL.prototype, "wrap", {
 
     get: function () {
+
         return this._wrap;
+
     },
 
     set: function (value) {
+
         this._wrap = value;
+
+        for (var i = 0; i < this.linkedLayers.length; i++)
+        {
+            this.linkedLayers[i]._wrap = value;
+        }
+
         this.dirty = true;
     }
 
@@ -789,11 +916,20 @@ Object.defineProperty(Phaser.TilemapLayerGL.prototype, "wrap", {
 Object.defineProperty(Phaser.TilemapLayerGL.prototype, "scrollX", {
 
     get: function () {
+
         return this._scrollX;
+
     },
 
     set: function (value) {
+
         this._scrollX = value;
+
+        for (var i = 0; i < this.linkedLayers.length; i++)
+        {
+            this.linkedLayers[i]._scrollX = value;
+        }
+
     }
 
 });
@@ -808,11 +944,20 @@ Object.defineProperty(Phaser.TilemapLayerGL.prototype, "scrollX", {
 Object.defineProperty(Phaser.TilemapLayerGL.prototype, "scrollY", {
 
     get: function () {
+
         return this._scrollY;
+
     },
 
     set: function (value) {
+
         this._scrollY = value;
+
+        for (var i = 0; i < this.linkedLayers.length; i++)
+        {
+            this.linkedLayers[i]._scrollY = value;
+        }
+
     }
 
 });
@@ -827,12 +972,22 @@ Object.defineProperty(Phaser.TilemapLayerGL.prototype, "scrollY", {
 Object.defineProperty(Phaser.TilemapLayerGL.prototype, "collisionWidth", {
 
     get: function () {
+
         return this._mc.cw;
+
     },
 
     set: function (value) {
+
         this._mc.cw = value | 0;
+
+        for (var i = 0; i < this.linkedLayers.length; i++)
+        {
+            this.linkedLayers[i]._mc.cw = value | 0;
+        }
+
         this.dirty = true;
+
     }
 
 });
@@ -847,11 +1002,20 @@ Object.defineProperty(Phaser.TilemapLayerGL.prototype, "collisionWidth", {
 Object.defineProperty(Phaser.TilemapLayerGL.prototype, "collisionHeight", {
 
     get: function () {
+
         return this._mc.ch;
+
     },
 
     set: function (value) {
+
         this._mc.ch = value | 0;
+
+        for (var i = 0; i < this.linkedLayers.length; i++)
+        {
+            this.linkedLayers[i]._mc.ch = value | 0;
+        }
+
         this.dirty = true;
     }
 

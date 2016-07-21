@@ -24,28 +24,30 @@ PIXI.Tilemap = function (texture, displayWidth, displayHeight, mapWidth, mapHeig
     PIXI.DisplayObjectContainer.call(this);
 
     /**
-     * The clipping limit of the display area.
-     *
-     * @property displayWidth
-     * @type integer
-     */
-    this.displayWidth = displayWidth;
-
-    /**
-     * The clipping limit of the display area.
-     *
-     * @property displayHeight
-     * @type integer
-     */
-    this.displayHeight = displayHeight;
-
-    /**
      * The texture of the Tilemap
      *
      * @property texture
      * @type Texture
      */
     this.texture = texture;
+
+    /**
+     * The clipping limit of the display area.
+     *
+     * @property _displayWidth
+     * @type integer
+     * @private
+     */
+    this._displayWidth = displayWidth;
+
+    /**
+     * The clipping limit of the display area.
+     *
+     * @property _displayHeight
+     * @type integer
+     * @private
+     */
+    this._displayHeight = displayHeight;
 
     /**
      * The width of a single tile in pixels.
@@ -289,26 +291,26 @@ PIXI.Tilemap.prototype._renderBatch = function (renderSession) {
         }
 
         // calculate the destination location of the tile in screen units (-1..1)
-        buffer[ c     ] = buffer[ c + 4 ] = lft;
-        buffer[ c + 1 ] = buffer[ c + 9 ] = bot;
-        buffer[ c + 8 ] = buffer[ c + 12] = oldR = x + wide;
-        buffer[ c + 5 ] = buffer[ c + 13] = oldT = y - high;
+        buffer[ c     ] = buffer[ c + 4  ] = lft;
+        buffer[ c + 1 ] = buffer[ c + 9  ] = bot;
+        buffer[ c + 8 ] = buffer[ c + 12 ] = oldR = x + wide;
+        buffer[ c + 5 ] = buffer[ c + 13 ] = oldT = y - high;
 
         // calculate the uv coordinates of the tile source image
         if (t.fd === 1)
         {
             // flipped diagonally, swap x,y axes
-            buffer[ c + 14] = buffer[ c + 6 ] = uvl;
-            buffer[ c + 15] = buffer[ c + 11] = uvt;
-            buffer[ c + 10] = buffer[ c + 2 ] = uvl + t.sw * iTextureWide;
-            buffer[ c + 7 ] = buffer[ c + 3 ] = uvt + t.sh * iTextureHigh;
+            buffer[ c + 14 ] = buffer[ c + 6  ] = uvl;
+            buffer[ c + 15 ] = buffer[ c + 11 ] = uvt;
+            buffer[ c + 10 ] = buffer[ c + 2  ] = uvl + t.sw * iTextureWide;
+            buffer[ c + 7  ] = buffer[ c + 3  ] = uvt + t.sh * iTextureHigh;
         }
         else
         {
-            buffer[ c + 2 ] = buffer[ c + 6 ] = uvl;
-            buffer[ c + 3 ] = buffer[ c + 11] = uvt;
-            buffer[ c + 10] = buffer[ c + 14] = uvl + t.sw * iTextureWide;
-            buffer[ c + 7 ] = buffer[ c + 15] = uvt + t.sh * iTextureHigh;
+            buffer[ c + 2  ] = buffer[ c + 6  ] = uvl;
+            buffer[ c + 3  ] = buffer[ c + 11 ] = uvt;
+            buffer[ c + 10 ] = buffer[ c + 14 ] = uvl + t.sw * iTextureWide;
+            buffer[ c + 7  ] = buffer[ c + 15 ] = uvt + t.sh * iTextureHigh;
         }
 
         // advance the buffer index
@@ -333,9 +335,9 @@ PIXI.Tilemap.prototype._renderBatch = function (renderSession) {
 };
 
 /**
-* render the entire tilemap using a fast webgl batched tile render
+* Render the entire tilemap using a fast WebGL batched tile render.
 *
-* @param  {[type]} renderSession [description]
+* @param  {Object} renderSession - The PIXI RenderSession.
 */
 PIXI.Tilemap.prototype._renderWholeTilemap = function (renderSession) {
 
@@ -351,9 +353,9 @@ PIXI.Tilemap.prototype._renderWholeTilemap = function (renderSession) {
     gl.uniform2f(shader.uOffset, renderSession.offset.x / this.game.width * 2, -renderSession.offset.y / this.game.height * 2);
 
     // set the clipping limits
-    gl.uniform2f(shader.uClipOffset, this.offset.x / this.game.width * 2, this.offset.y / this.game.height * 2);
-    gl.uniform2f(shader.uClipLoc, this.offset.x, this.offset.y);
-    gl.uniform2f(shader.uClipLimit, this.displayWidth, this.game.height - this.displayHeight);
+    gl.uniform2f(shader.uClipOffset, this._offset.x / this.game.width * 2, this._offset.y / this.game.height * 2);
+    gl.uniform2f(shader.uClipLoc, this._offset.x, this._offset.y);
+    gl.uniform2f(shader.uClipLimit, this._offset.x + this._displayWidth, this.game.height - (this._offset.y + this._displayHeight));
 
     // set the offset in screen units to the center of the screen
     // and flip the GL y coordinate to be zero at the top
@@ -397,69 +399,5 @@ PIXI.Tilemap.prototype._renderWholeTilemap = function (renderSession) {
 PIXI.Tilemap.prototype.onTextureUpdate = function () {
 
     this.updateFrame = true;
-
-};
-
-/**
- * Returns the bounds of the map as a rectangle. The bounds calculation takes the worldTransform into account.
- *
- * @method getBounds
- * @param matrix {Matrix} the transformation matrix of the sprite
- * @return {Rectangle} the framing rectangle
- */
-PIXI.Tilemap.prototype.getBounds = function (matrix) {
-
-    var worldTransform = matrix || this.worldTransform;
-
-    var a = worldTransform.a;
-    var b = worldTransform.b;
-    var c = worldTransform.c;
-    var d = worldTransform.d;
-    var tx = worldTransform.tx;
-    var ty = worldTransform.ty;
-
-    var maxX = -Infinity;
-    var maxY = -Infinity;
-
-    var minX = Infinity;
-    var minY = Infinity;
-
-    var vertices = [
-        0, 0,
-        this.mapWide * this.tileWide, 0,
-        this.mapWide * this.tileWide, this.mapHigh * this.tileHigh,
-        0, this.mapHigh * this.tileHigh
-    ];
-
-    for (var i = 0, n = vertices.length; i < n; i += 2)
-    {
-        var rawX = vertices[i], rawY = vertices[i + 1];
-        var x = (a * rawX) + (c * rawY) + tx;
-        var y = (d * rawY) + (b * rawX) + ty;
-
-        minX = x < minX ? x : minX;
-        minY = y < minY ? y : minY;
-
-        maxX = x > maxX ? x : maxX;
-        maxY = y > maxY ? y : maxY;
-    }
-
-    if (minX === -Infinity || maxY === Infinity)
-    {
-        return PIXI.EmptyRectangle;
-    }
-
-    var bounds = this._bounds;
-
-    bounds.x = minX;
-    bounds.width = maxX - minX;
-
-    bounds.y = minY;
-    bounds.height = maxY - minY;
-
-    // store a reference so that if this function gets called again in the render cycle we do not have to recalculate
-    this._currentBounds = bounds;
-
-    return bounds;
 
 };

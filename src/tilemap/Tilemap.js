@@ -601,6 +601,18 @@ Phaser.Tilemap.prototype = {
             console.log('Tilemap.createLayer', this.layers[index].name, width, 'x', height, 'tileset', this.tilesets[0].name, 'index:', index);
         }
 
+        var rootLayer;
+
+        if (this.game.renderType === Phaser.WEBGL)
+        {
+            // use WebGL variant of TilemapLayer
+            rootLayer = group.add(new Phaser.TilemapLayerGL(this.game, this, index, width, height));
+        }
+        else
+        {
+            rootLayer = group.add(new Phaser.TilemapLayer(this.game, this, index, width, height));
+        }
+
         // attempt to create internal layers for multiple tilesets in a layer
         // it is currently assumed that each base layer will use tileset[0] (so 'i' starts at 1 in the for loop)
         // (a 'base' layer is any layer except the so-called 'internal' layers created here)
@@ -608,8 +620,11 @@ Phaser.Tilemap.prototype = {
         {
             var ts = this.tilesets[i];
             var li = this.layers[index];
+            var name = 'layer' + index + '_internal_' + i;
 
-            if (!this.createInternalLayer('layer' + index + '_internal_' + i, ts, li, ts.tileWidth, ts.tileHeight, group))
+            var childLayer = this.createInternalLayer(name, ts, li, ts.tileWidth, ts.tileHeight, group);
+
+            if (!childLayer)
             {
                 if (this.enableDebug)
                 {
@@ -619,6 +634,8 @@ Phaser.Tilemap.prototype = {
             }
             else
             {
+                rootLayer.linkedLayers.push(childLayer);
+
                 if (this.enableDebug)
                 {
                     // we removed all tiles belonging to the tileset in the base layer, and placed them in a new internal layer
@@ -627,15 +644,11 @@ Phaser.Tilemap.prototype = {
             }
         }
 
-        if (this.game.renderType === Phaser.WEBGL)
-        {
-            // use WebGL variant of TilemapLayer
-            return group.add(new Phaser.TilemapLayerGL(this.game, this, index, width, height));
-        }
-        else
-        {
-            return group.add(new Phaser.TilemapLayer(this.game, this, index, width, height));
-        }
+        //  Automatically updates all children too
+        rootLayer.displayWidth = width;
+        rootLayer.displayHeight = height;
+
+        return rootLayer;
 
     },
 
@@ -729,7 +742,7 @@ Phaser.Tilemap.prototype = {
             output.push(row);
         }
 
-        if ( emptyFlag )
+        if (emptyFlag)
         {
             // none of those tiles are used in this layer, so we don't actually need it
             return;
@@ -752,20 +765,20 @@ Phaser.Tilemap.prototype = {
             h = this.game.height;
         }
 
-        var output;
+        var displayLayer;
 
         if (this.game.renderType === Phaser.WEBGL)
         {
-            output = new Phaser.TilemapLayerGL(this.game, this, this.layers.length - 1, w, h);
+            displayLayer = new Phaser.TilemapLayerGL(this.game, this, this.layers.length - 1, w, h);
         }
         else
         {
-            output = new Phaser.TilemapLayer(this.game, this, this.layers.length - 1, w, h);
+            displayLayer = new Phaser.TilemapLayer(this.game, this, this.layers.length - 1, w, h);
         }
 
-        output.name = name;
+        displayLayer.name = name;
 
-        return group.add(output);
+        return group.add(displayLayer);
 
     },
 
