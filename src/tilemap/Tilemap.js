@@ -593,7 +593,7 @@ Phaser.Tilemap.prototype = {
         {
             // incredibly useful when trying to debug multiple layers..
             // this and the two below describe each layer, tileset, and it's index in the layers list...
-            console.log("createLayer", this.layers[index].name, "tileset", this.tilesets[0].name, "index =", index);
+            console.log("createLayer", this.layers[index].name, width, "x", height, "tileset", this.tilesets[0].name, "index =", index);
         }
 
         // attempt to create internal layers for multiple tilesets in a layer
