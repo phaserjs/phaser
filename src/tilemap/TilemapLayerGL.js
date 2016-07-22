@@ -21,7 +21,7 @@
 * @param {integer} index - The index of the TileLayer to render within the Tilemap.
 * @param {integer} width - Width of the renderable area of the layer (in pixels).
 * @param {integer} height - Height of the renderable area of the layer (in pixels).
-* @param {Phaser.Tileset} [tileset] - The Tileset this Layer uses to render with.
+* @param {Phaser.Tileset} tileset - The Tileset this Layer uses to render with.
 */
 Phaser.TilemapLayerGL = function (game, tilemap, index, width, height, tileset) {
 
@@ -160,6 +160,7 @@ Phaser.TilemapLayerGL = function (game, tilemap, index, width, height, tileset) 
     * @private
     */
 
+    /*
     if (tileset === undefined)
     {
         if (tilemap.layers[index] && tilemap.layers[index].tileset)
@@ -171,6 +172,7 @@ Phaser.TilemapLayerGL = function (game, tilemap, index, width, height, tileset) 
             tileset = tilemap.tilesets[0];
         }
     }
+    */
 
     this._mc = {
 
@@ -537,6 +539,13 @@ Phaser.TilemapLayerGL.prototype.render = function () {
 
 };
 
+/**
+* The x position of this Tilemap Layer.
+*
+* @property {integer} x
+* @memberof Phaser.TilemapLayerGL
+* @public
+*/
 Object.defineProperty(Phaser.TilemapLayerGL.prototype, "x", {
 
     get: function () {
@@ -560,6 +569,13 @@ Object.defineProperty(Phaser.TilemapLayerGL.prototype, "x", {
 
 });
 
+/**
+* The y position of this Tilemap Layer.
+*
+* @property {integer} y
+* @memberof Phaser.TilemapLayerGL
+* @public
+*/
 Object.defineProperty(Phaser.TilemapLayerGL.prototype, "y", {
 
     get: function () {
@@ -583,6 +599,13 @@ Object.defineProperty(Phaser.TilemapLayerGL.prototype, "y", {
 
 });
 
+/**
+* The rendered width of this Tilemap Layer.
+*
+* @property {integer} width
+* @memberof Phaser.TilemapLayerGL
+* @public
+*/
 Object.defineProperty(Phaser.TilemapLayerGL.prototype, "width", {
 
     get: function () {
@@ -606,6 +629,13 @@ Object.defineProperty(Phaser.TilemapLayerGL.prototype, "width", {
 
 });
 
+/**
+* The rendered height of this Tilemap Layer.
+*
+* @property {integer} height
+* @memberof Phaser.TilemapLayerGL
+* @public
+*/
 Object.defineProperty(Phaser.TilemapLayerGL.prototype, "height", {
 
     get: function () {

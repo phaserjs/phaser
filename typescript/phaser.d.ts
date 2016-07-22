@@ -5041,6 +5041,7 @@ declare module Phaser {
         objects: any[];
         orientation: string;
         properties: any;
+        rayStepRate: number;
         tileHeight: number;
         tiles: Phaser.Tile[];
         tilesets: Phaser.Tileset[];
@@ -5067,6 +5068,11 @@ declare module Phaser {
         getLayerIndex(name: string): number;
         getObjectIndex(name: string): number;
         getTile(x: number, y: number, layer?: any, nonNull?: boolean): Phaser.Tile;
+        getRayCastTiles(layer: Phaser.TilemapLayer|Phaser.TilemapLayerGL, line: Phaser.Line, stepRate?: number, collides?: boolean, interestingFace?: boolean): Phaser.Tile[];
+        getTiles(layer: Phaser.TilemapLayer|Phaser.TilemapLayerGL, x: number, y: number, width: number, height: number, collides?: boolean, interestingFace?: boolean): Phaser.Tile[];
+        getTileX(layer: Phaser.TilemapLayer|Phaser.TilemapLayerGL, x: number): number;
+        getTileXY(layer: Phaser.TilemapLayer|Phaser.TilemapLayerGL, x: number, y: number, point: Phaser.Point): Phaser.Point;
+        getTileY(layer: Phaser.TilemapLayer|Phaser.TilemapLayerGL, y: number): number;
         getTileAbove(layer: number, x: number, y: number): Phaser.Tile;
         getTileBelow(layer: number, x: number, y: number): Phaser.Tile;
         getTileLeft(layer: number, x: number, y: number): Phaser.Tile;
@@ -5121,7 +5127,6 @@ declare module Phaser {
         map: Phaser.Tilemap;
         name: string;
         physicsType: number;
-        rayStepRate: number;
         renderSettings: { enableScrollDelta: boolean; overdrawRatio: number; copyCanvas: any; };
         scrollFactorX: number;
         scrollFactorY: number;
@@ -5131,11 +5136,44 @@ declare module Phaser {
         wrap: boolean;
 
         destroy(): void;
-        getRayCastTiles(line: Phaser.Line, stepRate?: number, collides?: boolean, interestingFace?: boolean): Phaser.Tile[];
-        getTiles(x: number, y: number, width: number, height: number, collides?: boolean, interestingFace?: boolean): Phaser.Tile[];
-        getTileX(x: number): number;
-        getTileXY(x: number, y: number, point: Phaser.Point): Phaser.Point;
-        getTileY(y: number): number;
+        postUpdate(): void;
+        render(): void;
+        resize(width: number, height: number): void;
+        resizeWorld(): void;
+        resetTilesetCache(): void;
+        setScale(xScale?: number, yScale?: number): void;
+        updateMax(): void;
+
+    }
+
+    class TilemapLayerGL {
+
+        constructor(game: Phaser.Game, tilemap: Phaser.Tilemap, index: number, width?: number, height?: number, tileset?: Phaser.Tileset);
+
+        collisionHeight: number;
+        collisionWidth: number;
+        data: any;
+        dirty: boolean;
+        exists: boolean;
+        fixedToCamera: boolean;
+        game: Phaser.Game;
+        index: number;
+        layer: Phaser.TilemapLayer;
+        map: Phaser.Tilemap;
+        name: string;
+        physicsType: number;
+        scrollFactorX: number;
+        scrollFactorY: number;
+        scrollX: number;
+        scrollY: number;
+        type: number;
+        wrap: boolean;
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+
+        destroy(): void;
         postUpdate(): void;
         render(): void;
         resize(width: number, height: number): void;
