@@ -608,7 +608,7 @@ Phaser.Weapon.prototype.update = function () {
         }
     }
 
-    if (this.autofire && this.game.time.now < this._nextFire)
+    if (this.autofire)
     {
         this.fire();
     }
@@ -879,7 +879,6 @@ Phaser.Weapon.prototype.fire = function (from, x, y) {
         {
             this.onFireLimit.dispatch(this, this.fireLimit);
         }
-
     }
 
 };

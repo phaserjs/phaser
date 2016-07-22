@@ -1219,7 +1219,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     /**
     * Returns true if the top of this Body is in contact with either the world bounds or a tile.
     *
-    * @method Phaser.Physics.Arcade.Body#onTop
+    * @method Phaser.Physics.Arcade.Body#onCeiling
     * @return {boolean} True if in contact with either the world bounds or a tile.
     */
     onCeiling: function(){

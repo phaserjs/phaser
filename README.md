@@ -316,17 +316,22 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 
 ### Updates
 
-* TypeScript definitions fixes and updates (thanks )
-* Docs typo fixes (thanks @rroylance @Owumaro)
+* TypeScript definitions fixes and updates (thanks @calvindavis)
+* Docs typo fixes (thanks @rroylance @Owumaro @boniatillo-com)
 * The InputHandler.flagged property has been removed. It was never used internally, or exposed via the API, so was just overhead.
 * The src/system folder has been removed and all files relocated to the src/utils folder. This doesn't change anything from an API point of view, but did change the grunt build scripts slightly.
 * BitmapData.shadow and BitmapData.text now both `return this` keeping them in-line with the docs (thanks @greeny #2634)
+* Group.align has had its arguments changed so that it's now `(width, height, ...)` instead of `(rows, columns, ...)` (thanks @deargle #2643)
+* Group.align now returns `true` if the Group was aligned, or `false` if not.
+* The Loader.headers object has a new property `requestedWith`. By default this is set to `false`, but it can be used to set the `X-Requested-With` header to `XMLHttpRequest` (or any other value you need). To enable this do `this.load.headers.requestedWith = 'XMLHttpRequest'` before adding anything to the Loader.
+* ScaleManager.hasPhaserSetFullScreen is a new boolean that identifies if the browser is in full screen mode or not, and if Phaser was the one that requested it. As it's possible to enter full screen mode outside of Phaser, and it then gets confused about what bounding parent to use.
+* Phaser.Tileset has a new property `lastgid` which is populated automatically by the TilemapParser when importing Tiled map data, or can be set manually if building your own tileset.
 
 ### Bug Fixes
 
 * A Group with `inputEnableChildren` set would re-start the Input Handler on a Sprite, even if that handler had been disabled previously.
-*
-*
+* Weapon.autofire wouldn't fire after the first bullet, or until `fire` was called, neither of which are requirements. If you now set this boolean the Weapon will fire continuously until you toggle it back to false (thanks @alverLopez #2647)
+* ArcadePhysics.World.angleBetweenCenters now uses `centerX` and `centerY` properties to check for the angle between, instead of `center.x/y` as that property no longer exists (thanks @leopoldobrines7 #2654)
 
 ### Pixi Updates
 

@@ -1,7 +1,7 @@
 /// <reference path="pixi.d.ts" />
 /// <reference path="p2.d.ts" />
 
-// Type definitions for Phaser 2.6.1 - 11th July 2016
+// Type definitions for Phaser 2.7.0 - 21st July 2016
 // Project: https://github.com/photonstorm/phaser
 
 declare module "phaser" {
@@ -1719,6 +1719,7 @@ declare module Phaser {
         static RETURN_CHILD: number;
         static RETURN_NONE: number;
         static RETURN_TOTAL: number;
+        static RETURN_ALL: number;
         static SORT_ASCENDING: number;
         static SORT_DESCENDING: number;
 
@@ -1767,7 +1768,7 @@ declare module Phaser {
         addAt(child: any, index: number, silent?: boolean): any;
         addMultiple(children: any[], silent?: boolean): any[];
         addToHash(child: PIXI.DisplayObject): boolean;
-        align(rows: number, columns: number, cellWidth: number, cellHeight: number, position?: number, offset?: number): void;
+        align(width: number, height: number, cellWidth: number, cellHeight: number, position?: number, offset?: number): boolean;
         alignIn(container: Phaser.Rectangle | Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapText | Phaser.Button | Phaser.Graphics | Phaser.TileSprite, position?: number, offsetX?: number, offsetY?: number): Phaser.Group;
         alignTo(container: Phaser.Rectangle | Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapText | Phaser.Button | Phaser.Graphics | Phaser.TileSprite, position?: number, offsetX?: number, offsetY?: number): Phaser.Group;
         bringToTop(child: any): any;
@@ -4074,7 +4075,7 @@ declare module Phaser {
 
     class RandomDataGenerator {
 
-        constructor(seeds: any[] | string);
+        constructor(seeds?: any[] | string);
 
         angle(): number;
         between(min: number, max: number): number;
@@ -4682,6 +4683,7 @@ declare module Phaser {
         fullScreenTarget: HTMLElement;
         game: Phaser.Game;
         grid: Phaser.FlexGrid;
+        hasPhaserSetFullScreen: boolean;
         height: number;
         incorrectOrientation: boolean;
         isFullScreen: boolean;
@@ -5026,6 +5028,7 @@ declare module Phaser {
         collideIndexes: any[];
         currentLayer: number;
         debugMap: any[];
+        enableDebug: boolean;
         format: number;
         game: Phaser.Game;
         height: number;
@@ -5161,6 +5164,7 @@ declare module Phaser {
         columns: number;
         firstgid: number;
         image: any;
+        lastgid: number;
         name: string;
         properties: any;
         rows: number;
@@ -5172,6 +5176,7 @@ declare module Phaser {
 
         containsTileIndex(tileIndex: number): boolean;
         draw(context: CanvasRenderingContext2D, x: number, y: number, index: number): void;
+        drawGl(glBatch: any[], x: number, y: number, index: number, alpha: number, flippedVal: number): void;
         setImage(image: any): void;
         setSpacing(margin?: number, spacing?: number): void;
 

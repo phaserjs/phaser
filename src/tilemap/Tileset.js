@@ -40,6 +40,14 @@ Phaser.Tileset = function (name, firstgid, width, height, margin, spacing, prope
     this.firstgid = firstgid | 0;
 
     /**
+    * This is the ending index of the last tile index this Tileset can contain.
+    * This is populated automatically by Phaser.TilemapParser.parseTiledJSON.
+    * For a single tileset map it should be left as the default value.
+    * @property {integer} lastgid
+    */
+    this.lastgid = Infinity;
+
+    /**
     * The width of each tile (in pixels).
     * @property {integer} tileWidth
     * @readonly
@@ -154,53 +162,88 @@ Phaser.Tileset.prototype = {
     },
 
     /**
-    * Draws a tile from this Tileset at the given coordinates using a WebGl renderer.
+    * Sets the GL Batch data to draw a tile from this Tileset at the given coordinates 
+    * using a WebGL renderer.
     *
     * @method Phaser.Tileset#drawGl
-    * @public
-    * @param out {Array} glBatch - A list of webgl batch objects to draw later.
+    * @param {Array} glBatch - A list of WebGL batch objects to draw later.
     * @param {number} x - The x coordinate to draw to.
     * @param {number} y - The y coordinate to draw to.
     * @param {integer} index - The index of the tile within the set to draw.
     * @param {number} alpha - The alpha value to draw this tile with.
+    * @param {integer} flippedVal - A bitwise value which indicates how the UV source coordinates should be flipped
     */
-    drawGl: function (glBatch, x, y, index, alpha) {
+    drawGl: function (glBatch, x, y, index, alpha, flippedVal) {
 
         // Correct the tile index for the set and bias for interlacing x/y values
         var coordIndex = (index - this.firstgid) * 2;
 
         if (coordIndex >= 0 && (coordIndex + 1) < this.drawCoords.length)
         {
-            // add the tile to the webgl batch
+            // apply "half-pixel correction" to avoid edge bleeding as much as possible
+            var sx = this.drawCoords[coordIndex] + 0.5;
+            var sy = this.drawCoords[coordIndex + 1] + 0.5;
+            var sw = this.tileWidth - 1.0;
+            var sh = this.tileHeight - 1.0;
+            var fd = 0;
+
+            if (flippedVal)
+            {
+                if (flippedVal & 1)
+                {
+                    // flipped diagonally (swap x,y axes)
+                    fd = 1;
+                }
+
+                if (flippedVal & 4)
+                {
+                    // flipped horizontally
+                    sx += sw;
+                    sw = -sw;
+                }
+
+                if (flippedVal & 2)
+                {
+                    // flipped vertically
+                    sy += sh;
+                    sh = -sh;
+                }
+            }
+
+            // add the tile to the WebGL batch
             // source and destination coordinates, in pixel units
-            // destination is the centre of the tile
-            glBatch.push( {
-                sx: this.drawCoords[coordIndex],
-                sy: this.drawCoords[coordIndex + 1],
-                sw: this.tileWidth,
-                sh: this.tileHeight,
+            // destination is the center of the tile
+            glBatch.push({
+                sx: sx,
+                sy: sy,
+                sw: sw,
+                sh: sh,
+                fd: fd,
                 dx: x + this.tileWidth * 0.5,
                 dy: y + this.tileHeight * 0.5,
                 dw: this.tileWidth,
                 dh: this.tileHeight,
                 alpha: alpha
-            } );
+            });
         }
 
     },
 
     /**
-     * adds a marker for the WebGl batch display to insert a degenerate triangle (eg. at the end of each row of tiles)
-     *
-     * @param {[type]} glBatch [description]
-     */
-    addDegenerate: function( glBatch )
-    {
-        // don't insert multiple degenerate markers in a row
-        if ( glBatch[ glBatch.length - 1] )
+    * Adds a marker for the WebGL batch display to insert a degenerate 
+    * triangle (eg. at the end of each row of tiles)
+    *
+    * @method Phaser.Tileset#addDegenerate
+    * @param {array} glBatch - The GL Batch data array.
+    */
+    addDegenerate: function (glBatch) {
+
+        //  Don't insert multiple degenerate markers in a row
+        if (glBatch[glBatch.length - 1])
         {
-            glBatch.push( null );
+            glBatch.push(null);
         }
+
     },
 
     /**

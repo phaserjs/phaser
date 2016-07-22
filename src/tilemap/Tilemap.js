@@ -137,6 +137,11 @@ Phaser.Tilemap = function (game, key, tileWidth, tileHeight, width, height) {
     this.images = data.images;
 
     /**
+    * @property {boolean} enableDebug - If set then console.log is used to dump out useful layer creation debug data.
+    */
+    this.enableDebug = false;
+
+    /**
     * @property {number} currentLayer - The current layer.
     */
     this.currentLayer = 0;
@@ -316,20 +321,6 @@ Phaser.Tilemap.prototype = {
         if (this.tilesets[idx])
         {
             this.tilesets[idx].setImage(img);
-
-            // create an empty layer for the map parts corresponding to this tileset
-            // if ( !this.tilesetLayers )
-            // {
-            //     // for the first tileset, don't create a layer because createLayer will be called to do that
-            //     this.tilesetLayers = [];
-            // }
-            // else
-            // {
-            //     // for all the rest, go ahead and make a (currently) blank layer
-            //     // name, width, height, tileWidth, tileHeight, group
-            //     this.tilesetLayers.push( this.createBlankLayer( "_internal" + this.tilesetLayers.length.toString() ) );
-            // }
-
             return this.tilesets[idx];
         }
         else
@@ -377,17 +368,6 @@ Phaser.Tilemap.prototype = {
                     }
                 }
             }
-
-            // create an empty layer for the map parts corresponding to this tileset
-            // if ( !this.tilesetLayers )
-            // {
-            //     this.tilesetLayers = [];
-            // }
-            // else
-            // {
-            //     // name, width, height, tileWidth, tileHeight, group
-            //     this.tilesetLayers.push( this.createBlankLayer( "_internal" + this.tilesetLayers.length.toString() ) );
-            // }
 
             return newSet;
 
@@ -595,8 +575,6 @@ Phaser.Tilemap.prototype = {
     */
     createLayer: function (layer, width, height, group) {
 
-        //  Add Buffer support for the left of the canvas
-
         if (width === undefined) { width = this.game.width; }
         if (height === undefined) { height = this.game.height; }
         if (group === undefined) { group = this.game.world; }
@@ -614,136 +592,92 @@ Phaser.Tilemap.prototype = {
             return;
         }
 
-        // create the internal layers for different tilesets using this one as a base description
-        for (var i = 1, l = this.tilesets.length; i < l; i++)
+        if (this.enableDebug)
         {
-            var ts = this.tilesets[i];
-            var li = this.layers[index];
-            this.createInternalLayer( "_internal" + i.toString(), ts, li.width, li.height, ts.tileWidth, ts.tileHeight, group );
+            console.group('Tilemap.createLayer');
+            console.log('Name:', this.layers[index].name);
+            console.log('Size:', width, 'x', height);
+            console.log('Tileset:', this.tilesets[0].name, 'index:', index);
         }
 
-        if ( this.game.renderType === Phaser.WEBGL )
+        var rootLayer;
+
+        if (this.game.renderType === Phaser.WEBGL)
         {
-            // use WebGL variant of TilemapLayer
-            return group.add(new Phaser.TilemapLayerGL(this.game, this, index, width, height));
+            rootLayer = group.add(new Phaser.TilemapLayerGL(this.game, this, index, width, height, this.tilesets[0]));
+        }
+        else
+        {
+            rootLayer = group.add(new Phaser.TilemapLayer(this.game, this, index, width, height));
         }
 
-        return group.add(new Phaser.TilemapLayer(this.game, this, index, width, height));
+        //  Create child layers for multiple tilesets in a layer
+        //  It is currently assumed that each base layer will use tileset[0] (so 'i' starts at 1 in the for loop)
+        //  (a 'base' layer is any layer except the so-called 'internal' layers created here)
+
+        var fromLayer = this.layers[index];
+        var childLayer;
+
+        for (var i = 1; i < this.tilesets.length; i++)
+        {
+            if (this.checkChildLayer(this.tilesets[i], fromLayer))
+            {
+                if (this.game.renderType === Phaser.WEBGL)
+                {
+                    childLayer = group.add(new Phaser.TilemapLayerGL(this.game, this, index, width, height, this.tilesets[i]));
+                }
+                else
+                {
+                    childLayer = group.add(new Phaser.TilemapLayer(this.game, this, index, width, height, this.tilesets[i]));
+                }
+
+                rootLayer.linkedLayers.push(childLayer);
+
+                if (this.enableDebug)
+                {
+                    console.log('Linked child created for tileset:', this.tilesets[i].name);
+                }
+            }
+        }
+
+        if (this.enableDebug)
+        {
+            console.groupEnd();
+        }
+
+
+        return rootLayer;
 
     },
 
     /**
-    * Creates a new internal layer on this Tilemap.
-    * 
-    * Internal layers are used when a Tilemap contains multiple Tilesets with different sized tiles.  The tilesets
-    * each get a separate layer which is only ever referenced internally by the renderer.  This approach permits us
-    * to handle large tiles at screen edges, and with the correct offset relative to the 'base' tileset regardless
-    * of size differences between the tiles.
-    * 
-    * For WebGL rendering, this approach also permits us to batch the drawing calls efficiently.
-    * 
-    * By default TilemapLayers are fixed to the camera.
+    * Takes a Tileset and map layer data, then runs through the data looking
+    * to see if there are any tiles that use the given Tileset. If there is,
+    * it returns true, otherwise false.
     *
-    * @method Phaser.Tilemap#createInternalLayer
-    * @param {string} name - The name of this layer. Must be unique within the map.
-    * @param {Phaser.Tileset} tileset - The tileset whose data is to be added to this layer.
-    * @param {number} width - The width of the layer in tiles.
-    * @param {number} height - The height of the layer in tiles.
-    * @param {number} tileWidth - The width of the tiles the layer uses for calculations.
-    * @param {number} tileHeight - The height of the tiles the layer uses for calculations.
-    * @param {Phaser.Group} [group] - Optional Group to add the layer to. If not specified it will be added to the World group.
-    * @return {Phaser.TilemapLayer} The TilemapLayer object. This is an extension of Phaser.Image and can be moved around the display list accordingly.
+    * @method Phaser.Tilemap#checkChildLayer
+    * @private
+    * @param {Phaser.Tileset} tileset - The Tileset to check against.
+    * @param {Object} fromLayer - The layer data to check.
+    * @return {boolean} True if a child layer needs to be created, otherwise false.
     */
-    createInternalLayer: function (name, tileset, width, height, tileWidth, tileHeight, group) {
+    checkChildLayer: function (tileset, fromLayer) {
 
-        if (group === undefined) { group = this.game.world; }
-
-        if (this.getLayerIndex(name) !== null)
+        for (var y = 0; y < fromLayer.height; y++)
         {
-            console.warn('Tilemap.createBlankLayer: Layer with matching name already exists');
-            return;
-        }
-
-        var layer = {
-
-            name: name,
-            x: 0,
-            y: 0,
-            width: width,
-            height: height,
-            widthInPixels: width * tileWidth,
-            heightInPixels: height * tileHeight,
-            alpha: 1,
-            visible: true,
-            properties: {},
-            indexes: [],
-            callbacks: [],
-            bodies: [],
-            data: null,
-            tileset: tileset
-
-        };
-
-        var row;
-        var output = [];
-
-        for (var y = 0; y < height; y++)
-        {
-            row = [];
-            for (var x = 0; x < width; x++)
+            for (var x = 0; x < fromLayer.width; x++)
             {
-                // get the equivalent tile from this Tilemap
-                var tile = this.layers[0].data[y][x];
-                // find out which tileset it is in
-                var setIndex = this.tiles[tile.index] && this.tiles[tile.index][2];
-                var ts = this.tilesets[setIndex];
-                // is it one of the ones we want to move?
-                if ( ts == tileset )
+                //  Get the equivalent tile from this Tilemap
+                var tile = fromLayer.data[y][x];
+
+                if (tile && tile.index >= tileset.firstgid && tile.index <= tileset.lastgid)
                 {
-                    // move the tile to this new layer
-                    row.push( tile );
-                    // erase it from the original (mixed tileset) layer
-                    this.layers[0].data[y][x] = new Phaser.Tile(layer, -1, x, y, tileWidth, tileHeight);
-                }
-                else
-                {
-                    // add an empty tile
-                    row.push(new Phaser.Tile(layer, -1, x, y, tileWidth, tileHeight));
+                    return true;
                 }
             }
-
-            output.push(row);
         }
 
-        layer.data = output;
-
-        this.layers.push(layer);
-
-        var w = layer.widthInPixels;
-        var h = layer.heightInPixels;
-
-        if (w > this.game.width)
-        {
-            w = this.game.width;
-        }
-
-        if (h > this.game.height)
-        {
-            h = this.game.height;
-        }
-
-        var output;
-        if ( this.game.renderType === Phaser.WEBGL )
-        {
-            output = new Phaser.TilemapLayerGL(this.game, this, this.layers.length - 1, w, h);
-        }
-        else
-        {
-            output = new Phaser.TilemapLayer(this.game, this, this.layers.length - 1, w, h);
-        }
-        output.name = name;
-
-        return group.add(output);
+        return false;
 
     },
 
@@ -765,7 +699,7 @@ Phaser.Tilemap.prototype = {
 
         if (this.getLayerIndex(name) !== null)
         {
-            console.warn('Tilemap.createBlankLayer: Layer with matching name already exists');
+            console.warn('Tilemap.createBlankLayer: Layer with matching name already exists: ' + name);
             return;
         }
 

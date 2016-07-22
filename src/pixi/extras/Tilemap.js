@@ -6,14 +6,22 @@
 */
 
 /**
-* Tilemap - constructor
-* 
-* @param {Array} layer - layer data from the map, arranged in mapheight lists of mapwidth Phaser.Tile objects (2d array)
-* 
-*/
-PIXI.Tilemap = function(texture, mapwidth, mapheight, tilewidth, tileheight, layer) {
+ * A PIXI WebGL Tilemap.
+ *
+ * @class PIXI.Tilemap
+ * @extends {PIXI.DisplayObject}
+ * @param {PIXI.Texture} texture - The tilemap texture.
+ * @param {integer} displayWidth - The width of the display area. Used as the clipping limit for the shader.
+ * @param {integer} displayHeight - The height of the display area. Used as the clipping limit for the shader.
+ * @param {integer} mapWidth - The width of the map.
+ * @param {integer} mapHeight - The height of the map.
+ * @param {integer} tileWidth - The width of a single tile.
+ * @param {integer} tileHeight - The height of a single tile.
+ * @param {Array} layer - Tilemap layer data from the map, arranged in mapHeight lists of mapWidth Phaser.Tile objects (2d array).
+ */
+PIXI.Tilemap = function (texture, displayWidth, displayHeight, mapWidth, mapHeight, tileWidth, tileHeight, layer) {
 
-    PIXI.DisplayObjectContainer.call(this);
+    PIXI.DisplayObject.call(this);
 
     /**
      * The texture of the Tilemap
@@ -23,41 +31,111 @@ PIXI.Tilemap = function(texture, mapwidth, mapheight, tilewidth, tileheight, lay
      */
     this.texture = texture;
 
-    // faster access to the tile dimensions
-    this.tileWide = tilewidth;
-    this.tileHigh = tileheight;
-    this.mapWide = mapwidth;
-    this.mapHigh = mapheight;
+    /**
+     * The clipping limit of the display area.
+     *
+     * @property _displayWidth
+     * @type integer
+     * @private
+     */
+    this._displayWidth = displayWidth;
 
-    // TODO: switch here to create DisplayObjectContainer at correct size for the render mode
-    this.width = this.mapWide * this.tileWide;
-    this.height = this.mapHigh * this.tileHigh;
+    /**
+     * The clipping limit of the display area.
+     *
+     * @property _displayHeight
+     * @type integer
+     * @private
+     */
+    this._displayHeight = displayHeight;
 
+    /**
+     * The width of a single tile in pixels.
+     *
+     * @property tileWidth
+     * @type integer
+     */
+    this.tileWidth = tileWidth;
+
+    /**
+     * The height of a single tile in pixels.
+     *
+     * @property tileHeight
+     * @type integer
+     */
+    this.tileHeight = tileHeight;
+
+    /**
+     * The width of the map in tiles.
+     *
+     * @property mapWidth
+     * @type integer
+     */
+    this.mapWidth = mapWidth;
+
+    /**
+     * The height of the map in tiles.
+     *
+     * @property mapHeight
+     * @type integer
+     */
+    this.mapHeight = mapHeight;
+
+    /**
+     * The width of the map in pixels.
+     *
+     * @property width
+     * @type integer
+     */
+    this.pxWidth = this.mapWidth * this.tileWidth;
+
+    /**
+     * The height of the map in pixels.
+     *
+     * @property height
+     * @type integer
+     */
+    this.pxHeight = this.mapHeight * this.tileHeight;
+
+    /**
+     * Tilemap layer data from the map, arranged in mapHeight lists of mapWidth tiles.
+     * Contains Phaser.Tile objects (2d array).
+     *
+     * @property layer
+     * @type Array
+     */
     this.layer = layer;
 
-    // store the list of batch drawing instructions (for use with WebGL rendering)
+    /**
+     * Store the list of batch drawing instructions.
+     *
+     * @property glBatch
+     * @type Array
+     */
     this.glBatch = null;
 
     /**
-     * Remember last tile drawn to avoid unnecessary set-up
+     * Remember last tile drawn to avoid unnecessary set-up.
      *
-     * @type Integer
+     * @property lastTile
+     * @type integer
      */
     this.lastTile = -1;
 
     /**
-     * Whether the Tilemap is dirty or not
+     * Whether the Tilemap is dirty or not.
      *
      * @property dirty
-     * @type Boolean
+     * @type boolean
      */
     this.dirty = true;
 
     /**
-     * The blend mode to be applied to the tilemap. Set to PIXI.blendModes.NORMAL to remove any blend mode.
+     * The blend mode to be applied to the tilemap.
+     * Set to PIXI.blendModes.NORMAL to remove any blend mode.
      *
      * @property blendMode
-     * @type Number
+     * @type integer
      * @default PIXI.blendModes.NORMAL;
      */
     this.blendMode = PIXI.blendModes.NORMAL;
@@ -68,25 +146,50 @@ PIXI.Tilemap = function(texture, mapwidth, mapheight, tilewidth, tileheight, lay
      * float left, bottom, right, top - screen coordinates
      * float u, v, wide, high - source texture coordinates
      *
-     * @type {Number}
+     * @property batchDataElement
+     * @type integer
      */
     this.batchDataElement = 16;
 
-    // calculate total batch data size
-    var dataSize = mapwidth * mapheight * this.batchDataElement;
+    /**
+     * Create the buffer data for the WebGL rendering of this tilemap.
+     * Calculates the total batch data size.
+     *
+     * @property buffer
+     * @type PIXI.Float32Array
+     */
+    this.buffer = new PIXI.Float32Array(mapWidth * mapHeight * this.batchDataElement);
 
-    // create buffer data for the webgl rendering of this tile
-    this.buffer = new PIXI.Float32Array( dataSize );
+    /**
+     * A required but un-used array.
+     * Do not add objects to this array, Tilemaps cannot have children.
+     *
+     * @property children
+     * @type Array
+     * @private
+     */
+    this.children = [];
 
 };
 
-// constructor, this class extends PIXI.DisplayObjectContainer
-PIXI.Tilemap.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
+PIXI.Tilemap.prototype = Object.create(PIXI.DisplayObject.prototype);
 PIXI.Tilemap.prototype.constructor = PIXI.Tilemap;
 
-// unused methods overridden to prevent default behavior
 PIXI.Tilemap.prototype.update = function () {};
 PIXI.Tilemap.prototype.postUpdate = function () {};
+
+PIXI.Tilemap.prototype._initWebGL = function (renderSession) {
+
+    var gl = renderSession.gl;
+
+    // create a GL buffer to transfer all the vertex position data through
+    this.positionBuffer = gl.createBuffer();
+
+    // bind the buffer to the RAM resident positionBuffer
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, this.buffer, gl.STATIC_DRAW);
+
+};
 
 // override PIXI.DisplayObjectContainer _renderWebGL
 PIXI.Tilemap.prototype._renderWebGL = function (renderSession) {
@@ -100,7 +203,7 @@ PIXI.Tilemap.prototype._renderWebGL = function (renderSession) {
     // stop current render session batch drawing
     renderSession.spriteBatch.stop();
 
-    if (!this._vertexBuffer)
+    if (!this.positionBuffer)
     {
         this._initWebGL(renderSession);
     }
@@ -114,144 +217,136 @@ PIXI.Tilemap.prototype._renderWebGL = function (renderSession) {
 
 };
 
-PIXI.Tilemap.prototype._initWebGL = function (renderSession) {
+PIXI.Tilemap.prototype._renderBatch = function (renderSession) {
+
+    if (!this.glBatch)
+    {
+        return;
+    }
 
     var gl = renderSession.gl;
 
-    this._vertexBuffer = gl.createBuffer();
-    this._indexBuffer = gl.createBuffer();
-    this._uvBuffer = gl.createBuffer();
-    this._colorBuffer = gl.createBuffer();
+    // TODO: should probably use destination buffer dimensions (halved)
+    var screenWide2 = this.game.width * 0.5;
+    var screenHigh2 = this.game.height * 0.5;
 
-    // create a GL buffer to transfer all the vertex position data through
-    this.positionBuffer = gl.createBuffer();
+    // size of one pixel in the source texture
+    var iTextureWide = 1.0 / this.texture.width;
+    var iTextureHigh = 1.0 / this.texture.height;
 
-    // bind the buffer to the RAM resident positionBuffer
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, this.buffer, gl.STATIC_DRAW);
+    // pre-calculate inverse half-buffer dimensions
+    var iWide = 1.0 / screenWide2;
+    var iHigh = 1.0 / screenHigh2;
 
-};
+    var wide = this.tileWidth * 0.5 / screenWide2;
+    var high = this.tileHeight * 0.5 / screenHigh2;
 
+    var buffer = this.buffer;
+    var oldR, oldT, uvl, uvt;
 
-PIXI.Tilemap.prototype._renderBatch = function (renderSession) {
+    // process entire glBatch into a single webGl draw buffer for a TRIANGLE_STRIP blit
+    var c = 0;
+    var degenerate = false;
 
-    if (this.glBatch)
+    for (var i = 0, l = this.glBatch.length; i < l; i++)
     {
-        var gl = renderSession.gl;
+        // each object in this.glBatch has properties:
+        // sx: this.drawCoords[coordIndex],
+        // sy: this.drawCoords[coordIndex + 1],
+        // sw: this.tileWidth,
+        // sh: this.tileHeight,
+        // dx: x,
+        // dy: y,
+        // dw: this.tileWidth,
+        // dh: this.tileHeight
+        var t = this.glBatch[i];
 
-        // TODO: should probably use destination buffer dimensions (halved)
-        var screenWide2 = this.game.width * 0.5;
-        var screenHigh2 = this.game.height * 0.5;
-
-        // size of one pixel in the source texture
-        var iTextureWide = 1.0 / this.texture.width;
-        var iTextureHigh = 1.0 / this.texture.height;
-
-        // size of one tile in the source texture
-        var srcWide = this.tileWide * iTextureWide;
-        var srcHigh = this.tileHigh * iTextureHigh;
-
-        // pre-calculate inverse half-buffer dimensions
-        var iWide = 1.0 / screenWide2;
-        var iHigh = 1.0 / screenHigh2;
-
-        var wide = this.tileWide * 0.5 / screenWide2;
-        var high = this.tileHigh * 0.5 / screenHigh2;
-
-        var buffer = this.buffer;
-        var oldR, oldT, uvl, uvt;
-
-        // process entire glBatch into a single webGl draw buffer for a TRIANGLE_STRIP blit
-        var c = 0;
-        var degenerate = false;
-
-        for (var i = 0, l = this.glBatch.length; i < l; i++)
+        if (!t)
         {
-            // sx: this.drawCoords[coordIndex],
-            // sy: this.drawCoords[coordIndex + 1],
-            // sw: this.tileWidth,
-            // sh: this.tileHeight,
-            // dx: x,
-            // dy: y,
-            // dw: this.tileWidth,
-            // dh: this.tileHeight
+            // insert a degenerate triangle when null is found in the list of batch objects
+            degenerate = true;
 
-            var t = this.glBatch[i];
-
-            if (!t)
-            {
-                // insert a degenerate triangle when null is found in the list of batch objects
-                degenerate = true;
-
-                // skip to end of loop, degenerate will be inserted when no more null objects are found
-                continue;
-            }
-
-            var x = t.dx * iWide - 1;
-            var y = 1 - t.dy * iHigh;
-
-            var lft = x - wide;
-            var bot = y + high;
-
-            var uvl = t.sx * iTextureWide;
-            var uvt = t.sy * iTextureHigh; 
-
-            // insert a degenerate triangle to separate the tiles
-            if (degenerate)
-            {
-                // add a degenerate triangle: repeat the last vertex
-                buffer[ c     ] = oldR;
-                buffer[ c + 1 ] = oldT;
-                // then repeat the next vertex
-                buffer[ c + 4 ] = lft;
-                buffer[ c + 5 ] = bot;
-                // pad with texture coordinates (probably not needed)
-                buffer[ c + 2 ] = buffer[ c + 6 ] = uvl;
-                buffer[ c + 3 ] = buffer[ c + 7 ] = uvt;
-
-                // advance the buffer index for one single degenerate triangle
-                c += 8;
-                degenerate = false;
-            }
-
-            // calculate the destination location of the tile in screen units (-1..1)
-            buffer[ c      ] = buffer[ c +  4 ] = lft;
-            buffer[ c +  1 ] = buffer[ c +  9 ] = bot;
-            buffer[ c +  8 ] = buffer[ c +  12] = oldR = x + wide;
-            buffer[ c +  5 ] = buffer[ c +  13] = oldT = y - high;
-
-            // calculate the uv coordinates of the tile source image
-            buffer[ c +  2 ] = buffer[ c +  6 ] = uvl;
-            buffer[ c +  3 ] = buffer[ c +  11] = uvt;
-            buffer[ c +  10] = buffer[ c +  14] = uvl + srcWide;
-            buffer[ c +  7 ] = buffer[ c +  15] = uvt + srcHigh;
-
-            // advance the buffer index
-            c += 16;
+            // skip to end of loop, degenerate will be inserted when no more null objects are found
+            continue;
         }
 
-        // if there's anything to draw...
-        if (c > 0)
+        var x = t.dx * iWide - 1;
+        var y = 1 - t.dy * iHigh;
+
+        var lft = x - wide;
+        var bot = y + high;
+
+        var uvl = t.sx * iTextureWide;
+        var uvt = t.sy * iTextureHigh; 
+
+        // insert a degenerate triangle to separate the tiles
+        if (degenerate)
         {
-            var shader = renderSession.shaderManager.tilemapShader;
+            // add a degenerate triangle: repeat the last vertex
+            buffer[ c     ] = oldR;
+            buffer[ c + 1 ] = oldT;
 
-            // upload the VBO
-            gl.bufferData( gl.ARRAY_BUFFER, buffer, gl.STATIC_DRAW );
+            // then repeat the next vertex
+            buffer[ c + 4 ] = lft;
+            buffer[ c + 5 ] = bot;
 
-            // prepare the shader attributes
-            gl.vertexAttribPointer( shader.aPosition, 4, gl.FLOAT, false, 0, 0 );
+            // pad with texture coordinates (probably not needed)
+            buffer[ c + 2 ] = buffer[ c + 6 ] = uvl;
+            buffer[ c + 3 ] = buffer[ c + 7 ] = uvt;
 
-            // draw the entire VBO in one call
-            gl.drawArrays(gl.TRIANGLE_STRIP, 0, Math.floor(c / 4));
+            // advance the buffer index for one single degenerate triangle
+            c += 8;
+            degenerate = false;
         }
+
+        // calculate the destination location of the tile in screen units (-1..1)
+        buffer[ c     ] = buffer[ c + 4  ] = lft;
+        buffer[ c + 1 ] = buffer[ c + 9  ] = bot;
+        buffer[ c + 8 ] = buffer[ c + 12 ] = oldR = x + wide;
+        buffer[ c + 5 ] = buffer[ c + 13 ] = oldT = y - high;
+
+        // calculate the uv coordinates of the tile source image
+        if (t.fd === 1)
+        {
+            // flipped diagonally, swap x,y axes
+            buffer[ c + 14 ] = buffer[ c + 6  ] = uvl;
+            buffer[ c + 15 ] = buffer[ c + 11 ] = uvt;
+            buffer[ c + 10 ] = buffer[ c + 2  ] = uvl + t.sw * iTextureWide;
+            buffer[ c + 7  ] = buffer[ c + 3  ] = uvt + t.sh * iTextureHigh;
+        }
+        else
+        {
+            buffer[ c + 2  ] = buffer[ c + 6  ] = uvl;
+            buffer[ c + 3  ] = buffer[ c + 11 ] = uvt;
+            buffer[ c + 10 ] = buffer[ c + 14 ] = uvl + t.sw * iTextureWide;
+            buffer[ c + 7  ] = buffer[ c + 15 ] = uvt + t.sh * iTextureHigh;
+        }
+
+        // advance the buffer index
+        c += 16;
+    }
+
+    // if there's anything to draw...
+    if (c > 0)
+    {
+        var shader = renderSession.shaderManager.tilemapShader;
+
+        // upload the VBO
+        gl.bufferData(gl.ARRAY_BUFFER, buffer, gl.STATIC_DRAW);
+
+        // prepare the shader attributes
+        gl.vertexAttribPointer(shader.aPosition, 4, gl.FLOAT, false, 0, 0);
+
+        // draw the entire VBO in one call
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, Math.floor(c / 4));
     }
 
 };
 
 /**
-* render the entire tilemap using a fast webgl batched tile render
+* Render the entire tilemap using a fast WebGL batched tile render.
 *
-* @param  {[type]} renderSession [description]
+* @param  {Object} renderSession - The PIXI RenderSession.
 */
 PIXI.Tilemap.prototype._renderWholeTilemap = function (renderSession) {
 
@@ -262,6 +357,14 @@ PIXI.Tilemap.prototype._renderWholeTilemap = function (renderSession) {
     renderSession.blendModeManager.setBlendMode(this.blendMode);
 
     // set the uniforms and texture
+
+    // set the global offset (e.g. screen shake)
+    gl.uniform2f(shader.uOffset, renderSession.offset.x / this.game.width * 2, -renderSession.offset.y / this.game.height * 2);
+
+    // set the clipping limits
+    gl.uniform2f(shader.uClipOffset, this._offset.x / this.game.width * 2, this._offset.y / this.game.height * 2);
+    gl.uniform2f(shader.uClipLoc, this._offset.x, this._offset.y);
+    gl.uniform2f(shader.uClipLimit, this._offset.x + this._displayWidth, this.game.height - (this._offset.y + this._displayHeight));
 
     // set the offset in screen units to the center of the screen
     // and flip the GL y coordinate to be zero at the top
@@ -276,7 +379,7 @@ PIXI.Tilemap.prototype._renderWholeTilemap = function (renderSession) {
     // source texture unit
     gl.activeTexture(gl.TEXTURE0);
 
-    // check if a texture is dirty..
+    // check if a texture is dirty...
     if(this.texture.baseTexture._dirty[gl.id])
     {
         renderSession.renderer.updateTexture(this.texture.baseTexture);
@@ -292,82 +395,5 @@ PIXI.Tilemap.prototype._renderWholeTilemap = function (renderSession) {
 
     // draw the batched tile list
     this._renderBatch(renderSession);
-
-};
-
-/**
- * When the texture is updated, this event will fire to update the scale and frame
- *
- * @method onTextureUpdate
- * @param event
- * @private
- */
-PIXI.Tilemap.prototype.onTextureUpdate = function () {
-
-    this.updateFrame = true;
-
-};
-
-/**
- * Returns the bounds of the map as a rectangle. The bounds calculation takes the worldTransform into account.
- *
- * @method getBounds
- * @param matrix {Matrix} the transformation matrix of the sprite
- * @return {Rectangle} the framing rectangle
- */
-PIXI.Tilemap.prototype.getBounds = function (matrix) {
-
-    var worldTransform = matrix || this.worldTransform;
-
-    var a = worldTransform.a;
-    var b = worldTransform.b;
-    var c = worldTransform.c;
-    var d = worldTransform.d;
-    var tx = worldTransform.tx;
-    var ty = worldTransform.ty;
-
-    var maxX = -Infinity;
-    var maxY = -Infinity;
-
-    var minX = Infinity;
-    var minY = Infinity;
-
-    var vertices = [
-        0, 0,
-        this.mapWide * this.tileWide, 0,
-        this.mapWide * this.tileWide, this.mapHigh * this.tileHigh,
-        0, this.mapHigh * this.tileHigh
-    ];
-
-    for (var i = 0, n = vertices.length; i < n; i += 2)
-    {
-        var rawX = vertices[i], rawY = vertices[i + 1];
-        var x = (a * rawX) + (c * rawY) + tx;
-        var y = (d * rawY) + (b * rawX) + ty;
-
-        minX = x < minX ? x : minX;
-        minY = y < minY ? y : minY;
-
-        maxX = x > maxX ? x : maxX;
-        maxY = y > maxY ? y : maxY;
-    }
-
-    if (minX === -Infinity || maxY === Infinity)
-    {
-        return PIXI.EmptyRectangle;
-    }
-
-    var bounds = this._bounds;
-
-    bounds.x = minX;
-    bounds.width = maxX - minX;
-
-    bounds.y = minY;
-    bounds.height = maxY - minY;
-
-    // store a reference so that if this function gets called again in the render cycle we do not have to recalculate
-    this._currentBounds = bounds;
-
-    return bounds;
 
 };

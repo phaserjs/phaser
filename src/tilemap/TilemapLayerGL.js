@@ -1,5 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
+* @author       Pete Baron <pete@photonstorm.com>
 * @copyright    2016 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
@@ -22,14 +23,28 @@
 * @param {integer} index - The index of the TileLayer to render within the Tilemap.
 * @param {integer} width - Width of the renderable area of the layer (in pixels).
 * @param {integer} height - Height of the renderable area of the layer (in pixels).
+* @param {Phaser.Tileset} tileset - The Tileset this Layer uses to render with.
 */
-Phaser.TilemapLayerGL = function (game, tilemap, index, width, height) {
+Phaser.TilemapLayerGL = function (game, tilemap, index, width, height, tileset) {
 
     this.game = game;
 
-    width |= 0;
-    height |= 0;
+    /**
+    * The rendering offset.
+    * 
+    * @property {Phaser.Point} _offset
+    * @private
+    */
+    this._offset = new Phaser.Point();
 
+    /**
+    * An Array of any linked layers.
+    * 
+    * @property {Array} linkedLayers
+    * @private
+    */
+    this.linkedLayers = [];
+    
     /**
     * The Tilemap to which this layer is bound.
     * @property {Phaser.Tilemap} map
@@ -72,29 +87,13 @@ Phaser.TilemapLayerGL = function (game, tilemap, index, width, height) {
     /**
     * Settings that control standard (non-diagnostic) rendering.
     *
-    * @property {boolean} [enableScrollDelta=true] - Delta scroll rendering only draws tiles/edges as they come into view.
-    *     This can greatly improve scrolling rendering performance, especially when there are many small tiles.
-    *     It should only be disabled in rare cases.
-    *
-    * @property {?DOMCanvasElement} [copyCanvas=(auto)] - [Internal] If set, force using a separate (shared) copy canvas.
-    *     Using a canvas bitblt/copy when the source and destinations region overlap produces unexpected behavior
-    *     in some browsers, notably Safari. 
+    * @property {float} [overdrawRatio=0.20] - Over Draw ratio.
     *
     * @default
     */
     this.renderSettings = {
-        enableScrollDelta: false,
-        overdrawRatio: 0.20,
-        copyCanvas: null
+        overdrawRatio: 0.20
     };
-
-    /**
-    * Enable an additional "debug rendering" pass to display collision information.
-    *
-    * @property {boolean} debug
-    * @default
-    */
-    this.debug = false;
 
     /**
     * @property {boolean} exists - Controls if the core game loop and physics update this game object or not.
@@ -172,7 +171,8 @@ Phaser.TilemapLayerGL = function (game, tilemap, index, width, height) {
     * @property {object} _mc
     * @private
     */
-    var tileset = this.layer.tileset || this.map.tilesets[0];
+    // var tileset = this.layer.tileset || this.map.tilesets[0];
+
     this._mc = {
 
         // Used to bypass rendering without reliance on `dirty` and detect changes.
@@ -198,6 +198,7 @@ Phaser.TilemapLayerGL = function (game, tilemap, index, width, height) {
 
         // Cached tilesets from index -> Tileset
         tilesets: []
+
     };
 
     /**
@@ -229,42 +230,34 @@ Phaser.TilemapLayerGL = function (game, tilemap, index, width, height) {
     */
     this._results = [];
 
-    // get PIXI textures for each tileset source image
-    var baseTexture = new PIXI.BaseTexture( tileset.image );
-    PIXI.Tilemap.call(this, new PIXI.Texture(baseTexture), this.map.width, this.map.height, this._mc.tileset.tileWidth, this._mc.tileset.tileHeight, this.layer);
+    var baseTexture = new PIXI.BaseTexture(tileset.image);
+
+    PIXI.Tilemap.call(this, new PIXI.Texture(baseTexture), width | 0, height | 0, this.map.width, this.map.height, this._mc.tileset.tileWidth, this._mc.tileset.tileHeight, this.layer);
 
     Phaser.Component.Core.init.call(this, game, 0, 0, null, null);
 
     // must be set *after* the Core.init
     this.fixedToCamera = true;
-};
 
+};
 
 // constructor: extends PIXI.Tilemap
 Phaser.TilemapLayerGL.prototype = Object.create(PIXI.Tilemap.prototype);
 Phaser.TilemapLayerGL.prototype.constructor = Phaser.TilemapLayerGL;
 
-
-// only one Phaser component used
+//  Only one Phaser component used
 Phaser.Component.Core.install.call(Phaser.TilemapLayerGL.prototype, [
     'FixedToCamera'
 ]);
 
-
-// redirect method prototypes (TODO: not needed?  I'm not sure...)
 Phaser.TilemapLayerGL.prototype.preUpdateCore = Phaser.Component.Core.preUpdate;
-Phaser.TileSprite.prototype.preUpdatePhysics = Phaser.Component.PhysicsBody.preUpdate;
-Phaser.TileSprite.prototype.preUpdateLifeSpan = Phaser.Component.LifeSpan.preUpdate;
-Phaser.TileSprite.prototype.preUpdateInWorld = Phaser.Component.InWorld.preUpdate;
-Phaser.TileSprite.prototype.preUpdateCore = Phaser.Component.Core.preUpdate;
-
 
 /**
 * Automatically called by World.preUpdate.
 *
 * @method Phaser.TilemapLayerGL#preUpdate
 */
-Phaser.TilemapLayerGL.prototype.preUpdate = function() {
+Phaser.TilemapLayerGL.prototype.preUpdate = function () {
 
     return this.preUpdateCore();
 
@@ -297,20 +290,12 @@ Phaser.TilemapLayerGL.prototype.postUpdate = function () {
 */
 Phaser.TilemapLayerGL.prototype.destroy = function() {
 
-    PIXI.CanvasPool.remove(this);
-
     Phaser.Component.Destroy.prototype.destroy.call(this);
 
 };
 
 /**
-* Resizes the internal dimensions and texture frame used by this TilemapLayerGL.
-*
-* This is an expensive call, so don't bind it to a window resize event! But instead call it at carefully
-* selected times.
-*
-* Be aware that no validation of the new sizes takes place and the current map scroll coordinates are not
-* modified either. You will have to handle both of these things from your game code if required.
+* Resizes the internal dimensions used by this TilemapLayerGL during rendering.
 * 
 * @method Phaser.TilemapLayerGL#resize
 * @param {number} width - The new width of the TilemapLayerGL
@@ -318,21 +303,9 @@ Phaser.TilemapLayerGL.prototype.destroy = function() {
 */
 Phaser.TilemapLayerGL.prototype.resize = function (width, height) {
 
-    this.texture.frame.resize(width, height);
-
-    this.texture.width = width;
-    this.texture.height = height;
-
-    this.texture.crop.width = width;
-    this.texture.crop.height = height;
-
-    this.texture.baseTexture.width = width;
-    this.texture.baseTexture.height = height;
-
-    this.texture.baseTexture.dirty();
-    this.texture.requiresUpdate = true;
-
-    this.texture._updateUvs();
+    //  These setters will automatically update any linked children
+    this.displayWidth = width;
+    this.displayHeight = height;
 
     this.dirty = true;
 
@@ -446,7 +419,6 @@ Phaser.TilemapLayerGL.prototype._unfixY = function (y) {
 */
 Phaser.TilemapLayerGL.prototype.getTileX = function (x) {
 
-    // var tileWidth = this.tileWidth * this.scale.x;
     return Math.floor(this._fixX(x) / this._mc.tileWidth);
 
 };
@@ -461,7 +433,6 @@ Phaser.TilemapLayerGL.prototype.getTileX = function (x) {
 */
 Phaser.TilemapLayerGL.prototype.getTileY = function (y) {
 
-    // var tileHeight = this.tileHeight * this.scale.y;
     return Math.floor(this._fixY(y) / this._mc.tileHeight);
 
 };
@@ -520,6 +491,7 @@ Phaser.TilemapLayerGL.prototype.getRayCastTiles = function (line, stepRate, coll
         {
             var tile = tiles[i];
             var coord = coords[t];
+
             if (tile.containsPoint(coord[0], coord[1]))
             {
                 results.push(tile);
@@ -560,6 +532,7 @@ Phaser.TilemapLayerGL.prototype.getTiles = function (x, y, width, height, collid
     //  Convert the pixel values into tile coordinates
     var tx = Math.floor(x / (this._mc.cw * this.scale.x));
     var ty = Math.floor(y / (this._mc.ch * this.scale.y));
+
     //  Don't just use ceil(width/cw) to allow account for x/y diff within cell
     var tw = Math.ceil((x + width) / (this._mc.cw * this.scale.x)) - tx;
     var th = Math.ceil((y + height) / (this._mc.ch * this.scale.y)) - ty;
@@ -598,6 +571,12 @@ Phaser.TilemapLayerGL.prototype.getTiles = function (x, y, width, height, collid
 Phaser.TilemapLayerGL.prototype.resetTilesetCache = function () {
 
     this._mc.tilesets = [];
+
+    for (var i = 0; i < this.linkedLayers.length; i++)
+    {
+        this.linkedLayers[i].resetTilesetCache();
+    }
+
 };
 
 /**
@@ -630,6 +609,11 @@ Phaser.TilemapLayerGL.prototype.setScale = function (xScale, yScale) {
 
     this.scale.setTo(xScale, yScale);
 
+    for (var i = 0; i < this.linkedLayers.length; i++)
+    {
+        this.linkedLayers[i].setScale(xScale, yScale);
+    }
+
 };
 
 /**
@@ -644,6 +628,8 @@ Phaser.TilemapLayerGL.prototype.setScale = function (xScale, yScale) {
 * @param {integer} top - Topmost row to render.
 * @param {integer} right - Rightmost column to render.
 * @param {integer} bottom - Bottommost row to render.
+* @param {integer} offx - X pixel offset.
+* @param {integer} offy - Y pixel offset.
 */
 Phaser.TilemapLayerGL.prototype.renderRegion = function (scrollX, scrollY, left, top, right, bottom, offx, offy) {
 
@@ -651,8 +637,6 @@ Phaser.TilemapLayerGL.prototype.renderRegion = function (scrollX, scrollY, left,
     var height = this.layer.height;
     var tw = this._mc.tileWidth;
     var th = this._mc.tileHeight;
-
-    // var lastAlpha = NaN;
 
     offx = offx || 0;
     offy = offy || 0;
@@ -664,6 +648,7 @@ Phaser.TilemapLayerGL.prototype.renderRegion = function (scrollX, scrollY, left,
             left = Math.max(0, left);
             right = Math.min(width - 1, right);
         }
+
         if (top <= bottom)
         {
             top = Math.max(0, top);
@@ -684,47 +669,39 @@ Phaser.TilemapLayerGL.prototype.renderRegion = function (scrollX, scrollY, left,
     // xmax/ymax - remaining cells to render on column/row
     var tx, ty, x, y, xmax, ymax;
 
-    //context.fillStyle = this.tileColor;
-
-    for (y = normStartY, ymax = bottom - top, ty = baseY;
-        ymax >= 0;
-        y++, ymax--, ty += th)
+    for (y = normStartY, ymax = bottom - top, ty = baseY; ymax >= 0; y++, ymax--, ty += th)
     {
-
-        if (y >= height) { y -= height; }
+        if (y >= height)
+        {
+            y -= height;
+        }
 
         var row = this.layer.data[y];
 
-        for (x = normStartX, xmax = right - left, tx = baseX;
-            xmax >= 0;
-            x++, xmax--, tx += tw)
+        for (x = normStartX, xmax = right - left, tx = baseX; xmax >= 0; x++, xmax--, tx += tw)
         {
-
-            if (x >= width) { x -= width; }
+            if (x >= width)
+            {
+                x -= width;
+            }
 
             var tile = row[x];
 
-            if (!tile || tile.index < 0)
+            //  If not the Tileset this Layer uses, then skip
+            if (!tile || tile.index < 0 || tile.index < this._mc.tileset.firstgid || tile.index > this._mc.lastgid)
             {
                 // skipping some tiles, add a degenerate marker into the batch list
-                this._mc.tileset.addDegenerate( this.glBatch );
+                this._mc.tileset.addDegenerate(this.glBatch);
                 continue;
             }
 
             var index = tile.index;
 
-            if (tile.rotation || tile.flipped)
-            {
-                this._mc.tileset.drawGl(this.glBatch, -tile.centerX + offx, -tile.centerY + offy, index, tile.alpha);
-            }
-            else
-            {
-                this._mc.tileset.drawGl(this.glBatch, tx + offx, ty + offy, index, tile.alpha);
-            }
+            this._mc.tileset.drawGl(this.glBatch, tx + offx, ty + offy, index, tile.alpha, tile.flippedVal);
         }
 
         // at end of each row, add a degenerate marker into the batch drawing list
-        this._mc.tileset.addDegenerate( this.glBatch );
+        this._mc.tileset.addDegenerate(this.glBatch);
     }
 
 };
@@ -740,8 +717,12 @@ Phaser.TilemapLayerGL.prototype.renderFull = function () {
     var scrollX = this._mc.scrollX;
     var scrollY = this._mc.scrollY;
 
-    var renderW = this.game._width;     //this.canvas.width;
-    var renderH = this.game._height;    //this.canvas.height;
+    // var renderW = this.game._width;
+    // var renderH = this.game._height;
+
+    //  displayWidth surely?
+    var renderW = this.game._width;
+    var renderH = this.game._height;
 
     var tw = this._mc.tileWidth;
     var th = this._mc.tileHeight;
@@ -749,13 +730,15 @@ Phaser.TilemapLayerGL.prototype.renderFull = function () {
     var cw = this._mc.cw;
     var ch = this._mc.ch;
 
-    var left = Math.floor( (scrollX - (cw - tw)) / tw );
-    var right = Math.floor( (renderW - 1 + scrollX) / tw );
-    var top = Math.floor( (scrollY - (ch - th)) / th );
-    var bottom = Math.floor( (renderH - 1 + scrollY) / th );
+    var left = Math.floor((scrollX - (cw - tw)) / tw);
+    var right = Math.floor((renderW - 1 + scrollX) / tw);
+    var top = Math.floor((scrollY - (ch - th)) / th);
+    var bottom = Math.floor((renderH - 1 + scrollY) / th);
 
     this.glBatch = [];
+
     this.renderRegion(scrollX, scrollY, left, top, right, bottom, 0, -(ch - th));
+
 };
 
 /**
@@ -766,29 +749,22 @@ Phaser.TilemapLayerGL.prototype.renderFull = function () {
 */
 Phaser.TilemapLayerGL.prototype.render = function () {
 
-    var redrawAll = false;
-
     if (!this.visible)
     {
         return;
     }
 
-    if (this.dirty || this.layer.dirty)
-    {
-        this.layer.dirty = false;
-        redrawAll = true;
-    }
+    var redrawAll = (this.dirty || this.layer.dirty);
 
     //  Scrolling bias; whole pixels only
     var scrollX = this._scrollX | 0;
     var scrollY = this._scrollY | 0;
 
     var mc = this._mc;
-    var shiftX = mc.scrollX - scrollX; // Negative when scrolling right/down
+    var shiftX = mc.scrollX - scrollX; // Negative when scrolling right / down
     var shiftY = mc.scrollY - scrollY;
 
-    if (!redrawAll &&
-        shiftX === 0 && shiftY === 0)
+    if (!redrawAll && shiftX === 0 && shiftY === 0)
     {
         //  No reason to rebuild batch, looking at same thing and not invalidated.
         return;
@@ -799,13 +775,104 @@ Phaser.TilemapLayerGL.prototype.render = function () {
 
     this.renderFull();
 
-    this.texture.baseTexture.dirty();
-
+    this.layer.dirty = false;
     this.dirty = false;
 
     return true;
 
 };
+
+Object.defineProperty(Phaser.TilemapLayerGL.prototype, "x", {
+
+    get: function () {
+
+        return this._offset.x;
+
+    },
+
+    set: function (value) {
+
+        this._offset.x = value;
+
+        for (var i = 0; i < this.linkedLayers.length; i++)
+        {
+            this.linkedLayers[i]._offset.x = value;
+        }
+
+        this.dirty = true;
+
+    }
+
+});
+
+Object.defineProperty(Phaser.TilemapLayerGL.prototype, "y", {
+
+    get: function () {
+
+        return this._offset.y;
+
+    },
+
+    set: function (value) {
+
+        this.offset.y = value;
+
+        for (var i = 0; i < this.linkedLayers.length; i++)
+        {
+            this.linkedLayers[i]._offset.y = value;
+        }
+
+        this.dirty = true;
+
+    }
+
+});
+
+Object.defineProperty(Phaser.TilemapLayerGL.prototype, "width", {
+
+    get: function () {
+
+        return this._displayWidth;
+
+    },
+
+    set: function (value) {
+
+        this._displayWidth = value;
+
+        for (var i = 0; i < this.linkedLayers.length; i++)
+        {
+            this.linkedLayers[i]._displayWidth = value;
+        }
+
+        this.dirty = true;
+
+    }
+
+});
+
+Object.defineProperty(Phaser.TilemapLayerGL.prototype, "height", {
+
+    get: function () {
+
+        return this._displayHeight;
+
+    },
+
+    set: function (value) {
+
+        this._displayHeight = value;
+
+        for (var i = 0; i < this.linkedLayers.length; i++)
+        {
+            this.linkedLayers[i]._displayHeight = value;
+        }
+
+        this.dirty = true;
+
+    }
+
+});
 
 /**
 * Flag controlling if the layer tiles wrap at the edges. Only works if the World size matches the Map size.
@@ -818,11 +885,20 @@ Phaser.TilemapLayerGL.prototype.render = function () {
 Object.defineProperty(Phaser.TilemapLayerGL.prototype, "wrap", {
 
     get: function () {
+
         return this._wrap;
+
     },
 
     set: function (value) {
+
         this._wrap = value;
+
+        for (var i = 0; i < this.linkedLayers.length; i++)
+        {
+            this.linkedLayers[i]._wrap = value;
+        }
+
         this.dirty = true;
     }
 
@@ -838,11 +914,20 @@ Object.defineProperty(Phaser.TilemapLayerGL.prototype, "wrap", {
 Object.defineProperty(Phaser.TilemapLayerGL.prototype, "scrollX", {
 
     get: function () {
+
         return this._scrollX;
+
     },
 
     set: function (value) {
+
         this._scrollX = value;
+
+        for (var i = 0; i < this.linkedLayers.length; i++)
+        {
+            this.linkedLayers[i]._scrollX = value;
+        }
+
     }
 
 });
@@ -857,11 +942,20 @@ Object.defineProperty(Phaser.TilemapLayerGL.prototype, "scrollX", {
 Object.defineProperty(Phaser.TilemapLayerGL.prototype, "scrollY", {
 
     get: function () {
+
         return this._scrollY;
+
     },
 
     set: function (value) {
+
         this._scrollY = value;
+
+        for (var i = 0; i < this.linkedLayers.length; i++)
+        {
+            this.linkedLayers[i]._scrollY = value;
+        }
+
     }
 
 });
@@ -876,12 +970,22 @@ Object.defineProperty(Phaser.TilemapLayerGL.prototype, "scrollY", {
 Object.defineProperty(Phaser.TilemapLayerGL.prototype, "collisionWidth", {
 
     get: function () {
+
         return this._mc.cw;
+
     },
 
     set: function (value) {
+
         this._mc.cw = value | 0;
+
+        for (var i = 0; i < this.linkedLayers.length; i++)
+        {
+            this.linkedLayers[i]._mc.cw = value | 0;
+        }
+
         this.dirty = true;
+
     }
 
 });
@@ -896,11 +1000,20 @@ Object.defineProperty(Phaser.TilemapLayerGL.prototype, "collisionWidth", {
 Object.defineProperty(Phaser.TilemapLayerGL.prototype, "collisionHeight", {
 
     get: function () {
+
         return this._mc.ch;
+
     },
 
     set: function (value) {
+
         this._mc.ch = value | 0;
+
+        for (var i = 0; i < this.linkedLayers.length; i++)
+        {
+            this.linkedLayers[i]._mc.ch = value | 0;
+        }
+
         this.dirty = true;
     }
 
