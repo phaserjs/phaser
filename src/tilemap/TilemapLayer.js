@@ -19,8 +19,9 @@
 * @param {integer} index - The index of the TileLayer to render within the Tilemap.
 * @param {integer} width - Width of the renderable area of the layer (in pixels).
 * @param {integer} height - Height of the renderable area of the layer (in pixels).
+* @param {Phaser.Tileset} [tileset] - The Tileset this Layer uses to render with.
 */
-Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
+Phaser.TilemapLayer = function (game, tilemap, index, width, height, tileset) {
 
     width |= 0;
     height |= 0;
@@ -249,7 +250,7 @@ Phaser.TilemapLayer.ensureSharedCopyCanvas = function () {
 
     if (!this.sharedCopyCanvas)
     {
-        this.sharedCopyCanvas = Phaser.Canvas.create(2, 2);
+        this.sharedCopyCanvas = PIXI.CanvasPool.create(this, 2, 2);
     }
 
     return this.sharedCopyCanvas;
@@ -311,30 +312,6 @@ Phaser.TilemapLayer.prototype._renderCanvas = function (renderSession) {
 };
 
 /**
-* Automatically called by the Canvas Renderer.
-* Overrides the Sprite._renderWebGL function.
-*
-* @method Phaser.TilemapLayer#_renderWebGL
-* @private
-*/
-Phaser.TilemapLayer.prototype._renderWebGL = function (renderSession) {
-
-    if (this.fixedToCamera)
-    {
-        this.position.x = (this.game.camera.view.x + this.cameraOffset.x) / this.game.camera.scale.x;
-        this.position.y = (this.game.camera.view.y + this.cameraOffset.y) / this.game.camera.scale.y;
-    }
-    
-    this._scrollX = this.game.camera.view.x * this.scrollFactorX / this.scale.x;
-    this._scrollY = this.game.camera.view.y * this.scrollFactorY / this.scale.y;
-
-    this.render();
-
-    PIXI.Sprite.prototype._renderWebGL.call(this, renderSession);
-
-};
-
-/**
 * Destroys this TilemapLayer.
 *
 * @method Phaser.TilemapLayer#destroy
@@ -376,10 +353,9 @@ Phaser.TilemapLayer.prototype.resize = function (width, height) {
     this.texture.baseTexture.width = width;
     this.texture.baseTexture.height = height;
 
-    this.texture.baseTexture.dirty();
-    this.texture.requiresUpdate = true;
-
-    this.texture._updateUvs();
+    // this.texture.baseTexture.dirty();
+    // this.texture.requiresUpdate = true;
+    // this.texture._updateUvs();
 
     this.dirty = true;
 
@@ -584,6 +560,7 @@ Phaser.TilemapLayer.prototype.renderRegion = function (scrollX, scrollY, left, t
             left = Math.max(0, left);
             right = Math.min(width - 1, right);
         }
+
         if (top <= bottom)
         {
             top = Math.max(0, top);
@@ -675,9 +652,7 @@ Phaser.TilemapLayer.prototype.renderRegion = function (scrollX, scrollY, left, t
                 context.fillStyle = this.debugSettings.debuggedTileOverfill;
                 context.fillRect(tx, ty, tw, th);
             }
-           
         }
-
     }
 
 };
@@ -978,6 +953,38 @@ Phaser.TilemapLayer.prototype.renderDebug = function () {
     }
 
 };
+
+Object.defineProperty(Phaser.TilemapLayer.prototype, "x", {
+
+    get: function () {
+
+        return this.cameraOffset.x;
+
+    },
+
+    set: function (value) {
+
+        this.cameraOffset.x = value;
+
+    }
+
+});
+
+Object.defineProperty(Phaser.TilemapLayer.prototype, "y", {
+
+    get: function () {
+
+        return this.cameraOffset.y;
+
+    },
+
+    set: function (value) {
+
+        this.cameraOffset.y = value;
+
+    }
+
+});
 
 /**
 * Flag controlling if the layer tiles wrap at the edges. Only works if the World size matches the Map size.

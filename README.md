@@ -330,6 +330,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * TilemapLayer.rayStepRate has been moved to Tilemap.rayStepRate.
 * TilemapLayer.getTiles has been moved to Tilemap.getTiles.
 * The private methods `TilemapLayer._fixX`, `_unfixX`, `_fixY` and `_unfixY` have been moved to `Tilemap.
+* TilemapLayer.getTileX, getTileY and getTileXY have been moved to Tilemap, and work off the current layer.
 
 ### Bug Fixes
 

@@ -612,46 +612,38 @@ Phaser.Tilemap.prototype = {
         if (this.game.renderType === Phaser.WEBGL)
         {
             rootLayer = group.add(new Phaser.TilemapLayerGL(this.game, this, index, width, height, this.tilesets[0]));
+
+            //  Create child layers for multiple tilesets in a layer
+            //  It is currently assumed that each base layer will use tileset[0] (so 'i' starts at 1 in the for loop)
+            //  (a 'base' layer is any layer except the so-called 'internal' layers created here)
+
+            var fromLayer = this.layers[index];
+            var childLayer;
+
+            for (var i = 1; i < this.tilesets.length; i++)
+            {
+                if (this.checkChildLayer(this.tilesets[i], fromLayer))
+                {
+                    childLayer = group.add(new Phaser.TilemapLayerGL(this.game, this, index, width, height, this.tilesets[i]));
+
+                    rootLayer.linkedLayers.push(childLayer);
+
+                    if (this.enableDebug)
+                    {
+                        console.log('Linked child created for tileset:', this.tilesets[i].name);
+                    }
+                }
+            }
         }
         else
         {
             rootLayer = group.add(new Phaser.TilemapLayer(this.game, this, index, width, height));
         }
 
-        //  Create child layers for multiple tilesets in a layer
-        //  It is currently assumed that each base layer will use tileset[0] (so 'i' starts at 1 in the for loop)
-        //  (a 'base' layer is any layer except the so-called 'internal' layers created here)
-
-        var fromLayer = this.layers[index];
-        var childLayer;
-
-        for (var i = 1; i < this.tilesets.length; i++)
-        {
-            if (this.checkChildLayer(this.tilesets[i], fromLayer))
-            {
-                if (this.game.renderType === Phaser.WEBGL)
-                {
-                    childLayer = group.add(new Phaser.TilemapLayerGL(this.game, this, index, width, height, this.tilesets[i]));
-                }
-                else
-                {
-                    childLayer = group.add(new Phaser.TilemapLayer(this.game, this, index, width, height, this.tilesets[i]));
-                }
-
-                rootLayer.linkedLayers.push(childLayer);
-
-                if (this.enableDebug)
-                {
-                    console.log('Linked child created for tileset:', this.tilesets[i].name);
-                }
-            }
-        }
-
         if (this.enableDebug)
         {
             console.groupEnd();
         }
-
 
         return rootLayer;
 
@@ -2132,7 +2124,7 @@ Phaser.Tilemap.prototype = {
 
         return layer._scrollX + (x - (layer._scrollX / layer.scrollFactorX));
 
-    };
+    },
 
     /**
     * Take an x coordinate that _does_ account for scrollFactorX and 'unfix' it back to camera space.

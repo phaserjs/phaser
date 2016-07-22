@@ -6,27 +6,32 @@
 */
 
 /**
-* A TilemapLayerGL is a PIXI.Tilemap that renders a specific TileLayer of a Tilemap using the PIXI WebGL renderer.
+* TilemapLayerGL is a WebGL specific version of TilemapLayer.
+* If extends PIXI.Tilemap, and renders a layer of a Tilemap, using the WebGL Tilemap shader.
 * 
-* NOTE: This is a close duplicate of Phaser.TilemapLayer class, modified to support WebGL rendering, it may be possible to merge the two classes
-* although that will probably incur performance penalties due to some fundamental differences in the set-up before rendering.
-* 
-* Since a PIXI.Tilemap is a PIXI.DisplayObjectContainer it can be moved around the display list, added to other groups, or display objects, etc.
+* Since a PIXI.Tilemap is a PIXI.DisplayObject it can be moved up and down the display list.
 *
 * By default TilemapLayers have fixedToCamera set to `true`. Changing this will break Camera follow and scrolling behavior.
 *
 * @class Phaser.TilemapLayerGL
-* @extends Phaser.Sprite
+* @extends PIXI.Tilemap
 * @constructor
 * @param {Phaser.Game} game - Game reference to the currently running game.
 * @param {Phaser.Tilemap} tilemap - The tilemap to which this layer belongs.
 * @param {integer} index - The index of the TileLayer to render within the Tilemap.
 * @param {integer} width - Width of the renderable area of the layer (in pixels).
 * @param {integer} height - Height of the renderable area of the layer (in pixels).
-* @param {Phaser.Tileset} tileset - The Tileset this Layer uses to render with.
+* @param {Phaser.Tileset} [tileset] - The Tileset this Layer uses to render with.
 */
 Phaser.TilemapLayerGL = function (game, tilemap, index, width, height, tileset) {
 
+    if (tileset === undefined) { tilemap.layers[index].tileset || map.tilesets[0]; }
+
+    /**
+    * A reference to the Phaser.Game instance.
+    * 
+    * @property {Phaser.Game} game
+    */
     this.game = game;
 
     /**
@@ -93,7 +98,7 @@ Phaser.TilemapLayerGL = function (game, tilemap, index, width, height, tileset) 
     this.exists = true;
 
     /**
-    * Settings used for debugging and diagnostics.
+    * Settings used for debugging and diagnostics. This is ignored in WebGL mode.
     *
     * @property {?string} missingImageFill - A tile is rendered as a rectangle using the following fill if a valid tileset/image cannot be found. A value of `null` prevents additional rendering for tiles without a valid tileset image. _This takes effect even when debug rendering for the layer is not enabled._
     *
@@ -156,9 +161,10 @@ Phaser.TilemapLayerGL = function (game, tilemap, index, width, height, tileset) 
     * @property {object} _mc
     * @private
     */
-    // var tileset = this.layer.tileset || this.map.tilesets[0];
-
     this._mc = {
+
+        x: 0,
+        y: 0,
 
         // Used to bypass rendering without reliance on `dirty` and detect changes.
         scrollX: 0,
@@ -179,16 +185,13 @@ Phaser.TilemapLayerGL = function (game, tilemap, index, width, height, tileset) 
         ch: tileset.tileHeight,
 
         // the tileset for this layer
-        tileset: tileset,
-
-        // Cached tilesets from index -> Tileset
-        tilesets: []
+        tileset: tileset
 
     };
 
     /**
-     * The rendering mode (used by PIXI.Tilemap).  Modes are: 0 - render entire screen of tiles, 1 - render entire map of tiles
-     * TODO: make some constants for the rendering modes
+     * The rendering mode used by PIXI.Tilemap.
+     * Modes are: 0 - render entire screen of tiles, 1 - render entire map of tiles.
      * @property {number} _renderMode
      * @private
      */
@@ -429,7 +432,7 @@ Phaser.TilemapLayerGL.prototype.renderRegion = function (scrollX, scrollY, left,
             var tile = row[x];
 
             //  If not the Tileset this Layer uses, then skip
-            if (!tile || tile.index < 0 || tile.index < this._mc.tileset.firstgid || tile.index > this._mc.lastgid)
+            if (!tile || tile.index < this._mc.tileset.firstgid || tile.index > this._mc.lastgid)
             {
                 // skipping some tiles, add a degenerate marker into the batch list
                 this._mc.tileset.addDegenerate(this.glBatch);
@@ -527,17 +530,17 @@ Object.defineProperty(Phaser.TilemapLayerGL.prototype, "x", {
 
     get: function () {
 
-        return this.position.x;
+        return this._mc.x;
 
     },
 
     set: function (value) {
 
-        this.position.x = value;
+        this._mc.x = value;
 
         for (var i = 0; i < this.linkedLayers.length; i++)
         {
-            this.linkedLayers[i].position.x = value;
+            this.linkedLayers[i]._mc.x = value;
         }
 
         this.dirty = true;
@@ -550,17 +553,17 @@ Object.defineProperty(Phaser.TilemapLayerGL.prototype, "y", {
 
     get: function () {
 
-        return this.position.y;
+        return this._mc.y;
 
     },
 
     set: function (value) {
 
-        this.position.y = value;
+        this._mc.y = value;
 
         for (var i = 0; i < this.linkedLayers.length; i++)
         {
-            this.linkedLayers[i].position.y = value;
+            this.linkedLayers[i]._mc.y = value;
         }
 
         this.dirty = true;
