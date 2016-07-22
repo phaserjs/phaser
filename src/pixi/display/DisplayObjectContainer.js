@@ -328,8 +328,6 @@ PIXI.DisplayObjectContainer.prototype.getBounds = function()
         return PIXI.EmptyRectangle;
     }
 
-    this.updateTransform();
-
     var minX = Infinity;
     var minY = Infinity;
 
