@@ -326,14 +326,6 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * The Loader.headers object has a new property `requestedWith`. By default this is set to `false`, but it can be used to set the `X-Requested-With` header to `XMLHttpRequest` (or any other value you need). To enable this do `this.load.headers.requestedWith = 'XMLHttpRequest'` before adding anything to the Loader.
 * ScaleManager.hasPhaserSetFullScreen is a new boolean that identifies if the browser is in full screen mode or not, and if Phaser was the one that requested it. As it's possible to enter full screen mode outside of Phaser, and it then gets confused about what bounding parent to use.
 * Phaser.Tileset has a new property `lastgid` which is populated automatically by the TilemapParser when importing Tiled map data, or can be set manually if building your own tileset.
-* TilemapLayer.rayStepRate has been moved to Tilemap.rayStepRate.
-* TilemapLayer.getRayCastTiles has been moved to Tilemap.getRayCastTiles.
-* TilemapLayer.getTiles has been moved to Tilemap.getTiles.
-* The private methods `TilemapLayer._fixX`, `_unfixX`, `_fixY` and `_unfixY` have been moved to the Tilemap class.
-* TilemapLayer.getTileX, getTileY and getTileXY have been moved to the Tilemap class.
-* TilemapLayer.getTileX, getTileY and getTileXY all now required a Phaser.TilemapLayer (or Phaser.TilemapLayerGL) as the first argument.
-* Tilemap.getRayCastTiles now requires a Phaser.TilemapLayer (or Phaser.TilemapLayerGL) as the first argument.
-* Tilemap.getTiles now requires a Phaser.TilemapLayer (or Phaser.TilemapLayerGL) as the first argument.
 
 ### Bug Fixes
 
