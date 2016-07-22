@@ -23,8 +23,9 @@
 * @param {integer} index - The index of the TileLayer to render within the Tilemap.
 * @param {integer} width - Width of the renderable area of the layer (in pixels).
 * @param {integer} height - Height of the renderable area of the layer (in pixels).
+* @param {Phaser.Tileset} tileset - The Tileset this Layer uses to render with.
 */
-Phaser.TilemapLayerGL = function (game, tilemap, index, width, height) {
+Phaser.TilemapLayerGL = function (game, tilemap, index, width, height, tileset) {
 
     this.game = game;
 
@@ -170,7 +171,7 @@ Phaser.TilemapLayerGL = function (game, tilemap, index, width, height) {
     * @property {object} _mc
     * @private
     */
-    var tileset = this.layer.tileset || this.map.tilesets[0];
+    // var tileset = this.layer.tileset || this.map.tilesets[0];
 
     this._mc = {
 
@@ -229,7 +230,6 @@ Phaser.TilemapLayerGL = function (game, tilemap, index, width, height) {
     */
     this._results = [];
 
-    // get PIXI textures for each tileset source image
     var baseTexture = new PIXI.BaseTexture(tileset.image);
 
     PIXI.Tilemap.call(this, new PIXI.Texture(baseTexture), width | 0, height | 0, this.map.width, this.map.height, this._mc.tileset.tileWidth, this._mc.tileset.tileHeight, this.layer);
@@ -687,7 +687,8 @@ Phaser.TilemapLayerGL.prototype.renderRegion = function (scrollX, scrollY, left,
 
             var tile = row[x];
 
-            if (!tile || tile.index < 0)
+            //  If not the Tileset this Layer uses, then skip
+            if (!tile || tile.index < 0 || tile.index < this._mc.tileset.firstgid || tile.index > this._mc.lastgid)
             {
                 // skipping some tiles, add a degenerate marker into the batch list
                 this._mc.tileset.addDegenerate(this.glBatch);

@@ -594,189 +594,90 @@ Phaser.Tilemap.prototype = {
 
         if (this.enableDebug)
         {
-            // incredibly useful when trying to debug multiple layers.
-            // this and the two below describe each layer, tileset, and its index in the layers list.
-            console.log('Tilemap.createLayer', this.layers[index].name, width, 'x', height, 'tileset', this.tilesets[0].name, 'index:', index);
+            console.group('Tilemap.createLayer');
+            console.log('Name:', this.layers[index].name);
+            console.log('Size:', width, 'x', height);
+            console.log('Tileset:', this.tilesets[0].name, 'index:', index);
         }
 
         var rootLayer;
 
         if (this.game.renderType === Phaser.WEBGL)
         {
-            // use WebGL variant of TilemapLayer
-            rootLayer = group.add(new Phaser.TilemapLayerGL(this.game, this, index, width, height));
+            rootLayer = group.add(new Phaser.TilemapLayerGL(this.game, this, index, width, height, this.tilesets[0]));
         }
         else
         {
             rootLayer = group.add(new Phaser.TilemapLayer(this.game, this, index, width, height));
         }
 
-        // attempt to create internal layers for multiple tilesets in a layer
-        // it is currently assumed that each base layer will use tileset[0] (so 'i' starts at 1 in the for loop)
-        // (a 'base' layer is any layer except the so-called 'internal' layers created here)
+        //  Create child layers for multiple tilesets in a layer
+        //  It is currently assumed that each base layer will use tileset[0] (so 'i' starts at 1 in the for loop)
+        //  (a 'base' layer is any layer except the so-called 'internal' layers created here)
+
+        var fromLayer = this.layers[index];
+        var childLayer;
+
         for (var i = 1; i < this.tilesets.length; i++)
         {
-            var ts = this.tilesets[i];
-            var li = this.layers[index];
-            var name = 'layer' + index + '_internal_' + i;
-
-            var childLayer = this.createInternalLayer(name, ts, li, ts.tileWidth, ts.tileHeight, group);
-
-            if (!childLayer)
+            if (this.checkChildLayer(this.tilesets[i], fromLayer))
             {
-                if (this.enableDebug)
+                if (this.game.renderType === Phaser.WEBGL)
                 {
-                    // we didn't create an internal layer, this tileset isn't used in the base layer
-                    console.log('Tilemap.createLayer: tileset', ts.name, 'is not used in layer', li.name);
+                    childLayer = group.add(new Phaser.TilemapLayerGL(this.game, this, index, width, height, this.tilesets[i]));
                 }
-            }
-            else
-            {
+                else
+                {
+                    childLayer = group.add(new Phaser.TilemapLayer(this.game, this, index, width, height, this.tilesets[i]));
+                }
+
                 rootLayer.linkedLayers.push(childLayer);
 
                 if (this.enableDebug)
                 {
-                    // we removed all tiles belonging to the tileset in the base layer, and placed them in a new internal layer
-                    console.log('Tilemap.createLayer: Created internal layer for tileset', ts.name, 'from layer', li.name, 'index:', this.layers.length - 1);
+                    console.log('Linked child created for tileset:', this.tilesets[i].name);
                 }
             }
         }
 
-        //  Automatically updates all children too
-        rootLayer.width = width;
-        rootLayer.height = height;
+        if (this.enableDebug)
+        {
+            console.groupEnd();
+        }
+
 
         return rootLayer;
 
     },
 
     /**
-    * Creates a new internal layer on this Tilemap.
-    * 
-    * Internal layers are used when a Tilemap contains multiple Tilesets with different sized tiles. The tilesets
-    * each get a separate layer which is only ever referenced internally by the renderer. This approach permits us
-    * to handle large tiles at screen edges, and with the correct offset relative to the 'base' tileset regardless
-    * of size differences between the tiles.
-    * 
-    * For WebGL rendering, this approach also permits us to batch the drawing calls efficiently.
-    * 
-    * By default TilemapLayers are fixed to the camera.
+    * Takes a Tileset and map layer data, then runs through the data looking
+    * to see if there are any tiles that use the given Tileset. If there is,
+    * it returns true, otherwise false.
     *
-    * @method Phaser.Tilemap#createInternalLayer
-    * @param {string} name - The name of this layer. Must be unique within the map.
-    * @param {Phaser.Tileset} tileset - The tileset whose data is to be added to this layer.
-    * @param {Phaser.TilemapLayer/TilemapLayerGL} fromLayer - The layer from which this internal layer is being created.
-    * @param {number} tileWidth - The width of the tiles the layer uses for calculations.
-    * @param {number} tileHeight - The height of the tiles the layer uses for calculations.
-    * @param {Phaser.Group} [group] - Optional Group to add the layer to. If not specified it will be added to the World group.
-    * @return {Phaser.TilemapLayer} The TilemapLayer object. This is an extension of Phaser.Image and can be moved around the display list accordingly.
+    * @method Phaser.Tilemap#checkChildLayer
+    * @private
+    * @param {Phaser.Tileset} tileset - The Tileset to check against.
+    * @param {Object} fromLayer - The layer data to check.
+    * @return {boolean} True if a child layer needs to be created, otherwise false.
     */
-    createInternalLayer: function (name, tileset, fromLayer, tileWidth, tileHeight, group) {
-
-        if (group === undefined) { group = this.game.world; }
-
-        if (this.getLayerIndex(name) !== null)
-        {
-            console.warn('Tilemap.createInternalLayer: Layer with matching name already exists: ' + name);
-            return;
-        }
-
-        var layer = {
-
-            name: name,
-            x: 0,
-            y: 0,
-            width: fromLayer.width,
-            height: fromLayer.height,
-            widthInPixels: fromLayer.width * tileWidth,
-            heightInPixels: fromLayer.height * tileHeight,
-            alpha: 1,
-            visible: true,
-            properties: {},
-            indexes: [],
-            callbacks: [],
-            bodies: [],
-            data: null,
-            tileset: tileset
-
-        };
-
-        var row;
-        var output = [];
-        var emptyFlag = true;
+    checkChildLayer: function (tileset, fromLayer) {
 
         for (var y = 0; y < fromLayer.height; y++)
         {
-            row = [];
-
             for (var x = 0; x < fromLayer.width; x++)
             {
-                // get the equivalent tile from this Tilemap
+                //  Get the equivalent tile from this Tilemap
                 var tile = fromLayer.data[y][x];
 
-                // find out which tileset it is in
-                var setIndex = this.tiles[tile.index] && this.tiles[tile.index][2];
-                var ts = this.tilesets[setIndex];
-
-                // is it one of the ones we want to move?
-                if (ts === tileset)
+                if (tile && tile.index >= tileset.firstgid && tile.index <= tileset.lastgid)
                 {
-                    // this layer does have some content...
-                    emptyFlag = false;
-
-                    // move the tile to this new layer
-                    row.push(tile);
-
-                    // erase it from the original (mixed tileset) layer
-                    fromLayer.data[y][x] = new Phaser.Tile(layer, -1, x, y, tileWidth, tileHeight);
-                }
-                else
-                {
-                    // add an empty tile
-                    row.push(new Phaser.Tile(layer, -1, x, y, tileWidth, tileHeight));
+                    return true;
                 }
             }
-
-            output.push(row);
         }
 
-        if (emptyFlag)
-        {
-            // none of those tiles are used in this layer, so we don't actually need it
-            return;
-        }
-
-        layer.data = output;
-
-        this.layers.push(layer);
-
-        var w = layer.widthInPixels;
-        var h = layer.heightInPixels;
-
-        if (w > this.game.width)
-        {
-            w = this.game.width;
-        }
-
-        if (h > this.game.height)
-        {
-            h = this.game.height;
-        }
-
-        var displayLayer;
-
-        if (this.game.renderType === Phaser.WEBGL)
-        {
-            displayLayer = new Phaser.TilemapLayerGL(this.game, this, this.layers.length - 1, w, h);
-        }
-        else
-        {
-            displayLayer = new Phaser.TilemapLayer(this.game, this, this.layers.length - 1, w, h);
-        }
-
-        displayLayer.name = name;
-
-        return group.add(displayLayer);
+        return false;
 
     },
 

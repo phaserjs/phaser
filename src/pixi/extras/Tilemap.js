@@ -178,6 +178,19 @@ PIXI.Tilemap.prototype.constructor = PIXI.Tilemap;
 PIXI.Tilemap.prototype.update = function () {};
 PIXI.Tilemap.prototype.postUpdate = function () {};
 
+PIXI.Tilemap.prototype._initWebGL = function (renderSession) {
+
+    var gl = renderSession.gl;
+
+    // create a GL buffer to transfer all the vertex position data through
+    this.positionBuffer = gl.createBuffer();
+
+    // bind the buffer to the RAM resident positionBuffer
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, this.buffer, gl.STATIC_DRAW);
+
+};
+
 // override PIXI.DisplayObjectContainer _renderWebGL
 PIXI.Tilemap.prototype._renderWebGL = function (renderSession) {
 
@@ -201,19 +214,6 @@ PIXI.Tilemap.prototype._renderWebGL = function (renderSession) {
 
     // restart batch drawing now that this Tile layer has been rendered
     renderSession.spriteBatch.start();
-
-};
-
-PIXI.Tilemap.prototype._initWebGL = function (renderSession) {
-
-    var gl = renderSession.gl;
-
-    // create a GL buffer to transfer all the vertex position data through
-    this.positionBuffer = gl.createBuffer();
-
-    // bind the buffer to the RAM resident positionBuffer
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, this.buffer, gl.STATIC_DRAW);
 
 };
 
@@ -397,17 +397,3 @@ PIXI.Tilemap.prototype._renderWholeTilemap = function (renderSession) {
     this._renderBatch(renderSession);
 
 };
-
-/**
- * When the texture is updated, this event will fire to update the scale and frame
- *
- * @method onTextureUpdate
- * @param event
- * @private
-PIXI.Tilemap.prototype.onTextureUpdate = function () {
-
-    this.updateFrame = true;
-
-};
- */
-
