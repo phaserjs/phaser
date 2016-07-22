@@ -25,8 +25,6 @@
 */
 Phaser.TilemapLayerGL = function (game, tilemap, index, width, height, tileset) {
 
-    if (tileset === undefined) { tilemap.layers[index].tileset || map.tilesets[0]; }
-
     /**
     * A reference to the Phaser.Game instance.
     * 
@@ -161,6 +159,19 @@ Phaser.TilemapLayerGL = function (game, tilemap, index, width, height, tileset) 
     * @property {object} _mc
     * @private
     */
+
+    if (tileset === undefined)
+    {
+        if (tilemap.layers[index] && tilemap.layers[index].tileset)
+        {
+            tileset = tilemap.layers[index].tileset;
+        }
+        else if (tilemap.tilesets[0])
+        {
+            tileset = tilemap.tilesets[0];
+        }
+    }
+
     this._mc = {
 
         x: 0,

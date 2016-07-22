@@ -19,9 +19,8 @@
 * @param {integer} index - The index of the TileLayer to render within the Tilemap.
 * @param {integer} width - Width of the renderable area of the layer (in pixels).
 * @param {integer} height - Height of the renderable area of the layer (in pixels).
-* @param {Phaser.Tileset} [tileset] - The Tileset this Layer uses to render with.
 */
-Phaser.TilemapLayer = function (game, tilemap, index, width, height, tileset) {
+Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
 
     width |= 0;
     height |= 0;
