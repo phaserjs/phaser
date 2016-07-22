@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.6.2 "Kore Springs" - Built: Fri Jul 22 2016 17:03:40
+* v2.6.2 "Kore Springs" - Built: Fri Jul 22 2016 17:38:00
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -76215,8 +76215,6 @@ Phaser.TilemapLayerGL = function (game, tilemap, index, width, height, tileset) 
     this._scrollY = 0;
 
     var baseTexture = new PIXI.BaseTexture(tileset.image);
-
-    console.log('TilemapLayerGL', width, height);
 
     PIXI.Tilemap.call(this, new PIXI.Texture(baseTexture), width, height, this.map.width, this.map.height, this._mc.tileset.tileWidth, this._mc.tileset.tileHeight, this.layer);
 

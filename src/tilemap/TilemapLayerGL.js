@@ -239,8 +239,6 @@ Phaser.TilemapLayerGL = function (game, tilemap, index, width, height, tileset) 
 
     var baseTexture = new PIXI.BaseTexture(tileset.image);
 
-    console.log('TilemapLayerGL', width, height);
-
     PIXI.Tilemap.call(this, new PIXI.Texture(baseTexture), width, height, this.map.width, this.map.height, this._mc.tileset.tileWidth, this._mc.tileset.tileHeight, this.layer);
 
     Phaser.Component.Core.init.call(this, game, 0, 0, null, null);
