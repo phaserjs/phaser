@@ -5164,6 +5164,7 @@ declare module Phaser {
         columns: number;
         firstgid: number;
         image: any;
+        lastgid: number;
         name: string;
         properties: any;
         rows: number;
@@ -5175,6 +5176,7 @@ declare module Phaser {
 
         containsTileIndex(tileIndex: number): boolean;
         draw(context: CanvasRenderingContext2D, x: number, y: number, index: number): void;
+        drawGl(glBatch: any[], x: number, y: number, index: number, alpha: number, flippedVal: number): void;
         setImage(image: any): void;
         setSpacing(margin?: number, spacing?: number): void;
 

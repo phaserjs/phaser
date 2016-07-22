@@ -353,14 +353,17 @@ Phaser.TilemapParser = {
                 if (gid > 0)
                 {
                     var tile = new Phaser.Tile(layer, gid, x, output.length, json.tilewidth, json.tileheight);
+
                     tile.rotation = rotation;
                     tile.flipped = flipped;
-                    if ( flippedVal !== 0 )
+
+                    if (flippedVal !== 0)
                     {
-                        // the webgl renderer uses this to flip UV coordinates before drawing
+                        //  The WebGL renderer uses this to flip UV coordinates before drawing
                         tile.flippedVal = flippedVal;
                     }
-                    row.push( tile );
+
+                    row.push(tile);
                 }
                 else
                 {
@@ -429,6 +432,7 @@ Phaser.TilemapParser = {
         //  Tilesets & Image Collections
         var tilesets = [];
         var imagecollections = [];
+        var lastSet = null;
 
         for (var i = 0; i < json.tilesets.length; i++)
         {
@@ -447,6 +451,7 @@ Phaser.TilemapParser = {
                 // For a normal sliced tileset the row/count/size information is computed when updated.
                 // This is done (again) after the image is set.
                 newSet.updateTileData(set.imagewidth, set.imageheight);
+
                 tilesets.push(newSet);
             }
             else
@@ -463,6 +468,13 @@ Phaser.TilemapParser = {
                 imagecollections.push(newCollection);
             }
 
+            //  We've got a new Tileset, so set the lastgid into the previous one
+            if (lastSet)
+            {
+                lastSet.lastgid = set.firstgid - 1;
+            }
+            
+            lastSet = set;
         }
 
         map.tilesets = tilesets;
