@@ -2000,14 +2000,14 @@ Phaser.Tilemap.prototype = {
     * @param {boolean} [interestingFace=false] - If true, _only_ return tiles that have interesting faces.
     * @return {Phaser.Tile[]} An array of Phaser.Tiles.
     */
-    getRayCastTiles: function (line, stepRate, collides, interestingFace) {
+    getRayCastTiles: function (layer, line, stepRate, collides, interestingFace) {
 
         if (!stepRate) { stepRate = this.rayStepRate; }
         if (collides === undefined) { collides = false; }
         if (interestingFace === undefined) { interestingFace = false; }
 
         //  First get all tiles that touch the bounds of the line
-        var tiles = this.getTiles(line.x, line.y, line.width, line.height, collides, interestingFace);
+        var tiles = this.getTiles(layer, line.x, line.y, line.width, line.height, collides, interestingFace);
 
         if (tiles.length === 0)
         {
@@ -2054,7 +2054,7 @@ Phaser.Tilemap.prototype = {
     * @param {boolean} [interestingFace=false] - If true, _only_ return tiles that have interesting faces.
     * @return {array<Phaser.Tile>} An array of Tiles.
     */
-    getTiles: function (x, y, width, height, collides, interestingFace) {
+    getTiles: function (layer, x, y, width, height, collides, interestingFace) {
 
         //  Should we only get tiles that have at least one of their collision flags set? (true = yes, false = no just get them all)
 
@@ -2063,11 +2063,9 @@ Phaser.Tilemap.prototype = {
 
         var fetchAll = !(collides || interestingFace);
 
-        var layer = this.layer;
-
         //  Adjust the x,y coordinates for scrollFactor
-        x = layer._fixX(x);
-        y = layer._fixY(y);
+        x = layer._fixX(layer, x);
+        y = layer._fixY(layer, y);
 
         //  Convert the pixel values into tile coordinates
         var tx = Math.floor(x / (layer._mc.cw * layer.scale.x));
@@ -2107,9 +2105,7 @@ Phaser.Tilemap.prototype = {
     * @param {number} x - x coordinate in camera space
     * @return {number} x coordinate in scrollFactor-adjusted dimensions
     */
-    _fixX: function (x) {
-
-        var layer = this.layer;
+    _fixX: function (layer, x) {
 
         if (layer.scrollFactorX === 1 || (layer.scrollFactorX === 0 && layer.position.x === 0))
         {
@@ -2134,9 +2130,7 @@ Phaser.Tilemap.prototype = {
     * @param {number} x - x coordinate in scrollFactor-adjusted dimensions
     * @return {number} x coordinate in camera space
     */
-    _unfixX: function (x) {
-
-        var layer = this.layer;
+    _unfixX: function (layer, x) {
 
         if (layer.scrollFactorX === 1)
         {
@@ -2155,9 +2149,7 @@ Phaser.Tilemap.prototype = {
     * @param {number} y - y coordinate in camera space
     * @return {number} y coordinate in scrollFactor-adjusted dimensions
     */
-    _fixY: function (y) {
-
-        var layer = this.layer;
+    _fixY: function (layer, y) {
 
         if (layer.scrollFactorY === 1 || (layer.scrollFactorY === 0 && layer.position.y === 0))
         {
@@ -2182,9 +2174,7 @@ Phaser.Tilemap.prototype = {
     * @param {number} y - y coordinate in scrollFactor-adjusted dimensions
     * @return {number} y coordinate in camera space
     */
-    _unfixY: function (y) {
-
-        var layer = this.layer;
+    _unfixY: function (layer, y) {
 
         if (layer.scrollFactorY === 1)
         {
@@ -2202,11 +2192,9 @@ Phaser.Tilemap.prototype = {
     * @param {number} x - X position of the point in target tile (in pixels).
     * @return {integer} The X map location of the tile.
     */
-    getTileX: function (x) {
+    getTileX: function (layer, x) {
 
-        var layer = this.layer;
-
-        return Math.floor(this._fixX(x) / layer._mc.tileWidth);
+        return Math.floor(this._fixX(layer, x) / layer._mc.tileWidth);
 
     },
 
@@ -2217,11 +2205,9 @@ Phaser.Tilemap.prototype = {
     * @param {number} y - Y position of the point in target tile (in pixels).
     * @return {integer} The Y map location of the tile.
     */
-    getTileY: function (y) {
+    getTileY: function (layer, y) {
 
-        var layer = this.layer;
-
-        return Math.floor(this._fixY(y) / layer._mc.tileHeight);
+        return Math.floor(this._fixY(layer, y) / layer._mc.tileHeight);
 
     },
 
@@ -2234,10 +2220,10 @@ Phaser.Tilemap.prototype = {
     * @param {(Phaser.Point|object)} point - The Point/object to update.
     * @return {(Phaser.Point|object)} A Point/object with its `x` and `y` properties set.
     */
-    getTileXY: function (x, y, point) {
+    getTileXY: function (layer, x, y, point) {
 
-        point.x = this.getTileX(x);
-        point.y = this.getTileY(y);
+        point.x = this.getTileX(layer, x);
+        point.y = this.getTileY(layer, y);
 
         return point;
 
