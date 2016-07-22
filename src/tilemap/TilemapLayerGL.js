@@ -19,8 +19,8 @@
 * @param {Phaser.Game} game - Game reference to the currently running game.
 * @param {Phaser.Tilemap} tilemap - The tilemap to which this layer belongs.
 * @param {integer} index - The index of the TileLayer to render within the Tilemap.
-* @param {integer} width - Width of the renderable area of the layer (in pixels).
-* @param {integer} height - Height of the renderable area of the layer (in pixels).
+* @param {integer} width - Width of the renderable area of the layer in pixels. Cannot be null or negative.
+* @param {integer} height - Height of the renderable area of the layer in pixels. Cannot be null or negative.
 * @param {Phaser.Tileset} tileset - The Tileset this Layer uses to render with.
 */
 Phaser.TilemapLayerGL = function (game, tilemap, index, width, height, tileset) {
@@ -239,7 +239,9 @@ Phaser.TilemapLayerGL = function (game, tilemap, index, width, height, tileset) 
 
     var baseTexture = new PIXI.BaseTexture(tileset.image);
 
-    PIXI.Tilemap.call(this, new PIXI.Texture(baseTexture), width | 0, height | 0, this.map.width, this.map.height, this._mc.tileset.tileWidth, this._mc.tileset.tileHeight, this.layer);
+    console.log('TilemapLayerGL', width, height);
+
+    PIXI.Tilemap.call(this, new PIXI.Texture(baseTexture), width, height, this.map.width, this.map.height, this._mc.tileset.tileWidth, this._mc.tileset.tileHeight, this.layer);
 
     Phaser.Component.Core.init.call(this, game, 0, 0, null, null);
 
@@ -835,6 +837,26 @@ Object.defineProperty(Phaser.TilemapLayerGL.prototype, "y", {
         }
 
         this.dirty = true;
+
+    }
+
+});
+
+Object.defineProperty(Phaser.TilemapLayerGL.prototype, "bottom", {
+
+    get: function () {
+
+        return this.y + this.layer.heightInPixels;
+
+    }
+
+});
+
+Object.defineProperty(Phaser.TilemapLayerGL.prototype, "right", {
+
+    get: function () {
+
+        return this.x + this.layer.widthInPixels;
 
     }
 

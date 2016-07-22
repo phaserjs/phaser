@@ -575,8 +575,6 @@ Phaser.Tilemap.prototype = {
     */
     createLayer: function (layer, width, height, group) {
 
-        if (width === undefined) { width = this.game.width; }
-        if (height === undefined) { height = this.game.height; }
         if (group === undefined) { group = this.game.world; }
 
         var index = layer;
@@ -590,6 +588,26 @@ Phaser.Tilemap.prototype = {
         {
             console.warn('Tilemap.createLayer: Invalid layer ID given: ' + index);
             return;
+        }
+
+        //  Sort out the display dimensions, so they never render too much, or too little.
+
+        if (width === undefined || width <= 0)
+        {
+            width = Math.min(this.game.width, this.layers[index].widthInPixels);
+        }
+        else if (width > this.game.width)
+        {
+            width = this.game.width;
+        }
+
+        if (height === undefined || height <= 0)
+        {
+            height = Math.min(this.game.height, this.layers[index].heightInPixels);
+        }
+        else if (height > this.game.height)
+        {
+            height = this.game.height;
         }
 
         if (this.enableDebug)

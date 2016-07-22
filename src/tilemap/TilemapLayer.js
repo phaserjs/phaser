@@ -365,10 +365,6 @@ Phaser.TilemapLayer.prototype.resize = function (width, height) {
     this.texture.baseTexture.width = width;
     this.texture.baseTexture.height = height;
 
-    // this.texture.baseTexture.dirty();
-    // this.texture.requiresUpdate = true;
-    // this.texture._updateUvs();
-
     this.dirty = true;
 
 };
@@ -524,6 +520,7 @@ Phaser.TilemapLayer.prototype.shiftCanvas = function (context, x, y) {
         var copyContext = copyCanvas.getContext('2d');
         copyContext.clearRect(0, 0, copyW, copyH);
         copyContext.drawImage(canvas, dx, dy, copyW, copyH, 0, 0, copyW, copyH);
+
         // clear allows default 'source-over' semantics
         context.clearRect(sx, sy, copyW, copyH);
         context.drawImage(copyCanvas, 0, 0, copyW, copyH, sx, sy, copyW, copyH);
@@ -593,21 +590,21 @@ Phaser.TilemapLayer.prototype.renderRegion = function (scrollX, scrollY, left, t
     // xmax/ymax - remaining cells to render on column/row
     var tx, ty, x, y, xmax, ymax;
 
-    for (y = normStartY, ymax = bottom - top, ty = baseY;
-        ymax >= 0;
-        y++, ymax--, ty += th)
+    for (y = normStartY, ymax = bottom - top, ty = baseY; ymax >= 0; y++, ymax--, ty += th)
     {
-
-        if (y >= height) { y -= height; }
+        if (y >= height)
+        {
+            y -= height;
+        }
 
         var row = this.layer.data[y];
 
-        for (x = normStartX, xmax = right - left, tx = baseX;
-            xmax >= 0;
-            x++, xmax--, tx += tw)
+        for (x = normStartX, xmax = right - left, tx = baseX; xmax >= 0; x++, xmax--, tx += tw)
         {
-
-            if (x >= width) { x -= width; }
+            if (x >= width)
+            {
+                x -= width;
+            }
 
             var tile = row[x];
 
@@ -854,8 +851,6 @@ Phaser.TilemapLayer.prototype.render = function () {
         this.renderDebug();
     }
 
-    this.texture.baseTexture.dirty();
-
     this.dirty = false;
 
     this.context.restore();
@@ -957,6 +952,8 @@ Phaser.TilemapLayer.prototype.renderDebug = function () {
                     context.moveTo(tx + this._mc.cw, ty);
                     context.lineTo(tx + this._mc.cw, ty + this._mc.ch);
                 }
+
+                context.closePath();
 
                 context.stroke();
             }
@@ -1239,6 +1236,26 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, "y", {
 
 });
 
+Object.defineProperty(Phaser.TilemapLayer.prototype, "bottom", {
+
+    get: function () {
+
+        return this.cameraOffset.y + this.layer.heightInPixels;
+
+    }
+
+});
+
+Object.defineProperty(Phaser.TilemapLayer.prototype, "right", {
+
+    get: function () {
+
+        return this.cameraOffset.x + this.layer.widthInPixels;
+
+    }
+
+});
+
 /**
 * Flag controlling if the layer tiles wrap at the edges. Only works if the World size matches the Map size.
 *
@@ -1250,12 +1267,16 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, "y", {
 Object.defineProperty(Phaser.TilemapLayer.prototype, "wrap", {
 
     get: function () {
+
         return this._wrap;
+
     },
 
     set: function (value) {
+
         this._wrap = value;
         this.dirty = true;
+
     }
 
 });

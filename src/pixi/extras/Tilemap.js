@@ -361,10 +361,30 @@ PIXI.Tilemap.prototype._renderWholeTilemap = function (renderSession) {
     // set the global offset (e.g. screen shake)
     gl.uniform2f(shader.uOffset, renderSession.offset.x / this.game.width * 2, -renderSession.offset.y / this.game.height * 2);
 
-    // set the clipping limits
-    gl.uniform2f(shader.uClipOffset, this._mc.x / this.game.width * 2, this._mc.y / this.game.height * 2);
-    gl.uniform2f(shader.uClipLoc, this._mc.x, this._mc.y);
-    gl.uniform2f(shader.uClipLimit, this._mc.x + this._displayWidth, this.game.height - (this._mc.y + this._displayHeight));
+    //  Set the clipping limits
+
+    var clipOffsetX = this._mc.x / this.game.width * 2;
+    var clipOffsetY = -this._mc.y / this.game.height * 2;
+
+    var clipLocX = this._mc.x;
+    var clipLocY = -this._mc.y;
+
+    //  The width, going across from the LEFT OF THE SCREEN, of the clipping limit
+    var clipLimitX = this._mc.x + this._displayWidth;
+
+    //  The height, going up from the BOTTOM OF THE SCREEN, of the clipping limit
+    var clipLimitY = this.game.height - (this._mc.y + this._displayHeight);
+
+    // console.log('render');
+    // console.log(clipOffsetX, clipOffsetY);
+    // console.log(clipLocX, clipLocY);
+    // console.log(clipLimitX, clipLimitY);
+    // console.log(this._displayWidth, this._displayHeight);
+    // debugger;
+
+    gl.uniform2f(shader.uClipLimit, clipLimitX, clipLimitY);
+    gl.uniform2f(shader.uClipOffset, clipOffsetX, clipOffsetY);
+    gl.uniform2f(shader.uClipLoc, clipLocX, clipLocY);
 
     // set the offset in screen units to the center of the screen
     // and flip the GL y coordinate to be zero at the top
@@ -380,7 +400,7 @@ PIXI.Tilemap.prototype._renderWholeTilemap = function (renderSession) {
     gl.activeTexture(gl.TEXTURE0);
 
     // check if a texture is dirty...
-    if(this.texture.baseTexture._dirty[gl.id])
+    if (this.texture.baseTexture._dirty[gl.id])
     {
         renderSession.renderer.updateTexture(this.texture.baseTexture);
     }
