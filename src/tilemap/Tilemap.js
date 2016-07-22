@@ -152,6 +152,13 @@ Phaser.Tilemap = function (game, key, tileWidth, tileHeight, width, height) {
     this.debugMap = [];
 
     /**
+    * When ray-casting against tiles this is the number of steps it will jump. For larger tile sizes you can increase this to improve performance.
+    * @property {integer} rayStepRate
+    * @default
+    */
+    this.rayStepRate = 4;
+
+    /**
     * @property {array} _results - Internal var.
     * @private
     */
@@ -731,7 +738,6 @@ Phaser.Tilemap.prototype = {
 
             for (var x = 0; x < width; x++)
             {
-                // row.push(null);
                 row.push(new Phaser.Tile(layer, -1, x, y, tileWidth, tileHeight));
             }
 
@@ -758,14 +764,16 @@ Phaser.Tilemap.prototype = {
         }
 
         var output;
-        if ( this.game.renderType === Phaser.WEBGL )
+
+        if (this.game.renderType === Phaser.WEBGL)
         {
-            output = new Phaser.TilemapLayerGL(this.game, this, this.layers.length - 1, w, h);
+            output = new Phaser.TilemapLayerGL(this.game, this, this.layers.length - 1, w, h, null);
         }
         else
         {
             output = new Phaser.TilemapLayer(this.game, this, this.layers.length - 1, w, h);
         }
+
         output.name = name;
 
         return group.add(output);
@@ -1311,10 +1319,14 @@ Phaser.Tilemap.prototype = {
     hasTile: function (x, y, layer) {
 
         layer = this.getLayer(layer);
-        if (this.layers[layer].data[y] === undefined || this.layers[layer].data[y][x] === undefined) {
+
+        if (this.layers[layer].data[y] === undefined || this.layers[layer].data[y][x] === undefined)
+        {
             return false;
         }
+
         return (this.layers[layer].data[y][x].index > -1);
+
     },
 
     /**
@@ -1981,6 +1993,117 @@ Phaser.Tilemap.prototype = {
 
         args[0] = txt;
         console.log.apply(console, args);
+
+    },
+
+    /**
+    * Gets all tiles from `Tilemap.layer` that intersect with the given Phaser.Line object.
+    *
+    * If you need to get the tiles from a different layer, then set the `layer` property first.
+    *
+    * @method Phaser.Tilemap#getRayCastTiles
+    * @param {Phaser.Line} line - The line used to determine which tiles to return.
+    * @param {integer} [stepRate=(rayStepRate)] - How many steps through the ray will we check? Defaults to `rayStepRate`.
+    * @param {boolean} [collides=false] - If true, _only_ return tiles that collide on one or more faces.
+    * @param {boolean} [interestingFace=false] - If true, _only_ return tiles that have interesting faces.
+    * @return {Phaser.Tile[]} An array of Phaser.Tiles.
+    */
+    getRayCastTiles: function (line, stepRate, collides, interestingFace) {
+
+        if (!stepRate) { stepRate = this.rayStepRate; }
+        if (collides === undefined) { collides = false; }
+        if (interestingFace === undefined) { interestingFace = false; }
+
+        //  First get all tiles that touch the bounds of the line
+        var tiles = this.getTiles(line.x, line.y, line.width, line.height, collides, interestingFace);
+
+        if (tiles.length === 0)
+        {
+            return [];
+        }
+
+        //  Now we only want the tiles that intersect with the points on this line
+        var coords = line.coordinatesOnLine(stepRate);
+        var results = [];
+
+        for (var i = 0; i < tiles.length; i++)
+        {
+            for (var t = 0; t < coords.length; t++)
+            {
+                var tile = tiles[i];
+                var coord = coords[t];
+
+                if (tile.containsPoint(coord[0], coord[1]))
+                {
+                    results.push(tile);
+                    break;
+                }
+            }
+        }
+
+        return results;
+
+    },
+
+    /**
+    * Get all Tiles that exist on the current `Tilemap.layer`, within the given area, 
+    * as defined by the top-left corner, width and height arguments.
+    * 
+    * Values given are in pixels, not tiles.
+    *
+    * If you need to get the tiles from a different layer, then set the `layer` property first.
+    *
+    * @method Phaser.Tilemap#getTiles
+    * @param {number} x - X position of the top left corner (in pixels).
+    * @param {number} y - Y position of the top left corner (in pixels).
+    * @param {number} width - Width of the area to get (in pixels).
+    * @param {number} height - Height of the area to get (in pixels).
+    * @param {boolean} [collides=false] - If true, _only_ return tiles that collide on one or more faces.
+    * @param {boolean} [interestingFace=false] - If true, _only_ return tiles that have interesting faces.
+    * @return {array<Phaser.Tile>} An array of Tiles.
+    */
+    getTiles: function (x, y, width, height, collides, interestingFace) {
+
+        //  Should we only get tiles that have at least one of their collision flags set? (true = yes, false = no just get them all)
+
+        if (collides === undefined) { collides = false; }
+        if (interestingFace === undefined) { interestingFace = false; }
+
+        var fetchAll = !(collides || interestingFace);
+
+        var layer = this.layer;
+
+        //  Adjust the x,y coordinates for scrollFactor
+        x = layer._fixX(x);
+        y = layer._fixY(y);
+
+        //  Convert the pixel values into tile coordinates
+        var tx = Math.floor(x / (layer._mc.cw * layer.scale.x));
+        var ty = Math.floor(y / (layer._mc.ch * layer.scale.y));
+
+        //  Don't just use ceil(width/cw) to allow account for x/y diff within cell
+        var tw = Math.ceil((x + width) / (layer._mc.cw * layer.scale.x)) - tx;
+        var th = Math.ceil((y + height) / (layer._mc.ch * layer.scale.y)) - ty;
+
+        this._results = [];
+
+        for (var wy = ty; wy < ty + th; wy++)
+        {
+            for (var wx = tx; wx < tx + tw; wx++)
+            {
+                var row = layer.data[wy];
+
+                if (row && row[wx])
+                {
+                    if (fetchAll || row[wx].isInteresting(collides, interestingFace))
+                    {
+                        this._results.push(row[wx]);
+                    }
+                }
+            }
+        }
+
+        return this._results.slice();
 
     },
 
