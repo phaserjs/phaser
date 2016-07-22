@@ -30,14 +30,6 @@ Phaser.TilemapLayerGL = function (game, tilemap, index, width, height, tileset) 
     this.game = game;
 
     /**
-    * The rendering offset.
-    * 
-    * @property {Phaser.Point} _offset
-    * @private
-    */
-    this._offset = new Phaser.Point();
-
-    /**
     * An Array of any linked layers.
     * 
     * @property {Array} linkedLayers
@@ -310,139 +302,6 @@ Phaser.TilemapLayerGL.prototype.resizeWorld = function () {
 };
 
 /**
-* Take an x coordinate that doesn't account for scrollFactorX and 'fix' it into a scrolled local space.
-*
-* @method Phaser.TilemapLayerGL#_fixX
-* @private
-* @param {number} x - x coordinate in camera space
-* @return {number} x coordinate in scrollFactor-adjusted dimensions
-*/
-Phaser.TilemapLayerGL.prototype._fixX = function (x) {
-
-    if (x < 0)
-    {
-        x = 0;
-    }
-
-    if (this.scrollFactorX === 1)
-    {
-        return x;
-    }
-
-    return this._scrollX + (x - (this._scrollX / this.scrollFactorX));
-
-};
-
-/**
-* Take an x coordinate that _does_ account for scrollFactorX and 'unfix' it back to camera space.
-*
-* @method Phaser.TilemapLayerGL#_unfixX
-* @private
-* @param {number} x - x coordinate in scrollFactor-adjusted dimensions
-* @return {number} x coordinate in camera space
-*/
-Phaser.TilemapLayerGL.prototype._unfixX = function (x) {
-
-    if (this.scrollFactorX === 1)
-    {
-        return x;
-    }
-
-    return (this._scrollX / this.scrollFactorX) + (x - this._scrollX);
-
-};
-
-/**
-* Take a y coordinate that doesn't account for scrollFactorY and 'fix' it into a scrolled local space.
-*
-* @method Phaser.TilemapLayerGL#_fixY
-* @private
-* @param {number} y - y coordinate in camera space
-* @return {number} y coordinate in scrollFactor-adjusted dimensions
-*/
-Phaser.TilemapLayerGL.prototype._fixY = function (y) {
-
-    if (y < 0)
-    {
-        y = 0;
-    }
-
-    if (this.scrollFactorY === 1)
-    {
-        return y;
-    }
-
-    return this._scrollY + (y - (this._scrollY / this.scrollFactorY));
-
-};
-
-/**
-* Take a y coordinate that _does_ account for scrollFactorY and 'unfix' it back to camera space.
-*
-* @method Phaser.TilemapLayerGL#_unfixY
-* @private
-* @param {number} y - y coordinate in scrollFactor-adjusted dimensions
-* @return {number} y coordinate in camera space
-*/
-Phaser.TilemapLayerGL.prototype._unfixY = function (y) {
-
-    if (this.scrollFactorY === 1)
-    {
-        return y;
-    }
-
-    return (this._scrollY / this.scrollFactorY) + (y - this._scrollY);
-
-};
-
-/**
-* Convert a pixel value to a tile coordinate.
-*
-* @method Phaser.TilemapLayerGL#getTileX
-* @public
-* @param {number} x - X position of the point in target tile (in pixels).
-* @return {integer} The X map location of the tile.
-*/
-Phaser.TilemapLayerGL.prototype.getTileX = function (x) {
-
-    return Math.floor(this._fixX(x) / this._mc.tileWidth);
-
-};
-
-/**
-* Convert a pixel value to a tile coordinate.
-*
-* @method Phaser.TilemapLayerGL#getTileY
-* @public
-* @param {number} y - Y position of the point in target tile (in pixels).
-* @return {integer} The Y map location of the tile.
-*/
-Phaser.TilemapLayerGL.prototype.getTileY = function (y) {
-
-    return Math.floor(this._fixY(y) / this._mc.tileHeight);
-
-};
-
-/**
-* Convert a pixel coordinate to a tile coordinate.
-*
-* @method Phaser.TilemapLayerGL#getTileXY
-* @public
-* @param {number} x - X position of the point in target tile (in pixels).
-* @param {number} y - Y position of the point in target tile (in pixels).
-* @param {(Phaser.Point|object)} point - The Point/object to update.
-* @return {(Phaser.Point|object)} A Point/object with its `x` and `y` properties set.
-*/
-Phaser.TilemapLayerGL.prototype.getTileXY = function (x, y, point) {
-
-    point.x = this.getTileX(x);
-    point.y = this.getTileY(y);
-
-    return point;
-
-};
-
-/**
 * The TilemapLayerGL caches tileset look-ups.
 *
 * Call this method to clear the cache if tilesets have been added or updated after the layer has been rendered.
@@ -668,17 +527,17 @@ Object.defineProperty(Phaser.TilemapLayerGL.prototype, "x", {
 
     get: function () {
 
-        return this._offset.x;
+        return this.position.x;
 
     },
 
     set: function (value) {
 
-        this._offset.x = value;
+        this.position.x = value;
 
         for (var i = 0; i < this.linkedLayers.length; i++)
         {
-            this.linkedLayers[i]._offset.x = value;
+            this.linkedLayers[i].position.x = value;
         }
 
         this.dirty = true;
@@ -691,17 +550,17 @@ Object.defineProperty(Phaser.TilemapLayerGL.prototype, "y", {
 
     get: function () {
 
-        return this._offset.y;
+        return this.position.y;
 
     },
 
     set: function (value) {
 
-        this.offset.y = value;
+        this.position.y = value;
 
         for (var i = 0; i < this.linkedLayers.length; i++)
         {
-            this.linkedLayers[i]._offset.y = value;
+            this.linkedLayers[i].position.y = value;
         }
 
         this.dirty = true;

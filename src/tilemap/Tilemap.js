@@ -2108,6 +2108,150 @@ Phaser.Tilemap.prototype = {
     },
 
     /**
+    * Take an x coordinate that doesn't account for scrollFactorX and 'fix' it into a scrolled local space.
+    *
+    * @method Phaser.Tilemap#_fixX
+    * @private
+    * @param {number} x - x coordinate in camera space
+    * @return {number} x coordinate in scrollFactor-adjusted dimensions
+    */
+    _fixX: function (x) {
+
+        var layer = this.layer;
+
+        if (layer.scrollFactorX === 1 || (layer.scrollFactorX === 0 && layer.position.x === 0))
+        {
+            return x;
+        }
+        
+        //  This executes if the scrollFactorX is 0 and the x position of the tilemap is off from standard.
+        if (layer.scrollFactorX === 0 && layer.position.x !== 0)
+        {
+            return x - layer.position.x;
+        }
+
+        return layer._scrollX + (x - (layer._scrollX / layer.scrollFactorX));
+
+    };
+
+    /**
+    * Take an x coordinate that _does_ account for scrollFactorX and 'unfix' it back to camera space.
+    *
+    * @method Phaser.Tilemap#_unfixX
+    * @private
+    * @param {number} x - x coordinate in scrollFactor-adjusted dimensions
+    * @return {number} x coordinate in camera space
+    */
+    _unfixX: function (x) {
+
+        var layer = this.layer;
+
+        if (layer.scrollFactorX === 1)
+        {
+            return x;
+        }
+
+        return (layer._scrollX / layer.scrollFactorX) + (x - layer._scrollX);
+
+    },
+
+    /**
+    * Take a y coordinate that doesn't account for scrollFactorY and 'fix' it into a scrolled local space.
+    *
+    * @method Phaser.Tilemap#_fixY
+    * @private
+    * @param {number} y - y coordinate in camera space
+    * @return {number} y coordinate in scrollFactor-adjusted dimensions
+    */
+    _fixY: function (y) {
+
+        var layer = this.layer;
+
+        if (layer.scrollFactorY === 1 || (layer.scrollFactorY === 0 && layer.position.y === 0))
+        {
+            return y;
+        }
+        
+        //  This executes if the scrollFactorY is 0 and the y position of the tilemap is off from standard.
+        if (layer.scrollFactorY === 0 && layer.position.y !== 0)
+        {
+            return y - layer.position.y;
+        }
+        
+        return layer._scrollY + (y - (layer._scrollY / layer.scrollFactorY));
+
+    },
+
+    /**
+    * Take a y coordinate that _does_ account for scrollFactorY and 'unfix' it back to camera space.
+    *
+    * @method Phaser.Tilemap#_unfixY
+    * @private
+    * @param {number} y - y coordinate in scrollFactor-adjusted dimensions
+    * @return {number} y coordinate in camera space
+    */
+    _unfixY: function (y) {
+
+        var layer = this.layer;
+
+        if (layer.scrollFactorY === 1)
+        {
+            return y;
+        }
+
+        return (layer._scrollY / layer.scrollFactorY) + (y - layer._scrollY);
+
+    },
+
+    /**
+    * Convert a pixel value to a tile coordinate.
+    *
+    * @method Phaser.Tilemap#getTileX
+    * @param {number} x - X position of the point in target tile (in pixels).
+    * @return {integer} The X map location of the tile.
+    */
+    getTileX: function (x) {
+
+        var layer = this.layer;
+
+        return Math.floor(this._fixX(x) / layer._mc.tileWidth);
+
+    },
+
+    /**
+    * Convert a pixel value to a tile coordinate.
+    *
+    * @method Phaser.Tilemap#getTileY
+    * @param {number} y - Y position of the point in target tile (in pixels).
+    * @return {integer} The Y map location of the tile.
+    */
+    getTileY: function (y) {
+
+        var layer = this.layer;
+
+        return Math.floor(this._fixY(y) / layer._mc.tileHeight);
+
+    },
+
+    /**
+    * Convert a pixel coordinate to a tile coordinate.
+    *
+    * @method Phaser.Tilemap#getTileXY
+    * @param {number} x - X position of the point in target tile (in pixels).
+    * @param {number} y - Y position of the point in target tile (in pixels).
+    * @param {(Phaser.Point|object)} point - The Point/object to update.
+    * @return {(Phaser.Point|object)} A Point/object with its `x` and `y` properties set.
+    */
+    getTileXY: function (x, y, point) {
+
+        point.x = this.getTileX(x);
+        point.y = this.getTileY(y);
+
+        return point;
+
+    },
+
+    /**
     * Removes all layer data from this tile map and nulls the game reference.
     * Note: You are responsible for destroying any TilemapLayer objects you generated yourself, as Tilemap doesn't keep a reference to them.
     *

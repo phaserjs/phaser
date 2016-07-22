@@ -362,9 +362,9 @@ PIXI.Tilemap.prototype._renderWholeTilemap = function (renderSession) {
     gl.uniform2f(shader.uOffset, renderSession.offset.x / this.game.width * 2, -renderSession.offset.y / this.game.height * 2);
 
     // set the clipping limits
-    gl.uniform2f(shader.uClipOffset, this._offset.x / this.game.width * 2, this._offset.y / this.game.height * 2);
-    gl.uniform2f(shader.uClipLoc, this._offset.x, this._offset.y);
-    gl.uniform2f(shader.uClipLimit, this._offset.x + this._displayWidth, this.game.height - (this._offset.y + this._displayHeight));
+    gl.uniform2f(shader.uClipOffset, this.position.x / this.game.width * 2, this.position.y / this.game.height * 2);
+    gl.uniform2f(shader.uClipLoc, this.position.x, this.position.y);
+    gl.uniform2f(shader.uClipLimit, this.position.x + this._displayWidth, this.game.height - (this.position.y + this._displayHeight));
 
     // set the offset in screen units to the center of the screen
     // and flip the GL y coordinate to be zero at the top
