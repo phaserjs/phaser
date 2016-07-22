@@ -38,8 +38,7 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
             return;
         }
 
-        var mapData = tilemapLayer.map.getTiles(
-            tilemapLayer,
+        var mapData = tilemapLayer.getTiles(
             sprite.body.position.x - sprite.body.tilePadding.x,
             sprite.body.position.y - sprite.body.tilePadding.y,
             sprite.body.width + sprite.body.tilePadding.x,
