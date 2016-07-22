@@ -38,11 +38,15 @@ PIXI.Strip = function (texture) {
     ]);
 
     this.colors = new PIXI.Float32Array([1, 1, 1, 1]);
-
     this.indices = new PIXI.Uint16Array([0, 1, 2, 3]);
 
-    var textureIndex = texture.baseTexture.textureIndex;
-    this.textureIndices = new PIXI.Float32Array([textureIndex, textureIndex, textureIndex, textureIndex]);
+    this.textureIndex = texture.baseTexture.textureIndex;
+    this.textureIndices = new PIXI.Float32Array([
+        this.textureIndex,
+        this.textureIndex,
+        this.textureIndex,
+        this.textureIndex
+    ]);
 
     /**
      * Whether the strip is dirty or not
@@ -101,7 +105,7 @@ PIXI.Strip.prototype._renderWebGL = function (renderSession) {
 PIXI.Strip.prototype._initWebGL = function (renderSession) {
     // build the strip!
     var gl = renderSession.gl;
-
+    this.gl = gl;
     this._vertexBuffer = gl.createBuffer();
     this._indexBuffer = gl.createBuffer();
     this._uvBuffer = gl.createBuffer();
@@ -123,6 +127,7 @@ PIXI.Strip.prototype._initWebGL = function (renderSession) {
 
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._indexBuffer);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.indices, gl.STATIC_DRAW);
+    this.rebindTexture();
 
 };
 
@@ -137,7 +142,7 @@ PIXI.Strip.prototype._renderStrip = function (renderSession) {
     // gl.uniformMatrix4fv(shaderProgram.mvMatrixUniform, false, mat4Real);
 
     renderSession.blendModeManager.setBlendMode(this.blendMode);
-
+    this.gl = gl;
 
     // set uniforms
     gl.uniformMatrix3fv(shader.translationMatrix, false, this.worldTransform.toArray(true));
@@ -148,7 +153,9 @@ PIXI.Strip.prototype._renderStrip = function (renderSession) {
     if (!this.dirty) {
 
         gl.bindBuffer(gl.ARRAY_BUFFER, this._textureIndex);
+        gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.textureIndices);
         gl.vertexAttribPointer(shader.aTextureIndex, 1, gl.FLOAT, false, 0, 0);
+
 
         gl.bindBuffer(gl.ARRAY_BUFFER, this._vertexBuffer);
         gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.vertices);
@@ -159,15 +166,15 @@ PIXI.Strip.prototype._renderStrip = function (renderSession) {
         gl.bindBuffer(gl.ARRAY_BUFFER, this._uvBuffer);
         gl.vertexAttribPointer(shader.aTextureCoord, 2, gl.FLOAT, false, 0, 0);
 
-        gl.activeTexture(gl.TEXTURE0);
 
         // check if a texture is dirty..
         if (this.texture.baseTexture._dirty[gl.id]) {
             renderSession.renderer.updateTexture(this.texture.baseTexture);
         } else {
-            // bind the current texture
+            gl.activeTexture(gl.TEXTURE0 + this.textureIndex);
             gl.bindTexture(gl.TEXTURE_2D, this.texture.baseTexture._glTextures[gl.id]);
         }
+
 
         // dont need to upload!
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._indexBuffer);
@@ -176,6 +183,10 @@ PIXI.Strip.prototype._renderStrip = function (renderSession) {
     } else {
 
         this.dirty = false;
+        gl.bindBuffer(gl.ARRAY_BUFFER, this._textureIndex);
+        gl.bufferData(gl.ARRAY_BUFFER, this.textureIndices, gl.STATIC_DRAW);
+        gl.vertexAttribPointer(shader.aTextureIndex, 1, gl.FLOAT, false, 0, 0);
+
         gl.bindBuffer(gl.ARRAY_BUFFER, this._vertexBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, this.vertices, gl.STATIC_DRAW);
         gl.vertexAttribPointer(shader.aVertexPosition, 2, gl.FLOAT, false, 0, 0);
@@ -185,14 +196,14 @@ PIXI.Strip.prototype._renderStrip = function (renderSession) {
         gl.bufferData(gl.ARRAY_BUFFER, this.uvs, gl.STATIC_DRAW);
         gl.vertexAttribPointer(shader.aTextureCoord, 2, gl.FLOAT, false, 0, 0);
 
-        gl.activeTexture(gl.TEXTURE0);
-
         // check if a texture is dirty..
         if (this.texture.baseTexture._dirty[gl.id]) {
             renderSession.renderer.updateTexture(this.texture.baseTexture);
         } else {
+            gl.activeTexture(gl.TEXTURE0 + this.textureIndex);
             gl.bindTexture(gl.TEXTURE_2D, this.texture.baseTexture._glTextures[gl.id]);
         }
+
 
         // dont need to upload!
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._indexBuffer);
@@ -202,13 +213,17 @@ PIXI.Strip.prototype._renderStrip = function (renderSession) {
     //console.log(gl.TRIANGLE_STRIP)
     //
     //
-    debugger;
     gl.drawElements(drawMode, this.indices.length, gl.UNSIGNED_SHORT, 0);
 
 
 };
 
-
+PIXI.Strip.prototype.rebindTexture = function () {
+    var gl = this.gl;
+    if (!gl) return;
+    gl.activeTexture(gl.TEXTURE0 + this.textureIndex);
+    gl.bindTexture(gl.TEXTURE_2D, this.texture.baseTexture._glTextures[gl.id]);
+};
 
 PIXI.Strip.prototype._renderCanvas = function (renderSession) {
     var context = renderSession.context;
@@ -404,6 +419,7 @@ PIXI.Strip.prototype.setTexture = function(texture)
 
 PIXI.Strip.prototype.onTextureUpdate = function () {
     this.updateFrame = true;
+    this.rebindTexture();
 };
 
 /**
