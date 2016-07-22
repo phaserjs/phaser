@@ -38,7 +38,8 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
             return;
         }
 
-        var mapData = tilemapLayer.getTiles(
+        var mapData = tilemapLayer.map.getTiles(
+            tilemapLayer,
             sprite.body.position.x - sprite.body.tilePadding.x,
             sprite.body.position.y - sprite.body.tilePadding.y,
             sprite.body.width + sprite.body.tilePadding.x,
@@ -152,7 +153,7 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
             //  If it returns true then we can carry on, otherwise we should abort.
             return false;
         }
-        else if (typeof tile.layer.callbacks !== 'undefined' && tile.layer.callbacks[tile.index] && !tile.layer.callbacks[tile.index].callback.call(tile.layer.callbacks[tile.index].callbackContext, body.sprite, tile))
+        else if (tile.layer.callbacks !== undefined && tile.layer.callbacks[tile.index] && !tile.layer.callbacks[tile.index].callback.call(tile.layer.callbacks[tile.index].callbackContext, body.sprite, tile))
         {
             //  If it returns true then we can carry on, otherwise we should abort.
             return false;

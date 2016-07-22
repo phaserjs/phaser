@@ -1994,6 +1994,7 @@ Phaser.Tilemap.prototype = {
     * If you need to get the tiles from a different layer, then set the `layer` property first.
     *
     * @method Phaser.Tilemap#getRayCastTiles
+    * @param {Phaser.TilemapLayer|Phaser.TilemapLayerGL} layer - The Tilemap Layer to check.
     * @param {Phaser.Line} line - The line used to determine which tiles to return.
     * @param {integer} [stepRate=(rayStepRate)] - How many steps through the ray will we check? Defaults to `rayStepRate`.
     * @param {boolean} [collides=false] - If true, _only_ return tiles that collide on one or more faces.
@@ -2046,6 +2047,7 @@ Phaser.Tilemap.prototype = {
     * If you need to get the tiles from a different layer, then set the `layer` property first.
     *
     * @method Phaser.Tilemap#getTiles
+    * @param {Phaser.TilemapLayer|Phaser.TilemapLayerGL} layer - The Tilemap Layer to check.
     * @param {number} x - X position of the top left corner (in pixels).
     * @param {number} y - Y position of the top left corner (in pixels).
     * @param {number} width - Width of the area to get (in pixels).
@@ -2064,8 +2066,8 @@ Phaser.Tilemap.prototype = {
         var fetchAll = !(collides || interestingFace);
 
         //  Adjust the x,y coordinates for scrollFactor
-        x = layer._fixX(layer, x);
-        y = layer._fixY(layer, y);
+        x = this._fixX(layer, x);
+        y = this._fixY(layer, y);
 
         //  Convert the pixel values into tile coordinates
         var tx = Math.floor(x / (layer._mc.cw * layer.scale.x));
@@ -2075,13 +2077,13 @@ Phaser.Tilemap.prototype = {
         var tw = Math.ceil((x + width) / (layer._mc.cw * layer.scale.x)) - tx;
         var th = Math.ceil((y + height) / (layer._mc.ch * layer.scale.y)) - ty;
 
-        this._results = [];
+        this._results.length = 0;
 
         for (var wy = ty; wy < ty + th; wy++)
         {
             for (var wx = tx; wx < tx + tw; wx++)
             {
-                var row = layer.data[wy];
+                var row = layer.layer.data[wy];
 
                 if (row && row[wx])
                 {
@@ -2102,6 +2104,7 @@ Phaser.Tilemap.prototype = {
     *
     * @method Phaser.Tilemap#_fixX
     * @private
+    * @param {Phaser.TilemapLayer|Phaser.TilemapLayerGL} layer - The Tilemap Layer to check.
     * @param {number} x - x coordinate in camera space
     * @return {number} x coordinate in scrollFactor-adjusted dimensions
     */
@@ -2127,6 +2130,7 @@ Phaser.Tilemap.prototype = {
     *
     * @method Phaser.Tilemap#_unfixX
     * @private
+    * @param {Phaser.TilemapLayer|Phaser.TilemapLayerGL} layer - The Tilemap Layer to check.
     * @param {number} x - x coordinate in scrollFactor-adjusted dimensions
     * @return {number} x coordinate in camera space
     */
@@ -2146,6 +2150,7 @@ Phaser.Tilemap.prototype = {
     *
     * @method Phaser.Tilemap#_fixY
     * @private
+    * @param {Phaser.TilemapLayer|Phaser.TilemapLayerGL} layer - The Tilemap Layer to check.
     * @param {number} y - y coordinate in camera space
     * @return {number} y coordinate in scrollFactor-adjusted dimensions
     */
@@ -2171,6 +2176,7 @@ Phaser.Tilemap.prototype = {
     *
     * @method Phaser.Tilemap#_unfixY
     * @private
+    * @param {Phaser.TilemapLayer|Phaser.TilemapLayerGL} layer - The Tilemap Layer to check.
     * @param {number} y - y coordinate in scrollFactor-adjusted dimensions
     * @return {number} y coordinate in camera space
     */
@@ -2189,6 +2195,7 @@ Phaser.Tilemap.prototype = {
     * Convert a pixel value to a tile coordinate.
     *
     * @method Phaser.Tilemap#getTileX
+    * @param {Phaser.TilemapLayer|Phaser.TilemapLayerGL} layer - The Tilemap Layer to check.
     * @param {number} x - X position of the point in target tile (in pixels).
     * @return {integer} The X map location of the tile.
     */
@@ -2202,6 +2209,7 @@ Phaser.Tilemap.prototype = {
     * Convert a pixel value to a tile coordinate.
     *
     * @method Phaser.Tilemap#getTileY
+    * @param {Phaser.TilemapLayer|Phaser.TilemapLayerGL} layer - The Tilemap Layer to check.
     * @param {number} y - Y position of the point in target tile (in pixels).
     * @return {integer} The Y map location of the tile.
     */
@@ -2215,6 +2223,7 @@ Phaser.Tilemap.prototype = {
     * Convert a pixel coordinate to a tile coordinate.
     *
     * @method Phaser.Tilemap#getTileXY
+    * @param {Phaser.TilemapLayer|Phaser.TilemapLayerGL} layer - The Tilemap Layer to check.
     * @param {number} x - X position of the point in target tile (in pixels).
     * @param {number} y - Y position of the point in target tile (in pixels).
     * @param {(Phaser.Point|object)} point - The Point/object to update.
