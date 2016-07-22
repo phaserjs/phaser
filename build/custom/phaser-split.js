@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.6.2 "Kore Springs" - Built: Mon Jul 18 2016 23:41:21
+* v2.6.2 "Kore Springs" - Built: Fri Jul 22 2016 17:03:40
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -54,7 +54,7 @@ var Phaser = Phaser || {
     * @constant
     * @type {string}
     */
-    VERSION: '2.7.0 Beta',
+    VERSION: '2.7.0 Beta 2',
 
     /**
     * An array of Phaser game instances.
@@ -2714,7 +2714,7 @@ Phaser.Line.intersects = function (a, b, asSegment, result) {
 *
 * The for the purposes of this function rectangles are considered 'solid'.
 *
-* @method intersectsRectangle
+* @method Phaser.Line.intersectsRectangle
 * @param {Phaser.Line} line - The line to check for intersection with.
 * @param {Phaser.Rectangle|object} rect - The rectangle, or rectangle-like object, to check for intersection with.
 * @return {boolean} True if the line intersects with the rectangle edges, or starts or ends within the rectangle.
@@ -10042,7 +10042,7 @@ Phaser.Group.prototype.updateZ = function () {
 * the `alignTo` method in order to be positioned by this call. All default Phaser Game Objects have
 * this.
 *
-* The grid dimensions are determined by the first four arguments. The `rows` and `columns` arguments
+* The grid dimensions are determined by the first four arguments. The `width` and `height` arguments
 * relate to the width and height of the grid respectively.
 *
 * For example if the Group had 100 children in it:
@@ -10056,13 +10056,13 @@ Phaser.Group.prototype.updateZ = function () {
 *
 * This will align the children into a grid of 25x4, again using 32 pixels per grid cell.
 *
-* You can choose to set _either_ the `rows` or `columns` value to -1. Doing so tells the method
+* You can choose to set _either_ the `width` or `height` value to -1. Doing so tells the method
 * to keep on aligning children until there are no children left. For example if this Group had
 * 48 children in it, the following:
 *
 * `Group.align(-1, 8, 32, 32)`
 *
-* ... will align the children so that there are 8 columns vertically (the second argument), 
+* ... will align the children so that there are 8 children vertically (the second argument), 
 * and each row will contain 6 sprites, except the last one, which will contain 5 (totaling 48)
 *
 * You can also do:
@@ -10080,26 +10080,27 @@ Phaser.Group.prototype.updateZ = function () {
 * The final argument; `offset` lets you start the alignment from a specific child index.
 *
 * @method Phaser.Group#align
-* @param {integer} rows - The number of rows, or width, of the grid. Set to -1 for a dynamic width.
-* @param {integer} columns - The number of columns, or height, of the grid. Set to -1 for a dynamic height.
+* @param {integer} width - The width of the grid in items (not pixels). Set to -1 for a dynamic width. If -1 then you must set an explicit height value.
+* @param {integer} height - The height of the grid in items (not pixels). Set to -1 for a dynamic height. If -1 then you must set an explicit width value.
 * @param {integer} cellWidth - The width of each grid cell, in pixels.
 * @param {integer} cellHeight - The height of each grid cell, in pixels.
 * @param {integer} [position] - The position constant. One of `Phaser.TOP_LEFT` (default), `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.LEFT_CENTER`, `Phaser.CENTER`, `Phaser.RIGHT_CENTER`, `Phaser.BOTTOM_LEFT`, `Phaser.BOTTOM_CENTER` or `Phaser.BOTTOM_RIGHT`.
 * @param {integer} [offset=0] - Optional index to start the alignment from. Defaults to zero, the first child in the Group, but can be set to any valid child index value.
+* @return {boolean} True if the Group children were aligned, otherwise false.
 */
-Phaser.Group.prototype.align = function (rows, columns, cellWidth, cellHeight, position, offset) {
+Phaser.Group.prototype.align = function (width, height, cellWidth, cellHeight, position, offset) {
 
     if (position === undefined) { position = Phaser.TOP_LEFT; }
     if (offset === undefined) { offset = 0; }
 
-    if (this.children.length === 0 || offset > this.children.length || (rows === -1 && columns === -1))
+    if (this.children.length === 0 || offset > this.children.length || (width === -1 && height === -1))
     {
-        return;
+        return false;
     }
 
     var r = new Phaser.Rectangle(0, 0, cellWidth, cellHeight);
-    var w = (rows * cellWidth);
-    var h = (columns * cellHeight);
+    var w = (width * cellWidth);
+    var h = (height * cellHeight);
 
     for (var i = offset; i < this.children.length; i++)
     {
@@ -10114,7 +10115,7 @@ Phaser.Group.prototype.align = function (rows, columns, cellWidth, cellHeight, p
             continue;
         }
 
-        if (rows === -1)
+        if (width === -1)
         {
             //  We keep laying them out horizontally until we've done them all
             r.y += cellHeight;
@@ -10125,7 +10126,7 @@ Phaser.Group.prototype.align = function (rows, columns, cellWidth, cellHeight, p
                 r.y = 0;
             }
         }
-        else if (columns === -1)
+        else if (height === -1)
         {
             //  We keep laying them out vertically until we've done them all
             r.x += cellWidth;
@@ -10149,11 +10150,13 @@ Phaser.Group.prototype.align = function (rows, columns, cellWidth, cellHeight, p
                 if (r.y === h)
                 {
                     //  We've hit the column limit, so return, even if there are children left
-                    return;
+                    return true;
                 }
             }
         }
     }
+
+    return true;
 
 };
 
@@ -49739,12 +49742,23 @@ Phaser.Loader = function (game) {
     * Used to map the application mime-types to to the Accept header in XHR requests.
     * If you don't require these mappings, or they cause problems on your server, then
     * remove them from the headers object and the XHR request will not try to use them.
+    *
+    * This object can also be used to set the `X-Requested-With` header to 
+    * `XMLHttpRequest` (or any other value you need). To enable this do:
+    *
+    * `this.load.headers.requestedWith = 'XMLHttpRequest'`
+    *
+    * before adding anything to the Loader. The XHR loader will then call:
+    *
+    * `setRequestHeader('X-Requested-With', this.headers['requestedWith'])`
+    * 
     * @property {object} headers
     * @default
     */
     this.headers = {
-        json: "application/json",
-        xml: "application/xml"
+        "requestedWith": false,
+        "json": "application/json",
+        "xml": "application/xml"
     };
 
     /**
@@ -50668,7 +50682,7 @@ Phaser.Loader.prototype = {
     *
     * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
     *
-    * @method Phaser.Loader#audiosprite
+    * @method Phaser.Loader#audioSprite
     * @param {string} key - Unique asset key of the audio file.
     * @param {Array|string} urls - An array containing the URLs of the audio files, i.e.: [ 'audiosprite.mp3', 'audiosprite.ogg', 'audiosprite.m4a' ] or a single string containing just one URL.
     * @param {string} [jsonURL=null] - The URL of the audiosprite configuration JSON object. If you wish to pass the data directly set this parameter to null.
@@ -51963,9 +51977,14 @@ Phaser.Loader.prototype = {
         xhr.open("GET", url, true);
         xhr.responseType = type;
 
+        if (this.headers['requestedWith'] !== false)
+        {
+            xhr.setRequestHeader('X-Requested-With', this.headers['requestedWith']);
+        }
+
         if (this.headers[file.type])
         {
-            xhr.setRequestHeader("Accept", this.headers[file.type]);
+            xhr.setRequestHeader('Accept', this.headers[file.type]);
         }
 
         onerror = onerror || this.fileError;
@@ -55253,6 +55272,18 @@ Phaser.ScaleManager = function (game, width, height) {
     this.leaveIncorrectOrientation = new Phaser.Signal();
 
     /**
+    * This boolean provides you with a way to determine if the browser is in Full Screen
+    * mode (via the Full Screen API), and Phaser was the one responsible for activating it.
+    *
+    * It's possible that ScaleManager.isFullScreen returns `true` even if Phaser wasn't the
+    * one that made the browser go full-screen, so this flag lets you determine that.
+    * 
+    * @property {boolean} hasPhaserSetFullScreen
+    * @default
+    */
+    this.hasPhaserSetFullScreen = false;
+
+    /**
     * If specified, this is the DOM element on which the Fullscreen API enter request will be invoked.
     * The target element must have the correct CSS styling and contain the Display canvas.
     *
@@ -56792,9 +56823,11 @@ Phaser.ScaleManager.prototype = {
         {
             // Error is called in timeout to emulate the real fullscreenerror event better
             var _this = this;
+
             setTimeout(function () {
                 _this.fullScreenError();
             }, 10);
+
             return;
         }
 
@@ -56811,7 +56844,7 @@ Phaser.ScaleManager.prototype = {
             }
         }
 
-        if (typeof antialias !== 'undefined' && this.game.renderType === Phaser.CANVAS)
+        if (antialias !== undefined && this.game.renderType === Phaser.CANVAS)
         {
             this.game.stage.smoothed = antialias;
         }
@@ -56829,6 +56862,8 @@ Phaser.ScaleManager.prototype = {
         var initData = {
             targetElement: fsTarget
         };
+
+        this.hasPhaserSetFullScreen = true;
 
         this.onFullScreenInit.dispatch(this, initData);
 
@@ -56868,6 +56903,8 @@ Phaser.ScaleManager.prototype = {
         {
             return false;
         }
+
+        this.hasPhaserSetFullScreen = false;
 
         document[this.game.device.cancelFullscreen]();
 
@@ -57115,14 +57152,17 @@ Phaser.ScaleManager.prototype.constructor = Phaser.ScaleManager;
 Object.defineProperty(Phaser.ScaleManager.prototype, "boundingParent", {
 
     get: function () {
+
         if (this.parentIsWindow ||
-            (this.isFullScreen && !this._createdFullScreenTarget))
+            (this.isFullScreen && this.hasPhaserSetFullScreen && !this._createdFullScreenTarget))
         {
             return null;
         }
 
         var parentNode = this.game.canvas && this.game.canvas.parentNode;
+
         return parentNode || null;
+
     }
 
 });
@@ -64007,8 +64047,8 @@ Phaser.Physics.Arcade.prototype = {
     */
     angleBetweenCenters: function (source, target) {
 
-        var dx = target.center.x - source.center.x;
-        var dy = target.center.y - source.center.y;
+        var dx = target.centerX - source.centerX;
+        var dy = target.centerY - source.centerY;
 
         return Math.atan2(dy, dx);
 
@@ -65310,7 +65350,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     /**
     * Returns true if the top of this Body is in contact with either the world bounds or a tile.
     *
-    * @method Phaser.Physics.Arcade.Body#onTop
+    * @method Phaser.Physics.Arcade.Body#onCeiling
     * @return {boolean} True if in contact with either the world bounds or a tile.
     */
     onCeiling: function(){
@@ -65613,14 +65653,15 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
     */
     collideSpriteVsTilemapLayer: function (sprite, tilemapLayer, collideCallback, processCallback, callbackContext, overlapOnly) {
 
-        if (!sprite.body)
+        //  Before we even do this, is the sprite outside the layer bounds?
+        if (!sprite.body || sprite.body.bottom < tilemapLayer.y || sprite.body.top > tilemapLayer.bottom || sprite.body.right < tilemapLayer.x || sprite.body.x > tilemapLayer.right)
         {
             return;
         }
 
         var mapData = tilemapLayer.getTiles(
-            sprite.body.position.x - sprite.body.tilePadding.x,
-            sprite.body.position.y - sprite.body.tilePadding.y,
+            (sprite.body.position.x - sprite.body.tilePadding.x) - tilemapLayer.x,
+            (sprite.body.position.y - sprite.body.tilePadding.y) - tilemapLayer.y,
             sprite.body.width + sprite.body.tilePadding.x,
             sprite.body.height + sprite.body.tilePadding.y,
             false, false);
@@ -65709,8 +65750,8 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
             return false;
         }
         
-        var tilemapLayerOffsetX = (!tilemapLayer.fixedToCamera) ? tilemapLayer.position.x : 0;
-        var tilemapLayerOffsetY = (!tilemapLayer.fixedToCamera) ? tilemapLayer.position.y : 0;
+        var tilemapLayerOffsetX = tilemapLayer.x;
+        var tilemapLayerOffsetY = tilemapLayer.y;
 
         //  We re-check for collision in case body was separated in a previous step
         if (!tile.intersects((body.position.x - tilemapLayerOffsetX), (body.position.y - tilemapLayerOffsetY), (body.right - tilemapLayerOffsetX), (body.bottom - tilemapLayerOffsetY)))
@@ -65732,7 +65773,7 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
             //  If it returns true then we can carry on, otherwise we should abort.
             return false;
         }
-        else if (typeof tile.layer.callbacks !== 'undefined' && tile.layer.callbacks[tile.index] && !tile.layer.callbacks[tile.index].callback.call(tile.layer.callbacks[tile.index].callbackContext, body.sprite, tile))
+        else if (tile.layer.callbacks !== undefined && tile.layer.callbacks[tile.index] && !tile.layer.callbacks[tile.index].callback.call(tile.layer.callbacks[tile.index].callbackContext, body.sprite, tile))
         {
             //  If it returns true then we can carry on, otherwise we should abort.
             return false;
@@ -65822,7 +65863,7 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
     tileCheckX: function (body, tile, tilemapLayer) {
 
         var ox = 0;
-        var tilemapLayerOffsetX = (!tilemapLayer.fixedToCamera) ? tilemapLayer.position.x : 0;
+        var tilemapLayerOffsetX = tilemapLayer.x;
 
         if (body.deltaX() < 0 && !body.blocked.left && tile.collideRight && body.checkCollision.left)
         {
@@ -65880,7 +65921,7 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
     tileCheckY: function (body, tile, tilemapLayer) {
 
         var oy = 0;
-        var tilemapLayerOffsetY = (!tilemapLayer.fixedToCamera) ? tilemapLayer.position.y : 0;
+        var tilemapLayerOffsetY = tilemapLayer.y;
 
         if (body.deltaY() < 0 && !body.blocked.up && tile.collideDown && body.checkCollision.up)
         {
@@ -71432,14 +71473,22 @@ Phaser.Physics.P2.RevoluteConstraint.prototype.constructor = Phaser.Physics.P2.R
 */
 
 /**
-* Tilemap - constructor
-* 
-* @param {Array} layer - layer data from the map, arranged in mapheight lists of mapwidth Phaser.Tile objects (2d array)
-* 
-*/
-PIXI.Tilemap = function(texture, mapwidth, mapheight, tilewidth, tileheight, layer) {
+ * A PIXI WebGL Tilemap.
+ *
+ * @class PIXI.Tilemap
+ * @extends {PIXI.DisplayObject}
+ * @param {PIXI.Texture} texture - The tilemap texture.
+ * @param {integer} displayWidth - The width of the display area. Used as the clipping limit for the shader.
+ * @param {integer} displayHeight - The height of the display area. Used as the clipping limit for the shader.
+ * @param {integer} mapWidth - The width of the map.
+ * @param {integer} mapHeight - The height of the map.
+ * @param {integer} tileWidth - The width of a single tile.
+ * @param {integer} tileHeight - The height of a single tile.
+ * @param {Array} layer - Tilemap layer data from the map, arranged in mapHeight lists of mapWidth Phaser.Tile objects (2d array).
+ */
+PIXI.Tilemap = function (texture, displayWidth, displayHeight, mapWidth, mapHeight, tileWidth, tileHeight, layer) {
 
-    PIXI.DisplayObjectContainer.call(this);
+    PIXI.DisplayObject.call(this);
 
     /**
      * The texture of the Tilemap
@@ -71449,41 +71498,111 @@ PIXI.Tilemap = function(texture, mapwidth, mapheight, tilewidth, tileheight, lay
      */
     this.texture = texture;
 
-    // faster access to the tile dimensions
-    this.tileWide = tilewidth;
-    this.tileHigh = tileheight;
-    this.mapWide = mapwidth;
-    this.mapHigh = mapheight;
+    /**
+     * The clipping limit of the display area.
+     *
+     * @property _displayWidth
+     * @type integer
+     * @private
+     */
+    this._displayWidth = displayWidth;
 
-    // TODO: switch here to create DisplayObjectContainer at correct size for the render mode
-    this.width = this.mapWide * this.tileWide;
-    this.height = this.mapHigh * this.tileHigh;
+    /**
+     * The clipping limit of the display area.
+     *
+     * @property _displayHeight
+     * @type integer
+     * @private
+     */
+    this._displayHeight = displayHeight;
 
+    /**
+     * The width of a single tile in pixels.
+     *
+     * @property tileWidth
+     * @type integer
+     */
+    this.tileWidth = tileWidth;
+
+    /**
+     * The height of a single tile in pixels.
+     *
+     * @property tileHeight
+     * @type integer
+     */
+    this.tileHeight = tileHeight;
+
+    /**
+     * The width of the map in tiles.
+     *
+     * @property mapWidth
+     * @type integer
+     */
+    this.mapWidth = mapWidth;
+
+    /**
+     * The height of the map in tiles.
+     *
+     * @property mapHeight
+     * @type integer
+     */
+    this.mapHeight = mapHeight;
+
+    /**
+     * The width of the map in pixels.
+     *
+     * @property width
+     * @type integer
+     */
+    this.pxWidth = this.mapWidth * this.tileWidth;
+
+    /**
+     * The height of the map in pixels.
+     *
+     * @property height
+     * @type integer
+     */
+    this.pxHeight = this.mapHeight * this.tileHeight;
+
+    /**
+     * Tilemap layer data from the map, arranged in mapHeight lists of mapWidth tiles.
+     * Contains Phaser.Tile objects (2d array).
+     *
+     * @property layer
+     * @type Array
+     */
     this.layer = layer;
 
-    // store the list of batch drawing instructions (for use with WebGL rendering)
+    /**
+     * Store the list of batch drawing instructions.
+     *
+     * @property glBatch
+     * @type Array
+     */
     this.glBatch = null;
 
     /**
-     * Remember last tile drawn to avoid unnecessary set-up
+     * Remember last tile drawn to avoid unnecessary set-up.
      *
-     * @type Integer
+     * @property lastTile
+     * @type integer
      */
     this.lastTile = -1;
 
     /**
-     * Whether the Tilemap is dirty or not
+     * Whether the Tilemap is dirty or not.
      *
      * @property dirty
-     * @type Boolean
+     * @type boolean
      */
     this.dirty = true;
 
     /**
-     * The blend mode to be applied to the tilemap. Set to PIXI.blendModes.NORMAL to remove any blend mode.
+     * The blend mode to be applied to the tilemap.
+     * Set to PIXI.blendModes.NORMAL to remove any blend mode.
      *
      * @property blendMode
-     * @type Number
+     * @type integer
      * @default PIXI.blendModes.NORMAL;
      */
     this.blendMode = PIXI.blendModes.NORMAL;
@@ -71494,25 +71613,50 @@ PIXI.Tilemap = function(texture, mapwidth, mapheight, tilewidth, tileheight, lay
      * float left, bottom, right, top - screen coordinates
      * float u, v, wide, high - source texture coordinates
      *
-     * @type {Number}
+     * @property batchDataElement
+     * @type integer
      */
     this.batchDataElement = 16;
 
-    // calculate total batch data size
-    var dataSize = mapwidth * mapheight * this.batchDataElement;
+    /**
+     * Create the buffer data for the WebGL rendering of this tilemap.
+     * Calculates the total batch data size.
+     *
+     * @property buffer
+     * @type PIXI.Float32Array
+     */
+    this.buffer = new PIXI.Float32Array(mapWidth * mapHeight * this.batchDataElement);
 
-    // create buffer data for the webgl rendering of this tile
-    this.buffer = new PIXI.Float32Array( dataSize );
+    /**
+     * A required but un-used array.
+     * Do not add objects to this array, Tilemaps cannot have children.
+     *
+     * @property children
+     * @type Array
+     * @private
+     */
+    this.children = [];
 
 };
 
-// constructor, this class extends PIXI.DisplayObjectContainer
-PIXI.Tilemap.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
+PIXI.Tilemap.prototype = Object.create(PIXI.DisplayObject.prototype);
 PIXI.Tilemap.prototype.constructor = PIXI.Tilemap;
 
-// unused methods overridden to prevent default behavior
 PIXI.Tilemap.prototype.update = function () {};
 PIXI.Tilemap.prototype.postUpdate = function () {};
+
+PIXI.Tilemap.prototype._initWebGL = function (renderSession) {
+
+    var gl = renderSession.gl;
+
+    // create a GL buffer to transfer all the vertex position data through
+    this.positionBuffer = gl.createBuffer();
+
+    // bind the buffer to the RAM resident positionBuffer
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, this.buffer, gl.STATIC_DRAW);
+
+};
 
 // override PIXI.DisplayObjectContainer _renderWebGL
 PIXI.Tilemap.prototype._renderWebGL = function (renderSession) {
@@ -71526,7 +71670,7 @@ PIXI.Tilemap.prototype._renderWebGL = function (renderSession) {
     // stop current render session batch drawing
     renderSession.spriteBatch.stop();
 
-    if (!this._vertexBuffer)
+    if (!this.positionBuffer)
     {
         this._initWebGL(renderSession);
     }
@@ -71540,144 +71684,136 @@ PIXI.Tilemap.prototype._renderWebGL = function (renderSession) {
 
 };
 
-PIXI.Tilemap.prototype._initWebGL = function (renderSession) {
+PIXI.Tilemap.prototype._renderBatch = function (renderSession) {
+
+    if (!this.glBatch)
+    {
+        return;
+    }
 
     var gl = renderSession.gl;
 
-    this._vertexBuffer = gl.createBuffer();
-    this._indexBuffer = gl.createBuffer();
-    this._uvBuffer = gl.createBuffer();
-    this._colorBuffer = gl.createBuffer();
+    // TODO: should probably use destination buffer dimensions (halved)
+    var screenWide2 = this.game.width * 0.5;
+    var screenHigh2 = this.game.height * 0.5;
 
-    // create a GL buffer to transfer all the vertex position data through
-    this.positionBuffer = gl.createBuffer();
+    // size of one pixel in the source texture
+    var iTextureWide = 1.0 / this.texture.width;
+    var iTextureHigh = 1.0 / this.texture.height;
 
-    // bind the buffer to the RAM resident positionBuffer
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, this.buffer, gl.STATIC_DRAW);
+    // pre-calculate inverse half-buffer dimensions
+    var iWide = 1.0 / screenWide2;
+    var iHigh = 1.0 / screenHigh2;
 
-};
+    var wide = this.tileWidth * 0.5 / screenWide2;
+    var high = this.tileHeight * 0.5 / screenHigh2;
 
+    var buffer = this.buffer;
+    var oldR, oldT, uvl, uvt;
 
-PIXI.Tilemap.prototype._renderBatch = function (renderSession) {
+    // process entire glBatch into a single webGl draw buffer for a TRIANGLE_STRIP blit
+    var c = 0;
+    var degenerate = false;
 
-    if (this.glBatch)
+    for (var i = 0, l = this.glBatch.length; i < l; i++)
     {
-        var gl = renderSession.gl;
+        // each object in this.glBatch has properties:
+        // sx: this.drawCoords[coordIndex],
+        // sy: this.drawCoords[coordIndex + 1],
+        // sw: this.tileWidth,
+        // sh: this.tileHeight,
+        // dx: x,
+        // dy: y,
+        // dw: this.tileWidth,
+        // dh: this.tileHeight
+        var t = this.glBatch[i];
 
-        // TODO: should probably use destination buffer dimensions (halved)
-        var screenWide2 = this.game.width * 0.5;
-        var screenHigh2 = this.game.height * 0.5;
-
-        // size of one pixel in the source texture
-        var iTextureWide = 1.0 / this.texture.width;
-        var iTextureHigh = 1.0 / this.texture.height;
-
-        // size of one tile in the source texture
-        var srcWide = this.tileWide * iTextureWide;
-        var srcHigh = this.tileHigh * iTextureHigh;
-
-        // pre-calculate inverse half-buffer dimensions
-        var iWide = 1.0 / screenWide2;
-        var iHigh = 1.0 / screenHigh2;
-
-        var wide = this.tileWide * 0.5 / screenWide2;
-        var high = this.tileHigh * 0.5 / screenHigh2;
-
-        var buffer = this.buffer;
-        var oldR, oldT, uvl, uvt;
-
-        // process entire glBatch into a single webGl draw buffer for a TRIANGLE_STRIP blit
-        var c = 0;
-        var degenerate = false;
-
-        for (var i = 0, l = this.glBatch.length; i < l; i++)
+        if (!t)
         {
-            // sx: this.drawCoords[coordIndex],
-            // sy: this.drawCoords[coordIndex + 1],
-            // sw: this.tileWidth,
-            // sh: this.tileHeight,
-            // dx: x,
-            // dy: y,
-            // dw: this.tileWidth,
-            // dh: this.tileHeight
+            // insert a degenerate triangle when null is found in the list of batch objects
+            degenerate = true;
 
-            var t = this.glBatch[i];
-
-            if (!t)
-            {
-                // insert a degenerate triangle when null is found in the list of batch objects
-                degenerate = true;
-
-                // skip to end of loop, degenerate will be inserted when no more null objects are found
-                continue;
-            }
-
-            var x = t.dx * iWide - 1;
-            var y = 1 - t.dy * iHigh;
-
-            var lft = x - wide;
-            var bot = y + high;
-
-            var uvl = t.sx * iTextureWide;
-            var uvt = t.sy * iTextureHigh; 
-
-            // insert a degenerate triangle to separate the tiles
-            if (degenerate)
-            {
-                // add a degenerate triangle: repeat the last vertex
-                buffer[ c     ] = oldR;
-                buffer[ c + 1 ] = oldT;
-                // then repeat the next vertex
-                buffer[ c + 4 ] = lft;
-                buffer[ c + 5 ] = bot;
-                // pad with texture coordinates (probably not needed)
-                buffer[ c + 2 ] = buffer[ c + 6 ] = uvl;
-                buffer[ c + 3 ] = buffer[ c + 7 ] = uvt;
-
-                // advance the buffer index for one single degenerate triangle
-                c += 8;
-                degenerate = false;
-            }
-
-            // calculate the destination location of the tile in screen units (-1..1)
-            buffer[ c      ] = buffer[ c +  4 ] = lft;
-            buffer[ c +  1 ] = buffer[ c +  9 ] = bot;
-            buffer[ c +  8 ] = buffer[ c +  12] = oldR = x + wide;
-            buffer[ c +  5 ] = buffer[ c +  13] = oldT = y - high;
-
-            // calculate the uv coordinates of the tile source image
-            buffer[ c +  2 ] = buffer[ c +  6 ] = uvl;
-            buffer[ c +  3 ] = buffer[ c +  11] = uvt;
-            buffer[ c +  10] = buffer[ c +  14] = uvl + srcWide;
-            buffer[ c +  7 ] = buffer[ c +  15] = uvt + srcHigh;
-
-            // advance the buffer index
-            c += 16;
+            // skip to end of loop, degenerate will be inserted when no more null objects are found
+            continue;
         }
 
-        // if there's anything to draw...
-        if (c > 0)
+        var x = t.dx * iWide - 1;
+        var y = 1 - t.dy * iHigh;
+
+        var lft = x - wide;
+        var bot = y + high;
+
+        var uvl = t.sx * iTextureWide;
+        var uvt = t.sy * iTextureHigh; 
+
+        // insert a degenerate triangle to separate the tiles
+        if (degenerate)
         {
-            var shader = renderSession.shaderManager.tilemapShader;
+            // add a degenerate triangle: repeat the last vertex
+            buffer[ c     ] = oldR;
+            buffer[ c + 1 ] = oldT;
 
-            // upload the VBO
-            gl.bufferData( gl.ARRAY_BUFFER, buffer, gl.STATIC_DRAW );
+            // then repeat the next vertex
+            buffer[ c + 4 ] = lft;
+            buffer[ c + 5 ] = bot;
 
-            // prepare the shader attributes
-            gl.vertexAttribPointer( shader.aPosition, 4, gl.FLOAT, false, 0, 0 );
+            // pad with texture coordinates (probably not needed)
+            buffer[ c + 2 ] = buffer[ c + 6 ] = uvl;
+            buffer[ c + 3 ] = buffer[ c + 7 ] = uvt;
 
-            // draw the entire VBO in one call
-            gl.drawArrays(gl.TRIANGLE_STRIP, 0, Math.floor(c / 4));
+            // advance the buffer index for one single degenerate triangle
+            c += 8;
+            degenerate = false;
         }
+
+        // calculate the destination location of the tile in screen units (-1..1)
+        buffer[ c     ] = buffer[ c + 4  ] = lft;
+        buffer[ c + 1 ] = buffer[ c + 9  ] = bot;
+        buffer[ c + 8 ] = buffer[ c + 12 ] = oldR = x + wide;
+        buffer[ c + 5 ] = buffer[ c + 13 ] = oldT = y - high;
+
+        // calculate the uv coordinates of the tile source image
+        if (t.fd === 1)
+        {
+            // flipped diagonally, swap x,y axes
+            buffer[ c + 14 ] = buffer[ c + 6  ] = uvl;
+            buffer[ c + 15 ] = buffer[ c + 11 ] = uvt;
+            buffer[ c + 10 ] = buffer[ c + 2  ] = uvl + t.sw * iTextureWide;
+            buffer[ c + 7  ] = buffer[ c + 3  ] = uvt + t.sh * iTextureHigh;
+        }
+        else
+        {
+            buffer[ c + 2  ] = buffer[ c + 6  ] = uvl;
+            buffer[ c + 3  ] = buffer[ c + 11 ] = uvt;
+            buffer[ c + 10 ] = buffer[ c + 14 ] = uvl + t.sw * iTextureWide;
+            buffer[ c + 7  ] = buffer[ c + 15 ] = uvt + t.sh * iTextureHigh;
+        }
+
+        // advance the buffer index
+        c += 16;
+    }
+
+    // if there's anything to draw...
+    if (c > 0)
+    {
+        var shader = renderSession.shaderManager.tilemapShader;
+
+        // upload the VBO
+        gl.bufferData(gl.ARRAY_BUFFER, buffer, gl.STATIC_DRAW);
+
+        // prepare the shader attributes
+        gl.vertexAttribPointer(shader.aPosition, 4, gl.FLOAT, false, 0, 0);
+
+        // draw the entire VBO in one call
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, Math.floor(c / 4));
     }
 
 };
 
 /**
-* render the entire tilemap using a fast webgl batched tile render
+* Render the entire tilemap using a fast WebGL batched tile render.
 *
-* @param  {[type]} renderSession [description]
+* @param  {Object} renderSession - The PIXI RenderSession.
 */
 PIXI.Tilemap.prototype._renderWholeTilemap = function (renderSession) {
 
@@ -71688,6 +71824,34 @@ PIXI.Tilemap.prototype._renderWholeTilemap = function (renderSession) {
     renderSession.blendModeManager.setBlendMode(this.blendMode);
 
     // set the uniforms and texture
+
+    // set the global offset (e.g. screen shake)
+    gl.uniform2f(shader.uOffset, renderSession.offset.x / this.game.width * 2, -renderSession.offset.y / this.game.height * 2);
+
+    //  Set the clipping limits
+
+    var clipOffsetX = this._mc.x / this.game.width * 2;
+    var clipOffsetY = -this._mc.y / this.game.height * 2;
+
+    var clipLocX = this._mc.x;
+    var clipLocY = -this._mc.y;
+
+    //  The width, going across from the LEFT OF THE SCREEN, of the clipping limit
+    var clipLimitX = this._mc.x + this._displayWidth;
+
+    //  The height, going up from the BOTTOM OF THE SCREEN, of the clipping limit
+    var clipLimitY = this.game.height - (this._mc.y + this._displayHeight);
+
+    // console.log('render');
+    // console.log(clipOffsetX, clipOffsetY);
+    // console.log(clipLocX, clipLocY);
+    // console.log(clipLimitX, clipLimitY);
+    // console.log(this._displayWidth, this._displayHeight);
+    // debugger;
+
+    gl.uniform2f(shader.uClipLimit, clipLimitX, clipLimitY);
+    gl.uniform2f(shader.uClipOffset, clipOffsetX, clipOffsetY);
+    gl.uniform2f(shader.uClipLoc, clipLocX, clipLocY);
 
     // set the offset in screen units to the center of the screen
     // and flip the GL y coordinate to be zero at the top
@@ -71702,8 +71866,8 @@ PIXI.Tilemap.prototype._renderWholeTilemap = function (renderSession) {
     // source texture unit
     gl.activeTexture(gl.TEXTURE0);
 
-    // check if a texture is dirty..
-    if(this.texture.baseTexture._dirty[gl.id])
+    // check if a texture is dirty...
+    if (this.texture.baseTexture._dirty[gl.id])
     {
         renderSession.renderer.updateTexture(this.texture.baseTexture);
     }
@@ -71718,83 +71882,6 @@ PIXI.Tilemap.prototype._renderWholeTilemap = function (renderSession) {
 
     // draw the batched tile list
     this._renderBatch(renderSession);
-
-};
-
-/**
- * When the texture is updated, this event will fire to update the scale and frame
- *
- * @method onTextureUpdate
- * @param event
- * @private
- */
-PIXI.Tilemap.prototype.onTextureUpdate = function () {
-
-    this.updateFrame = true;
-
-};
-
-/**
- * Returns the bounds of the map as a rectangle. The bounds calculation takes the worldTransform into account.
- *
- * @method getBounds
- * @param matrix {Matrix} the transformation matrix of the sprite
- * @return {Rectangle} the framing rectangle
- */
-PIXI.Tilemap.prototype.getBounds = function (matrix) {
-
-    var worldTransform = matrix || this.worldTransform;
-
-    var a = worldTransform.a;
-    var b = worldTransform.b;
-    var c = worldTransform.c;
-    var d = worldTransform.d;
-    var tx = worldTransform.tx;
-    var ty = worldTransform.ty;
-
-    var maxX = -Infinity;
-    var maxY = -Infinity;
-
-    var minX = Infinity;
-    var minY = Infinity;
-
-    var vertices = [
-        0, 0,
-        this.mapWide * this.tileWide, 0,
-        this.mapWide * this.tileWide, this.mapHigh * this.tileHigh,
-        0, this.mapHigh * this.tileHigh
-    ];
-
-    for (var i = 0, n = vertices.length; i < n; i += 2)
-    {
-        var rawX = vertices[i], rawY = vertices[i + 1];
-        var x = (a * rawX) + (c * rawY) + tx;
-        var y = (d * rawY) + (b * rawX) + ty;
-
-        minX = x < minX ? x : minX;
-        minY = y < minY ? y : minY;
-
-        maxX = x > maxX ? x : maxX;
-        maxY = y > maxY ? y : maxY;
-    }
-
-    if (minX === -Infinity || maxY === Infinity)
-    {
-        return PIXI.EmptyRectangle;
-    }
-
-    var bounds = this._bounds;
-
-    bounds.x = minX;
-    bounds.width = maxX - minX;
-
-    bounds.y = minY;
-    bounds.height = maxY - minY;
-
-    // store a reference so that if this function gets called again in the render cycle we do not have to recalculate
-    this._currentBounds = bounds;
-
-    return bounds;
 
 };
 
@@ -71814,6 +71901,7 @@ PIXI.Tilemap.prototype.getBounds = function (matrix) {
 * Settings available are:
 * 
 * uAlpha - the alpha blending factor for a batch draw
+* uOffset - an offset for all tiles in this batch (e.g. screen shake)
 * uCentreOffset - the offset to the center of the drawing area, in WebGL units (-1...1)
 * uScale - the scaling factor for a batch draw
 * uImageSampler - the source texture containing the tile images
@@ -71846,27 +71934,32 @@ PIXI.TilemapShader = function (gl) {
     this.program = null;
 
     this.fragmentSrc = [
-        "  precision lowp float;",
-        "  uniform sampler2D uImageSampler;",
-        "  uniform float uAlpha;",
-        "  varying vec2 vTexCoord;",
-        "  void main(void) {",
-        "    gl_FragColor = texture2D(uImageSampler, vTexCoord) * uAlpha;",
-        "  }"
-        ];
+        'precision lowp float;',
+        'uniform sampler2D uImageSampler;',
+        'uniform float uAlpha;',
+        'uniform vec2 uClipLoc;',
+        'uniform vec2 uClipLimit;',
+        'varying vec2 vTexCoord;',
+        'void main(void) {',
+        '  if ( gl_FragCoord.x >= uClipLoc.x && gl_FragCoord.y >= uClipLoc.y && gl_FragCoord.x < uClipLimit.x && gl_FragCoord.y > uClipLimit.y )',
+        '    gl_FragColor = texture2D(uImageSampler, vTexCoord) * uAlpha;',
+        '}'
+    ];
 
     this.vertexSrc = [
-        "  precision lowp float;",
-        "  uniform vec2 uCentreOffset;",
-        "  uniform vec2 uScale;",
-        "  attribute vec4 aPosition;",
-        "  varying vec2 vTexCoord;",
-        "  void main(void) {",
-        "    gl_Position.zw = vec2(1, 1);",
-        "    gl_Position.xy = (aPosition.xy + uCentreOffset) * uScale - uCentreOffset;",
-        "    vTexCoord = aPosition.zw;",
-        "  }"
-        ];
+        'precision lowp float;',
+        'uniform vec2 uOffset;',
+        'uniform vec2 uCentreOffset;',
+        'uniform vec2 uScale;',
+        'uniform vec2 uClipOffset;',
+        'attribute vec4 aPosition;',
+        'varying vec2 vTexCoord;',
+        'void main(void) {',
+        '  gl_Position.zw = vec2(1, 1);',
+        '  gl_Position.xy = (aPosition.xy + uOffset + uCentreOffset) * uScale - uCentreOffset + uClipOffset;',
+        '  vTexCoord = aPosition.zw;',
+        '}'
+    ];
 
     /**
      * A local texture counter for multi-texture shaders.
@@ -71876,6 +71969,7 @@ PIXI.TilemapShader = function (gl) {
     this.textureCount = 0;
 
     this.init();
+
 };
 
 PIXI.TilemapShader.prototype.constructor = PIXI.TilemapShader;
@@ -71895,12 +71989,29 @@ PIXI.TilemapShader.prototype.init = function () {
     // get and store the attributes
     this.aPosition = gl.getAttribLocation(program, 'aPosition');
     this.uSampler = gl.getUniformLocation(program, 'uImageSampler');
+
+    // clipping uniforms...
+
+    // clipping start location (pixels)
+    this.uClipLoc = gl.getUniformLocation(program, 'uClipLoc');
+    // clipping width/height (pixels)
+    this.uClipLimit = gl.getUniformLocation(program, 'uClipLimit');
+    // clipping start location in webGl coordinates (-1...+1)
+    this.uClipOffset = gl.getUniformLocation(program, 'uClipOffset');
+
+    // offset for screen shake effect etc
+    this.uOffset = gl.getUniformLocation(program, 'uOffset');
+
+    // centre of a tile for offset before scaling (so tiles scale from the centre out)
     this.uCentreOffset = gl.getUniformLocation(program, 'uCentreOffset');
-    this.uAlpha = gl.getUniformLocation(program, 'uAlpha');
+    // scale factor for tiles
     this.uScale = gl.getUniformLocation(program, 'uScale');
 
+    // alpha blending
+    this.uAlpha = gl.getUniformLocation(program, 'uAlpha');
+
     this.attributes = [this.aPosition];
-    this.uniforms = [this.uCentreOffset, this.uAlpha, this.uScale, this.uSampler];
+    this.uniforms = [this.uClipOffset, this.uClipLoc, this.uClipLimit, this.uOffset, this.uCentreOffset, this.uAlpha, this.uScale, this.uSampler];
 
     this.program = program;
 
@@ -72600,6 +72711,11 @@ Phaser.Tilemap = function (game, key, tileWidth, tileHeight, width, height) {
     this.images = data.images;
 
     /**
+    * @property {boolean} enableDebug - If set then console.log is used to dump out useful layer creation debug data.
+    */
+    this.enableDebug = false;
+
+    /**
     * @property {number} currentLayer - The current layer.
     */
     this.currentLayer = 0;
@@ -72779,20 +72895,6 @@ Phaser.Tilemap.prototype = {
         if (this.tilesets[idx])
         {
             this.tilesets[idx].setImage(img);
-
-            // create an empty layer for the map parts corresponding to this tileset
-            // if ( !this.tilesetLayers )
-            // {
-            //     // for the first tileset, don't create a layer because createLayer will be called to do that
-            //     this.tilesetLayers = [];
-            // }
-            // else
-            // {
-            //     // for all the rest, go ahead and make a (currently) blank layer
-            //     // name, width, height, tileWidth, tileHeight, group
-            //     this.tilesetLayers.push( this.createBlankLayer( "_internal" + this.tilesetLayers.length.toString() ) );
-            // }
-
             return this.tilesets[idx];
         }
         else
@@ -72840,17 +72942,6 @@ Phaser.Tilemap.prototype = {
                     }
                 }
             }
-
-            // create an empty layer for the map parts corresponding to this tileset
-            // if ( !this.tilesetLayers )
-            // {
-            //     this.tilesetLayers = [];
-            // }
-            // else
-            // {
-            //     // name, width, height, tileWidth, tileHeight, group
-            //     this.tilesetLayers.push( this.createBlankLayer( "_internal" + this.tilesetLayers.length.toString() ) );
-            // }
 
             return newSet;
 
@@ -73058,10 +73149,6 @@ Phaser.Tilemap.prototype = {
     */
     createLayer: function (layer, width, height, group) {
 
-        //  Add Buffer support for the left of the canvas
-
-        if (width === undefined) { width = this.game.width; }
-        if (height === undefined) { height = this.game.height; }
         if (group === undefined) { group = this.game.world; }
 
         var index = layer;
@@ -73077,136 +73164,104 @@ Phaser.Tilemap.prototype = {
             return;
         }
 
-        // create the internal layers for different tilesets using this one as a base description
-        for (var i = 1, l = this.tilesets.length; i < l; i++)
+        //  Sort out the display dimensions, so they never render too much, or too little.
+
+        if (width === undefined || width <= 0)
         {
-            var ts = this.tilesets[i];
-            var li = this.layers[index];
-            this.createInternalLayer( "_internal" + i.toString(), ts, li.width, li.height, ts.tileWidth, ts.tileHeight, group );
+            width = Math.min(this.game.width, this.layers[index].widthInPixels);
+        }
+        else if (width > this.game.width)
+        {
+            width = this.game.width;
         }
 
-        if ( this.game.renderType === Phaser.WEBGL )
+        if (height === undefined || height <= 0)
         {
-            // use WebGL variant of TilemapLayer
-            return group.add(new Phaser.TilemapLayerGL(this.game, this, index, width, height));
+            height = Math.min(this.game.height, this.layers[index].heightInPixels);
+        }
+        else if (height > this.game.height)
+        {
+            height = this.game.height;
         }
 
-        return group.add(new Phaser.TilemapLayer(this.game, this, index, width, height));
+        if (this.enableDebug)
+        {
+            console.group('Tilemap.createLayer');
+            console.log('Name:', this.layers[index].name);
+            console.log('Size:', width, 'x', height);
+            console.log('Tileset:', this.tilesets[0].name, 'index:', index);
+        }
+
+        var rootLayer;
+
+        if (this.game.renderType === Phaser.WEBGL)
+        {
+            rootLayer = group.add(new Phaser.TilemapLayerGL(this.game, this, index, width, height, this.tilesets[0]));
+
+            //  Create child layers for multiple tilesets in a layer
+            //  It is currently assumed that each base layer will use tileset[0] (so 'i' starts at 1 in the for loop)
+            //  (a 'base' layer is any layer except the so-called 'internal' layers created here)
+
+            var fromLayer = this.layers[index];
+            var childLayer;
+
+            for (var i = 1; i < this.tilesets.length; i++)
+            {
+                if (this.checkChildLayer(this.tilesets[i], fromLayer))
+                {
+                    childLayer = group.add(new Phaser.TilemapLayerGL(this.game, this, index, width, height, this.tilesets[i]));
+
+                    rootLayer.linkedLayers.push(childLayer);
+
+                    if (this.enableDebug)
+                    {
+                        console.log('Linked child created for tileset:', this.tilesets[i].name);
+                    }
+                }
+            }
+        }
+        else
+        {
+            rootLayer = group.add(new Phaser.TilemapLayer(this.game, this, index, width, height));
+        }
+
+        if (this.enableDebug)
+        {
+            console.groupEnd();
+        }
+
+        return rootLayer;
 
     },
 
     /**
-    * Creates a new internal layer on this Tilemap.
-    * 
-    * Internal layers are used when a Tilemap contains multiple Tilesets with different sized tiles.  The tilesets
-    * each get a separate layer which is only ever referenced internally by the renderer.  This approach permits us
-    * to handle large tiles at screen edges, and with the correct offset relative to the 'base' tileset regardless
-    * of size differences between the tiles.
-    * 
-    * For WebGL rendering, this approach also permits us to batch the drawing calls efficiently.
-    * 
-    * By default TilemapLayers are fixed to the camera.
+    * Takes a Tileset and map layer data, then runs through the data looking
+    * to see if there are any tiles that use the given Tileset. If there is,
+    * it returns true, otherwise false.
     *
-    * @method Phaser.Tilemap#createInternalLayer
-    * @param {string} name - The name of this layer. Must be unique within the map.
-    * @param {Phaser.Tileset} tileset - The tileset whose data is to be added to this layer.
-    * @param {number} width - The width of the layer in tiles.
-    * @param {number} height - The height of the layer in tiles.
-    * @param {number} tileWidth - The width of the tiles the layer uses for calculations.
-    * @param {number} tileHeight - The height of the tiles the layer uses for calculations.
-    * @param {Phaser.Group} [group] - Optional Group to add the layer to. If not specified it will be added to the World group.
-    * @return {Phaser.TilemapLayer} The TilemapLayer object. This is an extension of Phaser.Image and can be moved around the display list accordingly.
+    * @method Phaser.Tilemap#checkChildLayer
+    * @private
+    * @param {Phaser.Tileset} tileset - The Tileset to check against.
+    * @param {Object} fromLayer - The layer data to check.
+    * @return {boolean} True if a child layer needs to be created, otherwise false.
     */
-    createInternalLayer: function (name, tileset, width, height, tileWidth, tileHeight, group) {
+    checkChildLayer: function (tileset, fromLayer) {
 
-        if (group === undefined) { group = this.game.world; }
-
-        if (this.getLayerIndex(name) !== null)
+        for (var y = 0; y < fromLayer.height; y++)
         {
-            console.warn('Tilemap.createBlankLayer: Layer with matching name already exists');
-            return;
-        }
-
-        var layer = {
-
-            name: name,
-            x: 0,
-            y: 0,
-            width: width,
-            height: height,
-            widthInPixels: width * tileWidth,
-            heightInPixels: height * tileHeight,
-            alpha: 1,
-            visible: true,
-            properties: {},
-            indexes: [],
-            callbacks: [],
-            bodies: [],
-            data: null,
-            tileset: tileset
-
-        };
-
-        var row;
-        var output = [];
-
-        for (var y = 0; y < height; y++)
-        {
-            row = [];
-            for (var x = 0; x < width; x++)
+            for (var x = 0; x < fromLayer.width; x++)
             {
-                // get the equivalent tile from this Tilemap
-                var tile = this.layers[0].data[y][x];
-                // find out which tileset it is in
-                var setIndex = this.tiles[tile.index] && this.tiles[tile.index][2];
-                var ts = this.tilesets[setIndex];
-                // is it one of the ones we want to move?
-                if ( ts == tileset )
+                //  Get the equivalent tile from this Tilemap
+                var tile = fromLayer.data[y][x];
+
+                if (tile && tile.index >= tileset.firstgid && tile.index <= tileset.lastgid)
                 {
-                    // move the tile to this new layer
-                    row.push( tile );
-                    // erase it from the original (mixed tileset) layer
-                    this.layers[0].data[y][x] = new Phaser.Tile(layer, -1, x, y, tileWidth, tileHeight);
-                }
-                else
-                {
-                    // add an empty tile
-                    row.push(new Phaser.Tile(layer, -1, x, y, tileWidth, tileHeight));
+                    return true;
                 }
             }
-
-            output.push(row);
         }
 
-        layer.data = output;
-
-        this.layers.push(layer);
-
-        var w = layer.widthInPixels;
-        var h = layer.heightInPixels;
-
-        if (w > this.game.width)
-        {
-            w = this.game.width;
-        }
-
-        if (h > this.game.height)
-        {
-            h = this.game.height;
-        }
-
-        var output;
-        if ( this.game.renderType === Phaser.WEBGL )
-        {
-            output = new Phaser.TilemapLayerGL(this.game, this, this.layers.length - 1, w, h);
-        }
-        else
-        {
-            output = new Phaser.TilemapLayer(this.game, this, this.layers.length - 1, w, h);
-        }
-        output.name = name;
-
-        return group.add(output);
+        return false;
 
     },
 
@@ -73228,7 +73283,7 @@ Phaser.Tilemap.prototype = {
 
         if (this.getLayerIndex(name) !== null)
         {
-            console.warn('Tilemap.createBlankLayer: Layer with matching name already exists');
+            console.warn('Tilemap.createBlankLayer: Layer with matching name already exists: ' + name);
             return;
         }
 
@@ -73260,7 +73315,6 @@ Phaser.Tilemap.prototype = {
 
             for (var x = 0; x < width; x++)
             {
-                // row.push(null);
                 row.push(new Phaser.Tile(layer, -1, x, y, tileWidth, tileHeight));
             }
 
@@ -73287,14 +73341,16 @@ Phaser.Tilemap.prototype = {
         }
 
         var output;
-        if ( this.game.renderType === Phaser.WEBGL )
+
+        if (this.game.renderType === Phaser.WEBGL)
         {
-            output = new Phaser.TilemapLayerGL(this.game, this, this.layers.length - 1, w, h);
+            output = new Phaser.TilemapLayerGL(this.game, this, this.layers.length - 1, w, h, null);
         }
         else
         {
             output = new Phaser.TilemapLayer(this.game, this, this.layers.length - 1, w, h);
         }
+
         output.name = name;
 
         return group.add(output);
@@ -73840,10 +73896,14 @@ Phaser.Tilemap.prototype = {
     hasTile: function (x, y, layer) {
 
         layer = this.getLayer(layer);
-        if (this.layers[layer].data[y] === undefined || this.layers[layer].data[y][x] === undefined) {
+
+        if (this.layers[layer].data[y] === undefined || this.layers[layer].data[y][x] === undefined)
+        {
             return false;
         }
+
         return (this.layers[layer].data[y][x].index > -1);
+
     },
 
     /**
@@ -74716,18 +74776,24 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     this.scrollFactorY = 1;
 
     /**
-    * If true tiles will be force rendered, even if such is not believed to be required.
-    * @property {boolean} dirty
-    * @protected
-    */
-    this.dirty = true;
-
-    /**
     * When ray-casting against tiles this is the number of steps it will jump. For larger tile sizes you can increase this to improve performance.
     * @property {integer} rayStepRate
     * @default
     */
     this.rayStepRate = 4;
+
+    /**
+    * @property {array} _results - Internal var.
+    * @private
+    */
+    this._results = [];
+
+    /**
+    * If true tiles will be force rendered, even if such is not believed to be required.
+    * @property {boolean} dirty
+    * @protected
+    */
+    this.dirty = true;
 
     /**
     * Flag controlling if the layer tiles wrap at the edges.
@@ -74777,13 +74843,6 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     */
     this._scrollY = 0;
 
-    /**
-    * Used for caching the tiles / array of tiles.
-    * @property {Phaser.Tile[]} _results
-    * @private
-    */
-    this._results = [];
-
     if (!game.device.canvasBitBltShift)
     {
         this.renderSettings.copyCanvas = Phaser.TilemapLayer.ensureSharedCopyCanvas();
@@ -74819,7 +74878,7 @@ Phaser.TilemapLayer.ensureSharedCopyCanvas = function () {
 
     if (!this.sharedCopyCanvas)
     {
-        this.sharedCopyCanvas = Phaser.Canvas.create(2, 2);
+        this.sharedCopyCanvas = PIXI.CanvasPool.create(this, 2, 2);
     }
 
     return this.sharedCopyCanvas;
@@ -74881,30 +74940,6 @@ Phaser.TilemapLayer.prototype._renderCanvas = function (renderSession) {
 };
 
 /**
-* Automatically called by the Canvas Renderer.
-* Overrides the Sprite._renderWebGL function.
-*
-* @method Phaser.TilemapLayer#_renderWebGL
-* @private
-*/
-Phaser.TilemapLayer.prototype._renderWebGL = function (renderSession) {
-
-    if (this.fixedToCamera)
-    {
-        this.position.x = (this.game.camera.view.x + this.cameraOffset.x) / this.game.camera.scale.x;
-        this.position.y = (this.game.camera.view.y + this.cameraOffset.y) / this.game.camera.scale.y;
-    }
-    
-    this._scrollX = this.game.camera.view.x * this.scrollFactorX / this.scale.x;
-    this._scrollY = this.game.camera.view.y * this.scrollFactorY / this.scale.y;
-
-    this.render();
-
-    PIXI.Sprite.prototype._renderWebGL.call(this, renderSession);
-
-};
-
-/**
 * Destroys this TilemapLayer.
 *
 * @method Phaser.TilemapLayer#destroy
@@ -74946,11 +74981,6 @@ Phaser.TilemapLayer.prototype.resize = function (width, height) {
     this.texture.baseTexture.width = width;
     this.texture.baseTexture.height = height;
 
-    this.texture.baseTexture.dirty();
-    this.texture.requiresUpdate = true;
-
-    this.texture._updateUvs();
-
     this.dirty = true;
 
 };
@@ -74964,247 +74994,6 @@ Phaser.TilemapLayer.prototype.resize = function (width, height) {
 Phaser.TilemapLayer.prototype.resizeWorld = function () {
 
     this.game.world.setBounds(0, 0, this.layer.widthInPixels * this.scale.x, this.layer.heightInPixels * this.scale.y);
-
-};
-
-/**
-* Take an x coordinate that doesn't account for scrollFactorX and 'fix' it into a scrolled local space.
-*
-* @method Phaser.TilemapLayer#_fixX
-* @private
-* @param {number} x - x coordinate in camera space
-* @return {number} x coordinate in scrollFactor-adjusted dimensions
-*/
-Phaser.TilemapLayer.prototype._fixX = function (x) {
-
-    if (this.scrollFactorX === 1 || (this.scrollFactorX === 0 && this.position.x === 0))
-    {
-        return x;
-    }
-    
-    //  This executes if the scrollFactorX is 0 and the x position of the tilemap is off from standard.
-    if (this.scrollFactorX === 0 && this.position.x !== 0)
-    {
-        return x - this.position.x;
-    }
-
-    return this._scrollX + (x - (this._scrollX / this.scrollFactorX));
-
-};
-
-/**
-* Take an x coordinate that _does_ account for scrollFactorX and 'unfix' it back to camera space.
-*
-* @method Phaser.TilemapLayer#_unfixX
-* @private
-* @param {number} x - x coordinate in scrollFactor-adjusted dimensions
-* @return {number} x coordinate in camera space
-*/
-Phaser.TilemapLayer.prototype._unfixX = function (x) {
-
-    if (this.scrollFactorX === 1)
-    {
-        return x;
-    }
-
-    return (this._scrollX / this.scrollFactorX) + (x - this._scrollX);
-
-};
-
-/**
-* Take a y coordinate that doesn't account for scrollFactorY and 'fix' it into a scrolled local space.
-*
-* @method Phaser.TilemapLayer#_fixY
-* @private
-* @param {number} y - y coordinate in camera space
-* @return {number} y coordinate in scrollFactor-adjusted dimensions
-*/
-Phaser.TilemapLayer.prototype._fixY = function (y) {
-
-    if (this.scrollFactorY === 1 || (this.scrollFactorY === 0 && this.position.y === 0))
-    {
-        return y;
-    }
-    
-    //  This executes if the scrollFactorY is 0 and the y position of the tilemap is off from standard.
-    if (this.scrollFactorY === 0 && this.position.y !== 0)
-    {
-        return y - this.position.y;
-    }
-    
-    return this._scrollY + (y - (this._scrollY / this.scrollFactorY));
-
-};
-
-/**
-* Take a y coordinate that _does_ account for scrollFactorY and 'unfix' it back to camera space.
-*
-* @method Phaser.TilemapLayer#_unfixY
-* @private
-* @param {number} y - y coordinate in scrollFactor-adjusted dimensions
-* @return {number} y coordinate in camera space
-*/
-Phaser.TilemapLayer.prototype._unfixY = function (y) {
-
-    if (this.scrollFactorY === 1)
-    {
-        return y;
-    }
-
-    return (this._scrollY / this.scrollFactorY) + (y - this._scrollY);
-
-};
-
-/**
-* Convert a pixel value to a tile coordinate.
-*
-* @method Phaser.TilemapLayer#getTileX
-* @public
-* @param {number} x - X position of the point in target tile (in pixels).
-* @return {integer} The X map location of the tile.
-*/
-Phaser.TilemapLayer.prototype.getTileX = function (x) {
-
-    // var tileWidth = this.tileWidth * this.scale.x;
-    return Math.floor(this._fixX(x) / this._mc.tileWidth);
-
-};
-
-/**
-* Convert a pixel value to a tile coordinate.
-*
-* @method Phaser.TilemapLayer#getTileY
-* @public
-* @param {number} y - Y position of the point in target tile (in pixels).
-* @return {integer} The Y map location of the tile.
-*/
-Phaser.TilemapLayer.prototype.getTileY = function (y) {
-
-    // var tileHeight = this.tileHeight * this.scale.y;
-    return Math.floor(this._fixY(y) / this._mc.tileHeight);
-
-};
-
-/**
-* Convert a pixel coordinate to a tile coordinate.
-*
-* @method Phaser.TilemapLayer#getTileXY
-* @public
-* @param {number} x - X position of the point in target tile (in pixels).
-* @param {number} y - Y position of the point in target tile (in pixels).
-* @param {(Phaser.Point|object)} point - The Point/object to update.
-* @return {(Phaser.Point|object)} A Point/object with its `x` and `y` properties set.
-*/
-Phaser.TilemapLayer.prototype.getTileXY = function (x, y, point) {
-
-    point.x = this.getTileX(x);
-    point.y = this.getTileY(y);
-
-    return point;
-
-};
-
-/**
-* Gets all tiles that intersect with the given line.
-*
-* @method Phaser.TilemapLayer#getRayCastTiles
-* @public
-* @param {Phaser.Line} line - The line used to determine which tiles to return.
-* @param {integer} [stepRate=(rayStepRate)] - How many steps through the ray will we check? Defaults to `rayStepRate`.
-* @param {boolean} [collides=false] - If true, _only_ return tiles that collide on one or more faces.
-* @param {boolean} [interestingFace=false] - If true, _only_ return tiles that have interesting faces.
-* @return {Phaser.Tile[]} An array of Phaser.Tiles.
-*/
-Phaser.TilemapLayer.prototype.getRayCastTiles = function (line, stepRate, collides, interestingFace) {
-
-    if (!stepRate) { stepRate = this.rayStepRate; }
-    if (collides === undefined) { collides = false; }
-    if (interestingFace === undefined) { interestingFace = false; }
-
-    //  First get all tiles that touch the bounds of the line
-    var tiles = this.getTiles(line.x, line.y, line.width, line.height, collides, interestingFace);
-
-    if (tiles.length === 0)
-    {
-        return [];
-    }
-
-    //  Now we only want the tiles that intersect with the points on this line
-    var coords = line.coordinatesOnLine(stepRate);
-    var results = [];
-
-    for (var i = 0; i < tiles.length; i++)
-    {
-        for (var t = 0; t < coords.length; t++)
-        {
-            var tile = tiles[i];
-            var coord = coords[t];
-            if (tile.containsPoint(coord[0], coord[1]))
-            {
-                results.push(tile);
-                break;
-            }
-        }
-    }
-
-    return results;
-
-};
-
-/**
-* Get all tiles that exist within the given area, defined by the top-left corner, width and height. Values given are in pixels, not tiles.
-*
-* @method Phaser.TilemapLayer#getTiles
-* @public
-* @param {number} x - X position of the top left corner (in pixels).
-* @param {number} y - Y position of the top left corner (in pixels).
-* @param {number} width - Width of the area to get (in pixels).
-* @param {number} height - Height of the area to get (in pixels).
-* @param {boolean} [collides=false] - If true, _only_ return tiles that collide on one or more faces.
-* @param {boolean} [interestingFace=false] - If true, _only_ return tiles that have interesting faces.
-* @return {array<Phaser.Tile>} An array of Tiles.
-*/
-Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides, interestingFace) {
-
-    //  Should we only get tiles that have at least one of their collision flags set? (true = yes, false = no just get them all)
-    if (collides === undefined) { collides = false; }
-    if (interestingFace === undefined) { interestingFace = false; }
-
-    var fetchAll = !(collides || interestingFace);
-
-    //  Adjust the x,y coordinates for scrollFactor
-    x = this._fixX(x);
-    y = this._fixY(y);
-
-    //  Convert the pixel values into tile coordinates
-    var tx = Math.floor(x / (this._mc.cw * this.scale.x));
-    var ty = Math.floor(y / (this._mc.ch * this.scale.y));
-    //  Don't just use ceil(width/cw) to allow account for x/y diff within cell
-    var tw = Math.ceil((x + width) / (this._mc.cw * this.scale.x)) - tx;
-    var th = Math.ceil((y + height) / (this._mc.ch * this.scale.y)) - ty;
-
-    while (this._results.length)
-    {
-        this._results.pop();
-    }
-
-    for (var wy = ty; wy < ty + th; wy++)
-    {
-        for (var wx = tx; wx < tx + tw; wx++)
-        {
-            var row = this.layer.data[wy];
-
-            if (row && row[wx])
-            {
-                if (fetchAll || row[wx].isInteresting(collides, interestingFace))
-                {
-                    this._results.push(row[wx]);
-                }
-            }
-        }
-    }
-
-    return this._results.slice();
 
 };
 
@@ -75232,7 +75021,7 @@ Phaser.TilemapLayer.prototype.resolveTileset = function (tileIndex) {
 
     var setIndex = this.map.tiles[tileIndex] && this.map.tiles[tileIndex][2];
 
-    if (setIndex != null) // number: not null or undefined
+    if (setIndex !== null)
     {
         var tileset = this.map.tilesets[setIndex];
 
@@ -75347,6 +75136,7 @@ Phaser.TilemapLayer.prototype.shiftCanvas = function (context, x, y) {
         var copyContext = copyCanvas.getContext('2d');
         copyContext.clearRect(0, 0, copyW, copyH);
         copyContext.drawImage(canvas, dx, dy, copyW, copyH, 0, 0, copyW, copyH);
+
         // clear allows default 'source-over' semantics
         context.clearRect(sx, sy, copyW, copyH);
         context.drawImage(copyCanvas, 0, 0, copyW, copyH, sx, sy, copyW, copyH);
@@ -75395,6 +75185,7 @@ Phaser.TilemapLayer.prototype.renderRegion = function (scrollX, scrollY, left, t
             left = Math.max(0, left);
             right = Math.min(width - 1, right);
         }
+
         if (top <= bottom)
         {
             top = Math.max(0, top);
@@ -75415,21 +75206,21 @@ Phaser.TilemapLayer.prototype.renderRegion = function (scrollX, scrollY, left, t
     // xmax/ymax - remaining cells to render on column/row
     var tx, ty, x, y, xmax, ymax;
 
-    for (y = normStartY, ymax = bottom - top, ty = baseY;
-        ymax >= 0;
-        y++, ymax--, ty += th)
+    for (y = normStartY, ymax = bottom - top, ty = baseY; ymax >= 0; y++, ymax--, ty += th)
     {
-
-        if (y >= height) { y -= height; }
+        if (y >= height)
+        {
+            y -= height;
+        }
 
         var row = this.layer.data[y];
 
-        for (x = normStartX, xmax = right - left, tx = baseX;
-            xmax >= 0;
-            x++, xmax--, tx += tw)
+        for (x = normStartX, xmax = right - left, tx = baseX; xmax >= 0; x++, xmax--, tx += tw)
         {
-
-            if (x >= width) { x -= width; }
+            if (x >= width)
+            {
+                x -= width;
+            }
 
             var tile = row[x];
 
@@ -75486,9 +75277,7 @@ Phaser.TilemapLayer.prototype.renderRegion = function (scrollX, scrollY, left, t
                 context.fillStyle = this.debugSettings.debuggedTileOverfill;
                 context.fillRect(tx, ty, tw, th);
             }
-           
         }
-
     }
 
 };
@@ -75678,8 +75467,6 @@ Phaser.TilemapLayer.prototype.render = function () {
         this.renderDebug();
     }
 
-    this.texture.baseTexture.dirty();
-
     this.dirty = false;
 
     this.context.restore();
@@ -75725,23 +75512,24 @@ Phaser.TilemapLayer.prototype.renderDebug = function () {
 
     context.strokeStyle = this.debugSettings.facingEdgeStroke;
 
-    for (y = normStartY, ymax = bottom - top, ty = baseY;
-        ymax >= 0;
-        y++, ymax--, ty += th)
+    for (y = normStartY, ymax = bottom - top, ty = baseY; ymax >= 0; y++, ymax--, ty += th)
     {
-
-        if (y >= height) { y -= height; }
+        if (y >= height)
+        {
+            y -= height;
+        }
 
         var row = this.layer.data[y];
 
-        for (x = normStartX, xmax = right - left, tx = baseX;
-            xmax >= 0;
-            x++, xmax--, tx += tw)
+        for (x = normStartX, xmax = right - left, tx = baseX; xmax >= 0; x++, xmax--, tx += tw)
         {
-
-            if (x >= width) { x -= width; }
+            if (x >= width)
+            {
+                x -= width;
+            }
 
             var tile = row[x];
+
             if (!tile || tile.index < 0 || !tile.collides)
             {
                 continue;
@@ -75781,14 +75569,308 @@ Phaser.TilemapLayer.prototype.renderDebug = function () {
                     context.lineTo(tx + this._mc.cw, ty + this._mc.ch);
                 }
 
+                context.closePath();
+
                 context.stroke();
             }
-           
         }
-
     }
 
 };
+
+/**
+ * Take an x coordinate that doesn't account for scrollFactorX and 'fix' it into a scrolled local space.
+ *
+ * @method Phaser.TilemapLayer#_fixX
+ * @private
+ * @param {number} x - x coordinate in camera space
+ * @return {number} x coordinate in scrollFactor-adjusted dimensions
+ */
+Phaser.TilemapLayer.prototype._fixX = function (x) {
+
+    if (x < 0)
+    {
+        x = 0;
+    }
+
+    if (this.scrollFactorX === 1)
+    {
+        return x;
+    }
+
+    return this._scrollX + (x - (this._scrollX / this.scrollFactorX));
+
+};
+
+/**
+ * Take an x coordinate that _does_ account for scrollFactorX and 'unfix' it back to camera space.
+ *
+ * @method Phaser.TilemapLayer#_unfixX
+ * @private
+ * @param {number} x - x coordinate in scrollFactor-adjusted dimensions
+ * @return {number} x coordinate in camera space
+ */
+Phaser.TilemapLayer.prototype._unfixX = function (x) {
+
+    if (this.scrollFactorX === 1)
+    {
+        return x;
+    }
+
+    return (this._scrollX / this.scrollFactorX) + (x - this._scrollX);
+
+};
+
+/**
+ * Take a y coordinate that doesn't account for scrollFactorY and 'fix' it into a scrolled local space.
+ *
+ * @method Phaser.TilemapLayer#_fixY
+ * @private
+ * @param {number} y - y coordinate in camera space
+ * @return {number} y coordinate in scrollFactor-adjusted dimensions
+ */
+Phaser.TilemapLayer.prototype._fixY = function (y) {
+
+    if (y < 0)
+    {
+        y = 0;
+    }
+
+    if (this.scrollFactorY === 1)
+    {
+        return y;
+    }
+
+    return this._scrollY + (y - (this._scrollY / this.scrollFactorY));
+
+};
+
+/**
+ * Take a y coordinate that _does_ account for scrollFactorY and 'unfix' it back to camera space.
+ *
+ * @method Phaser.TilemapLayer#_unfixY
+ * @private
+ * @param {number} y - y coordinate in scrollFactor-adjusted dimensions
+ * @return {number} y coordinate in camera space
+ */
+Phaser.TilemapLayer.prototype._unfixY = function (y) {
+
+    if (this.scrollFactorY === 1)
+    {
+        return y;
+    }
+
+    return (this._scrollY / this.scrollFactorY) + (y - this._scrollY);
+
+};
+
+/**
+ * Convert a pixel value to a tile coordinate.
+ *
+ * @method Phaser.TilemapLayer#getTileX
+ * @param {number} x - X position of the point in target tile (in pixels).
+ * @return {integer} The X map location of the tile.
+ */
+Phaser.TilemapLayer.prototype.getTileX = function (x) {
+
+    return Math.floor(this._fixX(x) / this._mc.tileWidth);
+
+};
+
+/**
+ * Convert a pixel value to a tile coordinate.
+ *
+ * @method Phaser.TilemapLayer#getTileY
+ * @param {number} y - Y position of the point in target tile (in pixels).
+ * @return {integer} The Y map location of the tile.
+ */
+Phaser.TilemapLayer.prototype.getTileY = function (y) {
+
+    return Math.floor(this._fixY(y) / this._mc.tileHeight);
+
+};
+
+/**
+ * Convert a pixel coordinate to a tile coordinate.
+ *
+ * @method Phaser.TilemapLayer#getTileXY
+ * @param {number} x - X position of the point in target tile (in pixels).
+ * @param {number} y - Y position of the point in target tile (in pixels).
+ * @param {(Phaser.Point|object)} point - The Point/object to update.
+ * @return {(Phaser.Point|object)} A Point/object with its `x` and `y` properties set.
+ */
+Phaser.TilemapLayer.prototype.getTileXY = function (x, y, point) {
+
+    point.x = this.getTileX(x);
+    point.y = this.getTileY(y);
+
+    return point;
+
+};
+
+/**
+ * Gets all tiles that intersect with the given line.
+ *
+ * @method Phaser.TilemapLayer#getRayCastTiles
+ * @param {Phaser.Line} line - The line used to determine which tiles to return.
+ * @param {integer} [stepRate=(rayStepRate)] - How many steps through the ray will we check? Defaults to `rayStepRate`.
+ * @param {boolean} [collides=false] - If true, _only_ return tiles that collide on one or more faces.
+ * @param {boolean} [interestingFace=false] - If true, _only_ return tiles that have interesting faces.
+ * @return {Phaser.Tile[]} An array of Phaser.Tiles.
+ */
+Phaser.TilemapLayer.prototype.getRayCastTiles = function (line, stepRate, collides, interestingFace) {
+
+    if (!stepRate) { stepRate = this.rayStepRate; }
+    if (collides === undefined) { collides = false; }
+    if (interestingFace === undefined) { interestingFace = false; }
+
+    //  First get all tiles that touch the bounds of the line
+    var tiles = this.getTiles(line.x, line.y, line.width, line.height, collides, interestingFace);
+
+    if (tiles.length === 0)
+    {
+        return [];
+    }
+
+    //  Now we only want the tiles that intersect with the points on this line
+    var coords = line.coordinatesOnLine(stepRate);
+    var results = [];
+
+    for (var i = 0; i < tiles.length; i++)
+    {
+        for (var t = 0; t < coords.length; t++)
+        {
+            var tile = tiles[i];
+            var coord = coords[t];
+
+            if (tile.containsPoint(coord[0], coord[1]))
+            {
+                results.push(tile);
+                break;
+            }
+        }
+    }
+
+    return results;
+
+};
+
+/**
+ * Get all tiles that exist within the given area, defined by the top-left corner, width and height. Values given are in pixels, not tiles.
+ *
+ * @method Phaser.TilemapLayer#getTiles
+ * @param {number} x - X position of the top left corner (in pixels).
+ * @param {number} y - Y position of the top left corner (in pixels).
+ * @param {number} width - Width of the area to get (in pixels).
+ * @param {number} height - Height of the area to get (in pixels).
+ * @param {boolean} [collides=false] - If true, _only_ return tiles that collide on one or more faces.
+ * @param {boolean} [interestingFace=false] - If true, _only_ return tiles that have interesting faces.
+ * @return {array<Phaser.Tile>} An array of Tiles.
+ */
+Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides, interestingFace) {
+
+    //  Should we only get tiles that have at least one of their collision flags set? (true = yes, false = no just get them all)
+    if (collides === undefined) { collides = false; }
+    if (interestingFace === undefined) { interestingFace = false; }
+
+    var fetchAll = !(collides || interestingFace);
+
+    //  Adjust the x,y coordinates for scrollFactor
+    x = this._fixX(x);
+    y = this._fixY(y);
+
+    //  Convert the pixel values into tile coordinates
+    var tx = Math.floor(x / (this._mc.cw * this.scale.x));
+    var ty = Math.floor(y / (this._mc.ch * this.scale.y));
+
+    //  Don't just use ceil(width/cw) to allow account for x/y diff within cell
+    var tw = Math.ceil((x + width) / (this._mc.cw * this.scale.x)) - tx;
+    var th = Math.ceil((y + height) / (this._mc.ch * this.scale.y)) - ty;
+
+    this._results.length = 0;
+
+    for (var wy = ty; wy < ty + th; wy++)
+    {
+        for (var wx = tx; wx < tx + tw; wx++)
+        {
+            var row = this.layer.data[wy];
+
+            if (row && row[wx] && (fetchAll || row[wx].isInteresting(collides, interestingFace)))
+            {
+                this._results.push(row[wx]);
+            }
+        }
+    }
+
+    return this._results.slice();
+
+};
+
+/**
+* The x position of this Tilemap Layer.
+*
+* @property {integer} x
+* @memberof Phaser.TilemapLayer
+* @public
+*/
+Object.defineProperty(Phaser.TilemapLayer.prototype, "x", {
+
+    get: function () {
+
+        return this.cameraOffset.x;
+
+    },
+
+    set: function (value) {
+
+        this.cameraOffset.x = value;
+
+    }
+
+});
+
+/**
+* The y position of this Tilemap Layer.
+*
+* @property {integer} y
+* @memberof Phaser.TilemapLayer
+* @public
+*/
+Object.defineProperty(Phaser.TilemapLayer.prototype, "y", {
+
+    get: function () {
+
+        return this.cameraOffset.y;
+
+    },
+
+    set: function (value) {
+
+        this.cameraOffset.y = value;
+
+    }
+
+});
+
+Object.defineProperty(Phaser.TilemapLayer.prototype, "bottom", {
+
+    get: function () {
+
+        return this.cameraOffset.y + this.layer.heightInPixels;
+
+    }
+
+});
+
+Object.defineProperty(Phaser.TilemapLayer.prototype, "right", {
+
+    get: function () {
+
+        return this.cameraOffset.x + this.layer.widthInPixels;
+
+    }
+
+});
 
 /**
 * Flag controlling if the layer tiles wrap at the edges. Only works if the World size matches the Map size.
@@ -75801,12 +75883,16 @@ Phaser.TilemapLayer.prototype.renderDebug = function () {
 Object.defineProperty(Phaser.TilemapLayer.prototype, "wrap", {
 
     get: function () {
+
         return this._wrap;
+
     },
 
     set: function (value) {
+
         this._wrap = value;
         this.dirty = true;
+
     }
 
 });
@@ -75891,36 +75977,46 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, "collisionHeight", {
 
 /**
 * @author       Richard Davey <rich@photonstorm.com>
+* @author       Pete Baron <pete@photonstorm.com>
 * @copyright    2016 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
 /**
-* A TilemapLayerGL is a PIXI.Tilemap that renders a specific TileLayer of a Tilemap using the PIXI WebGL renderer.
+* TilemapLayerGL is a WebGL specific version of TilemapLayer.
+* If extends PIXI.Tilemap, and renders a layer of a Tilemap, using the WebGL Tilemap shader.
 * 
-* NOTE: This is a close duplicate of Phaser.TilemapLayer class, modified to support WebGL rendering, it may be possible to merge the two classes
-* although that will probably incur performance penalties due to some fundamental differences in the set-up before rendering.
-* 
-* Since a PIXI.Tilemap is a PIXI.DisplayObjectContainer it can be moved around the display list, added to other groups, or display objects, etc.
+* Since a PIXI.Tilemap is a PIXI.DisplayObject it can be moved up and down the display list.
 *
 * By default TilemapLayers have fixedToCamera set to `true`. Changing this will break Camera follow and scrolling behavior.
 *
 * @class Phaser.TilemapLayerGL
-* @extends Phaser.Sprite
+* @extends PIXI.Tilemap
 * @constructor
 * @param {Phaser.Game} game - Game reference to the currently running game.
 * @param {Phaser.Tilemap} tilemap - The tilemap to which this layer belongs.
 * @param {integer} index - The index of the TileLayer to render within the Tilemap.
-* @param {integer} width - Width of the renderable area of the layer (in pixels).
-* @param {integer} height - Height of the renderable area of the layer (in pixels).
+* @param {integer} width - Width of the renderable area of the layer in pixels. Cannot be null or negative.
+* @param {integer} height - Height of the renderable area of the layer in pixels. Cannot be null or negative.
+* @param {Phaser.Tileset} tileset - The Tileset this Layer uses to render with.
 */
-Phaser.TilemapLayerGL = function (game, tilemap, index, width, height) {
+Phaser.TilemapLayerGL = function (game, tilemap, index, width, height, tileset) {
 
+    /**
+    * A reference to the Phaser.Game instance.
+    * 
+    * @property {Phaser.Game} game
+    */
     this.game = game;
 
-    width |= 0;
-    height |= 0;
-
+    /**
+    * An Array of any linked layers.
+    * 
+    * @property {Array} linkedLayers
+    * @private
+    */
+    this.linkedLayers = [];
+    
     /**
     * The Tilemap to which this layer is bound.
     * @property {Phaser.Tilemap} map
@@ -75963,29 +76059,13 @@ Phaser.TilemapLayerGL = function (game, tilemap, index, width, height) {
     /**
     * Settings that control standard (non-diagnostic) rendering.
     *
-    * @property {boolean} [enableScrollDelta=true] - Delta scroll rendering only draws tiles/edges as they come into view.
-    *     This can greatly improve scrolling rendering performance, especially when there are many small tiles.
-    *     It should only be disabled in rare cases.
-    *
-    * @property {?DOMCanvasElement} [copyCanvas=(auto)] - [Internal] If set, force using a separate (shared) copy canvas.
-    *     Using a canvas bitblt/copy when the source and destinations region overlap produces unexpected behavior
-    *     in some browsers, notably Safari. 
+    * @property {float} [overdrawRatio=0.20] - Over Draw ratio.
     *
     * @default
     */
     this.renderSettings = {
-        enableScrollDelta: false,
-        overdrawRatio: 0.20,
-        copyCanvas: null
+        overdrawRatio: 0.20
     };
-
-    /**
-    * Enable an additional "debug rendering" pass to display collision information.
-    *
-    * @property {boolean} debug
-    * @default
-    */
-    this.debug = false;
 
     /**
     * @property {boolean} exists - Controls if the core game loop and physics update this game object or not.
@@ -75993,7 +76073,7 @@ Phaser.TilemapLayerGL = function (game, tilemap, index, width, height) {
     this.exists = true;
 
     /**
-    * Settings used for debugging and diagnostics.
+    * Settings used for debugging and diagnostics. This is ignored in WebGL mode.
     *
     * @property {?string} missingImageFill - A tile is rendered as a rectangle using the following fill if a valid tileset/image cannot be found. A value of `null` prevents additional rendering for tiles without a valid tileset image. _This takes effect even when debug rendering for the layer is not enabled._
     *
@@ -76038,18 +76118,24 @@ Phaser.TilemapLayerGL = function (game, tilemap, index, width, height) {
     this.scrollFactorY = 1;
 
     /**
-    * If true tiles will be force rendered, even if such is not believed to be required.
-    * @property {boolean} dirty
-    * @protected
-    */
-    this.dirty = true;
-
-    /**
     * When ray-casting against tiles this is the number of steps it will jump. For larger tile sizes you can increase this to improve performance.
     * @property {integer} rayStepRate
     * @default
     */
     this.rayStepRate = 4;
+
+    /**
+    * @property {array} _results - Internal var.
+    * @private
+    */
+    this._results = [];
+
+    /**
+    * If true tiles will be force rendered, even if such is not believed to be required.
+    * @property {boolean} dirty
+    * @protected
+    */
+    this.dirty = true;
 
     /**
     * Flag controlling if the layer tiles wrap at the edges.
@@ -76063,8 +76149,25 @@ Phaser.TilemapLayerGL = function (game, tilemap, index, width, height) {
     * @property {object} _mc
     * @private
     */
-    var tileset = this.layer.tileset || this.map.tilesets[0];
+
+    /*
+    if (tileset === undefined)
+    {
+        if (tilemap.layers[index] && tilemap.layers[index].tileset)
+        {
+            tileset = tilemap.layers[index].tileset;
+        }
+        else if (tilemap.tilesets[0])
+        {
+            tileset = tilemap.tilesets[0];
+        }
+    }
+    */
+
     this._mc = {
+
+        x: 0,
+        y: 0,
 
         // Used to bypass rendering without reliance on `dirty` and detect changes.
         scrollX: 0,
@@ -76085,15 +76188,13 @@ Phaser.TilemapLayerGL = function (game, tilemap, index, width, height) {
         ch: tileset.tileHeight,
 
         // the tileset for this layer
-        tileset: tileset,
+        tileset: tileset
 
-        // Cached tilesets from index -> Tileset
-        tilesets: []
     };
 
     /**
-     * The rendering mode (used by PIXI.Tilemap).  Modes are: 0 - render entire screen of tiles, 1 - render entire map of tiles
-     * TODO: make some constants for the rendering modes
+     * The rendering mode used by PIXI.Tilemap.
+     * Modes are: 0 - render entire screen of tiles, 1 - render entire map of tiles.
      * @property {number} _renderMode
      * @private
      */
@@ -76113,49 +76214,36 @@ Phaser.TilemapLayerGL = function (game, tilemap, index, width, height) {
     */
     this._scrollY = 0;
 
-    /**
-    * Used for caching the tiles / array of tiles.
-    * @property {Phaser.Tile[]} _results
-    * @private
-    */
-    this._results = [];
+    var baseTexture = new PIXI.BaseTexture(tileset.image);
 
-    // get PIXI textures for each tileset source image
-    var baseTexture = new PIXI.BaseTexture( tileset.image );
-    PIXI.Tilemap.call(this, new PIXI.Texture(baseTexture), this.map.width, this.map.height, this._mc.tileset.tileWidth, this._mc.tileset.tileHeight, this.layer);
+    console.log('TilemapLayerGL', width, height);
+
+    PIXI.Tilemap.call(this, new PIXI.Texture(baseTexture), width, height, this.map.width, this.map.height, this._mc.tileset.tileWidth, this._mc.tileset.tileHeight, this.layer);
 
     Phaser.Component.Core.init.call(this, game, 0, 0, null, null);
 
     // must be set *after* the Core.init
     this.fixedToCamera = true;
-};
 
+};
 
 // constructor: extends PIXI.Tilemap
 Phaser.TilemapLayerGL.prototype = Object.create(PIXI.Tilemap.prototype);
 Phaser.TilemapLayerGL.prototype.constructor = Phaser.TilemapLayerGL;
 
-
-// only one Phaser component used
+//  Only one Phaser component used
 Phaser.Component.Core.install.call(Phaser.TilemapLayerGL.prototype, [
     'FixedToCamera'
 ]);
 
-
-// redirect method prototypes (TODO: not needed?  I'm not sure...)
 Phaser.TilemapLayerGL.prototype.preUpdateCore = Phaser.Component.Core.preUpdate;
-Phaser.TileSprite.prototype.preUpdatePhysics = Phaser.Component.PhysicsBody.preUpdate;
-Phaser.TileSprite.prototype.preUpdateLifeSpan = Phaser.Component.LifeSpan.preUpdate;
-Phaser.TileSprite.prototype.preUpdateInWorld = Phaser.Component.InWorld.preUpdate;
-Phaser.TileSprite.prototype.preUpdateCore = Phaser.Component.Core.preUpdate;
-
 
 /**
 * Automatically called by World.preUpdate.
 *
 * @method Phaser.TilemapLayerGL#preUpdate
 */
-Phaser.TilemapLayerGL.prototype.preUpdate = function() {
+Phaser.TilemapLayerGL.prototype.preUpdate = function () {
 
     return this.preUpdateCore();
 
@@ -76188,20 +76276,12 @@ Phaser.TilemapLayerGL.prototype.postUpdate = function () {
 */
 Phaser.TilemapLayerGL.prototype.destroy = function() {
 
-    PIXI.CanvasPool.remove(this);
-
     Phaser.Component.Destroy.prototype.destroy.call(this);
 
 };
 
 /**
-* Resizes the internal dimensions and texture frame used by this TilemapLayerGL.
-*
-* This is an expensive call, so don't bind it to a window resize event! But instead call it at carefully
-* selected times.
-*
-* Be aware that no validation of the new sizes takes place and the current map scroll coordinates are not
-* modified either. You will have to handle both of these things from your game code if required.
+* Resizes the internal dimensions used by this TilemapLayerGL during rendering.
 * 
 * @method Phaser.TilemapLayerGL#resize
 * @param {number} width - The new width of the TilemapLayerGL
@@ -76209,21 +76289,9 @@ Phaser.TilemapLayerGL.prototype.destroy = function() {
 */
 Phaser.TilemapLayerGL.prototype.resize = function (width, height) {
 
-    this.texture.frame.resize(width, height);
-
-    this.texture.width = width;
-    this.texture.height = height;
-
-    this.texture.crop.width = width;
-    this.texture.crop.height = height;
-
-    this.texture.baseTexture.width = width;
-    this.texture.baseTexture.height = height;
-
-    this.texture.baseTexture.dirty();
-    this.texture.requiresUpdate = true;
-
-    this.texture._updateUvs();
+    //  These setters will automatically update any linked children
+    this.displayWidth = width;
+    this.displayHeight = height;
 
     this.dirty = true;
 
@@ -76242,246 +76310,9 @@ Phaser.TilemapLayerGL.prototype.resizeWorld = function () {
 };
 
 /**
-* Take an x coordinate that doesn't account for scrollFactorX and 'fix' it into a scrolled local space.
-*
-* @method Phaser.TilemapLayerGL#_fixX
-* @private
-* @param {number} x - x coordinate in camera space
-* @return {number} x coordinate in scrollFactor-adjusted dimensions
-*/
-Phaser.TilemapLayerGL.prototype._fixX = function (x) {
-
-    if (x < 0)
-    {
-        x = 0;
-    }
-
-    if (this.scrollFactorX === 1)
-    {
-        return x;
-    }
-
-    return this._scrollX + (x - (this._scrollX / this.scrollFactorX));
-
-};
-
-/**
-* Take an x coordinate that _does_ account for scrollFactorX and 'unfix' it back to camera space.
-*
-* @method Phaser.TilemapLayerGL#_unfixX
-* @private
-* @param {number} x - x coordinate in scrollFactor-adjusted dimensions
-* @return {number} x coordinate in camera space
-*/
-Phaser.TilemapLayerGL.prototype._unfixX = function (x) {
-
-    if (this.scrollFactorX === 1)
-    {
-        return x;
-    }
-
-    return (this._scrollX / this.scrollFactorX) + (x - this._scrollX);
-
-};
-
-/**
-* Take a y coordinate that doesn't account for scrollFactorY and 'fix' it into a scrolled local space.
-*
-* @method Phaser.TilemapLayerGL#_fixY
-* @private
-* @param {number} y - y coordinate in camera space
-* @return {number} y coordinate in scrollFactor-adjusted dimensions
-*/
-Phaser.TilemapLayerGL.prototype._fixY = function (y) {
-
-    if (y < 0)
-    {
-        y = 0;
-    }
-
-    if (this.scrollFactorY === 1)
-    {
-        return y;
-    }
-
-    return this._scrollY + (y - (this._scrollY / this.scrollFactorY));
-
-};
-
-/**
-* Take a y coordinate that _does_ account for scrollFactorY and 'unfix' it back to camera space.
-*
-* @method Phaser.TilemapLayerGL#_unfixY
-* @private
-* @param {number} y - y coordinate in scrollFactor-adjusted dimensions
-* @return {number} y coordinate in camera space
-*/
-Phaser.TilemapLayerGL.prototype._unfixY = function (y) {
-
-    if (this.scrollFactorY === 1)
-    {
-        return y;
-    }
-
-    return (this._scrollY / this.scrollFactorY) + (y - this._scrollY);
-
-};
-
-/**
-* Convert a pixel value to a tile coordinate.
-*
-* @method Phaser.TilemapLayerGL#getTileX
-* @public
-* @param {number} x - X position of the point in target tile (in pixels).
-* @return {integer} The X map location of the tile.
-*/
-Phaser.TilemapLayerGL.prototype.getTileX = function (x) {
-
-    // var tileWidth = this.tileWidth * this.scale.x;
-    return Math.floor(this._fixX(x) / this._mc.tileWidth);
-
-};
-
-/**
-* Convert a pixel value to a tile coordinate.
-*
-* @method Phaser.TilemapLayerGL#getTileY
-* @public
-* @param {number} y - Y position of the point in target tile (in pixels).
-* @return {integer} The Y map location of the tile.
-*/
-Phaser.TilemapLayerGL.prototype.getTileY = function (y) {
-
-    // var tileHeight = this.tileHeight * this.scale.y;
-    return Math.floor(this._fixY(y) / this._mc.tileHeight);
-
-};
-
-/**
-* Convert a pixel coordinate to a tile coordinate.
-*
-* @method Phaser.TilemapLayerGL#getTileXY
-* @public
-* @param {number} x - X position of the point in target tile (in pixels).
-* @param {number} y - Y position of the point in target tile (in pixels).
-* @param {(Phaser.Point|object)} point - The Point/object to update.
-* @return {(Phaser.Point|object)} A Point/object with its `x` and `y` properties set.
-*/
-Phaser.TilemapLayerGL.prototype.getTileXY = function (x, y, point) {
-
-    point.x = this.getTileX(x);
-    point.y = this.getTileY(y);
-
-    return point;
-
-};
-
-/**
-* Gets all tiles that intersect with the given line.
-*
-* @method Phaser.TilemapLayerGL#getRayCastTiles
-* @public
-* @param {Phaser.Line} line - The line used to determine which tiles to return.
-* @param {integer} [stepRate=(rayStepRate)] - How many steps through the ray will we check? Defaults to `rayStepRate`.
-* @param {boolean} [collides=false] - If true, _only_ return tiles that collide on one or more faces.
-* @param {boolean} [interestingFace=false] - If true, _only_ return tiles that have interesting faces.
-* @return {Phaser.Tile[]} An array of Phaser.Tiles.
-*/
-Phaser.TilemapLayerGL.prototype.getRayCastTiles = function (line, stepRate, collides, interestingFace) {
-
-    if (!stepRate) { stepRate = this.rayStepRate; }
-    if (collides === undefined) { collides = false; }
-    if (interestingFace === undefined) { interestingFace = false; }
-
-    //  First get all tiles that touch the bounds of the line
-    var tiles = this.getTiles(line.x, line.y, line.width, line.height, collides, interestingFace);
-
-    if (tiles.length === 0)
-    {
-        return [];
-    }
-
-    //  Now we only want the tiles that intersect with the points on this line
-    var coords = line.coordinatesOnLine(stepRate);
-    var results = [];
-
-    for (var i = 0; i < tiles.length; i++)
-    {
-        for (var t = 0; t < coords.length; t++)
-        {
-            var tile = tiles[i];
-            var coord = coords[t];
-            if (tile.containsPoint(coord[0], coord[1]))
-            {
-                results.push(tile);
-                break;
-            }
-        }
-    }
-
-    return results;
-
-};
-
-/**
-* Get all tiles that exist within the given area, defined by the top-left corner, width and height. Values given are in pixels, not tiles.
-*
-* @method Phaser.TilemapLayerGL#getTiles
-* @public
-* @param {number} x - X position of the top left corner (in pixels).
-* @param {number} y - Y position of the top left corner (in pixels).
-* @param {number} width - Width of the area to get (in pixels).
-* @param {number} height - Height of the area to get (in pixels).
-* @param {boolean} [collides=false] - If true, _only_ return tiles that collide on one or more faces.
-* @param {boolean} [interestingFace=false] - If true, _only_ return tiles that have interesting faces.
-* @return {array<Phaser.Tile>} An array of Tiles.
-*/
-Phaser.TilemapLayerGL.prototype.getTiles = function (x, y, width, height, collides, interestingFace) {
-
-    //  Should we only get tiles that have at least one of their collision flags set? (true = yes, false = no just get them all)
-    if (collides === undefined) { collides = false; }
-    if (interestingFace === undefined) { interestingFace = false; }
-
-    var fetchAll = !(collides || interestingFace);
-
-    //  Adjust the x,y coordinates for scrollFactor
-    x = this._fixX(x);
-    y = this._fixY(y);
-
-    //  Convert the pixel values into tile coordinates
-    var tx = Math.floor(x / (this._mc.cw * this.scale.x));
-    var ty = Math.floor(y / (this._mc.ch * this.scale.y));
-    //  Don't just use ceil(width/cw) to allow account for x/y diff within cell
-    var tw = Math.ceil((x + width) / (this._mc.cw * this.scale.x)) - tx;
-    var th = Math.ceil((y + height) / (this._mc.ch * this.scale.y)) - ty;
-
-    //  Discard old results before storing the new ones
-    this._results = [];
-
-    for (var wy = ty; wy < ty + th; wy++)
-    {
-        for (var wx = tx; wx < tx + tw; wx++)
-        {
-            var row = this.layer.data[wy];
-
-            if (row && row[wx])
-            {
-                if (fetchAll || row[wx].isInteresting(collides, interestingFace))
-                {
-                    this._results.push(row[wx]);
-                }
-            }
-        }
-    }
-
-    return this._results.slice();
-
-};
-
-/**
 * The TilemapLayerGL caches tileset look-ups.
 *
-* Call this method of clear the cache if tilesets have been added or updated after the layer has been rendered.
+* Call this method to clear the cache if tilesets have been added or updated after the layer has been rendered.
 *
 * @method Phaser.TilemapLayerGL#resetTilesetCache
 * @public
@@ -76489,6 +76320,12 @@ Phaser.TilemapLayerGL.prototype.getTiles = function (x, y, width, height, collid
 Phaser.TilemapLayerGL.prototype.resetTilesetCache = function () {
 
     this._mc.tilesets = [];
+
+    for (var i = 0; i < this.linkedLayers.length; i++)
+    {
+        this.linkedLayers[i].resetTilesetCache();
+    }
+
 };
 
 /**
@@ -76521,6 +76358,11 @@ Phaser.TilemapLayerGL.prototype.setScale = function (xScale, yScale) {
 
     this.scale.setTo(xScale, yScale);
 
+    for (var i = 0; i < this.linkedLayers.length; i++)
+    {
+        this.linkedLayers[i].setScale(xScale, yScale);
+    }
+
 };
 
 /**
@@ -76535,6 +76377,8 @@ Phaser.TilemapLayerGL.prototype.setScale = function (xScale, yScale) {
 * @param {integer} top - Topmost row to render.
 * @param {integer} right - Rightmost column to render.
 * @param {integer} bottom - Bottommost row to render.
+* @param {integer} offx - X pixel offset.
+* @param {integer} offy - Y pixel offset.
 */
 Phaser.TilemapLayerGL.prototype.renderRegion = function (scrollX, scrollY, left, top, right, bottom, offx, offy) {
 
@@ -76542,8 +76386,6 @@ Phaser.TilemapLayerGL.prototype.renderRegion = function (scrollX, scrollY, left,
     var height = this.layer.height;
     var tw = this._mc.tileWidth;
     var th = this._mc.tileHeight;
-
-    // var lastAlpha = NaN;
 
     offx = offx || 0;
     offy = offy || 0;
@@ -76555,6 +76397,7 @@ Phaser.TilemapLayerGL.prototype.renderRegion = function (scrollX, scrollY, left,
             left = Math.max(0, left);
             right = Math.min(width - 1, right);
         }
+
         if (top <= bottom)
         {
             top = Math.max(0, top);
@@ -76575,47 +76418,39 @@ Phaser.TilemapLayerGL.prototype.renderRegion = function (scrollX, scrollY, left,
     // xmax/ymax - remaining cells to render on column/row
     var tx, ty, x, y, xmax, ymax;
 
-    //context.fillStyle = this.tileColor;
-
-    for (y = normStartY, ymax = bottom - top, ty = baseY;
-        ymax >= 0;
-        y++, ymax--, ty += th)
+    for (y = normStartY, ymax = bottom - top, ty = baseY; ymax >= 0; y++, ymax--, ty += th)
     {
-
-        if (y >= height) { y -= height; }
+        if (y >= height)
+        {
+            y -= height;
+        }
 
         var row = this.layer.data[y];
 
-        for (x = normStartX, xmax = right - left, tx = baseX;
-            xmax >= 0;
-            x++, xmax--, tx += tw)
+        for (x = normStartX, xmax = right - left, tx = baseX; xmax >= 0; x++, xmax--, tx += tw)
         {
-
-            if (x >= width) { x -= width; }
+            if (x >= width)
+            {
+                x -= width;
+            }
 
             var tile = row[x];
 
-            if (!tile || tile.index < 0)
+            //  If not the Tileset this Layer uses, then skip
+            if (!tile || tile.index < this._mc.tileset.firstgid || tile.index > this._mc.lastgid)
             {
                 // skipping some tiles, add a degenerate marker into the batch list
-                this._mc.tileset.addDegenerate( this.glBatch );
+                this._mc.tileset.addDegenerate(this.glBatch);
                 continue;
             }
 
             var index = tile.index;
 
-            if (tile.rotation || tile.flipped)
-            {
-                this._mc.tileset.drawGl(this.glBatch, -tile.centerX + offx, -tile.centerY + offy, index, tile.alpha);
-            }
-            else
-            {
-                this._mc.tileset.drawGl(this.glBatch, tx + offx, ty + offy, index, tile.alpha);
-            }
+            this._mc.tileset.drawGl(this.glBatch, tx + offx, ty + offy, index, tile.alpha, tile.flippedVal);
         }
 
         // at end of each row, add a degenerate marker into the batch drawing list
-        this._mc.tileset.addDegenerate( this.glBatch );
+        this._mc.tileset.addDegenerate(this.glBatch);
     }
 
 };
@@ -76631,8 +76466,12 @@ Phaser.TilemapLayerGL.prototype.renderFull = function () {
     var scrollX = this._mc.scrollX;
     var scrollY = this._mc.scrollY;
 
-    var renderW = this.game._width;     //this.canvas.width;
-    var renderH = this.game._height;    //this.canvas.height;
+    // var renderW = this.game._width;
+    // var renderH = this.game._height;
+
+    //  displayWidth surely?
+    var renderW = this.game._width;
+    var renderH = this.game._height;
 
     var tw = this._mc.tileWidth;
     var th = this._mc.tileHeight;
@@ -76640,13 +76479,15 @@ Phaser.TilemapLayerGL.prototype.renderFull = function () {
     var cw = this._mc.cw;
     var ch = this._mc.ch;
 
-    var left = Math.floor( (scrollX - (cw - tw)) / tw );
-    var right = Math.floor( (renderW - 1 + scrollX) / tw );
-    var top = Math.floor( (scrollY - (ch - th)) / th );
-    var bottom = Math.floor( (renderH - 1 + scrollY) / th );
+    var left = Math.floor((scrollX - (cw - tw)) / tw);
+    var right = Math.floor((renderW - 1 + scrollX) / tw);
+    var top = Math.floor((scrollY - (ch - th)) / th);
+    var bottom = Math.floor((renderH - 1 + scrollY) / th);
 
     this.glBatch = [];
+
     this.renderRegion(scrollX, scrollY, left, top, right, bottom, 0, -(ch - th));
+
 };
 
 /**
@@ -76657,29 +76498,22 @@ Phaser.TilemapLayerGL.prototype.renderFull = function () {
 */
 Phaser.TilemapLayerGL.prototype.render = function () {
 
-    var redrawAll = false;
-
     if (!this.visible)
     {
         return;
     }
 
-    if (this.dirty || this.layer.dirty)
-    {
-        this.layer.dirty = false;
-        redrawAll = true;
-    }
+    var redrawAll = (this.dirty || this.layer.dirty);
 
     //  Scrolling bias; whole pixels only
     var scrollX = this._scrollX | 0;
     var scrollY = this._scrollY | 0;
 
     var mc = this._mc;
-    var shiftX = mc.scrollX - scrollX; // Negative when scrolling right/down
+    var shiftX = mc.scrollX - scrollX; // Negative when scrolling right / down
     var shiftY = mc.scrollY - scrollY;
 
-    if (!redrawAll &&
-        shiftX === 0 && shiftY === 0)
+    if (!redrawAll && shiftX === 0 && shiftY === 0)
     {
         //  No reason to rebuild batch, looking at same thing and not invalidated.
         return;
@@ -76690,13 +76524,380 @@ Phaser.TilemapLayerGL.prototype.render = function () {
 
     this.renderFull();
 
-    this.texture.baseTexture.dirty();
-
+    this.layer.dirty = false;
     this.dirty = false;
 
     return true;
 
 };
+
+/**
+ * Take an x coordinate that doesn't account for scrollFactorX and 'fix' it into a scrolled local space.
+ *
+ * @method Phaser.TilemapLayerGL#_fixX
+ * @private
+ * @param {number} x - x coordinate in camera space
+ * @return {number} x coordinate in scrollFactor-adjusted dimensions
+ */
+Phaser.TilemapLayerGL.prototype._fixX = function (x) {
+
+    if (x < 0)
+    {
+        x = 0;
+    }
+
+    if (this.scrollFactorX === 1)
+    {
+        return x;
+    }
+
+    return this._scrollX + (x - (this._scrollX / this.scrollFactorX));
+
+};
+
+/**
+ * Take an x coordinate that _does_ account for scrollFactorX and 'unfix' it back to camera space.
+ *
+ * @method Phaser.TilemapLayerGL#_unfixX
+ * @private
+ * @param {number} x - x coordinate in scrollFactor-adjusted dimensions
+ * @return {number} x coordinate in camera space
+ */
+Phaser.TilemapLayerGL.prototype._unfixX = function (x) {
+
+    if (this.scrollFactorX === 1)
+    {
+        return x;
+    }
+
+    return (this._scrollX / this.scrollFactorX) + (x - this._scrollX);
+
+};
+
+/**
+ * Take a y coordinate that doesn't account for scrollFactorY and 'fix' it into a scrolled local space.
+ *
+ * @method Phaser.TilemapLayerGL#_fixY
+ * @private
+ * @param {number} y - y coordinate in camera space
+ * @return {number} y coordinate in scrollFactor-adjusted dimensions
+ */
+Phaser.TilemapLayerGL.prototype._fixY = function (y) {
+
+    if (y < 0)
+    {
+        y = 0;
+    }
+
+    if (this.scrollFactorY === 1)
+    {
+        return y;
+    }
+
+    return this._scrollY + (y - (this._scrollY / this.scrollFactorY));
+
+};
+
+/**
+ * Take a y coordinate that _does_ account for scrollFactorY and 'unfix' it back to camera space.
+ *
+ * @method Phaser.TilemapLayerGL#_unfixY
+ * @private
+ * @param {number} y - y coordinate in scrollFactor-adjusted dimensions
+ * @return {number} y coordinate in camera space
+ */
+Phaser.TilemapLayerGL.prototype._unfixY = function (y) {
+
+    if (this.scrollFactorY === 1)
+    {
+        return y;
+    }
+
+    return (this._scrollY / this.scrollFactorY) + (y - this._scrollY);
+
+};
+
+/**
+ * Convert a pixel value to a tile coordinate.
+ *
+ * @method Phaser.TilemapLayerGL#getTileX
+ * @param {number} x - X position of the point in target tile (in pixels).
+ * @return {integer} The X map location of the tile.
+ */
+Phaser.TilemapLayerGL.prototype.getTileX = function (x) {
+
+    return Math.floor(this._fixX(x) / this._mc.tileWidth);
+
+};
+
+/**
+ * Convert a pixel value to a tile coordinate.
+ *
+ * @method Phaser.TilemapLayerGL#getTileY
+ * @param {number} y - Y position of the point in target tile (in pixels).
+ * @return {integer} The Y map location of the tile.
+ */
+Phaser.TilemapLayerGL.prototype.getTileY = function (y) {
+
+    return Math.floor(this._fixY(y) / this._mc.tileHeight);
+
+};
+
+/**
+ * Convert a pixel coordinate to a tile coordinate.
+ *
+ * @method Phaser.TilemapLayerGL#getTileXY
+ * @param {number} x - X position of the point in target tile (in pixels).
+ * @param {number} y - Y position of the point in target tile (in pixels).
+ * @param {(Phaser.Point|object)} point - The Point/object to update.
+ * @return {(Phaser.Point|object)} A Point/object with its `x` and `y` properties set.
+ */
+Phaser.TilemapLayerGL.prototype.getTileXY = function (x, y, point) {
+
+    point.x = this.getTileX(x);
+    point.y = this.getTileY(y);
+
+    return point;
+
+};
+
+/**
+ * Gets all tiles that intersect with the given line.
+ *
+ * @method Phaser.TilemapLayerGL#getRayCastTiles
+ * @param {Phaser.Line} line - The line used to determine which tiles to return.
+ * @param {integer} [stepRate=(rayStepRate)] - How many steps through the ray will we check? Defaults to `rayStepRate`.
+ * @param {boolean} [collides=false] - If true, _only_ return tiles that collide on one or more faces.
+ * @param {boolean} [interestingFace=false] - If true, _only_ return tiles that have interesting faces.
+ * @return {Phaser.Tile[]} An array of Phaser.Tiles.
+ */
+Phaser.TilemapLayerGL.prototype.getRayCastTiles = function (line, stepRate, collides, interestingFace) {
+
+    if (!stepRate) { stepRate = this.rayStepRate; }
+    if (collides === undefined) { collides = false; }
+    if (interestingFace === undefined) { interestingFace = false; }
+
+    //  First get all tiles that touch the bounds of the line
+    var tiles = this.getTiles(line.x, line.y, line.width, line.height, collides, interestingFace);
+
+    if (tiles.length === 0)
+    {
+        return [];
+    }
+
+    //  Now we only want the tiles that intersect with the points on this line
+    var coords = line.coordinatesOnLine(stepRate);
+    var results = [];
+
+    for (var i = 0; i < tiles.length; i++)
+    {
+        for (var t = 0; t < coords.length; t++)
+        {
+            var tile = tiles[i];
+            var coord = coords[t];
+
+            if (tile.containsPoint(coord[0], coord[1]))
+            {
+                results.push(tile);
+                break;
+            }
+        }
+    }
+
+    return results;
+
+};
+
+/**
+ * Get all tiles that exist within the given area, defined by the top-left corner, width and height. Values given are in pixels, not tiles.
+ *
+ * @method Phaser.TilemapLayerGL#getTiles
+ * @param {number} x - X position of the top left corner (in pixels).
+ * @param {number} y - Y position of the top left corner (in pixels).
+ * @param {number} width - Width of the area to get (in pixels).
+ * @param {number} height - Height of the area to get (in pixels).
+ * @param {boolean} [collides=false] - If true, _only_ return tiles that collide on one or more faces.
+ * @param {boolean} [interestingFace=false] - If true, _only_ return tiles that have interesting faces.
+ * @return {array<Phaser.Tile>} An array of Tiles.
+ */
+Phaser.TilemapLayerGL.prototype.getTiles = function (x, y, width, height, collides, interestingFace) {
+
+    //  Should we only get tiles that have at least one of their collision flags set? (true = yes, false = no just get them all)
+    if (collides === undefined) { collides = false; }
+    if (interestingFace === undefined) { interestingFace = false; }
+
+    var fetchAll = !(collides || interestingFace);
+
+    //  Adjust the x,y coordinates for scrollFactor
+    x = this._fixX(x);
+    y = this._fixY(y);
+
+    //  Convert the pixel values into tile coordinates
+    var tx = Math.floor(x / (this._mc.cw * this.scale.x));
+    var ty = Math.floor(y / (this._mc.ch * this.scale.y));
+
+    //  Don't just use ceil(width/cw) to allow account for x/y diff within cell
+    var tw = Math.ceil((x + width) / (this._mc.cw * this.scale.x)) - tx;
+    var th = Math.ceil((y + height) / (this._mc.ch * this.scale.y)) - ty;
+
+    this._results.length = 0;
+
+    for (var wy = ty; wy < ty + th; wy++)
+    {
+        for (var wx = tx; wx < tx + tw; wx++)
+        {
+            var row = this.layer.data[wy];
+
+            if (row && row[wx] && (fetchAll || row[wx].isInteresting(collides, interestingFace)))
+            {
+                this._results.push(row[wx]);
+            }
+        }
+    }
+
+    return this._results.slice();
+
+};
+
+/**
+* The x position of this Tilemap Layer.
+*
+* @property {integer} x
+* @memberof Phaser.TilemapLayerGL
+* @public
+*/
+Object.defineProperty(Phaser.TilemapLayerGL.prototype, "x", {
+
+    get: function () {
+
+        return this._mc.x;
+
+    },
+
+    set: function (value) {
+
+        this._mc.x = value;
+
+        for (var i = 0; i < this.linkedLayers.length; i++)
+        {
+            this.linkedLayers[i]._mc.x = value;
+        }
+
+        this.dirty = true;
+
+    }
+
+});
+
+/**
+* The y position of this Tilemap Layer.
+*
+* @property {integer} y
+* @memberof Phaser.TilemapLayerGL
+* @public
+*/
+Object.defineProperty(Phaser.TilemapLayerGL.prototype, "y", {
+
+    get: function () {
+
+        return this._mc.y;
+
+    },
+
+    set: function (value) {
+
+        this._mc.y = value;
+
+        for (var i = 0; i < this.linkedLayers.length; i++)
+        {
+            this.linkedLayers[i]._mc.y = value;
+        }
+
+        this.dirty = true;
+
+    }
+
+});
+
+Object.defineProperty(Phaser.TilemapLayerGL.prototype, "bottom", {
+
+    get: function () {
+
+        return this.y + this.layer.heightInPixels;
+
+    }
+
+});
+
+Object.defineProperty(Phaser.TilemapLayerGL.prototype, "right", {
+
+    get: function () {
+
+        return this.x + this.layer.widthInPixels;
+
+    }
+
+});
+
+/**
+* The rendered width of this Tilemap Layer.
+*
+* @property {integer} width
+* @memberof Phaser.TilemapLayerGL
+* @public
+*/
+Object.defineProperty(Phaser.TilemapLayerGL.prototype, "width", {
+
+    get: function () {
+
+        return this._displayWidth;
+
+    },
+
+    set: function (value) {
+
+        this._displayWidth = value;
+
+        for (var i = 0; i < this.linkedLayers.length; i++)
+        {
+            this.linkedLayers[i]._displayWidth = value;
+        }
+
+        this.dirty = true;
+
+    }
+
+});
+
+/**
+* The rendered height of this Tilemap Layer.
+*
+* @property {integer} height
+* @memberof Phaser.TilemapLayerGL
+* @public
+*/
+Object.defineProperty(Phaser.TilemapLayerGL.prototype, "height", {
+
+    get: function () {
+
+        return this._displayHeight;
+
+    },
+
+    set: function (value) {
+
+        this._displayHeight = value;
+
+        for (var i = 0; i < this.linkedLayers.length; i++)
+        {
+            this.linkedLayers[i]._displayHeight = value;
+        }
+
+        this.dirty = true;
+
+    }
+
+});
 
 /**
 * Flag controlling if the layer tiles wrap at the edges. Only works if the World size matches the Map size.
@@ -76709,11 +76910,20 @@ Phaser.TilemapLayerGL.prototype.render = function () {
 Object.defineProperty(Phaser.TilemapLayerGL.prototype, "wrap", {
 
     get: function () {
+
         return this._wrap;
+
     },
 
     set: function (value) {
+
         this._wrap = value;
+
+        for (var i = 0; i < this.linkedLayers.length; i++)
+        {
+            this.linkedLayers[i]._wrap = value;
+        }
+
         this.dirty = true;
     }
 
@@ -76729,11 +76939,20 @@ Object.defineProperty(Phaser.TilemapLayerGL.prototype, "wrap", {
 Object.defineProperty(Phaser.TilemapLayerGL.prototype, "scrollX", {
 
     get: function () {
+
         return this._scrollX;
+
     },
 
     set: function (value) {
+
         this._scrollX = value;
+
+        for (var i = 0; i < this.linkedLayers.length; i++)
+        {
+            this.linkedLayers[i]._scrollX = value;
+        }
+
     }
 
 });
@@ -76748,11 +76967,20 @@ Object.defineProperty(Phaser.TilemapLayerGL.prototype, "scrollX", {
 Object.defineProperty(Phaser.TilemapLayerGL.prototype, "scrollY", {
 
     get: function () {
+
         return this._scrollY;
+
     },
 
     set: function (value) {
+
         this._scrollY = value;
+
+        for (var i = 0; i < this.linkedLayers.length; i++)
+        {
+            this.linkedLayers[i]._scrollY = value;
+        }
+
     }
 
 });
@@ -76767,12 +76995,22 @@ Object.defineProperty(Phaser.TilemapLayerGL.prototype, "scrollY", {
 Object.defineProperty(Phaser.TilemapLayerGL.prototype, "collisionWidth", {
 
     get: function () {
+
         return this._mc.cw;
+
     },
 
     set: function (value) {
+
         this._mc.cw = value | 0;
+
+        for (var i = 0; i < this.linkedLayers.length; i++)
+        {
+            this.linkedLayers[i]._mc.cw = value | 0;
+        }
+
         this.dirty = true;
+
     }
 
 });
@@ -76787,11 +77025,20 @@ Object.defineProperty(Phaser.TilemapLayerGL.prototype, "collisionWidth", {
 Object.defineProperty(Phaser.TilemapLayerGL.prototype, "collisionHeight", {
 
     get: function () {
+
         return this._mc.ch;
+
     },
 
     set: function (value) {
+
         this._mc.ch = value | 0;
+
+        for (var i = 0; i < this.linkedLayers.length; i++)
+        {
+            this.linkedLayers[i]._mc.ch = value | 0;
+        }
+
         this.dirty = true;
     }
 
@@ -76939,57 +77186,40 @@ Phaser.TilemapParser = {
     */
     getEmptyData: function (tileWidth, tileHeight, width, height) {
 
-        var map = {};
-
-        map.width = 0;
-        map.height = 0;
-        map.tileWidth = 0;
-        map.tileHeight = 0;
-
-        if (typeof tileWidth !== 'undefined' && tileWidth !== null) { map.tileWidth = tileWidth; }
-        if (typeof tileHeight !== 'undefined' && tileHeight !== null) { map.tileHeight = tileHeight; }
-        if (typeof width !== 'undefined' && width !== null) { map.width = width; }
-        if (typeof height !== 'undefined' && height !== null) { map.height = height; }
-
-        map.orientation = 'orthogonal';
-        map.version = '1';
-        map.properties = {};
-        map.widthInPixels = 0;
-        map.heightInPixels = 0;
-
-        var layers = [];
-
-        var layer = {
-
-            name: 'layer',
-            x: 0,
-            y: 0,
-            width: 0,
-            height: 0,
+        return {
+            width: (width !== undefined && width !== null) ? width : 0,
+            height: (height !== undefined && height !== null) ? height : 0,
+            tileWidth: (tileWidth !== undefined && tileWidth !== null) ? tileWidth : 0,
+            tileHeight: (tileHeight !== undefined && tileHeight !== null) ? tileHeight : 0,
+            orientation: 'orthogonal',
+            version: '1',
+            properties: {},
             widthInPixels: 0,
             heightInPixels: 0,
-            alpha: 1,
-            visible: true,
-            properties: {},
-            indexes: [],
-            callbacks: [],
-            bodies: [],
-            data: []
-
+            layers: [
+                {
+                    name: 'layer',
+                    x: 0,
+                    y: 0,
+                    width: 0,
+                    height: 0,
+                    widthInPixels: 0,
+                    heightInPixels: 0,
+                    alpha: 1,
+                    visible: true,
+                    properties: {},
+                    indexes: [],
+                    callbacks: [],
+                    bodies: [],
+                    data: []
+                }
+            ],
+            images: [],
+            objects: {},
+            collision: {},
+            tilesets: [],
+            tiles: []
         };
-
-        //  fill with nulls?
-
-        layers.push(layer);
-
-        map.layers = layers;
-        map.images = [];
-        map.objects = {};
-        map.collision = {};
-        map.tilesets = [];
-        map.tiles = [];
-
-        return map;
 
     },
 
@@ -77008,18 +77238,18 @@ Phaser.TilemapParser = {
         }
 
         //  Map data will consist of: layers, objects, images, tilesets, sizes
-        var map = {};
-
-        map.width = json.width;
-        map.height = json.height;
-        map.tileWidth = json.tilewidth;
-        map.tileHeight = json.tileheight;
-        map.orientation = json.orientation;
-        map.format = Phaser.Tilemap.TILED_JSON;
-        map.version = json.version;
-        map.properties = json.properties;
-        map.widthInPixels = map.width * map.tileWidth;
-        map.heightInPixels = map.height * map.tileHeight;
+        var map = {
+            width: json.width,
+            height: json.height,
+            tileWidth: json.tilewidth,
+            tileHeight: json.tileheight,
+            orientation: json.orientation,
+            format: Phaser.Tilemap.TILED_JSON,
+            version: json.version,
+            properties: json.properties,
+            widthInPixels: json.width * json.tileWidth,
+            heightInPixels: json.height * json.tileHeight
+        };
 
         //  Tile Layers
         var layers = [];
@@ -77035,26 +77265,34 @@ Phaser.TilemapParser = {
 
             // Base64 decode data if necessary
             // NOTE: uncompressed base64 only.
-            if (!curl.compression && curl.encoding && curl.encoding === "base64") {
-                var binaryString =  window.atob(curl.data);
+
+            if (!curl.compression && curl.encoding && curl.encoding === 'base64')
+            {
+                var binaryString = window.atob(curl.data);
                 var len = binaryString.length;
-                var bytes = new Array( len );
+                var bytes = new Array(len);
+
                 // Interpret binaryString as an array of bytes representing
                 // little-endian encoded uint32 values.
-                for (var j = 0; j < len; j+=4) {
-                    bytes[j/4] = (binaryString.charCodeAt(j) |
-                                 binaryString.charCodeAt(j+1) << 8 |
-                                 binaryString.charCodeAt(j+2) << 16 |
-                                 binaryString.charCodeAt(j+3) << 24) >>> 0;
+                for (var j = 0; j < len; j+=4)
+                {
+                    bytes[j / 4] = (
+                        binaryString.charCodeAt(j) |
+                        binaryString.charCodeAt(j + 1) << 8 |
+                        binaryString.charCodeAt(j + 2) << 16 |
+                        binaryString.charCodeAt(j + 3) << 24
+                    ) >>> 0;
                 }
+
                 curl.data = bytes;
+
                 delete curl.encoding;
             }
-            else if(curl.compression){
+            else if (curl.compression)
+            {
                 console.warn('TilemapParser.parseTiledJSON - Layer compression is unsupported, skipping layer \'' + curl.name + '\'');
                 continue;
             }
-
 
             var layer = {
 
@@ -77095,12 +77333,11 @@ Phaser.TilemapParser = {
                 rotation = 0;
                 flipped = false;
                 gid = curl.data[t];
+                flippedVal = 0;
 
                 //  If true the current tile is flipped or rotated (Tiled TMX format)
                 if (gid > 0x20000000)
                 {
-                    flippedVal = 0;
-
                     // FlippedX
                     if (gid > 0x80000000)
                     {
@@ -77115,7 +77352,7 @@ Phaser.TilemapParser = {
                         flippedVal += 2;
                     }
 
-                    // FlippedAD
+                    // FlippedAD (anti-diagonal = top-right is swapped with bottom-left corners)
                     if (gid > 0x20000000)
                     {
                         gid -= 0x20000000;
@@ -77125,28 +77362,34 @@ Phaser.TilemapParser = {
                     switch (flippedVal)
                     {
                         case 5:
-                            rotation = Math.PI/2;
+                            rotation = Math.PI / 2;
                             break;
+
                         case 6:
                             rotation = Math.PI;
                             break;
+
                         case 3:
-                            rotation = 3*Math.PI/2;
+                            rotation = 3 * Math.PI / 2;
                             break;
+
                         case 4:
                             rotation = 0;
                             flipped = true;
                             break;
+
                         case 7:
-                            rotation = Math.PI/2;
+                            rotation = Math.PI / 2;
                             flipped = true;
                             break;
+
                         case 2:
                             rotation = Math.PI;
                             flipped = true;
                             break;
+
                         case 1:
-                            rotation = 3*Math.PI/2;
+                            rotation = 3 * Math.PI / 2;
                             flipped = true;
                             break;
                     }
@@ -77155,9 +77398,18 @@ Phaser.TilemapParser = {
                 //  index, x, y, width, height
                 if (gid > 0)
                 {
-                    row.push(new Phaser.Tile(layer, gid, x, output.length, json.tilewidth, json.tileheight));
-                    row[row.length - 1].rotation = rotation;
-                    row[row.length - 1].flipped = flipped;
+                    var tile = new Phaser.Tile(layer, gid, x, output.length, json.tilewidth, json.tileheight);
+
+                    tile.rotation = rotation;
+                    tile.flipped = flipped;
+
+                    if (flippedVal !== 0)
+                    {
+                        //  The WebGL renderer uses this to flip UV coordinates before drawing
+                        tile.flippedVal = flippedVal;
+                    }
+
+                    row.push(tile);
                 }
                 else
                 {
@@ -77184,7 +77436,6 @@ Phaser.TilemapParser = {
             layer.data = output;
 
             layers.push(layer);
-
         }
 
         map.layers = layers;
@@ -77227,6 +77478,7 @@ Phaser.TilemapParser = {
         //  Tilesets & Image Collections
         var tilesets = [];
         var imagecollections = [];
+        var lastSet = null;
 
         for (var i = 0; i < json.tilesets.length; i++)
         {
@@ -77245,6 +77497,7 @@ Phaser.TilemapParser = {
                 // For a normal sliced tileset the row/count/size information is computed when updated.
                 // This is done (again) after the image is set.
                 newSet.updateTileData(set.imagewidth, set.imageheight);
+
                 tilesets.push(newSet);
             }
             else
@@ -77261,6 +77514,13 @@ Phaser.TilemapParser = {
                 imagecollections.push(newCollection);
             }
 
+            //  We've got a new Tileset, so set the lastgid into the previous one
+            if (lastSet)
+            {
+                lastSet.lastgid = set.firstgid - 1;
+            }
+            
+            lastSet = set;
         }
 
         map.tilesets = tilesets;
@@ -77357,15 +77617,14 @@ Phaser.TilemapParser = {
                 // polygon
                 else if (curo.objects[v].polygon)
                 {
-                    var object = slice(curo.objects[v],
-                                       ["name", "type", "x", "y", "visible", "rotation", "properties" ]);
+                    var object = slice(curo.objects[v], ['name', 'type', 'x', 'y', 'visible', 'rotation', 'properties']);
 
                     //  Parse the polygon into an array
                     object.polygon = [];
 
                     for (var p = 0; p < curo.objects[v].polygon.length; p++)
                     {
-                        object.polygon.push([ curo.objects[v].polygon[p].x, curo.objects[v].polygon[p].y ]);
+                        object.polygon.push([curo.objects[v].polygon[p].x, curo.objects[v].polygon[p].y]);
                     }
 
                     objects[curo.name].push(object);
@@ -77374,15 +77633,13 @@ Phaser.TilemapParser = {
                 // ellipse
                 else if (curo.objects[v].ellipse)
                 {
-                    var object = slice(curo.objects[v],
-                                       ["name", "type", "ellipse", "x", "y", "width", "height", "visible", "rotation", "properties" ]);
+                    var object = slice(curo.objects[v], ['name', 'type', 'ellipse', 'x', 'y', 'width', 'height', 'visible', 'rotation', 'properties']);
                     objects[curo.name].push(object);
                 }
                 // otherwise it's a rectangle
                 else
                 {
-                    var object = slice(curo.objects[v],
-                                       ["name", "type", "x", "y", "width", "height", "visible", "rotation", "properties" ]);
+                    var object = slice(curo.objects[v], ['name', 'type', 'x', 'y', 'width', 'height', 'visible', 'rotation', 'properties']);
                     object.rectangle = true;
                     objects[curo.name].push(object);
                 }
@@ -77533,6 +77790,14 @@ Phaser.Tileset = function (name, firstgid, width, height, margin, spacing, prope
     this.firstgid = firstgid | 0;
 
     /**
+    * This is the ending index of the last tile index this Tileset can contain.
+    * This is populated automatically by Phaser.TilemapParser.parseTiledJSON.
+    * For a single tileset map it should be left as the default value.
+    * @property {integer} lastgid
+    */
+    this.lastgid = Infinity;
+
+    /**
     * The width of each tile (in pixels).
     * @property {integer} tileWidth
     * @readonly
@@ -77647,53 +77912,88 @@ Phaser.Tileset.prototype = {
     },
 
     /**
-    * Draws a tile from this Tileset at the given coordinates using a WebGl renderer.
+    * Sets the GL Batch data to draw a tile from this Tileset at the given coordinates 
+    * using a WebGL renderer.
     *
     * @method Phaser.Tileset#drawGl
-    * @public
-    * @param out {Array} glBatch - A list of webgl batch objects to draw later.
+    * @param {Array} glBatch - A list of WebGL batch objects to draw later.
     * @param {number} x - The x coordinate to draw to.
     * @param {number} y - The y coordinate to draw to.
     * @param {integer} index - The index of the tile within the set to draw.
     * @param {number} alpha - The alpha value to draw this tile with.
+    * @param {integer} flippedVal - A bitwise value which indicates how the UV source coordinates should be flipped
     */
-    drawGl: function (glBatch, x, y, index, alpha) {
+    drawGl: function (glBatch, x, y, index, alpha, flippedVal) {
 
         // Correct the tile index for the set and bias for interlacing x/y values
         var coordIndex = (index - this.firstgid) * 2;
 
         if (coordIndex >= 0 && (coordIndex + 1) < this.drawCoords.length)
         {
-            // add the tile to the webgl batch
+            // apply "half-pixel correction" to avoid edge bleeding as much as possible
+            var sx = this.drawCoords[coordIndex] + 0.5;
+            var sy = this.drawCoords[coordIndex + 1] + 0.5;
+            var sw = this.tileWidth - 1.0;
+            var sh = this.tileHeight - 1.0;
+            var fd = 0;
+
+            if (flippedVal)
+            {
+                if (flippedVal & 1)
+                {
+                    // flipped diagonally (swap x,y axes)
+                    fd = 1;
+                }
+
+                if (flippedVal & 4)
+                {
+                    // flipped horizontally
+                    sx += sw;
+                    sw = -sw;
+                }
+
+                if (flippedVal & 2)
+                {
+                    // flipped vertically
+                    sy += sh;
+                    sh = -sh;
+                }
+            }
+
+            // add the tile to the WebGL batch
             // source and destination coordinates, in pixel units
-            // destination is the centre of the tile
-            glBatch.push( {
-                sx: this.drawCoords[coordIndex],
-                sy: this.drawCoords[coordIndex + 1],
-                sw: this.tileWidth,
-                sh: this.tileHeight,
+            // destination is the center of the tile
+            glBatch.push({
+                sx: sx,
+                sy: sy,
+                sw: sw,
+                sh: sh,
+                fd: fd,
                 dx: x + this.tileWidth * 0.5,
                 dy: y + this.tileHeight * 0.5,
                 dw: this.tileWidth,
                 dh: this.tileHeight,
                 alpha: alpha
-            } );
+            });
         }
 
     },
 
     /**
-     * adds a marker for the WebGl batch display to insert a degenerate triangle (eg. at the end of each row of tiles)
-     *
-     * @param {[type]} glBatch [description]
-     */
-    addDegenerate: function( glBatch )
-    {
-        // don't insert multiple degenerate markers in a row
-        if ( glBatch[ glBatch.length - 1] )
+    * Adds a marker for the WebGL batch display to insert a degenerate 
+    * triangle (eg. at the end of each row of tiles)
+    *
+    * @method Phaser.Tileset#addDegenerate
+    * @param {array} glBatch - The GL Batch data array.
+    */
+    addDegenerate: function (glBatch) {
+
+        //  Don't insert multiple degenerate markers in a row
+        if (glBatch[glBatch.length - 1])
         {
-            glBatch.push( null );
+            glBatch.push(null);
         }
+
     },
 
     /**
@@ -79674,7 +79974,7 @@ Phaser.Weapon.prototype.update = function () {
         }
     }
 
-    if (this.autofire && this.game.time.now < this._nextFire)
+    if (this.autofire)
     {
         this.fire();
     }
@@ -79945,7 +80245,6 @@ Phaser.Weapon.prototype.fire = function (from, x, y) {
         {
             this.onFireLimit.dispatch(this, this.fireLimit);
         }
-
     }
 
 };

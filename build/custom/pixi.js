@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.6.2 "Kore Springs" - Built: Mon Jul 18 2016 23:41:20
+* v2.6.2 "Kore Springs" - Built: Fri Jul 22 2016 17:03:39
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
