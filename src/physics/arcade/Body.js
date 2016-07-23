@@ -365,7 +365,7 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     * For example checkCollision.up = false means it won't collide when the collision happened while moving up.
     * @property {object} checkCollision - An object containing allowed collision.
     */
-    this.checkCollision = { none: false, any: true, up: true, down: true, left: true, right: true };
+    this.checkCollision = { any: true, up: true, down: true, left: true, right: true };
 
     /**
     * This object is populated with boolean values when the Body collides with another.
