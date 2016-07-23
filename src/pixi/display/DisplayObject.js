@@ -226,7 +226,7 @@ PIXI.DisplayObject = function() {
     * @property {PIXI.Rectangle} _bounds - The cached bounds of this object.
     * @private
     */
-    this._bounds = new PIXI.Rectangle(0, 0, 1, 1);
+    this._bounds = new PIXI.Rectangle(0, 0, 0, 0);
 
     /**
     * @property {PIXI.Rectangle} _currentBounds - The most recently calculated bounds of this object.
@@ -313,7 +313,7 @@ PIXI.DisplayObject.prototype = {
     * the new, updated, worldTransform property, along with the parent transform used.
     *
     * @method PIXI.DisplayObject#updateTransform
-    * @param {PIXI.DisplayObject} [parent] - Optional parent to calculate this DisplayObjects transform from.
+    * @param {PIXI.DisplayObjectContainer} [parent] - Optional parent to calculate this DisplayObjects transform from.
     * @return {PIXI.DisplayObject} - A reference to this DisplayObject.
     */
     updateTransform: function (parent) {

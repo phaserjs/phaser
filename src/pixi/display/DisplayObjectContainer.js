@@ -49,7 +49,7 @@ PIXI.DisplayObjectContainer.prototype.constructor = PIXI.DisplayObjectContainer;
 Object.defineProperty(PIXI.DisplayObjectContainer.prototype, 'width', {
 
     get: function() {
-        return this.scale.x * this.getLocalBounds().width;
+        return this.getLocalBounds().width;
     },
 
     set: function(value) {
@@ -78,7 +78,7 @@ Object.defineProperty(PIXI.DisplayObjectContainer.prototype, 'width', {
 Object.defineProperty(PIXI.DisplayObjectContainer.prototype, 'height', {
 
     get: function() {
-        return  this.scale.y * this.getLocalBounds().height;
+        return this.getLocalBounds().height;
     },
 
     set: function(value) {
@@ -316,19 +316,43 @@ PIXI.DisplayObjectContainer.prototype.updateTransform = function()
 PIXI.DisplayObjectContainer.prototype.displayObjectContainerUpdateTransform = PIXI.DisplayObjectContainer.prototype.updateTransform;
 
 /**
- * Retrieves the bounds of the displayObjectContainer as a rectangle. The bounds calculation takes all visible children into consideration.
+ * Retrieves the global bounds of the displayObjectContainer as a rectangle. The bounds calculation takes all visible children into consideration.
  *
  * @method getBounds
+ * @param {PIXI.DisplayObject|PIXI.Matrix} [targetCoordinateSpace] Returns a rectangle that defines the area of the display object relative to the coordinate system of the targetCoordinateSpace object.
  * @return {Rectangle} The rectangular bounding area
  */
-PIXI.DisplayObjectContainer.prototype.getBounds = function()
+PIXI.DisplayObjectContainer.prototype.getBounds = function(targetCoordinateSpace)
 {
-    if (this.children.length === 0)
-    {
-        return PIXI.EmptyRectangle;
+    var isTargetCoordinateSpaceDisplayObject = targetCoordinateSpace && targetCoordinateSpace instanceof PIXI.DisplayObject;
+    var isTargetCoordinateSpaceThisOrParent = true;
+
+    if (!isTargetCoordinateSpaceDisplayObject) 
+	{
+        targetCoordinateSpace = this;
+    } 
+	else if (targetCoordinateSpace instanceof PIXI.DisplayObjectContainer) 
+	{
+        isTargetCoordinateSpaceThisOrParent = targetCoordinateSpace.contains(this);
+    } 
+	else 
+	{
+        isTargetCoordinateSpaceThisOrParent = false;
     }
 
-    this.updateTransform();
+    var i;
+
+    if (isTargetCoordinateSpaceDisplayObject) {
+
+        var matrixCache = targetCoordinateSpace.worldTransform;
+
+        targetCoordinateSpace.worldTransform = PIXI.identityMatrix;
+
+        for (i = 0; i < targetCoordinateSpace.children.length; i++) 
+		{
+            targetCoordinateSpace.children[i].updateTransform();
+        }
+    }
 
     var minX = Infinity;
     var minY = Infinity;
@@ -342,19 +366,17 @@ PIXI.DisplayObjectContainer.prototype.getBounds = function()
 
     var childVisible = false;
 
-    for (var i = 0; i < this.children.length; i++)
-    {
+    for (i = 0; i < this.children.length; i++) {
         var child = this.children[i];
-        
-        if (!child.visible)
-        {
+
+        if (!child.visible) {
             continue;
         }
 
         childVisible = true;
 
         childBounds = this.children[i].getBounds();
-     
+
         minX = minX < childBounds.x ? minX : childBounds.x;
         minY = minY < childBounds.y ? minY : childBounds.y;
 
@@ -365,17 +387,84 @@ PIXI.DisplayObjectContainer.prototype.getBounds = function()
         maxY = maxY > childMaxY ? maxY : childMaxY;
     }
 
-    if (!childVisible)
-    {
-        return PIXI.EmptyRectangle;
-    }
-
     var bounds = this._bounds;
+
+    if (!childVisible) 
+	{
+        bounds = new PIXI.Rectangle();
+
+        var w0 = bounds.x;
+        var w1 = bounds.width + bounds.x;
+
+        var h0 = bounds.y;
+        var h1 = bounds.height + bounds.y;
+
+        var worldTransform = this.worldTransform;
+
+        var a = worldTransform.a;
+        var b = worldTransform.b;
+        var c = worldTransform.c;
+        var d = worldTransform.d;
+        var tx = worldTransform.tx;
+        var ty = worldTransform.ty;
+
+        var x1 = a * w1 + c * h1 + tx;
+        var y1 = d * h1 + b * w1 + ty;
+
+        var x2 = a * w0 + c * h1 + tx;
+        var y2 = d * h1 + b * w0 + ty;
+
+        var x3 = a * w0 + c * h0 + tx;
+        var y3 = d * h0 + b * w0 + ty;
+
+        var x4 = a * w1 + c * h0 + tx;
+        var y4 = d * h0 + b * w1 + ty;
+
+        maxX = x1;
+        maxY = y1;
+
+        minX = x1;
+        minY = y1;
+
+        minX = x2 < minX ? x2 : minX;
+        minX = x3 < minX ? x3 : minX;
+        minX = x4 < minX ? x4 : minX;
+
+        minY = y2 < minY ? y2 : minY;
+        minY = y3 < minY ? y3 : minY;
+        minY = y4 < minY ? y4 : minY;
+
+        maxX = x2 > maxX ? x2 : maxX;
+        maxX = x3 > maxX ? x3 : maxX;
+        maxX = x4 > maxX ? x4 : maxX;
+
+        maxY = y2 > maxY ? y2 : maxY;
+        maxY = y3 > maxY ? y3 : maxY;
+        maxY = y4 > maxY ? y4 : maxY;
+    }
 
     bounds.x = minX;
     bounds.y = minY;
     bounds.width = maxX - minX;
     bounds.height = maxY - minY;
+
+    if (isTargetCoordinateSpaceDisplayObject) 
+	{
+        targetCoordinateSpace.worldTransform = matrixCache;
+
+        for (i = 0; i < targetCoordinateSpace.children.length; i++) 
+		{
+            targetCoordinateSpace.children[i].updateTransform();
+        }
+    }
+
+    if (!isTargetCoordinateSpaceThisOrParent) 
+	{
+        var targetCoordinateSpaceBounds = targetCoordinateSpace.getBounds();
+
+        bounds.x -= targetCoordinateSpaceBounds.x;
+        bounds.y -= targetCoordinateSpaceBounds.y;
+    }
 
     return bounds;
 };
@@ -388,26 +477,29 @@ PIXI.DisplayObjectContainer.prototype.getBounds = function()
  */
 PIXI.DisplayObjectContainer.prototype.getLocalBounds = function()
 {
-    var matrixCache = this.worldTransform;
-
-    this.worldTransform = PIXI.identityMatrix;
-
-    for (var i = 0; i < this.children.length; i++)
-    {
-        this.children[i].updateTransform();
-    }
-
-    var bounds = this.getBounds();
-
-    this.worldTransform = matrixCache;
-	
-    for (i = 0; i < this.children.length; i++)
-    {
-        this.children[i].updateTransform();
-    }	
-
-    return bounds;
+    return this.getBounds(this.parent);
 };
+
+/**
+* Determines whether the specified display object is a child of the DisplayObjectContainer instance or the instance itself.
+*
+* @method contains
+* @param {DisplayObject} child
+* @returns {boolean}
+*/
+PIXI.DisplayObjectContainer.prototype.contains = function (child) {
+    if (!child)
+        return false;
+
+    if (child === this) 
+	{
+        return true;
+    }
+    else 
+	{
+        return this.contains(child.parent);
+    }
+}
 
 /**
  * Sets the containers Stage reference. This is the Stage that this object, and all of its children, is connected to.
