@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.6.2 "Kore Springs" - Built: Fri Jul 22 2016 17:38:00
+* v2.6.2 "Kore Springs" - Built: Sat Jul 23 2016 15:05:21
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -54,7 +54,7 @@ var Phaser = Phaser || {
     * @constant
     * @type {string}
     */
-    VERSION: '2.7.0 Beta 2',
+    VERSION: '2.7.0 Beta 3',
 
     /**
     * An array of Phaser game instances.
@@ -9170,7 +9170,11 @@ Phaser.Stage.prototype.updateTransform = function () {
 */
 Phaser.Stage.prototype.checkVisibility = function () {
 
-    if (document.webkitHidden !== undefined)
+    if (document.hidden !== undefined)
+    {
+        this._hiddenVar = 'visibilitychange';
+    }
+    else if (document.webkitHidden !== undefined)
     {
         this._hiddenVar = 'webkitvisibilitychange';
     }
@@ -9181,10 +9185,6 @@ Phaser.Stage.prototype.checkVisibility = function () {
     else if (document.msHidden !== undefined)
     {
         this._hiddenVar = 'msvisibilitychange';
-    }
-    else if (document.hidden !== undefined)
-    {
-        this._hiddenVar = 'visibilitychange';
     }
     else
     {
@@ -29929,6 +29929,16 @@ PIXI.Graphics = function()
     this.dirty = true;
 
     /**
+     * Used to detect if the bounds have been invalidated, by this Graphics being cleared or drawn to.
+     * If this is set to true then the updateLocalBounds is called once in the postUpdate method.
+     * 
+     * @property _boundsDirty
+     * @type Boolean
+     * @private
+     */
+    this._boundsDirty = false;
+
+    /**
      * Used to detect if the webgl graphics object has changed. If this is set to true then the graphics object will be recalculated.
      * 
      * @property webGLDirty
@@ -30019,7 +30029,7 @@ PIXI.Graphics.prototype.lineTo = function(x, y)
 
     this.currentPath.shape.points.push(x, y);
     this.dirty = true;
-    this.updateLocalBounds();
+    this._boundsDirty = true;
 
     return this;
 };
@@ -30074,7 +30084,7 @@ PIXI.Graphics.prototype.quadraticCurveTo = function(cpX, cpY, toX, toY)
     }
 
     this.dirty = true;
-    this.updateLocalBounds();
+    this._boundsDirty = true;
 
     return this;
 };
@@ -30133,7 +30143,7 @@ PIXI.Graphics.prototype.bezierCurveTo = function(cpX, cpY, cpX2, cpY2, toX, toY)
     }
     
     this.dirty = true;
-    this.updateLocalBounds();
+    this._boundsDirty = true;
 
     return this;
 };
@@ -30203,7 +30213,7 @@ PIXI.Graphics.prototype.arcTo = function(x1, y1, x2, y2, radius)
     }
 
     this.dirty = true;
-    this.updateLocalBounds();
+    this._boundsDirty = true;
 
     return this;
 };
@@ -30289,7 +30299,7 @@ PIXI.Graphics.prototype.arc = function(cx, cy, radius, startAngle, endAngle, ant
     }
 
     this.dirty = true;
-    this.updateLocalBounds();
+    this._boundsDirty = true;
 
     return this;
 };
@@ -30448,6 +30458,7 @@ PIXI.Graphics.prototype.clear = function()
     this.filling = false;
 
     this.dirty = true;
+    this._boundsDirty = true;
     this.clearDirty = true;
     this.graphicsData = [];
 
@@ -30998,8 +31009,7 @@ PIXI.Graphics.prototype.drawShape = function(shape)
     }
 
     this.dirty = true;
-    
-    this.updateLocalBounds();
+    this._boundsDirty = true;
 
     return data;
 
@@ -33294,6 +33304,28 @@ Phaser.Graphics.prototype.preUpdate = function () {
     }
 
     return this.preUpdateCore();
+
+};
+
+/**
+* Automatically called by World
+* @method Phaser.Graphics.prototype.postUpdate
+*/
+Phaser.Graphics.prototype.postUpdate = function () {
+
+    Phaser.Component.PhysicsBody.postUpdate.call(this);
+    Phaser.Component.FixedToCamera.postUpdate.call(this);
+
+    if (this._boundsDirty)
+    {
+        this.updateLocalBounds();
+        this._boundsDirty = false;
+    }
+
+    for (var i = 0; i < this.children.length; i++)
+    {
+        this.children[i].postUpdate();
+    }
 
 };
 
@@ -62971,7 +63003,12 @@ Phaser.Physics.Arcade.prototype = {
     */
     separate: function (body1, body2, processCallback, callbackContext, overlapOnly) {
 
-        if (!body1.enable || !body2.enable || !this.intersects(body1, body2))
+        if (
+            !body1.enable ||
+            !body2.enable ||
+            body1.checkCollision.none ||
+            body2.checkCollision.none ||
+            !this.intersects(body1, body2))
         {
             return false;
         }
@@ -64494,6 +64531,8 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     /**
     * Set the checkCollision properties to control which directions collision is processed for this Body.
     * For example checkCollision.up = false means it won't collide when the collision happened while moving up.
+    * If you need to disable a Body entirely, use `body.enable = false`, this will also disable motion.
+    * If you need to disable just collision and/or overlap checks, but retain motion, set `checkCollision.none = true`.
     * @property {object} checkCollision - An object containing allowed collision.
     */
     this.checkCollision = { none: false, any: true, up: true, down: true, left: true, right: true };
@@ -76150,7 +76189,6 @@ Phaser.TilemapLayerGL = function (game, tilemap, index, width, height, tileset) 
     * @private
     */
 
-    /*
     if (tileset === undefined)
     {
         if (tilemap.layers[index] && tilemap.layers[index].tileset)
@@ -76161,8 +76199,11 @@ Phaser.TilemapLayerGL = function (game, tilemap, index, width, height, tileset) 
         {
             tileset = tilemap.tilesets[0];
         }
+        else
+        {
+            tileset = null;
+        }
     }
-    */
 
     this._mc = {
 
