@@ -327,6 +327,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * The Loader.headers object has a new property `requestedWith`. By default this is set to `false`, but it can be used to set the `X-Requested-With` header to `XMLHttpRequest` (or any other value you need). To enable this do `this.load.headers.requestedWith = 'XMLHttpRequest'` before adding anything to the Loader.
 * ScaleManager.hasPhaserSetFullScreen is a new boolean that identifies if the browser is in full screen mode or not, and if Phaser was the one that requested it. As it's possible to enter full screen mode outside of Phaser, and it then gets confused about what bounding parent to use.
 * Phaser.Tileset has a new property `lastgid` which is populated automatically by the TilemapParser when importing Tiled map data, or can be set manually if building your own tileset.
+* Stage will now check if `document.hidden` is available first, and if it is then never even check for the prefixed versions. This stops warnings like "mozHidden and mozVisibilityState are deprecated" in newer versions of browsers and retain backward compatibility (thanks @leopoldobrines7 #2656)
 
 ### Bug Fixes
 
@@ -339,8 +340,20 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 
 Please note that Phaser uses a custom build of Pixi and always has done. The following changes have been made to our custom build, not to Pixi in general.
 
-*
-*
+* This version contains significant fixes for `DisplayObject.getBounds` and `DisplayObjectContainer.getBounds`. The methods can now accept an optional argument `targetCoordinateSpace` which makes it much more flexible, allowing you to check the bounds against any target, not just local and global ones. If the `targetCoordinateSpace` is a valid DisplayObject:
+
+    - If it's a parent of the caller at some level it will return the bounds
+    relative to it.
+    - if it's not parenting the caller at all, it will get the global bounds of
+    it, and the caller and will calculate the x and y bounds of the caller
+    relative to the targetCoordinateSpace DisplayObject.
+
+As a result this also fixes how empty Groups are treated when they have no other
+children except Groups. So now calculations are correct.
+* DisplayObjectContainer.contains(child) is a new method which determines whether the specified display object is a child of the DisplayObjectContainer instance or the instance itself. This method is
+used in the new getBounds function.
+* Corrected DisplayObjects default `_bounds` rect from (0, 0, 1, 1) to (0, 0, 0, 0).
+* Thanks to @fmflame for his hard work on the above (#2639 #2627)
 *
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
