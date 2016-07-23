@@ -333,6 +333,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * A Group with `inputEnableChildren` set would re-start the Input Handler on a Sprite, even if that handler had been disabled previously.
 * Weapon.autofire wouldn't fire after the first bullet, or until `fire` was called, neither of which are requirements. If you now set this boolean the Weapon will fire continuously until you toggle it back to false (thanks @alverLopez #2647)
 * ArcadePhysics.World.angleBetweenCenters now uses `centerX` and `centerY` properties to check for the angle between, instead of `center.x/y` as that property no longer exists (thanks @leopoldobrines7 #2654)
+* The Emitter.makeParticles `collide` argument didn't work, as a result of #2661, but is now properly respected thanks to that change (thanks @samme #2662)
 
 ### Pixi Updates
 
