@@ -356,7 +356,7 @@ children except Groups. So now calculations are correct.
 used in the new getBounds function.
 * Corrected DisplayObjects default `_bounds` rect from (0, 0, 1, 1) to (0, 0, 0, 0).
 * Thanks to @fmflame for his hard work on the above (#2639 #2627)
-*
+* The methods `setStageReference` and `removeStageReference` have been removed from all Pixi classes. Objects no longer have `stage` properties, or references to the Stage object. This is because no reference to the Stage is required for any calculations, and Phaser can only have 1 Stage, so adding and removing references to it were superfluous actions.
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 

@@ -150,12 +150,12 @@ PIXI.CanvasRenderer = function (game) {
 PIXI.CanvasRenderer.prototype.constructor = PIXI.CanvasRenderer;
 
 /**
- * Renders the Stage to this canvas view
+ * Renders the DisplayObjectContainer, usually the Phaser.Stage, to this canvas view.
  *
  * @method render
- * @param stage {Stage} the Stage element to be rendered
+ * @param root {Phaser.Stage|PIXI.DisplayObjectContainer} The root element to be rendered.
  */
-PIXI.CanvasRenderer.prototype.render = function (stage) {
+PIXI.CanvasRenderer.prototype.render = function (root) {
 
     this.context.setTransform(1, 0, 0, 1, 0, 0);
 
@@ -179,14 +179,14 @@ PIXI.CanvasRenderer.prototype.render = function (stage) {
         {
             this.context.clearRect(0, 0, this.width, this.height);
         }
-        else
+        else if (root._bgColor)
         {
-            this.context.fillStyle = stage._bgColor.rgba;
+            this.context.fillStyle = root._bgColor.rgba;
             this.context.fillRect(0, 0, this.width , this.height);
         }
     }
     
-    this.renderDisplayObject(stage);
+    this.renderDisplayObject(root);
 
 };
 
