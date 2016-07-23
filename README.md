@@ -313,6 +313,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * Group.getRandomExists will return a random child from the Group that has exists set to true.
 * Group.getAll will return all children in the Group, or a section of the Group, with the optional ability to test if the child has a property matching the given value or not.
 * Group.iterate has a new `returnType`: `RETURN_ALL`. This allows you to return all children that pass the iteration test in an array.
+* The property `checkCollision.none` in the ArcadePhysics.Body class was available, but never used internally. It is now used and checked by the `separate` method. By setting `checkCollision.none = true` you can disable all collision and overlap checks on a Body, but still retain its motion updates (thanks @samme #2661)
 
 ### Updates
 
@@ -326,7 +327,6 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * The Loader.headers object has a new property `requestedWith`. By default this is set to `false`, but it can be used to set the `X-Requested-With` header to `XMLHttpRequest` (or any other value you need). To enable this do `this.load.headers.requestedWith = 'XMLHttpRequest'` before adding anything to the Loader.
 * ScaleManager.hasPhaserSetFullScreen is a new boolean that identifies if the browser is in full screen mode or not, and if Phaser was the one that requested it. As it's possible to enter full screen mode outside of Phaser, and it then gets confused about what bounding parent to use.
 * Phaser.Tileset has a new property `lastgid` which is populated automatically by the TilemapParser when importing Tiled map data, or can be set manually if building your own tileset.
-* The property `checkCollision.none` has been removed from the ArcadePhysics.Body class. It was never used internally, so lead to confusion about its use. To disable a body, use `body.enable = false` (thanks @samme #2661)
 
 ### Bug Fixes
 

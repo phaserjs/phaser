@@ -3076,6 +3076,7 @@ declare module Phaser {
 
             class FaceChoices {
 
+                none: boolean;
                 any: boolean;
                 up: boolean;
                 down: boolean;
