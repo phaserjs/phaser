@@ -2600,6 +2600,7 @@ declare module Phaser {
         static PI2: number;
         static radToDeg(radians: number): number;
         static reverseAngle(angleRed: number): number;
+        static rotateToAngle(currentAngle: number, targetAngle: number, lerp?: number): number;
         static roundAwayFromZero(value: number): number;
         static roundTo(value: number, place?: number, base?: number): number;
         static shear(n: number): number;

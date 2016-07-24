@@ -314,6 +314,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * Group.getAll will return all children in the Group, or a section of the Group, with the optional ability to test if the child has a property matching the given value or not.
 * Group.iterate has a new `returnType`: `RETURN_ALL`. This allows you to return all children that pass the iteration test in an array.
 * The property `checkCollision.none` in the ArcadePhysics.Body class was available, but never used internally. It is now used and checked by the `separate` method. By setting `checkCollision.none = true` you can disable all collision and overlap checks on a Body, but still retain its motion updates (thanks @samme #2661)
+* Math.rotateToAngle takes two angles (in radians), and an interpolation value, and returns a new angle, based on the shortest rotational distance between the two.
 
 ### Updates
 
