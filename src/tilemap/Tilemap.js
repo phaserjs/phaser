@@ -575,8 +575,6 @@ Phaser.Tilemap.prototype = {
     */
     createLayer: function (layer, width, height, group) {
 
-        if (width === undefined) { width = this.game.width; }
-        if (height === undefined) { height = this.game.height; }
         if (group === undefined) { group = this.game.world; }
 
         var index = layer;
@@ -592,6 +590,26 @@ Phaser.Tilemap.prototype = {
             return;
         }
 
+        //  Sort out the display dimensions, so they never render too much, or too little.
+
+        if (width === undefined || width <= 0)
+        {
+            width = Math.min(this.game.width, this.layers[index].widthInPixels);
+        }
+        else if (width > this.game.width)
+        {
+            width = this.game.width;
+        }
+
+        if (height === undefined || height <= 0)
+        {
+            height = Math.min(this.game.height, this.layers[index].heightInPixels);
+        }
+        else if (height > this.game.height)
+        {
+            height = this.game.height;
+        }
+
         if (this.enableDebug)
         {
             console.group('Tilemap.createLayer');
@@ -605,46 +623,38 @@ Phaser.Tilemap.prototype = {
         if (this.game.renderType === Phaser.WEBGL)
         {
             rootLayer = group.add(new Phaser.TilemapLayerGL(this.game, this, index, width, height, this.tilesets[0]));
+
+            //  Create child layers for multiple tilesets in a layer
+            //  It is currently assumed that each base layer will use tileset[0] (so 'i' starts at 1 in the for loop)
+            //  (a 'base' layer is any layer except the so-called 'internal' layers created here)
+
+            var fromLayer = this.layers[index];
+            var childLayer;
+
+            for (var i = 1; i < this.tilesets.length; i++)
+            {
+                if (this.checkChildLayer(this.tilesets[i], fromLayer))
+                {
+                    childLayer = group.add(new Phaser.TilemapLayerGL(this.game, this, index, width, height, this.tilesets[i]));
+
+                    rootLayer.linkedLayers.push(childLayer);
+
+                    if (this.enableDebug)
+                    {
+                        console.log('Linked child created for tileset:', this.tilesets[i].name);
+                    }
+                }
+            }
         }
         else
         {
             rootLayer = group.add(new Phaser.TilemapLayer(this.game, this, index, width, height));
         }
 
-        //  Create child layers for multiple tilesets in a layer
-        //  It is currently assumed that each base layer will use tileset[0] (so 'i' starts at 1 in the for loop)
-        //  (a 'base' layer is any layer except the so-called 'internal' layers created here)
-
-        var fromLayer = this.layers[index];
-        var childLayer;
-
-        for (var i = 1; i < this.tilesets.length; i++)
-        {
-            if (this.checkChildLayer(this.tilesets[i], fromLayer))
-            {
-                if (this.game.renderType === Phaser.WEBGL)
-                {
-                    childLayer = group.add(new Phaser.TilemapLayerGL(this.game, this, index, width, height, this.tilesets[i]));
-                }
-                else
-                {
-                    childLayer = group.add(new Phaser.TilemapLayer(this.game, this, index, width, height, this.tilesets[i]));
-                }
-
-                rootLayer.linkedLayers.push(childLayer);
-
-                if (this.enableDebug)
-                {
-                    console.log('Linked child created for tileset:', this.tilesets[i].name);
-                }
-            }
-        }
-
         if (this.enableDebug)
         {
             console.groupEnd();
         }
-
 
         return rootLayer;
 
@@ -731,7 +741,6 @@ Phaser.Tilemap.prototype = {
 
             for (var x = 0; x < width; x++)
             {
-                // row.push(null);
                 row.push(new Phaser.Tile(layer, -1, x, y, tileWidth, tileHeight));
             }
 
@@ -758,14 +767,16 @@ Phaser.Tilemap.prototype = {
         }
 
         var output;
-        if ( this.game.renderType === Phaser.WEBGL )
+
+        if (this.game.renderType === Phaser.WEBGL)
         {
-            output = new Phaser.TilemapLayerGL(this.game, this, this.layers.length - 1, w, h);
+            output = new Phaser.TilemapLayerGL(this.game, this, this.layers.length - 1, w, h, null);
         }
         else
         {
             output = new Phaser.TilemapLayer(this.game, this, this.layers.length - 1, w, h);
         }
+
         output.name = name;
 
         return group.add(output);
@@ -1311,10 +1322,14 @@ Phaser.Tilemap.prototype = {
     hasTile: function (x, y, layer) {
 
         layer = this.getLayer(layer);
-        if (this.layers[layer].data[y] === undefined || this.layers[layer].data[y][x] === undefined) {
+
+        if (this.layers[layer].data[y] === undefined || this.layers[layer].data[y][x] === undefined)
+        {
             return false;
         }
+
         return (this.layers[layer].data[y][x].index > -1);
+
     },
 
     /**

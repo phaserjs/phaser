@@ -796,9 +796,7 @@ declare module PIXI {
         y: number;
 
         click(e: InteractionData): void;
-        displayObjectUpdateTransform(): void;
-        getBounds(matrix?: Matrix): Rectangle;
-        getLocalBounds(): Rectangle;
+        displayObjectUpdateTransform(parent?: DisplayObjectContainer): void;
         generateTexture(resolution?: number, scaleMode?: number, renderer?: PixiRenderer | number): RenderTexture;
         mousedown(e: InteractionData): void;
         mouseout(e: InteractionData): void;
@@ -818,7 +816,7 @@ declare module PIXI {
         touchendoutside(e: InteractionData): void;
         touchstart(e: InteractionData): void;
         touchmove(e: InteractionData): void;
-        updateTransform(parent?: PIXI.DisplayObjectContainer): void;
+        updateTransform(parent?: DisplayObjectContainer): void;
 
     }
 
@@ -880,10 +878,11 @@ declare module PIXI {
         addChildAt(child: DisplayObject, index: number): DisplayObject;
 
         /**
-        * Retrieves the bounds of the displayObjectContainer as a rectangle. The bounds calculation takes all visible children into consideration.
+        * Retrieves the global bounds of the displayObjectContainer as a rectangle. The bounds calculation takes all visible children into consideration.
+        * @param targetCoordinateSpace Returns a rectangle that defines the area of the display object relative to the coordinate system of the targetCoordinateSpace object.
         * @return The rectangular bounding area
         */
-        getBounds(): Rectangle;
+        getBounds(targetCoordinateSpace?: DisplayObject | Matrix): Rectangle;
 
         /**
         * Returns the child at the specified index
@@ -951,6 +950,13 @@ declare module PIXI {
         * @param child2 -
         */
         swapChildren(child: DisplayObject, child2: DisplayObject): void;
+
+        /**
+        * Determines whether the specified display object is a child of the DisplayObjectContainer instance or the instance itself.
+        * 
+        * @param child
+        */
+        contains(child: DisplayObject): boolean;
 
     }
 

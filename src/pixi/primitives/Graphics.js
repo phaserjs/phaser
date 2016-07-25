@@ -113,6 +113,16 @@ PIXI.Graphics = function()
     this.dirty = true;
 
     /**
+     * Used to detect if the bounds have been invalidated, by this Graphics being cleared or drawn to.
+     * If this is set to true then the updateLocalBounds is called once in the postUpdate method.
+     * 
+     * @property _boundsDirty
+     * @type Boolean
+     * @private
+     */
+    this._boundsDirty = false;
+
+    /**
      * Used to detect if the webgl graphics object has changed. If this is set to true then the graphics object will be recalculated.
      * 
      * @property webGLDirty
@@ -203,7 +213,7 @@ PIXI.Graphics.prototype.lineTo = function(x, y)
 
     this.currentPath.shape.points.push(x, y);
     this.dirty = true;
-    this.updateLocalBounds();
+    this._boundsDirty = true;
 
     return this;
 };
@@ -258,7 +268,7 @@ PIXI.Graphics.prototype.quadraticCurveTo = function(cpX, cpY, toX, toY)
     }
 
     this.dirty = true;
-    this.updateLocalBounds();
+    this._boundsDirty = true;
 
     return this;
 };
@@ -317,7 +327,7 @@ PIXI.Graphics.prototype.bezierCurveTo = function(cpX, cpY, cpX2, cpY2, toX, toY)
     }
     
     this.dirty = true;
-    this.updateLocalBounds();
+    this._boundsDirty = true;
 
     return this;
 };
@@ -387,7 +397,7 @@ PIXI.Graphics.prototype.arcTo = function(x1, y1, x2, y2, radius)
     }
 
     this.dirty = true;
-    this.updateLocalBounds();
+    this._boundsDirty = true;
 
     return this;
 };
@@ -473,7 +483,7 @@ PIXI.Graphics.prototype.arc = function(cx, cy, radius, startAngle, endAngle, ant
     }
 
     this.dirty = true;
-    this.updateLocalBounds();
+    this._boundsDirty = true;
 
     return this;
 };
@@ -632,6 +642,7 @@ PIXI.Graphics.prototype.clear = function()
     this.filling = false;
 
     this.dirty = true;
+    this._boundsDirty = true;
     this.clearDirty = true;
     this.graphicsData = [];
 
@@ -1182,8 +1193,7 @@ PIXI.Graphics.prototype.drawShape = function(shape)
     }
 
     this.dirty = true;
-    
-    this.updateLocalBounds();
+    this._boundsDirty = true;
 
     return data;
 

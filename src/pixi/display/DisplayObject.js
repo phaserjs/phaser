@@ -15,7 +15,7 @@
 * @class PIXI.DisplayObject
 * @constructor
 */
-PIXI.DisplayObject = function() {
+PIXI.DisplayObject = function () {
 
     /**
     * The coordinates, in pixels, of this DisplayObject, relative to its parent container.
@@ -115,15 +115,6 @@ PIXI.DisplayObject = function() {
     * @readOnly
     */
     this.parent = null;
-
-    /**
-    * The stage that this DisplayObject is connected to.
-    * 
-    * @property {PIXI.Stage} stage
-    * @default
-    * @readOnly
-    */
-    this.stage = null;
 
     /**
     * The multiplied alpha value of this DisplayObject. A value of 1 is fully opaque. A value of 0 is transparent.
@@ -226,7 +217,7 @@ PIXI.DisplayObject = function() {
     * @property {PIXI.Rectangle} _bounds - The cached bounds of this object.
     * @private
     */
-    this._bounds = new PIXI.Rectangle(0, 0, 1, 1);
+    this._bounds = new PIXI.Rectangle(0, 0, 0, 0);
 
     /**
     * @property {PIXI.Rectangle} _currentBounds - The most recently calculated bounds of this object.
@@ -261,8 +252,7 @@ PIXI.DisplayObject.prototype = {
     /**
     * Destroy this DisplayObject.
     *
-    * Removes any cached sprites, sets renderable flag to false, and nulls references to the Stage, filters,
-    * bounds and mask.
+    * Removes any cached sprites, sets renderable flag to false, and nulls filters, bounds and mask.
     *
     * Also iteratively calls `destroy` on any children.
     *
@@ -284,7 +274,6 @@ PIXI.DisplayObject.prototype = {
 
         this.hitArea = null;
         this.parent = null;
-        this.stage = null;
         this.worldTransform = null;
         this.filterArea = null;
         this.renderable = false;
@@ -313,7 +302,7 @@ PIXI.DisplayObject.prototype = {
     * the new, updated, worldTransform property, along with the parent transform used.
     *
     * @method PIXI.DisplayObject#updateTransform
-    * @param {PIXI.DisplayObject} [parent] - Optional parent to calculate this DisplayObjects transform from.
+    * @param {PIXI.DisplayObjectContainer} [parent] - Optional parent to calculate this DisplayObjects transform from.
     * @return {PIXI.DisplayObject} - A reference to this DisplayObject.
     */
     updateTransform: function (parent) {
@@ -406,21 +395,6 @@ PIXI.DisplayObject.prototype = {
         {
             this.transformCallback.call(this.transformCallbackContext, wt, pt);
         }
-
-        return this;
-
-    },
-
-    /**
-    * Sets the root Stage object that this DisplayObject is connected to.
-    *
-    * @method PIXI.DisplayObject#setStageReference
-    * @param {Phaser.Stage} stage - The stage that the object will have as its current stage reference
-    * @return {PIXI.DisplayObject} - A reference to this DisplayObject.
-    */
-    setStageReference: function (stage)
-    {
-        this.stage = stage;
 
         return this;
 
