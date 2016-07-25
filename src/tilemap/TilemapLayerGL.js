@@ -33,6 +33,13 @@ Phaser.TilemapLayerGL = function (game, tilemap, index, width, height, tileset) 
     this.game = game;
 
     /**
+    * A custom view.
+    * 
+    * @property {Phaser.Point} view
+    */
+    this.view = null;
+
+    /**
     * An Array of any linked layers.
     * 
     * @property {Array} linkedLayers
@@ -272,6 +279,18 @@ Phaser.TilemapLayerGL.prototype.preUpdate = function () {
 
 };
 
+Phaser.TilemapLayerGL.prototype.addCamera = function () {
+
+    this.view = null;
+
+};
+
+Phaser.TilemapLayerGL.prototype.removeCamera = function (x, y) {
+
+    this.view = new Phaser.Point(x, y);
+
+};
+
 /**
 * Automatically called by World.postUpdate. Handles camera scrolling.
 *
@@ -282,11 +301,16 @@ Phaser.TilemapLayerGL.prototype.postUpdate = function () {
 
     Phaser.Component.FixedToCamera.postUpdate.call(this);
 
-    //  Stops you being able to auto-scroll the camera if it's not following a sprite
-    var camera = this.game.camera;
-
-    this.scrollX = camera.x * this.scrollFactorX / this.scale.x;
-    this.scrollY = camera.y * this.scrollFactorY / this.scale.y;
+    if (this.view)
+    {
+        this.scrollX = this.view.x * this.scrollFactorX / this.scale.x;
+        this.scrollY = this.view.y * this.scrollFactorY / this.scale.y;
+    }
+    else
+    {
+        this.scrollX = this.game.camera.x * this.scrollFactorX / this.scale.x;
+        this.scrollY = this.game.camera.y * this.scrollFactorY / this.scale.y;
+    }
 
     this.render();
 
@@ -569,7 +593,7 @@ Phaser.TilemapLayerGL.prototype._fixX = function (x) {
         x = 0;
     }
 
-    if (this.scrollFactorX === 1)
+    if (this.scrollFactorX === 1 && !this.view)
     {
         return x;
     }
@@ -588,7 +612,7 @@ Phaser.TilemapLayerGL.prototype._fixX = function (x) {
  */
 Phaser.TilemapLayerGL.prototype._unfixX = function (x) {
 
-    if (this.scrollFactorX === 1)
+    if (this.scrollFactorX === 1 && !this.view)
     {
         return x;
     }

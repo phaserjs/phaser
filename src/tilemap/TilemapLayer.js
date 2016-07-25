@@ -36,6 +36,15 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     this.map = tilemap;
 
     /**
+    * A custom view.
+    * 
+    * @property {Phaser.Point} view
+    */
+    this.view = game.camera;
+
+    this._camDetatched = false;
+
+    /**
     * The index of this layer within the Tilemap.
     * @property {number} index
     * @protected
@@ -232,7 +241,7 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
         this.renderSettings.copyCanvas = Phaser.TilemapLayer.ensureSharedCopyCanvas();
     }
 
-    this.fixedToCamera = true;
+    // this.fixedToCamera = true;
 
 };
 
@@ -280,6 +289,20 @@ Phaser.TilemapLayer.prototype.preUpdate = function() {
 
 };
 
+Phaser.TilemapLayer.prototype.addCamera = function () {
+
+    this.view = this.game.camera;
+    this._camDetatched = true;
+
+};
+
+Phaser.TilemapLayer.prototype.removeCamera = function (x, y) {
+
+    this.view = new Phaser.Point(x, y);
+    this._camDetatched = true;
+
+};
+
 /**
 * Automatically called by World.postUpdate. Handles cache updates.
 *
@@ -290,12 +313,12 @@ Phaser.TilemapLayer.prototype.postUpdate = function () {
 
     if (this.fixedToCamera)
     {
-        this.position.x = (this.game.camera.view.x + this.cameraOffset.x) / this.game.camera.scale.x;
-        this.position.y = (this.game.camera.view.y + this.cameraOffset.y) / this.game.camera.scale.y;
+        // this.position.x = (this.game.camera.view.x + this.cameraOffset.x) / this.game.camera.scale.x;
+        // this.position.y = (this.game.camera.view.y + this.cameraOffset.y) / this.game.camera.scale.y;
     }
 
-    this._scrollX = this.game.camera.view.x * this.scrollFactorX / this.scale.x;
-    this._scrollY = this.game.camera.view.y * this.scrollFactorY / this.scale.y;
+    this.scrollX = this.view.x * this.scrollFactorX / this.scale.x;
+    this.scrollY = this.view.y * this.scrollFactorY / this.scale.y;
 
 };
 
@@ -314,8 +337,8 @@ Phaser.TilemapLayer.prototype._renderCanvas = function (renderSession) {
         this.position.y = (this.game.camera.view.y + this.cameraOffset.y) / this.game.camera.scale.y;
     }
 
-    this._scrollX = this.game.camera.view.x * this.scrollFactorX / this.scale.x;
-    this._scrollY = this.game.camera.view.y * this.scrollFactorY / this.scale.y;
+    this.scrollX = this.view.x * this.scrollFactorX / this.scale.x;
+    this.scrollY = this.view.y * this.scrollFactorY / this.scale.y;
 
     this.render();
 
@@ -977,7 +1000,7 @@ Phaser.TilemapLayer.prototype._fixX = function (x) {
         x = 0;
     }
 
-    if (this.scrollFactorX === 1)
+    if (this.scrollFactorX === 1 && !this._camDetatched)
     {
         return x;
     }
@@ -996,7 +1019,7 @@ Phaser.TilemapLayer.prototype._fixX = function (x) {
  */
 Phaser.TilemapLayer.prototype._unfixX = function (x) {
 
-    if (this.scrollFactorX === 1)
+    if (this.scrollFactorX === 1 && !this._camDetatched)
     {
         return x;
     }
@@ -1020,7 +1043,7 @@ Phaser.TilemapLayer.prototype._fixY = function (y) {
         y = 0;
     }
 
-    if (this.scrollFactorY === 1)
+    if (this.scrollFactorY === 1 && !this._camDetatched)
     {
         return y;
     }
@@ -1039,7 +1062,7 @@ Phaser.TilemapLayer.prototype._fixY = function (y) {
  */
 Phaser.TilemapLayer.prototype._unfixY = function (y) {
 
-    if (this.scrollFactorY === 1)
+    if (this.scrollFactorY === 1 && !this._camDetatched)
     {
         return y;
     }
@@ -1236,6 +1259,54 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, "y", {
 
 });
 
+/**
+* The x position of this Tilemap Layer.
+*
+* @property {integer} x
+* @memberof Phaser.TilemapLayer
+* @public
+*/
+Object.defineProperty(Phaser.TilemapLayer.prototype, "offsetX", {
+
+    get: function () {
+
+        if (this._camDetatched)
+        {
+            return this.cameraOffset.x - this.view.x;
+        }
+        else
+        {
+            return this.cameraOffset.x;
+        }
+
+    }
+
+});
+
+/**
+* The y position of this Tilemap Layer.
+*
+* @property {integer} y
+* @memberof Phaser.TilemapLayer
+* @public
+*/
+Object.defineProperty(Phaser.TilemapLayer.prototype, "offsetY", {
+
+    get: function () {
+
+        if (this._camDetatched)
+        {
+            return this.cameraOffset.y - this.view.y;
+        }
+        else
+        {
+            return this.cameraOffset.y;
+        }
+
+    }
+
+});
+
 Object.defineProperty(Phaser.TilemapLayer.prototype, "bottom", {
 
     get: function () {
@@ -1291,11 +1362,15 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, "wrap", {
 Object.defineProperty(Phaser.TilemapLayer.prototype, "scrollX", {
 
     get: function () {
+
         return this._scrollX;
+
     },
 
     set: function (value) {
+
         this._scrollX = value;
+
     }
 
 });
@@ -1310,11 +1385,15 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, "scrollX", {
 Object.defineProperty(Phaser.TilemapLayer.prototype, "scrollY", {
 
     get: function () {
+
         return this._scrollY;
+
     },
 
     set: function (value) {
+
         this._scrollY = value;
+
     }
 
 });
@@ -1329,12 +1408,16 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, "scrollY", {
 Object.defineProperty(Phaser.TilemapLayer.prototype, "collisionWidth", {
 
     get: function () {
+
         return this._mc.cw;
+
     },
 
     set: function (value) {
+
         this._mc.cw = value | 0;
         this.dirty = true;
+
     }
 
 });
@@ -1349,12 +1432,16 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, "collisionWidth", {
 Object.defineProperty(Phaser.TilemapLayer.prototype, "collisionHeight", {
 
     get: function () {
+
         return this._mc.ch;
+
     },
 
     set: function (value) {
+
         this._mc.ch = value | 0;
         this.dirty = true;
+
     }
 
 });

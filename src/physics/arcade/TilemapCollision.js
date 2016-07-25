@@ -40,8 +40,8 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
         }
 
         var mapData = tilemapLayer.getTiles(
-            (sprite.body.position.x - sprite.body.tilePadding.x) - tilemapLayer.x,
-            (sprite.body.position.y - sprite.body.tilePadding.y) - tilemapLayer.y,
+            (sprite.body.position.x - sprite.body.tilePadding.x) - tilemapLayer.offsetX,
+            (sprite.body.position.y - sprite.body.tilePadding.y) - tilemapLayer.offsetY,
             sprite.body.width + sprite.body.tilePadding.x,
             sprite.body.height + sprite.body.tilePadding.y,
             false, false);
@@ -130,8 +130,8 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
             return false;
         }
         
-        var tilemapLayerOffsetX = tilemapLayer.x;
-        var tilemapLayerOffsetY = tilemapLayer.y;
+        var tilemapLayerOffsetX = tilemapLayer.offsetX;
+        var tilemapLayerOffsetY = tilemapLayer.offsetY;
 
         //  We re-check for collision in case body was separated in a previous step
         if (!tile.intersects((body.position.x - tilemapLayerOffsetX), (body.position.y - tilemapLayerOffsetY), (body.right - tilemapLayerOffsetX), (body.bottom - tilemapLayerOffsetY)))
@@ -243,7 +243,7 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
     tileCheckX: function (body, tile, tilemapLayer) {
 
         var ox = 0;
-        var tilemapLayerOffsetX = tilemapLayer.x;
+        var tilemapLayerOffsetX = tilemapLayer.offsetX;
 
         if (body.deltaX() < 0 && !body.blocked.left && tile.collideRight && body.checkCollision.left)
         {
@@ -301,7 +301,7 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
     tileCheckY: function (body, tile, tilemapLayer) {
 
         var oy = 0;
-        var tilemapLayerOffsetY = tilemapLayer.y;
+        var tilemapLayerOffsetY = tilemapLayer.offsetY;
 
         if (body.deltaY() < 0 && !body.blocked.up && tile.collideDown && body.checkCollision.up)
         {
