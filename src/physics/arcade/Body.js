@@ -363,6 +363,8 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     /**
     * Set the checkCollision properties to control which directions collision is processed for this Body.
     * For example checkCollision.up = false means it won't collide when the collision happened while moving up.
+    * If you need to disable a Body entirely, use `body.enable = false`, this will also disable motion.
+    * If you need to disable just collision and/or overlap checks, but retain motion, set `checkCollision.none = true`.
     * @property {object} checkCollision - An object containing allowed collision.
     */
     this.checkCollision = { none: false, any: true, up: true, down: true, left: true, right: true };
@@ -1219,7 +1221,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     /**
     * Returns true if the top of this Body is in contact with either the world bounds or a tile.
     *
-    * @method Phaser.Physics.Arcade.Body#onTop
+    * @method Phaser.Physics.Arcade.Body#onCeiling
     * @return {boolean} True if in contact with either the world bounds or a tile.
     */
     onCeiling: function(){

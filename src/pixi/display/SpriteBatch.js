@@ -9,8 +9,6 @@
 
     var container = new PIXI.SpriteBatch();
  
-    stage.addChild(container);
- 
     for(var i  = 0; i < 100; i++)
     {
         var sprite = new PIXI.Sprite.fromImage("myImage.png");

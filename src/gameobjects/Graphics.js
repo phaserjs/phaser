@@ -115,6 +115,28 @@ Phaser.Graphics.prototype.preUpdate = function () {
 };
 
 /**
+* Automatically called by World
+* @method Phaser.Graphics.prototype.postUpdate
+*/
+Phaser.Graphics.prototype.postUpdate = function () {
+
+    Phaser.Component.PhysicsBody.postUpdate.call(this);
+    Phaser.Component.FixedToCamera.postUpdate.call(this);
+
+    if (this._boundsDirty)
+    {
+        this.updateLocalBounds();
+        this._boundsDirty = false;
+    }
+
+    for (var i = 0; i < this.children.length; i++)
+    {
+        this.children[i].postUpdate();
+    }
+
+};
+
+/**
 * Destroy this Graphics instance.
 *
 * @method Phaser.Graphics.prototype.destroy

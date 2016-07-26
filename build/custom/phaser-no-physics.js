@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.6.1 "Caemlyn" - Built: Mon Jul 11 2016 10:00:02
+* v2.6.2 "Kore Springs" - Built: Sat Jul 23 2016 15:05:11
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -171,7 +171,7 @@ PIXI.defaultRenderOptions = {
 * @class PIXI.DisplayObject
 * @constructor
 */
-PIXI.DisplayObject = function() {
+PIXI.DisplayObject = function () {
 
     /**
     * The coordinates, in pixels, of this DisplayObject, relative to its parent container.
@@ -271,15 +271,6 @@ PIXI.DisplayObject = function() {
     * @readOnly
     */
     this.parent = null;
-
-    /**
-    * The stage that this DisplayObject is connected to.
-    * 
-    * @property {PIXI.Stage} stage
-    * @default
-    * @readOnly
-    */
-    this.stage = null;
 
     /**
     * The multiplied alpha value of this DisplayObject. A value of 1 is fully opaque. A value of 0 is transparent.
@@ -382,7 +373,7 @@ PIXI.DisplayObject = function() {
     * @property {PIXI.Rectangle} _bounds - The cached bounds of this object.
     * @private
     */
-    this._bounds = new PIXI.Rectangle(0, 0, 1, 1);
+    this._bounds = new PIXI.Rectangle(0, 0, 0, 0);
 
     /**
     * @property {PIXI.Rectangle} _currentBounds - The most recently calculated bounds of this object.
@@ -417,8 +408,7 @@ PIXI.DisplayObject.prototype = {
     /**
     * Destroy this DisplayObject.
     *
-    * Removes any cached sprites, sets renderable flag to false, and nulls references to the Stage, filters,
-    * bounds and mask.
+    * Removes any cached sprites, sets renderable flag to false, and nulls filters, bounds and mask.
     *
     * Also iteratively calls `destroy` on any children.
     *
@@ -440,7 +430,6 @@ PIXI.DisplayObject.prototype = {
 
         this.hitArea = null;
         this.parent = null;
-        this.stage = null;
         this.worldTransform = null;
         this.filterArea = null;
         this.renderable = false;
@@ -469,7 +458,7 @@ PIXI.DisplayObject.prototype = {
     * the new, updated, worldTransform property, along with the parent transform used.
     *
     * @method PIXI.DisplayObject#updateTransform
-    * @param {PIXI.DisplayObject} [parent] - Optional parent to calculate this DisplayObjects transform from.
+    * @param {PIXI.DisplayObjectContainer} [parent] - Optional parent to calculate this DisplayObjects transform from.
     * @return {PIXI.DisplayObject} - A reference to this DisplayObject.
     */
     updateTransform: function (parent) {
@@ -562,21 +551,6 @@ PIXI.DisplayObject.prototype = {
         {
             this.transformCallback.call(this.transformCallbackContext, wt, pt);
         }
-
-        return this;
-
-    },
-
-    /**
-    * Sets the root Stage object that this DisplayObject is connected to.
-    *
-    * @method PIXI.DisplayObject#setStageReference
-    * @param {Phaser.Stage} stage - The stage that the object will have as its current stage reference
-    * @return {PIXI.DisplayObject} - A reference to this DisplayObject.
-    */
-    setStageReference: function (stage)
-    {
-        this.stage = stage;
 
         return this;
 
@@ -991,8 +965,8 @@ Object.defineProperties(PIXI.DisplayObject.prototype, {
  * @extends DisplayObject
  * @constructor
  */
-PIXI.DisplayObjectContainer = function()
-{
+PIXI.DisplayObjectContainer = function () {
+
     PIXI.DisplayObject.call(this);
 
     /**
@@ -1017,68 +991,8 @@ PIXI.DisplayObjectContainer = function()
     
 };
 
-// constructor
 PIXI.DisplayObjectContainer.prototype = Object.create( PIXI.DisplayObject.prototype );
 PIXI.DisplayObjectContainer.prototype.constructor = PIXI.DisplayObjectContainer;
-
-/**
- * The width of the displayObjectContainer, setting this will actually modify the scale to achieve the value set
- *
- * @property width
- * @type Number
- */
-Object.defineProperty(PIXI.DisplayObjectContainer.prototype, 'width', {
-
-    get: function() {
-        return this.scale.x * this.getLocalBounds().width;
-    },
-
-    set: function(value) {
-        
-        var width = this.getLocalBounds().width;
-
-        if (width !== 0)
-        {
-            this.scale.x = value / width;
-        }
-        else
-        {
-            this.scale.x = 1;
-        }
-        
-        this._width = value;
-    }
-});
-
-/**
- * The height of the displayObjectContainer, setting this will actually modify the scale to achieve the value set
- *
- * @property height
- * @type Number
- */
-Object.defineProperty(PIXI.DisplayObjectContainer.prototype, 'height', {
-
-    get: function() {
-        return  this.scale.y * this.getLocalBounds().height;
-    },
-
-    set: function(value) {
-
-        var height = this.getLocalBounds().height;
-
-        if (height !== 0)
-        {
-            this.scale.y = value / height;
-        }
-        else
-        {
-            this.scale.y = 1;
-        }
-
-        this._height = value;
-    }
-
-});
 
 /**
  * Adds a child to the container.
@@ -1087,9 +1001,10 @@ Object.defineProperty(PIXI.DisplayObjectContainer.prototype, 'height', {
  * @param child {DisplayObject} The DisplayObject to add to the container
  * @return {DisplayObject} The child that was added.
  */
-PIXI.DisplayObjectContainer.prototype.addChild = function(child)
-{
+PIXI.DisplayObjectContainer.prototype.addChild = function (child) {
+
     return this.addChildAt(child, this.children.length);
+
 };
 
 /**
@@ -1100,11 +1015,11 @@ PIXI.DisplayObjectContainer.prototype.addChild = function(child)
  * @param index {Number} The index to place the child in
  * @return {DisplayObject} The child that was added.
  */
-PIXI.DisplayObjectContainer.prototype.addChildAt = function(child, index)
-{
-    if(index >= 0 && index <= this.children.length)
+PIXI.DisplayObjectContainer.prototype.addChildAt = function (child, index) {
+
+    if (index >= 0 && index <= this.children.length)
     {
-        if(child.parent)
+        if (child.parent)
         {
             child.parent.removeChild(child);
         }
@@ -1113,14 +1028,13 @@ PIXI.DisplayObjectContainer.prototype.addChildAt = function(child, index)
 
         this.children.splice(index, 0, child);
 
-        if(this.stage)child.setStageReference(this.stage);
-
         return child;
     }
     else
     {
         throw new Error(child + 'addChildAt: The index '+ index +' supplied is out of bounds ' + this.children.length);
     }
+
 };
 
 /**
@@ -1130,16 +1044,18 @@ PIXI.DisplayObjectContainer.prototype.addChildAt = function(child, index)
  * @param child {DisplayObject}
  * @param child2 {DisplayObject}
  */
-PIXI.DisplayObjectContainer.prototype.swapChildren = function(child, child2)
-{
-    if(child === child2) {
+PIXI.DisplayObjectContainer.prototype.swapChildren = function (child, child2) {
+
+    if (child === child2)
+    {
         return;
     }
 
     var index1 = this.getChildIndex(child);
     var index2 = this.getChildIndex(child2);
 
-    if(index1 < 0 || index2 < 0) {
+    if (index1 < 0 || index2 < 0)
+    {
         throw new Error('swapChildren: Both the supplied DisplayObjects must be a child of the caller.');
     }
 
@@ -1155,14 +1071,17 @@ PIXI.DisplayObjectContainer.prototype.swapChildren = function(child, child2)
  * @param child {DisplayObject} The DisplayObject instance to identify
  * @return {Number} The index position of the child display object to identify
  */
-PIXI.DisplayObjectContainer.prototype.getChildIndex = function(child)
-{
+PIXI.DisplayObjectContainer.prototype.getChildIndex = function (child) {
+
     var index = this.children.indexOf(child);
+
     if (index === -1)
     {
         throw new Error('The supplied DisplayObject must be a child of the caller');
     }
+
     return index;
+
 };
 
 /**
@@ -1172,15 +1091,18 @@ PIXI.DisplayObjectContainer.prototype.getChildIndex = function(child)
  * @param child {DisplayObject} The child DisplayObject instance for which you want to change the index number
  * @param index {Number} The resulting index number for the child display object
  */
-PIXI.DisplayObjectContainer.prototype.setChildIndex = function(child, index)
-{
+PIXI.DisplayObjectContainer.prototype.setChildIndex = function (child, index) {
+
     if (index < 0 || index >= this.children.length)
     {
         throw new Error('The supplied index is out of bounds');
     }
+
     var currentIndex = this.getChildIndex(child);
+
     this.children.splice(currentIndex, 1); //remove from old position
     this.children.splice(index, 0, child); //add at new position
+
 };
 
 /**
@@ -1190,12 +1112,13 @@ PIXI.DisplayObjectContainer.prototype.setChildIndex = function(child, index)
  * @param index {Number} The index to get the child from
  * @return {DisplayObject} The child at the given index, if any.
  */
-PIXI.DisplayObjectContainer.prototype.getChildAt = function(index)
-{
+PIXI.DisplayObjectContainer.prototype.getChildAt = function (index) {
+
     if (index < 0 || index >= this.children.length)
     {
         throw new Error('getChildAt: Supplied index '+ index +' does not exist in the child list, or the supplied DisplayObject must be a child of the caller');
     }
+
     return this.children[index];
     
 };
@@ -1207,12 +1130,17 @@ PIXI.DisplayObjectContainer.prototype.getChildAt = function(index)
  * @param child {DisplayObject} The DisplayObject to remove
  * @return {DisplayObject} The child that was removed.
  */
-PIXI.DisplayObjectContainer.prototype.removeChild = function(child)
-{
-    var index = this.children.indexOf( child );
-    if(index === -1)return;
+PIXI.DisplayObjectContainer.prototype.removeChild = function (child) {
+
+    var index = this.children.indexOf(child);
+
+    if (index === -1)
+    {
+        return;
+    }
     
-    return this.removeChildAt( index );
+    return this.removeChildAt(index);
+
 };
 
 /**
@@ -1222,15 +1150,19 @@ PIXI.DisplayObjectContainer.prototype.removeChild = function(child)
  * @param index {Number} The index to get the child from
  * @return {DisplayObject} The child that was removed.
  */
-PIXI.DisplayObjectContainer.prototype.removeChildAt = function(index)
-{
-    var child = this.getChildAt( index );
-    if(this.stage)
-        child.removeStageReference();
+PIXI.DisplayObjectContainer.prototype.removeChildAt = function (index) {
 
-    child.parent = undefined;
-    this.children.splice( index, 1 );
+    var child = this.getChildAt(index);
+
+    if (child)
+    {
+        child.parent = undefined;
+
+        this.children.splice(index, 1);
+    }
+
     return child;
+
 };
 
 /**
@@ -1240,21 +1172,23 @@ PIXI.DisplayObjectContainer.prototype.removeChildAt = function(index)
 * @param beginIndex {Number} The beginning position. Default value is 0.
 * @param endIndex {Number} The ending position. Default value is size of the container.
 */
-PIXI.DisplayObjectContainer.prototype.removeChildren = function(beginIndex, endIndex)
-{
-    var begin = beginIndex || 0;
-    var end = typeof endIndex === 'number' ? endIndex : this.children.length;
-    var range = end - begin;
+PIXI.DisplayObjectContainer.prototype.removeChildren = function (beginIndex, endIndex) {
 
-    if (range > 0 && range <= end)
+    if (beginIndex === undefined) { beginIndex = 0; }
+    if (endIndex === undefined) { endIndex = this.children.length; }
+
+    var range = endIndex - beginIndex;
+
+    if (range > 0 && range <= endIndex)
     {
         var removed = this.children.splice(begin, range);
-        for (var i = 0; i < removed.length; i++) {
+
+        for (var i = 0; i < removed.length; i++)
+        {
             var child = removed[i];
-            if(this.stage)
-                child.removeStageReference();
             child.parent = undefined;
         }
+
         return removed;
     }
     else if (range === 0 && this.children.length === 0)
@@ -1265,6 +1199,7 @@ PIXI.DisplayObjectContainer.prototype.removeChildren = function(beginIndex, endI
     {
         throw new Error( 'removeChildren: Range Error, numeric values are outside the acceptable range' );
     }
+
 };
 
 /*
@@ -1273,8 +1208,8 @@ PIXI.DisplayObjectContainer.prototype.removeChildren = function(beginIndex, endI
  * @method updateTransform
  * @private
  */
-PIXI.DisplayObjectContainer.prototype.updateTransform = function()
-{
+PIXI.DisplayObjectContainer.prototype.updateTransform = function () {
+
     if (!this.visible)
     {
         return;
@@ -1291,25 +1226,50 @@ PIXI.DisplayObjectContainer.prototype.updateTransform = function()
     {
         this.children[i].updateTransform();
     }
+
 };
 
 // performance increase to avoid using call.. (10x faster)
 PIXI.DisplayObjectContainer.prototype.displayObjectContainerUpdateTransform = PIXI.DisplayObjectContainer.prototype.updateTransform;
 
 /**
- * Retrieves the bounds of the displayObjectContainer as a rectangle. The bounds calculation takes all visible children into consideration.
+ * Retrieves the global bounds of the displayObjectContainer as a rectangle. The bounds calculation takes all visible children into consideration.
  *
  * @method getBounds
+ * @param {PIXI.DisplayObject|PIXI.Matrix} [targetCoordinateSpace] Returns a rectangle that defines the area of the display object relative to the coordinate system of the targetCoordinateSpace object.
  * @return {Rectangle} The rectangular bounding area
  */
-PIXI.DisplayObjectContainer.prototype.getBounds = function()
-{
-    if (this.children.length === 0)
-    {
-        return PIXI.EmptyRectangle;
+PIXI.DisplayObjectContainer.prototype.getBounds = function (targetCoordinateSpace) {
+
+    var isTargetCoordinateSpaceDisplayObject = (targetCoordinateSpace && targetCoordinateSpace instanceof PIXI.DisplayObject);
+    var isTargetCoordinateSpaceThisOrParent = true;
+
+    if (!isTargetCoordinateSpaceDisplayObject) 
+	{
+        targetCoordinateSpace = this;
+    } 
+	else if (targetCoordinateSpace instanceof PIXI.DisplayObjectContainer) 
+	{
+        isTargetCoordinateSpaceThisOrParent = targetCoordinateSpace.contains(this);
+    } 
+	else 
+	{
+        isTargetCoordinateSpaceThisOrParent = false;
     }
 
-    this.updateTransform();
+    var i;
+
+    if (isTargetCoordinateSpaceDisplayObject)
+    {
+        var matrixCache = targetCoordinateSpace.worldTransform;
+
+        targetCoordinateSpace.worldTransform = PIXI.identityMatrix;
+
+        for (i = 0; i < targetCoordinateSpace.children.length; i++) 
+		{
+            targetCoordinateSpace.children[i].updateTransform();
+        }
+    }
 
     var minX = Infinity;
     var minY = Infinity;
@@ -1323,10 +1283,10 @@ PIXI.DisplayObjectContainer.prototype.getBounds = function()
 
     var childVisible = false;
 
-    for (var i = 0; i < this.children.length; i++)
+    for (i = 0; i < this.children.length; i++)
     {
         var child = this.children[i];
-        
+
         if (!child.visible)
         {
             continue;
@@ -1335,30 +1295,98 @@ PIXI.DisplayObjectContainer.prototype.getBounds = function()
         childVisible = true;
 
         childBounds = this.children[i].getBounds();
-     
-        minX = minX < childBounds.x ? minX : childBounds.x;
-        minY = minY < childBounds.y ? minY : childBounds.y;
+
+        minX = (minX < childBounds.x) ? minX : childBounds.x;
+        minY = (minY < childBounds.y) ? minY : childBounds.y;
 
         childMaxX = childBounds.width + childBounds.x;
         childMaxY = childBounds.height + childBounds.y;
 
-        maxX = maxX > childMaxX ? maxX : childMaxX;
-        maxY = maxY > childMaxY ? maxY : childMaxY;
-    }
-
-    if (!childVisible)
-    {
-        return PIXI.EmptyRectangle;
+        maxX = (maxX > childMaxX) ? maxX : childMaxX;
+        maxY = (maxY > childMaxY) ? maxY : childMaxY;
     }
 
     var bounds = this._bounds;
+
+    if (!childVisible) 
+	{
+        bounds = new PIXI.Rectangle();
+
+        var w0 = bounds.x;
+        var w1 = bounds.width + bounds.x;
+
+        var h0 = bounds.y;
+        var h1 = bounds.height + bounds.y;
+
+        var worldTransform = this.worldTransform;
+
+        var a = worldTransform.a;
+        var b = worldTransform.b;
+        var c = worldTransform.c;
+        var d = worldTransform.d;
+        var tx = worldTransform.tx;
+        var ty = worldTransform.ty;
+
+        var x1 = a * w1 + c * h1 + tx;
+        var y1 = d * h1 + b * w1 + ty;
+
+        var x2 = a * w0 + c * h1 + tx;
+        var y2 = d * h1 + b * w0 + ty;
+
+        var x3 = a * w0 + c * h0 + tx;
+        var y3 = d * h0 + b * w0 + ty;
+
+        var x4 = a * w1 + c * h0 + tx;
+        var y4 = d * h0 + b * w1 + ty;
+
+        maxX = x1;
+        maxY = y1;
+
+        minX = x1;
+        minY = y1;
+
+        minX = x2 < minX ? x2 : minX;
+        minX = x3 < minX ? x3 : minX;
+        minX = x4 < minX ? x4 : minX;
+
+        minY = y2 < minY ? y2 : minY;
+        minY = y3 < minY ? y3 : minY;
+        minY = y4 < minY ? y4 : minY;
+
+        maxX = x2 > maxX ? x2 : maxX;
+        maxX = x3 > maxX ? x3 : maxX;
+        maxX = x4 > maxX ? x4 : maxX;
+
+        maxY = y2 > maxY ? y2 : maxY;
+        maxY = y3 > maxY ? y3 : maxY;
+        maxY = y4 > maxY ? y4 : maxY;
+    }
 
     bounds.x = minX;
     bounds.y = minY;
     bounds.width = maxX - minX;
     bounds.height = maxY - minY;
 
+    if (isTargetCoordinateSpaceDisplayObject) 
+	{
+        targetCoordinateSpace.worldTransform = matrixCache;
+
+        for (i = 0; i < targetCoordinateSpace.children.length; i++) 
+		{
+            targetCoordinateSpace.children[i].updateTransform();
+        }
+    }
+
+    if (!isTargetCoordinateSpaceThisOrParent) 
+	{
+        var targetCoordinateSpaceBounds = targetCoordinateSpace.getBounds();
+
+        bounds.x -= targetCoordinateSpaceBounds.x;
+        bounds.y -= targetCoordinateSpaceBounds.y;
+    }
+
     return bounds;
+
 };
 
 /**
@@ -1367,58 +1395,33 @@ PIXI.DisplayObjectContainer.prototype.getBounds = function()
  * @method getLocalBounds
  * @return {Rectangle} The rectangular bounding area
  */
-PIXI.DisplayObjectContainer.prototype.getLocalBounds = function()
-{
-    var matrixCache = this.worldTransform;
+PIXI.DisplayObjectContainer.prototype.getLocalBounds = function () {
 
-    this.worldTransform = PIXI.identityMatrix;
+    return this.getBounds(this.parent);
 
-    for (var i = 0; i < this.children.length; i++)
-    {
-        this.children[i].updateTransform();
-    }
-
-    var bounds = this.getBounds();
-
-    this.worldTransform = matrixCache;
-	
-    for (i = 0; i < this.children.length; i++)
-    {
-        this.children[i].updateTransform();
-    }	
-
-    return bounds;
 };
 
 /**
- * Sets the containers Stage reference. This is the Stage that this object, and all of its children, is connected to.
- *
- * @method setStageReference
- * @param stage {Stage} the stage that the container will have as its current stage reference
- */
-PIXI.DisplayObjectContainer.prototype.setStageReference = function(stage)
-{
-    this.stage = stage;
-    
-    for (var i=0; i < this.children.length; i++)
-    {
-        this.children[i].setStageReference(stage)
-    }
-};
+* Determines whether the specified display object is a child of the DisplayObjectContainer instance or the instance itself.
+*
+* @method contains
+* @param {DisplayObject} child
+* @returns {boolean}
+*/
+PIXI.DisplayObjectContainer.prototype.contains = function (child) {
 
-/**
- * Removes the current stage reference from the container and all of its children.
- *
- * @method removeStageReference
- */
-PIXI.DisplayObjectContainer.prototype.removeStageReference = function()
-{
-    for (var i = 0; i < this.children.length; i++)
+    if (!child)
     {
-        this.children[i].removeStageReference();
+        return false;
     }
-
-    this.stage = null;
+    else if (child === this) 
+	{
+        return true;
+    }
+    else 
+	{
+        return this.contains(child.parent);
+    }
 };
 
 /**
@@ -1428,9 +1431,12 @@ PIXI.DisplayObjectContainer.prototype.removeStageReference = function()
 * @param renderSession {RenderSession} 
 * @private
 */
-PIXI.DisplayObjectContainer.prototype._renderWebGL = function(renderSession)
-{
-    if (!this.visible || this.alpha <= 0) return;
+PIXI.DisplayObjectContainer.prototype._renderWebGL = function (renderSession) {
+
+    if (!this.visible || this.alpha <= 0)
+    {
+        return;
+    }
     
     if (this._cacheAsBitmap)
     {
@@ -1477,6 +1483,7 @@ PIXI.DisplayObjectContainer.prototype._renderWebGL = function(renderSession)
             this.children[i]._renderWebGL(renderSession);
         }
     }
+
 };
 
 /**
@@ -1486,9 +1493,12 @@ PIXI.DisplayObjectContainer.prototype._renderWebGL = function(renderSession)
 * @param renderSession {RenderSession} 
 * @private
 */
-PIXI.DisplayObjectContainer.prototype._renderCanvas = function(renderSession)
-{
-    if (this.visible === false || this.alpha === 0) return;
+PIXI.DisplayObjectContainer.prototype._renderCanvas = function (renderSession) {
+
+    if (this.visible === false || this.alpha === 0)
+    {
+        return;
+    }
 
     if (this._cacheAsBitmap)
     {
@@ -1514,6 +1524,66 @@ PIXI.DisplayObjectContainer.prototype._renderCanvas = function(renderSession)
 };
 
 /**
+ * The width of the displayObjectContainer, setting this will actually modify the scale to achieve the value set
+ *
+ * @property width
+ * @type Number
+ */
+Object.defineProperty(PIXI.DisplayObjectContainer.prototype, 'width', {
+
+    get: function() {
+        return this.getLocalBounds().width;
+    },
+
+    set: function(value) {
+        
+        var width = this.getLocalBounds().width;
+
+        if (width !== 0)
+        {
+            this.scale.x = value / width;
+        }
+        else
+        {
+            this.scale.x = 1;
+        }
+        
+        this._width = value;
+    }
+});
+
+/**
+ * The height of the displayObjectContainer, setting this will actually modify the scale to achieve the value set
+ *
+ * @property height
+ * @type Number
+ */
+Object.defineProperty(PIXI.DisplayObjectContainer.prototype, 'height', {
+
+    get: function() {
+        return this.getLocalBounds().height;
+    },
+
+    set: function(value) {
+
+        var height = this.getLocalBounds().height;
+
+        if (height !== 0)
+        {
+            this.scale.y = value / height;
+        }
+        else
+        {
+            this.scale.y = 1;
+        }
+
+        this._height = value;
+    }
+
+});
+
+
+/**
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
 
@@ -1524,14 +1594,9 @@ PIXI.DisplayObjectContainer.prototype._renderCanvas = function(renderSession)
  * @extends DisplayObjectContainer
  * @constructor
  * @param texture {Texture} The texture for this sprite
- *
- * A sprite can be created directly from an image like this :
- * var sprite = new PIXI.Sprite.fromImage('assets/image.png');
- * yourStage.addChild(sprite);
- * then obviously don't forget to add it to the stage you have already created
  */
-PIXI.Sprite = function(texture)
-{
+PIXI.Sprite = function (texture) {
+
     PIXI.DisplayObjectContainer.call(this);
 
     /**
@@ -1611,7 +1676,8 @@ PIXI.Sprite = function(texture)
     this.blendMode = PIXI.blendModes.NORMAL;
 
     /**
-     * The shader that will be used to render the texture to the stage. Set to null to remove a current shader.
+     * The shader that will be used to render this Sprite.
+     * Set to null to remove a current shader.
      *
      * @property shader
      * @type AbstractFilter
@@ -2017,8 +2083,6 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession, matrix)
  * And it's extremely easy to use : 
 
     var container = new PIXI.SpriteBatch();
- 
-    stage.addChild(container);
  
     for(var i  = 0; i < 100; i++)
     {
@@ -3478,20 +3542,21 @@ PIXI.ComplexPrimitiveShader.prototype.destroy = function()
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
 
-PIXI.glContexts = []; // this is where we store the webGL contexts for easy access.
+// this is where we store the webGL contexts for easy access.
+PIXI.glContexts = [];
 PIXI.instances = [];
 
 /**
- * The WebGLRenderer draws the stage and all its content onto a webGL enabled canvas. This renderer
- * should be used for browsers that support webGL. This Render works by automatically managing webGLBatchs.
- * So no need for Sprite Batches or Sprite Clouds.
- * Don't forget to add the view to your DOM or you will not see anything :)
+ * The WebGLRenderer draws the stage and all its content onto a WebGL enabled canvas.
+ * This renderer should be used for browsers that support WebGL.
+ * This renderer works by automatically managing WebGL Batches, so there is no need for
+ * Sprite Batches or Sprite Clouds.
  *
  * @class WebGLRenderer
  * @constructor
  * @param game {Phaser.Game} A reference to the Phaser Game instance
  */
-PIXI.WebGLRenderer = function(game) {
+PIXI.WebGLRenderer = function (game) {
 
     /**
     * @property {Phaser.Game} game - A reference to the Phaser Game instance.
@@ -3717,38 +3782,43 @@ PIXI.WebGLRenderer.prototype.initContext = function()
 };
 
 /**
- * Renders the stage to its webGL view
+ * Renders the DisplayObjectContainer, usually the Phaser.Stage, to the WebGL enabled canvas.
  *
  * @method render
- * @param stage {Stage} the Stage element to be rendered
+ * @param root {Phaser.Stage|PIXI.DisplayObjectContainer} The root element to be rendered.
  */
-PIXI.WebGLRenderer.prototype.render = function(stage)
-{
-    // no point rendering if our context has been blown up!
+PIXI.WebGLRenderer.prototype.render = function (root) {
+
     if (this.contextLost)
     {
+        //  No point rendering if the context is lost.
         return;
     }
 
     var gl = this.gl;
 
-    // -- Does this need to be set every frame? -- //
     gl.viewport(0, 0, this.width, this.height);
 
-    // make sure we are bound to the main frame buffer
+    //  Bind the Frame Buffer
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
+    //  Clear it
     if (this.game.clearBeforeRender)
     {
-        gl.clearColor(stage._bgColor.r, stage._bgColor.g, stage._bgColor.b, stage._bgColor.a);
+        var color = this.game.stage._bgColor;
+
+        gl.clearColor(color.r, color.g, color.b, color.a);
 
         gl.clear(gl.COLOR_BUFFER_BIT);
     }
 
+    //  Apply Camera Shake
     this.offset.x = this.game.camera._shake.x;
     this.offset.y = this.game.camera._shake.y;
 
-    this.renderDisplayObject(stage, this.projection);
+    //  Let the magic begin ...
+    this.renderDisplayObject(root, this.projection);
+
 };
 
 /**
@@ -3759,8 +3829,8 @@ PIXI.WebGLRenderer.prototype.render = function(stage)
  * @param projection {Point} The projection
  * @param buffer {Array} a standard WebGL buffer
  */
-PIXI.WebGLRenderer.prototype.renderDisplayObject = function(displayObject, projection, buffer, matrix)
-{
+PIXI.WebGLRenderer.prototype.renderDisplayObject = function(displayObject, projection, buffer, matrix) {
+
     this.renderSession.blendModeManager.setBlendMode(PIXI.blendModes.NORMAL);
 
     // reset the render session data..
@@ -3786,6 +3856,7 @@ PIXI.WebGLRenderer.prototype.renderDisplayObject = function(displayObject, proje
 
     // finish the sprite batch
     this.spriteBatch.end();
+
 };
 
 /**
@@ -3795,15 +3866,18 @@ PIXI.WebGLRenderer.prototype.renderDisplayObject = function(displayObject, proje
  * @param width {Number} the new width of the webGL view
  * @param height {Number} the new height of the webGL view
  */
-PIXI.WebGLRenderer.prototype.resize = function(width, height)
-{
+PIXI.WebGLRenderer.prototype.resize = function (width, height) {
+
     this.width = width * this.resolution;
     this.height = height * this.resolution;
 
     this.view.width = this.width;
     this.view.height = this.height;
 
-    if (this.autoResize) {
+    //  TODO - This probably needs removing, along with the property
+    //  as it will conflict with the ScaleManager
+    if (this.autoResize)
+    {
         this.view.style.width = this.width / this.resolution + 'px';
         this.view.style.height = this.height / this.resolution + 'px';
     }
@@ -3812,17 +3886,18 @@ PIXI.WebGLRenderer.prototype.resize = function(width, height)
 
     this.projection.x =  this.width / 2 / this.resolution;
     this.projection.y =  -this.height / 2 / this.resolution;
+
 };
 
 /**
- * Updates and Creates a WebGL texture for the renderers context.
+ * Updates and creates a WebGL texture for the renderers context.
  *
  * @method updateTexture
  * @param texture {Texture} the texture to update
  * @return {boolean} True if the texture was successfully bound, otherwise false.
  */
-PIXI.WebGLRenderer.prototype.updateTexture = function(texture)
-{
+PIXI.WebGLRenderer.prototype.updateTexture = function (texture) {
+
     if (!texture.hasLoaded)
     {
         return false;
@@ -3866,7 +3941,6 @@ PIXI.WebGLRenderer.prototype.updateTexture = function(texture)
 
     texture._dirty[gl.id] = false;
 
-    // return texture._glTextures[gl.id];
     return true;
 
 };
@@ -3876,8 +3950,8 @@ PIXI.WebGLRenderer.prototype.updateTexture = function(texture)
  *
  * @method destroy
  */
-PIXI.WebGLRenderer.prototype.destroy = function()
-{
+PIXI.WebGLRenderer.prototype.destroy = function () {
+
     PIXI.glContexts[this.glContextId] = null;
 
     this.projection = null;
@@ -3901,6 +3975,7 @@ PIXI.WebGLRenderer.prototype.destroy = function()
     PIXI.instances[this.glContextId] = null;
 
     PIXI.WebGLRenderer.glContextId--;
+
 };
 
 /**
@@ -3908,8 +3983,8 @@ PIXI.WebGLRenderer.prototype.destroy = function()
  *
  * @method mapBlendModes
  */
-PIXI.WebGLRenderer.prototype.mapBlendModes = function()
-{
+PIXI.WebGLRenderer.prototype.mapBlendModes = function () {
+
     var gl = this.gl;
 
     if (!PIXI.blendModesWebGL)
@@ -3937,6 +4012,7 @@ PIXI.WebGLRenderer.prototype.mapBlendModes = function()
 
         PIXI.blendModesWebGL = b;
     }
+
 };
 
 PIXI.WebGLRenderer.glContextId = 0;
@@ -4451,6 +4527,9 @@ PIXI.WebGLShaderManager.prototype.setContext = function(gl)
     // the next one is used for rendering triangle strips
     this.stripShader = new PIXI.StripShader(gl);
 
+    // shader for batch drawing tilemap tiles as a set of triangle strips with degenerate triangles between them
+    this.tilemapShader = new PIXI.TilemapShader(gl);
+
     this.setShader(this.defaultShader);
 };
 
@@ -4537,6 +4616,8 @@ PIXI.WebGLShaderManager.prototype.destroy = function()
     this.fastShader.destroy();
 
     this.stripShader.destroy();
+
+    this.tilemapShader.destroy();
 
     this.gl = null;
 };
@@ -6703,12 +6784,12 @@ PIXI.CanvasRenderer = function (game) {
 PIXI.CanvasRenderer.prototype.constructor = PIXI.CanvasRenderer;
 
 /**
- * Renders the Stage to this canvas view
+ * Renders the DisplayObjectContainer, usually the Phaser.Stage, to this canvas view.
  *
  * @method render
- * @param stage {Stage} the Stage element to be rendered
+ * @param root {Phaser.Stage|PIXI.DisplayObjectContainer} The root element to be rendered.
  */
-PIXI.CanvasRenderer.prototype.render = function (stage) {
+PIXI.CanvasRenderer.prototype.render = function (root) {
 
     this.context.setTransform(1, 0, 0, 1, 0, 0);
 
@@ -6732,14 +6813,14 @@ PIXI.CanvasRenderer.prototype.render = function (stage) {
         {
             this.context.clearRect(0, 0, this.width, this.height);
         }
-        else
+        else if (root._bgColor)
         {
-            this.context.fillStyle = stage._bgColor.rgba;
+            this.context.fillStyle = root._bgColor.rgba;
             this.context.fillRect(0, 0, this.width , this.height);
         }
     }
     
-    this.renderDisplayObject(stage);
+    this.renderDisplayObject(root);
 
 };
 
@@ -9043,7 +9124,7 @@ var Phaser = Phaser || {
     * @constant
     * @type {string}
     */
-    VERSION: '2.6.1',
+    VERSION: '2.7.0 Beta 3',
 
     /**
     * An array of Phaser game instances.
@@ -11703,7 +11784,7 @@ Phaser.Line.intersects = function (a, b, asSegment, result) {
 *
 * The for the purposes of this function rectangles are considered 'solid'.
 *
-* @method intersectsRectangle
+* @method Phaser.Line.intersectsRectangle
 * @param {Phaser.Line} line - The line to check for intersection with.
 * @param {Phaser.Rectangle|object} rect - The rectangle, or rectangle-like object, to check for intersection with.
 * @return {boolean} True if the line intersects with the rectangle edges, or starts or ends within the rectangle.
@@ -18159,7 +18240,11 @@ Phaser.Stage.prototype.updateTransform = function () {
 */
 Phaser.Stage.prototype.checkVisibility = function () {
 
-    if (document.webkitHidden !== undefined)
+    if (document.hidden !== undefined)
+    {
+        this._hiddenVar = 'visibilitychange';
+    }
+    else if (document.webkitHidden !== undefined)
     {
         this._hiddenVar = 'webkitvisibilitychange';
     }
@@ -18170,10 +18255,6 @@ Phaser.Stage.prototype.checkVisibility = function () {
     else if (document.msHidden !== undefined)
     {
         this._hiddenVar = 'msvisibilitychange';
-    }
-    else if (document.hidden !== undefined)
-    {
-        this._hiddenVar = 'visibilitychange';
     }
     else
     {
@@ -18664,6 +18745,13 @@ Phaser.Group.RETURN_TOTAL = 1;
 Phaser.Group.RETURN_CHILD = 2;
 
 /**
+* A returnType value, as specified in {@link #iterate} eg.
+* @constant
+* @type {integer}
+*/
+Phaser.Group.RETURN_ALL = 3;
+
+/**
 * A sort ordering value, as specified in {@link #sort} eg.
 * @constant
 * @type {integer}
@@ -18735,7 +18823,7 @@ Phaser.Group.prototype.add = function (child, silent, index) {
         this.addToHash(child);
     }
 
-    if (this.inputEnableChildren && !child.inputEnabled)
+    if (this.inputEnableChildren && (!child.input || child.inputEnabled))
     {
         child.inputEnabled = true;
     }
@@ -19024,7 +19112,7 @@ Phaser.Group.prototype.updateZ = function () {
 * the `alignTo` method in order to be positioned by this call. All default Phaser Game Objects have
 * this.
 *
-* The grid dimensions are determined by the first four arguments. The `rows` and `columns` arguments
+* The grid dimensions are determined by the first four arguments. The `width` and `height` arguments
 * relate to the width and height of the grid respectively.
 *
 * For example if the Group had 100 children in it:
@@ -19038,13 +19126,13 @@ Phaser.Group.prototype.updateZ = function () {
 *
 * This will align the children into a grid of 25x4, again using 32 pixels per grid cell.
 *
-* You can choose to set _either_ the `rows` or `columns` value to -1. Doing so tells the method
+* You can choose to set _either_ the `width` or `height` value to -1. Doing so tells the method
 * to keep on aligning children until there are no children left. For example if this Group had
 * 48 children in it, the following:
 *
 * `Group.align(-1, 8, 32, 32)`
 *
-* ... will align the children so that there are 8 columns vertically (the second argument), 
+* ... will align the children so that there are 8 children vertically (the second argument), 
 * and each row will contain 6 sprites, except the last one, which will contain 5 (totaling 48)
 *
 * You can also do:
@@ -19062,26 +19150,27 @@ Phaser.Group.prototype.updateZ = function () {
 * The final argument; `offset` lets you start the alignment from a specific child index.
 *
 * @method Phaser.Group#align
-* @param {integer} rows - The number of rows, or width, of the grid. Set to -1 for a dynamic width.
-* @param {integer} columns - The number of columns, or height, of the grid. Set to -1 for a dynamic height.
+* @param {integer} width - The width of the grid in items (not pixels). Set to -1 for a dynamic width. If -1 then you must set an explicit height value.
+* @param {integer} height - The height of the grid in items (not pixels). Set to -1 for a dynamic height. If -1 then you must set an explicit width value.
 * @param {integer} cellWidth - The width of each grid cell, in pixels.
 * @param {integer} cellHeight - The height of each grid cell, in pixels.
 * @param {integer} [position] - The position constant. One of `Phaser.TOP_LEFT` (default), `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.LEFT_CENTER`, `Phaser.CENTER`, `Phaser.RIGHT_CENTER`, `Phaser.BOTTOM_LEFT`, `Phaser.BOTTOM_CENTER` or `Phaser.BOTTOM_RIGHT`.
 * @param {integer} [offset=0] - Optional index to start the alignment from. Defaults to zero, the first child in the Group, but can be set to any valid child index value.
+* @return {boolean} True if the Group children were aligned, otherwise false.
 */
-Phaser.Group.prototype.align = function (rows, columns, cellWidth, cellHeight, position, offset) {
+Phaser.Group.prototype.align = function (width, height, cellWidth, cellHeight, position, offset) {
 
     if (position === undefined) { position = Phaser.TOP_LEFT; }
     if (offset === undefined) { offset = 0; }
 
-    if (this.children.length === 0 || offset > this.children.length || (rows === -1 && columns === -1))
+    if (this.children.length === 0 || offset > this.children.length || (width === -1 && height === -1))
     {
-        return;
+        return false;
     }
 
     var r = new Phaser.Rectangle(0, 0, cellWidth, cellHeight);
-    var w = (rows * cellWidth);
-    var h = (columns * cellHeight);
+    var w = (width * cellWidth);
+    var h = (height * cellHeight);
 
     for (var i = offset; i < this.children.length; i++)
     {
@@ -19096,7 +19185,7 @@ Phaser.Group.prototype.align = function (rows, columns, cellWidth, cellHeight, p
             continue;
         }
 
-        if (rows === -1)
+        if (width === -1)
         {
             //  We keep laying them out horizontally until we've done them all
             r.y += cellHeight;
@@ -19107,7 +19196,7 @@ Phaser.Group.prototype.align = function (rows, columns, cellWidth, cellHeight, p
                 r.y = 0;
             }
         }
-        else if (columns === -1)
+        else if (height === -1)
         {
             //  We keep laying them out vertically until we've done them all
             r.x += cellWidth;
@@ -19131,11 +19220,13 @@ Phaser.Group.prototype.align = function (rows, columns, cellWidth, cellHeight, p
                 if (r.y === h)
                 {
                     //  We've hit the column limit, so return, even if there are children left
-                    return;
+                    return true;
                 }
             }
         }
     }
+
+    return true;
 
 };
 
@@ -20342,12 +20433,24 @@ Phaser.Group.prototype.descendingSortHandler = function (a, b) {
 */
 Phaser.Group.prototype.iterate = function (key, value, returnType, callback, callbackContext, args) {
 
-    if (returnType === Phaser.Group.RETURN_TOTAL && this.children.length === 0)
+    if (this.children.length === 0)
     {
-        return 0;
+        if (returnType === Phaser.Group.RETURN_TOTAL)
+        {
+            return 0;
+        }
+        else if (returnType === Phaser.Group.RETURN_ALL)
+        {
+            return [];
+        }
     }
 
     var total = 0;
+
+    if (returnType === Phaser.Group.RETURN_ALL)
+    {
+        var output = [];
+    }
 
     for (var i = 0; i < this.children.length; i++)
     {
@@ -20372,6 +20475,10 @@ Phaser.Group.prototype.iterate = function (key, value, returnType, callback, cal
             {
                 return this.children[i];
             }
+            else if (returnType === Phaser.Group.RETURN_ALL)
+            {
+                output.push(this.children[i]);
+            }
         }
     }
 
@@ -20379,9 +20486,15 @@ Phaser.Group.prototype.iterate = function (key, value, returnType, callback, cal
     {
         return total;
     }
-
-    // RETURN_CHILD or RETURN_NONE
-    return null;
+    else if (returnType === Phaser.Group.RETURN_ALL)
+    {
+        return output;
+    }
+    else
+    {
+        //  RETURN_CHILD or RETURN_NONE
+        return null;
+    }
 
 };
 
@@ -20668,21 +20781,80 @@ Phaser.Group.prototype.countDead = function () {
 * Returns a random child from the group.
 *
 * @method Phaser.Group#getRandom
-* @param {integer} [startIndex=0] - Offset from the front of the front of the group (lowest child).
+* @param {integer} [startIndex=0] - Offset from the front of the group (lowest child).
 * @param {integer} [length=(to top)] - Restriction on the number of values you want to randomly select from.
 * @return {any} A random child of this Group.
 */
 Phaser.Group.prototype.getRandom = function (startIndex, length) {
 
-    if (this.children.length === 0)
+    if (startIndex === undefined) { startIndex = 0; }
+    if (length === undefined) { length = this.children.length; }
+
+    if (length === 0)
     {
         return null;
     }
 
-    startIndex = startIndex || 0;
-    length = length || this.children.length;
-
     return Phaser.ArrayUtils.getRandomItem(this.children, startIndex, length);
+
+};
+
+/**
+* Returns a random child from the Group that has `exists` set to `true`.
+*
+* Optionally you can specify a start and end index. For example if this Group had 100 children,
+* and you set `startIndex` to 0 and `endIndex` to 50, it would return a random child from only
+* the first 50 children in the Group.
+*
+* @method Phaser.Group#getRandomExists
+* @param {integer} [startIndex=0] - The first child index to start the search from.
+* @param {integer} [endIndex] - The last child index to search up to.
+* @return {any} A random child of this Group that exists.
+*/
+Phaser.Group.prototype.getRandomExists = function (startIndex, endIndex) {
+
+    var list = this.getAll('exists', true, startIndex, endIndex);
+
+    return this.game.rnd.pick(list);
+
+};
+
+/**
+* Returns all children in this Group.
+*
+* You can optionally specify a matching criteria using the `property` and `value` arguments.
+*
+* For example: `getAll('exists', true)` would return only children that have their exists property set.
+*
+* Optionally you can specify a start and end index. For example if this Group had 100 children,
+* and you set `startIndex` to 0 and `endIndex` to 50, it would return a random child from only
+* the first 50 children in the Group.
+*
+* @method Phaser.Group#getAll
+* @param {string} [property] - An optional property to test against the value argument.
+* @param {any} [value] - If property is set then Child.property must strictly equal this value to be included in the results.
+* @param {integer} [startIndex=0] - The first child index to start the search from.
+* @param {integer} [endIndex] - The last child index to search up until.
+* @return {any} A random existing child of this Group.
+*/
+Phaser.Group.prototype.getAll = function (property, value, startIndex, endIndex) {
+
+    if (startIndex === undefined) { startIndex = 0; }
+    if (endIndex === undefined) { endIndex = this.children.length; }
+
+    var output = [];
+
+    for (var i = startIndex; i < endIndex; i++)
+    {
+        var child = this.children[i];
+
+        if (property && child[property] === value)
+        {
+            output.push(child);
+        }
+    }
+
+    return output;
 
 };
 
@@ -27559,8 +27731,6 @@ Phaser.InputHandler.prototype = {
         this.sprite.events.onAddedToGroup.add(this.addedToGroup, this);
         this.sprite.events.onRemovedFromGroup.add(this.removedFromGroup, this);
 
-        this.flagged = false;
-
         return this.sprite;
 
     },
@@ -27617,7 +27787,6 @@ Phaser.InputHandler.prototype = {
     reset: function () {
 
         this.enabled = false;
-        this.flagged = false;
 
         for (var i = 0; i < 10; i++)
         {
@@ -38002,6 +38171,8 @@ Phaser.BitmapData.prototype = {
             ctx.shadowOffsetX = x || 10;
             ctx.shadowOffsetY = y || 10;
         }
+        
+        return this;
 
     },
 
@@ -38153,6 +38324,8 @@ Phaser.BitmapData.prototype = {
         ctx.fillText(text, x, y);
 
         ctx.font = prevFont;
+        
+        return this;
 
     },
 
@@ -38826,6 +38999,16 @@ PIXI.Graphics = function()
     this.dirty = true;
 
     /**
+     * Used to detect if the bounds have been invalidated, by this Graphics being cleared or drawn to.
+     * If this is set to true then the updateLocalBounds is called once in the postUpdate method.
+     * 
+     * @property _boundsDirty
+     * @type Boolean
+     * @private
+     */
+    this._boundsDirty = false;
+
+    /**
      * Used to detect if the webgl graphics object has changed. If this is set to true then the graphics object will be recalculated.
      * 
      * @property webGLDirty
@@ -38916,7 +39099,7 @@ PIXI.Graphics.prototype.lineTo = function(x, y)
 
     this.currentPath.shape.points.push(x, y);
     this.dirty = true;
-    this.updateLocalBounds();
+    this._boundsDirty = true;
 
     return this;
 };
@@ -38971,7 +39154,7 @@ PIXI.Graphics.prototype.quadraticCurveTo = function(cpX, cpY, toX, toY)
     }
 
     this.dirty = true;
-    this.updateLocalBounds();
+    this._boundsDirty = true;
 
     return this;
 };
@@ -39030,7 +39213,7 @@ PIXI.Graphics.prototype.bezierCurveTo = function(cpX, cpY, cpX2, cpY2, toX, toY)
     }
     
     this.dirty = true;
-    this.updateLocalBounds();
+    this._boundsDirty = true;
 
     return this;
 };
@@ -39100,7 +39283,7 @@ PIXI.Graphics.prototype.arcTo = function(x1, y1, x2, y2, radius)
     }
 
     this.dirty = true;
-    this.updateLocalBounds();
+    this._boundsDirty = true;
 
     return this;
 };
@@ -39186,7 +39369,7 @@ PIXI.Graphics.prototype.arc = function(cx, cy, radius, startAngle, endAngle, ant
     }
 
     this.dirty = true;
-    this.updateLocalBounds();
+    this._boundsDirty = true;
 
     return this;
 };
@@ -39345,6 +39528,7 @@ PIXI.Graphics.prototype.clear = function()
     this.filling = false;
 
     this.dirty = true;
+    this._boundsDirty = true;
     this.clearDirty = true;
     this.graphicsData = [];
 
@@ -39895,8 +40079,7 @@ PIXI.Graphics.prototype.drawShape = function(shape)
     }
 
     this.dirty = true;
-    
-    this.updateLocalBounds();
+    this._boundsDirty = true;
 
     return data;
 
@@ -42195,6 +42378,28 @@ Phaser.Graphics.prototype.preUpdate = function () {
 };
 
 /**
+* Automatically called by World
+* @method Phaser.Graphics.prototype.postUpdate
+*/
+Phaser.Graphics.prototype.postUpdate = function () {
+
+    Phaser.Component.PhysicsBody.postUpdate.call(this);
+    Phaser.Component.FixedToCamera.postUpdate.call(this);
+
+    if (this._boundsDirty)
+    {
+        this.updateLocalBounds();
+        this._boundsDirty = false;
+    }
+
+    for (var i = 0; i < this.children.length; i++)
+    {
+        this.children[i].postUpdate();
+    }
+
+};
+
+/**
 * Destroy this Graphics instance.
 *
 * @method Phaser.Graphics.prototype.destroy
@@ -42330,7 +42535,6 @@ Phaser.Graphics.prototype.drawTriangles = function(vertices, indices, cull) {
 * @constructor
 * @extends PIXI.RenderTexture
 * @param {Phaser.Game} game - Current game instance.
-* @param {string} key - Internal Phaser reference key for the render texture.
 * @param {number} [width=100] - The width of the render texture.
 * @param {number} [height=100] - The height of the render texture.
 * @param {string} [key=''] - The key of the RenderTexture in the Cache, if stored there.
@@ -58640,12 +58844,23 @@ Phaser.Loader = function (game) {
     * Used to map the application mime-types to to the Accept header in XHR requests.
     * If you don't require these mappings, or they cause problems on your server, then
     * remove them from the headers object and the XHR request will not try to use them.
+    *
+    * This object can also be used to set the `X-Requested-With` header to 
+    * `XMLHttpRequest` (or any other value you need). To enable this do:
+    *
+    * `this.load.headers.requestedWith = 'XMLHttpRequest'`
+    *
+    * before adding anything to the Loader. The XHR loader will then call:
+    *
+    * `setRequestHeader('X-Requested-With', this.headers['requestedWith'])`
+    * 
     * @property {object} headers
     * @default
     */
     this.headers = {
-        json: "application/json",
-        xml: "application/xml"
+        "requestedWith": false,
+        "json": "application/json",
+        "xml": "application/xml"
     };
 
     /**
@@ -59569,7 +59784,7 @@ Phaser.Loader.prototype = {
     *
     * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
     *
-    * @method Phaser.Loader#audiosprite
+    * @method Phaser.Loader#audioSprite
     * @param {string} key - Unique asset key of the audio file.
     * @param {Array|string} urls - An array containing the URLs of the audio files, i.e.: [ 'audiosprite.mp3', 'audiosprite.ogg', 'audiosprite.m4a' ] or a single string containing just one URL.
     * @param {string} [jsonURL=null] - The URL of the audiosprite configuration JSON object. If you wish to pass the data directly set this parameter to null.
@@ -60864,9 +61079,14 @@ Phaser.Loader.prototype = {
         xhr.open("GET", url, true);
         xhr.responseType = type;
 
+        if (this.headers['requestedWith'] !== false)
+        {
+            xhr.setRequestHeader('X-Requested-With', this.headers['requestedWith']);
+        }
+
         if (this.headers[file.type])
         {
-            xhr.setRequestHeader("Accept", this.headers[file.type]);
+            xhr.setRequestHeader('Accept', this.headers[file.type]);
         }
 
         onerror = onerror || this.fileError;
@@ -63040,8 +63260,7 @@ Object.defineProperty(Phaser.Sound.prototype, "mute", {
 
 /**
 * @name Phaser.Sound#volume
-* @property {number} volume - Gets or sets the volume of this sound, a value between 0 and 1.
-* @readonly
+* @property {number} volume - Gets or sets the volume of this sound, a value between 0 and 1. The value given is clamped to the range 0 to 1.
 */
 Object.defineProperty(Phaser.Sound.prototype, "volume", {
 
@@ -64153,6 +64372,18 @@ Phaser.ScaleManager = function (game, width, height) {
     * @public
     */
     this.leaveIncorrectOrientation = new Phaser.Signal();
+
+    /**
+    * This boolean provides you with a way to determine if the browser is in Full Screen
+    * mode (via the Full Screen API), and Phaser was the one responsible for activating it.
+    *
+    * It's possible that ScaleManager.isFullScreen returns `true` even if Phaser wasn't the
+    * one that made the browser go full-screen, so this flag lets you determine that.
+    * 
+    * @property {boolean} hasPhaserSetFullScreen
+    * @default
+    */
+    this.hasPhaserSetFullScreen = false;
 
     /**
     * If specified, this is the DOM element on which the Fullscreen API enter request will be invoked.
@@ -65694,9 +65925,11 @@ Phaser.ScaleManager.prototype = {
         {
             // Error is called in timeout to emulate the real fullscreenerror event better
             var _this = this;
+
             setTimeout(function () {
                 _this.fullScreenError();
             }, 10);
+
             return;
         }
 
@@ -65713,7 +65946,7 @@ Phaser.ScaleManager.prototype = {
             }
         }
 
-        if (typeof antialias !== 'undefined' && this.game.renderType === Phaser.CANVAS)
+        if (antialias !== undefined && this.game.renderType === Phaser.CANVAS)
         {
             this.game.stage.smoothed = antialias;
         }
@@ -65731,6 +65964,8 @@ Phaser.ScaleManager.prototype = {
         var initData = {
             targetElement: fsTarget
         };
+
+        this.hasPhaserSetFullScreen = true;
 
         this.onFullScreenInit.dispatch(this, initData);
 
@@ -65770,6 +66005,8 @@ Phaser.ScaleManager.prototype = {
         {
             return false;
         }
+
+        this.hasPhaserSetFullScreen = false;
 
         document[this.game.device.cancelFullscreen]();
 
@@ -66017,14 +66254,17 @@ Phaser.ScaleManager.prototype.constructor = Phaser.ScaleManager;
 Object.defineProperty(Phaser.ScaleManager.prototype, "boundingParent", {
 
     get: function () {
+
         if (this.parentIsWindow ||
-            (this.isFullScreen && !this._createdFullScreenTarget))
+            (this.isFullScreen && this.hasPhaserSetFullScreen && !this._createdFullScreenTarget))
         {
             return null;
         }
 
         var parentNode = this.game.canvas && this.game.canvas.parentNode;
+
         return parentNode || null;
+
     }
 
 });
