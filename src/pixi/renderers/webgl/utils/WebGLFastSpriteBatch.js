@@ -179,9 +179,8 @@ PIXI.WebGLFastSpriteBatch.prototype.end = function()
  * @method render
  * @param spriteBatch {WebGLSpriteBatch}
  */
-PIXI.WebGLFastSpriteBatch.prototype.render = function(spriteBatch)
+PIXI.WebGLFastSpriteBatch.prototype.render = function (spriteBatch)
 {
-    debugger;
     var children = spriteBatch.children;
     var sprite = children[0];
 
@@ -369,8 +368,6 @@ PIXI.WebGLFastSpriteBatch.prototype.renderSprite = function(sprite)
  */
 PIXI.WebGLFastSpriteBatch.prototype.flush = function()
 {
-    debugger;
-
     // If the batch is length 0 then return as there is nothing to draw
     if (this.currentBatchSize===0)return;
 

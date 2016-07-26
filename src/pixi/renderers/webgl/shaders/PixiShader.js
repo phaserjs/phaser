@@ -180,7 +180,6 @@ PIXI.PixiShader.prototype.initUniforms = function()
 
         if (type === 'sampler2D')
         {
-            debugger;
             uniform._init = false;
 
             if (uniform.value !== null)
