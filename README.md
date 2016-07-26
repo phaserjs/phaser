@@ -348,7 +348,9 @@ Please note that Phaser uses a custom build of Pixi and always has done. The fol
 * Rope has two new properties `textureIndices` and `textureIndex` to handle multi-texture support.
 * Strip has two new properties `textureIndices` and `textureIndex` to handle multi-texture support.
 * The following shaders have all been updated to support multi-textures: `ComplexPrimitiveShader`, `PixiFastShader`, `PixiShader`, `PrimitiveShader`, `StripShader`.
+* WebGLFastSpriteBatch.vertSize was increased from 10 to 11.
 * BaseTexture.textureIndex is a new property that controls the index of the texture within the GPU texture cache. Usually you don't change this yourself, and use `renderer.setTexturePriority` instead, but the property is public and available for more advanced use-cases.
+* CanvasRenderer.setTexturePriority is an empty function, but included to allow you to simply call `game.renderer.setTexturePriority` without first having to wrap that in a WebGL check.
 * This version contains significant fixes for `DisplayObject.getBounds` and `DisplayObjectContainer.getBounds`. The methods can now accept an optional argument `targetCoordinateSpace` which makes it much more flexible, allowing you to check the bounds against any target, not just local and global ones. If the `targetCoordinateSpace` is a valid DisplayObject:
 
     - If it's a parent of the caller at some level it will return the bounds

@@ -13,8 +13,8 @@
  *
  */
 PIXI.Strip = function (texture) {
-    PIXI.DisplayObjectContainer.call(this);
 
+    PIXI.DisplayObjectContainer.call(this);
 
     /**
      * The texture of the strip
@@ -82,6 +82,7 @@ PIXI.Strip.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
 PIXI.Strip.prototype.constructor = PIXI.Strip;
 
 PIXI.Strip.prototype._renderWebGL = function (renderSession) {
+
     // if the sprite is not visible or the alpha is 0 then no need to render this element
     if (!this.visible || this.alpha <= 0) return;
     // render triangle strip..
@@ -103,6 +104,7 @@ PIXI.Strip.prototype._renderWebGL = function (renderSession) {
 };
 
 PIXI.Strip.prototype._initWebGL = function (renderSession) {
+
     // build the strip!
     var gl = renderSession.gl;
     this.gl = gl;
@@ -132,6 +134,7 @@ PIXI.Strip.prototype._initWebGL = function (renderSession) {
 };
 
 PIXI.Strip.prototype._renderStrip = function (renderSession) {
+
     var gl = renderSession.gl;
     var projection = renderSession.projection,
         offset = renderSession.offset,

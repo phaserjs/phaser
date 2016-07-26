@@ -177,8 +177,6 @@ PIXI.Rope.prototype.updateTransform = function()
  */
 PIXI.Rope.prototype.setTexture = function(texture)
 {
-    console.log(texture);
-    debugger;
     // stop current texture
     this.texture = texture;
     this.textureIndex = texture.baseTexture.textureIndex;

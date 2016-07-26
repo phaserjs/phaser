@@ -242,20 +242,32 @@ PIXI.WebGLRenderer.prototype.initContext = function()
     this.resize(this.width, this.height);
 };
 
-PIXI.WebGLRenderer.prototype.setTexturePriority = function(textureNameCollection) {
+PIXI.WebGLRenderer.prototype.setTexturePriority = function (textureNameCollection) {
+
     var maxTextures = this.maxTextures;
     var imageCache = this.game.cache._cache.image;
     var imageName = null;
+
     // We start from 1 because framebuffer texture uses unit 0.
-    for (var index = 0; index < textureNameCollection.length; ++index) {
+    for (var index = 0; index < textureNameCollection.length; ++index)
+    {
         imageName = textureNameCollection[index];
-        if (!(imageName in imageCache)) continue;
-        if (index + 1 < maxTextures) {
+
+        if (!(imageName in imageCache))
+        {
+            continue;
+        }
+
+        if (index + 1 < maxTextures)
+        {
             imageCache[imageName].base.textureIndex = index + 1;
-        } else {
+        }
+        else
+        {
             imageCache[imageName].base.textureIndex = maxTextures - 1;
         }
     }
+
 };
 
 /**
