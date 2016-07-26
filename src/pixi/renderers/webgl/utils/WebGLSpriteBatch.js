@@ -225,10 +225,10 @@ PIXI.WebGLSpriteBatch.prototype.render = function (sprite, matrix) {
     var baseTexture = texture.baseTexture;
     var gl = this.gl;
     if (this.textureArray[baseTexture.textureIndex] != baseTexture) {
+        this.flush();
         gl.activeTexture(gl.TEXTURE0 + baseTexture.textureIndex);
         gl.bindTexture(gl.TEXTURE_2D, baseTexture._glTextures[gl.id]);
         this.textureArray[baseTexture.textureIndex] = baseTexture;
-        this.flush();
     }
 
     //  They provided an alternative rendering matrix, so use it
