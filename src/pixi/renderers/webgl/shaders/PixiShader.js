@@ -35,15 +35,7 @@ PIXI.PixiShader = function(gl)
      * @property fragmentSrc
      * @type Array
      */
-    this.fragmentSrc = [
-        'precision lowp float;',
-        'varying vec2 vTextureCoord;',
-        'varying vec4 vColor;',
-        'uniform sampler2D uSampler;',
-        'void main(void) {',
-        '   gl_FragColor = texture2D(uSampler, vTextureCoord) * vColor ;',
-        '}'
-    ];
+    this.fragmentSrc = null;
 
     /**
      * A local texture counter for multi-texture shaders.
@@ -88,13 +80,36 @@ PIXI.PixiShader.prototype.constructor = PIXI.PixiShader;
 PIXI.PixiShader.prototype.init = function()
 {
     var gl = this.gl;
+    this.MAX_TEXTURES = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);
+    var dynamicIfs = '\tif (vTextureIndex == 0.0) gl_FragColor = texture2D(uSamplerArray[0], vTextureCoord) * vColor;\n'
+    for (var index = 1; index < this.MAX_TEXTURES; ++index)
+    {
+        dynamicIfs += '\telse if (vTextureIndex == ' + 
+                    index + '.0) gl_FragColor = texture2D(uSamplerArray[' + 
+                    index + '], vTextureCoord) * vColor;\n'
+    }
+    this.fragmentSrc = [
+        '// PixiShader Fragment Shader.',
+        'precision lowp float;',
+        'varying vec2 vTextureCoord;',
+        'varying vec4 vColor;',
+        'varying float vTextureIndex;',
+        'uniform sampler2D uSamplerArray[' + this.MAX_TEXTURES + '];',
+        'const vec4 PINK = vec4(1.0, 0.0, 1.0, 1.0);',
+        'const vec4 GREEN = vec4(0.0, 1.0, 0.0, 1.0);',
+        'void main(void) {',
+        dynamicIfs,
+        'else gl_FragColor = PINK;',
+        '}'
+    ];
 
     var program = PIXI.compileProgram(gl, this.vertexSrc || PIXI.PixiShader.defaultVertexSrc, this.fragmentSrc);
 
     gl.useProgram(program);
 
     // get and store the uniforms for the shader
-    this.uSampler = gl.getUniformLocation(program, 'uSampler');
+    //this.uSampler = gl.getUniformLocation(program, 'uSampler');
+    this.uSamplerArray = gl.getUniformLocation(program, 'uSamplerArray[0]');
     this.projectionVector = gl.getUniformLocation(program, 'projectionVector');
     this.offsetVector = gl.getUniformLocation(program, 'offsetVector');
     this.dimensions = gl.getUniformLocation(program, 'dimensions');
@@ -103,6 +118,18 @@ PIXI.PixiShader.prototype.init = function()
     this.aVertexPosition = gl.getAttribLocation(program, 'aVertexPosition');
     this.aTextureCoord = gl.getAttribLocation(program, 'aTextureCoord');
     this.colorAttribute = gl.getAttribLocation(program, 'aColor');
+    this.aTextureIndex = gl.getAttribLocation(program, 'aTextureIndex');
+
+    var indices = [];
+    for (var i = 0; i < this.MAX_TEXTURES; ++i) {
+        indices.push(i);
+    }
+    // NOTE:!!!
+    // If textures are not bound
+    // then we'll get a bunch of warnings like:
+    // "WARNING: there is no texture bound to the unit X"
+    // Don't be scared, everything will be alright.
+    gl.uniform1iv(this.uSamplerArray, indices);
 
     // Begin worst hack eva //
 
@@ -115,7 +142,7 @@ PIXI.PixiShader.prototype.init = function()
         this.colorAttribute = 2;
     }
 
-    this.attributes = [this.aVertexPosition, this.aTextureCoord, this.colorAttribute];
+    this.attributes = [this.aVertexPosition, this.aTextureCoord, this.colorAttribute, this.aTextureIndex];
 
     // End worst hack eva //
 
@@ -153,6 +180,7 @@ PIXI.PixiShader.prototype.initUniforms = function()
 
         if (type === 'sampler2D')
         {
+            debugger;
             uniform._init = false;
 
             if (uniform.value !== null)
@@ -219,7 +247,8 @@ PIXI.PixiShader.prototype.initSampler2D = function(uniform)
 
     var gl = this.gl;
 
-    gl.activeTexture(gl['TEXTURE' + this.textureCount]);
+    // No need to do string manipulation for this.
+    gl.activeTexture(gl.TEXTURE0 + this.textureCount);
     gl.bindTexture(gl.TEXTURE_2D, uniform.value.baseTexture._glTextures[gl.id]);
 
     //  Extended texture data
@@ -369,21 +398,27 @@ PIXI.PixiShader.prototype.destroy = function()
 * @type String
 */
 PIXI.PixiShader.defaultVertexSrc = [
+    '// PixiShader Vertex Shader',
+    '// With multi-texture rendering',
     'attribute vec2 aVertexPosition;',
     'attribute vec2 aTextureCoord;',
     'attribute vec4 aColor;',
+    'attribute float aTextureIndex;',
 
     'uniform vec2 projectionVector;',
     'uniform vec2 offsetVector;',
 
     'varying vec2 vTextureCoord;',
     'varying vec4 vColor;',
+    'varying float vTextureIndex;',
 
     'const vec2 center = vec2(-1.0, 1.0);',
 
     'void main(void) {',
+    '   if (aTextureIndex > 0.0) gl_Position = vec4(0.0);',
     '   gl_Position = vec4( ((aVertexPosition + offsetVector) / projectionVector) + center , 0.0, 1.0);',
     '   vTextureCoord = aTextureCoord;',
     '   vColor = vec4(aColor.rgb * aColor.a, aColor.a);',
+    '   vTextureIndex = aTextureIndex;',
     '}'
 ];

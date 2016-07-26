@@ -210,6 +210,7 @@ PIXI.WebGLRenderer.prototype.initContext = function()
     var gl = this.view.getContext('webgl', this._contextOptions) || this.view.getContext('experimental-webgl', this._contextOptions);
 
     this.gl = gl;
+    this.maxTextures = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);
 
     if (!gl) {
         // fail, not able to get a context
@@ -239,6 +240,22 @@ PIXI.WebGLRenderer.prototype.initContext = function()
 
     // now resize and we are good to go!
     this.resize(this.width, this.height);
+};
+
+PIXI.WebGLRenderer.prototype.setTexturePriority = function(textureNameCollection) {
+    var maxTextures = this.maxTextures;
+    var imageCache = this.game.cache._cache.image;
+    var imageName = null;
+    // We start from 1 because framebuffer texture uses unit 0.
+    for (var index = 0; index < textureNameCollection.length; ++index) {
+        imageName = textureNameCollection[index];
+        if (!(imageName in imageCache)) continue;
+        if (index + 1 < maxTextures) {
+            imageCache[imageName].base.textureIndex = index + 1;
+        } else {
+            imageCache[imageName].base.textureIndex = maxTextures - 1;
+        }
+    }
 };
 
 /**
@@ -369,6 +386,7 @@ PIXI.WebGLRenderer.prototype.updateTexture = function (texture) {
     {
         texture._glTextures[gl.id] = gl.createTexture();
     }
+    gl.activeTexture(gl.TEXTURE0 + texture.textureIndex);
 
     gl.bindTexture(gl.TEXTURE_2D, texture._glTextures[gl.id]);
 

@@ -343,6 +343,12 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 
 Please note that Phaser uses a custom build of Pixi and always has done. The following changes have been made to our custom build, not to Pixi in general.
 
+* Multi-Texture support has now been built into our version of Pixi. This can offer dramatic performance increases in WebGL games on GPUs that support multiple texture bindings (which is most of them these days).
+* WebGLRenderer.setTexturePriority is the method used to set the priority of textures when the GPU supports multi-texture batching.
+* Rope has two new properties `textureIndices` and `textureIndex` to handle multi-texture support.
+* Strip has two new properties `textureIndices` and `textureIndex` to handle multi-texture support.
+* The following shaders have all been updated to support multi-textures: `ComplexPrimitiveShader`, `PixiFastShader`, `PixiShader`, `PrimitiveShader`, `StripShader`.
+* BaseTexture.textureIndex is a new property that controls the index of the texture within the GPU texture cache. Usually you don't change this yourself, and use `renderer.setTexturePriority` instead, but the property is public and available for more advanced use-cases.
 * This version contains significant fixes for `DisplayObject.getBounds` and `DisplayObjectContainer.getBounds`. The methods can now accept an optional argument `targetCoordinateSpace` which makes it much more flexible, allowing you to check the bounds against any target, not just local and global ones. If the `targetCoordinateSpace` is a valid DisplayObject:
 
     - If it's a parent of the caller at some level it will return the bounds
@@ -351,8 +357,7 @@ Please note that Phaser uses a custom build of Pixi and always has done. The fol
     it, and the caller and will calculate the x and y bounds of the caller
     relative to the targetCoordinateSpace DisplayObject.
 
-As a result this also fixes how empty Groups are treated when they have no other
-children except Groups. So now calculations are correct.
+As a result this also fixes how empty Groups are treated when they have no other children except Groups. So now calculations are correct.
 * DisplayObjectContainer.contains(child) is a new method which determines whether the specified display object is a child of the DisplayObjectContainer instance or the instance itself. This method is
 used in the new getBounds function.
 * Corrected DisplayObjects default `_bounds` rect from (0, 0, 1, 1) to (0, 0, 0, 0).

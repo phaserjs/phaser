@@ -21,7 +21,8 @@ PIXI.Rope = function(texture, points)
     this.uvs = new PIXI.Float32Array(points.length * 4);
     this.colors = new PIXI.Float32Array(points.length * 2);
     this.indices = new PIXI.Uint16Array(points.length * 2);
-
+    this.textureIndices = new PIXI.Float32Array(points.length * 4);
+    this.textureIndex = texture.baseTexture.textureIndex;
 
     this.refresh();
 };
@@ -46,6 +47,8 @@ PIXI.Rope.prototype.refresh = function()
     var lastPoint = points[0];
     var indices = this.indices;
     var colors = this.colors;
+    var textureIndices = this.textureIndices;
+    var textureIndex = this.textureIndex;
 
     this.count-=0.2;
 
@@ -94,6 +97,12 @@ PIXI.Rope.prototype.refresh = function()
         index = i * 2;
         indices[index] = index;
         indices[index + 1] = index + 1;
+
+        textureIndices[index + 0] = textureIndex;
+        textureIndices[index + 1] = textureIndex;
+        textureIndices[index + 2] = textureIndex;
+        textureIndices[index + 3] = textureIndex;
+
 
         lastPoint = point;
     }
@@ -168,7 +177,11 @@ PIXI.Rope.prototype.updateTransform = function()
  */
 PIXI.Rope.prototype.setTexture = function(texture)
 {
+    console.log(texture);
+    debugger;
     // stop current texture
     this.texture = texture;
+    this.textureIndex = texture.baseTexture.textureIndex;
+    this.rebindTexture();
     //this.updateFrame = true;
 };
