@@ -362,12 +362,12 @@ PIXI.WebGLSpriteBatch.prototype.renderTilingSprite = function (sprite) {
     var texture = sprite.tilingTexture;
     var baseTexture = texture.baseTexture;
     var gl = this.gl;
-    
-    if (this.textureArray[baseTexture.textureIndex] != baseTexture) {
-        gl.activeTexture(gl.TEXTURE0 + baseTexture.textureIndex);
-        gl.bindTexture(gl.TEXTURE_2D, baseTexture._glTextures[gl.id]);
-        this.textureArray[baseTexture.textureIndex] = baseTexture;
+    var textureIndex = sprite.texture.baseTexture.textureIndex;
+    if (this.textureArray[textureIndex] != baseTexture) {
         this.flush();
+        gl.activeTexture(gl.TEXTURE0 + textureIndex);
+        gl.bindTexture(gl.TEXTURE_2D, baseTexture._glTextures[gl.id]);
+        this.textureArray[textureIndex] = baseTexture;
     }
 
     // check texture..
@@ -444,7 +444,6 @@ PIXI.WebGLSpriteBatch.prototype.renderTilingSprite = function (sprite) {
     var d = wt.d / resolution;
     var tx = wt.tx;
     var ty = wt.ty;
-    var textureIndex = texture.baseTexture.textureIndex;
     // xy
     positions[i++] = a * w1 + c * h1 + tx;
     positions[i++] = d * h1 + b * w1 + ty;
@@ -651,9 +650,6 @@ PIXI.WebGLSpriteBatch.prototype.renderBatch = function (texture, size, startInde
             //  If updateTexture returns false then we cannot render it, so bail out now
             return;
         }
-    } else {
-        gl.activeTexture(gl.TEXTURE0 + texture.textureIndex);
-        gl.bindTexture(gl.TEXTURE_2D, texture._glTextures[gl.id]);
     }
     gl.drawElements(gl.TRIANGLES, size * 6, gl.UNSIGNED_SHORT, startIndex * 6 * 2);
     // increment the draw count
