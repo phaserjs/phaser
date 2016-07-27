@@ -164,4 +164,251 @@ Phaser.LoaderParser = {
         return bitmapFontData;
 
     }
+    /**
+    * Extract PVR header from loaded binary
+    *
+    * @method Phaser.LoaderParser.parsePVR
+    * @param {ArrayBuffer} arrayBuffer - The BaseTexture this font uses.
+    * @return {object} The parsed PVR file including texture data.
+    */
+    parsePVR: function (arrayBuffer) {
+        // Reference: http://cdn.imgtec.com/sdk-documentation/PVR+File+Format.Specification.pdf
+        // PVR 3 header structure
+        // ---------------------------------------
+        // address: 0, size: 4 bytes version
+        // address: 4, size: 4 bytes flags
+        // address: 8, size: 8 bytes pixel format
+        // address: 16, size: 4 bytes color space
+        // address: 20, size: 4 bytes channel type
+        // address: 24, size: 4 bytes height
+        // address: 28, size: 4 bytes width
+        // address: 32, size: 4 bytes depth
+        // address: 36, size: 4 bytes number of surfaces
+        // address: 40, size: 4 bytes number of faces
+        // address: 44, size: 4 bytes number of mipmaps
+        // address: 48, size: 4 bytes meta data size
+        // ---------------------------------------
+        var uintArray = new Uint32Array(arrayBuffer.slice(0, 52)),
+            byteArray = new Uint8Array(arrayBuffer),
+            pvrHeader = null,
+            pixelFormat = (uintArray[3] << 32 | uintArray[2]);
+
+        if (uintArray[0] === 0x03525650 &&
+            [ // Validate WebGL Pixel Format
+                0, 1, 2, 3,
+                6, 7, 9, 11
+            ].indexOf(pixelFormat) >= 0
+        ) {
+            pvrHeader = {
+                flags: uintArray[1],
+                pixelFormat: pixelFormat,
+                colorSpace: uintArray[4],
+                channelType: uintArray[5],
+                height: uintArray[6],
+                width: uintArray[7],
+                depth: uintArray[8],
+                numberOfSurfaces: uintArray[9],
+                numberOfFaces: uintArray[10],
+                numberOfMipmaps: uintArray[11],
+                metaDataSize: uintArray[12],
+                textureData: byteArray.subarray(52 + uintArray[12], byteArray.byteLength)
+            };
+        }
+        return pvrHeader;
+    },
+
+    /**
+    * Extract DDS header from loaded binary
+    *
+    * @method Phaser.LoaderParser.parseDDS
+    * @param {ArrayBuffer} arrayBuffer - The BaseTexture this font uses.
+    * @return {object} The parsed DDS file including texture data.
+    */
+    parseDDS: function (arrayBuffer) {
+        // Reference at: https://msdn.microsoft.com/en-us/library/windows/desktop/bb943982(v=vs.85).aspx
+        // DDS header structure
+        // ---------------------------------------
+        // address: 0, size: 4 bytes Identifier 'DDS '
+        // address: 4, size: 4 bytes size
+        // address: 8, size: 4 bytes flags
+        // address: 12, size: 4 bytes height
+        // address: 16, size: 4 bytes width
+        // address: 20, size: 4 bytes pitch or linear size
+        // address: 24, size: 4 bytes depth
+        // address: 28, size: 4 bytes mipmap count
+        // address: 32, size: 44 bytes reserved space 1
+        // address: 76, size: 4 pixel format size
+        // address: 80, size: 4 pixel format flag
+        // address: 84, size: 4 pixel format four CC
+        // address: 88, size: 4 pixel format bit count
+        // address: 92, size: 4 pixel format R bit mask
+        // address: 96, size: 4 pixel format G bit mask
+        // address: 100, size: 4 pixel format B bit mask
+        // address: 104, size: 4 pixel format A bit mask
+        // address: 108, size: 4 caps 1
+        // address: 112, size: 4 caps 2
+        // address: 116, size: 4 caps 3
+        // address: 120, size: 4 caps 4
+        // address: 124, size: 4 reserved 2
+        // -- DXT10 extension
+        // address: 130, size: 4 DXGI Format
+        // address: 134, size: 4 resource dimension
+        // address: 138, size: 4 misc flag
+        // address: 142, size: 4 array size
+        // address: 146, size: 4 misc flag 2
+        // ---------------------------------------
+        var byteArray = new Uint8Array(arrayBuffer),
+            uintArray = new Uint32Array(arrayBuffer),
+            ddsHeader = null;
+
+        if (byteArray[0] === 0x44 &&
+            byteArray[1] === 0x44 &&
+            byteArray[2] === 0x53 &&
+            byteArray[3] === 0x20) {
+            ddsHeader = {
+                size: uintArray[1],
+                flags: uintArray[2],
+                height: uintArray[3],
+                width: uintArray[4],
+                pitch: uintArray[5],
+                depth: uintArray[6],
+                mipmapCount: uintArray[7],
+                formatSize: uintArray[19],
+                formatFlag: uintArray[19],
+                formatFourCC: [
+                    String.fromCharCode(byteArray[84]),
+                    String.fromCharCode(byteArray[85]),
+                    String.fromCharCode(byteArray[86]),
+                    String.fromCharCode(byteArray[87])
+                ].join(''),
+                formatBitCount: uintArray[21],
+                formatRBitMask: uintArray[22],
+                formatGBitMask: uintArray[23],
+                formatBBitMask: uintArray[24],
+                formatABitMask: uintArray[25],
+                caps1: uintArray[26],
+                caps2: uintArray[27],
+                caps3: uintArray[28],
+                caps4: uintArray[29],
+                reserved2: uintArray[30],
+                DXGIFormat: null,
+                resourceDimension: null,
+                miscFlag: null,
+                arraySize: null,
+                textureData: byteArray.subarray(uintArray[1] + 4, byteArray.byteLength)
+            };
+            if (ddsHeader.formatFourCC === 'DX10') {
+                ddsHeader.DXGIFormat = uintArray[31];
+                ddsHeader.resourceDimension = uintArray[32];
+                ddsHeader.miscFlag = uintArray[33];
+                ddsHeader.arraySize = uintArray[34];
+                ddsHeader.miscFlag = uintArray[35];
+            }
+        }
+        return ddsHeader;
+    },
+
+    /**
+    * Extract KTX header from loaded binary
+    *
+    * @method Phaser.LoaderParser.parseKTX
+    * @param {ArrayBuffer} arrayBuffer - The BaseTexture this font uses.
+    * @return {object} The parsed KTX file including texture data.
+    */
+    parseKTX: function (arrayBuffer) {
+        // Reference: https://www.khronos.org/opengles/sdk/tools/KTX/file_format_spec/
+        // KTX header structure
+        // ---------------------------------------
+        // address: 0, size 12 bytes: Identifier '«KTX 11»\r\n\x1A\n'
+        // address: 12, size 4 bytes: endianness
+        // address: 16, size 4 bytes: GL type
+        // address: 20, size 4 bytes: GL type size
+        // address: 24, size 4 bytes: GL format
+        // address: 28, size 4 bytes: GL internal format
+        // address: 32, size 4 bytes: GL base internal format
+        // address: 36, size 4 bytes: pixel width
+        // address: 40, size 4 bytes: pixel height
+        // address: 44, size 4 bytes: pixel depth
+        // address: 48, size 4 bytes: number of array elements
+        // address: 52, size 4 bytes: number of faces
+        // address: 56, size 4 bytes: number of mipmap levels
+        // address: 60, size 4 bytes: bytes of key value data
+        // address: 64, size 4 bytes: key and value bytes size
+        // address: X, size 1 byte : key and value
+        // address: X, size 1 byte : value padding
+        // address: X, size 4 byte : image size
+        // ---------------------------------------
+        var byteArray = new Uint8Array(arrayBuffer),
+            uintArray = new Uint32Array(arrayBuffer),
+            ktxHeader = null,
+            imageSizeOffset = 16 + (uintArray[15] / 4) | 0,
+            imageSize = uintArray[imageSizeOffset];
+
+        if (byteArray[0] === 0xAB && byteArray[1] === 0x4B &&
+            byteArray[2] === 0x54 && byteArray[3] === 0x58 &&
+            byteArray[4] === 0x20 && byteArray[5] === 0x31 &&
+            byteArray[6] === 0x31 && byteArray[7] === 0xBB &&
+            byteArray[8] === 0x0D && byteArray[9] === 0x0A &&
+            byteArray[10] === 0x1A && byteArray[11] === 0x0A &&
+            //Check if internal GL format is ETC1_RGB8_OES
+            uintArray[7] === 0x8D64) {
+            ktxHeader = {
+                endianness: uintArray[3],
+                glType: uintArray[4],
+                glTypeSize: uintArray[5],
+                glFormat: uintArray[6],
+                glInternalFormat: uintArray[7],
+                glBaseInternalFormat: uintArray[8],
+                pixelWidth: uintArray[9],
+                pixelHeight: uintArray[10],
+                pixelDepth: uintArray[11],
+                numberOfArrayElements: uintArray[12],
+                numberOfFaces: uintArray[13],
+                numberOfMipmapLevels: uintArray[14],
+                bytesOfKeyValueData: uintArray[15],
+                keyAndValueByteSize: uintArray[16],
+                imageSize: imageSize,
+                textureData: byteArray.subarray((imageSizeOffset + 1) * 4, imageSize + 100)
+            };
+        }
+        return ktxHeader;
+    },
+
+    /**
+    * Extract PKM header from loaded binary
+    *
+    * @method Phaser.LoaderParser.parsePKM
+    * @param {ArrayBuffer} arrayBuffer - The BaseTexture this font uses.
+    * @return {object} The parsed PKM file including texture data.
+    */
+    parsePKM: function (arrayBuffer) {
+        // PKM header structure
+        // ---------------------------------------
+        // address: 0, size 4 bytes: for 'PKM '
+        // address: 4, size 2 bytes: for version
+        // address: 6, size 2 bytes: for type
+        // address: 8, size 2 bytes: for extended width
+        // address: 10, size 2 bytes: for extended height
+        // address: 12, size 2 bytes: for original width
+        // address: 14, size 2 bytes: for original height
+        // address: 16, texture data
+        // ---------------------------------------
+        var byteArray = new Uint8Array(arrayBuffer),
+            pkmHeader = null;
+
+        if (byteArray[0] === 0x50 &&
+            byteArray[1] === 0x4B &&
+            byteArray[2] === 0x4D &&
+            byteArray[3] === 0x20) {
+            pkmHeader = {
+                format: ((byteArray[6] << 8 | byteArray[7])) & 0xFFFF,
+                extendedWidth: ((byteArray[8] << 8 | byteArray[9])) & 0xFFFF,
+                extendedHeight: ((byteArray[10] << 8 | byteArray[11])) & 0xFFFF,
+                originalWidth: ((byteArray[12] << 8 | byteArray[13])) & 0xFFFF,
+                originalHeight: ((byteArray[14] << 8 | byteArray[15])) & 0xFFFF,
+                textureData: byteArray.subarray(16, byteArray.length)
+            };
+        }
+        return pkmHeader;
+    }
 };
