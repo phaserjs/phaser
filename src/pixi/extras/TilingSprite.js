@@ -197,21 +197,23 @@ PIXI.TilingSprite.prototype._renderWebGL = function(renderSession)
     {
         this.children[i]._renderWebGL(renderSession);
     }
-
-    //renderSession.spriteBatch.stop();
-
+    var restartBatch = false;
     if (this._filters)
     {
+        restartBatch = true;
+        renderSession.spriteBatch.stop();
         renderSession.filterManager.popFilter();
     }
 
     if (this._mask)
     {
+        if (!restartBatch)
+            renderSession.spriteBatch.stop();
         renderSession.maskManager.popMask(this._mask, renderSession);
     }
+    if (restartBatch)
+        renderSession.spriteBatch.start();
     
-    //renderSession.spriteBatch.start();
-
 };
 
 /**
