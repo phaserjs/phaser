@@ -719,6 +719,10 @@ Phaser.Loader.prototype = {
 
     },
 
+    texture: function (key, object, overwrite) {
+        return this.addToFileList('texture', key, object, undefined, overwrite, '.pvr');
+    },
+
     /**
     * Adds an array of images to the current load queue.
     *
@@ -2183,7 +2187,7 @@ Phaser.Loader.prototype = {
             case 'physics':
                 this.xhrLoad(file, this.transformUrl(file.url, file), 'text', this.fileComplete);
                 break;
-
+            case 'texture':
             case 'binary':
                 this.xhrLoad(file, this.transformUrl(file.url, file), 'arraybuffer', this.fileComplete);
                 break;
@@ -2196,7 +2200,6 @@ Phaser.Loader.prototype = {
     * @private
     */
     loadImageTag: function (file) {
-
         var _this = this;
 
         file.data = new Image();
@@ -2658,7 +2661,10 @@ Phaser.Loader.prototype = {
                 var data = JSON.parse(xhr.responseText);
                 file.data = data || {};
                 break;
-
+            case 'texture':
+                debugger;
+                this.cache.addImage(file.key, file.url, file.data);
+                break;
             case 'image':
 
                 this.cache.addImage(file.key, file.url, file.data);

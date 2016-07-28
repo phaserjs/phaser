@@ -163,7 +163,8 @@ Phaser.LoaderParser = {
 
         return bitmapFontData;
 
-    }
+    },
+    
     /**
     * Extract PVR header from loaded binary
     *
