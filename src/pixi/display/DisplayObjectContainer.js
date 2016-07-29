@@ -577,7 +577,7 @@ PIXI.DisplayObjectContainer.prototype._renderCanvas = function (renderSession) {
 Object.defineProperty(PIXI.DisplayObjectContainer.prototype, 'width', {
 
     get: function() {
-        return this.getLocalBounds().width + this.scale.x;
+        return this.getLocalBounds().width * this.scale.x;
     },
 
     set: function(value) {
