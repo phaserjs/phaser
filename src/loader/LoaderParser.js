@@ -164,7 +164,7 @@ Phaser.LoaderParser = {
         return bitmapFontData;
 
     },
-    
+
     /**
     * Extract PVR header from loaded binary
     *
@@ -172,7 +172,7 @@ Phaser.LoaderParser = {
     * @param {ArrayBuffer} arrayBuffer - The BaseTexture this font uses.
     * @return {object} The parsed PVR file including texture data.
     */
-    parsePVR: function (arrayBuffer) {
+    pvr: function (arrayBuffer) {
         // Reference: http://cdn.imgtec.com/sdk-documentation/PVR+File+Format.Specification.pdf
         // PVR 3 header structure
         // ---------------------------------------
@@ -201,6 +201,7 @@ Phaser.LoaderParser = {
             ].indexOf(pixelFormat) >= 0
         ) {
             pvrHeader = {
+                fileFormat: 'PVR',
                 flags: uintArray[1],
                 pixelFormat: pixelFormat,
                 colorSpace: uintArray[4],
@@ -225,7 +226,7 @@ Phaser.LoaderParser = {
     * @param {ArrayBuffer} arrayBuffer - The BaseTexture this font uses.
     * @return {object} The parsed DDS file including texture data.
     */
-    parseDDS: function (arrayBuffer) {
+    dds: function (arrayBuffer) {
         // Reference at: https://msdn.microsoft.com/en-us/library/windows/desktop/bb943982(v=vs.85).aspx
         // DDS header structure
         // ---------------------------------------
@@ -267,6 +268,7 @@ Phaser.LoaderParser = {
             byteArray[2] === 0x53 &&
             byteArray[3] === 0x20) {
             ddsHeader = {
+                fileFormat: 'DDS',
                 size: uintArray[1],
                 flags: uintArray[2],
                 height: uintArray[3],
@@ -316,7 +318,7 @@ Phaser.LoaderParser = {
     * @param {ArrayBuffer} arrayBuffer - The BaseTexture this font uses.
     * @return {object} The parsed KTX file including texture data.
     */
-    parseKTX: function (arrayBuffer) {
+    ktx: function (arrayBuffer) {
         // Reference: https://www.khronos.org/opengles/sdk/tools/KTX/file_format_spec/
         // KTX header structure
         // ---------------------------------------
@@ -344,16 +346,23 @@ Phaser.LoaderParser = {
             ktxHeader = null,
             imageSizeOffset = 16 + (uintArray[15] / 4) | 0,
             imageSize = uintArray[imageSizeOffset];
-
         if (byteArray[0] === 0xAB && byteArray[1] === 0x4B &&
             byteArray[2] === 0x54 && byteArray[3] === 0x58 &&
             byteArray[4] === 0x20 && byteArray[5] === 0x31 &&
             byteArray[6] === 0x31 && byteArray[7] === 0xBB &&
             byteArray[8] === 0x0D && byteArray[9] === 0x0A &&
             byteArray[10] === 0x1A && byteArray[11] === 0x0A &&
-            //Check if internal GL format is ETC1_RGB8_OES
-            uintArray[7] === 0x8D64) {
+            //Check if internal GL format is supported by WebGL
+            [
+                // ETC1
+                0x8D64,
+                // PVRTC 
+                0x8C00, 0x8C01, 0x8C02, 0x8C03, 
+                // DXTC | S3TC
+                0x83F0, 0x83F1, 0x83F2, 0x83F3
+            ].indexOf(uintArray[7]) >= 0) {
             ktxHeader = {
+                fileFormat: 'KTX',
                 endianness: uintArray[3],
                 glType: uintArray[4],
                 glTypeSize: uintArray[5],
@@ -382,7 +391,7 @@ Phaser.LoaderParser = {
     * @param {ArrayBuffer} arrayBuffer - The BaseTexture this font uses.
     * @return {object} The parsed PKM file including texture data.
     */
-    parsePKM: function (arrayBuffer) {
+    pkm: function (arrayBuffer) {
         // PKM header structure
         // ---------------------------------------
         // address: 0, size 4 bytes: for 'PKM '
@@ -402,6 +411,7 @@ Phaser.LoaderParser = {
             byteArray[2] === 0x4D &&
             byteArray[3] === 0x20) {
             pkmHeader = {
+                fileFormat: 'PKM',
                 format: ((byteArray[6] << 8 | byteArray[7])) & 0xFFFF,
                 extendedWidth: ((byteArray[8] << 8 | byteArray[9])) & 0xFFFF,
                 extendedHeight: ((byteArray[10] << 8 | byteArray[11])) & 0xFFFF,

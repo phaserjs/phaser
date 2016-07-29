@@ -64,7 +64,8 @@ Phaser.Cache = function (game) {
         bitmapData: {},
         bitmapFont: {},
         shader: {},
-        renderTexture: {}
+        renderTexture: {},
+        compressedTexture: {}
     };
 
     /**
@@ -111,6 +112,7 @@ Phaser.Cache = function (game) {
     this._cacheMap[Phaser.Cache.VIDEO] = this._cache.video;
     this._cacheMap[Phaser.Cache.SHADER] = this._cache.shader;
     this._cacheMap[Phaser.Cache.RENDER_TEXTURE] = this._cache.renderTexture;
+    this._cacheMap[Phaser.Cache.COMPRESSED_TEXTURE] = this._cache.compressedTexture;
 
     this.addDefaultImage();
     this.addMissingImage();
@@ -208,6 +210,12 @@ Phaser.Cache.SHADER = 14;
 Phaser.Cache.RENDER_TEXTURE = 15;
 
 /**
+* @constant
+* @type {number}
+*/
+Phaser.Cache.COMPRESSED_TEXTURE = 16;
+
+/**
 * The default image used for a texture when no other is specified.
 * @constant
 * @type {PIXI.Texture}
@@ -226,6 +234,15 @@ Phaser.Cache.prototype = {
     //////////////////
     //  Add Methods //
     //////////////////
+
+    addCompressedTextureMetaData: function (key, url, extension, arrayBuffer) {
+        this._cache.compressedTexture[key] = {
+            data: Phaser.LoaderParser[extension](arrayBuffer), 
+            url: url, 
+            key: key,
+            fileFormat: extension
+        };
+    },
 
     /**
     * Add a new canvas object in to the cache.

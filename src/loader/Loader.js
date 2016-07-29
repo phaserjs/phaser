@@ -2662,8 +2662,7 @@ Phaser.Loader.prototype = {
                 file.data = data || {};
                 break;
             case 'texture':
-                debugger;
-                this.cache.addImage(file.key, file.url, file.data);
+                this.cache.addCompressedTextureMetaData(file.key, file.url, file.url.split('.').pop().toLowerCase(), xhr.response);
                 break;
             case 'image':
 
