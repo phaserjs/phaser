@@ -730,14 +730,32 @@ Phaser.Weapon.prototype.fire = function (from, x, y) {
     }
     else if (this.trackedSprite)
     {
-        if (this.fireFrom.width > 1)
+        if (this.trackRotation)
         {
-            this.fireFrom.centerOn(this.trackedSprite.world.x + this.trackOffset.x, this.trackedSprite.world.y + this.trackOffset.y);
+          rotatedPoint = new Phaser.Point(this.trackedSprite.world.x + this.trackOffset.x, this.trackedSprite.world.y + this.trackOffset.y);
+          rotatedPoint.rotate(this.trackedSprite.world.x, this.trackedSprite.world.y, this.trackedSprite.rotation);
+
+          if (this.fireFrom.width > 1)
+          {
+              this.fireFrom.centerOn(rotatedPoint.x, rotatedPoint.y);
+          }
+          else
+          {
+              this.fireFrom.x = rotatedPoint.x;
+              this.fireFrom.y = rotatedPoint.y;
+          }
         }
         else
         {
-            this.fireFrom.x = this.trackedSprite.world.x + this.trackOffset.x;
-            this.fireFrom.y = this.trackedSprite.world.y + this.trackOffset.y;
+          if (this.fireFrom.width > 1)
+          {
+              this.fireFrom.centerOn(this.trackedSprite.world.x + this.trackOffset.x, this.trackedSprite.world.y + this.trackOffset.y);
+          }
+          else
+          {
+              this.fireFrom.x = this.trackedSprite.world.x + this.trackOffset.x;
+              this.fireFrom.y = this.trackedSprite.world.y + this.trackOffset.y;
+          }
         }
 
         if (this.bulletInheritSpriteSpeed)
