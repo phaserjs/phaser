@@ -644,16 +644,24 @@ Object.defineProperties(PIXI.DisplayObject.prototype, {
             {
                 var item = this.parent;
 
-                do
+                if (!item)
                 {
-                    if (!item.visible)
-                    {
-                        return false;
-                    }
-
-                    item = item.parent;
+                    return this.visible;
                 }
-                while (item);
+                else
+                {
+                    do
+                    {
+                        if (!item.visible)
+                        {
+                            return false;
+                        }
+
+                        item = item.parent;
+                    }
+                    while (item);
+
+                }
 
                 return true;
             }
