@@ -192,7 +192,8 @@ Phaser.LoaderParser = {
         var uintArray = new Uint32Array(arrayBuffer.slice(0, 52)),
             byteArray = new Uint8Array(arrayBuffer),
             pvrHeader = null,
-            pixelFormat = (uintArray[3] << 32 | uintArray[2]);
+            pixelFormat = (uintArray[3] << 32 | uintArray[2]),
+            compressionAlgorithm;
 
         if (uintArray[0] === 0x03525650 &&
             [ // Validate WebGL Pixel Format
@@ -200,8 +201,16 @@ Phaser.LoaderParser = {
                 6, 7, 9, 11
             ].indexOf(pixelFormat) >= 0
         ) {
+            if (pixelFormat >= 0 && pixelFormat <= 3) {
+                compressionAlgorithm = 'PVRTC';
+            } else if (pixelFormat >= 7 && pixelFormat <= 11) {
+                compressionAlgorithm = 'S3TC';
+            } else if (pixelFormat == 6) {
+                compressionAlgorithm = 'ETC1';
+            }
             pvrHeader = {
                 fileFormat: 'PVR',
+                compressionAlgorithm: compressionAlgorithm,
                 flags: uintArray[1],
                 pixelFormat: pixelFormat,
                 colorSpace: uintArray[4],
@@ -269,6 +278,7 @@ Phaser.LoaderParser = {
             byteArray[3] === 0x20) {
             ddsHeader = {
                 fileFormat: 'DDS',
+                compressionAlgorithm: 'S3TC',
                 size: uintArray[1],
                 flags: uintArray[2],
                 height: uintArray[3],
@@ -345,7 +355,10 @@ Phaser.LoaderParser = {
             uintArray = new Uint32Array(arrayBuffer),
             ktxHeader = null,
             imageSizeOffset = 16 + (uintArray[15] / 4) | 0,
-            imageSize = uintArray[imageSizeOffset];
+            imageSize = uintArray[imageSizeOffset],
+            glInternalFormat = uintArray[7],
+            compressionAlgorithm = 0;
+
         if (byteArray[0] === 0xAB && byteArray[1] === 0x4B &&
             byteArray[2] === 0x54 && byteArray[3] === 0x58 &&
             byteArray[4] === 0x20 && byteArray[5] === 0x31 &&
@@ -360,9 +373,27 @@ Phaser.LoaderParser = {
                 0x8C00, 0x8C01, 0x8C02, 0x8C03, 
                 // DXTC | S3TC
                 0x83F0, 0x83F1, 0x83F2, 0x83F3
-            ].indexOf(uintArray[7]) >= 0) {
+            ].indexOf(glInternalFormat) >= 0) {
+            switch (glInternalFormat) {
+                case 0x8D64:
+                    compressionAlgorithm = 'ETC1';
+                    break;
+                case 0x8C00:
+                case 0x8C01:
+                case 0x8C02:
+                case 0x8C03:
+                    compressionAlgorithm = 'PVRTC';
+                    break;
+                case 0x83F0:
+                case 0x83F1:
+                case 0x83F2:
+                case 0x83F3:
+                    compressionAlgorithm = 'S3TC';
+                    break;
+            }
             ktxHeader = {
                 fileFormat: 'KTX',
+                compressionAlgorithm: compressionAlgorithm,
                 endianness: uintArray[3],
                 glType: uintArray[4],
                 glTypeSize: uintArray[5],
@@ -412,6 +443,7 @@ Phaser.LoaderParser = {
             byteArray[3] === 0x20) {
             pkmHeader = {
                 fileFormat: 'PKM',
+                compressionAlgorithm: 'ETC1',
                 format: ((byteArray[6] << 8 | byteArray[7])) & 0xFFFF,
                 extendedWidth: ((byteArray[8] << 8 | byteArray[9])) & 0xFFFF,
                 extendedHeight: ((byteArray[10] << 8 | byteArray[11])) & 0xFFFF,
