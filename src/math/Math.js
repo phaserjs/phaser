@@ -372,6 +372,30 @@ Phaser.Math = {
     },
 
     /**
+    * Gets the shortest angle between `angle1` and `angle2`.
+    * Both angles must be in the range -180 to 180, which is the same clamped
+    * range that `sprite.angle` uses, so you can pass in two sprite angles to
+    * this method, and get the shortest angle back between the two of them.
+    *
+    * The angle returned will be in the same range. If the returned angle is
+    * less than 0 then it's a counter-clockwise rotation, if >= 0 then it's
+    * a clockwise rotation.
+    * 
+    * @method Phaser.Math#getShortestAngle
+    * @param {number} angle1 - The first angle. In the range -180 to 180.
+    * @param {number} angle2 - The second angle. In the range -180 to 180.
+    * @return {number} The shortest angle, in degrees. If less than zero it's counter-clockwise, otherwise clockwise.
+    */
+    getShortestAngle: function (angle1, angle2) {
+
+        var difference = angle2 - angle1;
+        var times = Math.floor((difference - (-180)) / 360);
+
+        return (difference - (times * 360)) * -1;
+
+    },
+
+    /**
     * Find the angle of a segment from (x1, y1) -> (x2, y2).
     * 
     * @method Phaser.Math#angleBetween
