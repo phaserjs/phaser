@@ -730,38 +730,38 @@ Phaser.Weapon.prototype.fire = function (from, x, y) {
     }
     else if (this.trackedSprite)
     {
-        if (this.trackRotation)
-        {
-          rotatedPoint = new Phaser.Point(this.trackedSprite.world.x + this.trackOffset.x, this.trackedSprite.world.y + this.trackOffset.y);
-          rotatedPoint.rotate(this.trackedSprite.world.x, this.trackedSprite.world.y, this.trackedSprite.rotation);
+      if (this.trackRotation)
+      {
+        var rotatedPoint = new Phaser.Point(this.trackedSprite.world.x + this.trackOffset.x, this.trackedSprite.world.y + this.trackOffset.y);
+        rotatedPoint.rotate(this.trackedSprite.world.x, this.trackedSprite.world.y, this.trackedSprite.rotation);
 
-          if (this.fireFrom.width > 1)
-          {
-              this.fireFrom.centerOn(rotatedPoint.x, rotatedPoint.y);
-          }
-          else
-          {
-              this.fireFrom.x = rotatedPoint.x;
-              this.fireFrom.y = rotatedPoint.y;
-          }
+        if (this.fireFrom.width > 1)
+        {
+            this.fireFrom.centerOn(rotatedPoint.x, rotatedPoint.y);
         }
         else
         {
-          if (this.fireFrom.width > 1)
-          {
-              this.fireFrom.centerOn(this.trackedSprite.world.x + this.trackOffset.x, this.trackedSprite.world.y + this.trackOffset.y);
-          }
-          else
-          {
-              this.fireFrom.x = this.trackedSprite.world.x + this.trackOffset.x;
-              this.fireFrom.y = this.trackedSprite.world.y + this.trackOffset.y;
-          }
+            this.fireFrom.x = rotatedPoint.x;
+            this.fireFrom.y = rotatedPoint.y;
         }
-
-        if (this.bulletInheritSpriteSpeed)
+      }
+      else
+      {
+        if (this.fireFrom.width > 1)
         {
-            speed += this.trackedSprite.body.speed;
+            this.fireFrom.centerOn(this.trackedSprite.world.x + this.trackOffset.x, this.trackedSprite.world.y + this.trackOffset.y);
         }
+        else
+        {
+            this.fireFrom.x = this.trackedSprite.world.x + this.trackOffset.x;
+            this.fireFrom.y = this.trackedSprite.world.y + this.trackOffset.y;
+        }
+      }
+
+      if (this.bulletInheritSpriteSpeed)
+      {
+          speed += this.trackedSprite.body.speed;
+      }
     }
     else if (this.trackedPointer)
     {
