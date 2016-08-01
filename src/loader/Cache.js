@@ -236,8 +236,9 @@ Phaser.Cache.prototype = {
     //////////////////
 
     addCompressedTextureMetaData: function (key, url, extension, arrayBuffer) {
+        var data = (extension in Phaser.LoaderParser) ? Phaser.LoaderParser[extension](arrayBuffer) : arrayBuffer; 
         this._cache.compressedTexture[key] = {
-            data: Phaser.LoaderParser[extension](arrayBuffer), 
+            data: data, 
             url: url, 
             key: key,
             fileFormat: extension

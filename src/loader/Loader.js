@@ -720,7 +720,17 @@ Phaser.Loader.prototype = {
     },
 
     texture: function (key, object, overwrite) {
-        return this.addToFileList('texture', key, object, undefined, overwrite, '.pvr');
+        var compression = this.game.renderer.extensions.compression, exkey;
+        if (this.game.renderType === Phaser.WEBGL) {
+            for (exkey in object) {
+                if (exkey in compression) {
+                    this.addToFileList('texture', key + '_' + exkey, object[exkey], undefined, overwrite, '.pvr');
+                } else if (exkey === 'truecolor') {
+                    this.addToFileList('texture', key + '_' + exkey, object[exkey], undefined, overwrite, '.png');
+                }
+            }
+        }
+        return this;
     },
 
     /**
@@ -1958,7 +1968,6 @@ Phaser.Loader.prototype = {
             file.errorMessage = errorMessage;
 
             console.warn('Phaser.Loader - ' + file.type + '[' + file.key + ']' + ': ' + errorMessage);
-            // debugger;
         }
 
         this.processLoadQueue();
@@ -2192,6 +2201,10 @@ Phaser.Loader.prototype = {
                 this.xhrLoad(file, this.transformUrl(file.url, file), 'text', this.fileComplete);
                 break;
             case 'texture':
+                if (file.key.split('_').pop() === 'truecolor') {
+                    this.loadImageTag(file);
+                    break;
+                }
             case 'binary':
                 this.xhrLoad(file, this.transformUrl(file.url, file), 'arraybuffer', this.fileComplete);
                 break;
@@ -2666,7 +2679,10 @@ Phaser.Loader.prototype = {
                 file.data = data || {};
                 break;
             case 'texture':
-                this.cache.addCompressedTextureMetaData(file.key, file.url, file.url.split('.').pop().toLowerCase(), xhr.response);
+                if (file.data != null)
+                    this.cache.addCompressedTextureMetaData(file.key, file.url, file.url.split('.').pop().toLowerCase(), file.data);
+                else
+                    this.cache.addCompressedTextureMetaData(file.key, file.url, file.url.split('.').pop().toLowerCase(), xhr.response);
                 break;
             case 'image':
 

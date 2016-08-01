@@ -34,6 +34,8 @@ PIXI.WebGLRenderer = function (game) {
      */
     this.type = PIXI.WEBGL_RENDERER;
 
+    this.extensions = {};
+
     /**
      * The resolution of the renderer
      *
@@ -208,6 +210,7 @@ PIXI.WebGLRenderer.prototype.constructor = PIXI.WebGLRenderer;
 PIXI.WebGLRenderer.prototype.initContext = function()
 {
     var gl = this.view.getContext('webgl', this._contextOptions) || this.view.getContext('experimental-webgl', this._contextOptions);
+    var etc1, pvrtc, s3tc;
 
     this.gl = gl;
     this.maxTextures = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);
@@ -240,6 +243,17 @@ PIXI.WebGLRenderer.prototype.initContext = function()
 
     // now resize and we are good to go!
     this.resize(this.width, this.height);
+
+    // Load WebGL extension
+    this.extensions.compression = {};
+
+    etc1 = gl.getExtension('WEBGL_compressed_texture_etc1') || gl.getExtension('WEBKIT_WEBGL_compressed_texture_etc1');
+    pvrtc = gl.getExtension('WEBGL_compressed_texture_pvrtc') || gl.getExtension('WEBKIT_WEBGL_compressed_texture_pvrtc');
+    s3tc = gl.getExtension('WEBGL_compressed_texture_s3tc') || gl.getExtension('WEBKIT_WEBGL_compressed_texture_s3tc');
+
+    if (etc1) this.extensions.compression.etc1 = etc1;
+    if (pvrtc) this.extensions.compression.pvrtc = pvrtc;
+    if (s3tc) this.extensions.compression.s3tc = s3tc;
 };
 
 PIXI.WebGLRenderer.prototype.setTexturePriority = function (textureNameCollection) {
