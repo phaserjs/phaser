@@ -193,7 +193,8 @@ Phaser.LoaderParser = {
             byteArray = new Uint8Array(arrayBuffer),
             pvrHeader = null,
             pixelFormat = (uintArray[3] << 32 | uintArray[2]),
-            compressionAlgorithm;
+            compressionAlgorithm,
+            glExtensionFormat = 0;
 
         if (uintArray[0] === 0x03525650 &&
             [ // Validate WebGL Pixel Format
@@ -208,7 +209,36 @@ Phaser.LoaderParser = {
             } else if (pixelFormat == 6) {
                 compressionAlgorithm = 'ETC1';
             }
+            switch (pixelFormat) {
+                case 0:
+                    glExtensionFormat = 0x8C01;
+                    break;
+                case 1:
+                    glExtensionFormat = 0x8C03;
+                    break;
+                case 2:
+                    glExtensionFormat = 0x8C00;
+                    break;
+                case 3:
+                    glExtensionFormat = 0x8C02;
+                    break;
+                case 6:
+                    glExtensionFormat = 0x8D64;
+                    break;
+                case 7:
+                    glExtensionFormat = 0x83F1;
+                    break;
+                case 9:
+                    glExtensionFormat = 0x83F2;
+                    break;
+                case 11:
+                    glExtensionFormat = 0x83F3;
+                    break;
+                default:
+                    glExtensionFormat = -1;
+            }
             pvrHeader = {
+                complete: true,
                 fileFormat: 'PVR',
                 compressionAlgorithm: compressionAlgorithm,
                 flags: uintArray[1],
@@ -222,7 +252,8 @@ Phaser.LoaderParser = {
                 numberOfFaces: uintArray[10],
                 numberOfMipmaps: uintArray[11],
                 metaDataSize: uintArray[12],
-                textureData: byteArray.subarray(52 + uintArray[12], byteArray.byteLength)
+                textureData: byteArray.subarray(52 + uintArray[12], byteArray.byteLength),
+                glExtensionFormat: glExtensionFormat
             };
         }
         return pvrHeader;
@@ -277,6 +308,7 @@ Phaser.LoaderParser = {
             byteArray[2] === 0x53 &&
             byteArray[3] === 0x20) {
             ddsHeader = {
+                complete: true,
                 fileFormat: 'DDS',
                 compressionAlgorithm: 'S3TC',
                 size: uintArray[1],
@@ -392,6 +424,7 @@ Phaser.LoaderParser = {
                     break;
             }
             ktxHeader = {
+                complete: true,
                 fileFormat: 'KTX',
                 compressionAlgorithm: compressionAlgorithm,
                 endianness: uintArray[3],
@@ -400,8 +433,8 @@ Phaser.LoaderParser = {
                 glFormat: uintArray[6],
                 glInternalFormat: uintArray[7],
                 glBaseInternalFormat: uintArray[8],
-                pixelWidth: uintArray[9],
-                pixelHeight: uintArray[10],
+                width: uintArray[9],
+                height: uintArray[10],
                 pixelDepth: uintArray[11],
                 numberOfArrayElements: uintArray[12],
                 numberOfFaces: uintArray[13],
@@ -442,11 +475,12 @@ Phaser.LoaderParser = {
             byteArray[2] === 0x4D &&
             byteArray[3] === 0x20) {
             pkmHeader = {
+                complete: true,
                 fileFormat: 'PKM',
                 compressionAlgorithm: 'ETC1',
                 format: ((byteArray[6] << 8 | byteArray[7])) & 0xFFFF,
-                extendedWidth: ((byteArray[8] << 8 | byteArray[9])) & 0xFFFF,
-                extendedHeight: ((byteArray[10] << 8 | byteArray[11])) & 0xFFFF,
+                width: ((byteArray[8] << 8 | byteArray[9])) & 0xFFFF,
+                height: ((byteArray[10] << 8 | byteArray[11])) & 0xFFFF,
                 originalWidth: ((byteArray[12] << 8 | byteArray[13])) & 0xFFFF,
                 originalHeight: ((byteArray[14] << 8 | byteArray[15])) & 0xFFFF,
                 textureData: byteArray.subarray(16, byteArray.length)

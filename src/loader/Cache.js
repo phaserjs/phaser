@@ -236,13 +236,35 @@ Phaser.Cache.prototype = {
     //////////////////
 
     addCompressedTextureMetaData: function (key, url, extension, arrayBuffer) {
+        //TODO: Check if texture was loaded and remove it was
         var data = (extension in Phaser.LoaderParser) ? Phaser.LoaderParser[extension](arrayBuffer) : arrayBuffer; 
-        this._cache.compressedTexture[key] = {
-            data: data, 
-            url: url, 
+        
+        var texture = {
             key: key,
+            url: url,
+            data: data,
+            base: new PIXI.BaseTexture(data),
+            frame: new Phaser.Frame(0, 0, 0, data.width, data.height, key),
+            frameData: new Phaser.FrameData(),            
             fileFormat: extension
         };
+
+        texture.frameData.addFrame(new Phaser.Frame(0, 0, 0, data.width, data.height, url));
+
+        this._cache.compressedTexture[key] = texture;
+
+        this._resolveURL(url, texture);
+
+        if (key === '__default')
+        {
+            Phaser.Cache.DEFAULT = new PIXI.Texture(img.base);
+        }
+        else if (key === '__missing')
+        {
+            Phaser.Cache.MISSING = new PIXI.Texture(img.base);
+        }
+
+        return texture;        
     },
 
     /**
@@ -1118,7 +1140,15 @@ Phaser.Cache.prototype = {
 
         if (full === undefined) { full = false; }
 
-        var img = this.getItem(key, Phaser.Cache.IMAGE, 'getImage');
+        var img = null;
+
+        if (key in this._cacheMap[Phaser.Cache.COMPRESSED_TEXTURE])
+            img = this.getItem(key, Phaser.Cache.COMPRESSED_TEXTURE, 'getImage');
+
+        if (img === null)
+        {
+            img = this.getItem(key, Phaser.Cache.IMAGE, 'getImage');
+        }
 
         if (img === null)
         {

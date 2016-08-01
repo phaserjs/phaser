@@ -723,7 +723,7 @@ Phaser.Loader.prototype = {
         var compression = this.game.renderer.extensions.compression, exkey;
         if (this.game.renderType === Phaser.WEBGL) {
             for (exkey in object) {
-                if (exkey in compression) {
+                if (exkey.toUpperCase() in compression) {
                     this.addToFileList('texture', key + '_' + exkey, object[exkey], undefined, overwrite, '.pvr');
                 } else if (exkey === 'truecolor') {
                     this.addToFileList('texture', key + '_' + exkey, object[exkey], undefined, overwrite, '.png');
