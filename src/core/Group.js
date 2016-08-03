@@ -2063,15 +2063,14 @@ Phaser.Group.prototype.spreadProperties = function(property, startValue, margin)
 	
 	for (var i = 0; i < amount; ++i)
 	{
-		var child = this.children[i];
+	    var child = this.children[i];
 		
 		if (child.exists)
 		{
-		    Phaser.Utils.setProperty(child, property, Phaser.Math.spread(startValue, amount, margin, i));
-	        //child[property] = Phaser.Math.spread(startValue, amount, margin, i);
+            Phaser.Utils.setProperty(child, property, Phaser.Math.spread(startValue, amount, margin, i));
 		}
 	}
-}
+};
 
 /**
 * Spreads the x position of all existing children from a given start value
