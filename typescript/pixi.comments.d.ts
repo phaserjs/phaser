@@ -901,7 +901,7 @@ declare module PIXI {
         getChildIndex(child: DisplayObject): number;
 
         /**
-        * Retrieves the non-global local bounds of the displayObjectContainer as a rectangle. The calculation takes all visible children into consideration.
+        * Retrieves the non-global local bounds of the displayObjectContainer as a rectangle without any transformations. The calculation takes all visible children into consideration.
         * @return The rectangular bounding area
         */
         getLocalBounds(): Rectangle;
