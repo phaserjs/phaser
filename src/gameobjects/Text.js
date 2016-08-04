@@ -538,6 +538,8 @@ Phaser.Text.prototype.updateText = function () {
         {
             linePositionX += (maxLineWidth - lineWidths[i]) / 2;
         }
+        
+        linePositionX = Math.round(linePositionX);
 
         if (this.autoRound)
         {
