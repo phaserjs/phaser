@@ -345,6 +345,11 @@ Phaser.Text.prototype.setStyle = function (style, update) {
 
     this.style = style;
     this.dirty = true;
+    
+    if (this._text !== '')
+    {
+        this.updateText();
+    }
 
     if (update)
     {
