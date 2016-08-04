@@ -199,6 +199,8 @@ Phaser.Button = function (game, x, y, key, callback, callbackContext, overFrame,
     this.forceOut = false;
 
     this.inputEnabled = true;
+    
+    this.input.useHandCursor = true;
 
     this.input.start(0, true);
 
