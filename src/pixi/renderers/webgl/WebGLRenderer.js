@@ -395,7 +395,7 @@ PIXI.WebGLRenderer.prototype.resize = function (width, height) {
 /**
  * Updates and creates a WebGL compressed texture for the renderers context.
  *
- * @method updateTexture
+ * @method updateCompressedTexture
  * @param texture {Texture} the texture to update
  * @return {boolean} True if the texture was successfully bound, otherwise false.
  */
@@ -414,9 +414,6 @@ PIXI.WebGLRenderer.prototype.updateCompressedTexture = function (texture) {
     gl.activeTexture(gl.TEXTURE0 + texture.textureIndex);
 
     gl.bindTexture(gl.TEXTURE_2D, texture._glTextures[gl.id]);
-
-
-    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, texture.premultipliedAlpha);
 
     gl.compressedTexImage2D(
         gl.TEXTURE_2D, 
@@ -450,9 +447,7 @@ PIXI.WebGLRenderer.prototype.updateCompressedTexture = function (texture) {
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
     }
-
     texture._dirty[gl.id] = false;
-
     return true;
 };
 

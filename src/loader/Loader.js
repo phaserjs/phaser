@@ -714,20 +714,27 @@ Phaser.Loader.prototype = {
     * @return {Phaser.Loader} This Loader instance.
     */
     image: function (key, url, overwrite) {
-
+        if (typeof url === 'object' && url.constructor === {}.constructor) {
+            return this.texture(key, url, overwrite);
+        }
         return this.addToFileList('image', key, url, undefined, overwrite, '.png');
 
     },
 
     texture: function (key, object, overwrite) {
-        var compression = this.game.renderer.extensions.compression, exkey;
+        var compression = this.game.renderer.extensions.compression, exkey, foundExt = false;
         if (this.game.renderType === Phaser.WEBGL) {
             for (exkey in object) {
                 if (exkey.toUpperCase() in compression) {
-                    this.addToFileList('texture', key + '_' + exkey, object[exkey], undefined, overwrite, '.pvr');
-                } else if (exkey === 'truecolor') {
-                    this.addToFileList('texture', key + '_' + exkey, object[exkey], undefined, overwrite, '.png');
+                    this.addToFileList('texture', key, object[exkey], undefined, overwrite, '.pvr');
+                    foundExt = true;
+                    break;
                 }
+            }
+            // Check if we have a truecolor texture to fallback.
+            if (!foundExt && object['truecolor'])
+            {
+                this.addToFileList('image', key, object['truecolor'], undefined, overwrite, '.png');
             }
         }
         return this;

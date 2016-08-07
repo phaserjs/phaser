@@ -112,7 +112,6 @@ Phaser.Cache = function (game) {
     this._cacheMap[Phaser.Cache.VIDEO] = this._cache.video;
     this._cacheMap[Phaser.Cache.SHADER] = this._cache.shader;
     this._cacheMap[Phaser.Cache.RENDER_TEXTURE] = this._cache.renderTexture;
-    this._cacheMap[Phaser.Cache.COMPRESSED_TEXTURE] = this._cache.compressedTexture;
 
     this.addDefaultImage();
     this.addMissingImage();
@@ -210,12 +209,6 @@ Phaser.Cache.SHADER = 14;
 Phaser.Cache.RENDER_TEXTURE = 15;
 
 /**
-* @constant
-* @type {number}
-*/
-Phaser.Cache.COMPRESSED_TEXTURE = 16;
-
-/**
 * The default image used for a texture when no other is specified.
 * @constant
 * @type {PIXI.Texture}
@@ -236,9 +229,12 @@ Phaser.Cache.prototype = {
     //////////////////
 
     addCompressedTextureMetaData: function (key, url, extension, arrayBuffer) {
-        //TODO: Check if texture was loaded and remove it was
-        var data = (extension in Phaser.LoaderParser) ? Phaser.LoaderParser[extension](arrayBuffer) : arrayBuffer; 
+        if (this.checkImageKey(key))
+        {
+            this.removeImage(key);
+        }
         
+        var data = (extension in Phaser.LoaderParser) ? Phaser.LoaderParser[extension](arrayBuffer) : arrayBuffer; 
         var texture = {
             key: key,
             url: url,
@@ -251,7 +247,7 @@ Phaser.Cache.prototype = {
 
         texture.frameData.addFrame(new Phaser.Frame(0, 0, 0, data.width, data.height, url));
 
-        this._cache.compressedTexture[key] = texture;
+        this._cache.image[key] = texture;
 
         this._resolveURL(url, texture);
 
@@ -1140,15 +1136,7 @@ Phaser.Cache.prototype = {
 
         if (full === undefined) { full = false; }
 
-        var img = null;
-
-        if (key in this._cacheMap[Phaser.Cache.COMPRESSED_TEXTURE])
-            img = this.getItem(key, Phaser.Cache.COMPRESSED_TEXTURE, 'getImage');
-
-        if (img === null)
-        {
-            img = this.getItem(key, Phaser.Cache.IMAGE, 'getImage');
-        }
+        var  img = this.getItem(key, Phaser.Cache.IMAGE, 'getImage');
 
         if (img === null)
         {
