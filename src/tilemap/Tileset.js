@@ -40,14 +40,6 @@ Phaser.Tileset = function (name, firstgid, width, height, margin, spacing, prope
     this.firstgid = firstgid | 0;
 
     /**
-    * This is the ending index of the last tile index this Tileset can contain.
-    * This is populated automatically by Phaser.TilemapParser.parseTiledJSON.
-    * For a single tileset map it should be left as the default value.
-    * @property {integer} lastgid
-    */
-    this.lastgid = Infinity;
-
-    /**
     * The width of each tile (in pixels).
     * @property {integer} tileWidth
     * @readonly
@@ -162,10 +154,10 @@ Phaser.Tileset.prototype = {
     },
 
     /**
-    * Sets the GL Batch data to draw a tile from this Tileset at the given coordinates 
-    * using a WebGL renderer.
+    * Draws a tile from this Tileset at the given coordinates using a WebGL renderer.
     *
     * @method Phaser.Tileset#drawGl
+    * @public
     * @param {Array} glBatch - A list of WebGL batch objects to draw later.
     * @param {number} x - The x coordinate to draw to.
     * @param {number} y - The y coordinate to draw to.
@@ -230,16 +222,16 @@ Phaser.Tileset.prototype = {
     },
 
     /**
-    * Adds a marker for the WebGL batch display to insert a degenerate 
-    * triangle (eg. at the end of each row of tiles)
+    * Adds a marker for the WebGl batch display to insert a degenerate triangle (eg. at the end of each row of tiles)
     *
     * @method Phaser.Tileset#addDegenerate
-    * @param {array} glBatch - The GL Batch data array.
+    * @public
+    * @param {[type]} glBatch [description]
     */
     addDegenerate: function (glBatch) {
 
-        //  Don't insert multiple degenerate markers in a row
-        if (glBatch[glBatch.length - 1])
+        // don't insert multiple degenerate markers in a row
+        if (glBatch.length > 0 && glBatch[glBatch.length - 1])
         {
             glBatch.push(null);
         }

@@ -464,12 +464,14 @@ Phaser.TilemapLayerGL.prototype.renderRegion = function (scrollX, scrollY, left,
     // x/y - is cell location, normalized [0..width/height) in loop
     // xmax/ymax - remaining cells to render on column/row
     var tx, ty, x, y, xmax, ymax;
+    var tileset = this._mc.tileset;
 
     for (y = normStartY, ymax = bottom - top, ty = baseY; ymax >= 0; y++, ymax--, ty += th)
     {
         if (y >= height)
         {
-            y -= height;
+            // wrap around if coordinates go out of range 0..height
+            y %= height;
         }
 
         var row = this.layer.data[y];
@@ -478,7 +480,8 @@ Phaser.TilemapLayerGL.prototype.renderRegion = function (scrollX, scrollY, left,
         {
             if (x >= width)
             {
-                x -= width;
+                // wrap around if coordinates go out of range 0..width
+                x %= width;
             }
 
             var tile = row[x];
@@ -487,23 +490,23 @@ Phaser.TilemapLayerGL.prototype.renderRegion = function (scrollX, scrollY, left,
             if (!tile || tile.index < this._mc.tileset.firstgid || tile.index > this._mc.lastgid)
             {
                 // skipping some tiles, add a degenerate marker into the batch list
-                this._mc.tileset.addDegenerate(this.glBatch);
+                tileset.addDegenerate(this.glBatch);
                 continue;
             }
 
             var index = tile.index;
 
-            this._mc.tileset.drawGl(this.glBatch, tx + offx, ty + offy, index, tile.alpha, tile.flippedVal);
+            tileset.drawGl(this.glBatch, tx + offx, ty + offy, index, tile.alpha, tile.flippedVal);
         }
 
         // at end of each row, add a degenerate marker into the batch drawing list
-        this._mc.tileset.addDegenerate(this.glBatch);
+        tileset.addDegenerate(this.glBatch);
     }
 
 };
 
 /**
-* Clear and render the entire canvas.
+* Render the entire visible region of the map.
 *
 * @method Phaser.TilemapLayerGL#renderFull
 * @private
