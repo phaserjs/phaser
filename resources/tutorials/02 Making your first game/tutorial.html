@@ -240,7 +240,12 @@ The final part of the code adds the ability to jump. The up cursor is our jump k
 
 It's time to give our little game a purpose. Let's drop a sprinkling of stars into the scene and allow the player to collect them. To achieve this we'll create a new Group called 'stars' and populate it. In our create function we add the following code (this can be seen in part8.html):
  
-<pre class="lang:js decode:true">    stars = game.add.group();
+<pre class="lang:js decode:true">
+    //  Finally some stars to collect
+    stars = game.add.group();
+
+    //  We will enable physics for any star that is created in this group
+    stars.enableBody = true;
 
     //  Here we'll create 12 of them evenly spaced apart
     for (var i = 0; i &lt; 12; i++)
