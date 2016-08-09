@@ -1,4 +1,4 @@
-/// <binding />
+/// <binding BeforeBuild='default' />
 module.exports = function (grunt) {
 
     var loadConfig = require('load-grunt-config');
@@ -32,7 +32,6 @@ module.exports = function (grunt) {
     grunt.registerTask('custom', 'Build a custom version of Phaser', function(arg) {
 
         var modules = {
-
             'intro':            { 'description': 'Phaser UMD wrapper',                          'optional': true, 'stub': false },
             'phaser':           { 'description': 'Phaser Globals',                              'optional': false, 'stub': false },
             'geom':             { 'description': 'Geometry Classes',                            'optional': false, 'stub': false },
@@ -71,10 +70,11 @@ module.exports = function (grunt) {
             'p2':               { 'description': 'P2 Physics',                                  'optional': true, 'stub': false },
             'tilemaps':         { 'description': 'Tilemap Support',                             'optional': true, 'stub': false },
             'particles':        { 'description': 'Arcade Physics Particle System',              'optional': true, 'stub': true },
+            'weapon':           { 'description': 'Arcade Physics Weapon Plugin',                'optional': true, 'stub': false },
             'creature':         { 'description': 'Creature Animation Tool Support',             'optional': true, 'stub': false },
             'video':            { 'description': 'Video Game Object',                           'optional': true, 'stub': false },
+            'pixidefs':         { 'description': 'Pixi defaults',                               'optional': true, 'stub': false },
             'outro':            { 'description': 'Phaser UMD closure',                          'optional': true, 'stub': false }
-
         };
 
         grunt.log.writeln("---------------------");
@@ -165,6 +165,12 @@ module.exports = function (grunt) {
                     excludes.push('particles');
                 }
 
+                if (excludedKeys['arcade'] && !excludedKeys['weapon'])
+                {
+                    grunt.log.writeln("Warning: The Weapon Plugin relies on Arcade Physics which has been excluded. Removing Weapon Plugin from build.");
+                    excludes.push('weapon');
+                }
+
                 if (excludedKeys['rendertexture'] && !excludedKeys['retrofont'])
                 {
                     grunt.log.writeln("Warning: RetroFonts rely on RenderTextures. Excluding from build.");
@@ -220,9 +226,16 @@ module.exports = function (grunt) {
                 //  3) PIXI
 
                 grunt.log.writeln("-> PIXI");
-                tasks.push('concat:pixiIntro');
-                pixiFilelist.push('<%= modules_dir %>/pixi-intro.js');
+                
+                if (!excludedKeys['intro'])
+                {
+                    tasks.push('concat:pixiIntro');
+                    pixiFilelist.push('<%= modules_dir %>/pixi-intro.js');
+                }
 
+                tasks.push('concat:pixiMain');
+                pixiFilelist.push('<%= modules_dir %>/pixi-main.js');
+                
                 //  Optional Rope
                 if (!excludedKeys['rope'])
                 {
@@ -240,8 +253,11 @@ module.exports = function (grunt) {
                 }
 
                 //  PIXI Outro
-                tasks.push('concat:pixiOutro');
-                pixiFilelist.push('<%= modules_dir %>/pixi-outro.js');
+                if (!excludedKeys['outro'])
+                {
+                    tasks.push('concat:pixiOutro');
+                    pixiFilelist.push('<%= modules_dir %>/pixi-outro.js');
+                }
 
                 grunt.config.set('pixiFilelist', pixiFilelist);
 
@@ -283,9 +299,16 @@ module.exports = function (grunt) {
                 //  3) PIXI
 
                 grunt.log.writeln("-> PIXI");
-                tasks.push('concat:pixiIntro');
-                filelist.push('<%= modules_dir %>/pixi-intro.js');
+                
+                if (!excludedKeys['intro'])
+                {
+                    tasks.push('concat:pixiIntro');
+                    filelist.push('<%= modules_dir %>/pixi-intro.js');
+                }
 
+                tasks.push('concat:pixiMain');
+                filelist.push('<%= modules_dir %>/pixi-main.js');
+                
                 //  Optional Rope
                 if (!excludedKeys['rope'])
                 {
@@ -303,8 +326,11 @@ module.exports = function (grunt) {
                 }
 
                 //  PIXI Outro
-                tasks.push('concat:pixiOutro');
-                filelist.push('<%= modules_dir %>/pixi-outro.js');
+                if (!excludedKeys['outro'])
+                {
+                    tasks.push('concat:pixiOutro');
+                    filelist.push('<%= modules_dir %>/pixi-outro.js');
+                }
             }
 
             //  And now for Phaser
@@ -381,6 +407,21 @@ module.exports = function (grunt) {
         grunt.task.run('arcadephysics');
         grunt.task.run('nophysics');
         grunt.task.run('minimum');
+        grunt.task.run('split');
+
+    });
+
+    grunt.registerTask('release', 'Compile all Phaser versions to the build folder and update docs and defs', function() {
+
+        grunt.task.run('clean:release');
+        grunt.task.run('full');
+        grunt.task.run('arcadephysics');
+        grunt.task.run('nophysics');
+        grunt.task.run('minimum');
+        grunt.task.run('split');
+        grunt.task.run('creature');
+        grunt.task.run('docs');
+        grunt.task.run('tsdocs');
 
     });
 
@@ -424,9 +465,10 @@ module.exports = function (grunt) {
     grunt.registerTask('split', 'Compile Phaser to dist folder and splits the globals into single files', function() {
 
         grunt.option('exclude', 'ninja,creature');
-        grunt.option('filename', 'phaser');
+        grunt.option('filename', 'phaser-split');
         grunt.option('sourcemap', true);
         grunt.option('copy', false);
+        grunt.option('copycustom', true);
         grunt.option('uglify', true);
         grunt.option('split', true);
 
@@ -459,7 +501,7 @@ module.exports = function (grunt) {
 
     });
 
-    grunt.registerTask('arcadephysics', 'Phaser with Arcade Physics, Tilemaps and Particles', function() {
+    grunt.registerTask('arcadephysics', 'Phaser with Arcade Physics, Tilemaps, Weapons and Particles', function() {
 
         grunt.option('exclude', 'ninja,p2,creature');
         grunt.option('filename', 'phaser-arcade-physics');
@@ -487,7 +529,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('nophysics', 'Phaser without physics, tilemaps or particles', function() {
 
-        grunt.option('exclude', 'arcade,ninja,p2,tilemaps,particles,creature');
+        grunt.option('exclude', 'arcade,ninja,p2,tilemaps,particles,creature,weapon');
         grunt.option('filename', 'phaser-no-physics');
         grunt.option('sourcemap', true);
         grunt.option('copy', false);
@@ -500,7 +542,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('minimum', 'Phaser without any optional modules', function() {
 
-        grunt.option('exclude', 'gamepad,keyboard,bitmapdata,graphics,rendertexture,text,bitmaptext,retrofont,net,tweens,sound,debug,arcade,ninja,p2,tilemaps,particles,creature,video,rope,tilesprite');
+        grunt.option('exclude', 'gamepad,keyboard,bitmapdata,graphics,rendertexture,text,bitmaptext,retrofont,net,tweens,sound,debug,arcade,ninja,p2,tilemaps,particles,creature,video,rope,tilesprite,weapon');
         grunt.option('filename', 'phaser-minimum');
         grunt.option('sourcemap', true);
         grunt.option('copy', false);

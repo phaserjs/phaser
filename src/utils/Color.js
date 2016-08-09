@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2015 Photon Storm Ltd.
+* @copyright    2016 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -138,6 +138,23 @@ Phaser.Color = {
     toRGBA: function (r, g, b, a) {
 
         return (r << 24) | (g << 16) | (b <<  8) | a;
+
+    },
+
+    /**
+    * Converts RGBA components to a 32 bit integer in AABBGGRR format.
+    *
+    * @method Phaser.Color.toABGR
+    * @static
+    * @param {number} r - The red color component, in the range 0 - 255.
+    * @param {number} g - The green color component, in the range 0 - 255.
+    * @param {number} b - The blue color component, in the range 0 - 255.
+    * @param {number} a - The alpha color component, in the range 0 - 255.
+    * @return {number} A RGBA-packed 32 bit integer
+    */
+    toABGR: function (r, g, b, a) {
+
+        return ((a << 24) | (b << 16) | (g << 8) | r) >>> 0;
 
     },
 
@@ -446,7 +463,7 @@ Phaser.Color = {
     },
 
     /**
-    * Takes a color object and updates the rgba property.
+    * Takes a color object and updates the rgba, color and color32 properties.
     *
     * @method Phaser.Color.updateColor
     * @static
@@ -457,7 +474,7 @@ Phaser.Color = {
 
         out.rgba = 'rgba(' + out.r.toString() + ',' + out.g.toString() + ',' + out.b.toString() + ',' + out.a.toString() + ')';
         out.color = Phaser.Color.getColor(out.r, out.g, out.b);
-        out.color32 = Phaser.Color.getColor32(out.a, out.r, out.g, out.b);
+        out.color32 = Phaser.Color.getColor32(out.a * 255, out.r, out.g, out.b);
 
         return out;
 

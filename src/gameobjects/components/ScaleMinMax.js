@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2015 Photon Storm Ltd.
+* @copyright    2016 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -17,7 +17,7 @@ Phaser.Component.ScaleMinMax.prototype = {
     * The callback that will apply any scale limiting to the worldTransform.
     * @property {function} transformCallback
     */
-    transformCallback: this.checkTransform,
+    transformCallback: null,
 
     /**
     * The context under which `transformCallback` is called.
@@ -151,6 +151,16 @@ Phaser.Component.ScaleMinMax.prototype = {
             {
                 this.scaleMax = new Phaser.Point(maxX, maxY);
             }
+        }
+
+        if (this.scaleMin === null)
+        {
+            this.transformCallback = null;
+        }
+        else
+        {
+            this.transformCallback = this.checkTransform;
+            this.transformCallbackContext = this;
         }
 
     }

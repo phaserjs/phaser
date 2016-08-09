@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2015 Photon Storm Ltd.
+* @copyright    2016 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -67,13 +67,9 @@ Phaser.World.prototype.boot = function () {
 
     this.camera = new Phaser.Camera(this.game, 0, 0, 0, this.game.width, this.game.height);
 
-    this.camera.displayObject = this;
-
-    this.camera.scale = this.scale;
-
-    this.game.camera = this.camera;
-
     this.game.stage.addChild(this);
+
+    this.camera.boot();
 
 };
 
@@ -175,6 +171,9 @@ Phaser.World.prototype.shutdown = function () {
 * This will take the given game object and check if its x/y coordinates fall outside of the world bounds.
 * If they do it will reposition the object to the opposite side of the world, creating a wrap-around effect.
 * If sprite has a P2 body then the body (sprite.body) should be passed as first parameter to the function.
+*
+* Please understand there are limitations to this method. For example if you have scaled the World
+* then objects won't always be re-positioned correctly, and you'll need to employ your own wrapping function.
 *
 * @method Phaser.World#wrap
 * @param {Phaser.Sprite|Phaser.Image|Phaser.TileSprite|Phaser.Text} sprite - The object you wish to wrap around the world bounds.
@@ -299,7 +298,7 @@ Object.defineProperty(Phaser.World.prototype, "height", {
 Object.defineProperty(Phaser.World.prototype, "centerX", {
 
     get: function () {
-        return this.bounds.halfWidth;
+        return this.bounds.halfWidth + this.bounds.x;
     }
 
 });
@@ -312,7 +311,7 @@ Object.defineProperty(Phaser.World.prototype, "centerX", {
 Object.defineProperty(Phaser.World.prototype, "centerY", {
 
     get: function () {
-        return this.bounds.halfHeight;
+        return this.bounds.halfHeight + this.bounds.y;
     }
 
 });

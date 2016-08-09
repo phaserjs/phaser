@@ -1,7 +1,7 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
 * @author       Adrien Brault <adrien.brault@gmail.com>
-* @copyright    2015 Photon Storm Ltd.
+* @copyright    2016 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -45,6 +45,11 @@ Phaser.Polygon = function () {
     this.closed = true;
 
     /**
+    * @property {boolean} flattened - Has this Polygon been flattened by a call to `Polygon.flatten` ?
+    */
+    this.flattened = false;
+
+    /**
      * @property {number} type - The base object type.
      */
     this.type = Phaser.POLYGON;
@@ -84,7 +89,9 @@ Phaser.Polygon.prototype = {
     },
 
     /**
-     * Flattens this Polygon so the points are a sequence of numbers. Any Point objects found are removed and replaced with two numbers.
+     * Flattens this Polygon so the points are a sequence of numbers.
+     * Any Point objects found are removed and replaced with two numbers.
+     * Also sets the Polygon.flattened property to `true`.
      *
      * @method Phaser.Polygon#flatten
      * @return {Phaser.Polygon} This Polygon object
@@ -92,6 +99,8 @@ Phaser.Polygon.prototype = {
     flatten: function () {
 
         this._points = this.toNumberArray();
+
+        this.flattened = true;
 
         return this;
 
@@ -134,20 +143,39 @@ Phaser.Polygon.prototype = {
 
         //  Adapted from http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html by Jonas Raoni Soares Silva
 
-        var length = this._points.length;
         var inside = false;
 
-        for (var i = -1, j = length - 1; ++i < length; j = i)
+        if (this.flattened)
         {
-            var ix = this._points[i].x;
-            var iy = this._points[i].y;
-
-            var jx = this._points[j].x;
-            var jy = this._points[j].y;
-
-            if (((iy <= y && y < jy) || (jy <= y && y < iy)) && (x < (jx - ix) * (y - iy) / (jy - iy) + ix))
+            for (var i = -2, j = this._points.length - 2; (i += 2) < this._points.length; j = i)
             {
-                inside = !inside;
+                var ix = this._points[i];
+                var iy = this._points[i + 1];
+
+                var jx = this._points[j];
+                var jy = this._points[j + 1];
+
+                if (((iy <= y && y < jy) || (jy <= y && y < iy)) && (x < (jx - ix) * (y - iy) / (jy - iy) + ix))
+                {
+                    inside = !inside;
+                }
+            }
+
+        }
+        else
+        {
+            for (var i = -1, j = this._points.length - 1; ++i < this._points.length; j = i)
+            {
+                var ix = this._points[i].x;
+                var iy = this._points[i].y;
+
+                var jx = this._points[j].x;
+                var jy = this._points[j].y;
+
+                if (((iy <= y && y < jy) || (jy <= y && y < iy)) && (x < (jx - ix) * (y - iy) / (jy - iy) + ix))
+                {
+                    inside = !inside;
+                }
             }
         }
 
@@ -163,6 +191,7 @@ Phaser.Polygon.prototype = {
      * - An array of Point objects: `[new Phaser.Point(x1, y1), ...]`
      * - An array of objects with public x/y properties: `[obj1, obj2, ...]`
      * - An array of paired numbers that represent point coordinates: `[x1,y1, x2,y2, ...]`
+     * - An array of arrays with two elements representing x/y coordinates: `[[x1, y1], [x2, y2], ...]`
      * - As separate Point arguments: `setTo(new Phaser.Point(x1, y1), ...)`
      * - As separate objects with public x/y properties arguments: `setTo(obj1, obj2, ...)`
      * - As separate arguments representing point coordinates: `setTo(x1,y1, x2,y2, ...)`
@@ -195,6 +224,10 @@ Phaser.Polygon.prototype = {
                 {
                     var p = new PIXI.Point(points[i], points[i + 1]);
                     i++;
+                }
+                else if (Array.isArray(points[i]))
+                {
+                    var p = new PIXI.Point(points[i][0], points[i][1]);
                 }
                 else
                 {

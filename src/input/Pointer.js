@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2015 Photon Storm Ltd.
+* @copyright    2016 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -299,6 +299,17 @@ Phaser.Pointer = function (game, id, pointerMode) {
     this.targetObject = null;
 
     /**
+    * This array is erased and re-populated every time this Pointer is updated. It contains references to all
+    * of the Game Objects that were considered as being valid for processing by this Pointer, this frame. To be
+    * valid they must have suitable a `priorityID`, be Input enabled, visible and actually have the Pointer over
+    * them. You can check the contents of this array in events such as `onInputDown`, but beware it is reset
+    * every frame.
+    * @property {array} interactiveCandidates
+    * @default
+    */
+    this.interactiveCandidates = [];
+
+    /**
     * @property {boolean} active - An active pointer is one that is currently pressed down on the display. A Mouse is always active.
     * @default
     */
@@ -553,10 +564,12 @@ Phaser.Pointer.prototype = {
         }
 
         //  On OS X (and other devices with trackpads) you have to press CTRL + the pad
-        //  to initiate a right-click event, so we'll check for that here
+        //  to initiate a right-click event, so we'll check for that here ONLY if
+        //  event.buttons = 1 (i.e. they only have a 1 button mouse or trackpad)
 
-        if (event.ctrlKey && this.leftButton.isDown)
+        if (event.buttons === 1 && event.ctrlKey && this.leftButton.isDown)
         {
+            this.leftButton.stop(event);
             this.rightButton.start(event);
         }
 
@@ -801,7 +814,7 @@ Phaser.Pointer.prototype = {
     processInteractiveObjects: function (fromClick) {
 
         //  Work out which object is on the top
-        var highestRenderOrderID = Number.MAX_VALUE;
+        var highestRenderOrderID = 0;
         var highestInputPriorityID = -1;
         var candidateTarget = null;
 
@@ -809,6 +822,8 @@ Phaser.Pointer.prototype = {
         //  We know they'll be valid for input detection but not which is the top just yet
 
         var currentNode = this.game.input.interactiveItems.first;
+
+        this.interactiveCandidates = [];
 
         while (currentNode)
         {
@@ -826,6 +841,7 @@ Phaser.Pointer.prototype = {
                     highestRenderOrderID = currentNode.sprite.renderOrderID;
                     highestInputPriorityID = currentNode.priorityID;
                     candidateTarget = currentNode;
+                    this.interactiveCandidates.push(currentNode);
                 }
             }
 
@@ -836,7 +852,7 @@ Phaser.Pointer.prototype = {
         //  because if their ID is lower anyway then we can just automatically discount them
         //  (A node that was previously checked did not request a pixel-perfect check.)
 
-        var currentNode = this.game.input.interactiveItems.first;
+        currentNode = this.game.input.interactiveItems.first;
 
         while (currentNode)
         {
@@ -849,19 +865,47 @@ Phaser.Pointer.prototype = {
                     highestRenderOrderID = currentNode.sprite.renderOrderID;
                     highestInputPriorityID = currentNode.priorityID;
                     candidateTarget = currentNode;
+                    this.interactiveCandidates.push(currentNode);
                 }
             }
 
             currentNode = this.game.input.interactiveItems.next;
         }
 
+        if (this.game.input.customCandidateHandler)
+        {
+            candidateTarget = this.game.input.customCandidateHandler.call(this.game.input.customCandidateHandlerContext, this, this.interactiveCandidates, candidateTarget);
+        }
+
+        this.swapTarget(candidateTarget, false);
+
+        return (this.targetObject !== null);
+
+    },
+
+    /**
+    * This will change the `Pointer.targetObject` object to be the one provided.
+    * 
+    * This allows you to have fine-grained control over which object the Pointer is targeting.
+    *
+    * Note that even if you set a new Target here, it is still able to be replaced by any other valid
+    * target during the next Pointer update.
+    *
+    * @method Phaser.Pointer#swapTarget
+    * @param {Phaser.InputHandler} newTarget - The new target for this Pointer. Note this is an `InputHandler`, so don't pass a Sprite, instead pass `sprite.input` to it.
+    * @param {boolean} [silent=false] - If true the new target AND the old one will NOT dispatch their `onInputOver` or `onInputOut` events.
+    */
+    swapTarget: function (newTarget, silent) {
+
+        if (silent === undefined) { silent = false; }
+
         //  Now we know the top-most item (if any) we can process it
-        if (candidateTarget === null)
+        if (newTarget === null)
         {
             //  The pointer isn't currently over anything, check if we've got a lingering previous target
             if (this.targetObject)
             {
-                this.targetObject._pointerOutHandler(this);
+                this.targetObject._pointerOutHandler(this, silent);
                 this.targetObject = null;
             }
         }
@@ -870,16 +914,16 @@ Phaser.Pointer.prototype = {
             if (this.targetObject === null)
             {
                 //  And now set the new one
-                this.targetObject = candidateTarget;
-                candidateTarget._pointerOverHandler(this);
+                this.targetObject = newTarget;
+                newTarget._pointerOverHandler(this, silent);
             }
             else
             {
                 //  We've got a target from the last update
-                if (this.targetObject === candidateTarget)
+                if (this.targetObject === newTarget)
                 {
                     //  Same target as before, so update it
-                    if (candidateTarget.update(this) === false)
+                    if (newTarget.update(this) === false)
                     {
                         this.targetObject = null;
                     }
@@ -887,16 +931,14 @@ Phaser.Pointer.prototype = {
                 else
                 {
                     //  The target has changed, so tell the old one we've left it
-                    this.targetObject._pointerOutHandler(this);
+                    this.targetObject._pointerOutHandler(this, silent);
 
                     //  And now set the new one
-                    this.targetObject = candidateTarget;
-                    this.targetObject._pointerOverHandler(this);
+                    this.targetObject = newTarget;
+                    this.targetObject._pointerOverHandler(this, silent);
                 }
             }
         }
-
-        return (this.targetObject !== null);
 
     },
 
@@ -1174,7 +1216,7 @@ Object.defineProperty(Phaser.Pointer.prototype, "duration", {
 /**
 * Gets the X value of this Pointer in world coordinates based on the world camera.
 * @name Phaser.Pointer#worldX
-* @property {number} duration - The X value of this Pointer in world coordinates based on the world camera.
+* @property {number} worldX - The X value of this Pointer in world coordinates based on the world camera.
 * @readonly
 */
 Object.defineProperty(Phaser.Pointer.prototype, "worldX", {
@@ -1190,7 +1232,7 @@ Object.defineProperty(Phaser.Pointer.prototype, "worldX", {
 /**
 * Gets the Y value of this Pointer in world coordinates based on the world camera.
 * @name Phaser.Pointer#worldY
-* @property {number} duration - The Y value of this Pointer in world coordinates based on the world camera.
+* @property {number} worldY - The Y value of this Pointer in world coordinates based on the world camera.
 * @readonly
 */
 Object.defineProperty(Phaser.Pointer.prototype, "worldY", {

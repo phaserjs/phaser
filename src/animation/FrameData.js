@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2015 Photon Storm Ltd.
+* @copyright    2016 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -230,7 +230,7 @@ Phaser.FrameData.prototype = {
             for (var i = 0; i < frames.length; i++)
             {
                 //  Does the frames array contain names or indexes?
-                if (useNumericIndex)
+                if (useNumericIndex && this._frames[frames[i]])
                 {
                     output.push(this._frames[frames[i]].index);
                 }
@@ -245,6 +245,18 @@ Phaser.FrameData.prototype = {
         }
 
         return output;
+
+    },
+
+    /**
+    * Destroys this FrameData collection by nulling the _frames and _frameNames arrays.
+    *
+    * @method Phaser.FrameData#destroy
+    */
+    destroy: function () {
+
+        this._frames = null;
+        this._frameNames = null;
 
     }
 

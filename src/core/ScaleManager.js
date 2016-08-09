@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2015 Photon Storm Ltd.
+* @copyright    2016 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -377,7 +377,7 @@ Phaser.ScaleManager = function (game, width, height) {
     *
     * @protected
     * 
-    * @property {boolean} [supportsFullscreen=(auto)] - True only if fullscreen support will be used. (Changing to fullscreen still might not work.)
+    * @property {boolean} [supportsFullScreen=(auto)] - True only if fullscreen support will be used. (Changing to fullscreen still might not work.)
     *
     * @property {boolean} [orientationFallback=(auto)] - See {@link Phaser.DOM.getScreenOrientation}.
     *
@@ -725,7 +725,7 @@ Phaser.ScaleManager.prototype = {
 
         this._booted = true;
 
-        if (this._pendingScaleMode)
+        if (this._pendingScaleMode !== null)
         {
             this.scaleMode = this._pendingScaleMode;
             this._pendingScaleMode = null;
@@ -742,7 +742,7 @@ Phaser.ScaleManager.prototype = {
     */
     parseConfig: function (config) {
 
-        if (config['scaleMode'])
+        if (config['scaleMode'] !== undefined)
         {
             if (this._booted)
             {
@@ -754,7 +754,7 @@ Phaser.ScaleManager.prototype = {
             }
         }
 
-        if (config['fullScreenScaleMode'])
+        if (config['fullScreenScaleMode'] !== undefined)
         {
             this.fullScreenScaleMode = config['fullScreenScaleMode'];
         }
@@ -844,6 +844,9 @@ Phaser.ScaleManager.prototype = {
             this.parentScaleFactor.y = parseInt(height, 10) / 100;
             newHeight = rect.height * this.parentScaleFactor.y;
         }
+
+        newWidth = Math.floor(newWidth);
+        newHeight = Math.floor(newHeight);
 
         this._gameSize.setTo(0, 0, newWidth, newHeight);
 
@@ -1421,7 +1424,7 @@ Phaser.ScaleManager.prototype = {
         {
             // Ref. http://msdn.microsoft.com/en-us/library/hh781509(v=vs.85).aspx for getBoundingClientRect
             var clientRect = parentNode.getBoundingClientRect();
-            var parentRect = parentNode.offsetParent.getBoundingClientRect();
+            var parentRect = (parentNode.offsetParent) ? parentNode.offsetParent.getBoundingClientRect() : parentNode.getBoundingClientRect();
 
             bounds.setTo(clientRect.left - parentRect.left, clientRect.top - parentRect.top, clientRect.width, clientRect.height);
 

@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2015 Photon Storm Ltd.
+* @copyright    2016 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -76,6 +76,12 @@ Phaser.TweenData = function (parent) {
     * @property {number} repeatDelay - The amount of time in ms between repeats of this tween.
     */
     this.repeatDelay = 0;
+
+    /**
+    * @property {number} repeatTotal - The total number of times this Tween will repeat.
+    * @readonly
+    */
+    this.repeatTotal = 0;
 
     /**
     * @property {boolean} interpolate - True if the Tween will use interpolation (i.e. is an Array to Array tween)
@@ -193,7 +199,7 @@ Phaser.TweenData.prototype = {
         this.duration = duration;
         this.easingFunction = ease;
         this.delay = delay;
-        this.repeatCounter = repeat;
+        this.repeatTotal = repeat;
         this.yoyo = yoyo;
 
         this.isFrom = false;
@@ -221,7 +227,7 @@ Phaser.TweenData.prototype = {
         this.duration = duration;
         this.easingFunction = ease;
         this.delay = delay;
-        this.repeatCounter = repeat;
+        this.repeatTotal = repeat;
         this.yoyo = yoyo;
 
         this.isFrom = true;
@@ -271,6 +277,7 @@ Phaser.TweenData.prototype = {
 
         this.value = 0;
         this.yoyoCounter = 0;
+        this.repeatCounter = this.repeatTotal;
 
         return this;
 
@@ -494,6 +501,15 @@ Phaser.TweenData.prototype = {
             //  We're already in reverse mode, which means the yoyo has finished and there's no repeats, so end
             if (this.inReverse && this.repeatCounter === 0)
             {
+                //  Restore the properties
+                for (var property in this.vStartCache)
+                {
+                    this.vStart[property] = this.vStartCache[property];
+                    this.vEnd[property] = this.vEndCache[property];
+                }
+
+                this.inReverse = false;
+
                 return Phaser.TweenData.COMPLETE;
             }
 

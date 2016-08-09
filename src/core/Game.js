@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2015 Photon Storm Ltd.
+* @copyright    2016 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -116,21 +116,13 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this.clearBeforeRender = true;
 
     /**
-    * The Frame Debugger.
-    * This should never be used in production games and is for debugging during development only.
-    * Start it with `Game.frameDebugger.record(n)` - where n is the number of frames to capture.
-    * @property {Phaser.FrameDebugger} fd
-    */
-    this.fd = null;
-
-    /**
     * @property {PIXI.CanvasRenderer|PIXI.WebGLRenderer} renderer - The Pixi Renderer.
     * @protected
     */
     this.renderer = null;
 
     /**
-    * @property {number} renderType - The Renderer this game will use. Either Phaser.AUTO, Phaser.CANVAS or Phaser.WEBGL.
+    * @property {number} renderType - The Renderer this game will use. Either Phaser.AUTO, Phaser.CANVAS, Phaser.WEBGL, or Phaser.HEADLESS.
     * @readonly
     */
     this.renderType = Phaser.AUTO;
@@ -385,7 +377,7 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     /**
     * @property {boolean} forceSingleUpdate - Should the game loop force a logic update, regardless of the delta timer? Set to true if you know you need this. You can toggle it on the fly.
     */
-    this.forceSingleUpdate = false;
+    this.forceSingleUpdate = true;
 
     /**
     * @property {number} _nextNotification - The soonest game.time.time value that the next fpsProblemNotifier can be dispatched.
@@ -480,12 +472,12 @@ Phaser.Game.prototype = {
             this.parent = config['parent'];
         }
 
-        if (config['transparent'])
+        if (config['transparent'] !== undefined)
         {
             this.transparent = config['transparent'];
         }
 
-        if (config['antialias'])
+        if (config['antialias'] !== undefined)
         {
             this.antialias = config['antialias'];
         }
@@ -495,7 +487,7 @@ Phaser.Game.prototype = {
             this.resolution = config['resolution'];
         }
 
-        if (config['preserveDrawingBuffer'])
+        if (config['preserveDrawingBuffer'] !== undefined)
         {
             this.preserveDrawingBuffer = config['preserveDrawingBuffer'];
         }
@@ -546,8 +538,6 @@ Phaser.Game.prototype = {
         this.isBooted = true;
 
         PIXI.game = this;
-
-        this.fd = new Phaser.FrameDebugger(this);
 
         this.math = Phaser.Math;
 
@@ -653,12 +643,12 @@ Phaser.Game.prototype = {
         if (this.device.chrome)
         {
             var args = [
-                '%c %c %c Phaser v' + v + ' | Pixi.js ' + PIXI.VERSION + ' | ' + r + ' | ' + a + '  %c %c ' + '%c http://phaser.io %c\u2665%c\u2665%c\u2665',
-                'background: #9854d8',
-                'background: #6c2ca7',
-                'color: #ffffff; background: #450f78;',
-                'background: #6c2ca7',
-                'background: #9854d8',
+                '%c %c %c Phaser v' + v + ' | Pixi.js | ' + r + ' | ' + a + '  %c %c ' + '%c http://phaser.io %c\u2665%c\u2665%c\u2665',
+                'background: #fb8cb3',
+                'background: #d44a52',
+                'color: #ffffff; background: #871905;',
+                'background: #d44a52',
+                'background: #fb8cb3',
                 'background: #ffffff'
             ];
 
@@ -691,7 +681,14 @@ Phaser.Game.prototype = {
     */
     setUpRenderer: function () {
 
-        this.canvas = Phaser.Canvas.create(this, this.width, this.height, this.config['canvasID'], true);
+        if (this.config['canvas'])
+        {
+            this.canvas = this.config['canvas'];
+        }
+        else
+        {
+            this.canvas = Phaser.Canvas.create(this, this.width, this.height, this.config['canvasID'], true);
+        }
 
         if (this.config['canvasStyle'])
         {
@@ -792,9 +789,6 @@ Phaser.Game.prototype = {
         {
             this.updateLogic(this.time.desiredFpsMult);
 
-            //  Sync the scene graph after _every_ logic update to account for moved game objects                
-            this.stage.updateTransform();
-
             // call the game render update exactly once every frame
             this.updateRender(this.time.slowMotion * this.time.desiredFps);
 
@@ -849,9 +843,6 @@ Phaser.Game.prototype = {
 
                 this.updateLogic(this.time.desiredFpsMult);
 
-                //  Sync the scene graph after _every_ logic update to account for moved game objects
-                this.stage.updateTransform();
-
                 count++;
 
                 if (this.forceSingleUpdate && count === 1)
@@ -901,7 +892,7 @@ Phaser.Game.prototype = {
 
             this.scale.preUpdate();
             this.debug.preUpdate();
-            this.world.camera.preUpdate();
+            this.camera.preUpdate();
             this.physics.preUpdate();
             this.state.preUpdate(timeStep);
             this.plugins.preUpdate(timeStep);
@@ -927,6 +918,8 @@ Phaser.Game.prototype = {
             this.debug.preUpdate();
         }
 
+        this.stage.updateTransform();
+
     },
 
     /**
@@ -951,19 +944,18 @@ Phaser.Game.prototype = {
             return;
         }
 
-        if (this.fd.on) { this.fd.start(); }
-
         this.state.preRender(elapsedTime);
 
-        this.renderer.render(this.stage);
+        if (this.renderType !== Phaser.HEADLESS)
+        {
+            this.renderer.render(this.stage);
 
-        this.plugins.render(elapsedTime);
+            this.plugins.render(elapsedTime);
 
-        this.state.render(elapsedTime);
+            this.state.render(elapsedTime);
+        }
 
         this.plugins.postRender(elapsedTime);
-
-        if (this.fd.on) { this.fd.stop(); }
 
     },
 
@@ -1009,6 +1001,11 @@ Phaser.Game.prototype = {
     /**
     * Nukes the entire game from orbit.
     *
+    * Calls destroy on Game.state, Game.sound, Game.scale, Game.stage, Game.input, Game.physics and Game.plugins.
+    *
+    * Then sets all of those local handlers to null, destroys the renderer, removes the canvas from the DOM
+    * and resets the PIXI default renderer.
+    *
     * @method Phaser.Game#destroy
     */
     destroy: function () {
@@ -1017,24 +1014,32 @@ Phaser.Game.prototype = {
 
         this.state.destroy();
         this.sound.destroy();
-
         this.scale.destroy();
         this.stage.destroy();
         this.input.destroy();
         this.physics.destroy();
+        this.plugins.destroy();
 
         this.state = null;
-        this.cache = null;
-        this.input = null;
-        this.load = null;
         this.sound = null;
+        this.scale = null;
         this.stage = null;
+        this.input = null;
+        this.physics = null;
+        this.plugins = null;
+
+        this.cache = null;
+        this.load = null;
         this.time = null;
         this.world = null;
+
         this.isBooted = false;
 
         this.renderer.destroy(false);
+
         Phaser.Canvas.removeFromDOM(this.canvas);
+
+        PIXI.defaultRenderer = null;
 
         Phaser.GAMES[this.id] = null;
 
@@ -1053,8 +1058,14 @@ Phaser.Game.prototype = {
         if (!this._paused)
         {
             this._paused = true;
+
             this.time.gamePaused();
-            this.sound.setMute();
+
+            if (this.sound.muteOnPause)
+            {
+                this.sound.setMute();
+            }
+
             this.onPause.dispatch(event);
 
             //  Avoids Cordova iOS crash event: https://github.com/photonstorm/phaser/issues/1800
@@ -1079,9 +1090,16 @@ Phaser.Game.prototype = {
         if (this._paused && !this._codePaused)
         {
             this._paused = false;
+
             this.time.gameResumed();
+
             this.input.reset();
-            this.sound.unsetMute();
+
+            if (this.sound.muteOnPause)
+            {
+                this.sound.unsetMute();
+            }
+
             this.onResume.dispatch(event);
 
             //  Avoids Cordova iOS crash event: https://github.com/photonstorm/phaser/issues/1800

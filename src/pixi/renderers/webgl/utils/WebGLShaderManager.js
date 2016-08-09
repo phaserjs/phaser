@@ -66,6 +66,7 @@ PIXI.WebGLShaderManager.prototype.setContext = function(gl)
 
     // the next one is used for rendering triangle strips
     this.stripShader = new PIXI.StripShader(gl);
+
     this.setShader(this.defaultShader);
 };
 

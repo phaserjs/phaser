@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2015 Photon Storm Ltd.
+* @copyright    2016 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -9,8 +9,10 @@
 *
 * It consists of a delay, which is a value in milliseconds after which the event will fire.
 * When the event fires it calls a specific callback with the specified arguments.
-*
-* Use {@link Phaser.Timer#add}, {@link Phaser.Timer#add}, or {@link Phaser.Timer#add} methods to create a new event.
+* 
+* TimerEvents are removed by their parent timer once finished firing or repeating.
+* 
+* Use {@link Phaser.Timer#add}, {@link Phaser.Timer#repeat}, or {@link Phaser.Timer#loop} methods to create a new event.
 *
 * @class Phaser.TimerEvent
 * @constructor

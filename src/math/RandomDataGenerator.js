@@ -2,7 +2,7 @@
 
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2015 Photon Storm Ltd.
+* @copyright    2016 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -265,6 +265,18 @@ Phaser.RandomDataGenerator.prototype = {
     pick: function (ary) {
 
         return ary[this.integerInRange(0, ary.length - 1)];
+
+    },
+
+    /**
+    * Returns a sign to be used with multiplication operator.
+    *
+    * @method Phaser.RandomDataGenerator#sign
+    * @return {number} -1 or +1.
+    */
+    sign: function () {
+
+        return this.pick([-1, 1]);
 
     },
 

@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2015 Photon Storm Ltd.
+* @copyright    2016 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -548,7 +548,7 @@ Phaser.Physics.P2.Body.prototype = {
     * period of time (impulse = force * time). Impulses will be added to Body.velocity and Body.angularVelocity.
     *
     * @method Phaser.Physics.P2.Body#applyImpulseLocal
-    * @param {Float32Array|Array} impulse - The impulse vector to add, oriented in world space.
+    * @param {Float32Array|Array} impulse - The impulse vector to add, oriented in local space.
     * @param {number} localX - A local point on the body.
     * @param {number} localY - A local point on the body.
     */
@@ -723,6 +723,40 @@ Phaser.Physics.P2.Body.prototype = {
     },
 
     /**
+    * Applies a force to the Body that causes it to 'thrust' to the left, based on its current angle and the given speed.
+    * The speed is represented in pixels per second. So a value of 100 would move 100 pixels in 1 second (1000ms).
+    *
+    * @method Phaser.Physics.P2.Body#thrustLeft
+    * @param {number} speed - The speed at which it should move to the left.
+    */
+    thrustLeft: function (speed) {
+
+        var magnitude = this.world.pxmi(-speed);
+        var angle = this.data.angle;
+
+        this.data.force[0] += magnitude * Math.cos(angle);
+        this.data.force[1] += magnitude * Math.sin(angle);
+
+    },
+
+    /**
+    * Applies a force to the Body that causes it to 'thrust' to the right, based on its current angle and the given speed.
+    * The speed is represented in pixels per second. So a value of 100 would move 100 pixels in 1 second (1000ms).
+    *
+    * @method Phaser.Physics.P2.Body#thrustRight
+    * @param {number} speed - The speed at which it should move to the right.
+    */
+    thrustRight: function (speed) {
+
+        var magnitude = this.world.pxmi(-speed);
+        var angle = this.data.angle;
+
+        this.data.force[0] -= magnitude * Math.cos(angle);
+        this.data.force[1] -= magnitude * Math.sin(angle);
+
+    },
+
+    /**
     * Applies a force to the Body that causes it to 'thrust' backwards (in reverse), based on its current angle and the given speed.
     * The speed is represented in pixels per second. So a value of 100 would move 100 pixels in 1 second (1000ms).
     *
@@ -817,8 +851,8 @@ Phaser.Physics.P2.Body.prototype = {
     */
     postUpdate: function () {
 
-        this.sprite.x = this.world.mpxi(this.data.position[0]);
-        this.sprite.y = this.world.mpxi(this.data.position[1]);
+        this.sprite.x = this.world.mpxi(this.data.position[0]) + this.offset.x;
+        this.sprite.y = this.world.mpxi(this.data.position[1]) + this.offset.y;
 
         if (!this.fixedRotation)
         {

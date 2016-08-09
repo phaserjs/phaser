@@ -154,7 +154,7 @@ PIXI.TilingSprite.prototype.setTexture = function(texture)
 */
 PIXI.TilingSprite.prototype._renderWebGL = function(renderSession)
 {
-    if (this.visible === false || this.alpha === 0)
+    if (!this.visible || !this.renderable || this.alpha === 0)
     {
         return;
     }
@@ -222,7 +222,7 @@ PIXI.TilingSprite.prototype._renderWebGL = function(renderSession)
 */
 PIXI.TilingSprite.prototype._renderCanvas = function(renderSession)
 {
-    if (this.visible === false || this.alpha === 0)
+    if (!this.visible || !this.renderable || this.alpha === 0)
     {
         return;
     }
@@ -238,8 +238,10 @@ PIXI.TilingSprite.prototype._renderCanvas = function(renderSession)
     
     var wt = this.worldTransform;
     var resolution = renderSession.resolution;
+    var tx = (wt.tx * resolution) + renderSession.shakeX;
+    var ty = (wt.ty * resolution) + renderSession.shakeY;
 
-    context.setTransform(wt.a * resolution, wt.b * resolution, wt.c * resolution, wt.d * resolution, wt.tx * resolution, wt.ty * resolution);
+    context.setTransform(wt.a * resolution, wt.b * resolution, wt.c * resolution, wt.d * resolution, tx, ty);
 
     if (this.refreshTexture)
     {
@@ -291,8 +293,6 @@ PIXI.TilingSprite.prototype._renderCanvas = function(renderSession)
     }
 
     context.fillRect(tx, ty, tw, th);
-
-    if (renderSession.fd.on) { renderSession.fd.cts(this.tilingTexture, tw, th); }
 
     //  Translate back again
     context.scale(1 / tileScale.x, 1 / tileScale.y);
@@ -346,8 +346,8 @@ PIXI.TilingSprite.prototype.generateTilingTexture = function(forcePowerOfTwo, re
     var texture = this.texture;
     var frame = texture.frame;
 
-    var targetWidth = this._frame.sourceSizeW;
-    var targetHeight = this._frame.sourceSizeH;
+    var targetWidth = this._frame.sourceSizeW || this._frame.width;
+    var targetHeight = this._frame.sourceSizeH || this._frame.height;
 
     var dx = 0;
     var dy = 0;
@@ -411,8 +411,6 @@ PIXI.TilingSprite.prototype.generateTilingTexture = function(forcePowerOfTwo, re
     this.refreshTexture = false;
 
     this.tilingTexture.baseTexture._powerOf2 = true;
-
-    if (renderSession.fd.on) { renderSession.fd.gtt(texture, w, h); }
 
 };
 

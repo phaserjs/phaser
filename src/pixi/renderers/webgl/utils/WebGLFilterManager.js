@@ -73,7 +73,14 @@ PIXI.WebGLFilterManager.prototype.pushFilter = function(filterBlock)
     var offset = this.renderSession.offset;
 
     filterBlock._filterArea = filterBlock.target.filterArea || filterBlock.target.getBounds();
-
+    
+    // >>> modify by nextht
+    filterBlock._previous_stencil_mgr = this.renderSession.stencilManager;
+    this.renderSession.stencilManager = new PIXI.WebGLStencilManager();
+    this.renderSession.stencilManager.setContext(gl);
+    gl.disable(gl.STENCIL_TEST);
+    // <<<  modify by nextht 
+   
     // filter program
     // OPTIMISATION - the first filter is free if its a simple color change?
     this.filterStack.push(filterBlock);
@@ -86,11 +93,11 @@ PIXI.WebGLFilterManager.prototype.pushFilter = function(filterBlock)
     var texture = this.texturePool.pop();
     if(!texture)
     {
-        texture = new PIXI.FilterTexture(this.gl, this.width, this.height);
+        texture = new PIXI.FilterTexture(this.gl, this.width * this.renderSession.resolution, this.height * this.renderSession.resolution);
     }
     else
     {
-        texture.resize(this.width, this.height);
+        texture.resize(this.width * this.renderSession.resolution, this.height * this.renderSession.resolution);
     }
 
     gl.bindTexture(gl.TEXTURE_2D,  texture.texture);
@@ -113,7 +120,7 @@ PIXI.WebGLFilterManager.prototype.pushFilter = function(filterBlock)
     gl.bindFramebuffer(gl.FRAMEBUFFER, texture.frameBuffer);
 
     // set view port
-    gl.viewport(0, 0, filterArea.width, filterArea.height);
+    gl.viewport(0, 0, filterArea.width * this.renderSession.resolution, filterArea.height * this.renderSession.resolution);
 
     projection.x = filterArea.width/2;
     projection.y = -filterArea.height/2;
@@ -151,7 +158,7 @@ PIXI.WebGLFilterManager.prototype.popFilter = function()
 
     if(filterBlock.filterPasses.length > 1)
     {
-        gl.viewport(0, 0, filterArea.width, filterArea.height);
+        gl.viewport(0, 0, filterArea.width * this.renderSession.resolution, filterArea.height * this.renderSession.resolution);
 
         gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
 
@@ -180,8 +187,8 @@ PIXI.WebGLFilterManager.prototype.popFilter = function()
 
         var inputTexture = texture;
         var outputTexture = this.texturePool.pop();
-        if(!outputTexture)outputTexture = new PIXI.FilterTexture(this.gl, this.width, this.height);
-        outputTexture.resize(this.width, this.height);
+        if(!outputTexture)outputTexture = new PIXI.FilterTexture(this.gl, this.width * this.renderSession.resolution, this.height * this.renderSession.resolution);
+        outputTexture.resize(this.width * this.renderSession.resolution, this.height * this.renderSession.resolution);
 
         // need to clear this FBO as it may have some left over elements from a previous filter.
         gl.bindFramebuffer(gl.FRAMEBUFFER, outputTexture.frameBuffer );
@@ -297,6 +304,20 @@ PIXI.WebGLFilterManager.prototype.popFilter = function()
     // set texture
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, texture.texture);
+
+    // >>> modify by nextht
+    if (this.renderSession.stencilManager) {
+        this.renderSession.stencilManager.destroy();
+    }
+    this.renderSession.stencilManager = filterBlock._previous_stencil_mgr;
+    filterBlock._previous_stencil_mgr = null;
+    if (this.renderSession.stencilManager.count > 0) {
+        gl.enable(gl.STENCIL_TEST);
+    }
+    else {
+        gl.disable(gl.STENCIL_TEST);
+    }    
+    // <<< modify by nextht
 
     // apply!
     this.applyFilterPass(filter, filterArea, sizeX, sizeY);

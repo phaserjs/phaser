@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2015 Photon Storm Ltd.
+* @copyright    2016 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -218,7 +218,7 @@ Phaser.Tileset.prototype = {
 
         if (rowCount % 1 !== 0 || colCount % 1 !== 0)
         {
-            console.warn("Phaser.Tileset - image tile area is not an even multiple of tile size");
+            console.warn("Phaser.Tileset - " + this.name + " image tile area is not an even multiple of tile size");
         }
 
         // In Tiled a tileset image that is not an even multiple of the tile dimensions

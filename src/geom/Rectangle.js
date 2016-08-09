@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2015 Photon Storm Ltd.
+* @copyright    2016 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -380,6 +380,59 @@ Phaser.Rectangle.prototype = {
         out.y = this.randomY;
 
         return out;
+
+    },
+
+    /**
+    * Returns a point based on the given position constant, which can be one of:
+    * 
+    * `Phaser.TOP_LEFT`, `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.LEFT_CENTER`,
+    * `Phaser.CENTER`, `Phaser.RIGHT_CENTER`, `Phaser.BOTTOM_LEFT`, `Phaser.BOTTOM_CENTER` 
+    * and `Phaser.BOTTOM_RIGHT`.
+    *
+    * This method returns the same values as calling Rectangle.bottomLeft, etc, but those
+    * calls always create a new Point object, where-as this one allows you to use your own.
+    * 
+    * @method Phaser.Rectangle#getPoint
+    * @param {integer} [position] - One of the Phaser position constants, such as `Phaser.TOP_RIGHT`.
+    * @param {Phaser.Point} [out] - A Phaser.Point that the values will be set in.
+    *     If no object is provided a new Phaser.Point object will be created. In high performance areas avoid this by re-using an existing object.
+    * @return {Phaser.Point} An object containing the point in its `x` and `y` properties.
+    */
+    getPoint: function (position, out) {
+
+        if (out === undefined) { out = new Phaser.Point(); }
+
+        switch (position)
+        {
+            default:
+            case Phaser.TOP_LEFT:
+                return out.set(this.x, this.y);
+
+            case Phaser.TOP_CENTER:
+                return out.set(this.centerX, this.y);
+
+            case Phaser.TOP_RIGHT:
+                return out.set(this.right, this.y);
+
+            case Phaser.LEFT_CENTER:
+                return out.set(this.x, this.centerY);
+
+            case Phaser.CENTER:
+                return out.set(this.centerX, this.centerY);
+
+            case Phaser.RIGHT_CENTER:
+                return out.set(this.right, this.centerY);
+
+            case Phaser.BOTTOM_LEFT:
+                return out.set(this.x, this.bottom);
+
+            case Phaser.BOTTOM_CENTER:
+                return out.set(this.centerX, this.bottom);
+
+            case Phaser.BOTTOM_RIGHT:
+                return out.set(this.right, this.bottom);
+        }
 
     },
 
@@ -975,10 +1028,10 @@ Phaser.Rectangle.aabb = function(points, out) {
         out = new Phaser.Rectangle();
     }
 
-    var xMax = Number.MIN_VALUE,
-        xMin = Number.MAX_VALUE,
-        yMax = Number.MIN_VALUE,
-        yMin = Number.MAX_VALUE;
+    var xMax = Number.NEGATIVE_INFINITY,
+        xMin = Number.POSITIVE_INFINITY,
+        yMax = Number.NEGATIVE_INFINITY,
+        yMin = Number.POSITIVE_INFINITY;
 
     points.forEach(function(point) {
         if (point.x > xMax) {

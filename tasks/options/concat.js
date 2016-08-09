@@ -30,6 +30,11 @@ module.exports = {
         dest: '<%= modules_dir %>/pixi-intro.js'
     },
 
+    pixiMain: {
+        src: require('../manifests/pixi-main'),
+        dest: '<%= modules_dir %>/pixi-main.js'
+    },
+    
     pixiRope: {
         src: require('../manifests/pixi-rope'),
         dest: '<%= modules_dir %>/pixi-rope.js'
@@ -200,6 +205,11 @@ module.exports = {
         dest: '<%= modules_dir %>/arcade.js'
     },
 
+    weapon: {
+        src: require('../manifests/physics.arcade.weapon'),
+        dest: '<%= modules_dir %>/weapon.js'
+    },
+
     arcadeTilemaps: {
         src: require('../manifests/physics.arcade.tilemaps'),
         dest: '<%= modules_dir %>/arcadeTilemaps.js'
@@ -295,6 +305,11 @@ module.exports = {
         dest: '<%= modules_dir %>/flexgrid.js'
     },
 
+    pixidefs: {
+        src: require('../manifests/pixidefs'),
+        dest: '<%= modules_dir %>/pixidefs.js'
+    },
+    
     outro: {
         src: require('../manifests/outro'),
         dest: '<%= modules_dir %>/outro.js'

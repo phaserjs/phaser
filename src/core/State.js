@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2015 Photon Storm Ltd.
+* @copyright    2016 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -72,6 +72,11 @@ Phaser.State = function () {
     * @property {Phaser.Stage} stage - A reference to the Stage.
     */
     this.stage = null;
+
+    /**
+    * @property {Phaser.StateManager} stage - A reference to the State Manager, which controls state changes.
+    */
+    this.state = null;
 
     /**
     * @property {Phaser.Time} time - A reference to the game clock and timed events system.
@@ -156,7 +161,7 @@ Phaser.State.prototype = {
     /**
     * The update method is left empty for your own use.
     * It is called during the core game loop AFTER debug, physics, plugins and the Stage have had their preUpdate methods called.
-    * If is called BEFORE Stage, Tweens, Sounds, Input, Physics, Particles and Plugins have had their postUpdate methods called.
+    * It is called BEFORE Stage, Tweens, Sounds, Input, Physics, Particles and Plugins have had their postUpdate methods called.
     *
     * @method Phaser.State#update
     */

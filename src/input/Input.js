@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2015 Photon Storm Ltd.
+* @copyright    2016 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -38,6 +38,18 @@ Phaser.Input = function (game) {
     * @protected
     */
     this.moveCallbacks = [];
+
+    /**
+    * @property {function} customCandidateHandler - See Input.setInteractiveCandidateHandler.
+    * @private
+    */
+    this.customCandidateHandler = null;
+
+    /**
+    * @property {object} customCandidateHandlerContext - See Input.setInteractiveCandidateHandler.
+    * @private
+    */
+    this.customCandidateHandlerContext = null;
 
     /**
     * @property {number} pollRate - How often should the input pointers be checked for updates? A value of 0 means every single frame (60fps); a value of 1 means every other frame (30fps) and so on.
@@ -459,9 +471,43 @@ Phaser.Input.prototype = {
     },
 
     /**
+    * Adds a callback that is fired every time `Pointer.processInteractiveObjects` is called.
+    * The purpose of `processInteractiveObjects` is to work out which Game Object the Pointer is going to
+    * interact with. It works by polling all of the valid game objects, and then slowly discounting those
+    * that don't meet the criteria (i.e. they aren't under the Pointer, are disabled, invisible, etc).
+    *
+    * Eventually a short-list of 'candidates' is created. These are all of the Game Objects which are valid
+    * for input and overlap with the Pointer. If you need fine-grained control over which of the items is
+    * selected then you can use this callback to do so.
+    *
+    * The callback will be sent 3 parameters:
+    * 
+    * 1) A reference to the Phaser.Pointer object that is processing the Items.
+    * 2) An array containing all potential interactive candidates. This is an array of `InputHandler` objects, not Sprites.
+    * 3) The current 'favorite' candidate, based on its priorityID and position in the display list.
+    *
+    * Your callback MUST return one of the candidates sent to it.
+    * 
+    * @method Phaser.Input#setInteractiveCandidateHandler
+    * @param {function} callback - The callback that will be called each time `Pointer.processInteractiveObjects` is called. Set to `null` to disable.
+    * @param {object} context - The context in which the callback will be called.
+    */
+    setInteractiveCandidateHandler: function (callback, context) {
+
+        this.customCandidateHandler = callback;
+        this.customCandidateHandlerContext = context;
+
+    },
+
+    /**
     * Adds a callback that is fired every time the activePointer receives a DOM move event such as a mousemove or touchmove.
     *
-    * The callback will be sent 4 parameters: The Pointer that moved, the x position of the pointer, the y position and the down state.
+    * The callback will be sent 4 parameters:
+    * 
+    * A reference to the Phaser.Pointer object that moved,
+    * The x position of the pointer,
+    * The y position,
+    * A boolean indicating if the movement was the result of a 'click' event (such as a mouse click or touch down).
     * 
     * It will be called every time the activePointer moves, which in a multi-touch game can be a lot of times, so this is best
     * to only use if you've limited input to a single pointer (i.e. mouse or touch).
@@ -951,7 +997,7 @@ Phaser.Input.prototype = {
 
         //  Didn't hit the parent, does it have any children?
 
-        for (var i = 0, len = displayObject.children.length; i < len; i++)
+        for (var i = 0; i < displayObject.children.length; i++)
         {
             if (this.hitTest(displayObject.children[i], pointer, localPoint))
             {

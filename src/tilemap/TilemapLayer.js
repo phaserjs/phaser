@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2015 Photon Storm Ltd.
+* @copyright    2016 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -289,15 +289,62 @@ Phaser.TilemapLayer.prototype.preUpdate = function() {
 */
 Phaser.TilemapLayer.prototype.postUpdate = function () {
 
-    Phaser.Component.FixedToCamera.postUpdate.call(this);
+    if (this.fixedToCamera)
+    {
+        this.position.x = (this.game.camera.view.x + this.cameraOffset.x) / this.game.camera.scale.x;
+        this.position.y = (this.game.camera.view.y + this.cameraOffset.y) / this.game.camera.scale.y;
+    }
 
-    //  Stops you being able to auto-scroll the camera if it's not following a sprite
-    var camera = this.game.camera;
+    this._scrollX = this.game.camera.view.x * this.scrollFactorX / this.scale.x;
+    this._scrollY = this.game.camera.view.y * this.scrollFactorY / this.scale.y;
 
-    this.scrollX = camera.x * this.scrollFactorX / this.scale.x;
-    this.scrollY = camera.y * this.scrollFactorY / this.scale.y;
+};
+
+/**
+* Automatically called by the Canvas Renderer.
+* Overrides the Sprite._renderCanvas function.
+*
+* @method Phaser.TilemapLayer#_renderCanvas
+* @private
+*/
+Phaser.TilemapLayer.prototype._renderCanvas = function (renderSession) {
+
+    if (this.fixedToCamera)
+    {
+        this.position.x = (this.game.camera.view.x + this.cameraOffset.x) / this.game.camera.scale.x;
+        this.position.y = (this.game.camera.view.y + this.cameraOffset.y) / this.game.camera.scale.y;
+    }
+
+    this._scrollX = this.game.camera.view.x * this.scrollFactorX / this.scale.x;
+    this._scrollY = this.game.camera.view.y * this.scrollFactorY / this.scale.y;
 
     this.render();
+
+    PIXI.Sprite.prototype._renderCanvas.call(this, renderSession);
+
+};
+
+/**
+* Automatically called by the Canvas Renderer.
+* Overrides the Sprite._renderWebGL function.
+*
+* @method Phaser.TilemapLayer#_renderWebGL
+* @private
+*/
+Phaser.TilemapLayer.prototype._renderWebGL = function (renderSession) {
+
+    if (this.fixedToCamera)
+    {
+        this.position.x = (this.game.camera.view.x + this.cameraOffset.x) / this.game.camera.scale.x;
+        this.position.y = (this.game.camera.view.y + this.cameraOffset.y) / this.game.camera.scale.y;
+    }
+    
+    this._scrollX = this.game.camera.view.x * this.scrollFactorX / this.scale.x;
+    this._scrollY = this.game.camera.view.y * this.scrollFactorY / this.scale.y;
+
+    this.render();
+
+    PIXI.Sprite.prototype._renderWebGL.call(this, renderSession);
 
 };
 
@@ -374,14 +421,15 @@ Phaser.TilemapLayer.prototype.resizeWorld = function () {
 */
 Phaser.TilemapLayer.prototype._fixX = function (x) {
 
-    if (x < 0)
-    {
-        x = 0;
-    }
-
-    if (this.scrollFactorX === 1)
+    if (this.scrollFactorX === 1 || (this.scrollFactorX === 0 && this.position.x === 0))
     {
         return x;
+    }
+    
+    //  This executes if the scrollFactorX is 0 and the x position of the tilemap is off from standard.
+    if (this.scrollFactorX === 0 && this.position.x !== 0)
+    {
+        return x - this.position.x;
     }
 
     return this._scrollX + (x - (this._scrollX / this.scrollFactorX));
@@ -417,16 +465,17 @@ Phaser.TilemapLayer.prototype._unfixX = function (x) {
 */
 Phaser.TilemapLayer.prototype._fixY = function (y) {
 
-    if (y < 0)
-    {
-        y = 0;
-    }
-
-    if (this.scrollFactorY === 1)
+    if (this.scrollFactorY === 1 || (this.scrollFactorY === 0 && this.position.y === 0))
     {
         return y;
     }
-
+    
+    //  This executes if the scrollFactorY is 0 and the y position of the tilemap is off from standard.
+    if (this.scrollFactorY === 0 && this.position.y !== 0)
+    {
+        return y - this.position.y;
+    }
+    
     return this._scrollY + (y - (this._scrollY / this.scrollFactorY));
 
 };
@@ -661,7 +710,7 @@ Phaser.TilemapLayer.prototype.resetTilesetCache = function () {
 };
 
 /**
- * This method will set the scale of the tilemap as well as update the underlying block data of this layer
+ * This method will set the scale of the tilemap as well as update the underlying block data of this layer.
  * 
  * @method Phaser.TilemapLayer#setScale
  * @param {number} [xScale=1] - The scale factor along the X-plane 
@@ -809,8 +858,6 @@ Phaser.TilemapLayer.prototype.renderRegion = function (scrollX, scrollY, left, t
     // x/y - is cell location, normalized [0..width/height) in loop
     // xmax/ymax - remaining cells to render on column/row
     var tx, ty, x, y, xmax, ymax;
-
-    context.fillStyle = this.tileColor;
 
     for (y = normStartY, ymax = bottom - top, ty = baseY;
         ymax >= 0;

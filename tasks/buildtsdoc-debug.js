@@ -116,14 +116,18 @@ var TypeScriptDocGenerator = (function () {
 
         var c = this.findClass(className);
 
-        if (c !== null)
+        // _grunt.log.writeln("generateClassComments class found: " + JSON.stringify(c));
+
+        if (c !== null && c !== undefined)
         {
             var comments = [];
             comments = comments.concat(this.cleanEndLine(c.description).split("\n"));
+            // _grunt.log.writeln("generateClassComments return comments");
             return comments;
         }
         else
         {
+            // _grunt.log.writeln("generateClassComments return null");
             return null;
         }
 
@@ -131,7 +135,7 @@ var TypeScriptDocGenerator = (function () {
 
     TypeScriptDocGenerator.prototype.generateMemberComments = function (className, memberName) {
 
-        // _grunt.log.writeln("generateMemberComments: " + className + " = " + memberName);
+        _grunt.log.writeln("generateMemberComments: " + className + " = " + memberName);
 
         var c = this.findClass(className);
 
@@ -163,7 +167,7 @@ var TypeScriptDocGenerator = (function () {
 
     TypeScriptDocGenerator.prototype.generateFunctionComments = function (className, functionName) {
 
-        // _grunt.log.writeln("generateFunctionComments: " + className);
+        _grunt.log.writeln("generateFunctionComments: " + className);
 
         var c = this.findClass(className);
 
@@ -243,7 +247,7 @@ var TypeScriptDocGenerator = (function () {
 
     TypeScriptDocGenerator.prototype.generateConstructorComments = function (className) {
 
-        // _grunt.log.writeln("generateConstructorComments: " + className);
+        _grunt.log.writeln("generateConstructorComments: " + className);
 
         var c = this.findClass(className);
 
@@ -310,20 +314,31 @@ var TypeScriptDocGenerator = (function () {
 
     TypeScriptDocGenerator.prototype.getClassName = function (node) {
 
-        // _grunt.log.writeln("getClassName: " + JSON.stringify(node.name));
+        // _grunt.log.writeln("getClassName: " + JSON.stringify(node));
         // _grunt.log.writeln("getClassName: " + JSON.stringify(node.kind));
+        // _grunt.log.writeln("getClassName: " + JSON.stringify(node.name));
 
         var fullName = '';
 
-        if (node.kind === ts.SyntaxKind.ClassDeclaration)
+        if (node.name !== undefined && node.kind === ts.SyntaxKind.ClassDeclaration)
         {
             // _grunt.log.writeln("getClassName 1a: " + node.name.text);
-            fullName = node.name.getText();
+
+            try {
+                fullName = node.name.getText();
+                // _grunt.log.writeln("getClassName 1b: " + fullName);
+            }
+            catch (e)
+            {
+                fullName = node.name.text;
+                // _grunt.log.writeln("getClassName bail");
+                // return '';
+            }
         }
 
         var parent = node.parent;
 
-        while (parent !== null)
+        while (parent !== null && parent !== undefined)
         {
             // _grunt.log.writeln("getClassName 2");
 
@@ -333,8 +348,14 @@ var TypeScriptDocGenerator = (function () {
             }
 
             parent = parent.parent;
-
         }
+
+        if (fullName === undefined || fullName === null)
+        {
+            fullName = '';
+        }
+
+        // _grunt.log.writeln("getClassName: " + fullName);
 
         return fullName;
 
@@ -342,29 +363,82 @@ var TypeScriptDocGenerator = (function () {
 
     TypeScriptDocGenerator.prototype.delintNode = function (node) {
 
+        var c = this.getClassName(node);
+
+        var r = true;
+
+        try {
+            r = node.getStart();
+        }
+        catch (e)
+        {
+            r = false;
+        }
+
         switch (node.kind)
         {
             case ts.SyntaxKind.Constructor:
                 // _grunt.log.writeln("insert1: " + node);
-                this.insertComment(this.generateConstructorComments(this.getClassName(node)), node.getStart());
+
+                if (c !== '' && r)
+                {
+                    this.insertComment(this.generateConstructorComments(c, r));
+                }
+
                 break;
 
             case ts.SyntaxKind.ClassDeclaration:
-                // _grunt.log.writeln("insert2: " + JSON.stringify(node));
-                _grunt.log.writeln("insert2a: " + JSON.stringify(node.name));
-                // _grunt.log.writeln("insert2b: " + node.getStart());
-                // _grunt.log.writeln("insert2c: " + this.getClassName(node));
-                this.insertComment(this.generateClassComments(this.getClassName(node)), node.getStart());
+                // _grunt.log.writeln("insertX2: " + JSON.stringify(node));
+                // _grunt.log.writeln("insertX2a: " + JSON.stringify(node.name));
+                // _grunt.log.writeln("insertX2b: " + this.getClassName(node));
+                // _grunt.log.writeln("insertX2c: " + r);
+                // _grunt.log.writeln("insertX2d ...");
+
+                if (c !== '' && r)
+                {
+                    this.insertComment(this.generateClassComments(c, r));
+                }
+
                 break;
 
             case ts.SyntaxKind.Property:
                 // _grunt.log.writeln("insert3: " + node);
-                this.insertComment(this.generateMemberComments(this.getClassName(node), node.name.getText()), node.getStart());
+
+                var t = true;
+
+                try {
+                    t = node.name.getText();
+                }
+                catch (e)
+                {
+                    t = false;
+                }
+
+                if (c !== '' && r && t)
+                {
+                    this.insertComment(this.generateMemberComments(c, t, r));
+                }
+
                 break;
 
             case ts.SyntaxKind.Method:
                 // _grunt.log.writeln("insert4: " + node);
-                this.insertComment(this.generateFunctionComments(this.getClassName(node), node.name.getText()), node.getStart());
+
+                var t2 = true;
+
+                try {
+                    t2 = node.name.getText();
+                }
+                catch (e)
+                {
+                    t2 = false;
+                }
+
+                if (c !== '' && r && t2)
+                {
+                    this.insertComment(this.generateFunctionComments(c, t2, r));
+                }
+
                 break;
         }
 

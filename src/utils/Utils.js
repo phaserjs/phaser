@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2015 Photon Storm Ltd.
+* @copyright    2016 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -9,6 +9,20 @@
 * @static
 */
 Phaser.Utils = {
+
+    /**
+    * Takes the given string and reverses it, returning the reversed string.
+    * For example if given the string `Atari 520ST` it would return `TS025 iratA`.
+    *
+    * @method Phaser.Utils.reverseString
+    * @param {string} string - The string to be reversed.
+    * @return {string} The reversed string.
+    */
+    reverseString: function (string) {
+
+        return string.split('').reverse().join('');
+
+    },
 
     /**
      * Gets an objects property by string.
@@ -80,7 +94,7 @@ Phaser.Utils = {
     * Returns true or false based on the chance value (default 50%). For example if you wanted a player to have a 30% chance
     * of getting a bonus, call chanceRoll(30) - true means the chance passed, false means it failed.
     *
-    * @method Phaser.Math#chanceRoll
+    * @method Phaser.Utils#chanceRoll
     * @param {number} chance - The chance of receiving the value. A number between 0 and 100 (effectively 0% to 100%).
     * @return {boolean} True if the roll passed, or false otherwise.
     */
@@ -145,20 +159,39 @@ Phaser.Utils = {
     },
 
     /**
-    * JavaScript string pad http://www.webtoolkit.info/.
+    * Takes the given string and pads it out, to the length required, using the character
+    * specified. For example if you need a string to be 6 characters long, you can call:
+    *
+    * `pad('bob', 6, '-', 2)`
+    *
+    * This would return: `bob---` as it has padded it out to 6 characters, using the `-` on the right.
+    *
+    * You can also use it to pad numbers (they are always returned as strings):
+    * 
+    * `pad(512, 6, '0', 1)`
+    *
+    * Would return: `000512` with the string padded to the left.
+    *
+    * If you don't specify a direction it'll pad to both sides:
+    * 
+    * `pad('c64', 7, '*')`
+    *
+    * Would return: `**c64**`
     *
     * @method Phaser.Utils.pad
-    * @param {string} str - The target string.
+    * @param {string} str - The target string. `toString()` will be called on the string, which means you can also pass in common data types like numbers.
     * @param {integer} [len=0] - The number of characters to be added.
     * @param {string} [pad=" "] - The string to pad it out with (defaults to a space).
-    * @param {integer} [dir=3] The direction dir = 1 (left), 2 (right), 3 (both).
-    * @return {string} The padded string
+    * @param {integer} [dir=3] - The direction dir = 1 (left), 2 (right), 3 (both).
+    * @return {string} The padded string.
     */
     pad: function (str, len, pad, dir) {
 
         if (len === undefined) { var len = 0; }
         if (pad === undefined) { var pad = ' '; }
         if (dir === undefined) { var dir = 3; }
+
+        str = str.toString();
 
         var padlen = 0;
 

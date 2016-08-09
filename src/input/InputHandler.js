@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2015 Photon Storm Ltd.
+* @copyright    2016 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -167,14 +167,6 @@ Phaser.InputHandler = function (sprite) {
     this.boundsSprite = null;
 
     /**
-    * If this object is set to consume the pointer event then it will stop all propagation from this object on.
-    * For example if you had a stack of 6 sprites with the same priority IDs and one consumed the event, none of the others would receive it.
-    * @property {boolean} consumePointerEvent
-    * @default
-    */
-    this.consumePointerEvent = false;
-
-    /**
     * @property {boolean} scaleLayer - EXPERIMENTAL: Please do not use this property unless you know what it does. Likely to change in the future.
     */
     this.scaleLayer = false;
@@ -190,9 +182,29 @@ Phaser.InputHandler = function (sprite) {
     this.dragFromCenter = false;
 
     /**
+    * @property {boolean} dragStopBlocksInputUp - If enabled, when the Sprite stops being dragged, it will only dispatch the `onDragStop` event, and not the `onInputUp` event. If set to `false` it will dispatch both events.
+    */
+    this.dragStopBlocksInputUp = false;
+
+    /**
     * @property {Phaser.Point} dragStartPoint - The Point from which the most recent drag started from. Useful if you need to return an object to its starting position.
     */
     this.dragStartPoint = new Phaser.Point();
+
+    /**
+    * @property {integer} dragDistanceThreshold - The distance, in pixels, the pointer has to move while being held down, before the Sprite thinks it is being dragged.
+    */
+    this.dragDistanceThreshold = 0;
+
+    /**
+    * @property {integer} dragTimeThreshold - The amount of time, in ms, the pointer has to be held down over the Sprite before it thinks it is being dragged.
+    */
+    this.dragTimeThreshold = 0;
+
+    /**
+    * @property {Phaser.Point} downPoint - A Point object containing the coordinates of the Pointer when it was first pressed down onto this Sprite.
+    */
+    this.downPoint = new Phaser.Point();
 
     /**
     * @property {Phaser.Point} snapPoint - If the sprite is set to snap while dragging this holds the point of the most recent 'snap' event.
@@ -210,6 +222,24 @@ Phaser.InputHandler = function (sprite) {
     * @private
     */
     this._dragPhase = false;
+
+    /**
+    * @property {boolean} _pendingDrag - Internal cache var.
+    * @private
+    */
+    this._pendingDrag = false;
+
+    /**
+    * @property {boolean} _dragTimePass - Internal cache var.
+    * @private
+    */
+    this._dragTimePass = false;
+
+    /**
+    * @property {boolean} _dragDistancePass - Internal cache var.
+    * @private
+    */
+    this._dragDistancePass = false;
 
     /**
     * @property {boolean} _wasEnabled - Internal cache var.
@@ -233,6 +263,8 @@ Phaser.InputHandler = function (sprite) {
         id: 0,
         x: 0,
         y: 0,
+        camX: 0,
+        camY: 0,
         isDown: false,
         isUp: false,
         isOver: false,
@@ -251,9 +283,10 @@ Phaser.InputHandler.prototype = {
 
     /**
     * Starts the Input Handler running. This is called automatically when you enable input on a Sprite, or can be called directly if you need to set a specific priority.
+    * 
     * @method Phaser.InputHandler#start
-    * @param {number} priority - Higher priority sprites take click priority over low-priority sprites when they are stacked on-top of each other.
-    * @param {boolean} useHandCursor - If true the Sprite will show the hand cursor on mouse-over (doesn't apply to mobile browsers)
+    * @param {number} [priority=0] - Higher priority sprites take click priority over low-priority sprites when they are stacked on-top of each other.
+    * @param {boolean} [useHandCursor=false] - If true the Sprite will show the hand cursor on mouse-over (doesn't apply to mobile browsers)
     * @return {Phaser.Sprite} The Sprite object to which the Input Handler is bound.
     */
     start: function (priority, useHandCursor) {
@@ -438,7 +471,11 @@ Phaser.InputHandler.prototype = {
 
         if (includePixelPerfect === undefined) { includePixelPerfect = true; }
 
-        if (!this.enabled || this.sprite.scale.x === 0 || this.sprite.scale.y === 0 || this.priorityID < this.game.input.minPriorityID)
+        if (!this.enabled ||
+            this.sprite.scale.x === 0 ||
+            this.sprite.scale.y === 0 ||
+            this.priorityID < this.game.input.minPriorityID ||
+            (this.sprite.parent && this.sprite.parent.ignoreChildInput))
         {
             return false;
         }
@@ -449,7 +486,7 @@ Phaser.InputHandler.prototype = {
             return false;
         }
 
-        if (this.priorityID > highestID || (this.priorityID === highestID && this.sprite.renderOrderID < highestRenderID))
+        if (this.priorityID > highestID || (this.priorityID === highestID && this.sprite.renderOrderID > highestRenderID))
         {
             return true;
         }
@@ -587,6 +624,8 @@ Phaser.InputHandler.prototype = {
                     return true;
                 }
             }
+
+            return false;
         }
         else
         {
@@ -682,7 +721,14 @@ Phaser.InputHandler.prototype = {
     */
     checkPointerDown: function (pointer, fastTest) {
 
-        if (!pointer.isDown || !this.enabled || !this.sprite || !this.sprite.parent || !this.sprite.visible || !this.sprite.parent.visible)
+        if (!pointer.isDown ||
+            !this.enabled ||
+            !this.sprite ||
+            !this.sprite.parent ||
+            !this.sprite.visible ||
+            !this.sprite.parent.visible ||
+            this.sprite.worldScale.x === 0 ||
+            this.sprite.worldScale.y === 0)
         {
             return false;
         }
@@ -720,7 +766,13 @@ Phaser.InputHandler.prototype = {
     */
     checkPointerOver: function (pointer, fastTest) {
 
-        if (!this.enabled || !this.sprite || !this.sprite.parent || !this.sprite.visible || !this.sprite.parent.visible)
+        if (!this.enabled ||
+            !this.sprite ||
+            !this.sprite.parent ||
+            !this.sprite.visible ||
+            !this.sprite.parent.visible ||
+            this.sprite.worldScale.x === 0 ||
+            this.sprite.worldScale.y === 0)
         {
             return false;
         }
@@ -817,11 +869,13 @@ Phaser.InputHandler.prototype = {
     },
 
     /**
-    * Update.
+    * Internal Update method. This is called automatically and handles the Pointer
+    * and drag update loops.
     * 
     * @method Phaser.InputHandler#update
     * @protected
     * @param {Phaser.Pointer} pointer
+    * @return {boolean} True if the pointer is still active, otherwise false.
     */
     update: function (pointer) {
 
@@ -837,9 +891,23 @@ Phaser.InputHandler.prototype = {
             return false;
         }
 
-        if (this.draggable && this._draggedPointerID === pointer.id)
+        if (this._pendingDrag)
         {
-            return this.updateDrag(pointer);
+            if (!this._dragDistancePass)
+            {
+                this._dragDistancePass = (Phaser.Math.distance(pointer.x, pointer.y, this.downPoint.x, this.downPoint.y) >= this.dragDistanceThreshold);
+            }
+
+            if (this._dragDistancePass && this._dragTimePass)
+            {
+                this.startDrag(pointer);
+            }
+
+            return true;
+        }
+        else if (this.draggable && this._draggedPointerID === pointer.id)
+        {
+            return this.updateDrag(pointer, false);
         }
         else if (this._pointerData[pointer.id].isOver)
         {
@@ -863,8 +931,9 @@ Phaser.InputHandler.prototype = {
     * @method Phaser.InputHandler#_pointerOverHandler
     * @private
     * @param {Phaser.Pointer} pointer - The pointer that triggered the event
+    * @param {boolean} [silent=false] - If silent is `true` then this method will not dispatch any Signals from the parent Sprite.
     */
-    _pointerOverHandler: function (pointer) {
+    _pointerOverHandler: function (pointer, silent) {
 
         if (this.sprite === null)
         {
@@ -876,6 +945,8 @@ Phaser.InputHandler.prototype = {
 
         if (data.isOver === false || pointer.dirty)
         {
+            var sendEvent = (data.isOver === false);
+
             data.isOver = true;
             data.isOut = false;
             data.timeOver = this.game.time.time;
@@ -888,9 +959,14 @@ Phaser.InputHandler.prototype = {
                 this._setHandCursor = true;
             }
 
-            if (this.sprite && this.sprite.events)
+            if (!silent && sendEvent && this.sprite && this.sprite.events)
             {
                 this.sprite.events.onInputOver$dispatch(this.sprite, pointer);
+            }
+
+            if (this.sprite.parent && this.sprite.parent.type === Phaser.GROUP)
+            {
+                this.sprite.parent.onChildInputOver.dispatch(this.sprite, pointer);
             }
         }
 
@@ -902,8 +978,9 @@ Phaser.InputHandler.prototype = {
     * @method Phaser.InputHandler#_pointerOutHandler
     * @private
     * @param {Phaser.Pointer} pointer - The pointer that triggered the event.
+    * @param {boolean} [silent=false] - If silent is `true` then this method will not dispatch any Signals from the parent Sprite.
     */
-    _pointerOutHandler: function (pointer) {
+    _pointerOutHandler: function (pointer, silent) {
 
         if (this.sprite === null)
         {
@@ -923,9 +1000,14 @@ Phaser.InputHandler.prototype = {
             this._setHandCursor = false;
         }
 
-        if (this.sprite && this.sprite.events)
+        if (!silent && this.sprite && this.sprite.events)
         {
             this.sprite.events.onInputOut$dispatch(this.sprite, pointer);
+
+            if (this.sprite && this.sprite.parent && this.sprite.parent.type === Phaser.GROUP)
+            {
+                this.sprite.parent.onChildInputOut.dispatch(this.sprite, pointer);
+            }
         }
 
     },
@@ -958,18 +1040,51 @@ Phaser.InputHandler.prototype = {
             data.isUp = false;
             data.timeDown = this.game.time.time;
 
+            this.downPoint.set(pointer.x, pointer.y);
+
+            //  It's possible the onInputDown event creates a new Sprite that is on-top of this one, so we ought to force a Pointer update
+            pointer.dirty = true;
+
             if (this.sprite && this.sprite.events)
             {
                 this.sprite.events.onInputDown$dispatch(this.sprite, pointer);
-            }
 
-            //  It's possible the onInputDown event created a new Sprite that is on-top of this one, so we ought to force a Pointer update
-            pointer.dirty = true;
+                //  The event above might have destroyed this sprite.
+                if (this.sprite && this.sprite.parent && this.sprite.parent.type === Phaser.GROUP)
+                {
+                    this.sprite.parent.onChildInputDown.dispatch(this.sprite, pointer);
+                }
+
+                //  The events might have destroyed this sprite.
+                if (this.sprite === null)
+                {
+                    return;
+                }
+            }
 
             //  Start drag
             if (this.draggable && this.isDragged === false)
             {
-                this.startDrag(pointer);
+                if (this.dragTimeThreshold === 0 && this.dragDistanceThreshold === 0)
+                {
+                    this.startDrag(pointer);
+                }
+                else
+                {
+                    this._pendingDrag = true;
+
+                    this._dragDistancePass = (this.dragDistanceThreshold === 0);
+
+                    if (this.dragTimeThreshold > 0)
+                    {
+                        this._dragTimePass = false;
+                        this.game.time.events.add(this.dragTimeThreshold, this.dragTimeElapsed, this, pointer);
+                    }
+                    else
+                    {
+                        this._dragTimePass = true;
+                    }
+                }
             }
 
             if (this.bringToTop)
@@ -978,8 +1093,26 @@ Phaser.InputHandler.prototype = {
             }
         }
 
-        //  Consume the event?
-        return this.consumePointerEvent;
+    },
+
+    /**
+    * Internal method handling the drag threshold timer.
+    * 
+    * @method Phaser.InputHandler#dragTimeElapsed
+    * @private
+    * @param {Phaser.Pointer} pointer
+    */
+    dragTimeElapsed: function (pointer) {
+
+        this._dragTimePass = true;
+
+        if (this._pendingDrag && this.sprite)
+        {
+            if (this._dragDistancePass)
+            {
+                this.startDrag(pointer);
+            }
+        }
 
     },
 
@@ -1012,7 +1145,16 @@ Phaser.InputHandler.prototype = {
 
             if (this.sprite && this.sprite.events)
             {
-                this.sprite.events.onInputUp$dispatch(this.sprite, pointer, isOver);
+                if (!this.dragStopBlocksInputUp ||
+                    this.dragStopBlocksInputUp && !(this.draggable && this.isDragged && this._draggedPointerID === pointer.id))
+                {
+                    this.sprite.events.onInputUp$dispatch(this.sprite, pointer, isOver);
+                }
+
+                if (this.sprite && this.sprite.parent && this.sprite.parent.type === Phaser.GROUP)
+                {
+                    this.sprite.parent.onChildInputUp.dispatch(this.sprite, pointer, isOver);
+                }
 
                 //  The onInputUp event may have changed the sprite so that checkPointerOver is no longer true, so update it.
                 if (isOver)
@@ -1032,6 +1174,8 @@ Phaser.InputHandler.prototype = {
             //  It's possible the onInputUp event created a new Sprite that is on-top of this one, so force a Pointer update
             pointer.dirty = true;
 
+            this._pendingDrag = false;
+
             //  Stop drag
             if (this.draggable && this.isDragged && this._draggedPointerID === pointer.id)
             {
@@ -1042,12 +1186,17 @@ Phaser.InputHandler.prototype = {
     },
 
     /**
-    * Updates the Pointer drag on this Sprite.
+    * Called as a Pointer actively drags this Game Object.
+    * 
     * @method Phaser.InputHandler#updateDrag
-    * @param {Phaser.Pointer} pointer
+    * @private
+    * @param {Phaser.Pointer} pointer - The Pointer causing the drag update.
+    * @param {boolean} fromStart - True if this is the first update, immediately after the drag has started.
     * @return {boolean}
     */
-    updateDrag: function (pointer) {
+    updateDrag: function (pointer, fromStart) {
+
+        if (fromStart === undefined) { fromStart = false; }
 
         if (pointer.isUp)
         {
@@ -1089,14 +1238,17 @@ Phaser.InputHandler.prototype = {
         }
         else
         {
+            var cx = this.game.camera.x - this._pointerData[pointer.id].camX;
+            var cy = this.game.camera.y - this._pointerData[pointer.id].camY;
+
             if (this.allowHorizontalDrag)
             {
-                this.sprite.x = px;
+                this.sprite.x = px + cx;
             }
 
             if (this.allowVerticalDrag)
             {
-                this.sprite.y = py;
+                this.sprite.y = py + cy;
             }
 
             if (this.boundsRect)
@@ -1117,7 +1269,7 @@ Phaser.InputHandler.prototype = {
             }
         }
 
-        this.sprite.events.onDragUpdate.dispatch(this.sprite, pointer, px, py, this.snapPoint);
+        this.sprite.events.onDragUpdate.dispatch(this.sprite, pointer, px, py, this.snapPoint, fromStart);
 
         return true;
 
@@ -1238,6 +1390,16 @@ Phaser.InputHandler.prototype = {
     * 
     * When the drag completes by way of the user letting go of the pointer that was dragging the sprite, the Sprite.events.onDragStop event is dispatched.
     *
+    * You can control the thresholds over when a drag starts via the properties:
+    * 
+    * `Pointer.dragDistanceThreshold` the distance, in pixels, that the pointer has to move
+    * before the drag will start.
+    *
+    * `Pointer.dragTimeThreshold` the time, in ms, that the pointer must be held down on
+    * the Sprite before the drag will start.
+    *
+    * You can set either (or both) of these properties after enabling a Sprite for drag.
+    *
     * For the duration of the drag the Sprite.events.onDragUpdate event is dispatched. This event is only dispatched when the pointer actually
     * changes position and moves. The event sends 5 parameters: `sprite`, `pointer`, `dragX`, `dragY` and `snapPoint`.
     * 
@@ -1298,6 +1460,7 @@ Phaser.InputHandler.prototype = {
         this.draggable = false;
         this.isDragged = false;
         this._draggedPointerID = -1;
+        this._pendingDrag = false;
 
     },
 
@@ -1314,19 +1477,23 @@ Phaser.InputHandler.prototype = {
 
         this.isDragged = true;
         this._draggedPointerID = pointer.id;
+
+        this._pointerData[pointer.id].camX = this.game.camera.x;
+        this._pointerData[pointer.id].camY = this.game.camera.y;
+
         this._pointerData[pointer.id].isDragged = true;
 
         if (this.sprite.fixedToCamera)
         {
             if (this.dragFromCenter)
             {
-                this.sprite.centerOn(pointer.x, pointer.y);
-                this._dragPoint.setTo(this.sprite.cameraOffset.x - pointer.x, this.sprite.cameraOffset.y - pointer.y);
+                var bounds = this.sprite.getBounds();
+
+                this.sprite.cameraOffset.x = this.globalToLocalX(pointer.x) + (this.sprite.cameraOffset.x - bounds.centerX);
+                this.sprite.cameraOffset.y = this.globalToLocalY(pointer.y) + (this.sprite.cameraOffset.y - bounds.centerY);
             }
-            else
-            {
-                this._dragPoint.setTo(this.sprite.cameraOffset.x - pointer.x, this.sprite.cameraOffset.y - pointer.y);
-            }
+
+            this._dragPoint.setTo(this.sprite.cameraOffset.x - pointer.x, this.sprite.cameraOffset.y - pointer.y);
         }
         else
         {
@@ -1341,7 +1508,7 @@ Phaser.InputHandler.prototype = {
             this._dragPoint.setTo(this.sprite.x - this.globalToLocalX(pointer.x), this.sprite.y - this.globalToLocalY(pointer.y));
         }
 
-        this.updateDrag(pointer);
+        this.updateDrag(pointer, true);
 
         if (this.bringToTop)
         {
@@ -1350,7 +1517,10 @@ Phaser.InputHandler.prototype = {
         }
 
         this.dragStartPoint.set(x, y);
+
         this.sprite.events.onDragStart$dispatch(this.sprite, pointer, x, y);
+
+        this._pendingDrag = false;
 
     },
 
@@ -1402,6 +1572,7 @@ Phaser.InputHandler.prototype = {
         this._draggedPointerID = -1;
         this._pointerData[pointer.id].isDragged = false;
         this._dragPhase = false;
+        this._pendingDrag = false;
 
         if (this.snapOnRelease)
         {
@@ -1482,7 +1653,6 @@ Phaser.InputHandler.prototype = {
         this.snapOnRelease = false;
 
     },
-
 
     /**
     * Bounds Rect check for the sprite drag
@@ -1580,24 +1750,6 @@ Phaser.InputHandler.prototype = {
             {
                 this.sprite.y = this.boundsSprite.bottom - (this.sprite.height - this.sprite.offsetY);
             }
-
-            // if (this.sprite.x < this.boundsSprite.x)
-            // {
-            //     this.sprite.x = this.boundsSprite.x;
-            // }
-            // else if ((this.sprite.x + this.sprite.width) > (this.boundsSprite.x + this.boundsSprite.width))
-            // {
-            //     this.sprite.x = (this.boundsSprite.x + this.boundsSprite.width) - this.sprite.width;
-            // }
-
-            // if (this.sprite.y < this.boundsSprite.y)
-            // {
-            //     this.sprite.y = this.boundsSprite.y;
-            // }
-            // else if ((this.sprite.y + this.sprite.height) > (this.boundsSprite.y + this.boundsSprite.height))
-            // {
-            //     this.sprite.y = (this.boundsSprite.y + this.boundsSprite.height) - this.sprite.height;
-            // }
         }
 
     }

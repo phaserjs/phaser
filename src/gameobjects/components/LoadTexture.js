@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2015 Photon Storm Ltd.
+* @copyright    2016 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -34,6 +34,15 @@ Phaser.Component.LoadTexture.prototype = {
     * 
     * Calling this method causes a WebGL texture update, so use sparingly or in low-intensity portions of your game, or if you know the new texture is already on the GPU.
     *
+    * You can use the new const `Phaser.PENDING_ATLAS` as the texture key for any sprite. 
+    * Doing this then sets the key to be the `frame` argument (the frame is set to zero). 
+    * 
+    * This allows you to create sprites using `load.image` during development, and then change them 
+    * to use a Texture Atlas later in development by simply searching your code for 'PENDING_ATLAS' 
+    * and swapping it to be the key of the atlas data.
+    *
+    * Note: You cannot use a RenderTexture as a texture for a TileSprite.
+    *
     * @method
     * @param {string|Phaser.RenderTexture|Phaser.BitmapData|Phaser.Video|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache Image entry, or an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
     * @param {string|number} [frame] - If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
@@ -41,7 +50,15 @@ Phaser.Component.LoadTexture.prototype = {
     */
     loadTexture: function (key, frame, stopAnimation) {
 
-        frame = frame || 0;
+        if (key === Phaser.PENDING_ATLAS)
+        {
+            key = frame;
+            frame = 0;
+        }
+        else
+        {
+            frame = frame || 0;
+        }
 
         if ((stopAnimation || stopAnimation === undefined) && this.animations)
         {
@@ -70,6 +87,10 @@ Phaser.Component.LoadTexture.prototype = {
             {
                 setFrame = !this.animations.loadFrameData(cache.getFrameData(key.key, Phaser.Cache.BITMAPDATA), frame);
             }
+            else
+            {
+                setFrame = !this.animations.loadFrameData(key.frameData, 0);
+            }
         }
         else if (Phaser.Video && key instanceof Phaser.Video)
         {
@@ -82,6 +103,12 @@ Phaser.Component.LoadTexture.prototype = {
             key.onChangeSource.add(this.resizeFrame, this);
             this.texture.valid = valid;
         }
+        else if (Phaser.Tilemap && key instanceof Phaser.TilemapLayer)
+        {
+            // this.customRender = true;
+
+            this.setTexture(PIXI.Texture.fromCanvas(key.canvas));
+        }
         else if (key instanceof PIXI.Texture)
         {
             this.setTexture(key);
@@ -92,6 +119,15 @@ Phaser.Component.LoadTexture.prototype = {
 
             this.key = img.key;
             this.setTexture(new PIXI.Texture(img.base));
+
+            if (key === '__default')
+            {
+                this.texture.baseTexture.skipRender = true;
+            }
+            else
+            {
+                this.texture.baseTexture.skipRender = false;
+            }
 
             setFrame = !this.animations.loadFrameData(img.frameData, frame);
         }
@@ -158,7 +194,7 @@ Phaser.Component.LoadTexture.prototype = {
         {
             this.updateCrop();
         }
-
+        
         this.texture.requiresReTint = true;
         
         this.texture._updateUvs();

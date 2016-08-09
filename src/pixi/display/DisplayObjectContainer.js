@@ -22,6 +22,17 @@ PIXI.DisplayObjectContainer = function()
      * @readOnly
      */
     this.children = [];
+
+    /**
+    * If `ignoreChildInput`  is `false` it will allow this objects _children_ to be considered as valid for Input events.
+    * 
+    * If this property is `true` then the children will _not_ be considered as valid for Input events.
+    * 
+    * Note that this property isn't recursive: only immediate children are influenced, it doesn't scan further down.
+    * @property {boolean} ignoreChildInput
+    * @default
+    */
+    this.ignoreChildInput = false;
     
 };
 
@@ -312,9 +323,12 @@ PIXI.DisplayObjectContainer.prototype.displayObjectContainerUpdateTransform = PI
  */
 PIXI.DisplayObjectContainer.prototype.getBounds = function()
 {
-    if(this.children.length === 0)return PIXI.EmptyRectangle;
+    if (this.children.length === 0)
+    {
+        return PIXI.EmptyRectangle;
+    }
 
-    // TODO the bounds have already been calculated this render session so return what we have
+    this.updateTransform();
 
     var minX = Infinity;
     var minY = Infinity;
@@ -328,11 +342,14 @@ PIXI.DisplayObjectContainer.prototype.getBounds = function()
 
     var childVisible = false;
 
-    for(var i=0,j=this.children.length; i<j; i++)
+    for (var i = 0; i < this.children.length; i++)
     {
         var child = this.children[i];
         
-        if(!child.visible)continue;
+        if (!child.visible)
+        {
+            continue;
+        }
 
         childVisible = true;
 
@@ -348,8 +365,10 @@ PIXI.DisplayObjectContainer.prototype.getBounds = function()
         maxY = maxY > childMaxY ? maxY : childMaxY;
     }
 
-    if(!childVisible)
+    if (!childVisible)
+    {
         return PIXI.EmptyRectangle;
+    }
 
     var bounds = this._bounds;
 
@@ -358,9 +377,6 @@ PIXI.DisplayObjectContainer.prototype.getBounds = function()
     bounds.width = maxX - minX;
     bounds.height = maxY - minY;
 
-    // TODO: store a reference so that if this function gets called again in the render cycle we do not have to recalculate
-    //this._currentBounds = bounds;
-   
     return bounds;
 };
 
@@ -376,7 +392,7 @@ PIXI.DisplayObjectContainer.prototype.getLocalBounds = function()
 
     this.worldTransform = PIXI.identityMatrix;
 
-    for(var i=0,j=this.children.length; i<j; i++)
+    for (var i = 0; i < this.children.length; i++)
     {
         this.children[i].updateTransform();
     }
@@ -384,6 +400,11 @@ PIXI.DisplayObjectContainer.prototype.getLocalBounds = function()
     var bounds = this.getBounds();
 
     this.worldTransform = matrixCache;
+	
+    for (i = 0; i < this.children.length; i++)
+    {
+        this.children[i].updateTransform();
+    }	
 
     return bounds;
 };
@@ -488,8 +509,6 @@ PIXI.DisplayObjectContainer.prototype._renderCanvas = function(renderSession)
 {
     if (this.visible === false || this.alpha === 0) return;
 
-    if (renderSession.fd.on) { renderSession.fd.cdcs(); }
-
     if (this._cacheAsBitmap)
     {
         this._renderCachedSprite(renderSession);
@@ -510,7 +529,5 @@ PIXI.DisplayObjectContainer.prototype._renderCanvas = function(renderSession)
     {
         renderSession.maskManager.popMask(renderSession);
     }
-
-    if (renderSession.fd.on) { renderSession.fd.cdcp(); }
 
 };

@@ -1,7 +1,7 @@
 /* global Phaser:true */
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2015 Photon Storm Ltd.
+* @copyright    2016 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -15,7 +15,7 @@ var Phaser = Phaser || {
     * @constant
     * @type {string}
     */
-    VERSION: '2.4.4-dev',
+    VERSION: '2.6.1',
 
     /**
     * An array of Phaser game instances.
@@ -289,6 +289,188 @@ var Phaser = Phaser || {
     * @type {integer}
     */
     VIDEO: 28,
+
+    /**
+    * Game Object type.
+    * @constant
+    * @type {integer}
+    */
+    PENDING_ATLAS: -1,
+
+    /**
+    * A horizontal orientation
+    * @constant
+    * @type {integer}
+    */
+    HORIZONTAL: 0,
+
+    /**
+    * A vertical orientation
+    * @constant
+    * @type {integer}
+    */
+    VERTICAL: 1,
+
+    /**
+    * A landscape orientation
+    * @constant
+    * @type {integer}
+    */
+    LANDSCAPE: 0,
+
+    /**
+    * A portrait orientation
+    * @constant
+    * @type {integer}
+    */
+    PORTRAIT: 1,
+
+    /**
+    * The Angle (in degrees) a Game Object needs to be set to in order to face up.
+    * @constant
+    * @type {integer}
+    */
+    ANGLE_UP: 270,
+
+    /**
+    * The Angle (in degrees) a Game Object needs to be set to in order to face down.
+    * @constant
+    * @type {integer}
+    */
+    ANGLE_DOWN: 90,
+
+    /**
+    * The Angle (in degrees) a Game Object needs to be set to in order to face left.
+    * @constant
+    * @type {integer}
+    */
+    ANGLE_LEFT: 180,
+
+    /**
+    * The Angle (in degrees) a Game Object needs to be set to in order to face right.
+    * @constant
+    * @type {integer}
+    */
+    ANGLE_RIGHT: 0,
+
+    /**
+    * The Angle (in degrees) a Game Object needs to be set to in order to face north east.
+    * @constant
+    * @type {integer}
+    */
+    ANGLE_NORTH_EAST: 315,
+
+    /**
+    * The Angle (in degrees) a Game Object needs to be set to in order to face north west.
+    * @constant
+    * @type {integer}
+    */
+    ANGLE_NORTH_WEST: 225,
+
+    /**
+    * The Angle (in degrees) a Game Object needs to be set to in order to face south east.
+    * @constant
+    * @type {integer}
+    */
+    ANGLE_SOUTH_EAST: 45,
+
+    /**
+    * The Angle (in degrees) a Game Object needs to be set to in order to face south west.
+    * @constant
+    * @type {integer}
+    */
+    ANGLE_SOUTH_WEST: 135,
+
+    /**
+    * A constant representing a top-left alignment or position.
+    * @constant
+    * @type {integer}
+    */
+    TOP_LEFT: 0,
+
+    /**
+    * A constant representing a top-center alignment or position.
+    * @constant
+    * @type {integer}
+    */
+    TOP_CENTER: 1,
+
+    /**
+    * A constant representing a top-right alignment or position.
+    * @constant
+    * @type {integer}
+    */
+    TOP_RIGHT: 2,
+
+    /**
+    * A constant representing a left-top alignment or position.
+    * @constant
+    * @type {integer}
+    */
+    LEFT_TOP: 3,
+
+    /**
+    * A constant representing a left-center alignment or position.
+    * @constant
+    * @type {integer}
+    */
+    LEFT_CENTER: 4,
+
+    /**
+    * A constant representing a left-bottom alignment or position.
+    * @constant
+    * @type {integer}
+    */
+    LEFT_BOTTOM: 5,
+
+    /**
+    * A constant representing a center alignment or position.
+    * @constant
+    * @type {integer}
+    */
+    CENTER: 6,
+
+    /**
+    * A constant representing a right-top alignment or position.
+    * @constant
+    * @type {integer}
+    */
+    RIGHT_TOP: 7,
+
+    /**
+    * A constant representing a right-center alignment or position.
+    * @constant
+    * @type {integer}
+    */
+    RIGHT_CENTER: 8,
+
+    /**
+    * A constant representing a right-bottom alignment or position.
+    * @constant
+    * @type {integer}
+    */
+    RIGHT_BOTTOM: 9,
+
+    /**
+    * A constant representing a bottom-left alignment or position.
+    * @constant
+    * @type {integer}
+    */
+    BOTTOM_LEFT: 10,
+
+    /**
+    * A constant representing a bottom-center alignment or position.
+    * @constant
+    * @type {integer}
+    */
+    BOTTOM_CENTER: 11,
+
+    /**
+    * A constant representing a bottom-right alignment or position.
+    * @constant
+    * @type {integer}
+    */
+    BOTTOM_RIGHT: 12,
 
     /**
      * Various blend modes supported by Pixi.

@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2015 Photon Storm Ltd.
+* @copyright    2016 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -9,7 +9,7 @@
 * quickly and easily, without the need for any external files. You can create textures for sprites and in
 * coming releases we'll add dynamic sound effect generation support as well (like sfxr).
 *
-* Access this via `State.create` (or `this.create` from within a State object)
+* Access this via `Game.create` (`this.game.create` from within a State object)
 * 
 * @class Phaser.Create
 * @constructor
@@ -130,7 +130,7 @@ Phaser.Create.prototype = {
         //  No bmd? Let's make one
         if (this.bmd === null)
         {
-            this.bmd = game.make.bitmapData();
+            this.bmd = this.game.make.bitmapData();
             this.canvas = this.bmd.canvas;
             this.ctx = this.bmd.context;
         }
@@ -176,7 +176,7 @@ Phaser.Create.prototype = {
         //  No bmd? Let's make one
         if (this.bmd === null)
         {
-            this.bmd = game.make.bitmapData();
+            this.bmd = this.game.make.bitmapData();
             this.canvas = this.bmd.canvas;
             this.ctx = this.bmd.context;
         }

@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2015 Photon Storm Ltd.
+* @copyright    2016 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -77,8 +77,9 @@ Phaser.Tween = function (target, game, manager) {
     this.onStart = new Phaser.Signal();
 
     /**
-    * The onLoop event is fired if the Tween or any child tween loops.
+    * The onLoop event is fired if the Tween, or any child tweens loop.
     * It will be sent 2 parameters: the target object and this tween.
+    * 
     * @property {Phaser.Signal} onLoop
     */
     this.onLoop = new Phaser.Signal();
@@ -138,13 +139,13 @@ Phaser.Tween = function (target, game, manager) {
     * Is this Tween frame or time based? A frame based tween will use the physics elapsed timer when updating. This means
     * it will retain the same consistent frame rate, regardless of the speed of the device. The duration value given should
     * be given in frames.
-    * 
+    *
     * If the Tween uses a time based update (which is the default) then the duration is given in milliseconds.
     * In this situation a 2000ms tween will last exactly 2 seconds, regardless of the device and how many visual updates the tween
     * has actually been through. For very short tweens you may wish to experiment with a frame based update instead.
     *
     * The default value is whatever you've set in TweenManager.frameBased.
-    * 
+    *
     * @property {boolean} frameBased
     * @default
     */
@@ -198,7 +199,7 @@ Phaser.Tween.prototype = {
     * @param {function|string} [ease=null] - Easing function. If not set it will default to Phaser.Easing.Default, which is Phaser.Easing.Linear.None by default but can be over-ridden.
     * @param {boolean} [autoStart=false] - Set to `true` to allow this tween to start automatically. Otherwise call Tween.start().
     * @param {number} [delay=0] - Delay before this tween will start in milliseconds. Defaults to 0, no delay.
-    * @param {number} [repeat=0] - Should the tween automatically restart once complete? If you want it to run forever set as -1. This only effects this induvidual tween, not any chained tweens.
+    * @param {number} [repeat=0] - Should the tween automatically restart once complete? If you want it to run forever set as -1. This only effects this individual tween, not any chained tweens.
     * @param {boolean} [yoyo=false] - A tween that yoyos will reverse itself and play backwards automatically. A yoyo'd tween doesn't fire the Tween.onComplete event, so listen for Tween.onLoop instead.
     * @return {Phaser.Tween} This Tween object.
     */
@@ -245,7 +246,7 @@ Phaser.Tween.prototype = {
     * @param {function|string} [ease=null] - Easing function. If not set it will default to Phaser.Easing.Default, which is Phaser.Easing.Linear.None by default but can be over-ridden.
     * @param {boolean} [autoStart=false] - Set to `true` to allow this tween to start automatically. Otherwise call Tween.start().
     * @param {number} [delay=0] - Delay before this tween will start in milliseconds. Defaults to 0, no delay.
-    * @param {number} [repeat=0] - Should the tween automatically restart once complete? If you want it to run forever set as -1. This only effects this induvidual tween, not any chained tweens.
+    * @param {number} [repeat=0] - Should the tween automatically restart once complete? If you want it to run forever set as -1. This only effects this individual tween, not any chained tweens.
     * @param {boolean} [yoyo=false] - A tween that yoyos will reverse itself and play backwards automatically. A yoyo'd tween doesn't fire the Tween.onComplete event, so listen for Tween.onLoop instead.
     * @return {Phaser.Tween} This Tween object.
     */
@@ -357,6 +358,7 @@ Phaser.Tween.prototype = {
         if (complete)
         {
             this.onComplete.dispatch(this.target, this);
+            this._hasStarted = false;
 
             if (this.chainedTween)
             {
@@ -546,10 +548,9 @@ Phaser.Tween.prototype = {
     /**
     * Set how many times this tween and all of its children will repeat.
     * A tween (A) with 3 children (B,C,D) with a `repeatAll` value of 2 would play as: ABCDABCD before completing.
-    * When all child tweens have completed Tween.onLoop will be dispatched.
     *
-    * @method Phaser.Tween#repeat
-    * @param {number} total - How many times this tween and all children should repeat before completing. Set to zero to remove an active repeat. Set to -1 to repeat forever.
+    * @method Phaser.Tween#repeatAll
+    * @param {number} [total=0] - How many times this tween and all children should repeat before completing. Set to zero to remove an active repeat. Set to -1 to repeat forever.
     * @return {Phaser.Tween} This tween. Useful for method chaining.
     */
     repeatAll: function (total) {
@@ -597,7 +598,8 @@ Phaser.Tween.prototype = {
     },
 
     /**
-    * Enables the looping of this tween and all child tweens. If this tween has no children this setting has no effect.
+    * Enables the looping of this tween. The tween will loop forever, and onComplete will never fire.
+    *
     * If `value` is `true` then this is the same as setting `Tween.repeatAll(-1)`.
     * If `value` is `false` it is the same as setting `Tween.repeatAll(0)` and will reset the `repeatCounter` to zero.
     *
@@ -608,21 +610,14 @@ Phaser.Tween.prototype = {
     * .to({ y: 0 }, 1000, Phaser.Easing.Linear.None)
     * .loop();
     * @method Phaser.Tween#loop
-    * @param {boolean} [value=true] - If `true` this tween and any child tweens will loop once they reach the end. Set to `false` to remove an active loop.
+    * @param {boolean} [value=true] - If `true` this tween will loop once it reaches the end. Set to `false` to remove an active loop.
     * @return {Phaser.Tween} This tween. Useful for method chaining.
     */
     loop: function (value) {
 
         if (value === undefined) { value = true; }
 
-        if (value)
-        {
-            this.repeatAll(-1);
-        }
-        else
-        {
-            this.repeatCounter = 0;
-        }
+        this.repeatCounter = (value) ? -1 : 0;
 
         return this;
 
@@ -728,7 +723,7 @@ Phaser.Tween.prototype = {
     */
     update: function (time) {
 
-        if (this.pendingDelete)
+        if (this.pendingDelete || !this.target)
         {
             return false;
         }
@@ -762,7 +757,15 @@ Phaser.Tween.prototype = {
         }
         else if (status === Phaser.TweenData.LOOPED)
         {
-            this.onLoop.dispatch(this.target, this);
+            if (this.timeline[this.current].repeatCounter === -1)
+            {
+                this.onLoop.dispatch(this.target, this);
+            }
+            else
+            {
+                this.onRepeat.dispatch(this.target, this);
+            }
+
             return true;
         }
         else if (status === Phaser.TweenData.COMPLETE)
@@ -797,7 +800,7 @@ Phaser.Tween.prototype = {
                 if (this.repeatCounter === -1)
                 {
                     this.timeline[this.current].start();
-                    this.onRepeat.dispatch(this.target, this);
+                    this.onLoop.dispatch(this.target, this);
                     return true;
                 }
                 else if (this.repeatCounter > 0)
@@ -813,6 +816,7 @@ Phaser.Tween.prototype = {
                     //  No more repeats and no more children, so we're done
                     this.isRunning = false;
                     this.onComplete.dispatch(this.target, this);
+                    this._hasStarted = false;
 
                     if (this.chainedTween)
                     {
@@ -851,13 +855,8 @@ Phaser.Tween.prototype = {
             return null;
         }
 
-        if (frameRate === undefined) {
-            frameRate = 60;
-        }
-
-        if (data === undefined) {
-            data = [];
-        }
+        if (frameRate === undefined) { frameRate = 60; }
+        if (data === undefined) { data = []; }
 
         //  Populate the tween data
         for (var i = 0; i < this.timeline.length; i++)

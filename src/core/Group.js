@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2015 Photon Storm Ltd.
+* @copyright    2016 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -13,7 +13,7 @@
 * In addition, Groups provides support for fast pooling and object recycling.
 *
 * Groups are also display objects and can be nested as children within other Groups.
-* 
+*
 * @class Phaser.Group
 * @extends PIXI.DisplayObjectContainer
 * @param {Phaser.Game} game - A reference to the currently running game.
@@ -107,13 +107,13 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
     this.ignoreDestroy = false;
 
     /**
-    * A Group is that has `pendingDestroy` set to `true` is flagged to have its destroy method 
+    * A Group is that has `pendingDestroy` set to `true` is flagged to have its destroy method
     * called on the next logic update.
     * You can set it directly to flag the Group to be destroyed on its next update.
-    * 
-    * This is extremely useful if you wish to destroy a Group from within one of its own callbacks 
+    *
+    * This is extremely useful if you wish to destroy a Group from within one of its own callbacks
     * or a callback of one of its children.
-    * 
+    *
     * @property {boolean} pendingDestroy
     */
     this.pendingDestroy = false;
@@ -138,7 +138,69 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
     this.cursor = null;
 
     /**
+    * A Group with `inputEnableChildren` set to `true` will automatically call `inputEnabled = true` 
+    * on any children _added_ to, or _created by_, this Group.
+    * 
+    * If there are children already in the Group at the time you set this property, they are not changed.
+    * 
+    * @property {boolean} inputEnableChildren
+    * @default
+    */
+    this.inputEnableChildren = false;
+
+    /**
+    * This Signal is dispatched whenever a child of this Group emits an onInputDown signal as a result
+    * of having been interacted with by a Pointer. You can bind functions to this Signal instead of to
+    * every child Sprite.
+    * 
+    * This Signal is sent 2 arguments: A reference to the Sprite that triggered the signal, and
+    * a reference to the Pointer that caused it.
+    * 
+    * @property {Phaser.Signal} onChildInputDown
+    */
+    this.onChildInputDown = new Phaser.Signal();
+
+    /**
+    * This Signal is dispatched whenever a child of this Group emits an onInputUp signal as a result
+    * of having been interacted with by a Pointer. You can bind functions to this Signal instead of to
+    * every child Sprite.
+    * 
+    * This Signal is sent 3 arguments: A reference to the Sprite that triggered the signal, 
+    * a reference to the Pointer that caused it, and a boolean value `isOver` that tells you if the Pointer
+    * is still over the Sprite or not.
+    * 
+    * @property {Phaser.Signal} onChildInputUp
+    */
+    this.onChildInputUp = new Phaser.Signal();
+
+    /**
+    * This Signal is dispatched whenever a child of this Group emits an onInputOver signal as a result
+    * of having been interacted with by a Pointer. You can bind functions to this Signal instead of to
+    * every child Sprite.
+    * 
+    * This Signal is sent 2 arguments: A reference to the Sprite that triggered the signal, and
+    * a reference to the Pointer that caused it.
+    * 
+    * @property {Phaser.Signal} onChildInputOver
+    */
+    this.onChildInputOver = new Phaser.Signal();
+
+    /**
+    * This Signal is dispatched whenever a child of this Group emits an onInputOut signal as a result
+    * of having been interacted with by a Pointer. You can bind functions to this Signal instead of to
+    * every child Sprite.
+    * 
+    * This Signal is sent 2 arguments: A reference to the Sprite that triggered the signal, and
+    * a reference to the Pointer that caused it.
+    * 
+    * @property {Phaser.Signal} onChildInputOut
+    */
+    this.onChildInputOut = new Phaser.Signal();
+
+    /**
     * If true all Sprites created by, or added to this group, will have a physics body enabled on them.
+    *
+    * If there are children already in the Group at the time you set this property, they are not changed.
     *
     * The default body type is controlled with {@link #physicsBodyType}.
     * @property {boolean} enableBody
@@ -164,7 +226,7 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
 
     /**
     * If this Group contains Arcade Physics Sprites you can set a custom sort direction via this property.
-    * 
+    *
     * It should be set to one of the Phaser.Physics.Arcade sort direction constants: 
     * 
     * Phaser.Physics.Arcade.SORT_NONE
@@ -272,48 +334,98 @@ Phaser.Group.SORT_DESCENDING = 1;
 /**
 * Adds an existing object as the top child in this group.
 *
-* The child is automatically added to the top of the group and is displayed on top of every previous child.
+* The child is automatically added to the top of the group, and is displayed above every previous child.
 *
-* If Group.enableBody is set then a physics body will be created on the object, so long as one does not already exist.
+* Or if the _optional_ index is specified, the child is added at the location specified by the index value, 
+* this allows you to control child ordering.
+*
+* If the child was already in this Group, it is simply returned, and nothing else happens to it.
+*
+* If `Group.enableBody` is set, then a physics body will be created on the object, so long as one does not already exist.
+*
+* If `Group.inputEnableChildren` is set, then an Input Handler will be created on the object, so long as one does not already exist.
 *
 * Use {@link #addAt} to control where a child is added. Use {@link #create} to create and add a new child.
 *
 * @method Phaser.Group#add
 * @param {DisplayObject} child - The display object to add as a child.
 * @param {boolean} [silent=false] - If true the child will not dispatch the `onAddedToGroup` event.
+* @param {integer} [index] - The index within the group to insert the child to. Where 0 is the bottom of the Group.
 * @return {DisplayObject} The child that was added to the group.
 */
-Phaser.Group.prototype.add = function (child, silent) {
+Phaser.Group.prototype.add = function (child, silent, index) {
 
     if (silent === undefined) { silent = false; }
 
-    if (child.parent !== this)
+    if (child.parent === this)
     {
-        this.addChild(child);
+        return child;
+    }
 
+    if (child.body && child.parent && child.parent.hash)
+    {
+        child.parent.removeFromHash(child);
+    }
+
+    if (index === undefined)
+    {
         child.z = this.children.length;
 
-        if (this.enableBody && child.body === null)
-        {
-            this.game.physics.enable(child, this.physicsBodyType);
-        }
-        else if (child.body)
-        {
-            this.addToHash(child);
-        }
+        this.addChild(child);
+    }
+    else
+    {
+        this.addChildAt(child, index);
 
-        if (!silent && child.events)
-        {
-            child.events.onAddedToGroup$dispatch(child, this);
-        }
+        this.updateZ();
+    }
 
-        if (this.cursor === null)
-        {
-            this.cursor = child;
-        }
+    if (this.enableBody && child.hasOwnProperty('body') && child.body === null)
+    {
+        this.game.physics.enable(child, this.physicsBodyType);
+    }
+    else if (child.body)
+    {
+        this.addToHash(child);
+    }
+
+    if (this.inputEnableChildren && !child.inputEnabled)
+    {
+        child.inputEnabled = true;
+    }
+
+    if (!silent && child.events)
+    {
+        child.events.onAddedToGroup$dispatch(child, this);
+    }
+
+    if (this.cursor === null)
+    {
+        this.cursor = child;
     }
 
     return child;
+
+};
+
+/**
+* Adds an existing object to this group.
+*
+* The child is added to the group at the location specified by the index value, this allows you to control child ordering.
+* 
+* If `Group.enableBody` is set, then a physics body will be created on the object, so long as one does not already exist.
+*
+* If `Group.inputEnableChildren` is set, then an Input Handler will be created on the object, so long as one does not already exist.
+*
+* @method Phaser.Group#addAt
+* @param {DisplayObject} child - The display object to add as a child.
+* @param {integer} [index=0] - The index within the group to insert the child to.
+* @param {boolean} [silent=false] - If true the child will not dispatch the `onAddedToGroup` event.
+* @return {DisplayObject} The child that was added to the group.
+*/
+Phaser.Group.prototype.addAt = function (child, index, silent) {
+
+    this.add(child, silent, index);
 
 };
 
@@ -374,6 +486,10 @@ Phaser.Group.prototype.removeFromHash = function (child) {
 *
 * As well as an array you can also pass another Group as the first argument. In this case all of the children from that
 * Group will be removed from it and added into this Group.
+* 
+* If `Group.enableBody` is set, then a physics body will be created on the objects, so long as one does not already exist.
+*
+* If `Group.inputEnableChildren` is set, then an Input Handler will be created on the objects, so long as one does not already exist.
 *
 * @method Phaser.Group#addMultiple
 * @param {DisplayObject[]|Phaser.Group} children - An array of display objects or a Phaser.Group. If a Group is given then *all* children will be moved from it.
@@ -395,51 +511,6 @@ Phaser.Group.prototype.addMultiple = function (children, silent) {
     }
 
     return children;
-
-};
-
-/**
-* Adds an existing object to this group.
-*
-* The child is added to the group at the location specified by the index value, this allows you to control child ordering.
-*
-* @method Phaser.Group#addAt
-* @param {DisplayObject} child - The display object to add as a child.
-* @param {integer} [index=0] - The index within the group to insert the child to.
-* @param {boolean} [silent=false] - If true the child will not dispatch the `onAddedToGroup` event.
-* @return {DisplayObject} The child that was added to the group.
-*/
-Phaser.Group.prototype.addAt = function (child, index, silent) {
-
-    if (silent === undefined) { silent = false; }
-
-    if (child.parent !== this)
-    {
-        this.addChildAt(child, index);
-
-        this.updateZ();
-
-        if (this.enableBody && child.body === null)
-        {
-            this.game.physics.enable(child, this.physicsBodyType);
-        }
-        else if (child.body)
-        {
-            this.addToHash(child);
-        }
-
-        if (!silent && child.events)
-        {
-            child.events.onAddedToGroup$dispatch(child, this);
-        }
-
-        if (this.cursor === null)
-        {
-            this.cursor = child;
-        }
-    }
-
-    return child;
 
 };
 
@@ -467,6 +538,15 @@ Phaser.Group.prototype.getAt = function (index) {
 * Creates a new Phaser.Sprite object and adds it to the top of this group.
 *
 * Use {@link #classType} to change the type of object created.
+* 
+* The child is automatically added to the top of the group, and is displayed above every previous child.
+*
+* Or if the _optional_ index is specified, the child is added at the location specified by the index value, 
+* this allows you to control child ordering.
+* 
+* If `Group.enableBody` is set, then a physics body will be created on the object, so long as one does not already exist.
+*
+* If `Group.inputEnableChildren` is set, then an Input Handler will be created on the object, so long as one does not already exist.
 *
 * @method Phaser.Group#create
 * @param {number} x - The x coordinate to display the newly created Sprite at. The value is in relation to the group.x point.
@@ -474,9 +554,10 @@ Phaser.Group.prototype.getAt = function (index) {
 * @param {string|Phaser.RenderTexture|Phaser.BitmapData|Phaser.Video|PIXI.Texture} [key] - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache Image entry, or an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
 * @param {string|number} [frame] - If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
 * @param {boolean} [exists=true] - The default exists state of the Sprite.
+* @param {integer} [index] - The index within the group to insert the child to. Where 0 is the bottom of the Group.
 * @return {DisplayObject} The child that was created: will be a {@link Phaser.Sprite} unless {@link #classType} has been changed.
 */
-Phaser.Group.prototype.create = function (x, y, key, frame, exists) {
+Phaser.Group.prototype.create = function (x, y, key, frame, exists, index) {
 
     if (exists === undefined) { exists = true; }
 
@@ -486,51 +567,89 @@ Phaser.Group.prototype.create = function (x, y, key, frame, exists) {
     child.visible = exists;
     child.alive = exists;
 
-    this.addChild(child);
-
-    child.z = this.children.length;
-
-    if (this.enableBody)
-    {
-        this.game.physics.enable(child, this.physicsBodyType, this.enableBodyDebug);
-    }
-
-    if (child.events)
-    {
-        child.events.onAddedToGroup$dispatch(child, this);
-    }
-
-    if (this.cursor === null)
-    {
-        this.cursor = child;
-    }
-
-    return child;
+    return this.add(child, false, index);
 
 };
 
 /**
-* Creates multiple Phaser.Sprite objects and adds them to the top of this group.
+* Creates multiple Phaser.Sprite objects and adds them to the top of this Group.
+* 
+* This method is useful if you need to quickly generate a pool of sprites, such as bullets.
 *
-* Useful if you need to quickly generate a pool of identical sprites, such as bullets.
-*
-* By default the sprites will be set to not exist and will be positioned at 0, 0 (relative to the group.x/y).
 * Use {@link #classType} to change the type of object created.
+*
+* You can provide an array as the `key` and / or `frame` arguments. When you do this
+* it will create `quantity` Sprites for every key (and frame) in the arrays.
+* 
+* For example:
+* 
+* `createMultiple(25, ['ball', 'carrot'])`
+*
+* In the above code there are 2 keys (ball and carrot) which means that 50 sprites will be
+* created in total, 25 of each. You can also have the `frame` as an array:
+*
+* `createMultiple(5, 'bricks', [0, 1, 2, 3])`
+*
+* In the above there is one key (bricks), which is a sprite sheet. The frames array tells
+* this method to use frames 0, 1, 2 and 3. So in total it will create 20 sprites, because
+* the quantity was set to 5, so that is 5 brick sprites of frame 0, 5 brick sprites with
+* frame 1, and so on.
+*
+* If you set both the key and frame arguments to be arrays then understand it will create
+* a total quantity of sprites equal to the size of both arrays times each other. I.e.:
+*
+* `createMultiple(20, ['diamonds', 'balls'], [0, 1, 2])`
+*
+* The above will create 20 'diamonds' of frame 0, 20 with frame 1 and 20 with frame 2.
+* It will then create 20 'balls' of frame 0, 20 with frame 1 and 20 with frame 2.
+* In total it will have created 120 sprites.
+*
+* By default the Sprites will have their `exists` property set to `false`, and they will be 
+* positioned at 0x0, relative to the `Group.x / y` values.
+* 
+* If `Group.enableBody` is set, then a physics body will be created on the objects, so long as one does not already exist.
+*
+* If `Group.inputEnableChildren` is set, then an Input Handler will be created on the objects, so long as one does not already exist.
 *
 * @method Phaser.Group#createMultiple
 * @param {integer} quantity - The number of Sprites to create.
-* @param {string} key - The Game.cache key of the image that this Sprite will use.
-* @param {integer|string} [frame] - If the Sprite image contains multiple frames you can specify which one to use here.
+* @param {string|array} key - The Cache key of the image that the Sprites will use. Or an Array of keys. See the description for details on how the quantity applies when arrays are used.
+* @param {integer|string|array} [frame=0] - If the Sprite image contains multiple frames you can specify which one to use here. Or an Array of frames. See the description for details on how the quantity applies when arrays are used.
 * @param {boolean} [exists=false] - The default exists state of the Sprite.
+* @return {array} An array containing all of the Sprites that were created.
 */
 Phaser.Group.prototype.createMultiple = function (quantity, key, frame, exists) {
 
+    if (frame === undefined) { frame = 0; }
     if (exists === undefined) { exists = false; }
 
-    for (var i = 0; i < quantity; i++)
+    if (!Array.isArray(key))
     {
-        this.create(0, 0, key, frame, exists);
+        key = [ key ];
     }
+
+    if (!Array.isArray(frame))
+    {
+        frame = [ frame ];
+    }
+
+    var _this = this;
+    var children = [];
+
+    key.forEach(function(singleKey) {
+
+        frame.forEach(function(singleFrame) {
+
+            for (var i = 0; i < quantity; i++)
+            {
+                children.push(_this.create(0, 0, singleKey, singleFrame, exists));
+            }
+
+        });
+
+    });
+
+    return children;
 
 };
 
@@ -549,6 +668,127 @@ Phaser.Group.prototype.updateZ = function () {
     while (i--)
     {
         this.children[i].z = i;
+    }
+
+};
+
+/**
+* This method iterates through all children in the Group (regardless if they are visible or exist)
+* and then changes their position so they are arranged in a Grid formation. Children must have
+* the `alignTo` method in order to be positioned by this call. All default Phaser Game Objects have
+* this.
+*
+* The grid dimensions are determined by the first four arguments. The `rows` and `columns` arguments
+* relate to the width and height of the grid respectively.
+*
+* For example if the Group had 100 children in it:
+*
+* `Group.align(10, 10, 32, 32)`
+*
+* This will align all of the children into a grid formation of 10x10, using 32 pixels per
+* grid cell. If you want a wider grid, you could do:
+* 
+* `Group.align(25, 4, 32, 32)`
+*
+* This will align the children into a grid of 25x4, again using 32 pixels per grid cell.
+*
+* You can choose to set _either_ the `rows` or `columns` value to -1. Doing so tells the method
+* to keep on aligning children until there are no children left. For example if this Group had
+* 48 children in it, the following:
+*
+* `Group.align(-1, 8, 32, 32)`
+*
+* ... will align the children so that there are 8 columns vertically (the second argument), 
+* and each row will contain 6 sprites, except the last one, which will contain 5 (totaling 48)
+*
+* You can also do:
+* 
+* `Group.align(10, -1, 32, 32)`
+*
+* In this case it will create a grid 10 wide, and as tall as it needs to be in order to fit
+* all of the children in.
+*
+* The `position` property allows you to control where in each grid cell the child is positioned.
+* This is a constant and can be one of `Phaser.TOP_LEFT` (default), `Phaser.TOP_CENTER`, 
+* `Phaser.TOP_RIGHT`, `Phaser.LEFT_CENTER`, `Phaser.CENTER`, `Phaser.RIGHT_CENTER`, 
+* `Phaser.BOTTOM_LEFT`, `Phaser.BOTTOM_CENTER` or `Phaser.BOTTOM_RIGHT`.
+*
+* The final argument; `offset` lets you start the alignment from a specific child index.
+*
+* @method Phaser.Group#align
+* @param {integer} rows - The number of rows, or width, of the grid. Set to -1 for a dynamic width.
+* @param {integer} columns - The number of columns, or height, of the grid. Set to -1 for a dynamic height.
+* @param {integer} cellWidth - The width of each grid cell, in pixels.
+* @param {integer} cellHeight - The height of each grid cell, in pixels.
+* @param {integer} [position] - The position constant. One of `Phaser.TOP_LEFT` (default), `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.LEFT_CENTER`, `Phaser.CENTER`, `Phaser.RIGHT_CENTER`, `Phaser.BOTTOM_LEFT`, `Phaser.BOTTOM_CENTER` or `Phaser.BOTTOM_RIGHT`.
+* @param {integer} [offset=0] - Optional index to start the alignment from. Defaults to zero, the first child in the Group, but can be set to any valid child index value.
+*/
+Phaser.Group.prototype.align = function (rows, columns, cellWidth, cellHeight, position, offset) {
+
+    if (position === undefined) { position = Phaser.TOP_LEFT; }
+    if (offset === undefined) { offset = 0; }
+
+    if (this.children.length === 0 || offset > this.children.length || (rows === -1 && columns === -1))
+    {
+        return;
+    }
+
+    var r = new Phaser.Rectangle(0, 0, cellWidth, cellHeight);
+    var w = (rows * cellWidth);
+    var h = (columns * cellHeight);
+
+    for (var i = offset; i < this.children.length; i++)
+    {
+        var child = this.children[i];
+
+        if (child['alignIn'])
+        {
+            child.alignIn(r, position);
+        }
+        else
+        {
+            continue;
+        }
+
+        if (rows === -1)
+        {
+            //  We keep laying them out horizontally until we've done them all
+            r.y += cellHeight;
+
+            if (r.y === h)
+            {
+                r.x += cellWidth;
+                r.y = 0;
+            }
+        }
+        else if (columns === -1)
+        {
+            //  We keep laying them out vertically until we've done them all
+            r.x += cellWidth;
+
+            if (r.x === w)
+            {
+                r.x = 0;
+                r.y += cellHeight;
+            }
+        }
+        else
+        {
+            //  We keep laying them out until we hit the column limit
+            r.x += cellWidth;
+
+            if (r.x === w)
+            {
+                r.x = 0;
+                r.y += cellHeight;
+
+                if (r.y === h)
+                {
+                    //  We've hit the column limit, so return, even if there are children left
+                    return;
+                }
+            }
+        }
     }
 
 };
@@ -765,7 +1005,7 @@ Phaser.Group.prototype.xy = function (index, x, y) {
 /**
 * Reverses all children in this group.
 *
-* This operaation applies only to immediate children and does not propagate to subgroups.
+* This operation applies only to immediate children and does not propagate to subgroups.
 *
 * @method Phaser.Group#reverse
 */
@@ -790,7 +1030,34 @@ Phaser.Group.prototype.getIndex = function (child) {
 };
 
 /**
-* Replaces a child of this group with the given newChild. The newChild cannot be a member of this group.
+* Searches the Group for the first instance of a child with the `name`
+* property matching the given argument. Should more than one child have
+* the same name only the first instance is returned.
+*
+* @method Phaser.Group#getByName
+* @param {string} name - The name to search for.
+* @return {any} The first child with a matching name, or null if none were found.
+*/
+Phaser.Group.prototype.getByName = function (name) {
+
+    for (var i = 0; i < this.children.length; i++)
+    {
+        if (this.children[i].name === name)
+        {
+            return this.children[i];
+        }
+    }
+
+    return null;
+
+};
+
+/**
+* Replaces a child of this Group with the given newChild. The newChild cannot be a member of this Group.
+*
+* If `Group.enableBody` is set, then a physics body will be created on the object, so long as one does not already exist.
+*
+* If `Group.inputEnableChildren` is set, then an Input Handler will be created on the object, so long as one does not already exist.
 *
 * @method Phaser.Group#replace
 * @param {any} oldChild - The child in this group that will be replaced.
@@ -830,7 +1097,7 @@ Phaser.Group.prototype.replace = function (oldChild, newChild) {
 * Will scan up to 4 levels deep only.
 *
 * @method Phaser.Group#hasProperty
-* @param {any} child - The child to check for the existance of the property on.
+* @param {any} child - The child to check for the existence of the property on.
 * @param {string[]} key - An array of strings that make up the property.
 * @return {boolean} True if the child has the property, otherwise false.
 */
@@ -1353,9 +1620,7 @@ Phaser.Group.prototype.preUpdate = function () {
         return false;
     }
 
-    var i = this.children.length;
-
-    while (i--)
+    for (var i = 0; i < this.children.length; i++)
     {
         this.children[i].preUpdate();
     }
@@ -1371,6 +1636,7 @@ Phaser.Group.prototype.preUpdate = function () {
 */
 Phaser.Group.prototype.update = function () {
 
+    //  Goes in reverse, because it's highly likely the child will destroy itself in `update`
     var i = this.children.length;
 
     while (i--)
@@ -1394,15 +1660,12 @@ Phaser.Group.prototype.postUpdate = function () {
         this.y = this.game.camera.view.y + this.cameraOffset.y;
     }
 
-    var i = this.children.length;
-
-    while (i--)
+    for (var i = 0; i < this.children.length; i++)
     {
         this.children[i].postUpdate();
     }
 
 };
-
 
 /**
 * Find children matching a certain predicate.
@@ -1586,7 +1849,11 @@ Phaser.Group.prototype.forEachDead = function (callback, callbackContext) {
 * Sort the children in the group according to a particular key and ordering.
 *
 * Call this function to sort the group according to a particular key value and order.
+* 
 * For example to depth sort Sprites for Zelda-style game you might call `group.sort('y', Phaser.Group.SORT_ASCENDING)` at the bottom of your `State.update()`.
+*
+* Internally this uses a standard JavaScript Array sort, so everything that applies there also applies here, including
+* alphabetical sorting, mixing strings and numbers, and Unicode sorting. See MDN for more details.
 *
 * @method Phaser.Group#sort
 * @param {string} [key='z'] - The name of the property to sort on. Defaults to the objects z-depth value.
@@ -1940,6 +2207,94 @@ Phaser.Group.prototype.getBottom = function () {
 };
 
 /**
+* Get the closest child to given Object, with optional callback to filter children.
+*
+* This can be a Sprite, Group, Image or any object with public x and y properties.
+*
+* 'close' is determined by the distance from the objects `x` and `y` properties compared to the childs `x` and `y` properties.
+*
+* You can use the optional `callback` argument to apply your own filter to the distance checks.
+* If the child is closer then the previous child, it will be sent to `callback` as the first argument,
+* with the distance as the second. The callback should return `true` if it passes your 
+* filtering criteria, otherwise it should return `false`.
+*
+* @method Phaser.Group#getClosestTo
+* @param {any} object - The object used to determine the distance. This can be a Sprite, Group, Image or any object with public x and y properties.
+* @param {function} [callback] - The function that each child will be evaluated against. Each child of the group will be passed to it as its first parameter, with the distance as the second. It should return `true` if the child passes the matching criteria.
+* @param {object} [callbackContext] - The context in which the function should be called (usually 'this').
+* @return {any} The child closest to given object, or `null` if no child was found.
+*/
+Phaser.Group.prototype.getClosestTo = function (object, callback, callbackContext) {
+
+    var distance = Number.MAX_VALUE;
+    var tempDistance = 0;
+    var result = null;
+
+    for (var i = 0; i < this.children.length; i++)
+    {
+        var child = this.children[i];
+
+        if (child.exists)
+        {
+            tempDistance = Math.abs(Phaser.Point.distance(object, child));
+
+            if (tempDistance < distance && (!callback || callback.call(callbackContext, child, tempDistance)))
+            {
+                distance = tempDistance;
+                result = child;
+            }
+        }
+    }
+
+    return result;
+
+};
+
+/**
+* Get the child furthest away from the given Object, with optional callback to filter children.
+*
+* This can be a Sprite, Group, Image or any object with public x and y properties.
+*
+* 'furthest away' is determined by the distance from the objects `x` and `y` properties compared to the childs `x` and `y` properties.
+*
+* You can use the optional `callback` argument to apply your own filter to the distance checks.
+* If the child is closer then the previous child, it will be sent to `callback` as the first argument,
+* with the distance as the second. The callback should return `true` if it passes your 
+* filtering criteria, otherwise it should return `false`.
+*
+* @method Phaser.Group#getFurthestFrom
+* @param {any} object - The object used to determine the distance. This can be a Sprite, Group, Image or any object with public x and y properties.
+* @param {function} [callback] - The function that each child will be evaluated against. Each child of the group will be passed to it as its first parameter, with the distance as the second. It should return `true` if the child passes the matching criteria.
+* @param {object} [callbackContext] - The context in which the function should be called (usually 'this').
+* @return {any} The child furthest from the given object, or `null` if no child was found.
+*/
+Phaser.Group.prototype.getFurthestFrom = function (object, callback, callbackContext) {
+
+    var distance = 0;
+    var tempDistance = 0;
+    var result = null;
+
+    for (var i = 0; i < this.children.length; i++)
+    {
+        var child = this.children[i];
+
+        if (child.exists)
+        {
+            tempDistance = Math.abs(Phaser.Point.distance(object, child));
+
+            if (tempDistance > distance && (!callback || callback.call(callbackContext, child, tempDistance)))
+            {
+                distance = tempDistance;
+                result = child;
+            }
+        }
+    }
+
+    return result;
+
+};
+
+/**
 * Get the number of living children in this group.
 *
 * @method Phaser.Group#countLiving
@@ -2063,16 +2418,23 @@ Phaser.Group.prototype.moveAll = function (group, silent) {
 };
 
 /**
-* Removes all children from this group, but does not remove the group from its parent.
+* Removes all children from this Group, but does not remove the group from its parent.
+*
+* The children can be optionally destroyed as they are removed.
+* 
+* You can also optionally also destroy the BaseTexture the Child is using. Be careful if you've
+* more than one Game Object sharing the same BaseTexture.
 *
 * @method Phaser.Group#removeAll
 * @param {boolean} [destroy=false] - If true `destroy` will be invoked on each removed child.
 * @param {boolean} [silent=false] - If true the children will not dispatch their `onRemovedFromGroup` events.
+* @param {boolean} [destroyTexture=false] - If true, and if the `destroy` argument is also true, the BaseTexture belonging to the Child is also destroyed. Note that if another Game Object is sharing the same BaseTexture it will invalidate it.
 */
-Phaser.Group.prototype.removeAll = function (destroy, silent) {
+Phaser.Group.prototype.removeAll = function (destroy, silent, destroyTexture) {
 
     if (destroy === undefined) { destroy = false; }
     if (silent === undefined) { silent = false; }
+    if (destroyTexture === undefined) { destroyTexture = false; }
 
     if (this.children.length === 0)
     {
@@ -2092,7 +2454,7 @@ Phaser.Group.prototype.removeAll = function (destroy, silent) {
 
         if (destroy && removed)
         {
-            removed.destroy(true);
+            removed.destroy(true, destroyTexture);
         }
     }
     while (this.children.length > 0);
@@ -2251,6 +2613,289 @@ Object.defineProperty(Phaser.Group.prototype, "angle", {
     }
 
 });
+
+/**
+* The center x coordinate of this Group.
+*
+* It is derived by calling `getBounds`, calculating the Groups dimensions based on its
+* visible children.
+* 
+* Note that no ancestors are factored into the result, meaning that if this Group is 
+* nested within another Group, with heavy transforms on it, the result of this property 
+* is likely to be incorrect. It is safe to get and set this property if the Group is a
+* top-level descendant of Phaser.World, or untransformed parents.
+*
+* @name Phaser.Group#centerX
+* @property {number} centerX
+*/
+Object.defineProperty(Phaser.Group.prototype, "centerX", {
+
+    get: function () {
+
+        return this.getBounds().centerX;
+
+    },
+
+    set: function (value) {
+
+        var r = this.getBounds();
+        var offset = this.x - r.x;
+
+        this.x = (value + offset) - r.halfWidth;
+
+    }
+
+});
+
+/**
+* The center y coordinate of this Group.
+*
+* It is derived by calling `getBounds`, calculating the Groups dimensions based on its
+* visible children.
+* 
+* Note that no ancestors are factored into the result, meaning that if this Group is 
+* nested within another Group, with heavy transforms on it, the result of this property 
+* is likely to be incorrect. It is safe to get and set this property if the Group is a
+* top-level descendant of Phaser.World, or untransformed parents.
+*
+* @name Phaser.Group#centerY
+* @property {number} centerY
+*/
+Object.defineProperty(Phaser.Group.prototype, "centerY", {
+
+    get: function () {
+
+        return this.getBounds().centerY;
+
+    },
+
+    set: function (value) {
+
+        var r = this.getBounds();
+        var offset = this.y - r.y;
+
+        this.y = (value + offset) - r.halfHeight;
+
+    }
+
+});
+
+/**
+* The left coordinate of this Group.
+*
+* It is derived by calling `getBounds`, calculating the Groups dimensions based on its
+* visible children.
+* 
+* Note that no ancestors are factored into the result, meaning that if this Group is 
+* nested within another Group, with heavy transforms on it, the result of this property 
+* is likely to be incorrect. It is safe to get and set this property if the Group is a
+* top-level descendant of Phaser.World, or untransformed parents.
+*
+* @name Phaser.Group#left
+* @property {number} left
+*/
+Object.defineProperty(Phaser.Group.prototype, "left", {
+
+    get: function () {
+
+        return this.getBounds().left;
+
+    },
+
+    set: function (value) {
+
+        var r = this.getBounds();
+        var offset = this.x - r.x;
+
+        this.x = value + offset;
+
+    }
+
+});
+
+/**
+* The right coordinate of this Group.
+*
+* It is derived by calling `getBounds`, calculating the Groups dimensions based on its
+* visible children.
+* 
+* Note that no ancestors are factored into the result, meaning that if this Group is 
+* nested within another Group, with heavy transforms on it, the result of this property 
+* is likely to be incorrect. It is safe to get and set this property if the Group is a
+* top-level descendant of Phaser.World, or untransformed parents.
+*
+* @name Phaser.Group#right
+* @property {number} right
+*/
+Object.defineProperty(Phaser.Group.prototype, "right", {
+
+    get: function () {
+
+        return this.getBounds().right;
+
+    },
+
+    set: function (value) {
+
+        var r = this.getBounds();
+        var offset = this.x - r.x;
+
+        this.x = (value + offset) - r.width;
+
+    }
+
+});
+
+/**
+* The top coordinate of this Group.
+*
+* It is derived by calling `getBounds`, calculating the Groups dimensions based on its
+* visible children.
+* 
+* Note that no ancestors are factored into the result, meaning that if this Group is 
+* nested within another Group, with heavy transforms on it, the result of this property 
+* is likely to be incorrect. It is safe to get and set this property if the Group is a
+* top-level descendant of Phaser.World, or untransformed parents.
+*
+* @name Phaser.Group#top
+* @property {number} top
+*/
+Object.defineProperty(Phaser.Group.prototype, "top", {
+
+    get: function () {
+
+        return this.getBounds().top;
+
+    },
+
+    set: function (value) {
+
+        var r = this.getBounds();
+        var offset = this.y - r.y;
+
+        this.y = (value + offset);
+
+    }
+
+});
+
+/**
+* The bottom coordinate of this Group.
+*
+* It is derived by calling `getBounds`, calculating the Groups dimensions based on its
+* visible children.
+* 
+* Note that no ancestors are factored into the result, meaning that if this Group is 
+* nested within another Group, with heavy transforms on it, the result of this property 
+* is likely to be incorrect. It is safe to get and set this property if the Group is a
+* top-level descendant of Phaser.World, or untransformed parents.
+*
+* @name Phaser.Group#bottom
+* @property {number} bottom
+*/
+Object.defineProperty(Phaser.Group.prototype, "bottom", {
+
+    get: function () {
+
+        return this.getBounds().bottom;
+
+    },
+
+    set: function (value) {
+
+        var r = this.getBounds();
+        var offset = this.y - r.y;
+
+        this.y = (value + offset) - r.height;
+
+    }
+
+});
+
+/**
+* Aligns this Group within another Game Object, or Rectangle, known as the
+* 'container', to one of 9 possible positions.
+*
+* The container must be a Game Object, or Phaser.Rectangle object. This can include properties
+* such as `World.bounds` or `Camera.view`, for aligning Groups within the world 
+* and camera bounds. Or it can include other Sprites, Images, Text objects, BitmapText,
+* TileSprites or Buttons.
+*
+* Please note that aligning a Group to another Game Object does **not** make it a child of
+* the container. It simply modifies its position coordinates so it aligns with it.
+* 
+* The position constants you can use are:
+* 
+* `Phaser.TOP_LEFT`, `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.LEFT_CENTER`, 
+* `Phaser.CENTER`, `Phaser.RIGHT_CENTER`, `Phaser.BOTTOM_LEFT`, 
+* `Phaser.BOTTOM_CENTER` and `Phaser.BOTTOM_RIGHT`.
+*
+* Groups are placed in such a way that their _bounds_ align with the
+* container, taking into consideration rotation and scale of its children.
+* This allows you to neatly align Groups, irrespective of their position value.
+*
+* The optional `offsetX` and `offsetY` arguments allow you to apply extra spacing to the final
+* aligned position of the Group. For example:
+*
+* `group.alignIn(background, Phaser.BOTTOM_RIGHT, -20, -20)`
+*
+* Would align the `group` to the bottom-right, but moved 20 pixels in from the corner.
+* Think of the offsets as applying an adjustment to the containers bounds before the alignment takes place.
+* So providing a negative offset will 'shrink' the container bounds by that amount, and providing a positive
+* one expands it.
+*
+* @method Phaser.Group#alignIn
+* @param {Phaser.Rectangle|Phaser.Sprite|Phaser.Image|Phaser.Text|Phaser.BitmapText|Phaser.Button|Phaser.Graphics|Phaser.TileSprite} container - The Game Object or Rectangle with which to align this Group to. Can also include properties such as `World.bounds` or `Camera.view`.
+* @param {integer} [position] - The position constant. One of `Phaser.TOP_LEFT` (default), `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.LEFT_CENTER`, `Phaser.CENTER`, `Phaser.RIGHT_CENTER`, `Phaser.BOTTOM_LEFT`, `Phaser.BOTTOM_CENTER` or `Phaser.BOTTOM_RIGHT`.
+* @param {integer} [offsetX=0] - A horizontal adjustment of the Containers bounds, applied to the aligned position of the Game Object. Use a negative value to shrink the bounds, positive to increase it.
+* @param {integer} [offsetY=0] - A vertical adjustment of the Containers bounds, applied to the aligned position of the Game Object. Use a negative value to shrink the bounds, positive to increase it.
+* @return {Phaser.Group} This Group.
+*/
+
+//  This function is set at the bottom of src/gameobjects/components/Bounds.js
+
+/**
+* Aligns this Group to the side of another Game Object, or Rectangle, known as the
+* 'parent', in one of 11 possible positions.
+*
+* The parent must be a Game Object, or Phaser.Rectangle object. This can include properties
+* such as `World.bounds` or `Camera.view`, for aligning Groups within the world 
+* and camera bounds. Or it can include other Sprites, Images, Text objects, BitmapText,
+* TileSprites or Buttons.
+*
+* Please note that aligning a Group to another Game Object does **not** make it a child of
+* the parent. It simply modifies its position coordinates so it aligns with it.
+* 
+* The position constants you can use are:
+* 
+* `Phaser.TOP_LEFT` (default), `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.LEFT_TOP`, 
+* `Phaser.LEFT_CENTER`, `Phaser.LEFT_BOTTOM`, `Phaser.RIGHT_TOP`, `Phaser.RIGHT_CENTER`, 
+* `Phaser.RIGHT_BOTTOM`, `Phaser.BOTTOM_LEFT`, `Phaser.BOTTOM_CENTER` 
+* and `Phaser.BOTTOM_RIGHT`.
+*
+* Groups are placed in such a way that their _bounds_ align with the
+* parent, taking into consideration rotation and scale of the children.
+* This allows you to neatly align Groups, irrespective of their position value.
+*
+* The optional `offsetX` and `offsetY` arguments allow you to apply extra spacing to the final
+* aligned position of the Group. For example:
+*
+* `group.alignTo(background, Phaser.BOTTOM_RIGHT, -20, -20)`
+*
+* Would align the `group` to the bottom-right, but moved 20 pixels in from the corner.
+* Think of the offsets as applying an adjustment to the parents bounds before the alignment takes place.
+* So providing a negative offset will 'shrink' the parent bounds by that amount, and providing a positive
+* one expands it.
+*
+* @method Phaser.Group#alignTo
+* @param {Phaser.Rectangle|Phaser.Sprite|Phaser.Image|Phaser.Text|Phaser.BitmapText|Phaser.Button|Phaser.Graphics|Phaser.TileSprite} parent - The Game Object or Rectangle with which to align this Group to. Can also include properties such as `World.bounds` or `Camera.view`.
+* @param {integer} [position] - The position constant. One of `Phaser.TOP_LEFT`, `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.LEFT_TOP`, `Phaser.LEFT_CENTER`, `Phaser.LEFT_BOTTOM`, `Phaser.RIGHT_TOP`, `Phaser.RIGHT_CENTER`, `Phaser.RIGHT_BOTTOM`, `Phaser.BOTTOM_LEFT`, `Phaser.BOTTOM_CENTER` or `Phaser.BOTTOM_RIGHT`.
+* @param {integer} [offsetX=0] - A horizontal adjustment of the Containers bounds, applied to the aligned position of the Game Object. Use a negative value to shrink the bounds, positive to increase it.
+* @param {integer} [offsetY=0] - A vertical adjustment of the Containers bounds, applied to the aligned position of the Game Object. Use a negative value to shrink the bounds, positive to increase it.
+* @return {Phaser.Group} This Group.
+*/
+
+//  This function is set at the bottom of src/gameobjects/components/Bounds.js
 
 /**
 * A display object is any object that can be rendered in the Phaser/pixi.js scene graph.

@@ -1,7 +1,7 @@
 /**
 * @author       Mat Groves http://matgroves.com/ @Doormat23
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2015 Photon Storm Ltd.
+* @copyright    2016 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -16,21 +16,21 @@
 *
 * @class Phaser.Matrix
 * @constructor
-* @param {number} [a=1]
-* @param {number} [b=0]
-* @param {number} [c=0]
-* @param {number} [d=1]
-* @param {number} [tx=0]
-* @param {number} [ty=0]
+* @param {number} [a=1] - Horizontal scaling
+* @param {number} [b=0] - Horizontal skewing
+* @param {number} [c=0] - Vertical skewing
+* @param {number} [d=1] - Vertical scaling
+* @param {number} [tx=0] - Horizontal translation
+* @param {number} [ty=0] - Vertical translation
 */
 Phaser.Matrix = function (a, b, c, d, tx, ty) {
 
-    a = a || 1;
-    b = b || 0;
-    c = c || 0;
-    d = d || 1;
-    tx = tx || 0;
-    ty = ty || 0;
+    if (a === undefined || a === null) { a = 1; }
+    if (b === undefined || b === null) { b = 0; }
+    if (c === undefined || c === null) { c = 0; }
+    if (d === undefined || d === null) { d = 1; }
+    if (tx === undefined || tx === null) { tx = 0; }
+    if (ty === undefined || ty === null) { ty = 0; }
 
     /**
     * @property {number} a
@@ -104,12 +104,12 @@ Phaser.Matrix.prototype = {
     * Sets the values of this Matrix to the given values.
     *
     * @method Phaser.Matrix#setTo
-    * @param {number} a
-    * @param {number} b
-    * @param {number} c
-    * @param {number} d
-    * @param {number} tx
-    * @param {number} ty
+    * @param {number} a - Horizontal scaling
+    * @param {number} b - Horizontal skewing
+    * @param {number} c - Vertical skewing
+    * @param {number} d - Vertical scaling
+    * @param {number} tx - Horizontal translation
+    * @param {number} ty - Vertical translation
     * @return {Phaser.Matrix} This Matrix object.
     */
     setTo: function (a, b, c, d, tx, ty) {

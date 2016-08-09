@@ -1,15 +1,20 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2015 Photon Storm Ltd.
+* @copyright    2016 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
 /**
 * A collection of methods for displaying debug information about game objects.
+*
+* If your game is running in Canvas mode, then you should invoke all of the Debug methods from
+* your games `render` function. This is because they are drawn directly onto the game canvas
+* itself, so if you call any debug methods outside of `render` they are likely to be overwritten
+* by the game itself.
+* 
 * If your game is running in WebGL then Debug will create a Sprite that is placed at the top of the Stage display list and bind a canvas texture
 * to it, which must be uploaded every frame. Be advised: this is very expensive, especially in browsers like Firefox. So please only enable Debug
 * in WebGL mode if you really need it (or your desktop can cope with it well) and disable it for production!
-* If your game is using a Canvas renderer then the debug information is literally drawn on the top of the active game canvas and no Sprite is used.
 *
 * @class Phaser.Utils.Debug
 * @constructor
@@ -104,9 +109,11 @@ Phaser.Utils.Debug.prototype = {
         }
         else
         {
-            this.bmd = this.game.make.bitmapData(this.game.width, this.game.height);
+            this.bmd = new Phaser.BitmapData(this.game, '__DEBUG', this.game.width, this.game.height, true);
             this.sprite = this.game.make.image(0, 0, this.bmd);
             this.game.stage.addChild(this.sprite);
+
+            this.game.scale.onSizeChange.add(this.resize, this);
 
             this.canvas = PIXI.CanvasPool.create(this, this.game.width, this.game.height);
             this.context = this.canvas.getContext('2d');
@@ -115,9 +122,29 @@ Phaser.Utils.Debug.prototype = {
     },
 
     /**
+    * Internal method that resizes the BitmapData and Canvas.
+    * Called by ScaleManager.onSizeChange only in WebGL mode.
+    *
+    * @method Phaser.Utils.Debug#resize
+    * @protected
+    * @param {Phaser.ScaleManager} scaleManager - The Phaser ScaleManager.
+    * @param {number} width - The new width of the game.
+    * @param {number} height - The new height of the game.
+    */
+    resize: function (scaleManager, width, height) {
+
+        this.bmd.resize(width, height);
+
+        this.canvas.width = width;
+        this.canvas.height = height;
+
+    },
+
+    /**
     * Internal method that clears the canvas (if a Sprite) ready for a new debug session.
     *
     * @method Phaser.Utils.Debug#preUpdate
+    * @protected
     */
     preUpdate: function () {
 
@@ -811,6 +838,39 @@ Phaser.Utils.Debug.prototype = {
         this.start();
         Phaser.Physics.Box2D.renderBody(this.context, body, color);
         this.stop();
+
+    },
+
+    /**
+    * Call this function from the Dev Tools console.
+    * 
+    * It will scan the display list and output all of the Objects it finds, and their renderOrderIDs.
+    *
+    * **Note** Requires a browser that supports console.group and console.groupEnd (such as Chrome)
+    *
+    * @method displayList
+    * @param {Object} [displayObject] - The displayObject level display object to start from. Defaults to the World.
+    */
+    displayList: function (displayObject) {
+
+        if (displayObject === undefined) { displayObject = this.game.world; }
+
+        if (displayObject.hasOwnProperty('renderOrderID'))
+        {
+            console.log('[' + displayObject.renderOrderID + ']', displayObject);
+        }
+        else
+        {
+            console.log('[]', displayObject);
+        }
+
+        if (displayObject.children && displayObject.children.length > 0)
+        {
+            for (var i = 0; i < displayObject.children.length; i++)
+            {
+                this.game.debug.displayList(displayObject.children[i]);
+            }
+        }
 
     },
 

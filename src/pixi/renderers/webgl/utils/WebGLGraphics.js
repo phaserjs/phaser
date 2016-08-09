@@ -14,6 +14,13 @@ PIXI.WebGLGraphics = function()
 };
 
 /**
+ * The number of points beyond which Pixi swaps to using the Stencil Buffer to render the Graphics.
+ *
+ * @type {number}
+ */
+PIXI.WebGLGraphics.stencilBufferLimit = 6;
+
+/**
  * Renders the graphics object
  *
  * @static
@@ -147,9 +154,9 @@ PIXI.WebGLGraphics.updateGraphics = function(graphics, gl)
             // MAKE SURE WE HAVE THE CORRECT TYPE..
             if(data.fill)
             {
-                if(data.points.length >= 6)
+                if(data.points.length >= PIXI.WebGLGraphics.stencilBufferLimit)
                 {
-                    if(data.points.length < 6 * 2)
+                    if(data.points.length < PIXI.WebGLGraphics.stencilBufferLimit * 2)
                     {
                         webGLData = PIXI.WebGLGraphics.switchMode(webGL, 0);
                         
@@ -274,7 +281,7 @@ PIXI.WebGLGraphics.buildRectangle = function(graphicsData, webGLData)
         var verts = webGLData.points;
         var indices = webGLData.indices;
 
-        var vertPos = verts.length/6;
+        var vertPos = verts.length / 6;
 
         // start
         verts.push(x, y);
@@ -290,10 +297,10 @@ PIXI.WebGLGraphics.buildRectangle = function(graphicsData, webGLData)
         verts.push(r, g, b, alpha);
 
         // insert 2 dead triangles..
-        indices.push(vertPos, vertPos, vertPos+1, vertPos+2, vertPos+3, vertPos+3);
+        indices.push(vertPos, vertPos, vertPos + 1, vertPos + 2, vertPos + 3, vertPos + 3);
     }
 
-    if(graphicsData.lineWidth)
+    if (graphicsData.lineWidth)
     {
         var tempPoints = graphicsData.points;
 
@@ -347,13 +354,12 @@ PIXI.WebGLGraphics.buildRoundedRectangle = function(graphicsData, webGLData)
         var verts = webGLData.points;
         var indices = webGLData.indices;
 
-        var vecPos = verts.length/6;
+        var vecPos = verts.length / 6;
 
-        var triangles = PIXI.PolyK.Triangulate(recPoints);
+        var triangles = PIXI.EarCut.Triangulate(recPoints, null, 2);
 
-        // 
-        
         var i = 0;
+
         for (i = 0; i < triangles.length; i+=3)
         {
             indices.push(triangles[i] + vecPos);
@@ -480,7 +486,7 @@ PIXI.WebGLGraphics.buildCircle = function(graphicsData, webGLData)
         var verts = webGLData.points;
         var indices = webGLData.indices;
 
-        var vecPos = verts.length/6;
+        var vecPos = verts.length / 6;
 
         indices.push(vecPos);
 
@@ -817,7 +823,7 @@ PIXI.WebGLGraphics.buildPoly = function(graphicsData, webGLData)
     var g = color[1] * alpha;
     var b = color[2] * alpha;
 
-    var triangles = PIXI.PolyK.Triangulate(points);
+    var triangles = PIXI.EarCut.Triangulate(points, null, 2);
 
     if(!triangles)return false;
 

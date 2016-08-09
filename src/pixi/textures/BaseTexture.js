@@ -2,17 +2,13 @@
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
 
-PIXI.BaseTextureCache = {};
-
-PIXI.BaseTextureCacheIdGenerator = 0;
-
 /**
  * A texture stores the information that represents an image. All textures have a base texture.
  *
  * @class BaseTexture
  * @uses EventTarget
  * @constructor
- * @param source {String} the source object (image or canvas)
+ * @param source {String|Canvas} the source object (image or canvas)
  * @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
  */
 PIXI.BaseTexture = function(source, scaleMode)
@@ -69,8 +65,6 @@ PIXI.BaseTexture = function(source, scaleMode)
      */
     this.source = source;
 
-    this._UID = PIXI._UID++;
-
     /**
      * Controls if RGB channels should be pre-multiplied by Alpha  (WebGL only)
      *
@@ -119,10 +113,15 @@ PIXI.BaseTexture = function(source, scaleMode)
     }
 
     /**
-     * @property imageUrl
-     * @type String
+     * A BaseTexture can be set to skip the rendering phase in the WebGL Sprite Batch.
+     * 
+     * You may want to do this if you have a parent Sprite with no visible texture (i.e. uses the internal `__default` texture)
+     * that has children that you do want to render, without causing a batch flush in the process.
+     * 
+     * @property skipRender
+     * @type Boolean
      */
-    this.imageUrl = null;
+    this.skipRender = false;
 
     /**
      * @property _powerOf2
@@ -150,7 +149,6 @@ PIXI.BaseTexture.prototype.forceLoaded = function(width, height)
     this.width = width;
     this.height = height;
     this.dirty();
-
 };
 
 /**
@@ -160,20 +158,9 @@ PIXI.BaseTexture.prototype.forceLoaded = function(width, height)
  */
 PIXI.BaseTexture.prototype.destroy = function()
 {
-    if (this.imageUrl)
-    {
-        delete PIXI.BaseTextureCache[this.imageUrl];
-        delete PIXI.TextureCache[this.imageUrl];
-
-        this.imageUrl = null;
-
-        if (!navigator.isCocoonJS) this.source.src = '';
-    }
-    else if (this.source && this.source._pixiId)
+    if (this.source)
     {
         PIXI.CanvasPool.removeByCanvas(this.source);
-
-        delete PIXI.BaseTextureCache[this.source._pixiId];
     }
 
     this.source = null;
@@ -186,12 +173,11 @@ PIXI.BaseTexture.prototype.destroy = function()
  *
  * @method updateSourceImage
  * @param newSrc {String} the path of the image
+ * @deprecated This method is deprecated. Please use Phaser.Sprite.loadTexture instead.
  */
 PIXI.BaseTexture.prototype.updateSourceImage = function(newSrc)
 {
-    this.hasLoaded = false;
-    this.source.src = null;
-    this.source.src = newSrc;
+    console.warn("PIXI.BaseTexture.updateSourceImage is deprecated. Use Phaser.Sprite.loadTexture instead.");
 };
 
 /**
@@ -236,64 +222,16 @@ PIXI.BaseTexture.prototype.unloadFromGPU = function()
 };
 
 /**
- * Helper function that creates a base texture from the given image url.
- * If the image is not in the base texture cache it will be created and loaded.
- *
- * @static
- * @method fromImage
- * @param imageUrl {String} The image url of the texture
- * @param crossorigin {Boolean}
- * @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
- * @return BaseTexture
- */
-PIXI.BaseTexture.fromImage = function(imageUrl, crossorigin, scaleMode)
-{
-    var baseTexture = PIXI.BaseTextureCache[imageUrl];
-
-    if(crossorigin === undefined && imageUrl.indexOf('data:') === -1) crossorigin = true;
-
-    if(!baseTexture)
-    {
-        // new Image() breaks tex loading in some versions of Chrome.
-        // See https://code.google.com/p/chromium/issues/detail?id=238071
-        var image = new Image();
-
-        if (crossorigin)
-        {
-            image.crossOrigin = '';
-        }
-
-        image.src = imageUrl;
-        baseTexture = new PIXI.BaseTexture(image, scaleMode);
-        baseTexture.imageUrl = imageUrl;
-        PIXI.BaseTextureCache[imageUrl] = baseTexture;
-
-        // if there is an @2x at the end of the url we are going to assume its a highres image
-        if( imageUrl.indexOf(PIXI.RETINA_PREFIX + '.') !== -1)
-        {
-            baseTexture.resolution = 2;
-        }
-    }
-
-    return baseTexture;
-};
-
-/**
  * Helper function that creates a base texture from the given canvas element.
  *
  * @static
  * @method fromCanvas
  * @param canvas {Canvas} The canvas element source of the texture
  * @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
- * @return BaseTexture
+ * @return {BaseTexture}
  */
 PIXI.BaseTexture.fromCanvas = function(canvas, scaleMode)
 {
-    if (!canvas._pixiId)
-    {
-        canvas._pixiId = 'canvas_' + PIXI.TextureCacheIdGenerator++;
-    }
-
     if (canvas.width === 0)
     {
         canvas.width = 1;
@@ -304,13 +242,5 @@ PIXI.BaseTexture.fromCanvas = function(canvas, scaleMode)
         canvas.height = 1;
     }
 
-    var baseTexture = PIXI.BaseTextureCache[canvas._pixiId];
-
-    if (!baseTexture)
-    {
-        baseTexture = new PIXI.BaseTexture(canvas, scaleMode);
-        PIXI.BaseTextureCache[canvas._pixiId] = baseTexture;
-    }
-
-    return baseTexture;
+    return new PIXI.BaseTexture(canvas, scaleMode);
 };

@@ -179,7 +179,6 @@ PIXI.WebGLRenderer = function(game) {
 
     //  Needed?
     this.renderSession.game = this.game;
-    this.renderSession.fd = this.game.fd;
     this.renderSession.gl = this.gl;
     this.renderSession.drawCount = 0;
     this.renderSession.shaderManager = this.shaderManager;
@@ -255,9 +254,6 @@ PIXI.WebGLRenderer.prototype.render = function(stage)
         return;
     }
 
-    // update the scene graph
-    stage.updateTransform();
-
     var gl = this.gl;
 
     // -- Does this need to be set every frame? -- //
@@ -273,10 +269,8 @@ PIXI.WebGLRenderer.prototype.render = function(stage)
         gl.clear(gl.COLOR_BUFFER_BIT);
     }
 
-    if (this.game.fd.on)
-    {
-        this.game.fd.record();
-    }
+    this.offset.x = this.game.camera._shake.x;
+    this.offset.y = this.game.camera._shake.y;
 
     this.renderDisplayObject(stage, this.projection);
 };

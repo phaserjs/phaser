@@ -1,7 +1,7 @@
 /* jshint wsh:true */
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2015 Photon Storm Ltd.
+* @copyright    2016 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -103,7 +103,19 @@ Phaser.Loader = function (game) {
     this.path = '';
 
     /**
-    * This event is dispatched when the loading process starts: before the first file has been requested,
+    * Used to map the application mime-types to to the Accept header in XHR requests.
+    * If you don't require these mappings, or they cause problems on your server, then
+    * remove them from the headers object and the XHR request will not try to use them.
+    * @property {object} headers
+    * @default
+    */
+    this.headers = {
+        json: "application/json",
+        xml: "application/xml"
+    };
+
+    /**
+     * This event is dispatched when the loading process starts: before the first file has been requested,
     * but after all the initial packs have been loaded.
     *
     * @property {Phaser.Signal} onLoadStart
@@ -183,7 +195,7 @@ Phaser.Loader = function (game) {
     *
     * To disable all parallel downloads this must be set to false prior to any resource being loaded.
     *
-    * @property {integer} enableParallel
+    * @property {boolean} enableParallel
     */
     this.enableParallel = true;
 
@@ -657,7 +669,7 @@ Phaser.Loader.prototype = {
 
             if (!file || (!file.loaded && !file.loading && file.type !== 'packfile'))
             {
-                this._fileList.splice(i, 1, pack);
+                this._fileList.splice(i, 0, pack);
                 this._totalPackCount++;
                 break;
             }
@@ -1032,7 +1044,7 @@ Phaser.Loader.prototype = {
     *    Audio files can't be played until they are decoded and, if specified, this enables immediate decoding. Decoding is a non-blocking async process, however it consumes huge amounts of CPU time on mobiles especially.
     * @return {Phaser.Loader} This Loader instance.
     */
-    audiosprite: function(key, urls, jsonURL, jsonData, autoDecode) {
+    audioSprite: function (key, urls, jsonURL, jsonData, autoDecode) {
 
         if (this.game.sound.noAudio)
         {
@@ -1067,6 +1079,23 @@ Phaser.Loader.prototype = {
 
     },
 
+    /**
+    * A legacy alias for Loader.audioSprite. Please see that method for documentation.
+    *
+    * @method Phaser.Loader#audiosprite
+    * @param {string} key - Unique asset key of the audio file.
+    * @param {Array|string} urls - An array containing the URLs of the audio files, i.e.: [ 'audiosprite.mp3', 'audiosprite.ogg', 'audiosprite.m4a' ] or a single string containing just one URL.
+    * @param {string} [jsonURL=null] - The URL of the audiosprite configuration JSON object. If you wish to pass the data directly set this parameter to null.
+    * @param {string|object} [jsonData=null] - A JSON object or string containing the audiosprite configuration data. This is ignored if jsonURL is not null.
+    * @param {boolean} [autoDecode=true] - When using Web Audio the audio files can either be decoded at load time or run-time.
+    *    Audio files can't be played until they are decoded and, if specified, this enables immediate decoding. Decoding is a non-blocking async process, however it consumes huge amounts of CPU time on mobiles especially.
+    * @return {Phaser.Loader} This Loader instance.
+    */
+    audiosprite: function (key, urls, jsonURL, jsonData, autoDecode) {
+
+        return this.audioSprite(key, urls, jsonURL, jsonData, autoDecode);
+
+    },
 
     /**
     * Adds a video file to the current load queue.
@@ -1883,9 +1912,9 @@ Phaser.Loader.prototype = {
 
         this.onLoadComplete.dispatch();
 
-        this.reset();
-
         this.game.state.loadComplete();
+
+        this.reset();
 
     },
 
@@ -2098,7 +2127,7 @@ Phaser.Loader.prototype = {
                 {
                     if (file.asBlob)
                     {
-                        this.xhrLoad(file, this.transformUrl(file.url, file), 'arraybuffer', this.fileComplete);
+                        this.xhrLoad(file, this.transformUrl(file.url, file), 'blob', this.fileComplete);
                     }
                     else
                     {
@@ -2259,9 +2288,9 @@ Phaser.Loader.prototype = {
             var playThroughEvent = function () {
                 file.data.removeEventListener('canplaythrough', playThroughEvent, false);
                 file.data.onerror = null;
-                // Why does this cycle through games?
-                Phaser.GAMES[_this.game.id].load.fileComplete(file);
+                _this.fileComplete(file);
             };
+
             file.data.onerror = function () {
                 file.data.removeEventListener('canplaythrough', playThroughEvent, false);
                 file.data.onerror = null;
@@ -2301,6 +2330,11 @@ Phaser.Loader.prototype = {
         xhr.open("GET", url, true);
         xhr.responseType = type;
 
+        if (this.headers[file.type])
+        {
+            xhr.setRequestHeader("Accept", this.headers[file.type]);
+        }
+
         onerror = onerror || this.fileError;
 
         var _this = this;
@@ -2308,9 +2342,12 @@ Phaser.Loader.prototype = {
         xhr.onload = function () {
 
             try {
-
-                return onload.call(_this, file, xhr);
-
+                if (xhr.readyState == 4 && xhr.status >= 400 && xhr.status <= 599) { // Handle HTTP status codes of 4xx and 5xx as errors, even if xhr.onerror was not called.
+                    return onerror.call(_this, file, xhr);
+                }
+                else {
+                    return onload.call(_this, file, xhr);
+                }
             } catch (e) {
 
                 //  If this was the last file in the queue and an error is thrown in the create method
@@ -2419,6 +2456,12 @@ Phaser.Loader.prototype = {
 
         xhr.onload = function () {
             try {
+                if (xhr.readyState == 4 && xhr.status >= 400 && xhr.status <= 599) { // Handle HTTP status codes of 4xx and 5xx as errors, even if xhr.onerror was not called.
+                    return onerror.call(_this, file, xhr);
+                }
+                else {
+                    return onload.call(_this, file, xhr);
+                }
                 return onload.call(_this, file, xhr);
             } catch (e) {
                 _this.asyncComplete(file, e.message || 'Exception');
@@ -2455,8 +2498,13 @@ Phaser.Loader.prototype = {
 
             if (url.uri) // {uri: .., type: ..} pair
             {
-                url = url.uri;
                 videoType = url.type;
+                url = url.uri;
+
+                if (this.game.device.canPlayVideo(videoType))
+                {
+                    return url;
+                }
             }
             else
             {
@@ -2474,11 +2522,11 @@ Phaser.Loader.prototype = {
                 var extension = url.substr((Math.max(0, url.lastIndexOf(".")) || Infinity) + 1);
 
                 videoType = extension.toLowerCase();
-            }
 
-            if (this.game.device.canPlayVideo(videoType))
-            {
-                return urls[i];
+                if (this.game.device.canPlayVideo(videoType))
+                {
+                    return urls[i];
+                }
             }
         }
 
@@ -2510,8 +2558,13 @@ Phaser.Loader.prototype = {
 
             if (url.uri) // {uri: .., type: ..} pair
             {
-                url = url.uri;
                 audioType = url.type;
+                url = url.uri;
+
+                if (this.game.device.canPlayAudio(audioType))
+                {
+                    return url;
+                }
             }
             else
             {
@@ -2529,11 +2582,11 @@ Phaser.Loader.prototype = {
                 var extension = url.substr((Math.max(0, url.lastIndexOf(".")) || Infinity) + 1);
 
                 audioType = extension.toLowerCase();
-            }
 
-            if (this.game.device.canPlayAudio(audioType))
-            {
-                return urls[i];
+                if (this.game.device.canPlayAudio(audioType))
+                {
+                    return urls[i];
+                }
             }
         }
 
@@ -2666,7 +2719,7 @@ Phaser.Loader.prototype = {
                 {
                     try
                     {
-                        file.data = new Blob([new Uint8Array(xhr.response)]);
+                        file.data = xhr.response;
                     }
                     catch (e)
                     {
@@ -2838,7 +2891,7 @@ Phaser.Loader.prototype = {
     /**
     * Parses string data as XML.
     *
-    * @method parseXml
+    * @method Phaser.Loader#parseXml
     * @private
     * @param {string} data - The XML text to parse
     * @return {?XMLDocument} Returns the xml document, or null if such could not parsed to a valid document.

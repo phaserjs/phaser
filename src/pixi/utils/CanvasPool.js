@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2015 Photon Storm Ltd.
+* @copyright    2016 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -68,7 +68,7 @@ PIXI.CanvasPool = {
 
         for (var i = 0; i < pool.length; i++)
         {
-            if (pool[i].parent === null)
+            if (!pool[i].parent)
             {
                 return i;
             }
@@ -94,6 +94,8 @@ PIXI.CanvasPool = {
             if (pool[i].parent === parent)
             {
                 pool[i].parent = null;
+                pool[i].canvas.width = 1;
+                pool[i].canvas.height = 1;
             }
         }
 
@@ -115,6 +117,8 @@ PIXI.CanvasPool = {
             if (pool[i].canvas === canvas)
             {
                 pool[i].parent = null;
+                pool[i].canvas.width = 1;
+                pool[i].canvas.height = 1;
             }
         }
 
@@ -134,7 +138,7 @@ PIXI.CanvasPool = {
 
         for (var i = 0; i < pool.length; i++)
         {
-            if (pool[i].parent !== null)
+            if (pool[i].parent)
             {
                 c++;
             }
@@ -158,7 +162,7 @@ PIXI.CanvasPool = {
 
         for (var i = 0; i < pool.length; i++)
         {
-            if (pool[i].parent === null)
+            if (!pool[i].parent)
             {
                 c++;
             }

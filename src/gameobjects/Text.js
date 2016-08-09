@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2015 Photon Storm Ltd.
+* @copyright    2016 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -34,6 +34,7 @@
 * @param {number} [style.strokeThickness=0] - A number that represents the thickness of the stroke. Default is 0 (no stroke).
 * @param {boolean} [style.wordWrap=false] - Indicates if word wrap should be used.
 * @param {number} [style.wordWrapWidth=100] - The width in pixels at which text will wrap.
+* @param {number} [style.maxLines=0] - The maximum number of lines to be shown for wrapped text.
 * @param {number} [style.tabs=0] - The size (in pixels) of the tabs, for when text includes tab characters. 0 disables. Can be an array of varying tab sizes, one per tab stop.
 */
 Phaser.Text = function (game, x, y, text, style) {
@@ -50,7 +51,7 @@ Phaser.Text = function (game, x, y, text, style) {
         text = text.toString();
     }
 
-    style = style || {};
+    style = Phaser.Utils.extend({}, style);
 
     /**
     * @property {number} type - The const type of this object.
@@ -116,6 +117,19 @@ Phaser.Text = function (game, x, y, text, style) {
     * @default
     */
     this.autoRound = false;
+
+    /**
+    * Will this Text object use Basic or Advanced Word Wrapping?
+    * 
+    * Advanced wrapping breaks long words if they are the first of a line, and repeats the process as necessary.
+    * White space is condensed (e.g., consecutive spaces are replaced with one).
+    * Lines are trimmed of white space before processing.
+    * 
+    * It throws an error if wordWrapWidth is less than a single character.
+    * @property {boolean} useAdvancedWrap
+    * @default
+    */
+    this.useAdvancedWrap = false;
 
     /**
      * @property {number} _res - Internal canvas resolution var.
@@ -271,10 +285,14 @@ Phaser.Text.prototype.setShadow = function (x, y, color, blur, shadowStroke, sha
 * @param {number} [style.strokeThickness=0] - A number that represents the thickness of the stroke. Default is 0 (no stroke).
 * @param {boolean} [style.wordWrap=false] - Indicates if word wrap should be used.
 * @param {number} [style.wordWrapWidth=100] - The width in pixels at which text will wrap.
+* @param {number} [style.maxLines=0] - The maximum number of lines to be shown for wrapped text.
 * @param {number|array} [style.tabs=0] - The size (in pixels) of the tabs, for when text includes tab characters. 0 disables. Can be an array of varying tab sizes, one per tab stop.
+* @param {boolean} [update=false] - Immediately update the Text object after setting the new style? Or wait for the next frame.
 * @return {Phaser.Text} This Text instance.
 */
-Phaser.Text.prototype.setStyle = function (style) {
+Phaser.Text.prototype.setStyle = function (style, update) {
+
+    if (update === undefined) { update = false; }
 
     style = style || {};
     style.font = style.font || 'bold 20pt Arial';
@@ -287,6 +305,7 @@ Phaser.Text.prototype.setStyle = function (style) {
     style.strokeThickness = style.strokeThickness || 0;
     style.wordWrap = style.wordWrap || false;
     style.wordWrapWidth = style.wordWrapWidth || 100;
+    style.maxLines = style.maxLines || 0;
     style.shadowOffsetX = style.shadowOffsetX || 0;
     style.shadowOffsetY = style.shadowOffsetY || 0;
     style.shadowColor = style.shadowColor || 'rgba(0,0,0,0)';
@@ -323,8 +342,14 @@ Phaser.Text.prototype.setStyle = function (style) {
     this._fontComponents = components;
 
     style.font = this.componentsToFont(this._fontComponents);
+
     this.style = style;
     this.dirty = true;
+
+    if (update)
+    {
+        this.updateText();
+    }
 
     return this;
 
@@ -358,12 +383,36 @@ Phaser.Text.prototype.updateText = function () {
     var maxLineWidth = 0;
     var fontProperties = this.determineFontProperties(this.style.font);
 
-    for (var i = 0; i < lines.length; i++)
+    var drawnLines = lines.length;
+    
+    if (this.style.maxLines > 0 && this.style.maxLines < lines.length)
+    {
+        drawnLines = this.style.maxLines;
+    }
+
+    this._charCount = 0;
+
+    for (var i = 0; i < drawnLines; i++)
     {
         if (tabs === 0)
         {
             //  Simple layout (no tabs)
-            var lineWidth = this.context.measureText(lines[i]).width + this.style.strokeThickness + this.padding.x;
+            var lineWidth =  this.style.strokeThickness + this.padding.x;
+
+            if (this.colors.length > 0 || this.strokeColors.length > 0 || this.fontWeights.length > 0 || this.fontStyles.length > 0)
+            {
+                lineWidth += this.measureLine(lines[i]);
+            }
+            else
+            {
+                lineWidth += this.context.measureText(lines[i]).width;
+            }
+
+            // Adjust for wrapped text
+            if (this.style.wordWrap)
+            {
+                lineWidth -= this.context.measureText(' ').width;
+            }
         }
         else
         {
@@ -377,7 +426,16 @@ Phaser.Text.prototype.updateText = function () {
 
                 for (var c = 0; c < line.length; c++)
                 {
-                    var section = Math.ceil(this.context.measureText(line[c]).width);
+                    var section = 0;
+
+                    if (this.colors.length > 0 || this.strokeColors.length > 0 || this.fontWeights.length > 0 || this.fontStyles.length > 0)
+                    {
+                        section = this.measureLine(line[c]);
+                    }
+                    else
+                    {
+                        section = Math.ceil(this.context.measureText(line[c]).width);
+                    }
 
                     if (c > 0)
                     {
@@ -392,7 +450,14 @@ Phaser.Text.prototype.updateText = function () {
                 for (var c = 0; c < line.length; c++)
                 {
                     //  How far to the next tab?
-                    lineWidth += Math.ceil(this.context.measureText(line[c]).width);
+                    if (this.colors.length > 0 || this.strokeColors.length > 0 || this.fontWeights.length > 0 || this.fontStyles.length > 0)
+                    {
+                        lineWidth += this.measureLine(line[c]);
+                    }
+                    else
+                    {
+                        lineWidth += Math.ceil(this.context.measureText(line[c]).width);
+                    }
 
                     var diff = this.game.math.snapToCeil(lineWidth, tabs) - lineWidth;
 
@@ -409,7 +474,7 @@ Phaser.Text.prototype.updateText = function () {
     
     //  Calculate text height
     var lineHeight = fontProperties.fontSize + this.style.strokeThickness + this.padding.y;
-    var height = lineHeight * lines.length;
+    var height = lineHeight * drawnLines;
     var lineSpacing = this._lineSpacing;
 
     if (lineSpacing < 0 && Math.abs(lineSpacing) > lineHeight)
@@ -420,8 +485,7 @@ Phaser.Text.prototype.updateText = function () {
     //  Adjust for line spacing
     if (lineSpacing !== 0)
     {
-        var diff = lineSpacing * (lines.length - 1);
-        height += diff;
+        height += (lineSpacing > 0) ? lineSpacing * lines.length : lineSpacing * (lines.length - 1);
     }
 
     this.canvas.height = height * this._res;
@@ -454,7 +518,7 @@ Phaser.Text.prototype.updateText = function () {
     this._charCount = 0;
 
     //  Draw text line by line
-    for (i = 0; i < lines.length; i++)
+    for (i = 0; i < drawnLines; i++)
     {
         //  Split the line by
 
@@ -609,6 +673,67 @@ Phaser.Text.prototype.updateShadow = function (state) {
         this.context.shadowBlur = 0;
     }
 
+};
+
+/**
+* Measures a line of text character by character taking into the account the specified character styles.
+*
+* @method Phaser.Text#measureLine
+* @private
+* @param {string} line - The line of text to measure.
+* @return {integer} length of the line.
+*/
+Phaser.Text.prototype.measureLine = function (line) {
+
+    var lineLength = 0;
+
+    for (var i = 0; i < line.length; i++)
+    {
+        var letter = line[i];
+
+        if (this.fontWeights.length > 0 || this.fontStyles.length > 0)
+        {
+            var components = this.fontToComponents(this.context.font);
+
+            if (this.fontStyles[this._charCount])
+            {
+                components.fontStyle = this.fontStyles[this._charCount];
+            }
+
+            if (this.fontWeights[this._charCount])
+            {
+                components.fontWeight = this.fontWeights[this._charCount];
+            }
+
+            this.context.font = this.componentsToFont(components);
+        }
+
+        if (this.style.stroke && this.style.strokeThickness)
+        {
+            if (this.strokeColors[this._charCount])
+            {
+                this.context.strokeStyle = this.strokeColors[this._charCount];
+            }
+
+            this.updateShadow(this.style.shadowStroke);
+        }
+
+        if (this.style.fill)
+        {
+            if (this.colors[this._charCount])
+            {
+                this.context.fillStyle = this.colors[this._charCount];
+            }
+
+            this.updateShadow(this.style.shadowFill);
+        }
+
+        lineLength += this.context.measureText(letter).width;
+
+        this._charCount++;
+    }
+
+    return Math.ceil(lineLength);
 };
 
 /**
@@ -800,6 +925,28 @@ Phaser.Text.prototype.addFontWeight = function (weight, position) {
 };
 
 /**
+* Runs the given text through the Text.runWordWrap function and returns
+* the results as an array, where each element of the array corresponds to a wrapped
+* line of text.
+*
+* Useful if you wish to control pagination on long pieces of content.
+*
+* @method Phaser.Text#precalculateWordWrap
+* @param {string} text - The text for which the wrapping will be calculated.
+* @return {array} An array of strings with the pieces of wrapped text.
+*/
+Phaser.Text.prototype.precalculateWordWrap = function (text) {
+
+    this.texture.baseTexture.resolution = this._res;
+    this.context.font = this.style.font;
+
+    var wrappedLines = this.runWordWrap(text);
+
+    return wrappedLines.split(/(?:\r\n|\r|\n)/);
+
+};
+
+/**
 * Greedy wrapping algorithm that will wrap words as the line grows longer than its horizontal bounds.
 *
 * @method Phaser.Text#runWordWrap
@@ -807,6 +954,150 @@ Phaser.Text.prototype.addFontWeight = function (weight, position) {
 * @private
 */
 Phaser.Text.prototype.runWordWrap = function (text) {
+
+    if (this.useAdvancedWrap)
+    {
+        return this.advancedWordWrap(text);
+    }
+    else
+    {
+        return this.basicWordWrap(text);
+    }
+
+};
+
+/**
+* Advanced wrapping algorithm that will wrap words as the line grows longer than its horizontal bounds.
+* White space is condensed (e.g., consecutive spaces are replaced with one).
+* Lines are trimmed of white space before processing.
+* Throws an error if the user was smart enough to specify a wordWrapWidth less than a single character.
+*
+* @method Phaser.Text#advancedWordWrap
+* @param {string} text - The text to perform word wrap detection against.
+* @private
+*/
+Phaser.Text.prototype.advancedWordWrap = function (text) {
+
+    var context = this.context;
+    var wordWrapWidth = this.style.wordWrapWidth;
+
+    var output = '';
+
+    // (1) condense whitespace
+    // (2) split into lines
+    var lines = text
+        .replace(/ +/gi, ' ')
+        .split(/\r?\n/gi);
+
+    var linesCount = lines.length;
+
+    for (var i = 0; i < linesCount; i++)
+    {
+        var line = lines[i];
+        var out = '';
+
+        // trim whitespace
+        line = line.replace(/^ *|\s*$/gi, '');
+
+        // if entire line is less than wordWrapWidth
+        // append the entire line and exit early
+        var lineWidth = context.measureText(line).width;
+
+        if (lineWidth < wordWrapWidth)
+        {
+            output += line + '\n';
+            continue;
+        }
+
+        // otherwise, calculate new lines
+        var currentLineWidth = wordWrapWidth;
+
+        // split into words
+        var words = line.split(' ');
+
+        for (var j = 0; j < words.length; j++)
+        {
+            var word = words[j];
+            var wordWithSpace = word + ' ';
+            var wordWidth = context.measureText(wordWithSpace).width;
+
+            if (wordWidth > currentLineWidth)
+            {
+                // break word
+                if (j === 0)
+                {
+                    // shave off letters from word until it's small enough
+                    var newWord = wordWithSpace;
+
+                    while (newWord.length)
+                    {
+                        newWord = newWord.slice(0, -1);
+                        wordWidth = context.measureText(newWord).width;
+
+                        if (wordWidth <= currentLineWidth)
+                        {
+                            break;
+                        }
+                    }
+
+                    // if wordWrapWidth is too small for even a single
+                    // letter, shame user failure with a fatal error
+                    if (!newWord.length)
+                    {
+                        throw new Error('This text\'s wordWrapWidth setting is less than a single character!');
+                    }
+
+                    // replace current word in array with remainder
+                    var secondPart = word.substr(newWord.length);
+
+                    words[j] = secondPart;
+
+                    // append first piece to output
+                    out += newWord;
+                }
+
+                // if existing word length is 0, don't include it
+                var offset = (words[j].length) ? j : j + 1;
+
+                // collapse rest of sentence
+                var remainder = words.slice(offset).join(' ')
+                // remove any trailing white space
+                .replace(/[ \n]*$/gi, '');
+
+                // prepend remainder to next line
+                lines[i + 1] = remainder + ' ' + (lines[i + 1] || '');
+                linesCount = lines.length;
+
+                break; // processing on this line
+
+                // append word with space to output
+            }
+            else
+            {
+                out += wordWithSpace;
+                currentLineWidth -= wordWidth;
+            }
+        }
+
+        // append processed line to output
+        output += out.replace(/[ \n]*$/gi, '') + '\n';
+    }
+
+    // trim the end of the string
+    output = output.replace(/[\s|\n]*$/gi, '');
+
+    return output;
+
+};
+
+/**
+* Greedy wrapping algorithm that will wrap words as the line grows longer than its horizontal bounds.
+*
+* @method Phaser.Text#basicWordWrap
+* @param {string} text - The text to perform word wrap detection against.
+* @private
+*/
+Phaser.Text.prototype.basicWordWrap = function (text) {
 
     var result = '';
     var lines = text.split('\n');
@@ -893,18 +1184,27 @@ Phaser.Text.prototype.fontToComponents = function (font) {
 
     if (m)
     {
+        var family = m[5].trim();
+
+        // If it looks like the value should be quoted, but isn't, then quote it.
+        if (!/^(?:inherit|serif|sans-serif|cursive|fantasy|monospace)$/.exec(family) && !/['",]/.exec(family))
+        {
+            family = "'" + family + "'";
+        }
+
         return {
             font: font,
             fontStyle: m[1] || 'normal',
             fontVariant: m[2] || 'normal',
             fontWeight: m[3] || 'normal',
             fontSize: m[4] || 'medium',
-            fontFamily: m[5]
+            fontFamily: family
         };
     }
     else
     {
         console.warn("Phaser.Text - unparsable CSS font: " + font);
+
         return {
             font: font
         };
@@ -950,18 +1250,34 @@ Phaser.Text.prototype.componentsToFont = function (components) {
 };
 
 /**
- * The text to be displayed by this Text object.
- * Use a \n to insert a carriage return and split the text.
- * The text will be rendered with any style currently set.
- *
- * @method Phaser.Text#setText
- * @param {string} [text] - The text to be displayed. Set to an empty string to clear text that is already present.
- * @return {Phaser.Text} This Text instance.
- */
-Phaser.Text.prototype.setText = function (text) {
+* The text to be displayed by this Text object.
+* Use a \n to insert a carriage return and split the text.
+* The text will be rendered with any style currently set.
+*
+* Use the optional `immediate` argument if you need the Text display to update immediately.
+* 
+* If not it will re-create the texture of this Text object during the next time the render
+* loop is called.
+*
+* @method Phaser.Text#setText
+* @param {string} [text] - The text to be displayed. Set to an empty string to clear text that is already present.
+* @param {boolean} [immediate=false] - Update the texture used by this Text object immediately (true) or automatically during the next render loop (false).
+* @return {Phaser.Text} This Text instance.
+*/
+Phaser.Text.prototype.setText = function (text, immediate) {
+
+    if (immediate === undefined) { immediate = false; }
 
     this.text = text.toString() || '';
-    this.dirty = true;
+
+    if (immediate)
+    {
+        this.updateText();
+    }
+    else
+    {
+        this.dirty = true;
+    }
 
     return this;
 
@@ -1185,13 +1501,10 @@ Phaser.Text.prototype._renderCanvas = function (renderSession) {
 
     if (this.dirty)
     {
-        if (renderSession.fd.on) { renderSession.fd.tu(); }
         this.updateText();
         this.dirty = false;
     }
      
-    if (renderSession.fd.on) { renderSession.fd.ct(this.texture, this.texture.width, this.texture.height, this.texture.baseTexture.resolution); }
-
     PIXI.Sprite.prototype._renderCanvas.call(this, renderSession);
 
 };
@@ -1975,5 +2288,5 @@ Object.defineProperty(Phaser.Text.prototype, 'height', {
 
 Phaser.Text.fontPropertiesCache = {};
 
-Phaser.Text.fontPropertiesCanvas = PIXI.CanvasPool.create(Phaser.Text.fontPropertiesCanvas);
+Phaser.Text.fontPropertiesCanvas = document.createElement('canvas');
 Phaser.Text.fontPropertiesContext = Phaser.Text.fontPropertiesCanvas.getContext('2d');

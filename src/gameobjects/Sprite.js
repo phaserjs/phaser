@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2015 Photon Storm Ltd.
+* @copyright    2016 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -60,7 +60,7 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     */
     this.physicsType = Phaser.SPRITE;
 
-    PIXI.Sprite.call(this, PIXI.TextureCache['__default']);
+    PIXI.Sprite.call(this, Phaser.Cache.DEFAULT);
 
     Phaser.Component.Core.init.call(this, game, x, y, key, frame);
 

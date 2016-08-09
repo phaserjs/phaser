@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2015 Photon Storm Ltd.
+* @copyright    2016 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -140,12 +140,13 @@ Phaser.Time = function (game) {
     * The suggested frame rate for your game, based on an averaged real frame rate.
     * This value is only populated if `Time.advancedTiming` is enabled.
     *
-    * _Note:_ This is not available until after a few frames have passed; use it after a few seconds (eg. after the menus)
+    * _Note:_ This is not available until after a few frames have passed; until then
+    * it's set to the same value as desiredFps.
     *
     * @property {number} suggestedFps
     * @default
     */
-    this.suggestedFps = null;
+    this.suggestedFps = this.desiredFps;
 
     /**
     * Scaling factor to make the game move smoothly in slow motion
@@ -300,6 +301,7 @@ Phaser.Time.prototype = {
         this._started = Date.now();
         this.time = Date.now();
         this.events.start();
+        this.timeExpected = this.time;
 
     },
 
@@ -403,11 +405,15 @@ Phaser.Time.prototype = {
 
         if (this.game.raf._isSetTimeOut)
         {
+            // console.log('Time isSet', this._desiredFps, 'te', this.timeExpected, 'time', time);
+
             // time to call this function again in ms in case we're using timers instead of RequestAnimationFrame to update the game
             this.timeToCall = Math.floor(Math.max(0, (1000.0 / this._desiredFps) - (this.timeExpected - time)));
 
             // time when the next call is expected if using timers
             this.timeExpected = time + this.timeToCall;
+
+            // console.log('Time expect', this.timeExpected);
         }
 
         if (this.advancedTiming)

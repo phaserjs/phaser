@@ -1,7 +1,7 @@
 /**
 * @author       George https://github.com/georgiee
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2015 Photon Storm Ltd.
+* @copyright    2016 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -458,7 +458,7 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
         var hex;
         hex = c.toString(16);
 
-        if (hex.len === 2)
+        if (hex.length === 2)
         {
             return hex;
         }

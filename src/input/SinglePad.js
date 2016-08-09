@@ -1,7 +1,7 @@
 /**
 * @author       @karlmacklin <tacklemcclean@gmail.com>
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2015 Photon Storm Ltd.
+* @copyright    2016 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -136,8 +136,9 @@ Phaser.SinglePad.prototype = {
             this.onUpCallback = (typeof callbacks.onUp === 'function') ? callbacks.onUp : this.onUpCallback;
             this.onAxisCallback = (typeof callbacks.onAxis === 'function') ? callbacks.onAxis : this.onAxisCallback;
             this.onFloatCallback = (typeof callbacks.onFloat === 'function') ? callbacks.onFloat : this.onFloatCallback;
-        }
 
+            this.callbackContext = context;
+        }
     },
 
     /**
@@ -359,6 +360,11 @@ Phaser.SinglePad.prototype = {
     */
     processButtonDown: function (buttonCode, value) {
 
+        if (this._buttons[buttonCode])
+        {
+            this._buttons[buttonCode].start(null, value);
+        }
+
         if (this._padParent.onDownCallback)
         {
             this._padParent.onDownCallback.call(this._padParent.callbackContext, buttonCode, value, this.index);
@@ -367,11 +373,6 @@ Phaser.SinglePad.prototype = {
         if (this.onDownCallback)
         {
             this.onDownCallback.call(this.callbackContext, buttonCode, value);
-        }
-
-        if (this._buttons[buttonCode])
-        {
-            this._buttons[buttonCode].start(null, value);
         }
 
     },

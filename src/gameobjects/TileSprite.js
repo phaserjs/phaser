@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2015 Photon Storm Ltd.
+* @copyright    2016 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -53,7 +53,7 @@
 * @param {number} y - The y coordinate (in world space) to position the TileSprite at.
 * @param {number} width - The width of the TileSprite.
 * @param {number} height - The height of the TileSprite.
-* @param {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the TileSprite during rendering. It can be a string which is a reference to the Phaser Image Cache entry, or an instance of a RenderTexture, PIXI.Texture or BitmapData.
+* @param {string|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the TileSprite during rendering. It can be a string which is a reference to the Phaser Image Cache entry, or an instance of a PIXI.Texture or BitmapData.
 * @param {string|number} frame - If this TileSprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
 */
 Phaser.TileSprite = function (game, x, y, width, height, key, frame) {
@@ -200,7 +200,7 @@ Phaser.TileSprite.prototype.destroy = function(destroyChildren) {
 * @memberof Phaser.TileSprite
 * @param {number} x - The x coordinate (in world space) to position the Sprite at.
 * @param {number} y - The y coordinate (in world space) to position the Sprite at.
-* @return (Phaser.TileSprite) This instance.
+* @return {Phaser.TileSprite} This instance.
 */
 Phaser.TileSprite.prototype.reset = function(x, y) {
 

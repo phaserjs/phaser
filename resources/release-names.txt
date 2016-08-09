@@ -14,13 +14,13 @@ POI: River Eldar, Sea of Storms
 Amadicia *
 
 Capital: Amador *
-Cities: Abila, Bellon, Jeramel, Mardecin, Sienda
-POI: Mountains of Mist, River Eldar, River Sharia, Shadow Coast
+Cities: Abila, Bellon, Jeramel, Mardecin, Sienda *
+POI: Mountains of Mist, River Eldar, River Sharia, Shadow Coast * (3.0.0?)
 
 Andor
 
-Capital: Caemlyn
-Cities: Arien, Aringill, Baerlon, Breen's Spring, Buryhill, Carysford, Comfrey, Cullen's Crossing, Damelien, Danabar *, Deven Ride, Emond's Field, Forel Market, Four Kings, Harlon Bridge, Jornhill *, Kore Springs, Market Sheran, New Braem, Sheldyn, Taren Ferry, Watch Hill, Whitebridge *
+Capital: Caemlyn *
+Cities: Arien, Aringill, Baerlon *, Breen's Spring, Buryhill, Carysford, Comfrey, Cullen's Crossing, Damelien, Danabar *, Deven Ride, Emond's Field, Forel Market, Four Kings *, Harlon Bridge, Jornhill *, Kore Springs, Market Sheran, New Braem, Sheldyn, Taren Ferry, Watch Hill *, Whitebridge *
 POI: Mountains of Mist, Tower of Ghenjei, Two Rivers, Whitebridge *
 
 Arad Doman
@@ -60,7 +60,7 @@ POI: Plain of Lances, Blight
 Murandy
 
 Capital: Lugard
-Cities: Hinderstap, Inishlinn, Mindea, Trustair
+Cities: Hinderstap *, Inishlinn, Mindea, Trustair
 
 Saldaea *
 
@@ -70,7 +70,7 @@ POI: Plain of Lances, World's End, Banikhan Mountains
 
 Shienar *
 
-Capital: Fal Moran
+Capital: Fal Moran *
 Cities: Ankor Dail, Camron Caan, Fal Dara, Fal Eisen, Fal Sion, Medo, Mos Shirare *
 
 Tarabon

@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2015 Photon Storm Ltd.
+* @copyright    2016 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -249,6 +249,10 @@ Phaser.Physics.prototype = {
         else if (system === Phaser.Physics.MATTERJS && this.matter)
         {
             this.matter.enable(object);
+        }
+        else
+        {
+            console.warn(object.key + ' is attempting to enable a physics body using an unknown physics system.');
         }
 
     },

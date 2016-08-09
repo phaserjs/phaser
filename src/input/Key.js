@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2015 Photon Storm Ltd.
+* @copyright    2016 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -10,7 +10,7 @@
 * @class Phaser.Key
 * @constructor
 * @param {Phaser.Game} game - Current game instance.
-* @param {number} keycode - The key code this Key is responsible for.
+* @param {integer} keycode - The key code this Key is responsible for. See {@link Phaser.KeyCode}.
 */
 Phaser.Key = function (game, keycode) {
 

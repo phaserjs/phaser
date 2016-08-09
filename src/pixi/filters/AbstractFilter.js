@@ -5,6 +5,7 @@
 /**
  * This is the base class for creating a PIXI filter. Currently only webGL supports filters.
  * If you want to make a custom filter this should be your base class.
+ * 
  * @class AbstractFilter
  * @constructor
  * @param fragmentSrc {Array} The fragment source in an array of strings.
@@ -16,14 +17,14 @@ PIXI.AbstractFilter = function(fragmentSrc, uniforms)
     * An array of passes - some filters contain a few steps this array simply stores the steps in a liniear fashion.
     * For example the blur filter has two passes blurX and blurY.
     * @property passes
-    * @type Array(Filter)
+    * @type Array
     * @private
     */
     this.passes = [this];
 
     /**
     * @property shaders
-    * @type Array(Shader)
+    * @type Array
     * @private
     */
     this.shaders = [];
@@ -42,7 +43,7 @@ PIXI.AbstractFilter = function(fragmentSrc, uniforms)
 
     /**
     * @property uniforms
-    * @type object
+    * @type Object
     * @private
     */
     this.uniforms = uniforms || {};
@@ -69,10 +70,3 @@ PIXI.AbstractFilter.prototype.syncUniforms = function()
         this.shaders[i].dirty = true;
     }
 };
-
-/*
-PIXI.AbstractFilter.prototype.apply = function(frameBuffer)
-{
-    // TODO :)
-};
-*/

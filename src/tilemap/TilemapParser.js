@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2015 Photon Storm Ltd.
+* @copyright    2016 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -13,7 +13,7 @@
 Phaser.TilemapParser = {
 
     /**
-     * When scanning the Tiled map data the TilemapParser can either insert a null value (true) or 
+     * When scanning the Tiled map data the TilemapParser can either insert a null value (true) or
      * a Phaser.Tile instance with an index of -1 (false, the default). Depending on your game type
      * depends how this should be configured. If you've a large sparsely populated map and the tile
      * data doesn't need to change then setting this value to `true` will help with memory consumption.
@@ -24,6 +24,33 @@ Phaser.TilemapParser = {
      * @type {boolean}
      */
     INSERT_NULL: false,
+
+    /**
+     * A tiled flag that resides within the 32 bit of the object gid and
+     * indicates whether the tiled/object is flipped horizontally.
+     *
+     * @constant
+     * @type {number}
+     */
+    FLIPPED_HORIZONTALLY_FLAG: 0x80000000,
+
+    /**
+     * A tiled flag that resides within the 31 bit of the object gid and
+     * indicates whether the tiled/object is flipped vertically.
+     *
+     * @constant
+     * @type {number}
+     */
+    FLIPPED_VERTICALLY_FLAG: 0x40000000,
+
+    /**
+     * A tiled flag that resides within the 30 bit of the object gid and
+     * indicates whether the tiled/object is flipped diagonally.
+     *
+     * @constant
+     * @type {number}
+     */
+    FLIPPED_DIAGONALLY_FLAG: 0x20000000,
 
     /**
     * Parse tilemap data from the cache and creates a Tilemap object.
@@ -78,6 +105,7 @@ Phaser.TilemapParser = {
     * Parses a CSV file into valid map data.
     *
     * @method Phaser.TilemapParser.parseCSV
+    * @param {string} key - The name you want to give the map data.
     * @param {string} data - The CSV file data.
     * @param {number} [tileWidth=32] - The pixel width of a single map tile. If using CSV data you must specify this. Not required if using Tiled map data.
     * @param {number} [tileHeight=32] - The pixel height of a single map tile. If using CSV data you must specify this. Not required if using Tiled map data.
@@ -232,22 +260,27 @@ Phaser.TilemapParser = {
             }
 
             var curl = json.layers[i];
-            
+
             // Base64 decode data if necessary
-            // NOTE: uncompressed base64 only. 
+            // NOTE: uncompressed base64 only.
             if (!curl.compression && curl.encoding && curl.encoding === "base64") {
                 var binaryString =  window.atob(curl.data);
                 var len = binaryString.length;
                 var bytes = new Array( len );
                 // Interpret binaryString as an array of bytes representing
-                // little-endian encoded uint32 values. 
-                for (var i = 0; i < len; i+=4) {
-                    bytes[i/4] = (binaryString.charCodeAt(i) |
-                                 binaryString.charCodeAt(i+1) << 8 |
-                                 binaryString.charCodeAt(i+2) << 16 |
-                                 binaryString.charCodeAt(i+3) << 24) >>> 0;
+                // little-endian encoded uint32 values.
+                for (var j = 0; j < len; j+=4) {
+                    bytes[j/4] = (binaryString.charCodeAt(j) |
+                                 binaryString.charCodeAt(j+1) << 8 |
+                                 binaryString.charCodeAt(j+2) << 16 |
+                                 binaryString.charCodeAt(j+3) << 24) >>> 0;
                 }
                 curl.data = bytes;
+                delete curl.encoding;
+            }
+            else if(curl.compression){
+                console.warn('TilemapParser.parseTiledJSON - Layer compression is unsupported, skipping layer \'' + curl.name + '\'');
+                continue;
             }
 
 
@@ -291,7 +324,7 @@ Phaser.TilemapParser = {
                 flipped = false;
                 gid = curl.data[t];
 
-                //  If true the current tile is flipped or rotated (Tiled TMX format) 
+                //  If true the current tile is flipped or rotated (Tiled TMX format)
                 if (gid > 0x20000000)
                 {
                     flippedVal = 0;
@@ -316,7 +349,7 @@ Phaser.TilemapParser = {
                         gid -= 0x20000000;
                         flippedVal += 1;
                     }
-                   
+
                     switch (flippedVal)
                     {
                         case 5:
@@ -445,11 +478,11 @@ Phaser.TilemapParser = {
             else
             {
                 var newCollection = new Phaser.ImageCollection(set.name, set.firstgid, set.tilewidth, set.tileheight, set.margin, set.spacing, set.properties);
-                
-                for (var i in set.tiles)
+
+                for (var ti in set.tiles)
                 {
-                    var image = set.tiles[i].image;
-                    var gid = set.firstgid + parseInt(i, 10);
+                    var image = set.tiles[ti].image;
+                    var gid = set.firstgid + parseInt(ti, 10);
                     newCollection.addImage(gid, image);
                 }
 
@@ -499,6 +532,8 @@ Phaser.TilemapParser = {
                 //  Object Tiles
                 if (curo.objects[v].gid)
                 {
+                    var self = this;
+
                     var object = {
 
                         gid: curo.objects[v].gid,
@@ -506,9 +541,13 @@ Phaser.TilemapParser = {
                         type: curo.objects[v].hasOwnProperty("type") ? curo.objects[v].type : "",
                         x: curo.objects[v].x,
                         y: curo.objects[v].y,
+                        width: curo.objects[v].width,
+                        height: curo.objects[v].height,
                         visible: curo.objects[v].visible,
-                        properties: curo.objects[v].properties
-
+                        properties: curo.objects[v].properties,
+                        horizontallyFlipped: curo.objects[v].gid & self.FLIPPED_HORIZONTALLY_FLAG,
+                        verticallyFlipped: curo.objects[v].gid & self.FLIPPED_VERTICALLY_FLAG,
+                        diagonallyFlipped: curo.objects[v].gid & self.FLIPPED_DIAGONALLY_FLAG
                     };
 
                     if (curo.objects[v].rotation)
