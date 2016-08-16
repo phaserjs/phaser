@@ -768,19 +768,19 @@ Object.defineProperty(Phaser.Animation.prototype, 'frame', {
 
 /**
 * @name Phaser.Animation#speed
-* @property {number} speed - Gets or sets the current speed of the animation in frames per second. Changing this in a playing animation will take effect from the next frame. Minimum value is 1.
+* @property {number} speed - Gets or sets the current speed of the animation in frames per second. Changing this in a playing animation will take effect from the next frame. Value must be greater than 0.
 */
 Object.defineProperty(Phaser.Animation.prototype, 'speed', {
 
     get: function () {
 
-        return Math.round(1000 / this.delay);
+        return 1000 / this.delay;
 
     },
 
     set: function (value) {
 
-        if (value >= 1)
+        if (value > 0)
         {
             this.delay = 1000 / value;
         }
