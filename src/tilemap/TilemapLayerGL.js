@@ -337,8 +337,8 @@ Phaser.TilemapLayerGL.prototype.destroy = function() {
 Phaser.TilemapLayerGL.prototype.resize = function (width, height) {
 
     //  These setters will automatically update any linked children
-    this.displayWidth = width;
-    this.displayHeight = height;
+    this.width = width;
+    this.height = height;
 
     this.dirty = true;
 
@@ -512,16 +512,12 @@ Phaser.TilemapLayerGL.prototype.renderRegion = function (scrollX, scrollY, left,
 * @private
 */
 Phaser.TilemapLayerGL.prototype.renderFull = function () {
-    
+
     var scrollX = this._mc.scrollX;
     var scrollY = this._mc.scrollY;
 
-    // var renderW = this.game._width;
-    // var renderH = this.game._height;
-
-    //  displayWidth surely?
-    var renderW = this.game._width;
-    var renderH = this.game._height;
+    var renderW = this._displayWidth;
+    var renderH = this._displayHeight;
 
     var tw = this._mc.tileWidth;
     var th = this._mc.tileHeight;

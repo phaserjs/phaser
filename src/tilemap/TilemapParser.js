@@ -201,8 +201,8 @@ Phaser.TilemapParser = {
             format: Phaser.Tilemap.TILED_JSON,
             version: json.version,
             properties: json.properties,
-            widthInPixels: json.width * json.tileWidth,
-            heightInPixels: json.height * json.tileHeight
+            widthInPixels: json.width * json.tilewidth,
+            heightInPixels: json.height * json.tileheight
         };
 
         //  Tile Layers
