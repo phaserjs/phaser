@@ -345,6 +345,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * Sound.play would throw the error "Uncaught DOMException: Failed to execute 'disconnect' on 'AudioNode': the given destination is not connected." in Chrome, if you tried to play an audio marker that didn't exist, while a valid marker was already playing.
 * Text bounds would incorrectly displace if the Text resolution was greater than 1 (thanks @valent-novem #2685)
 * TilemapParser would calculate widthInPixels and heightInPixels were being read incorrectly from JSON data (capitalisation of properties) (thanks @hexus #2691)
+* A tinted Texture in Canvas mode wouldn't be updated properly if it was also cropped, beyond the initial crop. Now a cropped texture will re-tint itself every time the crop is updated, and has changed (thanks @phoenixyjll #2688)
 
 ### Pixi Updates
 
