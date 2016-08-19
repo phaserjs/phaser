@@ -264,7 +264,7 @@ Phaser.Cache.prototype = {
             key: key,
             url: url,
             data: data,
-            base: new PIXI.BaseTexture(data),
+            base: new PIXI.BaseTexture(data, null, this.game.resolution),
             frame: new Phaser.Frame(0, 0, 0, data.width, data.height, key),
             frameData: new Phaser.FrameData()
         };
@@ -477,7 +477,7 @@ Phaser.Cache.prototype = {
             url: url,
             data: data,
             font: null,
-            base: new PIXI.BaseTexture(data)
+            base: new PIXI.BaseTexture(data, null, this.game.resolution)
         };
 
         if (xSpacing === undefined) { xSpacing = 0; }
@@ -603,7 +603,7 @@ Phaser.Cache.prototype = {
             frameHeight: frameHeight,
             margin: margin,
             spacing: spacing,
-            base: new PIXI.BaseTexture(data),
+            base: new PIXI.BaseTexture(data, null, this.game.resolution),
             frameData: Phaser.AnimationParser.spriteSheet(this.game, data, frameWidth, frameHeight, frameMax, margin, spacing)
         };
 
@@ -629,7 +629,7 @@ Phaser.Cache.prototype = {
             key: key,
             url: url,
             data: data,
-            base: new PIXI.BaseTexture(data)
+            base: new PIXI.BaseTexture(data, null, this.game.resolution)
         };
 
         if (format === Phaser.Loader.TEXTURE_ATLAS_XML_STARLING)
