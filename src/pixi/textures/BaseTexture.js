@@ -9,9 +9,10 @@
  * @uses EventTarget
  * @constructor
  * @param source {String|Canvas} the source object (image or canvas)
- * @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
+ * @param [scaleMode] {Number} See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
+ * @param [resolution] {Number} the resolution of the texture for devices with different pixel ratios
  */
-PIXI.BaseTexture = function(source, scaleMode)
+PIXI.BaseTexture = function(source, scaleMode, resolution)
 {
     /**
      * The Resolution of the texture. 
@@ -19,7 +20,7 @@ PIXI.BaseTexture = function(source, scaleMode)
      * @property resolution
      * @type Number
      */
-    this.resolution = 1;
+    this.resolution = resolution || 1;
     
     /**
      * [read-only] The width of the base texture set when the image has loaded

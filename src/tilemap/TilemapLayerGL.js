@@ -246,7 +246,7 @@ Phaser.TilemapLayerGL = function (game, tilemap, index, width, height, tileset) 
     */
     this._scrollY = 0;
 
-    var baseTexture = new PIXI.BaseTexture(tileset.image);
+    var baseTexture = new PIXI.BaseTexture(tileset.image, null, this.game.resolution);
 
     PIXI.Tilemap.call(this, new PIXI.Texture(baseTexture), width, height, this.map.width, this.map.height, this._mc.tileset.tileWidth, this._mc.tileset.tileHeight, this.layer);
 
