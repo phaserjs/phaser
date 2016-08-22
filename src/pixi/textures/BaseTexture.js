@@ -92,12 +92,6 @@ PIXI.BaseTexture = function(source, scaleMode)
      */
     this.mipmap = false;
 
-     /**
-     * @property textureIndex
-     * @type Number
-     */
-    this.textureIndex = 0;
-
     /**
      * @property _dirty
      * @type Array

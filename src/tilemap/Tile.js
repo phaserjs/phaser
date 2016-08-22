@@ -80,7 +80,6 @@ Phaser.Tile = function (layer, index, x, y, width, height) {
 
     /**
     * @property {number} alpha - The alpha value at which this tile is drawn to the canvas.
-    * TODO: currently unused for both Canvas and WebGL renderers
     */
     this.alpha = 1;
 

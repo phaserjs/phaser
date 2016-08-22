@@ -180,7 +180,6 @@ PIXI.TilingSprite.prototype._renderWebGL = function(renderSession)
         {
             if (this.tilingTexture.needsUpdate)
             {
-                this.tilingTexture.baseTexture.textureIndex = this.texture.baseTexture.textureIndex;
                 renderSession.renderer.updateTexture(this.tilingTexture.baseTexture);
                 this.tilingTexture.needsUpdate = false;
             }
@@ -197,23 +196,21 @@ PIXI.TilingSprite.prototype._renderWebGL = function(renderSession)
     {
         this.children[i]._renderWebGL(renderSession);
     }
-    var restartBatch = false;
+
+    renderSession.spriteBatch.stop();
+
     if (this._filters)
     {
-        restartBatch = true;
-        renderSession.spriteBatch.stop();
         renderSession.filterManager.popFilter();
     }
 
     if (this._mask)
     {
-        if (!restartBatch)
-            renderSession.spriteBatch.stop();
         renderSession.maskManager.popMask(this._mask, renderSession);
     }
-    if (restartBatch)
-        renderSession.spriteBatch.start();
     
+    renderSession.spriteBatch.start();
+
 };
 
 /**

@@ -190,13 +190,6 @@ PIXI.CanvasRenderer.prototype.render = function (root) {
 
 };
 
-PIXI.CanvasRenderer.prototype.setTexturePriority = function (textureNameCollection) {
-
-    //  Does nothing on Canvas, but here to allow you to simply set
-    //  `game.renderer.setTexturePriority()` without having to worry about
-    //  running in WebGL or not.
-
-};
 
 /**
  * Removes everything from the renderer and optionally removes the Canvas DOM element.

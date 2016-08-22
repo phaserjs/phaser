@@ -40,7 +40,7 @@ Grab the source and join in the fun!
 
 > In Development
 
-This is the development branch, where we are building Phaser 2.7.0.
+This is the development branch, where we are building Phaser 2.6.2.
 
 Check the [Change Log](#change-log) to see what we've done so far. Or switch to the master branch for the current stable release.
 
@@ -107,15 +107,15 @@ Using Browserify? Please [read this](#browserify).
 
 [jsDelivr](http://www.jsdelivr.com/#!phaser) is a "super-fast CDN for developers". Include the following in your html:
 
-`<script src="//cdn.jsdelivr.net/phaser/2.7.0/phaser.js"></script>`
+`<script src="//cdn.jsdelivr.net/phaser/2.6.2/phaser.js"></script>`
 
 or the minified version:
 
-`<script src="//cdn.jsdelivr.net/phaser/2.7.0/phaser.min.js"></script>`
+`<script src="//cdn.jsdelivr.net/phaser/2.6.2/phaser.min.js"></script>`
 
 [cdnjs.com](https://cdnjs.com/libraries/phaser) also offers a free CDN service. They have all versions of Phaser and even the custom builds:
 
-`<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/2.7.0/phaser.js"></script>`
+`<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/2.6.2/phaser.js"></script>`
 
 ### Phaser Sandbox
 
@@ -305,11 +305,10 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 ![Change Log](http://phaser.io/images/github/div-change-log.png "Change Log")
 <a name="change-log"></a>
 
-## Version 2.7.0 - "Kore Springs" - In Development
+## Version 2.6.2 - "Kore Springs" - In Development
 
 ### New Features
 
-* The brand new WebGL Tilemap Renderer is available in this release of Phaser. Using custom developed shaders, map parsing and index batching, it finally makes tilemap rendering as fast as it possibly can be in WebGL.
 * Group.getRandomExists will return a random child from the Group that has exists set to true.
 * Group.getAll will return all children in the Group, or a section of the Group, with the optional ability to test if the child has a property matching the given value or not.
 * Group.iterate has a new `returnType`: `RETURN_ALL`. This allows you to return all children that pass the iteration test in an array.
@@ -352,14 +351,6 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 
 Please note that Phaser uses a custom build of Pixi and always has done. The following changes have been made to our custom build, not to Pixi in general.
 
-* Multi-Texture support has now been built into our version of Pixi. This can offer dramatic performance increases in WebGL games on GPUs that support multiple texture bindings (which is most of them these days).
-* WebGLRenderer.setTexturePriority is the method used to set the priority of textures when the GPU supports multi-texture batching.
-* Rope has two new properties `textureIndices` and `textureIndex` to handle multi-texture support.
-* Strip has two new properties `textureIndices` and `textureIndex` to handle multi-texture support.
-* The following shaders have all been updated to support multi-textures: `ComplexPrimitiveShader`, `PixiFastShader`, `PixiShader`, `PrimitiveShader`, `StripShader`.
-* WebGLFastSpriteBatch.vertSize was increased from 10 to 11.
-* BaseTexture.textureIndex is a new property that controls the index of the texture within the GPU texture cache. Usually you don't change this yourself, and use `renderer.setTexturePriority` instead, but the property is public and available for more advanced use-cases.
-* CanvasRenderer.setTexturePriority is an empty function, but included to allow you to simply call `game.renderer.setTexturePriority` without first having to wrap that in a WebGL check.
 * This version contains significant fixes for `DisplayObject.getBounds` and `DisplayObjectContainer.getBounds`. The methods can now accept an optional argument `targetCoordinateSpace` which makes it much more flexible, allowing you to check the bounds against any target, not just local and global ones. If the `targetCoordinateSpace` is a valid DisplayObject:
 
     - If it's a parent of the caller at some level it will return the bounds
@@ -409,10 +400,10 @@ All rights reserved.
 
 [![Analytics](https://ga-beacon.appspot.com/UA-44006568-2/phaser/index)](https://github.com/igrigorik/ga-beacon)
 
-[get-js]: https://github.com/photonstorm/phaser/releases/download/v2.7.0/phaser.js
-[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v2.7.0/phaser.min.js
-[get-zip]: https://github.com/photonstorm/phaser/archive/v2.7.0.zip
-[get-tgz]: https://github.com/photonstorm/phaser/archive/v2.7.0.tar.gz
+[get-js]: https://github.com/photonstorm/phaser/releases/download/v2.6.2/phaser.js
+[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v2.6.2/phaser.min.js
+[get-zip]: https://github.com/photonstorm/phaser/archive/v2.6.2.zip
+[get-tgz]: https://github.com/photonstorm/phaser/archive/v2.6.2.tar.gz
 [clone-http]: https://github.com/photonstorm/phaser.git
 [clone-ssh]: git@github.com:photonstorm/phaser.git
 [clone-svn]: https://github.com/photonstorm/phaser
