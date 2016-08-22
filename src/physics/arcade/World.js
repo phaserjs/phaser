@@ -1158,7 +1158,10 @@ Phaser.Physics.Arcade.prototype = {
         this.getOverlapX(body1, body2);
         this.getOverlapY(body1, body2);
 
-        var angleCollision = this.angleBetweenCenters(body1, body2);
+        var dx = body2.center.x - body1.center.x;
+        var dy = body2.center.y - body1.center.y;
+
+        var angleCollision = Math.atan2(dy, dx);
 
         var overlap = 0;
 
