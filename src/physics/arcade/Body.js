@@ -78,7 +78,7 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.allowRotation = true;
 
     /**
-    * An Arcade Physics Body can have angularVelocity and angularAcceleration. Please understand that the collision Body
+    * The Body's rotation in degrees, as calculated by its angularVelocity and angularAcceleration. Please understand that the collision Body
     * itself never rotates, it is always axis-aligned. However these values are passed up to the parent Sprite and updates its rotation.
     * @property {number} rotation
     */
@@ -252,25 +252,25 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.friction = new Phaser.Point(1, 0);
 
     /**
-    * @property {number} angularVelocity - The angular velocity controls the rotation speed of the Body. It is measured in radians per second.
+    * @property {number} angularVelocity - The angular velocity controls the rotation speed of the Body. It is measured in degrees per second.
     * @default
     */
     this.angularVelocity = 0;
 
     /**
-    * @property {number} angularAcceleration - The angular acceleration is the rate of change of the angular velocity. Measured in radians per second squared.
+    * @property {number} angularAcceleration - The angular acceleration is the rate of change of the angular velocity. Measured in degrees per second squared.
     * @default
     */
     this.angularAcceleration = 0;
 
     /**
-    * @property {number} angularDrag - The drag applied during the rotation of the Body.
+    * @property {number} angularDrag - The drag applied during the rotation of the Body. Measured in degrees per second squared.
     * @default
     */
     this.angularDrag = 0;
 
     /**
-    * @property {number} maxAngular - The maximum angular velocity in radians per second that the Body can reach.
+    * @property {number} maxAngular - The maximum angular velocity in degrees per second that the Body can reach.
     * @default
     */
     this.maxAngular = 1000;
@@ -282,7 +282,7 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.mass = 1;
 
     /**
-    * @property {number} angle - The angle of the Body in radians, as calculated by its angularVelocity.
+    * @property {number} angle - The angle of the Body's velocity in radians.
     * @readonly
     */
     this.angle = 0;
