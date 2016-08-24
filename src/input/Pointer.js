@@ -310,7 +310,7 @@ Phaser.Pointer = function (game, id, pointerMode) {
     this.interactiveCandidates = [];
 
     /**
-    * @property {boolean} _propagateThrough - Internal variable indicating weather the pointer should propagate through the current target object.
+    * @property {boolean} _propagateThrough - Internal variable indicating whether the pointer should propagate through the current target object.
     * @private
     */
     this._propagateThrough = false;
