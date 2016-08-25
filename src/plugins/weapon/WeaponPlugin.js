@@ -367,6 +367,14 @@ Phaser.Weapon = function (game, parent) {
      */
     this._nextFire = 0;
 
+    /**
+     * Internal firing rotation tracking point.
+     *
+     * @type {Phaser.Point}
+     * @private
+     */
+    this._rotatedPoint = new Phaser.Point();
+
 };
 
 Phaser.Weapon.prototype = Object.create(Phaser.Plugin.prototype);
@@ -732,23 +740,17 @@ Phaser.Weapon.prototype.fire = function (from, x, y) {
     {
         if (this.trackRotation)
         {
-            if(!this.rotatedPoint)
-            {
-              this.rotatedPoint = new Phaser.Point(this.trackedSprite.world.x + this.trackOffset.x, this.trackedSprite.world.y + this.trackOffset.y);
-            } else {
-              this.rotatedPoint.x = this.trackedSprite.world.x + this.trackOffset.x;
-              this.rotatedPoint.y = this.trackedSprite.world.y + this.trackOffset.y;
-            }
-            this.rotatedPoint.rotate(this.trackedSprite.world.x, this.trackedSprite.world.y, this.trackedSprite.rotation);
+            this._rotatedPoint.set(this.trackedSprite.world.x + this.trackOffset.x, this.trackedSprite.world.y + this.trackOffset.y);
+            this._rotatedPoint.rotate(this.trackedSprite.world.x, this.trackedSprite.world.y, this.trackedSprite.rotation);
 
             if (this.fireFrom.width > 1)
             {
-                this.fireFrom.centerOn(this.rotatedPoint.x, this.rotatedPoint.y);
+                this.fireFrom.centerOn(this._rotatedPoint.x, this._rotatedPoint.y);
             }
             else
             {
-                this.fireFrom.x = this.rotatedPoint.x;
-                this.fireFrom.y = this.rotatedPoint.y;
+                this.fireFrom.x = this._rotatedPoint.x;
+                this.fireFrom.y = this._rotatedPoint.y;
             }
         }
         else
