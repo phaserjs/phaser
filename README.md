@@ -319,7 +319,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 ### Updates
 
 * TypeScript definitions fixes and updates (thanks @calvindavis @AlvaroBarua)
-* Docs typo fixes (thanks @rroylance @Owumaro @boniatillo-com @samme)
+* Docs typo fixes (thanks @rroylance @Owumaro @boniatillo-com @samme @kjav)
 * The InputHandler.flagged property has been removed. It was never used internally, or exposed via the API, so was just overhead.
 * The src/system folder has been removed and all files relocated to the src/utils folder. This doesn't change anything from an API point of view, but did change the grunt build scripts slightly.
 * BitmapData.shadow and BitmapData.text now both `return this` keeping them in-line with the docs (thanks @greeny #2634)
@@ -335,6 +335,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * Weapon.fire and all related methods (fireAtXY, fireAtPointer, fireAtSprite) now all return the instance of the Phaser.Bullet that was fired, or `null` if nothing was fired. Previously it would return a boolean, but this change allows you to perform additional processing on the Bullet as required (thanks @JTronLabs #2696)
 * Sound.loopFull now returns the Sound instance that was looped (thanks @hilts-vaughan #2697)
 * ArcadePhysics Body.rotation now reads its initial value from sprite.angle instead of sprite.rotation. The property was immediately replaced with the correct value in Body.preUpdate regardless, but it keeps it consistent (thanks @samme #2708)
+* Weapon.fire now tracks rotation properly, when using an offset and tracking a sprite (thanks @bobonthenet #2672)
 
 ### Bug Fixes
 
