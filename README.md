@@ -348,6 +348,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * TilemapParser would calculate widthInPixels and heightInPixels were being read incorrectly from JSON data (capitalisation of properties) (thanks @hexus #2691)
 * A tinted Texture in Canvas mode wouldn't be updated properly if it was also cropped, beyond the initial crop. Now a cropped texture will re-tint itself every time the crop is updated, and has changed (thanks @phoenixyjll #2688)
 * The Weapon.fireRateVariance property was never taken into account internally. It's now applied to the firing rate correctly (thanks @noseglid #2715)
+* Text.updateText now sets `Text.dirty = false`, which stops Text objects from having `updateText` called twice on them after creation.
 
 ### Pixi Updates
 

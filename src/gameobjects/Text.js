@@ -583,6 +583,8 @@ Phaser.Text.prototype.updateText = function () {
 
     this.updateTexture();
 
+    this.dirty = false;
+
 };
 
 /**
