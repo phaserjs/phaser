@@ -19,7 +19,7 @@
 * An important note about texture dimensions:
 *
 * When running under Canvas a TileSprite can use any texture size without issue. When running under WebGL the texture should ideally be
-* a power of two in size (i.e. 4, 8, 16, 32, 64, 128, 256, 512, etch pixels width by height). If the texture isn't a power of two
+* a power of two in size (i.e. 4, 8, 16, 32, 64, 128, 256, 512, etc pixels width by height). If the texture isn't a power of two
 * it will be rendered to a blank canvas that is the correct size, which means you may have 'blank' areas appearing to the right and
 * bottom of your frame. To avoid this ensure your textures are perfect powers of two.
 * 
