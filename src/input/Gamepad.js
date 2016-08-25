@@ -56,7 +56,7 @@ Phaser.Gamepad = function (game) {
     * @property {boolean} _gamepadSupportAvailable - Are gamepads supported in this browser or not?
     * @private
     */
-    this._gamepadSupportAvailable = !!navigator.webkitGetGamepads || !!navigator.webkitGamepads || (navigator.userAgent.indexOf('Firefox/') != -1) || !!navigator.getGamepads;
+    this._gamepadSupportAvailable = !!navigator.webkitGetGamepads || !!navigator.webkitGamepads || (navigator.userAgent.indexOf('Firefox/') !== -1) || !!navigator.getGamepads;
 
     /**
     * Used to check for differences between earlier polls and current state of gamepads.

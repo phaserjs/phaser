@@ -304,7 +304,7 @@ Phaser.Line.prototype = {
 
         var i = 1;
 
-        while (!((x1 == x2) && (y1 == y2)))
+        while (!((x1 === x2) && (y1 === y2)))
         {
             var e2 = err << 1;
 

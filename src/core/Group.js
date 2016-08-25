@@ -1180,34 +1180,34 @@ Phaser.Group.prototype.setProperty = function (child, key, value, operation, for
     if (len === 1)
     {
         if (operation === 0) { child[key[0]] = value; }
-        else if (operation == 1) { child[key[0]] += value; }
-        else if (operation == 2) { child[key[0]] -= value; }
-        else if (operation == 3) { child[key[0]] *= value; }
-        else if (operation == 4) { child[key[0]] /= value; }
+        else if (operation === 1) { child[key[0]] += value; }
+        else if (operation === 2) { child[key[0]] -= value; }
+        else if (operation === 3) { child[key[0]] *= value; }
+        else if (operation === 4) { child[key[0]] /= value; }
     }
     else if (len === 2)
     {
         if (operation === 0) { child[key[0]][key[1]] = value; }
-        else if (operation == 1) { child[key[0]][key[1]] += value; }
-        else if (operation == 2) { child[key[0]][key[1]] -= value; }
-        else if (operation == 3) { child[key[0]][key[1]] *= value; }
-        else if (operation == 4) { child[key[0]][key[1]] /= value; }
+        else if (operation === 1) { child[key[0]][key[1]] += value; }
+        else if (operation === 2) { child[key[0]][key[1]] -= value; }
+        else if (operation === 3) { child[key[0]][key[1]] *= value; }
+        else if (operation === 4) { child[key[0]][key[1]] /= value; }
     }
     else if (len === 3)
     {
         if (operation === 0) { child[key[0]][key[1]][key[2]] = value; }
-        else if (operation == 1) { child[key[0]][key[1]][key[2]] += value; }
-        else if (operation == 2) { child[key[0]][key[1]][key[2]] -= value; }
-        else if (operation == 3) { child[key[0]][key[1]][key[2]] *= value; }
-        else if (operation == 4) { child[key[0]][key[1]][key[2]] /= value; }
+        else if (operation === 1) { child[key[0]][key[1]][key[2]] += value; }
+        else if (operation === 2) { child[key[0]][key[1]][key[2]] -= value; }
+        else if (operation === 3) { child[key[0]][key[1]][key[2]] *= value; }
+        else if (operation === 4) { child[key[0]][key[1]][key[2]] /= value; }
     }
     else if (len === 4)
     {
         if (operation === 0) { child[key[0]][key[1]][key[2]][key[3]] = value; }
-        else if (operation == 1) { child[key[0]][key[1]][key[2]][key[3]] += value; }
-        else if (operation == 2) { child[key[0]][key[1]][key[2]][key[3]] -= value; }
-        else if (operation == 3) { child[key[0]][key[1]][key[2]][key[3]] *= value; }
-        else if (operation == 4) { child[key[0]][key[1]][key[2]][key[3]] /= value; }
+        else if (operation === 1) { child[key[0]][key[1]][key[2]][key[3]] += value; }
+        else if (operation === 2) { child[key[0]][key[1]][key[2]][key[3]] -= value; }
+        else if (operation === 3) { child[key[0]][key[1]][key[2]][key[3]] *= value; }
+        else if (operation === 4) { child[key[0]][key[1]][key[2]][key[3]] /= value; }
     }
 
     return true;
@@ -1498,40 +1498,37 @@ Phaser.Group.prototype.callbackFromArray = function (child, callback, length) {
 
     //  Kinda looks like a Christmas tree
 
-    if (length == 1)
+    if (length === 1)
     {
         if (child[callback[0]])
         {
             return child[callback[0]];
         }
     }
-    else if (length == 2)
+    else if (length === 2)
     {
         if (child[callback[0]][callback[1]])
         {
             return child[callback[0]][callback[1]];
         }
     }
-    else if (length == 3)
+    else if (length === 3)
     {
         if (child[callback[0]][callback[1]][callback[2]])
         {
             return child[callback[0]][callback[1]][callback[2]];
         }
     }
-    else if (length == 4)
+    else if (length === 4)
     {
         if (child[callback[0]][callback[1]][callback[2]][callback[3]])
         {
             return child[callback[0]][callback[1]][callback[2]][callback[3]];
         }
     }
-    else
+    else if (child[callback])
     {
-        if (child[callback])
-        {
-            return child[callback];
-        }
+        return child[callback];
     }
 
     return false;

@@ -1,4 +1,3 @@
-/* global Phaser:true */
 /**
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2016 Photon Storm Ltd.
@@ -8,7 +7,7 @@
 /**
 * @namespace Phaser
 */
-var Phaser = Phaser || {
+var Phaser = Phaser || {    // jshint ignore:line
 
     /**
     * The Phaser version number.
