@@ -488,6 +488,18 @@ module.exports = function (grunt) {
 
     });
 
+    grunt.registerTask('uglytest', 'Phaser Test Build (all libs)', function() {
+
+        grunt.option('exclude', 'ninja,creature');
+        grunt.option('filename', 'phaser-test');
+        grunt.option('sourcemap', false);
+        grunt.option('copy', false);
+        grunt.option('uglify', true);
+
+        grunt.task.run('custom');
+
+    });
+
     grunt.registerTask('creature', 'Phaser + Creature', function() {
 
         grunt.option('exclude', 'ninja');
