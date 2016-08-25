@@ -1781,6 +1781,62 @@ declare module PIXI {
 
     }
 
+    export class Strip extends DisplayObjectContainer {
+
+        static DrawModes: {
+
+            TRIANGLE_STRIP: number;
+            TRIANGLES: number;
+
+        };
+
+
+        /**
+        * 
+        * 
+        * @param texture The texture to use
+        * @param width the width
+        * @param height the height
+        */
+        constructor(texture: Texture);
+
+
+        /**
+        * The blend mode to be applied to the sprite. Set to PIXI.blendModes.NORMAL to remove any blend mode.
+        * Default: PIXI.blendModes.NORMAL;
+        */
+        blendMode: number;
+        colors: number[];
+
+        /**
+        * Whether the strip is dirty or not
+        */
+        dirty: boolean;
+        indices: number[];
+
+        /**
+        * Triangles in canvas mode are automatically antialiased, use this value to force triangles to overlap a bit with each other.
+        */
+        canvasPadding: number;
+
+        /**
+        * The texture of the strip
+        */
+        texture: Texture;
+        uvs: number[];
+        vertices: number[];
+
+
+        /**
+        * Returns the bounds of the mesh as a rectangle. The bounds calculation takes the worldTransform into account.
+        * 
+        * @param matrix the transformation matrix of the sprite
+        * @return the framing rectangle
+        */
+        getBounds(matrix?: Matrix): Rectangle;
+
+    }
+
     export class Rope extends Strip {
 
         points: Point[];
@@ -1995,62 +2051,6 @@ declare module PIXI {
         removeAllEventListeners(eventName: string): void;
 
         load(): void;
-
-    }
-
-    export class Strip extends DisplayObjectContainer {
-
-        static DrawModes: {
-
-            TRIANGLE_STRIP: number;
-            TRIANGLES: number;
-
-        };
-
-
-        /**
-        * 
-        * 
-        * @param texture The texture to use
-        * @param width the width
-        * @param height the height
-        */
-        constructor(texture: Texture);
-
-
-        /**
-        * The blend mode to be applied to the sprite. Set to PIXI.blendModes.NORMAL to remove any blend mode.
-        * Default: PIXI.blendModes.NORMAL;
-        */
-        blendMode: number;
-        colors: number[];
-
-        /**
-        * Whether the strip is dirty or not
-        */
-        dirty: boolean;
-        indices: number[];
-
-        /**
-        * Triangles in canvas mode are automatically antialiased, use this value to force triangles to overlap a bit with each other.
-        */
-        canvasPadding: number;
-
-        /**
-        * The texture of the strip
-        */
-        texture: Texture;
-        uvs: number[];
-        vertices: number[];
-
-
-        /**
-        * Returns the bounds of the mesh as a rectangle. The bounds calculation takes the worldTransform into account.
-        * 
-        * @param matrix the transformation matrix of the sprite
-        * @return the framing rectangle
-        */
-        getBounds(matrix?: Matrix): Rectangle;
 
     }
 

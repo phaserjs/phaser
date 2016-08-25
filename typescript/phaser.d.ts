@@ -436,12 +436,331 @@ declare module Phaser {
 
     }
 
+    class Group extends PIXI.DisplayObjectContainer {
+
+        constructor(game: Phaser.Game, parent?: PIXI.DisplayObjectContainer, name?: string, addToStage?: boolean, enableBody?: boolean, physicsBodyType?: number);
+
+        static RETURN_CHILD: number;
+        static RETURN_NONE: number;
+        static RETURN_TOTAL: number;
+        static RETURN_ALL: number;
+        static SORT_ASCENDING: number;
+        static SORT_DESCENDING: number;
+
+        alpha: number;
+        angle: number;
+        alive: boolean;
+        bottom: number;
+        cameraOffset: Phaser.Point;
+        centerX: number;
+        centerY: number;
+        classType: any;
+        cursor: any;
+        cursorIndex: number;
+        enableBody: boolean;
+        enableBodyDebug: boolean;
+        exists: boolean;
+        fixedToCamera: boolean;
+        game: Phaser.Game;
+        hash: PIXI.DisplayObject[];
+        ignoreDestroy: boolean;
+        inputEnableChildren: boolean;
+        left: number;
+        length: number;
+        name: string;
+        onChildInputDown: Phaser.Signal;
+        onChildInputUp: Phaser.Signal;
+        onChildInputOver: Phaser.Signal;
+        onChildInputOut: Phaser.Signal;
+        onDestroy: Phaser.Signal;
+        pendingDestroy: boolean;
+        physicsBodyType: number;
+        physicsType: number;
+        physicsSortDirection: number;
+        position: Phaser.Point;
+        right: number;
+        rotation: number;
+        scale: Phaser.Point;
+        top: number;
+        total: number;
+        type: number;
+        visible: boolean;
+        z: number;
+
+        add(child: any, silent?: boolean, index?: number): any;
+        addAll(property: string, amount: number, checkAlive: boolean, checkVisible: boolean): void;
+        addAt(child: any, index: number, silent?: boolean): any;
+        addMultiple(children: any[], silent?: boolean): any[];
+        addToHash(child: PIXI.DisplayObject): boolean;
+        align(width: number, height: number, cellWidth: number, cellHeight: number, position?: number, offset?: number): boolean;
+        alignIn(container: Phaser.Rectangle | Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapText | Phaser.Button | Phaser.Graphics | Phaser.TileSprite, position?: number, offsetX?: number, offsetY?: number): Phaser.Group;
+        alignTo(container: Phaser.Rectangle | Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapText | Phaser.Button | Phaser.Graphics | Phaser.TileSprite, position?: number, offsetX?: number, offsetY?: number): Phaser.Group;
+        bringToTop(child: any): any;
+        callAll(method: string, context: any, ...parameters: any[]): void;
+        callAllExists(callback: string, existsValue: boolean, ...parameters: any[]): void;
+        callbackFromArray(child: any, callback: Function, length: number): void;
+        checkAll(key: string[], value: any, checkAlive?: boolean, checkVisible?: boolean, force?: boolean): boolean;
+        checkProperty(child: any, key: string[], value: any, force?: boolean): boolean;
+        countDead(): number;
+        countLiving(): number;
+        create(x: number, y: number, key?: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture, frame?: string | number, exists?: boolean, index?: number): any;
+        createMultiple(quantity: number, key: string | string[], frame?: any | any[], exists?: boolean): any[];
+        customSort(sortHandler: Function, context?: any): void;
+        destroy(destroyChildren?: boolean, soft?: boolean): void;
+        divideAll(property: string, amount: number, checkAlive?: boolean, checkVisible?: boolean): void;
+        forEach(callback: Function, callbackContext: any, checkExists?: boolean, ...args: any[]): void;
+        forEachAlive(callback: Function, callbackContext: any, ...args: any[]): void;
+        forEachDead(callback: Function, callbackContext: any, ...args: any[]): void;
+        forEachExists(callback: Function, callbackContext: any): void;
+        filter(predicate: Function, checkExists?: boolean): ArraySet;
+        getAt(index: number): PIXI.DisplayObject | number;
+        getBottom(): any;
+        getByName(name: string): any;
+        getClosestTo(object: any, callback?: Function, callbackContext?: any): any;
+        getFirstAlive(createIfNull?: boolean, x?: number, y?: number, key?: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture, frame?: string | number): any;
+        getFirstDead(createIfNull?: boolean, x?: number, y?: number, key?: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture, frame?: string | number): any;
+        getFirstExists(exists: boolean, createIfNull?: boolean, x?: number, y?: number, key?: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture, frame?: string | number): any;
+        getFurthestFrom(object: any, callback?: Function, callbackContext?: any): any;
+        getIndex(child: any): number;
+        getRandom(startIndex?: number, length?: number): any;
+        getTop(): any;
+        hasProperty(child: any, key: string[]): boolean;
+        iterate(key: string, value: any, returnType: number, callback?: Function, callbackContext?: any, ...args: any[]): any;
+        moveAll(group: Phaser.Group, silent?: boolean): Phaser.Group;
+        moveDown(child: any): any;
+        moveUp(child: any): any;
+        multiplyAll(property: string, amount: number, checkAlive: boolean, checkVisible: boolean): void;
+        next(): void;
+        postUpdate(): void;
+        preUpdate(): void;
+        previous(): void;
+        remove(child: any, destroy?: boolean, silent?: boolean): boolean;
+        removeAll(destroy?: boolean, silent?: boolean, destroyTexture?: boolean): void;
+        removeBetween(startIndex: number, endIndex?: number, destroy?: boolean, silent?: boolean): void;
+        removeFromHash(child: PIXI.DisplayObject): boolean;
+        replace(oldChild: any, newChild: any): any;
+        resetChild(child: any, x?: number, y?: number, key?: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture, frame?: string | number): any;
+        resetCursor(index?: number): any;
+        reverse(): void;
+        sendToBack(child: any): any;
+        set(child: any, key: string[], value: any, operation?: number, force?: boolean): boolean;
+        setAll(key: string, value: any, checkAlive?: boolean, checkVisible?: boolean, operation?: number, force?: boolean): void;
+        setAllChildren(key: string, value: any, checkAlive?: boolean, checkVisible?: boolean, operation?: number, force?: boolean): void;
+        setProperty(child: any, key: string[], value: any, operation?: number, force?: boolean): boolean;
+        sort(key?: string, order?: number): void;
+        subAll(property: string, amount: number, checkAlive: boolean, checkVisible: boolean): void;
+        swap(child1: any, child2: any): boolean;
+        update(): void;
+        updateZ(): void;
+        xy(index: number, x: number, y: number): void;
+
+    }
+
+    class Sprite extends PIXI.Sprite {
+
+        constructor(game: Phaser.Game, x: number, y: number, key?: string | Phaser.RenderTexture | Phaser.BitmapData | PIXI.Texture, frame?: string | number);
+
+        alive: boolean;
+        anchor: Phaser.Point;
+        angle: number;
+        animations: Phaser.AnimationManager;
+        autoCull: boolean;
+        body: Phaser.Physics.Arcade.Body | Phaser.Physics.P2.Body | Phaser.Physics.Ninja.Body | any;
+        bottom: number;
+        cameraOffset: Phaser.Point;
+        centerX: number;
+        centerY: number;
+        checkWorldBounds: boolean;
+        components: any;
+        cropRect: Phaser.Rectangle;
+        customRender: boolean;
+        data: any;
+        debug: boolean;
+        deltaX: number;
+        deltaY: number;
+        deltaZ: number;
+        destroyPhase: boolean;
+        events: Phaser.Events;
+        exists: boolean;
+        fixedToCamera: boolean;
+        frame: string | number;
+        frameName: string;
+        fresh: boolean;
+        game: Phaser.Game;
+        health: number;
+        inCamera: boolean;
+        input: Phaser.InputHandler;
+        inputEnabled: boolean;
+        inWorld: boolean;
+        key: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture;
+        left: number;
+        lifespan: number;
+        maxHealth: number;
+        name: string;
+        offsetX: number;
+        offsetY: number;
+        outOfBoundsKill: boolean;
+        pendingDestroy: boolean;
+        previousPosition: Phaser.Point;
+        previousRotation: number;
+        position: Phaser.Point;
+        physicsEnabled: boolean;
+        physicsType: number;
+        renderOrderID: number;
+        right: number;
+        scale: Phaser.Point;
+        scaleMin: Phaser.Point;
+        scaleMax: Phaser.Point;
+        smoothed: boolean;
+        top: number;
+        type: number;
+        tintedTexture: HTMLCanvasElement;
+        transformCallback: Function;
+        transformCallbackContext: any;
+        world: Phaser.Point;
+        x: number;
+        y: number;
+        z: number;
+
+        alignIn(container: Phaser.Rectangle | Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapText | Phaser.Button | Phaser.Graphics | Phaser.TileSprite, position?: number, offsetX?: number, offsetY?: number): any;
+        alignTo(container: Phaser.Rectangle | Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapText | Phaser.Button | Phaser.Graphics | Phaser.TileSprite, position?: number, offsetX?: number, offsetY?: number): any;
+        bringToTop(): Phaser.Sprite;
+        crop(rect: Phaser.Rectangle, copy: boolean): void;
+        checkTransform(wt: PIXI.Matrix): void;
+        damage(amount: number): Phaser.Sprite;
+        destroy(destroyChildren?: boolean): void;
+        drawPolygon(): void;
+        heal(amount: number): Phaser.Sprite;
+        kill(): Phaser.Sprite;
+        loadTexture(key: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture, frame?: string | number, stopAnimation?: boolean): void;
+        moveUp(): Phaser.Sprite;
+        moveDown(): Phaser.Sprite;
+        overlap(displayObject: Phaser.Sprite | Phaser.Image | Phaser.TileSprite | Phaser.Button | PIXI.DisplayObject): boolean;
+        play(name: string, frameRate?: number, loop?: boolean, killOnComplete?: boolean): Phaser.Animation;
+        postUpdate(): void;
+        preUpdate(): void;
+        reset(x: number, y: number, health?: number): Phaser.Sprite;
+        resetFrame(): void;
+        resizeFrame(parent: any, width: number, height: number): void;
+        revive(health?: number): Phaser.Sprite;
+        sendToBack(): Phaser.Sprite;
+        setFrame(frame: Phaser.Frame): void;
+        setScaleMinMax(minX?: number, minY?: number, maxX?: number, maxY?: number): void;
+        update(): void;
+        updateCrop(): void;
+
+    }
+
+    class SpriteBatch extends Phaser.Group {
+
+        constructor(game: Phaser.Game, parent: PIXI.DisplayObjectContainer, name?: string, addedToStage?: boolean);
+
+        type: number;
+
+    }
+
     class Bullet extends Phaser.Sprite {
 
         constructor(game: Phaser.Game, x: number, y: number, key?: any, frame?: any);
 
         kill(): Phaser.Bullet;
         update(): void;
+
+    }
+
+
+    class Image extends PIXI.Sprite {
+
+        constructor(game: Phaser.Game, x: number, y: number, key: string | Phaser.RenderTexture | Phaser.BitmapData | PIXI.Texture, frame?: string | number);
+
+        alive: boolean;
+        angle: number;
+        anchor: Phaser.Point;
+        animations: Phaser.AnimationManager;
+        autoCull: boolean;
+        bottom: number;
+        cameraOffset: Phaser.Point;
+        centerX: number;
+        centerY: number;
+        components: any;
+        cropRect: Phaser.Rectangle;
+        customRender: boolean;
+        data: any;
+        debug: boolean;
+        deltaX: number;
+        deltaY: number;
+        deltaZ: number;
+        destroyPhase: boolean;
+        events: Phaser.Events;
+        exists: boolean;
+        fixedToCamera: boolean;
+        frame: string | number;
+        frameName: string;
+        fresh: boolean;
+        game: Phaser.Game;
+        inCamera: boolean;
+        input: Phaser.InputHandler;
+        inputEnabled: boolean;
+        inWorld: boolean;
+        key: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture;
+        lifespan: number;
+        left: number;
+        name: string;
+        offsetX: number;
+        offsetY: number;
+        pendingDestroy: boolean;
+        position: Phaser.Point;
+        previousPosition: Phaser.Point;
+        previousRotation: number;
+        renderOrderID: number;
+        right: number;
+        scale: Phaser.Point;
+        smoothed: boolean;
+        top: number;
+        type: number;
+        world: Phaser.Point;
+        z: number;
+
+        alignIn(container: Phaser.Rectangle | Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapText | Phaser.Button | Phaser.Graphics | Phaser.TileSprite, position?: number, offsetX?: number, offsetY?: number): any;
+        alignTo(container: Phaser.Rectangle | Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapText | Phaser.Button | Phaser.Graphics | Phaser.TileSprite, position?: number, offsetX?: number, offsetY?: number): any;
+        bringToTop(): Phaser.Image;
+        crop(rect: Phaser.Rectangle, copy?: boolean): void;
+        destroy(destroyChildren?: boolean): void;
+        kill(): Phaser.Image;
+        loadTexture(key: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture, frame?: string | number, stopAnimation?: boolean): void;
+        resizeFrame(parent: any, width: number, height: number): void;
+        moveDown(): Phaser.Image;
+        moveUp(): Phaser.Image;
+        overlap(displayObject: Phaser.Sprite | Phaser.Image | Phaser.TileSprite | Phaser.Button | PIXI.DisplayObject): boolean;
+        play(name: string, frameRate?: number, loop?: boolean, killOnComplete?: boolean): Phaser.Animation;
+        postUpdate(): void;
+        preUpdate(): void;
+        reset(x: number, y: number, health?: number): Phaser.Image;
+        resetFrame(): void;
+        revive(health?: number): Phaser.Image;
+        sendToBack(): Phaser.Image;
+        setFrame(frame: Phaser.Frame): void;
+        update(): void;
+        updateCrop(): void;
+
+    }
+
+    class ImageCollection {
+
+        constructor(name: string, firstgid: number, width?: number, height?: number, margin?: number, spacing?: number, properties?: any);
+
+        name: string;
+        firstgid: number;
+        imageWidth: number;
+        imageHeight: number;
+        imageMargin: number;
+        imageSpacing: number;
+        properties: any;
+        images: any[];
+        total: number;
+
+        addImage(gid: number, image: string): void;
+        containsImageIndex(imageIndex: number): boolean;
 
     }
 
@@ -1710,221 +2029,6 @@ declare module Phaser {
         reset(x: number, y: number, health?: number): Phaser.Graphics;
         revive(health?: number): Phaser.Graphics;
         update(): void;
-
-    }
-
-    class Group extends PIXI.DisplayObjectContainer {
-
-        constructor(game: Phaser.Game, parent?: PIXI.DisplayObjectContainer, name?: string, addToStage?: boolean, enableBody?: boolean, physicsBodyType?: number);
-
-        static RETURN_CHILD: number;
-        static RETURN_NONE: number;
-        static RETURN_TOTAL: number;
-        static RETURN_ALL: number;
-        static SORT_ASCENDING: number;
-        static SORT_DESCENDING: number;
-
-        alpha: number;
-        angle: number;
-        alive: boolean;
-        bottom: number;
-        cameraOffset: Phaser.Point;
-        centerX: number;
-        centerY: number;
-        classType: any;
-        cursor: any;
-        cursorIndex: number;
-        enableBody: boolean;
-        enableBodyDebug: boolean;
-        exists: boolean;
-        fixedToCamera: boolean;
-        game: Phaser.Game;
-        hash: PIXI.DisplayObject[];
-        ignoreDestroy: boolean;
-        inputEnableChildren: boolean;
-        left: number;
-        length: number;
-        name: string;
-        onChildInputDown: Phaser.Signal;
-        onChildInputUp: Phaser.Signal;
-        onChildInputOver: Phaser.Signal;
-        onChildInputOut: Phaser.Signal;
-        onDestroy: Phaser.Signal;
-        pendingDestroy: boolean;
-        physicsBodyType: number;
-        physicsType: number;
-        physicsSortDirection: number;
-        position: Phaser.Point;
-        right: number;
-        rotation: number;
-        scale: Phaser.Point;
-        top: number;
-        total: number;
-        type: number;
-        visible: boolean;
-        z: number;
-
-        add(child: any, silent?: boolean, index?: number): any;
-        addAll(property: string, amount: number, checkAlive: boolean, checkVisible: boolean): void;
-        addAt(child: any, index: number, silent?: boolean): any;
-        addMultiple(children: any[], silent?: boolean): any[];
-        addToHash(child: PIXI.DisplayObject): boolean;
-        align(width: number, height: number, cellWidth: number, cellHeight: number, position?: number, offset?: number): boolean;
-        alignIn(container: Phaser.Rectangle | Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapText | Phaser.Button | Phaser.Graphics | Phaser.TileSprite, position?: number, offsetX?: number, offsetY?: number): Phaser.Group;
-        alignTo(container: Phaser.Rectangle | Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapText | Phaser.Button | Phaser.Graphics | Phaser.TileSprite, position?: number, offsetX?: number, offsetY?: number): Phaser.Group;
-        bringToTop(child: any): any;
-        callAll(method: string, context: any, ...parameters: any[]): void;
-        callAllExists(callback: string, existsValue: boolean, ...parameters: any[]): void;
-        callbackFromArray(child: any, callback: Function, length: number): void;
-        checkAll(key: string[], value: any, checkAlive?: boolean, checkVisible?: boolean, force?: boolean): boolean;
-        checkProperty(child: any, key: string[], value: any, force?: boolean): boolean;
-        countDead(): number;
-        countLiving(): number;
-        create(x: number, y: number, key?: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture, frame?: string | number, exists?: boolean, index?: number): any;
-        createMultiple(quantity: number, key: string | string[], frame?: any | any[], exists?: boolean): any[];
-        customSort(sortHandler: Function, context?: any): void;
-        destroy(destroyChildren?: boolean, soft?: boolean): void;
-        divideAll(property: string, amount: number, checkAlive?: boolean, checkVisible?: boolean): void;
-        forEach(callback: Function, callbackContext: any, checkExists?: boolean, ...args: any[]): void;
-        forEachAlive(callback: Function, callbackContext: any, ...args: any[]): void;
-        forEachDead(callback: Function, callbackContext: any, ...args: any[]): void;
-        forEachExists(callback: Function, callbackContext: any): void;
-        filter(predicate: Function, checkExists?: boolean): ArraySet;
-        getAt(index: number): PIXI.DisplayObject | number;
-        getBottom(): any;
-        getByName(name: string): any;
-        getClosestTo(object: any, callback?: Function, callbackContext?: any): any;
-        getFirstAlive(createIfNull?: boolean, x?: number, y?: number, key?: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture, frame?: string | number): any;
-        getFirstDead(createIfNull?: boolean, x?: number, y?: number, key?: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture, frame?: string | number): any;
-        getFirstExists(exists: boolean, createIfNull?: boolean, x?: number, y?: number, key?: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture, frame?: string | number): any;
-        getFurthestFrom(object: any, callback?: Function, callbackContext?: any): any;
-        getIndex(child: any): number;
-        getRandom(startIndex?: number, length?: number): any;
-        getTop(): any;
-        hasProperty(child: any, key: string[]): boolean;
-        iterate(key: string, value: any, returnType: number, callback?: Function, callbackContext?: any, ...args: any[]): any;
-        moveAll(group: Phaser.Group, silent?: boolean): Phaser.Group;
-        moveDown(child: any): any;
-        moveUp(child: any): any;
-        multiplyAll(property: string, amount: number, checkAlive: boolean, checkVisible: boolean): void;
-        next(): void;
-        postUpdate(): void;
-        preUpdate(): void;
-        previous(): void;
-        remove(child: any, destroy?: boolean, silent?: boolean): boolean;
-        removeAll(destroy?: boolean, silent?: boolean, destroyTexture?: boolean): void;
-        removeBetween(startIndex: number, endIndex?: number, destroy?: boolean, silent?: boolean): void;
-        removeFromHash(child: PIXI.DisplayObject): boolean;
-        replace(oldChild: any, newChild: any): any;
-        resetChild(child: any, x?: number, y?: number, key?: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture, frame?: string | number): any;
-        resetCursor(index?: number): any;
-        reverse(): void;
-        sendToBack(child: any): any;
-        set(child: any, key: string[], value: any, operation?: number, force?: boolean): boolean;
-        setAll(key: string, value: any, checkAlive?: boolean, checkVisible?: boolean, operation?: number, force?: boolean): void;
-        setAllChildren(key: string, value: any, checkAlive?: boolean, checkVisible?: boolean, operation?: number, force?: boolean): void;
-        setProperty(child: any, key: string[], value: any, operation?: number, force?: boolean): boolean;
-        sort(key?: string, order?: number): void;
-        subAll(property: string, amount: number, checkAlive: boolean, checkVisible: boolean): void;
-        swap(child1: any, child2: any): boolean;
-        update(): void;
-        updateZ(): void;
-        xy(index: number, x: number, y: number): void;
-
-    }
-
-    class Image extends PIXI.Sprite {
-
-        constructor(game: Phaser.Game, x: number, y: number, key: string | Phaser.RenderTexture | Phaser.BitmapData | PIXI.Texture, frame?: string | number);
-
-        alive: boolean;
-        angle: number;
-        anchor: Phaser.Point;
-        animations: Phaser.AnimationManager;
-        autoCull: boolean;
-        bottom: number;
-        cameraOffset: Phaser.Point;
-        centerX: number;
-        centerY: number;
-        components: any;
-        cropRect: Phaser.Rectangle;
-        customRender: boolean;
-        data: any;
-        debug: boolean;
-        deltaX: number;
-        deltaY: number;
-        deltaZ: number;
-        destroyPhase: boolean;
-        events: Phaser.Events;
-        exists: boolean;
-        fixedToCamera: boolean;
-        frame: string | number;
-        frameName: string;
-        fresh: boolean;
-        game: Phaser.Game;
-        inCamera: boolean;
-        input: Phaser.InputHandler;
-        inputEnabled: boolean;
-        inWorld: boolean;
-        key: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture;
-        lifespan: number;
-        left: number;
-        name: string;
-        offsetX: number;
-        offsetY: number;
-        pendingDestroy: boolean;
-        position: Phaser.Point;
-        previousPosition: Phaser.Point;
-        previousRotation: number;
-        renderOrderID: number;
-        right: number;
-        scale: Phaser.Point;
-        smoothed: boolean;
-        top: number;
-        type: number;
-        world: Phaser.Point;
-        z: number;
-
-        alignIn(container: Phaser.Rectangle | Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapText | Phaser.Button | Phaser.Graphics | Phaser.TileSprite, position?: number, offsetX?: number, offsetY?: number): any;
-        alignTo(container: Phaser.Rectangle | Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapText | Phaser.Button | Phaser.Graphics | Phaser.TileSprite, position?: number, offsetX?: number, offsetY?: number): any;
-        bringToTop(): Phaser.Image;
-        crop(rect: Phaser.Rectangle, copy?: boolean): void;
-        destroy(destroyChildren?: boolean): void;
-        kill(): Phaser.Image;
-        loadTexture(key: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture, frame?: string | number, stopAnimation?: boolean): void;
-        resizeFrame(parent: any, width: number, height: number): void;
-        moveDown(): Phaser.Image;
-        moveUp(): Phaser.Image;
-        overlap(displayObject: Phaser.Sprite | Phaser.Image | Phaser.TileSprite | Phaser.Button | PIXI.DisplayObject): boolean;
-        play(name: string, frameRate?: number, loop?: boolean, killOnComplete?: boolean): Phaser.Animation;
-        postUpdate(): void;
-        preUpdate(): void;
-        reset(x: number, y: number, health?: number): Phaser.Image;
-        resetFrame(): void;
-        revive(health?: number): Phaser.Image;
-        sendToBack(): Phaser.Image;
-        setFrame(frame: Phaser.Frame): void;
-        update(): void;
-        updateCrop(): void;
-
-    }
-
-    class ImageCollection {
-
-        constructor(name: string, firstgid: number, width?: number, height?: number, margin?: number, spacing?: number, properties?: any);
-
-        name: string;
-        firstgid: number;
-        imageWidth: number;
-        imageHeight: number;
-        imageMargin: number;
-        imageSpacing: number;
-        properties: any;
-        images: any[];
-        total: number;
-
-        addImage(gid: number, image: string): void;
-        containsImageIndex(imageIndex: number): boolean;
 
     }
 
@@ -4520,109 +4624,6 @@ declare module Phaser {
         stopAll(): void;
         unlock(): boolean;
         update(): void;
-
-    }
-
-    class Sprite extends PIXI.Sprite {
-
-        constructor(game: Phaser.Game, x: number, y: number, key?: string | Phaser.RenderTexture | Phaser.BitmapData | PIXI.Texture, frame?: string | number);
-
-        alive: boolean;
-        anchor: Phaser.Point;
-        angle: number;
-        animations: Phaser.AnimationManager;
-        autoCull: boolean;
-        body: Phaser.Physics.Arcade.Body | Phaser.Physics.P2.Body | Phaser.Physics.Ninja.Body | any;
-        bottom: number;
-        cameraOffset: Phaser.Point;
-        centerX: number;
-        centerY: number;
-        checkWorldBounds: boolean;
-        components: any;
-        cropRect: Phaser.Rectangle;
-        customRender: boolean;
-        data: any;
-        debug: boolean;
-        deltaX: number;
-        deltaY: number;
-        deltaZ: number;
-        destroyPhase: boolean;
-        events: Phaser.Events;
-        exists: boolean;
-        fixedToCamera: boolean;
-        frame: string | number;
-        frameName: string;
-        fresh: boolean;
-        game: Phaser.Game;
-        health: number;
-        inCamera: boolean;
-        input: Phaser.InputHandler;
-        inputEnabled: boolean;
-        inWorld: boolean;
-        key: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture;
-        left: number;
-        lifespan: number;
-        maxHealth: number;
-        name: string;
-        offsetX: number;
-        offsetY: number;
-        outOfBoundsKill: boolean;
-        pendingDestroy: boolean;
-        previousPosition: Phaser.Point;
-        previousRotation: number;
-        position: Phaser.Point;
-        physicsEnabled: boolean;
-        physicsType: number;
-        renderOrderID: number;
-        right: number;
-        scale: Phaser.Point;
-        scaleMin: Phaser.Point;
-        scaleMax: Phaser.Point;
-        smoothed: boolean;
-        top: number;
-        type: number;
-        tintedTexture: HTMLCanvasElement;
-        transformCallback: Function;
-        transformCallbackContext: any;
-        world: Phaser.Point;
-        x: number;
-        y: number;
-        z: number;
-
-        alignIn(container: Phaser.Rectangle | Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapText | Phaser.Button | Phaser.Graphics | Phaser.TileSprite, position?: number, offsetX?: number, offsetY?: number): any;
-        alignTo(container: Phaser.Rectangle | Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapText | Phaser.Button | Phaser.Graphics | Phaser.TileSprite, position?: number, offsetX?: number, offsetY?: number): any;
-        bringToTop(): Phaser.Sprite;
-        crop(rect: Phaser.Rectangle, copy: boolean): void;
-        checkTransform(wt: PIXI.Matrix): void;
-        damage(amount: number): Phaser.Sprite;
-        destroy(destroyChildren?: boolean): void;
-        drawPolygon(): void;
-        heal(amount: number): Phaser.Sprite;
-        kill(): Phaser.Sprite;
-        loadTexture(key: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture, frame?: string | number, stopAnimation?: boolean): void;
-        moveUp(): Phaser.Sprite;
-        moveDown(): Phaser.Sprite;
-        overlap(displayObject: Phaser.Sprite | Phaser.Image | Phaser.TileSprite | Phaser.Button | PIXI.DisplayObject): boolean;
-        play(name: string, frameRate?: number, loop?: boolean, killOnComplete?: boolean): Phaser.Animation;
-        postUpdate(): void;
-        preUpdate(): void;
-        reset(x: number, y: number, health?: number): Phaser.Sprite;
-        resetFrame(): void;
-        resizeFrame(parent: any, width: number, height: number): void;
-        revive(health?: number): Phaser.Sprite;
-        sendToBack(): Phaser.Sprite;
-        setFrame(frame: Phaser.Frame): void;
-        setScaleMinMax(minX?: number, minY?: number, maxX?: number, maxY?: number): void;
-        update(): void;
-        updateCrop(): void;
-
-    }
-
-    class SpriteBatch extends Phaser.Group {
-
-        constructor(game: Phaser.Game, parent: PIXI.DisplayObjectContainer, name?: string, addedToStage?: boolean);
-
-        type: number;
 
     }
 

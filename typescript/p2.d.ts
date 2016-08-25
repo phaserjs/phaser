@@ -252,36 +252,6 @@ declare module p2 {
 
     }
 
-    export class AngleLockEquation extends Equation {
-
-        constructor(bodyA: Body, bodyB: Body, options?: {
-            angle?: number;
-            ratio?: number;
-        });
-
-        computeGq(): number;
-        setRatio(ratio: number): number;
-        setMaxTorque(torque: number): number;
-
-    }
-
-    export class ContactEquation extends Equation {
-
-        constructor(bodyA: Body, bodyB: Body);
-
-        contactPointA: number[];
-        penetrationVec: number[];
-        contactPointB: number[];
-        normalA: number[];
-        restitution: number;
-        firstImpact: boolean;
-        shapeA: Shape;
-        shapeB: Shape;
-
-        computeB(a: number, b: number, h: number): number;
-
-    }
-
     export class Equation {
 
         static DEFAULT_STIFFNESS: number;
@@ -315,6 +285,36 @@ declare module p2 {
         computeGiMGt(): number;
         addToWlambda(deltalambda: number): number;
         computeInvC(eps: number): number;
+
+    }
+
+    export class AngleLockEquation extends Equation {
+
+        constructor(bodyA: Body, bodyB: Body, options?: {
+            angle?: number;
+            ratio?: number;
+        });
+
+        computeGq(): number;
+        setRatio(ratio: number): number;
+        setMaxTorque(torque: number): number;
+
+    }
+
+    export class ContactEquation extends Equation {
+
+        constructor(bodyA: Body, bodyB: Body);
+
+        contactPointA: number[];
+        penetrationVec: number[];
+        contactPointB: number[];
+        normalA: number[];
+        restitution: number;
+        firstImpact: boolean;
+        shapeA: Shape;
+        shapeB: Shape;
+
+        computeB(a: number, b: number, h: number): number;
 
     }
 
@@ -595,6 +595,36 @@ declare module p2 {
 
     }
 
+    export class Shape {
+
+        static idCounter: number;
+        static CIRCLE: number;
+        static PARTICLE: number;
+        static PLANE: number;
+        static CONVEX: number;
+        static LINE: number;
+        static RECTANGLE: number;
+        static CAPSULE: number;
+        static HEIGHTFIELD: number;
+
+        constructor(type: number);
+
+        type: number;
+        id: number;
+        boundingRadius: number;
+        collisionGroup: number;
+        collisionMask: number;
+        material: Material;
+        area: number;
+        sensor: boolean;
+
+        computeMomentOfInertia(mass: number): number;
+        updateBoundingRadius(): number;
+        updateArea(): void;
+        computeAABB(out: AABB, position: number[], angle: number): void;
+
+    }
+
     export class Capsule extends Shape {
 
         constructor(length?: number, radius?: number);
@@ -643,36 +673,6 @@ declare module p2 {
         maxValue: number;
         minValue: number;
         elementWidth: number;
-
-    }
-
-    export class Shape {
-
-        static idCounter: number;
-        static CIRCLE: number;
-        static PARTICLE: number;
-        static PLANE: number;
-        static CONVEX: number;
-        static LINE: number;
-        static RECTANGLE: number;
-        static CAPSULE: number;
-        static HEIGHTFIELD: number;
-
-        constructor(type: number);
-
-        type: number;
-        id: number;
-        boundingRadius: number;
-        collisionGroup: number;
-        collisionMask: number;
-        material: Material;
-        area: number;
-        sensor: boolean;
-
-        computeMomentOfInertia(mass: number): number;
-        updateBoundingRadius(): number;
-        updateArea(): void;
-        computeAABB(out: AABB, position: number[], angle: number): void;
 
     }
 

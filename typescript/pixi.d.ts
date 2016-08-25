@@ -920,6 +920,30 @@ declare module PIXI {
 
     }
 
+    export class Strip extends DisplayObjectContainer {
+
+        static DrawModes: {
+
+            TRIANGLE_STRIP: number;
+            TRIANGLES: number;
+
+        };
+
+        constructor(texture: Texture);
+
+        blendMode: number;
+        colors: number[];
+        dirty: boolean;
+        indices: number[];
+        canvasPadding: number;
+        texture: Texture;
+        uvs: number[];
+        vertices: number[];
+
+        getBounds(matrix?: Matrix): Rectangle;
+
+    }
+
     export class Rope extends Strip {
 
         points: Point[];
@@ -1035,30 +1059,6 @@ declare module PIXI {
         removeAllEventListeners(eventName: string): void;
 
         load(): void;
-
-    }
-
-    export class Strip extends DisplayObjectContainer {
-
-        static DrawModes: {
-
-            TRIANGLE_STRIP: number;
-            TRIANGLES: number;
-
-        };
-
-        constructor(texture: Texture);
-
-        blendMode: number;
-        colors: number[];
-        dirty: boolean;
-        indices: number[];
-        canvasPadding: number;
-        texture: Texture;
-        uvs: number[];
-        vertices: number[];
-
-        getBounds(matrix?: Matrix): Rectangle;
 
     }
 

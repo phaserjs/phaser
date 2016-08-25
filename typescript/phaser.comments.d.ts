@@ -2492,12 +2492,2922 @@ declare module Phaser {
 
     }
 
+    /**
+    * Sprites are the lifeblood of your game, used for nearly everything visual.
+    * 
+    * At its most basic a Sprite consists of a set of coordinates and a texture that is rendered to the canvas.
+    * They also contain additional properties allowing for physics motion (via Sprite.body), input handling (via Sprite.input),
+    * events (via Sprite.events), animation (via Sprite.animations), camera culling and more. Please see the Examples for use cases.
+    */
+    class Sprite extends PIXI.Sprite {
+
+
+        /**
+        * Sprites are the lifeblood of your game, used for nearly everything visual.
+        * 
+        * At its most basic a Sprite consists of a set of coordinates and a texture that is rendered to the canvas.
+        * They also contain additional properties allowing for physics motion (via Sprite.body), input handling (via Sprite.input),
+        * events (via Sprite.events), animation (via Sprite.animations), camera culling and more. Please see the Examples for use cases.
+        * 
+        * @param game A reference to the currently running game.
+        * @param x The x coordinate (in world space) to position the Sprite at.
+        * @param y The y coordinate (in world space) to position the Sprite at.
+        * @param key This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
+        * @param frame If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
+        */
+        constructor(game: Phaser.Game, x: number, y: number, key?: string | Phaser.RenderTexture | Phaser.BitmapData | PIXI.Texture, frame?: string | number);
+
+
+        /**
+        * A useful flag to control if the Game Object is alive or dead.
+        * 
+        * This is set automatically by the Health components `damage` method should the object run out of health.
+        * Or you can toggle it via your game code.
+        * 
+        * This property is mostly just provided to be used by your game - it doesn't effect rendering or logic updates.
+        * However you can use `Group.getFirstAlive` in conjunction with this property for fast object pooling and recycling.
+        * Default: true
+        */
+        alive: boolean;
+
+        /**
+        * The anchor sets the origin point of the texture.
+        * The default is 0,0 this means the texture's origin is the top left
+        * Setting than anchor to 0.5,0.5 means the textures origin is centered
+        * Setting the anchor to 1,1 would mean the textures origin points will be the bottom right corner
+        */
+        anchor: Phaser.Point;
+
+        /**
+        * The angle property is the rotation of the Game Object in *degrees* from its original orientation.
+        * 
+        * Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
+        * 
+        * Values outside this range are added to or subtracted from 360 to obtain a value within the range.
+        * For example, the statement player.angle = 450 is the same as player.angle = 90.
+        * 
+        * If you wish to work in radians instead of degrees you can use the property `rotation` instead.
+        * Working in radians is slightly faster as it doesn't have to perform any calculations.
+        */
+        angle: number;
+
+        /**
+        * If the Game Object is enabled for animation (such as a Phaser.Sprite) this is a reference to its AnimationManager instance.
+        * Through it you can create, play, pause and stop animations.
+        */
+        animations: Phaser.AnimationManager;
+
+        /**
+        * A Game Object with `autoCull` set to true will check its bounds against the World Camera every frame.
+        * If it is not intersecting the Camera bounds at any point then it has its `renderable` property set to `false`.
+        * This keeps the Game Object alive and still processing updates, but forces it to skip the render step entirely.
+        * 
+        * This is a relatively expensive operation, especially if enabled on hundreds of Game Objects. So enable it only if you know it's required,
+        * or you have tested performance and find it acceptable.
+        */
+        autoCull: boolean;
+
+        /**
+        * `body` is the Game Objects physics body. Once a Game Object is enabled for physics you access all associated
+        * properties and methods via it.
+        * 
+        * By default Game Objects won't add themselves to any physics system and their `body` property will be `null`.
+        * 
+        * To enable this Game Object for physics you need to call `game.physics.enable(object, system)` where `object` is this object
+        * and `system` is the Physics system you are using. If none is given it defaults to `Phaser.Physics.Arcade`.
+        * 
+        * You can alternatively call `game.physics.arcade.enable(object)`, or add this Game Object to a physics enabled Group.
+        * 
+        * Important: Enabling a Game Object for P2 or Ninja physics will automatically set its `anchor` property to 0.5,
+        * so the physics body is centered on the Game Object.
+        * 
+        * If you need a different result then adjust or re-create the Body shape offsets manually or reset the anchor after enabling physics.
+        */
+        body: Phaser.Physics.Arcade.Body | Phaser.Physics.P2.Body | Phaser.Physics.Ninja.Body | any;
+
+        /**
+        * The sum of the y and height properties.
+        * This is the same as `y + height - offsetY`.
+        */
+        bottom: number;
+
+        /**
+        * The x/y coordinate offset applied to the top-left of the camera that this Game Object will be drawn at if `fixedToCamera` is true.
+        * 
+        * The values are relative to the top-left of the camera view and in addition to any parent of the Game Object on the display list.
+        */
+        cameraOffset: Phaser.Point;
+
+        /**
+        * The center x coordinate of the Game Object.
+        * This is the same as `(x - offsetX) + (width / 2)`.
+        */
+        centerX: number;
+
+        /**
+        * The center y coordinate of the Game Object.
+        * This is the same as `(y - offsetY) + (height / 2)`.
+        */
+        centerY: number;
+
+        /**
+        * If this is set to `true` the Game Object checks if it is within the World bounds each frame.
+        * 
+        * When it is no longer intersecting the world bounds it dispatches the `onOutOfBounds` event.
+        * 
+        * If it was *previously* out of bounds but is now intersecting the world bounds again it dispatches the `onEnterBounds` event.
+        * 
+        * It also optionally kills the Game Object if `outOfBoundsKill` is `true`.
+        * 
+        * When `checkWorldBounds` is enabled it forces the Game Object to calculate its full bounds every frame.
+        * 
+        * This is a relatively expensive operation, especially if enabled on hundreds of Game Objects. So enable it only if you know it's required,
+        * or you have tested performance and find it acceptable.
+        */
+        checkWorldBounds: boolean;
+
+        /**
+        * The components this Game Object has installed.
+        */
+        components: any;
+
+        /**
+        * The Rectangle used to crop the texture this Game Object uses.
+        * Set this property via `crop`.
+        * If you modify this property directly you must call `updateCrop` in order to have the change take effect.
+        */
+        cropRect: Phaser.Rectangle;
+
+        /**
+        * Does this texture require a custom render call? (as set by BitmapData, Video, etc)
+        */
+        customRender: boolean;
+
+        /**
+        * An empty Object that belongs to this Game Object.
+        * This value isn't ever used internally by Phaser, but may be used by your own code, or
+        * by Phaser Plugins, to store data that needs to be associated with the Game Object,
+        * without polluting the Game Object directly.
+        * Default: {}
+        */
+        data: any;
+
+        /**
+        * A debug flag designed for use with `Game.enableStep`.
+        */
+        debug: boolean;
+
+        /**
+        * Returns the delta x value. The difference between world.x now and in the previous frame.
+        * 
+        * The value will be positive if the Game Object has moved to the right or negative if to the left.
+        */
+        deltaX: number;
+
+        /**
+        * Returns the delta y value. The difference between world.y now and in the previous frame.
+        * 
+        * The value will be positive if the Game Object has moved down or negative if up.
+        */
+        deltaY: number;
+
+        /**
+        * Returns the delta z value. The difference between rotation now and in the previous frame. The delta value.
+        */
+        deltaZ: number;
+
+        /**
+        * As a Game Object runs through its destroy method this flag is set to true,
+        * and can be checked in any sub-systems or plugins it is being destroyed from.
+        */
+        destroyPhase: boolean;
+
+        /**
+        * All Phaser Game Objects have an Events class which contains all of the events that are dispatched when certain things happen to this
+        * Game Object, or any of its components.
+        */
+        events: Phaser.Events;
+
+        /**
+        * Controls if this Sprite is processed by the core Phaser game loops and Group loops.
+        * Default: true
+        */
+        exists: boolean;
+
+        /**
+        * A Game Object that is "fixed" to the camera uses its x/y coordinates as offsets from the top left of the camera during rendering.
+        * 
+        * The values are adjusted at the rendering stage, overriding the Game Objects actual world position.
+        * 
+        * The end result is that the Game Object will appear to be 'fixed' to the camera, regardless of where in the game world
+        * the camera is viewing. This is useful if for example this Game Object is a UI item that you wish to be visible at all times
+        * regardless where in the world the camera is.
+        * 
+        * The offsets are stored in the `cameraOffset` property.
+        * 
+        * Note that the `cameraOffset` values are in addition to any parent of this Game Object on the display list.
+        * 
+        * Be careful not to set `fixedToCamera` on Game Objects which are in Groups that already have `fixedToCamera` enabled on them.
+        */
+        fixedToCamera: boolean;
+
+        /**
+        * Gets or sets the current frame index of the texture being used to render this Game Object.
+        * 
+        * To change the frame set `frame` to the index of the new frame in the sprite sheet you wish this Game Object to use,
+        * for example: `player.frame = 4`.
+        * 
+        * If the frame index given doesn't exist it will revert to the first frame found in the texture.
+        * 
+        * If you are using a texture atlas then you should use the `frameName` property instead.
+        * 
+        * If you wish to fully replace the texture being used see `loadTexture`.
+        */
+        frame: string | number;
+
+        /**
+        * Gets or sets the current frame name of the texture being used to render this Game Object.
+        * 
+        * To change the frame set `frameName` to the name of the new frame in the texture atlas you wish this Game Object to use,
+        * for example: `player.frameName = "idle"`.
+        * 
+        * If the frame name given doesn't exist it will revert to the first frame found in the texture and throw a console warning.
+        * 
+        * If you are using a sprite sheet then you should use the `frame` property instead.
+        * 
+        * If you wish to fully replace the texture being used see `loadTexture`.
+        */
+        frameName: string;
+
+        /**
+        * A Game Object is considered `fresh` if it has just been created or reset and is yet to receive a renderer transform update.
+        * This property is mostly used internally by the physics systems, but is exposed for the use of plugins.
+        */
+        fresh: boolean;
+
+        /**
+        * A reference to the currently running Game.
+        */
+        game: Phaser.Game;
+
+        /**
+        * The Game Objects health value. This is a handy property for setting and manipulating health on a Game Object.
+        * 
+        * It can be used in combination with the `damage` method or modified directly.
+        * Default: 1
+        */
+        health: number;
+
+        /**
+        * Checks if the Game Objects bounds intersect with the Game Camera bounds.
+        * Returns `true` if they do, otherwise `false` if fully outside of the Cameras bounds.
+        */
+        inCamera: boolean;
+
+        /**
+        * The Input Handler for this Game Object.
+        * 
+        * By default it is disabled. If you wish this Game Object to process input events you should enable it with: `inputEnabled = true`.
+        * 
+        * After you have done this, this property will be a reference to the Phaser InputHandler.
+        */
+        input: Phaser.InputHandler;
+
+        /**
+        * By default a Game Object won't process any input events. By setting `inputEnabled` to true a Phaser.InputHandler is created
+        * for this Game Object and it will then start to process click / touch events and more.
+        * 
+        * You can then access the Input Handler via `this.input`.
+        * 
+        * Note that Input related events are dispatched from `this.events`, i.e.: `events.onInputDown`.
+        * 
+        * If you set this property to false it will stop the Input Handler from processing any more input events.
+        * 
+        * If you want to _temporarily_ disable input for a Game Object, then it's better to set
+        * `input.enabled = false`, as it won't reset any of the Input Handlers internal properties.
+        * You can then toggle this back on as needed.
+        */
+        inputEnabled: boolean;
+
+        /**
+        * Checks if the Game Objects bounds are within, or intersect at any point with the Game World bounds.
+        */
+        inWorld: boolean;
+
+        /**
+        * The key of the image or texture used by this Game Object during rendering.
+        * If it is a string it's the string used to retrieve the texture from the Phaser Image Cache.
+        * It can also be an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
+        * If a Game Object is created without a key it is automatically assigned the key `__default` which is a 32x32 transparent PNG stored within the Cache.
+        * If a Game Object is given a key which doesn't exist in the Image Cache it is re-assigned the key `__missing` which is a 32x32 PNG of a green box with a line through it.
+        */
+        key: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture;
+
+        /**
+        * The left coordinate of the Game Object.
+        * This is the same as `x - offsetX`.
+        */
+        left: number;
+
+        /**
+        * The lifespan allows you to give a Game Object a lifespan in milliseconds.
+        * 
+        * Once the Game Object is 'born' you can set this to a positive value.
+        * 
+        * It is automatically decremented by the millisecond equivalent of `game.time.physicsElapsed` each frame.
+        * When it reaches zero it will call the `kill` method.
+        * 
+        * Very handy for particles, bullets, collectibles, or any other short-lived entity.
+        */
+        lifespan: number;
+
+        /**
+        * The Game Objects maximum health value. This works in combination with the `heal` method to ensure
+        * the health value never exceeds the maximum.
+        * Default: 100
+        */
+        maxHealth: number;
+
+        /**
+        * A user defined name given to this Game Object.
+        * This value isn't ever used internally by Phaser, it is meant as a game level property.
+        */
+        name: string;
+
+        /**
+        * The amount the Game Object is visually offset from its x coordinate.
+        * This is the same as `width * anchor.x`.
+        * It will only be > 0 if anchor.x is not equal to zero.
+        */
+        offsetX: number;
+
+        /**
+        * The amount the Game Object is visually offset from its y coordinate.
+        * This is the same as `height * anchor.y`.
+        * It will only be > 0 if anchor.y is not equal to zero.
+        */
+        offsetY: number;
+
+        /**
+        * If this and the `checkWorldBounds` property are both set to `true` then the `kill` method is called as soon as `inWorld` returns false.
+        */
+        outOfBoundsKill: boolean;
+
+        /**
+        * A Game Object is that is pendingDestroy is flagged to have its destroy method called on the next logic update.
+        * You can set it directly to allow you to flag an object to be destroyed on its next update.
+        * 
+        * This is extremely useful if you wish to destroy an object from within one of its own callbacks
+        * such as with Buttons or other Input events.
+        */
+        pendingDestroy: boolean;
+
+        /**
+        * The position the Game Object was located in the previous frame.
+        */
+        previousPosition: Phaser.Point;
+
+        /**
+        * The rotation the Game Object was in set to in the previous frame. Value is in radians.
+        */
+        previousRotation: number;
+        position: Phaser.Point;
+        physicsEnabled: boolean;
+
+        /**
+        * The const physics body type of this object.
+        */
+        physicsType: number;
+
+        /**
+        * The render order ID is used internally by the renderer and Input Manager and should not be modified.
+        * This property is mostly used internally by the renderers, but is exposed for the use of plugins.
+        */
+        renderOrderID: number;
+
+        /**
+        * The right coordinate of the Game Object.
+        * This is the same as `x + width - offsetX`.
+        */
+        right: number;
+        scale: Phaser.Point;
+
+        /**
+        * The minimum scale this Game Object will scale down to.
+        * 
+        * It allows you to prevent a parent from scaling this Game Object lower than the given value.
+        * 
+        * Set it to `null` to remove the limit.
+        */
+        scaleMin: Phaser.Point;
+
+        /**
+        * The maximum scale this Game Object will scale up to.
+        * 
+        * It allows you to prevent a parent from scaling this Game Object higher than the given value.
+        * 
+        * Set it to `null` to remove the limit.
+        */
+        scaleMax: Phaser.Point;
+
+        /**
+        * Enable or disable texture smoothing for this Game Object.
+        * 
+        * It only takes effect if the Game Object is using an image based texture.
+        * 
+        * Smoothing is enabled by default.
+        */
+        smoothed: boolean;
+
+        /**
+        * The y coordinate of the Game Object.
+        * This is the same as `y - offsetY`.
+        */
+        top: number;
+
+        /**
+        * The const type of this object.
+        */
+        type: number;
+
+        /**
+        * A canvas that contains the tinted version of the Sprite (in Canvas mode, WebGL doesn't populate this)
+        * Default: null
+        */
+        tintedTexture: HTMLCanvasElement;
+
+        /**
+        * The callback that will apply any scale limiting to the worldTransform.
+        */
+        transformCallback: Function;
+
+        /**
+        * The context under which `transformCallback` is called.
+        */
+        transformCallbackContext: any;
+
+        /**
+        * The world coordinates of this Game Object in pixels.
+        * Depending on where in the display list this Game Object is placed this value can differ from `position`,
+        * which contains the x/y coordinates relative to the Game Objects parent.
+        */
+        world: Phaser.Point;
+
+        /**
+        * The position of the Game Object on the x axis relative to the local coordinates of the parent.
+        */
+        x: number;
+
+        /**
+        * The position of the Game Object on the y axis relative to the local coordinates of the parent.
+        */
+        y: number;
+
+        /**
+        * The z depth of this Game Object within its parent Group.
+        * No two objects in a Group can have the same z value.
+        * This value is adjusted automatically whenever the Group hierarchy changes.
+        * If you wish to re-order the layering of a Game Object then see methods like Group.moveUp or Group.bringToTop.
+        */
+        z: number;
+
+
+        /**
+        * Aligns this Game Object within another Game Object, or Rectangle, known as the
+        * 'container', to one of 9 possible positions.
+        * 
+        * The container must be a Game Object, or Phaser.Rectangle object. This can include properties
+        * such as `World.bounds` or `Camera.view`, for aligning Game Objects within the world
+        * and camera bounds. Or it can include other Sprites, Images, Text objects, BitmapText,
+        * TileSprites or Buttons.
+        * 
+        * Please note that aligning a Sprite to another Game Object does **not** make it a child of
+        * the container. It simply modifies its position coordinates so it aligns with it.
+        * 
+        * The position constants you can use are:
+        * 
+        * `Phaser.TOP_LEFT`, `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.LEFT_CENTER`,
+        * `Phaser.CENTER`, `Phaser.RIGHT_CENTER`, `Phaser.BOTTOM_LEFT`,
+        * `Phaser.BOTTOM_CENTER` and `Phaser.BOTTOM_RIGHT`.
+        * 
+        * The Game Objects are placed in such a way that their _bounds_ align with the
+        * container, taking into consideration rotation, scale and the anchor property.
+        * This allows you to neatly align Game Objects, irrespective of their position value.
+        * 
+        * The optional `offsetX` and `offsetY` arguments allow you to apply extra spacing to the final
+        * aligned position of the Game Object. For example:
+        * 
+        * `sprite.alignIn(background, Phaser.BOTTOM_RIGHT, -20, -20)`
+        * 
+        * Would align the `sprite` to the bottom-right, but moved 20 pixels in from the corner.
+        * Think of the offsets as applying an adjustment to the containers bounds before the alignment takes place.
+        * So providing a negative offset will 'shrink' the container bounds by that amount, and providing a positive
+        * one expands it.
+        * 
+        * @param container The Game Object or Rectangle with which to align this Game Object to. Can also include properties such as `World.bounds` or `Camera.view`.
+        * @param position The position constant. One of `Phaser.TOP_LEFT` (default), `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.LEFT_CENTER`, `Phaser.CENTER`, `Phaser.RIGHT_CENTER`, `Phaser.BOTTOM_LEFT`, `Phaser.BOTTOM_CENTER` or `Phaser.BOTTOM_RIGHT`.
+        * @param offsetX A horizontal adjustment of the Containers bounds, applied to the aligned position of the Game Object. Use a negative value to shrink the bounds, positive to increase it.
+        * @param offsetY A vertical adjustment of the Containers bounds, applied to the aligned position of the Game Object. Use a negative value to shrink the bounds, positive to increase it.
+        * @return This Game Object.
+        */
+        alignIn(container: Phaser.Rectangle | Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapText | Phaser.Button | Phaser.Graphics | Phaser.TileSprite, position?: number, offsetX?: number, offsetY?: number): any;
+
+        /**
+        * Aligns this Game Object to the side of another Game Object, or Rectangle, known as the
+        * 'parent', in one of 11 possible positions.
+        * 
+        * The parent must be a Game Object, or Phaser.Rectangle object. This can include properties
+        * such as `World.bounds` or `Camera.view`, for aligning Game Objects within the world
+        * and camera bounds. Or it can include other Sprites, Images, Text objects, BitmapText,
+        * TileSprites or Buttons.
+        * 
+        * Please note that aligning a Sprite to another Game Object does **not** make it a child of
+        * the parent. It simply modifies its position coordinates so it aligns with it.
+        * 
+        * The position constants you can use are:
+        * 
+        * `Phaser.TOP_LEFT` (default), `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.LEFT_TOP`,
+        * `Phaser.LEFT_CENTER`, `Phaser.LEFT_BOTTOM`, `Phaser.RIGHT_TOP`, `Phaser.RIGHT_CENTER`,
+        * `Phaser.RIGHT_BOTTOM`, `Phaser.BOTTOM_LEFT`, `Phaser.BOTTOM_CENTER`
+        * and `Phaser.BOTTOM_RIGHT`.
+        * 
+        * The Game Objects are placed in such a way that their _bounds_ align with the
+        * parent, taking into consideration rotation, scale and the anchor property.
+        * This allows you to neatly align Game Objects, irrespective of their position value.
+        * 
+        * The optional `offsetX` and `offsetY` arguments allow you to apply extra spacing to the final
+        * aligned position of the Game Object. For example:
+        * 
+        * `sprite.alignTo(background, Phaser.BOTTOM_RIGHT, -20, -20)`
+        * 
+        * Would align the `sprite` to the bottom-right, but moved 20 pixels in from the corner.
+        * Think of the offsets as applying an adjustment to the parents bounds before the alignment takes place.
+        * So providing a negative offset will 'shrink' the parent bounds by that amount, and providing a positive
+        * one expands it.
+        * 
+        * @param parent The Game Object or Rectangle with which to align this Game Object to. Can also include properties such as `World.bounds` or `Camera.view`.
+        * @param position The position constant. One of `Phaser.TOP_LEFT`, `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.LEFT_TOP`, `Phaser.LEFT_CENTER`, `Phaser.LEFT_BOTTOM`, `Phaser.RIGHT_TOP`, `Phaser.RIGHT_CENTER`, `Phaser.RIGHT_BOTTOM`, `Phaser.BOTTOM_LEFT`, `Phaser.BOTTOM_CENTER` or `Phaser.BOTTOM_RIGHT`.
+        * @param offsetX A horizontal adjustment of the Containers bounds, applied to the aligned position of the Game Object. Use a negative value to shrink the bounds, positive to increase it.
+        * @param offsetY A vertical adjustment of the Containers bounds, applied to the aligned position of the Game Object. Use a negative value to shrink the bounds, positive to increase it.
+        * @return This Game Object.
+        */
+        alignTo(container: Phaser.Rectangle | Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapText | Phaser.Button | Phaser.Graphics | Phaser.TileSprite, position?: number, offsetX?: number, offsetY?: number): any;
+
+        /**
+        * Brings this Game Object to the top of its parents display list.
+        * Visually this means it will render over the top of any old child in the same Group.
+        * 
+        * If this Game Object hasn't been added to a custom Group then this method will bring it to the top of the Game World,
+        * because the World is the root Group from which all Game Objects descend.
+        * @return This instance.
+        */
+        bringToTop(): Phaser.Sprite;
+
+        /**
+        * Crop allows you to crop the texture being used to display this Game Object.
+        * Setting a crop rectangle modifies the core texture frame. The Game Object width and height properties will be adjusted accordingly.
+        * 
+        * Cropping takes place from the top-left and can be modified in real-time either by providing an updated rectangle object to this method,
+        * or by modifying `cropRect` property directly and then calling `updateCrop`.
+        * 
+        * The rectangle object given to this method can be either a `Phaser.Rectangle` or any other object
+        * so long as it has public `x`, `y`, `width`, `height`, `right` and `bottom` properties.
+        * 
+        * A reference to the rectangle is stored in `cropRect` unless the `copy` parameter is `true`,
+        * in which case the values are duplicated to a local object.
+        * 
+        * @param rect The Rectangle used during cropping. Pass null or no parameters to clear a previously set crop rectangle.
+        * @param copy If false `cropRect` will be stored as a reference to the given rect. If true it will copy the rect values into a local Phaser Rectangle object stored in cropRect.
+        */
+        crop(rect: Phaser.Rectangle, copy: boolean): void;
+
+        /**
+        * Adjust scaling limits, if set, to this Game Object.
+        * 
+        * @param wt The updated worldTransform matrix.
+        */
+        checkTransform(wt: PIXI.Matrix): void;
+        damage(amount: number): Phaser.Sprite;
+
+        /**
+        * Destroys the Game Object. This removes it from its parent group, destroys the input, event and animation handlers if present
+        * and nulls its reference to `game`, freeing it up for garbage collection.
+        * 
+        * If this Game Object has the Events component it will also dispatch the `onDestroy` event.
+        * 
+        * You can optionally also destroy the BaseTexture this Game Object is using. Be careful if you've
+        * more than one Game Object sharing the same BaseTexture.
+        * 
+        * @param destroyChildren Should every child of this object have its destroy method called as well? - Default: true
+        * @param destroyTexture Destroy the BaseTexture this Game Object is using? Note that if another Game Object is sharing the same BaseTexture it will invalidate it.
+        */
+        destroy(destroyChildren?: boolean): void;
+        drawPolygon(): void;
+        heal(amount: number): Phaser.Sprite;
+
+        /**
+        * Kills a Game Object. A killed Game Object has its `alive`, `exists` and `visible` properties all set to false.
+        * 
+        * It will dispatch the `onKilled` event. You can listen to `events.onKilled` for the signal.
+        * 
+        * Note that killing a Game Object is a way for you to quickly recycle it in an object pool,
+        * it doesn't destroy the object or free it up from memory.
+        * 
+        * If you don't need this Game Object any more you should call `destroy` instead.
+        * @return This instance.
+        */
+        kill(): Phaser.Sprite;
+
+        /**
+        * Changes the base texture the Game Object is using. The old texture is removed and the new one is referenced or fetched from the Cache.
+        * 
+        * If your Game Object is using a frame from a texture atlas and you just wish to change to another frame, then see the `frame` or `frameName` properties instead.
+        * 
+        * You should only use `loadTexture` if you want to replace the base texture entirely.
+        * 
+        * Calling this method causes a WebGL texture update, so use sparingly or in low-intensity portions of your game, or if you know the new texture is already on the GPU.
+        * 
+        * You can use the new const `Phaser.PENDING_ATLAS` as the texture key for any sprite.
+        * Doing this then sets the key to be the `frame` argument (the frame is set to zero).
+        * 
+        * This allows you to create sprites using `load.image` during development, and then change them
+        * to use a Texture Atlas later in development by simply searching your code for 'PENDING_ATLAS'
+        * and swapping it to be the key of the atlas data.
+        * 
+        * Note: You cannot use a RenderTexture as a texture for a TileSprite.
+        * 
+        * @param key This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache Image entry, or an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
+        * @param frame If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
+        * @param stopAnimation If an animation is already playing on this Sprite you can choose to stop it or let it carry on playing. - Default: true
+        */
+        loadTexture(key: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture, frame?: string | number, stopAnimation?: boolean): void;
+
+        /**
+        * Moves this Game Object up one place in its parents display list.
+        * This call has no effect if the Game Object is already at the top of the display list.
+        * 
+        * If this Game Object hasn't been added to a custom Group then this method will move it one object up within the Game World,
+        * because the World is the root Group from which all Game Objects descend.
+        * @return This instance.
+        */
+        moveUp(): Phaser.Sprite;
+
+        /**
+        * Moves this Game Object down one place in its parents display list.
+        * This call has no effect if the Game Object is already at the bottom of the display list.
+        * 
+        * If this Game Object hasn't been added to a custom Group then this method will move it one object down within the Game World,
+        * because the World is the root Group from which all Game Objects descend.
+        * @return This instance.
+        */
+        moveDown(): Phaser.Sprite;
+
+        /**
+        * Checks to see if the bounds of this Game Object overlaps with the bounds of the given Display Object,
+        * which can be a Sprite, Image, TileSprite or anything that extends those such as Button or provides a `getBounds` method and result.
+        * 
+        * This check ignores the `hitArea` property if set and runs a `getBounds` comparison on both objects to determine the result.
+        * 
+        * Therefore it's relatively expensive to use in large quantities, i.e. with lots of Sprites at a high frequency.
+        * It should be fine for low-volume testing where physics isn't required.
+        * 
+        * @param displayObject The display object to check against.
+        * @return True if the bounds of this Game Object intersects at any point with the bounds of the given display object.
+        */
+        overlap(displayObject: Phaser.Sprite | Phaser.Image | Phaser.TileSprite | Phaser.Button | PIXI.DisplayObject): boolean;
+
+        /**
+        * Plays an Animation.
+        * 
+        * The animation should have previously been created via `animations.add`.
+        * 
+        * If the animation is already playing calling this again won't do anything.
+        * If you need to reset an already running animation do so directly on the Animation object itself or via `AnimationManager.stop`.
+        * 
+        * @param name The name of the animation to be played, e.g. "fire", "walk", "jump". Must have been previously created via 'AnimationManager.add'.
+        * @param frameRate The framerate to play the animation at. The speed is given in frames per second. If not provided the previously set frameRate of the Animation is used.
+        * @param loop Should the animation be looped after playback. If not provided the previously set loop value of the Animation is used.
+        * @param killOnComplete If set to true when the animation completes (only happens if loop=false) the parent Sprite will be killed.
+        * @return A reference to playing Animation.
+        */
+        play(name: string, frameRate?: number, loop?: boolean, killOnComplete?: boolean): Phaser.Animation;
+
+        /**
+        * Internal method called by the World postUpdate cycle.
+        */
+        postUpdate(): void;
+
+        /**
+        * Automatically called by World.preUpdate.
+        * @return True if the Sprite was rendered, otherwise false.
+        */
+        preUpdate(): void;
+
+        /**
+        * Resets the Game Object.
+        * 
+        * This moves the Game Object to the given x/y world coordinates and sets `fresh`, `exists`,
+        * `visible` and `renderable` to true.
+        * 
+        * If this Game Object has the LifeSpan component it will also set `alive` to true and `health` to the given value.
+        * 
+        * If this Game Object has a Physics Body it will reset the Body.
+        * 
+        * @param x The x coordinate (in world space) to position the Game Object at.
+        * @param y The y coordinate (in world space) to position the Game Object at.
+        * @param health The health to give the Game Object if it has the Health component. - Default: 1
+        * @return This instance.
+        */
+        reset(x: number, y: number, health?: number): Phaser.Sprite;
+
+        /**
+        * Resets the texture frame dimensions that the Game Object uses for rendering.
+        */
+        resetFrame(): void;
+
+        /**
+        * Resizes the Frame dimensions that the Game Object uses for rendering.
+        * 
+        * You shouldn't normally need to ever call this, but in the case of special texture types such as Video or BitmapData
+        * it can be useful to adjust the dimensions directly in this way.
+        * 
+        * @param parent The parent texture object that caused the resize, i.e. a Phaser.Video object.
+        * @param width The new width of the texture.
+        * @param height The new height of the texture.
+        */
+        resizeFrame(parent: any, width: number, height: number): void;
+
+        /**
+        * Brings a 'dead' Game Object back to life, optionally resetting its health value in the process.
+        * 
+        * A resurrected Game Object has its `alive`, `exists` and `visible` properties all set to true.
+        * 
+        * It will dispatch the `onRevived` event. Listen to `events.onRevived` for the signal.
+        * 
+        * @param health The health to give the Game Object. Only set if the GameObject has the Health component. - Default: 100
+        * @return This instance.
+        */
+        revive(health?: number): Phaser.Sprite;
+
+        /**
+        * Sends this Game Object to the bottom of its parents display list.
+        * Visually this means it will render below all other children in the same Group.
+        * 
+        * If this Game Object hasn't been added to a custom Group then this method will send it to the bottom of the Game World,
+        * because the World is the root Group from which all Game Objects descend.
+        * @return This instance.
+        */
+        sendToBack(): Phaser.Sprite;
+
+        /**
+        * Sets the texture frame the Game Object uses for rendering.
+        * 
+        * This is primarily an internal method used by `loadTexture`, but is exposed for the use of plugins and custom classes.
+        * 
+        * @param frame The Frame to be used by the texture.
+        */
+        setFrame(frame: Phaser.Frame): void;
+
+        /**
+        * Sets the scaleMin and scaleMax values. These values are used to limit how far this Game Object will scale based on its parent.
+        * 
+        * For example if this Game Object has a `minScale` value of 1 and its parent has a `scale` value of 0.5, the 0.5 will be ignored
+        * and the scale value of 1 will be used, as the parents scale is lower than the minimum scale this Game Object should adhere to.
+        * 
+        * By setting these values you can carefully control how Game Objects deal with responsive scaling.
+        * 
+        * If only one parameter is given then that value will be used for both scaleMin and scaleMax:
+        * `setScaleMinMax(1)` = scaleMin.x, scaleMin.y, scaleMax.x and scaleMax.y all = 1
+        * 
+        * If only two parameters are given the first is set as scaleMin.x and y and the second as scaleMax.x and y:
+        * `setScaleMinMax(0.5, 2)` = scaleMin.x and y = 0.5 and scaleMax.x and y = 2
+        * 
+        * If you wish to set `scaleMin` with different values for x and y then either modify Game Object.scaleMin directly,
+        * or pass `null` for the `maxX` and `maxY` parameters.
+        * 
+        * Call `setScaleMinMax(null)` to clear all previously set values.
+        * 
+        * @param minX The minimum horizontal scale value this Game Object can scale down to.
+        * @param minY The minimum vertical scale value this Game Object can scale down to.
+        * @param maxX The maximum horizontal scale value this Game Object can scale up to.
+        * @param maxY The maximum vertical scale value this Game Object can scale up to.
+        */
+        setScaleMinMax(minX?: number, minY?: number, maxX?: number, maxY?: number): void;
+
+        /**
+        * Override this method in your own custom objects to handle any update requirements.
+        * It is called immediately after `preUpdate` and before `postUpdate`.
+        * Remember if this Game Object has any children you should call update on those too.
+        */
+        update(): void;
+
+        /**
+        * If you have set a crop rectangle on this Game Object via `crop` and since modified the `cropRect` property,
+        * or the rectangle it references, then you need to update the crop frame by calling this method.
+        */
+        updateCrop(): void;
+
+    }
+	
+	
+    /**
+    * A Group is a container for {@link DisplayObject display objects} including {@link Phaser.Sprite Sprites} and {@link Phaser.Image Images}.
+    * 
+    * Groups form the logical tree structure of the display/scene graph where local transformations are applied to children.
+    * For instance, all children are also moved/rotated/scaled when the group is moved/rotated/scaled.
+    * 
+    * In addition, Groups provides support for fast pooling and object recycling.
+    * 
+    * Groups are also display objects and can be nested as children within other Groups.
+    */
+    class Group extends PIXI.DisplayObjectContainer {
+
+
+        /**
+        * A Group is a container for {@link DisplayObject display objects} including {@link Phaser.Sprite Sprites} and {@link Phaser.Image Images}.
+        * 
+        * Groups form the logical tree structure of the display/scene graph where local transformations are applied to children.
+        * For instance, all children are also moved/rotated/scaled when the group is moved/rotated/scaled.
+        * 
+        * In addition, Groups provides support for fast pooling and object recycling.
+        * 
+        * Groups are also display objects and can be nested as children within other Groups.
+        * 
+        * @param game A reference to the currently running game.
+        * @param parent The parent Group (or other {@link DisplayObject}) that this group will be added to.
+        *               If undefined/unspecified the Group will be added to the {@link Phaser.Game#world Game World}; if null the Group will not be added to any parent. - Default: (game world)
+        * @param name A name for this group. Not used internally but useful for debugging. - Default: 'group'
+        * @param addToStage If true this group will be added directly to the Game.Stage instead of Game.World.
+        * @param enableBody If true all Sprites created with {@link #create} or {@link #createMulitple} will have a physics body created on them. Change the body type with {@link #physicsBodyType}.
+        * @param physicsBodyType The physics body type to use when physics bodies are automatically added. See {@link #physicsBodyType} for values.
+        */
+        constructor(game: Phaser.Game, parent?: PIXI.DisplayObjectContainer, name?: string, addToStage?: boolean, enableBody?: boolean, physicsBodyType?: number);
+
+
+        /**
+        * A returnType value, as specified in {@link Phaser.Group#iterate iterate} eg.
+        */
+        static RETURN_CHILD: number;
+
+        /**
+        * A returnType value, as specified in {@link Phaser.Group#iterate iterate} eg.
+        */
+        static RETURN_NONE: number;
+
+        /**
+        * A returnType value, as specified in {@link Phaser.Group#iterate iterate} eg.
+        */
+        static RETURN_TOTAL: number;
+
+        /**
+        * A sort ordering value, as specified in {@link Phaser.Group#sort sort} eg.
+        */
+        static SORT_ASCENDING: number;
+
+        /**
+        * A sort ordering value, as specified in {@link Phaser.Group#sort sort} eg.
+        */
+        static SORT_DESCENDING: number;
+
+
+        /**
+        * The alpha value of the group container.
+        */
+        alpha: number;
+
+        /**
+        * The angle of rotation of the group container, in degrees.
+        * 
+        * This adjusts the group itself by modifying its local rotation transform.
+        * 
+        * This has no impact on the rotation/angle properties of the children, but it will update their worldTransform
+        * and on-screen orientation and position.
+        */
+        angle: number;
+
+        /**
+        * The alive property is useful for Groups that are children of other Groups and need to be included/excluded in checks like forEachAlive.
+        * Default: true
+        */
+        alive: boolean;
+
+        /**
+        * The bottom coordinate of this Group.
+        * 
+        * It is derived by calling `getBounds`, calculating the Groups dimensions based on its
+        * visible children.
+        * 
+        * Note that no ancestors are factored into the result, meaning that if this Group is
+        * nested within another Group, with heavy transforms on it, the result of this property
+        * is likely to be incorrect. It is safe to get and set this property if the Group is a
+        * top-level descendant of Phaser.World, or untransformed parents.
+        */
+        bottom: number;
+
+        /**
+        * If this object is {@link Phaser.Group#fixedToCamera fixedToCamera} then this stores the x/y position offset relative to the top-left of the camera view.
+        * If the parent of this Group is also `fixedToCamera` then the offset here is in addition to that and should typically be disabled.
+        */
+        cameraOffset: Phaser.Point;
+
+        /**
+        * The center x coordinate of this Group.
+        * 
+        * It is derived by calling `getBounds`, calculating the Groups dimensions based on its
+        * visible children.
+        * 
+        * Note that no ancestors are factored into the result, meaning that if this Group is
+        * nested within another Group, with heavy transforms on it, the result of this property
+        * is likely to be incorrect. It is safe to get and set this property if the Group is a
+        * top-level descendant of Phaser.World, or untransformed parents.
+        */
+        centerX: number;
+
+        /**
+        * The center y coordinate of this Group.
+        * 
+        * It is derived by calling `getBounds`, calculating the Groups dimensions based on its
+        * visible children.
+        * 
+        * Note that no ancestors are factored into the result, meaning that if this Group is
+        * nested within another Group, with heavy transforms on it, the result of this property
+        * is likely to be incorrect. It is safe to get and set this property if the Group is a
+        * top-level descendant of Phaser.World, or untransformed parents.
+        */
+        centerY: number;
+
+        /**
+        * The type of objects that will be created when using {@link Phaser.Group#create create} or {@link Phaser.Group#createMultiple createMultiple}.
+        * 
+        * Any object may be used but it should extend either Sprite or Image and accept the same constructor arguments:
+        * when a new object is created it is passed the following parameters to its constructor: `(game, x, y, key, frame)`.
+        * Default: {@link Phaser.Sprite}
+        */
+        classType: any;
+
+        /**
+        * The current display object that the group cursor is pointing to, if any. (Can be set manually.)
+        * 
+        * The cursor is a way to iterate through the children in a Group using {@link Phaser.Group#next next} and {@link Phaser.Group#previous previous}.
+        */
+        cursor: any;
+
+        /**
+        * The current index of the Group cursor. Advance it with Group.next.
+        */
+        cursorIndex: number;
+
+        /**
+        * If true all Sprites created by, or added to this group, will have a physics body enabled on them.
+        * 
+        * If there are children already in the Group at the time you set this property, they are not changed.
+        * 
+        * The default body type is controlled with {@link Phaser.Group#physicsBodyType physicsBodyType}.
+        */
+        enableBody: boolean;
+
+        /**
+        * If true when a physics body is created (via {@link Phaser.Group#enableBody enableBody}) it will create a physics debug object as well.
+        * 
+        * This only works for P2 bodies.
+        */
+        enableBodyDebug: boolean;
+
+        /**
+        * If exists is true the group is updated, otherwise it is skipped.
+        * Default: true
+        */
+        exists: boolean;
+
+        /**
+        * A Group that is fixed to the camera uses its x/y coordinates as offsets from the top left of the camera. These are stored in Group.cameraOffset.
+        * 
+        * Note that the cameraOffset values are in addition to any parent in the display list.
+        * So if this Group was in a Group that has x: 200, then this will be added to the cameraOffset.x
+        */
+        fixedToCamera: boolean;
+
+        /**
+        * A reference to the currently running Game.
+        */
+        game: Phaser.Game;
+
+        /**
+        * The hash array is an array belonging to this Group into which you can add any of its children via Group.addToHash and Group.removeFromHash.
+        * 
+        * Only children of this Group can be added to and removed from the hash.
+        * 
+        * This hash is used automatically by Phaser Arcade Physics in order to perform non z-index based destructive sorting.
+        * However if you don't use Arcade Physics, or this isn't a physics enabled Group, then you can use the hash to perform your own
+        * sorting and filtering of Group children without touching their z-index (and therefore display draw order)
+        */
+        hash: PIXI.DisplayObject[];
+
+        /**
+        * A group with `ignoreDestroy` set to `true` ignores all calls to its `destroy` method.
+        */
+        ignoreDestroy: boolean;
+
+        /**
+        * A Group with `inputEnableChildren` set to `true` will automatically call `inputEnabled = true`
+        * on any children _added_ to, or _created by_, this Group.
+        * 
+        * If there are children already in the Group at the time you set this property, they are not changed.
+        */
+        inputEnableChildren: boolean;
+
+        /**
+        * The left coordinate of this Group.
+        * 
+        * It is derived by calling `getBounds`, calculating the Groups dimensions based on its
+        * visible children.
+        * 
+        * Note that no ancestors are factored into the result, meaning that if this Group is
+        * nested within another Group, with heavy transforms on it, the result of this property
+        * is likely to be incorrect. It is safe to get and set this property if the Group is a
+        * top-level descendant of Phaser.World, or untransformed parents.
+        */
+        left: number;
+
+        /**
+        * Total number of children in this group, regardless of exists/alive status.
+        */
+        length: number;
+
+        /**
+        * A name for this group. Not used internally but useful for debugging.
+        */
+        name: string;
+
+        /**
+        * This Signal is dispatched whenever a child of this Group emits an onInputDown signal as a result
+        * of having been interacted with by a Pointer. You can bind functions to this Signal instead of to
+        * every child Sprite.
+        * 
+        * This Signal is sent 2 arguments: A reference to the Sprite that triggered the signal, and
+        * a reference to the Pointer that caused it.
+        */
+        onChildInputDown: Phaser.Signal;
+
+        /**
+        * This Signal is dispatched whenever a child of this Group emits an onInputUp signal as a result
+        * of having been interacted with by a Pointer. You can bind functions to this Signal instead of to
+        * every child Sprite.
+        * 
+        * This Signal is sent 3 arguments: A reference to the Sprite that triggered the signal,
+        * a reference to the Pointer that caused it, and a boolean value `isOver` that tells you if the Pointer
+        * is still over the Sprite or not.
+        */
+        onChildInputUp: Phaser.Signal;
+
+        /**
+        * This Signal is dispatched whenever a child of this Group emits an onInputOver signal as a result
+        * of having been interacted with by a Pointer. You can bind functions to this Signal instead of to
+        * every child Sprite.
+        * 
+        * This Signal is sent 2 arguments: A reference to the Sprite that triggered the signal, and
+        * a reference to the Pointer that caused it.
+        */
+        onChildInputOver: Phaser.Signal;
+
+        /**
+        * This Signal is dispatched whenever a child of this Group emits an onInputOut signal as a result
+        * of having been interacted with by a Pointer. You can bind functions to this Signal instead of to
+        * every child Sprite.
+        * 
+        * This Signal is sent 2 arguments: A reference to the Sprite that triggered the signal, and
+        * a reference to the Pointer that caused it.
+        */
+        onChildInputOut: Phaser.Signal;
+
+        /**
+        * This signal is dispatched when the group is destroyed.
+        */
+        onDestroy: Phaser.Signal;
+
+        /**
+        * A Group is that has `pendingDestroy` set to `true` is flagged to have its destroy method
+        * called on the next logic update.
+        * You can set it directly to flag the Group to be destroyed on its next update.
+        * 
+        * This is extremely useful if you wish to destroy a Group from within one of its own callbacks
+        * or a callback of one of its children.
+        */
+        pendingDestroy: boolean;
+
+        /**
+        * If {@link Phaser.Group#enableBody enableBody} is true this is the type of physics body that is created on new Sprites.
+        * 
+        * The valid values are {@link Phaser.Physics.ARCADE}, {@link Phaser.Physics.P2JS}, {@link Phaser.Physics.NINJA}, etc.
+        */
+        physicsBodyType: number;
+
+        /**
+        * The const physics body type of this object.
+        */
+        physicsType: number;
+
+        /**
+        * If this Group contains Arcade Physics Sprites you can set a custom sort direction via this property.
+        * 
+        * It should be set to one of the Phaser.Physics.Arcade sort direction constants:
+        * 
+        * Phaser.Physics.Arcade.SORT_NONE
+        * Phaser.Physics.Arcade.LEFT_RIGHT
+        * Phaser.Physics.Arcade.RIGHT_LEFT
+        * Phaser.Physics.Arcade.TOP_BOTTOM
+        * Phaser.Physics.Arcade.BOTTOM_TOP
+        * 
+        * If set to `null` the Group will use whatever Phaser.Physics.Arcade.sortDirection is set to. This is the default behavior.
+        */
+        physicsSortDirection: number;
+        position: Phaser.Point;
+
+        /**
+        * The right coordinate of this Group.
+        * 
+        * It is derived by calling `getBounds`, calculating the Groups dimensions based on its
+        * visible children.
+        * 
+        * Note that no ancestors are factored into the result, meaning that if this Group is
+        * nested within another Group, with heavy transforms on it, the result of this property
+        * is likely to be incorrect. It is safe to get and set this property if the Group is a
+        * top-level descendant of Phaser.World, or untransformed parents.
+        */
+        right: number;
+
+        /**
+        * The angle of rotation of the group container, in radians.
+        * 
+        * This will adjust the group container itself by modifying its rotation.
+        * This will have no impact on the rotation value of its children, but it will update their worldTransform and on-screen position.
+        */
+        rotation: number;
+        scale: Phaser.Point;
+
+        /**
+        * The top coordinate of this Group.
+        * 
+        * It is derived by calling `getBounds`, calculating the Groups dimensions based on its
+        * visible children.
+        * 
+        * Note that no ancestors are factored into the result, meaning that if this Group is
+        * nested within another Group, with heavy transforms on it, the result of this property
+        * is likely to be incorrect. It is safe to get and set this property if the Group is a
+        * top-level descendant of Phaser.World, or untransformed parents.
+        */
+        top: number;
+
+        /**
+        * Total number of existing children in the group.
+        */
+        total: number;
+
+        /**
+        * Internal Phaser Type value.
+        */
+        type: number;
+
+        /**
+        * The visible state of the group. Non-visible Groups and all of their children are not rendered.
+        */
+        visible: boolean;
+
+        /**
+        * The z-depth value of this object within its parent container/Group - the World is a Group as well.
+        * This value must be unique for each child in a Group.
+        */
+        z: number;
+
+
+        /**
+        * Adds an existing object as the top child in this group.
+        * 
+        * The child is automatically added to the top of the group, and is displayed above every previous child.
+        * 
+        * Or if the _optional_ index is specified, the child is added at the location specified by the index value,
+        * this allows you to control child ordering.
+        * 
+        * If the child was already in this Group, it is simply returned, and nothing else happens to it.
+        * 
+        * If `Group.enableBody` is set, then a physics body will be created on the object, so long as one does not already exist.
+        * 
+        * If `Group.inputEnableChildren` is set, then an Input Handler will be created on the object, so long as one does not already exist.
+        * 
+        * Use {@link Phaser.Group#addAt addAt} to control where a child is added. Use {@link Phaser.Group#create create} to create and add a new child.
+        * 
+        * @param child The display object to add as a child.
+        * @param silent If true the child will not dispatch the `onAddedToGroup` event.
+        * @param index The index within the group to insert the child to. Where 0 is the bottom of the Group.
+        * @return The child that was added to the group.
+        */
+        add(child: any, silent?: boolean, index?: number): any;
+
+        /**
+        * Adds the amount to the given property on all children in this group.
+        * 
+        * `Group.addAll('x', 10)` will add 10 to the child.x value for each child.
+        * 
+        * @param property The property to increment, for example 'body.velocity.x' or 'angle'.
+        * @param amount The amount to increment the property by. If child.x = 10 then addAll('x', 40) would make child.x = 50.
+        * @param checkAlive If true the property will only be changed if the child is alive.
+        * @param checkVisible If true the property will only be changed if the child is visible.
+        */
+        addAll(property: string, amount: number, checkAlive: boolean, checkVisible: boolean): void;
+
+        /**
+        * Adds an existing object to this group.
+        * 
+        * The child is added to the group at the location specified by the index value, this allows you to control child ordering.
+        * 
+        * If `Group.enableBody` is set, then a physics body will be created on the object, so long as one does not already exist.
+        * 
+        * If `Group.inputEnableChildren` is set, then an Input Handler will be created on the object, so long as one does not already exist.
+        * 
+        * @param child The display object to add as a child.
+        * @param index The index within the group to insert the child to.
+        * @param silent If true the child will not dispatch the `onAddedToGroup` event.
+        * @return The child that was added to the group.
+        */
+        addAt(child: any, index: number, silent?: boolean): any;
+
+        /**
+        * Adds an array of existing Display Objects to this Group.
+        * 
+        * The Display Objects are automatically added to the top of this Group, and will render on-top of everything already in this Group.
+        * 
+        * As well as an array you can also pass another Group as the first argument. In this case all of the children from that
+        * Group will be removed from it and added into this Group.
+        * 
+        * If `Group.enableBody` is set, then a physics body will be created on the objects, so long as one does not already exist.
+        * 
+        * If `Group.inputEnableChildren` is set, then an Input Handler will be created on the objects, so long as one does not already exist.
+        * 
+        * @param children An array of display objects or a Phaser.Group. If a Group is given then *all* children will be moved from it.
+        * @param silent If true the children will not dispatch the `onAddedToGroup` event.
+        * @return The array of children or Group of children that were added to this Group.
+        */
+        addMultiple(children: any[], silent?: boolean): any[];
+
+        /**
+        * Adds a child of this Group into the hash array.
+        * This call will return false if the child is not a child of this Group, or is already in the hash.
+        * 
+        * @param child The display object to add to this Groups hash. Must be a member of this Group already and not present in the hash.
+        * @return True if the child was successfully added to the hash, otherwise false.
+        */
+        addToHash(child: PIXI.DisplayObject): boolean;
+
+        /**
+        * This method iterates through all children in the Group (regardless if they are visible or exist)
+        * and then changes their position so they are arranged in a Grid formation. Children must have
+        * the `alignTo` method in order to be positioned by this call. All default Phaser Game Objects have
+        * this.
+        * 
+        * The grid dimensions are determined by the first four arguments. The `rows` and `columns` arguments
+        * relate to the width and height of the grid respectively.
+        * 
+        * For example if the Group had 100 children in it:
+        * 
+        * `Group.align(10, 10, 32, 32)`
+        * 
+        * This will align all of the children into a grid formation of 10x10, using 32 pixels per
+        * grid cell. If you want a wider grid, you could do:
+        * 
+        * `Group.align(25, 4, 32, 32)`
+        * 
+        * This will align the children into a grid of 25x4, again using 32 pixels per grid cell.
+        * 
+        * You can choose to set _either_ the `rows` or `columns` value to -1. Doing so tells the method
+        * to keep on aligning children until there are no children left. For example if this Group had
+        * 48 children in it, the following:
+        * 
+        * `Group.align(-1, 8, 32, 32)`
+        * 
+        * ... will align the children so that there are 8 columns vertically (the second argument),
+        * and each row will contain 6 sprites, except the last one, which will contain 5 (totaling 48)
+        * 
+        * You can also do:
+        * 
+        * `Group.align(10, -1, 32, 32)`
+        * 
+        * In this case it will create a grid 10 wide, and as tall as it needs to be in order to fit
+        * all of the children in.
+        * 
+        * The `position` property allows you to control where in each grid cell the child is positioned.
+        * This is a constant and can be one of `Phaser.TOP_LEFT` (default), `Phaser.TOP_CENTER`,
+        * `Phaser.TOP_RIGHT`, `Phaser.LEFT_CENTER`, `Phaser.CENTER`, `Phaser.RIGHT_CENTER`,
+        * `Phaser.BOTTOM_LEFT`, `Phaser.BOTTOM_CENTER` or `Phaser.BOTTOM_RIGHT`.
+        * 
+        * The final argument; `offset` lets you start the alignment from a specific child index.
+        * 
+        * @param rows The number of rows, or width, of the grid. Set to -1 for a dynamic width.
+        * @param columns The number of columns, or height, of the grid. Set to -1 for a dynamic height.
+        * @param cellWidth The width of each grid cell, in pixels.
+        * @param cellHeight The height of each grid cell, in pixels.
+        * @param position The position constant. One of `Phaser.TOP_LEFT` (default), `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.LEFT_CENTER`, `Phaser.CENTER`, `Phaser.RIGHT_CENTER`, `Phaser.BOTTOM_LEFT`, `Phaser.BOTTOM_CENTER` or `Phaser.BOTTOM_RIGHT`.
+        * @param offset Optional index to start the alignment from. Defaults to zero, the first child in the Group, but can be set to any valid child index value.
+        */
+        align(rows: number, columns: number, cellWidth: number, cellHeight: number, position?: number, offset?: number): void;
+
+        /**
+        * Aligns this Group within another Game Object, or Rectangle, known as the
+        * 'container', to one of 9 possible positions.
+        * 
+        * The container must be a Game Object, or Phaser.Rectangle object. This can include properties
+        * such as `World.bounds` or `Camera.view`, for aligning Groups within the world
+        * and camera bounds. Or it can include other Sprites, Images, Text objects, BitmapText,
+        * TileSprites or Buttons.
+        * 
+        * Please note that aligning a Group to another Game Object does **not** make it a child of
+        * the container. It simply modifies its position coordinates so it aligns with it.
+        * 
+        * The position constants you can use are:
+        * 
+        * `Phaser.TOP_LEFT`, `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.LEFT_CENTER`,
+        * `Phaser.CENTER`, `Phaser.RIGHT_CENTER`, `Phaser.BOTTOM_LEFT`,
+        * `Phaser.BOTTOM_CENTER` and `Phaser.BOTTOM_RIGHT`.
+        * 
+        * Groups are placed in such a way that their _bounds_ align with the
+        * container, taking into consideration rotation and scale of its children.
+        * This allows you to neatly align Groups, irrespective of their position value.
+        * 
+        * The optional `offsetX` and `offsetY` arguments allow you to apply extra spacing to the final
+        * aligned position of the Group. For example:
+        * 
+        * `group.alignIn(background, Phaser.BOTTOM_RIGHT, -20, -20)`
+        * 
+        * Would align the `group` to the bottom-right, but moved 20 pixels in from the corner.
+        * Think of the offsets as applying an adjustment to the containers bounds before the alignment takes place.
+        * So providing a negative offset will 'shrink' the container bounds by that amount, and providing a positive
+        * one expands it.
+        * 
+        * @param container The Game Object or Rectangle with which to align this Group to. Can also include properties such as `World.bounds` or `Camera.view`.
+        * @param position The position constant. One of `Phaser.TOP_LEFT` (default), `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.LEFT_CENTER`, `Phaser.CENTER`, `Phaser.RIGHT_CENTER`, `Phaser.BOTTOM_LEFT`, `Phaser.BOTTOM_CENTER` or `Phaser.BOTTOM_RIGHT`.
+        * @param offsetX A horizontal adjustment of the Containers bounds, applied to the aligned position of the Game Object. Use a negative value to shrink the bounds, positive to increase it.
+        * @param offsetY A vertical adjustment of the Containers bounds, applied to the aligned position of the Game Object. Use a negative value to shrink the bounds, positive to increase it.
+        * @return This Group.
+        */
+        alignIn(container: Phaser.Rectangle | Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapText | Phaser.Button | Phaser.Graphics | Phaser.TileSprite, position?: number, offsetX?: number, offsetY?: number): Phaser.Group;
+
+        /**
+        * Aligns this Group to the side of another Game Object, or Rectangle, known as the
+        * 'parent', in one of 11 possible positions.
+        * 
+        * The parent must be a Game Object, or Phaser.Rectangle object. This can include properties
+        * such as `World.bounds` or `Camera.view`, for aligning Groups within the world
+        * and camera bounds. Or it can include other Sprites, Images, Text objects, BitmapText,
+        * TileSprites or Buttons.
+        * 
+        * Please note that aligning a Group to another Game Object does **not** make it a child of
+        * the parent. It simply modifies its position coordinates so it aligns with it.
+        * 
+        * The position constants you can use are:
+        * 
+        * `Phaser.TOP_LEFT` (default), `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.LEFT_TOP`,
+        * `Phaser.LEFT_CENTER`, `Phaser.LEFT_BOTTOM`, `Phaser.RIGHT_TOP`, `Phaser.RIGHT_CENTER`,
+        * `Phaser.RIGHT_BOTTOM`, `Phaser.BOTTOM_LEFT`, `Phaser.BOTTOM_CENTER`
+        * and `Phaser.BOTTOM_RIGHT`.
+        * 
+        * Groups are placed in such a way that their _bounds_ align with the
+        * parent, taking into consideration rotation and scale of the children.
+        * This allows you to neatly align Groups, irrespective of their position value.
+        * 
+        * The optional `offsetX` and `offsetY` arguments allow you to apply extra spacing to the final
+        * aligned position of the Group. For example:
+        * 
+        * `group.alignTo(background, Phaser.BOTTOM_RIGHT, -20, -20)`
+        * 
+        * Would align the `group` to the bottom-right, but moved 20 pixels in from the corner.
+        * Think of the offsets as applying an adjustment to the parents bounds before the alignment takes place.
+        * So providing a negative offset will 'shrink' the parent bounds by that amount, and providing a positive
+        * one expands it.
+        * 
+        * @param parent The Game Object or Rectangle with which to align this Group to. Can also include properties such as `World.bounds` or `Camera.view`.
+        * @param position The position constant. One of `Phaser.TOP_LEFT`, `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.LEFT_TOP`, `Phaser.LEFT_CENTER`, `Phaser.LEFT_BOTTOM`, `Phaser.RIGHT_TOP`, `Phaser.RIGHT_CENTER`, `Phaser.RIGHT_BOTTOM`, `Phaser.BOTTOM_LEFT`, `Phaser.BOTTOM_CENTER` or `Phaser.BOTTOM_RIGHT`.
+        * @param offsetX A horizontal adjustment of the Containers bounds, applied to the aligned position of the Game Object. Use a negative value to shrink the bounds, positive to increase it.
+        * @param offsetY A vertical adjustment of the Containers bounds, applied to the aligned position of the Game Object. Use a negative value to shrink the bounds, positive to increase it.
+        * @return This Group.
+        */
+        alignTo(container: Phaser.Rectangle | Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapText | Phaser.Button | Phaser.Graphics | Phaser.TileSprite, position?: number, offsetX?: number, offsetY?: number): Phaser.Group;
+
+        /**
+        * Brings the given child to the top of this group so it renders above all other children.
+        * 
+        * @param child The child to bring to the top of this group.
+        * @return The child that was moved.
+        */
+        bringToTop(child: any): any;
+
+        /**
+        * Calls a function, specified by name, on all on children.
+        * 
+        * The function is called for all children regardless if they are dead or alive (see callAllExists for different options).
+        * After the method parameter and context you can add as many extra parameters as you like, which will all be passed to the child.
+        * 
+        * @param method Name of the function on the child to call. Deep property lookup is supported.
+        * @param context A string containing the context under which the method will be executed. Set to null to default to the child.
+        * @param args Additional parameters that will be passed to the method.
+        */
+        callAll(method: string, context: any, ...parameters: any[]): void;
+
+        /**
+        * Calls a function, specified by name, on all children in the group who exist (or do not exist).
+        * 
+        * After the existsValue parameter you can add as many parameters as you like, which will all be passed to the child callback.
+        * 
+        * @param callback Name of the function on the children to call.
+        * @param existsValue Only children with exists=existsValue will be called.
+        * @param parameter Additional parameters that will be passed to the callback.
+        */
+        callAllExists(callback: string, existsValue: boolean, ...parameters: any[]): void;
+
+        /**
+        * Returns a reference to a function that exists on a child of the group based on the given callback array.
+        * 
+        * @param child The object to inspect.
+        * @param callback The array of function names.
+        * @param length The size of the array (pre-calculated in callAll).
+        */
+        callbackFromArray(child: any, callback: Function, length: number): void;
+
+        /**
+        * Quickly check that the same property across all children of this group is equal to the given value.
+        * 
+        * This call doesn't descend down children, so if you have a Group inside of this group, the property will be checked on the group but not its children.
+        * 
+        * @param key The property, as a string, to be set. For example: 'body.velocity.x'
+        * @param value The value that will be checked.
+        * @param checkAlive If set then only children with alive=true will be checked. This includes any Groups that are children.
+        * @param checkVisible If set then only children with visible=true will be checked. This includes any Groups that are children.
+        * @param force If `force` is true then the property will be checked on the child regardless if it already exists or not. If true and the property doesn't exist, false will be returned.
+        */
+        checkAll(key: string[], value: any, checkAlive?: boolean, checkVisible?: boolean, force?: boolean): boolean;
+
+        /**
+        * Checks a property for the given value on the child.
+        * 
+        * @param child The child to check the property value on.
+        * @param key An array of strings that make up the property that will be set.
+        * @param value The value that will be checked.
+        * @param force If `force` is true then the property will be checked on the child regardless if it already exists or not. If true and the property doesn't exist, false will be returned.
+        * @return True if the property was was equal to value, false if not.
+        */
+        checkProperty(child: any, key: string[], value: any, force?: boolean): boolean;
+
+        /**
+        * Get the number of dead children in this group.
+        * @return The number of children flagged as dead.
+        */
+        countDead(): number;
+
+        /**
+        * Get the number of living children in this group.
+        * @return The number of children flagged as alive.
+        */
+        countLiving(): number;
+
+        /**
+        * Creates a new Phaser.Sprite object and adds it to the top of this group.
+        * 
+        * Use {@link Phaser.Group#classType classType} to change the type of object created.
+        * 
+        * The child is automatically added to the top of the group, and is displayed above every previous child.
+        * 
+        * Or if the _optional_ index is specified, the child is added at the location specified by the index value,
+        * this allows you to control child ordering.
+        * 
+        * If `Group.enableBody` is set, then a physics body will be created on the object, so long as one does not already exist.
+        * 
+        * If `Group.inputEnableChildren` is set, then an Input Handler will be created on the object, so long as one does not already exist.
+        * 
+        * @param x The x coordinate to display the newly created Sprite at. The value is in relation to the group.x point.
+        * @param y The y coordinate to display the newly created Sprite at. The value is in relation to the group.y point.
+        * @param key This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache Image entry, or an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
+        * @param frame If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
+        * @param exists The default exists state of the Sprite. - Default: true
+        * @param index The index within the group to insert the child to. Where 0 is the bottom of the Group.
+        * @return The child that was created: will be a {@link Phaser.Sprite} unless {@link #classType} has been changed.
+        */
+        create(x: number, y: number, key?: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture, frame?: string | number, exists?: boolean, index?: number): any;
+
+        /**
+        * Creates multiple Phaser.Sprite objects and adds them to the top of this Group.
+        * 
+        * This method is useful if you need to quickly generate a pool of sprites, such as bullets.
+        * 
+        * Use {@link Phaser.Group#classType classType} to change the type of object created.
+        * 
+        * You can provide an array as the `key` and / or `frame` arguments. When you do this
+        * it will create `quantity` Sprites for every key (and frame) in the arrays.
+        * 
+        * For example:
+        * 
+        * `createMultiple(25, ['ball', 'carrot'])`
+        * 
+        * In the above code there are 2 keys (ball and carrot) which means that 50 sprites will be
+        * created in total, 25 of each. You can also have the `frame` as an array:
+        * 
+        * `createMultiple(5, 'bricks', [0, 1, 2, 3])`
+        * 
+        * In the above there is one key (bricks), which is a sprite sheet. The frames array tells
+        * this method to use frames 0, 1, 2 and 3. So in total it will create 20 sprites, because
+        * the quantity was set to 5, so that is 5 brick sprites of frame 0, 5 brick sprites with
+        * frame 1, and so on.
+        * 
+        * If you set both the key and frame arguments to be arrays then understand it will create
+        * a total quantity of sprites equal to the size of both arrays times each other. I.e.:
+        * 
+        * `createMultiple(20, ['diamonds', 'balls'], [0, 1, 2])`
+        * 
+        * The above will create 20 'diamonds' of frame 0, 20 with frame 1 and 20 with frame 2.
+        * It will then create 20 'balls' of frame 0, 20 with frame 1 and 20 with frame 2.
+        * In total it will have created 120 sprites.
+        * 
+        * By default the Sprites will have their `exists` property set to `false`, and they will be
+        * positioned at 0x0, relative to the `Group.x / y` values.
+        * 
+        * If `Group.enableBody` is set, then a physics body will be created on the objects, so long as one does not already exist.
+        * 
+        * If `Group.inputEnableChildren` is set, then an Input Handler will be created on the objects, so long as one does not already exist.
+        * 
+        * @param quantity The number of Sprites to create.
+        * @param key The Cache key of the image that the Sprites will use. Or an Array of keys. See the description for details on how the quantity applies when arrays are used.
+        * @param frame If the Sprite image contains multiple frames you can specify which one to use here. Or an Array of frames. See the description for details on how the quantity applies when arrays are used.
+        * @param exists The default exists state of the Sprite.
+        * @return An array containing all of the Sprites that were created.
+        */
+        createMultiple(quantity: number, key: string | string[], frame?: any | any[], exists?: boolean): any[];
+
+        /**
+        * Sort the children in the group according to custom sort function.
+        * 
+        * The `sortHandler` is provided the two parameters: the two children involved in the comparison (a and b).
+        * It should return -1 if `a > b`, 1 if `a < b` or 0 if `a === b`.
+        * 
+        * @param sortHandler The custom sort function.
+        * @param context The context in which the sortHandler is called.
+        */
+        customSort(sortHandler: Function, context?: any): void;
+
+        /**
+        * Destroys this group.
+        * 
+        * Removes all children, then removes this group from its parent and nulls references.
+        * 
+        * @param destroyChildren If true `destroy` will be invoked on each removed child. - Default: true
+        * @param soft A 'soft destroy' (set to true) doesn't remove this group from its parent or null the game reference. Set to false and it does.
+        */
+        destroy(destroyChildren?: boolean, soft?: boolean): void;
+
+        /**
+        * Divides the given property by the amount on all children in this group.
+        * 
+        * `Group.divideAll('x', 2)` will half the child.x value for each child.
+        * 
+        * @param property The property to divide, for example 'body.velocity.x' or 'angle'.
+        * @param amount The amount to divide the property by. If child.x = 100 then divideAll('x', 2) would make child.x = 50.
+        * @param checkAlive If true the property will only be changed if the child is alive.
+        * @param checkVisible If true the property will only be changed if the child is visible.
+        */
+        divideAll(property: string, amount: number, checkAlive?: boolean, checkVisible?: boolean): void;
+
+        /**
+        * Call a function on each child in this group.
+        * 
+        * Additional arguments for the callback can be specified after the `checkExists` parameter. For example,
+        * 
+        *     Group.forEach(awardBonusGold, this, true, 100, 500)
+        * 
+        * would invoke `awardBonusGold` function with the parameters `(child, 100, 500)`.
+        * 
+        * Note: This check will skip any children which are Groups themselves.
+        * 
+        * @param callback The function that will be called for each applicable child. The child will be passed as the first argument.
+        * @param callbackContext The context in which the function should be called (usually 'this').
+        * @param checkExists If set only children matching for which `exists` is true will be passed to the callback, otherwise all children will be passed.
+        * @param args Additional arguments to pass to the callback function, after the child item. - Default: (none)
+        */
+        forEach(callback: Function, callbackContext: any, checkExists?: boolean, ...args: any[]): void;
+
+        /**
+        * Call a function on each alive child in this group.
+        * 
+        * See {@link Phaser.Group#forEach forEach} for details.
+        * 
+        * @param callback The function that will be called for each applicable child. The child will be passed as the first argument.
+        * @param callbackContext The context in which the function should be called (usually 'this').
+        * @param args Additional arguments to pass to the callback function, after the child item. - Default: (none)
+        */
+        forEachAlive(callback: Function, callbackContext: any, ...args: any[]): void;
+
+        /**
+        * Call a function on each dead child in this group.
+        * 
+        * See {@link Phaser.Group#forEach forEach} for details.
+        * 
+        * @param callback The function that will be called for each applicable child. The child will be passed as the first argument.
+        * @param callbackContext The context in which the function should be called (usually 'this').
+        * @param args Additional arguments to pass to the callback function, after the child item. - Default: (none)
+        */
+        forEachDead(callback: Function, callbackContext: any, ...args: any[]): void;
+
+        /**
+        * Call a function on each existing child in this group.
+        * 
+        * See {@link Phaser.Group#forEach forEach} for details.
+        * 
+        * @param callback The function that will be called for each applicable child. The child will be passed as the first argument.
+        * @param callbackContext The context in which the function should be called (usually 'this').
+        * @param args Additional arguments to pass to the callback function, after the child item. - Default: (none)
+        */
+        forEachExists(callback: Function, callbackContext: any): void;
+
+        /**
+        * Find children matching a certain predicate.
+        * 
+        * For example:
+        * 
+        *     var healthyList = Group.filter(function(child, index, children) {
+        *         return child.health > 10 ? true : false;
+        *     }, true);
+        *     healthyList.callAll('attack');
+        * 
+        * Note: Currently this will skip any children which are Groups themselves.
+        * 
+        * @param predicate The function that each child will be evaluated against. Each child of the group will be passed to it as its first parameter, the index as the second, and the entire child array as the third
+        * @param checkExists If true, only existing can be selected; otherwise all children can be selected and will be passed to the predicate.
+        * @return Returns an array list containing all the children that the predicate returned true for
+        */
+        filter(predicate: Function, checkExists?: boolean): ArraySet;
+
+        /**
+        * Returns the child found at the given index within this group.
+        * 
+        * @param index The index to return the child from.
+        * @return The child that was found at the given index, or -1 for an invalid index.
+        */
+        getAt(index: number): PIXI.DisplayObject | number;
+
+        /**
+        * Returns the child at the bottom of this group.
+        * 
+        * The bottom child the child being displayed (rendered) below every other child.
+        * @return The child at the bottom of the Group.
+        */
+        getBottom(): any;
+
+        /**
+        * Searches the Group for the first instance of a child with the `name`
+        * property matching the given argument. Should more than one child have
+        * the same name only the first instance is returned.
+        * 
+        * @param name The name to search for.
+        * @return The first child with a matching name, or null if none were found.
+        */
+        getByName(name: string): any;
+
+        /**
+        * Get the closest child to given Object, with optional callback to filter children.
+        * 
+        * This can be a Sprite, Group, Image or any object with public x and y properties.
+        * 
+        * 'close' is determined by the distance from the objects `x` and `y` properties compared to the childs `x` and `y` properties.
+        * 
+        * You can use the optional `callback` argument to apply your own filter to the distance checks.
+        * If the child is closer then the previous child, it will be sent to `callback` as the first argument,
+        * with the distance as the second. The callback should return `true` if it passes your
+        * filtering criteria, otherwise it should return `false`.
+        * 
+        * @param object The object used to determine the distance. This can be a Sprite, Group, Image or any object with public x and y properties.
+        * @param callback The function that each child will be evaluated against. Each child of the group will be passed to it as its first parameter, with the distance as the second. It should return `true` if the child passes the matching criteria.
+        * @param callbackContext The context in which the function should be called (usually 'this').
+        * @return The child closest to given object, or `null` if no child was found.
+        */
+        getClosestTo(object: any, callback?: Function, callbackContext?: any): any;
+
+        /**
+        * Get the first child that is alive (`child.alive === true`).
+        * 
+        * This is handy for choosing a squad leader, etc.
+        * 
+        * You can use the optional argument `createIfNull` to create a new Game Object if no alive ones were found in this Group.
+        * 
+        * It works by calling `Group.create` passing it the parameters given to this method, and returning the new child.
+        * 
+        * If a child *was* found , `createIfNull` is `false` and you provided the additional arguments then the child
+        * will be reset and/or have a new texture loaded on it. This is handled by `Group.resetChild`.
+        * 
+        * @param createIfNull If `true` and no alive children are found a new one is created.
+        * @param x The x coordinate to reset the child to. The value is in relation to the group.x point.
+        * @param y The y coordinate to reset the child to. The value is in relation to the group.y point.
+        * @param key This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache Image entry, or an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
+        * @param frame If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
+        * @return The alive dead child, or `null` if none found and `createIfNull` was false.
+        */
+        getFirstAlive(createIfNull?: boolean, x?: number, y?: number, key?: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture, frame?: string | number): any;
+
+        /**
+        * Get the first child that is dead (`child.alive === false`).
+        * 
+        * This is handy for checking if everything has been wiped out and adding to the pool as needed.
+        * 
+        * You can use the optional argument `createIfNull` to create a new Game Object if no dead ones were found in this Group.
+        * 
+        * It works by calling `Group.create` passing it the parameters given to this method, and returning the new child.
+        * 
+        * If a child *was* found , `createIfNull` is `false` and you provided the additional arguments then the child
+        * will be reset and/or have a new texture loaded on it. This is handled by `Group.resetChild`.
+        * 
+        * @param createIfNull If `true` and no dead children are found a new one is created.
+        * @param x The x coordinate to reset the child to. The value is in relation to the group.x point.
+        * @param y The y coordinate to reset the child to. The value is in relation to the group.y point.
+        * @param key This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache Image entry, or an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
+        * @param frame If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
+        * @return The first dead child, or `null` if none found and `createIfNull` was false.
+        */
+        getFirstDead(createIfNull?: boolean, x?: number, y?: number, key?: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture, frame?: string | number): any;
+
+        /**
+        * Get the first display object that exists, or doesn't exist.
+        * 
+        * You can use the optional argument `createIfNull` to create a new Game Object if none matching your exists argument were found in this Group.
+        * 
+        * It works by calling `Group.create` passing it the parameters given to this method, and returning the new child.
+        * 
+        * If a child *was* found , `createIfNull` is `false` and you provided the additional arguments then the child
+        * will be reset and/or have a new texture loaded on it. This is handled by `Group.resetChild`.
+        * 
+        * @param exists If true, find the first existing child; otherwise find the first non-existing child. - Default: true
+        * @param createIfNull If `true` and no alive children are found a new one is created.
+        * @param x The x coordinate to reset the child to. The value is in relation to the group.x point.
+        * @param y The y coordinate to reset the child to. The value is in relation to the group.y point.
+        * @param key This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache Image entry, or an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
+        * @param frame If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
+        * @return The first child, or `null` if none found and `createIfNull` was false.
+        */
+        getFirstExists(exists: boolean, createIfNull?: boolean, x?: number, y?: number, key?: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture, frame?: string | number): any;
+
+        /**
+        * Get the child furthest away from the given Object, with optional callback to filter children.
+        * 
+        * This can be a Sprite, Group, Image or any object with public x and y properties.
+        * 
+        * 'furthest away' is determined by the distance from the objects `x` and `y` properties compared to the childs `x` and `y` properties.
+        * 
+        * You can use the optional `callback` argument to apply your own filter to the distance checks.
+        * If the child is closer then the previous child, it will be sent to `callback` as the first argument,
+        * with the distance as the second. The callback should return `true` if it passes your
+        * filtering criteria, otherwise it should return `false`.
+        * 
+        * @param object The object used to determine the distance. This can be a Sprite, Group, Image or any object with public x and y properties.
+        * @param callback The function that each child will be evaluated against. Each child of the group will be passed to it as its first parameter, with the distance as the second. It should return `true` if the child passes the matching criteria.
+        * @param callbackContext The context in which the function should be called (usually 'this').
+        * @return The child furthest from the given object, or `null` if no child was found.
+        */
+        getFurthestFrom(object: any, callback?: Function, callbackContext?: any): any;
+
+        /**
+        * Get the index position of the given child in this group, which should match the child's `z` property.
+        * 
+        * @param child The child to get the index for.
+        * @return The index of the child or -1 if it's not a member of this group.
+        */
+        getIndex(child: any): number;
+
+        /**
+        * Returns a random child from the group.
+        * 
+        * @param startIndex Offset from the front of the front of the group (lowest child).
+        * @param length Restriction on the number of values you want to randomly select from. - Default: (to top)
+        * @return A random child of this Group.
+        */
+        getRandom(startIndex?: number, length?: number): any;
+
+        /**
+        * Return the child at the top of this group.
+        * 
+        * The top child is the child displayed (rendered) above every other child.
+        * @return The child at the top of the Group.
+        */
+        getTop(): any;
+
+        /**
+        * Checks if the child has the given property.
+        * 
+        * Will scan up to 4 levels deep only.
+        * 
+        * @param child The child to check for the existence of the property on.
+        * @param key An array of strings that make up the property.
+        * @return True if the child has the property, otherwise false.
+        */
+        hasProperty(child: any, key: string[]): boolean;
+
+        /**
+        * Iterates over the children of the group performing one of several actions for matched children.
+        * 
+        * A child is considered a match when it has a property, named `key`, whose value is equal to `value`
+        * according to a strict equality comparison.
+        * 
+        * The result depends on the `returnType`:
+        * 
+        * - {@link Phaser.Group.RETURN_TOTAL RETURN_TOTAL}:
+        *     The callback, if any, is applied to all matching children. The number of matched children is returned.
+        * - {@link Phaser.Group.RETURN_NONE RETURN_NONE}:
+        *     The callback, if any, is applied to all matching children. No value is returned.
+        * - {@link Phaser.Group.RETURN_CHILD RETURN_CHILD}:
+        *     The callback, if any, is applied to the *first* matching child and the *first* matched child is returned.
+        *     If there is no matching child then null is returned.
+        * 
+        * If `args` is specified it must be an array. The matched child will be assigned to the first
+        * element and the entire array will be applied to the callback function.
+        * 
+        * @param key The child property to check, i.e. 'exists', 'alive', 'health'
+        * @param value A child matches if `child[key] === value` is true.
+        * @param returnType How to iterate the children and what to return.
+        * @param callback Optional function that will be called on each matching child. The matched child is supplied as the first argument.
+        * @param callbackContext The context in which the function should be called (usually 'this').
+        * @param args The arguments supplied to to the callback; the first array index (argument) will be replaced with the matched child. - Default: (none)
+        * @return Returns either an integer (for RETURN_TOTAL), the first matched child (for RETURN_CHILD), or null.
+        */
+        iterate(key: string, value: any, returnType: number, callback?: Function, callbackContext?: any, ...args: any[]): any;
+
+        /**
+        * Moves all children from this Group to the Group given.
+        * 
+        * @param group The new Group to which the children will be moved to.
+        * @param silent If true the children will not dispatch the `onAddedToGroup` event for the new Group.
+        * @return The Group to which all the children were moved.
+        */
+        moveAll(group: Phaser.Group, silent?: boolean): Phaser.Group;
+
+        /**
+        * Moves the given child down one place in this group unless it's already at the bottom.
+        * 
+        * @param child The child to move down in the group.
+        * @return The child that was moved.
+        */
+        moveDown(child: any): any;
+
+        /**
+        * Moves the given child up one place in this group unless it's already at the top.
+        * 
+        * @param child The child to move up in the group.
+        * @return The child that was moved.
+        */
+        moveUp(child: any): any;
+
+        /**
+        * Multiplies the given property by the amount on all children in this group.
+        * 
+        * `Group.multiplyAll('x', 2)` will x2 the child.x value for each child.
+        * 
+        * @param property The property to multiply, for example 'body.velocity.x' or 'angle'.
+        * @param amount The amount to multiply the property by. If child.x = 10 then multiplyAll('x', 2) would make child.x = 20.
+        * @param checkAlive If true the property will only be changed if the child is alive.
+        * @param checkVisible If true the property will only be changed if the child is visible.
+        */
+        multiplyAll(property: string, amount: number, checkAlive: boolean, checkVisible: boolean): void;
+
+        /**
+        * Advances the group cursor to the next (higher) object in the group.
+        * 
+        * If the cursor is at the end of the group (top child) it is moved the start of the group (bottom child).
+        * @return The child the cursor now points to.
+        */
+        next(): void;
+
+        /**
+        * The core postUpdate - as called by World.
+        */
+        postUpdate(): void;
+
+        /**
+        * The core preUpdate - as called by World.
+        */
+        preUpdate(): void;
+
+        /**
+        * Moves the group cursor to the previous (lower) child in the group.
+        * 
+        * If the cursor is at the start of the group (bottom child) it is moved to the end (top child).
+        * @return The child the cursor now points to.
+        */
+        previous(): void;
+
+        /**
+        * Removes the given child from this group.
+        * 
+        * This will dispatch an `onRemovedFromGroup` event from the child (if it has one), and optionally destroy the child.
+        * 
+        * If the group cursor was referring to the removed child it is updated to refer to the next child.
+        * 
+        * @param child The child to remove.
+        * @param destroy If true `destroy` will be invoked on the removed child.
+        * @param silent If true the the child will not dispatch the `onRemovedFromGroup` event.
+        * @return true if the child was removed from this group, otherwise false.
+        */
+        remove(child: any, destroy?: boolean, silent?: boolean): boolean;
+
+        /**
+        * Removes all children from this Group, but does not remove the group from its parent.
+        * 
+        * The children can be optionally destroyed as they are removed.
+        * 
+        * You can also optionally also destroy the BaseTexture the Child is using. Be careful if you've
+        * more than one Game Object sharing the same BaseTexture.
+        * 
+        * @param destroy If true `destroy` will be invoked on each removed child.
+        * @param silent If true the children will not dispatch their `onRemovedFromGroup` events.
+        * @param destroyTexture If true, and if the `destroy` argument is also true, the BaseTexture belonging to the Child is also destroyed. Note that if another Game Object is sharing the same BaseTexture it will invalidate it.
+        */
+        removeAll(destroy?: boolean, silent?: boolean, destroyTexture?: boolean): void;
+
+        /**
+        * Removes all children from this group whose index falls beteen the given startIndex and endIndex values.
+        * 
+        * @param startIndex The index to start removing children from.
+        * @param endIndex The index to stop removing children at. Must be higher than startIndex. If undefined this method will remove all children between startIndex and the end of the group.
+        * @param destroy If true `destroy` will be invoked on each removed child.
+        * @param silent If true the children will not dispatch their `onRemovedFromGroup` events.
+        */
+        removeBetween(startIndex: number, endIndex?: number, destroy?: boolean, silent?: boolean): void;
+
+        /**
+        * Removes a child of this Group from the hash array.
+        * This call will return false if the child is not in the hash.
+        * 
+        * @param child The display object to remove from this Groups hash. Must be a member of this Group and in the hash.
+        * @return True if the child was successfully removed from the hash, otherwise false.
+        */
+        removeFromHash(child: PIXI.DisplayObject): boolean;
+
+        /**
+        * Replaces a child of this Group with the given newChild. The newChild cannot be a member of this Group.
+        * 
+        * If `Group.enableBody` is set, then a physics body will be created on the object, so long as one does not already exist.
+        * 
+        * If `Group.inputEnableChildren` is set, then an Input Handler will be created on the object, so long as one does not already exist.
+        * 
+        * @param oldChild The child in this group that will be replaced.
+        * @param newChild The child to be inserted into this group.
+        * @return Returns the oldChild that was replaced within this group.
+        */
+        replace(oldChild: any, newChild: any): any;
+
+        /**
+        * Takes a child and if the `x` and `y` arguments are given it calls `child.reset(x, y)` on it.
+        * 
+        * If the `key` and optionally the `frame` arguments are given, it calls `child.loadTexture(key, frame)` on it.
+        * 
+        * The two operations are separate. For example if you just wish to load a new texture then pass `null` as the x and y values.
+        * 
+        * @param child The child to reset and/or load the texture on.
+        * @param x The x coordinate to reset the child to. The value is in relation to the group.x point.
+        * @param y The y coordinate to reset the child to. The value is in relation to the group.y point.
+        * @param key This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache Image entry, or an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
+        * @param frame If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
+        * @return The child that was reset: usually a {@link Phaser.Sprite}.
+        */
+        resetChild(child: any, x?: number, y?: number, key?: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture, frame?: string | number): any;
+
+        /**
+        * Sets the group cursor to the first child in the group.
+        * 
+        * If the optional index parameter is given it sets the cursor to the object at that index instead.
+        * 
+        * @param index Set the cursor to point to a specific index.
+        * @return The child the cursor now points to.
+        */
+        resetCursor(index?: number): any;
+
+        /**
+        * Reverses all children in this group.
+        * 
+        * This operation applies only to immediate children and does not propagate to subgroups.
+        */
+        reverse(): void;
+
+        /**
+        * Sends the given child to the bottom of this group so it renders below all other children.
+        * 
+        * @param child The child to send to the bottom of this group.
+        * @return The child that was moved.
+        */
+        sendToBack(child: any): any;
+
+        /**
+        * Quickly set a property on a single child of this group to a new value.
+        * 
+        * The operation parameter controls how the new value is assigned to the property, from simple replacement to addition and multiplication.
+        * 
+        * @param child The child to set the property on.
+        * @param key The property, as a string, to be set. For example: 'body.velocity.x'
+        * @param value The value that will be set.
+        * @param checkAlive If set then the child will only be updated if alive=true.
+        * @param checkVisible If set then the child will only be updated if visible=true.
+        * @param operation Controls how the value is assigned. A value of 0 replaces the value with the new one. A value of 1 adds it, 2 subtracts it, 3 multiplies it and 4 divides it.
+        * @param force If `force` is true then the property will be set on the child regardless if it already exists or not. If false and the property doesn't exist, nothing will be set.
+        * @return True if the property was set, false if not.
+        */
+        set(child: any, key: string[], value: any, operation?: number, force?: boolean): boolean;
+
+        /**
+        * Quickly set the same property across all children of this group to a new value.
+        * 
+        * This call doesn't descend down children, so if you have a Group inside of this group, the property will be set on the group but not its children.
+        * If you need that ability please see `Group.setAllChildren`.
+        * 
+        * The operation parameter controls how the new value is assigned to the property, from simple replacement to addition and multiplication.
+        * 
+        * @param key The property, as a string, to be set. For example: 'body.velocity.x'
+        * @param value The value that will be set.
+        * @param checkAlive If set then only children with alive=true will be updated. This includes any Groups that are children.
+        * @param checkVisible If set then only children with visible=true will be updated. This includes any Groups that are children.
+        * @param operation Controls how the value is assigned. A value of 0 replaces the value with the new one. A value of 1 adds it, 2 subtracts it, 3 multiplies it and 4 divides it.
+        * @param force If `force` is true then the property will be set on the child regardless if it already exists or not. If false and the property doesn't exist, nothing will be set.
+        */
+        setAll(key: string, value: any, checkAlive?: boolean, checkVisible?: boolean, operation?: number, force?: boolean): void;
+
+        /**
+        * Quickly set the same property across all children of this group, and any child Groups, to a new value.
+        * 
+        * If this group contains other Groups then the same property is set across their children as well, iterating down until it reaches the bottom.
+        * Unlike with `setAll` the property is NOT set on child Groups itself.
+        * 
+        * The operation parameter controls how the new value is assigned to the property, from simple replacement to addition and multiplication.
+        * 
+        * @param key The property, as a string, to be set. For example: 'body.velocity.x'
+        * @param value The value that will be set.
+        * @param checkAlive If set then only children with alive=true will be updated. This includes any Groups that are children.
+        * @param checkVisible If set then only children with visible=true will be updated. This includes any Groups that are children.
+        * @param operation Controls how the value is assigned. A value of 0 replaces the value with the new one. A value of 1 adds it, 2 subtracts it, 3 multiplies it and 4 divides it.
+        * @param force If `force` is true then the property will be set on the child regardless if it already exists or not. If false and the property doesn't exist, nothing will be set.
+        */
+        setAllChildren(key: string, value: any, checkAlive?: boolean, checkVisible?: boolean, operation?: number, force?: boolean): void;
+
+        /**
+        * Sets a property to the given value on the child. The operation parameter controls how the value is set.
+        * 
+        * The operations are:
+        * - 0: set the existing value to the given value; if force is `true` a new property will be created if needed
+        * - 1: will add the given value to the value already present.
+        * - 2: will subtract the given value from the value already present.
+        * - 3: will multiply the value already present by the given value.
+        * - 4: will divide the value already present by the given value.
+        * 
+        * @param child The child to set the property value on.
+        * @param key An array of strings that make up the property that will be set.
+        * @param value The value that will be set.
+        * @param operation Controls how the value is assigned. A value of 0 replaces the value with the new one. A value of 1 adds it, 2 subtracts it, 3 multiplies it and 4 divides it.
+        * @param force If `force` is true then the property will be set on the child regardless if it already exists or not. If false and the property doesn't exist, nothing will be set.
+        * @return True if the property was set, false if not.
+        */
+        setProperty(child: any, key: string[], value: any, operation?: number, force?: boolean): boolean;
+
+        /**
+        * Sort the children in the group according to a particular key and ordering.
+        * 
+        * Call this function to sort the group according to a particular key value and order.
+        * 
+        * For example to depth sort Sprites for Zelda-style game you might call `group.sort('y', Phaser.Group.SORT_ASCENDING)` at the bottom of your `State.update()`.
+        * 
+        * Internally this uses a standard JavaScript Array sort, so everything that applies there also applies here, including
+        * alphabetical sorting, mixing strings and numbers, and Unicode sorting. See MDN for more details.
+        * 
+        * @param key The name of the property to sort on. Defaults to the objects z-depth value. - Default: 'z'
+        * @param order Order ascending ({@link Phaser.Group.SORT_ASCENDING SORT_ASCENDING}) or descending ({@link Phaser.Group.SORT_DESCENDING SORT_DESCENDING}). - Default: Phaser.Group.SORT_ASCENDING
+        */
+        sort(key?: string, order?: number): void;
+
+        /**
+        * Subtracts the amount from the given property on all children in this group.
+        * 
+        * `Group.subAll('x', 10)` will minus 10 from the child.x value for each child.
+        * 
+        * @param property The property to decrement, for example 'body.velocity.x' or 'angle'.
+        * @param amount The amount to subtract from the property. If child.x = 50 then subAll('x', 40) would make child.x = 10.
+        * @param checkAlive If true the property will only be changed if the child is alive.
+        * @param checkVisible If true the property will only be changed if the child is visible.
+        */
+        subAll(property: string, amount: number, checkAlive: boolean, checkVisible: boolean): void;
+
+        /**
+        * Swaps the position of two children in this group.
+        * 
+        * Both children must be in this group, a child cannot be swapped with itself, and unparented children cannot be swapped.
+        * 
+        * @param child1 The first child to swap.
+        * @param child2 The second child to swap.
+        */
+        swap(child1: any, child2: any): boolean;
+
+        /**
+        * The core update - as called by World.
+        */
+        update(): void;
+
+        /**
+        * Internal method that re-applies all of the children's Z values.
+        * 
+        * This must be called whenever children ordering is altered so that their `z` indices are correctly updated.
+        */
+        updateZ(): void;
+
+        /**
+        * Positions the child found at the given index within this group to the given x and y coordinates.
+        * 
+        * @param index The index of the child in the group to set the position of.
+        * @param x The new x position of the child.
+        * @param y The new y position of the child.
+        */
+        xy(index: number, x: number, y: number): void;
+
+    }
+
+
+    /**
+    * The SpriteBatch class is a really fast version of the DisplayObjectContainer built purely for speed, so use when you need a lot of sprites or particles.
+    * It's worth mentioning that by default sprite batches are used through-out the renderer, so you only really need to use a SpriteBatch if you have over
+    * 1000 sprites that all share the same texture (or texture atlas). It's also useful if running in Canvas mode and you have a lot of un-rotated or un-scaled
+    * Sprites as it skips all of the Canvas setTransform calls, which helps performance, especially on mobile devices.
+    * 
+    * Please note that any Sprite that is part of a SpriteBatch will not have its bounds updated, so will fail checks such as outOfBounds.
+    */
+    class SpriteBatch extends Phaser.Group {
+
+
+        /**
+        * The SpriteBatch class is a really fast version of the DisplayObjectContainer built purely for speed, so use when you need a lot of sprites or particles.
+        * It's worth mentioning that by default sprite batches are used through-out the renderer, so you only really need to use a SpriteBatch if you have over
+        * 1000 sprites that all share the same texture (or texture atlas). It's also useful if running in Canvas mode and you have a lot of un-rotated or un-scaled
+        * Sprites as it skips all of the Canvas setTransform calls, which helps performance, especially on mobile devices.
+        * 
+        * Please note that any Sprite that is part of a SpriteBatch will not have its bounds updated, so will fail checks such as outOfBounds.
+        * 
+        * @param game A reference to the currently running game.
+        * @param parent The parent Group, DisplayObject or DisplayObjectContainer that this Group will be added to. If `undefined` or `null` it will use game.world.
+        * @param name A name for this Group. Not used internally but useful for debugging. - Default: group
+        * @param addToStage If set to true this Group will be added directly to the Game.Stage instead of Game.World.
+        */
+        constructor(game: Phaser.Game, parent: PIXI.DisplayObjectContainer, name?: string, addedToStage?: boolean);
+
+
+        /**
+        * Internal Phaser Type value.
+        */
+        type: number;
+
+    }
+
     class Bullet extends Phaser.Sprite {
 
         constructor(game: Phaser.Game, x: number, y: number, key?: any, frame?: any);
 
         kill(): Phaser.Bullet;
         update(): void;
+
+    }
+	
+    /**
+    * An Image is a light-weight object you can use to display anything that doesn't need physics or animation.
+    * It can still rotate, scale, crop and receive input events. This makes it perfect for logos, backgrounds, simple buttons and other non-Sprite graphics.
+    */
+    class Image extends PIXI.Sprite {
+
+
+        /**
+        * An Image is a light-weight object you can use to display anything that doesn't need physics or animation.
+        * It can still rotate, scale, crop and receive input events. This makes it perfect for logos, backgrounds, simple buttons and other non-Sprite graphics.
+        * 
+        * @param game A reference to the currently running game.
+        * @param x The x coordinate of the Image. The coordinate is relative to any parent container this Image may be in.
+        * @param y The y coordinate of the Image. The coordinate is relative to any parent container this Image may be in.
+        * @param key The texture used by the Image during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture, BitmapData or PIXI.Texture.
+        * @param frame If this Image is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
+        */
+        constructor(game: Phaser.Game, x: number, y: number, key: string | Phaser.RenderTexture | Phaser.BitmapData | PIXI.Texture, frame?: string | number);
+
+
+        /**
+        * A useful flag to control if the Game Object is alive or dead.
+        * 
+        * This is set automatically by the Health components `damage` method should the object run out of health.
+        * Or you can toggle it via your game code.
+        * 
+        * This property is mostly just provided to be used by your game - it doesn't effect rendering or logic updates.
+        * However you can use `Group.getFirstAlive` in conjunction with this property for fast object pooling and recycling.
+        * Default: true
+        */
+        alive: boolean;
+
+        /**
+        * The angle property is the rotation of the Game Object in *degrees* from its original orientation.
+        * 
+        * Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
+        * 
+        * Values outside this range are added to or subtracted from 360 to obtain a value within the range.
+        * For example, the statement player.angle = 450 is the same as player.angle = 90.
+        * 
+        * If you wish to work in radians instead of degrees you can use the property `rotation` instead.
+        * Working in radians is slightly faster as it doesn't have to perform any calculations.
+        */
+        angle: number;
+
+        /**
+        * The anchor sets the origin point of the texture.
+        * The default is 0,0 this means the texture's origin is the top left
+        * Setting than anchor to 0.5,0.5 means the textures origin is centered
+        * Setting the anchor to 1,1 would mean the textures origin points will be the bottom right corner
+        */
+        anchor: Phaser.Point;
+
+        /**
+        * If the Game Object is enabled for animation (such as a Phaser.Sprite) this is a reference to its AnimationManager instance.
+        * Through it you can create, play, pause and stop animations.
+        */
+        animations: Phaser.AnimationManager;
+
+        /**
+        * A Game Object with `autoCull` set to true will check its bounds against the World Camera every frame.
+        * If it is not intersecting the Camera bounds at any point then it has its `renderable` property set to `false`.
+        * This keeps the Game Object alive and still processing updates, but forces it to skip the render step entirely.
+        * 
+        * This is a relatively expensive operation, especially if enabled on hundreds of Game Objects. So enable it only if you know it's required,
+        * or you have tested performance and find it acceptable.
+        */
+        autoCull: boolean;
+
+        /**
+        * The sum of the y and height properties.
+        * This is the same as `y + height - offsetY`.
+        */
+        bottom: number;
+
+        /**
+        * The x/y coordinate offset applied to the top-left of the camera that this Game Object will be drawn at if `fixedToCamera` is true.
+        * 
+        * The values are relative to the top-left of the camera view and in addition to any parent of the Game Object on the display list.
+        */
+        cameraOffset: Phaser.Point;
+
+        /**
+        * The center x coordinate of the Game Object.
+        * This is the same as `(x - offsetX) + (width / 2)`.
+        */
+        centerX: number;
+
+        /**
+        * The center y coordinate of the Game Object.
+        * This is the same as `(y - offsetY) + (height / 2)`.
+        */
+        centerY: number;
+
+        /**
+        * The components this Game Object has installed.
+        */
+        components: any;
+
+        /**
+        * The Rectangle used to crop the texture this Game Object uses.
+        * Set this property via `crop`.
+        * If you modify this property directly you must call `updateCrop` in order to have the change take effect.
+        */
+        cropRect: Phaser.Rectangle;
+
+        /**
+        * Does this texture require a custom render call? (as set by BitmapData, Video, etc)
+        */
+        customRender: boolean;
+
+        /**
+        * An empty Object that belongs to this Game Object.
+        * This value isn't ever used internally by Phaser, but may be used by your own code, or
+        * by Phaser Plugins, to store data that needs to be associated with the Game Object,
+        * without polluting the Game Object directly.
+        * Default: {}
+        */
+        data: any;
+
+        /**
+        * A debug flag designed for use with `Game.enableStep`.
+        */
+        debug: boolean;
+        deltaX: number;
+        deltaY: number;
+        deltaZ: number;
+
+        /**
+        * As a Game Object runs through its destroy method this flag is set to true,
+        * and can be checked in any sub-systems or plugins it is being destroyed from.
+        */
+        destroyPhase: boolean;
+
+        /**
+        * All Phaser Game Objects have an Events class which contains all of the events that are dispatched when certain things happen to this
+        * Game Object, or any of its components.
+        */
+        events: Phaser.Events;
+
+        /**
+        * Controls if this Sprite is processed by the core Phaser game loops and Group loops.
+        * Default: true
+        */
+        exists: boolean;
+
+        /**
+        * A Game Object that is "fixed" to the camera uses its x/y coordinates as offsets from the top left of the camera during rendering.
+        * 
+        * The values are adjusted at the rendering stage, overriding the Game Objects actual world position.
+        * 
+        * The end result is that the Game Object will appear to be 'fixed' to the camera, regardless of where in the game world
+        * the camera is viewing. This is useful if for example this Game Object is a UI item that you wish to be visible at all times
+        * regardless where in the world the camera is.
+        * 
+        * The offsets are stored in the `cameraOffset` property.
+        * 
+        * Note that the `cameraOffset` values are in addition to any parent of this Game Object on the display list.
+        * 
+        * Be careful not to set `fixedToCamera` on Game Objects which are in Groups that already have `fixedToCamera` enabled on them.
+        */
+        fixedToCamera: boolean;
+
+        /**
+        * Gets or sets the current frame index of the texture being used to render this Game Object.
+        * 
+        * To change the frame set `frame` to the index of the new frame in the sprite sheet you wish this Game Object to use,
+        * for example: `player.frame = 4`.
+        * 
+        * If the frame index given doesn't exist it will revert to the first frame found in the texture.
+        * 
+        * If you are using a texture atlas then you should use the `frameName` property instead.
+        * 
+        * If you wish to fully replace the texture being used see `loadTexture`.
+        */
+        frame: string | number;
+
+        /**
+        * Gets or sets the current frame name of the texture being used to render this Game Object.
+        * 
+        * To change the frame set `frameName` to the name of the new frame in the texture atlas you wish this Game Object to use,
+        * for example: `player.frameName = "idle"`.
+        * 
+        * If the frame name given doesn't exist it will revert to the first frame found in the texture and throw a console warning.
+        * 
+        * If you are using a sprite sheet then you should use the `frame` property instead.
+        * 
+        * If you wish to fully replace the texture being used see `loadTexture`.
+        */
+        frameName: string;
+
+        /**
+        * A Game Object is considered `fresh` if it has just been created or reset and is yet to receive a renderer transform update.
+        * This property is mostly used internally by the physics systems, but is exposed for the use of plugins.
+        */
+        fresh: boolean;
+
+        /**
+        * A reference to the currently running Game.
+        */
+        game: Phaser.Game;
+
+        /**
+        * Checks if the Game Objects bounds intersect with the Game Camera bounds.
+        * Returns `true` if they do, otherwise `false` if fully outside of the Cameras bounds.
+        */
+        inCamera: boolean;
+
+        /**
+        * The Input Handler for this Game Object.
+        * 
+        * By default it is disabled. If you wish this Game Object to process input events you should enable it with: `inputEnabled = true`.
+        * 
+        * After you have done this, this property will be a reference to the Phaser InputHandler.
+        */
+        input: Phaser.InputHandler;
+
+        /**
+        * By default a Game Object won't process any input events. By setting `inputEnabled` to true a Phaser.InputHandler is created
+        * for this Game Object and it will then start to process click / touch events and more.
+        * 
+        * You can then access the Input Handler via `this.input`.
+        * 
+        * Note that Input related events are dispatched from `this.events`, i.e.: `events.onInputDown`.
+        * 
+        * If you set this property to false it will stop the Input Handler from processing any more input events.
+        * 
+        * If you want to _temporarily_ disable input for a Game Object, then it's better to set
+        * `input.enabled = false`, as it won't reset any of the Input Handlers internal properties.
+        * You can then toggle this back on as needed.
+        */
+        inputEnabled: boolean;
+        inWorld: boolean;
+
+        /**
+        * The key of the image or texture used by this Game Object during rendering.
+        * If it is a string it's the string used to retrieve the texture from the Phaser Image Cache.
+        * It can also be an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
+        * If a Game Object is created without a key it is automatically assigned the key `__default` which is a 32x32 transparent PNG stored within the Cache.
+        * If a Game Object is given a key which doesn't exist in the Image Cache it is re-assigned the key `__missing` which is a 32x32 PNG of a green box with a line through it.
+        */
+        key: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture;
+
+        /**
+        * The lifespan allows you to give a Game Object a lifespan in milliseconds.
+        * 
+        * Once the Game Object is 'born' you can set this to a positive value.
+        * 
+        * It is automatically decremented by the millisecond equivalent of `game.time.physicsElapsed` each frame.
+        * When it reaches zero it will call the `kill` method.
+        * 
+        * Very handy for particles, bullets, collectibles, or any other short-lived entity.
+        */
+        lifespan: number;
+
+        /**
+        * The left coordinate of the Game Object.
+        * This is the same as `x - offsetX`.
+        */
+        left: number;
+
+        /**
+        * A user defined name given to this Game Object.
+        * This value isn't ever used internally by Phaser, it is meant as a game level property.
+        */
+        name: string;
+
+        /**
+        * The amount the Game Object is visually offset from its x coordinate.
+        * This is the same as `width * anchor.x`.
+        * It will only be > 0 if anchor.x is not equal to zero.
+        */
+        offsetX: number;
+
+        /**
+        * The amount the Game Object is visually offset from its y coordinate.
+        * This is the same as `height * anchor.y`.
+        * It will only be > 0 if anchor.y is not equal to zero.
+        */
+        offsetY: number;
+
+        /**
+        * A Game Object is that is pendingDestroy is flagged to have its destroy method called on the next logic update.
+        * You can set it directly to allow you to flag an object to be destroyed on its next update.
+        * 
+        * This is extremely useful if you wish to destroy an object from within one of its own callbacks
+        * such as with Buttons or other Input events.
+        */
+        pendingDestroy: boolean;
+        position: Phaser.Point;
+
+        /**
+        * The position the Game Object was located in the previous frame.
+        */
+        previousPosition: Phaser.Point;
+
+        /**
+        * The rotation the Game Object was in set to in the previous frame. Value is in radians.
+        */
+        previousRotation: number;
+
+        /**
+        * The render order ID is used internally by the renderer and Input Manager and should not be modified.
+        * This property is mostly used internally by the renderers, but is exposed for the use of plugins.
+        */
+        renderOrderID: number;
+
+        /**
+        * The right coordinate of the Game Object.
+        * This is the same as `x + width - offsetX`.
+        */
+        right: number;
+        scale: Phaser.Point;
+
+        /**
+        * Enable or disable texture smoothing for this Game Object.
+        * 
+        * It only takes effect if the Game Object is using an image based texture.
+        * 
+        * Smoothing is enabled by default.
+        */
+        smoothed: boolean;
+
+        /**
+        * The y coordinate of the Game Object.
+        * This is the same as `y - offsetY`.
+        */
+        top: number;
+
+        /**
+        * The const type of this object.
+        */
+        type: number;
+
+        /**
+        * The world coordinates of this Game Object in pixels.
+        * Depending on where in the display list this Game Object is placed this value can differ from `position`,
+        * which contains the x/y coordinates relative to the Game Objects parent.
+        */
+        world: Phaser.Point;
+
+        /**
+        * The z depth of this Game Object within its parent Group.
+        * No two objects in a Group can have the same z value.
+        * This value is adjusted automatically whenever the Group hierarchy changes.
+        * If you wish to re-order the layering of a Game Object then see methods like Group.moveUp or Group.bringToTop.
+        */
+        z: number;
+
+
+        /**
+        * Aligns this Game Object within another Game Object, or Rectangle, known as the
+        * 'container', to one of 9 possible positions.
+        * 
+        * The container must be a Game Object, or Phaser.Rectangle object. This can include properties
+        * such as `World.bounds` or `Camera.view`, for aligning Game Objects within the world
+        * and camera bounds. Or it can include other Sprites, Images, Text objects, BitmapText,
+        * TileSprites or Buttons.
+        * 
+        * Please note that aligning a Sprite to another Game Object does **not** make it a child of
+        * the container. It simply modifies its position coordinates so it aligns with it.
+        * 
+        * The position constants you can use are:
+        * 
+        * `Phaser.TOP_LEFT`, `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.LEFT_CENTER`,
+        * `Phaser.CENTER`, `Phaser.RIGHT_CENTER`, `Phaser.BOTTOM_LEFT`,
+        * `Phaser.BOTTOM_CENTER` and `Phaser.BOTTOM_RIGHT`.
+        * 
+        * The Game Objects are placed in such a way that their _bounds_ align with the
+        * container, taking into consideration rotation, scale and the anchor property.
+        * This allows you to neatly align Game Objects, irrespective of their position value.
+        * 
+        * The optional `offsetX` and `offsetY` arguments allow you to apply extra spacing to the final
+        * aligned position of the Game Object. For example:
+        * 
+        * `sprite.alignIn(background, Phaser.BOTTOM_RIGHT, -20, -20)`
+        * 
+        * Would align the `sprite` to the bottom-right, but moved 20 pixels in from the corner.
+        * Think of the offsets as applying an adjustment to the containers bounds before the alignment takes place.
+        * So providing a negative offset will 'shrink' the container bounds by that amount, and providing a positive
+        * one expands it.
+        * 
+        * @param container The Game Object or Rectangle with which to align this Game Object to. Can also include properties such as `World.bounds` or `Camera.view`.
+        * @param position The position constant. One of `Phaser.TOP_LEFT` (default), `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.LEFT_CENTER`, `Phaser.CENTER`, `Phaser.RIGHT_CENTER`, `Phaser.BOTTOM_LEFT`, `Phaser.BOTTOM_CENTER` or `Phaser.BOTTOM_RIGHT`.
+        * @param offsetX A horizontal adjustment of the Containers bounds, applied to the aligned position of the Game Object. Use a negative value to shrink the bounds, positive to increase it.
+        * @param offsetY A vertical adjustment of the Containers bounds, applied to the aligned position of the Game Object. Use a negative value to shrink the bounds, positive to increase it.
+        * @return This Game Object.
+        */
+        alignIn(container: Phaser.Rectangle | Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapText | Phaser.Button | Phaser.Graphics | Phaser.TileSprite, position?: number, offsetX?: number, offsetY?: number): any;
+
+        /**
+        * Aligns this Game Object to the side of another Game Object, or Rectangle, known as the
+        * 'parent', in one of 11 possible positions.
+        * 
+        * The parent must be a Game Object, or Phaser.Rectangle object. This can include properties
+        * such as `World.bounds` or `Camera.view`, for aligning Game Objects within the world
+        * and camera bounds. Or it can include other Sprites, Images, Text objects, BitmapText,
+        * TileSprites or Buttons.
+        * 
+        * Please note that aligning a Sprite to another Game Object does **not** make it a child of
+        * the parent. It simply modifies its position coordinates so it aligns with it.
+        * 
+        * The position constants you can use are:
+        * 
+        * `Phaser.TOP_LEFT` (default), `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.LEFT_TOP`,
+        * `Phaser.LEFT_CENTER`, `Phaser.LEFT_BOTTOM`, `Phaser.RIGHT_TOP`, `Phaser.RIGHT_CENTER`,
+        * `Phaser.RIGHT_BOTTOM`, `Phaser.BOTTOM_LEFT`, `Phaser.BOTTOM_CENTER`
+        * and `Phaser.BOTTOM_RIGHT`.
+        * 
+        * The Game Objects are placed in such a way that their _bounds_ align with the
+        * parent, taking into consideration rotation, scale and the anchor property.
+        * This allows you to neatly align Game Objects, irrespective of their position value.
+        * 
+        * The optional `offsetX` and `offsetY` arguments allow you to apply extra spacing to the final
+        * aligned position of the Game Object. For example:
+        * 
+        * `sprite.alignTo(background, Phaser.BOTTOM_RIGHT, -20, -20)`
+        * 
+        * Would align the `sprite` to the bottom-right, but moved 20 pixels in from the corner.
+        * Think of the offsets as applying an adjustment to the parents bounds before the alignment takes place.
+        * So providing a negative offset will 'shrink' the parent bounds by that amount, and providing a positive
+        * one expands it.
+        * 
+        * @param parent The Game Object or Rectangle with which to align this Game Object to. Can also include properties such as `World.bounds` or `Camera.view`.
+        * @param position The position constant. One of `Phaser.TOP_LEFT`, `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.LEFT_TOP`, `Phaser.LEFT_CENTER`, `Phaser.LEFT_BOTTOM`, `Phaser.RIGHT_TOP`, `Phaser.RIGHT_CENTER`, `Phaser.RIGHT_BOTTOM`, `Phaser.BOTTOM_LEFT`, `Phaser.BOTTOM_CENTER` or `Phaser.BOTTOM_RIGHT`.
+        * @param offsetX A horizontal adjustment of the Containers bounds, applied to the aligned position of the Game Object. Use a negative value to shrink the bounds, positive to increase it.
+        * @param offsetY A vertical adjustment of the Containers bounds, applied to the aligned position of the Game Object. Use a negative value to shrink the bounds, positive to increase it.
+        * @return This Game Object.
+        */
+        alignTo(container: Phaser.Rectangle | Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapText | Phaser.Button | Phaser.Graphics | Phaser.TileSprite, position?: number, offsetX?: number, offsetY?: number): any;
+
+        /**
+        * Brings this Game Object to the top of its parents display list.
+        * Visually this means it will render over the top of any old child in the same Group.
+        * 
+        * If this Game Object hasn't been added to a custom Group then this method will bring it to the top of the Game World,
+        * because the World is the root Group from which all Game Objects descend.
+        * @return This instance.
+        */
+        bringToTop(): Phaser.Image;
+
+        /**
+        * Crop allows you to crop the texture being used to display this Game Object.
+        * Setting a crop rectangle modifies the core texture frame. The Game Object width and height properties will be adjusted accordingly.
+        * 
+        * Cropping takes place from the top-left and can be modified in real-time either by providing an updated rectangle object to this method,
+        * or by modifying `cropRect` property directly and then calling `updateCrop`.
+        * 
+        * The rectangle object given to this method can be either a `Phaser.Rectangle` or any other object
+        * so long as it has public `x`, `y`, `width`, `height`, `right` and `bottom` properties.
+        * 
+        * A reference to the rectangle is stored in `cropRect` unless the `copy` parameter is `true`,
+        * in which case the values are duplicated to a local object.
+        * 
+        * @param rect The Rectangle used during cropping. Pass null or no parameters to clear a previously set crop rectangle.
+        * @param copy If false `cropRect` will be stored as a reference to the given rect. If true it will copy the rect values into a local Phaser Rectangle object stored in cropRect.
+        */
+        crop(rect: Phaser.Rectangle, copy?: boolean): void;
+
+        /**
+        * Destroys the Game Object. This removes it from its parent group, destroys the input, event and animation handlers if present
+        * and nulls its reference to `game`, freeing it up for garbage collection.
+        * 
+        * If this Game Object has the Events component it will also dispatch the `onDestroy` event.
+        * 
+        * You can optionally also destroy the BaseTexture this Game Object is using. Be careful if you've
+        * more than one Game Object sharing the same BaseTexture.
+        * 
+        * @param destroyChildren Should every child of this object have its destroy method called as well? - Default: true
+        * @param destroyTexture Destroy the BaseTexture this Game Object is using? Note that if another Game Object is sharing the same BaseTexture it will invalidate it.
+        */
+        destroy(destroyChildren?: boolean): void;
+
+        /**
+        * Kills a Game Object. A killed Game Object has its `alive`, `exists` and `visible` properties all set to false.
+        * 
+        * It will dispatch the `onKilled` event. You can listen to `events.onKilled` for the signal.
+        * 
+        * Note that killing a Game Object is a way for you to quickly recycle it in an object pool,
+        * it doesn't destroy the object or free it up from memory.
+        * 
+        * If you don't need this Game Object any more you should call `destroy` instead.
+        * @return This instance.
+        */
+        kill(): Phaser.Image;
+
+        /**
+        * Changes the base texture the Game Object is using. The old texture is removed and the new one is referenced or fetched from the Cache.
+        * 
+        * If your Game Object is using a frame from a texture atlas and you just wish to change to another frame, then see the `frame` or `frameName` properties instead.
+        * 
+        * You should only use `loadTexture` if you want to replace the base texture entirely.
+        * 
+        * Calling this method causes a WebGL texture update, so use sparingly or in low-intensity portions of your game, or if you know the new texture is already on the GPU.
+        * 
+        * You can use the new const `Phaser.PENDING_ATLAS` as the texture key for any sprite.
+        * Doing this then sets the key to be the `frame` argument (the frame is set to zero).
+        * 
+        * This allows you to create sprites using `load.image` during development, and then change them
+        * to use a Texture Atlas later in development by simply searching your code for 'PENDING_ATLAS'
+        * and swapping it to be the key of the atlas data.
+        * 
+        * Note: You cannot use a RenderTexture as a texture for a TileSprite.
+        * 
+        * @param key This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache Image entry, or an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
+        * @param frame If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
+        * @param stopAnimation If an animation is already playing on this Sprite you can choose to stop it or let it carry on playing. - Default: true
+        */
+        loadTexture(key: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture, frame?: string | number, stopAnimation?: boolean): void;
+
+        /**
+        * Resizes the Frame dimensions that the Game Object uses for rendering.
+        * 
+        * You shouldn't normally need to ever call this, but in the case of special texture types such as Video or BitmapData
+        * it can be useful to adjust the dimensions directly in this way.
+        * 
+        * @param parent The parent texture object that caused the resize, i.e. a Phaser.Video object.
+        * @param width The new width of the texture.
+        * @param height The new height of the texture.
+        */
+        resizeFrame(parent: any, width: number, height: number): void;
+
+        /**
+        * Moves this Game Object down one place in its parents display list.
+        * This call has no effect if the Game Object is already at the bottom of the display list.
+        * 
+        * If this Game Object hasn't been added to a custom Group then this method will move it one object down within the Game World,
+        * because the World is the root Group from which all Game Objects descend.
+        * @return This instance.
+        */
+        moveDown(): Phaser.Image;
+
+        /**
+        * Moves this Game Object up one place in its parents display list.
+        * This call has no effect if the Game Object is already at the top of the display list.
+        * 
+        * If this Game Object hasn't been added to a custom Group then this method will move it one object up within the Game World,
+        * because the World is the root Group from which all Game Objects descend.
+        * @return This instance.
+        */
+        moveUp(): Phaser.Image;
+
+        /**
+        * Checks to see if the bounds of this Game Object overlaps with the bounds of the given Display Object,
+        * which can be a Sprite, Image, TileSprite or anything that extends those such as Button or provides a `getBounds` method and result.
+        * 
+        * This check ignores the `hitArea` property if set and runs a `getBounds` comparison on both objects to determine the result.
+        * 
+        * Therefore it's relatively expensive to use in large quantities, i.e. with lots of Sprites at a high frequency.
+        * It should be fine for low-volume testing where physics isn't required.
+        * 
+        * @param displayObject The display object to check against.
+        * @return True if the bounds of this Game Object intersects at any point with the bounds of the given display object.
+        */
+        overlap(displayObject: Phaser.Sprite | Phaser.Image | Phaser.TileSprite | Phaser.Button | PIXI.DisplayObject): boolean;
+
+        /**
+        * Plays an Animation.
+        * 
+        * The animation should have previously been created via `animations.add`.
+        * 
+        * If the animation is already playing calling this again won't do anything.
+        * If you need to reset an already running animation do so directly on the Animation object itself or via `AnimationManager.stop`.
+        * 
+        * @param name The name of the animation to be played, e.g. "fire", "walk", "jump". Must have been previously created via 'AnimationManager.add'.
+        * @param frameRate The framerate to play the animation at. The speed is given in frames per second. If not provided the previously set frameRate of the Animation is used.
+        * @param loop Should the animation be looped after playback. If not provided the previously set loop value of the Animation is used.
+        * @param killOnComplete If set to true when the animation completes (only happens if loop=false) the parent Sprite will be killed.
+        * @return A reference to playing Animation.
+        */
+        play(name: string, frameRate?: number, loop?: boolean, killOnComplete?: boolean): Phaser.Animation;
+
+        /**
+        * Internal method called by the World postUpdate cycle.
+        */
+        postUpdate(): void;
+
+        /**
+        * Automatically called by World.preUpdate.
+        */
+        preUpdate(): void;
+
+        /**
+        * Resets the Game Object.
+        * 
+        * This moves the Game Object to the given x/y world coordinates and sets `fresh`, `exists`,
+        * `visible` and `renderable` to true.
+        * 
+        * If this Game Object has the LifeSpan component it will also set `alive` to true and `health` to the given value.
+        * 
+        * If this Game Object has a Physics Body it will reset the Body.
+        * 
+        * @param x The x coordinate (in world space) to position the Game Object at.
+        * @param y The y coordinate (in world space) to position the Game Object at.
+        * @param health The health to give the Game Object if it has the Health component. - Default: 1
+        * @return This instance.
+        */
+        reset(x: number, y: number, health?: number): Phaser.Image;
+
+        /**
+        * Resets the texture frame dimensions that the Game Object uses for rendering.
+        */
+        resetFrame(): void;
+
+        /**
+        * Brings a 'dead' Game Object back to life, optionally resetting its health value in the process.
+        * 
+        * A resurrected Game Object has its `alive`, `exists` and `visible` properties all set to true.
+        * 
+        * It will dispatch the `onRevived` event. Listen to `events.onRevived` for the signal.
+        * 
+        * @param health The health to give the Game Object. Only set if the GameObject has the Health component. - Default: 100
+        * @return This instance.
+        */
+        revive(health?: number): Phaser.Image;
+
+        /**
+        * Sends this Game Object to the bottom of its parents display list.
+        * Visually this means it will render below all other children in the same Group.
+        * 
+        * If this Game Object hasn't been added to a custom Group then this method will send it to the bottom of the Game World,
+        * because the World is the root Group from which all Game Objects descend.
+        * @return This instance.
+        */
+        sendToBack(): Phaser.Image;
+
+        /**
+        * Sets the texture frame the Game Object uses for rendering.
+        * 
+        * This is primarily an internal method used by `loadTexture`, but is exposed for the use of plugins and custom classes.
+        * 
+        * @param frame The Frame to be used by the texture.
+        */
+        setFrame(frame: Phaser.Frame): void;
+
+        /**
+        * Override this method in your own custom objects to handle any update requirements.
+        * It is called immediately after `preUpdate` and before `postUpdate`.
+        * Remember if this Game Object has any children you should call update on those too.
+        */
+        update(): void;
+
+        /**
+        * If you have set a crop rectangle on this Game Object via `crop` and since modified the `cropRect` property,
+        * or the rectangle it references, then you need to update the crop frame by calling this method.
+        */
+        updateCrop(): void;
+
+    }
+
+
+    /**
+    * An Image Collection is a special tileset containing mulitple images, with no slicing into each image.
+    * 
+    * Image Collections are normally created automatically when Tiled data is loaded.
+    */
+    class ImageCollection {
+
+
+        /**
+        * An Image Collection is a special tileset containing mulitple images, with no slicing into each image.
+        * 
+        * Image Collections are normally created automatically when Tiled data is loaded.
+        * 
+        * @param name The name of the image collection in the map data.
+        * @param firstgid The first image index this image collection contains.
+        * @param width Width of widest image (in pixels). - Default: 32
+        * @param height Height of tallest image (in pixels). - Default: 32
+        * @param margin The margin around all images in the collection (in pixels).
+        * @param spacing The spacing between each image in the collection (in pixels).
+        * @param properties Custom Image Collection properties. - Default: {}
+        */
+        constructor(name: string, firstgid: number, width?: number, height?: number, margin?: number, spacing?: number, properties?: any);
+
+
+        /**
+        * The name of the Image Collection.
+        */
+        name: string;
+
+        /**
+        * The Tiled firstgid value.
+        * This is the starting index of the first image index this Image Collection contains.
+        */
+        firstgid: number;
+
+        /**
+        * The width of the widest image (in pixels).
+        */
+        imageWidth: number;
+
+        /**
+        * The height of the tallest image (in pixels).
+        */
+        imageHeight: number;
+
+        /**
+        * The margin around the images in the collection (in pixels).
+        * Use `setSpacing` to change.
+        */
+        imageMargin: number;
+
+        /**
+        * The spacing between each image in the collection (in pixels).
+        * Use `setSpacing` to change.
+        */
+        imageSpacing: number;
+
+        /**
+        * Image Collection-specific properties that are typically defined in the Tiled editor.
+        */
+        properties: any;
+
+        /**
+        * The cached images that are a part of this collection.
+        */
+        images: any[];
+
+        /**
+        * The total number of images in the image collection.
+        */
+        total: number;
+
+
+        /**
+        * Add an image to this Image Collection.
+        * 
+        * @param gid The gid of the image in the Image Collection.
+        * @param image The the key of the image in the Image Collection and in the cache.
+        */
+        addImage(gid: number, image: string): void;
+
+        /**
+        * Returns true if and only if this image collection contains the given image index.
+        * 
+        * @param imageIndex The image index to search for.
+        * @return True if this Image Collection contains the given index.
+        */
+        containsImageIndex(imageIndex: number): boolean;
 
     }
 
@@ -9103,2065 +12013,6 @@ declare module Phaser {
         * Remember if this Game Object has any children you should call update on those too.
         */
         update(): void;
-
-    }
-
-
-    /**
-    * A Group is a container for {@link DisplayObject display objects} including {@link Phaser.Sprite Sprites} and {@link Phaser.Image Images}.
-    * 
-    * Groups form the logical tree structure of the display/scene graph where local transformations are applied to children.
-    * For instance, all children are also moved/rotated/scaled when the group is moved/rotated/scaled.
-    * 
-    * In addition, Groups provides support for fast pooling and object recycling.
-    * 
-    * Groups are also display objects and can be nested as children within other Groups.
-    */
-    class Group extends PIXI.DisplayObjectContainer {
-
-
-        /**
-        * A Group is a container for {@link DisplayObject display objects} including {@link Phaser.Sprite Sprites} and {@link Phaser.Image Images}.
-        * 
-        * Groups form the logical tree structure of the display/scene graph where local transformations are applied to children.
-        * For instance, all children are also moved/rotated/scaled when the group is moved/rotated/scaled.
-        * 
-        * In addition, Groups provides support for fast pooling and object recycling.
-        * 
-        * Groups are also display objects and can be nested as children within other Groups.
-        * 
-        * @param game A reference to the currently running game.
-        * @param parent The parent Group (or other {@link DisplayObject}) that this group will be added to.
-        *               If undefined/unspecified the Group will be added to the {@link Phaser.Game#world Game World}; if null the Group will not be added to any parent. - Default: (game world)
-        * @param name A name for this group. Not used internally but useful for debugging. - Default: 'group'
-        * @param addToStage If true this group will be added directly to the Game.Stage instead of Game.World.
-        * @param enableBody If true all Sprites created with {@link #create} or {@link #createMulitple} will have a physics body created on them. Change the body type with {@link #physicsBodyType}.
-        * @param physicsBodyType The physics body type to use when physics bodies are automatically added. See {@link #physicsBodyType} for values.
-        */
-        constructor(game: Phaser.Game, parent?: PIXI.DisplayObjectContainer, name?: string, addToStage?: boolean, enableBody?: boolean, physicsBodyType?: number);
-
-
-        /**
-        * A returnType value, as specified in {@link Phaser.Group#iterate iterate} eg.
-        */
-        static RETURN_CHILD: number;
-
-        /**
-        * A returnType value, as specified in {@link Phaser.Group#iterate iterate} eg.
-        */
-        static RETURN_NONE: number;
-
-        /**
-        * A returnType value, as specified in {@link Phaser.Group#iterate iterate} eg.
-        */
-        static RETURN_TOTAL: number;
-
-        /**
-        * A sort ordering value, as specified in {@link Phaser.Group#sort sort} eg.
-        */
-        static SORT_ASCENDING: number;
-
-        /**
-        * A sort ordering value, as specified in {@link Phaser.Group#sort sort} eg.
-        */
-        static SORT_DESCENDING: number;
-
-
-        /**
-        * The alpha value of the group container.
-        */
-        alpha: number;
-
-        /**
-        * The angle of rotation of the group container, in degrees.
-        * 
-        * This adjusts the group itself by modifying its local rotation transform.
-        * 
-        * This has no impact on the rotation/angle properties of the children, but it will update their worldTransform
-        * and on-screen orientation and position.
-        */
-        angle: number;
-
-        /**
-        * The alive property is useful for Groups that are children of other Groups and need to be included/excluded in checks like forEachAlive.
-        * Default: true
-        */
-        alive: boolean;
-
-        /**
-        * The bottom coordinate of this Group.
-        * 
-        * It is derived by calling `getBounds`, calculating the Groups dimensions based on its
-        * visible children.
-        * 
-        * Note that no ancestors are factored into the result, meaning that if this Group is
-        * nested within another Group, with heavy transforms on it, the result of this property
-        * is likely to be incorrect. It is safe to get and set this property if the Group is a
-        * top-level descendant of Phaser.World, or untransformed parents.
-        */
-        bottom: number;
-
-        /**
-        * If this object is {@link Phaser.Group#fixedToCamera fixedToCamera} then this stores the x/y position offset relative to the top-left of the camera view.
-        * If the parent of this Group is also `fixedToCamera` then the offset here is in addition to that and should typically be disabled.
-        */
-        cameraOffset: Phaser.Point;
-
-        /**
-        * The center x coordinate of this Group.
-        * 
-        * It is derived by calling `getBounds`, calculating the Groups dimensions based on its
-        * visible children.
-        * 
-        * Note that no ancestors are factored into the result, meaning that if this Group is
-        * nested within another Group, with heavy transforms on it, the result of this property
-        * is likely to be incorrect. It is safe to get and set this property if the Group is a
-        * top-level descendant of Phaser.World, or untransformed parents.
-        */
-        centerX: number;
-
-        /**
-        * The center y coordinate of this Group.
-        * 
-        * It is derived by calling `getBounds`, calculating the Groups dimensions based on its
-        * visible children.
-        * 
-        * Note that no ancestors are factored into the result, meaning that if this Group is
-        * nested within another Group, with heavy transforms on it, the result of this property
-        * is likely to be incorrect. It is safe to get and set this property if the Group is a
-        * top-level descendant of Phaser.World, or untransformed parents.
-        */
-        centerY: number;
-
-        /**
-        * The type of objects that will be created when using {@link Phaser.Group#create create} or {@link Phaser.Group#createMultiple createMultiple}.
-        * 
-        * Any object may be used but it should extend either Sprite or Image and accept the same constructor arguments:
-        * when a new object is created it is passed the following parameters to its constructor: `(game, x, y, key, frame)`.
-        * Default: {@link Phaser.Sprite}
-        */
-        classType: any;
-
-        /**
-        * The current display object that the group cursor is pointing to, if any. (Can be set manually.)
-        * 
-        * The cursor is a way to iterate through the children in a Group using {@link Phaser.Group#next next} and {@link Phaser.Group#previous previous}.
-        */
-        cursor: any;
-
-        /**
-        * The current index of the Group cursor. Advance it with Group.next.
-        */
-        cursorIndex: number;
-
-        /**
-        * If true all Sprites created by, or added to this group, will have a physics body enabled on them.
-        * 
-        * If there are children already in the Group at the time you set this property, they are not changed.
-        * 
-        * The default body type is controlled with {@link Phaser.Group#physicsBodyType physicsBodyType}.
-        */
-        enableBody: boolean;
-
-        /**
-        * If true when a physics body is created (via {@link Phaser.Group#enableBody enableBody}) it will create a physics debug object as well.
-        * 
-        * This only works for P2 bodies.
-        */
-        enableBodyDebug: boolean;
-
-        /**
-        * If exists is true the group is updated, otherwise it is skipped.
-        * Default: true
-        */
-        exists: boolean;
-
-        /**
-        * A Group that is fixed to the camera uses its x/y coordinates as offsets from the top left of the camera. These are stored in Group.cameraOffset.
-        * 
-        * Note that the cameraOffset values are in addition to any parent in the display list.
-        * So if this Group was in a Group that has x: 200, then this will be added to the cameraOffset.x
-        */
-        fixedToCamera: boolean;
-
-        /**
-        * A reference to the currently running Game.
-        */
-        game: Phaser.Game;
-
-        /**
-        * The hash array is an array belonging to this Group into which you can add any of its children via Group.addToHash and Group.removeFromHash.
-        * 
-        * Only children of this Group can be added to and removed from the hash.
-        * 
-        * This hash is used automatically by Phaser Arcade Physics in order to perform non z-index based destructive sorting.
-        * However if you don't use Arcade Physics, or this isn't a physics enabled Group, then you can use the hash to perform your own
-        * sorting and filtering of Group children without touching their z-index (and therefore display draw order)
-        */
-        hash: PIXI.DisplayObject[];
-
-        /**
-        * A group with `ignoreDestroy` set to `true` ignores all calls to its `destroy` method.
-        */
-        ignoreDestroy: boolean;
-
-        /**
-        * A Group with `inputEnableChildren` set to `true` will automatically call `inputEnabled = true`
-        * on any children _added_ to, or _created by_, this Group.
-        * 
-        * If there are children already in the Group at the time you set this property, they are not changed.
-        */
-        inputEnableChildren: boolean;
-
-        /**
-        * The left coordinate of this Group.
-        * 
-        * It is derived by calling `getBounds`, calculating the Groups dimensions based on its
-        * visible children.
-        * 
-        * Note that no ancestors are factored into the result, meaning that if this Group is
-        * nested within another Group, with heavy transforms on it, the result of this property
-        * is likely to be incorrect. It is safe to get and set this property if the Group is a
-        * top-level descendant of Phaser.World, or untransformed parents.
-        */
-        left: number;
-
-        /**
-        * Total number of children in this group, regardless of exists/alive status.
-        */
-        length: number;
-
-        /**
-        * A name for this group. Not used internally but useful for debugging.
-        */
-        name: string;
-
-        /**
-        * This Signal is dispatched whenever a child of this Group emits an onInputDown signal as a result
-        * of having been interacted with by a Pointer. You can bind functions to this Signal instead of to
-        * every child Sprite.
-        * 
-        * This Signal is sent 2 arguments: A reference to the Sprite that triggered the signal, and
-        * a reference to the Pointer that caused it.
-        */
-        onChildInputDown: Phaser.Signal;
-
-        /**
-        * This Signal is dispatched whenever a child of this Group emits an onInputUp signal as a result
-        * of having been interacted with by a Pointer. You can bind functions to this Signal instead of to
-        * every child Sprite.
-        * 
-        * This Signal is sent 3 arguments: A reference to the Sprite that triggered the signal,
-        * a reference to the Pointer that caused it, and a boolean value `isOver` that tells you if the Pointer
-        * is still over the Sprite or not.
-        */
-        onChildInputUp: Phaser.Signal;
-
-        /**
-        * This Signal is dispatched whenever a child of this Group emits an onInputOver signal as a result
-        * of having been interacted with by a Pointer. You can bind functions to this Signal instead of to
-        * every child Sprite.
-        * 
-        * This Signal is sent 2 arguments: A reference to the Sprite that triggered the signal, and
-        * a reference to the Pointer that caused it.
-        */
-        onChildInputOver: Phaser.Signal;
-
-        /**
-        * This Signal is dispatched whenever a child of this Group emits an onInputOut signal as a result
-        * of having been interacted with by a Pointer. You can bind functions to this Signal instead of to
-        * every child Sprite.
-        * 
-        * This Signal is sent 2 arguments: A reference to the Sprite that triggered the signal, and
-        * a reference to the Pointer that caused it.
-        */
-        onChildInputOut: Phaser.Signal;
-
-        /**
-        * This signal is dispatched when the group is destroyed.
-        */
-        onDestroy: Phaser.Signal;
-
-        /**
-        * A Group is that has `pendingDestroy` set to `true` is flagged to have its destroy method
-        * called on the next logic update.
-        * You can set it directly to flag the Group to be destroyed on its next update.
-        * 
-        * This is extremely useful if you wish to destroy a Group from within one of its own callbacks
-        * or a callback of one of its children.
-        */
-        pendingDestroy: boolean;
-
-        /**
-        * If {@link Phaser.Group#enableBody enableBody} is true this is the type of physics body that is created on new Sprites.
-        * 
-        * The valid values are {@link Phaser.Physics.ARCADE}, {@link Phaser.Physics.P2JS}, {@link Phaser.Physics.NINJA}, etc.
-        */
-        physicsBodyType: number;
-
-        /**
-        * The const physics body type of this object.
-        */
-        physicsType: number;
-
-        /**
-        * If this Group contains Arcade Physics Sprites you can set a custom sort direction via this property.
-        * 
-        * It should be set to one of the Phaser.Physics.Arcade sort direction constants:
-        * 
-        * Phaser.Physics.Arcade.SORT_NONE
-        * Phaser.Physics.Arcade.LEFT_RIGHT
-        * Phaser.Physics.Arcade.RIGHT_LEFT
-        * Phaser.Physics.Arcade.TOP_BOTTOM
-        * Phaser.Physics.Arcade.BOTTOM_TOP
-        * 
-        * If set to `null` the Group will use whatever Phaser.Physics.Arcade.sortDirection is set to. This is the default behavior.
-        */
-        physicsSortDirection: number;
-        position: Phaser.Point;
-
-        /**
-        * The right coordinate of this Group.
-        * 
-        * It is derived by calling `getBounds`, calculating the Groups dimensions based on its
-        * visible children.
-        * 
-        * Note that no ancestors are factored into the result, meaning that if this Group is
-        * nested within another Group, with heavy transforms on it, the result of this property
-        * is likely to be incorrect. It is safe to get and set this property if the Group is a
-        * top-level descendant of Phaser.World, or untransformed parents.
-        */
-        right: number;
-
-        /**
-        * The angle of rotation of the group container, in radians.
-        * 
-        * This will adjust the group container itself by modifying its rotation.
-        * This will have no impact on the rotation value of its children, but it will update their worldTransform and on-screen position.
-        */
-        rotation: number;
-        scale: Phaser.Point;
-
-        /**
-        * The top coordinate of this Group.
-        * 
-        * It is derived by calling `getBounds`, calculating the Groups dimensions based on its
-        * visible children.
-        * 
-        * Note that no ancestors are factored into the result, meaning that if this Group is
-        * nested within another Group, with heavy transforms on it, the result of this property
-        * is likely to be incorrect. It is safe to get and set this property if the Group is a
-        * top-level descendant of Phaser.World, or untransformed parents.
-        */
-        top: number;
-
-        /**
-        * Total number of existing children in the group.
-        */
-        total: number;
-
-        /**
-        * Internal Phaser Type value.
-        */
-        type: number;
-
-        /**
-        * The visible state of the group. Non-visible Groups and all of their children are not rendered.
-        */
-        visible: boolean;
-
-        /**
-        * The z-depth value of this object within its parent container/Group - the World is a Group as well.
-        * This value must be unique for each child in a Group.
-        */
-        z: number;
-
-
-        /**
-        * Adds an existing object as the top child in this group.
-        * 
-        * The child is automatically added to the top of the group, and is displayed above every previous child.
-        * 
-        * Or if the _optional_ index is specified, the child is added at the location specified by the index value,
-        * this allows you to control child ordering.
-        * 
-        * If the child was already in this Group, it is simply returned, and nothing else happens to it.
-        * 
-        * If `Group.enableBody` is set, then a physics body will be created on the object, so long as one does not already exist.
-        * 
-        * If `Group.inputEnableChildren` is set, then an Input Handler will be created on the object, so long as one does not already exist.
-        * 
-        * Use {@link Phaser.Group#addAt addAt} to control where a child is added. Use {@link Phaser.Group#create create} to create and add a new child.
-        * 
-        * @param child The display object to add as a child.
-        * @param silent If true the child will not dispatch the `onAddedToGroup` event.
-        * @param index The index within the group to insert the child to. Where 0 is the bottom of the Group.
-        * @return The child that was added to the group.
-        */
-        add(child: any, silent?: boolean, index?: number): any;
-
-        /**
-        * Adds the amount to the given property on all children in this group.
-        * 
-        * `Group.addAll('x', 10)` will add 10 to the child.x value for each child.
-        * 
-        * @param property The property to increment, for example 'body.velocity.x' or 'angle'.
-        * @param amount The amount to increment the property by. If child.x = 10 then addAll('x', 40) would make child.x = 50.
-        * @param checkAlive If true the property will only be changed if the child is alive.
-        * @param checkVisible If true the property will only be changed if the child is visible.
-        */
-        addAll(property: string, amount: number, checkAlive: boolean, checkVisible: boolean): void;
-
-        /**
-        * Adds an existing object to this group.
-        * 
-        * The child is added to the group at the location specified by the index value, this allows you to control child ordering.
-        * 
-        * If `Group.enableBody` is set, then a physics body will be created on the object, so long as one does not already exist.
-        * 
-        * If `Group.inputEnableChildren` is set, then an Input Handler will be created on the object, so long as one does not already exist.
-        * 
-        * @param child The display object to add as a child.
-        * @param index The index within the group to insert the child to.
-        * @param silent If true the child will not dispatch the `onAddedToGroup` event.
-        * @return The child that was added to the group.
-        */
-        addAt(child: any, index: number, silent?: boolean): any;
-
-        /**
-        * Adds an array of existing Display Objects to this Group.
-        * 
-        * The Display Objects are automatically added to the top of this Group, and will render on-top of everything already in this Group.
-        * 
-        * As well as an array you can also pass another Group as the first argument. In this case all of the children from that
-        * Group will be removed from it and added into this Group.
-        * 
-        * If `Group.enableBody` is set, then a physics body will be created on the objects, so long as one does not already exist.
-        * 
-        * If `Group.inputEnableChildren` is set, then an Input Handler will be created on the objects, so long as one does not already exist.
-        * 
-        * @param children An array of display objects or a Phaser.Group. If a Group is given then *all* children will be moved from it.
-        * @param silent If true the children will not dispatch the `onAddedToGroup` event.
-        * @return The array of children or Group of children that were added to this Group.
-        */
-        addMultiple(children: any[], silent?: boolean): any[];
-
-        /**
-        * Adds a child of this Group into the hash array.
-        * This call will return false if the child is not a child of this Group, or is already in the hash.
-        * 
-        * @param child The display object to add to this Groups hash. Must be a member of this Group already and not present in the hash.
-        * @return True if the child was successfully added to the hash, otherwise false.
-        */
-        addToHash(child: PIXI.DisplayObject): boolean;
-
-        /**
-        * This method iterates through all children in the Group (regardless if they are visible or exist)
-        * and then changes their position so they are arranged in a Grid formation. Children must have
-        * the `alignTo` method in order to be positioned by this call. All default Phaser Game Objects have
-        * this.
-        * 
-        * The grid dimensions are determined by the first four arguments. The `rows` and `columns` arguments
-        * relate to the width and height of the grid respectively.
-        * 
-        * For example if the Group had 100 children in it:
-        * 
-        * `Group.align(10, 10, 32, 32)`
-        * 
-        * This will align all of the children into a grid formation of 10x10, using 32 pixels per
-        * grid cell. If you want a wider grid, you could do:
-        * 
-        * `Group.align(25, 4, 32, 32)`
-        * 
-        * This will align the children into a grid of 25x4, again using 32 pixels per grid cell.
-        * 
-        * You can choose to set _either_ the `rows` or `columns` value to -1. Doing so tells the method
-        * to keep on aligning children until there are no children left. For example if this Group had
-        * 48 children in it, the following:
-        * 
-        * `Group.align(-1, 8, 32, 32)`
-        * 
-        * ... will align the children so that there are 8 columns vertically (the second argument),
-        * and each row will contain 6 sprites, except the last one, which will contain 5 (totaling 48)
-        * 
-        * You can also do:
-        * 
-        * `Group.align(10, -1, 32, 32)`
-        * 
-        * In this case it will create a grid 10 wide, and as tall as it needs to be in order to fit
-        * all of the children in.
-        * 
-        * The `position` property allows you to control where in each grid cell the child is positioned.
-        * This is a constant and can be one of `Phaser.TOP_LEFT` (default), `Phaser.TOP_CENTER`,
-        * `Phaser.TOP_RIGHT`, `Phaser.LEFT_CENTER`, `Phaser.CENTER`, `Phaser.RIGHT_CENTER`,
-        * `Phaser.BOTTOM_LEFT`, `Phaser.BOTTOM_CENTER` or `Phaser.BOTTOM_RIGHT`.
-        * 
-        * The final argument; `offset` lets you start the alignment from a specific child index.
-        * 
-        * @param rows The number of rows, or width, of the grid. Set to -1 for a dynamic width.
-        * @param columns The number of columns, or height, of the grid. Set to -1 for a dynamic height.
-        * @param cellWidth The width of each grid cell, in pixels.
-        * @param cellHeight The height of each grid cell, in pixels.
-        * @param position The position constant. One of `Phaser.TOP_LEFT` (default), `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.LEFT_CENTER`, `Phaser.CENTER`, `Phaser.RIGHT_CENTER`, `Phaser.BOTTOM_LEFT`, `Phaser.BOTTOM_CENTER` or `Phaser.BOTTOM_RIGHT`.
-        * @param offset Optional index to start the alignment from. Defaults to zero, the first child in the Group, but can be set to any valid child index value.
-        */
-        align(rows: number, columns: number, cellWidth: number, cellHeight: number, position?: number, offset?: number): void;
-
-        /**
-        * Aligns this Group within another Game Object, or Rectangle, known as the
-        * 'container', to one of 9 possible positions.
-        * 
-        * The container must be a Game Object, or Phaser.Rectangle object. This can include properties
-        * such as `World.bounds` or `Camera.view`, for aligning Groups within the world
-        * and camera bounds. Or it can include other Sprites, Images, Text objects, BitmapText,
-        * TileSprites or Buttons.
-        * 
-        * Please note that aligning a Group to another Game Object does **not** make it a child of
-        * the container. It simply modifies its position coordinates so it aligns with it.
-        * 
-        * The position constants you can use are:
-        * 
-        * `Phaser.TOP_LEFT`, `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.LEFT_CENTER`,
-        * `Phaser.CENTER`, `Phaser.RIGHT_CENTER`, `Phaser.BOTTOM_LEFT`,
-        * `Phaser.BOTTOM_CENTER` and `Phaser.BOTTOM_RIGHT`.
-        * 
-        * Groups are placed in such a way that their _bounds_ align with the
-        * container, taking into consideration rotation and scale of its children.
-        * This allows you to neatly align Groups, irrespective of their position value.
-        * 
-        * The optional `offsetX` and `offsetY` arguments allow you to apply extra spacing to the final
-        * aligned position of the Group. For example:
-        * 
-        * `group.alignIn(background, Phaser.BOTTOM_RIGHT, -20, -20)`
-        * 
-        * Would align the `group` to the bottom-right, but moved 20 pixels in from the corner.
-        * Think of the offsets as applying an adjustment to the containers bounds before the alignment takes place.
-        * So providing a negative offset will 'shrink' the container bounds by that amount, and providing a positive
-        * one expands it.
-        * 
-        * @param container The Game Object or Rectangle with which to align this Group to. Can also include properties such as `World.bounds` or `Camera.view`.
-        * @param position The position constant. One of `Phaser.TOP_LEFT` (default), `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.LEFT_CENTER`, `Phaser.CENTER`, `Phaser.RIGHT_CENTER`, `Phaser.BOTTOM_LEFT`, `Phaser.BOTTOM_CENTER` or `Phaser.BOTTOM_RIGHT`.
-        * @param offsetX A horizontal adjustment of the Containers bounds, applied to the aligned position of the Game Object. Use a negative value to shrink the bounds, positive to increase it.
-        * @param offsetY A vertical adjustment of the Containers bounds, applied to the aligned position of the Game Object. Use a negative value to shrink the bounds, positive to increase it.
-        * @return This Group.
-        */
-        alignIn(container: Phaser.Rectangle | Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapText | Phaser.Button | Phaser.Graphics | Phaser.TileSprite, position?: number, offsetX?: number, offsetY?: number): Phaser.Group;
-
-        /**
-        * Aligns this Group to the side of another Game Object, or Rectangle, known as the
-        * 'parent', in one of 11 possible positions.
-        * 
-        * The parent must be a Game Object, or Phaser.Rectangle object. This can include properties
-        * such as `World.bounds` or `Camera.view`, for aligning Groups within the world
-        * and camera bounds. Or it can include other Sprites, Images, Text objects, BitmapText,
-        * TileSprites or Buttons.
-        * 
-        * Please note that aligning a Group to another Game Object does **not** make it a child of
-        * the parent. It simply modifies its position coordinates so it aligns with it.
-        * 
-        * The position constants you can use are:
-        * 
-        * `Phaser.TOP_LEFT` (default), `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.LEFT_TOP`,
-        * `Phaser.LEFT_CENTER`, `Phaser.LEFT_BOTTOM`, `Phaser.RIGHT_TOP`, `Phaser.RIGHT_CENTER`,
-        * `Phaser.RIGHT_BOTTOM`, `Phaser.BOTTOM_LEFT`, `Phaser.BOTTOM_CENTER`
-        * and `Phaser.BOTTOM_RIGHT`.
-        * 
-        * Groups are placed in such a way that their _bounds_ align with the
-        * parent, taking into consideration rotation and scale of the children.
-        * This allows you to neatly align Groups, irrespective of their position value.
-        * 
-        * The optional `offsetX` and `offsetY` arguments allow you to apply extra spacing to the final
-        * aligned position of the Group. For example:
-        * 
-        * `group.alignTo(background, Phaser.BOTTOM_RIGHT, -20, -20)`
-        * 
-        * Would align the `group` to the bottom-right, but moved 20 pixels in from the corner.
-        * Think of the offsets as applying an adjustment to the parents bounds before the alignment takes place.
-        * So providing a negative offset will 'shrink' the parent bounds by that amount, and providing a positive
-        * one expands it.
-        * 
-        * @param parent The Game Object or Rectangle with which to align this Group to. Can also include properties such as `World.bounds` or `Camera.view`.
-        * @param position The position constant. One of `Phaser.TOP_LEFT`, `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.LEFT_TOP`, `Phaser.LEFT_CENTER`, `Phaser.LEFT_BOTTOM`, `Phaser.RIGHT_TOP`, `Phaser.RIGHT_CENTER`, `Phaser.RIGHT_BOTTOM`, `Phaser.BOTTOM_LEFT`, `Phaser.BOTTOM_CENTER` or `Phaser.BOTTOM_RIGHT`.
-        * @param offsetX A horizontal adjustment of the Containers bounds, applied to the aligned position of the Game Object. Use a negative value to shrink the bounds, positive to increase it.
-        * @param offsetY A vertical adjustment of the Containers bounds, applied to the aligned position of the Game Object. Use a negative value to shrink the bounds, positive to increase it.
-        * @return This Group.
-        */
-        alignTo(container: Phaser.Rectangle | Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapText | Phaser.Button | Phaser.Graphics | Phaser.TileSprite, position?: number, offsetX?: number, offsetY?: number): Phaser.Group;
-
-        /**
-        * Brings the given child to the top of this group so it renders above all other children.
-        * 
-        * @param child The child to bring to the top of this group.
-        * @return The child that was moved.
-        */
-        bringToTop(child: any): any;
-
-        /**
-        * Calls a function, specified by name, on all on children.
-        * 
-        * The function is called for all children regardless if they are dead or alive (see callAllExists for different options).
-        * After the method parameter and context you can add as many extra parameters as you like, which will all be passed to the child.
-        * 
-        * @param method Name of the function on the child to call. Deep property lookup is supported.
-        * @param context A string containing the context under which the method will be executed. Set to null to default to the child.
-        * @param args Additional parameters that will be passed to the method.
-        */
-        callAll(method: string, context: any, ...parameters: any[]): void;
-
-        /**
-        * Calls a function, specified by name, on all children in the group who exist (or do not exist).
-        * 
-        * After the existsValue parameter you can add as many parameters as you like, which will all be passed to the child callback.
-        * 
-        * @param callback Name of the function on the children to call.
-        * @param existsValue Only children with exists=existsValue will be called.
-        * @param parameter Additional parameters that will be passed to the callback.
-        */
-        callAllExists(callback: string, existsValue: boolean, ...parameters: any[]): void;
-
-        /**
-        * Returns a reference to a function that exists on a child of the group based on the given callback array.
-        * 
-        * @param child The object to inspect.
-        * @param callback The array of function names.
-        * @param length The size of the array (pre-calculated in callAll).
-        */
-        callbackFromArray(child: any, callback: Function, length: number): void;
-
-        /**
-        * Quickly check that the same property across all children of this group is equal to the given value.
-        * 
-        * This call doesn't descend down children, so if you have a Group inside of this group, the property will be checked on the group but not its children.
-        * 
-        * @param key The property, as a string, to be set. For example: 'body.velocity.x'
-        * @param value The value that will be checked.
-        * @param checkAlive If set then only children with alive=true will be checked. This includes any Groups that are children.
-        * @param checkVisible If set then only children with visible=true will be checked. This includes any Groups that are children.
-        * @param force If `force` is true then the property will be checked on the child regardless if it already exists or not. If true and the property doesn't exist, false will be returned.
-        */
-        checkAll(key: string[], value: any, checkAlive?: boolean, checkVisible?: boolean, force?: boolean): boolean;
-
-        /**
-        * Checks a property for the given value on the child.
-        * 
-        * @param child The child to check the property value on.
-        * @param key An array of strings that make up the property that will be set.
-        * @param value The value that will be checked.
-        * @param force If `force` is true then the property will be checked on the child regardless if it already exists or not. If true and the property doesn't exist, false will be returned.
-        * @return True if the property was was equal to value, false if not.
-        */
-        checkProperty(child: any, key: string[], value: any, force?: boolean): boolean;
-
-        /**
-        * Get the number of dead children in this group.
-        * @return The number of children flagged as dead.
-        */
-        countDead(): number;
-
-        /**
-        * Get the number of living children in this group.
-        * @return The number of children flagged as alive.
-        */
-        countLiving(): number;
-
-        /**
-        * Creates a new Phaser.Sprite object and adds it to the top of this group.
-        * 
-        * Use {@link Phaser.Group#classType classType} to change the type of object created.
-        * 
-        * The child is automatically added to the top of the group, and is displayed above every previous child.
-        * 
-        * Or if the _optional_ index is specified, the child is added at the location specified by the index value,
-        * this allows you to control child ordering.
-        * 
-        * If `Group.enableBody` is set, then a physics body will be created on the object, so long as one does not already exist.
-        * 
-        * If `Group.inputEnableChildren` is set, then an Input Handler will be created on the object, so long as one does not already exist.
-        * 
-        * @param x The x coordinate to display the newly created Sprite at. The value is in relation to the group.x point.
-        * @param y The y coordinate to display the newly created Sprite at. The value is in relation to the group.y point.
-        * @param key This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache Image entry, or an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
-        * @param frame If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
-        * @param exists The default exists state of the Sprite. - Default: true
-        * @param index The index within the group to insert the child to. Where 0 is the bottom of the Group.
-        * @return The child that was created: will be a {@link Phaser.Sprite} unless {@link #classType} has been changed.
-        */
-        create(x: number, y: number, key?: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture, frame?: string | number, exists?: boolean, index?: number): any;
-
-        /**
-        * Creates multiple Phaser.Sprite objects and adds them to the top of this Group.
-        * 
-        * This method is useful if you need to quickly generate a pool of sprites, such as bullets.
-        * 
-        * Use {@link Phaser.Group#classType classType} to change the type of object created.
-        * 
-        * You can provide an array as the `key` and / or `frame` arguments. When you do this
-        * it will create `quantity` Sprites for every key (and frame) in the arrays.
-        * 
-        * For example:
-        * 
-        * `createMultiple(25, ['ball', 'carrot'])`
-        * 
-        * In the above code there are 2 keys (ball and carrot) which means that 50 sprites will be
-        * created in total, 25 of each. You can also have the `frame` as an array:
-        * 
-        * `createMultiple(5, 'bricks', [0, 1, 2, 3])`
-        * 
-        * In the above there is one key (bricks), which is a sprite sheet. The frames array tells
-        * this method to use frames 0, 1, 2 and 3. So in total it will create 20 sprites, because
-        * the quantity was set to 5, so that is 5 brick sprites of frame 0, 5 brick sprites with
-        * frame 1, and so on.
-        * 
-        * If you set both the key and frame arguments to be arrays then understand it will create
-        * a total quantity of sprites equal to the size of both arrays times each other. I.e.:
-        * 
-        * `createMultiple(20, ['diamonds', 'balls'], [0, 1, 2])`
-        * 
-        * The above will create 20 'diamonds' of frame 0, 20 with frame 1 and 20 with frame 2.
-        * It will then create 20 'balls' of frame 0, 20 with frame 1 and 20 with frame 2.
-        * In total it will have created 120 sprites.
-        * 
-        * By default the Sprites will have their `exists` property set to `false`, and they will be
-        * positioned at 0x0, relative to the `Group.x / y` values.
-        * 
-        * If `Group.enableBody` is set, then a physics body will be created on the objects, so long as one does not already exist.
-        * 
-        * If `Group.inputEnableChildren` is set, then an Input Handler will be created on the objects, so long as one does not already exist.
-        * 
-        * @param quantity The number of Sprites to create.
-        * @param key The Cache key of the image that the Sprites will use. Or an Array of keys. See the description for details on how the quantity applies when arrays are used.
-        * @param frame If the Sprite image contains multiple frames you can specify which one to use here. Or an Array of frames. See the description for details on how the quantity applies when arrays are used.
-        * @param exists The default exists state of the Sprite.
-        * @return An array containing all of the Sprites that were created.
-        */
-        createMultiple(quantity: number, key: string | string[], frame?: any | any[], exists?: boolean): any[];
-
-        /**
-        * Sort the children in the group according to custom sort function.
-        * 
-        * The `sortHandler` is provided the two parameters: the two children involved in the comparison (a and b).
-        * It should return -1 if `a > b`, 1 if `a < b` or 0 if `a === b`.
-        * 
-        * @param sortHandler The custom sort function.
-        * @param context The context in which the sortHandler is called.
-        */
-        customSort(sortHandler: Function, context?: any): void;
-
-        /**
-        * Destroys this group.
-        * 
-        * Removes all children, then removes this group from its parent and nulls references.
-        * 
-        * @param destroyChildren If true `destroy` will be invoked on each removed child. - Default: true
-        * @param soft A 'soft destroy' (set to true) doesn't remove this group from its parent or null the game reference. Set to false and it does.
-        */
-        destroy(destroyChildren?: boolean, soft?: boolean): void;
-
-        /**
-        * Divides the given property by the amount on all children in this group.
-        * 
-        * `Group.divideAll('x', 2)` will half the child.x value for each child.
-        * 
-        * @param property The property to divide, for example 'body.velocity.x' or 'angle'.
-        * @param amount The amount to divide the property by. If child.x = 100 then divideAll('x', 2) would make child.x = 50.
-        * @param checkAlive If true the property will only be changed if the child is alive.
-        * @param checkVisible If true the property will only be changed if the child is visible.
-        */
-        divideAll(property: string, amount: number, checkAlive?: boolean, checkVisible?: boolean): void;
-
-        /**
-        * Call a function on each child in this group.
-        * 
-        * Additional arguments for the callback can be specified after the `checkExists` parameter. For example,
-        * 
-        *     Group.forEach(awardBonusGold, this, true, 100, 500)
-        * 
-        * would invoke `awardBonusGold` function with the parameters `(child, 100, 500)`.
-        * 
-        * Note: This check will skip any children which are Groups themselves.
-        * 
-        * @param callback The function that will be called for each applicable child. The child will be passed as the first argument.
-        * @param callbackContext The context in which the function should be called (usually 'this').
-        * @param checkExists If set only children matching for which `exists` is true will be passed to the callback, otherwise all children will be passed.
-        * @param args Additional arguments to pass to the callback function, after the child item. - Default: (none)
-        */
-        forEach(callback: Function, callbackContext: any, checkExists?: boolean, ...args: any[]): void;
-
-        /**
-        * Call a function on each alive child in this group.
-        * 
-        * See {@link Phaser.Group#forEach forEach} for details.
-        * 
-        * @param callback The function that will be called for each applicable child. The child will be passed as the first argument.
-        * @param callbackContext The context in which the function should be called (usually 'this').
-        * @param args Additional arguments to pass to the callback function, after the child item. - Default: (none)
-        */
-        forEachAlive(callback: Function, callbackContext: any, ...args: any[]): void;
-
-        /**
-        * Call a function on each dead child in this group.
-        * 
-        * See {@link Phaser.Group#forEach forEach} for details.
-        * 
-        * @param callback The function that will be called for each applicable child. The child will be passed as the first argument.
-        * @param callbackContext The context in which the function should be called (usually 'this').
-        * @param args Additional arguments to pass to the callback function, after the child item. - Default: (none)
-        */
-        forEachDead(callback: Function, callbackContext: any, ...args: any[]): void;
-
-        /**
-        * Call a function on each existing child in this group.
-        * 
-        * See {@link Phaser.Group#forEach forEach} for details.
-        * 
-        * @param callback The function that will be called for each applicable child. The child will be passed as the first argument.
-        * @param callbackContext The context in which the function should be called (usually 'this').
-        * @param args Additional arguments to pass to the callback function, after the child item. - Default: (none)
-        */
-        forEachExists(callback: Function, callbackContext: any): void;
-
-        /**
-        * Find children matching a certain predicate.
-        * 
-        * For example:
-        * 
-        *     var healthyList = Group.filter(function(child, index, children) {
-        *         return child.health > 10 ? true : false;
-        *     }, true);
-        *     healthyList.callAll('attack');
-        * 
-        * Note: Currently this will skip any children which are Groups themselves.
-        * 
-        * @param predicate The function that each child will be evaluated against. Each child of the group will be passed to it as its first parameter, the index as the second, and the entire child array as the third
-        * @param checkExists If true, only existing can be selected; otherwise all children can be selected and will be passed to the predicate.
-        * @return Returns an array list containing all the children that the predicate returned true for
-        */
-        filter(predicate: Function, checkExists?: boolean): ArraySet;
-
-        /**
-        * Returns the child found at the given index within this group.
-        * 
-        * @param index The index to return the child from.
-        * @return The child that was found at the given index, or -1 for an invalid index.
-        */
-        getAt(index: number): PIXI.DisplayObject | number;
-
-        /**
-        * Returns the child at the bottom of this group.
-        * 
-        * The bottom child the child being displayed (rendered) below every other child.
-        * @return The child at the bottom of the Group.
-        */
-        getBottom(): any;
-
-        /**
-        * Searches the Group for the first instance of a child with the `name`
-        * property matching the given argument. Should more than one child have
-        * the same name only the first instance is returned.
-        * 
-        * @param name The name to search for.
-        * @return The first child with a matching name, or null if none were found.
-        */
-        getByName(name: string): any;
-
-        /**
-        * Get the closest child to given Object, with optional callback to filter children.
-        * 
-        * This can be a Sprite, Group, Image or any object with public x and y properties.
-        * 
-        * 'close' is determined by the distance from the objects `x` and `y` properties compared to the childs `x` and `y` properties.
-        * 
-        * You can use the optional `callback` argument to apply your own filter to the distance checks.
-        * If the child is closer then the previous child, it will be sent to `callback` as the first argument,
-        * with the distance as the second. The callback should return `true` if it passes your
-        * filtering criteria, otherwise it should return `false`.
-        * 
-        * @param object The object used to determine the distance. This can be a Sprite, Group, Image or any object with public x and y properties.
-        * @param callback The function that each child will be evaluated against. Each child of the group will be passed to it as its first parameter, with the distance as the second. It should return `true` if the child passes the matching criteria.
-        * @param callbackContext The context in which the function should be called (usually 'this').
-        * @return The child closest to given object, or `null` if no child was found.
-        */
-        getClosestTo(object: any, callback?: Function, callbackContext?: any): any;
-
-        /**
-        * Get the first child that is alive (`child.alive === true`).
-        * 
-        * This is handy for choosing a squad leader, etc.
-        * 
-        * You can use the optional argument `createIfNull` to create a new Game Object if no alive ones were found in this Group.
-        * 
-        * It works by calling `Group.create` passing it the parameters given to this method, and returning the new child.
-        * 
-        * If a child *was* found , `createIfNull` is `false` and you provided the additional arguments then the child
-        * will be reset and/or have a new texture loaded on it. This is handled by `Group.resetChild`.
-        * 
-        * @param createIfNull If `true` and no alive children are found a new one is created.
-        * @param x The x coordinate to reset the child to. The value is in relation to the group.x point.
-        * @param y The y coordinate to reset the child to. The value is in relation to the group.y point.
-        * @param key This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache Image entry, or an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
-        * @param frame If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
-        * @return The alive dead child, or `null` if none found and `createIfNull` was false.
-        */
-        getFirstAlive(createIfNull?: boolean, x?: number, y?: number, key?: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture, frame?: string | number): any;
-
-        /**
-        * Get the first child that is dead (`child.alive === false`).
-        * 
-        * This is handy for checking if everything has been wiped out and adding to the pool as needed.
-        * 
-        * You can use the optional argument `createIfNull` to create a new Game Object if no dead ones were found in this Group.
-        * 
-        * It works by calling `Group.create` passing it the parameters given to this method, and returning the new child.
-        * 
-        * If a child *was* found , `createIfNull` is `false` and you provided the additional arguments then the child
-        * will be reset and/or have a new texture loaded on it. This is handled by `Group.resetChild`.
-        * 
-        * @param createIfNull If `true` and no dead children are found a new one is created.
-        * @param x The x coordinate to reset the child to. The value is in relation to the group.x point.
-        * @param y The y coordinate to reset the child to. The value is in relation to the group.y point.
-        * @param key This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache Image entry, or an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
-        * @param frame If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
-        * @return The first dead child, or `null` if none found and `createIfNull` was false.
-        */
-        getFirstDead(createIfNull?: boolean, x?: number, y?: number, key?: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture, frame?: string | number): any;
-
-        /**
-        * Get the first display object that exists, or doesn't exist.
-        * 
-        * You can use the optional argument `createIfNull` to create a new Game Object if none matching your exists argument were found in this Group.
-        * 
-        * It works by calling `Group.create` passing it the parameters given to this method, and returning the new child.
-        * 
-        * If a child *was* found , `createIfNull` is `false` and you provided the additional arguments then the child
-        * will be reset and/or have a new texture loaded on it. This is handled by `Group.resetChild`.
-        * 
-        * @param exists If true, find the first existing child; otherwise find the first non-existing child. - Default: true
-        * @param createIfNull If `true` and no alive children are found a new one is created.
-        * @param x The x coordinate to reset the child to. The value is in relation to the group.x point.
-        * @param y The y coordinate to reset the child to. The value is in relation to the group.y point.
-        * @param key This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache Image entry, or an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
-        * @param frame If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
-        * @return The first child, or `null` if none found and `createIfNull` was false.
-        */
-        getFirstExists(exists: boolean, createIfNull?: boolean, x?: number, y?: number, key?: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture, frame?: string | number): any;
-
-        /**
-        * Get the child furthest away from the given Object, with optional callback to filter children.
-        * 
-        * This can be a Sprite, Group, Image or any object with public x and y properties.
-        * 
-        * 'furthest away' is determined by the distance from the objects `x` and `y` properties compared to the childs `x` and `y` properties.
-        * 
-        * You can use the optional `callback` argument to apply your own filter to the distance checks.
-        * If the child is closer then the previous child, it will be sent to `callback` as the first argument,
-        * with the distance as the second. The callback should return `true` if it passes your
-        * filtering criteria, otherwise it should return `false`.
-        * 
-        * @param object The object used to determine the distance. This can be a Sprite, Group, Image or any object with public x and y properties.
-        * @param callback The function that each child will be evaluated against. Each child of the group will be passed to it as its first parameter, with the distance as the second. It should return `true` if the child passes the matching criteria.
-        * @param callbackContext The context in which the function should be called (usually 'this').
-        * @return The child furthest from the given object, or `null` if no child was found.
-        */
-        getFurthestFrom(object: any, callback?: Function, callbackContext?: any): any;
-
-        /**
-        * Get the index position of the given child in this group, which should match the child's `z` property.
-        * 
-        * @param child The child to get the index for.
-        * @return The index of the child or -1 if it's not a member of this group.
-        */
-        getIndex(child: any): number;
-
-        /**
-        * Returns a random child from the group.
-        * 
-        * @param startIndex Offset from the front of the front of the group (lowest child).
-        * @param length Restriction on the number of values you want to randomly select from. - Default: (to top)
-        * @return A random child of this Group.
-        */
-        getRandom(startIndex?: number, length?: number): any;
-
-        /**
-        * Return the child at the top of this group.
-        * 
-        * The top child is the child displayed (rendered) above every other child.
-        * @return The child at the top of the Group.
-        */
-        getTop(): any;
-
-        /**
-        * Checks if the child has the given property.
-        * 
-        * Will scan up to 4 levels deep only.
-        * 
-        * @param child The child to check for the existence of the property on.
-        * @param key An array of strings that make up the property.
-        * @return True if the child has the property, otherwise false.
-        */
-        hasProperty(child: any, key: string[]): boolean;
-
-        /**
-        * Iterates over the children of the group performing one of several actions for matched children.
-        * 
-        * A child is considered a match when it has a property, named `key`, whose value is equal to `value`
-        * according to a strict equality comparison.
-        * 
-        * The result depends on the `returnType`:
-        * 
-        * - {@link Phaser.Group.RETURN_TOTAL RETURN_TOTAL}:
-        *     The callback, if any, is applied to all matching children. The number of matched children is returned.
-        * - {@link Phaser.Group.RETURN_NONE RETURN_NONE}:
-        *     The callback, if any, is applied to all matching children. No value is returned.
-        * - {@link Phaser.Group.RETURN_CHILD RETURN_CHILD}:
-        *     The callback, if any, is applied to the *first* matching child and the *first* matched child is returned.
-        *     If there is no matching child then null is returned.
-        * 
-        * If `args` is specified it must be an array. The matched child will be assigned to the first
-        * element and the entire array will be applied to the callback function.
-        * 
-        * @param key The child property to check, i.e. 'exists', 'alive', 'health'
-        * @param value A child matches if `child[key] === value` is true.
-        * @param returnType How to iterate the children and what to return.
-        * @param callback Optional function that will be called on each matching child. The matched child is supplied as the first argument.
-        * @param callbackContext The context in which the function should be called (usually 'this').
-        * @param args The arguments supplied to to the callback; the first array index (argument) will be replaced with the matched child. - Default: (none)
-        * @return Returns either an integer (for RETURN_TOTAL), the first matched child (for RETURN_CHILD), or null.
-        */
-        iterate(key: string, value: any, returnType: number, callback?: Function, callbackContext?: any, ...args: any[]): any;
-
-        /**
-        * Moves all children from this Group to the Group given.
-        * 
-        * @param group The new Group to which the children will be moved to.
-        * @param silent If true the children will not dispatch the `onAddedToGroup` event for the new Group.
-        * @return The Group to which all the children were moved.
-        */
-        moveAll(group: Phaser.Group, silent?: boolean): Phaser.Group;
-
-        /**
-        * Moves the given child down one place in this group unless it's already at the bottom.
-        * 
-        * @param child The child to move down in the group.
-        * @return The child that was moved.
-        */
-        moveDown(child: any): any;
-
-        /**
-        * Moves the given child up one place in this group unless it's already at the top.
-        * 
-        * @param child The child to move up in the group.
-        * @return The child that was moved.
-        */
-        moveUp(child: any): any;
-
-        /**
-        * Multiplies the given property by the amount on all children in this group.
-        * 
-        * `Group.multiplyAll('x', 2)` will x2 the child.x value for each child.
-        * 
-        * @param property The property to multiply, for example 'body.velocity.x' or 'angle'.
-        * @param amount The amount to multiply the property by. If child.x = 10 then multiplyAll('x', 2) would make child.x = 20.
-        * @param checkAlive If true the property will only be changed if the child is alive.
-        * @param checkVisible If true the property will only be changed if the child is visible.
-        */
-        multiplyAll(property: string, amount: number, checkAlive: boolean, checkVisible: boolean): void;
-
-        /**
-        * Advances the group cursor to the next (higher) object in the group.
-        * 
-        * If the cursor is at the end of the group (top child) it is moved the start of the group (bottom child).
-        * @return The child the cursor now points to.
-        */
-        next(): void;
-
-        /**
-        * The core postUpdate - as called by World.
-        */
-        postUpdate(): void;
-
-        /**
-        * The core preUpdate - as called by World.
-        */
-        preUpdate(): void;
-
-        /**
-        * Moves the group cursor to the previous (lower) child in the group.
-        * 
-        * If the cursor is at the start of the group (bottom child) it is moved to the end (top child).
-        * @return The child the cursor now points to.
-        */
-        previous(): void;
-
-        /**
-        * Removes the given child from this group.
-        * 
-        * This will dispatch an `onRemovedFromGroup` event from the child (if it has one), and optionally destroy the child.
-        * 
-        * If the group cursor was referring to the removed child it is updated to refer to the next child.
-        * 
-        * @param child The child to remove.
-        * @param destroy If true `destroy` will be invoked on the removed child.
-        * @param silent If true the the child will not dispatch the `onRemovedFromGroup` event.
-        * @return true if the child was removed from this group, otherwise false.
-        */
-        remove(child: any, destroy?: boolean, silent?: boolean): boolean;
-
-        /**
-        * Removes all children from this Group, but does not remove the group from its parent.
-        * 
-        * The children can be optionally destroyed as they are removed.
-        * 
-        * You can also optionally also destroy the BaseTexture the Child is using. Be careful if you've
-        * more than one Game Object sharing the same BaseTexture.
-        * 
-        * @param destroy If true `destroy` will be invoked on each removed child.
-        * @param silent If true the children will not dispatch their `onRemovedFromGroup` events.
-        * @param destroyTexture If true, and if the `destroy` argument is also true, the BaseTexture belonging to the Child is also destroyed. Note that if another Game Object is sharing the same BaseTexture it will invalidate it.
-        */
-        removeAll(destroy?: boolean, silent?: boolean, destroyTexture?: boolean): void;
-
-        /**
-        * Removes all children from this group whose index falls beteen the given startIndex and endIndex values.
-        * 
-        * @param startIndex The index to start removing children from.
-        * @param endIndex The index to stop removing children at. Must be higher than startIndex. If undefined this method will remove all children between startIndex and the end of the group.
-        * @param destroy If true `destroy` will be invoked on each removed child.
-        * @param silent If true the children will not dispatch their `onRemovedFromGroup` events.
-        */
-        removeBetween(startIndex: number, endIndex?: number, destroy?: boolean, silent?: boolean): void;
-
-        /**
-        * Removes a child of this Group from the hash array.
-        * This call will return false if the child is not in the hash.
-        * 
-        * @param child The display object to remove from this Groups hash. Must be a member of this Group and in the hash.
-        * @return True if the child was successfully removed from the hash, otherwise false.
-        */
-        removeFromHash(child: PIXI.DisplayObject): boolean;
-
-        /**
-        * Replaces a child of this Group with the given newChild. The newChild cannot be a member of this Group.
-        * 
-        * If `Group.enableBody` is set, then a physics body will be created on the object, so long as one does not already exist.
-        * 
-        * If `Group.inputEnableChildren` is set, then an Input Handler will be created on the object, so long as one does not already exist.
-        * 
-        * @param oldChild The child in this group that will be replaced.
-        * @param newChild The child to be inserted into this group.
-        * @return Returns the oldChild that was replaced within this group.
-        */
-        replace(oldChild: any, newChild: any): any;
-
-        /**
-        * Takes a child and if the `x` and `y` arguments are given it calls `child.reset(x, y)` on it.
-        * 
-        * If the `key` and optionally the `frame` arguments are given, it calls `child.loadTexture(key, frame)` on it.
-        * 
-        * The two operations are separate. For example if you just wish to load a new texture then pass `null` as the x and y values.
-        * 
-        * @param child The child to reset and/or load the texture on.
-        * @param x The x coordinate to reset the child to. The value is in relation to the group.x point.
-        * @param y The y coordinate to reset the child to. The value is in relation to the group.y point.
-        * @param key This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache Image entry, or an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
-        * @param frame If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
-        * @return The child that was reset: usually a {@link Phaser.Sprite}.
-        */
-        resetChild(child: any, x?: number, y?: number, key?: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture, frame?: string | number): any;
-
-        /**
-        * Sets the group cursor to the first child in the group.
-        * 
-        * If the optional index parameter is given it sets the cursor to the object at that index instead.
-        * 
-        * @param index Set the cursor to point to a specific index.
-        * @return The child the cursor now points to.
-        */
-        resetCursor(index?: number): any;
-
-        /**
-        * Reverses all children in this group.
-        * 
-        * This operation applies only to immediate children and does not propagate to subgroups.
-        */
-        reverse(): void;
-
-        /**
-        * Sends the given child to the bottom of this group so it renders below all other children.
-        * 
-        * @param child The child to send to the bottom of this group.
-        * @return The child that was moved.
-        */
-        sendToBack(child: any): any;
-
-        /**
-        * Quickly set a property on a single child of this group to a new value.
-        * 
-        * The operation parameter controls how the new value is assigned to the property, from simple replacement to addition and multiplication.
-        * 
-        * @param child The child to set the property on.
-        * @param key The property, as a string, to be set. For example: 'body.velocity.x'
-        * @param value The value that will be set.
-        * @param checkAlive If set then the child will only be updated if alive=true.
-        * @param checkVisible If set then the child will only be updated if visible=true.
-        * @param operation Controls how the value is assigned. A value of 0 replaces the value with the new one. A value of 1 adds it, 2 subtracts it, 3 multiplies it and 4 divides it.
-        * @param force If `force` is true then the property will be set on the child regardless if it already exists or not. If false and the property doesn't exist, nothing will be set.
-        * @return True if the property was set, false if not.
-        */
-        set(child: any, key: string[], value: any, operation?: number, force?: boolean): boolean;
-
-        /**
-        * Quickly set the same property across all children of this group to a new value.
-        * 
-        * This call doesn't descend down children, so if you have a Group inside of this group, the property will be set on the group but not its children.
-        * If you need that ability please see `Group.setAllChildren`.
-        * 
-        * The operation parameter controls how the new value is assigned to the property, from simple replacement to addition and multiplication.
-        * 
-        * @param key The property, as a string, to be set. For example: 'body.velocity.x'
-        * @param value The value that will be set.
-        * @param checkAlive If set then only children with alive=true will be updated. This includes any Groups that are children.
-        * @param checkVisible If set then only children with visible=true will be updated. This includes any Groups that are children.
-        * @param operation Controls how the value is assigned. A value of 0 replaces the value with the new one. A value of 1 adds it, 2 subtracts it, 3 multiplies it and 4 divides it.
-        * @param force If `force` is true then the property will be set on the child regardless if it already exists or not. If false and the property doesn't exist, nothing will be set.
-        */
-        setAll(key: string, value: any, checkAlive?: boolean, checkVisible?: boolean, operation?: number, force?: boolean): void;
-
-        /**
-        * Quickly set the same property across all children of this group, and any child Groups, to a new value.
-        * 
-        * If this group contains other Groups then the same property is set across their children as well, iterating down until it reaches the bottom.
-        * Unlike with `setAll` the property is NOT set on child Groups itself.
-        * 
-        * The operation parameter controls how the new value is assigned to the property, from simple replacement to addition and multiplication.
-        * 
-        * @param key The property, as a string, to be set. For example: 'body.velocity.x'
-        * @param value The value that will be set.
-        * @param checkAlive If set then only children with alive=true will be updated. This includes any Groups that are children.
-        * @param checkVisible If set then only children with visible=true will be updated. This includes any Groups that are children.
-        * @param operation Controls how the value is assigned. A value of 0 replaces the value with the new one. A value of 1 adds it, 2 subtracts it, 3 multiplies it and 4 divides it.
-        * @param force If `force` is true then the property will be set on the child regardless if it already exists or not. If false and the property doesn't exist, nothing will be set.
-        */
-        setAllChildren(key: string, value: any, checkAlive?: boolean, checkVisible?: boolean, operation?: number, force?: boolean): void;
-
-        /**
-        * Sets a property to the given value on the child. The operation parameter controls how the value is set.
-        * 
-        * The operations are:
-        * - 0: set the existing value to the given value; if force is `true` a new property will be created if needed
-        * - 1: will add the given value to the value already present.
-        * - 2: will subtract the given value from the value already present.
-        * - 3: will multiply the value already present by the given value.
-        * - 4: will divide the value already present by the given value.
-        * 
-        * @param child The child to set the property value on.
-        * @param key An array of strings that make up the property that will be set.
-        * @param value The value that will be set.
-        * @param operation Controls how the value is assigned. A value of 0 replaces the value with the new one. A value of 1 adds it, 2 subtracts it, 3 multiplies it and 4 divides it.
-        * @param force If `force` is true then the property will be set on the child regardless if it already exists or not. If false and the property doesn't exist, nothing will be set.
-        * @return True if the property was set, false if not.
-        */
-        setProperty(child: any, key: string[], value: any, operation?: number, force?: boolean): boolean;
-
-        /**
-        * Sort the children in the group according to a particular key and ordering.
-        * 
-        * Call this function to sort the group according to a particular key value and order.
-        * 
-        * For example to depth sort Sprites for Zelda-style game you might call `group.sort('y', Phaser.Group.SORT_ASCENDING)` at the bottom of your `State.update()`.
-        * 
-        * Internally this uses a standard JavaScript Array sort, so everything that applies there also applies here, including
-        * alphabetical sorting, mixing strings and numbers, and Unicode sorting. See MDN for more details.
-        * 
-        * @param key The name of the property to sort on. Defaults to the objects z-depth value. - Default: 'z'
-        * @param order Order ascending ({@link Phaser.Group.SORT_ASCENDING SORT_ASCENDING}) or descending ({@link Phaser.Group.SORT_DESCENDING SORT_DESCENDING}). - Default: Phaser.Group.SORT_ASCENDING
-        */
-        sort(key?: string, order?: number): void;
-
-        /**
-        * Subtracts the amount from the given property on all children in this group.
-        * 
-        * `Group.subAll('x', 10)` will minus 10 from the child.x value for each child.
-        * 
-        * @param property The property to decrement, for example 'body.velocity.x' or 'angle'.
-        * @param amount The amount to subtract from the property. If child.x = 50 then subAll('x', 40) would make child.x = 10.
-        * @param checkAlive If true the property will only be changed if the child is alive.
-        * @param checkVisible If true the property will only be changed if the child is visible.
-        */
-        subAll(property: string, amount: number, checkAlive: boolean, checkVisible: boolean): void;
-
-        /**
-        * Swaps the position of two children in this group.
-        * 
-        * Both children must be in this group, a child cannot be swapped with itself, and unparented children cannot be swapped.
-        * 
-        * @param child1 The first child to swap.
-        * @param child2 The second child to swap.
-        */
-        swap(child1: any, child2: any): boolean;
-
-        /**
-        * The core update - as called by World.
-        */
-        update(): void;
-
-        /**
-        * Internal method that re-applies all of the children's Z values.
-        * 
-        * This must be called whenever children ordering is altered so that their `z` indices are correctly updated.
-        */
-        updateZ(): void;
-
-        /**
-        * Positions the child found at the given index within this group to the given x and y coordinates.
-        * 
-        * @param index The index of the child in the group to set the position of.
-        * @param x The new x position of the child.
-        * @param y The new y position of the child.
-        */
-        xy(index: number, x: number, y: number): void;
-
-    }
-
-
-    /**
-    * An Image is a light-weight object you can use to display anything that doesn't need physics or animation.
-    * It can still rotate, scale, crop and receive input events. This makes it perfect for logos, backgrounds, simple buttons and other non-Sprite graphics.
-    */
-    class Image extends PIXI.Sprite {
-
-
-        /**
-        * An Image is a light-weight object you can use to display anything that doesn't need physics or animation.
-        * It can still rotate, scale, crop and receive input events. This makes it perfect for logos, backgrounds, simple buttons and other non-Sprite graphics.
-        * 
-        * @param game A reference to the currently running game.
-        * @param x The x coordinate of the Image. The coordinate is relative to any parent container this Image may be in.
-        * @param y The y coordinate of the Image. The coordinate is relative to any parent container this Image may be in.
-        * @param key The texture used by the Image during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture, BitmapData or PIXI.Texture.
-        * @param frame If this Image is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
-        */
-        constructor(game: Phaser.Game, x: number, y: number, key: string | Phaser.RenderTexture | Phaser.BitmapData | PIXI.Texture, frame?: string | number);
-
-
-        /**
-        * A useful flag to control if the Game Object is alive or dead.
-        * 
-        * This is set automatically by the Health components `damage` method should the object run out of health.
-        * Or you can toggle it via your game code.
-        * 
-        * This property is mostly just provided to be used by your game - it doesn't effect rendering or logic updates.
-        * However you can use `Group.getFirstAlive` in conjunction with this property for fast object pooling and recycling.
-        * Default: true
-        */
-        alive: boolean;
-
-        /**
-        * The angle property is the rotation of the Game Object in *degrees* from its original orientation.
-        * 
-        * Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
-        * 
-        * Values outside this range are added to or subtracted from 360 to obtain a value within the range.
-        * For example, the statement player.angle = 450 is the same as player.angle = 90.
-        * 
-        * If you wish to work in radians instead of degrees you can use the property `rotation` instead.
-        * Working in radians is slightly faster as it doesn't have to perform any calculations.
-        */
-        angle: number;
-
-        /**
-        * The anchor sets the origin point of the texture.
-        * The default is 0,0 this means the texture's origin is the top left
-        * Setting than anchor to 0.5,0.5 means the textures origin is centered
-        * Setting the anchor to 1,1 would mean the textures origin points will be the bottom right corner
-        */
-        anchor: Phaser.Point;
-
-        /**
-        * If the Game Object is enabled for animation (such as a Phaser.Sprite) this is a reference to its AnimationManager instance.
-        * Through it you can create, play, pause and stop animations.
-        */
-        animations: Phaser.AnimationManager;
-
-        /**
-        * A Game Object with `autoCull` set to true will check its bounds against the World Camera every frame.
-        * If it is not intersecting the Camera bounds at any point then it has its `renderable` property set to `false`.
-        * This keeps the Game Object alive and still processing updates, but forces it to skip the render step entirely.
-        * 
-        * This is a relatively expensive operation, especially if enabled on hundreds of Game Objects. So enable it only if you know it's required,
-        * or you have tested performance and find it acceptable.
-        */
-        autoCull: boolean;
-
-        /**
-        * The sum of the y and height properties.
-        * This is the same as `y + height - offsetY`.
-        */
-        bottom: number;
-
-        /**
-        * The x/y coordinate offset applied to the top-left of the camera that this Game Object will be drawn at if `fixedToCamera` is true.
-        * 
-        * The values are relative to the top-left of the camera view and in addition to any parent of the Game Object on the display list.
-        */
-        cameraOffset: Phaser.Point;
-
-        /**
-        * The center x coordinate of the Game Object.
-        * This is the same as `(x - offsetX) + (width / 2)`.
-        */
-        centerX: number;
-
-        /**
-        * The center y coordinate of the Game Object.
-        * This is the same as `(y - offsetY) + (height / 2)`.
-        */
-        centerY: number;
-
-        /**
-        * The components this Game Object has installed.
-        */
-        components: any;
-
-        /**
-        * The Rectangle used to crop the texture this Game Object uses.
-        * Set this property via `crop`.
-        * If you modify this property directly you must call `updateCrop` in order to have the change take effect.
-        */
-        cropRect: Phaser.Rectangle;
-
-        /**
-        * Does this texture require a custom render call? (as set by BitmapData, Video, etc)
-        */
-        customRender: boolean;
-
-        /**
-        * An empty Object that belongs to this Game Object.
-        * This value isn't ever used internally by Phaser, but may be used by your own code, or
-        * by Phaser Plugins, to store data that needs to be associated with the Game Object,
-        * without polluting the Game Object directly.
-        * Default: {}
-        */
-        data: any;
-
-        /**
-        * A debug flag designed for use with `Game.enableStep`.
-        */
-        debug: boolean;
-        deltaX: number;
-        deltaY: number;
-        deltaZ: number;
-
-        /**
-        * As a Game Object runs through its destroy method this flag is set to true,
-        * and can be checked in any sub-systems or plugins it is being destroyed from.
-        */
-        destroyPhase: boolean;
-
-        /**
-        * All Phaser Game Objects have an Events class which contains all of the events that are dispatched when certain things happen to this
-        * Game Object, or any of its components.
-        */
-        events: Phaser.Events;
-
-        /**
-        * Controls if this Sprite is processed by the core Phaser game loops and Group loops.
-        * Default: true
-        */
-        exists: boolean;
-
-        /**
-        * A Game Object that is "fixed" to the camera uses its x/y coordinates as offsets from the top left of the camera during rendering.
-        * 
-        * The values are adjusted at the rendering stage, overriding the Game Objects actual world position.
-        * 
-        * The end result is that the Game Object will appear to be 'fixed' to the camera, regardless of where in the game world
-        * the camera is viewing. This is useful if for example this Game Object is a UI item that you wish to be visible at all times
-        * regardless where in the world the camera is.
-        * 
-        * The offsets are stored in the `cameraOffset` property.
-        * 
-        * Note that the `cameraOffset` values are in addition to any parent of this Game Object on the display list.
-        * 
-        * Be careful not to set `fixedToCamera` on Game Objects which are in Groups that already have `fixedToCamera` enabled on them.
-        */
-        fixedToCamera: boolean;
-
-        /**
-        * Gets or sets the current frame index of the texture being used to render this Game Object.
-        * 
-        * To change the frame set `frame` to the index of the new frame in the sprite sheet you wish this Game Object to use,
-        * for example: `player.frame = 4`.
-        * 
-        * If the frame index given doesn't exist it will revert to the first frame found in the texture.
-        * 
-        * If you are using a texture atlas then you should use the `frameName` property instead.
-        * 
-        * If you wish to fully replace the texture being used see `loadTexture`.
-        */
-        frame: string | number;
-
-        /**
-        * Gets or sets the current frame name of the texture being used to render this Game Object.
-        * 
-        * To change the frame set `frameName` to the name of the new frame in the texture atlas you wish this Game Object to use,
-        * for example: `player.frameName = "idle"`.
-        * 
-        * If the frame name given doesn't exist it will revert to the first frame found in the texture and throw a console warning.
-        * 
-        * If you are using a sprite sheet then you should use the `frame` property instead.
-        * 
-        * If you wish to fully replace the texture being used see `loadTexture`.
-        */
-        frameName: string;
-
-        /**
-        * A Game Object is considered `fresh` if it has just been created or reset and is yet to receive a renderer transform update.
-        * This property is mostly used internally by the physics systems, but is exposed for the use of plugins.
-        */
-        fresh: boolean;
-
-        /**
-        * A reference to the currently running Game.
-        */
-        game: Phaser.Game;
-
-        /**
-        * Checks if the Game Objects bounds intersect with the Game Camera bounds.
-        * Returns `true` if they do, otherwise `false` if fully outside of the Cameras bounds.
-        */
-        inCamera: boolean;
-
-        /**
-        * The Input Handler for this Game Object.
-        * 
-        * By default it is disabled. If you wish this Game Object to process input events you should enable it with: `inputEnabled = true`.
-        * 
-        * After you have done this, this property will be a reference to the Phaser InputHandler.
-        */
-        input: Phaser.InputHandler;
-
-        /**
-        * By default a Game Object won't process any input events. By setting `inputEnabled` to true a Phaser.InputHandler is created
-        * for this Game Object and it will then start to process click / touch events and more.
-        * 
-        * You can then access the Input Handler via `this.input`.
-        * 
-        * Note that Input related events are dispatched from `this.events`, i.e.: `events.onInputDown`.
-        * 
-        * If you set this property to false it will stop the Input Handler from processing any more input events.
-        * 
-        * If you want to _temporarily_ disable input for a Game Object, then it's better to set
-        * `input.enabled = false`, as it won't reset any of the Input Handlers internal properties.
-        * You can then toggle this back on as needed.
-        */
-        inputEnabled: boolean;
-        inWorld: boolean;
-
-        /**
-        * The key of the image or texture used by this Game Object during rendering.
-        * If it is a string it's the string used to retrieve the texture from the Phaser Image Cache.
-        * It can also be an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
-        * If a Game Object is created without a key it is automatically assigned the key `__default` which is a 32x32 transparent PNG stored within the Cache.
-        * If a Game Object is given a key which doesn't exist in the Image Cache it is re-assigned the key `__missing` which is a 32x32 PNG of a green box with a line through it.
-        */
-        key: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture;
-
-        /**
-        * The lifespan allows you to give a Game Object a lifespan in milliseconds.
-        * 
-        * Once the Game Object is 'born' you can set this to a positive value.
-        * 
-        * It is automatically decremented by the millisecond equivalent of `game.time.physicsElapsed` each frame.
-        * When it reaches zero it will call the `kill` method.
-        * 
-        * Very handy for particles, bullets, collectibles, or any other short-lived entity.
-        */
-        lifespan: number;
-
-        /**
-        * The left coordinate of the Game Object.
-        * This is the same as `x - offsetX`.
-        */
-        left: number;
-
-        /**
-        * A user defined name given to this Game Object.
-        * This value isn't ever used internally by Phaser, it is meant as a game level property.
-        */
-        name: string;
-
-        /**
-        * The amount the Game Object is visually offset from its x coordinate.
-        * This is the same as `width * anchor.x`.
-        * It will only be > 0 if anchor.x is not equal to zero.
-        */
-        offsetX: number;
-
-        /**
-        * The amount the Game Object is visually offset from its y coordinate.
-        * This is the same as `height * anchor.y`.
-        * It will only be > 0 if anchor.y is not equal to zero.
-        */
-        offsetY: number;
-
-        /**
-        * A Game Object is that is pendingDestroy is flagged to have its destroy method called on the next logic update.
-        * You can set it directly to allow you to flag an object to be destroyed on its next update.
-        * 
-        * This is extremely useful if you wish to destroy an object from within one of its own callbacks
-        * such as with Buttons or other Input events.
-        */
-        pendingDestroy: boolean;
-        position: Phaser.Point;
-
-        /**
-        * The position the Game Object was located in the previous frame.
-        */
-        previousPosition: Phaser.Point;
-
-        /**
-        * The rotation the Game Object was in set to in the previous frame. Value is in radians.
-        */
-        previousRotation: number;
-
-        /**
-        * The render order ID is used internally by the renderer and Input Manager and should not be modified.
-        * This property is mostly used internally by the renderers, but is exposed for the use of plugins.
-        */
-        renderOrderID: number;
-
-        /**
-        * The right coordinate of the Game Object.
-        * This is the same as `x + width - offsetX`.
-        */
-        right: number;
-        scale: Phaser.Point;
-
-        /**
-        * Enable or disable texture smoothing for this Game Object.
-        * 
-        * It only takes effect if the Game Object is using an image based texture.
-        * 
-        * Smoothing is enabled by default.
-        */
-        smoothed: boolean;
-
-        /**
-        * The y coordinate of the Game Object.
-        * This is the same as `y - offsetY`.
-        */
-        top: number;
-
-        /**
-        * The const type of this object.
-        */
-        type: number;
-
-        /**
-        * The world coordinates of this Game Object in pixels.
-        * Depending on where in the display list this Game Object is placed this value can differ from `position`,
-        * which contains the x/y coordinates relative to the Game Objects parent.
-        */
-        world: Phaser.Point;
-
-        /**
-        * The z depth of this Game Object within its parent Group.
-        * No two objects in a Group can have the same z value.
-        * This value is adjusted automatically whenever the Group hierarchy changes.
-        * If you wish to re-order the layering of a Game Object then see methods like Group.moveUp or Group.bringToTop.
-        */
-        z: number;
-
-
-        /**
-        * Aligns this Game Object within another Game Object, or Rectangle, known as the
-        * 'container', to one of 9 possible positions.
-        * 
-        * The container must be a Game Object, or Phaser.Rectangle object. This can include properties
-        * such as `World.bounds` or `Camera.view`, for aligning Game Objects within the world
-        * and camera bounds. Or it can include other Sprites, Images, Text objects, BitmapText,
-        * TileSprites or Buttons.
-        * 
-        * Please note that aligning a Sprite to another Game Object does **not** make it a child of
-        * the container. It simply modifies its position coordinates so it aligns with it.
-        * 
-        * The position constants you can use are:
-        * 
-        * `Phaser.TOP_LEFT`, `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.LEFT_CENTER`,
-        * `Phaser.CENTER`, `Phaser.RIGHT_CENTER`, `Phaser.BOTTOM_LEFT`,
-        * `Phaser.BOTTOM_CENTER` and `Phaser.BOTTOM_RIGHT`.
-        * 
-        * The Game Objects are placed in such a way that their _bounds_ align with the
-        * container, taking into consideration rotation, scale and the anchor property.
-        * This allows you to neatly align Game Objects, irrespective of their position value.
-        * 
-        * The optional `offsetX` and `offsetY` arguments allow you to apply extra spacing to the final
-        * aligned position of the Game Object. For example:
-        * 
-        * `sprite.alignIn(background, Phaser.BOTTOM_RIGHT, -20, -20)`
-        * 
-        * Would align the `sprite` to the bottom-right, but moved 20 pixels in from the corner.
-        * Think of the offsets as applying an adjustment to the containers bounds before the alignment takes place.
-        * So providing a negative offset will 'shrink' the container bounds by that amount, and providing a positive
-        * one expands it.
-        * 
-        * @param container The Game Object or Rectangle with which to align this Game Object to. Can also include properties such as `World.bounds` or `Camera.view`.
-        * @param position The position constant. One of `Phaser.TOP_LEFT` (default), `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.LEFT_CENTER`, `Phaser.CENTER`, `Phaser.RIGHT_CENTER`, `Phaser.BOTTOM_LEFT`, `Phaser.BOTTOM_CENTER` or `Phaser.BOTTOM_RIGHT`.
-        * @param offsetX A horizontal adjustment of the Containers bounds, applied to the aligned position of the Game Object. Use a negative value to shrink the bounds, positive to increase it.
-        * @param offsetY A vertical adjustment of the Containers bounds, applied to the aligned position of the Game Object. Use a negative value to shrink the bounds, positive to increase it.
-        * @return This Game Object.
-        */
-        alignIn(container: Phaser.Rectangle | Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapText | Phaser.Button | Phaser.Graphics | Phaser.TileSprite, position?: number, offsetX?: number, offsetY?: number): any;
-
-        /**
-        * Aligns this Game Object to the side of another Game Object, or Rectangle, known as the
-        * 'parent', in one of 11 possible positions.
-        * 
-        * The parent must be a Game Object, or Phaser.Rectangle object. This can include properties
-        * such as `World.bounds` or `Camera.view`, for aligning Game Objects within the world
-        * and camera bounds. Or it can include other Sprites, Images, Text objects, BitmapText,
-        * TileSprites or Buttons.
-        * 
-        * Please note that aligning a Sprite to another Game Object does **not** make it a child of
-        * the parent. It simply modifies its position coordinates so it aligns with it.
-        * 
-        * The position constants you can use are:
-        * 
-        * `Phaser.TOP_LEFT` (default), `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.LEFT_TOP`,
-        * `Phaser.LEFT_CENTER`, `Phaser.LEFT_BOTTOM`, `Phaser.RIGHT_TOP`, `Phaser.RIGHT_CENTER`,
-        * `Phaser.RIGHT_BOTTOM`, `Phaser.BOTTOM_LEFT`, `Phaser.BOTTOM_CENTER`
-        * and `Phaser.BOTTOM_RIGHT`.
-        * 
-        * The Game Objects are placed in such a way that their _bounds_ align with the
-        * parent, taking into consideration rotation, scale and the anchor property.
-        * This allows you to neatly align Game Objects, irrespective of their position value.
-        * 
-        * The optional `offsetX` and `offsetY` arguments allow you to apply extra spacing to the final
-        * aligned position of the Game Object. For example:
-        * 
-        * `sprite.alignTo(background, Phaser.BOTTOM_RIGHT, -20, -20)`
-        * 
-        * Would align the `sprite` to the bottom-right, but moved 20 pixels in from the corner.
-        * Think of the offsets as applying an adjustment to the parents bounds before the alignment takes place.
-        * So providing a negative offset will 'shrink' the parent bounds by that amount, and providing a positive
-        * one expands it.
-        * 
-        * @param parent The Game Object or Rectangle with which to align this Game Object to. Can also include properties such as `World.bounds` or `Camera.view`.
-        * @param position The position constant. One of `Phaser.TOP_LEFT`, `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.LEFT_TOP`, `Phaser.LEFT_CENTER`, `Phaser.LEFT_BOTTOM`, `Phaser.RIGHT_TOP`, `Phaser.RIGHT_CENTER`, `Phaser.RIGHT_BOTTOM`, `Phaser.BOTTOM_LEFT`, `Phaser.BOTTOM_CENTER` or `Phaser.BOTTOM_RIGHT`.
-        * @param offsetX A horizontal adjustment of the Containers bounds, applied to the aligned position of the Game Object. Use a negative value to shrink the bounds, positive to increase it.
-        * @param offsetY A vertical adjustment of the Containers bounds, applied to the aligned position of the Game Object. Use a negative value to shrink the bounds, positive to increase it.
-        * @return This Game Object.
-        */
-        alignTo(container: Phaser.Rectangle | Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapText | Phaser.Button | Phaser.Graphics | Phaser.TileSprite, position?: number, offsetX?: number, offsetY?: number): any;
-
-        /**
-        * Brings this Game Object to the top of its parents display list.
-        * Visually this means it will render over the top of any old child in the same Group.
-        * 
-        * If this Game Object hasn't been added to a custom Group then this method will bring it to the top of the Game World,
-        * because the World is the root Group from which all Game Objects descend.
-        * @return This instance.
-        */
-        bringToTop(): Phaser.Image;
-
-        /**
-        * Crop allows you to crop the texture being used to display this Game Object.
-        * Setting a crop rectangle modifies the core texture frame. The Game Object width and height properties will be adjusted accordingly.
-        * 
-        * Cropping takes place from the top-left and can be modified in real-time either by providing an updated rectangle object to this method,
-        * or by modifying `cropRect` property directly and then calling `updateCrop`.
-        * 
-        * The rectangle object given to this method can be either a `Phaser.Rectangle` or any other object
-        * so long as it has public `x`, `y`, `width`, `height`, `right` and `bottom` properties.
-        * 
-        * A reference to the rectangle is stored in `cropRect` unless the `copy` parameter is `true`,
-        * in which case the values are duplicated to a local object.
-        * 
-        * @param rect The Rectangle used during cropping. Pass null or no parameters to clear a previously set crop rectangle.
-        * @param copy If false `cropRect` will be stored as a reference to the given rect. If true it will copy the rect values into a local Phaser Rectangle object stored in cropRect.
-        */
-        crop(rect: Phaser.Rectangle, copy?: boolean): void;
-
-        /**
-        * Destroys the Game Object. This removes it from its parent group, destroys the input, event and animation handlers if present
-        * and nulls its reference to `game`, freeing it up for garbage collection.
-        * 
-        * If this Game Object has the Events component it will also dispatch the `onDestroy` event.
-        * 
-        * You can optionally also destroy the BaseTexture this Game Object is using. Be careful if you've
-        * more than one Game Object sharing the same BaseTexture.
-        * 
-        * @param destroyChildren Should every child of this object have its destroy method called as well? - Default: true
-        * @param destroyTexture Destroy the BaseTexture this Game Object is using? Note that if another Game Object is sharing the same BaseTexture it will invalidate it.
-        */
-        destroy(destroyChildren?: boolean): void;
-
-        /**
-        * Kills a Game Object. A killed Game Object has its `alive`, `exists` and `visible` properties all set to false.
-        * 
-        * It will dispatch the `onKilled` event. You can listen to `events.onKilled` for the signal.
-        * 
-        * Note that killing a Game Object is a way for you to quickly recycle it in an object pool,
-        * it doesn't destroy the object or free it up from memory.
-        * 
-        * If you don't need this Game Object any more you should call `destroy` instead.
-        * @return This instance.
-        */
-        kill(): Phaser.Image;
-
-        /**
-        * Changes the base texture the Game Object is using. The old texture is removed and the new one is referenced or fetched from the Cache.
-        * 
-        * If your Game Object is using a frame from a texture atlas and you just wish to change to another frame, then see the `frame` or `frameName` properties instead.
-        * 
-        * You should only use `loadTexture` if you want to replace the base texture entirely.
-        * 
-        * Calling this method causes a WebGL texture update, so use sparingly or in low-intensity portions of your game, or if you know the new texture is already on the GPU.
-        * 
-        * You can use the new const `Phaser.PENDING_ATLAS` as the texture key for any sprite.
-        * Doing this then sets the key to be the `frame` argument (the frame is set to zero).
-        * 
-        * This allows you to create sprites using `load.image` during development, and then change them
-        * to use a Texture Atlas later in development by simply searching your code for 'PENDING_ATLAS'
-        * and swapping it to be the key of the atlas data.
-        * 
-        * Note: You cannot use a RenderTexture as a texture for a TileSprite.
-        * 
-        * @param key This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache Image entry, or an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
-        * @param frame If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
-        * @param stopAnimation If an animation is already playing on this Sprite you can choose to stop it or let it carry on playing. - Default: true
-        */
-        loadTexture(key: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture, frame?: string | number, stopAnimation?: boolean): void;
-
-        /**
-        * Resizes the Frame dimensions that the Game Object uses for rendering.
-        * 
-        * You shouldn't normally need to ever call this, but in the case of special texture types such as Video or BitmapData
-        * it can be useful to adjust the dimensions directly in this way.
-        * 
-        * @param parent The parent texture object that caused the resize, i.e. a Phaser.Video object.
-        * @param width The new width of the texture.
-        * @param height The new height of the texture.
-        */
-        resizeFrame(parent: any, width: number, height: number): void;
-
-        /**
-        * Moves this Game Object down one place in its parents display list.
-        * This call has no effect if the Game Object is already at the bottom of the display list.
-        * 
-        * If this Game Object hasn't been added to a custom Group then this method will move it one object down within the Game World,
-        * because the World is the root Group from which all Game Objects descend.
-        * @return This instance.
-        */
-        moveDown(): Phaser.Image;
-
-        /**
-        * Moves this Game Object up one place in its parents display list.
-        * This call has no effect if the Game Object is already at the top of the display list.
-        * 
-        * If this Game Object hasn't been added to a custom Group then this method will move it one object up within the Game World,
-        * because the World is the root Group from which all Game Objects descend.
-        * @return This instance.
-        */
-        moveUp(): Phaser.Image;
-
-        /**
-        * Checks to see if the bounds of this Game Object overlaps with the bounds of the given Display Object,
-        * which can be a Sprite, Image, TileSprite or anything that extends those such as Button or provides a `getBounds` method and result.
-        * 
-        * This check ignores the `hitArea` property if set and runs a `getBounds` comparison on both objects to determine the result.
-        * 
-        * Therefore it's relatively expensive to use in large quantities, i.e. with lots of Sprites at a high frequency.
-        * It should be fine for low-volume testing where physics isn't required.
-        * 
-        * @param displayObject The display object to check against.
-        * @return True if the bounds of this Game Object intersects at any point with the bounds of the given display object.
-        */
-        overlap(displayObject: Phaser.Sprite | Phaser.Image | Phaser.TileSprite | Phaser.Button | PIXI.DisplayObject): boolean;
-
-        /**
-        * Plays an Animation.
-        * 
-        * The animation should have previously been created via `animations.add`.
-        * 
-        * If the animation is already playing calling this again won't do anything.
-        * If you need to reset an already running animation do so directly on the Animation object itself or via `AnimationManager.stop`.
-        * 
-        * @param name The name of the animation to be played, e.g. "fire", "walk", "jump". Must have been previously created via 'AnimationManager.add'.
-        * @param frameRate The framerate to play the animation at. The speed is given in frames per second. If not provided the previously set frameRate of the Animation is used.
-        * @param loop Should the animation be looped after playback. If not provided the previously set loop value of the Animation is used.
-        * @param killOnComplete If set to true when the animation completes (only happens if loop=false) the parent Sprite will be killed.
-        * @return A reference to playing Animation.
-        */
-        play(name: string, frameRate?: number, loop?: boolean, killOnComplete?: boolean): Phaser.Animation;
-
-        /**
-        * Internal method called by the World postUpdate cycle.
-        */
-        postUpdate(): void;
-
-        /**
-        * Automatically called by World.preUpdate.
-        */
-        preUpdate(): void;
-
-        /**
-        * Resets the Game Object.
-        * 
-        * This moves the Game Object to the given x/y world coordinates and sets `fresh`, `exists`,
-        * `visible` and `renderable` to true.
-        * 
-        * If this Game Object has the LifeSpan component it will also set `alive` to true and `health` to the given value.
-        * 
-        * If this Game Object has a Physics Body it will reset the Body.
-        * 
-        * @param x The x coordinate (in world space) to position the Game Object at.
-        * @param y The y coordinate (in world space) to position the Game Object at.
-        * @param health The health to give the Game Object if it has the Health component. - Default: 1
-        * @return This instance.
-        */
-        reset(x: number, y: number, health?: number): Phaser.Image;
-
-        /**
-        * Resets the texture frame dimensions that the Game Object uses for rendering.
-        */
-        resetFrame(): void;
-
-        /**
-        * Brings a 'dead' Game Object back to life, optionally resetting its health value in the process.
-        * 
-        * A resurrected Game Object has its `alive`, `exists` and `visible` properties all set to true.
-        * 
-        * It will dispatch the `onRevived` event. Listen to `events.onRevived` for the signal.
-        * 
-        * @param health The health to give the Game Object. Only set if the GameObject has the Health component. - Default: 100
-        * @return This instance.
-        */
-        revive(health?: number): Phaser.Image;
-
-        /**
-        * Sends this Game Object to the bottom of its parents display list.
-        * Visually this means it will render below all other children in the same Group.
-        * 
-        * If this Game Object hasn't been added to a custom Group then this method will send it to the bottom of the Game World,
-        * because the World is the root Group from which all Game Objects descend.
-        * @return This instance.
-        */
-        sendToBack(): Phaser.Image;
-
-        /**
-        * Sets the texture frame the Game Object uses for rendering.
-        * 
-        * This is primarily an internal method used by `loadTexture`, but is exposed for the use of plugins and custom classes.
-        * 
-        * @param frame The Frame to be used by the texture.
-        */
-        setFrame(frame: Phaser.Frame): void;
-
-        /**
-        * Override this method in your own custom objects to handle any update requirements.
-        * It is called immediately after `preUpdate` and before `postUpdate`.
-        * Remember if this Game Object has any children you should call update on those too.
-        */
-        update(): void;
-
-        /**
-        * If you have set a crop rectangle on this Game Object via `crop` and since modified the `cropRect` property,
-        * or the rectangle it references, then you need to update the crop frame by calling this method.
-        */
-        updateCrop(): void;
-
-    }
-
-
-    /**
-    * An Image Collection is a special tileset containing mulitple images, with no slicing into each image.
-    * 
-    * Image Collections are normally created automatically when Tiled data is loaded.
-    */
-    class ImageCollection {
-
-
-        /**
-        * An Image Collection is a special tileset containing mulitple images, with no slicing into each image.
-        * 
-        * Image Collections are normally created automatically when Tiled data is loaded.
-        * 
-        * @param name The name of the image collection in the map data.
-        * @param firstgid The first image index this image collection contains.
-        * @param width Width of widest image (in pixels). - Default: 32
-        * @param height Height of tallest image (in pixels). - Default: 32
-        * @param margin The margin around all images in the collection (in pixels).
-        * @param spacing The spacing between each image in the collection (in pixels).
-        * @param properties Custom Image Collection properties. - Default: {}
-        */
-        constructor(name: string, firstgid: number, width?: number, height?: number, margin?: number, spacing?: number, properties?: any);
-
-
-        /**
-        * The name of the Image Collection.
-        */
-        name: string;
-
-        /**
-        * The Tiled firstgid value.
-        * This is the starting index of the first image index this Image Collection contains.
-        */
-        firstgid: number;
-
-        /**
-        * The width of the widest image (in pixels).
-        */
-        imageWidth: number;
-
-        /**
-        * The height of the tallest image (in pixels).
-        */
-        imageHeight: number;
-
-        /**
-        * The margin around the images in the collection (in pixels).
-        * Use `setSpacing` to change.
-        */
-        imageMargin: number;
-
-        /**
-        * The spacing between each image in the collection (in pixels).
-        * Use `setSpacing` to change.
-        */
-        imageSpacing: number;
-
-        /**
-        * Image Collection-specific properties that are typically defined in the Tiled editor.
-        */
-        properties: any;
-
-        /**
-        * The cached images that are a part of this collection.
-        */
-        images: any[];
-
-        /**
-        * The total number of images in the image collection.
-        */
-        total: number;
-
-
-        /**
-        * Add an image to this Image Collection.
-        * 
-        * @param gid The gid of the image in the Image Collection.
-        * @param image The the key of the image in the Image Collection and in the cache.
-        */
-        addImage(gid: number, image: string): void;
-
-        /**
-        * Returns true if and only if this image collection contains the given image index.
-        * 
-        * @param imageIndex The image index to search for.
-        * @return True if this Image Collection contains the given index.
-        */
-        containsImageIndex(imageIndex: number): boolean;
 
     }
 
@@ -24970,859 +25821,6 @@ declare module Phaser {
         * Updates every sound in the game, checks for audio unlock on mobile and monitors the decoding watch list.
         */
         update(): void;
-
-    }
-
-
-    /**
-    * Sprites are the lifeblood of your game, used for nearly everything visual.
-    * 
-    * At its most basic a Sprite consists of a set of coordinates and a texture that is rendered to the canvas.
-    * They also contain additional properties allowing for physics motion (via Sprite.body), input handling (via Sprite.input),
-    * events (via Sprite.events), animation (via Sprite.animations), camera culling and more. Please see the Examples for use cases.
-    */
-    class Sprite extends PIXI.Sprite {
-
-
-        /**
-        * Sprites are the lifeblood of your game, used for nearly everything visual.
-        * 
-        * At its most basic a Sprite consists of a set of coordinates and a texture that is rendered to the canvas.
-        * They also contain additional properties allowing for physics motion (via Sprite.body), input handling (via Sprite.input),
-        * events (via Sprite.events), animation (via Sprite.animations), camera culling and more. Please see the Examples for use cases.
-        * 
-        * @param game A reference to the currently running game.
-        * @param x The x coordinate (in world space) to position the Sprite at.
-        * @param y The y coordinate (in world space) to position the Sprite at.
-        * @param key This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
-        * @param frame If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
-        */
-        constructor(game: Phaser.Game, x: number, y: number, key?: string | Phaser.RenderTexture | Phaser.BitmapData | PIXI.Texture, frame?: string | number);
-
-
-        /**
-        * A useful flag to control if the Game Object is alive or dead.
-        * 
-        * This is set automatically by the Health components `damage` method should the object run out of health.
-        * Or you can toggle it via your game code.
-        * 
-        * This property is mostly just provided to be used by your game - it doesn't effect rendering or logic updates.
-        * However you can use `Group.getFirstAlive` in conjunction with this property for fast object pooling and recycling.
-        * Default: true
-        */
-        alive: boolean;
-
-        /**
-        * The anchor sets the origin point of the texture.
-        * The default is 0,0 this means the texture's origin is the top left
-        * Setting than anchor to 0.5,0.5 means the textures origin is centered
-        * Setting the anchor to 1,1 would mean the textures origin points will be the bottom right corner
-        */
-        anchor: Phaser.Point;
-
-        /**
-        * The angle property is the rotation of the Game Object in *degrees* from its original orientation.
-        * 
-        * Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
-        * 
-        * Values outside this range are added to or subtracted from 360 to obtain a value within the range.
-        * For example, the statement player.angle = 450 is the same as player.angle = 90.
-        * 
-        * If you wish to work in radians instead of degrees you can use the property `rotation` instead.
-        * Working in radians is slightly faster as it doesn't have to perform any calculations.
-        */
-        angle: number;
-
-        /**
-        * If the Game Object is enabled for animation (such as a Phaser.Sprite) this is a reference to its AnimationManager instance.
-        * Through it you can create, play, pause and stop animations.
-        */
-        animations: Phaser.AnimationManager;
-
-        /**
-        * A Game Object with `autoCull` set to true will check its bounds against the World Camera every frame.
-        * If it is not intersecting the Camera bounds at any point then it has its `renderable` property set to `false`.
-        * This keeps the Game Object alive and still processing updates, but forces it to skip the render step entirely.
-        * 
-        * This is a relatively expensive operation, especially if enabled on hundreds of Game Objects. So enable it only if you know it's required,
-        * or you have tested performance and find it acceptable.
-        */
-        autoCull: boolean;
-
-        /**
-        * `body` is the Game Objects physics body. Once a Game Object is enabled for physics you access all associated
-        * properties and methods via it.
-        * 
-        * By default Game Objects won't add themselves to any physics system and their `body` property will be `null`.
-        * 
-        * To enable this Game Object for physics you need to call `game.physics.enable(object, system)` where `object` is this object
-        * and `system` is the Physics system you are using. If none is given it defaults to `Phaser.Physics.Arcade`.
-        * 
-        * You can alternatively call `game.physics.arcade.enable(object)`, or add this Game Object to a physics enabled Group.
-        * 
-        * Important: Enabling a Game Object for P2 or Ninja physics will automatically set its `anchor` property to 0.5,
-        * so the physics body is centered on the Game Object.
-        * 
-        * If you need a different result then adjust or re-create the Body shape offsets manually or reset the anchor after enabling physics.
-        */
-        body: Phaser.Physics.Arcade.Body | Phaser.Physics.P2.Body | Phaser.Physics.Ninja.Body | any;
-
-        /**
-        * The sum of the y and height properties.
-        * This is the same as `y + height - offsetY`.
-        */
-        bottom: number;
-
-        /**
-        * The x/y coordinate offset applied to the top-left of the camera that this Game Object will be drawn at if `fixedToCamera` is true.
-        * 
-        * The values are relative to the top-left of the camera view and in addition to any parent of the Game Object on the display list.
-        */
-        cameraOffset: Phaser.Point;
-
-        /**
-        * The center x coordinate of the Game Object.
-        * This is the same as `(x - offsetX) + (width / 2)`.
-        */
-        centerX: number;
-
-        /**
-        * The center y coordinate of the Game Object.
-        * This is the same as `(y - offsetY) + (height / 2)`.
-        */
-        centerY: number;
-
-        /**
-        * If this is set to `true` the Game Object checks if it is within the World bounds each frame.
-        * 
-        * When it is no longer intersecting the world bounds it dispatches the `onOutOfBounds` event.
-        * 
-        * If it was *previously* out of bounds but is now intersecting the world bounds again it dispatches the `onEnterBounds` event.
-        * 
-        * It also optionally kills the Game Object if `outOfBoundsKill` is `true`.
-        * 
-        * When `checkWorldBounds` is enabled it forces the Game Object to calculate its full bounds every frame.
-        * 
-        * This is a relatively expensive operation, especially if enabled on hundreds of Game Objects. So enable it only if you know it's required,
-        * or you have tested performance and find it acceptable.
-        */
-        checkWorldBounds: boolean;
-
-        /**
-        * The components this Game Object has installed.
-        */
-        components: any;
-
-        /**
-        * The Rectangle used to crop the texture this Game Object uses.
-        * Set this property via `crop`.
-        * If you modify this property directly you must call `updateCrop` in order to have the change take effect.
-        */
-        cropRect: Phaser.Rectangle;
-
-        /**
-        * Does this texture require a custom render call? (as set by BitmapData, Video, etc)
-        */
-        customRender: boolean;
-
-        /**
-        * An empty Object that belongs to this Game Object.
-        * This value isn't ever used internally by Phaser, but may be used by your own code, or
-        * by Phaser Plugins, to store data that needs to be associated with the Game Object,
-        * without polluting the Game Object directly.
-        * Default: {}
-        */
-        data: any;
-
-        /**
-        * A debug flag designed for use with `Game.enableStep`.
-        */
-        debug: boolean;
-
-        /**
-        * Returns the delta x value. The difference between world.x now and in the previous frame.
-        * 
-        * The value will be positive if the Game Object has moved to the right or negative if to the left.
-        */
-        deltaX: number;
-
-        /**
-        * Returns the delta y value. The difference between world.y now and in the previous frame.
-        * 
-        * The value will be positive if the Game Object has moved down or negative if up.
-        */
-        deltaY: number;
-
-        /**
-        * Returns the delta z value. The difference between rotation now and in the previous frame. The delta value.
-        */
-        deltaZ: number;
-
-        /**
-        * As a Game Object runs through its destroy method this flag is set to true,
-        * and can be checked in any sub-systems or plugins it is being destroyed from.
-        */
-        destroyPhase: boolean;
-
-        /**
-        * All Phaser Game Objects have an Events class which contains all of the events that are dispatched when certain things happen to this
-        * Game Object, or any of its components.
-        */
-        events: Phaser.Events;
-
-        /**
-        * Controls if this Sprite is processed by the core Phaser game loops and Group loops.
-        * Default: true
-        */
-        exists: boolean;
-
-        /**
-        * A Game Object that is "fixed" to the camera uses its x/y coordinates as offsets from the top left of the camera during rendering.
-        * 
-        * The values are adjusted at the rendering stage, overriding the Game Objects actual world position.
-        * 
-        * The end result is that the Game Object will appear to be 'fixed' to the camera, regardless of where in the game world
-        * the camera is viewing. This is useful if for example this Game Object is a UI item that you wish to be visible at all times
-        * regardless where in the world the camera is.
-        * 
-        * The offsets are stored in the `cameraOffset` property.
-        * 
-        * Note that the `cameraOffset` values are in addition to any parent of this Game Object on the display list.
-        * 
-        * Be careful not to set `fixedToCamera` on Game Objects which are in Groups that already have `fixedToCamera` enabled on them.
-        */
-        fixedToCamera: boolean;
-
-        /**
-        * Gets or sets the current frame index of the texture being used to render this Game Object.
-        * 
-        * To change the frame set `frame` to the index of the new frame in the sprite sheet you wish this Game Object to use,
-        * for example: `player.frame = 4`.
-        * 
-        * If the frame index given doesn't exist it will revert to the first frame found in the texture.
-        * 
-        * If you are using a texture atlas then you should use the `frameName` property instead.
-        * 
-        * If you wish to fully replace the texture being used see `loadTexture`.
-        */
-        frame: string | number;
-
-        /**
-        * Gets or sets the current frame name of the texture being used to render this Game Object.
-        * 
-        * To change the frame set `frameName` to the name of the new frame in the texture atlas you wish this Game Object to use,
-        * for example: `player.frameName = "idle"`.
-        * 
-        * If the frame name given doesn't exist it will revert to the first frame found in the texture and throw a console warning.
-        * 
-        * If you are using a sprite sheet then you should use the `frame` property instead.
-        * 
-        * If you wish to fully replace the texture being used see `loadTexture`.
-        */
-        frameName: string;
-
-        /**
-        * A Game Object is considered `fresh` if it has just been created or reset and is yet to receive a renderer transform update.
-        * This property is mostly used internally by the physics systems, but is exposed for the use of plugins.
-        */
-        fresh: boolean;
-
-        /**
-        * A reference to the currently running Game.
-        */
-        game: Phaser.Game;
-
-        /**
-        * The Game Objects health value. This is a handy property for setting and manipulating health on a Game Object.
-        * 
-        * It can be used in combination with the `damage` method or modified directly.
-        * Default: 1
-        */
-        health: number;
-
-        /**
-        * Checks if the Game Objects bounds intersect with the Game Camera bounds.
-        * Returns `true` if they do, otherwise `false` if fully outside of the Cameras bounds.
-        */
-        inCamera: boolean;
-
-        /**
-        * The Input Handler for this Game Object.
-        * 
-        * By default it is disabled. If you wish this Game Object to process input events you should enable it with: `inputEnabled = true`.
-        * 
-        * After you have done this, this property will be a reference to the Phaser InputHandler.
-        */
-        input: Phaser.InputHandler;
-
-        /**
-        * By default a Game Object won't process any input events. By setting `inputEnabled` to true a Phaser.InputHandler is created
-        * for this Game Object and it will then start to process click / touch events and more.
-        * 
-        * You can then access the Input Handler via `this.input`.
-        * 
-        * Note that Input related events are dispatched from `this.events`, i.e.: `events.onInputDown`.
-        * 
-        * If you set this property to false it will stop the Input Handler from processing any more input events.
-        * 
-        * If you want to _temporarily_ disable input for a Game Object, then it's better to set
-        * `input.enabled = false`, as it won't reset any of the Input Handlers internal properties.
-        * You can then toggle this back on as needed.
-        */
-        inputEnabled: boolean;
-
-        /**
-        * Checks if the Game Objects bounds are within, or intersect at any point with the Game World bounds.
-        */
-        inWorld: boolean;
-
-        /**
-        * The key of the image or texture used by this Game Object during rendering.
-        * If it is a string it's the string used to retrieve the texture from the Phaser Image Cache.
-        * It can also be an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
-        * If a Game Object is created without a key it is automatically assigned the key `__default` which is a 32x32 transparent PNG stored within the Cache.
-        * If a Game Object is given a key which doesn't exist in the Image Cache it is re-assigned the key `__missing` which is a 32x32 PNG of a green box with a line through it.
-        */
-        key: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture;
-
-        /**
-        * The left coordinate of the Game Object.
-        * This is the same as `x - offsetX`.
-        */
-        left: number;
-
-        /**
-        * The lifespan allows you to give a Game Object a lifespan in milliseconds.
-        * 
-        * Once the Game Object is 'born' you can set this to a positive value.
-        * 
-        * It is automatically decremented by the millisecond equivalent of `game.time.physicsElapsed` each frame.
-        * When it reaches zero it will call the `kill` method.
-        * 
-        * Very handy for particles, bullets, collectibles, or any other short-lived entity.
-        */
-        lifespan: number;
-
-        /**
-        * The Game Objects maximum health value. This works in combination with the `heal` method to ensure
-        * the health value never exceeds the maximum.
-        * Default: 100
-        */
-        maxHealth: number;
-
-        /**
-        * A user defined name given to this Game Object.
-        * This value isn't ever used internally by Phaser, it is meant as a game level property.
-        */
-        name: string;
-
-        /**
-        * The amount the Game Object is visually offset from its x coordinate.
-        * This is the same as `width * anchor.x`.
-        * It will only be > 0 if anchor.x is not equal to zero.
-        */
-        offsetX: number;
-
-        /**
-        * The amount the Game Object is visually offset from its y coordinate.
-        * This is the same as `height * anchor.y`.
-        * It will only be > 0 if anchor.y is not equal to zero.
-        */
-        offsetY: number;
-
-        /**
-        * If this and the `checkWorldBounds` property are both set to `true` then the `kill` method is called as soon as `inWorld` returns false.
-        */
-        outOfBoundsKill: boolean;
-
-        /**
-        * A Game Object is that is pendingDestroy is flagged to have its destroy method called on the next logic update.
-        * You can set it directly to allow you to flag an object to be destroyed on its next update.
-        * 
-        * This is extremely useful if you wish to destroy an object from within one of its own callbacks
-        * such as with Buttons or other Input events.
-        */
-        pendingDestroy: boolean;
-
-        /**
-        * The position the Game Object was located in the previous frame.
-        */
-        previousPosition: Phaser.Point;
-
-        /**
-        * The rotation the Game Object was in set to in the previous frame. Value is in radians.
-        */
-        previousRotation: number;
-        position: Phaser.Point;
-        physicsEnabled: boolean;
-
-        /**
-        * The const physics body type of this object.
-        */
-        physicsType: number;
-
-        /**
-        * The render order ID is used internally by the renderer and Input Manager and should not be modified.
-        * This property is mostly used internally by the renderers, but is exposed for the use of plugins.
-        */
-        renderOrderID: number;
-
-        /**
-        * The right coordinate of the Game Object.
-        * This is the same as `x + width - offsetX`.
-        */
-        right: number;
-        scale: Phaser.Point;
-
-        /**
-        * The minimum scale this Game Object will scale down to.
-        * 
-        * It allows you to prevent a parent from scaling this Game Object lower than the given value.
-        * 
-        * Set it to `null` to remove the limit.
-        */
-        scaleMin: Phaser.Point;
-
-        /**
-        * The maximum scale this Game Object will scale up to.
-        * 
-        * It allows you to prevent a parent from scaling this Game Object higher than the given value.
-        * 
-        * Set it to `null` to remove the limit.
-        */
-        scaleMax: Phaser.Point;
-
-        /**
-        * Enable or disable texture smoothing for this Game Object.
-        * 
-        * It only takes effect if the Game Object is using an image based texture.
-        * 
-        * Smoothing is enabled by default.
-        */
-        smoothed: boolean;
-
-        /**
-        * The y coordinate of the Game Object.
-        * This is the same as `y - offsetY`.
-        */
-        top: number;
-
-        /**
-        * The const type of this object.
-        */
-        type: number;
-
-        /**
-        * A canvas that contains the tinted version of the Sprite (in Canvas mode, WebGL doesn't populate this)
-        * Default: null
-        */
-        tintedTexture: HTMLCanvasElement;
-
-        /**
-        * The callback that will apply any scale limiting to the worldTransform.
-        */
-        transformCallback: Function;
-
-        /**
-        * The context under which `transformCallback` is called.
-        */
-        transformCallbackContext: any;
-
-        /**
-        * The world coordinates of this Game Object in pixels.
-        * Depending on where in the display list this Game Object is placed this value can differ from `position`,
-        * which contains the x/y coordinates relative to the Game Objects parent.
-        */
-        world: Phaser.Point;
-
-        /**
-        * The position of the Game Object on the x axis relative to the local coordinates of the parent.
-        */
-        x: number;
-
-        /**
-        * The position of the Game Object on the y axis relative to the local coordinates of the parent.
-        */
-        y: number;
-
-        /**
-        * The z depth of this Game Object within its parent Group.
-        * No two objects in a Group can have the same z value.
-        * This value is adjusted automatically whenever the Group hierarchy changes.
-        * If you wish to re-order the layering of a Game Object then see methods like Group.moveUp or Group.bringToTop.
-        */
-        z: number;
-
-
-        /**
-        * Aligns this Game Object within another Game Object, or Rectangle, known as the
-        * 'container', to one of 9 possible positions.
-        * 
-        * The container must be a Game Object, or Phaser.Rectangle object. This can include properties
-        * such as `World.bounds` or `Camera.view`, for aligning Game Objects within the world
-        * and camera bounds. Or it can include other Sprites, Images, Text objects, BitmapText,
-        * TileSprites or Buttons.
-        * 
-        * Please note that aligning a Sprite to another Game Object does **not** make it a child of
-        * the container. It simply modifies its position coordinates so it aligns with it.
-        * 
-        * The position constants you can use are:
-        * 
-        * `Phaser.TOP_LEFT`, `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.LEFT_CENTER`,
-        * `Phaser.CENTER`, `Phaser.RIGHT_CENTER`, `Phaser.BOTTOM_LEFT`,
-        * `Phaser.BOTTOM_CENTER` and `Phaser.BOTTOM_RIGHT`.
-        * 
-        * The Game Objects are placed in such a way that their _bounds_ align with the
-        * container, taking into consideration rotation, scale and the anchor property.
-        * This allows you to neatly align Game Objects, irrespective of their position value.
-        * 
-        * The optional `offsetX` and `offsetY` arguments allow you to apply extra spacing to the final
-        * aligned position of the Game Object. For example:
-        * 
-        * `sprite.alignIn(background, Phaser.BOTTOM_RIGHT, -20, -20)`
-        * 
-        * Would align the `sprite` to the bottom-right, but moved 20 pixels in from the corner.
-        * Think of the offsets as applying an adjustment to the containers bounds before the alignment takes place.
-        * So providing a negative offset will 'shrink' the container bounds by that amount, and providing a positive
-        * one expands it.
-        * 
-        * @param container The Game Object or Rectangle with which to align this Game Object to. Can also include properties such as `World.bounds` or `Camera.view`.
-        * @param position The position constant. One of `Phaser.TOP_LEFT` (default), `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.LEFT_CENTER`, `Phaser.CENTER`, `Phaser.RIGHT_CENTER`, `Phaser.BOTTOM_LEFT`, `Phaser.BOTTOM_CENTER` or `Phaser.BOTTOM_RIGHT`.
-        * @param offsetX A horizontal adjustment of the Containers bounds, applied to the aligned position of the Game Object. Use a negative value to shrink the bounds, positive to increase it.
-        * @param offsetY A vertical adjustment of the Containers bounds, applied to the aligned position of the Game Object. Use a negative value to shrink the bounds, positive to increase it.
-        * @return This Game Object.
-        */
-        alignIn(container: Phaser.Rectangle | Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapText | Phaser.Button | Phaser.Graphics | Phaser.TileSprite, position?: number, offsetX?: number, offsetY?: number): any;
-
-        /**
-        * Aligns this Game Object to the side of another Game Object, or Rectangle, known as the
-        * 'parent', in one of 11 possible positions.
-        * 
-        * The parent must be a Game Object, or Phaser.Rectangle object. This can include properties
-        * such as `World.bounds` or `Camera.view`, for aligning Game Objects within the world
-        * and camera bounds. Or it can include other Sprites, Images, Text objects, BitmapText,
-        * TileSprites or Buttons.
-        * 
-        * Please note that aligning a Sprite to another Game Object does **not** make it a child of
-        * the parent. It simply modifies its position coordinates so it aligns with it.
-        * 
-        * The position constants you can use are:
-        * 
-        * `Phaser.TOP_LEFT` (default), `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.LEFT_TOP`,
-        * `Phaser.LEFT_CENTER`, `Phaser.LEFT_BOTTOM`, `Phaser.RIGHT_TOP`, `Phaser.RIGHT_CENTER`,
-        * `Phaser.RIGHT_BOTTOM`, `Phaser.BOTTOM_LEFT`, `Phaser.BOTTOM_CENTER`
-        * and `Phaser.BOTTOM_RIGHT`.
-        * 
-        * The Game Objects are placed in such a way that their _bounds_ align with the
-        * parent, taking into consideration rotation, scale and the anchor property.
-        * This allows you to neatly align Game Objects, irrespective of their position value.
-        * 
-        * The optional `offsetX` and `offsetY` arguments allow you to apply extra spacing to the final
-        * aligned position of the Game Object. For example:
-        * 
-        * `sprite.alignTo(background, Phaser.BOTTOM_RIGHT, -20, -20)`
-        * 
-        * Would align the `sprite` to the bottom-right, but moved 20 pixels in from the corner.
-        * Think of the offsets as applying an adjustment to the parents bounds before the alignment takes place.
-        * So providing a negative offset will 'shrink' the parent bounds by that amount, and providing a positive
-        * one expands it.
-        * 
-        * @param parent The Game Object or Rectangle with which to align this Game Object to. Can also include properties such as `World.bounds` or `Camera.view`.
-        * @param position The position constant. One of `Phaser.TOP_LEFT`, `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.LEFT_TOP`, `Phaser.LEFT_CENTER`, `Phaser.LEFT_BOTTOM`, `Phaser.RIGHT_TOP`, `Phaser.RIGHT_CENTER`, `Phaser.RIGHT_BOTTOM`, `Phaser.BOTTOM_LEFT`, `Phaser.BOTTOM_CENTER` or `Phaser.BOTTOM_RIGHT`.
-        * @param offsetX A horizontal adjustment of the Containers bounds, applied to the aligned position of the Game Object. Use a negative value to shrink the bounds, positive to increase it.
-        * @param offsetY A vertical adjustment of the Containers bounds, applied to the aligned position of the Game Object. Use a negative value to shrink the bounds, positive to increase it.
-        * @return This Game Object.
-        */
-        alignTo(container: Phaser.Rectangle | Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapText | Phaser.Button | Phaser.Graphics | Phaser.TileSprite, position?: number, offsetX?: number, offsetY?: number): any;
-
-        /**
-        * Brings this Game Object to the top of its parents display list.
-        * Visually this means it will render over the top of any old child in the same Group.
-        * 
-        * If this Game Object hasn't been added to a custom Group then this method will bring it to the top of the Game World,
-        * because the World is the root Group from which all Game Objects descend.
-        * @return This instance.
-        */
-        bringToTop(): Phaser.Sprite;
-
-        /**
-        * Crop allows you to crop the texture being used to display this Game Object.
-        * Setting a crop rectangle modifies the core texture frame. The Game Object width and height properties will be adjusted accordingly.
-        * 
-        * Cropping takes place from the top-left and can be modified in real-time either by providing an updated rectangle object to this method,
-        * or by modifying `cropRect` property directly and then calling `updateCrop`.
-        * 
-        * The rectangle object given to this method can be either a `Phaser.Rectangle` or any other object
-        * so long as it has public `x`, `y`, `width`, `height`, `right` and `bottom` properties.
-        * 
-        * A reference to the rectangle is stored in `cropRect` unless the `copy` parameter is `true`,
-        * in which case the values are duplicated to a local object.
-        * 
-        * @param rect The Rectangle used during cropping. Pass null or no parameters to clear a previously set crop rectangle.
-        * @param copy If false `cropRect` will be stored as a reference to the given rect. If true it will copy the rect values into a local Phaser Rectangle object stored in cropRect.
-        */
-        crop(rect: Phaser.Rectangle, copy: boolean): void;
-
-        /**
-        * Adjust scaling limits, if set, to this Game Object.
-        * 
-        * @param wt The updated worldTransform matrix.
-        */
-        checkTransform(wt: PIXI.Matrix): void;
-        damage(amount: number): Phaser.Sprite;
-
-        /**
-        * Destroys the Game Object. This removes it from its parent group, destroys the input, event and animation handlers if present
-        * and nulls its reference to `game`, freeing it up for garbage collection.
-        * 
-        * If this Game Object has the Events component it will also dispatch the `onDestroy` event.
-        * 
-        * You can optionally also destroy the BaseTexture this Game Object is using. Be careful if you've
-        * more than one Game Object sharing the same BaseTexture.
-        * 
-        * @param destroyChildren Should every child of this object have its destroy method called as well? - Default: true
-        * @param destroyTexture Destroy the BaseTexture this Game Object is using? Note that if another Game Object is sharing the same BaseTexture it will invalidate it.
-        */
-        destroy(destroyChildren?: boolean): void;
-        drawPolygon(): void;
-        heal(amount: number): Phaser.Sprite;
-
-        /**
-        * Kills a Game Object. A killed Game Object has its `alive`, `exists` and `visible` properties all set to false.
-        * 
-        * It will dispatch the `onKilled` event. You can listen to `events.onKilled` for the signal.
-        * 
-        * Note that killing a Game Object is a way for you to quickly recycle it in an object pool,
-        * it doesn't destroy the object or free it up from memory.
-        * 
-        * If you don't need this Game Object any more you should call `destroy` instead.
-        * @return This instance.
-        */
-        kill(): Phaser.Sprite;
-
-        /**
-        * Changes the base texture the Game Object is using. The old texture is removed and the new one is referenced or fetched from the Cache.
-        * 
-        * If your Game Object is using a frame from a texture atlas and you just wish to change to another frame, then see the `frame` or `frameName` properties instead.
-        * 
-        * You should only use `loadTexture` if you want to replace the base texture entirely.
-        * 
-        * Calling this method causes a WebGL texture update, so use sparingly or in low-intensity portions of your game, or if you know the new texture is already on the GPU.
-        * 
-        * You can use the new const `Phaser.PENDING_ATLAS` as the texture key for any sprite.
-        * Doing this then sets the key to be the `frame` argument (the frame is set to zero).
-        * 
-        * This allows you to create sprites using `load.image` during development, and then change them
-        * to use a Texture Atlas later in development by simply searching your code for 'PENDING_ATLAS'
-        * and swapping it to be the key of the atlas data.
-        * 
-        * Note: You cannot use a RenderTexture as a texture for a TileSprite.
-        * 
-        * @param key This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache Image entry, or an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
-        * @param frame If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
-        * @param stopAnimation If an animation is already playing on this Sprite you can choose to stop it or let it carry on playing. - Default: true
-        */
-        loadTexture(key: string | Phaser.RenderTexture | Phaser.BitmapData | Phaser.Video | PIXI.Texture, frame?: string | number, stopAnimation?: boolean): void;
-
-        /**
-        * Moves this Game Object up one place in its parents display list.
-        * This call has no effect if the Game Object is already at the top of the display list.
-        * 
-        * If this Game Object hasn't been added to a custom Group then this method will move it one object up within the Game World,
-        * because the World is the root Group from which all Game Objects descend.
-        * @return This instance.
-        */
-        moveUp(): Phaser.Sprite;
-
-        /**
-        * Moves this Game Object down one place in its parents display list.
-        * This call has no effect if the Game Object is already at the bottom of the display list.
-        * 
-        * If this Game Object hasn't been added to a custom Group then this method will move it one object down within the Game World,
-        * because the World is the root Group from which all Game Objects descend.
-        * @return This instance.
-        */
-        moveDown(): Phaser.Sprite;
-
-        /**
-        * Checks to see if the bounds of this Game Object overlaps with the bounds of the given Display Object,
-        * which can be a Sprite, Image, TileSprite or anything that extends those such as Button or provides a `getBounds` method and result.
-        * 
-        * This check ignores the `hitArea` property if set and runs a `getBounds` comparison on both objects to determine the result.
-        * 
-        * Therefore it's relatively expensive to use in large quantities, i.e. with lots of Sprites at a high frequency.
-        * It should be fine for low-volume testing where physics isn't required.
-        * 
-        * @param displayObject The display object to check against.
-        * @return True if the bounds of this Game Object intersects at any point with the bounds of the given display object.
-        */
-        overlap(displayObject: Phaser.Sprite | Phaser.Image | Phaser.TileSprite | Phaser.Button | PIXI.DisplayObject): boolean;
-
-        /**
-        * Plays an Animation.
-        * 
-        * The animation should have previously been created via `animations.add`.
-        * 
-        * If the animation is already playing calling this again won't do anything.
-        * If you need to reset an already running animation do so directly on the Animation object itself or via `AnimationManager.stop`.
-        * 
-        * @param name The name of the animation to be played, e.g. "fire", "walk", "jump". Must have been previously created via 'AnimationManager.add'.
-        * @param frameRate The framerate to play the animation at. The speed is given in frames per second. If not provided the previously set frameRate of the Animation is used.
-        * @param loop Should the animation be looped after playback. If not provided the previously set loop value of the Animation is used.
-        * @param killOnComplete If set to true when the animation completes (only happens if loop=false) the parent Sprite will be killed.
-        * @return A reference to playing Animation.
-        */
-        play(name: string, frameRate?: number, loop?: boolean, killOnComplete?: boolean): Phaser.Animation;
-
-        /**
-        * Internal method called by the World postUpdate cycle.
-        */
-        postUpdate(): void;
-
-        /**
-        * Automatically called by World.preUpdate.
-        * @return True if the Sprite was rendered, otherwise false.
-        */
-        preUpdate(): void;
-
-        /**
-        * Resets the Game Object.
-        * 
-        * This moves the Game Object to the given x/y world coordinates and sets `fresh`, `exists`,
-        * `visible` and `renderable` to true.
-        * 
-        * If this Game Object has the LifeSpan component it will also set `alive` to true and `health` to the given value.
-        * 
-        * If this Game Object has a Physics Body it will reset the Body.
-        * 
-        * @param x The x coordinate (in world space) to position the Game Object at.
-        * @param y The y coordinate (in world space) to position the Game Object at.
-        * @param health The health to give the Game Object if it has the Health component. - Default: 1
-        * @return This instance.
-        */
-        reset(x: number, y: number, health?: number): Phaser.Sprite;
-
-        /**
-        * Resets the texture frame dimensions that the Game Object uses for rendering.
-        */
-        resetFrame(): void;
-
-        /**
-        * Resizes the Frame dimensions that the Game Object uses for rendering.
-        * 
-        * You shouldn't normally need to ever call this, but in the case of special texture types such as Video or BitmapData
-        * it can be useful to adjust the dimensions directly in this way.
-        * 
-        * @param parent The parent texture object that caused the resize, i.e. a Phaser.Video object.
-        * @param width The new width of the texture.
-        * @param height The new height of the texture.
-        */
-        resizeFrame(parent: any, width: number, height: number): void;
-
-        /**
-        * Brings a 'dead' Game Object back to life, optionally resetting its health value in the process.
-        * 
-        * A resurrected Game Object has its `alive`, `exists` and `visible` properties all set to true.
-        * 
-        * It will dispatch the `onRevived` event. Listen to `events.onRevived` for the signal.
-        * 
-        * @param health The health to give the Game Object. Only set if the GameObject has the Health component. - Default: 100
-        * @return This instance.
-        */
-        revive(health?: number): Phaser.Sprite;
-
-        /**
-        * Sends this Game Object to the bottom of its parents display list.
-        * Visually this means it will render below all other children in the same Group.
-        * 
-        * If this Game Object hasn't been added to a custom Group then this method will send it to the bottom of the Game World,
-        * because the World is the root Group from which all Game Objects descend.
-        * @return This instance.
-        */
-        sendToBack(): Phaser.Sprite;
-
-        /**
-        * Sets the texture frame the Game Object uses for rendering.
-        * 
-        * This is primarily an internal method used by `loadTexture`, but is exposed for the use of plugins and custom classes.
-        * 
-        * @param frame The Frame to be used by the texture.
-        */
-        setFrame(frame: Phaser.Frame): void;
-
-        /**
-        * Sets the scaleMin and scaleMax values. These values are used to limit how far this Game Object will scale based on its parent.
-        * 
-        * For example if this Game Object has a `minScale` value of 1 and its parent has a `scale` value of 0.5, the 0.5 will be ignored
-        * and the scale value of 1 will be used, as the parents scale is lower than the minimum scale this Game Object should adhere to.
-        * 
-        * By setting these values you can carefully control how Game Objects deal with responsive scaling.
-        * 
-        * If only one parameter is given then that value will be used for both scaleMin and scaleMax:
-        * `setScaleMinMax(1)` = scaleMin.x, scaleMin.y, scaleMax.x and scaleMax.y all = 1
-        * 
-        * If only two parameters are given the first is set as scaleMin.x and y and the second as scaleMax.x and y:
-        * `setScaleMinMax(0.5, 2)` = scaleMin.x and y = 0.5 and scaleMax.x and y = 2
-        * 
-        * If you wish to set `scaleMin` with different values for x and y then either modify Game Object.scaleMin directly,
-        * or pass `null` for the `maxX` and `maxY` parameters.
-        * 
-        * Call `setScaleMinMax(null)` to clear all previously set values.
-        * 
-        * @param minX The minimum horizontal scale value this Game Object can scale down to.
-        * @param minY The minimum vertical scale value this Game Object can scale down to.
-        * @param maxX The maximum horizontal scale value this Game Object can scale up to.
-        * @param maxY The maximum vertical scale value this Game Object can scale up to.
-        */
-        setScaleMinMax(minX?: number, minY?: number, maxX?: number, maxY?: number): void;
-
-        /**
-        * Override this method in your own custom objects to handle any update requirements.
-        * It is called immediately after `preUpdate` and before `postUpdate`.
-        * Remember if this Game Object has any children you should call update on those too.
-        */
-        update(): void;
-
-        /**
-        * If you have set a crop rectangle on this Game Object via `crop` and since modified the `cropRect` property,
-        * or the rectangle it references, then you need to update the crop frame by calling this method.
-        */
-        updateCrop(): void;
-
-    }
-
-
-    /**
-    * The SpriteBatch class is a really fast version of the DisplayObjectContainer built purely for speed, so use when you need a lot of sprites or particles.
-    * It's worth mentioning that by default sprite batches are used through-out the renderer, so you only really need to use a SpriteBatch if you have over
-    * 1000 sprites that all share the same texture (or texture atlas). It's also useful if running in Canvas mode and you have a lot of un-rotated or un-scaled
-    * Sprites as it skips all of the Canvas setTransform calls, which helps performance, especially on mobile devices.
-    * 
-    * Please note that any Sprite that is part of a SpriteBatch will not have its bounds updated, so will fail checks such as outOfBounds.
-    */
-    class SpriteBatch extends Phaser.Group {
-
-
-        /**
-        * The SpriteBatch class is a really fast version of the DisplayObjectContainer built purely for speed, so use when you need a lot of sprites or particles.
-        * It's worth mentioning that by default sprite batches are used through-out the renderer, so you only really need to use a SpriteBatch if you have over
-        * 1000 sprites that all share the same texture (or texture atlas). It's also useful if running in Canvas mode and you have a lot of un-rotated or un-scaled
-        * Sprites as it skips all of the Canvas setTransform calls, which helps performance, especially on mobile devices.
-        * 
-        * Please note that any Sprite that is part of a SpriteBatch will not have its bounds updated, so will fail checks such as outOfBounds.
-        * 
-        * @param game A reference to the currently running game.
-        * @param parent The parent Group, DisplayObject or DisplayObjectContainer that this Group will be added to. If `undefined` or `null` it will use game.world.
-        * @param name A name for this Group. Not used internally but useful for debugging. - Default: group
-        * @param addToStage If set to true this Group will be added directly to the Game.Stage instead of Game.World.
-        */
-        constructor(game: Phaser.Game, parent: PIXI.DisplayObjectContainer, name?: string, addedToStage?: boolean);
-
-
-        /**
-        * Internal Phaser Type value.
-        */
-        type: number;
 
     }
 
