@@ -409,13 +409,15 @@ Phaser.Camera.prototype = {
     * @method Phaser.Camera#flash
     * @param {numer} [color=0xffffff] - The color of the flash effect. I.e. 0xffffff for white, 0xff0000 for red, etc.
     * @param {number} [duration=500] - The duration of the flash effect in milliseconds.
+    * @param {number} [alpha=1] - The intensity of the flash.
     * @param {boolean} [force=false] - If a camera flash or fade effect is already running and force is true it will replace the previous effect, resetting the duration.
     * @return {boolean} True if the effect was started, otherwise false.
     */
-    flash: function (color, duration, force) {
+    flash: function (color, duration, alpha, force) {
 
         if (color === undefined) { color = 0xffffff; }
         if (duration === undefined) { duration = 500; }
+        if (alpha === undefined) { alpha = 1; }
         if (force === undefined) { force = false; }
 
         if (!this.fx || (!force && this._fxDuration > 0))
@@ -429,7 +431,7 @@ Phaser.Camera.prototype = {
         this.fx.drawRect(0, 0, this.width, this.height);
         this.fx.endFill();
 
-        this.fx.alpha = 1;
+        this.fx.alpha = alpha;
 
         this._fxDuration = duration;
         this._fxType = 0;
