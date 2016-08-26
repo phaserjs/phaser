@@ -345,7 +345,7 @@ Phaser.Path.prototype = {
     *
     * @method Phaser.Path#getControlPointsOnThisCurve
     * @param {Phaser.Hermite} curve - A Phaser.Hermite curve.
-    * @return {[Phaser.Point]} An array of points representing the end points of 10 line segments that make up the curve
+    * @return {array} An array of points representing the end points of 10 line segments that make up the curve.
     */
     getControlPointsOnThisCurve: function (curve) {
 

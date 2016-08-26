@@ -38,11 +38,13 @@ Grab the source and join in the fun!
 
 <div align="center"><img src="http://phaser.io/images/github/news.jpg"></div>
 
-> In Development
+> 26th August 2016
 
-This is the development branch, where we are building Phaser 2.6.2.
+Summer is nearly over, the nights are drawing in, and the Phaser releases continue. After enjoying a short break in August, we're back with Phaser 2.6.2. This is mostly a maintenance release, with a lot of attention paid to clearing bugs, and improving features. There's also some significant updates to our fork of Pixi, setting the scene for the next iteration of Phaser.
 
-Check the [Change Log](#change-log) to see what we've done so far. Or switch to the master branch for the current stable release.
+Check the [Change Log](#change-log) for the complete list of what's new and updated.
+
+With 2.6.2 out, we'll now turn our attention to merging in all of the renderer updates we've built over the past few months. They are going to form the basis of the Phaser 3.0 release. The bump in version number due to the dramatic internal changes we're making. Follow our progress in the Phaser World newsletter for details. It's going to be an exciting September for sure :)
 
 As always, keep you eyes on the Phaser web site, and subscribe to our weekly [newsletter](#newsletter). You can also follow me on [Twitter](https://twitter.com/photonstorm) or chat to me in the Phaser [Slack](http://phaser.io/community/slack) channel.
 
@@ -156,7 +158,7 @@ As well as the [book](http://phaser.io/interphase) you get all the source code, 
 
 ### Phaser Editor - A complete Phaser Editor
 
-[Phaser Editor](http://phasereditor.boniatillo.com/) is a brand new Eclipse based editor that offers lots of built-in tools specifically for Phaser developers. Handy features include Smart code auto-completion, built-in web server, documentation search, asset management, texture atlas creator, audio sprite creator, asset previews and lots more.
+[Phaser Editor](http://phaser.io/shop/apps/phaser-editor) is a brand new Eclipse based editor that offers lots of built-in tools specifically for Phaser developers. Handy features include Smart code auto-completion, built-in web server, documentation search, asset management, texture atlas creator, audio sprite creator, asset previews and lots more.
 
 ### Game Mechanic Explorer
 
@@ -305,7 +307,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 ![Change Log](http://phaser.io/images/github/div-change-log.png "Change Log")
 <a name="change-log"></a>
 
-## Version 2.6.2 - "Kore Springs" - In Development
+## Version 2.6.2 - "Kore Springs" - 26th August 2016
 
 ### New Features
 

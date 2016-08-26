@@ -43,7 +43,7 @@
     "grunt-jsdoc": "~0.6.2-beta",
     "grunt-notify": "^0.3.0",
     "grunt-text-replace": "^0.3.11",
-    "jsdoc": "~3.3.0-alpha10",
+    "jsdoc": "^3.4.0",
     "load-grunt-config": "~0.7.2",
     "typescript": "1.4.1",
     "yuidocjs": "^0.3.50"

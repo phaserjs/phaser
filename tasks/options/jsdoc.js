@@ -1,6 +1,6 @@
 module.exports = {
     html: {
-        src: ['d:/wamp/www/phaser/README.md'],
+        src: ['./README.md'],
         options: {
             configure: 'tasks/jsdoc-conf.json',
             /* The destination and private options must be redefined event if there are always in the configure file otherwise, grunt-jsdoc overwrite it with its default values */
