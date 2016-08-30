@@ -1127,8 +1127,10 @@ Object.defineProperty(Phaser.Weapon.prototype, "bulletClass", {
 
         this._bulletClass = classType;
 
-        this.bullets.classType = this._bulletClass;
-
+        //prevent crash if weapon's bullets have not yet been initialized
+        if (this.bullets) {
+            this.bullets.classType = this._bulletClass;
+        }
     }
 
 });
