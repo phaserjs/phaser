@@ -690,10 +690,10 @@ Phaser.Weapon.prototype.trackPointer = function (pointer, offsetX, offsetY) {
 
 /**
 * Attempts to fire a single Bullet. If there are no more bullets available in the pool, and the pool cannot be extended,
-* then this method returns `false`. It will also return false if not enough time has expired since the last time
+* then this method returns `null`. It will also return `null` if not enough time has expired since the last time
 * the Weapon was fired, as defined in the `Weapon.fireRate` property.
 *
-* Otherwise the first available bullet is selected and launched.
+* Otherwise the first available bullet is selected, launched and returned.
 *
 * The arguments are all optional, but allow you to control both where the bullet is launched from, and aimed at.
 *
@@ -971,6 +971,20 @@ Phaser.Weapon.prototype.fireAtXY = function (x, y) {
 };
 
 /**
+* You can modify the size of the physics Body the Bullets use to be any dimension you need.
+* This allows you to make it smaller, or larger, than the parent Sprite.
+* You can also control the x and y offset of the Body. This is the position of the
+* Body relative to the top-left of the Sprite _texture_.
+*
+* For example: If you have a Sprite with a texture that is 80x100 in size,
+* and you want the physics body to be 32x32 pixels in the middle of the texture, you would do:
+*
+* `setSize(32 / Math.abs(this.scale.x), 32 / Math.abs(this.scale.y), 24, 34)`
+*
+* Where the first two parameters is the new Body size (32x32 pixels) divided by the sprite's scale.
+* 24 is the horizontal offset of the Body from the top-left of the Sprites texture, and 34
+* is the vertical offset.
+
 * You can modify the size of the physics Body the Bullets use to be any dimension you need.
 * This allows you to make it smaller, or larger, than the parent Sprite.
 * You can also control the x and y offset of the Body. This is the position of the
