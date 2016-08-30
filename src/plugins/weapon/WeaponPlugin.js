@@ -1116,7 +1116,9 @@ Object.defineProperty(Phaser.Weapon.prototype, "bulletClass", {
 
         this._bulletClass = classType;
 
-        this.bullets.classType = this._bulletClass;
+        if (this.bullets) {
+            this.bullets.classType = this._bulletClass;
+        }
 
     }
 
