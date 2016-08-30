@@ -1046,9 +1046,9 @@ Phaser.Physics.Arcade.Body.prototype = {
     * For example: If you have a Sprite with a texture that is 80x100 in size,
     * and you want the physics body to be 32x32 pixels in the middle of the texture, you would do:
     *
-    * `setSize(32, 32, 24, 34)`
+    * `setSize(32 / Math.abs(this.scale.x), 32 / Math.abs(this.scale.y), 24, 34)`
     *
-    * Where the first two parameters is the new Body size (32x32 pixels).
+    * Where the first two parameters are the new Body size (32x32 pixels) relative to the Sprite's scale.
     * 24 is the horizontal offset of the Body from the top-left of the Sprites texture, and 34
     * is the vertical offset.
     *
