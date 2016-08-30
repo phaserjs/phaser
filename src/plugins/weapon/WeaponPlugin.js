@@ -690,10 +690,10 @@ Phaser.Weapon.prototype.trackPointer = function (pointer, offsetX, offsetY) {
 
 /**
 * Attempts to fire a single Bullet. If there are no more bullets available in the pool, and the pool cannot be extended,
-* then this method returns `false`. It will also return false if not enough time has expired since the last time
+* then this method returns `null`. It will also return `null` if not enough time has expired since the last time
 * the Weapon was fired, as defined in the `Weapon.fireRate` property.
 *
-* Otherwise the first available bullet is selected and launched.
+* Otherwise the first available bullet is selected, launched, and returned.
 *
 * The arguments are all optional, but allow you to control both where the bullet is launched from, and aimed at.
 *
