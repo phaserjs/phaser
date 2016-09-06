@@ -226,7 +226,7 @@ PIXI.DisplayObjectContainer.prototype.removeChildren = function (beginIndex, end
 
     if (range > 0 && range <= endIndex)
     {
-        var removed = this.children.splice(begin, range);
+        var removed = this.children.splice(beginIndex, range);
 
         for (var i = 0; i < removed.length; i++)
         {
