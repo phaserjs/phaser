@@ -784,7 +784,8 @@ Phaser.Camera.prototype = {
     */
     resetFX: function () {
 
-        if (this.fx) {
+        if (this.fx)
+        {
             this.fx.clear();
             this.fx.alpha = 0;
         }
