@@ -690,10 +690,10 @@ Phaser.Weapon.prototype.trackPointer = function (pointer, offsetX, offsetY) {
 
 /**
 * Attempts to fire a single Bullet. If there are no more bullets available in the pool, and the pool cannot be extended,
-* then this method returns `false`. It will also return false if not enough time has expired since the last time
+* then this method returns `null`. It will also return `null` if not enough time has expired since the last time
 * the Weapon was fired, as defined in the `Weapon.fireRate` property.
 *
-* Otherwise the first available bullet is selected and launched.
+* Otherwise the first available bullet is selected, launched, and returned.
 *
 * The arguments are all optional, but allow you to control both where the bullet is launched from, and aimed at.
 *
@@ -979,9 +979,9 @@ Phaser.Weapon.prototype.fireAtXY = function (x, y) {
 * For example: If you have a Sprite with a texture that is 80x100 in size,
 * and you want the physics body to be 32x32 pixels in the middle of the texture, you would do:
 *
-* `setSize(32, 32, 24, 34)`
+* `setSize(32 / Math.abs(this.scale.x), 32 / Math.abs(this.scale.y), 24, 34)`
 *
-* Where the first two parameters is the new Body size (32x32 pixels).
+* Where the first two parameters are the new Body size (32x32 pixels) relative to the Sprite's scale.
 * 24 is the horizontal offset of the Body from the top-left of the Sprites texture, and 34
 * is the vertical offset.
 *
@@ -1127,8 +1127,10 @@ Object.defineProperty(Phaser.Weapon.prototype, "bulletClass", {
 
         this._bulletClass = classType;
 
-        this.bullets.classType = this._bulletClass;
-
+        //prevent crash if weapon's bullets have not yet been initialized
+        if (this.bullets) {
+            this.bullets.classType = this._bulletClass;
+        }
     }
 
 });
