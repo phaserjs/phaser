@@ -323,8 +323,8 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 
 ### Bug Fixes
 
-*
-*
+* `DisplayObjectContainer.removeChildren` was incorrectly using the `begin` var, instead of `beginIndex` (thanks @alex-espinoza #2742 #2741)
+* Camera.fx is tested to see if it exists, before resetting it (thanks @samme #2739 #2738)
 *
 
 ### Pixi Updates
