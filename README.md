@@ -316,8 +316,8 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 ### Updates
 
 * TypeScript definitions fixes and updates (thanks )
-* Docs typo fixes (thanks )
-*
+* Docs typo fixes (thanks @JTronLabs)
+* `Phaser.Line.fromSprite` now uses the Sprite.centerX and centerY properties if the `useCenter` argument is true. Before it required you to have overridden the Sprite and added the property yourself (thanks @samme #2729)
 *
 *
 
@@ -325,7 +325,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 
 * `DisplayObjectContainer.removeChildren` was incorrectly using the `begin` var, instead of `beginIndex` (thanks @alex-espinoza #2742 #2741)
 * Camera.fx is tested to see if it exists, before resetting it (thanks @samme #2739 #2738)
-*
+* The Weapon Plugin will no longer crash if the Weapon's bullets have not yet been initialized before setting a new bullet class (thanks @JTronLabs #2731)
 
 ### Pixi Updates
 
