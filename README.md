@@ -309,14 +309,16 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 
 ### New Features
 
-*
-*
+* Weapon.multiFire is a new property that allows you to set a Weapon as being allowed to call `fire` as many times as you like, per game loop. This allows a single Weapon instance to fire multiple bullets.
+* Weapon.fire has two new arguments: `offsetX` and `offsetY`. If the bullet is fired from a tracked Sprite or Pointer, or the `from` argument is set, this applies a horizontal and vertical offset from the launch position.
+* Weapon.fireOffset attempts to fire a single Bullet from a tracked Sprite or Pointer, but applies an offset to the position first. This is a shorter form of calling `Weapon.fire` and passing in the offset arguments.
+* Weapon.fireMany attempts to fire multiple bullets from the positions defined in the given array. If you provide a `from` argument, or if there is a tracked Sprite or Pointer, then the positions are treated as __offsets__ from the given objects position. If `from` is undefined, and there is no tracked object, then the bullets are fired from the given positions, as they exist in the world.
 *
 
 ### Updates
 
-* TypeScript definitions fixes and updates (thanks )
-* Docs typo fixes (thanks @JTronLabs)
+* TypeScript definitions fixes and updates (thanks @chriteixeira)
+* Docs typo fixes (thanks @JTronLabs @samme)
 * `Phaser.Line.fromSprite` now uses the Sprite.centerX and centerY properties if the `useCenter` argument is true. Before it required you to have overridden the Sprite and added the property yourself (thanks @samme #2729)
 *
 *
