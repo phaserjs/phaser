@@ -809,7 +809,7 @@ declare module Phaser {
         l: number;
         color: number;
         color32: number;
-        rgba: string;        
+        rgba: string;
     }
 
     class Create {
@@ -1401,6 +1401,7 @@ declare module Phaser {
         physicsConfig?: any;
         seed?: string;
         state?: Phaser.State;
+        forceSetTimeOut: boolean;
 
     }
 
@@ -5650,10 +5651,10 @@ declare module Phaser {
         createBullets(quantity?: number, key?: any, frame?: any, group?: Phaser.Group): Phaser.Weapon;
         debug(x?: number, y?: number, debugBodies?: boolean): void;
         destroy(): void;
-        fire(from?: any, x?: number, y?: number): boolean;
-        fireAtPointer(pointer: Phaser.Pointer): boolean;
-        fireAtSprite(sprite: Phaser.Sprite): boolean;
-        fireAtXY(x: number, y: number): boolean;
+        fire(from?: any, x?: number, y?: number): Phaser.Bullet;
+        fireAtPointer(pointer: Phaser.Pointer): Phaser.Bullet;
+        fireAtSprite(sprite: Phaser.Sprite): Phaser.Bullet;
+        fireAtXY(x: number, y: number): Phaser.Bullet;
         forEach(callback: any, callbackContext: any): Phaser.Weapon;
         killAll(): Phaser.Weapon;
         pauseAll(): Phaser.Weapon;

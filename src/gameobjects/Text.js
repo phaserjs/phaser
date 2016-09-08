@@ -1442,20 +1442,20 @@ Phaser.Text.prototype.updateTexture = function () {
         //  Align the canvas based on the bounds
         if (this.style.boundsAlignH === 'right')
         {
-            x += this.textBounds.width - this.canvas.width;
+            x += this.textBounds.width - this.canvas.width / this.resolution;
         }
         else if (this.style.boundsAlignH === 'center')
         {
-            x += this.textBounds.halfWidth - (this.canvas.width / 2);
+            x += this.textBounds.halfWidth - (this.canvas.width / this.resolution / 2);
         }
 
         if (this.style.boundsAlignV === 'bottom')
         {
-            y += this.textBounds.height - this.canvas.height;
+            y += this.textBounds.height - this.canvas.height / this.resolution;
         }
         else if (this.style.boundsAlignV === 'middle')
         {
-            y += this.textBounds.halfHeight - (this.canvas.height / 2);
+            y += this.textBounds.halfHeight - (this.canvas.height / this.resolution / 2);
         }
 
         this.pivot.x = -x;

@@ -115,14 +115,17 @@ PIXI.PixiShader.prototype.initMultitexShader = function () {
     this.aTextureIndex = gl.getAttribLocation(program, 'aTextureIndex');
 
     var indices = [];
+    // HACK: we bind an empty texture to avoid WebGL warning spam.
+    var tempTexture = gl.createTexture();
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, tempTexture);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, 1, 1, 0, gl.RGB, gl.UNSIGNED_BYTE, null);
     for (var i = 0; i < this.MAX_TEXTURES; ++i) {
+        gl.activeTexture(gl.TEXTURE0 + i);
+        gl.bindTexture(gl.TEXTURE_2D, tempTexture);
         indices.push(i);
     }
-    // NOTE:!!!
-    // If textures are not bound
-    // then we'll get a bunch of warnings like:
-    // "WARNING: there is no texture bound to the unit X"
-    // Don't be scared, everything will be alright.
+    gl.activeTexture(gl.TEXTURE0);
     gl.uniform1iv(this.uSamplerArray, indices);
 
     // Begin worst hack eva //
@@ -245,7 +248,6 @@ PIXI.PixiShader.prototype.initUniforms = function()
 
         if (type === 'sampler2D')
         {
-            debugger;
             uniform._init = false;
 
             if (uniform.value !== null)

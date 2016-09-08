@@ -498,7 +498,7 @@ Phaser.Sound.prototype = {
      */
     loopFull: function (volume) {
 
-        this.play(null, 0, volume, true);
+       return this.play(null, 0, volume, true);
 
     },
 
@@ -555,6 +555,8 @@ Phaser.Sound.prototype = {
                 this._sound.pause();
                 this._sound.currentTime = 0;
             }
+
+            this.isPlaying = false;
         }
 
         if (marker === '' && Object.keys(this.markers).length > 0)
@@ -566,10 +568,10 @@ Phaser.Sound.prototype = {
 
         if (marker !== '')
         {
-            this.currentMarker = marker;
-
             if (this.markers[marker])
             {
+                this.currentMarker = marker;
+
                 //  Playing a marker? Then we default to the marker values
                 this.position = this.markers[marker].start;
                 this.volume = this.markers[marker].volume;
@@ -594,7 +596,7 @@ Phaser.Sound.prototype = {
             }
             else
             {
-                // console.warn("Phaser.Sound.play: audio marker " + marker + " doesn't exist");
+                console.warn("Phaser.Sound.play: audio marker " + marker + " doesn't exist");
                 return this;
             }
         }

@@ -6,6 +6,9 @@
 
 /**
 * Creates a new Phaser.Tilemap object. The map can either be populated with data from a Tiled JSON file or from a CSV file.
+*
+* Tiled is a free software package specifically for creating tile maps, and is available from http://www.mapeditor.org
+* 
 * To do this pass the Cache key as the first parameter. When using Tiled data you need only provide the key.
 * When using CSV data you must provide the key and the tileWidth and tileHeight parameters.
 * If creating a blank tilemap to be populated later, you can either specify no parameters at all and then use `Tilemap.create` or pass the map and tile dimensions here.

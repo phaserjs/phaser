@@ -82,13 +82,13 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     * itself never rotates, it is always axis-aligned. However these values are passed up to the parent Sprite and updates its rotation.
     * @property {number} rotation
     */
-    this.rotation = sprite.rotation;
+    this.rotation = sprite.angle;
 
     /**
     * @property {number} preRotation - The previous rotation of the physics body.
     * @readonly
     */
-    this.preRotation = sprite.rotation;
+    this.preRotation = sprite.angle;
 
     /**
     * @property {number} width - The calculated width of the physics body.
