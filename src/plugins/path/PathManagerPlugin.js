@@ -6,14 +6,15 @@
 */
 
 /**
- * PathManager controls a list of Paths and a list of PathFollowers.
- * It is the central control for the majority of the Pathing API.
- *
- * @method PathManager
- * @param {Phaser.Game} game - A reference to the Phaser Game instance.
- * @param {[type]} parent - ?
- */
-Phaser.Plugin.PathManager = function(game, parent) {
+* PathManager controls a list of Paths and a list of PathFollowers.
+* It is the central control for the majority of the Pathing API.
+*
+* @class Phaser.Plugin.PathManager
+* @constructor
+* @param {Phaser.Game} game - A reference to the current Phaser.Game instance.
+* @param {Phaser.PluginManager} parent - The Phaser Plugin Manager which looks after this plugin.
+*/
+Phaser.Plugin.PathManager = function (game, parent) {
 
     Phaser.Plugin.call(this, game, parent);
 

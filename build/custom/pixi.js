@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.6.2 "Kore Springs" - Built: Sat Jul 23 2016 15:05:21
+* v2.6.2 "Kore Springs" - Built: Fri Aug 26 2016 01:03:18
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -800,16 +800,24 @@ Object.defineProperties(PIXI.DisplayObject.prototype, {
             {
                 var item = this.parent;
 
-                do
+                if (!item)
                 {
-                    if (!item.visible)
-                    {
-                        return false;
-                    }
-
-                    item = item.parent;
+                    return this.visible;
                 }
-                while (item);
+                else
+                {
+                    do
+                    {
+                        if (!item.visible)
+                        {
+                            return false;
+                        }
+
+                        item = item.parent;
+                    }
+                    while (item);
+
+                }
 
                 return true;
             }
@@ -1390,14 +1398,14 @@ PIXI.DisplayObjectContainer.prototype.getBounds = function (targetCoordinateSpac
 };
 
 /**
- * Retrieves the non-global local bounds of the displayObjectContainer as a rectangle. The calculation takes all visible children into consideration.
+ * Retrieves the non-global local bounds of the displayObjectContainer as a rectangle without any transformations. The calculation takes all visible children into consideration.
  *
  * @method getLocalBounds
  * @return {Rectangle} The rectangular bounding area
  */
 PIXI.DisplayObjectContainer.prototype.getLocalBounds = function () {
 
-    return this.getBounds(this.parent);
+    return this.getBounds(this);
 
 };
 
@@ -1532,7 +1540,7 @@ PIXI.DisplayObjectContainer.prototype._renderCanvas = function (renderSession) {
 Object.defineProperty(PIXI.DisplayObjectContainer.prototype, 'width', {
 
     get: function() {
-        return this.getLocalBounds().width;
+        return this.getLocalBounds().width * this.scale.x;
     },
 
     set: function(value) {
@@ -1561,7 +1569,7 @@ Object.defineProperty(PIXI.DisplayObjectContainer.prototype, 'width', {
 Object.defineProperty(PIXI.DisplayObjectContainer.prototype, 'height', {
 
     get: function() {
-        return this.getLocalBounds().height;
+        return this.getLocalBounds().height * this.scale.y;
     },
 
     set: function(value) {
@@ -1895,6 +1903,36 @@ PIXI.Sprite.prototype.getBounds = function(matrix)
     this._currentBounds = bounds;
 
     return bounds;
+};
+
+/**
+ * Retrieves the non-global local bounds of the Sprite as a rectangle. The calculation takes all visible children into consideration.
+ *
+ * @method getLocalBounds
+ * @return {Rectangle} The rectangular bounding area
+ */
+PIXI.Sprite.prototype.getLocalBounds = function () {
+
+    var matrixCache = this.worldTransform;
+
+    this.worldTransform = PIXI.identityMatrix;
+
+    for (var i = 0; i < this.children.length; i++)
+    {
+        this.children[i].updateTransform();
+    }
+
+    var bounds = this.getBounds();
+
+    this.worldTransform = matrixCache;
+
+    for (i = 0; i < this.children.length; i++)
+    {
+        this.children[i].updateTransform();
+    }
+
+    return bounds;
+
 };
 
 /**
@@ -3542,21 +3580,20 @@ PIXI.ComplexPrimitiveShader.prototype.destroy = function()
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
 
-// this is where we store the webGL contexts for easy access.
-PIXI.glContexts = [];
+PIXI.glContexts = []; // this is where we store the webGL contexts for easy access.
 PIXI.instances = [];
 
 /**
- * The WebGLRenderer draws the stage and all its content onto a WebGL enabled canvas.
- * This renderer should be used for browsers that support WebGL.
- * This renderer works by automatically managing WebGL Batches, so there is no need for
- * Sprite Batches or Sprite Clouds.
+ * The WebGLRenderer draws the stage and all its content onto a webGL enabled canvas. This renderer
+ * should be used for browsers that support webGL. This Render works by automatically managing webGLBatchs.
+ * So no need for Sprite Batches or Sprite Clouds.
+ * Don't forget to add the view to your DOM or you will not see anything :)
  *
  * @class WebGLRenderer
  * @constructor
  * @param game {Phaser.Game} A reference to the Phaser Game instance
  */
-PIXI.WebGLRenderer = function (game) {
+PIXI.WebGLRenderer = function(game) {
 
     /**
     * @property {Phaser.Game} game - A reference to the Phaser Game instance.
@@ -3782,43 +3819,38 @@ PIXI.WebGLRenderer.prototype.initContext = function()
 };
 
 /**
- * Renders the DisplayObjectContainer, usually the Phaser.Stage, to the WebGL enabled canvas.
+ * Renders the stage to its webGL view
  *
  * @method render
- * @param root {Phaser.Stage|PIXI.DisplayObjectContainer} The root element to be rendered.
+ * @param stage {Stage} the Stage element to be rendered
  */
-PIXI.WebGLRenderer.prototype.render = function (root) {
-
+PIXI.WebGLRenderer.prototype.render = function(stage)
+{
+    // no point rendering if our context has been blown up!
     if (this.contextLost)
     {
-        //  No point rendering if the context is lost.
         return;
     }
 
     var gl = this.gl;
 
+    // -- Does this need to be set every frame? -- //
     gl.viewport(0, 0, this.width, this.height);
 
-    //  Bind the Frame Buffer
+    // make sure we are bound to the main frame buffer
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
-    //  Clear it
     if (this.game.clearBeforeRender)
     {
-        var color = this.game.stage._bgColor;
-
-        gl.clearColor(color.r, color.g, color.b, color.a);
+        gl.clearColor(stage._bgColor.r, stage._bgColor.g, stage._bgColor.b, stage._bgColor.a);
 
         gl.clear(gl.COLOR_BUFFER_BIT);
     }
 
-    //  Apply Camera Shake
     this.offset.x = this.game.camera._shake.x;
     this.offset.y = this.game.camera._shake.y;
 
-    //  Let the magic begin ...
-    this.renderDisplayObject(root, this.projection);
-
+    this.renderDisplayObject(stage, this.projection);
 };
 
 /**
@@ -3829,8 +3861,8 @@ PIXI.WebGLRenderer.prototype.render = function (root) {
  * @param projection {Point} The projection
  * @param buffer {Array} a standard WebGL buffer
  */
-PIXI.WebGLRenderer.prototype.renderDisplayObject = function(displayObject, projection, buffer, matrix) {
-
+PIXI.WebGLRenderer.prototype.renderDisplayObject = function(displayObject, projection, buffer, matrix)
+{
     this.renderSession.blendModeManager.setBlendMode(PIXI.blendModes.NORMAL);
 
     // reset the render session data..
@@ -3856,7 +3888,6 @@ PIXI.WebGLRenderer.prototype.renderDisplayObject = function(displayObject, proje
 
     // finish the sprite batch
     this.spriteBatch.end();
-
 };
 
 /**
@@ -3866,18 +3897,15 @@ PIXI.WebGLRenderer.prototype.renderDisplayObject = function(displayObject, proje
  * @param width {Number} the new width of the webGL view
  * @param height {Number} the new height of the webGL view
  */
-PIXI.WebGLRenderer.prototype.resize = function (width, height) {
-
+PIXI.WebGLRenderer.prototype.resize = function(width, height)
+{
     this.width = width * this.resolution;
     this.height = height * this.resolution;
 
     this.view.width = this.width;
     this.view.height = this.height;
 
-    //  TODO - This probably needs removing, along with the property
-    //  as it will conflict with the ScaleManager
-    if (this.autoResize)
-    {
+    if (this.autoResize) {
         this.view.style.width = this.width / this.resolution + 'px';
         this.view.style.height = this.height / this.resolution + 'px';
     }
@@ -3886,18 +3914,17 @@ PIXI.WebGLRenderer.prototype.resize = function (width, height) {
 
     this.projection.x =  this.width / 2 / this.resolution;
     this.projection.y =  -this.height / 2 / this.resolution;
-
 };
 
 /**
- * Updates and creates a WebGL texture for the renderers context.
+ * Updates and Creates a WebGL texture for the renderers context.
  *
  * @method updateTexture
  * @param texture {Texture} the texture to update
  * @return {boolean} True if the texture was successfully bound, otherwise false.
  */
-PIXI.WebGLRenderer.prototype.updateTexture = function (texture) {
-
+PIXI.WebGLRenderer.prototype.updateTexture = function(texture)
+{
     if (!texture.hasLoaded)
     {
         return false;
@@ -3941,6 +3968,7 @@ PIXI.WebGLRenderer.prototype.updateTexture = function (texture) {
 
     texture._dirty[gl.id] = false;
 
+    // return texture._glTextures[gl.id];
     return true;
 
 };
@@ -3950,8 +3978,8 @@ PIXI.WebGLRenderer.prototype.updateTexture = function (texture) {
  *
  * @method destroy
  */
-PIXI.WebGLRenderer.prototype.destroy = function () {
-
+PIXI.WebGLRenderer.prototype.destroy = function()
+{
     PIXI.glContexts[this.glContextId] = null;
 
     this.projection = null;
@@ -3975,7 +4003,6 @@ PIXI.WebGLRenderer.prototype.destroy = function () {
     PIXI.instances[this.glContextId] = null;
 
     PIXI.WebGLRenderer.glContextId--;
-
 };
 
 /**
@@ -3983,8 +4010,8 @@ PIXI.WebGLRenderer.prototype.destroy = function () {
  *
  * @method mapBlendModes
  */
-PIXI.WebGLRenderer.prototype.mapBlendModes = function () {
-
+PIXI.WebGLRenderer.prototype.mapBlendModes = function()
+{
     var gl = this.gl;
 
     if (!PIXI.blendModesWebGL)
@@ -4012,7 +4039,6 @@ PIXI.WebGLRenderer.prototype.mapBlendModes = function () {
 
         PIXI.blendModesWebGL = b;
     }
-
 };
 
 PIXI.WebGLRenderer.glContextId = 0;
@@ -4527,9 +4553,6 @@ PIXI.WebGLShaderManager.prototype.setContext = function(gl)
     // the next one is used for rendering triangle strips
     this.stripShader = new PIXI.StripShader(gl);
 
-    // shader for batch drawing tilemap tiles as a set of triangle strips with degenerate triangles between them
-    this.tilemapShader = new PIXI.TilemapShader(gl);
-
     this.setShader(this.defaultShader);
 };
 
@@ -4616,8 +4639,6 @@ PIXI.WebGLShaderManager.prototype.destroy = function()
     this.fastShader.destroy();
 
     this.stripShader.destroy();
-
-    this.tilemapShader.destroy();
 
     this.gl = null;
 };
@@ -6823,6 +6844,7 @@ PIXI.CanvasRenderer.prototype.render = function (root) {
     this.renderDisplayObject(root);
 
 };
+
 
 /**
  * Removes everything from the renderer and optionally removes the Canvas DOM element.

@@ -1,5 +1,5 @@
 {
-  "globals"     : { "Phaser": false, "PIXI": false, "p2": false, "CocoonJS": false, "process": false },
+  "globals"     : { "Phaser": false, "PIXI": false, "p2": false, "CocoonJS": false, "process": false, "JSON": false },
 
   // Ignore Environment Globals
   "browser"     : true,   // Standard browser globals e.g. `window`, `document`.
@@ -18,7 +18,7 @@
   "boss"        : true,   // Tolerate assignments inside if, for & while. Usually conditions & loops are for comparison, not assignments.
   "camelcase"   : true,   // Force all variable names to use either camelCase style or UPPER_CASE with underscores.
   "curly"       : true,   // Require {} for every new block or scope.
-  "eqeqeq"      : false,  // Require triple equals i.e. `===`.
+  "eqeqeq"      : true,   // Require triple equals i.e. `===`.
   "eqnull"      : true,   // Tolerate use of `== null`.
   "evil"        : false,  // Tolerate use of `eval`.
   "expr"        : false,  // Tolerate `ExpressionStatement` as Programs.

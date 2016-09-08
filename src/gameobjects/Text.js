@@ -224,8 +224,6 @@ Phaser.Text.prototype.destroy = function (destroyChildren) {
 
     this.texture.destroy(true);
 
-    PIXI.CanvasPool.remove(this);
-
     Phaser.Component.Destroy.prototype.destroy.call(this, destroyChildren);
 
 };
@@ -582,6 +580,8 @@ Phaser.Text.prototype.updateText = function () {
     }
 
     this.updateTexture();
+
+    this.dirty = false;
 
 };
 

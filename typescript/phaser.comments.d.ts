@@ -1,7 +1,7 @@
 /// <reference path="pixi.comments.d.ts" />
 /// <reference path="p2.d.ts" />
 
-// Type definitions for Phaser 2.6.1 - 11th July 2016
+// Type definitions for Phaser 2.6.2 - 26th August 2016
 // Project: https://github.com/photonstorm/phaser
 
 declare module "phaser" {
@@ -216,7 +216,7 @@ declare module Phaser {
         reversed: boolean;
 
         /**
-        * Gets or sets the current speed of the animation in frames per second. Changing this in a playing animation will take effect from the next frame. Minimum value is 1.
+        * Gets or sets the current speed of the animation in frames per second. Changing this in a playing animation will take effect from the next frame. Value must be greater than 0.
         */
         speed: number;
 
@@ -286,7 +286,7 @@ declare module Phaser {
         restart(): void;
 
         /**
-        * Reverses the animation direction
+        * Reverses the animation direction.
         * @return The animation instance.
         */
         reverse(): Animation;
@@ -4639,7 +4639,7 @@ declare module Phaser {
         * @param alpha The alpha of the returned color.
         * @return The interpolated color value.
         */
-        static interpolateColor(color1: number, color2: number, steps: number, currentStep: number, alpha: number): number;
+        static interpolateColor(color1: number, color2: number, steps: number, currentStep: number, alpha?: number): number;
 
         /**
         * Interpolates the two given colours based on the supplied step and currentStep properties.
@@ -5076,7 +5076,7 @@ declare module Phaser {
         l: number;
         color: number;
         color32: number;
-        rgba: string;        
+        rgba: string;
     }
 
 
@@ -7225,6 +7225,7 @@ declare module Phaser {
         physicsConfig?: any;
         seed?: string;
         state?: Phaser.State;
+        forceSetTimeOut: boolean;
 
     }
 
@@ -8153,7 +8154,7 @@ declare module Phaser {
         * @param addToStage If set to true this Group will be added directly to the Game.Stage instead of Game.World.
         * @return The newly created Group.
         */
-        physicsGroup(physicsBodyType: number, parent?: any, name?: string, addToStage?: boolean): Phaser.Group;
+        physicsGroup(physicsBodyType?: number, parent?: any, name?: string, addToStage?: boolean): Phaser.Group;
 
         /**
         * Add a new Plugin into the PluginManager.
@@ -9059,7 +9060,7 @@ declare module Phaser {
         kill(): Phaser.Graphics;
 
         /**
-        * Internal method called by the World postUpdate cycle.
+        * Automatically called by World
         */
         postUpdate(): void;
 
@@ -9157,6 +9158,11 @@ declare module Phaser {
         static RETURN_TOTAL: number;
 
         /**
+        * A returnType value, as specified in {@link Phaser.Group#iterate iterate} eg.
+        */
+        static RETURN_ALL: number;
+
+        /**
         * A sort ordering value, as specified in {@link Phaser.Group#sort sort} eg.
         */
         static SORT_ASCENDING: number;
@@ -9193,11 +9199,6 @@ declare module Phaser {
         * 
         * It is derived by calling `getBounds`, calculating the Groups dimensions based on its
         * visible children.
-        * 
-        * Note that no ancestors are factored into the result, meaning that if this Group is
-        * nested within another Group, with heavy transforms on it, the result of this property
-        * is likely to be incorrect. It is safe to get and set this property if the Group is a
-        * top-level descendant of Phaser.World, or untransformed parents.
         */
         bottom: number;
 
@@ -9212,11 +9213,6 @@ declare module Phaser {
         * 
         * It is derived by calling `getBounds`, calculating the Groups dimensions based on its
         * visible children.
-        * 
-        * Note that no ancestors are factored into the result, meaning that if this Group is
-        * nested within another Group, with heavy transforms on it, the result of this property
-        * is likely to be incorrect. It is safe to get and set this property if the Group is a
-        * top-level descendant of Phaser.World, or untransformed parents.
         */
         centerX: number;
 
@@ -9225,11 +9221,6 @@ declare module Phaser {
         * 
         * It is derived by calling `getBounds`, calculating the Groups dimensions based on its
         * visible children.
-        * 
-        * Note that no ancestors are factored into the result, meaning that if this Group is
-        * nested within another Group, with heavy transforms on it, the result of this property
-        * is likely to be incorrect. It is safe to get and set this property if the Group is a
-        * top-level descendant of Phaser.World, or untransformed parents.
         */
         centerY: number;
 
@@ -9318,11 +9309,6 @@ declare module Phaser {
         * 
         * It is derived by calling `getBounds`, calculating the Groups dimensions based on its
         * visible children.
-        * 
-        * Note that no ancestors are factored into the result, meaning that if this Group is
-        * nested within another Group, with heavy transforms on it, the result of this property
-        * is likely to be incorrect. It is safe to get and set this property if the Group is a
-        * top-level descendant of Phaser.World, or untransformed parents.
         */
         left: number;
 
@@ -9425,11 +9411,6 @@ declare module Phaser {
         * 
         * It is derived by calling `getBounds`, calculating the Groups dimensions based on its
         * visible children.
-        * 
-        * Note that no ancestors are factored into the result, meaning that if this Group is
-        * nested within another Group, with heavy transforms on it, the result of this property
-        * is likely to be incorrect. It is safe to get and set this property if the Group is a
-        * top-level descendant of Phaser.World, or untransformed parents.
         */
         right: number;
 
@@ -9447,11 +9428,6 @@ declare module Phaser {
         * 
         * It is derived by calling `getBounds`, calculating the Groups dimensions based on its
         * visible children.
-        * 
-        * Note that no ancestors are factored into the result, meaning that if this Group is
-        * nested within another Group, with heavy transforms on it, the result of this property
-        * is likely to be incorrect. It is safe to get and set this property if the Group is a
-        * top-level descendant of Phaser.World, or untransformed parents.
         */
         top: number;
 
@@ -9561,7 +9537,7 @@ declare module Phaser {
         * the `alignTo` method in order to be positioned by this call. All default Phaser Game Objects have
         * this.
         * 
-        * The grid dimensions are determined by the first four arguments. The `rows` and `columns` arguments
+        * The grid dimensions are determined by the first four arguments. The `width` and `height` arguments
         * relate to the width and height of the grid respectively.
         * 
         * For example if the Group had 100 children in it:
@@ -9575,13 +9551,13 @@ declare module Phaser {
         * 
         * This will align the children into a grid of 25x4, again using 32 pixels per grid cell.
         * 
-        * You can choose to set _either_ the `rows` or `columns` value to -1. Doing so tells the method
+        * You can choose to set _either_ the `width` or `height` value to -1. Doing so tells the method
         * to keep on aligning children until there are no children left. For example if this Group had
         * 48 children in it, the following:
         * 
         * `Group.align(-1, 8, 32, 32)`
         * 
-        * ... will align the children so that there are 8 columns vertically (the second argument),
+        * ... will align the children so that there are 8 children vertically (the second argument),
         * and each row will contain 6 sprites, except the last one, which will contain 5 (totaling 48)
         * 
         * You can also do:
@@ -9598,14 +9574,15 @@ declare module Phaser {
         * 
         * The final argument; `offset` lets you start the alignment from a specific child index.
         * 
-        * @param rows The number of rows, or width, of the grid. Set to -1 for a dynamic width.
-        * @param columns The number of columns, or height, of the grid. Set to -1 for a dynamic height.
+        * @param width The width of the grid in items (not pixels). Set to -1 for a dynamic width. If -1 then you must set an explicit height value.
+        * @param height The height of the grid in items (not pixels). Set to -1 for a dynamic height. If -1 then you must set an explicit width value.
         * @param cellWidth The width of each grid cell, in pixels.
         * @param cellHeight The height of each grid cell, in pixels.
         * @param position The position constant. One of `Phaser.TOP_LEFT` (default), `Phaser.TOP_CENTER`, `Phaser.TOP_RIGHT`, `Phaser.LEFT_CENTER`, `Phaser.CENTER`, `Phaser.RIGHT_CENTER`, `Phaser.BOTTOM_LEFT`, `Phaser.BOTTOM_CENTER` or `Phaser.BOTTOM_RIGHT`.
         * @param offset Optional index to start the alignment from. Defaults to zero, the first child in the Group, but can be set to any valid child index value.
+        * @return True if the Group children were aligned, otherwise false.
         */
-        align(rows: number, columns: number, cellWidth: number, cellHeight: number, position?: number, offset?: number): void;
+        align(width: number, height: number, cellWidth: number, cellHeight: number, position?: number, offset?: number): boolean;
 
         /**
         * Aligns this Group within another Game Object, or Rectangle, known as the
@@ -10075,7 +10052,7 @@ declare module Phaser {
         /**
         * Returns a random child from the group.
         * 
-        * @param startIndex Offset from the front of the front of the group (lowest child).
+        * @param startIndex Offset from the front of the group (lowest child).
         * @param length Restriction on the number of values you want to randomly select from. - Default: (to top)
         * @return A random child of this Group.
         */
@@ -12653,6 +12630,20 @@ declare module Phaser {
 
     }
 
+
+    /**
+    * A key code represents a physical key on a keyboard.
+    * 
+    * The KeyCode class contains commonly supported keyboard key codes which can be used
+    * as keycode`-parameters in several {@link Phaser.Keyboard} and {@link Phaser.Key} methods.
+    * 
+    * _Note_: These values should only be used indirectly, eg. as `Phaser.KeyCode.KEY`.
+    * Future versions may replace the actual values, such that they remain compatible with `keycode`-parameters.
+    * The current implementation maps to the {@link https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/keyCode KeyboardEvent.keyCode} property.
+    * 
+    * _Note_: Use `Phaser.KeyCode.KEY` instead of `Phaser.Keyboard.KEY` to refer to a key code;
+    * the latter approach is supported for compatibility.
+    */
     class KeyCode {
 
         static A: number;
@@ -12891,6 +12882,22 @@ declare module Phaser {
         * @return The intersection segment of the two lines as a Point, or null if there is no intersection.
         */
         static intersects(a: Phaser.Line, b: Phaser.Line, asSegment?: boolean, result?: Phaser.Point): Phaser.Point;
+
+        /**
+        * Checks for intersection between the Line and a Rectangle shape, or a rectangle-like
+        * object, with public `x`, `y`, `right` and `bottom` properties, such as a Sprite or Body.
+        * 
+        * An intersection is considered valid if:
+        * 
+        * The line starts within, or ends within, the Rectangle.
+        * The line segment intersects one of the 4 rectangle edges.
+        * 
+        * The for the purposes of this function rectangles are considered 'solid'.
+        * 
+        * @param line The line to check for intersection with.
+        * @param rect The rectangle, or rectangle-like object, to check for intersection with.
+        * @return True if the line intersects with the rectangle edges, or starts or ends within the rectangle.
+        */
         static intersectsRectangle(line: Phaser.Line, rect: Phaser.Rectangle): boolean;
 
         /**
@@ -13525,19 +13532,7 @@ declare module Phaser {
         audio(key: string, urls: string | string[] | any, autoDecode?: boolean): Phaser.Loader;
 
         /**
-        * Adds an audio sprite file to the current load queue.
-        * 
-        * The file is **not** loaded immediately after calling this method. The file is added to the queue ready to be loaded when the loader starts.
-        * 
-        * The key must be a unique String. It is used to add the file to the Phaser.Cache upon successful load.
-        * 
-        * Audio Sprites are a combination of audio files and a JSON configuration.
-        * 
-        * The JSON follows the format of that created by https://github.com/tonistiigi/audiosprite
-        * 
-        * Retrieve the file via `Cache.getSoundData(key)`.
-        * 
-        * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
+        * A legacy alias for Loader.audioSprite. Please see that method for documentation.
         * 
         * @param key Unique asset key of the audio file.
         * @param urls An array containing the URLs of the audio files, i.e.: [ 'audiosprite.mp3', 'audiosprite.ogg', 'audiosprite.m4a' ] or a single string containing just one URL.
@@ -14041,6 +14036,10 @@ declare module Phaser {
 
         /**
         * Adds a Tile Map data file to the current load queue.
+        * 
+        * Phaser can load data in two different formats: CSV and Tiled JSON.
+        * 
+        * Tiled is a free software package, specifically for creating tilemaps, and is available from http://www.mapeditor.org
         * 
         * You can choose to either load the data externally, by providing a URL to a json file.
         * Or you can pass in a JSON object or String via the `data` parameter.
@@ -14825,6 +14824,17 @@ declare module Phaser {
         * @return The reverse angle, in radians.
         */
         static reverseAngle(angleRed: number): number;
+
+        /**
+        * Rotates currentAngle towards targetAngle, taking the shortest rotation distance.
+        * The lerp argument is the amount to rotate by in this call.
+        * 
+        * @param currentAngle The current angle, in radians.
+        * @param targetAngle The target angle to rotate to, in radians.
+        * @param lerp The lerp value to add to the current angle. - Default: 0.05
+        * @return The adjusted angle.
+        */
+        static rotateToAngle(currentAngle: number, targetAngle: number, lerp?: number): number;
 
         /**
         * Round to the next whole number _away_ from zero.
@@ -17030,22 +17040,22 @@ declare module Phaser {
                 allowRotation: boolean;
 
                 /**
-                * The angle of the Body in radians, as calculated by its angularVelocity.
+                * The angle of the Body's velocity in radians.
                 */
                 angle: number;
 
                 /**
-                * The angular acceleration is the rate of change of the angular velocity. Measured in radians per second squared.
+                * The angular acceleration is the rate of change of the angular velocity. Measured in degrees per second squared.
                 */
                 angularAcceleration: number;
 
                 /**
-                * The drag applied during the rotation of the Body.
+                * The drag applied during the rotation of the Body. Measured in degrees per second squared.
                 */
                 angularDrag: number;
 
                 /**
-                * The angular velocity controls the rotation speed of the Body. It is measured in radians per second.
+                * The angular velocity controls the rotation speed of the Body. It is measured in degrees per second.
                 */
                 angularVelocity: number;
 
@@ -17072,7 +17082,9 @@ declare module Phaser {
 
                 /**
                 * Set the checkCollision properties to control which directions collision is processed for this Body.
-                * For example checkCollision.up = false means it won't collide when the collision happened while moving up. An object containing allowed collision.
+                * For example checkCollision.up = false means it won't collide when the collision happened while moving up.
+                * If you need to disable a Body entirely, use `body.enable = false`, this will also disable motion.
+                * If you need to disable just collision and/or overlap checks, but retain motion, set `checkCollision.none = true`. An object containing allowed collision.
                 */
                 checkCollision: FaceChoices;
 
@@ -17177,7 +17189,7 @@ declare module Phaser {
                 mass: number;
 
                 /**
-                * The maximum angular velocity in radians per second that the Body can reach.
+                * The maximum angular velocity in degrees per second that the Body can reach.
                 * Default: 1000
                 */
                 maxAngular: number;
@@ -17308,7 +17320,7 @@ declare module Phaser {
                 right: number;
 
                 /**
-                * An Arcade Physics Body can have angularVelocity and angularAcceleration. Please understand that the collision Body
+                * The Body's rotation in degrees, as calculated by its angularVelocity and angularAcceleration. Please understand that the collision Body
                 * itself never rotates, it is always axis-aligned. However these values are passed up to the parent Sprite and updates its rotation.
                 */
                 rotation: number;
@@ -22179,7 +22191,7 @@ declare module Phaser {
         * 
         * @param seeds An array of values to use as the seed, or a generator state (from {#state}).
         */
-        constructor(seeds: any[] | string);
+        constructor(seeds?: any[] | string);
 
 
         /**
@@ -22799,7 +22811,6 @@ declare module Phaser {
         * render them down into a single quad (on WebGL) which can then be used to texture other display objects with. A way of generating textures at run-time.
         * 
         * @param game Current game instance.
-        * @param key Internal Phaser reference key for the render texture.
         * @param width The width of the render texture. - Default: 100
         * @param height The height of the render texture. - Default: 100
         * @param key The key of the RenderTexture in the Cache, if stored there. - Default: ''
@@ -24621,7 +24632,7 @@ declare module Phaser {
         usingWebAudio: boolean;
 
         /**
-        * Gets or sets the volume of this sound, a value between 0 and 1.
+        * Gets or sets the volume of this sound, a value between 0 and 1. The value given is clamped to the range 0 to 1.
         */
         volume: number;
 
@@ -26120,6 +26131,15 @@ declare module Phaser {
         * _EXPERIMENTAL:_ A responsive grid on which you can align game objects.
         */
         grid: Phaser.FlexGrid;
+
+        /**
+        * This boolean provides you with a way to determine if the browser is in Full Screen
+        * mode (via the Full Screen API), and Phaser was the one responsible for activating it.
+        * 
+        * It's possible that ScaleManager.isFullScreen returns `true` even if Phaser wasn't the
+        * one that made the browser go full-screen, so this flag lets you determine that.
+        */
+        hasPhaserSetFullScreen: boolean;
 
         /**
         * Target height (in pixels) of the Display canvas.
@@ -28169,6 +28189,9 @@ declare module Phaser {
 
     /**
     * Creates a new Phaser.Tilemap object. The map can either be populated with data from a Tiled JSON file or from a CSV file.
+    * 
+    * Tiled is a free software package specifically for creating tile maps, and is available from http://www.mapeditor.org
+    * 
     * To do this pass the Cache key as the first parameter. When using Tiled data you need only provide the key.
     * When using CSV data you must provide the key and the tileWidth and tileHeight parameters.
     * If creating a blank tilemap to be populated later, you can either specify no parameters at all and then use `Tilemap.create` or pass the map and tile dimensions here.
@@ -28181,6 +28204,9 @@ declare module Phaser {
 
         /**
         * Creates a new Phaser.Tilemap object. The map can either be populated with data from a Tiled JSON file or from a CSV file.
+        * 
+        * Tiled is a free software package specifically for creating tile maps, and is available from http://www.mapeditor.org
+        * 
         * To do this pass the Cache key as the first parameter. When using Tiled data you need only provide the key.
         * When using CSV data you must provide the key and the tileWidth and tileHeight parameters.
         * If creating a blank tilemap to be populated later, you can either specify no parameters at all and then use `Tilemap.create` or pass the map and tile dimensions here.
@@ -28224,6 +28250,11 @@ declare module Phaser {
         * Map data used for debug values only.
         */
         debugMap: any[];
+
+        /**
+        * If set then console.log is used to dump out useful layer creation debug data.
+        */
+        enableDebug: boolean;
 
         /**
         * The format of the map data, either Phaser.Tilemap.CSV or Phaser.Tilemap.TILED_JSON.
@@ -28284,6 +28315,7 @@ declare module Phaser {
         * Map specific properties as specified in Tiled.
         */
         properties: any;
+        rayStepRate: number;
 
         /**
         * The base height of the tiles in the map (in pixels).
@@ -28427,7 +28459,6 @@ declare module Phaser {
         * @param width The rendered width of the layer, should never be wider than Game.width. If not given it will be set to Game.width.
         * @param height The rendered height of the layer, should never be wider than Game.height. If not given it will be set to Game.height.
         * @param group Optional Group to add the object to. If not specified it will be added to the World group.
-        * @param pixiTest Temporary additional flag to enable tests of the PIXI.Tilemap renderer
         * @return The TilemapLayer object. This is an extension of Phaser.Sprite and can be moved around the display list accordingly.
         */
         createLayer(layer: any, width?: number, height?: number, group?: Phaser.Group): Phaser.TilemapLayer;
@@ -28512,6 +28543,11 @@ declare module Phaser {
         * @return The tile at the given coordinates or null if no tile was found or the coordinates were invalid.
         */
         getTile(x: number, y: number, layer?: any, nonNull?: boolean): Phaser.Tile;
+        getRayCastTiles(layer: Phaser.TilemapLayer|Phaser.TilemapLayerGL, line: Phaser.Line, stepRate?: number, collides?: boolean, interestingFace?: boolean): Phaser.Tile[];
+        getTiles(layer: Phaser.TilemapLayer|Phaser.TilemapLayerGL, x: number, y: number, width: number, height: number, collides?: boolean, interestingFace?: boolean): Phaser.Tile[];
+        getTileX(layer: Phaser.TilemapLayer|Phaser.TilemapLayerGL, x: number): number;
+        getTileXY(layer: Phaser.TilemapLayer|Phaser.TilemapLayerGL, x: number, y: number, point: Phaser.Point): Phaser.Point;
+        getTileY(layer: Phaser.TilemapLayer|Phaser.TilemapLayerGL, y: number): number;
 
         /**
         * Gets the tile above the tile coordinates given.
@@ -28933,12 +28969,6 @@ declare module Phaser {
         physicsType: number;
 
         /**
-        * When ray-casting against tiles this is the number of steps it will jump. For larger tile sizes you can increase this to improve performance.
-        * Default: 4
-        */
-        rayStepRate: number;
-
-        /**
         * Settings that control standard (non-diagnostic) rendering.
         * Default: {"enableScrollDelta":false,"overdrawRatio":0.2,"copyCanvas":null}
         */
@@ -28970,56 +29000,6 @@ declare module Phaser {
         * Destroys this TilemapLayer.
         */
         destroy(): void;
-
-        /**
-        * Gets all tiles that intersect with the given line.
-        * 
-        * @param line The line used to determine which tiles to return.
-        * @param stepRate How many steps through the ray will we check? Defaults to `rayStepRate`. - Default: (rayStepRate)
-        * @param collides If true, _only_ return tiles that collide on one or more faces.
-        * @param interestingFace If true, _only_ return tiles that have interesting faces.
-        * @return An array of Phaser.Tiles.
-        */
-        getRayCastTiles(line: Phaser.Line, stepRate?: number, collides?: boolean, interestingFace?: boolean): Phaser.Tile[];
-
-        /**
-        * Get all tiles that exist within the given area, defined by the top-left corner, width and height. Values given are in pixels, not tiles.
-        * 
-        * @param x X position of the top left corner (in pixels).
-        * @param y Y position of the top left corner (in pixels).
-        * @param width Width of the area to get (in pixels).
-        * @param height Height of the area to get (in pixels).
-        * @param collides If true, _only_ return tiles that collide on one or more faces.
-        * @param interestingFace If true, _only_ return tiles that have interesting faces.
-        * @return An array of Tiles.
-        */
-        getTiles(x: number, y: number, width: number, height: number, collides?: boolean, interestingFace?: boolean): Phaser.Tile[];
-
-        /**
-        * Convert a pixel value to a tile coordinate.
-        * 
-        * @param x X position of the point in target tile (in pixels).
-        * @return The X map location of the tile.
-        */
-        getTileX(x: number): number;
-
-        /**
-        * Convert a pixel coordinate to a tile coordinate.
-        * 
-        * @param x X position of the point in target tile (in pixels).
-        * @param y Y position of the point in target tile (in pixels).
-        * @param point The Point/object to update.
-        * @return A Point/object with its `x` and `y` properties set.
-        */
-        getTileXY(x: number, y: number, point: Phaser.Point): Phaser.Point;
-
-        /**
-        * Convert a pixel value to a tile coordinate.
-        * 
-        * @param y Y position of the point in target tile (in pixels).
-        * @return The Y map location of the tile.
-        */
-        getTileY(y: number): number;
 
         /**
         * Automatically called by World.postUpdate. Handles cache updates.
@@ -29068,6 +29048,44 @@ declare module Phaser {
 
     }
 
+    class TilemapLayerGL {
+
+        constructor(game: Phaser.Game, tilemap: Phaser.Tilemap, index: number, width?: number, height?: number, tileset?: Phaser.Tileset);
+
+        collisionHeight: number;
+        collisionWidth: number;
+        data: any;
+        dirty: boolean;
+        exists: boolean;
+        fixedToCamera: boolean;
+        game: Phaser.Game;
+        index: number;
+        layer: Phaser.TilemapLayer;
+        map: Phaser.Tilemap;
+        name: string;
+        physicsType: number;
+        scrollFactorX: number;
+        scrollFactorY: number;
+        scrollX: number;
+        scrollY: number;
+        type: number;
+        wrap: boolean;
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+
+        destroy(): void;
+        postUpdate(): void;
+        render(): void;
+        resize(width: number, height: number): void;
+        resizeWorld(): void;
+        resetTilesetCache(): void;
+        setScale(xScale?: number, yScale?: number): void;
+        updateMax(): void;
+
+    }
+
 
     /**
     * Phaser.TilemapParser parses data objects from Phaser.Loader that need more preparation before they can be inserted into a Tilemap.
@@ -29093,7 +29111,7 @@ declare module Phaser {
         static getEmptyData(tileWidth?: number, tileHeight?: number, width?: number, height?: number): any;
 
         /**
-        * Parse tilemap data from the cache and creates a Tilemap object.
+        * Parse tilemap data from the cache and creates data for a Tilemap object.
         * 
         * @param game Game reference to the currently running game.
         * @param key The key of the tilemap in the Cache.
@@ -29166,6 +29184,7 @@ declare module Phaser {
         * The cached image that contains the individual tiles. Use {@link Phaser.Tileset.setImage setImage} to set.
         */
         image: any;
+        lastgid: number;
 
         /**
         * The name of the Tileset.
@@ -29225,6 +29244,7 @@ declare module Phaser {
         * @param index The index of the tile within the set to draw.
         */
         draw(context: CanvasRenderingContext2D, x: number, y: number, index: number): void;
+        drawGl(glBatch: any[], x: number, y: number, index: number, alpha: number, flippedVal: number): void;
 
         /**
         * Set the image associated with this Tileset and update the tile data.
@@ -29259,7 +29279,7 @@ declare module Phaser {
     * An important note about texture dimensions:
     * 
     * When running under Canvas a TileSprite can use any texture size without issue. When running under WebGL the texture should ideally be
-    * a power of two in size (i.e. 4, 8, 16, 32, 64, 128, 256, 512, etch pixels width by height). If the texture isn't a power of two
+    * a power of two in size (i.e. 4, 8, 16, 32, 64, 128, 256, 512, etc pixels width by height). If the texture isn't a power of two
     * it will be rendered to a blank canvas that is the correct size, which means you may have 'blank' areas appearing to the right and
     * bottom of your frame. To avoid this ensure your textures are perfect powers of two.
     * 
@@ -29285,7 +29305,7 @@ declare module Phaser {
         * An important note about texture dimensions:
         * 
         * When running under Canvas a TileSprite can use any texture size without issue. When running under WebGL the texture should ideally be
-        * a power of two in size (i.e. 4, 8, 16, 32, 64, 128, 256, 512, etch pixels width by height). If the texture isn't a power of two
+        * a power of two in size (i.e. 4, 8, 16, 32, 64, 128, 256, 512, etc pixels width by height). If the texture isn't a power of two
         * it will be rendered to a blank canvas that is the correct size, which means you may have 'blank' areas appearing to the right and
         * bottom of your frame. To avoid this ensure your textures are perfect powers of two.
         * 
@@ -31881,10 +31901,10 @@ declare module Phaser {
         createBullets(quantity?: number, key?: any, frame?: any, group?: Phaser.Group): Phaser.Weapon;
         debug(x?: number, y?: number, debugBodies?: boolean): void;
         destroy(): void;
-        fire(from: any, x?: number, y?: number): boolean;
-        fireAtPointer(pointer: Phaser.Pointer): boolean;
-        fireAtSprite(sprite: Phaser.Sprite): boolean;
-        fireAtXY(x: number, y: number): boolean;
+        fire(from?: any, x?: number, y?: number): Phaser.Bullet;
+        fireAtPointer(pointer: Phaser.Pointer): Phaser.Bullet;
+        fireAtSprite(sprite: Phaser.Sprite): Phaser.Bullet;
+        fireAtXY(x: number, y: number): Phaser.Bullet;
         forEach(callback: any, callbackContext: any): Phaser.Weapon;
         killAll(): Phaser.Weapon;
         pauseAll(): Phaser.Weapon;

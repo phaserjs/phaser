@@ -341,6 +341,24 @@ Phaser.Weapon = function (game, parent) {
     this.trackedPointer = null;
 
     /**
+     * If you want this Weapon to be able to fire more than 1 bullet in a single
+     * update, then set this property to `true`. When `true` the Weapon plugin won't
+     * set the shot / firing timers until the `postRender` phase of the game loop.
+     * This means you can call `fire` (and similar methods) as often as you like in one
+     * single game update.
+     *
+     * @type {boolean}
+     */
+    this.multiFire = false;
+
+    /**
+     * Internal multiFire test flag.
+     *
+     * @type {boolean}
+     */
+    this._hasFired = false;
+
+    /**
      * If the Weapon is tracking a Sprite, should it also track the Sprites rotation?
      * This is useful for a game such as Asteroids, where you want the weapon to fire based
      * on the sprites rotation.
@@ -366,6 +384,22 @@ Phaser.Weapon = function (game, parent) {
      * @private
      */
     this._nextFire = 0;
+
+    /**
+     * Internal firing rate time tracking variable used by multiFire.
+     *
+     * @type {number}
+     * @private
+     */
+    this._tempNextFire = 0;
+
+    /**
+     * Internal firing rotation tracking point.
+     *
+     * @type {Phaser.Point}
+     * @private
+     */
+    this._rotatedPoint = new Phaser.Point();
 
 };
 
@@ -616,6 +650,25 @@ Phaser.Weapon.prototype.update = function () {
 };
 
 /**
+* Internal update method, called by the PluginManager.
+*
+* @method Phaser.Weapon#postRender
+* @protected
+*/
+Phaser.Weapon.prototype.postRender = function () {
+
+    if (!this.multiFire || !this._hasFired)
+    {
+        return;
+    }
+
+    this._hasFired = false;
+
+    this._nextFire = this._tempNextFire;
+
+};
+
+/**
 * Sets this Weapon to track the given Sprite, or any Object with a public `world` Point object.
 * When a Weapon tracks a Sprite it will automatically update its `fireFrom` value to match the Sprites
 * position within the Game World, adjusting the coordinates based on the offset arguments.
@@ -681,11 +734,92 @@ Phaser.Weapon.prototype.trackPointer = function (pointer, offsetX, offsetY) {
 };
 
 /**
-* Attempts to fire a single Bullet. If there are no more bullets available in the pool, and the pool cannot be extended,
-* then this method returns `false`. It will also return false if not enough time has expired since the last time
+* Attempts to fire multiple bullets from the positions defined in the given array.
+*
+* If you provide a `from` argument, or if there is a tracked Sprite or Pointer, then
+* the positions are treated as __offsets__ from the given objects position.
+*
+* If `from` is undefined, and there is no tracked object, then the bullets are fired
+* from the given positions, as they exist in the world.
+*
+* Calling this method sets `Weapon.multiFire = true`.
+*
+* If there are not enough bullets available in the pool, and the pool cannot be extended,
+* then this method may not fire from all of the given positions.
+*
+* When the bullets are launched they have their texture and frame updated, as required.
+* The velocity of the bullets are calculated based on Weapon properties like `bulletSpeed`.
+*
+* @method Phaser.Weapon#fireMany
+* @param {array} positions - An array of positions. Each position can be any Object, as long as it has public `x` and `y` properties, such as Phaser.Point, { x: 0, y: 0 }, Phaser.Sprite, etc.
+* @param {Phaser.Sprite|Phaser.Point|Object|string} [from] - Optionally fires the bullets **from** the `x` and `y` properties of this object, _instead_ of any `Weapon.trackedSprite` or `trackedPointer` that is set.
+* @return {array} An array containing all of the fired Phaser.Bullet objects, if a launch was successful, otherwise an empty array.
+*/
+Phaser.Weapon.prototype.fireMany = function (positions, from) {
+
+    this.multiFire = true;
+
+    var bullets = [];
+
+    var _this = this;
+
+    if (from || this.trackedSprite || this.trackedPointer)
+    {
+        positions.forEach(function(offset) {
+
+            bullets.push(_this.fire(from, null, null, offset.x, offset.y));
+
+        });
+    }
+    else
+    {
+        positions.forEach(function(position) {
+
+            bullets.push(_this.fire(position));
+
+        });
+    }
+
+    return bullets;
+
+};
+
+/**
+* Attempts to fire a single Bullet from a tracked Sprite or Pointer, but applies an offset
+* to the position first. This is the same as calling `Weapon.fire` and passing in the offset arguments.
+*
+* If there are no more bullets available in the pool, and the pool cannot be extended,
+* then this method returns `null`. It will also return `null` if not enough time has expired since the last time
 * the Weapon was fired, as defined in the `Weapon.fireRate` property.
 *
-* Otherwise the first available bullet is selected and launched.
+* Otherwise the first available bullet is selected, launched, and returned.
+*
+* When the bullet is launched it has its texture and frame updated, as required. The velocity of the bullet is
+* calculated based on Weapon properties like `bulletSpeed`.
+*
+* If you wish to fire multiple bullets in a single game update, then set `Weapon.multiFire = true`
+* and you can call this method as many times as you like, per loop. See also `Weapon.fireMany`.
+*
+* @method Phaser.Weapon#fireOffset
+* @param {number} [offsetX=0] - The horizontal offset from the position of the tracked Sprite or Pointer, as set with `Weapon.trackSprite`.
+* @param {number} [offsetY=0] - The vertical offset from the position of the tracked Sprite or Pointer, as set with `Weapon.trackSprite`.
+* @return {Phaser.Bullet} The fired bullet, if a launch was successful, otherwise `null`.
+*/
+Phaser.Weapon.prototype.fireOffset = function (offsetX, offsetY) {
+
+    if (offsetX === undefined) { offsetX = 0; }
+    if (offsetY === undefined) { offsetY = 0; }
+
+    return this.fire(null, null, null, offsetX, offsetY);
+
+};
+
+/**
+* Attempts to fire a single Bullet. If there are no more bullets available in the pool, and the pool cannot be extended,
+* then this method returns `null`. It will also return `null` if not enough time has expired since the last time
+* the Weapon was fired, as defined in the `Weapon.fireRate` property.
+*
+* Otherwise the first available bullet is selected, launched, and returned.
 *
 * The arguments are all optional, but allow you to control both where the bullet is launched from, and aimed at.
 *
@@ -695,17 +829,26 @@ Phaser.Weapon.prototype.trackPointer = function (pointer, offsetX, offsetY) {
 * When the bullet is launched it has its texture and frame updated, as required. The velocity of the bullet is
 * calculated based on Weapon properties like `bulletSpeed`.
 *
+* If you wish to fire multiple bullets in a single game update, then set `Weapon.multiFire = true`
+* and you can call `fire` as many times as you like, per loop. Multiple fires in a single update
+* only counts once towards the `shots` total, but you will still receive a Signal for each bullet.
+*
 * @method Phaser.Weapon#fire
-* @param {Phaser.Sprite|Phaser.Point|Object} [from] - Optionally fires the bullet **from** the `x` and `y` properties of this object. If set this overrides `Weapon.trackedSprite` or `trackedPointer`. Pass `null` to ignore it.
-* @param {number} [x] - The x coordinate, in world space, to fire the bullet **towards**. If left as `undefined` the bullet direction is based on its angle.
-* @param {number} [y] - The y coordinate, in world space, to fire the bullet **towards**. If left as `undefined` the bullet direction is based on its angle.
-* @return {Phaser.Bullet} The fired bullet if successful, null otherwise.
+* @param {Phaser.Sprite|Phaser.Point|Object|string} [from] - Optionally fires the bullet **from** the `x` and `y` properties of this object. If set this overrides `Weapon.trackedSprite` or `trackedPointer`. Pass `null` to ignore it.
+* @param {number} [x] - The x coordinate, in world space, to fire the bullet **towards**. If left as `undefined`, or `null`, the bullet direction is based on its angle.
+* @param {number} [y] - The y coordinate, in world space, to fire the bullet **towards**. If left as `undefined`, or `null`, the bullet direction is based on its angle.
+* @param {number} [offsetX=0] - If the bullet is fired from a tracked Sprite or Pointer, or the `from` argument is set, this applies a horizontal offset from the launch position.
+* @param {number} [offsetY=0] - If the bullet is fired from a tracked Sprite or Pointer, or the `from` argument is set, this applies a vertical offset from the launch position.
+* @return {Phaser.Bullet} The fired bullet, if a launch was successful, otherwise `null`.
 */
-Phaser.Weapon.prototype.fire = function (from, x, y) {
+Phaser.Weapon.prototype.fire = function (from, x, y, offsetX, offsetY) {
+
+    if (x === undefined) { x = null; }
+    if (y === undefined) { y = null; }
 
     if (this.game.time.now < this._nextFire || (this.fireLimit > 0 && this.shots === this.fireLimit))
     {
-        return false;
+        return null;
     }
 
     var speed = this.bulletSpeed;
@@ -730,14 +873,32 @@ Phaser.Weapon.prototype.fire = function (from, x, y) {
     }
     else if (this.trackedSprite)
     {
-        if (this.fireFrom.width > 1)
+        if (this.trackRotation)
         {
-            this.fireFrom.centerOn(this.trackedSprite.world.x + this.trackOffset.x, this.trackedSprite.world.y + this.trackOffset.y);
+            this._rotatedPoint.set(this.trackedSprite.world.x + this.trackOffset.x, this.trackedSprite.world.y + this.trackOffset.y);
+            this._rotatedPoint.rotate(this.trackedSprite.world.x, this.trackedSprite.world.y, this.trackedSprite.rotation);
+
+            if (this.fireFrom.width > 1)
+            {
+                this.fireFrom.centerOn(this._rotatedPoint.x, this._rotatedPoint.y);
+            }
+            else
+            {
+                this.fireFrom.x = this._rotatedPoint.x;
+                this.fireFrom.y = this._rotatedPoint.y;
+            }
         }
         else
         {
-            this.fireFrom.x = this.trackedSprite.world.x + this.trackOffset.x;
-            this.fireFrom.y = this.trackedSprite.world.y + this.trackOffset.y;
+            if (this.fireFrom.width > 1)
+            {
+                this.fireFrom.centerOn(this.trackedSprite.world.x + this.trackOffset.x, this.trackedSprite.world.y + this.trackOffset.y);
+            }
+            else
+            {
+                this.fireFrom.x = this.trackedSprite.world.x + this.trackOffset.x;
+                this.fireFrom.y = this.trackedSprite.world.y + this.trackOffset.y;
+            }
         }
 
         if (this.bulletInheritSpriteSpeed)
@@ -758,13 +919,23 @@ Phaser.Weapon.prototype.fire = function (from, x, y) {
         }
     }
 
+    if (offsetX !== undefined)
+    {
+        this.fireFrom.x += offsetX;
+    }
+
+    if (offsetY !== undefined)
+    {
+        this.fireFrom.y += offsetY;
+    }
+
     var fromX = (this.fireFrom.width > 1) ? this.fireFrom.randomX : this.fireFrom.x;
     var fromY = (this.fireFrom.height > 1) ? this.fireFrom.randomY : this.fireFrom.y;
 
     var angle = (this.trackRotation) ? this.trackedSprite.angle : this.fireAngle;
 
     //  The position (in world space) to fire the bullet towards, if set
-    if (x !== undefined && y !== undefined)
+    if (x !== null && y !== null)
     {
         angle = this.game.math.radToDeg(Math.atan2(y - fromY, x - fromX));
     }
@@ -869,9 +1040,42 @@ Phaser.Weapon.prototype.fire = function (from, x, y) {
         bullet.body.velocity.set(moveX, moveY);
         bullet.body.gravity.set(this.bulletGravity.x, this.bulletGravity.y);
 
-        this._nextFire = this.game.time.now + this.fireRate;
+        var next = 0;
 
-        this.shots++;
+        if (this.bulletSpeedVariance !== 0)
+        {
+            var rate = this.fireRate;
+
+            rate += Phaser.Math.between(-this.fireRateVariance, this.fireRateVariance);
+
+            if (rate < 0)
+            {
+                rate = 0;
+            }
+
+            next = this.game.time.now + rate;
+        }
+        else
+        {
+            next = this.game.time.now + this.fireRate;
+        }
+
+        if (this.multiFire)
+        {
+            if (!this._hasFired)
+            {
+                //  We only add 1 to the 'shots' count for multiFire shots
+                this._hasFired = true;
+                this._tempNextFire = next;
+                this.shots++;
+            }
+        }
+        else
+        {
+            this._nextFire = next;
+
+            this.shots++;
+        }
 
         this.onFire.dispatch(bullet, this, speed);
 
@@ -880,7 +1084,9 @@ Phaser.Weapon.prototype.fire = function (from, x, y) {
             this.onFireLimit.dispatch(this, this.fireLimit);
         }
     }
+
     return bullet;
+
 };
 
 /**
@@ -937,9 +1143,9 @@ Phaser.Weapon.prototype.fireAtXY = function (x, y) {
 * For example: If you have a Sprite with a texture that is 80x100 in size,
 * and you want the physics body to be 32x32 pixels in the middle of the texture, you would do:
 *
-* `setSize(32, 32, 24, 34)`
+* `setSize(32 / Math.abs(this.scale.x), 32 / Math.abs(this.scale.y), 24, 34)`
 *
-* Where the first two parameters is the new Body size (32x32 pixels).
+* Where the first two parameters are the new Body size (32x32 pixels) relative to the Sprite's scale.
 * 24 is the horizontal offset of the Body from the top-left of the Sprites texture, and 34
 * is the vertical offset.
 *
@@ -1085,8 +1291,10 @@ Object.defineProperty(Phaser.Weapon.prototype, "bulletClass", {
 
         this._bulletClass = classType;
 
-        this.bullets.classType = this._bulletClass;
-
+        //prevent crash if weapon's bullets have not yet been initialized
+        if (this.bullets) {
+            this.bullets.classType = this._bulletClass;
+        }
     }
 
 });

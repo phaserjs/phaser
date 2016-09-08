@@ -277,7 +277,8 @@ Phaser.BitmapText.prototype.scanLine = function (data, scale, text) {
             var kerning = (prevCharCode && charData.kerning[prevCharCode]) ? charData.kerning[prevCharCode] : 0;
 
             //  Record the last space in the string and the current width
-            if (/(\s)/.test(text.charAt(i))) {
+            if (/(\s)/.test(text.charAt(i)))
+            {
                 lastSpace = i;
                 wrappedWidth = w;
             }

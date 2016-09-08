@@ -498,7 +498,7 @@ Phaser.Sound.prototype = {
      */
     loopFull: function (volume) {
 
-       return this.play(null, 0, volume, true);
+        return this.play(null, 0, volume, true);
 
     },
 
