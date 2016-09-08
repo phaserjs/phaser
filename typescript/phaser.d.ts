@@ -2584,6 +2584,7 @@ declare module Phaser {
         static fuzzyFloor(val: number, epsilon?: number): boolean;
         static fuzzyGreaterThan(a: number, b: number, epsilon?: number): boolean;
         static fuzzyLessThan(a: number, b: number, epsilon?: number): boolean;
+        static getShortestAngle(angle1: number, angle2: number): number;
         static isEven(n: number): boolean;
         static isOdd(n: number): boolean;
         static linear(p0: number, p1: number, t: number): number;
