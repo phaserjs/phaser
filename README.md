@@ -317,7 +317,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 
 ### Updates
 
-* TypeScript definitions fixes and updates (thanks @chriteixeira @StealthC)
+* TypeScript definitions fixes and updates (thanks @chriteixeira @StealthC @Lopdo)
 * Docs typo fixes (thanks @JTronLabs @samme)
 * `Phaser.Line.fromSprite` now uses the Sprite.centerX and centerY properties if the `useCenter` argument is true. Before it required you to have overridden the Sprite and added the property yourself (thanks @samme #2729)
 *
