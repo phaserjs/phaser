@@ -220,21 +220,6 @@ PIXI.WebGLRenderer.prototype.initContext = function()
 
     this.maxTextures = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);
 
-    // HACK: Fill all texture units with empty 1x1 texture
-    // ---
-    if (PIXI._enableMultiTextureToggle)
-    {
-        var tempTexture = gl.createTexture();
-        gl.bindTexture(gl.TEXTURE_2D, tempTexture);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, 1, 1, 0, gl.RGB, gl.UNSIGNED_BYTE, null);
-        for (var index = 0; index < this.maxTextures; ++index)
-        {
-            gl.activeTexture(gl.TEXTURE0 + index);
-            gl.bindTexture(gl.TEXTURE_2D, tempTexture);
-        }        
-    }
-    // ---
-
     this.glContextId = gl.id = PIXI.WebGLRenderer.glContextId++;
 
     PIXI.glContexts[this.glContextId] = gl;
