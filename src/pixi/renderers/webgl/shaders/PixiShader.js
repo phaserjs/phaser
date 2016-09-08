@@ -72,13 +72,7 @@ PIXI.PixiShader = function(gl)
 
 PIXI.PixiShader.prototype.constructor = PIXI.PixiShader;
 
-/**
-* Initialises the shader.
-*
-* @method init
-*/
-PIXI.PixiShader.prototype.init = function()
-{
+PIXI.PixiShader.prototype.initMultitexShader = function () {
     var gl = this.gl;
     this.MAX_TEXTURES = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);
     var dynamicIfs = '\tif (vTextureIndex == 0.0) gl_FragColor = texture2D(uSamplerArray[0], vTextureCoord) * vColor;\n'
@@ -156,6 +150,77 @@ PIXI.PixiShader.prototype.init = function()
     this.initUniforms();
 
     this.program = program;
+};
+
+PIXI.PixiShader.prototype.initDefaultShader = function () {
+    this.fragmentSrc = [
+        'precision lowp float;',
+        'varying vec2 vTextureCoord;',
+        'varying vec4 vColor;',
+        'varying float vTextureIndex;',
+        'uniform sampler2D uSampler;',
+        'void main(void) {',
+        '   gl_FragColor = texture2D(uSampler, vTextureCoord) * vColor ;',
+        '}'
+    ];
+
+    var gl = this.gl;
+
+    var program = PIXI.compileProgram(gl, this.vertexSrc || PIXI.PixiShader.defaultVertexSrc, this.fragmentSrc);
+
+    gl.useProgram(program);
+
+    // get and store the uniforms for the shader
+    this.uSampler = gl.getUniformLocation(program, 'uSampler');
+    this.projectionVector = gl.getUniformLocation(program, 'projectionVector');
+    this.offsetVector = gl.getUniformLocation(program, 'offsetVector');
+    this.dimensions = gl.getUniformLocation(program, 'dimensions');
+
+    // get and store the attributes
+    this.aVertexPosition = gl.getAttribLocation(program, 'aVertexPosition');
+    this.aTextureCoord = gl.getAttribLocation(program, 'aTextureCoord');
+    this.colorAttribute = gl.getAttribLocation(program, 'aColor');
+    this.aTextureIndex = gl.getAttribLocation(program, 'aTextureIndex');
+
+
+    // Begin worst hack eva //
+
+    // WHY??? ONLY on my chrome pixel the line above returns -1 when using filters?
+    // maybe its something to do with the current state of the gl context.
+    // I'm convinced this is a bug in the chrome browser as there is NO reason why this should be returning -1 especially as it only manifests on my chrome pixel
+    // If theres any webGL people that know why could happen please help :)
+    if(this.colorAttribute === -1)
+    {
+        this.colorAttribute = 2;
+    }
+
+    this.attributes = [this.aVertexPosition, this.aTextureCoord, this.colorAttribute, this.aTextureIndex];
+
+    // End worst hack eva //
+
+    // add those custom shaders!
+    for (var key in this.uniforms)
+    {
+        // get the uniform locations..
+        this.uniforms[key].uniformLocation = gl.getUniformLocation(program, key);
+    }
+
+    this.initUniforms();
+
+    this.program = program;
+};
+/**
+* Initialises the shader.
+*
+* @method init
+*/
+PIXI.PixiShader.prototype.init = function()
+{
+    if (PIXI._enableMultiTextureToggle) {
+        this.initMultitexShader();
+    } else {
+        this.initDefaultShader();
+    }  
 };
 
 /**

@@ -5,6 +5,7 @@
 // this is where we store the webGL contexts for easy access.
 PIXI.glContexts = [];
 PIXI.instances = [];
+PIXI._enableMultiTextureToggle = false;
 
 /**
  * The WebGLRenderer draws the stage and all its content onto a WebGL enabled canvas.
@@ -178,6 +179,7 @@ PIXI.WebGLRenderer = function (game) {
      */
     this.renderSession = {};
 
+
     //  Needed?
     this.renderSession.game = this.game;
     this.renderSession.gl = this.gl;
@@ -210,12 +212,28 @@ PIXI.WebGLRenderer.prototype.initContext = function()
     var gl = this.view.getContext('webgl', this._contextOptions) || this.view.getContext('experimental-webgl', this._contextOptions);
 
     this.gl = gl;
-    this.maxTextures = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);
 
     if (!gl) {
         // fail, not able to get a context
         throw new Error('This browser does not support webGL. Try using the canvas renderer');
     }
+
+    this.maxTextures = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);
+
+    // HACK: Fill all texture units with empty 1x1 texture
+    // ---
+    if (PIXI._enableMultiTextureToggle)
+    {
+        var tempTexture = gl.createTexture();
+        gl.bindTexture(gl.TEXTURE_2D, tempTexture);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, 1, 1, 0, gl.RGB, gl.UNSIGNED_BYTE, null);
+        for (var index = 0; index < this.maxTextures; ++index)
+        {
+            gl.activeTexture(gl.TEXTURE0 + index);
+            gl.bindTexture(gl.TEXTURE_2D, tempTexture);
+        }        
+    }
+    // ---
 
     this.glContextId = gl.id = PIXI.WebGLRenderer.glContextId++;
 
@@ -243,11 +261,15 @@ PIXI.WebGLRenderer.prototype.initContext = function()
 };
 
 PIXI.WebGLRenderer.prototype.setTexturePriority = function (textureNameCollection) {
-
+    if (!PIXI._enableMultiTextureToggle)
+    {
+        console.warn('Phaser: Can\'t call setTexturePriority if multi texture batching isn\'t enabled');
+        return;
+    }
     var maxTextures = this.maxTextures;
     var imageCache = this.game.cache._cache.image;
     var imageName = null;
-
+    var gl = this.gl;
     // We start from 1 because framebuffer texture uses unit 0.
     for (var index = 0; index < textureNameCollection.length; ++index)
     {
@@ -503,6 +525,15 @@ PIXI.WebGLRenderer.prototype.mapBlendModes = function () {
         PIXI.blendModesWebGL = b;
     }
 
+};
+
+PIXI.WebGLRenderer.prototype.getMaxTextureUnit = function() {
+    var gl = this.gl;
+    return gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);
+};
+
+PIXI.enableMultiTexture = function() {
+    PIXI._enableMultiTextureToggle = true;
 };
 
 PIXI.WebGLRenderer.glContextId = 0;
