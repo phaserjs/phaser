@@ -29,37 +29,57 @@ PIXI.StripShader = function(gl)
      */
     this.program = null;
 
-    var gl = this.gl;
-    this.MAX_TEXTURES = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);
-    var dynamicIfs = '\tif (vTextureIndex == 0.0) gl_FragColor = texture2D(uSamplerArray[0], vTextureCoord);\n'
-    for (var index = 1; index < this.MAX_TEXTURES; ++index)
-    {
-        dynamicIfs += '\telse if (vTextureIndex == ' + 
-                    index + '.0) gl_FragColor = texture2D(uSamplerArray[' + 
-                    index + '], vTextureCoord) ;\n'
+    if (PIXI._enableMultiTextureToggle) {
+        var gl = this.gl;
+        this.MAX_TEXTURES = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);
+        var dynamicIfs = '\tif (vTextureIndex == 0.0) gl_FragColor = texture2D(uSamplerArray[0], vTextureCoord);\n'
+        for (var index = 1; index < this.MAX_TEXTURES; ++index)
+        {
+            dynamicIfs += '\telse if (vTextureIndex == ' + 
+                        index + '.0) gl_FragColor = texture2D(uSamplerArray[' + 
+                        index + '], vTextureCoord) ;\n'
+        }
+
+
+        /**
+         * The fragment shader.
+         * @property fragmentSrc
+         * @type Array
+         */
+        this.fragmentSrc = [
+            '//StripShader Fragment Shader.',
+            'precision mediump float;',
+            'varying vec2 vTextureCoord;',
+            'varying float vTextureIndex;',
+         //   'varying float vColor;',
+            'uniform float alpha;',
+            'uniform sampler2D uSamplerArray[' + this.MAX_TEXTURES + '];',
+            'const vec4 PINK = vec4(1.0, 0.0, 1.0, 1.0);',
+            'const vec4 GREEN = vec4(0.0, 1.0, 0.0, 1.0);',
+            'void main(void) {',
+            dynamicIfs,
+            'else gl_FragColor = PINK;',
+            '}'
+        ];            
+    } else {
+        /**
+         * The fragment shader.
+         * @property fragmentSrc
+         * @type Array
+         */
+        this.fragmentSrc = [
+            '//StripShader Fragment Shader.',
+            'precision mediump float;',
+            'varying vec2 vTextureCoord;',
+            'varying float vTextureIndex;',
+         //   'varying float vColor;',
+            'uniform float alpha;',
+            'uniform sampler2D uSampler;',
+            'void main(void) {',
+            '   gl_FragColor = texture2D(uSampler, vTextureCoord);',
+            '}'
+        ]; 
     }
-
-
-    /**
-     * The fragment shader.
-     * @property fragmentSrc
-     * @type Array
-     */
-    this.fragmentSrc = [
-        '//StripShader Fragment Shader.',
-        'precision mediump float;',
-        'varying vec2 vTextureCoord;',
-        'varying float vTextureIndex;',
-     //   'varying float vColor;',
-        'uniform float alpha;',
-        'uniform sampler2D uSamplerArray[' + this.MAX_TEXTURES + '];',
-        'const vec4 PINK = vec4(1.0, 0.0, 1.0, 1.0);',
-        'const vec4 GREEN = vec4(0.0, 1.0, 0.0, 1.0);',
-        'void main(void) {',
-        dynamicIfs,
-        'else gl_FragColor = PINK;',
-        '}'
-    ];
 
     /**
      * The vertex shader.
@@ -107,23 +127,27 @@ PIXI.StripShader.prototype.init = function()
     gl.useProgram(program);
 
     // get and store the uniforms for the shader
-    // get and store the uniforms for the shader
-    this.uSampler = gl.getUniformLocation(program, 'uSamplerArray[0]');
+    this.uSampler = PIXI._enableMultiTextureToggle ?
+                         gl.getUniformLocation(program, 'uSamplerArray[0]') : 
+                         gl.getUniformLocation(program, 'uSampler');
 
-    var indices = [];
-    // HACK: we bind an empty texture to avoid WebGL warning spam.
-    var tempTexture = gl.createTexture();
-    gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture(gl.TEXTURE_2D, tempTexture);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, 1, 1, 0, gl.RGB, gl.UNSIGNED_BYTE, null);
-    for (var i = 0; i < this.MAX_TEXTURES; ++i) {
-        gl.activeTexture(gl.TEXTURE0 + i);
+
+    if (PIXI._enableMultiTextureToggle) {
+        var indices = [];
+        // HACK: we bind an empty texture to avoid WebGL warning spam.
+        var tempTexture = gl.createTexture();
+        gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, tempTexture);
-        indices.push(i);
-    }
-    gl.activeTexture(gl.TEXTURE0);
-    gl.uniform1iv(this.uSampler, indices);
-
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, 1, 1, 0, gl.RGB, gl.UNSIGNED_BYTE, null);
+        for (var i = 0; i < this.MAX_TEXTURES; ++i) {
+            gl.activeTexture(gl.TEXTURE0 + i);
+            gl.bindTexture(gl.TEXTURE_2D, tempTexture);
+            indices.push(i);
+        }
+        gl.activeTexture(gl.TEXTURE0);
+        gl.uniform1iv(this.uSampler, indices); 
+    }                         
+   
     this.projectionVector = gl.getUniformLocation(program, 'projectionVector');
     this.offsetVector = gl.getUniformLocation(program, 'offsetVector');
     this.colorAttribute = gl.getAttribLocation(program, 'aColor');
