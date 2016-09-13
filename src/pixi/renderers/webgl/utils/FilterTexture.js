@@ -38,6 +38,8 @@ PIXI.FilterTexture = function(gl, width, height, scaleMode)
      */
     scaleMode = scaleMode || PIXI.scaleModes.DEFAULT;
 
+    gl.activeTexture(gl.TEXTURE0);
+
     gl.bindTexture(gl.TEXTURE_2D,  this.texture);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, scaleMode === PIXI.scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, scaleMode === PIXI.scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);

@@ -67,7 +67,7 @@ PIXI.PixiFastShader = function (gl) {
             'varying float vTextureIndex;',
             'uniform sampler2D uSampler;',
             'void main(void) {',
-            '   gl_FragColor = texture2D(uSampler, vTextureCoord) * vColor;'
+            '   gl_FragColor = texture2D(uSampler, vTextureCoord) * vColor;',
             '}'
         ];
     }    
