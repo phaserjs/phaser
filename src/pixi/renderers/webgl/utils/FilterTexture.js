@@ -2,6 +2,51 @@
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
 
+function _CreateEmptyTexture(gl, width, height, scaleMode) {
+    var texture = gl.createTexture();
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, scaleMode === PIXI.scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, scaleMode === PIXI.scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+    return texture;
+}
+
+var _fbErrors = {
+    36054: 'Incomplete attachment',
+    36055: 'Missing attachment',
+    36057: 'Incomplete dimensions',
+    36061: 'Framebuffer unsupported'
+};
+
+function _CreateFramebuffer(gl, width, height, scaleMode) {
+    var framebuffer = gl.createFramebuffer();
+    var depthStencilBuffer = gl.createRenderbuffer();
+    var colorBuffer = null;   
+    var fbStatus = 0;
+    
+    gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
+    gl.bindRenderbuffer(gl.RENDERBUFFER, depthStencilBuffer);
+    gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_STENCIL_ATTACHMENT, gl.RENDERBUFFER, this.renderBuffer);
+    colorBuffer = _CreateEmptyTexture(gl, width, height, scaleMode);
+    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, colorBuffer, 0);        
+    fbStatus = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
+    if(fbStatus !== gl.FRAMEBUFFER_COMPLETE) {
+        console.error('Incomplete GL framebuffer. ', _fbErrors[fbStatus]);
+    }
+    gl.bindTexture(gl.TEXTURE_2D, null);
+    gl.bindRenderbuffer(gl.RENDERBUFFER, null);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
+    framebuffer.width = width;
+    framebuffer.height = height;
+    framebuffer.targetTexture = colorBuffer;
+    framebuffer.renderBuffer = depthStencilBuffer;
+    return framebuffer;
+}
+
 /**
 * @class FilterTexture
 * @constructor
@@ -24,38 +69,43 @@ PIXI.FilterTexture = function(gl, width, height, scaleMode)
      * @property frameBuffer
      * @type Any
      */
-    this.frameBuffer = gl.createFramebuffer();
+     this.frameBuffer = _CreateFramebuffer(gl, width, height, scaleMode || PIXI.scaleModes.DEFAULT);
+     this.texture = this.frameBuffer.targetTexture;
+     this.width = width;
+     this.height = height;
+     this.renderBuffer = this.frameBuffer.renderBuffer;
+   /* this.frameBuffer = gl.createFramebuffer();
 
-    /**
+    / **
      * @property texture
      * @type Any
-     */
-    this.texture = gl.createTexture();
+     * /
+    //this.texture = gl.createTexture();
 
-    /**
+    / **
      * @property scaleMode
      * @type Number
-     */
+     * /
     scaleMode = scaleMode || PIXI.scaleModes.DEFAULT;
 
+    this.destTexture = gl.createTexture();
     gl.activeTexture(gl.TEXTURE0);
 
-    gl.bindTexture(gl.TEXTURE_2D,  this.texture);
+    gl.bindTexture(gl.TEXTURE_2D,  this.destTexture);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, scaleMode === PIXI.scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, scaleMode === PIXI.scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer );
 
     gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer );
-    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.texture, 0);
+    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.destTexture, 0);
 
     // required for masking a mask??
     this.renderBuffer = gl.createRenderbuffer();
     gl.bindRenderbuffer(gl.RENDERBUFFER, this.renderBuffer);
     gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_STENCIL_ATTACHMENT, gl.RENDERBUFFER, this.renderBuffer);
   
-    this.resize(width, height);
+    this.resize(width, height);*/
 };
 
 PIXI.FilterTexture.prototype.constructor = PIXI.FilterTexture;
@@ -88,7 +138,6 @@ PIXI.FilterTexture.prototype.resize = function(width, height)
     this.height = height;
 
     var gl = this.gl;
-
     gl.bindTexture(gl.TEXTURE_2D,  this.texture);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA,  width , height , 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
     // update the stencil buffer width and height

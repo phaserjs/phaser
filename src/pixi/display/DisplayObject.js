@@ -548,7 +548,6 @@ PIXI.DisplayObject.prototype = {
 
         PIXI.DisplayObject._tempMatrix.tx = -bounds.x;
         PIXI.DisplayObject._tempMatrix.ty = -bounds.y;
-
         this._cachedSprite.texture.render(this, PIXI.DisplayObject._tempMatrix, true);
         this._cachedSprite.anchor.x = -(bounds.x / bounds.width);
         this._cachedSprite.anchor.y = -(bounds.y / bounds.height);
