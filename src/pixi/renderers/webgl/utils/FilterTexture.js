@@ -4,7 +4,6 @@
 
 function _CreateEmptyTexture(gl, width, height, scaleMode) {
     var texture = gl.createTexture();
-    gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, texture);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
@@ -21,12 +20,13 @@ var _fbErrors = {
     36061: 'Framebuffer unsupported'
 };
 
-function _CreateFramebuffer(gl, width, height, scaleMode) {
+function _CreateFramebuffer(gl, width, height, scaleMode, textureUnit) {
     var framebuffer = gl.createFramebuffer();
     var depthStencilBuffer = gl.createRenderbuffer();
     var colorBuffer = null;   
     var fbStatus = 0;
     
+    gl.activeTexture(gl.TEXTURE0 + textureUnit);
     gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
     gl.bindRenderbuffer(gl.RENDERBUFFER, depthStencilBuffer);
     gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_STENCIL_ATTACHMENT, gl.RENDERBUFFER, this.renderBuffer);
@@ -55,7 +55,7 @@ function _CreateFramebuffer(gl, width, height, scaleMode) {
 * @param height {Number} the vertical range of the filter
 * @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
 */
-PIXI.FilterTexture = function(gl, width, height, scaleMode)
+PIXI.FilterTexture = function(gl, width, height, scaleMode, textureUnit)
 {
     /**
      * @property gl
@@ -69,43 +69,15 @@ PIXI.FilterTexture = function(gl, width, height, scaleMode)
      * @property frameBuffer
      * @type Any
      */
-     this.frameBuffer = _CreateFramebuffer(gl, width, height, scaleMode || PIXI.scaleModes.DEFAULT);
+     this.frameBuffer = _CreateFramebuffer(gl, width, height, scaleMode || PIXI.scaleModes.DEFAULT, textureUnit);
+    /**
+     * @property texture
+     * @type Any
+     */
      this.texture = this.frameBuffer.targetTexture;
      this.width = width;
      this.height = height;
      this.renderBuffer = this.frameBuffer.renderBuffer;
-   /* this.frameBuffer = gl.createFramebuffer();
-
-    / **
-     * @property texture
-     * @type Any
-     * /
-    //this.texture = gl.createTexture();
-
-    / **
-     * @property scaleMode
-     * @type Number
-     * /
-    scaleMode = scaleMode || PIXI.scaleModes.DEFAULT;
-
-    this.destTexture = gl.createTexture();
-    gl.activeTexture(gl.TEXTURE0);
-
-    gl.bindTexture(gl.TEXTURE_2D,  this.destTexture);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, scaleMode === PIXI.scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, scaleMode === PIXI.scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-
-    gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer );
-    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.destTexture, 0);
-
-    // required for masking a mask??
-    this.renderBuffer = gl.createRenderbuffer();
-    gl.bindRenderbuffer(gl.RENDERBUFFER, this.renderBuffer);
-    gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_STENCIL_ATTACHMENT, gl.RENDERBUFFER, this.renderBuffer);
-  
-    this.resize(width, height);*/
 };
 
 PIXI.FilterTexture.prototype.constructor = PIXI.FilterTexture;

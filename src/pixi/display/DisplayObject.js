@@ -530,7 +530,8 @@ PIXI.DisplayObject.prototype = {
         if (!this._cachedSprite)
         {
             var textureUnit = 0;
-
+            if (this.texture && this.texture.baseTexture && PIXI._enableMultiTextureToggle)
+                textureUnit = this.texture.baseTexture.textureIndex;
             var renderTexture = new PIXI.RenderTexture(bounds.width, bounds.height, null, null, null, textureUnit);
             this._cachedSprite = new PIXI.Sprite(renderTexture);
             this._cachedSprite.worldTransform = this.worldTransform;

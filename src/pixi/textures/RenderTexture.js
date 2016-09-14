@@ -108,11 +108,10 @@ PIXI.RenderTexture = function(width, height, renderer, scaleMode, resolution, te
     if (this.renderer.type === PIXI.WEBGL_RENDERER)
     {
         var gl = this.renderer.gl;
-       // gl.activeTexture(gl.TEXTURE0 + textureUnit);
         this.baseTexture.textureIndex = textureUnit;
         this.baseTexture._dirty[gl.id] = false;
 
-        this.textureBuffer = new PIXI.FilterTexture(gl, this.width, this.height, this.baseTexture.scaleMode);
+        this.textureBuffer = new PIXI.FilterTexture(gl, this.width, this.height, this.baseTexture.scaleMode, textureUnit);
         this.baseTexture._glTextures[gl.id] =  this.textureBuffer.texture;
 
         this.render = this.renderWebGL;
