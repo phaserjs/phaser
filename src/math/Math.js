@@ -27,10 +27,10 @@ Phaser.Math = {
     * Returns a random float in the range `[min, max)`. If these parameters are not in order than they will be put in order.
     * Default is 0 for `min` and 1 for `max`.
     *
-    * @method Phaser.Math#between
+    * @method Phaser.Math#random
     * @param {number} min - The minimum value. Must be a Number.
     * @param {number} max - The maximum value. Must be a Number.
-    * @return {number} A floating point number between the range min to max.
+    * @return {number} A floating point number between min (inclusive) and max (exclusive).
     */
     random: function (min, max) {
         if (min === undefined) { min = 0; }
@@ -52,7 +52,7 @@ Phaser.Math = {
     * @method Phaser.Math#between
     * @param {number} min - The minimum value. Must be a Number.
     * @param {number} max - The maximum value. Must be a Number.
-    * @return {number} A floating point number between the range min to max.
+    * @return {number} An integer between min (inclusive) and max (inclusive).
     */
     between: function (min, max) {
         if (min === undefined) { min = 0; }
