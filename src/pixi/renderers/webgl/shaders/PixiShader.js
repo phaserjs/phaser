@@ -73,6 +73,11 @@ PIXI.PixiShader = function(gl)
 PIXI.PixiShader.prototype.constructor = PIXI.PixiShader;
 
 PIXI.PixiShader.prototype.initMultitexShader = function () {
+    if (this.fragmentSrc != null) {
+        // Can't run multi-texture batching with filters
+        PIXI._enableMultiTextureToggle = false;
+        this.initDefaultShader();
+    }
     var gl = this.gl;
     this.MAX_TEXTURES = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);
     var dynamicIfs = '\tif (vTextureIndex == 0.0) gl_FragColor = texture2D(uSamplerArray[0], vTextureCoord) * vColor;\n'
@@ -156,16 +161,19 @@ PIXI.PixiShader.prototype.initMultitexShader = function () {
 };
 
 PIXI.PixiShader.prototype.initDefaultShader = function () {
-    this.fragmentSrc = [
-        'precision lowp float;',
-        'varying vec2 vTextureCoord;',
-        'varying vec4 vColor;',
-        'varying float vTextureIndex;',
-        'uniform sampler2D uSampler;',
-        'void main(void) {',
-        '   gl_FragColor = texture2D(uSampler, vTextureCoord) * vColor ;',
-        '}'
-    ];
+
+    if (this.fragmentSrc === null) {
+        this.fragmentSrc = [
+            'precision lowp float;',
+            'varying vec2 vTextureCoord;',
+            'varying vec4 vColor;',
+            'varying float vTextureIndex;',
+            'uniform sampler2D uSampler;',
+            'void main(void) {',
+            '   gl_FragColor = texture2D(uSampler, vTextureCoord) * vColor ;',
+            '}'
+        ];
+    }
 
     var gl = this.gl;
 
@@ -391,7 +399,6 @@ PIXI.PixiShader.prototype.syncUniforms = function()
     for (var key in this.uniforms)
     {
         uniform = this.uniforms[key];
-
         if (uniform.glValueLength === 1)
         {
             if (uniform.glMatrix === true)
