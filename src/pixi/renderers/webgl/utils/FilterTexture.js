@@ -36,9 +36,9 @@ function _CreateFramebuffer(gl, width, height, scaleMode, textureUnit) {
     if(fbStatus !== gl.FRAMEBUFFER_COMPLETE) {
         console.error('Incomplete GL framebuffer. ', _fbErrors[fbStatus]);
     }
-    gl.bindTexture(gl.TEXTURE_2D, null);
-    gl.bindRenderbuffer(gl.RENDERBUFFER, null);
-    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+   // gl.bindTexture(gl.TEXTURE_2D, null);
+   // gl.bindRenderbuffer(gl.RENDERBUFFER, null);
+   // gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
     framebuffer.width = width;
     framebuffer.height = height;
@@ -57,11 +57,27 @@ function _CreateFramebuffer(gl, width, height, scaleMode, textureUnit) {
 */
 PIXI.FilterTexture = function(gl, width, height, scaleMode, textureUnit)
 {
+    textureUnit = typeof textureUnit === 'number' ? textureUnit : 0;
     /**
      * @property gl
      * @type WebGLContext
      */
     this.gl = gl;
+    var glUniform1f = gl.uniform1f.bind(gl);
+    var glGetUniformLocation = gl.getUniformLocation.bind(gl);
+    gl.uniform1f = function (location, value) {
+        //console.log('uniform1f', location, value);
+        glUniform1f(location, value);
+       // debugger;
+    };
+    gl.getUniformLocation = function (program, name) {
+        console.log('getUniformLocation', program, name);
+        if (name === 'blur') {
+            debugger;
+        }
+        return glGetUniformLocation(program, name);
+        //debugger;
+    };
 
     // next time to create a frame buffer and texture
 
