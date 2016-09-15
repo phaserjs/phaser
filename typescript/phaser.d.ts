@@ -2564,6 +2564,7 @@ declare module Phaser {
         static angleBetweenPointsY(point1: Phaser.Point, point2: Phaser.Point): number;
         static average(...numbers: number[]): number;
         static bernstein(n: number, i: number): number;
+        static random(min: number, max: number): number;
         static between(min: number, max: number): number;
         static bezierInterpolation(v: number[], k: number): number;
         static catmullRom(p0: number, p1: number, p2: number, p3: number, t: number): number;
