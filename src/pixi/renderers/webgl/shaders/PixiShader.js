@@ -75,8 +75,8 @@ PIXI.PixiShader.prototype.constructor = PIXI.PixiShader;
 PIXI.PixiShader.prototype.initMultitexShader = function () {
     if (this.fragmentSrc != null) {
         // Can't run multi-texture batching with filters
-        PIXI._enableMultiTextureToggle = false;
         this.initDefaultShader();
+        return;
     }
     var gl = this.gl;
     this.MAX_TEXTURES = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);

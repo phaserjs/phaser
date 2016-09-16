@@ -60,7 +60,7 @@ PIXI.StripShader = function(gl)
             dynamicIfs,
             'else gl_FragColor = PINK;',
             '}'
-        ];            
+        ];    
     } else {
         /**
          * The fragment shader.
