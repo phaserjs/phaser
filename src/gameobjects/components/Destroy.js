@@ -102,6 +102,7 @@ Phaser.Component.Destroy.prototype = {
         if (this._crop)
         {
             this._crop = null;
+            this.cropRect = null;
         }
 
         if (this._frame)

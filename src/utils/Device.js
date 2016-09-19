@@ -786,7 +786,7 @@ Phaser.Device._initialize = function () {
             device.touch = true;
         }
 
-        if (window.navigator.msPointerEnabled || window.navigator.pointerEnabled)
+        if (window.PointerEvent || window.MSPointerEvent || window.navigator.msPointerEnabled || window.navigator.pointerEnabled)
         {
             device.mspointer = true;
         }
@@ -947,12 +947,12 @@ Phaser.Device._initialize = function () {
             device.webApp = true;
         }
         
-        if (typeof window.cordova !== "undefined")
+        if (typeof window.cordova !== 'undefined')
         {
             device.cordova = true;
         }
         
-        if (typeof process !== "undefined" && typeof require !== "undefined")
+        if (typeof process !== 'undefined' && typeof require !== 'undefined')
         {
             device.node = true;
         }
@@ -972,7 +972,7 @@ Phaser.Device._initialize = function () {
         if (device.cocoonJS)
         {
             try {
-                device.cocoonJSApp = (typeof CocoonJS !== "undefined");
+                device.cocoonJSApp = (typeof CocoonJS !== 'undefined');
             }
             catch(error)
             {
@@ -980,7 +980,7 @@ Phaser.Device._initialize = function () {
             }
         }
 
-        if (typeof window.ejecta !== "undefined")
+        if (typeof window.ejecta !== 'undefined')
         {
             device.ejecta = true;
         }
@@ -1106,42 +1106,6 @@ Phaser.Device._initialize = function () {
     }
 
     /**
-    * Check PixelRatio, iOS device, Vibration API, ArrayBuffers and endianess.
-    */
-    function _checkDevice () {
-
-        device.pixelRatio = window['devicePixelRatio'] || 1;
-        device.iPhone = navigator.userAgent.toLowerCase().indexOf('iphone') != -1;
-        device.iPhone4 = (device.pixelRatio == 2 && device.iPhone);
-        device.iPad = navigator.userAgent.toLowerCase().indexOf('ipad') != -1;
-
-        if (typeof Int8Array !== 'undefined')
-        {
-            device.typedArray = true;
-        }
-        else
-        {
-            device.typedArray = false;
-        }
-
-        if (typeof ArrayBuffer !== 'undefined' && typeof Uint8Array !== 'undefined' && typeof Uint32Array !== 'undefined')
-        {
-            device.littleEndian = _checkIsLittleEndian();
-            device.LITTLE_ENDIAN = device.littleEndian;
-        }
-
-        device.support32bit = (typeof ArrayBuffer !== "undefined" && typeof Uint8ClampedArray !== "undefined" && typeof Int32Array !== "undefined" && device.littleEndian !== null && _checkIsUint8ClampedImageData());
-
-        navigator.vibrate = navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate;
-
-        if (navigator.vibrate)
-        {
-            device.vibration = true;
-        }
-
-    }
-
-    /**
     * Check Little or Big Endian system.
     *
     * @author Matt DesLauriers (@mattdesl)
@@ -1157,12 +1121,12 @@ Phaser.Device._initialize = function () {
         b[2] = 0xc3;
         b[3] = 0xd4;
 
-        if (c[0] == 0xd4c3b2a1)
+        if (c[0] === 0xd4c3b2a1)
         {
             return true;
         }
 
-        if (c[0] == 0xa1b2c3d4)
+        if (c[0] === 0xa1b2c3d4)
         {
             return false;
         }
@@ -1199,6 +1163,42 @@ Phaser.Device._initialize = function () {
         PIXI.CanvasPool.remove(this);
 
         return image.data instanceof Uint8ClampedArray;
+
+    }
+
+    /**
+    * Check PixelRatio, iOS device, Vibration API, ArrayBuffers and endianess.
+    */
+    function _checkDevice () {
+
+        device.pixelRatio = window['devicePixelRatio'] || 1;
+        device.iPhone = navigator.userAgent.toLowerCase().indexOf('iphone') !== -1;
+        device.iPhone4 = (device.pixelRatio === 2 && device.iPhone);
+        device.iPad = navigator.userAgent.toLowerCase().indexOf('ipad') !== -1;
+
+        if (typeof Int8Array !== 'undefined')
+        {
+            device.typedArray = true;
+        }
+        else
+        {
+            device.typedArray = false;
+        }
+
+        if (typeof ArrayBuffer !== 'undefined' && typeof Uint8Array !== 'undefined' && typeof Uint32Array !== 'undefined')
+        {
+            device.littleEndian = _checkIsLittleEndian();
+            device.LITTLE_ENDIAN = device.littleEndian;
+        }
+
+        device.support32bit = (typeof ArrayBuffer !== 'undefined' && typeof Uint8ClampedArray !== 'undefined' && typeof Int32Array !== 'undefined' && device.littleEndian !== null && _checkIsUint8ClampedImageData());
+
+        navigator.vibrate = navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate;
+
+        if (navigator.vibrate)
+        {
+            device.vibration = true;
+        }
 
     }
 

@@ -421,9 +421,12 @@ Phaser.Animation.prototype = {
             //  And what's left now?
             this._timeNextFrame = this.game.time.time + (this.delay - this._frameDiff);
 
-            if (this.isReversed){
+            if (this.isReversed)
+            {
                 this._frameIndex -= this._frameSkip;
-            }else{
+            }
+            else
+            {
                 this._frameIndex += this._frameSkip;
             }
 
@@ -434,7 +437,8 @@ Phaser.Animation.prototype = {
                     // Update current state before event callback
                     this._frameIndex = Math.abs(this._frameIndex) % this._frames.length;
 
-                    if (this.isReversed){
+                    if (this.isReversed)
+                    {
                         this._frameIndex = this._frames.length - 1 - this._frameIndex;
                     }
 

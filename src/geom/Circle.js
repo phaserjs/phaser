@@ -488,7 +488,9 @@ Phaser.Circle.contains = function (a, x, y) {
 * @return {boolean} A value of true if the object has exactly the same values for the x, y and diameter properties as this Circle object; otherwise false.
 */
 Phaser.Circle.equals = function (a, b) {
-    return (a.x == b.x && a.y == b.y && a.diameter == b.diameter);
+
+    return (a.x === b.x && a.y === b.y && a.diameter === b.diameter);
+
 };
 
 /**
@@ -500,7 +502,9 @@ Phaser.Circle.equals = function (a, b) {
 * @return {boolean} A value of true if the specified object intersects with this Circle object; otherwise false.
 */
 Phaser.Circle.intersects = function (a, b) {
+
     return (Phaser.Math.distance(a.x, a.y, b.x, b.y) <= (a.radius + b.radius));
+
 };
 
 /**

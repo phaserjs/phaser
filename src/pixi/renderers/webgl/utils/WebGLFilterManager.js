@@ -354,7 +354,7 @@ PIXI.WebGLFilterManager.prototype.applyFilterPass = function(filter, filterArea,
 
         shader.fragmentSrc = filter.fragmentSrc;
         shader.uniforms = filter.uniforms;
-        shader.init();
+        shader.init(true);
 
         filter.shaders[gl.id] = shader;
     }

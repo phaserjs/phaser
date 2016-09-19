@@ -347,28 +347,28 @@ Phaser.Physics.Ninja.Tile.prototype = {
             //  45deg
             this.type = Phaser.Physics.Ninja.Tile.TYPE_45DEG;
 
-            if (this.id == Phaser.Physics.Ninja.Tile.SLOPE_45DEGpn)
+            if (this.id === Phaser.Physics.Ninja.Tile.SLOPE_45DEGpn)
             {
                 this.signx = 1;
                 this.signy = -1;
                 this.sx = this.signx / Math.SQRT2;//get slope _unit_ normal
                 this.sy = this.signy / Math.SQRT2;//since normal is (1,-1), length is sqrt(1*1 + -1*-1) = sqrt(2)
             }
-            else if (this.id == Phaser.Physics.Ninja.Tile.SLOPE_45DEGnn)
+            else if (this.id === Phaser.Physics.Ninja.Tile.SLOPE_45DEGnn)
             {
                 this.signx = -1;
                 this.signy = -1;
                 this.sx = this.signx / Math.SQRT2;//get slope _unit_ normal
                 this.sy = this.signy / Math.SQRT2;//since normal is (1,-1), length is sqrt(1*1 + -1*-1) = sqrt(2)
             }
-            else if (this.id == Phaser.Physics.Ninja.Tile.SLOPE_45DEGnp)
+            else if (this.id === Phaser.Physics.Ninja.Tile.SLOPE_45DEGnp)
             {
                 this.signx = -1;
                 this.signy = 1;
                 this.sx = this.signx / Math.SQRT2;//get slope _unit_ normal
                 this.sy = this.signy / Math.SQRT2;//since normal is (1,-1), length is sqrt(1*1 + -1*-1) = sqrt(2)
             }
-            else if (this.id == Phaser.Physics.Ninja.Tile.SLOPE_45DEGpp)
+            else if (this.id === Phaser.Physics.Ninja.Tile.SLOPE_45DEGpp)
             {
                 this.signx = 1;
                 this.signy = 1;
@@ -385,28 +385,28 @@ Phaser.Physics.Ninja.Tile.prototype = {
             //  Concave
             this.type = Phaser.Physics.Ninja.Tile.TYPE_CONCAVE;
 
-            if (this.id == Phaser.Physics.Ninja.Tile.CONCAVEpn)
+            if (this.id === Phaser.Physics.Ninja.Tile.CONCAVEpn)
             {
                 this.signx = 1;
                 this.signy = -1;
                 this.sx = 0;
                 this.sy = 0;
             }
-            else if (this.id == Phaser.Physics.Ninja.Tile.CONCAVEnn)
+            else if (this.id === Phaser.Physics.Ninja.Tile.CONCAVEnn)
             {
                 this.signx = -1;
                 this.signy = -1;
                 this.sx = 0;
                 this.sy = 0;
             }
-            else if (this.id == Phaser.Physics.Ninja.Tile.CONCAVEnp)
+            else if (this.id === Phaser.Physics.Ninja.Tile.CONCAVEnp)
             {
                 this.signx = -1;
                 this.signy = 1;
                 this.sx = 0;
                 this.sy = 0;
             }
-            else if (this.id == Phaser.Physics.Ninja.Tile.CONCAVEpp)
+            else if (this.id === Phaser.Physics.Ninja.Tile.CONCAVEpp)
             {
                 this.signx = 1;
                 this.signy = 1;
@@ -423,28 +423,28 @@ Phaser.Physics.Ninja.Tile.prototype = {
             //  Convex
             this.type = Phaser.Physics.Ninja.Tile.TYPE_CONVEX;
 
-            if (this.id == Phaser.Physics.Ninja.Tile.CONVEXpn)
+            if (this.id === Phaser.Physics.Ninja.Tile.CONVEXpn)
             {
                 this.signx = 1;
                 this.signy = -1;
                 this.sx = 0;
                 this.sy = 0;
             }
-            else if (this.id == Phaser.Physics.Ninja.Tile.CONVEXnn)
+            else if (this.id === Phaser.Physics.Ninja.Tile.CONVEXnn)
             {
                 this.signx = -1;
                 this.signy = -1;
                 this.sx = 0;
                 this.sy = 0;
             }
-            else if (this.id == Phaser.Physics.Ninja.Tile.CONVEXnp)
+            else if (this.id === Phaser.Physics.Ninja.Tile.CONVEXnp)
             {
                 this.signx = -1;
                 this.signy = 1;
                 this.sx = 0;
                 this.sy = 0;
             }
-            else if (this.id == Phaser.Physics.Ninja.Tile.CONVEXpp)
+            else if (this.id === Phaser.Physics.Ninja.Tile.CONVEXpp)
             {
                 this.signx = 1;
                 this.signy = 1;
@@ -461,7 +461,7 @@ Phaser.Physics.Ninja.Tile.prototype = {
             //  22deg small
             this.type = Phaser.Physics.Ninja.Tile.TYPE_22DEGs;
 
-            if (this.id == Phaser.Physics.Ninja.Tile.SLOPE_22DEGpnS)
+            if (this.id === Phaser.Physics.Ninja.Tile.SLOPE_22DEGpnS)
             {
                 this.signx = 1;
                 this.signy = -1;
@@ -469,7 +469,7 @@ Phaser.Physics.Ninja.Tile.prototype = {
                 this.sx = (this.signx * 1) / slen;
                 this.sy = (this.signy * 2) / slen;
             }
-            else if (this.id == Phaser.Physics.Ninja.Tile.SLOPE_22DEGnnS)
+            else if (this.id === Phaser.Physics.Ninja.Tile.SLOPE_22DEGnnS)
             {
                 this.signx = -1;
                 this.signy = -1;
@@ -477,7 +477,7 @@ Phaser.Physics.Ninja.Tile.prototype = {
                 this.sx = (this.signx * 1) / slen;
                 this.sy = (this.signy * 2) / slen;
             }
-            else if (this.id == Phaser.Physics.Ninja.Tile.SLOPE_22DEGnpS)
+            else if (this.id === Phaser.Physics.Ninja.Tile.SLOPE_22DEGnpS)
             {
                 this.signx = -1;
                 this.signy = 1;
@@ -485,7 +485,7 @@ Phaser.Physics.Ninja.Tile.prototype = {
                 this.sx = (this.signx * 1) / slen;
                 this.sy = (this.signy * 2) / slen;
             }
-            else if (this.id == Phaser.Physics.Ninja.Tile.SLOPE_22DEGppS)
+            else if (this.id === Phaser.Physics.Ninja.Tile.SLOPE_22DEGppS)
             {
                 this.signx = 1;
                 this.signy = 1;
@@ -503,7 +503,7 @@ Phaser.Physics.Ninja.Tile.prototype = {
             //  22deg big
             this.type = Phaser.Physics.Ninja.Tile.TYPE_22DEGb;
 
-            if (this.id == Phaser.Physics.Ninja.Tile.SLOPE_22DEGpnB)
+            if (this.id === Phaser.Physics.Ninja.Tile.SLOPE_22DEGpnB)
             {
                 this.signx = 1;
                 this.signy = -1;
@@ -511,7 +511,7 @@ Phaser.Physics.Ninja.Tile.prototype = {
                 this.sx = (this.signx * 1) / slen;
                 this.sy = (this.signy * 2) / slen;
             }
-            else if (this.id == Phaser.Physics.Ninja.Tile.SLOPE_22DEGnnB)
+            else if (this.id === Phaser.Physics.Ninja.Tile.SLOPE_22DEGnnB)
             {
                 this.signx = -1;
                 this.signy = -1;
@@ -519,7 +519,7 @@ Phaser.Physics.Ninja.Tile.prototype = {
                 this.sx = (this.signx * 1) / slen;
                 this.sy = (this.signy * 2) / slen;
             }
-            else if (this.id == Phaser.Physics.Ninja.Tile.SLOPE_22DEGnpB)
+            else if (this.id === Phaser.Physics.Ninja.Tile.SLOPE_22DEGnpB)
             {
                 this.signx = -1;
                 this.signy = 1;
@@ -527,7 +527,7 @@ Phaser.Physics.Ninja.Tile.prototype = {
                 this.sx = (this.signx * 1) / slen;
                 this.sy = (this.signy * 2) / slen;
             }
-            else if (this.id == Phaser.Physics.Ninja.Tile.SLOPE_22DEGppB)
+            else if (this.id === Phaser.Physics.Ninja.Tile.SLOPE_22DEGppB)
             {
                 this.signx = 1;
                 this.signy = 1;
@@ -545,7 +545,7 @@ Phaser.Physics.Ninja.Tile.prototype = {
             //  67deg small
             this.type = Phaser.Physics.Ninja.Tile.TYPE_67DEGs;
 
-            if (this.id == Phaser.Physics.Ninja.Tile.SLOPE_67DEGpnS)
+            if (this.id === Phaser.Physics.Ninja.Tile.SLOPE_67DEGpnS)
             {
                 this.signx = 1;
                 this.signy = -1;
@@ -553,7 +553,7 @@ Phaser.Physics.Ninja.Tile.prototype = {
                 this.sx = (this.signx * 2) / slen;
                 this.sy = (this.signy * 1) / slen;
             }
-            else if (this.id == Phaser.Physics.Ninja.Tile.SLOPE_67DEGnnS)
+            else if (this.id === Phaser.Physics.Ninja.Tile.SLOPE_67DEGnnS)
             {
                 this.signx = -1;
                 this.signy = -1;
@@ -561,7 +561,7 @@ Phaser.Physics.Ninja.Tile.prototype = {
                 this.sx = (this.signx * 2) / slen;
                 this.sy = (this.signy * 1) / slen;
             }
-            else if (this.id == Phaser.Physics.Ninja.Tile.SLOPE_67DEGnpS)
+            else if (this.id === Phaser.Physics.Ninja.Tile.SLOPE_67DEGnpS)
             {
                 this.signx = -1;
                 this.signy = 1;
@@ -569,7 +569,7 @@ Phaser.Physics.Ninja.Tile.prototype = {
                 this.sx = (this.signx * 2) / slen;
                 this.sy = (this.signy * 1) / slen;
             }
-            else if (this.id == Phaser.Physics.Ninja.Tile.SLOPE_67DEGppS)
+            else if (this.id === Phaser.Physics.Ninja.Tile.SLOPE_67DEGppS)
             {
                 this.signx = 1;
                 this.signy = 1;
@@ -587,7 +587,7 @@ Phaser.Physics.Ninja.Tile.prototype = {
             //  67deg big
             this.type = Phaser.Physics.Ninja.Tile.TYPE_67DEGb;
 
-            if (this.id == Phaser.Physics.Ninja.Tile.SLOPE_67DEGpnB)
+            if (this.id === Phaser.Physics.Ninja.Tile.SLOPE_67DEGpnB)
             {
                 this.signx = 1;
                 this.signy = -1;
@@ -595,7 +595,7 @@ Phaser.Physics.Ninja.Tile.prototype = {
                 this.sx = (this.signx * 2) / slen;
                 this.sy = (this.signy * 1) / slen;
             }
-            else if (this.id == Phaser.Physics.Ninja.Tile.SLOPE_67DEGnnB)
+            else if (this.id === Phaser.Physics.Ninja.Tile.SLOPE_67DEGnnB)
             {
                 this.signx = -1;
                 this.signy = -1;
@@ -603,7 +603,7 @@ Phaser.Physics.Ninja.Tile.prototype = {
                 this.sx = (this.signx * 2) / slen;
                 this.sy = (this.signy * 1) / slen;
             }
-            else if (this.id == Phaser.Physics.Ninja.Tile.SLOPE_67DEGnpB)
+            else if (this.id === Phaser.Physics.Ninja.Tile.SLOPE_67DEGnpB)
             {
                 this.signx = -1;
                 this.signy = 1;
@@ -611,7 +611,7 @@ Phaser.Physics.Ninja.Tile.prototype = {
                 this.sx = (this.signx * 2) / slen;
                 this.sy = (this.signy * 1) / slen;
             }
-            else if (this.id == Phaser.Physics.Ninja.Tile.SLOPE_67DEGppB)
+            else if (this.id === Phaser.Physics.Ninja.Tile.SLOPE_67DEGppB)
             {
                 this.signx = 1;
                 this.signy = 1;
@@ -629,28 +629,28 @@ Phaser.Physics.Ninja.Tile.prototype = {
             //  Half-full tile
             this.type = Phaser.Physics.Ninja.Tile.TYPE_HALF;
 
-            if (this.id == Phaser.Physics.Ninja.Tile.HALFd)
+            if (this.id === Phaser.Physics.Ninja.Tile.HALFd)
             {
                 this.signx = 0;
                 this.signy = -1;
                 this.sx = this.signx;
                 this.sy = this.signy;
             }
-            else if (this.id == Phaser.Physics.Ninja.Tile.HALFu)
+            else if (this.id === Phaser.Physics.Ninja.Tile.HALFu)
             {
                 this.signx = 0;
                 this.signy = 1;
                 this.sx = this.signx;
                 this.sy = this.signy;
             }
-            else if (this.id == Phaser.Physics.Ninja.Tile.HALFl)
+            else if (this.id === Phaser.Physics.Ninja.Tile.HALFl)
             {
                 this.signx = 1;
                 this.signy = 0;
                 this.sx = this.signx;
                 this.sy = this.signy;
             }
-            else if (this.id == Phaser.Physics.Ninja.Tile.HALFr)
+            else if (this.id === Phaser.Physics.Ninja.Tile.HALFr)
             {
                 this.signx = -1;
                 this.signy = 0;

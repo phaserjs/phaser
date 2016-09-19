@@ -529,7 +529,10 @@ PIXI.DisplayObject.prototype = {
 
         if (!this._cachedSprite)
         {
-            var renderTexture = new PIXI.RenderTexture(bounds.width, bounds.height);
+            var textureUnit = 0;
+            if (this.texture && this.texture.baseTexture && PIXI._enableMultiTextureToggle)
+                textureUnit = this.texture.baseTexture.textureIndex;
+            var renderTexture = new PIXI.RenderTexture(bounds.width, bounds.height, null, null, null, textureUnit);
             this._cachedSprite = new PIXI.Sprite(renderTexture);
             this._cachedSprite.worldTransform = this.worldTransform;
         }
@@ -546,7 +549,6 @@ PIXI.DisplayObject.prototype = {
 
         PIXI.DisplayObject._tempMatrix.tx = -bounds.x;
         PIXI.DisplayObject._tempMatrix.ty = -bounds.y;
-
         this._cachedSprite.texture.render(this, PIXI.DisplayObject._tempMatrix, true);
         this._cachedSprite.anchor.x = -(bounds.x / bounds.width);
         this._cachedSprite.anchor.y = -(bounds.y / bounds.height);

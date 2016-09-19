@@ -32,8 +32,9 @@
  * @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
  * @param resolution {Number} The resolution of the texture being generated
  */
-PIXI.RenderTexture = function(width, height, renderer, scaleMode, resolution)
+PIXI.RenderTexture = function(width, height, renderer, scaleMode, resolution, textureUnit)
 {
+    textureUnit = typeof textureUnit == 'number' ? textureUnit : 0;
     /**
      * The with of the render texture
      *
@@ -107,9 +108,10 @@ PIXI.RenderTexture = function(width, height, renderer, scaleMode, resolution)
     if (this.renderer.type === PIXI.WEBGL_RENDERER)
     {
         var gl = this.renderer.gl;
+        this.baseTexture.textureIndex = textureUnit;
         this.baseTexture._dirty[gl.id] = false;
 
-        this.textureBuffer = new PIXI.FilterTexture(gl, this.width, this.height, this.baseTexture.scaleMode);
+        this.textureBuffer = new PIXI.FilterTexture(gl, this.width, this.height, this.baseTexture.scaleMode, textureUnit);
         this.baseTexture._glTextures[gl.id] =  this.textureBuffer.texture;
 
         this.render = this.renderWebGL;
@@ -245,6 +247,7 @@ PIXI.RenderTexture.prototype.renderWebGL = function(displayObject, matrix, clear
 
     this.renderer.spriteBatch.dirty = true;
 
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 };
 
 /**

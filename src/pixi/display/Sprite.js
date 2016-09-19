@@ -319,11 +319,13 @@ PIXI.Sprite.prototype.getBounds = function(matrix)
  * @return {Rectangle} The rectangular bounding area
  */
 PIXI.Sprite.prototype.getLocalBounds = function () {
+
     var matrixCache = this.worldTransform;
 
     this.worldTransform = PIXI.identityMatrix;
 
-    for (var i = 0; i < this.children.length; i++) {
+    for (var i = 0; i < this.children.length; i++)
+    {
         this.children[i].updateTransform();
     }
 
@@ -331,11 +333,13 @@ PIXI.Sprite.prototype.getLocalBounds = function () {
 
     this.worldTransform = matrixCache;
 
-    for (i = 0; i < this.children.length; i++) {
+    for (i = 0; i < this.children.length; i++)
+    {
         this.children[i].updateTransform();
     }
 
     return bounds;
+
 };
 
 /**

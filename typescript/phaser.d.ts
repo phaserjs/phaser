@@ -1,7 +1,7 @@
 /// <reference path="pixi.d.ts" />
 /// <reference path="p2.d.ts" />
 
-// Type definitions for Phaser 2.7.0 - 21st July 2016
+// Type definitions for Phaser 3.0.0 - 7th September 2016
 // Project: https://github.com/photonstorm/phaser
 
 declare module "phaser" {
@@ -334,7 +334,7 @@ declare module Phaser {
         generateTexture(key: string): PIXI.Texture;
         getBounds(rect?: Phaser.Rectangle): Phaser.Rectangle;
         getFirstPixel(direction: number): { r: number; g: number; b: number; x: number; y: number; };
-        getPixel(x: number, y: number, out?: any): number;
+        getPixel(x: number, y: number, out?: any): any;
         getPixelRGB(x: number, y: number, out?: any, hsl?: boolean, hsv?: boolean): any;
         getPixel32(x: number, y: number): number;
         getPixels(rect: Phaser.Rectangle): ImageData;
@@ -2584,6 +2584,7 @@ declare module Phaser {
         static fuzzyFloor(val: number, epsilon?: number): boolean;
         static fuzzyGreaterThan(a: number, b: number, epsilon?: number): boolean;
         static fuzzyLessThan(a: number, b: number, epsilon?: number): boolean;
+        static getShortestAngle(angle1: number, angle2: number): number;
         static isEven(n: number): boolean;
         static isOdd(n: number): boolean;
         static linear(p0: number, p1: number, t: number): number;
@@ -4672,6 +4673,7 @@ declare module Phaser {
             clickTrampoline: string;
             forceMinimumDocumentHeight: boolean;
             noMargins: boolean;
+            orientationFallback: boolean;
             scrollTo: Point;
             supportsFullScreen: boolean;
         };
@@ -5636,6 +5638,7 @@ declare module Phaser {
         fireLimit: number;
         fireRate: number;
         fireRateVariance: number;
+        multiFire: boolean;
         onFire: Phaser.Signal;
         onFireLimit: Phaser.Signal;
         onKill: Phaser.Signal;
@@ -5651,10 +5654,12 @@ declare module Phaser {
         createBullets(quantity?: number, key?: any, frame?: any, group?: Phaser.Group): Phaser.Weapon;
         debug(x?: number, y?: number, debugBodies?: boolean): void;
         destroy(): void;
-        fire(from?: any, x?: number, y?: number): Phaser.Bullet;
+        fire(from?: any, x?: number, y?: number, offsetX?: number, offsetY?: number): Phaser.Bullet;
         fireAtPointer(pointer: Phaser.Pointer): Phaser.Bullet;
         fireAtSprite(sprite: Phaser.Sprite): Phaser.Bullet;
         fireAtXY(x: number, y: number): Phaser.Bullet;
+        fireMany(positions: any[], from?: any): Phaser.Bullet[];
+        fireOffset(offsetX?: number, offsetY?: number): Phaser.Bullet;
         forEach(callback: any, callbackContext: any): Phaser.Weapon;
         killAll(): Phaser.Weapon;
         pauseAll(): Phaser.Weapon;

@@ -1,4 +1,3 @@
-/* global Phaser:true */
 /**
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2016 Photon Storm Ltd.
@@ -8,14 +7,14 @@
 /**
 * @namespace Phaser
 */
-var Phaser = Phaser || {
+var Phaser = Phaser || {    // jshint ignore:line
 
     /**
     * The Phaser version number.
     * @constant
     * @type {string}
     */
-    VERSION: '2.7.0 Beta 4',
+    VERSION: '3.0.0-dev',
 
     /**
     * An array of Phaser game instances.
@@ -51,6 +50,13 @@ var Phaser = Phaser || {
     * @type {integer}
     */
     HEADLESS: 3,
+
+    /**
+    * WebGL Renderer with MultiTexture support enabled.
+    * @constant
+    * @type {integer}
+    */
+    WEBGL_MULTI: 4,
 
     /**
     * Direction constant.

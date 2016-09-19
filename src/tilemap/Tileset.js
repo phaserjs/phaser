@@ -137,7 +137,6 @@ Phaser.Tileset.prototype = {
 
         if (coordIndex >= 0 && (coordIndex + 1) < this.drawCoords.length)
         {
-            // draw the tile on the canvas
             context.drawImage(
                 this.image,
                 this.drawCoords[coordIndex],
@@ -149,91 +148,6 @@ Phaser.Tileset.prototype = {
                 this.tileWidth,
                 this.tileHeight
             );
-        }
-
-    },
-
-    /**
-    * Draws a tile from this Tileset at the given coordinates using a WebGL renderer.
-    *
-    * @method Phaser.Tileset#drawGl
-    * @public
-    * @param {Array} glBatch - A list of WebGL batch objects to draw later.
-    * @param {number} x - The x coordinate to draw to.
-    * @param {number} y - The y coordinate to draw to.
-    * @param {integer} index - The index of the tile within the set to draw.
-    * @param {number} alpha - The alpha value to draw this tile with.
-    * @param {integer} flippedVal - A bitwise value which indicates how the UV source coordinates should be flipped
-    */
-    drawGl: function (glBatch, x, y, index, alpha, flippedVal) {
-
-        // Correct the tile index for the set and bias for interlacing x/y values
-        var coordIndex = (index - this.firstgid) * 2;
-
-        if (coordIndex >= 0 && (coordIndex + 1) < this.drawCoords.length)
-        {
-            // apply "half-pixel correction" to avoid edge bleeding as much as possible
-            var sx = this.drawCoords[coordIndex] + 0.5;
-            var sy = this.drawCoords[coordIndex + 1] + 0.5;
-            var sw = this.tileWidth - 1.0;
-            var sh = this.tileHeight - 1.0;
-            var fd = 0;
-
-            if (flippedVal)
-            {
-                if (flippedVal & 1)
-                {
-                    // flipped diagonally (swap x,y axes)
-                    fd = 1;
-                }
-
-                if (flippedVal & 4)
-                {
-                    // flipped horizontally
-                    sx += sw;
-                    sw = -sw;
-                }
-
-                if (flippedVal & 2)
-                {
-                    // flipped vertically
-                    sy += sh;
-                    sh = -sh;
-                }
-            }
-
-            // add the tile to the WebGL batch
-            // source and destination coordinates, in pixel units
-            // destination is the center of the tile
-            glBatch.push({
-                sx: sx,
-                sy: sy,
-                sw: sw,
-                sh: sh,
-                fd: fd,
-                dx: x + this.tileWidth * 0.5,
-                dy: y + this.tileHeight * 0.5,
-                dw: this.tileWidth,
-                dh: this.tileHeight,
-                alpha: alpha
-            });
-        }
-
-    },
-
-    /**
-    * Adds a marker for the WebGl batch display to insert a degenerate triangle (eg. at the end of each row of tiles)
-    *
-    * @method Phaser.Tileset#addDegenerate
-    * @public
-    * @param {[type]} glBatch [description]
-    */
-    addDegenerate: function (glBatch) {
-
-        // don't insert multiple degenerate markers in a row
-        if (glBatch.length > 0 && glBatch[glBatch.length - 1])
-        {
-            glBatch.push(null);
         }
 
     },

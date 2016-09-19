@@ -917,7 +917,7 @@ Phaser.Physics.P2.prototype = {
     */
     removeBody: function (body) {
 
-        if (body.data.world == this.world)
+        if (body.data.world === this.world)
         {
             this.world.removeBody(body.data);
 

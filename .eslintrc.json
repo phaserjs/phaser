@@ -1,0 +1,69 @@
+{
+    "env": {
+        "browser": true
+    },
+    "extends": "eslint:recommended",
+    "globals": {
+        "PhaserGlobal": true,
+        "Phaser": true,
+        "PIXI": true,
+        "p2": true
+    },
+    "rules": {
+
+        "no-cond-assign": [ "error", "except-parens" ],
+        "no-duplicate-case": [ "error" ],
+
+        "accessor-pairs": "error",
+        "curly": "error",
+        "eqeqeq": [ "error", "smart" ],
+        "no-alert": "error",
+        "no-caller": "error",
+        "no-floating-decimal": "error",
+        "no-invalid-this": "error",
+        "no-multi-spaces": "error",
+        "no-multi-str": "error",
+        "no-new-func": "error",
+        "no-new-wrappers": "error",
+        "no-redeclare": "error",
+        "no-self-assign": "error",
+        "no-self-compare": "error",
+        "yoda": [ "error", "never" ],
+
+        "array-bracket-spacing": [ "error", "always" ],
+        "block-spacing": [ "error", "always" ],
+        "brace-style": [ "error", "allman", { "allowSingleLine": true } ],
+        "camelcase": "error",
+        "comma-dangle": [ "error", "never" ],
+        "comma-style": [ "error", "last" ],
+        "computed-property-spacing": [ "error", "never" ],
+        "consistent-this": [ "error", "_this" ],
+        "eol-last": [ "error" ],
+        "func-call-spacing": [ "error", "never" ],
+        "indent": [ "error", 4 ],
+        "key-spacing": [ "error", { "beforeColon": false, "afterColon": true }],
+        "linebreak-style": [ "off" ],
+        "lines-around-comment": [ "error", { "beforeBlockComment": true }],
+        "new-parens": "error",
+        "no-array-constructor": "error",
+        "no-lonely-if": "error",
+        "no-mixed-operators": "error",
+        "no-mixed-spaces-and-tabs": "error",
+        "no-plusplus": "off",
+        "no-trailing-spaces": "error",
+        "no-underscore-dangle": "off",
+        "no-whitespace-before-property": "error",
+        "object-curly-newline": [ "error", "always" ],
+        "one-var-declaration-per-line": [ "error", "initializations" ],
+        "quote-props": [ "error", "as-needed" ],
+        "quotes": [ "error", "single" ],
+        "semi-spacing": [ "error", { "before": false, "after": true } ],
+        "semi": [ "error", "always" ],
+        "space-before-blocks": "error",
+        "space-before-function-paren": "error",
+        "space-in-parens": [ "error",  "never" ],
+        "space-infix-ops": [ "error", { "int32Hint": true } ],
+        "wrap-regex": "error"
+
+    }
+}
