@@ -190,6 +190,11 @@ Phaser.Component.LoadTexture.prototype = {
             this.texture.trim = null;
         }
 
+        if (frame.rotated)
+        {
+            this.texture.rotated = true;
+        }
+
         if (this.cropRect)
         {
             this.updateCrop();

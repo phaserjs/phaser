@@ -448,62 +448,86 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession, matrix)
     }
 
     //  Ignore null sources
-    if (this.texture.valid)
+    if (!this.texture.valid)
     {
-        var resolution = this.texture.baseTexture.resolution / renderSession.resolution;
-
-        renderSession.context.globalAlpha = this.worldAlpha;
-
-        //  If smoothingEnabled is supported and we need to change the smoothing property for this texture
-        if (renderSession.smoothProperty && renderSession.scaleMode !== this.texture.baseTexture.scaleMode)
+        //  Update the children and leave
+        for (var i = 0; i < this.children.length; i++)
         {
-            renderSession.scaleMode = this.texture.baseTexture.scaleMode;
-            renderSession.context[renderSession.smoothProperty] = (renderSession.scaleMode === PIXI.scaleModes.LINEAR);
+            this.children[i]._renderCanvas(renderSession);
         }
 
-        //  If the texture is trimmed we offset by the trim x/y, otherwise we use the frame dimensions
-        var dx = (this.texture.trim) ? this.texture.trim.x - this.anchor.x * this.texture.trim.width : this.anchor.x * -this.texture.frame.width;
-        var dy = (this.texture.trim) ? this.texture.trim.y - this.anchor.y * this.texture.trim.height : this.anchor.y * -this.texture.frame.height;
-
-        var tx = (wt.tx * renderSession.resolution) + renderSession.shakeX;
-        var ty = (wt.ty * renderSession.resolution) + renderSession.shakeY;
-
-        //  Allow for pixel rounding
-        if (renderSession.roundPixels)
+        if (this._mask)
         {
-            renderSession.context.setTransform(wt.a, wt.b, wt.c, wt.d, tx | 0, ty | 0);
-            dx |= 0;
-            dy |= 0;
-        }
-        else
-        {
-            renderSession.context.setTransform(wt.a, wt.b, wt.c, wt.d, tx, ty);
+            renderSession.maskManager.popMask(renderSession);
         }
 
-        var cw = this.texture.crop.width;
-        var ch = this.texture.crop.height;
+        return;
+    }
 
-        dx /= resolution;
-        dy /= resolution;
+    var resolution = this.texture.baseTexture.resolution / renderSession.resolution;
 
-        if (this.tint !== 0xFFFFFF)
+    renderSession.context.globalAlpha = this.worldAlpha;
+
+    //  If smoothingEnabled is supported and we need to change the smoothing property for this texture
+    if (renderSession.smoothProperty && renderSession.scaleMode !== this.texture.baseTexture.scaleMode)
+    {
+        renderSession.scaleMode = this.texture.baseTexture.scaleMode;
+        renderSession.context[renderSession.smoothProperty] = (renderSession.scaleMode === PIXI.scaleModes.LINEAR);
+    }
+
+    //  If the texture is trimmed we offset by the trim x/y, otherwise we use the frame dimensions
+    var dx = (this.texture.trim) ? this.texture.trim.x - this.anchor.x * this.texture.trim.width : this.anchor.x * -this.texture.frame.width;
+    var dy = (this.texture.trim) ? this.texture.trim.y - this.anchor.y * this.texture.trim.height : this.anchor.y * -this.texture.frame.height;
+
+    var tx = (wt.tx * renderSession.resolution) + renderSession.shakeX;
+    var ty = (wt.ty * renderSession.resolution) + renderSession.shakeY;
+
+    //  Allow for pixel rounding
+    if (renderSession.roundPixels)
+    {
+        renderSession.context.setTransform(wt.a, wt.b, wt.c, wt.d, tx | 0, ty | 0);
+        dx |= 0;
+        dy |= 0;
+    }
+    else
+    {
+        renderSession.context.setTransform(wt.a, wt.b, wt.c, wt.d, tx, ty);
+    }
+
+    var cw = this.texture.crop.width;
+    var ch = this.texture.crop.height;
+
+    if (this.texture.rotated)
+    {
+        //  90 degree coordinate rotation
+        cw = ch;
+        ch = this.texture.crop.width;
+
+        renderSession.context.translate(0, cw);
+        renderSession.context.rotate(-1.5707963267948966);
+    }
+
+    dx /= resolution;
+    dy /= resolution;
+
+    if (this.tint !== 0xFFFFFF)
+    {
+        if (this.texture.requiresReTint || this.cachedTint !== this.tint)
         {
-            if (this.texture.requiresReTint || this.cachedTint !== this.tint)
-            {
-                this.tintedTexture = PIXI.CanvasTinter.getTintedTexture(this, this.tint);
+            this.tintedTexture = PIXI.CanvasTinter.getTintedTexture(this, this.tint);
 
-                this.cachedTint = this.tint;
-                this.texture.requiresReTint = false;
-            }
+            this.cachedTint = this.tint;
+            this.texture.requiresReTint = false;
+        }
 
-            renderSession.context.drawImage(this.tintedTexture, 0, 0, cw, ch, dx, dy, cw / resolution, ch / resolution);
-        }
-        else
-        {
-            var cx = this.texture.crop.x;
-            var cy = this.texture.crop.y;
-            renderSession.context.drawImage(this.texture.baseTexture.source, cx, cy, cw, ch, dx, dy, cw / resolution, ch / resolution);
-        }
+        renderSession.context.drawImage(this.tintedTexture, 0, 0, cw, ch, dx, dy, cw / resolution, ch / resolution);
+    }
+    else
+    {
+        var cx = this.texture.crop.x;
+        var cy = this.texture.crop.y;
+
+        renderSession.context.drawImage(this.texture.baseTexture.source, cx, cy, cw, ch, dx, dy, cw / resolution, ch / resolution);
     }
 
     for (var i = 0; i < this.children.length; i++)

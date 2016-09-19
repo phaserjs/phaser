@@ -134,6 +134,8 @@ PIXI.Texture = function(baseTexture, frame, crop, trim)
      */
     this.crop = crop || new PIXI.Rectangle(0, 0, 1, 1);
 
+    this.rotated = false;
+
     if (baseTexture.hasLoaded)
     {
         if (this.noFrame) frame = new PIXI.Rectangle(0, 0, baseTexture.width, baseTexture.height);

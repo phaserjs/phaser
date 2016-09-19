@@ -138,6 +138,11 @@ Phaser.AnimationParser = {
                     frames[i].spriteSourceSize.h
                 );
             }
+
+            if (frames[i].rotated)
+            {
+                newFrame.rotated = true;
+            }
         }
 
         return data;
@@ -249,6 +254,11 @@ Phaser.AnimationParser = {
                     frames[key].spriteSourceSize.w,
                     frames[key].spriteSourceSize.h
                 );
+            }
+
+            if (frames[key].rotated)
+            {
+                newFrame.rotated = true;
             }
 
             i++;
