@@ -5,17 +5,65 @@
 */
 
 /**
-* This is where the magic happens. The Game object is the heart of your game,
-* providing quick access to common functions and handling the boot process.
+* The Phaser.Game object is the main controller for the entire Phaser game. It is responsible
+* for handling the boot process, parsing the configuration values, creating the renderer,
+* and setting-up all of the Phaser systems, such as physics, sound and input.
+* Once that is complete it will start the default State, and then begin the main game loop.
+*
+* You can access lots of the Phaser systems via the properties on the `game` object. For
+* example `game.renderer` is the Renderer, `game.sound` is the Sound Manager, and so on.
+*
+* Anywhere you can access the `game` property, you can access all of these core systems.
+* For example a Sprite has a `game` property, allowing you to talk to the various parts
+* of Phaser directly, without having to look after your own references.
+*
+* In it's most simplest form, a Phaser game can be created by providing the arguments
+* to the constructor:
+*
+* ```
+* var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create });
+* ```
+*
+* In the example above it is passing in a State object directly. You can also use the State
+* Manager to do this:
+*
+* ```
+* var game = new Phaser.Game(800, 600, Phaser.AUTO);
+* game.state.add('Boot', BasicGame.Boot);
+* game.state.add('Preloader', BasicGame.Preloader);
+* game.state.add('MainMenu', BasicGame.MainMenu);
+* game.state.add('Game', BasicGame.Game);
+* game.state.start('Boot');
 * 
-* "Hell, there are no rules here - we're trying to accomplish something."
-*                                                       Thomas A. Edison
+* ```
+* In the example above, 4 States are added to the State Manager, and Phaser is told to
+* start running the `Boot` state when it has finished initializing. There are example
+* project templates you can use in the Phaser GitHub repo, inside the `resources` folder.
+*
+* Instead of specifying arguments you can also pass a single object instead:
+*
+* ```
+* var config = {
+*     width: 800,
+*     height: 600,
+*     renderer: Phaser.AUTO,
+*     antialias: true,
+*     multiTexture: true,
+*     state: {
+*         preload: preload,
+*         create: create,
+*         update: update
+*     }
+* }
+*
+* var game = new Phaser.Game(config);
+* ```
 *
 * @class Phaser.Game
 * @constructor
 * @param {number|string} [width=800] - The width of your game in game pixels. If given as a string the value must be between 0 and 100 and will be used as the percentage width of the parent container, or the browser window if no parent is given.
 * @param {number|string} [height=600] - The height of your game in game pixels. If given as a string the value must be between 0 and 100 and will be used as the percentage height of the parent container, or the browser window if no parent is given.
-* @param {number} [renderer=Phaser.AUTO] - Which renderer to use: Phaser.AUTO will auto-detect, Phaser.WEBGL, Phaser.CANVAS or Phaser.HEADLESS (no rendering at all).
+* @param {number} [renderer=Phaser.AUTO] - Which renderer to use: Phaser.AUTO will auto-detect, Phaser.WEBGL, Phaser.WEBGL_MULTI, Phaser.CANVAS or Phaser.HEADLESS (no rendering at all).
 * @param {string|HTMLElement} [parent=''] - The DOM element into which this games canvas will be injected. Either a DOM ID (string) or the element itself.
 * @param {object} [state=null] - The default state object. A object consisting of Phaser.State functions (preload, create, update, render) or null.
 * @param {boolean} [transparent=false] - Use a transparent canvas background or not.
@@ -25,7 +73,7 @@
 Phaser.Game = function (width, height, renderer, parent, state, transparent, antialias, physicsConfig) {
 
     /**
-    * @property {number} id - Phaser Game ID (for when Pixi supports multiple instances).
+    * @property {number} id - Phaser Game ID
     * @readonly
     */
     this.id = Phaser.GAMES.push(this) - 1;
@@ -102,6 +150,19 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this.antialias = true;
 
     /**
+    * Has support for Multiple bound Textures in WebGL been enabled? This is a read-only property.
+    * To set it you need to either specify `Phaser.WEBGL_MULTI` as the renderer type, or use the Game
+    * Configuration object with the property `multiTexture` set to true. It has to be enabled before
+    * Pixi boots, and cannot be changed after the game is running. Once enabled, take advantage of it
+    * via the `game.renderer.setTexturePriority` method.
+    * 
+    * @property {boolean} multiTexture
+    * @default
+    * @readOnly
+    */
+    this.multiTexture = false;
+
+    /**
     * @property {boolean} preserveDrawingBuffer - The value of the preserveDrawingBuffer flag affects whether or not the contents of the stencil buffer is retained after rendering.
     * @default
     */
@@ -122,7 +183,7 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this.renderer = null;
 
     /**
-    * @property {number} renderType - The Renderer this game will use. Either Phaser.AUTO, Phaser.CANVAS, Phaser.WEBGL, or Phaser.HEADLESS.
+    * @property {number} renderType - The Renderer this game will use. Either Phaser.AUTO, Phaser.CANVAS, Phaser.WEBGL, Phaser.WEBGL_MULTI or Phaser.HEADLESS.
     * @readonly
     */
     this.renderType = Phaser.AUTO;
@@ -482,6 +543,11 @@ Phaser.Game.prototype = {
             this.antialias = config['antialias'];
         }
 
+        if (config['multiTexture'] !== undefined)
+        {
+            this.multiTexture = config['multiTexture'];
+        }
+
         if (config['resolution'])
         {
             this.resolution = config['resolution'];
@@ -718,6 +784,12 @@ Phaser.Game.prototype = {
         else
         {
             //  They requested WebGL and their browser supports it
+
+            if (this.multiTexture || this.renderType === Phaser.WEBGL_MULTI)
+            {
+                PIXI.enableMultiTexture();
+            }
+
             this.renderType = Phaser.WEBGL;
 
             this.renderer = new PIXI.WebGLRenderer(this);

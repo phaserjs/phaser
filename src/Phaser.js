@@ -52,6 +52,13 @@ var Phaser = Phaser || {    // jshint ignore:line
     HEADLESS: 3,
 
     /**
+    * WebGL Renderer with MultiTexture support enabled.
+    * @constant
+    * @type {integer}
+    */
+    WEBGL_MULTI: 4,
+
+    /**
     * Direction constant.
     * @constant
     * @type {integer}

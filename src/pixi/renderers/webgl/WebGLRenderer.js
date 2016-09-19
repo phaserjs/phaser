@@ -244,16 +244,33 @@ PIXI.WebGLRenderer.prototype.initContext = function()
     this.resize(this.width, this.height);
 };
 
+/**
+* If Multi Texture support has been enabled, then calling this method will enable batching on the given
+* textures. The texture collection is an array of keys, that map to Phaser.Cache image entries.
+*
+* The number of textures that can be batched is dependent on hardware. If you provide more textures
+* than can be batched by the GPU, then only those at the start of the array will be used. Generally
+* you shouldn't provide more than 16 textures to this method. You can check the hardware limit 
+* via the `maxTextures` property.
+* 
+* Note: Throws a warning if you haven't enabled Multiple Texture batching support in the Phaser Game config.
+* 
+* @method setTexturePriority
+* @param textureNameCollection {Array} An Array of Texture Cache keys to use for multi-texture batching.
+*/
 PIXI.WebGLRenderer.prototype.setTexturePriority = function (textureNameCollection) {
+
     if (!PIXI._enableMultiTextureToggle)
     {
-        console.warn('Phaser: Can\'t call setTexturePriority if multi texture batching isn\'t enabled');
+        console.warn('setTexturePriority error: Multi Texture support hasn\'t been enabled in the Phaser Game Config.');
         return;
     }
+
     var maxTextures = this.maxTextures;
     var imageCache = this.game.cache._cache.image;
     var imageName = null;
     var gl = this.gl;
+
     // We start from 1 because framebuffer texture uses unit 0.
     for (var index = 0; index < textureNameCollection.length; ++index)
     {

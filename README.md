@@ -309,6 +309,8 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 
 ### New Features
 
+* Multiple Batched Texture support is now available. This is a WebGL feature that can seriously decrease the volume of draw calls made in complex, or asset heavy, games. To enable it you can either use the new renderer type `Phaser.WEBGL_MULTI`, or you can pass the property `multiTexture: true` in a Phaser.Game configuration object. Once enabled, it cannot be disabled.
+* `game.renderer.setTexturePriority` is the method that goes with the Multiple Texture support. It takes an array as its single argument. The array consists of Phaser.Cache image key strings. Phaser will then try to batch as many of the textures as it can, depending on the hardware limits. If for example the GPU can only batch 8 textures, and you provide an array of 16, then only the first 8 in the array will be batched.
 * Weapon.multiFire is a new property that allows you to set a Weapon as being allowed to call `fire` as many times as you like, per game loop. This allows a single Weapon instance to fire multiple bullets.
 * Weapon.fire has two new arguments: `offsetX` and `offsetY`. If the bullet is fired from a tracked Sprite or Pointer, or the `from` argument is set, this applies a horizontal and vertical offset from the launch position.
 * Weapon.fireOffset attempts to fire a single Bullet from a tracked Sprite or Pointer, but applies an offset to the position first. This is a shorter form of calling `Weapon.fire` and passing in the offset arguments.
@@ -320,7 +322,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * TypeScript definitions fixes and updates (thanks @chriteixeira @StealthC @Lopdo)
 * Docs typo fixes (thanks @JTronLabs @samme)
 * `Phaser.Line.fromSprite` now uses the Sprite.centerX and centerY properties if the `useCenter` argument is true. Before it required you to have overridden the Sprite and added the property yourself (thanks @samme #2729)
-*
+* Updated the pointer check code in the Device class, to get rid of the message `Navigator.pointerEnabled is a non-standard API added for experiments only. It will be removed in near future.` in Chrome.
 *
 
 ### Bug Fixes
