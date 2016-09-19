@@ -1,7 +1,7 @@
 /// <reference path="pixi.d.ts" />
 /// <reference path="p2.d.ts" />
 
-// Type definitions for Phaser 3.0.0 - 7th September 2016
+// Type definitions for Phaser 3.0.0
 // Project: https://github.com/photonstorm/phaser
 
 declare module "phaser" {
@@ -18,6 +18,7 @@ declare class Phaser {
     static CANVAS: number;
     static WEBGL: number;
     static HEADLESS: number;
+    static WEBGL_MULTI: number;
 
     static BITMAPDATA: number;
     static BITMAPTEXT: number;
@@ -1402,6 +1403,7 @@ declare module Phaser {
         seed?: string;
         state?: Phaser.State;
         forceSetTimeOut: boolean;
+        multiTextue: boolean;
 
     }
 

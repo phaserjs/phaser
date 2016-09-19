@@ -328,13 +328,13 @@ PIXI.WebGLRenderer.prototype.setTexturePriority = function (textureNameCollectio
         if (index + 1 < maxTextures)
         {
             imageCache[imageName].base.textureIndex = index + 1;
-
-            this.currentBatchedTextures.push(imageName);
         }
         else
         {
             imageCache[imageName].base.textureIndex = maxTextures - 1;
         }
+
+        this.currentBatchedTextures.push(imageName);
     }
 
     return this.currentBatchedTextures;
