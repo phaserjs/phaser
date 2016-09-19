@@ -2362,7 +2362,7 @@ Phaser.Loader.prototype = {
         xhr.onload = function () {
 
             try {
-                if (xhr.readyState == 4 && xhr.status >= 400 && xhr.status <= 599) { // Handle HTTP status codes of 4xx and 5xx as errors, even if xhr.onerror was not called.
+                if (xhr.readyState === 4 && xhr.status >= 400 && xhr.status <= 599) { // Handle HTTP status codes of 4xx and 5xx as errors, even if xhr.onerror was not called.
                     return onerror.call(_this, file, xhr);
                 }
                 else {
@@ -2476,7 +2476,7 @@ Phaser.Loader.prototype = {
 
         xhr.onload = function () {
             try {
-                if (xhr.readyState == 4 && xhr.status >= 400 && xhr.status <= 599) { // Handle HTTP status codes of 4xx and 5xx as errors, even if xhr.onerror was not called.
+                if (xhr.readyState === 4 && xhr.status >= 400 && xhr.status <= 599) { // Handle HTTP status codes of 4xx and 5xx as errors, even if xhr.onerror was not called.
                     return onerror.call(_this, file, xhr);
                 }
                 else {
@@ -2684,11 +2684,11 @@ Phaser.Loader.prototype = {
                     //  Load the JSON or XML before carrying on with the next file
                     loadNext = false;
 
-                    if (file.format == Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY || file.format == Phaser.Loader.TEXTURE_ATLAS_JSON_HASH || file.format == Phaser.Loader.TEXTURE_ATLAS_JSON_PYXEL)
+                    if (file.format === Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY || file.format === Phaser.Loader.TEXTURE_ATLAS_JSON_HASH || file.format === Phaser.Loader.TEXTURE_ATLAS_JSON_PYXEL)
                     {
                         this.xhrLoad(file, this.transformUrl(file.atlasURL, file), 'text', this.jsonLoadComplete);
                     }
-                    else if (file.format == Phaser.Loader.TEXTURE_ATLAS_XML_STARLING)
+                    else if (file.format === Phaser.Loader.TEXTURE_ATLAS_XML_STARLING)
                     {
                         this.xhrLoad(file, this.transformUrl(file.atlasURL, file), 'text', this.xmlLoadComplete);
                     }
