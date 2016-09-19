@@ -46,7 +46,7 @@ Phaser.Component.Crop.prototype = {
     * @param {Phaser.Rectangle} rect - The Rectangle used during cropping. Pass null or no parameters to clear a previously set crop rectangle.
     * @param {boolean} [copy=false] - If false `cropRect` will be stored as a reference to the given rect. If true it will copy the rect values into a local Phaser Rectangle object stored in cropRect.
     */
-    crop: function(rect, copy) {
+    crop: function (rect, copy) {
 
         if (copy === undefined) { copy = false; }
 
@@ -83,12 +83,17 @@ Phaser.Component.Crop.prototype = {
     *
     * @method
     */
-    updateCrop: function() {
+    updateCrop: function () {
 
         if (!this.cropRect)
         {
             return;
         }
+
+        var oldX = this.texture.crop.x;
+        var oldY = this.texture.crop.y;
+        var oldW = this.texture.crop.width;
+        var oldH = this.texture.crop.height;
 
         this._crop = Phaser.Rectangle.clone(this.cropRect, this._crop);
         this._crop.x += this._frame.x;
@@ -111,6 +116,11 @@ Phaser.Component.Crop.prototype = {
         this.texture.height = this.texture.frame.height;
 
         this.texture._updateUvs();
+
+        if (this.tint !== 0xffffff && (oldX !== cx || oldY !== cy || oldW !== cw || oldH !== ch))
+        {
+            this.texture.requiresReTint = true;
+        }
 
     }
 

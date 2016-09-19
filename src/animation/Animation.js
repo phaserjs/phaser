@@ -244,29 +244,33 @@ Phaser.Animation.prototype = {
     },
 
     /**
-     * Reverses the animation direction
-     *
-     * @method Phaser.Animation#reverse
-     * @return {Phaser.Animation} The animation instance.
-     * */
+    * Reverses the animation direction.
+    *
+    * @method Phaser.Animation#reverse
+    * @return {Phaser.Animation} The animation instance.
+    */
     reverse: function () {
+
         this.reversed = !this.reversed;
 
         return this;
+
     },
 
     /**
-     * Reverses the animation direction for the current/next animation only
-     * Once the onComplete event is called this method will be called again and revert
-     * the reversed state.
-     *
-     * @method Phaser.Animation#reverseOnce
-     * @return {Phaser.Animation} The animation instance.
-     * */
+    * Reverses the animation direction for the current/next animation only
+    * Once the onComplete event is called this method will be called again and revert
+    * the reversed state.
+    *
+    * @method Phaser.Animation#reverseOnce
+    * @return {Phaser.Animation} The animation instance.
+    */
     reverseOnce: function () {
-        this.onComplete.addOnce(this.reverse.bind(this));
+
+        this.onComplete.addOnce(this.reverse, this);
 
         return this.reverse();
+
     },
 
     /**
@@ -768,19 +772,19 @@ Object.defineProperty(Phaser.Animation.prototype, 'frame', {
 
 /**
 * @name Phaser.Animation#speed
-* @property {number} speed - Gets or sets the current speed of the animation in frames per second. Changing this in a playing animation will take effect from the next frame. Minimum value is 1.
+* @property {number} speed - Gets or sets the current speed of the animation in frames per second. Changing this in a playing animation will take effect from the next frame. Value must be greater than 0.
 */
 Object.defineProperty(Phaser.Animation.prototype, 'speed', {
 
     get: function () {
 
-        return Math.round(1000 / this.delay);
+        return 1000 / this.delay;
 
     },
 
     set: function (value) {
 
-        if (value >= 1)
+        if (value > 0)
         {
             this.delay = 1000 / value;
         }

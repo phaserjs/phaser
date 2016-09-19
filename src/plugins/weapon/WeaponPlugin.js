@@ -699,7 +699,7 @@ Phaser.Weapon.prototype.trackPointer = function (pointer, offsetX, offsetY) {
 * @param {Phaser.Sprite|Phaser.Point|Object} [from] - Optionally fires the bullet **from** the `x` and `y` properties of this object. If set this overrides `Weapon.trackedSprite` or `trackedPointer`. Pass `null` to ignore it.
 * @param {number} [x] - The x coordinate, in world space, to fire the bullet **towards**. If left as `undefined` the bullet direction is based on its angle.
 * @param {number} [y] - The y coordinate, in world space, to fire the bullet **towards**. If left as `undefined` the bullet direction is based on its angle.
-* @return {boolean} True if a bullet was successfully fired, otherwise false.
+* @return {Phaser.Bullet} The fired bullet if successful, null otherwise.
 */
 Phaser.Weapon.prototype.fire = function (from, x, y) {
 
@@ -880,7 +880,7 @@ Phaser.Weapon.prototype.fire = function (from, x, y) {
             this.onFireLimit.dispatch(this, this.fireLimit);
         }
     }
-
+    return bullet;
 };
 
 /**
@@ -889,7 +889,7 @@ Phaser.Weapon.prototype.fire = function (from, x, y) {
 *
 * @method Phaser.Weapon#fireAtPointer
 * @param {Phaser.Pointer} [pointer] - The Pointer to fire the bullet towards.
-* @return {boolean} True if a bullet was successfully fired, otherwise false.
+* @return {Phaser.Bullet} The fired bullet if successful, null otherwise.
 */
 Phaser.Weapon.prototype.fireAtPointer = function (pointer) {
 
@@ -905,7 +905,7 @@ Phaser.Weapon.prototype.fireAtPointer = function (pointer) {
 *
 * @method Phaser.Weapon#fireAtSprite
 * @param {Phaser.Sprite} [sprite] - The Sprite to fire the bullet towards.
-* @return {boolean} True if a bullet was successfully fired, otherwise false.
+* @return {Phaser.Bullet} The fired bullet if successful, null otherwise.
 */
 Phaser.Weapon.prototype.fireAtSprite = function (sprite) {
 
@@ -920,7 +920,7 @@ Phaser.Weapon.prototype.fireAtSprite = function (sprite) {
 * @method Phaser.Weapon#fireAtXY
 * @param {number} [x] - The x coordinate, in world space, to fire the bullet towards.
 * @param {number} [y] - The y coordinate, in world space, to fire the bullet towards.
-* @return {boolean} True if a bullet was successfully fired, otherwise false.
+* @return {Phaser.Bullet} The fired bullet if successful, null otherwise.
 */
 Phaser.Weapon.prototype.fireAtXY = function (x, y) {
 

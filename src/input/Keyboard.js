@@ -604,7 +604,7 @@ Phaser.Keyboard.prototype.constructor = Phaser.Keyboard;
 * _Note_: Use `Phaser.KeyCode.KEY` instead of `Phaser.Keyboard.KEY` to refer to a key code;
 * the latter approach is supported for compatibility.
 *
-* @namespace
+* @class Phaser.KeyCode
 */
 Phaser.KeyCode = {
     /** @static */
@@ -814,8 +814,10 @@ Phaser.KeyCode = {
 };
 
 // Duplicate Phaser.KeyCode values in Phaser.Keyboard for compatibility
-for (var key in Phaser.KeyCode) {
-    if (Phaser.KeyCode.hasOwnProperty(key) && !key.match(/[a-z]/)) {
+for (var key in Phaser.KeyCode)
+{
+    if (Phaser.KeyCode.hasOwnProperty(key) && !key.match(/[a-z]/))
+    {
         Phaser.Keyboard[key] = Phaser.KeyCode[key];
     }
 }
