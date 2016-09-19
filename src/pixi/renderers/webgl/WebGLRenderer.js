@@ -178,6 +178,11 @@ PIXI.WebGLRenderer = function(game) {
      */
     this.renderSession = {};
 
+    /**
+     * @property currentBatchedTextures
+     * @type Array
+     */
+    this.currentBatchedTextures = [];
 
     //  Needed?
     this.renderSession.game = this.game;
@@ -250,13 +255,22 @@ PIXI.WebGLRenderer.prototype.initContext = function()
 *
 * The number of textures that can be batched is dependent on hardware. If you provide more textures
 * than can be batched by the GPU, then only those at the start of the array will be used. Generally
-* you shouldn't provide more than 16 textures to this method. You can check the hardware limit 
-* via the `maxTextures` property.
+* you shouldn't provide more than 16 textures to this method. You can check the hardware limit via the
+* `maxTextures` property.
+*
+* You can also check the property `currentBatchedTextures` at any time, to see which textures are currently
+* being batched.
+*
+* To stop all textures from being batched, call this method again with an empty array.
+*
+* To change the textures being batched, call this method with a new array of image keys. The old ones
+* will all be purged out and no-longer batched, and the new ones enabled.
 * 
 * Note: Throws a warning if you haven't enabled Multiple Texture batching support in the Phaser Game config.
 * 
 * @method setTexturePriority
 * @param textureNameCollection {Array} An Array of Texture Cache keys to use for multi-texture batching.
+* @return {Array} An array containing the texture keys that were enabled for batching.
 */
 PIXI.WebGLRenderer.prototype.setTexturePriority = function (textureNameCollection) {
 
@@ -271,6 +285,23 @@ PIXI.WebGLRenderer.prototype.setTexturePriority = function (textureNameCollectio
     var imageName = null;
     var gl = this.gl;
 
+    //  Clear out all previously batched textures and reset their flags.
+    //  If the array has been modified, then the developer will have to
+    //  deal with that in their own way.
+    for (var i = 0; i < this.currentBatchedTextures.length; i++)
+    {
+        imageName = textureNameCollection[index];
+
+        if (!(imageName in imageCache))
+        {
+            continue;
+        }
+        
+        imageCache[imageName].base.textureIndex = 0;
+    }
+
+    this.currentBatchedTextures.length = 0;
+
     // We start from 1 because framebuffer texture uses unit 0.
     for (var index = 0; index < textureNameCollection.length; ++index)
     {
@@ -284,12 +315,16 @@ PIXI.WebGLRenderer.prototype.setTexturePriority = function (textureNameCollectio
         if (index + 1 < maxTextures)
         {
             imageCache[imageName].base.textureIndex = index + 1;
+
+            this.currentBatchedTextures.push(imageName);
         }
         else
         {
             imageCache[imageName].base.textureIndex = maxTextures - 1;
         }
     }
+
+    return this.currentBatchedTextures;
 
 };
 
