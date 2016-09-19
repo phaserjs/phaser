@@ -73,11 +73,6 @@ PIXI.PixiShader = function(gl)
 PIXI.PixiShader.prototype.constructor = PIXI.PixiShader;
 
 PIXI.PixiShader.prototype.initMultitexShader = function () {
-    if (this.fragmentSrc != null) {
-        // Can't run multi-texture batching with filters
-        this.initDefaultShader();
-        return;
-    }
     var gl = this.gl;
     this.MAX_TEXTURES = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);
     var dynamicIfs = '\tif (vTextureIndex == 0.0) gl_FragColor = texture2D(uSamplerArray[0], vTextureCoord) * vColor;\n'
@@ -225,9 +220,9 @@ PIXI.PixiShader.prototype.initDefaultShader = function () {
 *
 * @method init
 */
-PIXI.PixiShader.prototype.init = function()
+PIXI.PixiShader.prototype.init = function(usingFilter)
 {
-    if (PIXI._enableMultiTextureToggle) {
+    if (PIXI._enableMultiTextureToggle && !usingFilter) {
         this.initMultitexShader();
     } else {
         this.initDefaultShader();
