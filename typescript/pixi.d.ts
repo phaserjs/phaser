@@ -1300,6 +1300,7 @@ declare module PIXI {
         clearBeforeRender: boolean;
         width: number;
         height: number;
+        currentBatchedTextures: string[];
         view: HTMLCanvasElement;
         projection: Point;
         offset: Point;
@@ -1318,6 +1319,7 @@ declare module PIXI {
         updateTexture(texture: Texture): void;
         destroy(): void;
         mapBlendModes(): void;
+        setTexturePriority(textureNameCollection: string[]): string[];
 
     }
 
