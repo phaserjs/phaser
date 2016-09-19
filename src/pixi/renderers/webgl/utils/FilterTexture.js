@@ -36,10 +36,6 @@ function _CreateFramebuffer(gl, width, height, scaleMode, textureUnit) {
     if(fbStatus !== gl.FRAMEBUFFER_COMPLETE) {
         console.error('Incomplete GL framebuffer. ', _fbErrors[fbStatus]);
     }
-   // gl.bindTexture(gl.TEXTURE_2D, null);
-   // gl.bindRenderbuffer(gl.RENDERBUFFER, null);
-   // gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-
     framebuffer.width = width;
     framebuffer.height = height;
     framebuffer.targetTexture = colorBuffer;
