@@ -740,6 +740,7 @@ Phaser.Loader.prototype = {
     *     truecolor: 'assets/factory.png'
     * });
     * ```
+    * 
     * The `truecolor` property points to a standard PNG file, that will be used if none of the 
     * compressed formats are supported by the browser / GPU.
     * 

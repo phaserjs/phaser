@@ -2506,6 +2506,7 @@ declare module Phaser {
         spritesheet(key: string, url: string, frameWidth: number, frameHeight: number, frameMax?: number, margin?: number, spacing?: number): Phaser.Loader;
         start(): void;
         text(key: string, url?: string, overwrite?: boolean): Phaser.Loader;
+        texture(key: string, object: any, overwrite?: boolean): Phaser.Loader;
         tilemap(key: string, url?: string, data?: any, format?: number): Phaser.Loader;
         totalLoadedFiles(): number;
         totalLoadedPacks(): number;
