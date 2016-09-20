@@ -714,30 +714,79 @@ Phaser.Loader.prototype = {
     * @return {Phaser.Loader} This Loader instance.
     */
     image: function (key, url, overwrite) {
-        if (typeof url === 'object' && url.constructor === {}.constructor) {
+
+        if (typeof url === 'object')
+        {
             return this.texture(key, url, overwrite);
         }
-        return this.addToFileList('image', key, url, undefined, overwrite, '.png');
+        else
+        {
+            return this.addToFileList('image', key, url, undefined, overwrite, '.png');
+        }
 
     },
 
+    /**
+    * Adds a Compressed Texture Image to the current load queue.
+    *
+    * Compressed Textures are a WebGL only feature, and require 3rd party tools to create.
+    *
+    * The texture path object looks like this:
+    *
+    * ```
+    * load.texture('factory', {
+    *     s3tc: 'assets/factory_dxt1.pvr',
+    *     pvrtc: 'assets/factory_pvrtc.pvr',
+    *     truecolor: 'assets/factory.png'
+    * });
+    * ```
+    * The `truecolor` property points to a standard PNG file, that will be used if none of the 
+    * compressed formats are supported by the browser / GPU.
+    * 
+    * The file is **not** loaded immediately after calling this method. The file is added to the queue ready to be loaded when the loader starts.
+    *
+    * The key must be a unique String. It is used to add the file to the Phaser.Cache upon successful load.
+    *
+    * Retrieve the image via `Cache.getImage(key)`
+    *
+    * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
+    *
+    * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "alien"
+    * and no URL is given then the Loader will set the URL to be "alien.png". It will always add `.png` as the extension.
+    * If you do not desire this action then provide a URL.
+    *
+    * @method Phaser.Loader#texture
+    * @param {string} key - Unique asset key of this image file.
+    * @param {object} object - The texture path data object.
+    * @param {boolean} [overwrite=false] - If an unloaded file with a matching key already exists in the queue, this entry will overwrite it.
+    * @return {Phaser.Loader} This Loader instance.
+    */
     texture: function (key, object, overwrite) {
-        var compression = this.game.renderer.extensions.compression, exkey, foundExt = false;
-        if (this.game.renderType === Phaser.WEBGL) {
-            for (exkey in object) {
-                if (exkey.toUpperCase() in compression) {
-                    this.addToFileList('texture', key, object[exkey], undefined, overwrite, '.pvr');
-                    foundExt = true;
-                    break;
+
+        if (this.game.renderType === Phaser.WEBGL)
+        {
+            var compression = this.game.renderer.extensions.compression;
+            var exkey;
+
+            for (exkey in object)
+            {
+                if (exkey.toUpperCase() in compression)
+                {
+                    return this.addToFileList('texture', key, object[exkey], undefined, overwrite, '.pvr');
                 }
             }
-            // Check if we have a truecolor texture to fallback.
-            if (!foundExt && object['truecolor'])
-            {
-                this.addToFileList('image', key, object['truecolor'], undefined, overwrite, '.png');
-            }
         }
+
+        // Check if we have a truecolor texture to fallback.
+        // Also catches calls to this function that are from a Canvas renderer
+
+        if (object['truecolor'])
+        {
+            this.addToFileList('image', key, object['truecolor'], undefined, overwrite, '.png');
+        }
+
         return this;
+
     },
 
     /**
@@ -2207,11 +2256,15 @@ Phaser.Loader.prototype = {
             case 'physics':
                 this.xhrLoad(file, this.transformUrl(file.url, file), 'text', this.fileComplete);
                 break;
+
             case 'texture':
-                if (file.key.split('_').pop() === 'truecolor') {
+
+                if (file.key.split('_').pop() === 'truecolor')
+                {
                     this.loadImageTag(file);
-                    break;
                 }
+                break;
+
             case 'binary':
                 this.xhrLoad(file, this.transformUrl(file.url, file), 'arraybuffer', this.fileComplete);
                 break;
@@ -2666,7 +2719,7 @@ Phaser.Loader.prototype = {
     },
 
     /**
-    * Called when a file/resources had been downloaded and needs to be processed further.
+    * Called when a file has been downloaded and needs to be processed further.
     *
     * @method Phaser.Loader#fileComplete
     * @private
@@ -2685,12 +2738,19 @@ Phaser.Loader.prototype = {
                 var data = JSON.parse(xhr.responseText);
                 file.data = data || {};
                 break;
+
             case 'texture':
-                if (file.data != null)
+
+                if (file.data !== null)
+                {
                     this.cache.addCompressedTextureMetaData(file.key, file.url, file.url.split('.').pop().toLowerCase(), file.data);
+                }
                 else
+                {
                     this.cache.addCompressedTextureMetaData(file.key, file.url, file.url.split('.').pop().toLowerCase(), xhr.response);
+                }
                 break;
+
             case 'image':
 
                 this.cache.addImage(file.key, file.url, file.data);

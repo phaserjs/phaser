@@ -168,11 +168,12 @@ Phaser.LoaderParser = {
     /**
     * Extract PVR header from loaded binary
     *
-    * @method Phaser.LoaderParser.parsePVR
-    * @param {ArrayBuffer} arrayBuffer - The BaseTexture this font uses.
+    * @method Phaser.LoaderParser.pvr
+    * @param {ArrayBuffer} arrayBuffer
     * @return {object} The parsed PVR file including texture data.
     */
     pvr: function (arrayBuffer) {
+
         // Reference: http://cdn.imgtec.com/sdk-documentation/PVR+File+Format.Specification.pdf
         // PVR 3 header structure
         // ---------------------------------------
@@ -206,9 +207,10 @@ Phaser.LoaderParser = {
                 compressionAlgorithm = 'PVRTC';
             } else if (pixelFormat >= 7 && pixelFormat <= 11) {
                 compressionAlgorithm = 'S3TC';
-            } else if (pixelFormat == 6) {
+            } else if (pixelFormat === 6) {
                 compressionAlgorithm = 'ETC1';
             }
+
             switch (pixelFormat) {
                 case 0:
                     glExtensionFormat = 0x8C01;
@@ -237,6 +239,7 @@ Phaser.LoaderParser = {
                 default:
                     glExtensionFormat = -1;
             }
+
             pvrHeader = {
                 complete: true,
                 fileFormat: 'PVR',
@@ -256,17 +259,20 @@ Phaser.LoaderParser = {
                 glExtensionFormat: glExtensionFormat
             };
         }
+
         return pvrHeader;
+
     },
 
     /**
     * Extract DDS header from loaded binary
     *
-    * @method Phaser.LoaderParser.parseDDS
-    * @param {ArrayBuffer} arrayBuffer - The BaseTexture this font uses.
+    * @method Phaser.LoaderParser.dds
+    * @param {ArrayBuffer} arrayBuffer
     * @return {object} The parsed DDS file including texture data.
     */
     dds: function (arrayBuffer) {
+
         // Reference at: https://msdn.microsoft.com/en-us/library/windows/desktop/bb943982(v=vs.85).aspx
         // DDS header structure
         // ---------------------------------------
@@ -350,17 +356,20 @@ Phaser.LoaderParser = {
                 ddsHeader.miscFlag = uintArray[35];
             }
         }
+
         return ddsHeader;
+
     },
 
     /**
     * Extract KTX header from loaded binary
     *
-    * @method Phaser.LoaderParser.parseKTX
-    * @param {ArrayBuffer} arrayBuffer - The BaseTexture this font uses.
+    * @method Phaser.LoaderParser.ktx
+    * @param {ArrayBuffer} arrayBuffer
     * @return {object} The parsed KTX file including texture data.
     */
     ktx: function (arrayBuffer) {
+
         // Reference: https://www.khronos.org/opengles/sdk/tools/KTX/file_format_spec/
         // KTX header structure
         // ---------------------------------------
@@ -423,6 +432,7 @@ Phaser.LoaderParser = {
                     compressionAlgorithm = 'S3TC';
                     break;
             }
+
             ktxHeader = {
                 complete: true,
                 fileFormat: 'KTX',
@@ -445,17 +455,20 @@ Phaser.LoaderParser = {
                 textureData: byteArray.subarray((imageSizeOffset + 1) * 4, imageSize + 100)
             };
         }
+
         return ktxHeader;
+
     },
 
     /**
     * Extract PKM header from loaded binary
     *
-    * @method Phaser.LoaderParser.parsePKM
-    * @param {ArrayBuffer} arrayBuffer - The BaseTexture this font uses.
+    * @method Phaser.LoaderParser.pkm
+    * @param {ArrayBuffer} arrayBuffer
     * @return {object} The parsed PKM file including texture data.
     */
     pkm: function (arrayBuffer) {
+
         // PKM header structure
         // ---------------------------------------
         // address: 0, size 4 bytes: for 'PKM '
@@ -474,6 +487,7 @@ Phaser.LoaderParser = {
             byteArray[1] === 0x4B &&
             byteArray[2] === 0x4D &&
             byteArray[3] === 0x20) {
+
             pkmHeader = {
                 complete: true,
                 fileFormat: 'PKM',
@@ -486,6 +500,9 @@ Phaser.LoaderParser = {
                 textureData: byteArray.subarray(16, byteArray.length)
             };
         }
+
         return pkmHeader;
+
     }
+
 };

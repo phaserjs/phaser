@@ -228,20 +228,33 @@ Phaser.Cache.prototype = {
     //  Add Methods //
     //////////////////
 
+    /**
+    * Add a new canvas object in to the cache.
+    *
+    * @method Phaser.Cache#addCompressedTextureMetaData
+    * @private
+    * @param {string} key - The key that this asset will be stored in the cache under. This should be unique within this cache.
+    * @param {string} url
+    * @param {string} extension
+    * @param {array} arrayBuffer
+    * @return {object} The compressed texture entry.
+    */
     addCompressedTextureMetaData: function (key, url, extension, arrayBuffer) {
+
         if (this.checkImageKey(key))
         {
             this.removeImage(key);
         }
         
-        var data = (extension in Phaser.LoaderParser) ? Phaser.LoaderParser[extension](arrayBuffer) : arrayBuffer; 
+        var data = (extension in Phaser.LoaderParser) ? Phaser.LoaderParser[extension](arrayBuffer) : arrayBuffer;
+
         var texture = {
             key: key,
             url: url,
             data: data,
             base: new PIXI.BaseTexture(data),
             frame: new Phaser.Frame(0, 0, 0, data.width, data.height, key),
-            frameData: new Phaser.FrameData(),            
+            frameData: new Phaser.FrameData(),
             fileFormat: extension
         };
 
@@ -251,16 +264,8 @@ Phaser.Cache.prototype = {
 
         this._resolveURL(url, texture);
 
-        if (key === '__default')
-        {
-            Phaser.Cache.DEFAULT = new PIXI.Texture(img.base);
-        }
-        else if (key === '__missing')
-        {
-            Phaser.Cache.MISSING = new PIXI.Texture(img.base);
-        }
+        return texture;
 
-        return texture;        
     },
 
     /**
