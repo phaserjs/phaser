@@ -318,7 +318,6 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * Weapon.fire has two new arguments: `offsetX` and `offsetY`. If the bullet is fired from a tracked Sprite or Pointer, or the `from` argument is set, this applies a horizontal and vertical offset from the launch position.
 * Weapon.fireOffset attempts to fire a single Bullet from a tracked Sprite or Pointer, but applies an offset to the position first. This is a shorter form of calling `Weapon.fire` and passing in the offset arguments.
 * Weapon.fireMany attempts to fire multiple bullets from the positions defined in the given array. If you provide a `from` argument, or if there is a tracked Sprite or Pointer, then the positions are treated as __offsets__ from the given objects position. If `from` is undefined, and there is no tracked object, then the bullets are fired from the given positions, as they exist in the world.
-*
 
 ### Updates
 
@@ -338,9 +337,9 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 
 Please note that Phaser uses a custom build of Pixi and always has done. The following changes have been made to our custom build, not to Pixi in general.
 
-*
-*
-*
+* WebGL Renderer and shaders updated to support multi-texture batching (see main docs above)
+* WebGL and Canvas both now support rotated texture atlas frames.
+* WebGL support for compressed texture formats added.
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
