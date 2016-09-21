@@ -42,23 +42,31 @@ PIXI.CanvasTinter.tintWithMultiply = function(texture, color, canvas)
     var context = canvas.getContext("2d");
 
     var crop = texture.crop;
+    var w = crop.width;
+    var h = crop.height;
 
-    if (canvas.width !== crop.width || canvas.height !== crop.height)
+    if (texture.rotated)
     {
-        canvas.width = crop.width;
-        canvas.height = crop.height;
+        w = h;
+        h = crop.width;
     }
 
-    context.clearRect(0, 0, crop.width, crop.height);
+    if (canvas.width !== w || canvas.height !== h)
+    {
+        canvas.width = w;
+        canvas.height = h;
+    }
+
+    context.clearRect(0, 0, w, h);
 
     context.fillStyle = "#" + ("00000" + (color | 0).toString(16)).substr(-6);
-    context.fillRect(0, 0, crop.width, crop.height);
+    context.fillRect(0, 0, w, h);
 
     context.globalCompositeOperation = "multiply";
-    context.drawImage(texture.baseTexture.source, crop.x, crop.y, crop.width, crop.height, 0, 0, crop.width, crop.height);
+    context.drawImage(texture.baseTexture.source, crop.x, crop.y, w, h, 0, 0, w, h);
 
     context.globalCompositeOperation = "destination-atop";
-    context.drawImage(texture.baseTexture.source, crop.x, crop.y, crop.width, crop.height, 0, 0, crop.width, crop.height);
+    context.drawImage(texture.baseTexture.source, crop.x, crop.y, w, h, 0, 0, w, h);
 
 };
 
@@ -76,18 +84,29 @@ PIXI.CanvasTinter.tintWithPerPixel = function(texture, color, canvas)
     var context = canvas.getContext("2d");
 
     var crop = texture.crop;
+    var w = crop.width;
+    var h = crop.height;
 
-    canvas.width = crop.width;
-    canvas.height = crop.height;
+    if (texture.rotated)
+    {
+        w = h;
+        h = crop.width;
+    }
+
+    if (canvas.width !== w || canvas.height !== h)
+    {
+        canvas.width = w;
+        canvas.height = h;
+    }
   
     context.globalCompositeOperation = "copy";
 
-    context.drawImage(texture.baseTexture.source, crop.x, crop.y, crop.width, crop.height, 0, 0, crop.width, crop.height);
+    context.drawImage(texture.baseTexture.source, crop.x, crop.y, w, h, 0, 0, w, h);
 
     var rgbValues = PIXI.hex2rgb(color);
     var r = rgbValues[0], g = rgbValues[1], b = rgbValues[2];
 
-    var pixelData = context.getImageData(0, 0, crop.width, crop.height);
+    var pixelData = context.getImageData(0, 0, w, h);
 
     var pixels = pixelData.data;
 

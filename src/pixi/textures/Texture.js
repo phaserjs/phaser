@@ -248,8 +248,15 @@ PIXI.Texture.prototype._updateUvs = function()
     this._uvs.y3 = (frame.y + frame.height) / th;
 };
 
+/**
+ * Updates the internal WebGL UV cache.
+ *
+ * @method _updateUvsInverted
+ * @private
+ */
 PIXI.Texture.prototype._updateUvsInverted = function () {
-    if(!this._uvs)this._uvs = new PIXI.TextureUvs();
+
+    if (!this._uvs) { this._uvs = new PIXI.TextureUvs(); }
 
     var frame = this.crop;
     var tw = this.baseTexture.width;
@@ -266,6 +273,7 @@ PIXI.Texture.prototype._updateUvsInverted = function () {
 
     this._uvs.x3 = frame.x / tw;
     this._uvs.y3 = (frame.y + frame.width) / th;
+
 };
 
 /**
