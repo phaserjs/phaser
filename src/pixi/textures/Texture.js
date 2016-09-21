@@ -248,6 +248,26 @@ PIXI.Texture.prototype._updateUvs = function()
     this._uvs.y3 = (frame.y + frame.height) / th;
 };
 
+PIXI.Texture.prototype._updateUvsInverted = function () {
+    if(!this._uvs)this._uvs = new PIXI.TextureUvs();
+
+    var frame = this.crop;
+    var tw = this.baseTexture.width;
+    var th = this.baseTexture.height;
+    
+    this._uvs.x0 = frame.x / tw;
+    this._uvs.y0 = frame.y / th;
+
+    this._uvs.x1 = (frame.x + frame.height) / tw;
+    this._uvs.y1 = frame.y / th;
+
+    this._uvs.x2 = (frame.x + frame.height) / tw;
+    this._uvs.y2 = (frame.y + frame.width) / th;
+
+    this._uvs.x3 = frame.x / tw;
+    this._uvs.y3 = (frame.y + frame.width) / th;
+};
+
 /**
  * Helper function that creates a new a Texture based on the given canvas element.
  *

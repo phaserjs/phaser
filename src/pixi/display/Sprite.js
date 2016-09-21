@@ -482,6 +482,33 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession, matrix)
     var tx = (wt.tx * renderSession.resolution) + renderSession.shakeX;
     var ty = (wt.ty * renderSession.resolution) + renderSession.shakeY;
 
+    var cw = this.texture.crop.width;
+    var ch = this.texture.crop.height;
+
+    if (this.texture.rotated)
+    {
+        var a = wt.a;
+        var b = wt.b;
+        var c = wt.c;
+        var d = wt.d;
+        var e = cw;
+        
+        // Offset before rotating
+        tx = wt.c * ch + tx;
+        ty = wt.d * ch + ty;
+        
+        // Rotate matrix by 90 degrees
+        // We use precalculated values for sine and cosine of rad(90)
+        wt.a = a * 6.123233995736766e-17 + -c;
+        wt.b = b * 6.123233995736766e-17 + -d;
+        wt.c = a + c * 6.123233995736766e-17;
+        wt.d = b + d * 6.123233995736766e-17;
+
+        // Update cropping dimensions.
+        cw = ch;
+        ch = e;
+    }
+
     //  Allow for pixel rounding
     if (renderSession.roundPixels)
     {
@@ -492,19 +519,6 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession, matrix)
     else
     {
         renderSession.context.setTransform(wt.a, wt.b, wt.c, wt.d, tx, ty);
-    }
-
-    var cw = this.texture.crop.width;
-    var ch = this.texture.crop.height;
-
-    if (this.texture.rotated)
-    {
-        //  90 degree coordinate rotation
-        cw = ch;
-        ch = this.texture.crop.width;
-
-        renderSession.context.translate(0, cw);
-        renderSession.context.rotate(-1.5707963267948966);
     }
 
     dx /= resolution;

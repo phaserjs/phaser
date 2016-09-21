@@ -286,6 +286,39 @@ PIXI.WebGLSpriteBatch.prototype.render = function (sprite, matrix) {
     var tx = wt.tx;
     var ty = wt.ty;
 
+    var cw = texture.crop.width;
+    var ch = texture.crop.height;
+
+    if (texture.rotated)
+    {
+        var a0 = wt.a;
+        var b0 = wt.b;
+        var c0 = wt.c;
+        var d0 = wt.d;
+        var _w1 = w1;
+        var _w0 = w0;
+
+        // Offset before rotating
+        tx = wt.c * ch + tx;
+        ty = wt.d * ch + ty;
+        
+        // Rotate matrix by 90 degrees
+        // We use precalculated values for sine and cosine of rad(90)
+        a = a0 * 6.123233995736766e-17 + -c0;
+        b = b0 * 6.123233995736766e-17 + -d0;
+        c = a0 + c0 * 6.123233995736766e-17;
+        d = b0 + d0 * 6.123233995736766e-17;
+
+        // Update UV coordinates
+        texture._updateUvsInverted();
+
+        // Rotate dimensions
+        w0 = h0;
+        w1 = h1;
+        h0 = _w0;
+        h1 = _w1;   
+    }
+
     var colors = this.colors;
     var positions = this.positions;
     var tint = sprite.tint;
