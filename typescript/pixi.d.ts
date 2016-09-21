@@ -265,6 +265,7 @@ declare module PIXI {
         scaleMode: scaleModes;
         skipRender: boolean;
         source: HTMLImageElement;
+        textureIndex: number;
         width: number;
 
         listeners(eventName: string): Function[];

@@ -93,6 +93,7 @@ PIXI.BaseTexture = function(source, scaleMode)
     this.mipmap = false;
 
      /**
+     * The multi texture batching index number.
      * @property textureIndex
      * @type Number
      */
