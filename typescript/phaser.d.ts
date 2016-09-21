@@ -1353,7 +1353,6 @@ declare module Phaser {
         name: string;
         right: number;
         rotated: boolean;
-        rotationDirection: string;
         sourceSizeH: number;
         sourceSizeW: number;
         spriteSourceSizeH: number;

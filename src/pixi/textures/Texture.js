@@ -134,6 +134,14 @@ PIXI.Texture = function(baseTexture, frame, crop, trim)
      */
     this.crop = crop || new PIXI.Rectangle(0, 0, 1, 1);
 
+    /**
+     * A flag that controls if this frame is rotated or not.
+     * Rotation allows you to use rotated frames in texture atlas packing, it has nothing to do with
+     * Sprite rotation.
+     *
+     * @property rotated
+     * @type Boolean
+     */
     this.rotated = false;
 
     if (baseTexture.hasLoaded)

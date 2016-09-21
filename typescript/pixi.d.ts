@@ -1080,6 +1080,7 @@ declare module PIXI {
         width: number;
         scope: any;
         valid: boolean;
+        rotated: boolean;
 
         listeners(eventName: string): Function[];
         emit(eventName: string, data?: any): boolean;
