@@ -2482,7 +2482,7 @@ declare module Phaser {
         getAsset(type: string, key: string): any;
         getAssetIndex(type: string, key: string): number;
         getAudioURL(urls: any[]): void;
-        image(key: string, url?: string, overwrite?: boolean): Phaser.Loader;
+        image(key: string, url?: string | any, overwrite?: boolean): Phaser.Loader;
         images(keys: string[], urls?: string[]): Phaser.Loader;
         json(key: string, url?: string, overwrite?: boolean): Phaser.Loader;
         jsonLoadComplete(file: any, xhr: XMLHttpRequest): void;

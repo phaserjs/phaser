@@ -707,9 +707,30 @@ Phaser.Loader.prototype = {
     * and no URL is given then the Loader will set the URL to be "alien.png". It will always add `.png` as the extension.
     * If you do not desire this action then provide a URL.
     *
+    * This method also supports passing in a texture object as the `url` argument. This allows you to load
+    * compressed textures into Phaser. You can also use `Loader.texture` to do this.
+    * 
+    * Compressed Textures are a WebGL only feature, and require 3rd party tools to create.
+    *
+    * Supported texture compression formats are: PVRTC, S3TC and ETC1.
+    * Supported file formats are: PVR, DDS, KTX and PKM.
+    *
+    * The texture path object looks like this:
+    *
+    * ```
+    * load.image('factory', {
+    *     s3tc: 'assets/factory_dxt1.pvr',
+    *     pvrtc: 'assets/factory_pvrtc.pvr',
+    *     truecolor: 'assets/factory.png'
+    * });
+    * ```
+    * 
+    * The `truecolor` property points to a standard PNG file, that will be used if none of the 
+    * compressed formats are supported by the browser / GPU.
+    *
     * @method Phaser.Loader#image
     * @param {string} key - Unique asset key of this image file.
-    * @param {string} [url] - URL of an image file. If undefined or `null` the url will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
+    * @param {string|object} [url] - URL of an image file. If undefined or `null` the url will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png". Can also be a texture data object.
     * @param {boolean} [overwrite=false] - If an unloaded file with a matching key already exists in the queue, this entry will overwrite it.
     * @return {Phaser.Loader} This Loader instance.
     */
@@ -730,6 +751,9 @@ Phaser.Loader.prototype = {
     * Adds a Compressed Texture Image to the current load queue.
     *
     * Compressed Textures are a WebGL only feature, and require 3rd party tools to create.
+    *
+    * Supported texture compression formats are: PVRTC, S3TC and ETC1.
+    * Supported file formats are: PVR, DDS, KTX and PKM.
     *
     * The texture path object looks like this:
     *
