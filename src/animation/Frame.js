@@ -70,12 +70,6 @@ Phaser.Frame = function (index, x, y, width, height, name) {
     this.rotated = false;
 
     /**
-    * @property {string} rotationDirection - Either 'cw' or 'ccw', rotation is always 90 degrees.
-    * @default 'cw'
-    */
-    this.rotationDirection = 'cw';
-
-    /**
     * @property {boolean} trimmed - Was it trimmed when packed?
     * @default
     */
