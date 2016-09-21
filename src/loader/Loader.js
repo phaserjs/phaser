@@ -711,14 +711,19 @@ Phaser.Loader.prototype = {
     * compressed textures into Phaser. You can also use `Loader.texture` to do this.
     * 
     * Compressed Textures are a WebGL only feature, and require 3rd party tools to create.
+    * Available tools include Texture Packer, PVRTexTool, DirectX Texture Tool and Mali Texture Compression Tool.
     *
     * Supported texture compression formats are: PVRTC, S3TC and ETC1.
     * Supported file formats are: PVR, DDS, KTX and PKM.
+    *
+    * The formats that support all 3 compression algorithms are PVR and KTX.
+    * PKM only supports ETC1, and DDS only S3TC for now.
     *
     * The texture path object looks like this:
     *
     * ```
     * load.image('factory', {
+    *     etc1: 'assets/factory_etc1.pkm',
     *     s3tc: 'assets/factory_dxt1.pvr',
     *     pvrtc: 'assets/factory_pvrtc.pvr',
     *     truecolor: 'assets/factory.png'
@@ -751,14 +756,19 @@ Phaser.Loader.prototype = {
     * Adds a Compressed Texture Image to the current load queue.
     *
     * Compressed Textures are a WebGL only feature, and require 3rd party tools to create.
+    * Available tools include Texture Packer, PVRTexTool, DirectX Texture Tool and Mali Texture Compression Tool.
     *
     * Supported texture compression formats are: PVRTC, S3TC and ETC1.
     * Supported file formats are: PVR, DDS, KTX and PKM.
+    * 
+    * The formats that support all 3 compression algorithms are PVR and KTX.
+    * PKM only supports ETC1, and DDS only S3TC for now.
     *
     * The texture path object looks like this:
     *
     * ```
     * load.texture('factory', {
+    *     etc1: 'assets/factory_etc1.pkm',
     *     s3tc: 'assets/factory_dxt1.pvr',
     *     pvrtc: 'assets/factory_pvrtc.pvr',
     *     truecolor: 'assets/factory.png'
@@ -777,7 +787,7 @@ Phaser.Loader.prototype = {
     * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
     *
     * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "alien"
-    * and no URL is given then the Loader will set the URL to be "alien.png". It will always add `.png` as the extension.
+    * and no URL is given then the Loader will set the URL to be "alien.pvr". It will always add `.pvr` as the extension.
     * If you do not desire this action then provide a URL.
     *
     * @method Phaser.Loader#texture
