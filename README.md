@@ -326,7 +326,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * Docs typo fixes (thanks @JTronLabs @samme)
 * `Phaser.Line.fromSprite` now uses the Sprite.centerX and centerY properties if the `useCenter` argument is true. Before it required you to have overridden the Sprite and added the property yourself (thanks @samme #2729)
 * Updated the pointer check code in the Device class, to get rid of the message `Navigator.pointerEnabled is a non-standard API added for experiments only. It will be removed in near future.` in Chrome.
-*
+* The P2 Physics library has been updated to 0.7.1. This is still quite out of date, but as soon as they release their latest build (hopefully soon) we'll update to that.
 
 ### Bug Fixes
 
