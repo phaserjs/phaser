@@ -339,6 +339,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * Groups with `fixedToCamera` set on them now factor in the camera scale (thanks @kevinAlbs #2771)
 * Text.width and Text.height now divide the result by the Text.resolution, to avoid incorrect dimensions on High DPI devices (thanks @mattahj #2146)
 * If you called Video.changeSource, and then immediately called Video.play after it, it would fire the `onComplete` event twice (thanks @jaraiza #2543)
+* The Video.playing property didn't check to see if the Video existed, and would throw the error `Uncaught TypeError: Cannot read property 'paused' of null` if you called it after destroying the video (thanks @Tetley #2740)
 
 ### Pixi Updates
 

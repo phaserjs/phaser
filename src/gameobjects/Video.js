@@ -1414,7 +1414,7 @@ Object.defineProperty(Phaser.Video.prototype, "playing", {
 
     get: function () {
 
-        return !(this.video.paused && this.video.ended);
+        return (this.video) ? !(this.video.paused && this.video.ended) : false;
 
     }
 
