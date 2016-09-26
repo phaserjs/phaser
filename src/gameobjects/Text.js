@@ -132,6 +132,14 @@ Phaser.Text = function (game, x, y, text, style) {
     this.useAdvancedWrap = false;
 
     /**
+     * The Regular Expression that is used to split the text up into lines, in
+     * multi-line text. By default this is `/(?:\r\n|\r|\n)/`.
+     * You can change this RegExp to be anything else that you may need.
+     * @property {Object} splitRegExp
+     */
+    this.splitRegExp = /(?:\r\n|\r|\n)/;
+
+    /**
      * @property {number} _res - Internal canvas resolution var.
      * @private
      */
@@ -354,7 +362,7 @@ Phaser.Text.prototype.setStyle = function (style, update) {
 };
 
 /**
-* Renders text. This replaces the Pixi.Text.updateText function as we need a few extra bits in here.
+* Renders text to the internal canvas.
 *
 * @method Phaser.Text#updateText
 * @private
@@ -373,7 +381,7 @@ Phaser.Text.prototype.updateText = function () {
     }
 
     //  Split text into lines
-    var lines = outputText.split(/(?:\r\n|\r|\n)/);
+    var lines = outputText.split(this.splitRegExp);
 
     //  Calculate text width
     var tabs = this.style.tabs;

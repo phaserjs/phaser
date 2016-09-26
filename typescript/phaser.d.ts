@@ -4928,6 +4928,7 @@ declare module Phaser {
         shadowOffsetX: number;
         shadowOffsetY: number;
         shadowStroke: boolean;
+        splitRegExp: any;
         stroke: string;
         strokeColors: string[];
         strokeThickness: number;
