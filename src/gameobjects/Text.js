@@ -2237,6 +2237,7 @@ Object.defineProperty(Phaser.Text.prototype, 'shadowFill', {
 });
 
 /**
+* The width of the Text object in pixels. This is width of the Texture frame / the Text.resolution.
 * @name Phaser.Text#width
 * @property {number} width - The width of the Text. Setting this will modify the scale to achieve the value requested.
 */
@@ -2250,7 +2251,7 @@ Object.defineProperty(Phaser.Text.prototype, 'width', {
             this.dirty = false;
         }
 
-        return this.scale.x * this.texture.frame.width;
+        return this.scale.x * (this.texture.frame.width / this.resolution);
     },
 
     set: function(value) {
@@ -2262,6 +2263,7 @@ Object.defineProperty(Phaser.Text.prototype, 'width', {
 });
 
 /**
+* The height of the Text object in pixels. This is height of the Texture frame / the Text.resolution.
 * @name Phaser.Text#height
 * @property {number} height - The height of the Text. Setting this will modify the scale to achieve the value requested.
 */
@@ -2275,7 +2277,7 @@ Object.defineProperty(Phaser.Text.prototype, 'height', {
             this.dirty = false;
         }
 
-        return this.scale.y * this.texture.frame.height;
+        return this.scale.y * (this.texture.frame.height / this.resolution);
     },
 
     set: function(value) {
