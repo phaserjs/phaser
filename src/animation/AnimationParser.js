@@ -57,15 +57,17 @@ Phaser.AnimationParser = {
         var column = Math.floor((height - margin) / (frameHeight + spacing));
         var total = row * column;
 
-        console.assert(typeof skipFrames === "number");
-        if (skipFrames > total || skipFrames < -total) {
+        if (skipFrames > total || skipFrames < -total)
+        {
             console.warn(
                 "Phaser.AnimationParser.spriteSheet: skipFrames = " +
                 skipFrames.toString() + " is larger than total sprite number " +
                 total.toString());
             return null;
         }
-        if (skipFrames < 0) {
+
+        if (skipFrames < 0)
+        {
             // Allow negative skipframes.
             skipFrames = total + skipFrames;
         }
