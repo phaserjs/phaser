@@ -319,6 +319,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * Weapon.fireOffset attempts to fire a single Bullet from a tracked Sprite or Pointer, but applies an offset to the position first. This is a shorter form of calling `Weapon.fire` and passing in the offset arguments.
 * Weapon.fireMany attempts to fire multiple bullets from the positions defined in the given array. If you provide a `from` argument, or if there is a tracked Sprite or Pointer, then the positions are treated as __offsets__ from the given objects position. If `from` is undefined, and there is no tracked object, then the bullets are fired from the given positions, as they exist in the world.
 * When loading a Sprite Sheet you can now specify the number of frames to skip, as the frames are extracted from the sheet and converted to Frames (thanks @arefiev #2763)
+* Math.random returns a random float in the range given (thanks @JTronLabs #2760)
 
 ### Updates
 
@@ -327,6 +328,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * `Phaser.Line.fromSprite` now uses the Sprite.centerX and centerY properties if the `useCenter` argument is true. Before it required you to have overridden the Sprite and added the property yourself (thanks @samme #2729)
 * Updated the pointer check code in the Device class, to get rid of the message `Navigator.pointerEnabled is a non-standard API added for experiments only. It will be removed in near future.` in Chrome.
 * The P2 Physics library has been updated to 0.7.1. This is still quite out of date, but as soon as they release their latest build (hopefully soon) we'll update to that.
+* Math.between has been strengthened and the docs improved (thanks @JTronLabs #2760)
 
 ### Bug Fixes
 
