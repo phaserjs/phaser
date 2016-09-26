@@ -4096,7 +4096,7 @@ declare module Phaser {
         sow(seeds: any[]): void;
         state(state?: string): string;
         timestamp(min: number, max: number): number;
-        uuid(): number;
+        uuid(): string;
         weightedPick<T>(ary: T[]): T;
 
     }
