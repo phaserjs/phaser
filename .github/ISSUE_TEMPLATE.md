@@ -10,5 +10,8 @@ This Issue is about (delete as applicable)
 
 API errors must include example code showing what happens, and why you don't believe this is the expected behavior. Issues posted without code take _far_ longer to get resolved, sometimes not ever.
 
+If the issue is in a current version of Phaser, then you can use the [Phaser Sandbox](http://phaser.io/sandbox) to demonstrate it. Otherwise feel free to use another service, such as jsbin, or if you really must, codepen. If we can run it, and see the error, we can usually fix it.
+
 If your Issue contains _any_ form of hostility it will be instantly closed.
+
 **Be nice.**
