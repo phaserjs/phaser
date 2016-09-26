@@ -338,6 +338,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * The Weapon Plugin will no longer crash if the Weapon's bullets have not yet been initialized before setting a new bullet class (thanks @JTronLabs #2731)
 * Groups with `fixedToCamera` set on them now factor in the camera scale (thanks @kevinAlbs #2771)
 * Text.width and Text.height now divide the result by the Text.resolution, to avoid incorrect dimensions on High DPI devices (thanks @mattahj #2146)
+* If you called Video.changeSource, and then immediately called Video.play after it, it would fire the `onComplete` event twice (thanks @jaraiza #2543)
 
 ### Pixi Updates
 

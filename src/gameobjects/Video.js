@@ -202,6 +202,13 @@ Phaser.Video = function (game, key, url) {
     this._pending = false;
 
     /**
+    * @property {boolean} _pendingChangeSource - Internal var tracking play pending.
+    * @private
+    * @default
+    */
+    this._pendingChangeSource = false;
+
+    /**
     * @property {boolean} _autoplay - Internal var tracking autoplay when changing source.
     * @private
     * @default
@@ -633,7 +640,9 @@ Phaser.Video.prototype = {
     },
 
     /**
-     * Starts this video playing if it's not already doing so.
+     * Starts this video playing.
+     * 
+     * If the video is already playing, or has been queued to play with `changeSource` then this method just returns.
      *
      * @method Phaser.Video#play
      * @param {boolean} [loop=false] - Should the video loop automatically when it reaches the end? Please note that at present some browsers (i.e. Chrome) do not support *seamless* video looping.
@@ -641,6 +650,11 @@ Phaser.Video.prototype = {
      * @return {Phaser.Video} This Video object for method chaining.
      */
     play: function (loop, playbackRate) {
+
+        if (this._pendingChangeSource)
+        {
+            return this;
+        }
 
         if (loop === undefined) { loop = false; }
         if (playbackRate === undefined) { playbackRate = 1; }
@@ -756,7 +770,7 @@ Phaser.Video.prototype = {
             }
             else
             {
-                this.video.src = "";
+                this.video.src = '';
 
                 if (this.videoStream['active'])
                 {
@@ -774,7 +788,6 @@ Phaser.Video.prototype = {
                     {
                         this.videoStream.stop();
                     }
-
                 }
             }
 
@@ -981,6 +994,8 @@ Phaser.Video.prototype = {
 
         this.video.pause();
 
+        this._pendingChangeSource = true;
+
         this.retry = this.retryLimit;
 
         this._retryID = window.setTimeout(this.checkVideoProgress.bind(this), this.retryInterval);
@@ -1011,6 +1026,8 @@ Phaser.Video.prototype = {
         // if (this.video.readyState === 2 || this.video.readyState === 4)
         if (this.video.readyState === 4)
         {
+            this._pendingChangeSource = false;
+
             //  We've got enough data to update the texture for playback
             this.updateTexture();
         }
