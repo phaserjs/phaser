@@ -23,9 +23,10 @@ Phaser.AnimationParser = {
     * @param {number} [frameMax=-1] - The total number of animation frames to extract from the Sprite Sheet. The default value of -1 means "extract all frames".
     * @param {number} [margin=0] - If the frames have been drawn with a margin, specify the amount here.
     * @param {number} [spacing=0] - If the frames have been drawn with spacing between them, specify the amount here.
+    * @param {number} [skipFrames=0] - Skip a number of frames. Useful when there are multiple sprite sheets in one image.
     * @return {Phaser.FrameData} A FrameData object containing the parsed frames.
     */
-    spriteSheet: function (game, key, frameWidth, frameHeight, frameMax, margin, spacing) {
+    spriteSheet: function (game, key, frameWidth, frameHeight, frameMax, margin, spacing, skipFrames) {
 
         var img = key;
 
@@ -56,9 +57,22 @@ Phaser.AnimationParser = {
         var column = Math.floor((height - margin) / (frameHeight + spacing));
         var total = row * column;
 
+        console.assert(typeof skipFrames === "number");
+        if (skipFrames > total || skipFrames < -total) {
+            console.warn(
+                "Phaser.AnimationParser.spriteSheet: skipFrames = " +
+                skipFrames.toString() + " is larger than total sprite number " +
+                total.toString());
+            return null;
+        }
+        if (skipFrames < 0) {
+            // Allow negative skipframes.
+            skipFrames = total + skipFrames;
+        }
+
         if (frameMax !== -1)
         {
-            total = frameMax;
+            total = skipFrames + frameMax;
         }
 
         //  Zero or smaller than frame sizes?
