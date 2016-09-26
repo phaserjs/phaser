@@ -33,16 +33,24 @@ Phaser.Math = {
     * @return {number} A floating point number between min (inclusive) and max (exclusive).
     */
     random: function (min, max) {
+
         if (min === undefined) { min = 0; }
         if (max === undefined) { max = 1; }
 
-        if ( min < max ) {
+        if (min === max)
+        {
+            return min;
+        }
+
+        if (min < max)
+        {
             var temp = min;
             min = max;
             max = temp;
         }
 
-        return Math.random() * (max - min) + min;
+        return (Math.random() * (max - min) + min);
+
     },
 
     /**
@@ -55,10 +63,17 @@ Phaser.Math = {
     * @return {number} An integer between min (inclusive) and max (inclusive).
     */
     between: function (min, max) {
+
         if (min === undefined) { min = 0; }
         if (max === undefined) { max = 1; }
 
-        if ( min < max ) {
+        if (min === max)
+        {
+            return min;
+        }
+
+        if (min < max)
+        {
             var temp = min;
             min = max;
             max = temp;
@@ -66,7 +81,9 @@ Phaser.Math = {
 
         min = Math.ceil(min);
         max = Math.floor(max);
+
         return Math.floor(Math.random() * (max - min + 1)) + min;
+
     },
 
     /**
