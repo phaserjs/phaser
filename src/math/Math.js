@@ -24,17 +24,49 @@ Phaser.Math = {
     PI2: Math.PI * 2,
 
     /**
-    * Returns a number between the `min` and `max` values.
+    * Returns a random float in the range `[min, max)`. If these parameters are not in order than they will be put in order.
+    * Default is 0 for `min` and 1 for `max`.
+    *
+    * @method Phaser.Math#random
+    * @param {number} min - The minimum value. Must be a Number.
+    * @param {number} max - The maximum value. Must be a Number.
+    * @return {number} A floating point number between min (inclusive) and max (exclusive).
+    */
+    random: function (min, max) {
+        if (min === undefined) { min = 0; }
+        if (max === undefined) { max = 1; }
+
+        if ( min < max ) {
+            var temp = min;
+            min = max;
+            max = temp;
+        }
+
+        return Math.random() * (max - min) + min;
+    },
+
+    /**
+    * Returns a random integer in the range `[min, max]`. If these parameters are not in order than they will be put in order.
+    * Default is 0 for `min` and 1 for `max`.
     *
     * @method Phaser.Math#between
-    * @param {number} min - The minimum value. Must be positive, and less than 'max'.
-    * @param {number} max - The maximum value. Must be position, and greater than 'min'.
-    * @return {number} A value between the range min to max.
+    * @param {number} min - The minimum value. Must be a Number.
+    * @param {number} max - The maximum value. Must be a Number.
+    * @return {number} An integer between min (inclusive) and max (inclusive).
     */
     between: function (min, max) {
+        if (min === undefined) { min = 0; }
+        if (max === undefined) { max = 1; }
 
-        return Math.floor(Math.random() * (max - min + 1) + min);
+        if ( min < max ) {
+            var temp = min;
+            min = max;
+            max = temp;
+        }
 
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min + 1)) + min;
     },
 
     /**
