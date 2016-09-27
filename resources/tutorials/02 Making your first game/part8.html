@@ -103,7 +103,7 @@ function create() {
 function update() {
 
     //  Collide the player and the stars with the platforms
-    game.physics.arcade.collide(player, platforms);
+    var hitPlatform = game.physics.arcade.collide(player, platforms);
     game.physics.arcade.collide(stars, platforms);
 
     //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
@@ -135,7 +135,7 @@ function update() {
     }
     
     //  Allow the player to jump if they are touching the ground.
-    if (cursors.up.isDown && player.body.touching.down)
+    if (cursors.up.isDown && player.body.touching.down && hitPlatform)
     {
         player.body.velocity.y = -350;
     }
