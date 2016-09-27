@@ -139,12 +139,6 @@ PIXI.WebGLSpriteBatch = function () {
      * @type AbstractFilter
      */
     this.defaultShader = null;
-
-    /**
-     * @property textureArray
-     * @type Array
-     */
-    this.textureArray = [];
 };
 
 /**
@@ -153,25 +147,41 @@ PIXI.WebGLSpriteBatch = function () {
  */
 PIXI.WebGLSpriteBatch.prototype.setContext = function (gl) {
     this.MAX_TEXTURES = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);
-    var dynamicIfs = '\tif (vTextureIndex == 0.0) gl_FragColor = texture2D(uSamplerArray[0], vTextureCoord) * vColor;\n'
-    for (var index = 1; index < this.MAX_TEXTURES; ++index) {
-        dynamicIfs += '\telse if (vTextureIndex == ' +
-            index + '.0) gl_FragColor = texture2D(uSamplerArray[' +
-            index + '], vTextureCoord) * vColor;\n'
-    }
     this.gl = gl;
-    this.defaultShader = new PIXI.AbstractFilter([
-        '//WebGLSpriteBatch Fragment Shader.',
-        'precision lowp float;',
-        'varying vec2 vTextureCoord;',
-        'varying vec4 vColor;',
-        'varying float vTextureIndex;',
-        'uniform sampler2D uSamplerArray[' + this.MAX_TEXTURES + '];',
-        'void main(void) {',
-        dynamicIfs,
-        '\telse gl_FragColor = texture2D(uSamplerArray[0], vTextureCoord) * vColor;',
-        '}'
-    ]);
+    if (PIXI._enableMultiTextureToggle) {
+        var dynamicIfs = '\tif (vTextureIndex == 0.0) gl_FragColor = texture2D(uSamplerArray[0], vTextureCoord) * vColor;\n'
+        for (var index = 1; index < this.MAX_TEXTURES; ++index) {
+            dynamicIfs += '\telse if (vTextureIndex == ' +
+                index + '.0) gl_FragColor = texture2D(uSamplerArray[' +
+                index + '], vTextureCoord) * vColor;\n'
+        }
+        this.defaultShader = new PIXI.AbstractFilter([
+            '//WebGLSpriteBatch Fragment Shader.',
+            'precision lowp float;',
+            'varying vec2 vTextureCoord;',
+            'varying vec4 vColor;',
+            'varying float vTextureIndex;',
+            'uniform sampler2D uSamplerArray[' + this.MAX_TEXTURES + '];',
+            'void main(void) {',
+            dynamicIfs,
+            '\telse gl_FragColor = texture2D(uSamplerArray[0], vTextureCoord) * vColor;',
+            '}'
+        ]);
+    }
+    else
+    {
+        this.defaultShader = new PIXI.AbstractFilter([
+            '//WebGLSpriteBatch Fragment Shader.',
+            'precision lowp float;',
+            'varying vec2 vTextureCoord;',
+            'varying vec4 vColor;',
+            'varying float vTextureIndex;',
+            'uniform sampler2D uSampler;',
+            'void main(void) {',
+            '   gl_FragColor = texture2D(uSampler, vTextureCoord) * vColor;',
+            '}'
+        ]);
+    }
 
     // create a couple of buffers
     this.vertexBuffer = gl.createBuffer();
@@ -224,11 +234,11 @@ PIXI.WebGLSpriteBatch.prototype.render = function (sprite, matrix) {
     var texture = sprite.texture;
     var baseTexture = texture.baseTexture;
     var gl = this.gl;
-    if (this.textureArray[baseTexture.textureIndex] != baseTexture) {
+    if (PIXI.WebGLRenderer.textureArray[baseTexture.textureIndex] != baseTexture) {
         this.flush();
         gl.activeTexture(gl.TEXTURE0 + baseTexture.textureIndex);
         gl.bindTexture(gl.TEXTURE_2D, baseTexture._glTextures[gl.id]);
-        this.textureArray[baseTexture.textureIndex] = baseTexture;
+        PIXI.WebGLRenderer.textureArray[baseTexture.textureIndex] = baseTexture;
     }
 
     //  They provided an alternative rendering matrix, so use it
@@ -396,11 +406,11 @@ PIXI.WebGLSpriteBatch.prototype.renderTilingSprite = function (sprite) {
     var baseTexture = texture.baseTexture;
     var gl = this.gl;
     var textureIndex = sprite.texture.baseTexture.textureIndex;
-    if (this.textureArray[textureIndex] != baseTexture) {
+    if (PIXI.WebGLRenderer.textureArray[textureIndex] != baseTexture) {
         this.flush();
         gl.activeTexture(gl.TEXTURE0 + textureIndex);
         gl.bindTexture(gl.TEXTURE_2D, baseTexture._glTextures[gl.id]);
-        this.textureArray[textureIndex] = baseTexture;
+        PIXI.WebGLRenderer.textureArray[textureIndex] = baseTexture;
     }
 
     // check texture..

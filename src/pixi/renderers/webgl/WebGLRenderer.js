@@ -637,3 +637,4 @@ PIXI.enableMultiTexture = function() {
 };
 
 PIXI.WebGLRenderer.glContextId = 0;
+PIXI.WebGLRenderer.textureArray = [];
