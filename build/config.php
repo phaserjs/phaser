@@ -51,7 +51,6 @@
     <script src="$path/src/pixi/display/DisplayObject.js"></script>
     <script src="$path/src/pixi/display/DisplayObjectContainer.js"></script>
     <script src="$path/src/pixi/display/Sprite.js"></script>
-    <script src="$path/src/pixi/display/SpriteBatch.js"></script>
 
     <script src="$path/src/pixi/utils/Utils.js"></script>
     <script src="$path/src/pixi/utils/EarCut.js"></script>
