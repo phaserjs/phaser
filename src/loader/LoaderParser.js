@@ -128,8 +128,8 @@ Phaser.LoaderParser = {
 
         );
 
-        if (json.font.kernings && json.font.kernings.kerning) {
-
+        if (json.font.kernings && json.font.kernings.kerning)
+        {
             json.font.kernings.kerning.forEach(
 
                 function parseKerning(kerning) {
@@ -139,7 +139,6 @@ Phaser.LoaderParser = {
                 }
 
             );
-
         }
 
         return this.finalizeBitmapFont(baseTexture, data);

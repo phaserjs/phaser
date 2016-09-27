@@ -711,60 +711,6 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * Add a new Sprite Sheet to the Cache, where the sheet is part of a Texture Atlas.
-    * 
-    * The atlas must already exist in the cache, and be available based on the given `atlasKey`.
-    * 
-    * The `atlasFrame` specifies the name of the frame within the atlas that the Sprite Sheet is
-    * stored in.
-    *
-    * @method Phaser.Cache#addSpriteSheetFromAtlas
-    * @param {string} key - The key that this asset will be stored in the cache under. This should be unique within this cache.
-    * @param {string} atlasKey - The key of the Texture Atlas in the Cache.
-    * @param {string} atlasFrame - The frame of the Texture Atlas that the Sprite Sheet is in.
-    * @param {number} frameWidth - Width of the sprite sheet.
-    * @param {number} frameHeight - Height of the sprite sheet.
-    * @param {number} [frameMax=-1] - How many frames stored in the sprite sheet. If -1 then it divides the whole sheet evenly.
-    * @param {number} [margin=0] - If the frames have been drawn with a margin, specify the amount here.
-    * @param {number} [spacing=0] - If the frames have been drawn with spacing between them, specify the amount here.
-    * @param {number} [skipFrames=0] - Skip a number of frames. Useful when there are multiple sprite sheets in one image.
-    */
-    addSpriteSheetFromAtlas: function (key, atlasKey, atlasFrame, frameWidth, frameHeight, frameMax, margin, spacing, skipFrames) {
-
-        if (frameMax === undefined) { frameMax = -1; }
-        if (margin === undefined) { margin = 0; }
-        if (spacing === undefined) { spacing = 0; }
-
-        var frame = this.getFrameByName(atlasKey, atlasFrame);
-
-        if (!frame)
-        {
-            return;
-        }
-
-        var obj = {
-            font: null,
-            base: this.getBaseTexture(atlasKey),
-            frame: frame
-        };
-
-
-        var obj = {
-            key: key,
-            frameWidth: frameWidth,
-            frameHeight: frameHeight,
-            margin: margin,
-            spacing: spacing,
-            base: this.getBaseTexture(atlasKey),
-            frame: frame,
-            frameData: Phaser.AnimationParser.spriteSheet(this.game, data, frameWidth, frameHeight, frameMax, margin, spacing, skipFrames, frame)
-        };
-
-        this._cache.image[key] = obj;
-
-    },
-
-    /**
     * Add a new texture atlas to the Cache.
     *
     * @method Phaser.Cache#addTextureAtlas

@@ -24,15 +24,11 @@ Phaser.AnimationParser = {
     * @param {number} [margin=0] - If the frames have been drawn with a margin, specify the amount here.
     * @param {number} [spacing=0] - If the frames have been drawn with spacing between them, specify the amount here.
     * @param {number} [skipFrames=0] - Skip a number of frames. Useful when there are multiple sprite sheets in one image.
-    * @param {Phaser.Frame} [frame] - Optional Frame, if this font is embedded in a texture atlas.
     * @return {Phaser.FrameData} A FrameData object containing the parsed frames.
     */
-    spriteSheet: function (game, key, frameWidth, frameHeight, frameMax, margin, spacing, skipFrames, frame) {
+    spriteSheet: function (game, key, frameWidth, frameHeight, frameMax, margin, spacing, skipFrames) {
 
         var img = key;
-
-        var frameX = (frame) ? frame.x : 0;
-        var frameY = (frame) ? frame.y : 0;
 
         if (typeof key === 'string')
         {
@@ -95,7 +91,7 @@ Phaser.AnimationParser = {
 
         for (var i = 0; i < total; i++)
         {
-            data.addFrame(new Phaser.Frame(i, x + frameX, y + frameY, frameWidth, frameHeight, ''));
+            data.addFrame(new Phaser.Frame(i, x, y, frameWidth, frameHeight, ''));
 
             x += frameWidth + spacing;
 
