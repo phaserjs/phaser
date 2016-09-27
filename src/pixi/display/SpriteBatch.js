@@ -22,14 +22,17 @@
  */
 PIXI.SpriteBatch = function(texture)
 {
-    PIXI.DisplayObjectContainer.call( this);
+    // PIXI.DisplayObjectContainer.call( this);
 
     this.textureThing = texture;
 
     this.ready = false;
 };
 
-PIXI.SpriteBatch.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
+// PIXI.SpriteBatch.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
+
+PIXI.SpriteBatch.prototype = {};
+
 PIXI.SpriteBatch.prototype.constructor = PIXI.SpriteBatch;
 
 /*
@@ -40,6 +43,8 @@ PIXI.SpriteBatch.prototype.constructor = PIXI.SpriteBatch;
  */
 PIXI.SpriteBatch.prototype.initWebGL = function(gl)
 {
+    console.log('initWebGL');
+
     // TODO only one needed for the whole engine really?
     this.fastSpriteBatch = new PIXI.WebGLFastSpriteBatch(gl);
 
@@ -52,7 +57,7 @@ PIXI.SpriteBatch.prototype.initWebGL = function(gl)
  * @method updateTransform
  * @private
  */
-PIXI.SpriteBatch.prototype.updateTransform = function()
+PIXI.SpriteBatch.prototype.XupdateTransform = function()
 {
     // TODO don't need to!
     this.displayObjectUpdateTransform();
