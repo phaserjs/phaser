@@ -410,13 +410,15 @@ Phaser.Camera.prototype = {
     * @param {numer} [color=0xffffff] - The color of the flash effect. I.e. 0xffffff for white, 0xff0000 for red, etc.
     * @param {number} [duration=500] - The duration of the flash effect in milliseconds.
     * @param {boolean} [force=false] - If a camera flash or fade effect is already running and force is true it will replace the previous effect, resetting the duration.
+    * @param {numer} [alpha=1] - The alpha value of the color applied to the flash effect.
     * @return {boolean} True if the effect was started, otherwise false.
     */
-    flash: function (color, duration, force) {
+    flash: function (color, duration, force, alpha) {
 
         if (color === undefined) { color = 0xffffff; }
         if (duration === undefined) { duration = 500; }
         if (force === undefined) { force = false; }
+        if (alpha === undefined) { alpha = 1; }
 
         if (!this.fx || (!force && this._fxDuration > 0))
         {
@@ -425,7 +427,7 @@ Phaser.Camera.prototype = {
 
         this.fx.clear();
 
-        this.fx.beginFill(color);
+        this.fx.beginFill(color, alpha);
         this.fx.drawRect(0, 0, this.width, this.height);
         this.fx.endFill();
 
@@ -455,13 +457,15 @@ Phaser.Camera.prototype = {
     * @param {numer} [color=0x000000] - The color the game will fade to. I.e. 0x000000 for black, 0xff0000 for red, etc.
     * @param {number} [duration=500] - The duration of the fade in milliseconds.
     * @param {boolean} [force=false] - If a camera flash or fade effect is already running and force is true it will replace the previous effect, resetting the duration.
+    * @param {numer} [alpha=1] - The alpha value of the color applied to the fade effect.
     * @return {boolean} True if the effect was started, otherwise false.
     */
-    fade: function (color, duration, force) {
+    fade: function (color, duration, force, alpha) {
 
         if (color === undefined) { color = 0x000000; }
         if (duration === undefined) { duration = 500; }
         if (force === undefined) { force = false; }
+        if (alpha === undefined) { alpha = 1; }
 
         if (!this.fx || (!force && this._fxDuration > 0))
         {
@@ -470,7 +474,7 @@ Phaser.Camera.prototype = {
 
         this.fx.clear();
 
-        this.fx.beginFill(color);
+        this.fx.beginFill(color, alpha);
         this.fx.drawRect(0, 0, this.width, this.height);
         this.fx.endFill();
 

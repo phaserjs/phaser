@@ -663,8 +663,8 @@ declare module Phaser {
         y: number;
 
         checkBounds(): void;
-        fade(color?: number, duration?: number, force?: boolean): boolean;
-        flash(color?: number, duration?: number, force?: boolean): boolean;
+        fade(color?: number, duration?: number, force?: boolean, alpha?: number): boolean;
+        flash(color?: number, duration?: number, force?: boolean, alpha?: number): boolean;
         focusOn(displayObject: PIXI.DisplayObject): void;
         focusOnXY(x: number, y: number): void;
         follow(target: Phaser.Sprite, style?: number, lerpX?: number, lerpY?: number): void;
