@@ -1005,17 +1005,6 @@ declare module PIXI {
 
     }
 
-    export class SpriteBatch extends DisplayObjectContainer {
-
-        constructor(texture?: Texture);
-
-        ready: boolean;
-        textureThing: Texture;
-
-        initWebGL(gl: WebGLRenderingContext): void;
-
-    }
-
     export class SpriteSheetLoader implements Mixin {
 
         constructor(url: string, crossorigin?: boolean);

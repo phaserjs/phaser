@@ -3,7 +3,6 @@
     "src/pixi/display/DisplayObject.js",
     "src/pixi/display/DisplayObjectContainer.js",
     "src/pixi/display/Sprite.js",
-    "src/pixi/display/SpriteBatch.js",
 
     "src/pixi/utils/Utils.js",
     "src/pixi/utils/CanvasPool.js",
