@@ -35,9 +35,10 @@ Phaser.LoaderParser = {
     * @param {PIXI.BaseTexture} baseTexture - The BaseTexture this font uses.
     * @param {number} [xSpacing=0] - Additional horizontal spacing between the characters.
     * @param {number} [ySpacing=0] - Additional vertical spacing between the characters.
+    * @param {Phaser.Frame} [frame] - Optional Frame, if this font is embedded in a texture atlas.
     * @return {object} The parsed Bitmap Font data.
     */
-    xmlBitmapFont: function (xml, baseTexture, xSpacing, ySpacing) {
+    xmlBitmapFont: function (xml, baseTexture, xSpacing, ySpacing, frame) {
 
         var data = {};
         var info = xml.getElementsByTagName('info')[0];
@@ -50,13 +51,16 @@ Phaser.LoaderParser = {
 
         var letters = xml.getElementsByTagName('char');
 
+        var x = (frame) ? frame.x : 0;
+        var y = (frame) ? frame.y : 0;
+
         for (var i = 0; i < letters.length; i++)
         {
             var charCode = parseInt(letters[i].getAttribute('id'), 10);
 
             data.chars[charCode] = {
-                x: parseInt(letters[i].getAttribute('x'), 10),
-                y: parseInt(letters[i].getAttribute('y'), 10),
+                x: x + parseInt(letters[i].getAttribute('x'), 10),
+                y: y + parseInt(letters[i].getAttribute('y'), 10),
                 width: parseInt(letters[i].getAttribute('width'), 10),
                 height: parseInt(letters[i].getAttribute('height'), 10),
                 xOffset: parseInt(letters[i].getAttribute('xoffset'), 10),
@@ -89,9 +93,10 @@ Phaser.LoaderParser = {
     * @param {PIXI.BaseTexture} baseTexture - The BaseTexture this font uses.
     * @param {number} [xSpacing=0] - Additional horizontal spacing between the characters.
     * @param {number} [ySpacing=0] - Additional vertical spacing between the characters.
+    * @param {Phaser.Frame} [frame] - Optional Frame, if this font is embedded in a texture atlas.
     * @return {object} The parsed Bitmap Font data.
     */
-    jsonBitmapFont: function (json, baseTexture, xSpacing, ySpacing) {
+    jsonBitmapFont: function (json, baseTexture, xSpacing, ySpacing, frame) {
 
         var data = {
             font: json.font.info._face,
@@ -100,6 +105,9 @@ Phaser.LoaderParser = {
             chars: {}
         };
 
+        var x = (frame) ? frame.x : 0;
+        var y = (frame) ? frame.y : 0;
+
         json.font.chars["char"].forEach(
 
             function parseChar(letter) {
@@ -107,8 +115,8 @@ Phaser.LoaderParser = {
                 var charCode = parseInt(letter._id, 10);
 
                 data.chars[charCode] = {
-                    x: parseInt(letter._x, 10),
-                    y: parseInt(letter._y, 10),
+                    x: x + parseInt(letter._x, 10),
+                    y: y + parseInt(letter._y, 10),
                     width: parseInt(letter._width, 10),
                     height: parseInt(letter._height, 10),
                     xOffset: parseInt(letter._xoffset, 10),

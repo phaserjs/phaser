@@ -321,6 +321,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * When loading a Sprite Sheet you can now specify the number of frames to skip, as the frames are extracted from the sheet and converted to Frames (thanks @arefiev #2763)
 * Math.random returns a random float in the range given (thanks @JTronLabs #2760)
 * Text.splitRegExp is a new property that allows you to control the regular expression that is used to split the text into multiple lines (thanks @dai-shi #1403)
+* Cache.addBitmapFontFromAtlas allows you to add a Bitmap Font to the Cache, that is comprised of a frame from a Texture Atlas, and the font data (in JSON or XML format). Once added you can use the Bitmap Font in the same way as you would any Bitmap Font (#2614)
 
 ### Updates
 
