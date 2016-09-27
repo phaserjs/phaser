@@ -50,7 +50,7 @@
         "no-mixed-operators": "error",
         "no-mixed-spaces-and-tabs": "error",
         "no-plusplus": "off",
-        "no-trailing-spaces": "error",
+        "no-trailing-spaces": [ "error", { "skipBlankLines": true } ],
         "no-underscore-dangle": "off",
         "no-whitespace-before-property": "error",
         "object-curly-newline": [ "error", "always" ],
