@@ -1,3 +1,5 @@
+/* jshint ignore:start */
+
 /*
 Copyright (c) 2016, Mapbox
 
@@ -55,7 +57,7 @@ Phaser.EarCut.Triangulate = function (data, holeIndices, dim) {
     Phaser.EarCut.earcutLinked(outerNode, triangles, dim, minX, minY, size);
 
     return triangles;
-}
+};
 
 // create a circular doubly linked list from polygon points in the specified winding order
 
@@ -77,7 +79,7 @@ Phaser.EarCut.linkedList = function (data, start, end, dim, clockwise) {
     }
 
     return last;
-}
+};
 
 // eliminate colinear or duplicate points
 
@@ -102,7 +104,7 @@ Phaser.EarCut.filterPoints = function (start, end) {
     } while (again || p !== end);
 
     return end;
-}
+};
 
 // main ear slicing loop which triangulates a polygon (given as a linked list)
 
@@ -156,7 +158,7 @@ Phaser.EarCut.earcutLinked = function (ear, triangles, dim, minX, minY, size, pa
             break;
         }
     }
-}
+};
 
 // check whether a polygon node forms a valid ear with adjacent nodes
 
@@ -177,7 +179,7 @@ Phaser.EarCut.isEar = function (ear) {
     }
 
     return true;
-}
+};
 
 Phaser.EarCut.isEarHashed = function (ear, minX, minY, size) {
     var a = ear.prev,
@@ -217,7 +219,7 @@ Phaser.EarCut.isEarHashed = function (ear, minX, minY, size) {
     }
 
     return true;
-}
+};
 
 // go through all polygon nodes and cure small local self-intersections
 
@@ -244,7 +246,7 @@ Phaser.EarCut.cureLocalIntersections = function (start, triangles, dim) {
     } while (p !== start);
 
     return p;
-}
+};
 
 // try splitting polygon into two and triangulate them independently
 
@@ -271,7 +273,7 @@ Phaser.EarCut.splitEarcut = function (start, triangles, dim, minX, minY, size) {
         }
         a = a.next;
     } while (a !== start);
-}
+};
 
 // link every hole into the outer loop, producing a single-ring polygon without holes
 
@@ -296,11 +298,11 @@ Phaser.EarCut.eliminateHoles = function (data, holeIndices, outerNode, dim) {
     }
 
     return outerNode;
-}
+};
 
 Phaser.EarCut.compareX = function (a, b) {
     return a.x - b.x;
-}
+};
 
 // find a bridge between vertices that connects hole with an outer ring and and link it
 
@@ -310,7 +312,7 @@ Phaser.EarCut.eliminateHole = function (hole, outerNode) {
         var b = Phaser.EarCut.splitPolygon(outerNode, hole);
         Phaser.EarCut.filterPoints(b, b.next);
     }
-}
+};
 
 // David Eberly's algorithm for finding a bridge between hole and outer polygon
 
@@ -364,7 +366,7 @@ Phaser.EarCut.findHoleBridge = function (hole, outerNode) {
     }
 
     return m;
-}
+};
 
 // interlink polygon nodes in z-order
 
@@ -381,7 +383,7 @@ Phaser.EarCut.indexCurve = function (start, minX, minY, size) {
     p.prevZ = null;
 
     Phaser.EarCut.sortLinked(p);
-}
+};
 
 // Simon Tatham's linked list merge sort algorithm
 // http://www.chiark.greenend.org.uk/~sgtatham/algorithms/listsort.html
@@ -444,7 +446,7 @@ Phaser.EarCut.sortLinked = function (list) {
     } while (numMerges > 1);
 
     return list;
-}
+};
 
 // z-order of a point given coords and size of the data bounding box
 
@@ -464,7 +466,7 @@ Phaser.EarCut.zOrder = function (x, y, minX, minY, size) {
     y = (y | (y << 1)) & 0x55555555;
 
     return x | (y << 1);
-}
+};
 
 // find the leftmost node of a polygon ring
 
@@ -477,7 +479,7 @@ Phaser.EarCut.getLeftmost = function (start) {
     } while (p !== start);
 
     return leftmost;
-}
+};
 
 // check if a point lies within a convex triangle
 
@@ -485,33 +487,33 @@ Phaser.EarCut.pointInTriangle = function (ax, ay, bx, by, cx, cy, px, py) {
     return (cx - px) * (ay - py) - (ax - px) * (cy - py) >= 0 &&
         (ax - px) * (by - py) - (bx - px) * (ay - py) >= 0 &&
         (bx - px) * (cy - py) - (cx - px) * (by - py) >= 0;
-}
+};
 
 // check if a diagonal between two polygon nodes is valid (lies in polygon interior)
 
 Phaser.EarCut.isValidDiagonal = function (a, b) {
     return Phaser.EarCut.equals(a, b) || a.next.i !== b.i && a.prev.i !== b.i && !Phaser.EarCut.intersectsPolygon(a, b) &&
         Phaser.EarCut.locallyInside(a, b) && Phaser.EarCut.locallyInside(b, a) && Phaser.EarCut.middleInside(a, b);
-}
+};
 
 // signed area of a triangle
 
 Phaser.EarCut.area = function (p, q, r) {
     return (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
-}
+};
 
 // check if two points are equal
 
 Phaser.EarCut.equals = function (p1, p2) {
     return p1.x === p2.x && p1.y === p2.y;
-}
+};
 
 // check if two segments intersect
 
 Phaser.EarCut.intersects = function (p1, q1, p2, q2) {
     return Phaser.EarCut.area(p1, q1, p2) > 0 !== Phaser.EarCut.area(p1, q1, q2) > 0 &&
         Phaser.EarCut.area(p2, q2, p1) > 0 !== Phaser.EarCut.area(p2, q2, q1) > 0;
-}
+};
 
 // check if a polygon diagonal intersects any polygon segments
 
@@ -524,7 +526,7 @@ Phaser.EarCut.intersectsPolygon = function (a, b) {
     } while (p !== a);
 
     return false;
-}
+};
 
 // check if a polygon diagonal is locally inside the polygon
 
@@ -532,7 +534,7 @@ Phaser.EarCut.locallyInside = function (a, b) {
     return Phaser.EarCut.area(a.prev, a, a.next) < 0 ?
         Phaser.EarCut.area(a, b, a.next) >= 0 && Phaser.EarCut.area(a, a.prev, b) >= 0 :
         Phaser.EarCut.area(a, b, a.prev) < 0 || Phaser.EarCut.area(a, a.next, b) < 0;
-}
+};
 
 // check if the middle point of a polygon diagonal is inside the polygon
 
@@ -548,7 +550,7 @@ Phaser.EarCut.middleInside = function (a, b) {
     } while (p !== a);
 
     return inside;
-}
+};
 
 // link two polygon vertices with a bridge; if the vertices belong to the same ring, it splits polygon into two;
 // if one belongs to the outer ring and another to a hole, it merges it into a single ring
@@ -572,7 +574,7 @@ Phaser.EarCut.splitPolygon = function (a, b) {
     b2.prev = bp;
 
     return b2;
-}
+};
 
 // create a node and optionally link it with previous one (in a circular doubly linked list)
 
@@ -590,7 +592,7 @@ Phaser.EarCut.insertNode = function (i, x, y, last) {
         last.next = p;
     }
     return p;
-}
+};
 
 Phaser.EarCut.removeNode = function (p) {
     p.next.prev = p.prev;
@@ -598,7 +600,7 @@ Phaser.EarCut.removeNode = function (p) {
 
     if (p.prevZ) p.prevZ.nextZ = p.nextZ;
     if (p.nextZ) p.nextZ.prevZ = p.prevZ;
-}
+};
 
 Phaser.EarCut.Node = function (i, x, y) {
     // vertice index in coordinates array
@@ -621,4 +623,6 @@ Phaser.EarCut.Node = function (i, x, y) {
 
     // indicates whether this is a steiner point
     this.steiner = false;
-}
+};
+
+/* jshint ignore:end */
