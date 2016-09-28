@@ -83,7 +83,7 @@ Phaser.RenderTexture = function (game, width, height, key, scaleMode, resolution
      */
     this.renderer = renderer;
 
-    if (this.renderer.type === PIXI.WEBGL_RENDERER)
+    if (this.renderer.type === Phaser.WEBGL)
     {
         var gl = this.renderer.gl;
         this.baseTexture.textureIndex = textureUnit;
@@ -136,7 +136,7 @@ Phaser.RenderTexture.prototype.renderXY = function (displayObject, x, y, clear) 
     this._tempMatrix.tx = x;
     this._tempMatrix.ty = y;
 
-    if (this.renderer.type === PIXI.WEBGL_RENDERER)
+    if (this.renderer.type === Phaser.WEBGL)
     {
         this._renderWebGL(displayObject, this._tempMatrix, clear);
     }
@@ -164,7 +164,7 @@ Phaser.RenderTexture.prototype.renderRawXY = function (displayObject, x, y, clea
 
     this._tempMatrix.identity().translate(x, y);
 
-    if (this.renderer.type === PIXI.WEBGL_RENDERER)
+    if (this.renderer.type === Phaser.WEBGL)
     {
         this._renderWebGL(displayObject, this._tempMatrix, clear);
     }
@@ -201,7 +201,7 @@ Phaser.RenderTexture.prototype.render = function (displayObject, matrix, clear) 
         this._tempMatrix.copyFrom(matrix);
     }
 
-    if (this.renderer.type === PIXI.WEBGL_RENDERER)
+    if (this.renderer.type === Phaser.WEBGL)
     {
         this._renderWebGL(displayObject, this._tempMatrix, clear);
     }
@@ -240,7 +240,7 @@ Phaser.RenderTexture.prototype.resize = function (width, height, updateBase) {
         this.baseTexture.height = this.height * this.resolution;
     }
 
-    if (this.renderer.type === PIXI.WEBGL_RENDERER)
+    if (this.renderer.type === Phaser.WEBGL)
     {
         this.projection.x = this.width / 2;
         this.projection.y = -this.height / 2;
@@ -267,7 +267,7 @@ Phaser.RenderTexture.prototype.clear = function () {
         return;
     }
 
-    if (this.renderer.type === PIXI.WEBGL_RENDERER)
+    if (this.renderer.type === Phaser.WEBGL)
     {
         this.renderer.gl.bindFramebuffer(this.renderer.gl.FRAMEBUFFER, this.textureBuffer.frameBuffer);
     }
@@ -416,7 +416,7 @@ Phaser.RenderTexture.prototype.getBase64 = function () {
 */
 Phaser.RenderTexture.prototype.getCanvas = function () {
 
-    if (this.renderer.type === PIXI.WEBGL_RENDERER)
+    if (this.renderer.type === Phaser.WEBGL)
     {
         var gl = this.renderer.gl;
         var width = this.textureBuffer.width;

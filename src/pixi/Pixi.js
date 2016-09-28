@@ -25,27 +25,6 @@ var PIXI = PIXI || {};
  */
 PIXI.game = null;
 
-/**
- * @property {Number} WEBGL_RENDERER
- * @protected
- * @static 
- */
-PIXI.WEBGL_RENDERER = 0;
-
-/**
- * @property {Number} CANVAS_RENDERER
- * @protected
- * @static
- */
-PIXI.CANVAS_RENDERER = 1;
-
-/**
- * Version of pixi that is loaded.
- * @property {String} VERSION
- * @static 
- */
-PIXI.VERSION = "v2.2.9";
-
 // used to create uids for various pixi objects.
 PIXI._UID = 0;
 
@@ -67,24 +46,6 @@ else
     PIXI.Float32Array = Array;
     PIXI.Uint16Array = Array;
 }
-
-/**
- * @property {Number} PI_2
- * @static
- */
-PIXI.PI_2 = Math.PI * 2;
-
-/**
- * @property {Number} RAD_TO_DEG
- * @static
- */
-PIXI.RAD_TO_DEG = 180 / Math.PI;
-
-/**
- * @property {Number} DEG_TO_RAD
- * @static
- */
-PIXI.DEG_TO_RAD = Math.PI / 180;
 
 /**
  * @property {String} RETINA_PREFIX

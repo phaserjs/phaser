@@ -734,7 +734,7 @@ Phaser.Game.prototype = {
         }
         else if (window['console'])
         {
-            console.log('Phaser v' + v + ' | Pixi.js ' + PIXI.VERSION + ' | ' + r + ' | ' + a + ' | http://phaser.io');
+            console.log('Phaser v' + v + ' | Pixi.js | ' + r + ' | ' + a + ' | http://phaser.io');
         }
 
     },

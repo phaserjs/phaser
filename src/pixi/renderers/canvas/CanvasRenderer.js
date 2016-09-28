@@ -28,7 +28,7 @@ PIXI.CanvasRenderer = function (game) {
      * @property type
      * @type Number
      */
-    this.type = PIXI.CANVAS_RENDERER;
+    this.type = Phaser.CANVAS;
 
     /**
      * The resolution of the canvas.

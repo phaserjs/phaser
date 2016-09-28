@@ -34,7 +34,7 @@ PIXI.WebGLRenderer = function(game) {
      * @property type
      * @type Number
      */
-    this.type = PIXI.WEBGL_RENDERER;
+    this.type = Phaser.WEBGL;
 
     /**
      * The resolution of the renderer

@@ -24,6 +24,44 @@ Phaser.Math = {
     PI2: Math.PI * 2,
 
     /**
+    * Degrees to Radians factor.
+    * @property {number} Phaser.Math#DEG_TO_RAD
+    */
+    DEG_TO_RAD: Math.PI / 180,
+
+    /**
+    * Degrees to Radians factor.
+    * @property {number} Phaser.Math#RAD_TO_DEG
+    */
+    RAD_TO_DEG: 180 / Math.PI,
+
+    /**
+    * Convert degrees to radians.
+    *
+    * @method Phaser.Math#degToRad
+    * @param {number} degrees - Angle in degrees.
+    * @return {number} Angle in radians.
+    */
+    degToRad: function (degrees) {
+
+        return degrees * Phaser.Math.DEG_TO_RAD;
+
+    },
+
+    /**
+    * Convert radians to degrees.
+    *
+    * @method Phaser.Math#radToDeg
+    * @param {number} radians - Angle in radians.
+    * @return {number} Angle in degrees
+    */
+    radToDeg: function (radians) {
+
+        return radians * Phaser.Math.RAD_TO_DEG;
+
+    },
+
+    /**
     * Given a number, this function returns the closest number that is a power of two.
     * This function is from the Starling Framework.
     *
@@ -1270,29 +1308,4 @@ Phaser.Math = {
 
     }
 
-};
-
-var degreeToRadiansFactor = Math.PI / 180;
-var radianToDegreesFactor = 180 / Math.PI;
-
-/**
-* Convert degrees to radians.
-*
-* @method Phaser.Math#degToRad
-* @param {number} degrees - Angle in degrees.
-* @return {number} Angle in radians.
-*/
-Phaser.Math.degToRad = function degToRad (degrees) {
-    return degrees * degreeToRadiansFactor;
-};
-
-/**
-* Convert radians to degrees.
-*
-* @method Phaser.Math#radToDeg
-* @param {number} radians - Angle in radians.
-* @return {number} Angle in degrees
-*/
-Phaser.Math.radToDeg = function radToDeg (radians) {
-    return radians * radianToDegreesFactor;
 };
