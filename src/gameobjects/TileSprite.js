@@ -546,8 +546,8 @@ Phaser.TileSprite.prototype.generateTilingTexture = function (forcePowerOfTwo) {
 
     if (forcePowerOfTwo)
     {
-        targetWidth = PIXI.getNextPowerOfTwo(targetWidth);
-        targetHeight = PIXI.getNextPowerOfTwo(targetHeight);
+        targetWidth = Phaser.Math.getNextPowerOfTwo(targetWidth);
+        targetHeight = Phaser.Math.getNextPowerOfTwo(targetHeight);
     }
 
     if (this.canvasBuffer)

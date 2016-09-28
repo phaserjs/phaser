@@ -103,7 +103,7 @@ PIXI.CanvasTinter.tintWithPerPixel = function(texture, color, canvas)
 
     context.drawImage(texture.baseTexture.source, crop.x, crop.y, w, h, 0, 0, w, h);
 
-    var rgbValues = PIXI.hex2rgb(color);
+    var rgbValues = Phaser.Color.hexToRGBArray(color);
     var r = rgbValues[0], g = rgbValues[1], b = rgbValues[2];
 
     var pixelData = context.getImageData(0, 0, w, h);
