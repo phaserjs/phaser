@@ -1241,7 +1241,7 @@ Phaser.BitmapData.prototype = {
 
         if (source === undefined || source === null) { source = this; }
 
-        if (source instanceof Phaser.RenderTexture || source instanceof PIXI.RenderTexture)
+        if (source instanceof Phaser.RenderTexture)
         {
             source = source.getCanvas();
         }
@@ -1258,7 +1258,7 @@ Phaser.BitmapData.prototype = {
             this._rotate = source.rotation;
             this._alpha.current = source.alpha;
 
-            if (source.texture instanceof Phaser.RenderTexture || source.texture instanceof PIXI.RenderTexture)
+            if (source.texture instanceof Phaser.RenderTexture)
             {
                 this._image = source.texture.getCanvas();
             }
@@ -1457,7 +1457,7 @@ Phaser.BitmapData.prototype = {
             return this;
         }
 
-        if (source.texture instanceof Phaser.RenderTexture || source.texture instanceof PIXI.RenderTexture)
+        if (source.texture instanceof Phaser.RenderTexture)
         {
             this._image = source.texture.getCanvas();
         }

@@ -27,11 +27,6 @@ if (PIXI.DisplayObject._tempMatrix === undefined)
     PIXI.DisplayObject._tempMatrix = new PIXI.Matrix();
 }
 
-if (PIXI.RenderTexture.tempMatrix === undefined)
-{
-    PIXI.RenderTexture.tempMatrix = new PIXI.Matrix();
-}
-
 if (PIXI.Graphics && PIXI.Graphics.POLY === undefined)
 {
     PIXI.Graphics.POLY = Phaser.POLYGON;

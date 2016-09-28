@@ -334,6 +334,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * Camera.fade has a new argument `alpha` to control the alpha level of the effect (thanks @rgk #2493)
 * Camera.flash has a new argument `alpha` to control the alpha level of the effect (thanks @rgk #2493)
 * Phaser.SpriteBatch was incorrectly applying the prototypes, causing the Sprite Batch render methods to be replaced by the normal DisplayObjectContainer ones, meaning nothing was really batched at all. This has now been fixed, and PIXI.SpriteBatch removed, as it's no longer required.
+* PIXI.RenderTexture has been removed, and all functionality merged in to Phaser.RenderTexture, to cut down on the number of internal classes and inheritance going on.
 
 ### Bug Fixes
 
@@ -353,6 +354,7 @@ Please note that Phaser uses a custom build of Pixi and always has done. The fol
 * WebGL and Canvas both now support rotated texture atlas frames.
 * WebGL support for compressed texture formats added.
 * PIXI.SpriteBatch has been removed as it's no longer used internally.
+* PIXI.RenderTexture has been removed as it's no longer used internally.
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
