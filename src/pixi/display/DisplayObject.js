@@ -718,7 +718,7 @@ Object.defineProperties(PIXI.DisplayObject.prototype, {
     * filter will reset this DisplayObjects blend mode to NORMAL.
     * 
     * @name PIXI.DisplayObject#filters
-    * @property {Array} filters - An Array of PIXI.AbstractFilter objects, or objects that extend them.
+    * @property {Array} filters - An Array of Phaser.Filter objects, or objects that extend them.
     */
     'filters': {
 

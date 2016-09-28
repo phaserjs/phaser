@@ -1,11 +1,27 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
+* @author       Mat Groves (@Doormat23)
 * @copyright    2016 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
 /**
 * This is a base Filter class to use for any Phaser filter development.
+* If you want to make a custom filter, this should be your base class.
+*
+* The default uniforms, types and values for all Filters are:
+*
+* ```
+* resolution: { type: '2f', value: { x: 256, y: 256 }}
+* time: { type: '1f', value: 0 }
+* mouse: { type: '2f', value: { x: 0.0, y: 0.0 } }
+* date: { type: '4fv', value: [ d.getFullYear(),  d.getMonth(),  d.getDate(), d.getHours() *60 * 60 + d.getMinutes() * 60 + d.getSeconds() ] }
+* sampleRate: { type: '1f', value: 44100.0 }
+* iChannel0: { type: 'sampler2D', value: null, textureData: { repeat: true } }
+* iChannel1: { type: 'sampler2D', value: null, textureData: { repeat: true } }
+* iChannel2: { type: 'sampler2D', value: null, textureData: { repeat: true } }
+* iChannel3: { type: 'sampler2D', value: null, textureData: { repeat: true } }
+* ```
 *
 * The vast majority of filters (including all of those that ship with Phaser) use fragment shaders, and
 * therefore only work in WebGL and are not supported by Canvas at all.
@@ -13,8 +29,8 @@
 * @class Phaser.Filter
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
-* @param {object} uniforms - Uniform mappings object
-* @param {Array|string} fragmentSrc - The fragment shader code. Either an array, one element per line of code, or a string.
+* @param {object} [uniforms] - Uniform mappings object. The uniforms are added on the default uniforms, or replace them if the keys are the same.
+* @param {Array|string} [fragmentSrc] - The fragment shader code. Either an array, one element per line of code, or a string.
 */
 Phaser.Filter = function (game, uniforms, fragmentSrc) {
 
@@ -35,7 +51,7 @@ Phaser.Filter = function (game, uniforms, fragmentSrc) {
     * @property {array} passes - An array of filter objects.
     * @private
     */
-    this.passes = [this];
+    this.passes = [ this ];
 
     /**
     * @property {array} shaders - Array an array of shaders.
@@ -83,7 +99,7 @@ Phaser.Filter = function (game, uniforms, fragmentSrc) {
 
     };
 
-    //  Copy over/replace any passed in the constructor
+    //  Copy over / replace any passed in the constructor
     if (uniforms)
     {
         for (var key in uniforms)
@@ -92,25 +108,35 @@ Phaser.Filter = function (game, uniforms, fragmentSrc) {
         }
     }
 
+    //  If fragmentSrc is a string, split it based on new-lines into an array
+    if (typeof fragmentSrc === 'string')
+    {
+        fragmentSrc = fragmentSrc.split('\n');
+    }
+
     /**
     * @property {array|string} fragmentSrc - The fragment shader code.
     */
-    this.fragmentSrc = fragmentSrc || '';
+    this.fragmentSrc = fragmentSrc || [];
 
 };
 
 Phaser.Filter.prototype = {
 
     /**
-    * Should be over-ridden.
+    * This should be over-ridden. Will receive a variable number of arguments.
+    * 
     * @method Phaser.Filter#init
     */
     init: function () {
+
         //  This should be over-ridden. Will receive a variable number of arguments.
+
     },
 
     /**
     * Set the resolution uniforms on the filter.
+    * 
     * @method Phaser.Filter#setResolution
     * @param {number} width - The width of the display.
     * @param {number} height - The height of the display.
@@ -124,12 +150,13 @@ Phaser.Filter.prototype = {
 
     /**
     * Updates the filter.
+    * 
     * @method Phaser.Filter#update
     * @param {Phaser.Pointer} [pointer] - A Pointer object to use for the filter. The coordinates are mapped to the mouse uniform.
     */
     update: function (pointer) {
 
-        if (typeof pointer !== 'undefined')
+        if (pointer)
         {
             var x = pointer.x / this.game.width;
             var y = 1 - pointer.y / this.game.height;
@@ -201,12 +228,33 @@ Phaser.Filter.prototype = {
     },
 
     /**
-    * Clear down this Filter and null out references
+    * Syncs the uniforms between the class object and the shaders.
+    * 
+    * @method Phaser.Filter#syncUniforms
+    */
+    syncUniforms: function () {
+
+        for (var i = 0; i < this.shaders.length; i++)
+        {
+            this.shaders[i].dirty = true;
+        }
+
+    },
+
+    /**
+    * Clear down this Filter and null out references to game.
+    * 
     * @method Phaser.Filter#destroy
     */
     destroy: function () {
 
+        this.passes.length = 0;
+        this.shaders.length = 0;
+        this.fragmentSrc.length = 0;
+
         this.game = null;
+        this.uniforms = null;
+        this.prevPoint = null;
 
     }
 
@@ -220,12 +268,16 @@ Phaser.Filter.prototype.constructor = Phaser.Filter;
 */
 Object.defineProperty(Phaser.Filter.prototype, 'width', {
 
-    get: function() {
+    get: function () {
+
         return this.uniforms.resolution.value.x;
+
     },
 
-    set: function(value) {
+    set: function (value) {
+
         this.uniforms.resolution.value.x = value;
+
     }
 
 });
@@ -236,12 +288,16 @@ Object.defineProperty(Phaser.Filter.prototype, 'width', {
 */
 Object.defineProperty(Phaser.Filter.prototype, 'height', {
 
-    get: function() {
+    get: function () {
+
         return this.uniforms.resolution.value.y;
+
     },
 
-    set: function(value) {
+    set: function (value) {
+
         this.uniforms.resolution.value.y = value;
+
     }
 
 });

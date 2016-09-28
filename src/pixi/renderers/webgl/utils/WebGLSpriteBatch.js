@@ -15,7 +15,13 @@
  * @private
  * @constructor
  */
-PIXI.WebGLSpriteBatch = function () {
+PIXI.WebGLSpriteBatch = function (game) {
+
+    /**
+    * @property {Phaser.Game} game - A reference to the currently running game.
+    */
+    this.game = game;
+
     /**
      * @property vertSize
      * @type Number
@@ -136,7 +142,7 @@ PIXI.WebGLSpriteBatch = function () {
 
     /**
      * @property defaultShader
-     * @type AbstractFilter
+     * @type Phaser.Filter
      */
     this.defaultShader = null;
 };
@@ -155,32 +161,38 @@ PIXI.WebGLSpriteBatch.prototype.setContext = function (gl) {
                 index + '.0) gl_FragColor = texture2D(uSamplerArray[' +
                 index + '], vTextureCoord) * vColor;\n'
         }
-        this.defaultShader = new PIXI.AbstractFilter([
-            '//WebGLSpriteBatch Fragment Shader.',
-            'precision lowp float;',
-            'varying vec2 vTextureCoord;',
-            'varying vec4 vColor;',
-            'varying float vTextureIndex;',
-            'uniform sampler2D uSamplerArray[' + this.MAX_TEXTURES + '];',
-            'void main(void) {',
-            dynamicIfs,
-            '\telse gl_FragColor = texture2D(uSamplerArray[0], vTextureCoord) * vColor;',
-            '}'
-        ]);
+        this.defaultShader = new Phaser.Filter(
+            this.game,
+            undefined,
+            [
+                '//WebGLSpriteBatch Fragment Shader.',
+                'precision lowp float;',
+                'varying vec2 vTextureCoord;',
+                'varying vec4 vColor;',
+                'varying float vTextureIndex;',
+                'uniform sampler2D uSamplerArray[' + this.MAX_TEXTURES + '];',
+                'void main(void) {',
+                    dynamicIfs,
+                    '\telse gl_FragColor = texture2D(uSamplerArray[0], vTextureCoord) * vColor;',
+                '}'
+            ]);
     }
     else
     {
-        this.defaultShader = new PIXI.AbstractFilter([
-            '//WebGLSpriteBatch Fragment Shader.',
-            'precision lowp float;',
-            'varying vec2 vTextureCoord;',
-            'varying vec4 vColor;',
-            'varying float vTextureIndex;',
-            'uniform sampler2D uSampler;',
-            'void main(void) {',
-            '   gl_FragColor = texture2D(uSampler, vTextureCoord) * vColor;',
-            '}'
-        ]);
+        this.defaultShader = new Phaser.Filter(
+            this.game,
+            undefined,
+            [
+                '//WebGLSpriteBatch Fragment Shader.',
+                'precision lowp float;',
+                'varying vec2 vTextureCoord;',
+                'varying vec4 vColor;',
+                'varying float vTextureIndex;',
+                'uniform sampler2D uSampler;',
+                'void main(void) {',
+                '   gl_FragColor = texture2D(uSampler, vTextureCoord) * vColor;',
+                '}'
+            ]);
     }
 
     // create a couple of buffers

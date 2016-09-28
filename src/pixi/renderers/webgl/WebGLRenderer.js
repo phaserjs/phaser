@@ -144,7 +144,7 @@ PIXI.WebGLRenderer = function(game) {
      * @property spriteBatch
      * @type WebGLSpriteBatch
      */
-    this.spriteBatch = new PIXI.WebGLSpriteBatch();
+    this.spriteBatch = new PIXI.WebGLSpriteBatch(game);
 
     /**
      * Manages the masks using the stencil buffer

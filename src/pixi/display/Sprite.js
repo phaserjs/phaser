@@ -95,7 +95,7 @@ PIXI.Sprite = function (texture) {
      * Set to null to remove a current shader.
      *
      * @property shader
-     * @type AbstractFilter
+     * @type Phaser.Filter
      * @default null
      */
     this.shader = null;
