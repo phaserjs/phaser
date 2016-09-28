@@ -18,16 +18,6 @@
  */
 var PIXI = PIXI || {};
 
-/**
- * A reference to the Phaser Game instance that owns this Pixi renderer.
- * @property {Phaser.Game} game
- * @static 
- */
-PIXI.game = null;
-
-// used to create uids for various pixi objects.
-PIXI._UID = 0;
-
 if (typeof(Float32Array) != 'undefined')
 {
     PIXI.Float32Array = Float32Array;

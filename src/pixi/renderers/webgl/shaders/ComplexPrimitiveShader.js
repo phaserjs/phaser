@@ -14,7 +14,7 @@ PIXI.ComplexPrimitiveShader = function(gl)
      * @type Number
      * @private
      */
-    this._UID = PIXI._UID++;
+    this._UID = Phaser._UID++;
 
     /**
      * @property gl

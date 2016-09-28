@@ -14,7 +14,7 @@ var Phaser = Phaser || {    // jshint ignore:line
     * @constant
     * @type {string}
     */
-    VERSION: '3.0.0 b2',
+    VERSION: '3.0.0 rev3',
 
     /**
     * An array of Phaser game instances.
@@ -479,69 +479,72 @@ var Phaser = Phaser || {    // jshint ignore:line
     BOTTOM_RIGHT: 12,
 
     /**
-     * Various blend modes supported by Pixi.
-     * 
-     * IMPORTANT: The WebGL renderer only supports the NORMAL, ADD, MULTIPLY and SCREEN blend modes.
-     * 
-     * @constant
-     * @property {Number} blendModes.NORMAL
-     * @property {Number} blendModes.ADD
-     * @property {Number} blendModes.MULTIPLY
-     * @property {Number} blendModes.SCREEN
-     * @property {Number} blendModes.OVERLAY
-     * @property {Number} blendModes.DARKEN
-     * @property {Number} blendModes.LIGHTEN
-     * @property {Number} blendModes.COLOR_DODGE
-     * @property {Number} blendModes.COLOR_BURN
-     * @property {Number} blendModes.HARD_LIGHT
-     * @property {Number} blendModes.SOFT_LIGHT
-     * @property {Number} blendModes.DIFFERENCE
-     * @property {Number} blendModes.EXCLUSION
-     * @property {Number} blendModes.HUE
-     * @property {Number} blendModes.SATURATION
-     * @property {Number} blendModes.COLOR
-     * @property {Number} blendModes.LUMINOSITY
-     * @static
-     */
+    * Various blend modes supported by Pixi.
+    * 
+    * IMPORTANT: The WebGL renderer only supports the NORMAL, ADD, MULTIPLY and SCREEN blend modes.
+    * 
+    * @constant
+    * @property {Number} blendModes.NORMAL
+    * @property {Number} blendModes.ADD
+    * @property {Number} blendModes.MULTIPLY
+    * @property {Number} blendModes.SCREEN
+    * @property {Number} blendModes.OVERLAY
+    * @property {Number} blendModes.DARKEN
+    * @property {Number} blendModes.LIGHTEN
+    * @property {Number} blendModes.COLOR_DODGE
+    * @property {Number} blendModes.COLOR_BURN
+    * @property {Number} blendModes.HARD_LIGHT
+    * @property {Number} blendModes.SOFT_LIGHT
+    * @property {Number} blendModes.DIFFERENCE
+    * @property {Number} blendModes.EXCLUSION
+    * @property {Number} blendModes.HUE
+    * @property {Number} blendModes.SATURATION
+    * @property {Number} blendModes.COLOR
+    * @property {Number} blendModes.LUMINOSITY
+    * @static
+    */
     blendModes: {
-        NORMAL:0,
-        ADD:1,
-        MULTIPLY:2,
-        SCREEN:3,
-        OVERLAY:4,
-        DARKEN:5,
-        LIGHTEN:6,
-        COLOR_DODGE:7,
-        COLOR_BURN:8,
-        HARD_LIGHT:9,
-        SOFT_LIGHT:10,
-        DIFFERENCE:11,
-        EXCLUSION:12,
-        HUE:13,
-        SATURATION:14,
-        COLOR:15,
-        LUMINOSITY:16
+        NORMAL: 0,
+        ADD: 1,
+        MULTIPLY: 2,
+        SCREEN: 3,
+        OVERLAY: 4,
+        DARKEN: 5,
+        LIGHTEN: 6,
+        COLOR_DODGE: 7,
+        COLOR_BURN: 8,
+        HARD_LIGHT: 9,
+        SOFT_LIGHT: 10,
+        DIFFERENCE: 11,
+        EXCLUSION: 12,
+        HUE: 13,
+        SATURATION: 14,
+        COLOR: 15,
+        LUMINOSITY: 16
     },
 
     /**
-     * The scale modes that are supported by Pixi.
-     *
-     * The DEFAULT scale mode affects the default scaling mode of future operations.
-     * It can be re-assigned to either LINEAR or NEAREST, depending upon suitability.
-     *
-     * @constant
-     * @property {Object} Phaser.scaleModes
-     * @property {Number} scaleModes.DEFAULT=LINEAR
-     * @property {Number} scaleModes.LINEAR Smooth scaling
-     * @property {Number} scaleModes.NEAREST Pixelating scaling
-     * @static
-     */
+    * The scale modes that are supported by Pixi.
+    *
+    * The DEFAULT scale mode affects the default scaling mode of future operations.
+    * It can be re-assigned to either LINEAR or NEAREST, depending upon suitability.
+    *
+    * @constant
+    * @property {Object} Phaser.scaleModes
+    * @property {Number} scaleModes.DEFAULT=LINEAR
+    * @property {Number} scaleModes.LINEAR Smooth scaling
+    * @property {Number} scaleModes.NEAREST Pixelating scaling
+    * @static
+    */
     scaleModes: {
-        DEFAULT:0,
-        LINEAR:0,
-        NEAREST:1
+        DEFAULT: 0,
+        LINEAR: 0,
+        NEAREST: 1
     },
 
-    PIXI: PIXI || {}
+    PIXI: PIXI || {},
+
+    //  Used to create IDs for various Pixi objects.
+    _UID: 0
 
 };

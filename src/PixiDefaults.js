@@ -27,13 +27,4 @@ if (PIXI.DisplayObject._tempMatrix === undefined)
     PIXI.DisplayObject._tempMatrix = new PIXI.Matrix();
 }
 
-if (PIXI.Graphics && PIXI.Graphics.POLY === undefined)
-{
-    PIXI.Graphics.POLY = Phaser.POLYGON;
-    PIXI.Graphics.RECT = Phaser.RECTANGLE;
-    PIXI.Graphics.CIRC = Phaser.CIRCLE;
-    PIXI.Graphics.ELIP = Phaser.ELLIPSE;
-    PIXI.Graphics.RREC = Phaser.ROUNDEDRECTANGLE;
-}
-
 PIXI.TextureSilentFail = true;
