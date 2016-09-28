@@ -2324,6 +2324,53 @@ Phaser.Group.prototype.getFurthestFrom = function (object, callback, callbackCon
 };
 
 /**
+* Spreads a property of all existing children from a given start value
+*
+* @method Phaser.Group#spreadProperties
+* @param {number} startValue - The center/starting value
+* @param {number} margin - The margin between values
+* @return {none}
+*/
+Phaser.Group.prototype.spreadProperties = function(property, startValue, margin) {
+    
+    var amount = this.children.length;
+	
+	for (var i = 0; i < amount; ++i)
+	{
+	    var child = this.children[i];
+		
+		if (child.exists)
+		{
+            Phaser.Utils.setProperty(child, property, Phaser.Math.spread(startValue, amount, margin, i));
+		}
+	}
+};
+
+/**
+* Spreads the x position of all existing children from a given start value
+*
+* @method Phaser.Group#spreadX
+* @param {number} startValue - The center/starting x value
+* @param {number} margin - The margin between values
+* @return {none}
+*/
+Phaser.Group.prototype.spreadX = function(startValue, margin) {
+    this.spreadProperties('x', startValue, margin);
+};
+
+/**
+* Spreads the y position of all existing children from a given start value
+*
+* @method Phaser.Group#spreadY
+* @param {number} startValue - The center/starting y value
+* @param {number} margin - The margin between values
+* @return {none}
+*/
+Phaser.Group.prototype.spreadY = function(startValue, margin) {
+    this.spreadProperties('y', startValue, margin);
+};
+
+/**
 * Get the number of living children in this group.
 *
 * @method Phaser.Group#countLiving
