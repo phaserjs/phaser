@@ -90,11 +90,6 @@ EOL;
         echo "    <script src=\"$path/src/pixi/extras/Rope.js\"></script>";
     }
 
-    if ($modules['tilesprite'])
-    {
-        echo "    <script src=\"$path/src/pixi/extras/TilingSprite.js\"></script>";
-    }
-
     //  PIXI Outro + Phaser Global
     echo <<<EOL
 

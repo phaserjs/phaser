@@ -40,11 +40,6 @@ module.exports = {
         dest: '<%= modules_dir %>/pixi-rope.js'
     },
 
-    pixiTileSprite: {
-        src: require('../manifests/pixi-tilesprite'),
-        dest: '<%= modules_dir %>/pixi-tilesprite.js'
-    },
-
     pixiOutro: {
         src: require('../manifests/pixi-outro'),
         dest: '<%= modules_dir %>/pixi-outro.js'
