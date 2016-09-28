@@ -75,9 +75,6 @@
     <script src="$path/src/pixi/renderers/canvas/CanvasRenderer.js"></script>
     <script src="$path/src/pixi/renderers/canvas/CanvasGraphics.js"></script>
 
-    <script src="$path/src/pixi/primitives/Graphics.js"></script>
-    <script src="$path/src/pixi/primitives/GraphicsData.js"></script>
-
 EOL;
 
     //  PIXI Outro + Phaser Global
@@ -232,6 +229,7 @@ EOL;
     if ($modules['graphics'])
     {
         echo <<<EOL
+    <script src="$path/src/gameobjects/GraphicsData.js"></script>
     <script src="$path/src/gameobjects/Graphics.js"></script>
 
 

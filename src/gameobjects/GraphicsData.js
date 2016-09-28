@@ -1,27 +1,5 @@
 /**
  * A GraphicsData object.
- * 
- * @class GraphicsData
- * @constructor
-PIXI.GraphicsData = function(lineWidth, lineColor, lineAlpha, fillColor, fillAlpha, fill, shape)
-{
-    this.lineWidth = lineWidth;
-    this.lineColor = lineColor;
-    this.lineAlpha = lineAlpha;
-    this._lineTint = lineColor;
-
-    this.fillColor = fillColor;
-    this.fillAlpha = fillAlpha;
-    this._fillTint = fillColor;
-    this.fill = fill;
-
-    this.shape = shape;
-    this.type = shape.type;
-};
- */
-
-/**
- * A GraphicsData object.
  *
  * @class
  * @memberof PIXI
@@ -34,7 +12,7 @@ PIXI.GraphicsData = function(lineWidth, lineColor, lineAlpha, fillColor, fillAlp
  * @param shape     {Circle|Rectangle|Ellipse|Line|Polygon} The shape object to draw.
  */
 
-PIXI.GraphicsData = function(lineWidth, lineColor, lineAlpha, fillColor, fillAlpha, fill, shape) {
+Phaser.GraphicsData = function (lineWidth, lineColor, lineAlpha, fillColor, fillAlpha, fill, shape) {
 
     /*
      * @member {number} the width of the line to draw
@@ -88,16 +66,16 @@ PIXI.GraphicsData = function(lineWidth, lineColor, lineAlpha, fillColor, fillAlp
 
 };
 
-PIXI.GraphicsData.prototype.constructor = PIXI.GraphicsData;
+Phaser.GraphicsData.prototype.constructor = Phaser.GraphicsData;
 
 /**
  * Creates a new GraphicsData object with the same values as this one.
  *
  * @return {GraphicsData}
  */
-PIXI.GraphicsData.prototype.clone = function() {
+Phaser.GraphicsData.prototype.clone = function () {
 
-    return new GraphicsData(
+    return new Phaser.GraphicsData(
         this.lineWidth,
         this.lineColor,
         this.lineAlpha,

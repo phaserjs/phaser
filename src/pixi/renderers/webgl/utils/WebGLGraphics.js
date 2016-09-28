@@ -138,7 +138,7 @@ PIXI.WebGLGraphics.updateGraphics = function(graphics, gl)
     {
         var data = graphics.graphicsData[i];
 
-        if(data.type === PIXI.Graphics.POLY)
+        if (data.type === Phaser.POLYGON)
         {
             // need to add the points the the graphics object..
             data.points = data.shape.points.slice();
@@ -190,15 +190,15 @@ PIXI.WebGLGraphics.updateGraphics = function(graphics, gl)
         {
             webGLData = PIXI.WebGLGraphics.switchMode(webGL, 0);
             
-            if(data.type === PIXI.Graphics.RECT)
+            if (data.type === Phaser.RECTANGLE)
             {
                 PIXI.WebGLGraphics.buildRectangle(data, webGLData);
             }
-            else if(data.type === PIXI.Graphics.CIRC || data.type === PIXI.Graphics.ELIP)
+            else if (data.type === Phaser.CIRCLE || data.type === Phaser.ELLIPSE)
             {
                 PIXI.WebGLGraphics.buildCircle(data, webGLData);
             }
-            else if(data.type === PIXI.Graphics.RREC)
+            else if (data.type === Phaser.ROUNDEDRECTANGLE)
             {
                 PIXI.WebGLGraphics.buildRoundedRectangle(data, webGLData);
             }
@@ -458,7 +458,7 @@ PIXI.WebGLGraphics.buildCircle = function(graphicsData, webGLData)
     var height;
     
     // TODO - bit hacky??
-    if(graphicsData.type === PIXI.Graphics.CIRC)
+    if (graphicsData.type === Phaser.CIRCLE)
     {
         width = circleData.radius;
         height = circleData.radius;
