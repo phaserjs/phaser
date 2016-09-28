@@ -159,6 +159,38 @@ Phaser.Color = {
     },
 
     /**
+    * Converts a hex color value to an [R, G, B] array.
+    *
+    * @static
+    * @method Phaser.Color.hexToRGBArray
+    * @param {number} color - The color to convert to an RGB array. In the format 0xRRGGBB.
+    * @return {array} An array with element 0 containing the Red value, 1 containing Green, and 2 containing Blue.
+    */
+    hexToRGBArray: function (color) {
+
+        return [
+            (color >> 16 & 0xFF) / 255,
+            (color >> 8 & 0xFF) / 255,
+            (color & 0xFF) / 255
+        ];
+
+    },
+
+    /**
+    * Converts an RGB color array, in the format: [R, G, B], to a hex color value.
+    *
+    * @static
+    * @method Phaser.Color.RGBArrayToHex
+    * @param {array} rgb - An array with element 0 containing the Red value, 1 containing Green, and 2 containing Blue.
+    * @return {number} The color value, in the format 0xRRGGBB.
+    */
+    RGBArrayToHex: function (rgb) {
+
+        return ((rgb[0] * 255 << 16) + (rgb[1] * 255 << 8) + rgb[2] * 255);
+
+    },
+
+    /**
     * Converts an RGB color value to HSL (hue, saturation and lightness).
     * Conversion forumla from http://en.wikipedia.org/wiki/HSL_color_space.
     * Assumes RGB values are contained in the set [0, 255] and returns h, s and l in the set [0, 1].

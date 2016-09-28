@@ -749,6 +749,7 @@ declare module Phaser {
         static getRed(color: number): number;
         static getRGB(color: number): RGBColor;
         static getWebRGB(color: number | RGBColor): string;
+        static hexToRGBArray(color: number): number[];
         static hexToRGB(h: string): number;
         static hexToColor(hex: string, out?: ColorComponents): ColorComponents;
         static HSLtoRGB(h: number, s: number, l: number, out?: ColorComponents): ColorComponents;
@@ -760,6 +761,7 @@ declare module Phaser {
         static interpolateColorWithRGB(color: number, r: number, g: number, b: number, steps: number, currentStep: number): number;
         static interpolateRGB(r1: number, g1: number, b1: number, r2: number, g2: number, b2: number, steps: number, currentStep: number): number;
         static packPixel(r: number, g: number, b: number, a: number): number;
+        static RGBArrayToHex(rgb: number[]): number;
         static RGBtoHSL(r: number, g: number, b: number, out?: ColorComponents): ColorComponents;
         static RGBtoHSV(r: number, g: number, b: number, out?: ColorComponents): ColorComponents;
         static RGBtoString(r: number, g: number, b: number, a?: number, prefix?: string): string;

@@ -342,6 +342,8 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * Device.canUseMultiply is a new boolean property that stores whether or not the Canvas BlendModes are supported, consequently the ability to tint using the multiply method.
 * Math.getNextPowerOfTwo will get the next power of two for the given value.
 * Math.isPowerOfTwo will return a boolean if the given width and height are a power of two.
+* Color.hexToRGBArray converts a hex color value to an [R, G, B] array.
+* Color.RGBArrayToHex converts an RGB color array, in the format: [R, G, B], to a hex color value.
 
 ### Bug Fixes
 
