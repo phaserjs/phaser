@@ -24,6 +24,49 @@ Phaser.Math = {
     PI2: Math.PI * 2,
 
     /**
+    * Given a number, this function returns the closest number that is a power of two.
+    * This function is from the Starling Framework.
+    *
+    * @method Phaser.Math#getNextPowerOfTwo
+    * @param {number} value - The value to get the closest power of two from.
+    * @return {number} The closest number that is a power of two.
+    */
+    getNextPowerOfTwo: function (value) {
+
+        if (value > 0 && (value & (value - 1)) === 0)
+        {
+            //  http://goo.gl/D9kPj
+            return value;
+        }
+        else
+        {
+            var result = 1;
+
+            while (result < value)
+            {
+                result <<= 1;
+            }
+
+            return result;
+        }
+
+    },
+
+    /**
+    * Checks if the given dimensions make a power of two texture.
+    * 
+    * @method Phaser.Math#isPowerOfTwo
+    * @param {number} width - The width to check.
+    * @param {number} height - The height to check.
+    * @return {boolean} True if the width and height are a power of two.
+    */
+    isPowerOfTwo: function (width, height) {
+
+        return (width > 0 && (width & (width - 1)) === 0 && height > 0 && (height & (height - 1)) === 0);
+
+    },
+
+    /**
     * Returns a random float in the range `[min, max)`. If these parameters are not in order than they will be put in order.
     * Default is 0 for `min` and 1 for `max`.
     *

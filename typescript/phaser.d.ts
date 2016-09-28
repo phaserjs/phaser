@@ -2590,8 +2590,10 @@ declare module Phaser {
         static fuzzyGreaterThan(a: number, b: number, epsilon?: number): boolean;
         static fuzzyLessThan(a: number, b: number, epsilon?: number): boolean;
         static getShortestAngle(angle1: number, angle2: number): number;
+        static getNextPowerOfTwo(value: number): number;
         static isEven(n: number): boolean;
         static isOdd(n: number): boolean;
+        static isPowerOfTwo(width: number, height: number): boolean;
         static linear(p0: number, p1: number, t: number): number;
         static linearInterpolation(v: number[], k: number): number;
         static mapLinear(x: number, a1: number, a2: number, b1: number, b2: number): number;

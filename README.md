@@ -338,6 +338,10 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * PIXI.TilingSprite has been removed, and all functionality merged in to Phaser.TileSprite, to cut down on the number of internal classes and inheritance going on.
 * PIXI.CanvasPool has been moved into the Phaser `utils` folder, and renamed to `Phaser.CanvasPool`. All references to PIXI.CanvasPool have been updated to match the new namespace.
 * PIXI.EarCut has been moved into the Phaser `utils` folder, and renamed to `Phaser.EarCut`. All references to PIXI.EarCut have been updated to match the new namespace.
+* Device.canHandleAlpha is a new boolean property that stores is the browser is capable of tinting with alpha.
+* Device.canUseMultiply is a new boolean property that stores whether or not the Canvas BlendModes are supported, consequently the ability to tint using the multiply method.
+* Math.getNextPowerOfTwo will get the next power of two for the given value.
+* Math.isPowerOfTwo will return a boolean if the given width and height are a power of two.
 
 ### Bug Fixes
 
@@ -360,6 +364,7 @@ Please note that Phaser uses a custom build of Pixi and always has done. The fol
 * PIXI.RenderTexture has been removed as it's no longer used internally.
 * PIXI.TileSprite has been removed as it's no longer used internally.
 * PIXI.EarCut has been removed as it's no longer used internally.
+* PIXI.Utils has been removed. All functionality is now available in Phaser.
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
