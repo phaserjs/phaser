@@ -344,7 +344,8 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * Math.isPowerOfTwo will return a boolean if the given width and height are a power of two.
 * Color.hexToRGBArray converts a hex color value to an [R, G, B] array.
 * Color.RGBArrayToHex converts an RGB color array, in the format: [R, G, B], to a hex color value.
-* PIXI.AbstractFilter has been merged into the Phaser.Filter class.All references to PIXI.AbstractFilter have been updated to use Phaser.Filter instead.
+* PIXI.AbstractFilter has been merged into the Phaser.Filter class. All references to PIXI.AbstractFilter have been updated to use Phaser.Filter instead.
+* PIXI.Rope and PIXI.Strip have been removed, and all functionality merged in to Phaser.Rope, to cut down on the number of internal classes and inheritance going on.
 
 ### Bug Fixes
 
@@ -370,6 +371,7 @@ Please note that Phaser uses a custom build of Pixi and always has done. The fol
 * PIXI.Utils has been removed. All functionality is now available in Phaser.
 * PIXI.EventTarget has been removed as it's no longer used internally.
 * PIXI.AbstractFilter has been removed as it's no longer used internally. All functionality is now available via Phaser.Filter.
+* PIXI.Strip and PIXI.Rope have been removed. All functionality is now available via Phaser.Rope.
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 

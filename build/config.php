@@ -80,12 +80,6 @@
 
 EOL;
 
-    if ($modules['rope'])
-    {
-        echo "    <script src=\"$path/src/pixi/extras/Strip.js\"></script>";
-        echo "    <script src=\"$path/src/pixi/extras/Rope.js\"></script>";
-    }
-
     //  PIXI Outro + Phaser Global
     echo <<<EOL
 

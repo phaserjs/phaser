@@ -277,7 +277,7 @@ PIXI.CanvasRenderer.prototype.mapBlendModes = function () {
     {
         var b = [];
         var modes = PIXI.blendModes;
-        var useNew = PIXI.canUseNewCanvasBlendModes();
+        var useNew = this.game.device.canUseMultiply;
 
         b[modes.NORMAL] = 'source-over';
         b[modes.ADD] = 'lighter';
