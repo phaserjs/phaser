@@ -4,9 +4,6 @@
     "src/pixi/display/DisplayObjectContainer.js",
     "src/pixi/display/Sprite.js",
 
-    "src/pixi/utils/Utils.js",
-    "src/pixi/utils/CanvasPool.js",
-
     "src/pixi/renderers/webgl/utils/WebGLShaderUtils.js",
     "src/pixi/renderers/webgl/shaders/PixiShader.js",
     "src/pixi/renderers/webgl/shaders/PixiFastShader.js",

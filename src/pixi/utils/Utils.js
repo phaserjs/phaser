@@ -22,43 +22,6 @@ PIXI.rgb2hex = function(rgb) {
     return ((rgb[0]*255 << 16) + (rgb[1]*255 << 8) + rgb[2]*255);
 };
 
-/**
- * Checks whether the Canvas BlendModes are supported by the current browser for drawImage
- *
- * @method canUseNewCanvasBlendModes
- * @return {Boolean} whether they are supported
- */
-PIXI.canUseNewCanvasBlendModes = function()
-{
-    if (document === undefined) return false;
-
-    var pngHead = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAABAQMAAADD8p2OAAAAA1BMVEX/';
-    var pngEnd = 'AAAACklEQVQI12NgAAAAAgAB4iG8MwAAAABJRU5ErkJggg==';
-
-    var magenta = new Image();
-    magenta.src = pngHead + 'AP804Oa6' + pngEnd;
-
-    var yellow = new Image();
-    yellow.src = pngHead + '/wCKxvRF' + pngEnd;
-
-    var canvas = Phaser.CanvasPool.create(this, 6, 1);
-    var context = canvas.getContext('2d');
-    context.globalCompositeOperation = 'multiply';
-    context.drawImage(magenta, 0, 0);
-    context.drawImage(yellow, 2, 0);
-
-    if (!context.getImageData(2,0,1,1))
-    {
-        return false;
-    }
-
-    var data = context.getImageData(2,0,1,1).data;
-
-    Phaser.CanvasPool.remove(this);
-
-    return (data[0] === 255 && data[1] === 0 && data[2] === 0);
-
-};
 
 /**
  * Given a number, this function returns the closest number that is a power of two

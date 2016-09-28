@@ -859,6 +859,8 @@ declare module Phaser {
         arora: boolean;
         audioData: boolean;
         cancelFullScreen: string;
+        canHandleAlpha: boolean;
+        canUseMultiply: boolean;
         canvas: boolean;
         chrome: boolean;
         chromeOS: boolean;
