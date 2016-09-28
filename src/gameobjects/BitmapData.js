@@ -280,7 +280,7 @@ Phaser.BitmapData.prototype = {
 
         if (this._swapCanvas === undefined)
         {
-            this._swapCanvas = PIXI.CanvasPool.create(this, this.width, this.height);
+            this._swapCanvas = Phaser.CanvasPool.create(this, this.width, this.height);
         }
 
         var c = this._swapCanvas;
@@ -343,7 +343,7 @@ Phaser.BitmapData.prototype = {
 
         if (this._swapCanvas === undefined)
         {
-            this._swapCanvas = PIXI.CanvasPool.create(this, this.width, this.height);
+            this._swapCanvas = Phaser.CanvasPool.create(this, this.width, this.height);
         }
 
         var c = this._swapCanvas;
@@ -2032,7 +2032,7 @@ Phaser.BitmapData.prototype = {
 
         this.texture.destroy(true);
 
-        PIXI.CanvasPool.remove(this);
+        Phaser.CanvasPool.remove(this);
 
     },
 

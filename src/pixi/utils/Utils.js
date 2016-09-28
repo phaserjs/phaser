@@ -41,7 +41,7 @@ PIXI.canUseNewCanvasBlendModes = function()
     var yellow = new Image();
     yellow.src = pngHead + '/wCKxvRF' + pngEnd;
 
-    var canvas = PIXI.CanvasPool.create(this, 6, 1);
+    var canvas = Phaser.CanvasPool.create(this, 6, 1);
     var context = canvas.getContext('2d');
     context.globalCompositeOperation = 'multiply';
     context.drawImage(magenta, 0, 0);
@@ -54,7 +54,7 @@ PIXI.canUseNewCanvasBlendModes = function()
 
     var data = context.getImageData(2,0,1,1).data;
 
-    PIXI.CanvasPool.remove(this);
+    Phaser.CanvasPool.remove(this);
 
     return (data[0] === 255 && data[1] === 0 && data[2] === 0);
 

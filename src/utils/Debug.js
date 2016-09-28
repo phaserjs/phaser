@@ -115,7 +115,7 @@ Phaser.Utils.Debug.prototype = {
 
             this.game.scale.onSizeChange.add(this.resize, this);
 
-            this.canvas = PIXI.CanvasPool.create(this, this.game.width, this.game.height);
+            this.canvas = Phaser.CanvasPool.create(this, this.game.width, this.game.height);
             this.context = this.canvas.getContext('2d');
         }
 
@@ -881,7 +881,7 @@ Phaser.Utils.Debug.prototype = {
     */
     destroy: function () {
     
-        PIXI.CanvasPool.remove(this);
+        Phaser.CanvasPool.remove(this);
 
     }
 
