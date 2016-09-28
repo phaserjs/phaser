@@ -79,7 +79,8 @@ Phaser.CanvasPool = {
     },
 
     /**
-    * Removes the parent from a canvas element from the pool, freeing it up for re-use.
+    * Looks up a canvas based on its parent, and if found puts it back in the pool, freeing it up for re-use.
+    * The canvas has its width and height set to 1, and its parent attribute nulled.
     * 
     * @static
     * @method Phaser.CanvasPool.remove
@@ -102,7 +103,8 @@ Phaser.CanvasPool = {
     },
 
     /**
-    * Removes the parent from a canvas element from the pool, freeing it up for re-use.
+    * Looks up a canvas based on its type, and if found puts it back in the pool, freeing it up for re-use.
+    * The canvas has its width and height set to 1, and its parent attribute nulled.
     * 
     * @static
     * @method Phaser.CanvasPool.removeByCanvas
