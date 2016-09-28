@@ -46,34 +46,3 @@ else
     PIXI.Float32Array = Array;
     PIXI.Uint16Array = Array;
 }
-
-/**
- * @property {String} RETINA_PREFIX
- * @protected
- * @static
- */
-PIXI.RETINA_PREFIX = "@2x";
-
-/**
- * The default render options if none are supplied to
- * {{#crossLink "WebGLRenderer"}}{{/crossLink}} or {{#crossLink "CanvasRenderer"}}{{/crossLink}}.
- *
- * @property {Object} defaultRenderOptions
- * @property {Object} defaultRenderOptions.view=null
- * @property {Boolean} defaultRenderOptions.transparent=false
- * @property {Boolean} defaultRenderOptions.antialias=false
- * @property {Boolean} defaultRenderOptions.preserveDrawingBuffer=false
- * @property {Number} defaultRenderOptions.resolution=1
- * @property {Boolean} defaultRenderOptions.clearBeforeRender=true
- * @property {Boolean} defaultRenderOptions.autoResize=false
- * @static
-PIXI.defaultRenderOptions = {
-    view: null,
-    transparent: false,
-    antialias: false, 
-    preserveDrawingBuffer: false,
-    resolution: 1,
-    clearBeforeRender: true,
-    autoResize: false
-};
- */
