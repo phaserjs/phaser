@@ -349,6 +349,9 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * PIXI.Graphics and PIXI.GraphicsData have been removed, and all functionality merged in to Phaser.Graphics, to cut down on the number of internal classes and inheritance going on.
 * WebGLGraphics and CanvasGraphics have been updated so that it checks for Phaser Geometry shape types internally.
 * PIXI.PI_2 has been removed, because it's available via Phaser.Math.PI2. The only place PI_2 was used has been updated to now use PI2.
+* The polyfills.js file now polyfills in for Float32Array, Uint16Array and ArrayBuffer.
+* PIXI.Float32Array, PIXI.Uint16Array, PIXI.Uint32Array and PIXI.ArrayBuffer have all been removed, and replaced with their own proper native versions. The polyfill now captures any instances where the browser needs to fall back to an Array instead.
+
 
 ### Bug Fixes
 
@@ -379,6 +382,7 @@ Please note that Phaser uses a custom build of Pixi and always has done. The fol
 * PIXI.PI_2, PIXI.RAD_TO_DEG and PIXI.DEG_TO_RAD have all been removed, as they are no longer used internally, and are all available under Phaser.Math.
 * PIXI.RETINA_PREFIX has been removed, as it was never used anywhere internally.
 * PIXI._UID has been removed, all affected classes now use Phaser._UID.
+* PIXI.Float32Array, PIXI.Uint16Array, PIXI.Uint32Array and PIXI.ArrayBuffer have all been removed, and replaced with their own proper native versions.
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 

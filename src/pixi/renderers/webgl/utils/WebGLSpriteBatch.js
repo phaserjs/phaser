@@ -51,7 +51,7 @@ PIXI.WebGLSpriteBatch = function (game) {
      * @property vertices
      * @type ArrayBuffer
      */
-    this.vertices = new PIXI.ArrayBuffer(numVerts);
+    this.vertices = new ArrayBuffer(numVerts);
 
     /**
      * View on the vertices as a Float32Array
@@ -59,7 +59,7 @@ PIXI.WebGLSpriteBatch = function (game) {
      * @property positions
      * @type Float32Array
      */
-    this.positions = new PIXI.Float32Array(this.vertices);
+    this.positions = new Float32Array(this.vertices);
 
     /**
      * View on the vertices as a Uint32Array
@@ -67,7 +67,7 @@ PIXI.WebGLSpriteBatch = function (game) {
      * @property colors
      * @type Uint32Array
      */
-    this.colors = new PIXI.Uint32Array(this.vertices);
+    this.colors = new Uint32Array(this.vertices);
 
     /**
      * Holds the indices
@@ -75,7 +75,7 @@ PIXI.WebGLSpriteBatch = function (game) {
      * @property indices
      * @type Uint16Array
      */
-    this.indices = new PIXI.Uint16Array(numIndices);
+    this.indices = new Uint16Array(numIndices);
 
     /**
      * @property lastIndexCount

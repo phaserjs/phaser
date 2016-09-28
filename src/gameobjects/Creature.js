@@ -113,22 +113,22 @@ Phaser.Creature = function (game, x, y, key, mesh, animation) {
     var target = this.manager.target_creature;
 
     /**
-    * @property {PIXI.Float32Array} vertices - The vertices data.
+    * @property {Float32Array} vertices - The vertices data.
     * @protected
     */
-    this.vertices = new PIXI.Float32Array(target.total_num_pts * 2);
+    this.vertices = new Float32Array(target.total_num_pts * 2);
 
     /**
-    * @property {PIXI.Float32Array} uvs - The UV data.
+    * @property {Float32Array} uvs - The UV data.
     * @protected
     */
-    this.uvs = new PIXI.Float32Array(target.total_num_pts * 2);
+    this.uvs = new Float32Array(target.total_num_pts * 2);
     
     /**
-    * @property {PIXI.Uint16Array} indices
+    * @property {Uint16Array} indices
     * @protected
     */
-    this.indices = new PIXI.Uint16Array(target.global_indices.length);
+    this.indices = new Uint16Array(target.global_indices.length);
 
     for (var i = 0; i < this.indices.length; i++)
     {
@@ -136,10 +136,10 @@ Phaser.Creature = function (game, x, y, key, mesh, animation) {
     }
     
     /**
-    * @property {PIXI.Uint16Array} colors - The vertices colors
+    * @property {Uint16Array} colors - The vertices colors
     * @protected
     */
-    this.colors = new PIXI.Float32Array([1, 1, 1, 1]);
+    this.colors = new Float32Array([1, 1, 1, 1]);
 
     this.updateRenderData(target.global_pts, target.global_uvs);
 

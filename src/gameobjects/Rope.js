@@ -65,26 +65,26 @@ Phaser.Rope = function (game, x, y, key, frame, points) {
     this.texture = Phaser.Cache.DEFAULT;
 
     // set up the main bits..
-    this.uvs = new PIXI.Float32Array([0, 1,
+    this.uvs = new Float32Array([0, 1,
                                       1, 1,
                                       1, 0,
                                       0, 1]);
 
-    this.vertices = new PIXI.Float32Array([0, 0,
+    this.vertices = new Float32Array([0, 0,
                                             100, 0,
                                             100, 100,
                                             0, 100]);
 
-    this.colors = new PIXI.Float32Array([1, 1, 1, 1]);
+    this.colors = new Float32Array([1, 1, 1, 1]);
 
-    this.indices = new PIXI.Uint16Array([0, 1, 2, 3]);
+    this.indices = new Uint16Array([0, 1, 2, 3]);
 
     if (points)
     {
-        this.vertices = new PIXI.Float32Array(points.length * 4);
-        this.uvs = new PIXI.Float32Array(points.length * 4);
-        this.colors = new PIXI.Float32Array(points.length * 2);
-        this.indices = new PIXI.Uint16Array(points.length * 2);
+        this.vertices = new Float32Array(points.length * 4);
+        this.uvs = new Float32Array(points.length * 4);
+        this.colors = new Float32Array(points.length * 2);
+        this.indices = new Uint16Array(points.length * 2);
     }
 
     /**
