@@ -17,22 +17,22 @@ THIS SOFTWARE.
 /**
 * @class EarCut
 */
-PIXI.EarCut = {};
+Phaser.EarCut = {};
 
-PIXI.EarCut.Triangulate = function (data, holeIndices, dim) {
+Phaser.EarCut.Triangulate = function (data, holeIndices, dim) {
 
     dim = dim || 2;
 
     var hasHoles = holeIndices && holeIndices.length,
         outerLen = hasHoles ? holeIndices[0] * dim : data.length,
-        outerNode = PIXI.EarCut.linkedList(data, 0, outerLen, dim, true),
+        outerNode = Phaser.EarCut.linkedList(data, 0, outerLen, dim, true),
         triangles = [];
 
     if (!outerNode) return triangles;
 
     var minX, minY, maxX, maxY, x, y, size;
 
-    if (hasHoles) outerNode = PIXI.EarCut.eliminateHoles(data, holeIndices, outerNode, dim);
+    if (hasHoles) outerNode = Phaser.EarCut.eliminateHoles(data, holeIndices, outerNode, dim);
 
     // if the shape is not too simple, we'll use z-order curve hash later; calculate polygon bbox
     if (data.length > 80 * dim) {
@@ -52,14 +52,14 @@ PIXI.EarCut.Triangulate = function (data, holeIndices, dim) {
         size = Math.max(maxX - minX, maxY - minY);
     }
 
-    PIXI.EarCut.earcutLinked(outerNode, triangles, dim, minX, minY, size);
+    Phaser.EarCut.earcutLinked(outerNode, triangles, dim, minX, minY, size);
 
     return triangles;
 }
 
 // create a circular doubly linked list from polygon points in the specified winding order
 
-PIXI.EarCut.linkedList = function (data, start, end, dim, clockwise) {
+Phaser.EarCut.linkedList = function (data, start, end, dim, clockwise) {
     var sum = 0,
         i, j, last;
 
@@ -71,9 +71,9 @@ PIXI.EarCut.linkedList = function (data, start, end, dim, clockwise) {
 
     // link points into circular doubly-linked list in the specified winding order
     if (clockwise === (sum > 0)) {
-        for (i = start; i < end; i += dim) last = PIXI.EarCut.insertNode(i, data[i], data[i + 1], last);
+        for (i = start; i < end; i += dim) last = Phaser.EarCut.insertNode(i, data[i], data[i + 1], last);
     } else {
-        for (i = end - dim; i >= start; i -= dim) last = PIXI.EarCut.insertNode(i, data[i], data[i + 1], last);
+        for (i = end - dim; i >= start; i -= dim) last = Phaser.EarCut.insertNode(i, data[i], data[i + 1], last);
     }
 
     return last;
@@ -81,7 +81,7 @@ PIXI.EarCut.linkedList = function (data, start, end, dim, clockwise) {
 
 // eliminate colinear or duplicate points
 
-PIXI.EarCut.filterPoints = function (start, end) {
+Phaser.EarCut.filterPoints = function (start, end) {
     if (!start) return start;
     if (!end) end = start;
 
@@ -90,8 +90,8 @@ PIXI.EarCut.filterPoints = function (start, end) {
     do {
         again = false;
 
-        if (!p.steiner && (PIXI.EarCut.equals(p, p.next) || PIXI.EarCut.area(p.prev, p, p.next) === 0)) {
-            PIXI.EarCut.removeNode(p);
+        if (!p.steiner && (Phaser.EarCut.equals(p, p.next) || Phaser.EarCut.area(p.prev, p, p.next) === 0)) {
+            Phaser.EarCut.removeNode(p);
             p = end = p.prev;
             if (p === p.next) return null;
             again = true;
@@ -106,11 +106,11 @@ PIXI.EarCut.filterPoints = function (start, end) {
 
 // main ear slicing loop which triangulates a polygon (given as a linked list)
 
-PIXI.EarCut.earcutLinked = function (ear, triangles, dim, minX, minY, size, pass) {
+Phaser.EarCut.earcutLinked = function (ear, triangles, dim, minX, minY, size, pass) {
     if (!ear) return;
 
     // interlink polygon nodes in z-order
-    if (!pass && size) PIXI.EarCut.indexCurve(ear, minX, minY, size);
+    if (!pass && size) Phaser.EarCut.indexCurve(ear, minX, minY, size);
 
     var stop = ear,
         prev, next;
@@ -120,13 +120,13 @@ PIXI.EarCut.earcutLinked = function (ear, triangles, dim, minX, minY, size, pass
         prev = ear.prev;
         next = ear.next;
 
-        if (size ? PIXI.EarCut.isEarHashed(ear, minX, minY, size) : PIXI.EarCut.isEar(ear)) {
+        if (size ? Phaser.EarCut.isEarHashed(ear, minX, minY, size) : Phaser.EarCut.isEar(ear)) {
             // cut off the triangle
             triangles.push(prev.i / dim);
             triangles.push(ear.i / dim);
             triangles.push(next.i / dim);
 
-            PIXI.EarCut.removeNode(ear);
+            Phaser.EarCut.removeNode(ear);
 
             // skipping the next vertice leads to less sliver triangles
             ear = next.next;
@@ -141,16 +141,16 @@ PIXI.EarCut.earcutLinked = function (ear, triangles, dim, minX, minY, size, pass
         if (ear === stop) {
             // try filtering points and slicing again
             if (!pass) {
-                PIXI.EarCut.earcutLinked(PIXI.EarCut.filterPoints(ear), triangles, dim, minX, minY, size, 1);
+                Phaser.EarCut.earcutLinked(Phaser.EarCut.filterPoints(ear), triangles, dim, minX, minY, size, 1);
 
                 // if this didn't work, try curing all small self-intersections locally
             } else if (pass === 1) {
-                ear = PIXI.EarCut.cureLocalIntersections(ear, triangles, dim);
-                PIXI.EarCut.earcutLinked(ear, triangles, dim, minX, minY, size, 2);
+                ear = Phaser.EarCut.cureLocalIntersections(ear, triangles, dim);
+                Phaser.EarCut.earcutLinked(ear, triangles, dim, minX, minY, size, 2);
 
                 // as a last resort, try splitting the remaining polygon into two
             } else if (pass === 2) {
-                PIXI.EarCut.splitEarcut(ear, triangles, dim, minX, minY, size);
+                Phaser.EarCut.splitEarcut(ear, triangles, dim, minX, minY, size);
             }
 
             break;
@@ -160,31 +160,31 @@ PIXI.EarCut.earcutLinked = function (ear, triangles, dim, minX, minY, size, pass
 
 // check whether a polygon node forms a valid ear with adjacent nodes
 
-PIXI.EarCut.isEar = function (ear) {
+Phaser.EarCut.isEar = function (ear) {
     var a = ear.prev,
         b = ear,
         c = ear.next;
 
-    if (PIXI.EarCut.area(a, b, c) >= 0) return false; // reflex, can't be an ear
+    if (Phaser.EarCut.area(a, b, c) >= 0) return false; // reflex, can't be an ear
 
     // now make sure we don't have other points inside the potential ear
     var p = ear.next.next;
 
     while (p !== ear.prev) {
-        if (PIXI.EarCut.pointInTriangle(a.x, a.y, b.x, b.y, c.x, c.y, p.x, p.y) &&
-            PIXI.EarCut.area(p.prev, p, p.next) >= 0) return false;
+        if (Phaser.EarCut.pointInTriangle(a.x, a.y, b.x, b.y, c.x, c.y, p.x, p.y) &&
+            Phaser.EarCut.area(p.prev, p, p.next) >= 0) return false;
         p = p.next;
     }
 
     return true;
 }
 
-PIXI.EarCut.isEarHashed = function (ear, minX, minY, size) {
+Phaser.EarCut.isEarHashed = function (ear, minX, minY, size) {
     var a = ear.prev,
         b = ear,
         c = ear.next;
 
-    if (PIXI.EarCut.area(a, b, c) >= 0) return false; // reflex, can't be an ear
+    if (Phaser.EarCut.area(a, b, c) >= 0) return false; // reflex, can't be an ear
 
     // triangle bbox; min & max are calculated like this for speed
     var minTX = a.x < b.x ? (a.x < c.x ? a.x : c.x) : (b.x < c.x ? b.x : c.x),
@@ -193,16 +193,16 @@ PIXI.EarCut.isEarHashed = function (ear, minX, minY, size) {
         maxTY = a.y > b.y ? (a.y > c.y ? a.y : c.y) : (b.y > c.y ? b.y : c.y);
 
     // z-order range for the current triangle bbox;
-    var minZ = PIXI.EarCut.zOrder(minTX, minTY, minX, minY, size),
-        maxZ = PIXI.EarCut.zOrder(maxTX, maxTY, minX, minY, size);
+    var minZ = Phaser.EarCut.zOrder(minTX, minTY, minX, minY, size),
+        maxZ = Phaser.EarCut.zOrder(maxTX, maxTY, minX, minY, size);
 
     // first look for points inside the triangle in increasing z-order
     var p = ear.nextZ;
 
     while (p && p.z <= maxZ) {
         if (p !== ear.prev && p !== ear.next &&
-            PIXI.EarCut.pointInTriangle(a.x, a.y, b.x, b.y, c.x, c.y, p.x, p.y) &&
-            PIXI.EarCut.area(p.prev, p, p.next) >= 0) return false;
+            Phaser.EarCut.pointInTriangle(a.x, a.y, b.x, b.y, c.x, c.y, p.x, p.y) &&
+            Phaser.EarCut.area(p.prev, p, p.next) >= 0) return false;
         p = p.nextZ;
     }
 
@@ -211,8 +211,8 @@ PIXI.EarCut.isEarHashed = function (ear, minX, minY, size) {
 
     while (p && p.z >= minZ) {
         if (p !== ear.prev && p !== ear.next &&
-            PIXI.EarCut.pointInTriangle(a.x, a.y, b.x, b.y, c.x, c.y, p.x, p.y) &&
-            PIXI.EarCut.area(p.prev, p, p.next) >= 0) return false;
+            Phaser.EarCut.pointInTriangle(a.x, a.y, b.x, b.y, c.x, c.y, p.x, p.y) &&
+            Phaser.EarCut.area(p.prev, p, p.next) >= 0) return false;
         p = p.prevZ;
     }
 
@@ -221,22 +221,22 @@ PIXI.EarCut.isEarHashed = function (ear, minX, minY, size) {
 
 // go through all polygon nodes and cure small local self-intersections
 
-PIXI.EarCut.cureLocalIntersections = function (start, triangles, dim) {
+Phaser.EarCut.cureLocalIntersections = function (start, triangles, dim) {
     var p = start;
     do {
         var a = p.prev,
             b = p.next.next;
 
         // a self-intersection where edge (v[i-1],v[i]) intersects (v[i+1],v[i+2])
-        if (PIXI.EarCut.intersects(a, p, p.next, b) && PIXI.EarCut.locallyInside(a, b) && PIXI.EarCut.locallyInside(b, a)) {
+        if (Phaser.EarCut.intersects(a, p, p.next, b) && Phaser.EarCut.locallyInside(a, b) && Phaser.EarCut.locallyInside(b, a)) {
 
             triangles.push(a.i / dim);
             triangles.push(p.i / dim);
             triangles.push(b.i / dim);
 
             // remove two nodes involved
-            PIXI.EarCut.removeNode(p);
-            PIXI.EarCut.removeNode(p.next);
+            Phaser.EarCut.removeNode(p);
+            Phaser.EarCut.removeNode(p.next);
 
             p = start = b;
         }
@@ -248,23 +248,23 @@ PIXI.EarCut.cureLocalIntersections = function (start, triangles, dim) {
 
 // try splitting polygon into two and triangulate them independently
 
-PIXI.EarCut.splitEarcut = function (start, triangles, dim, minX, minY, size) {
+Phaser.EarCut.splitEarcut = function (start, triangles, dim, minX, minY, size) {
     // look for a valid diagonal that divides the polygon into two
     var a = start;
     do {
         var b = a.next.next;
         while (b !== a.prev) {
-            if (a.i !== b.i && PIXI.EarCut.isValidDiagonal(a, b)) {
+            if (a.i !== b.i && Phaser.EarCut.isValidDiagonal(a, b)) {
                 // split the polygon in two by the diagonal
-                var c = PIXI.EarCut.splitPolygon(a, b);
+                var c = Phaser.EarCut.splitPolygon(a, b);
 
                 // filter colinear points around the cuts
-                a = PIXI.EarCut.filterPoints(a, a.next);
-                c = PIXI.EarCut.filterPoints(c, c.next);
+                a = Phaser.EarCut.filterPoints(a, a.next);
+                c = Phaser.EarCut.filterPoints(c, c.next);
 
                 // run earcut on each half
-                PIXI.EarCut.earcutLinked(a, triangles, dim, minX, minY, size);
-                PIXI.EarCut.earcutLinked(c, triangles, dim, minX, minY, size);
+                Phaser.EarCut.earcutLinked(a, triangles, dim, minX, minY, size);
+                Phaser.EarCut.earcutLinked(c, triangles, dim, minX, minY, size);
                 return;
             }
             b = b.next;
@@ -275,46 +275,46 @@ PIXI.EarCut.splitEarcut = function (start, triangles, dim, minX, minY, size) {
 
 // link every hole into the outer loop, producing a single-ring polygon without holes
 
-PIXI.EarCut.eliminateHoles = function (data, holeIndices, outerNode, dim) {
+Phaser.EarCut.eliminateHoles = function (data, holeIndices, outerNode, dim) {
     var queue = [],
         i, len, start, end, list;
 
     for (i = 0, len = holeIndices.length; i < len; i++) {
         start = holeIndices[i] * dim;
         end = i < len - 1 ? holeIndices[i + 1] * dim : data.length;
-        list = PIXI.EarCut.linkedList(data, start, end, dim, false);
+        list = Phaser.EarCut.linkedList(data, start, end, dim, false);
         if (list === list.next) list.steiner = true;
-        queue.push(PIXI.EarCut.getLeftmost(list));
+        queue.push(Phaser.EarCut.getLeftmost(list));
     }
 
     queue.sort(compareX);
 
     // process holes from left to right
     for (i = 0; i < queue.length; i++) {
-        PIXI.EarCut.eliminateHole(queue[i], outerNode);
-        outerNode = PIXI.EarCut.filterPoints(outerNode, outerNode.next);
+        Phaser.EarCut.eliminateHole(queue[i], outerNode);
+        outerNode = Phaser.EarCut.filterPoints(outerNode, outerNode.next);
     }
 
     return outerNode;
 }
 
-PIXI.EarCut.compareX = function (a, b) {
+Phaser.EarCut.compareX = function (a, b) {
     return a.x - b.x;
 }
 
 // find a bridge between vertices that connects hole with an outer ring and and link it
 
-PIXI.EarCut.eliminateHole = function (hole, outerNode) {
-    outerNode = PIXI.EarCut.findHoleBridge(hole, outerNode);
+Phaser.EarCut.eliminateHole = function (hole, outerNode) {
+    outerNode = Phaser.EarCut.findHoleBridge(hole, outerNode);
     if (outerNode) {
-        var b = PIXI.EarCut.splitPolygon(outerNode, hole);
-        PIXI.EarCut.filterPoints(b, b.next);
+        var b = Phaser.EarCut.splitPolygon(outerNode, hole);
+        Phaser.EarCut.filterPoints(b, b.next);
     }
 }
 
 // David Eberly's algorithm for finding a bridge between hole and outer polygon
 
-PIXI.EarCut.findHoleBridge = function (hole, outerNode) {
+Phaser.EarCut.findHoleBridge = function (hole, outerNode) {
     var p = outerNode,
         hx = hole.x,
         hy = hole.y,
@@ -350,11 +350,11 @@ PIXI.EarCut.findHoleBridge = function (hole, outerNode) {
 
     while (p !== stop) {
         if (hx >= p.x && p.x >= m.x &&
-            PIXI.EarCut.pointInTriangle(hy < m.y ? hx : qx, hy, m.x, m.y, hy < m.y ? qx : hx, hy, p.x, p.y)) {
+            Phaser.EarCut.pointInTriangle(hy < m.y ? hx : qx, hy, m.x, m.y, hy < m.y ? qx : hx, hy, p.x, p.y)) {
 
             tan = Math.abs(hy - p.y) / (hx - p.x); // tangential
 
-            if ((tan < tanMin || (tan === tanMin && p.x > m.x)) && PIXI.EarCut.locallyInside(p, hole)) {
+            if ((tan < tanMin || (tan === tanMin && p.x > m.x)) && Phaser.EarCut.locallyInside(p, hole)) {
                 m = p;
                 tanMin = tan;
             }
@@ -368,10 +368,10 @@ PIXI.EarCut.findHoleBridge = function (hole, outerNode) {
 
 // interlink polygon nodes in z-order
 
-PIXI.EarCut.indexCurve = function (start, minX, minY, size) {
+Phaser.EarCut.indexCurve = function (start, minX, minY, size) {
     var p = start;
     do {
-        if (p.z === null) p.z = PIXI.EarCut.zOrder(p.x, p.y, minX, minY, size);
+        if (p.z === null) p.z = Phaser.EarCut.zOrder(p.x, p.y, minX, minY, size);
         p.prevZ = p.prev;
         p.nextZ = p.next;
         p = p.next;
@@ -380,13 +380,13 @@ PIXI.EarCut.indexCurve = function (start, minX, minY, size) {
     p.prevZ.nextZ = null;
     p.prevZ = null;
 
-    PIXI.EarCut.sortLinked(p);
+    Phaser.EarCut.sortLinked(p);
 }
 
 // Simon Tatham's linked list merge sort algorithm
 // http://www.chiark.greenend.org.uk/~sgtatham/algorithms/listsort.html
 
-PIXI.EarCut.sortLinked = function (list) {
+Phaser.EarCut.sortLinked = function (list) {
     var i, p, q, e, tail, numMerges, pSize, qSize,
         inSize = 1;
 
@@ -448,7 +448,7 @@ PIXI.EarCut.sortLinked = function (list) {
 
 // z-order of a point given coords and size of the data bounding box
 
-PIXI.EarCut.zOrder = function (x, y, minX, minY, size) {
+Phaser.EarCut.zOrder = function (x, y, minX, minY, size) {
     // coords are transformed into non-negative 15-bit integer range
     x = 32767 * (x - minX) / size;
     y = 32767 * (y - minY) / size;
@@ -468,7 +468,7 @@ PIXI.EarCut.zOrder = function (x, y, minX, minY, size) {
 
 // find the leftmost node of a polygon ring
 
-PIXI.EarCut.getLeftmost = function (start) {
+Phaser.EarCut.getLeftmost = function (start) {
     var p = start,
         leftmost = start;
     do {
@@ -481,7 +481,7 @@ PIXI.EarCut.getLeftmost = function (start) {
 
 // check if a point lies within a convex triangle
 
-PIXI.EarCut.pointInTriangle = function (ax, ay, bx, by, cx, cy, px, py) {
+Phaser.EarCut.pointInTriangle = function (ax, ay, bx, by, cx, cy, px, py) {
     return (cx - px) * (ay - py) - (ax - px) * (cy - py) >= 0 &&
         (ax - px) * (by - py) - (bx - px) * (ay - py) >= 0 &&
         (bx - px) * (cy - py) - (cx - px) * (by - py) >= 0;
@@ -489,37 +489,37 @@ PIXI.EarCut.pointInTriangle = function (ax, ay, bx, by, cx, cy, px, py) {
 
 // check if a diagonal between two polygon nodes is valid (lies in polygon interior)
 
-PIXI.EarCut.isValidDiagonal = function (a, b) {
-    return PIXI.EarCut.equals(a, b) || a.next.i !== b.i && a.prev.i !== b.i && !PIXI.EarCut.intersectsPolygon(a, b) &&
-        PIXI.EarCut.locallyInside(a, b) && PIXI.EarCut.locallyInside(b, a) && PIXI.EarCut.middleInside(a, b);
+Phaser.EarCut.isValidDiagonal = function (a, b) {
+    return Phaser.EarCut.equals(a, b) || a.next.i !== b.i && a.prev.i !== b.i && !Phaser.EarCut.intersectsPolygon(a, b) &&
+        Phaser.EarCut.locallyInside(a, b) && Phaser.EarCut.locallyInside(b, a) && Phaser.EarCut.middleInside(a, b);
 }
 
 // signed area of a triangle
 
-PIXI.EarCut.area = function (p, q, r) {
+Phaser.EarCut.area = function (p, q, r) {
     return (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
 }
 
 // check if two points are equal
 
-PIXI.EarCut.equals = function (p1, p2) {
+Phaser.EarCut.equals = function (p1, p2) {
     return p1.x === p2.x && p1.y === p2.y;
 }
 
 // check if two segments intersect
 
-PIXI.EarCut.intersects = function (p1, q1, p2, q2) {
-    return PIXI.EarCut.area(p1, q1, p2) > 0 !== PIXI.EarCut.area(p1, q1, q2) > 0 &&
-        PIXI.EarCut.area(p2, q2, p1) > 0 !== PIXI.EarCut.area(p2, q2, q1) > 0;
+Phaser.EarCut.intersects = function (p1, q1, p2, q2) {
+    return Phaser.EarCut.area(p1, q1, p2) > 0 !== Phaser.EarCut.area(p1, q1, q2) > 0 &&
+        Phaser.EarCut.area(p2, q2, p1) > 0 !== Phaser.EarCut.area(p2, q2, q1) > 0;
 }
 
 // check if a polygon diagonal intersects any polygon segments
 
-PIXI.EarCut.intersectsPolygon = function (a, b) {
+Phaser.EarCut.intersectsPolygon = function (a, b) {
     var p = a;
     do {
         if (p.i !== a.i && p.next.i !== a.i && p.i !== b.i && p.next.i !== b.i &&
-            PIXI.EarCut.intersects(p, p.next, a, b)) return true;
+            Phaser.EarCut.intersects(p, p.next, a, b)) return true;
         p = p.next;
     } while (p !== a);
 
@@ -528,15 +528,15 @@ PIXI.EarCut.intersectsPolygon = function (a, b) {
 
 // check if a polygon diagonal is locally inside the polygon
 
-PIXI.EarCut.locallyInside = function (a, b) {
-    return PIXI.EarCut.area(a.prev, a, a.next) < 0 ?
-        PIXI.EarCut.area(a, b, a.next) >= 0 && PIXI.EarCut.area(a, a.prev, b) >= 0 :
-        PIXI.EarCut.area(a, b, a.prev) < 0 || PIXI.EarCut.area(a, a.next, b) < 0;
+Phaser.EarCut.locallyInside = function (a, b) {
+    return Phaser.EarCut.area(a.prev, a, a.next) < 0 ?
+        Phaser.EarCut.area(a, b, a.next) >= 0 && Phaser.EarCut.area(a, a.prev, b) >= 0 :
+        Phaser.EarCut.area(a, b, a.prev) < 0 || Phaser.EarCut.area(a, a.next, b) < 0;
 }
 
 // check if the middle point of a polygon diagonal is inside the polygon
 
-PIXI.EarCut.middleInside = function (a, b) {
+Phaser.EarCut.middleInside = function (a, b) {
     var p = a,
         inside = false,
         px = (a.x + b.x) / 2,
@@ -553,9 +553,9 @@ PIXI.EarCut.middleInside = function (a, b) {
 // link two polygon vertices with a bridge; if the vertices belong to the same ring, it splits polygon into two;
 // if one belongs to the outer ring and another to a hole, it merges it into a single ring
 
-PIXI.EarCut.splitPolygon = function (a, b) {
-    var a2 = new PIXI.EarCut.Node(a.i, a.x, a.y),
-        b2 = new PIXI.EarCut.Node(b.i, b.x, b.y),
+Phaser.EarCut.splitPolygon = function (a, b) {
+    var a2 = new Phaser.EarCut.Node(a.i, a.x, a.y),
+        b2 = new Phaser.EarCut.Node(b.i, b.x, b.y),
         an = a.next,
         bp = b.prev;
 
@@ -576,8 +576,8 @@ PIXI.EarCut.splitPolygon = function (a, b) {
 
 // create a node and optionally link it with previous one (in a circular doubly linked list)
 
-PIXI.EarCut.insertNode = function (i, x, y, last) {
-    var p = new PIXI.EarCut.Node(i, x, y);
+Phaser.EarCut.insertNode = function (i, x, y, last) {
+    var p = new Phaser.EarCut.Node(i, x, y);
 
     if (!last) {
         p.prev = p;
@@ -592,7 +592,7 @@ PIXI.EarCut.insertNode = function (i, x, y, last) {
     return p;
 }
 
-PIXI.EarCut.removeNode = function (p) {
+Phaser.EarCut.removeNode = function (p) {
     p.next.prev = p.prev;
     p.prev.next = p.next;
 
@@ -600,7 +600,7 @@ PIXI.EarCut.removeNode = function (p) {
     if (p.nextZ) p.nextZ.prevZ = p.prevZ;
 }
 
-PIXI.EarCut.Node = function (i, x, y) {
+Phaser.EarCut.Node = function (i, x, y) {
     // vertice index in coordinates array
     this.i = i;
 

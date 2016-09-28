@@ -51,11 +51,7 @@
     <script src="$path/src/pixi/display/DisplayObject.js"></script>
     <script src="$path/src/pixi/display/DisplayObjectContainer.js"></script>
     <script src="$path/src/pixi/display/Sprite.js"></script>
-
-    <script src="$path/src/pixi/utils/Utils.js"></script>
-    <script src="$path/src/pixi/utils/EarCut.js"></script>
-    <script src="$path/src/pixi/utils/CanvasPool.js"></script>
-
+    
     <script src="$path/src/pixi/renderers/webgl/utils/WebGLShaderUtils.js"></script>
     <script src="$path/src/pixi/renderers/webgl/shaders/PixiShader.js"></script>
     <script src="$path/src/pixi/renderers/webgl/shaders/PixiFastShader.js"></script>
@@ -101,6 +97,7 @@ EOL;
     <script src="$path/src/Phaser.js"></script>
     <script src="$path/src/polyfills.js"></script>
     <script src="$path/src/utils/Utils.js"></script>
+    <script src="$path/src/utils/CanvasPool.js"></script>
 
     <script src="$path/src/geom/Circle.js"></script>
     <script src="$path/src/geom/Ellipse.js"></script>

@@ -356,7 +356,7 @@ PIXI.WebGLGraphics.buildRoundedRectangle = function(graphicsData, webGLData)
 
         var vecPos = verts.length / 6;
 
-        var triangles = PIXI.EarCut.Triangulate(recPoints, null, 2);
+        var triangles = Phaser.EarCut.Triangulate(recPoints, null, 2);
 
         var i = 0;
 
@@ -823,7 +823,7 @@ PIXI.WebGLGraphics.buildPoly = function(graphicsData, webGLData)
     var g = color[1] * alpha;
     var b = color[2] * alpha;
 
-    var triangles = PIXI.EarCut.Triangulate(points, null, 2);
+    var triangles = Phaser.EarCut.Triangulate(points, null, 2);
 
     if(!triangles)return false;
 

@@ -337,6 +337,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * PIXI.RenderTexture has been removed, and all functionality merged in to Phaser.RenderTexture, to cut down on the number of internal classes and inheritance going on.
 * PIXI.TilingSprite has been removed, and all functionality merged in to Phaser.TileSprite, to cut down on the number of internal classes and inheritance going on.
 * PIXI.CanvasPool has been moved into the Phaser `utils` folder, and renamed to `Phaser.CanvasPool`. All references to PIXI.CanvasPool have been updated to match the new namespace.
+* PIXI.EarCut has been moved into the Phaser `utils` folder, and renamed to `Phaser.EarCut`. All references to PIXI.EarCut have been updated to match the new namespace.
 
 ### Bug Fixes
 
@@ -358,6 +359,7 @@ Please note that Phaser uses a custom build of Pixi and always has done. The fol
 * PIXI.SpriteBatch has been removed as it's no longer used internally.
 * PIXI.RenderTexture has been removed as it's no longer used internally.
 * PIXI.TileSprite has been removed as it's no longer used internally.
+* PIXI.EarCut has been removed as it's no longer used internally.
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
