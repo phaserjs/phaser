@@ -20,7 +20,18 @@
 * @param {object} source
 * @param {number} scaleMode
 */
-Phaser.Texture = function (source, scaleMode) {
+Phaser.Texture = function (key, source, scaleMode)
+{
+    this.key = key;
+
+    /**
+    * The source that is used to create the texture.
+    * Usually an Image, but can also be a Canvas.
+    *
+    * @property source
+    * @type Image
+    */
+    this.source = source;
 
     /**
     * The Resolution of the texture.
@@ -37,7 +48,7 @@ Phaser.Texture = function (source, scaleMode) {
     * @type Number
     * @readOnly
     */
-    this.width = 0;
+    this.width = source.naturalWidth || source.width || 0;
 
     /**
     * The height of the Texture.
@@ -46,7 +57,7 @@ Phaser.Texture = function (source, scaleMode) {
     * @type Number
     * @readOnly
     */
-    this.height = 0;
+    this.height = source.naturalHeight || source.height || 0;
 
     /**
     * The scale mode to apply when scaling this texture
@@ -58,15 +69,6 @@ Phaser.Texture = function (source, scaleMode) {
     this.scaleMode = scaleMode || PIXI.scaleModes.DEFAULT;
 
     /**
-    * The source that is used to create the texture.
-    * Usually an Image, but can also be a Canvas.
-    *
-    * @property source
-    * @type Image
-    */
-    this.source = source;
-
-    /**
     * Controls if RGB channels should be pre-multiplied by Alpha  (WebGL only)
     *
     * @property premultipliedAlpha
@@ -74,13 +76,6 @@ Phaser.Texture = function (source, scaleMode) {
     * @default true
     */
     this.premultipliedAlpha = true;
-
-    /**
-    * @property _glTextures
-    * @type Array
-    * @private
-    */
-    this._glTextures = [];
 
     /**
     * Set this to true if a mipmap of this texture needs to be generated. This value needs to be set before the texture is used
@@ -99,6 +94,30 @@ Phaser.Texture = function (source, scaleMode) {
     this.textureIndex = 0;
 
     /**
+    * A BaseTexture can be set to skip the rendering phase in the WebGL Sprite Batch.
+    * 
+    * You may want to do this if you have a parent Sprite with no visible texture (i.e. uses the internal `__default` texture)
+    * that has children that you do want to render, without causing a batch flush in the process.
+    * 
+    * @property renderable
+    * @type Boolean
+    */
+    this.renderable = false;
+
+    /**
+    * @property isPowerOf2
+    * @type boolean
+    */
+    this.isPowerOf2 = Phaser.Math.isPowerOfTwo(this.width, this.height);
+
+    /**
+    * @property {object} frames - Frames
+    */
+    this.frames = {
+        __BASE: new Phaser.TextureFrame(this, '__BASE', 0, 0, this.width, this.height)
+    };
+
+    /**
     * @property _dirty
     * @type Array
     * @private
@@ -106,35 +125,11 @@ Phaser.Texture = function (source, scaleMode) {
     this._dirty = [ true, true, true, true ];
 
     /**
-    * A BaseTexture can be set to skip the rendering phase in the WebGL Sprite Batch.
-    * 
-    * You may want to do this if you have a parent Sprite with no visible texture (i.e. uses the internal `__default` texture)
-    * that has children that you do want to render, without causing a batch flush in the process.
-    * 
-    * @property skipRender
-    * @type Boolean
-    */
-    this.skipRender = false;
-
-    /**
-    * @property _powerOf2
-    * @type Boolean
+    * @property _glTextures
+    * @type Array
     * @private
     */
-    this._powerOf2 = false;
-
-    if (!source)
-    {
-        return;
-    }
-
-    if ((this.source.complete || this.source.getContext) && this.source.width && this.source.height)
-    {
-        this.width = this.source.naturalWidth || this.source.width;
-        this.height = this.source.naturalHeight || this.source.height;
-        this._powerOf2 = Phaser.Math.isPowerOfTwo(this.width, this.height);
-        this.dirty();
-    }
+    this._glTextures = [];
     
 };
 
@@ -142,38 +137,20 @@ Phaser.Texture.prototype.constructor = Phaser.Texture;
 
 Phaser.Texture.prototype = {
 
-    /**
-     * Forces this BaseTexture to be set as loaded, with the given width and height.
-     * Then calls BaseTexture.dirty.
-     * Important for when you don't want to modify the source object by forcing in `complete` or dimension properties it may not have.
-     *
-     * @method forceLoaded
-     * @param {number} width - The new width to force the BaseTexture to be.
-     * @param {number} height - The new height to force the BaseTexture to be.
-     */
-    forceLoaded: function(width, height) {
+    add: function (name, x, y, width, height)
+    {
+        var frame = new Phaser.TextureFrame(this, name, x, y, width, height);
 
-        this.width = width;
-        this.height = height;
-        this.dirty();
+        this.frames[name] = frame;
 
+        return frame;
     },
 
-    /**
-    * Destroys this base texture
-    *
-    * @method destroy
-    */
-    destroy: function() {
+    get: function (name)
+    {
+        if (name === undefined) { name = '__BASE'; }
 
-        if (this.source)
-        {
-            Phaser.CanvasPool.removeByCanvas(this.source);
-        }
-
-        this.source = null;
-
-        this.unloadFromGPU();
+        return this.frames[name];
 
     },
 
@@ -182,23 +159,22 @@ Phaser.Texture.prototype = {
     *
     * @method dirty
     */
-    dirty: function() {
-
+    dirty: function ()
+    {
         for (var i = 0; i < this._glTextures.length; i++)
         {
             this._dirty[i] = true;
         }
-
     },
 
     /**
     * Removes the base texture from the GPU, useful for managing resources on the GPU.
-    * Atexture is still 100% usable and will simply be reuploaded if there is a sprite on screen that is using it.
+    * A texture is still 100% usable and will simply be re-uploaded if there is a sprite on screen that is using it.
     *
     * @method unloadFromGPU
     */
-    unloadFromGPU: function () {
-
+    unloadFromGPU: function ()
+    {
         this.dirty();
 
         // delete the webGL textures if any.
@@ -216,10 +192,26 @@ Phaser.Texture.prototype = {
         this._glTextures.length = 0;
 
         this.dirty();
-
     },
 
+    /**
+    * Destroys this base texture
+    *
+    * @method destroy
+    */
+    destroy: function ()
+    {
+        if (this.source)
+        {
+            Phaser.CanvasPool.removeByCanvas(this.source);
+        }
 
+        this.source = null;
+
+        this.unloadFromGPU();
+
+        //  TODO: Clear out the Frames
+    }
 
 };
 
@@ -232,8 +224,8 @@ Phaser.Texture.prototype = {
 * @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
 * @return {BaseTexture}
 */
-Phaser.Texture.fromCanvas = function (canvas, scaleMode) {
-
+Phaser.Texture.fromCanvas = function (canvas, scaleMode)
+{
     if (canvas.width === 0)
     {
         canvas.width = 1;
@@ -245,5 +237,4 @@ Phaser.Texture.fromCanvas = function (canvas, scaleMode) {
     }
 
     return new Phaser.Texture(canvas, scaleMode);
-
 };

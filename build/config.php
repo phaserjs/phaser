@@ -123,6 +123,11 @@ EOL;
     <script src="$path/src/input/Touch.js"></script>
     <script src="$path/src/input/InputHandler.js"></script>
 
+    <script src="$path/src/textures/TextureManager.js"></script>
+    <script src="$path/src/textures/Texture.js"></script>
+    <script src="$path/src/textures/Frame.js"></script>
+    <script src="$path/src/textures/parsers/JSONArray.js"></script>
+
 
 EOL;
 
