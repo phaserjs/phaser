@@ -391,7 +391,7 @@ Phaser.TilemapLayer.prototype.resize = function (width, height) {
     this.texture.baseTexture.height = height;
 
     this.texture.baseTexture.dirty();
-    this.texture.requiresUpdate = true;
+    // this.texture.requiresUpdate = true;
 
     this.texture._updateUvs();
 

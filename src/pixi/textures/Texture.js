@@ -90,7 +90,8 @@ PIXI.Texture = function(baseTexture, frame, crop, trim)
      * @property requiresUpdate
      * @type Boolean
      */
-    this.requiresUpdate = false;
+     // Isn't used anywhere internally
+    // this.requiresUpdate = false;
 
     /**
      * This will let a renderer know that a tinted parent has updated its texture.
@@ -155,11 +156,12 @@ PIXI.Texture = function(baseTexture, frame, crop, trim)
 PIXI.Texture.prototype.constructor = PIXI.Texture;
 
 /**
+ * NEVER USED INTERNALLY
+ * 
  * Called when the base texture is loaded
  *
  * @method onBaseTextureLoaded
  * @private
- */
 PIXI.Texture.prototype.onBaseTextureLoaded = function()
 {
     var baseTexture = this.baseTexture;
@@ -171,6 +173,7 @@ PIXI.Texture.prototype.onBaseTextureLoaded = function()
 
     this.setFrame(this.frame);
 };
+ */
 
 /**
  * Destroys this texture
