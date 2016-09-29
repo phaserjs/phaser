@@ -9,7 +9,9 @@
 *
 * @class
 */
-Phaser.Component.Children = function () {
+Phaser.Component.Children = function (parent) {
+
+    this.parent = parent;
 
     //  The objects that belong to this collection.
     //  The equivalent of the old `Sprite.children` array.
@@ -193,8 +195,6 @@ Phaser.Component.Children.prototype = {
 
     },
 
-
-
     swap: function (child1, child2) {
 
         if (child1 === child2)
@@ -214,7 +214,6 @@ Phaser.Component.Children.prototype = {
         this.list[index2] = child1;
 
     },
-
 
     //   was setIndex
     moveTo: function (child, index) {
@@ -292,6 +291,24 @@ Phaser.Component.Children.prototype = {
         {
             throw new Error('Children.removeBetween: Range Error, numeric values are outside the acceptable range');
         }
+
+    },
+
+    /**
+    * Removes all the items.
+    *
+    * @method Phaser.ArraySet#removeAll
+    */
+    removeAll: function () {
+
+        var i = this.list.length;
+
+        while (i--)
+        {
+            this.remove(this.list[i]);
+        }
+
+        return this;
 
     },
 
@@ -496,24 +513,6 @@ Phaser.Component.Children.prototype = {
     exists: function (child) {
 
         return (this.list.indexOf(child) > -1);
-
-    },
-
-    /**
-    * Removes all the items.
-    *
-    * @method Phaser.ArraySet#reset
-    */
-    reset: function () {
-
-        var i = this.list.length;
-
-        while (i--)
-        {
-            this.remove(this.list[i]);
-        }
-
-        return this;
 
     },
 
