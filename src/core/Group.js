@@ -2397,7 +2397,7 @@ Phaser.Group.prototype.getRandomExists = function (startIndex, endIndex) {
 * For example: `getAll('exists', true)` would return only children that have their exists property set.
 *
 * Optionally you can specify a start and end index. For example if this Group had 100 children,
-* and you set `startIndex` to 0 and `endIndex` to 50, it would return a random child from only
+* and you set `startIndex` to 0 and `endIndex` to 50, it would return matches from only
 * the first 50 children in the Group.
 *
 * @method Phaser.Group#getAll
@@ -2554,7 +2554,7 @@ Phaser.Group.prototype.removeAll = function (destroy, silent, destroyTexture) {
 };
 
 /**
-* Removes all children from this group whose index falls beteen the given startIndex and endIndex values.
+* Removes all children from this group whose index falls between the given startIndex and endIndex values.
 *
 * @method Phaser.Group#removeBetween
 * @param {integer} startIndex - The index to start removing children from.
