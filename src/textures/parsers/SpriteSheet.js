@@ -19,8 +19,13 @@
 * @param {number} [skipFrames=0] - Skip a number of frames. Useful when there are multiple sprite sheets in one Texture.
 * @return {Phaser.FrameData} A FrameData object containing the parsed frames.
 */
-Phaser.TextureParser.SpriteSheet = function (texture, frameWidth, frameHeight, frameMax, margin, spacing, skipFrames)
+Phaser.TextureManager.Parsers.SpriteSheet = function (texture, frameWidth, frameHeight, frameMax, margin, spacing, skipFrames)
 {
+    if (frameMax === undefined) { frameMax = -1; }
+    if (margin === undefined) { margin = 0; }
+    if (spacing === undefined) { spacing = 0; }
+    if (skipFrames === undefined) { skipFrames = 0; }
+
     var width = texture.width;
     var height = texture.height;
 
@@ -71,7 +76,9 @@ Phaser.TextureParser.SpriteSheet = function (texture, frameWidth, frameHeight, f
 
     for (var i = 0; i < total; i++)
     {
-        texture.addFrame(i.toString(), x, y, frameWidth, frameHeight);
+        console.log(x, y, frameWidth, frameHeight);
+
+        texture.add(i.toString(), x, y, frameWidth, frameHeight);
 
         x += frameWidth + spacing;
 

@@ -13,7 +13,7 @@
 * @param {object} json - The JSON data from the Texture Atlas. Must be in JSON Hash format.
 * @return {Phaser.FrameData} A FrameData object containing the parsed frames.
 */
-Phaser.TextureParser.JSONHash = function (texture, json)
+Phaser.TextureManager.Parsers.JSONHash = function (texture, json)
 {
     //  Malformed?
     if (!json['frames'])

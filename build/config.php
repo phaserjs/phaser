@@ -127,6 +127,8 @@ EOL;
     <script src="$path/src/textures/Texture.js"></script>
     <script src="$path/src/textures/Frame.js"></script>
     <script src="$path/src/textures/parsers/JSONArray.js"></script>
+    <script src="$path/src/textures/parsers/JSONHash.js"></script>
+    <script src="$path/src/textures/parsers/SpriteSheet.js"></script>
 
 
 EOL;
