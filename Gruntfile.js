@@ -226,7 +226,7 @@ module.exports = function (grunt) {
                 //  3) PIXI
 
                 grunt.log.writeln("-> PIXI");
-                
+
                 if (!excludedKeys['intro'])
                 {
                     tasks.push('concat:pixiIntro');
@@ -235,22 +235,6 @@ module.exports = function (grunt) {
 
                 tasks.push('concat:pixiMain');
                 pixiFilelist.push('<%= modules_dir %>/pixi-main.js');
-                
-                //  Optional Rope
-                if (!excludedKeys['rope'])
-                {
-                    grunt.log.writeln("-> PIXI.Rope");
-                    tasks.push('concat:pixiRope');
-                    pixiFilelist.push('<%= modules_dir %>/pixi-rope.js');
-                }
-
-                //  Optional Tilesprite
-                if (!excludedKeys['tilesprite'])
-                {
-                    grunt.log.writeln("-> PIXI.TileSprite");
-                    tasks.push('concat:pixiTileSprite');
-                    pixiFilelist.push('<%= modules_dir %>/pixi-tilesprite.js');
-                }
 
                 //  PIXI Outro
                 if (!excludedKeys['outro'])
@@ -299,7 +283,7 @@ module.exports = function (grunt) {
                 //  3) PIXI
 
                 grunt.log.writeln("-> PIXI");
-                
+
                 if (!excludedKeys['intro'])
                 {
                     tasks.push('concat:pixiIntro');
@@ -308,22 +292,6 @@ module.exports = function (grunt) {
 
                 tasks.push('concat:pixiMain');
                 filelist.push('<%= modules_dir %>/pixi-main.js');
-                
-                //  Optional Rope
-                if (!excludedKeys['rope'])
-                {
-                    grunt.log.writeln("-> PIXI.Rope");
-                    tasks.push('concat:pixiRope');
-                    filelist.push('<%= modules_dir %>/pixi-rope.js');
-                }
-
-                //  Optional Tilesprite
-                if (!excludedKeys['tilesprite'])
-                {
-                    grunt.log.writeln("-> PIXI.TileSprite");
-                    tasks.push('concat:pixiTileSprite');
-                    filelist.push('<%= modules_dir %>/pixi-tilesprite.js');
-                }
 
                 //  PIXI Outro
                 if (!excludedKeys['outro'])
