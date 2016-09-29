@@ -206,12 +206,6 @@ Phaser.Device = function () {
     this.worker = false;
 
     /**
-    * @property {boolean} css3D - Is css3D available?
-    * @default
-    */
-    this.css3D = false;
-
-    /**
     * @property {boolean} pointerLock - Is Pointer Lock available?
     * @default
     */
@@ -265,12 +259,6 @@ Phaser.Device = function () {
     //  Browser
 
     /**
-    * @property {boolean} arora - Set to true if running in Arora.
-    * @default
-    */
-    this.arora = false;
-
-    /**
     * @property {boolean} chrome - Set to true if running in Chrome.
     * @default
     */
@@ -281,12 +269,6 @@ Phaser.Device = function () {
     * @default
     */
     this.chromeVersion = 0;
-
-    /**
-    * @property {boolean} epiphany - Set to true if running in Epiphany.
-    * @default
-    */
-    this.epiphany = false;
 
     /**
     * @property {boolean} firefox - Set to true if running in Firefox.
@@ -335,12 +317,6 @@ Phaser.Device = function () {
     * @default
     */
     this.mobileSafari = false;
-
-    /**
-    * @property {boolean} midori - Set to true if running in Midori.
-    * @default
-    */
-    this.midori = false;
 
     /**
     * @property {boolean} opera - Set to true if running in Opera.
@@ -496,13 +472,7 @@ Phaser.Device = function () {
     this.pixelRatio = 0;
 
     /**
-    * @property {boolean} littleEndian - Is the device big or little endian? (only detected if the browser supports TypedArrays)
-    * @default
-    */
-    this.littleEndian = false;
-
-    /**
-    * @property {boolean} LITTLE_ENDIAN - Same value as `littleEndian`.
+    * @property {boolean} LITTLE_ENDIAN - Is the device big or little endian? (only detected if the browser supports TypedArrays)
     * @default
     */
     this.LITTLE_ENDIAN = false;
@@ -958,11 +928,7 @@ Phaser.Device._initialize = function () {
 
         var ua = navigator.userAgent;
 
-        if (/Arora/.test(ua))
-        {
-            device.arora = true;
-        }
-        else if (/Edge\/\d+/.test(ua))
+        if (/Edge\/\d+/.test(ua))
         {
             device.edge = true;
         }
@@ -970,10 +936,6 @@ Phaser.Device._initialize = function () {
         {
             device.chrome = true;
             device.chromeVersion = parseInt(RegExp.$1, 10);
-        }
-        else if (/Epiphany/.test(ua))
-        {
-            device.epiphany = true;
         }
         else if (/Firefox\D+(\d+)/.test(ua))
         {
@@ -988,10 +950,6 @@ Phaser.Device._initialize = function () {
         {
             device.ie = true;
             device.ieVersion = parseInt(RegExp.$1, 10);
-        }
-        else if (/Midori/.test(ua))
-        {
-            device.midori = true;
         }
         else if (/Opera/.test(ua))
         {
@@ -1266,11 +1224,10 @@ Phaser.Device._initialize = function () {
 
         if (typeof ArrayBuffer !== 'undefined' && typeof Uint8Array !== 'undefined' && typeof Uint32Array !== 'undefined')
         {
-            device.littleEndian = _checkIsLittleEndian();
-            device.LITTLE_ENDIAN = device.littleEndian;
+            device.LITTLE_ENDIAN = _checkIsLittleEndian();
         }
 
-        device.support32bit = (typeof ArrayBuffer !== 'undefined' && typeof Uint8ClampedArray !== 'undefined' && typeof Int32Array !== 'undefined' && device.littleEndian !== null && _checkIsUint8ClampedImageData());
+        device.support32bit = (typeof ArrayBuffer !== 'undefined' && typeof Uint8ClampedArray !== 'undefined' && typeof Int32Array !== 'undefined' && device.LITTLE_ENDIAN !== null && _checkIsUint8ClampedImageData());
 
         navigator.vibrate = navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate;
 
@@ -1281,44 +1238,11 @@ Phaser.Device._initialize = function () {
 
     }
 
-    /**
-    * Check whether the host environment support 3D CSS.
-    */
-    function _checkCSS3D () {
-
-        var el = document.createElement('p');
-        var has3d;
-        var transforms = {
-            'webkitTransform': '-webkit-transform',
-            'OTransform': '-o-transform',
-            'msTransform': '-ms-transform',
-            'MozTransform': '-moz-transform',
-            'transform': 'transform'
-        };
-
-        // Add it to the body to get the computed style.
-        document.body.insertBefore(el, null);
-
-        for (var t in transforms)
-        {
-            if (el.style[t] !== undefined)
-            {
-                el.style[t] = "translate3d(1px,1px,1px)";
-                has3d = window.getComputedStyle(el).getPropertyValue(transforms[t]);
-            }
-        }
-
-        document.body.removeChild(el);
-        device.css3D = (has3d !== undefined && has3d.length > 0 && has3d !== "none");
-
-    }
-
     //  Run the checks
     _checkOS();
     _checkBrowser();
     _checkAudio();
     _checkVideo();
-    _checkCSS3D();
     _checkDevice();
     _checkFeatures();
     _checkCanvasFeatures();
@@ -1402,41 +1326,6 @@ Phaser.Device.canPlayVideo = function (type) {
 };
 
 /**
-* Check whether the console is open.
-* Note that this only works in Firefox with Firebug and earlier versions of Chrome.
-* It used to work in Chrome, but then they removed the ability: {@link http://src.chromium.org/viewvc/blink?view=revision&revision=151136}
-*
-* @method isConsoleOpen
-* @memberof Phaser.Device.prototype
-*/
-Phaser.Device.isConsoleOpen = function () {
-
-    if (window.console && window.console['firebug'])
-    {
-        return true;
-    }
-
-    if (window.console)
-    {
-        console.profile();
-        console.profileEnd();
-
-        if (console.clear)
-        {
-            console.clear();
-        }
-
-        if (console['profiles'])
-        {
-            return console['profiles'].length > 0;
-        }
-    }
-
-    return false;
-
-};
-
-/**
 * Detect if the host is a an Android Stock browser.
 * This is available before the device "ready" event.
 *
@@ -1451,6 +1340,7 @@ Phaser.Device.isConsoleOpen = function () {
 Phaser.Device.isAndroidStockBrowser = function () {
 
     var matches = window.navigator.userAgent.match(/Android.*AppleWebKit\/([\d.]+)/);
+
     return matches && matches[1] < 537;
 
 };

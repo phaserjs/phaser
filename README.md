@@ -351,6 +351,12 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * PIXI.PI_2 has been removed, because it's available via Phaser.Math.PI2. The only place PI_2 was used has been updated to now use PI2.
 * The polyfills.js file now polyfills in for Float32Array, Uint16Array and ArrayBuffer.
 * PIXI.Float32Array, PIXI.Uint16Array, PIXI.Uint32Array and PIXI.ArrayBuffer have all been removed, and replaced with their own proper native versions. The polyfill now captures any instances where the browser needs to fall back to an Array instead.
+* Device.arora has been removed.
+* Device.epiphany has been removed.
+* Device.midori has been removed.
+* Device.css3D has been removed, and the function that tested it is no longer run.
+* Device.isConsoleOpen has been removed. The function only worked on a very limited set of old browsers.
+* Device.littleEndian has been removed, you can use Device.LITTLE_ENDIAN instead.
 
 
 ### Bug Fixes
