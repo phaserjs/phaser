@@ -13,7 +13,7 @@
 * @param {object} json - The JSON data from the Texture Atlas. Must be in Array format.
 * @return {Phaser.FrameData} A FrameData object containing the parsed frames.
 */
-Phaser.TextureManager.Parsers.JSONArray = function (texture, json)
+Phaser.TextureManager.Parsers.JSONArray = function (texture, sourceIndex, json)
 {
     //  Malformed?
     if (!json['frames'])
@@ -32,7 +32,7 @@ Phaser.TextureManager.Parsers.JSONArray = function (texture, json)
         var src = frames[i];
 
         //  The frame values are the exact coordinates to cut the frame out of the atlas from
-        newFrame = texture.add(src.filename, src.frame.x, src.frame.y, src.frame.w, src.frame.h);
+        newFrame = texture.add(src.filename, sourceIndex, src.frame.x, src.frame.y, src.frame.w, src.frame.h);
 
         //  These are the original (non-trimmed) sprite values
         if (src.trimmed)

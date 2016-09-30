@@ -20,8 +20,15 @@
 * @param {object} source
 * @param {number} scaleMode
 */
-Phaser.Texture = function (key, source, scaleMode)
+Phaser.Texture = function (manager, key, source)
 {
+    this.manager = manager;
+
+    if (!Array.isArray(source))
+    {
+        source = [ source ];
+    }
+
     this.key = key;
 
     /**
@@ -29,93 +36,17 @@ Phaser.Texture = function (key, source, scaleMode)
     * Usually an Image, but can also be a Canvas.
     *
     * @property source
-    * @type Image
+    * @type array
     */
-    this.source = source;
-
-    /**
-    * The Resolution of the texture.
-    *
-    * @property resolution
-    * @type Number
-    */
-    this.resolution = 1;
-    
-    /**
-    * The width of the Texture.
-    *
-    * @property width
-    * @type Number
-    * @readOnly
-    */
-    this.width = source.naturalWidth || source.width || 0;
-
-    /**
-    * The height of the Texture.
-    *
-    * @property height
-    * @type Number
-    * @readOnly
-    */
-    this.height = source.naturalHeight || source.height || 0;
-
-    /**
-    * The scale mode to apply when scaling this texture
-    * 
-    * @property scaleMode
-    * @type {Number}
-    * @default PIXI.scaleModes.LINEAR
-    */
-    this.scaleMode = scaleMode || PIXI.scaleModes.DEFAULT;
-
-    /**
-    * Controls if RGB channels should be pre-multiplied by Alpha  (WebGL only)
-    *
-    * @property premultipliedAlpha
-    * @type Boolean
-    * @default true
-    */
-    this.premultipliedAlpha = true;
-
-    /**
-    * Set this to true if a mipmap of this texture needs to be generated. This value needs to be set before the texture is used
-    * Also the texture must be a power of two size to work
-    * 
-    * @property mipmap
-    * @type {Boolean}
-    */
-    this.mipmap = false;
-
-    /**
-    * The multi texture batching index number.
-    * @property textureIndex
-    * @type Number
-    */
-    this.textureIndex = 0;
-
-    /**
-    * A BaseTexture can be set to skip the rendering phase in the WebGL Sprite Batch.
-    * 
-    * You may want to do this if you have a parent Sprite with no visible texture (i.e. uses the internal `__default` texture)
-    * that has children that you do want to render, without causing a batch flush in the process.
-    * 
-    * @property renderable
-    * @type Boolean
-    */
-    this.renderable = false;
-
-    /**
-    * @property isPowerOf2
-    * @type boolean
-    */
-    this.isPowerOf2 = Phaser.Math.isPowerOfTwo(this.width, this.height);
+    this.source = [];
 
     /**
     * @property {object} frames - Frames
     */
     this.frames = {
-        __BASE: new Phaser.TextureFrame(this, '__BASE', 0, 0, this.width, this.height)
     };
+
+    this.frameTotal = 0;
 
     /**
     * @property _dirty
@@ -130,6 +61,12 @@ Phaser.Texture = function (key, source, scaleMode)
     * @private
     */
     this._glTextures = [];
+
+    //  Load the Sources
+    for (var i = 0; i < source.length; i++)
+    {
+        this.source.push(new Phaser.TextureSource(this, source[i]));
+    }
     
 };
 
@@ -137,11 +74,13 @@ Phaser.Texture.prototype.constructor = Phaser.Texture;
 
 Phaser.Texture.prototype = {
 
-    add: function (name, x, y, width, height)
+    add: function (name, sourceIndex, x, y, width, height)
     {
-        var frame = new Phaser.TextureFrame(this, name, x, y, width, height);
+        var frame = new Phaser.TextureFrame(this, name, sourceIndex, x, y, width, height);
 
         this.frames[name] = frame;
+
+        this.frameTotal++;
 
         return frame;
     },
@@ -152,6 +91,20 @@ Phaser.Texture.prototype = {
 
         return this.frames[name];
 
+    },
+
+    getSpriteSheet: function (key, frame, frameWidth, frameHeight, startFrame, endFrame, margin, spacing)
+    {
+        var sheet = this.get(frame);
+
+        if (sheet)
+        {
+            var texture = this.manager.create(key, sheet.source.image);
+
+            this.manager.parsers.SpriteSheet(texture, 0, sheet.cutX, sheet.cutY, sheet.cutWidth, sheet.cutHeight, frameWidth, frameHeight, startFrame, endFrame, margin, spacing);
+
+            return texture;
+        }
     },
 
     /**

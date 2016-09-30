@@ -18,7 +18,7 @@
 * @param {number} width - Width of the frame within the Texture.
 * @param {number} height - Height of the frame within the Texture.
 */
-Phaser.TextureFrame = function (texture, name, x, y, width, height)
+Phaser.TextureFrame = function (texture, name, sourceIndex, x, y, width, height)
 {
 
     /**
@@ -26,7 +26,9 @@ Phaser.TextureFrame = function (texture, name, x, y, width, height)
     */
     this.texture = texture;
 
-    this.source = texture.source;
+    this.source = texture.source[sourceIndex];
+
+    this.sourceIndex = sourceIndex;
 
     /**
     * @property {string} name - The name of this frame within the Texture.
