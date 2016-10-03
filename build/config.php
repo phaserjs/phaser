@@ -245,6 +245,7 @@ EOL;
         echo <<<EOL
     <script src="$path/src/gameobjects/GraphicsData.js"></script>
     <script src="$path/src/gameobjects/Graphics.js"></script>
+    <script src="$path/src/renderer/canvas/gameobjects/Graphics.js"></script>
 
 
 EOL;

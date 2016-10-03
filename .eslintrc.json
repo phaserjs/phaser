@@ -40,7 +40,7 @@
         "consistent-this": [ "error", "_this" ],
         "eol-last": [ "error" ],
         "func-call-spacing": [ "error", "never" ],
-        "indent": [ "error", 4 ],
+        "indent": [ "error", 4, { "SwitchCase": 4 } ],
         "key-spacing": [ "error", { "beforeColon": false, "afterColon": true }],
         "linebreak-style": [ "off" ],
         "lines-around-comment": [ "error", { "beforeBlockComment": true }],

@@ -24,8 +24,6 @@ Phaser.Renderer.Canvas = function (game)
 
     this.type = Phaser.CANVAS;
 
-    // this.resolution = game.resolution;
-
     /**
      * This sets if the CanvasRenderer will clear the canvas or not before the new render pass.
      * If the Stage is NOT transparent Pixi will use a canvas sized fillRect operation every frame to set the canvas background color.
@@ -106,10 +104,6 @@ Phaser.Renderer.Canvas = function (game)
     }
 
     this.resize(this.width, this.height);
-
-    // this.renderTypes = [];
-    // this.renderTypes[Phaser.GROUP] = Phaser.Renderer.Canvas.GameObjects.Container;
-    // this.renderTypes[Phaser.SPRITE] = Phaser.Renderer.Canvas.GameObjects.Sprite;
 
 };
 
@@ -244,11 +238,126 @@ Phaser.Renderer.Canvas.prototype = {
             transform.ty * resolution
         );
 
-        // PIXI.CanvasGraphics.renderGraphicsMask(maskData, context);
+        this.applyMask(maskData);
 
         this.context.clip();
 
         maskData.worldAlpha = cacheAlpha;
+
+    },
+
+    /*
+     * Renders a graphics mask
+     *
+     * @static
+     * @private
+     * @method renderGraphicsMask
+     * @param graphics {Graphics} the graphics which will be used as a mask
+     * @param context {CanvasRenderingContext2D} the context 2d method of the canvas
+     */
+    applyMask: function (graphics)
+    {
+        var len = graphics.graphicsData.length;
+
+        if (len === 0)
+        {
+            return;
+        }
+
+        var context = this.context;
+
+        context.beginPath();
+
+        for (var i = 0; i < len; i++)
+        {
+            var data = graphics.graphicsData[i];
+            var shape = data.shape;
+
+            switch (data.type)
+            {
+                case Phaser.RECTANGLE:
+
+                    context.rect(shape.x, shape.y, shape.width, shape.height);
+                    context.closePath();
+                    break;
+
+                case Phaser.CIRCLE:
+
+                    context.arc(shape.x, shape.y, shape.radius, 0, 2 * Math.PI);
+                    context.closePath();
+                    break;
+
+                case Phaser.POLYGON:
+
+                    var points = shape.points;
+                
+                    context.moveTo(points[0], points[1]);
+
+                    for (var j = 1; j < points.length / 2; j++)
+                    {
+                        context.lineTo(points[j * 2], points[j * 2 + 1]);
+                    }
+
+                    //  If the first and last point are the same close the path - much neater :)
+                    if (points[0] === points[points.length - 2] && points[1] === points[points.length - 1])
+                    {
+                        context.closePath();
+                    }
+
+                    break;
+
+                case Phaser.ELLIPSE:
+
+                    // ellipse code taken from: http://stackoverflow.com/questions/2172798/how-to-draw-an-oval-in-html5-canvas
+
+                    var w = shape.width * 2;
+                    var h = shape.height * 2;
+                    var x = shape.x - (w / 2);
+                    var y = shape.y - (h / 2);
+
+                    var kappa = 0.5522848;
+                    var ox = (w / 2) * kappa;   // control point offset horizontal
+                    var oy = (h / 2) * kappa;   // control point offset vertical
+                    var xe = x + w;             // x-end
+                    var ye = y + h;             // y-end
+                    var xm = x + (w / 2);       // x-middle
+                    var ym = y + (h / 2);       // y-middle
+
+                    context.moveTo(x, ym);
+                    context.bezierCurveTo(x, ym - oy, xm - ox, y, xm, y);
+                    context.bezierCurveTo(xm + ox, y, xe, ym - oy, xe, ym);
+                    context.bezierCurveTo(xe, ym + oy, xm + ox, ye, xm, ye);
+                    context.bezierCurveTo(xm - ox, ye, x, ym + oy, x, ym);
+                    context.closePath();
+
+                    break;
+
+                case Phaser.ROUNDEDRECTANGLE:
+
+                    var rx = shape.x;
+                    var ry = shape.y;
+                    var width = shape.width;
+                    var height = shape.height;
+                    var radius = shape.radius;
+
+                    var maxRadius = Math.min(width, height) / 2 | 0;
+                    radius = radius > maxRadius ? maxRadius : radius;
+
+                    context.moveTo(rx, ry + radius);
+                    context.lineTo(rx, ry + height - radius);
+                    context.quadraticCurveTo(rx, ry + height, rx + radius, ry + height);
+                    context.lineTo(rx + width - radius, ry + height);
+                    context.quadraticCurveTo(rx + width, ry + height, rx + width, ry + height - radius);
+                    context.lineTo(rx + width, ry + radius);
+                    context.quadraticCurveTo(rx + width, ry, rx + width - radius, ry);
+                    context.lineTo(rx + radius, ry);
+                    context.quadraticCurveTo(rx, ry, rx, ry + radius);
+                    context.closePath();
+
+                    break;
+            }
+
+        }
 
     },
 
