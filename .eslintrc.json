@@ -43,11 +43,20 @@
         "indent": [ "error", 4, { "SwitchCase": 1 } ],
         "key-spacing": [ "error", { "beforeColon": false, "afterColon": true }],
         "linebreak-style": [ "off" ],
-        "lines-around-comment": [ "error", { "beforeBlockComment": true }],
+        "lines-around-comment": [ "error", { "beforeBlockComment": true, "allowBlockStart": true, "allowObjectStart": true, "allowArrayStart": true, "beforeLineComment": true, "allowBlockEnd": true }],
         "new-parens": "error",
         "no-array-constructor": "error",
         "no-lonely-if": "error",
-        "no-mixed-operators": "error",
+        "no-mixed-operators": [ "error", {
+            "groups": [
+                ["+", "-", "*", "/", "%", "**"],
+                ["&", "|", "^", "~", "<<", ">>", ">>>"],
+                ["==", "!=", "===", "!==", ">", ">=", "<", "<="],
+                ["&&", "||"],
+                ["in", "instanceof"]
+            ],
+            "allowSamePrecedence": true
+        }],
         "no-mixed-spaces-and-tabs": "error",
         "no-plusplus": "off",
         "no-trailing-spaces": [ "error", { "skipBlankLines": true } ],
