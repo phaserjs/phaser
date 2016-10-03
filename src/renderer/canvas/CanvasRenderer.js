@@ -181,7 +181,6 @@ Phaser.Renderer.Canvas.prototype = {
 
         //  Add Pre-render hook
 
-        // this.renderSession.currentBlendMode = 0;
         // this.renderSession.shakeX = this.game.camera._shake.x;
         // this.renderSession.shakeY = this.game.camera._shake.y;
 

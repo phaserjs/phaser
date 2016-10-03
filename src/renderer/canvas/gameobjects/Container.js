@@ -1,33 +1,30 @@
 /**
-* Renders the object using the Canvas renderer
-*
-* @method _renderCanvas
-* @param renderSession {RenderSession} 
-* @private
+* Note that 'this' in all functions here refer to the owning object.
+* For example the Group, Stage, Sprite, etc. because the render function
+* here is mapped to the prototype for the game object.
 */
 Phaser.Renderer.Canvas.GameObjects.Container = {
 
-    render: function (renderer, source)
+    render: function (renderer)
     {
-        if (source.visible === false || source.alpha === 0)
+        if (this.visible === false || this.alpha === 0)
         {
             return;
         }
 
-        // if (this._cacheAsBitmap)
-        // {
-        //     this._renderCachedSprite(renderSession);
-        //     return;
-        // }
-
-        if (source._mask)
+        if (this._cacheAsBitmap)
         {
-            renderer.pushMask(source._mask);
+            return this.renderCachedSprite(renderer);
         }
 
-        for (var i = 0; i < source.children.length; i++)
+        if (this._mask)
         {
-            var child = source.children[i];
+            renderer.pushMask(this._mask);
+        }
+
+        for (var i = 0; i < this.children.length; i++)
+        {
+            var child = this.children[i];
 
             child.render(renderer, child);
         }
@@ -39,11 +36,10 @@ Phaser.Renderer.Canvas.GameObjects.Container = {
 
     },
 
-    renderCache: function (renderer, source)
+    renderCachedSprite: function (renderer)
     {
-        //  Do something
-
-        return source;
+        //  TODO
+        return renderer;
     }
 
 };

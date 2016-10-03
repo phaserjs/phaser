@@ -1,40 +1,36 @@
 /**
-* Renders the object using the Canvas renderer
-*
-* @method _renderCanvas
-* @param renderSession {RenderSession}
-* @param {Matrix} [matrix] - Optional matrix. If provided the Display Object will be rendered using this matrix, otherwise it will use its worldTransform.
-* @private
+* Note that 'this' in all functions here refer to the owning object.
+* For example the Group, Stage, Sprite, etc. because the render function
+* here is mapped to the prototype for the game object.
 */
 Phaser.Renderer.Canvas.GameObjects.Sprite = {
 
-    render: function (renderer, source, matrix)
+    render: function (renderer)
     {
         // If the sprite is not visible or the alpha is 0 then no need to render this element
-        if (!source.visible || source.alpha === 0 || !source.renderable)
+        if (!this.visible || this.alpha === 0 || !this.renderable)
         {
             return;
         }
 
         // Add back in: || src.texture.crop.width <= 0 || src.texture.crop.height <= 0
 
-        //  If they provided an alternative rendering matrix then use it
-        var wt = (matrix) ? matrix : source.worldTransform;
+        var wt = this.worldTransform;
 
-        if (source.blendMode !== renderer.currentBlendMode)
+        if (this.blendMode !== renderer.currentBlendMode)
         {
-            renderer.currentBlendMode = source.blendMode;
+            renderer.currentBlendMode = this.blendMode;
             renderer.context.globalCompositeOperation = Phaser.blendModesCanvas[renderer.currentBlendMode];
         }
 
         //  Check if the texture can be rendered
 
-        if (source._mask)
+        if (this._mask)
         {
-            renderer.pushMask(source._mask);
+            renderer.pushMask(this._mask);
         }
 
-        //  Ignore null sources
+        //  Ignore null thiss
         /*
         if (!src.texture.valid)
         {
@@ -53,28 +49,28 @@ Phaser.Renderer.Canvas.GameObjects.Sprite = {
         }
         */
 
-        var resolution = source.texture.baseTexture.resolution / renderer.game.resolution;
+        var resolution = this.texture.baseTexture.resolution / renderer.game.resolution;
 
-        renderer.context.globalAlpha = source.worldAlpha;
+        renderer.context.globalAlpha = this.worldAlpha;
 
         //  If smoothingEnabled is supported and we need to change the smoothing property for src texture
-        if (renderer.smoothProperty && renderer.currentScaleMode !== source.texture.baseTexture.scaleMode)
+        if (renderer.smoothProperty && renderer.currentScaleMode !== this.texture.baseTexture.scaleMode)
         {
-            renderer.currentScaleMode = source.texture.baseTexture.scaleMode;
+            renderer.currentScaleMode = this.texture.baseTexture.scaleMode;
             renderer.context[renderer.smoothProperty] = (renderer.currentScaleMode === Phaser.scaleModes.LINEAR);
         }
 
         //  If the texture is trimmed we offset by the trim x/y, otherwise we use the frame dimensions
-        var dx = (source.texture.trim) ? source.texture.trim.x - source.anchor.x * source.texture.trim.width : source.anchor.x * -source.texture.frame.width;
-        var dy = (source.texture.trim) ? source.texture.trim.y - source.anchor.y * source.texture.trim.height : source.anchor.y * -source.texture.frame.height;
+        var dx = (this.texture.trim) ? this.texture.trim.x - this.anchor.x * this.texture.trim.width : this.anchor.x * -this.texture.frame.width;
+        var dy = (this.texture.trim) ? this.texture.trim.y - this.anchor.y * this.texture.trim.height : this.anchor.y * -this.texture.frame.height;
 
         var tx = (wt.tx * renderer.game.resolution) + renderer.game.camera._shake.x;
         var ty = (wt.ty * renderer.game.resolution) + renderer.game.camera._shake.y;
 
-        var cw = source.texture.crop.width;
-        var ch = source.texture.crop.height;
+        var cw = this.texture.crop.width;
+        var ch = this.texture.crop.height;
 
-        if (source.texture.rotated)
+        if (this.texture.rotated)
         {
             var a = wt.a;
             var b = wt.b;
@@ -113,34 +109,34 @@ Phaser.Renderer.Canvas.GameObjects.Sprite = {
         dx /= resolution;
         dy /= resolution;
 
-        if (source.tint !== 0xFFFFFF)
+        if (this.tint !== 0xFFFFFF)
         {
-            if (source.texture.requiresReTint || source.cachedTint !== source.tint)
+            if (this.texture.requiresReTint || this.cachedTint !== this.tint)
             {
-                source.tintedTexture = PIXI.CanvasTinter.getTintedTexture(source, source.tint);
+                this.tintedTexture = PIXI.CanvasTinter.getTintedTexture(this, this.tint);
 
-                source.cachedTint = source.tint;
-                source.texture.requiresReTint = false;
+                this.cachedTint = this.tint;
+                this.texture.requiresReTint = false;
             }
 
-            renderer.context.drawImage(source.tintedTexture, 0, 0, cw, ch, dx, dy, cw / resolution, ch / resolution);
+            renderer.context.drawImage(this.tintedTexture, 0, 0, cw, ch, dx, dy, cw / resolution, ch / resolution);
         }
         else
         {
-            var cx = source.texture.crop.x;
-            var cy = source.texture.crop.y;
+            var cx = this.texture.crop.x;
+            var cy = this.texture.crop.y;
 
-            renderer.context.drawImage(source.texture.baseTexture.source, cx, cy, cw, ch, dx, dy, cw / resolution, ch / resolution);
+            renderer.context.drawImage(this.texture.baseTexture.this, cx, cy, cw, ch, dx, dy, cw / resolution, ch / resolution);
         }
 
-        for (var i = 0; i < source.children.length; i++)
+        for (var i = 0; i < this.children.length; i++)
         {
-            var child = source.children[i];
+            var child = this.children[i];
 
             child.render(renderer, child);
         }
 
-        if (source._mask)
+        if (this._mask)
         {
             renderer.popMask();
         }
