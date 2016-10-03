@@ -100,6 +100,9 @@ Phaser.TextureFrame = function (texture, name, sourceIndex, x, y, width, height)
     */
     this.requiresReTint = false;
 
+    //  Over-rides the Renderer setting? 0 = use Renderer Setting, 1 = No rounding, 2 = Round
+    this.autoRound = 0;
+
     /**
     * The un-modified source frame, trim and UV data.
     *

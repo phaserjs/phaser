@@ -685,10 +685,12 @@ Phaser.Game.prototype = {
             return;
         }
 
+        var c = (this.renderType === Phaser.CANVAS) ? 'Canvas' : 'WebGL';
+
         if (!this.device.ie)
         {
             var args = [
-                '%c %c %c %c %c Phaser v' + Phaser.VERSION + ' / Pixi.js  %c http://phaser.io',
+                '%c %c %c %c %c Phaser v' + Phaser.VERSION + ' / Pixi.js / ' + c + '  %c http://phaser.io',
                 'background: #ff0000',
                 'background: #ffff00',
                 'background: #00ff00',
@@ -739,7 +741,8 @@ Phaser.Game.prototype = {
                 //  They requested Canvas and their browser supports it
                 this.renderType = Phaser.CANVAS;
 
-                this.renderer = new PIXI.CanvasRenderer(this);
+                // this.renderer = new PIXI.CanvasRenderer(this);
+                this.renderer = new Phaser.Renderer.Canvas(this);
 
                 this.context = this.renderer.context;
             }

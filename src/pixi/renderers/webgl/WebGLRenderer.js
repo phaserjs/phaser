@@ -499,6 +499,8 @@ PIXI.WebGLRenderer.prototype.updateCompressedTexture = function (texture) {
 };
 
 /**
+ * Note: Moved to TextureManager class.
+ * 
  * Updates and Creates a WebGL texture for the renderers context.
  *
  * @method updateTexture

@@ -133,6 +133,10 @@ EOL;
     <script src="$path/src/textures/parsers/JSONHash.js"></script>
     <script src="$path/src/textures/parsers/SpriteSheet.js"></script>
 
+    <script src="$path/src/renderer/canvas/CanvasRenderer.js"></script>
+    <script src="$path/src/renderer/canvas/gameobjects/Container.js"></script>
+    <script src="$path/src/renderer/canvas/gameobjects/Sprite.js"></script>
+
 
 EOL;
 

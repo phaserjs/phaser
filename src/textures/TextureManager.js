@@ -185,6 +185,101 @@ Phaser.TextureManager.prototype = {
 
             callback.apply(thisArg, args);
         }
+    },
+
+    /**
+     * TODO: This should move to the WebGL Renderer class.
+     * 
+    * Removes the base texture from the GPU, useful for managing resources on the GPU.
+    * A texture is still 100% usable and will simply be re-uploaded if there is a sprite on screen that is using it.
+    *
+    * @method unloadFromGPU
+    */
+    unloadFromGPU: function ()
+    {
+        this.dirty();
+
+        // delete the webGL textures if any.
+        for (var i = this._glTextures.length - 1; i >= 0; i--)
+        {
+            var glTexture = this._glTextures[i];
+            var gl = PIXI.glContexts[i];
+
+            if (gl && glTexture)
+            {
+                gl.deleteTexture(glTexture);
+            }
+        }
+
+        this._glTextures.length = 0;
+
+        this.dirty();
+    },
+
+    /**
+     * TODO: This should move to the WebGL Renderer class.
+     * 
+    * Updates and Creates a WebGL texture for the renderers context.
+    *
+    * @method updateTexture
+    * @param texture {Texture} the texture to update
+    * @return {boolean} True if the texture was successfully bound, otherwise false.
+    */
+    loadToGPU: function (texture)
+    {
+        if (!texture.hasLoaded)
+        {
+            return false;
+        }
+
+        if (texture.source.compressionAlgorithm)
+        {
+            return this.updateCompressedTexture(texture);
+        }
+
+        var gl = this.gl;
+
+        if (!texture._glTextures[gl.id])
+        {
+            texture._glTextures[gl.id] = gl.createTexture();
+        }
+
+        gl.activeTexture(gl.TEXTURE0 + texture.textureIndex);
+
+        gl.bindTexture(gl.TEXTURE_2D, texture._glTextures[gl.id]);
+
+        gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, texture.premultipliedAlpha);
+
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.source);
+
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, texture.scaleMode === PIXI.scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
+
+        if (texture.mipmap && Phaser.Math.isPowerOfTwo(texture.width, texture.height))
+        {
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, texture.scaleMode === PIXI.scaleModes.LINEAR ? gl.LINEAR_MIPMAP_LINEAR : gl.NEAREST_MIPMAP_NEAREST);
+            gl.generateMipmap(gl.TEXTURE_2D);
+        }
+        else
+        {
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, texture.scaleMode === PIXI.scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
+        }
+
+        if (!texture._powerOf2)
+        {
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        }
+        else
+        {
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+        }
+
+        texture._dirty[gl.id] = false;
+
+        // return texture._glTextures[gl.id];
+        return true;
+
     }
 
 };

@@ -121,33 +121,6 @@ Phaser.Texture.prototype = {
     },
 
     /**
-    * Removes the base texture from the GPU, useful for managing resources on the GPU.
-    * A texture is still 100% usable and will simply be re-uploaded if there is a sprite on screen that is using it.
-    *
-    * @method unloadFromGPU
-    */
-    unloadFromGPU: function ()
-    {
-        this.dirty();
-
-        // delete the webGL textures if any.
-        for (var i = this._glTextures.length - 1; i >= 0; i--)
-        {
-            var glTexture = this._glTextures[i];
-            var gl = PIXI.glContexts[i];
-
-            if (gl && glTexture)
-            {
-                gl.deleteTexture(glTexture);
-            }
-        }
-
-        this._glTextures.length = 0;
-
-        this.dirty();
-    },
-
-    /**
     * Destroys this base texture
     *
     * @method destroy

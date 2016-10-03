@@ -33,6 +33,8 @@ PIXI.DisplayObjectContainer = function () {
     * @default
     */
     this.ignoreChildInput = false;
+
+    this.render = Phaser.Renderer.Canvas.GameObjects.Container.render;
     
 };
 

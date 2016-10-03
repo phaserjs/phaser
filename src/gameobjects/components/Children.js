@@ -46,6 +46,11 @@ Phaser.Component.Children.prototype = {
 
     addAt: function (child, index) {
 
+        if (this.list.length === 0)
+        {
+            return this.add(child);
+        }
+
         if (index >= 0 && index <= this.list.length)
         {
             if (child.parent)
