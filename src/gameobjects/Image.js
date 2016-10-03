@@ -82,7 +82,7 @@ Phaser.Image.prototype.preUpdateCore = Phaser.Component.Core.preUpdate;
 * @method Phaser.Image#preUpdate
 * @memberof Phaser.Image
 */
-Phaser.Image.prototype.preUpdate = function() {
+Phaser.Image.prototype.preUpdate = function () {
 
     if (!this.preUpdateInWorld())
     {
