@@ -34,7 +34,8 @@ PIXI.DisplayObjectContainer = function () {
     */
     this.ignoreChildInput = false;
 
-    this.render = Phaser.Renderer.Canvas.GameObjects.Container.render;
+    // this.render = Phaser.Renderer.Canvas.GameObjects.Container.render;
+    this.render = Phaser.Renderer.WebGL.GameObjects.Container.render;
     
 };
 

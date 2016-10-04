@@ -762,10 +762,12 @@ Phaser.Game.prototype = {
 
             this.renderType = Phaser.WEBGL;
 
-            this.renderer = new PIXI.WebGLRenderer(this);
+            // this.renderer = new PIXI.WebGLRenderer(this);
+            this.renderer = new Phaser.Renderer.WebGL(this);
 
             this.context = null;
 
+            //  Move to renderer class
             this.canvas.addEventListener('webglcontextlost', this.contextLost.bind(this), false);
             this.canvas.addEventListener('webglcontextrestored', this.contextRestored.bind(this), false);
         }

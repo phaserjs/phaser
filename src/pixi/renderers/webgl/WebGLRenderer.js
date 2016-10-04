@@ -377,7 +377,7 @@ PIXI.WebGLRenderer.prototype.render = function(stage)
 };
 
 /**
- * Renders a Display Object.
+ * Renders a Display Object. Only used by this class and RenderTexture, nothing else calls it.
  *
  * @method renderDisplayObject
  * @param displayObject {DisplayObject} The DisplayObject to render

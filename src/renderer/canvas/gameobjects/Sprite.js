@@ -126,7 +126,7 @@ Phaser.Renderer.Canvas.GameObjects.Sprite = {
             var cx = this.texture.crop.x;
             var cy = this.texture.crop.y;
 
-            renderer.context.drawImage(this.texture.baseTexture.this, cx, cy, cw, ch, dx, dy, cw / resolution, ch / resolution);
+            renderer.context.drawImage(this.texture.baseTexture.source, cx, cy, cw, ch, dx, dy, cw / resolution, ch / resolution);
         }
 
         for (var i = 0; i < this.children.length; i++)

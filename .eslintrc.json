@@ -1,6 +1,7 @@
 {
     "env": {
-        "browser": true
+        "browser": true,
+        "es6"
     },
     "extends": "eslint:recommended",
     "globals": {
@@ -19,6 +20,7 @@
         "eqeqeq": [ "error", "smart" ],
         "no-alert": "error",
         "no-caller": "error",
+        "no-console": [ "error", { "allow": ["warn", "log"] } ],
         "no-floating-decimal": "error",
         "no-invalid-this": "error",
         "no-multi-spaces": "error",
@@ -62,7 +64,7 @@
         "no-trailing-spaces": [ "error", { "skipBlankLines": true } ],
         "no-underscore-dangle": "off",
         "no-whitespace-before-property": "error",
-        "object-curly-newline": [ "error", "always" ],
+        "object-curly-newline": [ "error", { "multiline": true, "minProperties": 0 } ],
         "one-var-declaration-per-line": [ "error", "initializations" ],
         "quote-props": [ "error", "as-needed" ],
         "quotes": [ "error", "single" ],
