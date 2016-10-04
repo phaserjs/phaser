@@ -7,6 +7,12 @@ Phaser.Renderer.Canvas.GameObjects.Text = {
 
     render: function (renderer)
     {
+        if (this.dirty)
+        {
+            this.updateText();
+            this.dirty = false;
+        }
+
         // If the sprite is not visible or the alpha is 0 then no need to render this element
         if (!this.visible || this.alpha === 0 || !this.renderable)
         {
@@ -112,9 +118,7 @@ Phaser.Renderer.Canvas.GameObjects.Text = {
 
         for (var i = 0; i < this.children.length; i++)
         {
-            var child = this.children[i];
-
-            child.render(renderer, child);
+            this.children[i].render(renderer);
         }
 
         if (this._mask)

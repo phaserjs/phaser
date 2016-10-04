@@ -143,7 +143,7 @@ Phaser.Text = function (game, x, y, text, style) {
      * @property {number} _res - Internal canvas resolution var.
      * @private
      */
-    this._res = game.renderer.resolution;
+    this._res = game.resolution;
 
     /**
     * @property {string} _text - Internal cache var.

@@ -19,9 +19,7 @@ Phaser.Renderer.Canvas.GameObjects.Stage = {
 
         for (var i = 0; i < this.children.length; i++)
         {
-            var child = this.children[i];
-
-            child.render(renderer, child);
+            this.children[i].render(renderer);
         }
 
         if (this._mask)

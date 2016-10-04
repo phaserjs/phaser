@@ -199,7 +199,7 @@ Phaser.Renderer.Canvas.prototype = {
             }
         }
 
-        stage.render(this, stage);
+        stage.render(this);
 
         //  Add Post-render hook
     },
