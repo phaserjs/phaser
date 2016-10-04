@@ -3,7 +3,7 @@
 * For example the Group, Stage, Sprite, etc. because the render function
 * here is mapped to the prototype for the game object.
 */
-Phaser.Renderer.Canvas.GameObjects.Container = {
+Phaser.Renderer.Canvas.GameObjects.SpriteBatch = {
 
     render: function (renderer)
     {

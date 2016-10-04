@@ -136,7 +136,10 @@ EOL;
     <script src="$path/src/renderer/canvas/CanvasRenderer.js"></script>
     <script src="$path/src/renderer/canvas/gameobjects/Container.js"></script>
     <script src="$path/src/renderer/canvas/gameobjects/Sprite.js"></script>
+    <script src="$path/src/renderer/canvas/gameobjects/Graphics.js"></script>
     <script src="$path/src/renderer/canvas/gameobjects/SpriteBatch.js"></script>
+    <script src="$path/src/renderer/canvas/gameobjects/Stage.js"></script>
+    <script src="$path/src/renderer/canvas/gameobjects/Text.js"></script>
 
     <script src="$path/src/renderer/webgl/WebGLRenderer.js"></script>
     <script src="$path/src/renderer/webgl/ShaderManager.js"></script>
@@ -147,6 +150,9 @@ EOL;
     <script src="$path/src/renderer/webgl/shaders/PrimitiveGraphics.js"></script>
     <script src="$path/src/renderer/webgl/gameobjects/Container.js"></script>
     <script src="$path/src/renderer/webgl/gameobjects/Sprite.js"></script>
+    <script src="$path/src/renderer/webgl/gameobjects/Stage.js"></script>
+    <script src="$path/src/renderer/webgl/gameobjects/Text.js"></script>
+    <script src="$path/src/renderer/webgl/gameobjects/Graphics.js"></script>
 
 
 EOL;

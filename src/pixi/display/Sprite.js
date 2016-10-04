@@ -116,9 +116,6 @@ PIXI.Sprite = function (texture) {
 
     this.renderable = true;
 
-    // this.render = Phaser.Renderer.Canvas.GameObjects.Sprite.render;
-    this.render = Phaser.Renderer.WebGL.GameObjects.Sprite.render;
-
 };
 
 // constructor

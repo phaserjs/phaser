@@ -201,6 +201,15 @@ Phaser.Graphics = function (game, x, y) {
 
     Phaser.Component.Core.init.call(this, game, x, y, '', null);
 
+    if (this.game.renderType === Phaser.CANVAS)
+    {
+        this.render = Phaser.Renderer.Canvas.GameObjects.Graphics.render;
+    }
+    else
+    {
+        this.render = Phaser.Renderer.WebGL.GameObjects.Graphics.render;
+    }
+
 };
 
 Phaser.Graphics.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
@@ -1510,6 +1519,30 @@ Phaser.Graphics.prototype.drawShape = function (shape) {
     this._boundsDirty = true;
 
     return data;
+
+};
+
+Phaser.Graphics.prototype.updateGraphicsTint = function () {
+
+    if (this.tint === 0xFFFFFF)
+    {
+        return;
+    }
+
+    var tintR = (this.tint >> 16 & 0xFF) / 255;
+    var tintG = (this.tint >> 8 & 0xFF) / 255;
+    var tintB = (this.tint & 0xFF) / 255;
+
+    for (var i = 0; i < this.graphicsData.length; i++)
+    {
+        var data = this.graphicsData[i];
+
+        var fillColor = data.fillColor | 0;
+        var lineColor = data.lineColor | 0;
+
+        data._fillTint = (((fillColor >> 16 & 0xFF) / 255 * tintR * 255 << 16) + ((fillColor >> 8 & 0xFF) / 255 * tintG * 255 << 8) + (fillColor & 0xFF) / 255 * tintB * 255);
+        data._lineTint = (((lineColor >> 16 & 0xFF) / 255 * tintR * 255 << 16) + ((lineColor >> 8 & 0xFF) / 255 * tintG * 255 << 8) + (lineColor & 0xFF) / 255 * tintB * 255);
+    }
 
 };
 

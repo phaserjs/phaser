@@ -104,9 +104,7 @@ Phaser.Renderer.Canvas = function (game)
 
 };
 
-Phaser.Renderer.Canvas.GameObjects = {
-    //  Populated by the GameObjects classes
-};
+Phaser.Renderer.Canvas.GameObjects = {};
 
 Phaser.Renderer.Canvas.prototype.constructor = Phaser.Renderer.Canvas;
 

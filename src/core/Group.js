@@ -291,6 +291,15 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
     */
     this._sortProperty = 'z';
 
+    if (this.game.renderType === Phaser.CANVAS)
+    {
+        this.render = Phaser.Renderer.Canvas.GameObjects.Container.render;
+    }
+    else
+    {
+        this.render = Phaser.Renderer.WebGL.GameObjects.Container.render;
+    }
+
 };
 
 Phaser.Group.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);

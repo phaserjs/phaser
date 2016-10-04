@@ -3,10 +3,16 @@
 * For example the Group, Stage, Sprite, etc. because the render function
 * here is mapped to the prototype for the game object.
 */
-Phaser.Renderer.WebGL.GameObjects.Sprite = {
+Phaser.Renderer.WebGL.GameObjects.Text = {
 
     render: function (renderer)
     {
+        if (this.dirty)
+        {
+            this.updateText();
+            this.dirty = false;
+        }
+
         // If the sprite is not visible or the alpha is 0 then no need to render this element
         if (!this.visible || this.alpha === 0 || !this.renderable)
         {
@@ -70,6 +76,7 @@ Phaser.Renderer.WebGL.GameObjects.Sprite = {
                 this.children[i].render(renderer);
             }
         }
+
     }
 
 };

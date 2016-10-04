@@ -8,10 +8,12 @@ Phaser.Renderer.Canvas.GameObjects.Graphics = {
     render: function (renderer)
     {
         var context = renderer.context;
+        var local = Phaser.Renderer.Canvas.GameObjects.Graphics;
 
         if (this.dirty)
         {
             this.updateGraphicsTint();
+
             this.dirty = false;
         }
 
@@ -24,23 +26,23 @@ Phaser.Renderer.Canvas.GameObjects.Graphics = {
             switch (data.type)
             {
                 case Phaser.RECTANGLE:
-                    this.drawRectangle(data, context);
+                    local.drawRectangle(data, context);
                     break;
 
                 case Phaser.CIRCLE:
-                    this.drawCircle(data, context);
+                    local.drawCircle(data, context);
                     break;
 
                 case Phaser.POLYGON:
-                    this.drawPolygon(data, context);
+                    local.drawPolygon(data, context);
                     break;
 
                 case Phaser.ELLIPSE:
-                    this.drawEllipse(data, context);
+                    local.drawEllipse(data, context);
                     break;
 
                 case Phaser.ROUNDEDRECTANGLE:
-                    this.drawRoundedRectangle(data, context);
+                    local.drawRoundedRectangle(data, context);
                     break;
             }
         }
@@ -216,30 +218,6 @@ Phaser.Renderer.Canvas.GameObjects.Graphics = {
             context.globalAlpha = data.lineAlpha * this.worldAlpha;
             context.strokeStyle = '#' + ('00000' + (data._lineTint | 0).toString(16)).substr(-6);
             context.stroke();
-        }
-
-    },
-
-    updateGraphicsTint: function ()
-    {
-        if (this.tint === 0xFFFFFF)
-        {
-            return;
-        }
-
-        var tintR = (this.tint >> 16 & 0xFF) / 255;
-        var tintG = (this.tint >> 8 & 0xFF) / 255;
-        var tintB = (this.tint & 0xFF) / 255;
-
-        for (var i = 0; i < this.graphicsData.length; i++)
-        {
-            var data = this.graphicsData[i];
-
-            var fillColor = data.fillColor | 0;
-            var lineColor = data.lineColor | 0;
-
-            data._fillTint = (((fillColor >> 16 & 0xFF) / 255 * tintR * 255 << 16) + ((fillColor >> 8 & 0xFF) / 255 * tintG * 255 << 8) + (fillColor & 0xFF) / 255 * tintB * 255);
-            data._lineTint = (((lineColor >> 16 & 0xFF) / 255 * tintR * 255 << 16) + ((lineColor >> 8 & 0xFF) / 255 * tintG * 255 << 8) + (lineColor & 0xFF) / 255 * tintB * 255);
         }
 
     }

@@ -64,6 +64,15 @@ Phaser.Sprite = function (game, x, y, key, frame) {
 
     Phaser.Component.Core.init.call(this, game, x, y, key, frame);
 
+    if (this.game.renderType === Phaser.CANVAS)
+    {
+        this.render = Phaser.Renderer.Canvas.GameObjects.Sprite.render;
+    }
+    else
+    {
+        this.render = Phaser.Renderer.WebGL.GameObjects.Sprite.render;
+    }
+
 };
 
 Phaser.Sprite.prototype = Object.create(PIXI.Sprite.prototype);

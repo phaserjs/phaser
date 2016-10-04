@@ -3,50 +3,46 @@
 * For example the Group, Stage, Sprite, etc. because the render function
 * here is mapped to the prototype for the game object.
 */
-Phaser.Renderer.WebGL.GameObjects.Sprite = {
+Phaser.Renderer.WebGL.GameObjects.Stage = {
 
     render: function (renderer)
     {
-        // If the sprite is not visible or the alpha is 0 then no need to render this element
-        if (!this.visible || this.alpha === 0 || !this.renderable)
+        if (this.visible === false || this.alpha === 0 || this.children.length === 0)
         {
             return;
         }
 
-        // Add back in: || src.texture.crop.width <= 0 || src.texture.crop.height <= 0
-
         var i;
 
-        //  Would be good to get this down to 1 check, or even none.
         if (this._mask || this._filters)
         {
-            var spriteBatch = renderer.spriteBatch;
-
             // push filter first as we need to ensure the stencil buffer is correct for any masking
             if (this._filters)
             {
-                spriteBatch.flush();
+                renderer.spriteBatch.flush();
                 renderer.filterManager.pushFilter(this._filterBlock);
             }
 
             if (this._mask)
             {
-                spriteBatch.stop();
+                renderer.spriteBatch.stop();
                 renderer.pushMask(this.mask);
-                spriteBatch.start();
+                renderer.spriteBatch.start();
             }
 
-            // add this sprite to the batch
-            spriteBatch.render(this);
-
-            // now loop through the children and make sure they get rendered
+            // simple render children!
             for (i = 0; i < this.children.length; i++)
             {
+                if (!this.children[i].render)
+                {
+                    console.dir(this.children[i]);
+                    debugger;
+                }
+
                 this.children[i].render(renderer);
             }
 
-            // time to stop the sprite batch as either a mask element or a filter draw will happen next
-            spriteBatch.stop();
+            renderer.spriteBatch.stop();
 
             if (this._mask)
             {
@@ -57,19 +53,24 @@ Phaser.Renderer.WebGL.GameObjects.Sprite = {
             {
                 renderer.filterManager.popFilter();
             }
-
-            spriteBatch.start();
+            
+            renderer.spriteBatch.start();
         }
         else
         {
-            renderer.spriteBatch.render(this);
-
-            //  Render children!
+            // simple render children!
             for (i = 0; i < this.children.length; i++)
             {
+                if (!this.children[i].render)
+                {
+                    console.dir(this.children[i]);
+                    debugger;
+                }
+
                 this.children[i].render(renderer);
             }
         }
+
     }
 
 };
