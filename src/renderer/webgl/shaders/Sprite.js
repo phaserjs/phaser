@@ -40,27 +40,7 @@ Phaser.Renderer.WebGL.Shaders.Sprite = function (renderer)
      */
     this.fragmentSrc = null;
 
-    /**
-     * A local texture counter for multi-texture shaders.
-     * @property textureCount
-     * @type Number
-     */
-    this.textureCount = 0;
-
-    /**
-     * A local flag
-     * @property firstRun
-     * @type Boolean
-     * @private
-     */
-    this.firstRun = true;
-
-    /**
-     * A dirty flag
-     * @property dirty
-     * @type Boolean
-     */
-    this.dirty = true;
+    // this.vertexSrc = [];
 
     /**
      * Uniform attributes cache.
@@ -69,6 +49,13 @@ Phaser.Renderer.WebGL.Shaders.Sprite = function (renderer)
      * @private
      */
     this.attributes = [];
+
+    /**
+     * A local texture counter for multi-texture shaders.
+     * @property textureCount
+     * @type Number
+     */
+    this.textureCount = 0;
 
     //  @type {WebGLUniformLocation }
     this.uSampler;

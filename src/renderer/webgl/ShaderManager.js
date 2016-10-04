@@ -50,20 +50,20 @@ Phaser.Renderer.WebGL.ShaderManager.prototype = {
     {
         this.gl = this.renderer.gl;
 
-        // the next one is used for rendering primitives
-        // this.primitiveShader = new PIXI.PrimitiveShader(this);
-
-        // the next one is used for rendering triangle strips
-        // this.complexPrimitiveShader = new PIXI.ComplexPrimitiveShader(this);
-
         // this shader is used for the default sprite rendering
         this.defaultShader = new Phaser.Renderer.WebGL.Shaders.Sprite(this.renderer);
 
         // this shader is used for the fast sprite rendering
-        // this.fastShader = new PIXI.PixiFastShader(this);
+        this.fastShader = new Phaser.Renderer.WebGL.Shaders.SpriteBatch(this.renderer);
 
         // the next one is used for rendering triangle strips
-        // this.stripShader = new PIXI.StripShader(this);
+        this.stripShader = new Phaser.Renderer.WebGL.Shaders.Strip(this.renderer);
+
+        // the next one is used for rendering primitives
+        this.primitiveShader = new Phaser.Renderer.WebGL.Shaders.PrimitiveGraphics(this.renderer);
+
+        // the next one is used for rendering triangle strips
+        // this.complexPrimitiveShader = new PIXI.ComplexPrimitiveShader(this);
 
         this.setShader(this.defaultShader);
     },
