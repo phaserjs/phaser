@@ -5,7 +5,8 @@
         baseUrl: "src/",
         
         paths: {
-            //  Edit the below path to point to where-ever you have placed the phaser.min.js file
+            // phaser.min.js library location, by default this is the location where bower will place it.
+            // Feel free to edit the below path to point to wherever you have placed this file.
             phaser: 'libs/phaser/build/phaser.min'
         },
 
