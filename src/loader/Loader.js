@@ -1761,7 +1761,7 @@ Phaser.Loader.prototype = {
     * for previous assets to load (unless they are sync-points). Resources, such as packs, may still
     * be downloaded around sync-points, as long as they do not finalize loading.
     *
-    * @method Phaser.Loader#withSyncPoints
+    * @method Phaser.Loader#withSyncPoint
     * @param {function} callback - The callback is invoked and is supplied with a single argument: the loader.
     * @param {object} [callbackContext=(loader)] - Context for the callback.
     * @return {Phaser.Loader} This Loader instance.
