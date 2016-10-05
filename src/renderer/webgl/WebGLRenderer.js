@@ -182,8 +182,6 @@ Phaser.Renderer.WebGL.prototype = {
             }
         }
 
-        this.gl.id = 0;
-
         var gl = this.gl;
 
         this.maxTextures = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);
@@ -406,14 +404,14 @@ Phaser.Renderer.WebGL.prototype = {
 
         var gl = this.gl;
 
-        if (!texture._glTextures[gl.id])
+        if (!texture._glTextures)
         {
-            texture._glTextures[gl.id] = gl.createTexture();
+            texture._glTextures = gl.createTexture();
         }
 
         gl.activeTexture(gl.TEXTURE0 + texture.textureIndex);
 
-        gl.bindTexture(gl.TEXTURE_2D, texture._glTextures[gl.id]);
+        gl.bindTexture(gl.TEXTURE_2D, texture._glTextures);
 
         gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, texture.premultipliedAlpha);
 
@@ -442,7 +440,7 @@ Phaser.Renderer.WebGL.prototype = {
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
         }
 
-        texture._dirty[gl.id] = false;
+        texture._dirty = false;
 
         return true;
     },
@@ -457,14 +455,14 @@ Phaser.Renderer.WebGL.prototype = {
         var gl = this.gl;
         var textureMetaData = texture.source;
 
-        if (!texture._glTextures[gl.id])
+        if (!texture._glTextures)
         {
-            texture._glTextures[gl.id] = gl.createTexture();
+            texture._glTextures = gl.createTexture();
         }
 
         gl.activeTexture(gl.TEXTURE0 + texture.textureIndex);
 
-        gl.bindTexture(gl.TEXTURE_2D, texture._glTextures[gl.id]);
+        gl.bindTexture(gl.TEXTURE_2D, texture._glTextures);
 
         gl.compressedTexImage2D(
             gl.TEXTURE_2D,
@@ -499,7 +497,7 @@ Phaser.Renderer.WebGL.prototype = {
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
         }
 
-        texture._dirty[gl.id] = false;
+        texture._dirty = false;
 
         return true;
     },
@@ -536,22 +534,22 @@ Phaser.Renderer.WebGL.prototype = {
             // PIXI.WebGLGraphics.updateGraphics(maskData, gl);
         }
 
-        if (maskData._webGL[gl.id] === undefined || maskData._webGL[gl.id].data === undefined || maskData._webGL[gl.id].data.length === 0)
+        if (maskData._webGL === undefined || maskData._webGL.data === undefined || maskData._webGL.data.length === 0)
         {
             return;
         }
 
-        this.stencilManager.pushStencil(maskData, maskData._webGL[gl.id].data[0]);
+        this.stencilManager.pushStencil(maskData, maskData._webGL.data[0]);
     },
 
     popMask: function (maskData)
     {
-        if (maskData._webGL[gl.id] === undefined || maskData._webGL[gl.id].data === undefined || maskData._webGL[gl.id].data.length === 0)
+        if (maskData._webGL === undefined || maskData._webGL.data === undefined || maskData._webGL.data.length === 0)
         {
             return;
         }
 
-        this.stencilManager.popStencil(maskData, maskData._webGL[gl.id].data[0]);
+        this.stencilManager.popStencil(maskData, maskData._webGL.data[0]);
     },
 
     //  Shader Utils

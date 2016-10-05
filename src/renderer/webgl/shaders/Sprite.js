@@ -264,7 +264,7 @@ Phaser.Renderer.WebGL.Shaders.Sprite.prototype = {
 
         // No need to do string manipulation for this.
         gl.activeTexture(gl.TEXTURE0 + this.textureCount);
-        gl.bindTexture(gl.TEXTURE_2D, uniform.value.baseTexture._glTextures[gl.id]);
+        gl.bindTexture(gl.TEXTURE_2D, uniform.value.baseTexture._glTextures);
 
         //  Extended texture data
         if (uniform.textureData)
@@ -368,17 +368,17 @@ Phaser.Renderer.WebGL.Shaders.Sprite.prototype = {
                 {
                     gl.activeTexture(gl['TEXTURE' + this.textureCount]);
 
-                    if(uniform.value.baseTexture._dirty[gl.id])
+                    if(uniform.value.baseTexture._dirty)
                     {
-                        PIXI.instances[gl.id].updateTexture(uniform.value.baseTexture);
+                        PIXI.instances.updateTexture(uniform.value.baseTexture);
                     }
                     else
                     {
                         // bind the current texture
-                        gl.bindTexture(gl.TEXTURE_2D, uniform.value.baseTexture._glTextures[gl.id]);
+                        gl.bindTexture(gl.TEXTURE_2D, uniform.value.baseTexture._glTextures);
                     }
 
-                    //  gl.bindTexture(gl.TEXTURE_2D, uniform.value.baseTexture._glTextures[gl.id] || PIXI.createWebGLTexture( uniform.value.baseTexture, gl));
+                    //  gl.bindTexture(gl.TEXTURE_2D, uniform.value.baseTexture._glTextures || PIXI.createWebGLTexture( uniform.value.baseTexture, gl));
                     gl.uniform1i(uniform.uniformLocation, this.textureCount);
                     this.textureCount++;
                 }

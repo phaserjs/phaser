@@ -151,7 +151,7 @@ Phaser.Renderer.WebGL.SpriteBatch.prototype = {
         shader.uniforms = {};
         shader.init();
 
-        this.defaultShader.shaders[gl.id] = shader;
+        this.defaultShader.shaders = shader;
     },
 
     begin: function ()
@@ -184,7 +184,7 @@ Phaser.Renderer.WebGL.SpriteBatch.prototype = {
         {
             this.flush();
             gl.activeTexture(gl.TEXTURE0 + baseTexture.textureIndex);
-            gl.bindTexture(gl.TEXTURE_2D, baseTexture._glTextures[gl.id]);
+            gl.bindTexture(gl.TEXTURE_2D, baseTexture._glTextures);
             this.renderer.textureArray[baseTexture.textureIndex] = baseTexture;
         }
 
@@ -334,7 +334,7 @@ Phaser.Renderer.WebGL.SpriteBatch.prototype = {
         {
             this.dirty = false;
 
-            shader = this.defaultShader.shaders[gl.id];
+            shader = this.defaultShader.shaders;
 
             // bind the main texture
             gl.activeTexture(gl.TEXTURE0);
@@ -423,7 +423,7 @@ Phaser.Renderer.WebGL.SpriteBatch.prototype = {
                 {
                     currentShader = nextShader;
 
-                    shader = currentShader.shaders[gl.id];
+                    shader = currentShader.shaders;
 
                     if (!shader)
                     {
@@ -433,7 +433,7 @@ Phaser.Renderer.WebGL.SpriteBatch.prototype = {
                         shader.uniforms = currentShader.uniforms;
                         shader.init();
 
-                        currentShader.shaders[gl.id] = shader;
+                        currentShader.shaders = shader;
                     }
 
                     this.renderer.shaderManager.setShader(shader);
@@ -474,7 +474,7 @@ Phaser.Renderer.WebGL.SpriteBatch.prototype = {
         var gl = this.gl;
 
         // check if a texture is dirty..
-        if (texture._dirty[gl.id])
+        if (texture._dirty)
         {
             if (!this.renderer.updateTexture(texture))
             {
