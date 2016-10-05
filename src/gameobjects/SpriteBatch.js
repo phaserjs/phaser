@@ -44,15 +44,6 @@ Phaser.SpriteBatch = function (game, parent, name, addToStage) {
     */
     this.ready = false;
 
-    if (this.game.renderType === Phaser.CANVAS)
-    {
-        this.render = Phaser.Renderer.Canvas.GameObjects.SpriteBatch.render;
-    }
-    else
-    {
-        this.render = Phaser.Renderer.WebGL.GameObjects.SpriteBatch.render;
-    }
-
 };
 
 Phaser.SpriteBatch.prototype = Object.create(Phaser.Group.prototype);

@@ -190,15 +190,6 @@ Phaser.Text = function (game, x, y, text, style) {
         this.updateText();
     }
 
-    if (this.game.renderType === Phaser.CANVAS)
-    {
-        this.render = Phaser.Renderer.Canvas.GameObjects.Text.render;
-    }
-    else
-    {
-        this.render = Phaser.Renderer.WebGL.GameObjects.Text.render;
-    }
-
 };
 
 Phaser.Text.prototype = Object.create(Phaser.Sprite.prototype);

@@ -1,45 +1,53 @@
 /**
-* Note that 'this' in all functions here refer to the owning object.
-* For example the Group, Stage, Sprite, etc. because the render function
-* here is mapped to the prototype for the game object.
+* @author       Richard Davey <rich@photonstorm.com>
+* @author       Mat Groves (@Doormat23)
+* @copyright    2016 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
+
+
 Phaser.Renderer.Canvas.GameObjects.Container = {
 
-    render: function (renderer)
+    TYPES: [
+        Phaser.Group.prototype,
+        PIXI.DisplayObjectContainer.prototype
+    ],
+
+    render: function (renderer, src)
     {
-        if (this.visible === false || this.alpha === 0)
+        if (src.visible === false || src.alpha === 0)
         {
             return;
         }
 
-        if (this._cacheAsBitmap)
+        if (src._cacheAsBitmap)
         {
-            return this.renderCachedSprite(renderer);
+            return this.renderCachedSprite(renderer, src);
         }
 
-        if (this._mask)
+        if (src._mask)
         {
-            renderer.pushMask(this._mask);
+            renderer.pushMask(src._mask);
         }
 
-        for (var i = 0; i < this.children.length; i++)
+        for (var i = 0; i < src.children.length; i++)
         {
-            var child = this.children[i];
+            var child = src.children[i];
 
             child.render(renderer, child);
         }
 
-        if (this._mask)
+        if (src._mask)
         {
             renderer.popMask();
         }
 
     },
 
-    renderCachedSprite: function (renderer)
+    renderCachedSprite: function (renderer, src)
     {
         //  TODO
-        return renderer;
+        return src;
     }
 
 };

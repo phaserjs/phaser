@@ -93,15 +93,6 @@ Phaser.Stage = function (game) {
         this.parseConfig(game.config);
     }
 
-    if (this.game.renderType === Phaser.CANVAS)
-    {
-        this.render = Phaser.Renderer.Canvas.GameObjects.Stage.render;
-    }
-    else
-    {
-        this.render = Phaser.Renderer.WebGL.GameObjects.Stage.render;
-    }
-
 };
 
 Phaser.Stage.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);

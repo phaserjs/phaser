@@ -5,6 +5,10 @@
 */
 Phaser.Renderer.Canvas.GameObjects.SpriteBatch = {
 
+    TYPES: [
+        Phaser.SpriteBatch.prototype
+    ],
+
     render: function (renderer)
     {
         if (!this.visible || this.alpha <= 0 || !this.children.length)

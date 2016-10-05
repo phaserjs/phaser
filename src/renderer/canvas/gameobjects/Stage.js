@@ -1,3 +1,4 @@
+
 /**
 * Note that 'this' in all functions here refer to the owning object.
 * For example the Group, Stage, Sprite, etc. because the render function
@@ -5,24 +6,30 @@
 */
 Phaser.Renderer.Canvas.GameObjects.Stage = {
 
-    render: function (renderer)
+    TYPES: [
+        Phaser.Stage.prototype
+    ],
+
+    render: function (renderer, src)
     {
-        if (this.visible === false || this.alpha === 0)
+        if (src.visible === false || src.alpha === 0)
         {
             return;
         }
 
-        if (this._mask)
+        if (src._mask)
         {
-            renderer.pushMask(this._mask);
+            renderer.pushMask(src._mask);
         }
 
-        for (var i = 0; i < this.children.length; i++)
+        for (var i = 0; i < src.children.length; i++)
         {
-            this.children[i].render(renderer);
+            var child = src.children[i];
+
+            child.render(renderer, child);
         }
 
-        if (this._mask)
+        if (src._mask)
         {
             renderer.popMask();
         }

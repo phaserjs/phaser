@@ -95,12 +95,7 @@ Phaser.Renderer.Canvas = function (game)
     this.currentBlendMode = 0;
     this.currentScaleMode = 0;
 
-    if (this.game.device.canUseMultiply)
-    {
-        this.mapBlendModes();
-    }
-
-    this.resize(this.width, this.height);
+    this.init();
 
 };
 
@@ -109,6 +104,27 @@ Phaser.Renderer.Canvas.GameObjects = {};
 Phaser.Renderer.Canvas.prototype.constructor = Phaser.Renderer.Canvas;
 
 Phaser.Renderer.Canvas.prototype = {
+
+    init: function ()
+    {
+        //  Mixin the renderer functions
+        for (var renderer in Phaser.Renderer.Canvas.GameObjects)
+        {
+            var types = Phaser.Renderer.Canvas.GameObjects[renderer].TYPES;
+
+            for (var i = 0; i < types.length; i++)
+            {
+                types[i].render = Phaser.Renderer.Canvas.GameObjects[renderer].render;
+            }
+        }
+
+        if (this.game.device.canUseMultiply)
+        {
+            this.mapBlendModes();
+        }
+
+        this.resize(this.width, this.height);
+    },
 
     /**
      * Maps Blend modes to Canvas blend modes.
@@ -199,7 +215,7 @@ Phaser.Renderer.Canvas.prototype = {
             }
         }
 
-        stage.render(this);
+        stage.render(this, stage);
 
         //  Add Post-render hook
     },

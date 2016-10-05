@@ -1,3 +1,4 @@
+
 /**
 * Note that 'this' in all functions here refer to the owning object.
 * For example the Group, Stage, Sprite, etc. because the render function
@@ -5,10 +6,15 @@
 */
 Phaser.Renderer.Canvas.GameObjects.Graphics = {
 
-    render: function (renderer)
+    TYPES: [
+        Phaser.Graphics.prototype
+    ],
+
+    render: function (renderer, src)
     {
+        return;
+
         var context = renderer.context;
-        var local = Phaser.Renderer.Canvas.GameObjects.Graphics;
 
         if (this.dirty)
         {

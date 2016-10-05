@@ -201,15 +201,6 @@ Phaser.Graphics = function (game, x, y) {
 
     Phaser.Component.Core.init.call(this, game, x, y, '', null);
 
-    if (this.game.renderType === Phaser.CANVAS)
-    {
-        this.render = Phaser.Renderer.Canvas.GameObjects.Graphics.render;
-    }
-    else
-    {
-        this.render = Phaser.Renderer.WebGL.GameObjects.Graphics.render;
-    }
-
 };
 
 Phaser.Graphics.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
