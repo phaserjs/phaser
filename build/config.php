@@ -214,8 +214,6 @@ EOL;
     <script src="$path/src/renderer/webgl/gameobjects/Container.js"></script>
     <script src="$path/src/renderer/webgl/gameobjects/Sprite.js"></script>
     <script src="$path/src/renderer/webgl/gameobjects/Stage.js"></script>
-    <script src="$path/src/renderer/webgl/gameobjects/Text.js"></script>
-    <script src="$path/src/renderer/webgl/gameobjects/Graphics.js"></script>
 
 
 EOL;
@@ -262,6 +260,7 @@ EOL;
     <script src="$path/src/gameobjects/GraphicsData.js"></script>
     <script src="$path/src/gameobjects/Graphics.js"></script>
     <script src="$path/src/renderer/canvas/gameobjects/Graphics.js"></script>
+    <script src="$path/src/renderer/webgl/gameobjects/Graphics.js"></script>
 
 
 EOL;
@@ -281,6 +280,7 @@ EOL;
         echo <<<EOL
     <script src="$path/src/gameobjects/Text.js"></script>
     <script src="$path/src/renderer/canvas/gameobjects/Text.js"></script>
+    <script src="$path/src/renderer/webgl/gameobjects/Text.js"></script>
 
 
 EOL;

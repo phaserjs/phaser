@@ -5,29 +5,31 @@
 */
 Phaser.Renderer.WebGL.GameObjects.Graphics = {
 
-    render: function (renderer)
-    {
-        var local = Phaser.Renderer.Canvas.GameObjects.Graphics;
+    TYPES: [
+        Phaser.Graphics.prototype
+    ],
 
-        if (this.visible === false || this.alpha === 0 || this.isMask === true)
+    render: function (renderer, src)
+    {
+        if (src.visible === false || src.alpha === 0 || src.isMask === true)
         {
             return;
         }
 
-        if (this._cacheAsBitmap)
+        if (src._cacheAsBitmap)
         {
-            if (this.dirty || this.cachedSpriteDirty)
+            if (src.dirty || src.cachedSpriteDirty)
             {
-                this._generateCachedSprite();
+                src._generateCachedSprite();
        
                 // we will also need to update the texture on the gpu too!
-                this.updateCachedSpriteTexture();
+                src.updateCachedSpriteTexture();
 
-                this.cachedSpriteDirty = false;
-                this.dirty = false;
+                src.cachedSpriteDirty = false;
+                src.dirty = false;
             }
 
-            this._cachedSprite.worldAlpha = this.worldAlpha;
+            src._cachedSprite.worldAlpha = src.worldAlpha;
 
             // PIXI.Sprite.prototype._renderWebGL.call(this._cachedSprite, renderSession);
 
@@ -36,22 +38,22 @@ Phaser.Renderer.WebGL.GameObjects.Graphics = {
         else
         {
             renderer.spriteBatch.stop();
-            renderer.setBlendMode(this.blendMode);
+            renderer.setBlendMode(src.blendMode);
 
-            if (this._mask)
+            if (src._mask)
             {
-                renderer.pushMask(this._mask);
+                renderer.pushMask(src._mask);
             }
 
-            if (this._filters)
+            if (src._filters)
             {
-                renderer.filterManager.pushFilter(this._filterBlock);
+                renderer.filterManager.pushFilter(src._filterBlock);
             }
           
             // check blend mode
-            if (this.blendMode !== renderer.spriteBatch.currentBlendMode)
+            if (src.blendMode !== renderer.spriteBatch.currentBlendMode)
             {
-                renderer.spriteBatch.currentBlendMode = this.blendMode;
+                renderer.spriteBatch.currentBlendMode = src.blendMode;
 
                 var blendModeWebGL = renderer.blendModes[renderer.spriteBatch.currentBlendMode];
 
@@ -59,36 +61,37 @@ Phaser.Renderer.WebGL.GameObjects.Graphics = {
             }
             
             // check if the webgl graphic needs to be updated
-            if (this.webGLDirty)
+            if (src.webGLDirty)
             {
-                this.dirty = true;
-                this.webGLDirty = false;
+                src.dirty = true;
+                src.webGLDirty = false;
             }
             
             //  Merge with this class
             // PIXI.WebGLGraphics.renderGraphics(this, renderSession);
             
             // only render if it has children!
-            if (this.children.length)
+            if (src.children.length)
             {
                 renderer.spriteBatch.start();
 
-                for (var i = 0; i < this.children.length; i++)
+                for (var i = 0; i < src.children.length; i++)
                 {
-                    this.children[i].render(renderer);
+                    var child = src.children[i];
+                    child.render(renderer, child);
                 }
 
                 renderer.spriteBatch.stop();
             }
 
-            if (this._filters)
+            if (src._filters)
             {
                 renderer.filterManager.popFilter();
             }
 
-            if (this._mask)
+            if (src._mask)
             {
-                renderer.popMask(this.mask);
+                renderer.popMask(src.mask);
             }
               
             renderer.drawCount++;

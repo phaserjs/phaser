@@ -171,6 +171,17 @@ Phaser.Renderer.WebGL.prototype = {
             throw new Error('This browser does not support WebGL. Try using the Canvas renderer.');
         }
 
+        //  Mixin the renderer functions
+        for (var renderer in Phaser.Renderer.WebGL.GameObjects)
+        {
+            var types = Phaser.Renderer.WebGL.GameObjects[renderer].TYPES;
+
+            for (var i = 0; i < types.length; i++)
+            {
+                types[i].render = Phaser.Renderer.WebGL.GameObjects[renderer].render;
+            }
+        }
+
         this.gl.id = 0;
 
         var gl = this.gl;
@@ -362,7 +373,7 @@ Phaser.Renderer.WebGL.prototype = {
         this.offset.x = this.game.camera._shake.x;
         this.offset.y = this.game.camera._shake.y;
 
-        // this.renderSession.blendModeManager.setBlendMode(PIXI.blendModes.NORMAL);
+        this.setBlendMode(this.blendModes.NORMAL);
 
         //  Reset draw count
         this.drawCount = 0;
@@ -374,7 +385,7 @@ Phaser.Renderer.WebGL.prototype = {
 
         // this.filterManager.begin();
 
-        stage.render(this);
+        stage.render(this, stage);
 
         this.spriteBatch.end();
 
