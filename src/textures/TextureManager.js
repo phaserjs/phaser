@@ -20,9 +20,7 @@ Phaser.TextureManager = function (game)
 {
     this.game = game;
 
-    this.list = {
-        //  Empty by default
-    };
+    this.list = {};
 
     this.parsers = {
         Image: Phaser.TextureManager.Parsers.Image,
@@ -37,9 +35,8 @@ Phaser.TextureManager = function (game)
 
 Phaser.TextureManager.prototype.constructor = Phaser.TextureManager;
 
-Phaser.TextureManager.Parsers = {
-    //  Where the different parsers hook themselves
-};
+//  Where the different parsers hook themselves
+Phaser.TextureManager.Parsers = {};
 
 Phaser.TextureManager.prototype = {
 
