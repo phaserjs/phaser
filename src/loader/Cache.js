@@ -2002,7 +2002,7 @@ Phaser.Cache.prototype = {
 
         for (var key in this._cache.image)
         {
-            this._cache.image[key].base._glTextures = [];
+            this._cache.image[key].base._glTextures = null;
         }
 
     },

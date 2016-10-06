@@ -192,6 +192,11 @@ Phaser.Renderer.WebGL.prototype = {
         {
             var types = Phaser.Renderer.WebGL.GameObjects[renderer].TYPES;
 
+            if (!types)
+            {
+                continue;
+            }
+
             for (var i = 0; i < types.length; i++)
             {
                 types[i].render = Phaser.Renderer.WebGL.GameObjects[renderer].render;
@@ -397,7 +402,7 @@ Phaser.Renderer.WebGL.prototype = {
 
         this.spriteBatch.begin();
 
-        // this.filterManager.begin();
+        this.filterManager.begin();
 
         stage.render(this, stage);
 

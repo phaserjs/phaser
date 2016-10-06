@@ -130,13 +130,13 @@ Phaser.Renderer.WebGL.SpriteBatch.prototype = {
                 ]);
         }
 
-        // create a couple of buffers
+        //  Create a couple of buffers
         this.vertexBuffer = gl.createBuffer();
         this.indexBuffer = gl.createBuffer();
 
-        // 65535 is max index, so 65535 / 6 = 10922.
+        //  65535 is max index, so 65535 / 6 = 10922.
 
-        //upload the index data
+        //  Upload the index data
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.indices, gl.STATIC_DRAW);
 

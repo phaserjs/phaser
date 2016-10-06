@@ -12,8 +12,6 @@ Phaser.Renderer.Canvas.GameObjects.Graphics = {
 
     render: function (renderer, src)
     {
-        return;
-
         var context = renderer.context;
 
         if (this.dirty)

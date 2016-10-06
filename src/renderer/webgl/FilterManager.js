@@ -57,6 +57,8 @@ Phaser.Renderer.WebGL.FilterManager.prototype = {
     {
         this.gl = this.renderer.gl;
 
+        var gl = this.gl;
+
         this.texturePool = [];
 
         //  Initialises the shader buffers
@@ -112,7 +114,7 @@ Phaser.Renderer.WebGL.FilterManager.prototype = {
     {
         this.defaultShader = this.renderer.shaderManager.defaultShader;
 
-        var projection = this.this.renderer.projection;
+        var projection = this.renderer.projection;
 
         this.width = projection.x * 2;
         this.height = -projection.y * 2;

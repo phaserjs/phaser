@@ -66,7 +66,7 @@ Phaser.RenderTexture = function (game, width, height, key, scaleMode, resolution
     this.baseTexture = new PIXI.BaseTexture();
     this.baseTexture.width = this.width * this.resolution;
     this.baseTexture.height = this.height * this.resolution;
-    this.baseTexture._glTextures = [];
+    this.baseTexture._glTextures = null;
     this.baseTexture.resolution = this.resolution;
 
     this.baseTexture.scaleMode = scaleMode;
@@ -90,7 +90,7 @@ Phaser.RenderTexture = function (game, width, height, key, scaleMode, resolution
         this.baseTexture._dirty[gl.id] = false;
 
         this.textureBuffer = new PIXI.FilterTexture(gl, this.width, this.height, this.baseTexture.scaleMode, textureUnit);
-        this.baseTexture._glTextures[gl.id] = this.textureBuffer.texture;
+        this.baseTexture._glTextures = this.textureBuffer.texture;
 
         this.projection = new Phaser.Point(this.width * 0.5, -this.height * 0.5);
     }

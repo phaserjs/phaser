@@ -455,7 +455,7 @@ Phaser.Rope.prototype._renderStrip = function (renderSession) {
         else
         {
             // bind the current texture
-            gl.bindTexture(gl.TEXTURE_2D, this.texture.baseTexture._glTextures[gl.id]);
+            gl.bindTexture(gl.TEXTURE_2D, this.texture.baseTexture._glTextures);
         }
 
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._indexBuffer);
@@ -482,7 +482,7 @@ Phaser.Rope.prototype._renderStrip = function (renderSession) {
         }
         else
         {
-            gl.bindTexture(gl.TEXTURE_2D, this.texture.baseTexture._glTextures[gl.id]);
+            gl.bindTexture(gl.TEXTURE_2D, this.texture.baseTexture._glTextures);
         }
 
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._indexBuffer);
