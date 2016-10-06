@@ -207,6 +207,7 @@ EOL;
     <script src="$path/src/renderer/webgl/WebGLRenderer.js"></script>
     <script src="$path/src/renderer/webgl/ShaderManager.js"></script>
     <script src="$path/src/renderer/webgl/StencilManager.js"></script>
+    <script src="$path/src/renderer/webgl/FilterTexture.js"></script>
     <script src="$path/src/renderer/webgl/FilterManager.js"></script>
     <script src="$path/src/renderer/webgl/SpriteBatch.js"></script>
     <script src="$path/src/renderer/webgl/shaders/Sprite.js"></script>

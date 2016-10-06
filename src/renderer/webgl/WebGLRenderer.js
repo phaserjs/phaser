@@ -133,7 +133,7 @@ Phaser.Renderer.WebGL = function (game)
      * @property filterManager
      * @type WebGLFilterManager
      */
-    // this.filterManager = new PIXI.WebGLFilterManager();
+    this.filterManager = new Phaser.Renderer.WebGL.FilterManager(this);
 
     /**
      * Manages the stencil buffer
@@ -150,6 +150,13 @@ Phaser.Renderer.WebGL = function (game)
 
     this.drawCount = 0;
     this.flipY = 1;
+
+    this._fbErrors = {
+        36054: 'Incomplete attachment',
+        36055: 'Missing attachment',
+        36057: 'Incomplete dimensions',
+        36061: 'Framebuffer unsupported'
+    };
 
     this.init();
 
@@ -608,6 +615,58 @@ Phaser.Renderer.WebGL.prototype = {
         }
 
         return shaderProgram;
+    },
+
+    createEmptyTexture: function (width, height, scaleMode)
+    {
+        var gl = this.gl;
+        var texture = gl.createTexture();
+        var glScaleMode = (scaleMode === Phaser.scaleModes.LINEAR) ? gl.LINEAR : gl.NEAREST;
+
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, glScaleMode);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, glScaleMode);
+
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+
+        return texture;
+    },
+
+    createFramebuffer: function (width, height, scaleMode, textureUnit)
+    {
+        var gl = this.gl;
+        var framebuffer = gl.createFramebuffer();
+        var depthStencilBuffer = gl.createRenderbuffer();
+        var colorBuffer = null;   
+        var fbStatus = 0;
+        
+        gl.activeTexture(gl.TEXTURE0 + textureUnit);
+
+        gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
+        gl.bindRenderbuffer(gl.RENDERBUFFER, depthStencilBuffer);
+
+        //  `this.renderBuffer` = undefined? FilterTexture has a renderBuffer, but `this` doesn't.
+        gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_STENCIL_ATTACHMENT, gl.RENDERBUFFER, this.renderBuffer);
+
+        colorBuffer = this.createEmptyTexture(width, height, scaleMode);
+
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, colorBuffer, 0);
+
+        fbStatus = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
+
+        if (fbStatus !== gl.FRAMEBUFFER_COMPLETE)
+        {
+            console.error('Incomplete GL framebuffer. ', this._fbErrors[fbStatus]);
+        }
+
+        framebuffer.width = width;
+        framebuffer.height = height;
+        framebuffer.targetTexture = colorBuffer;
+        framebuffer.renderBuffer = depthStencilBuffer;
+
+        return framebuffer;
     },
 
     destroy: function ()

@@ -6,7 +6,7 @@
 */
 
 /**
-* New version of PIXI.DefaultShader
+* New version of PIXI.PixiFastShader
 *
 * @class Phaser.Renderer.Canvas
 * @constructor
