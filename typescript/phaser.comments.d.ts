@@ -31374,6 +31374,18 @@ declare module Phaser {
 
     class Utils {
 
+        /**
+         * Gets a random property of an object.
+         *
+         * If the object is a string, you get a random character.
+         * If the object is an array, you get a random element.
+         *
+         * @method Phaser.Utils.getRandomProperty
+         * @param {object} obj - The object to get the property from.
+         * @param {boolean} [returnValue=true] whether to return the value (if true, which is default) or the key (if false)
+         * @return {*} the value of the property or null if object doesn't have any properties.
+         */
+        static getRandomProperty(obj: any, returnValue?: boolean): any;
 
         /**
         * Gets an objects property by string.
