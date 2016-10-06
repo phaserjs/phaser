@@ -70,6 +70,14 @@ Phaser.AnimationManager = function (sprite) {
     */
     this._outputFrames = [];
 
+    /**
+     * This event is dispatched when the Animation Manager changes frame.
+     * By default this event is disabled due to its intensive nature. Enable it with: `AnimationManager.enableUpdate = true`.
+     * @property {Phaser.Signal|null} onUpdate
+     * @default
+     */
+    this.onUpdate = null;
+
 };
 
 Phaser.AnimationManager.prototype = {
@@ -329,6 +337,12 @@ Phaser.AnimationManager.prototype = {
         if (this.currentAnim && this.currentAnim.update())
         {
             this.currentFrame = this.currentAnim.currentFrame;
+
+            if (this.onUpdate)
+            {
+                this.onUpdate.dispatch(this);
+            }
+
             return true;
         }
 
@@ -427,6 +441,10 @@ Phaser.AnimationManager.prototype = {
         this.sprite = null;
         this.game = null;
 
+        if (this.onUpdate)
+        {
+            this.onUpdate.dispose();
+        }
     }
 
 };
@@ -560,6 +578,34 @@ Object.defineProperty(Phaser.AnimationManager.prototype, 'frameName', {
         {
             console.warn('Cannot set frameName: ' + value);
         }
+    }
+
+});
+
+/**
+ * @name Phaser.AnimationManager#enableUpdate
+ * @property {boolean} enableUpdate - Gets or sets if the animation manager will dispatch the onUpdate events upon changing frame.
+ */
+Object.defineProperty(Phaser.AnimationManager.prototype, 'enableUpdate', {
+
+    get: function () {
+
+        return (this.onUpdate !== null);
+
+    },
+
+    set: function (value) {
+
+        if (value && this.onUpdate === null)
+        {
+            this.onUpdate = new Phaser.Signal();
+        }
+        else if (!value && this.onUpdate !== null)
+        {
+            this.onUpdate.dispose();
+            this.onUpdate = null;
+        }
+
     }
 
 });
