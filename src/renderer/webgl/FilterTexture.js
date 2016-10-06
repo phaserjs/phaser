@@ -61,7 +61,7 @@ Phaser.Renderer.WebGL.FilterTexture.prototype = {
      * @param width {Number} the new width of the texture
      * @param height {Number} the new height of the texture
      */
-    resize = function (width, height)
+    resize: function (width, height)
     {
         if (this.width === width && this.height === height)
         {
