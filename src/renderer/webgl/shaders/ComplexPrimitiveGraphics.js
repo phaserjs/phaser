@@ -6,13 +6,13 @@
 */
 
 /**
-* New version of PIXI.DefaultShader
+* New version of PIXI.ComplexPrimitiveShader
 *
 * @class Phaser.Renderer.Canvas
 * @constructor
 * @param {Phaser.Game} game - Game reference to the currently running game.
 */
-Phaser.Renderer.WebGL.Shaders.PrimitiveGraphics = function (renderer)
+Phaser.Renderer.WebGL.Shaders.ComplexPrimitiveGraphics = function (renderer)
 {
     this.renderer = renderer;
 
@@ -54,6 +54,9 @@ Phaser.Renderer.WebGL.Shaders.PrimitiveGraphics = function (renderer)
     this.tintColor;
 
     //  @type {WebGLUniformLocation }
+    this.color;
+
+    //  @type {WebGLUniformLocation }
     this.flipY;
 
     //  @type {GLint}
@@ -71,9 +74,9 @@ Phaser.Renderer.WebGL.Shaders.PrimitiveGraphics = function (renderer)
     this.init();
 };
 
-Phaser.Renderer.WebGL.Shaders.PrimitiveGraphics.prototype.constructor = Phaser.Renderer.WebGL.Shaders.PrimitiveGraphics;
+Phaser.Renderer.WebGL.Shaders.ComplexPrimitiveGraphics.prototype.constructor = Phaser.Renderer.WebGL.Shaders.ComplexPrimitiveGraphics;
 
-Phaser.Renderer.WebGL.Shaders.PrimitiveGraphics.prototype = {
+Phaser.Renderer.WebGL.Shaders.ComplexPrimitiveGraphics.prototype = {
 
     init: function ()
     {
@@ -88,20 +91,21 @@ Phaser.Renderer.WebGL.Shaders.PrimitiveGraphics.prototype = {
 
         this.vertexSrc  = [
             'attribute vec2 aVertexPosition;',
-            'attribute vec4 aColor;',
             'uniform mat3 translationMatrix;',
             'uniform vec2 projectionVector;',
             'uniform vec2 offsetVector;',
-            'uniform float alpha;',
-            'uniform float flipY;',
+            
             'uniform vec3 tint;',
+            'uniform float alpha;',
+            'uniform vec3 color;',
+            'uniform float flipY;',
             'varying vec4 vColor;',
 
             'void main(void) {',
             '   vec3 v = translationMatrix * vec3(aVertexPosition , 1.0);',
             '   v -= offsetVector.xyx;',
             '   gl_Position = vec4( v.x / projectionVector.x -1.0, (v.y / projectionVector.y * -flipY) + flipY , 0.0, 1.0);',
-            '   vColor = aColor * vec4(tint * alpha, alpha);',
+            '   vColor = vec4(color * alpha * tint, alpha);',
             '}'
         ];
 
@@ -116,12 +120,14 @@ Phaser.Renderer.WebGL.Shaders.PrimitiveGraphics.prototype = {
         this.offsetVector = gl.getUniformLocation(program, 'offsetVector');
         this.tintColor = gl.getUniformLocation(program, 'tint');
         this.flipY = gl.getUniformLocation(program, 'flipY');
+        this.color = gl.getUniformLocation(program, 'color');
 
         // get and store the attributes
         this.aVertexPosition = gl.getAttribLocation(program, 'aVertexPosition');
         this.colorAttribute = gl.getAttribLocation(program, 'aColor');
 
-        this.attributes = [ this.aVertexPosition, this.colorAttribute ];
+        // this.attributes = [ this.aVertexPosition, this.colorAttribute ];
+        this.attributes = [ this.aVertexPosition ];
 
         this.translationMatrix = gl.getUniformLocation(program, 'translationMatrix');
         this.alpha = gl.getUniformLocation(program, 'alpha');

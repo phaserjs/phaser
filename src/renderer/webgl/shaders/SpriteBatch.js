@@ -225,7 +225,7 @@ Phaser.Renderer.WebGL.Shaders.SpriteBatch.prototype = {
         this.gl.deleteProgram(this.program);
         this.gl = null;
         this.renderer = null;
-        this.attribute = null;
+        this.attributes = null;
     }
 
 };

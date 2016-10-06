@@ -190,7 +190,7 @@ Phaser.Renderer.WebGL.Shaders.Strip.prototype = {
         this.gl.deleteProgram(this.program);
         this.gl = null;
         this.renderer = null;
-        this.attribute = null;
+        this.attributes = null;
     }
 
 };

@@ -206,11 +206,14 @@ EOL;
 
     <script src="$path/src/renderer/webgl/WebGLRenderer.js"></script>
     <script src="$path/src/renderer/webgl/ShaderManager.js"></script>
+    <script src="$path/src/renderer/webgl/StencilManager.js"></script>
+    <script src="$path/src/renderer/webgl/FilterManager.js"></script>
     <script src="$path/src/renderer/webgl/SpriteBatch.js"></script>
     <script src="$path/src/renderer/webgl/shaders/Sprite.js"></script>
     <script src="$path/src/renderer/webgl/shaders/SpriteBatch.js"></script>
     <script src="$path/src/renderer/webgl/shaders/Strip.js"></script>
     <script src="$path/src/renderer/webgl/shaders/PrimitiveGraphics.js"></script>
+    <script src="$path/src/renderer/webgl/shaders/ComplexPrimitiveGraphics.js"></script>
     <script src="$path/src/renderer/webgl/gameobjects/Container.js"></script>
     <script src="$path/src/renderer/webgl/gameobjects/Sprite.js"></script>
     <script src="$path/src/renderer/webgl/gameobjects/Stage.js"></script>

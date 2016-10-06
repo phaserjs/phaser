@@ -140,7 +140,7 @@ Phaser.Renderer.WebGL = function (game)
      * @property stencilManager
      * @type WebGLStencilManager
      */
-    // this.stencilManager = new PIXI.WebGLStencilManager();
+    this.stencilManager = new Phaser.Renderer.WebGL.StencilManager(this);
 
     this.gl = null;
 

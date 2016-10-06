@@ -62,8 +62,8 @@ Phaser.Renderer.WebGL.ShaderManager.prototype = {
         // the next one is used for rendering primitives
         this.primitiveShader = new Phaser.Renderer.WebGL.Shaders.PrimitiveGraphics(this.renderer);
 
-        // the next one is used for rendering triangle strips
-        // this.complexPrimitiveShader = new PIXI.ComplexPrimitiveShader(this);
+        // the next one is used by the stencil buffer manager when Graphics.mode = 1
+        this.complexPrimitiveShader = new Phaser.Renderer.WebGL.Shaders.ComplexPrimitiveGraphics(this);
 
         this.setShader(this.defaultShader);
     },
