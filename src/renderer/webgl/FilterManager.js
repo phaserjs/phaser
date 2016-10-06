@@ -59,7 +59,48 @@ Phaser.Renderer.WebGL.FilterManager.prototype = {
 
         this.texturePool = [];
 
-        this.initShaderBuffers();
+        //  Initialises the shader buffers
+
+        this.vertexBuffer = gl.createBuffer();
+        this.uvBuffer = gl.createBuffer();
+        this.colorBuffer = gl.createBuffer();
+        this.indexBuffer = gl.createBuffer();
+
+        // bind and upload the vertex data
+        this.vertexArray = new Float32Array([
+            0.0, 0.0,
+            1.0, 0.0,
+            0.0, 1.0,
+            1.0, 1.0
+        ]);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, this.vertexArray, gl.STATIC_DRAW);
+
+        // bind and upload the uv buffer
+        this.uvArray = new Float32Array([
+            0.0, 0.0,
+            1.0, 0.0,
+            0.0, 1.0,
+            1.0, 1.0
+        ]);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.uvBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, this.uvArray, gl.STATIC_DRAW);
+
+        this.colorArray = new Float32Array([
+            1.0, 0xFFFFFF,
+            1.0, 0xFFFFFF,
+            1.0, 0xFFFFFF,
+            1.0, 0xFFFFFF
+        ]);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.colorBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, this.colorArray, gl.STATIC_DRAW);
+
+        // bind and upload the index
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array([ 0, 1, 2, 1, 3, 2 ]), gl.STATIC_DRAW);
     },
 
     /**
@@ -365,7 +406,7 @@ Phaser.Renderer.WebGL.FilterManager.prototype = {
     applyFilterPass: function (filter, filterArea, width, height)
     {
         var gl = this.gl;
-        var shader = filter.shaders[gl.id];
+        var shader = filter.shaders;
 
         if (!shader)
         {
@@ -375,7 +416,7 @@ Phaser.Renderer.WebGL.FilterManager.prototype = {
             shader.uniforms = filter.uniforms;
             shader.init(true);
 
-            filter.shaders[gl.id] = shader;
+            filter.shaders = shader;
         }
 
         this.renderer.shaderManager.setShader(shader);
@@ -407,58 +448,6 @@ Phaser.Renderer.WebGL.FilterManager.prototype = {
         gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
 
         this.renderer.drawCount++;
-    },
-
-    /**
-    * Initialises the shader buffers.
-    * 
-    * @method initShaderBuffers
-    */
-    initShaderBuffers: function ()
-    {
-        var gl = this.gl;
-
-        this.vertexBuffer = gl.createBuffer();
-        this.uvBuffer = gl.createBuffer();
-        this.colorBuffer = gl.createBuffer();
-        this.indexBuffer = gl.createBuffer();
-
-        // bind and upload the vertex data
-        this.vertexArray = new Float32Array([
-            0.0, 0.0,
-            1.0, 0.0,
-            0.0, 1.0,
-            1.0, 1.0
-        ]);
-
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, this.vertexArray, gl.STATIC_DRAW);
-
-        // bind and upload the uv buffer
-        this.uvArray = new Float32Array([
-            0.0, 0.0,
-            1.0, 0.0,
-            0.0, 1.0,
-            1.0, 1.0
-        ]);
-
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.uvBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, this.uvArray, gl.STATIC_DRAW);
-
-        this.colorArray = new Float32Array([
-            1.0, 0xFFFFFF,
-            1.0, 0xFFFFFF,
-            1.0, 0xFFFFFF,
-            1.0, 0xFFFFFF
-        ]);
-
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.colorBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, this.colorArray, gl.STATIC_DRAW);
-
-        // bind and upload the index
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
-        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array([ 0, 1, 2, 1, 3, 2 ]), gl.STATIC_DRAW);
-
     },
 
     /**

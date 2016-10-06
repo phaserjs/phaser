@@ -67,6 +67,8 @@ Phaser.Renderer.WebGL = function (game)
      */
     this.height = game.height * game.resolution;
 
+    this.resolution = game.resolution;
+
     /**
      * The canvas element that everything is drawn to.
      *
@@ -74,6 +76,13 @@ Phaser.Renderer.WebGL = function (game)
      * @type HTMLCanvasElement
      */
     this.view = game.canvas;
+
+    /**
+     * The number of points beyond which the renderer swaps to using the Stencil Buffer to render the Graphics.
+     *
+     * @type {number}
+     */
+    this.stencilBufferLimit = 6;
 
     //  WebGL specific from here
 
@@ -199,8 +208,8 @@ Phaser.Renderer.WebGL.prototype = {
 
         this.shaderManager.init();
         this.spriteBatch.init();
-        // this.filterManager.setContext(gl);
-        // this.stencilManager.setContext(gl);
+        this.filterManager.init();
+        this.stencilManager.init();
 
         this.resize(this.width, this.height);
 
