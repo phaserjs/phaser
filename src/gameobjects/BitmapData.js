@@ -537,16 +537,16 @@ Phaser.BitmapData.prototype = {
     * @param {string} key - The key which will be used to store the image in the Cache.
     * @return {PIXI.Texture} The newly generated texture.
     */
-    generateTexture: function (key) {
+    generateTexture: function(key) {
+        var copyCanvas = PIXI.CanvasPool.create(this, this.width, this.height);
 
-        var image = new Image();
+        var copyContext = copyCanvas.getContext('2d', { alpha: true });
 
-        image.src = this.canvas.toDataURL("image/png");
+        var imageData = this.ctx.getImageData(0, 0, this.width, this.height);
 
-        var obj = this.game.cache.addImage(key, '', image);
+        copyContext.putImageData(imageData, 0, 0);
 
-        return new PIXI.Texture(obj.base);
-
+        return PIXI.Texture.fromCanvas(copyCanvas);
     },
 
     /**
