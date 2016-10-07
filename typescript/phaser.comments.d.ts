@@ -452,11 +452,16 @@ declare module Phaser {
         destroy(): void;
 
         /**
-        * Returns an animation that was previously added by name.
-        * 
-        * @param name The name of the animation to be returned, e.g. "fire".
-        * @return The Animation instance, if found, otherwise null.
-        */
+         * Iterates through the list of animations stored in this manager and calls destroy on each of them.
+         */
+        destroyAnimations(): void;
+
+        /**
+         * Returns an animation that was previously added by name.
+         *
+         * @param name The name of the animation to be returned, e.g. "fire".
+         * @return The Animation instance, if found, otherwise null.
+         */
         getAnimation(name: string): Phaser.Animation;
 
         /**
