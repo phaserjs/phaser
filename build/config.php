@@ -485,12 +485,6 @@ EOL;
 EOL;
     }
 
-    echo <<<EOL
-    <script src="$path/src/PixiDefaults.js"></script>
-
-
-EOL;
-
     if (isset($custom))
     {
         for ($i = 0; $i < count($custom); $i++)
