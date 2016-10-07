@@ -50,6 +50,8 @@ Phaser.Ellipse = function (x, y, width, height) {
 
 };
 
+Phaser.Ellipse.prototype.constructor = Phaser.Ellipse;
+
 Phaser.Ellipse.prototype = {
 
     /**
@@ -185,8 +187,6 @@ Phaser.Ellipse.prototype = {
 
 };
 
-Phaser.Ellipse.prototype.constructor = Phaser.Ellipse;
-
 /**
 * The left coordinate of the Ellipse. The same as the X coordinate.
 * @name Phaser.Ellipse#left
@@ -321,6 +321,3 @@ Phaser.Ellipse.contains = function (a, x, y) {
     return (normx + normy < 0.25);
  
 };
-
-//   Because PIXI uses its own Ellipse, we'll replace it with ours to avoid duplicating code or confusion.
-PIXI.Ellipse = Phaser.Ellipse;

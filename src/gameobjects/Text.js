@@ -143,7 +143,7 @@ Phaser.Text = function (game, x, y, text, style) {
      * @property {number} _res - Internal canvas resolution var.
      * @private
      */
-    this._res = game.renderer.resolution;
+    this._res = game.resolution;
 
     /**
     * @property {string} _text - Internal cache var.
@@ -1476,44 +1476,6 @@ Phaser.Text.prototype.updateTexture = function () {
     this.texture.requiresReTint = true;
 
     this.texture.baseTexture.dirty();
-
-};
-
-/**
-* Renders the object using the WebGL renderer
-*
-* @method Phaser.Text#_renderWebGL
-* @private
-* @param {RenderSession} renderSession - The Render Session to render the Text on.
-*/
-Phaser.Text.prototype._renderWebGL = function (renderSession) {
-
-    if (this.dirty)
-    {
-        this.updateText();
-        this.dirty = false;
-    }
-
-    PIXI.Sprite.prototype._renderWebGL.call(this, renderSession);
-
-};
-
-/**
-* Renders the object using the Canvas renderer.
-*
-* @method Phaser.Text#_renderCanvas
-* @private
-* @param {RenderSession} renderSession - The Render Session to render the Text on.
-*/
-Phaser.Text.prototype._renderCanvas = function (renderSession) {
-
-    if (this.dirty)
-    {
-        this.updateText();
-        this.dirty = false;
-    }
-     
-    PIXI.Sprite.prototype._renderCanvas.call(this, renderSession);
 
 };
 

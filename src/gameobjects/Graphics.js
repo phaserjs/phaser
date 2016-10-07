@@ -124,7 +124,7 @@ Phaser.Graphics = function (game, x, y) {
      * @type Number
      * @default PIXI.blendModes.NORMAL;
      */
-    this.blendMode = PIXI.blendModes.NORMAL;
+    this.blendMode = Phaser.blendModes.NORMAL;
     
     /**
      * Current path
@@ -142,7 +142,7 @@ Phaser.Graphics = function (game, x, y) {
      * @type Array
      * @private
      */
-    this._webGL = [];
+    this._webGL = null;
 
     /**
      * Whether this shape is being used as a mask.
@@ -918,7 +918,7 @@ Phaser.Graphics.prototype.clear = function () {
 Phaser.Graphics.prototype.generateTexture = function (resolution, scaleMode, padding) {
 
     if (resolution === undefined) { resolution = 1; }
-    if (scaleMode === undefined) { scaleMode = PIXI.scaleModes.DEFAULT; }
+    if (scaleMode === undefined) { scaleMode = Phaser.scaleModes.DEFAULT; }
     if (padding === undefined) { padding = 0; }
 
     var bounds = this.getBounds();
@@ -939,187 +939,6 @@ Phaser.Graphics.prototype.generateTexture = function (resolution, scaleMode, pad
     PIXI.CanvasGraphics.renderGraphics(this, canvasBuffer.context);
 
     return texture;
-
-};
-
-/**
-* Renders the object using the WebGL renderer
-*
-* @method _renderWebGL
-* @param renderSession {RenderSession} 
-* @private
-*/
-Phaser.Graphics.prototype._renderWebGL = function (renderSession) {
-
-    // if the sprite is not visible or the alpha is 0 then no need to render this element
-    if (this.visible === false || this.alpha === 0 || this.isMask === true)
-    {
-        return;
-    }
-
-    if (this._cacheAsBitmap)
-    {
-        if (this.dirty || this.cachedSpriteDirty)
-        {
-            this._generateCachedSprite();
-   
-            // we will also need to update the texture on the gpu too!
-            this.updateCachedSpriteTexture();
-
-            this.cachedSpriteDirty = false;
-            this.dirty = false;
-        }
-
-        this._cachedSprite.worldAlpha = this.worldAlpha;
-
-        PIXI.Sprite.prototype._renderWebGL.call(this._cachedSprite, renderSession);
-
-        return;
-    }
-    else
-    {
-        renderSession.spriteBatch.stop();
-        renderSession.blendModeManager.setBlendMode(this.blendMode);
-
-        if (this._mask)
-        {
-            renderSession.maskManager.pushMask(this._mask, renderSession);
-        }
-
-        if (this._filters)
-        {
-            renderSession.filterManager.pushFilter(this._filterBlock);
-        }
-      
-        // check blend mode
-        if (this.blendMode !== renderSession.spriteBatch.currentBlendMode)
-        {
-            renderSession.spriteBatch.currentBlendMode = this.blendMode;
-            var blendModeWebGL = PIXI.blendModesWebGL[renderSession.spriteBatch.currentBlendMode];
-            renderSession.spriteBatch.gl.blendFunc(blendModeWebGL[0], blendModeWebGL[1]);
-        }
-        
-        // check if the webgl graphic needs to be updated
-        if (this.webGLDirty)
-        {
-            this.dirty = true;
-            this.webGLDirty = false;
-        }
-        
-        PIXI.WebGLGraphics.renderGraphics(this, renderSession);
-        
-        // only render if it has children!
-        if (this.children.length)
-        {
-            renderSession.spriteBatch.start();
-
-            // simple render children!
-            for (var i = 0; i < this.children.length; i++)
-            {
-                this.children[i]._renderWebGL(renderSession);
-            }
-
-            renderSession.spriteBatch.stop();
-        }
-
-        if (this._filters)
-        {
-            renderSession.filterManager.popFilter();
-        }
-
-        if (this._mask)
-        {
-            renderSession.maskManager.popMask(this.mask, renderSession);
-        }
-          
-        renderSession.drawCount++;
-
-        renderSession.spriteBatch.start();
-    }
-
-};
-
-/**
-* Renders the object using the Canvas renderer
-*
-* @method _renderCanvas
-* @param renderSession {RenderSession} 
-* @private
-*/
-Phaser.Graphics.prototype._renderCanvas = function (renderSession) {
-
-    // if the sprite is not visible or the alpha is 0 then no need to render this element
-    if (this.visible === false || this.alpha === 0 || this.isMask === true)
-    {
-        return;
-    }
-
-    // if the tint has changed, set the graphics object to dirty.
-    if (this._prevTint !== this.tint)
-    {
-        this.dirty = true;
-        this._prevTint = this.tint;
-    }
-
-    if (this._cacheAsBitmap)
-    {
-        if (this.dirty || this.cachedSpriteDirty)
-        {
-            this._generateCachedSprite();
-   
-            // we will also need to update the texture
-            this.updateCachedSpriteTexture();
-
-            this.cachedSpriteDirty = false;
-            this.dirty = false;
-        }
-
-        this._cachedSprite.alpha = this.alpha;
-
-        PIXI.Sprite.prototype._renderCanvas.call(this._cachedSprite, renderSession);
-
-        return;
-    }
-    else
-    {
-        var context = renderSession.context;
-        var transform = this.worldTransform;
-        
-        if (this.blendMode !== renderSession.currentBlendMode)
-        {
-            renderSession.currentBlendMode = this.blendMode;
-            context.globalCompositeOperation = PIXI.blendModesCanvas[renderSession.currentBlendMode];
-        }
-
-        if (this._mask)
-        {
-            renderSession.maskManager.pushMask(this._mask, renderSession);
-        }
-
-        var resolution = renderSession.resolution;
-        var tx = (transform.tx * renderSession.resolution) + renderSession.shakeX;
-        var ty = (transform.ty * renderSession.resolution) + renderSession.shakeY;
-
-        context.setTransform(transform.a * resolution,
-                             transform.b * resolution,
-                             transform.c * resolution,
-                             transform.d * resolution,
-                             tx,
-                             ty);
-
-        PIXI.CanvasGraphics.renderGraphics(this, context);
-
-         // simple render children!
-        for (var i = 0; i < this.children.length; i++)
-        {
-            this.children[i]._renderCanvas(renderSession);
-        }
-
-        if (this._mask)
-        {
-            renderSession.maskManager.popMask(renderSession);
-        }
-    }
 
 };
 
@@ -1510,6 +1329,30 @@ Phaser.Graphics.prototype.drawShape = function (shape) {
     this._boundsDirty = true;
 
     return data;
+
+};
+
+Phaser.Graphics.prototype.updateGraphicsTint = function () {
+
+    if (this.tint === 0xFFFFFF)
+    {
+        return;
+    }
+
+    var tintR = (this.tint >> 16 & 0xFF) / 255;
+    var tintG = (this.tint >> 8 & 0xFF) / 255;
+    var tintB = (this.tint & 0xFF) / 255;
+
+    for (var i = 0; i < this.graphicsData.length; i++)
+    {
+        var data = this.graphicsData[i];
+
+        var fillColor = data.fillColor | 0;
+        var lineColor = data.lineColor | 0;
+
+        data._fillTint = (((fillColor >> 16 & 0xFF) / 255 * tintR * 255 << 16) + ((fillColor >> 8 & 0xFF) / 255 * tintG * 255 << 8) + (fillColor & 0xFF) / 255 * tintB * 255);
+        data._lineTint = (((lineColor >> 16 & 0xFF) / 255 * tintR * 255 << 16) + ((lineColor >> 8 & 0xFF) / 255 * tintG * 255 << 8) + (lineColor & 0xFF) / 255 * tintB * 255);
+    }
 
 };
 

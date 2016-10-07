@@ -6,7 +6,7 @@
 */
 
 /**
-* New version of PIXI.DefaultShader
+* New version of PIXI.PixiFastShader
 *
 * @class Phaser.Renderer.Canvas
 * @constructor
@@ -24,7 +24,7 @@ Phaser.Renderer.WebGL.Shaders.SpriteBatch = function (renderer)
      * @type Number
      * @private
      */
-    this._UID = Phaser._UID++;
+    this._UID = renderer.getShaderID(this);
 
     /**
      * The WebGL program.
@@ -225,7 +225,7 @@ Phaser.Renderer.WebGL.Shaders.SpriteBatch.prototype = {
         this.gl.deleteProgram(this.program);
         this.gl = null;
         this.renderer = null;
-        this.attribute = null;
+        this.attributes = null;
     }
 
 };

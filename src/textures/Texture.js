@@ -43,24 +43,18 @@ Phaser.Texture = function (manager, key, source)
     /**
     * @property {object} frames - Frames
     */
-    this.frames = {
-    };
+    this.frames = {};
 
     this.frameTotal = 0;
 
-    /**
-    * @property _dirty
-    * @type Array
-    * @private
-    */
-    this._dirty = [ true, true, true, true ];
+    this.dirty = true;
 
     /**
     * @property _glTextures
     * @type Array
     * @private
     */
-    this._glTextures = [];
+    this.glTextures = null;
 
     //  Load the Sources
     for (var i = 0; i < source.length; i++)
@@ -108,19 +102,6 @@ Phaser.Texture.prototype = {
     },
 
     /**
-    * Sets all glTextures to be dirty.
-    *
-    * @method dirty
-    */
-    dirty: function ()
-    {
-        for (var i = 0; i < this._glTextures.length; i++)
-        {
-            this._dirty[i] = true;
-        }
-    },
-
-    /**
     * Destroys this base texture
     *
     * @method destroy
@@ -147,7 +128,7 @@ Phaser.Texture.prototype = {
 * @static
 * @method fromCanvas
 * @param canvas {Canvas} The canvas element source of the texture
-* @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
+* @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}Phaser.scaleModes{{/crossLink}} for possible values
 * @return {BaseTexture}
 */
 Phaser.Texture.fromCanvas = function (canvas, scaleMode)

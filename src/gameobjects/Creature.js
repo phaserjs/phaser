@@ -96,7 +96,7 @@ Phaser.Creature = function (game, x, y, key, mesh, animation) {
     PIXI.DisplayObjectContainer.call(this);
 
     this.dirty = true;
-    this.blendMode = PIXI.blendModes.NORMAL;
+    this.blendMode = Phaser.blendModes.NORMAL;
 
     /**
     * @property {Phaser.Point} creatureBoundsMin - The minimum bounds point.

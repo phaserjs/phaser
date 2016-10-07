@@ -38,6 +38,8 @@ Phaser.Point = function (x, y) {
 
 };
 
+Phaser.Point.prototype.constructor = Phaser.Point;
+
 Phaser.Point.prototype = {
 
     /**
@@ -486,8 +488,6 @@ Phaser.Point.prototype = {
 
 };
 
-Phaser.Point.prototype.constructor = Phaser.Point;
-
 /**
 * Adds the coordinates of two points together to create a new point.
 *
@@ -901,6 +901,3 @@ Phaser.Point.parse = function(obj, xProp, yProp) {
     return point;
 
 };
-
-//   Because PIXI uses its own Point, we'll replace it with ours to avoid duplicating code or confusion.
-PIXI.Point = Phaser.Point;

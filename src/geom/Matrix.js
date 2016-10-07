@@ -76,6 +76,8 @@ Phaser.Matrix = function (a, b, c, d, tx, ty) {
 
 };
 
+Phaser.Matrix.prototype.constructor = Phaser.Matrix;
+
 Phaser.Matrix.prototype = {
 
     /**
@@ -383,7 +385,4 @@ Phaser.Matrix.prototype = {
 };
 
 Phaser.identityMatrix = new Phaser.Matrix();
-
-//  Because PIXI uses its own type, we'll replace it with ours to avoid duplicating code or confusion.
-PIXI.Matrix = Phaser.Matrix;
-PIXI.identityMatrix = Phaser.identityMatrix;
+Phaser.tempMatrix = new Phaser.Matrix();

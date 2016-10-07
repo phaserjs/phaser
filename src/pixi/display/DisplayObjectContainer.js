@@ -33,9 +33,6 @@ PIXI.DisplayObjectContainer = function () {
     * @default
     */
     this.ignoreChildInput = false;
-
-    // this.render = Phaser.Renderer.Canvas.GameObjects.Container.render;
-    this.render = Phaser.Renderer.WebGL.GameObjects.Container.render;
     
 };
 
@@ -311,7 +308,7 @@ PIXI.DisplayObjectContainer.prototype.getBounds = function (targetCoordinateSpac
     {
         var matrixCache = targetCoordinateSpace.worldTransform;
 
-        targetCoordinateSpace.worldTransform = PIXI.identityMatrix;
+        targetCoordinateSpace.worldTransform = Phaser.identityMatrix;
 
         for (i = 0; i < targetCoordinateSpace.children.length; i++) 
 		{
@@ -358,7 +355,7 @@ PIXI.DisplayObjectContainer.prototype.getBounds = function (targetCoordinateSpac
 
     if (!childVisible) 
 	{
-        bounds = new PIXI.Rectangle();
+        bounds = new Phaser.Rectangle();
 
         var w0 = bounds.x;
         var w1 = bounds.width + bounds.x;

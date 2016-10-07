@@ -44,47 +44,23 @@
         echo "    <script src=\"$box2dpath/box2d-html5.js\"></script>";
     }
 
-    //  PIXI Intro
     echo <<<EOL
-
-    <script src="$path/src/pixi/Pixi.js"></script>
-    <script src="$path/src/pixi/display/DisplayObject.js"></script>
-    <script src="$path/src/pixi/display/DisplayObjectContainer.js"></script>
-    <script src="$path/src/pixi/display/Sprite.js"></script>
-    
-    <script src="$path/src/pixi/renderers/webgl/utils/WebGLShaderUtils.js"></script>
-    <script src="$path/src/pixi/renderers/webgl/shaders/PixiShader.js"></script>
-    <script src="$path/src/pixi/renderers/webgl/shaders/PixiFastShader.js"></script>
-    <script src="$path/src/pixi/renderers/webgl/shaders/StripShader.js"></script>
-    <script src="$path/src/pixi/renderers/webgl/shaders/PrimitiveShader.js"></script>
-    <script src="$path/src/pixi/renderers/webgl/shaders/ComplexPrimitiveShader.js"></script>
-    <script src="$path/src/pixi/renderers/webgl/utils/WebGLGraphics.js"></script>
-    <script src="$path/src/pixi/renderers/webgl/WebGLRenderer.js"></script>
-    <script src="$path/src/pixi/renderers/webgl/utils/WebGLBlendModeManager.js"></script>
-    <script src="$path/src/pixi/renderers/webgl/utils/WebGLMaskManager.js"></script>
-    <script src="$path/src/pixi/renderers/webgl/utils/WebGLStencilManager.js"></script>
-    <script src="$path/src/pixi/renderers/webgl/utils/WebGLShaderManager.js"></script>
-    <script src="$path/src/pixi/renderers/webgl/utils/WebGLSpriteBatch.js"></script>
-    <script src="$path/src/pixi/renderers/webgl/utils/WebGLFastSpriteBatch.js"></script>
-    <script src="$path/src/pixi/renderers/webgl/utils/WebGLFilterManager.js"></script>
-    <script src="$path/src/pixi/renderers/webgl/utils/FilterTexture.js"></script>
-
-    <script src="$path/src/pixi/renderers/canvas/utils/CanvasBuffer.js"></script>
-    <script src="$path/src/pixi/renderers/canvas/utils/CanvasMaskManager.js"></script>
-    <script src="$path/src/pixi/renderers/canvas/utils/CanvasTinter.js"></script>
-    <script src="$path/src/pixi/renderers/canvas/CanvasRenderer.js"></script>
-    <script src="$path/src/pixi/renderers/canvas/CanvasGraphics.js"></script>
 
 EOL;
 
-    //  PIXI Outro + Phaser Global
+    //  Phaser Global
     echo <<<EOL
-
-    <script src="$path/src/pixi/textures/BaseTexture.js"></script>
-    <script src="$path/src/pixi/textures/Texture.js"></script>
 
     <script src="$path/src/Phaser.js"></script>
     <script src="$path/src/polyfills.js"></script>
+
+    <script src="$path/src/pixi/display/DisplayObject.js"></script>
+    <script src="$path/src/pixi/display/DisplayObjectContainer.js"></script>
+    <script src="$path/src/pixi/display/Sprite.js"></script>
+    <script src="$path/src/pixi/renderers/canvas/utils/CanvasBuffer.js"></script>
+    <script src="$path/src/pixi/textures/BaseTexture.js"></script>
+    <script src="$path/src/pixi/textures/Texture.js"></script>
+
     <script src="$path/src/utils/Utils.js"></script>
     <script src="$path/src/utils/CanvasPool.js"></script>
 
@@ -132,21 +108,6 @@ EOL;
     <script src="$path/src/textures/parsers/JSONArray.js"></script>
     <script src="$path/src/textures/parsers/JSONHash.js"></script>
     <script src="$path/src/textures/parsers/SpriteSheet.js"></script>
-
-    <script src="$path/src/renderer/canvas/CanvasRenderer.js"></script>
-    <script src="$path/src/renderer/canvas/gameobjects/Container.js"></script>
-    <script src="$path/src/renderer/canvas/gameobjects/Sprite.js"></script>
-    <script src="$path/src/renderer/canvas/gameobjects/SpriteBatch.js"></script>
-
-    <script src="$path/src/renderer/webgl/WebGLRenderer.js"></script>
-    <script src="$path/src/renderer/webgl/ShaderManager.js"></script>
-    <script src="$path/src/renderer/webgl/SpriteBatch.js"></script>
-    <script src="$path/src/renderer/webgl/shaders/Sprite.js"></script>
-    <script src="$path/src/renderer/webgl/shaders/SpriteBatch.js"></script>
-    <script src="$path/src/renderer/webgl/shaders/Strip.js"></script>
-    <script src="$path/src/renderer/webgl/shaders/PrimitiveGraphics.js"></script>
-    <script src="$path/src/renderer/webgl/gameobjects/Container.js"></script>
-    <script src="$path/src/renderer/webgl/gameobjects/Sprite.js"></script>
 
 
 EOL;
@@ -213,6 +174,29 @@ EOL;
     <script src="$path/src/plugins/path/PathPoint.js"></script>
     <script src="$path/src/plugins/path/EventTarget.js"></script>
 
+    <script src="$path/src/renderer/canvas/CanvasRenderer.js"></script>
+    <script src="$path/src/renderer/canvas/gameobjects/Container.js"></script>
+    <script src="$path/src/renderer/canvas/gameobjects/Sprite.js"></script>
+    <script src="$path/src/renderer/canvas/gameobjects/SpriteBatch.js"></script>
+    <script src="$path/src/renderer/canvas/gameobjects/Stage.js"></script>
+
+    <script src="$path/src/renderer/webgl/WebGLRenderer.js"></script>
+    <script src="$path/src/renderer/webgl/BatchManager.js"></script>
+    <script src="$path/src/renderer/webgl/FilterManager.js"></script>
+    <script src="$path/src/renderer/webgl/FilterTexture.js"></script>
+    <script src="$path/src/renderer/webgl/ShaderManager.js"></script>
+    <script src="$path/src/renderer/webgl/StencilManager.js"></script>
+    <script src="$path/src/renderer/webgl/shaders/ComplexPrimitiveGraphics.js"></script>
+    <script src="$path/src/renderer/webgl/shaders/PrimitiveGraphics.js"></script>
+    <script src="$path/src/renderer/webgl/shaders/Sprite.js"></script>
+    <script src="$path/src/renderer/webgl/shaders/SpriteBatch.js"></script>
+    <script src="$path/src/renderer/webgl/shaders/Strip.js"></script>
+    <script src="$path/src/renderer/webgl/gameobjects/Container.js"></script>
+    <script src="$path/src/renderer/webgl/gameobjects/Sprite.js"></script>
+    <script src="$path/src/renderer/webgl/gameobjects/SpriteBatch.js"></script>
+    <script src="$path/src/renderer/webgl/gameobjects/Stage.js"></script>
+
+
 EOL;
 
     if ($modules['rope'])
@@ -228,6 +212,8 @@ EOL;
     {
         echo <<<EOL
     <script src="$path/src/gameobjects/TileSprite.js"></script>
+    <script src="$path/src/renderer/canvas/gameobjects/TileSprite.js"></script>
+    <script src="$path/src/renderer/webgl/gameobjects/TileSprite.js"></script>
 
 
 EOL;
@@ -257,6 +243,8 @@ EOL;
     <script src="$path/src/gameobjects/GraphicsData.js"></script>
     <script src="$path/src/gameobjects/Graphics.js"></script>
     <script src="$path/src/renderer/canvas/gameobjects/Graphics.js"></script>
+    <script src="$path/src/renderer/webgl/gameobjects/Graphics.js"></script>
+    <script src="$path/src/renderer/webgl/gameobjects/GraphicsData.js"></script>
 
 
 EOL;
@@ -275,6 +263,8 @@ EOL;
     {
         echo <<<EOL
     <script src="$path/src/gameobjects/Text.js"></script>
+    <script src="$path/src/renderer/canvas/gameobjects/Text.js"></script>
+    <script src="$path/src/renderer/webgl/gameobjects/Text.js"></script>
 
 
 EOL;
@@ -494,12 +484,6 @@ EOL;
 
 EOL;
     }
-
-    echo <<<EOL
-    <script src="$path/src/PixiDefaults.js"></script>
-
-
-EOL;
 
     if (isset($custom))
     {

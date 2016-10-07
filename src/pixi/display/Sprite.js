@@ -23,7 +23,7 @@ PIXI.Sprite = function (texture) {
      * @property anchor
      * @type Point
      */
-    this.anchor = new PIXI.Point();
+    this.anchor = new Phaser.Point();
 
     /**
      * The texture that the sprite is using
@@ -31,7 +31,7 @@ PIXI.Sprite = function (texture) {
      * @property texture
      * @type Texture
      */
-    this.texture = texture || PIXI.Texture.emptyTexture;
+    this.texture = texture;
 
     /**
      * The width of the sprite (this is initially set by the texture)
@@ -88,7 +88,7 @@ PIXI.Sprite = function (texture) {
      * @type Number
      * @default PIXI.blendModes.NORMAL;
      */
-    this.blendMode = PIXI.blendModes.NORMAL;
+    this.blendMode = Phaser.blendModes.NORMAL;
 
     /**
      * The shader that will be used to render this Sprite.
@@ -115,9 +115,6 @@ PIXI.Sprite = function (texture) {
     }
 
     this.renderable = true;
-
-    // this.render = Phaser.Renderer.Canvas.GameObjects.Sprite.render;
-    this.render = Phaser.Renderer.WebGL.GameObjects.Sprite.render;
 
 };
 
@@ -325,7 +322,7 @@ PIXI.Sprite.prototype.getLocalBounds = function () {
 
     var matrixCache = this.worldTransform;
 
-    this.worldTransform = PIXI.identityMatrix;
+    this.worldTransform = Phaser.identityMatrix;
 
     for (var i = 0; i < this.children.length; i++)
     {
@@ -475,7 +472,7 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession, matrix)
     if (renderSession.smoothProperty && renderSession.scaleMode !== this.texture.baseTexture.scaleMode)
     {
         renderSession.scaleMode = this.texture.baseTexture.scaleMode;
-        renderSession.context[renderSession.smoothProperty] = (renderSession.scaleMode === PIXI.scaleModes.LINEAR);
+        renderSession.context[renderSession.smoothProperty] = (renderSession.scaleMode === Phaser.scaleModes.LINEAR);
     }
 
     //  If the texture is trimmed we offset by the trim x/y, otherwise we use the frame dimensions

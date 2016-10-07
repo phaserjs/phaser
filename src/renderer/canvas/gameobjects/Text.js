@@ -1,20 +1,23 @@
-/**
-* @author       Richard Davey <rich@photonstorm.com>
-* @author       Mat Groves (@Doormat23)
-* @copyright    2016 Photon Storm Ltd.
-* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-*/
 
-Phaser.Renderer.Canvas.GameObjects.Sprite = {
+/**
+* Note that 'this' in all functions here refer to the owning object.
+* For example the Group, Stage, Sprite, etc. because the render function
+* here is mapped to the prototype for the game object.
+*/
+Phaser.Renderer.Canvas.GameObjects.Text = {
 
     TYPES: [
-        Phaser.Sprite.prototype,
-        Phaser.Image.prototype,
-        PIXI.Sprite.prototype
+        Phaser.Text.prototype
     ],
 
     render: function (renderer, src)
     {
+        if (src.dirty)
+        {
+            src.updateText();
+            src.dirty = false;
+        }
+
         // If the sprite is not visible or the alpha is 0 then no need to render this element
         if (!src.visible || src.alpha === 0 || !src.renderable)
         {
@@ -37,25 +40,6 @@ Phaser.Renderer.Canvas.GameObjects.Sprite = {
         {
             renderer.pushMask(src._mask);
         }
-
-        //  Ignore null srcs
-        /*
-        if (!src.texture.valid)
-        {
-            //  Update the children and leave
-            for (var i = 0; i < src.children.length; i++)
-            {
-                src.children[i]._renderCanvas(renderSession);
-            }
-
-            if (src._mask)
-            {
-                renderSession.maskManager.popMask(renderSession);
-            }
-
-            return;
-        }
-        */
 
         var resolution = src.texture.baseTexture.resolution / renderer.game.resolution;
 
@@ -140,8 +124,7 @@ Phaser.Renderer.Canvas.GameObjects.Sprite = {
         for (var i = 0; i < src.children.length; i++)
         {
             var child = src.children[i];
-
-            child.render(child);
+            child.render(renderer, child);
         }
 
         if (src._mask)

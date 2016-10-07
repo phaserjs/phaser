@@ -9,7 +9,7 @@
  *
  * @type {boolean}
  */
-PIXI.TextureSilentFail = false;
+// PIXI.TextureSilentFail = false;
 
 /**
  * A texture stores the information that represents an image or part of an image. It cannot be added
@@ -36,10 +36,10 @@ PIXI.Texture = function(baseTexture, frame, crop, trim)
     if (!frame)
     {
         this.noFrame = true;
-        frame = new PIXI.Rectangle(0,0,1,1);
+        frame = new Phaser.Rectangle(0,0,1,1);
     }
 
-    if (baseTexture instanceof PIXI.Texture)
+    if (baseTexture instanceof Phaser.Texture)
     {
         baseTexture = baseTexture.baseTexture;
     }
@@ -133,7 +133,7 @@ PIXI.Texture = function(baseTexture, frame, crop, trim)
      * @property crop
      * @type Rectangle
      */
-    this.crop = crop || new PIXI.Rectangle(0, 0, 1, 1);
+    this.crop = crop || new Phaser.Rectangle(0, 0, 1, 1);
 
     /**
      * A flag that controls if this frame is rotated or not.
@@ -147,7 +147,7 @@ PIXI.Texture = function(baseTexture, frame, crop, trim)
 
     if (baseTexture.hasLoaded)
     {
-        if (this.noFrame) frame = new PIXI.Rectangle(0, 0, baseTexture.width, baseTexture.height);
+        if (this.noFrame) frame = new Phaser.Rectangle(0, 0, baseTexture.width, baseTexture.height);
         this.setFrame(frame);
     }
 
@@ -209,12 +209,8 @@ PIXI.Texture.prototype.setFrame = function(frame)
 
     if (!this.trim && (frame.x + frame.width > this.baseTexture.width || frame.y + frame.height > this.baseTexture.height))
     {
-        if (!PIXI.TextureSilentFail)
-        {
-            throw new Error('Texture Error: frame does not fit inside the base Texture dimensions ' + this);
-        }
-
         this.valid = false;
+
         return;
     }
 
@@ -293,7 +289,7 @@ PIXI.Texture.prototype._updateUvsInverted = function () {
  * @static
  * @method fromCanvas
  * @param canvas {Canvas} The canvas element source of the texture
- * @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
+ * @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}Phaser.scaleModes{{/crossLink}} for possible values
  * @return {Texture}
  */
 PIXI.Texture.fromCanvas = function(canvas, scaleMode)

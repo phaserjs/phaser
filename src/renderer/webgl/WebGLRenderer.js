@@ -21,6 +21,8 @@ Phaser.Renderer.WebGL = function (game)
 
     this.type = Phaser.WEBGL;
 
+    this.shaderID = 0;
+
     /**
      * This sets if the CanvasRenderer will clear the canvas or not before the new render pass.
      * If the Stage is NOT transparent Pixi will use a canvas sized fillRect operation every frame to set the canvas background color.
@@ -67,6 +69,8 @@ Phaser.Renderer.WebGL = function (game)
      */
     this.height = game.height * game.resolution;
 
+    this.resolution = game.resolution;
+
     /**
      * The canvas element that everything is drawn to.
      *
@@ -74,6 +78,13 @@ Phaser.Renderer.WebGL = function (game)
      * @type HTMLCanvasElement
      */
     this.view = game.canvas;
+
+    /**
+     * The number of points beyond which the renderer swaps to using the Stencil Buffer to render the Graphics.
+     *
+     * @type {number}
+     */
+    this.stencilBufferLimit = 6;
 
     //  WebGL specific from here
 
@@ -126,21 +137,21 @@ Phaser.Renderer.WebGL = function (game)
      * @property spriteBatch
      * @type WebGLSpriteBatch
      */
-    this.spriteBatch = new Phaser.Renderer.WebGL.SpriteBatch(this);
+    this.spriteBatch = new Phaser.Renderer.WebGL.BatchManager(this);
 
     /**
      * Manages the filters
      * @property filterManager
      * @type WebGLFilterManager
      */
-    // this.filterManager = new PIXI.WebGLFilterManager();
+    this.filterManager = new Phaser.Renderer.WebGL.FilterManager(this);
 
     /**
      * Manages the stencil buffer
      * @property stencilManager
      * @type WebGLStencilManager
      */
-    // this.stencilManager = new PIXI.WebGLStencilManager();
+    this.stencilManager = new Phaser.Renderer.WebGL.StencilManager(this);
 
     this.gl = null;
 
@@ -150,6 +161,13 @@ Phaser.Renderer.WebGL = function (game)
 
     this.drawCount = 0;
     this.flipY = 1;
+
+    this._fbErrors = {
+        36054: 'Incomplete attachment',
+        36055: 'Missing attachment',
+        36057: 'Incomplete dimensions',
+        36061: 'Framebuffer unsupported'
+    };
 
     this.init();
 
@@ -171,7 +189,21 @@ Phaser.Renderer.WebGL.prototype = {
             throw new Error('This browser does not support WebGL. Try using the Canvas renderer.');
         }
 
-        this.gl.id = 0;
+        //  Mixin the renderer functions
+        for (var renderer in Phaser.Renderer.WebGL.GameObjects)
+        {
+            var types = Phaser.Renderer.WebGL.GameObjects[renderer].TYPES;
+
+            if (!types)
+            {
+                continue;
+            }
+
+            for (var i = 0; i < types.length; i++)
+            {
+                types[i].render = Phaser.Renderer.WebGL.GameObjects[renderer].render;
+            }
+        }
 
         var gl = this.gl;
 
@@ -183,8 +215,8 @@ Phaser.Renderer.WebGL.prototype = {
 
         this.shaderManager.init();
         this.spriteBatch.init();
-        // this.filterManager.setContext(gl);
-        // this.stencilManager.setContext(gl);
+        this.filterManager.init();
+        this.stencilManager.init();
 
         this.resize(this.width, this.height);
 
@@ -244,6 +276,15 @@ Phaser.Renderer.WebGL.prototype = {
 
         this.projection.x = (this.width / 2) / this.game.resolution;
         this.projection.y = -(this.height / 2) / this.game.resolution;
+    },
+
+    getShaderID: function (shader)
+    {
+        this.shaderID++;
+
+        //  Store shader reference somewhere?
+
+        return this.shaderID;
     },
 
     /**
@@ -362,7 +403,7 @@ Phaser.Renderer.WebGL.prototype = {
         this.offset.x = this.game.camera._shake.x;
         this.offset.y = this.game.camera._shake.y;
 
-        // this.renderSession.blendModeManager.setBlendMode(PIXI.blendModes.NORMAL);
+        this.setBlendMode(this.blendModes.NORMAL);
 
         //  Reset draw count
         this.drawCount = 0;
@@ -372,9 +413,9 @@ Phaser.Renderer.WebGL.prototype = {
 
         this.spriteBatch.begin();
 
-        // this.filterManager.begin();
+        this.filterManager.begin();
 
-        stage.render(this);
+        stage.render(this, stage);
 
         this.spriteBatch.end();
 
@@ -395,14 +436,14 @@ Phaser.Renderer.WebGL.prototype = {
 
         var gl = this.gl;
 
-        if (!texture._glTextures[gl.id])
+        if (!texture._glTextures)
         {
-            texture._glTextures[gl.id] = gl.createTexture();
+            texture._glTextures = gl.createTexture();
         }
 
         gl.activeTexture(gl.TEXTURE0 + texture.textureIndex);
 
-        gl.bindTexture(gl.TEXTURE_2D, texture._glTextures[gl.id]);
+        gl.bindTexture(gl.TEXTURE_2D, texture._glTextures);
 
         gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, texture.premultipliedAlpha);
 
@@ -431,7 +472,7 @@ Phaser.Renderer.WebGL.prototype = {
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
         }
 
-        texture._dirty[gl.id] = false;
+        texture._dirty = false;
 
         return true;
     },
@@ -446,14 +487,14 @@ Phaser.Renderer.WebGL.prototype = {
         var gl = this.gl;
         var textureMetaData = texture.source;
 
-        if (!texture._glTextures[gl.id])
+        if (!texture._glTextures)
         {
-            texture._glTextures[gl.id] = gl.createTexture();
+            texture._glTextures = gl.createTexture();
         }
 
         gl.activeTexture(gl.TEXTURE0 + texture.textureIndex);
 
-        gl.bindTexture(gl.TEXTURE_2D, texture._glTextures[gl.id]);
+        gl.bindTexture(gl.TEXTURE_2D, texture._glTextures);
 
         gl.compressedTexImage2D(
             gl.TEXTURE_2D,
@@ -488,7 +529,7 @@ Phaser.Renderer.WebGL.prototype = {
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
         }
 
-        texture._dirty[gl.id] = false;
+        texture._dirty = false;
 
         return true;
     },
@@ -525,22 +566,22 @@ Phaser.Renderer.WebGL.prototype = {
             // PIXI.WebGLGraphics.updateGraphics(maskData, gl);
         }
 
-        if (maskData._webGL[gl.id] === undefined || maskData._webGL[gl.id].data === undefined || maskData._webGL[gl.id].data.length === 0)
+        if (maskData._webGL === undefined || maskData._webGL.data === undefined || maskData._webGL.data.length === 0)
         {
             return;
         }
 
-        this.stencilManager.pushStencil(maskData, maskData._webGL[gl.id].data[0]);
+        this.stencilManager.pushStencil(maskData, maskData._webGL.data[0]);
     },
 
     popMask: function (maskData)
     {
-        if (maskData._webGL[gl.id] === undefined || maskData._webGL[gl.id].data === undefined || maskData._webGL[gl.id].data.length === 0)
+        if (maskData._webGL === undefined || maskData._webGL.data === undefined || maskData._webGL.data.length === 0)
         {
             return;
         }
 
-        this.stencilManager.popStencil(maskData, maskData._webGL[gl.id].data[0]);
+        this.stencilManager.popStencil(maskData, maskData._webGL.data[0]);
     },
 
     //  Shader Utils
@@ -599,6 +640,58 @@ Phaser.Renderer.WebGL.prototype = {
         }
 
         return shaderProgram;
+    },
+
+    createEmptyTexture: function (width, height, scaleMode)
+    {
+        var gl = this.gl;
+        var texture = gl.createTexture();
+        var glScaleMode = (scaleMode === Phaser.scaleModes.LINEAR) ? gl.LINEAR : gl.NEAREST;
+
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, glScaleMode);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, glScaleMode);
+
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+
+        return texture;
+    },
+
+    createFramebuffer: function (width, height, scaleMode, textureUnit)
+    {
+        var gl = this.gl;
+        var framebuffer = gl.createFramebuffer();
+        var depthStencilBuffer = gl.createRenderbuffer();
+        var colorBuffer = null;   
+        var fbStatus = 0;
+        
+        gl.activeTexture(gl.TEXTURE0 + textureUnit);
+
+        gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
+        gl.bindRenderbuffer(gl.RENDERBUFFER, depthStencilBuffer);
+
+        //  `this.renderBuffer` = undefined? FilterTexture has a renderBuffer, but `this` doesn't.
+        gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_STENCIL_ATTACHMENT, gl.RENDERBUFFER, this.renderBuffer);
+
+        colorBuffer = this.createEmptyTexture(width, height, scaleMode);
+
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, colorBuffer, 0);
+
+        fbStatus = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
+
+        if (fbStatus !== gl.FRAMEBUFFER_COMPLETE)
+        {
+            console.error('Incomplete GL framebuffer. ', this._fbErrors[fbStatus]);
+        }
+
+        framebuffer.width = width;
+        framebuffer.height = height;
+        framebuffer.targetTexture = colorBuffer;
+        framebuffer.renderBuffer = depthStencilBuffer;
+
+        return framebuffer;
     },
 
     destroy: function ()

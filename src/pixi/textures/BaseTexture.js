@@ -9,7 +9,7 @@
  * @uses EventTarget
  * @constructor
  * @param source {String|Canvas} the source object (image or canvas)
- * @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
+ * @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}Phaser.scaleModes{{/crossLink}} for possible values
  */
 PIXI.BaseTexture = function(source, scaleMode)
 {
@@ -44,9 +44,9 @@ PIXI.BaseTexture = function(source, scaleMode)
      * 
      * @property scaleMode
      * @type {Number}
-     * @default PIXI.scaleModes.LINEAR
+     * @default Phaser.scaleModes.LINEAR
      */
-    this.scaleMode = scaleMode || PIXI.scaleModes.DEFAULT;
+    this.scaleMode = scaleMode || Phaser.scaleModes.DEFAULT;
 
     /**
      * [read-only] Set to true once the base texture has loaded
@@ -81,7 +81,7 @@ PIXI.BaseTexture = function(source, scaleMode)
      * @type Array
      * @private
      */
-    this._glTextures = [];
+    this._glTextures = null;
 
     /**
      * Set this to true if a mipmap of this texture needs to be generated. This value needs to be set before the texture is used
@@ -194,10 +194,7 @@ PIXI.BaseTexture.prototype.updateSourceImage = function(newSrc)
  */
 PIXI.BaseTexture.prototype.dirty = function()
 {
-    for (var i = 0; i < this._glTextures.length; i++)
-    {
-        this._dirty[i] = true;
-    }
+    this._dirty = true;
 };
 
 /**
@@ -208,22 +205,9 @@ PIXI.BaseTexture.prototype.dirty = function()
  */
 PIXI.BaseTexture.prototype.unloadFromGPU = function()
 {
-    this.dirty();
-
-    // delete the webGL textures if any.
-    for (var i = this._glTextures.length - 1; i >= 0; i--)
-    {
-        var glTexture = this._glTextures[i];
-        var gl = PIXI.glContexts[i];
-
-        if(gl && glTexture)
-        {
-            gl.deleteTexture(glTexture);
-        }
-        
-    }
-
-    this._glTextures.length = 0;
+    // gl.deleteTexture(this._glTextures);
+    
+    this._glTextures = null;
 
     this.dirty();
 };
@@ -234,7 +218,7 @@ PIXI.BaseTexture.prototype.unloadFromGPU = function()
  * @static
  * @method fromCanvas
  * @param canvas {Canvas} The canvas element source of the texture
- * @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
+ * @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}Phaser.scaleModes{{/crossLink}} for possible values
  * @return {BaseTexture}
  */
 PIXI.BaseTexture.fromCanvas = function(canvas, scaleMode)

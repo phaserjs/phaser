@@ -12,7 +12,7 @@
 * @constructor
 * @param {Phaser.Game} game - Game reference to the currently running game.
 */
-Phaser.Renderer.WebGL.SpriteBatch = function (renderer)
+Phaser.Renderer.WebGL.BatchManager = function (renderer)
 {
     this.renderer = renderer;
 
@@ -20,7 +20,7 @@ Phaser.Renderer.WebGL.SpriteBatch = function (renderer)
 
     this.vertSize = 5;
 
-    //  Number of images in the SpriteBatch before it flushes
+    //  Number of images in the BatchManager before it flushes
     this.size = 2000;
 
     //the total number of bytes in our batch
@@ -73,9 +73,9 @@ Phaser.Renderer.WebGL.SpriteBatch = function (renderer)
 
 };
 
-Phaser.Renderer.WebGL.SpriteBatch.prototype.constructor = Phaser.Renderer.WebGL.SpriteBatch;
+Phaser.Renderer.WebGL.BatchManager.prototype.constructor = Phaser.Renderer.WebGL.BatchManager;
 
-Phaser.Renderer.WebGL.SpriteBatch.prototype = {
+Phaser.Renderer.WebGL.BatchManager.prototype = {
 
     init: function ()
     {
@@ -100,7 +100,7 @@ Phaser.Renderer.WebGL.SpriteBatch.prototype = {
                 this.renderer.game,
                 undefined,
                 [
-                    '//WebGLSpriteBatch Fragment Shader.',
+                    '//WebGLBatchManager Fragment Shader.',
                     'precision lowp float;',
                     'varying vec2 vTextureCoord;',
                     'varying vec4 vColor;',
@@ -118,7 +118,7 @@ Phaser.Renderer.WebGL.SpriteBatch.prototype = {
                 this.renderer.game,
                 undefined,
                 [
-                    '//WebGLSpriteBatch Fragment Shader.',
+                    '//WebGLBatchManager Fragment Shader.',
                     'precision lowp float;',
                     'varying vec2 vTextureCoord;',
                     'varying vec4 vColor;',
@@ -130,13 +130,13 @@ Phaser.Renderer.WebGL.SpriteBatch.prototype = {
                 ]);
         }
 
-        // create a couple of buffers
+        //  Create a couple of buffers
         this.vertexBuffer = gl.createBuffer();
         this.indexBuffer = gl.createBuffer();
 
-        // 65535 is max index, so 65535 / 6 = 10922.
+        //  65535 is max index, so 65535 / 6 = 10922.
 
-        //upload the index data
+        //  Upload the index data
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.indices, gl.STATIC_DRAW);
 
@@ -151,7 +151,7 @@ Phaser.Renderer.WebGL.SpriteBatch.prototype = {
         shader.uniforms = {};
         shader.init();
 
-        this.defaultShader.shaders[gl.id] = shader;
+        this.defaultShader.shaders = shader;
     },
 
     begin: function ()
@@ -184,7 +184,7 @@ Phaser.Renderer.WebGL.SpriteBatch.prototype = {
         {
             this.flush();
             gl.activeTexture(gl.TEXTURE0 + baseTexture.textureIndex);
-            gl.bindTexture(gl.TEXTURE_2D, baseTexture._glTextures[gl.id]);
+            gl.bindTexture(gl.TEXTURE_2D, baseTexture._glTextures);
             this.renderer.textureArray[baseTexture.textureIndex] = baseTexture;
         }
 
@@ -334,7 +334,7 @@ Phaser.Renderer.WebGL.SpriteBatch.prototype = {
         {
             this.dirty = false;
 
-            shader = this.defaultShader.shaders[gl.id];
+            shader = this.defaultShader.shaders;
 
             // bind the main texture
             gl.activeTexture(gl.TEXTURE0);
@@ -423,7 +423,7 @@ Phaser.Renderer.WebGL.SpriteBatch.prototype = {
                 {
                     currentShader = nextShader;
 
-                    shader = currentShader.shaders[gl.id];
+                    shader = currentShader.shaders;
 
                     if (!shader)
                     {
@@ -433,7 +433,7 @@ Phaser.Renderer.WebGL.SpriteBatch.prototype = {
                         shader.uniforms = currentShader.uniforms;
                         shader.init();
 
-                        currentShader.shaders[gl.id] = shader;
+                        currentShader.shaders = shader;
                     }
 
                     this.renderer.shaderManager.setShader(shader);
@@ -474,7 +474,7 @@ Phaser.Renderer.WebGL.SpriteBatch.prototype = {
         var gl = this.gl;
 
         // check if a texture is dirty..
-        if (texture._dirty[gl.id])
+        if (texture._dirty)
         {
             if (!this.renderer.updateTexture(texture))
             {
@@ -488,8 +488,6 @@ Phaser.Renderer.WebGL.SpriteBatch.prototype = {
         // increment the draw count
         this.renderer.drawCount++;
     },
-
-    //  PIXI.WebGLSpriteBatch.prototype.renderTilingSprite needs porting over, but not into here
 
     destroy: function ()
     {

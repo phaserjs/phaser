@@ -56,6 +56,8 @@ Phaser.Polygon = function () {
 
 };
 
+Phaser.Polygon.prototype.constructor = Phaser.Polygon;
+
 Phaser.Polygon.prototype = {
 
     /**
@@ -222,16 +224,16 @@ Phaser.Polygon.prototype = {
             {
                 if (typeof points[i] === 'number')
                 {
-                    var p = new PIXI.Point(points[i], points[i + 1]);
+                    var p = new Phaser.Point(points[i], points[i + 1]);
                     i++;
                 }
                 else if (Array.isArray(points[i]))
                 {
-                    var p = new PIXI.Point(points[i][0], points[i][1]);
+                    var p = new Phaser.Point(points[i][0], points[i][1]);
                 }
                 else
                 {
-                    var p = new PIXI.Point(points[i].x, points[i].y);
+                    var p = new Phaser.Point(points[i].x, points[i].y);
                 }
 
                 this._points.push(p);
@@ -289,8 +291,6 @@ Phaser.Polygon.prototype = {
 
 };
 
-Phaser.Polygon.prototype.constructor = Phaser.Polygon;
-
 /**
 * Sets and modifies the points of this polygon.
 *
@@ -321,6 +321,3 @@ Object.defineProperty(Phaser.Polygon.prototype, 'points', {
     }
 
 });
-
-//  Because PIXI uses its own type, we'll replace it with ours to avoid duplicating code or confusion.
-PIXI.Polygon = Phaser.Polygon;
