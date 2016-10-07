@@ -76,6 +76,8 @@ Phaser.Matrix = function (a, b, c, d, tx, ty) {
 
 };
 
+Phaser.Matrix.prototype.constructor = Phaser.Matrix;
+
 Phaser.Matrix.prototype = {
 
     /**

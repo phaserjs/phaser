@@ -355,7 +355,7 @@ PIXI.DisplayObjectContainer.prototype.getBounds = function (targetCoordinateSpac
 
     if (!childVisible) 
 	{
-        bounds = new PIXI.Rectangle();
+        bounds = new Phaser.Rectangle();
 
         var w0 = bounds.x;
         var w1 = bounds.width + bounds.x;

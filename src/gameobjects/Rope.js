@@ -754,7 +754,7 @@ Phaser.Rope.prototype.getBounds = function (matrix) {
 
     if (minX === -Infinity || maxY === Infinity)
     {
-        return PIXI.EmptyRectangle;
+        return Phaser.EmptyRectangle;
     }
 
     var bounds = this._bounds;

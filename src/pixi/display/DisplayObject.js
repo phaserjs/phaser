@@ -26,7 +26,7 @@ PIXI.DisplayObject = function () {
     * @property {PIXI.Point} position
     * @default
     */
-    this.position = new PIXI.Point(0, 0);
+    this.position = new Phaser.Point(0, 0);
 
     /**
     * The scale of this DisplayObject. A scale of 1:1 represents the DisplayObject
@@ -38,7 +38,7 @@ PIXI.DisplayObject = function () {
     * @property {PIXI.Point} scale
     * @default
     */
-    this.scale = new PIXI.Point(1, 1);
+    this.scale = new Phaser.Point(1, 1);
 
     /**
     * The pivot point of this DisplayObject that it rotates around. The values are expressed
@@ -46,7 +46,7 @@ PIXI.DisplayObject = function () {
     * @property {PIXI.Point} pivot
     * @default
     */
-    this.pivot = new PIXI.Point(0, 0);
+    this.pivot = new Phaser.Point(0, 0);
 
     /**
     * The rotation of this DisplayObject. The value is given, and expressed, in radians, and is based on
@@ -160,7 +160,7 @@ PIXI.DisplayObject = function () {
     * @property {PIXI.Point} worldPosition
     * @readOnly
     */
-    this.worldPosition = new PIXI.Point(0, 0);
+    this.worldPosition = new Phaser.Point(0, 0);
 
     /**
     * The global scale of this DisplayObject.
@@ -175,7 +175,7 @@ PIXI.DisplayObject = function () {
     * @property {PIXI.Point} worldScale
     * @readOnly
     */
-    this.worldScale = new PIXI.Point(1, 1);
+    this.worldScale = new Phaser.Point(1, 1);
 
     /**
     * The rotation, in radians, of this DisplayObject.
@@ -217,7 +217,7 @@ PIXI.DisplayObject = function () {
     * @property {PIXI.Rectangle} _bounds - The cached bounds of this object.
     * @private
     */
-    this._bounds = new PIXI.Rectangle(0, 0, 0, 0);
+    this._bounds = new Phaser.Rectangle(0, 0, 0, 0);
 
     /**
     * @property {PIXI.Rectangle} _currentBounds - The most recently calculated bounds of this object.

@@ -50,6 +50,8 @@ Phaser.Rectangle = function (x, y, width, height) {
 
 };
 
+Phaser.Rectangle.prototype.constructor = Phaser.Rectangle;
+
 Phaser.Rectangle.prototype = {
 
     /**
@@ -756,8 +758,6 @@ Object.defineProperty(Phaser.Rectangle.prototype, "empty", {
 
 });
 
-Phaser.Rectangle.prototype.constructor = Phaser.Rectangle;
-
 /**
 * Increases the size of the Rectangle object by the specified amounts. The center point of the Rectangle object stays the same, and its size increases to the left and right by the dx value, and to the top and the bottom by the dy value.
 * @method Phaser.Rectangle.inflate
@@ -1053,7 +1053,3 @@ Phaser.Rectangle.aabb = function(points, out) {
 
     return out;
 };
-
-//   Because PIXI uses its own Rectangle, we'll replace it with ours to avoid duplicating code or confusion.
-PIXI.Rectangle = Phaser.Rectangle;
-PIXI.EmptyRectangle = new Phaser.Rectangle(0, 0, 0, 0);
