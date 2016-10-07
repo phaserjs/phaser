@@ -1403,9 +1403,8 @@ Phaser.BitmapData.prototype = {
         }
 
         //  Doesn't work fully with children, or nested scale + rotation transforms (see copyTransform)
-        ctx.translate(tx, ty);
-
         ctx.scale(this._scale.x, this._scale.y);
+        ctx.translate(tx, ty);
 
         ctx.rotate(this._rotate);
 
