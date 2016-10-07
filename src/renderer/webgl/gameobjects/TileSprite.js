@@ -6,7 +6,7 @@ Phaser.Renderer.WebGL.GameObjects.TileSprite = {
 
     render: function (renderer, src)
     {
-        if (src.visible === false || src.alpha === 0 || src.children.length === 0)
+        if (src.visible === false || src.alpha === 0 || src.renderable === false)
         {
             return;
         }
@@ -48,7 +48,7 @@ Phaser.Renderer.WebGL.GameObjects.TileSprite = {
             }
         }
         
-        this.batchRender(renderer, src);
+        Phaser.Renderer.WebGL.GameObjects.TileSprite.batchRender(renderer, src);
 
         //  Render children!
         for (i = 0; i < src.children.length; i++)
