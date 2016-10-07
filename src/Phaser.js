@@ -546,8 +546,9 @@ var Phaser = Phaser || {    // jshint ignore:line
 
     },
 
-    PIXI: PIXI || {
-        
-    }
+    tempMatrix: null
 
 };
+
+//  Remove when ready
+var PIXI = PIXI || {};

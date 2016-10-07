@@ -428,10 +428,10 @@ PIXI.DisplayObject.prototype = {
 
         var renderTexture = new Phaser.RenderTexture(bounds.width | 0, bounds.height | 0, renderer, scaleMode, resolution);
         
-        PIXI.DisplayObject._tempMatrix.tx = -bounds.x;
-        PIXI.DisplayObject._tempMatrix.ty = -bounds.y;
+        Phaser.tempMatrix.tx = -bounds.x;
+        Phaser.tempMatrix.ty = -bounds.y;
         
-        renderTexture.render(this, PIXI.DisplayObject._tempMatrix);
+        renderTexture.render(this, Phaser.tempMatrix);
 
         return renderTexture;
 
@@ -547,9 +547,9 @@ PIXI.DisplayObject.prototype = {
         this._filters = null;
         this._cachedSprite.filters = tempFilters;
 
-        PIXI.DisplayObject._tempMatrix.tx = -bounds.x;
-        PIXI.DisplayObject._tempMatrix.ty = -bounds.y;
-        this._cachedSprite.texture.render(this, PIXI.DisplayObject._tempMatrix, true);
+        Phaser.tempMatrix.tx = -bounds.x;
+        Phaser.tempMatrix.ty = -bounds.y;
+        this._cachedSprite.texture.render(this, Phaser.tempMatrix, true);
         this._cachedSprite.anchor.x = -(bounds.x / bounds.width);
         this._cachedSprite.anchor.y = -(bounds.y / bounds.height);
 
@@ -751,11 +751,10 @@ Object.defineProperties(PIXI.DisplayObject.prototype, {
 
             this._filters = value;
 
-            if (this.blendMode && this.blendMode === PIXI.blendModes.MULTIPLY)
+            if (this.blendMode && this.blendMode === Phaser.blendModes.MULTIPLY)
             {
-                this.blendMode = PIXI.blendModes.NORMAL;
+                this.blendMode = Phaser.blendModes.NORMAL;
             }
-
         }
 
     },

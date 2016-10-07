@@ -7,24 +7,24 @@
 
 //  Pixi expects these globals to exist
 
-if (PIXI.blendModes === undefined)
-{
-    PIXI.blendModes = Phaser.blendModes;
-}
+// if (PIXI.blendModes === undefined)
+// {
+//     PIXI.blendModes = Phaser.blendModes;
+// }
 
 if (PIXI.scaleModes === undefined)
 {
     PIXI.scaleModes = Phaser.scaleModes;
 }
 
-if (PIXI.Texture.emptyTexture === undefined)
-{
-    PIXI.Texture.emptyTexture = new PIXI.Texture(new PIXI.BaseTexture());
-}
+// if (PIXI.Texture.emptyTexture === undefined)
+// {
+//     PIXI.Texture.emptyTexture = new PIXI.Texture(new PIXI.BaseTexture());
+// }
 
-if (PIXI.DisplayObject._tempMatrix === undefined)
-{
-    PIXI.DisplayObject._tempMatrix = new PIXI.Matrix();
-}
+// if (PIXI.DisplayObject._tempMatrix === undefined)
+// {
+//     PIXI.DisplayObject._tempMatrix = new PIXI.Matrix();
+// }
 
-PIXI.TextureSilentFail = true;
+// PIXI.TextureSilentFail = true;

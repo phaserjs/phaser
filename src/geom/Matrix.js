@@ -384,6 +384,9 @@ Phaser.Matrix.prototype = {
 
 Phaser.identityMatrix = new Phaser.Matrix();
 
+Phaser.tempMatrix = new Phaser.Matrix();
+
 //  Because PIXI uses its own type, we'll replace it with ours to avoid duplicating code or confusion.
 PIXI.Matrix = Phaser.Matrix;
 PIXI.identityMatrix = Phaser.identityMatrix;
+

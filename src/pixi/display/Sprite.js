@@ -23,7 +23,7 @@ PIXI.Sprite = function (texture) {
      * @property anchor
      * @type Point
      */
-    this.anchor = new PIXI.Point();
+    this.anchor = new Phaser.Point();
 
     /**
      * The texture that the sprite is using
@@ -31,7 +31,7 @@ PIXI.Sprite = function (texture) {
      * @property texture
      * @type Texture
      */
-    this.texture = texture || PIXI.Texture.emptyTexture;
+    this.texture = texture;
 
     /**
      * The width of the sprite (this is initially set by the texture)
@@ -88,7 +88,7 @@ PIXI.Sprite = function (texture) {
      * @type Number
      * @default PIXI.blendModes.NORMAL;
      */
-    this.blendMode = PIXI.blendModes.NORMAL;
+    this.blendMode = Phaser.blendModes.NORMAL;
 
     /**
      * The shader that will be used to render this Sprite.

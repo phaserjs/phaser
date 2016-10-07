@@ -124,7 +124,7 @@ Phaser.Graphics = function (game, x, y) {
      * @type Number
      * @default PIXI.blendModes.NORMAL;
      */
-    this.blendMode = PIXI.blendModes.NORMAL;
+    this.blendMode = Phaser.blendModes.NORMAL;
     
     /**
      * Current path

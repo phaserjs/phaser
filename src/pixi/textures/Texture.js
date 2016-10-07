@@ -9,7 +9,7 @@
  *
  * @type {boolean}
  */
-PIXI.TextureSilentFail = false;
+// PIXI.TextureSilentFail = false;
 
 /**
  * A texture stores the information that represents an image or part of an image. It cannot be added
@@ -209,12 +209,8 @@ PIXI.Texture.prototype.setFrame = function(frame)
 
     if (!this.trim && (frame.x + frame.width > this.baseTexture.width || frame.y + frame.height > this.baseTexture.height))
     {
-        if (!PIXI.TextureSilentFail)
-        {
-            throw new Error('Texture Error: frame does not fit inside the base Texture dimensions ' + this);
-        }
-
         this.valid = false;
+
         return;
     }
 
