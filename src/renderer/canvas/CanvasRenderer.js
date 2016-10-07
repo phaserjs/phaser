@@ -95,6 +95,8 @@ Phaser.Renderer.Canvas = function (game)
     this.currentBlendMode = 0;
     this.currentScaleMode = 0;
 
+    this.tintMethod = this.tintWithPerPixel;
+
     this.init();
 
 };
@@ -120,6 +122,8 @@ Phaser.Renderer.Canvas.prototype = {
 
         if (this.game.device.canUseMultiply)
         {
+            this.tintMethod = this.tintWithMultiply;
+
             this.mapBlendModes();
         }
 

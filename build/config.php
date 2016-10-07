@@ -45,6 +45,28 @@
     }
 
     //  PIXI Intro
+
+    // <script src="$path/src/pixi/renderers/webgl/utils/WebGLShaderUtils.js"></script>
+    // <script src="$path/src/pixi/renderers/webgl/shaders/PixiShader.js"></script>
+    // <script src="$path/src/pixi/renderers/webgl/shaders/PixiFastShader.js"></script>
+    // <script src="$path/src/pixi/renderers/webgl/shaders/StripShader.js"></script>
+    // <script src="$path/src/pixi/renderers/webgl/shaders/PrimitiveShader.js"></script>
+    // <script src="$path/src/pixi/renderers/webgl/shaders/ComplexPrimitiveShader.js"></script>
+    // <script src="$path/src/pixi/renderers/webgl/utils/WebGLGraphics.js"></script>
+    // <script src="$path/src/pixi/renderers/webgl/WebGLRenderer.js"></script>
+    // <script src="$path/src/pixi/renderers/webgl/utils/WebGLBlendModeManager.js"></script>
+    // <script src="$path/src/pixi/renderers/webgl/utils/WebGLMaskManager.js"></script>
+    // <script src="$path/src/pixi/renderers/webgl/utils/WebGLStencilManager.js"></script>
+    // <script src="$path/src/pixi/renderers/webgl/utils/WebGLShaderManager.js"></script>
+    // <script src="$path/src/pixi/renderers/webgl/utils/WebGLSpriteBatch.js"></script>
+    // <script src="$path/src/pixi/renderers/webgl/utils/WebGLFastSpriteBatch.js"></script>
+    // <script src="$path/src/pixi/renderers/webgl/utils/WebGLFilterManager.js"></script>
+    // <script src="$path/src/pixi/renderers/webgl/utils/FilterTexture.js"></script>
+    // <script src="$path/src/pixi/renderers/canvas/utils/CanvasMaskManager.js"></script>
+    // <script src="$path/src/pixi/renderers/canvas/utils/CanvasTinter.js"></script>
+    // <script src="$path/src/pixi/renderers/canvas/CanvasRenderer.js"></script>
+    // <script src="$path/src/pixi/renderers/canvas/CanvasGraphics.js"></script>
+
     echo <<<EOL
 
     <script src="$path/src/pixi/Pixi.js"></script>
@@ -52,28 +74,7 @@
     <script src="$path/src/pixi/display/DisplayObjectContainer.js"></script>
     <script src="$path/src/pixi/display/Sprite.js"></script>
     
-    <script src="$path/src/pixi/renderers/webgl/utils/WebGLShaderUtils.js"></script>
-    <script src="$path/src/pixi/renderers/webgl/shaders/PixiShader.js"></script>
-    <script src="$path/src/pixi/renderers/webgl/shaders/PixiFastShader.js"></script>
-    <script src="$path/src/pixi/renderers/webgl/shaders/StripShader.js"></script>
-    <script src="$path/src/pixi/renderers/webgl/shaders/PrimitiveShader.js"></script>
-    <script src="$path/src/pixi/renderers/webgl/shaders/ComplexPrimitiveShader.js"></script>
-    <script src="$path/src/pixi/renderers/webgl/utils/WebGLGraphics.js"></script>
-    <script src="$path/src/pixi/renderers/webgl/WebGLRenderer.js"></script>
-    <script src="$path/src/pixi/renderers/webgl/utils/WebGLBlendModeManager.js"></script>
-    <script src="$path/src/pixi/renderers/webgl/utils/WebGLMaskManager.js"></script>
-    <script src="$path/src/pixi/renderers/webgl/utils/WebGLStencilManager.js"></script>
-    <script src="$path/src/pixi/renderers/webgl/utils/WebGLShaderManager.js"></script>
-    <script src="$path/src/pixi/renderers/webgl/utils/WebGLSpriteBatch.js"></script>
-    <script src="$path/src/pixi/renderers/webgl/utils/WebGLFastSpriteBatch.js"></script>
-    <script src="$path/src/pixi/renderers/webgl/utils/WebGLFilterManager.js"></script>
-    <script src="$path/src/pixi/renderers/webgl/utils/FilterTexture.js"></script>
-
     <script src="$path/src/pixi/renderers/canvas/utils/CanvasBuffer.js"></script>
-    <script src="$path/src/pixi/renderers/canvas/utils/CanvasMaskManager.js"></script>
-    <script src="$path/src/pixi/renderers/canvas/utils/CanvasTinter.js"></script>
-    <script src="$path/src/pixi/renderers/canvas/CanvasRenderer.js"></script>
-    <script src="$path/src/pixi/renderers/canvas/CanvasGraphics.js"></script>
 
 EOL;
 
