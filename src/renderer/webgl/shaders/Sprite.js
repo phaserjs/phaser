@@ -24,7 +24,9 @@ Phaser.Renderer.WebGL.Shaders.Sprite = function (renderer)
      * @type Number
      * @private
      */
-    this._UID = Phaser._UID++;
+    this._UID = renderer.getShaderID(this);
+
+    console.log('Sprite Shader', this._UID);
 
     /**
      * The WebGL program.
@@ -200,7 +202,6 @@ Phaser.Renderer.WebGL.Shaders.Sprite.prototype = {
             'varying float vTextureIndex;',
             'uniform sampler2D uSamplerArray[' + max + '];',
             'const vec4 PINK = vec4(1.0, 0.0, 1.0, 1.0);',
-            'const vec4 GREEN = vec4(0.0, 1.0, 0.0, 1.0);',
             'void main(void) {',
             dynamicIfs,
             'else gl_FragColor = PINK;',

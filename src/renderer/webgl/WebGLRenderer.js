@@ -21,6 +21,8 @@ Phaser.Renderer.WebGL = function (game)
 
     this.type = Phaser.WEBGL;
 
+    this.shaderID = 0;
+
     /**
      * This sets if the CanvasRenderer will clear the canvas or not before the new render pass.
      * If the Stage is NOT transparent Pixi will use a canvas sized fillRect operation every frame to set the canvas background color.
@@ -274,6 +276,15 @@ Phaser.Renderer.WebGL.prototype = {
 
         this.projection.x = (this.width / 2) / this.game.resolution;
         this.projection.y = -(this.height / 2) / this.game.resolution;
+    },
+
+    getShaderID: function (shader)
+    {
+        this.shaderID++;
+
+        //  Store shader reference somewhere?
+
+        return this.shaderID;
     },
 
     /**

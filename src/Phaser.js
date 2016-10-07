@@ -548,9 +548,6 @@ var Phaser = Phaser || {    // jshint ignore:line
 
     PIXI: PIXI || {
         
-    },
-
-    //  Used to create IDs for various Pixi objects.
-    _UID: 0
+    }
 
 };

@@ -24,7 +24,7 @@ Phaser.Renderer.WebGL.Shaders.ComplexPrimitiveGraphics = function (renderer)
      * @type Number
      * @private
      */
-    this._UID = Phaser._UID++;
+    this._UID = renderer.getShaderID(this);
 
     /**
      * The WebGL program.
