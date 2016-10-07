@@ -6,7 +6,7 @@
 
 /**
 * The Events component is a collection of events fired by the parent Game Object.
-* 
+*
 * Phaser uses what are known as 'Signals' for all event handling. All of the events in
 * this class are signals you can subscribe to, much in the same way you'd "listen" for
 * an event.
@@ -17,7 +17,7 @@
 * `sprite.events.onAddedToGroup.add(yourFunction, this);`
 *
 * Where `yourFunction` is the function you want called when this event occurs.
-* 
+*
 * For more details about how signals work please see the Phaser.Signal class.
 *
 * The Input-related events will only be dispatched if the Sprite has had `inputEnabled` set to `true`
@@ -59,6 +59,7 @@ Phaser.Events.prototype = {
         if (this._onOutOfBounds)       { this._onOutOfBounds.dispose(); }
 
         if (this._onInputOver)         { this._onInputOver.dispose(); }
+        if (this._onInputUpdate)       { this._onInputUpdate.dispose(); }
         if (this._onInputOut)          { this._onInputOut.dispose(); }
         if (this._onInputDown)         { this._onInputDown.dispose(); }
         if (this._onInputUp)           { this._onInputUp.dispose(); }
@@ -69,6 +70,14 @@ Phaser.Events.prototype = {
         if (this._onAnimationStart)    { this._onAnimationStart.dispose(); }
         if (this._onAnimationComplete) { this._onAnimationComplete.dispose(); }
         if (this._onAnimationLoop)     { this._onAnimationLoop.dispose(); }
+
+        if (this._onFocusIn)           { this._onFocusIn.dispose(); }
+        if (this._onFocusOut)          { this._onFocusOut.dispose(); }
+        if (this._onKeyDown)           { this._onKeyDown.dispose(); }
+        if (this._onKeyPress)          { this._onKeyPress.dispose(); }
+        if (this._onKeyUp)             { this._onKeyUp.dispose(); }
+
+        if (this._onMove)              { this._onMove.dispose(); }
 
     },
 
@@ -146,42 +155,52 @@ Phaser.Events.prototype = {
     onEnterBounds: null,
 
     /**
-    * This signal is dispatched if the Game Object has `inputEnabled` set to `true`, 
+    * This signal is dispatched if the Game Object has `inputEnabled` set to `true`,
     * and receives an over event from a Phaser.Pointer.
     * It is sent two arguments:
-    * {any} The Game Object that received the event.
+    * {Phaser.InputEvent} The event object.
     * {Phaser.Pointer} The Phaser.Pointer object that caused the event.
     * @property {Phaser.Signal} onInputOver
     */
     onInputOver: null,
 
     /**
-    * This signal is dispatched if the Game Object has `inputEnabled` set to `true`, 
+    * This signal is dispatched if the parent is inputEnabled and a pointer is moved within it.
+    * It is sent two arguments:
+    * {Phaser.InputEvent} The event object.
+    * {Phaser.Pointer} The Phaser.Pointer object that caused the event.
+    * @property {Phaser.Signal} onInputUpdate
+    */
+    onInputUpdate: null,
+
+    /**
+    * @property {Phaser.Signal} onInputOut - This signal is dispatched if the parent is inputEnabled and receives an out event from a Pointer.
+    * This signal is dispatched if the Game Object has `inputEnabled` set to `true`,
     * and receives an out event from a Phaser.Pointer, which was previously over it.
     * It is sent two arguments:
-    * {any} The Game Object that received the event.
+    * {Phaser.InputEvent} The event object.
     * {Phaser.Pointer} The Phaser.Pointer object that caused the event.
     * @property {Phaser.Signal} onInputOut
     */
     onInputOut: null,
 
     /**
-    * This signal is dispatched if the Game Object has `inputEnabled` set to `true`, 
+    * This signal is dispatched if the Game Object has `inputEnabled` set to `true`,
     * and receives a down event from a Phaser.Pointer. This effectively means the Pointer has been
     * pressed down (but not yet released) on the Game Object.
     * It is sent two arguments:
-    * {any} The Game Object that received the event.
+    * {Phaser.InputEvent} The event object.
     * {Phaser.Pointer} The Phaser.Pointer object that caused the event.
     * @property {Phaser.Signal} onInputDown
     */
     onInputDown: null,
 
     /**
-    * This signal is dispatched if the Game Object has `inputEnabled` set to `true`, 
+    * This signal is dispatched if the Game Object has `inputEnabled` set to `true`,
     * and receives an up event from a Phaser.Pointer. This effectively means the Pointer had been
     * pressed down, and was then released on the Game Object.
     * It is sent three arguments:
-    * {any} The Game Object that received the event.
+    * {Phaser.InputEvent} The event object.
     * {Phaser.Pointer} The Phaser.Pointer object that caused the event.
     * {boolean} isOver - Is the Pointer still over the Game Object?
     * @property {Phaser.Signal} onInputUp
@@ -193,7 +212,7 @@ Phaser.Events.prototype = {
     * It is sent when a Phaser.Pointer starts to drag the Game Object, taking into consideration the various
     * drag limitations that may be set.
     * It is sent four arguments:
-    * {any} The Game Object that received the event.
+    * {Phaser.InputEvent} The event object.
     * {Phaser.Pointer} The Phaser.Pointer object that caused the event.
     * {number} The x coordinate that the drag started from.
     * {number} The y coordinate that the drag started from.
@@ -206,7 +225,7 @@ Phaser.Events.prototype = {
     * It is sent when a Phaser.Pointer is actively dragging the Game Object.
     * Be warned: This is a high volume Signal. Be careful what you bind to it.
     * It is sent six arguments:
-    * {any} The Game Object that received the event.
+    * {Phaser.InputEvent} The event object.
     * {Phaser.Pointer} The Phaser.Pointer object that caused the event.
     * {number} The new x coordinate of the Game Object.
     * {number} The new y coordinate of the Game Object.
@@ -220,14 +239,14 @@ Phaser.Events.prototype = {
     * This signal is dispatched if the Game Object has been `inputEnabled` and `enableDrag` has been set.
     * It is sent when a Phaser.Pointer stops dragging the Game Object.
     * It is sent two arguments:
-    * {any} The Game Object that received the event.
+    * {Phaser.InputEvent} The event object.
     * {Phaser.Pointer} The Phaser.Pointer object that caused the event.
     * @property {Phaser.Signal} onDragStop
     */
     onDragStop: null,
 
     /**
-    * This signal is dispatched if the Game Object has the AnimationManager component, 
+    * This signal is dispatched if the Game Object has the AnimationManager component,
     * and an Animation has been played.
     * You can also listen to `Animation.onStart` rather than via the Game Objects events.
     * It is sent two arguments:
@@ -238,7 +257,7 @@ Phaser.Events.prototype = {
     onAnimationStart: null,
 
     /**
-    * This signal is dispatched if the Game Object has the AnimationManager component, 
+    * This signal is dispatched if the Game Object has the AnimationManager component,
     * and an Animation has been stopped (via `animation.stop()` and the `dispatchComplete` argument has been set.
     * You can also listen to `Animation.onComplete` rather than via the Game Objects events.
     * It is sent two arguments:
@@ -249,7 +268,7 @@ Phaser.Events.prototype = {
     onAnimationComplete: null,
 
     /**
-    * This signal is dispatched if the Game Object has the AnimationManager component, 
+    * This signal is dispatched if the Game Object has the AnimationManager component,
     * and an Animation has looped playback.
     * You can also listen to `Animation.onLoop` rather than via the Game Objects events.
     * It is sent two arguments:
@@ -257,7 +276,37 @@ Phaser.Events.prototype = {
     * {Phaser.Animation} The Phaser.Animation that looped.
     * @property {Phaser.Signal} onAnimationLoop
     */
-    onAnimationLoop: null
+    onAnimationLoop: null,
+
+    /**
+    * @property {Phaser.Signal} onFocusIn - This signal is dispatched if the parent is inputEnabled and receives input focus.
+    */
+    onFocusIn: null,
+
+    /**
+    * @property {Phaser.Signal} onFocusOut - This signal is dispatched if the parent is inputEnabled and loses input focus.
+    */
+    onFocusOut: null,
+
+    /**
+    * @property {Phaser.Signal} onKeyDown - This signal is dispatched if the parent is inputEnabled, has input focus and the appropriate keyboard event occurred. See {@link Phaser.Keyboard}
+    */
+    onKeyDown: null,
+
+    /**
+    * @property {Phaser.Signal} onKeyPress - This signal is dispatched if the parent is inputEnabled, has input focus and the appropriate keyboard event occurred. See {@link Phaser.Keyboard}
+    */
+    onKeyPress: null,
+
+    /**
+    * @property {Phaser.Signal} onKeyUp - This signal is dispatched if the parent is inputEnabled, has input focus and the appropriate keyboard event occurred. See {@link Phaser.Keyboard}
+    */
+    onKeyUp: null,
+
+    /**
+    * @property {Phaser.Signal} onMove - This signal is dispatched if the parent is inputEnabled and a pointer is moved.
+    */
+    onMove: null
 
 };
 

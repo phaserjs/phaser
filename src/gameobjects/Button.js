@@ -180,7 +180,7 @@ Phaser.Button = function (game, x, y, key, callback, callbackContext, overFrame,
     * @property {Phaser.PointerMode?} justReleasedPreventsOver=ACTIVE_CURSOR
     */
     this.justReleasedPreventsOver = Phaser.PointerMode.TOUCH;
-    
+
     /**
     * When true the the texture frame will not be automatically switched on up/down/over/out events.
     * @property {boolean} freezeFrames
@@ -480,10 +480,10 @@ Phaser.Button.prototype.setUpSound = function (sound, marker) {
 *
 * @method Phaser.Button#onInputOverHandler
 * @protected
-* @param {Phaser.Button} sprite - The Button that the event occurred on.
+* @param {Phaser.InputEvent} event - The input event object.
 * @param {Phaser.Pointer} pointer - The Pointer that activated the Button.
 */
-Phaser.Button.prototype.onInputOverHandler = function (sprite, pointer) {
+Phaser.Button.prototype.onInputOverHandler = function (event, pointer) {
 
     if (pointer.justReleased() &&
         (this.justReleasedPreventsOver & pointer.pointerMode) === pointer.pointerMode)
@@ -513,10 +513,10 @@ Phaser.Button.prototype.onInputOverHandler = function (sprite, pointer) {
 *
 * @method Phaser.Button#onInputOutHandler
 * @protected
-* @param {Phaser.Button} sprite - The Button that the event occurred on.
+* @param {Phaser.InputEvent} event - The input event object.
 * @param {Phaser.Pointer} pointer - The Pointer that activated the Button.
 */
-Phaser.Button.prototype.onInputOutHandler = function (sprite, pointer) {
+Phaser.Button.prototype.onInputOutHandler = function (event, pointer) {
 
     this.changeStateFrame(STATE_OUT);
 
@@ -533,10 +533,10 @@ Phaser.Button.prototype.onInputOutHandler = function (sprite, pointer) {
 *
 * @method Phaser.Button#onInputDownHandler
 * @protected
-* @param {Phaser.Button} sprite - The Button that the event occurred on.
+* @param {Phaser.InputEvent} event - The input event object.
 * @param {Phaser.Pointer} pointer - The Pointer that activated the Button.
 */
-Phaser.Button.prototype.onInputDownHandler = function (sprite, pointer) {
+Phaser.Button.prototype.onInputDownHandler = function (event, pointer) {
 
     this.changeStateFrame(STATE_DOWN);
 
@@ -553,10 +553,10 @@ Phaser.Button.prototype.onInputDownHandler = function (sprite, pointer) {
 *
 * @method Phaser.Button#onInputUpHandler
 * @protected
-* @param {Phaser.Button} sprite - The Button that the event occurred on.
+* @param {Phaser.InputEvent} event - The input event object.
 * @param {Phaser.Pointer} pointer - The Pointer that activated the Button.
 */
-Phaser.Button.prototype.onInputUpHandler = function (sprite, pointer, isOver) {
+Phaser.Button.prototype.onInputUpHandler = function (event, pointer, isOver) {
 
     this.playStateSound(STATE_UP);
 

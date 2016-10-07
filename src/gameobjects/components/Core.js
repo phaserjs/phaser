@@ -101,7 +101,7 @@ Phaser.Component.Core.preUpdate = function () {
     this.previousPosition.set(this.world.x, this.world.y);
     this.previousRotation = this.rotation;
 
-    if (!this.exists || !this.parent.exists)
+    if (!this.exists)
     {
         this.renderOrderID = -1;
         return false;
@@ -204,7 +204,7 @@ Phaser.Component.Core.prototype = {
 
     /**
     * The world coordinates of this Game Object in pixels.
-    * Depending on where in the display list this Game Object is placed this value can differ from `position`, 
+    * Depending on where in the display list this Game Object is placed this value can differ from `position`,
     * which contains the x/y coordinates relative to the Game Objects parent.
     * @property {Phaser.Point} world
     */
@@ -250,10 +250,10 @@ Phaser.Component.Core.prototype = {
     /**
     * A Game Object is that is pendingDestroy is flagged to have its destroy method called on the next logic update.
     * You can set it directly to allow you to flag an object to be destroyed on its next update.
-    * 
-    * This is extremely useful if you wish to destroy an object from within one of its own callbacks 
+    *
+    * This is extremely useful if you wish to destroy an object from within one of its own callbacks
     * such as with Buttons or other Input events.
-    * 
+    *
     * @property {boolean} pendingDestroy
     */
     pendingDestroy: false,

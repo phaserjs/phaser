@@ -138,11 +138,11 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
     this.cursor = null;
 
     /**
-    * A Group with `inputEnableChildren` set to `true` will automatically call `inputEnabled = true` 
+    * A Group with `inputEnableChildren` set to `true` will automatically call `inputEnabled = true`
     * on any children _added_ to, or _created by_, this Group.
-    * 
+    *
     * If there are children already in the Group at the time you set this property, they are not changed.
-    * 
+    *
     * @property {boolean} inputEnableChildren
     * @default
     */
@@ -152,10 +152,10 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
     * This Signal is dispatched whenever a child of this Group emits an onInputDown signal as a result
     * of having been interacted with by a Pointer. You can bind functions to this Signal instead of to
     * every child Sprite.
-    * 
+    *
     * This Signal is sent 2 arguments: A reference to the Sprite that triggered the signal, and
     * a reference to the Pointer that caused it.
-    * 
+    *
     * @property {Phaser.Signal} onChildInputDown
     */
     this.onChildInputDown = new Phaser.Signal();
@@ -164,11 +164,11 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
     * This Signal is dispatched whenever a child of this Group emits an onInputUp signal as a result
     * of having been interacted with by a Pointer. You can bind functions to this Signal instead of to
     * every child Sprite.
-    * 
-    * This Signal is sent 3 arguments: A reference to the Sprite that triggered the signal, 
+    *
+    * This Signal is sent 3 arguments: A reference to the Sprite that triggered the signal,
     * a reference to the Pointer that caused it, and a boolean value `isOver` that tells you if the Pointer
     * is still over the Sprite or not.
-    * 
+    *
     * @property {Phaser.Signal} onChildInputUp
     */
     this.onChildInputUp = new Phaser.Signal();
@@ -177,10 +177,10 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
     * This Signal is dispatched whenever a child of this Group emits an onInputOver signal as a result
     * of having been interacted with by a Pointer. You can bind functions to this Signal instead of to
     * every child Sprite.
-    * 
+    *
     * This Signal is sent 2 arguments: A reference to the Sprite that triggered the signal, and
     * a reference to the Pointer that caused it.
-    * 
+    *
     * @property {Phaser.Signal} onChildInputOver
     */
     this.onChildInputOver = new Phaser.Signal();
@@ -189,10 +189,10 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
     * This Signal is dispatched whenever a child of this Group emits an onInputOut signal as a result
     * of having been interacted with by a Pointer. You can bind functions to this Signal instead of to
     * every child Sprite.
-    * 
+    *
     * This Signal is sent 2 arguments: A reference to the Sprite that triggered the signal, and
     * a reference to the Pointer that caused it.
-    * 
+    *
     * @property {Phaser.Signal} onChildInputOut
     */
     this.onChildInputOut = new Phaser.Signal();
@@ -227,8 +227,8 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
     /**
     * If this Group contains Arcade Physics Sprites you can set a custom sort direction via this property.
     *
-    * It should be set to one of the Phaser.Physics.Arcade sort direction constants: 
-    * 
+    * It should be set to one of the Phaser.Physics.Arcade sort direction constants:
+    *
     * Phaser.Physics.Arcade.SORT_NONE
     * Phaser.Physics.Arcade.LEFT_RIGHT
     * Phaser.Physics.Arcade.RIGHT_LEFT
@@ -236,7 +236,7 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
     * Phaser.Physics.Arcade.BOTTOM_TOP
     *
     * If set to `null` the Group will use whatever Phaser.Physics.Arcade.sortDirection is set to. This is the default behavior.
-    * 
+    *
     * @property {integer} physicsSortDirection
     * @default
     */
@@ -256,10 +256,10 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
 
     /**
     * A Group that is fixed to the camera uses its x/y coordinates as offsets from the top left of the camera. These are stored in Group.cameraOffset.
-    * 
+    *
     * Note that the cameraOffset values are in addition to any parent in the display list.
     * So if this Group was in a Group that has x: 200, then this will be added to the cameraOffset.x
-    * 
+    *
     * @property {boolean} fixedToCamera
     */
     this.fixedToCamera = false;
@@ -273,13 +273,13 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
 
     /**
     * The hash array is an array belonging to this Group into which you can add any of its children via Group.addToHash and Group.removeFromHash.
-    * 
+    *
     * Only children of this Group can be added to and removed from the hash.
-    * 
+    *
     * This hash is used automatically by Phaser Arcade Physics in order to perform non z-index based destructive sorting.
     * However if you don't use Arcade Physics, or this isn't a physics enabled Group, then you can use the hash to perform your own
     * sorting and filtering of Group children without touching their z-index (and therefore display draw order)
-    * 
+    *
     * @property {array} hash
     */
     this.hash = [];
@@ -343,7 +343,7 @@ Phaser.Group.SORT_DESCENDING = 1;
 *
 * The child is automatically added to the top of the group, and is displayed above every previous child.
 *
-* Or if the _optional_ index is specified, the child is added at the location specified by the index value, 
+* Or if the _optional_ index is specified, the child is added at the location specified by the index value,
 * this allows you to control child ordering.
 *
 * If the child was already in this Group, it is simply returned, and nothing else happens to it.
@@ -419,7 +419,7 @@ Phaser.Group.prototype.add = function (child, silent, index) {
 * Adds an existing object to this group.
 *
 * The child is added to the group at the location specified by the index value, this allows you to control child ordering.
-* 
+*
 * If `Group.enableBody` is set, then a physics body will be created on the object, so long as one does not already exist.
 *
 * If `Group.inputEnableChildren` is set, then an Input Handler will be created on the object, so long as one does not already exist.
@@ -493,7 +493,7 @@ Phaser.Group.prototype.removeFromHash = function (child) {
 *
 * As well as an array you can also pass another Group as the first argument. In this case all of the children from that
 * Group will be removed from it and added into this Group.
-* 
+*
 * If `Group.enableBody` is set, then a physics body will be created on the objects, so long as one does not already exist.
 *
 * If `Group.inputEnableChildren` is set, then an Input Handler will be created on the objects, so long as one does not already exist.
@@ -545,12 +545,12 @@ Phaser.Group.prototype.getAt = function (index) {
 * Creates a new Phaser.Sprite object and adds it to the top of this group.
 *
 * Use {@link #classType} to change the type of object created.
-* 
+*
 * The child is automatically added to the top of the group, and is displayed above every previous child.
 *
-* Or if the _optional_ index is specified, the child is added at the location specified by the index value, 
+* Or if the _optional_ index is specified, the child is added at the location specified by the index value,
 * this allows you to control child ordering.
-* 
+*
 * If `Group.enableBody` is set, then a physics body will be created on the object, so long as one does not already exist.
 *
 * If `Group.inputEnableChildren` is set, then an Input Handler will be created on the object, so long as one does not already exist.
@@ -611,9 +611,9 @@ Phaser.Group.prototype.create = function (x, y, key, frame, exists, index) {
 * It will then create 20 'balls' of frame 0, 20 with frame 1 and 20 with frame 2.
 * In total it will have created 120 sprites.
 *
-* By default the Sprites will have their `exists` property set to `false`, and they will be 
+* By default the Sprites will have their `exists` property set to `false`, and they will be
 * positioned at 0x0, relative to the `Group.x / y` values.
-* 
+*
 * If `Group.enableBody` is set, then a physics body will be created on the objects, so long as one does not already exist.
 *
 * If `Group.inputEnableChildren` is set, then an Input Handler will be created on the objects, so long as one does not already exist.
@@ -1621,7 +1621,7 @@ Phaser.Group.prototype.preUpdate = function () {
         return false;
     }
 
-    if (!this.exists || !this.parent.exists)
+    if (!this.exists)
     {
         this.renderOrderID = -1;
         return false;
@@ -1856,7 +1856,7 @@ Phaser.Group.prototype.forEachDead = function (callback, callbackContext) {
 * Sort the children in the group according to a particular key and ordering.
 *
 * Call this function to sort the group according to a particular key value and order.
-* 
+*
 * For example to depth sort Sprites for Zelda-style game you might call `group.sort('y', Phaser.Group.SORT_ASCENDING)` at the bottom of your `State.update()`.
 *
 * Internally this uses a standard JavaScript Array sort, so everything that applies there also applies here, including
@@ -2070,7 +2070,7 @@ Phaser.Group.prototype.iterate = function (key, value, returnType, callback, cal
 
 /**
 * Get the first display object that exists, or doesn't exist.
-* 
+*
 * You can use the optional argument `createIfNull` to create a new Game Object if none matching your exists argument were found in this Group.
 *
 * It works by calling `Group.create` passing it the parameters given to this method, and returning the new child.
@@ -2509,7 +2509,7 @@ Phaser.Group.prototype.moveAll = function (group, silent) {
 * Removes all children from this Group, but does not remove the group from its parent.
 *
 * The children can be optionally destroyed as they are removed.
-* 
+*
 * You can also optionally also destroy the BaseTexture the Child is using. Be careful if you've
 * more than one Game Object sharing the same BaseTexture.
 *
@@ -2666,7 +2666,7 @@ Object.defineProperty(Phaser.Group.prototype, "total", {
 * Total number of children in this group, regardless of exists/alive status.
 *
 * @name Phaser.Group#length
-* @property {integer} length 
+* @property {integer} length
 * @readonly
 */
 Object.defineProperty(Phaser.Group.prototype, "length", {
