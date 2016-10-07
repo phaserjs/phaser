@@ -137,7 +137,7 @@ Phaser.Renderer.WebGL = function (game)
      * @property spriteBatch
      * @type WebGLSpriteBatch
      */
-    this.spriteBatch = new Phaser.Renderer.WebGL.SpriteBatch(this);
+    this.spriteBatch = new Phaser.Renderer.WebGL.BatchManager(this);
 
     /**
      * Manages the filters

@@ -26,8 +26,6 @@ Phaser.Renderer.WebGL.Shaders.Sprite = function (renderer)
      */
     this._UID = renderer.getShaderID(this);
 
-    console.log('Sprite Shader', this._UID);
-
     /**
      * The WebGL program.
      * @property program

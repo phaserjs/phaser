@@ -12,7 +12,7 @@
 * @constructor
 * @param {Phaser.Game} game - Game reference to the currently running game.
 */
-Phaser.Renderer.WebGL.SpriteBatch = function (renderer)
+Phaser.Renderer.WebGL.BatchManager = function (renderer)
 {
     this.renderer = renderer;
 
@@ -20,7 +20,7 @@ Phaser.Renderer.WebGL.SpriteBatch = function (renderer)
 
     this.vertSize = 5;
 
-    //  Number of images in the SpriteBatch before it flushes
+    //  Number of images in the BatchManager before it flushes
     this.size = 2000;
 
     //the total number of bytes in our batch
@@ -73,9 +73,9 @@ Phaser.Renderer.WebGL.SpriteBatch = function (renderer)
 
 };
 
-Phaser.Renderer.WebGL.SpriteBatch.prototype.constructor = Phaser.Renderer.WebGL.SpriteBatch;
+Phaser.Renderer.WebGL.BatchManager.prototype.constructor = Phaser.Renderer.WebGL.BatchManager;
 
-Phaser.Renderer.WebGL.SpriteBatch.prototype = {
+Phaser.Renderer.WebGL.BatchManager.prototype = {
 
     init: function ()
     {
@@ -100,7 +100,7 @@ Phaser.Renderer.WebGL.SpriteBatch.prototype = {
                 this.renderer.game,
                 undefined,
                 [
-                    '//WebGLSpriteBatch Fragment Shader.',
+                    '//WebGLBatchManager Fragment Shader.',
                     'precision lowp float;',
                     'varying vec2 vTextureCoord;',
                     'varying vec4 vColor;',
@@ -118,7 +118,7 @@ Phaser.Renderer.WebGL.SpriteBatch.prototype = {
                 this.renderer.game,
                 undefined,
                 [
-                    '//WebGLSpriteBatch Fragment Shader.',
+                    '//WebGLBatchManager Fragment Shader.',
                     'precision lowp float;',
                     'varying vec2 vTextureCoord;',
                     'varying vec4 vColor;',
@@ -488,8 +488,6 @@ Phaser.Renderer.WebGL.SpriteBatch.prototype = {
         // increment the draw count
         this.renderer.drawCount++;
     },
-
-    //  PIXI.WebGLSpriteBatch.prototype.renderTilingSprite needs porting over, but not into here
 
     destroy: function ()
     {
