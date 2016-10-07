@@ -67,14 +67,15 @@ Phaser.Renderer.WebGL.GameObjects.Graphics = {
             src.webGLDirty = false;
         }
         
-        var projection = renderer.projection;
+        var gl = renderer.gl;
         var offset = renderer.offset;
+        var projection = renderer.projection;
         var shader = renderer.shaderManager.primitiveShader;
         var webGLData;
 
         if (src.dirty)
         {
-            this.updateGraphics(renderer, src);
+            Phaser.Renderer.WebGL.GameObjects.Graphics.updateGraphics(renderer, src);
         }
 
         for (var i = 0; i < src._webGL.data.length; i++)
@@ -156,7 +157,7 @@ Phaser.Renderer.WebGL.GameObjects.Graphics = {
      * @param graphicsData {Graphics} The graphics object to update
      * @param gl {WebGLContext} the current WebGL drawing context
      */
-    updateGraphics: function(renderer, graphics)
+    updateGraphics: function (renderer, graphics)
     {
         var gl = renderer.gl;
         var webGL = graphics._webGL;
@@ -184,7 +185,7 @@ Phaser.Renderer.WebGL.GameObjects.Graphics = {
 
                 graphicsData.reset();
 
-                this.graphicsDataPool.push(graphicsData);
+                Phaser.Renderer.WebGL.GameObjects.Graphics.graphicsDataPool.push(graphicsData);
             }
 
             //  Clear the array and reset the index
@@ -206,23 +207,23 @@ Phaser.Renderer.WebGL.GameObjects.Graphics = {
             {
                 case Phaser.RECTANGLE:
 
-                    webGLData = this.switchMode(webGL, 0);
-                    this.buildRectangle(data, webGLData);
+                    webGLData = Phaser.Renderer.WebGL.GameObjects.Graphics.switchMode(webGL, 0);
+                    Phaser.Renderer.WebGL.GameObjects.Graphics.buildRectangle(data, webGLData);
 
                     break;
 
                 case Phaser.CIRCLE:
                 case Phaser.ELLIPSE:
 
-                    webGLData = this.switchMode(webGL, 0);
-                    this.buildCircle(data, webGLData);
+                    webGLData = Phaser.Renderer.WebGL.GameObjects.Graphics.switchMode(webGL, 0);
+                    Phaser.Renderer.WebGL.GameObjects.Graphics.buildCircle(data, webGLData);
 
                     break;
 
                 case Phaser.ROUNDEDRECTANGLE:
 
-                    webGLData = this.switchMode(webGL, 0);
-                    this.buildRoundedRectangle(data, webGLData);
+                    webGLData = Phaser.Renderer.WebGL.GameObjects.Graphics.switchMode(webGL, 0);
+                    Phaser.Renderer.WebGL.GameObjects.Graphics.buildRoundedRectangle(data, webGLData);
 
                     break;
 
@@ -247,28 +248,28 @@ Phaser.Renderer.WebGL.GameObjects.Graphics = {
                         {
                             if (data.points.length < renderer.stencilBufferLimit * 2)
                             {
-                                webGLData = this.switchMode(webGL, 0);
+                                webGLData = Phaser.Renderer.WebGL.GameObjects.Graphics.switchMode(webGL, 0);
                                 
-                                var canDrawUsingSimple = this.buildPoly(data, webGLData);
+                                var canDrawUsingSimple = Phaser.Renderer.WebGL.GameObjects.Graphics.buildPoly(data, webGLData);
 
                                 if (!canDrawUsingSimple)
                                 {
-                                    webGLData = this.switchMode(webGL, 1);
-                                    this.buildComplexPoly(data, webGLData);
+                                    webGLData = Phaser.Renderer.WebGL.GameObjects.Graphics.switchMode(webGL, 1);
+                                    Phaser.Renderer.WebGL.GameObjects.Graphics.buildComplexPoly(data, webGLData);
                                 }
                             }
                             else
                             {
-                                webGLData = this.switchMode(webGL, 1);
-                                this.buildComplexPoly(data, webGLData);
+                                webGLData = Phaser.Renderer.WebGL.GameObjects.Graphics.switchMode(webGL, 1);
+                                Phaser.Renderer.WebGL.GameObjects.Graphics.buildComplexPoly(data, webGLData);
                             }
                         }
                     }
 
                     if (data.lineWidth > 0)
                     {
-                        webGLData = this.switchMode(webGL, 0);
-                        this.buildLine(data, webGLData);
+                        webGLData = Phaser.Renderer.WebGL.GameObjects.Graphics.switchMode(webGL, 0);
+                        Phaser.Renderer.WebGL.GameObjects.Graphics.buildLine(data, webGLData);
                     }
 
                     break;
@@ -295,7 +296,7 @@ Phaser.Renderer.WebGL.GameObjects.Graphics = {
 
         if (!webGL.data.length)
         {
-            webGLData = this.graphicsDataPool.pop() || new Phaser.Renderer.WebGL.GameObjects.GraphicsData(webGL.gl);
+            webGLData = Phaser.Renderer.WebGL.GameObjects.Graphics.graphicsDataPool.pop() || new Phaser.Renderer.WebGL.GameObjects.GraphicsData(webGL.gl);
             webGLData.mode = type;
             webGL.data.push(webGLData);
         }
@@ -305,7 +306,7 @@ Phaser.Renderer.WebGL.GameObjects.Graphics = {
 
             if (webGLData.mode !== type || type === 1)
             {
-                webGLData = this.graphicsDataPool.pop() || new Phaser.Renderer.WebGL.GameObjects.GraphicsData(webGL.gl);
+                webGLData = Phaser.Renderer.WebGL.GameObjects.Graphics.graphicsDataPool.pop() || new Phaser.Renderer.WebGL.GameObjects.GraphicsData(webGL.gl);
                 webGLData.mode = type;
                 webGL.data.push(webGLData);
             }
@@ -367,7 +368,7 @@ Phaser.Renderer.WebGL.GameObjects.Graphics = {
                 x, y
             ];
 
-            this.buildLine(graphicsData, webGLData);
+            Phaser.Renderer.WebGL.GameObjects.Graphics.buildLine(graphicsData, webGLData);
 
             graphicsData.points = tempPoints;
         }
@@ -387,10 +388,10 @@ Phaser.Renderer.WebGL.GameObjects.Graphics = {
 
         recPoints.push(x, y + radius);
 
-        recPoints = recPoints.concat(this.quadraticBezierCurve(x, y + height - radius, x, y + height, x + radius, y + height));
-        recPoints = recPoints.concat(this.quadraticBezierCurve(x + width - radius, y + height, x + width, y + height, x + width, y + height - radius));
-        recPoints = recPoints.concat(this.quadraticBezierCurve(x + width, y + radius, x + width, y, x + width - radius, y));
-        recPoints = recPoints.concat(this.quadraticBezierCurve(x + radius, y, x, y, x, y + radius));
+        recPoints = recPoints.concat(Phaser.Renderer.WebGL.GameObjects.Graphics.quadraticBezierCurve(x, y + height - radius, x, y + height, x + radius, y + height));
+        recPoints = recPoints.concat(Phaser.Renderer.WebGL.GameObjects.Graphics.quadraticBezierCurve(x + width - radius, y + height, x + width, y + height, x + width, y + height - radius));
+        recPoints = recPoints.concat(Phaser.Renderer.WebGL.GameObjects.Graphics.quadraticBezierCurve(x + width, y + radius, x + width, y, x + width - radius, y));
+        recPoints = recPoints.concat(Phaser.Renderer.WebGL.GameObjects.Graphics.quadraticBezierCurve(x + radius, y, x, y, x, y + radius));
 
         if (graphicsData.fill)
         {
@@ -431,7 +432,7 @@ Phaser.Renderer.WebGL.GameObjects.Graphics = {
 
             graphicsData.points = recPoints;
 
-            this.buildLine(graphicsData, webGLData);
+            Phaser.Renderer.WebGL.GameObjects.Graphics.buildLine(graphicsData, webGLData);
 
             graphicsData.points = tempPoints;
         }
@@ -497,7 +498,7 @@ Phaser.Renderer.WebGL.GameObjects.Graphics = {
             height = circleData.height;
         }
 
-        var totalSegs = this.circleSegments;
+        var totalSegs = Phaser.Renderer.WebGL.GameObjects.Graphics.circleSegments;
         var seg = (Math.PI * 2) / totalSegs;
 
         var i = 0;
@@ -548,7 +549,7 @@ Phaser.Renderer.WebGL.GameObjects.Graphics = {
                 );
             }
 
-            this.buildLine(graphicsData, webGLData);
+            Phaser.Renderer.WebGL.GameObjects.Graphics.buildLine(graphicsData, webGLData);
 
             graphicsData.points = tempPoints;
         }

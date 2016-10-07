@@ -140,7 +140,7 @@ Phaser.Renderer.WebGL.StencilManager.prototype = {
         var gl = this.gl;
 
          // bind the graphics object..
-        var projection = renderSession.projection;
+        var projection = this.renderer.projection;
         var offset = this.renderer.offset;
         var shader;
 

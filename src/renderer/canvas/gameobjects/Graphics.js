@@ -30,23 +30,23 @@ Phaser.Renderer.Canvas.GameObjects.Graphics = {
             switch (data.type)
             {
                 case Phaser.RECTANGLE:
-                    local.drawRectangle(data, context);
+                    Phaser.Renderer.Canvas.GameObjects.Graphics.drawRectangle(data, context);
                     break;
 
                 case Phaser.CIRCLE:
-                    local.drawCircle(data, context);
+                    Phaser.Renderer.Canvas.GameObjects.Graphics.drawCircle(data, context);
                     break;
 
                 case Phaser.POLYGON:
-                    local.drawPolygon(data, context);
+                    Phaser.Renderer.Canvas.GameObjects.Graphics.drawPolygon(data, context);
                     break;
 
                 case Phaser.ELLIPSE:
-                    local.drawEllipse(data, context);
+                    Phaser.Renderer.Canvas.GameObjects.Graphics.drawEllipse(data, context);
                     break;
 
                 case Phaser.ROUNDEDRECTANGLE:
-                    local.drawRoundedRectangle(data, context);
+                    Phaser.Renderer.Canvas.GameObjects.Graphics.drawRoundedRectangle(data, context);
                     break;
             }
         }

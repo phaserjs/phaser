@@ -142,7 +142,7 @@ Phaser.Graphics = function (game, x, y) {
      * @type Array
      * @private
      */
-    this._webGL = [];
+    this._webGL = null;
 
     /**
      * Whether this shape is being used as a mask.
