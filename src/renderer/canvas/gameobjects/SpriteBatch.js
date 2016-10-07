@@ -9,26 +9,26 @@ Phaser.Renderer.Canvas.GameObjects.SpriteBatch = {
         Phaser.SpriteBatch.prototype
     ],
 
-    render: function (renderer)
+    render: function (renderer, src)
     {
-        if (!this.visible || this.alpha <= 0 || !this.children.length)
+        if (!src.visible || src.alpha <= 0 || !src.children.length)
         {
             return;
         }
         
         var context = renderer.context;
 
-        context.globalAlpha = this.worldAlpha;
+        context.globalAlpha = src.worldAlpha;
 
-        this.displayObjectUpdateTransform();
+        src.displayObjectUpdateTransform();
 
-        var transform = this.worldTransform;
+        var transform = src.worldTransform;
            
         var isRotated = true;
 
-        for (var i = 0; i < this.children.length; i++)
+        for (var i = 0; i < src.children.length; i++)
         {
-            var child = this.children[i];
+            var child = src.children[i];
 
             if (!child.visible)
             {
@@ -38,7 +38,7 @@ Phaser.Renderer.Canvas.GameObjects.SpriteBatch = {
             var texture = child.texture;
             var frame = texture.frame;
 
-            context.globalAlpha = this.worldAlpha * child.alpha;
+            context.globalAlpha = src.worldAlpha * child.alpha;
 
             if (child.rotation % Phaser.Math.PI2 === 0)
             {
@@ -56,8 +56,8 @@ Phaser.Renderer.Canvas.GameObjects.SpriteBatch = {
                     frame.y,
                     frame.width,
                     frame.height,
-                    ((child.anchor.x) * (-frame.width * child.scale.x) + child.position.x + 0.5 + renderSession.shakeX) | 0,
-                    ((child.anchor.y) * (-frame.height * child.scale.y) + child.position.y + 0.5 + renderSession.shakeY) | 0,
+                    ((child.anchor.x) * (-frame.width * child.scale.x) + child.position.x + 0.5 + renderer.game.camera._shake.x) | 0,
+                    ((child.anchor.y) * (-frame.height * child.scale.y) + child.position.y + 0.5 + renderer.game.camera._shake.y) | 0,
                     frame.width * child.scale.x,
                     frame.height * child.scale.y);
             }
@@ -71,8 +71,8 @@ Phaser.Renderer.Canvas.GameObjects.SpriteBatch = {
                 child.displayObjectUpdateTransform();
                
                 var childTransform = child.worldTransform;
-                var tx = (childTransform.tx * renderSession.resolution) + renderSession.shakeX;
-                var ty = (childTransform.ty * renderSession.resolution) + renderSession.shakeY;
+                var tx = (childTransform.tx * renderer.game.resolution) + renderer.game.camera._shake.x;
+                var ty = (childTransform.ty * renderer.game.resolution) + renderer.game.camera._shake.y;
 
                 // allow for trimming
                
