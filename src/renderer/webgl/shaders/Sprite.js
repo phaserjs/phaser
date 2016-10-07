@@ -34,13 +34,41 @@ Phaser.Renderer.WebGL.Shaders.Sprite = function (renderer)
     this.program = null;
 
     /**
+    * The Default Vertex shader source.
+    *
+    * @property defaultVertexSrc
+    * @type String
+    */
+    this.vertexSrc = [
+        'attribute vec2 aVertexPosition;',
+        'attribute vec2 aTextureCoord;',
+        'attribute vec4 aColor;',
+        'attribute float aTextureIndex;',
+
+        'uniform vec2 projectionVector;',
+        'uniform vec2 offsetVector;',
+
+        'varying vec2 vTextureCoord;',
+        'varying vec4 vColor;',
+        'varying float vTextureIndex;',
+
+        'const vec2 center = vec2(-1.0, 1.0);',
+
+        'void main(void) {',
+        '   if (aTextureIndex > 0.0) gl_Position = vec4(0.0);',
+        '   gl_Position = vec4( ((aVertexPosition + offsetVector) / projectionVector) + center, 0.0, 1.0);',
+        '   vTextureCoord = aTextureCoord;',
+        '   vColor = vec4(aColor.rgb * aColor.a, aColor.a);',
+        '   vTextureIndex = aTextureIndex;',
+        '}'
+    ];
+
+    /**
      * The fragment shader.
      * @property fragmentSrc
      * @type Array
      */
     this.fragmentSrc = null;
-
-    // this.vertexSrc = [];
 
     /**
      * Uniform attributes cache.
@@ -84,8 +112,6 @@ Phaser.Renderer.WebGL.Shaders.Sprite = function (renderer)
     //  @type {WebGLUniformLocation }
     this.alpha;
 
-    this.defaultVertexSrc = [];
-
     this.init();
 };
 
@@ -95,31 +121,6 @@ Phaser.Renderer.WebGL.Shaders.Sprite.prototype = {
 
     init: function (usingFilter)
     {
-        //  Externalize these, so devs can change them
-        this.defaultVertexSrc = [
-            'attribute vec2 aVertexPosition;',
-            'attribute vec2 aTextureCoord;',
-            'attribute vec4 aColor;',
-            'attribute float aTextureIndex;',
-
-            'uniform vec2 projectionVector;',
-            'uniform vec2 offsetVector;',
-
-            'varying vec2 vTextureCoord;',
-            'varying vec4 vColor;',
-            'varying float vTextureIndex;',
-
-            'const vec2 center = vec2(-1.0, 1.0);',
-
-            'void main(void) {',
-            '   if (aTextureIndex > 0.0) gl_Position = vec4(0.0);',
-            '   gl_Position = vec4( ((aVertexPosition + offsetVector) / projectionVector) + center , 0.0, 1.0);',
-            '   vTextureCoord = aTextureCoord;',
-            '   vColor = vec4(aColor.rgb * aColor.a, aColor.a);',
-            '   vTextureIndex = aTextureIndex;',
-            '}'
-        ];
-
         if (this.renderer.enableMultiTextureToggle && !usingFilter)
         {
             this.initMultitexShader();
@@ -148,7 +149,7 @@ Phaser.Renderer.WebGL.Shaders.Sprite.prototype = {
 
         var gl = this.gl;
 
-        var program = this.renderer.compileProgram(this.vertexSrc || this.defaultVertexSrc, this.fragmentSrc);
+        var program = this.renderer.compileProgram(this.vertexSrc, this.fragmentSrc);
 
         gl.useProgram(program);
 
@@ -170,6 +171,82 @@ Phaser.Renderer.WebGL.Shaders.Sprite.prototype = {
         for (var key in this.uniforms)
         {
             // get the uniform locations..
+            this.uniforms[key].uniformLocation = gl.getUniformLocation(program, key);
+        }
+
+        this.initUniforms();
+
+        this.program = program;
+    },
+
+    initMultitexShader: function ()
+    {
+        var gl = this.gl;
+        var max = this.renderer.getMaxTextureUnits();
+
+        var dynamicIfs = '\tif (vTextureIndex == 0.0) gl_FragColor = texture2D(uSamplerArray[0], vTextureCoord) * vColor;\n';
+
+        for (var index = 1; index < max; ++index)
+        {
+            dynamicIfs += '\telse if (vTextureIndex == ' + 
+                        index + '.0) gl_FragColor = texture2D(uSamplerArray[' + 
+                        index + '], vTextureCoord) * vColor;\n'
+        }
+
+        this.fragmentSrc = [
+            'precision lowp float;',
+            'varying vec2 vTextureCoord;',
+            'varying vec4 vColor;',
+            'varying float vTextureIndex;',
+            'uniform sampler2D uSamplerArray[' + max + '];',
+            'const vec4 PINK = vec4(1.0, 0.0, 1.0, 1.0);',
+            'const vec4 GREEN = vec4(0.0, 1.0, 0.0, 1.0);',
+            'void main(void) {',
+            dynamicIfs,
+            'else gl_FragColor = PINK;',
+            '}'
+        ];
+
+        var program = this.renderer.compileProgram(this.vertexSrc, this.fragmentSrc);
+
+        gl.useProgram(program);
+
+        // get and store the uniforms for the shader
+        this.uSamplerArray = gl.getUniformLocation(program, 'uSamplerArray[0]');
+        this.projectionVector = gl.getUniformLocation(program, 'projectionVector');
+        this.offsetVector = gl.getUniformLocation(program, 'offsetVector');
+        this.dimensions = gl.getUniformLocation(program, 'dimensions');
+
+        // get and store the attributes
+        this.aVertexPosition = gl.getAttribLocation(program, 'aVertexPosition');
+        this.aTextureCoord = gl.getAttribLocation(program, 'aTextureCoord');
+        this.colorAttribute = gl.getAttribLocation(program, 'aColor');
+        this.aTextureIndex = gl.getAttribLocation(program, 'aTextureIndex');
+
+        var indices = [];
+
+        //  Bind an empty texture to avoid WebGL console warning spam
+        var tempTexture = gl.createTexture();
+
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, tempTexture);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, 1, 1, 0, gl.RGB, gl.UNSIGNED_BYTE, null);
+
+        for (var i = 0; i < max; ++i)
+        {
+            gl.activeTexture(gl.TEXTURE0 + i);
+            gl.bindTexture(gl.TEXTURE_2D, tempTexture);
+            indices.push(i);
+        }
+
+        gl.activeTexture(gl.TEXTURE0);
+        gl.uniform1iv(this.uSamplerArray, indices);
+
+        this.attributes = [this.aVertexPosition, this.aTextureCoord, this.colorAttribute, this.aTextureIndex];
+
+        //  Add those custom shaders!
+        for (var key in this.uniforms)
+        {
             this.uniforms[key].uniformLocation = gl.getUniformLocation(program, key);
         }
 
@@ -331,7 +408,9 @@ Phaser.Renderer.WebGL.Shaders.Sprite.prototype = {
     syncUniforms: function ()
     {
         this.textureCount = 1;
+
         var uniform;
+
         var gl = this.gl;
 
         //  This would probably be faster in an array and it would guarantee key order
@@ -368,18 +447,17 @@ Phaser.Renderer.WebGL.Shaders.Sprite.prototype = {
                 {
                     gl.activeTexture(gl['TEXTURE' + this.textureCount]);
 
-                    if(uniform.value.baseTexture._dirty)
+                    if (uniform.value.baseTexture._dirty)
                     {
-                        PIXI.instances.updateTexture(uniform.value.baseTexture);
+                        this.renderer.updateTexture(uniform.value.baseTexture);
                     }
                     else
                     {
-                        // bind the current texture
                         gl.bindTexture(gl.TEXTURE_2D, uniform.value.baseTexture._glTextures);
                     }
 
-                    //  gl.bindTexture(gl.TEXTURE_2D, uniform.value.baseTexture._glTextures || PIXI.createWebGLTexture( uniform.value.baseTexture, gl));
                     gl.uniform1i(uniform.uniformLocation, this.textureCount);
+
                     this.textureCount++;
                 }
                 else
@@ -390,92 +468,6 @@ Phaser.Renderer.WebGL.Shaders.Sprite.prototype = {
         }
 
     },
-
-
-/*
-PIXI.PixiShader.prototype.initMultitexShader = function () {
-    var gl = this.gl;
-    this.MAX_TEXTURES = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);
-    var dynamicIfs = '\tif (vTextureIndex == 0.0) gl_FragColor = texture2D(uSamplerArray[0], vTextureCoord) * vColor;\n'
-    for (var index = 1; index < this.MAX_TEXTURES; ++index)
-    {
-        dynamicIfs += '\telse if (vTextureIndex == ' + 
-                    index + '.0) gl_FragColor = texture2D(uSamplerArray[' + 
-                    index + '], vTextureCoord) * vColor;\n'
-    }
-    this.fragmentSrc = [
-        '// PixiShader Fragment Shader.',
-        'precision lowp float;',
-        'varying vec2 vTextureCoord;',
-        'varying vec4 vColor;',
-        'varying float vTextureIndex;',
-        'uniform sampler2D uSamplerArray[' + this.MAX_TEXTURES + '];',
-        'const vec4 PINK = vec4(1.0, 0.0, 1.0, 1.0);',
-        'const vec4 GREEN = vec4(0.0, 1.0, 0.0, 1.0);',
-        'void main(void) {',
-        dynamicIfs,
-        'else gl_FragColor = PINK;',
-        '}'
-    ];
-
-    var program = PIXI.compileProgram(gl, this.vertexSrc || PIXI.PixiShader.defaultVertexSrc, this.fragmentSrc);
-
-    gl.useProgram(program);
-
-    // get and store the uniforms for the shader
-    //this.uSampler = gl.getUniformLocation(program, 'uSampler');
-    this.uSamplerArray = gl.getUniformLocation(program, 'uSamplerArray[0]');
-    this.projectionVector = gl.getUniformLocation(program, 'projectionVector');
-    this.offsetVector = gl.getUniformLocation(program, 'offsetVector');
-    this.dimensions = gl.getUniformLocation(program, 'dimensions');
-
-    // get and store the attributes
-    this.aVertexPosition = gl.getAttribLocation(program, 'aVertexPosition');
-    this.aTextureCoord = gl.getAttribLocation(program, 'aTextureCoord');
-    this.colorAttribute = gl.getAttribLocation(program, 'aColor');
-    this.aTextureIndex = gl.getAttribLocation(program, 'aTextureIndex');
-
-    var indices = [];
-    // HACK: we bind an empty texture to avoid WebGL warning spam.
-    var tempTexture = gl.createTexture();
-    gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture(gl.TEXTURE_2D, tempTexture);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, 1, 1, 0, gl.RGB, gl.UNSIGNED_BYTE, null);
-    for (var i = 0; i < this.MAX_TEXTURES; ++i) {
-        gl.activeTexture(gl.TEXTURE0 + i);
-        gl.bindTexture(gl.TEXTURE_2D, tempTexture);
-        indices.push(i);
-    }
-    gl.activeTexture(gl.TEXTURE0);
-    gl.uniform1iv(this.uSamplerArray, indices);
-
-    // Begin worst hack eva //
-
-    // WHY??? ONLY on my chrome pixel the line above returns -1 when using filters?
-    // maybe its something to do with the current state of the gl context.
-    // I'm convinced this is a bug in the chrome browser as there is NO reason why this should be returning -1 especially as it only manifests on my chrome pixel
-    // If theres any webGL people that know why could happen please help :)
-    if(this.colorAttribute === -1)
-    {
-        this.colorAttribute = 2;
-    }
-
-    this.attributes = [this.aVertexPosition, this.aTextureCoord, this.colorAttribute, this.aTextureIndex];
-
-    // End worst hack eva //
-
-    // add those custom shaders!
-    for (var key in this.uniforms)
-    {
-        // get the uniform locations..
-        this.uniforms[key].uniformLocation = gl.getUniformLocation(program, key);
-    }
-
-    this.initUniforms();
-
-    this.program = program;
-};
-*/
 
     destroy: function ()
     {
