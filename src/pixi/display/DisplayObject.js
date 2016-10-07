@@ -418,7 +418,7 @@ PIXI.DisplayObject.prototype = {
     *
     * @method PIXI.DisplayObject#generateTexture
     * @param {number} [resolution=1] - The resolution of the texture being generated.
-    * @param {number} [scaleMode=PIXI.scaleModes.DEFAULT] - See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values.
+    * @param {number} [scaleMode=Phaser.scaleModes.DEFAULT] - See {{#crossLink "PIXI/scaleModes:property"}}Phaser.scaleModes{{/crossLink}} for possible values.
     * @param {PIXI.CanvasRenderer|PIXI.WebGLRenderer} renderer - The renderer used to generate the texture.
     * @return {Phaser.RenderTexture} - A RenderTexture containing an image of this DisplayObject at the time it was invoked.
     */

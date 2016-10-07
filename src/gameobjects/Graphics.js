@@ -918,7 +918,7 @@ Phaser.Graphics.prototype.clear = function () {
 Phaser.Graphics.prototype.generateTexture = function (resolution, scaleMode, padding) {
 
     if (resolution === undefined) { resolution = 1; }
-    if (scaleMode === undefined) { scaleMode = PIXI.scaleModes.DEFAULT; }
+    if (scaleMode === undefined) { scaleMode = Phaser.scaleModes.DEFAULT; }
     if (padding === undefined) { padding = 0; }
 
     var bounds = this.getBounds();

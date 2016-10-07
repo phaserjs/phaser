@@ -13,7 +13,7 @@
 * @param {Phaser.Game} game - Game reference to the currently running game.
 * @param width {Number} the horizontal range of the filter
 * @param height {Number} the vertical range of the filter
-* @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
+* @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}Phaser.scaleModes{{/crossLink}} for possible values
 */
 Phaser.Renderer.WebGL.FilterTexture = function (renderer, width, height, scaleMode, textureUnit)
 {

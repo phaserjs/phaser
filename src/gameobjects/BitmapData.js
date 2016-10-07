@@ -1507,7 +1507,7 @@ Phaser.BitmapData.prototype = {
             this.op = blendMode;
         }
 
-        ctx[this.smoothProperty] = (source.texture.baseTexture.scaleMode === PIXI.scaleModes.LINEAR);
+        ctx[this.smoothProperty] = (source.texture.baseTexture.scaleMode === Phaser.scaleModes.LINEAR);
 
         ctx.setTransform(wt.a, wt.b, wt.c, wt.d, tx, ty);
 

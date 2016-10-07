@@ -472,7 +472,7 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession, matrix)
     if (renderSession.smoothProperty && renderSession.scaleMode !== this.texture.baseTexture.scaleMode)
     {
         renderSession.scaleMode = this.texture.baseTexture.scaleMode;
-        renderSession.context[renderSession.smoothProperty] = (renderSession.scaleMode === PIXI.scaleModes.LINEAR);
+        renderSession.context[renderSession.smoothProperty] = (renderSession.scaleMode === Phaser.scaleModes.LINEAR);
     }
 
     //  If the texture is trimmed we offset by the trim x/y, otherwise we use the frame dimensions

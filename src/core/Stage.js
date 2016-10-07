@@ -393,7 +393,7 @@ Object.defineProperty(Phaser.Stage.prototype, "smoothed", {
 
     get: function () {
 
-        return PIXI.scaleModes.DEFAULT === PIXI.scaleModes.LINEAR;
+        return Phaser.scaleModes.DEFAULT === Phaser.scaleModes.LINEAR;
 
     },
 
@@ -401,11 +401,11 @@ Object.defineProperty(Phaser.Stage.prototype, "smoothed", {
 
         if (value)
         {
-            PIXI.scaleModes.DEFAULT = PIXI.scaleModes.LINEAR;
+            Phaser.scaleModes.DEFAULT = Phaser.scaleModes.LINEAR;
         }
         else
         {
-            PIXI.scaleModes.DEFAULT = PIXI.scaleModes.NEAREST;
+            Phaser.scaleModes.DEFAULT = Phaser.scaleModes.NEAREST;
         }
     }
 

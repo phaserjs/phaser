@@ -9,7 +9,7 @@
  * @uses EventTarget
  * @constructor
  * @param source {String|Canvas} the source object (image or canvas)
- * @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
+ * @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}Phaser.scaleModes{{/crossLink}} for possible values
  */
 PIXI.BaseTexture = function(source, scaleMode)
 {
@@ -44,9 +44,9 @@ PIXI.BaseTexture = function(source, scaleMode)
      * 
      * @property scaleMode
      * @type {Number}
-     * @default PIXI.scaleModes.LINEAR
+     * @default Phaser.scaleModes.LINEAR
      */
-    this.scaleMode = scaleMode || PIXI.scaleModes.DEFAULT;
+    this.scaleMode = scaleMode || Phaser.scaleModes.DEFAULT;
 
     /**
      * [read-only] Set to true once the base texture has loaded
@@ -218,7 +218,7 @@ PIXI.BaseTexture.prototype.unloadFromGPU = function()
  * @static
  * @method fromCanvas
  * @param canvas {Canvas} The canvas element source of the texture
- * @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
+ * @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}Phaser.scaleModes{{/crossLink}} for possible values
  * @return {BaseTexture}
  */
 PIXI.BaseTexture.fromCanvas = function(canvas, scaleMode)

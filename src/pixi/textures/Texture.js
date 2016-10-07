@@ -289,7 +289,7 @@ PIXI.Texture.prototype._updateUvsInverted = function () {
  * @static
  * @method fromCanvas
  * @param canvas {Canvas} The canvas element source of the texture
- * @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
+ * @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}Phaser.scaleModes{{/crossLink}} for possible values
  * @return {Texture}
  */
 PIXI.Texture.fromCanvas = function(canvas, scaleMode)
