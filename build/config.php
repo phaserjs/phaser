@@ -171,10 +171,8 @@ EOL;
     <script src="$path/src/gameobjects/components/ScaleMinMax.js"></script>
     <script src="$path/src/gameobjects/components/Smoothed.js"></script>
 
-    <script src="$path/src/gameobjects/GameObjectFactory.js"></script>
-    <script src="$path/src/gameobjects/GameObjectCreator.js"></script>
-
     <script src="$path/src/gameobjects/Factory.js"></script>
+    <script src="$path/src/gameobjects/GameObjectCreator.js"></script>
 
     <script src="$path/src/gameobjects/stage/Stage.js"></script>
     <script src="$path/src/gameobjects/stage/StageCanvasRenderer.js"></script>
