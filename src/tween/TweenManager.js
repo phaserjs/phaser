@@ -114,7 +114,7 @@ Phaser.TweenManager.prototype = {
     /**
     * Get all the tween objects in an array.
     * @method Phaser.TweenManager#getAll
-    * @returns {Phaser.Tween[]} Array with all tween objects.
+    * @return {Phaser.Tween[]} Array with all tween objects.
     */
     getAll: function () {
 
@@ -191,7 +191,7 @@ Phaser.TweenManager.prototype = {
     *
     * @method Phaser.TweenManager#add
     * @param {Phaser.Tween} tween - The tween object you want to add.
-    * @returns {Phaser.Tween} The tween object you added to the manager.
+    * @return {Phaser.Tween} The tween object you added to the manager.
     */
     add: function (tween) {
 
@@ -205,7 +205,7 @@ Phaser.TweenManager.prototype = {
     *
     * @method Phaser.TweenManager#create
     * @param {object} object - Object the tween will be run on.
-    * @returns {Phaser.Tween} The newly created tween object.
+    * @return {Phaser.Tween} The newly created tween object.
     */
     create: function (object) {
 
@@ -243,7 +243,7 @@ Phaser.TweenManager.prototype = {
     * Update all the tween objects you added to this manager.
     *
     * @method Phaser.TweenManager#update
-    * @returns {boolean} Return false if there's no tween to update, otherwise return true.
+    * @return {boolean} Return false if there's no tween to update, otherwise return true.
     */
     update: function () {
 
@@ -287,7 +287,7 @@ Phaser.TweenManager.prototype = {
     *
     * @method Phaser.TweenManager#isTweening
     * @param {object} object - The object to check for tweens against.
-    * @returns {boolean} Returns true if the object is currently being tweened, false if not.
+    * @return {boolean} Returns true if the object is currently being tweened, false if not.
     */
     isTweening: function(object) {
 

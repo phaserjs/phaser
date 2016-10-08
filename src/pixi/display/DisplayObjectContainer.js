@@ -451,7 +451,7 @@ PIXI.DisplayObjectContainer.prototype.getLocalBounds = function () {
 *
 * @method contains
 * @param {DisplayObject} child
-* @returns {boolean}
+* @return {boolean}
 */
 PIXI.DisplayObjectContainer.prototype.contains = function (child) {
 

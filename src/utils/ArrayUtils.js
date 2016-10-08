@@ -294,7 +294,7 @@ Phaser.ArrayUtils = {
     * @param {number} start - The start of the range.
     * @param {number} [end] - The end of the range.
     * @param {number} [step=1] - The value to increment or decrement by.
-    * @returns {Array} Returns the new array of numbers.
+    * @return {Array} Returns the new array of numbers.
     * @example
     * Phaser.ArrayUtils.numberArrayStep(4);
     * // => [0, 1, 2, 3]

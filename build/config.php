@@ -191,6 +191,7 @@ EOL;
     <script src="$path/src/gameobjects/image/ImageWebGLRenderer.js"></script>
 
     <script src="$path/src/gameobjects/button/Button.js"></script>
+    <script src="$path/src/gameobjects/button/ButtonFactory.js"></script>
 
     <script src="$path/src/gameobjects/spritebatch/SpriteBatch.js"></script>
     <script src="$path/src/gameobjects/spritebatch/SpriteBatchFactory.js"></script>
@@ -223,6 +224,7 @@ EOL;
     {
         echo <<<EOL
     <script src="$path/src/gameobjects/rope/Rope.js"></script>
+    <script src="$path/src/gameobjects/rope/RopeFactory.js"></script>
 
 
 EOL;
@@ -308,6 +310,7 @@ EOL;
     {
         echo <<<EOL
     <script src="$path/src/gameobjects/retrofont/RetroFont.js"></script>
+    <script src="$path/src/gameobjects/retrofont/RetroFontFactory.js"></script>
 
 
 EOL;
@@ -317,6 +320,7 @@ EOL;
     {
         echo <<<EOL
     <script src="$path/src/gameobjects/video/Video.js"></script>
+    <script src="$path/src/gameobjects/video/VideoFactory.js"></script>
 
 
 EOL;

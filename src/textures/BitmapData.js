@@ -1789,7 +1789,7 @@ Phaser.BitmapData.prototype = {
     * @param {number} [r2] - An alternative red color component to be written to the destination, in the range 0 - 255.
     * @param {number} [g2] - An alternative green color component to be written to the destination, in the range 0 - 255.
     * @param {number} [b2] - An alternative blue color component to be written to the destination, in the range 0 - 255.
-    * @returns {Phaser.BitmapData} The BitmapData that the extract pixels were drawn on.
+    * @return {Phaser.BitmapData} The BitmapData that the extract pixels were drawn on.
     */
     extract: function (destination, r, g, b, a, resize, r2, g2, b2) {
 
