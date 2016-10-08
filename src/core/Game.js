@@ -216,6 +216,9 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     */
     this.add = null;
 
+    //  TODO: Testing new Game Objects Factory
+    this.factory = null;
+
     /**
     * @property {Phaser.GameObjectCreator} make - Reference to the GameObject Creator.
     */
@@ -634,6 +637,10 @@ Phaser.Game.prototype = {
         this.input.boot();
         this.sound.boot();
         this.state.boot();
+
+        this.factory = new Phaser.GameObjects.Factory(this);
+
+        this.factory.boot();
 
         if (this.config['enableDebug'])
         {

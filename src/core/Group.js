@@ -125,9 +125,9 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
     * when a new object is created it is passed the following parameters to its constructor: `(game, x, y, key, frame)`.
     *
     * @property {object} classType
-    * @default {@link Phaser.Sprite}
+    * @default {@link Phaser.GameObjects.Sprite}
     */
-    this.classType = Phaser.Sprite;
+    this.classType = Phaser.GameObjects.Sprite;
 
     /**
     * The current display object that the group cursor is pointing to, if any. (Can be set manually.)

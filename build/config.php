@@ -83,7 +83,6 @@ EOL;
     <script src="$path/src/core/Filter.js"></script>
     <script src="$path/src/core/Plugin.js"></script>
     <script src="$path/src/core/PluginManager.js"></script>
-    <script src="$path/src/core/Stage.js"></script>
     <script src="$path/src/core/Group.js"></script>
     <script src="$path/src/core/World.js"></script>
     <script src="$path/src/core/FlexGrid.js"></script>
@@ -109,7 +108,6 @@ EOL;
     <script src="$path/src/textures/parsers/JSONHash.js"></script>
     <script src="$path/src/textures/parsers/SpriteSheet.js"></script>
 
-
 EOL;
 
     if ($modules['keyboard'])
@@ -133,6 +131,22 @@ EOL;
     }
 
     echo <<<EOL
+
+    <script src="$path/src/renderer/canvas/CanvasRenderer.js"></script>
+
+    <script src="$path/src/renderer/webgl/WebGLRenderer.js"></script>
+    <script src="$path/src/renderer/webgl/BatchManager.js"></script>
+    <script src="$path/src/renderer/webgl/FilterManager.js"></script>
+    <script src="$path/src/renderer/webgl/FilterTexture.js"></script>
+    <script src="$path/src/renderer/webgl/ShaderManager.js"></script>
+    <script src="$path/src/renderer/webgl/StencilManager.js"></script>
+    <script src="$path/src/renderer/webgl/shaders/ComplexPrimitiveGraphics.js"></script>
+    <script src="$path/src/renderer/webgl/shaders/PrimitiveGraphics.js"></script>
+    <script src="$path/src/renderer/webgl/shaders/Sprite.js"></script>
+    <script src="$path/src/renderer/webgl/shaders/SpriteBatch.js"></script>
+    <script src="$path/src/renderer/webgl/shaders/Strip.js"></script>
+
+
     <script src="$path/src/gameobjects/components/Component.js"></script>
     <script src="$path/src/gameobjects/components/Angle.js"></script>
     <script src="$path/src/gameobjects/components/Animation.js"></script>
@@ -159,11 +173,38 @@ EOL;
 
     <script src="$path/src/gameobjects/GameObjectFactory.js"></script>
     <script src="$path/src/gameobjects/GameObjectCreator.js"></script>
-    <script src="$path/src/gameobjects/Sprite.js"></script>
-    <script src="$path/src/gameobjects/Image.js"></script>
-    <script src="$path/src/gameobjects/Button.js"></script>
-    <script src="$path/src/gameobjects/SpriteBatch.js"></script>
-    <script src="$path/src/gameobjects/Particle.js"></script>
+
+    <script src="$path/src/gameobjects/Factory.js"></script>
+
+    <script src="$path/src/gameobjects/stage/Stage.js"></script>
+    <script src="$path/src/gameobjects/stage/StageCanvasRenderer.js"></script>
+    <script src="$path/src/gameobjects/stage/StageWebGLRenderer.js"></script>
+
+    <script src="$path/src/gameobjects/sprite/Sprite.js"></script>
+    <script src="$path/src/gameobjects/sprite/SpriteFactory.js"></script>
+    <script src="$path/src/gameobjects/sprite/SpriteCanvasRenderer.js"></script>
+    <script src="$path/src/gameobjects/sprite/SpriteWebGLRenderer.js"></script>
+
+    <script src="$path/src/gameobjects/image/Image.js"></script>
+    <script src="$path/src/gameobjects/image/ImageFactory.js"></script>
+    <script src="$path/src/gameobjects/image/ImageCanvasRenderer.js"></script>
+    <script src="$path/src/gameobjects/image/ImageWebGLRenderer.js"></script>
+
+    <script src="$path/src/gameobjects/button/Button.js"></script>
+
+    <script src="$path/src/gameobjects/spritebatch/SpriteBatch.js"></script>
+    <script src="$path/src/gameobjects/spritebatch/SpriteBatchFactory.js"></script>
+    <script src="$path/src/gameobjects/spritebatch/SpriteBatchCanvasRenderer.js"></script>
+    <script src="$path/src/gameobjects/spritebatch/SpriteBatchWebGLRenderer.js"></script>
+
+    <script src="$path/src/gameobjects/particle/Particle.js"></script>
+
+    <script src="$path/src/gameobjects/container/Canvas.js"></script>
+    <script src="$path/src/gameobjects/container/WebGL.js"></script>
+
+
+
+
 
     <script src="$path/src/plugins/weapon/WeaponPlugin.js"></script>
     <script src="$path/src/plugins/weapon/Bullet.js"></script>
@@ -174,27 +215,6 @@ EOL;
     <script src="$path/src/plugins/path/PathPoint.js"></script>
     <script src="$path/src/plugins/path/EventTarget.js"></script>
 
-    <script src="$path/src/renderer/canvas/CanvasRenderer.js"></script>
-    <script src="$path/src/renderer/canvas/gameobjects/Container.js"></script>
-    <script src="$path/src/renderer/canvas/gameobjects/Sprite.js"></script>
-    <script src="$path/src/renderer/canvas/gameobjects/SpriteBatch.js"></script>
-    <script src="$path/src/renderer/canvas/gameobjects/Stage.js"></script>
-
-    <script src="$path/src/renderer/webgl/WebGLRenderer.js"></script>
-    <script src="$path/src/renderer/webgl/BatchManager.js"></script>
-    <script src="$path/src/renderer/webgl/FilterManager.js"></script>
-    <script src="$path/src/renderer/webgl/FilterTexture.js"></script>
-    <script src="$path/src/renderer/webgl/ShaderManager.js"></script>
-    <script src="$path/src/renderer/webgl/StencilManager.js"></script>
-    <script src="$path/src/renderer/webgl/shaders/ComplexPrimitiveGraphics.js"></script>
-    <script src="$path/src/renderer/webgl/shaders/PrimitiveGraphics.js"></script>
-    <script src="$path/src/renderer/webgl/shaders/Sprite.js"></script>
-    <script src="$path/src/renderer/webgl/shaders/SpriteBatch.js"></script>
-    <script src="$path/src/renderer/webgl/shaders/Strip.js"></script>
-    <script src="$path/src/renderer/webgl/gameobjects/Container.js"></script>
-    <script src="$path/src/renderer/webgl/gameobjects/Sprite.js"></script>
-    <script src="$path/src/renderer/webgl/gameobjects/SpriteBatch.js"></script>
-    <script src="$path/src/renderer/webgl/gameobjects/Stage.js"></script>
 
 
 EOL;
@@ -202,7 +222,7 @@ EOL;
     if ($modules['rope'])
     {
         echo <<<EOL
-    <script src="$path/src/gameobjects/Rope.js"></script>
+    <script src="$path/src/gameobjects/rope/Rope.js"></script>
 
 
 EOL;
@@ -211,9 +231,10 @@ EOL;
     if ($modules['tilesprite'])
     {
         echo <<<EOL
-    <script src="$path/src/gameobjects/TileSprite.js"></script>
-    <script src="$path/src/renderer/canvas/gameobjects/TileSprite.js"></script>
-    <script src="$path/src/renderer/webgl/gameobjects/TileSprite.js"></script>
+    <script src="$path/src/gameobjects/tilesprite/TileSprite.js"></script>
+    <script src="$path/src/gameobjects/tilesprite/TileSpriteFactory.js"></script>
+    <script src="$path/src/gameobjects/tilesprite/TileSpriteCanvasRenderer.js"></script>
+    <script src="$path/src/gameobjects/tilesprite/TileSpriteWebGLRenderer.js"></script>
 
 
 EOL;
@@ -222,7 +243,8 @@ EOL;
     if ($modules['creature'])
     {
         echo <<<EOL
-    <script src="$path/src/gameobjects/Creature.js"></script>
+    <script src="$path/src/gameobjects/creature/Creature.js"></script>
+    <script src="$path/src/gameobjects/creature/CreatureFactory.js"></script>
 
 
 EOL;
@@ -231,7 +253,7 @@ EOL;
     if ($modules['bitmapdata'])
     {
         echo <<<EOL
-    <script src="$path/src/gameobjects/BitmapData.js"></script>
+    <script src="$path/src/textures/BitmapData.js"></script>
 
 
 EOL;
@@ -240,11 +262,12 @@ EOL;
     if ($modules['graphics'])
     {
         echo <<<EOL
-    <script src="$path/src/gameobjects/GraphicsData.js"></script>
-    <script src="$path/src/gameobjects/Graphics.js"></script>
-    <script src="$path/src/renderer/canvas/gameobjects/Graphics.js"></script>
-    <script src="$path/src/renderer/webgl/gameobjects/Graphics.js"></script>
-    <script src="$path/src/renderer/webgl/gameobjects/GraphicsData.js"></script>
+    <script src="$path/src/gameobjects/graphics/GraphicsData.js"></script>
+    <script src="$path/src/gameobjects/graphics/Graphics.js"></script>
+    <script src="$path/src/gameobjects/graphics/GraphicsFactory.js"></script>
+    <script src="$path/src/gameobjects/graphics/GraphicsCanvasRenderer.js"></script>
+    <script src="$path/src/gameobjects/graphics/GraphicsWebGLRenderer.js"></script>
+    <script src="$path/src/gameobjects/graphics/GraphicsWebGLData.js"></script>
 
 
 EOL;
@@ -253,7 +276,7 @@ EOL;
     if ($modules['rendertexture'])
     {
         echo <<<EOL
-    <script src="$path/src/gameobjects/RenderTexture.js"></script>
+    <script src="$path/src/textures/RenderTexture.js"></script>
 
 
 EOL;
@@ -262,9 +285,10 @@ EOL;
     if ($modules['text'])
     {
         echo <<<EOL
-    <script src="$path/src/gameobjects/Text.js"></script>
-    <script src="$path/src/renderer/canvas/gameobjects/Text.js"></script>
-    <script src="$path/src/renderer/webgl/gameobjects/Text.js"></script>
+    <script src="$path/src/gameobjects/text/Text.js"></script>
+    <script src="$path/src/gameobjects/text/TextFactory.js"></script>
+    <script src="$path/src/gameobjects/text/TextCanvasRenderer.js"></script>
+    <script src="$path/src/gameobjects/text/TextWebGLRenderer.js"></script>
 
 
 EOL;
@@ -273,7 +297,7 @@ EOL;
     if ($modules['bitmaptext'])
     {
         echo <<<EOL
-    <script src="$path/src/gameobjects/BitmapText.js"></script>
+    <script src="$path/src/gameobjects/bitmaptext/BitmapText.js"></script>
 
 
 EOL;
@@ -282,7 +306,7 @@ EOL;
     if ($modules['retrofont'] && $modules['rendertexture'])
     {
         echo <<<EOL
-    <script src="$path/src/gameobjects/RetroFont.js"></script>
+    <script src="$path/src/gameobjects/retrofont/RetroFont.js"></script>
 
 
 EOL;
@@ -291,7 +315,7 @@ EOL;
     if ($modules['video'])
     {
         echo <<<EOL
-    <script src="$path/src/gameobjects/Video.js"></script>
+    <script src="$path/src/gameobjects/video/Video.js"></script>
 
 
 EOL;
