@@ -298,6 +298,7 @@ EOL;
     {
         echo <<<EOL
     <script src="$path/src/gameobjects/bitmaptext/BitmapText.js"></script>
+    <script src="$path/src/gameobjects/bitmaptext/BitmapTextFactory.js"></script>
 
 
 EOL;
