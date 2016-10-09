@@ -29,7 +29,7 @@
 *
 * If you were using an older version of Phaser (< 2.4) and using the DOMish parser hack, please remove this. It isn't required any longer.
 *
-* @class Phaser.GameObjects.BitmapText
+* @class Phaser.GameObject.BitmapText
 * @constructor
 * @extends PIXI.DisplayObjectContainer
 * @extends Phaser.Component.Core
@@ -51,7 +51,7 @@
 * @param {number} [size=32] - The size the font will be rendered at in pixels.
 * @param {string} [align='left'] - The alignment of multi-line text. Has no effect if there is only one line of text.
 */
-Phaser.GameObjects.BitmapText = function (game, x, y, font, text, size, align) {
+Phaser.GameObject.BitmapText = function (game, x, y, font, text, size, align) {
 
     x = x || 0;
     y = y || 0;
@@ -156,10 +156,10 @@ Phaser.GameObjects.BitmapText = function (game, x, y, font, text, size, align) {
 
 };
 
-Phaser.GameObjects.BitmapText.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
-Phaser.GameObjects.BitmapText.prototype.constructor = Phaser.GameObjects.BitmapText;
+Phaser.GameObject.BitmapText.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
+Phaser.GameObject.BitmapText.prototype.constructor = Phaser.GameObject.BitmapText;
 
-Phaser.Component.Core.install.call(Phaser.GameObjects.BitmapText.prototype, [
+Phaser.Component.Core.install.call(Phaser.GameObject.BitmapText.prototype, [
     'Angle',
     'AutoCull',
     'Bounds',
@@ -172,19 +172,19 @@ Phaser.Component.Core.install.call(Phaser.GameObjects.BitmapText.prototype, [
     'Reset'
 ]);
 
-Phaser.GameObjects.BitmapText.prototype.preUpdatePhysics = Phaser.Component.PhysicsBody.preUpdate;
-Phaser.GameObjects.BitmapText.prototype.preUpdateLifeSpan = Phaser.Component.LifeSpan.preUpdate;
-Phaser.GameObjects.BitmapText.prototype.preUpdateInWorld = Phaser.Component.InWorld.preUpdate;
-Phaser.GameObjects.BitmapText.prototype.preUpdateCore = Phaser.Component.Core.preUpdate;
+Phaser.GameObject.BitmapText.prototype.preUpdatePhysics = Phaser.Component.PhysicsBody.preUpdate;
+Phaser.GameObject.BitmapText.prototype.preUpdateLifeSpan = Phaser.Component.LifeSpan.preUpdate;
+Phaser.GameObject.BitmapText.prototype.preUpdateInWorld = Phaser.Component.InWorld.preUpdate;
+Phaser.GameObject.BitmapText.prototype.preUpdateCore = Phaser.Component.Core.preUpdate;
 
 /**
 * Automatically called by World.preUpdate.
 *
 * @method
-* @memberof Phaser.GameObjects.BitmapText
+* @memberof Phaser.GameObject.BitmapText
 * @return {boolean} True if the BitmapText was rendered, otherwise false.
 */
-Phaser.GameObjects.BitmapText.prototype.preUpdate = function () {
+Phaser.GameObject.BitmapText.prototype.preUpdate = function () {
 
     if (!this.preUpdatePhysics() || !this.preUpdateLifeSpan() || !this.preUpdateInWorld())
     {
@@ -197,9 +197,9 @@ Phaser.GameObjects.BitmapText.prototype.preUpdate = function () {
 
 /**
 * Automatically called by World.preUpdate.
-* @method Phaser.GameObjects.BitmapText.prototype.postUpdate
+* @method Phaser.GameObject.BitmapText.prototype.postUpdate
 */
-Phaser.GameObjects.BitmapText.prototype.postUpdate = function () {
+Phaser.GameObject.BitmapText.prototype.postUpdate = function () {
 
     Phaser.Component.PhysicsBody.postUpdate.call(this);
     Phaser.Component.FixedToCamera.postUpdate.call(this);
@@ -219,10 +219,10 @@ Phaser.GameObjects.BitmapText.prototype.postUpdate = function () {
 * 
 * It's faster to use `BitmapText.text = string`, but this is kept for backwards compatibility.
 *
-* @method Phaser.GameObjects.BitmapText.prototype.setText
+* @method Phaser.GameObject.BitmapText.prototype.setText
 * @param {string} text - The text to be displayed by this BitmapText object.
 */
-Phaser.GameObjects.BitmapText.prototype.setText = function (text) {
+Phaser.GameObject.BitmapText.prototype.setText = function (text) {
 
     this.text = text;
 
@@ -232,14 +232,14 @@ Phaser.GameObjects.BitmapText.prototype.setText = function (text) {
 * Given the input text this will scan the characters until either a newline is encountered, 
 * or the line exceeds maxWidth, taking into account kerning, character widths and scaling.
 * 
-* @method Phaser.GameObjects.BitmapText.prototype.scanLine
+* @method Phaser.GameObject.BitmapText.prototype.scanLine
 * @private
 * @param {object} data - A reference to the font object in the Phaser.Cache.
 * @param {float} scale - The scale of the font in relation to the texture.
 * @param {string} text - The text to parse.
 * @return {object} An object containing the parsed characters, total pixel width and x offsets.
 */
-Phaser.GameObjects.BitmapText.prototype.scanLine = function (data, scale, text) {
+Phaser.GameObject.BitmapText.prototype.scanLine = function (data, scale, text) {
 
     var x = 0;
     var w = 0;
@@ -315,12 +315,12 @@ Phaser.GameObjects.BitmapText.prototype.scanLine = function (data, scale, text) 
 *
 * If no font data has been loaded at all this returns an empty string, as nothing can be rendered.
 * 
-* @method Phaser.GameObjects.BitmapText.prototype.cleanText
+* @method Phaser.GameObject.BitmapText.prototype.cleanText
 * @param {string} text - The text to parse.
 * @param {string} [replace=''] - The replacement string for any missing characters.
 * @return {string} The cleaned text string.
 */
-Phaser.GameObjects.BitmapText.prototype.cleanText = function (text, replace) {
+Phaser.GameObject.BitmapText.prototype.cleanText = function (text, replace) {
 
     if (replace === undefined)
     {
@@ -364,10 +364,10 @@ Phaser.GameObjects.BitmapText.prototype.cleanText = function (text, replace) {
 /**
 * Renders text and updates it when needed.
 *
-* @method Phaser.GameObjects.BitmapText.prototype.updateText
+* @method Phaser.GameObject.BitmapText.prototype.updateText
 * @private
 */
-Phaser.GameObjects.BitmapText.prototype.updateText = function () {
+Phaser.GameObject.BitmapText.prototype.updateText = function () {
 
     var data = this._data.font;
 
@@ -484,10 +484,10 @@ Phaser.GameObjects.BitmapText.prototype.updateText = function () {
 *
 * Calling this doesn't prevent you from increasing the length of the text again in the future.
 *
-* @method Phaser.GameObjects.BitmapText.prototype.purgeGlyphs
+* @method Phaser.GameObject.BitmapText.prototype.purgeGlyphs
 * @return {integer} The amount of glyphs removed from the pool.
 */
-Phaser.GameObjects.BitmapText.prototype.purgeGlyphs = function () {
+Phaser.GameObject.BitmapText.prototype.purgeGlyphs = function () {
 
     var len = this._glyphs.length;
     var kept = [];
@@ -516,10 +516,10 @@ Phaser.GameObjects.BitmapText.prototype.purgeGlyphs = function () {
 /**
 * Updates the transform of this object.
 *
-* @method Phaser.GameObjects.BitmapText.prototype.updateTransform
+* @method Phaser.GameObject.BitmapText.prototype.updateTransform
 * @private
 */
-Phaser.GameObjects.BitmapText.prototype.updateTransform = function () {
+Phaser.GameObject.BitmapText.prototype.updateTransform = function () {
 
     if (this.dirty || !this.anchor.equals(this._prevAnchor))
     {
@@ -533,10 +533,10 @@ Phaser.GameObjects.BitmapText.prototype.updateTransform = function () {
 };
 
 /**
-* @name Phaser.GameObjects.BitmapText#align
+* @name Phaser.GameObject.BitmapText#align
 * @property {string} align - Alignment for multi-line text ('left', 'center' or 'right'), does not affect single lines of text.
 */
-Object.defineProperty(Phaser.GameObjects.BitmapText.prototype, 'align', {
+Object.defineProperty(Phaser.GameObject.BitmapText.prototype, 'align', {
 
     get: function() {
         return this._align;
@@ -555,10 +555,10 @@ Object.defineProperty(Phaser.GameObjects.BitmapText.prototype, 'align', {
 });
 
 /**
-* @name Phaser.GameObjects.BitmapText#tint
+* @name Phaser.GameObject.BitmapText#tint
 * @property {number} tint - The tint applied to the BitmapText. This is a hex value. Set to white to disable (0xFFFFFF)
 */
-Object.defineProperty(Phaser.GameObjects.BitmapText.prototype, 'tint', {
+Object.defineProperty(Phaser.GameObject.BitmapText.prototype, 'tint', {
 
     get: function() {
         return this._tint;
@@ -577,10 +577,10 @@ Object.defineProperty(Phaser.GameObjects.BitmapText.prototype, 'tint', {
 });
 
 /**
-* @name Phaser.GameObjects.BitmapText#font
+* @name Phaser.GameObject.BitmapText#font
 * @property {string} font - The font the text will be rendered in, i.e. 'Arial'. Must be loaded in the browser before use.
 */
-Object.defineProperty(Phaser.GameObjects.BitmapText.prototype, 'font', {
+Object.defineProperty(Phaser.GameObject.BitmapText.prototype, 'font', {
 
     get: function() {
         return this._font;
@@ -600,10 +600,10 @@ Object.defineProperty(Phaser.GameObjects.BitmapText.prototype, 'font', {
 });
 
 /**
-* @name Phaser.GameObjects.BitmapText#fontSize
+* @name Phaser.GameObject.BitmapText#fontSize
 * @property {number} fontSize - The size of the font in pixels.
 */
-Object.defineProperty(Phaser.GameObjects.BitmapText.prototype, 'fontSize', {
+Object.defineProperty(Phaser.GameObject.BitmapText.prototype, 'fontSize', {
 
     get: function() {
         return this._fontSize;
@@ -624,10 +624,10 @@ Object.defineProperty(Phaser.GameObjects.BitmapText.prototype, 'fontSize', {
 });
 
 /**
-* @name Phaser.GameObjects.BitmapText#text
+* @name Phaser.GameObject.BitmapText#text
 * @property {string} text - The text to be displayed by this BitmapText object.
 */
-Object.defineProperty(Phaser.GameObjects.BitmapText.prototype, 'text', {
+Object.defineProperty(Phaser.GameObject.BitmapText.prototype, 'text', {
 
     get: function() {
         return this._text;
@@ -655,10 +655,10 @@ Object.defineProperty(Phaser.GameObjects.BitmapText.prototype, 'text', {
 * 
 * Disable maxWidth by setting the value to 0.
 * 
-* @name Phaser.GameObjects.BitmapText#maxWidth
+* @name Phaser.GameObject.BitmapText#maxWidth
 * @property {number} maxWidth - The maximum width of this BitmapText in pixels.
 */
-Object.defineProperty(Phaser.GameObjects.BitmapText.prototype, 'maxWidth', {
+Object.defineProperty(Phaser.GameObject.BitmapText.prototype, 'maxWidth', {
 
     get: function() {
 
@@ -685,10 +685,10 @@ Object.defineProperty(Phaser.GameObjects.BitmapText.prototype, 'maxWidth', {
 * 
 * Smoothing is enabled by default.
 * 
-* @name Phaser.GameObjects.BitmapText#smoothed
+* @name Phaser.GameObject.BitmapText#smoothed
 * @property {boolean} smoothed
 */
-Object.defineProperty(Phaser.GameObjects.BitmapText.prototype, 'smoothed', {
+Object.defineProperty(Phaser.GameObject.BitmapText.prototype, 'smoothed', {
 
     get: function() {
 

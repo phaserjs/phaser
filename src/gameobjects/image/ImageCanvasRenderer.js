@@ -8,7 +8,7 @@
 Phaser.Renderer.Canvas.GameObjects.Image = {
 
     TYPES: [
-        Phaser.GameObjects.Image.prototype
+        Phaser.GameObject.Image.prototype
     ],
 
     render: function (renderer, src)

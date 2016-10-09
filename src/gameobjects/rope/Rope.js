@@ -13,7 +13,7 @@
 * 
 * Please note that Ropes cannot have an input handler.
 *
-* @class Phaser.GameObjects.Rope
+* @class Phaser.GameObject.Rope
 * @constructor
 * @extends PIXI.DisplayObjectContainer
 * @extends Phaser.Component.Core
@@ -41,7 +41,7 @@
 * @param {string|number} frame - If this Rope is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
 * @param {Array} points - An array of {Phaser.Point}.
 */
-Phaser.GameObjects.Rope = function (game, x, y, key, frame, points) {
+Phaser.GameObject.Rope = function (game, x, y, key, frame, points) {
 
     this.points = [];
     this.points = points;
@@ -103,7 +103,7 @@ Phaser.GameObjects.Rope = function (game, x, y, key, frame, points) {
      */
     this.canvasPadding = 0;
 
-    this.drawMode = Phaser.GameObjects.Rope.TRIANGLE_STRIP;
+    this.drawMode = Phaser.GameObject.Rope.TRIANGLE_STRIP;
 
     Phaser.Component.Core.init.call(this, game, x, y, key, frame);
 
@@ -111,10 +111,10 @@ Phaser.GameObjects.Rope = function (game, x, y, key, frame, points) {
 
 };
 
-Phaser.GameObjects.Rope.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
-Phaser.GameObjects.Rope.prototype.constructor = Phaser.GameObjects.Rope;
+Phaser.GameObject.Rope.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
+Phaser.GameObject.Rope.prototype.constructor = Phaser.GameObject.Rope;
 
-Phaser.Component.Core.install.call(Phaser.GameObjects.Rope.prototype, [
+Phaser.Component.Core.install.call(Phaser.GameObject.Rope.prototype, [
     'Angle',
     'Animation',
     'AutoCull',
@@ -134,21 +134,21 @@ Phaser.Component.Core.install.call(Phaser.GameObjects.Rope.prototype, [
     'Smoothed'
 ]);
 
-Phaser.GameObjects.Rope.prototype.preUpdatePhysics = Phaser.Component.PhysicsBody.preUpdate;
-Phaser.GameObjects.Rope.prototype.preUpdateLifeSpan = Phaser.Component.LifeSpan.preUpdate;
-Phaser.GameObjects.Rope.prototype.preUpdateInWorld = Phaser.Component.InWorld.preUpdate;
-Phaser.GameObjects.Rope.prototype.preUpdateCore = Phaser.Component.Core.preUpdate;
+Phaser.GameObject.Rope.prototype.preUpdatePhysics = Phaser.Component.PhysicsBody.preUpdate;
+Phaser.GameObject.Rope.prototype.preUpdateLifeSpan = Phaser.Component.LifeSpan.preUpdate;
+Phaser.GameObject.Rope.prototype.preUpdateInWorld = Phaser.Component.InWorld.preUpdate;
+Phaser.GameObject.Rope.prototype.preUpdateCore = Phaser.Component.Core.preUpdate;
 
-Phaser.GameObjects.Rope.TRIANGLE_STRIP = 0;
-Phaser.GameObjects.Rope.TRIANGLES = 1;
+Phaser.GameObject.Rope.TRIANGLE_STRIP = 0;
+Phaser.GameObject.Rope.TRIANGLES = 1;
 
 /**
 * Automatically called by World.preUpdate.
 *
-* @method Phaser.GameObjects.Rope#preUpdate
-* @memberof Phaser.GameObjects.Rope
+* @method Phaser.GameObject.Rope#preUpdate
+* @memberof Phaser.GameObject.Rope
 */
-Phaser.GameObjects.Rope.prototype.preUpdate = function () {
+Phaser.GameObject.Rope.prototype.preUpdate = function () {
 
     if (!this.preUpdatePhysics() || !this.preUpdateLifeSpan() || !this.preUpdateInWorld())
     {
@@ -162,10 +162,10 @@ Phaser.GameObjects.Rope.prototype.preUpdate = function () {
 /**
 * Override and use this function in your own custom objects to handle any update requirements you may have.
 *
-* @method Phaser.GameObjects.Rope#update
-* @memberof Phaser.GameObjects.Rope
+* @method Phaser.GameObject.Rope#update
+* @memberof Phaser.GameObject.Rope
 */
-Phaser.GameObjects.Rope.prototype.update = function() {
+Phaser.GameObject.Rope.prototype.update = function() {
 
     if (this._hasUpdateAnimation)
     {
@@ -179,13 +179,13 @@ Phaser.GameObjects.Rope.prototype.update = function() {
 * sets alive, exists, visible and renderable all to true. Also resets the outOfBounds state.
 * If the Rope has a physics body that too is reset.
 *
-* @method Phaser.GameObjects.Rope#reset
-* @memberof Phaser.GameObjects.Rope
+* @method Phaser.GameObject.Rope#reset
+* @memberof Phaser.GameObject.Rope
 * @param {number} x - The x coordinate (in world space) to position the Sprite at.
 * @param {number} y - The y coordinate (in world space) to position the Sprite at.
-* @return {Phaser.GameObjects.Rope} This instance.
+* @return {Phaser.GameObject.Rope} This instance.
 */
-Phaser.GameObjects.Rope.prototype.reset = function (x, y) {
+Phaser.GameObject.Rope.prototype.reset = function (x, y) {
 
     Phaser.Component.Reset.prototype.reset.call(this, x, y);
 
@@ -196,10 +196,10 @@ Phaser.GameObjects.Rope.prototype.reset = function (x, y) {
 /*
 * Refreshes the rope texture and UV coordinates.
 *
-* @method Phaser.GameObjects.Rope#refresh
-* @memberof Phaser.GameObjects.Rope
+* @method Phaser.GameObject.Rope#refresh
+* @memberof Phaser.GameObject.Rope
 */
-Phaser.GameObjects.Rope.prototype.refresh = function () {
+Phaser.GameObject.Rope.prototype.refresh = function () {
 
     var points = this.points;
 
@@ -268,10 +268,10 @@ Phaser.GameObjects.Rope.prototype.refresh = function () {
 /*
 * Updates the Ropes transform ready for rendering.
 *
-* @method Phaser.GameObjects.Rope#updateTransform
-* @memberof Phaser.GameObjects.Rope
+* @method Phaser.GameObject.Rope#updateTransform
+* @memberof Phaser.GameObject.Rope
 */
-Phaser.GameObjects.Rope.prototype.updateTransform = function () {
+Phaser.GameObject.Rope.prototype.updateTransform = function () {
 
     var points = this.points;
 
@@ -341,11 +341,11 @@ Phaser.GameObjects.Rope.prototype.updateTransform = function () {
 /*
 * Sets the Texture this Rope uses for rendering.
 *
-* @method Phaser.GameObjects.Rope#setTexture
-* @memberof Phaser.GameObjects.Rope
+* @method Phaser.GameObject.Rope#setTexture
+* @memberof Phaser.GameObject.Rope
 * @param {Texture} texture - The texture that will be used.
 */
-Phaser.GameObjects.Rope.prototype.setTexture = function (texture) {
+Phaser.GameObject.Rope.prototype.setTexture = function (texture) {
 
     this.texture = texture;
 
@@ -355,10 +355,10 @@ Phaser.GameObjects.Rope.prototype.setTexture = function (texture) {
 * Renders the Rope to WebGL.
 *
 * @private
-* @method Phaser.GameObjects.Rope#_renderWebGL
-* @memberof Phaser.GameObjects.Rope
+* @method Phaser.GameObject.Rope#_renderWebGL
+* @memberof Phaser.GameObject.Rope
 */
-Phaser.GameObjects.Rope.prototype._renderWebGL = function (renderSession) {
+Phaser.GameObject.Rope.prototype._renderWebGL = function (renderSession) {
 
     if (!this.visible || this.alpha <= 0)
     {
@@ -384,10 +384,10 @@ Phaser.GameObjects.Rope.prototype._renderWebGL = function (renderSession) {
 * Builds the Strip.
 *
 * @private
-* @method Phaser.GameObjects.Rope#_initWebGL
-* @memberof Phaser.GameObjects.Rope
+* @method Phaser.GameObject.Rope#_initWebGL
+* @memberof Phaser.GameObject.Rope
 */
-Phaser.GameObjects.Rope.prototype._initWebGL = function (renderSession) {
+Phaser.GameObject.Rope.prototype._initWebGL = function (renderSession) {
 
     // build the strip!
     var gl = renderSession.gl;
@@ -415,17 +415,17 @@ Phaser.GameObjects.Rope.prototype._initWebGL = function (renderSession) {
 * Renders the Strip to WebGL.
 *
 * @private
-* @method Phaser.GameObjects.Rope#_renderStrip
-* @memberof Phaser.GameObjects.Rope
+* @method Phaser.GameObject.Rope#_renderStrip
+* @memberof Phaser.GameObject.Rope
 */
-Phaser.GameObjects.Rope.prototype._renderStrip = function (renderSession) {
+Phaser.GameObject.Rope.prototype._renderStrip = function (renderSession) {
 
     var gl = renderSession.gl;
     var projection = renderSession.projection;
     var offset = renderSession.offset;
     var shader = renderSession.shaderManager.stripShader;
 
-    var drawMode = (this.drawMode === Phaser.GameObjects.Rope.TRIANGLE_STRIP) ? gl.TRIANGLE_STRIP : gl.TRIANGLES;
+    var drawMode = (this.drawMode === Phaser.GameObject.Rope.TRIANGLE_STRIP) ? gl.TRIANGLE_STRIP : gl.TRIANGLES;
 
     renderSession.blendModeManager.setBlendMode(this.blendMode);
 
@@ -497,10 +497,10 @@ Phaser.GameObjects.Rope.prototype._renderStrip = function (renderSession) {
 * Renders the Strip to Canvas.
 *
 * @private
-* @method Phaser.GameObjects.Rope#_renderCanvas
-* @memberof Phaser.GameObjects.Rope
+* @method Phaser.GameObject.Rope#_renderCanvas
+* @memberof Phaser.GameObject.Rope
 */
-Phaser.GameObjects.Rope.prototype._renderCanvas = function (renderSession) {
+Phaser.GameObject.Rope.prototype._renderCanvas = function (renderSession) {
 
     var context = renderSession.context;
 
@@ -518,7 +518,7 @@ Phaser.GameObjects.Rope.prototype._renderCanvas = function (renderSession) {
         context.setTransform(transform.a, transform.b, transform.c, transform.d, tx, ty);
     }
 
-    if (this.drawMode === Phaser.GameObjects.Rope.TRIANGLE_STRIP)
+    if (this.drawMode === Phaser.GameObject.Rope.TRIANGLE_STRIP)
     {
         this._renderCanvasTriangleStrip(context);
     }
@@ -533,10 +533,10 @@ Phaser.GameObjects.Rope.prototype._renderCanvas = function (renderSession) {
 * Renders a Triangle Strip to Canvas.
 *
 * @private
-* @method Phaser.GameObjects.Rope#_renderCanvasTriangleStrip
-* @memberof Phaser.GameObjects.Rope
+* @method Phaser.GameObject.Rope#_renderCanvasTriangleStrip
+* @memberof Phaser.GameObject.Rope
 */
-Phaser.GameObjects.Rope.prototype._renderCanvasTriangleStrip = function (context) {
+Phaser.GameObject.Rope.prototype._renderCanvasTriangleStrip = function (context) {
 
     // draw triangles!!
     var vertices = this.vertices;
@@ -558,10 +558,10 @@ Phaser.GameObjects.Rope.prototype._renderCanvasTriangleStrip = function (context
 * Renders a Triangle to Canvas.
 *
 * @private
-* @method Phaser.GameObjects.Rope#_renderCanvasTriangles
-* @memberof Phaser.GameObjects.Rope
+* @method Phaser.GameObject.Rope#_renderCanvasTriangles
+* @memberof Phaser.GameObject.Rope
 */
-Phaser.GameObjects.Rope.prototype._renderCanvasTriangles = function (context) {
+Phaser.GameObject.Rope.prototype._renderCanvasTriangles = function (context) {
 
     var vertices = this.vertices;
     var uvs = this.uvs;
@@ -586,10 +586,10 @@ Phaser.GameObjects.Rope.prototype._renderCanvasTriangles = function (context) {
 * Renders a Triangle to Canvas.
 *
 * @private
-* @method Phaser.GameObjects.Rope#_renderCanvasDrawTriangle
-* @memberof Phaser.GameObjects.Rope
+* @method Phaser.GameObject.Rope#_renderCanvasDrawTriangle
+* @memberof Phaser.GameObject.Rope
 */
-Phaser.GameObjects.Rope.prototype._renderCanvasDrawTriangle = function (context, vertices, uvs, index0, index1, index2) {
+Phaser.GameObject.Rope.prototype._renderCanvasDrawTriangle = function (context, vertices, uvs, index0, index1, index2) {
 
     var textureSource = this.texture.baseTexture.source;
     var textureWidth = this.texture.width;
@@ -674,10 +674,10 @@ Phaser.GameObjects.Rope.prototype._renderCanvasDrawTriangle = function (context,
 /*
 * Renders a flat strip.
 *
-* @method Phaser.GameObjects.Rope#renderStripFlat
-* @memberof Phaser.GameObjects.Rope
+* @method Phaser.GameObject.Rope#renderStripFlat
+* @memberof Phaser.GameObject.Rope
 */
-Phaser.GameObjects.Rope.prototype.renderStripFlat = function (strip) {
+Phaser.GameObject.Rope.prototype.renderStripFlat = function (strip) {
 
     var context = this.context;
     var vertices = strip.vertices;
@@ -714,12 +714,12 @@ Phaser.GameObjects.Rope.prototype.renderStripFlat = function (strip) {
 /*
 * Returns the bounds of the mesh as a rectangle. The bounds calculation takes the worldTransform into account.
 *
-* @method Phaser.GameObjects.Rope#getBounds
-* @memberof Phaser.GameObjects.Rope
+* @method Phaser.GameObject.Rope#getBounds
+* @memberof Phaser.GameObject.Rope
 * @param {Matrix} matrix - The transformation matrix of the Sprite.
 * @return {Rectangle} The framing rectangle.
 */
-Phaser.GameObjects.Rope.prototype.getBounds = function (matrix) {
+Phaser.GameObject.Rope.prototype.getBounds = function (matrix) {
 
     var worldTransform = matrix || this.worldTransform;
 
@@ -775,10 +775,10 @@ Phaser.GameObjects.Rope.prototype.getBounds = function (matrix) {
 /**
 * A Rope will call its updateAnimation function on each update loop if it has one.
 *
-* @name Phaser.GameObjects.Rope#updateAnimation
+* @name Phaser.GameObject.Rope#updateAnimation
 * @property {function} updateAnimation - Set to a function if you'd like the rope to animate during the update phase. Set to false or null to remove it.
 */
-Object.defineProperty(Phaser.GameObjects.Rope.prototype, "updateAnimation", {
+Object.defineProperty(Phaser.GameObject.Rope.prototype, "updateAnimation", {
 
     get: function () {
 
@@ -806,10 +806,10 @@ Object.defineProperty(Phaser.GameObjects.Rope.prototype, "updateAnimation", {
 /**
 * The segments that make up the rope body as an array of Phaser.Rectangles
 *
-* @name Phaser.GameObjects.Rope#segments
+* @name Phaser.GameObject.Rope#segments
 * @property {Phaser.Rectangles[]} updateAnimation - Returns an array of Phaser.Rectangles that represent the segments of the given rope
 */
-Object.defineProperty(Phaser.GameObjects.Rope.prototype, "segments", {
+Object.defineProperty(Phaser.GameObject.Rope.prototype, "segments", {
 
     get: function () {
 

@@ -10,11 +10,11 @@
 *
 * Created objects are _automatically added_ to the appropriate Manager, World, or manually specified parent Group.
 *
-* @class Phaser.GameObjects.Factory
+* @class Phaser.GameObject.Factory
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
 */
-Phaser.GameObjects.Factory = function (game) {
+Phaser.GameObject.Factory = function (game) {
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running Game.
@@ -30,21 +30,21 @@ Phaser.GameObjects.Factory = function (game) {
 
 };
 
-Phaser.GameObjects.Factory.prototype.constructor = Phaser.GameObjects.Factory;
+Phaser.GameObject.Factory.prototype.constructor = Phaser.GameObject.Factory;
 
-Phaser.GameObjects.Factory.prototype = {
+Phaser.GameObject.Factory.prototype = {
 
     boot: function ()
     {
-        for (var gameobject in Phaser.GameObjects)
+        for (var gameobject in Phaser.GameObject)
         {
-            if (Phaser.GameObjects[gameobject].hasOwnProperty('FACTORY_KEY'))
+            if (Phaser.GameObject[gameobject].hasOwnProperty('FACTORY_KEY'))
             {
-                var key = Phaser.GameObjects[gameobject]['FACTORY_KEY'];
+                var key = Phaser.GameObject[gameobject]['FACTORY_KEY'];
 
                 // console.log('found', key);
 
-                Phaser.GameObjects.Factory.prototype[key] = Phaser.GameObjects[gameobject]['FACTORY_ADD'];
+                Phaser.GameObject.Factory.prototype[key] = Phaser.GameObject[gameobject]['FACTORY_ADD'];
             }
         }
     },
@@ -52,7 +52,7 @@ Phaser.GameObjects.Factory.prototype = {
     /**
     * Adds an existing display object to the game world.
     * 
-    * @method Phaser.GameObjects.Factory#existing
+    * @method Phaser.GameObject.Factory#existing
     * @param {any} object - An instance of Phaser.Sprite, Phaser.Button or any other display object.
     * @return {any} The child that was added to the World.
     */
@@ -67,7 +67,7 @@ Phaser.GameObjects.Factory.prototype = {
     * 
     * The object can be any JavaScript object or Phaser object such as Sprite.
     *
-    * @method Phaser.GameObjects.Factory#tween
+    * @method Phaser.GameObject.Factory#tween
     * @param {object} object - Object the tween will be run on.
     * @return {Phaser.Tween} The newly created Phaser.Tween object.
     */
@@ -80,7 +80,7 @@ Phaser.GameObjects.Factory.prototype = {
     /**
     * A Group is a container for display objects that allows for fast pooling, recycling and collision checks.
     *
-    * @method Phaser.GameObjects.Factory#group
+    * @method Phaser.GameObject.Factory#group
     * @param {any} [parent] - The parent Group or DisplayObjectContainer that will hold this group, if any. If set to null the Group won't be added to the display list. If undefined it will be added to World by default.
     * @param {string} [name='group'] - A name for this Group. Not used internally but useful for debugging.
     * @param {boolean} [addToStage=false] - If set to true this Group will be added directly to the Game.Stage instead of Game.World.
@@ -100,7 +100,7 @@ Phaser.GameObjects.Factory.prototype = {
     * A Physics Group is the same as an ordinary Group except that is has enableBody turned on by default, so any Sprites it creates
     * are automatically given a physics body.
     *
-    * @method Phaser.GameObjects.Factory#physicsGroup
+    * @method Phaser.GameObject.Factory#physicsGroup
     * @param {number} [physicsBodyType=Phaser.Physics.ARCADE] - If enableBody is true this is the type of physics body that is created on new Sprites. Phaser.Physics.ARCADE, Phaser.Physics.P2JS, Phaser.Physics.NINJA, etc.
     * @param {any} [parent] - The parent Group or DisplayObjectContainer that will hold this group, if any. If set to null the Group won't be added to the display list. If undefined it will be added to World by default.
     * @param {string} [name='group'] - A name for this Group. Not used internally but useful for debugging.
@@ -116,7 +116,7 @@ Phaser.GameObjects.Factory.prototype = {
     /**
     * Creates a new Sound object.
     *
-    * @method Phaser.GameObjects.Factory#audio
+    * @method Phaser.GameObject.Factory#audio
     * @param {string} key - The Game.cache key of the sound that this object will use.
     * @param {number} [volume=1] - The volume at which the sound will be played.
     * @param {boolean} [loop=false] - Whether or not the sound will loop.
@@ -132,7 +132,7 @@ Phaser.GameObjects.Factory.prototype = {
     /**
     * Creates a new Sound object.
     *
-    * @method Phaser.GameObjects.Factory#sound
+    * @method Phaser.GameObject.Factory#sound
     * @param {string} key - The Game.cache key of the sound that this object will use.
     * @param {number} [volume=1] - The volume at which the sound will be played.
     * @param {boolean} [loop=false] - Whether or not the sound will loop.
@@ -148,7 +148,7 @@ Phaser.GameObjects.Factory.prototype = {
     /**
      * Creates a new AudioSprite object.
      *
-     * @method Phaser.GameObjects.Factory#audioSprite
+     * @method Phaser.GameObject.Factory#audioSprite
      * @param {string} key - The Game.cache key of the sound that this object will use.
      * @return {Phaser.AudioSprite} The newly created AudioSprite object.
      */
@@ -165,7 +165,7 @@ Phaser.GameObjects.Factory.prototype = {
     * continuous effects like rain and fire. All it really does is launch Particle objects out
     * at set intervals, and fixes their positions and velocities accordingly.
     *
-    * @method Phaser.GameObjects.Factory#emitter
+    * @method Phaser.GameObject.Factory#emitter
     * @param {number} [x=0] - The x coordinate within the Emitter that the particles are emitted from.
     * @param {number} [y=0] - The y coordinate within the Emitter that the particles are emitted from.
     * @param {number} [maxParticles=50] - The total number of particles in this emitter.
@@ -186,7 +186,7 @@ Phaser.GameObjects.Factory.prototype = {
     * If creating a blank tilemap to be populated later, you can either specify no parameters at all and then use `Tilemap.create` or pass the map and tile dimensions here.
     * Note that all Tilemaps use a base tile size to calculate dimensions from, but that a TilemapLayer may have its own unique tile size that overrides it.
     *
-    * @method Phaser.GameObjects.Factory#tilemap
+    * @method Phaser.GameObject.Factory#tilemap
     * @param {string} [key] - The key of the tilemap data as stored in the Cache. If you're creating a blank map either leave this parameter out or pass `null`.
     * @param {number} [tileWidth=32] - The pixel width of a single map tile. If using CSV data you must specify this. Not required if using Tiled map data.
     * @param {number} [tileHeight=32] - The pixel height of a single map tile. If using CSV data you must specify this. Not required if using Tiled map data.
@@ -202,7 +202,7 @@ Phaser.GameObjects.Factory.prototype = {
     /**
     * A dynamic initially blank canvas to which images can be drawn.
     *
-    * @method Phaser.GameObjects.Factory#renderTexture
+    * @method Phaser.GameObject.Factory#renderTexture
     * @param {number} [width=100] - the width of the RenderTexture.
     * @param {number} [height=100] - the height of the RenderTexture.
     * @param {string} [key=''] - Asset key for the RenderTexture when stored in the Cache (see addToCache parameter).
@@ -230,7 +230,7 @@ Phaser.GameObjects.Factory.prototype = {
     *
     * A BitmapData object can be manipulated and drawn to like a traditional Canvas object and used to texture Sprites.
     *
-    * @method Phaser.GameObjects.Factory#bitmapData
+    * @method Phaser.GameObject.Factory#bitmapData
     * @param {number} [width=256] - The width of the BitmapData in pixels.
     * @param {number} [height=256] - The height of the BitmapData in pixels.
     * @param {string} [key=''] - Asset key for the BitmapData when stored in the Cache (see addToCache parameter).
@@ -256,7 +256,7 @@ Phaser.GameObjects.Factory.prototype = {
     /**
     * A WebGL shader/filter that can be applied to Sprites.
     *
-    * @method Phaser.GameObjects.Factory#filter
+    * @method Phaser.GameObject.Factory#filter
     * @param {string} filter - The name of the filter you wish to create, for example HueRotate or SineWave.
     * @param {any} - Whatever parameters are needed to be passed to the filter init function.
     * @return {Phaser.Filter} The newly created Phaser.Filter object.
@@ -278,7 +278,7 @@ Phaser.GameObjects.Factory.prototype = {
     *
     * The Plugin must have 2 properties: `game` and `parent`. Plugin.game is set to the game reference the PluginManager uses, and parent is set to the PluginManager.
     *
-    * @method Phaser.GameObjects.Factory#plugin
+    * @method Phaser.GameObject.Factory#plugin
     * @param {object|Phaser.Plugin} plugin - The Plugin to add into the PluginManager. This can be a function or an existing object.
     * @param {...*} parameter - Additional parameters that will be passed to the Plugin.init method.
     * @return {Phaser.Plugin} The Plugin that was added to the manager.

@@ -27,7 +27,7 @@
 * if your game is running under WebGL please note that each frame of the animation must be a power of two in size, or it will receive
 * additional padding to enforce it to be so.
 *
-* @class Phaser.GameObjects.TileSprite
+* @class Phaser.GameObject.TileSprite
 * @constructor
 * @extends PIXI.Sprite
 * @extends Phaser.Component.Core
@@ -56,7 +56,7 @@
 * @param {string|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the TileSprite during rendering. It can be a string which is a reference to the Phaser Image Cache entry, or an instance of a PIXI.Texture or BitmapData.
 * @param {string|number} frame - If this TileSprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
 */
-Phaser.GameObjects.TileSprite = function (game, x, y, width, height, key, frame) {
+Phaser.GameObject.TileSprite = function (game, x, y, width, height, key, frame) {
 
     x = x || 0;
     y = y || 0;
@@ -149,10 +149,10 @@ Phaser.GameObjects.TileSprite = function (game, x, y, width, height, key, frame)
 
 };
 
-Phaser.GameObjects.TileSprite.prototype = Object.create(PIXI.Sprite.prototype);
-Phaser.GameObjects.TileSprite.prototype.constructor = Phaser.GameObjects.TileSprite;
+Phaser.GameObject.TileSprite.prototype = Object.create(PIXI.Sprite.prototype);
+Phaser.GameObject.TileSprite.prototype.constructor = Phaser.GameObject.TileSprite;
 
-Phaser.Component.Core.install.call(Phaser.GameObjects.TileSprite.prototype, [
+Phaser.Component.Core.install.call(Phaser.GameObject.TileSprite.prototype, [
     'Angle',
     'Animation',
     'AutoCull',
@@ -172,19 +172,19 @@ Phaser.Component.Core.install.call(Phaser.GameObjects.TileSprite.prototype, [
     'Smoothed'
 ]);
 
-Phaser.GameObjects.TileSprite.prototype.preUpdatePhysics = Phaser.Component.PhysicsBody.preUpdate;
-Phaser.GameObjects.TileSprite.prototype.preUpdateLifeSpan = Phaser.Component.LifeSpan.preUpdate;
-Phaser.GameObjects.TileSprite.prototype.preUpdateInWorld = Phaser.Component.InWorld.preUpdate;
-Phaser.GameObjects.TileSprite.prototype.preUpdateCore = Phaser.Component.Core.preUpdate;
+Phaser.GameObject.TileSprite.prototype.preUpdatePhysics = Phaser.Component.PhysicsBody.preUpdate;
+Phaser.GameObject.TileSprite.prototype.preUpdateLifeSpan = Phaser.Component.LifeSpan.preUpdate;
+Phaser.GameObject.TileSprite.prototype.preUpdateInWorld = Phaser.Component.InWorld.preUpdate;
+Phaser.GameObject.TileSprite.prototype.preUpdateCore = Phaser.Component.Core.preUpdate;
 
 /**
 * Automatically called by World.preUpdate.
 *
-* @method Phaser.GameObjects.TileSprite#preUpdate
-* @memberof Phaser.GameObjects.TileSprite
+* @method Phaser.GameObject.TileSprite#preUpdate
+* @memberof Phaser.GameObject.TileSprite
 * @return {boolean}
 */
-Phaser.GameObjects.TileSprite.prototype.preUpdate = function () {
+Phaser.GameObject.TileSprite.prototype.preUpdate = function () {
 
     if (this._scroll.x !== 0)
     {
@@ -211,13 +211,13 @@ Phaser.GameObjects.TileSprite.prototype.preUpdate = function () {
 * A negative x value will scroll to the left. A positive x value will scroll to the right.
 * A negative y value will scroll up. A positive y value will scroll down.
 *
-* @method Phaser.GameObjects.TileSprite#autoScroll
-* @memberof Phaser.GameObjects.TileSprite
+* @method Phaser.GameObject.TileSprite#autoScroll
+* @memberof Phaser.GameObject.TileSprite
 * @param {number} x - Horizontal scroll speed in pixels per second.
 * @param {number} y - Vertical scroll speed in pixels per second.
-* @return {Phaser.GameObjects.TileSprite} This instance.
+* @return {Phaser.GameObject.TileSprite} This instance.
 */
-Phaser.GameObjects.TileSprite.prototype.autoScroll = function (x, y) {
+Phaser.GameObject.TileSprite.prototype.autoScroll = function (x, y) {
 
     this._scroll.set(x, y);
 
@@ -228,11 +228,11 @@ Phaser.GameObjects.TileSprite.prototype.autoScroll = function (x, y) {
 /**
 * Stops an automatically scrolling TileSprite.
 *
-* @method Phaser.GameObjects.TileSprite#stopScroll
-* @memberof Phaser.GameObjects.TileSprite
-* @return {Phaser.GameObjects.TileSprite} This instance.
+* @method Phaser.GameObject.TileSprite#stopScroll
+* @memberof Phaser.GameObject.TileSprite
+* @return {Phaser.GameObject.TileSprite} This instance.
 */
-Phaser.GameObjects.TileSprite.prototype.stopScroll = function () {
+Phaser.GameObject.TileSprite.prototype.stopScroll = function () {
 
     this._scroll.set(0, 0);
 
@@ -244,11 +244,11 @@ Phaser.GameObjects.TileSprite.prototype.stopScroll = function () {
 * Destroys the TileSprite. This removes it from its parent group, destroys the event and animation handlers if present
 * and nulls its reference to game, freeing it up for garbage collection.
 *
-* @method Phaser.GameObjects.TileSprite#destroy
-* @memberof Phaser.GameObjects.TileSprite
+* @method Phaser.GameObject.TileSprite#destroy
+* @memberof Phaser.GameObject.TileSprite
 * @param {boolean} [destroyChildren=true] - Should every child of this object have its destroy method called?
 */
-Phaser.GameObjects.TileSprite.prototype.destroy = function (destroyChildren) {
+Phaser.GameObject.TileSprite.prototype.destroy = function (destroyChildren) {
 
     Phaser.Component.Destroy.prototype.destroy.call(this, destroyChildren);
 
@@ -277,13 +277,13 @@ Phaser.GameObjects.TileSprite.prototype.destroy = function (destroyChildren) {
 * sets alive, exists, visible and renderable all to true. Also resets the outOfBounds state.
 * If the TileSprite has a physics body that too is reset.
 *
-* @method Phaser.GameObjects.TileSprite#reset
-* @memberof Phaser.GameObjects.TileSprite
+* @method Phaser.GameObject.TileSprite#reset
+* @memberof Phaser.GameObject.TileSprite
 * @param {number} x - The x coordinate (in world space) to position the Sprite at.
 * @param {number} y - The y coordinate (in world space) to position the Sprite at.
-* @return {Phaser.GameObjects.TileSprite} This instance.
+* @return {Phaser.GameObject.TileSprite} This instance.
 */
-Phaser.GameObjects.TileSprite.prototype.reset = function (x, y) {
+Phaser.GameObject.TileSprite.prototype.reset = function (x, y) {
 
     Phaser.Component.Reset.prototype.reset.call(this, x, y);
 
@@ -298,12 +298,12 @@ Phaser.GameObjects.TileSprite.prototype.reset = function (x, y) {
 * Changes the texture being rendered by this TileSprite.
 * Causes a texture refresh to take place on the next render.
 *
-* @method Phaser.GameObjects.TileSprite#setTexture
-* @memberof Phaser.GameObjects.TileSprite
+* @method Phaser.GameObject.TileSprite#setTexture
+* @memberof Phaser.GameObject.TileSprite
 * @param {PIXI.Texture} texture - The texture to apply to this TileSprite.
-* @return {Phaser.GameObjects.TileSprite} This instance.
+* @return {Phaser.GameObject.TileSprite} This instance.
 */
-Phaser.GameObjects.TileSprite.prototype.setTexture = function (texture) {
+Phaser.GameObject.TileSprite.prototype.setTexture = function (texture) {
 
     if (this.texture !== texture)
     {
@@ -320,10 +320,10 @@ Phaser.GameObjects.TileSprite.prototype.setTexture = function (texture) {
 * Override the Sprite method.
 *
 * @private
-* @method Phaser.GameObjects.TileSprite#onTextureUpdate
-* @memberof Phaser.GameObjects.TileSprite
+* @method Phaser.GameObject.TileSprite#onTextureUpdate
+* @memberof Phaser.GameObject.TileSprite
 */
-Phaser.GameObjects.TileSprite.prototype.onTextureUpdate = function () {
+Phaser.GameObject.TileSprite.prototype.onTextureUpdate = function () {
 
    // overriding the sprite version of this!
 
@@ -332,11 +332,11 @@ Phaser.GameObjects.TileSprite.prototype.onTextureUpdate = function () {
 /**
 * Internal method that generates a new tiling texture.
 *
-* @method Phaser.GameObjects.TileSprite#generateTilingTexture
-* @memberof Phaser.GameObjects.TileSprite
+* @method Phaser.GameObject.TileSprite#generateTilingTexture
+* @memberof Phaser.GameObject.TileSprite
 * @param {boolean} forcePowerOfTwo - Whether we want to force the texture to be a power of two
 */
-Phaser.GameObjects.TileSprite.prototype.generateTilingTexture = function (forcePowerOfTwo) {
+Phaser.GameObject.TileSprite.prototype.generateTilingTexture = function (forcePowerOfTwo) {
 
     if (!this.texture.baseTexture.hasLoaded)
     {
@@ -419,11 +419,11 @@ Phaser.GameObjects.TileSprite.prototype.generateTilingTexture = function (forceP
 /**
 * Returns the framing rectangle of the Tile Sprite.
 *
-* @method Phaser.GameObjects.TileSprite#getBounds
-* @memberof Phaser.GameObjects.TileSprite
+* @method Phaser.GameObject.TileSprite#getBounds
+* @memberof Phaser.GameObject.TileSprite
 * @return {Phaser.Rectangle} The bounds of the Tile Sprite.
 */
-Phaser.GameObjects.TileSprite.prototype.getBounds = function () {
+Phaser.GameObject.TileSprite.prototype.getBounds = function () {
 
     var width = this._width;
     var height = this._height;
@@ -503,7 +503,7 @@ Phaser.GameObjects.TileSprite.prototype.getBounds = function () {
 * @property width
 * @type Number
 */
-Object.defineProperty(Phaser.GameObjects.TileSprite.prototype, 'width', {
+Object.defineProperty(Phaser.GameObject.TileSprite.prototype, 'width', {
 
     get: function () {
 
@@ -525,7 +525,7 @@ Object.defineProperty(Phaser.GameObjects.TileSprite.prototype, 'width', {
 * @property height
 * @type Number
 */
-Object.defineProperty(Phaser.GameObjects.TileSprite.prototype, 'height', {
+Object.defineProperty(Phaser.GameObject.TileSprite.prototype, 'height', {
 
     get: function () {
 

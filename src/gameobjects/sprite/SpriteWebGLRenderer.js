@@ -1,7 +1,7 @@
 Phaser.Renderer.WebGL.GameObjects.Sprite = {
 
     TYPES: [
-        Phaser.GameObjects.Sprite.prototype,
+        Phaser.GameObject.Sprite.prototype,
         PIXI.Sprite.prototype
     ],
 

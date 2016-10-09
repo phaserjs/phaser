@@ -1,7 +1,7 @@
 Phaser.Renderer.WebGL.GameObjects.TileSprite = {
 
     TYPES: [
-        Phaser.GameObjects.TileSprite.prototype
+        Phaser.GameObject.TileSprite.prototype
     ],
 
     render: function (renderer, src)

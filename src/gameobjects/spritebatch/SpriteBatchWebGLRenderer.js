@@ -1,7 +1,7 @@
 Phaser.Renderer.WebGL.GameObjects.SpriteBatch = {
 
     TYPES: [
-        Phaser.GameObjects.SpriteBatch.prototype
+        Phaser.GameObject.SpriteBatch.prototype
     ],
 
     render: function (renderer, src)

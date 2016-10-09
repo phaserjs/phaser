@@ -8,7 +8,7 @@
 Phaser.Renderer.Canvas.GameObjects.Sprite = {
 
     TYPES: [
-        Phaser.GameObjects.Sprite.prototype,
+        Phaser.GameObject.Sprite.prototype,
         PIXI.Sprite.prototype
     ],
 

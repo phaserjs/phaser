@@ -4,12 +4,12 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
-Phaser.GameObjects.Button.FACTORY_KEY = 'button';
+Phaser.GameObject.Button.FACTORY_KEY = 'button';
 
 /**
 * Creates a new Button object.
 *
-* @method Phaser.GameObjects.Factory#button
+* @method Phaser.GameObject.Factory#button
 * @param {number} [x=0] - The x coordinate of the Button. The coordinate is relative to any parent container this button may be in.
 * @param {number} [y=0] - The y coordinate of the Button. The coordinate is relative to any parent container this button may be in.
 * @param {string} [key] - The image key as defined in the Game.Cache to use as the texture for this button.
@@ -22,11 +22,11 @@ Phaser.GameObjects.Button.FACTORY_KEY = 'button';
 * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
 * @return {Phaser.Button} The newly created Button object.
 */
-Phaser.GameObjects.Button.FACTORY_ADD = function (x, y, key, callback, callbackContext, overFrame, outFrame, downFrame, upFrame, group)
+Phaser.GameObject.Button.FACTORY_ADD = function (x, y, key, callback, callbackContext, overFrame, outFrame, downFrame, upFrame, group)
 {
     if (group === undefined) { group = this.world; }
 
-    return group.add(new Phaser.GameObjects.Button(this.game, x, y, key, callback, callbackContext, overFrame, outFrame, downFrame, upFrame));
+    return group.add(new Phaser.GameObject.Button(this.game, x, y, key, callback, callbackContext, overFrame, outFrame, downFrame, upFrame));
 };
 
 /**
@@ -44,7 +44,7 @@ Phaser.GameObjects.Button.FACTORY_ADD = function (x, y, key, callback, callbackC
 * @param {string|number} [upFrame] This is the frame or frameName that will be set when this button is in an up state. Give either a number to use a frame ID or a string for a frame name.
 * @return {Phaser.Button} The newly created button object.
 */
-Phaser.GameObjects.Button.FACTORY_MAKE = function (x, y, key, callback, callbackContext, overFrame, outFrame, downFrame, upFrame)
+Phaser.GameObject.Button.FACTORY_MAKE = function (x, y, key, callback, callbackContext, overFrame, outFrame, downFrame, upFrame)
 {
-    return new Phaser.GameObjects.Button(this.game, x, y, key, callback, callbackContext, overFrame, outFrame, downFrame, upFrame);
+    return new Phaser.GameObject.Button(this.game, x, y, key, callback, callbackContext, overFrame, outFrame, downFrame, upFrame);
 };

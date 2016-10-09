@@ -6,7 +6,7 @@
 Phaser.Renderer.WebGL.GameObjects.Text = {
 
     TYPES: [
-        Phaser.GameObjects.Text.prototype
+        Phaser.GameObject.Text.prototype
     ],
 
     render: function (renderer, src)

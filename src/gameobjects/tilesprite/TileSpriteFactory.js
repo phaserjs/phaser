@@ -4,12 +4,12 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
-Phaser.GameObjects.TileSprite.FACTORY_KEY = 'tileSprite';
+Phaser.GameObject.TileSprite.FACTORY_KEY = 'tileSprite';
 
 /**
 * Creates a new TileSprite object.
 *
-* @method Phaser.GameObjects.Factory#tileSprite
+* @method Phaser.GameObject.Factory#tileSprite
 * @param {number} x - The x coordinate of the TileSprite. The coordinate is relative to any parent container this TileSprite may be in.
 * @param {number} y - The y coordinate of the TileSprite. The coordinate is relative to any parent container this TileSprite may be in.
 * @param {number} width - The width of the TileSprite.
@@ -19,17 +19,17 @@ Phaser.GameObjects.TileSprite.FACTORY_KEY = 'tileSprite';
 * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
 * @return {Phaser.TileSprite} The newly created TileSprite object.
 */
-Phaser.GameObjects.TileSprite.FACTORY_ADD = function (x, y, width, height, key, frame, group)
+Phaser.GameObject.TileSprite.FACTORY_ADD = function (x, y, width, height, key, frame, group)
 {
     if (group === undefined) { group = this.world; }
 
-    return group.add(new Phaser.GameObjects.TileSprite(this.game, x, y, width, height, key, frame));
+    return group.add(new Phaser.GameObject.TileSprite(this.game, x, y, width, height, key, frame));
 };
 
 /**
 * Creates a new TileSprite object.
 *
-* @method Phaser.GameObjects.Factory#tileSprite
+* @method Phaser.GameObject.Factory#tileSprite
 * @param {number} x - The x coordinate of the TileSprite. The coordinate is relative to any parent container this TileSprite may be in.
 * @param {number} y - The y coordinate of the TileSprite. The coordinate is relative to any parent container this TileSprite may be in.
 * @param {number} width - The width of the TileSprite.
@@ -38,7 +38,7 @@ Phaser.GameObjects.TileSprite.FACTORY_ADD = function (x, y, width, height, key, 
 * @param {string|number} [frame] - If a Texture Atlas or Sprite Sheet is used this allows you to specify the frame to be used. Use either an integer for a Frame ID or a string for a frame name.
 * @return {Phaser.TileSprite} The newly created TileSprite object.
 */
-Phaser.GameObjects.TileSprite.FACTORY_MAKE = function (x, y, width, height, key, frame)
+Phaser.GameObject.TileSprite.FACTORY_MAKE = function (x, y, width, height, key, frame)
 {
-    return new Phaser.GameObjects.TileSprite(this.game, x, y, width, height, key, frame);
+    return new Phaser.GameObject.TileSprite(this.game, x, y, width, height, key, frame);
 };

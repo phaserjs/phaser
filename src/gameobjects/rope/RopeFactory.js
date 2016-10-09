@@ -4,14 +4,14 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
-Phaser.GameObjects.Rope.FACTORY_KEY = 'rope';
+Phaser.GameObject.Rope.FACTORY_KEY = 'rope';
 
 /**
 * Creates a new Rope object.
 *
 * Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/demo.js
 *
-* @method Phaser.GameObjects.Factory#rope
+* @method Phaser.GameObject.Factory#rope
 * @param {number} [x=0] - The x coordinate of the Rope. The coordinate is relative to any parent container this rope may be in.
 * @param {number} [y=0] - The y coordinate of the Rope. The coordinate is relative to any parent container this rope may be in.
 * @param {string|Phaser.RenderTexture|Phaser.BitmapData|Phaser.Video|PIXI.Texture} [key] - The image used as a texture by this display object during rendering. If a string Phaser will get for an entry in the Image Cache. Or it can be an instance of a RenderTexture, BitmapData, Video or PIXI.Texture.
@@ -20,11 +20,11 @@ Phaser.GameObjects.Rope.FACTORY_KEY = 'rope';
 * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
 * @return {Phaser.Rope} The newly created Rope object.
 */
-Phaser.GameObjects.Rope.FACTORY_ADD = function (x, y, key, frame, points, group)
+Phaser.GameObject.Rope.FACTORY_ADD = function (x, y, key, frame, points, group)
 {
     if (group === undefined) { group = this.world; }
 
-    return group.add(new Phaser.GameObjects.Rope(this.game, x, y, key, frame, points));
+    return group.add(new Phaser.GameObject.Rope(this.game, x, y, key, frame, points));
 };
 
 /**
@@ -38,7 +38,7 @@ Phaser.GameObjects.Rope.FACTORY_ADD = function (x, y, key, frame, points, group)
 * @param {Array} [points] - An array of {Phaser.Point}.
 * @return {Phaser.Rope} The newly created rope object.
 */
-Phaser.GameObjects.Rope.FACTORY_MAKE = function (x, y, key, frame, points)
+Phaser.GameObject.Rope.FACTORY_MAKE = function (x, y, key, frame, points)
 {
-    return new Phaser.GameObjects.Rope(this.game, x, y, key, frame, points);
+    return new Phaser.GameObject.Rope(this.game, x, y, key, frame, points);
 };

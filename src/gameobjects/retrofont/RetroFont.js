@@ -8,7 +8,7 @@
 * A Retro Font is similar to a BitmapFont, in that it uses a texture to render the text. However unlike a BitmapFont every character in a RetroFont
 * is the same size. This makes it similar to a sprite sheet. You typically find font sheets like this from old 8/16-bit games and demos.
 * 
-* @class Phaser.GameObjects.RetroFont
+* @class Phaser.GameObject.RetroFont
 * @extends Phaser.RenderTexture
 * @constructor
 * @param {Phaser.Game} game - Current game instance.
@@ -22,7 +22,7 @@
 * @param {number} [xOffset=0] - If the font set doesn't start at the top left of the given image, specify the X coordinate offset here.
 * @param {number} [yOffset=0] - If the font set doesn't start at the top left of the given image, specify the Y coordinate offset here.
 */
-Phaser.GameObjects.RetroFont = function (game, key, characterWidth, characterHeight, chars, charsPerRow, xSpacing, ySpacing, xOffset, yOffset) {
+Phaser.GameObject.RetroFont = function (game, key, characterWidth, characterHeight, chars, charsPerRow, xSpacing, ySpacing, xOffset, yOffset) {
 
     if (!game.cache.checkImageKey(key))
     {
@@ -171,117 +171,117 @@ Phaser.GameObjects.RetroFont = function (game, key, characterWidth, characterHei
 
 };
 
-Phaser.GameObjects.RetroFont.prototype = Object.create(Phaser.RenderTexture.prototype);
-Phaser.GameObjects.RetroFont.prototype.constructor = Phaser.GameObjects.RetroFont;
+Phaser.GameObject.RetroFont.prototype = Object.create(Phaser.RenderTexture.prototype);
+Phaser.GameObject.RetroFont.prototype.constructor = Phaser.GameObject.RetroFont;
 
 /**
 * Align each line of multi-line text to the left.
 * @constant
 * @type {string}
 */
-Phaser.GameObjects.RetroFont.ALIGN_LEFT = "left";
+Phaser.GameObject.RetroFont.ALIGN_LEFT = "left";
 
 /**
 * Align each line of multi-line text to the right.
 * @constant
 * @type {string}
 */
-Phaser.GameObjects.RetroFont.ALIGN_RIGHT = "right";
+Phaser.GameObject.RetroFont.ALIGN_RIGHT = "right";
 
 /**
 * Align each line of multi-line text in the center.
 * @constant
 * @type {string}
 */
-Phaser.GameObjects.RetroFont.ALIGN_CENTER = "center";
+Phaser.GameObject.RetroFont.ALIGN_CENTER = "center";
 
 /**
 * Text Set 1 =  !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
 * @constant
 * @type {string}
 */
-Phaser.GameObjects.RetroFont.TEXT_SET1 = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
+Phaser.GameObject.RetroFont.TEXT_SET1 = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
 
 /**
 * Text Set 2 =  !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ
 * @constant
 * @type {string}
 */
-Phaser.GameObjects.RetroFont.TEXT_SET2 = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+Phaser.GameObject.RetroFont.TEXT_SET2 = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 /**
 * Text Set 3 = ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 
 * @constant
 * @type {string}
 */
-Phaser.GameObjects.RetroFont.TEXT_SET3 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ";
+Phaser.GameObject.RetroFont.TEXT_SET3 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ";
 
 /**
 * Text Set 4 = ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789
 * @constant
 * @type {string}
 */
-Phaser.GameObjects.RetroFont.TEXT_SET4 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789";
+Phaser.GameObject.RetroFont.TEXT_SET4 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789";
 
 /**
 * Text Set 5 = ABCDEFGHIJKLMNOPQRSTUVWXYZ.,/() '!?-*:0123456789
 * @constant
 * @type {string}
 */
-Phaser.GameObjects.RetroFont.TEXT_SET5 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ.,/() '!?-*:0123456789";
+Phaser.GameObject.RetroFont.TEXT_SET5 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ.,/() '!?-*:0123456789";
 
 /**
 * Text Set 6 = ABCDEFGHIJKLMNOPQRSTUVWXYZ!?:;0123456789"(),-.' 
 * @constant
 * @type {string}
 */
-Phaser.GameObjects.RetroFont.TEXT_SET6 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ!?:;0123456789\"(),-.' ";
+Phaser.GameObject.RetroFont.TEXT_SET6 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ!?:;0123456789\"(),-.' ";
 
 /**
 * Text Set 7 = AGMSY+:4BHNTZ!;5CIOU.?06DJPV,(17EKQW")28FLRX-'39
 * @constant
 * @type {string}
 */
-Phaser.GameObjects.RetroFont.TEXT_SET7 = "AGMSY+:4BHNTZ!;5CIOU.?06DJPV,(17EKQW\")28FLRX-'39";
+Phaser.GameObject.RetroFont.TEXT_SET7 = "AGMSY+:4BHNTZ!;5CIOU.?06DJPV,(17EKQW\")28FLRX-'39";
 
 /**
 * Text Set 8 = 0123456789 .ABCDEFGHIJKLMNOPQRSTUVWXYZ
 * @constant
 * @type {string}
 */
-Phaser.GameObjects.RetroFont.TEXT_SET8 = "0123456789 .ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+Phaser.GameObject.RetroFont.TEXT_SET8 = "0123456789 .ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 /**
 * Text Set 9 = ABCDEFGHIJKLMNOPQRSTUVWXYZ()-0123456789.:,'"?!
 * @constant
 * @type {string}
 */
-Phaser.GameObjects.RetroFont.TEXT_SET9 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ()-0123456789.:,'\"?!";
+Phaser.GameObject.RetroFont.TEXT_SET9 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ()-0123456789.:,'\"?!";
 
 /**
 * Text Set 10 = ABCDEFGHIJKLMNOPQRSTUVWXYZ
 * @constant
 * @type {string}
 */
-Phaser.GameObjects.RetroFont.TEXT_SET10 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+Phaser.GameObject.RetroFont.TEXT_SET10 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 /**
 * Text Set 11 = ABCDEFGHIJKLMNOPQRSTUVWXYZ.,"-+!?()':;0123456789
 * @constant
 * @type {string}
 */
-Phaser.GameObjects.RetroFont.TEXT_SET11 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ.,\"-+!?()':;0123456789";
+Phaser.GameObject.RetroFont.TEXT_SET11 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ.,\"-+!?()':;0123456789";
 
 /**
 * If you need this RetroFont to have a fixed width and custom alignment you can set the width here.
 * If text is wider than the width specified it will be cropped off.
 *
-* @method Phaser.GameObjects.RetroFont#setFixedWidth
-* @memberof Phaser.GameObjects.RetroFont
+* @method Phaser.GameObject.RetroFont#setFixedWidth
+* @memberof Phaser.GameObject.RetroFont
 * @param {number} width - Width in pixels of this RetroFont. Set to zero to disable and re-enable automatic resizing.
 * @param {string} [lineAlignment='left'] - Align the text within this width. Set to RetroFont.ALIGN_LEFT (default), RetroFont.ALIGN_RIGHT or RetroFont.ALIGN_CENTER.
 */
-Phaser.GameObjects.RetroFont.prototype.setFixedWidth = function (width, lineAlignment) {
+Phaser.GameObject.RetroFont.prototype.setFixedWidth = function (width, lineAlignment) {
 
     if (lineAlignment === undefined) { lineAlignment = 'left'; }
 
@@ -293,8 +293,8 @@ Phaser.GameObjects.RetroFont.prototype.setFixedWidth = function (width, lineAlig
 /**
 * A helper function that quickly sets lots of variables at once, and then updates the text.
 *
-* @method Phaser.GameObjects.RetroFont#setText
-* @memberof Phaser.GameObjects.RetroFont
+* @method Phaser.GameObject.RetroFont#setText
+* @memberof Phaser.GameObject.RetroFont
 * @param {string} content - The text of this sprite.
 * @param {boolean} [multiLine=false] - Set to true if you want to support carriage-returns in the text and create a multi-line sprite instead of a single line.
 * @param {number} [characterSpacing=0] - To add horizontal spacing between each character specify the amount in pixels.
@@ -302,7 +302,7 @@ Phaser.GameObjects.RetroFont.prototype.setFixedWidth = function (width, lineAlig
 * @param {string} [lineAlignment='left'] - Align each line of multi-line text. Set to RetroFont.ALIGN_LEFT, RetroFont.ALIGN_RIGHT or RetroFont.ALIGN_CENTER.
 * @param {boolean} [allowLowerCase=false] - Lots of bitmap font sets only include upper-case characters, if yours needs to support lower case then set this to true.
 */
-Phaser.GameObjects.RetroFont.prototype.setText = function (content, multiLine, characterSpacing, lineSpacing, lineAlignment, allowLowerCase) {
+Phaser.GameObject.RetroFont.prototype.setText = function (content, multiLine, characterSpacing, lineSpacing, lineAlignment, allowLowerCase) {
 
     this.multiLine = multiLine || false;
     this.customSpacingX = characterSpacing || 0;
@@ -328,10 +328,10 @@ Phaser.GameObjects.RetroFont.prototype.setText = function (content, multiLine, c
 /**
 * Updates the texture with the new text.
 *
-* @method Phaser.GameObjects.RetroFont#buildRetroFontText
-* @memberof Phaser.GameObjects.RetroFont
+* @method Phaser.GameObject.RetroFont#buildRetroFontText
+* @memberof Phaser.GameObject.RetroFont
 */
-Phaser.GameObjects.RetroFont.prototype.buildRetroFontText = function () {
+Phaser.GameObject.RetroFont.prototype.buildRetroFontText = function () {
 
     var cx = 0;
     var cy = 0;
@@ -355,15 +355,15 @@ Phaser.GameObjects.RetroFont.prototype.buildRetroFontText = function () {
         //  Loop through each line of text
         for (var i = 0; i < lines.length; i++)
         {
-            //  Phaser.GameObjects.RetroFont.ALIGN_LEFT
+            //  Phaser.GameObject.RetroFont.ALIGN_LEFT
             cx = 0;
 
             //  This line of text is held in lines[i] - need to work out the alignment
-            if (this.align === Phaser.GameObjects.RetroFont.ALIGN_RIGHT)
+            if (this.align === Phaser.GameObject.RetroFont.ALIGN_RIGHT)
             {
                 cx = this.width - (lines[i].length * (this.characterWidth + this.customSpacingX));
             }
-            else if (this.align === Phaser.GameObjects.RetroFont.ALIGN_CENTER)
+            else if (this.align === Phaser.GameObject.RetroFont.ALIGN_CENTER)
             {
                 cx = (this.width / 2) - ((lines[i].length * (this.characterWidth + this.customSpacingX)) / 2);
                 cx += this.customSpacingX / 2;
@@ -391,14 +391,14 @@ Phaser.GameObjects.RetroFont.prototype.buildRetroFontText = function () {
             this.resize(this._text.length * (this.characterWidth + this.customSpacingX), this.characterHeight, true);
         }
 
-        //  Phaser.GameObjects.RetroFont.ALIGN_LEFT
+        //  Phaser.GameObject.RetroFont.ALIGN_LEFT
         cx = 0;
 
-        if (this.align === Phaser.GameObjects.RetroFont.ALIGN_RIGHT)
+        if (this.align === Phaser.GameObject.RetroFont.ALIGN_RIGHT)
         {
             cx = this.width - (this._text.length * (this.characterWidth + this.customSpacingX));
         }
-        else if (this.align === Phaser.GameObjects.RetroFont.ALIGN_CENTER)
+        else if (this.align === Phaser.GameObject.RetroFont.ALIGN_CENTER)
         {
             cx = (this.width / 2) - ((this._text.length * (this.characterWidth + this.customSpacingX)) / 2);
             cx += this.customSpacingX / 2;
@@ -421,14 +421,14 @@ Phaser.GameObjects.RetroFont.prototype.buildRetroFontText = function () {
 * Internal function that takes a single line of text (2nd parameter) and pastes it into the BitmapData at the given coordinates.
 * Used by getLine and getMultiLine
 *
-* @method Phaser.GameObjects.RetroFont#pasteLine
-* @memberof Phaser.GameObjects.RetroFont
+* @method Phaser.GameObject.RetroFont#pasteLine
+* @memberof Phaser.GameObject.RetroFont
 * @param {string} line - The single line of text to paste.
 * @param {number} x - The x coordinate.
 * @param {number} y - The y coordinate.
 * @param {number} customSpacingX - Custom X spacing.
 */
-Phaser.GameObjects.RetroFont.prototype.pasteLine = function (line, x, y, customSpacingX) {
+Phaser.GameObject.RetroFont.prototype.pasteLine = function (line, x, y, customSpacingX) {
 
     for (var c = 0; c < line.length; c++)
     {
@@ -459,11 +459,11 @@ Phaser.GameObjects.RetroFont.prototype.pasteLine = function (line, x, y, customS
 /**
 * Works out the longest line of text in _text and returns its length
 *
-* @method Phaser.GameObjects.RetroFont#getLongestLine
-* @memberof Phaser.GameObjects.RetroFont
+* @method Phaser.GameObject.RetroFont#getLongestLine
+* @memberof Phaser.GameObject.RetroFont
 * @return {number} The length of the longest line of text.
 */
-Phaser.GameObjects.RetroFont.prototype.getLongestLine = function () {
+Phaser.GameObject.RetroFont.prototype.getLongestLine = function () {
 
     var longestLine = 0;
 
@@ -486,13 +486,13 @@ Phaser.GameObjects.RetroFont.prototype.getLongestLine = function () {
 /**
 * Internal helper function that removes all unsupported characters from the _text String, leaving only characters contained in the font set.
 *
-* @method Phaser.GameObjects.RetroFont#removeUnsupportedCharacters
-* @memberof Phaser.GameObjects.RetroFont
+* @method Phaser.GameObject.RetroFont#removeUnsupportedCharacters
+* @memberof Phaser.GameObject.RetroFont
 * @protected
 * @param {boolean} [stripCR=true] - Should it strip carriage returns as well?
 * @return {string}  A clean version of the string.
 */
-Phaser.GameObjects.RetroFont.prototype.removeUnsupportedCharacters = function (stripCR) {
+Phaser.GameObject.RetroFont.prototype.removeUnsupportedCharacters = function (stripCR) {
 
     var newString = "";
 
@@ -516,12 +516,12 @@ Phaser.GameObjects.RetroFont.prototype.removeUnsupportedCharacters = function (s
 * Note that the values given for the x and y properties are either ADDED to or SUBTRACTED from (if negative) the existing offsetX/Y values of the characters.
 * So if the current offsetY is 8 and you want it to start rendering from y16 you would call updateOffset(0, 8) to add 8 to the current y offset.
 *
-* @method Phaser.GameObjects.RetroFont#updateOffset
-* @memberof Phaser.GameObjects.RetroFont
+* @method Phaser.GameObject.RetroFont#updateOffset
+* @memberof Phaser.GameObject.RetroFont
 * @param {number} [xOffset=0] - If the font set doesn't start at the top left of the given image, specify the X coordinate offset here.
 * @param {number} [yOffset=0] - If the font set doesn't start at the top left of the given image, specify the Y coordinate offset here.
 */
-Phaser.GameObjects.RetroFont.prototype.updateOffset = function (x, y) {
+Phaser.GameObject.RetroFont.prototype.updateOffset = function (x, y) {
 
     if (this.offsetX === x && this.offsetY === y)
     {
@@ -545,10 +545,10 @@ Phaser.GameObjects.RetroFont.prototype.updateOffset = function (x, y) {
 };
 
 /**
-* @name Phaser.GameObjects.RetroFont#text
+* @name Phaser.GameObject.RetroFont#text
 * @property {string} text - Set this value to update the text in this sprite. Carriage returns are automatically stripped out if multiLine is false. Text is converted to upper case if autoUpperCase is true.
 */
-Object.defineProperty(Phaser.GameObjects.RetroFont.prototype, "text", {
+Object.defineProperty(Phaser.GameObject.RetroFont.prototype, "text", {
 
     get: function () {
 
@@ -583,10 +583,10 @@ Object.defineProperty(Phaser.GameObjects.RetroFont.prototype, "text", {
 });
 
 /**
-* @name Phaser.GameObjects.RetroFont#smoothed
+* @name Phaser.GameObject.RetroFont#smoothed
 * @property {boolean} smoothed - Sets if the stamp is smoothed or not.
 */
-Object.defineProperty(Phaser.GameObjects.RetroFont.prototype, "smoothed", {
+Object.defineProperty(Phaser.GameObject.RetroFont.prototype, "smoothed", {
 
     get: function () {
 

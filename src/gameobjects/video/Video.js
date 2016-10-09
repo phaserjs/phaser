@@ -29,13 +29,13 @@
 * Note: On iOS if you need to detect when the user presses the 'Done' button (before the video ends)
 * then you need to add your own event listener
 *
-* @class Phaser.GameObjects.Video
+* @class Phaser.GameObject.Video
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
 * @param {string|null} [key=null] - The key of the video file in the Phaser.Cache that this Video object will play. Set to `null` or leave undefined if you wish to use a webcam as the source. See `startMediaStream` to start webcam capture.
 * @param {string|null} [url=null] - If the video hasn't been loaded then you can provide a full URL to the file here (make sure to set key to null)
 */
-Phaser.GameObjects.Video = function (game, key, url) {
+Phaser.GameObject.Video = function (game, key, url) {
 
     if (key === undefined) { key = null; }
     if (url === undefined) { url = null; }
@@ -313,15 +313,15 @@ Phaser.GameObjects.Video = function (game, key, url) {
 
 };
 
-Phaser.GameObjects.Video.prototype = {
+Phaser.GameObject.Video.prototype = {
 
     /**
      * Connects to an external media stream for the webcam, rather than using a local one.
      *
-     * @method Phaser.GameObjects.Video#connectToMediaStream
+     * @method Phaser.GameObject.Video#connectToMediaStream
      * @param {HTMLVideoElement} video - The HTML Video Element that the stream uses.
      * @param {MediaStream} stream - The Video Stream data.
-     * @return {Phaser.GameObjects.Video} This Video object for method chaining.
+     * @return {Phaser.GameObject.Video} This Video object for method chaining.
      */
     connectToMediaStream: function (video, stream) {
 
@@ -354,11 +354,11 @@ Phaser.GameObjects.Video.prototype = {
      * If not given then as soon as the stream has enough data the video dimensions will be changed to match the webcam device.
      * You can listen for this with the onChangeSource signal.
      *
-     * @method Phaser.GameObjects.Video#startMediaStream
+     * @method Phaser.GameObject.Video#startMediaStream
      * @param {boolean} [captureAudio=false] - Controls if audio should be captured along with video in the video stream.
      * @param {integer} [width] - The width is used to create the video stream. If not provided the video width will be set to the width of the webcam input source.
      * @param {integer} [height] - The height is used to create the video stream. If not provided the video height will be set to the height of the webcam input source.
-     * @return {Phaser.GameObjects.Video} This Video object for method chaining or false if the device doesn't support getUserMedia.
+     * @return {Phaser.GameObject.Video} This Video object for method chaining or false if the device doesn't support getUserMedia.
      */
     startMediaStream: function (captureAudio, width, height) {
 
@@ -420,7 +420,7 @@ Phaser.GameObjects.Video.prototype = {
     },
 
     /**
-     * @method Phaser.GameObjects.Video#getUserMediaTimeout
+     * @method Phaser.GameObject.Video#getUserMediaTimeout
      * @private
      */
     getUserMediaTimeout: function () {
@@ -432,7 +432,7 @@ Phaser.GameObjects.Video.prototype = {
     },
 
     /**
-     * @method Phaser.GameObjects.Video#getUserMediaError
+     * @method Phaser.GameObject.Video#getUserMediaError
      * @private
      */
     getUserMediaError: function (event) {
@@ -444,7 +444,7 @@ Phaser.GameObjects.Video.prototype = {
     },
 
     /**
-     * @method Phaser.GameObjects.Video#getUserMediaSuccess
+     * @method Phaser.GameObject.Video#getUserMediaSuccess
      * @private
      */
     getUserMediaSuccess: function (stream) {
@@ -515,9 +515,9 @@ Phaser.GameObjects.Video.prototype = {
      * Creates a new Video element from the given Blob. The Blob must contain the video data in the correct encoded format.
      * This method is typically called by the Phaser.Loader and Phaser.Cache for you, but is exposed publicly for convenience.
      *
-     * @method Phaser.GameObjects.Video#createVideoFromBlob
+     * @method Phaser.GameObject.Video#createVideoFromBlob
      * @param {Blob} blob - The Blob containing the video data: `Blob([new Uint8Array(data)])`
-     * @return {Phaser.GameObjects.Video} This Video object for method chaining.
+     * @return {Phaser.GameObject.Video} This Video object for method chaining.
      */
     createVideoFromBlob: function (blob) {
 
@@ -537,10 +537,10 @@ Phaser.GameObjects.Video.prototype = {
     /**
      * Creates a new Video element from the given URL.
      *
-     * @method Phaser.GameObjects.Video#createVideoFromURL
+     * @method Phaser.GameObject.Video#createVideoFromURL
      * @param {string} url - The URL of the video.
      * @param {boolean} [autoplay=false] - Automatically start the video?
-     * @return {Phaser.GameObjects.Video} This Video object for method chaining.
+     * @return {Phaser.GameObject.Video} This Video object for method chaining.
      */
     createVideoFromURL: function (url, autoplay) {
 
@@ -580,7 +580,7 @@ Phaser.GameObjects.Video.prototype = {
      * Called automatically if the video source changes and updates the internal texture dimensions.
      * Then dispatches the onChangeSource signal.
      *
-     * @method Phaser.GameObjects.Video#updateTexture
+     * @method Phaser.GameObject.Video#updateTexture
      * @param {object} [event] - The event which triggered the texture update.
      * @param {integer} [width] - The new width of the video. If undefined `video.videoWidth` is used.
      * @param {integer} [height] - The new height of the video. If undefined `video.videoHeight` is used.
@@ -631,7 +631,7 @@ Phaser.GameObjects.Video.prototype = {
      * Called when the video completes playback (reaches and ended state).
      * Dispatches the Video.onComplete signal.
      *
-     * @method Phaser.GameObjects.Video#complete
+     * @method Phaser.GameObject.Video#complete
      */
     complete: function () {
 
@@ -644,10 +644,10 @@ Phaser.GameObjects.Video.prototype = {
      * 
      * If the video is already playing, or has been queued to play with `changeSource` then this method just returns.
      *
-     * @method Phaser.GameObjects.Video#play
+     * @method Phaser.GameObject.Video#play
      * @param {boolean} [loop=false] - Should the video loop automatically when it reaches the end? Please note that at present some browsers (i.e. Chrome) do not support *seamless* video looping.
      * @param {number} [playbackRate=1] - The playback rate of the video. 1 is normal speed, 2 is x2 speed, and so on. You cannot set a negative playback rate.
-     * @return {Phaser.GameObjects.Video} This Video object for method chaining.
+     * @return {Phaser.GameObject.Video} This Video object for method chaining.
      */
     play: function (loop, playbackRate) {
 
@@ -723,7 +723,7 @@ Phaser.GameObjects.Video.prototype = {
     /**
      * Called when the video starts to play. Updates the texture.
      *
-     * @method Phaser.GameObjects.Video#playHandler
+     * @method Phaser.GameObject.Video#playHandler
      * @private
      */
     playHandler: function () {
@@ -745,8 +745,8 @@ Phaser.GameObjects.Video.prototype = {
      *
      * If you are using a video stream from a webcam then calling Stop will disconnect the MediaStream session and disable the webcam.
      *
-     * @method Phaser.GameObjects.Video#stop
-     * @return {Phaser.GameObjects.Video} This Video object for method chaining.
+     * @method Phaser.GameObject.Video#stop
+     * @return {Phaser.GameObject.Video} This Video object for method chaining.
      */
     stop: function () {
 
@@ -818,9 +818,9 @@ Phaser.GameObjects.Video.prototype = {
     * Updates the given Display Objects so they use this Video as their texture.
     * This will replace any texture they will currently have set.
     *
-    * @method Phaser.GameObjects.Video#add
+    * @method Phaser.GameObject.Video#add
     * @param {Phaser.Sprite|Phaser.Sprite[]|Phaser.Image|Phaser.Image[]} object - Either a single Sprite/Image or an Array of Sprites/Images.
-    * @return {Phaser.GameObjects.Video} This Video object for method chaining.
+    * @return {Phaser.GameObject.Video} This Video object for method chaining.
     */
     add: function (object) {
 
@@ -846,7 +846,7 @@ Phaser.GameObjects.Video.prototype = {
     /**
     * Creates a new Phaser.Image object, assigns this Video to be its texture, adds it to the world then returns it.
     *
-    * @method Phaser.GameObjects.Video#addToWorld
+    * @method Phaser.GameObject.Video#addToWorld
     * @param {number} [x=0] - The x coordinate to place the Image at.
     * @param {number} [y=0] - The y coordinate to place the Image at.
     * @param {number} [anchorX=0] - Set the x anchor point of the Image. A value between 0 and 1, where 0 is the top-left and 1 is bottom-right.
@@ -874,7 +874,7 @@ Phaser.GameObjects.Video.prototype = {
     * This is called automatically if the Video is being used by a Sprite, otherwise you need to remember to call it in your render function.
     * If you wish to suppress this functionality set Video.disableTextureUpload to `true`.
     *
-    * @method Phaser.GameObjects.Video#render
+    * @method Phaser.GameObject.Video#render
     */
     render: function () {
 
@@ -888,7 +888,7 @@ Phaser.GameObjects.Video.prototype = {
     /**
     * Internal handler called automatically by the Video.mute setter.
     *
-    * @method Phaser.GameObjects.Video#setMute
+    * @method Phaser.GameObject.Video#setMute
     * @private
     */
     setMute: function () {
@@ -907,7 +907,7 @@ Phaser.GameObjects.Video.prototype = {
     /**
     * Internal handler called automatically by the Video.mute setter.
     *
-    * @method Phaser.GameObjects.Video#unsetMute
+    * @method Phaser.GameObject.Video#unsetMute
     * @private
     */
     unsetMute: function () {
@@ -926,7 +926,7 @@ Phaser.GameObjects.Video.prototype = {
     /**
     * Internal handler called automatically by the Video.paused setter.
     *
-    * @method Phaser.GameObjects.Video#setPause
+    * @method Phaser.GameObject.Video#setPause
     * @private
     */
     setPause: function () {
@@ -945,7 +945,7 @@ Phaser.GameObjects.Video.prototype = {
     /**
     * Internal handler called automatically by the Video.paused setter.
     *
-    * @method Phaser.GameObjects.Video#setResume
+    * @method Phaser.GameObject.Video#setResume
     * @private
     */
     setResume: function () {
@@ -980,10 +980,10 @@ Phaser.GameObjects.Video.prototype = {
      * when the new video has downloaded enough content to be able to be played. Previous settings such as the volume and loop state
      * are adopted automatically by the new video.
      *
-     * @method Phaser.GameObjects.Video#changeSource
+     * @method Phaser.GameObject.Video#changeSource
      * @param {string} src - The new URL to change the video.src to.
      * @param {boolean} [autoplay=true] - Should the video play automatically after the source has been updated?
-     * @return {Phaser.GameObjects.Video} This Video object for method chaining.
+     * @return {Phaser.GameObject.Video} This Video object for method chaining.
      */
     changeSource: function (src, autoplay) {
 
@@ -1018,7 +1018,7 @@ Phaser.GameObjects.Video.prototype = {
     /**
     * Internal callback that monitors the download progress of a video after changing its source.
     *
-    * @method Phaser.GameObjects.Video#checkVideoProgress
+    * @method Phaser.GameObject.Video#checkVideoProgress
     * @private
     */
     checkVideoProgress: function () {
@@ -1041,7 +1041,7 @@ Phaser.GameObjects.Video.prototype = {
             }
             else
             {
-                console.warn('Phaser.GameObjects.Video: Unable to start downloading video in time', this.isStreaming);
+                console.warn('Phaser.GameObject.Video: Unable to start downloading video in time', this.isStreaming);
             }
         }
 
@@ -1051,7 +1051,7 @@ Phaser.GameObjects.Video.prototype = {
     * Sets the Input Manager touch callback to be Video.unlock.
     * Required for mobile video unlocking. Mostly just used internally.
     *
-    * @method Phaser.GameObjects.Video#setTouchLock
+    * @method Phaser.GameObject.Video#setTouchLock
     */
     setTouchLock: function () {
 
@@ -1065,7 +1065,7 @@ Phaser.GameObjects.Video.prototype = {
     * If the SoundManager hasn't been unlocked then this will automatically unlock that as well.
     * Only one video can be pending unlock at any one time.
     *
-    * @method Phaser.GameObjects.Video#unlock
+    * @method Phaser.GameObject.Video#unlock
     */
     unlock: function () {
 
@@ -1096,7 +1096,7 @@ Phaser.GameObjects.Video.prototype = {
      *
      * If you need more advanced control over the grabbing them call `Video.snapshot.copy` directly with the same parameters as BitmapData.copy.
      *
-     * @method Phaser.GameObjects.Video#grab
+     * @method Phaser.GameObject.Video#grab
      * @param {boolean} [clear=false] - Should the BitmapData be cleared before the Video is grabbed? Unless you are using alpha or a blend mode you can usually leave this set to false.
      * @param {number} [alpha=1] - The alpha that will be set on the video before drawing. A value between 0 (fully transparent) and 1, opaque.
      * @param {string} [blendMode=null] - The composite blend mode that will be used when drawing. The default is no blend mode at all. This is a Canvas globalCompositeOperation value such as 'lighter' or 'xor'.
@@ -1129,7 +1129,7 @@ Phaser.GameObjects.Video.prototype = {
      * Removes the Video element from the DOM by calling parentNode.removeChild on itself.
      * Also removes the autoplay and src attributes and nulls the reference.
      *
-     * @method Phaser.GameObjects.Video#removeVideoElement
+     * @method Phaser.GameObject.Video#removeVideoElement
      */
     removeVideoElement: function () {
 
@@ -1159,7 +1159,7 @@ Phaser.GameObjects.Video.prototype = {
      * Destroys the Video object. This calls `Video.stop` and then `Video.removeVideoElement`.
      * If any Sprites are using this Video as their texture it is up to you to manage those.
      *
-     * @method Phaser.GameObjects.Video#destroy
+     * @method Phaser.GameObject.Video#destroy
      */
     destroy: function () {
 
@@ -1182,10 +1182,10 @@ Phaser.GameObjects.Video.prototype = {
 };
 
 /**
-* @name Phaser.GameObjects.Video#currentTime
+* @name Phaser.GameObject.Video#currentTime
 * @property {number} currentTime - The current time of the video in seconds. If set the video will attempt to seek to that point in time.
 */
-Object.defineProperty(Phaser.GameObjects.Video.prototype, "currentTime", {
+Object.defineProperty(Phaser.GameObject.Video.prototype, "currentTime", {
 
     get: function () {
 
@@ -1202,11 +1202,11 @@ Object.defineProperty(Phaser.GameObjects.Video.prototype, "currentTime", {
 });
 
 /**
-* @name Phaser.GameObjects.Video#duration
+* @name Phaser.GameObject.Video#duration
 * @property {number} duration - The duration of the video in seconds.
 * @readOnly
 */
-Object.defineProperty(Phaser.GameObjects.Video.prototype, "duration", {
+Object.defineProperty(Phaser.GameObject.Video.prototype, "duration", {
 
     get: function () {
 
@@ -1217,11 +1217,11 @@ Object.defineProperty(Phaser.GameObjects.Video.prototype, "duration", {
 });
 
 /**
-* @name Phaser.GameObjects.Video#progress
+* @name Phaser.GameObject.Video#progress
 * @property {number} progress - The progress of this video. This is a value between 0 and 1, where 0 is the start and 1 is the end of the video.
 * @readOnly
 */
-Object.defineProperty(Phaser.GameObjects.Video.prototype, "progress", {
+Object.defineProperty(Phaser.GameObject.Video.prototype, "progress", {
 
     get: function () {
 
@@ -1232,10 +1232,10 @@ Object.defineProperty(Phaser.GameObjects.Video.prototype, "progress", {
 });
 
 /**
-* @name Phaser.GameObjects.Video#mute
+* @name Phaser.GameObject.Video#mute
 * @property {boolean} mute - Gets or sets the muted state of the Video.
 */
-Object.defineProperty(Phaser.GameObjects.Video.prototype, "mute", {
+Object.defineProperty(Phaser.GameObject.Video.prototype, "mute", {
 
     get: function () {
 
@@ -1275,10 +1275,10 @@ Object.defineProperty(Phaser.GameObjects.Video.prototype, "mute", {
 * Gets or sets the paused state of the Video.
 * If the video is still touch locked (such as on iOS devices) this call has no effect.
 *
-* @name Phaser.GameObjects.Video#paused
+* @name Phaser.GameObject.Video#paused
 * @property {boolean} paused
 */
-Object.defineProperty(Phaser.GameObjects.Video.prototype, "paused", {
+Object.defineProperty(Phaser.GameObject.Video.prototype, "paused", {
 
     get: function () {
 
@@ -1320,10 +1320,10 @@ Object.defineProperty(Phaser.GameObjects.Video.prototype, "paused", {
 });
 
 /**
-* @name Phaser.GameObjects.Video#volume
+* @name Phaser.GameObject.Video#volume
 * @property {number} volume - Gets or sets the volume of the Video, a value between 0 and 1. The value given is clamped to the range 0 to 1.
 */
-Object.defineProperty(Phaser.GameObjects.Video.prototype, "volume", {
+Object.defineProperty(Phaser.GameObject.Video.prototype, "volume", {
 
     get: function () {
 
@@ -1352,10 +1352,10 @@ Object.defineProperty(Phaser.GameObjects.Video.prototype, "volume", {
 });
 
 /**
-* @name Phaser.GameObjects.Video#playbackRate
+* @name Phaser.GameObject.Video#playbackRate
 * @property {number} playbackRate - Gets or sets the playback rate of the Video. This is the speed at which the video is playing.
 */
-Object.defineProperty(Phaser.GameObjects.Video.prototype, "playbackRate", {
+Object.defineProperty(Phaser.GameObject.Video.prototype, "playbackRate", {
 
     get: function () {
 
@@ -1379,10 +1379,10 @@ Object.defineProperty(Phaser.GameObjects.Video.prototype, "playbackRate", {
 * Please note that at present some browsers (i.e. Chrome) do not support *seamless* video looping.
 * If the video isn't yet set this will always return false.
 *
-* @name Phaser.GameObjects.Video#loop
+* @name Phaser.GameObject.Video#loop
 * @property {boolean} loop
 */
-Object.defineProperty(Phaser.GameObjects.Video.prototype, "loop", {
+Object.defineProperty(Phaser.GameObject.Video.prototype, "loop", {
 
     get: function () {
 
@@ -1406,11 +1406,11 @@ Object.defineProperty(Phaser.GameObjects.Video.prototype, "loop", {
 });
 
 /**
-* @name Phaser.GameObjects.Video#playing
+* @name Phaser.GameObject.Video#playing
 * @property {boolean} playing - True if the video is currently playing (and not paused or ended), otherwise false.
 * @readOnly
 */
-Object.defineProperty(Phaser.GameObjects.Video.prototype, "playing", {
+Object.defineProperty(Phaser.GameObject.Video.prototype, "playing", {
 
     get: function () {
 
@@ -1420,4 +1420,4 @@ Object.defineProperty(Phaser.GameObjects.Video.prototype, "playing", {
 
 });
 
-Phaser.GameObjects.Video.prototype.constructor = Phaser.GameObjects.Video;
+Phaser.GameObject.Video.prototype.constructor = Phaser.GameObject.Video;

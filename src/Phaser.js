@@ -542,8 +542,8 @@ var Phaser = Phaser || {    // jshint ignore:line
         NEAREST: 1
     },
 
-    GameObjects: {},
-
+    Component: {},
+    GameObject: {},
     Renderer: {},
 
     tempMatrix: null

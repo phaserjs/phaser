@@ -11,7 +11,7 @@
 * They also contain additional properties allowing for physics motion (via Sprite.body), input handling (via Sprite.input),
 * events (via Sprite.events), animation (via Sprite.animations), camera culling and more. Please see the Examples for use cases.
 *
-* @class Phaser.GameObjects.Sprite
+* @class Phaser.GameObject.Sprite
 * @constructor
 * @extends PIXI.Sprite
 * @extends Phaser.Component.Core
@@ -41,7 +41,7 @@
 * @param {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
 * @param {string|number} frame - If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
 */
-Phaser.GameObjects.Sprite = function (game, x, y, key, frame) {
+Phaser.GameObject.Sprite = function (game, x, y, key, frame) {
 
     x = x || 0;
     y = y || 0;
@@ -66,10 +66,10 @@ Phaser.GameObjects.Sprite = function (game, x, y, key, frame) {
 
 };
 
-Phaser.GameObjects.Sprite.prototype = Object.create(PIXI.Sprite.prototype);
-Phaser.GameObjects.Sprite.prototype.constructor = Phaser.GameObjects.Sprite;
+Phaser.GameObject.Sprite.prototype = Object.create(PIXI.Sprite.prototype);
+Phaser.GameObject.Sprite.prototype.constructor = Phaser.GameObject.Sprite;
 
-Phaser.Component.Core.install.call(Phaser.GameObjects.Sprite.prototype, [
+Phaser.Component.Core.install.call(Phaser.GameObject.Sprite.prototype, [
     'Angle',
     'Animation',
     'AutoCull',
@@ -92,19 +92,19 @@ Phaser.Component.Core.install.call(Phaser.GameObjects.Sprite.prototype, [
     'Smoothed'
 ]);
 
-Phaser.GameObjects.Sprite.prototype.preUpdatePhysics = Phaser.Component.PhysicsBody.preUpdate;
-Phaser.GameObjects.Sprite.prototype.preUpdateLifeSpan = Phaser.Component.LifeSpan.preUpdate;
-Phaser.GameObjects.Sprite.prototype.preUpdateInWorld = Phaser.Component.InWorld.preUpdate;
-Phaser.GameObjects.Sprite.prototype.preUpdateCore = Phaser.Component.Core.preUpdate;
+Phaser.GameObject.Sprite.prototype.preUpdatePhysics = Phaser.Component.PhysicsBody.preUpdate;
+Phaser.GameObject.Sprite.prototype.preUpdateLifeSpan = Phaser.Component.LifeSpan.preUpdate;
+Phaser.GameObject.Sprite.prototype.preUpdateInWorld = Phaser.Component.InWorld.preUpdate;
+Phaser.GameObject.Sprite.prototype.preUpdateCore = Phaser.Component.Core.preUpdate;
 
 /**
 * Automatically called by World.preUpdate.
 *
 * @method
-* @memberof Phaser.GameObjects.Sprite
+* @memberof Phaser.GameObject.Sprite
 * @return {boolean} True if the Sprite was rendered, otherwise false.
 */
-Phaser.GameObjects.Sprite.prototype.preUpdate = function () {
+Phaser.GameObject.Sprite.prototype.preUpdate = function () {
 
     if (!this.preUpdatePhysics() || !this.preUpdateLifeSpan() || !this.preUpdateInWorld())
     {

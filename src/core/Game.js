@@ -212,7 +212,7 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this.raf = null;
 
     /**
-    * @property {Phaser.GameObjects.Factory} add - Reference to the Phaser GameObject Factory.
+    * @property {Phaser.GameObject.Factory} add - Reference to the Phaser GameObject Factory.
     */
     this.add = null;
 
@@ -614,7 +614,7 @@ Phaser.Game.prototype = {
 
         this.world = new Phaser.World(this);
 
-        this.add = new Phaser.GameObjects.Factory(this);
+        this.add = new Phaser.GameObject.Factory(this);
         this.add.boot();
 
         this.make = new Phaser.GameObjectCreator(this);

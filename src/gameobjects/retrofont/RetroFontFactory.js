@@ -4,7 +4,7 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
-Phaser.GameObjects.RetroFont.FACTORY_KEY = 'retroFont';
+Phaser.GameObject.RetroFont.FACTORY_KEY = 'retroFont';
 
 /**
 * Create a new RetroFont object.
@@ -16,7 +16,7 @@ Phaser.GameObjects.RetroFont.FACTORY_KEY = 'retroFont';
 * The texture can be asssigned or one or multiple images/sprites, but note that the text the RetroFont uses will be shared across them all,
 * i.e. if you need each Image to have different text in it, then you need to create multiple RetroFont objects.
 *
-* @method Phaser.GameObjects.Factory#retroFont
+* @method Phaser.GameObject.Factory#retroFont
 * @param {string} font - The key of the image in the Game.Cache that the RetroFont will use.
 * @param {number} characterWidth - The width of each character in the font set.
 * @param {number} characterHeight - The height of each character in the font set.
@@ -28,9 +28,9 @@ Phaser.GameObjects.RetroFont.FACTORY_KEY = 'retroFont';
 * @param {number} [yOffset=0] - If the font set doesn't start at the top left of the given image, specify the Y coordinate offset here.
 * @return {Phaser.RetroFont} The newly created RetroFont texture which can be applied to an Image or Sprite.
 */
-Phaser.GameObjects.RetroFont.FACTORY_ADD = function (font, characterWidth, characterHeight, chars, charsPerRow, xSpacing, ySpacing, xOffset, yOffset)
+Phaser.GameObject.RetroFont.FACTORY_ADD = function (font, characterWidth, characterHeight, chars, charsPerRow, xSpacing, ySpacing, xOffset, yOffset)
 {
-    return new Phaser.GameObjects.RetroFont(this.game, font, characterWidth, characterHeight, chars, charsPerRow, xSpacing, ySpacing, xOffset, yOffset);
+    return new Phaser.GameObject.RetroFont(this.game, font, characterWidth, characterHeight, chars, charsPerRow, xSpacing, ySpacing, xOffset, yOffset);
 };
 
 /**
@@ -55,7 +55,7 @@ Phaser.GameObjects.RetroFont.FACTORY_ADD = function (font, characterWidth, chara
 * @param {number} [yOffset=0] - If the font set doesn't start at the top left of the given image, specify the Y coordinate offset here.
 * @return {Phaser.RetroFont} The newly created RetroFont texture which can be applied to an Image or Sprite.
 */
-Phaser.GameObjects.RetroFont.FACTORY_MAKE = function (font, characterWidth, characterHeight, chars, charsPerRow, xSpacing, ySpacing, xOffset, yOffset)
+Phaser.GameObject.RetroFont.FACTORY_MAKE = function (font, characterWidth, characterHeight, chars, charsPerRow, xSpacing, ySpacing, xOffset, yOffset)
 {
-    return new Phaser.GameObjects.RetroFont(this.game, font, characterWidth, characterHeight, chars, charsPerRow, xSpacing, ySpacing, xOffset, yOffset);
+    return new Phaser.GameObject.RetroFont(this.game, font, characterWidth, characterHeight, chars, charsPerRow, xSpacing, ySpacing, xOffset, yOffset);
 };

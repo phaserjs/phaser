@@ -19,7 +19,7 @@
 */
 Phaser.Bullet = function (game, x, y, key, frame) {
 
-    Phaser.GameObjects.Sprite.call(this, game, x, y, key, frame);
+    Phaser.GameObject.Sprite.call(this, game, x, y, key, frame);
 
     this.anchor.set(0.5);
 
@@ -35,7 +35,7 @@ Phaser.Bullet = function (game, x, y, key, frame) {
 
 };
 
-Phaser.Bullet.prototype = Object.create(Phaser.GameObjects.Sprite.prototype);
+Phaser.Bullet.prototype = Object.create(Phaser.GameObject.Sprite.prototype);
 Phaser.Bullet.prototype.constructor = Phaser.Bullet;
 
 /**

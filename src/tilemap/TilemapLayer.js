@@ -25,7 +25,7 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     width |= 0;
     height |= 0;
 
-    Phaser.GameObjects.Sprite.call(this, game, 0, 0);
+    Phaser.GameObject.Sprite.call(this, game, 0, 0);
 
     /**
     * The Tilemap to which this layer is bound.
@@ -237,7 +237,7 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
 
 };
 
-Phaser.TilemapLayer.prototype = Object.create(Phaser.GameObjects.Sprite.prototype);
+Phaser.TilemapLayer.prototype = Object.create(Phaser.GameObject.Sprite.prototype);
 Phaser.TilemapLayer.prototype.constructor = Phaser.TilemapLayer;
 
 Phaser.TilemapLayer.prototype.preUpdateCore = Phaser.Component.Core.preUpdate;

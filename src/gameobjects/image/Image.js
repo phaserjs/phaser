@@ -8,7 +8,7 @@
 * An Image is a light-weight object you can use to display anything that doesn't need physics or animation.
 * It can still rotate, scale, crop and receive input events. This makes it perfect for logos, backgrounds, simple buttons and other non-Sprite graphics.
 *
-* @class Phaser.GameObjects.Image
+* @class Phaser.GameObject.Image
 * @extends PIXI.Sprite
 * @extends Phaser.Component.Core
 * @extends Phaser.Component.Angle
@@ -33,7 +33,7 @@
 * @param {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} [key] - The texture used by the Image during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture, BitmapData or PIXI.Texture.
 * @param {string|number} [frame] - If this Image is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
 */
-Phaser.GameObjects.Image = function (game, x, y, key, frame) {
+Phaser.GameObject.Image = function (game, x, y, key, frame) {
 
     x = x || 0;
     y = y || 0;
@@ -52,10 +52,10 @@ Phaser.GameObjects.Image = function (game, x, y, key, frame) {
 
 };
 
-Phaser.GameObjects.Image.prototype = Object.create(PIXI.Sprite.prototype);
-Phaser.GameObjects.Image.prototype.constructor = Phaser.GameObjects.Image;
+Phaser.GameObject.Image.prototype = Object.create(PIXI.Sprite.prototype);
+Phaser.GameObject.Image.prototype.constructor = Phaser.GameObject.Image;
 
-Phaser.Component.Core.install.call(Phaser.GameObjects.Image.prototype, [
+Phaser.Component.Core.install.call(Phaser.GameObject.Image.prototype, [
     'Angle',
     'Animation',
     'AutoCull',
@@ -73,8 +73,8 @@ Phaser.Component.Core.install.call(Phaser.GameObjects.Image.prototype, [
     'Smoothed'
 ]);
 
-Phaser.GameObjects.Image.prototype.preUpdateInWorld = Phaser.Component.InWorld.preUpdate;
-Phaser.GameObjects.Image.prototype.preUpdateCore = Phaser.Component.Core.preUpdate;
+Phaser.GameObject.Image.prototype.preUpdateInWorld = Phaser.Component.InWorld.preUpdate;
+Phaser.GameObject.Image.prototype.preUpdateCore = Phaser.Component.Core.preUpdate;
 
 /**
 * Automatically called by World.preUpdate.
@@ -82,7 +82,7 @@ Phaser.GameObjects.Image.prototype.preUpdateCore = Phaser.Component.Core.preUpda
 * @method Phaser.Image#preUpdate
 * @memberof Phaser.Image
 */
-Phaser.GameObjects.Image.prototype.preUpdate = function () {
+Phaser.GameObject.Image.prototype.preUpdate = function () {
 
     if (!this.preUpdateInWorld())
     {

@@ -10,7 +10,7 @@
 * 
 * It allows you to display animated Game Objects that were created with the [Creature Automated Animation Tool](http://www.kestrelmoon.com/creature/).
 * 
-* Note 1: You can only use Phaser.GameObjects.Creature objects in WebGL enabled games. They do not work in Canvas mode games.
+* Note 1: You can only use Phaser.GameObject.Creature objects in WebGL enabled games. They do not work in Canvas mode games.
 *
 * Note 2: You must use a build of Phaser that includes the CreatureMeshBone.js runtime and gl-matrix.js, or have them
 * loaded before your Phaser game boots.
@@ -21,7 +21,7 @@
 * 
 * So you'll need to do `grunt custom` to create a build that includes them.
 *
-* @class Phaser.GameObjects.Creature
+* @class Phaser.GameObject.Creature
 * @extends PIXI.DisplayObjectContainer
 * @extends Phaser.Component.Core
 * @extends Phaser.Component.Angle
@@ -39,7 +39,7 @@
 * @param {string} mesh - The mesh data for the Creature Object. It should be a string which is a reference to the Cache JSON entry.
 * @param {string} [animation='default'] - The animation within the mesh data  to play.
 */
-Phaser.GameObjects.Creature = function (game, x, y, key, mesh, animation) {
+Phaser.GameObject.Creature = function (game, x, y, key, mesh, animation) {
 
     if (animation === undefined) { animation = 'default'; }
 
@@ -51,7 +51,7 @@ Phaser.GameObjects.Creature = function (game, x, y, key, mesh, animation) {
 
     if (!game.cache.checkJSONKey(mesh))
     {
-        console.warn('Phaser.GameObjects.Creature: Invalid mesh key given. Not found in Phaser.Cache');
+        console.warn('Phaser.GameObject.Creature: Invalid mesh key given. Not found in Phaser.Cache');
         return;
     }
 
@@ -150,10 +150,10 @@ Phaser.GameObjects.Creature = function (game, x, y, key, mesh, animation) {
 
 };
 
-Phaser.GameObjects.Creature.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
-Phaser.GameObjects.Creature.prototype.constructor = Phaser.GameObjects.Creature;
+Phaser.GameObject.Creature.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
+Phaser.GameObject.Creature.prototype.constructor = Phaser.GameObject.Creature;
 
-Phaser.Component.Core.install.call(Phaser.GameObjects.Creature.prototype, [
+Phaser.Component.Core.install.call(Phaser.GameObject.Creature.prototype, [
     'Angle',
     'AutoCull',
     'BringToTop',
@@ -163,16 +163,16 @@ Phaser.Component.Core.install.call(Phaser.GameObjects.Creature.prototype, [
     'Reset'
 ]);
 
-Phaser.GameObjects.Creature.prototype.preUpdateInWorld = Phaser.Component.InWorld.preUpdate;
-Phaser.GameObjects.Creature.prototype.preUpdateCore = Phaser.Component.Core.preUpdate;
+Phaser.GameObject.Creature.prototype.preUpdateInWorld = Phaser.Component.InWorld.preUpdate;
+Phaser.GameObject.Creature.prototype.preUpdateCore = Phaser.Component.Core.preUpdate;
 
 /**
 * Automatically called by World.preUpdate.
 *
-* @method Phaser.GameObjects.Creature#preUpdate
-* @memberof Phaser.GameObjects.Creature
+* @method Phaser.GameObject.Creature#preUpdate
+* @memberof Phaser.GameObject.Creature
 */
-Phaser.GameObjects.Creature.prototype.preUpdate = function () {
+Phaser.GameObject.Creature.prototype.preUpdate = function () {
 
     if (!this.preUpdateInWorld())
     {
@@ -190,11 +190,11 @@ Phaser.GameObjects.Creature.prototype.preUpdate = function () {
 /**
 * 
 *
-* @method Phaser.GameObjects.Creature#_initWebGL
-* @memberof Phaser.GameObjects.Creature
+* @method Phaser.GameObject.Creature#_initWebGL
+* @memberof Phaser.GameObject.Creature
 * @private
 */
-Phaser.GameObjects.Creature.prototype._initWebGL = function (renderSession) {
+Phaser.GameObject.Creature.prototype._initWebGL = function (renderSession) {
 
     // build the strip!
     var gl = renderSession.gl;
@@ -219,11 +219,11 @@ Phaser.GameObjects.Creature.prototype._initWebGL = function (renderSession) {
 };
 
 /**
-* @method Phaser.GameObjects.Creature#_renderWebGL
-* @memberof Phaser.GameObjects.Creature
+* @method Phaser.GameObject.Creature#_renderWebGL
+* @memberof Phaser.GameObject.Creature
 * @private
 */
-Phaser.GameObjects.Creature.prototype._renderWebGL = function (renderSession) {
+Phaser.GameObject.Creature.prototype._renderWebGL = function (renderSession) {
 
     //  If the sprite is not visible or the alpha is 0 then no need to render this element
     if (!this.visible || this.alpha <= 0)
@@ -248,11 +248,11 @@ Phaser.GameObjects.Creature.prototype._renderWebGL = function (renderSession) {
 };
 
 /**
-* @method Phaser.GameObjects.Creature#_renderCreature
-* @memberof Phaser.GameObjects.Creature
+* @method Phaser.GameObject.Creature#_renderCreature
+* @memberof Phaser.GameObject.Creature
 * @private
 */
-Phaser.GameObjects.Creature.prototype._renderCreature = function (renderSession) {
+Phaser.GameObject.Creature.prototype._renderCreature = function (renderSession) {
 
     var gl = renderSession.gl;
 
@@ -329,11 +329,11 @@ Phaser.GameObjects.Creature.prototype._renderCreature = function (renderSession)
 };
 
 /**
-* @method Phaser.GameObjects.Creature#updateCreatureBounds
-* @memberof Phaser.GameObjects.Creature
+* @method Phaser.GameObject.Creature#updateCreatureBounds
+* @memberof Phaser.GameObject.Creature
 * @private
 */
-Phaser.GameObjects.Creature.prototype.updateCreatureBounds = function () {
+Phaser.GameObject.Creature.prototype.updateCreatureBounds = function () {
 
     //  Update bounds based off world transform matrix
     var target = this.manager.target_creature;
@@ -349,11 +349,11 @@ Phaser.GameObjects.Creature.prototype.updateCreatureBounds = function () {
 };
 
 /**
-* @method Phaser.GameObjects.Creature#updateData
-* @memberof Phaser.GameObjects.Creature
+* @method Phaser.GameObject.Creature#updateData
+* @memberof Phaser.GameObject.Creature
 * @private
 */
-Phaser.GameObjects.Creature.prototype.updateData = function () {
+Phaser.GameObject.Creature.prototype.updateData = function () {
 
     var target = this.manager.target_creature;
 
@@ -368,11 +368,11 @@ Phaser.GameObjects.Creature.prototype.updateData = function () {
 };
 
 /**
-* @method Phaser.GameObjects.Creature#updateRenderData
-* @memberof Phaser.GameObjects.Creature
+* @method Phaser.GameObject.Creature#updateRenderData
+* @memberof Phaser.GameObject.Creature
 * @private
 */
-Phaser.GameObjects.Creature.prototype.updateRenderData = function (verts, uvs) {
+Phaser.GameObject.Creature.prototype.updateRenderData = function (verts, uvs) {
 
     var target = this.manager.target_creature;
 
@@ -400,11 +400,11 @@ Phaser.GameObjects.Creature.prototype.updateRenderData = function (verts, uvs) {
 /**
 * Sets the Animation this Creature object will play, as defined in the mesh data.
 *
-* @method Phaser.GameObjects.Creature#setAnimation
-* @memberof Phaser.GameObjects.Creature
+* @method Phaser.GameObject.Creature#setAnimation
+* @memberof Phaser.GameObject.Creature
 * @param {string} key - The key of the animation to set, as defined in the mesh data.
 */
-Phaser.GameObjects.Creature.prototype.setAnimation = function (key) {
+Phaser.GameObject.Creature.prototype.setAnimation = function (key) {
 
     this.manager.SetActiveAnimationName(key, true);
 
@@ -413,11 +413,11 @@ Phaser.GameObjects.Creature.prototype.setAnimation = function (key) {
 /**
 * Plays the currently set animation.
 *
-* @method Phaser.GameObjects.Creature#play
-* @memberof Phaser.GameObjects.Creature
+* @method Phaser.GameObject.Creature#play
+* @memberof Phaser.GameObject.Creature
 * @param {boolean} [loop=false] - Should the animation loop?
 */
-Phaser.GameObjects.Creature.prototype.play = function (loop) {
+Phaser.GameObject.Creature.prototype.play = function (loop) {
 
     if (loop === undefined) { loop = false; }
 
@@ -431,20 +431,20 @@ Phaser.GameObjects.Creature.prototype.play = function (loop) {
 /**
 * Stops the currently playing animation.
 *
-* @method Phaser.GameObjects.Creature#stop
-* @memberof Phaser.GameObjects.Creature
+* @method Phaser.GameObject.Creature#stop
+* @memberof Phaser.GameObject.Creature
 */
-Phaser.GameObjects.Creature.prototype.stop = function () {
+Phaser.GameObject.Creature.prototype.stop = function () {
 
     this.manager.SetIsPlaying(false);
 
 };
 
 /**
-* @name Phaser.GameObjects.Creature#isPlaying
+* @name Phaser.GameObject.Creature#isPlaying
 * @property {boolean} isPlaying - Is the _current_ animation playing?
 */
-Object.defineProperty(Phaser.GameObjects.Creature.prototype, 'isPlaying', {
+Object.defineProperty(Phaser.GameObject.Creature.prototype, 'isPlaying', {
 
     get: function() {
 
@@ -461,10 +461,10 @@ Object.defineProperty(Phaser.GameObjects.Creature.prototype, 'isPlaying', {
 });
 
 /**
-* @name Phaser.GameObjects.Creature#loop
+* @name Phaser.GameObject.Creature#loop
 * @property {boolean} loop - Should the _current_ animation loop or not?
 */
-Object.defineProperty(Phaser.GameObjects.Creature.prototype, 'loop', {
+Object.defineProperty(Phaser.GameObject.Creature.prototype, 'loop', {
 
     get: function() {
 

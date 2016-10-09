@@ -12,7 +12,7 @@
 *
 * See {@link http://www.jordanm.co.uk/tinytype this compatibility table} for the available default fonts across mobile browsers.
 *
-* @class Phaser.GameObjects.Text
+* @class Phaser.GameObject.Text
 * @extends Phaser.Sprite
 * @constructor
 * @param {Phaser.Game} game - Current game instance.
@@ -37,7 +37,7 @@
 * @param {number} [style.maxLines=0] - The maximum number of lines to be shown for wrapped text.
 * @param {number} [style.tabs=0] - The size (in pixels) of the tabs, for when text includes tab characters. 0 disables. Can be an array of varying tab sizes, one per tab stop.
 */
-Phaser.GameObjects.Text = function (game, x, y, text, style) {
+Phaser.GameObject.Text = function (game, x, y, text, style) {
 
     x = x || 0;
     y = y || 0;
@@ -91,22 +91,22 @@ Phaser.GameObjects.Text = function (game, x, y, text, style) {
     this.context = this.canvas.getContext('2d');
 
     /**
-    * @property {array} colors - An array of the color values as specified by {@link Phaser.GameObjects.Text#addColor addColor}.
+    * @property {array} colors - An array of the color values as specified by {@link Phaser.GameObject.Text#addColor addColor}.
     */
     this.colors = [];
 
     /**
-    * @property {array} strokeColors - An array of the stroke color values as specified by {@link Phaser.GameObjects.Text#addStrokeColor addStrokeColor}.
+    * @property {array} strokeColors - An array of the stroke color values as specified by {@link Phaser.GameObject.Text#addStrokeColor addStrokeColor}.
     */
     this.strokeColors = [];
 
     /**
-    * @property {array} fontStyles - An array of the font styles values as specified by {@link Phaser.GameObjects.Text#addFontStyle addFontStyle}.
+    * @property {array} fontStyles - An array of the font styles values as specified by {@link Phaser.GameObject.Text#addFontStyle addFontStyle}.
     */
     this.fontStyles = [];
 
     /**
-    * @property {array} fontWeights - An array of the font weights values as specified by {@link Phaser.GameObjects.Text#addFontWeight addFontWeight}.
+    * @property {array} fontWeights - An array of the font weights values as specified by {@link Phaser.GameObject.Text#addFontWeight addFontWeight}.
     */
     this.fontWeights = [];
 
@@ -192,16 +192,16 @@ Phaser.GameObjects.Text = function (game, x, y, text, style) {
 
 };
 
-Phaser.GameObjects.Text.prototype = Object.create(Phaser.GameObjects.Sprite.prototype);
-Phaser.GameObjects.Text.prototype.constructor = Phaser.GameObjects.Text;
+Phaser.GameObject.Text.prototype = Object.create(Phaser.GameObject.Sprite.prototype);
+Phaser.GameObject.Text.prototype.constructor = Phaser.GameObject.Text;
 
 /**
 * Automatically called by World.preUpdate.
 * 
-* @method Phaser.GameObjects.Text#preUpdate
+* @method Phaser.GameObject.Text#preUpdate
 * @protected
 */
-Phaser.GameObjects.Text.prototype.preUpdate = function () {
+Phaser.GameObject.Text.prototype.preUpdate = function () {
 
     if (!this.preUpdatePhysics() || !this.preUpdateLifeSpan() || !this.preUpdateInWorld())
     {
@@ -215,20 +215,20 @@ Phaser.GameObjects.Text.prototype.preUpdate = function () {
 /**
 * Override this function to handle any special update requirements.
 *
-* @method Phaser.GameObjects.Text#update
+* @method Phaser.GameObject.Text#update
 * @protected
 */
-Phaser.GameObjects.Text.prototype.update = function() {
+Phaser.GameObject.Text.prototype.update = function() {
 
 };
 
 /**
 * Destroy this Text object, removing it from the group it belongs to.
 *
-* @method Phaser.GameObjects.Text#destroy
+* @method Phaser.GameObject.Text#destroy
 * @param {boolean} [destroyChildren=true] - Should every child of this object have its destroy method called?
 */
-Phaser.GameObjects.Text.prototype.destroy = function (destroyChildren) {
+Phaser.GameObject.Text.prototype.destroy = function (destroyChildren) {
 
     this.texture.destroy(true);
 
@@ -242,16 +242,16 @@ Phaser.GameObjects.Text.prototype.destroy = function (destroyChildren) {
 * The blur is the strength of the shadow. A value of zero means a hard shadow, a value of 10 means a very soft shadow.
 * To remove a shadow already in place you can call this method with no parameters set.
 * 
-* @method Phaser.GameObjects.Text#setShadow
+* @method Phaser.GameObject.Text#setShadow
 * @param {number} [x=0] - The shadowOffsetX value in pixels. This is how far offset horizontally the shadow effect will be.
 * @param {number} [y=0] - The shadowOffsetY value in pixels. This is how far offset vertically the shadow effect will be.
 * @param {string} [color='rgba(0,0,0,1)'] - The color of the shadow, as given in CSS rgba or hex format. Set the alpha component to 0 to disable the shadow.
 * @param {number} [blur=0] - The shadowBlur value. Make the shadow softer by applying a Gaussian blur to it. A number from 0 (no blur) up to approx. 10 (depending on scene).
 * @param {boolean} [shadowStroke=true] - Apply the drop shadow to the Text stroke (if set).
 * @param {boolean} [shadowFill=true] - Apply the drop shadow to the Text fill (if set).
-* @return {Phaser.GameObjects.Text} This Text instance.
+* @return {Phaser.GameObject.Text} This Text instance.
 */
-Phaser.GameObjects.Text.prototype.setShadow = function (x, y, color, blur, shadowStroke, shadowFill) {
+Phaser.GameObject.Text.prototype.setShadow = function (x, y, color, blur, shadowStroke, shadowFill) {
 
     if (x === undefined) { x = 0; }
     if (y === undefined) { y = 0; }
@@ -275,7 +275,7 @@ Phaser.GameObjects.Text.prototype.setShadow = function (x, y, color, blur, shado
 /**
 * Set the style of the text by passing a single style object to it.
 *
-* @method Phaser.GameObjects.Text#setStyle
+* @method Phaser.GameObject.Text#setStyle
 * @param {object} [style] - The style properties to be set on the Text.
 * @param {string} [style.font='bold 20pt Arial'] - The style and size of the font.
 * @param {string} [style.fontStyle=(from font)] - The style of the font (eg. 'italic'): overrides the value in `style.font`.
@@ -294,9 +294,9 @@ Phaser.GameObjects.Text.prototype.setShadow = function (x, y, color, blur, shado
 * @param {number} [style.maxLines=0] - The maximum number of lines to be shown for wrapped text.
 * @param {number|array} [style.tabs=0] - The size (in pixels) of the tabs, for when text includes tab characters. 0 disables. Can be an array of varying tab sizes, one per tab stop.
 * @param {boolean} [update=false] - Immediately update the Text object after setting the new style? Or wait for the next frame.
-* @return {Phaser.GameObjects.Text} This Text instance.
+* @return {Phaser.GameObject.Text} This Text instance.
 */
-Phaser.GameObjects.Text.prototype.setStyle = function (style, update) {
+Phaser.GameObject.Text.prototype.setStyle = function (style, update) {
 
     if (update === undefined) { update = false; }
 
@@ -364,10 +364,10 @@ Phaser.GameObjects.Text.prototype.setStyle = function (style, update) {
 /**
 * Renders text to the internal canvas.
 *
-* @method Phaser.GameObjects.Text#updateText
+* @method Phaser.GameObject.Text#updateText
 * @private
 */
-Phaser.GameObjects.Text.prototype.updateText = function () {
+Phaser.GameObject.Text.prototype.updateText = function () {
 
     this.texture.baseTexture.resolution = this._res;
 
@@ -597,14 +597,14 @@ Phaser.GameObjects.Text.prototype.updateText = function () {
 * Renders a line of text that contains tab characters if Text.tab > 0.
 * Called automatically by updateText.
 *
-* @method Phaser.GameObjects.Text#renderTabLine
+* @method Phaser.GameObject.Text#renderTabLine
 * @private
 * @param {string} line - The line of text to render.
 * @param {integer} x - The x position to start rendering from.
 * @param {integer} y - The y position to start rendering from.
 * @param {boolean} fill - If true uses fillText, if false uses strokeText.
 */
-Phaser.GameObjects.Text.prototype.renderTabLine = function (line, x, y, fill) {
+Phaser.GameObject.Text.prototype.renderTabLine = function (line, x, y, fill) {
 
     var text = line.split(/(?:\t)/);
     var tabs = this.style.tabs;
@@ -661,10 +661,10 @@ Phaser.GameObjects.Text.prototype.renderTabLine = function (line, x, y, fill) {
 * Sets the Shadow on the Text.context based on the Style settings, or disables it if not enabled.
 * This is called automatically by Text.updateText.
 *
-* @method Phaser.GameObjects.Text#updateShadow
+* @method Phaser.GameObject.Text#updateShadow
 * @param {boolean} state - If true the shadow will be set to the Style values, otherwise it will be set to zero.
 */
-Phaser.GameObjects.Text.prototype.updateShadow = function (state) {
+Phaser.GameObject.Text.prototype.updateShadow = function (state) {
 
     if (state)
     {
@@ -686,12 +686,12 @@ Phaser.GameObjects.Text.prototype.updateShadow = function (state) {
 /**
 * Measures a line of text character by character taking into the account the specified character styles.
 *
-* @method Phaser.GameObjects.Text#measureLine
+* @method Phaser.GameObject.Text#measureLine
 * @private
 * @param {string} line - The line of text to measure.
 * @return {integer} length of the line.
 */
-Phaser.GameObjects.Text.prototype.measureLine = function (line) {
+Phaser.GameObject.Text.prototype.measureLine = function (line) {
 
     var lineLength = 0;
 
@@ -747,10 +747,10 @@ Phaser.GameObjects.Text.prototype.measureLine = function (line) {
 /**
 * Updates a line of text, applying fill and stroke per-character colors or style and weight per-character font if applicable.
 *
-* @method Phaser.GameObjects.Text#updateLine
+* @method Phaser.GameObject.Text#updateLine
 * @private
 */
-Phaser.GameObjects.Text.prototype.updateLine = function (line, x, y) {
+Phaser.GameObject.Text.prototype.updateLine = function (line, x, y) {
 
     for (var i = 0; i < line.length; i++)
     {
@@ -805,10 +805,10 @@ Phaser.GameObjects.Text.prototype.updateLine = function (line, x, y) {
 /**
 * Clears any text fill or stroke colors that were set by `addColor` or `addStrokeColor`.
 *
-* @method Phaser.GameObjects.Text#clearColors
-* @return {Phaser.GameObjects.Text} This Text instance.
+* @method Phaser.GameObject.Text#clearColors
+* @return {Phaser.GameObject.Text} This Text instance.
 */
-Phaser.GameObjects.Text.prototype.clearColors = function () {
+Phaser.GameObject.Text.prototype.clearColors = function () {
 
     this.colors = [];
     this.strokeColors = [];
@@ -821,10 +821,10 @@ Phaser.GameObjects.Text.prototype.clearColors = function () {
 /**
 * Clears any text styles or weights font that were set by `addFontStyle` or `addFontWeight`.
 *
-* @method Phaser.GameObjects.Text#clearFontValues
-* @return {Phaser.GameObjects.Text} This Text instance.
+* @method Phaser.GameObject.Text#clearFontValues
+* @return {Phaser.GameObject.Text} This Text instance.
 */
-Phaser.GameObjects.Text.prototype.clearFontValues = function () {
+Phaser.GameObject.Text.prototype.clearFontValues = function () {
 
     this.fontStyles = [];
     this.fontWeights = [];
@@ -844,12 +844,12 @@ Phaser.GameObjects.Text.prototype.clearFontValues = function () {
 *
 * If you wish to change the stroke color see addStrokeColor instead.
 *
-* @method Phaser.GameObjects.Text#addColor
+* @method Phaser.GameObject.Text#addColor
 * @param {string} color - A canvas fillstyle that will be used on the text eg `red`, `#00FF00`, `rgba()`.
 * @param {number} position - The index of the character in the string to start applying this color value from.
-* @return {Phaser.GameObjects.Text} This Text instance.
+* @return {Phaser.GameObject.Text} This Text instance.
 */
-Phaser.GameObjects.Text.prototype.addColor = function (color, position) {
+Phaser.GameObject.Text.prototype.addColor = function (color, position) {
 
     this.colors[position] = color;
     this.dirty = true;
@@ -870,12 +870,12 @@ Phaser.GameObjects.Text.prototype.addColor = function (color, position) {
 *
 * If you wish to change the text fill color see addColor instead.
 *
-* @method Phaser.GameObjects.Text#addStrokeColor
+* @method Phaser.GameObject.Text#addStrokeColor
 * @param {string} color - A canvas fillstyle that will be used on the text stroke eg `red`, `#00FF00`, `rgba()`.
 * @param {number} position - The index of the character in the string to start applying this color value from.
-* @return {Phaser.GameObjects.Text} This Text instance.
+* @return {Phaser.GameObject.Text} This Text instance.
 */
-Phaser.GameObjects.Text.prototype.addStrokeColor = function (color, position) {
+Phaser.GameObject.Text.prototype.addStrokeColor = function (color, position) {
 
     this.strokeColors[position] = color;
     this.dirty = true;
@@ -894,12 +894,12 @@ Phaser.GameObjects.Text.prototype.addStrokeColor = function (color, position) {
 *
 * If you wish to change the text font weight see addFontWeight instead.
 *
-* @method Phaser.GameObjects.Text#addFontStyle
+* @method Phaser.GameObject.Text#addFontStyle
 * @param {string} style - A canvas font-style that will be used on the text style eg `normal`, `italic`, `oblique`.
 * @param {number} position - The index of the character in the string to start applying this font style value from.
-* @return {Phaser.GameObjects.Text} This Text instance.
+* @return {Phaser.GameObject.Text} This Text instance.
 */
-Phaser.GameObjects.Text.prototype.addFontStyle = function (style, position) {
+Phaser.GameObject.Text.prototype.addFontStyle = function (style, position) {
 
     this.fontStyles[position] = style;
     this.dirty = true;
@@ -918,12 +918,12 @@ Phaser.GameObjects.Text.prototype.addFontStyle = function (style, position) {
 *
 * If you wish to change the text font style see addFontStyle instead.
 *
-* @method Phaser.GameObjects.Text#addFontWeight
+* @method Phaser.GameObject.Text#addFontWeight
 * @param {string} style - A canvas font-weight that will be used on the text weight eg `normal`, `bold`, `bolder`, `lighter`, etc.
 * @param {number} position - The index of the character in the string to start applying this font weight value from.
-* @return {Phaser.GameObjects.Text} This Text instance.
+* @return {Phaser.GameObject.Text} This Text instance.
 */
-Phaser.GameObjects.Text.prototype.addFontWeight = function (weight, position) {
+Phaser.GameObject.Text.prototype.addFontWeight = function (weight, position) {
 
     this.fontWeights[position] = weight;
     this.dirty = true;
@@ -939,11 +939,11 @@ Phaser.GameObjects.Text.prototype.addFontWeight = function (weight, position) {
 *
 * Useful if you wish to control pagination on long pieces of content.
 *
-* @method Phaser.GameObjects.Text#precalculateWordWrap
+* @method Phaser.GameObject.Text#precalculateWordWrap
 * @param {string} text - The text for which the wrapping will be calculated.
 * @return {array} An array of strings with the pieces of wrapped text.
 */
-Phaser.GameObjects.Text.prototype.precalculateWordWrap = function (text) {
+Phaser.GameObject.Text.prototype.precalculateWordWrap = function (text) {
 
     this.texture.baseTexture.resolution = this._res;
     this.context.font = this.style.font;
@@ -957,11 +957,11 @@ Phaser.GameObjects.Text.prototype.precalculateWordWrap = function (text) {
 /**
 * Greedy wrapping algorithm that will wrap words as the line grows longer than its horizontal bounds.
 *
-* @method Phaser.GameObjects.Text#runWordWrap
+* @method Phaser.GameObject.Text#runWordWrap
 * @param {string} text - The text to perform word wrap detection against.
 * @private
 */
-Phaser.GameObjects.Text.prototype.runWordWrap = function (text) {
+Phaser.GameObject.Text.prototype.runWordWrap = function (text) {
 
     if (this.useAdvancedWrap)
     {
@@ -980,11 +980,11 @@ Phaser.GameObjects.Text.prototype.runWordWrap = function (text) {
 * Lines are trimmed of white space before processing.
 * Throws an error if the user was smart enough to specify a wordWrapWidth less than a single character.
 *
-* @method Phaser.GameObjects.Text#advancedWordWrap
+* @method Phaser.GameObject.Text#advancedWordWrap
 * @param {string} text - The text to perform word wrap detection against.
 * @private
 */
-Phaser.GameObjects.Text.prototype.advancedWordWrap = function (text) {
+Phaser.GameObject.Text.prototype.advancedWordWrap = function (text) {
 
     var context = this.context;
     var wordWrapWidth = this.style.wordWrapWidth;
@@ -1101,11 +1101,11 @@ Phaser.GameObjects.Text.prototype.advancedWordWrap = function (text) {
 /**
 * Greedy wrapping algorithm that will wrap words as the line grows longer than its horizontal bounds.
 *
-* @method Phaser.GameObjects.Text#basicWordWrap
+* @method Phaser.GameObject.Text#basicWordWrap
 * @param {string} text - The text to perform word wrap detection against.
 * @private
 */
-Phaser.GameObjects.Text.prototype.basicWordWrap = function (text) {
+Phaser.GameObject.Text.prototype.basicWordWrap = function (text) {
 
     var result = '';
     var lines = text.split('\n');
@@ -1150,11 +1150,11 @@ Phaser.GameObjects.Text.prototype.basicWordWrap = function (text) {
 /**
 * Updates the internal `style.font` if it now differs according to generation from components.
 *
-* @method Phaser.GameObjects.Text#updateFont
+* @method Phaser.GameObject.Text#updateFont
 * @private
 * @param {object} components - Font components.
 */
-Phaser.GameObjects.Text.prototype.updateFont = function (components) {
+Phaser.GameObject.Text.prototype.updateFont = function (components) {
 
     var font = this.componentsToFont(components);
 
@@ -1174,11 +1174,11 @@ Phaser.GameObjects.Text.prototype.updateFont = function (components) {
 /**
 * Converting a short CSS-font string into the relevant components.
 *
-* @method Phaser.GameObjects.Text#fontToComponents
+* @method Phaser.GameObject.Text#fontToComponents
 * @private
 * @param {string} font - a CSS font string
 */
-Phaser.GameObjects.Text.prototype.fontToComponents = function (font) {
+Phaser.GameObject.Text.prototype.fontToComponents = function (font) {
 
     // The format is specified in http://www.w3.org/TR/CSS2/fonts.html#font-shorthand:
     // style - normal | italic | oblique | inherit
@@ -1211,7 +1211,7 @@ Phaser.GameObjects.Text.prototype.fontToComponents = function (font) {
     }
     else
     {
-        console.warn("Phaser.GameObjects.Text - unparsable CSS font: " + font);
+        console.warn("Phaser.GameObject.Text - unparsable CSS font: " + font);
 
         return {
             font: font
@@ -1223,11 +1223,11 @@ Phaser.GameObjects.Text.prototype.fontToComponents = function (font) {
 /**
 * Converts individual font components (see `fontToComponents`) to a short CSS font string.
 *
-* @method Phaser.GameObjects.Text#componentsToFont
+* @method Phaser.GameObject.Text#componentsToFont
 * @private
 * @param {object} components - Font components.
 */
-Phaser.GameObjects.Text.prototype.componentsToFont = function (components) {
+Phaser.GameObject.Text.prototype.componentsToFont = function (components) {
 
     var parts = [];
     var v;
@@ -1267,12 +1267,12 @@ Phaser.GameObjects.Text.prototype.componentsToFont = function (components) {
 * If not it will re-create the texture of this Text object during the next time the render
 * loop is called.
 *
-* @method Phaser.GameObjects.Text#setText
+* @method Phaser.GameObject.Text#setText
 * @param {string} [text] - The text to be displayed. Set to an empty string to clear text that is already present.
 * @param {boolean} [immediate=false] - Update the texture used by this Text object immediately (true) or automatically during the next render loop (false).
-* @return {Phaser.GameObjects.Text} This Text instance.
+* @return {Phaser.GameObject.Text} This Text instance.
 */
-Phaser.GameObjects.Text.prototype.setText = function (text, immediate) {
+Phaser.GameObject.Text.prototype.setText = function (text, immediate) {
 
     if (immediate === undefined) { immediate = false; }
 
@@ -1308,11 +1308,11 @@ Phaser.GameObjects.Text.prototype.setText = function (text, immediate) {
  *
  * would convert in to: `"a\tb\tc\nd\te\tf"`
  *
- * @method Phaser.GameObjects.Text#parseList
+ * @method Phaser.GameObject.Text#parseList
  * @param {array} list - The array of data to convert into a string.
- * @return {Phaser.GameObjects.Text} This Text instance.
+ * @return {Phaser.GameObject.Text} This Text instance.
  */
-Phaser.GameObjects.Text.prototype.parseList = function (list) {
+Phaser.GameObject.Text.prototype.parseList = function (list) {
 
     if (!Array.isArray(list))
     {
@@ -1376,14 +1376,14 @@ Phaser.GameObjects.Text.prototype.parseList = function (list) {
  * property based on the given bounds and canvas size. This means if you need to set the pivot property directly in your game then
  * you either cannot use `setTextBounds` or you must place the Text object inside another DisplayObject on which you set the pivot.
  *
- * @method Phaser.GameObjects.Text#setTextBounds
+ * @method Phaser.GameObject.Text#setTextBounds
  * @param {number} [x] - The x coordinate of the Text Bounds region.
  * @param {number} [y] - The y coordinate of the Text Bounds region.
  * @param {number} [width] - The width of the Text Bounds region.
  * @param {number} [height] - The height of the Text Bounds region.
- * @return {Phaser.GameObjects.Text} This Text instance.
+ * @return {Phaser.GameObject.Text} This Text instance.
  */
-Phaser.GameObjects.Text.prototype.setTextBounds = function (x, y, width, height) {
+Phaser.GameObject.Text.prototype.setTextBounds = function (x, y, width, height) {
 
     if (x === undefined)
     {
@@ -1415,10 +1415,10 @@ Phaser.GameObjects.Text.prototype.setTextBounds = function (x, y, width, height)
 /**
  * Updates the texture based on the canvas dimensions.
  *
- * @method Phaser.GameObjects.Text#updateTexture
+ * @method Phaser.GameObject.Text#updateTexture
  * @private
  */
-Phaser.GameObjects.Text.prototype.updateTexture = function () {
+Phaser.GameObject.Text.prototype.updateTexture = function () {
 
     var base = this.texture.baseTexture;
     var crop = this.texture.crop;
@@ -1482,20 +1482,20 @@ Phaser.GameObjects.Text.prototype.updateTexture = function () {
 /**
 * Calculates the ascent, descent and fontSize of a given font style.
 *
-* @method Phaser.GameObjects.Text#determineFontProperties
+* @method Phaser.GameObject.Text#determineFontProperties
 * @private
 * @param {object} fontStyle 
 */
-Phaser.GameObjects.Text.prototype.determineFontProperties = function (fontStyle) {
+Phaser.GameObject.Text.prototype.determineFontProperties = function (fontStyle) {
 
-    var properties = Phaser.GameObjects.Text.fontPropertiesCache[fontStyle];
+    var properties = Phaser.GameObject.Text.fontPropertiesCache[fontStyle];
 
     if (!properties)
     {
         properties = {};
         
-        var canvas = Phaser.GameObjects.Text.fontPropertiesCanvas;
-        var context = Phaser.GameObjects.Text.fontPropertiesContext;
+        var canvas = Phaser.GameObject.Text.fontPropertiesCanvas;
+        var context = Phaser.GameObject.Text.fontPropertiesContext;
 
         context.font = fontStyle;
 
@@ -1523,7 +1523,7 @@ Phaser.GameObjects.Text.prototype.determineFontProperties = function (fontStyle)
             properties.descent = baseline + 6;
             properties.fontSize = properties.ascent + properties.descent;
 
-            Phaser.GameObjects.Text.fontPropertiesCache[fontStyle] = properties;
+            Phaser.GameObject.Text.fontPropertiesCache[fontStyle] = properties;
 
             return properties;
         }
@@ -1591,7 +1591,7 @@ Phaser.GameObjects.Text.prototype.determineFontProperties = function (fontStyle)
         properties.descent += 6;
         properties.fontSize = properties.ascent + properties.descent;
 
-        Phaser.GameObjects.Text.fontPropertiesCache[fontStyle] = properties;
+        Phaser.GameObject.Text.fontPropertiesCache[fontStyle] = properties;
     }
 
     return properties;
@@ -1602,11 +1602,11 @@ Phaser.GameObjects.Text.prototype.determineFontProperties = function (fontStyle)
 * Returns the bounds of the Text as a rectangle.
 * The bounds calculation takes the worldTransform into account.
 *
-* @method Phaser.GameObjects.Text#getBounds
+* @method Phaser.GameObject.Text#getBounds
 * @param {Phaser.Matrix} matrix - The transformation matrix of the Text.
 * @return {Phaser.Rectangle} The framing rectangle
 */
-Phaser.GameObjects.Text.prototype.getBounds = function (matrix) {
+Phaser.GameObject.Text.prototype.getBounds = function (matrix) {
 
     if (this.dirty)
     {
@@ -1623,10 +1623,10 @@ Phaser.GameObjects.Text.prototype.getBounds = function (matrix) {
 * Use a \n to insert a carriage return and split the text.
 * The text will be rendered with any style currently set.
 *
-* @name Phaser.GameObjects.Text#text
+* @name Phaser.GameObject.Text#text
 * @property {string} text
 */
-Object.defineProperty(Phaser.GameObjects.Text.prototype, 'text', {
+Object.defineProperty(Phaser.GameObject.Text.prototype, 'text', {
 
     get: function() {
         return this._text;
@@ -1652,15 +1652,15 @@ Object.defineProperty(Phaser.GameObjects.Text.prototype, 'text', {
 /**
 * Change the font used.
 *
-* This is equivalent of the `font` property specified to {@link Phaser.GameObjects.Text#setStyle setStyle}, except
+* This is equivalent of the `font` property specified to {@link Phaser.GameObject.Text#setStyle setStyle}, except
 * that unlike using `setStyle` this will not change any current font fill/color settings.
 *
 * The CSS font string can also be individually altered with the `font`, `fontSize`, `fontWeight`, `fontStyle`, and `fontVariant` properties.
 *
-* @name Phaser.GameObjects.Text#cssFont
+* @name Phaser.GameObject.Text#cssFont
 * @property {string} cssFont
 */
-Object.defineProperty(Phaser.GameObjects.Text.prototype, 'cssFont', {
+Object.defineProperty(Phaser.GameObject.Text.prototype, 'cssFont', {
 
     get: function() {
         return this.componentsToFont(this._fontComponents);
@@ -1681,12 +1681,12 @@ Object.defineProperty(Phaser.GameObjects.Text.prototype, 'cssFont', {
 * Multiple CSS font families and generic fallbacks can be specified as long as
 * {@link http://www.w3.org/TR/CSS2/fonts.html#propdef-font-family CSS font-family rules} are followed.
 *
-* To change the entire font string use {@link Phaser.GameObjects.Text#cssFont cssFont} instead: eg. `text.cssFont = 'bold 20pt Arial'`.
+* To change the entire font string use {@link Phaser.GameObject.Text#cssFont cssFont} instead: eg. `text.cssFont = 'bold 20pt Arial'`.
 *
-* @name Phaser.GameObjects.Text#font
+* @name Phaser.GameObject.Text#font
 * @property {string} font
 */
-Object.defineProperty(Phaser.GameObjects.Text.prototype, 'font', {
+Object.defineProperty(Phaser.GameObject.Text.prototype, 'font', {
 
     get: function() {
         return this._fontComponents.fontFamily;
@@ -1716,10 +1716,10 @@ Object.defineProperty(Phaser.GameObjects.Text.prototype, 'font', {
 * If the font size is specified in pixels (eg. `32` or `'32px`') then a number (ie. `32`) representing
 * the font size in pixels is returned; otherwise the value with CSS unit is returned as a string (eg. `'12pt'`).
 *
-* @name Phaser.GameObjects.Text#fontSize
+* @name Phaser.GameObject.Text#fontSize
 * @property {number|string} fontSize
 */
-Object.defineProperty(Phaser.GameObjects.Text.prototype, 'fontSize', {
+Object.defineProperty(Phaser.GameObject.Text.prototype, 'fontSize', {
 
     get: function() {
 
@@ -1754,10 +1754,10 @@ Object.defineProperty(Phaser.GameObjects.Text.prototype, 'fontSize', {
 
 /**
 * The weight of the font: 'normal', 'bold', or {@link http://www.w3.org/TR/CSS2/fonts.html#propdef-font-weight a valid CSS font weight}.
-* @name Phaser.GameObjects.Text#fontWeight
+* @name Phaser.GameObject.Text#fontWeight
 * @property {string} fontWeight
 */
-Object.defineProperty(Phaser.GameObjects.Text.prototype, 'fontWeight', {
+Object.defineProperty(Phaser.GameObject.Text.prototype, 'fontWeight', {
 
     get: function() {
         return this._fontComponents.fontWeight || 'normal';
@@ -1775,10 +1775,10 @@ Object.defineProperty(Phaser.GameObjects.Text.prototype, 'fontWeight', {
 
 /**
 * The style of the font: 'normal', 'italic', 'oblique'
-* @name Phaser.GameObjects.Text#fontStyle
+* @name Phaser.GameObject.Text#fontStyle
 * @property {string} fontStyle
 */
-Object.defineProperty(Phaser.GameObjects.Text.prototype, 'fontStyle', {
+Object.defineProperty(Phaser.GameObject.Text.prototype, 'fontStyle', {
 
     get: function() {
         return this._fontComponents.fontStyle || 'normal';
@@ -1796,10 +1796,10 @@ Object.defineProperty(Phaser.GameObjects.Text.prototype, 'fontStyle', {
 
 /**
 * The variant the font: 'normal', 'small-caps'
-* @name Phaser.GameObjects.Text#fontVariant
+* @name Phaser.GameObject.Text#fontVariant
 * @property {string} fontVariant
 */
-Object.defineProperty(Phaser.GameObjects.Text.prototype, 'fontVariant', {
+Object.defineProperty(Phaser.GameObject.Text.prototype, 'fontVariant', {
 
     get: function() {
         return this._fontComponents.fontVariant || 'normal';
@@ -1816,10 +1816,10 @@ Object.defineProperty(Phaser.GameObjects.Text.prototype, 'fontVariant', {
 });
 
 /**
-* @name Phaser.GameObjects.Text#fill
+* @name Phaser.GameObject.Text#fill
 * @property {object} fill - A canvas fillstyle that will be used on the text eg 'red', '#00FF00'.
 */
-Object.defineProperty(Phaser.GameObjects.Text.prototype, 'fill', {
+Object.defineProperty(Phaser.GameObject.Text.prototype, 'fill', {
 
     get: function() {
         return this.style.fill;
@@ -1841,10 +1841,10 @@ Object.defineProperty(Phaser.GameObjects.Text.prototype, 'fill', {
 * Controls the horizontal alignment for multiline text.
 * Can be: 'left', 'center' or 'right'.
 * Does not affect single lines of text. For that please see `setTextBounds`.
-* @name Phaser.GameObjects.Text#align
+* @name Phaser.GameObject.Text#align
 * @property {string} align
 */
-Object.defineProperty(Phaser.GameObjects.Text.prototype, 'align', {
+Object.defineProperty(Phaser.GameObject.Text.prototype, 'align', {
 
     get: function() {
         return this.style.align;
@@ -1865,10 +1865,10 @@ Object.defineProperty(Phaser.GameObjects.Text.prototype, 'align', {
 /**
 * The resolution of the canvas the text is rendered to.
 * This defaults to match the resolution of the renderer, but can be changed on a per Text object basis.
-* @name Phaser.GameObjects.Text#resolution
+* @name Phaser.GameObject.Text#resolution
 * @property {integer} resolution
 */
-Object.defineProperty(Phaser.GameObjects.Text.prototype, 'resolution', {
+Object.defineProperty(Phaser.GameObject.Text.prototype, 'resolution', {
 
     get: function() {
         return this._res;
@@ -1892,10 +1892,10 @@ Object.defineProperty(Phaser.GameObjects.Text.prototype, 'resolution', {
 * For example if you set tabs to 100 then when Text encounters a tab it will jump ahead 100 pixels.
 * If you set tabs to be `[100,200]` then it will set the first tab at 100px and the second at 200px.
 * 
-* @name Phaser.GameObjects.Text#tabs
+* @name Phaser.GameObject.Text#tabs
 * @property {integer|array} tabs
 */
-Object.defineProperty(Phaser.GameObjects.Text.prototype, 'tabs', {
+Object.defineProperty(Phaser.GameObject.Text.prototype, 'tabs', {
 
     get: function() {
         return this.style.tabs;
@@ -1915,10 +1915,10 @@ Object.defineProperty(Phaser.GameObjects.Text.prototype, 'tabs', {
 
 /**
 * Horizontal alignment of the text within the `textBounds`. Can be: 'left', 'center' or 'right'.
-* @name Phaser.GameObjects.Text#boundsAlignH
+* @name Phaser.GameObject.Text#boundsAlignH
 * @property {string} boundsAlignH
 */
-Object.defineProperty(Phaser.GameObjects.Text.prototype, 'boundsAlignH', {
+Object.defineProperty(Phaser.GameObject.Text.prototype, 'boundsAlignH', {
 
     get: function() {
         return this.style.boundsAlignH;
@@ -1938,10 +1938,10 @@ Object.defineProperty(Phaser.GameObjects.Text.prototype, 'boundsAlignH', {
 
 /**
 * Vertical alignment of the text within the `textBounds`. Can be: 'top', 'middle' or 'bottom'.
-* @name Phaser.GameObjects.Text#boundsAlignV
+* @name Phaser.GameObject.Text#boundsAlignV
 * @property {string} boundsAlignV
 */
-Object.defineProperty(Phaser.GameObjects.Text.prototype, 'boundsAlignV', {
+Object.defineProperty(Phaser.GameObject.Text.prototype, 'boundsAlignV', {
 
     get: function() {
         return this.style.boundsAlignV;
@@ -1960,10 +1960,10 @@ Object.defineProperty(Phaser.GameObjects.Text.prototype, 'boundsAlignV', {
 });
 
 /**
-* @name Phaser.GameObjects.Text#stroke
+* @name Phaser.GameObject.Text#stroke
 * @property {string} stroke - A canvas fillstyle that will be used on the text stroke eg 'blue', '#FCFF00'.
 */
-Object.defineProperty(Phaser.GameObjects.Text.prototype, 'stroke', {
+Object.defineProperty(Phaser.GameObject.Text.prototype, 'stroke', {
 
     get: function() {
         return this.style.stroke;
@@ -1982,10 +1982,10 @@ Object.defineProperty(Phaser.GameObjects.Text.prototype, 'stroke', {
 });
 
 /**
-* @name Phaser.GameObjects.Text#strokeThickness
+* @name Phaser.GameObject.Text#strokeThickness
 * @property {number} strokeThickness - A number that represents the thickness of the stroke. Default is 0 (no stroke)
 */
-Object.defineProperty(Phaser.GameObjects.Text.prototype, 'strokeThickness', {
+Object.defineProperty(Phaser.GameObject.Text.prototype, 'strokeThickness', {
 
     get: function() {
         return this.style.strokeThickness;
@@ -2004,10 +2004,10 @@ Object.defineProperty(Phaser.GameObjects.Text.prototype, 'strokeThickness', {
 });
 
 /**
-* @name Phaser.GameObjects.Text#wordWrap
+* @name Phaser.GameObject.Text#wordWrap
 * @property {boolean} wordWrap - Indicates if word wrap should be used.
 */
-Object.defineProperty(Phaser.GameObjects.Text.prototype, 'wordWrap', {
+Object.defineProperty(Phaser.GameObject.Text.prototype, 'wordWrap', {
 
     get: function() {
         return this.style.wordWrap;
@@ -2026,10 +2026,10 @@ Object.defineProperty(Phaser.GameObjects.Text.prototype, 'wordWrap', {
 });
 
 /**
-* @name Phaser.GameObjects.Text#wordWrapWidth
+* @name Phaser.GameObject.Text#wordWrapWidth
 * @property {number} wordWrapWidth - The width at which text will wrap.
 */
-Object.defineProperty(Phaser.GameObjects.Text.prototype, 'wordWrapWidth', {
+Object.defineProperty(Phaser.GameObject.Text.prototype, 'wordWrapWidth', {
 
     get: function() {
         return this.style.wordWrapWidth;
@@ -2048,10 +2048,10 @@ Object.defineProperty(Phaser.GameObjects.Text.prototype, 'wordWrapWidth', {
 });
 
 /**
-* @name Phaser.GameObjects.Text#lineSpacing
+* @name Phaser.GameObject.Text#lineSpacing
 * @property {number} lineSpacing - Additional spacing (in pixels) between each line of text if multi-line.
 */
-Object.defineProperty(Phaser.GameObjects.Text.prototype, 'lineSpacing', {
+Object.defineProperty(Phaser.GameObject.Text.prototype, 'lineSpacing', {
 
     get: function() {
         return this._lineSpacing;
@@ -2075,10 +2075,10 @@ Object.defineProperty(Phaser.GameObjects.Text.prototype, 'lineSpacing', {
 });
 
 /**
-* @name Phaser.GameObjects.Text#shadowOffsetX
+* @name Phaser.GameObject.Text#shadowOffsetX
 * @property {number} shadowOffsetX - The shadowOffsetX value in pixels. This is how far offset horizontally the shadow effect will be.
 */
-Object.defineProperty(Phaser.GameObjects.Text.prototype, 'shadowOffsetX', {
+Object.defineProperty(Phaser.GameObject.Text.prototype, 'shadowOffsetX', {
 
     get: function() {
         return this.style.shadowOffsetX;
@@ -2097,10 +2097,10 @@ Object.defineProperty(Phaser.GameObjects.Text.prototype, 'shadowOffsetX', {
 });
 
 /**
-* @name Phaser.GameObjects.Text#shadowOffsetY
+* @name Phaser.GameObject.Text#shadowOffsetY
 * @property {number} shadowOffsetY - The shadowOffsetY value in pixels. This is how far offset vertically the shadow effect will be.
 */
-Object.defineProperty(Phaser.GameObjects.Text.prototype, 'shadowOffsetY', {
+Object.defineProperty(Phaser.GameObject.Text.prototype, 'shadowOffsetY', {
 
     get: function() {
         return this.style.shadowOffsetY;
@@ -2119,10 +2119,10 @@ Object.defineProperty(Phaser.GameObjects.Text.prototype, 'shadowOffsetY', {
 });
 
 /**
-* @name Phaser.GameObjects.Text#shadowColor
+* @name Phaser.GameObject.Text#shadowColor
 * @property {string} shadowColor - The color of the shadow, as given in CSS rgba format. Set the alpha component to 0 to disable the shadow.
 */
-Object.defineProperty(Phaser.GameObjects.Text.prototype, 'shadowColor', {
+Object.defineProperty(Phaser.GameObject.Text.prototype, 'shadowColor', {
 
     get: function() {
         return this.style.shadowColor;
@@ -2141,10 +2141,10 @@ Object.defineProperty(Phaser.GameObjects.Text.prototype, 'shadowColor', {
 });
 
 /**
-* @name Phaser.GameObjects.Text#shadowBlur
+* @name Phaser.GameObject.Text#shadowBlur
 * @property {number} shadowBlur - The shadowBlur value. Make the shadow softer by applying a Gaussian blur to it. A number from 0 (no blur) up to approx. 10 (depending on scene).
 */
-Object.defineProperty(Phaser.GameObjects.Text.prototype, 'shadowBlur', {
+Object.defineProperty(Phaser.GameObject.Text.prototype, 'shadowBlur', {
 
     get: function() {
         return this.style.shadowBlur;
@@ -2163,10 +2163,10 @@ Object.defineProperty(Phaser.GameObjects.Text.prototype, 'shadowBlur', {
 });
 
 /**
-* @name Phaser.GameObjects.Text#shadowStroke
+* @name Phaser.GameObject.Text#shadowStroke
 * @property {boolean} shadowStroke - Sets if the drop shadow is applied to the Text stroke.
 */
-Object.defineProperty(Phaser.GameObjects.Text.prototype, 'shadowStroke', {
+Object.defineProperty(Phaser.GameObject.Text.prototype, 'shadowStroke', {
 
     get: function() {
         return this.style.shadowStroke;
@@ -2185,10 +2185,10 @@ Object.defineProperty(Phaser.GameObjects.Text.prototype, 'shadowStroke', {
 });
 
 /**
-* @name Phaser.GameObjects.Text#shadowFill
+* @name Phaser.GameObject.Text#shadowFill
 * @property {boolean} shadowFill - Sets if the drop shadow is applied to the Text fill.
 */
-Object.defineProperty(Phaser.GameObjects.Text.prototype, 'shadowFill', {
+Object.defineProperty(Phaser.GameObject.Text.prototype, 'shadowFill', {
 
     get: function() {
         return this.style.shadowFill;
@@ -2208,10 +2208,10 @@ Object.defineProperty(Phaser.GameObjects.Text.prototype, 'shadowFill', {
 
 /**
 * The width of the Text object in pixels. This is width of the Texture frame / the Text.resolution.
-* @name Phaser.GameObjects.Text#width
+* @name Phaser.GameObject.Text#width
 * @property {number} width - The width of the Text. Setting this will modify the scale to achieve the value requested.
 */
-Object.defineProperty(Phaser.GameObjects.Text.prototype, 'width', {
+Object.defineProperty(Phaser.GameObject.Text.prototype, 'width', {
 
     get: function() {
 
@@ -2234,10 +2234,10 @@ Object.defineProperty(Phaser.GameObjects.Text.prototype, 'width', {
 
 /**
 * The height of the Text object in pixels. This is height of the Texture frame / the Text.resolution.
-* @name Phaser.GameObjects.Text#height
+* @name Phaser.GameObject.Text#height
 * @property {number} height - The height of the Text. Setting this will modify the scale to achieve the value requested.
 */
-Object.defineProperty(Phaser.GameObjects.Text.prototype, 'height', {
+Object.defineProperty(Phaser.GameObject.Text.prototype, 'height', {
 
     get: function() {
 
@@ -2258,7 +2258,7 @@ Object.defineProperty(Phaser.GameObjects.Text.prototype, 'height', {
 
 });
 
-Phaser.GameObjects.Text.fontPropertiesCache = {};
+Phaser.GameObject.Text.fontPropertiesCache = {};
 
-Phaser.GameObjects.Text.fontPropertiesCanvas = document.createElement('canvas');
-Phaser.GameObjects.Text.fontPropertiesContext = Phaser.GameObjects.Text.fontPropertiesCanvas.getContext('2d');
+Phaser.GameObject.Text.fontPropertiesCanvas = document.createElement('canvas');
+Phaser.GameObject.Text.fontPropertiesContext = Phaser.GameObject.Text.fontPropertiesCanvas.getContext('2d');

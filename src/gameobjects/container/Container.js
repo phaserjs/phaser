@@ -3,7 +3,7 @@
 * @copyright    2016 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
-Phaser.GameObjects.Container = function () {
+Phaser.GameObject.Container = function () {
 
     /**
     * @property {number} type - The const type of this object.
@@ -29,8 +29,8 @@ Phaser.GameObjects.Container = function () {
 
 };
 
-Phaser.GameObjects.Container.prototype = Object.create(PIXI.Sprite.prototype);
-Phaser.GameObjects.Container.prototype.constructor = Phaser.GameObjects.Container;
+Phaser.GameObject.Container.prototype = Object.create(PIXI.Sprite.prototype);
+Phaser.GameObject.Container.prototype.constructor = Phaser.GameObject.Container;
 
 /*
  * Updates the transform on all children of this container for rendering

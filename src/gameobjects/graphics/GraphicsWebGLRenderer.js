@@ -3,7 +3,7 @@
 Phaser.Renderer.WebGL.GameObjects.Graphics = {
 
     TYPES: [
-        Phaser.GameObjects.Graphics.prototype
+        Phaser.GameObject.Graphics.prototype
     ],
 
     circleSegments: 40,

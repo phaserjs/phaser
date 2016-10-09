@@ -4,7 +4,7 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
-Phaser.GameObjects.BitmapText.FACTORY_KEY = 'bitmapText';
+Phaser.GameObject.BitmapText.FACTORY_KEY = 'bitmapText';
 
 /**
 * Create a new BitmapText object.
@@ -25,7 +25,7 @@ Phaser.GameObjects.BitmapText.FACTORY_KEY = 'bitmapText';
 * Glyph Designer (OS X, commercial): http://www.71squared.com/en/glyphdesigner
 * Littera (Web-based, free): http://kvazars.com/littera/
 *
-* @method Phaser.GameObjects.Factory#bitmapText
+* @method Phaser.GameObject.Factory#bitmapText
 * @param {number} x - X coordinate to display the BitmapText object at.
 * @param {number} y - Y coordinate to display the BitmapText object at.
 * @param {string} font - The key of the BitmapText as stored in Phaser.Cache.
@@ -34,11 +34,11 @@ Phaser.GameObjects.BitmapText.FACTORY_KEY = 'bitmapText';
 * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
 * @return {Phaser.BitmapText} The newly created bitmapText object.
 */
-Phaser.GameObjects.BitmapText.FACTORY_ADD = function (x, y, font, text, size, group)
+Phaser.GameObject.BitmapText.FACTORY_ADD = function (x, y, font, text, size, group)
 {
     if (group === undefined) { group = this.world; }
 
-    return group.add(new Phaser.GameObjects.BitmapText(this.game, x, y, font, text, size));
+    return group.add(new Phaser.GameObject.BitmapText(this.game, x, y, font, text, size));
 };
 
 /**
@@ -69,7 +69,7 @@ Phaser.GameObjects.BitmapText.FACTORY_ADD = function (x, y, font, text, size, gr
 * @param {string} [align='left'] - The alignment of multi-line text. Has no effect if there is only one line of text.
 * @return {Phaser.BitmapText} The newly created bitmapText object.
 */
-Phaser.GameObjects.BitmapText.FACTORY_MAKE = function (x, y, font, text, size, align)
+Phaser.GameObject.BitmapText.FACTORY_MAKE = function (x, y, font, text, size, align)
 {
-    return new Phaser.GameObjects.BitmapText(this.game, x, y, font, text, size, align);
+    return new Phaser.GameObject.BitmapText(this.game, x, y, font, text, size, align);
 };

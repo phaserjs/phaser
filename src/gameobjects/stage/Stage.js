@@ -8,7 +8,7 @@
 * The Stage controls root level display objects upon which everything is displayed.
 * It also handles browser visibility handling and the pausing due to loss of focus.
 *
-* @class Phaser.GameObjects.Stage
+* @class Phaser.GameObject.Stage
 * @extends PIXI.DisplayObjectContainer
 * @constructor
 * @param {Phaser.Game} game - Game reference to the currently running game.

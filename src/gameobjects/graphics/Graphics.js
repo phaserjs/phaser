@@ -29,7 +29,7 @@
 * As you can tell, Graphics objects are a bit of a trade-off. While they are extremely useful, you need to be careful
 * in their complexity and quantity of them in your game.
 *
-* @class Phaser.GameObjects.Graphics
+* @class Phaser.GameObject.Graphics
 * @constructor
 * @extends PIXI.DisplayObjectContainer
 * @extends Phaser.Component.Core
@@ -47,7 +47,7 @@
 * @param {number} [x=0] - X position of the new graphics object.
 * @param {number} [y=0] - Y position of the new graphics object.
 */
-Phaser.GameObjects.Graphics = function (game, x, y) {
+Phaser.GameObject.Graphics = function (game, x, y) {
 
     if (x === undefined) { x = 0; }
     if (y === undefined) { y = 0; }
@@ -203,10 +203,10 @@ Phaser.GameObjects.Graphics = function (game, x, y) {
 
 };
 
-Phaser.GameObjects.Graphics.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
-Phaser.GameObjects.Graphics.prototype.constructor = Phaser.GameObjects.Graphics;
+Phaser.GameObject.Graphics.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
+Phaser.GameObject.Graphics.prototype.constructor = Phaser.GameObject.Graphics;
 
-Phaser.Component.Core.install.call(Phaser.GameObjects.Graphics.prototype, [
+Phaser.Component.Core.install.call(Phaser.GameObject.Graphics.prototype, [
     'Angle',
     'AutoCull',
     'Bounds',
@@ -219,18 +219,18 @@ Phaser.Component.Core.install.call(Phaser.GameObjects.Graphics.prototype, [
     'Reset'
 ]);
 
-Phaser.GameObjects.Graphics.prototype.preUpdatePhysics = Phaser.Component.PhysicsBody.preUpdate;
-Phaser.GameObjects.Graphics.prototype.preUpdateLifeSpan = Phaser.Component.LifeSpan.preUpdate;
-Phaser.GameObjects.Graphics.prototype.preUpdateInWorld = Phaser.Component.InWorld.preUpdate;
-Phaser.GameObjects.Graphics.prototype.preUpdateCore = Phaser.Component.Core.preUpdate;
+Phaser.GameObject.Graphics.prototype.preUpdatePhysics = Phaser.Component.PhysicsBody.preUpdate;
+Phaser.GameObject.Graphics.prototype.preUpdateLifeSpan = Phaser.Component.LifeSpan.preUpdate;
+Phaser.GameObject.Graphics.prototype.preUpdateInWorld = Phaser.Component.InWorld.preUpdate;
+Phaser.GameObject.Graphics.prototype.preUpdateCore = Phaser.Component.Core.preUpdate;
 
 /**
 * Automatically called by World.preUpdate.
 * 
 * @method
-* @memberof Phaser.GameObjects.Graphics
+* @memberof Phaser.GameObject.Graphics
 */
-Phaser.GameObjects.Graphics.prototype.preUpdate = function () {
+Phaser.GameObject.Graphics.prototype.preUpdate = function () {
 
     if (!this.preUpdatePhysics() || !this.preUpdateLifeSpan() || !this.preUpdateInWorld())
     {
@@ -243,9 +243,9 @@ Phaser.GameObjects.Graphics.prototype.preUpdate = function () {
 
 /**
 * Automatically called by World
-* @method Phaser.GameObjects.Graphics.prototype.postUpdate
+* @method Phaser.GameObject.Graphics.prototype.postUpdate
 */
-Phaser.GameObjects.Graphics.prototype.postUpdate = function () {
+Phaser.GameObject.Graphics.prototype.postUpdate = function () {
 
     Phaser.Component.PhysicsBody.postUpdate.call(this);
     Phaser.Component.FixedToCamera.postUpdate.call(this);
@@ -266,10 +266,10 @@ Phaser.GameObjects.Graphics.prototype.postUpdate = function () {
 /**
 * Destroy this Graphics instance.
 *
-* @method Phaser.GameObjects.Graphics.prototype.destroy
+* @method Phaser.GameObject.Graphics.prototype.destroy
 * @param {boolean} [destroyChildren=true] - Should every child of this object have its destroy method called?
 */
-Phaser.GameObjects.Graphics.prototype.destroy = function (destroyChildren) {
+Phaser.GameObject.Graphics.prototype.destroy = function (destroyChildren) {
 
     this.clear();
 
@@ -280,11 +280,11 @@ Phaser.GameObjects.Graphics.prototype.destroy = function (destroyChildren) {
 /*
 * Draws a single {Phaser.Polygon} triangle from a {Phaser.Point} array
 *
-* @method Phaser.GameObjects.Graphics.prototype.drawTriangle
+* @method Phaser.GameObject.Graphics.prototype.drawTriangle
 * @param {Array<Phaser.Point>} points - An array of Phaser.Points that make up the three vertices of this triangle
 * @param {boolean} [cull=false] - Should we check if the triangle is back-facing
 */
-Phaser.GameObjects.Graphics.prototype.drawTriangle = function (points, cull) {
+Phaser.GameObject.Graphics.prototype.drawTriangle = function (points, cull) {
 
     if (cull === undefined) { cull = false; }
 
@@ -312,12 +312,12 @@ Phaser.GameObjects.Graphics.prototype.drawTriangle = function (points, cull) {
 /*
 * Draws {Phaser.Polygon} triangles
 *
-* @method Phaser.GameObjects.Graphics.prototype.drawTriangles
+* @method Phaser.GameObject.Graphics.prototype.drawTriangles
 * @param {Array<Phaser.Point>|Array<number>} vertices - An array of Phaser.Points or numbers that make up the vertices of the triangles
 * @param {Array<number>} {indices=null} - An array of numbers that describe what order to draw the vertices in
 * @param {boolean} [cull=false] - Should we check if the triangle is back-facing
 */
-Phaser.GameObjects.Graphics.prototype.drawTriangles = function (vertices, indices, cull) {
+Phaser.GameObject.Graphics.prototype.drawTriangles = function (vertices, indices, cull) {
 
     if (cull === undefined) { cull = false; }
 
@@ -394,7 +394,7 @@ Phaser.GameObjects.Graphics.prototype.drawTriangles = function (vertices, indice
  * @param alpha {Number} alpha of the line to draw, will update the objects stored style
  * @return {Graphics}
  */
-Phaser.GameObjects.Graphics.prototype.lineStyle = function (lineWidth, color, alpha) {
+Phaser.GameObject.Graphics.prototype.lineStyle = function (lineWidth, color, alpha) {
 
     this.lineWidth = lineWidth || 0;
     this.lineColor = color || 0;
@@ -428,7 +428,7 @@ Phaser.GameObjects.Graphics.prototype.lineStyle = function (lineWidth, color, al
  * @param y {Number} the Y coordinate to move to
  * @return {Graphics}
   */
-Phaser.GameObjects.Graphics.prototype.moveTo = function (x, y) {
+Phaser.GameObject.Graphics.prototype.moveTo = function (x, y) {
 
     this.drawShape(new Phaser.Polygon([ x, y ]));
 
@@ -445,7 +445,7 @@ Phaser.GameObjects.Graphics.prototype.moveTo = function (x, y) {
  * @param y {Number} the Y coordinate to draw to
  * @return {Graphics}
  */
-Phaser.GameObjects.Graphics.prototype.lineTo = function (x, y) {
+Phaser.GameObject.Graphics.prototype.lineTo = function (x, y) {
 
     if (!this.currentPath)
     {
@@ -471,7 +471,7 @@ Phaser.GameObjects.Graphics.prototype.lineTo = function (x, y) {
  * @param toY {Number} Destination point y
  * @return {Graphics}
  */
-Phaser.GameObjects.Graphics.prototype.quadraticCurveTo = function (cpX, cpY, toX, toY) {
+Phaser.GameObject.Graphics.prototype.quadraticCurveTo = function (cpX, cpY, toX, toY) {
 
     if (this.currentPath)
     {
@@ -528,7 +528,7 @@ Phaser.GameObjects.Graphics.prototype.quadraticCurveTo = function (cpX, cpY, toX
  * @param toY {Number} Destination point y
  * @return {Graphics}
  */
-Phaser.GameObjects.Graphics.prototype.bezierCurveTo = function (cpX, cpY, cpX2, cpY2, toX, toY) {
+Phaser.GameObject.Graphics.prototype.bezierCurveTo = function (cpX, cpY, cpX2, cpY2, toX, toY) {
 
     if (this.currentPath)
     {
@@ -589,7 +589,7 @@ Phaser.GameObjects.Graphics.prototype.bezierCurveTo = function (cpX, cpY, cpX2, 
  * @param radius {Number} The radius of the arc
  * @return {Graphics}
  */
-Phaser.GameObjects.Graphics.prototype.arcTo = function (x1, y1, x2, y2, radius) {
+Phaser.GameObject.Graphics.prototype.arcTo = function (x1, y1, x2, y2, radius) {
 
     if (this.currentPath)
     {
@@ -660,7 +660,7 @@ Phaser.GameObjects.Graphics.prototype.arcTo = function (x1, y1, x2, y2, radius) 
  * @param segments {Number} Optional. The number of segments to use when calculating the arc. The default is 40. If you need more fidelity use a higher number.
  * @return {Graphics}
  */
-Phaser.GameObjects.Graphics.prototype.arc = function (cx, cy, radius, startAngle, endAngle, anticlockwise, segments) {
+Phaser.GameObject.Graphics.prototype.arc = function (cx, cy, radius, startAngle, endAngle, anticlockwise, segments) {
 
     //  If we do this we can never draw a full circle
     if (startAngle === endAngle)
@@ -743,7 +743,7 @@ Phaser.GameObjects.Graphics.prototype.arc = function (cx, cy, radius, startAngle
  * @param alpha {Number} the alpha of the fill
  * @return {Graphics}
  */
-Phaser.GameObjects.Graphics.prototype.beginFill = function (color, alpha) {
+Phaser.GameObject.Graphics.prototype.beginFill = function (color, alpha) {
 
     this.filling = true;
     this.fillColor = color || 0;
@@ -769,7 +769,7 @@ Phaser.GameObjects.Graphics.prototype.beginFill = function (color, alpha) {
  * @method endFill
  * @return {Graphics}
  */
-Phaser.GameObjects.Graphics.prototype.endFill = function () {
+Phaser.GameObject.Graphics.prototype.endFill = function () {
 
     this.filling = false;
     this.fillColor = null;
@@ -788,7 +788,7 @@ Phaser.GameObjects.Graphics.prototype.endFill = function () {
  * @param height {Number} The height of the rectangle
  * @return {Graphics}
  */
-Phaser.GameObjects.Graphics.prototype.drawRect = function (x, y, width, height) {
+Phaser.GameObject.Graphics.prototype.drawRect = function (x, y, width, height) {
 
     this.drawShape(new Phaser.Rectangle(x, y, width, height));
 
@@ -804,7 +804,7 @@ Phaser.GameObjects.Graphics.prototype.drawRect = function (x, y, width, height) 
  * @param height {Number} The height of the rectangle
  * @param radius {Number} Radius of the rectangle corners. In WebGL this must be a value between 0 and 9.
  */
-Phaser.GameObjects.Graphics.prototype.drawRoundedRect = function (x, y, width, height, radius) {
+Phaser.GameObject.Graphics.prototype.drawRoundedRect = function (x, y, width, height, radius) {
 
     this.drawShape(new Phaser.RoundedRectangle(x, y, width, height, radius));
 
@@ -821,7 +821,7 @@ Phaser.GameObjects.Graphics.prototype.drawRoundedRect = function (x, y, width, h
  * @param diameter {Number} The diameter of the circle
  * @return {Graphics}
  */
-Phaser.GameObjects.Graphics.prototype.drawCircle = function (x, y, diameter) {
+Phaser.GameObject.Graphics.prototype.drawCircle = function (x, y, diameter) {
 
     this.drawShape(new Phaser.Circle(x, y, diameter));
 
@@ -839,7 +839,7 @@ Phaser.GameObjects.Graphics.prototype.drawCircle = function (x, y, diameter) {
  * @param height {Number} The half height of the ellipse
  * @return {Graphics}
  */
-Phaser.GameObjects.Graphics.prototype.drawEllipse = function (x, y, width, height) {
+Phaser.GameObject.Graphics.prototype.drawEllipse = function (x, y, width, height) {
 
     this.drawShape(new Phaser.Ellipse(x, y, width, height));
 
@@ -854,7 +854,7 @@ Phaser.GameObjects.Graphics.prototype.drawEllipse = function (x, y, width, heigh
  * @param path {Array|Phaser.Polygon} The path data used to construct the polygon. Can either be an array of points or a Phaser.Polygon object.
  * @return {Graphics}
  */
-Phaser.GameObjects.Graphics.prototype.drawPolygon = function (path) {
+Phaser.GameObject.Graphics.prototype.drawPolygon = function (path) {
 
     if (path instanceof Phaser.Polygon)
     {
@@ -889,7 +889,7 @@ Phaser.GameObjects.Graphics.prototype.drawPolygon = function (path) {
  * @method clear
  * @return {Graphics}
  */
-Phaser.GameObjects.Graphics.prototype.clear = function () {
+Phaser.GameObject.Graphics.prototype.clear = function () {
 
     this.lineWidth = 0;
     this.filling = false;
@@ -915,7 +915,7 @@ Phaser.GameObjects.Graphics.prototype.clear = function () {
  * @param [padding=0] {Number} Add optional extra padding to the generated texture (default 0)
  * @return {Texture} a texture of the graphics object
  */
-Phaser.GameObjects.Graphics.prototype.generateTexture = function (resolution, scaleMode, padding) {
+Phaser.GameObject.Graphics.prototype.generateTexture = function (resolution, scaleMode, padding) {
 
     if (resolution === undefined) { resolution = 1; }
     if (scaleMode === undefined) { scaleMode = Phaser.scaleModes.DEFAULT; }
@@ -948,7 +948,7 @@ Phaser.GameObjects.Graphics.prototype.generateTexture = function (resolution, sc
  * @method getBounds
  * @return {Rectangle} the rectangular bounding area
  */
-Phaser.GameObjects.Graphics.prototype.getBounds = function (matrix) {
+Phaser.GameObject.Graphics.prototype.getBounds = function (matrix) {
 
     if (this._currentBounds)
     {
@@ -1038,7 +1038,7 @@ Phaser.GameObjects.Graphics.prototype.getBounds = function (matrix) {
  * @method getLocalBounds
  * @return {Rectangle} The rectangular bounding area
  */
-Phaser.GameObjects.Graphics.prototype.getLocalBounds = function () {
+Phaser.GameObject.Graphics.prototype.getLocalBounds = function () {
 
     var matrixCache = this.worldTransform;
 
@@ -1068,7 +1068,7 @@ Phaser.GameObjects.Graphics.prototype.getLocalBounds = function () {
 * @param point {Point} the point to test
 * @return {boolean} the result of the test
 */
-Phaser.GameObjects.Graphics.prototype.containsPoint = function (point) {
+Phaser.GameObject.Graphics.prototype.containsPoint = function (point) {
 
     this.worldTransform.applyInverse(point, tempPoint);
 
@@ -1102,7 +1102,7 @@ Phaser.GameObjects.Graphics.prototype.containsPoint = function (point) {
  *
  * @method updateLocalBounds
  */
-Phaser.GameObjects.Graphics.prototype.updateLocalBounds = function () {
+Phaser.GameObject.Graphics.prototype.updateLocalBounds = function () {
 
     var minX = Infinity;
     var maxX = -Infinity;
@@ -1216,7 +1216,7 @@ Phaser.GameObjects.Graphics.prototype.updateLocalBounds = function () {
  * @method _generateCachedSprite
  * @private
  */
-Phaser.GameObjects.Graphics.prototype._generateCachedSprite = function () {
+Phaser.GameObject.Graphics.prototype._generateCachedSprite = function () {
 
     var bounds = this.getLocalBounds();
 
@@ -1257,7 +1257,7 @@ Phaser.GameObjects.Graphics.prototype._generateCachedSprite = function () {
  * @method updateCachedSpriteTexture
  * @private
  */
-Phaser.GameObjects.Graphics.prototype.updateCachedSpriteTexture = function () {
+Phaser.GameObject.Graphics.prototype.updateCachedSpriteTexture = function () {
 
     var cachedSprite = this._cachedSprite;
     var texture = cachedSprite.texture;
@@ -1281,7 +1281,7 @@ Phaser.GameObjects.Graphics.prototype.updateCachedSpriteTexture = function () {
  *
  * @method destroyCachedSprite
  */
-Phaser.GameObjects.Graphics.prototype.destroyCachedSprite = function () {
+Phaser.GameObject.Graphics.prototype.destroyCachedSprite = function () {
 
     this._cachedSprite.texture.destroy(true);
     this._cachedSprite = null;
@@ -1295,7 +1295,7 @@ Phaser.GameObjects.Graphics.prototype.destroyCachedSprite = function () {
  * @param {Circle|Rectangle|Ellipse|Line|Polygon} shape The Shape object to draw.
  * @return {GraphicsData} The generated GraphicsData object.
  */
-Phaser.GameObjects.Graphics.prototype.drawShape = function (shape) {
+Phaser.GameObject.Graphics.prototype.drawShape = function (shape) {
 
     if (this.currentPath)
     {
@@ -1315,7 +1315,7 @@ Phaser.GameObjects.Graphics.prototype.drawShape = function (shape) {
         shape.flatten();
     }
 
-    var data = new Phaser.GameObjects.GraphicsData(this.lineWidth, this.lineColor, this.lineAlpha, this.fillColor, this.fillAlpha, this.filling, shape);
+    var data = new Phaser.GameObject.GraphicsData(this.lineWidth, this.lineColor, this.lineAlpha, this.fillColor, this.fillAlpha, this.filling, shape);
     
     this.graphicsData.push(data);
 
@@ -1332,7 +1332,7 @@ Phaser.GameObjects.Graphics.prototype.drawShape = function (shape) {
 
 };
 
-Phaser.GameObjects.Graphics.prototype.updateGraphicsTint = function () {
+Phaser.GameObject.Graphics.prototype.updateGraphicsTint = function () {
 
     if (this.tint === 0xFFFFFF)
     {
@@ -1367,7 +1367,7 @@ Phaser.GameObjects.Graphics.prototype.updateGraphicsTint = function () {
  * @default false
  * @private
  */
-Object.defineProperty(Phaser.GameObjects.Graphics.prototype, 'cacheAsBitmap', {
+Object.defineProperty(Phaser.GameObject.Graphics.prototype, 'cacheAsBitmap', {
 
     get: function () {
 

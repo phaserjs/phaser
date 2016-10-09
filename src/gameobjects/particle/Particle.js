@@ -7,7 +7,7 @@
 /**
 * Create a new `Particle` object. Particles are extended Sprites that are emitted by a particle emitter such as Phaser.Particles.Arcade.Emitter.
 * 
-* @class Phaser.GameObjects.Particle
+* @class Phaser.GameObject.Particle
 * @constructor
 * @extends Phaser.Sprite
 * @param {Phaser.Game} game - A reference to the currently running game.
@@ -16,9 +16,9 @@
 * @param {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the Particle during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
 * @param {string|number} frame - If this Particle is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
 */
-Phaser.GameObjects.Particle = function (game, x, y, key, frame) {
+Phaser.GameObject.Particle = function (game, x, y, key, frame) {
 
-    Phaser.GameObjects.Sprite.call(this, game, x, y, key, frame);
+    Phaser.GameObject.Sprite.call(this, game, x, y, key, frame);
 
     /**
     * @property {boolean} autoScale - If this Particle automatically scales this is set to true by Particle.setScaleData.
@@ -58,8 +58,8 @@ Phaser.GameObjects.Particle = function (game, x, y, key, frame) {
 
 };
 
-Phaser.GameObjects.Particle.prototype = Object.create(Phaser.GameObjects.Sprite.prototype);
-Phaser.GameObjects.Particle.prototype.constructor = Phaser.GameObjects.Particle;
+Phaser.GameObject.Particle.prototype = Object.create(Phaser.GameObject.Sprite.prototype);
+Phaser.GameObject.Particle.prototype.constructor = Phaser.GameObject.Particle;
 
 /**
 * Updates the Particle scale or alpha if autoScale and autoAlpha are set.
@@ -67,7 +67,7 @@ Phaser.GameObjects.Particle.prototype.constructor = Phaser.GameObjects.Particle;
 * @method Phaser.Particle#update
 * @memberof Phaser.Particle
 */
-Phaser.GameObjects.Particle.prototype.update = function() {
+Phaser.GameObject.Particle.prototype.update = function() {
 
     if (this.autoScale)
     {
@@ -105,7 +105,7 @@ Phaser.GameObjects.Particle.prototype.update = function() {
 * @method Phaser.Particle#onEmit
 * @memberof Phaser.Particle
 */
-Phaser.GameObjects.Particle.prototype.onEmit = function() {
+Phaser.GameObject.Particle.prototype.onEmit = function() {
 };
 
 /**
@@ -114,7 +114,7 @@ Phaser.GameObjects.Particle.prototype.onEmit = function() {
 * @method Phaser.Particle#setAlphaData
 * @memberof Phaser.Particle
 */
-Phaser.GameObjects.Particle.prototype.setAlphaData = function(data) {
+Phaser.GameObject.Particle.prototype.setAlphaData = function(data) {
 
     this.alphaData = data;
     this._a = data.length - 1;
@@ -129,7 +129,7 @@ Phaser.GameObjects.Particle.prototype.setAlphaData = function(data) {
 * @method Phaser.Particle#setScaleData
 * @memberof Phaser.Particle
 */
-Phaser.GameObjects.Particle.prototype.setScaleData = function(data) {
+Phaser.GameObject.Particle.prototype.setScaleData = function(data) {
 
     this.scaleData = data;
     this._s = data.length - 1;
@@ -150,7 +150,7 @@ Phaser.GameObjects.Particle.prototype.setScaleData = function(data) {
 * @param {number} [health=1] - The health to give the Particle.
 * @return {Phaser.Particle} This instance.
 */
-Phaser.GameObjects.Particle.prototype.reset = function(x, y, health) {
+Phaser.GameObject.Particle.prototype.reset = function(x, y, health) {
 
     Phaser.Component.Reset.prototype.reset.call(this, x, y, health);
 
