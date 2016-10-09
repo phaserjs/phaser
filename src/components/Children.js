@@ -9,24 +9,23 @@
 *
 * @class
 */
-Phaser.Component.Children = function (parent) {
-
-    this.parent = parent;
+Phaser.Component.Children = function (gameObject)
+{
+    this.gameObject = gameObject;
 
     //  The objects that belong to this collection.
     //  The equivalent of the old `Sprite.children` array.
     this.list = [];
 
     this.position = 0;
-
 };
 
 Phaser.Component.Children.prototype.constructor = Phaser.Component.Children;
 
 Phaser.Component.Children.prototype = {
 
-    add: function (child) {
-
+    add: function (child)
+    {
         if (child.parent === this)
         {
             return child;
@@ -41,11 +40,10 @@ Phaser.Component.Children.prototype = {
         this.list.push(child);
 
         return child;
-
     },
 
-    addAt: function (child, index) {
-
+    addAt: function (child, index)
+    {
         if (this.list.length === 0)
         {
             return this.add(child);
@@ -67,8 +65,8 @@ Phaser.Component.Children.prototype = {
 
     },
 
-    addMultiple: function (children) {
-
+    addMultiple: function (children)
+    {
         if (Array.isArray(children))
         {
             for (var i = 0; i < children.length; i++)
@@ -78,20 +76,17 @@ Phaser.Component.Children.prototype = {
         }
 
         return children;
-
     },
 
-    getAt: function (index) {
-
+    getAt: function (index)
+    {
         return this.list[index];
-        
     },
 
-    getIndex: function (child) {
-
+    getIndex: function (child)
+    {
         //  Return -1 if given child isn't a child of this parent
         return this.list.indexOf(child);
-
     },
 
     /**
@@ -103,8 +98,8 @@ Phaser.Component.Children.prototype = {
     * @param {any} value - The value to check if the property strictly equals.
     * @return {any} The item that was found, or null if nothing matched.
     */
-    getByKey: function (property, value) {
-
+    getByKey: function (property, value)
+    {
         for (var i = 0; i < this.list.length; i++)
         {
             if (this.list[i][property] === value)
@@ -114,7 +109,6 @@ Phaser.Component.Children.prototype = {
         }
 
         return null;
-
     },
 
     /**
@@ -126,10 +120,9 @@ Phaser.Component.Children.prototype = {
     * @param {string} name - The name to search for.
     * @return {any} The first child with a matching name, or null if none were found.
     */
-    getByName: function (name) {
-
+    getByName: function (name)
+    {
         return this.getByKey('name', name);
-
     },
 
     /**
@@ -140,18 +133,19 @@ Phaser.Component.Children.prototype = {
     * @param {integer} [length=(to top)] - Restriction on the number of values you want to randomly select from.
     * @return {any} A random child of this Group.
     */
-    getRandom: function (startIndex, length) {
-
+    getRandom: function (startIndex, length)
+    {
         if (startIndex === undefined) { startIndex = 0; }
         if (length === undefined) { length = this.list.length; }
 
-        if (length === 0)
+        if (length === 0 || length > this.list.length)
         {
             return null;
         }
 
-        return Phaser.ArrayUtils.getRandomItem(this.list, startIndex, length);
+        var randomIndex = startIndex + Math.floor(Math.random() * length);
 
+        return this.list[randomIndex];
     },
 
     /**
@@ -172,8 +166,8 @@ Phaser.Component.Children.prototype = {
     * @param {integer} [endIndex] - The last child index to search up until.
     * @return {any} A random existing child of this Group.
     */
-    getAll: function (property, value, startIndex, endIndex) {
-
+    getAll: function (property, value, startIndex, endIndex)
+    {
         if (startIndex === undefined) { startIndex = 0; }
         if (endIndex === undefined) { endIndex = this.list.length; }
 
@@ -197,11 +191,10 @@ Phaser.Component.Children.prototype = {
         }
 
         return output;
-
     },
 
-    swap: function (child1, child2) {
-
+    swap: function (child1, child2)
+    {
         if (child1 === child2)
         {
             return;
@@ -217,12 +210,11 @@ Phaser.Component.Children.prototype = {
 
         this.list[index1] = child2;
         this.list[index2] = child1;
-
     },
 
     //   was setIndex
-    moveTo: function (child, index) {
-
+    moveTo: function (child, index)
+    {
         var currentIndex = this.getIndex(child);
 
         if (currentIndex === -1 || index < 0 || index >= this.list.length)
@@ -237,11 +229,10 @@ Phaser.Component.Children.prototype = {
         this.list.splice(index, 0, child);
 
         return child;
-
     },
 
-    remove: function (child) {
-
+    remove: function (child)
+    {
         var index = this.list.indexOf(child);
 
         if (index !== -1)
@@ -252,11 +243,10 @@ Phaser.Component.Children.prototype = {
         }
         
         return child;
-
     },
 
-    removeAt: function (index) {
-
+    removeAt: function (index)
+    {
         var child = this.list[index];
 
         if (child)
@@ -267,11 +257,10 @@ Phaser.Component.Children.prototype = {
         }
 
         return child;
-
     },
 
-    removeBetween: function (beginIndex, endIndex) {
-
+    removeBetween: function (beginIndex, endIndex)
+    {
         if (beginIndex === undefined) { beginIndex = 0; }
         if (endIndex === undefined) { endIndex = this.list.length; }
 
@@ -296,7 +285,6 @@ Phaser.Component.Children.prototype = {
         {
             throw new Error('Children.removeBetween: Range Error, numeric values are outside the acceptable range');
         }
-
     },
 
     /**
@@ -304,8 +292,8 @@ Phaser.Component.Children.prototype = {
     *
     * @method Phaser.ArraySet#removeAll
     */
-    removeAll: function () {
-
+    removeAll: function ()
+    {
         var i = this.list.length;
 
         while (i--)
@@ -314,12 +302,11 @@ Phaser.Component.Children.prototype = {
         }
 
         return this;
-
     },
 
     //  Check to see if the given child is a child of this object, at any depth (recursively scans up the tree)
-    contains: function (child) {
-
+    contains: function (child)
+    {
         if (!child)
         {
             return false;
@@ -332,7 +319,6 @@ Phaser.Component.Children.prototype = {
         {
             return this.contains(child.parent);
         }
-
     },
 
     /**
@@ -342,8 +328,8 @@ Phaser.Component.Children.prototype = {
     * @param {any} child - The child to bring to the top of this group.
     * @return {any} The child that was moved.
     */
-    bringToTop: function (child) {
-
+    bringToTop: function (child)
+    {
         if (child.parent === this && this.getIndex(child) < this.list.length)
         {
             this.remove(child);
@@ -351,7 +337,6 @@ Phaser.Component.Children.prototype = {
         }
 
         return child;
-
     },
 
     /**
@@ -361,8 +346,8 @@ Phaser.Component.Children.prototype = {
     * @param {any} child - The child to send to the bottom of this group.
     * @return {any} The child that was moved.
     */
-    sendToBack: function (child) {
-
+    sendToBack: function (child)
+    {
         if (child.parent === this && this.getIndex(child) > 0)
         {
             this.remove(child);
@@ -370,7 +355,6 @@ Phaser.Component.Children.prototype = {
         }
 
         return child;
-
     },
 
     /**
@@ -380,8 +364,8 @@ Phaser.Component.Children.prototype = {
     * @param {any} child - The child to move up in the group.
     * @return {any} The child that was moved.
     */
-    moveUp: function (child) {
-
+    moveUp: function (child)
+    {
         var a = this.getIndex(child);
 
         if (a !== -1 && a < this.list.length - 1)
@@ -395,7 +379,6 @@ Phaser.Component.Children.prototype = {
         }
 
         return child;
-
     },
 
     /**
@@ -405,8 +388,8 @@ Phaser.Component.Children.prototype = {
     * @param {any} child - The child to move down in the group.
     * @return {any} The child that was moved.
     */
-    moveDown: function (child) {
-
+    moveDown: function (child)
+    {
         var a = this.getIndex(child);
 
         if (a > 0)
@@ -420,7 +403,6 @@ Phaser.Component.Children.prototype = {
         }
 
         return child;
-
     },
 
     /**
@@ -430,20 +412,24 @@ Phaser.Component.Children.prototype = {
     *
     * @method Phaser.Group#reverse
     */
-    reverse: function () {
-
+    reverse: function ()
+    {
         this.list.reverse();
 
         return this;
-
     },
 
-    shuffle: function () {
-
-        this.list = Phaser.ArrayUtils.shuffle(this.list);
+    shuffle: function ()
+    {
+        for (var i = this.list.length - 1; i > 0; i--)
+        {
+            var j = Math.floor(Math.random() * (i + 1));
+            var temp = this.list[i];
+            this.list[i] = this.list[j];
+            this.list[j] = temp;
+        }
 
         return this;
-
     },
 
     /**
@@ -458,8 +444,8 @@ Phaser.Component.Children.prototype = {
     * @param {any} newChild - The child to be inserted into this group.
     * @return {any} Returns the oldChild that was replaced within this group.
     */
-    replace: function (oldChild, newChild) {
-
+    replace: function (oldChild, newChild)
+    {
         var index = this.getIndex(oldChild);
 
         if (index !== -1)
@@ -475,14 +461,13 @@ Phaser.Component.Children.prototype = {
 
             return oldChild;
         }
-
     },
 
     //  Swaps a child from another parent, with one from this parent.
     //  child1 = the child of THIS parent
     //  child2 = the child of the OTHER parent
-    exchange: function (child1, child2) {
-
+    exchange: function (child1, child2)
+    {
         if (child1 === child2 || child1.parent === child2.parent)
         {
             return;
@@ -505,7 +490,6 @@ Phaser.Component.Children.prototype = {
         this.addAt(child2, index1);
 
         parentChildren.addAt(child1, index2);
-
     },
 
     /**
@@ -515,10 +499,9 @@ Phaser.Component.Children.prototype = {
     * @param {any} item - The element to get the list index for.
     * @return {boolean} True if the item is found in the list, otherwise false.
     */
-    exists: function (child) {
-
+    exists: function (child)
+    {
         return (this.list.indexOf(child) > -1);
-
     },
 
     /**
@@ -528,8 +511,8 @@ Phaser.Component.Children.prototype = {
     * @param {any} key - The property of the item to set.
     * @param {any} value - The value to set the property to.
     */
-    setAll: function (key, value) {
-
+    setAll: function (key, value)
+    {
         var i = this.list.length;
 
         while (i--)
@@ -539,7 +522,6 @@ Phaser.Component.Children.prototype = {
                 this.list[i][key] = value;
             }
         }
-
     },
 
     /**
@@ -550,8 +532,8 @@ Phaser.Component.Children.prototype = {
     * @param {object} [thisArg] - Value to use as `this` when executing callback.
     * @param {...*} [arguments] - Additional arguments that will be passed to the callback, after the child.
     */
-    each: function (callback, thisArg) {
-
+    each: function (callback, thisArg)
+    {
         var args = [ null ];
 
         for (var i = 1; i < arguments.length; i++)
@@ -564,7 +546,6 @@ Phaser.Component.Children.prototype = {
             args[0] = this.list[i];
             callback.apply(thisArg, args);
         }
-
     },
 
     /**
@@ -575,8 +556,8 @@ Phaser.Component.Children.prototype = {
     * @param {boolean} [silent=false] - If true the children will not dispatch the `onAddedToGroup` event for the new Group.
     * @return {Phaser.Group} The Group to which all the children were moved.
     */
-    reparent: function (newParent) {
-
+    reparent: function (newParent)
+    {
         if (newParent !== this)
         {
             for (var i = 0; i < this.list.length; i++)
@@ -588,7 +569,6 @@ Phaser.Component.Children.prototype = {
         }
 
         return newParent;
-
     }
 
 };
@@ -605,8 +585,8 @@ Object.defineProperties(Phaser.Component.Children.prototype, {
 
         enumerable: true,
 
-        get: function () {
-
+        get: function ()
+        {
             this.position = 0;
 
             if (this.list.length > 0)
@@ -617,7 +597,6 @@ Object.defineProperties(Phaser.Component.Children.prototype, {
             {
                 return null;
             }
-
         }
 
     },
@@ -632,8 +611,8 @@ Object.defineProperties(Phaser.Component.Children.prototype, {
 
         enumerable: true,
 
-        get: function () {
-
+        get: function ()
+        {
             if (this.list.length > 0)
             {
                 this.position = this.list.length - 1;
@@ -644,7 +623,6 @@ Object.defineProperties(Phaser.Component.Children.prototype, {
             {
                 return null;
             }
-
         }
 
     },
@@ -659,8 +637,8 @@ Object.defineProperties(Phaser.Component.Children.prototype, {
 
         enumerable: true,
 
-        get: function () {
-
+        get: function ()
+        {
             if (this.position < this.list.length)
             {
                 this.position++;
@@ -671,7 +649,6 @@ Object.defineProperties(Phaser.Component.Children.prototype, {
             {
                 return null;
             }
-
         }
 
     },
@@ -686,8 +663,8 @@ Object.defineProperties(Phaser.Component.Children.prototype, {
 
         enumerable: true,
 
-        get: function () {
-
+        get: function ()
+        {
             if (this.position > 0)
             {
                 this.position--;
@@ -698,7 +675,6 @@ Object.defineProperties(Phaser.Component.Children.prototype, {
             {
                 return null;
             }
-
         }
 
     }
