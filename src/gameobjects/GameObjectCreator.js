@@ -41,7 +41,7 @@ Phaser.GameObjectCreator.prototype = {
     * @param {number} y - Y position of the image.
     * @param {string|Phaser.RenderTexture|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
     * @param {string|number} [frame] - If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
-    * @returns {Phaser.Image} the newly created sprite object.
+    * @return {Phaser.Image} the newly created sprite object.
     */
     image: function (x, y, key, frame) {
 
@@ -57,7 +57,7 @@ Phaser.GameObjectCreator.prototype = {
     * @param {number} y - Y position of the new sprite.
     * @param {string|Phaser.RenderTexture|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
     * @param {string|number} [frame] - If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
-    * @returns {Phaser.Sprite} the newly created sprite object.
+    * @return {Phaser.Sprite} the newly created sprite object.
     */
     sprite: function (x, y, key, frame) {
 

@@ -21,7 +21,7 @@ PIXI.CanvasTinter = function() {};
  */
 PIXI.CanvasTinter.getTintedTexture = function(sprite, color)
 {
-    var canvas = sprite.tintedTexture || PIXI.CanvasPool.create(this);
+    var canvas = sprite.tintedTexture || Phaser.CanvasPool.create(this);
     
     PIXI.CanvasTinter.tintMethod(sprite.texture, color, canvas);
 
@@ -42,23 +42,31 @@ PIXI.CanvasTinter.tintWithMultiply = function(texture, color, canvas)
     var context = canvas.getContext("2d");
 
     var crop = texture.crop;
+    var w = crop.width;
+    var h = crop.height;
 
-    if (canvas.width !== crop.width || canvas.height !== crop.height)
+    if (texture.rotated)
     {
-        canvas.width = crop.width;
-        canvas.height = crop.height;
+        w = h;
+        h = crop.width;
     }
 
-    context.clearRect(0, 0, crop.width, crop.height);
+    if (canvas.width !== w || canvas.height !== h)
+    {
+        canvas.width = w;
+        canvas.height = h;
+    }
+
+    context.clearRect(0, 0, w, h);
 
     context.fillStyle = "#" + ("00000" + (color | 0).toString(16)).substr(-6);
-    context.fillRect(0, 0, crop.width, crop.height);
+    context.fillRect(0, 0, w, h);
 
     context.globalCompositeOperation = "multiply";
-    context.drawImage(texture.baseTexture.source, crop.x, crop.y, crop.width, crop.height, 0, 0, crop.width, crop.height);
+    context.drawImage(texture.baseTexture.source, crop.x, crop.y, w, h, 0, 0, w, h);
 
     context.globalCompositeOperation = "destination-atop";
-    context.drawImage(texture.baseTexture.source, crop.x, crop.y, crop.width, crop.height, 0, 0, crop.width, crop.height);
+    context.drawImage(texture.baseTexture.source, crop.x, crop.y, w, h, 0, 0, w, h);
 
 };
 
@@ -76,18 +84,29 @@ PIXI.CanvasTinter.tintWithPerPixel = function(texture, color, canvas)
     var context = canvas.getContext("2d");
 
     var crop = texture.crop;
+    var w = crop.width;
+    var h = crop.height;
 
-    canvas.width = crop.width;
-    canvas.height = crop.height;
+    if (texture.rotated)
+    {
+        w = h;
+        h = crop.width;
+    }
+
+    if (canvas.width !== w || canvas.height !== h)
+    {
+        canvas.width = w;
+        canvas.height = h;
+    }
   
     context.globalCompositeOperation = "copy";
 
-    context.drawImage(texture.baseTexture.source, crop.x, crop.y, crop.width, crop.height, 0, 0, crop.width, crop.height);
+    context.drawImage(texture.baseTexture.source, crop.x, crop.y, w, h, 0, 0, w, h);
 
-    var rgbValues = PIXI.hex2rgb(color);
+    var rgbValues = Phaser.Color.hexToRGBArray(color);
     var r = rgbValues[0], g = rgbValues[1], b = rgbValues[2];
 
-    var pixelData = context.getImageData(0, 0, crop.width, crop.height);
+    var pixelData = context.getImageData(0, 0, w, h);
 
     var pixels = pixelData.data;
 
@@ -110,62 +129,3 @@ PIXI.CanvasTinter.tintWithPerPixel = function(texture, color, canvas)
     context.putImageData(pixelData, 0, 0);
 };
 
-/**
- * Checks if the browser correctly supports putImageData alpha channels.
- * 
- * @method checkInverseAlpha
- * @static
- */
-PIXI.CanvasTinter.checkInverseAlpha = function()
-{
-    var canvas = new PIXI.CanvasBuffer(2, 1);
-
-    canvas.context.fillStyle = "rgba(10, 20, 30, 0.5)";
-
-    //  Draw a single pixel
-    canvas.context.fillRect(0, 0, 1, 1);
-
-    //  Get the color values
-    var s1 = canvas.context.getImageData(0, 0, 1, 1);
-
-    if (s1 === null)
-    {
-        return false;
-    }
-
-    //  Plot them to x2
-    canvas.context.putImageData(s1, 1, 0);
-
-    //  Get those values
-    var s2 = canvas.context.getImageData(1, 0, 1, 1);
-
-    //  Compare and return
-    return (s2.data[0] === s1.data[0] && s2.data[1] === s1.data[1] && s2.data[2] === s1.data[2] && s2.data[3] === s1.data[3]);
-};
-
-/**
- * If the browser isn't capable of handling tinting with alpha this will be false.
- * This property is only applicable if using tintWithPerPixel.
- *
- * @property canHandleAlpha
- * @type Boolean
- * @static
- */
-PIXI.CanvasTinter.canHandleAlpha = PIXI.CanvasTinter.checkInverseAlpha();
-
-/**
- * Whether or not the Canvas BlendModes are supported, consequently the ability to tint using the multiply method.
- *
- * @property canUseMultiply
- * @type Boolean
- * @static
- */
-PIXI.CanvasTinter.canUseMultiply = PIXI.canUseNewCanvasBlendModes();
-
-/**
- * The tinting method that will be used.
- * 
- * @method tintMethod
- * @static
- */
-PIXI.CanvasTinter.tintMethod = PIXI.CanvasTinter.canUseMultiply ? PIXI.CanvasTinter.tintWithMultiply :  PIXI.CanvasTinter.tintWithPerPixel;

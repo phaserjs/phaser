@@ -23,7 +23,7 @@ PIXI.Sprite = function (texture) {
      * @property anchor
      * @type Point
      */
-    this.anchor = new PIXI.Point();
+    this.anchor = new Phaser.Point();
 
     /**
      * The texture that the sprite is using
@@ -31,7 +31,7 @@ PIXI.Sprite = function (texture) {
      * @property texture
      * @type Texture
      */
-    this.texture = texture || PIXI.Texture.emptyTexture;
+    this.texture = texture;
 
     /**
      * The width of the sprite (this is initially set by the texture)
@@ -88,14 +88,14 @@ PIXI.Sprite = function (texture) {
      * @type Number
      * @default PIXI.blendModes.NORMAL;
      */
-    this.blendMode = PIXI.blendModes.NORMAL;
+    this.blendMode = Phaser.blendModes.NORMAL;
 
     /**
      * The shader that will be used to render this Sprite.
      * Set to null to remove a current shader.
      *
      * @property shader
-     * @type AbstractFilter
+     * @type Phaser.Filter
      * @default null
      */
     this.shader = null;
@@ -322,7 +322,7 @@ PIXI.Sprite.prototype.getLocalBounds = function () {
 
     var matrixCache = this.worldTransform;
 
-    this.worldTransform = PIXI.identityMatrix;
+    this.worldTransform = Phaser.identityMatrix;
 
     for (var i = 0; i < this.children.length; i++)
     {
@@ -448,62 +448,100 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession, matrix)
     }
 
     //  Ignore null sources
-    if (this.texture.valid)
+    if (!this.texture.valid)
     {
-        var resolution = this.texture.baseTexture.resolution / renderSession.resolution;
-
-        renderSession.context.globalAlpha = this.worldAlpha;
-
-        //  If smoothingEnabled is supported and we need to change the smoothing property for this texture
-        if (renderSession.smoothProperty && renderSession.scaleMode !== this.texture.baseTexture.scaleMode)
+        //  Update the children and leave
+        for (var i = 0; i < this.children.length; i++)
         {
-            renderSession.scaleMode = this.texture.baseTexture.scaleMode;
-            renderSession.context[renderSession.smoothProperty] = (renderSession.scaleMode === PIXI.scaleModes.LINEAR);
+            this.children[i]._renderCanvas(renderSession);
         }
 
-        //  If the texture is trimmed we offset by the trim x/y, otherwise we use the frame dimensions
-        var dx = (this.texture.trim) ? this.texture.trim.x - this.anchor.x * this.texture.trim.width : this.anchor.x * -this.texture.frame.width;
-        var dy = (this.texture.trim) ? this.texture.trim.y - this.anchor.y * this.texture.trim.height : this.anchor.y * -this.texture.frame.height;
-
-        var tx = (wt.tx * renderSession.resolution) + renderSession.shakeX;
-        var ty = (wt.ty * renderSession.resolution) + renderSession.shakeY;
-
-        //  Allow for pixel rounding
-        if (renderSession.roundPixels)
+        if (this._mask)
         {
-            renderSession.context.setTransform(wt.a, wt.b, wt.c, wt.d, tx | 0, ty | 0);
-            dx |= 0;
-            dy |= 0;
-        }
-        else
-        {
-            renderSession.context.setTransform(wt.a, wt.b, wt.c, wt.d, tx, ty);
+            renderSession.maskManager.popMask(renderSession);
         }
 
-        var cw = this.texture.crop.width;
-        var ch = this.texture.crop.height;
+        return;
+    }
 
-        dx /= resolution;
-        dy /= resolution;
+    var resolution = this.texture.baseTexture.resolution / renderSession.resolution;
 
-        if (this.tint !== 0xFFFFFF)
+    renderSession.context.globalAlpha = this.worldAlpha;
+
+    //  If smoothingEnabled is supported and we need to change the smoothing property for this texture
+    if (renderSession.smoothProperty && renderSession.scaleMode !== this.texture.baseTexture.scaleMode)
+    {
+        renderSession.scaleMode = this.texture.baseTexture.scaleMode;
+        renderSession.context[renderSession.smoothProperty] = (renderSession.scaleMode === Phaser.scaleModes.LINEAR);
+    }
+
+    //  If the texture is trimmed we offset by the trim x/y, otherwise we use the frame dimensions
+    var dx = (this.texture.trim) ? this.texture.trim.x - this.anchor.x * this.texture.trim.width : this.anchor.x * -this.texture.frame.width;
+    var dy = (this.texture.trim) ? this.texture.trim.y - this.anchor.y * this.texture.trim.height : this.anchor.y * -this.texture.frame.height;
+
+    var tx = (wt.tx * renderSession.resolution) + renderSession.shakeX;
+    var ty = (wt.ty * renderSession.resolution) + renderSession.shakeY;
+
+    var cw = this.texture.crop.width;
+    var ch = this.texture.crop.height;
+
+    if (this.texture.rotated)
+    {
+        var a = wt.a;
+        var b = wt.b;
+        var c = wt.c;
+        var d = wt.d;
+        var e = cw;
+        
+        // Offset before rotating
+        tx = wt.c * ch + tx;
+        ty = wt.d * ch + ty;
+        
+        // Rotate matrix by 90 degrees
+        // We use precalculated values for sine and cosine of rad(90)
+        wt.a = a * 6.123233995736766e-17 + -c;
+        wt.b = b * 6.123233995736766e-17 + -d;
+        wt.c = a + c * 6.123233995736766e-17;
+        wt.d = b + d * 6.123233995736766e-17;
+
+        // Update cropping dimensions.
+        cw = ch;
+        ch = e;
+    }
+
+    //  Allow for pixel rounding
+    if (renderSession.roundPixels)
+    {
+        renderSession.context.setTransform(wt.a, wt.b, wt.c, wt.d, tx | 0, ty | 0);
+        dx |= 0;
+        dy |= 0;
+    }
+    else
+    {
+        renderSession.context.setTransform(wt.a, wt.b, wt.c, wt.d, tx, ty);
+    }
+
+    dx /= resolution;
+    dy /= resolution;
+
+    if (this.tint !== 0xFFFFFF)
+    {
+        if (this.texture.requiresReTint || this.cachedTint !== this.tint)
         {
-            if (this.texture.requiresReTint || this.cachedTint !== this.tint)
-            {
-                this.tintedTexture = PIXI.CanvasTinter.getTintedTexture(this, this.tint);
+            this.tintedTexture = PIXI.CanvasTinter.getTintedTexture(this, this.tint);
 
-                this.cachedTint = this.tint;
-                this.texture.requiresReTint = false;
-            }
+            this.cachedTint = this.tint;
+            this.texture.requiresReTint = false;
+        }
 
-            renderSession.context.drawImage(this.tintedTexture, 0, 0, cw, ch, dx, dy, cw / resolution, ch / resolution);
-        }
-        else
-        {
-            var cx = this.texture.crop.x;
-            var cy = this.texture.crop.y;
-            renderSession.context.drawImage(this.texture.baseTexture.source, cx, cy, cw, ch, dx, dy, cw / resolution, ch / resolution);
-        }
+        renderSession.context.drawImage(this.tintedTexture, 0, 0, cw, ch, dx, dy, cw / resolution, ch / resolution);
+    }
+    else
+    {
+        var cx = this.texture.crop.x;
+        var cy = this.texture.crop.y;
+
+        renderSession.context.drawImage(this.texture.baseTexture.source, cx, cy, cw, ch, dx, dy, cw / resolution, ch / resolution);
     }
 
     for (var i = 0; i < this.children.length; i++)

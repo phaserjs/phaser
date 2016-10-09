@@ -1,6 +1,7 @@
 {
     "env": {
-        "browser": true
+        "browser": true,
+        "es6"
     },
     "extends": "eslint:recommended",
     "globals": {
@@ -19,6 +20,7 @@
         "eqeqeq": [ "error", "smart" ],
         "no-alert": "error",
         "no-caller": "error",
+        "no-console": [ "error", { "allow": ["warn", "log"] } ],
         "no-floating-decimal": "error",
         "no-invalid-this": "error",
         "no-multi-spaces": "error",
@@ -40,20 +42,29 @@
         "consistent-this": [ "error", "_this" ],
         "eol-last": [ "error" ],
         "func-call-spacing": [ "error", "never" ],
-        "indent": [ "error", 4 ],
+        "indent": [ "error", 4, { "SwitchCase": 1 } ],
         "key-spacing": [ "error", { "beforeColon": false, "afterColon": true }],
         "linebreak-style": [ "off" ],
-        "lines-around-comment": [ "error", { "beforeBlockComment": true }],
+        "lines-around-comment": [ "error", { "beforeBlockComment": true, "allowBlockStart": true, "allowObjectStart": true, "allowArrayStart": true, "beforeLineComment": true, "allowBlockEnd": true }],
         "new-parens": "error",
         "no-array-constructor": "error",
         "no-lonely-if": "error",
-        "no-mixed-operators": "error",
+        "no-mixed-operators": [ "error", {
+            "groups": [
+                ["+", "-", "*", "/", "%", "**"],
+                ["&", "|", "^", "~", "<<", ">>", ">>>"],
+                ["==", "!=", "===", "!==", ">", ">=", "<", "<="],
+                ["&&", "||"],
+                ["in", "instanceof"]
+            ],
+            "allowSamePrecedence": true
+        }],
         "no-mixed-spaces-and-tabs": "error",
         "no-plusplus": "off",
-        "no-trailing-spaces": "error",
+        "no-trailing-spaces": [ "error", { "skipBlankLines": true } ],
         "no-underscore-dangle": "off",
         "no-whitespace-before-property": "error",
-        "object-curly-newline": [ "error", "always" ],
+        "object-curly-newline": [ "error", { "multiline": true, "minProperties": 0 } ],
         "one-var-declaration-per-line": [ "error", "initializations" ],
         "quote-props": [ "error", "as-needed" ],
         "quotes": [ "error", "single" ],

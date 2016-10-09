@@ -138,8 +138,11 @@ if (typeof window.Uint32Array !== "function" && typeof window.Uint32Array !== "o
         window[type].constructor = window[type];
     };
 
+    CheapArray('Float32Array'); // jshint ignore:line
     CheapArray('Uint32Array'); // jshint ignore:line
-    CheapArray('Int16Array');  // jshint ignore:line
+    CheapArray('Uint16Array'); // jshint ignore:line
+    CheapArray('Int16Array'); // jshint ignore:line
+    CheapArray('ArrayBuffer'); // jshint ignore:line
 }
 
 /**

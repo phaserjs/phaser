@@ -707,15 +707,120 @@ Phaser.Loader.prototype = {
     * and no URL is given then the Loader will set the URL to be "alien.png". It will always add `.png` as the extension.
     * If you do not desire this action then provide a URL.
     *
+    * This method also supports passing in a texture object as the `url` argument. This allows you to load
+    * compressed textures into Phaser. You can also use `Loader.texture` to do this.
+    * 
+    * Compressed Textures are a WebGL only feature, and require 3rd party tools to create.
+    * Available tools include Texture Packer, PVRTexTool, DirectX Texture Tool and Mali Texture Compression Tool.
+    *
+    * Supported texture compression formats are: PVRTC, S3TC and ETC1.
+    * Supported file formats are: PVR, DDS, KTX and PKM.
+    *
+    * The formats that support all 3 compression algorithms are PVR and KTX.
+    * PKM only supports ETC1, and DDS only S3TC for now.
+    *
+    * The texture path object looks like this:
+    *
+    * ```
+    * load.image('factory', {
+    *     etc1: 'assets/factory_etc1.pkm',
+    *     s3tc: 'assets/factory_dxt1.pvr',
+    *     pvrtc: 'assets/factory_pvrtc.pvr',
+    *     truecolor: 'assets/factory.png'
+    * });
+    * ```
+    * 
+    * The `truecolor` property points to a standard PNG file, that will be used if none of the 
+    * compressed formats are supported by the browser / GPU.
+    *
     * @method Phaser.Loader#image
     * @param {string} key - Unique asset key of this image file.
-    * @param {string} [url] - URL of an image file. If undefined or `null` the url will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
+    * @param {string|object} [url] - URL of an image file. If undefined or `null` the url will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png". Can also be a texture data object.
     * @param {boolean} [overwrite=false] - If an unloaded file with a matching key already exists in the queue, this entry will overwrite it.
     * @return {Phaser.Loader} This Loader instance.
     */
     image: function (key, url, overwrite) {
 
-        return this.addToFileList('image', key, url, undefined, overwrite, '.png');
+        if (typeof url === 'object')
+        {
+            return this.texture(key, url, overwrite);
+        }
+        else
+        {
+            return this.addToFileList('image', key, url, undefined, overwrite, '.png');
+        }
+
+    },
+
+    /**
+    * Adds a Compressed Texture Image to the current load queue.
+    *
+    * Compressed Textures are a WebGL only feature, and require 3rd party tools to create.
+    * Available tools include Texture Packer, PVRTexTool, DirectX Texture Tool and Mali Texture Compression Tool.
+    *
+    * Supported texture compression formats are: PVRTC, S3TC and ETC1.
+    * Supported file formats are: PVR, DDS, KTX and PKM.
+    * 
+    * The formats that support all 3 compression algorithms are PVR and KTX.
+    * PKM only supports ETC1, and DDS only S3TC for now.
+    *
+    * The texture path object looks like this:
+    *
+    * ```
+    * load.texture('factory', {
+    *     etc1: 'assets/factory_etc1.pkm',
+    *     s3tc: 'assets/factory_dxt1.pvr',
+    *     pvrtc: 'assets/factory_pvrtc.pvr',
+    *     truecolor: 'assets/factory.png'
+    * });
+    * ```
+    * 
+    * The `truecolor` property points to a standard PNG file, that will be used if none of the 
+    * compressed formats are supported by the browser / GPU.
+    * 
+    * The file is **not** loaded immediately after calling this method. The file is added to the queue ready to be loaded when the loader starts.
+    *
+    * The key must be a unique String. It is used to add the file to the Phaser.Cache upon successful load.
+    *
+    * Retrieve the image via `Cache.getImage(key)`
+    *
+    * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
+    *
+    * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "alien"
+    * and no URL is given then the Loader will set the URL to be "alien.pvr". It will always add `.pvr` as the extension.
+    * If you do not desire this action then provide a URL.
+    *
+    * @method Phaser.Loader#texture
+    * @param {string} key - Unique asset key of this image file.
+    * @param {object} object - The texture path data object.
+    * @param {boolean} [overwrite=false] - If an unloaded file with a matching key already exists in the queue, this entry will overwrite it.
+    * @return {Phaser.Loader} This Loader instance.
+    */
+    texture: function (key, object, overwrite) {
+
+        if (this.game.renderType === Phaser.WEBGL)
+        {
+            var compression = this.game.renderer.extensions.compression;
+            var exkey;
+
+            for (exkey in object)
+            {
+                if (exkey.toUpperCase() in compression)
+                {
+                    return this.addToFileList('texture', key, object[exkey], undefined, overwrite, '.pvr');
+                }
+            }
+        }
+
+        // Check if we have a truecolor texture to fallback.
+        // Also catches calls to this function that are from a Canvas renderer
+
+        if (object['truecolor'])
+        {
+            this.addToFileList('image', key, object['truecolor'], undefined, overwrite, '.png');
+        }
+
+        return this;
 
     },
 
@@ -976,15 +1081,17 @@ Phaser.Loader.prototype = {
     * @param {number} [frameMax=-1] - How many frames in this sprite sheet. If not specified it will divide the whole image into frames.
     * @param {number} [margin=0] - If the frames have been drawn with a margin, specify the amount here.
     * @param {number} [spacing=0] - If the frames have been drawn with spacing between them, specify the amount here.
+    * @param {number} [skipFrames=0] - Skip a number of frames. Useful when there are multiple sprite sheets in one image.
     * @return {Phaser.Loader} This Loader instance.
     */
-    spritesheet: function (key, url, frameWidth, frameHeight, frameMax, margin, spacing) {
+    spritesheet: function (key, url, frameWidth, frameHeight, frameMax, margin, spacing, skipFrames) {
 
         if (frameMax === undefined) { frameMax = -1; }
         if (margin === undefined) { margin = 0; }
         if (spacing === undefined) { spacing = 0; }
+        if (skipFrames === undefined) { skipFrames = 0; }
 
-        return this.addToFileList('spritesheet', key, url, { frameWidth: frameWidth, frameHeight: frameHeight, frameMax: frameMax, margin: margin, spacing: spacing }, false, '.png');
+        return this.addToFileList('spritesheet', key, url, { frameWidth: frameWidth, frameHeight: frameHeight, frameMax: frameMax, margin: margin, spacing: spacing, skipFrames: skipFrames }, false, '.png');
 
     },
 
@@ -1954,7 +2061,6 @@ Phaser.Loader.prototype = {
             file.errorMessage = errorMessage;
 
             console.warn('Phaser.Loader - ' + file.type + '[' + file.key + ']' + ': ' + errorMessage);
-            // debugger;
         }
 
         this.processLoadQueue();
@@ -2009,7 +2115,7 @@ Phaser.Loader.prototype = {
                     break;
 
                 case "spritesheet":
-                    this.spritesheet(file.key, file.url, file.frameWidth, file.frameHeight, file.frameMax, file.margin, file.spacing);
+                    this.spritesheet(file.key, file.url, file.frameWidth, file.frameHeight, file.frameMax, file.margin, file.spacing, file.skipFrames);
                     break;
 
                 case "video":
@@ -2188,6 +2294,14 @@ Phaser.Loader.prototype = {
                 this.xhrLoad(file, this.transformUrl(file.url, file), 'text', this.fileComplete);
                 break;
 
+            case 'texture':
+
+                if (file.key.split('_').pop() === 'truecolor')
+                {
+                    this.loadImageTag(file);
+                }
+                break;
+
             case 'binary':
                 this.xhrLoad(file, this.transformUrl(file.url, file), 'arraybuffer', this.fileComplete);
                 break;
@@ -2200,7 +2314,6 @@ Phaser.Loader.prototype = {
     * @private
     */
     loadImageTag: function (file) {
-
         var _this = this;
 
         file.data = new Image();
@@ -2643,7 +2756,7 @@ Phaser.Loader.prototype = {
     },
 
     /**
-    * Called when a file/resources had been downloaded and needs to be processed further.
+    * Called when a file has been downloaded and needs to be processed further.
     *
     * @method Phaser.Loader#fileComplete
     * @private
@@ -2663,6 +2776,18 @@ Phaser.Loader.prototype = {
                 file.data = data || {};
                 break;
 
+            case 'texture':
+
+                if (file.data !== null)
+                {
+                    this.cache.addCompressedTextureMetaData(file.key, file.url, file.url.split('.').pop().toLowerCase(), file.data);
+                }
+                else
+                {
+                    this.cache.addCompressedTextureMetaData(file.key, file.url, file.url.split('.').pop().toLowerCase(), xhr.response);
+                }
+                break;
+
             case 'image':
 
                 this.cache.addImage(file.key, file.url, file.data);
@@ -2670,7 +2795,7 @@ Phaser.Loader.prototype = {
 
             case 'spritesheet':
 
-                this.cache.addSpriteSheet(file.key, file.url, file.data, file.frameWidth, file.frameHeight, file.frameMax, file.margin, file.spacing);
+                this.cache.addSpriteSheet(file.key, file.url, file.data, file.frameWidth, file.frameHeight, file.frameMax, file.margin, file.spacing, file.skipFrames);
                 break;
 
             case 'textureatlas':

@@ -73,7 +73,7 @@ PIXI.WebGLGraphics.renderGraphics = function(graphics, renderSession)//projectio
             gl.uniform2f(shader.projectionVector, projection.x, -projection.y);
             gl.uniform2f(shader.offsetVector, -offset.x, -offset.y);
 
-            gl.uniform3fv(shader.tintColor, PIXI.hex2rgb(graphics.tint));
+            gl.uniform3fv(shader.tintColor, Phaser.Color.hexToRGBArray(graphics.tint));
 
             gl.uniform1f(shader.alpha, graphics.worldAlpha);
             
@@ -138,7 +138,7 @@ PIXI.WebGLGraphics.updateGraphics = function(graphics, gl)
     {
         var data = graphics.graphicsData[i];
 
-        if(data.type === PIXI.Graphics.POLY)
+        if (data.type === Phaser.POLYGON)
         {
             // need to add the points the the graphics object..
             data.points = data.shape.points.slice();
@@ -190,15 +190,15 @@ PIXI.WebGLGraphics.updateGraphics = function(graphics, gl)
         {
             webGLData = PIXI.WebGLGraphics.switchMode(webGL, 0);
             
-            if(data.type === PIXI.Graphics.RECT)
+            if (data.type === Phaser.RECTANGLE)
             {
                 PIXI.WebGLGraphics.buildRectangle(data, webGLData);
             }
-            else if(data.type === PIXI.Graphics.CIRC || data.type === PIXI.Graphics.ELIP)
+            else if (data.type === Phaser.CIRCLE || data.type === Phaser.ELLIPSE)
             {
                 PIXI.WebGLGraphics.buildCircle(data, webGLData);
             }
-            else if(data.type === PIXI.Graphics.RREC)
+            else if (data.type === Phaser.ROUNDEDRECTANGLE)
             {
                 PIXI.WebGLGraphics.buildRoundedRectangle(data, webGLData);
             }
@@ -271,7 +271,7 @@ PIXI.WebGLGraphics.buildRectangle = function(graphicsData, webGLData)
 
     if(graphicsData.fill)
     {
-        var color = PIXI.hex2rgb(graphicsData.fillColor);
+        var color = Phaser.Color.hexToRGBArray(graphicsData.fillColor);
         var alpha = graphicsData.fillAlpha;
 
         var r = color[0] * alpha;
@@ -344,7 +344,7 @@ PIXI.WebGLGraphics.buildRoundedRectangle = function(graphicsData, webGLData)
     recPoints = recPoints.concat(PIXI.WebGLGraphics.quadraticBezierCurve(x + radius, y, x, y, x, y + radius));
 
     if (graphicsData.fill) {
-        var color = PIXI.hex2rgb(graphicsData.fillColor);
+        var color = Phaser.Color.hexToRGBArray(graphicsData.fillColor);
         var alpha = graphicsData.fillAlpha;
 
         var r = color[0] * alpha;
@@ -356,7 +356,7 @@ PIXI.WebGLGraphics.buildRoundedRectangle = function(graphicsData, webGLData)
 
         var vecPos = verts.length / 6;
 
-        var triangles = PIXI.EarCut.Triangulate(recPoints, null, 2);
+        var triangles = Phaser.EarCut.Triangulate(recPoints, null, 2);
 
         var i = 0;
 
@@ -458,7 +458,7 @@ PIXI.WebGLGraphics.buildCircle = function(graphicsData, webGLData)
     var height;
     
     // TODO - bit hacky??
-    if(graphicsData.type === PIXI.Graphics.CIRC)
+    if (graphicsData.type === Phaser.CIRCLE)
     {
         width = circleData.radius;
         height = circleData.radius;
@@ -476,7 +476,7 @@ PIXI.WebGLGraphics.buildCircle = function(graphicsData, webGLData)
 
     if(graphicsData.fill)
     {
-        var color = PIXI.hex2rgb(graphicsData.fillColor);
+        var color = Phaser.Color.hexToRGBArray(graphicsData.fillColor);
         var alpha = graphicsData.fillAlpha;
 
         var r = color[0] * alpha;
@@ -578,7 +578,7 @@ PIXI.WebGLGraphics.buildLine = function(graphicsData, webGLData)
     var width = graphicsData.lineWidth / 2;
 
     // sort color
-    var color = PIXI.hex2rgb(graphicsData.lineColor);
+    var color = Phaser.Color.hexToRGBArray(graphicsData.lineColor);
     var alpha = graphicsData.lineAlpha;
     var r = color[0] * alpha;
     var g = color[1] * alpha;
@@ -753,7 +753,7 @@ PIXI.WebGLGraphics.buildComplexPoly = function(graphicsData, webGLData)
     var indices = webGLData.indices;
     webGLData.points = points;
     webGLData.alpha = graphicsData.fillAlpha;
-    webGLData.color = PIXI.hex2rgb(graphicsData.fillColor);
+    webGLData.color = Phaser.Color.hexToRGBArray(graphicsData.fillColor);
 
     /*
         calclate the bounds..
@@ -817,13 +817,13 @@ PIXI.WebGLGraphics.buildPoly = function(graphicsData, webGLData)
     var length = points.length / 2;
 
     // sort color
-    var color = PIXI.hex2rgb(graphicsData.fillColor);
+    var color = Phaser.Color.hexToRGBArray(graphicsData.fillColor);
     var alpha = graphicsData.fillAlpha;
     var r = color[0] * alpha;
     var g = color[1] * alpha;
     var b = color[2] * alpha;
 
-    var triangles = PIXI.EarCut.Triangulate(points, null, 2);
+    var triangles = Phaser.EarCut.Triangulate(points, null, 2);
 
     if(!triangles)return false;
 
@@ -888,12 +888,12 @@ PIXI.WebGLGraphicsData.prototype.upload = function()
     var gl = this.gl;
 
 //    this.lastIndex = graphics.graphicsData.length;
-    this.glPoints = new PIXI.Float32Array(this.points);
+    this.glPoints = new Float32Array(this.points);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer);
     gl.bufferData(gl.ARRAY_BUFFER, this.glPoints, gl.STATIC_DRAW);
 
-    this.glIndicies = new PIXI.Uint16Array(this.indices);
+    this.glIndicies = new Uint16Array(this.indices);
 
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.glIndicies, gl.STATIC_DRAW);

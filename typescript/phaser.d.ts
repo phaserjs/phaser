@@ -1,7 +1,7 @@
 /// <reference path="pixi.d.ts" />
 /// <reference path="p2.d.ts" />
 
-// Type definitions for Phaser 2.6.2 - 26th August 2016
+// Type definitions for Phaser 3.0.0
 // Project: https://github.com/photonstorm/phaser
 
 declare module "phaser" {
@@ -18,6 +18,7 @@ declare class Phaser {
     static CANVAS: number;
     static WEBGL: number;
     static HEADLESS: number;
+    static WEBGL_MULTI: number;
 
     static BITMAPDATA: number;
     static BITMAPTEXT: number;
@@ -170,7 +171,7 @@ declare module Phaser {
         static JSONData(game: Phaser.Game, json: any): Phaser.FrameData;
         static JSONDataHash(game: Phaser.Game, json: any): Phaser.FrameData;
         static JSONDataPyxel(game: Phaser.Game, json: any): Phaser.FrameData;
-        static spriteSheet(game: Phaser.Game, key: string, frameWidth: number, frameHeight: number, frameMax?: number, margin?: number, spacing?: number): Phaser.FrameData;
+        static spriteSheet(game: Phaser.Game, key: string, frameWidth: number, frameHeight: number, frameMax?: number, margin?: number, spacing?: number, skipFrames?: number): Phaser.FrameData;
         static XMLData(game: Phaser.Game, xml: any): Phaser.FrameData;
 
     }
@@ -334,7 +335,7 @@ declare module Phaser {
         generateTexture(key: string): PIXI.Texture;
         getBounds(rect?: Phaser.Rectangle): Phaser.Rectangle;
         getFirstPixel(direction: number): { r: number; g: number; b: number; x: number; y: number; };
-        getPixel(x: number, y: number, out?: any): number;
+        getPixel(x: number, y: number, out?: any): any;
         getPixelRGB(x: number, y: number, out?: any, hsl?: boolean, hsv?: boolean): any;
         getPixel32(x: number, y: number): number;
         getPixels(rect: Phaser.Rectangle): ImageData;
@@ -521,8 +522,8 @@ declare module Phaser {
 
         addBinary(key: string, binaryData: any): void;
         addBitmapData(key: string, bitmapData: Phaser.BitmapData, frameData?: Phaser.FrameData): Phaser.BitmapData;
-        addBitmapFont(key: string, texture: Phaser.RetroFont): void;
         addBitmapFont(key: string, url: string, data: any, atlasData: any, atlasType: string, xSpacing?: number, ySpacing?: number): void;
+        addBitmapFontFromAtlas(key: string, atlasKey: string, atlasFrame: string, dataKey: string, dataType?: string, xSpacing?: number, ySpacing?: number): void;
         addCanvas(key: string, canvas: HTMLCanvasElement, context?: CanvasRenderingContext2D): void;
         addDefaultImage(): void;
         addImage(key: string, url: string, data: any): HTMLImageElement;
@@ -532,7 +533,7 @@ declare module Phaser {
         addRenderTexture(key: string, texture: RenderTexture): void;
         addShader(key: string, url: string, data: any): void;
         addSound(key: string, url: string, data: any, webAudio: boolean, audioTag: boolean): void;
-        addSpriteSheet(key: string, url: string, data: any, frameWidth: number, frameHeight: number, frameMax?: number, margin?: number, spacing?: number): void;
+        addSpriteSheet(key: string, url: string, data: any, frameWidth: number, frameHeight: number, frameMax?: number, margin?: number, spacing?: number, skipFrames?: number): void;
         addText(key: string, url: string, data: any): void;
         addTextureAtlas(key: string, url: string, data: any, atlasData: any, format: number): void;
         addTilemap(key: string, url: string, mapData: any, format: number): void;
@@ -662,8 +663,8 @@ declare module Phaser {
         y: number;
 
         checkBounds(): void;
-        fade(color?: number, duration?: number, force?: boolean): boolean;
-        flash(color?: number, duration?: number, force?: boolean): boolean;
+        fade(color?: number, duration?: number, force?: boolean, alpha?: number): boolean;
+        flash(color?: number, duration?: number, force?: boolean, alpha?: number): boolean;
         focusOn(displayObject: PIXI.DisplayObject): void;
         focusOnXY(x: number, y: number): void;
         follow(target: Phaser.Sprite, style?: number, lerpX?: number, lerpY?: number): void;
@@ -748,6 +749,7 @@ declare module Phaser {
         static getRed(color: number): number;
         static getRGB(color: number): RGBColor;
         static getWebRGB(color: number | RGBColor): string;
+        static hexToRGBArray(color: number): number[];
         static hexToRGB(h: string): number;
         static hexToColor(hex: string, out?: ColorComponents): ColorComponents;
         static HSLtoRGB(h: number, s: number, l: number, out?: ColorComponents): ColorComponents;
@@ -759,6 +761,7 @@ declare module Phaser {
         static interpolateColorWithRGB(color: number, r: number, g: number, b: number, steps: number, currentStep: number): number;
         static interpolateRGB(r1: number, g1: number, b1: number, r2: number, g2: number, b2: number, steps: number, currentStep: number): number;
         static packPixel(r: number, g: number, b: number, a: number): number;
+        static RGBArrayToHex(rgb: number[]): number;
         static RGBtoHSL(r: number, g: number, b: number, out?: ColorComponents): ColorComponents;
         static RGBtoHSV(r: number, g: number, b: number, out?: ColorComponents): ColorComponents;
         static RGBtoString(r: number, g: number, b: number, a?: number, prefix?: string): string;
@@ -858,6 +861,8 @@ declare module Phaser {
         arora: boolean;
         audioData: boolean;
         cancelFullScreen: string;
+        canHandleAlpha: boolean;
+        canUseMultiply: boolean;
         canvas: boolean;
         chrome: boolean;
         chromeOS: boolean;
@@ -1352,7 +1357,6 @@ declare module Phaser {
         name: string;
         right: number;
         rotated: boolean;
-        rotationDirection: string;
         sourceSizeH: number;
         sourceSizeW: number;
         spriteSourceSizeH: number;
@@ -1402,6 +1406,7 @@ declare module Phaser {
         seed?: string;
         state?: Phaser.State;
         forceSetTimeOut: boolean;
+        multiTextue: boolean;
 
     }
 
@@ -2481,7 +2486,7 @@ declare module Phaser {
         getAsset(type: string, key: string): any;
         getAssetIndex(type: string, key: string): number;
         getAudioURL(urls: any[]): void;
-        image(key: string, url?: string, overwrite?: boolean): Phaser.Loader;
+        image(key: string, url?: string | any, overwrite?: boolean): Phaser.Loader;
         images(keys: string[], urls?: string[]): Phaser.Loader;
         json(key: string, url?: string, overwrite?: boolean): Phaser.Loader;
         jsonLoadComplete(file: any, xhr: XMLHttpRequest): void;
@@ -2501,9 +2506,10 @@ declare module Phaser {
         script(key: string, url?: String, callback?: Function, callbackContext?: any): Phaser.Loader;
         shader(key: string, url?: String, overwrite?: boolean): Phaser.Loader;
         setPreloadSprite(sprite: Phaser.Sprite | Phaser.Image, direction?: number): void;
-        spritesheet(key: string, url: string, frameWidth: number, frameHeight: number, frameMax?: number, margin?: number, spacing?: number): Phaser.Loader;
+        spritesheet(key: string, url: string, frameWidth: number, frameHeight: number, frameMax?: number, margin?: number, spacing?: number, skipFrames?: number): Phaser.Loader;
         start(): void;
         text(key: string, url?: string, overwrite?: boolean): Phaser.Loader;
+        texture(key: string, object: any, overwrite?: boolean): Phaser.Loader;
         tilemap(key: string, url?: string, data?: any, format?: number): Phaser.Loader;
         totalLoadedFiles(): number;
         totalLoadedPacks(): number;
@@ -2523,8 +2529,8 @@ declare module Phaser {
     class LoaderParser {
 
         static bitmapFont(xml: any, baseTexture: PIXI.BaseTexture, xSpacing?: number, ySpacing?: number): any;
-        static xmlBitmapFont(xml: any, baseTexture: PIXI.BaseTexture, xSpacing?: number, ySpacing?: number): any;
-        static jsonBitmapFont(json: any, baseTexture: PIXI.BaseTexture, xSpacing?: number, ySpacing?: number): any;
+        static xmlBitmapFont(xml: any, baseTexture: PIXI.BaseTexture, xSpacing?: number, ySpacing?: number, frame?: Phaser.Frame): any;
+        static jsonBitmapFont(json: any, baseTexture: PIXI.BaseTexture, xSpacing?: number, ySpacing?: number, frame?: Phaser.Frame): any;
 
     }
 
@@ -2564,6 +2570,7 @@ declare module Phaser {
         static angleBetweenPointsY(point1: Phaser.Point, point2: Phaser.Point): number;
         static average(...numbers: number[]): number;
         static bernstein(n: number, i: number): number;
+        static random(min: number, max: number): number;
         static between(min: number, max: number): number;
         static bezierInterpolation(v: number[], k: number): number;
         static catmullRom(p0: number, p1: number, p2: number, p3: number, t: number): number;
@@ -2584,8 +2591,11 @@ declare module Phaser {
         static fuzzyFloor(val: number, epsilon?: number): boolean;
         static fuzzyGreaterThan(a: number, b: number, epsilon?: number): boolean;
         static fuzzyLessThan(a: number, b: number, epsilon?: number): boolean;
+        static getShortestAngle(angle1: number, angle2: number): number;
+        static getNextPowerOfTwo(value: number): number;
         static isEven(n: number): boolean;
         static isOdd(n: number): boolean;
+        static isPowerOfTwo(width: number, height: number): boolean;
         static linear(p0: number, p1: number, t: number): number;
         static linearInterpolation(v: number[], k: number): number;
         static mapLinear(x: number, a1: number, a2: number, b1: number, b2: number): number;
@@ -4092,7 +4102,7 @@ declare module Phaser {
         sow(seeds: any[]): void;
         state(state?: string): string;
         timestamp(min: number, max: number): number;
-        uuid(): number;
+        uuid(): string;
         weightedPick<T>(ary: T[]): T;
 
     }
@@ -4672,6 +4682,7 @@ declare module Phaser {
             clickTrampoline: string;
             forceMinimumDocumentHeight: boolean;
             noMargins: boolean;
+            orientationFallback: boolean;
             scrollTo: Point;
             supportsFullScreen: boolean;
         };
@@ -4923,6 +4934,7 @@ declare module Phaser {
         shadowOffsetX: number;
         shadowOffsetY: number;
         shadowStroke: boolean;
+        splitRegExp: any;
         stroke: string;
         strokeColors: string[];
         strokeThickness: number;
@@ -5636,6 +5648,7 @@ declare module Phaser {
         fireLimit: number;
         fireRate: number;
         fireRateVariance: number;
+        multiFire: boolean;
         onFire: Phaser.Signal;
         onFireLimit: Phaser.Signal;
         onKill: Phaser.Signal;
@@ -5651,10 +5664,12 @@ declare module Phaser {
         createBullets(quantity?: number, key?: any, frame?: any, group?: Phaser.Group): Phaser.Weapon;
         debug(x?: number, y?: number, debugBodies?: boolean): void;
         destroy(): void;
-        fire(from?: any, x?: number, y?: number): Phaser.Bullet;
+        fire(from?: any, x?: number, y?: number, offsetX?: number, offsetY?: number): Phaser.Bullet;
         fireAtPointer(pointer: Phaser.Pointer): Phaser.Bullet;
         fireAtSprite(sprite: Phaser.Sprite): Phaser.Bullet;
         fireAtXY(x: number, y: number): Phaser.Bullet;
+        fireMany(positions: any[], from?: any): Phaser.Bullet[];
+        fireOffset(offsetX?: number, offsetY?: number): Phaser.Bullet;
         forEach(callback: any, callbackContext: any): Phaser.Weapon;
         killAll(): Phaser.Weapon;
         pauseAll(): Phaser.Weapon;

@@ -9,7 +9,7 @@
  *
  * @type {boolean}
  */
-PIXI.TextureSilentFail = false;
+// PIXI.TextureSilentFail = false;
 
 /**
  * A texture stores the information that represents an image or part of an image. It cannot be added
@@ -36,10 +36,10 @@ PIXI.Texture = function(baseTexture, frame, crop, trim)
     if (!frame)
     {
         this.noFrame = true;
-        frame = new PIXI.Rectangle(0,0,1,1);
+        frame = new Phaser.Rectangle(0,0,1,1);
     }
 
-    if (baseTexture instanceof PIXI.Texture)
+    if (baseTexture instanceof Phaser.Texture)
     {
         baseTexture = baseTexture.baseTexture;
     }
@@ -90,7 +90,8 @@ PIXI.Texture = function(baseTexture, frame, crop, trim)
      * @property requiresUpdate
      * @type Boolean
      */
-    this.requiresUpdate = false;
+     // Isn't used anywhere internally
+    // this.requiresUpdate = false;
 
     /**
      * This will let a renderer know that a tinted parent has updated its texture.
@@ -132,11 +133,21 @@ PIXI.Texture = function(baseTexture, frame, crop, trim)
      * @property crop
      * @type Rectangle
      */
-    this.crop = crop || new PIXI.Rectangle(0, 0, 1, 1);
+    this.crop = crop || new Phaser.Rectangle(0, 0, 1, 1);
+
+    /**
+     * A flag that controls if this frame is rotated or not.
+     * Rotation allows you to use rotated frames in texture atlas packing, it has nothing to do with
+     * Sprite rotation.
+     *
+     * @property rotated
+     * @type Boolean
+     */
+    this.rotated = false;
 
     if (baseTexture.hasLoaded)
     {
-        if (this.noFrame) frame = new PIXI.Rectangle(0, 0, baseTexture.width, baseTexture.height);
+        if (this.noFrame) frame = new Phaser.Rectangle(0, 0, baseTexture.width, baseTexture.height);
         this.setFrame(frame);
     }
 
@@ -145,11 +156,12 @@ PIXI.Texture = function(baseTexture, frame, crop, trim)
 PIXI.Texture.prototype.constructor = PIXI.Texture;
 
 /**
+ * NEVER USED INTERNALLY
+ * 
  * Called when the base texture is loaded
  *
  * @method onBaseTextureLoaded
  * @private
- */
 PIXI.Texture.prototype.onBaseTextureLoaded = function()
 {
     var baseTexture = this.baseTexture;
@@ -161,6 +173,7 @@ PIXI.Texture.prototype.onBaseTextureLoaded = function()
 
     this.setFrame(this.frame);
 };
+ */
 
 /**
  * Destroys this texture
@@ -196,12 +209,8 @@ PIXI.Texture.prototype.setFrame = function(frame)
 
     if (!this.trim && (frame.x + frame.width > this.baseTexture.width || frame.y + frame.height > this.baseTexture.height))
     {
-        if (!PIXI.TextureSilentFail)
-        {
-            throw new Error('Texture Error: frame does not fit inside the base Texture dimensions ' + this);
-        }
-
         this.valid = false;
+
         return;
     }
 
@@ -247,12 +256,40 @@ PIXI.Texture.prototype._updateUvs = function()
 };
 
 /**
+ * Updates the internal WebGL UV cache.
+ *
+ * @method _updateUvsInverted
+ * @private
+ */
+PIXI.Texture.prototype._updateUvsInverted = function () {
+
+    if (!this._uvs) { this._uvs = new PIXI.TextureUvs(); }
+
+    var frame = this.crop;
+    var tw = this.baseTexture.width;
+    var th = this.baseTexture.height;
+    
+    this._uvs.x0 = frame.x / tw;
+    this._uvs.y0 = frame.y / th;
+
+    this._uvs.x1 = (frame.x + frame.height) / tw;
+    this._uvs.y1 = frame.y / th;
+
+    this._uvs.x2 = (frame.x + frame.height) / tw;
+    this._uvs.y2 = (frame.y + frame.width) / th;
+
+    this._uvs.x3 = frame.x / tw;
+    this._uvs.y3 = (frame.y + frame.width) / th;
+
+};
+
+/**
  * Helper function that creates a new a Texture based on the given canvas element.
  *
  * @static
  * @method fromCanvas
  * @param canvas {Canvas} The canvas element source of the texture
- * @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
+ * @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}Phaser.scaleModes{{/crossLink}} for possible values
  * @return {Texture}
  */
 PIXI.Texture.fromCanvas = function(canvas, scaleMode)
