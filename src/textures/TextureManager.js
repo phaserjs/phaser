@@ -42,6 +42,8 @@ Phaser.TextureManager.prototype = {
 
     addImage: function (key, source)
     {
+        console.log('TextureManager.addImage', key);
+
         var texture = this.create(key, source);
         
         this.parsers.Image(texture, 0);

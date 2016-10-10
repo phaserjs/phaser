@@ -294,8 +294,42 @@ Phaser.Cache.prototype = {
     * @param {object} data - Extra image data.
     * @return {object} The full image object that was added to the cache.
     */
-    addImage: function (key, url, data) {
+    addImage: function (key, url, data)
+    {
+        if (this.checkImageKey(key))
+        {
+            this.removeImage(key);
+        }
 
+        console.log('Cache.addImage', key);
+
+        var img = {
+            key: key,
+            url: url,
+            data: data,
+            texture: this.game.textures.addImage(key, data)
+        };
+
+        this._cache.image[key] = img;
+
+        this._resolveURL(url, img);
+
+        //  Remove this
+        if (key === '__default')
+        {
+            Phaser.Cache.DEFAULT = this.game.textures.getFrame('__default');
+        }
+        else if (key === '__missing')
+        {
+            Phaser.Cache.MISSING = this.game.textures.getFrame('__missing');
+        }
+
+        return img;
+
+    },
+
+    __addImage: function (key, url, data)
+    {
         if (this.checkImageKey(key))
         {
             this.removeImage(key);
@@ -347,10 +381,10 @@ Phaser.Cache.prototype = {
         var obj = this.addImage('__default', null, img);
 
         //  Because we don't want to invalidate the sprite batch for an invisible texture
-        obj.base.skipRender = true;
+        // obj.base.skipRender = true;
 
         //  Make it easily available within the rest of Phaser / Pixi
-        Phaser.Cache.DEFAULT = new PIXI.Texture(obj.base);
+        // Phaser.Cache.DEFAULT = new PIXI.Texture(obj.base);
 
     },
 
@@ -372,7 +406,7 @@ Phaser.Cache.prototype = {
         var obj = this.addImage('__missing', null, img);
 
         //  Make it easily available within the rest of Phaser / Pixi
-        Phaser.Cache.MISSING = new PIXI.Texture(obj.base);
+        // Phaser.Cache.MISSING = new PIXI.Texture(obj.base);
 
     },
 
