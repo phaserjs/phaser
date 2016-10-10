@@ -141,6 +141,12 @@ Phaser.Camera = function (game, id, x, y, width, height) {
     this.fx = null;
 
     /**
+    * @property {Phaser.Point} _smoothBoundsTarget - internal point used for camera interpolation from outside of bounds.
+    * @private
+    */
+    this._smoothBoundsTarget = new Phaser.Point();
+
+    /**
     * @property {Phaser.Point} _targetPosition - Internal point used to calculate target position.
     * @private
     */
@@ -514,6 +520,10 @@ Phaser.Camera.prototype = {
         if (this.bounds)
         {
             this.checkBounds();
+            if (this.smoothBounds) {
+                this.view.x = this.game.math.linear(this.view.x, this._smoothBoundsTarget.x, this.lerp.x);
+                this.view.y = this.game.math.linear(this.view.y, this._smoothBoundsTarget.y, this.lerp.y);
+            }
         }
 
         if (this.roundPx)
@@ -686,10 +696,10 @@ Phaser.Camera.prototype = {
         {
             this.atLimit.x = true;
 
-            // if smoothBounds enabled, interpolate to new view position (at rate this.lerp.x) instead of jumping.
+            // if smoothBounds enabled, set interpolation target instead of jumping.
             if (this.smoothBounds)
             {
-                this.view.x = this.game.math.linear(this.view.x, this.bounds.x * this.scale.x, this.lerp.x);
+                this._smoothBoundsTarget.x = this.bounds.x * this.scale.x;
             }
             else
             {
@@ -709,7 +719,7 @@ Phaser.Camera.prototype = {
 
             if (this.smoothBounds)
             {
-                this.view.x = this.game.math.linear(this.view.x, (this.bounds.right * this.scale.x) - this.width, this.lerp.x);
+                this._smoothBoundsTarget.x = (this.bounds.right * this.scale.x) - this.width;
             }
             else
             {
@@ -729,7 +739,7 @@ Phaser.Camera.prototype = {
 
             if (this.smoothBounds)
             {
-                this.view.y = this.game.math.linear(this.view.y, this.bounds.top * this.scale.y, this.lerp.y);
+                this._smoothBoundsTarget.y = this.bounds.top * this.scale.y;
             }
             else
             {
@@ -749,7 +759,7 @@ Phaser.Camera.prototype = {
 
             if (this.smoothBounds)
             {
-                this.view.y = this.game.math.linear(this.view.y, (this.bounds.bottom * this.scale.y) - this.height, this.lerp.y);
+                this._smoothBoundsTarget.y = (this.bounds.bottom * this.scale.y) - this.height;
             }
             else
             {
