@@ -24,9 +24,14 @@ Phaser.State = function () {
     this.key = '';
 
     /**
-    * @property {Phaser.GameObjectFactory} add - A reference to the GameObjectFactory which can be used to add new objects to the World.
+    * @property {Phaser.GameObject.Factory} add - A reference to the GameObjectFactory which can be used to add new objects to the World.
     */
     this.add = null;
+
+    /**
+    * @property {Phaser.TextureManager} textures - TODO
+    */
+    this.textures = null;
 
     /**
     * @property {Phaser.GameObjectCreator} make - A reference to the GameObjectCreator which can be used to make new objects.

@@ -222,6 +222,11 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this.make = null;
 
     /**
+    * @property {Phaser.TextureManager} textures - Reference to the Phaser Texture Manager.
+    */
+    this.textures = null;
+
+    /**
     * @property {Phaser.Cache} cache - Reference to the assets cache.
     */
     this.cache = null;
@@ -603,7 +608,7 @@ Phaser.Game.prototype = {
 
         this.isBooted = true;
 
-        PIXI.game = this;
+        // PIXI.game = this;
 
         this.math = Phaser.Math;
 
@@ -611,6 +616,8 @@ Phaser.Game.prototype = {
         this.stage = new Phaser.Stage(this);
 
         this.setUpRenderer();
+
+        this.textures = new Phaser.TextureManager(this);
 
         this.world = new Phaser.World(this);
 
