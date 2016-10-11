@@ -359,7 +359,6 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * Device.littleEndian has been removed, you can use Device.LITTLE_ENDIAN instead.
 * Phaser.ArrayUtils.numberArray now has optional `prefix` and `suffix` arguments, allowing you to do: `numberArray(1, 4, 'Level ')` and the Array will contain `["Level 1", "Level 2", "Level 3", "Level 4"]`.
 
-
 ### Bug Fixes
 
 * `DisplayObjectContainer.removeChildren` was incorrectly using the `begin` var, instead of `beginIndex` (thanks @alex-espinoza #2742 #2741)

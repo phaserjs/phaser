@@ -237,6 +237,14 @@ Phaser.Loader = function (game) {
     this._fileList = [];
 
     /**
+    * Contains all the information about multi atlases.
+    *
+    * @property {array} _multilist
+    * @private
+    */
+    this._multilist = [];
+
+    /**
     * Inflight files (or packs) that are being fetched/processed.
     *
     * This means that if there are any files in the flight queue there should still be processing
@@ -474,8 +482,8 @@ Phaser.Loader.prototype = {
     * @param {boolean} [hard=false] - If true then the preload sprite and other artifacts may also be cleared.
     * @param {boolean} [clearEvents=false] - If true then the all Loader signals will have removeAll called on them.
     */
-    reset: function (hard, clearEvents) {
-
+    reset: function (hard, clearEvents)
+    {
         if (clearEvents === undefined) { clearEvents = false; }
 
         if (this.resetLocked)
@@ -493,6 +501,7 @@ Phaser.Loader.prototype = {
         this._processingHead = 0;
         this._fileList.length = 0;
         this._flightQueue.length = 0;
+        this._multilist.length = 0;
 
         this._fileLoadStarted = false;
         this._totalFileCount = 0;
@@ -509,7 +518,6 @@ Phaser.Loader.prototype = {
             this.onFileComplete.removeAll();
             this.onFileError.removeAll();
         }
-
     },
 
     /**
@@ -1752,18 +1760,38 @@ Phaser.Loader.prototype = {
 
     },
 
+    //  
+
+    /**
+     * @method Phaser.Loader#multiatlas
+     * @param {string} key - Unique asset key of the texture atlas file.
+     * @param {array|integer} textureURLs - An array of PNG files, or an integer.
+     * @param {array} [atlasURLs] -  An array of JSON files.
+     * @param {number} [format] - The format of the data. Can be Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY (the default), Phaser.Loader.TEXTURE_ATLAS_JSON_HASH or Phaser.Loader.TEXTURE_ATLAS_XML_STARLING.
+     * @return {Phaser.Loader} This Loader instance.
+     */
     multiatlas: function (key, textureURLs, atlasURLs, format)
     {
         if (format === undefined) { format = Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY; }
 
-        if (!Array.isArray(textureURLs))
+        if (typeof textureURLs === 'number')
         {
-            textureURLs = [ textureURLs ];
-        }
+            var total = textureURLs;
 
-        if (!Array.isArray(atlasURLs))
+            textureURLs = Phaser.ArrayUtils.numberArray(0, total, key + '-', '.png');
+            atlasURLs = Phaser.ArrayUtils.numberArray(0, total, key + '-', '.json');
+        }
+        else
         {
-            atlasURLs = [ atlasURLs ];
+            if (!Array.isArray(textureURLs))
+            {
+                textureURLs = [ textureURLs ];
+            }
+
+            if (!Array.isArray(atlasURLs))
+            {
+                atlasURLs = [ atlasURLs ];
+            }
         }
 
         var i = 0;
@@ -1790,10 +1818,9 @@ Phaser.Loader.prototype = {
             this.addToFileList('json', multiKey, atlasURLs[i], { multiatlas: true });
         }
 
-        this.addToFileList('multiatlas', key, null, { images: imgs, json: data, format: format });
+        this._multilist.push({ key: key, images: imgs, json: data, format: format });
 
         return this;
-
     },
 
     /**
@@ -1809,13 +1836,16 @@ Phaser.Loader.prototype = {
     * @param {object} [callbackContext=(loader)] - Context for the callback.
     * @return {Phaser.Loader} This Loader instance.
     */
-    withSyncPoint: function (callback, callbackContext) {
-
+    withSyncPoint: function (callback, callbackContext)
+    {
         this._withSyncPointDepth++;
 
-        try {
+        try
+        {
             callback.call(callbackContext || this, this);
-        } finally {
+        }
+        finally
+        {
             this._withSyncPointDepth--;
         }
 
@@ -1833,8 +1863,8 @@ Phaser.Loader.prototype = {
     * @return {Phaser.Loader} This Loader instance.
     * @see {@link Phaser.Loader#withSyncPoint withSyncPoint}
     */
-    addSyncPoint: function (type, key) {
-
+    addSyncPoint: function (type, key)
+    {
         var asset = this.getAsset(type, key);
 
         if (asset)
@@ -1855,8 +1885,8 @@ Phaser.Loader.prototype = {
     * @param {string} type - The type of resource to add to the list (image, audio, xml, etc).
     * @param {string} key - Key of the file you want to remove.
     */
-    removeFile: function (type, key) {
-
+    removeFile: function (type, key)
+    {
         var asset = this.getAsset(type, key);
 
         if (asset)
@@ -1866,7 +1896,6 @@ Phaser.Loader.prototype = {
                 this._fileList.splice(asset.index, 1);
             }
         }
-
     },
 
     /**
@@ -1875,11 +1904,11 @@ Phaser.Loader.prototype = {
     * @method Phaser.Loader#removeAll
     * @protected
     */
-    removeAll: function () {
-
+    removeAll: function ()
+    {
         this._fileList.length = 0;
         this._flightQueue.length = 0;
-
+        this._multilist.length = 0;
     },
 
     /**
@@ -1887,8 +1916,8 @@ Phaser.Loader.prototype = {
     *
     * @method Phaser.Loader#start
     */
-    start: function () {
-
+    start: function ()
+    {
         if (this.isLoading)
         {
             return;
@@ -1900,7 +1929,6 @@ Phaser.Loader.prototype = {
         this.updateProgress();
 
         this.processLoadQueue();
-
     },
 
     /**
@@ -1916,8 +1944,8 @@ Phaser.Loader.prototype = {
     * @method Phaser.Loader#processLoadQueue
     * @private
     */
-    processLoadQueue: function () {
-
+    processLoadQueue: function ()
+    {
         if (!this.isLoading)
         {
             console.warn('Phaser.Loader - active loading canceled / reset');
@@ -2058,8 +2086,8 @@ Phaser.Loader.prototype = {
     * @private
     * @param {boolean} [abnormal=true] - True if the loading finished abnormally.
     */
-    finishedLoading: function (abnormal) {
-
+    finishedLoading: function (abnormal)
+    {
         if (this.hasLoaded)
         {
             return;
@@ -2080,7 +2108,6 @@ Phaser.Loader.prototype = {
         this.game.state.loadComplete();
 
         this.reset();
-
     },
 
     /**
@@ -2092,8 +2119,8 @@ Phaser.Loader.prototype = {
     * @param {object} file
     * @param {string} [error=''] - The error message, if any. No message implies no error.
     */
-    asyncComplete: function (file, errorMessage) {
-
+    asyncComplete: function (file, errorMessage)
+    {
         if (errorMessage === undefined) { errorMessage = ''; }
 
         file.loaded = true;
@@ -2107,7 +2134,6 @@ Phaser.Loader.prototype = {
         }
 
         this.processLoadQueue();
-
     },
 
     /**
@@ -2117,8 +2143,8 @@ Phaser.Loader.prototype = {
     * @private
     * @param {object} pack
     */
-    processPack: function (pack) {
-
+    processPack: function (pack)
+    {
         var packData = pack.data[pack.key];
 
         if (!packData)
@@ -2220,8 +2246,8 @@ Phaser.Loader.prototype = {
     * @param {object} file - The file object being transformed.
     * @return {string} The transformed url. In rare cases where the url isn't specified it will return false instead.
     */
-    transformUrl: function (url, file) {
-
+    transformUrl: function (url, file)
+    {
         if (!url)
         {
             return false;
@@ -2235,7 +2261,6 @@ Phaser.Loader.prototype = {
         {
             return this.baseURL + file.path + url;
         }
-
     },
 
     /**
@@ -2247,7 +2272,9 @@ Phaser.Loader.prototype = {
     * @private
     * @param {object} file
     */
-    loadFile: function (file) {
+    loadFile: function (file)
+    {
+        console.log('loadFile', file.url);
 
         //  Image or Data?
         switch (file.type)
@@ -2349,14 +2376,14 @@ Phaser.Loader.prototype = {
                 this.xhrLoad(file, this.transformUrl(file.url, file), 'arraybuffer', this.fileComplete);
                 break;
         }
-
     },
 
     /**
     * Continue async loading through an Image tag.
     * @private
     */
-    loadImageTag: function (file) {
+    loadImageTag: function (file)
+    {
         var _this = this;
 
         file.data = new Image();
@@ -2367,7 +2394,8 @@ Phaser.Loader.prototype = {
             file.data.crossOrigin = this.crossOrigin;
         }
 
-        file.data.onload = function () {
+        file.data.onload = function ()
+        {
             if (file.data.onload)
             {
                 file.data.onload = null;
@@ -2376,7 +2404,8 @@ Phaser.Loader.prototype = {
             }
         };
 
-        file.data.onerror = function () {
+        file.data.onerror = function ()
+        {
             if (file.data.onload)
             {
                 file.data.onload = null;
@@ -2394,32 +2423,31 @@ Phaser.Loader.prototype = {
             file.data.onerror = null;
             this.fileComplete(file);
         }
-
     },
 
     /**
     * Continue async loading through a Video tag.
     * @private
     */
-    loadVideoTag: function (file) {
-
+    loadVideoTag: function (file)
+    {
         var _this = this;
 
-        file.data = document.createElement("video");
+        file.data = document.createElement('video');
         file.data.name = file.key;
         file.data.controls = false;
         file.data.autoplay = false;
 
-        var videoLoadEvent = function () {
-
+        var videoLoadEvent = function ()
+        {
             file.data.removeEventListener(file.loadEvent, videoLoadEvent, false);
             file.data.onerror = null;
             file.data.canplay = true;
             Phaser.GAMES[_this.game.id].load.fileComplete(file);
-
         };
 
-        file.data.onerror = function () {
+        file.data.onerror = function ()
+        {
             file.data.removeEventListener(file.loadEvent, videoLoadEvent, false);
             file.data.onerror = null;
             file.data.canplay = false;
@@ -2430,15 +2458,14 @@ Phaser.Loader.prototype = {
 
         file.data.src = this.transformUrl(file.url, file);
         file.data.load();
-
     },
 
     /**
     * Continue async loading through an Audio tag.
     * @private
     */
-    loadAudioTag: function (file) {
-
+    loadAudioTag: function (file)
+    {
         var _this = this;
 
         if (this.game.sound.touchLocked)
