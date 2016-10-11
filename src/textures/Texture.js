@@ -87,20 +87,6 @@ Phaser.Texture.prototype = {
 
     },
 
-    getSpriteSheet: function (key, frame, frameWidth, frameHeight, startFrame, endFrame, margin, spacing)
-    {
-        var sheet = this.get(frame);
-
-        if (sheet)
-        {
-            var texture = this.manager.create(key, sheet.source.image);
-
-            this.manager.parsers.SpriteSheet(texture, 0, sheet.cutX, sheet.cutY, sheet.cutWidth, sheet.cutHeight, frameWidth, frameHeight, startFrame, endFrame, margin, spacing);
-
-            return texture;
-        }
-    },
-
     /**
     * Destroys this base texture
     *

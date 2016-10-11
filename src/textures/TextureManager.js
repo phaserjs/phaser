@@ -110,6 +110,21 @@ Phaser.TextureManager.prototype = {
         return texture;
     },
 
+    addSpriteSheetFromAtlas: function (key, atlasKey, atlasFrame, frameWidth, frameHeight, startFrame, endFrame, margin, spacing)
+    {
+        var atlas = this.get(atlasKey);
+        var sheet = atlas.get(atlasFrame);
+
+        if (sheet)
+        {
+            var texture = this.create(key, sheet.source.image);
+
+            this.parsers.SpriteSheet(texture, 0, sheet.cutX, sheet.cutY, sheet.cutWidth, sheet.cutHeight, frameWidth, frameHeight, startFrame, endFrame, margin, spacing);
+
+            return texture;
+        }
+    },
+
     /*
     addAtlasStarlingXML: function (key, source, data)
     {
@@ -159,6 +174,17 @@ Phaser.TextureManager.prototype = {
 
     },
 
+    setTexture: function (gameObject, key, frame)
+    {
+        if (this.list[key])
+        {
+            gameObject.texture = this.list[key];
+            gameObject.frame = gameObject.texture.get(frame);
+        }
+
+        return gameObject;
+    },
+
     /**
     * Passes all Textures to the given callback.
     *
@@ -185,8 +211,8 @@ Phaser.TextureManager.prototype = {
     },
 
     /**
-     * TODO: This should move to the WebGL Renderer class.
-     * 
+    * TODO: This should move to the WebGL Renderer class.
+    * 
     * Removes the base texture from the GPU, useful for managing resources on the GPU.
     * A texture is still 100% usable and will simply be re-uploaded if there is a sprite on screen that is using it.
     *
