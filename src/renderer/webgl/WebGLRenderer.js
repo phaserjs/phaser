@@ -422,6 +422,27 @@ Phaser.Renderer.WebGL.prototype = {
         //  Add Post-render hook
     },
 
+    /**
+    * Removes the base texture from the GPU, useful for managing resources on the GPU.
+    * A texture is still 100% usable and will simply be re-uploaded if there is a sprite on screen that is using it.
+    *
+    * @method unloadTexture
+    */
+    unloadTexture: function (texture)
+    {
+        var gl = this.gl;
+
+        var glTexture = texture._glTexture;
+
+        if (gl && glTexture)
+        {
+            gl.deleteTexture(glTexture);
+        }
+
+        texture._glTexture = null;
+        texture._dirty = false;
+    },
+
     updateTexture: function (texture)
     {
         if (!texture.hasLoaded)
@@ -696,8 +717,6 @@ Phaser.Renderer.WebGL.prototype = {
 
     destroy: function ()
     {
-        PIXI.glContexts[this.glContextId] = null;
-
         this.projection = null;
         this.offset = null;
 
@@ -715,10 +734,6 @@ Phaser.Renderer.WebGL.prototype = {
         this.renderSession = null;
 
         Phaser.CanvasPool.remove(this);
-
-        PIXI.instances[this.glContextId] = null;
-
-        PIXI.WebGLRenderer.glContextId--;
     }
 
 };
