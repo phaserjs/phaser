@@ -13,10 +13,10 @@
 * @param {string} key - The key of the Frame within the Texture that the Sprite Sheet is stored in.
 * @param {number} frameWidth - The fixed width of each frame.
 * @param {number} frameHeight - The fixed height of each frame.
+* @param {number} [startFrame=0] - Skip a number of frames. Useful when there are multiple sprite sheets in one Texture.
 * @param {number} [endFrame=-1] - The total number of frames to extract from the Sprite Sheet. The default value of -1 means "extract all frames".
 * @param {number} [margin=0] - If the frames have been drawn with a margin, specify the amount here.
 * @param {number} [spacing=0] - If the frames have been drawn with spacing between them, specify the amount here.
-* @param {number} [startFrame=0] - Skip a number of frames. Useful when there are multiple sprite sheets in one Texture.
 * @return {Phaser.FrameData} A FrameData object containing the parsed frames.
 */
 Phaser.TextureManager.Parsers.SpriteSheet = function (texture, sourceIndex, x, y, width, height, frameWidth, frameHeight, startFrame, endFrame, margin, spacing)

@@ -1076,23 +1076,22 @@ Phaser.Loader.prototype = {
     * @method Phaser.Loader#spritesheet
     * @param {string} key - Unique asset key of the sheet file.
     * @param {string} url - URL of the sprite sheet file. If undefined or `null` the url will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
-    * @param {number} frameWidth - Width in pixels of a single frame in the sprite sheet.
-    * @param {number} frameHeight - Height in pixels of a single frame in the sprite sheet.
-    * @param {number} [frameMax=-1] - How many frames in this sprite sheet. If not specified it will divide the whole image into frames.
+    * @param {number} frameWidth - The fixed width of each frame.
+    * @param {number} frameHeight - The fixed height of each frame.
+    * @param {number} [startFrame=0] - Skip a number of frames. Useful when there are multiple sprite sheets in one Texture.
+    * @param {number} [endFrame=-1] - The total number of frames to extract from the Sprite Sheet. The default value of -1 means "extract all frames".
     * @param {number} [margin=0] - If the frames have been drawn with a margin, specify the amount here.
     * @param {number} [spacing=0] - If the frames have been drawn with spacing between them, specify the amount here.
-    * @param {number} [skipFrames=0] - Skip a number of frames. Useful when there are multiple sprite sheets in one image.
     * @return {Phaser.Loader} This Loader instance.
     */
-    spritesheet: function (key, url, frameWidth, frameHeight, frameMax, margin, spacing, skipFrames) {
-
-        if (frameMax === undefined) { frameMax = -1; }
+    spritesheet: function (key, url, frameWidth, frameHeight, startFrame, endFrame, margin, spacing)
+    {
+        if (startFrame === undefined) { startFrame = 0; }
+        if (endFrame === undefined) { endFrame = -1; }
         if (margin === undefined) { margin = 0; }
         if (spacing === undefined) { spacing = 0; }
-        if (skipFrames === undefined) { skipFrames = 0; }
 
-        return this.addToFileList('spritesheet', key, url, { frameWidth: frameWidth, frameHeight: frameHeight, frameMax: frameMax, margin: margin, spacing: spacing, skipFrames: skipFrames }, false, '.png');
-
+        return this.addToFileList('spritesheet', key, url, { frameWidth: frameWidth, frameHeight: frameHeight, startFrame: startFrame, endFrame: endFrame, margin: margin, spacing: spacing }, false, '.png');
     },
 
     /**
@@ -1746,7 +1745,6 @@ Phaser.Loader.prototype = {
             }
 
             this.addToFileList('textureatlas', key, textureURL, { atlasURL: null, atlasData: atlasData, format: format });
-
         }
 
         return this;
@@ -2795,7 +2793,7 @@ Phaser.Loader.prototype = {
 
             case 'spritesheet':
 
-                this.cache.addSpriteSheet(file.key, file.url, file.data, file.frameWidth, file.frameHeight, file.frameMax, file.margin, file.spacing, file.skipFrames);
+                this.cache.addSpriteSheet(file.key, file.url, file.data, file.frameWidth, file.frameHeight, file.startFrame, file.endFrame, file.margin, file.spacing);
                 break;
 
             case 'textureatlas':

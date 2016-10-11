@@ -13,43 +13,68 @@ Phaser.Renderer.Canvas.GameObjects.Image = {
 
     render: function (renderer, src)
     {
-        // If the sprite is not visible or the alpha is 0 then no need to render this element
-        if (!src.visible || src.alpha === 0 || !src.renderable)
+        var frame = src.frame;
+        var source = frame.source;
+
+        //  Skip render?
+
+        if (!src.visible || !src.alpha || !src.renderable || !frame.cutWidth || !frame.cutHeight)
         {
             return;
         }
 
-        // Add back in: || src.texture.crop.width <= 0 || src.texture.crop.height <= 0
-
-        var wt = src.worldTransform;
+        //  Blend Mode
 
         if (src.blendMode !== renderer.currentBlendMode)
         {
             renderer.currentBlendMode = src.blendMode;
-            renderer.context.globalCompositeOperation = Phaser.blendModesCanvas[renderer.currentBlendMode];
+            renderer.context.globalCompositeOperation = renderer.blendModes[renderer.currentBlendMode];
         }
 
-        var resolution = src.texture.baseTexture.resolution / renderer.game.resolution;
+        //  Alpha
 
-        renderer.context.globalAlpha = src.worldAlpha;
-
-        //  If smoothingEnabled is supported and we need to change the smoothing property for src texture
-        if (renderer.smoothProperty && renderer.currentScaleMode !== src.texture.baseTexture.scaleMode)
+        if (src.worldAlpha !== renderer.context.globalAlpha)
         {
-            renderer.currentScaleMode = src.texture.baseTexture.scaleMode;
-            renderer.context[renderer.smoothProperty] = (renderer.currentScaleMode === Phaser.scaleModes.LINEAR);
+            renderer.context.globalAlpha = src.worldAlpha;
         }
 
-        //  If the texture is trimmed we offset by the trim x/y, otherwise we use the frame dimensions
-        var dx = (src.texture.trim) ? src.texture.trim.x - src.anchor.x * src.texture.trim.width : src.anchor.x * -src.texture.frame.width;
-        var dy = (src.texture.trim) ? src.texture.trim.y - src.anchor.y * src.texture.trim.height : src.anchor.y * -src.texture.frame.height;
+        //  Smoothing (should this be a Game Object, or Frame/Texture level property?)
+
+        if (source.scaleMode !== renderer.currentScaleMode)
+        {
+            renderer.currentScaleMode = source.scaleMode;
+            renderer.context[renderer.smoothProperty] = (source.scaleMode === Phaser.scaleModes.LINEAR);
+        }
+
+        var wt = src.worldTransform;
+
+        var resolution = source.resolution / renderer.game.resolution;
+
+        var dx = frame.x - (src.anchor.x * frame.width);
+        var dy = frame.y - (src.anchor.y * frame.height);
 
         var tx = (wt.tx * renderer.game.resolution) + renderer.game.camera._shake.x;
         var ty = (wt.ty * renderer.game.resolution) + renderer.game.camera._shake.y;
 
-        var cw = src.texture.crop.width;
-        var ch = src.texture.crop.height;
+        //  Round Pixels
 
+        if (renderer.roundPixels)
+        {
+            tx |= 0;
+            ty |= 0;
+            dx |= 0;
+            dy |= 0;
+        }
+
+        var cw = frame.cutWidth;
+        var ch = frame.cutHeight;
+
+        renderer.context.setTransform(wt.a, wt.b, wt.c, wt.d, tx, ty);
+
+        renderer.context.drawImage(source.image, frame.cutX, frame.cutY, cw, ch, dx, dy, cw / resolution, ch / resolution);
+
+        /*
+        //  Move this to either the Renderer, or the Texture Manager, but not here (as it's repeated all over the place)
         if (src.texture.rotated)
         {
             var a = wt.a;
@@ -73,22 +98,9 @@ Phaser.Renderer.Canvas.GameObjects.Image = {
             cw = ch;
             ch = e;
         }
+        */
 
-        //  Allow for pixel rounding
-        if (renderer.roundPixels)
-        {
-            renderer.context.setTransform(wt.a, wt.b, wt.c, wt.d, tx | 0, ty | 0);
-            dx |= 0;
-            dy |= 0;
-        }
-        else
-        {
-            renderer.context.setTransform(wt.a, wt.b, wt.c, wt.d, tx, ty);
-        }
-
-        dx /= resolution;
-        dy /= resolution;
-
+        /*
         if (src.tint !== 0xFFFFFF)
         {
             if (src.texture.requiresReTint || src.cachedTint !== src.tint)
@@ -108,6 +120,7 @@ Phaser.Renderer.Canvas.GameObjects.Image = {
 
             renderer.context.drawImage(src.texture.baseTexture.source, cx, cy, cw, ch, dx, dy, cw / resolution, ch / resolution);
         }
+        */
 
     }
 

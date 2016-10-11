@@ -301,8 +301,6 @@ Phaser.Cache.prototype = {
             this.removeImage(key);
         }
 
-        console.log('Cache.addImage', key);
-
         var img = {
             key: key,
             url: url,
@@ -314,7 +312,7 @@ Phaser.Cache.prototype = {
 
         this._resolveURL(url, img);
 
-        //  Remove this
+        //  TODO Remove this
         if (key === '__default')
         {
             Phaser.Cache.DEFAULT = this.game.textures.getFrame('__default');
@@ -322,41 +320,6 @@ Phaser.Cache.prototype = {
         else if (key === '__missing')
         {
             Phaser.Cache.MISSING = this.game.textures.getFrame('__missing');
-        }
-
-        return img;
-
-    },
-
-    __addImage: function (key, url, data)
-    {
-        if (this.checkImageKey(key))
-        {
-            this.removeImage(key);
-        }
-
-        var img = {
-            key: key,
-            url: url,
-            data: data,
-            base: new PIXI.BaseTexture(data),
-            frame: new Phaser.Frame(0, 0, 0, data.width, data.height, key),
-            frameData: new Phaser.FrameData()
-        };
-
-        img.frameData.addFrame(new Phaser.Frame(0, 0, 0, data.width, data.height, url));
-
-        this._cache.image[key] = img;
-
-        this._resolveURL(url, img);
-
-        if (key === '__default')
-        {
-            Phaser.Cache.DEFAULT = new PIXI.Texture(img.base);
-        }
-        else if (key === '__missing')
-        {
-            Phaser.Cache.MISSING = new PIXI.Texture(img.base);
         }
 
         return img;
@@ -713,35 +676,31 @@ Phaser.Cache.prototype = {
     * @param {string} key - The key that this asset will be stored in the cache under. This should be unique within this cache.
     * @param {string} url - The URL the asset was loaded from. If the asset was not loaded externally set to `null`.
     * @param {object} data - Extra sprite sheet data.
-    * @param {number} frameWidth - Width of the sprite sheet.
-    * @param {number} frameHeight - Height of the sprite sheet.
-    * @param {number} [frameMax=-1] - How many frames stored in the sprite sheet. If -1 then it divides the whole sheet evenly.
+    * @param {number} frameWidth - The fixed width of each frame.
+    * @param {number} frameHeight - The fixed height of each frame.
+    * @param {number} [startFrame=0] - Skip a number of frames. Useful when there are multiple sprite sheets in one Texture.
+    * @param {number} [endFrame=-1] - The total number of frames to extract from the Sprite Sheet. The default value of -1 means "extract all frames".
     * @param {number} [margin=0] - If the frames have been drawn with a margin, specify the amount here.
     * @param {number} [spacing=0] - If the frames have been drawn with spacing between them, specify the amount here.
-    * @param {number} [skipFrames=0] - Skip a number of frames. Useful when there are multiple sprite sheets in one image.
     */
-    addSpriteSheet: function (key, url, data, frameWidth, frameHeight, frameMax, margin, spacing, skipFrames) {
-
-        if (frameMax === undefined) { frameMax = -1; }
-        if (margin === undefined) { margin = 0; }
-        if (spacing === undefined) { spacing = 0; }
-
+    addSpriteSheet: function (key, url, data, frameWidth, frameHeight, startFrame, endFrame, margin, spacing)
+    {
         var obj = {
             key: key,
             url: url,
             data: data,
             frameWidth: frameWidth,
             frameHeight: frameHeight,
+            startFrame: startFrame,
+            endFrame: endFrame,
             margin: margin,
             spacing: spacing,
-            base: new PIXI.BaseTexture(data),
-            frameData: Phaser.AnimationParser.spriteSheet(this.game, data, frameWidth, frameHeight, frameMax, margin, spacing, skipFrames)
+            texture: this.game.textures.addSpriteSheet(key, data, frameWidth, frameHeight, startFrame, endFrame, margin, spacing)
         };
 
         this._cache.image[key] = obj;
 
         this._resolveURL(url, obj);
-
     },
 
     /**
@@ -760,9 +719,30 @@ Phaser.Cache.prototype = {
             key: key,
             url: url,
             data: data,
-            base: new PIXI.BaseTexture(data)
+            texture: null
         };
 
+        if (Array.isArray(atlasData.frames) && format === Phaser.Loader.TEXTURE_ATLAS_JSON_HASH)
+        {
+            format = Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY;
+        }
+
+        var manager = this.game.textures;
+
+        switch (format)
+        {
+            case Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY:
+                obj.texture = manager.addAtlasJSONArray(key, data, atlasData);
+                break;
+
+            case Phaser.Loader.TEXTURE_ATLAS_JSON_HASH:
+                obj.texture = manager.addAtlasJSONHash(key, data, atlasData);
+                break;
+        }
+
+        //  TODO: XML + Pyxel
+
+        /*
         if (format === Phaser.Loader.TEXTURE_ATLAS_XML_STARLING)
         {
             obj.frameData = Phaser.AnimationParser.XMLData(this.game, atlasData, key);
@@ -783,6 +763,7 @@ Phaser.Cache.prototype = {
                 obj.frameData = Phaser.AnimationParser.JSONDataHash(this.game, atlasData, key);
             }
         }
+        */
 
         this._cache.image[key] = obj;
 

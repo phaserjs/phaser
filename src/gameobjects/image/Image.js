@@ -12,7 +12,6 @@
 * @extends PIXI.Sprite
 * @extends Phaser.Component.Core
 * @extends Phaser.Component.Angle
-* @extends Phaser.Component.Animation
 * @extends Phaser.Component.AutoCull
 * @extends Phaser.Component.Bounds
 * @extends Phaser.Component.BringToTop
@@ -21,7 +20,6 @@
 * @extends Phaser.Component.FixedToCamera
 * @extends Phaser.Component.InputEnabled
 * @extends Phaser.Component.LifeSpan
-* @extends Phaser.Component.LoadTexture
 * @extends Phaser.Component.Overlap
 * @extends Phaser.Component.Reset
 * @extends Phaser.Component.ScaleMinMax
@@ -33,12 +31,10 @@
 * @param {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} [key] - The texture used by the Image during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture, BitmapData or PIXI.Texture.
 * @param {string|number} [frame] - If this Image is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
 */
-Phaser.GameObject.Image = function (game, x, y, key, frame) {
-
+Phaser.GameObject.Image = function (game, x, y, key, frame)
+{
     x = x || 0;
     y = y || 0;
-    key = key || null;
-    frame = frame || null;
 
     /**
     * @property {number} type - The const type of this object.
@@ -48,8 +44,11 @@ Phaser.GameObject.Image = function (game, x, y, key, frame) {
 
     PIXI.Sprite.call(this, Phaser.Cache.DEFAULT);
 
-    Phaser.Component.Core.init.call(this, game, x, y, key, frame);
+    this.texture = game.textures.get(key);
 
+    this.frame = this.texture.get(frame);
+
+    Phaser.Component.Core.init.call(this, game, x, y, key, frame);
 };
 
 Phaser.GameObject.Image.prototype = Object.create(PIXI.Sprite.prototype);
@@ -57,7 +56,6 @@ Phaser.GameObject.Image.prototype.constructor = Phaser.GameObject.Image;
 
 Phaser.Component.Core.install.call(Phaser.GameObject.Image.prototype, [
     'Angle',
-    'Animation',
     'AutoCull',
     'Bounds',
     'BringToTop',
@@ -66,7 +64,6 @@ Phaser.Component.Core.install.call(Phaser.GameObject.Image.prototype, [
     'FixedToCamera',
     'InputEnabled',
     'LifeSpan',
-    'LoadTexture',
     'Overlap',
     'Reset',
     'ScaleMinMax',
@@ -82,13 +79,12 @@ Phaser.GameObject.Image.prototype.preUpdateCore = Phaser.Component.Core.preUpdat
 * @method Phaser.Image#preUpdate
 * @memberof Phaser.Image
 */
-Phaser.GameObject.Image.prototype.preUpdate = function () {
-
+Phaser.GameObject.Image.prototype.preUpdate = function ()
+{
     if (!this.preUpdateInWorld())
     {
         return false;
     }
 
     return this.preUpdateCore();
-
 };

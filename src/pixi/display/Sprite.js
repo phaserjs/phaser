@@ -109,10 +109,10 @@ PIXI.Sprite = function (texture) {
     */
     this.exists = true;
 
-    if (this.texture.baseTexture.hasLoaded)
-    {
-        this.onTextureUpdate();
-    }
+    // if (this.texture.baseTexture.hasLoaded)
+    // {
+    //     this.onTextureUpdate();
+    // }
 
     this.renderable = true;
 

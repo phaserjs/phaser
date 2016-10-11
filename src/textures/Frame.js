@@ -6,7 +6,7 @@
 
 /**
 * A Frame is a section of a Texture.
-* 
+*
 * Called TextureFrame during integration, will rename to Frame later.
 *
 * @class Phaser.TextureFrame
@@ -20,7 +20,6 @@
 */
 Phaser.TextureFrame = function (texture, name, sourceIndex, x, y, width, height)
 {
-
     /**
     * @property {Phaser.Texture} texture - The Texture this frame belongs to.
     */
@@ -79,6 +78,7 @@ Phaser.TextureFrame = function (texture, name, sourceIndex, x, y, width, height)
     * Is this frame is rotated or not in the Texture?
     * Rotation allows you to use rotated frames in texture atlas packing.
     * It has nothing to do with Sprite rotation.
+    *
     * @property {boolean} rotated
     * @default
     */
@@ -86,6 +86,7 @@ Phaser.TextureFrame = function (texture, name, sourceIndex, x, y, width, height)
 
     /**
     * Is this a tiling texture? As used by the likes of a TilingSprite.
+    * TODO: Try and remove this, it shouldn't be here
     *
     * @property {boolean} isTiling
     * @default
@@ -94,14 +95,15 @@ Phaser.TextureFrame = function (texture, name, sourceIndex, x, y, width, height)
 
     /**
     * This will let a renderer know that a tinted parent has updated its texture.
+    * TODO: Try and remove this, it shouldn't be here
     *
     * @property {boolean} requiresReTint
     * @default
     */
     this.requiresReTint = false;
 
-    //  Over-rides the Renderer setting? 0 = use Renderer Setting, 1 = No rounding, 2 = Round
-    this.autoRound = 0;
+    //  Over-rides the Renderer setting? -1 = use Renderer Setting, 0 = No rounding, 1 = Round
+    this.autoRound = -1;
 
     /**
     * The un-modified source frame, trim and UV data.

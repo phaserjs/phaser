@@ -80,9 +80,7 @@ Phaser.Renderer.Canvas = function (game)
      * @property context
      * @type CanvasRenderingContext2D
      */
-    this.context = this.view.getContext('2d', {
-        alpha: this.transparent
-    });
+    this.context = this.view.getContext('2d', { alpha: this.transparent });
 
     this.smoothProperty = Phaser.Canvas.getSmoothingPrefix(this.context);
 

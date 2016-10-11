@@ -80,7 +80,7 @@ Phaser.Component.Core.init = function (game, x, y, key, frame) {
 
     if (this.components.LoadTexture && key !== null)
     {
-        this.loadTexture(key, frame);
+        // this.loadTexture(key, frame);
     }
 
     if (this.components.FixedToCamera)

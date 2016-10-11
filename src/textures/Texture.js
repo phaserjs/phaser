@@ -81,7 +81,7 @@ Phaser.Texture.prototype = {
 
     get: function (name)
     {
-        if (name === undefined) { name = '__BASE'; }
+        if (name === undefined || name === null) { name = '__BASE'; }
 
         return this.frames[name];
 
