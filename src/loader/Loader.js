@@ -1815,10 +1815,11 @@ Phaser.Loader.prototype = {
 
             data.push(multiKey);
 
+            //   Check if this can support XML as well?
             this.addToFileList('json', multiKey, atlasURLs[i], { multiatlas: true });
         }
 
-        this._multilist.push({ key: key, images: imgs, json: data, format: format });
+        this._multilist.push({ key: key, images: imgs, data: data, format: format });
 
         return this;
     },
@@ -1953,10 +1954,13 @@ Phaser.Loader.prototype = {
             return;
         }
 
+        var i;
+        var file;
+
         // Empty the flight queue as applicable
-        for (var i = 0; i < this._flightQueue.length; i++)
+        for (i = 0; i < this._flightQueue.length; i++)
         {
-            var file = this._flightQueue[i];
+            file = this._flightQueue[i];
 
             if (file.loaded || file.error)
             {
@@ -1992,9 +1996,9 @@ Phaser.Loader.prototype = {
 
         var inflightLimit = this.enableParallel ? Phaser.Math.clamp(this.maxParallelDownloads, 1, 12) : 1;
 
-        for (var i = this._processingHead; i < this._fileList.length; i++)
+        for (i = this._processingHead; i < this._fileList.length; i++)
         {
-            var file = this._fileList[i];
+            file = this._fileList[i];
 
             // Pack is fetched (ie. has data) and is currently at the start of the process queue.
             if (file.type === 'packfile' && !file.error && file.loaded && i === this._processingHead)
@@ -2068,15 +2072,77 @@ Phaser.Loader.prototype = {
         {
             // Flight queue is empty but file list is not done being processed.
             // This indicates a critical internal error with no known recovery.
-            console.warn("Phaser.Loader - aborting: processing queue empty, loading may have stalled");
+            console.warn('Phaser.Loader - aborting: processing queue empty, loading may have stalled');
 
             var _this = this;
 
-            setTimeout(function () {
+            setTimeout(function ()
+            {
                 _this.finishedLoading(true);
             }, 2000);
         }
+    },
 
+    /**
+    * Process any loaded multi-atlases.
+    *
+    * @method Phaser.Loader#processMultiAtlases
+    * @private
+    */
+    processMultiAtlases: function ()
+    {
+        //  Process any multi atlases
+
+        for (var i = 0; i < this._multilist.length; i++)
+        {
+            var list = this._multilist[i];
+            var images = [];
+            var data = [];
+            var imagesLoaded = true;
+            var dataLoaded = true;
+
+            //  Check all the images loaded
+            for (var a = 0; a < list.images.length; a++)
+            {
+                var image = this.cache.getImage(list.images[a]);
+
+                if (image)
+                {
+                    images.push(image);
+                }
+                else
+                {
+                    imagesLoaded = false;
+                }
+            }
+
+            //  Check all the atlas data loaded
+            for (var b = 0; b < list.data.length; b++)
+            {
+                var json = this.cache.getJSON(list.data[b]);
+
+                if (json)
+                {
+                    data.push(json);
+                }
+                else
+                {
+                    dataLoaded = false;
+                }
+            }
+
+            if (imagesLoaded && dataLoaded)
+            {
+                if (list.format === Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY)
+                {
+                    this.game.textures.addAtlasJSONArray(list.key, images, data);
+                }
+                else if (list.format === Phaser.Loader.TEXTURE_ATLAS_JSON_HASH)
+                {
+                    this.game.textures.addAtlasJSONHash(list.key, images, data);
+                }
+            }
+        }
     },
 
     /**
@@ -2092,6 +2158,8 @@ Phaser.Loader.prototype = {
         {
             return;
         }
+
+        this.processMultiAtlases();
 
         this.hasLoaded = true;
         this.isLoading = false;
@@ -2274,8 +2342,6 @@ Phaser.Loader.prototype = {
     */
     loadFile: function (file)
     {
-        console.log('loadFile', file.url);
-
         //  Image or Data?
         switch (file.type)
         {
@@ -2833,8 +2899,8 @@ Phaser.Loader.prototype = {
     * @param {object} file - File loaded
     * @param {?XMLHttpRequest} xhr - XHR request, unspecified if loaded via other means (eg. tags)
     */
-    fileComplete: function (file, xhr) {
-
+    fileComplete: function (file, xhr)
+    {
         var loadNext = true;
 
         switch (file.type)
@@ -3022,8 +3088,8 @@ Phaser.Loader.prototype = {
     * @param {object} file - File associated with this request
     * @param {XMLHttpRequest} xhr
     */
-    jsonLoadComplete: function (file, xhr) {
-
+    jsonLoadComplete: function (file, xhr)
+    {
         var data = JSON.parse(xhr.responseText);
 
         if (file.type === 'tilemap')
@@ -3054,14 +3120,13 @@ Phaser.Loader.prototype = {
     * @param {object} file - File associated with this request
     * @param {XMLHttpRequest} xhr
     */
-    csvLoadComplete: function (file, xhr) {
-
+    csvLoadComplete: function (file, xhr)
+    {
         var data = xhr.responseText;
 
         this.cache.addTilemap(file.key, file.url, data, file.format);
 
         this.asyncComplete(file);
-
     },
 
     /**
@@ -3072,8 +3137,8 @@ Phaser.Loader.prototype = {
     * @param {object} file - File associated with this request
     * @param {XMLHttpRequest} xhr
     */
-    xmlLoadComplete: function (file, xhr) {
-
+    xmlLoadComplete: function (file, xhr)
+    {
         // Always try parsing the content as XML, regardless of actually response type
         var data = xhr.responseText;
         var xml = this.parseXml(data);
@@ -3100,7 +3165,6 @@ Phaser.Loader.prototype = {
         }
 
         this.asyncComplete(file);
-
     },
 
     /**
@@ -3111,8 +3175,8 @@ Phaser.Loader.prototype = {
     * @param {string} data - The XML text to parse
     * @return {?XMLDocument} Returns the xml document, or null if such could not parsed to a valid document.
     */
-    parseXml: function (data) {
-
+    parseXml: function (data)
+    {
         var xml;
 
         try
@@ -3143,7 +3207,6 @@ Phaser.Loader.prototype = {
         {
             return xml;
         }
-
     },
 
     /**
@@ -3154,8 +3217,8 @@ Phaser.Loader.prototype = {
     * @param {object} previousFile
     * @param {boolean} success - Whether the previous asset loaded successfully or not.
     */
-    updateProgress: function () {
-
+    updateProgress: function ()
+    {
         if (this.preloadSprite)
         {
             if (this.preloadSprite.direction === 0)
@@ -3177,7 +3240,6 @@ Phaser.Loader.prototype = {
                 this.preloadSprite = null;
             }
         }
-
     },
 
     /**
@@ -3187,10 +3249,9 @@ Phaser.Loader.prototype = {
     * @protected
     * @return {number} The number of files that have already been loaded (even if they errored)
     */
-    totalLoadedFiles: function () {
-
+    totalLoadedFiles: function ()
+    {
         return this._loadedFileCount;
-
     },
 
     /**
@@ -3200,10 +3261,9 @@ Phaser.Loader.prototype = {
     * @protected
     * @return {number} The number of files that still remain in the load queue.
     */
-    totalQueuedFiles: function () {
-
+    totalQueuedFiles: function ()
+    {
         return this._totalFileCount - this._loadedFileCount;
-
     },
 
     /**
@@ -3213,10 +3273,9 @@ Phaser.Loader.prototype = {
     * @protected
     * @return {number} The number of asset packs that have already been loaded (even if they errored)
     */
-    totalLoadedPacks: function () {
-
+    totalLoadedPacks: function ()
+    {
         return this._totalPackCount;
-
     },
 
     /**
@@ -3226,10 +3285,9 @@ Phaser.Loader.prototype = {
     * @protected
     * @return {number} The number of asset packs that still remain in the load queue.
     */
-    totalQueuedPacks: function () {
-
+    totalQueuedPacks: function ()
+    {
         return this._totalPackCount - this._loadedPackCount;
-
     }
 
 };
