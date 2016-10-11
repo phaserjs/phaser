@@ -1686,8 +1686,8 @@ Phaser.Loader.prototype = {
     * @param {number} [format] - The format of the data. Can be Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY (the default), Phaser.Loader.TEXTURE_ATLAS_JSON_HASH or Phaser.Loader.TEXTURE_ATLAS_XML_STARLING.
     * @return {Phaser.Loader} This Loader instance.
     */
-    atlas: function (key, textureURL, atlasURL, atlasData, format) {
-
+    atlas: function (key, textureURL, atlasURL, atlasData, format)
+    {
         if (textureURL === undefined || textureURL === null)
         {
             textureURL = key + '.png';
@@ -1718,6 +1718,7 @@ Phaser.Loader.prototype = {
         {
             switch (format)
             {
+
                 //  A json string or object has been given
                 case Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY:
 
@@ -1746,6 +1747,50 @@ Phaser.Loader.prototype = {
 
             this.addToFileList('textureatlas', key, textureURL, { atlasURL: null, atlasData: atlasData, format: format });
         }
+
+        return this;
+
+    },
+
+    multiatlas: function (key, textureURLs, atlasURLs, format)
+    {
+        if (format === undefined) { format = Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY; }
+
+        if (!Array.isArray(textureURLs))
+        {
+            textureURLs = [ textureURLs ];
+        }
+
+        if (!Array.isArray(atlasURLs))
+        {
+            atlasURLs = [ atlasURLs ];
+        }
+
+        var i = 0;
+        var multiKey;
+        var imgs = [];
+        var data = [];
+
+        for (i = 0; i < textureURLs.length; i++)
+        {
+            //  TODO - Add support for compressed textures
+            multiKey = '_MA_' + key + '_' + i.toString();
+
+            imgs.push(multiKey);
+
+            this.addToFileList('image', multiKey, textureURLs[i], { multiatlas: true });
+        }
+
+        for (i = 0; i < atlasURLs.length; i++)
+        {
+            multiKey = '_MA_' + key + '_' + i.toString();
+
+            data.push(multiKey);
+
+            this.addToFileList('json', multiKey, atlasURLs[i], { multiatlas: true });
+        }
+
+        this.addToFileList('multiatlas', key, null, { images: imgs, json: data, format: format });
 
         return this;
 
