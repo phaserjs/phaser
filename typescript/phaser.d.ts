@@ -5082,7 +5082,6 @@ declare module Phaser {
         getLayerIndex(name: string): number;
         getObjectIndex(name: string): number;
         getTile(x: number, y: number, layer?: any, nonNull?: boolean): Phaser.Tile;
-        getRayCastTiles(layer: Phaser.TilemapLayer|Phaser.TilemapLayerGL, line: Phaser.Line, stepRate?: number, collides?: boolean, interestingFace?: boolean): Phaser.Tile[];
         getTiles(layer: Phaser.TilemapLayer|Phaser.TilemapLayerGL, x: number, y: number, width: number, height: number, collides?: boolean, interestingFace?: boolean): Phaser.Tile[];
         getTileX(layer: Phaser.TilemapLayer|Phaser.TilemapLayerGL, x: number): number;
         getTileXY(layer: Phaser.TilemapLayer|Phaser.TilemapLayerGL, x: number, y: number, point: Phaser.Point): Phaser.Point;
@@ -5150,6 +5149,7 @@ declare module Phaser {
         wrap: boolean;
 
         destroy(): void;
+        getRayCastTiles(line: Phaser.Line, stepRate?: number, collides?: boolean, interestingFace?: boolean): Phaser.Tile[];
         postUpdate(): void;
         render(): void;
         resize(width: number, height: number): void;
