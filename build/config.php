@@ -171,6 +171,9 @@ EOL;
     <script src="$path/src/gameobjects/components/ScaleMinMax.js"></script>
     <script src="$path/src/gameobjects/components/Smoothed.js"></script>
 
+    <script src="$path/src/components/Children.js"></script>
+    <script src="$path/src/components/Data.js"></script>
+
     <script src="$path/src/gameobjects/Factory.js"></script>
     <script src="$path/src/gameobjects/GameObjectCreator.js"></script>
 

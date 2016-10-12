@@ -51,13 +51,17 @@ Phaser.Component.Core.install = function (components) {
 * @method
 * @protected
 */
-Phaser.Component.Core.init = function (game, x, y, key, frame) {
-
+Phaser.Component.Core.init = function (game, x, y, key, frame)
+{
     this.game = game;
 
     this.key = key;
 
     this.data = {};
+
+    this.texture = game.textures.get(key);
+
+    this.frame = (this.texture) ? this.texture.get(frame) : null;
 
     this.position.set(x, y);
     this.world = new Phaser.Point(x, y);
@@ -76,11 +80,6 @@ Phaser.Component.Core.init = function (game, x, y, key, frame) {
     if (this.components.Animation)
     {
         this.animations = new Phaser.AnimationManager(this);
-    }
-
-    if (this.components.LoadTexture && key !== null)
-    {
-        // this.loadTexture(key, frame);
     }
 
     if (this.components.FixedToCamera)

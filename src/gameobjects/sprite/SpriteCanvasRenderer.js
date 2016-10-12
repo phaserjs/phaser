@@ -14,69 +14,75 @@ Phaser.Renderer.Canvas.GameObjects.Sprite = {
 
     render: function (renderer, src)
     {
-        // If the sprite is not visible or the alpha is 0 then no need to render this element
-        if (!src.visible || src.alpha === 0 || !src.renderable)
+        var frame = src.frame;
+        var source = frame.source;
+
+        //  Skip render?
+
+        if (!src.visible || !src.alpha || !src.renderable || !frame.cutWidth || !frame.cutHeight)
         {
             return;
         }
 
-        // Add back in: || src.texture.crop.width <= 0 || src.texture.crop.height <= 0
-
-        var wt = src.worldTransform;
+        //  Blend Mode
 
         if (src.blendMode !== renderer.currentBlendMode)
         {
             renderer.currentBlendMode = src.blendMode;
-            renderer.context.globalCompositeOperation = Phaser.blendModesCanvas[renderer.currentBlendMode];
+            renderer.context.globalCompositeOperation = renderer.blendModes[renderer.currentBlendMode];
         }
 
-        //  Check if the texture can be rendered
+        //  Alpha
+
+        if (src.worldAlpha !== renderer.context.globalAlpha)
+        {
+            renderer.context.globalAlpha = src.worldAlpha;
+        }
+
+        //  Smoothing (should this be a Game Object, or Frame/Texture level property?)
+
+        if (source.scaleMode !== renderer.currentScaleMode)
+        {
+            renderer.currentScaleMode = source.scaleMode;
+            renderer.context[renderer.smoothProperty] = (source.scaleMode === Phaser.scaleModes.LINEAR);
+        }
+
+        var wt = src.worldTransform;
+
+        var resolution = source.resolution / renderer.game.resolution;
+
+        var dx = frame.x - (src.anchor.x * frame.width);
+        var dy = frame.y - (src.anchor.y * frame.height);
+
+        var tx = (wt.tx * renderer.game.resolution) + renderer.game.camera._shake.x;
+        var ty = (wt.ty * renderer.game.resolution) + renderer.game.camera._shake.y;
+
+        //  Round Pixels
+
+        if (renderer.roundPixels)
+        {
+            tx |= 0;
+            ty |= 0;
+            dx |= 0;
+            dy |= 0;
+        }
+
+        var cw = frame.cutWidth;
+        var ch = frame.cutHeight;
+
+        //  Does this Sprite have a mask?
 
         if (src._mask)
         {
             renderer.pushMask(src._mask);
         }
 
-        //  Ignore null srcs
+        renderer.context.setTransform(wt.a, wt.b, wt.c, wt.d, tx, ty);
+
+        renderer.context.drawImage(source.image, frame.cutX, frame.cutY, cw, ch, dx, dy, cw / resolution, ch / resolution);
+
         /*
-        if (!src.texture.valid)
-        {
-            //  Update the children and leave
-            for (var i = 0; i < src.children.length; i++)
-            {
-                src.children[i]._renderCanvas(renderSession);
-            }
-
-            if (src._mask)
-            {
-                renderSession.maskManager.popMask(renderSession);
-            }
-
-            return;
-        }
-        */
-
-        var resolution = src.texture.baseTexture.resolution / renderer.game.resolution;
-
-        renderer.context.globalAlpha = src.worldAlpha;
-
-        //  If smoothingEnabled is supported and we need to change the smoothing property for src texture
-        if (renderer.smoothProperty && renderer.currentScaleMode !== src.texture.baseTexture.scaleMode)
-        {
-            renderer.currentScaleMode = src.texture.baseTexture.scaleMode;
-            renderer.context[renderer.smoothProperty] = (renderer.currentScaleMode === Phaser.scaleModes.LINEAR);
-        }
-
-        //  If the texture is trimmed we offset by the trim x/y, otherwise we use the frame dimensions
-        var dx = (src.texture.trim) ? src.texture.trim.x - src.anchor.x * src.texture.trim.width : src.anchor.x * -src.texture.frame.width;
-        var dy = (src.texture.trim) ? src.texture.trim.y - src.anchor.y * src.texture.trim.height : src.anchor.y * -src.texture.frame.height;
-
-        var tx = (wt.tx * renderer.game.resolution) + renderer.game.camera._shake.x;
-        var ty = (wt.ty * renderer.game.resolution) + renderer.game.camera._shake.y;
-
-        var cw = src.texture.crop.width;
-        var ch = src.texture.crop.height;
-
+        //  Move this to either the Renderer, or the Texture Manager, but not here (as it's repeated all over the place)
         if (src.texture.rotated)
         {
             var a = wt.a;
@@ -101,21 +107,6 @@ Phaser.Renderer.Canvas.GameObjects.Sprite = {
             ch = e;
         }
 
-        //  Allow for pixel rounding
-        if (renderer.roundPixels)
-        {
-            renderer.context.setTransform(wt.a, wt.b, wt.c, wt.d, tx | 0, ty | 0);
-            dx |= 0;
-            dy |= 0;
-        }
-        else
-        {
-            renderer.context.setTransform(wt.a, wt.b, wt.c, wt.d, tx, ty);
-        }
-
-        dx /= resolution;
-        dy /= resolution;
-
         if (src.tint !== 0xFFFFFF)
         {
             if (src.texture.requiresReTint || src.cachedTint !== src.tint)
@@ -128,13 +119,7 @@ Phaser.Renderer.Canvas.GameObjects.Sprite = {
 
             renderer.context.drawImage(src.tintedTexture, 0, 0, cw, ch, dx, dy, cw / resolution, ch / resolution);
         }
-        else
-        {
-            var cx = src.texture.crop.x;
-            var cy = src.texture.crop.y;
-
-            renderer.context.drawImage(src.texture.baseTexture.source, cx, cy, cw, ch, dx, dy, cw / resolution, ch / resolution);
-        }
+        */
 
         for (var i = 0; i < src.children.length; i++)
         {

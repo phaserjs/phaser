@@ -41,12 +41,10 @@
 * @param {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
 * @param {string|number} frame - If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
 */
-Phaser.GameObject.Sprite = function (game, x, y, key, frame) {
-
+Phaser.GameObject.Sprite = function (game, x, y, key, frame)
+{
     x = x || 0;
     y = y || 0;
-    key = key || null;
-    frame = frame || null;
 
     /**
     * @property {number} type - The const type of this object.
@@ -84,7 +82,6 @@ Phaser.Component.Core.install.call(Phaser.GameObject.Sprite.prototype, [
     'InputEnabled',
     'InWorld',
     'LifeSpan',
-    'LoadTexture',
     'Overlap',
     'PhysicsBody',
     'Reset',

@@ -44,11 +44,9 @@ Phaser.GameObject.Image = function (game, x, y, key, frame)
 
     PIXI.Sprite.call(this, Phaser.Cache.DEFAULT);
 
-    this.texture = game.textures.get(key);
-
-    this.frame = this.texture.get(frame);
-
     Phaser.Component.Core.init.call(this, game, x, y, key, frame);
+
+    this.data = new Phaser.Component.Data(this);
 };
 
 Phaser.GameObject.Image.prototype = Object.create(PIXI.Sprite.prototype);
