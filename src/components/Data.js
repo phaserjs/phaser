@@ -159,7 +159,7 @@ Phaser.Component.Data.prototype = {
         //  Merge data from another component into this one
         for (var key in data)
         {
-            if (overwrite || (!overwrite && !this.list.hasOwnProperty(key)))
+            if (overwrite || (!overwrite && !this.has(key)))
             {
                 this.list[key] = data;
             }
@@ -168,7 +168,7 @@ Phaser.Component.Data.prototype = {
 
     remove: function (key)
     {
-        if (!this._frozen && this.list.hasOwnProperty(key))
+        if (!this._frozen && this.has(key))
         {
             delete this.list[key];
 
@@ -194,7 +194,7 @@ Phaser.Component.Data.prototype = {
     {
         var data = undefined;
 
-        if (!this._frozen && this.list.hasOwnProperty(key))
+        if (!this._frozen && this.has(key))
         {
             data = this.list[key];
 
