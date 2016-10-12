@@ -158,11 +158,16 @@ Phaser.TextureManager.prototype = {
 
     get: function (key)
     {
+        if (key === undefined) { key = '__DEFAULT'; }
+
         if (this.list[key])
         {
             return this.list[key];
         }
-
+        else
+        {
+            return this.list['__MISSING'];
+        }
     },
 
     getFrame: function (key, frame)

@@ -31,8 +31,8 @@
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
 */
-Phaser.Cache = function (game) {
-
+Phaser.Cache = function (game)
+{
     /**
     * @property {Phaser.Game} game - Local reference to game.
     */
@@ -115,7 +115,6 @@ Phaser.Cache = function (game) {
 
     this.addDefaultImage();
     this.addMissingImage();
-
 };
 
 /**
@@ -312,65 +311,43 @@ Phaser.Cache.prototype = {
 
         this._resolveURL(url, img);
 
-        //  TODO Remove this
-        if (key === '__default')
-        {
-            Phaser.Cache.DEFAULT = this.game.textures.getFrame('__default');
-        }
-        else if (key === '__missing')
-        {
-            Phaser.Cache.MISSING = this.game.textures.getFrame('__missing');
-        }
-
         return img;
-
     },
 
     /**
     * Adds a default image to be used in special cases such as WebGL Filters.
-    * It uses the special reserved key of `__default`.
+    * It uses the special reserved key of `__DEFAULT`.
     * This method is called automatically when the Cache is created.
     * This image is skipped when `Cache.destroy` is called due to its internal requirements.
     *
     * @method Phaser.Cache#addDefaultImage
     * @protected
     */
-    addDefaultImage: function () {
-
+    addDefaultImage: function ()
+    {
         var img = new Image();
 
-        img.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgAQMAAABJtOi3AAAAA1BMVEX///+nxBvIAAAAAXRSTlMAQObYZgAAABVJREFUeF7NwIEAAAAAgKD9qdeocAMAoAABm3DkcAAAAABJRU5ErkJggg==";
+        img.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgAQMAAABJtOi3AAAAA1BMVEX///+nxBvIAAAAAXRSTlMAQObYZgAAABVJREFUeF7NwIEAAAAAgKD9qdeocAMAoAABm3DkcAAAAABJRU5ErkJggg==';
 
-        var obj = this.addImage('__default', null, img);
-
-        //  Because we don't want to invalidate the sprite batch for an invisible texture
-        // obj.base.skipRender = true;
-
-        //  Make it easily available within the rest of Phaser / Pixi
-        // Phaser.Cache.DEFAULT = new PIXI.Texture(obj.base);
-
+        this.game.textures.addImage('__DEFAULT', img);
     },
 
     /**
     * Adds an image to be used when a key is wrong / missing.
-    * It uses the special reserved key of `__missing`.
+    * It uses the special reserved key of `__MISSING`.
     * This method is called automatically when the Cache is created.
     * This image is skipped when `Cache.destroy` is called due to its internal requirements.
     *
     * @method Phaser.Cache#addMissingImage
     * @protected
     */
-    addMissingImage: function () {
-
+    addMissingImage: function ()
+    {
         var img = new Image();
 
-        img.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAJ9JREFUeNq01ssOwyAMRFG46v//Mt1ESmgh+DFmE2GPOBARKb2NVjo+17PXLD8a1+pl5+A+wSgFygymWYHBb0FtsKhJDdZlncG2IzJ4ayoMDv20wTmSMzClEgbWYNTAkQ0Z+OJ+A/eWnAaR9+oxCF4Os0H8htsMUp+pwcgBBiMNnAwF8GqIgL2hAzaGFFgZauDPKABmowZ4GL369/0rwACp2yA/ttmvsQAAAABJRU5ErkJggg==";
+        img.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAJ9JREFUeNq01ssOwyAMRFG46v//Mt1ESmgh+DFmE2GPOBARKb2NVjo+17PXLD8a1+pl5+A+wSgFygymWYHBb0FtsKhJDdZlncG2IzJ4ayoMDv20wTmSMzClEgbWYNTAkQ0Z+OJ+A/eWnAaR9+oxCF4Os0H8htsMUp+pwcgBBiMNnAwF8GqIgL2hAzaGFFgZauDPKABmowZ4GL369/0rwACp2yA/ttmvsQAAAABJRU5ErkJggg==';
 
-        var obj = this.addImage('__missing', null, img);
-
-        //  Make it easily available within the rest of Phaser / Pixi
-        // Phaser.Cache.MISSING = new PIXI.Texture(obj.base);
-
+        this.game.textures.addImage('__MISSING', img);
     },
 
     /**
