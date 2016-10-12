@@ -152,6 +152,39 @@ Phaser.Component.Data.prototype = {
         }
     },
 
+    merge: function (data)
+    {
+        //  Merge data from another component into this one
+    },
+
+    clone: function (data)
+    {
+        //  Export this Data component
+    },
+
+    remove: function (key)
+    {
+        if (!this._frozen && this.list.hasOwnProperty(key))
+        {
+            delete this.list[key];
+
+            this.removeListeners(key);
+        }
+    },
+
+    removeListeners: function (key)
+    {
+        if (this._beforeCallbacks.hasOwnProperty(key))
+        {
+            delete this._beforeCallbacks[key];
+        }
+
+        if (this._afterCallbacks.hasOwnProperty(key))
+        {
+            delete this._afterCallbacks[key];
+        }
+    },
+
     //  Gets the data associated with the given 'key', deletes it from this Data store, then returns it.
     pop: function (key)
     {
@@ -162,6 +195,8 @@ Phaser.Component.Data.prototype = {
             data = this.list[key];
 
             delete this.list[key];
+
+            this.removeListeners(key);
         }
 
         return data;
