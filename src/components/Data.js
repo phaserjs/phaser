@@ -10,9 +10,9 @@
 *
 * @class
 */
-Phaser.Component.Data = function (gameObject)
+Phaser.Component.Data = function (parent)
 {
-    this.gameObject = gameObject;
+    this.parent = parent;
 
     this.list = {};
 
@@ -74,7 +74,7 @@ Phaser.Component.Data.prototype = {
         {
             listener = this._beforeCallbacks[key];
 
-            result = listener.callback.call(listener.scope, this.gameObject, key, data);
+            result = listener.callback.call(listener.scope, this.parent, key, data);
 
             if (result !== undefined)
             {
@@ -89,7 +89,7 @@ Phaser.Component.Data.prototype = {
         {
             listener = this._afterCallbacks[key];
 
-            result = listener.callback.call(listener.scope, this.gameObject, key, data);
+            result = listener.callback.call(listener.scope, this.parent, key, data);
 
             if (result !== undefined)
             {
@@ -136,7 +136,7 @@ Phaser.Component.Data.prototype = {
     */
     each: function (callback, scope)
     {
-        var args = [ this.gameObject, null, undefined ];
+        var args = [ this.parent, null, undefined ];
 
         for (var i = 1; i < arguments.length; i++)
         {
@@ -152,14 +152,18 @@ Phaser.Component.Data.prototype = {
         }
     },
 
-    merge: function (data)
+    merge: function (data, overwrite)
     {
-        //  Merge data from another component into this one
-    },
+        if (overwrite === undefined) { overwrite = true; }
 
-    clone: function (data)
-    {
-        //  Export this Data component
+        //  Merge data from another component into this one
+        for (var key in data)
+        {
+            if (overwrite || (!overwrite && !this.list.hasOwnProperty(key)))
+            {
+                this.list[key] = data;
+            }
+        }
     },
 
     remove: function (key)
