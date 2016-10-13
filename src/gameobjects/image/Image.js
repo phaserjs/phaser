@@ -19,7 +19,7 @@
 */
 Phaser.GameObject.Image = function (game, x, y, key, frame)
 {
-    Phaser.Components.BaseTransform.call(this, x, y);
+    Phaser.Component.BaseTransform.call(this, x, y);
 
     this.game = game;
 
@@ -29,14 +29,27 @@ Phaser.GameObject.Image = function (game, x, y, key, frame)
     */
     this.type = Phaser.IMAGE;
 
+    this.parent = null;
+
     this.texture = game.textures.get(key);
 
     this.frame = this.texture.get(frame);
 
+    //  Allows you to turn off a GO from rendering, but still render its children
+    this.skipRender = (key === undefined);
+
+    this.visible = true;
+
     this.data = new Phaser.Component.Data(this);
+
+    //  Temporary for now?
+    this.alpha = 1;
+    this.blendMode = Phaser.blendModes.NORMAL;
+    this.scaleMode = Phaser.scaleModes.DEFAULT;
+    this.exists = true;
 };
 
-Phaser.GameObject.Image.prototype = Object.create(Phaser.Components.BaseTransform.prototype);
+Phaser.GameObject.Image.prototype = Object.create(Phaser.Component.BaseTransform.prototype);
 Phaser.GameObject.Image.prototype.constructor = Phaser.GameObject.Image;
 
 /**
@@ -47,4 +60,49 @@ Phaser.GameObject.Image.prototype.constructor = Phaser.GameObject.Image;
 */
 Phaser.GameObject.Image.prototype.preUpdate = function ()
 {
+    // this.transform.update();
 };
+
+Phaser.GameObject.Image.prototype.update = function ()
+{
+};
+
+Phaser.GameObject.Image.prototype.postUpdate = function ()
+{
+};
+
+Object.defineProperties(Phaser.GameObject.Image.prototype, {
+
+    width: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return this.transform._scaleX * this.frame.realWidth;
+        },
+
+        set: function (value)
+        {
+            this.scaleX = value / this.frame.realWidth;
+        }
+
+    },
+
+    height: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return this.transform._scaleY * this.frame.realHeight;
+        },
+
+        set: function (value)
+        {
+            this.scaleY = value / this.frame.realHeight;
+        }
+
+    }
+
+});
