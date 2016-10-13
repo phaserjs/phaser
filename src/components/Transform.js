@@ -16,6 +16,8 @@ Phaser.Component.Transform = function (gameObject, x, y, scaleX, scaleY)
     if (scaleX === undefined) { scaleX = 1; }
     if (scaleY === undefined) { scaleY = 1; }
 
+    this.name = '';
+
     //  Local Transform
     //  a = scale X
     //  b = shear Y
@@ -40,6 +42,8 @@ Phaser.Component.Transform = function (gameObject, x, y, scaleX, scaleY)
     this._rotation = 0;
     this._pivotX = 0;
     this._pivotY = 0;
+    this._anchorX = 0;
+    this._anchorY = 0;
 
     this._worldRotation = 0;
     this._worldScaleX = scaleX;
@@ -49,7 +53,7 @@ Phaser.Component.Transform = function (gameObject, x, y, scaleX, scaleY)
 
     this.parent = null;
 
-     // Optional if Flat Display List?
+    // Optional if Flat Display List
     // this.children = new Children(this);
 
     // if (parent)
@@ -62,6 +66,56 @@ Phaser.Component.Transform.prototype.constructor = Phaser.Component.Transform;
 
 Phaser.Component.Transform.prototype = {
 
+    setPosition: function (x, y)
+    {
+        if (y === undefined) { y = x; }
+
+        this._posX = x;
+        this._posY = y;
+
+        return this.update();
+    },
+
+    setScale: function (x, y)
+    {
+        if (y === undefined) { y = x; }
+
+        this._scaleX = x;
+        this._scaleY = y;
+
+        this.updateCache();
+
+        return this.update();
+    },
+
+    setPivot: function (x, y)
+    {
+        if (y === undefined) { y = x; }
+
+        this._pivotX = x;
+        this._pivotY = y;
+
+        return this.update();
+    },
+
+    setAnchor: function (x, y)
+    {
+        if (y === undefined) { y = x; }
+
+        this._anchorX = x;
+        this._anchorY = y;
+
+        return this.update();
+    },
+
+    setRotation: function (rotation)
+    {
+        this.rotation = rotation;
+
+        return this.update();
+    },
+
+    //  Pretty sure we can get rid of this, and move the dirty logic into the update method
     setContextTransform: function (context)
     {
         //  Have they modified a local property? (like x, y, scale, etc)
@@ -224,6 +278,11 @@ Phaser.Component.Transform.prototype = {
 
     update: function ()
     {
+        if (!this.dirty)
+        {
+            return;
+        }
+
         if (this.parent)
         {
             this.updateFromParent();
@@ -235,7 +294,7 @@ Phaser.Component.Transform.prototype = {
 
         //  Update children
 
-        this.children.update();
+        // this.children.update();
 
         this.dirty = false;
 
@@ -251,3 +310,75 @@ Phaser.Component.Transform.prototype = {
     }
 
 };
+
+Object.defineProperties(Phaser.Component.Transform.prototype, {
+
+    //  GLOBAL read-only properties from here on
+    //  Need *all* parents taken into account to get the correct values
+
+    worldRotation: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            this.updateAncestors();
+
+            return this._worldRotation;
+        }
+
+    },
+
+    worldScaleX: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            this.updateAncestors();
+
+            return this._worldScaleX;
+        }
+
+    },
+
+    worldScaleY: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            this.updateAncestors();
+
+            return this._worldScaleY;
+        }
+
+    },
+
+    worldX: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            this.updateAncestors();
+
+            return this.world.tx;
+        }
+
+    },
+
+    worldY: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            this.updateAncestors();
+
+            return this.world.ty;
+        }
+
+    }
+
+});

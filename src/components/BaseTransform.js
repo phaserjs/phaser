@@ -17,52 +17,6 @@ Phaser.Component.BaseTransform = function (x, y)
 
 Phaser.Component.BaseTransform.prototype.constructor = Phaser.Component.BaseTransform;
 
-Phaser.Component.BaseTransform.prototype = {
-
-    //  Move these into the Transform class?
-    //  As you can access them all via the getters and setters
-
-    setPosition: function (x, y)
-    {
-        if (y === undefined) { y = x; }
-
-        this.transform._posX = x;
-        this.transform._posY = y;
-
-        return this.transform.update();
-    },
-
-    setScale: function (x, y)
-    {
-        if (y === undefined) { y = x; }
-
-        this.transform._scaleX = x;
-        this.transform._scaleY = y;
-
-        this.transform.updateCache();
-
-        return this.transform.update();
-    },
-
-    setPivot: function (x, y)
-    {
-        if (y === undefined) { y = x; }
-
-        this.transform._pivotX = x;
-        this.transform._pivotY = y;
-
-        return this.transform.update();
-    },
-
-    setRotation: function (rotation)
-    {
-        this.transform.rotation = rotation;
-
-        return this.transform.update();
-    }
-
-};
-
 Object.defineProperties(Phaser.Component.BaseTransform.prototype, {
 
     x: {
@@ -95,6 +49,25 @@ Object.defineProperties(Phaser.Component.BaseTransform.prototype, {
         {
             this.transform._posY = value;
             this.transform.dirty = true;
+        }
+
+    },
+
+    scale: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return this.transform._scaleX;
+        },
+
+        set: function (value)
+        {
+            this.transform._scaleX = value;
+            this.transform._scaleY = value;
+            this.transform.dirty = true;
+            this.transform.updateCache();
         }
 
     },
@@ -135,6 +108,55 @@ Object.defineProperties(Phaser.Component.BaseTransform.prototype, {
 
     },
 
+    anchor: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return this.transform._anchorX;
+        },
+
+        set: function (value)
+        {
+            this.transform._anchorX = value;
+            this.transform._anchorY = value;
+        }
+
+    },
+
+    anchorX: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return this.transform._anchorX;
+        },
+
+        set: function (value)
+        {
+            this.transform._anchorX = value;
+        }
+
+    },
+
+    anchorY: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return this.transform._anchorY;
+        },
+
+        set: function (value)
+        {
+            this.transform._anchorY = value;
+        }
+
+    },
+
     pivotX: {
 
         enumerable: true,
@@ -171,6 +193,22 @@ Object.defineProperties(Phaser.Component.BaseTransform.prototype, {
 
     },
 
+    angle: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return Phaser.Math.wrapAngle(this.rotation * Phaser.Math.RAD_TO_DEG);
+        },
+
+        set: function (value)
+        {
+            this.rotation = Phaser.Math.wrapAngle(value) * Phaser.Math.DEG_TO_RAD;
+        }
+
+    },
+
     rotation: {
 
         enumerable: true,
@@ -201,74 +239,6 @@ Object.defineProperties(Phaser.Component.BaseTransform.prototype, {
             {
                 this.transform.hasLocalRotation = false;
             }
-        }
-
-    },
-
-    //  GLOBAL read-only properties from here on
-    //  Need *all* parents taken into account to get the correct values
-
-    worldRotation: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            this.transform.updateAncestors();
-
-            return this.transform._worldRotation;
-        }
-
-    },
-
-    worldScaleX: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            this.transform.updateAncestors();
-
-            return this.transform._worldScaleX;
-        }
-
-    },
-
-    worldScaleY: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            this.transform.updateAncestors();
-
-            return this.transform._worldScaleY;
-        }
-
-    },
-
-    worldX: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            this.transform.updateAncestors();
-
-            return this.transform.world.tx;
-        }
-
-    },
-
-    worldY: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            this.transform.updateAncestors();
-
-            return this.transform.world.ty;
         }
 
     }
