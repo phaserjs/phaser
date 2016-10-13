@@ -16,9 +16,9 @@ Phaser.Renderer.Canvas.GameObjects.Image = {
         var frame = src.frame;
         var source = frame.source;
 
-        //  Skip render?
+        //  Skip rendering?
 
-        if (!src.visible || !src.alpha || !src.renderable || !frame.cutWidth || !frame.cutHeight)
+        if (src.skipRender || !src.visible || !src.alpha || !frame.cutWidth || !frame.cutHeight)
         {
             return;
         }
@@ -31,14 +31,14 @@ Phaser.Renderer.Canvas.GameObjects.Image = {
             renderer.context.globalCompositeOperation = renderer.blendModes[renderer.currentBlendMode];
         }
 
-        //  Alpha
+        //  Alpha (World Alpha?)
 
-        if (src.worldAlpha !== renderer.context.globalAlpha)
+        if (src.alpha !== renderer.context.globalAlpha)
         {
-            renderer.context.globalAlpha = src.worldAlpha;
+            renderer.context.globalAlpha = src.alpha;
         }
 
-        //  Smoothing (should this be a Game Object, or Frame/Texture level property?)
+        //  Smoothing (should this be a Game Object, or Frame / Texture level property?)
 
         if (source.scaleMode !== renderer.currentScaleMode)
         {
@@ -46,12 +46,12 @@ Phaser.Renderer.Canvas.GameObjects.Image = {
             renderer.context[renderer.smoothProperty] = (source.scaleMode === Phaser.scaleModes.LINEAR);
         }
 
-        var wt = src.worldTransform;
+        var wt = src.transform.world;
 
         var resolution = source.resolution / renderer.game.resolution;
 
-        var dx = frame.x - (src.anchor.x * frame.width);
-        var dy = frame.y - (src.anchor.y * frame.height);
+        var dx = frame.x - (src.anchorX * frame.width);
+        var dy = frame.y - (src.anchorY * frame.height);
 
         var tx = (wt.tx * renderer.game.resolution) + renderer.game.camera._shake.x;
         var ty = (wt.ty * renderer.game.resolution) + renderer.game.camera._shake.y;
