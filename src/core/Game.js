@@ -608,8 +608,6 @@ Phaser.Game.prototype = {
 
         this.isBooted = true;
 
-        // PIXI.game = this;
-
         this.math = Phaser.Math;
 
         this.scale = new Phaser.ScaleManager(this, this._width, this._height);
@@ -645,15 +643,15 @@ Phaser.Game.prototype = {
         this.sound.boot();
         this.state.boot();
 
-        if (this.config['enableDebug'])
-        {
-            this.debug = new Phaser.Utils.Debug(this);
-            this.debug.boot();
-        }
-        else
-        {
+        // if (this.config['enableDebug'])
+        // {
+        //     this.debug = new Phaser.Utils.Debug(this);
+        //     this.debug.boot();
+        // }
+        // else
+        // {
             this.debug = { preUpdate: function () {}, update: function () {}, reset: function () {} };
-        }
+        // }
 
         this.showDebugHeader();
 
