@@ -714,10 +714,10 @@ Phaser.StateManager.prototype = {
             {
                 if (this.game.renderType === Phaser.CANVAS)
                 {
-                    this.game.context.save();
+                    // this.game.context.save();
                     this.game.context.setTransform(1, 0, 0, 1, 0, 0);
                     this.onRenderCallback.call(this.callbackContext, this.game);
-                    this.game.context.restore();
+                    // this.game.context.restore();
                 }
                 else
                 {
