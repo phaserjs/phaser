@@ -8,10 +8,10 @@ Phaser.GameObject.Image.FACTORY_KEY = 'image';
 
 /**
 * Create a new `Image` object.
-* 
+*
 * An Image is a light-weight object you can use to display anything that doesn't need physics or animation.
-* 
-* It can still rotate, scale, crop and receive input events. 
+*
+* It can still rotate, scale, crop and receive input events.
 * This makes it perfect for logos, backgrounds, simple buttons and other non-Sprite graphics.
 *
 * @method Phaser.GameObject.Factory#image

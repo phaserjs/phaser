@@ -19,9 +19,9 @@
 */
 Phaser.GameObject.Image = function (game, x, y, key, frame)
 {
-    Phaser.Component.BaseTransform.call(this, x, y);
-
     this.game = game;
+
+    Phaser.Component.BaseTransform.call(this, x, y);
 
     /**
     * @property {number} type - The const type of this object.
@@ -29,13 +29,13 @@ Phaser.GameObject.Image = function (game, x, y, key, frame)
     */
     this.type = Phaser.IMAGE;
 
+    this.name = '';
+
     this.parent = null;
 
     this.texture = game.textures.get(key);
 
     this.frame = this.texture.get(frame);
-
-    this.children = new Phaser.Component.Children(this);
 
     //  Allows you to turn off a GO from rendering, but still render its children
     this.skipRender = (key === undefined);
@@ -62,8 +62,7 @@ Phaser.GameObject.Image.prototype.constructor = Phaser.GameObject.Image;
 */
 Phaser.GameObject.Image.prototype.preUpdate = function ()
 {
-    this.transform.update();
-    // this.children.update();
+    // this.transform.update();
 };
 
 Phaser.GameObject.Image.prototype.update = function ()

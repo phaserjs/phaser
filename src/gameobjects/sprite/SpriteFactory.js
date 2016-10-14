@@ -25,7 +25,7 @@ Phaser.GameObject.Sprite.FACTORY_ADD = function (x, y, key, frame, group)
 {
     if (group === undefined) { group = this.world; }
 
-    return group.create(x, y, key, frame);
+    return group.children.add(new Phaser.GameObject.Sprite(this.game, x, y, key, frame));
 };
 
 /**

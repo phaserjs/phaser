@@ -8,8 +8,7 @@
 Phaser.Renderer.Canvas.GameObjects.Sprite = {
 
     TYPES: [
-        Phaser.GameObject.Sprite.prototype,
-        PIXI.Sprite.prototype
+        Phaser.GameObject.Sprite.prototype
     ],
 
     render: function (renderer, src)
@@ -19,7 +18,7 @@ Phaser.Renderer.Canvas.GameObjects.Sprite = {
 
         //  Skip render?
 
-        if (!src.visible || !src.alpha || !src.renderable || !frame.cutWidth || !frame.cutHeight)
+        if (src.skipRender || !src.visible || !src.alpha || !frame.cutWidth || !frame.cutHeight)
         {
             return;
         }
@@ -32,14 +31,14 @@ Phaser.Renderer.Canvas.GameObjects.Sprite = {
             renderer.context.globalCompositeOperation = renderer.blendModes[renderer.currentBlendMode];
         }
 
-        //  Alpha
+        //  Alpha (World Alpha?)
 
-        if (src.worldAlpha !== renderer.context.globalAlpha)
+        if (src.alpha !== renderer.context.globalAlpha)
         {
-            renderer.context.globalAlpha = src.worldAlpha;
+            renderer.context.globalAlpha = src.alpha;
         }
 
-        //  Smoothing (should this be a Game Object, or Frame/Texture level property?)
+        //  Smoothing (should this be a Game Object, or Frame / Texture level property?)
 
         if (source.scaleMode !== renderer.currentScaleMode)
         {
@@ -47,12 +46,12 @@ Phaser.Renderer.Canvas.GameObjects.Sprite = {
             renderer.context[renderer.smoothProperty] = (source.scaleMode === Phaser.scaleModes.LINEAR);
         }
 
-        var wt = src.worldTransform;
+        var wt = src.transform.world;
 
         var resolution = source.resolution / renderer.game.resolution;
 
-        var dx = frame.x - (src.anchor.x * frame.width);
-        var dy = frame.y - (src.anchor.y * frame.height);
+        var dx = frame.x - (src.anchorX * frame.width);
+        var dy = frame.y - (src.anchorY * frame.height);
 
         var tx = (wt.tx * renderer.game.resolution) + renderer.game.camera._shake.x;
         var ty = (wt.ty * renderer.game.resolution) + renderer.game.camera._shake.y;
@@ -70,6 +69,8 @@ Phaser.Renderer.Canvas.GameObjects.Sprite = {
         var cw = frame.cutWidth;
         var ch = frame.cutHeight;
 
+        renderer.context.setTransform(wt.a, wt.b, wt.c, wt.d, tx, ty);
+
         //  Does this Sprite have a mask?
 
         if (src._mask)
@@ -77,9 +78,14 @@ Phaser.Renderer.Canvas.GameObjects.Sprite = {
             renderer.pushMask(src._mask);
         }
 
-        renderer.context.setTransform(wt.a, wt.b, wt.c, wt.d, tx, ty);
-
         renderer.context.drawImage(source.image, frame.cutX, frame.cutY, cw, ch, dx, dy, cw / resolution, ch / resolution);
+
+        for (var i = 0; i < src.children.list.length; i++)
+        {
+            var child = src.children.list[i];
+
+            child.render(renderer, child);
+        }
 
         /*
         //  Move this to either the Renderer, or the Texture Manager, but not here (as it's repeated all over the place)
@@ -120,13 +126,6 @@ Phaser.Renderer.Canvas.GameObjects.Sprite = {
             renderer.context.drawImage(src.tintedTexture, 0, 0, cw, ch, dx, dy, cw / resolution, ch / resolution);
         }
         */
-
-        for (var i = 0; i < src.children.length; i++)
-        {
-            var child = src.children[i];
-
-            child.render(child);
-        }
 
         if (src._mask)
         {

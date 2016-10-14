@@ -73,14 +73,6 @@ Phaser.Renderer.Canvas.GameObjects.Image = {
 
         renderer.context.drawImage(source.image, frame.cutX, frame.cutY, cw, ch, dx, dy, cw / resolution, ch / resolution);
 
-        //  TEMP TEST!
-        for (var i = 0; i < src.children.list.length; i++)
-        {
-            var child = src.children.list[i];
-
-            child.render(renderer, child);
-        }
-
         /*
         //  Move this to either the Renderer, or the Texture Manager, but not here (as it's repeated all over the place)
         if (src.texture.rotated)

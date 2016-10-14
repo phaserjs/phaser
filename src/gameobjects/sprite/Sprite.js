@@ -13,28 +13,7 @@
 *
 * @class Phaser.GameObject.Sprite
 * @constructor
-* @extends PIXI.Sprite
-* @extends Phaser.Component.Core
-* @extends Phaser.Component.Angle
-* @extends Phaser.Component.Animation
-* @extends Phaser.Component.AutoCull
-* @extends Phaser.Component.Bounds
-* @extends Phaser.Component.BringToTop
-* @extends Phaser.Component.Crop
-* @extends Phaser.Component.Delta
-* @extends Phaser.Component.Destroy
-* @extends Phaser.Component.FixedToCamera
-* @extends Phaser.Component.Health
-* @extends Phaser.Component.InCamera
-* @extends Phaser.Component.InputEnabled
-* @extends Phaser.Component.InWorld
-* @extends Phaser.Component.LifeSpan
-* @extends Phaser.Component.LoadTexture
-* @extends Phaser.Component.Overlap
-* @extends Phaser.Component.PhysicsBody
-* @extends Phaser.Component.Reset
-* @extends Phaser.Component.ScaleMinMax
-* @extends Phaser.Component.Smoothed
+* @extends Phaser.Components.BaseTransform
 * @param {Phaser.Game} game - A reference to the currently running game.
 * @param {number} x - The x coordinate (in world space) to position the Sprite at.
 * @param {number} y - The y coordinate (in world space) to position the Sprite at.
@@ -43,8 +22,9 @@
 */
 Phaser.GameObject.Sprite = function (game, x, y, key, frame)
 {
-    x = x || 0;
-    y = y || 0;
+    this.game = game;
+
+    Phaser.Component.BaseTransform.call(this, x, y);
 
     /**
     * @property {number} type - The const type of this object.
@@ -58,56 +38,84 @@ Phaser.GameObject.Sprite = function (game, x, y, key, frame)
     */
     this.physicsType = Phaser.SPRITE;
 
-    PIXI.Sprite.call(this, Phaser.Cache.DEFAULT);
+    this.name = '';
 
-    Phaser.Component.Core.init.call(this, game, x, y, key, frame);
+    this.parent = null;
 
+    this.texture = game.textures.get(key);
+
+    this.frame = this.texture.get(frame);
+
+    this.children = new Phaser.Component.Children(this);
+
+    //  Allows you to turn off a GO from rendering, but still render its children
+    this.skipRender = (key === undefined);
+
+    this.visible = true;
+
+    this.data = new Phaser.Component.Data(this);
+
+    //  Temporary for now?
+    this.alpha = 1;
+    this.blendMode = Phaser.blendModes.NORMAL;
+    this.scaleMode = Phaser.scaleModes.DEFAULT;
+    this.exists = true;
 };
 
-Phaser.GameObject.Sprite.prototype = Object.create(PIXI.Sprite.prototype);
+Phaser.GameObject.Sprite.prototype = Object.create(Phaser.Component.BaseTransform.prototype);
 Phaser.GameObject.Sprite.prototype.constructor = Phaser.GameObject.Sprite;
-
-Phaser.Component.Core.install.call(Phaser.GameObject.Sprite.prototype, [
-    'Angle',
-    'Animation',
-    'AutoCull',
-    'Bounds',
-    'BringToTop',
-    'Crop',
-    'Delta',
-    'Destroy',
-    'FixedToCamera',
-    'Health',
-    'InCamera',
-    'InputEnabled',
-    'InWorld',
-    'LifeSpan',
-    'Overlap',
-    'PhysicsBody',
-    'Reset',
-    'ScaleMinMax',
-    'Smoothed'
-]);
-
-Phaser.GameObject.Sprite.prototype.preUpdatePhysics = Phaser.Component.PhysicsBody.preUpdate;
-Phaser.GameObject.Sprite.prototype.preUpdateLifeSpan = Phaser.Component.LifeSpan.preUpdate;
-Phaser.GameObject.Sprite.prototype.preUpdateInWorld = Phaser.Component.InWorld.preUpdate;
-Phaser.GameObject.Sprite.prototype.preUpdateCore = Phaser.Component.Core.preUpdate;
 
 /**
 * Automatically called by World.preUpdate.
 *
-* @method
-* @memberof Phaser.GameObject.Sprite
-* @return {boolean} True if the Sprite was rendered, otherwise false.
+* @method Phaser.Sprite#preUpdate
+* @memberof Phaser.Sprite
 */
-Phaser.GameObject.Sprite.prototype.preUpdate = function () {
+Phaser.GameObject.Sprite.prototype.preUpdate = function ()
+{
+    // this.transform.update();
+};
 
-    if (!this.preUpdatePhysics() || !this.preUpdateLifeSpan() || !this.preUpdateInWorld())
-    {
-        return false;
+Phaser.GameObject.Sprite.prototype.update = function ()
+{
+};
+
+Phaser.GameObject.Sprite.prototype.postUpdate = function ()
+{
+};
+
+Object.defineProperties(Phaser.GameObject.Sprite.prototype, {
+
+    width: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return this.transform._scaleX * this.frame.realWidth;
+        },
+
+        set: function (value)
+        {
+            this.scaleX = value / this.frame.realWidth;
+        }
+
+    },
+
+    height: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return this.transform._scaleY * this.frame.realHeight;
+        },
+
+        set: function (value)
+        {
+            this.scaleY = value / this.frame.realHeight;
+        }
+
     }
 
-    return this.preUpdateCore();
-
-};
+});
