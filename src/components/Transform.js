@@ -51,7 +51,9 @@ Phaser.Component.Transform = function (gameObject, x, y, scaleX, scaleY)
     this._worldScaleX = scaleX;
     this._worldScaleY = scaleY;
 
-    this._dirty = false;
+    this._dirty = true;
+    
+    this.game.updates.add(this);
 
     //  The parent Transform (NOT the parent GameObject, although very often they are related)
     this.parent = null;
@@ -401,7 +403,7 @@ Object.defineProperties(Phaser.Component.Transform.prototype, {
             {
                 if (!this._dirty)
                 {
-                    this.game.transforms.add(this);
+                    this.game.updates.add(this);
                 }
 
                 this._dirty = true;
