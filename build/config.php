@@ -179,9 +179,10 @@ EOL;
     <script src="$path/src/gameobjects/Factory.js"></script>
     <script src="$path/src/gameobjects/GameObjectCreator.js"></script>
 
-    <script src="$path/src/gameobjects/stage/Stage.js"></script>
-    <script src="$path/src/gameobjects/stage/StageCanvasRenderer.js"></script>
-    <script src="$path/src/gameobjects/stage/StageWebGLRenderer.js"></script>
+    <script src="$path/src/gameobjects/container/Container.js"></script>
+    <script src="$path/src/gameobjects/container/ContainerFactory.js"></script>
+    <script src="$path/src/gameobjects/container/ContainerCanvasRenderer.js"></script>
+    <script src="$path/src/gameobjects/container/ContainerWebGLRenderer.js"></script>
 
     <script src="$path/src/gameobjects/sprite/Sprite.js"></script>
     <script src="$path/src/gameobjects/sprite/SpriteFactory.js"></script>
@@ -203,9 +204,9 @@ EOL;
 
     <script src="$path/src/gameobjects/particle/Particle.js"></script>
 
-    <script src="$path/src/gameobjects/container/Canvas.js"></script>
-    <script src="$path/src/gameobjects/container/WebGL.js"></script>
-
+    <script src="$path/src/gameobjects/stage/Stage.js"></script>
+    <script src="$path/src/gameobjects/stage/StageCanvasRenderer.js"></script>
+    <script src="$path/src/gameobjects/stage/StageWebGLRenderer.js"></script>
 
 
 
