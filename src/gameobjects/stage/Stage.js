@@ -20,7 +20,6 @@ Phaser.Stage = function (game) {
     */
     this.game = game;
 
-    // PIXI.DisplayObjectContainer.call(this);
     Phaser.GameObject.Container.call(this, game);
 
     /**
@@ -80,14 +79,14 @@ Phaser.Stage = function (game) {
     /**
     * @property {number} _bgColor - Stage background color object. Populated by setBackgroundColor.
     * @private
-    */
-    this._bgColor = { r: 0, g: 0, b: 0, a: 0, color: 0, rgba: '#000000' };
+    this._bgColor = { r: 255, g: 0, b: 255, a: 0, color: 0, rgba: 'rgba(0,0,0,0.1)' };
 
     if (!this.game.transparent)
     {
         //  transparent = 0,0,0,0 - otherwise r,g,b,1
-        this._bgColor.a = 1;
+        // this._bgColor.a = 1;
     }
+    */
 
     if (game.config)
     {
@@ -96,7 +95,6 @@ Phaser.Stage = function (game) {
 
 };
 
-// Phaser.Stage.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
 Phaser.Stage.prototype = Object.create(Phaser.GameObject.Container.prototype);
 Phaser.Stage.prototype.constructor = Phaser.Stage;
 
@@ -135,6 +133,8 @@ Phaser.Stage.prototype.boot = function () {
 
     this.checkVisibility();
 
+    this.setBackgroundColor('#000000');
+
 };
 
 /**
@@ -143,9 +143,9 @@ Phaser.Stage.prototype.boot = function () {
 *
 * @method Phaser.Stage#preUpdate
 */
-Phaser.Stage.prototype.preUpdate = function () {
-
-    this.transform.update();
+Phaser.Stage.prototype.preUpdate = function ()
+{
+    this.worldAlpha = this.alpha;
 
     this.currentRenderOrderID = 0;
 
@@ -204,23 +204,6 @@ Phaser.Stage.prototype.postUpdate = function () {
     }
 
     // this.updateTransform();
-
-};
-
-/**
-* Updates the transforms for all objects on the display list.
-* This overrides the Pixi default as we don't need the interactionManager, but do need the game property check.
-* 
-* @method Phaser.Stage#updateTransform
-*/
-Phaser.Stage.prototype.updateTransform = function () {
-
-    // this.worldAlpha = 1;
-
-    // for (var i = 0; i < this.children.length; i++)
-    // {
-    //     this.children[i].updateTransform();
-    // }
 
 };
 
@@ -334,10 +317,11 @@ Phaser.Stage.prototype.visibilityChange = function (event) {
 * @method Phaser.Stage#setBackgroundColor
 * @param {number|string} color - The color of the background.
 */
-Phaser.Stage.prototype.setBackgroundColor = function (color) {
+Phaser.Stage.prototype.setBackgroundColor = function (color)
+{
+    this.game.canvas.style.backgroundColor = color;
 
-    if (this.game.transparent) { return; }
-
+    /*
     Phaser.Color.valueToColor(color, this._bgColor);
     Phaser.Color.updateColor(this._bgColor);
 
@@ -346,6 +330,7 @@ Phaser.Stage.prototype.setBackgroundColor = function (color) {
     this._bgColor.g /= 255;
     this._bgColor.b /= 255;
     this._bgColor.a = 1;
+    */
 
 };
 
