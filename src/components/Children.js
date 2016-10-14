@@ -24,7 +24,7 @@ Phaser.Component.Children.prototype.constructor = Phaser.Component.Children;
 
 Phaser.Component.Children.prototype = {
 
-    add: function (child)
+    add: function (child, skipTransform)
     {
         if (child.parent === this)
         {
@@ -37,8 +37,7 @@ Phaser.Component.Children.prototype = {
 
         child.parent = this.gameObject;
 
-        //  Should this be done here?
-        if (this.gameObject.transform)
+        if (!skipTransform && this.gameObject.transform && child.transform)
         {
             this.gameObject.transform.add(child.transform);
         }
@@ -48,7 +47,7 @@ Phaser.Component.Children.prototype = {
         return child;
     },
 
-    addAt: function (child, index)
+    addAt: function (child, index, skipTransform)
     {
         if (this.list.length === 0)
         {
@@ -67,17 +66,22 @@ Phaser.Component.Children.prototype = {
             this.list.splice(index, 0, child);
         }
 
+        if (!skipTransform && this.gameObject.transform && child.transform)
+        {
+            this.gameObject.transform.add(child.transform);
+        }
+
         return child;
 
     },
 
-    addMultiple: function (children)
+    addMultiple: function (children, skipTransform)
     {
         if (Array.isArray(children))
         {
             for (var i = 0; i < children.length; i++)
             {
-                this.add(children[i]);
+                this.add(children[i], skipTransform);
             }
         }
 
@@ -237,7 +241,7 @@ Phaser.Component.Children.prototype = {
         return child;
     },
 
-    remove: function (child)
+    remove: function (child, skipTransform)
     {
         var index = this.list.indexOf(child);
 
@@ -246,12 +250,17 @@ Phaser.Component.Children.prototype = {
             child.parent = undefined;
 
             this.list.splice(index, 1);
+
+            if (!skipTransform && this.gameObject.transform && child.transform)
+            {
+                this.gameObject.transform.remove(child.transform);
+            }
         }
         
         return child;
     },
 
-    removeAt: function (index)
+    removeAt: function (index, skipTransform)
     {
         var child = this.list[index];
 
@@ -260,6 +269,11 @@ Phaser.Component.Children.prototype = {
             child.parent = undefined;
 
             this.children.splice(index, 1);
+
+            if (!skipTransform && this.gameObject.transform && child.transform)
+            {
+                this.gameObject.transform.remove(child.transform);
+            }
         }
 
         return child;
@@ -450,7 +464,7 @@ Phaser.Component.Children.prototype = {
     * @param {any} newChild - The child to be inserted into this group.
     * @return {any} Returns the oldChild that was replaced within this group.
     */
-    replace: function (oldChild, newChild)
+    replace: function (oldChild, newChild, skipTransform)
     {
         var index = this.getIndex(oldChild);
 
@@ -458,12 +472,12 @@ Phaser.Component.Children.prototype = {
         {
             if (newChild.parent)
             {
-                newChild.parent.remove(newChild);
+                newChild.parent.remove(newChild, skipTransform);
             }
 
-            this.remove(oldChild);
+            this.remove(oldChild, skipTransform);
 
-            this.addAt(newChild, index);
+            this.addAt(newChild, index, skipTransform);
 
             return oldChild;
         }
@@ -472,7 +486,7 @@ Phaser.Component.Children.prototype = {
     //  Swaps a child from another parent, with one from this parent.
     //  child1 = the child of THIS parent
     //  child2 = the child of the OTHER parent
-    exchange: function (child1, child2)
+    exchange: function (child1, child2, skipTransform)
     {
         if (child1 === child2 || child1.parent === child2.parent)
         {
@@ -489,13 +503,13 @@ Phaser.Component.Children.prototype = {
             throw new Error('Children.swap: Supplied objects must be children of parents');
         }
 
-        this.remove(child1);
+        this.remove(child1, skipTransform);
 
-        parentChildren.remove(child2);
+        parentChildren.remove(child2, skipTransform);
 
-        this.addAt(child2, index1);
+        this.addAt(child2, index1, skipTransform);
 
-        parentChildren.addAt(child1, index2);
+        parentChildren.addAt(child1, index2, skipTransform);
     },
 
     /**
@@ -519,9 +533,7 @@ Phaser.Component.Children.prototype = {
     */
     setAll: function (key, value)
     {
-        var i = this.list.length;
-
-        while (i--)
+        for (var i = 0; i < this.list.length; i++)
         {
             if (this.list[i])
             {
@@ -575,6 +587,17 @@ Phaser.Component.Children.prototype = {
         }
 
         return newParent;
+    },
+
+    preUpdate: function ()
+    {
+        for (var i = 0; i < this.list.length; i++)
+        {
+            if (this.list[i])
+            {
+                this.list[i].preUpdate();
+            }
+        }
     }
 
 };
