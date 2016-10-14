@@ -20,7 +20,8 @@ Phaser.Stage = function (game) {
     */
     this.game = game;
 
-    PIXI.DisplayObjectContainer.call(this);
+    // PIXI.DisplayObjectContainer.call(this);
+    Phaser.GameObject.Container.call(this, game);
 
     /**
     * @property {string} name - The name of this object.
@@ -43,14 +44,14 @@ Phaser.Stage = function (game) {
     * @property {boolean} exists - If exists is true the Stage and all children are updated, otherwise it is skipped.
     * @default
     */
-    this.exists = true;
+    // this.exists = true;
 
     /**
     * @property {Phaser.Matrix} worldTransform - Current transform of the object based on world (parent) factors
     * @private
     * @readOnly
     */
-    this.worldTransform = new Phaser.Matrix();
+    // this.worldTransform = new Phaser.Matrix();
 
     /**
     * @property {Phaser.Stage} stage - The stage reference (the Stage is its own stage)
@@ -95,7 +96,8 @@ Phaser.Stage = function (game) {
 
 };
 
-Phaser.Stage.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
+// Phaser.Stage.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
+Phaser.Stage.prototype = Object.create(Phaser.GameObject.Container.prototype);
 Phaser.Stage.prototype.constructor = Phaser.Stage;
 
 /**
@@ -143,12 +145,14 @@ Phaser.Stage.prototype.boot = function () {
 */
 Phaser.Stage.prototype.preUpdate = function () {
 
+    this.transform.update();
+
     this.currentRenderOrderID = 0;
 
     //  This can't loop in reverse, we need the renderOrderID to be in sequence
-    for (var i = 0; i < this.children.length; i++)
+    for (var i = 0; i < this.children.list.length; i++)
     {
-        this.children[i].preUpdate();
+        this.children.list[i].preUpdate();
     }
 
 };
@@ -161,11 +165,11 @@ Phaser.Stage.prototype.preUpdate = function () {
 Phaser.Stage.prototype.update = function () {
 
     //  Goes in reverse, because it's highly likely the child will destroy itself in `update`
-    var i = this.children.length;
+    var i = this.children.list.length;
 
     while (i--)
     {
-        this.children[i].update();
+        this.children.list[i].update();
     }
 
 };
@@ -179,6 +183,7 @@ Phaser.Stage.prototype.update = function () {
 */
 Phaser.Stage.prototype.postUpdate = function () {
 
+    /*
     //  Apply the camera shake, fade, bounds, etc
     this.game.camera.update();
 
@@ -191,13 +196,14 @@ Phaser.Stage.prototype.postUpdate = function () {
 
         this.game.camera.updateTarget();
     }
+    */
 
-    for (var i = 0; i < this.children.length; i++)
+    for (var i = 0; i < this.children.list.length; i++)
     {
-        this.children[i].postUpdate();
+        this.children.list[i].postUpdate();
     }
 
-    this.updateTransform();
+    // this.updateTransform();
 
 };
 
@@ -209,12 +215,12 @@ Phaser.Stage.prototype.postUpdate = function () {
 */
 Phaser.Stage.prototype.updateTransform = function () {
 
-    this.worldAlpha = 1;
+    // this.worldAlpha = 1;
 
-    for (var i = 0; i < this.children.length; i++)
-    {
-        this.children[i].updateTransform();
-    }
+    // for (var i = 0; i < this.children.length; i++)
+    // {
+    //     this.children[i].updateTransform();
+    // }
 
 };
 

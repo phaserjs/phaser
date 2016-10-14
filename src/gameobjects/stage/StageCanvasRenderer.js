@@ -17,22 +17,22 @@ Phaser.Renderer.Canvas.GameObjects.Stage = {
             return;
         }
 
-        if (src._mask)
-        {
-            renderer.pushMask(src._mask);
-        }
+        // if (src._mask)
+        // {
+        //     renderer.pushMask(src._mask);
+        // }
 
-        for (var i = 0; i < src.children.length; i++)
+        for (var i = 0; i < src.children.list.length; i++)
         {
-            var child = src.children[i];
+            var child = src.children.list[i];
 
             child.render(renderer, child);
         }
 
-        if (src._mask)
-        {
-            renderer.popMask();
-        }
+        // if (src._mask)
+        // {
+        //     renderer.popMask();
+        // }
 
     }
 
