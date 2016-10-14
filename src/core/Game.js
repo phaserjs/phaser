@@ -610,6 +610,13 @@ Phaser.Game.prototype = {
 
         this.math = Phaser.Math;
 
+        this.camera = {
+            _shake: {
+                x: 0,
+                y: 0
+            }
+        };
+
         this.scale = new Phaser.ScaleManager(this, this._width, this._height);
         this.stage = new Phaser.Stage(this);
 
@@ -617,7 +624,7 @@ Phaser.Game.prototype = {
 
         this.textures = new Phaser.TextureManager(this);
 
-        this.world = new Phaser.World(this);
+        // this.world = new Phaser.World(this);
 
         this.add = new Phaser.GameObject.Factory(this);
         this.add.boot();
@@ -637,7 +644,7 @@ Phaser.Game.prototype = {
 
         this.time.boot();
         this.stage.boot();
-        this.world.boot();
+        // this.world.boot();
         this.scale.boot();
         this.input.boot();
         this.sound.boot();
@@ -944,7 +951,7 @@ Phaser.Game.prototype = {
 
             this.scale.preUpdate();
             this.debug.preUpdate();
-            this.camera.preUpdate();
+            // this.camera.preUpdate();
             this.physics.preUpdate();
             this.state.preUpdate(timeStep);
             this.plugins.preUpdate(timeStep);
@@ -970,7 +977,7 @@ Phaser.Game.prototype = {
             this.debug.preUpdate();
         }
 
-        this.stage.updateTransform();
+        // this.stage.updateTransform();
 
     },
 
