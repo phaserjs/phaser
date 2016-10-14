@@ -33,6 +33,8 @@ Phaser.Renderer.Canvas = function (game)
      */
     this.clearBeforeRender = game.clearBeforeRender;
 
+    this.dirtyRender = true;
+
     /**
      * Whether the render view is transparent
      *
@@ -80,7 +82,7 @@ Phaser.Renderer.Canvas = function (game)
      * @property context
      * @type CanvasRenderingContext2D
      */
-    this.context = this.view.getContext('2d', { alpha: this.transparent });
+    this.context = this.view.getContext('2d', { alpha: true });
 
     this.smoothProperty = Phaser.Canvas.getSmoothingPrefix(this.context);
 
@@ -90,6 +92,7 @@ Phaser.Renderer.Canvas = function (game)
 
     this.blendModes = [ so, 'lighter', so, so, so, so, so, so, so, so, so, so, so, so, so, so, so ];
 
+    this.currentAlpha = 1;
     this.currentBlendMode = 0;
     this.currentScaleMode = 0;
 
@@ -183,20 +186,26 @@ Phaser.Renderer.Canvas.prototype = {
      */
     render: function (stage)
     {
-        //  this first setTransform, alpha, etc could all be set direct
-        //  from the Stage values - as they're the basis really
-
         this.context.setTransform(1, 0, 0, 1, 0, 0);
-        this.context.globalAlpha = 1;
-        this.context.globalCompositeOperation = 'source-over';
+
+        //  If the alpha or blend mode didn't change since the last render, then don't set them again
+        //  (saves 2 canvas ops)
+
+        if (this.currentAlpha !== 1)
+        {
+            this.context.globalAlpha = 1;
+        }
+
+        if (this.currentBlendMode !== 0)
+        {
+            this.context.globalCompositeOperation = 'source-over';
+        }
 
         this.currentBlendMode = 0;
         this.currentScaleMode = 0;
+        this.currentAlpha = 1;
 
         //  Add Pre-render hook
-
-        // this.renderSession.shakeX = this.game.camera._shake.x;
-        // this.renderSession.shakeY = this.game.camera._shake.y;
 
         //  Is this needed any longer?
         /*
@@ -209,15 +218,7 @@ Phaser.Renderer.Canvas.prototype = {
         
         if (this.clearBeforeRender)
         {
-            if (this.transparent)
-            {
-                this.context.clearRect(0, 0, this.width, this.height);
-            }
-            else if (stage._bgColor)
-            {
-                this.context.fillStyle = stage._bgColor.rgba;
-                this.context.fillRect(0, 0, this.width , this.height);
-            }
+            this.context.clearRect(0, 0, this.width, this.height);
         }
 
         stage.render(this, stage);
