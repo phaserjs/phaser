@@ -26,7 +26,7 @@ Phaser.GameObject.Image.FACTORY_ADD = function (x, y, key, frame, group)
 {
     if (group === undefined) { group = this.world; }
 
-    return group.add(new Phaser.GameObject.Image(this.game, x, y, key, frame));
+    return group.children.add(new Phaser.GameObject.Image(this.game, x, y, key, frame));
 };
 
 /**
