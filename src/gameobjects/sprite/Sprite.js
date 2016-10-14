@@ -55,10 +55,12 @@ Phaser.GameObject.Sprite = function (game, x, y, key, frame)
 
     this.data = new Phaser.Component.Data(this);
 
+    this.color = new Phaser.Component.Color(this);
+
     //  Temporary for now?
-    this.alpha = 1;
-    this.worldAlpha = 1;
-    this.blendMode = Phaser.blendModes.NORMAL;
+    // this.alpha = 1;
+    // this.worldAlpha = 1;
+    // this.blendMode = Phaser.blendModes.NORMAL;
     this.scaleMode = Phaser.scaleModes.DEFAULT;
     this.exists = true;
 };
@@ -74,10 +76,10 @@ Phaser.GameObject.Sprite.prototype.constructor = Phaser.GameObject.Sprite;
 */
 Phaser.GameObject.Sprite.prototype.preUpdate = function ()
 {
-    if (this.parent)
-    {
-        this.worldAlpha = this.alpha * this.parent.worldAlpha;
-    }
+    // if (this.parent)
+    // {
+    //     this.worldAlpha = this.alpha * this.parent.worldAlpha;
+    // }
 
     this.children.preUpdate();
 };
