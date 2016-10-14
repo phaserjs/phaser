@@ -57,6 +57,7 @@ Phaser.GameObject.Sprite = function (game, x, y, key, frame)
 
     //  Temporary for now?
     this.alpha = 1;
+    this.worldAlpha = 1;
     this.blendMode = Phaser.blendModes.NORMAL;
     this.scaleMode = Phaser.scaleModes.DEFAULT;
     this.exists = true;
@@ -73,7 +74,12 @@ Phaser.GameObject.Sprite.prototype.constructor = Phaser.GameObject.Sprite;
 */
 Phaser.GameObject.Sprite.prototype.preUpdate = function ()
 {
-    // this.transform.update();
+    if (this.parent)
+    {
+        this.worldAlpha = this.alpha * this.parent.worldAlpha;
+    }
+
+    this.children.preUpdate();
 };
 
 Phaser.GameObject.Sprite.prototype.update = function ()

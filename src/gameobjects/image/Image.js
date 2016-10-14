@@ -46,6 +46,7 @@ Phaser.GameObject.Image = function (game, x, y, key, frame)
 
     //  Temporary for now?
     this.alpha = 1;
+    this.worldAlpha = 1;
     this.blendMode = Phaser.blendModes.NORMAL;
     this.scaleMode = Phaser.scaleModes.DEFAULT;
     this.exists = true;
@@ -62,7 +63,10 @@ Phaser.GameObject.Image.prototype.constructor = Phaser.GameObject.Image;
 */
 Phaser.GameObject.Image.prototype.preUpdate = function ()
 {
-    // this.transform.update();
+    if (this.parent)
+    {
+        this.worldAlpha = this.alpha * this.parent.worldAlpha;
+    }
 };
 
 Phaser.GameObject.Image.prototype.update = function ()

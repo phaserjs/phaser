@@ -24,6 +24,7 @@ Phaser.GameObject.Container = function (game, parent, x, y)
     //  Temporary for now?
     this.visible = true;
     this.alpha = 1;
+    this.worldAlpha = 1;
     this.blendMode = Phaser.blendModes.NORMAL;
     this.scaleMode = Phaser.scaleModes.DEFAULT;
     this.exists = true;
@@ -35,7 +36,10 @@ Phaser.GameObject.Container.prototype.constructor = Phaser.GameObject.Container;
 
 Phaser.GameObject.Container.prototype.preUpdate = function ()
 {
-    // this.transform.update();
+    if (this.parent)
+    {
+        this.worldAlpha = this.alpha * this.parent.worldAlpha;
+    }
 };
 
 Phaser.GameObject.Container.prototype.update = function ()
