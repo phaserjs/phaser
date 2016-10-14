@@ -30,12 +30,18 @@ Phaser.Component.Children.prototype = {
         {
             return child;
         }
-        else
+        else if (child.parent)
         {
             child.parent.children.remove(child);
         }
 
-        child.parent = this;
+        child.parent = this.gameObject;
+
+        //  Should this be done here?
+        if (this.gameObject.transform)
+        {
+            this.gameObject.transform.add(child.transform);
+        }
 
         this.list.push(child);
 
