@@ -16,6 +16,8 @@ Phaser.Component.Transform = function (gameObject, x, y, scaleX, scaleY)
     if (scaleX === undefined) { scaleX = 1; }
     if (scaleY === undefined) { scaleY = 1; }
 
+    this.game = gameObject.game;
+
     this.gameObject = gameObject;
 
     //  Local Transform
@@ -49,7 +51,7 @@ Phaser.Component.Transform = function (gameObject, x, y, scaleX, scaleY)
     this._worldScaleX = scaleX;
     this._worldScaleY = scaleY;
 
-    this.dirty = false;
+    this._dirty = false;
 
     //  The parent Transform (NOT the parent GameObject, although very often they are related)
     this.parent = null;
@@ -326,10 +328,16 @@ Phaser.Component.Transform.prototype = {
 
     update: function ()
     {
-        if (!this.dirty)
+        // console.log('Transform.update', this.gameObject.name, this.dirty);
+
+        if (!this._dirty)
         {
-            return;
+            return this;
         }
+
+        //  If we got this far then this Transform is dirty
+        //  so we need to update it from its parent
+        //  and then force the update to all children
 
         if (this.parent)
         {
@@ -340,9 +348,17 @@ Phaser.Component.Transform.prototype = {
             this.updateFromRoot();
         }
 
-        this.updateChildren();
+        var len = this.children.length;
 
-        this.dirty = false;
+        if (len)
+        {
+            for (var i = 0; i < len; i++)
+            {
+                this.children[i].update();
+            }
+        }
+
+        this._dirty = false;
 
         return this;
     },
@@ -358,6 +374,34 @@ Phaser.Component.Transform.prototype = {
 };
 
 Object.defineProperties(Phaser.Component.Transform.prototype, {
+
+    dirty: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return this._dirty;
+        },
+
+        set: function (value)
+        {
+            if (value)
+            {
+                if (!this._dirty)
+                {
+                    this.game.transforms.add(this);
+                }
+
+                this._dirty = true;
+            }
+            else
+            {
+                this._dirty = false;
+            }
+        }
+
+    },
 
     //  GLOBAL read-only properties from here on
     //  Need *all* parents taken into account to get the correct values

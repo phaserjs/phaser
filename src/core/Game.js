@@ -227,6 +227,11 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this.textures = null;
 
     /**
+    * @property {Phaser.TransformManager} transforms - Reference to the Phaser Transform Manager.
+    */
+    this.transforms = null;
+
+    /**
     * @property {Phaser.Cache} cache - Reference to the assets cache.
     */
     this.cache = null;
@@ -617,6 +622,8 @@ Phaser.Game.prototype = {
             }
         };
 
+        this.transforms = new Phaser.TransformManager(this);
+
         this.scale = new Phaser.ScaleManager(this, this._width, this._height);
         this.stage = new Phaser.Stage(this);
 
@@ -940,14 +947,16 @@ Phaser.Game.prototype = {
     * @protected
     * @param {number} timeStep - The current timeStep value as determined by Game.update.
     */
-    updateLogic: function (timeStep) {
-
+    updateLogic: function (timeStep)
+    {
         if (!this._paused && !this.pendingStep)
         {
             if (this.stepping)
             {
                 this.pendingStep = true;
             }
+
+            this.transforms.preUpdate();
 
             this.scale.preUpdate();
             this.debug.preUpdate();
@@ -957,9 +966,11 @@ Phaser.Game.prototype = {
             this.plugins.preUpdate(timeStep);
             this.stage.preUpdate();
 
+            this.tweens.update();
             this.state.update();
             this.stage.update();
-            this.tweens.update();
+            // this.tweens.update();
+
             this.sound.update();
             this.input.update();
             this.physics.update();
@@ -976,8 +987,6 @@ Phaser.Game.prototype = {
             this.state.pauseUpdate();
             this.debug.preUpdate();
         }
-
-        // this.stage.updateTransform();
 
     },
 
@@ -996,14 +1005,17 @@ Phaser.Game.prototype = {
     * @protected
     * @param {number} elapsedTime - The time elapsed since the last update.
     */
-    updateRender: function (elapsedTime) {
-
+    updateRender: function (elapsedTime)
+    {
         if (this.lockRender)
         {
             return;
         }
 
         this.state.preRender(elapsedTime);
+
+        //  If this is empty then we could always NOT re-render the Canvas
+        this.transforms.update();
 
         if (this.renderType !== Phaser.HEADLESS)
         {
