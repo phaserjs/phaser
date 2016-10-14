@@ -16,7 +16,7 @@ Phaser.Component.Transform = function (gameObject, x, y, scaleX, scaleY)
     if (scaleX === undefined) { scaleX = 1; }
     if (scaleY === undefined) { scaleY = 1; }
 
-    this.name = '';
+    this.gameObject = gameObject;
 
     //  Local Transform
     //  a = scale X
@@ -24,7 +24,7 @@ Phaser.Component.Transform = function (gameObject, x, y, scaleX, scaleY)
     //  c = shear X
     //  d = scale Y
     //  tx / ty = translation
-    this.local = { a: scaleX, b: 0, c: 0, d: scaleY, tx: x, ty: y };
+    // this.local = { a: scaleX, b: 0, c: 0, d: scaleY, tx: x, ty: y };
 
     //  World Transform
     this.world = { a: scaleX, b: 0, c: 0, d: scaleY, tx: x, ty: y };
@@ -51,10 +51,12 @@ Phaser.Component.Transform = function (gameObject, x, y, scaleX, scaleY)
 
     this.dirty = false;
 
+    //  The parent Transform (NOT the parent GameObject, although very often they are related)
     this.parent = null;
 
-    // Optional if Flat Display List
-    // this.children = new Children(this);
+    //  Any child Tranforms of this one - note that they don't have to belong to Game Objects
+    //  that are children of the owner of this Transform
+    this.children = [];
 
     // if (parent)
     // {
@@ -65,6 +67,68 @@ Phaser.Component.Transform = function (gameObject, x, y, scaleX, scaleY)
 Phaser.Component.Transform.prototype.constructor = Phaser.Component.Transform;
 
 Phaser.Component.Transform.prototype = {
+
+    add: function (child)
+    {
+        return this.addAt(child, this.children.length);
+    },
+
+    addAt: function (child, index)
+    {
+        //  Invalid child?
+        if (child === this || child.parent === this || index < 0 || index > this.children.length)
+        {
+            return child;
+        }
+
+        //  Child already parented? Remove it
+        if (child.parent)
+        {
+            child.parent.remove(child);
+        }
+
+        child.parent = this;
+
+        this.children.splice(index, 0, child);
+
+        this.dirty = true;
+
+        this.updateAncestors();
+
+        return child;
+    },
+
+    remove: function (child)
+    {
+        //  Invalid child?
+        if (child === this || child.parent !== this)
+        {
+            return child;
+        }
+
+        var index = this.children.indexOf(child);
+
+        if (index !== -1)
+        {
+            return this.removeAt(index);
+        }
+    },
+
+    removeAt: function (index)
+    {
+        //  Valid index?
+        if (index >= 0 && index < this.children.length)
+        {
+            var child = this.children.splice(index, 1);
+
+            if (child[0])
+            {
+                child[0].parent = null;
+
+                return child[0];
+            }
+        }
+    },
 
     setPosition: function (x, y)
     {
@@ -115,32 +179,8 @@ Phaser.Component.Transform.prototype = {
         return this.update();
     },
 
-    //  Pretty sure we can get rid of this, and move the dirty logic into the update method
-    setContextTransform: function (context)
-    {
-        //  Have they modified a local property? (like x, y, scale, etc)
-        //  If so, we need to update, and spread it down to the children.
-        //  It's possible this has already been called by an update further
-        //  up the display list too.
-
-        if (this.dirty)
-        {
-            this.update();
-        }
-
-        context.setTransform(
-            this.world.a,
-            this.world.b,
-            this.world.c,
-            this.world.d,
-            this.world.tx,
-            this.world.ty);
-
-        return this;
-    },
-
     //  Updates the Transform.world object, ready for rendering
-    //  Assuming this Transform is attached to the root (i.e. no parent)
+    //  Assuming this Transform is a root node (i.e. no transform parent)
     updateFromRoot: function ()
     {
         if (this.hasLocalRotation)
@@ -164,8 +204,8 @@ Phaser.Component.Transform.prototype = {
             this.world.b = 0;
             this.world.c = 0;
             this.world.d = this._scaleY;
-            this.world.tx = this._posX - this._pivotX * this._scaleX;
-            this.world.ty = this._posY - this._pivotY * this._scaleY;
+            this.world.tx = this._posX - (this._pivotX * this._scaleX);
+            this.world.ty = this._posY - (this._pivotY * this._scaleY);
 
             this._worldRotation = 0;
         }
@@ -178,49 +218,47 @@ Phaser.Component.Transform.prototype = {
 
     updateFromParent: function ()
     {
-        let parent = this.parent.world;
-        let tx = 0;
-        let ty = 0;
+        var parent = this.parent.world;
+        var tx = 0;
+        var ty = 0;
 
         if (this.hasLocalRotation)
         {
             // console.log(this.name, 'Transform.updateFromParent', this.parent.name);
 
-            let a = this.cache.a;
-            let b = this.cache.b;
-            let c = this.cache.c;
-            let d = this.cache.d;
+            var a = this.cache.a;
+            var b = this.cache.b;
+            var c = this.cache.c;
+            var d = this.cache.d;
 
-            tx = this._posX - (this._pivotX * a + this._pivotY * c);
-            ty = this._posY - (this._pivotX * b + this._pivotY * d);
+            tx = this._posX - ((this._pivotX * a) + (this._pivotY * c));
+            ty = this._posY - ((this._pivotX * b) + (this._pivotY * d));
 
-            this.world.a = a * parent.a + b * parent.c;
-            this.world.b = a * parent.b + b * parent.d;
-            this.world.c = c * parent.a + d * parent.c;
-            this.world.d = c * parent.b + d * parent.d;
-
-            this._worldRotation = Math.atan2(-this.world.c, this.world.d);
+            this.world.a = (a * parent.a) + (b * parent.c);
+            this.world.b = (a * parent.b) + (b * parent.d);
+            this.world.c = (c * parent.a) + (d * parent.c);
+            this.world.d = (c * parent.b) + (d * parent.d);
         }
         else
         {
             // console.log(this.name, 'Transform.updateFromParent FAST', this.parent.name);
 
-            tx = this._posX - this._pivotX * this._scaleX;
-            ty = this._posY - this._pivotY * this._scaleY;
+            tx = this._posX - (this._pivotX * this._scaleX);
+            ty = this._posY - (this._pivotY * this._scaleY);
 
             this.world.a = this._scaleX * parent.a;
             this.world.b = this._scaleX * parent.b;
             this.world.c = this._scaleY * parent.c;
             this.world.d = this._scaleY * parent.d;
-
-            this._worldRotation = 0;
         }
 
-        this.world.tx = tx * parent.a + ty * parent.c + parent.tx;
-        this.world.ty = ty * parent.b + ty * parent.d + parent.ty;
+        this._worldRotation = Math.atan2(-this.world.c, this.world.d);
 
-        this._worldScaleX = this._scaleX * Math.sqrt(this.world.a * this.world.a + this.world.c * this.world.c);
-        this._worldScaleY = this._scaleY * Math.sqrt(this.world.b * this.world.b + this.world.d * this.world.d);
+        this.world.tx = (tx * parent.a) + (ty * parent.c) + parent.tx;
+        this.world.ty = (tx * parent.b) + (ty * parent.d) + parent.ty;
+
+        this._worldScaleX = this._scaleX * Math.sqrt((this.world.a * this.world.a) + (this.world.c * this.world.c));
+        this._worldScaleY = this._scaleY * Math.sqrt((this.world.b * this.world.b) + (this.world.d * this.world.d));
 
         return this;
     },
@@ -231,7 +269,7 @@ Phaser.Component.Transform.prototype = {
         if (!this.parent)
         {
             this.updateFromRoot();
-            this.children.update();
+            this.updateChildren();
             this.dirty = false;
 
             return this;
@@ -243,8 +281,8 @@ Phaser.Component.Transform.prototype = {
         //  Then updates from the top, down, but only on the ancestors,
         //  not any other children - will give us accurate worldX etc properties
 
-        let node = this.parent;
-        let nodes = [];
+        var node = this.parent;
+        var nodes = [];
 
         do
         {
@@ -276,6 +314,16 @@ Phaser.Component.Transform.prototype = {
         return this.update();
     },
 
+    updateChildren: function ()
+    {
+        for (var i = 0; i < this.children.length; i++)
+        {
+            this.children[i].update();
+        }
+
+        return this;
+    },
+
     update: function ()
     {
         if (!this.dirty)
@@ -292,9 +340,7 @@ Phaser.Component.Transform.prototype = {
             this.updateFromRoot();
         }
 
-        //  Update children
-
-        // this.children.update();
+        this.updateChildren();
 
         this.dirty = false;
 
