@@ -183,6 +183,9 @@ Phaser.Renderer.Canvas.prototype = {
      */
     render: function (stage)
     {
+        //  this first setTransform, alpha, etc could all be set direct
+        //  from the Stage values - as they're the basis really
+
         this.context.setTransform(1, 0, 0, 1, 0, 0);
         this.context.globalAlpha = 1;
         this.context.globalCompositeOperation = 'source-over';
