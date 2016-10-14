@@ -16,31 +16,32 @@ Phaser.Renderer.Canvas.GameObjects.Sprite = {
         var frame = src.frame;
         var source = frame.source;
 
-        //  Skip render?
+        //  Skip rendering?
 
-        if (src.skipRender || !src.visible || !src.alpha || !frame.cutWidth || !frame.cutHeight)
+        if (src.skipRender || !src.visible || src.worldAlpha <= 0 || !frame.cutWidth || !frame.cutHeight)
         {
             return;
         }
 
         //  Blend Mode
 
-        if (src.blendMode !== renderer.currentBlendMode)
+        if (renderer.currentBlendMode !== src.blendMode)
         {
             renderer.currentBlendMode = src.blendMode;
             renderer.context.globalCompositeOperation = renderer.blendModes[renderer.currentBlendMode];
         }
 
-        //  Alpha (World Alpha?)
+        //  Alpha
 
-        if (src.alpha !== renderer.context.globalAlpha)
+        if (renderer.currentAlpha !== src.worldAlpha)
         {
-            renderer.context.globalAlpha = src.alpha;
+            renderer.currentAlpha = src.worldAlpha;
+            renderer.context.globalAlpha = src.worldAlpha;
         }
 
         //  Smoothing (should this be a Game Object, or Frame / Texture level property?)
 
-        if (source.scaleMode !== renderer.currentScaleMode)
+        if (renderer.currentScaleMode !== source.scaleMode)
         {
             renderer.currentScaleMode = source.scaleMode;
             renderer.context[renderer.smoothProperty] = (source.scaleMode === Phaser.scaleModes.LINEAR);
