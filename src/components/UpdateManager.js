@@ -9,28 +9,56 @@
 *
 * @class
 */
-Phaser.TransformManager = function (game)
+Phaser.UpdateManager = function (game)
 {
     this.game = game;
 
     this.list = [];
+
+    this.i = 1;
+
+    this.running = false;
     
     this.processed = 0;
 };
 
-Phaser.TransformManager.prototype.constructor = Phaser.TransformManager;
+Phaser.UpdateManager.prototype.constructor = Phaser.UpdateManager;
 
-Phaser.TransformManager.prototype = {
+Phaser.UpdateManager.prototype = {
 
-    preUpdate: function ()
+    stop: function ()
     {
-        this.processed = 0;
+        if (!this.running)
+        {
+            return;
+        }
+
+        // console.log(this.i, 'UpdateManager.stop', this.processed);
+
         this.list.length = 0;
+
+        this.i++;
     },
 
-    update: function ()
+    start: function ()
     {
-        for (var i = 0; i < this.list.length; i++)
+        if (!this.running)
+        {
+            return;
+        }
+
+        var len = this.list.length;
+
+        if (len === 0)
+        {
+            return;
+        }
+
+        // console.log(this.i, 'UpdateManager.start', len);
+
+        this.processed = 0;
+
+        for (var i = 0; i < len; i++)
         {
             //  Because it may have already been processed (as a child of another Transform that was updated)
             if (this.list[i] && this.list[i]._dirty)
@@ -39,7 +67,6 @@ Phaser.TransformManager.prototype = {
                 this.list[i].update();
             }
         }
-
     },
 
     add: function (transform)

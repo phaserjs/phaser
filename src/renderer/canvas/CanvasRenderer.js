@@ -33,7 +33,7 @@ Phaser.Renderer.Canvas = function (game)
      */
     this.clearBeforeRender = game.clearBeforeRender;
 
-    this.dirtyRender = true;
+    this.dirtyRender = false;
 
     /**
      * Whether the render view is transparent
@@ -186,6 +186,11 @@ Phaser.Renderer.Canvas.prototype = {
      */
     render: function (stage)
     {
+        if (this.dirtyRender && this.game.updates.processed === 0)
+        {
+            return;
+        }
+
         this.context.setTransform(1, 0, 0, 1, 0, 0);
 
         //  If the alpha or blend mode didn't change since the last render, then don't set them again
@@ -222,6 +227,8 @@ Phaser.Renderer.Canvas.prototype = {
         }
 
         stage.render(this, stage);
+
+        // console.log('render stage', this.game.updates.processed);
 
         //  Add Post-render hook
     },

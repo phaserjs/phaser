@@ -220,9 +220,9 @@ Phaser.Game = function (width, height, renderer, parent, state, pixelArt)
     this.textures = null;
 
     /**
-    * @property {Phaser.TransformManager} transforms - Reference to the Phaser Transform Manager.
+    * @property {Phaser.UpdateManager} updates - Reference to the Phaser Update Manager.
     */
-    this.transforms = null;
+    this.updates = null;
 
     /**
     * @property {Phaser.Cache} cache - Reference to the assets cache.
@@ -605,7 +605,7 @@ Phaser.Game.prototype = {
             }
         };
 
-        this.transforms = new Phaser.TransformManager(this);
+        this.updates = new Phaser.UpdateManager(this);
 
         this.scale = new Phaser.ScaleManager(this, this._width, this._height);
         this.stage = new Phaser.Stage(this);
@@ -833,6 +833,9 @@ Phaser.Game.prototype = {
     update: function (time) {
 
         this.time.update(time);
+        this.updateLogic(this.time.desiredFpsMult);
+        this.updateRender(this.time.slowMotion * this.time.desiredFps);
+        return;
 
         if (this._kickstart)
         {
@@ -939,7 +942,7 @@ Phaser.Game.prototype = {
                 this.pendingStep = true;
             }
 
-            this.transforms.preUpdate();
+            // this.updates.preUpdate();
 
             this.scale.preUpdate();
             this.debug.preUpdate();
@@ -997,20 +1000,17 @@ Phaser.Game.prototype = {
 
         this.state.preRender(elapsedTime);
 
-        //  If this is empty then we could always NOT re-render the Canvas
-        this.transforms.update();
+        this.updates.start();
 
-        if (this.renderType !== Phaser.HEADLESS)
-        {
-            this.renderer.render(this.stage);
+        this.renderer.render(this.stage);
 
-            this.plugins.render(elapsedTime);
+        this.plugins.render(elapsedTime);
 
-            this.state.render(elapsedTime);
-        }
+        this.state.render(elapsedTime);
 
         this.plugins.postRender(elapsedTime);
 
+        this.updates.stop();
     },
 
     /**

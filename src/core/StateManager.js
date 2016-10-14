@@ -595,6 +595,7 @@ Phaser.StateManager.prototype = {
         {
             this._created = true;
             this.onCreateCallback.call(this.callbackContext, this.game);
+            this.game.updates.running = true;
         }
         else
         {
