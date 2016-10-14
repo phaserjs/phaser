@@ -26,7 +26,8 @@ Phaser.Physics.Arcade = function (game) {
     /**
     * @property {Phaser.Rectangle} bounds - The bounds inside of which the physics world exists. Defaults to match the world bounds.
     */
-    this.bounds = new Phaser.Rectangle(0, 0, game.world.width, game.world.height);
+    // this.bounds = new Phaser.Rectangle(0, 0, game.world.width, game.world.height);
+    this.bounds = new Phaser.Rectangle(0, 0, game.width, game.height);
 
     /**
     * Set the checkCollision properties to control for which bounds collision is processed.
@@ -74,7 +75,8 @@ Phaser.Physics.Arcade = function (game) {
     /**
     * @property {Phaser.QuadTree} quadTree - The world QuadTree.
     */
-    this.quadTree = new Phaser.QuadTree(this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height, this.maxObjects, this.maxLevels);
+    // this.quadTree = new Phaser.QuadTree(this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height, this.maxObjects, this.maxLevels);
+    this.quadTree = new Phaser.QuadTree(0, 0, this.game.width, this.game.height, this.maxObjects, this.maxLevels);
 
     /**
     * @property {number} _total - Internal cache var.
@@ -83,7 +85,7 @@ Phaser.Physics.Arcade = function (game) {
     this._total = 0;
 
     // By default we want the bounds the same size as the world bounds
-    this.setBoundsToWorld();
+    // this.setBoundsToWorld();
 
 };
 

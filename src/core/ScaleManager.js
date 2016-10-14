@@ -1119,10 +1119,10 @@ Phaser.ScaleManager.prototype = {
             this.game.renderer.resize(this.width, this.height);
 
             //  The Camera can never be smaller than the Game size
-            this.game.camera.setSize(this.width, this.height);
+            // this.game.camera.setSize(this.width, this.height);
 
             //  This should only happen if the world is smaller than the new canvas size
-            this.game.world.resize(this.width, this.height);
+            // this.game.world.resize(this.width, this.height);
         }
 
     },
