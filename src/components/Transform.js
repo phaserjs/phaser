@@ -60,9 +60,9 @@ Phaser.Component.Transform = function (gameObject, x, y, scaleX, scaleY)
     //  that are children of the owner of this Transform
     this.children = [];
 
-    // if (parent)
+    // if (gameObject.parent && gameObject.parent.transform)
     // {
-    //     parent.children.add(this);
+    //     gameObject.parent.transform.add(this);
     // }
 };
 
@@ -313,7 +313,7 @@ Phaser.Component.Transform.prototype = {
         //  updated, in the correct order, so we can now do this one
         //  and any of its children too
 
-        return this.update();
+        this.update();
     },
 
     updateChildren: function ()
@@ -322,8 +322,21 @@ Phaser.Component.Transform.prototype = {
         {
             this.children[i].update();
         }
+    },
 
-        return this;
+    updateFromDirtyParent: function ()
+    {
+        this.updateFromParent();
+
+        if (this.children.length)
+        {
+            for (var i = 0; i < this.children.length; i++)
+            {
+                this.children[i].updateFromDirtyParent();
+            }
+        }
+
+        this._dirty = false;
     },
 
     update: function ()
@@ -332,7 +345,7 @@ Phaser.Component.Transform.prototype = {
 
         if (!this._dirty)
         {
-            return this;
+            return;
         }
 
         //  If we got this far then this Transform is dirty
@@ -354,13 +367,11 @@ Phaser.Component.Transform.prototype = {
         {
             for (var i = 0; i < len; i++)
             {
-                this.children[i].update();
+                this.children[i].updateFromDirtyParent();
             }
         }
 
         this._dirty = false;
-
-        return this;
     },
 
     updateCache: function ()
