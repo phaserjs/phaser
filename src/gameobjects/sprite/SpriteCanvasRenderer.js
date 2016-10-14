@@ -13,30 +13,31 @@ Phaser.Renderer.Canvas.GameObjects.Sprite = {
 
     render: function (renderer, src)
     {
+        var color = src.color;
         var frame = src.frame;
         var source = frame.source;
 
         //  Skip rendering?
 
-        if (src.skipRender || !src.visible || src.worldAlpha <= 0 || !frame.cutWidth || !frame.cutHeight)
+        if (src.skipRender || !src.visible || color.worldAlpha <= 0 || !frame.cutWidth || !frame.cutHeight)
         {
             return;
         }
 
         //  Blend Mode
 
-        if (renderer.currentBlendMode !== src.blendMode)
+        if (renderer.currentBlendMode !== color.blendMode)
         {
-            renderer.currentBlendMode = src.blendMode;
+            renderer.currentBlendMode = color.blendMode;
             renderer.context.globalCompositeOperation = renderer.blendModes[renderer.currentBlendMode];
         }
 
         //  Alpha
 
-        if (renderer.currentAlpha !== src.worldAlpha)
+        if (renderer.currentAlpha !== color.worldAlpha)
         {
-            renderer.currentAlpha = src.worldAlpha;
-            renderer.context.globalAlpha = src.worldAlpha;
+            renderer.currentAlpha = color.worldAlpha;
+            renderer.context.globalAlpha = color.worldAlpha;
         }
 
         //  Smoothing (should this be a Game Object, or Frame / Texture level property?)
@@ -69,6 +70,8 @@ Phaser.Renderer.Canvas.GameObjects.Sprite = {
 
         var cw = frame.cutWidth;
         var ch = frame.cutHeight;
+        var cwr = cw / resolution;
+        var chr = ch / resolution;
 
         renderer.context.setTransform(wt.a, wt.b, wt.c, wt.d, tx, ty);
 
@@ -79,7 +82,15 @@ Phaser.Renderer.Canvas.GameObjects.Sprite = {
             renderer.pushMask(src._mask);
         }
 
-        renderer.context.drawImage(source.image, frame.cutX, frame.cutY, cw, ch, dx, dy, cw / resolution, ch / resolution);
+        //  Color Component
+
+        if (color._hasBackground)
+        {
+            renderer.context.fillStyle = color._rgba;
+            renderer.context.fillRect(dx, dy, cwr, chr);
+        }
+
+        renderer.context.drawImage(source.image, frame.cutX, frame.cutY, cw, ch, dx, dy, cwr, chr);
 
         for (var i = 0; i < src.children.list.length; i++)
         {
