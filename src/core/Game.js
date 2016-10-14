@@ -66,13 +66,12 @@
 * @param {number} [renderer=Phaser.AUTO] - Which renderer to use: Phaser.AUTO will auto-detect, Phaser.WEBGL, Phaser.WEBGL_MULTI, Phaser.CANVAS or Phaser.HEADLESS (no rendering at all).
 * @param {string|HTMLElement} [parent=''] - The DOM element into which this games canvas will be injected. Either a DOM ID (string) or the element itself.
 * @param {object} [state=null] - The default state object. A object consisting of Phaser.State functions (preload, create, update, render) or null.
-* @param {boolean} [transparent=false] - Use a transparent canvas background or not.
-* @param {boolean} [antialias=true] - Draw all image textures anti-aliased or not. The default is for smooth textures, but disable if your game features pixel art.
-* @param {object} [physicsConfig=null] - A physics configuration object to pass to the Physics world on creation.
+* @param {boolean} [pixelArt=false] - Draw all image textures anti-aliased or not. The default is for smooth textures (false), but set to `true` if your game features all pixel art.
 */
-Phaser.Game = function (width, height, renderer, parent, state, transparent, antialias, physicsConfig) {
-
+Phaser.Game = function (width, height, renderer, parent, state, pixelArt)
+{
     /**
+    * TODO: Remove this
     * @property {number} id - Phaser Game ID
     * @readonly
     */
@@ -86,7 +85,7 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     /**
     * @property {object} physicsConfig - The Phaser.Physics.World configuration object.
     */
-    this.physicsConfig = physicsConfig;
+    this.physicsConfig = null;
 
     /**
     * @property {string|HTMLElement} parent - The Games DOM parent.
@@ -138,12 +137,6 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this._height = 600;
 
     /**
-    * @property {boolean} transparent - Use a transparent canvas background or not.
-    * @default
-    */
-    this.transparent = false;
-
-    /**
     * @property {boolean} antialias - Anti-alias graphics. By default scaled images are smoothed in Canvas and WebGL, set anti-alias to false to disable this globally.
     * @default
     */
@@ -155,7 +148,7 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     * Configuration object with the property `multiTexture` set to true. It has to be enabled before
     * Pixi boots, and cannot be changed after the game is running. Once enabled, take advantage of it
     * via the `game.renderer.setTexturePriority` method.
-    * 
+    *
     * @property {boolean} multiTexture
     * @default
     * @readOnly
@@ -485,14 +478,9 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
             this.parent = parent;
         }
 
-        if (typeof transparent !== 'undefined')
+        if (typeof pixelArt !== 'undefined')
         {
-            this.transparent = transparent;
-        }
-
-        if (typeof antialias !== 'undefined')
-        {
-            this.antialias = antialias;
+            this.antialias = !pixelArt;
         }
 
         this.rnd = new Phaser.RandomDataGenerator([(Date.now() * Math.random()).toString()]);
@@ -514,8 +502,8 @@ Phaser.Game.prototype = {
     * @method Phaser.Game#parseConfig
     * @protected
     */
-    parseConfig: function (config) {
-
+    parseConfig: function (config)
+    {
         this.config = config;
 
         if (config['enableDebug'] === undefined)
@@ -541,11 +529,6 @@ Phaser.Game.prototype = {
         if (config['parent'])
         {
             this.parent = config['parent'];
-        }
-
-        if (config['transparent'] !== undefined)
-        {
-            this.transparent = config['transparent'];
         }
 
         if (config['antialias'] !== undefined)
@@ -599,8 +582,8 @@ Phaser.Game.prototype = {
     * @method Phaser.Game#boot
     * @protected
     */
-    boot: function () {
-
+    boot: function ()
+    {
         if (this.isBooted)
         {
             return;
