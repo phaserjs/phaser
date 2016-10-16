@@ -23,7 +23,7 @@ Phaser.Component.Color = function (gameObject)
 
     this._blendMode = 0;
 
-    this._tint = [];
+    this._tint = [ 0xffffff, 0xffffff, 0xffffff, 0xffffff ];
     this._hasTint = false;
 
     this._r = 0;
@@ -52,6 +52,25 @@ Phaser.Component.Color.prototype = {
             this._b = (blue) ? blue : 0;
             this._a = (alpha) ? alpha : 1;
         }
+
+        this.setDirty();
+    },
+
+    clearTint: function ()
+    {
+        this._hasTint = false;
+
+        this.setDirty();
+    },
+
+    setTint: function (topLeft, topRight, bottomLeft, bottomRight)
+    {
+        this._tint[0] = topLeft;
+        this._tint[1] = topRight;
+        this._tint[2] = bottomLeft;
+        this._tint[3] = bottomRight;
+
+        this._hasTint = true;
 
         this.setDirty();
     },
@@ -101,6 +120,34 @@ Phaser.Component.Color.prototype = {
 };
 
 Object.defineProperties(Phaser.Component.Color.prototype, {
+
+    tint: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return this._tint;
+        },
+
+        set: function (value)
+        {
+            if (Array.isArray(value))
+            {
+                this._tint = value;
+            }
+            else
+            {
+                this._tint[0] = value;
+                this._tint[1] = value;
+                this._tint[2] = value;
+                this._tint[3] = value;
+            }
+
+            this.setDirty();
+        }
+
+    },
 
     alpha: {
 
