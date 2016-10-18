@@ -11,11 +11,19 @@ Phaser.Renderer.WebGL.GameObjects.Stage = {
 
     render: function (renderer, src)
     {
-        if (src.visible === false || src.alpha === 0 || src.children.length === 0)
+        if (!src.visible || src.alpha === 0 || src.children.list.length === 0)
         {
             return;
         }
 
+        for (var i = 0; i < src.children.list.length; i++)
+        {
+            var child = src.children.list[i];
+
+            child.render(renderer, child);
+        }
+
+        /*
         var i;
 
         if (src._mask || src._filters)
@@ -64,6 +72,7 @@ Phaser.Renderer.WebGL.GameObjects.Stage = {
                 child.render(renderer, child);
             }
         }
+        */
 
     }
 

@@ -47,21 +47,11 @@ Phaser.Texture = function (manager, key, source)
 
     this.frameTotal = 0;
 
-    this.dirty = true;
-
-    /**
-    * @property _glTextures
-    * @type Array
-    * @private
-    */
-    this.glTextures = null;
-
     //  Load the Sources
     for (var i = 0; i < source.length; i++)
     {
         this.source.push(new Phaser.TextureSource(this, source[i]));
     }
-    
 };
 
 Phaser.Texture.prototype.constructor = Phaser.Texture;
@@ -81,10 +71,21 @@ Phaser.Texture.prototype = {
 
     get: function (name)
     {
-        if (name === undefined || name === null) { name = '__BASE'; }
+        if (name === undefined || name === null || this.frameTotal === 1)
+        {
+            name = '__BASE';
+        }
 
-        return this.frames[name];
+        var frame = this.frames[name];
 
+        if (!frame)
+        {
+            console.warn('No Texture.frame found with name ' + name);
+        }
+        else
+        {
+            return frame;
+        }
     },
 
     /**
@@ -94,16 +95,18 @@ Phaser.Texture.prototype = {
     */
     destroy: function ()
     {
+
+        //  Need to iterate though the TextureSources, and unload each one
+        //  then clear out the frames
+
+        /*
         if (this.source)
         {
             Phaser.CanvasPool.removeByCanvas(this.source);
         }
 
         this.source = null;
-
-        this.unloadFromGPU();
-
-        //  TODO: Clear out the Frames
+        */
     }
 
 };

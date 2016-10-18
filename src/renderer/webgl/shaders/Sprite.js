@@ -128,28 +128,66 @@ Phaser.Renderer.WebGL.Shaders.Sprite.prototype = {
         else
         {
             this.initDefaultShader();
-        }  
+        }
     },
 
     initDefaultShader: function ()
     {
         if (this.fragmentSrc === null)
         {
-            this.fragmentSrc = [
-                'precision lowp float;',
-                'varying vec2 vTextureCoord;',
-                'varying vec4 vColor;',
-                'varying float vTextureIndex;',
-                'uniform sampler2D uSampler;',
-                'void main(void) {',
-                '   gl_FragColor = texture2D(uSampler, vTextureCoord) * vColor ;',
-                '}'
-            ];
+            // this.fragmentSrc = [
+            //     'precision lowp float;',
+            //     'varying vec2 vTextureCoord;',
+            //     'varying vec4 vColor;',
+            //     'varying float vTextureIndex;',
+            //     'uniform sampler2D uSampler;',
+            //     'void main(void) {',
+            //     '   gl_FragColor = texture2D(uSampler, vTextureCoord) * vColor ;',
+            //     '}'
+            // ];
         }
+
+        var fragmentSrc = [
+            'precision mediump float;',
+            'varying vec2 vTextureCoord;',
+            'varying vec4 vColor;',
+            'uniform sampler2D uSampler;',
+            'void main(void) {',
+            '   gl_FragColor = texture2D(uSampler, vTextureCoord) * vColor;',
+            '}'
+        ];
+
+        var vertexSrc = [
+            'attribute vec2 aVertexPosition;',
+            'attribute vec2 aTextureCoord;',
+            'attribute vec4 aColor;',
+
+            'uniform vec2 projectionVector;',
+
+            'varying vec2 vTextureCoord;',
+            'varying vec4 vColor;',
+
+            'const vec2 center = vec2(-1.0, 1.0);',
+
+            'void main(void) {',
+            '   gl_Position = vec4((aVertexPosition / projectionVector) + center, 0.0, 1.0);',
+            '   vTextureCoord = aTextureCoord;',
+            '   vec3 color = mod(vec3(aColor.y / 65536.0, aColor.y / 256.0, aColor.y), 256.0) / 256.0;',
+            '   vColor = vec4(color * aColor.x, aColor.x);',
+            '}'
+        ];
+
+
+        console.log('initDefaultShader');
+        console.log(vertexSrc.join('\n'));
+        console.log(fragmentSrc.join('\n'));
+        console.log('compiling ...');
 
         var gl = this.gl;
 
-        var program = this.renderer.compileProgram(this.vertexSrc, this.fragmentSrc);
+        var program = this.renderer.compileProgram(vertexSrc, fragmentSrc);
+
+        // var program = this.renderer.compileProgram(this.vertexSrc, this.fragmentSrc);
 
         gl.useProgram(program);
 
@@ -163,16 +201,20 @@ Phaser.Renderer.WebGL.Shaders.Sprite.prototype = {
         this.aVertexPosition = gl.getAttribLocation(program, 'aVertexPosition');
         this.aTextureCoord = gl.getAttribLocation(program, 'aTextureCoord');
         this.colorAttribute = gl.getAttribLocation(program, 'aColor');
-        this.aTextureIndex = gl.getAttribLocation(program, 'aTextureIndex');
+        // this.aTextureIndex = gl.getAttribLocation(program, 'aTextureIndex');
 
-        this.attributes = [this.aVertexPosition, this.aTextureCoord, this.colorAttribute, this.aTextureIndex];
+        // this.attributes = [ this.aVertexPosition, this.aTextureCoord, this.colorAttribute, this.aTextureIndex ];
+        this.attributes = [ this.aVertexPosition, this.aTextureCoord, this.colorAttribute ];
 
-        // add those custom shaders!
+        //  Add those custom shaders!
+
+        /*
         for (var key in this.uniforms)
         {
             // get the uniform locations..
             this.uniforms[key].uniformLocation = gl.getUniformLocation(program, key);
         }
+        */
 
         this.initUniforms();
 
@@ -256,6 +298,8 @@ Phaser.Renderer.WebGL.Shaders.Sprite.prototype = {
 
     initUniforms: function ()
     {
+        console.log('initUniforms', this.uniforms);
+
         this.textureCount = 1;
         var gl = this.gl;
         var uniform;
@@ -331,6 +375,8 @@ Phaser.Renderer.WebGL.Shaders.Sprite.prototype = {
     */
     initSampler2D: function (uniform)
     {
+        console.log('initSampler2D');
+
         if (!uniform.value || !uniform.value.baseTexture || !uniform.value.baseTexture.hasLoaded)
         {
             return;
@@ -406,6 +452,8 @@ Phaser.Renderer.WebGL.Shaders.Sprite.prototype = {
     */
     syncUniforms: function ()
     {
+        console.log('syncUniforms');
+
         this.textureCount = 1;
 
         var uniform;

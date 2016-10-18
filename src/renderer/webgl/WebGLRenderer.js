@@ -155,12 +155,15 @@ Phaser.Renderer.WebGL = function (game)
 
     this.gl = null;
 
-    this.textureArray = [];
+    //  Add a null entry to avoid an array look-up miss
+    this.textureArray = [ null, null ];
 
     this.blendModes = [];
 
     this.drawCount = 0;
     this.flipY = 1;
+
+    this.contextLost = false;
 
     this._fbErrors = {
         36054: 'Incomplete attachment',
@@ -186,6 +189,7 @@ Phaser.Renderer.WebGL.prototype = {
 
         if (!this.gl)
         {
+            this.contextLost = true;
             throw new Error('This browser does not support WebGL. Try using the Canvas renderer.');
         }
 
@@ -378,7 +382,7 @@ Phaser.Renderer.WebGL.prototype = {
      */
     render: function (stage)
     {
-        // no point rendering if our context has been blown up!
+        //  No point rendering if our context has been blown up!
         if (this.contextLost)
         {
             return;
@@ -390,20 +394,39 @@ Phaser.Renderer.WebGL.prototype = {
 
         gl.viewport(0, 0, this.width, this.height);
 
-        // make sure we are bound to the main frame buffer
+        //  Make sure we are bound to the main frame buffer
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
-        if (this.game.clearBeforeRender)
+        //  Transparent
+        gl.clearColor(0, 0, 0, 0);
+
+        //  Black
+        // gl.clearColor(0, 0, 0, 1);
+        // gl.clear(gl.COLOR_BUFFER_BIT);
+
+        //  Normal Blend Mode
+        gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+
+        /*
+        if (this.clearBeforeRender)
         {
-            gl.clearColor(stage._bgColor.r, stage._bgColor.g, stage._bgColor.b, stage._bgColor.a);
+            // gl.clearColor(stage._bgColor.r, stage._bgColor.g, stage._bgColor.b, stage._bgColor.a);
+            gl.clearColor(0, 0.5, 0, 0);
 
             gl.clear(gl.COLOR_BUFFER_BIT);
         }
 
-        this.offset.x = this.game.camera._shake.x;
-        this.offset.y = this.game.camera._shake.y;
+        // this.offset.x = this.game.camera._shake.x;
+        // this.offset.y = this.game.camera._shake.y;
+
+        this.offset.x = 0;
+        this.offset.y = 0;
 
         this.setBlendMode(this.blendModes.NORMAL);
+        */
+
+        this.offset.x = 0;
+        this.offset.y = 0;
 
         //  Reset draw count
         this.drawCount = 0;
@@ -443,57 +466,55 @@ Phaser.Renderer.WebGL.prototype = {
         texture._dirty = false;
     },
 
-    updateTexture: function (texture)
+    //  Takes a TextureSource object
+    updateTexture: function (source)
     {
-        if (!texture.hasLoaded)
+        if (source.compressionAlgorithm)
         {
-            return false;
-        }
-
-        if (texture.source.compressionAlgorithm)
-        {
-            return this.updateCompressedTexture(texture);
+            return this.updateCompressedTexture(source);
         }
 
         var gl = this.gl;
 
-        if (!texture._glTextures)
+        if (!source.glTexture)
         {
-            texture._glTextures = gl.createTexture();
+            source.glTexture = gl.createTexture();
         }
 
-        gl.activeTexture(gl.TEXTURE0 + texture.textureIndex);
+        gl.activeTexture(gl.TEXTURE0 + source.glTextureIndex);
 
-        gl.bindTexture(gl.TEXTURE_2D, texture._glTextures);
+        gl.bindTexture(gl.TEXTURE_2D, source.glTexture);
 
-        gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, texture.premultipliedAlpha);
+        gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, source.premultipliedAlpha);
 
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.source);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, source.image);
 
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, texture.scaleMode === Phaser.scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, source.scaleMode === Phaser.scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
 
-        if (texture.mipmap && Phaser.Math.isPowerOfTwo(texture.width, texture.height))
+        if (source.mipmap && source.isPowerOf2)
         {
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, texture.scaleMode === Phaser.scaleModes.LINEAR ? gl.LINEAR_MIPMAP_LINEAR : gl.NEAREST_MIPMAP_NEAREST);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, source.scaleMode === Phaser.scaleModes.LINEAR ? gl.LINEAR_MIPMAP_LINEAR : gl.NEAREST_MIPMAP_NEAREST);
             gl.generateMipmap(gl.TEXTURE_2D);
         }
         else
         {
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, texture.scaleMode === Phaser.scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, source.scaleMode === Phaser.scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
         }
 
-        if (!texture._powerOf2)
-        {
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-        }
-        else
+        if (source.isPowerOf2)
         {
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
         }
+        else
+        {
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        }
 
-        texture._dirty = false;
+        source.glDirty = false;
+
+        console.log('updateTexture', source.glTexture);
 
         return true;
     },
@@ -657,7 +678,9 @@ Phaser.Renderer.WebGL.prototype = {
         if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS))
         {
             console.log(gl.getProgramInfoLog(shaderProgram));
-            console.log('Could not initialize shaders');
+            console.log('Could not initialize shaders: Vertex & Fragment');
+            console.log(vertexSrc.join('\n'));
+            console.log(fragmentSrc.join('\n'));
         }
 
         return shaderProgram;
@@ -685,7 +708,7 @@ Phaser.Renderer.WebGL.prototype = {
         var gl = this.gl;
         var framebuffer = gl.createFramebuffer();
         var depthStencilBuffer = gl.createRenderbuffer();
-        var colorBuffer = null;   
+        var colorBuffer = null;
         var fbStatus = 0;
         
         gl.activeTexture(gl.TEXTURE0 + textureUnit);

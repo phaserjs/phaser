@@ -142,6 +142,7 @@ Phaser.TextureFrame = function (texture, name, sourceIndex, x, y, width, height)
         }
     };
 
+    this.updateUVs();
 };
 
 Phaser.TextureFrame.prototype.constructor = Phaser.TextureFrame;
@@ -170,6 +171,8 @@ Phaser.TextureFrame.prototype = {
             this.cutWidth = Phaser.Math.clamp(width, 0, this.data.cut.w - this.cutX);
             this.cutHeight = Phaser.Math.clamp(height, 0, this.data.cut.h - this.cutY);
         }
+
+        this.updateUVs();
 
         return this;
     },
@@ -203,6 +206,8 @@ Phaser.TextureFrame.prototype = {
         this.width = destWidth;
         this.height = destHeight;
 
+        this.updateUVs();
+
         return this;
     },
 
@@ -214,21 +219,21 @@ Phaser.TextureFrame.prototype = {
     */
     updateUVs: function ()
     {
-        var tw = this.texture.width;
-        var th = this.texture.height;
+        var tw = this.source.width;
+        var th = this.source.height;
         var uvs = this.data.uvs;
         
-        uvs.x0 = this.x / tw;
-        uvs.y0 = this.y / th;
+        uvs.x0 = this.cutX / tw;
+        uvs.y0 = this.cutY / th;
 
-        uvs.x1 = (this.x + this.width) / tw;
-        uvs.y1 = this.y / th;
+        uvs.x1 = (this.cutX + this.cutWidth) / tw;
+        uvs.y1 = this.cutY / th;
 
-        uvs.x2 = (this.x + this.width) / tw;
-        uvs.y2 = (this.y + this.height) / th;
+        uvs.x2 = (this.cutX + this.cutWidth) / tw;
+        uvs.y2 = (this.cutY + this.cutHeight) / th;
 
-        uvs.x3 = this.x / tw;
-        uvs.y3 = (this.y + this.height) / th;
+        uvs.x3 = this.cutX / tw;
+        uvs.y3 = (this.cutY + this.cutHeight) / th;
 
         return this;
     },
@@ -241,8 +246,8 @@ Phaser.TextureFrame.prototype = {
     */
     updateUVsInverted: function ()
     {
-        var tw = this.texture.width;
-        var th = this.texture.height;
+        var tw = this.source.width;
+        var th = this.source.height;
         var uvs = this.data.uvs;
         
         uvs.x0 = this.x / tw;
@@ -326,6 +331,23 @@ Object.defineProperties(Phaser.TextureFrame.prototype, {
         get: function ()
         {
             return this.data.sourceSize.h;
+        }
+
+    },
+
+    /**
+    * UVs
+    *
+    * @name Phaser.TextureFrame#uvs
+    * @property {Object} uvs
+    */
+    uvs: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return this.data.uvs;
         }
 
     }

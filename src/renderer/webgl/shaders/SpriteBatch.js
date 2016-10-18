@@ -91,13 +91,13 @@ Phaser.Renderer.WebGL.Shaders.SpriteBatch.prototype = {
     {
         if (this.renderer.enableMultiTextureToggle)
         {
-            var dynamicIfs = '\tif (vTextureIndex == 0.0) gl_FragColor = texture2D(uSamplerArray[0], vTextureCoord) * vColor;\n'
+            var dynamicIfs = '\tif (vTextureIndex == 0.0) gl_FragColor = texture2D(uSamplerArray[0], vTextureCoord) * vColor;\n';
 
             for (var index = 1; index < this.renderer.getMaxTextureUnits(); ++index)
             {
-                dynamicIfs += '\telse if (vTextureIndex == ' + 
-                            index + '.0) gl_FragColor = texture2D(uSamplerArray[' + 
-                            index + '], vTextureCoord) * vColor;\n'
+                dynamicIfs += '\telse if (vTextureIndex == ' +
+                    index + '.0) gl_FragColor = texture2D(uSamplerArray[' +
+                    index + '], vTextureCoord) * vColor;\n';
             }
 
             this.fragmentSrc = [
@@ -110,7 +110,7 @@ Phaser.Renderer.WebGL.Shaders.SpriteBatch.prototype = {
                 'const vec4 GREEN = vec4(0.0, 1.0, 0.0, 1.0);',
                 'void main(void) {',
                 dynamicIfs,
-                'else gl_FragColor = PINK;',        
+                'else gl_FragColor = PINK;',
                 '}'
             ];
         }
@@ -126,9 +126,37 @@ Phaser.Renderer.WebGL.Shaders.SpriteBatch.prototype = {
                 '   gl_FragColor = texture2D(uSampler, vTextureCoord) * vColor;',
                 '}'
             ];
-        }  
+        }
 
-        this.vertexSrc  = [
+        this.vertexSrc = [
+            'attribute vec2 aVertexPosition;',
+            'attribute vec2 aTextureCoord;',
+            'attribute vec4 aColor;',
+            'attribute float aTextureIndex;',
+
+            'uniform vec2 projectionVector;',
+            'uniform vec2 offsetVector;',
+
+            'varying vec2 vTextureCoord;',
+            'varying vec4 vColor;',
+            'varying float vTextureIndex;',
+
+            'const vec2 center = vec2(-1.0, 1.0);',
+
+            'void main(void) {',
+            '   gl_Position = vec4( ((aVertexPosition + offsetVector) / projectionVector) + center, 0.0, 1.0);',
+            '   vTextureCoord = aTextureCoord;',
+            '   vTextureIndex = aTextureIndex;',
+            '   vColor = vec4(aColor.rgb * aColor.a, aColor.a);',
+            '}'
+        ];
+
+            // '   vec3 color = mod(vec3(aColor.y / 65536.0, aColor.y / 256.0, aColor.y), 256.0) / 256.0;',
+            // '   vColor = vec4(color * aColor.x, aColor.x);',
+
+
+        /*
+        this.vertexSrc = [
             'attribute vec2 aVertexPosition;',
             'attribute vec2 aPositionCoord;',
             'attribute vec2 aScale;',
@@ -152,13 +180,14 @@ Phaser.Renderer.WebGL.Shaders.SpriteBatch.prototype = {
             '   vec2 sv = aVertexPosition * aScale;',
             '   v.x = (sv.x) * cos(aRotation) - (sv.y) * sin(aRotation);',
             '   v.y = (sv.x) * sin(aRotation) + (sv.y) * cos(aRotation);',
-            '   v = ( uMatrix * vec3(v + aPositionCoord , 1.0) ).xy ;',
-            '   gl_Position = vec4( ( v / projectionVector) + center , 0.0, 1.0);',
+            '   v = (uMatrix * vec3(v + aPositionCoord , 1.0)).xy ;',
+            '   gl_Position = vec4((v / projectionVector) + center , 0.0, 1.0);',
             '   vTextureCoord = aTextureCoord;',
             '   vTextureIndex = aTextureIndex;',
             '   vColor = aColor;',
             '}'
         ];
+        */
 
         var program = this.renderer.compileProgram(this.vertexSrc, this.fragmentSrc);
 

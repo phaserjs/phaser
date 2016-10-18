@@ -48,21 +48,23 @@ Phaser.Renderer.WebGL.ShaderManager.prototype = {
 
     init: function ()
     {
+        return;
+
         this.gl = this.renderer.gl;
 
-        // this shader is used for the default sprite rendering
+        //  This shader is used for the batched rendering of Images and Sprites
         this.defaultShader = new Phaser.Renderer.WebGL.Shaders.Sprite(this.renderer);
 
-        // this shader is used for the fast sprite rendering
+        //  This shader is used for SpriteBatch Game Object rendering
         this.fastShader = new Phaser.Renderer.WebGL.Shaders.SpriteBatch(this.renderer);
 
-        // the next one is used for rendering triangle strips
+        //  Tiling Sprites / Strips
         this.stripShader = new Phaser.Renderer.WebGL.Shaders.Strip(this.renderer);
 
-        // the next one is used for rendering primitives
+        //  Simple Graphics (when vertices count is low)
         this.primitiveShader = new Phaser.Renderer.WebGL.Shaders.PrimitiveGraphics(this.renderer);
 
-        // the next one is used by the stencil buffer manager when Graphics.mode = 1
+        //  The next one is used by the stencil buffer manager when Graphics.mode = 1
         this.complexPrimitiveShader = new Phaser.Renderer.WebGL.Shaders.ComplexPrimitiveGraphics(this.renderer);
 
         this.setShader(this.defaultShader);
