@@ -398,14 +398,17 @@ Phaser.Renderer.WebGL.prototype = {
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
         //  Transparent
-        gl.clearColor(0, 0, 0, 0);
+        // gl.clearColor(0, 0, 0, 0);
+
+        gl.clearColor(0.0, 0.4, 0.0, 1.0);
+        gl.clear(gl.COLOR_BUFFER_BIT);
 
         //  Black
         // gl.clearColor(0, 0, 0, 1);
         // gl.clear(gl.COLOR_BUFFER_BIT);
 
         //  Normal Blend Mode
-        gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+        // gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
 
         /*
         if (this.clearBeforeRender)
@@ -481,7 +484,9 @@ Phaser.Renderer.WebGL.prototype = {
             source.glTexture = gl.createTexture();
         }
 
-        gl.activeTexture(gl.TEXTURE0 + source.glTextureIndex);
+        // gl.activeTexture(gl.TEXTURE0 + source.glTextureIndex);
+
+        gl.activeTexture(gl.TEXTURE0);
 
         gl.bindTexture(gl.TEXTURE_2D, source.glTexture);
 

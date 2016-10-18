@@ -28,19 +28,19 @@ Phaser.Renderer.WebGL.FilterTexture = function (renderer, width, height, scaleMo
      * @property frameBuffer
      * @type Any
      */
-     this.frameBuffer = this.renderer.createFramebuffer(width, height, scaleMode || Phaser.scaleModes.DEFAULT, textureUnit);
+    this.frameBuffer = this.renderer.createFramebuffer(width, height, scaleMode || Phaser.scaleModes.DEFAULT, textureUnit);
 
     /**
      * @property texture
      * @type Any
      */
-     this.texture = this.frameBuffer.targetTexture;
+    this.texture = this.frameBuffer.targetTexture;
 
-     this.width = width;
+    this.width = width;
 
-     this.height = height;
+    this.height = height;
 
-     this.renderBuffer = this.frameBuffer.renderBuffer;
+    this.renderBuffer = this.frameBuffer.renderBuffer;
 
 };
 
@@ -51,7 +51,7 @@ Phaser.Renderer.WebGL.FilterTexture.prototype = {
     clear: function ()
     {
         this.gl.clearColor(0, 0, 0, 0);
-        this.gl.clear(gl.COLOR_BUFFER_BIT);
+        this.gl.clear(this.gl.COLOR_BUFFER_BIT);
     },
 
     /**
