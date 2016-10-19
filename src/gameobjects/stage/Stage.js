@@ -76,6 +76,8 @@ Phaser.Stage = function (game) {
     */
     this._onChange = null;
 
+    this.color = new Phaser.Component.Color(this);
+
     /**
     * @property {number} _bgColor - Stage background color object. Populated by setBackgroundColor.
     * @private

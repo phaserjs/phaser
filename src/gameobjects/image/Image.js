@@ -44,10 +44,12 @@ Phaser.GameObject.Image = function (game, x, y, key, frame)
 
     this.data = new Phaser.Component.Data(this);
 
+    this.color = new Phaser.Component.Color(this);
+
     //  Temporary for now?
-    this.alpha = 1;
-    this.worldAlpha = 1;
-    this.blendMode = Phaser.blendModes.NORMAL;
+    // this.alpha = 1;
+    // this.worldAlpha = 1;
+    // this.blendMode = Phaser.blendModes.NORMAL;
     this.scaleMode = Phaser.scaleModes.DEFAULT;
     this.exists = true;
 };
@@ -65,7 +67,7 @@ Phaser.GameObject.Image.prototype.preUpdate = function ()
 {
     if (this.parent)
     {
-        this.worldAlpha = this.alpha * this.parent.worldAlpha;
+        this.color.worldAlpha = this.parent.color.worldAlpha;
     }
 };
 

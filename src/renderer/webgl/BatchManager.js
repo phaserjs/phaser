@@ -339,9 +339,9 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         this.dirty = true;
     },
 
-    render: function (src)
+    render: function (sprite)
     {
-        var frame = src.frame;
+        var frame = sprite.frame;
         var source = frame.source;
 
         //  Check TextureSource
@@ -355,8 +355,7 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
 
             var gl = this.gl;
 
-            gl.activeTexture(gl.TEXTURE0);
-            // gl.activeTexture(gl.TEXTURE0 + source.glTextureIndex);
+            gl.activeTexture(gl.TEXTURE0 + source.glTextureIndex);
             gl.bindTexture(gl.TEXTURE_2D, source.glTexture);
 
             // this.renderer.textureArray[source.glTextureIndex] = source;
@@ -373,8 +372,8 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         // Get the Texture UVs
         var uvs = frame.uvs;
 
-        var aX = src.anchorX;
-        var aY = src.anchorY;
+        var aX = sprite.anchorX;
+        var aY = sprite.anchorY;
 
         var w0, w1, h0, h1;
 
@@ -409,7 +408,7 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         var resolution = source.resolution;
         var textureIndex = source.glTextureIndex;
 
-        var wt = src.transform.world;
+        var wt = sprite.transform.world;
 
         var a = wt.a / resolution;
         var b = wt.b / resolution;
@@ -457,12 +456,6 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         var colors = this.colors;
         var positions = this.positions;
 
-        // var tint = sprite.tint;
-        var tint = 0xffffff;
-        var color = (tint >> 16) + (tint & 0xff00) + ((tint & 0xff) << 16) + (src.worldAlpha * 255 << 24);
-        // var color = 16777215;
-        // var color = -1;
-
         if (this.renderer.roundPixels)
         {
             tx |= 0;
@@ -480,7 +473,10 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         positions[i++] = d * h1 + b * w1 + ty;
         positions[i++] = uvs.x0;
         positions[i++] = uvs.y0;
-        colors[i++] = color;
+
+        var tint = sprite.color.tint[0];
+        colors[i++] = (tint >> 16) + (tint & 0xff00) + ((tint & 0xff) << 16) + (sprite.color.worldAlpha * 255 << 24);
+
         // positions[i++] = textureIndex;
 
         //  Top Right vert (xy, uv, color)
@@ -488,7 +484,10 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         positions[i++] = d * h1 + b * w0 + ty;
         positions[i++] = uvs.x1;
         positions[i++] = uvs.y1;
-        colors[i++] = color;
+
+        tint = sprite.color.tint[1];
+        colors[i++] = (tint >> 16) + (tint & 0xff00) + ((tint & 0xff) << 16) + (sprite.color.worldAlpha * 255 << 24);
+
         // positions[i++] = textureIndex;
 
         //  Bottom Right vert (xy, uv, color)
@@ -496,7 +495,10 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         positions[i++] = d * h0 + b * w0 + ty;
         positions[i++] = uvs.x2;
         positions[i++] = uvs.y2;
-        colors[i++] = color;
+
+        tint = sprite.color.tint[3];
+        colors[i++] = (tint >> 16) + (tint & 0xff00) + ((tint & 0xff) << 16) + (sprite.color.worldAlpha * 255 << 24);
+
         // positions[i++] = textureIndex;
 
         //  Bottom Left vert (xy, uv, color)
@@ -504,10 +506,13 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         positions[i++] = d * h0 + b * w1 + ty;
         positions[i++] = uvs.x3;
         positions[i++] = uvs.y3;
-        colors[i++] = color;
+
+        tint = sprite.color.tint[2];
+        colors[i++] = (tint >> 16) + (tint & 0xff00) + ((tint & 0xff) << 16) + (sprite.color.worldAlpha * 255 << 24);
+
         // positions[i++] = textureIndex;
 
-        this.sprites[this.currentBatchSize++] = src;
+        this.sprites[this.currentBatchSize++] = sprite;
     },
 
     flush: function ()

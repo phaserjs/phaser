@@ -65,6 +65,13 @@ Phaser.Component.Color.prototype = {
 
     setTint: function (topLeft, topRight, bottomLeft, bottomRight)
     {
+        if (topRight === undefined)
+        {
+            topRight = topLeft;
+            bottomLeft = topLeft;
+            bottomRight = topLeft;
+        }
+
         this._tint[0] = topLeft;
         this._tint[1] = topRight;
         this._tint[2] = bottomLeft;
@@ -165,6 +172,22 @@ Object.defineProperties(Phaser.Component.Color.prototype, {
                 this._alpha = value;
                 this.setDirty();
             }
+        }
+
+    },
+
+    worldAlpha: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return this._worldAlpha;
+        },
+
+        set: function (value)
+        {
+            this._worldAlpha = this._alpha * value;
         }
 
     },

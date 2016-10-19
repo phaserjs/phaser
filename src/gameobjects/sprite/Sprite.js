@@ -76,10 +76,10 @@ Phaser.GameObject.Sprite.prototype.constructor = Phaser.GameObject.Sprite;
 */
 Phaser.GameObject.Sprite.prototype.preUpdate = function ()
 {
-    // if (this.parent)
-    // {
-    //     this.worldAlpha = this.alpha * this.parent.worldAlpha;
-    // }
+    if (this.parent)
+    {
+        this.color.worldAlpha = this.parent.color.worldAlpha;
+    }
 
     this.children.preUpdate();
 };
