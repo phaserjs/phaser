@@ -34,6 +34,9 @@ Phaser.Component.Transform = function (gameObject, x, y, scaleX, scaleY)
     //  Cached Transform Calculations
     this.cache = { a: 1, b: 0, c: 0, d: 1, sr: 0, cr: 0 };
 
+    //  GL Vertex Data
+    this.glVertextData = { x0: 0, y0: 0, x1: 0, y1: 0, x2: 0, y2: 0, x3: 0, y3: 0 };
+
     this.hasLocalRotation = false;
 
     //  Private value holders, accessed via the getters and setters
@@ -50,8 +53,6 @@ Phaser.Component.Transform = function (gameObject, x, y, scaleX, scaleY)
     this._worldRotation = 0;
     this._worldScaleX = scaleX;
     this._worldScaleY = scaleY;
-
-    // this._glVertexDataX1 = 
 
     this._dirty = true;
    
@@ -197,8 +198,8 @@ Phaser.Component.Transform.prototype = {
             this.world.b = this.cache.b;
             this.world.c = this.cache.c;
             this.world.d = this.cache.d;
-            this.world.tx = this._posX - (this._pivotX * this.cache.a + this._pivotY * this.cache.c);
-            this.world.ty = this._posY - (this._pivotX * this.cache.b + this._pivotY * this.cache.d);
+            this.world.tx = this._posX - ((this._pivotX * this.cache.a) + (this._pivotY * this.cache.c));
+            this.world.ty = this._posY - ((this._pivotX * this.cache.b) + (this._pivotY * this.cache.d));
 
             this._worldRotation = Math.atan2(-this.cache.c, this.cache.d);
         }
@@ -375,6 +376,8 @@ Phaser.Component.Transform.prototype = {
             }
         }
 
+        this.updateVertexData();
+
         this._dirty = false;
     },
 
@@ -384,12 +387,107 @@ Phaser.Component.Transform.prototype = {
         this.cache.b = this.cache.sr * this._scaleX;
         this.cache.c = -this.cache.sr * this._scaleY;
         this.cache.d = this.cache.cr * this._scaleY;
+    },
+
+    updateVertexData: function ()
+    {
+        var frame = this.gameObject.frame;
+
+        var w0;
+        var h0;
+        var w1;
+        var h1;
+
+        if (frame.data.trim)
+        {
+            //  If the sprite is trimmed, add the extra space before transforming
+            w1 = frame.x - (this._anchorX * frame.width);
+            w0 = w1 + frame.cutWidth;
+
+            h1 = frame.y - (this._anchorY * frame.height);
+            h0 = h1 + frame.cutHeight;
+        }
+        else
+        {
+            w0 = frame.width * (1 - this._anchorX);
+            w1 = frame.width * -this._anchorX;
+
+            h0 = frame.height * (1 - this._anchorY);
+            h1 = frame.height * -this._anchorY;
+        }
+
+        var resolution = frame.source.resolution;
+
+        var wt = this.world;
+
+        var a = wt.a / resolution;
+        var b = wt.b / resolution;
+        var c = wt.c / resolution;
+        var d = wt.d / resolution;
+        var tx = wt.tx;
+        var ty = wt.ty;
+
+        if (frame.rotated)
+        {
+            // var cw = frame.cutWidth;
+            var ch = frame.height;
+            var a0 = a;
+            var b0 = b;
+            var c0 = c;
+            var d0 = d;
+            var _w1 = w1;
+            var _w0 = w0;
+
+            //  Offset before rotating
+            tx = (wt.c * ch) + tx;
+            ty = (wt.d * ch) + ty;
+            
+            //  Rotate matrix by 90 degrees with precalc values for sine and cosine of rad(90)
+            a = (a0 * 6.123233995736766e-17) + -c0;
+            b = (b0 * 6.123233995736766e-17) + -d0;
+            c = a0 + (c0 * 6.123233995736766e-17);
+            d = b0 + (d0 * 6.123233995736766e-17);
+
+            // Update UV coordinates
+            frame.updateUVsInverted();
+
+            // Rotate dimensions
+            w0 = h0;
+            w1 = h1;
+            h0 = _w0;
+            h1 = _w1;
+        }
+
+        if (frame.autoRound === 1 || (frame.autoRound === -1 && this.game.renderer.roundPixels))
+        {
+            tx |= 0;
+            ty |= 0;
+        }
+
+        var vert = this.glVertextData;
+
+        //  Top Left Vert
+        vert.x0 = (a * w1) + (c * h1) + tx;
+        vert.y0 = (d * h1) + (b * w1) + ty;
+
+        //  Top Right Vert
+        vert.x1 = (a * w0) + (c * h1) + tx;
+        vert.y1 = (d * h1) + (b * w0) + ty;
+
+        //  Bottom Right Vert
+        vert.x2 = (a * w0) + (c * h0) + tx;
+        vert.y2 = (d * h0) + (b * w0) + ty;
+
+        //  Bottom Left Vert
+        vert.x3 = (a * w1) + (c * h0) + tx;
+        vert.y3 = (d * h0) + (b * w1) + ty;
     }
 
 };
 
 Object.defineProperties(Phaser.Component.Transform.prototype, {
 
+    //  Sets this *component* as being dirty
     dirty: {
 
         enumerable: true,
