@@ -120,6 +120,7 @@ Phaser.TextureFrame = function (texture, name, sourceIndex, x, y, width, height)
             r: x + width,
             b: y + height
         },
+        trim: false,
         sourceSize: {
             w: width,
             h: height
@@ -192,6 +193,8 @@ Phaser.TextureFrame.prototype = {
     {
         //  Store actual values
 
+        this.data.trim = true;
+
         this.data.sourceSize.w = actualWidth;
         this.data.sourceSize.h = actualHeight;
 
@@ -250,17 +253,17 @@ Phaser.TextureFrame.prototype = {
         var th = this.source.height;
         var uvs = this.data.uvs;
         
-        uvs.x0 = this.x / tw;
-        uvs.y0 = this.y / th;
+        uvs.x0 = this.cutX / tw;
+        uvs.y0 = this.cutY / th;
 
-        uvs.x1 = (this.x + this.height) / tw;
-        uvs.y1 = this.y / th;
+        uvs.x1 = (this.cutX + this.cutHeight) / tw;
+        uvs.y1 = this.cutY / th;
 
-        uvs.x2 = (this.x + this.height) / tw;
-        uvs.y2 = (this.y + this.width) / th;
+        uvs.x2 = (this.cutX + this.cutHeight) / tw;
+        uvs.y2 = (this.cutY + this.cutWidth) / th;
 
-        uvs.x3 = this.x / tw;
-        uvs.y3 = (this.y + this.width) / th;
+        uvs.x3 = this.cutX / tw;
+        uvs.y3 = (this.cutY + this.cutWidth) / th;
 
         return this;
     },
