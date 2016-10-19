@@ -38,8 +38,8 @@ Phaser.Component.Color = function (gameObject)
     //  String version of RGBA
     this._rgba = '';
 
-    //  32-bit version of RGBA
-    this._glBg = this.getColor32(0, 0, 0, 0);
+    //  32-bit version of ARGB
+    this._glBg = 0;
 
     this._hasBackground = false;
 };
@@ -53,6 +53,7 @@ Phaser.Component.Color.prototype = {
         if (red === undefined)
         {
             this._hasBackground = false;
+            this._glBg = 0;
         }
         else
         {
@@ -117,7 +118,7 @@ Phaser.Component.Color.prototype = {
             this._glBg = this.getColor32(this._r, this._g, this._b, this._a);
         }
 
-        //  Tint mults
+        //  Tint mults?
 
     },
 
