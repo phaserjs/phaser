@@ -18,8 +18,7 @@ Phaser.TextureManager.Parsers.JSONArray = function (texture, sourceIndex, json)
     //  Malformed?
     if (!json['frames'])
     {
-        // console.warn("Phaser.AnimationParser.JSONData: Invalid Texture Atlas JSON given, missing 'frames' array");
-        // console.log(json);
+        console.warn('Invalid Texture Atlas JSON Array given, missing \'frames\' array');
         return;
     }
 

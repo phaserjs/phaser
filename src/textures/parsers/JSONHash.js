@@ -13,17 +13,16 @@
 * @param {object} json - The JSON data from the Texture Atlas. Must be in JSON Hash format.
 * @return {Phaser.FrameData} A FrameData object containing the parsed frames.
 */
-Phaser.TextureManager.Parsers.JSONHash = function (texture, json)
+Phaser.TextureManager.Parsers.JSONHash = function (texture, sourceIndex, json)
 {
     //  Malformed?
     if (!json['frames'])
     {
-        // console.warn("Phaser.AnimationParser.JSONDataHash: Invalid Texture Atlas JSON given, missing 'frames' object");
-        // console.log(json);
+        console.warn('Invalid Texture Atlas JSON Hash given, missing \'frames\' Object');
         return;
     }
 
-    //  By this stage frames is a fully parsed array
+    //  By this stage frames is a fully parsed Object
     var frames = json['frames'];
     var newFrame;
 
@@ -32,7 +31,7 @@ Phaser.TextureManager.Parsers.JSONHash = function (texture, json)
         var src = frames[key];
 
         //  The frame values are the exact coordinates to cut the frame out of the atlas from
-        newFrame = texture.add(key, src.frame.x, src.frame.y, src.frame.w, src.frame.h);
+        newFrame = texture.add(key, sourceIndex, src.frame.x, src.frame.y, src.frame.w, src.frame.h);
 
         //  These are the original (non-trimmed) sprite values
         if (src.trimmed)
@@ -53,5 +52,5 @@ Phaser.TextureManager.Parsers.JSONHash = function (texture, json)
         }
     }
 
-    return data;
+    return texture;
 };

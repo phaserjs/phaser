@@ -699,9 +699,10 @@ Phaser.Cache.prototype = {
             texture: null
         };
 
-        if (Array.isArray(atlasData.frames) && format === Phaser.Loader.TEXTURE_ATLAS_JSON_HASH)
+        //  If they (or Phaser) set the JSON Format to ARRAY, but it's an Object, then switch it
+        if (!Array.isArray(atlasData.frames) && format === Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY)
         {
-            format = Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY;
+            format = Phaser.Loader.TEXTURE_ATLAS_JSON_HASH;
         }
 
         var manager = this.game.textures;
