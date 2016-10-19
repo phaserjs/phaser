@@ -382,8 +382,8 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
 
     render: function (sprite)
     {
-        var frame = sprite.frame;
-        var source = frame.source;
+        // var frame = sprite.frame;
+        var source = sprite.frame.source;
 
         //  Check TextureSource
         if (this.currentTextureSource !== source)
@@ -410,13 +410,12 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
             this.currentTextureSource = source;
         }
 
-        // Get the Texture UVs
-        var uvs = frame.uvs;
-
+        /*
         var aX = sprite.anchorX;
         var aY = sprite.anchorY;
 
         var w0, w1, h0, h1;
+        */
 
         /*
         if (texture.trim)
@@ -440,6 +439,7 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         }
         */
 
+        /*
         w0 = (frame.width) * (1 - aX);
         w1 = (frame.width) * -aX;
 
@@ -447,7 +447,7 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         h1 = frame.height * -aY;
 
         var resolution = source.resolution;
-        var textureIndex = source.glTextureIndex;
+        */
 
         //  A Sprite Transform Update would need:
         //  w0, w1, h0, h1, resolution, roundPixels
@@ -459,6 +459,7 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         //  Perhaps Frame is a requirement for all GameObjects, no matter what they actually render
         //  So maybe Image, etc should extend a BaseGameObject, which includes Transform, Frame and Color?
 
+        /*
         var wt = sprite.transform.world;
 
         var a = wt.a / resolution;
@@ -467,6 +468,7 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         var d = wt.d / resolution;
         var tx = wt.tx;
         var ty = wt.ty;
+        */
 
         // var cw = frame.cutWidth;
         // var ch = frame.cutHeight;
@@ -503,21 +505,30 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         }
         */
 
-        //  These are just views into the same typed array
-        var colors = this.colors;
-        var positions = this.positions;
-
+        /*
         if (this.renderer.roundPixels)
         {
             tx |= 0;
             ty |= 0;
         }
+        */
+
+        //  These are just views into the same typed array
+        var colors = this.colors;
+        var positions = this.positions;
+
+        var uvs = sprite.frame.uvs;
+        var verts = sprite.transform.glVertextData;
+
+        // var textureIndex = source.glTextureIndex;
 
         var i = this.currentBatchSize * this.vertSize;
 
         //  Top Left vert (xy, uv, color)
-        positions[i++] = a * w1 + c * h1 + tx;
-        positions[i++] = d * h1 + b * w1 + ty;
+        // positions[i++] = a * w1 + c * h1 + tx;
+        // positions[i++] = d * h1 + b * w1 + ty;
+        positions[i++] = verts.x0;
+        positions[i++] = verts.y0;
         positions[i++] = uvs.x0;
         positions[i++] = uvs.y0;
         colors[i++] = sprite.color._glTint.topLeft + (sprite.color.worldAlpha * 255 << 24);
@@ -525,8 +536,10 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         // positions[i++] = textureIndex;
 
         //  Top Right vert (xy, uv, color)
-        positions[i++] = a * w0 + c * h1 + tx;
-        positions[i++] = d * h1 + b * w0 + ty;
+        // positions[i++] = a * w0 + c * h1 + tx;
+        // positions[i++] = d * h1 + b * w0 + ty;
+        positions[i++] = verts.x1;
+        positions[i++] = verts.y1;
         positions[i++] = uvs.x1;
         positions[i++] = uvs.y1;
         colors[i++] = sprite.color._glTint.topRight + (sprite.color.worldAlpha * 255 << 24);
@@ -534,8 +547,10 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         // positions[i++] = textureIndex;
 
         //  Bottom Right vert (xy, uv, color)
-        positions[i++] = a * w0 + c * h0 + tx;
-        positions[i++] = d * h0 + b * w0 + ty;
+        // positions[i++] = a * w0 + c * h0 + tx;
+        // positions[i++] = d * h0 + b * w0 + ty;
+        positions[i++] = verts.x2;
+        positions[i++] = verts.y2;
         positions[i++] = uvs.x2;
         positions[i++] = uvs.y2;
         colors[i++] = sprite.color._glTint.bottomRight + (sprite.color.worldAlpha * 255 << 24);
@@ -543,8 +558,10 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         // positions[i++] = textureIndex;
 
         //  Bottom Left vert (xy, uv, color)
-        positions[i++] = a * w1 + c * h0 + tx;
-        positions[i++] = d * h0 + b * w1 + ty;
+        // positions[i++] = a * w1 + c * h0 + tx;
+        // positions[i++] = d * h0 + b * w1 + ty;
+        positions[i++] = verts.x3;
+        positions[i++] = verts.y3;
         positions[i++] = uvs.x3;
         positions[i++] = uvs.y3;
         colors[i++] = sprite.color._glTint.bottomLeft + (sprite.color.worldAlpha * 255 << 24);
@@ -552,29 +569,6 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         // positions[i++] = textureIndex;
 
         this.sprites[this.currentBatchSize++] = sprite;
-    },
-
-    addVertexData: function (x, y, uvX, uvY, tint, bgColor, gameObject)
-    {
-        var colors = this.colors;
-        var positions = this.positions;
-        var i = this.currentBatchSize * (this.vertSize / 4);
-
-        //  Top Left vert (xy, uv, color)
-        positions[i++] = x;
-        positions[i++] = y;
-        positions[i++] = uvX;
-        positions[i++] = uvY;
-
-        // positions[i++] = textureIndex;
-
-        colors[i++] = tint;
-        colors[i++] = bgColor;
-
-        if (gameObject)
-        {
-            this.sprites[this.currentBatchSize++] = gameObject;
-        }
     },
 
     flush: function ()
