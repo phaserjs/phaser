@@ -383,10 +383,10 @@ Phaser.Renderer.WebGL.prototype = {
     render: function (stage)
     {
         //  No point rendering if our context has been blown up!
-        if (this.contextLost)
-        {
-            return;
-        }
+        // if (this.contextLost)
+        // {
+        //     return;
+        // }
 
         //  Add Pre-render hook
 
@@ -398,10 +398,10 @@ Phaser.Renderer.WebGL.prototype = {
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
         //  Transparent
-        // gl.clearColor(0, 0, 0, 0);
+        gl.clearColor(0, 0, 0, 0);
 
-        gl.clearColor(0.0, 0.4, 0.0, 1.0);
-        gl.clear(gl.COLOR_BUFFER_BIT);
+        // gl.clearColor(0.0, 0.4, 0.0, 1.0);
+        // gl.clear(gl.COLOR_BUFFER_BIT);
 
         //  Black
         // gl.clearColor(0, 0, 0, 1);
@@ -518,8 +518,6 @@ Phaser.Renderer.WebGL.prototype = {
         }
 
         source.glDirty = false;
-
-        console.log('updateTexture', source.glTexture);
 
         return true;
     },
