@@ -522,8 +522,8 @@ Phaser.StateManager.prototype = {
     * @param {string} key - State key.
     * @private
     */
-    setCurrentState: function (key) {
-
+    setCurrentState: function (key)
+    {
         this.callbackContext = this.states[key];
 
         this.link(key);

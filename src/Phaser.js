@@ -4,6 +4,8 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
+//  "First do it, then do it right, then do it better" - Addy Osmani
+
 /**
 * @namespace Phaser
 */
@@ -14,7 +16,7 @@ var Phaser = Phaser || {    // jshint ignore:line
     * @constant
     * @type {string}
     */
-    VERSION: '3.0.0.r4',
+    VERSION: '3.0.0.r5',
 
     /**
     * An array of Phaser game instances.

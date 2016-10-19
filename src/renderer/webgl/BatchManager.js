@@ -131,7 +131,8 @@ Phaser.Renderer.WebGL.BatchManager = function (renderer)
 
         'void main(void) {',
         '   vec4 pixel = texture2D(uSampler, vTextureCoord) * vTintColor;', // get the color from the texture
-        '   if (pixel.a == 0.0) pixel = vBgColor;', // if texture alpha is zero, use the bg color
+        // '   if (pixel.a == 0.0) pixel = vBgColor;', // if texture alpha is zero, use the bg color
+        '   if (pixel.a > 0.0) pixel = PINK;', // if texture alpha is zero, use the bg color
         '   gl_FragColor = pixel;',
         '}'
     ];

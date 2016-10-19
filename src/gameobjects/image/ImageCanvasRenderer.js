@@ -69,10 +69,44 @@ Phaser.Renderer.Canvas.GameObjects.Image = {
 
         var cw = frame.cutWidth;
         var ch = frame.cutHeight;
+        var cwr = cw / resolution;
+        var chr = ch / resolution;
 
         renderer.context.setTransform(wt.a, wt.b, wt.c, wt.d, tx, ty);
 
-        renderer.context.drawImage(source.image, frame.cutX, frame.cutY, cw, ch, dx, dy, cw / resolution, ch / resolution);
+        //  Color Component
+
+        if (src.color._hasBackground)
+        {
+            //  context save?
+            renderer.context.fillStyle = src.color._rgba;
+            renderer.context.fillRect(dx, dy, cwr, chr);
+        }
+
+        // renderer.context.drawImage(source.image, frame.cutX, frame.cutY, cw, ch, dx, dy, cw / resolution, ch / resolution);
+
+        //  Test drawing over the top
+        // renderer.currentBlendMode = src.blendMode;
+
+        //  TESTS Works fine :)
+        if (src.texture.key === 'bunny')
+        {
+            renderer.context.drawImage(source.image, frame.cutX, frame.cutY, cw, ch, dx, dy, cw / resolution, ch / resolution);
+            renderer.context.save();
+            // renderer.context.globalCompositeOperation = 'source-in';
+            renderer.context.globalCompositeOperation = 'xor';
+            renderer.context.beginPath();
+            renderer.context.fillStyle = 'rgba(255,0,255,0.5)';
+            renderer.context.fillRect(dx, dy, cwr, chr);
+            renderer.context.closePath();
+            // renderer.context.drawImage(source.image, frame.cutX, frame.cutY, cw, ch, dx, dy, cw / resolution, ch / resolution);
+            renderer.context.restore();
+            renderer.context.globalCompositeOperation = 'source-over';
+        }
+        else
+        {
+            renderer.context.drawImage(source.image, frame.cutX, frame.cutY, cw, ch, dx, dy, cw / resolution, ch / resolution);
+        }
 
         /*
         //  Move this to either the Renderer, or the Texture Manager, but not here (as it's repeated all over the place)
