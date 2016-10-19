@@ -178,6 +178,7 @@ EOL;
     <script src="$path/src/components/Transform.js"></script>
     <script src="$path/src/components/UpdateManager.js"></script>
 
+    <script src="$path/src/gameobjects/GameObject.js"></script>
     <script src="$path/src/gameobjects/Factory.js"></script>
     <script src="$path/src/gameobjects/GameObjectCreator.js"></script>
 

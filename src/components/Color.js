@@ -64,7 +64,7 @@ Phaser.Component.Color.prototype = {
             this._a = (alpha) ? alpha : 1;
         }
 
-        this.setDirty();
+        this.dirty = true;
     },
 
     clearTint: function ()
@@ -90,21 +90,7 @@ Phaser.Component.Color.prototype = {
 
         this._hasTint = true;
 
-        this.setDirty();
-    },
-
-    getBlendMode: function ()
-    {
-        return this._blendMode;
-    },
-
-    setBlendMode: function (blendMode)
-    {
-        if (blendMode >= 0 && blendMode <= 16)
-        {
-            this._blendMode = blendMode;
-            this.setDirty();
-        }
+        this.dirty = true;
     },
 
     //  Called by the Dirty Manager
@@ -120,16 +106,6 @@ Phaser.Component.Color.prototype = {
 
         //  Tint mults?
 
-    },
-
-    setDirty: function ()
-    {
-        if (!this._dirty)
-        {
-            this.game.updates.add(this);
-        }
-
-        this._dirty = true;
     },
 
     getColor: function (value)
@@ -155,6 +131,34 @@ Phaser.Component.Color.prototype = {
 
 Object.defineProperties(Phaser.Component.Color.prototype, {
 
+    dirty: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return this._dirty;
+        },
+
+        set: function (value)
+        {
+            if (value)
+            {
+                if (!this._dirty)
+                {
+                    this.game.updates.add(this);
+                }
+
+                this._dirty = true;
+            }
+            else
+            {
+                this._dirty = false;
+            }
+        }
+
+    },
+
     tintTopLeft: {
 
         enumerable: true,
@@ -168,7 +172,7 @@ Object.defineProperties(Phaser.Component.Color.prototype, {
         {
             this._tint.topLeft = value;
             this._glTint.topLeft = this.getColor(value);
-            this.setDirty();
+            this.dirty = true;
         }
 
     },
@@ -186,7 +190,7 @@ Object.defineProperties(Phaser.Component.Color.prototype, {
         {
             this._tint.topRight = value;
             this._glTint.topRight = this.getColor(value);
-            this.setDirty();
+            this.dirty = true;
         }
 
     },
@@ -204,7 +208,7 @@ Object.defineProperties(Phaser.Component.Color.prototype, {
         {
             this._tint.bottomLeft = value;
             this._glTint.bottomLeft = this.getColor(value);
-            this.setDirty();
+            this.dirty = true;
         }
 
     },
@@ -222,7 +226,7 @@ Object.defineProperties(Phaser.Component.Color.prototype, {
         {
             this._tint.bottomRight = value;
             this._glTint.bottomRight = this.getColor(value);
-            this.setDirty();
+            this.dirty = true;
         }
 
     },
@@ -257,7 +261,27 @@ Object.defineProperties(Phaser.Component.Color.prototype, {
             if (value !== this._alpha)
             {
                 this._alpha = value;
-                this.setDirty();
+                this.dirty = true;
+            }
+        }
+
+    },
+
+    blendMode: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return this._blendMode;
+        },
+
+        set: function (value)
+        {
+            if (value !== this._blendMode && value >= 0 && value <= 16)
+            {
+                this._blendMode = value;
+                this.dirty = true;
             }
         }
 
@@ -294,7 +318,7 @@ Object.defineProperties(Phaser.Component.Color.prototype, {
             {
                 this._a = value;
                 this._hasBackground = true;
-                this.setDirty();
+                this.dirty = true;
             }
         }
 
@@ -315,7 +339,7 @@ Object.defineProperties(Phaser.Component.Color.prototype, {
             {
                 this._r = value | 0;
                 this._hasBackground = true;
-                this.setDirty();
+                this.dirty = true;
             }
         }
 
@@ -336,7 +360,7 @@ Object.defineProperties(Phaser.Component.Color.prototype, {
             {
                 this._g = value | 0;
                 this._hasBackground = true;
-                this.setDirty();
+                this.dirty = true;
             }
         }
 
@@ -357,7 +381,7 @@ Object.defineProperties(Phaser.Component.Color.prototype, {
             {
                 this._b = value | 0;
                 this._hasBackground = true;
-                this.setDirty();
+                this.dirty = true;
             }
         }
 

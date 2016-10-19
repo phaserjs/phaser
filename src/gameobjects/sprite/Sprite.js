@@ -13,7 +13,7 @@
 *
 * @class Phaser.GameObject.Sprite
 * @constructor
-* @extends Phaser.Components.BaseTransform
+* @extends Phaser.GameObject
 * @param {Phaser.Game} game - A reference to the currently running game.
 * @param {number} x - The x coordinate (in world space) to position the Sprite at.
 * @param {number} y - The y coordinate (in world space) to position the Sprite at.
@@ -24,7 +24,10 @@ Phaser.GameObject.Sprite = function (game, x, y, key, frame)
 {
     this.game = game;
 
-    Phaser.Component.BaseTransform.call(this, x, y);
+    var _texture = game.textures.get(key);
+    var _frame = _texture.get(frame);
+
+    Phaser.GameObject.call(this, game, x, y, _texture, _frame);
 
     /**
     * @property {number} type - The const type of this object.
@@ -38,34 +41,10 @@ Phaser.GameObject.Sprite = function (game, x, y, key, frame)
     */
     this.physicsType = Phaser.SPRITE;
 
-    this.name = '';
-
-    this.parent = null;
-
-    this.texture = game.textures.get(key);
-
-    this.frame = this.texture.get(frame);
-
     this.children = new Phaser.Component.Children(this);
-
-    //  Allows you to turn off a GO from rendering, but still render its children
-    this.skipRender = (key === undefined);
-
-    this.visible = true;
-
-    this.data = new Phaser.Component.Data(this);
-
-    this.color = new Phaser.Component.Color(this);
-
-    //  Temporary for now?
-    // this.alpha = 1;
-    // this.worldAlpha = 1;
-    // this.blendMode = Phaser.blendModes.NORMAL;
-    this.scaleMode = Phaser.scaleModes.DEFAULT;
-    this.exists = true;
 };
 
-Phaser.GameObject.Sprite.prototype = Object.create(Phaser.Component.BaseTransform.prototype);
+Phaser.GameObject.Sprite.prototype = Object.create(Phaser.GameObject.prototype);
 Phaser.GameObject.Sprite.prototype.constructor = Phaser.GameObject.Sprite;
 
 /**
@@ -84,13 +63,13 @@ Phaser.GameObject.Sprite.prototype.preUpdate = function ()
     this.children.preUpdate();
 };
 
-Phaser.GameObject.Sprite.prototype.update = function ()
-{
-};
+// Phaser.GameObject.Sprite.prototype.update = function ()
+// {
+// };
 
-Phaser.GameObject.Sprite.prototype.postUpdate = function ()
-{
-};
+// Phaser.GameObject.Sprite.prototype.postUpdate = function ()
+// {
+// };
 
 Object.defineProperties(Phaser.GameObject.Sprite.prototype, {
 

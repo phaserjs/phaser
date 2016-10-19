@@ -356,6 +356,30 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         this.dirty = true;
     },
 
+    setCurrentTexture: function (textureSource)
+    {
+        if (this.currentTextureSource === textureSource)
+        {
+            return;
+        }
+
+        // if (this.renderer.textureArray[source.glTextureIndex] !== source)
+
+        if (this.currentBatchSize > 0)
+        {
+            this.flush();
+        }
+
+        var gl = this.gl;
+
+        gl.activeTexture(gl.TEXTURE0 + textureSource.glTextureIndex);
+        gl.bindTexture(gl.TEXTURE_2D, textureSource.glTexture);
+
+        this.currentTextureSource = textureSource;
+
+        // this.renderer.textureArray[textureSource.glTextureIndex] = textureSource;
+    },
+
     render: function (sprite)
     {
         var frame = sprite.frame;
@@ -379,7 +403,7 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
             this.currentTextureSource = source;
         }
 
-        //  Check Batch Size
+        //  Check Batch Size (TODO)
         if (this.currentBatchSize >= this.maxBatchSize)
         {
             this.flush();
@@ -424,6 +448,16 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
 
         var resolution = source.resolution;
         var textureIndex = source.glTextureIndex;
+
+        //  A Sprite Transform Update would need:
+        //  w0, w1, h0, h1, resolution, roundPixels
+        //  then it could calculate the vertex data
+        //  it could also cache those 6 values, and if nothing changed, not need to re-calc it
+        //  would the comparison checks be more expensive than the calculation?
+
+        //  maybe it's fair for the Transform component to assume that gameObject has a Frame?
+        //  Perhaps Frame is a requirement for all GameObjects, no matter what they actually render
+        //  So maybe Image, etc should extend a BaseGameObject, which includes Transform, Frame and Color?
 
         var wt = sprite.transform.world;
 
@@ -518,6 +552,29 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         // positions[i++] = textureIndex;
 
         this.sprites[this.currentBatchSize++] = sprite;
+    },
+
+    addVertexData: function (x, y, uvX, uvY, tint, bgColor, gameObject)
+    {
+        var colors = this.colors;
+        var positions = this.positions;
+        var i = this.currentBatchSize * (this.vertSize / 4);
+
+        //  Top Left vert (xy, uv, color)
+        positions[i++] = x;
+        positions[i++] = y;
+        positions[i++] = uvX;
+        positions[i++] = uvY;
+
+        // positions[i++] = textureIndex;
+
+        colors[i++] = tint;
+        colors[i++] = bgColor;
+
+        if (gameObject)
+        {
+            this.sprites[this.currentBatchSize++] = gameObject;
+        }
     },
 
     flush: function ()

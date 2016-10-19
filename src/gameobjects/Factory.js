@@ -14,8 +14,8 @@
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
 */
-Phaser.GameObject.Factory = function (game) {
-
+Phaser.GameObject.Factory = function (game)
+{
     /**
     * @property {Phaser.Game} game - A reference to the currently running Game.
     * @protected
@@ -27,7 +27,6 @@ Phaser.GameObject.Factory = function (game) {
     * @protected
     */
     this.world = this.game.world;
-
 };
 
 Phaser.GameObject.Factory.prototype.constructor = Phaser.GameObject.Factory;

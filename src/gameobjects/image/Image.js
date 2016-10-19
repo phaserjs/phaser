@@ -9,7 +9,7 @@
 * It can still rotate, scale, crop and receive input events. This makes it perfect for logos, backgrounds, simple buttons and other non-Sprite graphics.
 *
 * @class Phaser.GameObject.Image
-* @extends Phaser.Components.BaseTransform
+* @extends Phaser.GameObject
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
 * @param {number} [x=0] - The x coordinate of the Image. The coordinate is relative to any parent container this Image may be in.
@@ -21,40 +21,19 @@ Phaser.GameObject.Image = function (game, x, y, key, frame)
 {
     this.game = game;
 
-    Phaser.Component.BaseTransform.call(this, x, y);
+    var _texture = game.textures.get(key);
+    var _frame = _texture.get(frame);
+
+    Phaser.GameObject.call(this, game, x, y, _texture, _frame);
 
     /**
     * @property {number} type - The const type of this object.
     * @readonly
     */
     this.type = Phaser.IMAGE;
-
-    this.name = '';
-
-    this.parent = null;
-
-    this.texture = game.textures.get(key);
-
-    this.frame = this.texture.get(frame);
-
-    //  Allows you to turn off a GO from rendering, but still render its children
-    this.skipRender = (key === undefined);
-
-    this.visible = true;
-
-    this.data = new Phaser.Component.Data(this);
-
-    this.color = new Phaser.Component.Color(this);
-
-    //  Temporary for now?
-    // this.alpha = 1;
-    // this.worldAlpha = 1;
-    // this.blendMode = Phaser.blendModes.NORMAL;
-    this.scaleMode = Phaser.scaleModes.DEFAULT;
-    this.exists = true;
 };
 
-Phaser.GameObject.Image.prototype = Object.create(Phaser.Component.BaseTransform.prototype);
+Phaser.GameObject.Image.prototype = Object.create(Phaser.GameObject.prototype);
 Phaser.GameObject.Image.prototype.constructor = Phaser.GameObject.Image;
 
 /**
@@ -71,13 +50,13 @@ Phaser.GameObject.Image.prototype.preUpdate = function ()
     }
 };
 
-Phaser.GameObject.Image.prototype.update = function ()
-{
-};
+// Phaser.GameObject.Image.prototype.update = function ()
+// {
+// };
 
-Phaser.GameObject.Image.prototype.postUpdate = function ()
-{
-};
+// Phaser.GameObject.Image.prototype.postUpdate = function ()
+// {
+// };
 
 Object.defineProperties(Phaser.GameObject.Image.prototype, {
 
