@@ -27,10 +27,11 @@ Phaser.Renderer.WebGL.BatchManager = function (renderer)
     //
     //  Position (vec2) = 4 * 2 bytes
     //  UV (vec2) = 4 * 2 bytes
-    //  Color (float) = 4 bytes
+    //  Tint Color (float) = 4 bytes
+    //  BG Color (float) = 4 bytes
     //  Texture Index (float) OR tint (float) = 4 bytes
 
-    this.vertSize = (4 * 2) + (4 * 2) + (4);
+    this.vertSize = (4 * 2) + (4 * 2) + (4) + (4);
 
     var numVerts = this.vertSize * this.maxBatchSize * 4;
 
@@ -92,19 +93,22 @@ Phaser.Renderer.WebGL.BatchManager = function (renderer)
     this.vertexSrc = [
         'attribute vec2 aVertexPosition;',
         'attribute vec2 aTextureCoord;',
-        'attribute vec4 aColor;',
+        'attribute vec4 aTintColor;',
+        'attribute vec4 aBgColor;',
 
         'uniform vec2 projectionVector;',
 
         'varying vec2 vTextureCoord;',
-        'varying vec4 vColor;',
+        'varying vec4 vTintColor;',
+        'varying vec4 vBgColor;',
 
         'const vec2 center = vec2(-1.0, 1.0);',
 
         'void main(void) {',
         '   gl_Position = vec4((aVertexPosition / projectionVector) + center, 0.0, 1.0);',
         '   vTextureCoord = aTextureCoord;', // pass the texture coordinate to the fragment shader, the GPU will interpolate the points
-        '   vColor = vec4(aColor.rgb * aColor.a, aColor.a);',
+        '   vTintColor = vec4(aTintColor.rgb * aTintColor.a, aTintColor.a);',
+        '   vBgColor = aBgColor;',
         '}'
     ];
 
@@ -115,14 +119,20 @@ Phaser.Renderer.WebGL.BatchManager = function (renderer)
     */
     this.fragmentSrc = [
         'precision mediump float;',
+
         'varying vec2 vTextureCoord;', // the texture coords passed in from the vertex shader
-        'varying vec4 vColor;', //  the color value passed in from the vertex shader (texture color + alpha + tint)
+        'varying vec4 vTintColor;', //  the color value passed in from the vertex shader (texture color + alpha + tint)
+        'varying vec4 vBgColor;', //  the bg color value passed in from the vertex shader
         'varying float vTextureIndex;',
+
         'uniform sampler2D uSampler;', // our texture
+
         'const vec4 PINK = vec4(1.0, 0.0, 1.0, 1.0);',
+
         'void main(void) {',
-        '   gl_FragColor = texture2D(uSampler, vTextureCoord) * vColor;', // get the color from the texture
-        // '   gl_FragColor = PINK;', // debugging
+        '   vec4 pixel = texture2D(uSampler, vTextureCoord) * vTintColor;', // get the color from the texture
+        '   if (pixel.a == 0.0) pixel = vBgColor;', // if texture alpha is zero, use the bg color
+        '   gl_FragColor = pixel;',
         '}'
     ];
 
@@ -136,7 +146,10 @@ Phaser.Renderer.WebGL.BatchManager = function (renderer)
     // this.offsetVector;
 
     //  @type {GLint}
-    this.colorAttribute;
+    this.aTintColor;
+
+    //  @type {GLint}
+    this.aBgColor;
 
     //  @type {GLint}
     this.aTextureIndex;
@@ -234,8 +247,9 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         //  Get and store the attributes
         this.aVertexPosition = gl.getAttribLocation(program, 'aVertexPosition');
         this.aTextureCoord = gl.getAttribLocation(program, 'aTextureCoord');
-        this.colorAttribute = gl.getAttribLocation(program, 'aColor');
         // this.aTextureIndex = gl.getAttribLocation(program, 'aTextureIndex');
+        this.aTintColor = gl.getAttribLocation(program, 'aTintColor');
+        this.aBgColor = gl.getAttribLocation(program, 'aBgColor');
 
         //  Get and store the uniforms for the shader
         //  this part is different for multi-textures
@@ -247,8 +261,11 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         //  texture coordinate
         gl.enableVertexAttribArray(1);
 
-        //  color attribute
+        //  tint color attribute
         gl.enableVertexAttribArray(2);
+
+        //  bg color attribute
+        gl.enableVertexAttribArray(3);
 
         //  texture index
         // gl.enableVertexAttribArray(3);
@@ -470,6 +487,7 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         positions[i++] = uvs.x0;
         positions[i++] = uvs.y0;
         colors[i++] = sprite.color._glTint.topLeft + (sprite.color.worldAlpha * 255 << 24);
+        colors[i++] = sprite.color._glBg;
         // positions[i++] = textureIndex;
 
         //  Top Right vert (xy, uv, color)
@@ -478,6 +496,7 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         positions[i++] = uvs.x1;
         positions[i++] = uvs.y1;
         colors[i++] = sprite.color._glTint.topRight + (sprite.color.worldAlpha * 255 << 24);
+        colors[i++] = sprite.color._glBg;
         // positions[i++] = textureIndex;
 
         //  Bottom Right vert (xy, uv, color)
@@ -486,6 +505,7 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         positions[i++] = uvs.x2;
         positions[i++] = uvs.y2;
         colors[i++] = sprite.color._glTint.bottomRight + (sprite.color.worldAlpha * 255 << 24);
+        colors[i++] = sprite.color._glBg;
         // positions[i++] = textureIndex;
 
         //  Bottom Left vert (xy, uv, color)
@@ -494,6 +514,7 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         positions[i++] = uvs.x3;
         positions[i++] = uvs.y3;
         colors[i++] = sprite.color._glTint.bottomLeft + (sprite.color.worldAlpha * 255 << 24);
+        colors[i++] = sprite.color._glBg;
         // positions[i++] = textureIndex;
 
         this.sprites[this.currentBatchSize++] = sprite;
@@ -530,8 +551,11 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
             //  set the texture coordinate
             gl.vertexAttribPointer(this.aTextureCoord, 2, gl.FLOAT, false, this.vertSize, 8);
 
-            // color attributes will be interpreted as unsigned bytes and normalized
-            gl.vertexAttribPointer(this.colorAttribute, 4, gl.UNSIGNED_BYTE, true, this.vertSize, 16);
+            // tint color attributes will be interpreted as unsigned bytes and normalized
+            gl.vertexAttribPointer(this.aTintColor, 4, gl.UNSIGNED_BYTE, true, this.vertSize, 16);
+
+            // bg color attributes will be interpreted as unsigned bytes and normalized
+            gl.vertexAttribPointer(this.aBgColor, 4, gl.UNSIGNED_BYTE, true, this.vertSize, 20);
 
             //  texture index
             // gl.vertexAttribPointer(this.aTextureIndex, 2, gl.FLOAT, false, this.vertSize, 20);

@@ -27,11 +27,20 @@ Phaser.Component.Color = function (gameObject)
     this._glTint = { topLeft: 16777215, topRight: 16777215, bottomLeft: 16777215, bottomRight: 16777215 };
     this._hasTint = false;
 
+    //  Between 0 and 255
     this._r = 0;
     this._g = 0;
     this._b = 0;
+
+    //  Between 0 and 1
     this._a = 1;
+
+    //  String version of RGBA
     this._rgba = '';
+
+    //  32-bit version of RGBA
+    this._glBg = this.getColor32(0, 0, 0, 0);
+
     this._hasBackground = false;
 };
 
@@ -105,7 +114,11 @@ Phaser.Component.Color.prototype = {
         if (this._hasBackground)
         {
             this._rgba = 'rgba(' + this._r + ',' + this._g + ',' + this._b + ',' + this._a + ')';
+            this._glBg = this.getColor32(this._r, this._g, this._b, this._a);
         }
+
+        //  Tint mults
+
     },
 
     setDirty: function ()
@@ -116,6 +129,18 @@ Phaser.Component.Color.prototype = {
         }
 
         this._dirty = true;
+    },
+
+    getColor: function (value)
+    {
+        return (value >> 16) + (value & 0xff00) + ((value & 0xff) << 16);
+    },
+
+    getColor32: function (r, g, b, a)
+    {
+        a *= 255;
+
+        return ((a << 24) | (b << 16) | (g << 8) | r) >>> 0;
     },
 
     destroy: function ()
@@ -141,8 +166,7 @@ Object.defineProperties(Phaser.Component.Color.prototype, {
         set: function (value)
         {
             this._tint.topLeft = value;
-            // this._glTint.topLeft = (value >> 16) + (value & 0xff00) + ((value & 0xff) << 16) + (this._worldAlpha * 255 << 24);
-            this._glTint.topLeft = (value >> 16) + (value & 0xff00) + ((value & 0xff) << 16);
+            this._glTint.topLeft = this.getColor(value);
             this.setDirty();
         }
 
@@ -160,8 +184,7 @@ Object.defineProperties(Phaser.Component.Color.prototype, {
         set: function (value)
         {
             this._tint.topRight = value;
-            // this._glTint.topRight = (value >> 16) + (value & 0xff00) + ((value & 0xff) << 16) + (this._worldAlpha * 255 << 24);
-            this._glTint.topRight = (value >> 16) + (value & 0xff00) + ((value & 0xff) << 16);
+            this._glTint.topRight = this.getColor(value);
             this.setDirty();
         }
 
@@ -179,8 +202,7 @@ Object.defineProperties(Phaser.Component.Color.prototype, {
         set: function (value)
         {
             this._tint.bottomLeft = value;
-            this._glTint.bottomLeft = (value >> 16) + (value & 0xff00) + ((value & 0xff) << 16);
-            // this._glTint.bottomLeft = (value >> 16) + (value & 0xff00) + ((value & 0xff) << 16) + (this._worldAlpha * 255 << 24);
+            this._glTint.bottomLeft = this.getColor(value);
             this.setDirty();
         }
 
@@ -198,8 +220,7 @@ Object.defineProperties(Phaser.Component.Color.prototype, {
         set: function (value)
         {
             this._tint.bottomRight = value;
-            this._glTint.bottomRight = (value >> 16) + (value & 0xff00) + ((value & 0xff) << 16);
-            // this._glTint.bottomRight = (value >> 16) + (value & 0xff00) + ((value & 0xff) << 16) + (this._worldAlpha * 255 << 24);
+            this._glTint.bottomRight = this.getColor(value);
             this.setDirty();
         }
 
