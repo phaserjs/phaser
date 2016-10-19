@@ -23,7 +23,8 @@ Phaser.Component.Color = function (gameObject)
 
     this._blendMode = 0;
 
-    this._tint = [ 0xffffff, 0xffffff, 0xffffff, 0xffffff ];
+    this._tint = { topLeft: 0xffffff, topRight: 0xffffff, bottomLeft: 0xffffff, bottomRight: 0xffffff };
+    this._glTint = { topLeft: 16777215, topRight: 16777215, bottomLeft: 16777215, bottomRight: 16777215 };
     this._hasTint = false;
 
     this._r = 0;
@@ -58,9 +59,9 @@ Phaser.Component.Color.prototype = {
 
     clearTint: function ()
     {
-        this._hasTint = false;
+        this.setTint(0xffffff);
 
-        this.setDirty();
+        this._hasTint = false;
     },
 
     setTint: function (topLeft, topRight, bottomLeft, bottomRight)
@@ -72,10 +73,10 @@ Phaser.Component.Color.prototype = {
             bottomRight = topLeft;
         }
 
-        this._tint[0] = topLeft;
-        this._tint[1] = topRight;
-        this._tint[2] = bottomLeft;
-        this._tint[3] = bottomRight;
+        this.tintTopLeft = topLeft;
+        this.tintTopRight = topRight;
+        this.tintBottomLeft = bottomLeft;
+        this.tintBottomRight = bottomRight;
 
         this._hasTint = true;
 
@@ -128,6 +129,82 @@ Phaser.Component.Color.prototype = {
 
 Object.defineProperties(Phaser.Component.Color.prototype, {
 
+    tintTopLeft: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return this._tint.topLeft;
+        },
+
+        set: function (value)
+        {
+            this._tint.topLeft = value;
+            // this._glTint.topLeft = (value >> 16) + (value & 0xff00) + ((value & 0xff) << 16) + (this._worldAlpha * 255 << 24);
+            this._glTint.topLeft = (value >> 16) + (value & 0xff00) + ((value & 0xff) << 16);
+            this.setDirty();
+        }
+
+    },
+
+    tintTopRight: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return this._tint.topRight;
+        },
+
+        set: function (value)
+        {
+            this._tint.topRight = value;
+            // this._glTint.topRight = (value >> 16) + (value & 0xff00) + ((value & 0xff) << 16) + (this._worldAlpha * 255 << 24);
+            this._glTint.topRight = (value >> 16) + (value & 0xff00) + ((value & 0xff) << 16);
+            this.setDirty();
+        }
+
+    },
+
+    tintBottomLeft: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return this._tint.bottomLeft;
+        },
+
+        set: function (value)
+        {
+            this._tint.bottomLeft = value;
+            this._glTint.bottomLeft = (value >> 16) + (value & 0xff00) + ((value & 0xff) << 16);
+            // this._glTint.bottomLeft = (value >> 16) + (value & 0xff00) + ((value & 0xff) << 16) + (this._worldAlpha * 255 << 24);
+            this.setDirty();
+        }
+
+    },
+
+    tintBottomRight: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return this._tint.bottomRight;
+        },
+
+        set: function (value)
+        {
+            this._tint.bottomRight = value;
+            this._glTint.bottomRight = (value >> 16) + (value & 0xff00) + ((value & 0xff) << 16);
+            // this._glTint.bottomRight = (value >> 16) + (value & 0xff00) + ((value & 0xff) << 16) + (this._worldAlpha * 255 << 24);
+            this.setDirty();
+        }
+
+    },
+
     tint: {
 
         enumerable: true,
@@ -139,19 +216,7 @@ Object.defineProperties(Phaser.Component.Color.prototype, {
 
         set: function (value)
         {
-            if (Array.isArray(value))
-            {
-                this._tint = value;
-            }
-            else
-            {
-                this._tint[0] = value;
-                this._tint[1] = value;
-                this._tint[2] = value;
-                this._tint[3] = value;
-            }
-
-            this.setDirty();
+            this.setTint(value, value, value, value);
         }
 
     },

@@ -462,10 +462,6 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
             ty |= 0;
         }
 
-        //  Interleaved vert and color data
-        //  The color passed here includes an applied tint *see bitwise ops above *
-        //  Better to calculate that in the shader?
-
         var i = this.currentBatchSize * this.vertSize;
 
         //  Top Left vert (xy, uv, color)
@@ -473,10 +469,7 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         positions[i++] = d * h1 + b * w1 + ty;
         positions[i++] = uvs.x0;
         positions[i++] = uvs.y0;
-
-        var tint = sprite.color.tint[0];
-        colors[i++] = (tint >> 16) + (tint & 0xff00) + ((tint & 0xff) << 16) + (sprite.color.worldAlpha * 255 << 24);
-
+        colors[i++] = sprite.color._glTint.topLeft + (sprite.color.worldAlpha * 255 << 24);
         // positions[i++] = textureIndex;
 
         //  Top Right vert (xy, uv, color)
@@ -484,10 +477,7 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         positions[i++] = d * h1 + b * w0 + ty;
         positions[i++] = uvs.x1;
         positions[i++] = uvs.y1;
-
-        tint = sprite.color.tint[1];
-        colors[i++] = (tint >> 16) + (tint & 0xff00) + ((tint & 0xff) << 16) + (sprite.color.worldAlpha * 255 << 24);
-
+        colors[i++] = sprite.color._glTint.topRight + (sprite.color.worldAlpha * 255 << 24);
         // positions[i++] = textureIndex;
 
         //  Bottom Right vert (xy, uv, color)
@@ -495,10 +485,7 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         positions[i++] = d * h0 + b * w0 + ty;
         positions[i++] = uvs.x2;
         positions[i++] = uvs.y2;
-
-        tint = sprite.color.tint[3];
-        colors[i++] = (tint >> 16) + (tint & 0xff00) + ((tint & 0xff) << 16) + (sprite.color.worldAlpha * 255 << 24);
-
+        colors[i++] = sprite.color._glTint.bottomRight + (sprite.color.worldAlpha * 255 << 24);
         // positions[i++] = textureIndex;
 
         //  Bottom Left vert (xy, uv, color)
@@ -506,10 +493,7 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         positions[i++] = d * h0 + b * w1 + ty;
         positions[i++] = uvs.x3;
         positions[i++] = uvs.y3;
-
-        tint = sprite.color.tint[2];
-        colors[i++] = (tint >> 16) + (tint & 0xff00) + ((tint & 0xff) << 16) + (sprite.color.worldAlpha * 255 << 24);
-
+        colors[i++] = sprite.color._glTint.bottomLeft + (sprite.color.worldAlpha * 255 << 24);
         // positions[i++] = textureIndex;
 
         this.sprites[this.currentBatchSize++] = sprite;
