@@ -111,6 +111,7 @@ Phaser.Renderer.WebGL.BatchManager = function (renderer)
         '   vTextureCoord = aTextureCoord;', // pass the texture coordinate to the fragment shader, the GPU will interpolate the points
         '   vTintColor = vec4(aTintColor.rgb * aTintColor.a, aTintColor.a);',
         '   vBgColor = aBgColor;',
+        '   vTextureIndex = aTextureIndex;',
         '}'
     ];
 
@@ -120,7 +121,7 @@ Phaser.Renderer.WebGL.BatchManager = function (renderer)
      * @type Array
     */
     this.fragmentSrc = [
-        'precision mediump float;',
+        'precision lowp float;',
 
         'varying vec2 vTextureCoord;', // the texture coords passed in from the vertex shader
         'varying vec4 vTintColor;', //  the color value passed in from the vertex shader (texture color + alpha + tint)
@@ -140,12 +141,6 @@ Phaser.Renderer.WebGL.BatchManager = function (renderer)
     ];
 
     //  @type {WebGLUniformLocation }
-    this.uSampler;
-
-    //  @type {WebGLUniformLocation }
-    this.projectionVector;
-
-    //  @type {WebGLUniformLocation }
     // this.offsetVector;
 
     //  @type {GLint}
@@ -162,6 +157,12 @@ Phaser.Renderer.WebGL.BatchManager = function (renderer)
 
     //  @type {GLint}
     this.aBgColor;
+
+    //  @type {WebGLUniformLocation }
+    this.uSampler;
+
+    //  @type {WebGLUniformLocation }
+    this.projectionVector;
 };
 
 Phaser.Renderer.WebGL.BatchManager.prototype.constructor = Phaser.Renderer.WebGL.BatchManager;
@@ -247,30 +248,26 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         gl.useProgram(program);
 
         //  Get and store the attributes
+
+        //  vertex position
         this.aVertexPosition = gl.getAttribLocation(program, 'aVertexPosition');
+        gl.enableVertexAttribArray(this.aVertexPosition);
+
         this.aTextureCoord = gl.getAttribLocation(program, 'aTextureCoord');
+        gl.enableVertexAttribArray(this.aTextureCoord);
+
         this.aTextureIndex = gl.getAttribLocation(program, 'aTextureIndex');
+        gl.enableVertexAttribArray(this.aTextureIndex);
+
         this.aTintColor = gl.getAttribLocation(program, 'aTintColor');
+        gl.enableVertexAttribArray(this.aTintColor);
+
         this.aBgColor = gl.getAttribLocation(program, 'aBgColor');
+        gl.enableVertexAttribArray(this.aBgColor);
 
         //  Get and store the uniforms for the shader
         //  this part is different for multi-textures
         this.uSampler = gl.getUniformLocation(program, 'uSampler');
-
-        //  vertex position
-        gl.enableVertexAttribArray(0);
-
-        //  texture coordinate
-        gl.enableVertexAttribArray(1);
-
-        //  texture index
-        gl.enableVertexAttribArray(2);
-
-        //  tint color attribute
-        gl.enableVertexAttribArray(3);
-
-        //  bg color attribute
-        gl.enableVertexAttribArray(4);
 
         //  The projection vector (middle of the game world)
         this.projectionVector = gl.getUniformLocation(program, 'projectionVector');
@@ -466,29 +463,31 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
             gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
 
-            //  set the projection vector (defaults to middle of game world on negative y)
+            //  Set the projection vector. Defaults to the middle of the Game World, on negative y.
+            //  I.e. if the world is 800x600 then the projection vector is 400 x -300
             gl.uniform2f(this.projectionVector, this.renderer.projection.x, this.renderer.projection.y);
 
-// gl.vertexAttribPointer(shader.aVertexPosition, 2, gl.FLOAT, false, stride, 0); (+8)
-// gl.vertexAttribPointer(shader.aTextureCoord, 2, gl.FLOAT, false, stride, 8); (+8)
-// gl.vertexAttribPointer(shader.colorAttribute, 4, gl.UNSIGNED_BYTE, true, stride, 16); (+4)
-// gl.vertexAttribPointer(shader.aTextureIndex, 1, gl.FLOAT, false, stride, 20); (+4)
-
-            //  set the vertex position (0 to 8 bytes)
+            //  The Vertex Position (x/y)
+            //  2 FLOATS, 2 * 4 = 8 bytes. Index pos: 0 to 7
+            //  final argument = the offset within the vertex input
             gl.vertexAttribPointer(this.aVertexPosition, 2, gl.FLOAT, false, this.vertSize, 0);
 
-            //  set the texture coordinate (8 to 16 bytes)
+            //  The Texture Coordinate (uvx/uvy)
+            //  2 FLOATS, 2 * 4 = 8 bytes. Index pos: 8 to 15
             gl.vertexAttribPointer(this.aTextureCoord, 2, gl.FLOAT, false, this.vertSize, 8);
 
-            //  texture index (16 to 20 bytes)
+            //  Texture Index
+            //  1 FLOAT, 4 bytes. Index pos: 16 to 19
             gl.vertexAttribPointer(this.aTextureIndex, 1, gl.FLOAT, false, this.vertSize, 16);
 
-            //  tint color (20 to 24 bytes)
-            //  attributes will be interpreted as unsigned bytes and normalized
+            //  Tint color
+            //  4 UNSIGNED BYTES, 4 bytes. Index pos: 20 to 23
+            //  Attributes will be interpreted as unsigned bytes and normalized
             gl.vertexAttribPointer(this.aTintColor, 4, gl.UNSIGNED_BYTE, true, this.vertSize, 20);
 
-            //  bg color (24 to 28 bytes)
-            //  attributes will be interpreted as unsigned bytes and normalized
+            //  Background Color
+            //  4 UNSIGNED BYTES, 4 bytes. Index pos: 24 to 27
+            //  Attributes will be interpreted as unsigned bytes and normalized
             gl.vertexAttribPointer(this.aBgColor, 4, gl.UNSIGNED_BYTE, true, this.vertSize, 24);
         }
 
