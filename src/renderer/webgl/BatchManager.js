@@ -25,13 +25,13 @@ Phaser.Renderer.WebGL.BatchManager = function (renderer)
 
     //  Vertex Data Size is calculated by adding together:
     //
-    //  Position (vec2) = 4 * 2 bytes
-    //  UV (vec2) = 4 * 2 bytes
+    //  Position (vec2) = 4 * 2 = 8 bytes
+    //  UV (vec2) = 4 * 2 = 8 bytes
+    //  Texture Index (float) = 4 bytes
     //  Tint Color (float) = 4 bytes
     //  BG Color (float) = 4 bytes
-    //  Texture Index (float) OR tint (float) = 4 bytes
 
-    this.vertSize = (4 * 2) + (4 * 2) + (4) + (4);
+    this.vertSize = (4 * 2) + (4 * 2) + (4) + (4) + (4);
 
     var numVerts = this.vertSize * this.maxBatchSize * 4;
 
@@ -93,6 +93,7 @@ Phaser.Renderer.WebGL.BatchManager = function (renderer)
     this.vertexSrc = [
         'attribute vec2 aVertexPosition;',
         'attribute vec2 aTextureCoord;',
+        'attribute float aTextureIndex;',
         'attribute vec4 aTintColor;',
         'attribute vec4 aBgColor;',
 
@@ -101,6 +102,7 @@ Phaser.Renderer.WebGL.BatchManager = function (renderer)
         'varying vec2 vTextureCoord;',
         'varying vec4 vTintColor;',
         'varying vec4 vBgColor;',
+        'varying float vTextureIndex;',
 
         'const vec2 center = vec2(-1.0, 1.0);',
 
@@ -131,8 +133,8 @@ Phaser.Renderer.WebGL.BatchManager = function (renderer)
 
         'void main(void) {',
         '   vec4 pixel = texture2D(uSampler, vTextureCoord) * vTintColor;', // get the color from the texture
-        // '   if (pixel.a == 0.0) pixel = vBgColor;', // if texture alpha is zero, use the bg color
-        '   if (pixel.a > 0.0) pixel = PINK;', // if texture alpha is zero, use the bg color
+        '   if (pixel.a == 0.0) pixel = vBgColor;', // if texture alpha is zero, use the bg color
+        // '   if (pixel.a > 0.0) pixel = PINK;', // if texture alpha is zero, use the bg color
         '   gl_FragColor = pixel;',
         '}'
     ];
@@ -147,19 +149,19 @@ Phaser.Renderer.WebGL.BatchManager = function (renderer)
     // this.offsetVector;
 
     //  @type {GLint}
-    this.aTintColor;
+    this.aVertexPosition;
 
     //  @type {GLint}
-    this.aBgColor;
+    this.aTextureCoord;
 
     //  @type {GLint}
     this.aTextureIndex;
 
     //  @type {GLint}
-    this.aVertexPosition;
+    this.aTintColor;
 
     //  @type {GLint}
-    this.aTextureCoord;
+    this.aBgColor;
 };
 
 Phaser.Renderer.WebGL.BatchManager.prototype.constructor = Phaser.Renderer.WebGL.BatchManager;
@@ -239,7 +241,6 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         gl.bufferData(gl.ARRAY_BUFFER, this.vertices, gl.DYNAMIC_DRAW);
 
         //  initShader
-
         var program = this.renderer.compileProgram(this.vertexSrc, this.fragmentSrc);
 
         //  Set Shader
@@ -248,7 +249,7 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         //  Get and store the attributes
         this.aVertexPosition = gl.getAttribLocation(program, 'aVertexPosition');
         this.aTextureCoord = gl.getAttribLocation(program, 'aTextureCoord');
-        // this.aTextureIndex = gl.getAttribLocation(program, 'aTextureIndex');
+        this.aTextureIndex = gl.getAttribLocation(program, 'aTextureIndex');
         this.aTintColor = gl.getAttribLocation(program, 'aTintColor');
         this.aBgColor = gl.getAttribLocation(program, 'aBgColor');
 
@@ -262,17 +263,18 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         //  texture coordinate
         gl.enableVertexAttribArray(1);
 
-        //  tint color attribute
+        //  texture index
         gl.enableVertexAttribArray(2);
 
-        //  bg color attribute
+        //  tint color attribute
         gl.enableVertexAttribArray(3);
 
-        //  texture index
-        // gl.enableVertexAttribArray(3);
+        //  bg color attribute
+        gl.enableVertexAttribArray(4);
 
         //  The projection vector (middle of the game world)
         this.projectionVector = gl.getUniformLocation(program, 'projectionVector');
+
         // this.offsetVector = gl.getUniformLocation(program, 'offsetVector');
 
         this.program = program;
@@ -359,11 +361,6 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
 
     setCurrentTexture: function (textureSource)
     {
-        if (this.currentTextureSource === textureSource)
-        {
-            return;
-        }
-
         // if (this.renderer.textureArray[source.glTextureIndex] !== source)
 
         if (this.currentBatchSize > 0)
@@ -373,7 +370,8 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
 
         var gl = this.gl;
 
-        gl.activeTexture(gl.TEXTURE0 + textureSource.glTextureIndex);
+        // gl.activeTexture(gl.TEXTURE0 + textureSource.glTextureIndex);
+        gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, textureSource.glTexture);
 
         this.currentTextureSource = textureSource;
@@ -383,25 +381,11 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
 
     render: function (sprite)
     {
-        // var frame = sprite.frame;
         var source = sprite.frame.source;
 
-        //  Check TextureSource
         if (this.currentTextureSource !== source)
-        // if (this.renderer.textureArray[source.glTextureIndex] !== source)
         {
-            if (this.currentBatchSize > 0)
-            {
-                this.flush();
-            }
-
-            var gl = this.gl;
-
-            gl.activeTexture(gl.TEXTURE0 + source.glTextureIndex);
-            gl.bindTexture(gl.TEXTURE_2D, source.glTexture);
-
-            // this.renderer.textureArray[source.glTextureIndex] = source;
-            this.currentTextureSource = source;
+            this.setCurrentTexture(source);
         }
 
         //  Check Batch Size (TODO)
@@ -411,163 +395,51 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
             this.currentTextureSource = source;
         }
 
-        /*
-        var aX = sprite.anchorX;
-        var aY = sprite.anchorY;
-
-        var w0, w1, h0, h1;
-        */
-
-        /*
-        if (texture.trim)
-        {
-            //  If the sprite is trimmed, add the extra space before transforming
-            var trim = texture.trim;
-
-            w1 = trim.x - (aX * trim.width);
-            w0 = w1 + texture.crop.width;
-
-            h1 = trim.y - (aY * trim.height);
-            h0 = h1 + texture.crop.height;
-        }
-        else
-        {
-            w0 = (texture.frame.width) * (1 - aX);
-            w1 = (texture.frame.width) * -aX;
-
-            h0 = texture.frame.height * (1 - aY);
-            h1 = texture.frame.height * -aY;
-        }
-        */
-
-        /*
-        w0 = (frame.width) * (1 - aX);
-        w1 = (frame.width) * -aX;
-
-        h0 = frame.height * (1 - aY);
-        h1 = frame.height * -aY;
-
-        var resolution = source.resolution;
-        */
-
-        //  A Sprite Transform Update would need:
-        //  w0, w1, h0, h1, resolution, roundPixels
-        //  then it could calculate the vertex data
-        //  it could also cache those 6 values, and if nothing changed, not need to re-calc it
-        //  would the comparison checks be more expensive than the calculation?
-
-        //  maybe it's fair for the Transform component to assume that gameObject has a Frame?
-        //  Perhaps Frame is a requirement for all GameObjects, no matter what they actually render
-        //  So maybe Image, etc should extend a BaseGameObject, which includes Transform, Frame and Color?
-
-        /*
-        var wt = sprite.transform.world;
-
-        var a = wt.a / resolution;
-        var b = wt.b / resolution;
-        var c = wt.c / resolution;
-        var d = wt.d / resolution;
-        var tx = wt.tx;
-        var ty = wt.ty;
-        */
-
-        // var cw = frame.cutWidth;
-        // var ch = frame.cutHeight;
-
-        /*
-        if (texture.rotated)
-        {
-            var a0 = wt.a;
-            var b0 = wt.b;
-            var c0 = wt.c;
-            var d0 = wt.d;
-            var _w1 = w1;
-            var _w0 = w0;
-
-            // Offset before rotating
-            tx = wt.c * ch + tx;
-            ty = wt.d * ch + ty;
-            
-            // Rotate matrix by 90 degrees
-            // We use precalculated values for sine and cosine of rad(90)
-            a = a0 * 6.123233995736766e-17 + -c0;
-            b = b0 * 6.123233995736766e-17 + -d0;
-            c = a0 + c0 * 6.123233995736766e-17;
-            d = b0 + d0 * 6.123233995736766e-17;
-
-            // Update UV coordinates
-            texture._updateUvsInverted();
-
-            // Rotate dimensions
-            w0 = h0;
-            w1 = h1;
-            h0 = _w0;
-            h1 = _w1;
-        }
-        */
-
-        /*
-        if (this.renderer.roundPixels)
-        {
-            tx |= 0;
-            ty |= 0;
-        }
-        */
-
         //  These are just views into the same typed array
         var colors = this.colors;
         var positions = this.positions;
 
         var uvs = sprite.frame.uvs;
         var verts = sprite.transform.glVertextData;
-
-        // var textureIndex = source.glTextureIndex;
+        var textureIndex = source.glTextureIndex;
 
         var i = this.currentBatchSize * this.vertSize;
 
         //  Top Left vert (xy, uv, color)
-        // positions[i++] = a * w1 + c * h1 + tx;
-        // positions[i++] = d * h1 + b * w1 + ty;
         positions[i++] = verts.x0;
         positions[i++] = verts.y0;
         positions[i++] = uvs.x0;
         positions[i++] = uvs.y0;
+        positions[i++] = textureIndex;
         colors[i++] = sprite.color._glTint.topLeft + (sprite.color.worldAlpha * 255 << 24);
         colors[i++] = sprite.color._glBg;
-        // positions[i++] = textureIndex;
 
         //  Top Right vert (xy, uv, color)
-        // positions[i++] = a * w0 + c * h1 + tx;
-        // positions[i++] = d * h1 + b * w0 + ty;
         positions[i++] = verts.x1;
         positions[i++] = verts.y1;
         positions[i++] = uvs.x1;
         positions[i++] = uvs.y1;
+        positions[i++] = textureIndex;
         colors[i++] = sprite.color._glTint.topRight + (sprite.color.worldAlpha * 255 << 24);
         colors[i++] = sprite.color._glBg;
-        // positions[i++] = textureIndex;
 
         //  Bottom Right vert (xy, uv, color)
-        // positions[i++] = a * w0 + c * h0 + tx;
-        // positions[i++] = d * h0 + b * w0 + ty;
         positions[i++] = verts.x2;
         positions[i++] = verts.y2;
         positions[i++] = uvs.x2;
         positions[i++] = uvs.y2;
+        positions[i++] = textureIndex;
         colors[i++] = sprite.color._glTint.bottomRight + (sprite.color.worldAlpha * 255 << 24);
         colors[i++] = sprite.color._glBg;
-        // positions[i++] = textureIndex;
 
         //  Bottom Left vert (xy, uv, color)
-        // positions[i++] = a * w1 + c * h0 + tx;
-        // positions[i++] = d * h0 + b * w1 + ty;
         positions[i++] = verts.x3;
         positions[i++] = verts.y3;
         positions[i++] = uvs.x3;
         positions[i++] = uvs.y3;
+        positions[i++] = textureIndex;
         colors[i++] = sprite.color._glTint.bottomLeft + (sprite.color.worldAlpha * 255 << 24);
         colors[i++] = sprite.color._glBg;
-        // positions[i++] = textureIndex;
 
         this.sprites[this.currentBatchSize++] = sprite;
     },
@@ -597,20 +469,27 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
             //  set the projection vector (defaults to middle of game world on negative y)
             gl.uniform2f(this.projectionVector, this.renderer.projection.x, this.renderer.projection.y);
 
-            //  set the vertex position
+// gl.vertexAttribPointer(shader.aVertexPosition, 2, gl.FLOAT, false, stride, 0); (+8)
+// gl.vertexAttribPointer(shader.aTextureCoord, 2, gl.FLOAT, false, stride, 8); (+8)
+// gl.vertexAttribPointer(shader.colorAttribute, 4, gl.UNSIGNED_BYTE, true, stride, 16); (+4)
+// gl.vertexAttribPointer(shader.aTextureIndex, 1, gl.FLOAT, false, stride, 20); (+4)
+
+            //  set the vertex position (0 to 8 bytes)
             gl.vertexAttribPointer(this.aVertexPosition, 2, gl.FLOAT, false, this.vertSize, 0);
 
-            //  set the texture coordinate
+            //  set the texture coordinate (8 to 16 bytes)
             gl.vertexAttribPointer(this.aTextureCoord, 2, gl.FLOAT, false, this.vertSize, 8);
 
-            // tint color attributes will be interpreted as unsigned bytes and normalized
-            gl.vertexAttribPointer(this.aTintColor, 4, gl.UNSIGNED_BYTE, true, this.vertSize, 16);
+            //  texture index (16 to 20 bytes)
+            gl.vertexAttribPointer(this.aTextureIndex, 1, gl.FLOAT, false, this.vertSize, 16);
 
-            // bg color attributes will be interpreted as unsigned bytes and normalized
-            gl.vertexAttribPointer(this.aBgColor, 4, gl.UNSIGNED_BYTE, true, this.vertSize, 20);
+            //  tint color (20 to 24 bytes)
+            //  attributes will be interpreted as unsigned bytes and normalized
+            gl.vertexAttribPointer(this.aTintColor, 4, gl.UNSIGNED_BYTE, true, this.vertSize, 20);
 
-            //  texture index
-            // gl.vertexAttribPointer(this.aTextureIndex, 2, gl.FLOAT, false, this.vertSize, 20);
+            //  bg color (24 to 28 bytes)
+            //  attributes will be interpreted as unsigned bytes and normalized
+            gl.vertexAttribPointer(this.aBgColor, 4, gl.UNSIGNED_BYTE, true, this.vertSize, 24);
         }
 
         //  Upload verts to the buffer
