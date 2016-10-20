@@ -65,31 +65,7 @@ Phaser.Renderer.WebGL.BatchManager = function (renderer)
     *
     * @property defaultVertexSrc
     * @type String
-    this.multivertexSrc = [
-        'attribute vec2 aVertexPosition;',
-        'attribute vec2 aTextureCoord;',
-        'attribute vec4 aColor;',
-        'attribute float aTextureIndex;',
-
-        'uniform vec2 projectionVector;',
-        'uniform vec2 offsetVector;',
-
-        'varying vec2 vTextureCoord;',
-        'varying vec4 vColor;',
-        'varying float vTextureIndex;',
-
-        'const vec2 center = vec2(-1.0, 1.0);',
-
-        'void main(void) {',
-        '   if (aTextureIndex > 0.0) gl_Position = vec4(0.0);',
-        '   gl_Position = vec4( ((aVertexPosition + offsetVector) / projectionVector) + center, 0.0, 1.0);',
-        '   vTextureCoord = aTextureCoord;',
-        '   vColor = vec4(aColor.rgb * aColor.a, aColor.a);',
-        '   vTextureIndex = aTextureIndex;',
-        '}'
-    ];
     */
-
     this.vertexSrc = [
         'attribute vec2 aVertexPosition;',
         'attribute vec2 aTextureCoord;',
@@ -98,6 +74,7 @@ Phaser.Renderer.WebGL.BatchManager = function (renderer)
         'attribute vec4 aBgColor;',
 
         'uniform vec2 projectionVector;',
+        'uniform vec2 offsetVector;',
 
         'varying vec2 vTextureCoord;',
         'varying vec4 vTintColor;',
@@ -107,7 +84,9 @@ Phaser.Renderer.WebGL.BatchManager = function (renderer)
         'const vec2 center = vec2(-1.0, 1.0);',
 
         'void main(void) {',
-        '   gl_Position = vec4((aVertexPosition / projectionVector) + center, 0.0, 1.0);',
+        '   if (aTextureIndex > 0.0) gl_Position = vec4(0.0);',
+        // '   gl_Position = vec4((aVertexPosition / projectionVector) + center, 0.0, 1.0);',
+        '   gl_Position = vec4(((aVertexPosition + offsetVector) / projectionVector) + center, 0.0, 1.0);',
         '   vTextureCoord = aTextureCoord;', // pass the texture coordinate to the fragment shader, the GPU will interpolate the points
         '   vTintColor = vec4(aTintColor.rgb * aTintColor.a, aTintColor.a);',
         '   vBgColor = aBgColor;',
@@ -140,9 +119,6 @@ Phaser.Renderer.WebGL.BatchManager = function (renderer)
         '}'
     ];
 
-    //  @type {WebGLUniformLocation }
-    // this.offsetVector;
-
     //  @type {GLint}
     this.aVertexPosition;
 
@@ -163,6 +139,9 @@ Phaser.Renderer.WebGL.BatchManager = function (renderer)
 
     //  @type {WebGLUniformLocation }
     this.projectionVector;
+
+    //  @type {WebGLUniformLocation }
+    this.offsetVector;
 };
 
 Phaser.Renderer.WebGL.BatchManager.prototype.constructor = Phaser.Renderer.WebGL.BatchManager;
@@ -272,7 +251,8 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         //  The projection vector (middle of the game world)
         this.projectionVector = gl.getUniformLocation(program, 'projectionVector');
 
-        // this.offsetVector = gl.getUniformLocation(program, 'offsetVector');
+        //  The offset vector
+        this.offsetVector = gl.getUniformLocation(program, 'offsetVector');
 
         this.program = program;
     },
@@ -466,6 +446,9 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
             //  Set the projection vector. Defaults to the middle of the Game World, on negative y.
             //  I.e. if the world is 800x600 then the projection vector is 400 x -300
             gl.uniform2f(this.projectionVector, this.renderer.projection.x, this.renderer.projection.y);
+
+            //  Set the offset vector.
+            gl.uniform2f(this.offsetVector, this.renderer.offset.x, this.renderer.offset.y);
 
             //  The Vertex Position (x/y)
             //  2 FLOATS, 2 * 4 = 8 bytes. Index pos: 0 to 7

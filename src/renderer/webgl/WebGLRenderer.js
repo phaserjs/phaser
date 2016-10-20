@@ -428,6 +428,8 @@ Phaser.Renderer.WebGL.prototype = {
         this.setBlendMode(this.blendModes.NORMAL);
         */
 
+        // this.offset.x = this.game.camera._shake.x;
+        // this.offset.y = this.game.camera._shake.y;
         this.offset.x = 0;
         this.offset.y = 0;
 
