@@ -421,6 +421,75 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         this.sprites[this.currentBatchSize++] = sprite;
     },
 
+    addGameObject: function (gameObject)
+    {
+        this.sprites[this.currentBatchSize++] = gameObject;
+    },
+
+    //  Call this 4 times, once for each vert
+    //  Then call addGameObject to complete it
+
+    addVert: function (x, y, uvx, uvy, textureIndex, tint, bg)
+    {
+        var i = this.currentBatchSize * (this.vertSize / 4);
+
+        this.positions[i++] = x;
+        this.positions[i++] = y;
+        this.positions[i++] = uvx;
+        this.positions[i++] = uvy;
+        this.positions[i++] = textureIndex;
+
+        this.colors[i++] = tint;
+        this.colors[i++] = bg;
+    },
+
+    addVerts: function (gameObject, uvs, verts, textureIndex, tintColors, bgColors)
+    {
+        //  These are just views into the same typed array
+        var colors = this.colors;
+        var positions = this.positions;
+
+        var i = this.currentBatchSize * this.vertSize;
+
+        //  Top Left vert (xy, uv, color)
+        positions[i++] = verts.x0;
+        positions[i++] = verts.y0;
+        positions[i++] = uvs.x0;
+        positions[i++] = uvs.y0;
+        positions[i++] = textureIndex;
+        colors[i++] = tintColors.topLeft;
+        colors[i++] = bgColors.topLeft;
+
+        //  Top Right vert (xy, uv, color)
+        positions[i++] = verts.x1;
+        positions[i++] = verts.y1;
+        positions[i++] = uvs.x1;
+        positions[i++] = uvs.y1;
+        positions[i++] = textureIndex;
+        colors[i++] = tintColors.topRight;
+        colors[i++] = bgColors.topRight;
+
+        //  Bottom Right vert (xy, uv, color)
+        positions[i++] = verts.x2;
+        positions[i++] = verts.y2;
+        positions[i++] = uvs.x2;
+        positions[i++] = uvs.y2;
+        positions[i++] = textureIndex;
+        colors[i++] = tintColors.bottomRight;
+        colors[i++] = bgColors.bottomRight;
+
+        //  Bottom Left vert (xy, uv, color)
+        positions[i++] = verts.x3;
+        positions[i++] = verts.y3;
+        positions[i++] = uvs.x3;
+        positions[i++] = uvs.y3;
+        positions[i++] = textureIndex;
+        colors[i++] = tintColors.bottomLeft;
+        colors[i++] = bgColors.bottomLeft;
+
+        this.sprites[this.currentBatchSize++] = gameObject;
+    },
+
     flush: function ()
     {
         // If the batch is length 0 then return as there is nothing to draw
