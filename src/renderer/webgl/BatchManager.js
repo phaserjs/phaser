@@ -142,6 +142,8 @@ Phaser.Renderer.WebGL.BatchManager = function (renderer)
 
     //  @type {WebGLUniformLocation }
     this.offsetVector;
+
+    this._i = 0;
 };
 
 Phaser.Renderer.WebGL.BatchManager.prototype.constructor = Phaser.Renderer.WebGL.BatchManager;
@@ -323,6 +325,7 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
     start: function ()
     {
         this.dirty = true;
+        this._i = 0;
     },
 
     end: function ()
@@ -356,9 +359,9 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         // this.renderer.textureArray[textureSource.glTextureIndex] = textureSource;
     },
 
-    render: function (sprite)
+    render: function (gameObject)
     {
-        var source = sprite.frame.source;
+        var source = gameObject.frame.source;
 
         if (this.currentTextureSource !== source)
         {
@@ -371,6 +374,11 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
             this.flush();
             this.currentTextureSource = source;
         }
+
+        this.sprites[this.currentBatchSize++] = gameObject;
+    },
+
+    /*
 
         //  These are just views into the same typed array
         var colors = this.colors;
@@ -426,12 +434,14 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         this.sprites[this.currentBatchSize++] = gameObject;
     },
 
+    */
+
     //  Call this 4 times, once for each vert
     //  Then call addGameObject to complete it
 
     addVert: function (x, y, uvx, uvy, textureIndex, tint, bg)
     {
-        var i = this.currentBatchSize * (this.vertSize / 4);
+        var i = this._i;
 
         this.positions[i++] = x;
         this.positions[i++] = y;
@@ -441,6 +451,8 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
 
         this.colors[i++] = tint;
         this.colors[i++] = bg;
+
+        this._i = i;
     },
 
     addVerts: function (gameObject, uvs, verts, textureIndex, tintColors, bgColors)
