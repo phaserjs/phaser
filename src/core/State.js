@@ -74,7 +74,7 @@ Phaser.State = function () {
     this.stage = null;
 
     /**
-    * @property {Phaser.StateManager} stage - A reference to the State Manager, which controls state changes.
+    * @property {Phaser.StateManager} state - A reference to the State Manager, which controls state changes.
     */
     this.state = null;
 
