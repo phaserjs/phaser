@@ -85,7 +85,6 @@ Phaser.Renderer.WebGL.BatchManager = function (renderer, batchSize)
 
         'void main(void) {',
         '   if (aTextureIndex > 0.0) gl_Position = vec4(0.0);',
-        // '   gl_Position = vec4((aVertexPosition / projectionVector) + center, 0.0, 1.0);',
         '   gl_Position = vec4(((aVertexPosition + offsetVector) / projectionVector) + center, 0.0, 1.0);',
         '   vTextureCoord = aTextureCoord;', // pass the texture coordinate to the fragment shader, the GPU will interpolate the points
         '   vTintColor = vec4(aTintColor.rgb * aTintColor.a, aTintColor.a);',
@@ -109,15 +108,14 @@ Phaser.Renderer.WebGL.BatchManager = function (renderer, batchSize)
 
         'uniform sampler2D uSampler;', // our texture
 
-        'const vec4 PINK = vec4(1.0, 0.0, 1.0, 1.0);',
-
         'void main(void) {',
         '   vec4 pixel = texture2D(uSampler, vTextureCoord) * vTintColor;', // get the color from the texture
         '   if (pixel.a == 0.0) pixel = vBgColor;', // if texture alpha is zero, use the bg color
-        // '   if (pixel.a > 0.0) pixel = PINK;', // if texture alpha is zero, use the bg color
         '   gl_FragColor = pixel;',
         '}'
     ];
+
+    this.multiTextureFragmentSrc = null;
 
     //  @type {GLint}
     this.aVertexPosition;
@@ -197,11 +195,6 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
             this.indices[i + 5] = j + 3;    //  Bottom Left
         }
 
-        if (this.renderer.enableMultiTextureToggle)
-        {
-            // this.initMultitexShader();
-        }
-
         var gl = this.gl;
 
         //  Create indices buffer
@@ -222,8 +215,51 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         //  Set the source of the buffer data (this.vertices array)
         gl.bufferData(gl.ARRAY_BUFFER, this.vertices, gl.DYNAMIC_DRAW);
 
-        //  initShader
-        var program = this.renderer.compileProgram(this.vertexSrc, this.fragmentSrc);
+        var fragmentSrc = this.fragmentSrc;
+
+        if (this.renderer.multiTexture && this.renderer.maxTextures > 1)
+        {
+            var multiFrag = [
+                'precision lowp float;',
+
+                'varying vec2 vTextureCoord;', // the texture coords passed in from the vertex shader
+                'varying vec4 vTintColor;', //  the color value passed in from the vertex shader (texture color + alpha + tint)
+                'varying vec4 vBgColor;', //  the bg color value passed in from the vertex shader
+                'varying float vTextureIndex;',
+
+                'uniform sampler2D uSamplerArray[' + this.renderer.maxTextures + '];',
+
+                'const vec4 PINK = vec4(1.0, 0.0, 1.0, 1.0);',
+
+                'void main(void) {',
+
+                '   vec4 pixel;',
+                '   if (vTextureIndex == 0.0) pixel = texture2D(uSamplerArray[0], vTextureCoord);'
+            ];
+
+            for (i = 1; i < this.renderer.maxTextures; i++)
+            {
+                multiFrag.push('   else if (vTextureIndex == ' + i + '.0) pixel = texture2D(uSamplerArray[' + i + '], vTextureCoord);');
+            }
+
+            multiFrag = multiFrag.concat([
+                // '   else pixel = PINK;',
+                '   pixel *= vTintColor;',
+                // '   if (pixel.a == 0.0) pixel = vBgColor;', // if texture alpha is zero, use the bg color
+                '   gl_FragColor = pixel;',
+                // '   gl_FragColor = PINK;',
+                '}'
+            ]);
+
+            this.multiTextureFragmentSrc = multiFrag;
+
+            fragmentSrc = this.multiTextureFragmentSrc;
+    
+            console.dir(this.multiTextureFragmentSrc);
+        }
+
+        //  Compile the Shaders
+        var program = this.renderer.compileProgram(this.vertexSrc, fragmentSrc);
 
         //  Set Shader
         gl.useProgram(program);
@@ -248,7 +284,32 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
 
         //  Get and store the uniforms for the shader
         //  this part is different for multi-textures
-        this.uSampler = gl.getUniformLocation(program, 'uSampler');
+        if (this.renderer.multiTexture)
+        {
+            //  Bind empty multi-textures to avoid WebGL spam
+            var indices = [];
+
+            var tempTexture = this.renderer.createEmptyTexture(1, 1, 0);
+
+            for (i = 0; i < this.maxTextures; i++)
+            {
+                gl.activeTexture(gl.TEXTURE0 + i);
+
+                gl.bindTexture(gl.TEXTURE_2D, tempTexture);
+
+                indices.push(i);
+            }
+
+            this.uSampler = gl.getUniformLocation(program, 'uSamplerArray[0]');
+
+            gl.activeTexture(gl.TEXTURE0);
+
+            gl.uniform1iv(this.uSamplerArray, indices);
+        }
+        else
+        {
+            this.uSampler = gl.getUniformLocation(program, 'uSampler');
+        }
 
         //  The projection vector (middle of the game world)
         this.projectionVector = gl.getUniformLocation(program, 'projectionVector');
@@ -257,64 +318,6 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         this.offsetVector = gl.getUniformLocation(program, 'offsetVector');
 
         this.program = program;
-    },
-
-    initMultiTextureShader: function ()
-    {
-        this.gl = this.renderer.gl;
-
-        // var gl = this.gl;
-
-        //  New Fragment Source ...
-
-        /*
-        if (this.renderer.enableMultiTextureToggle)
-        {
-            var dynamicIfs = '\tif (vTextureIndex == 0.0) gl_FragColor = texture2D(uSamplerArray[0], vTextureCoord) * vColor;\n';
-
-            for (var index = 1; index < this.MAX_TEXTURES; ++index)
-            {
-                dynamicIfs += '\telse if (vTextureIndex == ' +
-                    index + '.0) gl_FragColor = texture2D(uSamplerArray[' +
-                    index + '], vTextureCoord) * vColor;\n';
-            }
-
-            //  Does this need the vTextureIndex varying? Doesn't look like it
-
-            this.defaultShader = new Phaser.Filter(
-                this.renderer.game,
-                undefined,
-                [
-                    'precision lowp float;',
-                    'varying vec2 vTextureCoord;',
-                    'varying vec4 vColor;',
-                    'varying float vTextureIndex;',
-                    'uniform sampler2D uSamplerArray[' + this.MAX_TEXTURES + '];',
-                    'void main(void) {',
-                    dynamicIfs,
-                    '\telse gl_FragColor = texture2D(uSamplerArray[0], vTextureCoord) * vColor;',
-                    '}'
-                ]);
-        }
-        else
-        {
-            //  Does this need the vTextureIndex varying? Doesn't look like it
-
-            this.defaultShader = new Phaser.Filter(
-                this.renderer.game,
-                undefined,
-                [
-                    'precision lowp float;',
-                    'varying vec2 vTextureCoord;',
-                    'varying vec4 vColor;',
-                    'varying float vTextureIndex;',
-                    'uniform sampler2D uSampler;',
-                    'void main(void) {',
-                    '   gl_FragColor = texture2D(uSampler, vTextureCoord) * vColor;',
-                    '}'
-                ]);
-        }
-        */
     },
 
     begin: function ()
@@ -349,27 +352,47 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
 
     setCurrentTexture: function (textureSource)
     {
-        if (this.currentTextureSource === textureSource)
-        {
-            return;
-        }
-
-        // if (this.renderer.textureArray[source.glTextureIndex] !== source)
-
-        if (this.currentBatchSize > 0)
-        {
-            this.flush();
-        }
-
         var gl = this.gl;
 
-        // gl.activeTexture(gl.TEXTURE0 + textureSource.glTextureIndex);
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, textureSource.glTexture);
+        if (this.renderer.multiTexture)
+        {
+            if (this.renderer.textureArray[textureSource.glTextureIndex] !== textureSource)
+            {
+                console.log('setCurrentTexture', this.currentBatchSize);
+                console.log(textureSource);
 
-        this.currentTextureSource = textureSource;
+                if (this.currentBatchSize > 0)
+                {
+                    this.flush();
+                }
 
-        // this.renderer.textureArray[textureSource.glTextureIndex] = textureSource;
+                gl.activeTexture(gl.TEXTURE0 + textureSource.glTextureIndex);
+
+                console.log('activeTexture', gl.TEXTURE0 + textureSource.glTextureIndex);
+
+                gl.bindTexture(gl.TEXTURE_2D, textureSource.glTexture);
+
+                this.renderer.textureArray[textureSource.glTextureIndex] = textureSource;
+            }
+        }
+        else
+        {
+            if (this.currentTextureSource === textureSource)
+            {
+                return;
+            }
+
+            if (this.currentBatchSize > 0)
+            {
+                this.flush();
+            }
+
+            gl.activeTexture(gl.TEXTURE0);
+
+            gl.bindTexture(gl.TEXTURE_2D, textureSource.glTexture);
+
+            this.currentTextureSource = textureSource;
+        }
     },
 
     //  Call 'addVert' x4 after calling this
@@ -424,10 +447,7 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         }
 
         //  Set texture
-        if (this.currentTextureSource !== gameObject.frame.source)
-        {
-            this.setCurrentTexture(gameObject.frame.source);
-        }
+        this.setCurrentTexture(gameObject.frame.source);
 
         //  These are TypedArray Views into the vertices ArrayBuffer
         var colors = this.colors;
@@ -476,7 +496,7 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         this.list[this.currentBatchSize++] = gameObject;
     },
 
-    prepShader: function ()
+    initShader: function ()
     {
         var gl = this.gl;
 
@@ -525,7 +545,7 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         //  Always dirty the first pass through but subsequent calls may be clean
         if (this.dirty)
         {
-            this.prepShader();
+            this.initShader();
         }
 
         var gl = this.gl;
@@ -559,7 +579,7 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
                 this.renderer.setBlendMode(sprite.blendMode);
             }
 
-            if (this.currentTextureSource !== sprite.frame.source)
+            if (!this.renderer.multiTexture && this.currentTextureSource !== sprite.frame.source)
             {
                 if (currentSize > 0)
                 {

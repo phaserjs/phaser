@@ -20,7 +20,7 @@ Phaser.Renderer.WebGL.GameObjects.Image = {
 
         var uvs = frame.uvs;
         var verts = src.transform.glVertextData;
-        var index = src.glTextureIndex;
+        var index = src.frame.source.glTextureIndex;
         var tint = src.color._glTint;
         var bg = src.color._glBg;
 

@@ -86,9 +86,7 @@ Phaser.Renderer.WebGL = function (game)
      */
     this.stencilBufferLimit = 6;
 
-    //  WebGL specific from here
-
-    this.enableMultiTextureToggle = false;
+    this.multiTexture = true;
 
     this.extensions = {};
 
@@ -155,10 +153,10 @@ Phaser.Renderer.WebGL = function (game)
 
     this.gl = null;
 
-    //  Add a null entry to avoid an array look-up miss
-    this.textureArray = [ null, null ];
+    this.textureArray = [];
 
     this.currentBlendMode = 0;
+    this.currentTextureSource = null;
 
     this.blendModes = [];
 
@@ -214,6 +212,13 @@ Phaser.Renderer.WebGL.prototype = {
         var gl = this.gl;
 
         this.maxTextures = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);
+
+        console.log('maxTextures', this.maxTextures);
+
+        if (this.maxTextures === 1)
+        {
+            this.multiTexture = false;
+        }
 
         gl.disable(gl.DEPTH_TEST);
         gl.disable(gl.CULL_FACE);
@@ -318,12 +323,6 @@ Phaser.Renderer.WebGL.prototype = {
     */
     setTexturePriority: function (textureNameCollection)
     {
-        if (!this.enableMultiTextureToggle)
-        {
-            console.warn('setTexturePriority error: Multi Texture support hasn\'t been enabled in the Phaser Game Config.');
-            return;
-        }
-
         var maxTextures = this.maxTextures;
         var imageCache = this.game.cache._cache.image;
         var imageName = null;
@@ -409,8 +408,7 @@ Phaser.Renderer.WebGL.prototype = {
         // gl.clearColor(0, 0, 0, 1);
         // gl.clear(gl.COLOR_BUFFER_BIT);
 
-        //  Normal Blend Mode
-        this.setBlendMode(0);
+        this.setBlendMode(this.blendModes.NORMAL);
 
         /*
         if (this.clearBeforeRender)
@@ -476,6 +474,8 @@ Phaser.Renderer.WebGL.prototype = {
     //  Takes a TextureSource object
     updateTexture: function (source)
     {
+        console.log('updateTexture', source);
+
         if (source.compressionAlgorithm)
         {
             return this.updateCompressedTexture(source);
@@ -488,9 +488,7 @@ Phaser.Renderer.WebGL.prototype = {
             source.glTexture = gl.createTexture();
         }
 
-        // gl.activeTexture(gl.TEXTURE0 + source.glTextureIndex);
-
-        gl.activeTexture(gl.TEXTURE0);
+        gl.activeTexture(gl.TEXTURE0 + source.glTextureIndex);
 
         gl.bindTexture(gl.TEXTURE_2D, source.glTexture);
 
@@ -699,11 +697,15 @@ Phaser.Renderer.WebGL.prototype = {
 
     createEmptyTexture: function (width, height, scaleMode)
     {
+        console.log('createEmptyTexture');
+
         var gl = this.gl;
         var texture = gl.createTexture();
         var glScaleMode = (scaleMode === Phaser.scaleModes.LINEAR) ? gl.LINEAR : gl.NEAREST;
 
+        gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, texture);
+
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, glScaleMode);
