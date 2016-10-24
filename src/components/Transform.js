@@ -481,6 +481,22 @@ Phaser.Component.Transform.prototype = {
         //  Bottom Left Vert
         vert.x3 = (a * w1) + (c * h0) + tx;
         vert.y3 = (d * h0) + (b * w1) + ty;
+    },
+
+    cloneVertexData: function ()
+    {
+        var src = this.glVertextData;
+
+        return {
+            x0: src.x0,
+            y0: src.y0,
+            x1: src.x1,
+            y1: src.y1,
+            x2: src.x2,
+            y2: src.y2,
+            x3: src.x3,
+            y3: src.y3
+        };
     }
 
 };

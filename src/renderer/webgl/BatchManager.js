@@ -12,14 +12,14 @@
 * @constructor
 * @param {Phaser.Game} game - Game reference to the currently running game.
 */
-Phaser.Renderer.WebGL.BatchManager = function (renderer)
+Phaser.Renderer.WebGL.BatchManager = function (renderer, batchSize)
 {
     this.renderer = renderer;
 
     this.gl = null;
 
     //  Total number of objects we'll batch before flushing and rendering
-    this.maxBatchSize = 2000;
+    this.maxBatchSize = batchSize;
 
     this.halfBatchSize = this.maxBatchSize / 2;
 
@@ -51,7 +51,7 @@ Phaser.Renderer.WebGL.BatchManager = function (renderer)
 
     this.currentBatchSize = 0;
     this.dirty = true;
-    this.sprites = [];
+    this.list = [];
 
     /**
      * The WebGL program.
@@ -319,28 +319,41 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
 
     begin: function ()
     {
-        this.start();
-    },
-
-    start: function ()
-    {
-        this.dirty = true;
         this._i = 0;
+        this.dirty = true;
     },
 
     end: function ()
     {
-        this.flush();
+        if (this.currentBatchSize > 0)
+        {
+            this.flush();
+        }
+    },
+
+    start: function ()
+    {
+        this._i = 0;
+        this.dirty = true;
     },
 
     stop: function ()
     {
-        this.flush();
+        if (this.currentBatchSize > 0)
+        {
+            this.flush();
+        }
+
         this.dirty = true;
     },
 
     setCurrentTexture: function (textureSource)
     {
+        if (this.currentTextureSource === textureSource)
+        {
+            return;
+        }
+
         // if (this.renderer.textureArray[source.glTextureIndex] !== source)
 
         if (this.currentBatchSize > 0)
@@ -359,85 +372,26 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         // this.renderer.textureArray[textureSource.glTextureIndex] = textureSource;
     },
 
-    render: function (gameObject)
+    //  Call 'addVert' x4 after calling this
+    startGameObject: function (gameObject)
     {
-        var source = gameObject.frame.source;
-
-        if (this.currentTextureSource !== source)
+        //  Does this Game Objects texture need updating?
+        if (gameObject.frame.source.glDirty)
         {
-            this.setCurrentTexture(source);
+            this.renderer.updateTexture(gameObject.frame.source);
         }
 
-        //  Check Batch Size (TODO)
+        //  Check Batch Size
         if (this.currentBatchSize >= this.maxBatchSize)
         {
             this.flush();
-            this.currentTextureSource = source;
         }
 
-        this.sprites[this.currentBatchSize++] = gameObject;
+        this.list[this.currentBatchSize++] = gameObject;
     },
-
-    /*
-
-        //  These are just views into the same typed array
-        var colors = this.colors;
-        var positions = this.positions;
-
-        var uvs = sprite.frame.uvs;
-        var verts = sprite.transform.glVertextData;
-        var textureIndex = source.glTextureIndex;
-
-        var i = this.currentBatchSize * this.vertSize;
-
-        //  Top Left vert (xy, uv, color)
-        positions[i++] = verts.x0;
-        positions[i++] = verts.y0;
-        positions[i++] = uvs.x0;
-        positions[i++] = uvs.y0;
-        positions[i++] = textureIndex;
-        colors[i++] = sprite.color._glTint.topLeft + (sprite.color.worldAlpha * 255 << 24);
-        colors[i++] = sprite.color._glBg;
-
-        //  Top Right vert (xy, uv, color)
-        positions[i++] = verts.x1;
-        positions[i++] = verts.y1;
-        positions[i++] = uvs.x1;
-        positions[i++] = uvs.y1;
-        positions[i++] = textureIndex;
-        colors[i++] = sprite.color._glTint.topRight + (sprite.color.worldAlpha * 255 << 24);
-        colors[i++] = sprite.color._glBg;
-
-        //  Bottom Right vert (xy, uv, color)
-        positions[i++] = verts.x2;
-        positions[i++] = verts.y2;
-        positions[i++] = uvs.x2;
-        positions[i++] = uvs.y2;
-        positions[i++] = textureIndex;
-        colors[i++] = sprite.color._glTint.bottomRight + (sprite.color.worldAlpha * 255 << 24);
-        colors[i++] = sprite.color._glBg;
-
-        //  Bottom Left vert (xy, uv, color)
-        positions[i++] = verts.x3;
-        positions[i++] = verts.y3;
-        positions[i++] = uvs.x3;
-        positions[i++] = uvs.y3;
-        positions[i++] = textureIndex;
-        colors[i++] = sprite.color._glTint.bottomLeft + (sprite.color.worldAlpha * 255 << 24);
-        colors[i++] = sprite.color._glBg;
-
-        this.sprites[this.currentBatchSize++] = sprite;
-    },
-
-    addGameObject: function (gameObject)
-    {
-        this.sprites[this.currentBatchSize++] = gameObject;
-    },
-
-    */
 
     //  Call this 4 times, once for each vert
-    //  Then call addGameObject to complete it
+    //  Then call addGameObject to complete it (or before it, doesn't matter which order)
 
     addVert: function (x, y, uvx, uvy, textureIndex, tint, bg)
     {
@@ -455,13 +409,31 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         this._i = i;
     },
 
-    addVerts: function (gameObject, uvs, verts, textureIndex, tintColors, bgColors)
+    addToBatch: function (gameObject, verts, uvs, textureIndex, alpha, tintColors, bgColors)
     {
-        //  These are just views into the same typed array
+        //  Does this Game Objects texture need updating?
+        if (gameObject.frame.source.glDirty)
+        {
+            this.renderer.updateTexture(gameObject.frame.source);
+        }
+
+        //  Check Batch Size and flush if needed
+        if (this.currentBatchSize >= this.maxBatchSize)
+        {
+            this.flush();
+        }
+
+        //  Set texture
+        if (this.currentTextureSource !== gameObject.frame.source)
+        {
+            this.setCurrentTexture(gameObject.frame.source);
+        }
+
+        //  These are TypedArray Views into the vertices ArrayBuffer
         var colors = this.colors;
         var positions = this.positions;
 
-        var i = this.currentBatchSize * this.vertSize;
+        var i = this._i;
 
         //  Top Left vert (xy, uv, color)
         positions[i++] = verts.x0;
@@ -469,7 +441,7 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         positions[i++] = uvs.x0;
         positions[i++] = uvs.y0;
         positions[i++] = textureIndex;
-        colors[i++] = tintColors.topLeft;
+        colors[i++] = tintColors.topLeft + alpha;
         colors[i++] = bgColors.topLeft;
 
         //  Top Right vert (xy, uv, color)
@@ -478,7 +450,7 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         positions[i++] = uvs.x1;
         positions[i++] = uvs.y1;
         positions[i++] = textureIndex;
-        colors[i++] = tintColors.topRight;
+        colors[i++] = tintColors.topRight + alpha;
         colors[i++] = bgColors.topRight;
 
         //  Bottom Right vert (xy, uv, color)
@@ -487,7 +459,7 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         positions[i++] = uvs.x2;
         positions[i++] = uvs.y2;
         positions[i++] = textureIndex;
-        colors[i++] = tintColors.bottomRight;
+        colors[i++] = tintColors.bottomRight + alpha;
         colors[i++] = bgColors.bottomRight;
 
         //  Bottom Left vert (xy, uv, color)
@@ -496,64 +468,67 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         positions[i++] = uvs.x3;
         positions[i++] = uvs.y3;
         positions[i++] = textureIndex;
-        colors[i++] = tintColors.bottomLeft;
+        colors[i++] = tintColors.bottomLeft + alpha;
         colors[i++] = bgColors.bottomLeft;
 
-        this.sprites[this.currentBatchSize++] = gameObject;
+        this._i = i;
+
+        this.list[this.currentBatchSize++] = gameObject;
+    },
+
+    prepShader: function ()
+    {
+        var gl = this.gl;
+
+        //  Bind the main texture
+        gl.activeTexture(gl.TEXTURE0);
+
+        //  Bind the buffers
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
+
+        //  Set the projection vector. Defaults to the middle of the Game World, on negative y.
+        //  I.e. if the world is 800x600 then the projection vector is 400 x -300
+        gl.uniform2f(this.projectionVector, this.renderer.projection.x, this.renderer.projection.y);
+
+        //  Set the offset vector.
+        gl.uniform2f(this.offsetVector, this.renderer.offset.x, this.renderer.offset.y);
+
+        //  The Vertex Position (x/y)
+        //  2 FLOATS, 2 * 4 = 8 bytes. Index pos: 0 to 7
+        //  final argument = the offset within the vertex input
+        gl.vertexAttribPointer(this.aVertexPosition, 2, gl.FLOAT, false, this.vertSize, 0);
+
+        //  The Texture Coordinate (uvx/uvy)
+        //  2 FLOATS, 2 * 4 = 8 bytes. Index pos: 8 to 15
+        gl.vertexAttribPointer(this.aTextureCoord, 2, gl.FLOAT, false, this.vertSize, 8);
+
+        //  Texture Index
+        //  1 FLOAT, 4 bytes. Index pos: 16 to 19
+        gl.vertexAttribPointer(this.aTextureIndex, 1, gl.FLOAT, false, this.vertSize, 16);
+
+        //  Tint color
+        //  4 UNSIGNED BYTES, 4 bytes. Index pos: 20 to 23
+        //  Attributes will be interpreted as unsigned bytes and normalized
+        gl.vertexAttribPointer(this.aTintColor, 4, gl.UNSIGNED_BYTE, true, this.vertSize, 20);
+
+        //  Background Color
+        //  4 UNSIGNED BYTES, 4 bytes. Index pos: 24 to 27
+        //  Attributes will be interpreted as unsigned bytes and normalized
+        gl.vertexAttribPointer(this.aBgColor, 4, gl.UNSIGNED_BYTE, true, this.vertSize, 24);
+
+        this.dirty = false;
     },
 
     flush: function ()
     {
-        // If the batch is length 0 then return as there is nothing to draw
-        if (this.currentBatchSize === 0)
+        //  Always dirty the first pass through but subsequent calls may be clean
+        if (this.dirty)
         {
-            return;
+            this.prepShader();
         }
 
         var gl = this.gl;
-
-        if (this.dirty)
-        {
-            //  Always dirty the first pass through but subsequent calls may be clean
-            this.dirty = false;
-
-            // bind the main texture
-            gl.activeTexture(gl.TEXTURE0);
-
-            // bind the buffers
-            gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
-            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
-
-            //  Set the projection vector. Defaults to the middle of the Game World, on negative y.
-            //  I.e. if the world is 800x600 then the projection vector is 400 x -300
-            gl.uniform2f(this.projectionVector, this.renderer.projection.x, this.renderer.projection.y);
-
-            //  Set the offset vector.
-            gl.uniform2f(this.offsetVector, this.renderer.offset.x, this.renderer.offset.y);
-
-            //  The Vertex Position (x/y)
-            //  2 FLOATS, 2 * 4 = 8 bytes. Index pos: 0 to 7
-            //  final argument = the offset within the vertex input
-            gl.vertexAttribPointer(this.aVertexPosition, 2, gl.FLOAT, false, this.vertSize, 0);
-
-            //  The Texture Coordinate (uvx/uvy)
-            //  2 FLOATS, 2 * 4 = 8 bytes. Index pos: 8 to 15
-            gl.vertexAttribPointer(this.aTextureCoord, 2, gl.FLOAT, false, this.vertSize, 8);
-
-            //  Texture Index
-            //  1 FLOAT, 4 bytes. Index pos: 16 to 19
-            gl.vertexAttribPointer(this.aTextureIndex, 1, gl.FLOAT, false, this.vertSize, 16);
-
-            //  Tint color
-            //  4 UNSIGNED BYTES, 4 bytes. Index pos: 20 to 23
-            //  Attributes will be interpreted as unsigned bytes and normalized
-            gl.vertexAttribPointer(this.aTintColor, 4, gl.UNSIGNED_BYTE, true, this.vertSize, 20);
-
-            //  Background Color
-            //  4 UNSIGNED BYTES, 4 bytes. Index pos: 24 to 27
-            //  Attributes will be interpreted as unsigned bytes and normalized
-            gl.vertexAttribPointer(this.aBgColor, 4, gl.UNSIGNED_BYTE, true, this.vertSize, 24);
-        }
 
         //  Upload verts to the buffer
         if (this.currentBatchSize > this.halfBatchSize)
@@ -564,6 +539,7 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         {
             gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
 
+            //  This creates a brand new Typed Array - what's the cost of this vs. just uploading all vert data?
             var view = this.positions.subarray(0, this.currentBatchSize * this.vertSize);
 
             gl.bufferSubData(gl.ARRAY_BUFFER, 0, view);
@@ -574,52 +550,26 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         var start = 0;
         var currentSize = 0;
 
-        var nextSource = null;
-
-        var blend = 0;
-        var nextBlend = null;
-
         for (var i = 0; i < this.currentBatchSize; i++)
         {
-            sprite = this.sprites[i];
+            sprite = this.list[i];
 
-            nextBlend = sprite.blendMode;
-
-            if (blend !== nextBlend)
+            if (sprite.blendMode !== this.renderer.currentBlendMode)
             {
-                //  Unrolled for speed
-                /*
-                if (nextBlend === this.renderer.blendModes.NORMAL)
-                {
-                    gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-                }
-                else if (nextBlend === BlendModes.ADD)
-                {
-                    gl.blendFunc(gl.SRC_ALPHA, gl.DST_ALPHA);
-                }
-                else if (nextBlend === BlendModes.MULTIPLY)
-                {
-                    gl.blendFunc(gl.DST_COLOR, gl.ONE_MINUS_SRC_ALPHA);
-                }
-                else if (nextBlend === BlendModes.SCREEN)
-                {
-                    gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
-                }
-                */
+                this.renderer.setBlendMode(sprite.blendMode);
             }
 
-            nextSource = sprite.frame.source;
-
-            if (nextSource !== this.currentTextureSource)
+            if (this.currentTextureSource !== sprite.frame.source)
             {
                 if (currentSize > 0)
                 {
-                    this.renderBatch(this.currentTextureSource, currentSize, start);
+                    gl.drawElements(gl.TRIANGLES, currentSize * 6, gl.UNSIGNED_SHORT, start * 6 * 2);
+                    this.renderer.drawCount++;
                 }
 
                 start = i;
                 currentSize = 0;
-                this.currentTextureSource = nextSource;
+                this.currentTextureSource = sprite.frame.source;
             }
 
             currentSize++;
@@ -627,34 +577,12 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
 
         if (currentSize > 0)
         {
-            this.renderBatch(this.currentTextureSource, currentSize, start);
+            gl.drawElements(gl.TRIANGLES, currentSize * 6, gl.UNSIGNED_SHORT, start * 6 * 2);
+            this.renderer.drawCount++;
         }
 
         //  Reset the batch
         this.currentBatchSize = 0;
-    },
-
-    renderBatch: function (source, size, startIndex)
-    {
-        if (size === 0)
-        {
-            return;
-        }
-
-        var gl = this.gl;
-
-        if (source.glDirty)
-        {
-            if (!this.renderer.updateTexture(source))
-            {
-                //  If updateTexture returns false then we cannot render it, so bail out now
-                return;
-            }
-        }
-
-        gl.drawElements(gl.TRIANGLES, size * 6, gl.UNSIGNED_SHORT, startIndex * 6 * 2);
-
-        this.renderer.drawCount++;
     },
 
     destroy: function ()
@@ -665,7 +593,7 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         this.gl.deleteBuffer(this.vertexBuffer);
         this.gl.deleteBuffer(this.indexBuffer);
 
-        this.currentBaseTexture = null;
+        this.currentTextureSource = null;
 
         this.renderer = null;
         this.gl = null;

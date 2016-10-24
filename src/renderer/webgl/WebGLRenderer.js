@@ -137,7 +137,7 @@ Phaser.Renderer.WebGL = function (game)
      * @property spriteBatch
      * @type WebGLSpriteBatch
      */
-    this.spriteBatch = new Phaser.Renderer.WebGL.BatchManager(this);
+    this.spriteBatch = new Phaser.Renderer.WebGL.BatchManager(this, 2000);
 
     /**
      * Manages the filters
@@ -157,6 +157,8 @@ Phaser.Renderer.WebGL = function (game)
 
     //  Add a null entry to avoid an array look-up miss
     this.textureArray = [ null, null ];
+
+    this.currentBlendMode = 0;
 
     this.blendModes = [];
 
@@ -383,10 +385,10 @@ Phaser.Renderer.WebGL.prototype = {
     render: function (stage)
     {
         //  No point rendering if our context has been blown up!
-        // if (this.contextLost)
-        // {
-        //     return;
-        // }
+        if (this.contextLost)
+        {
+            return;
+        }
 
         //  Add Pre-render hook
 
@@ -408,7 +410,7 @@ Phaser.Renderer.WebGL.prototype = {
         // gl.clear(gl.COLOR_BUFFER_BIT);
 
         //  Normal Blend Mode
-        gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+        this.setBlendMode(0);
 
         /*
         if (this.clearBeforeRender)
@@ -589,17 +591,21 @@ Phaser.Renderer.WebGL.prototype = {
         {
             return false;
         }
-
-        this.currentBlendMode = blendMode;
-        
+       
         var blendModeWebGL = this.blendModes[this.currentBlendMode];
 
         if (blendModeWebGL)
         {
+            this.currentBlendMode = blendMode;
+    
             this.gl.blendFunc(blendModeWebGL[0], blendModeWebGL[1]);
+
+            return true;
         }
-        
-        return true;
+        else
+        {
+            return false;
+        }
     },
 
     //  WebGL Mask Manager
