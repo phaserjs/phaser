@@ -86,7 +86,7 @@ Phaser.Renderer.WebGL = function (game)
      */
     this.stencilBufferLimit = 6;
 
-    this.multiTexture = true;
+    this.multiTexture = false;
 
     this.extensions = {};
 
@@ -212,8 +212,6 @@ Phaser.Renderer.WebGL.prototype = {
         var gl = this.gl;
 
         this.maxTextures = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);
-
-        console.log('maxTextures', this.maxTextures);
 
         if (this.maxTextures === 1)
         {
@@ -439,13 +437,19 @@ Phaser.Renderer.WebGL.prototype = {
         //  RenderTextures set this to -1
         this.flipY = 1;
 
+        // console.log('render');
+
         this.spriteBatch.begin();
 
         this.filterManager.begin();
 
+        // console.log('render stage');
+
         stage.render(this, stage);
 
         this.spriteBatch.end();
+
+        // debugger;
 
         //  Add Post-render hook
     },
@@ -474,7 +478,7 @@ Phaser.Renderer.WebGL.prototype = {
     //  Takes a TextureSource object
     updateTexture: function (source)
     {
-        console.log('updateTexture', source);
+        console.log('updateTexture', source.image.currentSrc);
 
         if (source.compressionAlgorithm)
         {
@@ -697,8 +701,6 @@ Phaser.Renderer.WebGL.prototype = {
 
     createEmptyTexture: function (width, height, scaleMode)
     {
-        console.log('createEmptyTexture');
-
         var gl = this.gl;
         var texture = gl.createTexture();
         var glScaleMode = (scaleMode === Phaser.scaleModes.LINEAR) ? gl.LINEAR : gl.NEAREST;

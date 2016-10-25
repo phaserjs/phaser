@@ -88,6 +88,20 @@ Phaser.Texture.prototype = {
         }
     },
 
+    setTextureIndex: function (index)
+    {
+        for (var i = 0; i < this.source.length; i++)
+        {
+            this.source[i].glTextureIndex = index;
+
+            console.log('setTextureIndex', index);
+
+            index++;
+        }
+
+        return index;
+    },
+
     /**
     * Destroys this base texture
     *

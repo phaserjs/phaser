@@ -255,7 +255,7 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
 
             fragmentSrc = this.multiTextureFragmentSrc;
     
-            console.dir(this.multiTextureFragmentSrc);
+            // console.dir(this.multiTextureFragmentSrc);
         }
 
         //  Compile the Shaders
@@ -324,6 +324,8 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
     {
         this._i = 0;
         this.dirty = true;
+        this.currentTextureSource = null;
+        this.currentBatchSize = 0;
     },
 
     end: function ()
@@ -358,8 +360,8 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         {
             if (this.renderer.textureArray[textureSource.glTextureIndex] !== textureSource)
             {
-                console.log('setCurrentTexture', this.currentBatchSize);
-                console.log(textureSource);
+                console.log('setCurrentTexture - batch size', this.currentBatchSize);
+                // console.log(textureSource);
 
                 if (this.currentBatchSize > 0)
                 {
@@ -377,15 +379,21 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         }
         else
         {
+            // console.log('setCurrentTexture');
+
             if (this.currentTextureSource === textureSource)
             {
+                // console.log('skip');
                 return;
             }
 
             if (this.currentBatchSize > 0)
             {
+                // console.log('force flush from insdie setCurrentTexture');
                 this.flush();
             }
+
+            // console.log('bind new sprites texture', textureSource.image.currentSrc);
 
             gl.activeTexture(gl.TEXTURE0);
 
@@ -434,16 +442,27 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
 
     addToBatch: function (gameObject, verts, uvs, textureIndex, alpha, tintColors, bgColors)
     {
-        //  Does this Game Objects texture need updating?
-        if (gameObject.frame.source.glDirty)
-        {
-            this.renderer.updateTexture(gameObject.frame.source);
-        }
+        // console.log('addToBatch', gameObject.frame.name);
 
         //  Check Batch Size and flush if needed
         if (this.currentBatchSize >= this.maxBatchSize)
         {
+            // console.log('force flush because batch limit hit');
             this.flush();
+        }
+
+        //  Does this Game Objects texture need updating?
+        if (gameObject.frame.source.glDirty)
+        {
+            //  Check Batch Size and flush if needed
+            if (this.currentBatchSize > 0)
+            {
+                // console.log('force flush before updateTexture');
+                this.flush();
+            }
+
+            // console.log('texture dirty');
+            this.renderer.updateTexture(gameObject.frame.source);
         }
 
         //  Set texture
@@ -454,6 +473,8 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         var positions = this.positions;
 
         var i = this._i;
+
+        // console.log('addToBatch i / ci', i, this.currentBatchSize);
 
         //  Top Left vert (xy, uv, color)
         positions[i++] = verts.x0;
@@ -501,7 +522,7 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         var gl = this.gl;
 
         //  Bind the main texture
-        gl.activeTexture(gl.TEXTURE0);
+        // gl.activeTexture(gl.TEXTURE0);
 
         //  Bind the buffers
         gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
@@ -542,6 +563,8 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
 
     flush: function ()
     {
+        // console.log('flush');
+
         //  Always dirty the first pass through but subsequent calls may be clean
         if (this.dirty)
         {
@@ -579,30 +602,19 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
                 this.renderer.setBlendMode(sprite.blendMode);
             }
 
-            if (!this.renderer.multiTexture && this.currentTextureSource !== sprite.frame.source)
-            {
-                if (currentSize > 0)
-                {
-                    gl.drawElements(gl.TRIANGLES, currentSize * 6, gl.UNSIGNED_SHORT, start * 6 * 2);
-                    this.renderer.drawCount++;
-                }
-
-                start = i;
-                currentSize = 0;
-                this.currentTextureSource = sprite.frame.source;
-            }
-
             currentSize++;
         }
 
         if (currentSize > 0)
         {
+            // console.log('flushed and drew', currentSize);
             gl.drawElements(gl.TRIANGLES, currentSize * 6, gl.UNSIGNED_SHORT, start * 6 * 2);
             this.renderer.drawCount++;
         }
 
         //  Reset the batch
         this.currentBatchSize = 0;
+        this._i = 0;
     },
 
     destroy: function ()
