@@ -140,10 +140,10 @@ Phaser.Renderer.WebGL = function (game)
 
     /**
      * Manages the rendering of sprites
-     * @property spriteBatch
+     * @property batch
      * @type WebGLSpriteBatch
      */
-    this.spriteBatch = new Phaser.Renderer.WebGL.BatchManager(this, 2000);
+    this.batch = new Phaser.Renderer.WebGL.BatchManager(this, 2000);
 
     /**
      * Manages the filters
@@ -234,7 +234,7 @@ Phaser.Renderer.WebGL.prototype = {
         gl.enable(gl.BLEND);
 
         this.shaderManager.init();
-        this.spriteBatch.init();
+        this.batch.init();
         this.filterManager.init();
         this.stencilManager.init();
 
@@ -453,7 +453,7 @@ Phaser.Renderer.WebGL.prototype = {
 
         // console.log('render');
 
-        this.spriteBatch.begin();
+        this.batch.begin();
 
         // this.filterManager.begin();
 
@@ -461,7 +461,7 @@ Phaser.Renderer.WebGL.prototype = {
 
         stage.render(this, stage);
 
-        this.spriteBatch.end();
+        this.batch.end();
 
         // debugger;
 
@@ -775,12 +775,12 @@ Phaser.Renderer.WebGL.prototype = {
         this.offset = null;
 
         this.shaderManager.destroy();
-        this.spriteBatch.destroy();
+        this.batch.destroy();
         this.maskManager.destroy();
         this.filterManager.destroy();
 
         this.shaderManager = null;
-        this.spriteBatch = null;
+        this.batch = null;
         this.maskManager = null;
         this.filterManager = null;
 

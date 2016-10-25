@@ -366,7 +366,7 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         }
     },
 
-    addToBatch: function (gameObject, verts, uvs, textureIndex, alpha, tintColors, bgColors)
+    add: function (gameObject, verts, uvs, textureIndex, alpha, tintColors, bgColors)
     {
         // console.log('addToBatch', gameObject.frame.name);
 

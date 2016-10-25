@@ -20,7 +20,7 @@ Phaser.Renderer.WebGL.GameObjects.Sprite = {
         //  Would be good to get this down to 1 check, or even none.
         if (src._mask || src._filters)
         {
-            var spriteBatch = renderer.spriteBatch;
+            var spriteBatch = renderer.batch;
 
             // push filter first as we need to ensure the stencil buffer is correct for any masking
             if (src._filters)

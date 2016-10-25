@@ -24,7 +24,7 @@ Phaser.Renderer.WebGL.GameObjects.Image = {
         var tint = src.color._glTint;
         var bg = src.color._glBg;
 
-        renderer.spriteBatch.addToBatch(src, verts, uvs, index, alpha, tint, bg);
+        renderer.batch.add(src, verts, uvs, index, alpha, tint, bg);
 
         /*
 
