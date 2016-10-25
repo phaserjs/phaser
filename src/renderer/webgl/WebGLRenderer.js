@@ -86,7 +86,7 @@ Phaser.Renderer.WebGL = function (game)
      */
     this.stencilBufferLimit = 6;
 
-    this.multiTexture = false;
+    this.multiTexture = true;
 
     this.extensions = {};
 

@@ -291,7 +291,7 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
 
             var tempTexture = this.renderer.createEmptyTexture(1, 1, 0);
 
-            for (i = 0; i < this.maxTextures; i++)
+            for (i = 0; i < this.renderer.maxTextures; i++)
             {
                 gl.activeTexture(gl.TEXTURE0 + i);
 
@@ -304,7 +304,7 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
 
             gl.activeTexture(gl.TEXTURE0);
 
-            gl.uniform1iv(this.uSamplerArray, indices);
+            gl.uniform1iv(this.uSampler, indices);
         }
         else
         {
@@ -360,7 +360,7 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         {
             if (this.renderer.textureArray[textureSource.glTextureIndex] !== textureSource)
             {
-                console.log('setCurrentTexture - batch size', this.currentBatchSize);
+                // console.log('setCurrentTexture - batch size', this.currentBatchSize);
                 // console.log(textureSource);
 
                 if (this.currentBatchSize > 0)
@@ -370,7 +370,7 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
 
                 gl.activeTexture(gl.TEXTURE0 + textureSource.glTextureIndex);
 
-                console.log('activeTexture', gl.TEXTURE0 + textureSource.glTextureIndex);
+                // console.log('activeTexture', gl.TEXTURE0 + textureSource.glTextureIndex);
 
                 gl.bindTexture(gl.TEXTURE_2D, textureSource.glTexture);
 
