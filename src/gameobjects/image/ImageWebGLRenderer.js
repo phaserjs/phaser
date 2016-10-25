@@ -71,13 +71,6 @@ Phaser.Renderer.WebGL.GameObjects.Image = {
         }
         */
 
-        //  Also works ...
-
-        // renderer.spriteBatch.startGameObject(src);
-        // renderer.spriteBatch.addVert(verts.x0, verts.y0, uvs.x0, uvs.y0, index, tint.topLeft + alpha, bg);
-        // renderer.spriteBatch.addVert(verts.x1, verts.y1, uvs.x1, uvs.y1, index, tint.topRight + alpha, bg);
-        // renderer.spriteBatch.addVert(verts.x2, verts.y2, uvs.x2, uvs.y2, index, tint.bottomRight + alpha, bg);
-        // renderer.spriteBatch.addVert(verts.x3, verts.y3, uvs.x3, uvs.y3, index, tint.bottomLeft + alpha, bg);
     }
 
 };

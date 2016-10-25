@@ -86,7 +86,7 @@ Phaser.Renderer.WebGL = function (game)
      */
     this.stencilBufferLimit = 6;
 
-    this.multiTexture = true;
+    this.multiTexture = false;
 
     this.extensions = {};
 
@@ -110,6 +110,14 @@ Phaser.Renderer.WebGL = function (game)
         stencil: true,
         preserveDrawingBuffer: this.preserveDrawingBuffer
     };
+
+    // this.contextOptions = {
+    //     alpha: true,
+    //     antialias: true,
+    //     premultipliedAlpha: true,
+    //     stencil: true,
+    //     preserveDrawingBuffer: false
+    // };
 
     /**
      * @property projection
@@ -155,7 +163,7 @@ Phaser.Renderer.WebGL = function (game)
 
     this.textureArray = [];
 
-    this.currentBlendMode = 0;
+    this.currentBlendMode = -1;
     this.currentTextureSource = null;
 
     this.blendModes = [];
@@ -399,14 +407,15 @@ Phaser.Renderer.WebGL.prototype = {
         //  Transparent
         // gl.clearColor(0, 0, 0, 0);
 
-        // gl.clearColor(0.0, 0.4, 0.0, 1.0);
-        // gl.clear(gl.COLOR_BUFFER_BIT);
+        //  If 'alpha' is true in the context options then
+        //  things like blend mode ADD looks really weird
+        //  if you don't clear the background (would look fine over a background image though)
 
         //  Black
         // gl.clearColor(0, 0, 0, 1);
         // gl.clear(gl.COLOR_BUFFER_BIT);
 
-        this.setBlendMode(this.blendModes.NORMAL);
+        this.setBlendMode(Phaser.blendModes.NORMAL);
 
         /*
         if (this.clearBeforeRender)
@@ -441,7 +450,7 @@ Phaser.Renderer.WebGL.prototype = {
 
         this.spriteBatch.begin();
 
-        this.filterManager.begin();
+        // this.filterManager.begin();
 
         // console.log('render stage');
 
@@ -478,8 +487,6 @@ Phaser.Renderer.WebGL.prototype = {
     //  Takes a TextureSource object
     updateTexture: function (source)
     {
-        console.log('updateTexture', source.image.currentSrc);
-
         if (source.compressionAlgorithm)
         {
             return this.updateCompressedTexture(source);
@@ -498,6 +505,8 @@ Phaser.Renderer.WebGL.prototype = {
 
         gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, source.premultipliedAlpha);
 
+        //  Throws a warning in Firefox: WebGL: texImage2D: Chosen format/type incured an expensive reformat: 0x1908/0x1401
+        //  @see https://github.com/mrdoob/three.js/issues/9109
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, source.image);
 
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, source.scaleMode === Phaser.scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
@@ -587,18 +596,18 @@ Phaser.Renderer.WebGL.prototype = {
 
     //  Blend Mode Manager
 
-    setBlendMode: function (blendMode)
+    setBlendMode: function (newBlendMode)
     {
-        if (this.currentBlendMode === blendMode)
+        if (this.currentBlendMode === newBlendMode)
         {
             return false;
         }
-       
-        var blendModeWebGL = this.blendModes[this.currentBlendMode];
+        
+        var blendModeWebGL = this.blendModes[newBlendMode];
 
         if (blendModeWebGL)
         {
-            this.currentBlendMode = blendMode;
+            this.currentBlendMode = newBlendMode;
     
             this.gl.blendFunc(blendModeWebGL[0], blendModeWebGL[1]);
 
