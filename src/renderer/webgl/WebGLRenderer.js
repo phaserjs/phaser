@@ -168,8 +168,11 @@ Phaser.Renderer.WebGL = function (game)
 
     this.blendModes = [];
 
-    this.drawCount = 0;
     this.flipY = 1;
+
+    this.startTime = 0;
+    this.endTime = 0;
+    this.drawCount = 0;
 
     this.contextLost = false;
 
@@ -397,6 +400,8 @@ Phaser.Renderer.WebGL.prototype = {
 
         //  Add Pre-render hook
 
+        this.startTime = Date.now();
+
         var gl = this.gl;
 
         gl.viewport(0, 0, this.width, this.height);
@@ -459,6 +464,8 @@ Phaser.Renderer.WebGL.prototype = {
         this.spriteBatch.end();
 
         // debugger;
+
+        this.endTime = Date.now();
 
         //  Add Post-render hook
     },

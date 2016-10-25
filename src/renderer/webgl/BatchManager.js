@@ -378,6 +378,8 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
 
         var source = gameObject.frame.source;
 
+        source.glLastUsed = this.renderer.startTime;
+
         //  Does this Game Objects texture need updating?
         if (source.glDirty)
         {

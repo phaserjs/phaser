@@ -102,6 +102,14 @@ Phaser.TextureSource = function (texture, source)
     this.glTextureIndex = 0;
 
     /**
+    * The timestamp when this texture was last used by the WebGL renderer.
+    * Can be used to purge out 'dead' textures from GPU memory.
+    * @property glLastUsed
+    * @type Number
+    */
+    this.glLastUsed = 0;
+
+    /**
     * @property glDirty
     */
     this.glDirty = true;
