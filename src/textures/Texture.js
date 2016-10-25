@@ -94,6 +94,8 @@ Phaser.Texture.prototype = {
         {
             this.source[i].glTextureIndex = index;
 
+            console.log(this.source[i].image.currentSrc, 'index = ', index);
+
             index++;
         }
 

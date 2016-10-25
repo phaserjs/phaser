@@ -278,6 +278,26 @@ Phaser.Renderer.WebGL.prototype = {
 
     },
 
+    enableMultiTextureSupport: function (textureArray)
+    {
+        this.multiTexture = true;
+
+        //  Recompile the batch
+        this.batch.initMultiTexture();
+
+        if (Array.isArray(textureArray))
+        {
+            var index = 0;
+
+            for (var i = 0; i < textureArray.length; i++)
+            {
+                var texture = this.game.textures.get(textureArray[i]);
+
+                index = texture.setTextureIndex(index);
+            }
+        }
+    },
+
     resize: function (width, height)
     {
         this.width = width * this.game.resolution;
@@ -713,6 +733,15 @@ Phaser.Renderer.WebGL.prototype = {
         }
 
         return shaderProgram;
+    },
+
+    deleteProgram: function (program)
+    {
+        var gl = this.gl;
+
+        gl.deleteProgram(program);
+
+        return this;
     },
 
     createEmptyTexture: function (width, height, scaleMode)

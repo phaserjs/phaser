@@ -944,12 +944,12 @@ Phaser.Game.prototype = {
 
             // this.updates.preUpdate();
 
-            this.scale.preUpdate();
-            this.debug.preUpdate();
+            // this.scale.preUpdate();
+            // this.debug.preUpdate();
             // this.camera.preUpdate();
-            this.physics.preUpdate();
+            // this.physics.preUpdate();
             this.state.preUpdate(timeStep);
-            this.plugins.preUpdate(timeStep);
+            // this.plugins.preUpdate(timeStep);
             this.stage.preUpdate();
 
             this.tweens.update();
@@ -957,11 +957,11 @@ Phaser.Game.prototype = {
             this.stage.update();
             // this.tweens.update();
 
-            this.sound.update();
-            this.input.update();
-            this.physics.update();
-            this.particles.update();
-            this.plugins.update();
+            // this.sound.update();
+            // this.input.update();
+            // this.physics.update();
+            // this.particles.update();
+            // this.plugins.update();
 
             this.stage.postUpdate();
             this.plugins.postUpdate();
@@ -1004,11 +1004,11 @@ Phaser.Game.prototype = {
 
         this.renderer.render(this.stage);
 
-        this.plugins.render(elapsedTime);
+        // this.plugins.render(elapsedTime);
 
         this.state.render(elapsedTime);
 
-        this.plugins.postRender(elapsedTime);
+        // this.plugins.postRender(elapsedTime);
 
         this.updates.stop();
     },

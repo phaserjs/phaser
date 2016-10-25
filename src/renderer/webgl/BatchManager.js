@@ -109,8 +109,7 @@ Phaser.Renderer.WebGL.BatchManager = function (renderer, batchSize)
         'uniform sampler2D uSampler;', // our texture
 
         'void main(void) {',
-        '   vec4 pixel = texture2D(uSampler, vTextureCoord);', // get the color from the texture
-        // '   vec4 pixel = texture2D(uSampler, vTextureCoord) * vTintColor;', // get the color from the texture
+        '   vec4 pixel = texture2D(uSampler, vTextureCoord) * vTintColor;', // get the color from the texture
         // '   if (pixel.a == 0.0) pixel = vBgColor;', // if texture alpha is zero, use the bg color
         '   gl_FragColor = pixel;',
         '}'
@@ -216,52 +215,20 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         //  Set the source of the buffer data (this.vertices array)
         gl.bufferData(gl.ARRAY_BUFFER, this.vertices, gl.DYNAMIC_DRAW);
 
-        var fragmentSrc = this.fragmentSrc;
-
         if (this.renderer.multiTexture)
         {
-            var multiFrag = [
-                'precision lowp float;',
-
-                'varying vec2 vTextureCoord;', // the texture coords passed in from the vertex shader
-                'varying vec4 vTintColor;', //  the color value passed in from the vertex shader (texture color + alpha + tint)
-                'varying vec4 vBgColor;', //  the bg color value passed in from the vertex shader
-                'varying float vTextureIndex;',
-
-                'uniform sampler2D uSamplerArray[' + this.renderer.maxTextures + '];',
-
-                'const vec4 PINK = vec4(1.0, 0.0, 1.0, 1.0);',
-
-                'void main(void) {',
-
-                '   vec4 pixel;',
-                '   if (vTextureIndex == 0.0) pixel = texture2D(uSamplerArray[0], vTextureCoord);'
-            ];
-
-            for (i = 1; i < this.renderer.maxTextures; i++)
-            {
-                multiFrag.push('   else if (vTextureIndex == ' + i + '.0) pixel = texture2D(uSamplerArray[' + i + '], vTextureCoord);');
-            }
-
-            multiFrag = multiFrag.concat([
-                '   else pixel = PINK;',
-
-                '   pixel *= vTintColor;',
-                '   if (pixel.a == 0.0) pixel = vBgColor;', // if texture alpha is zero, use the bg color
-                '   gl_FragColor = pixel;',
-                '}'
-            ]);
-
-            this.multiTextureFragmentSrc = multiFrag;
-
-            fragmentSrc = this.multiTextureFragmentSrc;
+            this.initMultiTexture();
         }
+        else
+        {
+            this.initSingleTexture();
+        }
+    },
 
-        //  Compile the Shader
-        var program = this.renderer.compileProgram(this.vertexSrc, fragmentSrc);
-
-        //  Set Shader
-        gl.useProgram(program);
+    initAttributes: function ()
+    {
+        var gl = this.gl;
+        var program = this.program;
 
         //  Get and store the attributes
 
@@ -269,51 +236,123 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         this.aVertexPosition = gl.getAttribLocation(program, 'aVertexPosition');
         gl.enableVertexAttribArray(this.aVertexPosition);
 
+        //  texture coordinate
         this.aTextureCoord = gl.getAttribLocation(program, 'aTextureCoord');
         gl.enableVertexAttribArray(this.aTextureCoord);
 
+        //  texture index
         this.aTextureIndex = gl.getAttribLocation(program, 'aTextureIndex');
         gl.enableVertexAttribArray(this.aTextureIndex);
 
+        //  tint / pixel color
         this.aTintColor = gl.getAttribLocation(program, 'aTintColor');
         gl.enableVertexAttribArray(this.aTintColor);
 
+        //  background pixel color
         this.aBgColor = gl.getAttribLocation(program, 'aBgColor');
         gl.enableVertexAttribArray(this.aBgColor);
-
-        //  Get and store the uniforms for the shader
-        if (this.renderer.multiTexture)
-        {
-            //  Bind empty multi-textures to avoid WebGL spam
-            var indices = [];
-
-            var tempTexture = this.renderer.createEmptyTexture(1, 1, 0);
-
-            for (i = 0; i < this.renderer.maxTextures; i++)
-            {
-                gl.activeTexture(gl.TEXTURE0 + i);
-
-                gl.bindTexture(gl.TEXTURE_2D, tempTexture);
-
-                indices.push(i);
-            }
-
-            this.uSampler = gl.getUniformLocation(program, 'uSamplerArray[0]');
-
-            gl.uniform1iv(this.uSampler, indices);
-        }
-        else
-        {
-            this.uSampler = gl.getUniformLocation(program, 'uSampler');
-        }
 
         //  The projection vector (middle of the game world)
         this.projectionVector = gl.getUniformLocation(program, 'projectionVector');
 
         //  The offset vector (camera shake)
         this.offsetVector = gl.getUniformLocation(program, 'offsetVector');
+    },
 
-        this.program = program;
+    initSingleTexture: function ()
+    {
+        console.log('initSingleTexture');
+
+        var gl = this.gl;
+
+        //  Shader already exists
+        if (this.program)
+        {
+            this.renderer.deleteProgram(this.program);
+        }
+            
+        //  Compile the Shader
+        this.program = this.renderer.compileProgram(this.vertexSrc, this.fragmentSrc);
+
+        //  Set Shader
+        gl.useProgram(this.program);
+
+        this.initAttributes();
+
+        this.uSampler = gl.getUniformLocation(this.program, 'uSampler');
+    },
+
+    initMultiTexture: function ()
+    {
+        console.log('initMultiTexture');
+
+        var gl = this.gl;
+
+        var multiFrag = [
+            'precision lowp float;',
+
+            'varying vec2 vTextureCoord;', // the texture coords passed in from the vertex shader
+            'varying vec4 vTintColor;', //  the color value passed in from the vertex shader (texture color + alpha + tint)
+            'varying vec4 vBgColor;', //  the bg color value passed in from the vertex shader
+            'varying float vTextureIndex;',
+
+            'uniform sampler2D uSamplerArray[' + this.renderer.maxTextures + '];',
+
+            'const vec4 PINK = vec4(1.0, 0.0, 1.0, 1.0);',
+
+            'void main(void) {',
+
+            '   vec4 pixel;',
+            '   if (vTextureIndex == 0.0) pixel = texture2D(uSamplerArray[0], vTextureCoord);'
+        ];
+
+        for (var i = 1; i < this.renderer.maxTextures; i++)
+        {
+            multiFrag.push('   else if (vTextureIndex == ' + i + '.0) pixel = texture2D(uSamplerArray[' + i + '], vTextureCoord);');
+        }
+
+        multiFrag = multiFrag.concat([
+            '   else pixel = PINK;',
+
+            '   pixel *= vTintColor;',
+            // '   if (pixel.a == 0.0) pixel = vBgColor;', // if texture alpha is zero, use the bg color
+            '   gl_FragColor = pixel;',
+            '}'
+        ]);
+
+        this.multiTextureFragmentSrc = multiFrag;
+
+        //  Shader already exists
+        if (this.program)
+        {
+            this.renderer.deleteProgram(this.program);
+        }
+
+        //  Compile the Shader
+        this.program = this.renderer.compileProgram(this.vertexSrc, this.multiTextureFragmentSrc);
+
+        //  Set Shader
+        gl.useProgram(this.program);
+
+        this.initAttributes();
+
+        //  Bind empty multi-textures to avoid WebGL spam
+        var indices = [];
+
+        var tempTexture = this.renderer.createEmptyTexture(1, 1, 0);
+
+        for (i = 0; i < this.renderer.maxTextures; i++)
+        {
+            gl.activeTexture(gl.TEXTURE0 + i);
+
+            gl.bindTexture(gl.TEXTURE_2D, tempTexture);
+
+            indices.push(i);
+        }
+
+        this.uSampler = gl.getUniformLocation(this.program, 'uSamplerArray[0]');
+
+        gl.uniform1iv(this.uSampler, indices);
     },
 
     begin: function ()

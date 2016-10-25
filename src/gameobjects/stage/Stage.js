@@ -149,14 +149,13 @@ Phaser.Stage.prototype.preUpdate = function ()
 {
     this.worldAlpha = this.alpha;
 
-    this.currentRenderOrderID = 0;
+    // this.currentRenderOrderID = 0;
 
     //  This can't loop in reverse, we need the renderOrderID to be in sequence
     for (var i = 0; i < this.children.list.length; i++)
     {
         this.children.list[i].preUpdate();
     }
-
 };
 
 /**
