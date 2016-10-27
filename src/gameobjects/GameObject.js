@@ -192,8 +192,7 @@ Object.defineProperties(Phaser.GameObject.prototype, {
 
         set: function (value)
         {
-            this.transform._anchorX = value;
-            this.transform._anchorY = value;
+            this.transform.setAnchor(value);
         }
 
     },
@@ -210,6 +209,7 @@ Object.defineProperties(Phaser.GameObject.prototype, {
         set: function (value)
         {
             this.transform._anchorX = value;
+            this.transform.dirty = true;
         }
 
     },
@@ -226,6 +226,7 @@ Object.defineProperties(Phaser.GameObject.prototype, {
         set: function (value)
         {
             this.transform._anchorY = value;
+            this.transform.dirty = true;
         }
 
     },
