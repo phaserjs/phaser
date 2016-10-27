@@ -10,7 +10,7 @@ Before contributing, please read the [code of conduct](https://github.com/photon
 
 **1. Search for existing issues.** Your bug may have already been fixed or addressed in a development branch version of Phaser, so be sure to search the issues first before putting in a duplicate issue.
 
-**2. Not sure if it's a bug?.** Then please ask on the [forum][4]. If something is blatantly wrong then post it to github. But if you feel it might just be because you're not sure of expected behaviour, then it might save us time, and get you a response faster, if you post it to the Phaser forum instead.
+**2. Not sure if it's a bug?** Then please ask on the [forum][4]. If something is blatantly wrong then post it to github. But if you feel it might just be because you're not sure of expected behaviour, then it might save us time, and get you a response faster, if you post it to the Phaser forum instead.
 
 **3. Create an isolated and reproducible test case.** If you are reporting a bug, make sure you also have a minimal, runnable, code example that reproduces the problem you have.
 
