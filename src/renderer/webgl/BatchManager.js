@@ -386,23 +386,20 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         this.dirty = true;
     },
 
-    setCurrentTexture: function (textureSource)
+    setCurrentTexture: function (source)
     {
-        if (this.renderer.textureArray[textureSource.glTextureIndex] !== textureSource)
+        var gl = this.gl;
+
+        if (this.currentBatchSize > 0)
         {
-            if (this.currentBatchSize > 0)
-            {
-                this.flush();
-            }
-
-            var gl = this.gl;
-
-            gl.activeTexture(gl.TEXTURE0 + textureSource.glTextureIndex);
-
-            gl.bindTexture(gl.TEXTURE_2D, textureSource.glTexture);
-
-            this.renderer.textureArray[textureSource.glTextureIndex] = textureSource;
+            this.flush();
         }
+
+        gl.activeTexture(gl.TEXTURE0 + source.glTextureIndex);
+
+        gl.bindTexture(gl.TEXTURE_2D, source.glTexture);
+
+        this.renderer.textureArray[source.glTextureIndex] = source;
     },
 
     add: function (gameObject, verts, uvs, textureIndex, alpha, tintColors, bgColors)
@@ -422,30 +419,13 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         //  Does this Game Objects texture need updating?
         if (source.glDirty)
         {
-            //  Check Batch Size and flush if needed
-            if (this.currentBatchSize > 0)
-            {
-                this.flush();
-            }
-
             this.renderer.updateTexture(source);
         }
 
-        //  Set the current texture (not if this sprite has its own shader?)
+        //  Does the batch need to activate a new texture?
         if (this.renderer.textureArray[source.glTextureIndex] !== source)
         {
-            var gl = this.gl;
-
-            if (this.currentBatchSize > 0)
-            {
-                this.flush();
-            }
-
-            gl.activeTexture(gl.TEXTURE0 + source.glTextureIndex);
-
-            gl.bindTexture(gl.TEXTURE_2D, source.glTexture);
-
-            this.renderer.textureArray[source.glTextureIndex] = source;
+            this.setCurrentTexture(source);
         }
 
         //  These are TypedArray Views into the vertices ArrayBuffer
@@ -580,6 +560,10 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
                 {
                     gl.drawElements(gl.TRIANGLES, currentSize * 6, gl.UNSIGNED_SHORT, start * 6 * 2);
                     this.renderer.drawCount++;
+
+                    //  Reset the batch
+                    start = i;
+                    currentSize = 0;
                 }
 
                 this.renderer.setBlendMode(sprite.blendMode);
@@ -601,6 +585,7 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         //  Reset the batch
         this.currentBatchSize = 0;
         this._i = 0;
+
     },
 
     destroy: function ()
