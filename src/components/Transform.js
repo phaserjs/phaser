@@ -176,7 +176,7 @@ Phaser.Component.Transform.prototype = {
         this._anchorX = x;
         this._anchorY = y;
 
-        return this.update();
+        this.dirty = true;
     },
 
     setRotation: function (rotation)

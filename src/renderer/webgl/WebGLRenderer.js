@@ -21,7 +21,7 @@ Phaser.Renderer.WebGL = function (game)
 
     this.type = Phaser.WEBGL;
 
-    this.shaderID = 0;
+    this.currentShader = null;
 
     /**
      * This sets if the CanvasRenderer will clear the canvas or not before the new render pass.
@@ -318,6 +318,7 @@ Phaser.Renderer.WebGL.prototype = {
         this.projection.y = -(this.height / 2) / this.game.resolution;
     },
 
+    /*
     getShaderID: function (shader)
     {
         this.shaderID++;
@@ -326,6 +327,7 @@ Phaser.Renderer.WebGL.prototype = {
 
         return this.shaderID;
     },
+    */
 
     /**
     * If Multi Texture support has been enabled, then calling this method will enable batching on the given
