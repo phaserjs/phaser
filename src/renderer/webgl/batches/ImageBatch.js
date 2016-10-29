@@ -190,6 +190,9 @@ Phaser.Renderer.WebGL.Batch.Image.prototype = {
         //  Set Shader
         gl.useProgram(program);
 
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
+
         //  Get and store the attributes
 
         //  vertex position

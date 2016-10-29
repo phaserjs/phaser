@@ -89,7 +89,7 @@ Phaser.Renderer.WebGL.Batch.Base.prototype = {
     start: function ()
     {
         this._i = 0;
-        this.dirty = true;
+        // this.dirty = true;
         this.currentBatchSize = 0;
 
         this.init();
@@ -102,7 +102,7 @@ Phaser.Renderer.WebGL.Batch.Base.prototype = {
             this.flush();
         }
 
-        this.dirty = true;
+        // this.dirty = true;
     },
 
     /*
