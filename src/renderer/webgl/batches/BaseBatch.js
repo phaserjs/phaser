@@ -89,51 +89,15 @@ Phaser.Renderer.WebGL.Batch.Base.prototype = {
     start: function ()
     {
         this._i = 0;
-        // this.dirty = true;
+
         this.currentBatchSize = 0;
 
-        this.init();
+        this.bindShader();
     },
 
     stop: function ()
     {
-        if (this.currentBatchSize > 0)
-        {
-            this.flush();
-        }
-
-        // this.dirty = true;
-    },
-
-    /*
-    flush: function ()
-    {
-        if (currentSize > 0)
-        {
-            gl.drawElements(gl.TRIANGLES, currentSize * 6, gl.UNSIGNED_SHORT, start * 6 * 2);
-            this.renderer.drawCount++;
-        }
-
-        //  Reset the batch
-        this.currentBatchSize = 0;
-        this._i = 0;
-    },
-    */
-
-    setCurrentTexture: function (source)
-    {
-        var gl = this.gl;
-
-        if (this.currentBatchSize > 0)
-        {
-            this.flush();
-        }
-
-        gl.activeTexture(gl.TEXTURE0 + source.glTextureIndex);
-
-        gl.bindTexture(gl.TEXTURE_2D, source.glTexture);
-
-        this.renderer.textureArray[source.glTextureIndex] = source;
+        this.flush();
     }
 
 };

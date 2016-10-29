@@ -11,7 +11,7 @@
 * @constructor
 * @param {Phaser.Renderer.WebGL} renderer - The WebGL Renderer.
 */
-Phaser.Renderer.WebGL.Batch.Image = function (renderer, batchSize)
+Phaser.Renderer.WebGL.Batch.Image = function (manager, batchSize)
 {
     //  Vertex Data Size is calculated by adding together:
     //
@@ -20,12 +20,12 @@ Phaser.Renderer.WebGL.Batch.Image = function (renderer, batchSize)
     //  Texture Index (float) = 4 bytes
     //  Tint Color (float) = 4 bytes
     //  BG Color (float) = 4 bytes
-    //  
+    //
     //  Total: 28 bytes (per vert) * 4 (4 verts per quad) (= 112 bytes) * maxBatchSize (usually 2000) = 224 kilobytes sent to the GPU every frame
 
     var vertSize = (4 * 2) + (4 * 2) + (4) + (4) + (4);
 
-    Phaser.Renderer.WebGL.Batch.Base.call(this, renderer, batchSize, vertSize);
+    Phaser.Renderer.WebGL.Batch.Base.call(this, manager, batchSize, vertSize);
 
     //  View on the vertices as a Float32Array
     this.positions = new Float32Array(this.vertices);
@@ -66,7 +66,7 @@ Phaser.Renderer.WebGL.Batch.Image.prototype.constructor = Phaser.Renderer.WebGL.
 
 Phaser.Renderer.WebGL.Batch.Image.prototype = {
 
-    build: function ()
+    init: function ()
     {
         this.gl = this.renderer.gl;
 
@@ -181,7 +181,7 @@ Phaser.Renderer.WebGL.Batch.Image.prototype = {
         gl.bufferData(gl.ARRAY_BUFFER, this.vertices, gl.DYNAMIC_DRAW);
     },
 
-    init: function ()
+    bindShader: function ()
     {
         var gl = this.gl;
         var program = this.program;
@@ -328,19 +328,38 @@ Phaser.Renderer.WebGL.Batch.Image.prototype = {
         this.list[this.currentBatchSize++] = gameObject;
     },
 
+    flush: function ()
+    {
+        if (this.currentBatchSize > 0)
+        {
+            var gl = this.gl;
+
+            gl.drawElements(gl.TRIANGLES, this.currentBatchSize * 6, gl.UNSIGNED_SHORT, 0);
+
+            this.renderer.drawCount++;
+        }
+
+        //  Reset the batch
+        this.currentBatchSize = 0;
+
+        this._i = 0;
+    },
+
     destroy: function ()
     {
-        // this.vertices = null;
-        // this.indices = null;
+        this.vertices = null;
+        this.indices = null;
 
-        // this.gl.deleteBuffer(this.vertexBuffer);
-        // this.gl.deleteBuffer(this.indexBuffer);
+        this.gl.deleteBuffer(this.vertexBuffer);
+        this.gl.deleteBuffer(this.indexBuffer);
 
         this.renderer.deleteProgram(this.program);
 
         this.renderer = null;
 
         this.gl = null;
+
+        this.manager = null;
     }
 
 };
