@@ -576,6 +576,10 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         }
 
         //  Upload the vertex data to the GPU - is this cheaper (overall) than creating a new TypedArray view?
+        //  The tradeoff is sending 224KB of data to the GPU every frame, even if most of it is empty should the
+        //  batch be only slightly populated, vs. the creation of a new TypedArray view and its corresponding gc every frame.
+
+        //  the vertices array never changes, it's set once at the start, so only needs sending once?
         gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.vertices);
 
         /*
@@ -599,6 +603,8 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         var start = 0;
         var currentSize = 0;
 
+        //  Rather than keep the sprites in a list, we can simply flush and switch when
+        //  we encounter a new one in the add method, then we don't need to track any offsets?
         for (var i = 0; i < this.currentBatchSize; i++)
         {
             sprite = this.list[i];
