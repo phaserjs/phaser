@@ -256,34 +256,6 @@ Phaser.Renderer.WebGL.Batch.Image.prototype.bindShader = function ()
 
 Phaser.Renderer.WebGL.Batch.Image.prototype.add = function (verts, uvs, textureIndex, alpha, tintColors, bgColors)
 {
-    // console.log('addToBatch', gameObject.frame.name);
-
-    /*
-
-    //  Check Batch Size and flush if needed
-    if (this.size >= this.maxSize)
-    {
-        this.flush();
-    }
-
-    var source = gameObject.frame.source;
-
-    source.glLastUsed = this.renderer.startTime;
-
-    //  Does this Game Objects texture need updating?
-    if (source.glDirty)
-    {
-        this.renderer.updateTexture(source);
-    }
-
-    //  Does the batch need to activate a new texture?
-    if (this.renderer.textureArray[source.glTextureIndex] !== source)
-    {
-        this.setCurrentTexture(source);
-    }
-
-    */
-
     //  These are TypedArray Views into the vertices ArrayBuffer
     var colors = this.colors;
     var positions = this.positions;

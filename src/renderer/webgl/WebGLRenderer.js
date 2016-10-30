@@ -282,7 +282,7 @@ Phaser.Renderer.WebGL.prototype = {
         this.multiTexture = true;
 
         //  Recompile the batch
-        this.batch.initMultiTexture();
+        // this.batch.initMultiTexture();
 
         if (Array.isArray(textureArray))
         {
