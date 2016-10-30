@@ -37,6 +37,8 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
 
     init: function ()
     {
+        console.log('BatchManager.init');
+
         this.gl = this.renderer.gl;
 
         this.imageBatch.init();
@@ -57,29 +59,36 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
     add: function (batch, source)
     {
         //  Check Batch Size and flush if needed, OR if a different batch then swap
-        //  Also what about blend mode or shader?
-        if (this.currentBatchSize >= this.maxBatchSize)
+        //  Also what about blend mode or shader swaps?
+        if (this.currentBatch.size >= this.currentBatch.maxSize)
         {
-            this.flush();
+            this.currentBatch.flush();
         }
 
-        source.glLastUsed = this.renderer.startTime;
-
-        //  Does this Game Objects texture need updating?
-        if (source.glDirty)
+        if (source)
         {
-            this.renderer.updateTexture(source);
+            source.glLastUsed = this.renderer.startTime;
+
+            //  Does this TextureSource need updating?
+            if (source.glDirty)
+            {
+                this.renderer.updateTexture(source);
+            }
+
+            //  Does the batch need to activate a new texture?
+            if (this.renderer.textureArray[source.glTextureIndex] !== source)
+            {
+                this.setCurrentTexture(source);
+            }
         }
 
-        //  Does the batch need to activate a new texture?
-        if (this.renderer.textureArray[source.glTextureIndex] !== source)
-        {
-            this.setCurrentTexture(source);
-        }
+        //  Swap Batch check
+
+        //  At this point the game object should call 'add' on the batch it needs (ImageBatch, FXBatch, etc)
 
     },
 
-    flush: function ()
+    __flush: function ()
     {
         var gl = this.gl;
 

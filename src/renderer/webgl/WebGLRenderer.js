@@ -474,7 +474,7 @@ Phaser.Renderer.WebGL.prototype = {
 
         // console.log('render');
 
-        this.batch.begin();
+        this.batch.start();
 
         // this.filterManager.begin();
 
@@ -482,7 +482,7 @@ Phaser.Renderer.WebGL.prototype = {
 
         stage.render(this, stage);
 
-        this.batch.end();
+        this.batch.stop();
 
         // debugger;
 

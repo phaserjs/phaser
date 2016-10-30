@@ -140,12 +140,13 @@ EOL;
     <script src="$path/src/renderer/webgl/FilterTexture.js"></script>
     <script src="$path/src/renderer/webgl/ShaderManager.js"></script>
     <script src="$path/src/renderer/webgl/StencilManager.js"></script>
+    <script src="$path/src/renderer/webgl/batches/BaseBatch.js"></script>
+    <script src="$path/src/renderer/webgl/batches/ImageBatch.js"></script>
     <script src="$path/src/renderer/webgl/shaders/ComplexPrimitiveGraphics.js"></script>
     <script src="$path/src/renderer/webgl/shaders/PrimitiveGraphics.js"></script>
     <script src="$path/src/renderer/webgl/shaders/Sprite.js"></script>
     <script src="$path/src/renderer/webgl/shaders/SpriteBatch.js"></script>
     <script src="$path/src/renderer/webgl/shaders/Strip.js"></script>
-
 
     <script src="$path/src/gameobjects/components/Component.js"></script>
     <script src="$path/src/gameobjects/components/Angle.js"></script>

@@ -7,11 +7,11 @@
 /**
 *
 *
-* @class Phaser.Renderer.WebGL.Batch.Base
+* @class Phaser.Renderer.WebGL.Batch
 * @constructor
 * @param {Phaser.Renderer.WebGL} renderer - The WebGL Renderer.
 */
-Phaser.Renderer.WebGL.Batch.Base = function (manager, batchSize, vertSize)
+Phaser.Renderer.WebGL.Batch = function (manager, batchSize, vertSize)
 {
     this.batchManager = manager;
 
@@ -21,16 +21,16 @@ Phaser.Renderer.WebGL.Batch.Base = function (manager, batchSize, vertSize)
 
     //  Total number of objects we'll batch before flushing and rendering
     //  Integer
-    this.maxBatchSize = batchSize;
+    this.maxSize = batchSize;
 
     //  Integer
-    this.halfBatchSize = Math.floor(this.maxBatchSize / 2);
+    this.halfSize = Math.floor(this.maxSize / 2);
 
     //  Integer
     this.vertSize = vertSize;
 
     //  * 4 because there are 4 verts per batch entry (each corner of the quad)
-    var numVerts = this.vertSize * this.maxBatchSize * 4;
+    var numVerts = this.vertSize * this.maxSize * 4;
 
     //  ArrayBuffer
     //  This data is what changes every frame, populated by the game objects
@@ -41,10 +41,13 @@ Phaser.Renderer.WebGL.Batch.Base = function (manager, batchSize, vertSize)
     //  6 because there are 2 triangles per quad, and each triangle has 3 indices
     //  This Typed Array is set in the build method of the extended class, and then
     //  doesn't change again (it's populated just once)
-    this.indices = new Uint16Array(this.maxBatchSize * 6);
+    this.indices = new Uint16Array(this.maxSize * 6);
+
+    //  Populated by the flush operation when the batch is < 50% of the max size
+    this.view = null;
 
     //  Integer
-    this.currentBatchSize = 0;
+    this.size = 0;
 
     //  Boolean
     this.dirty = true;
@@ -82,17 +85,23 @@ Phaser.Renderer.WebGL.Batch.Base = function (manager, batchSize, vertSize)
     this._i = 0;
 };
 
-Phaser.Renderer.WebGL.Batch.Base.prototype.constructor = Phaser.Renderer.WebGL.Batch.Base;
+Phaser.Renderer.WebGL.Batch.prototype.constructor = Phaser.Renderer.WebGL.Batch;
 
-Phaser.Renderer.WebGL.Batch.Base.prototype = {
+Phaser.Renderer.WebGL.Batch.prototype = {
 
     start: function ()
     {
         this._i = 0;
 
-        this.currentBatchSize = 0;
+        this.size = 0;
 
-        this.bindShader();
+        //  We only need to do this if this batch isn't the current one
+
+        if (this.dirty)
+        {
+            this.bindShader();
+            this.dirty = false;
+        }
     },
 
     stop: function ()
