@@ -18,11 +18,11 @@ Phaser.Renderer.WebGL.Batch.Pixel = function (manager, batchSize)
     //  Position (vec2) = 4 * 2 = 8 bytes
     //  Color (float) = 4 bytes
     //
-    //  Total: 12 bytes (per vert) * 4 (4 verts per quad) (= 48 bytes) * maxSize (usually 2000) = 96 kilobytes sent to the GPU every frame
+    //  Total: 12 bytes (per vert) * 4 (4 verts per quad) (= 48 bytes) = 96 kilobytes per 2000 pixels sent to the GPU every frame
 
     var vertSize = (4 * 2) + (4);
 
-    Phaser.Renderer.WebGL.Batch.call(this, manager, batchSize * 2, vertSize);
+    Phaser.Renderer.WebGL.Batch.call(this, manager, batchSize * 10, vertSize);
 
     //  View on the vertices as a Float32Array
     this.positions = new Float32Array(this.vertices);
