@@ -140,8 +140,13 @@ EOL;
     <script src="$path/src/renderer/webgl/FilterTexture.js"></script>
     <script src="$path/src/renderer/webgl/ShaderManager.js"></script>
     <script src="$path/src/renderer/webgl/StencilManager.js"></script>
+
     <script src="$path/src/renderer/webgl/batches/BaseBatch.js"></script>
     <script src="$path/src/renderer/webgl/batches/ImageBatch.js"></script>
+    <script src="$path/src/renderer/webgl/batches/FXBatch.js"></script>
+    <script src="$path/src/renderer/webgl/batches/MultiTextureBatch.js"></script>
+    <script src="$path/src/renderer/webgl/batches/PixelBatch.js"></script>
+
     <script src="$path/src/renderer/webgl/shaders/ComplexPrimitiveGraphics.js"></script>
     <script src="$path/src/renderer/webgl/shaders/PrimitiveGraphics.js"></script>
     <script src="$path/src/renderer/webgl/shaders/Sprite.js"></script>
@@ -207,6 +212,10 @@ EOL;
     <script src="$path/src/gameobjects/spritebatch/SpriteBatchWebGLRenderer.js"></script>
 
     <script src="$path/src/gameobjects/particle/Particle.js"></script>
+
+    <script src="$path/src/gameobjects/pixelfield/PixelField.js"></script>
+    <script src="$path/src/gameobjects/pixelfield/PixelFieldFactory.js"></script>
+    <script src="$path/src/gameobjects/pixelfield/PixelFieldWebGLRenderer.js"></script>
 
     <script src="$path/src/gameobjects/stage/Stage.js"></script>
     <script src="$path/src/gameobjects/stage/StageCanvasRenderer.js"></script>
