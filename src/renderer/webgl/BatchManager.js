@@ -20,14 +20,9 @@ Phaser.Renderer.WebGL.BatchManager = function (renderer, batchSize)
     this.currentBatch = null;
 
     this.imageBatch = new Phaser.Renderer.WebGL.Batch.Image(this, batchSize);
-
-    // this.multiTextureBatch = new Phaser.Renderer.WebGL.Batch.Image(this, batchSize);
-    // this.pixelBatch = null;
-    // this.fxBatch = null;
-
-    // this.currentBatchSize = 0;
-    // this.dirty = true;
-    // this.list = [];
+    this.fxBatch = new Phaser.Renderer.WebGL.Batch.FX(this, batchSize);
+    this.multiTextureBatch = new Phaser.Renderer.WebGL.Batch.MultiTexture(this, batchSize);
+    this.pixelBatch = new Phaser.Renderer.WebGL.Batch.Pixel(this, batchSize);
 
 };
 
@@ -37,13 +32,17 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
 
     init: function ()
     {
-        console.log('BatchManager.init');
-
         this.gl = this.renderer.gl;
 
         this.imageBatch.init();
+        this.fxBatch.init();
+        this.multiTextureBatch.init();
+        this.pixelBatch.init();
 
-        this.currentBatch = this.imageBatch;
+        // this.currentBatch = this.imageBatch;
+        // this.currentBatch = this.fxBatch;
+        // this.currentBatch = this.multiTextureBatch;
+        this.currentBatch = this.pixelBatch;
     },
 
     start: function ()
@@ -56,140 +55,61 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         this.currentBatch.stop();
     },
 
-    add: function (batch, source)
+    addPixel: function (verts, color)
     {
-        //  Check Batch Size and flush if needed, OR if a different batch then swap
-        //  Also what about blend mode or shader swaps?
+        //  Check Batch Size and flush if needed
         if (this.currentBatch.size >= this.currentBatch.maxSize)
         {
             this.currentBatch.flush();
         }
 
-        if (source)
-        {
-            source.glLastUsed = this.renderer.startTime;
-
-            //  Does this TextureSource need updating?
-            if (source.glDirty)
-            {
-                this.renderer.updateTexture(source);
-            }
-
-            //  Does the batch need to activate a new texture?
-            if (this.renderer.textureArray[source.glTextureIndex] !== source)
-            {
-                this.setCurrentTexture(source);
-            }
-        }
-
-        //  Swap Batch check
-
-        //  At this point the game object should call 'add' on the batch it needs (ImageBatch, FXBatch, etc)
-
+        this.pixelBatch.add(verts, color);
     },
 
-    __flush: function ()
+    add: function (source, blendMode, verts, uvs, textureIndex, alpha, tintColors, bgColors)
     {
-        var gl = this.gl;
+        var hasFlushed = false;
 
-        //  Always dirty the first pass through but subsequent calls may be clean
-        if (this.dirty)
+        //  Check Batch Size and flush if needed
+        if (this.currentBatch.size >= this.currentBatch.maxSize)
         {
-            gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
-            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
+            this.currentBatch.flush();
 
-            this.initShader();
+            hasFlushed = true;
         }
 
-        //  Upload the vertex data to the GPU - is this cheaper (overall) than creating a new TypedArray view?
-        //  The tradeoff is sending 224KB of data to the GPU every frame, even if most of it is empty should the
-        //  batch be only slightly populated, vs. the creation of a new TypedArray view and its corresponding gc every frame.
+        source.glLastUsed = this.renderer.startTime;
 
-        gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.vertices);
-
-        /*
-        if (this.currentBatchSize > this.halfBatchSize)
+        //  Does this TextureSource need updating?
+        if (source.glDirty)
         {
-            gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.vertices);
+            this.renderer.updateTexture(source);
         }
-        else
+
+        //  Does the batch need to activate a new texture?
+        if (this.renderer.textureArray[source.glTextureIndex] !== source)
         {
-            gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
-
-            //  This creates a brand new Typed Array - what's the cost of this vs. just uploading all vert data?
-            var view = this.positions.subarray(0, this.currentBatchSize * this.vertSize);
-
-            gl.bufferSubData(gl.ARRAY_BUFFER, 0, view);
+            this.setCurrentTexture(source);
         }
-        */
 
-        var sprite;
-
-        var start = 0;
-        var currentSize = 0;
-
-        //  Rather than keep the sprites in a list, we can simply flush and switch when
-        //  we encounter a new one in the add method, then we don't need to track any offsets?
-        for (var i = 0; i < this.currentBatchSize; i++)
+        //  Blend Mode?
+        if (blendMode !== this.renderer.currentBlendMode)
         {
-            sprite = this.list[i];
-
-            if (sprite.blendMode !== this.renderer.currentBlendMode)
+            if (!hasFlushed)
             {
-                if (currentSize > 0)
-                {
-                    gl.drawElements(gl.TRIANGLES, currentSize * 6, gl.UNSIGNED_SHORT, start * 6 * 2);
-                    this.renderer.drawCount++;
+                this.currentBatch.flush();
 
-                    //  Reset the batch
-                    start = i;
-                    currentSize = 0;
-                }
-
-                this.renderer.setBlendMode(sprite.blendMode);
+                hasFlushed = true;
             }
 
-            if (sprite.shader === 2)
-            {
-                gl.drawElements(gl.TRIANGLES, currentSize * 6, gl.UNSIGNED_SHORT, start * 6 * 2);
-                this.renderer.drawCount++;
-
-                //  Reset the batch
-                start = i;
-                currentSize = 0;
-
-                this.initAttributes(this.program2);
-                this.initShader();
-            }
-            else if (sprite.shader === 1)
-            {
-                gl.drawElements(gl.TRIANGLES, currentSize * 6, gl.UNSIGNED_SHORT, start * 6 * 2);
-                this.renderer.drawCount++;
-
-                //  Reset the batch
-                start = i;
-                currentSize = 0;
-
-                this.initAttributes(this.program);
-                this.initShader();
-            }
-
-            //  TODO: Check for shader here
-
-            //  If either blend or shader set, we need to drawElements and swap
-
-            currentSize++;
+            this.renderer.setBlendMode(blendMode);
         }
 
-        if (currentSize > 0)
-        {
-            gl.drawElements(gl.TRIANGLES, currentSize * 6, gl.UNSIGNED_SHORT, start * 6 * 2);
-            this.renderer.drawCount++;
-        }
+        //  Shader?
 
-        //  Reset the batch
-        this.currentBatchSize = 0;
-        this._i = 0;
+        // this.imageBatch.add(verts, uvs, textureIndex, alpha, tintColors, bgColors);
+        // this.fxBatch.add(verts, uvs, textureIndex, alpha, tintColors, bgColors);
+        // this.multiTextureBatch.add(verts, uvs, textureIndex, alpha, tintColors, bgColors);
 
     },
 
