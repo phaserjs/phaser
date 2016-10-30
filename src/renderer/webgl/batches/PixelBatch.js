@@ -78,8 +78,8 @@ Phaser.Renderer.WebGL.Batch.Pixel.prototype.init = function ()
         'varying vec4 vColor;', //  the color value passed in from the vertex shader
 
         'void main(void) {',
-        // '   gl_FragColor = vColor;',
-        '   gl_FragColor = PINK;',
+        '   gl_FragColor = vColor;',
+        // '   gl_FragColor = PINK;',
         '}'
     ];
 
@@ -197,7 +197,7 @@ Phaser.Renderer.WebGL.Batch.Pixel.prototype.bindShader = function ()
     gl.vertexAttribPointer(this.aColor, 4, gl.UNSIGNED_BYTE, true, vertSize, 8);
 };
 
-Phaser.Renderer.WebGL.Batch.Pixel.prototype.add = function (verts, color)
+Phaser.Renderer.WebGL.Batch.Pixel.prototype.add = function (x0, y0, x1, y1, x2, y2, x3, y3, color)
 {
     //  These are TypedArray Views into the vertices ArrayBuffer
     var colors = this.colors;
@@ -205,32 +205,24 @@ Phaser.Renderer.WebGL.Batch.Pixel.prototype.add = function (verts, color)
 
     var i = this._i;
 
-    //  Top Left vert (xy, uv, color)
-    positions[i++] = verts.x0;
-    positions[i++] = verts.y0;
-    // positions[i++] = uvs.x0;
-    // positions[i++] = uvs.y0;
+    //  Top Left vert (xy, color)
+    positions[i++] = x0;
+    positions[i++] = y0;
     colors[i++] = color;
 
-    //  Top Right vert (xy, uv, color)
-    positions[i++] = verts.x1;
-    positions[i++] = verts.y1;
-    // positions[i++] = uvs.x1;
-    // positions[i++] = uvs.y1;
+    //  Top Right vert (xy, color)
+    positions[i++] = x1;
+    positions[i++] = y1;
     colors[i++] = color;
 
-    //  Bottom Right vert (xy, uv, color)
-    positions[i++] = verts.x2;
-    positions[i++] = verts.y2;
-    // positions[i++] = uvs.x2;
-    // positions[i++] = uvs.y2;
+    //  Bottom Right vert (xy, color)
+    positions[i++] = x2;
+    positions[i++] = y2;
     colors[i++] = color;
 
-    //  Bottom Left vert (xy, uv, color)
-    positions[i++] = verts.x3;
-    positions[i++] = verts.y3;
-    // positions[i++] = uvs.x3;
-    // positions[i++] = uvs.y3;
+    //  Bottom Left vert (xy, color)
+    positions[i++] = x3;
+    positions[i++] = y3;
     colors[i++] = color;
 
     this._i = i;

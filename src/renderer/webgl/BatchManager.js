@@ -55,7 +55,7 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         this.currentBatch.stop();
     },
 
-    addPixel: function (verts, color)
+    addPixel: function (x0, y0, x1, y1, x2, y2, x3, y3, color)
     {
         //  Check Batch Size and flush if needed
         if (this.currentBatch.size >= this.currentBatch.maxSize)
@@ -63,7 +63,7 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
             this.currentBatch.flush();
         }
 
-        this.pixelBatch.add(verts, color);
+        this.pixelBatch.add(x0, y0, x1, y1, x2, y2, x3, y3, color);
     },
 
     add: function (source, blendMode, verts, uvs, textureIndex, alpha, tintColors, bgColors)
@@ -107,7 +107,7 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
 
         //  Shader?
 
-        // this.imageBatch.add(verts, uvs, textureIndex, alpha, tintColors, bgColors);
+        this.imageBatch.add(verts, uvs, textureIndex, alpha, tintColors, bgColors);
         // this.fxBatch.add(verts, uvs, textureIndex, alpha, tintColors, bgColors);
         // this.multiTextureBatch.add(verts, uvs, textureIndex, alpha, tintColors, bgColors);
 

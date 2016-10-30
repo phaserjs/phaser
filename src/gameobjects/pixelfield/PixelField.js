@@ -34,6 +34,13 @@ Phaser.GameObject.PixelField = function (game, x, y, pixelSize)
 
     this.list = [];
 
+    this.getColor32 = function (r, g, b, a)
+    {
+        a *= 255;
+
+        return ((a << 24) | (b << 16) | (g << 8) | r) >>> 0;
+    };
+
 };
 
 Phaser.GameObject.PixelField.prototype = Object.create(Phaser.GameObject.prototype);
@@ -51,6 +58,23 @@ Phaser.GameObject.PixelField.prototype.preUpdate = function ()
     {
         this.color.worldAlpha = this.parent.color.worldAlpha;
     }
+};
+
+//  Ideas:
+//
+//  Pixel velocity?
+//  Pixel fade (alpha out) duration?
+//  Kill pixel
+//  Remove pixel
+
+Phaser.GameObject.PixelField.prototype.add = function (x, y, r, g, b, a)
+{
+    this.list.push({
+        x: x,
+        y: y,
+        a: a,
+        color: this.getColor32(r, g, b, a)
+    });
 };
 
 // Phaser.GameObject.Image.prototype.update = function ()

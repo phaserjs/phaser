@@ -16,7 +16,7 @@ var Phaser = Phaser || {    // jshint ignore:line
     * @constant
     * @type {string}
     */
-    VERSION: '3.0.0.r5',
+    VERSION: '3.0.0.r6',
 
     /**
     * An array of Phaser game instances.
@@ -551,6 +551,10 @@ var Phaser = Phaser || {    // jshint ignore:line
     tempMatrix: null
 
 };
+
+//  "Anybody who doesn’t change their mind a lot is
+//  dramatically underestimating the complexity of
+//  the world we live in.” - Jeff Bezos
 
 //  Remove when ready
 var PIXI = PIXI || {};
