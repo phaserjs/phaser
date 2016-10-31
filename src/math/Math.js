@@ -1204,3 +1204,21 @@ Phaser.Math.degToRad = function degToRad (degrees) {
 Phaser.Math.radToDeg = function radToDeg (radians) {
     return radians * radianToDegreesFactor;
 };
+
+/**
+* Approximate a property's value towards a goal by a given step
+*
+* @method Phaser.Math#reach
+* @param {number} value - Value to approximate.
+* @param {number} goal - Approximation goal.
+* @param {number} step - Step to change the given value.
+* @return {number} value approximated
+*/
+Phaser.Math.reach = function reach(value, goal, step) {
+    var s = Math.abs(step);
+
+    if(value > goal) {
+        s *= -1;
+    }
+    return value + s;
+};
