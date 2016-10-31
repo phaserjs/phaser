@@ -27,6 +27,8 @@ Phaser.Renderer.WebGL.Batch.FX = function (manager, batchSize)
 
     Phaser.Renderer.WebGL.Batch.call(this, manager, batchSize, vertSize);
 
+    this.type = 4;
+
     //  View on the vertices as a Float32Array
     this.positions = new Float32Array(this.vertices);
 

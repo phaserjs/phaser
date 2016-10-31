@@ -18,12 +18,13 @@ Phaser.Renderer.WebGL.BatchManager = function (renderer, batchSize)
     this.gl = null;
 
     this.currentBatch = null;
+    this.spriteBatch = null;
 
-    this.imageBatch = new Phaser.Renderer.WebGL.Batch.Image(this, batchSize);
-    this.fxBatch = new Phaser.Renderer.WebGL.Batch.FX(this, batchSize);
+    this.singleTextureBatch = new Phaser.Renderer.WebGL.Batch.SingleTexture(this, batchSize);
     this.multiTextureBatch = new Phaser.Renderer.WebGL.Batch.MultiTexture(this, batchSize);
-    this.pixelBatch = new Phaser.Renderer.WebGL.Batch.Pixel(this, batchSize);
 
+    this.pixelBatch = new Phaser.Renderer.WebGL.Batch.Pixel(this, batchSize);
+    this.fxBatch = new Phaser.Renderer.WebGL.Batch.FX(this, batchSize);
 };
 
 Phaser.Renderer.WebGL.BatchManager.prototype.constructor = Phaser.Renderer.WebGL.BatchManager;
@@ -34,15 +35,21 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
     {
         this.gl = this.renderer.gl;
 
-        this.imageBatch.init();
-        this.fxBatch.init();
+        this.singleTextureBatch.init();
         this.multiTextureBatch.init();
         this.pixelBatch.init();
+        this.fxBatch.init();
 
-        // this.currentBatch = this.imageBatch;
-        // this.currentBatch = this.fxBatch;
-        // this.currentBatch = this.multiTextureBatch;
-        this.currentBatch = this.pixelBatch;
+        if (this.renderer.multiTexture)
+        {
+            this.currentBatch = this.multiTextureBatch;
+            this.spriteBatch = this.multiTextureBatch;
+        }
+        else
+        {
+            this.currentBatch = this.singleTextureBatch;
+            this.spriteBatch = this.singleTextureBatch;
+        }
     },
 
     start: function ()
@@ -55,20 +62,32 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         this.currentBatch.stop();
     },
 
-    addPixel: function (x0, y0, x1, y1, x2, y2, x3, y3, color)
+    setBatch: function (newBatch)
     {
-        //  Check Batch Size and flush if needed
-        if (this.currentBatch.size >= this.currentBatch.maxSize)
+        if (this.currentBatch === newBatch)
         {
-            this.currentBatch.flush();
+            return;
         }
 
-        this.pixelBatch.add(x0, y0, x1, y1, x2, y2, x3, y3, color);
+        //  Flush whatever was in the current batch (if anything)
+        this.currentBatch.flush();
+
+        if (newBatch)
+        {
+            this.currentBatch = newBatch;
+        }
+        else
+        {
+            this.currentBatch = this.spriteBatch;
+        }
     },
 
     add: function (source, blendMode, verts, uvs, textureIndex, alpha, tintColors, bgColors)
     {
         var hasFlushed = false;
+
+        //  Shader? Then we check the current batch, and swap if needed
+
 
         //  Check Batch Size and flush if needed
         if (this.currentBatch.size >= this.currentBatch.maxSize)
@@ -105,12 +124,20 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
             this.renderer.setBlendMode(blendMode);
         }
 
-        //  Shader?
+        this.currentBatch.add(verts, uvs, textureIndex, alpha, tintColors, bgColors);
+    },
 
-        this.imageBatch.add(verts, uvs, textureIndex, alpha, tintColors, bgColors);
-        // this.fxBatch.add(verts, uvs, textureIndex, alpha, tintColors, bgColors);
-        // this.multiTextureBatch.add(verts, uvs, textureIndex, alpha, tintColors, bgColors);
+    addPixel: function (x0, y0, x1, y1, x2, y2, x3, y3, color)
+    {
+        //  Swapping batch? Flush and change
 
+        //  Check Batch Size and flush if needed
+        if (this.pixelBatch.size >= this.pixelBatch.maxSize)
+        {
+            this.pixelBatch.flush();
+        }
+
+        this.pixelBatch.add(x0, y0, x1, y1, x2, y2, x3, y3, color);
     },
 
     setCurrentTexture: function (source)
@@ -128,7 +155,7 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
 
     destroy: function ()
     {
-        this.imageBatch.destroy();
+        this.singleTextureBatch.destroy();
 
         this.renderer = null;
         this.gl = null;

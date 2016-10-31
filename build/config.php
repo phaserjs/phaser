@@ -142,10 +142,10 @@ EOL;
     <script src="$path/src/renderer/webgl/StencilManager.js"></script>
 
     <script src="$path/src/renderer/webgl/batches/BaseBatch.js"></script>
-    <script src="$path/src/renderer/webgl/batches/ImageBatch.js"></script>
     <script src="$path/src/renderer/webgl/batches/FXBatch.js"></script>
     <script src="$path/src/renderer/webgl/batches/MultiTextureBatch.js"></script>
     <script src="$path/src/renderer/webgl/batches/PixelBatch.js"></script>
+    <script src="$path/src/renderer/webgl/batches/SingleTextureBatch.js"></script>
 
     <script src="$path/src/renderer/webgl/shaders/ComplexPrimitiveGraphics.js"></script>
     <script src="$path/src/renderer/webgl/shaders/PrimitiveGraphics.js"></script>

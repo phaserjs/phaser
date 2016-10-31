@@ -277,12 +277,18 @@ Phaser.Renderer.WebGL.prototype = {
 
     },
 
+    disableMultiTextureSupport: function ()
+    {
+        this.multiTexture = false;
+
+        this.batch.spriteBatch = this.batch.singleTextureBatch;
+    },
+
     enableMultiTextureSupport: function (textureArray)
     {
         this.multiTexture = true;
 
-        //  Recompile the batch
-        // this.batch.initMultiTexture();
+        this.batch.spriteBatch = this.batch.multiTextureBatch;
 
         if (Array.isArray(textureArray))
         {

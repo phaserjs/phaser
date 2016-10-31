@@ -19,6 +19,8 @@ Phaser.Renderer.WebGL.Batch = function (manager, batchSize, vertSize)
 
     this.gl = null;
 
+    this.type = 0;
+
     //  Total number of objects we'll batch before flushing and rendering
     //  Integer
     this.maxSize = batchSize;

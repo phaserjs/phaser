@@ -7,11 +7,11 @@
 /**
 * Standard Image and Sprite Shader.
 *
-* @class Phaser.Renderer.WebGL.Batch.Image
+* @class Phaser.Renderer.WebGL.Batch.SingleTexture
 * @constructor
 * @param {Phaser.Renderer.WebGL} renderer - The WebGL Renderer.
 */
-Phaser.Renderer.WebGL.Batch.Image = function (manager, batchSize)
+Phaser.Renderer.WebGL.Batch.SingleTexture = function (manager, batchSize)
 {
     //  Vertex Data Size is calculated by adding together:
     //
@@ -26,6 +26,8 @@ Phaser.Renderer.WebGL.Batch.Image = function (manager, batchSize)
     var vertSize = (4 * 2) + (4 * 2) + (4) + (4) + (4);
 
     Phaser.Renderer.WebGL.Batch.call(this, manager, batchSize, vertSize);
+
+    this.type = 1;
 
     //  View on the vertices as a Float32Array
     this.positions = new Float32Array(this.vertices);
@@ -60,11 +62,11 @@ Phaser.Renderer.WebGL.Batch.Image = function (manager, batchSize)
     this.offsetVector;
 };
 
-Phaser.Renderer.WebGL.Batch.Image.prototype = Object.create(Phaser.Renderer.WebGL.Batch.prototype);
+Phaser.Renderer.WebGL.Batch.SingleTexture.prototype = Object.create(Phaser.Renderer.WebGL.Batch.prototype);
 
-Phaser.Renderer.WebGL.Batch.Image.prototype.constructor = Phaser.Renderer.WebGL.Batch.Image;
+Phaser.Renderer.WebGL.Batch.SingleTexture.prototype.constructor = Phaser.Renderer.WebGL.Batch.SingleTexture;
 
-Phaser.Renderer.WebGL.Batch.Image.prototype.init = function ()
+Phaser.Renderer.WebGL.Batch.SingleTexture.prototype.init = function ()
 {
     this.gl = this.renderer.gl;
 
@@ -180,7 +182,7 @@ Phaser.Renderer.WebGL.Batch.Image.prototype.init = function ()
 
 };
 
-Phaser.Renderer.WebGL.Batch.Image.prototype.bindShader = function ()
+Phaser.Renderer.WebGL.Batch.SingleTexture.prototype.bindShader = function ()
 {
     var gl = this.gl;
     var program = this.program;
@@ -254,7 +256,7 @@ Phaser.Renderer.WebGL.Batch.Image.prototype.bindShader = function ()
     gl.vertexAttribPointer(this.aBgColor, 4, gl.UNSIGNED_BYTE, true, vertSize, 24);
 };
 
-Phaser.Renderer.WebGL.Batch.Image.prototype.add = function (verts, uvs, textureIndex, alpha, tintColors, bgColors)
+Phaser.Renderer.WebGL.Batch.SingleTexture.prototype.add = function (verts, uvs, textureIndex, alpha, tintColors, bgColors)
 {
     //  These are TypedArray Views into the vertices ArrayBuffer
     var colors = this.colors;
@@ -304,7 +306,7 @@ Phaser.Renderer.WebGL.Batch.Image.prototype.add = function (verts, uvs, textureI
 };
 
 /*
-Phaser.Renderer.WebGL.Batch.Image.prototype.flush = function ()
+Phaser.Renderer.WebGL.Batch.SingleTexture.prototype.flush = function ()
 {
     if (this.size === 0)
     {
@@ -341,7 +343,7 @@ Phaser.Renderer.WebGL.Batch.Image.prototype.flush = function ()
 };
 */
 
-Phaser.Renderer.WebGL.Batch.Image.prototype.destroy = function ()
+Phaser.Renderer.WebGL.Batch.SingleTexture.prototype.destroy = function ()
 {
     this.vertices = null;
     this.indices = null;
