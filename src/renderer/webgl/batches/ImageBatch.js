@@ -303,6 +303,7 @@ Phaser.Renderer.WebGL.Batch.Image.prototype.add = function (verts, uvs, textureI
     this.size++;
 };
 
+/*
 Phaser.Renderer.WebGL.Batch.Image.prototype.flush = function ()
 {
     if (this.size === 0)
@@ -338,6 +339,7 @@ Phaser.Renderer.WebGL.Batch.Image.prototype.flush = function ()
 
     this._i = 0;
 };
+*/
 
 Phaser.Renderer.WebGL.Batch.Image.prototype.destroy = function ()
 {

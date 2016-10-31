@@ -73,13 +73,10 @@ Phaser.Renderer.WebGL.Batch.Pixel.prototype.init = function ()
     this.fragmentSrc = [
         'precision lowp float;',
 
-        'const vec4 PINK = vec4(1.0, 0.0, 1.0, 1.0);',
-
         'varying vec4 vColor;', //  the color value passed in from the vertex shader
 
         'void main(void) {',
         '   gl_FragColor = vColor;',
-        // '   gl_FragColor = PINK;',
         '}'
     ];
 
@@ -230,6 +227,7 @@ Phaser.Renderer.WebGL.Batch.Pixel.prototype.add = function (x0, y0, x1, y1, x2, 
     this.size++;
 };
 
+/*
 Phaser.Renderer.WebGL.Batch.Pixel.prototype.flush = function ()
 {
     if (this.size === 0)
@@ -265,6 +263,7 @@ Phaser.Renderer.WebGL.Batch.Pixel.prototype.flush = function ()
 
     this._i = 0;
 };
+*/
 
 Phaser.Renderer.WebGL.Batch.Pixel.prototype.destroy = function ()
 {
