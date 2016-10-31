@@ -91,7 +91,7 @@ Phaser.Renderer.WebGL.Batch.prototype.constructor = Phaser.Renderer.WebGL.Batch;
 
 Phaser.Renderer.WebGL.Batch.prototype = {
 
-    start: function ()
+    start: function (force)
     {
         this._i = 0;
 
@@ -99,7 +99,7 @@ Phaser.Renderer.WebGL.Batch.prototype = {
 
         //  We only need to do this if this batch isn't the current one
 
-        if (this.dirty)
+        if (this.dirty || force)
         {
             this.bindShader();
             this.dirty = false;

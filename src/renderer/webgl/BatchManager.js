@@ -64,35 +64,31 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
 
     setBatch: function (newBatch)
     {
-        if (this.currentBatch === newBatch)
+        if (this.currentBatch.type === newBatch.type)
         {
-            return;
+            return false;
         }
 
         //  Flush whatever was in the current batch (if anything)
         this.currentBatch.flush();
 
-        if (newBatch)
-        {
-            this.currentBatch = newBatch;
-        }
-        else
-        {
-            this.currentBatch = this.spriteBatch;
-        }
+        this.currentBatch = newBatch;
+
+        this.currentBatch.start(true);
+
+        return true;
     },
 
+    //  Add a new entry into the current sprite batch
     add: function (source, blendMode, verts, uvs, textureIndex, alpha, tintColors, bgColors)
     {
-        var hasFlushed = false;
-
-        //  Shader? Then we check the current batch, and swap if needed
-
+        //  Set the current batch (if different from this one)
+        var hasFlushed = this.setBatch(this.spriteBatch);
 
         //  Check Batch Size and flush if needed
-        if (this.currentBatch.size >= this.currentBatch.maxSize)
+        if (!hasFlushed && this.spriteBatch.size >= this.spriteBatch.maxSize)
         {
-            this.currentBatch.flush();
+            this.spriteBatch.flush();
 
             hasFlushed = true;
         }
@@ -116,23 +112,31 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         {
             if (!hasFlushed)
             {
-                this.currentBatch.flush();
-
-                hasFlushed = true;
+                this.spriteBatch.flush();
             }
 
             this.renderer.setBlendMode(blendMode);
         }
 
-        this.currentBatch.add(verts, uvs, textureIndex, alpha, tintColors, bgColors);
+        this.spriteBatch.add(verts, uvs, textureIndex, alpha, tintColors, bgColors);
+    },
+
+    addCustomShader: function ()
+    {
+        //  TODO
+    },
+
+    addFX: function ()
+    {
+        //  TODO
     },
 
     addPixel: function (x0, y0, x1, y1, x2, y2, x3, y3, color)
     {
-        //  Swapping batch? Flush and change
+        var hasFlushed = this.setBatch(this.pixelBatch);
 
         //  Check Batch Size and flush if needed
-        if (this.pixelBatch.size >= this.pixelBatch.maxSize)
+        if (!hasFlushed && this.pixelBatch.size >= this.pixelBatch.maxSize)
         {
             this.pixelBatch.flush();
         }
