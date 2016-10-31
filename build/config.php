@@ -149,7 +149,6 @@ EOL;
 
     <script src="$path/src/renderer/webgl/shaders/ComplexPrimitiveGraphics.js"></script>
     <script src="$path/src/renderer/webgl/shaders/PrimitiveGraphics.js"></script>
-    <script src="$path/src/renderer/webgl/shaders/Sprite.js"></script>
     <script src="$path/src/renderer/webgl/shaders/SpriteBatch.js"></script>
     <script src="$path/src/renderer/webgl/shaders/Strip.js"></script>
 

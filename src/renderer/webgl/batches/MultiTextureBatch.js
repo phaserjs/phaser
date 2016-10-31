@@ -361,42 +361,6 @@ Phaser.Renderer.WebGL.Batch.MultiTexture.prototype.add = function (verts, uvs, t
     this.size++;
 };
 
-Phaser.Renderer.WebGL.Batch.MultiTexture.prototype.flush = function ()
-{
-    if (this.size === 0)
-    {
-        return;
-    }
-
-    var gl = this.gl;
-
-    //  Upload the vertex data to the GPU - is this cheaper (overall) than creating a new TypedArray view?
-    //  The tradeoff is sending 224KB of data to the GPU every frame, even if most of it is empty should the
-    //  batch be only slightly populated, vs. the creation of a new TypedArray view and its corresponding gc every frame.
-
-    if (this.size > this.halfSize)
-    {
-        gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.vertices);
-    }
-    else
-    {
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
-
-        this.view = this.positions.subarray(0, this.size * this.vertSize);
-
-        gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.view);
-    }
-
-    gl.drawElements(gl.TRIANGLES, this.size * 6, gl.UNSIGNED_SHORT, 0);
-
-    this.renderer.drawCount++;
-
-    //  Reset the batch
-    this.size = 0;
-
-    this._i = 0;
-};
-
 Phaser.Renderer.WebGL.Batch.MultiTexture.prototype.destroy = function ()
 {
     this.vertices = null;

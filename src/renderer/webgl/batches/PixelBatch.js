@@ -87,31 +87,6 @@ Phaser.Renderer.WebGL.Batch.Pixel.prototype.init = function ()
 
     //  Our static index buffer, calculated once at the start of our game
 
-    //  This contains the indices data for the quads.
-    //
-    //  A quad is made up of 2 triangles (A and B in the image below)
-    //
-    //  0 = Top Left
-    //  1 = Top Right
-    //  2 = Bottom Right
-    //  3 = Bottom Left
-    //
-    //  0----1
-    //  |\  A|
-    //  | \  |
-    //  |  \ |
-    //  | B \|
-    //  |    \
-    //  3----2
-    //
-    //  Because triangles A and B share 2 points (0 and 2) the vertex buffer only stores
-    //  4 sets of data (top-left, top-right, bottom-left and bottom-right), which is why
-    //  the indices offsets uses the j += 4 iteration. Indices array has to contain 3
-    //  entries for every triangle (so 6 for every quad), but our vertex data compacts
-    //  that down, as we don't want to fill it with loads of DUPLICATE data, so the
-    //  indices array is a look-up table, telling WebGL where in the vertex buffer to look
-    //  for that triangles indice data.
-
     //  batchSize * vertSize = 2000 * 6 (because we store 6 pieces of vertex data per triangle)
     //  and up to a maximum of 2000 entries in the batch
 
@@ -228,44 +203,6 @@ Phaser.Renderer.WebGL.Batch.Pixel.prototype.add = function (x0, y0, x1, y1, x2, 
 
     this.size++;
 };
-
-/*
-Phaser.Renderer.WebGL.Batch.Pixel.prototype.flush = function ()
-{
-    if (this.size === 0)
-    {
-        return;
-    }
-
-    var gl = this.gl;
-
-    //  Upload the vertex data to the GPU - is this cheaper (overall) than creating a new TypedArray view?
-    //  The tradeoff is sending 224KB of data to the GPU every frame, even if most of it is empty should the
-    //  batch be only slightly populated, vs. the creation of a new TypedArray view and its corresponding gc every frame.
-
-    if (this.size > this.halfSize)
-    {
-        gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.vertices);
-    }
-    else
-    {
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
-
-        this.view = this.positions.subarray(0, this.size * this.vertSize);
-
-        gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.view);
-    }
-
-    gl.drawElements(gl.TRIANGLES, this.size * 6, gl.UNSIGNED_SHORT, 0);
-
-    this.renderer.drawCount++;
-
-    //  Reset the batch
-    this.size = 0;
-
-    this._i = 0;
-};
-*/
 
 Phaser.Renderer.WebGL.Batch.Pixel.prototype.destroy = function ()
 {
