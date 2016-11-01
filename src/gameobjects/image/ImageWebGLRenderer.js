@@ -22,15 +22,6 @@ Phaser.Renderer.WebGL.GameObjects.Image = {
         var bg = src.color._glBg;
 
         renderer.batch.add(frame.source, src.blendMode, verts, frame.uvs, index, alpha, tint, bg);
-
-        // console.log('image render');
-
-        // console.log(verts);
-        // console.log(frame.source);
-        // console.log(frame.uvs);
-
-        // debugger;
-
     }
 
 };

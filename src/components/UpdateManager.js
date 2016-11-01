@@ -15,7 +15,7 @@ Phaser.UpdateManager = function (game)
 
     this.list = [];
 
-    this.i = 1;
+    // this.i = 1;
 
     this.running = false;
     
@@ -37,7 +37,7 @@ Phaser.UpdateManager.prototype = {
 
         this.list.length = 0;
 
-        this.i++;
+        // this.i++;
     },
 
     start: function ()
