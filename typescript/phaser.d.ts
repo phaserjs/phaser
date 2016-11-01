@@ -4785,6 +4785,7 @@ declare module Phaser {
         scale: Phaser.ScaleManager;
         sound: Phaser.SoundManager;
         stage: Phaser.Stage;
+        state: Phaser.StateManager;
         time: Phaser.Time;
         tweens: Phaser.TweenManager;
         world: Phaser.World;
