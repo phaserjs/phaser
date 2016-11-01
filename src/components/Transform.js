@@ -64,11 +64,6 @@ Phaser.Component.Transform = function (gameObject, x, y, scaleX, scaleY)
     //  Any child Tranforms of this one - note that they don't have to belong to Game Objects
     //  that are children of the owner of this Transform
     this.children = [];
-
-    // if (gameObject.parent && gameObject.parent.transform)
-    // {
-    //     gameObject.parent.transform.add(this);
-    // }
 };
 
 Phaser.Component.Transform.prototype.constructor = Phaser.Component.Transform;
@@ -343,7 +338,10 @@ Phaser.Component.Transform.prototype = {
 
         this.updateFromParent();
 
-        this.updateVertexData();
+        if (this.gameObject.frame)
+        {
+            this.updateVertexData();
+        }
 
         if (this.children.length)
         {
