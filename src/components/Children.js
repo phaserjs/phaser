@@ -26,23 +26,30 @@ Phaser.Component.Children.prototype = {
 
     add: function (child, skipTransform)
     {
+        // console.log('--->', this.gameObject.name, 'adds new child:', child.name);
+
         if (child.parent === this)
         {
+            // console.log('Children.add 1');
             return child;
         }
         else if (child.parent)
         {
+            // console.log('Children.add 2');
             child.parent.children.remove(child);
         }
 
         child.parent = this.gameObject;
 
+        this.list.push(child);
+
         if (!skipTransform && this.gameObject.transform && child.transform)
         {
+            // console.log(this.gameObject.name, 'adds transform from', child.name);
             this.gameObject.transform.add(child.transform);
         }
 
-        this.list.push(child);
+        // console.log('<--- end');
 
         return child;
     },

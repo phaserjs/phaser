@@ -837,6 +837,7 @@ Phaser.Game.prototype = {
         this.updateRender(this.time.slowMotion * this.time.desiredFps);
         return;
 
+        /*
         if (this._kickstart)
         {
             this.updateLogic(this.time.desiredFpsMult);
@@ -923,6 +924,7 @@ Phaser.Game.prototype = {
             // call the game render update exactly once every frame unless we're playing catch-up from a spiral condition
             this.updateRender(this._deltaTime / slowStep);
         }
+        */
 
     },
 

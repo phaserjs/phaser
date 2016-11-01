@@ -272,17 +272,23 @@ Phaser.Component.Transform.prototype = {
 
     updateAncestors: function ()
     {
+        // console.log(this.name, 'Transform.updateAncestors');
+
         //  No parent? Then just update the children and leave, our job is done
         if (!this.parent)
         {
+            // console.log(this.name, 'updateAncestors has no parent Transform');
+
             this.updateFromRoot();
+
             this.updateChildren();
+
             this.dirty = false;
 
             return this;
         }
 
-        // console.log(this.name, 'updateAncestors');
+        // console.log(this.name, 'start updateAncestors while');
 
         //  Gets all parent nodes, starting from this Transform.
         //  Then updates from the top, down, but only on the ancestors,
@@ -323,6 +329,8 @@ Phaser.Component.Transform.prototype = {
 
     updateChildren: function ()
     {
+        // console.log(this.name, 'Transform.updateChildren');
+
         for (var i = 0; i < this.children.length; i++)
         {
             this.children[i].update();
@@ -331,7 +339,11 @@ Phaser.Component.Transform.prototype = {
 
     updateFromDirtyParent: function ()
     {
+        // console.log(this.name, 'is updateFromDirtyParent', this.parent.name);
+
         this.updateFromParent();
+
+        this.updateVertexData();
 
         if (this.children.length)
         {
@@ -346,7 +358,14 @@ Phaser.Component.Transform.prototype = {
 
     update: function ()
     {
-        // console.log('Transform.update', this.gameObject.name, this.dirty);
+        // if (this.parent)
+        // {
+        //     console.log('**', this.name, 'Transform.update. Dirty?', this.dirty, 'Parent:', this.parent.name);
+        // }
+        // else
+        // {
+        //     console.log('**', this.name, 'Transform.update. Dirty?', this.dirty, 'No Parent');
+        // }
 
         if (!this._dirty)
         {
@@ -376,7 +395,12 @@ Phaser.Component.Transform.prototype = {
             }
         }
 
-        this.updateVertexData();
+        if (this.gameObject.frame)
+        {
+            // console.log(this.name, 'updateVertexData');
+
+            this.updateVertexData();
+        }
 
         this._dirty = false;
     },
@@ -481,6 +505,10 @@ Phaser.Component.Transform.prototype = {
         //  Bottom Left Vert
         vert.x3 = (a * w1) + (c * h0) + tx;
         vert.y3 = (d * h0) + (b * w1) + ty;
+
+        // console.log('Vertex Data for', this.name);
+        // console.log(vert);
+
     },
 
     cloneVertexData: function ()
@@ -534,6 +562,17 @@ Object.defineProperties(Phaser.Component.Transform.prototype, {
 
     //  GLOBAL read-only properties from here on
     //  Need *all* parents taken into account to get the correct values
+
+    name: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return (this.gameObject) ? this.gameObject.name : '';
+        }
+
+    },
 
     worldRotation: {
 

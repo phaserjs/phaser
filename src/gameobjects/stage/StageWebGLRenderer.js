@@ -11,6 +11,8 @@ Phaser.Renderer.WebGL.GameObjects.Stage = {
 
     render: function (renderer, src)
     {
+        // console.log('stage render', src.visible);
+
         if (!src.visible || src.alpha === 0 || src.children.list.length === 0)
         {
             return;
@@ -22,58 +24,6 @@ Phaser.Renderer.WebGL.GameObjects.Stage = {
 
             child.render(renderer, child);
         }
-
-        /*
-        var i;
-
-        if (src._mask || src._filters)
-        {
-            // push filter first as we need to ensure the stencil buffer is correct for any masking
-            if (src._filters)
-            {
-                renderer.spriteBatch.flush();
-                renderer.filterManager.pushFilter(src._filterBlock);
-            }
-
-            if (src._mask)
-            {
-                renderer.spriteBatch.stop();
-                renderer.pushMask(src.mask);
-                renderer.spriteBatch.start();
-            }
-
-            // simple render children!
-            for (i = 0; i < src.children.length; i++)
-            {
-                var child = src.children[i];
-                child.render(renderer, child);
-            }
-
-            renderer.spriteBatch.stop();
-
-            if (src._mask)
-            {
-                renderer.popMask(src._mask);
-            }
-
-            if (src._filters)
-            {
-                renderer.filterManager.popFilter();
-            }
-            
-            renderer.spriteBatch.start();
-        }
-        else
-        {
-            // simple render children!
-            for (i = 0; i < src.children.length; i++)
-            {
-                var child = src.children[i];
-                child.render(renderer, child);
-            }
-        }
-        */
-
     }
 
 };

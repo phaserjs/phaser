@@ -286,6 +286,11 @@ Phaser.Renderer.WebGL.prototype = {
 
     enableMultiTextureSupport: function (textureArray)
     {
+        if (this.maxTextures === 1)
+        {
+            return;
+        }
+
         this.multiTexture = true;
 
         this.batch.spriteBatch = this.batch.multiTextureBatch;
@@ -404,11 +409,6 @@ Phaser.Renderer.WebGL.prototype = {
 
         return this.currentBatchedTextures;
 
-    },
-
-    getMaxTextureUnits: function ()
-    {
-        return this.gl.getParameter(this.gl.MAX_TEXTURE_IMAGE_UNITS);
     },
 
     /**

@@ -177,9 +177,15 @@ Phaser.Renderer.WebGL.Batch.MultiTexture.prototype.init = function ()
         'void main(void) {',
         '   vec4 pixel;',
 
-        '   if (vTextureIndex == 0.0) pixel = texture2D(uSamplerArray[0], vTextureCoord);',
+        '   if (vTextureIndex == 0.0)',
+        '   {',
+        '       pixel = texture2D(uSamplerArray[0], vTextureCoord);',
+        '   }',
         '// IFELSEBLOCK', // special tag used to insert the multi-texture if else block. Do not edit or remove.
-        '   else pixel = PINK;',
+        '   else',
+        '   {',
+        '       pixel = PINK;',
+        '   }',
 
         '   pixel *= vTintColor;',
         // '   if (pixel.a == 0.0) pixel = vBgColor;', // if texture alpha is zero, use the bg color
@@ -193,7 +199,10 @@ Phaser.Renderer.WebGL.Batch.MultiTexture.prototype.init = function ()
     //  Build the else if block
     for (var t = 1; t < this.renderer.maxTextures; t++)
     {
-        block.push('   else if (vTextureIndex == ' + t + '.0) pixel = texture2D(uSamplerArray[' + t + '], vTextureCoord);');
+        block.push('   else if (vTextureIndex == ' + t + '.0)');
+        block.push('   {');
+        block.push('       pixel = texture2D(uSamplerArray[' + t + '], vTextureCoord);');
+        block.push('   }');
     }
 
     //  Parse the fragment src array

@@ -20,7 +20,7 @@ Phaser.Stage = function (game) {
     */
     this.game = game;
 
-    Phaser.GameObject.Container.call(this, game);
+    // Phaser.GameObject.Container.call(this, game);
 
     /**
     * @property {string} name - The name of this object.
@@ -57,7 +57,7 @@ Phaser.Stage = function (game) {
     * @private
     * @readOnly
     */
-    this.stage = this;
+    // this.stage = this;
 
     /**
     * @property {number} currentRenderOrderID - Reset each frame, keeps a count of the total number of objects updated.
@@ -78,6 +78,11 @@ Phaser.Stage = function (game) {
 
     this.color = new Phaser.Component.Color(this);
 
+    this.children = new Phaser.Component.Children(this);
+
+    this.alpha = 1;
+    this.visible = true;
+
     /**
     * @property {number} _bgColor - Stage background color object. Populated by setBackgroundColor.
     * @private
@@ -97,7 +102,7 @@ Phaser.Stage = function (game) {
 
 };
 
-Phaser.Stage.prototype = Object.create(Phaser.GameObject.Container.prototype);
+// Phaser.Stage.prototype = Object.create(Phaser.GameObject.Container.prototype);
 Phaser.Stage.prototype.constructor = Phaser.Stage;
 
 /**
@@ -147,7 +152,7 @@ Phaser.Stage.prototype.boot = function () {
 */
 Phaser.Stage.prototype.preUpdate = function ()
 {
-    this.worldAlpha = this.alpha;
+    // this.worldAlpha = this.alpha;
 
     // this.currentRenderOrderID = 0;
 

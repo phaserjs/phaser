@@ -22,11 +22,11 @@ Phaser.GameObject.Image.FACTORY_KEY = 'image';
 * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
 * @return {Phaser.Image} The newly created Image object.
 */
-Phaser.GameObject.Image.FACTORY_ADD = function (x, y, key, frame, group)
+Phaser.GameObject.Image.FACTORY_ADD = function (x, y, key, frame, group, name)
 {
     if (group === undefined) { group = this.world; }
 
-    return group.children.add(new Phaser.GameObject.Image(this.game, x, y, key, frame));
+    return group.children.add(new Phaser.GameObject.Image(this.game, x, y, key, frame, name));
 };
 
 /**
