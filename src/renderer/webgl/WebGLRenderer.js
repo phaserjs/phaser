@@ -576,17 +576,72 @@ Phaser.Renderer.WebGL.prototype = {
             '}'
         ];
 
-        var fragmentSrc = [
+        var standardFragmentSrc = [
             'precision mediump float;',
             'uniform sampler2D uSampler;',
             'varying vec2 vTextureCoord;',
 
             'void main(void) {',
             '   vec4 color = texture2D(uSampler, vTextureCoord);',
-            // '   if (color.a > 0.0) color.r = 1.0;',
             '   gl_FragColor = vec4(color.rgb, 1.0);',
             '}'
         ];
+
+        var blurFragmentSrc = [
+            'precision mediump float;',
+            'uniform sampler2D uSampler;',
+            'varying vec2 vTextureCoord;',
+
+            'const float blur = 1.0 / 512.0;',
+
+            'void main(void) {',
+            '   vec4 sum = vec4(0.0);',
+
+            '   sum += texture2D(uSampler, vec2(vTextureCoord.x - 4.0*blur, vTextureCoord.y)) * 0.05;',
+            '   sum += texture2D(uSampler, vec2(vTextureCoord.x - 3.0*blur, vTextureCoord.y)) * 0.09;',
+            '   sum += texture2D(uSampler, vec2(vTextureCoord.x - 2.0*blur, vTextureCoord.y)) * 0.12;',
+            '   sum += texture2D(uSampler, vec2(vTextureCoord.x - blur, vTextureCoord.y)) * 0.15;',
+            '   sum += texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y)) * 0.16;',
+            '   sum += texture2D(uSampler, vec2(vTextureCoord.x + blur, vTextureCoord.y)) * 0.15;',
+            '   sum += texture2D(uSampler, vec2(vTextureCoord.x + 2.0*blur, vTextureCoord.y)) * 0.12;',
+            '   sum += texture2D(uSampler, vec2(vTextureCoord.x + 3.0*blur, vTextureCoord.y)) * 0.09;',
+            '   sum += texture2D(uSampler, vec2(vTextureCoord.x + 4.0*blur, vTextureCoord.y)) * 0.05;',
+
+            '   gl_FragColor = sum;',
+            '}'
+        ];
+
+        var fragmentSrc = [
+            'precision mediump float;',
+            'varying vec2 vTextureCoord;',
+            // 'varying vec4 vColor;',
+            // 'uniform vec4 dimensions;',
+            'uniform sampler2D uSampler;',
+
+            // 'uniform float radius;',
+            // 'uniform float angle;',
+            // 'uniform vec2 offset;',
+
+            'const float radius = 0.5;',
+            'const float angle = 5.0;',
+            'const vec2 offset = vec2(0.5, 0.5);',
+
+            'void main(void) {',
+            '   vec2 coord = vTextureCoord - offset;',
+            '   float distance = length(coord);',
+
+            '   if (distance < radius) {',
+            '       float ratio = (radius - distance) / radius;',
+            '       float angleMod = ratio * ratio * angle;',
+            '       float s = sin(angleMod);',
+            '       float c = cos(angleMod);',
+            '       coord = vec2(coord.x * c - coord.y * s, coord.x * s + coord.y * c);',
+            '   }',
+
+            '   gl_FragColor = texture2D(uSampler, coord+offset);',
+            '}'
+        ];
+
 
         //  This compiles, attaches and links the shader
         this.postProcessShaderProgram = this.compileProgram(vertexSrc, fragmentSrc);
