@@ -100,7 +100,6 @@ Phaser.Renderer.WebGL = function (game)
      * @property _contextOptions
      * @type Object
      * @private
-     */
     this.contextOptions = {
         alpha: this.transparent,
         antialias: game.antialias,
@@ -108,14 +107,15 @@ Phaser.Renderer.WebGL = function (game)
         stencil: true,
         preserveDrawingBuffer: this.preserveDrawingBuffer
     };
+     */
 
-    // this.contextOptions = {
-    //     alpha: true,
-    //     antialias: true,
-    //     premultipliedAlpha: true,
-    //     stencil: true,
-    //     preserveDrawingBuffer: false
-    // };
+    this.contextOptions = {
+        alpha: true,
+        antialias: true,
+        premultipliedAlpha: true,
+        stencil: true,
+        preserveDrawingBuffer: false
+    };
 
     /**
      * @property projection
@@ -424,11 +424,17 @@ Phaser.Renderer.WebGL.prototype = {
 
         var gl = this.gl;
 
+        gl.viewport(0, 0, this.width, this.height);
+
         //  Make sure we are bound to the main frame buffer
         // gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         gl.bindFramebuffer(gl.FRAMEBUFFER, this.framebuffer);
 
-        gl.viewport(0, 0, this.width, this.height);
+        gl.clearColor(0, 0, 0, 0);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+
+        // gl.clearColor(0, 0, 0, 1);
+        // gl.clear(gl.COLOR_BUFFER_BIT);
 
         //  Transparent
         // gl.clearColor(0, 0, 0, 0);
@@ -438,7 +444,7 @@ Phaser.Renderer.WebGL.prototype = {
         //  if you don't clear the background (would look fine over a background image though)
 
         //  Black
-        // gl.clearColor(0, 0, 0, 1);
+        // gl.clearColor(0.4, 0, 0, 1);
         // gl.clear(gl.COLOR_BUFFER_BIT);
 
         this.setBlendMode(Phaser.blendModes.NORMAL);
@@ -468,19 +474,22 @@ Phaser.Renderer.WebGL.prototype = {
 
         this.flipY = 1;
 
-        this.batch.start();
+        this.batch.start(true);
 
         stage.render(this, stage);
 
         this.batch.stop();
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        gl.clearColor(0, 0, 0, 1);
-        gl.clear(gl.COLOR_BUFFER_BIT);
+
+        // gl.clearColor(0, 0, 0, 1);
+        // gl.clear(gl.COLOR_BUFFER_BIT);
 
         this.drawScenePostProcess();
 
         this.endTime = Date.now();
+
+        // debugger;
 
         //  Add Post-render hook
     },
@@ -574,7 +583,7 @@ Phaser.Renderer.WebGL.prototype = {
 
             'void main(void) {',
             '   vec4 color = texture2D(uSampler, vTextureCoord);',
-            '   color.r = 1.0;',
+            // '   if (color.a > 0.0) color.r = 1.0;',
             '   gl_FragColor = vec4(color.rgb, 1.0);',
             '}'
         ];
