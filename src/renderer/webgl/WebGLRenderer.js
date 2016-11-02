@@ -231,11 +231,12 @@ Phaser.Renderer.WebGL.prototype = {
         gl.disable(gl.DEPTH_TEST);
         gl.disable(gl.CULL_FACE);
         gl.enable(gl.BLEND);
+        // gl.enable(gl.DEPTH_TEST);
 
-        this.shaderManager.init();
+        // this.shaderManager.init();
         this.batch.init();
-        this.filterManager.init();
-        this.stencilManager.init();
+        // this.filterManager.init();
+        // this.stencilManager.init();
 
         this.resize(this.width, this.height);
 
@@ -275,13 +276,9 @@ Phaser.Renderer.WebGL.prototype = {
             normal, normal, normal, normal
         ];
 
-    },
+        //  Test
+        this.createFramebuffer(800, 600);
 
-    disableMultiTextureSupport: function ()
-    {
-        this.multiTexture = false;
-
-        this.batch.spriteBatch = this.batch.singleTextureBatch;
     },
 
     enableMultiTextureSupport: function (textureArray)
@@ -308,6 +305,13 @@ Phaser.Renderer.WebGL.prototype = {
         }
     },
 
+    disableMultiTextureSupport: function ()
+    {
+        this.multiTexture = false;
+
+        this.batch.spriteBatch = this.batch.singleTextureBatch;
+    },
+
     resize: function (width, height)
     {
         this.width = width * this.game.resolution;
@@ -327,17 +331,6 @@ Phaser.Renderer.WebGL.prototype = {
         this.projection.x = (this.width / 2) / this.game.resolution;
         this.projection.y = -(this.height / 2) / this.game.resolution;
     },
-
-    /*
-    getShaderID: function (shader)
-    {
-        this.shaderID++;
-
-        //  Store shader reference somewhere?
-
-        return this.shaderID;
-    },
-    */
 
     /**
     * If Multi Texture support has been enabled, then calling this method will enable batching on the given
@@ -431,10 +424,11 @@ Phaser.Renderer.WebGL.prototype = {
 
         var gl = this.gl;
 
-        gl.viewport(0, 0, this.width, this.height);
-
         //  Make sure we are bound to the main frame buffer
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        // gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, this.framebuffer);
+
+        gl.viewport(0, 0, this.width, this.height);
 
         //  Transparent
         // gl.clearColor(0, 0, 0, 0);
@@ -467,34 +461,156 @@ Phaser.Renderer.WebGL.prototype = {
         this.setBlendMode(this.blendModes.NORMAL);
         */
 
-        // this.offset.x = this.game.camera._shake.x;
-        // this.offset.y = this.game.camera._shake.y;
         this.offset.x = 0;
         this.offset.y = 0;
 
-        //  Reset draw count
         this.drawCount = 0;
 
-        //  RenderTextures set this to -1
         this.flipY = 1;
 
-        // console.log('render');
-
         this.batch.start();
-
-        // this.filterManager.begin();
-
-        // console.log('render stage');
 
         stage.render(this, stage);
 
         this.batch.stop();
 
-        // debugger;
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        gl.clearColor(0, 0, 0, 1);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+
+        this.drawScenePostProcess();
 
         this.endTime = Date.now();
 
         //  Add Post-render hook
+    },
+
+    createFramebuffer: function (width, height, scaleMode)
+    {
+        var gl = this.gl;
+
+        //  Create our Quad
+        this.square = {
+            vbo: gl.createBuffer(),
+            ibo: gl.createBuffer(),
+            verticesTextureBuffer: gl.createBuffer(),
+            indices: [ 0, 1, 2, 2, 1, 3 ],
+            vertices: [
+                -1.0, -1.0, 0.0,//0
+                1.0, -1.0, 0.0, //1
+                -1.0, 1.0, 0.0, //2
+                1.0, 1.0, 0.0   //3
+            ],
+            uvs: [
+                [ 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0, 1.0 ]
+            ]
+        };
+
+        //  ibo = indices buffer object
+        //  vbo = vertices buffer object
+
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.square.ibo);
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.square.indices), gl.STATIC_DRAW);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.square.vbo);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.square.vertices), gl.STATIC_DRAW);
+
+        this.square.vbo.itemSize = 3;
+        this.square.vbo.numItems = this.square.vertices.length / 3;
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.square.verticesTextureBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.square.uvs[0]), gl.STATIC_DRAW);
+
+        // this.frameTexture = this.createEmptyTexture(width, height, scaleMode);
+
+        this.frameTexture = gl.createTexture();
+        gl.bindTexture(gl.TEXTURE_2D, this.frameTexture);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+
+        this.renderbuffer = gl.createRenderbuffer();
+        gl.bindRenderbuffer(gl.RENDERBUFFER, this.renderbuffer);
+        gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, width, height);
+
+        this.framebuffer = gl.createFramebuffer();
+        gl.bindFramebuffer(gl.FRAMEBUFFER, this.framebuffer);
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.frameTexture, 0);
+        gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, this.renderbuffer);
+
+        var fbStatus = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
+
+        if (fbStatus !== gl.FRAMEBUFFER_COMPLETE)
+        {
+            console.error('Incomplete GL framebuffer. ', this._fbErrors[fbStatus]);
+        }
+
+        //  Reset back to defaults
+        gl.bindTexture(gl.TEXTURE_2D, null);
+        gl.bindRenderbuffer(gl.RENDERBUFFER, null);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
+        //  Create the quad shader
+
+        var vertexSrc = [
+            'attribute vec3 aVertexPosition;',
+            'attribute vec2 aTextureCoord;',
+
+            'varying vec2 vTextureCoord;',
+
+            'void main(void) {',
+            '   vTextureCoord = aTextureCoord;',
+            '   gl_Position = vec4(aVertexPosition, 1.0);',
+            '}'
+        ];
+
+        var fragmentSrc = [
+            'precision mediump float;',
+            'uniform sampler2D uSampler;',
+            'varying vec2 vTextureCoord;',
+
+            'void main(void) {',
+            '   vec4 color = texture2D(uSampler, vTextureCoord);',
+            '   color.r = 1.0;',
+            '   gl_FragColor = vec4(color.rgb, 1.0);',
+            '}'
+        ];
+
+        //  This compiles, attaches and links the shader
+        this.postProcessShaderProgram = this.compileProgram(vertexSrc, fragmentSrc);
+
+        this.postProcessShaderProgram.vertexPositionAttribute = gl.getAttribLocation(this.postProcessShaderProgram, 'aVertexPosition');
+        this.postProcessShaderProgram.textureCoordAttribute = gl.getAttribLocation(this.postProcessShaderProgram, 'aTextureCoord');
+
+    },
+
+    drawScenePostProcess: function ()
+    {
+        var gl = this.gl;
+        var program = this.postProcessShaderProgram;
+
+        gl.useProgram(program);
+
+        //gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        gl.enableVertexAttribArray(program.vertexPositionAttribute);
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.square.vbo);
+
+        gl.vertexAttribPointer(program.vertexPositionAttribute, this.square.vbo.itemSize, gl.FLOAT, false, 0, 0);
+        gl.enableVertexAttribArray(program.textureCoordAttribute);
+
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, this.frameTexture);
+        gl.uniform1i(gl.getUniformLocation(program, 'uSampler'), 0);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.square.verticesTextureBuffer);
+        gl.vertexAttribPointer(program.textureCoordAttribute, 2, gl.FLOAT, false, 0, 0);
+
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.square.ibo);
+        gl.drawElements(gl.TRIANGLES, this.square.indices.length, gl.UNSIGNED_SHORT, 0);
+
     },
 
     /**
@@ -754,6 +870,7 @@ Phaser.Renderer.WebGL.prototype = {
     createEmptyTexture: function (width, height, scaleMode)
     {
         var gl = this.gl;
+
         var texture = gl.createTexture();
         var glScaleMode = (scaleMode === Phaser.scaleModes.LINEAR) ? gl.LINEAR : gl.NEAREST;
 
@@ -770,12 +887,13 @@ Phaser.Renderer.WebGL.prototype = {
         return texture;
     },
 
-    createFramebuffer: function (width, height, scaleMode, textureUnit)
+    /*
+    _createFramebuffer: function (width, height, scaleMode, textureUnit)
     {
         var gl = this.gl;
         var framebuffer = gl.createFramebuffer();
         var depthStencilBuffer = gl.createRenderbuffer();
-        var colorBuffer = null;
+        var fsColorBuffer = null;
         var fbStatus = 0;
         
         gl.activeTexture(gl.TEXTURE0 + textureUnit);
@@ -786,9 +904,9 @@ Phaser.Renderer.WebGL.prototype = {
         //  `this.renderBuffer` = undefined? FilterTexture has a renderBuffer, but `this` doesn't.
         gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_STENCIL_ATTACHMENT, gl.RENDERBUFFER, this.renderBuffer);
 
-        colorBuffer = this.createEmptyTexture(width, height, scaleMode);
+        fsColorBuffer = this.createEmptyTexture(width, height, scaleMode);
 
-        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, colorBuffer, 0);
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, fsColorBuffer, 0);
 
         fbStatus = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
 
@@ -799,11 +917,12 @@ Phaser.Renderer.WebGL.prototype = {
 
         framebuffer.width = width;
         framebuffer.height = height;
-        framebuffer.targetTexture = colorBuffer;
+        framebuffer.targetTexture = fsColorBuffer;
         framebuffer.renderBuffer = depthStencilBuffer;
 
         return framebuffer;
     },
+    */
 
     destroy: function ()
     {

@@ -91,7 +91,7 @@ Phaser.Renderer.WebGL.Batch.SingleTexture.prototype.init = function ()
         '   if (aTextureIndex > 0.0) gl_Position = vec4(0.0);',
         '   gl_Position = vec4(((aVertexPosition + offsetVector) / projectionVector) + center, 0.0, 1.0);',
         '   vTextureCoord = aTextureCoord;', // pass the texture coordinate to the fragment shader, the GPU will interpolate the points
-        '   vTintColor = vec4(aTintColor.rgb * aTintColor.a, aTintColor.a);',
+        '   vTintColor = vec4(aTintColor.rgb * aTintColor.a, aTintColor.a);', // pre-multiply the alpha (all textures are pre-multiplied)
         '   vBgColor = aBgColor;',
         '   vTextureIndex = aTextureIndex;',
         '}'
