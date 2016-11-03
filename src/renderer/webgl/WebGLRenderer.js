@@ -482,8 +482,7 @@ Phaser.Renderer.WebGL.prototype = {
 
         this.stateFBO.activate();
 
-        //  clear doesn't need to be called unless we're using an FBO, as it will clear automatically (at least in FF and Canary)
-
+        //  clear is needed for the FBO, otherwise corruption ...
         gl.clear(gl.COLOR_BUFFER_BIT);
 
         this.setBlendMode(Phaser.blendModes.NORMAL);
@@ -496,8 +495,6 @@ Phaser.Renderer.WebGL.prototype = {
 
         this.batch.stop();
 
-        // gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-
         this.stateFBO.render(null);
 
         this.endTime = Date.now();
@@ -505,8 +502,8 @@ Phaser.Renderer.WebGL.prototype = {
         // console.log('%c render end ', 'color: #ffffff; background: #ff0000;');
 
         //  Reset back to defaults
-        gl.bindRenderbuffer(gl.RENDERBUFFER, null);
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        // gl.bindRenderbuffer(gl.RENDERBUFFER, null);
+        // gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
         //  Add Post-render hook
     },

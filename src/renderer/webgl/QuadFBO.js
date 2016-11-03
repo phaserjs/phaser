@@ -204,6 +204,7 @@ Phaser.Renderer.WebGL.QuadFBO.prototype = {
 
         //  This compiles, attaches and links the shader
         this.program = this.renderer.compileProgram(vertexSrc, fragmentSrc);
+        this.program2 = this.renderer.compileProgram(vertexSrc, twirlFragmentSrc);
 
         this.aVertexPosition = gl.getAttribLocation(this.program, 'aVertexPosition');
         this.aTextureCoord = gl.getAttribLocation(this.program, 'aTextureCoord');
@@ -280,13 +281,13 @@ Phaser.Renderer.WebGL.QuadFBO.prototype = {
 
     bindShader: function ()
     {
-        var program = this.program;
+        var program = this.program2;
 
         // console.log('QuadFBO bindShader');
 
         var gl = this.gl;
 
-        gl.useProgram(program);
+        // gl.useProgram(program);
 
         gl.uniform1i(gl.getUniformLocation(program, 'uSampler'), 0);
 
@@ -301,6 +302,7 @@ Phaser.Renderer.WebGL.QuadFBO.prototype = {
         gl.vertexAttribPointer(this.aTextureCoord, 2, gl.FLOAT, false, 0, 0);
     },
 
+    //  destinationBuffer MUST be set, even if just to 'null'
     render: function (destinationBuffer)
     {
         // console.log('QuadFBO.render');
@@ -309,18 +311,13 @@ Phaser.Renderer.WebGL.QuadFBO.prototype = {
 
         //  Return to the default framebuffer
         gl.bindFramebuffer(gl.FRAMEBUFFER, destinationBuffer);
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-
-        //  Reset viewport and clear
-        // gl.viewport(0, 0, this.width, this.height);
-        // gl.clear(gl.COLOR_BUFFER_BIT);
 
         //  Bind the texture we rendered to, for reading
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, this.texture);
 
         //  The shader that will read from the fbo texture
-        if (this.renderer.shaderManager.setShader(this.program))
+        if (this.renderer.shaderManager.setShader(this.program2))
         {
             this.bindShader();
         }
@@ -331,11 +328,7 @@ Phaser.Renderer.WebGL.QuadFBO.prototype = {
 
         this.renderer.drawCount++;
 
-        //  Reset back to defaults
-        // gl.bindRenderbuffer(gl.RENDERBUFFER, null);
-        // gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-
-        //  Unbind the fbo texture
+        //  Unbind the fbo texture - forget this and Chrome goes haywire!
         gl.bindTexture(gl.TEXTURE_2D, null);
     },
 
