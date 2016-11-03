@@ -523,11 +523,17 @@ Phaser.Renderer.WebGL.prototype = {
             ibo: gl.createBuffer(),
             verticesTextureBuffer: gl.createBuffer(),
             indices: [ 0, 1, 2, 2, 1, 3 ],
-            vertices: [
+            _vertices: [
                 -1.0, -1.0,//0
                 1.0, -1.0, //1
                 -1.0, 1.0, //2
                 1.0, 1.0   //3
+            ],
+            vertices: [
+                -1.0, -1.0, // 0 = bottom-left
+                1.0, -1.0,  // 1 = bottom-right
+                -1.0, 1.0,  // 2 = top-left
+                1.0, 1.0    // 3 = top-right
             ],
             uvs: [
                 [ 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0, 1.0 ]
