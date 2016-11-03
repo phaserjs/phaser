@@ -303,29 +303,9 @@ Phaser.Renderer.WebGL.prototype = {
             return;
         }
 
-        var gl = this.gl;
-
-        // var tempTexture = this.createEmptyTexture(1, 1, 0);
-
         for (var i = 0; i < this.maxTextures; i++)
         {
-            console.log('createMultiEmptyTextures', i);
-
-            var texture = gl.createTexture();
-
-            gl.activeTexture(gl.TEXTURE0 + i);
-            gl.bindTexture(gl.TEXTURE_2D, texture);
-
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-
-            //  We'll read from this texture, but it won't have mipmaps, so turn them off:
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
-
-            this.textureArray[i] = texture;
+            this.textureArray[i] = this.createEmptyTexture(1, 1, 0, i);
         }
     },
 
@@ -831,16 +811,14 @@ Phaser.Renderer.WebGL.prototype = {
         return this;
     },
 
-    createEmptyTexture: function (width, height, scaleMode)
+    createEmptyTexture: function (width, height, scaleMode, textureIndex)
     {
-        console.log('createEmptyTexture - set as active on TEXTURE0');
-
         var gl = this.gl;
 
         var texture = gl.createTexture();
         var glScaleMode = (scaleMode === Phaser.scaleModes.LINEAR) ? gl.LINEAR : gl.NEAREST;
 
-        gl.activeTexture(gl.TEXTURE0);
+        gl.activeTexture(gl.TEXTURE0 + textureIndex);
         gl.bindTexture(gl.TEXTURE_2D, texture);
 
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
