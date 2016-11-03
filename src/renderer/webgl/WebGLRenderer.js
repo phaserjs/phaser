@@ -513,6 +513,37 @@ Phaser.Renderer.WebGL.prototype = {
         //  Add Post-render hook
     },
 
+    clipX: function (x)
+    {
+        var unit = 2 / this.width;
+
+        return (unit * x) - 1;
+    },
+
+    clipY: function (y)
+    {
+        var unit = 2 / this.height;
+
+        return 1 - (unit * y);
+    },
+
+    getVerticesFromRect: function (x, y, width, height)
+    {
+        return [
+            //  bottom-left
+            this.clipX(x), this.clipY(y + height),
+
+            //  bottom-right
+            this.clipX(x + width), this.clipY(y + height),
+
+            //  top-left
+            this.clipX(x), this.clipY(y),
+
+            //  top-right
+            this.clipX(x + width), this.clipY(y)
+        ];
+    },
+
     createFramebuffer: function (width, height, scaleMode)
     {
         var gl = this.gl;
@@ -529,7 +560,9 @@ Phaser.Renderer.WebGL.prototype = {
                 -1.0, 1.0, //2
                 1.0, 1.0   //3
             ],
-            vertices: [
+            fsvertices: this.getVerticesFromRect(0, 0, 800, 600),
+            vertices: this.getVerticesFromRect(300, 100, 400, 300),
+            __vertices: [
                 -1.0, -1.0, // 0 = bottom-left
                 1.0, -1.0,  // 1 = bottom-right
                 -1.0, 1.0,  // 2 = top-left
@@ -539,6 +572,8 @@ Phaser.Renderer.WebGL.prototype = {
                 [ 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0, 1.0 ]
             ]
         };
+
+        console.log(this.getVerticesFromRect(0, 0, 800, 600));
 
         //  ibo = indices buffer object
         //  vbo = vertices buffer object
