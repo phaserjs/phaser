@@ -177,9 +177,9 @@ Phaser.Renderer.WebGL.Batch.MultiTexture.prototype.init = function ()
         'void main(void) {',
         '   vec4 pixel;',
 
-        '   if (vTextureIndex == 0.0)',
+        '   if (vTextureIndex == 1.0)',
         '   {',
-        '       pixel = texture2D(uSamplerArray[0], vTextureCoord);',
+        '       pixel = texture2D(uSamplerArray[1], vTextureCoord);',
         '   }',
         '// IFELSEBLOCK', // special tag used to insert the multi-texture if else block. Do not edit or remove.
         '   else',
@@ -197,7 +197,7 @@ Phaser.Renderer.WebGL.Batch.MultiTexture.prototype.init = function ()
     var splicePoint = 0;
 
     //  Build the else if block
-    for (var t = 1; t < this.renderer.maxTextures; t++)
+    for (var t = 2; t < this.renderer.maxTextures; t++)
     {
         block.push('   else if (vTextureIndex == ' + t + '.0)');
         block.push('   {');
@@ -233,7 +233,7 @@ Phaser.Renderer.WebGL.Batch.MultiTexture.prototype.init = function ()
 
     var tempTexture = this.renderer.createEmptyTexture(1, 1, 0);
 
-    for (i = 0; i < this.renderer.maxTextures; i++)
+    for (i = 1; i < this.renderer.maxTextures; i++)
     {
         gl.activeTexture(gl.TEXTURE0 + i);
 
@@ -252,6 +252,8 @@ Phaser.Renderer.WebGL.Batch.MultiTexture.prototype.bindShader = function ()
     var gl = this.gl;
     var program = this.program;
     var vertSize = this.vertSize;
+
+    // console.log('MultiTexture bindShader');
 
     //  Set Shader
     gl.useProgram(program);

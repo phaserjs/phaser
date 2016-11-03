@@ -35,7 +35,7 @@ Phaser.Renderer.WebGL.QuadFBO = function (renderer, x, y, width, height)
     };
 
     this.vertexBuffer;
-    this.indicesBuffer;
+    this.indexBuffer;
     this.textureBuffer;
 
     this.vertices;
@@ -60,10 +60,25 @@ Phaser.Renderer.WebGL.QuadFBO.prototype = {
         var gl = this.gl;
 
         this.vertexBuffer = gl.createBuffer();
-        this.indicesBuffer = gl.createBuffer();
+        this.indexBuffer = gl.createBuffer();
         this.textureBuffer = gl.createBuffer();
 
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indicesBuffer);
+        //  An FBO quad is made up of 2 triangles (A and B in the image below)
+        //
+        //  0 = Bottom Left
+        //  1 = Bottom Right
+        //  2 = Top Left
+        //  3 = Top Right
+        //
+        //  2----3
+        //  |\  B|
+        //  | \  |
+        //  |  \ |
+        //  | A \|
+        //  |    \
+        //  0----1
+
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array([ 0, 1, 2, 2, 1, 3 ]), gl.STATIC_DRAW);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
 
@@ -98,11 +113,6 @@ Phaser.Renderer.WebGL.QuadFBO.prototype = {
         {
             window.console.error('FrameBuffer Error: ', this.renderer._fbErrors[fbStatus]);
         }
-
-        //  Reset back to defaults
-        gl.bindTexture(gl.TEXTURE_2D, null);
-        gl.bindRenderbuffer(gl.RENDERBUFFER, null);
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
         this.createShader();
     },
@@ -240,10 +250,16 @@ Phaser.Renderer.WebGL.QuadFBO.prototype = {
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, destinationBuffer);
 
+        gl.activeTexture(gl.TEXTURE0);
+
         gl.useProgram(program);
 
-        gl.activeTexture(gl.TEXTURE0 + this.textureIndex);
+        // gl.activeTexture(gl.TEXTURE0 + this.textureIndex);
+
         gl.bindTexture(gl.TEXTURE_2D, this.texture);
+
+        this.renderer.textureArray[0] = this.texture;
+
         gl.uniform1i(gl.getUniformLocation(program, 'uSampler'), 0);
 
         gl.enableVertexAttribArray(this.aTextureCoord);
@@ -256,10 +272,9 @@ Phaser.Renderer.WebGL.QuadFBO.prototype = {
         gl.bindBuffer(gl.ARRAY_BUFFER, this.textureBuffer); // texture buffer
         gl.vertexAttribPointer(this.aTextureCoord, 2, gl.FLOAT, false, 0, 0);
 
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indicesBuffer); // index buffer
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer); // index buffer
         gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
 
-        this.renderer.textureArray[this.textureIndex] = this.texture;
     },
 
     destroy: function ()

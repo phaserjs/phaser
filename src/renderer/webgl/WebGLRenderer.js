@@ -303,7 +303,8 @@ Phaser.Renderer.WebGL.prototype = {
 
         if (Array.isArray(textureArray))
         {
-            var index = 0;
+            //  index 0 is reserved!
+            var index = 1;
 
             for (var i = 0; i < textureArray.length; i++)
             {
@@ -466,9 +467,11 @@ Phaser.Renderer.WebGL.prototype = {
         //  Giving no argument here tells it to draw to the main context buffer
         //  the same as doing 'gl.bindFramebuffer(gl.FRAMEBUFFER, null)' first.
         //  Or you can give it another framebuffer to draw to.
-        this.stateFBO.render();
+        this.stateFBO.render(null);
 
         this.endTime = Date.now();
+
+        // debugger;
 
         //  Add Post-render hook
     },
