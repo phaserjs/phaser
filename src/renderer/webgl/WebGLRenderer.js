@@ -231,6 +231,10 @@ Phaser.Renderer.WebGL.prototype = {
         {
             this.multiTexture = false;
         }
+        else
+        {
+            this.createMultiEmptyTextures();
+        }
 
         gl.disable(gl.DEPTH_TEST);
         gl.disable(gl.CULL_FACE);
@@ -285,9 +289,33 @@ Phaser.Renderer.WebGL.prototype = {
             normal, normal, normal, normal
         ];
 
-        this.stateFBO = new Phaser.Renderer.WebGL.QuadFBO(this, 0, 0, 800, 600);
+        // this.stateFBO = new Phaser.Renderer.WebGL.QuadFBO(this, 0, 0, 800, 600);
+        // this.stateFBO.init();
+    },
 
-        this.stateFBO.init();
+    //  Bind empty multi-textures to avoid WebGL spam
+
+    createMultiEmptyTextures: function ()
+    {
+        if (this.maxTextures === 1)
+        {
+            return;
+        }
+
+        var gl = this.gl;
+
+        var indices = [];
+
+        var tempTexture = this.createEmptyTexture(1, 1, 0);
+
+        for (var i = 0; i < this.maxTextures; i++)
+        {
+            gl.activeTexture(gl.TEXTURE0 + i);
+
+            gl.bindTexture(gl.TEXTURE_2D, tempTexture);
+
+            indices.push(i);
+        }
     },
 
     enableMultiTextureSupport: function (textureArray)
@@ -440,14 +468,18 @@ Phaser.Renderer.WebGL.prototype = {
         //  viewport only needs to be set when the canvas is resized, not every render pass
         // gl.viewport(0, 0, this.width, this.height);
 
-        this.stateFBO.activate();
+        // this.stateFBO.activate();
+        // gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
         //  clearColor only needs to be set once, then 'clear' picks the value up every time
         //  It's set in the 'init' method for now, but will need binding to the background color
         //  
         //  If 'alpha' is true in the context options then modes like Blend Mode ADD look really weird
         //  if you don't clear the background (looks fine over a background image though)
-        gl.clear(gl.COLOR_BUFFER_BIT);
+
+        //  clear doesn't need to be called unless we're using an FBO, as it will clear automatically (at least in FF and Canary)
+
+        // gl.clear(gl.COLOR_BUFFER_BIT);
 
         this.setBlendMode(Phaser.blendModes.NORMAL);
 
@@ -458,7 +490,8 @@ Phaser.Renderer.WebGL.prototype = {
 
         // this.flipY = 1;
 
-        this.batch.start(true);
+        // this.batch.start(true);
+        this.batch.start(false);
 
         stage.render(this, stage);
 
@@ -467,7 +500,9 @@ Phaser.Renderer.WebGL.prototype = {
         //  Giving no argument here tells it to draw to the main context buffer
         //  the same as doing 'gl.bindFramebuffer(gl.FRAMEBUFFER, null)' first.
         //  Or you can give it another framebuffer to draw to.
-        this.stateFBO.render(null);
+
+        // gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        // this.stateFBO.render(null);
 
         this.endTime = Date.now();
 

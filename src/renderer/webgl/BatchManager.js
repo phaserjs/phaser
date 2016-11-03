@@ -52,9 +52,9 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         }
     },
 
-    start: function ()
+    start: function (force)
     {
-        this.currentBatch.start(true);
+        this.currentBatch.start(force);
     },
 
     stop: function ()
