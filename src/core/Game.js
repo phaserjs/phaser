@@ -616,8 +616,20 @@ Phaser.Game.prototype = {
 
         // this.world = new Phaser.World(this);
 
+        //  Inject any new Factory helpers that exist in the build
+        for (var gameobject in Phaser.GameObject)
+        {
+            if (Phaser.GameObject[gameobject].hasOwnProperty('FACTORY_KEY'))
+            {
+                var key = Phaser.GameObject[gameobject]['FACTORY_KEY'];
+
+                // console.log('found', key);
+
+                Phaser.GameObject.Factory.prototype[key] = Phaser.GameObject[gameobject]['FACTORY_ADD'];
+            }
+        }
+
         this.add = new Phaser.GameObject.Factory(this);
-        this.add.boot();
 
         this.make = new Phaser.GameObjectCreator(this);
         this.cache = new Phaser.Cache(this);
