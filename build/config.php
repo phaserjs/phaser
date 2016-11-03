@@ -140,6 +140,7 @@ EOL;
     <script src="$path/src/renderer/webgl/FilterTexture.js"></script>
     <script src="$path/src/renderer/webgl/ShaderManager.js"></script>
     <script src="$path/src/renderer/webgl/StencilManager.js"></script>
+    <script src="$path/src/renderer/webgl/QuadFBO.js"></script>
 
     <script src="$path/src/renderer/webgl/batches/BaseBatch.js"></script>
     <script src="$path/src/renderer/webgl/batches/FXBatch.js"></script>

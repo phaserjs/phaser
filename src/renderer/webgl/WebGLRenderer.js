@@ -69,6 +69,10 @@ Phaser.Renderer.WebGL = function (game)
 
     this.resolution = game.resolution;
 
+    this.clipUnitX = 2 / this.width;
+
+    this.clipUnitY = 2 / this.height;
+
     /**
      * The canvas element that everything is drawn to.
      *
@@ -279,8 +283,11 @@ Phaser.Renderer.WebGL.prototype = {
         ];
 
         //  Test
-        this.createFramebuffer(800, 600);
+        // this.createFramebuffer(800, 600);
 
+        this.stateFBO = new Phaser.Renderer.WebGL.QuadFBO(this, 0, 0, 800, 600);
+
+        this.stateFBO.init();
     },
 
     enableMultiTextureSupport: function (textureArray)
@@ -329,6 +336,9 @@ Phaser.Renderer.WebGL.prototype = {
         }
 
         this.gl.viewport(0, 0, this.width, this.height);
+
+        this.clipUnitX = 2 / this.width;
+        this.clipUnitY = 2 / this.height;
 
         this.projection.x = (this.width / 2) / this.game.resolution;
         this.projection.y = -(this.height / 2) / this.game.resolution;
@@ -432,9 +442,13 @@ Phaser.Renderer.WebGL.prototype = {
         //  Render 1/4 size view into the top left
         // gl.viewport(0, this.height / 2, this.width / 2, this.height / 2);
 
+
+        this.stateFBO.activate();
+
+
         //  Make sure we are bound to the main frame buffer
         // gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        gl.bindFramebuffer(gl.FRAMEBUFFER, this.framebuffer);
+        // gl.bindFramebuffer(gl.FRAMEBUFFER, this.framebuffer);
 
         //  clearColor only needs to be set once, then 'clear' picks the value up every time
         // gl.clearColor(0, 0, 0.3, 1);
@@ -501,10 +515,12 @@ Phaser.Renderer.WebGL.prototype = {
         //  Draw the FBO to the main context
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
+        this.stateFBO.render();
+
         // gl.clearColor(0, 0, 0, 1);
         // gl.clear(gl.COLOR_BUFFER_BIT);
 
-        this.drawScenePostProcess();
+        // this.drawScenePostProcess();
 
         this.endTime = Date.now();
 
@@ -515,20 +531,21 @@ Phaser.Renderer.WebGL.prototype = {
 
     clipX: function (x)
     {
-        var unit = 2 / this.width;
-
-        return (unit * x) - 1;
+        return (this.clipUnitX * x) - 1;
     },
 
     clipY: function (y)
     {
-        var unit = 2 / this.height;
-
-        return 1 - (unit * y);
+        return 1 - (this.clipUnitY * y);
     },
 
     getVerticesFromRect: function (x, y, width, height)
     {
+        // -1.0, -1.0, // 0 = bottom-left
+        // 1.0, -1.0,  // 1 = bottom-right
+        // -1.0, 1.0,  // 2 = top-left
+        // 1.0, 1.0    // 3 = top-right
+
         return [
             //  bottom-left
             this.clipX(x), this.clipY(y + height),
@@ -544,6 +561,7 @@ Phaser.Renderer.WebGL.prototype = {
         ];
     },
 
+    /**
     createFramebuffer: function (width, height, scaleMode)
     {
         var gl = this.gl;
@@ -554,26 +572,12 @@ Phaser.Renderer.WebGL.prototype = {
             ibo: gl.createBuffer(),
             verticesTextureBuffer: gl.createBuffer(),
             indices: [ 0, 1, 2, 2, 1, 3 ],
-            _vertices: [
-                -1.0, -1.0,//0
-                1.0, -1.0, //1
-                -1.0, 1.0, //2
-                1.0, 1.0   //3
-            ],
             fsvertices: this.getVerticesFromRect(0, 0, 800, 600),
-            vertices: this.getVerticesFromRect(300, 100, 400, 300),
-            __vertices: [
-                -1.0, -1.0, // 0 = bottom-left
-                1.0, -1.0,  // 1 = bottom-right
-                -1.0, 1.0,  // 2 = top-left
-                1.0, 1.0    // 3 = top-right
-            ],
+            vertices: this.getVerticesFromRect(100, 100, 400, 300),
             uvs: [
-                [ 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0, 1.0 ]
+                [ 0, 0, 1, 0, 0, 1, 1, 1 ]
             ]
         };
-
-        console.log(this.getVerticesFromRect(0, 0, 800, 600));
 
         //  ibo = indices buffer object
         //  vbo = vertices buffer object
@@ -583,20 +587,12 @@ Phaser.Renderer.WebGL.prototype = {
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
 
         gl.bindBuffer(gl.ARRAY_BUFFER, this.square.vbo);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.square.vertices), gl.STATIC_DRAW);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.square.vertices), gl.DYNAMIC_DRAW);
 
         gl.bindBuffer(gl.ARRAY_BUFFER, this.square.verticesTextureBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.square.uvs[0]), gl.STATIC_DRAW);
 
-        // this.frameTexture = this.createEmptyTexture(width, height, scaleMode);
-
-        this.frameTexture = gl.createTexture();
-        gl.bindTexture(gl.TEXTURE_2D, this.frameTexture);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+        this.frameTexture = this.createEmptyTexture(width, height, scaleMode);
 
         this.renderbuffer = gl.createRenderbuffer();
         gl.bindRenderbuffer(gl.RENDERBUFFER, this.renderbuffer);
@@ -668,7 +664,7 @@ Phaser.Renderer.WebGL.prototype = {
             '}'
         ];
 
-        var fragmentSrc = [
+        var twirlFragmentSrc = [
             'precision mediump float;',
             'varying vec2 vTextureCoord;',
             // 'varying vec4 vColor;',
@@ -736,6 +732,7 @@ Phaser.Renderer.WebGL.prototype = {
 
         this.textureArray[0] = this.frameTexture;
     },
+    */
 
     /**
     * Removes the base texture from the GPU, useful for managing resources on the GPU.
