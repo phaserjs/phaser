@@ -311,8 +311,16 @@ Phaser.Renderer.WebGL.Batch.SingleTexture.prototype.destroy = function ()
     this.indices = null;
     this.view = null;
 
-    this.gl.deleteBuffer(this.vertexBuffer);
-    this.gl.deleteBuffer(this.indexBuffer);
+    var gl = this.gl;
+
+    gl.disableVertexAttribArray(this.aVertexPosition);
+    gl.disableVertexAttribArray(this.aTextureCoord);
+    gl.disableVertexAttribArray(this.aTextureIndex);
+    gl.disableVertexAttribArray(this.aTintColor);
+    gl.disableVertexAttribArray(this.aBgColor);
+
+    gl.deleteBuffer(this.vertexBuffer);
+    gl.deleteBuffer(this.indexBuffer);
 
     this.renderer.deleteProgram(this.program);
 
