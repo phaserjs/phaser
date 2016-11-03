@@ -274,7 +274,7 @@ Phaser.Renderer.WebGL.QuadFBO.prototype = {
     {
         var gl = this.gl;
 
-        //  Return to the default framebuffer
+        //  Set the framebuffer to render to
         gl.bindFramebuffer(gl.FRAMEBUFFER, destinationBuffer);
 
         //  Bind the texture we rendered to, for reading, always TEXTURE0
