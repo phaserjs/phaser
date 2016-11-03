@@ -322,7 +322,7 @@ Phaser.Renderer.WebGL.prototype = {
 
         if (Array.isArray(textureArray))
         {
-            //  index 0 is reserved!
+            //  index 0 is reserved?
             var index = 0;
 
             for (var i = 0; i < textureArray.length; i++)

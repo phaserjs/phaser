@@ -115,9 +115,11 @@ Phaser.Renderer.WebGL.QuadFBO.prototype = {
 
         this.createShader();
 
+        this.emptyTexture = this.renderer.createEmptyTexture(1, 1, 0, 0);
+
         //  Reset back to defaults
-        gl.bindRenderbuffer(gl.RENDERBUFFER, null);
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        // gl.bindRenderbuffer(gl.RENDERBUFFER, null);
+        // gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     },
 
     //  This whole function ought to be split out into the Shader Manager
@@ -295,8 +297,10 @@ Phaser.Renderer.WebGL.QuadFBO.prototype = {
 
         this.renderer.drawCount++;
 
-        //  Unbind the fbo texture - if we forget this we corrupt the main context texture!
-        gl.bindTexture(gl.TEXTURE_2D, null);
+        //  Unbind the fbo texture and replace it with an empty texture.
+        //  If we forget this we corrupt the main context texture!
+        //  or get `RENDER WARNING: there is no texture bound to the unit 0` spam in the console
+        gl.bindTexture(gl.TEXTURE_2D, this.emptyTexture);
     },
 
     destroy: function ()
