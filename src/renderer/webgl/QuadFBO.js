@@ -55,8 +55,6 @@ Phaser.Renderer.WebGL.QuadFBO.prototype = {
 
     init: function ()
     {
-        // console.log('QuadFBO.init');
-
         this.gl = this.renderer.gl;
 
         var gl = this.gl;
@@ -94,29 +92,7 @@ Phaser.Renderer.WebGL.QuadFBO.prototype = {
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([ 0, 0, 1, 0, 0, 1, 1, 1 ]), gl.STATIC_DRAW);
 
         //  Create a texture for our color buffer
-        // this.texture = this.renderer.createEmptyTexture(this.width, this.height);
-
-        console.log('QuadFBO created texture bound to TEXTURE0');
-
-        var texture = gl.createTexture();
-
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, texture);
-
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-
-        //  We'll read from this texture, but it won't have mipmaps, so turn them off:
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this.width, this.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
-
-        this.texture = texture;
-
-        console.log(this.texture);
-
-        // this.renderer.textureArray[0] = this.texture;
+        this.texture = this.renderer.createEmptyTexture(this.width, this.height, Phaser.scaleModes.LINEAR, 0);
 
         //  The FBO's depth buffer
         this.renderBuffer = gl.createRenderbuffer();
@@ -268,26 +244,17 @@ Phaser.Renderer.WebGL.QuadFBO.prototype = {
     {
         var gl = this.gl;
 
-        // console.log('QuadFBO.activate');
-
         gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer);
-        // gl.bindRenderbuffer(gl.RENDERBUFFER, this.renderBuffer);
 
+        //  FBO textures always use index zero
         this.renderer.textureArray[0] = this.texture;
- 
-        // gl.viewport(0, 0, this.width, this.height);
-        // gl.clear(gl.COLOR_BUFFER_BIT);
     },
 
     bindShader: function ()
     {
-        var program = this.program2;
-
-        // console.log('QuadFBO bindShader');
+        var program = this.program;
 
         var gl = this.gl;
-
-        // gl.useProgram(program);
 
         gl.uniform1i(gl.getUniformLocation(program, 'uSampler'), 0);
 
@@ -305,19 +272,17 @@ Phaser.Renderer.WebGL.QuadFBO.prototype = {
     //  destinationBuffer MUST be set, even if just to 'null'
     render: function (destinationBuffer)
     {
-        // console.log('QuadFBO.render');
-
         var gl = this.gl;
 
         //  Return to the default framebuffer
         gl.bindFramebuffer(gl.FRAMEBUFFER, destinationBuffer);
 
-        //  Bind the texture we rendered to, for reading
+        //  Bind the texture we rendered to, for reading, always TEXTURE0
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, this.texture);
 
         //  The shader that will read from the fbo texture
-        if (this.renderer.shaderManager.setShader(this.program2))
+        if (this.renderer.shaderManager.setShader(this.program))
         {
             this.bindShader();
         }
@@ -328,7 +293,7 @@ Phaser.Renderer.WebGL.QuadFBO.prototype = {
 
         this.renderer.drawCount++;
 
-        //  Unbind the fbo texture - forget this and Chrome goes haywire!
+        //  Unbind the fbo texture - if we forget this we corrupt the main context texture!
         gl.bindTexture(gl.TEXTURE_2D, null);
     },
 
