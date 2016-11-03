@@ -92,7 +92,7 @@ Phaser.Renderer.WebGL.QuadFBO.prototype = {
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([ 0, 0, 1, 0, 0, 1, 1, 1 ]), gl.STATIC_DRAW);
 
         //  Create a texture for our color buffer
-        this.texture = this.renderer.createEmptyTexture(this.width, this.height, Phaser.scaleModes.LINEAR, 0);
+        this.texture = this.renderer.createEmptyTexture(this._width, this._height, 0, 0);
 
         //  The FBO's depth buffer
         this.renderBuffer = gl.createRenderbuffer();
@@ -180,7 +180,7 @@ Phaser.Renderer.WebGL.QuadFBO.prototype = {
 
         //  This compiles, attaches and links the shader
         this.program = this.renderer.compileProgram(vertexSrc, fragmentSrc);
-        this.program2 = this.renderer.compileProgram(vertexSrc, twirlFragmentSrc);
+        // this.program2 = this.renderer.compileProgram(vertexSrc, twirlFragmentSrc);
 
         this.aVertexPosition = gl.getAttribLocation(this.program, 'aVertexPosition');
         this.aTextureCoord = gl.getAttribLocation(this.program, 'aTextureCoord');
@@ -255,6 +255,8 @@ Phaser.Renderer.WebGL.QuadFBO.prototype = {
         var program = this.program;
 
         var gl = this.gl;
+
+        gl.useProgram(program);
 
         gl.uniform1i(gl.getUniformLocation(program, 'uSampler'), 0);
 
