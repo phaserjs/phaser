@@ -14,7 +14,7 @@
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
 */
-Phaser.GameObject.Factory = function (game)
+Phaser.GameObject.Factory = function (game, state)
 {
     /**
     * @property {Phaser.Game} game - A reference to the currently running Game.
@@ -23,30 +23,15 @@ Phaser.GameObject.Factory = function (game)
     this.game = game;
 
     /**
-    * @property {Phaser.World} world - A reference to the game world.
+    * @property {Phaser.State} state - The State that owns this Factory
     * @protected
     */
-    this.world = this.game.world;
+    this.state = state;
 };
 
 Phaser.GameObject.Factory.prototype.constructor = Phaser.GameObject.Factory;
 
 Phaser.GameObject.Factory.prototype = {
-
-    boot: function ()
-    {
-        for (var gameobject in Phaser.GameObject)
-        {
-            if (Phaser.GameObject[gameobject].hasOwnProperty('FACTORY_KEY'))
-            {
-                var key = Phaser.GameObject[gameobject]['FACTORY_KEY'];
-
-                // console.log('found', key);
-
-                Phaser.GameObject.Factory.prototype[key] = Phaser.GameObject[gameobject]['FACTORY_ADD'];
-            }
-        }
-    },
 
     /**
     * Adds an existing display object to the game world.
@@ -55,10 +40,9 @@ Phaser.GameObject.Factory.prototype = {
     * @param {any} object - An instance of Phaser.Sprite, Phaser.Button or any other display object.
     * @return {any} The child that was added to the World.
     */
-    existing: function (object) {
-
-        return this.world.add(object);
-
+    existing: function (object)
+    {
+        return this.state.children.add(object);
     },
 
     /**
@@ -70,10 +54,9 @@ Phaser.GameObject.Factory.prototype = {
     * @param {object} object - Object the tween will be run on.
     * @return {Phaser.Tween} The newly created Phaser.Tween object.
     */
-    tween: function (object) {
-
+    tween: function (object)
+    {
         return this.game.tweens.create(object);
-
     },
 
     /**
@@ -87,10 +70,9 @@ Phaser.GameObject.Factory.prototype = {
     * @param {number} [physicsBodyType=0] - If enableBody is true this is the type of physics body that is created on new Sprites. Phaser.Physics.ARCADE, Phaser.Physics.P2, Phaser.Physics.NINJA, etc.
     * @return {Phaser.Group} The newly created Group.
     */
-    group: function (parent, name, addToStage, enableBody, physicsBodyType) {
-
+    group: function (parent, name, addToStage, enableBody, physicsBodyType)
+    {
         return new Phaser.Group(this.game, parent, name, addToStage, enableBody, physicsBodyType);
-
     },
 
     /**
@@ -106,26 +88,9 @@ Phaser.GameObject.Factory.prototype = {
     * @param {boolean} [addToStage=false] - If set to true this Group will be added directly to the Game.Stage instead of Game.World.
     * @return {Phaser.Group} The newly created Group.
     */
-    physicsGroup: function (physicsBodyType, parent, name, addToStage) {
-
+    physicsGroup: function (physicsBodyType, parent, name, addToStage)
+    {
         return new Phaser.Group(this.game, parent, name, addToStage, true, physicsBodyType);
-
-    },
-
-    /**
-    * Creates a new Sound object.
-    *
-    * @method Phaser.GameObject.Factory#audio
-    * @param {string} key - The Game.cache key of the sound that this object will use.
-    * @param {number} [volume=1] - The volume at which the sound will be played.
-    * @param {boolean} [loop=false] - Whether or not the sound will loop.
-    * @param {boolean} [connect=true] - Controls if the created Sound object will connect to the master gainNode of the SoundManager when running under WebAudio.
-    * @return {Phaser.Sound} The newly created sound object.
-    */
-    audio: function (key, volume, loop, connect) {
-
-        return this.game.sound.add(key, volume, loop, connect);
-
     },
 
     /**
@@ -138,10 +103,9 @@ Phaser.GameObject.Factory.prototype = {
     * @param {boolean} [connect=true] - Controls if the created Sound object will connect to the master gainNode of the SoundManager when running under WebAudio.
     * @return {Phaser.Sound} The newly created sound object.
     */
-    sound: function (key, volume, loop, connect) {
-
+    sound: function (key, volume, loop, connect)
+    {
         return this.game.sound.add(key, volume, loop, connect);
-
     },
 
     /**
@@ -151,10 +115,9 @@ Phaser.GameObject.Factory.prototype = {
      * @param {string} key - The Game.cache key of the sound that this object will use.
      * @return {Phaser.AudioSprite} The newly created AudioSprite object.
      */
-    audioSprite: function (key) {
-
+    audioSprite: function (key)
+    {
         return this.game.sound.addSprite(key);
-
     },
 
     /**
@@ -170,10 +133,9 @@ Phaser.GameObject.Factory.prototype = {
     * @param {number} [maxParticles=50] - The total number of particles in this emitter.
     * @return {Phaser.Particles.Arcade.Emitter} The newly created emitter object.
     */
-    emitter: function (x, y, maxParticles) {
-
+    emitter: function (x, y, maxParticles)
+    {
         return this.game.particles.add(new Phaser.Particles.Arcade.Emitter(this.game, x, y, maxParticles));
-
     },
 
     /**
@@ -193,11 +155,11 @@ Phaser.GameObject.Factory.prototype = {
     * @param {number} [height=10] - The height of the map in tiles. If this map is created from Tiled or CSV data you don't need to specify this.
     * @return {Phaser.Tilemap} The newly created tilemap object.
     */
-    tilemap: function (key, tileWidth, tileHeight, width, height) {
-
+    tilemap: function (key, tileWidth, tileHeight, width, height)
+    {
         return new Phaser.Tilemap(this.game, key, tileWidth, tileHeight, width, height);
-
     },
+
     /**
     * A dynamic initially blank canvas to which images can be drawn.
     *
@@ -208,8 +170,8 @@ Phaser.GameObject.Factory.prototype = {
     * @param {boolean} [addToCache=false] - Should this RenderTexture be added to the Game.Cache? If so you can retrieve it with Cache.getTexture(key)
     * @return {Phaser.RenderTexture} The newly created RenderTexture object.
     */
-    renderTexture: function (width, height, key, addToCache) {
-
+    renderTexture: function (width, height, key, addToCache)
+    {
         if (key === undefined || key === '') { key = this.game.rnd.uuid(); }
         if (addToCache === undefined) { addToCache = false; }
 
@@ -221,7 +183,6 @@ Phaser.GameObject.Factory.prototype = {
         }
 
         return texture;
-
     },
 
     /**
@@ -236,8 +197,8 @@ Phaser.GameObject.Factory.prototype = {
     * @param {boolean} [addToCache=false] - Should this BitmapData be added to the Game.Cache? If so you can retrieve it with Cache.getBitmapData(key)
     * @return {Phaser.BitmapData} The newly created BitmapData object.
     */
-    bitmapData: function (width, height, key, addToCache) {
-
+    bitmapData: function (width, height, key, addToCache)
+    {
         if (addToCache === undefined) { addToCache = false; }
         if (key === undefined || key === '') { key = this.game.rnd.uuid(); }
 
@@ -249,7 +210,6 @@ Phaser.GameObject.Factory.prototype = {
         }
 
         return texture;
-
     },
 
     /**
@@ -260,8 +220,8 @@ Phaser.GameObject.Factory.prototype = {
     * @param {any} - Whatever parameters are needed to be passed to the filter init function.
     * @return {Phaser.Filter} The newly created Phaser.Filter object.
     */
-    filter: function (filter) {
-
+    filter: function (filter)
+    {
         var args = Array.prototype.slice.call(arguments, 1);
 
         var filter = new Phaser.Filter[filter](this.game);
@@ -269,7 +229,6 @@ Phaser.GameObject.Factory.prototype = {
         filter.init.apply(filter, args);
 
         return filter;
-
     },
 
     /**
@@ -282,10 +241,9 @@ Phaser.GameObject.Factory.prototype = {
     * @param {...*} parameter - Additional parameters that will be passed to the Plugin.init method.
     * @return {Phaser.Plugin} The Plugin that was added to the manager.
     */
-    plugin: function (plugin) {
-
+    plugin: function (plugin)
+    {
         return this.game.plugins.add(plugin);
-
     }
 
 };
