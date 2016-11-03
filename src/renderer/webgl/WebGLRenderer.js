@@ -233,6 +233,8 @@ Phaser.Renderer.WebGL.prototype = {
         gl.enable(gl.BLEND);
         // gl.enable(gl.DEPTH_TEST);
 
+        gl.clearColor(0, 0.3, 0, 1);
+
         // this.shaderManager.init();
         this.batch.init();
         // this.filterManager.init();
@@ -424,13 +426,18 @@ Phaser.Renderer.WebGL.prototype = {
 
         var gl = this.gl;
 
-        gl.viewport(0, 0, this.width, this.height);
+        //  viewport only needs to be set when the canvas is resized, not every render pass
+        // gl.viewport(0, 0, this.width, this.height);
+
+        //  Render 1/4 size view into the top left
+        // gl.viewport(0, this.height / 2, this.width / 2, this.height / 2);
 
         //  Make sure we are bound to the main frame buffer
         // gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         gl.bindFramebuffer(gl.FRAMEBUFFER, this.framebuffer);
 
-        gl.clearColor(0, 0, 0, 0);
+        //  clearColor only needs to be set once, then 'clear' picks the value up every time
+        // gl.clearColor(0, 0, 0.3, 1);
         gl.clear(gl.COLOR_BUFFER_BIT);
 
         // gl.clearColor(0, 0, 0, 1);
@@ -480,6 +487,18 @@ Phaser.Renderer.WebGL.prototype = {
 
         this.batch.stop();
 
+        //  Render the whole lot again after changing the viewport
+        //  It does what you'd expect, but literally draws _everything_ again!
+        /*
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        gl.viewport(400, 300, 400, 300);
+        this.batch.start(true);
+        stage.render(this, stage);
+        this.batch.stop();
+        */
+
+
+        //  Draw the FBO to the main context
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
         // gl.clearColor(0, 0, 0, 1);
@@ -505,10 +524,10 @@ Phaser.Renderer.WebGL.prototype = {
             verticesTextureBuffer: gl.createBuffer(),
             indices: [ 0, 1, 2, 2, 1, 3 ],
             vertices: [
-                -1.0, -1.0, 0.0,//0
-                1.0, -1.0, 0.0, //1
-                -1.0, 1.0, 0.0, //2
-                1.0, 1.0, 0.0   //3
+                -1.0, -1.0,//0
+                1.0, -1.0, //1
+                -1.0, 1.0, //2
+                1.0, 1.0   //3
             ],
             uvs: [
                 [ 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0, 1.0 ]
@@ -524,9 +543,6 @@ Phaser.Renderer.WebGL.prototype = {
 
         gl.bindBuffer(gl.ARRAY_BUFFER, this.square.vbo);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.square.vertices), gl.STATIC_DRAW);
-
-        this.square.vbo.itemSize = 3;
-        this.square.vbo.numItems = this.square.vertices.length / 3;
 
         gl.bindBuffer(gl.ARRAY_BUFFER, this.square.verticesTextureBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.square.uvs[0]), gl.STATIC_DRAW);
@@ -565,14 +581,14 @@ Phaser.Renderer.WebGL.prototype = {
         //  Create the quad shader
 
         var vertexSrc = [
-            'attribute vec3 aVertexPosition;',
+            'attribute vec2 aVertexPosition;',
             'attribute vec2 aTextureCoord;',
 
             'varying vec2 vTextureCoord;',
 
             'void main(void) {',
             '   vTextureCoord = aTextureCoord;',
-            '   gl_Position = vec4(aVertexPosition, 1.0);',
+            '   gl_Position = vec4(aVertexPosition, 0.0, 1.0);',
             '}'
         ];
 
@@ -644,7 +660,7 @@ Phaser.Renderer.WebGL.prototype = {
 
 
         //  This compiles, attaches and links the shader
-        this.postProcessShaderProgram = this.compileProgram(vertexSrc, fragmentSrc);
+        this.postProcessShaderProgram = this.compileProgram(vertexSrc, standardFragmentSrc);
 
         this.postProcessShaderProgram.vertexPositionAttribute = gl.getAttribLocation(this.postProcessShaderProgram, 'aVertexPosition');
         this.postProcessShaderProgram.textureCoordAttribute = gl.getAttribLocation(this.postProcessShaderProgram, 'aTextureCoord');
@@ -658,23 +674,26 @@ Phaser.Renderer.WebGL.prototype = {
 
         gl.useProgram(program);
 
-        //gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-        gl.enableVertexAttribArray(program.vertexPositionAttribute);
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.square.vbo);
-
-        gl.vertexAttribPointer(program.vertexPositionAttribute, this.square.vbo.itemSize, gl.FLOAT, false, 0, 0);
-        gl.enableVertexAttribArray(program.textureCoordAttribute);
-
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, this.frameTexture);
         gl.uniform1i(gl.getUniformLocation(program, 'uSampler'), 0);
 
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.square.verticesTextureBuffer);
+        gl.enableVertexAttribArray(program.textureCoordAttribute);
+        gl.enableVertexAttribArray(program.vertexPositionAttribute);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.square.vbo); // vertex buffer object
+        gl.vertexAttribPointer(program.vertexPositionAttribute, 2, gl.FLOAT, false, 0, 0);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.square.verticesTextureBuffer); // texture buffer
         gl.vertexAttribPointer(program.textureCoordAttribute, 2, gl.FLOAT, false, 0, 0);
 
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.square.ibo);
-        gl.drawElements(gl.TRIANGLES, this.square.indices.length, gl.UNSIGNED_SHORT, 0);
+        //  Draw
 
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.square.ibo); // index buffer
+
+        gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
+
+        this.textureArray[0] = this.frameTexture;
     },
 
     /**
