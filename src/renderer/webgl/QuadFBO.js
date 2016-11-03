@@ -34,14 +34,15 @@ Phaser.Renderer.WebGL.QuadFBO = function (renderer, x, y, width, height)
         return 1 - (renderer.clipUnitY * y);
     };
 
-    this.vbo;
-    this.ibo;
-    this.verticesTextureBuffer;
+    this.vertexBuffer;
+    this.indicesBuffer;
+    this.textureBuffer;
+
     this.vertices;
 
-    this.frameTexture;
-    this.renderbuffer;
-    this.framebuffer;
+    this.texture;
+    this.renderBuffer;
+    this.frameBuffer;
 
     this.program;
     this.aVertexPosition;
@@ -58,11 +59,11 @@ Phaser.Renderer.WebGL.QuadFBO.prototype = {
 
         var gl = this.gl;
 
-        this.vbo = gl.createBuffer();
-        this.ibo = gl.createBuffer();
-        this.verticesTextureBuffer = gl.createBuffer();
+        this.vertexBuffer = gl.createBuffer();
+        this.indicesBuffer = gl.createBuffer();
+        this.textureBuffer = gl.createBuffer();
 
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.ibo);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indicesBuffer);
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array([ 0, 1, 2, 2, 1, 3 ]), gl.STATIC_DRAW);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
 
@@ -70,24 +71,26 @@ Phaser.Renderer.WebGL.QuadFBO.prototype = {
 
         this.updateVerts();
 
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.vbo);
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, this.vertices, gl.DYNAMIC_DRAW);
 
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.verticesTextureBuffer);
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.textureBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([ 0, 0, 1, 0, 0, 1, 1, 1 ]), gl.STATIC_DRAW);
 
-        this.frameTexture = this.renderer.createEmptyTexture(this.width, this.height);
+        this.texture = this.renderer.createEmptyTexture(this.width, this.height);
 
-        this.renderbuffer = gl.createRenderbuffer();
+        this.renderBuffer = gl.createRenderbuffer();
 
-        gl.bindRenderbuffer(gl.RENDERBUFFER, this.renderbuffer);
+        gl.bindRenderbuffer(gl.RENDERBUFFER, this.renderBuffer);
         gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, this.width, this.height);
 
-        this.framebuffer = gl.createFramebuffer();
+        this.frameBuffer = gl.createFramebuffer();
 
-        gl.bindFramebuffer(gl.FRAMEBUFFER, this.framebuffer);
-        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.frameTexture, 0);
-        gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, this.renderbuffer);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer);
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.texture, 0);
+
+        //  May need to optionally be: gl.DEPTH_STENCIL_ATTACHMENT
+        gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, this.renderBuffer);
 
         var fbStatus = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
 
@@ -133,6 +136,32 @@ Phaser.Renderer.WebGL.QuadFBO.prototype = {
 
             'void main(void) {',
             '   gl_FragColor = texture2D(uSampler, vTextureCoord);',
+            '}'
+        ];
+
+        var twirlFragmentSrc = [
+            'precision mediump float;',
+
+            'uniform sampler2D uSampler;',
+            'varying vec2 vTextureCoord;',
+
+            'const float radius = 0.5;',
+            'const float angle = 5.0;',
+            'const vec2 offset = vec2(0.5, 0.5);',
+
+            'void main(void) {',
+            '   vec2 coord = vTextureCoord - offset;',
+            '   float distance = length(coord);',
+
+            '   if (distance < radius) {',
+            '       float ratio = (radius - distance) / radius;',
+            '       float angleMod = ratio * ratio * angle;',
+            '       float s = sin(angleMod);',
+            '       float c = cos(angleMod);',
+            '       coord = vec2(coord.x * c - coord.y * s, coord.x * s + coord.y * c);',
+            '   }',
+
+            '   gl_FragColor = texture2D(uSampler, coord + offset);',
             '}'
         ];
 
@@ -201,34 +230,36 @@ Phaser.Renderer.WebGL.QuadFBO.prototype = {
     {
         var gl = this.gl;
 
-        gl.bindFramebuffer(gl.FRAMEBUFFER, this.framebuffer);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer);
     },
 
-    render: function ()
+    render: function (destinationBuffer)
     {
         var gl = this.gl;
         var program = this.program;
 
+        gl.bindFramebuffer(gl.FRAMEBUFFER, destinationBuffer);
+
         gl.useProgram(program);
 
         gl.activeTexture(gl.TEXTURE0 + this.textureIndex);
-        gl.bindTexture(gl.TEXTURE_2D, this.frameTexture);
+        gl.bindTexture(gl.TEXTURE_2D, this.texture);
         gl.uniform1i(gl.getUniformLocation(program, 'uSampler'), 0);
 
         gl.enableVertexAttribArray(this.aTextureCoord);
         gl.enableVertexAttribArray(this.aVertexPosition);
 
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.vbo); // vertex buffer object
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer); // vertex buffer object
         gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.vertices);
         gl.vertexAttribPointer(this.aVertexPosition, 2, gl.FLOAT, false, 0, 0);
 
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.verticesTextureBuffer); // texture buffer
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.textureBuffer); // texture buffer
         gl.vertexAttribPointer(this.aTextureCoord, 2, gl.FLOAT, false, 0, 0);
 
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.ibo); // index buffer
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indicesBuffer); // index buffer
         gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
 
-        this.renderer.textureArray[this.textureIndex] = this.frameTexture;
+        this.renderer.textureArray[this.textureIndex] = this.texture;
     },
 
     destroy: function ()

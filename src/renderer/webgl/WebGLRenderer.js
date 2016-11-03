@@ -235,9 +235,12 @@ Phaser.Renderer.WebGL.prototype = {
         gl.disable(gl.DEPTH_TEST);
         gl.disable(gl.CULL_FACE);
         gl.enable(gl.BLEND);
-        // gl.enable(gl.DEPTH_TEST);
 
-        gl.clearColor(0, 0.3, 0, 1);
+        //  Transparent
+        gl.clearColor(0, 0, 0, 0);
+
+        //  Black
+        // gl.clearColor(0, 0, 0, 1);
 
         // this.shaderManager.init();
         this.batch.init();
@@ -281,9 +284,6 @@ Phaser.Renderer.WebGL.prototype = {
             normal, normal, normal, normal,
             normal, normal, normal, normal
         ];
-
-        //  Test
-        // this.createFramebuffer(800, 600);
 
         this.stateFBO = new Phaser.Renderer.WebGL.QuadFBO(this, 0, 0, 800, 600);
 
@@ -439,61 +439,23 @@ Phaser.Renderer.WebGL.prototype = {
         //  viewport only needs to be set when the canvas is resized, not every render pass
         // gl.viewport(0, 0, this.width, this.height);
 
-        //  Render 1/4 size view into the top left
-        // gl.viewport(0, this.height / 2, this.width / 2, this.height / 2);
-
-
         this.stateFBO.activate();
 
-
-        //  Make sure we are bound to the main frame buffer
-        // gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        // gl.bindFramebuffer(gl.FRAMEBUFFER, this.framebuffer);
-
         //  clearColor only needs to be set once, then 'clear' picks the value up every time
-        // gl.clearColor(0, 0, 0.3, 1);
+        //  It's set in the 'init' method for now, but will need binding to the background color
+        //  
+        //  If 'alpha' is true in the context options then modes like Blend Mode ADD look really weird
+        //  if you don't clear the background (looks fine over a background image though)
         gl.clear(gl.COLOR_BUFFER_BIT);
 
-        // gl.clearColor(0, 0, 0, 1);
-        // gl.clear(gl.COLOR_BUFFER_BIT);
-
-        //  Transparent
-        // gl.clearColor(0, 0, 0, 0);
-
-        //  If 'alpha' is true in the context options then
-        //  things like blend mode ADD looks really weird
-        //  if you don't clear the background (would look fine over a background image though)
-
-        //  Black
-        // gl.clearColor(0.4, 0, 0, 1);
-        // gl.clear(gl.COLOR_BUFFER_BIT);
-
         this.setBlendMode(Phaser.blendModes.NORMAL);
-
-        /*
-        if (this.clearBeforeRender)
-        {
-            // gl.clearColor(stage._bgColor.r, stage._bgColor.g, stage._bgColor.b, stage._bgColor.a);
-            gl.clearColor(0, 0.5, 0, 0);
-
-            gl.clear(gl.COLOR_BUFFER_BIT);
-        }
 
         // this.offset.x = this.game.camera._shake.x;
         // this.offset.y = this.game.camera._shake.y;
 
-        this.offset.x = 0;
-        this.offset.y = 0;
-
-        this.setBlendMode(this.blendModes.NORMAL);
-        */
-
-        this.offset.x = 0;
-        this.offset.y = 0;
-
         this.drawCount = 0;
 
-        this.flipY = 1;
+        // this.flipY = 1;
 
         this.batch.start(true);
 
@@ -501,30 +463,12 @@ Phaser.Renderer.WebGL.prototype = {
 
         this.batch.stop();
 
-        //  Render the whole lot again after changing the viewport
-        //  It does what you'd expect, but literally draws _everything_ again!
-        /*
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        gl.viewport(400, 300, 400, 300);
-        this.batch.start(true);
-        stage.render(this, stage);
-        this.batch.stop();
-        */
-
-
-        //  Draw the FBO to the main context
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-
+        //  Giving no argument here tells it to draw to the main context buffer
+        //  the same as doing 'gl.bindFramebuffer(gl.FRAMEBUFFER, null)' first.
+        //  Or you can give it another framebuffer to draw to.
         this.stateFBO.render();
 
-        // gl.clearColor(0, 0, 0, 1);
-        // gl.clear(gl.COLOR_BUFFER_BIT);
-
-        // this.drawScenePostProcess();
-
         this.endTime = Date.now();
-
-        // debugger;
 
         //  Add Post-render hook
     },
@@ -560,179 +504,6 @@ Phaser.Renderer.WebGL.prototype = {
             this.clipX(x + width), this.clipY(y)
         ];
     },
-
-    /**
-    createFramebuffer: function (width, height, scaleMode)
-    {
-        var gl = this.gl;
-
-        //  Create our Quad
-        this.square = {
-            vbo: gl.createBuffer(),
-            ibo: gl.createBuffer(),
-            verticesTextureBuffer: gl.createBuffer(),
-            indices: [ 0, 1, 2, 2, 1, 3 ],
-            fsvertices: this.getVerticesFromRect(0, 0, 800, 600),
-            vertices: this.getVerticesFromRect(100, 100, 400, 300),
-            uvs: [
-                [ 0, 0, 1, 0, 0, 1, 1, 1 ]
-            ]
-        };
-
-        //  ibo = indices buffer object
-        //  vbo = vertices buffer object
-
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.square.ibo);
-        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.square.indices), gl.STATIC_DRAW);
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
-
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.square.vbo);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.square.vertices), gl.DYNAMIC_DRAW);
-
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.square.verticesTextureBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.square.uvs[0]), gl.STATIC_DRAW);
-
-        this.frameTexture = this.createEmptyTexture(width, height, scaleMode);
-
-        this.renderbuffer = gl.createRenderbuffer();
-        gl.bindRenderbuffer(gl.RENDERBUFFER, this.renderbuffer);
-        gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, width, height);
-
-        this.framebuffer = gl.createFramebuffer();
-        gl.bindFramebuffer(gl.FRAMEBUFFER, this.framebuffer);
-        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.frameTexture, 0);
-        gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, this.renderbuffer);
-
-        var fbStatus = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
-
-        if (fbStatus !== gl.FRAMEBUFFER_COMPLETE)
-        {
-            console.error('Incomplete GL framebuffer. ', this._fbErrors[fbStatus]);
-        }
-
-        //  Reset back to defaults
-        gl.bindTexture(gl.TEXTURE_2D, null);
-        gl.bindRenderbuffer(gl.RENDERBUFFER, null);
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-
-        //  Create the quad shader
-
-        var vertexSrc = [
-            'attribute vec2 aVertexPosition;',
-            'attribute vec2 aTextureCoord;',
-
-            'varying vec2 vTextureCoord;',
-
-            'void main(void) {',
-            '   vTextureCoord = aTextureCoord;',
-            '   gl_Position = vec4(aVertexPosition, 0.0, 1.0);',
-            '}'
-        ];
-
-        var standardFragmentSrc = [
-            'precision mediump float;',
-            'uniform sampler2D uSampler;',
-            'varying vec2 vTextureCoord;',
-
-            'void main(void) {',
-            '   vec4 color = texture2D(uSampler, vTextureCoord);',
-            '   gl_FragColor = vec4(color.rgb, 1.0);',
-            '}'
-        ];
-
-        var blurFragmentSrc = [
-            'precision mediump float;',
-            'uniform sampler2D uSampler;',
-            'varying vec2 vTextureCoord;',
-
-            'const float blur = 1.0 / 512.0;',
-
-            'void main(void) {',
-            '   vec4 sum = vec4(0.0);',
-
-            '   sum += texture2D(uSampler, vec2(vTextureCoord.x - 4.0*blur, vTextureCoord.y)) * 0.05;',
-            '   sum += texture2D(uSampler, vec2(vTextureCoord.x - 3.0*blur, vTextureCoord.y)) * 0.09;',
-            '   sum += texture2D(uSampler, vec2(vTextureCoord.x - 2.0*blur, vTextureCoord.y)) * 0.12;',
-            '   sum += texture2D(uSampler, vec2(vTextureCoord.x - blur, vTextureCoord.y)) * 0.15;',
-            '   sum += texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y)) * 0.16;',
-            '   sum += texture2D(uSampler, vec2(vTextureCoord.x + blur, vTextureCoord.y)) * 0.15;',
-            '   sum += texture2D(uSampler, vec2(vTextureCoord.x + 2.0*blur, vTextureCoord.y)) * 0.12;',
-            '   sum += texture2D(uSampler, vec2(vTextureCoord.x + 3.0*blur, vTextureCoord.y)) * 0.09;',
-            '   sum += texture2D(uSampler, vec2(vTextureCoord.x + 4.0*blur, vTextureCoord.y)) * 0.05;',
-
-            '   gl_FragColor = sum;',
-            '}'
-        ];
-
-        var twirlFragmentSrc = [
-            'precision mediump float;',
-            'varying vec2 vTextureCoord;',
-            // 'varying vec4 vColor;',
-            // 'uniform vec4 dimensions;',
-            'uniform sampler2D uSampler;',
-
-            // 'uniform float radius;',
-            // 'uniform float angle;',
-            // 'uniform vec2 offset;',
-
-            'const float radius = 0.5;',
-            'const float angle = 5.0;',
-            'const vec2 offset = vec2(0.5, 0.5);',
-
-            'void main(void) {',
-            '   vec2 coord = vTextureCoord - offset;',
-            '   float distance = length(coord);',
-
-            '   if (distance < radius) {',
-            '       float ratio = (radius - distance) / radius;',
-            '       float angleMod = ratio * ratio * angle;',
-            '       float s = sin(angleMod);',
-            '       float c = cos(angleMod);',
-            '       coord = vec2(coord.x * c - coord.y * s, coord.x * s + coord.y * c);',
-            '   }',
-
-            '   gl_FragColor = texture2D(uSampler, coord+offset);',
-            '}'
-        ];
-
-
-        //  This compiles, attaches and links the shader
-        this.postProcessShaderProgram = this.compileProgram(vertexSrc, standardFragmentSrc);
-
-        this.postProcessShaderProgram.vertexPositionAttribute = gl.getAttribLocation(this.postProcessShaderProgram, 'aVertexPosition');
-        this.postProcessShaderProgram.textureCoordAttribute = gl.getAttribLocation(this.postProcessShaderProgram, 'aTextureCoord');
-
-    },
-
-    drawScenePostProcess: function ()
-    {
-        var gl = this.gl;
-        var program = this.postProcessShaderProgram;
-
-        gl.useProgram(program);
-
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, this.frameTexture);
-        gl.uniform1i(gl.getUniformLocation(program, 'uSampler'), 0);
-
-        gl.enableVertexAttribArray(program.textureCoordAttribute);
-        gl.enableVertexAttribArray(program.vertexPositionAttribute);
-
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.square.vbo); // vertex buffer object
-        gl.vertexAttribPointer(program.vertexPositionAttribute, 2, gl.FLOAT, false, 0, 0);
-
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.square.verticesTextureBuffer); // texture buffer
-        gl.vertexAttribPointer(program.textureCoordAttribute, 2, gl.FLOAT, false, 0, 0);
-
-        //  Draw
-
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.square.ibo); // index buffer
-
-        gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
-
-        this.textureArray[0] = this.frameTexture;
-    },
-    */
 
     /**
     * Removes the base texture from the GPU, useful for managing resources on the GPU.
@@ -1007,43 +778,6 @@ Phaser.Renderer.WebGL.prototype = {
 
         return texture;
     },
-
-    /*
-    _createFramebuffer: function (width, height, scaleMode, textureUnit)
-    {
-        var gl = this.gl;
-        var framebuffer = gl.createFramebuffer();
-        var depthStencilBuffer = gl.createRenderbuffer();
-        var fsColorBuffer = null;
-        var fbStatus = 0;
-        
-        gl.activeTexture(gl.TEXTURE0 + textureUnit);
-
-        gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
-        gl.bindRenderbuffer(gl.RENDERBUFFER, depthStencilBuffer);
-
-        //  `this.renderBuffer` = undefined? FilterTexture has a renderBuffer, but `this` doesn't.
-        gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_STENCIL_ATTACHMENT, gl.RENDERBUFFER, this.renderBuffer);
-
-        fsColorBuffer = this.createEmptyTexture(width, height, scaleMode);
-
-        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, fsColorBuffer, 0);
-
-        fbStatus = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
-
-        if (fbStatus !== gl.FRAMEBUFFER_COMPLETE)
-        {
-            console.error('Incomplete GL framebuffer. ', this._fbErrors[fbStatus]);
-        }
-
-        framebuffer.width = width;
-        framebuffer.height = height;
-        framebuffer.targetTexture = fsColorBuffer;
-        framebuffer.renderBuffer = depthStencilBuffer;
-
-        return framebuffer;
-    },
-    */
 
     destroy: function ()
     {
