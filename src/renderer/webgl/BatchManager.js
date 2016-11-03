@@ -52,9 +52,9 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         }
     },
 
-    start: function (force)
+    start: function ()
     {
-        this.currentBatch.start(force);
+        this.currentBatch.start();
     },
 
     stop: function ()
@@ -104,6 +104,8 @@ Phaser.Renderer.WebGL.BatchManager.prototype = {
         //  Does the batch need to activate a new texture?
         if (this.renderer.textureArray[source.glTextureIndex] !== source)
         {
+            // console.log('setCurrentTexture to', source.glTextureIndex);
+            // console.log(source.image.currentSrc);
             this.setCurrentTexture(source);
         }
 

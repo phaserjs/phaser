@@ -229,26 +229,6 @@ Phaser.Renderer.WebGL.Batch.MultiTexture.prototype.init = function ()
 
     gl.useProgram(this.program);
 
-    //  The below is now done in the WebGLRenderer.init
-    /*
-    var indices = [];
-
-    var tempTexture = this.renderer.createEmptyTexture(1, 1, 0);
-
-    for (i = 0; i < this.renderer.maxTextures; i++)
-    {
-        gl.activeTexture(gl.TEXTURE0 + i);
-
-        gl.bindTexture(gl.TEXTURE_2D, tempTexture);
-
-        indices.push(i);
-    }
-
-    this.uSampler = gl.getUniformLocation(this.program, 'uSamplerArray[0]');
-
-    gl.uniform1iv(this.uSampler, indices);
-    */
-
     var indices = [];
 
     for (i = 0; i < this.renderer.maxTextures; i++)
@@ -259,20 +239,16 @@ Phaser.Renderer.WebGL.Batch.MultiTexture.prototype.init = function ()
     this.uSampler = gl.getUniformLocation(this.program, 'uSamplerArray[0]');
 
     gl.uniform1iv(this.uSampler, indices);
-
-
 };
 
 Phaser.Renderer.WebGL.Batch.MultiTexture.prototype.bindShader = function ()
 {
-    var gl = this.gl;
     var program = this.program;
+
+    // console.log('MultiTexture bindShader');
+
+    var gl = this.gl;
     var vertSize = this.vertSize;
-
-    console.log('MultiTexture bindShader');
-
-    //  Set Shader
-    gl.useProgram(program);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);

@@ -246,8 +246,9 @@ Phaser.Renderer.WebGL.prototype = {
         //  Black
         // gl.clearColor(0, 0, 0, 1);
 
-        // this.shaderManager.init();
+        this.shaderManager.init();
         this.batch.init();
+
         // this.filterManager.init();
         // this.stencilManager.init();
 
@@ -289,8 +290,8 @@ Phaser.Renderer.WebGL.prototype = {
             normal, normal, normal, normal
         ];
 
-        // this.stateFBO = new Phaser.Renderer.WebGL.QuadFBO(this, 0, 0, 800, 600);
-        // this.stateFBO.init();
+        this.stateFBO = new Phaser.Renderer.WebGL.QuadFBO(this, 0, 0, 800, 600);
+        this.stateFBO.init();
     },
 
     //  Bind empty multi-textures to avoid WebGL spam
@@ -304,17 +305,27 @@ Phaser.Renderer.WebGL.prototype = {
 
         var gl = this.gl;
 
-        var indices = [];
-
-        var tempTexture = this.createEmptyTexture(1, 1, 0);
+        // var tempTexture = this.createEmptyTexture(1, 1, 0);
 
         for (var i = 0; i < this.maxTextures; i++)
         {
+            console.log('createMultiEmptyTextures', i);
+
+            var texture = gl.createTexture();
+
             gl.activeTexture(gl.TEXTURE0 + i);
+            gl.bindTexture(gl.TEXTURE_2D, texture);
 
-            gl.bindTexture(gl.TEXTURE_2D, tempTexture);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
-            indices.push(i);
+            //  We'll read from this texture, but it won't have mipmaps, so turn them off:
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+
+            this.textureArray[i] = texture;
         }
     },
 
@@ -332,7 +343,7 @@ Phaser.Renderer.WebGL.prototype = {
         if (Array.isArray(textureArray))
         {
             //  index 0 is reserved!
-            var index = 1;
+            var index = 0;
 
             for (var i = 0; i < textureArray.length; i++)
             {
@@ -459,54 +470,77 @@ Phaser.Renderer.WebGL.prototype = {
             return;
         }
 
+        // debugger;
+
+        // console.log('%c render start ', 'color: #ffffff; background: #00ff00;');
+
         //  Add Pre-render hook
 
         this.startTime = Date.now();
 
         var gl = this.gl;
 
-        //  viewport only needs to be set when the canvas is resized, not every render pass
-        // gl.viewport(0, 0, this.width, this.height);
-
-        // this.stateFBO.activate();
-        // gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-
-        //  clearColor only needs to be set once, then 'clear' picks the value up every time
-        //  It's set in the 'init' method for now, but will need binding to the background color
-        //  
-        //  If 'alpha' is true in the context options then modes like Blend Mode ADD look really weird
-        //  if you don't clear the background (looks fine over a background image though)
+        this.stateFBO.activate();
 
         //  clear doesn't need to be called unless we're using an FBO, as it will clear automatically (at least in FF and Canary)
 
-        // gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.clear(gl.COLOR_BUFFER_BIT);
 
         this.setBlendMode(Phaser.blendModes.NORMAL);
 
-        // this.offset.x = this.game.camera._shake.x;
-        // this.offset.y = this.game.camera._shake.y;
+        this.drawCount = 0;
+
+        this.batch.start();
+
+        stage.render(this, stage);
+
+        this.batch.stop();
+
+        // gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
+        this.stateFBO.render(null);
+
+        this.endTime = Date.now();
+
+        // console.log('%c render end ', 'color: #ffffff; background: #ff0000;');
+
+        //  Reset back to defaults
+        gl.bindRenderbuffer(gl.RENDERBUFFER, null);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
+        //  Add Post-render hook
+    },
+
+    /**
+     * With the current set-up, a multi-texture batch can render the entire scene in 1 draw and just 4 calls
+     * (once the shader is loaded and bound)
+     *
+     * @method render
+     * @param stage {Stage} the Stage element to be rendered
+     */
+    Tinyrender: function (stage)
+    {
+        //  No point rendering if our context has been blown up!
+        if (this.contextLost)
+        {
+            return;
+        }
+
+        //  Add Pre-render hook
+
+        this.startTime = Date.now();
+
+        this.setBlendMode(Phaser.blendModes.NORMAL);
 
         this.drawCount = 0;
 
-        // this.flipY = 1;
-
-        // this.batch.start(true);
         this.batch.start(false);
 
         stage.render(this, stage);
 
         this.batch.stop();
 
-        //  Giving no argument here tells it to draw to the main context buffer
-        //  the same as doing 'gl.bindFramebuffer(gl.FRAMEBUFFER, null)' first.
-        //  Or you can give it another framebuffer to draw to.
-
-        // gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        // this.stateFBO.render(null);
-
         this.endTime = Date.now();
-
-        // debugger;
 
         //  Add Post-render hook
     },
@@ -578,6 +612,9 @@ Phaser.Renderer.WebGL.prototype = {
         {
             source.glTexture = gl.createTexture();
         }
+
+        // console.log('updateTexture', source.glTextureIndex);
+        // console.log(source.image.currentSrc);
 
         gl.activeTexture(gl.TEXTURE0 + source.glTextureIndex);
 
@@ -799,6 +836,8 @@ Phaser.Renderer.WebGL.prototype = {
 
     createEmptyTexture: function (width, height, scaleMode)
     {
+        console.log('createEmptyTexture - set as active on TEXTURE0');
+
         var gl = this.gl;
 
         var texture = gl.createTexture();
@@ -809,8 +848,10 @@ Phaser.Renderer.WebGL.prototype = {
 
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, glScaleMode);
+
+        //  We'll read from this texture, but it won't have mipmaps, so turn them off:
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, glScaleMode);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, glScaleMode);
 
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
 

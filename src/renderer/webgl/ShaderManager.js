@@ -18,27 +18,7 @@ Phaser.Renderer.WebGL.ShaderManager = function (renderer)
 
     this.gl = null;
 
-    this.maxAttribs = 10;
-
-    this.attribState = [];
-
-    this.tempAttribState = [];
-
-    this.stack = [];
-
-    this._currentId = -1;
     this.currentShader = null;
-
-    this.primitiveShader = null;
-    this.complexPrimitiveShader = null;
-    this.defaultShader = null;
-    this.fastShader = null;
-    this.stripShader = null;
-
-    for (var i = 0; i < this.maxAttribs; i++)
-    {
-        this.attribState[i] = false;
-    }
 
 };
 
@@ -48,28 +28,10 @@ Phaser.Renderer.WebGL.ShaderManager.prototype = {
 
     init: function ()
     {
-        return;
-
         this.gl = this.renderer.gl;
-
-        //  This shader is used for the batched rendering of Images and Sprites
-        this.defaultShader = new Phaser.Renderer.WebGL.Shaders.Sprite(this.renderer);
-
-        //  This shader is used for SpriteBatch Game Object rendering
-        this.fastShader = new Phaser.Renderer.WebGL.Shaders.SpriteBatch(this.renderer);
-
-        //  Tiling Sprites / Strips
-        this.stripShader = new Phaser.Renderer.WebGL.Shaders.Strip(this.renderer);
-
-        //  Simple Graphics (when vertices count is low)
-        this.primitiveShader = new Phaser.Renderer.WebGL.Shaders.PrimitiveGraphics(this.renderer);
-
-        //  The next one is used by the stencil buffer manager when Graphics.mode = 1
-        this.complexPrimitiveShader = new Phaser.Renderer.WebGL.Shaders.ComplexPrimitiveGraphics(this.renderer);
-
-        this.setShader(this.defaultShader);
     },
 
+    /*
     setAttribs: function (attribs)
     {
         // reset temp state
@@ -104,21 +66,22 @@ Phaser.Renderer.WebGL.ShaderManager.prototype = {
             }
         }
     },
+    */
 
-    setShader: function (shader)
+    setShader: function (program)
     {
-        if (this._currentId === shader._UID)
+        if (this.currentShader === program)
         {
             return false;
         }
         
-        this._currentId = shader._UID;
+        //  Tell the current shader it is being unbound?
 
-        this.currentShader = shader;
+        this.currentShader = program;
 
-        this.gl.useProgram(shader.program);
+        this.gl.useProgram(program);
 
-        this.setAttribs(shader.attributes);
+        // this.setAttribs(shader.attributes);
 
         return true;
     },
@@ -128,17 +91,17 @@ Phaser.Renderer.WebGL.ShaderManager.prototype = {
         this.renderer = null;
         this.gl = null;
 
-        this.attribState = [];
-        this.tempAttribState = [];
-        this.stack = [];
+        // this.attribState = [];
+        // this.tempAttribState = [];
+        // this.stack = [];
 
         this.currentShader = null;
 
-        this.primitiveShader.destroy();
-        this.complexPrimitiveShader.destroy();
-        this.defaultShader.destroy();
-        this.fastShader.destroy();
-        this.stripShader.destroy();
+        // this.primitiveShader.destroy();
+        // this.complexPrimitiveShader.destroy();
+        // this.defaultShader.destroy();
+        // this.fastShader.destroy();
+        // this.stripShader.destroy();
     }
 
 };

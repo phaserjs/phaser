@@ -55,13 +55,11 @@ Phaser.Renderer.WebGL.QuadFBO.prototype = {
 
     init: function ()
     {
+        // console.log('QuadFBO.init');
+
         this.gl = this.renderer.gl;
 
         var gl = this.gl;
-
-        this.vertexBuffer = gl.createBuffer();
-        this.indexBuffer = gl.createBuffer();
-        this.textureBuffer = gl.createBuffer();
 
         //  An FBO quad is made up of 2 triangles (A and B in the image below)
         //
@@ -78,6 +76,7 @@ Phaser.Renderer.WebGL.QuadFBO.prototype = {
         //  |    \
         //  0----1
 
+        this.indexBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array([ 0, 1, 2, 2, 1, 3 ]), gl.STATIC_DRAW);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
@@ -86,21 +85,45 @@ Phaser.Renderer.WebGL.QuadFBO.prototype = {
 
         this.updateVerts();
 
+        this.vertexBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, this.vertices, gl.DYNAMIC_DRAW);
 
+        this.textureBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, this.textureBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([ 0, 0, 1, 0, 0, 1, 1, 1 ]), gl.STATIC_DRAW);
 
-        this.texture = this.renderer.createEmptyTexture(this.width, this.height);
+        //  Create a texture for our color buffer
+        // this.texture = this.renderer.createEmptyTexture(this.width, this.height);
 
+        console.log('QuadFBO created texture bound to TEXTURE0');
+
+        var texture = gl.createTexture();
+
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
+        //  We'll read from this texture, but it won't have mipmaps, so turn them off:
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this.width, this.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+
+        this.texture = texture;
+
+        console.log(this.texture);
+
+        // this.renderer.textureArray[0] = this.texture;
+
+        //  The FBO's depth buffer
         this.renderBuffer = gl.createRenderbuffer();
-
         gl.bindRenderbuffer(gl.RENDERBUFFER, this.renderBuffer);
         gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, this.width, this.height);
 
         this.frameBuffer = gl.createFramebuffer();
-
         gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer);
         gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.texture, 0);
 
@@ -115,6 +138,10 @@ Phaser.Renderer.WebGL.QuadFBO.prototype = {
         }
 
         this.createShader();
+
+        //  Reset back to defaults
+        gl.bindRenderbuffer(gl.RENDERBUFFER, null);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     },
 
     //  This whole function ought to be split out into the Shader Manager
@@ -240,41 +267,76 @@ Phaser.Renderer.WebGL.QuadFBO.prototype = {
     {
         var gl = this.gl;
 
+        // console.log('QuadFBO.activate');
+
         gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer);
-    },
-
-    render: function (destinationBuffer)
-    {
-        var gl = this.gl;
-        var program = this.program;
-
-        gl.bindFramebuffer(gl.FRAMEBUFFER, destinationBuffer);
-
-        gl.activeTexture(gl.TEXTURE0);
-
-        gl.useProgram(program);
-
-        // gl.activeTexture(gl.TEXTURE0 + this.textureIndex);
-
-        gl.bindTexture(gl.TEXTURE_2D, this.texture);
+        // gl.bindRenderbuffer(gl.RENDERBUFFER, this.renderBuffer);
 
         this.renderer.textureArray[0] = this.texture;
+ 
+        // gl.viewport(0, 0, this.width, this.height);
+        // gl.clear(gl.COLOR_BUFFER_BIT);
+    },
+
+    bindShader: function ()
+    {
+        var program = this.program;
+
+        // console.log('QuadFBO bindShader');
+
+        var gl = this.gl;
+
+        gl.useProgram(program);
 
         gl.uniform1i(gl.getUniformLocation(program, 'uSampler'), 0);
 
         gl.enableVertexAttribArray(this.aTextureCoord);
         gl.enableVertexAttribArray(this.aVertexPosition);
 
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer); // vertex buffer object
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
         gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.vertices);
         gl.vertexAttribPointer(this.aVertexPosition, 2, gl.FLOAT, false, 0, 0);
 
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.textureBuffer); // texture buffer
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.textureBuffer);
         gl.vertexAttribPointer(this.aTextureCoord, 2, gl.FLOAT, false, 0, 0);
+    },
 
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer); // index buffer
+    render: function (destinationBuffer)
+    {
+        // console.log('QuadFBO.render');
+
+        var gl = this.gl;
+
+        //  Return to the default framebuffer
+        gl.bindFramebuffer(gl.FRAMEBUFFER, destinationBuffer);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
+        //  Reset viewport and clear
+        // gl.viewport(0, 0, this.width, this.height);
+        // gl.clear(gl.COLOR_BUFFER_BIT);
+
+        //  Bind the texture we rendered to, for reading
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, this.texture);
+
+        //  The shader that will read from the fbo texture
+        if (this.renderer.shaderManager.setShader(this.program))
+        {
+            this.bindShader();
+        }
+
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
+
         gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
 
+        this.renderer.drawCount++;
+
+        //  Reset back to defaults
+        // gl.bindRenderbuffer(gl.RENDERBUFFER, null);
+        // gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
+        //  Unbind the fbo texture
+        gl.bindTexture(gl.TEXTURE_2D, null);
     },
 
     destroy: function ()
