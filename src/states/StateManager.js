@@ -167,7 +167,49 @@ Phaser.StateManager.prototype = {
         }
         else
         {
-            throw new Error('Given State object must extend Phaser.State');
+            newState.game = null;
+
+            newState.settings = new Phaser.State.Settings(newState, key);
+
+            //  Could be a StateSystems class (to add protection + jsdocs)
+            newState._sys = {
+                add: null,
+                data: null,
+                input: null,
+                tweens: null,
+                load: null,
+                transform: null,
+                children: null,
+                color: null,
+                time: null,
+                fbo: null
+            };
+
+            //  Messy! But works ...
+
+            Object.defineProperties(newState, Phaser.State.gs);
+
+            if (!newState.preUpdate)
+            {
+                newState.preUpdate = function () {};
+            }
+
+            if (!newState.update)
+            {
+                newState.update = function () {};
+            }
+
+            if (!newState.postUpdate)
+            {
+                newState.postUpdate = function () {};
+            }
+
+            if (!newState.render)
+            {
+                newState.render = function () {};
+            }
+
+            return this.createStateFromInstance(key, newState);
         }
     },
 
@@ -428,6 +470,9 @@ Phaser.StateManager.prototype = {
             var state = this.active[i];
 
             //  Invoke State Main Loop here - updating all of its systems (tweens, physics, etc)
+
+            //  This shouldn't be called if the State is still loading
+            //  Have a State.STATUS const in the Settings, dictating what is going on
 
             for (var c = 0; c < state._sys.children.list.length; c++)
             {

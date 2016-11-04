@@ -62,6 +62,145 @@ Phaser.State.prototype = {
 
 };
 
+Phaser.State.gs = {
+
+    add: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return this._sys.add;
+        },
+
+        set: function ()
+        {
+            throw Error('Cannot re-assign protected property: add');
+        }
+
+    },
+
+    load: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return this._sys.load;
+        },
+
+        set: function ()
+        {
+            throw Error('Cannot re-assign protected property: load');
+        }
+
+    },
+
+
+    data: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return this._sys.data;
+        },
+
+        set: function ()
+        {
+            throw Error('Cannot re-assign protected property: data');
+        }
+
+    },
+
+    children: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return this._sys.children;
+        },
+
+        set: function ()
+        {
+            throw Error('Cannot re-assign protected property: children');
+        }
+
+    },
+
+    color: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return this._sys.color;
+        },
+
+        set: function ()
+        {
+            throw Error('Cannot re-assign protected property: color');
+        }
+
+    },
+
+    transform: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return this._sys.transform;
+        },
+
+        set: function ()
+        {
+            throw Error('Cannot re-assign protected property: transform');
+        }
+
+    },
+
+    //  Just a test
+    rotation: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return this.transform._rotation;
+        },
+
+        set: function (value)
+        {
+            if (this.transform._rotation === value)
+            {
+                return;
+            }
+
+            this.transform._rotation = value;
+            this.transform.dirty = true;
+
+            if (this.transform._rotation % Phaser.Math.PI2)
+            {
+                this.transform.cache.sr = Math.sin(this.transform._rotation);
+                this.transform.cache.cr = Math.cos(this.transform._rotation);
+                this.transform.updateCache();
+                this.transform.hasLocalRotation = true;
+            }
+            else
+            {
+                this.transform.hasLocalRotation = false;
+            }
+        }
+
+    }
+
+};
+
+Object.defineProperties(Phaser.State.prototype, Phaser.State.gs);
+
+/*
 Object.defineProperties(Phaser.State.prototype, {
 
     add: {
@@ -197,3 +336,4 @@ Object.defineProperties(Phaser.State.prototype, {
     }
 
 });
+*/
