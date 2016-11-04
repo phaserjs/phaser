@@ -289,9 +289,6 @@ Phaser.Renderer.WebGL.prototype = {
             normal, normal, normal, normal,
             normal, normal, normal, normal
         ];
-
-        this.stateFBO = new Phaser.Renderer.WebGL.QuadFBO(this, 0, 0, 800, 600);
-        this.stateFBO.init();
     },
 
     //  Bind empty multi-textures to avoid WebGL spam
@@ -450,8 +447,6 @@ Phaser.Renderer.WebGL.prototype = {
             return;
         }
 
-        // debugger;
-
         // console.log('%c render start ', 'color: #ffffff; background: #00ff00;');
 
         //  Add Pre-render hook
@@ -460,7 +455,7 @@ Phaser.Renderer.WebGL.prototype = {
 
         var gl = this.gl;
 
-        this.stateFBO.activate();
+        state._sys.fbo.activate();
 
         //  clear is needed for the FBO, otherwise corruption ...
         gl.clear(gl.COLOR_BUFFER_BIT);
@@ -478,7 +473,7 @@ Phaser.Renderer.WebGL.prototype = {
         //  Call state.render here, so we can do some extra shizzle on the top
         //  Maybe pass in the FBO texture too?
 
-        this.stateFBO.render(null);
+        state._sys.fbo.render(null);
 
         this.endTime = Date.now();
 

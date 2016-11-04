@@ -596,41 +596,6 @@ Phaser.Component.Children.prototype = {
         return newParent;
     }
 
-    /*
-    preUpdate: function ()
-    {
-        for (var i = 0; i < this.list.length; i++)
-        {
-            if (this.list[i])
-            {
-                this.list[i].preUpdate();
-            }
-        }
-    },
-
-    update: function ()
-    {
-        for (var i = 0; i < this.list.length; i++)
-        {
-            if (this.list[i])
-            {
-                this.list[i].update();
-            }
-        }
-    },
-
-    postUpdate: function ()
-    {
-        for (var i = 0; i < this.list.length; i++)
-        {
-            if (this.list[i])
-            {
-                this.list[i].postUpdate();
-            }
-        }
-    }
-    */
-
 };
 
 Object.defineProperties(Phaser.Component.Children.prototype, {

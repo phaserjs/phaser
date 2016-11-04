@@ -17,12 +17,13 @@
 * @class Phaser.State
 * @constructor
 */
-Phaser.State = function (game)
+Phaser.State = function (game, key)
 {
     this.game = game;
 
     //  Could be a StateSettings class (to add protection + jsdocs)
     this.settings = {
+        key: key,
         active: false,
         visible: true,
         scaleMode: Phaser.scaleModes.DEFAULT,
@@ -41,7 +42,8 @@ Phaser.State = function (game)
         transform: null,
         children: null,
         color: null,
-        time: null
+        time: null,
+        fbo: null
     };
 
 };

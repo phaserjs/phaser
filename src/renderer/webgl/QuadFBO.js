@@ -47,6 +47,8 @@ Phaser.Renderer.WebGL.QuadFBO = function (renderer, x, y, width, height)
     this.program;
     this.aVertexPosition;
     this.aTextureCoord;
+
+    this.init();
 };
 
 Phaser.Renderer.WebGL.QuadFBO.prototype.constructor = Phaser.Renderer.WebGL.QuadFBO;

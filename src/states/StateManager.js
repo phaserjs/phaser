@@ -22,24 +22,6 @@ Phaser.StateManager = function (game, pendingState)
     //  Only active states are kept in here
     this.active = [];
 
-    //  Functions that are called during the game loop are stored in their own arrays
-
-    //  State callbacks are called sequentially. If there are 4 active states (A, B, C and D)
-    //  then preUpdate will be called for all of them, and then update, etc. It doesn't
-    //  do the full loop for a single state, and then move to another state. Why? :)
-    //  because actions that happen in state A's update could change positions of things
-    //  in state B and they won't be a frame behind (if state B main looped first)
-
-    //  By storing loop callbacks in arrays like this we don't need to check if they exist
-    //  on the actual state objects. Could always just NOOP them all? But a game may have loads
-    //  of states, and would then be iterating through states which may not even be active.
-    //  This ought to be a list of active states maybe?
-
-    this.preUpdates = [];
-    this.updates = [];
-    this.postUpdates = [];
-    this.preRenders = [];
-
     this._pendingState = pendingState;
     this._pendingStart = [];
 };
@@ -48,6 +30,7 @@ Phaser.StateManager.prototype = {
 
     /**
     * The Boot handler is called by Phaser.Game when it first starts up.
+    * The renderer is available by now.
     * 
     * @method Phaser.StateManager#boot
     * @private
@@ -129,7 +112,7 @@ Phaser.StateManager.prototype = {
 
     createStateFromObject: function (key, state)
     {
-        var newState = new Phaser.State(this.game);
+        var newState = new Phaser.State(this.game, key);
 
         //  Inject the default (non-optional) managers
 
@@ -174,6 +157,39 @@ Phaser.StateManager.prototype = {
         newState.update = (state.hasOwnProperty('update')) ? state.update : function () {};
         newState.postUpdate = (state.hasOwnProperty('postUpdate')) ? state.postUpdate : function () {};
         newState.render = (state.hasOwnProperty('render')) ? state.render : function () {};
+
+        //  Settings?
+
+        if (state.hasOwnProperty('x'))
+        {
+            newState.settings.x = state.x;
+        }
+
+        if (state.hasOwnProperty('y'))
+        {
+            newState.settings.y = state.y;
+        }
+
+        if (state.hasOwnProperty('width'))
+        {
+            newState.settings.width = state.width;
+        }
+
+        if (state.hasOwnProperty('height'))
+        {
+            newState.settings.height = state.height;
+        }
+
+        //  WebGL?
+        if (this.game.renderType === Phaser.WEBGL)
+        {
+            var x = newState.settings.x;
+            var y = newState.settings.y;
+            var width = newState.settings.width;
+            var height = newState.settings.height;
+
+            newState._sys.fbo = new Phaser.Renderer.WebGL.QuadFBO(this.game.renderer, x, y, width, height);
+        }
 
         return newState;
     },
