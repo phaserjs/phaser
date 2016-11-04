@@ -184,7 +184,7 @@ Phaser.Game = function (width, height, renderer, parent, state, pixelArt)
     /**
     * @property {Phaser.StateManager} state - The StateManager.
     */
-    this.state = null;
+    this.state = new Phaser.StateManager(this, state);
 
     /**
     * @property {boolean} isBooted - Whether the game engine is booted, aka available.
@@ -484,8 +484,6 @@ Phaser.Game = function (width, height, renderer, parent, state, pixelArt)
         }
 
         this.rnd = new Phaser.RandomDataGenerator([(Date.now() * Math.random()).toString()]);
-
-        this.state = new Phaser.StateManager(this, state);
     }
 
     this.device.whenReady(this.boot, this);
@@ -565,15 +563,10 @@ Phaser.Game.prototype = {
 
         this.rnd = new Phaser.RandomDataGenerator(seed);
 
-        var state = null;
-
         if (config['state'])
         {
-            state = config['state'];
+            this.state.add(null, config['state'], true);
         }
-
-        this.state = new Phaser.StateManager(this, state);
-
     },
 
     /**
@@ -587,6 +580,19 @@ Phaser.Game.prototype = {
         if (this.isBooted)
         {
             return;
+        }
+
+        //  Inject any new Factory helpers that exist in the build
+        for (var gameobject in Phaser.GameObject)
+        {
+            if (Phaser.GameObject[gameobject].hasOwnProperty('FACTORY_KEY'))
+            {
+                var key = Phaser.GameObject[gameobject]['FACTORY_KEY'];
+
+                // console.log('found', key);
+
+                Phaser.GameObject.Factory.prototype[key] = Phaser.GameObject[gameobject]['FACTORY_ADD'];
+            }
         }
 
         this.onPause = new Phaser.Signal();
@@ -605,9 +611,8 @@ Phaser.Game.prototype = {
             }
         };
 
-        this.updates = new Phaser.UpdateManager(this);
-
         this.scale = new Phaser.ScaleManager(this, this._width, this._height);
+
         // this.stage = new Phaser.Stage(this);
 
         this.setUpRenderer();
@@ -616,18 +621,9 @@ Phaser.Game.prototype = {
 
         // this.world = new Phaser.World(this);
 
-        //  Inject any new Factory helpers that exist in the build
-        for (var gameobject in Phaser.GameObject)
-        {
-            if (Phaser.GameObject[gameobject].hasOwnProperty('FACTORY_KEY'))
-            {
-                var key = Phaser.GameObject[gameobject]['FACTORY_KEY'];
+        this.updates = new Phaser.UpdateManager(this);
 
-                // console.log('found', key);
-
-                Phaser.GameObject.Factory.prototype[key] = Phaser.GameObject[gameobject]['FACTORY_ADD'];
-            }
-        }
+        // this.state = new Phaser.StateManager(this, this._pendingState);
 
         this.add = new Phaser.GameObject.Factory(this);
 
@@ -650,6 +646,7 @@ Phaser.Game.prototype = {
         this.scale.boot();
         this.input.boot();
         this.sound.boot();
+
         this.state.boot();
 
         // if (this.config['enableDebug'])

@@ -22,9 +22,23 @@ Phaser.StateManager = function (game, pending)
     //  Only active states are kept in here
     this.active = [];
 
-    this._pending = pending;
+    this._pending = [];
 
-    this._start = [];
+    if (pending)
+    {
+        if (Array.isArray(pending))
+        {
+            for (var i = 0; i < pending.length; i++)
+            {
+                //  The i === 0 part just starts the first State given
+                this._pending.push({ key: 'default', state: pending[i], autoStart: (i === 0) });
+            }
+        }
+        else
+        {
+            this._pending.push({ key: 'default', state: pending, autoStart: true });
+        }
+    }
 };
 
 Phaser.StateManager.prototype = {
@@ -41,28 +55,21 @@ Phaser.StateManager.prototype = {
         // this.game.onPause.add(this.pause, this);
         // this.game.onResume.add(this.resume, this);
 
-        if (this._pending)
-        {
-            if (Array.isArray(this._pending))
-            {
-                for (var i = 0; i < this._pending.length; i++)
-                {
-                    //  The i === 0 part just starts the first State given
-                    this.add('default', this._pending[i], (i === 0));
-                }
-            }
-            else
-            {
-                this.add('default', this._pending, true);
-            }
+        console.log('StateManager.boot');
 
-            this._pending = null;
+        for (var i = 0; i < this._pending.length; i++)
+        {
+            var entry = this._pending[i];
+
+            this.add(entry.key, entry.state, entry.autoStart);
         }
+
+        this._pending = [];
     },
 
     getKey: function (key, state)
     {
-        if (key === undefined) { key = 'default'; }
+        if (!key) { key = 'default'; }
 
         if (state instanceof Phaser.State)
         {
@@ -99,8 +106,15 @@ Phaser.StateManager.prototype = {
     {
         if (autoStart === undefined) { autoStart = false; }
 
-        //  if not booted, then do something else - put state into a holding pattern?
-        // if (this.game.isBooted)
+        //  if not booted, then put state into a holding pattern
+        if (!this.game.isBooted)
+        {
+            console.log('StateManager not yet booted, adding to list');
+
+            this._pending.push({ key: key, state: state, autoStart: autoStart });
+
+            return;
+        }
 
         key = this.getKey(key, state);
 
@@ -108,15 +122,18 @@ Phaser.StateManager.prototype = {
 
         if (state instanceof Phaser.State)
         {
+            console.log('StateManager.add from instance', key);
             newState = this.createStateFromInstance(key, state);
         }
         else if (typeof state === 'object')
         {
+            console.log('StateManager.add from object', key);
             newState = this.createStateFromObject(key, state);
         }
         else if (typeof state === 'function')
         {
-            newState = new state(this.game);
+            console.log('StateManager.add from function', key);
+            newState = this.createStateFromFunction(key, state);
         }
 
         this.keys[key] = newState;
@@ -140,12 +157,22 @@ Phaser.StateManager.prototype = {
         return newState;
     },
 
-    createStateFromInstance: function (key, newState)
+    createStateFromFunction: function (key, state)
     {
-        newState.game = this.game;
+        var newState = new state();
 
-        newState.settings.key = key;
+        if (newState instanceof Phaser.State)
+        {
+            return this.createStateFromInstance(key, newState);
+        }
+        else
+        {
+            throw new Error('Given State object must extend Phaser.State');
+        }
+    },
 
+    injectDefaultSystems: function (newState)
+    {
         //  Inject the default (non-optional) managers
 
         newState._sys.add = new Phaser.GameObject.Factory(this.game, newState);
@@ -160,6 +187,17 @@ Phaser.StateManager.prototype = {
         newState._sys.color = new Phaser.Component.Color(newState);
 
         newState._sys.children = new Phaser.Component.Children(newState);
+
+        return newState;
+    },
+
+    createStateFromInstance: function (key, newState)
+    {
+        newState.game = this.game;
+
+        newState.settings.key = key;
+
+        this.injectDefaultSystems(newState);
 
         if (this.game.renderType === Phaser.WEBGL)
         {
@@ -192,22 +230,11 @@ Phaser.StateManager.prototype = {
 
     createStateFromObject: function (key, state)
     {
-        var newState = new Phaser.State(key, this.game);
+        var newState = new Phaser.State(key);
 
-        //  Inject the default (non-optional) managers
+        newState.game = this.game;
 
-        newState._sys.add = new Phaser.GameObject.Factory(this.game, newState);
-
-        //  States have their own Loaders? Would make a lot of sense actually
-        // newState._sys.load = this.game.load;
-
-        newState._sys.transform = new Phaser.Component.Transform(newState);
-
-        newState._sys.data = new Phaser.Component.Data(newState);
-
-        newState._sys.color = new Phaser.Component.Color(newState);
-
-        newState._sys.children = new Phaser.Component.Children(newState);
+        this.injectDefaultSystems(newState);
 
         //  Inject custom managers
 
@@ -282,6 +309,24 @@ Phaser.StateManager.prototype = {
 
     start: function (key)
     {
+        //  if not booted, then put state into a holding pattern
+        if (!this.game.isBooted)
+        {
+            console.log('StateManager not yet booted, setting autoStart on pending list');
+
+            for (var i = 0; i < this._pending.length; i++)
+            {
+                var entry = this._pending[i];
+
+                if (entry.key === key)
+                {
+                    entry.autoStart = true;
+                }
+            }
+
+            return;
+        }
+
         var state = this.getState(key);
 
         if (state)

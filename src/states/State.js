@@ -40,18 +40,22 @@ Phaser.State.prototype.constructor = Phaser.State;
 
 Phaser.State.prototype = {
 
+    //  Can be overridden by your own States
     preUpdate: function ()
     {
     },
 
+    //  Can be overridden by your own States
     update: function ()
     {
     },
 
+    //  Can be overridden by your own States
     postUpdate: function ()
     {
     },
 
+    //  Can be overridden by your own States
     render: function ()
     {
     }
@@ -153,6 +157,41 @@ Object.defineProperties(Phaser.State.prototype, {
         set: function ()
         {
             throw Error('Cannot re-assign protected property: transform');
+        }
+
+    },
+
+    //  Just a test
+    rotation: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return this.transform._rotation;
+        },
+
+        set: function (value)
+        {
+            if (this.transform._rotation === value)
+            {
+                return;
+            }
+
+            this.transform._rotation = value;
+            this.transform.dirty = true;
+
+            if (this.transform._rotation % Phaser.Math.PI2)
+            {
+                this.transform.cache.sr = Math.sin(this.transform._rotation);
+                this.transform.cache.cr = Math.cos(this.transform._rotation);
+                this.transform.updateCache();
+                this.transform.hasLocalRotation = true;
+            }
+            else
+            {
+                this.transform.hasLocalRotation = false;
+            }
         }
 
     }

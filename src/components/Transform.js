@@ -55,7 +55,7 @@ Phaser.Component.Transform = function (gameObject, x, y, scaleX, scaleY)
     this._worldScaleY = scaleY;
 
     this._dirty = true;
-   
+
     this.game.updates.add(this);
 
     //  The parent Transform (NOT the parent GameObject, although very often they are related)
