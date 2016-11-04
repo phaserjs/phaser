@@ -61,10 +61,10 @@ Phaser.Renderer.WebGL.QuadFBO.prototype = {
 
         //  An FBO quad is made up of 2 triangles (A and B in the image below)
         //
-        //  0 = Bottom Left
-        //  1 = Bottom Right
-        //  2 = Top Left
-        //  3 = Top Right
+        //  0 = Bottom Left (-1, -1)
+        //  1 = Bottom Right (1, -1)
+        //  2 = Top Left (-1, 1)
+        //  3 = Top Right (1, 1)
         //
         //  2----3
         //  |\  B|
@@ -73,6 +73,9 @@ Phaser.Renderer.WebGL.QuadFBO.prototype = {
         //  | A \|
         //  |    \
         //  0----1
+
+        var width = this.renderer.width;
+        var height = this.renderer.height;
 
         this.indexBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
@@ -92,12 +95,12 @@ Phaser.Renderer.WebGL.QuadFBO.prototype = {
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([ 0, 0, 1, 0, 0, 1, 1, 1 ]), gl.STATIC_DRAW);
 
         //  Create a texture for our color buffer
-        this.texture = this.renderer.createEmptyTexture(this._width, this._height, 0, 0);
+        this.texture = this.renderer.createEmptyTexture(width, height, 0, 0);
 
         //  The FBO's depth buffer
         this.renderBuffer = gl.createRenderbuffer();
         gl.bindRenderbuffer(gl.RENDERBUFFER, this.renderBuffer);
-        gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, this.width, this.height);
+        gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, width, height);
 
         this.frameBuffer = gl.createFramebuffer();
         gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer);
@@ -233,7 +236,6 @@ Phaser.Renderer.WebGL.QuadFBO.prototype = {
         //  Top Right
         this.vertices[6] = this.clipX(x + width);
         this.vertices[7] = this.clipY(y);
-
     },
 
     activate: function ()
