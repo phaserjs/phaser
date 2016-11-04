@@ -19,7 +19,7 @@
 * @class Phaser.Loader
 * @param {Phaser.Game} game - A reference to the currently running game.
 */
-Phaser.Loader = function (game) {
+Phaser.Loader = function (game, state) {
 
     /**
     * Local reference to game.
@@ -29,7 +29,14 @@ Phaser.Loader = function (game) {
     this.game = game;
 
     /**
-    * Local reference to the Phaser.Cache.
+    * Reference to the State that owns this Loader.
+    * @property {Phaser.State} state
+    * @protected
+    */
+    this.state = state;
+
+    /**
+    * Local reference to the global Phaser.Cache.
     * @property {Phaser.Cache} cache
     * @protected
     */
@@ -120,9 +127,9 @@ Phaser.Loader = function (game) {
     * @default
     */
     this.headers = {
-        "requestedWith": false,
-        "json": "application/json",
-        "xml": "application/xml"
+        requestedWith: false,
+        json: 'application/json',
+        xml: 'application/xml'
     };
 
     /**
@@ -2173,7 +2180,7 @@ Phaser.Loader.prototype = {
 
         this.onLoadComplete.dispatch();
 
-        // this.game.state.loadComplete();
+        this.game.state.loadComplete(this.state);
 
         this.reset();
     },

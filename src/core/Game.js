@@ -633,7 +633,7 @@ Phaser.Game.prototype = {
 
         // this.make = new Phaser.GameObjectCreator(this);
         this.cache = new Phaser.Cache(this);
-        this.load = new Phaser.Loader(this);
+        // this.load = new Phaser.Loader(this);
         this.time = new Phaser.Time(this);
         this.tweens = new Phaser.TweenManager(this);
         this.input = new Phaser.Input(this);

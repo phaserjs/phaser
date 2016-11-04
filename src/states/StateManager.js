@@ -150,8 +150,8 @@ Phaser.StateManager.prototype = {
 
         newState._sys.add = new Phaser.GameObject.Factory(this.game, newState);
 
-        //  States have their own Loaders? Would make a lot of sense actually
-        // newState._sys.load = this.game.load;
+        //  States have their own Loaders
+        newState._sys.load = new Phaser.Loader(this.game, newState);
 
         newState._sys.transform = new Phaser.Component.Transform(newState);
 
@@ -282,12 +282,12 @@ Phaser.StateManager.prototype = {
 
             if (state.preload)
             {
-                this.game.load.reset(true);
+                state.load.reset(true);
 
                 state.preload.call(state, this.game);
 
                 //  Is the loader empty?
-                if (this.game.load.totalQueuedFiles() === 0 && this.game.load.totalQueuedPacks() === 0)
+                if (state.load.totalQueuedFiles() === 0 && state.load.totalQueuedPacks() === 0)
                 {
                     // console.log('empty queue');
                     this.startCreate(state);
@@ -297,9 +297,9 @@ Phaser.StateManager.prototype = {
                     // console.log('load start');
 
                     //  Start the loader going as we have something in the queue
-                    this.game.load.onLoadComplete.addOnce(this.loadComplete, this, 0, state);
+                    // state.load.onLoadComplete.addOnce(this.loadComplete, this, 0, state);
 
-                    this.game.load.start();
+                    state.load.start();
                 }
             }
             else

@@ -39,6 +39,7 @@ Phaser.State = function (key, game)
         data: null,
         input: null,
         tweens: null,
+        load: null,
         transform: null,
         children: null,
         color: null,
@@ -94,7 +95,7 @@ Object.defineProperties(Phaser.State.prototype, {
 
         get: function ()
         {
-            return this.game.load;
+            return this._sys.load;
         },
 
         set: function ()
