@@ -32,7 +32,7 @@ Phaser.StateManager.prototype = {
     /**
     * The Boot handler is called by Phaser.Game when it first starts up.
     * The renderer is available by now.
-    * 
+    *
     * @method Phaser.StateManager#boot
     * @private
     */
@@ -47,7 +47,7 @@ Phaser.StateManager.prototype = {
             {
                 for (var i = 0; i < this._pending.length; i++)
                 {
-                    //  The i===0 part just starts the first State given
+                    //  The i === 0 part just starts the first State given
                     this.add('default', this._pending[i], (i === 0));
                 }
             }
@@ -64,7 +64,7 @@ Phaser.StateManager.prototype = {
     {
         if (key === undefined) { key = 'default'; }
 
-        if (state instanceof Phaser.State && state.settings.key)
+        if (state instanceof Phaser.State)
         {
             key = state.settings.key;
         }
@@ -125,7 +125,7 @@ Phaser.StateManager.prototype = {
 
         // window.console.dir(newState);
 
-        if (autoStart)
+        if (autoStart || newState.settings.active)
         {
             if (this.game.isBooted)
             {
@@ -161,18 +161,33 @@ Phaser.StateManager.prototype = {
 
         newState._sys.children = new Phaser.Component.Children(newState);
 
-        //  WebGL?
         if (this.game.renderType === Phaser.WEBGL)
         {
-            var x = newState.settings.x;
-            var y = newState.settings.y;
-            var width = newState.settings.width;
-            var height = newState.settings.height;
-
-            newState._sys.fbo = new Phaser.Renderer.WebGL.QuadFBO(this.game.renderer, x, y, width, height);
+            this.createStateFrameBuffer(newState);
         }
 
         return newState;
+    },
+
+    createStateFrameBuffer: function (newState)
+    {
+        var x = newState.settings.x;
+        var y = newState.settings.y;
+
+        if (newState.settings.width === -1)
+        {
+            newState.settings.width = this.game.width;
+        }
+
+        if (newState.settings.height === -1)
+        {
+            newState.settings.height = this.game.height;
+        }
+
+        var width = newState.settings.width;
+        var height = newState.settings.height;
+
+        newState._sys.fbo = new Phaser.Renderer.WebGL.QuadFBO(this.game.renderer, x, y, width, height);
     },
 
     createStateFromObject: function (key, state)
@@ -245,15 +260,9 @@ Phaser.StateManager.prototype = {
             newState.settings.height = state.height;
         }
 
-        //  WebGL?
         if (this.game.renderType === Phaser.WEBGL)
         {
-            var x = newState.settings.x;
-            var y = newState.settings.y;
-            var width = newState.settings.width;
-            var height = newState.settings.height;
-
-            newState._sys.fbo = new Phaser.Renderer.WebGL.QuadFBO(this.game.renderer, x, y, width, height);
+            this.createStateFrameBuffer(newState);
         }
 
         return newState;
@@ -264,12 +273,25 @@ Phaser.StateManager.prototype = {
         return this.keys[key];
     },
 
+    isActive: function (key)
+    {
+        var state = this.getState(key);
+
+        return (state && state.settings.active && this.active.indexOf(state) !== -1);
+    },
+
     start: function (key)
     {
         var state = this.getState(key);
 
-        if (state && !state.settings.active)
+        if (state)
         {
+            //  Already started? Nothing more to do here ...
+            if (this.isActive(key))
+            {
+                return;
+            }
+
             state.settings.active = true;
 
             this.active.push(state);
@@ -359,6 +381,8 @@ Phaser.StateManager.prototype = {
         for (var i = 0; i < this.active.length; i++)
         {
             var state = this.active[i];
+
+            //  Invoke State Main Loop here - updating all of its systems (tweens, physics, etc)
 
             for (var c = 0; c < state._sys.children.list.length; c++)
             {

@@ -12,26 +12,14 @@
 *
 * Objective: To avoid the State ever changing shape (unless the dev wants it to)
 *
-* Place important functions
-*
 * @class Phaser.State
 * @constructor
 */
-Phaser.State = function (key, game)
+Phaser.State = function (config)
 {
-    this.game = game;
+    this.game = null;
 
-    //  Could be a StateSettings class (to add protection + jsdocs)
-    this.settings = {
-        key: key,
-        active: false,
-        visible: true,
-        scaleMode: Phaser.scaleModes.DEFAULT,
-        x: 0,
-        y: 0,
-        width: 800,
-        height: 600
-    };
+    this.settings = new Phaser.State.Settings(this, config);
 
     //  Could be a StateSystems class (to add protection + jsdocs)
     this._sys = {
@@ -46,7 +34,6 @@ Phaser.State = function (key, game)
         time: null,
         fbo: null
     };
-
 };
 
 Phaser.State.prototype.constructor = Phaser.State;
