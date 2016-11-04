@@ -74,10 +74,11 @@ EOL;
     <script src="$path/src/geom/Rectangle.js"></script>
     <script src="$path/src/geom/RoundedRectangle.js"></script>
 
+    <script src="$path/src/states/State.js"></script>
+    <script src="$path/src/states/StateManager.js"></script>
+
     <script src="$path/src/core/Camera.js"></script>
     <script src="$path/src/core/Create.js"></script>
-    <script src="$path/src/core/State.js"></script>
-    <script src="$path/src/core/StateManager.js"></script>
     <script src="$path/src/core/Signal.js"></script>
     <script src="$path/src/core/SignalBinding.js"></script>
     <script src="$path/src/core/Filter.js"></script>

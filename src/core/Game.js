@@ -608,7 +608,7 @@ Phaser.Game.prototype = {
         this.updates = new Phaser.UpdateManager(this);
 
         this.scale = new Phaser.ScaleManager(this, this._width, this._height);
-        this.stage = new Phaser.Stage(this);
+        // this.stage = new Phaser.Stage(this);
 
         this.setUpRenderer();
 
@@ -631,7 +631,7 @@ Phaser.Game.prototype = {
 
         this.add = new Phaser.GameObject.Factory(this);
 
-        this.make = new Phaser.GameObjectCreator(this);
+        // this.make = new Phaser.GameObjectCreator(this);
         this.cache = new Phaser.Cache(this);
         this.load = new Phaser.Loader(this);
         this.time = new Phaser.Time(this);
@@ -645,7 +645,7 @@ Phaser.Game.prototype = {
         this.net = new Phaser.Net(this);
 
         this.time.boot();
-        this.stage.boot();
+        // this.stage.boot();
         // this.world.boot();
         this.scale.boot();
         this.input.boot();
@@ -772,14 +772,8 @@ Phaser.Game.prototype = {
         {
             //  They requested WebGL and their browser supports it
 
-            if (this.multiTexture || this.renderType === Phaser.WEBGL_MULTI)
-            {
-                PIXI.enableMultiTexture();
-            }
-
             this.renderType = Phaser.WEBGL;
 
-            // this.renderer = new PIXI.WebGLRenderer(this);
             this.renderer = new Phaser.Renderer.WebGL(this);
 
             this.context = null;
@@ -789,14 +783,14 @@ Phaser.Game.prototype = {
             this.canvas.addEventListener('webglcontextrestored', this.contextRestored.bind(this), false);
         }
 
-        if (this.device.cocoonJS)
-        {
-            this.canvas.screencanvas = (this.renderType === Phaser.CANVAS) ? true : false;
-        }
+        // if (this.device.cocoonJS)
+        // {
+        //     this.canvas.screencanvas = (this.renderType === Phaser.CANVAS) ? true : false;
+        // }
 
         if (this.renderType !== Phaser.HEADLESS)
         {
-            this.stage.smoothed = this.antialias;
+            // this.stage.smoothed = this.antialias;
             
             Phaser.Canvas.addToDOM(this.canvas, this.parent, false);
             Phaser.Canvas.setTouchAction(this.canvas);
@@ -964,11 +958,11 @@ Phaser.Game.prototype = {
             // this.physics.preUpdate();
             this.state.preUpdate(timeStep);
             // this.plugins.preUpdate(timeStep);
-            this.stage.preUpdate();
+            // this.stage.preUpdate();
 
             this.tweens.update();
             this.state.update();
-            this.stage.update();
+            // this.stage.update();
             // this.tweens.update();
 
             // this.sound.update();
@@ -977,7 +971,8 @@ Phaser.Game.prototype = {
             // this.particles.update();
             // this.plugins.update();
 
-            this.stage.postUpdate();
+            this.state.postUpdate();
+
             this.plugins.postUpdate();
         }
         else
@@ -1012,16 +1007,17 @@ Phaser.Game.prototype = {
             return;
         }
 
-        this.state.preRender(elapsedTime);
+        // this.state.preRender(elapsedTime);
 
         this.updates.start();
 
-        this.renderer.render(this.stage);
+        this.state.render(this.renderer);
+
+        //  Disabled while building out the new State Manager
+        // this.renderer.render();
 
         // this.plugins.render(elapsedTime);
-
-        this.state.render(elapsedTime);
-
+        // this.state.render(elapsedTime);
         // this.plugins.postRender(elapsedTime);
 
         this.updates.stop();

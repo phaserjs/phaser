@@ -2173,7 +2173,7 @@ Phaser.Loader.prototype = {
 
         this.onLoadComplete.dispatch();
 
-        this.game.state.loadComplete();
+        // this.game.state.loadComplete();
 
         this.reset();
     },

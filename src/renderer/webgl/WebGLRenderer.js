@@ -442,7 +442,7 @@ Phaser.Renderer.WebGL.prototype = {
      * @method render
      * @param stage {Stage} the Stage element to be rendered
      */
-    render: function (stage)
+    render: function (state)
     {
         //  No point rendering if our context has been blown up!
         if (this.contextLost)
@@ -471,9 +471,12 @@ Phaser.Renderer.WebGL.prototype = {
 
         this.batch.start();
 
-        stage.render(this, stage);
+        this.game.state.renderChildren(this, state);
 
         this.batch.stop();
+
+        //  Call state.render here, so we can do some extra shizzle on the top
+        //  Maybe pass in the FBO texture too?
 
         this.stateFBO.render(null);
 
