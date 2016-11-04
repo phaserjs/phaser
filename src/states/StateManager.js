@@ -11,7 +11,7 @@
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
 */
-Phaser.StateManager = function (game, pendingState)
+Phaser.StateManager = function (game, pending)
 {
     this.game = game;
 
@@ -22,8 +22,9 @@ Phaser.StateManager = function (game, pendingState)
     //  Only active states are kept in here
     this.active = [];
 
-    this._pendingState = pendingState;
-    this._pendingStart = [];
+    this._pending = pending;
+
+    this._start = [];
 };
 
 Phaser.StateManager.prototype = {
@@ -40,11 +41,48 @@ Phaser.StateManager.prototype = {
         // this.game.onPause.add(this.pause, this);
         // this.game.onResume.add(this.resume, this);
 
-        if (this._pendingState !== null && typeof this._pendingState !== 'string')
+        if (this._pending)
         {
-            this.add('default', this._pendingState, true);
+            if (Array.isArray(this._pending))
+            {
+                for (var i = 0; i < this._pending.length; i++)
+                {
+                    //  The i===0 part just starts the first State given
+                    this.add('default', this._pending[i], (i === 0));
+                }
+            }
+            else
+            {
+                this.add('default', this._pending, true);
+            }
+
+            this._pending = null;
+        }
+    },
+
+    getKey: function (key, state)
+    {
+        if (key === undefined) { key = 'default'; }
+
+        if (state instanceof Phaser.State && state.settings.key)
+        {
+            key = state.settings.key;
+        }
+        else if (typeof state === 'object' && state.hasOwnProperty('key'))
+        {
+            key = state.key;
         }
 
+        //  By this point it's either 'default' or extracted from the State
+
+        if (this.keys.hasOwnProperty(key))
+        {
+            throw new Error('Cannot add a State with duplicate key: ' + key);
+        }
+        else
+        {
+            return key;
+        }
     },
 
     /**
@@ -61,32 +99,23 @@ Phaser.StateManager.prototype = {
     {
         if (autoStart === undefined) { autoStart = false; }
 
-        if (this.keys.hasOwnProperty(key))
-        {
-            throw new Error('Cannot add a State with duplicate key: ' + key);
-        }
-
-        //  if not booted, then do something else - put state into a holding pattern
+        //  if not booted, then do something else - put state into a holding pattern?
         // if (this.game.isBooted)
+
+        key = this.getKey(key, state);
 
         var newState;
 
         if (state instanceof Phaser.State)
         {
-            console.log('add 1');
-            newState = state;
+            newState = this.createStateFromInstance(key, state);
         }
         else if (typeof state === 'object')
         {
-            console.log('add 2');
-
-            key = (state.hasOwnProperty('key')) ? state.key : 'default';
-
             newState = this.createStateFromObject(key, state);
         }
         else if (typeof state === 'function')
         {
-            console.log('add 3');
             newState = new state(this.game);
         }
 
@@ -94,8 +123,7 @@ Phaser.StateManager.prototype = {
 
         this.states.push(newState);
 
-        window.state = newState;
-        window.console.dir(newState);
+        // window.console.dir(newState);
 
         if (autoStart)
         {
@@ -105,14 +133,51 @@ Phaser.StateManager.prototype = {
             }
             else
             {
-                this._pendingStart.push(key);
+                this._start.push(key);
             }
         }
+
+        return newState;
+    },
+
+    createStateFromInstance: function (key, newState)
+    {
+        newState.game = this.game;
+
+        newState.settings.key = key;
+
+        //  Inject the default (non-optional) managers
+
+        newState._sys.add = new Phaser.GameObject.Factory(this.game, newState);
+
+        //  States have their own Loaders? Would make a lot of sense actually
+        // newState._sys.load = this.game.load;
+
+        newState._sys.transform = new Phaser.Component.Transform(newState);
+
+        newState._sys.data = new Phaser.Component.Data(newState);
+
+        newState._sys.color = new Phaser.Component.Color(newState);
+
+        newState._sys.children = new Phaser.Component.Children(newState);
+
+        //  WebGL?
+        if (this.game.renderType === Phaser.WEBGL)
+        {
+            var x = newState.settings.x;
+            var y = newState.settings.y;
+            var width = newState.settings.width;
+            var height = newState.settings.height;
+
+            newState._sys.fbo = new Phaser.Renderer.WebGL.QuadFBO(this.game.renderer, x, y, width, height);
+        }
+
+        return newState;
     },
 
     createStateFromObject: function (key, state)
     {
-        var newState = new Phaser.State(this.game, key);
+        var newState = new Phaser.State(key, this.game);
 
         //  Inject the default (non-optional) managers
 
@@ -224,12 +289,12 @@ Phaser.StateManager.prototype = {
                 //  Is the loader empty?
                 if (this.game.load.totalQueuedFiles() === 0 && this.game.load.totalQueuedPacks() === 0)
                 {
-                    console.log('empty queue');
+                    // console.log('empty queue');
                     this.startCreate(state);
                 }
                 else
                 {
-                    console.log('load start');
+                    // console.log('load start');
 
                     //  Start the loader going as we have something in the queue
                     this.game.load.onLoadComplete.addOnce(this.loadComplete, this, 0, state);
@@ -239,7 +304,7 @@ Phaser.StateManager.prototype = {
             }
             else
             {
-                console.log('no preload');
+                // console.log('no preload');
 
                 //  No preload? Then there was nothing to load either
                 this.startCreate(state);
@@ -250,9 +315,7 @@ Phaser.StateManager.prototype = {
 
     loadComplete: function (state)
     {
-        console.log('loadComplete');
-        // console.log(arguments);
-        console.log(state);
+        // console.log('loadComplete');
 
         //  Make sure to do load-update one last time before state is set to _created
 
@@ -262,23 +325,6 @@ Phaser.StateManager.prototype = {
         }
 
         this.startCreate(state);
-
-        // if (this._created === false && this.onLoadUpdateCallback)
-        // {
-        //     this.onLoadUpdateCallback.call(this.callbackContext, this.game);
-        // }
-
-        // if (this._created === false && this.onCreateCallback)
-        // {
-        //     this._created = true;
-        //     this.onCreateCallback.call(this.callbackContext, this.game);
-        //     this.game.updates.running = true;
-        // }
-        // else
-        // {
-        //     this._created = true;
-        // }
-
     },
 
     startCreate: function (state)

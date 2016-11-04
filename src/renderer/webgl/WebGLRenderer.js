@@ -163,6 +163,8 @@ Phaser.Renderer.WebGL = function (game)
 
     this.gl = null;
 
+    this.emptyTexture = null;
+
     this.textureArray = [];
 
     this.currentBlendMode = -1;
@@ -235,6 +237,8 @@ Phaser.Renderer.WebGL.prototype = {
         {
             this.createMultiEmptyTextures();
         }
+
+        this.emptyTexture = this.createEmptyTexture(1, 1, 0, 0);
 
         gl.disable(gl.DEPTH_TEST);
         gl.disable(gl.CULL_FACE);
@@ -455,7 +459,9 @@ Phaser.Renderer.WebGL.prototype = {
 
         var gl = this.gl;
 
-        state._sys.fbo.activate();
+        var fbo = state._sys.fbo;
+
+        fbo.activate();
 
         //  clear is needed for the FBO, otherwise corruption ...
         gl.clear(gl.COLOR_BUFFER_BIT);
@@ -473,7 +479,12 @@ Phaser.Renderer.WebGL.prototype = {
         //  Call state.render here, so we can do some extra shizzle on the top
         //  Maybe pass in the FBO texture too?
 
-        state._sys.fbo.render(null);
+        fbo.render(null);
+
+        //  Unbind the fbo texture and replace it with an empty texture.
+        //  If we forget this we corrupt the main context texture!
+        //  or get `RENDER WARNING: there is no texture bound to the unit 0` spam in the console
+        gl.bindTexture(gl.TEXTURE_2D, this.emptyTexture);
 
         this.endTime = Date.now();
 

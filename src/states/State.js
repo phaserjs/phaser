@@ -17,7 +17,7 @@
 * @class Phaser.State
 * @constructor
 */
-Phaser.State = function (game, key)
+Phaser.State = function (key, game)
 {
     this.game = game;
 
