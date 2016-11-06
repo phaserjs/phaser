@@ -413,26 +413,32 @@ Phaser.StateManager.prototype = {
 
         var i = this.getStateIndex(state);
 
-        console.log('startCreate', i);
-        console.log(state);
-
         this.active.push({ index: i, state: state });
 
         //  Sort the 'active' array based on the index property
-
-        //  FIX: Cannot sort because it contains objects?
         this.active.sort(this.sortStates.bind(this));
 
         this.game.updates.running = true;
     },
 
+    pause: function (key)
+    {
+        var index = this.getActiveStateIndex(key);
+
+        if (index > -1)
+        {
+            var state = this.getState(key);
+
+            state.settings.active = false;
+
+            this.active.splice(index, 1);
+
+            this.active.sort(this.sortStates.bind(this));
+        }
+    },
+
     sortStates: function (stateA, stateB)
     {
-        // var indexA = this.getActiveStateIndex(stateA.state);
-        // var indexB = this.getActiveStateIndex(stateB);
-
-        console.log('sorting states', stateA, stateB);
-
         //  Sort descending
         if (stateA.index < stateB.index)
         {

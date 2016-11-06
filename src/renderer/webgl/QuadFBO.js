@@ -48,6 +48,9 @@ Phaser.Renderer.WebGL.QuadFBO = function (renderer, x, y, width, height)
     this.aVertexPosition;
     this.aTextureCoord;
 
+    this._normal;
+    this._twirl;
+
     this.init();
 };
 
@@ -178,8 +181,10 @@ Phaser.Renderer.WebGL.QuadFBO.prototype = {
         ];
 
         //  This compiles, attaches and links the shader
-        this.program = this.renderer.compileProgram(vertexSrc, fragmentSrc);
-        // this.program = this.renderer.compileProgram(vertexSrc, twirlFragmentSrc);
+        this._normal = this.renderer.compileProgram(vertexSrc, fragmentSrc);
+        this._twirl = this.renderer.compileProgram(vertexSrc, twirlFragmentSrc);
+
+        this.program = this._normal;
 
         this.aVertexPosition = gl.getAttribLocation(this.program, 'aVertexPosition');
         this.aTextureCoord = gl.getAttribLocation(this.program, 'aTextureCoord');
