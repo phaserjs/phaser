@@ -244,7 +244,7 @@ Phaser.Renderer.WebGL.prototype = {
         gl.disable(gl.CULL_FACE);
         gl.enable(gl.BLEND);
 
-        //  Transparent
+         // Transparent
         gl.clearColor(0, 0, 0, 0);
 
         //  Black

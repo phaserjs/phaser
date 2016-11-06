@@ -20,6 +20,10 @@ Phaser.State = function (config)
 
     this.sys = new Phaser.State.Systems(this, config);
 
+    //  Needs to have its own Renderer - can make 1 draw call per State if smart enough
+    //  Use a shared canvas though. Or 
+    this.renderer;
+
     //  Reference to sys.children, set during sys.init only
     this.children;
 };

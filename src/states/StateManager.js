@@ -31,12 +31,12 @@ Phaser.StateManager = function (game, pending)
             for (var i = 0; i < pending.length; i++)
             {
                 //  The i === 0 part just starts the first State given
-                this._pending.push({ key: 'default', state: pending[i], autoStart: (i === 0) });
+                this._pending.push({ index: i, key: 'default', state: pending[i], autoStart: (i === 0) });
             }
         }
         else
         {
-            this._pending.push({ key: 'default', state: pending, autoStart: true });
+            this._pending.push({ index: 0, key: 'default', state: pending, autoStart: true });
         }
     }
 };
@@ -64,6 +64,7 @@ Phaser.StateManager.prototype = {
             this.add(entry.key, entry.state, entry.autoStart);
         }
 
+        //  Clear the pending list
         this._pending = [];
     },
 
@@ -109,9 +110,9 @@ Phaser.StateManager.prototype = {
         //  if not booted, then put state into a holding pattern
         if (!this.game.isBooted)
         {
-            console.log('StateManager not yet booted, adding to list');
+            this._pending.push({ index: this._pending.length, key: key, state: state, autoStart: autoStart });
 
-            this._pending.push({ key: key, state: state, autoStart: autoStart });
+            console.log('StateManager not yet booted, adding to list', this._pending.length);
 
             return;
         }
@@ -291,6 +292,24 @@ Phaser.StateManager.prototype = {
         return this.keys[key];
     },
 
+    getStateIndex: function (state)
+    {
+        return this.states.indexOf(state);
+    },
+
+    getActiveStateIndex: function (state)
+    {
+        for (var i = 0; i < this.active.length; i++)
+        {
+            if (this.active[i].state === state)
+            {
+                return this.active[i].index;
+            }
+        }
+
+        return -1;
+    },
+
     isActive: function (key)
     {
         var state = this.getState(key);
@@ -390,9 +409,43 @@ Phaser.StateManager.prototype = {
             state.create.call(state);
         }
 
-        this.active.push(state);
+        //  Insert at the correct index, or it just all goes wrong :)
+
+        var i = this.getStateIndex(state);
+
+        console.log('startCreate', i);
+        console.log(state);
+
+        this.active.push({ index: i, state: state });
+
+        //  Sort the 'active' array based on the index property
+
+        //  FIX: Cannot sort because it contains objects?
+        this.active.sort(this.sortStates.bind(this));
 
         this.game.updates.running = true;
+    },
+
+    sortStates: function (stateA, stateB)
+    {
+        // var indexA = this.getActiveStateIndex(stateA.state);
+        // var indexB = this.getActiveStateIndex(stateB);
+
+        console.log('sorting states', stateA, stateB);
+
+        //  Sort descending
+        if (stateA.index < stateB.index)
+        {
+            return -1;
+        }
+        else if (stateA.index > stateB.index)
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
     },
 
     //  See if we can reduce this down to just update and render
@@ -401,7 +454,7 @@ Phaser.StateManager.prototype = {
     {
         for (var i = 0; i < this.active.length; i++)
         {
-            var state = this.active[i];
+            var state = this.active[i].state;
 
             for (var c = 0; c < state.sys.children.list.length; c++)
             {
@@ -416,7 +469,7 @@ Phaser.StateManager.prototype = {
     {
         for (var i = 0; i < this.active.length; i++)
         {
-            var state = this.active[i];
+            var state = this.active[i].state;
 
             //  Invoke State Main Loop here - updating all of its systems (tweens, physics, etc)
 
@@ -441,7 +494,7 @@ Phaser.StateManager.prototype = {
     {
         for (var i = 0; i < this.active.length; i++)
         {
-            var state = this.active[i];
+            var state = this.active[i].state;
 
             for (var c = 0; c < state.sys.children.list.length; c++)
             {
@@ -456,7 +509,7 @@ Phaser.StateManager.prototype = {
     {
         for (var i = 0; i < this.active.length; i++)
         {
-            var state = this.active[i];
+            var state = this.active[i].state;
 
             //  Can put all kinds of other checks in here, like MainLoop, FPS, etc.
             if (!state.settings.visible || state.sys.color.alpha === 0 || state.sys.children.list.length === 0)
