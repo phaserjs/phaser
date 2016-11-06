@@ -18,14 +18,14 @@
 *
 *   Unlike wall-clock time, *game time stops when Phaser is paused*.
 *
-*   Game time is used for {@link Phaser.Timer timer events}.
+*   Game time is used for {@link Phaser.Timer timer events} and {@link Phaser.Tween tweens} when `Tween.frameBased` is false.
 *
 * - ***Physics time*** represents the amount of time given to physics calculations.
 *
 *   *When {@link #slowMotion} is in effect physics time runs slower than game time.*
 *   Like game time, physics time stops when Phaser is paused.
 *
-*   Physics time is used for physics calculations and {@link Phaser.Tween tweens}.
+*   Physics time is used for physics calculations and {@link Phaser.Tween tweens} when `Tween.frameBased` is true.
 *
 * - {@link https://en.wikipedia.org/wiki/Wall-clock_time ***Wall-clock time***} represents the duration between two events in real life time.
 *
