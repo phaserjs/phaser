@@ -12,6 +12,12 @@ Phaser.State.Settings = function (state, config)
 
     this.state = state;
 
+    this.status = Phaser.State.Settings.PENDING;
+
+    //  Which part of this State is currently being processed?
+    //  preload, create, update, shutdown, etc
+    this.op = Phaser.State.Settings.BOOT;
+
     this.key = (config.hasOwnProperty('key')) ? config.key : '';
 
     this.active = (config.hasOwnProperty('active')) ? config.active : false;
@@ -29,5 +35,16 @@ Phaser.State.Settings = function (state, config)
 
     this.height = (config.hasOwnProperty('height')) ? config.height : -1;
 };
+
+Phaser.State.Settings.PENDING = 0;
+Phaser.State.Settings.INSTALLED = 1;
+
+Phaser.State.Settings.BOOT = 0;
+Phaser.State.Settings.INIT = 1;
+Phaser.State.Settings.PRELOAD = 2;
+Phaser.State.Settings.CREATE = 3;
+Phaser.State.Settings.UPDATE = 4;
+Phaser.State.Settings.RENDER = 5;
+Phaser.State.Settings.SHUTDOWN = 6;
 
 Phaser.State.Settings.prototype.constructor = Phaser.State.Settings;

@@ -14,13 +14,13 @@
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
 */
-Phaser.GameObject.Factory = function (game, state)
+Phaser.GameObject.Factory = function (state)
 {
     /**
     * @property {Phaser.Game} game - A reference to the currently running Game.
     * @protected
     */
-    this.game = game;
+    this.game = state.game;
 
     /**
     * @property {Phaser.State} state - The State that owns this Factory

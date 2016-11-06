@@ -19,14 +19,14 @@
 * @class Phaser.Loader
 * @param {Phaser.Game} game - A reference to the currently running game.
 */
-Phaser.Loader = function (game, state) {
-
+Phaser.Loader = function (state)
+{
     /**
     * Local reference to game.
     * @property {Phaser.Game} game
     * @protected
     */
-    this.game = game;
+    this.game = state.game;
 
     /**
     * Reference to the State that owns this Loader.
@@ -40,7 +40,7 @@ Phaser.Loader = function (game, state) {
     * @property {Phaser.Cache} cache
     * @protected
     */
-    this.cache = game.cache;
+    this.cache = this.game.cache;
 
     /**
     * If true all calls to Loader.reset will be ignored. Useful if you need to create a load queue before swapping to a preloader state.

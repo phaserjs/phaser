@@ -529,6 +529,233 @@ Phaser.Component.Transform.prototype = {
 
 Object.defineProperties(Phaser.Component.Transform.prototype, {
 
+    //  Transform getters / setters
+
+    x: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return this._posX;
+        },
+
+        set: function (value)
+        {
+            this._posX = value;
+            this.dirty = true;
+        }
+
+    },
+
+    y: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return this._posY;
+        },
+
+        set: function (value)
+        {
+            this._posY = value;
+            this.dirty = true;
+        }
+
+    },
+
+    scale: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return this._scaleX;
+        },
+
+        set: function (value)
+        {
+            this._scaleX = value;
+            this._scaleY = value;
+            this.dirty = true;
+            this.updateCache();
+        }
+
+    },
+
+    scaleX: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return this._scaleX;
+        },
+
+        set: function (value)
+        {
+            this._scaleX = value;
+            this.dirty = true;
+            this.updateCache();
+        }
+
+    },
+
+    scaleY: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return this._scaleY;
+        },
+
+        set: function (value)
+        {
+            this._scaleY = value;
+            this.dirty = true;
+            this.updateCache();
+        }
+
+    },
+
+    anchor: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return this._anchorX;
+        },
+
+        set: function (value)
+        {
+            this.setAnchor(value);
+        }
+
+    },
+
+    anchorX: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return this._anchorX;
+        },
+
+        set: function (value)
+        {
+            this._anchorX = value;
+            this.dirty = true;
+        }
+
+    },
+
+    anchorY: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return this._anchorY;
+        },
+
+        set: function (value)
+        {
+            this._anchorY = value;
+            this.dirty = true;
+        }
+
+    },
+
+    pivotX: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return this._pivotX;
+        },
+
+        set: function (value)
+        {
+            this._pivotX = value;
+            this.dirty = true;
+            this.updateCache();
+        }
+
+    },
+
+    pivotY: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return this._pivotY;
+        },
+
+        set: function (value)
+        {
+            this._pivotY = value;
+            this.dirty = true;
+            this.updateCache();
+        }
+
+    },
+
+    angle: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return Phaser.Math.wrapAngle(this.rotation * Phaser.Math.RAD_TO_DEG);
+        },
+
+        set: function (value)
+        {
+            this.rotation = Phaser.Math.wrapAngle(value) * Phaser.Math.DEG_TO_RAD;
+        }
+
+    },
+
+    rotation: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return this._rotation;
+        },
+
+        set: function (value)
+        {
+            if (this._rotation === value)
+            {
+                return;
+            }
+
+            this._rotation = value;
+            this.dirty = true;
+
+            if (this._rotation % Phaser.Math.PI2)
+            {
+                this.cache.sr = Math.sin(this._rotation);
+                this.cache.cr = Math.cos(this._rotation);
+                this.updateCache();
+                this.hasLocalRotation = true;
+            }
+            else
+            {
+                this.hasLocalRotation = false;
+            }
+        }
+
+    },
+
     //  Sets this *component* as being dirty
     dirty: {
 

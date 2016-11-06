@@ -77,6 +77,7 @@ EOL;
     <script src="$path/src/states/State.js"></script>
     <script src="$path/src/states/StateManager.js"></script>
     <script src="$path/src/states/StateSettings.js"></script>
+    <script src="$path/src/states/StateSystems.js"></script>
 
     <script src="$path/src/core/Camera.js"></script>
     <script src="$path/src/core/Create.js"></script>

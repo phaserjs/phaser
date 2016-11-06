@@ -481,6 +481,13 @@ var Phaser = Phaser || {    // jshint ignore:line
     BOTTOM_RIGHT: 12,
 
     /**
+    * A constant representing a no-operation function
+    * @constant
+    * @type {function}
+    */
+    NOOP: function () {},
+
+    /**
     * Various blend modes supported by Pixi.
     * 
     * IMPORTANT: The WebGL renderer only supports the NORMAL, ADD, MULTIPLY and SCREEN blend modes.

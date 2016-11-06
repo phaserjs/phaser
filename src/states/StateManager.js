@@ -157,89 +157,13 @@ Phaser.StateManager.prototype = {
         return newState;
     },
 
-    createStateFromFunction: function (key, state)
-    {
-        var newState = new state();
-
-        if (newState instanceof Phaser.State)
-        {
-            return this.createStateFromInstance(key, newState);
-        }
-        else
-        {
-            newState.game = null;
-
-            newState.settings = new Phaser.State.Settings(newState, key);
-
-            //  Could be a StateSystems class (to add protection + jsdocs)
-            newState._sys = {
-                add: null,
-                data: null,
-                input: null,
-                tweens: null,
-                load: null,
-                transform: null,
-                children: null,
-                color: null,
-                time: null,
-                fbo: null
-            };
-
-            //  Messy! But works ...
-
-            Object.defineProperties(newState, Phaser.State.gs);
-
-            if (!newState.preUpdate)
-            {
-                newState.preUpdate = function () {};
-            }
-
-            if (!newState.update)
-            {
-                newState.update = function () {};
-            }
-
-            if (!newState.postUpdate)
-            {
-                newState.postUpdate = function () {};
-            }
-
-            if (!newState.render)
-            {
-                newState.render = function () {};
-            }
-
-            return this.createStateFromInstance(key, newState);
-        }
-    },
-
-    injectDefaultSystems: function (newState)
-    {
-        //  Inject the default (non-optional) managers
-
-        newState._sys.add = new Phaser.GameObject.Factory(this.game, newState);
-
-        //  States have their own Loaders
-        newState._sys.load = new Phaser.Loader(this.game, newState);
-
-        newState._sys.transform = new Phaser.Component.Transform(newState);
-
-        newState._sys.data = new Phaser.Component.Data(newState);
-
-        newState._sys.color = new Phaser.Component.Color(newState);
-
-        newState._sys.children = new Phaser.Component.Children(newState);
-
-        return newState;
-    },
-
     createStateFromInstance: function (key, newState)
     {
         newState.game = this.game;
 
         newState.settings.key = key;
 
-        this.injectDefaultSystems(newState);
+        newState.sys.init();
 
         if (this.game.renderType === Phaser.WEBGL)
         {
@@ -249,36 +173,18 @@ Phaser.StateManager.prototype = {
         return newState;
     },
 
-    createStateFrameBuffer: function (newState)
-    {
-        var x = newState.settings.x;
-        var y = newState.settings.y;
-
-        if (newState.settings.width === -1)
-        {
-            newState.settings.width = this.game.width;
-        }
-
-        if (newState.settings.height === -1)
-        {
-            newState.settings.height = this.game.height;
-        }
-
-        var width = newState.settings.width;
-        var height = newState.settings.height;
-
-        newState._sys.fbo = new Phaser.Renderer.WebGL.QuadFBO(this.game.renderer, x, y, width, height);
-    },
-
     createStateFromObject: function (key, state)
     {
         var newState = new Phaser.State(key);
 
         newState.game = this.game;
 
-        this.injectDefaultSystems(newState);
+        newState.sys.init();
 
-        //  Inject custom managers
+        if (this.game.renderType === Phaser.WEBGL)
+        {
+            this.createStateFrameBuffer(newState);
+        }
 
         //  Extract callbacks or set NOOP
 
@@ -302,39 +208,82 @@ Phaser.StateManager.prototype = {
             newState.shutdown = state.shutdown;
         }
 
-        newState.preUpdate = (state.hasOwnProperty('preUpdate')) ? state.preUpdate : function () {};
-        newState.update = (state.hasOwnProperty('update')) ? state.update : function () {};
-        newState.postUpdate = (state.hasOwnProperty('postUpdate')) ? state.postUpdate : function () {};
-        newState.render = (state.hasOwnProperty('render')) ? state.render : function () {};
-
-        //  Settings?
-
-        if (state.hasOwnProperty('x'))
-        {
-            newState.settings.x = state.x;
-        }
-
-        if (state.hasOwnProperty('y'))
-        {
-            newState.settings.y = state.y;
-        }
-
-        if (state.hasOwnProperty('width'))
-        {
-            newState.settings.width = state.width;
-        }
-
-        if (state.hasOwnProperty('height'))
-        {
-            newState.settings.height = state.height;
-        }
-
-        if (this.game.renderType === Phaser.WEBGL)
-        {
-            this.createStateFrameBuffer(newState);
-        }
+        newState.preUpdate = (state.hasOwnProperty('preUpdate')) ? state.preUpdate : Phaser.NOOP;
+        newState.update = (state.hasOwnProperty('update')) ? state.update : Phaser.NOOP;
+        newState.postUpdate = (state.hasOwnProperty('postUpdate')) ? state.postUpdate : Phaser.NOOP;
+        newState.render = (state.hasOwnProperty('render')) ? state.render : Phaser.NOOP;
 
         return newState;
+    },
+
+    createStateFromFunction: function (key, state)
+    {
+        var newState = new state();
+
+        if (newState instanceof Phaser.State)
+        {
+            return this.createStateFromInstance(key, newState);
+        }
+        else
+        {
+            newState.game = this.game;
+
+            newState.settings = new Phaser.State.Settings(newState, key);
+
+            newState.sys = new Phaser.State.Systems(newState);
+
+            newState.sys.init();
+
+            if (this.game.renderType === Phaser.WEBGL)
+            {
+                this.createStateFrameBuffer(newState);
+            }
+
+            //  Default required functions
+
+            if (!newState.preUpdate)
+            {
+                newState.preUpdate = Phaser.NOOP;
+            }
+
+            if (!newState.update)
+            {
+                newState.update = Phaser.NOOP;
+            }
+
+            if (!newState.postUpdate)
+            {
+                newState.postUpdate = Phaser.NOOP;
+            }
+
+            if (!newState.render)
+            {
+                newState.render = Phaser.NOOP;
+            }
+
+            return newState;
+        }
+    },
+
+    createStateFrameBuffer: function (newState)
+    {
+        var x = newState.settings.x;
+        var y = newState.settings.y;
+
+        if (newState.settings.width === -1)
+        {
+            newState.settings.width = this.game.width;
+        }
+
+        if (newState.settings.height === -1)
+        {
+            newState.settings.height = this.game.height;
+        }
+
+        var width = newState.settings.width;
+        var height = newState.settings.height;
+
+        newState.sys.fbo = this.game.renderer.createFBO(x, y, width, height);
     },
 
     getState: function (key)
@@ -391,12 +340,12 @@ Phaser.StateManager.prototype = {
 
             if (state.preload)
             {
-                state.load.reset(true);
+                state.sys.load.reset(true);
 
                 state.preload.call(state, this.game);
 
                 //  Is the loader empty?
-                if (state.load.totalQueuedFiles() === 0 && state.load.totalQueuedPacks() === 0)
+                if (state.sys.load.totalQueuedFiles() === 0 && state.sys.load.totalQueuedPacks() === 0)
                 {
                     // console.log('empty queue');
                     this.startCreate(state);
@@ -408,7 +357,7 @@ Phaser.StateManager.prototype = {
                     //  Start the loader going as we have something in the queue
                     // state.load.onLoadComplete.addOnce(this.loadComplete, this, 0, state);
 
-                    state.load.start();
+                    state.sys.load.start();
                 }
             }
             else
@@ -454,9 +403,9 @@ Phaser.StateManager.prototype = {
         {
             var state = this.active[i];
 
-            for (var c = 0; c < state._sys.children.list.length; c++)
+            for (var c = 0; c < state.sys.children.list.length; c++)
             {
-                state._sys.children.list[c].preUpdate();
+                state.sys.children.list[c].preUpdate();
             }
 
             state.preUpdate();
@@ -474,9 +423,9 @@ Phaser.StateManager.prototype = {
             //  This shouldn't be called if the State is still loading
             //  Have a State.STATUS const in the Settings, dictating what is going on
 
-            for (var c = 0; c < state._sys.children.list.length; c++)
+            for (var c = 0; c < state.sys.children.list.length; c++)
             {
-                var child = state._sys.children.list[c];
+                var child = state.sys.children.list[c];
 
                 if (child.exists)
                 {
@@ -494,9 +443,9 @@ Phaser.StateManager.prototype = {
         {
             var state = this.active[i];
 
-            for (var c = 0; c < state._sys.children.list.length; c++)
+            for (var c = 0; c < state.sys.children.list.length; c++)
             {
-                state._sys.children.list[c].postUpdate();
+                state.sys.children.list[c].postUpdate();
             }
 
             state.postUpdate();
@@ -510,7 +459,7 @@ Phaser.StateManager.prototype = {
             var state = this.active[i];
 
             //  Can put all kinds of other checks in here, like MainLoop, FPS, etc.
-            if (!state.settings.visible || state._sys.color.alpha === 0 || state._sys.children.list.length === 0)
+            if (!state.settings.visible || state.sys.color.alpha === 0 || state.sys.children.list.length === 0)
             {
                 continue;
             }
@@ -522,9 +471,9 @@ Phaser.StateManager.prototype = {
     renderChildren: function (renderer, state)
     {
         //  Populates the display list
-        for (var c = 0; c < state._sys.children.list.length; c++)
+        for (var c = 0; c < state.sys.children.list.length; c++)
         {
-            var child = state._sys.children.list[c];
+            var child = state.sys.children.list[c];
 
             child.render(renderer, child);
         }

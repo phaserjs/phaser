@@ -459,7 +459,7 @@ Phaser.Renderer.WebGL.prototype = {
 
         var gl = this.gl;
 
-        var fbo = state._sys.fbo;
+        var fbo = state.sys.fbo;
 
         fbo.activate();
 
@@ -840,6 +840,12 @@ Phaser.Renderer.WebGL.prototype = {
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
 
         return texture;
+    },
+
+    createFBO: function (x, y, width, height)
+    {
+        //   Store in a local list so we can update size if the canvas size changes?
+        return new Phaser.Renderer.WebGL.QuadFBO(this, x, y, width, height);
     },
 
     destroy: function ()

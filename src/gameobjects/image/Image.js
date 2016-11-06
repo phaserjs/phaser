@@ -46,6 +46,7 @@ Phaser.GameObject.Image.prototype.constructor = Phaser.GameObject.Image;
 */
 Phaser.GameObject.Image.prototype.preUpdate = function ()
 {
+    //  Would like to get rid of this somehow ...
     if (this.parent)
     {
         this.color.worldAlpha = this.parent.color.worldAlpha;
