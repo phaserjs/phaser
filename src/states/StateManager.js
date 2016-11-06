@@ -330,8 +330,6 @@ Phaser.StateManager.prototype = {
 
             state.settings.active = true;
 
-            this.active.push(state);
-
             //  + arguments
             if (state.init)
             {
@@ -391,6 +389,8 @@ Phaser.StateManager.prototype = {
         {
             state.create.call(state);
         }
+
+        this.active.push(state);
 
         this.game.updates.running = true;
     },
