@@ -621,6 +621,8 @@ Phaser.Game.prototype = {
 
         // this.world = new Phaser.World(this);
 
+        console.log('UpdateManager alive');
+
         this.updates = new Phaser.UpdateManager(this);
 
         // this.state = new Phaser.StateManager(this, this._pendingState);
@@ -728,8 +730,8 @@ Phaser.Game.prototype = {
     * @method Phaser.Game#setUpRenderer
     * @protected
     */
-    setUpRenderer: function () {
-
+    setUpRenderer: function ()
+    {
         if (this.config['canvas'])
         {
             this.canvas = this.config['canvas'];
@@ -963,7 +965,7 @@ Phaser.Game.prototype = {
             // this.tweens.update();
 
             // this.sound.update();
-            // this.input.update();
+            this.input.update();
             // this.physics.update();
             // this.particles.update();
             // this.plugins.update();

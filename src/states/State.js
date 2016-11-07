@@ -12,6 +12,8 @@
 */
 Phaser.State = function (config)
 {
+    console.log('State.cstr');
+
     //  The properties a State *must* have, that cannot be changed without breaking it:
 
     this.game = null;
@@ -19,10 +21,6 @@ Phaser.State = function (config)
     this.settings = new Phaser.State.Settings(this, config);
 
     this.sys = new Phaser.State.Systems(this, config);
-
-    //  Needs to have its own Renderer - can make 1 draw call per State if smart enough
-    //  Use a shared canvas though. Or 
-    this.renderer;
 
     //  Reference to sys.children, set during sys.init only
     this.children;

@@ -61,6 +61,8 @@ EOL;
     <script src="$path/src/geom/Rectangle.js"></script>
     <script src="$path/src/geom/RoundedRectangle.js"></script>
 
+    <script src="$path/src/camera/Camera.js"></script>
+
     <script src="$path/src/states/State.js"></script>
     <script src="$path/src/states/StateManager.js"></script>
     <script src="$path/src/states/StateSettings.js"></script>
