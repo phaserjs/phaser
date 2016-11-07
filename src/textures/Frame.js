@@ -25,14 +25,14 @@ Phaser.TextureFrame = function (texture, name, sourceIndex, x, y, width, height)
     */
     this.texture = texture;
 
-    this.source = texture.source[sourceIndex];
-
-    this.sourceIndex = sourceIndex;
-
     /**
     * @property {string} name - The name of this frame within the Texture.
     */
     this.name = name;
+
+    this.source = texture.source[sourceIndex];
+
+    this.sourceIndex = sourceIndex;
 
     /**
     * @property {number} cutX - X position within the source image to cut from.
@@ -150,34 +150,6 @@ Phaser.TextureFrame.prototype.constructor = Phaser.TextureFrame;
 
 Phaser.TextureFrame.prototype = {
 
-    crop: function (width, height, x, y)
-    {
-        if (width === undefined) { width = this.data.cut.w; }
-        if (height === undefined) { height = this.data.cut.h; }
-        if (x === undefined) { x = 0; }
-        if (y === undefined) { y = 0; }
-
-        if (width === undefined)
-        {
-            //  No arguments means reset the crop
-            this.cutX = this.data.cut.x;
-            this.cutY = this.data.cut.y;
-            this.cutWidth = this.data.cut.w;
-            this.cutHeight = this.data.cut.h;
-        }
-        else if (width !== this.cutWidth || height !== this.cutHeight || x !== this.cutX || y !== this.cutY)
-        {
-            this.cutX = Phaser.Math.clamp(x, this.data.cut.x, this.data.cut.r);
-            this.cutY = Phaser.Math.clamp(y, this.data.cut.y, this.data.cut.b);
-            this.cutWidth = Phaser.Math.clamp(width, 0, this.data.cut.w - this.cutX);
-            this.cutHeight = Phaser.Math.clamp(height, 0, this.data.cut.h - this.cutY);
-        }
-
-        this.updateUVs();
-
-        return this;
-    },
-
     /**
     * If the frame was trimmed when added to the Texture Atlas, this records the trim and source data.
     *
@@ -268,30 +240,27 @@ Phaser.TextureFrame.prototype = {
         return this;
     },
 
-    /**
-    * Adjusts of all the Frame properties based on the given width and height values.
-    *
-    * @method Phaser.TextureFrame#resize
-    * @param {integer} width - The new width of the Frame.
-    * @param {integer} height - The new height of the Frame.
-    */
-    resize: function (width, height)
-    {
-    },
-
     clone: function ()
     {
+        var clone = new Phaser.TextureFrame(this.texture, this.name, this.sourceIndex);
 
-    },
+        clone.cutX = this.cutX;
+        clone.cutY = this.cutY;
+        clone.cutWidth = this.cutWidth;
+        clone.cutHeight = this.cutHeight;
 
-    right: function ()
-    {
+        clone.x = this.x;
+        clone.y = this.y;
+        clone.width = this.width;
+        clone.height = this.height;
 
-    },
+        clone.rotated = this.rotated;
 
-    bottom: function ()
-    {
+        clone.data = Phaser.Utils.extend(true, clone.data, this.data);
 
+        clone.updateUVs();
+
+        return clone;
     },
 
     destroy: function ()

@@ -170,13 +170,20 @@ Phaser.TextureManager.prototype = {
         }
     },
 
+    cloneFrame: function (key, frame)
+    {
+        if (this.list[key])
+        {
+            return this.list[key].get(frame).clone();
+        }
+    },
+
     getFrame: function (key, frame)
     {
         if (this.list[key])
         {
             return this.list[key].get(frame);
         }
-
     },
 
     setTexture: function (gameObject, key, frame)
