@@ -431,11 +431,17 @@ Phaser.Component.Transform.prototype = {
         }
         else
         {
-            w0 = frame.width * (1 - this._anchorX);
-            w1 = frame.width * -this._anchorX;
+            // w0 = frame.width * (1 - this._anchorX);
+            // w1 = frame.width * -this._anchorX;
 
-            h0 = frame.height * (1 - this._anchorY);
-            h1 = frame.height * -this._anchorY;
+            // h0 = frame.height * (1 - this._anchorY);
+            // h1 = frame.height * -this._anchorY;
+
+            w0 = frame.cutWidth * (1 - this._anchorX);
+            w1 = frame.cutWidth * -this._anchorX;
+
+            h0 = frame.cutHeight * (1 - this._anchorY);
+            h1 = frame.cutHeight * -this._anchorY;
         }
 
         var resolution = frame.source.resolution;
