@@ -36,12 +36,6 @@ Phaser.TextureCrop = function (gameObject, width, height, x, y)
         frame.cutHeight = Phaser.Math.clamp(height, 0, frame.data.cut.h - frame.cutY);
     }
 
-    //  ?
-    // frame.x = frame.cutX;
-    // frame.y = frame.cutY;
-    // frame.width = frame.cutWidth;
-    // frame.height = frame.cutHeight;
-
     frame.updateUVs();
 
     gameObject.transform.updateVertexData();
