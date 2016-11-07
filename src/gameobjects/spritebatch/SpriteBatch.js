@@ -24,7 +24,7 @@ Phaser.GameObject.SpriteBatch = function (game, parent, name, addToStage) {
 
     if (parent === undefined || parent === null) { parent = game.world; }
 
-    Phaser.Group.call(this, game, parent, name, addToStage);
+    // Phaser.Group.call(this, game, parent, name, addToStage);
 
     /**
     * @property {number} type - Internal Phaser Type value.
@@ -46,6 +46,6 @@ Phaser.GameObject.SpriteBatch = function (game, parent, name, addToStage) {
 
 };
 
-Phaser.GameObject.SpriteBatch.prototype = Object.create(Phaser.Group.prototype);
+// Phaser.GameObject.SpriteBatch.prototype = Object.create(Phaser.Group.prototype);
 
 Phaser.GameObject.SpriteBatch.prototype.constructor = Phaser.GameObject.SpriteBatch;
