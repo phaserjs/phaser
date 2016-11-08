@@ -67,6 +67,7 @@ EOL;
     <script src="$path/src/states/StateManager.js"></script>
     <script src="$path/src/states/StateSettings.js"></script>
     <script src="$path/src/states/StateSystems.js"></script>
+    <script src="$path/src/states/MainLoop.js"></script>
 
     <script src="$path/src/core/Signal.js"></script>
     <script src="$path/src/core/SignalBinding.js"></script>

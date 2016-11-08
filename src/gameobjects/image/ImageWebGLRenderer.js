@@ -4,7 +4,7 @@ Phaser.Renderer.WebGL.GameObjects.Image = {
         Phaser.GameObject.Image.prototype
     ],
 
-    render: function (renderer, src)
+    render: function (renderer, src, interpolationPercentage)
     {
         var frame = src.frame;
         var alpha = src.color.worldAlpha * 255 << 24;

@@ -437,13 +437,18 @@ Phaser.Renderer.WebGL.prototype = {
 
     },
 
+
+
     /**
-     * Renders the stage to its webGL view
+     * Renders the State.
      *
      * @method render
-     * @param stage {Stage} the Stage element to be rendered
+     * @param {Phaser.State} state - The State to be rendered.
+     * @param {number} interpolationPercentage - The cumulative amount of time that hasn't been simulated yet, divided
+     *   by the amount of time that will be simulated the next time update()
+     *   runs. Useful for interpolating frames.
      */
-    render: function (state)
+    render: function (state, interpolationPercentage)
     {
         //  No point rendering if our context has been blown up!
         if (this.contextLost)
@@ -472,7 +477,8 @@ Phaser.Renderer.WebGL.prototype = {
 
         this.batch.start();
 
-        this.game.state.renderChildren(this, state);
+        //  Could move to the State Systems or MainLoop
+        this.game.state.renderChildren(this, state, interpolationPercentage);
 
         this.batch.stop();
 

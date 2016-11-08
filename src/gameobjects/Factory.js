@@ -56,7 +56,7 @@ Phaser.GameObject.Factory.prototype = {
     */
     tween: function (object)
     {
-        return this.game.tweens.create(object);
+        return this.state.sys.tweens.create(object);
     },
 
     /**

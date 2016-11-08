@@ -12,9 +12,11 @@
 */
 //  Phaser.Texture and Phaser.Frame objects passed in here, instead of looked-up.
 //  Allows override from non-standard GO types
-Phaser.GameObject = function (game, x, y, texture, frame, parent)
+Phaser.GameObject = function (state, x, y, texture, frame, parent)
 {
-    this.game = game;
+    this.state = state;
+
+    this.game = state.game;
 
     this.name = '';
 

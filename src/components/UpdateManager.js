@@ -9,9 +9,11 @@
 *
 * @class
 */
-Phaser.UpdateManager = function (game)
+Phaser.UpdateManager = function (state)
 {
-    this.game = game;
+    this.state = state;
+
+    this.game = state.game;
 
     this.list = [];
 

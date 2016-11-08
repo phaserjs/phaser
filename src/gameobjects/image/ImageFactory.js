@@ -26,7 +26,7 @@ Phaser.GameObject.Image.FACTORY_ADD = function (x, y, key, frame, group, name)
 {
     if (group === undefined) { group = this.state; }
 
-    return group.children.add(new Phaser.GameObject.Image(this.game, x, y, key, frame, name));
+    return group.children.add(new Phaser.GameObject.Image(this.state, x, y, key, frame, name));
 };
 
 /**
@@ -44,5 +44,5 @@ Phaser.GameObject.Image.FACTORY_ADD = function (x, y, key, frame, group, name)
 */
 Phaser.GameObject.Image.FACTORY_MAKE = function (x, y, key, frame)
 {
-    return new Phaser.GameObject.Image(this.game, x, y, key, frame);
+    return new Phaser.GameObject.Image(this.state, x, y, key, frame);
 };

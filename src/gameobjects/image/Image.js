@@ -17,14 +17,12 @@
 * @param {string} [key] - The texture used by the Image during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture, BitmapData or PIXI.Texture.
 * @param {string|number} [frame] - If this Image is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
 */
-Phaser.GameObject.Image = function (game, x, y, key, frame, name)
+Phaser.GameObject.Image = function (state, x, y, key, frame, name)
 {
-    this.game = game;
-
-    var _texture = game.textures.get(key);
+    var _texture = state.game.textures.get(key);
     var _frame = _texture.get(frame);
 
-    Phaser.GameObject.call(this, game, x, y, _texture, _frame);
+    Phaser.GameObject.call(this, state, x, y, _texture, _frame);
 
     this.name = name;
 

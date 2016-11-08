@@ -14,25 +14,24 @@
 * @class Phaser.Tween
 * @constructor
 * @param {object} target - The target object, such as a Phaser.Sprite or Phaser.Sprite.scale.
-* @param {Phaser.Game} game - Current game instance.
 * @param {Phaser.TweenManager} manager - The TweenManager responsible for looking after this Tween.
 */
-Phaser.Tween = function (target, game, manager) {
+Phaser.Tween = function (target, manager)
+{
+    /**
+    * @property {Phaser.TweenManager} manager - Reference to the TweenManager responsible for updating this Tween.
+    */
+    this.manager = manager;
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running Game.
     */
-    this.game = game;
+    this.state = manager.state;
 
     /**
     * @property {object} target - The target object, such as a Phaser.Sprite or property like Phaser.Sprite.scale.
     */
     this.target = target;
-
-    /**
-    * @property {Phaser.TweenManager} manager - Reference to the TweenManager responsible for updating this Tween.
-    */
-    this.manager = manager;
 
     /**
     * @property {Array} timeline - An Array of TweenData objects that comprise the different parts of this Tween.
@@ -203,8 +202,8 @@ Phaser.Tween.prototype = {
     * @param {boolean} [yoyo=false] - A tween that yoyos will reverse itself and play backwards automatically. A yoyo'd tween doesn't fire the Tween.onComplete event, so listen for Tween.onLoop instead.
     * @return {Phaser.Tween} This Tween object.
     */
-    to: function (properties, duration, ease, autoStart, delay, repeat, yoyo) {
-
+    to: function (properties, duration, ease, autoStart, delay, repeat, yoyo)
+    {
         if (duration === undefined || duration <= 0) { duration = 1000; }
         if (ease === undefined || ease === null) { ease = Phaser.Easing.Default; }
         if (autoStart === undefined) { autoStart = false; }
@@ -294,7 +293,7 @@ Phaser.Tween.prototype = {
 
         if (index === undefined) { index = 0; }
 
-        if (this.game === null || this.target === null || this.timeline.length === 0 || this.isRunning)
+        if (this.target === null || this.timeline.length === 0 || this.isRunning)
         {
             return this;
         }
@@ -645,14 +644,13 @@ Phaser.Tween.prototype = {
     *
     * @method Phaser.Tween#pause
     */
-    pause: function () {
-
+    pause: function ()
+    {
         this.isPaused = true;
 
         this._codePaused = true;
 
         this._pausedTime = this.game.time.time;
-
     },
 
     /**
@@ -661,15 +659,14 @@ Phaser.Tween.prototype = {
     * @private
     * @method Phaser.Tween#_pause
     */
-    _pause: function () {
-
+    _pause: function ()
+    {
         if (!this._codePaused)
         {
             this.isPaused = true;
 
             this._pausedTime = this.game.time.time;
         }
-
     },
 
     /**
@@ -677,8 +674,8 @@ Phaser.Tween.prototype = {
     *
     * @method Phaser.Tween#resume
     */
-    resume: function () {
-
+    resume: function ()
+    {
         if (this.isPaused)
         {
             this.isPaused = false;
@@ -693,7 +690,6 @@ Phaser.Tween.prototype = {
                 }
             }
         }
-
     },
 
     /**
@@ -850,7 +846,7 @@ Phaser.Tween.prototype = {
     */
     generateData: function (frameRate, data) {
 
-        if (this.game === null || this.target === null)
+        if (this.target === null)
         {
             return null;
         }

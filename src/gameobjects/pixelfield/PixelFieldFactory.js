@@ -24,7 +24,7 @@ Phaser.GameObject.PixelField.FACTORY_ADD = function (x, y, pixelSize, group)
 {
     if (group === undefined) { group = this.state; }
 
-    return group.children.add(new Phaser.GameObject.PixelField(this.game, x, y, pixelSize));
+    return group.children.add(new Phaser.GameObject.PixelField(this.state, x, y, pixelSize));
 };
 
 /**
@@ -40,5 +40,5 @@ Phaser.GameObject.PixelField.FACTORY_ADD = function (x, y, pixelSize, group)
 */
 Phaser.GameObject.PixelField.FACTORY_MAKE = function (x, y, pixelSize)
 {
-    return new Phaser.GameObject.PixelField(this.game, x, y, pixelSize);
+    return new Phaser.GameObject.PixelField(this.state, x, y, pixelSize);
 };

@@ -418,7 +418,9 @@ Phaser.StateManager.prototype = {
         //  Sort the 'active' array based on the index property
         this.active.sort(this.sortStates.bind(this));
 
-        this.game.updates.running = true;
+        state.sys.updates.running = true;
+
+        state.sys.mainloop.start();
     },
 
     pause: function (key)
@@ -456,6 +458,20 @@ Phaser.StateManager.prototype = {
 
     //  See if we can reduce this down to just update and render
 
+    step: function (timestamp)
+    {
+        for (var i = 0; i < this.active.length; i++)
+        {
+            var state = this.active[i].state;
+
+            if (state.sys.mainloop.running)
+            {
+                state.sys.mainloop.step(timestamp);
+            }
+        }
+    },
+
+    /*
     preUpdate: function ()
     {
         for (var i = 0; i < this.active.length; i++)
@@ -526,15 +542,16 @@ Phaser.StateManager.prototype = {
             this.game.renderer.render(state);
         }
     },
+    */
 
-    renderChildren: function (renderer, state)
+    renderChildren: function (renderer, state, interpolationPercentage)
     {
         //  Populates the display list
         for (var c = 0; c < state.sys.children.list.length; c++)
         {
             var child = state.sys.children.list[c];
 
-            child.render(renderer, child);
+            child.render(renderer, child, interpolationPercentage);
         }
     }
 

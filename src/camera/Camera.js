@@ -17,10 +17,8 @@
 * @param {number} width - The width of the view rectangle
 * @param {number} height - The height of the view rectangle
 */
-Phaser.Camera = function (state, x, y, width, height)
+Phaser.Camera = function (state, x, y, viewportWidth, viewportHeight)
 {
-    console.log('Camera');
-
     /**
      * The State that this Camera belongs to. A Camera can only belong to one State, and a State only
      * has one Camera.
@@ -33,9 +31,9 @@ Phaser.Camera = function (state, x, y, width, height)
     */
     this.game = state.game;
 
-    this.width = width;
+    this.viewportWidth = viewportWidth;
 
-    this.height = height;
+    this.viewportHeight = viewportHeight;
 
     this.transform = new Phaser.Component.Transform(this, x, y);
 
@@ -78,9 +76,9 @@ Phaser.Camera.prototype = {
         // var vh = this.view.bottom + this._shake.y;
 
         var vx = this.x;
-        var vw = this.x + this.width;
+        var vw = this.x + this.viewportWidth;
         var vy = this.y;
-        var vh = this.y + this.height;
+        var vh = this.y + this.viewportHeight;
 
         //  Make sure we didn't go outside the cameras bounds
         if (vx <= this.bounds.x * this.scale.x)
@@ -131,8 +129,7 @@ Phaser.Camera.prototype = {
             }
         }
 
-    },
-
+    }
 
 };
 
@@ -180,7 +177,7 @@ Object.defineProperties(Phaser.Camera.prototype, {
 
         get: function ()
         {
-            return this.transform._posX + (this.width * this.transform._scaleX);
+            return this.transform._posX + (this.viewportWidth * this.transform._scaleX);
         }
 
     },
@@ -191,7 +188,7 @@ Object.defineProperties(Phaser.Camera.prototype, {
 
         get: function ()
         {
-            return this.transform._posY + (this.height * this.transform._scaleY);
+            return this.transform._posY + (this.viewportHeight * this.transform._scaleY);
         }
 
     },

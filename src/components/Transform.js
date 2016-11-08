@@ -16,9 +16,11 @@ Phaser.Component.Transform = function (gameObject, x, y, scaleX, scaleY)
     if (scaleX === undefined) { scaleX = 1; }
     if (scaleY === undefined) { scaleY = 1; }
 
-    this.game = gameObject.game;
-
     this.gameObject = gameObject;
+
+    this.state = gameObject.state;
+
+    this.game = gameObject.state.game;
 
     //  Local Transform
     //  a = scale X
@@ -56,12 +58,12 @@ Phaser.Component.Transform = function (gameObject, x, y, scaleX, scaleY)
 
     this._dirty = true;
 
-    this.game.updates.add(this);
+    this.state.sys.updates.add(this);
 
     //  The parent Transform (NOT the parent GameObject, although very often they are related)
     this.parent = null;
 
-    //  Any child Tranforms of this one - note that they don't have to belong to Game Objects
+    //  Any child Transforms of this one - note that they don't have to belong to Game Objects
     //  that are children of the owner of this Transform
     this.children = [];
 };
@@ -515,6 +517,11 @@ Phaser.Component.Transform.prototype = {
 
     },
 
+    getVertexData: function (interpolationPercentage)
+    {
+        return this.glVertextData;
+    },
+
     cloneVertexData: function ()
     {
         var src = this.glVertextData;
@@ -778,7 +785,7 @@ Object.defineProperties(Phaser.Component.Transform.prototype, {
             {
                 if (!this._dirty)
                 {
-                    this.game.updates.add(this);
+                    this.state.sys.updates.add(this);
                 }
 
                 this._dirty = true;

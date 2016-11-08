@@ -9,6 +9,8 @@ Phaser.State.Systems = function (state, config)
     this.input;
     this.load;
     this.tweens;
+    this.mainloop;
+    this.updates;
 
     //  State specific properties (transform, data, children, etc)
     this.camera;
@@ -31,13 +33,15 @@ Phaser.State.Systems.prototype = {
         //  State specific managers (Factory, Tweens, Loader, Physics, etc)
         this.add = new Phaser.GameObject.Factory(this.state);
         this.load = new Phaser.Loader(this.state);
+        this.mainloop = new Phaser.State.MainLoop(this.state);
+        this.updates = new Phaser.UpdateManager(this.state);
+        this.tweens = new Phaser.TweenManager(this.state);
 
         //  State specific properties (transform, data, children, etc)
         this.camera = new Phaser.Camera(this.state, 0, 0, 800, 600);
         this.children = new Phaser.Component.Children(this.state);
         this.color = new Phaser.Component.Color(this.state);
         this.data = new Phaser.Component.Data(this.state);
-        // this.transform = new Phaser.Component.Transform(this.state);
         this.transform = this.camera.transform;
 
         //  Defaults
@@ -46,7 +50,7 @@ Phaser.State.Systems.prototype = {
         this.state.load = this.load;
         this.state.children = this.children;
         this.state.color = this.color;
-        // this.state.data = this.data;
+        this.state.data = this.data;
         this.state.camera = this.camera;
         this.state.transform = this.camera.transform;
 
@@ -62,6 +66,11 @@ Phaser.State.Systems.prototype = {
         }
 
         // this.key = (config.hasOwnProperty('key')) ? config.key : '';
+    },
+
+    begin: function (timestamp, frameDelta)
+    {
+        this.tweens.update(timestamp, frameDelta);
     }
 
 };

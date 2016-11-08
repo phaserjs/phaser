@@ -12,8 +12,6 @@
 */
 Phaser.State = function (config)
 {
-    console.log('State.cstr');
-
     //  The properties a State *must* have, that cannot be changed without breaking it:
 
     this.game = null;

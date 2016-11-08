@@ -13,17 +13,17 @@
 * @constructor
 * @param {Phaser.Tween} parent - The Tween that owns this TweenData object.
 */
-Phaser.TweenData = function (parent) {
-
+Phaser.TweenData = function (parent)
+{
     /**
     * @property {Phaser.Tween} parent - The Tween which owns this TweenData.
     */
     this.parent = parent;
 
     /**
-    * @property {Phaser.Game} game - A reference to the currently running Game.
+    * @property {Phaser.State} state - A reference to the currently running State.
     */
-    this.game = parent.game;
+    this.state = parent.state;
 
     /**
     * @property {object} vStart - An object containing the values at the start of the tween.
@@ -178,6 +178,8 @@ Phaser.TweenData.LOOPED = 2;
 */
 Phaser.TweenData.COMPLETE = 3;
 
+Phaser.TweenData.prototype.constructor = Phaser.TweenData;
+
 Phaser.TweenData.prototype = {
 
     /**
@@ -193,8 +195,8 @@ Phaser.TweenData.prototype = {
     * @param {boolean} [yoyo=false] - A tween that yoyos will reverse itself and play backwards automatically. A yoyo'd tween doesn't fire the Tween.onComplete event, so listen for Tween.onLoop instead.
     * @return {Phaser.TweenData} This Tween object.
     */
-    to: function (properties, duration, ease, delay, repeat, yoyo) {
-
+    to: function (properties, duration, ease, delay, repeat, yoyo)
+    {
         this.vEnd = properties;
         this.duration = duration;
         this.easingFunction = ease;
@@ -205,7 +207,6 @@ Phaser.TweenData.prototype = {
         this.isFrom = false;
 
         return this;
-
     },
 
     /**
@@ -221,8 +222,8 @@ Phaser.TweenData.prototype = {
     * @param {boolean} [yoyo=false] - A tween that yoyos will reverse itself and play backwards automatically. A yoyo'd tween doesn't fire the Tween.onComplete event, so listen for Tween.onLoop instead.
     * @return {Phaser.TweenData} This Tween object.
     */
-    from: function (properties, duration, ease, delay, repeat, yoyo) {
-
+    from: function (properties, duration, ease, delay, repeat, yoyo)
+    {
         this.vEnd = properties;
         this.duration = duration;
         this.easingFunction = ease;
@@ -233,7 +234,6 @@ Phaser.TweenData.prototype = {
         this.isFrom = true;
 
         return this;
-
     },
 
     /**
@@ -242,9 +242,9 @@ Phaser.TweenData.prototype = {
     * @method Phaser.TweenData#start
     * @return {Phaser.TweenData} This Tween object.
     */
-    start: function () {
-
-        this.startTime = this.game.time.time + this.delay;
+    start: function ()
+    {
+        this.startTime = this.state.sys.mainloop.getTime() + this.delay;
 
         if (this.parent.reverse)
         {
@@ -280,7 +280,6 @@ Phaser.TweenData.prototype = {
         this.repeatCounter = this.repeatTotal;
 
         return this;
-
     },
 
     /**
@@ -290,8 +289,8 @@ Phaser.TweenData.prototype = {
     * @method Phaser.TweenData#loadValues
     * @return {Phaser.TweenData} This Tween object.
     */
-    loadValues: function () {
-
+    loadValues: function ()
+    {
         for (var property in this.parent.properties)
         {
             //  Load the property from the parent object
@@ -345,8 +344,8 @@ Phaser.TweenData.prototype = {
     * @param {number} time - A timestamp passed in by the Tween parent.
     * @return {number} The current status of this Tween. One of the Phaser.TweenData constants: PENDING, RUNNING, LOOPED or COMPLETE.
     */
-    update: function (time) {
-
+    update: function (time)
+    {
         if (!this.isRunning)
         {
             if (time >= this.startTime)
@@ -358,16 +357,15 @@ Phaser.TweenData.prototype = {
                 return Phaser.TweenData.PENDING;
             }
         }
-        else
+        else if (time < this.startTime)
         {
             //  Is Running, but is waiting to repeat
-            if (time < this.startTime)
-            {
-                return Phaser.TweenData.RUNNING;
-            }
+            return Phaser.TweenData.RUNNING;
         }
 
-        var ms = (this.parent.frameBased) ? this.game.time.physicsElapsedMS : this.game.time.elapsedMS;
+        // var ms = (this.parent.frameBased) ? this.game.time.physicsElapsedMS : this.game.time.elapsedMS;
+
+        var ms = this.state.sys.mainloop.physicsStep;
 
         if (this.parent.reverse)
         {
@@ -417,8 +415,8 @@ Phaser.TweenData.prototype = {
     * @param {number} [frameRate=60] - The speed in frames per second that the data should be generated at. The higher the value, the larger the array it creates.
     * @return {array} An array of tweened values.
     */
-    generateData: function (frameRate) {
-
+    generateData: function (frameRate)
+    {
         if (this.parent.reverse)
         {
             this.dt = this.duration;
@@ -493,7 +491,9 @@ Phaser.TweenData.prototype = {
     * @method Phaser.TweenData#repeat
     * @return {number} Either Phaser.TweenData.LOOPED or Phaser.TweenData.COMPLETE.
     */
-    repeat: function () {
+    repeat: function ()
+    {
+        var property;
 
         //  If not a yoyo and repeatCounter = 0 then we're done
         if (this.yoyo)
@@ -502,7 +502,7 @@ Phaser.TweenData.prototype = {
             if (this.inReverse && this.repeatCounter === 0)
             {
                 //  Restore the properties
-                for (var property in this.vStartCache)
+                for (property in this.vStartCache)
                 {
                     this.vStart[property] = this.vStartCache[property];
                     this.vEnd[property] = this.vEndCache[property];
@@ -515,18 +515,15 @@ Phaser.TweenData.prototype = {
 
             this.inReverse = !this.inReverse;
         }
-        else
+        else if (this.repeatCounter === 0)
         {
-            if (this.repeatCounter === 0)
-            {
-                return Phaser.TweenData.COMPLETE;
-            }
+            return Phaser.TweenData.COMPLETE;
         }
 
         if (this.inReverse)
         {
             //  If inReverse we're going from vEnd to vStartCache
-            for (var property in this.vStartCache)
+            for (property in this.vStartCache)
             {
                 this.vStart[property] = this.vEndCache[property];
                 this.vEnd[property] = this.vStartCache[property];
@@ -535,7 +532,7 @@ Phaser.TweenData.prototype = {
         else
         {
             //  If not inReverse we're just repopulating the cache again
-            for (var property in this.vStartCache)
+            for (property in this.vStartCache)
             {
                 this.vStart[property] = this.vStartCache[property];
                 this.vEnd[property] = this.vEndCache[property];
@@ -549,7 +546,7 @@ Phaser.TweenData.prototype = {
             }
         }
 
-        this.startTime = this.game.time.time;
+        this.startTime = this.state.sys.mainloop.lastFrameTimeMs;
 
         if (this.yoyo && this.inReverse)
         {
@@ -574,5 +571,3 @@ Phaser.TweenData.prototype = {
     }
 
 };
-
-Phaser.TweenData.prototype.constructor = Phaser.TweenData;
