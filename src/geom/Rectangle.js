@@ -1054,6 +1054,19 @@ Phaser.Rectangle.aabb = function(points, out) {
     return out;
 };
 
+
+/**
+* Creates an empty rectangle
+*
+* @method Phaser.Rectangle#empty
+* @static
+*/
+Phaser.Rectangle.empty = function() {
+
+	return new Phaser.Rectangle(0, 0, 0, 0);
+}
+
+
 //   Because PIXI uses its own Rectangle, we'll replace it with ours to avoid duplicating code or confusion.
 PIXI.Rectangle = Phaser.Rectangle;
 PIXI.EmptyRectangle = new Phaser.Rectangle(0, 0, 0, 0);
