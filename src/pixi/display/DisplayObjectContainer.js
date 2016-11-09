@@ -25,15 +25,15 @@ PIXI.DisplayObjectContainer = function () {
 
     /**
     * If `ignoreChildInput`  is `false` it will allow this objects _children_ to be considered as valid for Input events.
-    * 
+    *
     * If this property is `true` then the children will _not_ be considered as valid for Input events.
-    * 
+    *
     * Note that this property isn't recursive: only immediate children are influenced, it doesn't scan further down.
     * @property {boolean} ignoreChildInput
     * @default
     */
     this.ignoreChildInput = false;
-    
+
 };
 
 PIXI.DisplayObjectContainer.prototype = Object.create( PIXI.DisplayObject.prototype );
@@ -165,7 +165,7 @@ PIXI.DisplayObjectContainer.prototype.getChildAt = function (index) {
     }
 
     return this.children[index];
-    
+
 };
 
 /**
@@ -183,7 +183,7 @@ PIXI.DisplayObjectContainer.prototype.removeChild = function (child) {
     {
         return;
     }
-    
+
     return this.removeChildAt(index);
 
 };
@@ -289,15 +289,15 @@ PIXI.DisplayObjectContainer.prototype.getBounds = function (targetCoordinateSpac
     var isTargetCoordinateSpaceDisplayObject = (targetCoordinateSpace && targetCoordinateSpace instanceof PIXI.DisplayObject);
     var isTargetCoordinateSpaceThisOrParent = true;
 
-    if (!isTargetCoordinateSpaceDisplayObject) 
+    if (!isTargetCoordinateSpaceDisplayObject)
 	{
         targetCoordinateSpace = this;
-    } 
-	else if (targetCoordinateSpace instanceof PIXI.DisplayObjectContainer) 
+    }
+	else if (targetCoordinateSpace instanceof PIXI.DisplayObjectContainer)
 	{
         isTargetCoordinateSpaceThisOrParent = targetCoordinateSpace.contains(this);
-    } 
-	else 
+    }
+	else
 	{
         isTargetCoordinateSpaceThisOrParent = false;
     }
@@ -310,7 +310,7 @@ PIXI.DisplayObjectContainer.prototype.getBounds = function (targetCoordinateSpac
 
         targetCoordinateSpace.worldTransform = Phaser.identityMatrix;
 
-        for (i = 0; i < targetCoordinateSpace.children.length; i++) 
+        for (i = 0; i < targetCoordinateSpace.children.length; i++)
 		{
             targetCoordinateSpace.children[i].updateTransform();
         }
@@ -353,7 +353,7 @@ PIXI.DisplayObjectContainer.prototype.getBounds = function (targetCoordinateSpac
 
     var bounds = this._bounds;
 
-    if (!childVisible) 
+    if (!childVisible)
 	{
         bounds = new Phaser.Rectangle();
 
@@ -412,17 +412,17 @@ PIXI.DisplayObjectContainer.prototype.getBounds = function (targetCoordinateSpac
     bounds.width = maxX - minX;
     bounds.height = maxY - minY;
 
-    if (isTargetCoordinateSpaceDisplayObject) 
+    if (isTargetCoordinateSpaceDisplayObject)
 	{
         targetCoordinateSpace.worldTransform = matrixCache;
 
-        for (i = 0; i < targetCoordinateSpace.children.length; i++) 
+        for (i = 0; i < targetCoordinateSpace.children.length; i++)
 		{
             targetCoordinateSpace.children[i].updateTransform();
         }
     }
 
-    if (!isTargetCoordinateSpaceThisOrParent) 
+    if (!isTargetCoordinateSpaceThisOrParent)
 	{
         var targetCoordinateSpaceBounds = targetCoordinateSpace.getBounds();
 
@@ -459,11 +459,11 @@ PIXI.DisplayObjectContainer.prototype.contains = function (child) {
     {
         return false;
     }
-    else if (child === this) 
+    else if (child === this)
 	{
         return true;
     }
-    else 
+    else
 	{
         return this.contains(child.parent);
     }
@@ -473,7 +473,7 @@ PIXI.DisplayObjectContainer.prototype.contains = function (child) {
 * Renders the object using the WebGL renderer
 *
 * @method _renderWebGL
-* @param renderSession {RenderSession} 
+* @param renderSession {RenderSession}
 * @private
 */
 PIXI.DisplayObjectContainer.prototype._renderWebGL = function (renderSession) {
@@ -482,13 +482,13 @@ PIXI.DisplayObjectContainer.prototype._renderWebGL = function (renderSession) {
     {
         return;
     }
-    
+
     if (this._cacheAsBitmap)
     {
         this._renderCachedSprite(renderSession);
         return;
     }
-    
+
     var i;
 
     if (this._mask || this._filters)
@@ -517,7 +517,7 @@ PIXI.DisplayObjectContainer.prototype._renderWebGL = function (renderSession) {
 
         if (this._mask) renderSession.maskManager.popMask(this._mask, renderSession);
         if (this._filters) renderSession.filterManager.popFilter();
-        
+
         renderSession.spriteBatch.start();
     }
     else
@@ -535,7 +535,7 @@ PIXI.DisplayObjectContainer.prototype._renderWebGL = function (renderSession) {
 * Renders the object using the Canvas renderer
 *
 * @method _renderCanvas
-* @param renderSession {RenderSession} 
+* @param renderSession {RenderSession}
 * @private
 */
 PIXI.DisplayObjectContainer.prototype._renderCanvas = function (renderSession) {
@@ -581,7 +581,7 @@ Object.defineProperty(PIXI.DisplayObjectContainer.prototype, 'width', {
     },
 
     set: function(value) {
-        
+
         var width = this.getLocalBounds().width;
 
         if (width !== 0)
@@ -592,7 +592,7 @@ Object.defineProperty(PIXI.DisplayObjectContainer.prototype, 'width', {
         {
             this.scale.x = 1;
         }
-        
+
         this._width = value;
     }
 });
