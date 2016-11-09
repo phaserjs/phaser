@@ -91,6 +91,9 @@ Phaser.State.MainLoop = function (state, framerate)
     // A function that runs at the end of the main loop.
     // See `MainLoop.setEnd()` for details.
     this.end = Phaser.NOOP;
+
+    this.bob = 0;
+
 };
 
 Phaser.State.MainLoop.prototype.constructor = Phaser.State.MainLoop;
@@ -136,15 +139,31 @@ Phaser.State.MainLoop.prototype = {
         this.lastFrameTimeMs = this.getTime();
         this.lastFpsUpdate = this.getTime();
         this.framesThisSecond = 0;
+
+        console.log('MainLoop.start', this.lastFrameTimeMs);
+
     },
 
     //  timestamp = DOMHighResTimeStamp
     step: function (timestamp)
     {
+        this.bob++;
+
+        if (this.bob > 500 && this.bob < 550)
+        {
+            console.log('%c  MainLoop.step : ' + (this.bob - 500) + ' ', 'color: #000000; background: #00ff00;');
+            console.log('timestamp', timestamp);
+            console.log('lastFrameTimeMs', this.lastFrameTimeMs);
+        }
+
         // Throttle the frame rate (if minFrameDelay is set to a non-zero value by
         // `MainLoop.setMaxAllowedFPS()`).
         if (timestamp < this.lastFrameTimeMs + this.minFrameDelay)
         {
+            if (this.bob > 500 && this.bob < 550)
+            {
+                console.log('exit');
+            }
             return;
         }
 
@@ -155,6 +174,14 @@ Phaser.State.MainLoop.prototype = {
         // simulated each frame. See the comments below for details.
         this.frameDelta += timestamp - this.lastFrameTimeMs;
         this.lastFrameTimeMs = timestamp;
+
+        if (this.bob > 500 && this.bob < 550)
+        {
+            console.log('frameDelta', this.frameDelta);
+            console.log('lastFrameTimeMs', this.lastFrameTimeMs);
+            console.log('lastFpsUpdate', this.lastFpsUpdate);
+            console.log('ts', timestamp, '>', (this.lastFpsUpdate + 1000), (timestamp > this.lastFpsUpdate + 1000));
+        }
 
         // Run any updates that are not dependent on time in the simulation.
 
@@ -168,12 +195,22 @@ Phaser.State.MainLoop.prototype = {
         // older seconds.
         if (timestamp > this.lastFpsUpdate + 1000)
         {
+            if (this.bob > 500 && this.bob < 550)
+            {
+                console.log('compute new exponential');
+            }
+
             // Compute the new exponential moving average with an alpha of 0.25.
             // Using constants inline is okay here.
-            this.fps = 0.25 * this.framesThisSecond + 0.75 * this.fps;
+            this.fps = (0.25 * this.framesThisSecond) + (0.75 * this.fps);
 
             this.lastFpsUpdate = timestamp;
             this.framesThisSecond = 0;
+
+            if (this.bob > 500 && this.bob < 550)
+            {
+                console.log('fps', this.fps);
+            }
         }
 
         this.framesThisSecond++;
@@ -185,6 +222,12 @@ Phaser.State.MainLoop.prototype = {
             this.update(this.timestep);
 
             this.frameDelta -= this.timestep;
+
+            if (this.bob > 500 && this.bob < 550)
+            {
+                console.log('%c update ', 'color: #ffffff; background: #ffff00;');
+                console.log('update', this.frameDelta);
+            }
 
             if (++this.numUpdateSteps >= 240)
             {
@@ -206,6 +249,11 @@ Phaser.State.MainLoop.prototype = {
         this.end(this.fps, this.panic);
 
         this.panic = false;
+
+        if (this.bob > 500 && this.bob < 550)
+        {
+            console.log('%c  MainLoop.step  ', 'color: #ffffff; background: #ff0000;');
+        }
     },
 
     update: function (timestep)
