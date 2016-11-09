@@ -590,6 +590,10 @@ Phaser.Cache.prototype = {
     * @param {number} [spacing=0] - If the frames have been drawn with spacing between them, specify the amount here.
     */
     addSpriteSheet: function (key, url, data, frameWidth, frameHeight, frameMax, margin, spacing) {
+        
+        if (frameMax === undefined) { frameMax = -1; }
+        if (margin === undefined) { margin = 0; }
+        if (spacing === undefined) { spacing = 0; }
 
         if (frameMax === undefined) { frameMax = -1; }
         if (margin === undefined) { margin = 0; }
