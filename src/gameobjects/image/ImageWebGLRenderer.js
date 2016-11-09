@@ -16,7 +16,7 @@ Phaser.Renderer.WebGL.GameObjects.Image = {
             return;
         }
 
-        var verts = src.transform.glVertextData;
+        var verts = src.transform.getVertexData(interpolationPercentage);
         var index = src.frame.source.glTextureIndex;
         var tint = src.color._glTint;
         var bg = src.color._glBg;

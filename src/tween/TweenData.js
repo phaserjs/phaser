@@ -244,7 +244,7 @@ Phaser.TweenData.prototype = {
     */
     start: function ()
     {
-        this.startTime = this.state.sys.mainloop.getTime() + this.delay;
+        this.startTime = this.state.sys.mainloop.lastFrameTimeMs + this.delay;
 
         if (this.parent.reverse)
         {
@@ -344,11 +344,11 @@ Phaser.TweenData.prototype = {
     * @param {number} time - A timestamp passed in by the Tween parent.
     * @return {number} The current status of this Tween. One of the Phaser.TweenData constants: PENDING, RUNNING, LOOPED or COMPLETE.
     */
-    update: function (time)
+    update: function (frameDelta)
     {
         if (!this.isRunning)
         {
-            if (time >= this.startTime)
+            if (this.state.sys.mainloop.lastFrameTimeMs >= this.startTime)
             {
                 this.isRunning = true;
             }
@@ -357,15 +357,14 @@ Phaser.TweenData.prototype = {
                 return Phaser.TweenData.PENDING;
             }
         }
-        else if (time < this.startTime)
+        else if (this.state.sys.mainloop.lastFrameTimeMs < this.startTime)
         {
             //  Is Running, but is waiting to repeat
             return Phaser.TweenData.RUNNING;
         }
 
         // var ms = (this.parent.frameBased) ? this.game.time.physicsElapsedMS : this.game.time.elapsedMS;
-
-        var ms = this.state.sys.mainloop.physicsStep;
+        var ms = frameDelta;
 
         if (this.parent.reverse)
         {

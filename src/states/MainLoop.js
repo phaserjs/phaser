@@ -8,6 +8,8 @@
 
 Phaser.State.MainLoop = function (state, framerate)
 {
+    console.log('MainLoop FPS', framerate);
+
     /**
     * @property {Phaser.State} state
     */
@@ -92,7 +94,7 @@ Phaser.State.MainLoop = function (state, framerate)
     // See `MainLoop.setEnd()` for details.
     this.end = Phaser.NOOP;
 
-    this.bob = 0;
+    window.bob = 0;
 
 };
 
@@ -147,11 +149,11 @@ Phaser.State.MainLoop.prototype = {
     //  timestamp = DOMHighResTimeStamp
     step: function (timestamp)
     {
-        this.bob++;
+        window.bob++;
 
-        if (this.bob > 500 && this.bob < 550)
+        if (window.bob > 200 && window.bob < 300)
         {
-            console.log('%c  MainLoop.step : ' + (this.bob - 500) + ' ', 'color: #000000; background: #00ff00;');
+            console.log('%c  MainLoop.step : ' + (window.bob - 200) + ' ', 'color: #000000; background: #00ff00;');
             console.log('timestamp', timestamp);
             console.log('lastFrameTimeMs', this.lastFrameTimeMs);
         }
@@ -160,7 +162,7 @@ Phaser.State.MainLoop.prototype = {
         // `MainLoop.setMaxAllowedFPS()`).
         if (timestamp < this.lastFrameTimeMs + this.minFrameDelay)
         {
-            if (this.bob > 500 && this.bob < 550)
+            if (window.bob > 200 && window.bob < 300)
             {
                 console.log('exit');
             }
@@ -175,12 +177,10 @@ Phaser.State.MainLoop.prototype = {
         this.frameDelta += timestamp - this.lastFrameTimeMs;
         this.lastFrameTimeMs = timestamp;
 
-        if (this.bob > 500 && this.bob < 550)
+        if (window.bob > 200 && window.bob < 300)
         {
             console.log('frameDelta', this.frameDelta);
             console.log('lastFrameTimeMs', this.lastFrameTimeMs);
-            console.log('lastFpsUpdate', this.lastFpsUpdate);
-            console.log('ts', timestamp, '>', (this.lastFpsUpdate + 1000), (timestamp > this.lastFpsUpdate + 1000));
         }
 
         // Run any updates that are not dependent on time in the simulation.
@@ -195,20 +195,23 @@ Phaser.State.MainLoop.prototype = {
         // older seconds.
         if (timestamp > this.lastFpsUpdate + 1000)
         {
-            if (this.bob > 500 && this.bob < 550)
+            if (window.bob > 200 && window.bob < 300)
             {
                 console.log('compute new exponential');
+                console.log('timestamp', timestamp, '>', (this.lastFpsUpdate + 1000), (timestamp > this.lastFpsUpdate + 1000));
             }
 
             // Compute the new exponential moving average with an alpha of 0.25.
             // Using constants inline is okay here.
-            this.fps = (0.25 * this.framesThisSecond) + (0.75 * this.fps);
+            this.fps = 0.25 * this.framesThisSecond + 0.75 * this.fps;
 
             this.lastFpsUpdate = timestamp;
             this.framesThisSecond = 0;
 
-            if (this.bob > 500 && this.bob < 550)
+            if (window.bob > 200 && window.bob < 300)
             {
+                console.log('lastFpsUpdate', this.lastFpsUpdate);
+                console.log('framesThisSecond', this.framesThisSecond);
                 console.log('fps', this.fps);
             }
         }
@@ -223,7 +226,7 @@ Phaser.State.MainLoop.prototype = {
 
             this.frameDelta -= this.timestep;
 
-            if (this.bob > 500 && this.bob < 550)
+            if (window.bob > 200 && window.bob < 300)
             {
                 console.log('%c update ', 'color: #ffffff; background: #ffff00;');
                 console.log('update', this.frameDelta);
@@ -240,6 +243,11 @@ Phaser.State.MainLoop.prototype = {
 
         if (this.state.settings.visible && this.state.sys.color.alpha !== 0 && this.state.sys.children.list.length > 0)
         {
+            if (window.bob > 200 && window.bob < 300)
+            {
+                console.log('%c render ' + (this.frameDelta / this.timestep) + '% ', 'color: #ffffff; background: #0f0f0f;');
+            }
+
             this.game.renderer.render(this.state, this.frameDelta / this.timestep);
         }
 
@@ -250,7 +258,7 @@ Phaser.State.MainLoop.prototype = {
 
         this.panic = false;
 
-        if (this.bob > 500 && this.bob < 550)
+        if (window.bob > 200 && window.bob < 300)
         {
             console.log('%c  MainLoop.step  ', 'color: #ffffff; background: #ff0000;');
         }
@@ -258,6 +266,8 @@ Phaser.State.MainLoop.prototype = {
 
     update: function (timestep)
     {
+        this.state.sys.update(timestep);
+
         for (var c = 0; c < this.state.sys.children.list.length; c++)
         {
             var child = this.state.sys.children.list[c];

@@ -33,7 +33,7 @@ Phaser.State.Systems.prototype = {
         //  State specific managers (Factory, Tweens, Loader, Physics, etc)
         this.add = new Phaser.GameObject.Factory(this.state);
         this.load = new Phaser.Loader(this.state);
-        this.mainloop = new Phaser.State.MainLoop(this.state);
+        this.mainloop = new Phaser.State.MainLoop(this.state, this.state.settings.fps);
         this.updates = new Phaser.UpdateManager(this.state);
         this.tweens = new Phaser.TweenManager(this.state);
 
@@ -68,9 +68,13 @@ Phaser.State.Systems.prototype = {
         // this.key = (config.hasOwnProperty('key')) ? config.key : '';
     },
 
+    update: function (frameDelta)
+    {
+        this.tweens.update(frameDelta);
+    },
+
     begin: function (timestamp, frameDelta)
     {
-        this.tweens.update(timestamp, frameDelta);
     }
 
 };

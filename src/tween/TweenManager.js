@@ -248,7 +248,7 @@ Phaser.TweenManager.prototype = {
     * @method Phaser.TweenManager#update
     * @return {boolean} Return false if there's no tween to update, otherwise return true.
     */
-    update: function ()
+    update: function (frameDelta)
     {
         var addTweens = this._add.length;
         var numTweens = this._tweens.length;
@@ -262,7 +262,7 @@ Phaser.TweenManager.prototype = {
 
         while (i < numTweens)
         {
-            if (this._tweens[i].update(this.state.sys.mainloop.lastFrameTimeMs))
+            if (this._tweens[i].update(frameDelta))
             {
                 i++;
             }

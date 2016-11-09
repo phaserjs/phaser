@@ -717,7 +717,7 @@ Phaser.Tween.prototype = {
     * @param {number} time - A timestamp passed in by the TweenManager.
     * @return {boolean} false if the tween and all child tweens have completed and should be deleted from the manager, otherwise true (still active).
     */
-    update: function (time) {
+    update: function (frameDelta) {
 
         if (this.pendingDelete || !this.target)
         {
@@ -729,7 +729,7 @@ Phaser.Tween.prototype = {
             return true;
         }
 
-        var status = this.timeline[this.current].update(time);
+        var status = this.timeline[this.current].update(frameDelta);
 
         if (status === Phaser.TweenData.PENDING)
         {
