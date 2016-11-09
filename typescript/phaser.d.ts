@@ -4528,6 +4528,7 @@ declare module Phaser {
         constructor(game: Phaser.Game, x: number, y: number, key?: string | Phaser.RenderTexture | Phaser.BitmapData | PIXI.Texture, frame?: string | number);
 
         alive: boolean;
+        alpha: number;
         anchor: Phaser.Point;
         angle: number;
         animations: Phaser.AnimationManager;
