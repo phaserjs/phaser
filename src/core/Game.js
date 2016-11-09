@@ -5,7 +5,7 @@
 */
 
 
-Phaser.Game = function (width, height, renderType, parent, state)
+Phaser.Game = function (width, height, renderType, parent, stateConfig)
 {
     this.width = width;
     this.height = height;
@@ -49,7 +49,7 @@ Phaser.Game = function (width, height, renderType, parent, state)
     /**
     * @property {Phaser.StateManager} state - The StateManager.
     */
-    this.state = new Phaser.StateManager(this, state);
+    this.state = new Phaser.StateManager(this, stateConfig);
 
     /**
     * @property {Phaser.Device} device - Contains device information and capabilities.

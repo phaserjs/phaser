@@ -11,7 +11,7 @@
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
 */
-Phaser.StateManager = function (game, pending)
+Phaser.StateManager = function (game, stateConfig)
 {
     this.game = game;
 
@@ -24,19 +24,19 @@ Phaser.StateManager = function (game, pending)
 
     this._pending = [];
 
-    if (pending)
+    if (stateConfig)
     {
-        if (Array.isArray(pending))
+        if (Array.isArray(stateConfig))
         {
-            for (var i = 0; i < pending.length; i++)
+            for (var i = 0; i < stateConfig.length; i++)
             {
                 //  The i === 0 part just starts the first State given
-                this._pending.push({ index: i, key: 'default', state: pending[i], autoStart: (i === 0) });
+                this._pending.push({ index: i, key: 'default', state: stateConfig[i], autoStart: (i === 0) });
             }
         }
         else
         {
-            this._pending.push({ index: 0, key: 'default', state: pending, autoStart: true });
+            this._pending.push({ index: 0, key: 'default', state: stateConfig, autoStart: true });
         }
     }
 };
@@ -68,17 +68,17 @@ Phaser.StateManager.prototype = {
         this._pending = [];
     },
 
-    getKey: function (key, state)
+    getKey: function (key, stateConfig)
     {
         if (!key) { key = 'default'; }
 
-        if (state instanceof Phaser.State)
+        if (stateConfig instanceof Phaser.State)
         {
-            key = state.settings.key;
+            key = stateConfig.settings.key;
         }
-        else if (typeof state === 'object' && state.hasOwnProperty('key'))
+        else if (typeof stateConfig === 'object' && stateConfig.hasOwnProperty('key'))
         {
-            key = state.key;
+            key = stateConfig.key;
         }
 
         //  By this point it's either 'default' or extracted from the State
@@ -103,38 +103,43 @@ Phaser.StateManager.prototype = {
     * @param {Phaser.State|object|function} state  - The state you want to switch to.
     * @param {boolean} [autoStart=false]  - If true the State will be started immediately after adding it.
     */
-    add: function (key, state, autoStart)
+    add: function (key, stateConfig, autoStart)
     {
         if (autoStart === undefined) { autoStart = false; }
 
         //  if not booted, then put state into a holding pattern
         if (!this.game.isBooted)
         {
-            this._pending.push({ index: this._pending.length, key: key, state: state, autoStart: autoStart });
+            this._pending.push({ index: this._pending.length, key: key, state: stateConfig, autoStart: autoStart });
 
             console.log('StateManager not yet booted, adding to list', this._pending.length);
 
             return;
         }
 
-        key = this.getKey(key, state);
+        key = this.getKey(key, stateConfig);
 
         var newState;
 
-        if (state instanceof Phaser.State)
+        if (stateConfig instanceof Phaser.State)
         {
             console.log('StateManager.add from instance', key);
-            newState = this.createStateFromInstance(key, state);
+            newState = this.createStateFromInstance(key, stateConfig);
         }
-        else if (typeof state === 'object')
+        else if (typeof stateConfig === 'object')
         {
             console.log('StateManager.add from object', key);
-            newState = this.createStateFromObject(key, state);
+
+            stateConfig.key = key;
+
+            newState = this.createStateFromObject(key, stateConfig);
         }
-        else if (typeof state === 'function')
+        else if (typeof stateConfig === 'function')
         {
             console.log('StateManager.add from function', key);
-            newState = this.createStateFromFunction(key, state);
+
+
+            newState = this.createStateFromFunction(key, stateConfig);
         }
 
         this.keys[key] = newState;
@@ -174,9 +179,9 @@ Phaser.StateManager.prototype = {
         return newState;
     },
 
-    createStateFromObject: function (key, state)
+    createStateFromObject: function (key, stateConfig)
     {
-        var newState = new Phaser.State(key);
+        var newState = new Phaser.State(stateConfig);
 
         newState.game = this.game;
 
@@ -189,30 +194,30 @@ Phaser.StateManager.prototype = {
 
         //  Extract callbacks or set NOOP
 
-        if (state.hasOwnProperty('init'))
+        if (stateConfig.hasOwnProperty('init'))
         {
-            newState.init = state.init;
+            newState.init = stateConfig.init;
         }
 
-        if (state.hasOwnProperty('preload'))
+        if (stateConfig.hasOwnProperty('preload'))
         {
-            newState.preload = state.preload;
+            newState.preload = stateConfig.preload;
         }
 
-        if (state.hasOwnProperty('create'))
+        if (stateConfig.hasOwnProperty('create'))
         {
-            newState.create = state.create;
+            newState.create = stateConfig.create;
         }
 
-        if (state.hasOwnProperty('shutdown'))
+        if (stateConfig.hasOwnProperty('shutdown'))
         {
-            newState.shutdown = state.shutdown;
+            newState.shutdown = stateConfig.shutdown;
         }
 
-        newState.preUpdate = (state.hasOwnProperty('preUpdate')) ? state.preUpdate : Phaser.NOOP;
-        newState.update = (state.hasOwnProperty('update')) ? state.update : Phaser.NOOP;
-        newState.postUpdate = (state.hasOwnProperty('postUpdate')) ? state.postUpdate : Phaser.NOOP;
-        newState.render = (state.hasOwnProperty('render')) ? state.render : Phaser.NOOP;
+        newState.preUpdate = (stateConfig.hasOwnProperty('preUpdate')) ? stateConfig.preUpdate : Phaser.NOOP;
+        newState.update = (stateConfig.hasOwnProperty('update')) ? stateConfig.update : Phaser.NOOP;
+        newState.postUpdate = (stateConfig.hasOwnProperty('postUpdate')) ? stateConfig.postUpdate : Phaser.NOOP;
+        newState.render = (stateConfig.hasOwnProperty('render')) ? stateConfig.render : Phaser.NOOP;
 
         return newState;
     },

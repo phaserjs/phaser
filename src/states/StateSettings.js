@@ -26,7 +26,7 @@ Phaser.State.Settings = function (state, config)
 
     this.scaleMode = (config.hasOwnProperty('scaleMode')) ? config.scaleMode : Phaser.scaleModes.DEFAULT;
 
-    this.fps = (config.hasOwnProperty('fps')) ? config.fps : 10;
+    this.fps = (config.hasOwnProperty('fps')) ? config.fps : 60;
 
     this.x = (config.hasOwnProperty('x')) ? config.x : 0;
 
