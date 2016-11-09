@@ -948,8 +948,8 @@ Phaser.TilemapLayer.prototype.renderDeltaScroll = function (shiftX, shiftY) {
     var scrollX = this._mc.scrollX;
     var scrollY = this._mc.scrollY;
 
-    var renderW = this.canvas.width;
-    var renderH = this.canvas.height;
+    var renderW = this.game.camera.width;
+    var renderH = this.game.camera.height;
 
     var tw = this._mc.tileWidth;
     var th = this._mc.tileHeight;
@@ -1025,8 +1025,8 @@ Phaser.TilemapLayer.prototype.renderFull = function () {
     var scrollX = this._mc.scrollX;
     var scrollY = this._mc.scrollY;
 
-    var renderW = this.canvas.width;
-    var renderH = this.canvas.height;
+    var renderW = this.game.camera.width;
+    var renderH = this.game.camera.height;
 
     var tw = this._mc.tileWidth;
     var th = this._mc.tileHeight;
