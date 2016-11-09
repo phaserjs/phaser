@@ -2642,6 +2642,8 @@ Phaser.Group.prototype.destroy = function (destroyChildren, soft) {
         this.game = null;
         this.exists = false;
     }
+    
+    this.filters = null;
 
 };
 
