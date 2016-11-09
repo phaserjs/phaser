@@ -376,6 +376,85 @@ Phaser.Tilemap.prototype = {
     },
 
     /**
+    * Adds a bitmapData object to the map to be used as a tileset. A single map may use multiple tilesets.
+    *
+    * @method Phaser.Tilemap#addTilesetBitmapData
+    * @param {string} [key] - The key of the Phaser.Cache bitmapData used for this tileset.
+    * @param {number} [tileWidth=32] - The width of the tiles in the Tileset Image. If not given it will default to the map.tileWidth value, if that isn't set then 32.
+    * @param {number} [tileHeight=32] - The height of the tiles in the Tileset Image. If not given it will default to the map.tileHeight value, if that isn't set then 32.
+    * @param {number} [tileMargin=0] - The width of the tiles in the Tileset Image. If not given it will default to the map.tileWidth value.
+    * @param {number} [tileSpacing=0] - The height of the tiles in the Tileset Image. If not given it will default to the map.tileHeight value.
+    * @param {number} [gid=this.tiles.length] - If adding multiple tilesets to a blank/dynamic map, specify the starting GID the set will use here.
+    * @return {Phaser.Tileset} Returns the Tileset object that was created or updated, or null if it failed.
+    */
+    addTilesetBitmapData: function (key, tileWidth, tileHeight, tileMargin, tileSpacing, gid) {
+
+        if (typeof tileWidth === 'undefined') { tileWidth = this.tileWidth; }
+        if (typeof tileHeight === 'undefined') { tileHeight = this.tileHeight; }
+        if (typeof tileMargin === 'undefined') { tileMargin = 0; }
+        if (typeof tileSpacing === 'undefined') { tileSpacing = 0; }
+        if (typeof gid === 'undefined') { gid = this.tiles.length; }
+
+        //  In-case we're working from a blank map
+        if (tileWidth === 0)
+        {
+            tileWidth = 32;
+        }
+
+        if (tileHeight === 0)
+        {
+            tileHeight = 32;
+        }
+
+        var newSet = new Phaser.Tileset(key, gid, tileWidth, tileHeight, tileMargin, tileSpacing, {});
+        var bitmapData = this.game.cache.getBitmapData(key);
+
+        newSet.setImage(bitmapData.context.canvas);
+
+        this.tilesets.push(newSet);
+
+        var i = this.tilesets.length - 1;
+        var x = tileMargin;
+        var y = tileMargin;
+
+        var count = 0;
+        var countX = 0;
+        var countY = 0;
+
+        for (var t = gid; t < gid + newSet.total; t++)
+        {
+            this.tiles[t] = [x, y, i];
+
+            x += tileWidth + tileSpacing;
+
+            count++;
+
+            if (count === newSet.total)
+            {
+                break;
+            }
+
+            countX++;
+
+            if (countX === newSet.columns)
+            {
+                x = tileMargin;
+                y += tileHeight + tileSpacing;
+
+                countX = 0;
+                countY++;
+
+                if (countY === newSet.rows)
+                {
+                    break;
+                }
+            }
+        }
+
+        return newSet;
+    },
+
+    /**
     * Creates a Sprite for every object matching the given gid in the map data. You can optionally specify the group that the Sprite will be created in. If none is
     * given it will be created in the World. All properties from the map data objectgroup are copied across to the Sprite, so you can use this as an easy way to
     * configure Sprite properties from within the map editor. For example giving an object a property of alpha: 0.5 in the map editor will duplicate that when the
