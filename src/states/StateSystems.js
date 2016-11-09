@@ -68,13 +68,27 @@ Phaser.State.Systems.prototype = {
         // this.key = (config.hasOwnProperty('key')) ? config.key : '';
     },
 
+    begin: function (timestamp, frameDelta)
+    {
+    },
+
     update: function (frameDelta)
     {
         this.tweens.update(frameDelta);
     },
 
-    begin: function (timestamp, frameDelta)
+    end: function (fps, panic)
     {
+        if (panic)
+        {
+            // This pattern introduces non-deterministic behavior, but in this case
+            // it's better than the alternative (the application would look like it
+            // was running very quickly until the simulation caught up to real
+            // time).
+            var discardedTime = Math.round(this.mainloop.resetFrameDelta());
+
+            console.warn('Main loop panicked, probably because the browser tab was put in the background. Discarding ' + discardedTime + 'ms');
+        }
     }
 
 };

@@ -69,14 +69,6 @@ Phaser.State.MainLoop = function (state, framerate)
     // held externally so that this variable is not marked for garbage
     // collection every time the main loop runs.
     this.panic = false;
-
-    // A function that runs at the beginning of the main loop.
-    // See `MainLoop.setBegin()` for details.
-    this.begin = Phaser.NOOP;
-
-    // A function that runs at the end of the main loop.
-    // See `MainLoop.setEnd()` for details.
-    this.end = Phaser.NOOP;
 };
 
 Phaser.State.MainLoop.prototype.constructor = Phaser.State.MainLoop;
@@ -189,7 +181,7 @@ Phaser.State.MainLoop.prototype = {
         this.state.sys.updates.stop();
 
         // Run any updates that are not dependent on time in the simulation.
-        this.end(this.fps, this.panic);
+        this.state.sys.end(this.fps, this.panic);
 
         this.panic = false;
     },
