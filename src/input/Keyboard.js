@@ -272,6 +272,9 @@ Phaser.Keyboard.prototype = {
         this._onKeyUp = null;
         this._onKeyPress = null;
 
+        this._onKeyDown = null;
+        this._onKeyUp = null;
+
     },
 
     /**
