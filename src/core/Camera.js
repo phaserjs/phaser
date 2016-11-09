@@ -68,7 +68,7 @@ Phaser.Camera = function (game, id, x, y, width, height) {
     * @property {boolean} roundPx - If a Camera has roundPx set to `true` it will call `view.floor` as part of its update loop, keeping its boundary to integer values. Set this to `false` to disable this from happening.
     * @default
     */
-    this.roundPx = true;
+    this.roundPx = false;
 
     /**
     * @property {boolean} atLimit - Whether this camera is flush with the World Bounds or not.
