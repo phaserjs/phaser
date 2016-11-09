@@ -66,6 +66,10 @@ Phaser.TilemapParser = {
             {
                 return this.parseTiledJSON(map.data);
             }
+            else
+            {
+                console.warn("Phaser.TilemapParser.parse: unrecognised map format");
+            }
         }
         else
         {
