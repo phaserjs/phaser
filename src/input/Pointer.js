@@ -71,10 +71,10 @@ Phaser.Pointer = function (game, id, pointerMode) {
 
     /**
     * If this Pointer is a Mouse or Pen / Stylus then you can access its left button directly through this property.
-    * 
+    *
     * The DeviceButton has its own properties such as `isDown`, `duration` and methods like `justReleased` for more fine-grained
     * button control.
-    * 
+    *
     * @property {Phaser.DeviceButton} leftButton
     * @default
     */
@@ -82,12 +82,12 @@ Phaser.Pointer = function (game, id, pointerMode) {
 
     /**
     * If this Pointer is a Mouse or Pen / Stylus then you can access its middle button directly through this property.
-    * 
+    *
     * The DeviceButton has its own properties such as `isDown`, `duration` and methods like `justReleased` for more fine-grained
     * button control.
     *
     * Please see the DeviceButton docs for details on browser button limitations.
-    * 
+    *
     * @property {Phaser.DeviceButton} middleButton
     * @default
     */
@@ -95,12 +95,12 @@ Phaser.Pointer = function (game, id, pointerMode) {
 
     /**
     * If this Pointer is a Mouse or Pen / Stylus then you can access its right button directly through this property.
-    * 
+    *
     * The DeviceButton has its own properties such as `isDown`, `duration` and methods like `justReleased` for more fine-grained
     * button control.
     *
     * Please see the DeviceButton docs for details on browser button limitations.
-    * 
+    *
     * @property {Phaser.DeviceButton} rightButton
     * @default
     */
@@ -108,12 +108,12 @@ Phaser.Pointer = function (game, id, pointerMode) {
 
     /**
     * If this Pointer is a Mouse or Pen / Stylus then you can access its X1 (back) button directly through this property.
-    * 
+    *
     * The DeviceButton has its own properties such as `isDown`, `duration` and methods like `justReleased` for more fine-grained
     * button control.
     *
     * Please see the DeviceButton docs for details on browser button limitations.
-    * 
+    *
     * @property {Phaser.DeviceButton} backButton
     * @default
     */
@@ -121,12 +121,12 @@ Phaser.Pointer = function (game, id, pointerMode) {
 
     /**
     * If this Pointer is a Mouse or Pen / Stylus then you can access its X2 (forward) button directly through this property.
-    * 
+    *
     * The DeviceButton has its own properties such as `isDown`, `duration` and methods like `justReleased` for more fine-grained
     * button control.
     *
     * Please see the DeviceButton docs for details on browser button limitations.
-    * 
+    *
     * @property {Phaser.DeviceButton} forwardButton
     * @default
     */
@@ -134,12 +134,12 @@ Phaser.Pointer = function (game, id, pointerMode) {
 
     /**
     * If this Pointer is a Pen / Stylus then you can access its eraser button directly through this property.
-    * 
+    *
     * The DeviceButton has its own properties such as `isDown`, `duration` and methods like `justReleased` for more fine-grained
     * button control.
     *
     * Please see the DeviceButton docs for details on browser button limitations.
-    * 
+    *
     * @property {Phaser.DeviceButton} eraserButton
     * @default
     */
@@ -330,7 +330,7 @@ Phaser.Pointer = function (game, id, pointerMode) {
     * @property {Phaser.Point} positionDown - A Phaser.Point object containing the x/y values of the pointer when it was last in a down state on the display.
     */
     this.positionDown = new Phaser.Point();
-    
+
     /**
     * @property {Phaser.Point} positionUp - A Phaser.Point object containing the x/y values of the pointer when it was last released.
     */
@@ -415,7 +415,7 @@ Phaser.Pointer.prototype = {
 
     /**
     * Resets the states of all the button booleans.
-    * 
+    *
     * @method Phaser.Pointer#resetButtons
     * @protected
     */
@@ -438,7 +438,7 @@ Phaser.Pointer.prototype = {
 
     /**
     * Called by updateButtons.
-    * 
+    *
     * @method Phaser.Pointer#processButtonsDown
     * @private
     * @param {integer} buttons - The DOM event.buttons property.
@@ -457,7 +457,7 @@ Phaser.Pointer.prototype = {
         {
             this.rightButton.start(event);
         }
-                
+
         if (Phaser.Pointer.MIDDLE_BUTTON & buttons)
         {
             this.middleButton.start(event);
@@ -482,7 +482,7 @@ Phaser.Pointer.prototype = {
 
     /**
     * Called by updateButtons.
-    * 
+    *
     * @method Phaser.Pointer#processButtonsUp
     * @private
     * @param {integer} buttons - The DOM event.buttons property.
@@ -501,7 +501,7 @@ Phaser.Pointer.prototype = {
         {
             this.rightButton.stop(event);
         }
-                
+
         if (button === Phaser.Mouse.MIDDLE_BUTTON)
         {
             this.middleButton.stop(event);
@@ -527,7 +527,7 @@ Phaser.Pointer.prototype = {
     /**
     * Called when the event.buttons property changes from zero.
     * Contains a button bitmask.
-    * 
+    *
     * @method Phaser.Pointer#updateButtons
     * @protected
     * @param {MouseEvent} event - The DOM event.
@@ -708,7 +708,7 @@ Phaser.Pointer.prototype = {
 
     /**
     * Called when the Pointer is moved.
-    * 
+    *
     * @method Phaser.Pointer#move
     * @param {MouseEvent|PointerEvent|TouchEvent} event - The event passed up from the input handler.
     * @param {boolean} [fromClick=false] - Was this called from the click event?
@@ -805,7 +805,7 @@ Phaser.Pointer.prototype = {
 
     /**
     * Process all interactive objects to find out which ones were updated in the recent Pointer move.
-    * 
+    *
     * @method Phaser.Pointer#processInteractiveObjects
     * @protected
     * @param {boolean} [fromClick=false] - Was this called from the click event?
@@ -1017,9 +1017,9 @@ Phaser.Pointer.prototype = {
         this.withinGame = this.game.scale.bounds.contains(event.pageX, event.pageY);
         this.pointerId = null;
         this.identifier = null;
-        
+
         this.positionUp.setTo(this.x, this.y);
-        
+
         if (this.isMouse === false)
         {
             input.currentPointers--;
@@ -1193,7 +1193,7 @@ Phaser.Pointer.prototype.constructor = Phaser.Pointer;
 * How long the Pointer has been depressed on the touchscreen or *any* of the mouse buttons have been held down.
 * If not currently down it returns -1.
 * If you need to test a specific mouse or pen button then access the buttons directly, i.e. `Pointer.rightButton.duration`.
-* 
+*
 * @name Phaser.Pointer#duration
 * @property {number} duration
 * @readonly
