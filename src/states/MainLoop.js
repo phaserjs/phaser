@@ -4,12 +4,10 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
-// My thanks to Isaac Sukin for some of the concepts used in this class
+// My thanks to Isaac Sukin for creating MainLoop.js, on which lots of this is based.
 
 Phaser.State.MainLoop = function (state, framerate)
 {
-    console.log('MainLoop FPS', framerate);
-
     /**
     * @property {Phaser.State} state
     */
@@ -19,20 +17,6 @@ Phaser.State.MainLoop = function (state, framerate)
     * @property {Phaser.Game} game - A reference to the currently running Game.
     */
     this.game = state.game;
-
-    this.getTime = Date.now;
-
-    if (window.performance)
-    {
-        if (window.performance.now)
-        {
-            this.getTime = function () { return window.performance.now(); };
-        }
-        else if (window.performance.webkitNow)
-        {
-            this.getTime = function () { return window.performance.webkitNow(); };
-        }
-    }
 
     // The amount of time (in milliseconds) to simulate each time update() runs.
     this.timestep = 1000 / framerate;
@@ -93,9 +77,6 @@ Phaser.State.MainLoop = function (state, framerate)
     // A function that runs at the end of the main loop.
     // See `MainLoop.setEnd()` for details.
     this.end = Phaser.NOOP;
-
-    window.bob = 0;
-
 };
 
 Phaser.State.MainLoop.prototype.constructor = Phaser.State.MainLoop;
@@ -138,34 +119,18 @@ Phaser.State.MainLoop.prototype = {
         this.started = true;
         this.running = true;
 
-        this.lastFrameTimeMs = this.getTime();
-        this.lastFpsUpdate = this.getTime();
+        this.lastFrameTimeMs = window.performance.now();
+        this.lastFpsUpdate = window.performance.now();
         this.framesThisSecond = 0;
-
-        console.log('MainLoop.start', this.lastFrameTimeMs);
-
     },
 
     //  timestamp = DOMHighResTimeStamp
     step: function (timestamp)
     {
-        window.bob++;
-
-        if (window.bob > 200 && window.bob < 300)
-        {
-            console.log('%c  MainLoop.step : ' + (window.bob - 200) + ' ', 'color: #000000; background: #00ff00;');
-            console.log('timestamp', timestamp);
-            console.log('lastFrameTimeMs', this.lastFrameTimeMs);
-        }
-
         // Throttle the frame rate (if minFrameDelay is set to a non-zero value by
         // `MainLoop.setMaxAllowedFPS()`).
         if (timestamp < this.lastFrameTimeMs + this.minFrameDelay)
         {
-            if (window.bob > 200 && window.bob < 300)
-            {
-                console.log('exit');
-            }
             return;
         }
 
@@ -176,12 +141,6 @@ Phaser.State.MainLoop.prototype = {
         // simulated each frame. See the comments below for details.
         this.frameDelta += timestamp - this.lastFrameTimeMs;
         this.lastFrameTimeMs = timestamp;
-
-        if (window.bob > 200 && window.bob < 300)
-        {
-            console.log('frameDelta', this.frameDelta);
-            console.log('lastFrameTimeMs', this.lastFrameTimeMs);
-        }
 
         // Run any updates that are not dependent on time in the simulation.
 
@@ -195,25 +154,12 @@ Phaser.State.MainLoop.prototype = {
         // older seconds.
         if (timestamp > this.lastFpsUpdate + 1000)
         {
-            if (window.bob > 200 && window.bob < 300)
-            {
-                console.log('compute new exponential');
-                console.log('timestamp', timestamp, '>', (this.lastFpsUpdate + 1000), (timestamp > this.lastFpsUpdate + 1000));
-            }
-
             // Compute the new exponential moving average with an alpha of 0.25.
             // Using constants inline is okay here.
             this.fps = 0.25 * this.framesThisSecond + 0.75 * this.fps;
 
             this.lastFpsUpdate = timestamp;
             this.framesThisSecond = 0;
-
-            if (window.bob > 200 && window.bob < 300)
-            {
-                console.log('lastFpsUpdate', this.lastFpsUpdate);
-                console.log('framesThisSecond', this.framesThisSecond);
-                console.log('fps', this.fps);
-            }
         }
 
         this.framesThisSecond++;
@@ -226,12 +172,6 @@ Phaser.State.MainLoop.prototype = {
 
             this.frameDelta -= this.timestep;
 
-            if (window.bob > 200 && window.bob < 300)
-            {
-                console.log('%c update ', 'color: #ffffff; background: #ffff00;');
-                console.log('update', this.frameDelta);
-            }
-
             if (++this.numUpdateSteps >= 240)
             {
                 this.panic = true;
@@ -243,11 +183,6 @@ Phaser.State.MainLoop.prototype = {
 
         if (this.state.settings.visible && this.state.sys.color.alpha !== 0 && this.state.sys.children.list.length > 0)
         {
-            if (window.bob > 200 && window.bob < 300)
-            {
-                console.log('%c render ' + (this.frameDelta / this.timestep) + '% ', 'color: #ffffff; background: #0f0f0f;');
-            }
-
             this.game.renderer.render(this.state, this.frameDelta / this.timestep);
         }
 
@@ -257,11 +192,6 @@ Phaser.State.MainLoop.prototype = {
         this.end(this.fps, this.panic);
 
         this.panic = false;
-
-        if (window.bob > 200 && window.bob < 300)
-        {
-            console.log('%c  MainLoop.step  ', 'color: #ffffff; background: #ff0000;');
-        }
     },
 
     update: function (timestep)
