@@ -4,10 +4,10 @@ Phaser.Renderer.WebGL.GameObjects.PixelField = {
         Phaser.GameObject.PixelField.prototype
     ],
 
-    render: function (renderer, src)
+    render: function (renderer, src, interpolationPercentage)
     {
         var pixel;
-        var verts = src.transform.glVertextData;
+        var verts = src.transform.getVertexData(interpolationPercentage);
 
         for (var i = 0; i < src.list.length; i++)
         {

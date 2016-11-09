@@ -15,16 +15,14 @@
 * @param {number} [x=0] - The x coordinate of the Image. The coordinate is relative to any parent container this Image may be in.
 * @param {number} [y=0] - The y coordinate of the Image. The coordinate is relative to any parent container this Image may be in.
 */
-Phaser.GameObject.PixelField = function (game, x, y, pixelSize)
+Phaser.GameObject.PixelField = function (state, x, y, pixelSize)
 {
     if (pixelSize === undefined) { pixelSize = 1; }
 
-    this.game = game;
-
-    var _texture = game.textures.get('__DEFAULT');
+    var _texture = state.game.textures.get('__DEFAULT');
     var _frame = new Phaser.TextureFrame(_texture, 'pixel', 0, 0, 0, pixelSize, pixelSize);
 
-    Phaser.GameObject.call(this, game, x, y, _texture, _frame);
+    Phaser.GameObject.call(this, state, x, y, _texture, _frame);
 
     /**
     * @property {number} type - The const type of this object.
