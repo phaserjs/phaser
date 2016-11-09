@@ -283,7 +283,7 @@ Phaser.InputHandler.prototype = {
 
     /**
     * Starts the Input Handler running. This is called automatically when you enable input on a Sprite, or can be called directly if you need to set a specific priority.
-    * 
+    *
     * @method Phaser.InputHandler#start
     * @param {number} [priority=0] - Higher priority sprites take click priority over low-priority sprites when they are stacked on-top of each other.
     * @param {boolean} [useHandCursor=false] - If true the Sprite will show the hand cursor on mouse-over (doesn't apply to mobile browsers)
@@ -459,14 +459,10 @@ Phaser.InputHandler.prototype = {
     *
     * @method Phaser.InputHandler#validForInput
     * @protected
-    * @param {number} highestID - The highest ID currently processed by the Pointer.
-    * @param {number} highestRenderID - The highest Render Order ID currently processed by the Pointer.
-    * @param {boolean} [includePixelPerfect=true] - If this object has `pixelPerfectClick` or `pixelPerfectOver` set should it be considered as valid?
     * @return {boolean} True if the object this InputHandler is bound to should be considered as valid for input detection.
     */
-    validForInput: function (highestID, highestRenderID, includePixelPerfect) {
+    validForInput: function () {
 
-        if (includePixelPerfect === undefined) { includePixelPerfect = true; }
 
         if (!this.enabled ||
             this.sprite.scale.x === 0 ||
@@ -477,18 +473,7 @@ Phaser.InputHandler.prototype = {
             return false;
         }
 
-        //   If we're trying to specifically IGNORE pixel perfect objects, then set includePixelPerfect to false and skip it
-        if (!includePixelPerfect && (this.pixelPerfectClick || this.pixelPerfectOver))
-        {
-            return false;
-        }
-
-        if (this.priorityID > highestID || (this.priorityID === highestID && this.sprite.renderOrderID > highestRenderID))
-        {
-            return true;
-        }
-
-        return false;
+        return true;
 
     },
 
@@ -868,7 +853,7 @@ Phaser.InputHandler.prototype = {
     /**
     * Internal Update method. This is called automatically and handles the Pointer
     * and drag update loops.
-    * 
+    *
     * @method Phaser.InputHandler#update
     * @protected
     * @param {Phaser.Pointer} pointer
@@ -879,7 +864,7 @@ Phaser.InputHandler.prototype = {
         if (this.sprite === null || this.sprite.parent === undefined)
         {
             //  Abort. We've been destroyed.
-            return;
+            return false;
         }
 
         if (!this.enabled || !this.sprite.visible || !this.sprite.parent.visible)
@@ -912,11 +897,13 @@ Phaser.InputHandler.prototype = {
             {
                 this._pointerData[pointer.id].x = pointer.x - this.sprite.x;
                 this._pointerData[pointer.id].y = pointer.y - this.sprite.y;
+                this.sprite.events.onInputUpdate.dispatch(this.sprite, pointer);
                 return true;
             }
             else
             {
                 this._pointerOutHandler(pointer);
+                pointer.propagateThrough();
                 return false;
             }
         }
@@ -924,7 +911,7 @@ Phaser.InputHandler.prototype = {
 
     /**
     * Internal method handling the pointer over event.
-    * 
+    *
     * @method Phaser.InputHandler#_pointerOverHandler
     * @private
     * @param {Phaser.Pointer} pointer - The pointer that triggered the event
@@ -935,6 +922,12 @@ Phaser.InputHandler.prototype = {
         if (this.sprite === null)
         {
             //  Abort. We've been destroyed.
+            return;
+        }
+
+        if(this.pixelPerfectOver && !this.checkPixel(null, null, pointer))
+        {
+            pointer.propagateThrough();
             return;
         }
 
@@ -971,7 +964,7 @@ Phaser.InputHandler.prototype = {
 
     /**
     * Internal method handling the pointer out event.
-    * 
+    *
     * @method Phaser.InputHandler#_pointerOutHandler
     * @private
     * @param {Phaser.Pointer} pointer - The pointer that triggered the event.
@@ -1011,7 +1004,7 @@ Phaser.InputHandler.prototype = {
 
     /**
     * Internal method handling the touched / clicked event.
-    * 
+    *
     * @method Phaser.InputHandler#_touchedHandler
     * @private
     * @param {Phaser.Pointer} pointer - The pointer that triggered the event.
@@ -1024,14 +1017,16 @@ Phaser.InputHandler.prototype = {
             return;
         }
 
+        if(this.pixelPerfectClick && !this.checkPixel(null, null, pointer))
+        {
+            pointer.propagateThrough();
+            return;
+        }
+
         var data = this._pointerData[pointer.id];
 
         if (!data.isDown && data.isOver)
         {
-            if (this.pixelPerfectClick && !this.checkPixel(null, null, pointer))
-            {
-                return;
-            }
 
             data.isDown = true;
             data.isUp = false;
@@ -1094,7 +1089,7 @@ Phaser.InputHandler.prototype = {
 
     /**
     * Internal method handling the drag threshold timer.
-    * 
+    *
     * @method Phaser.InputHandler#dragTimeElapsed
     * @private
     * @param {Phaser.Pointer} pointer
@@ -1159,7 +1154,7 @@ Phaser.InputHandler.prototype = {
                     isOver = this.checkPointerOver(pointer);
                 }
             }
-            
+
             data.isOver = isOver;
 
             if (!isOver && this.useHandCursor)
@@ -1184,7 +1179,7 @@ Phaser.InputHandler.prototype = {
 
     /**
     * Called as a Pointer actively drags this Game Object.
-    * 
+    *
     * @method Phaser.InputHandler#updateDrag
     * @private
     * @param {Phaser.Pointer} pointer - The Pointer causing the drag update.
@@ -1384,11 +1379,11 @@ Phaser.InputHandler.prototype = {
     * Allow this Sprite to be dragged by any valid pointer.
     *
     * When the drag begins the Sprite.events.onDragStart event will be dispatched.
-    * 
+    *
     * When the drag completes by way of the user letting go of the pointer that was dragging the sprite, the Sprite.events.onDragStop event is dispatched.
     *
     * You can control the thresholds over when a drag starts via the properties:
-    * 
+    *
     * `Pointer.dragDistanceThreshold` the distance, in pixels, that the pointer has to move
     * before the drag will start.
     *
@@ -1399,7 +1394,7 @@ Phaser.InputHandler.prototype = {
     *
     * For the duration of the drag the Sprite.events.onDragUpdate event is dispatched. This event is only dispatched when the pointer actually
     * changes position and moves. The event sends 5 parameters: `sprite`, `pointer`, `dragX`, `dragY` and `snapPoint`.
-    * 
+    *
     * @method Phaser.InputHandler#enableDrag
     * @param {boolean} [lockCenter=false] - If false the Sprite will drag from where you click it minus the dragOffset. If true it will center itself to the tip of the mouse pointer.
     * @param {boolean} [bringToTop=false] - If true the Sprite will be bought to the top of the rendering list in its current Group.

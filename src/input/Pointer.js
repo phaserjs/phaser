@@ -71,10 +71,10 @@ Phaser.Pointer = function (game, id, pointerMode) {
 
     /**
     * If this Pointer is a Mouse or Pen / Stylus then you can access its left button directly through this property.
-    * 
+    *
     * The DeviceButton has its own properties such as `isDown`, `duration` and methods like `justReleased` for more fine-grained
     * button control.
-    * 
+    *
     * @property {Phaser.DeviceButton} leftButton
     * @default
     */
@@ -82,12 +82,12 @@ Phaser.Pointer = function (game, id, pointerMode) {
 
     /**
     * If this Pointer is a Mouse or Pen / Stylus then you can access its middle button directly through this property.
-    * 
+    *
     * The DeviceButton has its own properties such as `isDown`, `duration` and methods like `justReleased` for more fine-grained
     * button control.
     *
     * Please see the DeviceButton docs for details on browser button limitations.
-    * 
+    *
     * @property {Phaser.DeviceButton} middleButton
     * @default
     */
@@ -95,12 +95,12 @@ Phaser.Pointer = function (game, id, pointerMode) {
 
     /**
     * If this Pointer is a Mouse or Pen / Stylus then you can access its right button directly through this property.
-    * 
+    *
     * The DeviceButton has its own properties such as `isDown`, `duration` and methods like `justReleased` for more fine-grained
     * button control.
     *
     * Please see the DeviceButton docs for details on browser button limitations.
-    * 
+    *
     * @property {Phaser.DeviceButton} rightButton
     * @default
     */
@@ -108,12 +108,12 @@ Phaser.Pointer = function (game, id, pointerMode) {
 
     /**
     * If this Pointer is a Mouse or Pen / Stylus then you can access its X1 (back) button directly through this property.
-    * 
+    *
     * The DeviceButton has its own properties such as `isDown`, `duration` and methods like `justReleased` for more fine-grained
     * button control.
     *
     * Please see the DeviceButton docs for details on browser button limitations.
-    * 
+    *
     * @property {Phaser.DeviceButton} backButton
     * @default
     */
@@ -121,12 +121,12 @@ Phaser.Pointer = function (game, id, pointerMode) {
 
     /**
     * If this Pointer is a Mouse or Pen / Stylus then you can access its X2 (forward) button directly through this property.
-    * 
+    *
     * The DeviceButton has its own properties such as `isDown`, `duration` and methods like `justReleased` for more fine-grained
     * button control.
     *
     * Please see the DeviceButton docs for details on browser button limitations.
-    * 
+    *
     * @property {Phaser.DeviceButton} forwardButton
     * @default
     */
@@ -134,12 +134,12 @@ Phaser.Pointer = function (game, id, pointerMode) {
 
     /**
     * If this Pointer is a Pen / Stylus then you can access its eraser button directly through this property.
-    * 
+    *
     * The DeviceButton has its own properties such as `isDown`, `duration` and methods like `justReleased` for more fine-grained
     * button control.
     *
     * Please see the DeviceButton docs for details on browser button limitations.
-    * 
+    *
     * @property {Phaser.DeviceButton} eraserButton
     * @default
     */
@@ -299,15 +299,21 @@ Phaser.Pointer = function (game, id, pointerMode) {
     this.targetObject = null;
 
     /**
-    * This array is erased and re-populated every time this Pointer is updated. It contains references to all
-    * of the Game Objects that were considered as being valid for processing by this Pointer, this frame. To be
-    * valid they must have suitable a `priorityID`, be Input enabled, visible and actually have the Pointer over
-    * them. You can check the contents of this array in events such as `onInputDown`, but beware it is reset
-    * every frame.
+    * This array is re-assigned every time this Pointer is updated. It contains references to all of the
+    * Game Objects that were considered as being valid for processing by this Pointer, this frame, sorted
+    * by priority and render order. To be considered valid they must be Input enabled, visible and actually have
+    * the Pointer over them. You can check the contents of this array in events such as `onInputDown`, but
+    * beware it is reset every frame.
     * @property {array} interactiveCandidates
     * @default
     */
     this.interactiveCandidates = [];
+
+    /**
+    * @property {boolean} _propagateThrough - Internal variable indicating whether the pointer should propagate through the current target object.
+    * @private
+    */
+    this._propagateThrough = false;
 
     /**
     * @property {boolean} active - An active pointer is one that is currently pressed down on the display. A Mouse is always active.
@@ -330,7 +336,7 @@ Phaser.Pointer = function (game, id, pointerMode) {
     * @property {Phaser.Point} positionDown - A Phaser.Point object containing the x/y values of the pointer when it was last in a down state on the display.
     */
     this.positionDown = new Phaser.Point();
-    
+
     /**
     * @property {Phaser.Point} positionUp - A Phaser.Point object containing the x/y values of the pointer when it was last released.
     */
@@ -415,7 +421,7 @@ Phaser.Pointer.prototype = {
 
     /**
     * Resets the states of all the button booleans.
-    * 
+    *
     * @method Phaser.Pointer#resetButtons
     * @protected
     */
@@ -438,7 +444,7 @@ Phaser.Pointer.prototype = {
 
     /**
     * Called by updateButtons.
-    * 
+    *
     * @method Phaser.Pointer#processButtonsDown
     * @private
     * @param {integer} buttons - The DOM event.buttons property.
@@ -457,7 +463,7 @@ Phaser.Pointer.prototype = {
         {
             this.rightButton.start(event);
         }
-                
+
         if (Phaser.Pointer.MIDDLE_BUTTON & buttons)
         {
             this.middleButton.start(event);
@@ -482,7 +488,7 @@ Phaser.Pointer.prototype = {
 
     /**
     * Called by updateButtons.
-    * 
+    *
     * @method Phaser.Pointer#processButtonsUp
     * @private
     * @param {integer} buttons - The DOM event.buttons property.
@@ -501,7 +507,7 @@ Phaser.Pointer.prototype = {
         {
             this.rightButton.stop(event);
         }
-                
+
         if (button === Phaser.Mouse.MIDDLE_BUTTON)
         {
             this.middleButton.stop(event);
@@ -527,7 +533,7 @@ Phaser.Pointer.prototype = {
     /**
     * Called when the event.buttons property changes from zero.
     * Contains a button bitmask.
-    * 
+    *
     * @method Phaser.Pointer#updateButtons
     * @protected
     * @param {MouseEvent} event - The DOM event.
@@ -582,6 +588,29 @@ Phaser.Pointer.prototype = {
             this.isDown = true;
         }
 
+    },
+
+    /**
+    * Call this in an input event handler to make the event propagate to other valid objects "underneath".
+    *
+    * @method Phaser.Pointer#propagateThrough
+    * @default
+    */
+    propagateThrough: function() {
+        this._propagateThrough = true;
+    },
+
+    /**
+    * Check if pointer should propagate through the current target object and reset the indicator.
+    *
+    * @method Phaser.Pointer#triggerPropagation
+    * @private
+    * @return {boolean} True if pointer should propagate, false otherwise.
+    */
+    triggerPropagation: function() {
+        var shouldPropagate = this._propagateThrough;
+        this._propagateThrough = false;
+        return shouldPropagate;
     },
 
     /**
@@ -645,9 +674,16 @@ Phaser.Pointer.prototype = {
 
         this.totalTouches++;
 
-        if (this.targetObject !== null)
+        var propagated = true; // no-object propagates input
+        for (var i = this.interactiveCandidates.length; i --> 0;)
         {
+            this.targetObject = this.interactiveCandidates[i];
             this.targetObject._touchedHandler(this);
+            propagated = this.triggerPropagation();
+            if(!propagated)
+            {
+                break;
+            }
         }
 
         return this;
@@ -708,7 +744,7 @@ Phaser.Pointer.prototype = {
 
     /**
     * Called when the Pointer is moved.
-    * 
+    *
     * @method Phaser.Pointer#move
     * @param {MouseEvent|PointerEvent|TouchEvent} event - The event passed up from the input handler.
     * @param {boolean} [fromClick=false] - Was this called from the click event?
@@ -786,17 +822,34 @@ Phaser.Pointer.prototype = {
             input.moveCallbacks[i].callback.call(input.moveCallbacks[i].context, this, this.x, this.y, fromClick);
         }
 
-        //  Easy out if we're dragging something and it still exists
-        if (this.targetObject !== null && this.targetObject.isDragged === true)
+        var dragged = false; // no-object can not be dragged
+        var propagated = true; // no-object propagates input
+        for (var i = this.interactiveCandidates.length; i --> 0;)
         {
-            if (this.targetObject.update(this) === false)
+            this.targetObject = this.interactiveCandidates[i];
+            if(this.targetObject.isDragged === true)
             {
-                this.targetObject = null;
+                dragged = true;
+                if(this.targetObject.update(this) === false)
+                {
+                    this.interactiveCandidates.splice(i,1);
+                    this.targetObject = null;
+                    this.propagateThrough();
+                } else {
+                    this.targetObject.sprite.updateTransform();
+                }
+                propagated = this.triggerPropagation();
+                if(!propagated)
+                {
+                    break;
+                }
             }
         }
-        else if (input.interactiveItems.total > 0)
+
+        if (!(dragged && !propagated) && // if an object was dragged and did not propagate the input, then we can skip processing other objects
+                input.interactiveItems.total > 0)
         {
-            this.processInteractiveObjects(fromClick);
+            this.processInteractiveObjects(fromClick, true);
         }
 
         return this;
@@ -805,79 +858,102 @@ Phaser.Pointer.prototype = {
 
     /**
     * Process all interactive objects to find out which ones were updated in the recent Pointer move.
-    * 
+    *
     * @method Phaser.Pointer#processInteractiveObjects
     * @protected
     * @param {boolean} [fromClick=false] - Was this called from the click event?
     * @return {boolean} True if this method processes an object (i.e. a Sprite becomes the Pointers currentTarget), otherwise false.
     */
-    processInteractiveObjects: function (fromClick) {
+    processInteractiveObjects: function (fromClick, fromMove) {
 
-        //  Work out which object is on the top
-        var highestRenderOrderID = 0;
-        var highestInputPriorityID = -1;
-        var candidateTarget = null;
+		if(fromMove === undefined) { fromMove = false; }
 
-        //  First pass gets all objects that the pointer is over that DON'T use pixelPerfect checks and get the highest ID
-        //  We know they'll be valid for input detection but not which is the top just yet
+        var detectedObjects = [];
 
+        // just fast hit-test all interactive items and collect valid ones
         var currentNode = this.game.input.interactiveItems.first;
-
-        this.interactiveCandidates = [];
-
         while (currentNode)
         {
-            //  Reset checked status
-            currentNode.checked = false;
-
-            if (currentNode.validForInput(highestInputPriorityID, highestRenderOrderID, false))
+            if(currentNode.validForInput())
             {
-                //  Flag it as checked so we don't re-scan it on the next phase
-                currentNode.checked = true;
-
                 if ((fromClick && currentNode.checkPointerDown(this, true)) ||
                     (!fromClick && currentNode.checkPointerOver(this, true)))
                 {
-                    highestRenderOrderID = currentNode.sprite.renderOrderID;
-                    highestInputPriorityID = currentNode.priorityID;
-                    candidateTarget = currentNode;
-                    this.interactiveCandidates.push(currentNode);
+                    detectedObjects.push(currentNode);
                 }
             }
-
             currentNode = this.game.input.interactiveItems.next;
         }
 
-        //  Then in the second sweep we process ONLY the pixel perfect ones that are checked and who have a higher ID
-        //  because if their ID is lower anyway then we can just automatically discount them
-        //  (A node that was previously checked did not request a pixel-perfect check.)
+        // sort them by priority and render order
+        detectedObjects.sort( function(one, other) {
+            var priority = one.priorityID - other.priorityID;
+            var renderOrder = one.sprite.renderOrderID - other.sprite.renderOrderID;
+            return priority ? priority : renderOrder;
+        });
 
-        currentNode = this.game.input.interactiveItems.first;
-
-        while (currentNode)
+        // call _pointerOut on objects that are no longer valid, and mark the ones that stayed valid
+        for (var i = this.interactiveCandidates.length; i --> 0;)
         {
-            if (!currentNode.checked &&
-                currentNode.validForInput(highestInputPriorityID, highestRenderOrderID, true))
+            var object = this.interactiveCandidates[i];
+            var index = detectedObjects.indexOf(object);
+            if(index === -1)
             {
-                if ((fromClick && currentNode.checkPointerDown(this, false)) ||
-                    (!fromClick && currentNode.checkPointerOver(this, false)))
+                object._pointerOutHandler(this);
+                object.checked = false;
+            }
+            else
+            {
+                object.checked = object.pointerOver(this.id);
+            }
+        }
+
+        this.targetObject = null;
+
+        // for currently valid objects if they were valid previously update, otherwise _pointerOverHandler
+        var i = detectedObjects.length;
+        while ( i --> 0 )
+        {
+            this.targetObject = detectedObjects[i];
+            if(this.targetObject.checked)
+            {
+                this.targetObject.checked = false;
+				if(!fromClick && fromMove && this.targetObject.isDragged) // exclude dragged objects as they have been updated previously in move() and, since we are here now, propagated input
+				{
+                    this.propagateThrough();
+				}
+				else if(this.targetObject.update(this) === false)
                 {
-                    highestRenderOrderID = currentNode.sprite.renderOrderID;
-                    highestInputPriorityID = currentNode.priorityID;
-                    candidateTarget = currentNode;
-                    this.interactiveCandidates.push(currentNode);
+                    detectedObjects.splice(i,1);
+                    this.propagateThrough();
                 }
             }
-
-            currentNode = this.game.input.interactiveItems.next;
+            else
+            {
+                this.targetObject._pointerOverHandler(this);
+            }
+            if(!this.triggerPropagation()) // stop if did not propagate
+            {
+                break;
+            }
         }
+
+        // pointer out on all objects that have been obscured
+        while ( i --> 0 )
+        {
+            var object = detectedObjects[i];
+            if(object.checked) {
+                object.checked = false;
+                object._pointerOutHandler(this);
+            }
+        }
+
+        this.interactiveCandidates = detectedObjects;
 
         if (this.game.input.customCandidateHandler)
         {
-            candidateTarget = this.game.input.customCandidateHandler.call(this.game.input.customCandidateHandlerContext, this, this.interactiveCandidates, candidateTarget);
+            this.game.input.customCandidateHandler.call(this.game.input.customCandidateHandlerContext, this);
         }
-
-        this.swapTarget(candidateTarget, false);
 
         return (this.targetObject !== null);
 
@@ -885,7 +961,7 @@ Phaser.Pointer.prototype = {
 
     /**
     * This will change the `Pointer.targetObject` object to be the one provided.
-    * 
+    *
     * This allows you to have fine-grained control over which object the Pointer is targeting.
     *
     * Note that even if you set a new Target here, it is still able to be replaced by any other valid
@@ -1017,9 +1093,9 @@ Phaser.Pointer.prototype = {
         this.withinGame = this.game.scale.bounds.contains(event.pageX, event.pageY);
         this.pointerId = null;
         this.identifier = null;
-        
+
         this.positionUp.setTo(this.x, this.y);
-        
+
         if (this.isMouse === false)
         {
             input.currentPointers--;
@@ -1033,6 +1109,7 @@ Phaser.Pointer.prototype = {
         }
 
         this.targetObject = null;
+        this.interactiveCandidates.length = 0;
 
         return this;
 
@@ -1165,12 +1242,14 @@ Phaser.Pointer.prototype = {
 
         this.resetButtons();
 
-        if (this.targetObject)
+        for (var i = this.interactiveCandidates.length; i --> 0;)
         {
+            this.targetObject = this.interactiveCandidates[i];
             this.targetObject._releasedHandler(this);
         }
 
         this.targetObject = null;
+        this.interactiveCandidates.length = 0;
 
     },
 
@@ -1193,7 +1272,7 @@ Phaser.Pointer.prototype.constructor = Phaser.Pointer;
 * How long the Pointer has been depressed on the touchscreen or *any* of the mouse buttons have been held down.
 * If not currently down it returns -1.
 * If you need to test a specific mouse or pen button then access the buttons directly, i.e. `Pointer.rightButton.duration`.
-* 
+*
 * @name Phaser.Pointer#duration
 * @property {number} duration
 * @readonly
