@@ -228,7 +228,7 @@ This populates the cursors object with four properties: up, down, left, right, t
 
 Although we've added a lot of code it should all be pretty readable. The first thing we do is reset the horizontal velocity on the sprite. Then we check to see if the left cursor key is held down. If it is we apply a negative horizontal velocity and start the 'left' running animation. If they are holding down 'right' instead we literally do the opposite. By clearing the velocity and setting it in this manner, every frame, it creates a 'stop-start' style of movement.
 
-The player sprite will move only when a key is held down and stop immediately they are not. Phaser also allows you to create more complex motions, with momentum and acceleration, but this gives us the effect we need for this game. The final part of the key check sets the frame to 4 if no keyis held down. Frame 4 in the sprite sheet is the one of the player looking at you, idle.
+The player sprite will move only when a key is held down and stop immediately they are not. Phaser also allows you to create more complex motions, with momentum and acceleration, but this gives us the effect we need for this game. The final part of the key check sets the frame to 4 if no key is held down. Frame 4 in the sprite sheet is the one of the player looking at you, idle.
 
 <h3>Jump to it</h3>
 
