@@ -56,12 +56,6 @@ Phaser.Component.Transform = function (gameObject, x, y, scaleX, scaleY)
     this._anchorX = 0;
     this._anchorY = 0;
 
-    this._oldPosX = x;
-    this._oldPosY = y;
-    this._oldScaleX = scaleX;
-    this._oldScaleY = scaleY;
-    this._oldRotation = 0;
-
     this._worldRotation = 0;
     this._worldScaleX = scaleX;
     this._worldScaleY = scaleY;
@@ -145,17 +139,41 @@ Phaser.Component.Transform.prototype = {
         }
     },
 
+    enableInterpolation: function ()
+    {
+        this.interpolate = true;
+
+        this.syncInterpolation();
+    },
+
+    syncInterpolation: function ()
+    {
+        this._dirty = true;
+
+        this.update();
+
+        var old = this.old;
+        var world = this.world;
+
+        old.a = world.a;
+        old.b = world.b;
+        old.c = world.c;
+        old.d = world.d;
+        old.tx = world.tx;
+        old.ty = world.ty;
+    },
+
+    disableInterpolation: function ()
+    {
+        this.interpolate = false;
+    },
+
     setPosition: function (x, y)
     {
         if (y === undefined) { y = x; }
 
-        this._oldPosX = this._posX;
-        this._oldPosY = this._posY;
-
         this._posX = x;
         this._posY = y;
-
-        this._dirtyVertex = true;
 
         return this.update();
     },
@@ -164,14 +182,8 @@ Phaser.Component.Transform.prototype = {
     {
         if (y === undefined) { y = x; }
 
-        this._oldScaleX = this._scaleX;
-        this._oldScaleY = this._scaleY;
-
         this._scaleX = x;
         this._scaleY = y;
-
-        this._dirtyVertex = true;
-
         this.updateCache();
 
         return this.update();
@@ -199,11 +211,7 @@ Phaser.Component.Transform.prototype = {
 
     setRotation: function (rotation)
     {
-        this._oldRotation = this.rotation;
-
         this.rotation = rotation;
-
-        this._dirtyVertex = true;
 
         return this.update();
     },
@@ -214,11 +222,6 @@ Phaser.Component.Transform.prototype = {
     {
         var old = this.old;
         var world = this.world;
-
-        if (window.bob > 200 && window.bob < 300)
-        {
-            console.log('updateFromRoot');
-        }
 
         old.a = world.a;
         old.b = world.b;
@@ -264,11 +267,6 @@ Phaser.Component.Transform.prototype = {
     {
         var old = this.old;
         var world = this.world;
-
-        if (window.bob > 200 && window.bob < 300)
-        {
-            console.log('updateFromParent');
-        }
 
         old.a = world.a;
         old.b = world.b;
@@ -395,10 +393,10 @@ Phaser.Component.Transform.prototype = {
 
         this.updateFromParent();
 
-        if (this.gameObject.frame)
-        {
-            this.updateVertexData();
-        }
+        // if (this.gameObject.frame)
+        // {
+        //     this.updateVertexData();
+        // }
 
         if (this.children.length)
         {
@@ -413,15 +411,6 @@ Phaser.Component.Transform.prototype = {
 
     update: function ()
     {
-        // if (this.parent)
-        // {
-        //     console.log('**', this.name, 'Transform.update. Dirty?', this.dirty, 'Parent:', this.parent.name);
-        // }
-        // else
-        // {
-        //     console.log('**', this.name, 'Transform.update. Dirty?', this.dirty, 'No Parent');
-        // }
-
         if (!this._dirty)
         {
             return;
@@ -464,7 +453,7 @@ Phaser.Component.Transform.prototype = {
 
     updateVertexData: function (interpolationPercentage)
     {
-        if (!this.gameObject.frame || !this._dirtyVertex)
+        if (!this.gameObject.frame || (!this._dirtyVertex && !this.interpolate))
         {
             return;
         }
@@ -516,17 +505,12 @@ Phaser.Component.Transform.prototype = {
             var old = this.old;
 
             // Interpolate with the last position to reduce stuttering.
-            a = old.a + (a - old.a) * interpolationPercentage;
-            b = old.b + (b - old.b) * interpolationPercentage;
-            c = old.c + (c - old.c) * interpolationPercentage;
-            d = old.d + (d - old.d) * interpolationPercentage;
-            tx = old.tx + (tx - old.tx) * interpolationPercentage;
-            ty = old.ty + (ty - old.ty) * interpolationPercentage;
-
-            if (window.bob > 200 && window.bob < 300)
-            {
-                console.log('updateVertexData', interpolationPercentage);
-            }
+            a = old.a + ((a - old.a) * interpolationPercentage);
+            b = old.b + ((b - old.b) * interpolationPercentage);
+            c = old.c + ((c - old.c) * interpolationPercentage);
+            d = old.d + ((d - old.d) * interpolationPercentage);
+            tx = old.tx + ((tx - old.tx) * interpolationPercentage);
+            ty = old.ty + ((ty - old.ty) * interpolationPercentage);
         }
 
         if (frame.rotated)
@@ -583,9 +567,6 @@ Phaser.Component.Transform.prototype = {
         //  Bottom Left Vert
         vert.x3 = (a * w1) + (c * h0) + tx;
         vert.y3 = (d * h0) + (b * w1) + ty;
-
-        // console.log('Vertex Data for', this.name);
-        // console.log(vert);
         
         return vert;
     },
@@ -635,9 +616,7 @@ Object.defineProperties(Phaser.Component.Transform.prototype, {
 
         set: function (value)
         {
-            this._oldPosX = this._posX;
             this._posX = value;
-
             this.dirty = true;
         }
 
@@ -654,9 +633,7 @@ Object.defineProperties(Phaser.Component.Transform.prototype, {
 
         set: function (value)
         {
-            this._oldPosY = this._posY;
             this._posY = value;
-
             this.dirty = true;
         }
 
@@ -673,9 +650,6 @@ Object.defineProperties(Phaser.Component.Transform.prototype, {
 
         set: function (value)
         {
-            this._oldScaleX = this._scaleX;
-            this._oldScaleY = this._scaleY;
-
             this._scaleX = value;
             this._scaleY = value;
 
@@ -697,7 +671,6 @@ Object.defineProperties(Phaser.Component.Transform.prototype, {
         set: function (value)
         {
             this._scaleX = value;
-            this._oldScaleX = this._scaleX;
 
             this.dirty = true;
             this.updateCache();
@@ -716,7 +689,6 @@ Object.defineProperties(Phaser.Component.Transform.prototype, {
 
         set: function (value)
         {
-            this._oldScaleY = this._scaleY;
             this._scaleY = value;
 
             this.dirty = true;
@@ -843,7 +815,6 @@ Object.defineProperties(Phaser.Component.Transform.prototype, {
                 return;
             }
 
-            this._oldRotation = this._rotation;
             this._rotation = value;
             this.dirty = true;
 
