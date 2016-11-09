@@ -203,6 +203,8 @@ Phaser.Physics.prototype = {
             }
         }
 
+        this.setBoundsToWorld();
+
     },
 
     /**
