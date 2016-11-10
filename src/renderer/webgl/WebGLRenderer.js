@@ -848,10 +848,10 @@ Phaser.Renderer.WebGL.prototype = {
         return texture;
     },
 
-    createFBO: function (x, y, width, height)
+    createFBO: function (parent, x, y, width, height)
     {
         //   Store in a local list so we can update size if the canvas size changes?
-        return new Phaser.Renderer.WebGL.QuadFBO(this, x, y, width, height);
+        return new Phaser.Renderer.WebGL.QuadFBO(this, parent, x, y, width, height);
     },
 
     destroy: function ()
