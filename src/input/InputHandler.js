@@ -774,8 +774,8 @@ Phaser.InputHandler.prototype = {
             !this.sprite ||
             !this.sprite.parent ||
             !this.sprite.visible ||
-            this.sprite.worldScaleX === 0 ||
-            this.sprite.worldScaleY === 0)
+            this.sprite.transform.worldScaleX === 0 ||
+            this.sprite.transform.worldScaleY === 0)
         {
             return false;
         }
@@ -888,7 +888,7 @@ Phaser.InputHandler.prototype = {
             return;
         }
 
-        if (!this.enabled || !this.sprite.visible || !this.sprite.parent.visible)
+        if (!this.enabled || !this.sprite.visible)
         {
             this._pointerOutHandler(pointer);
             return false;
