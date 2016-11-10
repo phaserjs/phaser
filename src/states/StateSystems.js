@@ -59,6 +59,7 @@ Phaser.State.Systems.prototype = {
         this.state.camera = this.camera;
         this.state.input = this.input;
         this.state.transform = this.camera.transform;
+        this.state.state = this.state.game.state;
 
         //  Here we can check which Systems to install as properties into the State object
         //  (default systems always exist in here, regardless)
