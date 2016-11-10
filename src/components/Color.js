@@ -14,7 +14,7 @@ Phaser.Component.Color = function (gameObject)
 {
     this.gameObject = gameObject;
 
-    this.game = gameObject.game;
+    this.state = gameObject.state;
 
     this._dirty = false;
 
@@ -123,7 +123,7 @@ Phaser.Component.Color.prototype = {
     destroy: function ()
     {
         this.gameObject = null;
-        this.game = null;
+        this.state = null;
         this._tint = [];
     }
 
@@ -146,7 +146,7 @@ Object.defineProperties(Phaser.Component.Color.prototype, {
             {
                 if (!this._dirty)
                 {
-                    this.game.updates.add(this);
+                    this.state.sys.updates.add(this);
                 }
 
                 this._dirty = true;
