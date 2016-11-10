@@ -138,7 +138,6 @@ Phaser.StateManager.prototype = {
         {
             console.log('StateManager.add from function', key);
 
-
             newState = this.createStateFromFunction(key, stateConfig);
         }
 
@@ -289,7 +288,7 @@ Phaser.StateManager.prototype = {
         var width = newState.settings.width;
         var height = newState.settings.height;
 
-        newState.sys.fbo = this.game.renderer.createFBO(x, y, width, height);
+        newState.sys.fbo = this.game.renderer.createFBO(newState, x, y, width, height);
     },
 
     getState: function (key)

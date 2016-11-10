@@ -87,6 +87,7 @@ Phaser.Component.Transform.prototype = {
         //  Invalid child?
         if (child === this || child.parent === this || index < 0 || index > this.children.length)
         {
+            console.log('Invalid child');
             return child;
         }
 
@@ -393,11 +394,6 @@ Phaser.Component.Transform.prototype = {
 
         this.updateFromParent();
 
-        // if (this.gameObject.frame)
-        // {
-        //     this.updateVertexData();
-        // }
-
         if (this.children.length)
         {
             for (var i = 0; i < this.children.length; i++)
@@ -407,6 +403,7 @@ Phaser.Component.Transform.prototype = {
         }
 
         this._dirty = false;
+        this._dirtyVertex = true;
     },
 
     update: function ()

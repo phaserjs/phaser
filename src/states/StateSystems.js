@@ -28,8 +28,6 @@ Phaser.State.Systems.prototype = {
 
     init: function ()
     {
-        console.log('State.init');
-
         //  State specific managers (Factory, Tweens, Loader, Physics, etc)
         this.add = new Phaser.GameObject.Factory(this.state);
         this.load = new Phaser.Loader(this.state);
