@@ -281,6 +281,9 @@ Phaser.InputHandler = function (sprite)
     this.onOut = new Phaser.Signal();
     this.onDown = new Phaser.Signal();
     this.onUp = new Phaser.Signal();
+    this.onDragStart = new Phaser.Signal();
+    this.onDragUpdate = new Phaser.Signal();
+    this.onDragStop = new Phaser.Signal();
 
 };
 
@@ -1275,7 +1278,7 @@ Phaser.InputHandler.prototype = {
             }
         }
 
-        this.sprite.events.onDragUpdate.dispatch(this.sprite, pointer, px, py, this.snapPoint, fromStart);
+        this.onDragUpdate.dispatch(this.sprite, pointer, px, py, this.snapPoint, fromStart);
 
         return true;
 
@@ -1417,8 +1420,8 @@ Phaser.InputHandler.prototype = {
     * @param {Phaser.Rectangle} [boundsRect=null] - If you want to restrict the drag of this sprite to a specific Rectangle, pass the Phaser.Rectangle here, otherwise it's free to drag anywhere.
     * @param {Phaser.Sprite} [boundsSprite=null] - If you want to restrict the drag of this sprite to within the bounding box of another sprite, pass it here.
     */
-    enableDrag: function (lockCenter, bringToTop, pixelPerfect, alphaThreshold, boundsRect, boundsSprite) {
-
+    enableDrag: function (lockCenter, bringToTop, pixelPerfect, alphaThreshold, boundsRect, boundsSprite)
+    {
         if (lockCenter === undefined) { lockCenter = false; }
         if (bringToTop === undefined) { bringToTop = false; }
         if (pixelPerfect === undefined) { pixelPerfect = false; }
@@ -1476,8 +1479,8 @@ Phaser.InputHandler.prototype = {
     * @method Phaser.InputHandler#startDrag
     * @param {Phaser.Pointer} pointer
     */
-    startDrag: function (pointer) {
-
+    startDrag: function (pointer)
+    {
         var x = this.sprite.x;
         var y = this.sprite.y;
 
@@ -1489,6 +1492,7 @@ Phaser.InputHandler.prototype = {
 
         this._pointerData[pointer.id].isDragged = true;
 
+        /*
         if (this.sprite.fixedToCamera)
         {
             if (this.dragFromCenter)
@@ -1513,18 +1517,23 @@ Phaser.InputHandler.prototype = {
 
             this._dragPoint.setTo(this.sprite.x - this.globalToLocalX(pointer.x), this.sprite.y - this.globalToLocalY(pointer.y));
         }
+        */
+
+        this._dragPoint.setTo(this.sprite.x - this.globalToLocalX(pointer.x), this.sprite.y - this.globalToLocalY(pointer.y));
 
         this.updateDrag(pointer, true);
 
+        /*
         if (this.bringToTop)
         {
             this._dragPhase = true;
             this.sprite.bringToTop();
         }
+        */
 
         this.dragStartPoint.set(x, y);
 
-        this.sprite.events.onDragStart$dispatch(this.sprite, pointer, x, y);
+        this.onDragStart.dispatch(this.sprite, pointer, x, y);
 
         this._pendingDrag = false;
 
@@ -1594,7 +1603,7 @@ Phaser.InputHandler.prototype = {
             }
         }
 
-        this.sprite.events.onDragStop$dispatch(this.sprite, pointer);
+        this.onDragStop.dispatch(this.sprite, pointer);
 
         if (this.checkPointerOver(pointer) === false)
         {
