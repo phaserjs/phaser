@@ -47,6 +47,11 @@ Phaser.Game = function (width, height, renderType, parent, stateConfig)
     this.cache = null;
 
     /**
+    * @property {Phaser.Input} input - Reference to the input manager
+    */
+    this.input = null;
+
+    /**
     * @property {Phaser.StateManager} state - The StateManager.
     */
     this.state = new Phaser.StateManager(this, stateConfig);
@@ -91,8 +96,15 @@ Phaser.Game.prototype = {
 
         //  Global
         // this.scale = new Phaser.ScaleManager(this, this.width, this.height);
+
+        this.scale = { offset: { x: 0, y: 0 } };
+        this.time = { time: function () { return Date.now(); } };
+
         this.textures = new Phaser.TextureManager(this);
         this.cache = new Phaser.Cache(this);
+        this.input = new Phaser.Input(this);
+
+        this.input.boot();
 
         this.state.boot();
 
@@ -104,6 +116,8 @@ Phaser.Game.prototype = {
     //  timestamp = DOMHighResTimeStamp
     step: function (timestamp)
     {
+        this.input.update();
+
         this.state.step(timestamp);
 
         this.rafHandle = window.requestAnimationFrame(this.step.bind(this));

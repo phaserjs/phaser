@@ -11,17 +11,17 @@
 * @constructor
 * @param {Phaser.Sprite} sprite - The Sprite object to which this Input Handler belongs.
 */
-Phaser.InputHandler = function (sprite) {
-
+Phaser.InputHandler = function (sprite)
+{
     /**
     * @property {Phaser.Sprite} sprite - The Sprite object to which this Input Handler belongs.
     */
     this.sprite = sprite;
 
     /**
-    * @property {Phaser.Game} game - A reference to the currently running game.
+    * @property {Phaser.Game} game - A reference to the State the Game Object belongs to.
     */
-    this.game = sprite.game;
+    this.state = sprite.state;
 
     /**
     * @property {boolean} enabled - If enabled the Input Handler will process input requests and monitor pointer activity.
@@ -277,6 +277,11 @@ Phaser.InputHandler = function (sprite) {
         isDragged: false
     });
 
+    this.onOver = new Phaser.Signal();
+    this.onOut = new Phaser.Signal();
+    this.onDown = new Phaser.Signal();
+    this.onUp = new Phaser.Signal();
+
 };
 
 Phaser.InputHandler.prototype = {
@@ -289,16 +294,18 @@ Phaser.InputHandler.prototype = {
     * @param {boolean} [useHandCursor=false] - If true the Sprite will show the hand cursor on mouse-over (doesn't apply to mobile browsers)
     * @return {Phaser.Sprite} The Sprite object to which the Input Handler is bound.
     */
-    start: function (priority, useHandCursor) {
-
+    start: function (priority, useHandCursor)
+    {
         priority = priority || 0;
+
         if (useHandCursor === undefined) { useHandCursor = false; }
 
         //  Turning on
         if (this.enabled === false)
         {
             //  Register, etc
-            this.game.input.interactiveItems.add(this);
+            this.state.game.input.interactiveItems.add(this);
+            // this.state.sys.input.interactiveItems.add(this);
             this.useHandCursor = useHandCursor;
             this.priorityID = priority;
 
@@ -327,8 +334,8 @@ Phaser.InputHandler.prototype = {
 
         }
 
-        this.sprite.events.onAddedToGroup.add(this.addedToGroup, this);
-        this.sprite.events.onRemovedFromGroup.add(this.removedFromGroup, this);
+        // this.sprite.events.onAddedToGroup.add(this.addedToGroup, this);
+        // this.sprite.events.onRemovedFromGroup.add(this.removedFromGroup, this);
 
         return this.sprite;
 
@@ -422,7 +429,7 @@ Phaser.InputHandler.prototype = {
         {
             //  De-register, etc
             this.enabled = false;
-            this.game.input.interactiveItems.remove(this);
+            this.state.game.input.interactiveItems.remove(this);
         }
 
     },
@@ -437,13 +444,13 @@ Phaser.InputHandler.prototype = {
         {
             if (this._setHandCursor)
             {
-                this.game.canvas.style.cursor = "default";
+                this.game.canvas.style.cursor = 'default';
                 this._setHandCursor = false;
             }
 
             this.enabled = false;
 
-            this.game.input.interactiveItems.remove(this);
+            this.state.game.input.interactiveItems.remove(this);
 
             this._pointerData.length = 0;
             this.boundsRect = null;
@@ -471,7 +478,7 @@ Phaser.InputHandler.prototype = {
         if (!this.enabled ||
             this.sprite.scale.x === 0 ||
             this.sprite.scale.y === 0 ||
-            this.priorityID < this.game.input.minPriorityID ||
+            this.priorityID < this.state.game.input.minPriorityID ||
             (this.sprite.parent && this.sprite.parent.ignoreChildInput))
         {
             return false;
@@ -723,15 +730,14 @@ Phaser.InputHandler.prototype = {
             !this.sprite ||
             !this.sprite.parent ||
             !this.sprite.visible ||
-            !this.sprite.parent.visible ||
-            this.sprite.worldScale.x === 0 ||
-            this.sprite.worldScale.y === 0)
+            this.sprite.transform.worldScaleX === 0 ||
+            this.sprite.transform.worldScaleY === 0)
         {
             return false;
         }
 
         //  Need to pass it a temp point, in case we need it again for the pixel check
-        if (this.game.input.hitTest(this.sprite, pointer, this._tempPoint))
+        if (this.state.game.input.hitTest(this.sprite, pointer, this._tempPoint))
         {
             if (fastTest === undefined)
             {
@@ -761,21 +767,21 @@ Phaser.InputHandler.prototype = {
     * @param {boolean} [fastTest=false] - Force a simple hit area check even if `pixelPerfectOver` is true for this object?
     * @return {boolean}
     */
-    checkPointerOver: function (pointer, fastTest) {
-
+    checkPointerOver: function (pointer, fastTest)
+    {
+        //  Need a worldVisible property
         if (!this.enabled ||
             !this.sprite ||
             !this.sprite.parent ||
             !this.sprite.visible ||
-            !this.sprite.parent.visible ||
-            this.sprite.worldScale.x === 0 ||
-            this.sprite.worldScale.y === 0)
+            this.sprite.worldScaleX === 0 ||
+            this.sprite.worldScaleY === 0)
         {
             return false;
         }
 
         //  Need to pass it a temp point, in case we need it again for the pixel check
-        if (this.game.input.hitTest(this.sprite, pointer, this._tempPoint))
+        if (this.state.game.input.hitTest(this.sprite, pointer, this._tempPoint))
         {
             if (fastTest === undefined)
             {
@@ -814,7 +820,7 @@ Phaser.InputHandler.prototype = {
             if (x === null && y === null)
             {
                 //  Use the pointer parameter
-                this.game.input.getLocalPosition(this.sprite, pointer, this._tempPoint);
+                this.state.game.input.getLocalPosition(this.sprite, pointer, this._tempPoint);
 
                 var x = this._tempPoint.x;
                 var y = this._tempPoint.y;
@@ -850,10 +856,10 @@ Phaser.InputHandler.prototype = {
             this._dx = x;
             this._dy = y;
 
-            this.game.input.hitContext.clearRect(0, 0, 1, 1);
-            this.game.input.hitContext.drawImage(this.sprite.texture.baseTexture.source, x, y, 1, 1, 0, 0, 1, 1);
+            this.state.game.input.hitContext.clearRect(0, 0, 1, 1);
+            this.state.game.input.hitContext.drawImage(this.sprite.texture.baseTexture.source, x, y, 1, 1, 0, 0, 1, 1);
 
-            var rgb = this.game.input.hitContext.getImageData(0, 0, 1, 1);
+            var rgb = this.state.game.input.hitContext.getImageData(0, 0, 1, 1);
 
             if (rgb.data[3] >= this.pixelPerfectAlpha)
             {
@@ -946,19 +952,19 @@ Phaser.InputHandler.prototype = {
 
             data.isOver = true;
             data.isOut = false;
-            data.timeOver = this.game.time.time;
+            data.timeOver = Date.now();
             data.x = pointer.x - this.sprite.x;
             data.y = pointer.y - this.sprite.y;
 
             if (this.useHandCursor && data.isDragged === false)
             {
-                this.game.canvas.style.cursor = "pointer";
+                this.state.game.canvas.style.cursor = "pointer";
                 this._setHandCursor = true;
             }
 
-            if (!silent && sendEvent && this.sprite && this.sprite.events)
+            if (!silent && sendEvent && this.sprite)
             {
-                this.sprite.events.onInputOver$dispatch(this.sprite, pointer);
+                this.onOver.dispatch(this.sprite, pointer);
             }
 
             if (this.sprite.parent && this.sprite.parent.type === Phaser.GROUP)
@@ -989,17 +995,17 @@ Phaser.InputHandler.prototype = {
 
         data.isOver = false;
         data.isOut = true;
-        data.timeOut = this.game.time.time;
+        data.timeOut = Date.now();
 
         if (this.useHandCursor && data.isDragged === false)
         {
-            this.game.canvas.style.cursor = "default";
+            this.state.game.canvas.style.cursor = "default";
             this._setHandCursor = false;
         }
 
-        if (!silent && this.sprite && this.sprite.events)
+        if (!silent)
         {
-            this.sprite.events.onInputOut$dispatch(this.sprite, pointer);
+            this.onOut.dispatch(this.sprite, pointer);
 
             if (this.sprite && this.sprite.parent && this.sprite.parent.type === Phaser.GROUP)
             {
@@ -1035,16 +1041,16 @@ Phaser.InputHandler.prototype = {
 
             data.isDown = true;
             data.isUp = false;
-            data.timeDown = this.game.time.time;
+            data.timeDown = Date.now();
 
             this.downPoint.set(pointer.x, pointer.y);
 
             //  It's possible the onInputDown event creates a new Sprite that is on-top of this one, so we ought to force a Pointer update
             pointer.dirty = true;
 
-            if (this.sprite && this.sprite.events)
+            if (this.sprite)
             {
-                this.sprite.events.onInputDown$dispatch(this.sprite, pointer);
+                this.onDown.dispatch(this.sprite, pointer);
 
                 //  The event above might have destroyed this sprite.
                 if (this.sprite && this.sprite.parent && this.sprite.parent.type === Phaser.GROUP)
@@ -1075,7 +1081,7 @@ Phaser.InputHandler.prototype = {
                     if (this.dragTimeThreshold > 0)
                     {
                         this._dragTimePass = false;
-                        this.game.time.events.add(this.dragTimeThreshold, this.dragTimeElapsed, this, pointer);
+                        this.state.sys.time.events.add(this.dragTimeThreshold, this.dragTimeElapsed, this, pointer);
                     }
                     else
                     {
@@ -1134,18 +1140,18 @@ Phaser.InputHandler.prototype = {
         {
             data.isDown = false;
             data.isUp = true;
-            data.timeUp = this.game.time.time;
+            data.timeUp = Date.now();
             data.downDuration = data.timeUp - data.timeDown;
 
             //  Only release the InputUp signal if the pointer is still over this sprite
             var isOver = this.checkPointerOver(pointer);
 
-            if (this.sprite && this.sprite.events)
+            if (this.sprite)
             {
                 if (!this.dragStopBlocksInputUp ||
                     this.dragStopBlocksInputUp && !(this.draggable && this.isDragged && this._draggedPointerID === pointer.id))
                 {
-                    this.sprite.events.onInputUp$dispatch(this.sprite, pointer, isOver);
+                    this.onUp.dispatch(this.sprite, pointer, isOver);
                 }
 
                 if (this.sprite && this.sprite.parent && this.sprite.parent.type === Phaser.GROUP)
@@ -1164,7 +1170,7 @@ Phaser.InputHandler.prototype = {
 
             if (!isOver && this.useHandCursor)
             {
-                this.game.canvas.style.cursor = "default";
+                this.state.game.canvas.style.cursor = "default";
                 this._setHandCursor = false;
             }
 
@@ -1235,8 +1241,11 @@ Phaser.InputHandler.prototype = {
         }
         else
         {
-            var cx = this.game.camera.x - this._pointerData[pointer.id].camX;
-            var cy = this.game.camera.y - this._pointerData[pointer.id].camY;
+            // var cx = this.game.camera.x - this._pointerData[pointer.id].camX;
+            // var cy = this.game.camera.y - this._pointerData[pointer.id].camY;
+
+            var cx = 0;
+            var cy = 0;
 
             if (this.allowHorizontalDrag)
             {
@@ -1302,7 +1311,7 @@ Phaser.InputHandler.prototype = {
         pointerId = pointerId || 0;
         delay = delay || 500;
 
-        return (this._pointerData[pointerId].isOut && (this.game.time.time - this._pointerData[pointerId].timeOut < delay));
+        return (this._pointerData[pointerId].isOut && (Date.now() - this._pointerData[pointerId].timeOut < delay));
 
     },
 
@@ -1336,7 +1345,7 @@ Phaser.InputHandler.prototype = {
         pointerId = pointerId || 0;
         delay = delay || 500;
 
-        return (this._pointerData[pointerId].isUp && (this.game.time.time - this._pointerData[pointerId].timeUp < delay));
+        return (this._pointerData[pointerId].isUp && (Date.now() - this._pointerData[pointerId].timeUp < delay));
 
     },
 
@@ -1353,7 +1362,7 @@ Phaser.InputHandler.prototype = {
 
         if (this._pointerData[pointerId].isOver)
         {
-            return this.game.time.time - this._pointerData[pointerId].timeOver;
+            return Date.now() - this._pointerData[pointerId].timeOver;
         }
 
         return -1;
@@ -1373,7 +1382,7 @@ Phaser.InputHandler.prototype = {
 
         if (this._pointerData[pointerId].isDown)
         {
-            return this.game.time.time - this._pointerData[pointerId].timeDown;
+            return Date.now() - this._pointerData[pointerId].timeDown;
         }
 
         return -1;
@@ -1475,8 +1484,8 @@ Phaser.InputHandler.prototype = {
         this.isDragged = true;
         this._draggedPointerID = pointer.id;
 
-        this._pointerData[pointer.id].camX = this.game.camera.x;
-        this._pointerData[pointer.id].camY = this.game.camera.y;
+        // this._pointerData[pointer.id].camX = this.game.camera.x;
+        // this._pointerData[pointer.id].camY = this.game.camera.y;
 
         this._pointerData[pointer.id].isDragged = true;
 

@@ -384,9 +384,10 @@ Phaser.Input.prototype = {
     * @method Phaser.Input#boot
     * @protected
     */
-    boot: function () {
-
+    boot: function ()
+    {
         this.mousePointer = new Phaser.Pointer(this.game, 0, Phaser.PointerMode.CURSOR);
+
         this.addPointer();
         this.addPointer();
 
@@ -578,8 +579,8 @@ Phaser.Input.prototype = {
     * @method Phaser.Input#update
     * @protected
     */
-    update: function () {
-
+    update: function ()
+    {
         if (this.keyboard)
         {
             this.keyboard.update();
@@ -608,7 +609,6 @@ Phaser.Input.prototype = {
         }
 
         this._pollCounter = 0;
-
     },
 
     /**
@@ -903,15 +903,16 @@ Phaser.Input.prototype = {
     * This will return the local coordinates of the specified displayObject based on the given Pointer.
     *
     * @method Phaser.Input#getLocalPosition
-    * @param {Phaser.Sprite|Phaser.Image} displayObject - The DisplayObject to get the local coordinates for.
-    * @param {Phaser.Pointer} pointer - The Pointer to use in the check against the displayObject.
+    * @param {Phaser.Sprite|Phaser.Image} gameObject - The DisplayObject to get the local coordinates for.
+    * @param {Phaser.Pointer} pointer - The Pointer to use in the check against the gameObject.
     * @return {Phaser.Point} A point containing the coordinates of the Pointer position relative to the DisplayObject.
     */
-    getLocalPosition: function (displayObject, pointer, output) {
-
+    getLocalPosition: function (gameObject, pointer, output)
+    {
         if (output === undefined) { output = new Phaser.Point(); }
 
-        var wt = displayObject.worldTransform;
+        var wt = gameObject.transform.world;
+
         var id = 1 / (wt.a * wt.d + wt.c * -wt.b);
 
         return output.setTo(
@@ -924,14 +925,16 @@ Phaser.Input.prototype = {
     /**
     * Tests if the pointer hits the given object.
     *
+    * THIS NEEDS MOVING TO THE GAME OBJECT LEVEL, OR SPLIT OUT.
+    *
     * @method Phaser.Input#hitTest
     * @param {DisplayObject} displayObject - The displayObject to test for a hit.
     * @param {Phaser.Pointer} pointer - The pointer to use for the test.
     * @param {Phaser.Point} localPoint - The local translated point.
     */
-    hitTest: function (displayObject, pointer, localPoint) {
-
-        if (!displayObject.worldVisible)
+    hitTest: function (displayObject, pointer, localPoint)
+    {
+        if (!displayObject.visible)
         {
             return false;
         }
@@ -940,6 +943,21 @@ Phaser.Input.prototype = {
 
         localPoint.copyFrom(this._localPoint);
 
+        var width = displayObject.frame.cutWidth;
+        var height = displayObject.frame.cutHeight;
+        var x1 = -width * displayObject.transform.anchorX;
+
+        if (this._localPoint.x >= x1 && this._localPoint.x < x1 + width)
+        {
+            var y1 = -height * displayObject.transform.anchorY;
+
+            if (this._localPoint.y >= y1 && this._localPoint.y < y1 + height)
+            {
+                return true;
+            }
+        }
+
+        /*
         if (displayObject.hitArea && displayObject.hitArea.contains)
         {
             return (displayObject.hitArea.contains(this._localPoint.x, this._localPoint.y));
@@ -1004,6 +1022,7 @@ Phaser.Input.prototype = {
                 return true;
             }
         }
+        */
 
         return false;
     },
