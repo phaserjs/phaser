@@ -3,9 +3,9 @@
 * @copyright    2016 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
-Phaser.GameObject.Container = function (game, parent, x, y, name)
+Phaser.GameObject.Container = function (state, parent, x, y, name)
 {
-    Phaser.GameObject.call(this, game, x, y, null, null, parent);
+    Phaser.GameObject.call(this, state, x, y, null, null, parent);
 
     /**
     * @property {number} type - The const type of this object.

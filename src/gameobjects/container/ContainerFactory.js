@@ -8,10 +8,10 @@ Phaser.GameObject.Container.FACTORY_KEY = 'container';
 
 Phaser.GameObject.Container.FACTORY_ADD = function (parent, x, y, name)
 {
-    return parent.children.add(new Phaser.GameObject.Container(this.game, null, x, y, name));
+    return parent.children.add(new Phaser.GameObject.Container(this.state, null, x, y, name));
 };
 
 Phaser.GameObject.Container.FACTORY_MAKE = function (parent, x, y)
 {
-    return new Phaser.GameObject.Container(this.game, parent, x, y);
+    return new Phaser.GameObject.Container(this.state, parent, x, y);
 };
