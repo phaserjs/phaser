@@ -15,8 +15,8 @@
 * @param {number} [width=0] - The overall width of this ellipse.
 * @param {number} [height=0] - The overall height of this ellipse.
 */
-Phaser.Ellipse = function (x, y, width, height) {
-
+Phaser.Ellipse = function (x, y, width, height)
+{
     x = x || 0;
     y = y || 0;
     width = width || 0;
@@ -177,6 +177,30 @@ Phaser.Ellipse.prototype = {
     },
 
     /**
+    * Returns a Point object containing the coordinates of a point on the circumference of the ellipse based on the given angle.
+    * 
+    * @method Phaser.Ellipse#circumferencePoint
+    * @param {number} angle - The angle in radians (unless asDegrees is true) to return the point from.
+    * @param {boolean} [asDegrees=false] - Is the given angle in radians (false) or degrees (true)?
+    * @param {Phaser.Point} [out] - An optional Point object to put the result in to. If none specified a new Point object will be created.
+    * @return {Phaser.Point} The Point object holding the result.
+    */
+    circumferencePoint: function (angle, asDegrees, out)
+    {
+        if (out === undefined) { out = new Phaser.Point(); }
+
+        if (asDegrees)
+        {
+            angle = Phaser.Math.degToRad(angle);
+        }
+
+        out.x = this.x + (this.width * Math.cos(angle));
+        out.y = this.y + (this.height * Math.sin(angle));
+
+        return out;
+    },
+
+    /**
     * Returns a string representation of this object.
     * @method Phaser.Ellipse#toString
     * @return {string} A string representation of the instance.
@@ -305,9 +329,10 @@ Object.defineProperty(Phaser.Ellipse.prototype, "empty", {
 * @param {number} y - The Y value of the coordinate to test.
 * @return {boolean} True if the coordinates are within this ellipse, otherwise false.
 */
-Phaser.Ellipse.contains = function (a, x, y) {
- 
-    if (a.width <= 0 || a.height <= 0) {
+Phaser.Ellipse.contains = function (a, x, y)
+{
+    if (a.width <= 0 || a.height <= 0)
+    {
         return false;
     }
  
