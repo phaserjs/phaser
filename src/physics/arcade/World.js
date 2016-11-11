@@ -11,12 +11,17 @@
 * @constructor
 * @param {Phaser.Game} game - reference to the current game instance.
 */
-Phaser.Physics.Arcade = function (game) {
+Phaser.Physics.Arcade = function (state, width, height)
+{
+    /**
+    * @property {Phaser.State} state - The State that owns this physics instance.
+    */
+    this.state = state;
 
     /**
     * @property {Phaser.Game} game - Local reference to game.
     */
-    this.game = game;
+    this.game = state.game;
 
     /**
     * @property {Phaser.Point} gravity - The World gravity setting. Defaults to x: 0, y: 0, or no gravity.
@@ -27,7 +32,7 @@ Phaser.Physics.Arcade = function (game) {
     * @property {Phaser.Rectangle} bounds - The bounds inside of which the physics world exists. Defaults to match the world bounds.
     */
     // this.bounds = new Phaser.Rectangle(0, 0, game.world.width, game.world.height);
-    this.bounds = new Phaser.Rectangle(0, 0, game.width, game.height);
+    this.bounds = new Phaser.Rectangle(0, 0, width, height);
 
     /**
     * Set the checkCollision properties to control for which bounds collision is processed.
@@ -76,13 +81,15 @@ Phaser.Physics.Arcade = function (game) {
     * @property {Phaser.QuadTree} quadTree - The world QuadTree.
     */
     // this.quadTree = new Phaser.QuadTree(this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height, this.maxObjects, this.maxLevels);
-    this.quadTree = new Phaser.QuadTree(0, 0, this.game.width, this.game.height, this.maxObjects, this.maxLevels);
+    this.quadTree = new Phaser.QuadTree(0, 0, width, height, this.maxObjects, this.maxLevels);
 
     /**
     * @property {number} _total - Internal cache var.
     * @private
     */
     this._total = 0;
+
+    this.children = new Phaser.Component.Children(this);
 
     // By default we want the bounds the same size as the world bounds
     // this.setBoundsToWorld();
@@ -167,8 +174,8 @@ Phaser.Physics.Arcade.prototype = {
     * @param {object|array|Phaser.Group} object - The game object to create the physics body on. Can also be an array or Group of objects, a body will be created on every child that has a `body` property.
     * @param {boolean} [children=true] - Should a body be created on all children of this object? If true it will recurse down the display list as far as it can go.
     */
-    enable: function (object, children) {
-
+    enable: function (object, children)
+    {
         if (children === undefined) { children = true; }
 
         var i = 1;
@@ -195,24 +202,20 @@ Phaser.Physics.Arcade.prototype = {
                 }
             }
         }
+        else if (object instanceof Phaser.GameObject.Container)
+        {
+            //  If it's a Group then we do it on the children regardless
+            this.enable(object.children, children);
+        }
         else
         {
-            if (object instanceof Phaser.Group)
-            {
-                //  If it's a Group then we do it on the children regardless
-                this.enable(object.children, children);
-            }
-            else
-            {
-                this.enableBody(object);
+            this.enableBody(object);
 
-                if (children && object.hasOwnProperty('children') && object.children.length > 0)
-                {
-                    this.enable(object.children, true);
-                }
-            }
+            // if (children && object.hasOwnProperty('children') && object.children.length > 0)
+            // {
+            //     this.enable(object.children, true);
+            // }
         }
-
     },
 
     /**
@@ -225,15 +228,54 @@ Phaser.Physics.Arcade.prototype = {
     * @method Phaser.Physics.Arcade#enableBody
     * @param {object} object - The game object to create the physics body on. A body will only be created if this object has a null `body` property.
     */
-    enableBody: function (object) {
-
+    enableBody: function (object)
+    {
         if (object.hasOwnProperty('body') && object.body === null)
         {
             object.body = new Phaser.Physics.Arcade.Body(object);
 
-            if (object.parent && object.parent instanceof Phaser.Group)
+            this.children.add(object.body);
+
+            // if (object.parent && object.parent instanceof Phaser.Group)
+            // {
+            //     object.parent.addToHash(object);
+            // }
+        }
+    },
+
+    preUpdate: function (frameDelta)
+    {
+        if (this.isPaused)
+        {
+            return;
+        }
+
+        for (var c = 0; c < this.children.list.length; c++)
+        {
+            var body = this.children.list[c];
+
+            if (body.enabled)
             {
-                object.parent.addToHash(object);
+                body.preUpdate(frameDelta);
+            }
+        }
+
+    },
+
+    update: function ()
+    {
+        if (this.isPaused)
+        {
+            return;
+        }
+
+        for (var c = 0; c < this.children.list.length; c++)
+        {
+            var body = this.children.list[c];
+
+            if (body.enabled && body.dirty)
+            {
+                body.update();
             }
         }
 
@@ -245,15 +287,14 @@ Phaser.Physics.Arcade.prototype = {
     * @method Phaser.Physics.Arcade#updateMotion
     * @param {Phaser.Physics.Arcade.Body} The Body object to be updated.
     */
-    updateMotion: function (body) {
-
-        var velocityDelta = this.computeVelocity(0, body, body.angularVelocity, body.angularAcceleration, body.angularDrag, body.maxAngular) - body.angularVelocity;
+    updateMotion: function (body, frameDelta)
+    {
+        var velocityDelta = this.computeVelocity(frameDelta, 0, body, body.angularVelocity, body.angularAcceleration, body.angularDrag, body.maxAngular) - body.angularVelocity;
         body.angularVelocity += velocityDelta;
-        body.rotation += (body.angularVelocity * this.game.time.physicsElapsed);
+        body.rotation += (body.angularVelocity * frameDelta);
 
-        body.velocity.x = this.computeVelocity(1, body, body.velocity.x, body.acceleration.x, body.drag.x, body.maxVelocity.x);
-        body.velocity.y = this.computeVelocity(2, body, body.velocity.y, body.acceleration.y, body.drag.y, body.maxVelocity.y);
-
+        body.velocity.x = this.computeVelocity(frameDelta, 1, body, body.velocity.x, body.acceleration.x, body.drag.x, body.maxVelocity.x);
+        body.velocity.y = this.computeVelocity(frameDelta, 2, body, body.velocity.y, body.acceleration.y, body.drag.y, body.maxVelocity.y);
     },
 
     /**
@@ -269,26 +310,26 @@ Phaser.Physics.Arcade.prototype = {
     * @param {number} [max=10000] - An absolute value cap for the velocity.
     * @return {number} The altered Velocity value.
     */
-    computeVelocity: function (axis, body, velocity, acceleration, drag, max) {
-
+    computeVelocity: function (frameDelta, axis, body, velocity, acceleration, drag, max)
+    {
         if (max === undefined) { max = 10000; }
 
         if (axis === 1 && body.allowGravity)
         {
-            velocity += (this.gravity.x + body.gravity.x) * this.game.time.physicsElapsed;
+            velocity += (this.gravity.x + body.gravity.x) * frameDelta;
         }
         else if (axis === 2 && body.allowGravity)
         {
-            velocity += (this.gravity.y + body.gravity.y) * this.game.time.physicsElapsed;
+            velocity += (this.gravity.y + body.gravity.y) * frameDelta;
         }
 
         if (acceleration)
         {
-            velocity += acceleration * this.game.time.physicsElapsed;
+            velocity += acceleration * frameDelta;
         }
         else if (drag)
         {
-            drag *= this.game.time.physicsElapsed;
+            drag *= frameDelta;
 
             if (velocity - drag > 0)
             {

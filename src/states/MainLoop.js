@@ -158,9 +158,26 @@ Phaser.State.MainLoop.prototype = {
 
         this.numUpdateSteps = 0;
 
-        while (this.frameDelta >= this.timestep)
+        var step = this.timestep;
+
+        while (this.frameDelta >= step)
         {
-            this.update(this.timestep);
+            // this.update(this.timestep);
+
+            this.state.sys.update(step, this.physicsStep);
+
+            for (var c = 0; c < this.state.sys.children.list.length; c++)
+            {
+                var child = this.state.sys.children.list[c];
+
+                if (child.exists)
+                {
+                    child.update(step);
+                }
+            }
+
+            //  Dev level callback
+            this.state.update(step);
 
             this.frameDelta -= this.timestep;
 
@@ -170,6 +187,8 @@ Phaser.State.MainLoop.prototype = {
                 break;
             }
         }
+
+        this.state.sys.preRender();
 
         this.state.sys.updates.start();
 
@@ -186,9 +205,13 @@ Phaser.State.MainLoop.prototype = {
         this.panic = false;
     },
 
+    /*
     update: function (timestep)
     {
         this.state.sys.update(timestep);
+
+        var c;
+        var child;
 
         for (var c = 0; c < this.state.sys.children.list.length; c++)
         {
@@ -202,7 +225,18 @@ Phaser.State.MainLoop.prototype = {
 
         //  Dev level callback
         this.state.update(timestep);
+
+        for (c = 0; c < this.state.sys.children.list.length; c++)
+        {
+            var child = this.state.sys.children.list[c];
+
+            if (child.exists)
+            {
+                child.update(timestep);
+            }
+        }
     },
+    */
 
     stop: function ()
     {

@@ -35,6 +35,7 @@ Phaser.State.Systems.prototype = {
         this.updates = new Phaser.UpdateManager(this.state);
         this.tweens = new Phaser.TweenManager(this.state);
         this.input = new Phaser.State.Input(this.state);
+        this.physics = new Phaser.Physics.Arcade(this.state, 800, 600);
 
         //  State specific properties (transform, data, children, etc)
         this.camera = new Phaser.Camera(this.state, 0, 0, 800, 600);
@@ -77,9 +78,15 @@ Phaser.State.Systems.prototype = {
     {
     },
 
-    update: function (frameDelta)
+    update: function (timestep, physicsStep)
     {
-        this.tweens.update(frameDelta);
+        this.tweens.update(timestep);
+        this.physics.preUpdate(physicsStep);
+    },
+
+    preRender: function ()
+    {
+        this.physics.update();
     },
 
     end: function (fps, panic)

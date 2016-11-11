@@ -606,6 +606,23 @@ Object.defineProperties(Phaser.Component.Children.prototype, {
     * @name Phaser.ArraySet#first
     * @property {any} first
     */
+    length: {
+
+        enumerable: true,
+
+        get: function ()
+        {
+            return this.list.length;
+        }
+
+    },
+
+    /**
+    * Returns the first item and resets the cursor to the start.
+    *
+    * @name Phaser.ArraySet#first
+    * @property {any} first
+    */
     first: {
 
         enumerable: true,
