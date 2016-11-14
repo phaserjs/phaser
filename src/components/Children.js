@@ -26,6 +26,8 @@ Phaser.Component.Children.prototype = {
 
     add: function (child, skipTransform)
     {
+        if (skipTransform === undefined) { skipTransform = false; }
+
         // console.log('--->', this.gameObject.name, 'adds new child:', child.name);
 
         if (child.parent === this)
@@ -56,6 +58,9 @@ Phaser.Component.Children.prototype = {
 
     addAt: function (child, index, skipTransform)
     {
+        if (index === undefined) { index = 0; }
+        if (skipTransform === undefined) { skipTransform = false; }
+
         if (this.list.length === 0)
         {
             return this.add(child);
