@@ -18,9 +18,9 @@ Phaser.Component.Transform = function (gameObject, x, y, scaleX, scaleY)
 
     this.gameObject = gameObject;
 
-    this.state = gameObject.state;
+    this.state = (gameObject.state) ? gameObject.state : gameObject.parent.state;
 
-    this.game = gameObject.state.game;
+    this.game = this.state.game;
 
     //  Local Transform
     //  a = scale X
@@ -40,6 +40,8 @@ Phaser.Component.Transform = function (gameObject, x, y, scaleX, scaleY)
 
     //  GL Vertex Data
     this.glVertextData = { x0: 0, y0: 0, x1: 0, y1: 0, x2: 0, y2: 0, x3: 0, y3: 0 };
+
+    this.immediate = false;
 
     this.interpolate = false;
 
@@ -846,11 +848,18 @@ Object.defineProperties(Phaser.Component.Transform.prototype, {
             {
                 if (!this._dirty)
                 {
-                    this.state.sys.updates.add(this);
-                }
+                    this._dirty = true;
 
-                this._dirty = true;
-                this._dirtyVertex = true;
+                    if (this.immediate)
+                    {
+                        this.update();
+                    }
+                    else
+                    {
+                        this._dirtyVertex = true;
+                        this.state.sys.updates.add(this);
+                    }
+                }
             }
             else
             {
