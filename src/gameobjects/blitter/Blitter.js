@@ -54,7 +54,7 @@ Phaser.GameObject.Blitter.prototype.createFromCallback = function (callback, qua
     {
         var bob = bobs[i];
 
-        callback.call(this, bob);
+        callback.call(this, bob, i);
     }
 
     return bobs;

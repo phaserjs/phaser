@@ -16,7 +16,7 @@
             'sound' => true,
             'particles' => true,
             'debug' => true,
-            'tilemap' => false,
+            'tilemap' => true,
             'arcade' => true,
             'p2' => true,
             'ninja' => false,
@@ -414,11 +414,12 @@ EOL;
 
     if ($modules['tilemap'])
     {
+    // <script src="$path/src/tilemap/TilemapLayer.js"></script>
+
         echo <<<EOL
     <script src="$path/src/tilemap/ImageCollection.js"></script>
     <script src="$path/src/tilemap/Tile.js"></script>
     <script src="$path/src/tilemap/Tilemap.js"></script>
-    <script src="$path/src/tilemap/TilemapLayer.js"></script>
     <script src="$path/src/tilemap/TilemapParser.js"></script>
     <script src="$path/src/tilemap/Tileset.js"></script>
 

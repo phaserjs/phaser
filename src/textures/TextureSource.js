@@ -46,13 +46,15 @@ Phaser.TextureSource = function (texture, source)
     this.height = source.naturalHeight || source.height || 0;
 
     /**
-    * The scale mode to apply when scaling this texture
+    * The scale mode to apply when scaling this texture.
+    * NEAREST or DEFAULT
     *
     * @property scaleMode
     * @type {Number}
     * @default Phaser.scaleModes.DEFAULT;
     */
-    this.scaleMode = Phaser.scaleModes.DEFAULT;
+    // this.scaleMode = Phaser.scaleModes.DEFAULT;
+    this.scaleMode = Phaser.scaleModes.NEAREST;
 
     /**
     * Controls if RGB channels should be pre-multiplied by Alpha  (WebGL only)
