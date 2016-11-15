@@ -156,6 +156,7 @@ declare module Phaser {
         add(name: string, frames?: number[] | string[], frameRate?: number, loop?: boolean, useNumericIndex?: boolean): Phaser.Animation;
         copyFrameData(frameData: Phaser.FrameData, frame: string | number): boolean;
         destroy(): void;
+        destroyAnimations(): void;
         getAnimation(name: string): Phaser.Animation;
         next(quantity?: number): void;
         play(name: string, frameRate?: number, loop?: boolean, killOnComplete?: boolean): Phaser.Animation;

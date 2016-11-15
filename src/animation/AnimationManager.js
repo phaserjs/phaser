@@ -402,12 +402,11 @@ Phaser.AnimationManager.prototype = {
     },
 
     /**
-    * Destroys all references this AnimationManager contains.
-    * Iterates through the list of animations stored in this manager and calls destroy on each of them.
-    *
-    * @method Phaser.AnimationManager#destroy
-    */
-    destroy: function () {
+     * Iterates through the list of animations stored in this manager and calls destroy on each of them.
+     *
+     * @method Phaser.AnimationManager#destroyAnimations
+     */
+    destroyAnimations: function () {
 
         var anim = null;
 
@@ -420,6 +419,19 @@ Phaser.AnimationManager.prototype = {
         }
 
         this._anims = {};
+
+    },
+
+    /**
+    * Destroys all references this AnimationManager contains.
+    * Iterates through the list of animations stored in this manager and calls destroy on each of them.
+    *
+    * @method Phaser.AnimationManager#destroy
+    */
+    destroy: function () {
+
+        this.destroyAnimations();
+
         this._outputFrames = [];
         this._frameData = null;
         this.currentAnim = null;
