@@ -168,6 +168,11 @@ EOL;
     <script src="$path/src/gameobjects/image/ImageCanvasRenderer.js"></script>
     <script src="$path/src/gameobjects/image/ImageWebGLRenderer.js"></script>
 
+    <script src="$path/src/gameobjects/blitter/Blitter.js"></script>
+    <script src="$path/src/gameobjects/blitter/BlitterFactory.js"></script>
+    <script src="$path/src/gameobjects/blitter/BlitterWebGLRenderer.js"></script>
+    <script src="$path/src/gameobjects/blitter/Bob.js"></script>
+
     <script src="$path/src/gameobjects/button/Button.js"></script>
     <script src="$path/src/gameobjects/button/ButtonFactory.js"></script>
 

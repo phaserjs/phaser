@@ -109,12 +109,12 @@ Phaser.Math = {
     * Default is 0 for `min` and 1 for `max`.
     *
     * @method Phaser.Math#random
-    * @param {number} min - The minimum value. Must be a Number.
-    * @param {number} max - The maximum value. Must be a Number.
+    * @param {number} [min=0] - The minimum value. Must be a Number.
+    * @param {number} [max=1] - The maximum value. Must be a Number greater than `min`.
     * @return {number} A floating point number between min (inclusive) and max (exclusive).
     */
-    random: function (min, max) {
-
+    random: function (min, max)
+    {
         if (min === undefined) { min = 0; }
         if (max === undefined) { max = 1; }
 
@@ -131,7 +131,6 @@ Phaser.Math = {
         }
 
         return (Math.random() * (max - min) + min);
-
     },
 
     /**
@@ -139,12 +138,12 @@ Phaser.Math = {
     * Default is 0 for `min` and 1 for `max`.
     *
     * @method Phaser.Math#between
-    * @param {number} min - The minimum value. Must be a Number.
-    * @param {number} max - The maximum value. Must be a Number.
+    * @param {number} [min=0] - The minimum value. Must be a Number.
+    * @param {number} [max=1] - The maximum value. Must be a Number greater than `min`.
     * @return {number} An integer between min (inclusive) and max (inclusive).
     */
-    between: function (min, max) {
-
+    between: function (min, max)
+    {
         if (min === undefined) { min = 0; }
         if (max === undefined) { max = 1; }
 
@@ -164,7 +163,6 @@ Phaser.Math = {
         max = Math.floor(max);
 
         return Math.floor(Math.random() * (max - min + 1)) + min;
-
     },
 
     /**

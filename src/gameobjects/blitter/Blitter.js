@@ -4,6 +4,16 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
+/**
+* A Blitter Game Object.
+*
+* The Blitter Game Object is a special type of Container, that contains Blitter.Bob objects.
+* These objects can be thought of as just texture frames with a transform, and nothing more.
+* Bobs don't have any update methods, or the ability to have children, or any kind of special effects.
+* They are essentially just texture renderers, and the Blitter object creates and manages them.
+*
+* @class
+*/
 Phaser.GameObject.Blitter = function (state, parent)
 {
     Phaser.GameObject.call(this, state, 0, 0, null, null, parent);
@@ -24,23 +34,41 @@ Phaser.GameObject.Blitter.prototype.preUpdate = function ()
     }
 };
 
-Phaser.GameObject.Blitter.prototype.create = function (frame, x, y, visible, index)
+Phaser.GameObject.Blitter.prototype.create = function (x, y, key, frame, visible, index)
 {
-    if (x === undefined) { x = 0; }
-    if (y === undefined) { y = 0; }
     if (visible === undefined) { visible = true; }
     if (index === undefined) { index = 0; }
 
-    var bob = new Phaser.GameObject.Blitter.Bob(this, frame, x, y, visible);
+    var bob = new Phaser.GameObject.Blitter.Bob(this, x, y, key, frame, visible);
 
-    this.children.addAt(bob, index, true);
+    this.children.addAt(bob, index, false);
 
     return bob;
 };
 
-Phaser.GameObject.Blitter.prototype.createMultiple = function (quantity, frame, visible)
+Phaser.GameObject.Blitter.prototype.createFromCallback = function (callback, quantity, key, frame, visible)
 {
+    var bobs = this.createMultiple(quantity, key, frame, visible);
+
+    for (var i = 0; i < bobs.length; i++)
+    {
+        var bob = bobs[i];
+
+        callback.call(this, bob);
+    }
+
+    return bobs;
+};
+
+Phaser.GameObject.Blitter.prototype.createMultiple = function (quantity, key, frame, visible)
+{
+    if (frame === undefined) { frame = 0; }
     if (visible === undefined) { visible = true; }
+
+    if (!Array.isArray(key))
+    {
+        key = [ key ];
+    }
 
     if (!Array.isArray(frame))
     {
@@ -48,14 +76,18 @@ Phaser.GameObject.Blitter.prototype.createMultiple = function (quantity, frame, 
     }
 
     var bobs = [];
+    var _this = this;
 
-    for (var f = 0; f < frame.length; f++)
+    key.forEach(function (singleKey)
     {
-        for (var i = 0; i < quantity; i++)
+        frame.forEach(function (singleFrame)
         {
-            bobs.push(this.create(frame[f], 0, 0, visible));
-        }
-    }
+            for (var i = 0; i < quantity; i++)
+            {
+                bobs.push(_this.create(0, 0, singleKey, singleFrame, visible));
+            }
+        });
+    });
 
     return bobs;
 };
