@@ -400,7 +400,7 @@ Phaser.TweenData.prototype = {
         {
             return this.repeat();
         }
-        
+
         return Phaser.TweenData.RUNNING;
 
     },
@@ -455,7 +455,7 @@ Phaser.TweenData.prototype = {
 
                 if (Array.isArray(end))
                 {
-                    blob[property] = this.interpolationFunction(end, this.value);
+                    blob[property] = this.interpolationFunction.call(this.interpolationContext, end, this.value);
                 }
                 else
                 {
