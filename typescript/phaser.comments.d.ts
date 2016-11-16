@@ -371,6 +371,11 @@ declare module Phaser {
         currentFrame: Phaser.Frame;
 
         /**
+         * Gets or sets if the animation manager will dispatch the onUpdate events upon changing frame.
+         */
+        enableUpdate: boolean;
+
+        /**
         * Gets or sets the current frame index and updates the Texture Cache for display.
         */
         frame: number;
@@ -404,6 +409,12 @@ declare module Phaser {
         * Gets the current animation name, if set.
         */
         name: string;
+
+        /**
+         * This event is dispatched when the Animation Manager changes frame.
+         * By default this event is disabled due to its intensive nature. Enable it with: `AnimationManager.enableUpdate = true`.
+         */
+        onUpdate: Phaser.Signal;
 
         /**
         * Gets and sets the paused state of the current animation.

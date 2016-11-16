@@ -142,6 +142,7 @@ declare module Phaser {
 
         currentAnim: Phaser.Animation;
         currentFrame: Phaser.Frame;
+        enableUpdate: boolean;
         frame: number;
         frameData: Phaser.FrameData;
         frameName: string;
@@ -149,6 +150,7 @@ declare module Phaser {
         game: Phaser.Game;
         isLoaded: boolean;
         name: string;
+        onUpdate: Phaser.Signal;
         paused: boolean;
         sprite: Phaser.Sprite;
         updateIfVisible: boolean;
