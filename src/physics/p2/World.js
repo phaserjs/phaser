@@ -553,7 +553,7 @@ Phaser.Physics.P2.prototype = {
     * Sets the bounds of the Physics world to match the Game.World dimensions.
     * You can optionally set which 'walls' to create: left, right, top or bottom.
     *
-    * @method Phaser.Physics#setBoundsToWorld
+    * @method Phaser.Physics.P2#setBoundsToWorld
     * @param {boolean} [left=true] - If true will create the left bounds wall.
     * @param {boolean} [right=true] - If true will create the right bounds wall.
     * @param {boolean} [top=true] - If true will create the top bounds wall.
@@ -569,7 +569,7 @@ Phaser.Physics.P2.prototype = {
     /**
     * Sets the given material against the 4 bounds of this World.
     *
-    * @method Phaser.Physics#setWorldMaterial
+    * @method Phaser.Physics.P2#setWorldMaterial
     * @param {Phaser.Physics.P2.Material} material - The material to set.
     * @param {boolean} [left=true] - If true will set the material on the left bounds wall.
     * @param {boolean} [right=true] - If true will set the material on the right bounds wall.
