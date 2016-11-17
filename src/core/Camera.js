@@ -54,6 +54,12 @@ Phaser.Camera = function (game, id, x, y, width, height) {
     this.bounds = new Phaser.Rectangle(x, y, width, height);
 
     /**
+    * @property {boolean} smoothBounds - If a Camera has smoothBounds set to `true`, it will interpolate to the new target position when the camera bounds are updated, rather then jumping there immediately.  Interpolation rates are calculated using the values stored in Camera.lerp.
+    * @default
+    */
+    this.smoothBounds = false;
+
+    /**
     * @property {Phaser.Rectangle} deadzone - Moving inside this Rectangle will not cause the camera to move.
     */
     this.deadzone = null;
@@ -133,6 +139,12 @@ Phaser.Camera = function (game, id, x, y, width, height) {
     * @protected
     */
     this.fx = null;
+
+    /**
+    * @property {Phaser.Point} _smoothBoundsTarget - internal point used for camera interpolation from outside of bounds.
+    * @private
+    */
+    this._smoothBoundsTarget = new Phaser.Point();
 
     /**
     * @property {Phaser.Point} _targetPosition - Internal point used to calculate target position.
@@ -508,6 +520,10 @@ Phaser.Camera.prototype = {
         if (this.bounds)
         {
             this.checkBounds();
+            if (this.smoothBounds) {
+                this.view.x = this.game.math.linear(this.view.x, this._smoothBoundsTarget.x, this.lerp.x);
+                this.view.y = this.game.math.linear(this.view.y, this._smoothBoundsTarget.y, this.lerp.y);
+            }
         }
 
         if (this.roundPx)
@@ -679,7 +695,16 @@ Phaser.Camera.prototype = {
         if (vx <= this.bounds.x * this.scale.x)
         {
             this.atLimit.x = true;
-            this.view.x = this.bounds.x * this.scale.x;
+
+            // if smoothBounds enabled, set interpolation target instead of jumping.
+            if (this.smoothBounds)
+            {
+                this._smoothBoundsTarget.x = this.bounds.x * this.scale.x;
+            }
+            else
+            {
+                this.view.x = this.bounds.x * this.scale.x;
+            }
 
             if (!this._shake.shakeBounds)
             {
@@ -691,7 +716,15 @@ Phaser.Camera.prototype = {
         if (vw >= this.bounds.right * this.scale.x)
         {
             this.atLimit.x = true;
-            this.view.x = (this.bounds.right * this.scale.x) - this.width;
+
+            if (this.smoothBounds)
+            {
+                this._smoothBoundsTarget.x = (this.bounds.right * this.scale.x) - this.width;
+            }
+            else
+            {
+                this.view.x = (this.bounds.right * this.scale.x) - this.width;
+            }
 
             if (!this._shake.shakeBounds)
             {
@@ -703,7 +736,15 @@ Phaser.Camera.prototype = {
         if (vy <= this.bounds.top * this.scale.y)
         {
             this.atLimit.y = true;
-            this.view.y = this.bounds.top * this.scale.y;
+
+            if (this.smoothBounds)
+            {
+                this._smoothBoundsTarget.y = this.bounds.top * this.scale.y;
+            }
+            else
+            {
+                this.view.y = this.bounds.top * this.scale.y;
+            }
 
             if (!this._shake.shakeBounds)
             {
@@ -715,7 +756,15 @@ Phaser.Camera.prototype = {
         if (vh >= this.bounds.bottom * this.scale.y)
         {
             this.atLimit.y = true;
-            this.view.y = (this.bounds.bottom * this.scale.y) - this.height;
+
+            if (this.smoothBounds)
+            {
+                this._smoothBoundsTarget.y = (this.bounds.bottom * this.scale.y) - this.height;
+            }
+            else
+            {
+                this.view.y = (this.bounds.bottom * this.scale.y) - this.height;
+            }
 
             if (!this._shake.shakeBounds)
             {
