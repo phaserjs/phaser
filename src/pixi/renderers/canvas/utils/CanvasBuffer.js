@@ -34,7 +34,7 @@ PIXI.CanvasBuffer = function(width, height)
      * @property canvas
      * @type HTMLCanvasElement
      */
-    this.canvas = PIXI.CanvasPool.create(this, this.width, this.height);
+    this.canvas = Phaser.CanvasPool.create(this, this.width, this.height);
 
     /**
      * A CanvasRenderingContext2D object representing a two-dimensional rendering context.
@@ -82,5 +82,5 @@ PIXI.CanvasBuffer.prototype.resize = function(width, height)
  */
 PIXI.CanvasBuffer.prototype.destroy = function()
 {
-    PIXI.CanvasPool.remove(this);
+    Phaser.CanvasPool.remove(this);
 };

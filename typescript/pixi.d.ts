@@ -265,6 +265,7 @@ declare module PIXI {
         scaleMode: scaleModes;
         skipRender: boolean;
         source: HTMLImageElement;
+        textureIndex: number;
         width: number;
 
         listeners(eventName: string): Function[];
@@ -1004,17 +1005,6 @@ declare module PIXI {
 
     }
 
-    export class SpriteBatch extends DisplayObjectContainer {
-
-        constructor(texture?: Texture);
-
-        ready: boolean;
-        textureThing: Texture;
-
-        initWebGL(gl: WebGLRenderingContext): void;
-
-    }
-
     export class SpriteSheetLoader implements Mixin {
 
         constructor(url: string, crossorigin?: boolean);
@@ -1080,6 +1070,7 @@ declare module PIXI {
         width: number;
         scope: any;
         valid: boolean;
+        rotated: boolean;
 
         listeners(eventName: string): Function[];
         emit(eventName: string, data?: any): boolean;
@@ -1300,6 +1291,7 @@ declare module PIXI {
         clearBeforeRender: boolean;
         width: number;
         height: number;
+        currentBatchedTextures: string[];
         view: HTMLCanvasElement;
         projection: Point;
         offset: Point;
@@ -1318,6 +1310,7 @@ declare module PIXI {
         updateTexture(texture: Texture): void;
         destroy(): void;
         mapBlendModes(): void;
+        setTexturePriority(textureNameCollection: string[]): string[];
 
     }
 

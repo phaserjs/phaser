@@ -3,10 +3,6 @@
     "src/pixi/display/DisplayObject.js",
     "src/pixi/display/DisplayObjectContainer.js",
     "src/pixi/display/Sprite.js",
-    "src/pixi/display/SpriteBatch.js",
-
-    "src/pixi/utils/Utils.js",
-    "src/pixi/utils/CanvasPool.js",
 
     "src/pixi/renderers/webgl/utils/WebGLShaderUtils.js",
     "src/pixi/renderers/webgl/shaders/PixiShader.js",
@@ -29,9 +25,6 @@
     "src/pixi/renderers/canvas/CanvasRenderer.js",
 
     "src/pixi/textures/BaseTexture.js",
-    "src/pixi/textures/Texture.js",
-    "src/pixi/textures/RenderTexture.js",
-
-    "src/pixi/filters/AbstractFilter.js"
+    "src/pixi/textures/Texture.js"
 
 ]

@@ -470,6 +470,7 @@ Phaser.StateManager.prototype = {
         this.states[key].scale = this.game.scale;
         this.states[key].state = this;
         this.states[key].stage = this.game.stage;
+        this.states[key].textures = this.game.textures;
         this.states[key].time = this.game.time;
         this.states[key].tweens = this.game.tweens;
         this.states[key].world = this.game.world;
@@ -503,6 +504,7 @@ Phaser.StateManager.prototype = {
             this.states[key].scale = null;
             this.states[key].state = null;
             this.states[key].stage = null;
+            this.states[key].textures = null;
             this.states[key].time = null;
             this.states[key].tweens = null;
             this.states[key].world = null;
@@ -520,8 +522,8 @@ Phaser.StateManager.prototype = {
     * @param {string} key - State key.
     * @private
     */
-    setCurrentState: function (key) {
-
+    setCurrentState: function (key)
+    {
         this.callbackContext = this.states[key];
 
         this.link(key);
@@ -593,6 +595,7 @@ Phaser.StateManager.prototype = {
         {
             this._created = true;
             this.onCreateCallback.call(this.callbackContext, this.game);
+            this.game.updates.running = true;
         }
         else
         {
@@ -712,10 +715,10 @@ Phaser.StateManager.prototype = {
             {
                 if (this.game.renderType === Phaser.CANVAS)
                 {
-                    this.game.context.save();
+                    // this.game.context.save();
                     this.game.context.setTransform(1, 0, 0, 1, 0, 0);
                     this.onRenderCallback.call(this.callbackContext, this.game);
-                    this.game.context.restore();
+                    // this.game.context.restore();
                 }
                 else
                 {

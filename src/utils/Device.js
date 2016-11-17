@@ -162,6 +162,20 @@ Phaser.Device = function () {
     this.canvasBitBltShift = null;
 
     /**
+    * If the browser isn't capable of handling tinting with alpha this will be false.
+    * @property {boolean} canHandleAlpha
+    * @default
+    */
+    this.canHandleAlpha = false;
+
+    /**
+    * Whether or not the Canvas BlendModes are supported, consequently the ability to tint using the multiply method.
+    * @property {boolean} canUseMultiply
+    * @default
+    */
+    this.canUseMultiply = false;
+
+    /**
     * @property {boolean} webGL - Is webGL available?
     * @default
     */
@@ -190,12 +204,6 @@ Phaser.Device = function () {
     * @default
     */
     this.worker = false;
-
-    /**
-    * @property {boolean} css3D - Is css3D available?
-    * @default
-    */
-    this.css3D = false;
 
     /**
     * @property {boolean} pointerLock - Is Pointer Lock available?
@@ -251,12 +259,6 @@ Phaser.Device = function () {
     //  Browser
 
     /**
-    * @property {boolean} arora - Set to true if running in Arora.
-    * @default
-    */
-    this.arora = false;
-
-    /**
     * @property {boolean} chrome - Set to true if running in Chrome.
     * @default
     */
@@ -267,12 +269,6 @@ Phaser.Device = function () {
     * @default
     */
     this.chromeVersion = 0;
-
-    /**
-    * @property {boolean} epiphany - Set to true if running in Epiphany.
-    * @default
-    */
-    this.epiphany = false;
 
     /**
     * @property {boolean} firefox - Set to true if running in Firefox.
@@ -321,12 +317,6 @@ Phaser.Device = function () {
     * @default
     */
     this.mobileSafari = false;
-
-    /**
-    * @property {boolean} midori - Set to true if running in Midori.
-    * @default
-    */
-    this.midori = false;
 
     /**
     * @property {boolean} opera - Set to true if running in Opera.
@@ -482,13 +472,7 @@ Phaser.Device = function () {
     this.pixelRatio = 0;
 
     /**
-    * @property {boolean} littleEndian - Is the device big or little endian? (only detected if the browser supports TypedArrays)
-    * @default
-    */
-    this.littleEndian = false;
-
-    /**
-    * @property {boolean} LITTLE_ENDIAN - Same value as `littleEndian`.
+    * @property {boolean} LITTLE_ENDIAN - Is the device big or little endian? (only detected if the browser supports TypedArrays)
     * @default
     */
     this.LITTLE_ENDIAN = false;
@@ -723,6 +707,69 @@ Phaser.Device._initialize = function () {
     }
 
     /**
+    * Checks if the browser correctly supports putImageData alpha channels.
+    * If the browser isn't capable of handling tinting with alpha, `Device.canHandleAlpha` will be false.
+    * Also checks whether the Canvas BlendModes are supported by the current browser for drawImage.
+    */
+    function _checkCanvasFeatures () {
+
+        var canvas = Phaser.CanvasPool.create(this, 6, 1);
+        var context = canvas.getContext('2d');
+
+        context.fillStyle = 'rgba(10, 20, 30, 0.5)';
+
+        //  Draw a single pixel
+        context.fillRect(0, 0, 1, 1);
+
+        //  Get the color values
+        var s1 = context.getImageData(0, 0, 1, 1);
+
+        if (s1)
+        {
+            //  Plot them to x2
+            context.putImageData(s1, 1, 0);
+
+            //  Get those values
+            var s2 = context.getImageData(1, 0, 1, 1);
+
+            //  Compare and set
+            device.canHandleAlpha = (
+                s2.data[0] === s1.data[0] &&
+                s2.data[1] === s1.data[1] &&
+                s2.data[2] === s1.data[2] &&
+                s2.data[3] === s1.data[3]
+            );
+        }
+
+        //  Checks whether the Canvas BlendModes are supported by the current browser for drawImage.
+
+        var pngHead = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAABAQMAAADD8p2OAAAAA1BMVEX/';
+        var pngEnd = 'AAAACklEQVQI12NgAAAAAgAB4iG8MwAAAABJRU5ErkJggg==';
+
+        var magenta = new Image();
+        magenta.src = pngHead + 'AP804Oa6' + pngEnd;
+
+        var yellow = new Image();
+        yellow.src = pngHead + '/wCKxvRF' + pngEnd;
+
+        context.clearRect(0, 0, 6, 1);
+
+        context.globalCompositeOperation = 'multiply';
+        context.drawImage(magenta, 0, 0);
+        context.drawImage(yellow, 2, 0);
+
+        if (context.getImageData(2, 0, 1, 1))
+        {
+            var data = context.getImageData(2, 0, 1, 1).data;
+
+            device.canUseMultiply = (data[0] === 255 && data[1] === 0 && data[2] === 0);
+        }
+
+        Phaser.CanvasPool.removeByCanvas(canvas);
+
+    }
+
+    /**
     * Check HTML5 features of the host environment.
     */
     function _checkFeatures () {
@@ -786,7 +833,7 @@ Phaser.Device._initialize = function () {
             device.touch = true;
         }
 
-        if (window.navigator.msPointerEnabled || window.navigator.pointerEnabled)
+        if (window.PointerEvent || window.MSPointerEvent || window.navigator.msPointerEnabled || window.navigator.pointerEnabled)
         {
             device.mspointer = true;
         }
@@ -879,11 +926,7 @@ Phaser.Device._initialize = function () {
 
         var ua = navigator.userAgent;
 
-        if (/Arora/.test(ua))
-        {
-            device.arora = true;
-        }
-        else if (/Edge\/\d+/.test(ua))
+        if (/Edge\/\d+/.test(ua))
         {
             device.edge = true;
         }
@@ -891,10 +934,6 @@ Phaser.Device._initialize = function () {
         {
             device.chrome = true;
             device.chromeVersion = parseInt(RegExp.$1, 10);
-        }
-        else if (/Epiphany/.test(ua))
-        {
-            device.epiphany = true;
         }
         else if (/Firefox\D+(\d+)/.test(ua))
         {
@@ -909,10 +948,6 @@ Phaser.Device._initialize = function () {
         {
             device.ie = true;
             device.ieVersion = parseInt(RegExp.$1, 10);
-        }
-        else if (/Midori/.test(ua))
-        {
-            device.midori = true;
         }
         else if (/Opera/.test(ua))
         {
@@ -1150,7 +1185,7 @@ Phaser.Device._initialize = function () {
             return false;
         }
 
-        var elem = PIXI.CanvasPool.create(this, 1, 1);
+        var elem = Phaser.CanvasPool.create(this, 1, 1);
         var ctx = elem.getContext('2d');
 
         if (!ctx)
@@ -1160,7 +1195,7 @@ Phaser.Device._initialize = function () {
 
         var image = ctx.createImageData(1, 1);
 
-        PIXI.CanvasPool.remove(this);
+        Phaser.CanvasPool.remove(this);
 
         return image.data instanceof Uint8ClampedArray;
 
@@ -1187,11 +1222,10 @@ Phaser.Device._initialize = function () {
 
         if (typeof ArrayBuffer !== 'undefined' && typeof Uint8Array !== 'undefined' && typeof Uint32Array !== 'undefined')
         {
-            device.littleEndian = _checkIsLittleEndian();
-            device.LITTLE_ENDIAN = device.littleEndian;
+            device.LITTLE_ENDIAN = _checkIsLittleEndian();
         }
 
-        device.support32bit = (typeof ArrayBuffer !== 'undefined' && typeof Uint8ClampedArray !== 'undefined' && typeof Int32Array !== 'undefined' && device.littleEndian !== null && _checkIsUint8ClampedImageData());
+        device.support32bit = (typeof ArrayBuffer !== 'undefined' && typeof Uint8ClampedArray !== 'undefined' && typeof Int32Array !== 'undefined' && device.LITTLE_ENDIAN !== null && _checkIsUint8ClampedImageData());
 
         navigator.vibrate = navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate;
 
@@ -1202,46 +1236,14 @@ Phaser.Device._initialize = function () {
 
     }
 
-    /**
-    * Check whether the host environment support 3D CSS.
-    */
-    function _checkCSS3D () {
-
-        var el = document.createElement('p');
-        var has3d;
-        var transforms = {
-            'webkitTransform': '-webkit-transform',
-            'OTransform': '-o-transform',
-            'msTransform': '-ms-transform',
-            'MozTransform': '-moz-transform',
-            'transform': 'transform'
-        };
-
-        // Add it to the body to get the computed style.
-        document.body.insertBefore(el, null);
-
-        for (var t in transforms)
-        {
-            if (el.style[t] !== undefined)
-            {
-                el.style[t] = "translate3d(1px,1px,1px)";
-                has3d = window.getComputedStyle(el).getPropertyValue(transforms[t]);
-            }
-        }
-
-        document.body.removeChild(el);
-        device.css3D = (has3d !== undefined && has3d.length > 0 && has3d !== "none");
-
-    }
-
     //  Run the checks
     _checkOS();
     _checkBrowser();
     _checkAudio();
     _checkVideo();
-    _checkCSS3D();
     _checkDevice();
     _checkFeatures();
+    _checkCanvasFeatures();
     _checkFullScreenSupport();
     _checkInput();
 
@@ -1322,41 +1324,6 @@ Phaser.Device.canPlayVideo = function (type) {
 };
 
 /**
-* Check whether the console is open.
-* Note that this only works in Firefox with Firebug and earlier versions of Chrome.
-* It used to work in Chrome, but then they removed the ability: {@link http://src.chromium.org/viewvc/blink?view=revision&revision=151136}
-*
-* @method isConsoleOpen
-* @memberof Phaser.Device.prototype
-*/
-Phaser.Device.isConsoleOpen = function () {
-
-    if (window.console && window.console['firebug'])
-    {
-        return true;
-    }
-
-    if (window.console)
-    {
-        console.profile();
-        console.profileEnd();
-
-        if (console.clear)
-        {
-            console.clear();
-        }
-
-        if (console['profiles'])
-        {
-            return console['profiles'].length > 0;
-        }
-    }
-
-    return false;
-
-};
-
-/**
 * Detect if the host is a an Android Stock browser.
 * This is available before the device "ready" event.
 *
@@ -1371,6 +1338,7 @@ Phaser.Device.isConsoleOpen = function () {
 Phaser.Device.isAndroidStockBrowser = function () {
 
     var matches = window.navigator.userAgent.match(/Android.*AppleWebKit\/([\d.]+)/);
+
     return matches && matches[1] < 537;
 
 };

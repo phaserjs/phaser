@@ -19,6 +19,14 @@ typings install github:photonstorm/phaser/typescript/typings.json -GD
 This will make phaser typescript definitions available for your compiler so that there is no need to reference them from your source files. 
 For more information, check [the official typings site](https://github.com/typings/typings). 
 
+Included in this folder are also:
+
+- `phaser.comments.d.ts` 
+- `pixi.comments.d.ts`
+
+These are simply annotated versions of their respective files. You should only include one version of each file, commented or not otherwise
+you will run into conflicts.
+
 ## Contributing ##
 
 If you find any mistakes in these definitions or you feel they can be improved in any way, please make a pull request against the dev branch. 

@@ -108,10 +108,10 @@ Phaser.RequestAnimationFrame.prototype = {
 
         if (this.isRunning)
         {
+            this._timeOutID = window.requestAnimationFrame(this._onLoop);
+
             // floor the rafTime to make it equivalent to the Date.now() provided by updateSetTimeout (just below)
             this.game.update(Math.floor(rafTime));
-
-            this._timeOutID = window.requestAnimationFrame(this._onLoop);
         }
 
     },

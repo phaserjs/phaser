@@ -4,6 +4,7 @@
 
 PIXI.glContexts = []; // this is where we store the webGL contexts for easy access.
 PIXI.instances = [];
+PIXI._enableMultiTextureToggle = false;
 
 /**
  * The WebGLRenderer draws the stage and all its content onto a webGL enabled canvas. This renderer
@@ -27,11 +28,13 @@ PIXI.WebGLRenderer = function(game) {
         PIXI.defaultRenderer = this;
     }
 
+    this.extensions = {};
+
     /**
      * @property type
      * @type Number
      */
-    this.type = PIXI.WEBGL_RENDERER;
+    this.type = Phaser.WEBGL;
 
     /**
      * The resolution of the renderer
@@ -141,7 +144,7 @@ PIXI.WebGLRenderer = function(game) {
      * @property spriteBatch
      * @type WebGLSpriteBatch
      */
-    this.spriteBatch = new PIXI.WebGLSpriteBatch();
+    this.spriteBatch = new PIXI.WebGLSpriteBatch(game);
 
     /**
      * Manages the masks using the stencil buffer
@@ -176,6 +179,12 @@ PIXI.WebGLRenderer = function(game) {
      * @type Object
      */
     this.renderSession = {};
+
+    /**
+     * @property currentBatchedTextures
+     * @type Array
+     */
+    this.currentBatchedTextures = [];
 
     //  Needed?
     this.renderSession.game = this.game;
@@ -215,6 +224,8 @@ PIXI.WebGLRenderer.prototype.initContext = function()
         throw new Error('This browser does not support webGL. Try using the canvas renderer');
     }
 
+    this.maxTextures = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);
+
     this.glContextId = gl.id = PIXI.WebGLRenderer.glContextId++;
 
     PIXI.glContexts[this.glContextId] = gl;
@@ -238,6 +249,96 @@ PIXI.WebGLRenderer.prototype.initContext = function()
 
     // now resize and we are good to go!
     this.resize(this.width, this.height);
+
+    // Load WebGL extension
+    this.extensions.compression = {};
+
+    etc1 = gl.getExtension('WEBGL_compressed_texture_etc1') || gl.getExtension('WEBKIT_WEBGL_compressed_texture_etc1');
+    pvrtc = gl.getExtension('WEBGL_compressed_texture_pvrtc') || gl.getExtension('WEBKIT_WEBGL_compressed_texture_pvrtc');
+    s3tc = gl.getExtension('WEBGL_compressed_texture_s3tc') || gl.getExtension('WEBKIT_WEBGL_compressed_texture_s3tc');
+
+    if (etc1) this.extensions.compression.ETC1 = etc1;
+    if (pvrtc) this.extensions.compression.PVRTC = pvrtc;
+    if (s3tc) this.extensions.compression.S3TC = s3tc;
+};
+
+/**
+* If Multi Texture support has been enabled, then calling this method will enable batching on the given
+* textures. The texture collection is an array of keys, that map to Phaser.Cache image entries.
+*
+* The number of textures that can be batched is dependent on hardware. If you provide more textures
+* than can be batched by the GPU, then only those at the start of the array will be used. Generally
+* you shouldn't provide more than 16 textures to this method. You can check the hardware limit via the
+* `maxTextures` property.
+*
+* You can also check the property `currentBatchedTextures` at any time, to see which textures are currently
+* being batched.
+*
+* To stop all textures from being batched, call this method again with an empty array.
+*
+* To change the textures being batched, call this method with a new array of image keys. The old ones
+* will all be purged out and no-longer batched, and the new ones enabled.
+* 
+* Note: Throws a warning if you haven't enabled Multiple Texture batching support in the Phaser Game config.
+* 
+* @method setTexturePriority
+* @param textureNameCollection {Array} An Array of Texture Cache keys to use for multi-texture batching.
+* @return {Array} An array containing the texture keys that were enabled for batching.
+*/
+PIXI.WebGLRenderer.prototype.setTexturePriority = function (textureNameCollection) {
+
+    if (!PIXI._enableMultiTextureToggle)
+    {
+        console.warn('setTexturePriority error: Multi Texture support hasn\'t been enabled in the Phaser Game Config.');
+        return;
+    }
+
+    var maxTextures = this.maxTextures;
+    var imageCache = this.game.cache._cache.image;
+    var imageName = null;
+    var gl = this.gl;
+
+    //  Clear out all previously batched textures and reset their flags.
+    //  If the array has been modified, then the developer will have to
+    //  deal with that in their own way.
+    for (var i = 0; i < this.currentBatchedTextures.length; i++)
+    {
+        imageName = textureNameCollection[index];
+
+        if (!(imageName in imageCache))
+        {
+            continue;
+        }
+        
+        imageCache[imageName].base.textureIndex = 0;
+    }
+
+    this.currentBatchedTextures.length = 0;
+
+    // We start from 1 because framebuffer texture uses unit 0.
+    for (var index = 0; index < textureNameCollection.length; ++index)
+    {
+        imageName = textureNameCollection[index];
+
+        if (!(imageName in imageCache))
+        {
+            continue;
+        }
+
+        if (index + 1 < maxTextures)
+        {
+            imageCache[imageName].base.textureIndex = index + 1;
+        }
+        else
+        {
+            imageCache[imageName].base.textureIndex = maxTextures - 1;
+        }
+
+        this.currentBatchedTextures.push(imageName);
+    }
+
+    return this.currentBatchedTextures;
+
 };
 
 /**
@@ -276,7 +377,7 @@ PIXI.WebGLRenderer.prototype.render = function(stage)
 };
 
 /**
- * Renders a Display Object.
+ * Renders a Display Object. Only used by this class and RenderTexture, nothing else calls it.
  *
  * @method renderDisplayObject
  * @param displayObject {DisplayObject} The DisplayObject to render
@@ -339,6 +440,67 @@ PIXI.WebGLRenderer.prototype.resize = function(width, height)
 };
 
 /**
+ * Updates and creates a WebGL compressed texture for the renderers context.
+ *
+ * @method updateCompressedTexture
+ * @param texture {Texture} the texture to update
+ * @return {boolean} True if the texture was successfully bound, otherwise false.
+ */
+PIXI.WebGLRenderer.prototype.updateCompressedTexture = function (texture) {
+    if (!texture.hasLoaded)
+    {
+        return false;
+    }
+    var gl = this.gl;
+    var textureMetaData = texture.source;
+
+    if (!texture._glTextures[gl.id])
+    {
+        texture._glTextures[gl.id] = gl.createTexture();
+    }
+    gl.activeTexture(gl.TEXTURE0 + texture.textureIndex);
+
+    gl.bindTexture(gl.TEXTURE_2D, texture._glTextures[gl.id]);
+
+    gl.compressedTexImage2D(
+        gl.TEXTURE_2D, 
+        0, 
+        textureMetaData.glExtensionFormat, 
+        textureMetaData.width, 
+        textureMetaData.height, 
+        0, 
+        textureMetaData.textureData
+    );
+
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, texture.scaleMode === PIXI.scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
+
+    if (texture.mipmap && Phaser.Math.isPowerOfTwo(texture.width, texture.height))
+    {
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, texture.scaleMode === PIXI.scaleModes.LINEAR ? gl.LINEAR_MIPMAP_LINEAR : gl.NEAREST_MIPMAP_NEAREST);
+        gl.generateMipmap(gl.TEXTURE_2D);
+    }
+    else
+    {
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, texture.scaleMode === PIXI.scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
+    }
+
+    if (!texture._powerOf2)
+    {
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    }
+    else
+    {
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+    }
+    texture._dirty[gl.id] = false;
+    return true;
+};
+
+/**
+ * Note: Moved to TextureManager class.
+ * 
  * Updates and Creates a WebGL texture for the renderers context.
  *
  * @method updateTexture
@@ -351,6 +513,9 @@ PIXI.WebGLRenderer.prototype.updateTexture = function(texture)
     {
         return false;
     }
+    if (texture.source.compressionAlgorithm) {
+        return this.updateCompressedTexture(texture);
+    }
 
     var gl = this.gl;
 
@@ -358,6 +523,7 @@ PIXI.WebGLRenderer.prototype.updateTexture = function(texture)
     {
         texture._glTextures[gl.id] = gl.createTexture();
     }
+    gl.activeTexture(gl.TEXTURE0 + texture.textureIndex);
 
     gl.bindTexture(gl.TEXTURE_2D, texture._glTextures[gl.id]);
 
@@ -367,7 +533,7 @@ PIXI.WebGLRenderer.prototype.updateTexture = function(texture)
 
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, texture.scaleMode === PIXI.scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
 
-    if (texture.mipmap && PIXI.isPowerOfTwo(texture.width, texture.height))
+    if (texture.mipmap && Phaser.Math.isPowerOfTwo(texture.width, texture.height))
     {
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, texture.scaleMode === PIXI.scaleModes.LINEAR ? gl.LINEAR_MIPMAP_LINEAR : gl.NEAREST_MIPMAP_NEAREST);
         gl.generateMipmap(gl.TEXTURE_2D);
@@ -420,7 +586,7 @@ PIXI.WebGLRenderer.prototype.destroy = function()
     this.gl = null;
     this.renderSession = null;
 
-    PIXI.CanvasPool.remove(this);
+    Phaser.CanvasPool.remove(this);
 
     PIXI.instances[this.glContextId] = null;
 
@@ -463,4 +629,14 @@ PIXI.WebGLRenderer.prototype.mapBlendModes = function()
     }
 };
 
+PIXI.WebGLRenderer.prototype.getMaxTextureUnit = function() {
+    var gl = this.gl;
+    return gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);
+};
+
+PIXI.enableMultiTexture = function() {
+    PIXI._enableMultiTextureToggle = true;
+};
+
 PIXI.WebGLRenderer.glContextId = 0;
+PIXI.WebGLRenderer.textureArray = [];

@@ -28,7 +28,7 @@ PIXI.CanvasRenderer = function (game) {
      * @property type
      * @type Number
      */
-    this.type = PIXI.CANVAS_RENDERER;
+    this.type = Phaser.CANVAS;
 
     /**
      * The resolution of the canvas.
@@ -190,6 +190,13 @@ PIXI.CanvasRenderer.prototype.render = function (root) {
 
 };
 
+PIXI.CanvasRenderer.prototype.setTexturePriority = function (textureNameCollection) {
+
+    //  Does nothing on Canvas, but here to allow you to simply set
+    //  `game.renderer.setTexturePriority()` without having to worry about
+    //  running in WebGL or not.
+
+};
 
 /**
  * Removes everything from the renderer and optionally removes the Canvas DOM element.
@@ -270,7 +277,7 @@ PIXI.CanvasRenderer.prototype.mapBlendModes = function () {
     {
         var b = [];
         var modes = PIXI.blendModes;
-        var useNew = PIXI.canUseNewCanvasBlendModes();
+        var useNew = this.game.device.canUseMultiply;
 
         b[modes.NORMAL] = 'source-over';
         b[modes.ADD] = 'lighter';

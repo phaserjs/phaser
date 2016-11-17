@@ -159,6 +159,38 @@ Phaser.Color = {
     },
 
     /**
+    * Converts a hex color value to an [R, G, B] array.
+    *
+    * @static
+    * @method Phaser.Color.hexToRGBArray
+    * @param {number} color - The color to convert to an RGB array. In the format 0xRRGGBB.
+    * @return {array} An array with element 0 containing the Red value, 1 containing Green, and 2 containing Blue.
+    */
+    hexToRGBArray: function (color) {
+
+        return [
+            (color >> 16 & 0xFF) / 255,
+            (color >> 8 & 0xFF) / 255,
+            (color & 0xFF) / 255
+        ];
+
+    },
+
+    /**
+    * Converts an RGB color array, in the format: [R, G, B], to a hex color value.
+    *
+    * @static
+    * @method Phaser.Color.RGBArrayToHex
+    * @param {array} rgb - An array with element 0 containing the Red value, 1 containing Green, and 2 containing Blue.
+    * @return {number} The color value, in the format 0xRRGGBB.
+    */
+    RGBArrayToHex: function (rgb) {
+
+        return ((rgb[0] * 255 << 16) + (rgb[1] * 255 << 8) + rgb[2] * 255);
+
+    },
+
+    /**
     * Converts an RGB color value to HSL (hue, saturation and lightness).
     * Conversion forumla from http://en.wikipedia.org/wiki/HSL_color_space.
     * Assumes RGB values are contained in the set [0, 255] and returns h, s and l in the set [0, 1].
@@ -468,7 +500,7 @@ Phaser.Color = {
     * @method Phaser.Color.updateColor
     * @static
     * @param {object} out - The color object to update.
-    * @returns {number} A native color value integer (format: 0xAARRGGBB).
+    * @return {number} A native color value integer (format: 0xAARRGGBB).
     */
     updateColor: function (out) {
 
@@ -489,7 +521,7 @@ Phaser.Color = {
     * @param {number} r - The red color component, in the range 0 - 255.
     * @param {number} g - The green color component, in the range 0 - 255.
     * @param {number} b - The blue color component, in the range 0 - 255.
-    * @returns {number} A native color value integer (format: 0xAARRGGBB).
+    * @return {number} A native color value integer (format: 0xAARRGGBB).
     */
     getColor32: function (a, r, g, b) {
 
@@ -505,7 +537,7 @@ Phaser.Color = {
     * @param {number} r - The red color component, in the range 0 - 255.
     * @param {number} g - The green color component, in the range 0 - 255.
     * @param {number} b - The blue color component, in the range 0 - 255.
-    * @returns {number} A native color value integer (format: 0xRRGGBB).
+    * @return {number} A native color value integer (format: 0xRRGGBB).
     */
     getColor: function (r, g, b) {
 
@@ -697,7 +729,7 @@ Phaser.Color = {
     * @method Phaser.Color.componentToHex
     * @static
     * @param {number} color - The color channel to get the hex value for, must be a value between 0 and 255.
-    * @returns {string} A string of length 2 characters, i.e. 255 = ff, 100 = 64.
+    * @return {string} A string of length 2 characters, i.e. 255 = ff, 100 = 64.
     */
     componentToHex: function (color) {
 
@@ -767,7 +799,7 @@ Phaser.Color = {
     * @param {number} steps - The number of steps to run the interpolation over.
     * @param {number} currentStep - The currentStep value. If the interpolation will take 100 steps, a currentStep value of 50 would be half-way between the two.
     * @param {number} alpha - The alpha of the returned color.
-    * @returns {number} The interpolated color value.
+    * @return {number} The interpolated color value.
     */
     interpolateColor: function (color1, color2, steps, currentStep, alpha) {
 
@@ -794,7 +826,7 @@ Phaser.Color = {
     * @param {number} b - The blue color value, between 0 and 0xFF (255).
     * @param {number} steps - The number of steps to run the interpolation over.
     * @param {number} currentStep - The currentStep value. If the interpolation will take 100 steps, a currentStep value of 50 would be half-way between the two.
-    * @returns {number} The interpolated color value.
+    * @return {number} The interpolated color value.
     */
     interpolateColorWithRGB: function (color, r, g, b, steps, currentStep) {
 
@@ -819,7 +851,7 @@ Phaser.Color = {
     * @param {number} b2 - The blue color value, between 0 and 0xFF (255).
     * @param {number} steps - The number of steps to run the interpolation over.
     * @param {number} currentStep - The currentStep value. If the interpolation will take 100 steps, a currentStep value of 50 would be half-way between the two.
-    * @returns {number} The interpolated color value.
+    * @return {number} The interpolated color value.
     */
     interpolateRGB: function (r1, g1, b1, r2, g2, b2, steps, currentStep) {
 
@@ -841,7 +873,7 @@ Phaser.Color = {
     * @param {number} [min=0] - The lowest value to use for the color.
     * @param {number} [max=255] - The highest value to use for the color.
     * @param {number} [alpha=255] - The alpha value of the returning color (default 255 = fully opaque).
-    * @returns {number} 32-bit color value with alpha.
+    * @return {number} 32-bit color value with alpha.
     */
     getRandomColor: function (min, max, alpha) {
 
@@ -871,7 +903,7 @@ Phaser.Color = {
     * @method Phaser.Color.getRGB
     * @static
     * @param {number} color - Color in RGB (0xRRGGBB) or ARGB format (0xAARRGGBB).
-    * @returns {object} An Object with properties: alpha, red, green, blue (also r, g, b and a). Alpha will only be present if a color value > 16777215 was given.
+    * @return {object} An Object with properties: alpha, red, green, blue (also r, g, b and a). Alpha will only be present if a color value > 16777215 was given.
     */
     getRGB: function (color) {
 
@@ -911,7 +943,7 @@ Phaser.Color = {
     * @method Phaser.Color.getWebRGB
     * @static
     * @param {number|Object} color - Color in RGB (0xRRGGBB), ARGB format (0xAARRGGBB) or an Object with r, g, b, a properties.
-    * @returns {string} A string in the format: 'rgba(r,g,b,a)'
+    * @return {string} A string in the format: 'rgba(r,g,b,a)'
     */
     getWebRGB: function (color) {
 
@@ -933,7 +965,7 @@ Phaser.Color = {
     * @method Phaser.Color.getAlpha
     * @static
     * @param {number} color - In the format 0xAARRGGBB.
-    * @returns {number} The Alpha component of the color, will be between 0 and 1 (0 being no Alpha (opaque), 1 full Alpha (transparent)).
+    * @return {number} The Alpha component of the color, will be between 0 and 1 (0 being no Alpha (opaque), 1 full Alpha (transparent)).
     */
     getAlpha: function (color) {
         return color >>> 24;
@@ -945,7 +977,7 @@ Phaser.Color = {
     * @method Phaser.Color.getAlphaFloat
     * @static
     * @param {number} color - In the format 0xAARRGGBB.
-    * @returns {number} The Alpha component of the color, will be between 0 and 1 (0 being no Alpha (opaque), 1 full Alpha (transparent)).
+    * @return {number} The Alpha component of the color, will be between 0 and 1 (0 being no Alpha (opaque), 1 full Alpha (transparent)).
     */
     getAlphaFloat: function (color) {
         return (color >>> 24) / 255;
@@ -957,7 +989,7 @@ Phaser.Color = {
     * @method Phaser.Color.getRed
     * @static
     * @param {number} color In the format 0xAARRGGBB.
-    * @returns {number} The Red component of the color, will be between 0 and 255 (0 being no color, 255 full Red).
+    * @return {number} The Red component of the color, will be between 0 and 255 (0 being no color, 255 full Red).
     */
     getRed: function (color) {
         return color >> 16 & 0xFF;
@@ -969,7 +1001,7 @@ Phaser.Color = {
     * @method Phaser.Color.getGreen
     * @static
     * @param {number} color - In the format 0xAARRGGBB.
-    * @returns {number} The Green component of the color, will be between 0 and 255 (0 being no color, 255 full Green).
+    * @return {number} The Green component of the color, will be between 0 and 255 (0 being no color, 255 full Green).
     */
     getGreen: function (color) {
         return color >> 8 & 0xFF;
@@ -981,7 +1013,7 @@ Phaser.Color = {
     * @method Phaser.Color.getBlue
     * @static
     * @param {number} color - In the format 0xAARRGGBB.
-    * @returns {number} The Blue component of the color, will be between 0 and 255 (0 being no color, 255 full Blue).
+    * @return {number} The Blue component of the color, will be between 0 and 255 (0 being no color, 255 full Blue).
     */
     getBlue: function (color) {
         return color & 0xFF;
@@ -994,7 +1026,7 @@ Phaser.Color = {
     * @static
     * @param {integer} a - The source color to blend, in the range 1 to 255.
     * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
-    * @returns {integer} The blended color value, in the range 1 to 255.
+    * @return {integer} The blended color value, in the range 1 to 255.
     */
     blendNormal: function (a) {
         return a;
@@ -1007,7 +1039,7 @@ Phaser.Color = {
     * @static
     * @param {integer} a - The source color to blend, in the range 1 to 255.
     * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
-    * @returns {integer} The blended color value, in the range 1 to 255.
+    * @return {integer} The blended color value, in the range 1 to 255.
     */
     blendLighten: function (a, b) {
         return (b > a) ? b : a;
@@ -1020,7 +1052,7 @@ Phaser.Color = {
     * @static
     * @param {integer} a - The source color to blend, in the range 1 to 255.
     * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
-    * @returns {integer} The blended color value, in the range 1 to 255.
+    * @return {integer} The blended color value, in the range 1 to 255.
     */
     blendDarken: function (a, b) {
         return (b > a) ? a : b;
@@ -1036,7 +1068,7 @@ Phaser.Color = {
     * @static
     * @param {integer} a - The source color to blend, in the range 1 to 255.
     * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
-    * @returns {integer} The blended color value, in the range 1 to 255.
+    * @return {integer} The blended color value, in the range 1 to 255.
     */
     blendMultiply: function (a, b) {
         return (a * b) / 255;
@@ -1049,7 +1081,7 @@ Phaser.Color = {
     * @static
     * @param {integer} a - The source color to blend, in the range 1 to 255.
     * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
-    * @returns {integer} The blended color value, in the range 1 to 255.
+    * @return {integer} The blended color value, in the range 1 to 255.
     */
     blendAverage: function (a, b) {
         return (a + b) / 2;
@@ -1062,7 +1094,7 @@ Phaser.Color = {
     * @static
     * @param {integer} a - The source color to blend, in the range 1 to 255.
     * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
-    * @returns {integer} The blended color value, in the range 1 to 255.
+    * @return {integer} The blended color value, in the range 1 to 255.
     */
     blendAdd: function (a, b) {
         return Math.min(255, a + b);
@@ -1075,7 +1107,7 @@ Phaser.Color = {
     * @static
     * @param {integer} a - The source color to blend, in the range 1 to 255.
     * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
-    * @returns {integer} The blended color value, in the range 1 to 255.
+    * @return {integer} The blended color value, in the range 1 to 255.
     */
     blendSubtract: function (a, b) {
         return Math.max(0, a + b - 255);
@@ -1090,7 +1122,7 @@ Phaser.Color = {
     * @static
     * @param {integer} a - The source color to blend, in the range 1 to 255.
     * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
-    * @returns {integer} The blended color value, in the range 1 to 255.
+    * @return {integer} The blended color value, in the range 1 to 255.
     */
     blendDifference: function (a, b) {
         return Math.abs(a - b);
@@ -1103,7 +1135,7 @@ Phaser.Color = {
     * @static
     * @param {integer} a - The source color to blend, in the range 1 to 255.
     * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
-    * @returns {integer} The blended color value, in the range 1 to 255.
+    * @return {integer} The blended color value, in the range 1 to 255.
     */
     blendNegation: function (a, b) {
         return 255 - Math.abs(255 - a - b);
@@ -1118,7 +1150,7 @@ Phaser.Color = {
     * @static
     * @param {integer} a - The source color to blend, in the range 1 to 255.
     * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
-    * @returns {integer} The blended color value, in the range 1 to 255.
+    * @return {integer} The blended color value, in the range 1 to 255.
     */
     blendScreen: function (a, b) {
         return 255 - (((255 - a) * (255 - b)) >> 8);
@@ -1132,7 +1164,7 @@ Phaser.Color = {
     * @static
     * @param {integer} a - The source color to blend, in the range 1 to 255.
     * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
-    * @returns {integer} The blended color value, in the range 1 to 255.
+    * @return {integer} The blended color value, in the range 1 to 255.
     */
     blendExclusion: function (a, b) {
         return a + b - 2 * a * b / 255;
@@ -1147,7 +1179,7 @@ Phaser.Color = {
     * @static
     * @param {integer} a - The source color to blend, in the range 1 to 255.
     * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
-    * @returns {integer} The blended color value, in the range 1 to 255.
+    * @return {integer} The blended color value, in the range 1 to 255.
     */
     blendOverlay: function (a, b) {
         return b < 128 ? (2 * a * b / 255) : (255 - 2 * (255 - a) * (255 - b) / 255);
@@ -1170,7 +1202,7 @@ Phaser.Color = {
     * @static
     * @param {integer} a - The source color to blend, in the range 1 to 255.
     * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
-    * @returns {integer} The blended color value, in the range 1 to 255.
+    * @return {integer} The blended color value, in the range 1 to 255.
     */
     blendSoftLight: function (a, b) {
         return b < 128 ? (2 * ((a >> 1) + 64)) * (b / 255) : 255 - (2 * (255 - ((a >> 1) + 64)) * (255 - b) / 255);
@@ -1194,7 +1226,7 @@ Phaser.Color = {
     * @static
     * @param {integer} a - The source color to blend, in the range 1 to 255.
     * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
-    * @returns {integer} The blended color value, in the range 1 to 255.
+    * @return {integer} The blended color value, in the range 1 to 255.
     */
     blendHardLight: function (a, b) {
         return Phaser.Color.blendOverlay(b, a);
@@ -1208,7 +1240,7 @@ Phaser.Color = {
     * @static
     * @param {integer} a - The source color to blend, in the range 1 to 255.
     * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
-    * @returns {integer} The blended color value, in the range 1 to 255.
+    * @return {integer} The blended color value, in the range 1 to 255.
     */
     blendColorDodge: function (a, b) {
         return b === 255 ? b : Math.min(255, ((a << 8) / (255 - b)));
@@ -1222,7 +1254,7 @@ Phaser.Color = {
     * @static
     * @param {integer} a - The source color to blend, in the range 1 to 255.
     * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
-    * @returns {integer} The blended color value, in the range 1 to 255.
+    * @return {integer} The blended color value, in the range 1 to 255.
     */
     blendColorBurn: function (a, b) {
         return b === 0 ? b : Math.max(0, (255 - ((255 - a) << 8) / b));
@@ -1235,7 +1267,7 @@ Phaser.Color = {
     * @static
     * @param {integer} a - The source color to blend, in the range 1 to 255.
     * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
-    * @returns {integer} The blended color value, in the range 1 to 255.
+    * @return {integer} The blended color value, in the range 1 to 255.
     */
     blendLinearDodge: function (a, b) {
         return Phaser.Color.blendAdd(a, b);
@@ -1248,7 +1280,7 @@ Phaser.Color = {
     * @static
     * @param {integer} a - The source color to blend, in the range 1 to 255.
     * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
-    * @returns {integer} The blended color value, in the range 1 to 255.
+    * @return {integer} The blended color value, in the range 1 to 255.
     */
     blendLinearBurn: function (a, b) {
         return Phaser.Color.blendSubtract(a, b);
@@ -1263,7 +1295,7 @@ Phaser.Color = {
     * @static
     * @param {integer} a - The source color to blend, in the range 1 to 255.
     * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
-    * @returns {integer} The blended color value, in the range 1 to 255.
+    * @return {integer} The blended color value, in the range 1 to 255.
     */
     blendLinearLight: function (a, b) {
         return b < 128 ? Phaser.Color.blendLinearBurn(a, 2 * b) : Phaser.Color.blendLinearDodge(a, (2 * (b - 128)));
@@ -1279,7 +1311,7 @@ Phaser.Color = {
     * @static
     * @param {integer} a - The source color to blend, in the range 1 to 255.
     * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
-    * @returns {integer} The blended color value, in the range 1 to 255.
+    * @return {integer} The blended color value, in the range 1 to 255.
     */
     blendVividLight: function (a, b) {
         return b < 128 ? Phaser.Color.blendColorBurn(a, 2 * b) : Phaser.Color.blendColorDodge(a, (2 * (b - 128)));
@@ -1293,7 +1325,7 @@ Phaser.Color = {
     * @static
     * @param {integer} a - The source color to blend, in the range 1 to 255.
     * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
-    * @returns {integer} The blended color value, in the range 1 to 255.
+    * @return {integer} The blended color value, in the range 1 to 255.
     */
     blendPinLight: function (a, b) {
         return b < 128 ? Phaser.Color.blendDarken(a, 2 * b) : Phaser.Color.blendLighten(a, (2 * (b - 128)));
@@ -1309,7 +1341,7 @@ Phaser.Color = {
     * @static
     * @param {integer} a - The source color to blend, in the range 1 to 255.
     * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
-    * @returns {integer} The blended color value, in the range 1 to 255.
+    * @return {integer} The blended color value, in the range 1 to 255.
     */
     blendHardMix: function (a, b) {
         return Phaser.Color.blendVividLight(a, b) < 128 ? 0 : 255;
@@ -1322,7 +1354,7 @@ Phaser.Color = {
     * @static
     * @param {integer} a - The source color to blend, in the range 1 to 255.
     * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
-    * @returns {integer} The blended color value, in the range 1 to 255.
+    * @return {integer} The blended color value, in the range 1 to 255.
     */
     blendReflect: function (a, b) {
         return b === 255 ? b : Math.min(255, (a * a / (255 - b)));
@@ -1335,7 +1367,7 @@ Phaser.Color = {
     * @static
     * @param {integer} a - The source color to blend, in the range 1 to 255.
     * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
-    * @returns {integer} The blended color value, in the range 1 to 255.
+    * @return {integer} The blended color value, in the range 1 to 255.
     */
     blendGlow: function (a, b) {
         return Phaser.Color.blendReflect(b, a);
@@ -1348,7 +1380,7 @@ Phaser.Color = {
     * @static
     * @param {integer} a - The source color to blend, in the range 1 to 255.
     * @param {integer} b - The backdrop color to blend, in the range 1 to 255.
-    * @returns {integer} The blended color value, in the range 1 to 255.
+    * @return {integer} The blended color value, in the range 1 to 255.
     */
     blendPhoenix: function (a, b) {
         return Math.min(a, b) - Math.max(a, b) + 255;

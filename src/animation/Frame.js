@@ -64,16 +64,10 @@ Phaser.Frame = function (index, x, y, width, height, name) {
     this.distance = Phaser.Math.distance(0, 0, width, height);
 
     /**
-    * @property {boolean} rotated - Rotated? (not yet implemented)
+    * @property {boolean} rotated - Is the frame rotated in the source texture?
     * @default
     */
     this.rotated = false;
-
-    /**
-    * @property {string} rotationDirection - Either 'cw' or 'ccw', rotation is always 90 degrees.
-    * @default 'cw'
-    */
-    this.rotationDirection = 'cw';
 
     /**
     * @property {boolean} trimmed - Was it trimmed when packed?
@@ -182,7 +176,7 @@ Phaser.Frame.prototype = {
 
     /**
      * Clones this Frame into a new Phaser.Frame object and returns it.
-     * Note that all properties are cloned, including the name, index and UUID.
+     * Note that all properties are cloned, including the name and index.
      *
      * @method Phaser.Frame#clone
      * @return {Phaser.Frame} An exact copy of this Frame object.

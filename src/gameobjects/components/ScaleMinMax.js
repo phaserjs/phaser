@@ -50,7 +50,7 @@ Phaser.Component.ScaleMinMax.prototype = {
      *
      * @method
      * @private
-     * @param {PIXI.Matrix} wt - The updated worldTransform matrix.
+     * @param {Phaser.Matrix} wt - The updated worldTransform matrix.
      */
     checkTransform: function (wt) {
 

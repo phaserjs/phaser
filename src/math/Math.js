@@ -24,17 +24,145 @@ Phaser.Math = {
     PI2: Math.PI * 2,
 
     /**
-    * Returns a number between the `min` and `max` values.
+    * Degrees to Radians factor.
+    * @property {number} Phaser.Math#DEG_TO_RAD
+    */
+    DEG_TO_RAD: Math.PI / 180,
+
+    /**
+    * Degrees to Radians factor.
+    * @property {number} Phaser.Math#RAD_TO_DEG
+    */
+    RAD_TO_DEG: 180 / Math.PI,
+
+    /**
+    * Convert degrees to radians.
+    *
+    * @method Phaser.Math#degToRad
+    * @param {number} degrees - Angle in degrees.
+    * @return {number} Angle in radians.
+    */
+    degToRad: function (degrees) {
+
+        return degrees * Phaser.Math.DEG_TO_RAD;
+
+    },
+
+    /**
+    * Convert radians to degrees.
+    *
+    * @method Phaser.Math#radToDeg
+    * @param {number} radians - Angle in radians.
+    * @return {number} Angle in degrees
+    */
+    radToDeg: function (radians) {
+
+        return radians * Phaser.Math.RAD_TO_DEG;
+
+    },
+
+    /**
+    * Given a number, this function returns the closest number that is a power of two.
+    * This function is from the Starling Framework.
+    *
+    * @method Phaser.Math#getNextPowerOfTwo
+    * @param {number} value - The value to get the closest power of two from.
+    * @return {number} The closest number that is a power of two.
+    */
+    getNextPowerOfTwo: function (value) {
+
+        if (value > 0 && (value & (value - 1)) === 0)
+        {
+            //  http://goo.gl/D9kPj
+            return value;
+        }
+        else
+        {
+            var result = 1;
+
+            while (result < value)
+            {
+                result <<= 1;
+            }
+
+            return result;
+        }
+
+    },
+
+    /**
+    * Checks if the given dimensions make a power of two texture.
+    * 
+    * @method Phaser.Math#isPowerOfTwo
+    * @param {number} width - The width to check.
+    * @param {number} height - The height to check.
+    * @return {boolean} True if the width and height are a power of two.
+    */
+    isPowerOfTwo: function (width, height) {
+
+        return (width > 0 && (width & (width - 1)) === 0 && height > 0 && (height & (height - 1)) === 0);
+
+    },
+
+    /**
+    * Returns a random float in the range `[min, max)`. If these parameters are not in order than they will be put in order.
+    * Default is 0 for `min` and 1 for `max`.
+    *
+    * @method Phaser.Math#random
+    * @param {number} [min=0] - The minimum value. Must be a Number.
+    * @param {number} [max=1] - The maximum value. Must be a Number greater than `min`.
+    * @return {number} A floating point number between min (inclusive) and max (exclusive).
+    */
+    random: function (min, max)
+    {
+        if (min === undefined) { min = 0; }
+        if (max === undefined) { max = 1; }
+
+        if (min === max)
+        {
+            return min;
+        }
+
+        if (min < max)
+        {
+            var temp = min;
+            min = max;
+            max = temp;
+        }
+
+        return (Math.random() * (max - min) + min);
+    },
+
+    /**
+    * Returns a random integer in the range `[min, max]`. If these parameters are not in order than they will be put in order.
+    * Default is 0 for `min` and 1 for `max`.
     *
     * @method Phaser.Math#between
-    * @param {number} min - The minimum value. Must be positive, and less than 'max'.
-    * @param {number} max - The maximum value. Must be position, and greater than 'min'.
-    * @return {number} A value between the range min to max.
+    * @param {number} [min=0] - The minimum value. Must be a Number.
+    * @param {number} [max=1] - The maximum value. Must be a Number greater than `min`.
+    * @return {number} An integer between min (inclusive) and max (inclusive).
     */
-    between: function (min, max) {
+    between: function (min, max)
+    {
+        if (min === undefined) { min = 0; }
+        if (max === undefined) { max = 1; }
 
-        return Math.floor(Math.random() * (max - min + 1) + min);
+        if (min === max)
+        {
+            return min;
+        }
 
+        if (min < max)
+        {
+            var temp = min;
+            min = max;
+            max = temp;
+        }
+
+        min = Math.ceil(min);
+        max = Math.floor(max);
+
+        return Math.floor(Math.random() * (max - min + 1)) + min;
     },
 
     /**
@@ -1178,29 +1306,4 @@ Phaser.Math = {
 
     }
 
-};
-
-var degreeToRadiansFactor = Math.PI / 180;
-var radianToDegreesFactor = 180 / Math.PI;
-
-/**
-* Convert degrees to radians.
-*
-* @method Phaser.Math#degToRad
-* @param {number} degrees - Angle in degrees.
-* @return {number} Angle in radians.
-*/
-Phaser.Math.degToRad = function degToRad (degrees) {
-    return degrees * degreeToRadiansFactor;
-};
-
-/**
-* Convert radians to degrees.
-*
-* @method Phaser.Math#radToDeg
-* @param {number} radians - Angle in radians.
-* @return {number} Angle in degrees
-*/
-Phaser.Math.radToDeg = function radToDeg (radians) {
-    return radians * radianToDegreesFactor;
 };

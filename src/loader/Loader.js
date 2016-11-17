@@ -19,21 +19,28 @@
 * @class Phaser.Loader
 * @param {Phaser.Game} game - A reference to the currently running game.
 */
-Phaser.Loader = function (game) {
-
+Phaser.Loader = function (state)
+{
     /**
     * Local reference to game.
     * @property {Phaser.Game} game
     * @protected
     */
-    this.game = game;
+    this.game = state.game;
 
     /**
-    * Local reference to the Phaser.Cache.
+    * Reference to the State that owns this Loader.
+    * @property {Phaser.State} state
+    * @protected
+    */
+    this.state = state;
+
+    /**
+    * Local reference to the global Phaser.Cache.
     * @property {Phaser.Cache} cache
     * @protected
     */
-    this.cache = game.cache;
+    this.cache = this.game.cache;
 
     /**
     * If true all calls to Loader.reset will be ignored. Useful if you need to create a load queue before swapping to a preloader state.
@@ -120,9 +127,9 @@ Phaser.Loader = function (game) {
     * @default
     */
     this.headers = {
-        "requestedWith": false,
-        "json": "application/json",
-        "xml": "application/xml"
+        requestedWith: false,
+        json: 'application/json',
+        xml: 'application/xml'
     };
 
     /**
@@ -235,6 +242,14 @@ Phaser.Loader = function (game) {
     * @private
     */
     this._fileList = [];
+
+    /**
+    * Contains all the information about multi atlases.
+    *
+    * @property {array} _multilist
+    * @private
+    */
+    this._multilist = [];
 
     /**
     * Inflight files (or packs) that are being fetched/processed.
@@ -474,8 +489,8 @@ Phaser.Loader.prototype = {
     * @param {boolean} [hard=false] - If true then the preload sprite and other artifacts may also be cleared.
     * @param {boolean} [clearEvents=false] - If true then the all Loader signals will have removeAll called on them.
     */
-    reset: function (hard, clearEvents) {
-
+    reset: function (hard, clearEvents)
+    {
         if (clearEvents === undefined) { clearEvents = false; }
 
         if (this.resetLocked)
@@ -493,6 +508,7 @@ Phaser.Loader.prototype = {
         this._processingHead = 0;
         this._fileList.length = 0;
         this._flightQueue.length = 0;
+        this._multilist.length = 0;
 
         this._fileLoadStarted = false;
         this._totalFileCount = 0;
@@ -509,7 +525,6 @@ Phaser.Loader.prototype = {
             this.onFileComplete.removeAll();
             this.onFileError.removeAll();
         }
-
     },
 
     /**
@@ -707,15 +722,120 @@ Phaser.Loader.prototype = {
     * and no URL is given then the Loader will set the URL to be "alien.png". It will always add `.png` as the extension.
     * If you do not desire this action then provide a URL.
     *
+    * This method also supports passing in a texture object as the `url` argument. This allows you to load
+    * compressed textures into Phaser. You can also use `Loader.texture` to do this.
+    * 
+    * Compressed Textures are a WebGL only feature, and require 3rd party tools to create.
+    * Available tools include Texture Packer, PVRTexTool, DirectX Texture Tool and Mali Texture Compression Tool.
+    *
+    * Supported texture compression formats are: PVRTC, S3TC and ETC1.
+    * Supported file formats are: PVR, DDS, KTX and PKM.
+    *
+    * The formats that support all 3 compression algorithms are PVR and KTX.
+    * PKM only supports ETC1, and DDS only S3TC for now.
+    *
+    * The texture path object looks like this:
+    *
+    * ```
+    * load.image('factory', {
+    *     etc1: 'assets/factory_etc1.pkm',
+    *     s3tc: 'assets/factory_dxt1.pvr',
+    *     pvrtc: 'assets/factory_pvrtc.pvr',
+    *     truecolor: 'assets/factory.png'
+    * });
+    * ```
+    * 
+    * The `truecolor` property points to a standard PNG file, that will be used if none of the 
+    * compressed formats are supported by the browser / GPU.
+    *
     * @method Phaser.Loader#image
     * @param {string} key - Unique asset key of this image file.
-    * @param {string} [url] - URL of an image file. If undefined or `null` the url will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
+    * @param {string|object} [url] - URL of an image file. If undefined or `null` the url will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png". Can also be a texture data object.
     * @param {boolean} [overwrite=false] - If an unloaded file with a matching key already exists in the queue, this entry will overwrite it.
     * @return {Phaser.Loader} This Loader instance.
     */
     image: function (key, url, overwrite) {
 
-        return this.addToFileList('image', key, url, undefined, overwrite, '.png');
+        if (typeof url === 'object')
+        {
+            return this.texture(key, url, overwrite);
+        }
+        else
+        {
+            return this.addToFileList('image', key, url, undefined, overwrite, '.png');
+        }
+
+    },
+
+    /**
+    * Adds a Compressed Texture Image to the current load queue.
+    *
+    * Compressed Textures are a WebGL only feature, and require 3rd party tools to create.
+    * Available tools include Texture Packer, PVRTexTool, DirectX Texture Tool and Mali Texture Compression Tool.
+    *
+    * Supported texture compression formats are: PVRTC, S3TC and ETC1.
+    * Supported file formats are: PVR, DDS, KTX and PKM.
+    * 
+    * The formats that support all 3 compression algorithms are PVR and KTX.
+    * PKM only supports ETC1, and DDS only S3TC for now.
+    *
+    * The texture path object looks like this:
+    *
+    * ```
+    * load.texture('factory', {
+    *     etc1: 'assets/factory_etc1.pkm',
+    *     s3tc: 'assets/factory_dxt1.pvr',
+    *     pvrtc: 'assets/factory_pvrtc.pvr',
+    *     truecolor: 'assets/factory.png'
+    * });
+    * ```
+    * 
+    * The `truecolor` property points to a standard PNG file, that will be used if none of the 
+    * compressed formats are supported by the browser / GPU.
+    * 
+    * The file is **not** loaded immediately after calling this method. The file is added to the queue ready to be loaded when the loader starts.
+    *
+    * The key must be a unique String. It is used to add the file to the Phaser.Cache upon successful load.
+    *
+    * Retrieve the image via `Cache.getImage(key)`
+    *
+    * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
+    *
+    * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "alien"
+    * and no URL is given then the Loader will set the URL to be "alien.pvr". It will always add `.pvr` as the extension.
+    * If you do not desire this action then provide a URL.
+    *
+    * @method Phaser.Loader#texture
+    * @param {string} key - Unique asset key of this image file.
+    * @param {object} object - The texture path data object.
+    * @param {boolean} [overwrite=false] - If an unloaded file with a matching key already exists in the queue, this entry will overwrite it.
+    * @return {Phaser.Loader} This Loader instance.
+    */
+    texture: function (key, object, overwrite) {
+
+        if (this.game.renderType === Phaser.WEBGL)
+        {
+            var compression = this.game.renderer.extensions.compression;
+            var exkey;
+
+            for (exkey in object)
+            {
+                if (exkey.toUpperCase() in compression)
+                {
+                    return this.addToFileList('texture', key, object[exkey], undefined, overwrite, '.pvr');
+                }
+            }
+        }
+
+        // Check if we have a truecolor texture to fallback.
+        // Also catches calls to this function that are from a Canvas renderer
+
+        if (object['truecolor'])
+        {
+            this.addToFileList('image', key, object['truecolor'], undefined, overwrite, '.png');
+        }
+
+        return this;
 
     },
 
@@ -971,21 +1091,22 @@ Phaser.Loader.prototype = {
     * @method Phaser.Loader#spritesheet
     * @param {string} key - Unique asset key of the sheet file.
     * @param {string} url - URL of the sprite sheet file. If undefined or `null` the url will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
-    * @param {number} frameWidth - Width in pixels of a single frame in the sprite sheet.
-    * @param {number} frameHeight - Height in pixels of a single frame in the sprite sheet.
-    * @param {number} [frameMax=-1] - How many frames in this sprite sheet. If not specified it will divide the whole image into frames.
+    * @param {number} frameWidth - The fixed width of each frame.
+    * @param {number} frameHeight - The fixed height of each frame.
+    * @param {number} [startFrame=0] - Skip a number of frames. Useful when there are multiple sprite sheets in one Texture.
+    * @param {number} [endFrame=-1] - The total number of frames to extract from the Sprite Sheet. The default value of -1 means "extract all frames".
     * @param {number} [margin=0] - If the frames have been drawn with a margin, specify the amount here.
     * @param {number} [spacing=0] - If the frames have been drawn with spacing between them, specify the amount here.
     * @return {Phaser.Loader} This Loader instance.
     */
-    spritesheet: function (key, url, frameWidth, frameHeight, frameMax, margin, spacing) {
-
-        if (frameMax === undefined) { frameMax = -1; }
+    spritesheet: function (key, url, frameWidth, frameHeight, startFrame, endFrame, margin, spacing)
+    {
+        if (startFrame === undefined) { startFrame = 0; }
+        if (endFrame === undefined) { endFrame = -1; }
         if (margin === undefined) { margin = 0; }
         if (spacing === undefined) { spacing = 0; }
 
-        return this.addToFileList('spritesheet', key, url, { frameWidth: frameWidth, frameHeight: frameHeight, frameMax: frameMax, margin: margin, spacing: spacing }, false, '.png');
-
+        return this.addToFileList('spritesheet', key, url, { frameWidth: frameWidth, frameHeight: frameHeight, startFrame: startFrame, endFrame: endFrame, margin: margin, spacing: spacing }, false, '.png');
     },
 
     /**
@@ -1580,8 +1701,8 @@ Phaser.Loader.prototype = {
     * @param {number} [format] - The format of the data. Can be Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY (the default), Phaser.Loader.TEXTURE_ATLAS_JSON_HASH or Phaser.Loader.TEXTURE_ATLAS_XML_STARLING.
     * @return {Phaser.Loader} This Loader instance.
     */
-    atlas: function (key, textureURL, atlasURL, atlasData, format) {
-
+    atlas: function (key, textureURL, atlasURL, atlasData, format)
+    {
         if (textureURL === undefined || textureURL === null)
         {
             textureURL = key + '.png';
@@ -1612,6 +1733,7 @@ Phaser.Loader.prototype = {
         {
             switch (format)
             {
+
                 //  A json string or object has been given
                 case Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY:
 
@@ -1639,11 +1761,74 @@ Phaser.Loader.prototype = {
             }
 
             this.addToFileList('textureatlas', key, textureURL, { atlasURL: null, atlasData: atlasData, format: format });
-
         }
 
         return this;
 
+    },
+
+    //  
+
+    /**
+     * @method Phaser.Loader#multiatlas
+     * @param {string} key - Unique asset key of the texture atlas file.
+     * @param {array|integer} textureURLs - An array of PNG files, or an integer.
+     * @param {array} [atlasURLs] -  An array of JSON files.
+     * @param {number} [format] - The format of the data. Can be Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY (the default), Phaser.Loader.TEXTURE_ATLAS_JSON_HASH or Phaser.Loader.TEXTURE_ATLAS_XML_STARLING.
+     * @return {Phaser.Loader} This Loader instance.
+     */
+    multiatlas: function (key, textureURLs, atlasURLs, format)
+    {
+        if (format === undefined) { format = Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY; }
+
+        if (typeof textureURLs === 'number')
+        {
+            var total = textureURLs;
+
+            textureURLs = Phaser.ArrayUtils.numberArray(0, total, key + '-', '.png');
+            atlasURLs = Phaser.ArrayUtils.numberArray(0, total, key + '-', '.json');
+        }
+        else
+        {
+            if (!Array.isArray(textureURLs))
+            {
+                textureURLs = [ textureURLs ];
+            }
+
+            if (!Array.isArray(atlasURLs))
+            {
+                atlasURLs = [ atlasURLs ];
+            }
+        }
+
+        var i = 0;
+        var multiKey;
+        var imgs = [];
+        var data = [];
+
+        for (i = 0; i < textureURLs.length; i++)
+        {
+            //  TODO - Add support for compressed textures
+            multiKey = '_MA_' + key + '_' + i.toString();
+
+            imgs.push(multiKey);
+
+            this.addToFileList('image', multiKey, textureURLs[i], { multiatlas: true });
+        }
+
+        for (i = 0; i < atlasURLs.length; i++)
+        {
+            multiKey = '_MA_' + key + '_' + i.toString();
+
+            data.push(multiKey);
+
+            //   Check if this can support XML as well?
+            this.addToFileList('json', multiKey, atlasURLs[i], { multiatlas: true });
+        }
+
+        this._multilist.push({ key: key, images: imgs, data: data, format: format });
+
+        return this;
     },
 
     /**
@@ -1659,13 +1844,16 @@ Phaser.Loader.prototype = {
     * @param {object} [callbackContext=(loader)] - Context for the callback.
     * @return {Phaser.Loader} This Loader instance.
     */
-    withSyncPoint: function (callback, callbackContext) {
-
+    withSyncPoint: function (callback, callbackContext)
+    {
         this._withSyncPointDepth++;
 
-        try {
+        try
+        {
             callback.call(callbackContext || this, this);
-        } finally {
+        }
+        finally
+        {
             this._withSyncPointDepth--;
         }
 
@@ -1683,8 +1871,8 @@ Phaser.Loader.prototype = {
     * @return {Phaser.Loader} This Loader instance.
     * @see {@link Phaser.Loader#withSyncPoint withSyncPoint}
     */
-    addSyncPoint: function (type, key) {
-
+    addSyncPoint: function (type, key)
+    {
         var asset = this.getAsset(type, key);
 
         if (asset)
@@ -1705,8 +1893,8 @@ Phaser.Loader.prototype = {
     * @param {string} type - The type of resource to add to the list (image, audio, xml, etc).
     * @param {string} key - Key of the file you want to remove.
     */
-    removeFile: function (type, key) {
-
+    removeFile: function (type, key)
+    {
         var asset = this.getAsset(type, key);
 
         if (asset)
@@ -1716,7 +1904,6 @@ Phaser.Loader.prototype = {
                 this._fileList.splice(asset.index, 1);
             }
         }
-
     },
 
     /**
@@ -1725,11 +1912,11 @@ Phaser.Loader.prototype = {
     * @method Phaser.Loader#removeAll
     * @protected
     */
-    removeAll: function () {
-
+    removeAll: function ()
+    {
         this._fileList.length = 0;
         this._flightQueue.length = 0;
-
+        this._multilist.length = 0;
     },
 
     /**
@@ -1737,8 +1924,8 @@ Phaser.Loader.prototype = {
     *
     * @method Phaser.Loader#start
     */
-    start: function () {
-
+    start: function ()
+    {
         if (this.isLoading)
         {
             return;
@@ -1750,7 +1937,6 @@ Phaser.Loader.prototype = {
         this.updateProgress();
 
         this.processLoadQueue();
-
     },
 
     /**
@@ -1766,8 +1952,8 @@ Phaser.Loader.prototype = {
     * @method Phaser.Loader#processLoadQueue
     * @private
     */
-    processLoadQueue: function () {
-
+    processLoadQueue: function ()
+    {
         if (!this.isLoading)
         {
             console.warn('Phaser.Loader - active loading canceled / reset');
@@ -1775,10 +1961,13 @@ Phaser.Loader.prototype = {
             return;
         }
 
+        var i;
+        var file;
+
         // Empty the flight queue as applicable
-        for (var i = 0; i < this._flightQueue.length; i++)
+        for (i = 0; i < this._flightQueue.length; i++)
         {
-            var file = this._flightQueue[i];
+            file = this._flightQueue[i];
 
             if (file.loaded || file.error)
             {
@@ -1814,9 +2003,9 @@ Phaser.Loader.prototype = {
 
         var inflightLimit = this.enableParallel ? Phaser.Math.clamp(this.maxParallelDownloads, 1, 12) : 1;
 
-        for (var i = this._processingHead; i < this._fileList.length; i++)
+        for (i = this._processingHead; i < this._fileList.length; i++)
         {
-            var file = this._fileList[i];
+            file = this._fileList[i];
 
             // Pack is fetched (ie. has data) and is currently at the start of the process queue.
             if (file.type === 'packfile' && !file.error && file.loaded && i === this._processingHead)
@@ -1890,15 +2079,77 @@ Phaser.Loader.prototype = {
         {
             // Flight queue is empty but file list is not done being processed.
             // This indicates a critical internal error with no known recovery.
-            console.warn("Phaser.Loader - aborting: processing queue empty, loading may have stalled");
+            console.warn('Phaser.Loader - aborting: processing queue empty, loading may have stalled');
 
             var _this = this;
 
-            setTimeout(function () {
+            setTimeout(function ()
+            {
                 _this.finishedLoading(true);
             }, 2000);
         }
+    },
 
+    /**
+    * Process any loaded multi-atlases.
+    *
+    * @method Phaser.Loader#processMultiAtlases
+    * @private
+    */
+    processMultiAtlases: function ()
+    {
+        //  Process any multi atlases
+
+        for (var i = 0; i < this._multilist.length; i++)
+        {
+            var list = this._multilist[i];
+            var images = [];
+            var data = [];
+            var imagesLoaded = true;
+            var dataLoaded = true;
+
+            //  Check all the images loaded
+            for (var a = 0; a < list.images.length; a++)
+            {
+                var image = this.cache.getImage(list.images[a]);
+
+                if (image)
+                {
+                    images.push(image);
+                }
+                else
+                {
+                    imagesLoaded = false;
+                }
+            }
+
+            //  Check all the atlas data loaded
+            for (var b = 0; b < list.data.length; b++)
+            {
+                var json = this.cache.getJSON(list.data[b]);
+
+                if (json)
+                {
+                    data.push(json);
+                }
+                else
+                {
+                    dataLoaded = false;
+                }
+            }
+
+            if (imagesLoaded && dataLoaded)
+            {
+                if (list.format === Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY)
+                {
+                    this.game.textures.addAtlasJSONArray(list.key, images, data);
+                }
+                else if (list.format === Phaser.Loader.TEXTURE_ATLAS_JSON_HASH)
+                {
+                    this.game.textures.addAtlasJSONHash(list.key, images, data);
+                }
+            }
+        }
     },
 
     /**
@@ -1908,12 +2159,14 @@ Phaser.Loader.prototype = {
     * @private
     * @param {boolean} [abnormal=true] - True if the loading finished abnormally.
     */
-    finishedLoading: function (abnormal) {
-
+    finishedLoading: function (abnormal)
+    {
         if (this.hasLoaded)
         {
             return;
         }
+
+        this.processMultiAtlases();
 
         this.hasLoaded = true;
         this.isLoading = false;
@@ -1927,10 +2180,9 @@ Phaser.Loader.prototype = {
 
         this.onLoadComplete.dispatch();
 
-        this.game.state.loadComplete();
+        this.game.state.loadComplete(this.state);
 
         this.reset();
-
     },
 
     /**
@@ -1942,8 +2194,8 @@ Phaser.Loader.prototype = {
     * @param {object} file
     * @param {string} [error=''] - The error message, if any. No message implies no error.
     */
-    asyncComplete: function (file, errorMessage) {
-
+    asyncComplete: function (file, errorMessage)
+    {
         if (errorMessage === undefined) { errorMessage = ''; }
 
         file.loaded = true;
@@ -1954,11 +2206,9 @@ Phaser.Loader.prototype = {
             file.errorMessage = errorMessage;
 
             console.warn('Phaser.Loader - ' + file.type + '[' + file.key + ']' + ': ' + errorMessage);
-            // debugger;
         }
 
         this.processLoadQueue();
-
     },
 
     /**
@@ -1968,8 +2218,8 @@ Phaser.Loader.prototype = {
     * @private
     * @param {object} pack
     */
-    processPack: function (pack) {
-
+    processPack: function (pack)
+    {
         var packData = pack.data[pack.key];
 
         if (!packData)
@@ -2009,7 +2259,7 @@ Phaser.Loader.prototype = {
                     break;
 
                 case "spritesheet":
-                    this.spritesheet(file.key, file.url, file.frameWidth, file.frameHeight, file.frameMax, file.margin, file.spacing);
+                    this.spritesheet(file.key, file.url, file.frameWidth, file.frameHeight, file.frameMax, file.margin, file.spacing, file.skipFrames);
                     break;
 
                 case "video":
@@ -2071,8 +2321,8 @@ Phaser.Loader.prototype = {
     * @param {object} file - The file object being transformed.
     * @return {string} The transformed url. In rare cases where the url isn't specified it will return false instead.
     */
-    transformUrl: function (url, file) {
-
+    transformUrl: function (url, file)
+    {
         if (!url)
         {
             return false;
@@ -2086,7 +2336,6 @@ Phaser.Loader.prototype = {
         {
             return this.baseURL + file.path + url;
         }
-
     },
 
     /**
@@ -2098,8 +2347,8 @@ Phaser.Loader.prototype = {
     * @private
     * @param {object} file
     */
-    loadFile: function (file) {
-
+    loadFile: function (file)
+    {
         //  Image or Data?
         switch (file.type)
         {
@@ -2188,19 +2437,26 @@ Phaser.Loader.prototype = {
                 this.xhrLoad(file, this.transformUrl(file.url, file), 'text', this.fileComplete);
                 break;
 
+            case 'texture':
+
+                if (file.key.split('_').pop() === 'truecolor')
+                {
+                    this.loadImageTag(file);
+                }
+                break;
+
             case 'binary':
                 this.xhrLoad(file, this.transformUrl(file.url, file), 'arraybuffer', this.fileComplete);
                 break;
         }
-
     },
 
     /**
     * Continue async loading through an Image tag.
     * @private
     */
-    loadImageTag: function (file) {
-
+    loadImageTag: function (file)
+    {
         var _this = this;
 
         file.data = new Image();
@@ -2211,7 +2467,8 @@ Phaser.Loader.prototype = {
             file.data.crossOrigin = this.crossOrigin;
         }
 
-        file.data.onload = function () {
+        file.data.onload = function ()
+        {
             if (file.data.onload)
             {
                 file.data.onload = null;
@@ -2220,7 +2477,8 @@ Phaser.Loader.prototype = {
             }
         };
 
-        file.data.onerror = function () {
+        file.data.onerror = function ()
+        {
             if (file.data.onload)
             {
                 file.data.onload = null;
@@ -2238,32 +2496,31 @@ Phaser.Loader.prototype = {
             file.data.onerror = null;
             this.fileComplete(file);
         }
-
     },
 
     /**
     * Continue async loading through a Video tag.
     * @private
     */
-    loadVideoTag: function (file) {
-
+    loadVideoTag: function (file)
+    {
         var _this = this;
 
-        file.data = document.createElement("video");
+        file.data = document.createElement('video');
         file.data.name = file.key;
         file.data.controls = false;
         file.data.autoplay = false;
 
-        var videoLoadEvent = function () {
-
+        var videoLoadEvent = function ()
+        {
             file.data.removeEventListener(file.loadEvent, videoLoadEvent, false);
             file.data.onerror = null;
             file.data.canplay = true;
             Phaser.GAMES[_this.game.id].load.fileComplete(file);
-
         };
 
-        file.data.onerror = function () {
+        file.data.onerror = function ()
+        {
             file.data.removeEventListener(file.loadEvent, videoLoadEvent, false);
             file.data.onerror = null;
             file.data.canplay = false;
@@ -2274,15 +2531,14 @@ Phaser.Loader.prototype = {
 
         file.data.src = this.transformUrl(file.url, file);
         file.data.load();
-
     },
 
     /**
     * Continue async loading through an Audio tag.
     * @private
     */
-    loadAudioTag: function (file) {
-
+    loadAudioTag: function (file)
+    {
         var _this = this;
 
         if (this.game.sound.touchLocked)
@@ -2643,15 +2899,15 @@ Phaser.Loader.prototype = {
     },
 
     /**
-    * Called when a file/resources had been downloaded and needs to be processed further.
+    * Called when a file has been downloaded and needs to be processed further.
     *
     * @method Phaser.Loader#fileComplete
     * @private
     * @param {object} file - File loaded
     * @param {?XMLHttpRequest} xhr - XHR request, unspecified if loaded via other means (eg. tags)
     */
-    fileComplete: function (file, xhr) {
-
+    fileComplete: function (file, xhr)
+    {
         var loadNext = true;
 
         switch (file.type)
@@ -2663,6 +2919,18 @@ Phaser.Loader.prototype = {
                 file.data = data || {};
                 break;
 
+            case 'texture':
+
+                if (file.data !== null)
+                {
+                    this.cache.addCompressedTextureMetaData(file.key, file.url, file.url.split('.').pop().toLowerCase(), file.data);
+                }
+                else
+                {
+                    this.cache.addCompressedTextureMetaData(file.key, file.url, file.url.split('.').pop().toLowerCase(), xhr.response);
+                }
+                break;
+
             case 'image':
 
                 this.cache.addImage(file.key, file.url, file.data);
@@ -2670,7 +2938,7 @@ Phaser.Loader.prototype = {
 
             case 'spritesheet':
 
-                this.cache.addSpriteSheet(file.key, file.url, file.data, file.frameWidth, file.frameHeight, file.frameMax, file.margin, file.spacing);
+                this.cache.addSpriteSheet(file.key, file.url, file.data, file.frameWidth, file.frameHeight, file.startFrame, file.endFrame, file.margin, file.spacing);
                 break;
 
             case 'textureatlas':
@@ -2827,8 +3095,8 @@ Phaser.Loader.prototype = {
     * @param {object} file - File associated with this request
     * @param {XMLHttpRequest} xhr
     */
-    jsonLoadComplete: function (file, xhr) {
-
+    jsonLoadComplete: function (file, xhr)
+    {
         var data = JSON.parse(xhr.responseText);
 
         if (file.type === 'tilemap')
@@ -2859,14 +3127,13 @@ Phaser.Loader.prototype = {
     * @param {object} file - File associated with this request
     * @param {XMLHttpRequest} xhr
     */
-    csvLoadComplete: function (file, xhr) {
-
+    csvLoadComplete: function (file, xhr)
+    {
         var data = xhr.responseText;
 
         this.cache.addTilemap(file.key, file.url, data, file.format);
 
         this.asyncComplete(file);
-
     },
 
     /**
@@ -2877,8 +3144,8 @@ Phaser.Loader.prototype = {
     * @param {object} file - File associated with this request
     * @param {XMLHttpRequest} xhr
     */
-    xmlLoadComplete: function (file, xhr) {
-
+    xmlLoadComplete: function (file, xhr)
+    {
         // Always try parsing the content as XML, regardless of actually response type
         var data = xhr.responseText;
         var xml = this.parseXml(data);
@@ -2905,7 +3172,6 @@ Phaser.Loader.prototype = {
         }
 
         this.asyncComplete(file);
-
     },
 
     /**
@@ -2916,8 +3182,8 @@ Phaser.Loader.prototype = {
     * @param {string} data - The XML text to parse
     * @return {?XMLDocument} Returns the xml document, or null if such could not parsed to a valid document.
     */
-    parseXml: function (data) {
-
+    parseXml: function (data)
+    {
         var xml;
 
         try
@@ -2948,7 +3214,6 @@ Phaser.Loader.prototype = {
         {
             return xml;
         }
-
     },
 
     /**
@@ -2959,8 +3224,8 @@ Phaser.Loader.prototype = {
     * @param {object} previousFile
     * @param {boolean} success - Whether the previous asset loaded successfully or not.
     */
-    updateProgress: function () {
-
+    updateProgress: function ()
+    {
         if (this.preloadSprite)
         {
             if (this.preloadSprite.direction === 0)
@@ -2982,7 +3247,6 @@ Phaser.Loader.prototype = {
                 this.preloadSprite = null;
             }
         }
-
     },
 
     /**
@@ -2992,10 +3256,9 @@ Phaser.Loader.prototype = {
     * @protected
     * @return {number} The number of files that have already been loaded (even if they errored)
     */
-    totalLoadedFiles: function () {
-
+    totalLoadedFiles: function ()
+    {
         return this._loadedFileCount;
-
     },
 
     /**
@@ -3005,10 +3268,9 @@ Phaser.Loader.prototype = {
     * @protected
     * @return {number} The number of files that still remain in the load queue.
     */
-    totalQueuedFiles: function () {
-
+    totalQueuedFiles: function ()
+    {
         return this._totalFileCount - this._loadedFileCount;
-
     },
 
     /**
@@ -3018,10 +3280,9 @@ Phaser.Loader.prototype = {
     * @protected
     * @return {number} The number of asset packs that have already been loaded (even if they errored)
     */
-    totalLoadedPacks: function () {
-
+    totalLoadedPacks: function ()
+    {
         return this._totalPackCount;
-
     },
 
     /**
@@ -3031,10 +3292,9 @@ Phaser.Loader.prototype = {
     * @protected
     * @return {number} The number of asset packs that still remain in the load queue.
     */
-    totalQueuedPacks: function () {
-
+    totalQueuedPacks: function ()
+    {
         return this._totalPackCount - this._loadedPackCount;
-
     }
 
 };

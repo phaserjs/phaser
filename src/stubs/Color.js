@@ -65,7 +65,7 @@ Phaser.Color = {
     * @method Phaser.Color.getRGB
     * @static
     * @param {number} color - Color in RGB (0xRRGGBB) or ARGB format (0xAARRGGBB).
-    * @returns {object} An Object with properties: alpha, red, green, blue (also r, g, b and a). Alpha will only be present if a color value > 16777215 was given.
+    * @return {object} An Object with properties: alpha, red, green, blue (also r, g, b and a). Alpha will only be present if a color value > 16777215 was given.
     */
     getRGB: function (color) {
 
@@ -170,7 +170,7 @@ Phaser.Color = {
     * @method Phaser.Color.updateColor
     * @static
     * @param {object} out - The color object to update.
-    * @returns {number} A native color value integer (format: 0xAARRGGBB).
+    * @return {number} A native color value integer (format: 0xAARRGGBB).
     */
     updateColor: function (out) {
 
@@ -191,7 +191,7 @@ Phaser.Color = {
     * @param {number} r - The red color component, in the range 0 - 255.
     * @param {number} g - The green color component, in the range 0 - 255.
     * @param {number} b - The blue color component, in the range 0 - 255.
-    * @returns {number} A native color value integer (format: 0xAARRGGBB).
+    * @return {number} A native color value integer (format: 0xAARRGGBB).
     */
     getColor32: function (a, r, g, b) {
 
@@ -207,7 +207,7 @@ Phaser.Color = {
     * @param {number} r - The red color component, in the range 0 - 255.
     * @param {number} g - The green color component, in the range 0 - 255.
     * @param {number} b - The blue color component, in the range 0 - 255.
-    * @returns {number} A native color value integer (format: 0xRRGGBB).
+    * @return {number} A native color value integer (format: 0xRRGGBB).
     */
     getColor: function (r, g, b) {
 
