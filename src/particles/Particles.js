@@ -40,11 +40,8 @@ Phaser.Particles.prototype = {
     * @return {Phaser.Emitter} The emitter that was added.
     */
     add: function (emitter) {
-
-        this.emitters[emitter.name] = emitter;
-
+        this.emitters[emitter.id] = emitter;
         return emitter;
-
     },
 
     /**
@@ -53,9 +50,7 @@ Phaser.Particles.prototype = {
     * @param {Phaser.Emitter} emitter - The emitter to remove.
     */
     remove: function (emitter) {
-
-        delete this.emitters[emitter.name];
-
+        delete this.emitters[emitter.id];
     },
 
     /**
@@ -64,7 +59,6 @@ Phaser.Particles.prototype = {
     * @protected
     */
     update: function () {
-
         for (var key in this.emitters)
         {
             if (this.emitters[key].exists)
