@@ -8,7 +8,7 @@
 * Emitter is a lightweight particle emitter that uses Arcade Physics.
 * It can be used for one-time explosions or for continuous effects like rain and fire.
 * All it really does is launch Particle objects out at set intervals, and fixes their positions and velocities accordingly.
-* 
+*
 * @class Phaser.Particles.Arcade.Emitter
 * @constructor
 * @extends Phaser.Group
@@ -28,9 +28,15 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
     Phaser.Group.call(this, game);
 
     /**
+    * @property {number} _id - Internal ID for this emitter -- only used by the Particle System in most cases
+    * @private
+    */
+    this._id = this.game.particles.ID++;
+
+    /**
     * @property {string} name - A handy string name for this emitter. Can be set to anything.
     */
-    this.name = 'emitter' + this.game.particles.ID++;
+    this.name = 'emitter' + this.id;
 
     /**
     * @property {number} type - Internal Phaser Type value.
@@ -265,7 +271,7 @@ Phaser.Particles.Arcade.Emitter.prototype.constructor = Phaser.Particles.Arcade.
 
 /**
 * Called automatically by the game loop, decides when to launch particles and when to "die".
-* 
+*
 * @method Phaser.Particles.Arcade.Emitter#update
 */
 Phaser.Particles.Arcade.Emitter.prototype.update = function () {
@@ -437,7 +443,7 @@ Phaser.Particles.Arcade.Emitter.prototype.revive = function () {
 
 /**
 * Call this function to emit the given quantity of particles at all once (an explosion)
-* 
+*
 * @method Phaser.Particles.Arcade.Emitter#explode
 * @param {number} [lifespan=0] - How long each particle lives once emitted in ms. 0 = forever.
 * @param {number} [quantity=0] - How many particles to launch.
@@ -459,7 +465,7 @@ Phaser.Particles.Arcade.Emitter.prototype.explode = function (lifespan, quantity
 * Each time the flow is run the quantity number of particles will be emitted together.
 * If you set the total to be 20 and quantity to be 5 then flow will emit 4 times in total (4 x 5 = 20 total)
 * If you set the total to be -1 then no quantity cap is used and it will keep emitting.
-* 
+*
 * @method Phaser.Particles.Arcade.Emitter#flow
 * @param {number} [lifespan=0] - How long each particle lives once emitted in ms. 0 = forever.
 * @param {number} [frequency=250] - Frequency is how often to emit the particles, given in ms.
@@ -502,7 +508,7 @@ Phaser.Particles.Arcade.Emitter.prototype.flow = function (lifespan, frequency, 
 
 /**
 * Call this function to start emitting particles.
-* 
+*
 * @method Phaser.Particles.Arcade.Emitter#start
 * @param {boolean} [explode=true] - Whether the particles should all burst out at once (true) or at the frequency given (false).
 * @param {number} [lifespan=0] - How long each particle lives once emitted in ms. 0 = forever.
@@ -680,7 +686,7 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function (x, y, key, fr
 
 /**
 * Destroys this Emitter, all associated child Particles and then removes itself from the Particle Manager.
-* 
+*
 * @method Phaser.Particles.Arcade.Emitter#destroy
 */
 Phaser.Particles.Arcade.Emitter.prototype.destroy = function () {
@@ -693,7 +699,7 @@ Phaser.Particles.Arcade.Emitter.prototype.destroy = function () {
 
 /**
 * A more compact way of setting the width and height of the emitter.
-* 
+*
 * @method Phaser.Particles.Arcade.Emitter#setSize
 * @param {number} width - The desired width of the emitter (particles are spawned randomly within these dimensions).
 * @param {number} height - The desired height of the emitter.
@@ -883,6 +889,16 @@ Phaser.Particles.Arcade.Emitter.prototype.at = function (object) {
     return this;
 
 };
+
+/**
+* @name Phaser.Particles.Arcade.Emitter#id
+* @property {number} id - Gets the internal ID that represents this emitter.
+*/
+Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "id", {
+    get: function () {
+        return this._id;
+    }
+});
 
 /**
 * @name Phaser.Particles.Arcade.Emitter#width
