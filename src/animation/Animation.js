@@ -320,8 +320,9 @@ Phaser.Animation.prototype = {
 
         if (frameIndex)
         {
-            //  Set the current frame index to the found index. Subtract 1 so that it animates to the desired frame on update.
-            this._frameIndex = frameIndex - 1;
+            //  Set the current frame index to the found index. Subtract a directional offset so that it animates to the desired frame on update.
+            var directionalOffset = this.isReversed ? -1 : 1;
+            this._frameIndex = frameIndex - directionalOffset;
 
             //  Make the animation update at next update
             this._timeNextFrame = this.game.time.time;
