@@ -25,6 +25,46 @@ Phaser.Utils = {
     },
 
     /**
+     * Gets a random property of an object.
+     *
+     * If the object is a string, you get a random character.
+     * If the object is an array, you get a random element.
+     *
+     * @method Phaser.Utils.getRandomProperty
+     * @param {object} obj - The object to get the property from.
+     * @param {boolean} [returnValue=true] whether to return the value (if true, which is default) or the key (if false)
+     * @return {*} the value of the property, or the key depending on the value of returnValue, or null if object doesn't have any properties.
+     */
+    getRandomProperty: function(obj, returnValue) {
+
+        if (obj === undefined || obj === null)
+        {
+            return null;
+        }
+
+        var keys = Object.keys(obj);
+
+        if (keys.length === 0)
+        {
+            return null;
+        }
+        else
+        {
+            var randomIndex = Math.floor(Math.random() * keys.length);
+            var key = keys[randomIndex];
+
+            if (typeof returnValue === 'boolean' && returnValue)
+            {
+                return obj[key];
+            }
+            else
+            {
+                return key;
+            }
+        }
+    },
+
+    /**
      * Gets an objects property by string.
      *
      * @method Phaser.Utils.getProperty

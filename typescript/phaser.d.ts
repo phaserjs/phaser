@@ -5539,6 +5539,7 @@ declare module Phaser {
 
     class Utils {
 
+        static getRandomProperty(obj: any, returnValue?: boolean): any;
         static getProperty(obj: any, prop: string): any;
         static setProperty(obj: any, prop: string, value: any): any;
         static chanceRoll(chance: number): boolean;
