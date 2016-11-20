@@ -15,7 +15,7 @@ PIXI.PixiShader = function(gl)
      * @type Number
      * @private
      */
-    this._UID = PIXI._UID++;
+    this._UID = Phaser._UID++;
 
     /**
      * @property gl
@@ -35,15 +35,7 @@ PIXI.PixiShader = function(gl)
      * @property fragmentSrc
      * @type Array
      */
-    this.fragmentSrc = [
-        'precision lowp float;',
-        'varying vec2 vTextureCoord;',
-        'varying vec4 vColor;',
-        'uniform sampler2D uSampler;',
-        'void main(void) {',
-        '   gl_FragColor = texture2D(uSampler, vTextureCoord) * vColor ;',
-        '}'
-    ];
+    this.fragmentSrc = null;
 
     /**
      * A local texture counter for multi-texture shaders.
@@ -80,13 +72,104 @@ PIXI.PixiShader = function(gl)
 
 PIXI.PixiShader.prototype.constructor = PIXI.PixiShader;
 
-/**
-* Initialises the shader.
-*
-* @method init
-*/
-PIXI.PixiShader.prototype.init = function()
-{
+PIXI.PixiShader.prototype.initMultitexShader = function () {
+    var gl = this.gl;
+    this.MAX_TEXTURES = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);
+    var dynamicIfs = '\tif (vTextureIndex == 0.0) gl_FragColor = texture2D(uSamplerArray[0], vTextureCoord) * vColor;\n'
+    for (var index = 1; index < this.MAX_TEXTURES; ++index)
+    {
+        dynamicIfs += '\telse if (vTextureIndex == ' + 
+                    index + '.0) gl_FragColor = texture2D(uSamplerArray[' + 
+                    index + '], vTextureCoord) * vColor;\n'
+    }
+    this.fragmentSrc = [
+        '// PixiShader Fragment Shader.',
+        'precision lowp float;',
+        'varying vec2 vTextureCoord;',
+        'varying vec4 vColor;',
+        'varying float vTextureIndex;',
+        'uniform sampler2D uSamplerArray[' + this.MAX_TEXTURES + '];',
+        'const vec4 PINK = vec4(1.0, 0.0, 1.0, 1.0);',
+        'const vec4 GREEN = vec4(0.0, 1.0, 0.0, 1.0);',
+        'void main(void) {',
+        dynamicIfs,
+        'else gl_FragColor = PINK;',
+        '}'
+    ];
+
+    var program = PIXI.compileProgram(gl, this.vertexSrc || PIXI.PixiShader.defaultVertexSrc, this.fragmentSrc);
+
+    gl.useProgram(program);
+
+    // get and store the uniforms for the shader
+    //this.uSampler = gl.getUniformLocation(program, 'uSampler');
+    this.uSamplerArray = gl.getUniformLocation(program, 'uSamplerArray[0]');
+    this.projectionVector = gl.getUniformLocation(program, 'projectionVector');
+    this.offsetVector = gl.getUniformLocation(program, 'offsetVector');
+    this.dimensions = gl.getUniformLocation(program, 'dimensions');
+
+    // get and store the attributes
+    this.aVertexPosition = gl.getAttribLocation(program, 'aVertexPosition');
+    this.aTextureCoord = gl.getAttribLocation(program, 'aTextureCoord');
+    this.colorAttribute = gl.getAttribLocation(program, 'aColor');
+    this.aTextureIndex = gl.getAttribLocation(program, 'aTextureIndex');
+
+    var indices = [];
+    // HACK: we bind an empty texture to avoid WebGL warning spam.
+    var tempTexture = gl.createTexture();
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, tempTexture);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, 1, 1, 0, gl.RGB, gl.UNSIGNED_BYTE, null);
+    for (var i = 0; i < this.MAX_TEXTURES; ++i) {
+        gl.activeTexture(gl.TEXTURE0 + i);
+        gl.bindTexture(gl.TEXTURE_2D, tempTexture);
+        indices.push(i);
+    }
+    gl.activeTexture(gl.TEXTURE0);
+    gl.uniform1iv(this.uSamplerArray, indices);
+
+    // Begin worst hack eva //
+
+    // WHY??? ONLY on my chrome pixel the line above returns -1 when using filters?
+    // maybe its something to do with the current state of the gl context.
+    // I'm convinced this is a bug in the chrome browser as there is NO reason why this should be returning -1 especially as it only manifests on my chrome pixel
+    // If theres any webGL people that know why could happen please help :)
+    if(this.colorAttribute === -1)
+    {
+        this.colorAttribute = 2;
+    }
+
+    this.attributes = [this.aVertexPosition, this.aTextureCoord, this.colorAttribute, this.aTextureIndex];
+
+    // End worst hack eva //
+
+    // add those custom shaders!
+    for (var key in this.uniforms)
+    {
+        // get the uniform locations..
+        this.uniforms[key].uniformLocation = gl.getUniformLocation(program, key);
+    }
+
+    this.initUniforms();
+
+    this.program = program;
+};
+
+PIXI.PixiShader.prototype.initDefaultShader = function () {
+
+    if (this.fragmentSrc === null) {
+        this.fragmentSrc = [
+            'precision lowp float;',
+            'varying vec2 vTextureCoord;',
+            'varying vec4 vColor;',
+            'varying float vTextureIndex;',
+            'uniform sampler2D uSampler;',
+            'void main(void) {',
+            '   gl_FragColor = texture2D(uSampler, vTextureCoord) * vColor ;',
+            '}'
+        ];
+    }
+
     var gl = this.gl;
 
     var program = PIXI.compileProgram(gl, this.vertexSrc || PIXI.PixiShader.defaultVertexSrc, this.fragmentSrc);
@@ -103,6 +186,8 @@ PIXI.PixiShader.prototype.init = function()
     this.aVertexPosition = gl.getAttribLocation(program, 'aVertexPosition');
     this.aTextureCoord = gl.getAttribLocation(program, 'aTextureCoord');
     this.colorAttribute = gl.getAttribLocation(program, 'aColor');
+    this.aTextureIndex = gl.getAttribLocation(program, 'aTextureIndex');
+
 
     // Begin worst hack eva //
 
@@ -115,7 +200,7 @@ PIXI.PixiShader.prototype.init = function()
         this.colorAttribute = 2;
     }
 
-    this.attributes = [this.aVertexPosition, this.aTextureCoord, this.colorAttribute];
+    this.attributes = [this.aVertexPosition, this.aTextureCoord, this.colorAttribute, this.aTextureIndex];
 
     // End worst hack eva //
 
@@ -129,6 +214,19 @@ PIXI.PixiShader.prototype.init = function()
     this.initUniforms();
 
     this.program = program;
+};
+/**
+* Initialises the shader.
+*
+* @method init
+*/
+PIXI.PixiShader.prototype.init = function(usingFilter)
+{
+    if (PIXI._enableMultiTextureToggle && !usingFilter) {
+        this.initMultitexShader();
+    } else {
+        this.initDefaultShader();
+    }  
 };
 
 /**
@@ -219,7 +317,8 @@ PIXI.PixiShader.prototype.initSampler2D = function(uniform)
 
     var gl = this.gl;
 
-    gl.activeTexture(gl['TEXTURE' + this.textureCount]);
+    // No need to do string manipulation for this.
+    gl.activeTexture(gl.TEXTURE0 + this.textureCount);
     gl.bindTexture(gl.TEXTURE_2D, uniform.value.baseTexture._glTextures[gl.id]);
 
     //  Extended texture data
@@ -295,7 +394,6 @@ PIXI.PixiShader.prototype.syncUniforms = function()
     for (var key in this.uniforms)
     {
         uniform = this.uniforms[key];
-
         if (uniform.glValueLength === 1)
         {
             if (uniform.glMatrix === true)
@@ -369,21 +467,27 @@ PIXI.PixiShader.prototype.destroy = function()
 * @type String
 */
 PIXI.PixiShader.defaultVertexSrc = [
+    '// PixiShader Vertex Shader',
+    '// With multi-texture rendering',
     'attribute vec2 aVertexPosition;',
     'attribute vec2 aTextureCoord;',
     'attribute vec4 aColor;',
+    'attribute float aTextureIndex;',
 
     'uniform vec2 projectionVector;',
     'uniform vec2 offsetVector;',
 
     'varying vec2 vTextureCoord;',
     'varying vec4 vColor;',
+    'varying float vTextureIndex;',
 
     'const vec2 center = vec2(-1.0, 1.0);',
 
     'void main(void) {',
+    '   if (aTextureIndex > 0.0) gl_Position = vec4(0.0);',
     '   gl_Position = vec4( ((aVertexPosition + offsetVector) / projectionVector) + center , 0.0, 1.0);',
     '   vTextureCoord = aTextureCoord;',
     '   vColor = vec4(aColor.rgb * aColor.a, aColor.a);',
+    '   vTextureIndex = aTextureIndex;',
     '}'
 ];

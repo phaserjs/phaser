@@ -76,6 +76,8 @@ Phaser.Matrix = function (a, b, c, d, tx, ty) {
 
 };
 
+Phaser.Matrix.prototype.constructor = Phaser.Matrix;
+
 Phaser.Matrix.prototype = {
 
     /**
@@ -194,12 +196,12 @@ Phaser.Matrix.prototype = {
     *
     * @method Phaser.Matrix#toArray
     * @param {boolean} [transpose=false] - Whether the values in the array are transposed or not.
-    * @param {PIXI.Float32Array} [array] - If provided the values will be set into this array, otherwise a new Float32Array is created.
-    * @return {PIXI.Float32Array} The newly created array which contains the matrix.
+    * @param {Float32Array} [array] - If provided the values will be set into this array, otherwise a new Float32Array is created.
+    * @return {Float32Array} The newly created array which contains the matrix.
     */
     toArray: function (transpose, array) {
 
-        if (array === undefined) { array = new PIXI.Float32Array(9); }
+        if (array === undefined) { array = new Float32Array(9); }
 
         if (transpose)
         {
@@ -383,7 +385,4 @@ Phaser.Matrix.prototype = {
 };
 
 Phaser.identityMatrix = new Phaser.Matrix();
-
-//  Because PIXI uses its own type, we'll replace it with ours to avoid duplicating code or confusion.
-PIXI.Matrix = Phaser.Matrix;
-PIXI.identityMatrix = Phaser.identityMatrix;
+Phaser.tempMatrix = new Phaser.Matrix();

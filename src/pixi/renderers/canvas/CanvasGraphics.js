@@ -41,7 +41,7 @@ PIXI.CanvasGraphics.renderGraphics = function(graphics, context)
 
         context.lineWidth = data.lineWidth;
 
-        if (data.type === PIXI.Graphics.POLY)
+        if (data.type === Phaser.POLYGON)
         {
             context.beginPath();
 
@@ -79,7 +79,7 @@ PIXI.CanvasGraphics.renderGraphics = function(graphics, context)
                 context.stroke();
             }
         }
-        else if (data.type === PIXI.Graphics.RECT)
+        else if (data.type === Phaser.RECTANGLE)
         {
             if (data.fillColor || data.fillColor === 0)
             {
@@ -95,7 +95,7 @@ PIXI.CanvasGraphics.renderGraphics = function(graphics, context)
                 context.strokeRect(shape.x, shape.y, shape.width, shape.height);
             }
         }
-        else if (data.type === PIXI.Graphics.CIRC)
+        else if (data.type === Phaser.CIRCLE)
         {
             // TODO - need to be Undefined!
             context.beginPath();
@@ -116,7 +116,7 @@ PIXI.CanvasGraphics.renderGraphics = function(graphics, context)
                 context.stroke();
             }
         }
-        else if (data.type === PIXI.Graphics.ELIP)
+        else if (data.type === Phaser.ELLIPSE)
         {
             // ellipse code taken from: http://stackoverflow.com/questions/2172798/how-to-draw-an-oval-in-html5-canvas
 
@@ -158,7 +158,7 @@ PIXI.CanvasGraphics.renderGraphics = function(graphics, context)
                 context.stroke();
             }
         }
-        else if (data.type === PIXI.Graphics.RREC)
+        else if (data.type === Phaser.ROUNDEDRECTANGLE)
         {
             var rx = shape.x;
             var ry = shape.y;
@@ -224,7 +224,7 @@ PIXI.CanvasGraphics.renderGraphicsMask = function(graphics, context)
         var data = graphics.graphicsData[i];
         var shape = data.shape;
 
-        if (data.type === PIXI.Graphics.POLY)
+        if (data.type === Phaser.POLYGON)
         {
 
             var points = shape.points;
@@ -243,18 +243,18 @@ PIXI.CanvasGraphics.renderGraphicsMask = function(graphics, context)
             }
 
         }
-        else if (data.type === PIXI.Graphics.RECT)
+        else if (data.type === Phaser.RECTANGLE)
         {
             context.rect(shape.x, shape.y, shape.width, shape.height);
             context.closePath();
         }
-        else if (data.type === PIXI.Graphics.CIRC)
+        else if (data.type === Phaser.CIRCLE)
         {
             // TODO - need to be Undefined!
             context.arc(shape.x, shape.y, shape.radius, 0, 2 * Math.PI);
             context.closePath();
         }
-        else if (data.type === PIXI.Graphics.ELIP)
+        else if (data.type === Phaser.ELLIPSE)
         {
 
             // ellipse code taken from: http://stackoverflow.com/questions/2172798/how-to-draw-an-oval-in-html5-canvas
@@ -280,7 +280,7 @@ PIXI.CanvasGraphics.renderGraphicsMask = function(graphics, context)
             context.bezierCurveTo(xm - ox, ye, x, ym + oy, x, ym);
             context.closePath();
         }
-        else if (data.type === PIXI.Graphics.RREC)
+        else if (data.type === Phaser.ROUNDEDRECTANGLE)
         {
 
             var rx = shape.x;

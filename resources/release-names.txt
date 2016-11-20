@@ -15,7 +15,7 @@ Amadicia *
 
 Capital: Amador *
 Cities: Abila, Bellon, Jeramel, Mardecin, Sienda *
-POI: Mountains of Mist, River Eldar, River Sharia, Shadow Coast *
+POI: River Eldar, River Sharia, Shadow Coast *
 
 Andor
 
@@ -37,7 +37,7 @@ POI: River Mora
 
 Cairhien *
 
-Capital: Cairhien
+Capital: Cairhien *
 Cities: Eianrod *, Jurene, Maerone, Morelle, Selean, Taien, Tremonsien
 
 Ghealdan *

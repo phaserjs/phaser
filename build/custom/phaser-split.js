@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.6.2 "Kore Springs" - Built: Fri Aug 26 2016 01:03:19
+* v3.0.0 "Shadow Coast" - Built: Wed Sep 21 2016 23:21:17
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -53,7 +53,7 @@ var Phaser = Phaser || {    // jshint ignore:line
     * @constant
     * @type {string}
     */
-    VERSION: '2.6.2',
+    VERSION: '3.0.0 b1',
 
     /**
     * An array of Phaser game instances.
@@ -89,6 +89,13 @@ var Phaser = Phaser || {    // jshint ignore:line
     * @type {integer}
     */
     HEADLESS: 3,
+
+    /**
+    * WebGL Renderer with MultiTexture support enabled.
+    * @constant
+    * @type {integer}
+    */
+    WEBGL_MULTI: 4,
 
     /**
     * Direction constant.
@@ -2146,7 +2153,7 @@ Phaser.Line.prototype = {
     * @method Phaser.Line#fromSprite
     * @param {Phaser.Sprite} startSprite - The coordinates of this Sprite will be set to the Line.start point.
     * @param {Phaser.Sprite} endSprite - The coordinates of this Sprite will be set to the Line.start point.
-    * @param {boolean} [useCenter=false] - If true it will use startSprite.center.x, if false startSprite.x. Note that Sprites don't have a center property by default, so only enable if you've over-ridden your Sprite with a custom class.
+    * @param {boolean} [useCenter=false] - If true it will use startSprite.centerX, if false startSprite.x.
     * @return {Phaser.Line} This line object
     */
     fromSprite: function (startSprite, endSprite, useCenter) {
@@ -2155,7 +2162,7 @@ Phaser.Line.prototype = {
 
         if (useCenter)
         {
-            return this.setTo(startSprite.center.x, startSprite.center.y, endSprite.center.x, endSprite.center.y);
+            return this.setTo(startSprite.centerX, startSprite.centerY, endSprite.centerX, endSprite.centerY);
         }
 
         return this.setTo(startSprite.x, startSprite.y, endSprite.x, endSprite.y);
@@ -6395,9 +6402,11 @@ Phaser.Camera.prototype = {
     */
     resetFX: function () {
 
-        this.fx.clear();
-
-        this.fx.alpha = 0;
+        if (this.fx)
+        {
+            this.fx.clear();
+            this.fx.alpha = 0;
+        }
 
         this._fxDuration = 0;
 
@@ -12736,17 +12745,65 @@ Object.defineProperty(Phaser.World.prototype, "randomY", {
 */
 
 /**
-* This is where the magic happens. The Game object is the heart of your game,
-* providing quick access to common functions and handling the boot process.
+* The Phaser.Game object is the main controller for the entire Phaser game. It is responsible
+* for handling the boot process, parsing the configuration values, creating the renderer,
+* and setting-up all of the Phaser systems, such as physics, sound and input.
+* Once that is complete it will start the default State, and then begin the main game loop.
+*
+* You can access lots of the Phaser systems via the properties on the `game` object. For
+* example `game.renderer` is the Renderer, `game.sound` is the Sound Manager, and so on.
+*
+* Anywhere you can access the `game` property, you can access all of these core systems.
+* For example a Sprite has a `game` property, allowing you to talk to the various parts
+* of Phaser directly, without having to look after your own references.
+*
+* In it's most simplest form, a Phaser game can be created by providing the arguments
+* to the constructor:
+*
+* ```
+* var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create });
+* ```
+*
+* In the example above it is passing in a State object directly. You can also use the State
+* Manager to do this:
+*
+* ```
+* var game = new Phaser.Game(800, 600, Phaser.AUTO);
+* game.state.add('Boot', BasicGame.Boot);
+* game.state.add('Preloader', BasicGame.Preloader);
+* game.state.add('MainMenu', BasicGame.MainMenu);
+* game.state.add('Game', BasicGame.Game);
+* game.state.start('Boot');
 * 
-* "Hell, there are no rules here - we're trying to accomplish something."
-*                                                       Thomas A. Edison
+* ```
+* In the example above, 4 States are added to the State Manager, and Phaser is told to
+* start running the `Boot` state when it has finished initializing. There are example
+* project templates you can use in the Phaser GitHub repo, inside the `resources` folder.
+*
+* Instead of specifying arguments you can also pass a single object instead:
+*
+* ```
+* var config = {
+*     width: 800,
+*     height: 600,
+*     renderer: Phaser.AUTO,
+*     antialias: true,
+*     multiTexture: true,
+*     state: {
+*         preload: preload,
+*         create: create,
+*         update: update
+*     }
+* }
+*
+* var game = new Phaser.Game(config);
+* ```
 *
 * @class Phaser.Game
 * @constructor
 * @param {number|string} [width=800] - The width of your game in game pixels. If given as a string the value must be between 0 and 100 and will be used as the percentage width of the parent container, or the browser window if no parent is given.
 * @param {number|string} [height=600] - The height of your game in game pixels. If given as a string the value must be between 0 and 100 and will be used as the percentage height of the parent container, or the browser window if no parent is given.
-* @param {number} [renderer=Phaser.AUTO] - Which renderer to use: Phaser.AUTO will auto-detect, Phaser.WEBGL, Phaser.CANVAS or Phaser.HEADLESS (no rendering at all).
+* @param {number} [renderer=Phaser.AUTO] - Which renderer to use: Phaser.AUTO will auto-detect, Phaser.WEBGL, Phaser.WEBGL_MULTI, Phaser.CANVAS or Phaser.HEADLESS (no rendering at all).
 * @param {string|HTMLElement} [parent=''] - The DOM element into which this games canvas will be injected. Either a DOM ID (string) or the element itself.
 * @param {object} [state=null] - The default state object. A object consisting of Phaser.State functions (preload, create, update, render) or null.
 * @param {boolean} [transparent=false] - Use a transparent canvas background or not.
@@ -12756,7 +12813,7 @@ Object.defineProperty(Phaser.World.prototype, "randomY", {
 Phaser.Game = function (width, height, renderer, parent, state, transparent, antialias, physicsConfig) {
 
     /**
-    * @property {number} id - Phaser Game ID (for when Pixi supports multiple instances).
+    * @property {number} id - Phaser Game ID
     * @readonly
     */
     this.id = Phaser.GAMES.push(this) - 1;
@@ -12833,6 +12890,19 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this.antialias = true;
 
     /**
+    * Has support for Multiple bound Textures in WebGL been enabled? This is a read-only property.
+    * To set it you need to either specify `Phaser.WEBGL_MULTI` as the renderer type, or use the Game
+    * Configuration object with the property `multiTexture` set to true. It has to be enabled before
+    * Pixi boots, and cannot be changed after the game is running. Once enabled, take advantage of it
+    * via the `game.renderer.setTexturePriority` method.
+    * 
+    * @property {boolean} multiTexture
+    * @default
+    * @readOnly
+    */
+    this.multiTexture = false;
+
+    /**
     * @property {boolean} preserveDrawingBuffer - The value of the preserveDrawingBuffer flag affects whether or not the contents of the stencil buffer is retained after rendering.
     * @default
     */
@@ -12853,7 +12923,7 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this.renderer = null;
 
     /**
-    * @property {number} renderType - The Renderer this game will use. Either Phaser.AUTO, Phaser.CANVAS, Phaser.WEBGL, or Phaser.HEADLESS.
+    * @property {number} renderType - The Renderer this game will use. Either Phaser.AUTO, Phaser.CANVAS, Phaser.WEBGL, Phaser.WEBGL_MULTI or Phaser.HEADLESS.
     * @readonly
     */
     this.renderType = Phaser.AUTO;
@@ -13213,6 +13283,11 @@ Phaser.Game.prototype = {
             this.antialias = config['antialias'];
         }
 
+        if (config['multiTexture'] !== undefined)
+        {
+            this.multiTexture = config['multiTexture'];
+        }
+
         if (config['resolution'])
         {
             this.resolution = config['resolution'];
@@ -13449,6 +13524,12 @@ Phaser.Game.prototype = {
         else
         {
             //  They requested WebGL and their browser supports it
+
+            if (this.multiTexture || this.renderType === Phaser.WEBGL_MULTI)
+            {
+                PIXI.enableMultiTexture();
+            }
+
             this.renderType = Phaser.WEBGL;
 
             this.renderer = new PIXI.WebGLRenderer(this);
@@ -24911,6 +24992,11 @@ Phaser.Component.LoadTexture.prototype = {
         else if (!frame.trimmed && this.texture.trim)
         {
             this.texture.trim = null;
+        }
+
+        if (frame.rotated)
+        {
+            this.texture.rotated = true;
         }
 
         if (this.cropRect)
@@ -38270,7 +38356,7 @@ Phaser.Device._initialize = function () {
             device.touch = true;
         }
 
-        if (window.navigator.msPointerEnabled || window.navigator.pointerEnabled)
+        if (window.PointerEvent || window.MSPointerEvent || window.navigator.msPointerEnabled || window.navigator.pointerEnabled)
         {
             device.mspointer = true;
         }
@@ -46841,16 +46927,10 @@ Phaser.Frame = function (index, x, y, width, height, name) {
     this.distance = Phaser.Math.distance(0, 0, width, height);
 
     /**
-    * @property {boolean} rotated - Rotated? (not yet implemented)
+    * @property {boolean} rotated - Is the frame rotated in the source texture?
     * @default
     */
     this.rotated = false;
-
-    /**
-    * @property {string} rotationDirection - Either 'cw' or 'ccw', rotation is always 90 degrees.
-    * @default 'cw'
-    */
-    this.rotationDirection = 'cw';
 
     /**
     * @property {boolean} trimmed - Was it trimmed when packed?
@@ -47425,6 +47505,11 @@ Phaser.AnimationParser = {
                     frames[i].spriteSourceSize.h
                 );
             }
+
+            if (frames[i].rotated)
+            {
+                newFrame.rotated = true;
+            }
         }
 
         return data;
@@ -47536,6 +47621,11 @@ Phaser.AnimationParser = {
                     frames[key].spriteSourceSize.w,
                     frames[key].spriteSourceSize.h
                 );
+            }
+
+            if (frames[key].rotated)
+            {
+                newFrame.rotated = true;
             }
 
             i++;
@@ -47680,7 +47770,8 @@ Phaser.Cache = function (game) {
         bitmapData: {},
         bitmapFont: {},
         shader: {},
-        renderTexture: {}
+        renderTexture: {},
+        compressedTexture: {}
     };
 
     /**
@@ -47842,6 +47933,46 @@ Phaser.Cache.prototype = {
     //////////////////
     //  Add Methods //
     //////////////////
+
+    /**
+    * Add a new canvas object in to the cache.
+    *
+    * @method Phaser.Cache#addCompressedTextureMetaData
+    * @private
+    * @param {string} key - The key that this asset will be stored in the cache under. This should be unique within this cache.
+    * @param {string} url
+    * @param {string} extension
+    * @param {array} arrayBuffer
+    * @return {object} The compressed texture entry.
+    */
+    addCompressedTextureMetaData: function (key, url, extension, arrayBuffer) {
+
+        if (this.checkImageKey(key))
+        {
+            this.removeImage(key);
+        }
+        
+        var data = (extension in Phaser.LoaderParser) ? Phaser.LoaderParser[extension](arrayBuffer) : arrayBuffer;
+
+        var texture = {
+            key: key,
+            url: url,
+            data: data,
+            base: new PIXI.BaseTexture(data),
+            frame: new Phaser.Frame(0, 0, 0, data.width, data.height, key),
+            frameData: new Phaser.FrameData(),
+            fileFormat: extension
+        };
+
+        texture.frameData.addFrame(new Phaser.Frame(0, 0, 0, data.width, data.height, url));
+
+        this._cache.image[key] = texture;
+
+        this._resolveURL(url, texture);
+
+        return texture;
+
+    },
 
     /**
     * Add a new canvas object in to the cache.
@@ -48716,7 +48847,7 @@ Phaser.Cache.prototype = {
 
         if (full === undefined) { full = false; }
 
-        var img = this.getItem(key, Phaser.Cache.IMAGE, 'getImage');
+        var  img = this.getItem(key, Phaser.Cache.IMAGE, 'getImage');
 
         if (img === null)
         {
@@ -50305,15 +50436,120 @@ Phaser.Loader.prototype = {
     * and no URL is given then the Loader will set the URL to be "alien.png". It will always add `.png` as the extension.
     * If you do not desire this action then provide a URL.
     *
+    * This method also supports passing in a texture object as the `url` argument. This allows you to load
+    * compressed textures into Phaser. You can also use `Loader.texture` to do this.
+    * 
+    * Compressed Textures are a WebGL only feature, and require 3rd party tools to create.
+    * Available tools include Texture Packer, PVRTexTool, DirectX Texture Tool and Mali Texture Compression Tool.
+    *
+    * Supported texture compression formats are: PVRTC, S3TC and ETC1.
+    * Supported file formats are: PVR, DDS, KTX and PKM.
+    *
+    * The formats that support all 3 compression algorithms are PVR and KTX.
+    * PKM only supports ETC1, and DDS only S3TC for now.
+    *
+    * The texture path object looks like this:
+    *
+    * ```
+    * load.image('factory', {
+    *     etc1: 'assets/factory_etc1.pkm',
+    *     s3tc: 'assets/factory_dxt1.pvr',
+    *     pvrtc: 'assets/factory_pvrtc.pvr',
+    *     truecolor: 'assets/factory.png'
+    * });
+    * ```
+    * 
+    * The `truecolor` property points to a standard PNG file, that will be used if none of the 
+    * compressed formats are supported by the browser / GPU.
+    *
     * @method Phaser.Loader#image
     * @param {string} key - Unique asset key of this image file.
-    * @param {string} [url] - URL of an image file. If undefined or `null` the url will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
+    * @param {string|object} [url] - URL of an image file. If undefined or `null` the url will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png". Can also be a texture data object.
     * @param {boolean} [overwrite=false] - If an unloaded file with a matching key already exists in the queue, this entry will overwrite it.
     * @return {Phaser.Loader} This Loader instance.
     */
     image: function (key, url, overwrite) {
 
-        return this.addToFileList('image', key, url, undefined, overwrite, '.png');
+        if (typeof url === 'object')
+        {
+            return this.texture(key, url, overwrite);
+        }
+        else
+        {
+            return this.addToFileList('image', key, url, undefined, overwrite, '.png');
+        }
+
+    },
+
+    /**
+    * Adds a Compressed Texture Image to the current load queue.
+    *
+    * Compressed Textures are a WebGL only feature, and require 3rd party tools to create.
+    * Available tools include Texture Packer, PVRTexTool, DirectX Texture Tool and Mali Texture Compression Tool.
+    *
+    * Supported texture compression formats are: PVRTC, S3TC and ETC1.
+    * Supported file formats are: PVR, DDS, KTX and PKM.
+    * 
+    * The formats that support all 3 compression algorithms are PVR and KTX.
+    * PKM only supports ETC1, and DDS only S3TC for now.
+    *
+    * The texture path object looks like this:
+    *
+    * ```
+    * load.texture('factory', {
+    *     etc1: 'assets/factory_etc1.pkm',
+    *     s3tc: 'assets/factory_dxt1.pvr',
+    *     pvrtc: 'assets/factory_pvrtc.pvr',
+    *     truecolor: 'assets/factory.png'
+    * });
+    * ```
+    * 
+    * The `truecolor` property points to a standard PNG file, that will be used if none of the 
+    * compressed formats are supported by the browser / GPU.
+    * 
+    * The file is **not** loaded immediately after calling this method. The file is added to the queue ready to be loaded when the loader starts.
+    *
+    * The key must be a unique String. It is used to add the file to the Phaser.Cache upon successful load.
+    *
+    * Retrieve the image via `Cache.getImage(key)`
+    *
+    * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
+    *
+    * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "alien"
+    * and no URL is given then the Loader will set the URL to be "alien.pvr". It will always add `.pvr` as the extension.
+    * If you do not desire this action then provide a URL.
+    *
+    * @method Phaser.Loader#texture
+    * @param {string} key - Unique asset key of this image file.
+    * @param {object} object - The texture path data object.
+    * @param {boolean} [overwrite=false] - If an unloaded file with a matching key already exists in the queue, this entry will overwrite it.
+    * @return {Phaser.Loader} This Loader instance.
+    */
+    texture: function (key, object, overwrite) {
+
+        if (this.game.renderType === Phaser.WEBGL)
+        {
+            var compression = this.game.renderer.extensions.compression;
+            var exkey;
+
+            for (exkey in object)
+            {
+                if (exkey.toUpperCase() in compression)
+                {
+                    return this.addToFileList('texture', key, object[exkey], undefined, overwrite, '.pvr');
+                }
+            }
+        }
+
+        // Check if we have a truecolor texture to fallback.
+        // Also catches calls to this function that are from a Canvas renderer
+
+        if (object['truecolor'])
+        {
+            this.addToFileList('image', key, object['truecolor'], undefined, overwrite, '.png');
+        }
+
+        return this;
 
     },
 
@@ -51552,7 +51788,6 @@ Phaser.Loader.prototype = {
             file.errorMessage = errorMessage;
 
             console.warn('Phaser.Loader - ' + file.type + '[' + file.key + ']' + ': ' + errorMessage);
-            // debugger;
         }
 
         this.processLoadQueue();
@@ -51786,6 +52021,14 @@ Phaser.Loader.prototype = {
                 this.xhrLoad(file, this.transformUrl(file.url, file), 'text', this.fileComplete);
                 break;
 
+            case 'texture':
+
+                if (file.key.split('_').pop() === 'truecolor')
+                {
+                    this.loadImageTag(file);
+                }
+                break;
+
             case 'binary':
                 this.xhrLoad(file, this.transformUrl(file.url, file), 'arraybuffer', this.fileComplete);
                 break;
@@ -51798,7 +52041,6 @@ Phaser.Loader.prototype = {
     * @private
     */
     loadImageTag: function (file) {
-
         var _this = this;
 
         file.data = new Image();
@@ -52241,7 +52483,7 @@ Phaser.Loader.prototype = {
     },
 
     /**
-    * Called when a file/resources had been downloaded and needs to be processed further.
+    * Called when a file has been downloaded and needs to be processed further.
     *
     * @method Phaser.Loader#fileComplete
     * @private
@@ -52259,6 +52501,18 @@ Phaser.Loader.prototype = {
                 // Pack data must never be false-ish after it is fetched without error
                 var data = JSON.parse(xhr.responseText);
                 file.data = data || {};
+                break;
+
+            case 'texture':
+
+                if (file.data !== null)
+                {
+                    this.cache.addCompressedTextureMetaData(file.key, file.url, file.url.split('.').pop().toLowerCase(), file.data);
+                }
+                else
+                {
+                    this.cache.addCompressedTextureMetaData(file.key, file.url, file.url.split('.').pop().toLowerCase(), xhr.response);
+                }
                 break;
 
             case 'image':
@@ -52836,7 +53090,348 @@ Phaser.LoaderParser = {
 
         return bitmapFontData;
 
+    },
+
+    /**
+    * Extract PVR header from loaded binary
+    *
+    * @method Phaser.LoaderParser.pvr
+    * @param {ArrayBuffer} arrayBuffer
+    * @return {object} The parsed PVR file including texture data.
+    */
+    pvr: function (arrayBuffer) {
+
+        // Reference: http://cdn.imgtec.com/sdk-documentation/PVR+File+Format.Specification.pdf
+        // PVR 3 header structure
+        // ---------------------------------------
+        // address: 0, size: 4 bytes version
+        // address: 4, size: 4 bytes flags
+        // address: 8, size: 8 bytes pixel format
+        // address: 16, size: 4 bytes color space
+        // address: 20, size: 4 bytes channel type
+        // address: 24, size: 4 bytes height
+        // address: 28, size: 4 bytes width
+        // address: 32, size: 4 bytes depth
+        // address: 36, size: 4 bytes number of surfaces
+        // address: 40, size: 4 bytes number of faces
+        // address: 44, size: 4 bytes number of mipmaps
+        // address: 48, size: 4 bytes meta data size
+        // ---------------------------------------
+        var uintArray = new Uint32Array(arrayBuffer.slice(0, 52)),
+            byteArray = new Uint8Array(arrayBuffer),
+            pvrHeader = null,
+            pixelFormat = (uintArray[3] << 32 | uintArray[2]),
+            compressionAlgorithm,
+            glExtensionFormat = 0;
+
+        if (uintArray[0] === 0x03525650 &&
+            [ // Validate WebGL Pixel Format
+                0, 1, 2, 3,
+                6, 7, 9, 11
+            ].indexOf(pixelFormat) >= 0
+        ) {
+            if (pixelFormat >= 0 && pixelFormat <= 3) {
+                compressionAlgorithm = 'PVRTC';
+            } else if (pixelFormat >= 7 && pixelFormat <= 11) {
+                compressionAlgorithm = 'S3TC';
+            } else if (pixelFormat === 6) {
+                compressionAlgorithm = 'ETC1';
+            }
+
+            switch (pixelFormat) {
+                case 0:
+                    glExtensionFormat = 0x8C01;
+                    break;
+                case 1:
+                    glExtensionFormat = 0x8C03;
+                    break;
+                case 2:
+                    glExtensionFormat = 0x8C00;
+                    break;
+                case 3:
+                    glExtensionFormat = 0x8C02;
+                    break;
+                case 6:
+                    glExtensionFormat = 0x8D64;
+                    break;
+                case 7:
+                    glExtensionFormat = 0x83F1;
+                    break;
+                case 9:
+                    glExtensionFormat = 0x83F2;
+                    break;
+                case 11:
+                    glExtensionFormat = 0x83F3;
+                    break;
+                default:
+                    glExtensionFormat = -1;
+            }
+
+            pvrHeader = {
+                complete: true,
+                fileFormat: 'PVR',
+                compressionAlgorithm: compressionAlgorithm,
+                flags: uintArray[1],
+                pixelFormat: pixelFormat,
+                colorSpace: uintArray[4],
+                channelType: uintArray[5],
+                height: uintArray[6],
+                width: uintArray[7],
+                depth: uintArray[8],
+                numberOfSurfaces: uintArray[9],
+                numberOfFaces: uintArray[10],
+                numberOfMipmaps: uintArray[11],
+                metaDataSize: uintArray[12],
+                textureData: byteArray.subarray(52 + uintArray[12], byteArray.byteLength),
+                glExtensionFormat: glExtensionFormat
+            };
+        }
+
+        return pvrHeader;
+
+    },
+
+    /**
+    * Extract DDS header from loaded binary
+    *
+    * @method Phaser.LoaderParser.dds
+    * @param {ArrayBuffer} arrayBuffer
+    * @return {object} The parsed DDS file including texture data.
+    */
+    dds: function (arrayBuffer) {
+
+        // Reference at: https://msdn.microsoft.com/en-us/library/windows/desktop/bb943982(v=vs.85).aspx
+        // DDS header structure
+        // ---------------------------------------
+        // address: 0, size: 4 bytes Identifier 'DDS '
+        // address: 4, size: 4 bytes size
+        // address: 8, size: 4 bytes flags
+        // address: 12, size: 4 bytes height
+        // address: 16, size: 4 bytes width
+        // address: 20, size: 4 bytes pitch or linear size
+        // address: 24, size: 4 bytes depth
+        // address: 28, size: 4 bytes mipmap count
+        // address: 32, size: 44 bytes reserved space 1
+        // address: 76, size: 4 pixel format size
+        // address: 80, size: 4 pixel format flag
+        // address: 84, size: 4 pixel format four CC
+        // address: 88, size: 4 pixel format bit count
+        // address: 92, size: 4 pixel format R bit mask
+        // address: 96, size: 4 pixel format G bit mask
+        // address: 100, size: 4 pixel format B bit mask
+        // address: 104, size: 4 pixel format A bit mask
+        // address: 108, size: 4 caps 1
+        // address: 112, size: 4 caps 2
+        // address: 116, size: 4 caps 3
+        // address: 120, size: 4 caps 4
+        // address: 124, size: 4 reserved 2
+        // -- DXT10 extension
+        // address: 130, size: 4 DXGI Format
+        // address: 134, size: 4 resource dimension
+        // address: 138, size: 4 misc flag
+        // address: 142, size: 4 array size
+        // address: 146, size: 4 misc flag 2
+        // ---------------------------------------
+        var byteArray = new Uint8Array(arrayBuffer),
+            uintArray = new Uint32Array(arrayBuffer),
+            ddsHeader = null;
+
+        if (byteArray[0] === 0x44 &&
+            byteArray[1] === 0x44 &&
+            byteArray[2] === 0x53 &&
+            byteArray[3] === 0x20) {
+            ddsHeader = {
+                complete: true,
+                fileFormat: 'DDS',
+                compressionAlgorithm: 'S3TC',
+                size: uintArray[1],
+                flags: uintArray[2],
+                height: uintArray[3],
+                width: uintArray[4],
+                pitch: uintArray[5],
+                depth: uintArray[6],
+                mipmapCount: uintArray[7],
+                formatSize: uintArray[19],
+                formatFlag: uintArray[19],
+                formatFourCC: [
+                    String.fromCharCode(byteArray[84]),
+                    String.fromCharCode(byteArray[85]),
+                    String.fromCharCode(byteArray[86]),
+                    String.fromCharCode(byteArray[87])
+                ].join(''),
+                formatBitCount: uintArray[21],
+                formatRBitMask: uintArray[22],
+                formatGBitMask: uintArray[23],
+                formatBBitMask: uintArray[24],
+                formatABitMask: uintArray[25],
+                caps1: uintArray[26],
+                caps2: uintArray[27],
+                caps3: uintArray[28],
+                caps4: uintArray[29],
+                reserved2: uintArray[30],
+                DXGIFormat: null,
+                resourceDimension: null,
+                miscFlag: null,
+                arraySize: null,
+                textureData: byteArray.subarray(uintArray[1] + 4, byteArray.byteLength)
+            };
+            if (ddsHeader.formatFourCC === 'DX10') {
+                ddsHeader.DXGIFormat = uintArray[31];
+                ddsHeader.resourceDimension = uintArray[32];
+                ddsHeader.miscFlag = uintArray[33];
+                ddsHeader.arraySize = uintArray[34];
+                ddsHeader.miscFlag = uintArray[35];
+            }
+        }
+
+        return ddsHeader;
+
+    },
+
+    /**
+    * Extract KTX header from loaded binary
+    *
+    * @method Phaser.LoaderParser.ktx
+    * @param {ArrayBuffer} arrayBuffer
+    * @return {object} The parsed KTX file including texture data.
+    */
+    ktx: function (arrayBuffer) {
+
+        // Reference: https://www.khronos.org/opengles/sdk/tools/KTX/file_format_spec/
+        // KTX header structure
+        // ---------------------------------------
+        // address: 0, size 12 bytes: Identifier '«KTX 11»\r\n\x1A\n'
+        // address: 12, size 4 bytes: endianness
+        // address: 16, size 4 bytes: GL type
+        // address: 20, size 4 bytes: GL type size
+        // address: 24, size 4 bytes: GL format
+        // address: 28, size 4 bytes: GL internal format
+        // address: 32, size 4 bytes: GL base internal format
+        // address: 36, size 4 bytes: pixel width
+        // address: 40, size 4 bytes: pixel height
+        // address: 44, size 4 bytes: pixel depth
+        // address: 48, size 4 bytes: number of array elements
+        // address: 52, size 4 bytes: number of faces
+        // address: 56, size 4 bytes: number of mipmap levels
+        // address: 60, size 4 bytes: bytes of key value data
+        // address: 64, size 4 bytes: key and value bytes size
+        // address: X, size 1 byte : key and value
+        // address: X, size 1 byte : value padding
+        // address: X, size 4 byte : image size
+        // ---------------------------------------
+        var byteArray = new Uint8Array(arrayBuffer),
+            uintArray = new Uint32Array(arrayBuffer),
+            ktxHeader = null,
+            imageSizeOffset = 16 + (uintArray[15] / 4) | 0,
+            imageSize = uintArray[imageSizeOffset],
+            glInternalFormat = uintArray[7],
+            compressionAlgorithm = 0;
+
+        if (byteArray[0] === 0xAB && byteArray[1] === 0x4B &&
+            byteArray[2] === 0x54 && byteArray[3] === 0x58 &&
+            byteArray[4] === 0x20 && byteArray[5] === 0x31 &&
+            byteArray[6] === 0x31 && byteArray[7] === 0xBB &&
+            byteArray[8] === 0x0D && byteArray[9] === 0x0A &&
+            byteArray[10] === 0x1A && byteArray[11] === 0x0A &&
+            //Check if internal GL format is supported by WebGL
+            [
+                // ETC1
+                0x8D64,
+                // PVRTC 
+                0x8C00, 0x8C01, 0x8C02, 0x8C03, 
+                // DXTC | S3TC
+                0x83F0, 0x83F1, 0x83F2, 0x83F3
+            ].indexOf(glInternalFormat) >= 0) {
+            switch (glInternalFormat) {
+                case 0x8D64:
+                    compressionAlgorithm = 'ETC1';
+                    break;
+                case 0x8C00:
+                case 0x8C01:
+                case 0x8C02:
+                case 0x8C03:
+                    compressionAlgorithm = 'PVRTC';
+                    break;
+                case 0x83F0:
+                case 0x83F1:
+                case 0x83F2:
+                case 0x83F3:
+                    compressionAlgorithm = 'S3TC';
+                    break;
+            }
+
+            ktxHeader = {
+                complete: true,
+                fileFormat: 'KTX',
+                compressionAlgorithm: compressionAlgorithm,
+                endianness: uintArray[3],
+                glType: uintArray[4],
+                glTypeSize: uintArray[5],
+                glFormat: uintArray[6],
+                glInternalFormat: uintArray[7],
+                glBaseInternalFormat: uintArray[8],
+                width: uintArray[9],
+                height: uintArray[10],
+                pixelDepth: uintArray[11],
+                numberOfArrayElements: uintArray[12],
+                numberOfFaces: uintArray[13],
+                numberOfMipmapLevels: uintArray[14],
+                bytesOfKeyValueData: uintArray[15],
+                keyAndValueByteSize: uintArray[16],
+                imageSize: imageSize,
+                textureData: byteArray.subarray((imageSizeOffset + 1) * 4, imageSize + 100)
+            };
+        }
+
+        return ktxHeader;
+
+    },
+
+    /**
+    * Extract PKM header from loaded binary
+    *
+    * @method Phaser.LoaderParser.pkm
+    * @param {ArrayBuffer} arrayBuffer
+    * @return {object} The parsed PKM file including texture data.
+    */
+    pkm: function (arrayBuffer) {
+
+        // PKM header structure
+        // ---------------------------------------
+        // address: 0, size 4 bytes: for 'PKM '
+        // address: 4, size 2 bytes: for version
+        // address: 6, size 2 bytes: for type
+        // address: 8, size 2 bytes: for extended width
+        // address: 10, size 2 bytes: for extended height
+        // address: 12, size 2 bytes: for original width
+        // address: 14, size 2 bytes: for original height
+        // address: 16, texture data
+        // ---------------------------------------
+        var byteArray = new Uint8Array(arrayBuffer),
+            pkmHeader = null;
+
+        if (byteArray[0] === 0x50 &&
+            byteArray[1] === 0x4B &&
+            byteArray[2] === 0x4D &&
+            byteArray[3] === 0x20) {
+
+            pkmHeader = {
+                complete: true,
+                fileFormat: 'PKM',
+                compressionAlgorithm: 'ETC1',
+                format: ((byteArray[6] << 8 | byteArray[7])) & 0xFFFF,
+                width: ((byteArray[8] << 8 | byteArray[9])) & 0xFFFF,
+                height: ((byteArray[10] << 8 | byteArray[11])) & 0xFFFF,
+                originalWidth: ((byteArray[12] << 8 | byteArray[13])) & 0xFFFF,
+                originalHeight: ((byteArray[14] << 8 | byteArray[15])) & 0xFFFF,
+                textureData: byteArray.subarray(16, byteArray.length)
+            };
+        }
+
+        return pkmHeader;
+
     }
+
 };
 
 /**
@@ -65154,11 +65749,17 @@ Phaser.Physics.Arcade.Body.prototype = {
     * For example: If you have a Sprite with a texture that is 80x100 in size,
     * and you want the physics body to be 32x32 pixels in the middle of the texture, you would do:
     *
-    * `setSize(32, 32, 24, 34)`
+    * `setSize(32 / Math.abs(this.scale.x), 32 / Math.abs(this.scale.y), 24, 34)`
     *
-    * Where the first two parameters is the new Body size (32x32 pixels).
+    * Where the first two parameters are the new Body size (32x32 pixels) relative to the Sprite's scale.
     * 24 is the horizontal offset of the Body from the top-left of the Sprites texture, and 34
     * is the vertical offset.
+    *
+    * If you've scaled a Sprite by altering its `width`, `height`, or `scale` and you want to
+    * position the Body relative to the Sprite's dimensions (which will differ from its texture's
+    * dimensions), you should divide these arguments by the Sprite's current scale:
+    *
+    * `setSize(32 / sprite.scale.x, 32 / sprite.scale.y)`
     *
     * Calling `setSize` on a Body that has already had `setCircle` will reset all of the Circle
     * properties, making this Body rectangular again.
@@ -65166,8 +65767,8 @@ Phaser.Physics.Arcade.Body.prototype = {
     * @method Phaser.Physics.Arcade.Body#setSize
     * @param {number} width - The width of the Body.
     * @param {number} height - The height of the Body.
-    * @param {number} [offsetX] - The X offset of the Body from the top-left of the Sprites texture.
-    * @param {number} [offsetY] - The Y offset of the Body from the top-left of the Sprites texture.
+    * @param {number} [offsetX] - The X offset of the Body from the top-left of the Sprite's texture.
+    * @param {number} [offsetY] - The Y offset of the Body from the top-left of the Sprite's texture.
     */
     setSize: function (width, height, offsetX, offsetY) {
 
@@ -77857,6 +78458,24 @@ Phaser.Weapon = function (game, parent) {
     this.trackedPointer = null;
 
     /**
+     * If you want this Weapon to be able to fire more than 1 bullet in a single
+     * update, then set this property to `true`. When `true` the Weapon plugin won't
+     * set the shot / firing timers until the `postRender` phase of the game loop.
+     * This means you can call `fire` (and similar methods) as often as you like in one
+     * single game update.
+     *
+     * @type {boolean}
+     */
+    this.multiFire = false;
+
+    /**
+     * Internal multiFire test flag.
+     *
+     * @type {boolean}
+     */
+    this._hasFired = false;
+
+    /**
      * If the Weapon is tracking a Sprite, should it also track the Sprites rotation?
      * This is useful for a game such as Asteroids, where you want the weapon to fire based
      * on the sprites rotation.
@@ -77882,6 +78501,14 @@ Phaser.Weapon = function (game, parent) {
      * @private
      */
     this._nextFire = 0;
+
+    /**
+     * Internal firing rate time tracking variable used by multiFire.
+     *
+     * @type {number}
+     * @private
+     */
+    this._tempNextFire = 0;
 
     /**
      * Internal firing rotation tracking point.
@@ -78140,6 +78767,25 @@ Phaser.Weapon.prototype.update = function () {
 };
 
 /**
+* Internal update method, called by the PluginManager.
+*
+* @method Phaser.Weapon#postRender
+* @protected
+*/
+Phaser.Weapon.prototype.postRender = function () {
+
+    if (!this.multiFire || !this._hasFired)
+    {
+        return;
+    }
+
+    this._hasFired = false;
+
+    this._nextFire = this._tempNextFire;
+
+};
+
+/**
 * Sets this Weapon to track the given Sprite, or any Object with a public `world` Point object.
 * When a Weapon tracks a Sprite it will automatically update its `fireFrom` value to match the Sprites
 * position within the Game World, adjusting the coordinates based on the offset arguments.
@@ -78205,11 +78851,92 @@ Phaser.Weapon.prototype.trackPointer = function (pointer, offsetX, offsetY) {
 };
 
 /**
-* Attempts to fire a single Bullet. If there are no more bullets available in the pool, and the pool cannot be extended,
-* then this method returns `false`. It will also return false if not enough time has expired since the last time
+* Attempts to fire multiple bullets from the positions defined in the given array.
+*
+* If you provide a `from` argument, or if there is a tracked Sprite or Pointer, then
+* the positions are treated as __offsets__ from the given objects position.
+*
+* If `from` is undefined, and there is no tracked object, then the bullets are fired
+* from the given positions, as they exist in the world.
+*
+* Calling this method sets `Weapon.multiFire = true`.
+*
+* If there are not enough bullets available in the pool, and the pool cannot be extended,
+* then this method may not fire from all of the given positions.
+*
+* When the bullets are launched they have their texture and frame updated, as required.
+* The velocity of the bullets are calculated based on Weapon properties like `bulletSpeed`.
+*
+* @method Phaser.Weapon#fireMany
+* @param {array} positions - An array of positions. Each position can be any Object, as long as it has public `x` and `y` properties, such as Phaser.Point, { x: 0, y: 0 }, Phaser.Sprite, etc.
+* @param {Phaser.Sprite|Phaser.Point|Object|string} [from] - Optionally fires the bullets **from** the `x` and `y` properties of this object, _instead_ of any `Weapon.trackedSprite` or `trackedPointer` that is set.
+* @return {array} An array containing all of the fired Phaser.Bullet objects, if a launch was successful, otherwise an empty array.
+*/
+Phaser.Weapon.prototype.fireMany = function (positions, from) {
+
+    this.multiFire = true;
+
+    var bullets = [];
+
+    var _this = this;
+
+    if (from || this.trackedSprite || this.trackedPointer)
+    {
+        positions.forEach(function(offset) {
+
+            bullets.push(_this.fire(from, null, null, offset.x, offset.y));
+
+        });
+    }
+    else
+    {
+        positions.forEach(function(position) {
+
+            bullets.push(_this.fire(position));
+
+        });
+    }
+
+    return bullets;
+
+};
+
+/**
+* Attempts to fire a single Bullet from a tracked Sprite or Pointer, but applies an offset
+* to the position first. This is the same as calling `Weapon.fire` and passing in the offset arguments.
+*
+* If there are no more bullets available in the pool, and the pool cannot be extended,
+* then this method returns `null`. It will also return `null` if not enough time has expired since the last time
 * the Weapon was fired, as defined in the `Weapon.fireRate` property.
 *
-* Otherwise the first available bullet is selected and launched.
+* Otherwise the first available bullet is selected, launched, and returned.
+*
+* When the bullet is launched it has its texture and frame updated, as required. The velocity of the bullet is
+* calculated based on Weapon properties like `bulletSpeed`.
+*
+* If you wish to fire multiple bullets in a single game update, then set `Weapon.multiFire = true`
+* and you can call this method as many times as you like, per loop. See also `Weapon.fireMany`.
+*
+* @method Phaser.Weapon#fireOffset
+* @param {number} [offsetX=0] - The horizontal offset from the position of the tracked Sprite or Pointer, as set with `Weapon.trackSprite`.
+* @param {number} [offsetY=0] - The vertical offset from the position of the tracked Sprite or Pointer, as set with `Weapon.trackSprite`.
+* @return {Phaser.Bullet} The fired bullet, if a launch was successful, otherwise `null`.
+*/
+Phaser.Weapon.prototype.fireOffset = function (offsetX, offsetY) {
+
+    if (offsetX === undefined) { offsetX = 0; }
+    if (offsetY === undefined) { offsetY = 0; }
+
+    return this.fire(null, null, null, offsetX, offsetY);
+
+};
+
+/**
+* Attempts to fire a single Bullet. If there are no more bullets available in the pool, and the pool cannot be extended,
+* then this method returns `null`. It will also return `null` if not enough time has expired since the last time
+* the Weapon was fired, as defined in the `Weapon.fireRate` property.
+*
+* Otherwise the first available bullet is selected, launched, and returned.
 *
 * The arguments are all optional, but allow you to control both where the bullet is launched from, and aimed at.
 *
@@ -78219,17 +78946,26 @@ Phaser.Weapon.prototype.trackPointer = function (pointer, offsetX, offsetY) {
 * When the bullet is launched it has its texture and frame updated, as required. The velocity of the bullet is
 * calculated based on Weapon properties like `bulletSpeed`.
 *
+* If you wish to fire multiple bullets in a single game update, then set `Weapon.multiFire = true`
+* and you can call `fire` as many times as you like, per loop. Multiple fires in a single update
+* only counts once towards the `shots` total, but you will still receive a Signal for each bullet.
+*
 * @method Phaser.Weapon#fire
-* @param {Phaser.Sprite|Phaser.Point|Object} [from] - Optionally fires the bullet **from** the `x` and `y` properties of this object. If set this overrides `Weapon.trackedSprite` or `trackedPointer`. Pass `null` to ignore it.
-* @param {number} [x] - The x coordinate, in world space, to fire the bullet **towards**. If left as `undefined` the bullet direction is based on its angle.
-* @param {number} [y] - The y coordinate, in world space, to fire the bullet **towards**. If left as `undefined` the bullet direction is based on its angle.
-* @return {Phaser.Bullet} The fired bullet if successful, null otherwise.
+* @param {Phaser.Sprite|Phaser.Point|Object|string} [from] - Optionally fires the bullet **from** the `x` and `y` properties of this object. If set this overrides `Weapon.trackedSprite` or `trackedPointer`. Pass `null` to ignore it.
+* @param {number} [x] - The x coordinate, in world space, to fire the bullet **towards**. If left as `undefined`, or `null`, the bullet direction is based on its angle.
+* @param {number} [y] - The y coordinate, in world space, to fire the bullet **towards**. If left as `undefined`, or `null`, the bullet direction is based on its angle.
+* @param {number} [offsetX=0] - If the bullet is fired from a tracked Sprite or Pointer, or the `from` argument is set, this applies a horizontal offset from the launch position.
+* @param {number} [offsetY=0] - If the bullet is fired from a tracked Sprite or Pointer, or the `from` argument is set, this applies a vertical offset from the launch position.
+* @return {Phaser.Bullet} The fired bullet, if a launch was successful, otherwise `null`.
 */
-Phaser.Weapon.prototype.fire = function (from, x, y) {
+Phaser.Weapon.prototype.fire = function (from, x, y, offsetX, offsetY) {
+
+    if (x === undefined) { x = null; }
+    if (y === undefined) { y = null; }
 
     if (this.game.time.now < this._nextFire || (this.fireLimit > 0 && this.shots === this.fireLimit))
     {
-        return false;
+        return null;
     }
 
     var speed = this.bulletSpeed;
@@ -78300,13 +79036,23 @@ Phaser.Weapon.prototype.fire = function (from, x, y) {
         }
     }
 
+    if (offsetX !== undefined)
+    {
+        this.fireFrom.x += offsetX;
+    }
+
+    if (offsetY !== undefined)
+    {
+        this.fireFrom.y += offsetY;
+    }
+
     var fromX = (this.fireFrom.width > 1) ? this.fireFrom.randomX : this.fireFrom.x;
     var fromY = (this.fireFrom.height > 1) ? this.fireFrom.randomY : this.fireFrom.y;
 
     var angle = (this.trackRotation) ? this.trackedSprite.angle : this.fireAngle;
 
     //  The position (in world space) to fire the bullet towards, if set
-    if (x !== undefined && y !== undefined)
+    if (x !== null && y !== null)
     {
         angle = this.game.math.radToDeg(Math.atan2(y - fromY, x - fromX));
     }
@@ -78411,6 +79157,8 @@ Phaser.Weapon.prototype.fire = function (from, x, y) {
         bullet.body.velocity.set(moveX, moveY);
         bullet.body.gravity.set(this.bulletGravity.x, this.bulletGravity.y);
 
+        var next = 0;
+
         if (this.bulletSpeedVariance !== 0)
         {
             var rate = this.fireRate;
@@ -78422,14 +79170,29 @@ Phaser.Weapon.prototype.fire = function (from, x, y) {
                 rate = 0;
             }
 
-            this._nextFire = this.game.time.now + rate;
+            next = this.game.time.now + rate;
         }
         else
         {
-            this._nextFire = this.game.time.now + this.fireRate;
+            next = this.game.time.now + this.fireRate;
         }
 
-        this.shots++;
+        if (this.multiFire)
+        {
+            if (!this._hasFired)
+            {
+                //  We only add 1 to the 'shots' count for multiFire shots
+                this._hasFired = true;
+                this._tempNextFire = next;
+                this.shots++;
+            }
+        }
+        else
+        {
+            this._nextFire = next;
+
+            this.shots++;
+        }
 
         this.onFire.dispatch(bullet, this, speed);
 
@@ -78438,7 +79201,9 @@ Phaser.Weapon.prototype.fire = function (from, x, y) {
             this.onFireLimit.dispatch(this, this.fireLimit);
         }
     }
+
     return bullet;
+
 };
 
 /**
@@ -78495,9 +79260,9 @@ Phaser.Weapon.prototype.fireAtXY = function (x, y) {
 * For example: If you have a Sprite with a texture that is 80x100 in size,
 * and you want the physics body to be 32x32 pixels in the middle of the texture, you would do:
 *
-* `setSize(32, 32, 24, 34)`
+* `setSize(32 / Math.abs(this.scale.x), 32 / Math.abs(this.scale.y), 24, 34)`
 *
-* Where the first two parameters is the new Body size (32x32 pixels).
+* Where the first two parameters are the new Body size (32x32 pixels) relative to the Sprite's scale.
 * 24 is the horizontal offset of the Body from the top-left of the Sprites texture, and 34
 * is the vertical offset.
 *
@@ -78643,8 +79408,10 @@ Object.defineProperty(Phaser.Weapon.prototype, "bulletClass", {
 
         this._bulletClass = classType;
 
-        this.bullets.classType = this._bulletClass;
-
+        //prevent crash if weapon's bullets have not yet been initialized
+        if (this.bullets) {
+            this.bullets.classType = this._bulletClass;
+        }
     }
 
 });

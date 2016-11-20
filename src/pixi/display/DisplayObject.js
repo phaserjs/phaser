@@ -26,7 +26,7 @@ PIXI.DisplayObject = function () {
     * @property {PIXI.Point} position
     * @default
     */
-    this.position = new PIXI.Point(0, 0);
+    this.position = new Phaser.Point(0, 0);
 
     /**
     * The scale of this DisplayObject. A scale of 1:1 represents the DisplayObject
@@ -38,7 +38,7 @@ PIXI.DisplayObject = function () {
     * @property {PIXI.Point} scale
     * @default
     */
-    this.scale = new PIXI.Point(1, 1);
+    this.scale = new Phaser.Point(1, 1);
 
     /**
     * The pivot point of this DisplayObject that it rotates around. The values are expressed
@@ -46,7 +46,7 @@ PIXI.DisplayObject = function () {
     * @property {PIXI.Point} pivot
     * @default
     */
-    this.pivot = new PIXI.Point(0, 0);
+    this.pivot = new Phaser.Point(0, 0);
 
     /**
     * The rotation of this DisplayObject. The value is given, and expressed, in radians, and is based on
@@ -142,10 +142,10 @@ PIXI.DisplayObject = function () {
     * that happens this property will contain values based on the previous frame. Be mindful of this if
     * accessing this property outside of the normal game flow, i.e. from an asynchronous event callback.
     *
-    * @property {PIXI.Matrix} worldTransform
+    * @property {Phaser.Matrix} worldTransform
     * @readOnly
     */
-    this.worldTransform = new PIXI.Matrix();
+    this.worldTransform = new Phaser.Matrix();
 
     /**
     * The coordinates, in pixels, of this DisplayObject within the world.
@@ -160,7 +160,7 @@ PIXI.DisplayObject = function () {
     * @property {PIXI.Point} worldPosition
     * @readOnly
     */
-    this.worldPosition = new PIXI.Point(0, 0);
+    this.worldPosition = new Phaser.Point(0, 0);
 
     /**
     * The global scale of this DisplayObject.
@@ -175,7 +175,7 @@ PIXI.DisplayObject = function () {
     * @property {PIXI.Point} worldScale
     * @readOnly
     */
-    this.worldScale = new PIXI.Point(1, 1);
+    this.worldScale = new Phaser.Point(1, 1);
 
     /**
     * The rotation, in radians, of this DisplayObject.
@@ -217,7 +217,7 @@ PIXI.DisplayObject = function () {
     * @property {PIXI.Rectangle} _bounds - The cached bounds of this object.
     * @private
     */
-    this._bounds = new PIXI.Rectangle(0, 0, 0, 0);
+    this._bounds = new Phaser.Rectangle(0, 0, 0, 0);
 
     /**
     * @property {PIXI.Rectangle} _currentBounds - The most recently calculated bounds of this object.
@@ -331,7 +331,7 @@ PIXI.DisplayObject.prototype = {
         var a, b, c, d, tx, ty;
 
         // so if rotation is between 0 then we can simplify the multiplication process..
-        if (this.rotation % PIXI.PI_2)
+        if (this.rotation % Phaser.Math.PI2)
         {
             // check to see if the rotation is the same as the previous render. This means we only need to use sin and cos when rotation actually changes
             if (this.rotation !== this.rotationCache)
@@ -418,20 +418,20 @@ PIXI.DisplayObject.prototype = {
     *
     * @method PIXI.DisplayObject#generateTexture
     * @param {number} [resolution=1] - The resolution of the texture being generated.
-    * @param {number} [scaleMode=PIXI.scaleModes.DEFAULT] - See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values.
+    * @param {number} [scaleMode=Phaser.scaleModes.DEFAULT] - See {{#crossLink "PIXI/scaleModes:property"}}Phaser.scaleModes{{/crossLink}} for possible values.
     * @param {PIXI.CanvasRenderer|PIXI.WebGLRenderer} renderer - The renderer used to generate the texture.
-    * @return {PIXI.RenderTexture} - A RenderTexture containing an image of this DisplayObject at the time it was invoked.
+    * @return {Phaser.RenderTexture} - A RenderTexture containing an image of this DisplayObject at the time it was invoked.
     */
     generateTexture: function (resolution, scaleMode, renderer) {
 
         var bounds = this.getLocalBounds();
 
-        var renderTexture = new PIXI.RenderTexture(bounds.width | 0, bounds.height | 0, renderer, scaleMode, resolution);
+        var renderTexture = new Phaser.RenderTexture(bounds.width | 0, bounds.height | 0, renderer, scaleMode, resolution);
         
-        PIXI.DisplayObject._tempMatrix.tx = -bounds.x;
-        PIXI.DisplayObject._tempMatrix.ty = -bounds.y;
+        Phaser.tempMatrix.tx = -bounds.x;
+        Phaser.tempMatrix.ty = -bounds.y;
         
-        renderTexture.render(this, PIXI.DisplayObject._tempMatrix);
+        renderTexture.render(this, Phaser.tempMatrix);
 
         return renderTexture;
 
@@ -529,7 +529,10 @@ PIXI.DisplayObject.prototype = {
 
         if (!this._cachedSprite)
         {
-            var renderTexture = new PIXI.RenderTexture(bounds.width, bounds.height);
+            var textureUnit = 0;
+            if (this.texture && this.texture.baseTexture && PIXI._enableMultiTextureToggle)
+                textureUnit = this.texture.baseTexture.textureIndex;
+            var renderTexture = new Phaser.RenderTexture(bounds.width, bounds.height, null, null, null, textureUnit);
             this._cachedSprite = new PIXI.Sprite(renderTexture);
             this._cachedSprite.worldTransform = this.worldTransform;
         }
@@ -544,10 +547,9 @@ PIXI.DisplayObject.prototype = {
         this._filters = null;
         this._cachedSprite.filters = tempFilters;
 
-        PIXI.DisplayObject._tempMatrix.tx = -bounds.x;
-        PIXI.DisplayObject._tempMatrix.ty = -bounds.y;
-
-        this._cachedSprite.texture.render(this, PIXI.DisplayObject._tempMatrix, true);
+        Phaser.tempMatrix.tx = -bounds.x;
+        Phaser.tempMatrix.ty = -bounds.y;
+        this._cachedSprite.texture.render(this, Phaser.tempMatrix, true);
         this._cachedSprite.anchor.x = -(bounds.x / bounds.width);
         this._cachedSprite.anchor.y = -(bounds.y / bounds.height);
 
@@ -716,7 +718,7 @@ Object.defineProperties(PIXI.DisplayObject.prototype, {
     * filter will reset this DisplayObjects blend mode to NORMAL.
     * 
     * @name PIXI.DisplayObject#filters
-    * @property {Array} filters - An Array of PIXI.AbstractFilter objects, or objects that extend them.
+    * @property {Array} filters - An Array of Phaser.Filter objects, or objects that extend them.
     */
     'filters': {
 
@@ -749,11 +751,10 @@ Object.defineProperties(PIXI.DisplayObject.prototype, {
 
             this._filters = value;
 
-            if (this.blendMode && this.blendMode === PIXI.blendModes.MULTIPLY)
+            if (this.blendMode && this.blendMode === Phaser.blendModes.MULTIPLY)
             {
-                this.blendMode = PIXI.blendModes.NORMAL;
+                this.blendMode = Phaser.blendModes.NORMAL;
             }
-
         }
 
     },

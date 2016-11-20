@@ -226,7 +226,7 @@ PIXI.DisplayObjectContainer.prototype.removeChildren = function (beginIndex, end
 
     if (range > 0 && range <= endIndex)
     {
-        var removed = this.children.splice(begin, range);
+        var removed = this.children.splice(beginIndex, range);
 
         for (var i = 0; i < removed.length; i++)
         {
@@ -308,7 +308,7 @@ PIXI.DisplayObjectContainer.prototype.getBounds = function (targetCoordinateSpac
     {
         var matrixCache = targetCoordinateSpace.worldTransform;
 
-        targetCoordinateSpace.worldTransform = PIXI.identityMatrix;
+        targetCoordinateSpace.worldTransform = Phaser.identityMatrix;
 
         for (i = 0; i < targetCoordinateSpace.children.length; i++) 
 		{
@@ -355,7 +355,7 @@ PIXI.DisplayObjectContainer.prototype.getBounds = function (targetCoordinateSpac
 
     if (!childVisible) 
 	{
-        bounds = new PIXI.Rectangle();
+        bounds = new Phaser.Rectangle();
 
         var w0 = bounds.x;
         var w1 = bounds.width + bounds.x;
@@ -451,7 +451,7 @@ PIXI.DisplayObjectContainer.prototype.getLocalBounds = function () {
 *
 * @method contains
 * @param {DisplayObject} child
-* @returns {boolean}
+* @return {boolean}
 */
 PIXI.DisplayObjectContainer.prototype.contains = function (child) {
 

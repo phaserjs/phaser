@@ -55,6 +55,8 @@ Phaser.Circle = function (x, y, diameter) {
 
 };
 
+Phaser.Circle.prototype.constructor = Phaser.Circle;
+
 Phaser.Circle.prototype = {
 
     /**
@@ -252,8 +254,6 @@ Phaser.Circle.prototype = {
     }
 
 };
-
-Phaser.Circle.prototype.constructor = Phaser.Circle;
 
 /**
 * The largest distance between any two points on the circle. The same as the radius * 2.
@@ -572,6 +572,3 @@ Phaser.Circle.intersectsRectangle = function (c, r) {
     return xCornerDistSq + yCornerDistSq <= maxCornerDistSq;
 
 };
-
-//   Because PIXI uses its own Circle, we'll replace it with ours to avoid duplicating code or confusion.
-PIXI.Circle = Phaser.Circle;

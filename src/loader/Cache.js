@@ -31,8 +31,8 @@
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
 */
-Phaser.Cache = function (game) {
-
+Phaser.Cache = function (game)
+{
     /**
     * @property {Phaser.Game} game - Local reference to game.
     */
@@ -64,7 +64,8 @@ Phaser.Cache = function (game) {
         bitmapData: {},
         bitmapFont: {},
         shader: {},
-        renderTexture: {}
+        renderTexture: {},
+        compressedTexture: {}
     };
 
     /**
@@ -114,7 +115,6 @@ Phaser.Cache = function (game) {
 
     this.addDefaultImage();
     this.addMissingImage();
-
 };
 
 /**
@@ -230,6 +230,46 @@ Phaser.Cache.prototype = {
     /**
     * Add a new canvas object in to the cache.
     *
+    * @method Phaser.Cache#addCompressedTextureMetaData
+    * @private
+    * @param {string} key - The key that this asset will be stored in the cache under. This should be unique within this cache.
+    * @param {string} url
+    * @param {string} extension
+    * @param {array} arrayBuffer
+    * @return {object} The compressed texture entry.
+    */
+    addCompressedTextureMetaData: function (key, url, extension, arrayBuffer) {
+
+        if (this.checkImageKey(key))
+        {
+            this.removeImage(key);
+        }
+        
+        var data = (extension in Phaser.LoaderParser) ? Phaser.LoaderParser[extension](arrayBuffer) : arrayBuffer;
+
+        var texture = {
+            key: key,
+            url: url,
+            data: data,
+            base: new PIXI.BaseTexture(data),
+            frame: new Phaser.Frame(0, 0, 0, data.width, data.height, key),
+            frameData: new Phaser.FrameData(),
+            fileFormat: extension
+        };
+
+        texture.frameData.addFrame(new Phaser.Frame(0, 0, 0, data.width, data.height, url));
+
+        this._cache.image[key] = texture;
+
+        this._resolveURL(url, texture);
+
+        return texture;
+
+    },
+
+    /**
+    * Add a new canvas object in to the cache.
+    *
     * @method Phaser.Cache#addCanvas
     * @param {string} key - The key that this asset will be stored in the cache under. This should be unique within this cache.
     * @param {HTMLCanvasElement} canvas - The Canvas DOM element.
@@ -253,8 +293,8 @@ Phaser.Cache.prototype = {
     * @param {object} data - Extra image data.
     * @return {object} The full image object that was added to the cache.
     */
-    addImage: function (key, url, data) {
-
+    addImage: function (key, url, data)
+    {
         if (this.checkImageKey(key))
         {
             this.removeImage(key);
@@ -264,75 +304,50 @@ Phaser.Cache.prototype = {
             key: key,
             url: url,
             data: data,
-            base: new PIXI.BaseTexture(data),
-            frame: new Phaser.Frame(0, 0, 0, data.width, data.height, key),
-            frameData: new Phaser.FrameData()
+            texture: this.game.textures.addImage(key, data)
         };
-
-        img.frameData.addFrame(new Phaser.Frame(0, 0, 0, data.width, data.height, url));
 
         this._cache.image[key] = img;
 
         this._resolveURL(url, img);
 
-        if (key === '__default')
-        {
-            Phaser.Cache.DEFAULT = new PIXI.Texture(img.base);
-        }
-        else if (key === '__missing')
-        {
-            Phaser.Cache.MISSING = new PIXI.Texture(img.base);
-        }
-
         return img;
-
     },
 
     /**
     * Adds a default image to be used in special cases such as WebGL Filters.
-    * It uses the special reserved key of `__default`.
+    * It uses the special reserved key of `__DEFAULT`.
     * This method is called automatically when the Cache is created.
     * This image is skipped when `Cache.destroy` is called due to its internal requirements.
     *
     * @method Phaser.Cache#addDefaultImage
     * @protected
     */
-    addDefaultImage: function () {
-
+    addDefaultImage: function ()
+    {
         var img = new Image();
 
-        img.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgAQMAAABJtOi3AAAAA1BMVEX///+nxBvIAAAAAXRSTlMAQObYZgAAABVJREFUeF7NwIEAAAAAgKD9qdeocAMAoAABm3DkcAAAAABJRU5ErkJggg==";
+        img.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgAQMAAABJtOi3AAAAA1BMVEX///+nxBvIAAAAAXRSTlMAQObYZgAAABVJREFUeF7NwIEAAAAAgKD9qdeocAMAoAABm3DkcAAAAABJRU5ErkJggg==';
 
-        var obj = this.addImage('__default', null, img);
-
-        //  Because we don't want to invalidate the sprite batch for an invisible texture
-        obj.base.skipRender = true;
-
-        //  Make it easily available within the rest of Phaser / Pixi
-        Phaser.Cache.DEFAULT = new PIXI.Texture(obj.base);
-
+        this.game.textures.addImage('__DEFAULT', img);
     },
 
     /**
     * Adds an image to be used when a key is wrong / missing.
-    * It uses the special reserved key of `__missing`.
+    * It uses the special reserved key of `__MISSING`.
     * This method is called automatically when the Cache is created.
     * This image is skipped when `Cache.destroy` is called due to its internal requirements.
     *
     * @method Phaser.Cache#addMissingImage
     * @protected
     */
-    addMissingImage: function () {
-
+    addMissingImage: function ()
+    {
         var img = new Image();
 
-        img.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAJ9JREFUeNq01ssOwyAMRFG46v//Mt1ESmgh+DFmE2GPOBARKb2NVjo+17PXLD8a1+pl5+A+wSgFygymWYHBb0FtsKhJDdZlncG2IzJ4ayoMDv20wTmSMzClEgbWYNTAkQ0Z+OJ+A/eWnAaR9+oxCF4Os0H8htsMUp+pwcgBBiMNnAwF8GqIgL2hAzaGFFgZauDPKABmowZ4GL369/0rwACp2yA/ttmvsQAAAABJRU5ErkJggg==";
+        img.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAJ9JREFUeNq01ssOwyAMRFG46v//Mt1ESmgh+DFmE2GPOBARKb2NVjo+17PXLD8a1+pl5+A+wSgFygymWYHBb0FtsKhJDdZlncG2IzJ4ayoMDv20wTmSMzClEgbWYNTAkQ0Z+OJ+A/eWnAaR9+oxCF4Os0H8htsMUp+pwcgBBiMNnAwF8GqIgL2hAzaGFFgZauDPKABmowZ4GL369/0rwACp2yA/ttmvsQAAAABJRU5ErkJggg==';
 
-        var obj = this.addImage('__missing', null, img);
-
-        //  Make it easily available within the rest of Phaser / Pixi
-        Phaser.Cache.MISSING = new PIXI.Texture(obj.base);
-
+        this.game.textures.addImage('__MISSING', img);
     },
 
     /**
@@ -466,8 +481,8 @@ Phaser.Cache.prototype = {
     * @param {string} key - The key that this asset will be stored in the cache under. This should be unique within this cache.
     * @param {string} url - The URL the asset was loaded from. If the asset was not loaded externally set to `null`.
     * @param {object} data - Extra font data.
-    * @param {object} atlasData - Texture atlas frames data.
-    * @param {string} [atlasType='xml'] - The format of the texture atlas ( 'json' or 'xml' ).
+    * @param {object} atlasData - The Bitmap Font data.
+    * @param {string} [atlasType='xml'] - The format of the Bitmap Font data file: `json` or `xml`.
     * @param {number} [xSpacing=0] - If you'd like to add additional horizontal spacing between the characters then set the pixel value here.
     * @param {number} [ySpacing=0] - If you'd like to add additional vertical spacing between the lines then set the pixel value here.
     */
@@ -495,6 +510,61 @@ Phaser.Cache.prototype = {
         this._cache.bitmapFont[key] = obj;
 
         this._resolveURL(url, obj);
+
+    },
+
+    /**
+    * Add a new Bitmap Font to the Cache, where the font texture is part of a Texture Atlas.
+    * 
+    * The atlas must already exist in the cache, and be available based on the given `atlasKey`.
+    * 
+    * The `atlasFrame` specifies the name of the frame within the atlas that the Bitmap Font is
+    * stored in.
+    *
+    * The `dataKey` is the key of the XML or JSON Bitmap Font Data, which must already be in
+    * the Cache.
+    *
+    * @method Phaser.Cache#addBitmapFontFromAtlas
+    * @param {string} key - The key that this asset will be stored in the cache under. This should be unique within this cache.
+    * @param {string} atlasKey - The key of the Texture Atlas in the Cache.
+    * @param {string} atlasFrame - The frame of the Texture Atlas that the Bitmap Font is in.
+    * @param {string} dataKey - The key of the Bitmap Font data in the Cache
+    * @param {string} [dataType='xml'] - The format of the Bitmap Font data: `json` or `xml`.
+    * @param {number} [xSpacing=0] - If you'd like to add additional horizontal spacing between the characters then set the pixel value here.
+    * @param {number} [ySpacing=0] - If you'd like to add additional vertical spacing between the lines then set the pixel value here.
+    */
+    addBitmapFontFromAtlas: function (key, atlasKey, atlasFrame, dataKey, dataType, xSpacing, ySpacing) {
+
+        var frame = this.getFrameByName(atlasKey, atlasFrame);
+
+        if (!frame)
+        {
+            return;
+        }
+
+        var obj = {
+            font: null,
+            base: this.getBaseTexture(atlasKey),
+            frame: frame
+        };
+
+        if (xSpacing === undefined) { xSpacing = 0; }
+        if (ySpacing === undefined) { ySpacing = 0; }
+
+        var fontData;
+
+        if (dataType === 'json')
+        {
+            fontData = this.getJSON(dataKey);
+            obj.font = Phaser.LoaderParser.jsonBitmapFont(fontData, obj.base, xSpacing, ySpacing, frame);
+        }
+        else
+        {
+            fontData = this.getXML(dataKey);
+            obj.font = Phaser.LoaderParser.xmlBitmapFont(fontData, obj.base, xSpacing, ySpacing, frame);
+        }
+
+        this._cache.bitmapFont[key] = obj;
 
     },
 
@@ -583,34 +653,31 @@ Phaser.Cache.prototype = {
     * @param {string} key - The key that this asset will be stored in the cache under. This should be unique within this cache.
     * @param {string} url - The URL the asset was loaded from. If the asset was not loaded externally set to `null`.
     * @param {object} data - Extra sprite sheet data.
-    * @param {number} frameWidth - Width of the sprite sheet.
-    * @param {number} frameHeight - Height of the sprite sheet.
-    * @param {number} [frameMax=-1] - How many frames stored in the sprite sheet. If -1 then it divides the whole sheet evenly.
+    * @param {number} frameWidth - The fixed width of each frame.
+    * @param {number} frameHeight - The fixed height of each frame.
+    * @param {number} [startFrame=0] - Skip a number of frames. Useful when there are multiple sprite sheets in one Texture.
+    * @param {number} [endFrame=-1] - The total number of frames to extract from the Sprite Sheet. The default value of -1 means "extract all frames".
     * @param {number} [margin=0] - If the frames have been drawn with a margin, specify the amount here.
     * @param {number} [spacing=0] - If the frames have been drawn with spacing between them, specify the amount here.
     */
-    addSpriteSheet: function (key, url, data, frameWidth, frameHeight, frameMax, margin, spacing) {
-
-        if (frameMax === undefined) { frameMax = -1; }
-        if (margin === undefined) { margin = 0; }
-        if (spacing === undefined) { spacing = 0; }
-
+    addSpriteSheet: function (key, url, data, frameWidth, frameHeight, startFrame, endFrame, margin, spacing)
+    {
         var obj = {
             key: key,
             url: url,
             data: data,
             frameWidth: frameWidth,
             frameHeight: frameHeight,
+            startFrame: startFrame,
+            endFrame: endFrame,
             margin: margin,
             spacing: spacing,
-            base: new PIXI.BaseTexture(data),
-            frameData: Phaser.AnimationParser.spriteSheet(this.game, data, frameWidth, frameHeight, frameMax, margin, spacing)
+            texture: this.game.textures.addSpriteSheet(key, data, frameWidth, frameHeight, startFrame, endFrame, margin, spacing)
         };
 
         this._cache.image[key] = obj;
 
         this._resolveURL(url, obj);
-
     },
 
     /**
@@ -629,9 +696,31 @@ Phaser.Cache.prototype = {
             key: key,
             url: url,
             data: data,
-            base: new PIXI.BaseTexture(data)
+            texture: null
         };
 
+        //  If they (or Phaser) set the JSON Format to ARRAY, but it's an Object, then switch it
+        if (!Array.isArray(atlasData.frames) && format === Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY)
+        {
+            format = Phaser.Loader.TEXTURE_ATLAS_JSON_HASH;
+        }
+
+        var manager = this.game.textures;
+
+        switch (format)
+        {
+            case Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY:
+                obj.texture = manager.addAtlasJSONArray(key, data, atlasData);
+                break;
+
+            case Phaser.Loader.TEXTURE_ATLAS_JSON_HASH:
+                obj.texture = manager.addAtlasJSONHash(key, data, atlasData);
+                break;
+        }
+
+        //  TODO: XML + Pyxel
+
+        /*
         if (format === Phaser.Loader.TEXTURE_ATLAS_XML_STARLING)
         {
             obj.frameData = Phaser.AnimationParser.XMLData(this.game, atlasData, key);
@@ -652,6 +741,7 @@ Phaser.Cache.prototype = {
                 obj.frameData = Phaser.AnimationParser.JSONDataHash(this.game, atlasData, key);
             }
         }
+        */
 
         this._cache.image[key] = obj;
 
@@ -1100,7 +1190,7 @@ Phaser.Cache.prototype = {
 
         if (full === undefined) { full = false; }
 
-        var img = this.getItem(key, Phaser.Cache.IMAGE, 'getImage');
+        var  img = this.getItem(key, Phaser.Cache.IMAGE, 'getImage');
 
         if (img === null)
         {
@@ -1905,7 +1995,7 @@ Phaser.Cache.prototype = {
 
         for (var key in this._cache.image)
         {
-            this._cache.image[key].base._glTextures = [];
+            this._cache.image[key].base._glTextures = null;
         }
 
     },

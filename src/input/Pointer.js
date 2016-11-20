@@ -771,7 +771,8 @@ Phaser.Pointer.prototype = {
             input.circle.y = input.y;
         }
 
-        this.withinGame = this.game.scale.bounds.contains(this.pageX, this.pageY);
+        // this.withinGame = this.game.scale.bounds.contains(this.pageX, this.pageY);
+        this.withinGame = true;
 
         //  If the game is paused we don't process any target objects or callbacks
         if (this.game.paused)
@@ -1014,7 +1015,8 @@ Phaser.Pointer.prototype = {
             this.active = false;
         }
 
-        this.withinGame = this.game.scale.bounds.contains(event.pageX, event.pageY);
+        // this.withinGame = this.game.scale.bounds.contains(event.pageX, event.pageY);
+        this.withinGame = true;
         this.pointerId = null;
         this.identifier = null;
         

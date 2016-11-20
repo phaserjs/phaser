@@ -44,70 +44,25 @@
         echo "    <script src=\"$box2dpath/box2d-html5.js\"></script>";
     }
 
-    //  PIXI Intro
     echo <<<EOL
-
-    <script src="$path/src/pixi/Pixi.js"></script>
-    <script src="$path/src/pixi/display/DisplayObject.js"></script>
-    <script src="$path/src/pixi/display/DisplayObjectContainer.js"></script>
-    <script src="$path/src/pixi/display/Sprite.js"></script>
-    <script src="$path/src/pixi/display/SpriteBatch.js"></script>
-
-    <script src="$path/src/pixi/utils/Utils.js"></script>
-    <script src="$path/src/pixi/utils/EarCut.js"></script>
-    <script src="$path/src/pixi/utils/CanvasPool.js"></script>
-
-    <script src="$path/src/pixi/renderers/webgl/utils/WebGLShaderUtils.js"></script>
-    <script src="$path/src/pixi/renderers/webgl/shaders/PixiShader.js"></script>
-    <script src="$path/src/pixi/renderers/webgl/shaders/PixiFastShader.js"></script>
-    <script src="$path/src/pixi/renderers/webgl/shaders/StripShader.js"></script>
-    <script src="$path/src/pixi/renderers/webgl/shaders/PrimitiveShader.js"></script>
-    <script src="$path/src/pixi/renderers/webgl/shaders/ComplexPrimitiveShader.js"></script>
-    <script src="$path/src/pixi/renderers/webgl/utils/WebGLGraphics.js"></script>
-    <script src="$path/src/pixi/renderers/webgl/WebGLRenderer.js"></script>
-    <script src="$path/src/pixi/renderers/webgl/utils/WebGLBlendModeManager.js"></script>
-    <script src="$path/src/pixi/renderers/webgl/utils/WebGLMaskManager.js"></script>
-    <script src="$path/src/pixi/renderers/webgl/utils/WebGLStencilManager.js"></script>
-    <script src="$path/src/pixi/renderers/webgl/utils/WebGLShaderManager.js"></script>
-    <script src="$path/src/pixi/renderers/webgl/utils/WebGLSpriteBatch.js"></script>
-    <script src="$path/src/pixi/renderers/webgl/utils/WebGLFastSpriteBatch.js"></script>
-    <script src="$path/src/pixi/renderers/webgl/utils/WebGLFilterManager.js"></script>
-    <script src="$path/src/pixi/renderers/webgl/utils/FilterTexture.js"></script>
-
-    <script src="$path/src/pixi/renderers/canvas/utils/CanvasBuffer.js"></script>
-    <script src="$path/src/pixi/renderers/canvas/utils/CanvasMaskManager.js"></script>
-    <script src="$path/src/pixi/renderers/canvas/utils/CanvasTinter.js"></script>
-    <script src="$path/src/pixi/renderers/canvas/CanvasRenderer.js"></script>
-    <script src="$path/src/pixi/renderers/canvas/CanvasGraphics.js"></script>
-
-    <script src="$path/src/pixi/primitives/Graphics.js"></script>
-    <script src="$path/src/pixi/primitives/GraphicsData.js"></script>
 
 EOL;
 
-    if ($modules['rope'])
-    {
-        echo "    <script src=\"$path/src/pixi/extras/Strip.js\"></script>";
-        echo "    <script src=\"$path/src/pixi/extras/Rope.js\"></script>";
-    }
-
-    if ($modules['tilesprite'])
-    {
-        echo "    <script src=\"$path/src/pixi/extras/TilingSprite.js\"></script>";
-    }
-
-    //  PIXI Outro + Phaser Global
+    //  Phaser Global
     echo <<<EOL
-
-    <script src="$path/src/pixi/textures/BaseTexture.js"></script>
-    <script src="$path/src/pixi/textures/Texture.js"></script>
-    <script src="$path/src/pixi/textures/RenderTexture.js"></script>
-
-    <script src="$path/src/pixi/filters/AbstractFilter.js"></script>
 
     <script src="$path/src/Phaser.js"></script>
     <script src="$path/src/polyfills.js"></script>
+
+    <script src="$path/src/pixi/display/DisplayObject.js"></script>
+    <script src="$path/src/pixi/display/DisplayObjectContainer.js"></script>
+    <script src="$path/src/pixi/display/Sprite.js"></script>
+    <script src="$path/src/pixi/renderers/canvas/utils/CanvasBuffer.js"></script>
+    <script src="$path/src/pixi/textures/BaseTexture.js"></script>
+    <script src="$path/src/pixi/textures/Texture.js"></script>
+
     <script src="$path/src/utils/Utils.js"></script>
+    <script src="$path/src/utils/CanvasPool.js"></script>
 
     <script src="$path/src/geom/Circle.js"></script>
     <script src="$path/src/geom/Ellipse.js"></script>
@@ -119,16 +74,18 @@ EOL;
     <script src="$path/src/geom/Rectangle.js"></script>
     <script src="$path/src/geom/RoundedRectangle.js"></script>
 
+    <script src="$path/src/states/State.js"></script>
+    <script src="$path/src/states/StateManager.js"></script>
+    <script src="$path/src/states/StateSettings.js"></script>
+    <script src="$path/src/states/StateSystems.js"></script>
+
     <script src="$path/src/core/Camera.js"></script>
     <script src="$path/src/core/Create.js"></script>
-    <script src="$path/src/core/State.js"></script>
-    <script src="$path/src/core/StateManager.js"></script>
     <script src="$path/src/core/Signal.js"></script>
     <script src="$path/src/core/SignalBinding.js"></script>
     <script src="$path/src/core/Filter.js"></script>
     <script src="$path/src/core/Plugin.js"></script>
     <script src="$path/src/core/PluginManager.js"></script>
-    <script src="$path/src/core/Stage.js"></script>
     <script src="$path/src/core/Group.js"></script>
     <script src="$path/src/core/World.js"></script>
     <script src="$path/src/core/FlexGrid.js"></script>
@@ -144,6 +101,15 @@ EOL;
     <script src="$path/src/input/Touch.js"></script>
     <script src="$path/src/input/InputHandler.js"></script>
 
+    <script src="$path/src/textures/TextureManager.js"></script>
+    <script src="$path/src/textures/Texture.js"></script>
+    <script src="$path/src/textures/TextureSource.js"></script>
+    <script src="$path/src/textures/Frame.js"></script>
+    <script src="$path/src/textures/parsers/Canvas.js"></script>
+    <script src="$path/src/textures/parsers/Image.js"></script>
+    <script src="$path/src/textures/parsers/JSONArray.js"></script>
+    <script src="$path/src/textures/parsers/JSONHash.js"></script>
+    <script src="$path/src/textures/parsers/SpriteSheet.js"></script>
 
 EOL;
 
@@ -168,6 +134,28 @@ EOL;
     }
 
     echo <<<EOL
+
+    <script src="$path/src/renderer/canvas/CanvasRenderer.js"></script>
+
+    <script src="$path/src/renderer/webgl/WebGLRenderer.js"></script>
+    <script src="$path/src/renderer/webgl/BatchManager.js"></script>
+    <script src="$path/src/renderer/webgl/FilterManager.js"></script>
+    <script src="$path/src/renderer/webgl/FilterTexture.js"></script>
+    <script src="$path/src/renderer/webgl/ShaderManager.js"></script>
+    <script src="$path/src/renderer/webgl/StencilManager.js"></script>
+    <script src="$path/src/renderer/webgl/QuadFBO.js"></script>
+
+    <script src="$path/src/renderer/webgl/batches/BaseBatch.js"></script>
+    <script src="$path/src/renderer/webgl/batches/FXBatch.js"></script>
+    <script src="$path/src/renderer/webgl/batches/MultiTextureBatch.js"></script>
+    <script src="$path/src/renderer/webgl/batches/PixelBatch.js"></script>
+    <script src="$path/src/renderer/webgl/batches/SingleTextureBatch.js"></script>
+
+    <script src="$path/src/renderer/webgl/shaders/ComplexPrimitiveGraphics.js"></script>
+    <script src="$path/src/renderer/webgl/shaders/PrimitiveGraphics.js"></script>
+    <script src="$path/src/renderer/webgl/shaders/SpriteBatch.js"></script>
+    <script src="$path/src/renderer/webgl/shaders/Strip.js"></script>
+
     <script src="$path/src/gameobjects/components/Component.js"></script>
     <script src="$path/src/gameobjects/components/Angle.js"></script>
     <script src="$path/src/gameobjects/components/Animation.js"></script>
@@ -192,13 +180,52 @@ EOL;
     <script src="$path/src/gameobjects/components/ScaleMinMax.js"></script>
     <script src="$path/src/gameobjects/components/Smoothed.js"></script>
 
-    <script src="$path/src/gameobjects/GameObjectFactory.js"></script>
+    <script src="$path/src/components/BaseTransform.js"></script>
+    <script src="$path/src/components/Children.js"></script>
+    <script src="$path/src/components/Color.js"></script>
+    <script src="$path/src/components/Data.js"></script>
+    <script src="$path/src/components/Transform.js"></script>
+    <script src="$path/src/components/UpdateManager.js"></script>
+
+    <script src="$path/src/gameobjects/GameObject.js"></script>
+    <script src="$path/src/gameobjects/Factory.js"></script>
     <script src="$path/src/gameobjects/GameObjectCreator.js"></script>
-    <script src="$path/src/gameobjects/Sprite.js"></script>
-    <script src="$path/src/gameobjects/Image.js"></script>
-    <script src="$path/src/gameobjects/Button.js"></script>
-    <script src="$path/src/gameobjects/SpriteBatch.js"></script>
-    <script src="$path/src/gameobjects/Particle.js"></script>
+
+    <script src="$path/src/gameobjects/container/Container.js"></script>
+    <script src="$path/src/gameobjects/container/ContainerFactory.js"></script>
+    <script src="$path/src/gameobjects/container/ContainerCanvasRenderer.js"></script>
+    <script src="$path/src/gameobjects/container/ContainerWebGLRenderer.js"></script>
+
+    <script src="$path/src/gameobjects/sprite/Sprite.js"></script>
+    <script src="$path/src/gameobjects/sprite/SpriteFactory.js"></script>
+    <script src="$path/src/gameobjects/sprite/SpriteCanvasRenderer.js"></script>
+    <script src="$path/src/gameobjects/sprite/SpriteWebGLRenderer.js"></script>
+
+    <script src="$path/src/gameobjects/image/Image.js"></script>
+    <script src="$path/src/gameobjects/image/ImageFactory.js"></script>
+    <script src="$path/src/gameobjects/image/ImageCanvasRenderer.js"></script>
+    <script src="$path/src/gameobjects/image/ImageWebGLRenderer.js"></script>
+
+    <script src="$path/src/gameobjects/button/Button.js"></script>
+    <script src="$path/src/gameobjects/button/ButtonFactory.js"></script>
+
+    <script src="$path/src/gameobjects/spritebatch/SpriteBatch.js"></script>
+    <script src="$path/src/gameobjects/spritebatch/SpriteBatchFactory.js"></script>
+    <script src="$path/src/gameobjects/spritebatch/SpriteBatchCanvasRenderer.js"></script>
+    <script src="$path/src/gameobjects/spritebatch/SpriteBatchWebGLRenderer.js"></script>
+
+    <script src="$path/src/gameobjects/particle/Particle.js"></script>
+
+    <script src="$path/src/gameobjects/pixelfield/PixelField.js"></script>
+    <script src="$path/src/gameobjects/pixelfield/PixelFieldFactory.js"></script>
+    <script src="$path/src/gameobjects/pixelfield/PixelFieldWebGLRenderer.js"></script>
+
+    <script src="$path/src/gameobjects/stage/Stage.js"></script>
+    <script src="$path/src/gameobjects/stage/StageCanvasRenderer.js"></script>
+    <script src="$path/src/gameobjects/stage/StageWebGLRenderer.js"></script>
+
+
+
 
     <script src="$path/src/plugins/weapon/WeaponPlugin.js"></script>
     <script src="$path/src/plugins/weapon/Bullet.js"></script>
@@ -209,12 +236,15 @@ EOL;
     <script src="$path/src/plugins/path/PathPoint.js"></script>
     <script src="$path/src/plugins/path/EventTarget.js"></script>
 
+
+
 EOL;
 
     if ($modules['rope'])
     {
         echo <<<EOL
-    <script src="$path/src/gameobjects/Rope.js"></script>
+    <script src="$path/src/gameobjects/rope/Rope.js"></script>
+    <script src="$path/src/gameobjects/rope/RopeFactory.js"></script>
 
 
 EOL;
@@ -223,7 +253,10 @@ EOL;
     if ($modules['tilesprite'])
     {
         echo <<<EOL
-    <script src="$path/src/gameobjects/TileSprite.js"></script>
+    <script src="$path/src/gameobjects/tilesprite/TileSprite.js"></script>
+    <script src="$path/src/gameobjects/tilesprite/TileSpriteFactory.js"></script>
+    <script src="$path/src/gameobjects/tilesprite/TileSpriteCanvasRenderer.js"></script>
+    <script src="$path/src/gameobjects/tilesprite/TileSpriteWebGLRenderer.js"></script>
 
 
 EOL;
@@ -232,7 +265,8 @@ EOL;
     if ($modules['creature'])
     {
         echo <<<EOL
-    <script src="$path/src/gameobjects/Creature.js"></script>
+    <script src="$path/src/gameobjects/creature/Creature.js"></script>
+    <script src="$path/src/gameobjects/creature/CreatureFactory.js"></script>
 
 
 EOL;
@@ -241,7 +275,7 @@ EOL;
     if ($modules['bitmapdata'])
     {
         echo <<<EOL
-    <script src="$path/src/gameobjects/BitmapData.js"></script>
+    <script src="$path/src/textures/BitmapData.js"></script>
 
 
 EOL;
@@ -250,7 +284,12 @@ EOL;
     if ($modules['graphics'])
     {
         echo <<<EOL
-    <script src="$path/src/gameobjects/Graphics.js"></script>
+    <script src="$path/src/gameobjects/graphics/GraphicsData.js"></script>
+    <script src="$path/src/gameobjects/graphics/Graphics.js"></script>
+    <script src="$path/src/gameobjects/graphics/GraphicsFactory.js"></script>
+    <script src="$path/src/gameobjects/graphics/GraphicsCanvasRenderer.js"></script>
+    <script src="$path/src/gameobjects/graphics/GraphicsWebGLRenderer.js"></script>
+    <script src="$path/src/gameobjects/graphics/GraphicsWebGLData.js"></script>
 
 
 EOL;
@@ -259,7 +298,7 @@ EOL;
     if ($modules['rendertexture'])
     {
         echo <<<EOL
-    <script src="$path/src/gameobjects/RenderTexture.js"></script>
+    <script src="$path/src/textures/RenderTexture.js"></script>
 
 
 EOL;
@@ -268,7 +307,10 @@ EOL;
     if ($modules['text'])
     {
         echo <<<EOL
-    <script src="$path/src/gameobjects/Text.js"></script>
+    <script src="$path/src/gameobjects/text/Text.js"></script>
+    <script src="$path/src/gameobjects/text/TextFactory.js"></script>
+    <script src="$path/src/gameobjects/text/TextCanvasRenderer.js"></script>
+    <script src="$path/src/gameobjects/text/TextWebGLRenderer.js"></script>
 
 
 EOL;
@@ -277,7 +319,8 @@ EOL;
     if ($modules['bitmaptext'])
     {
         echo <<<EOL
-    <script src="$path/src/gameobjects/BitmapText.js"></script>
+    <script src="$path/src/gameobjects/bitmaptext/BitmapText.js"></script>
+    <script src="$path/src/gameobjects/bitmaptext/BitmapTextFactory.js"></script>
 
 
 EOL;
@@ -286,7 +329,8 @@ EOL;
     if ($modules['retrofont'] && $modules['rendertexture'])
     {
         echo <<<EOL
-    <script src="$path/src/gameobjects/RetroFont.js"></script>
+    <script src="$path/src/gameobjects/retrofont/RetroFont.js"></script>
+    <script src="$path/src/gameobjects/retrofont/RetroFontFactory.js"></script>
 
 
 EOL;
@@ -295,7 +339,8 @@ EOL;
     if ($modules['video'])
     {
         echo <<<EOL
-    <script src="$path/src/gameobjects/Video.js"></script>
+    <script src="$path/src/gameobjects/video/Video.js"></script>
+    <script src="$path/src/gameobjects/video/VideoFactory.js"></script>
 
 
 EOL;
@@ -488,12 +533,6 @@ EOL;
 
 EOL;
     }
-
-    echo <<<EOL
-    <script src="$path/src/PixiDefaults.js"></script>
-
-
-EOL;
 
     if (isset($custom))
     {

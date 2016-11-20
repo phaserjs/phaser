@@ -57,6 +57,8 @@ Phaser.RoundedRectangle = function(x, y, width, height, radius)
     this.type = Phaser.ROUNDEDRECTANGLE;
 };
 
+Phaser.RoundedRectangle.prototype.constructor = Phaser.RoundedRectangle;
+
 Phaser.RoundedRectangle.prototype = {
 
     /**
@@ -104,8 +106,3 @@ Phaser.RoundedRectangle.prototype = {
     }
 
 };
-
-Phaser.RoundedRectangle.prototype.constructor = Phaser.RoundedRectangle;
-
-//  Because PIXI uses its own type, we'll replace it with ours to avoid duplicating code or confusion.
-PIXI.RoundedRectangle = Phaser.RoundedRectangle;

@@ -689,7 +689,7 @@ module.exports = {
 },{"./Point":2,"./Polygon":3}],6:[function(_dereq_,module,exports){
 module.exports={
   "name": "p2",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "A JavaScript 2D physics engine.",
   "author": "Stefan Hedman <schteppe@gmail.com> (http://steffe.se)",
   "keywords": [
@@ -725,7 +725,7 @@ module.exports={
     "grunt-contrib-concat": "^0.4.0"
   },
   "dependencies": {
-    "poly-decomp": "0.1.0"
+    "poly-decomp": "0.1.1"
   }
 }
 
@@ -5760,6 +5760,23 @@ ContactEquation.prototype.computeB = function(a,b,h){
     return B;
 };
 
+var vi = vec2.create();
+var vj = vec2.create();
+var relVel = vec2.create();
+
+/**
+ * Get the relative velocity along the normal vector.
+ * @return {number}
+ */
+ContactEquation.prototype.getVelocityAlongNormal = function(){
+
+    this.bodyA.getVelocityAtPoint(vi, this.contactPointA);
+    this.bodyB.getVelocityAtPoint(vj, this.contactPointB);
+
+    vec2.subtract(relVel, vi, vj);
+
+    return vec2.dot(this.normalA, relVel);
+};
 },{"../math/vec2":30,"./Equation":22}],22:[function(_dereq_,module,exports){
 module.exports = Equation;
 
@@ -6433,52 +6450,55 @@ function ContactMaterial(materialA, materialB, options){
     this.materialB = materialB;
 
     /**
-     * Friction to use in the contact of these two materials
+     * Friction coefficient to use in the contact of these two materials. Friction = 0 will make the involved objects super slippery, and friction = 1 will make it much less slippery. A friction coefficient larger than 1 will allow for very large friction forces, which can be convenient for preventing car tires not slip on the ground.
      * @property friction
      * @type {Number}
+     * @default 0.3
      */
-    this.friction    =  typeof(options.friction)    !== "undefined" ?   Number(options.friction)    : 0.3;
+    this.friction = typeof(options.friction) !== "undefined" ? Number(options.friction) : 0.3;
 
     /**
-     * Restitution to use in the contact of these two materials
+     * Restitution, or "bounciness" to use in the contact of these two materials. A restitution of 0 will make no bounce, while restitution=1 will approximately bounce back with the same velocity the object came with.
      * @property restitution
      * @type {Number}
+     * @default 0
      */
-    this.restitution =  typeof(options.restitution) !== "undefined" ?   Number(options.restitution) : 0.0;
+    this.restitution = typeof(options.restitution) !== "undefined" ? Number(options.restitution) : 0;
 
     /**
-     * Stiffness of the resulting ContactEquation that this ContactMaterial generate
+     * Hardness of the contact. Less stiffness will make the objects penetrate more, and will make the contact act more like a spring than a contact force. Default value is {{#crossLink "Equation/DEFAULT_STIFFNESS:property"}}Equation.DEFAULT_STIFFNESS{{/crossLink}}.
      * @property stiffness
      * @type {Number}
      */
-    this.stiffness =            typeof(options.stiffness)           !== "undefined" ?   Number(options.stiffness)   : Equation.DEFAULT_STIFFNESS;
+    this.stiffness = typeof(options.stiffness) !== "undefined" ? Number(options.stiffness) : Equation.DEFAULT_STIFFNESS;
 
     /**
-     * Relaxation of the resulting ContactEquation that this ContactMaterial generate
+     * Relaxation of the resulting ContactEquation that this ContactMaterial generate. Default value is {{#crossLink "Equation/DEFAULT_RELAXATION:property"}}Equation.DEFAULT_RELAXATION{{/crossLink}}.
      * @property relaxation
      * @type {Number}
      */
-    this.relaxation =           typeof(options.relaxation)          !== "undefined" ?   Number(options.relaxation)  : Equation.DEFAULT_RELAXATION;
+    this.relaxation = typeof(options.relaxation) !== "undefined" ? Number(options.relaxation) : Equation.DEFAULT_RELAXATION;
 
     /**
-     * Stiffness of the resulting FrictionEquation that this ContactMaterial generate
+     * Stiffness of the resulting friction force. For most cases, the value of this property should be a large number. I cannot think of any case where you would want less frictionStiffness. Default value is {{#crossLink "Equation/DEFAULT_STIFFNESS:property"}}Equation.DEFAULT_STIFFNESS{{/crossLink}}.
      * @property frictionStiffness
      * @type {Number}
      */
-    this.frictionStiffness =    typeof(options.frictionStiffness)   !== "undefined" ?   Number(options.frictionStiffness)   : Equation.DEFAULT_STIFFNESS;
+    this.frictionStiffness = typeof(options.frictionStiffness) !== "undefined" ? Number(options.frictionStiffness) : Equation.DEFAULT_STIFFNESS;
 
     /**
-     * Relaxation of the resulting FrictionEquation that this ContactMaterial generate
+     * Relaxation of the resulting friction force. The default value should be good for most simulations. Default value is {{#crossLink "Equation/DEFAULT_RELAXATION:property"}}Equation.DEFAULT_RELAXATION{{/crossLink}}.
      * @property frictionRelaxation
      * @type {Number}
      */
-    this.frictionRelaxation =   typeof(options.frictionRelaxation)  !== "undefined" ?   Number(options.frictionRelaxation)  : Equation.DEFAULT_RELAXATION;
+    this.frictionRelaxation = typeof(options.frictionRelaxation) !== "undefined" ? Number(options.frictionRelaxation)  : Equation.DEFAULT_RELAXATION;
 
     /**
      * Will add surface velocity to this material. If bodyA rests on top if bodyB, and the surface velocity is positive, bodyA will slide to the right.
      * @property {Number} surfaceVelocity
+     * @default 0
      */
-    this.surfaceVelocity = typeof(options.surfaceVelocity)    !== "undefined" ?   Number(options.surfaceVelocity)    : 0;
+    this.surfaceVelocity = typeof(options.surfaceVelocity) !== "undefined" ? Number(options.surfaceVelocity) : 0;
 
     /**
      * Offset to be set on ContactEquations. A positive value will make the bodies penetrate more into each other. Can be useful in scenes where contacts need to be more persistent, for example when stacking. Aka "cure for nervous contacts".
@@ -8224,7 +8244,7 @@ Body.prototype.applyForce = function(force, relativePoint){
  * Apply force to a body-local point.
  * @method applyForceLocal
  * @param  {Array} localForce The force vector to add, oriented in local body space.
- * @param  {Array} localPoint A point relative to the body in world space. If not given, it is set to zero and all of the impulse will be excerted on the center of mass.
+ * @param  {Array} [localPoint] A point relative to the body in world space. If not given, it is set to zero and all of the impulse will be excerted on the center of mass.
  */
 var Body_applyForce_forceWorld = vec2.create();
 var Body_applyForce_pointWorld = vec2.create();
@@ -10619,42 +10639,42 @@ Plane.prototype.updateBoundingRadius = function(){
 Plane.prototype.computeAABB = function(out, position, angle){
     var a = angle % (2 * Math.PI);
     var set = vec2.set;
-    var max = Number.MAX_VALUE;
+    var max = 1e7;
     var lowerBound = out.lowerBound;
     var upperBound = out.upperBound;
 
+    // Set max bounds
+    set(lowerBound, -max, -max);
+    set(upperBound,  max,  max);
+
     if(a === 0){
         // y goes from -inf to 0
-        set(lowerBound, -max, -max);
-        set(upperBound,  max,  0);
+        upperBound[1] = 0;
+        // set(lowerBound, -max, -max);
+        // set(upperBound,  max,  0);
 
     } else if(a === Math.PI / 2){
 
         // x goes from 0 to inf
-        set(lowerBound, 0, -max);
-        set(upperBound,      max,  max);
+        lowerBound[0] = 0;
+        // set(lowerBound, 0, -max);
+        // set(upperBound,      max,  max);
 
     } else if(a === Math.PI){
 
         // y goes from 0 to inf
-        set(lowerBound, -max, 0);
-        set(upperBound,  max, max);
+        lowerBound[1] = 0;
+        // set(lowerBound, -max, 0);
+        // set(upperBound,  max, max);
 
     } else if(a === 3*Math.PI/2){
 
         // x goes from -inf to 0
-        set(lowerBound, -max,     -max);
-        set(upperBound,  0,  max);
+        upperBound[0] = 0;
+        // set(lowerBound, -max,     -max);
+        // set(upperBound,  0,  max);
 
-    } else {
-
-        // Set max bounds
-        set(lowerBound, -max, -max);
-        set(upperBound,  max,  max);
     }
-
-    vec2.add(lowerBound, lowerBound, position);
-    vec2.add(upperBound, upperBound, position);
 };
 
 Plane.prototype.updateArea = function(){
@@ -11000,16 +11020,20 @@ function GSSolver(options){
      * Set to true to set all right hand side terms to zero when solving. Can be handy for a few applications.
      * @property useZeroRHS
      * @type {Boolean}
+     * @todo Remove, not used
      */
     this.useZeroRHS = false;
 
     /**
-     * Number of solver iterations that are done to approximate normal forces. When these iterations are done, friction force will be computed from the contact normal forces. These friction forces will override any other friction forces set from the World for example.
-     * The solver will use less iterations if the solution is below the .tolerance.
+     * Number of solver iterations that are used to approximate normal forces used for friction (F_friction = mu * F_normal). These friction forces will override any other friction forces that are set. If you set frictionIterations = 0, then this feature will be disabled.
+     *
+     * Use only frictionIterations > 0 if the approximated normal force (F_normal = mass * gravity) is not good enough. Examples of where it can happen is in space games where gravity is zero, or in tall stacks where the normal force is large at bottom but small at top.
+     *
      * @property frictionIterations
      * @type {Number}
+     * @default 0
      */
-    this.frictionIterations = 0;
+    this.frictionIterations = options.frictionIterations !== undefined ? 0 : options.frictionIterations;
 
     /**
      * The number of iterations that were made during the last solve. If .tolerance is zero, this value will always be equal to .iterations, but if .tolerance is larger than zero, and the solver can quit early, then this number will be somewhere between 1 and .iterations.
@@ -13450,6 +13474,7 @@ var hitTest_tmp1 = vec2.create(),
  * @return {Array}              Array of bodies that overlap the point
  * @todo Should use an api similar to the raycast function
  * @todo Should probably implement a .containsPoint method for all shapes. Would be more efficient
+ * @todo Should use the broadphase
  */
 World.prototype.hitTest = function(worldPoint,bodies,precision){
     precision = precision || 0;
