@@ -390,6 +390,62 @@ var Phaser = Phaser || {    // jshint ignore:line
     ANGLE_SOUTH_WEST: 135,
 
     /**
+    * The angle (in radians) a Game Object needs to be set to in order to face up.
+    * @constant
+    * @type {number}
+    */
+    ROTATION_UP: -0.5 * Math.PI,
+
+    /**
+    * The angle (in radians) a Game Object needs to be set to in order to face down.
+    * @constant
+    * @type {number}
+    */
+    ROTATION_DOWN: 0.5 * Math.PI,
+
+    /**
+    * The angle (in radians) a Game Object needs to be set to in order to face left.
+    * @constant
+    * @type {number}
+    */
+    ROTATION_LEFT: -1 * Math.PI,
+
+    /**
+    * The angle (in radians) a Game Object needs to be set to in order to face right.
+    * @constant
+    * @type {number}
+    */
+    ROTATION_RIGHT: 0,
+
+    /**
+    * The angle (in radians) a Game Object needs to be set to in order to face north east.
+    * @constant
+    * @type {number}
+    */
+    ROTATION_NORTH_EAST: -0.25 * Math.PI,
+
+    /**
+    * The angle (in radians) a Game Object needs to be set to in order to face north west.
+    * @constant
+    * @type {number}
+    */
+    ROTATION_NORTH_WEST: -0.75 * Math.PI,
+
+    /**
+    * The angle (in radians) a Game Object needs to be set to in order to face south east.
+    * @constant
+    * @type {number}
+    */
+    ROTATION_SOUTH_EAST: 0.25 * Math.PI,
+
+    /**
+    * The angle (in radians) a Game Object needs to be set to in order to face south west.
+    * @constant
+    * @type {number}
+    */
+    ROTATION_SOUTH_WEST: 0.75 * Math.PI,
+
+    /**
     * A constant representing a top-left alignment or position.
     * @constant
     * @type {integer}
@@ -489,9 +545,9 @@ var Phaser = Phaser || {    // jshint ignore:line
 
     /**
     * Various blend modes supported by Pixi.
-    * 
+    *
     * IMPORTANT: The WebGL renderer only supports the NORMAL, ADD, MULTIPLY and SCREEN blend modes.
-    * 
+    *
     * @constant
     * @property {Number} blendModes.NORMAL
     * @property {Number} blendModes.ADD
