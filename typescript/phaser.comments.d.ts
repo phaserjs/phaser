@@ -28543,7 +28543,6 @@ declare module Phaser {
         * @return The tile at the given coordinates or null if no tile was found or the coordinates were invalid.
         */
         getTile(x: number, y: number, layer?: any, nonNull?: boolean): Phaser.Tile;
-        getRayCastTiles(layer: Phaser.TilemapLayer|Phaser.TilemapLayerGL, line: Phaser.Line, stepRate?: number, collides?: boolean, interestingFace?: boolean): Phaser.Tile[];
         getTiles(layer: Phaser.TilemapLayer|Phaser.TilemapLayerGL, x: number, y: number, width: number, height: number, collides?: boolean, interestingFace?: boolean): Phaser.Tile[];
         getTileX(layer: Phaser.TilemapLayer|Phaser.TilemapLayerGL, x: number): number;
         getTileXY(layer: Phaser.TilemapLayer|Phaser.TilemapLayerGL, x: number, y: number, point: Phaser.Point): Phaser.Point;
@@ -29000,6 +28999,17 @@ declare module Phaser {
         * Destroys this TilemapLayer.
         */
         destroy(): void;
+
+        /**
+         * Gets all tiles that intersect with the given line.
+
+         * @param {Phaser.Line} line - The line used to determine which tiles to return.
+         * @param {integer} [stepRate=(rayStepRate)] - How many steps through the ray will we check? Defaults to `rayStepRate`.
+         * @param {boolean} [collides=false] - If true, _only_ return tiles that collide on one or more faces.
+         * @param {boolean} [interestingFace=false] - If true, _only_ return tiles that have interesting faces.
+         * @return {Phaser.Tile[]} An array of Phaser.Tiles.
+         */
+        getRayCastTiles(line: Phaser.Line, stepRate?: number, collides?: boolean, interestingFace?: boolean): Phaser.Tile[];
 
         /**
         * Automatically called by World.postUpdate. Handles cache updates.
