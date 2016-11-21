@@ -30,6 +30,7 @@
     "**/.*",
     "node_modules",
     "bower_components",
+    "resources",
     "test",
     "tests"
   ],
