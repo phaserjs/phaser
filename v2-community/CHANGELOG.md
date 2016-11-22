@@ -1,5 +1,87 @@
 # Change Log
 
+## Version 2.7.0 - "World's End" - 22nd November 2016
+
+Phaser 2.7 is now released to the community to maintain. Please see the README for more details.
+
+### New Features
+
+* Multiple Batched Texture support is now available. This is a WebGL feature that can seriously decrease the volume of draw calls made in complex, or asset heavy, games. To enable it you can either use the new renderer type `Phaser.WEBGL_MULTI`, or you can pass the property `multiTexture: true` in a Phaser.Game configuration object. Once enabled, it cannot be disabled.
+* `game.renderer.setTexturePriority` is the method that goes with the Multiple Texture support. It takes an array as its single argument. The array consists of Phaser.Cache image key strings. Phaser will then try to batch as many of the textures as it can, depending on the hardware limits. If for example the GPU can only batch 8 textures, and you provide an array of 16, then only the first 8 in the array will be batched.
+* Phaser now supports Compressed Textures under WebGL. It will handle loading PVRTC, DDS, ETC1, KTX and PKM texture formats, and supports PVRTC, S3TC and ETC1 compression formats, with a TrueColor fallback for standard PNGs. Using compressed textures allows the GPU to decode, and access, the texture data much faster than traditional image compression schemes such as JPEG. iOS devices in particular benefit greatly from using PowerVR Texture Compression (PVRTC). The resulting textures take up less memory than their traditional counterparts, and when it comes to iOS, every bit of memory helps! Look at the new `Loader.texture` method for details on using this. You can also pass a file object to `Loader.image`, again, please see the docs for details.
+* Support for Rotated Frames in Texture Atlases is now included for WebGL and Canvas. If you use software such as Texture Packer, you may now enable the 'Allow Rotation' checkbox, which can often help getting smaller, or more compact, atlases. As a result, the `Texture.rotated` and `Frame.rotated` properties are now in use.
+* `Frame.rotationDirection` has been removed. It isn't needed, as modern texture packers only rotate 90 degrees clockwise anyway, and Phaser only supports this rotation direction.
+* Weapon.multiFire is a new property that allows you to set a Weapon as being allowed to call `fire` as many times as you like, per game loop. This allows a single Weapon instance to fire multiple bullets.
+* Weapon.fire has two new arguments: `offsetX` and `offsetY`. If the bullet is fired from a tracked Sprite or Pointer, or the `from` argument is set, this applies a horizontal and vertical offset from the launch position.
+* Weapon.fireOffset attempts to fire a single Bullet from a tracked Sprite or Pointer, but applies an offset to the position first. This is a shorter form of calling `Weapon.fire` and passing in the offset arguments.
+* Weapon.fireMany attempts to fire multiple bullets from the positions defined in the given array. If you provide a `from` argument, or if there is a tracked Sprite or Pointer, then the positions are treated as __offsets__ from the given objects position. If `from` is undefined, and there is no tracked object, then the bullets are fired from the given positions, as they exist in the world.
+* When loading a Sprite Sheet you can now specify the number of frames to skip, as the frames are extracted from the sheet and converted to Frames (thanks @arefiev #2763)
+* Math.random returns a random float in the range given (thanks @JTronLabs #2760)
+* Text.splitRegExp is a new property that allows you to control the regular expression that is used to split the text into multiple lines (thanks @dai-shi #1403)
+* Cache.addBitmapFontFromAtlas allows you to add a Bitmap Font to the Cache, that is comprised of a frame from a Texture Atlas, and the font data (in JSON or XML format). Once added you can use the Bitmap Font in the same way as you would any Bitmap Font (#2614)
+
+### Updates
+
+* TypeScript definitions fixes and updates (thanks @chriteixeira @StealthC @Lopdo @nickdbush)
+* Docs typo fixes (thanks @JTronLabs @samme @jorgesumle)
+* `Phaser.Line.fromSprite` now uses the Sprite.centerX and centerY properties if the `useCenter` argument is true. Before it required you to have overridden the Sprite and added the property yourself (thanks @samme #2729)
+* Updated the pointer check code in the Device class, to get rid of the message `Navigator.pointerEnabled is a non-standard API added for experiments only. It will be removed in near future.` in Chrome.
+* The P2 Physics library has been updated to 0.7.1. This is still quite out of date, but as soon as they release their latest build (hopefully soon) we'll update to that.
+* Math.between has been strengthened and the docs improved (thanks @JTronLabs #2760)
+* Camera.fade has a new argument `alpha` to control the alpha level of the effect (thanks @rgk #2493)
+* Camera.flash has a new argument `alpha` to control the alpha level of the effect (thanks @rgk #2493)
+* Phaser.SpriteBatch was incorrectly applying the prototypes, causing the Sprite Batch render methods to be replaced by the normal DisplayObjectContainer ones, meaning nothing was really batched at all. This has now been fixed, and PIXI.SpriteBatch removed, as it's no longer required.
+* PIXI.RenderTexture has been removed, and all functionality merged in to Phaser.RenderTexture, to cut down on the number of internal classes and inheritance going on.
+* PIXI.TilingSprite has been removed, and all functionality merged in to Phaser.TileSprite, to cut down on the number of internal classes and inheritance going on.
+* PIXI.CanvasPool has been moved into the Phaser `utils` folder, and renamed to `Phaser.CanvasPool`. All references to PIXI.CanvasPool have been updated to match the new namespace.
+* PIXI.EarCut has been moved into the Phaser `utils` folder, and renamed to `Phaser.EarCut`. All references to PIXI.EarCut have been updated to match the new namespace.
+* Device.canHandleAlpha is a new boolean property that stores is the browser is capable of tinting with alpha.
+* Device.canUseMultiply is a new boolean property that stores whether or not the Canvas BlendModes are supported, consequently the ability to tint using the multiply method.
+* Math.getNextPowerOfTwo will get the next power of two for the given value.
+* Math.isPowerOfTwo will return a boolean if the given width and height are a power of two.
+* Color.hexToRGBArray converts a hex color value to an [R, G, B] array.
+* Color.RGBArrayToHex converts an RGB color array, in the format: [R, G, B], to a hex color value.
+* PIXI.AbstractFilter has been merged into the Phaser.Filter class. All references to PIXI.AbstractFilter have been updated to use Phaser.Filter instead.
+* PIXI.Rope and PIXI.Strip have been removed, and all functionality merged in to Phaser.Rope, to cut down on the number of internal classes and inheritance going on.
+* PIXI.Graphics and PIXI.GraphicsData have been removed, and all functionality merged in to Phaser.Graphics, to cut down on the number of internal classes and inheritance going on.
+* WebGLGraphics and CanvasGraphics have been updated so that it checks for Phaser Geometry shape types internally.
+* PIXI.PI_2 has been removed, because it's available via Phaser.Math.PI2. The only place PI_2 was used has been updated to now use PI2.
+* The polyfills.js file now polyfills in for Float32Array, Uint16Array and ArrayBuffer.
+* PIXI.Float32Array, PIXI.Uint16Array, PIXI.Uint32Array and PIXI.ArrayBuffer have all been removed, and replaced with their own proper native versions. The polyfill now captures any instances where the browser needs to fall back to an Array instead.
+
+
+### Bug Fixes
+
+* `DisplayObjectContainer.removeChildren` was incorrectly using the `begin` var, instead of `beginIndex` (thanks @alex-espinoza #2742 #2741)
+* Camera.fx is tested to see if it exists, before resetting it (thanks @samme #2739 #2738)
+* The Weapon Plugin will no longer crash if the Weapon's bullets have not yet been initialized before setting a new bullet class (thanks @JTronLabs #2731)
+* Groups with `fixedToCamera` set on them now factor in the camera scale (thanks @kevinAlbs #2771)
+* Text.width and Text.height now divide the result by the Text.resolution, to avoid incorrect dimensions on High DPI devices (thanks @mattahj #2146)
+* If you called Video.changeSource, and then immediately called Video.play after it, it would fire the `onComplete` event twice (thanks @jaraiza #2543)
+* The Video.playing property didn't check to see if the Video existed, and would throw the error `Uncaught TypeError: Cannot read property 'paused' of null` if you called it after destroying the video (thanks @Tetley #2740)
+* Fixed bug in DisplayObject where it was using `PI_2` instead of `PI2`.
+
+### Pixi Updates
+
+Please note that Phaser uses a custom build of Pixi and always has done. The following changes have been made to our custom build, not to Pixi in general.
+
+* WebGL Renderer and shaders updated to support multi-texture batching (see main docs above)
+* WebGL and Canvas both now support rotated texture atlas frames.
+* WebGL support for compressed texture formats added.
+* PIXI.SpriteBatch has been removed as it's no longer used internally.
+* PIXI.RenderTexture has been removed as it's no longer used internally.
+* PIXI.TileSprite has been removed as it's no longer used internally.
+* PIXI.EarCut has been removed as it's no longer used internally.
+* PIXI.Utils has been removed. All functionality is now available in Phaser.
+* PIXI.EventTarget has been removed as it's no longer used internally.
+* PIXI.AbstractFilter has been removed as it's no longer used internally. All functionality is now available via Phaser.Filter.
+* PIXI.Strip and PIXI.Rope have been removed. All functionality is now available via Phaser.Rope.
+* PIXI.Graphics and PIXI.GraphicsData have been removed. All functionality is now available via Phaser.Graphics. The respective renderers have been updated.
+* PIXI.PI_2, PIXI.RAD_TO_DEG and PIXI.DEG_TO_RAD have all been removed, as they are no longer used internally, and are all available under Phaser.Math.
+* PIXI.RETINA_PREFIX has been removed, as it was never used anywhere internally.
+* PIXI._UID has been removed, all affected classes now use Phaser._UID.
+* PIXI.Float32Array, PIXI.Uint16Array, PIXI.Uint32Array and PIXI.ArrayBuffer have all been removed, and replaced with their own proper native versions.
+
 ## Version 2.6.2 - "Kore Springs" - 26th August 2016
 
 ### New Features

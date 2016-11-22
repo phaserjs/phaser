@@ -66,7 +66,7 @@ Saldaea *
 
 Capital: Maradon
 Cities: Irinjavar, Mehar, Kayacun
-POI: Plain of Lances, World's End, Banikhan Mountains
+POI: Plain of Lances, World's End *, Banikhan Mountains
 
 Shienar *
 
@@ -91,14 +91,4 @@ Also used so far:
 Aes Sedai
 Lyrelle
 Allorallen
-
-
-Readme.md
----------
-
-> In Development
-
-This is the development branch, where we are building Phaser 2.6.2.
-
-Check the [Change Log](#change-log) to see what we've done so far. Or switch to the master branch for the current stable release.
 

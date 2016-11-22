@@ -1,18 +1,18 @@
-# Phaser - HTML5 Game Framework
+# Phaser CE (Community Edition) - HTML5 Game Framework
 
 <img src="http://phaser.io/images/github/arcade-cab.png" align="right">
 
-Phaser is a fast, free, and fun open source HTML5 game framework. It uses a custom build of [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) for WebGL and Canvas rendering, and supports desktop and mobile web browsers. Games can be compiled to iOS, Android and native desktop apps via 3rd party tools. You can use JavaScript or TypeScript for development.
-
-Along with the fantastic open source community, Phaser is actively developed and maintained by [Photon Storm](http://www.photonstorm.com). As a result of rapid support, and a developer friendly API, Phaser is currently one of the [most starred](https://github.com/showcases/javascript-game-engines) game frameworks on GitHub.
+Phaser is a fast, free, and fun open source HTML5 game framework. It uses a custom build of [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) for WebGL and Canvas rendering, and supports desktop and mobile web browsers. Games can be compiled to iOS, Android and native desktop apps via 3rd party tools. You can use JavaScript or TypeScript for development. Years after release, Phaser is still one of the [most starred](https://github.com/showcases/javascript-game-engines) game frameworks on GitHub.
 
 Thousands of developers worldwide use Phaser. From indies and multi-national digital agencies, to schools and Universities. Each creating their own incredible [games](http://phaser.io/games/).
+
+Phaser v2 was originally built and maintained by the company [Photon Storm](http://www.photonstorm.com), but was turned over to the community in November 2016.
 
 **Visit:** The [Phaser website](http://phaser.io) and follow on [Twitter](https://twitter.com/photonstorm) (#phaserjs)<br />
 **Learn:** [API Docs](http://phaser.io/docs), [Support Forum][forum] and [StackOverflow](http://stackoverflow.com/questions/tagged/phaser-framework)<br />
 **Code:** 700+ [Examples](http://phaser.io/examples) (source available in this [repo][examples])<br />
 **Read:** Weekly [Phaser World](#newsletter) Newsletter<br />
-**Chat:** [Slack](http://phaser.io/community/slack) and [IRC](http://phaser.io/community/irc)<br />
+**Chat:** [Slack](http://phaser.io/community/slack) and [Discord](http://phaser.io/community/discord)<br />
 **Extend:** With [Phaser Plugins](http://phaser.io/shop/plugins)<br />
 **Be awesome:** [Support](#support) the future of Phaser<br />
 
@@ -28,9 +28,7 @@ Grab the source and join in the fun!
 - [Building Phaser](#building-phaser)
 - [Games made with Phaser](#games)
 - [Requirements](#requirements)
-- [Road Map](#road-map)
 - [Change Log](#change-log)
-- [Lazer](#lazer)
 - [Contributing](#contributing)
 
 <a name="whats-new"></a>
@@ -38,17 +36,28 @@ Grab the source and join in the fun!
 
 <div align="center"><img src="http://phaser.io/images/github/news.jpg"></div>
 
-> In Development
+> 22nd November 2016
 
-This is the development branch, where we are building Phaser 2.7.1
+Today we hand over Phaser 2.7 to you, the awesome open source community, to maintain.
 
-Check the [Change Log](#change-log) to see what we've done so far. Or switch to the master branch for the current stable release.
+Phaser 2 was a massive milestone for us, and we're still constantly amazed at all the cool things you've created, and continue to create with it. Thank you to everyone who has submitted an issue or pull request over the years, or helped the framework grow in any shape or capacity.
 
-As always, keep you eyes on the Phaser web site, and subscribe to our weekly [newsletter](#newsletter). You can also follow me on [Twitter](https://twitter.com/photonstorm) or chat to me in the Phaser [Slack](http://phaser.io/community/slack) channel.
+As of today all of our in-house resources are spent on building Phaser 3 and beyond. However we fully recognize that lots of you still use Phaser 2, and have a lot to contribute to its future. So this is what we've done:
+
+* Phaser 2.6.2 is the last 'official' release, and remains set as the 'latest' version on npm
+* Phaser 2.7.0 has been given to the community to maintain, and released to npm under a version tag
+
+**All Pull Requests made against the `v2-community` version will be unconditionally approved**. We'll give GitHub permissions to a select few individuals to help with this process. When you, the community, requests it, we will publish new versions to npm.
+
+We believe this set-up will give us the best of both worlds. It will allow us to continue focusing our efforts on Phaser 3. And it will allow the community to enhance Phaser 2 for as long as they wish.
+
+As always, check the [Change Log](#change-log) to see what was added recently.
+
+Keep your eyes on the web site, and subscribe to the weekly Phaser World [newsletter](#newsletter). You can also follow on [Twitter](https://twitter.com/photonstorm), or chat in the Phaser [Slack](http://phaser.io/community/slack) and [Discord](http://phaser.io/community/discord) channels.
 
 There are also now more ways than before to help [support](#support) the development of Phaser. The uptake so far has been fantastic, but this is an on-going mission. Thank you to everyone who supports our development. Who shares our belief in the future of HTML5 gaming, and Phasers role in that.
 
-Happy coding everyone! See you on the forums.
+Happy coding everyone!
 
 Cheers,
 
@@ -77,7 +86,7 @@ If you would like to sponsor Phaser then please [get in touch](mailto:support@ph
 
 <div align="center"><img src="http://phaser.io/images/github/phaser-world.png"></div>
 
-Every Friday we publish the [Phaser World](http://phaser.io/community/newsletter) newsletter. It's packed full of the latest Phaser games, tutorials, videos, meet-ups, talks, and more. It also contains our weekly Development Progress updates.
+Every Friday we publish the [Phaser World](http://phaser.io/community/newsletter) newsletter. It's packed full of the latest Phaser games, tutorials, videos, meet-ups, talks, and more. It also contains our weekly Development Progress updates. If you want to know what we're working on, this is the newsletter to read!
 
 Previous editions can found on our [Back Issues](http://phaser.io/community/backissues) page.
 
@@ -99,7 +108,7 @@ Install via [bower](http://bower.io)
 
 Install via [npm](https://www.npmjs.com)
 
-`npm install phaser@2.7.1`
+`npm install phaser@2.7.0`
 
 Using Browserify? Please [read this](#browserify).
 
@@ -107,15 +116,15 @@ Using Browserify? Please [read this](#browserify).
 
 [jsDelivr](http://www.jsdelivr.com/#!phaser) is a "super-fast CDN for developers". Include the following in your html:
 
-`<script src="//cdn.jsdelivr.net/phaser/2.7.1/phaser.js"></script>`
+`<script src="//cdn.jsdelivr.net/phaser/2.7.0/phaser.js"></script>`
 
 or the minified version:
 
-`<script src="//cdn.jsdelivr.net/phaser/2.7.1/phaser.min.js"></script>`
+`<script src="//cdn.jsdelivr.net/phaser/2.7.0/phaser.min.js"></script>`
 
 [cdnjs.com](https://cdnjs.com/libraries/phaser) also offers a free CDN service. They have all versions of Phaser and even the custom builds:
 
-`<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/2.7.1/phaser.js"></script>`
+`<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/2.7.0/phaser.js"></script>`
 
 ### Phaser Sandbox
 
@@ -192,7 +201,7 @@ window.Phaser = require('phaser/build/custom/phaser-split')
 
 If you build a custom version of Phaser it will split the 3 core libs out into their own files, allowing you to require them as above.
 
-We appreciate this is just a band-aid, and not a proper use of modules, but please understand it was never built to be used this way. You're trying to fit a square peg in a round browserify-shaped hole, so compromises have to be made. Please don't open GitHub issues about it as we've no intention of changing Phaser at this stage of its life. Full module based development is being undertaken in Lazer, the next iteration of the Phaser framework.
+We appreciate this is just a band-aid, and not a proper use of modules, but please understand it was never built to be used this way. You're trying to fit a square peg in a round browserify-shaped hole, so compromises have to be made. Please don't open GitHub issues about it as we've no intention of changing Phaser at this stage of its life. Full module based development is available in Phaser v3.
 
 ### Webpack
 
@@ -288,24 +297,10 @@ Phaser is developed in ES5 JavaScript. We've made no assumptions about how you l
 
 If you code with [TypeScript](http://www.typescriptlang.org/) there are comprehensive definition files in the `typescript` folder. They are for TypeScript 1.4+.
 
-![Road Map](http://phaser.io/images/github/div-roadmap.png "Road Map")
-<a name="road-map"></a>
-
-The majority of Phaser development is now taking place within the [Lazer](https://github.com/photonstorm/lazer) project. Lazer is the name for Phaser version 3. The Phaser 2 branch will still be supported, and issues fixed, but most roadmap features have been migrated over.
-
-<a name="lazer"></a>
-## Lazer
-
-[Lazer](https://github.com/photonstorm/lazer) is the next generation of the Phaser game framework, and was previously called Phaser 3. Using a completely ES6 base it is renderer agnostic, allowing for DOM, SVG, Canvas and WebGL rendering, across desktop and mobile web browsers.
-
-**Lazer is in active development, but is not yet ready for production use.**
-
-You can read all about the philosophy behind Lazer [here](http://phaser.io/news/2016/01/phaser-in-2015-and-beyond) or join the Google Group [mailing list](https://groups.google.com/d/forum/phaser3-dev) where progress reports are posted. You can also follow progress in the [Phaser World](#newsletter) newsletter.
-
 ![Change Log](http://phaser.io/images/github/div-change-log.png "Change Log")
 <a name="change-log"></a>
 
-## Version 2.7.1 - "Shadow Coast" - In Development
+## Version 2.7.0 - "World's End" - 22nd November 2016
 
 ### New Features
 
@@ -418,10 +413,10 @@ All rights reserved.
 
 [![Analytics](https://ga-beacon.appspot.com/UA-44006568-2/phaser/index)](https://github.com/igrigorik/ga-beacon)
 
-[get-js]: https://github.com/photonstorm/phaser/releases/download/v2.7.1/phaser.js
-[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v2.7.1/phaser.min.js
-[get-zip]: https://github.com/photonstorm/phaser/archive/v2.7.1.zip
-[get-tgz]: https://github.com/photonstorm/phaser/archive/v2.7.1.tar.gz
+[get-js]: https://github.com/photonstorm/phaser/releases/download/v2.7.0/phaser.js
+[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v2.7.0/phaser.min.js
+[get-zip]: https://github.com/photonstorm/phaser/archive/v2.7.0.zip
+[get-tgz]: https://github.com/photonstorm/phaser/archive/v2.7.0.tar.gz
 [clone-http]: https://github.com/photonstorm/phaser.git
 [clone-ssh]: git@github.com:photonstorm/phaser.git
 [clone-svn]: https://github.com/photonstorm/phaser
