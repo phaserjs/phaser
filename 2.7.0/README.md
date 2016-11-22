@@ -40,7 +40,7 @@ Grab the source and join in the fun!
 
 > In Development
 
-This is the development branch, where we are building Phaser 3.0.0
+This is the development branch, where we are building Phaser 2.7.1
 
 Check the [Change Log](#change-log) to see what we've done so far. Or switch to the master branch for the current stable release.
 
@@ -99,7 +99,7 @@ Install via [bower](http://bower.io)
 
 Install via [npm](https://www.npmjs.com)
 
-`npm install phaser`
+`npm install phaser@2.7.1`
 
 Using Browserify? Please [read this](#browserify).
 
@@ -107,15 +107,15 @@ Using Browserify? Please [read this](#browserify).
 
 [jsDelivr](http://www.jsdelivr.com/#!phaser) is a "super-fast CDN for developers". Include the following in your html:
 
-`<script src="//cdn.jsdelivr.net/phaser/3.0.0/phaser.js"></script>`
+`<script src="//cdn.jsdelivr.net/phaser/2.7.1/phaser.js"></script>`
 
 or the minified version:
 
-`<script src="//cdn.jsdelivr.net/phaser/3.0.0/phaser.min.js"></script>`
+`<script src="//cdn.jsdelivr.net/phaser/2.7.1/phaser.min.js"></script>`
 
 [cdnjs.com](https://cdnjs.com/libraries/phaser) also offers a free CDN service. They have all versions of Phaser and even the custom builds:
 
-`<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.0.0/phaser.js"></script>`
+`<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/2.7.1/phaser.js"></script>`
 
 ### Phaser Sandbox
 
@@ -305,7 +305,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 ![Change Log](http://phaser.io/images/github/div-change-log.png "Change Log")
 <a name="change-log"></a>
 
-## Version 3.0.0 - "Shadow Coast" - In Development
+## Version 2.7.1 - "Shadow Coast" - In Development
 
 ### New Features
 
@@ -362,6 +362,7 @@ You can read all about the philosophy behind Lazer [here](http://phaser.io/news/
 * Text.width and Text.height now divide the result by the Text.resolution, to avoid incorrect dimensions on High DPI devices (thanks @mattahj #2146)
 * If you called Video.changeSource, and then immediately called Video.play after it, it would fire the `onComplete` event twice (thanks @jaraiza #2543)
 * The Video.playing property didn't check to see if the Video existed, and would throw the error `Uncaught TypeError: Cannot read property 'paused' of null` if you called it after destroying the video (thanks @Tetley #2740)
+* Fixed bug in DisplayObject where it was using `PI_2` instead of `PI2`.
 
 ### Pixi Updates
 
@@ -417,10 +418,10 @@ All rights reserved.
 
 [![Analytics](https://ga-beacon.appspot.com/UA-44006568-2/phaser/index)](https://github.com/igrigorik/ga-beacon)
 
-[get-js]: https://github.com/photonstorm/phaser/releases/download/v3.0.0/phaser.js
-[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v3.0.0/phaser.min.js
-[get-zip]: https://github.com/photonstorm/phaser/archive/v3.0.0.zip
-[get-tgz]: https://github.com/photonstorm/phaser/archive/v3.0.0.tar.gz
+[get-js]: https://github.com/photonstorm/phaser/releases/download/v2.7.1/phaser.js
+[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v2.7.1/phaser.min.js
+[get-zip]: https://github.com/photonstorm/phaser/archive/v2.7.1.zip
+[get-tgz]: https://github.com/photonstorm/phaser/archive/v2.7.1.tar.gz
 [clone-http]: https://github.com/photonstorm/phaser.git
 [clone-ssh]: git@github.com:photonstorm/phaser.git
 [clone-svn]: https://github.com/photonstorm/phaser
