@@ -1,7 +1,24 @@
+'use strict';
+
+const webpack = require('webpack');
+
 module.exports = {
-    entry: './src/index.js',
+
+    context: __dirname + '/src',
+
+    entry: {
+        phaser: './phaser.js'
+    },
+
     output: {
-        filename: 'bundle.js',
-        path: './dist'
+        path: __dirname + '/dist',
+        filename: '[name].js',
+        library: 'Phaser',
+        publicPath: '/lib'
+    },
+
+    devServer: {
+        contentBase: __dirname + '/src'
     }
+
 };
