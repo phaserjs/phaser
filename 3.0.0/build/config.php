@@ -6,12 +6,12 @@
         $modules = array(
             'keyboard' => true,
             'gamepad' => true,
-            'bitmapdata' => true,
-            'graphics' => true,
-            'rendertexture' => true,
-            'text' => true,
-            'bitmaptext' => true,
-            'retrofont' => true,
+            'bitmapdata' => false,
+            'graphics' => false,
+            'rendertexture' => false,
+            'text' => false,
+            'bitmaptext' => false,
+            'retrofont' => false,
             'tweens' => true,
             'sound' => true,
             'particles' => true,
@@ -22,16 +22,10 @@
             'ninja' => false,
             'box2d' => false,
             'creature' => false,
-            'video' => true,
-            'rope' => true,
-            'tilesprite' => true
+            'video' => false,
+            'rope' => false,
+            'tilesprite' => false
         );
-    }
-
-    if ($modules['creature'])
-    {
-        echo "    <script src=\"$path/src/animation/creature/gl-matrix.js\"></script>";
-        echo "    <script src=\"$path/src/animation/creature/CreatureMeshBone.js\"></script>";
     }
 
     if ($modules['p2'])
@@ -54,13 +48,6 @@ EOL;
     <script src="$path/src/Phaser.js"></script>
     <script src="$path/src/polyfills.js"></script>
 
-    <script src="$path/src/pixi/display/DisplayObject.js"></script>
-    <script src="$path/src/pixi/display/DisplayObjectContainer.js"></script>
-    <script src="$path/src/pixi/display/Sprite.js"></script>
-    <script src="$path/src/pixi/renderers/canvas/utils/CanvasBuffer.js"></script>
-    <script src="$path/src/pixi/textures/BaseTexture.js"></script>
-    <script src="$path/src/pixi/textures/Texture.js"></script>
-
     <script src="$path/src/utils/Utils.js"></script>
     <script src="$path/src/utils/CanvasPool.js"></script>
 
@@ -74,22 +61,20 @@ EOL;
     <script src="$path/src/geom/Rectangle.js"></script>
     <script src="$path/src/geom/RoundedRectangle.js"></script>
 
+    <script src="$path/src/camera/Camera.js"></script>
+
     <script src="$path/src/states/State.js"></script>
     <script src="$path/src/states/StateManager.js"></script>
     <script src="$path/src/states/StateSettings.js"></script>
     <script src="$path/src/states/StateSystems.js"></script>
+    <script src="$path/src/states/StateInput.js"></script>
+    <script src="$path/src/states/MainLoop.js"></script>
 
-    <script src="$path/src/core/Camera.js"></script>
-    <script src="$path/src/core/Create.js"></script>
     <script src="$path/src/core/Signal.js"></script>
     <script src="$path/src/core/SignalBinding.js"></script>
     <script src="$path/src/core/Filter.js"></script>
     <script src="$path/src/core/Plugin.js"></script>
     <script src="$path/src/core/PluginManager.js"></script>
-    <script src="$path/src/core/Group.js"></script>
-    <script src="$path/src/core/World.js"></script>
-    <script src="$path/src/core/FlexGrid.js"></script>
-    <script src="$path/src/core/FlexLayer.js"></script>
     <script src="$path/src/core/ScaleManager.js"></script>
     <script src="$path/src/core/Game.js"></script>
 
@@ -105,6 +90,7 @@ EOL;
     <script src="$path/src/textures/Texture.js"></script>
     <script src="$path/src/textures/TextureSource.js"></script>
     <script src="$path/src/textures/Frame.js"></script>
+    <script src="$path/src/textures/Crop.js"></script>
     <script src="$path/src/textures/parsers/Canvas.js"></script>
     <script src="$path/src/textures/parsers/Image.js"></script>
     <script src="$path/src/textures/parsers/JSONArray.js"></script>
@@ -156,30 +142,6 @@ EOL;
     <script src="$path/src/renderer/webgl/shaders/SpriteBatch.js"></script>
     <script src="$path/src/renderer/webgl/shaders/Strip.js"></script>
 
-    <script src="$path/src/gameobjects/components/Component.js"></script>
-    <script src="$path/src/gameobjects/components/Angle.js"></script>
-    <script src="$path/src/gameobjects/components/Animation.js"></script>
-    <script src="$path/src/gameobjects/components/AutoCull.js"></script>
-    <script src="$path/src/gameobjects/components/Bounds.js"></script>
-    <script src="$path/src/gameobjects/components/BringToTop.js"></script>
-    <script src="$path/src/gameobjects/components/Core.js"></script>
-    <script src="$path/src/gameobjects/components/Crop.js"></script>
-    <script src="$path/src/gameobjects/components/Delta.js"></script>
-    <script src="$path/src/gameobjects/components/Destroy.js"></script>
-    <script src="$path/src/gameobjects/components/Events.js"></script>
-    <script src="$path/src/gameobjects/components/FixedToCamera.js"></script>
-    <script src="$path/src/gameobjects/components/Health.js"></script>
-    <script src="$path/src/gameobjects/components/InCamera.js"></script>
-    <script src="$path/src/gameobjects/components/InputEnabled.js"></script>
-    <script src="$path/src/gameobjects/components/InWorld.js"></script>
-    <script src="$path/src/gameobjects/components/LifeSpan.js"></script>
-    <script src="$path/src/gameobjects/components/LoadTexture.js"></script>
-    <script src="$path/src/gameobjects/components/Overlap.js"></script>
-    <script src="$path/src/gameobjects/components/PhysicsBody.js"></script>
-    <script src="$path/src/gameobjects/components/Reset.js"></script>
-    <script src="$path/src/gameobjects/components/ScaleMinMax.js"></script>
-    <script src="$path/src/gameobjects/components/Smoothed.js"></script>
-
     <script src="$path/src/components/BaseTransform.js"></script>
     <script src="$path/src/components/Children.js"></script>
     <script src="$path/src/components/Color.js"></script>
@@ -206,6 +168,11 @@ EOL;
     <script src="$path/src/gameobjects/image/ImageCanvasRenderer.js"></script>
     <script src="$path/src/gameobjects/image/ImageWebGLRenderer.js"></script>
 
+    <script src="$path/src/gameobjects/blitter/Blitter.js"></script>
+    <script src="$path/src/gameobjects/blitter/BlitterFactory.js"></script>
+    <script src="$path/src/gameobjects/blitter/BlitterWebGLRenderer.js"></script>
+    <script src="$path/src/gameobjects/blitter/Bob.js"></script>
+
     <script src="$path/src/gameobjects/button/Button.js"></script>
     <script src="$path/src/gameobjects/button/ButtonFactory.js"></script>
 
@@ -224,9 +191,6 @@ EOL;
     <script src="$path/src/gameobjects/stage/StageCanvasRenderer.js"></script>
     <script src="$path/src/gameobjects/stage/StageWebGLRenderer.js"></script>
 
-
-
-
     <script src="$path/src/plugins/weapon/WeaponPlugin.js"></script>
     <script src="$path/src/plugins/weapon/Bullet.js"></script>
 
@@ -235,8 +199,6 @@ EOL;
     <script src="$path/src/plugins/path/PathFollower.js"></script>
     <script src="$path/src/plugins/path/PathPoint.js"></script>
     <script src="$path/src/plugins/path/EventTarget.js"></script>
-
-
 
 EOL;
 
@@ -452,11 +414,12 @@ EOL;
 
     if ($modules['tilemap'])
     {
+    // <script src="$path/src/tilemap/TilemapLayer.js"></script>
+
         echo <<<EOL
     <script src="$path/src/tilemap/ImageCollection.js"></script>
     <script src="$path/src/tilemap/Tile.js"></script>
     <script src="$path/src/tilemap/Tilemap.js"></script>
-    <script src="$path/src/tilemap/TilemapLayer.js"></script>
     <script src="$path/src/tilemap/TilemapParser.js"></script>
     <script src="$path/src/tilemap/Tileset.js"></script>
 
