@@ -4,4 +4,11 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
-Phaser.Create = function () {};
+require('./DebugHeader');
+
+var Game = function ()
+{
+    DebugHeader(0);
+}
+
+module.exports = Game;

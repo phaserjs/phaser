@@ -28,5 +28,8 @@
     "tweens",
     "typescript",
     "web audio"
-  ]
+  ],
+  "dependencies": {
+    "webpack": "^1.13.3"
+  }
 }

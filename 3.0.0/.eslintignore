@@ -1,3 +1,4 @@
+dist/*
 Gruntfile.js
 node_modules/*
 build/*
