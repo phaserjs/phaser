@@ -1535,7 +1535,7 @@ declare module Phaser {
         emitter(x?: number, y?: number, maxParticles?: number): Phaser.Particles.Arcade.Emitter;
         existing(object: any): any;
         filter(filter: string, ...args: any[]): Phaser.Filter;
-        graphics(x: number, y: number, group?: Phaser.Group): Phaser.Graphics;
+        graphics(x?: number, y?: number, group?: Phaser.Group): Phaser.Graphics;
         group(parent?: any, name?: string, addToStage?: boolean, enableBody?: boolean, physicsBodyType?: number): Phaser.Group;
         image(x: number, y: number, key?: any, frame?: any, group?: Phaser.Group): Phaser.Image;
         physicsGroup(physicsBodyType?: number, parent?: any, name?: string, addToStage?: boolean): Phaser.Group;
@@ -1778,7 +1778,7 @@ declare module Phaser {
         alignIn(container: Phaser.Rectangle | Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapText | Phaser.Button | Phaser.Graphics | Phaser.TileSprite, position?: number, offsetX?: number, offsetY?: number): Phaser.Group;
         alignTo(container: Phaser.Rectangle | Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapText | Phaser.Button | Phaser.Graphics | Phaser.TileSprite, position?: number, offsetX?: number, offsetY?: number): Phaser.Group;
         bringToTop(child: any): any;
-        callAll(method: string, context: any, ...parameters: any[]): void;
+        callAll(method: string, context?: any, ...parameters: any[]): void;
         callAllExists(callback: string, existsValue: boolean, ...parameters: any[]): void;
         callbackFromArray(child: any, callback: Function, length: number): void;
         checkAll(key: string[], value: any, checkAlive?: boolean, checkVisible?: boolean, force?: boolean): boolean;
@@ -1791,7 +1791,7 @@ declare module Phaser {
         destroy(destroyChildren?: boolean, soft?: boolean): void;
         divideAll(property: string, amount: number, checkAlive?: boolean, checkVisible?: boolean): void;
         forEach(callback: Function, callbackContext: any, checkExists?: boolean, ...args: any[]): void;
-        forEachAlive(callback: Function, callbackContext: any, ...args: any[]): void;
+        forEachAlive(callback: Function, callbackContext?: any, ...args: any[]): void;
         forEachDead(callback: Function, callbackContext: any, ...args: any[]): void;
         forEachExists(callback: Function, callbackContext: any): void;
         filter(predicate: Function, checkExists?: boolean): ArraySet;
@@ -5158,6 +5158,10 @@ declare module Phaser {
         setScale(xScale?: number, yScale?: number): void;
         updateMax(): void;
 
+        getTileX(x: number): number;
+        getTileY(y: number): number;
+        getTileXY(x: number, y: number, point: Phaser.Point): Phaser.Point;
+		
     }
 
     class TilemapLayerGL {
