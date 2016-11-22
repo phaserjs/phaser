@@ -8111,7 +8111,7 @@ declare module Phaser {
         * @param group Optional Group to add the object to. If not specified it will be added to the World group.
         * @return The newly created graphics object.
         */
-        graphics(x: number, y: number, group?: Phaser.Group): Phaser.Graphics;
+        graphics(x?: number, y?: number, group?: Phaser.Group): Phaser.Graphics;
 
         /**
         * A Group is a container for display objects that allows for fast pooling, recycling and collision checks.
@@ -9683,7 +9683,7 @@ declare module Phaser {
         * @param context A string containing the context under which the method will be executed. Set to null to default to the child.
         * @param args Additional parameters that will be passed to the method.
         */
-        callAll(method: string, context: any, ...parameters: any[]): void;
+        callAll(method: string, context?: any, ...parameters: any[]): void;
 
         /**
         * Calls a function, specified by name, on all children in the group who exist (or do not exist).
@@ -9873,7 +9873,7 @@ declare module Phaser {
         * @param callbackContext The context in which the function should be called (usually 'this').
         * @param args Additional arguments to pass to the callback function, after the child item. - Default: (none)
         */
-        forEachAlive(callback: Function, callbackContext: any, ...args: any[]): void;
+        forEachAlive(callback: Function, callbackContext?: any, ...args: any[]): void;
 
         /**
         * Call a function on each dead child in this group.
@@ -29045,6 +29045,33 @@ declare module Phaser {
         */
         setScale(xScale?: number, yScale?: number): void;
         updateMax(): void;
+
+        /**
+        * Convert a pixel value to a tile coordinate.
+        *
+        * @param {number} x - X position of the point in target tile (in pixels).
+        * @return {integer} The X map location of the tile.
+        */
+        getTileX(x: number): number;
+
+        /**
+        * Convert a pixel value to a tile coordinate.
+        *
+        * @param {number} y - Y position of the point in target tile (in pixels).
+        * @return {integer} The Y map location of the tile.
+        */
+        getTileY(y: number): number;
+
+        /**
+        * Convert a pixel coordinate to a tile coordinate.
+        *
+        * @param {number} x - X position of the point in target tile (in pixels).
+        * @param {number} y - Y position of the point in target tile (in pixels).
+        * @param {(Phaser.Point|object)} point - The Point/object to update.
+        * @return {(Phaser.Point|object)} A Point/object with its `x` and `y` properties set.
+        */
+        getTileXY(x: number, y: number, point: Phaser.Point): Phaser.Point;
+
 
     }
 
