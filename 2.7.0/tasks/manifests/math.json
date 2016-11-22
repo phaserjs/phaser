@@ -1,0 +1,5 @@
+[
+    "src/math/Math.js",
+    "src/math/RandomDataGenerator.js",
+    "src/math/QuadTree.js"
+]

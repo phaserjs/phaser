@@ -1,0 +1,419 @@
+Phaser/PIXI Tilemap modifications
+
+day one:
+
+Background/comprehension - understanding the existing system
+Experiments in PIXI - adjusting the first test code
+Rewriting the PIXI component - created a new shader and handling code
+Tile-mapping - added a single "tile" drawer using the "mario" test images, extended it to draw the whole map full of tiles
+Optimised the code to reduce unneccesary webgl initialisation
+
+
+day two:
+
+Modify TilemapLayer to create and use PIXI.TileSprite using pixiTest flag (carried through Phaser.Tilemap.createLayer)
+Tests indicate that the PIXI.TileSprite drawing isn't properly embedded in the draw list.
+Created a new TilemapLayerGL class which extends PIXI.Tilemap in the same way that Phaser.TileSprite extends PIXI.TilingSprite.  Used pixiTest flag in createLayer to branch and create the appropriate version.  Adjusted sci-fly demo to use the new TilemapLayerGL class and tested.
+We've now got a running demo with the ship over the map.  It's running very slowly (profiling indicates 87% of the time is spent drawing tiles, so that will have to be modified to only draw the visible area) and it doesn't scroll when the ship hits the edges.
+I think the scrolling might be related to the inability to set this.fixedToCamera (which blows up because there is no this.position value when it tries to establish the fixed position).  Modified PIXI.Tilemap to extend PIXI.Sprite instead, but that didn't fix either problem.  Realised that the problem was with lack of Core functions, so copied code from TileSprite to create core and experimented turning off the various mixins that it included.  Successful test with only 'FixedToCamera' provided that this.fixedToCamera is set after the Core.init call.
+Modified Pixi.TilingSprite to use this.x and this.y when drawing tiles, which has provided a scrolling map surface.
+It's still very slow - probably because it's rebuilding the entire PIXI surface (2560x704 pixels) from 16x16 pixel tiles.
+
+TODO: modify PIXI.Tilemap to create a surface only the size of the visible screen.  Render only that part of the map into the new smaller surface.
+
+day three:
+
+Step through full process to ensure that slow-down is not caused by multiple draw-over (e.g. if a prior layer had multiple copies of a tile layer, or was calling render too many times).  It isn't, so it must simply be too much work to draw the entire map each frame.
+
+Add TilemapLayerGL modes to optionally draw only the visible on-screen tiles each frame.  This fixed the frame-rate issues entirely, it all runs smoothly in this mode.
+Did first-pass clean-up on TilemapLayerGL to get rid of all the legacy code from the original canvas implementation and correct the comments accordingly.
+Modified Phaser.Tilemap to temporarily default to testing (pixiText = true) so that I can test the other examples/tilemaps demos and fix incompatibilities with the GL layer code.
+
+Quick test results:
+blank tilemap - draws tiles at top and runs, but newly drawn (by hand) tiles don't appear in the layers
+create from objects - draws arrow and coins but not the map background
+csv map - draws a map but with many white squares in it, doesn't feel very smooth either
+csv map collide - draws a character but no map
+csv map with p2 - same again
+features test - draws brown background and green arrow, has a very few tiles but mostly blank brown
+
+I'll start with "blank tilemap" and then retest the others in case it's all caused by one set of problems...
+Ok, turns out that the examples are mostly set to Canvas mode... having overwritten that setting we get much better results (the examples are hardwired to use the GL tile layers at the moment, so Canvas logic + GL drawing == examples fail weirdly).
+I have the blank tilemap example working, but there seems to be a difference in the way tiles are represented... for "sci fly" we have to subtract one from the tile index values (I'm assuming they're '1' based tile indices accessing a '0' based tilemap with the '0' tile index representing a blank tile).  In the 'blank tilemap' example the tile indices are '0' based with '-1' representing a blank tile.
+
+Retests:
+blank tilemap - works, but tile numbers are out by one (click on the second tile picture to draw the first tile, etc) and there's no alpha blending when layers are not focused
+* create from objects - draws arrow, coins, and map, but doesn't draw 'objects' like the signs
+csv map (all three demos) - work but tile numbers are out by one
+* features test - works but doesn't draw 'objects' like the torches and signs
+fill tiles - appears to work, tile numbers are out by one
+map bounce - works perfectly
+map collide - works perfectly
+* mario - works but 'wrap' is not repeating the map data down the screen
+paint tiles - works, tiles out by one
+randomise tiles - works, tiles out by one
+replace tiles - works, tiles out by one
+* resize map - draws map but doesn't visibly resize
+sci fly - works perfectly
+shuffle tiles - works perfectly
+swap tiles - works perfectly
+* tile callbacks - draws map but not coins, blobs where coins should be don't vanish (so callbacks might not be working)
+tile properties - works perfectly
+* tilemap ray cast - draws map but not debug layer, impossible to tell if raycast is working without debug
+tileset from bitmapdata - works perfectly
+
+* demos that fail for other reasons than 'tiles out by one'
+
+create from objects: looks like the actual 'createFromObjects' call is working perfectly (coins).  The failure is due to the lack of ability to handle multiple tile source images per tilemap.  Looking at features_test.json (the map source) it appears that there are multiple layers with different sources... I'll start by supporting multiple layers.
+With some help from Rich, finally discovered the Tileset class and it's firstgid value.  Also discovered the 'draw' function in there which is hard-wired to Canvas drawing.  Options: spin off TilesetGl class, or create drawGl function and branch on every draw call, or duplicate the firstgid logic in my new GL drawing code.  I prefer the third option.  At some point that draw in Tileset should be moved because Tileset is a data-holder class and shouldn't really contain drawing logic (despite how convenient it is to put it there to access firstgid etc from Tileset).  My rationale for this separation is that rendering for browsers is very similar to writing game for old-school consoles - we separated the code that touches hardware from the logic code, because then we could convert the game to a different platform easily.  In this case the 'different platform' is webgl but the approach should be the same.
+
+
+
+day four:
+
+Read through the new PIXI 4 tilemap code to see another approach to this task.  It looks very similar (beautiful code though, mine is still very rough).  They're using TRIANGLE rather than TRIANGLE_STRIP which I believe will give this implementation a slight speed edge when I add proper batching.  There's an anim x,y property which is passed to the shaders, I'll need to look at their shader code to see how that's being used... might be a clever way of allowing map tile animations and passing most of the work off to the GPU.
+
+Ran a profiler on my code using FireFox which runs the sci-fly demo extremely slowly (6 fps).  As expected 95% of the time is locked in the _renderTile function, I'm virtually certain that the GPU is blocking because I'm only sending pairs in my TRIANGLE_STRIP at the moment.  I shall prioritise the batch processing then re-run those tests to make sure the problem is solved.  It would be very interesting to find out why Chrome and Canary on my computer do not suffer from the same problem (after all, it's the same GPU!). But I suspect I won't ever be able to answer that question in light of Rich's results (it ran slowly on his Chrome browser with a more powerful GPU...)
+
+The batch changes are in, in a very rough form.  The entire visible screen is now drawn with a single gl.drawArrays call after the JS sets up a large VBO with degenerate tris to separate the individual tiles from each other.  This approach was hugely successful at drawing in the "pbRenderer" (now called "Beam"), however it is still choking FireFox.  Further investigation is needed including: test the old pbRenderer demos to make sure they don't choke FireFox, if it does then check the PIXI 4 tilemap renderer to see if that does too.  If the old demos work properly, then compare them with this new implementation line-by-line to find out what's causing the problem now.
+
+False alarm? After a restart FireFox is now running the new demo correctly (60 fps)... I'm certain I cleared the cache before testing the new version, but maybe there was something jamming up the GPU which got cleared when I reset the browser.  Still, this is good news, and now I can go ahead and finish this implementation with proper scroll offsets then get Rich to test it on his rig.
+Added the scroll offsets and gave the code a cursory first-pass clean up.  I've noticed that when switching from Chrome to FireFox it runs slowly for a few seconds before settling in to the solid 60 fps... I think this might be some webgl feature not being cleaned up immediately after Chrome closes because it's very consistent.
+
+Next coding task is to modify the Tileset class to remove the 'draw' function, and use it's firstgid value so that more of the Phaser tileset examples will work correctly.
+Rich tested on his lap-top and the frame-rate issues were generally gone.
+However testing other demos shows a large corrupt tile in the ones which use the brown tile-set (create from objects, features test, map bounce, etc) and the green tiles (csv map collide, csv map with p2, etc).  Some of these demos run slowly on his lap-top so I'll prioritise fixing the corrupt tile (maybe a firstgid issue?)
+
+
+day five (part 1):
+
+I can reference firstgid (in Phaser.Tileset) through PIXI.Tilemap.map.tilesets[X].firstgid.  Currently I'm limited to one tileset per map so I've hardwired this to tilesets[0].firstgid and it's working for many examples.
+Test results show that most of the demos which previously had "out by one" errors are working properly now.  The exceptions are "fill tiles" and anything else using that desert tileset.  I'll need to investigate that further, it still looks like an 'out by one' error so maybe it's using a second tileset and I'm grabbing the wrong firstgid value.
+
+The large corrupt tile was caused by drawing a VBO with insufficient data.  I've found two possible cases where this can happen and fixed them.  I'll need to get Rich to test again to see if the previously slow demos with corrupt tiles are now working smoothly on his rig.
+
+Ok the 'desert' tileset uses a 1 pixel margin and a 1 pixel separation between each tile (which is why filltiles etc were broken).  I don't see an efficient way to support this level of flexibility using WebGL because every time the tileset changes the batching will break, and it's going to impose a ton of extra calculations which are currently being pre-calced into the high-speed VBO creation loop.  Ideally webgl wants to draw a ton of stuff from a single source image in one large batch.
+What we could maybe do is run the canvas tile rendering code to generate a source texture (no margins, no spacing) of all tiles which are the same size.  We'd need a different texture for each tile-size, and they would need to be processed as separate batches.  This would let webgl run at maximum speed, with a memory overhead for the new textures, and an initialisation overhead to generate them.  I'll talk this over with Rich before going any further with these more complicated tileset cases.
+
+(part 2):
+
+Had a chat with Rich and he suggested a number of things that are helpful.
+It *looks* like I can avoid a lot of code duplication by adding an alternative to Phaser.Tileset.draw for drawGl.  If I do things this way I can leverage all of the existing Phaser support for tilesets with margins and separators, plus the code to handle multiple tilesets in a single map (which is currently broken even in canvas if the tilesets aren't the same size, see example "Create From Objects" - the large tiles are messed up).
+My new drawGl function builds a list of data objects with texture coordinates and destination coordinate - exactly like the canvas drawImage function uses... then the tricky bit will be finding a good mechanism for transferring that list over to PIXI such that it draws as part of the PIXI draw loops to maintain layer order with all the other gl drawing.
+My older attempt uses TilemapLayerGL which extends PIXI.Tilemap which extends PIXI.DisplayObject... with this new approach I would like to avoid using TilemapLayerGL (which will mainly be a duplicate of Phaser.TilemapLayer), but I need to dig a bit deeper to see if that will be possible.
+
+
+day six:
+
+After several attempts I can't find a neat way to discard TilemapLayerGL.  In order to make PIXI accept this drawing as part of it's own system it is essential to extend PIXI.Tilemap, and for Canvas drawing TilemapLayer has to extend Phaser.Sprite.
+I've copied over a ton more content from TilemapLayer so that TilemapLayerGL is now a duplicate in all regards except what it extends and the actual tile batch list build and draw stuff.  This should be looked at again in the future because it violates the DRY principle, however I don't want to spend any more time on non-essential work getting this GL tile drawing system up and running.
+There is now a drawGL function in Phaser.Tileset which simply pushes the tile information into a list of Objects.  This information is being added to the TilemapLayerGL this.glBatch list (which extends PIXI.Tilemap and so is visible to the renderer).
+PIXI.Tilemap uses this list to build a GL buffer of TRIANGLE_STRIP with degenerate triangles between each pair of triangles that represent a tile.  It then draws the entire layer in a single GL draw call.
+To test the demos, we currently need to set drawing mode to Phaser.WEBGL (in the Phaser.Game constructor arguments), and pass 'true' as the final argument to map.createLayer (eg. from sci-fly example):
+    map = game.add.tilemap('level3');
+    map.addTilesetImage('CybernoidMap3BG_bank.png', 'tiles');
+    layer = map.createLayer(0, undefined, undefined, undefined, true);		<-- true specifies to use the new PIXI tilemap system
+
+bug - in the sci-fly demo there is a new problem with collisions when the map has scrolled, I'm guessing this is some sort of scroll offset conflict between the display and the collision system.
+
+Testing the system on tilemaps with borders and tiles with margins ("fill-tiles" example)... it works!  This vindicates the change of approach because that was going to be a real pain to support if I had to recreate all the stuff that Phaser already handles out of the box!
+
+Removed requirement for pixiTest parameter in createLayer by using renderType instead.  I don't need to use WEBGL because it's currently hard-wired in Phaser.Game constructor code (which I had forgotten about) so all examples running locally will be using the new renderer.
+
+another bug - when scrolling not only are the collisions off, the redrawing tile area gets smaller as we move away from the map origin.  This could be linked to the collisions via the scroll offsets being wrong, however the area of map which is drawn appears to be in the correct place... are there two separate scroll offsets in this system?  There are some calculations for start/end of drawing region, might be a good place to start looking.
+
+I need to make the PIXI.Tilemap access multiple source textures and use tile width and height from the batch buffer data in order to reinstate the Phaser multiple tilesets per map capabilities.  NOTE: decided this is a stupid approach, see task list below for better idea.
+
+After testing, *all* examples seem to work (with these three restrictions)
+
+Found both bugs, I was effectively applying the scroll twice because the new batch list calculates the offsets internally and I was still applying it as a uniform to the webgl shader.
+
+Remaining Task Summary:
+
+- Change the map parser, so that when additional tilesets are encountered, it creates a new Tilemap Layer for each and keeps data for only one tileset per layer.  (added TODO: comments into TilemapParser.js for one possible approach to this).
+- Store the tileset index or reference in the Tile structure, deprecate resolveTileset and any other related code
+- Add alpha blending to the shader, calculate the 'final' alpha by multiplying the layer's worldAlpha with the tile.alpha
+- Add scaling to the shader, use the layer's worldScale.  (See if rotation can be easily supported too, while doing this)
+- Optimise the drawing to avoid degenerate triangles where possible, e.g. each row should be a single tri-strip without degenerates in it for faster drawing
+
+Known bugs:
+- Blank Tilemap example isn't drawing, may not handle multiple layers correctly.
+
+Attempted a quick hack to test the new layers approach but got bogged down in the messy class relationship here.
+
+Some notes for later:
+- Tilemap creates TilemapLayer objects (Sprites). It keeps no reference to them after adding them to a group (or the world group), the new layer object gets a 'map' reference.
+- Tilemap contains a layers member variable, it contains bespoke objects (see createBlankLayer) with some information about layers in the map data (which do not correspond to TilemapLayer objects at all)
+- TilemapParser parses raw map data into a local 'map' variable which is returned to be set as the Tilemap.data member.  It creates Tileset objects and populates them for each tile set used in the raw map.  It creates Tile objects for each tile in the map data.
+- Tileset contains information about separate tile sources, including the image, the first tile, tile layout in the image.  It contains the draw function to render a tile on the canvas.
+- Tilemap.createLayer is called by Examples after the Tilemap has been created and parsed.
+
+So, I can't create new TilemapLayer objects in TilemapParser because it will preempt Tilemap.createLayer.  Or maybe I can, these TilemapLayer objects will be internal (hidden)...?  There aren't any later calls in the Examples which I can extend or adapt, so that might have to be the solution.
+
+day seven:
+
+Read through the above and took a good look at the code.  It's a messy solution in this context.
+A better idea... parse the map as originally, on return to Tilemap create layers for each 'unique' entry in tilesets array.
+This avoids the circular calls to and from tilemap and parse, allows map to have a populated data member after parse, and still creates the required new layers before the example calls createLayer.
+(Check if this process can be added to createLayer?)
+Added createInternalLayer to Phaser.Tilemap which creates a new internal layer for each non-zero member of the base Tilemap's tilesets list when createLayer is called.  (The zero tileset is drawn by the layer created by createLayer).
+
+The Tile objects have incorrect data... in the "create from objects" example the "tiles2" tiles which are 70x70 pixels have a width/height of 32x32 (the same as the base tiles from the "ground_1x1" set).  I'll take a look at that in a minute after I get this to draw something (the tile used is in the top-left of the image so it should draw even through the sizes are wrong).
+
+The image texture appears to also be incorrect in Tile objects that use different tilesets.  This might explain why we get garbage drawn to screen, however looking at the phaser.io example I'm seeing the correct tiles being drawn.  Need to check all my new code to find how it has got the wrong values.
+
+Bug found in TilemapLayerGL where it sets the PIXI baseTexture.  I'm seeing the top-left corner of the 70x70 tiles.
+
+Added a tileset parameter to the map's layer data objects when creating an 'internal' layer.
+Made TilemapLayerGL grab the tile dimensions from the new tileset parameter instead of relying on the map containing only one size.
+
+First working demo with multiple webgl layers each batching tiles from separate tilesets which were all attached to one map layer in the Tiled program.
+Tiles are still turning off too soon at the map edges (exactly like the Canvas version) but that should be fixable with this 'internal layer' approach.
+
+Fixed tiles vanishing at the edge of the screen by using the difference between the original map tileWidth and the current tileset tileWidth when calculating the redraw region left and top.
+
+Removed resolveTileset from TilemapLayerGL as it is no longer needed.
+
+Task list updated:
+- Add alpha blending to the shader, calculate the 'final' alpha by multiplying the layer's worldAlpha with the tile.alpha
+- Add scaling to the shader, use the layer's worldScale.  (See if rotation can be easily supported too, while doing this)
+- Optimise the drawing to avoid degenerate triangles where possible, e.g. each row should be a single tri-strip without degenerates in it for faster drawing
+- larger tiles are top-left aligned but should be bottom-left aligned to match the way that Tiled places them
+
+Added offset parameters to renderRegion to correctly bottom-left align the large tiles.
+NOTE: the canvas version does not do this and consequently displays the tiles in the wrong positions.
+
+Added alpha blending based on TilemapLayerGL.alpha property.  NOTE: this appears to punch holes through the background and blends with the CSS background colour of the web-page.  See: http://webglfundamentals.org/webgl/lessons/webgl-and-alpha.html for list of possible solutions to this... looks like PIXI is currently set to use premultiplied alpha by Phaser (need to find out where, or if this is a default?)
+
+Prepared code to pass each Tile alpha value through to the batch renderer, however realised that implementing this will break the batching!
+Need to talk with Rich about it before proceeding further.
+
+Modified the batch creation code and the batch drawing code to only insert degenerate triangles at the end of rows or when a row is broken (e.g. by some empty tiles which we won't draw at all).  This should speed things up by optimising the draw, and reducing the amount of data required to describe the batch.
+
+Took a look at the PIXI triangle strip shader and noticed that the alpha is being used as a multiplier on the whole colour vector... I was applying it directly to the .a fourth vector value.  Changed the tilemap shader to match and it's working great now!
+
+
+day eight:
+
+Task list updated:
+- calculate the 'final' alpha by multiplying the layer's worldAlpha with the tile.alpha
+Added a TODO note in Tile.js for the unused 'alpha' property.  It is not currently supported in Canvas or WebGL.  Supporting it in WebGL will require the batch processing to change.  Either we add 'alpha' to the gl data buffer for every tile, and modify the shader to apply it.  Or we need to break the Tiles into two processing groups, those with alpha = 1, and those with other (non-zero) alpha values.
+Both renderers currently support one global alpha value applied to each layer.
+- Add scaling to the shader, use the layer's worldScale.  (See if rotation can be easily supported too, while doing this)
+
+Added a uniform to the tile shader for scale factor.  Set it up and modified the 'blank tilemap.js' example to constantly stretch it between 0.5 and 2.0 in x and y at different speeds.  It looks like it's nearly correct, but the anchor point doesn't match the same test in Canvas mode - which is using the top-left corner as the anchor.
+Yes my current GL version is using the centre of the screen as the anchor point.
+Added a uniform for the centreOffset which is (+1, -1) to offset the WebGL screen space before scaling, then applied it again after scaling to draw things where they should go.  The -1 flips the Y coordinates (Canvas coordinates increase down the screen, WebGL coordinates increase up the screen).
+I'm now seeing the same behaviour in WebGL as we get from the Canvas when a Tilemap is scaled.
+
+I think that's it!  Time to clean it all up...
+
+
+
+
+Ok finally... here is the source for my modifications of the "blank tilemap" example which scales layer 1 constantly.
+
+
+
+
+// var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, update: update, render: render });
+var game = new Phaser.Game(800, 600, Phaser.WEBGL, 'phaser-example', { preload: preload, create: create, update: update, render: render });
+
+
+function preload() {
+
+    game.load.image('ground_1x1', 'assets/tilemaps/tiles/ground_1x1.png');
+
+}
+
+var map;
+var layer1;
+var layer2;
+var layer3;
+
+var marker;
+var currentTile = 0;
+var currentLayer;
+
+var cursors;
+var showLayersKey;
+var layer1Key;
+var layer2Key;
+var layer3Key;
+
+var layer1Scale = new Phaser.Point(1, 1);
+var sx = 0.03;
+var sy = 0.02;
+
+
+function create() {
+
+    game.stage.backgroundColor = '#2d2d2d';
+
+    //  Creates a blank tilemap
+    map = game.add.tilemap();
+
+    //  Add a Tileset image to the map
+    map.addTilesetImage('ground_1x1');
+
+    //  Creates a new blank layer and sets the map dimensions.
+    //  In this case the map is 40x30 tiles in size and the tiles are 32x32 pixels in size.
+    layer1 = map.create('level1', 40, 30, 32, 32);
+    layer1.scrollFactorX = 0.5;
+    layer1.scrollFactorY = 0.5;
+
+    //  Resize the world
+    layer1.resizeWorld();
+
+    layer2 = map.createBlankLayer('level2', 40, 30, 32, 32);
+    layer2.scrollFactorX = 0.8;
+    layer2.scrollFactorY = 0.8;
+
+    layer3 = map.createBlankLayer('level3', 40, 30, 32, 32);
+
+    currentLayer = layer3;
+
+    //  Create our tile selector at the top of the screen
+    createTileSelector();
+
+    game.input.addMoveCallback(updateMarker, this);
+
+    cursors = game.input.keyboard.createCursorKeys();
+
+    showLayersKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    layer1Key = game.input.keyboard.addKey(Phaser.Keyboard.ONE);
+    layer2Key = game.input.keyboard.addKey(Phaser.Keyboard.TWO);
+    layer3Key = game.input.keyboard.addKey(Phaser.Keyboard.THREE);
+
+    showLayersKey.onDown.add(changeLayer, this);
+    layer1Key.onDown.add(changeLayer, this);
+    layer2Key.onDown.add(changeLayer, this);
+    layer3Key.onDown.add(changeLayer, this);
+
+    console.log(layer1.index);
+    console.log(layer2.index);
+    console.log(layer3.index);
+
+}
+
+function changeLayer(key) {
+
+    switch (key.keyCode)
+    {
+        case Phaser.Keyboard.SPACEBAR:
+            layer1.alpha = 1;
+            layer2.alpha = 1;
+            layer3.alpha = 1;
+            break;
+
+        case Phaser.Keyboard.ONE:
+            currentLayer = layer1;
+            layer1.alpha = 1;
+            layer2.alpha = 0.2;
+            layer3.alpha = 0.2;
+            break;
+
+        case Phaser.Keyboard.TWO:
+            currentLayer = layer2;
+            layer1.alpha = 0.2;
+            layer2.alpha = 1;
+            layer3.alpha = 0.2;
+            break;
+
+        case Phaser.Keyboard.THREE:
+            currentLayer = layer3;
+            layer1.alpha = 0.2;
+            layer2.alpha = 0.2;
+            layer3.alpha = 1;
+            break;
+    }
+
+}
+
+function pickTile(sprite, pointer) {
+
+    currentTile = game.math.snapToFloor(pointer.x, 32) / 32;
+
+}
+
+function updateMarker() {
+
+    marker.x = currentLayer.getTileX(game.input.activePointer.worldX) * 32;
+    marker.y = currentLayer.getTileY(game.input.activePointer.worldY) * 32;
+
+    if (game.input.mousePointer.isDown)
+    {
+        map.putTile(currentTile, currentLayer.getTileX(marker.x), currentLayer.getTileY(marker.y), currentLayer);
+        // map.fill(currentTile, currentLayer.getTileX(marker.x), currentLayer.getTileY(marker.y), 4, 4, currentLayer);
+    }
+
+}
+
+function update() {
+
+    if (cursors.left.isDown)
+    {
+        game.camera.x -= 4;
+    }
+    else if (cursors.right.isDown)
+    {
+        game.camera.x += 4;
+    }
+
+    if (cursors.up.isDown)
+    {
+        game.camera.y -= 4;
+    }
+    else if (cursors.down.isDown)
+    {
+        game.camera.y += 4;
+    }
+
+    // animate the layer1 scale constantly
+    layer1Scale.x += sx;
+    if ( layer1Scale.x < 0.5 || layer1Scale.x > 2.0 ) sx = -sx;
+    layer1Scale.y += sy;
+    if ( layer1Scale.y < 0.5 || layer1Scale.y > 2.0 ) sy = -sy;
+    layer1.scale.set( layer1Scale.x, layer1Scale.y );
+    layer1.updateTransform();
+}
+
+function render() {
+
+    game.debug.text('Current Layer: ' + currentLayer.name, 16, 550);
+    game.debug.text('1-3 Switch Layers. SPACE = Show All. Cursors = Move Camera', 16, 570);
+
+}
+
+function createTileSelector() {
+
+    //  Our tile selection window
+    var tileSelector = game.add.group();
+
+    var tileSelectorBackground = game.make.graphics();
+    tileSelectorBackground.beginFill(0x000000, 0.5);
+    tileSelectorBackground.drawRect(0, 0, 800, 34);
+    tileSelectorBackground.endFill();
+
+    tileSelector.add(tileSelectorBackground);
+
+    var tileStrip = tileSelector.create(1, 1, 'ground_1x1');
+    tileStrip.inputEnabled = true;
+    tileStrip.events.onInputDown.add(pickTile, this);
+
+    tileSelector.fixedToCamera = true;
+
+    //  Our painting marker
+    marker = game.add.graphics();
+    marker.lineStyle(2, 0x000000, 1);
+    marker.drawRect(0, 0, 32, 32);
+
+}
+
+
+
+
+
+
+
+
