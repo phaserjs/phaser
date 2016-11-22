@@ -4,11 +4,11 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
-require('./DebugHeader');
+var DebugHeader = require('./DebugHeader');
 
 var Game = function ()
 {
     DebugHeader(0);
-}
+};
 
 module.exports = Game;

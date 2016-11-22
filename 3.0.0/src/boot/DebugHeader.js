@@ -4,16 +4,16 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
-require('../const');
+var CONST = require('../const');
 
-function DebugHeader (renderType)
+var DebugHeader = function (renderType, ie)
 {
     var c = (renderType === CONST.CANVAS) ? 'Canvas' : 'WebGL';
 
-    if (!this.device.ie)
+    if (!ie)
     {
         var args = [
-            '%c %c %c %c %c Phaser v' + CONST.version + ' / ' + c + '  %c http://phaser.io',
+            '%c %c %c %c %c Phaser v' + CONST.VERSION + ' / ' + c + '  %c http://phaser.io',
             'background: #ff0000',
             'background: #ffff00',
             'background: #00ff00',
@@ -26,9 +26,9 @@ function DebugHeader (renderType)
     }
     else if (window['console'])
     {
-        console.log('Phaser v' + CONST.version + ' / http://phaser.io');
+        console.log('Phaser v' + CONST.VERSION + ' / http://phaser.io');
     }
 
-}
+};
 
 module.exports = DebugHeader;

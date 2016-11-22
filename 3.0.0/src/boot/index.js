@@ -1,1 +1,5 @@
-require('./Game');
+module.exports = {
+
+    Game: require('./Game')
+
+};
