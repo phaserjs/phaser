@@ -1,4 +1,4 @@
-**Important:** Pull Requests should _only_ be issued against the `dev` branch. PRs against the master branch will always be closed.
+** >> Make sure you describe your PR to the README Change Log section! << **
 
 This PR changes (delete as applicable)
 

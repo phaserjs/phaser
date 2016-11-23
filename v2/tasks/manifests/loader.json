@@ -1,0 +1,5 @@
+[
+    "src/loader/Cache.js",
+    "src/loader/Loader.js",
+    "src/loader/LoaderParser.js"
+]

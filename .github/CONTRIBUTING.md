@@ -2,15 +2,15 @@
 
 It's important to us that you feel you can contribute towards the evolution of Phaser. This can take many forms: from helping to fix bugs or improve the docs, to adding in new features to the source. This guide should help you in making that process as smooth as possible.
 
-Before contributing, please read the [code of conduct](https://github.com/photonstorm/phaser/blob/master/CODE_OF_CONDUCT.md).
+Before contributing, please read the [code of conduct](https://github.com/photonstorm/phaser/blob/master/v2/CODE_OF_CONDUCT.md).
 
 ##Reporting issues
 
-[GitHub Issues][0] is the place to report bugs you may have found in either the core library or any of the examples that are part of the repository. When submitting a bug please do the following:
+[GitHub Issues][0] is the place to report bugs you may have found. When submitting a bug please do the following:
 
-**1. Search for existing issues.** Your bug may have already been fixed or addressed in a development branch version of Phaser, so be sure to search the issues first before putting in a duplicate issue.
+**1. Search for existing issues.** Your bug may have already been fixed, or cannot, or will not, be fixed. So be sure to search the issues first before putting in a duplicate issue.
 
-**2. Not sure if it's a bug?.** Then please ask on the [forum][4]. If something is blatantly wrong then post it to github. But if you feel it might just be because you're not sure of expected behaviour, then it might save us time, and get you a response faster, if you post it to the Phaser forum instead.
+**2. Not sure if it's a bug?.** Please ask on the [forum][4]. If something is blatantly wrong then post it to GitHub. But if you feel it might just be because you're not sure of expected behavior, then it might save us time, and get you a response faster, if you post it to the Phaser forum instead.
 
 **3. Create an isolated and reproducible test case.** If you are reporting a bug, make sure you also have a minimal, runnable, code example that reproduces the problem you have.
 
@@ -21,17 +21,12 @@ Before contributing, please read the [code of conduct](https://github.com/photon
 
 ##Pixi and Phaser
 
-It's important to understand that internally Phaser uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) for all rendering. It's possible you may find a bug that is generated on the Pixi level rather than Phaser. You're welcome to still report the issue of course, but if you get a reply saying we think it might be a Pixi issue this is what we're talking about :)
+It's important to understand that internally Phaser 2 uses a heavily customized version of [Pixi.js v2](https://github.com/GoodBoyDigital/pixi.js/) for all rendering. It's possible you may find a bug that is generated on the Pixi level rather than Phaser. You're welcome to still report the issue of course, but if you get a reply saying we think it might be a Pixi issue, this is what we're talking about :)
 
 
 ##Support Forum
 
 We have a very active [Phaser Support Forum][4]. If you need general support, or are struggling to understand how to do something or need your code checked over, then we would urge you to post it to our forum. There are a lot of friendly devs in there who can help, as well as the core Phaser and Pixi teams, so it's a great place to get support from. You're welcome to report bugs directly on GitHub, but for general support we'd always recommend using the forum first.
-
-
-##Dev vs. Master
-
-The dev branch of Phaser is our 'current working' version. It is always ahead of the master branch in terms of features and fixes. However it's also bleeding-edge and experimental and we cannot and do not guarantee it will compile or work for you. Very often we have to break things for a few days while we rebuild and patch. So by all means please export the dev branch and contribute towards it, indeed that is where all Pull Requests should be sent, but do so understanding the API may change beneath you.
 
 
 ##Making Changes
@@ -43,7 +38,7 @@ You can download node.js from [nodejs.org][3]. After it has been installed open 
 After that you can clone the repository and run `npm i` inside the cloned folder. This will install dependencies necessary for building the project. Once that is ready,
 make your changes and submit a Pull Request:
 
-- **Send Pull Requests to the `dev` branch.** All Pull Requests must be sent to the `dev` branch, `master` is the latest release and PRs to that branch will be closed.
+- **Send Pull Requests to the `master` branch.** We _used_ to insist PRs went to `dev` but have removed this policy since the release of Phaser CE.
 
 - **Ensure changes are jshint validated.** Our JSHint configuration file is provided in the repository and you should check against it before submitting.
 
