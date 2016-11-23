@@ -44,10 +44,10 @@ Phaser 2 was a massive milestone for us, and we're still constantly amazed at al
 
 As of today all of our in-house resources are spent on building Phaser 3 and beyond. However we fully recognize that lots of you still use Phaser 2, and have a lot to contribute to its future. So this is what we've done:
 
-* Phaser 2.6.2 is the last 'official' release, and remains set as the 'latest' version on npm
-* Phaser 2.7.0 has been given to the community to maintain, and released to npm under a version tag
+* Phaser 2.6.2 is the last 'official' release, published on npm as `phaser`
+* Phaser 2.7.0 and all future versions have been given to the community to maintain, published on npm as `phaser-ce`
 
-**All Pull Requests made against the `v2-community` version will be unconditionally approved**. We'll give GitHub permissions to a select few individuals to help with this process. When you, the community, requests it, we will publish new versions to npm.
+**All Pull Requests made against the `v2-community` version will be unconditionally approved**. We'll give GitHub permissions to a select few individuals to help with this process. When you, the community, request it, we will publish new versions to npm.
 
 We believe this set-up will give us the best of both worlds. It will allow us to continue focusing our efforts on Phaser 3. And it will allow the community to enhance Phaser 2 for as long as they wish.
 
@@ -108,7 +108,7 @@ Install via [bower](http://bower.io)
 
 Install via [npm](https://www.npmjs.com)
 
-`npm install phaser@2.7.0`
+`npm install phaser-ce`
 
 Using Browserify? Please [read this](#browserify).
 
@@ -116,15 +116,15 @@ Using Browserify? Please [read this](#browserify).
 
 [jsDelivr](http://www.jsdelivr.com/#!phaser) is a "super-fast CDN for developers". Include the following in your html:
 
-`<script src="//cdn.jsdelivr.net/phaser/2.7.0/phaser.js"></script>`
+`<script src="//cdn.jsdelivr.net/phaser-ce/2.7.0/phaser.js"></script>`
 
 or the minified version:
 
-`<script src="//cdn.jsdelivr.net/phaser/2.7.0/phaser.min.js"></script>`
+`<script src="//cdn.jsdelivr.net/phaser-ce/2.7.0/phaser.min.js"></script>`
 
-[cdnjs.com](https://cdnjs.com/libraries/phaser) also offers a free CDN service. They have all versions of Phaser and even the custom builds:
+[cdnjs.com](https://cdnjs.com/libraries/phaser-ce) also offers a free CDN service. They have all versions of Phaser and even the custom builds:
 
-`<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/2.7.0/phaser.js"></script>`
+`<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser-ce/2.7.0/phaser.js"></script>`
 
 ### Phaser Sandbox
 
