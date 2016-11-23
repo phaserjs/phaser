@@ -1,5 +1,5 @@
 [
-    "src/phaser/utils/EarCut.js",
+    "src/utils/EarCut.js",
     "src/pixi/renderers/webgl/utils/WebGLGraphics.js",
     "src/pixi/renderers/canvas/CanvasGraphics.js",
     "src/gameobjects/GraphicsData.js",
