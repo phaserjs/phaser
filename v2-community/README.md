@@ -49,6 +49,20 @@ As of today all of our in-house resources are spent on building Phaser 3 and bey
 
 **All Pull Requests made against the `v2-community` version will be unconditionally approved**. We'll give GitHub permissions to a select few individuals to help with this process. When you, the community, request it, we will publish new versions to npm.
 
+If you are migrating pull requests from the old folder structure, you might find the following process useful to migrate your PRs over to the new structure:
+
+First, from your forked repo, make sure `master` is up to date by fetching upstream. To do this easily:
+
+```
+git checkout master
+git reset --hard upstream/master
+```
+
+1. `cd` into your forked repo locally
+2. `git checkout x` where `x` is your feature branch
+3. `git rebase master`
+4. `git push --force x` and then resubmit a PR on the GitHub UI
+
 We believe this set-up will give us the best of both worlds. It will allow us to continue focusing our efforts on Phaser 3. And it will allow the community to enhance Phaser 2 for as long as they wish.
 
 As always, check the [Change Log](#change-log) to see what was added recently.
