@@ -40,27 +40,27 @@ Grab the source and join in the fun!
 
 > 22nd November 2016
 
-Welcome game devs!
+Welcome!
 
-We've made some important structural changes to our git repo. You now have a choice of 3 top-level folders:
+We've made some important structural changes to our git repo. You have a choice of 3 versions:
 
 **[Phaser v2](https://github.com/photonstorm/phaser/blob/master/v2/)**
 
-Here for the first time? Use this build of Phaser. It's the last officially released build of Phaser 2.
+Are you here for the first time? Then use this build of Phaser. It's the last officially released build of Phaser 2.
 
 **[Phaser CE (Community Edition)](https://github.com/photonstorm/phaser/blob/master/v2-community/)**
 
-In November 2016 we opened-up Phaser 2 to the community as Phaser CE. This Community Edition is maintained by the wider open source community, and as such contains the latest features and fixes.
+In November 2016 we handed ownership of Phaser 2 over to the open source community. This version is called Phaser CE (Community Edition). As it is maintained by the wider community, it contains the latest features and fixes.
 
 **[Phaser 3](https://github.com/photonstorm/phaser/blob/master/v3/)**
 
-After development so bleeding-edge it'd even make Freddy Krueger shudder? Check out the `v3` folder. This is where we're focusing all our efforts, building Phaser 3. It is not yet production ready, but we're building it entirely transparently, so you're welcome (and encouraged) to poke around. Just don't try and make a game with it, yet.
+Looking for development so bleeding-edge it'd even make Freddy Krueger shudder? Check out the `v3` folder. This is where we're focusing all our efforts on building Phaser 3. It is not yet production ready, but we're creating it entirely transparently, so you're welcome (and encouraged) to poke around. Just don't try and make a game with it, _yet_.
 
-You can find lots more details about each release in their own README files, located in the root of each folder.
+Find more details about each release in their respective README files, located in the root of each folder.
 
-As always, keep you eyes on the Phaser web site where we'll continue to cover all three versions. Subscribe to [Phaser World](#newsletter), our weekly newsletter, for the latest games, tutorials and development updates. Follow on [Twitter](https://twitter.com/photonstorm) or chat in the Phaser [Slack](http://phaser.io/community/slack) and [Discord](http://phaser.io/community/discord) channels.
+For the latest information visit the Phaser web site, where we cover all three versions. Subscribe to [Phaser World](#newsletter), our weekly newsletter, for the latest news, tutorials and development updates. Follow on [Twitter](https://twitter.com/photonstorm) and chat with fellow Phaser developers in our [Slack](http://phaser.io/community/slack) and [Discord](http://phaser.io/community/discord) channels.
 
-There are also now more ways than before to help [support](#support) the development of Phaser. The uptake so far has been fantastic, but this is an on-going mission. Thank you to everyone who supports our development. Who shares our belief in the future of HTML5 gaming, and Phasers role in that.
+There are now more ways than ever to help [support](#support) development of Phaser. The uptake so far has been fantastic, but this is an on-going mission. Thank you to everyone who supports our development, who shares our belief in the future of HTML5 gaming, and Phasers role in that.
 
 Happy coding everyone!
 
@@ -73,7 +73,7 @@ Rich - [@photonstorm](https://twitter.com/photonstorm)
 <a name="support"></a>
 ![Support Phaser](http://phaser.io/images/github/div-support-phaser.png "Support Phaser")
 
-Developing Phaser takes a lot of time, effort, and money. There are monthly running costs; such as the forum and site, which we maintain 100% ad-free. As well as countless hours of development time, community support, and assistance resolving issues. We do this out of our love for Phaser of course, but at the end of the day there are real tangible costs involved.
+Developing Phaser takes a lot of time, effort, and money. There are monthly running costs; such as hosting and services. As well as countless hours of development time, community support, and assistance resolving issues. We do this out of our love for Phaser, but at the end of the day there are real tangible costs involved.
 
 If you have found Phaser useful in your development life. Or have made income as a result of using it, and are in a position to support us financially, without causing any detriment to yourself, then please do. There are a number of ways:
 
