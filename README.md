@@ -44,7 +44,7 @@ Welcome!
 
 We've made some important structural changes to our git repo. You have a choice of 3 versions:
 
-**[Phaser v2](https://github.com/photonstorm/phaser/blob/master/v2/)**
+**[Phaser 2](https://github.com/photonstorm/phaser/blob/master/v2/)**
 
 Are you here for the first time? Then use this build of Phaser. It's the last officially released build of Phaser 2.
 
