@@ -1,7 +1,7 @@
 /// <reference path="pixi.d.ts" />
 /// <reference path="p2.d.ts" />
 
-// Type definitions for Phaser 3.0.0
+// Type definitions for Phaser 2.7.0 CE
 // Project: https://github.com/photonstorm/phaser
 
 declare module "phaser" {
