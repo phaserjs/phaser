@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v3.0.0 "Shadow Coast" - Built: Mon Nov 14 2016 16:26:13
+* v2.7.0 "World's End" - Built: Wed Nov 23 2016 00:48:51
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -388,7 +388,7 @@ PIXI.DisplayObject.prototype = {
         var a, b, c, d, tx, ty;
 
         // so if rotation is between 0 then we can simplify the multiplication process..
-        if (this.rotation % Phaser.Math.PI_2)
+        if (this.rotation % Phaser.Math.PI2)
         {
             // check to see if the rotation is the same as the previous render. This means we only need to use sin and cos when rotation actually changes
             if (this.rotation !== this.rotationCache)

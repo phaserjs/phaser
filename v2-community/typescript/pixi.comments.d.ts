@@ -176,21 +176,8 @@ declare module PIXI {
 
     }
 
-
-    /**
-    * This is the base class for creating a PIXI filter. Currently only webGL supports filters.
-    * If you want to make a custom filter this should be your base class.
-    */
     export class AbstractFilter {
 
-
-        /**
-        * This is the base class for creating a PIXI filter. Currently only webGL supports filters.
-        * If you want to make a custom filter this should be your base class.
-        * 
-        * @param fragmentSrc The fragment source in an array of strings.
-        * @param uniforms An object containing the uniforms for this filter.
-        */
         constructor(fragmentSrc: string | string[], uniforms: any);
 
         dirty: boolean;
@@ -199,10 +186,6 @@ declare module PIXI {
         fragmentSrc: string | string[];
 
         apply(frameBuffer: WebGLFramebuffer): void;
-
-        /**
-        * Syncs the uniforms between the class object and the shaders.
-        */
         syncUniforms(): void;
 
     }
@@ -347,6 +330,11 @@ declare module PIXI {
         source: HTMLImageElement;
 
         /**
+        * The multi texture batching index number.
+        */
+        textureIndex: number;
+
+        /**
         * [read-only] The width of the base texture set when the image has loaded
         */
         width: number;
@@ -487,52 +475,13 @@ declare module PIXI {
 
     }
 
-
-    /**
-    * The CanvasPool is a global static object that allows Pixi and Phaser to pool canvas DOM elements.
-    */
     export class CanvasPool {
 
-
-        /**
-        * Creates a new Canvas DOM element, or pulls one from the pool if free.
-        * 
-        * @param parent The parent of the canvas element.
-        * @param width The width of the canvas element.
-        * @param height The height of the canvas element.
-        * @return The canvas element.
-        */
         static create(parent: HTMLElement, width?: number, height?: number): HTMLCanvasElement;
-
-        /**
-        * Gets the first free canvas index from the pool.
-        */
         static getFirst(): HTMLCanvasElement;
-
-        /**
-        * Removes the parent from a canvas element from the pool, freeing it up for re-use.
-        * 
-        * @param parent The parent of the canvas element.
-        */
         static remove(parent: HTMLElement): void;
-
-        /**
-        * Removes the parent from a canvas element from the pool, freeing it up for re-use.
-        * 
-        * @param canvas The canvas element to remove
-        */
         static removeByCanvas(canvas: HTMLCanvasElement): HTMLCanvasElement;
-
-        /**
-        * Gets the total number of used canvas elements in the pool.
-        * @return The number of in-use (parented) canvas elements in the pool.
-        */
         static getTotal(): number;
-
-        /**
-        * Gets the total number of free canvas elements in the pool.
-        * @return The number of free (un-parented) canvas elements in the pool.
-        */
         static getFree(): number;
 
     }
@@ -697,10 +646,6 @@ declare module PIXI {
         static tintWithOverlay(texture: Texture, color: number, canvas: HTMLCanvasElement): void;
         static tintWithPerPixel(texture: Texture, color: number, canvas: HTMLCanvasElement): void;
 
-
-        /**
-        * Whether or not the Canvas BlendModes are supported, consequently the ability to tint using the multiply method.
-        */
         static canUseMultiply: boolean;
         static tintMethod: any;
 
@@ -972,69 +917,23 @@ declare module PIXI {
 
     }
 
-
-    /**
-    * Creates an homogenous object for tracking events so users can know what to expect.
-    */
     export class Event {
 
-
-        /**
-        * Creates an homogenous object for tracking events so users can know what to expect.
-        * 
-        * @param target The target object that the event is called on
-        * @param name The string name of the event that was triggered
-        * @param data Arbitrary event data to pass along
-        */
         constructor(target: any, name: string, data: any);
 
-
-        /**
-        * The original target the event triggered on.
-        */
         target: any;
-
-        /**
-        * The string name of the event that this represents.
-        */
         type: string;
-
-        /**
-        * The data that was passed in with this event.
-        */
         data: any;
-
-        /**
-        * The timestamp when the event occurred.
-        */
         timeStamp: number;
 
-
-        /**
-        * Stops the propagation of events up the scene graph (prevents bubbling).
-        */
         stopPropagation(): void;
         preventDefault(): void;
-
-        /**
-        * Stops the propagation of events to sibling listeners (no longer calls any listeners).
-        */
         stopImmediatePropagation(): void;
 
     }
 
-
-    /**
-    * Mixins event emitter functionality to a class
-    */
     export class EventTarget {
 
-
-        /**
-        * Mixes in the properties of the EventTarget prototype onto another object
-        * 
-        * @param object The obj to mix into
-        */
         static mixin(obj: any): void;
 
     }
@@ -1080,16 +979,8 @@ declare module PIXI {
 
     }
 
-
-    /**
-    * A GraphicsData object.
-    */
     export class GraphicsData {
 
-
-        /**
-        * A GraphicsData object.
-        */
         constructor(lineWidth?: number, lineColor?: number, lineAlpha?: number, fillColor?: number, fillAlpha?: number, fill?: boolean, shape?: any);
 
         lineWidth: number;
@@ -1103,10 +994,6 @@ declare module PIXI {
 
     }
 
-
-    /**
-    * The Graphics class contains methods used to draw primitive shapes such as lines, circles and rectangles to the display, and color and fill them.
-    */
     export class Graphics extends DisplayObjectContainer {
 
         static POLY: number;
@@ -1115,222 +1002,35 @@ declare module PIXI {
         static ELIP: number;
         static RREC: number;
 
-
-        /**
-        * The blend mode to be applied to the graphic shape. Apply a value of PIXI.blendModes.NORMAL to reset the blend mode.
-        * Default: PIXI.blendModes.NORMAL;
-        */
         blendMode: number;
-
-        /**
-        * The bounds' padding used for bounds calculation.
-        */
         boundsPadding: number;
-
-        /**
-        * The alpha value used when filling the Graphics object.
-        */
         fillAlpha: number;
-
-        /**
-        * Whether this shape is being used as a mask.
-        */
         isMask: boolean;
-
-        /**
-        * The width (thickness) of any lines drawn.
-        */
         lineWidth: number;
-
-        /**
-        * The color of any lines drawn.
-        * Default: 0
-        */
         lineColor: number;
-
-        /**
-        * The tint applied to the graphic shape. This is a hex value. Apply a value of 0xFFFFFF to reset the tint.
-        * Default: 0xFFFFFF
-        */
         tint: number;
         worldAlpha: number;
 
-
-        /**
-        * The arc method creates an arc/curve (used to create circles, or parts of circles).
-        * 
-        * @param cx The x-coordinate of the center of the circle
-        * @param cy The y-coordinate of the center of the circle
-        * @param radius The radius of the circle
-        * @param startAngle The starting angle, in radians (0 is at the 3 o'clock position of the arc's circle)
-        * @param endAngle The ending angle, in radians
-        * @param anticlockwise Optional. Specifies whether the drawing should be counterclockwise or clockwise. False is default, and indicates clockwise, while true indicates counter-clockwise.
-        * @param segments Optional. The number of segments to use when calculating the arc. The default is 40. If you need more fidelity use a higher number.
-        */
         arc(cx: number, cy: number, radius: number, startAngle: number, endAngle: number, anticlockwise: boolean): Graphics;
         arcTo(x1: number, y1: number, x2: number, y2: number, radius: number): Graphics;
-
-        /**
-        * Specifies a simple one-color fill that subsequent calls to other Graphics methods
-        * (such as lineTo() or drawCircle()) use when drawing.
-        * 
-        * @param color the color of the fill
-        * @param alpha the alpha of the fill
-        */
         beginFill(color?: number, alpha?: number): Graphics;
-
-        /**
-        * Calculate the points for a bezier curve and then draws it.
-        * 
-        * @param cpX Control point x
-        * @param cpY Control point y
-        * @param cpX2 Second Control point x
-        * @param cpY2 Second Control point y
-        * @param toX Destination point x
-        * @param toY Destination point y
-        */
         bezierCurveTo(cpX: number, cpY: number, cpX2: number, cpY2: number, toX: number, toY: number): Graphics;
-
-        /**
-        * Clears the graphics that were drawn to this Graphics object, and resets fill and line style settings.
-        */
         clear(): Graphics;
-
-        /**
-        * Destroys a previous cached sprite.
-        */
         destroyCachedSprite(): void;
-
-        /**
-        * Draws a circle.
-        * 
-        * @param x The X coordinate of the center of the circle
-        * @param y The Y coordinate of the center of the circle
-        * @param diameter The diameter of the circle
-        */
         drawCircle(x: number, y: number, diameter: number): Graphics;
-
-        /**
-        * Draws an ellipse.
-        * 
-        * @param x The X coordinate of the center of the ellipse
-        * @param y The Y coordinate of the center of the ellipse
-        * @param width The half width of the ellipse
-        * @param height The half height of the ellipse
-        */
         drawEllipse(x: number, y: number, width: number, height: number): Graphics;
-
-        /**
-        * Draws a polygon using the given path.
-        * 
-        * @param path The path data used to construct the polygon. Can either be an array of points or a Phaser.Polygon object.
-        */
         drawPolygon(...path: any[]): Graphics;
-
-        /**
-        * 
-        * 
-        * @param x The X coord of the top-left of the rectangle
-        * @param y The Y coord of the top-left of the rectangle
-        * @param width The width of the rectangle
-        * @param height The height of the rectangle
-        */
         drawRect(x: number, y: number, width: number, height: number): Graphics;
-
-        /**
-        * 
-        * 
-        * @param x The X coord of the top-left of the rectangle
-        * @param y The Y coord of the top-left of the rectangle
-        * @param width The width of the rectangle
-        * @param height The height of the rectangle
-        * @param radius Radius of the rectangle corners. In WebGL this must be a value between 0 and 9.
-        */
         drawRoundedRect(x: number, y: number, width: number, height: number, radius: number): Graphics;
-
-        /**
-        * Draws the given shape to this Graphics object. Can be any of Circle, Rectangle, Ellipse, Line or Polygon.
-        * 
-        * @param shape The Shape object to draw.
-        * @return The generated GraphicsData object.
-        */
         drawShape(shape: Circle): GraphicsData;
-
-        /**
-        * Draws the given shape to this Graphics object. Can be any of Circle, Rectangle, Ellipse, Line or Polygon.
-        * 
-        * @param shape The Shape object to draw.
-        * @return The generated GraphicsData object.
-        */
         drawShape(shape: Rectangle): GraphicsData;
-
-        /**
-        * Draws the given shape to this Graphics object. Can be any of Circle, Rectangle, Ellipse, Line or Polygon.
-        * 
-        * @param shape The Shape object to draw.
-        * @return The generated GraphicsData object.
-        */
         drawShape(shape: Ellipse): GraphicsData;
-
-        /**
-        * Draws the given shape to this Graphics object. Can be any of Circle, Rectangle, Ellipse, Line or Polygon.
-        * 
-        * @param shape The Shape object to draw.
-        * @return The generated GraphicsData object.
-        */
         drawShape(shape: Polygon): GraphicsData;
-
-        /**
-        * Applies a fill to the lines and shapes that were added since the last call to the beginFill() method.
-        */
         endFill(): Graphics;
-
-        /**
-        * Useful function that returns a texture of the graphics object that can then be used to create sprites
-        * This can be quite useful if your geometry is complicated and needs to be reused multiple times.
-        * 
-        * @param resolution The resolution of the texture being generated - Default: 1
-        * @param scaleMode Should be one of the PIXI.scaleMode consts
-        * @param padding Add optional extra padding to the generated texture (default 0)
-        * @return a texture of the graphics object
-        */
         generateTexture(resolution?: number, scaleMode?: number, padding?: number): RenderTexture;
-
-        /**
-        * Specifies the line style used for subsequent calls to Graphics methods such as the lineTo() method or the drawCircle() method.
-        * 
-        * @param lineWidth width of the line to draw, will update the objects stored style
-        * @param color color of the line to draw, will update the objects stored style
-        * @param alpha alpha of the line to draw, will update the objects stored style
-        */
         lineStyle(lineWidth?: number, color?: number, alpha?: number): Graphics;
-
-        /**
-        * Draws a line using the current line style from the current drawing position to (x, y);
-        * The current drawing position is then set to (x, y).
-        * 
-        * @param x the X coordinate to draw to
-        * @param y the Y coordinate to draw to
-        */
         lineTo(x: number, y: number): Graphics;
-
-        /**
-        * Moves the current drawing position to x, y.
-        * 
-        * @param x the X coordinate to move to
-        * @param y the Y coordinate to move to
-        */
         moveTo(x: number, y: number): Graphics;
-
-        /**
-        * Calculate the points for a quadratic bezier curve and then draws it.
-        * Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier-curve-in-c
-        * 
-        * @param cpX Control point x
-        * @param cpY Control point y
-        * @param toX Destination point x
-        * @param toY Destination point y
-        */
         quadraticCurveTo(cpX: number, cpY: number, toX: number, toY: number): Graphics;
 
     }
@@ -1783,13 +1483,6 @@ declare module PIXI {
         points: Point[];
         vertices: number[];
 
-
-        /**
-        * 
-        * 
-        * @param texture - The texture to use on the rope.
-        * @param points - An array of {PIXI.Point}.
-        */
         constructor(texture: Texture, points: Point[]);
 
         refresh(): void;
@@ -1921,49 +1614,6 @@ declare module PIXI {
 
     }
 
-
-    /**
-    * The SpriteBatch class is a really fast version of the DisplayObjectContainer
-    * built solely for speed, so use when you need a lot of sprites or particles.
-    * And it's extremely easy to use :
-    * 
-    *    var container = new PIXI.SpriteBatch();
-    * 
-    *    for(var i  = 0; i < 100; i++)
-    *    {
-    *        var sprite = new PIXI.Sprite.fromImage("myImage.png");
-    *        container.addChild(sprite);
-    *    }
-    * And here you have a hundred sprites that will be renderer at the speed of light
-    */
-    export class SpriteBatch extends DisplayObjectContainer {
-
-
-        /**
-        * The SpriteBatch class is a really fast version of the DisplayObjectContainer
-        * built solely for speed, so use when you need a lot of sprites or particles.
-        * And it's extremely easy to use :
-        * 
-        *    var container = new PIXI.SpriteBatch();
-        * 
-        *    for(var i  = 0; i < 100; i++)
-        *    {
-        *        var sprite = new PIXI.Sprite.fromImage("myImage.png");
-        *        container.addChild(sprite);
-        *    }
-        * And here you have a hundred sprites that will be renderer at the speed of light
-        * 
-        * @param texture -
-        */
-        constructor(texture?: Texture);
-
-        ready: boolean;
-        textureThing: Texture;
-
-        initWebGL(gl: WebGLRenderingContext): void;
-
-    }
-
     export class SpriteSheetLoader implements Mixin {
 
         constructor(url: string, crossorigin?: boolean);
@@ -1996,49 +1646,17 @@ declare module PIXI {
 
         };
 
-
-        /**
-        * 
-        * 
-        * @param texture The texture to use
-        * @param width the width
-        * @param height the height
-        */
         constructor(texture: Texture);
 
-
-        /**
-        * The blend mode to be applied to the sprite. Set to PIXI.blendModes.NORMAL to remove any blend mode.
-        * Default: PIXI.blendModes.NORMAL;
-        */
         blendMode: number;
         colors: number[];
-
-        /**
-        * Whether the strip is dirty or not
-        */
         dirty: boolean;
         indices: number[];
-
-        /**
-        * Triangles in canvas mode are automatically antialiased, use this value to force triangles to overlap a bit with each other.
-        */
         canvasPadding: number;
-
-        /**
-        * The texture of the strip
-        */
         texture: Texture;
         uvs: number[];
         vertices: number[];
 
-
-        /**
-        * Returns the bounds of the mesh as a rectangle. The bounds calculation takes the worldTransform into account.
-        * 
-        * @param matrix the transformation matrix of the sprite
-        * @return the framing rectangle
-        */
         getBounds(matrix?: Matrix): Rectangle;
 
     }
@@ -2121,6 +1739,13 @@ declare module PIXI {
         */
         valid: boolean;
 
+        /**
+        * A flag that controls if this frame is rotated or not.
+        * Rotation allows you to use rotated frames in texture atlas packing, it has nothing to do with
+        * Sprite rotation.
+        */
+        rotated: boolean;
+
         listeners(eventName: string): Function[];
         emit(eventName: string, data?: any): boolean;
         dispatchEvent(eventName: string, data?: any): boolean;
@@ -2147,95 +1772,23 @@ declare module PIXI {
 
     }
 
-
-    /**
-    * A tiling sprite is a fast way of rendering a tiling image
-    */
     export class TilingSprite extends Sprite {
 
-
-        /**
-        * A tiling sprite is a fast way of rendering a tiling image
-        * 
-        * @param texture the texture of the tiling sprite
-        * @param width the width of the tiling sprite
-        * @param height the height of the tiling sprite
-        */
         constructor(texture: Texture, width: number, height: number);
 
-
-        /**
-        * The CanvasBuffer object that the tiled texture is drawn to.
-        */
         canvasBuffer: PIXI.CanvasBuffer;
-
-        /**
-        * The blend mode to be applied to the sprite
-        * Default: PIXI.blendModes.NORMAL;
-        */
         blendMode: number;
-
-        /**
-        * If true the TilingSprite will run generateTexture on its **next** render pass.
-        * This is set by the likes of Phaser.LoadTexture.setFrame.
-        * Default: true
-        */
         refreshTexture: boolean;
-
-        /**
-        * The texture that the sprite is using
-        */
         texture: Texture;
-
-        /**
-        * If enabled a green rectangle will be drawn behind the generated tiling texture, allowing you to visually
-        * debug the texture being used.
-        */
         textureDebug: boolean;
-
-        /**
-        * The tint applied to the sprite. This is a hex value
-        * Default: 0xFFFFFF
-        */
         tint: number;
-
-        /**
-        * The offset position of the image that is being tiled
-        */
         tilePosition: Point;
-
-        /**
-        * The Context fill pattern that is used to draw the TilingSprite in Canvas mode only (will be null in WebGL).
-        */
         tilePattern: PIXI.Texture;
-
-        /**
-        * The scaling of the image that is being tiled
-        */
         tileScale: Point;
-
-        /**
-        * A point that represents the scale of the texture object
-        */
         tileScaleOffset: Point;
 
         destroy(): void;
-
-        /**
-        * 
-        * 
-        * @param forcePowerOfTwo Whether we want to force the texture to be a power of two
-        * @param renderSession -
-        */
         generateTilingTexture(forcePowerOfTwo?: boolean): void;
-
-        /**
-        * Sets the texture of the sprite. Be warned that this doesn't remove or destroy the previous
-        * texture this Sprite was using.
-        * 
-        * @param texture The PIXI texture that is displayed by the sprite
-        * @param destroy Call Texture.destroy on the current texture before replacing it with the new one?
-        */
         setTexture(texture: Texture): void;
 
     }
@@ -2664,6 +2217,7 @@ declare module PIXI {
         * The height of the canvas view
         */
         height: number;
+        currentBatchedTextures: string[];
 
         /**
         * The canvas element that everything is drawn to
@@ -2746,6 +2300,30 @@ declare module PIXI {
         * Maps Pixi blend modes to WebGL blend modes.
         */
         mapBlendModes(): void;
+
+        /**
+        * If Multi Texture support has been enabled, then calling this method will enable batching on the given
+        * textures. The texture collection is an array of keys, that map to Phaser.Cache image entries.
+        * 
+        * The number of textures that can be batched is dependent on hardware. If you provide more textures
+        * than can be batched by the GPU, then only those at the start of the array will be used. Generally
+        * you shouldn't provide more than 16 textures to this method. You can check the hardware limit via the
+        * `maxTextures` property.
+        * 
+        * You can also check the property `currentBatchedTextures` at any time, to see which textures are currently
+        * being batched.
+        * 
+        * To stop all textures from being batched, call this method again with an empty array.
+        * 
+        * To change the textures being batched, call this method with a new array of image keys. The old ones
+        * will all be purged out and no-longer batched, and the new ones enabled.
+        * 
+        * Note: Throws a warning if you haven't enabled Multiple Texture batching support in the Phaser Game config.
+        * 
+        * @param textureNameCollection An Array of Texture Cache keys to use for multi-texture batching.
+        * @return An array containing the texture keys that were enabled for batching.
+        */
+        setTexturePriority(textureNameCollection: string[]): string[];
 
     }
 
@@ -2919,112 +2497,20 @@ declare module PIXI {
 
     }
 
-
-    /**
-    * A RenderTexture is a special texture that allows any Pixi display object to be rendered to it.
-    * 
-    * __Hint__: All DisplayObjects (i.e. Sprites) that render to a RenderTexture should be preloaded otherwise black rectangles will be drawn instead.
-    * 
-    * A RenderTexture takes a snapshot of any Display Object given to its render method. The position and rotation of the given Display Objects is ignored. For example:
-    * 
-    *    var renderTexture = new PIXI.RenderTexture(800, 600);
-    *    var sprite = PIXI.Sprite.fromImage("spinObj_01.png");
-    *    sprite.position.x = 800/2;
-    *    sprite.position.y = 600/2;
-    *    sprite.anchor.x = 0.5;
-    *    sprite.anchor.y = 0.5;
-    *    renderTexture.render(sprite);
-    * 
-    * The Sprite in this case will be rendered to a position of 0,0. To render this sprite at its actual position a DisplayObjectContainer should be used:
-    * 
-    *    var doc = new PIXI.DisplayObjectContainer();
-    *    doc.addChild(sprite);
-    *    renderTexture.render(doc);  // Renders to center of renderTexture
-    */
     export class RenderTexture extends Texture {
 
-
-        /**
-        * A RenderTexture is a special texture that allows any Pixi display object to be rendered to it.
-        * 
-        * __Hint__: All DisplayObjects (i.e. Sprites) that render to a RenderTexture should be preloaded otherwise black rectangles will be drawn instead.
-        * 
-        * A RenderTexture takes a snapshot of any Display Object given to its render method. The position and rotation of the given Display Objects is ignored. For example:
-        * 
-        *    var renderTexture = new PIXI.RenderTexture(800, 600);
-        *    var sprite = PIXI.Sprite.fromImage("spinObj_01.png");
-        *    sprite.position.x = 800/2;
-        *    sprite.position.y = 600/2;
-        *    sprite.anchor.x = 0.5;
-        *    sprite.anchor.y = 0.5;
-        *    renderTexture.render(sprite);
-        * 
-        * The Sprite in this case will be rendered to a position of 0,0. To render this sprite at its actual position a DisplayObjectContainer should be used:
-        * 
-        *    var doc = new PIXI.DisplayObjectContainer();
-        *    doc.addChild(sprite);
-        *    renderTexture.render(doc);  // Renders to center of renderTexture
-        * 
-        * @param width The width of the render texture
-        * @param height The height of the render texture
-        * @param renderer The renderer used for this RenderTexture
-        * @param scaleMode See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
-        * @param resolution The resolution of the texture being generated
-        */
         constructor(width?: number, height?: number, renderer?: PixiRenderer, scaleMode?: scaleModes, resolution?: number);
 
-
-        /**
-        * The framing rectangle of the render texture
-        */
         frame: Rectangle;
-
-        /**
-        * The base texture object that this texture uses
-        */
         baseTexture: BaseTexture;
-
-        /**
-        * The renderer this RenderTexture uses. A RenderTexture can only belong to one renderer at the moment if its webGL.
-        */
         renderer: PixiRenderer;
-
-        /**
-        * The Resolution of the texture.
-        */
         resolution: number;
         valid: boolean;
 
-
-        /**
-        * Clears the RenderTexture.
-        */
         clear(): void;
-
-        /**
-        * Will return a base64 encoded string of this texture. It works by calling RenderTexture.getCanvas and then running toDataURL on that.
-        * @return A base64 encoded string of the texture.
-        */
         getBase64(): string;
-
-        /**
-        * Creates a Canvas element, renders this RenderTexture to it and then returns it.
-        * @return A Canvas element with the texture rendered on.
-        */
         getCanvas(): HTMLCanvasElement;
-
-        /**
-        * Will return a HTML Image of the texture
-        */
         getImage(): HTMLImageElement;
-
-        /**
-        * Resizes the RenderTexture.
-        * 
-        * @param width The width to resize to.
-        * @param height The height to resize to.
-        * @param updateBase Should the baseTexture.width and height values be resized as well?
-        */
         resize(width: number, height: number, updateBase: boolean): void;
         render(displayObject: DisplayObject, matrix?: Matrix, clear?: boolean): void;
 
