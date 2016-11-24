@@ -11,7 +11,7 @@ var Game = function (config)
 {
     this.config = new Config(config);
 
-    DebugHeader(this.config);
+    DebugHeader(this);
 };
 
 module.exports = Game;
