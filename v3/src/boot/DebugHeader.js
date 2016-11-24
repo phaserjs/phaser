@@ -6,14 +6,16 @@
 
 var CONST = require('../const');
 
-var DebugHeader = function (renderType, ie)
+var DebugHeader = function (config)
 {
-    var c = (renderType === CONST.CANVAS) ? 'Canvas' : 'WebGL';
+    var c = (config.renderType === CONST.CANVAS) ? 'Canvas' : 'WebGL';
+
+    var ie = false;
 
     if (!ie)
     {
         var args = [
-            '%c %c %c %c %c Phaser v' + CONST.VERSION + ' / ' + c + '  %c http://phaser.io',
+            '%c %c %c %c %c ' + config.gameTitle + ' / Phaser v' + CONST.VERSION + ' / ' + c + '  %c http://phaser.io',
             'background: #ff0000',
             'background: #ffff00',
             'background: #00ff00',

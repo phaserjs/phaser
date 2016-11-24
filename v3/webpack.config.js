@@ -1,6 +1,7 @@
 'use strict';
 
 const webpack = require('webpack');
+const WebpackShellPlugin = require('webpack-shell-plugin');
 
 module.exports = {
 
@@ -13,12 +14,14 @@ module.exports = {
     output: {
         path: './dist',
         filename: '[name].js',
-        library: 'Phaser',
-        publicPath: '/lib'
+        library: 'Phaser'
     },
 
-    devServer: {
-        contentBase: '/src'
-    }
+    plugins: [
 
+        new WebpackShellPlugin({
+            onBuildEnd: 'node copy-to-examples.js'
+        })
+
+    ]
 };

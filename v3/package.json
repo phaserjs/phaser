@@ -33,6 +33,9 @@
     "webpack": "2.1.0-beta.27"
   },
   "devDependencies": {
-    "webpack-dev-server": "2.1.0-beta.11"
+    "copy-webpack-plugin": "^4.0.1",
+    "fs-extra": "^1.0.0",
+    "webpack-dev-server": "2.1.0-beta.11",
+    "webpack-shell-plugin": "^0.4.3"
   }
 }

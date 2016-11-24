@@ -4,11 +4,14 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
+var Config = require('./Config');
 var DebugHeader = require('./DebugHeader');
 
-var Game = function ()
+var Game = function (config)
 {
-    DebugHeader(0);
+    this.config = new Config(config);
+
+    DebugHeader(this.config);
 };
 
 module.exports = Game;
