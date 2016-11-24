@@ -1791,9 +1791,9 @@ declare module Phaser {
         destroy(destroyChildren?: boolean, soft?: boolean): void;
         divideAll(property: string, amount: number, checkAlive?: boolean, checkVisible?: boolean): void;
         forEach(callback: Function, callbackContext: any, checkExists?: boolean, ...args: any[]): void;
-        forEachAlive(callback: Function, callbackContext: any, ...args: any[]): void;
-        forEachDead(callback: Function, callbackContext: any, ...args: any[]): void;
-        forEachExists(callback: Function, callbackContext: any): void;
+        forEachAlive(callback: Function, callbackContext?: any, ...args: any[]): void;
+        forEachDead(callback: Function, callbackContext?: any, ...args: any[]): void;
+        forEachExists(callback: Function, callbackContext?: any): void;
         filter(predicate: Function, checkExists?: boolean): ArraySet;
         getAt(index: number): PIXI.DisplayObject | number;
         getBottom(): any;
