@@ -1812,7 +1812,7 @@ declare module Phaser {
         moveDown(child: any): any;
         moveUp(child: any): any;
         multiplyAll(property: string, amount: number, checkAlive: boolean, checkVisible: boolean): void;
-        next(): void;
+        next(): any;
         postUpdate(): void;
         preUpdate(): void;
         previous(): void;
