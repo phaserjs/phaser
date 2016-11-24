@@ -43,6 +43,8 @@ var DebugHeader = function (game)
         }
         else
         {
+            c = c.concat('%c ');
+
             args.push('color: ' + config.bannerTextColor + '; background: ' + config.bannerBackgroundColor);
         }
 
