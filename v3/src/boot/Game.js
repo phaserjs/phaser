@@ -11,6 +11,7 @@ var Config = require('./Config');
 var DebugHeader = require('./DebugHeader');
 var RequestAnimationFrame = require('../dom/RequestAnimationFrame');
 var DOMContentLoaded = require('../dom/DOMContentLoaded');
+var RandomDataGenerator = require('../math/random-data-generator/RandomDataGenerator');
 
 var Game = function (config)
 {
@@ -67,7 +68,7 @@ var Game = function (config)
     */
     this.device = Device;
 
-    // this.rnd = new Phaser.RandomDataGenerator([ (Date.now() * Math.random()).toString() ]);
+    this.rnd;
 
     DOMContentLoaded(this.boot.bind(this), Device.OS);
 
@@ -79,6 +80,8 @@ Game.prototype = {
 
     boot: function ()
     {
+        this.rnd = new RandomDataGenerator(this.config.seed);
+
         DebugHeader(this);
 
         console.log(CHECKSUM.build);

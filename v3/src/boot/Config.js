@@ -43,7 +43,7 @@ function Config (config)
 
     this.stateConfig = getValue(config, 'state', null);
 
-    this.rngSeed = getValue(config, 'seed', (Date.now() * Math.random()).toString());
+    this.seed = getValue(config, 'seed', [ (Date.now() * Math.random()).toString() ]);
 
     this.gameTitle = getValue(config, 'title', '');
     this.gameURL = getValue(config, 'url', 'http://phaser.io');
