@@ -63,6 +63,9 @@ function Config (config)
     this.hidePhaser = getValue(banner, 'hidePhaser', false);
     this.bannerTextColor = getValue(banner, 'text', defaultBannerTextColor);
     this.bannerBackgroundColor = getValue(banner, 'background', defaultBannerColor);
+    
+    this.forceSetTimeOut = getValue(config, 'forceSetTimeOut', false);
+
 }
 
 Config.prototype.constructor = Config;

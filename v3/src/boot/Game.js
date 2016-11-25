@@ -6,6 +6,7 @@
 
 var Config = require('./Config');
 var DebugHeader = require('./DebugHeader');
+var RequestAnimationFrame = require('./RequestAnimationFrame');
 
 var Game = function (config)
 {
@@ -30,7 +31,7 @@ var Game = function (config)
     * @property {Phaser.RequestAnimationFrame} raf - Automatically handles the core game loop via requestAnimationFrame or setTimeout
     * @protected
     */
-    this.raf = null;
+    this.raf = new RequestAnimationFrame(this);
 
     /**
     * @property {Phaser.TextureManager} textures - Reference to the Phaser Texture Manager.
@@ -65,7 +66,6 @@ var Game = function (config)
     // this.rnd = new Phaser.RandomDataGenerator([ (Date.now() * Math.random()).toString() ]);
 
     // this.device.whenReady(this.boot, this);
-
 
     DebugHeader(this);
 };
