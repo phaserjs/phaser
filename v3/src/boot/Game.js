@@ -6,6 +6,7 @@
 
 var CHECKSUM = require('../checksum');
 
+var Device = require('../device');
 var Config = require('./Config');
 var DebugHeader = require('./DebugHeader');
 var RequestAnimationFrame = require('../dom/RequestAnimationFrame');
@@ -64,11 +65,9 @@ var Game = function (config)
     /**
     * @property {Phaser.Device} device - Contains device information and capabilities.
     */
-    // this.device = Phaser.Device;
+    this.device = Device;
 
     // this.rnd = new Phaser.RandomDataGenerator([ (Date.now() * Math.random()).toString() ]);
-
-    // this.device.whenReady(this.boot, this);
 
     DOMContentLoaded(this.boot.bind(this));
 
