@@ -6,7 +6,7 @@
 
 var isBooted = false;
 
-function DOMContentLoaded (callback)
+function DOMContentLoaded (callback, OS)
 {
     if (isBooted)
     {
@@ -36,6 +36,11 @@ function DOMContentLoaded (callback)
     if (!document.body)
     {
         window.setTimeout(check, 20);
+    }
+    else if (OS.cordova && !OS.cocoonJS)
+    {
+        //  Ref. http://docs.phonegap.com/en/3.5.0/cordova_events_events.md.html#deviceready
+        document.addEventListener('deviceready', check, false);
     }
     else
     {

@@ -58,9 +58,53 @@ var Features = {
     * @property {boolean} getUserMedia - Does the device support the getUserMedia API?
     * @default
     */
-    getUserMedia: true
+    getUserMedia: true,
+
+    /**
+    * @property {boolean} littleEndian - Is the device big or little endian? (only detected if the browser supports TypedArrays)
+    * @default
+    */
+    littleEndian: false,
+
+    /**
+    * @property {boolean} support32bit - Does the device context support 32bit pixel manipulation using array buffer views?
+    * @default
+    */
+    support32bit: false
 
 };
+
+/**
+* Check Little or Big Endian system.
+*
+* @author Matt DesLauriers (@mattdesl)
+*/
+function checkIsLittleEndian ()
+{
+    var a = new ArrayBuffer(4);
+    var b = new Uint8Array(a);
+    var c = new Uint32Array(a);
+
+    b[0] = 0xa1;
+    b[1] = 0xb2;
+    b[2] = 0xc3;
+    b[3] = 0xd4;
+
+    if (c[0] === 0xd4c3b2a1)
+    {
+        return true;
+    }
+
+    if (c[0] === 0xa1b2c3d4)
+    {
+        return false;
+    }
+    else
+    {
+        //  Could not determine endianness
+        return null;
+    }
+}
 
 function init (OS, Browser)
 {
@@ -78,6 +122,8 @@ function init (OS, Browser)
     Features.file = !!window['File'] && !!window['FileReader'] && !!window['FileList'] && !!window['Blob'];
     Features.fileSystem = !!window['requestFileSystem'];
 
+    var isUint8 = false;
+
     var testWebGL = function ()
     {
         if (window['WebGLRenderingContext'])
@@ -90,6 +136,15 @@ function init (OS, Browser)
                 canvas.screencanvas = false;
 
                 var ctx = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+
+                var image = ctx.createImageData(1, 1);
+
+                /**
+                * Test to see if ImageData uses CanvasPixelArray or Uint8ClampedArray.
+                *
+                * @author Matt DesLauriers (@mattdesl)
+                */
+                isUint8 = image.data instanceof Uint8ClampedArray;
 
                 return (ctx !== null);
             }
@@ -132,6 +187,26 @@ function init (OS, Browser)
     {
         Features.canvasBitBltShift = false;
     }
+
+    navigator.vibrate = navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate;
+
+    if (navigator.vibrate)
+    {
+        Features.vibration = true;
+    }
+
+    if (typeof ArrayBuffer !== 'undefined' && typeof Uint8Array !== 'undefined' && typeof Uint32Array !== 'undefined')
+    {
+        Features.littleEndian = checkIsLittleEndian();
+    }
+
+    Features.support32bit = (
+        typeof ArrayBuffer !== 'undefined' &&
+        typeof Uint8ClampedArray !== 'undefined' &&
+        typeof Int32Array !== 'undefined' &&
+        Features.littleEndian !== null &&
+        isUint8
+    );
 
     return Features;
 }

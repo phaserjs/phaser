@@ -69,7 +69,7 @@ var Game = function (config)
 
     // this.rnd = new Phaser.RandomDataGenerator([ (Date.now() * Math.random()).toString() ]);
 
-    DOMContentLoaded(this.boot.bind(this));
+    DOMContentLoaded(this.boot.bind(this), Device.OS);
 
 };
 

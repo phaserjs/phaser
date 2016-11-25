@@ -25,6 +25,18 @@ var OS = {
     iOSVersion: 0,
 
     /**
+    * @property {boolean} iPhone - Is running on iPhone?
+    * @default
+    */
+    iPhone: false,
+
+    /**
+    * @property {boolean} iPad - Is running on iPad?
+    * @default
+    */
+    iPad: false,
+
+    /**
     * @property {boolean} cocoonJS - Is the game running under CocoonJS?
     * @default
     */
@@ -118,7 +130,13 @@ var OS = {
     * @property {boolean} kindle - Is running on an Amazon Kindle?
     * @default
     */
-    kindle: false
+    kindle: false,
+
+    /**
+    * @property {number} pixelRatio - PixelRatio of the host device?
+    * @default
+    */
+    pixelRatio: 1
 
 };
 
@@ -232,6 +250,11 @@ function init ()
     {
         OS.crosswalk = true;
     }
+
+    OS.iPhone = ua.toLowerCase().indexOf('iphone') !== -1;
+    OS.iPad = ua.toLowerCase().indexOf('ipad') !== -1;
+
+    OS.pixelRatio = window['devicePixelRatio'] || 1;
 
     return OS;
 }

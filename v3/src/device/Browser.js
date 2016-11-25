@@ -94,7 +94,7 @@ var Browser = {
     * @property {boolean} edge - Set to true if running in Microsoft Edge browser.
     * @default
     */
-    // edge: false,
+    edge: false,
 
     /**
     * @property {boolean} silk - Set to true if running in the Silk browser (as used on the Amazon Kindle)
@@ -111,6 +111,10 @@ function init (OS)
     if ((/Arora/).test(ua))
     {
         Browser.arora = true;
+    }
+    else if (/Edge\/\d+/.test(ua))
+    {
+        Browser.edge = true;
     }
     else if ((/Chrome\/(\d+)/).test(ua) && !OS.windowsPhone)
     {
