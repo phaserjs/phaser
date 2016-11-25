@@ -25,6 +25,8 @@ function RequestAnimationFrame (game)
     */
     this.isRunning = false;
 
+    this.tick = 0;
+
     var vendors = [
         'ms',
         'moz',
@@ -48,19 +50,25 @@ function RequestAnimationFrame (game)
     */
     this.timeOutID = null;
 
-    //  timestamp = DOMHighResTimeStamp
-    this.step = function (timestamp)
-    {
-        this.timeOutID = window.requestAnimationFrame(this.step);
+    var _this = this;
 
-        this.game.update(timestamp);
+    //  timestamp = DOMHighResTimeStamp
+    var step = function (timestamp)
+    {
+        _this.tick = timestamp;
+
+        _this.timeOutID = window.requestAnimationFrame(step);
+
+        _this.game.update(timestamp);
     };
 
-    this.stepTimeout = function ()
+    var stepTimeout = function ()
     {
-        this.game.update(Date.now());
+        _this.tick = Date.now();
 
-        this.timeOutID = window.setTimeout(this.stepTimeout, this.game.time.timeToCall);
+        // _this.game.update(_this.tick);
+
+        // _this.timeOutID = window.setTimeout(stepTimeout, _this.game.time.timeToCall);
     };
 
     /**
@@ -75,13 +83,13 @@ function RequestAnimationFrame (game)
         {
             this.isSetTimeOut = true;
 
-            this.timeOutID = window.setTimeout(this.stepTimeout, 0);
+            this.timeOutID = window.setTimeout(stepTimeout, 0);
         }
         else
         {
             this.isSetTimeOut = false;
 
-            this.timeOutID = window.requestAnimationFrame(this.step);
+            this.timeOutID = window.requestAnimationFrame(step);
         }
     };
 

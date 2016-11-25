@@ -20,8 +20,10 @@ module.exports = {
     plugins: [
 
         new WebpackShellPlugin({
+            onBuildStart: 'node create-checksum.js',
             onBuildEnd: 'node copy-to-examples.js'
         })
 
     ]
+
 };

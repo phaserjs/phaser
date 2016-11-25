@@ -4,9 +4,11 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
+var CHECKSUM = require('../checksum');
+
 var Config = require('./Config');
 var DebugHeader = require('./DebugHeader');
-var RequestAnimationFrame = require('./RequestAnimationFrame');
+var RequestAnimationFrame = require('../dom/RequestAnimationFrame');
 
 var Game = function (config)
 {
@@ -68,6 +70,20 @@ var Game = function (config)
     // this.device.whenReady(this.boot, this);
 
     DebugHeader(this);
+
+    console.log(CHECKSUM.build);
+
+};
+
+Game.prototype.constructor = Game;
+
+Game.prototype = {
+
+    update: function (timestamp)
+    {
+        // console.log(timestamp);
+    }
+
 };
 
 module.exports = Game;
