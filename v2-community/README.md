@@ -314,6 +314,18 @@ If you code with [TypeScript](http://www.typescriptlang.org/) there are comprehe
 ![Change Log](http://phaser.io/images/github/div-change-log.png "Change Log")
 <a name="change-log"></a>
 
+## Version 2.7.1
+
+### Updates
+
+* TypeScript definitions fixes and updates (thanks @Aleksey-Danchin)
+
+### Bug Fixes
+
+* Phaser.AnimationParser.spriteSheet() now works like it is supposed to work (thanks @stoneman1, @qarlosh)
+* EarCut was not included in the build because of wrong path in grunt tasks. It should  now work (thanks @stoneman1)
+* Some browsers uses CancelRequestAnimationFrame instead of CancelAnimationFrame and it is now fixed (thanks @stoneman1)
+
 ## Version 2.7.0 - "World's End" - 22nd November 2016
 
 ### New Features
