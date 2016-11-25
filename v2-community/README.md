@@ -34,7 +34,7 @@ Grab the source and join in the fun!
 <a name="whats-new"></a>
 ![What's New](http://phaser.io/images/github/div-whats-new.png "What's New")
 
-<div align="center"><img src="http://phaser.io/images/github/news.jpg"></div>
+<div align="center"><img src="http://phaser.io/images/github/phaser-ce.png"></div>
 
 > 22nd November 2016
 
