@@ -66,6 +66,10 @@ function Config (config)
     
     this.forceSetTimeOut = getValue(config, 'forceSetTimeOut', false);
 
+    this.transparent = getValue(config, 'transparent', false);
+
+    this.pixelArt = getValue(config, 'pixelArt', false);
+
 }
 
 Config.prototype.constructor = Config;
