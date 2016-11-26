@@ -87,8 +87,8 @@ Game.prototype = {
 
         console.log(CHECKSUM.build);
 
-        console.log('pool', CanvasPool.getTotal());
-        console.log('free', CanvasPool.getFree());
+        console.log('pool', CanvasPool.total());
+        console.log('free', CanvasPool.free());
 
         //  Add in ability to specify pre-init and post-init callbacks in the config
 

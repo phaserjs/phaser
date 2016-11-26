@@ -1,32 +1,38 @@
-var Smoothing = {
+var CanvasPool = require('./CanvasPool');
 
-    //  See if we can cache this - first check how often getPrefix is called
-    prefix: null,
+var Smoothing = {
 
     /**
     * Gets the Smoothing Enabled vendor prefix being used on the given context, or null if not set.
+    * iife
     *
     * @method Phaser.Canvas.getSmoothingPrefix
     * @param {CanvasRenderingContext2D} context - The context to enable or disable the image smoothing on.
     * @return {string|null} Returns the smoothingEnabled vendor prefix, or null if not set on the context.
     */
-    getPrefix: function (context)
+    prefix: (function ()
     {
+        var canvas = CanvasPool.create(this, 1, 1);
+        var ctx = canvas.getContext('2d');
+
         var vendors = [ 'i', 'webkitI', 'msI', 'mozI', 'oI' ];
 
         vendors.forEach(function (vendor)
         {
             var s = vendor + 'mageSmoothingEnabled';
 
-            if (s in context)
+            if (s in ctx)
             {
+                CanvasPool.remove(canvas);
                 return s;
             }
-
         });
 
+        CanvasPool.remove(canvas);
+
         return null;
-    },
+
+    })(),
 
     /**
     * Sets the Image Smoothing property on the given context. Set to false to disable image smoothing.
@@ -42,11 +48,9 @@ var Smoothing = {
     */
     enable: function (context, value)
     {
-        var s = Smoothing.getPrefix(context);
-
-        if (s)
+        if (Smoothing.prefix)
         {
-            context[s] = value;
+            context[Smoothing.prefix] = value;
         }
 
         return context;
@@ -54,6 +58,7 @@ var Smoothing = {
 
     /**
      * Returns `true` if the given context has image smoothing enabled, otherwise returns `false`.
+     * Returns null if no smoothing prefix is available.
      *
      * @method Phaser.Canvas.getSmoothingEnabled
      * @param {CanvasRenderingContext2D} context - The context to check for smoothing on.
@@ -61,15 +66,9 @@ var Smoothing = {
      */
     isEnabled: function (context)
     {
-        var s = Smoothing.getPrefix(context);
-
-        if (s)
-        {
-            return context[s];
-        }
-
+        return (Smoothing.prefix !== null) ? context[Smoothing.prefix] : null;
     }
 
 };
 
-module.exports = Smoothing;
+module.exports = Smoothing();

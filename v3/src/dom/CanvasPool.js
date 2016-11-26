@@ -4,6 +4,8 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
+var CONST = require('../const');
+
 /**
  * The pool into which the canvas elements are placed.
  *
@@ -35,18 +37,23 @@ var CanvasPool = function ()
     * @param {number} height - The height of the canvas element.
     * @return {HTMLCanvasElement} The canvas element.
     */
-    var create = function (parent, width, height)
+    var create = function (parent, width, height, type)
     {
-        var idx = first();
+        if (width === undefined) { width = 1; }
+        if (height === undefined) { height = 1; }
+        if (type === undefined) { type = CONST.CANVAS; }
+
         var canvas;
+        var container = first(type);
 
-        console.log('CanvasPool.create', idx);
-
-        if (idx === -1)
+        if (container === null)
         {
-            var container = {
+            console.log('CanvasPool.create new');
+
+            container = {
                 parent: parent,
-                canvas: document.createElement('canvas')
+                canvas: document.createElement('canvas'),
+                type: type
             };
 
             pool.push(container);
@@ -55,9 +62,11 @@ var CanvasPool = function ()
         }
         else
         {
-            pool[idx].parent = parent;
+            console.log('CanvasPool.create existing');
 
-            canvas = pool[idx].canvas;
+            container.parent = parent;
+
+            canvas = container.canvas;
         }
 
         if (width !== undefined)
@@ -69,6 +78,16 @@ var CanvasPool = function ()
         return canvas;
     };
 
+    var create2D = function (parent, width, height)
+    {
+        return create(parent, width, height, CONST.CANVAS);
+    };
+
+    var createWebGL = function (parent, width, height)
+    {
+        return create(parent, width, height, CONST.WEBGL);
+    };
+
     /**
     * Gets the first free canvas index from the pool.
     * 
@@ -76,17 +95,19 @@ var CanvasPool = function ()
     * @method Phaser.CanvasPool.getFirst
     * @return {number}
     */
-    var first = function ()
+    var first = function (type)
     {
-        for (var i = 0; i < pool.length; i++)
-        {
-            if (!pool[i].parent)
-            {
-                return i;
-            }
-        }
+        if (type === undefined) { type = CONST.CANVAS; }
 
-        return -1;
+        pool.forEach(function (container)
+        {
+            if (!container.parent && container.type === type)
+            {
+                return container;
+            }
+        });
+
+        return null;
     };
 
     /**
@@ -95,49 +116,23 @@ var CanvasPool = function ()
     * 
     * @static
     * @method Phaser.CanvasPool.remove
-    * @param {any} parent - The parent of the canvas element.
+    * @param {any|HTMLCanvasElement} parent - The parent of the canvas element.
     */
     var remove = function (parent)
     {
-        //  Check to see if the parent is a canvas object, then do removeByCanvas stuff instead
-        //  CanvasRenderingContext2D
+        //  Check to see if the parent is a canvas object
+        var isCanvas = parent instanceof HTMLCanvasElement;
 
-        for (var i = 0; i < pool.length; i++)
+        pool.forEach(function (container)
         {
-            if (pool[i].parent === parent)
+            if ((isCanvas && container.canvas === parent) || (!isCanvas && container.parent === parent))
             {
-                pool[i].parent = null;
-                pool[i].canvas.width = 1;
-                pool[i].canvas.height = 1;
+                console.log('CanvasPool.remove found and removed');
+                container.parent = null;
+                container.canvas.width = 1;
+                container.canvas.height = 1;
             }
-        }
-
-    };
-
-    /**
-    * Looks up a canvas based on its type, and if found puts it back in the pool, freeing it up for re-use.
-    * The canvas has its width and height set to 1, and its parent attribute nulled.
-    * 
-    * @static
-    * @method Phaser.CanvasPool.removeByCanvas
-    * @param {HTMLCanvasElement} canvas - The canvas element to remove.
-    */
-    var removeByCanvas = function (canvas)
-    {
-        console.log('removeByCanvas');
-
-        for (var i = 0; i < pool.length; i++)
-        {
-            if (pool[i].canvas === canvas)
-            {
-                console.log('found and removed');
-
-                pool[i].parent = null;
-                pool[i].canvas.width = 1;
-                pool[i].canvas.height = 1;
-            }
-        }
-
+        });
     };
 
     /**
@@ -147,17 +142,17 @@ var CanvasPool = function ()
     * @method Phaser.CanvasPool.getTotal
     * @return {number} The number of in-use (parented) canvas elements in the pool.
     */
-    var getTotal = function ()
+    var total = function ()
     {
         var c = 0;
 
-        for (var i = 0; i < pool.length; i++)
+        pool.forEach(function (container)
         {
-            if (pool[i].parent)
+            if (container.parent)
             {
                 c++;
             }
-        }
+        });
 
         return c;
     };
@@ -169,32 +164,22 @@ var CanvasPool = function ()
     * @method Phaser.CanvasPool.getFree
     * @return {number} The number of free (un-parented) canvas elements in the pool.
     */
-    var getFree = function ()
+    var free = function ()
     {
-        var c = 0;
-
-        for (var i = 0; i < pool.length; i++)
-        {
-            if (!pool[i].parent)
-            {
-                c++;
-            }
-        }
-
-        return c;
+        return pool.length - total();
     };
 
     return {
         create: create,
+        create2D: create2D,
+        createWebGL: createWebGL,
         first: first,
         remove: remove,
-        removeByCanvas: removeByCanvas,
-        getTotal: getTotal,
-        getFree: getFree,
+        total: total,
+        free: free,
         pool: pool
     };
 };
 
 //  If we export the called function here, it'll only be invoked once (not every time it's required).
-//  This function must return something though
 module.exports = CanvasPool();

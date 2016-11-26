@@ -136,15 +136,22 @@ function init ()
         {
             try
             {
-                var canvas = CanvasPool.create(this, 1, 1);
+                var canvas = CanvasPool.createWebGL(this);
 
-                //  cocoon ...
-                canvas.screencanvas = false;
+                if (OS.cocoonJS)
+                {
+                    canvas.screencanvas = false;
+                }
 
                 var ctx = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
 
-                var image = ctx.createImageData(1, 1);
+                var canvas2D = CanvasPool.create2D(this);
 
+                var ctx2D = canvas2D.getContext('2d');
+
+                //  Can't be done on a webgl context
+                var image = ctx2D.createImageData(1, 1);
+    
                 /**
                 * Test to see if ImageData uses CanvasPixelArray or Uint8ClampedArray.
                 *
@@ -152,7 +159,8 @@ function init ()
                 */
                 isUint8 = image.data instanceof Uint8ClampedArray;
 
-                CanvasPool.removeByCanvas(canvas);
+                CanvasPool.remove(canvas);
+                CanvasPool.remove(canvas2D);
 
                 return (ctx !== null);
             }
