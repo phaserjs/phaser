@@ -1,3 +1,6 @@
+var OS = require('./OS');
+var Browser = require('./Browser');
+
 var Audio = {
 
     /**
@@ -57,7 +60,7 @@ var Audio = {
 
 };
 
-function init (OS, Browser)
+function init ()
 {
     Audio.audioData = !!(window['Audio']);
     Audio.webAudio = !!(window['AudioContext'] || window['webkitAudioContext']);
@@ -133,4 +136,4 @@ function init (OS, Browser)
     return Audio;
 }
 
-module.exports = init;
+module.exports = init();

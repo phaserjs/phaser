@@ -5,26 +5,26 @@
 */
 
 /**
+ * The pool into which the canvas elements are placed.
+ *
+ * @property pool
+ * @type Array
+ */
+var pool = [];
+
+//  This singleton is instantiated as soon as Phaser loads,
+//  before a Phaser.Game instance has even been created.
+//  Which means all instances of Phaser Games on the same page
+//  can share the one single pool
+
+/**
 * The CanvasPool is a global static object, that allows Phaser to recycle and pool Canvas DOM elements.
 *
 * @class Phaser.CanvasPool
 * @static
 */
-function CanvasPool ()
+var CanvasPool = function ()
 {
-    /**
-     * The pool into which the canvas elements are placed.
-     *
-     * @property pool
-     * @type Array
-     */
-    this.pool = [];
-}
-
-CanvasPool.prototype.constructor = CanvasPool;
-
-CanvasPool.prototype = {
-
     /**
     * Creates a new Canvas DOM element, or pulls one from the pool if free.
     * 
@@ -35,10 +35,12 @@ CanvasPool.prototype = {
     * @param {number} height - The height of the canvas element.
     * @return {HTMLCanvasElement} The canvas element.
     */
-    create: function (parent, width, height)
+    var create = function (parent, width, height)
     {
-        var idx = this.first();
+        var idx = first();
         var canvas;
+
+        console.log('CanvasPool.create', idx);
 
         if (idx === -1)
         {
@@ -47,15 +49,15 @@ CanvasPool.prototype = {
                 canvas: document.createElement('canvas')
             };
 
-            this.pool.push(container);
+            pool.push(container);
 
             canvas = container.canvas;
         }
         else
         {
-            this.pool[idx].parent = parent;
+            pool[idx].parent = parent;
 
-            canvas = this.pool[idx].canvas;
+            canvas = pool[idx].canvas;
         }
 
         if (width !== undefined)
@@ -65,7 +67,7 @@ CanvasPool.prototype = {
         }
 
         return canvas;
-    },
+    };
 
     /**
     * Gets the first free canvas index from the pool.
@@ -74,10 +76,8 @@ CanvasPool.prototype = {
     * @method Phaser.CanvasPool.getFirst
     * @return {number}
     */
-    first: function ()
+    var first = function ()
     {
-        var pool = this.pool;
-
         for (var i = 0; i < pool.length; i++)
         {
             if (!pool[i].parent)
@@ -87,7 +87,7 @@ CanvasPool.prototype = {
         }
 
         return -1;
-    },
+    };
 
     /**
     * Looks up a canvas based on its parent, and if found puts it back in the pool, freeing it up for re-use.
@@ -97,9 +97,10 @@ CanvasPool.prototype = {
     * @method Phaser.CanvasPool.remove
     * @param {any} parent - The parent of the canvas element.
     */
-    remove: function (parent)
+    var remove = function (parent)
     {
-        var pool = this.pool;
+        //  Check to see if the parent is a canvas object, then do removeByCanvas stuff instead
+        //  CanvasRenderingContext2D
 
         for (var i = 0; i < pool.length; i++)
         {
@@ -111,7 +112,7 @@ CanvasPool.prototype = {
             }
         }
 
-    },
+    };
 
     /**
     * Looks up a canvas based on its type, and if found puts it back in the pool, freeing it up for re-use.
@@ -121,25 +122,23 @@ CanvasPool.prototype = {
     * @method Phaser.CanvasPool.removeByCanvas
     * @param {HTMLCanvasElement} canvas - The canvas element to remove.
     */
-    removeByCanvas: function (canvas)
+    var removeByCanvas = function (canvas)
     {
-        var pool = this.pool;
+        console.log('removeByCanvas');
 
         for (var i = 0; i < pool.length; i++)
         {
             if (pool[i].canvas === canvas)
             {
+                console.log('found and removed');
+
                 pool[i].parent = null;
                 pool[i].canvas.width = 1;
                 pool[i].canvas.height = 1;
             }
         }
 
-    },
-
-};
-
-Object.defineProperties(CanvasPool.prototype, {
+    };
 
     /**
     * Gets the total number of used canvas elements in the pool.
@@ -148,25 +147,20 @@ Object.defineProperties(CanvasPool.prototype, {
     * @method Phaser.CanvasPool.getTotal
     * @return {number} The number of in-use (parented) canvas elements in the pool.
     */
-    total:
+    var getTotal = function ()
     {
-        enumerable: true,
+        var c = 0;
 
-        get: function ()
+        for (var i = 0; i < pool.length; i++)
         {
-            var c = 0;
-
-            for (var i = 0; i < this.pool.length; i++)
+            if (pool[i].parent)
             {
-                if (this.pool[i].parent)
-                {
-                    c++;
-                }
+                c++;
             }
-
-            return c;
         }
-    },
+
+        return c;
+    };
 
     /**
     * Gets the total number of free canvas elements in the pool.
@@ -175,26 +169,32 @@ Object.defineProperties(CanvasPool.prototype, {
     * @method Phaser.CanvasPool.getFree
     * @return {number} The number of free (un-parented) canvas elements in the pool.
     */
-    free:
+    var getFree = function ()
     {
-        enumerable: true,
+        var c = 0;
 
-        get: function ()
+        for (var i = 0; i < pool.length; i++)
         {
-            var c = 0;
-
-            for (var i = 0; i < this.pool.length; i++)
+            if (!pool[i].parent)
             {
-                if (!this.pool[i].parent)
-                {
-                    c++;
-                }
+                c++;
             }
-
-            return c;
         }
-    }
 
-});
+        return c;
+    };
 
-module.exports = CanvasPool;
+    return {
+        create: create,
+        first: first,
+        remove: remove,
+        removeByCanvas: removeByCanvas,
+        getTotal: getTotal,
+        getFree: getFree,
+        pool: pool
+    };
+};
+
+//  If we export the called function here, it'll only be invoked once (not every time it's required).
+//  This function must return something though
+module.exports = CanvasPool();

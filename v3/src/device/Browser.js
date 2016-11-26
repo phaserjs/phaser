@@ -1,3 +1,5 @@
+var OS = require('./OS');
+
 var Browser = {
 
     /**
@@ -104,7 +106,7 @@ var Browser = {
 
 };
 
-function init (OS)
+function init ()
 {
     var ua = navigator.userAgent;
 
@@ -168,4 +170,4 @@ function init (OS)
     return Browser;
 }
 
-module.exports = init;
+module.exports = init();

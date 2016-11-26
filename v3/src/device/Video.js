@@ -1,3 +1,6 @@
+var OS = require('./OS');
+var Browser = require('./Browser');
+
 var Video = {
 
     /**
@@ -38,7 +41,7 @@ var Video = {
 
 };
 
-function init (OS, Browser)
+function init ()
 {
     var videoElement = document.createElement('video');
     var result = !!videoElement.canPlayType;
@@ -83,4 +86,4 @@ function init (OS, Browser)
     return Video;
 }
 
-module.exports = init;
+module.exports = init();

@@ -1,3 +1,6 @@
+var OS = require('./OS');
+var Browser = require('./Browser');
+
 var Fullscreen = {
 
     /**
@@ -86,4 +89,4 @@ function init ()
     return Fullscreen;
 }
 
-module.exports = init;
+module.exports = init();

@@ -1,3 +1,7 @@
+var OS = require('./OS');
+var Browser = require('./Browser');
+var CanvasPool = require('../dom/CanvasPool');
+
 var Features = {
 
     /**
@@ -106,8 +110,10 @@ function checkIsLittleEndian ()
     }
 }
 
-function init (OS, Browser)
+function init ()
 {
+    console.log('Features.init');
+
     Features.canvas = !!window['CanvasRenderingContext2D'] || OS.cocoonJS;
 
     try
@@ -130,7 +136,7 @@ function init (OS, Browser)
         {
             try
             {
-                var canvas = document.createElement('canvas');
+                var canvas = CanvasPool.create(this, 1, 1);
 
                 //  cocoon ...
                 canvas.screencanvas = false;
@@ -145,6 +151,8 @@ function init (OS, Browser)
                 * @author Matt DesLauriers (@mattdesl)
                 */
                 isUint8 = image.data instanceof Uint8ClampedArray;
+
+                CanvasPool.removeByCanvas(canvas);
 
                 return (ctx !== null);
             }
@@ -211,4 +219,4 @@ function init (OS, Browser)
     return Features;
 }
 
-module.exports = init;
+module.exports = init();

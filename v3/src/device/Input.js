@@ -1,3 +1,6 @@
+var OS = require('./OS');
+var Browser = require('./Browser');
+
 var Input = {
 
     /**
@@ -21,7 +24,7 @@ var Input = {
     
 };
 
-function init (OS, Browser)
+function init ()
 {
     if ('ontouchstart' in document.documentElement || (window.navigator.maxTouchPoints && window.navigator.maxTouchPoints >= 1))
     {
@@ -56,4 +59,4 @@ function init (OS, Browser)
     return Input;
 }
 
-module.exports = init;
+module.exports = init();

@@ -259,4 +259,4 @@ function init ()
     return OS;
 }
 
-module.exports = init;
+module.exports = init();

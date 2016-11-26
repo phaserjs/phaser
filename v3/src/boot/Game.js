@@ -12,6 +12,7 @@ var DebugHeader = require('./DebugHeader');
 var RequestAnimationFrame = require('../dom/RequestAnimationFrame');
 var DOMContentLoaded = require('../dom/DOMContentLoaded');
 var RandomDataGenerator = require('../math/random-data-generator/RandomDataGenerator');
+var CanvasPool = require('../dom/CanvasPool');
 
 var Game = function (config)
 {
@@ -85,6 +86,9 @@ Game.prototype = {
         DebugHeader(this);
 
         console.log(CHECKSUM.build);
+
+        console.log('pool', CanvasPool.getTotal());
+        console.log('free', CanvasPool.getFree());
 
         //  Add in ability to specify pre-init and post-init callbacks in the config
 
