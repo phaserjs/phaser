@@ -10085,7 +10085,7 @@ declare module Phaser {
         * @param callbackContext The context in which the function should be called (usually 'this').
         * @param args Additional arguments to pass to the callback function, after the child item. - Default: (none)
         */
-        forEachAlive(callback: Function, callbackContext: any, ...args: any[]): void;
+        forEachAlive(callback: Function, callbackContext?: any, ...args: any[]): void;
 
         /**
         * Call a function on each dead child in this group.
@@ -10096,7 +10096,7 @@ declare module Phaser {
         * @param callbackContext The context in which the function should be called (usually 'this').
         * @param args Additional arguments to pass to the callback function, after the child item. - Default: (none)
         */
-        forEachDead(callback: Function, callbackContext: any, ...args: any[]): void;
+        forEachDead(callback: Function, callbackContext?: any, ...args: any[]): void;
 
         /**
         * Call a function on each existing child in this group.
@@ -10107,7 +10107,7 @@ declare module Phaser {
         * @param callbackContext The context in which the function should be called (usually 'this').
         * @param args Additional arguments to pass to the callback function, after the child item. - Default: (none)
         */
-        forEachExists(callback: Function, callbackContext: any): void;
+        forEachExists(callback: Function, callbackContext?: any): void;
 
         /**
         * Find children matching a certain predicate.
@@ -10361,7 +10361,7 @@ declare module Phaser {
         * If the cursor is at the end of the group (top child) it is moved the start of the group (bottom child).
         * @return The child the cursor now points to.
         */
-        next(): void;
+        next(): any;
 
         /**
         * The core postUpdate - as called by World.
@@ -12377,6 +12377,12 @@ declare module Phaser {
         * If the key is up it holds the duration of the previous down session. The number of milliseconds this key has been held down for.
         */
         duration: number;
+
+        /**
+        * An enabled key processes its update and dispatches events.
+        * A key can be disabled momentarily at runtime instead of deleting it.
+        * Default: true
+        */
         enabled: boolean;
 
         /**
@@ -12404,12 +12410,28 @@ declare module Phaser {
         * True if the key has just been pressed (NOTE: requires to be reset, see justDown getter)
         */
         _justDown: boolean;
+
+        /**
+        * The justDown value allows you to test if this Key has just been pressed down or not.
+        * When you check this value it will return `true` if the Key is down, otherwise `false`.
+        * You can only call justDown once per key press. It will only return `true` once, until the Key is released and pressed down again.
+        * This allows you to use it in situations where you want to check if this key is down without using a Signal, such as in a core game loop.
+        * Default: false
+        */
         justDown: boolean;
 
         /**
         * True if the key has just been pressed (NOTE: requires to be reset, see justDown getter)
         */
         _justUp: boolean;
+
+        /**
+        * The justUp value allows you to test if this Key has just been released or not.
+        * When you check this value it will return `true` if the Key is up, otherwise `false`.
+        * You can only call justUp once per key release. It will only return `true` once, until the Key is pressed down and released again.
+        * This allows you to use it in situations where you want to check if this key is up without using a Signal, such as in a core game loop.
+        * Default: false
+        */
         justUp: boolean;
 
         /**
