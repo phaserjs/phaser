@@ -4,6 +4,7 @@
 
 ### Updates
 
+* Added a third optional parameter to PIXI.BaseTexture allowing textures to be scaled according to devicePixelRatio (thanks @cloakedninjas)
 * TypeScript definitions fixes and updates (thanks @Aleksey-Danchin)
 
 ### Bug Fixes
