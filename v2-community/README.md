@@ -314,7 +314,7 @@ If you code with [TypeScript](http://www.typescriptlang.org/) there are comprehe
 ![Change Log](http://phaser.io/images/github/div-change-log.png "Change Log")
 <a name="change-log"></a>
 
-## Version 2.7.1
+## Version 2.7.1 - 28th November 2016
 
 ### Updates
 
