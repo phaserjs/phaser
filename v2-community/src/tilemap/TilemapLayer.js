@@ -65,7 +65,7 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     */
     this.context = this.canvas.getContext('2d');
 
-    this.setTexture(new PIXI.Texture(new PIXI.BaseTexture(this.canvas)));
+    this.setTexture(new PIXI.Texture(new PIXI.BaseTexture(this.canvas, null, this.game.resolution)));
 
     /**
     * The const type of this object.
