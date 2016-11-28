@@ -4,9 +4,11 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
+var OS = require('../device/OS');
+
 var isBooted = false;
 
-function DOMContentLoaded (callback, OS)
+function DOMContentLoaded (callback)
 {
     if (isBooted)
     {

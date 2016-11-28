@@ -5,6 +5,7 @@
 */
 
 var CONST = require('../const');
+var NOOP = require('../utils/NOOP');
 
 var defaultBannerColor = [
     '#ff0000',
@@ -69,6 +70,19 @@ function Config (config)
     this.transparent = getValue(config, 'transparent', false);
 
     this.pixelArt = getValue(config, 'pixelArt', false);
+
+    //  Callbacks
+
+    var callbacks = getValue(config, 'callbacks', null);
+
+    if (!callbacks)
+    {
+        //  Use the default banner set-up
+        callbacks = {};
+    }
+
+    this.preBoot  = getValue(callbacks, 'preBoot', NOOP);
+    this.postBoot  = getValue(callbacks, 'postBoot', NOOP);
 
 }
 

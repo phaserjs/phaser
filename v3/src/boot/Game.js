@@ -71,7 +71,7 @@ var Game = function (config)
 
     this.rnd;
 
-    DOMContentLoaded(this.boot.bind(this), Device.OS);
+    DOMContentLoaded(this.boot.bind(this));
 
 };
 
@@ -81,6 +81,8 @@ Game.prototype = {
 
     boot: function ()
     {
+        this.config.preBoot();
+
         this.rnd = new RandomDataGenerator(this.config.seed);
 
         DebugHeader(this);
@@ -90,7 +92,7 @@ Game.prototype = {
         console.log('pool', CanvasPool.total());
         console.log('free', CanvasPool.free());
 
-        //  Add in ability to specify pre-init and post-init callbacks in the config
+        this.config.postBoot();
 
         this.raf.start();
     },
