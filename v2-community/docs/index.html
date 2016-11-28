@@ -1373,7 +1373,7 @@ return {number} The total number of PathPoints in this Path.</a>
 <li><a href="#contributing">Contributing</a></li>
 </ul>
 <p><a name="whats-new"></a><br><img src="http://phaser.io/images/github/div-whats-new.png" alt="What's New" title="What's New"></p>
-<div align="center"><img src="http://phaser.io/images/github/news.jpg"></div>
+<div align="center"><img src="http://phaser.io/images/github/phaser-ce.png"></div>
 
 <blockquote>
 <p>22nd November 2016</p>
@@ -1382,10 +1382,19 @@ return {number} The total number of PathPoints in this Path.</a>
 <p>Phaser 2 was a massive milestone for us, and we're still constantly amazed at all the cool things you've created, and continue to create with it. Thank you to everyone who has submitted an issue or pull request over the years, or helped the framework grow in any shape or capacity.</p>
 <p>As of today all of our in-house resources are spent on building Phaser 3 and beyond. However we fully recognize that lots of you still use Phaser 2, and have a lot to contribute to its future. So this is what we've done:</p>
 <ul>
-<li>Phaser 2.6.2 is the last 'official' release, and remains set as the 'latest' version on npm</li>
-<li>Phaser 2.7.0 has been given to the community to maintain, and released to npm under a version tag</li>
+<li>Phaser 2.6.2 is the last 'official' release, published on npm as <code>phaser</code></li>
+<li>Phaser 2.7.0 and all future versions have been given to the community to maintain, published on npm as <code>phaser-ce</code></li>
 </ul>
-<p><strong>All Pull Requests made against the <code>v2-community</code> version will be unconditionally approved</strong>. We'll give GitHub permissions to a select few individuals to help with this process. When you, the community, requests it, we will publish new versions to npm.</p>
+<p><strong>All Pull Requests made against the <code>v2-community</code> version will be unconditionally approved</strong>. We'll give GitHub permissions to a select few individuals to help with this process. When you, the community, request it, we will publish new versions to npm.</p>
+<p>If you are migrating pull requests from the old folder structure, you might find the following process useful to migrate your PRs over to the new structure:</p>
+<p>First, from your forked repo, make sure <code>master</code> is up to date by fetching upstream. To do this easily:</p>
+<pre class="prettyprint source"><code>git checkout master
+git reset --hard upstream/master</code></pre><ol>
+<li><code>cd</code> into your forked repo locally</li>
+<li><code>git checkout x</code> where <code>x</code> is your feature branch</li>
+<li><code>git rebase master</code></li>
+<li><code>git push --force x</code> and then resubmit a PR on the GitHub UI</li>
+</ol>
 <p>We believe this set-up will give us the best of both worlds. It will allow us to continue focusing our efforts on Phaser 3. And it will allow the community to enhance Phaser 2 for as long as they wish.</p>
 <p>As always, check the <a href="#change-log">Change Log</a> to see what was added recently.</p>
 <p>Keep your eyes on the web site, and subscribe to the weekly Phaser World <a href="#newsletter">newsletter</a>. You can also follow on <a href="https://twitter.com/photonstorm">Twitter</a>, or chat in the Phaser <a href="http://phaser.io/community/slack">Slack</a> and <a href="http://phaser.io/community/discord">Discord</a> channels.</p>
@@ -1421,14 +1430,14 @@ return {number} The total number of PathPoints in this Path.</a>
 <h3>Bower / npm</h3><p>Install via <a href="http://bower.io">bower</a></p>
 <p><code>bower install phaser</code></p>
 <p>Install via <a href="https://www.npmjs.com">npm</a></p>
-<p><code>npm install phaser@2.7.0</code></p>
+<p><code>npm install phaser-ce</code></p>
 <p>Using Browserify? Please <a href="#browserify">read this</a>.</p>
 <h3>CDN</h3><p><a href="http://www.jsdelivr.com/#!phaser">jsDelivr</a> is a &quot;super-fast CDN for developers&quot;. Include the following in your html:</p>
-<p><code>&lt;script src=&quot;//cdn.jsdelivr.net/phaser/2.7.0/phaser.js&quot;&gt;&lt;/script&gt;</code></p>
+<p><code>&lt;script src=&quot;//cdn.jsdelivr.net/phaser-ce/2.7.0/phaser.js&quot;&gt;&lt;/script&gt;</code></p>
 <p>or the minified version:</p>
-<p><code>&lt;script src=&quot;//cdn.jsdelivr.net/phaser/2.7.0/phaser.min.js&quot;&gt;&lt;/script&gt;</code></p>
-<p><a href="https://cdnjs.com/libraries/phaser">cdnjs.com</a> also offers a free CDN service. They have all versions of Phaser and even the custom builds:</p>
-<p><code>&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/phaser/2.7.0/phaser.js&quot;&gt;&lt;/script&gt;</code></p>
+<p><code>&lt;script src=&quot;//cdn.jsdelivr.net/phaser-ce/2.7.0/phaser.min.js&quot;&gt;&lt;/script&gt;</code></p>
+<p><a href="https://cdnjs.com/libraries/phaser-ce">cdnjs.com</a> also offers a free CDN service. They have all versions of Phaser and even the custom builds:</p>
+<p><code>&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/phaser-ce/2.7.0/phaser.js&quot;&gt;&lt;/script&gt;</code></p>
 <h3>Phaser Sandbox</h3><p>If you'd like to try coding in Phaser right now, with nothing more than your web browser, then head over to the <a href="http://phaser.io/sandbox">Phaser Sandbox</a>. You'll find Quick Start templates, and a user-friendly editor filled with handy code-completion features.</p>
 <h3>License</h3><p>Phaser is released under the <a href="http://opensource.org/licenses/MIT">MIT License</a>.</p>
 <p><img src="http://phaser.io/images/github/div-getting-started.png" alt="Getting Started" title="Getting Started"><br><a name="getting-started"></a></p>
@@ -1499,6 +1508,15 @@ require('phaser');</code></pre><h3>Building from source</h3><p>Should you wish t
 <h3>JavaScript and TypeScript</h3><p>Phaser is developed in ES5 JavaScript. We've made no assumptions about how you like to code, and were careful not to impose a strict structure upon you. You won't find Phaser split into modules, requiring a build step, or making you use a class / inheritance OOP approach. That doesn't mean you can't do so, it just means we don't <em>force</em> you to. It's your choice.</p>
 <p>If you code with <a href="http://www.typescriptlang.org/">TypeScript</a> there are comprehensive definition files in the <code>typescript</code> folder. They are for TypeScript 1.4+.</p>
 <p><img src="http://phaser.io/images/github/div-change-log.png" alt="Change Log" title="Change Log"><br><a name="change-log"></a></p>
+<h2>Version 2.7.1</h2><h3>Updates</h3><ul>
+<li>Added a third optional parameter to PIXI.BaseTexture allowing textures to be scaled according to devicePixelRatio (thanks @cloakedninjas)</li>
+<li>TypeScript definitions fixes and updates (thanks @Aleksey-Danchin)</li>
+</ul>
+<h3>Bug Fixes</h3><ul>
+<li>Phaser.AnimationParser.spriteSheet() now works like it is supposed to work (thanks @stoneman1, @qarlosh)</li>
+<li>EarCut was not included in the build because of wrong path in grunt tasks. It should  now work (thanks @stoneman1)</li>
+<li>Some browsers uses CancelRequestAnimationFrame instead of CancelAnimationFrame and it is now fixed (thanks @stoneman1)</li>
+</ul>
 <h2>Version 2.7.0 - &quot;World's End&quot; - 22nd November 2016</h2><h3>New Features</h3><ul>
 <li>Multiple Batched Texture support is now available. This is a WebGL feature that can seriously decrease the volume of draw calls made in complex, or asset heavy, games. To enable it you can either use the new renderer type <code>Phaser.WEBGL_MULTI</code>, or you can pass the property <code>multiTexture: true</code> in a Phaser.Game configuration object. Once enabled, it cannot be disabled.</li>
 <li><code>game.renderer.setTexturePriority</code> is the method that goes with the Multiple Texture support. It takes an array as its single argument. The array consists of Phaser.Cache image key strings. Phaser will then try to batch as many of the textures as it can, depending on the hardware limits. If for example the GPU can only batch 8 textures, and you provide an array of 16, then only the first 8 in the array will be batched.</li>
@@ -1612,7 +1630,7 @@ require('phaser');</code></pre><h3>Building from source</h3><p>Should you wish t
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
-		on Wed Nov 23 2016 00:49:20 GMT+0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Mon Nov 28 2016 18:47:54 GMT+0200 (EET) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

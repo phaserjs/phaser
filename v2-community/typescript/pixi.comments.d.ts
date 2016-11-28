@@ -262,6 +262,7 @@ declare module PIXI {
         * 
         * @param canvas The canvas element source of the texture
         * @param scaleMode See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
+        * @param resolution the resolution of the texture (for HiDPI displays)
         */
         static fromCanvas(canvas: HTMLCanvasElement, scaleMode?: scaleModes): BaseTexture;
 
@@ -271,6 +272,7 @@ declare module PIXI {
         * 
         * @param source the source object (image or canvas)
         * @param scaleMode See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
+        * @param resolution the resolution of the texture (for HiDPI displays)
         */
         constructor(source: HTMLImageElement, scaleMode: scaleModes);
 
@@ -279,6 +281,7 @@ declare module PIXI {
         * 
         * @param source the source object (image or canvas)
         * @param scaleMode See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
+        * @param resolution the resolution of the texture (for HiDPI displays)
         */
         constructor(source: HTMLCanvasElement, scaleMode: scaleModes);
 

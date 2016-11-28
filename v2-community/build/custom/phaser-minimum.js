@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.7.0 "World's End" - Built: Wed Nov 23 2016 00:48:46
+* v2.7.1 "2016-11-28" - Built: Mon Nov 28 2016 18:47:30
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -6900,8 +6900,9 @@ PIXI.CanvasRenderer.prototype.mapBlendModes = function () {
  * @constructor
  * @param source {String|Canvas} the source object (image or canvas)
  * @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
+ * @param [resolution] {Number} the resolution of the texture (for HiDPI displays)
  */
-PIXI.BaseTexture = function(source, scaleMode)
+PIXI.BaseTexture = function(source, scaleMode, resolution)
 {
     /**
      * The Resolution of the texture. 
@@ -6909,7 +6910,7 @@ PIXI.BaseTexture = function(source, scaleMode)
      * @property resolution
      * @type Number
      */
-    this.resolution = 1;
+    this.resolution = resolution || 1;
     
     /**
      * [read-only] The width of the base texture set when the image has loaded
@@ -7125,9 +7126,10 @@ PIXI.BaseTexture.prototype.unloadFromGPU = function()
  * @method fromCanvas
  * @param canvas {Canvas} The canvas element source of the texture
  * @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
+ * @param [resolution] {Number} the resolution of the texture (for HiDPI displays)
  * @return {BaseTexture}
  */
-PIXI.BaseTexture.fromCanvas = function(canvas, scaleMode)
+PIXI.BaseTexture.fromCanvas = function(canvas, scaleMode, resolution)
 {
     if (canvas.width === 0)
     {
@@ -7139,7 +7141,9 @@ PIXI.BaseTexture.fromCanvas = function(canvas, scaleMode)
         canvas.height = 1;
     }
 
-    return new PIXI.BaseTexture(canvas, scaleMode);
+    resolution = resolution || 1;
+
+    return new PIXI.BaseTexture(canvas, scaleMode, resolution);
 };
 
 /**
@@ -7502,7 +7506,7 @@ var Phaser = Phaser || {    // jshint ignore:line
     * @constant
     * @type {string}
     */
-    VERSION: '2.7.0',
+    VERSION: '2.7.1',
 
     /**
     * An array of Phaser game instances.
@@ -34675,7 +34679,7 @@ Phaser.RequestAnimationFrame = function(game, forceSetTimeOut) {
     for (var x = 0; x < vendors.length && !window.requestAnimationFrame; x++)
     {
         window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
-        window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'];
+        window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'] || window[vendors[x] + 'CancelRequestAnimationFrame'];
     }
 
     /**
@@ -39229,8 +39233,9 @@ Phaser.Animation.prototype = {
 
         if (frameIndex)
         {
-            //  Set the current frame index to the found index. Subtract 1 so that it animates to the desired frame on update.
-            this._frameIndex = frameIndex - 1;
+            //  Set the current frame index to the found index. Subtract a directional offset so that it animates to the desired frame on update.
+            var directionalOffset = this.isReversed ? -1 : 1;
+            this._frameIndex = frameIndex - directionalOffset;
 
             //  Make the animation update at next update
             this._timeNextFrame = this.game.time.time;
@@ -40332,6 +40337,10 @@ Phaser.AnimationParser = {
     */
     spriteSheet: function (game, key, frameWidth, frameHeight, frameMax, margin, spacing, skipFrames) {
 
+        if (frameMax === undefined) { frameMax = -1; }
+        if (margin === undefined) { margin = 0; }
+        if (spacing === undefined) { spacing = 0; }
+
         var img = key;
 
         if (typeof key === 'string')
@@ -40911,7 +40920,7 @@ Phaser.Cache.prototype = {
             key: key,
             url: url,
             data: data,
-            base: new PIXI.BaseTexture(data),
+            base: new PIXI.BaseTexture(data, null, this.game.resolution),
             frame: new Phaser.Frame(0, 0, 0, data.width, data.height, key),
             frameData: new Phaser.FrameData(),
             fileFormat: extension
@@ -40964,7 +40973,7 @@ Phaser.Cache.prototype = {
             key: key,
             url: url,
             data: data,
-            base: new PIXI.BaseTexture(data),
+            base: new PIXI.BaseTexture(data, null, this.game.resolution),
             frame: new Phaser.Frame(0, 0, 0, data.width, data.height, key),
             frameData: new Phaser.FrameData()
         };
@@ -41177,7 +41186,7 @@ Phaser.Cache.prototype = {
             url: url,
             data: data,
             font: null,
-            base: new PIXI.BaseTexture(data)
+            base: new PIXI.BaseTexture(data, null, this.game.resolution)
         };
 
         if (xSpacing === undefined) { xSpacing = 0; }
@@ -41359,7 +41368,7 @@ Phaser.Cache.prototype = {
             frameHeight: frameHeight,
             margin: margin,
             spacing: spacing,
-            base: new PIXI.BaseTexture(data),
+            base: new PIXI.BaseTexture(data, null, this.game.resolution),
             frameData: Phaser.AnimationParser.spriteSheet(this.game, data, frameWidth, frameHeight, frameMax, margin, spacing, skipFrames)
         };
 
@@ -41385,7 +41394,7 @@ Phaser.Cache.prototype = {
             key: key,
             url: url,
             data: data,
-            base: new PIXI.BaseTexture(data)
+            base: new PIXI.BaseTexture(data, null, this.game.resolution)
         };
 
         if (format === Phaser.Loader.TEXTURE_ATLAS_XML_STARLING)
@@ -52681,11 +52690,8 @@ Phaser.Particles.prototype = {
     * @return {Phaser.Emitter} The emitter that was added.
     */
     add: function (emitter) {
-
-        this.emitters[emitter.name] = emitter;
-
+        this.emitters[emitter.id] = emitter;
         return emitter;
-
     },
 
     /**
@@ -52694,9 +52700,7 @@ Phaser.Particles.prototype = {
     * @param {Phaser.Emitter} emitter - The emitter to remove.
     */
     remove: function (emitter) {
-
-        delete this.emitters[emitter.name];
-
+        delete this.emitters[emitter.id];
     },
 
     /**
@@ -52705,7 +52709,6 @@ Phaser.Particles.prototype = {
     * @protected
     */
     update: function () {
-
         for (var key in this.emitters)
         {
             if (this.emitters[key].exists)
