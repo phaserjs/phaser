@@ -6,6 +6,10 @@
 
 var CONST = require('../const');
 var NOOP = require('../utils/NOOP');
+var State = require('./State');
+var Settings = require('./Settings');
+var Systems = require('./Systems');
+var GetObjectValue = require('../utils/GetObjectValue');
 
 /**
 * The State Manager is responsible for loading, setting up and switching game states.
@@ -34,12 +38,22 @@ var StateManager = function (game, stateConfig)
             for (var i = 0; i < stateConfig.length; i++)
             {
                 //  The i === 0 part just starts the first State given
-                this._pending.push({ index: i, key: 'default', state: stateConfig[i], autoStart: (i === 0) });
+                this._pending.push({
+                    index: i,
+                    key: 'default',
+                    state: stateConfig[i],
+                    autoStart: (i === 0)
+                });
             }
         }
         else
         {
-            this._pending.push({ index: 0, key: 'default', state: stateConfig, autoStart: true });
+            this._pending.push({
+                index: 0,
+                key: 'default',
+                state: stateConfig,
+                autoStart: true
+            });
         }
     }
 };
@@ -77,7 +91,7 @@ StateManager.prototype = {
     {
         if (!key) { key = 'default'; }
 
-        if (stateConfig instanceof Phaser.State)
+        if (stateConfig instanceof State)
         {
             key = stateConfig.settings.key;
         }
@@ -131,7 +145,7 @@ StateManager.prototype = {
 
         var newState;
 
-        if (stateConfig instanceof Phaser.State)
+        if (stateConfig instanceof State)
         {
             console.log('StateManager.add from instance', key);
             newState = this.createStateFromInstance(key, stateConfig);
@@ -154,8 +168,6 @@ StateManager.prototype = {
         this.keys[key] = newState;
 
         this.states.push(newState);
-
-        // window.console.dir(newState);
 
         if (autoStart || newState.settings.active)
         {
@@ -190,7 +202,7 @@ StateManager.prototype = {
 
     createStateFromObject: function (key, stateConfig)
     {
-        var newState = new Phaser.State(stateConfig);
+        var newState = new State(stateConfig);
 
         newState.game = this.game;
 
@@ -201,41 +213,14 @@ StateManager.prototype = {
             this.createStateFrameBuffer(newState);
         }
 
-        //  Extract callbacks or set NOOP
-
-        if (stateConfig.hasOwnProperty('init'))
-        {
-            newState.init = stateConfig.init;
-        }
-
-        if (stateConfig.hasOwnProperty('preload'))
-        {
-            newState.preload = stateConfig.preload;
-        }
-
-        if (stateConfig.hasOwnProperty('create'))
-        {
-            newState.create = stateConfig.create;
-        }
-
-        if (stateConfig.hasOwnProperty('shutdown'))
-        {
-            newState.shutdown = stateConfig.shutdown;
-        }
-
-        newState.preUpdate = (stateConfig.hasOwnProperty('preUpdate')) ? stateConfig.preUpdate : NOOP;
-        newState.update = (stateConfig.hasOwnProperty('update')) ? stateConfig.update : NOOP;
-        newState.postUpdate = (stateConfig.hasOwnProperty('postUpdate')) ? stateConfig.postUpdate : NOOP;
-        newState.render = (stateConfig.hasOwnProperty('render')) ? stateConfig.render : NOOP;
-
-        return newState;
+        return this.setupCallbacks(newState, stateConfig);
     },
 
     createStateFromFunction: function (key, state)
     {
         var newState = new state();
 
-        if (newState instanceof Phaser.State)
+        if (newState instanceof State)
         {
             return this.createStateFromInstance(key, newState);
         }
@@ -243,9 +228,8 @@ StateManager.prototype = {
         {
             newState.game = this.game;
 
-            newState.settings = new Phaser.State.Settings(newState, key);
-
-            newState.sys = new Phaser.State.Systems(newState);
+            newState.settings = new Settings(newState, key);
+            newState.sys = new Systems(newState);
 
             newState.sys.init();
 
@@ -255,29 +239,27 @@ StateManager.prototype = {
             }
 
             //  Default required functions
-
-            if (!newState.preUpdate)
-            {
-                newState.preUpdate = NOOP;
-            }
-
-            if (!newState.update)
-            {
-                newState.update = NOOP;
-            }
-
-            if (!newState.postUpdate)
-            {
-                newState.postUpdate = NOOP;
-            }
-
-            if (!newState.render)
-            {
-                newState.render = NOOP;
-            }
-
-            return newState;
+            return this.setupCallbacks(newState);
         }
+    },
+
+    setupCallbacks: function (newState, stateConfig)
+    {
+        if (stateConfig === undefined) { stateConfig = newState; }
+
+        //  Extract callbacks or set NOOP
+
+        newState.init = GetObjectValue(stateConfig, 'init', NOOP);
+        newState.preload = GetObjectValue(stateConfig, 'preload', NOOP);
+        newState.create = GetObjectValue(stateConfig, 'create', NOOP);
+        newState.shutdown = GetObjectValue(stateConfig, 'shutdown', NOOP);
+
+        newState.preUpdate = GetObjectValue(stateConfig, 'preUpdate', NOOP);
+        newState.update = GetObjectValue(stateConfig, 'update', NOOP);
+        newState.postUpdate = GetObjectValue(stateConfig, 'postUpdate', NOOP);
+        newState.render = GetObjectValue(stateConfig, 'render', NOOP);
+
+        return newState;
     },
 
     createStateFrameBuffer: function (newState)
@@ -287,18 +269,18 @@ StateManager.prototype = {
 
         if (newState.settings.width === -1)
         {
-            newState.settings.width = this.game.width;
+            newState.settings.width = this.game.config.width;
         }
 
         if (newState.settings.height === -1)
         {
-            newState.settings.height = this.game.height;
+            newState.settings.height = this.game.config.height;
         }
 
         var width = newState.settings.width;
         var height = newState.settings.height;
 
-        newState.sys.fbo = this.game.renderer.createFBO(newState, x, y, width, height);
+        // newState.sys.fbo = this.game.renderer.createFBO(newState, x, y, width, height);
     },
 
     getState: function (key)
@@ -369,7 +351,7 @@ StateManager.prototype = {
                 state.init.call(state);
             }
 
-            if (state.preload)
+            if (state.preload && state.sys.load)
             {
                 state.sys.load.reset(true);
 
@@ -378,12 +360,12 @@ StateManager.prototype = {
                 //  Is the loader empty?
                 if (state.sys.load.totalQueuedFiles() === 0 && state.sys.load.totalQueuedPacks() === 0)
                 {
-                    // console.log('empty queue');
+                    console.log('empty queue');
                     this.startCreate(state);
                 }
                 else
                 {
-                    // console.log('load start');
+                    console.log('load start');
 
                     //  Start the loader going as we have something in the queue
                     // state.load.onLoadComplete.addOnce(this.loadComplete, this, 0, state);
@@ -393,7 +375,7 @@ StateManager.prototype = {
             }
             else
             {
-                // console.log('no preload');
+                console.log('no preload');
 
                 //  No preload? Then there was nothing to load either
                 this.startCreate(state);
@@ -404,7 +386,7 @@ StateManager.prototype = {
 
     loadComplete: function (state)
     {
-        // console.log('loadComplete');
+        console.log('loadComplete');
 
         //  Make sure to do load-update one last time before state is set to _created
 

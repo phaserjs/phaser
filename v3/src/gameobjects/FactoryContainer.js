@@ -6,7 +6,7 @@
 
 /**
 * The GameObject Factory is a global level container of Factory instances.
-* Factories register themselves with this container.
+* Factories register themselves with this container (when required)
 *
 * @class Phaser.GameObject.Factory
 * @constructor

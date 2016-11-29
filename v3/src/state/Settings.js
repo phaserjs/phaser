@@ -1,5 +1,4 @@
-var CONST = require('../CONST');
-var STATE_CONST = require('./STATE_CONST');
+var CONST = require('../const');
 var GetObjectValue = require('../utils/GetObjectValue');
 
 var Settings = function (state, config)
@@ -16,11 +15,11 @@ var Settings = function (state, config)
 
     this.state = state; //  Do we actually need this reference? This could just be a property bucket
 
-    this.status = STATE_CONST.PENDING;
+    this.status = CONST.state.PENDING;
 
     //  Which part of this State is currently being processed?
     //  preload, create, update, shutdown, etc
-    this.op = STATE_CONST.BOOT;
+    this.op = CONST.state.BOOT;
 
     this.key = GetObjectValue(config, 'key', '');
     this.active = GetObjectValue(config, 'active', false);

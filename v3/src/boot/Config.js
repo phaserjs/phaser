@@ -18,20 +18,6 @@ var defaultBannerColor = [
 
 var defaultBannerTextColor = '#ffffff';
 
-/*
-function getValue (obj, key, def)
-{
-    if (obj.hasOwnProperty(key))
-    {
-        return obj[key];
-    }
-    else
-    {
-        return def;
-    }
-}
-*/
-
 function Config (config)
 {
     if (config === undefined) { config = {}; }
@@ -56,43 +42,17 @@ function Config (config)
     this.gameVersion = GetObjectValue(config, 'version', '');
 
     //  If you do: { banner: false } it won't display any banner at all
-
     this.hideBanner = (GetObjectValue(config, 'banner', false) === false);
 
     this.hidePhaser = GetObjectValue(config, 'banner.hidePhaser', false);
     this.bannerTextColor = GetObjectValue(config, 'banner.text', defaultBannerTextColor);
     this.bannerBackgroundColor = GetObjectValue(config, 'banner.background', defaultBannerColor);
-
-    // var banner = getValue(config, 'banner', null);
-
-    // this.hideBanner = (banner === false);
-
-    // if (!banner)
-    // {
-        //  Use the default banner set-up
-        // banner = {};
-    // }
-
-    // this.hidePhaser = getValue(banner, 'hidePhaser', false);
-    // this.bannerTextColor = getValue(banner, 'text', defaultBannerTextColor);
-    // this.bannerBackgroundColor = getValue(banner, 'background', defaultBannerColor);
-    
+   
     this.forceSetTimeOut = GetObjectValue(config, 'forceSetTimeOut', false);
     this.transparent = GetObjectValue(config, 'transparent', false);
     this.pixelArt = GetObjectValue(config, 'pixelArt', false);
 
     //  Callbacks
-
-    /*
-    var callbacks = getValue(config, 'callbacks', null);
-
-    if (!callbacks)
-    {
-        //  Use the default banner set-up
-        callbacks = {};
-    }
-    */
-
     this.preBoot = GetObjectValue(config, 'callbacks.preBoot', NOOP);
     this.postBoot = GetObjectValue(config, 'callbacks.postBoot', NOOP);
 

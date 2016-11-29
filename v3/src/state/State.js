@@ -19,6 +19,7 @@ var State = function (config)
 
     this.game = null;
 
+    //  Maybe just an object? Doesn't have to instantiate I don't think ...
     this.settings = new Settings(this, config);
 
     this.sys = new Systems(this, config);
