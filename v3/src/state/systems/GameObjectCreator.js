@@ -14,7 +14,7 @@ var FactoryContainer = require('../../gameobjects/FactoryContainer');
 * @param {Phaser.Game} game - A reference to the currently running game.
 */
 
-var GameObjectFactory = {
+var GameObjectCreator = {
 
     /**
     * @property {Phaser.State} state - The State that owns this Factory
@@ -26,15 +26,15 @@ var GameObjectFactory = {
 
 function init (state)
 {
-    console.log('Creating GameObjectFactory instance for State', state);
+    console.log('Creating GameObjectCreator instance for State', state);
 
-    GameObjectFactory.state = state;
+    GameObjectCreator.state = state;
 
     //   Load the factories into this Object
 
-    FactoryContainer.load(GameObjectFactory, true);
+    FactoryContainer.load(GameObjectCreator, false);
 
-    return GameObjectFactory;
+    return GameObjectCreator;
 }
 
 module.exports = init;

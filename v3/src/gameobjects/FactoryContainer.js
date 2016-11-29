@@ -43,16 +43,15 @@ var FactoryContainer = function ()
         return factories[key];
     };
 
-    this.load = function (dest)
+    this.load = function (dest, isFactory)
     {
         for (var factory in factories)
         {
-            console.log('Testing load of:', factory);
-
             if (factories.hasOwnProperty(factory))
             {
-                console.log('Loading', factory);
-                dest[factory] = factories[factory].add;
+                // console.log('Loading', factory);
+
+                dest[factory] = (isFactory) ? factories[factory].add : factories[factory].make;
             }
         }
 

@@ -4,6 +4,7 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
+var Image = require('./Image');
 var FactoryContainer = require('../../gameobjects/FactoryContainer');
 
 var ImageFactory = {
@@ -26,31 +27,20 @@ var ImageFactory = {
     * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
     * @return {Phaser.Image} The newly created Image object.
     */
-    add: function (x, y, key, frame, group, name)
+    add: function (x, y, key, frame, group)
     {
-        console.log('ImageFactory.add', key, x, y, frame, group, name);
+        if (group === undefined) { group = this.state; }
+
+        console.log('ImageFactory.add', key, x, y, frame, group);
         console.log('into State', this.state);
 
-        // if (group === undefined) { group = this.state; }
-
-        // return group.children.add(new Image(this.state, x, y, key, frame, name));
+        return group.children.add(new Image(this.state, x, y, key, frame));
     },
 
-    /**
-    * Create a new Image object.
-    *
-    * An Image is a light-weight object you can use to display anything that doesn't need physics or animation.
-    * It can still rotate, scale, crop and receive input events. This makes it perfect for logos, backgrounds, simple buttons and other non-Sprite graphics.
-    *
-    * @method Phaser.GameObjectCreator#image
-    * @param {number} x - X position of the image.
-    * @param {number} y - Y position of the image.
-    * @param {string|Phaser.RenderTexture|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
-    * @param {string|number} [frame] - If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
-    * @return {Phaser.Image} the newly created sprite object.
-    */
     make: function (x, y, key, frame)
     {
+        console.log('ImageFactory.make', key, x, y, frame);
+
         return new Image(this.state, x, y, key, frame);
     }
 
