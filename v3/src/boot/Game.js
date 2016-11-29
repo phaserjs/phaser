@@ -13,6 +13,9 @@ var RequestAnimationFrame = require('../dom/RequestAnimationFrame');
 var DOMContentLoaded = require('../dom/DOMContentLoaded');
 var RandomDataGenerator = require('../math/random-data-generator/RandomDataGenerator');
 var CanvasPool = require('../dom/CanvasPool');
+var FactoryContainer = require('../gameobjects/FactoryContainer');
+var Image = require('../gameobjects/image/ImageFactory');
+var GameObjectFactory = require('../state/systems/GameObjectFactory');
 
 var Game = function (config)
 {
@@ -64,6 +67,8 @@ var Game = function (config)
     */
     // this.state = new Phaser.StateManager(this, stateConfig);
 
+    this.add = null;
+
     /**
     * @property {Phaser.Device} device - Contains device information and capabilities.
     */
@@ -89,8 +94,19 @@ Game.prototype = {
 
         console.log(CHECKSUM.build);
 
-        console.log('pool', CanvasPool.total());
-        console.log('free', CanvasPool.free());
+        // console.log('pool', CanvasPool.total());
+        // console.log('free', CanvasPool.free());
+        // console.dir(FactoryContainer.getType('image'));
+
+        //  Create a fake State to test the GF with
+
+        var state = {
+            hello: 'world'
+        };
+
+        this.add = GameObjectFactory(state);
+
+        console.log(this.add);
 
         this.config.postBoot();
 

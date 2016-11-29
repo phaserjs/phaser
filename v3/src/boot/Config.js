@@ -81,8 +81,8 @@ function Config (config)
         callbacks = {};
     }
 
-    this.preBoot  = getValue(callbacks, 'preBoot', NOOP);
-    this.postBoot  = getValue(callbacks, 'postBoot', NOOP);
+    this.preBoot = getValue(callbacks, 'preBoot', NOOP);
+    this.postBoot = getValue(callbacks, 'postBoot', NOOP);
 
 }
 

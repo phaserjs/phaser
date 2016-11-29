@@ -4,6 +4,8 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
+var FactoryContainer = require('../../gameobjects/FactoryContainer');
+
 var ImageFactory = {
 
     KEY: 'image',
@@ -26,9 +28,12 @@ var ImageFactory = {
     */
     add: function (x, y, key, frame, group, name)
     {
-        if (group === undefined) { group = this.state; }
+        console.log('ImageFactory.add', key, x, y, frame, group, name);
+        console.log('into State', this.state);
 
-        return group.children.add(new Image(this.state, x, y, key, frame, name));
+        // if (group === undefined) { group = this.state; }
+
+        // return group.children.add(new Image(this.state, x, y, key, frame, name));
     },
 
     /**
@@ -51,4 +56,4 @@ var ImageFactory = {
 
 };
 
-module.exports = ImageFactory;
+module.exports = FactoryContainer.register(ImageFactory);

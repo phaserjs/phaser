@@ -4,6 +4,8 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
+var FactoryContainer = require('../../gameobjects/FactoryContainer');
+
 /**
 * The GameObject Factory is a quick way to create many common game objects. The Factory is owned by the State.
 *
@@ -12,25 +14,27 @@
 * @param {Phaser.Game} game - A reference to the currently running game.
 */
 
-var GameObjectFactory = function (state)
-{
-    /**
-    * @property {Phaser.Game} game - A reference to the currently running Game.
-    * @protected
-    */
-    this.game = state.game;
+var GameObjectFactory = {
 
     /**
     * @property {Phaser.State} state - The State that owns this Factory
     * @protected
     */
-    this.state = state;
-};
-
-GameObjectFactory.prototype.constructor = GameObjectFactory;
-
-GameObjectFactory.prototype = {
+    state: null
 
 };
 
-module.exports = GameObjectFactory;
+function init (state)
+{
+    console.log('Creating GameObjectFactory instance for State', state);
+
+    GameObjectFactory.state = state;
+
+    //   Load the factories into this Object
+
+    FactoryContainer.load(GameObjectFactory);
+
+    return GameObjectFactory;
+}
+
+module.exports = init;
