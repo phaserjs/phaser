@@ -41,6 +41,8 @@ function Config (config)
     this.renderType = getValue(config, 'type', CONST.AUTO);
 
     this.parent = getValue(config, 'parent', null);
+    this.canvas = getValue(config, 'canvas', null);
+    this.canvasStyle = getValue(config, 'canvasStyle', null);
 
     this.stateConfig = getValue(config, 'state', null);
 

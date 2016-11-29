@@ -9,10 +9,10 @@ var CHECKSUM = require('../checksum');
 var Device = require('../device');
 var Config = require('./Config');
 var DebugHeader = require('./DebugHeader');
+var CreateRenderer = require('./CreateRenderer');
 var RequestAnimationFrame = require('../dom/RequestAnimationFrame');
 var DOMContentLoaded = require('../dom/DOMContentLoaded');
 var RandomDataGenerator = require('../math/random-data-generator/RandomDataGenerator');
-var CanvasPool = require('../dom/CanvasPool');
 var FactoryContainer = require('../gameobjects/FactoryContainer');
 var Image = require('../gameobjects/image/ImageFactory');
 var GameObjectFactory = require('../state/systems/GameObjectFactory');
@@ -91,14 +91,15 @@ Game.prototype = {
         this.rnd = new RandomDataGenerator(this.config.seed);
 
         DebugHeader(this);
+        console.log(CHECKSUM.build); // Keep this during dev build only
 
-        console.log(CHECKSUM.build);
+        CreateRenderer(this);
 
         // console.log('pool', CanvasPool.total());
         // console.log('free', CanvasPool.free());
         // console.dir(FactoryContainer.getType('image'));
 
-        //  Create a fake State to test the GF with
+        //  Create a fake State to test the GF with (this will all move to a State level when done)
 
         var state = {
             hello: 'world'
