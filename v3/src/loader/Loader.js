@@ -1,17 +1,16 @@
 var Set = require('../structs/Set');
 var XHRSettings = require('./XHRSettings');
+// var ImageLoader = require('./filetypes/Image');
 
 var Loader = function ()
 {
-    //  Move to a 'setURL' method
+    //  Move to a 'setURL' method?
     this.baseURL = '';
     this.path = '';
 
-    this.tag = '';
-
+    //  Read from Game Config
     this.enableParallel = true;
-
-    this.maxParallelDownloads = 4;
+    this.maxParallelDownloads = 8;
 
     //  xhr specific global settings (can be overridden on a per-file basis)
     this.xhr = XHRSettings();
@@ -31,9 +30,23 @@ Loader.prototype.contructor = Loader;
 
 Loader.prototype = {
 
-    add: function ()
+    //  The File Loaders
+
+    //  Add a File direct to the queue. Must extend File base object.
+    add: function (file)
     {
-        
+
+    },
+
+    //  Different images based on device-pixel ratio
+    //  And maybe on screen resolution breakpoints
+
+    image: function (key, url)
+    {
+
+
+
+        // return ImageLoader(this, key, url);
     }
 
 };
