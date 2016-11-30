@@ -1987,7 +1987,7 @@ Phaser.Cache.prototype = {
     */
     removeTextureAtlas: function (key) {
 
-        delete this._cache.atlas[key];
+        delete this._cache.image[key];
 
     },
 
