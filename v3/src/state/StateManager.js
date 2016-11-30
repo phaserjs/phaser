@@ -353,12 +353,12 @@ StateManager.prototype = {
 
             if (state.preload && state.sys.load)
             {
-                state.sys.load.reset(true);
+                state.sys.load.reset();
 
                 state.preload.call(state, this.game);
 
                 //  Is the loader empty?
-                if (state.sys.load.totalQueuedFiles() === 0 && state.sys.load.totalQueuedPacks() === 0)
+                if (state.sys.load.list.size === 0)
                 {
                     console.log('empty queue');
                     this.startCreate(state);
@@ -390,6 +390,7 @@ StateManager.prototype = {
 
         //  Make sure to do load-update one last time before state is set to _created
 
+        //  Stop doing this ...
         if (state.hasOwnProperty('loadUpdate'))
         {
             state.loadUpdate.call(state);

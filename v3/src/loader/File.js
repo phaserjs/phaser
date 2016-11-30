@@ -1,15 +1,7 @@
-import XHRLoader from 'loader/XHRLoader.js';
-import XHRSettings from 'loader/XHRSettings.js';
+// import XHRLoader from 'loader/XHRLoader.js';
+// import XHRSettings from 'loader/XHRSettings.js';
 
-//  File level consts
 
-export const PENDING = 0;      // file is in the load queue but not yet started
-export const LOADING = 1;      // file has been started to load by the loader (onLoad called)
-export const LOADED = 2;       // file has loaded successfully, awaiting processing
-export const FAILED = 3;       // file failed to load
-export const PROCESSING = 4;   // file is being processed (onProcess callback)
-export const COMPLETE = 5;     // file has finished processing
-export const DESTROYED = 6;    // file has been destroyed
 
 //  Our base File object (from which all File Types extend)
 

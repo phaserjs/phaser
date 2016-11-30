@@ -25,6 +25,17 @@ Set.prototype = {
         }
     },
 
+    each: function (callback)
+    {
+        for (var i = 0; i < this.values.length; i++)
+        {
+            if (!callback(this.values[i]))
+            {
+                break;
+            }
+        }
+    },
+
     clear: function ()
     {
         this.values.length = 0;
@@ -86,10 +97,9 @@ Set.prototype = {
 
 Object.defineProperties(Set.prototype, {
 
-    length: {
+    size: {
 
-        writable: true,
-        enumerable: false,
+        enumerable: true,
 
         get: function ()
         {

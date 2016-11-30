@@ -6,6 +6,7 @@
 
 var GameObjectFactory = require('./systems/GameObjectFactory');
 var GameObjectCreator = require('./systems/GameObjectCreator');
+var Loader = require('./systems/Loader');
 var MainLoop = require('./systems/MainLoop');
 var UpdateManager = require('./systems/UpdateManager');
 
@@ -50,8 +51,8 @@ Systems.prototype = {
         // this.make = GameObjectCreator(this.state);
         this.mainloop = new MainLoop(this.state, this.state.settings.fps);
         this.updates = new UpdateManager(this.state);
+        this.load = new Loader(this.state);
 
-        // this.load = new Phaser.Loader(this.state);
         // this.tweens = new Phaser.TweenManager(this.state);
         // this.input = new Phaser.State.Input(this.state);
         // this.physics = new Phaser.Physics.Arcade(this.state, 800, 600);
@@ -70,7 +71,7 @@ Systems.prototype = {
         //  Defaults
 
         this.state.add = this.add;
-        // this.state.load = this.load;
+        this.state.load = this.load;
         // this.state.children = this.children;
         // this.state.color = this.color;
         // this.state.data = this.data;

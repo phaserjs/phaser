@@ -8,7 +8,9 @@ var XHRSettings = function (responseType, async, user, password, timeout)
     if (password === undefined) { password = ''; }
     if (timeout === undefined) { timeout = 0; }
 
-    // Before sending a request, set the xhr.responseType to "text", "arraybuffer", "blob", or "document", depending on your data needs. Note, setting xhr.responseType = '' (or omitting) will default the response to "text".
+    // Before sending a request, set the xhr.responseType to "text", 
+    // "arraybuffer", "blob", or "document", depending on your data needs. 
+    // Note, setting xhr.responseType = '' (or omitting) will default the response to "text".
 
     return {
 
