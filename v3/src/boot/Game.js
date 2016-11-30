@@ -4,15 +4,16 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
-var CHECKSUM = require('../checksum');
-
 var Device = require('../device');
 var Config = require('./Config');
 var DebugHeader = require('./DebugHeader');
+var CreateRenderer = require('./CreateRenderer');
 var RequestAnimationFrame = require('../dom/RequestAnimationFrame');
 var DOMContentLoaded = require('../dom/DOMContentLoaded');
 var RandomDataGenerator = require('../math/random-data-generator/RandomDataGenerator');
-var CanvasPool = require('../dom/CanvasPool');
+var StateManager = require('../state/StateManager');
+var FactoryContainer = require('../gameobjects/FactoryContainer');
+var GameObjects = require ('../gameobjects/');
 
 var Game = function (config)
 {
@@ -60,19 +61,23 @@ var Game = function (config)
     this.input = null;
 
     /**
-    * @property {Phaser.StateManager} state - The StateManager.
+    * @property {Phaser.StateManager} state - The StateManager. Phaser instance specific.
     */
-    // this.state = new Phaser.StateManager(this, stateConfig);
+    this.state = new StateManager(this, this.config.stateConfig);
 
     /**
-    * @property {Phaser.Device} device - Contains device information and capabilities.
+    * @property {Phaser.Device} device - Contains device information and capabilities (singleton)
     */
     this.device = Device;
 
+    //  More this somewhere else? Math perhaps? Doesn't need to be a Game level system.
     this.rnd;
 
-    DOMContentLoaded(this.boot.bind(this), Device.OS);
+    //  Wait for the DOM Ready event, then call boot.
+    DOMContentLoaded(this.boot.bind(this));
 
+    //  For debugging only
+    window.game = this;
 };
 
 Game.prototype.constructor = Game;
@@ -81,23 +86,31 @@ Game.prototype = {
 
     boot: function ()
     {
+        this.isBooted = true;
+
+        this.config.preBoot();
+
+        //  Probably move within Math
         this.rnd = new RandomDataGenerator(this.config.seed);
 
         DebugHeader(this);
 
-        console.log(CHECKSUM.build);
+        CreateRenderer(this);
 
-        console.log('pool', CanvasPool.total());
-        console.log('free', CanvasPool.free());
+        this.state.boot();
 
-        //  Add in ability to specify pre-init and post-init callbacks in the config
+        this.isRunning = true;
+
+        this.config.postBoot();
 
         this.raf.start();
     },
 
+    //  timestamp = DOMHighResTimeStamp
     update: function (timestamp)
     {
         // console.log(timestamp);
+        // this.state.step(timestamp);
     }
 
 };

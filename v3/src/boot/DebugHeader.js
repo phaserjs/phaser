@@ -5,6 +5,7 @@
 */
 
 var CONST = require('../const');
+var CHECKSUM = require('../checksum');
 
 var DebugHeader = function (game)
 {
@@ -82,6 +83,9 @@ var DebugHeader = function (game)
     {
         console.log('Phaser v' + CONST.VERSION + ' / http://phaser.io');
     }
+
+    // Keep this during dev build only
+    console.log(CHECKSUM.build);
 
 };
 
