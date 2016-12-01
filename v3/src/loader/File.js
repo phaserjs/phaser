@@ -1,157 +1,115 @@
-// import XHRLoader from 'loader/XHRLoader.js';
-// import XHRSettings from 'loader/XHRSettings.js';
+var GetURL = require('./GetURL');
+var FILE_CONST = require('./const');
+var XHRLoader = require('./XHRLoader');
+var XHRSettings = require('./XHRSettings');
 
-
-
-//  Our base File object (from which all File Types extend)
-
-//  key = user level file key (can be filename or other string based value)
-//  url = the URL to load the file from, doesn't include baseURL or Path (which are both set by the Loader)
-//  type = a user-level value that can control which cache the file is added to
-
-var File = function (key, url, type)
+var File = function (type, key, url, responseType)
 {
-    if (!key)
+    //  file type (image, json, etc) for sorting within the Loader
+    this.type = type;
+
+    //  unique cache key (unique within its file type)
+    this.key = key;
+
+    //  The URL of the file, not including baseURL
+    this.url = url;
+
+    //  Set when the Loader calls 'load' on this file
+    this.src = '';
+
+    this.xhrSettings = XHRSettings(responseType);
+
+    this.xhrLoader = null;
+
+    this.state = FILE_CONST.PENDING;
+
+    //  Set by onProgress
+    this.bytesTotal = 0;
+    this.bytesLoaded = -1;
+    this.percentComplete = -1;
+
+    //  For CORs based loading.
+    //  If this is undefined then the File will check BaseLoader.crossOrigin and use that (if set)
+    this.crossOrigin = undefined;
+
+    //  The actual processed file data
+    this.data = undefined;
+
+    //  Multipart file? (i.e. an atlas and its json)
+    this.multipart = undefined;
+    this.linkFile = undefined;
+
+    this.callback = null;
+};
+
+File.prototype.constructor = File;
+
+File.prototype = {
+
+    resetXHR: function ()
     {
-        console.warn('Invalid File key');
-        return;
+        this.xhrLoader.onload = undefined;
+        this.xhrLoader.onerror = undefined;
+        this.xhrLoader.onprogress = undefined;
+    },
+
+    //  Called when the Image loads
+    //  ProgressEvent
+    onLoad: function (event)
+    {
+        console.log('image loaded');
+        console.log(event);
+
+        // this.onStateChange(LOADING);
+
+        this.resetXHR();
+
+        this.callback(this, true);
+    },
+
+    onError: function (event)
+    {
+        console.log('image error');
+        console.log(event);
+
+        this.resetXHR();
+
+        this.callback(this, false);
+    },
+
+    onProgress: function (event)
+    {
+        this.bytesLoaded = event.loaded;
+        this.bytesTotal = event.total;
+
+        this.percentComplete = Math.min((this.bytesLoaded / this.bytesTotal), 1);
+
+        console.log(this.percentComplete + '% (' + this.bytesLoaded + ' bytes)');
+    },
+
+    onProcess: function ()
+    {
+        console.log('process the image');
+    },
+
+    onComplete: function ()
+    {
+        console.log('image completed and added to the loader store');
+    },
+
+    //  Called by the Loader, starts the actual file downloading
+    load: function (callback, baseURL, globalXHR)
+    {
+        if (baseURL === undefined) { baseURL = ''; }
+
+        this.callback = callback;
+
+        this.src = GetURL(this, baseURL);
+
+        console.log('LOADING2', this.src);
+
+        this.xhrLoader = XHRLoader(this, globalXHR);
     }
-
-    return {
-
-        key: key,
-
-        url: url,
-
-        //  Both of these are overridden by the BaseLoader (if being used)
-        path: '',
-        src: url,
-
-        tag: '',    // Tag this file, this is a non-unique string. For example you could tag a collection of files as 'level1', or 'mainmenu'.
-
-        type: type, // the file type, i.e. 'image', 'json', etc which can be used to control which cache it gets added to
-
-        state: PENDING,
-
-        //  Multipart file? (i.e. an atlas and its json)
-        multipart: undefined,
-        linkFile: undefined,
-
-        //  The actual processed file data
-        data: undefined,
-
-        //  For CORs based loading.
-        //  If this is undefined then the File will check BaseLoader.crossOrigin and use that (if set)
-        crossOrigin: undefined,
-
-        //  Optionally set by the Promise returned from BaseLoader.addFile.
-        resolve: undefined,
-        reject: undefined,
-
-        //  maybe you have to set it in the Promise?
-        processCallback: undefined,
-
-        //  xhr specific settings (ignored by TagLoaded files)
-        xhr: XHRSettings('text'),
-
-        onStateChange: function (value) {
-
-            // console.log('onStateChange', this.url, 'from', this.state, 'to', value);
-
-            if (this.state !== value)
-            {
-                this.state = value;
-
-                //  Loaded AND Processed
-                if (value === COMPLETE)
-                {
-                    //  Part of a multipart load?
-                    if (this.multipart)
-                    {
-                        //  Has the linked file loaded too?
-                        if (this.linkFile.state === COMPLETE && this.multipart.resolve)
-                        {
-                            //  Send the Promise for the multipart file
-                            this.multipart.resolve(this.multipart);
-                        }
-                    }
-
-                    //  Send the Promise for this file
-                    if (this.resolve)
-                    {
-                        this.resolve(this);
-                    }
-                }
-                else if (value === FAILED)
-                {
-                    //  Part of a multipart load?
-                    if (this.multipart)
-                    {
-                        if (this.multipart.reject)
-                        {
-                            //  Send the Promise for the multipart file
-                            this.multipart.reject(this.multipart, error);
-                        }
-                    }
-
-                    //  Send the Promise for this file
-                    if (this.reject)
-                    {
-                        this.reject(this);
-                    }
-                }
-            }
-
-        },
-
-        //  These functions are usually overridden by the custom file types
-
-        load: function (globalXHRSettings) {
-
-            this.onStateChange(LOADING);
-
-            //  Returns a Promise from the XHRLoader
-            return XHRLoader(this, globalXHRSettings);
-
-        },
-
-        onLoad: function () {
-
-            //  If overridden it must set `state` to LOADED
-            this.onStateChange(LOADED);
-
-        },
-
-        onError: function () {
-
-            //  If overridden it must set `state` to FAILED
-            this.onStateChange(FAILED);
-
-        },
-
-        onProcess: function () {
-
-            //  If overridden it must set `state` to PROCESSING
-            this.onStateChange(PROCESSING);
-
-        },
-
-        onComplete: function () {
-
-            //  If overridden it must set `state` to COMPLETE
-            this.onStateChange(COMPLETE);
-
-        },
-
-        onDestroy: function () {
-
-            //  If overridden it must set `state` to DESTROYED
-            this.onStateChange(DESTROYED);
-
-        }
-
-    };
-
 };
 
 module.exports = File;

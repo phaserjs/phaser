@@ -146,7 +146,7 @@ BaseLoader.prototype = {
             file.crossOrigin = this.crossOrigin;
         }
 
-        file.load(this.nextFile, this.baseURL);
+        file.load(this.nextFile.bind(this), this.baseURL);
     },
 
     nextFile: function (previousFile, success)
@@ -184,7 +184,9 @@ BaseLoader.prototype = {
 
         this.state = 'PROCESSING';
 
-        this.storage.clear();
+        var storage = this.storage;
+
+        storage.clear();
 
         //  This could be Promise based as well, allowing for async processing
 
@@ -201,14 +203,14 @@ BaseLoader.prototype = {
 
             file.onComplete();
 
-            this.storage.add(file);
+            storage.add(file);
         });
 
         this.list.clear();
         this.inflight.clear();
         this.queue.clear();
 
-        console.log('Loader Complete. Loaded:', this.storage.size, 'Failed:', this.failed.size);
+        console.log('Loader Complete. Loaded:', storage.size, 'Failed:', this.failed.size);
 
         console.log('BaseLoader COMPLETE');
 

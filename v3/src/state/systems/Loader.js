@@ -18,7 +18,7 @@ Loader.prototype.constructor = Loader;
 
 Loader.prototype.image = function (key, url)
 {
-    var file = new ImageLoader(key, url);
+    var file = ImageLoader(key, url, this.path);
 
     console.log('Loader.image');
     console.log(file);
@@ -28,7 +28,6 @@ Loader.prototype.image = function (key, url)
     console.log(this.list);
 
     return this;
-
 };
 
 module.exports = Loader;
