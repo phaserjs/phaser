@@ -49,7 +49,7 @@
     "typescript": "1.4.1",
     "yuidocjs": "^0.3.50"
   },
-  "typings": "./typescript/typings.json",
+  "typings": "./typescript/phaser.comments.d.ts",
   "typescript": {
     "definitions": [
       "typescript/p2.d.ts",
