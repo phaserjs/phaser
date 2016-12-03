@@ -115,10 +115,10 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
     this.alphaData = null;
 
     /**
-    * @property {number} gravity - Sets the `body.gravity.y` of each particle sprite to this value on launch.
+    * @property {Phaser.Point} gravity - Sets the `body.gravity` of each particle sprite to this on launch.
     * @default
     */
-    this.gravity = 100;
+    this.gravity = new Phaser.Point(0, 100);
 
     /**
     * @property {any} particleClass - For emitting your own particle class types. They must extend Phaser.Particle.
@@ -675,7 +675,7 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function (x, y, key, fr
     body.velocity.y = rnd.between(this.minParticleSpeed.y, this.maxParticleSpeed.y);
     body.angularVelocity = rnd.between(this.minRotation, this.maxRotation);
 
-    body.gravity.y = this.gravity;
+    body.gravity = this.gravity;
     body.angularDrag = this.angularDrag;
 
     particle.onEmit();
