@@ -1405,8 +1405,8 @@ declare module Phaser {
         physicsConfig?: any;
         seed?: string;
         state?: Phaser.State;
-        forceSetTimeOut: boolean;
-        multiTextue: boolean;
+        forceSetTimeOut?: boolean;
+        multiTextue?: boolean;
 
     }
 
