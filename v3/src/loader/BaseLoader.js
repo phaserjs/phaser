@@ -2,6 +2,7 @@
 var FILE_CONST = require('./const');
 var Set = require('../structs/Set');
 var XHRSettings = require('./XHRSettings');
+var Events = require('./events/');
 
 var BaseLoader = function ()
 {
@@ -89,6 +90,8 @@ BaseLoader.prototype = {
         {
             return;
         }
+
+        this.state.sys.events.dispatch(new Events.LOADER_START_EVENT(this));
 
         if (this.list.size === 0)
         {

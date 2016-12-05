@@ -23,7 +23,7 @@ EventDispatcher.prototype = {
             return;
         }
 
-        console.log('Add listener', type, listener);
+        // console.log('Add listener', type, listener);
 
         if (!this.listeners[type])
         {
@@ -38,7 +38,7 @@ EventDispatcher.prototype = {
         }
         else
         {
-            listeners.push({ listener: listener, priority: priority, isOnce: isOnce });
+            listeners.push({ listener: listener, priority: priority, isOnce: isOnce, toRemove: false });
         }
 
         listeners.sort(this.sortHandler);
@@ -46,11 +46,11 @@ EventDispatcher.prototype = {
 
     sortHandler: function (listenerA, listenerB)
     {
-        if (listenerA.priority < listenerB.priority)
+        if (listenerB.priority < listenerA.priority)
         {
             return -1;
         }
-        else if (listenerA.priority > listenerB.priority)
+        else if (listenerB.priority > listenerA.priority)
         {
             return 1;
         }
@@ -76,6 +76,8 @@ EventDispatcher.prototype = {
 
     },
 
+    //  Need to test what happens if array is sorted during DISPATCH phase (does it screw it all up?)
+
     on: function (type, listener, priority)
     {
         if (priority === undefined) { priority = 0; }
@@ -92,6 +94,16 @@ EventDispatcher.prototype = {
         this.add(type, listener, priority, true);
 
         return this;
+    },
+
+    total: function (type)
+    {
+        if (!this.listeners || !this.listeners[type])
+        {
+            return -1;
+        }
+
+        return this.listeners[type].length;
     },
 
     has: function (type, listener)
@@ -129,9 +141,17 @@ EventDispatcher.prototype = {
         {
             if (listeners[i].listener === listener)
             {
-                console.log('Remove listener', type, listener);
+                if (this._state === EventDispatcher.STATE_DISPATCHING)
+                {
+                    console.log('Flag listener for removal', type);
+                    listeners[i].toRemove = true;
+                }
+                else
+                {
+                    console.log('Remove listener', type);
+                    listeners.splice(i, 1);
+                }
 
-                listeners.splice(i, 1);
                 break;
             }
         }
@@ -148,21 +168,39 @@ EventDispatcher.prototype = {
             return false;
         }
 
-        this._state = EventDispatcher.STATE_DISPATCHING;
-
         var listeners = this.listeners[event.type];
+
+        //  This was a valid dispatch call, we just had nothing to do ...
+        if (listeners.length === 0)
+        {
+            return true;
+        }
+
+        this._state = EventDispatcher.STATE_DISPATCHING;
 
         event.reset(this);
 
         var toRemove = [];
+
+        var entry;
         var entries = listeners.slice();
+        // var entries = listeners;
 
         console.log('Dispatching', entries.length, 'listeners');
 
         for (var i = 0; i < entries.length; i++)
         {
+            entry = entries[i];
+
+            if (entry.toRemove)
+            {
+                toRemove.push(entry);
+                continue;
+            }
+
             //  Add Custom Events
-            entries[i].listener.call(this, event);
+            //  If this adjusts the entries.length for any reason, the reference is still valid
+            entry.listener.call(this, event);
 
             //  Has the callback done something disastrous? Like called removeAll, or nuked the dispatcher?
             if (this._state !== EventDispatcher.STATE_DISPATCHING)
@@ -171,9 +209,10 @@ EventDispatcher.prototype = {
                 break;
             }
 
-            if (entries[i].isOnce)
+            //  Was a 'once' or was removed during the callback
+            if (entry.isOnce || entry.toRemove)
             {
-                toRemove.push(entries[i]);
+                toRemove.push(entry);
             }
 
             //  Has the event been halted?
@@ -200,8 +239,10 @@ EventDispatcher.prototype = {
 
             for (i = 0; i < toRemove.length; i++)
             {
-                this.off(toRemove[i].type, toRemove[i].listener);
+                this.off(event.type, toRemove[i].listener);
             }
+
+            toRemove.length = 0;
 
             this._state = EventDispatcher.STATE_PENDING;
         }
