@@ -2452,6 +2452,7 @@ declare module Phaser {
         enableParallel: boolean;
         game: Phaser.Game;
         hasLoaded: boolean;
+        headers: any;
         isLoading: boolean;
         maxParallelDownloads: number;
         onFileStart: Phaser.Signal;
