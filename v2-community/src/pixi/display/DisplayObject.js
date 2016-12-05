@@ -12,7 +12,7 @@
 *
 * It is used internally by the likes of PIXI.Sprite.
 *
-* @class PIXI.DisplayObject
+* @class DisplayObject
 * @constructor
 */
 PIXI.DisplayObject = function () {
