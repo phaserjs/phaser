@@ -432,7 +432,7 @@ Phaser.Group.prototype.add = function (child, silent, index) {
 */
 Phaser.Group.prototype.addAt = function (child, index, silent) {
 
-    this.add(child, silent, index);
+    return this.add(child, silent, index);
 
 };
 
