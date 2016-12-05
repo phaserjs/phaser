@@ -166,6 +166,9 @@ Phaser.Animation.prototype = {
 
     /**
     * Plays this animation.
+    * 
+    * If you need to jump to a specific frame of this animation, then call `play` and immediately after it,
+    * set the frame you require (i.e. `animation.play(); animation.frame = 4`).
     *
     * @method Phaser.Animation#play
     * @param {number} [frameRate=null] - The framerate to play the animation at. The speed is given in frames per second. If not provided the previously set frameRate of the Animation is used.

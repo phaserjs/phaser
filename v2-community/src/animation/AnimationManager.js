@@ -255,6 +255,9 @@ Phaser.AnimationManager.prototype = {
     * 
     * If the requested animation is already playing this request will be ignored. 
     * If you need to reset an already running animation do so directly on the Animation object itself.
+    * 
+    * If you need to jump to a specific frame of this animation, then call `play` and immediately after it,
+    * set the frame you require (i.e. `animation.play(); animation.frame = 4`).
     *
     * @method Phaser.AnimationManager#play
     * @param {string} name - The name of the animation to be played, e.g. "fire", "walk", "jump".
