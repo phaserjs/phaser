@@ -1754,14 +1754,14 @@ Phaser.Loader.prototype = {
     },
 
     /**
-    * Add a synchronization point to the assets/files added within the supplied callback.
+    * Add a synchronization point to the assets / files added within the supplied callback.
     *
     * A synchronization point denotes that an asset _must_ be completely loaded before
     * subsequent assets can be loaded. An asset marked as a sync-point does not need to wait
     * for previous assets to load (unless they are sync-points). Resources, such as packs, may still
     * be downloaded around sync-points, as long as they do not finalize loading.
     *
-    * @method Phaser.Loader#withSyncPoints
+    * @method Phaser.Loader#withSyncPoint
     * @param {function} callback - The callback is invoked and is supplied with a single argument: the loader.
     * @param {object} [callbackContext=(loader)] - Context for the callback.
     * @return {Phaser.Loader} This Loader instance.
