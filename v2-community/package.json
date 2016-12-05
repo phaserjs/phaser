@@ -31,7 +31,6 @@
     "phaser"
   ],
   "devDependencies": {
-    "eslint": "^3.3.1",
     "grunt": "^0.4.5",
     "grunt-contrib-clean": "^0.5.0",
     "grunt-contrib-concat": "^0.4.0",
