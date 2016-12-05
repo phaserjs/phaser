@@ -37,15 +37,14 @@ Phaser.Component.FixedToCamera.prototype = {
     _fixedToCamera: false,
 
     /**
-    * A Game Object that is "fixed" to the camera uses its x/y coordinates as offsets from the top left of the camera during rendering.
+    * A Game Object that is "fixed" to the camera is rendered at a given x/y offsets from the top left of the camera. The offsets 
+    * are stored in the `cameraOffset` property, which is initialized with the current object coordinates. 
     * 
     * The values are adjusted at the rendering stage, overriding the Game Objects actual world position.
     * 
     * The end result is that the Game Object will appear to be 'fixed' to the camera, regardless of where in the game world
     * the camera is viewing. This is useful if for example this Game Object is a UI item that you wish to be visible at all times 
     * regardless where in the world the camera is.
-    * 
-    * The offsets are stored in the `cameraOffset` property.
     * 
     * Note that the `cameraOffset` values are in addition to any parent of this Game Object on the display list.
     *
