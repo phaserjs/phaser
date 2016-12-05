@@ -23,7 +23,7 @@ var File = function (type, key, url, responseType)
 
     this.state = FILE_CONST.PENDING;
 
-    //  Set by onProgress
+    //  Set by onProgress (if loading via XHR)
     this.bytesTotal = 0;
     this.bytesLoaded = -1;
     this.percentComplete = -1;

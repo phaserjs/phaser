@@ -5,6 +5,17 @@ var XHRSettings = require('./XHRSettings');
 
 var BaseLoader = function ()
 {
+    //  To finish the loader ...
+    //  
+    //  1) Image Tag loader
+    //  2) Events (or Signals?) for the various stages
+    //  3) Progress update
+    //  4) JSON loader
+    //  5) XML Loader
+    //  6) Multi File support (atlas + data)
+    //  7) Atlas Loader
+
+
     //  Move to a 'setURL' method?
     this.baseURL = '';
     this.path = '';
@@ -22,6 +33,7 @@ var BaseLoader = function ()
     this.inflight = new Set();
     this.failed = new Set();
     this.queue = new Set();
+
     this.storage = new Set();
 
     this._state = 'PENDING';
@@ -44,16 +56,12 @@ BaseLoader.prototype = {
             file.fileA.path = this.path;
             file.fileB.path = this.path;
 
-            file.fileA.tag = this.tag;
-            file.fileB.tag = this.tag;
-
             this.list.add(file.fileA);
             this.list.add(file.fileB);
         }
         else
         {
             file.path = this.path;
-            // file.tag = this.tag;
 
             this.list.add(file);
         }
@@ -219,24 +227,9 @@ BaseLoader.prototype = {
         //  Dispatch 'on complete' signals now
     },
 
-    /*
-    getLoadedFilesByType (type, group = '', output = []) {
-
-        //  Return an array of all files that have state = COMPLETE (which means loaded + processed)
-
-        for (let file of this.storage)
-        {
-            if (file.state === FILE.COMPLETE && file.tag === group && file.type === type)
-            {
-                output.push(file);
-            }
-        }
-
-        return output;
-
-    },
-
     getLoadedFiles (group = '', output = []) {
+
+        var output = [];
 
         //  Return an array of all files that have state = COMPLETE (which means loaded + processed)
 
@@ -251,7 +244,6 @@ BaseLoader.prototype = {
         return output;
 
     },
-    */
 
     reset: function ()
     {
