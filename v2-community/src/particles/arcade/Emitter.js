@@ -476,6 +476,7 @@ Phaser.Particles.Arcade.Emitter.prototype.explode = function (lifespan, quantity
 */
 Phaser.Particles.Arcade.Emitter.prototype.flow = function (lifespan, frequency, quantity, total, immediate) {
 
+    if (frequency === undefined || frequency === null) { frequency = 250; }
     if (quantity === undefined || quantity === 0) { quantity = 1; }
     if (total === undefined) { total = -1; }
     if (immediate === undefined) { immediate = true; }
