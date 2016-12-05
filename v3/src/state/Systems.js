@@ -4,6 +4,7 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
+var EventDispatcher = require('../events/EventDispatcher');
 var GameObjectFactory = require('./systems/GameObjectFactory');
 var GameObjectCreator = require('./systems/GameObjectCreator');
 var Loader = require('./systems/Loader');
@@ -15,6 +16,8 @@ var Systems = function (state, config)
     this.state = state;
 
     this.config = config;
+
+    this.events;
 
     //  State specific managers (Factory, Tweens, Loader, Physics, etc)
     this.add;
@@ -43,8 +46,10 @@ Systems.prototype = {
     {
         console.log('State.Systems.init');
 
-        //  State specific managers (Factory, Tweens, Loader, Physics, etc)
+        //  All of the systems can use the State level EventDispatcher
+        this.events = new EventDispatcher();
 
+        //  State specific managers (Factory, Tweens, Loader, Physics, etc)
         //  All these to be set by a State Config package
 
         this.add = new GameObjectFactory(this.state);
@@ -70,6 +75,7 @@ Systems.prototype = {
 
         //  Defaults
 
+        this.state.events = this.events;
         this.state.add = this.add;
         this.state.load = this.load;
         // this.state.children = this.children;
