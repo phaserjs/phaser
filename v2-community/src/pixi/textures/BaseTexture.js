@@ -6,7 +6,6 @@
  * A texture stores the information that represents an image. All textures have a base texture.
  *
  * @class BaseTexture
- * @uses EventTarget
  * @constructor
  * @param source {String|Canvas} the source object (image or canvas)
  * @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
