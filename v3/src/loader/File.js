@@ -1,5 +1,5 @@
 var GetURL = require('./GetURL');
-var FILE_CONST = require('./const');
+var CONST = require('./const');
 var XHRLoader = require('./XHRLoader');
 var XHRSettings = require('./XHRSettings');
 
@@ -21,7 +21,7 @@ var File = function (type, key, url, responseType)
 
     this.xhrLoader = null;
 
-    this.state = FILE_CONST.PENDING;
+    this.state = CONST.FILE_PENDING;
 
     //  Set by onProgress (if loading via XHR)
     this.bytesTotal = 0;

@@ -40,6 +40,8 @@ EventDispatcher.prototype = {
             binding.add(listener, priority, false);
         }
 
+        console.log('on', binding);
+
         return this;
     },
 
@@ -120,6 +122,8 @@ EventDispatcher.prototype = {
 
     _dispatchHandler: function (event)
     {
+        console.log('_dispatchHandler', event.type);
+
         event.reset(this);
 
         //  Pass the event through the filters first
@@ -139,6 +143,9 @@ EventDispatcher.prototype = {
         }
 
         var binding = this.getBinding(event.type);
+
+        console.log('_dispatchHandler', binding);
+        console.dir(this.bindings);
 
         if (binding)
         {

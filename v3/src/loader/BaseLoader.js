@@ -1,8 +1,9 @@
 
-var FILE_CONST = require('./const');
+var CONST = require('./const');
 var Set = require('../structs/Set');
 var XHRSettings = require('./XHRSettings');
-var Events = require('./events/');
+var Event = require('./events/');
+var EventDispatcher = require('../events/EventDispatcher');
 
 var BaseLoader = function ()
 {
@@ -16,6 +17,7 @@ var BaseLoader = function ()
     //  6) Multi File support (atlas + data)
     //  7) Atlas Loader
 
+    this.events = new EventDispatcher();
 
     //  Move to a 'setURL' method?
     this.baseURL = '';
@@ -37,7 +39,7 @@ var BaseLoader = function ()
 
     this.storage = new Set();
 
-    this._state = 'PENDING';
+    this._state = CONST.LOADER_IDLE;
 };
 
 BaseLoader.prototype.contructor = BaseLoader;
@@ -73,13 +75,13 @@ BaseLoader.prototype = {
     //  Is the Loader actively loading (or processing loaded files)
     isLoading: function ()
     {
-        return (this._state === 'LOADING' || this._state === 'PROCESSING');
+        return (this._state === CONST.LOADER_LOADING || this._state === CONST.LOADER_PROCESSING);
     },
 
     //  Is the Loader ready to start a new load?
     isReady: function ()
     {
-        return (this._state === 'PENDING' || this._state === 'COMPLETE' || this._state === 'FAILED');
+        return (this._state === CONST.LOADER_IDLE || this._state === CONST.LOADER_COMPLETE || this._state === CONST.LOADER_FAILED);
     },
 
     start: function ()
@@ -91,7 +93,7 @@ BaseLoader.prototype = {
             return;
         }
 
-        this.state.sys.events.dispatch(new Events.LOADER_START_EVENT(this));
+        this.events.dispatch(new Event.LOADER_START_EVENT(this));
 
         if (this.list.size === 0)
         {
@@ -99,7 +101,7 @@ BaseLoader.prototype = {
         }
         else
         {
-            // this.state = LOADING;
+            this._state = CONST.LOADER_LOADING;
 
             this.failed.clear();
             this.inflight.clear();
@@ -124,7 +126,7 @@ BaseLoader.prototype = {
 
         this.list.each(function (file)
         {
-            if (file.state === FILE_CONST.PENDING && _this.inflight.size < _this.maxParallelDownloads)
+            if (file.state === CONST.FILE_PENDING && _this.inflight.size < _this.maxParallelDownloads)
             {
                 console.log('ADDED TO QUEUE:', file.key);
 
@@ -193,7 +195,7 @@ BaseLoader.prototype = {
     {
         console.log('BaseLoader.finishedLoading PROCESSING');
 
-        this.state = 'PROCESSING';
+        this._state = CONST.LOADER_PROCESSING;
 
         var storage = this.storage;
 
@@ -223,11 +225,11 @@ BaseLoader.prototype = {
 
         console.log('Loader Complete. Loaded:', storage.size, 'Failed:', this.failed.size);
 
-        console.log('BaseLoader COMPLETE');
+        console.log('BaseLoader COMPLETE - dispatching event');
 
-        this.state = 'COMPLETE';
+        this._state = CONST.LOADER_COMPLETE;
 
-        //  Dispatch 'on complete' signals now
+        this.events.dispatch(new Event.LOADER_COMPLETE_EVENT(this));
     },
 
     getLoadedFiles (group = '', output = []) {
@@ -260,13 +262,13 @@ BaseLoader.prototype = {
         this.path = '';
         this.baseURL = '';
 
-        this.state = 'PENDING';
+        this._state = CONST.LOADER_IDLE;
     },
 
     destroy: function ()
     {
         this.reset();
-        this.state = 'DESTROYED';
+        this._state = CONST.LOADER_DESTROYED;
     }
 
 };

@@ -2,7 +2,7 @@ var Event = require('../../events/Event');
 
 var LoaderStartEvent = function (loader)
 {
-    Event.call(this);
+    Event.call(this, 'LOADER_START_EVENT');
 
     this.loader = loader;
 };

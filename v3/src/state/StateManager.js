@@ -10,6 +10,7 @@ var State = require('./State');
 var Settings = require('./Settings');
 var Systems = require('./Systems');
 var GetObjectValue = require('../utils/GetObjectValue');
+var LoaderEvent = require('../loader/events/');
 
 /**
 * The State Manager is responsible for loading, setting up and switching game states.
@@ -360,23 +361,22 @@ StateManager.prototype = {
                 //  Is the loader empty?
                 if (state.sys.load.list.size === 0)
                 {
-                    console.log('empty queue');
+                    console.log('Loader: Empty queue');
                     this.startCreate(state);
                 }
                 else
                 {
-                    console.log('load start');
+                    console.log('-------------------> Loader: Start');
 
                     //  Start the loader going as we have something in the queue
-                    // state.load.onLoadComplete.addOnce(this.loadComplete, this, 0, state);
+
+                    state.sys.load.events.on('LOADER_COMPLETE_EVENT', this.loadComplete.bind(this));
 
                     state.sys.load.start();
                 }
             }
             else
             {
-                console.log('no preload');
-
                 //  No preload? Then there was nothing to load either
                 this.startCreate(state);
             }
@@ -384,9 +384,14 @@ StateManager.prototype = {
         }
     },
 
-    loadComplete: function (state)
+    loadComplete: function (event)
     {
-        console.log('loadComplete');
+        console.log('Loader: Complete');
+        console.log(arguments);
+
+        var state = event.loader.state;
+
+        console.log(state);
 
         //  Make sure to do load-update one last time before state is set to _created
 
