@@ -138,14 +138,12 @@ EventBinding.prototype = {
         else if (this.active.length === 0)
         {
             //  This was a valid dispatch call, we just had nothing to do ...
-            return true;
+            return;
         }
 
         this.state = CONST.DISPATCHER_DISPATCHING;
 
         var listener;
-
-        event.reset(this.dispatcher);
 
         for (var i = 0; i < this.active.length; i++)
         {

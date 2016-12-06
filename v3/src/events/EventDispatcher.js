@@ -3,6 +3,8 @@ var EventBinding = require('./EventBinding');
 var EventDispatcher = function ()
 {
     this.bindings = {};
+    this.filters = [];
+    this.hasFilters = false;
 };
 
 EventDispatcher.prototype.constructor = EventDispatcher;
@@ -55,6 +57,29 @@ EventDispatcher.prototype = {
         return this;
     },
 
+    //  Add a callback that is notified every time this EventDispatcher dispatches an event
+    //  no matter what the event type is. Filters are invoked first, before any bindings,
+    //  and can stop events if they wish (in which case they'll never reach the bindings)
+    filter: function (callback)
+    {
+        var i = this.filters.indexOf(callback);
+
+        if (i === -1)
+        {
+            //  Add the filter
+            this.filters.push(callback);
+        }
+        else
+        {
+            //  Remove the filter
+            this.filters.splice(i, 1);
+        }
+        
+        this.hasFilters = (this.filters.length > 0);
+
+        return this;
+    },
+
     has: function (type, listener)
     {
         var binding = this.getBinding(type);
@@ -93,30 +118,46 @@ EventDispatcher.prototype = {
         return this;
     },
 
+    _dispatchHandler: function (event)
+    {
+        event.reset(this);
+
+        //  Pass the event through the filters first
+
+        if (this.hasFilters)
+        {
+            for (var i = 0; i < this.filters.length; i++)
+            {
+                this.filters[i].call(this, event);
+
+                //  Did the filter kill the event? If so, we can abort now
+                if (!event._propagate)
+                {
+                    return;
+                }
+            }
+        }
+
+        var binding = this.getBinding(event.type);
+
+        if (binding)
+        {
+            binding.dispatch(event);
+        }
+    },
+
     dispatch: function (event)
     {
-        var binding;
-
         if (Array.isArray(event))
         {
             for (var i = 0; i < event.length; i++)
             {
-                binding = this.getBinding(event[i].type);
-
-                if (binding)
-                {
-                    return binding.dispatch(event[i]);
-                }
+                this._dispatchHandler(event[i]);
             }
         }
         else
         {
-            binding = this.getBinding(event.type);
-
-            if (binding)
-            {
-                return binding.dispatch(event);
-            }
+            this._dispatchHandler(event);
         }
     },
 
@@ -129,6 +170,15 @@ EventDispatcher.prototype = {
         {
             binding.removeAll();
         }
+
+        return this;
+    },
+
+    removeAllFilters: function ()
+    {
+        this.filters.length = 0;
+
+        this.hasFilters = false;
 
         return this;
     },
@@ -159,7 +209,8 @@ EventDispatcher.prototype = {
 
     destroy: function ()
     {
-        //  What would it do any differently to deleteAll?
+        this.deleteAll();
+        this.removeAllFilters();
     }
 
 };
