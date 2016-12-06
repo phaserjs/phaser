@@ -1,4 +1,5 @@
 // var FILE_CONST = require('../const');
+
 var File = require('../File');
 
 //  Different images based on device-pixel ratio
@@ -30,6 +31,14 @@ var ImageFile = function (key, url, path)
     var file = new File('image', key, url, 'arraybuffer');
 
     return file;
+};
+
+ImageFile.prototype = Object.create(File.prototype);
+ImageFile.prototype.constructor = ImageFile;
+
+ImageFile.prototype.onProcess = function ()
+{
+
 };
 
 module.exports = ImageFile;

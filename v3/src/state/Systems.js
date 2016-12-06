@@ -19,6 +19,9 @@ var Systems = function (state, config)
 
     this.events;
 
+    //  Reference to the global Game level TextureManager.
+    this.textures;
+
     //  State specific managers (Factory, Tweens, Loader, Physics, etc)
     this.add;
     this.make;
@@ -45,6 +48,8 @@ Systems.prototype = {
     init: function ()
     {
         console.log('State.Systems.init');
+
+        this.textures = this.state.game.textures;
 
         //  All of the systems can use the State level EventDispatcher, or their own
         this.events = new EventDispatcher();

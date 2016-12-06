@@ -14,6 +14,7 @@ var RandomDataGenerator = require('../math/random-data-generator/RandomDataGener
 var StateManager = require('../state/StateManager');
 var FactoryContainer = require('../gameobjects/FactoryContainer');
 var GameObjects = require ('../gameobjects/');
+var TextureManager = require ('../textures/TextureManager');
 
 var Game = function (config)
 {
@@ -43,7 +44,7 @@ var Game = function (config)
     /**
     * @property {Phaser.TextureManager} textures - Reference to the Phaser Texture Manager.
     */
-    this.textures = null;
+    this.textures = new TextureManager(this);
 
     /**
     * @property {Phaser.UpdateManager} updates - Reference to the Phaser Update Manager.

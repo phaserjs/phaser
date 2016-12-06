@@ -20,12 +20,7 @@ Loader.prototype.image = function (key, url)
 {
     var file = ImageLoader(key, url, this.path);
 
-    console.log('Loader.image');
-    console.log(file);
-
     this.addFile(file);
-
-    console.log(this.list);
 
     return this;
 };

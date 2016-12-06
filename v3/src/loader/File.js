@@ -23,7 +23,7 @@ var File = function (type, key, url, responseType)
 
     this.state = CONST.FILE_PENDING;
 
-    //  Set by onProgress (if loading via XHR)
+    //  Set by onProgress (only if loading via XHR)
     this.bytesTotal = 0;
     this.bytesLoaded = -1;
     this.percentComplete = -1;
@@ -35,7 +35,7 @@ var File = function (type, key, url, responseType)
     //  The actual processed file data
     this.data = undefined;
 
-    //  Multipart file? (i.e. an atlas and its json)
+    //  Multipart file? (i.e. an atlas and its json together)
     this.multipart = undefined;
     this.linkFile = undefined;
 
