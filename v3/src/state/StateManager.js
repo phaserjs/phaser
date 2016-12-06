@@ -75,8 +75,6 @@ StateManager.prototype = {
         // this.game.onPause.add(this.pause, this);
         // this.game.onResume.add(this.resume, this);
 
-        console.log('StateManager.boot');
-
         for (var i = 0; i < this._pending.length; i++)
         {
             var entry = this._pending[i];
@@ -137,7 +135,7 @@ StateManager.prototype = {
                 autoStart: autoStart
             });
 
-            console.log('StateManager not yet booted, adding to list', this._pending.length);
+            // console.log('StateManager not yet booted, adding to list', this._pending.length);
 
             return;
         }
@@ -148,12 +146,12 @@ StateManager.prototype = {
 
         if (stateConfig instanceof State)
         {
-            console.log('StateManager.add from instance', key);
+            // console.log('StateManager.add from instance', key);
             newState = this.createStateFromInstance(key, stateConfig);
         }
         else if (typeof stateConfig === 'object')
         {
-            console.log('StateManager.add from object', key);
+            // console.log('StateManager.add from object', key);
 
             stateConfig.key = key;
 
@@ -161,7 +159,7 @@ StateManager.prototype = {
         }
         else if (typeof stateConfig === 'function')
         {
-            console.log('StateManager.add from function', key);
+            // console.log('StateManager.add from function', key);
 
             newState = this.createStateFromFunction(key, stateConfig);
         }
@@ -319,7 +317,7 @@ StateManager.prototype = {
         //  if not booted, then put state into a holding pattern
         if (!this.game.isBooted)
         {
-            console.log('StateManager not yet booted, setting autoStart on pending list');
+            // console.log('StateManager not yet booted, setting autoStart on pending list');
 
             for (var i = 0; i < this._pending.length; i++)
             {
@@ -361,16 +359,13 @@ StateManager.prototype = {
                 //  Is the loader empty?
                 if (state.sys.load.list.size === 0)
                 {
-                    console.log('Loader: Empty queue');
                     this.startCreate(state);
                 }
                 else
                 {
-                    console.log('-------------------> Loader: Start');
-
                     //  Start the loader going as we have something in the queue
 
-                    state.sys.load.events.on('LOADER_COMPLETE_EVENT', this.loadComplete.bind(this));
+                    state.sys.load.events.once('LOADER_COMPLETE_EVENT', this.loadComplete.bind(this));
 
                     state.sys.load.start();
                 }
@@ -386,12 +381,7 @@ StateManager.prototype = {
 
     loadComplete: function (event)
     {
-        console.log('Loader: Complete');
-        console.log(arguments);
-
         var state = event.loader.state;
-
-        console.log(state);
 
         //  Make sure to do load-update one last time before state is set to _created
 

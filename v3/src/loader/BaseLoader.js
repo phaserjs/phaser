@@ -86,7 +86,7 @@ BaseLoader.prototype = {
 
     start: function ()
     {
-        console.log('BaseLoader start. Files to load:', this.list.size);
+        // console.log('BaseLoader start. Files to load:', this.list.size);
 
         if (!this.isReady())
         {
@@ -120,7 +120,7 @@ BaseLoader.prototype = {
 
     processLoadQueue: function ()
     {
-        console.log('BaseLoader processLoadQueue', this.list.size);
+        // console.log('BaseLoader processLoadQueue', this.list.size);
 
         var _this = this;
 
@@ -128,7 +128,7 @@ BaseLoader.prototype = {
         {
             if (file.state === CONST.FILE_PENDING && _this.inflight.size < _this.maxParallelDownloads)
             {
-                console.log('ADDED TO QUEUE:', file.key);
+                // console.log('ADDED TO QUEUE:', file.key);
 
                 _this.inflight.add(file);
 
@@ -150,7 +150,7 @@ BaseLoader.prototype = {
     //  private
     loadFile: function (file)
     {
-        console.log('LOADING', file.key);
+        // console.log('LOADING', file.key);
 
         //  If the file doesn't have its own crossOrigin set,
         //  we'll use the Loaders (which is undefined by default)
@@ -164,7 +164,7 @@ BaseLoader.prototype = {
 
     nextFile: function (previousFile, success)
     {
-        console.log('LOADED:', previousFile.src, success);
+        // console.log('LOADED:', previousFile.src, success);
 
         //  Move the file that just loaded from the inflight list to the queue or failed Set
 
@@ -181,19 +181,19 @@ BaseLoader.prototype = {
 
         if (this.list.size > 0)
         {
-            console.log('nextFile - still something in the list');
+            // console.log('nextFile - still something in the list');
             this.processLoadQueue();
         }
         else if (this.inflight.size === 0)
         {
-            console.log('nextFile calling finishedLoading');
+            // console.log('nextFile calling finishedLoading');
             this.finishedLoading();
         }
     },
 
     finishedLoading: function ()
     {
-        console.log('BaseLoader.finishedLoading PROCESSING');
+        // console.log('BaseLoader.finishedLoading PROCESSING');
 
         this._state = CONST.LOADER_PROCESSING;
 
@@ -223,9 +223,7 @@ BaseLoader.prototype = {
         this.inflight.clear();
         this.queue.clear();
 
-        console.log('Loader Complete. Loaded:', storage.size, 'Failed:', this.failed.size);
-
-        console.log('BaseLoader COMPLETE - dispatching event');
+        // console.log('Loader Complete. Loaded:', storage.size, 'Failed:', this.failed.size);
 
         this._state = CONST.LOADER_COMPLETE;
 
