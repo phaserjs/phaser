@@ -46,7 +46,7 @@ Systems.prototype = {
     {
         console.log('State.Systems.init');
 
-        //  All of the systems can use the State level EventDispatcher
+        //  All of the systems can use the State level EventDispatcher, or their own
         this.events = new EventDispatcher();
 
         //  State specific managers (Factory, Tweens, Loader, Physics, etc)
