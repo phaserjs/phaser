@@ -1,10 +1,8 @@
-var Event = function (type, target)
+var Event = function (type)
 {
-    this.dispatcher;
-
     this.type = type;
 
-    this.target = target;
+    this.target;
 
     this._propagate = true;
 };
@@ -13,9 +11,9 @@ Event.prototype.constructor = Event;
 
 Event.prototype = {
 
-    reset: function (dispatcher)
+    reset: function (target)
     {
-        this.dispatcher = dispatcher;
+        this.target = target;
 
         this._propagate = true;
     },

@@ -13,6 +13,21 @@ EventBinding.prototype.constructor = EventBinding;
 
 EventBinding.prototype = {
 
+    total: function ()
+    {
+        var total = 0;
+
+        for (var i = 0; i < this.active.length; i++)
+        {
+            if (this.active[i].state !== CONST.LISTENER_REMOVING)
+            {
+                total++;
+            }
+        }
+
+        return total;
+    },
+
     get: function (callback)
     {
         for (var i = 0; i < this.active.length; i++)
@@ -61,11 +76,17 @@ EventBinding.prototype = {
         {
             //  The Dispatcher isn't doing anything, so we don't need a pending state
             listener.state = CONST.LISTENER_ACTIVE;
+
+            this.active.push(listener);
+
+            this.active.sort(this.sortHandler);
         }
-
-        this.active.push(listener);
-
-        this.active.sort(this.sortHandler);
+        else if (this.state === CONST.DISPATCHER_DISPATCHING)
+        {
+            //  Add it to the list, but keep the state as pending.
+            //  The call to 'tidy' will sort it out at the end of the dispatch.
+            this.active.push(listener);
+        }
     },
 
     sortHandler: function (listenerA, listenerB)
@@ -122,8 +143,6 @@ EventBinding.prototype = {
 
         this.state = CONST.DISPATCHER_DISPATCHING;
 
-        console.log('Dispatching', this.active.length, 'listeners');
-
         var listener;
 
         event.reset(this.dispatcher);
@@ -164,6 +183,9 @@ EventBinding.prototype = {
         if (this.state === CONST.DISPATCHER_REMOVING)
         {
             this.removeAll();
+
+            //  All done, tidy the list in case there were any pending events added
+            this.tidy();
         }
         else if (this.state === CONST.DISPATCHER_DESTROYED)
         {
@@ -189,13 +211,11 @@ EventBinding.prototype = {
         }
         else
         {
-            var i = this.active.length;
-
-            while (i--)
+            for (var i = this.active.length - 1; i >= 0; i--)
             {
                 if (this.active[i].state !== CONST.LISTENER_PENDING)
                 {
-                    this.active.slice(i, 1);
+                    this.active.pop();
                 }
             }
 
@@ -205,18 +225,29 @@ EventBinding.prototype = {
 
     tidy: function ()
     {
-        var i = this.active.length;
+        var added = 0;
 
-        while (i--)
+        var i = this.active.length - 1;
+
+        do
         {
             if (this.active[i].state === CONST.LISTENER_REMOVING)
             {
-                this.active.slice(i, 1);
+                this.active.splice(i, 1);
             }
             else if (this.active[i].state === CONST.LISTENER_PENDING)
             {
                 this.active[i].state === CONST.LISTENER_ACTIVE;
+                added++;
             }
+
+            i--;
+        }
+        while (i >= 0);
+
+        if (added > 0)
+        {
+            this.active.sort(this.sortHandler);
         }
     },
 

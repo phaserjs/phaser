@@ -35,7 +35,7 @@ EventDispatcher.prototype = {
 
         if (binding)
         {
-            binding.add(type, listener, priority, false);
+            binding.add(listener, priority, false);
         }
 
         return this;
@@ -49,7 +49,7 @@ EventDispatcher.prototype = {
 
         if (binding)
         {
-            binding.add(type, listener, priority, true);
+            binding.add(listener, priority, true);
         }
 
         return this;
@@ -66,6 +66,16 @@ EventDispatcher.prototype = {
         else
         {
             return false;
+        }
+    },
+
+    total: function (type)
+    {
+        var binding = this.getBinding(type);
+
+        if (binding)
+        {
+            return binding.total();
         }
     },
 
