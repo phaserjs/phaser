@@ -18,7 +18,7 @@ Phaser.ArrayUtils = {
     * Will return null if there are no array items that fall within the specified range
     * or if there is no item for the randomly chosen index.
     *
-    * @method
+    * @method Phaser.ArrayUtils.getRandomItem
     * @param {any[]} objects - An array of objects.
     * @param {integer} startIndex - Optional offset off the front of the array. Default value is 0, or the beginning of the array.
     * @param {integer} length - Optional restriction on the number of values you want to randomly select from.
@@ -42,7 +42,7 @@ Phaser.ArrayUtils = {
     * Will return null if there are no array items that fall within the specified range
     * or if there is no item for the randomly chosen index.
     *
-    * @method
+    * @method Phaser.ArrayUtils.removeRandomItem
     * @param {any[]} objects - An array of objects.
     * @param {integer} startIndex - Optional offset off the front of the array. Default value is 0, or the beginning of the array.
     * @param {integer} length - Optional restriction on the number of values you want to randomly select from.
@@ -73,7 +73,7 @@ Phaser.ArrayUtils = {
     /**
     * A standard Fisher-Yates Array shuffle implementation which modifies the array in place.
     *
-    * @method
+    * @method Phaser.ArrayUtils.shuffle
     * @param {any[]} array - The array to shuffle.
     * @return {any[]} The original array, now shuffled.
     */
@@ -94,7 +94,7 @@ Phaser.ArrayUtils = {
     /**
     * Transposes the elements of the given matrix (array of arrays).
     *
-    * @method
+    * @method Phaser.ArrayUtils.transposeMatrix
     * @param {Array<any[]>} array - The matrix to transpose.
     * @return {Array<any[]>} A new transposed matrix
     */
@@ -124,7 +124,7 @@ Phaser.ArrayUtils = {
     *
     * Based on the routine from {@link http://jsfiddle.net/MrPolywhirl/NH42z/}.
     *
-    * @method
+    * @method Phaser.ArrayUtils.rotateMatrix
     * @param {Array<any[]>} matrix - The array to rotate; this matrix _may_ be altered.
     * @param {number|string} direction - The amount to rotate: the rotation in degrees (90, -90, 270, -270, 180) or a string command ('rotateLeft', 'rotateRight' or 'rotate180').
     * @return {Array<any[]>} The rotated matrix. The source matrix should be discarded for the returned matrix.
@@ -164,7 +164,7 @@ Phaser.ArrayUtils = {
     * Snaps a value to the nearest value in an array.
     * The result will always be in the range `[first_value, last_value]`.
     *
-    * @method
+    * @method Phaser.ArrayUtils.findClosest
     * @param {number} value - The search value
     * @param {number[]} arr - The input array which _must_ be sorted.
     * @return {number} The nearest value found.
@@ -263,7 +263,7 @@ Phaser.ArrayUtils = {
     * Create an array representing the inclusive range of numbers (usually integers) in `[start, end]`.
     * This is equivalent to `numberArrayStep(start, end, 1)`.
     *
-    * @method Phaser.ArrayUtils#numberArray
+    * @method Phaser.ArrayUtils.numberArray
     * @param {number} start - The minimum value the array starts with.
     * @param {number} end - The maximum value the array contains.
     * @return {number[]} The array of number values.
@@ -290,7 +290,7 @@ Phaser.ArrayUtils = {
     * Certain values for `start` and `end` (eg. NaN/undefined/null) are currently coerced to 0;
     * for forward compatibility make sure to pass in actual numbers.
     *
-    * @method Phaser.ArrayUtils#numberArrayStep
+    * @method Phaser.ArrayUtils.numberArrayStep
     * @param {number} start - The start of the range.
     * @param {number} [end] - The end of the range.
     * @param {number} [step=1] - The value to increment or decrement by.
