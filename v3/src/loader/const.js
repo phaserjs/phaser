@@ -14,7 +14,10 @@ var FILE_CONST = {
     FILE_WAITING_LINKFILE: 10,   // file is being processed (onProcess callback)
     FILE_ERRORED: 11,   // file is being processed (onProcess callback)
     FILE_COMPLETE: 12,     // file has finished processing
-    FILE_DESTROYED: 13     // file has been destroyed
+    FILE_DESTROYED: 13,     // file has been destroyed
+
+    TEXTURE_ATLAS_JSON_ARRAY: 20,
+    TEXTURE_ATLAS_JSON_HASH: 21
 
 };
 

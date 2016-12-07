@@ -1,3 +1,4 @@
+var CONST = require('../../loader/const');
 var BaseLoader = require('../../loader/BaseLoader');
 var ImageLoader = require('../../loader/filetypes/ImageFile');
 var AtlasJSONFile = require('../../loader/filetypes/AtlasJSONFile');
@@ -32,6 +33,68 @@ Loader.prototype.atlas = function (key, textureURL, atlasURL)
     this.addFile(file);
 
     return this;
+};
+
+/**
+ * @method Phaser.Loader#multiatlas
+ * @param {string} key - Unique asset key of the texture atlas file.
+ * @param {array|integer} textureURLs - An array of PNG files, or an integer.
+ * @param {array} [atlasURLs] -  An array of JSON files.
+ * @param {number} [format] - The format of the data. Can be Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY (the default), Phaser.Loader.TEXTURE_ATLAS_JSON_HASH or Phaser.Loader.TEXTURE_ATLAS_XML_STARLING.
+ * @return {Phaser.Loader} This Loader instance.
+ */
+Loader.prototype.multiatlas = function (key, textureURLs, atlasURLs, format)
+{
+    if (format === undefined) { format = CONST.TEXTURE_ATLAS_JSON_ARRAY; }
+
+    if (typeof textureURLs === 'number')
+    {
+        var total = textureURLs;
+
+        textureURLs = Phaser.ArrayUtils.numberArray(0, total, key + '-', '.png');
+        atlasURLs = Phaser.ArrayUtils.numberArray(0, total, key + '-', '.json');
+    }
+    else
+    {
+        if (!Array.isArray(textureURLs))
+        {
+            textureURLs = [ textureURLs ];
+        }
+
+        if (!Array.isArray(atlasURLs))
+        {
+            atlasURLs = [ atlasURLs ];
+        }
+    }
+
+    var i = 0;
+    var multiKey;
+    var imgs = [];
+    var data = [];
+
+    for (i = 0; i < textureURLs.length; i++)
+    {
+        //  TODO - Add support for compressed textures
+        multiKey = '_MA_' + key + '_' + i.toString();
+
+        imgs.push(multiKey);
+
+        this.addToFileList('image', multiKey, textureURLs[i], { multiatlas: true });
+    }
+
+    for (i = 0; i < atlasURLs.length; i++)
+    {
+        multiKey = '_MA_' + key + '_' + i.toString();
+
+        data.push(multiKey);
+
+        //   Check if this can support XML as well?
+        this.addToFileList('json', multiKey, atlasURLs[i], { multiatlas: true });
+    }
+
+    this._multilist.push({ key: key, images: imgs, data: data, format: format });
+
+
 };
 
 Loader.prototype.processCallback = function ()
