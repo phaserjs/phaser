@@ -36,7 +36,6 @@ var File = function (type, key, url, responseType)
     this.data = undefined;
 
     //  Multipart file? (i.e. an atlas and its json together)
-    this.multipart = undefined;
     this.linkFile = undefined;
 
     this.callback = null;
@@ -94,7 +93,24 @@ File.prototype = {
 
     onComplete: function ()
     {
-        this.state = CONST.FILE_COMPLETE;
+        if (this.linkFile)
+        {
+            if (this.linkFile.state === CONST.FILE_WAITING_LINKFILE)
+            {
+                //  The linkfile has finished processing, and is waiting for this file, so let's do them both
+                this.state = CONST.FILE_COMPLETE;
+                this.linkFile.state = CONST.FILE_COMPLETE;
+            }
+            else
+            {
+                //  The linkfile still hasn't finished loading and/or processing yet
+                this.state = CONST.FILE_WAITING_LINKFILE;
+            }
+        }
+        else
+        {
+            this.state = CONST.FILE_COMPLETE;
+        }
     },
 
     //  Called by the Loader, starts the actual file downloading

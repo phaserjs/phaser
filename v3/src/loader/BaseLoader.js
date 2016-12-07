@@ -51,13 +51,16 @@ BaseLoader.prototype = {
         }
 
         //  Multipart file?
-        if (file.multipart)
+        if (file.linkFile)
         {
-            file.fileA.path = this.path;
-            file.fileB.path = this.path;
+            var fileA = file;
+            var fileB = file.linkFile;
 
-            this.list.add(file.fileA);
-            this.list.add(file.fileB);
+            fileA.path = this.path;
+            fileB.path = this.path;
+
+            this.list.add(fileA);
+            this.list.add(fileB);
         }
         else
         {
@@ -206,23 +209,54 @@ BaseLoader.prototype = {
         });
     },
 
-    processUpdate: function (file)
+    removeFromQueue: function (file)
     {
-        if (file.state === CONST.FILE_ERRORED)
-        {
-            this.failed.add(file);
-        }
-        else
-        {
-            this.storage.add(file);
-        }
-
         this.queue.delete(file);
 
         if (this.queue.size === 0 && this._state === CONST.LOADER_PROCESSING)
         {
             //  We've processed all the files we loaded
             this.processComplete();
+        }
+    },
+
+    //  Called automatically by the File when it has finished processing
+    processUpdate: function (file)
+    {
+        //  This file has failed to load, so move it to the failed Set
+        if (file.state === CONST.FILE_ERRORED)
+        {
+            this.failed.add(file);
+
+            if (file.linkFile)
+            {
+                this.queue.delete(file.linkFile);
+            }
+
+            return this.removeFromQueue(file);
+        }
+
+        //  If we got here, then the file loaded
+
+        //  Special handling for multi-part files
+
+        if (file.linkFile)
+        {
+            if (file.state === CONST.FILE_COMPLETE && file.linkFile.state === CONST.FILE_COMPLETE)
+            {
+                //  Partner has loaded, so add them both to Storage
+                this.storage.add(file);
+                this.storage.add(file.linkFile);
+
+                this.queue.delete(file.linkFile);
+
+                this.removeFromQueue(file);
+            }
+        }
+        else
+        {
+            this.storage.add(file);
+            this.removeFromQueue(file);
         }
     },
 

@@ -1,5 +1,6 @@
 var BaseLoader = require('../../loader/BaseLoader');
 var ImageLoader = require('../../loader/filetypes/ImageFile');
+var AtlasJSONFile = require('../../loader/filetypes/AtlasJSONFile');
 
 var Loader = function (state)
 {
@@ -18,6 +19,15 @@ Loader.prototype.constructor = Loader;
 Loader.prototype.image = function (key, url)
 {
     var file = new ImageLoader(key, url, this.path);
+
+    this.addFile(file);
+
+    return this;
+};
+
+Loader.prototype.atlas = function (key, textureURL, atlasURL)
+{
+    var file = new AtlasJSONFile(key, textureURL, atlasURL, this.path);
 
     this.addFile(file);
 
