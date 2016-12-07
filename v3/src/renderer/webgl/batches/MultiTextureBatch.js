@@ -383,3 +383,6 @@ MultiTextureBatch.prototype.destroy = function ()
 
     this.manager = null;
 };
+
+module.exports = MultiTextureBatch;
+

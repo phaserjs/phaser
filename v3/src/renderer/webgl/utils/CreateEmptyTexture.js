@@ -1,7 +1,9 @@
+var CONST = require('../../../const');
+
 var CreateEmptyTexture = function (gl, width, height, scaleMode, textureIndex)
 {
     var texture = gl.createTexture();
-    var glScaleMode = (scaleMode === Phaser.scaleModes.LINEAR) ? gl.LINEAR : gl.NEAREST;
+    var glScaleMode = (scaleMode === CONST.scaleModes.LINEAR) ? gl.LINEAR : gl.NEAREST;
 
     gl.activeTexture(gl.TEXTURE0 + textureIndex);
     gl.bindTexture(gl.TEXTURE_2D, texture);

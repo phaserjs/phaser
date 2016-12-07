@@ -110,8 +110,7 @@ Game.prototype = {
     //  timestamp = DOMHighResTimeStamp
     update: function (timestamp)
     {
-        // console.log(timestamp);
-        // this.state.step(timestamp);
+        this.state.step(timestamp);
     }
 
 };

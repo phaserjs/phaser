@@ -10,7 +10,7 @@ var State = require('./State');
 var Settings = require('./Settings');
 var Systems = require('./Systems');
 var GetObjectValue = require('../utils/GetObjectValue');
-var LoaderEvent = require('../loader/events/');
+// var LoaderEvent = require('../loader/events/');
 
 /**
 * The State Manager is responsible for loading, setting up and switching game states.

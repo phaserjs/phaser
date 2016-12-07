@@ -27,7 +27,7 @@ var SingleTextureBatch = function (manager, batchSize)
 
     var vertSize = (4 * 2) + (4 * 2) + (4) + (4) + (4);
 
-    Phaser.Renderer.WebGL.Batch.call(this, manager, batchSize, vertSize);
+    BaseBatch.call(this, manager, batchSize, vertSize);
 
     this.type = 1;
 
