@@ -13,7 +13,7 @@ var DOMContentLoaded = require('../dom/DOMContentLoaded');
 var RandomDataGenerator = require('../math/random-data-generator/RandomDataGenerator');
 var StateManager = require('../state/StateManager');
 var FactoryContainer = require('../gameobjects/FactoryContainer');
-var GameObjects = require ('../gameobjects/');
+var GameObjects = require('../gameobjects/');
 var TextureManager = require ('../textures/TextureManager');
 
 var Game = function (config)

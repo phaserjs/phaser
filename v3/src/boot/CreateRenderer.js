@@ -7,6 +7,7 @@
 var CONST = require('../const');
 var CanvasPool = require('../dom/CanvasPool');
 var Features = require('../device/Features');
+var WebGLRenderer = require('../renderer/webgl/WebGLRenderer');
 
 /**
 * Checks if the device is capable of using the requested renderer and sets it up or an alternative if not.
@@ -58,8 +59,8 @@ var CreateRenderer = function (game)
     if (config.renderType === CONST.WEBGL)
     {
         console.log('Creating WEBGL Renderer');
-        // game.renderer = new Phaser.Renderer.WebGL(this);
-        // game.context = null;
+        game.renderer = new WebGLRenderer(game);
+        game.context = null;
     }
     else
     {
