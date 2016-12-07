@@ -1,6 +1,6 @@
-var MathWrap from '../Wrap';
+var MathWrap = require('../Wrap');
 
-var Wrap (angle)
+var Wrap = function (angle)
 {
     return MathWrap(angle, -Math.PI, Math.PI);
 };
