@@ -22,6 +22,10 @@ var JSONArrayTextureParser = function (texture, sourceIndex, json)
         return;
     }
 
+    //  Add in a __BASE entry (for the entire atlas)
+    var source = texture.source[sourceIndex];
+    texture.add('__BASE', sourceIndex, 0, 0, source.width, source.height);
+
     //  By this stage frames is a fully parsed array
     var frames = json['frames'];
     var newFrame;

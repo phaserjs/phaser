@@ -84,6 +84,8 @@ Texture.prototype = {
         if (!frame)
         {
             console.warn('No Texture.frame found with name ' + name);
+
+            return this.frames['__BASE'];
         }
         else
         {
