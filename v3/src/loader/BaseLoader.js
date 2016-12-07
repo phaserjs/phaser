@@ -9,8 +9,6 @@ var BaseLoader = function ()
 {
     //  To finish the loader ...
     //  
-    //  1) Image Tag loader
-    //  2) Events (or Signals?) for the various stages
     //  3) Progress update
     //  4) JSON loader
     //  5) XML Loader
@@ -18,6 +16,8 @@ var BaseLoader = function ()
     //  7) Atlas Loader
 
     this.events = new EventDispatcher();
+
+    this.forceImageTags = false;
 
     //  Move to a 'setURL' method?
     this.baseURL = '';
@@ -230,22 +230,9 @@ BaseLoader.prototype = {
         this.events.dispatch(new Event.LOADER_COMPLETE_EVENT(this));
     },
 
-    getLoadedFiles (group = '', output = []) {
-
-        var output = [];
-
-        //  Return an array of all files that have state = COMPLETE (which means loaded + processed)
-
-        for (let file of this.storage)
-        {
-            if (file.state === FILE.COMPLETE && file.tag === group && (type !== '' && file.type === type))
-            {
-                output.push(file);
-            }
-        }
-
-        return output;
-
+    getLoadedFiles: function ()
+    {
+        return this.storage.slice();
     },
 
     reset: function ()

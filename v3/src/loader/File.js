@@ -57,10 +57,11 @@ File.prototype = {
     //  ProgressEvent
     onLoad: function (event)
     {
-        console.log('image loaded');
-        console.log(event);
-
+        // console.log('image loaded');
+        // console.log(event);
         // this.onStateChange(LOADING);
+
+        this.process();
 
         this.resetXHR();
 
@@ -69,8 +70,8 @@ File.prototype = {
 
     onError: function (event)
     {
-        console.log('image error');
-        console.log(event);
+        // console.log('image error');
+        // console.log(event);
 
         this.resetXHR();
 
@@ -87,14 +88,16 @@ File.prototype = {
         console.log(this.percentComplete + '% (' + this.bytesLoaded + ' bytes)');
     },
 
-    onProcess: function ()
+    process: function ()
     {
-        console.log('process the image');
+        //  Override by an extending class
     },
 
     onComplete: function ()
     {
-        console.log('image completed and added to the loader store');
+        console.log('File completed, ready to add to the Loader store');
+
+        this.state = CONST.FILE_COMPLETE;
     },
 
     //  Called by the Loader, starts the actual file downloading
@@ -105,8 +108,6 @@ File.prototype = {
         this.callback = callback;
 
         this.src = GetURL(this, baseURL);
-
-        console.log('LOADING2', this.src);
 
         this.xhrLoader = XHRLoader(this, globalXHR);
     }

@@ -1,12 +1,6 @@
-// var FILE_CONST = require('../const');
 
+var CONST = require('../const');
 var File = require('../File');
-
-//  Different images based on device-pixel ratio
-//  And maybe on screen resolution breakpoints
-
-//  2 options - can either return the File object, so they can listen to it specifically
-//  Or can return the Loader, so they can chain calls?
 
 var ImageFile = function (key, url, path)
 {
@@ -14,9 +8,7 @@ var ImageFile = function (key, url, path)
 
     if (!key)
     {
-        console.warn('Loader: You tried to load an Image, but no key was given');
-
-        return false;
+        throw new Error('Error calling \'Loader.image\' invalid key provided.');
     }
 
     if (!url)
@@ -28,17 +20,26 @@ var ImageFile = function (key, url, path)
         url = path.concat(url);
     }
 
-    var file = new File('image', key, url, 'arraybuffer');
-
-    return file;
+    File.call(this, 'image', key, url, 'blob');
 };
 
 ImageFile.prototype = Object.create(File.prototype);
 ImageFile.prototype.constructor = ImageFile;
 
-ImageFile.prototype.onProcess = function ()
+ImageFile.prototype.process = function ()
 {
+    this.state = CONST.FILE_PROCESSING;
 
+    this.data = new Image();
+
+    this.data.onload = function ()
+    {
+        window.URL.revokeObjectURL(this.src);
+
+        this.onComplete();
+    };
+
+    this.data.src = window.URL.createObjectURL(this.xhrLoader.response);
 };
 
 module.exports = ImageFile;
