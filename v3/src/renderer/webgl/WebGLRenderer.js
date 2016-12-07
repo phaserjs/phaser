@@ -5,6 +5,7 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
+var CONST = require('../../const');
 var CreateEmptyTexture = require('./utils/CreateEmptyTexture');
 var QuadFBO = require('./utils/QuadFBO');
 var BatchManager = require('./BatchManager');
@@ -24,7 +25,7 @@ var WebGLRenderer = function (game)
     */
     this.game = game;
 
-    this.type = Phaser.WEBGL;
+    this.type = CONST.WEBGL;
 
     //  Read all the following from game config
     this.clearBeforeRender = true;
@@ -35,11 +36,11 @@ var WebGLRenderer = function (game)
 
     this.preserveDrawingBuffer = false;
 
-    this.width = game.width * game.resolution;
+    this.width = game.config.width * game.config.resolution;
 
-    this.height = game.height * game.resolution;
+    this.height = game.config.height * game.config.resolution;
 
-    this.resolution = game.resolution;
+    this.resolution = game.config.resolution;
 
     this.clipUnitX = 2 / this.width;
 
@@ -148,10 +149,10 @@ WebGLRenderer.prototype = {
         gl.enable(gl.BLEND);
 
          // Transparent
-        gl.clearColor(0, 0, 0, 0);
+        // gl.clearColor(0, 0, 0, 0);
 
         //  Black
-        // gl.clearColor(0, 0, 0, 1);
+        gl.clearColor(1, 0, 0, 1);
 
         this.shaderManager.init();
         this.batch.init();
@@ -247,16 +248,18 @@ WebGLRenderer.prototype = {
 
     resize: function (width, height)
     {
-        this.width = width * this.game.resolution;
-        this.height = height * this.game.resolution;
+        var res = this.game.config.resolution;
+
+        this.width = width * res;
+        this.height = height * res;
 
         this.view.width = this.width;
         this.view.height = this.height;
 
         if (this.autoResize)
         {
-            this.view.style.width = (this.width / this.game.resolution) + 'px';
-            this.view.style.height = (this.height / this.game.resolution) + 'px';
+            this.view.style.width = (this.width / res) + 'px';
+            this.view.style.height = (this.height / res) + 'px';
         }
 
         this.gl.viewport(0, 0, this.width, this.height);
@@ -264,8 +267,8 @@ WebGLRenderer.prototype = {
         this.clipUnitX = 2 / this.width;
         this.clipUnitY = 2 / this.height;
 
-        this.projection.x = (this.width / 2) / this.game.resolution;
-        this.projection.y = -(this.height / 2) / this.game.resolution;
+        this.projection.x = (this.width / 2) / res;
+        this.projection.y = -(this.height / 2) / res;
     },
 
     /**
@@ -279,13 +282,13 @@ WebGLRenderer.prototype = {
      */
     render: function (state, interpolationPercentage)
     {
+        // console.log('%c render start ', 'color: #ffffff; background: #00ff00;');
+
         //  No point rendering if our context has been blown up!
         if (this.contextLost)
         {
             return;
         }
-
-        console.log('%c render start ', 'color: #ffffff; background: #00ff00;');
 
         //  Add Pre-render hook
 
@@ -300,7 +303,7 @@ WebGLRenderer.prototype = {
         //  clear is needed for the FBO, otherwise corruption ...
         gl.clear(gl.COLOR_BUFFER_BIT);
 
-        this.setBlendMode(Phaser.blendModes.NORMAL);
+        this.setBlendMode(CONST.blendModes.NORMAL);
 
         this.drawCount = 0;
 
@@ -413,16 +416,16 @@ WebGLRenderer.prototype = {
         //  @see https://github.com/mrdoob/three.js/issues/9109
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, source.image);
 
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, source.scaleMode === Phaser.scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, source.scaleMode === CONST.scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
 
         if (source.mipmap && source.isPowerOf2)
         {
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, source.scaleMode === Phaser.scaleModes.LINEAR ? gl.LINEAR_MIPMAP_LINEAR : gl.NEAREST_MIPMAP_NEAREST);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, source.scaleMode === CONST.scaleModes.LINEAR ? gl.LINEAR_MIPMAP_LINEAR : gl.NEAREST_MIPMAP_NEAREST);
             gl.generateMipmap(gl.TEXTURE_2D);
         }
         else
         {
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, source.scaleMode === Phaser.scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, source.scaleMode === CONST.scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
         }
 
         if (source.isPowerOf2)
@@ -441,6 +444,7 @@ WebGLRenderer.prototype = {
         return true;
     },
 
+    /*
     updateCompressedTexture: function (texture)
     {
         if (!texture.hasLoaded)
@@ -497,6 +501,7 @@ WebGLRenderer.prototype = {
 
         return true;
     },
+    */
 
     //  Blend Mode Manager
 

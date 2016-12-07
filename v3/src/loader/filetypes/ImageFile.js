@@ -32,11 +32,13 @@ ImageFile.prototype.onProcess = function (callback)
 
     this.data = new Image();
 
+    this.data.crossOrigin = this.crossOrigin;
+
     var _this = this;
 
     this.data.onload = function ()
     {
-        window.URL.revokeObjectURL(_this.data.src);
+        URL.revokeObjectURL(_this.data.src);
 
         _this.onComplete();
 
@@ -45,14 +47,14 @@ ImageFile.prototype.onProcess = function (callback)
 
     this.data.onerror = function ()
     {
-        window.URL.revokeObjectURL(_this.data.src);
+        URL.revokeObjectURL(_this.data.src);
 
         _this.state = CONST.FILE_ERRORED;
 
         callback(_this);
     };
 
-    this.data.src = window.URL.createObjectURL(this.xhrLoader.response);
+    this.data.src = URL.createObjectURL(this.xhrLoader.response);
 };
 
 module.exports = ImageFile;

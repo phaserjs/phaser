@@ -279,7 +279,7 @@ StateManager.prototype = {
         var width = newState.settings.width;
         var height = newState.settings.height;
 
-        // newState.sys.fbo = this.game.renderer.createFBO(newState, x, y, width, height);
+        newState.sys.fbo = this.game.renderer.createFBO(newState, x, y, width, height);
     },
 
     getState: function (key)

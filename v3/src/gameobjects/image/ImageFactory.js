@@ -34,7 +34,7 @@ var ImageFactory = {
         console.log('ImageFactory.add', key, x, y, frame, group);
         console.log('into State', this.state);
 
-        // return group.children.add(new Image(this.state, x, y, key, frame));
+        return group.children.add(new Image(this.state, x, y, key, frame));
     },
 
     make: function (x, y, key, frame)

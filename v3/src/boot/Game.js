@@ -15,6 +15,7 @@ var StateManager = require('../state/StateManager');
 var FactoryContainer = require('../gameobjects/FactoryContainer');
 var GameObjects = require('../gameobjects/');
 var TextureManager = require ('../textures/TextureManager');
+var AddToDOM = require('../dom/AddToDOM');
 
 var Game = function (config)
 {
@@ -97,6 +98,8 @@ Game.prototype = {
         DebugHeader(this);
 
         CreateRenderer(this);
+
+        AddToDOM(this.canvas, this.config.parent);
 
         this.state.boot();
 

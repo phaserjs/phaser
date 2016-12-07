@@ -192,7 +192,7 @@ MainLoop.prototype = {
 
         this.state.sys.updates.start();
 
-        if (this.state.settings.visible && this.state.sys.color.alpha !== 0 && this.state.sys.children.list.length > 0)
+        if (this.state.settings.visible && this.state.sys.color.alpha !== 0)
         {
             this.game.renderer.render(this.state, this.frameDelta / this.timestep);
         }

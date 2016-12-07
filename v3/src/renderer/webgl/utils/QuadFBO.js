@@ -4,6 +4,8 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
+var CreateEmptyTexture = require('./CreateEmptyTexture');
+
 /**
 * Frame Buffer Object with drawing quad + shader
 *
@@ -100,7 +102,7 @@ QuadFBO.prototype = {
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([ 0, 0, 1, 0, 0, 1, 1, 1 ]), gl.STATIC_DRAW);
 
         //  Create a texture for our color buffer
-        this.texture = this.renderer.createEmptyTexture(width, height, 0, 0);
+        this.texture = CreateEmptyTexture(gl, width, height, 0, 0);
 
         //  The FBO's depth buffer
         this.renderBuffer = gl.createRenderbuffer();
