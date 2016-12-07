@@ -4,8 +4,8 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
-var SingleTextureBatch = require('./SingleTextureBatch');
-var MultiTextureBatch = require('./MultiTextureBatch');
+var SingleTextureBatch = require('./batches/SingleTextureBatch');
+var MultiTextureBatch = require('./batches/MultiTextureBatch');
 
 /**
 * Manages the different WebGL Sprite Batches.

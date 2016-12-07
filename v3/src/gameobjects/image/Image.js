@@ -4,7 +4,7 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
-var CONST = require('../const');
+var CONST = require('../../const');
 var GameObject = require('../GameObject');
 var ImageWebGLRenderer = require('./ImageWebGLRenderer');
 
