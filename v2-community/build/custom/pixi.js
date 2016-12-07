@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.7.1 "2016-11-28" - Built: Mon Nov 28 2016 18:47:34
+* v2.7.2 "2016-12-06" - Built: Tue Dec 06 2016 23:48:33
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -69,7 +69,7 @@ var PIXI = PIXI || {};
 *
 * It is used internally by the likes of PIXI.Sprite.
 *
-* @class PIXI.DisplayObject
+* @class DisplayObject
 * @constructor
 */
 PIXI.DisplayObject = function () {
@@ -6896,7 +6896,6 @@ PIXI.CanvasRenderer.prototype.mapBlendModes = function () {
  * A texture stores the information that represents an image. All textures have a base texture.
  *
  * @class BaseTexture
- * @uses EventTarget
  * @constructor
  * @param source {String|Canvas} the source object (image or canvas)
  * @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
@@ -7164,7 +7163,6 @@ PIXI.TextureSilentFail = false;
  * to the display list directly. Instead use it as the texture for a PIXI.Sprite. If no frame is provided then the whole image is used.
  *
  * @class Texture
- * @uses EventTarget
  * @constructor
  * @param baseTexture {BaseTexture} The base texture source to create the texture from
  * @param frame {Rectangle} The rectangle frame of the texture to show

@@ -1572,7 +1572,7 @@
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_ArrayUtils.js.html">utils/ArrayUtils.js</a>, <a href="src_utils_ArrayUtils.js.html#sunlight-1-line-172">line 172</a>
+    <a href="src_utils_ArrayUtils.js.html">utils/ArrayUtils.js</a>, <a href="src_utils_ArrayUtils.js.html#sunlight-1-line-163">line 163</a>
     </dt>
     
 
@@ -1758,7 +1758,7 @@
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_ArrayUtils.js.html">utils/ArrayUtils.js</a>, <a href="src_utils_ArrayUtils.js.html#sunlight-1-line-27">line 27</a>
+    <a href="src_utils_ArrayUtils.js.html">utils/ArrayUtils.js</a>, <a href="src_utils_ArrayUtils.js.html#sunlight-1-line-15">line 15</a>
     </dt>
     
 
@@ -1778,6 +1778,407 @@
     
        
     
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".numberArray"><span class="type-signature">&lt;static> </span>numberArray<span class="signature">(start, end)</span><span class="type-signature"> &rarr; {Array.&lt;number>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Create an array representing the inclusive range of numbers (usually integers) in <code>[start, end]</code>.<br>This is equivalent to <code>numberArrayStep(start, end, 1)</code>.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>start</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The minimum value the array starts with.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>end</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The maximum value the array contains.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+
+    
+    <h5>Returns:</h5>
+    <div class="returns">
+        
+            
+    
+        <div class="returns-type">
+        
+<span class="param-type">Array.&lt;number></span>
+
+ -
+        </div>
+    
+    <div class="returns-desc param-desc">
+        <p>The array of number values.</p>
+    </div>
+
+
+        
+    </div>
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_utils_ArrayUtils.js.html">utils/ArrayUtils.js</a>, <a href="src_utils_ArrayUtils.js.html#sunlight-1-line-262">line 262</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+       
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id=".numberArrayStep"><span class="type-signature">&lt;static> </span>numberArrayStep<span class="signature">(start, <span class="optional">end</span>, <span class="optional">step</span>)</span><span class="type-signature"> &rarr; {Array}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Create an array of numbers (positive and/or negative) progressing from <code>start</code><br>up to but not including <code>end</code> by advancing by <code>step</code>.</p>
+<p>If <code>start</code> is less than <code>end</code> a zero-length range is created unless a negative <code>step</code> is specified.</p>
+<p>Certain values for <code>start</code> and <code>end</code> (eg. NaN/undefined/null) are currently coerced to 0;<br>for forward compatibility make sure to pass in actual numbers.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+		<th>Default</th>
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>start</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The start of the range.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>end</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The end of the range.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>step</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    1
+                
+                </td>
+            
+
+            <td class="description last"><p>The value to increment or decrement by.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+
+    
+    <h5>Returns:</h5>
+    <div class="returns">
+        
+            
+    
+        <div class="returns-type">
+        
+<span class="param-type">Array</span>
+
+ -
+        </div>
+    
+    <div class="returns-desc param-desc">
+        <p>Returns the new array of numbers.</p>
+    </div>
+
+
+        
+    </div>
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="src_utils_ArrayUtils.js.html">utils/ArrayUtils.js</a>, <a href="src_utils_ArrayUtils.js.html#sunlight-1-line-284">line 284</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+       
+    
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">Phaser.ArrayUtils.numberArrayStep(4);// => [0, 1, 2, 3]Phaser.ArrayUtils.numberArrayStep(1, 5);// => [1, 2, 3, 4]Phaser.ArrayUtils.numberArrayStep(0, 20, 5);// => [0, 5, 10, 15]Phaser.ArrayUtils.numberArrayStep(0, -4, -1);// => [0, -1, -2, -3]Phaser.ArrayUtils.numberArrayStep(1, 4, 0);// => [1, 1, 1]Phaser.ArrayUtils.numberArrayStep(0);// => []</pre>
+
+
     
 </dd>
 
@@ -1944,7 +2345,7 @@
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_ArrayUtils.js.html">utils/ArrayUtils.js</a>, <a href="src_utils_ArrayUtils.js.html#sunlight-1-line-51">line 51</a>
+    <a href="src_utils_ArrayUtils.js.html">utils/ArrayUtils.js</a>, <a href="src_utils_ArrayUtils.js.html#sunlight-1-line-39">line 39</a>
     </dt>
     
 
@@ -2403,7 +2804,7 @@
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_ArrayUtils.js.html">utils/ArrayUtils.js</a>, <a href="src_utils_ArrayUtils.js.html#sunlight-1-line-132">line 132</a>
+    <a href="src_utils_ArrayUtils.js.html">utils/ArrayUtils.js</a>, <a href="src_utils_ArrayUtils.js.html#sunlight-1-line-122">line 122</a>
     </dt>
     
 
@@ -2683,7 +3084,7 @@
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_ArrayUtils.js.html">utils/ArrayUtils.js</a>, <a href="src_utils_ArrayUtils.js.html#sunlight-1-line-80">line 80</a>
+    <a href="src_utils_ArrayUtils.js.html">utils/ArrayUtils.js</a>, <a href="src_utils_ArrayUtils.js.html#sunlight-1-line-73">line 73</a>
     </dt>
     
 
@@ -2822,7 +3223,7 @@
 
     
     <dt class="tag-source">Source -
-    <a href="src_utils_ArrayUtils.js.html">utils/ArrayUtils.js</a>, <a href="src_utils_ArrayUtils.js.html#sunlight-1-line-101">line 101</a>
+    <a href="src_utils_ArrayUtils.js.html">utils/ArrayUtils.js</a>, <a href="src_utils_ArrayUtils.js.html#sunlight-1-line-94">line 94</a>
     </dt>
     
 
@@ -2842,407 +3243,6 @@
     
        
     
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="numberArray"><span class="type-signature"></span>numberArray<span class="signature">(start, end)</span><span class="type-signature"> &rarr; {Array.&lt;number>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Create an array representing the inclusive range of numbers (usually integers) in <code>[start, end]</code>.<br>This is equivalent to <code>numberArrayStep(start, end, 1)</code>.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>start</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The minimum value the array starts with.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>end</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The maximum value the array contains.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-
-    
-    <h5>Returns:</h5>
-    <div class="returns">
-        
-            
-    
-        <div class="returns-type">
-        
-<span class="param-type">Array.&lt;number></span>
-
- -
-        </div>
-    
-    <div class="returns-desc param-desc">
-        <p>The array of number values.</p>
-    </div>
-
-
-        
-    </div>
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_utils_ArrayUtils.js.html">utils/ArrayUtils.js</a>, <a href="src_utils_ArrayUtils.js.html#sunlight-1-line-262">line 262</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="numberArrayStep"><span class="type-signature"></span>numberArrayStep<span class="signature">(start, <span class="optional">end</span>, <span class="optional">step</span>)</span><span class="type-signature"> &rarr; {Array}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Create an array of numbers (positive and/or negative) progressing from <code>start</code><br>up to but not including <code>end</code> by advancing by <code>step</code>.</p>
-<p>If <code>start</code> is less than <code>end</code> a zero-length range is created unless a negative <code>step</code> is specified.</p>
-<p>Certain values for <code>start</code> and <code>end</code> (eg. NaN/undefined/null) are currently coerced to 0;<br>for forward compatibility make sure to pass in actual numbers.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-		<th>Argument</th>
-		
-
-		
-		<th>Default</th>
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>start</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"><p>The start of the range.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>end</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"><p>The end of the range.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>step</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    1
-                
-                </td>
-            
-
-            <td class="description last"><p>The value to increment or decrement by.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-
-    
-    <h5>Returns:</h5>
-    <div class="returns">
-        
-            
-    
-        <div class="returns-type">
-        
-<span class="param-type">Array</span>
-
- -
-        </div>
-    
-    <div class="returns-desc param-desc">
-        <p>Returns the new array of numbers.</p>
-    </div>
-
-
-        
-    </div>
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="src_utils_ArrayUtils.js.html">utils/ArrayUtils.js</a>, <a href="src_utils_ArrayUtils.js.html#sunlight-1-line-284">line 284</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-        <h5>Example</h5>
-        
-    <pre class="sunlight-highlight-javascript">Phaser.ArrayUtils.numberArrayStep(4);// => [0, 1, 2, 3]Phaser.ArrayUtils.numberArrayStep(1, 5);// => [1, 2, 3, 4]Phaser.ArrayUtils.numberArrayStep(0, 20, 5);// => [0, 5, 10, 15]Phaser.ArrayUtils.numberArrayStep(0, -4, -1);// => [0, -1, -2, -3]Phaser.ArrayUtils.numberArrayStep(1, 4, 0);// => [1, 1, 1]Phaser.ArrayUtils.numberArrayStep(0);// => []</pre>
-
-
     
 </dd>
 
@@ -3272,7 +3272,7 @@
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
-		on Mon Dec 05 2016 10:04:32 GMT+0000 (GMT Standard Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Tue Dec 06 2016 23:48:57 GMT+0000 (GMT Standard Time) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

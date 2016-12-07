@@ -1,5 +1,21 @@
 # Change Log
 
+## Version 2.7.2 - 6th December 2016
+
+### New Features
+
+* Added feature: set character limit with suffix
+
+### Updates
+
+* Clarification of fixedToCamera semantics
+* change Emitter.gravity from number to Phaser.Point
+* Fixed issue causing tsc to crap out under certain circumstances
+
+### Bug Fixes
+
+* removeTextureAtlas now deletes the correct cache object.
+
 ## Version 2.7.1 - 28th November 2016
 
 ### Updates

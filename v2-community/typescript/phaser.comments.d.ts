@@ -267,6 +267,9 @@ declare module Phaser {
         /**
         * Plays this animation.
         * 
+        * If you need to jump to a specific frame of this animation, then call `play` and immediately after it,
+        * set the frame you require (i.e. `animation.play(); animation.frame = 4`).
+        * 
         * @param frameRate The framerate to play the animation at. The speed is given in frames per second. If not provided the previously set frameRate of the Animation is used.
         * @param loop Should the animation be looped after playback. If not provided the previously set loop value of the Animation is used.
         * @param killOnComplete If set to true when the animation completes (only happens if loop=false) the parent Sprite will be killed.
@@ -472,6 +475,9 @@ declare module Phaser {
         * 
         * If the requested animation is already playing this request will be ignored.
         * If you need to reset an already running animation do so directly on the Animation object itself.
+        * 
+        * If you need to jump to a specific frame of this animation, then call `play` and immediately after it,
+        * set the frame you require (i.e. `animation.play(); animation.frame = 4`).
         * 
         * @param name The name of the animation to be played, e.g. "fire", "walk", "jump".
         * @param frameRate The framerate to play the animation at. The speed is given in frames per second. If not provided the previously set frameRate of the Animation is used.
@@ -2041,15 +2047,14 @@ declare module Phaser {
         exists: boolean;
 
         /**
-        * A Game Object that is "fixed" to the camera uses its x/y coordinates as offsets from the top left of the camera during rendering.
+        * A Game Object that is "fixed" to the camera is rendered at a given x/y offsets from the top left of the camera. The offsets
+        * are stored in the `cameraOffset` property, which is initialized with the current object coordinates.
         * 
         * The values are adjusted at the rendering stage, overriding the Game Objects actual world position.
         * 
         * The end result is that the Game Object will appear to be 'fixed' to the camera, regardless of where in the game world
         * the camera is viewing. This is useful if for example this Game Object is a UI item that you wish to be visible at all times
         * regardless where in the world the camera is.
-        * 
-        * The offsets are stored in the `cameraOffset` property.
         * 
         * Note that the `cameraOffset` values are in addition to any parent of this Game Object on the display list.
         * 
@@ -2206,6 +2211,13 @@ declare module Phaser {
         * The rotation the Game Object was in set to in the previous frame. Value is in radians.
         */
         previousRotation: number;
+
+        /**
+        * The coordinates, in pixels, of this DisplayObject, relative to its parent container.
+        * 
+        * The value of this property does not reflect any positioning happening further up the display list.
+        * To obtain that value please see the `worldPosition` property.
+        */
         position: Phaser.Point;
 
         /**
@@ -2268,12 +2280,14 @@ declare module Phaser {
         world: Phaser.Point;
 
         /**
-        * The position of the Game Object on the x axis relative to the local coordinates of the parent.
+        * The horizontal position of the DisplayObject, in pixels, relative to its parent.
+        * If you need the world position of the DisplayObject, use `DisplayObject.worldPosition` instead.
         */
         x: number;
 
         /**
-        * The position of the Game Object on the y axis relative to the local coordinates of the parent.
+        * The vertical position of the DisplayObject, in pixels, relative to its parent.
+        * If you need the world position of the DisplayObject, use `DisplayObject.worldPosition` instead.
         */
         y: number;
 
@@ -7292,8 +7306,8 @@ declare module Phaser {
         physicsConfig?: any;
         seed?: string;
         state?: Phaser.State;
-        forceSetTimeOut: boolean;
-        multiTextue: boolean;
+        forceSetTimeOut?: boolean;
+        multiTextue?: boolean;
 
     }
 
@@ -8979,15 +8993,14 @@ declare module Phaser {
         events: Phaser.Events;
 
         /**
-        * A Game Object that is "fixed" to the camera uses its x/y coordinates as offsets from the top left of the camera during rendering.
+        * A Game Object that is "fixed" to the camera is rendered at a given x/y offsets from the top left of the camera. The offsets
+        * are stored in the `cameraOffset` property, which is initialized with the current object coordinates.
         * 
         * The values are adjusted at the rendering stage, overriding the Game Objects actual world position.
         * 
         * The end result is that the Game Object will appear to be 'fixed' to the camera, regardless of where in the game world
         * the camera is viewing. This is useful if for example this Game Object is a UI item that you wish to be visible at all times
         * regardless where in the world the camera is.
-        * 
-        * The offsets are stored in the `cameraOffset` property.
         * 
         * Note that the `cameraOffset` values are in addition to any parent of this Game Object on the display list.
         * 
@@ -9112,6 +9125,13 @@ declare module Phaser {
         * The const physics body type of this object.
         */
         physicsType: number;
+
+        /**
+        * The coordinates, in pixels, of this DisplayObject, relative to its parent container.
+        * 
+        * The value of this property does not reflect any positioning happening further up the display list.
+        * To obtain that value please see the `worldPosition` property.
+        */
         position: Phaser.Point;
 
         /**
@@ -9616,6 +9636,13 @@ declare module Phaser {
         * If set to `null` the Group will use whatever Phaser.Physics.Arcade.sortDirection is set to. This is the default behavior.
         */
         physicsSortDirection: number;
+
+        /**
+        * The coordinates, in pixels, of this DisplayObject, relative to its parent container.
+        * 
+        * The value of this property does not reflect any positioning happening further up the display list.
+        * To obtain that value please see the `worldPosition` property.
+        */
         position: Phaser.Point;
 
         /**
@@ -9633,6 +9660,14 @@ declare module Phaser {
         * This will have no impact on the rotation value of its children, but it will update their worldTransform and on-screen position.
         */
         rotation: number;
+
+        /**
+        * The scale of this DisplayObject. A scale of 1:1 represents the DisplayObject
+        * at its default size. A value of 0.5 would scale this DisplayObject by half, and so on.
+        * 
+        * The value of this property does not reflect any scaling happening further up the display list.
+        * To obtain that value please see the `worldScale` property.
+        */
         scale: Phaser.Point;
 
         /**
@@ -10759,15 +10794,14 @@ declare module Phaser {
         exists: boolean;
 
         /**
-        * A Game Object that is "fixed" to the camera uses its x/y coordinates as offsets from the top left of the camera during rendering.
+        * A Game Object that is "fixed" to the camera is rendered at a given x/y offsets from the top left of the camera. The offsets
+        * are stored in the `cameraOffset` property, which is initialized with the current object coordinates.
         * 
         * The values are adjusted at the rendering stage, overriding the Game Objects actual world position.
         * 
         * The end result is that the Game Object will appear to be 'fixed' to the camera, regardless of where in the game world
         * the camera is viewing. This is useful if for example this Game Object is a UI item that you wish to be visible at all times
         * regardless where in the world the camera is.
-        * 
-        * The offsets are stored in the `cameraOffset` property.
         * 
         * Note that the `cameraOffset` values are in addition to any parent of this Game Object on the display list.
         * 
@@ -10901,6 +10935,13 @@ declare module Phaser {
         * such as with Buttons or other Input events.
         */
         pendingDestroy: boolean;
+
+        /**
+        * The coordinates, in pixels, of this DisplayObject, relative to its parent container.
+        * 
+        * The value of this property does not reflect any positioning happening further up the display list.
+        * To obtain that value please see the `worldPosition` property.
+        */
         position: Phaser.Point;
 
         /**
@@ -10924,6 +10965,14 @@ declare module Phaser {
         * This is the same as `x + width - offsetX`.
         */
         right: number;
+
+        /**
+        * The scale of this DisplayObject. A scale of 1:1 represents the DisplayObject
+        * at its default size. A value of 0.5 would scale this DisplayObject by half, and so on.
+        * 
+        * The value of this property does not reflect any scaling happening further up the display list.
+        * To obtain that value please see the `worldScale` property.
+        */
         scale: Phaser.Point;
 
         /**
@@ -13433,6 +13482,23 @@ declare module Phaser {
         hasLoaded: boolean;
 
         /**
+        * Used to map the application mime-types to to the Accept header in XHR requests.
+        * If you don't require these mappings, or they cause problems on your server, then
+        * remove them from the headers object and the XHR request will not try to use them.
+        * 
+        * This object can also be used to set the `X-Requested-With` header to
+        * `XMLHttpRequest` (or any other value you need). To enable this do:
+        * 
+        * `this.load.headers.requestedWith = 'XMLHttpRequest'`
+        * 
+        * before adding anything to the Loader. The XHR loader will then call:
+        * 
+        * `setRequestHeader('X-Requested-With', this.headers['requestedWith'])`
+        * Default: {"undefined":"application/xml"}
+        */
+        headers: any;
+
+        /**
         * True if the Loader is in the process of loading the queue.
         */
         isLoading: boolean;
@@ -14439,6 +14505,19 @@ declare module Phaser {
         * @return This Loader instance.
         */
         video(key: string, urls: string | string[] | any, loadEvent?: string, asBlob?: boolean): Phaser.Loader;
+
+        /**
+        * Add a synchronization point to the assets / files added within the supplied callback.
+        * 
+        * A synchronization point denotes that an asset _must_ be completely loaded before
+        * subsequent assets can be loaded. An asset marked as a sync-point does not need to wait
+        * for previous assets to load (unless they are sync-points). Resources, such as packs, may still
+        * be downloaded around sync-points, as long as they do not finalize loading.
+        * 
+        * @param callback The callback is invoked and is supplied with a single argument: the loader.
+        * @param callbackContext Context for the callback. - Default: (loader)
+        * @return This Loader instance.
+        */
         withSyncPoint(callback: Function, callbackContext?: any): Phaser.Loader;
 
         /**
@@ -15992,8 +16071,7 @@ declare module Phaser {
                 frequency: number;
 
                 /**
-                * Sets the `body.gravity.y` of each particle sprite to this value on launch.
-                * Default: 100
+                * Sets the `body.gravity` of each particle sprite to this on launch.
                 */
                 gravity: number;
                 group: Phaser.Group;
@@ -16091,6 +16169,13 @@ declare module Phaser {
                 * The const physics body type of this object.
                 */
                 physicsType: number;
+
+                /**
+                * The coordinates, in pixels, of this DisplayObject, relative to its parent container.
+                * 
+                * The value of this property does not reflect any positioning happening further up the display list.
+                * To obtain that value please see the `worldPosition` property.
+                */
                 position: Phaser.Point;
 
                 /**
@@ -23747,15 +23832,14 @@ declare module Phaser {
         events: Phaser.Events;
 
         /**
-        * A Game Object that is "fixed" to the camera uses its x/y coordinates as offsets from the top left of the camera during rendering.
+        * A Game Object that is "fixed" to the camera is rendered at a given x/y offsets from the top left of the camera. The offsets
+        * are stored in the `cameraOffset` property, which is initialized with the current object coordinates.
         * 
         * The values are adjusted at the rendering stage, overriding the Game Objects actual world position.
         * 
         * The end result is that the Game Object will appear to be 'fixed' to the camera, regardless of where in the game world
         * the camera is viewing. This is useful if for example this Game Object is a UI item that you wish to be visible at all times
         * regardless where in the world the camera is.
-        * 
-        * The offsets are stored in the `cameraOffset` property.
         * 
         * Note that the `cameraOffset` values are in addition to any parent of this Game Object on the display list.
         * 
@@ -23890,6 +23974,13 @@ declare module Phaser {
         */
         pendingDestroy: boolean;
         points: Phaser.Point[];
+
+        /**
+        * The coordinates, in pixels, of this DisplayObject, relative to its parent container.
+        * 
+        * The value of this property does not reflect any positioning happening further up the display list.
+        * To obtain that value please see the `worldPosition` property.
+        */
         position: Phaser.Point;
 
         /**
@@ -23980,12 +24071,14 @@ declare module Phaser {
         world: Phaser.Point;
 
         /**
-        * The position of the Game Object on the x axis relative to the local coordinates of the parent.
+        * The horizontal position of the DisplayObject, in pixels, relative to its parent.
+        * If you need the world position of the DisplayObject, use `DisplayObject.worldPosition` instead.
         */
         x: number;
 
         /**
-        * The position of the Game Object on the y axis relative to the local coordinates of the parent.
+        * The vertical position of the DisplayObject, in pixels, relative to its parent.
+        * If you need the world position of the DisplayObject, use `DisplayObject.worldPosition` instead.
         */
         y: number;
 
@@ -25549,15 +25642,14 @@ declare module Phaser {
         exists: boolean;
 
         /**
-        * A Game Object that is "fixed" to the camera uses its x/y coordinates as offsets from the top left of the camera during rendering.
+        * A Game Object that is "fixed" to the camera is rendered at a given x/y offsets from the top left of the camera. The offsets
+        * are stored in the `cameraOffset` property, which is initialized with the current object coordinates.
         * 
         * The values are adjusted at the rendering stage, overriding the Game Objects actual world position.
         * 
         * The end result is that the Game Object will appear to be 'fixed' to the camera, regardless of where in the game world
         * the camera is viewing. This is useful if for example this Game Object is a UI item that you wish to be visible at all times
         * regardless where in the world the camera is.
-        * 
-        * The offsets are stored in the `cameraOffset` property.
         * 
         * Note that the `cameraOffset` values are in addition to any parent of this Game Object on the display list.
         * 
@@ -25725,6 +25817,13 @@ declare module Phaser {
         * The rotation the Game Object was in set to in the previous frame. Value is in radians.
         */
         previousRotation: number;
+
+        /**
+        * The coordinates, in pixels, of this DisplayObject, relative to its parent container.
+        * 
+        * The value of this property does not reflect any positioning happening further up the display list.
+        * To obtain that value please see the `worldPosition` property.
+        */
         position: Phaser.Point;
         physicsEnabled: boolean;
 
@@ -25744,6 +25843,14 @@ declare module Phaser {
         * This is the same as `x + width - offsetX`.
         */
         right: number;
+
+        /**
+        * The scale of this DisplayObject. A scale of 1:1 represents the DisplayObject
+        * at its default size. A value of 0.5 would scale this DisplayObject by half, and so on.
+        * 
+        * The value of this property does not reflect any scaling happening further up the display list.
+        * To obtain that value please see the `worldScale` property.
+        */
         scale: Phaser.Point;
 
         /**
@@ -25808,12 +25915,14 @@ declare module Phaser {
         world: Phaser.Point;
 
         /**
-        * The position of the Game Object on the x axis relative to the local coordinates of the parent.
+        * The horizontal position of the DisplayObject, in pixels, relative to its parent.
+        * If you need the world position of the DisplayObject, use `DisplayObject.worldPosition` instead.
         */
         x: number;
 
         /**
-        * The position of the Game Object on the y axis relative to the local coordinates of the parent.
+        * The vertical position of the DisplayObject, in pixels, relative to its parent.
+        * If you need the world position of the DisplayObject, use `DisplayObject.worldPosition` instead.
         */
         y: number;
 
@@ -27232,6 +27341,11 @@ declare module Phaser {
         stage: Phaser.Stage;
 
         /**
+        * A reference to the State Manager, which controls state changes.
+        */
+        state: Phaser.StateManager;
+
+        /**
         * A reference to the game clock and timed events system.
         */
         time: Phaser.Time;
@@ -27711,15 +27825,14 @@ declare module Phaser {
         fill: any;
 
         /**
-        * A Game Object that is "fixed" to the camera uses its x/y coordinates as offsets from the top left of the camera during rendering.
+        * A Game Object that is "fixed" to the camera is rendered at a given x/y offsets from the top left of the camera. The offsets
+        * are stored in the `cameraOffset` property, which is initialized with the current object coordinates.
         * 
         * The values are adjusted at the rendering stage, overriding the Game Objects actual world position.
         * 
         * The end result is that the Game Object will appear to be 'fixed' to the camera, regardless of where in the game world
         * the camera is viewing. This is useful if for example this Game Object is a UI item that you wish to be visible at all times
         * regardless where in the world the camera is.
-        * 
-        * The offsets are stored in the `cameraOffset` property.
         * 
         * Note that the `cameraOffset` values are in addition to any parent of this Game Object on the display list.
         * 
@@ -27830,6 +27943,13 @@ declare module Phaser {
         * The const physics body type of this object.
         */
         physicsType: number;
+
+        /**
+        * The coordinates, in pixels, of this DisplayObject, relative to its parent container.
+        * 
+        * The value of this property does not reflect any positioning happening further up the display list.
+        * To obtain that value please see the `worldPosition` property.
+        */
         position: Phaser.Point;
 
         /**
@@ -27905,6 +28025,14 @@ declare module Phaser {
         * A number that represents the thickness of the stroke. Default is 0 (no stroke)
         */
         strokeThickness: number;
+
+        /**
+        * The scale of this DisplayObject. A scale of 1:1 represents the DisplayObject
+        * at its default size. A value of 0.5 would scale this DisplayObject by half, and so on.
+        * 
+        * The value of this property does not reflect any scaling happening further up the display list.
+        * To obtain that value please see the `worldScale` property.
+        */
         scale: Phaser.Point;
         tab: number;
 
@@ -28912,11 +29040,6 @@ declare module Phaser {
         * @return The tile at the given coordinates or null if no tile was found or the coordinates were invalid.
         */
         getTile(x: number, y: number, layer?: any, nonNull?: boolean): Phaser.Tile;
-        getRayCastTiles(layer: Phaser.TilemapLayer|Phaser.TilemapLayerGL, line: Phaser.Line, stepRate?: number, collides?: boolean, interestingFace?: boolean): Phaser.Tile[];
-        getTiles(layer: Phaser.TilemapLayer|Phaser.TilemapLayerGL, x: number, y: number, width: number, height: number, collides?: boolean, interestingFace?: boolean): Phaser.Tile[];
-        getTileX(layer: Phaser.TilemapLayer|Phaser.TilemapLayerGL, x: number): number;
-        getTileXY(layer: Phaser.TilemapLayer|Phaser.TilemapLayerGL, x: number, y: number, point: Phaser.Point): Phaser.Point;
-        getTileY(layer: Phaser.TilemapLayer|Phaser.TilemapLayerGL, y: number): number;
 
         /**
         * Gets the tile above the tile coordinates given.
@@ -29290,15 +29413,14 @@ declare module Phaser {
         exists: boolean;
 
         /**
-        * A Game Object that is "fixed" to the camera uses its x/y coordinates as offsets from the top left of the camera during rendering.
+        * A Game Object that is "fixed" to the camera is rendered at a given x/y offsets from the top left of the camera. The offsets
+        * are stored in the `cameraOffset` property, which is initialized with the current object coordinates.
         * 
         * The values are adjusted at the rendering stage, overriding the Game Objects actual world position.
         * 
         * The end result is that the Game Object will appear to be 'fixed' to the camera, regardless of where in the game world
         * the camera is viewing. This is useful if for example this Game Object is a UI item that you wish to be visible at all times
         * regardless where in the world the camera is.
-        * 
-        * The offsets are stored in the `cameraOffset` property.
         * 
         * Note that the `cameraOffset` values are in addition to any parent of this Game Object on the display list.
         * 
@@ -29369,6 +29491,56 @@ declare module Phaser {
         * Destroys this TilemapLayer.
         */
         destroy(): void;
+
+        /**
+        * Gets all tiles that intersect with the given line.
+        * 
+        * @param line The line used to determine which tiles to return.
+        * @param stepRate How many steps through the ray will we check? Defaults to `rayStepRate`. - Default: (rayStepRate)
+        * @param collides If true, _only_ return tiles that collide on one or more faces.
+        * @param interestingFace If true, _only_ return tiles that have interesting faces.
+        * @return An array of Phaser.Tiles.
+        */
+        getRayCastTiles(layer: Phaser.TilemapLayer|Phaser.TilemapLayerGL, line: Phaser.Line, stepRate?: number, collides?: boolean, interestingFace?: boolean): Phaser.Tile[];
+
+        /**
+        * Get all tiles that exist within the given area, defined by the top-left corner, width and height. Values given are in pixels, not tiles.
+        * 
+        * @param x X position of the top left corner (in pixels).
+        * @param y Y position of the top left corner (in pixels).
+        * @param width Width of the area to get (in pixels).
+        * @param height Height of the area to get (in pixels).
+        * @param collides If true, _only_ return tiles that collide on one or more faces.
+        * @param interestingFace If true, _only_ return tiles that have interesting faces.
+        * @return An array of Tiles.
+        */
+        getTiles(layer: Phaser.TilemapLayer|Phaser.TilemapLayerGL, x: number, y: number, width: number, height: number, collides?: boolean, interestingFace?: boolean): Phaser.Tile[];
+
+        /**
+        * Convert a pixel value to a tile coordinate.
+        * 
+        * @param x X position of the point in target tile (in pixels).
+        * @return The X map location of the tile.
+        */
+        getTileX(layer: Phaser.TilemapLayer|Phaser.TilemapLayerGL, x: number): number;
+
+        /**
+        * Convert a pixel coordinate to a tile coordinate.
+        * 
+        * @param x X position of the point in target tile (in pixels).
+        * @param y Y position of the point in target tile (in pixels).
+        * @param point The Point/object to update.
+        * @return A Point/object with its `x` and `y` properties set.
+        */
+        getTileXY(layer: Phaser.TilemapLayer|Phaser.TilemapLayerGL, x: number, y: number, point: Phaser.Point): Phaser.Point;
+
+        /**
+        * Convert a pixel value to a tile coordinate.
+        * 
+        * @param y Y position of the point in target tile (in pixels).
+        * @return The Y map location of the tile.
+        */
+        getTileY(layer: Phaser.TilemapLayer|Phaser.TilemapLayerGL, y: number): number;
 
         /**
         * Automatically called by World.postUpdate. Handles cache updates.
@@ -29824,15 +29996,14 @@ declare module Phaser {
         exists: boolean;
 
         /**
-        * A Game Object that is "fixed" to the camera uses its x/y coordinates as offsets from the top left of the camera during rendering.
+        * A Game Object that is "fixed" to the camera is rendered at a given x/y offsets from the top left of the camera. The offsets
+        * are stored in the `cameraOffset` property, which is initialized with the current object coordinates.
         * 
         * The values are adjusted at the rendering stage, overriding the Game Objects actual world position.
         * 
         * The end result is that the Game Object will appear to be 'fixed' to the camera, regardless of where in the game world
         * the camera is viewing. This is useful if for example this Game Object is a UI item that you wish to be visible at all times
         * regardless where in the world the camera is.
-        * 
-        * The offsets are stored in the `cameraOffset` property.
         * 
         * Note that the `cameraOffset` values are in addition to any parent of this Game Object on the display list.
         * 
@@ -29968,6 +30139,13 @@ declare module Phaser {
         * The const physics body type of this object.
         */
         physicsType: number;
+
+        /**
+        * The coordinates, in pixels, of this DisplayObject, relative to its parent container.
+        * 
+        * The value of this property does not reflect any positioning happening further up the display list.
+        * To obtain that value please see the `worldPosition` property.
+        */
         position: Phaser.Point;
 
         /**
