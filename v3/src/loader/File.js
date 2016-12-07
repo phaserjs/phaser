@@ -57,12 +57,6 @@ File.prototype = {
     //  ProgressEvent
     onLoad: function (event)
     {
-        console.log('image loaded');
-        // console.log(event);
-        // this.onStateChange(LOADING);
-
-        // this.process();
-
         this.resetXHR();
 
         this.callback(this, true);
@@ -70,9 +64,6 @@ File.prototype = {
 
     onError: function (event)
     {
-        // console.log('image error');
-        // console.log(event);
-
         this.resetXHR();
 
         this.callback(this, false);
@@ -80,12 +71,15 @@ File.prototype = {
 
     onProgress: function (event)
     {
-        this.bytesLoaded = event.loaded;
-        this.bytesTotal = event.total;
+        if (event.lengthComputable)
+        {
+            this.bytesLoaded = event.loaded;
+            this.bytesTotal = event.total;
 
-        this.percentComplete = Math.min((this.bytesLoaded / this.bytesTotal), 1);
+            this.percentComplete = Math.min((this.bytesLoaded / this.bytesTotal), 1);
+        }
 
-        console.log(this.percentComplete + '% (' + this.bytesLoaded + ' bytes)');
+        // console.log(this.percentComplete + '% (' + this.bytesLoaded + ' bytes)');
     },
 
     onProcess: function (callback)
@@ -100,8 +94,6 @@ File.prototype = {
 
     onComplete: function ()
     {
-        console.log('File completed, ready to add to the Loader store');
-
         this.state = CONST.FILE_COMPLETE;
     },
 

@@ -28,8 +28,6 @@ ImageFile.prototype.constructor = ImageFile;
 
 ImageFile.prototype.onProcess = function (callback)
 {
-    console.log('ImageFile.onProcess');
-
     this.state = CONST.FILE_PROCESSING;
 
     this.data = new Image();
@@ -38,11 +36,20 @@ ImageFile.prototype.onProcess = function (callback)
 
     this.data.onload = function ()
     {
-        window.URL.revokeObjectURL(_this.src);
-
-        callback(_this);
+        window.URL.revokeObjectURL(_this.data.src);
 
         _this.onComplete();
+
+        callback(_this);
+    };
+
+    this.data.onerror = function ()
+    {
+        window.URL.revokeObjectURL(_this.data.src);
+
+        _this.state = CONST.FILE_ERRORED;
+
+        callback(_this);
     };
 
     this.data.src = window.URL.createObjectURL(this.xhrLoader.response);

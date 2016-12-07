@@ -4,6 +4,7 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
+var CONST = require('../const');
 var IsPowerOfTwo = require('../math/IsPowerOfTwo');
 
 /**
@@ -55,8 +56,8 @@ var TextureSource = function (texture, source)
     * @type {Number}
     * @default Phaser.scaleModes.DEFAULT;
     */
-    // this.scaleMode = Phaser.scaleModes.DEFAULT;
-    this.scaleMode = Phaser.scaleModes.NEAREST;
+    this.scaleMode = CONST.scaleModes.DEFAULT;
+    // this.scaleMode = CONST.scaleModes.NEAREST;
 
     /**
     * Controls if RGB channels should be pre-multiplied by Alpha  (WebGL only)

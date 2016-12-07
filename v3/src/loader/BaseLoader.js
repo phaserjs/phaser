@@ -17,8 +17,6 @@ var BaseLoader = function ()
 
     this.events = new EventDispatcher();
 
-    this.forceImageTags = false;
-
     //  Move to a 'setURL' method?
     this.baseURL = '';
     this.path = '';
@@ -36,7 +34,6 @@ var BaseLoader = function ()
     this.inflight = new Set();
     this.failed = new Set();
     this.queue = new Set();
-
     this.storage = new Set();
 
     this._state = CONST.LOADER_IDLE;
@@ -193,7 +190,7 @@ BaseLoader.prototype = {
 
     finishedLoading: function ()
     {
-        console.log('BaseLoader.finishedLoading PROCESSING');
+        // console.log('BaseLoader.finishedLoading PROCESSING', this.queue.size, 'files');
 
         this._state = CONST.LOADER_PROCESSING;
 
@@ -211,9 +208,18 @@ BaseLoader.prototype = {
 
     processUpdate: function (file)
     {
-        this.storage.add(file);
+        if (file.state === CONST.FILE_ERRORED)
+        {
+            this.failed.add(file);
+        }
+        else
+        {
+            this.storage.add(file);
+        }
 
-        if (this.storage.size === this.queue.size && this._state === CONST.LOADER_PROCESSING)
+        this.queue.delete(file);
+
+        if (this.queue.size === 0 && this._state === CONST.LOADER_PROCESSING)
         {
             //  We've processed all the files we loaded
             this.processComplete();
@@ -226,16 +232,16 @@ BaseLoader.prototype = {
         this.inflight.clear();
         this.queue.clear();
 
-        console.log('Loader Process Complete. Loaded:', this.storage.size, 'Failed:', this.failed.size);
+        console.log('Loader Complete. Loaded:', this.storage.size, 'Failed:', this.failed.size);
+
+        if (this.processCallback)
+        {
+            this.processCallback();
+        }
 
         this._state = CONST.LOADER_COMPLETE;
 
         this.events.dispatch(new Event.LOADER_COMPLETE_EVENT(this));
-    },
-
-    getLoadedFiles: function ()
-    {
-        return this.storage.slice();
     },
 
     reset: function ()

@@ -48,7 +48,7 @@ var CanvasPool = function ()
 
         if (container === null)
         {
-            console.log('CanvasPool.create new');
+            // console.log('CanvasPool.create new');
 
             container = {
                 parent: parent,
@@ -62,7 +62,7 @@ var CanvasPool = function ()
         }
         else
         {
-            console.log('CanvasPool.create existing');
+            // console.log('CanvasPool.create existing');
 
             container.parent = parent;
 
@@ -127,7 +127,7 @@ var CanvasPool = function ()
         {
             if ((isCanvas && container.canvas === parent) || (!isCanvas && container.parent === parent))
             {
-                console.log('CanvasPool.remove found and removed');
+                // console.log('CanvasPool.remove found and removed');
                 container.parent = null;
                 container.canvas.width = 1;
                 container.canvas.height = 1;

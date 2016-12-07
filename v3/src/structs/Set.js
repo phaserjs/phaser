@@ -29,7 +29,7 @@ Set.prototype = {
     {
         for (var i = 0; i < this.values.length; i++)
         {
-            if (!callback(this.values[i]))
+            if (callback(this.values[i]) === false)
             {
                 break;
             }
