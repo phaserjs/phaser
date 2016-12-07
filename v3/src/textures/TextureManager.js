@@ -49,6 +49,20 @@ TextureManager.prototype = {
         return texture;
     },
 
+    addAtlas: function (key, source, data)
+    {
+        //  Is it a Hash or an Array?
+
+        if (Array.isArray(data.frames))
+        {
+            return this.addAtlasJSONArray(key, source, data);
+        }
+        else
+        {
+            return this.addAtlasJSONHash(key, source, data);
+        }
+    },
+
     addAtlasJSONArray: function (key, source, data)
     {
         var texture = this.create(key, source);

@@ -32,6 +32,8 @@ JSONFile.prototype.onProcess = function (callback)
 
     this.data = JSON.parse(this.xhrLoader.responseText);
 
+    this.onComplete();
+
     callback(this);
 };
 

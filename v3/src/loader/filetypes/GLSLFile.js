@@ -32,6 +32,8 @@ GLSLFile.prototype.onProcess = function (callback)
 
     this.data = this.xhrLoader.responseText;
 
+    this.onComplete();
+
     callback(this);
 };
 

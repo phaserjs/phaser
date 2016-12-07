@@ -10,6 +10,10 @@ var AtlasJSONFile = function (key, textureURL, atlasURL, path)
     image.linkFile = data;
     data.linkFile = image;
 
+    //  Set the type
+    image.linkType = 'atlasjson';
+    data.linkType = 'atlasjson';
+
     return image;
 };
 

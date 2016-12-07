@@ -37,6 +37,7 @@ var File = function (type, key, url, responseType)
 
     //  Multipart file? (i.e. an atlas and its json together)
     this.linkFile = undefined;
+    this.linkType = '';
 
     this.callback = null;
 };

@@ -38,6 +38,8 @@ XMLFile.prototype.onProcess = function (callback)
         throw new Error('XMLFile: Invalid XML');
     }
 
+    this.onComplete();
+
     callback(this);
 };
 

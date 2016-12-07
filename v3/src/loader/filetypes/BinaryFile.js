@@ -32,6 +32,8 @@ BinaryFile.prototype.onProcess = function (callback)
 
     this.data = this.xhrLoader.response;
 
+    this.onComplete();
+
     callback(this);
 };
 

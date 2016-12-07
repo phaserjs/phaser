@@ -245,8 +245,8 @@ BaseLoader.prototype = {
             if (file.state === CONST.FILE_COMPLETE && file.linkFile.state === CONST.FILE_COMPLETE)
             {
                 //  Partner has loaded, so add them both to Storage
-                this.storage.add(file);
-                this.storage.add(file.linkFile);
+
+                this.storage.add({ type: file.linkType, fileA: file, fileB: file.linkFile });
 
                 this.queue.delete(file.linkFile);
 
