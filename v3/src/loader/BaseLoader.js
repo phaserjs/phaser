@@ -193,7 +193,7 @@ BaseLoader.prototype = {
 
     finishedLoading: function ()
     {
-        // console.log('BaseLoader.finishedLoading PROCESSING');
+        console.log('BaseLoader.finishedLoading PROCESSING');
 
         this._state = CONST.LOADER_PROCESSING;
 
@@ -201,29 +201,32 @@ BaseLoader.prototype = {
 
         storage.clear();
 
-        //  This could be Promise based as well, allowing for async processing
+        var _this = this;
 
         this.queue.each(function (file)
         {
-            file.onProcess();
-
-            //  The File specific process handler has run
-            //  Now run any custom callbacks
-            if (file.processCallback)
-            {
-                file.processCallback(file);
-            }
-
-            file.onComplete();
-
-            storage.add(file);
+            file.onProcess(_this.processUpdate.bind(_this));
         });
+    },
 
+    processUpdate: function (file)
+    {
+        this.storage.add(file);
+
+        if (this.storage.size === this.queue.size && this._state === CONST.LOADER_PROCESSING)
+        {
+            //  We've processed all the files we loaded
+            this.processComplete();
+        }
+    },
+
+    processComplete: function ()
+    {
         this.list.clear();
         this.inflight.clear();
         this.queue.clear();
 
-        // console.log('Loader Complete. Loaded:', storage.size, 'Failed:', this.failed.size);
+        console.log('Loader Process Complete. Loaded:', this.storage.size, 'Failed:', this.failed.size);
 
         this._state = CONST.LOADER_COMPLETE;
 

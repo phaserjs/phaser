@@ -57,11 +57,11 @@ File.prototype = {
     //  ProgressEvent
     onLoad: function (event)
     {
-        // console.log('image loaded');
+        console.log('image loaded');
         // console.log(event);
         // this.onStateChange(LOADING);
 
-        this.process();
+        // this.process();
 
         this.resetXHR();
 
@@ -88,9 +88,14 @@ File.prototype = {
         console.log(this.percentComplete + '% (' + this.bytesLoaded + ' bytes)');
     },
 
-    process: function ()
+    onProcess: function (callback)
     {
-        //  Override by an extending class
+        this.state = CONST.FILE_PROCESSING;
+
+        //  If overridden by another class, it must call the callback when finished, then onComplete
+        callback(this);
+
+        this.onComplete();
     },
 
     onComplete: function ()

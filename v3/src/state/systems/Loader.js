@@ -18,7 +18,7 @@ Loader.prototype.constructor = Loader;
 
 Loader.prototype.image = function (key, url)
 {
-    var file = ImageLoader(key, url, this.path);
+    var file = new ImageLoader(key, url, this.path);
 
     this.addFile(file);
 

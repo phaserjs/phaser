@@ -26,17 +26,23 @@ var ImageFile = function (key, url, path)
 ImageFile.prototype = Object.create(File.prototype);
 ImageFile.prototype.constructor = ImageFile;
 
-ImageFile.prototype.process = function ()
+ImageFile.prototype.onProcess = function (callback)
 {
+    console.log('ImageFile.onProcess');
+
     this.state = CONST.FILE_PROCESSING;
 
     this.data = new Image();
 
+    var _this = this;
+
     this.data.onload = function ()
     {
-        window.URL.revokeObjectURL(this.src);
+        window.URL.revokeObjectURL(_this.src);
 
-        this.onComplete();
+        callback(_this);
+
+        _this.onComplete();
     };
 
     this.data.src = window.URL.createObjectURL(this.xhrLoader.response);
