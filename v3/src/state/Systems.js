@@ -90,6 +90,7 @@ Systems.prototype = {
         this.state.data = this.data;
         this.state.camera = this.camera;
         this.state.transform = this.camera.transform;
+        this.state.textures = this.textures;
 
 
 
