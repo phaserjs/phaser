@@ -51,14 +51,26 @@ Set.prototype = {
         }
     },
 
+    //  For when you know this Set will be modified during the iteration
     each: function (callback)
     {
-        //  Because it's highly likely the callback may modify the Set
         var temp = this.values.slice();
 
         for (var i = 0; i < temp.length; i++)
         {
             if (callback(temp[i]) === false)
+            {
+                break;
+            }
+        }
+    },
+
+    //  For when you absolutely know this Set won't be modified during the iteration
+    iterate: function (callback)
+    {
+        for (var i = 0; i < this.values.length; i++)
+        {
+            if (callback(this.values[i]) === false)
             {
                 break;
             }
