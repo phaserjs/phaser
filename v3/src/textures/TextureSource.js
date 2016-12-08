@@ -5,7 +5,7 @@
 */
 
 var CONST = require('../const');
-var IsPowerOfTwo = require('../math/IsPowerOfTwo');
+var IsSizePowerOfTwo = require('../math/pow2/IsSizePowerOfTwo');
 
 /**
 *
@@ -92,7 +92,7 @@ var TextureSource = function (texture, source)
     * @property isPowerOf2
     * @type boolean
     */
-    this.isPowerOf2 = IsPowerOfTwo(this.width, this.height);
+    this.isPowerOf2 = IsSizePowerOfTwo(this.width, this.height);
 
     /**
     * @property glTexture

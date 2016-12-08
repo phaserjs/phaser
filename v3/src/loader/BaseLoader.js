@@ -23,7 +23,7 @@ var BaseLoader = function ()
 
     //  Read from Game / State Config
     this.enableParallel = true;
-    this.maxParallelDownloads = 8;
+    this.maxParallelDownloads = 4;
 
     //  xhr specific global settings (can be overridden on a per-file basis)
     this.xhr = XHRSettings();
@@ -86,7 +86,7 @@ BaseLoader.prototype = {
 
     start: function ()
     {
-        // console.log('BaseLoader start. Files to load:', this.list.size);
+        console.log('BaseLoader start. Files to load:', this.list.size);
 
         if (!this.isReady())
         {
@@ -107,6 +107,8 @@ BaseLoader.prototype = {
             this.inflight.clear();
             this.queue.clear();
 
+            this.queue.debug = true;
+
             this.updateProgress();
 
             this.processLoadQueue();
@@ -120,7 +122,9 @@ BaseLoader.prototype = {
 
     processLoadQueue: function ()
     {
-        // console.log('BaseLoader processLoadQueue', this.list.size);
+        // console.log('======== BaseLoader processLoadQueue');
+        // console.log('List size', this.list.size);
+        // console.log(this.inflight.size, 'items still in flight. Can load another', (this.maxParallelDownloads - this.inflight.size));
 
         var _this = this;
 
@@ -128,8 +132,6 @@ BaseLoader.prototype = {
         {
             if (file.state === CONST.FILE_PENDING && _this.inflight.size < _this.maxParallelDownloads)
             {
-                // console.log('ADDED TO QUEUE:', file.key);
-
                 _this.inflight.add(file);
 
                 _this.list.delete(file);
@@ -144,7 +146,6 @@ BaseLoader.prototype = {
             }
 
         });
-
     },
 
     //  private
@@ -193,36 +194,27 @@ BaseLoader.prototype = {
 
     finishedLoading: function ()
     {
-        // console.log('BaseLoader.finishedLoading PROCESSING', this.queue.size, 'files');
+        // console.log('---> BaseLoader.finishedLoading PROCESSING', this.queue.size, 'files');
 
         this._state = CONST.LOADER_PROCESSING;
 
-        var storage = this.storage;
-
-        storage.clear();
+        this.storage.clear();
 
         var _this = this;
 
         this.queue.each(function (file)
         {
+            // console.log('%c Calling process on ' + file.key, 'color: #000000; background: #ffff00;');
+
             file.onProcess(_this.processUpdate.bind(_this));
         });
-    },
-
-    removeFromQueue: function (file)
-    {
-        this.queue.delete(file);
-
-        if (this.queue.size === 0 && this._state === CONST.LOADER_PROCESSING)
-        {
-            //  We've processed all the files we loaded
-            this.processComplete();
-        }
     },
 
     //  Called automatically by the File when it has finished processing
     processUpdate: function (file)
     {
+        // console.log('-> processUpdate', file.key, file.state);
+
         //  This file has failed to load, so move it to the failed Set
         if (file.state === CONST.FILE_ERRORED)
         {
@@ -256,17 +248,29 @@ BaseLoader.prototype = {
         else
         {
             this.storage.add(file);
+
             this.removeFromQueue(file);
+        }
+    },
+
+    removeFromQueue: function (file)
+    {
+        this.queue.delete(file);
+
+        if (this.queue.size === 0 && this._state === CONST.LOADER_PROCESSING)
+        {
+            //  We've processed all the files we loaded
+            this.processComplete();
         }
     },
 
     processComplete: function ()
     {
+        console.log('Loader Complete. Loaded:', this.storage.size, 'Failed:', this.failed.size);
+
         this.list.clear();
         this.inflight.clear();
         this.queue.clear();
-
-        console.log('Loader Complete. Loaded:', this.storage.size, 'Failed:', this.failed.size);
 
         if (this.processCallback)
         {

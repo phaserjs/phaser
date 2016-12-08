@@ -1,7 +1,9 @@
 var CONST = require('../../loader/const');
 var BaseLoader = require('../../loader/BaseLoader');
-var ImageLoader = require('../../loader/filetypes/ImageFile');
+var ImageFile = require('../../loader/filetypes/ImageFile');
+var JSONFile = require('../../loader/filetypes/JSONFile');
 var AtlasJSONFile = require('../../loader/filetypes/AtlasJSONFile');
+var NumberArray = require('../../utils/array/NumberArray');
 
 var Loader = function (state)
 {
@@ -12,6 +14,8 @@ var Loader = function (state)
     * @protected
     */
     this.state = state;
+
+    this._multilist = {};
 };
 
 Loader.prototype = Object.create(BaseLoader.prototype);
@@ -19,7 +23,16 @@ Loader.prototype.constructor = Loader;
 
 Loader.prototype.image = function (key, url)
 {
-    var file = new ImageLoader(key, url, this.path);
+    var file = new ImageFile(key, url, this.path);
+
+    this.addFile(file);
+
+    return this;
+};
+
+Loader.prototype.json = function (key, url)
+{
+    var file = new JSONFile(key, url, this.path);
 
     this.addFile(file);
 
@@ -35,24 +48,14 @@ Loader.prototype.atlas = function (key, textureURL, atlasURL)
     return this;
 };
 
-/**
- * @method Phaser.Loader#multiatlas
- * @param {string} key - Unique asset key of the texture atlas file.
- * @param {array|integer} textureURLs - An array of PNG files, or an integer.
- * @param {array} [atlasURLs] -  An array of JSON files.
- * @param {number} [format] - The format of the data. Can be Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY (the default), Phaser.Loader.TEXTURE_ATLAS_JSON_HASH or Phaser.Loader.TEXTURE_ATLAS_XML_STARLING.
- * @return {Phaser.Loader} This Loader instance.
- */
-Loader.prototype.multiatlas = function (key, textureURLs, atlasURLs, format)
+Loader.prototype.multiatlas = function (key, textureURLs, atlasURLs)
 {
-    if (format === undefined) { format = CONST.TEXTURE_ATLAS_JSON_ARRAY; }
-
     if (typeof textureURLs === 'number')
     {
         var total = textureURLs;
 
-        textureURLs = Phaser.ArrayUtils.numberArray(0, total, key + '-', '.png');
-        atlasURLs = Phaser.ArrayUtils.numberArray(0, total, key + '-', '.json');
+        textureURLs = NumberArray(0, total, key + '-', '.png');
+        atlasURLs = NumberArray(0, total, key + '-', '.json');
     }
     else
     {
@@ -69,37 +72,31 @@ Loader.prototype.multiatlas = function (key, textureURLs, atlasURLs, format)
 
     var i = 0;
     var multiKey;
-    var imgs = [];
-    var data = [];
+
+    this._multilist[key] = [];
 
     for (i = 0; i < textureURLs.length; i++)
     {
-        //  TODO - Add support for compressed textures
-        multiKey = '_MA_' + key + '_' + i.toString();
+        multiKey = '_MA_IMG_' + key + '_' + i.toString();
 
-        imgs.push(multiKey);
+        this.addFile(new ImageFile(multiKey, textureURLs[i], this.path));
 
-        this.addToFileList('image', multiKey, textureURLs[i], { multiatlas: true });
+        this._multilist[key].push(multiKey);
     }
 
     for (i = 0; i < atlasURLs.length; i++)
     {
-        multiKey = '_MA_' + key + '_' + i.toString();
+        multiKey = '_MA_JSON_' + key + '_' + i.toString();
 
-        data.push(multiKey);
+        this.addFile(new JSONFile(multiKey, atlasURLs[i], this.path));
 
-        //   Check if this can support XML as well?
-        this.addToFileList('json', multiKey, atlasURLs[i], { multiatlas: true });
+        this._multilist[key].push(multiKey);
     }
-
-    this._multilist.push({ key: key, images: imgs, data: data, format: format });
-
-
 };
 
+//  The Loader has finished
 Loader.prototype.processCallback = function ()
 {
-    //  All of the files have loaded. Now to put them into the Cache.
     if (this.storage.size === 0)
     {
         return;
@@ -107,6 +104,52 @@ Loader.prototype.processCallback = function ()
 
     //  The global Texture Manager
     var textures = this.state.sys.textures;
+
+    //  Process multiatlas groups first
+
+    var file;
+
+    for (var key in this._multilist)
+    {
+        var data = [];
+        var images = [];
+        var keys = this._multilist[key];
+
+        for (var i = 0; i < keys.length; i++)
+        {
+            file = this.storage.get('key', keys[i]);
+
+            if (file)
+            {
+                if (file.type === 'image')
+                {
+                    images.push(file.data);
+                }
+                else if (file.type === 'json')
+                {
+                    data.push(file.data);
+                }
+
+                this.storage.delete(file);
+            }
+        }
+
+        //  Do we have everything needed?
+        if (images.length + data.length === keys.length)
+        {
+            //  Yup, add them to the Texture Manager
+
+            //  Is the data JSON Hash or JSON Array?
+            if (Array.isArray(data[0].frames))
+            {
+                textures.addAtlasJSONArray(key, images, data);
+            }
+            else
+            {
+                textures.addAtlasJSONHash(key, images, data);
+            }
+        }
+    }
 
     this.storage.each(function (file)
     {
@@ -127,6 +170,10 @@ Loader.prototype.processCallback = function ()
             {
                 textures.addAtlas(fileB.key, fileB.data, fileA.data);
             }
+        }
+        else if (file.type === 'json')
+        {
+            // console.dir(file.data);
         }
     });
 

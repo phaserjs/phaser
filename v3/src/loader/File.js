@@ -86,10 +86,9 @@ File.prototype = {
     {
         this.state = CONST.FILE_PROCESSING;
 
-        //  If overridden by another class, it must call the callback when finished, then onComplete
-        callback(this);
-
         this.onComplete();
+
+        callback(this);
     },
 
     onComplete: function ()
@@ -123,7 +122,14 @@ File.prototype = {
 
         this.src = GetURL(this, baseURL);
 
-        this.xhrLoader = XHRLoader(this, globalXHR);
+        if (this.src.indexOf('data:') === 0)
+        {
+            console.log('Local data URI');
+        }
+        else
+        {
+            this.xhrLoader = XHRLoader(this, globalXHR);
+        }
     }
 };
 

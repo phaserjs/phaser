@@ -11,7 +11,7 @@ var GetURL = function (file, baseURL)
     }
     else
     {
-        return baseURL + file.path + file.url;
+        return baseURL + file.url;
     }
 };
 

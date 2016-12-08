@@ -25,11 +25,40 @@ Set.prototype = {
         }
     },
 
-    each: function (callback)
+    dump: function ()
+    {
+        console.group('Set');
+
+        for (var i = 0; i < this.values.length; i++)
+        {
+            var entry = this.values[i];
+            console.log(entry);
+        }
+
+        console.groupEnd();
+    },
+
+    get: function (property, value)
     {
         for (var i = 0; i < this.values.length; i++)
         {
-            if (callback(this.values[i]) === false)
+            var entry = this.values[i];
+
+            if (entry[property] === value)
+            {
+                return entry;
+            }
+        }
+    },
+
+    each: function (callback)
+    {
+        //  Because it's highly likely the callback may modify the Set
+        var temp = this.values.slice();
+
+        for (var i = 0; i < temp.length; i++)
+        {
+            if (callback(temp[i]) === false)
             {
                 break;
             }
