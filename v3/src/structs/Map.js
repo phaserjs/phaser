@@ -1,30 +1,70 @@
-// A Set is a collection of unique elements.
+// The keys of a Map can be arbitrary values.
 
-var Set = function (elements)
+/*
+var map = new Map([
+    [ 1, 'one' ],
+    [ 2, 'two' ],
+    [ 3, 'three' ]
+]);
+*/
+
+var Map = function (elements)
 {
-    this.entries = [];
+    this.entries = {};
 
     if (Array.isArray(elements))
     {
         for (var i = 0; i < elements.length; i++)
         {
-            this.add(elements[i]);
+            this.add(elements[i][0], elements[i][1]);
         }
     }
 };
 
-Set.prototype.constructor = Set;
+Map.prototype.constructor = Map;
 
-Set.prototype = {
+Map.prototype = {
 
-    set: function (value)
+    set: function (key, value)
     {
-        if (this.entries.indexOf(value) === -1)
+        if (!this.entries.hasOwnProperty(key))
         {
-            this.entries.push(value);
+            this.entries[key] = value;
+        }
+        return this;
+    },
+
+    delete: function (value)
+    {
+        var index = this.entries.indexOf(value);
+
+        if (index > -1)
+        {
+            this.entries.splice(index, 1);
+        }
+    },
+
+    keys: function ()
+    {
+
+    },
+
+    values: function ()
+    {
+
+    },
+
+    dump: function ()
+    {
+        console.group('Map');
+
+        for (var i = 0; i < this.entries.length; i++)
+        {
+            var entry = this.entries[i];
+            console.log(entry);
         }
 
-        return this;
+        console.groupEnd();
     },
 
     get: function (property, value)
@@ -40,33 +80,7 @@ Set.prototype = {
         }
     },
 
-    delete: function (value)
-    {
-        var index = this.entries.indexOf(value);
-
-        if (index > -1)
-        {
-            this.entries.splice(index, 1);
-        }
-
-        return this;
-    },
-
-    dump: function ()
-    {
-        console.group('Set');
-
-        for (var i = 0; i < this.entries.length; i++)
-        {
-            var entry = this.entries[i];
-            console.log(entry);
-        }
-
-        console.groupEnd();
-    },
-
-
-    //  For when you know this Set will be modified during the iteration
+    //  For when you know this Map will be modified during the iteration
     each: function (callback)
     {
         var temp = this.entries.slice();
@@ -78,11 +92,9 @@ Set.prototype = {
                 break;
             }
         }
-
-        return this;
     },
 
-    //  For when you absolutely know this Set won't be modified during the iteration
+    //  For when you absolutely know this Map won't be modified during the iteration
     iterate: function (callback)
     {
         for (var i = 0; i < this.entries.length; i++)
@@ -92,15 +104,11 @@ Set.prototype = {
                 break;
             }
         }
-
-        return this;
     },
 
     clear: function ()
     {
         this.entries.length = 0;
-
-        return this;
     },
 
     contains: function (value)
@@ -110,54 +118,54 @@ Set.prototype = {
 
     union: function (set)
     {
-        var newSet = new Set();
+        var newMap = new Map();
 
         set.values.forEach(function (value)
         {
-            newSet.add(value);
+            newMap.add(value);
         });
 
         this.entries.forEach(function (value)
         {
-            newSet.add(value);
+            newMap.add(value);
         });
 
-        return newSet;
+        return newMap;
     },
 
     intersect: function (set)
     {
-        var newSet = new Set();
+        var newMap = new Map();
 
         this.entries.forEach(function (value)
         {
             if (set.contains(value))
             {
-                newSet.add(value);
+                newMap.add(value);
             }
         });
 
-        return newSet;
+        return newMap;
     },
 
     difference: function (set)
     {
-        var newSet = new Set();
+        var newMap = new Map();
 
         this.entries.forEach(function (value)
         {
             if (!set.contains(value))
             {
-                newSet.add(value);
+                newMap.add(value);
             }
         });
 
-        return newSet;
+        return newMap;
     }
 
 };
 
-Object.defineProperties(Set.prototype, {
+Object.defineProperties(Map.prototype, {
 
     size: {
 
@@ -177,4 +185,4 @@ Object.defineProperties(Set.prototype, {
 
 });
 
-module.exports = Set;
+module.exports = Map;

@@ -1,9 +1,14 @@
 var CONST = require('../../loader/const');
 var BaseLoader = require('../../loader/BaseLoader');
+var NumberArray = require('../../utils/array/NumberArray');
+
 var ImageFile = require('../../loader/filetypes/ImageFile');
 var JSONFile = require('../../loader/filetypes/JSONFile');
+var XMLFile = require('../../loader/filetypes/XMLFile');
+var BinaryFile = require('../../loader/filetypes/BinaryFile');
+var GLSLFile = require('../../loader/filetypes/GLSLFile');
+var TextFile = require('../../loader/filetypes/TextFile');
 var AtlasJSONFile = require('../../loader/filetypes/AtlasJSONFile');
-var NumberArray = require('../../utils/array/NumberArray');
 
 var Loader = function (state)
 {
@@ -33,6 +38,42 @@ Loader.prototype.image = function (key, url)
 Loader.prototype.json = function (key, url)
 {
     var file = new JSONFile(key, url, this.path);
+
+    this.addFile(file);
+
+    return this;
+};
+
+Loader.prototype.xml = function (key, url)
+{
+    var file = new XMLFile(key, url, this.path);
+
+    this.addFile(file);
+
+    return this;
+};
+
+Loader.prototype.binary = function (key, url)
+{
+    var file = new BinaryFile(key, url, this.path);
+
+    this.addFile(file);
+
+    return this;
+};
+
+Loader.prototype.text = function (key, url)
+{
+    var file = new TextFile(key, url, this.path);
+
+    this.addFile(file);
+
+    return this;
+};
+
+Loader.prototype.glsl = function (key, url)
+{
+    var file = new GLSLFile(key, url, this.path);
 
     this.addFile(file);
 
