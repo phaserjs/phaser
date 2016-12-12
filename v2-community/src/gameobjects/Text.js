@@ -1682,11 +1682,11 @@ Phaser.Text.prototype.getBounds = function (matrix) {
 */
 Phaser.Text.prototype.setCharacterLimit = function (characterLimit, suffix) {
 
-    this.characterLimitSuffix = suffix == undefined ? '' : suffix;
+    this.characterLimitSuffix = (suffix === undefined) ? '' : suffix;
     this.characterLimitSize = characterLimit;
 
     this.updateText();
-}
+};
 
 /**
 * The text to be displayed by this Text object.
