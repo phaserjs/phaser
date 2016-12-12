@@ -50,24 +50,9 @@ BaseLoader.prototype = {
             return -1;
         }
 
-        //  Multipart file?
-        if (file.linkFile)
-        {
-            var fileA = file;
-            var fileB = file.linkFile;
+        file.path = this.path;
 
-            fileA.path = this.path;
-            fileB.path = this.path;
-
-            this.list.add(fileA);
-            this.list.add(fileB);
-        }
-        else
-        {
-            file.path = this.path;
-
-            this.list.add(file);
-        }
+        this.list.add(file);
 
         return this;
     },

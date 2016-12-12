@@ -1,10 +1,10 @@
 var ImageFile = require('./ImageFile.js');
 var JSONFile = require('./JSONFile.js');
 
-var AtlasJSONFile = function (key, textureURL, atlasURL, path)
+var AtlasJSONFile = function (key, textureURL, atlasURL, path, textureXhrSettings, atlasXhrSettings)
 {
-    var image = new ImageFile(key, textureURL, path);
-    var data = new JSONFile(key, atlasURL, path);
+    var image = new ImageFile(key, textureURL, path, textureXhrSettings);
+    var data = new JSONFile(key, atlasURL, path, atlasXhrSettings);
 
     //  Link them together
     image.linkFile = data;
@@ -14,7 +14,7 @@ var AtlasJSONFile = function (key, textureURL, atlasURL, path)
     image.linkType = 'atlasjson';
     data.linkType = 'atlasjson';
 
-    return image;
+    return { texture: image, data: data };
 };
 
 module.exports = AtlasJSONFile;

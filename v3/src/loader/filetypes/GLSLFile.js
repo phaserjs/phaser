@@ -2,7 +2,7 @@
 var CONST = require('../const');
 var File = require('../File');
 
-var GLSLFile = function (key, url, path)
+var GLSLFile = function (key, url, path, xhrSettings)
 {
     if (path === undefined) { path = ''; }
 
@@ -20,7 +20,7 @@ var GLSLFile = function (key, url, path)
         url = path.concat(url);
     }
 
-    File.call(this, 'glsl', key, url, 'text');
+    File.call(this, 'glsl', key, url, 'text', xhrSettings);
 };
 
 GLSLFile.prototype = Object.create(File.prototype);

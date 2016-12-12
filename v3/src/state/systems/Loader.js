@@ -26,70 +26,60 @@ var Loader = function (state)
 Loader.prototype = Object.create(BaseLoader.prototype);
 Loader.prototype.constructor = Loader;
 
-Loader.prototype.image = function (key, url)
+Loader.prototype.image = function (key, url, xhrSettings)
 {
-    var file = new ImageFile(key, url, this.path);
+    var file = new ImageFile(key, url, this.path, xhrSettings);
 
-    this.addFile(file);
+    return this.addFile(file);
+};
+
+Loader.prototype.json = function (key, url, xhrSettings)
+{
+    var file = new JSONFile(key, url, this.path, xhrSettings);
+
+    return this.addFile(file);
+};
+
+Loader.prototype.xml = function (key, url, xhrSettings)
+{
+    var file = new XMLFile(key, url, this.path, xhrSettings);
+
+    return this.addFile(file);
+};
+
+Loader.prototype.binary = function (key, url, xhrSettings)
+{
+    var file = new BinaryFile(key, url, this.path, xhrSettings);
+
+    return this.addFile(file);
+};
+
+Loader.prototype.text = function (key, url, xhrSettings)
+{
+    var file = new TextFile(key, url, this.path, xhrSettings);
+
+    return this.addFile(file);
+};
+
+Loader.prototype.glsl = function (key, url, xhrSettings)
+{
+    var file = new GLSLFile(key, url, this.path, xhrSettings);
+
+    return this.addFile(file);
+};
+
+Loader.prototype.atlas = function (key, textureURL, atlasURL, textureXhrSettings, atlasXhrSettings)
+{
+    //  Returns an object with two properties: 'texture' and 'data'
+    var files = new AtlasJSONFile(key, textureURL, atlasURL, this.path, textureXhrSettings, atlasXhrSettings);
+
+    this.addFile(files.texture);
+    this.addFile(files.data);
 
     return this;
 };
 
-Loader.prototype.json = function (key, url)
-{
-    var file = new JSONFile(key, url, this.path);
-
-    this.addFile(file);
-
-    return this;
-};
-
-Loader.prototype.xml = function (key, url)
-{
-    var file = new XMLFile(key, url, this.path);
-
-    this.addFile(file);
-
-    return this;
-};
-
-Loader.prototype.binary = function (key, url)
-{
-    var file = new BinaryFile(key, url, this.path);
-
-    this.addFile(file);
-
-    return this;
-};
-
-Loader.prototype.text = function (key, url)
-{
-    var file = new TextFile(key, url, this.path);
-
-    this.addFile(file);
-
-    return this;
-};
-
-Loader.prototype.glsl = function (key, url)
-{
-    var file = new GLSLFile(key, url, this.path);
-
-    this.addFile(file);
-
-    return this;
-};
-
-Loader.prototype.atlas = function (key, textureURL, atlasURL)
-{
-    var file = new AtlasJSONFile(key, textureURL, atlasURL, this.path);
-
-    this.addFile(file);
-
-    return this;
-};
-
-Loader.prototype.multiatlas = function (key, textureURLs, atlasURLs)
+Loader.prototype.multiatlas = function (key, textureURLs, atlasURLs, textureXhrSettings, atlasXhrSettings)
 {
     if (typeof textureURLs === 'number')
     {
@@ -111,6 +101,7 @@ Loader.prototype.multiatlas = function (key, textureURLs, atlasURLs)
         }
     }
 
+    var file;
     var i = 0;
     var multiKey;
 
@@ -120,7 +111,9 @@ Loader.prototype.multiatlas = function (key, textureURLs, atlasURLs)
     {
         multiKey = '_MA_IMG_' + key + '_' + i.toString();
 
-        this.addFile(new ImageFile(multiKey, textureURLs[i], this.path));
+        file = new ImageFile(multiKey, textureURLs[i], this.path, textureXhrSettings);
+
+        this.addFile(file);
 
         this._multilist[key].push(multiKey);
     }
@@ -129,7 +122,9 @@ Loader.prototype.multiatlas = function (key, textureURLs, atlasURLs)
     {
         multiKey = '_MA_JSON_' + key + '_' + i.toString();
 
-        this.addFile(new JSONFile(multiKey, atlasURLs[i], this.path));
+        file = new JSONFile(multiKey, atlasURLs[i], this.path, atlasXhrSettings);
+
+        this.addFile(file);
 
         this._multilist[key].push(multiKey);
     }

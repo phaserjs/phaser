@@ -2,7 +2,7 @@
 var CONST = require('../const');
 var File = require('../File');
 
-var JSONFile = function (key, url, path)
+var JSONFile = function (key, url, path, xhrSettings)
 {
     if (path === undefined) { path = ''; }
 
@@ -20,7 +20,7 @@ var JSONFile = function (key, url, path)
         url = path.concat(url);
     }
 
-    File.call(this, 'json', key, url, 'text');
+    File.call(this, 'json', key, url, 'text', xhrSettings);
 };
 
 JSONFile.prototype = Object.create(File.prototype);

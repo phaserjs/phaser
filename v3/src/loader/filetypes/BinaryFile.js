@@ -2,7 +2,7 @@
 var CONST = require('../const');
 var File = require('../File');
 
-var BinaryFile = function (key, url, path)
+var BinaryFile = function (key, url, path, xhrSettings)
 {
     if (path === undefined) { path = ''; }
 
@@ -20,7 +20,7 @@ var BinaryFile = function (key, url, path)
         url = path.concat(url);
     }
 
-    File.call(this, 'binary', key, url, 'arraybuffer');
+    File.call(this, 'binary', key, url, 'arraybuffer', xhrSettings);
 };
 
 BinaryFile.prototype = Object.create(File.prototype);

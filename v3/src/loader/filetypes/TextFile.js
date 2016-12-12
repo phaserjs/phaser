@@ -2,7 +2,7 @@
 var CONST = require('../const');
 var File = require('../File');
 
-var TextFile = function (key, url, path)
+var TextFile = function (key, url, path, xhrSettings)
 {
     if (path === undefined) { path = ''; }
 
@@ -20,7 +20,7 @@ var TextFile = function (key, url, path)
         url = path.concat(url);
     }
 
-    File.call(this, 'text', key, url, 'text');
+    File.call(this, 'text', key, url, 'text', xhrSettings);
 };
 
 TextFile.prototype = Object.create(File.prototype);

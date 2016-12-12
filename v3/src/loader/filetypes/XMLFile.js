@@ -3,7 +3,7 @@ var CONST = require('../const');
 var File = require('../File');
 var ParseXML = require('../../dom/ParseXML');
 
-var XMLFile = function (key, url, path)
+var XMLFile = function (key, url, path, xhrSettings)
 {
     if (path === undefined) { path = ''; }
 
@@ -21,7 +21,7 @@ var XMLFile = function (key, url, path)
         url = path.concat(url);
     }
 
-    File.call(this, 'xml', key, url, 'text');
+    File.call(this, 'xml', key, url, 'text', xhrSettings);
 };
 
 XMLFile.prototype = Object.create(File.prototype);

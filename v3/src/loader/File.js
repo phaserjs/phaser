@@ -2,8 +2,9 @@ var GetURL = require('./GetURL');
 var CONST = require('./const');
 var XHRLoader = require('./XHRLoader');
 var XHRSettings = require('./XHRSettings');
+var MergeXHRSettings = require('./MergeXHRSettings');
 
-var File = function (type, key, url, responseType)
+var File = function (type, key, url, responseType, xhrSettings)
 {
     //  file type (image, json, etc) for sorting within the Loader
     this.type = type;
@@ -18,6 +19,11 @@ var File = function (type, key, url, responseType)
     this.src = '';
 
     this.xhrSettings = XHRSettings(responseType);
+
+    if (xhrSettings)
+    {
+        this.xhrSettings = MergeXHRSettings(this.xhrSettings, xhrSettings);
+    }
 
     this.xhrLoader = null;
 
