@@ -38,7 +38,7 @@ Phaser.LoaderParser = {
     * @param {Phaser.Frame} [frame] - Optional Frame, if this font is embedded in a texture atlas.
     * @return {object} The parsed Bitmap Font data.
     */
-    xmlBitmapFont: function (xml, baseTexture, xSpacing, ySpacing, frame) {
+    xmlBitmapFont: function (xml, baseTexture, xSpacing, ySpacing, frame, resolution) {
 
         var data = {};
         var info = xml.getElementsByTagName('info')[0];
@@ -63,9 +63,9 @@ Phaser.LoaderParser = {
                 y: y + parseInt(letters[i].getAttribute('y'), 10),
                 width: parseInt(letters[i].getAttribute('width'), 10),
                 height: parseInt(letters[i].getAttribute('height'), 10),
-                xOffset: parseInt(letters[i].getAttribute('xoffset'), 10),
-                yOffset: parseInt(letters[i].getAttribute('yoffset'), 10),
-                xAdvance: parseInt(letters[i].getAttribute('xadvance'), 10) + xSpacing,
+                xOffset: parseInt(letters[i].getAttribute('xoffset'), 10) / resolution,
+                yOffset: parseInt(letters[i].getAttribute('yoffset'), 10) / resolution,
+                xAdvance: (parseInt(letters[i].getAttribute('xadvance'), 10) + xSpacing) / resolution,
                 kerning: {}
             };
         }
@@ -76,7 +76,7 @@ Phaser.LoaderParser = {
         {
             var first = parseInt(kernings[i].getAttribute('first'), 10);
             var second = parseInt(kernings[i].getAttribute('second'), 10);
-            var amount = parseInt(kernings[i].getAttribute('amount'), 10);
+            var amount = parseInt(kernings[i].getAttribute('amount'), 10) / resolution;
 
             data.chars[second].kerning[first] = amount;
         }
@@ -119,9 +119,9 @@ Phaser.LoaderParser = {
                     y: y + parseInt(letter._y, 10),
                     width: parseInt(letter._width, 10),
                     height: parseInt(letter._height, 10),
-                    xOffset: parseInt(letter._xoffset, 10),
-                    yOffset: parseInt(letter._yoffset, 10),
-                    xAdvance: parseInt(letter._xadvance, 10) + xSpacing,
+                    xOffset: parseInt(letter._xoffset, 10) / resolution,
+                    yOffset: parseInt(letter._yoffset, 10) / resolution,
+                    xAdvance: (parseInt(letter._xadvance, 10) + xSpacing) / resolution,
                     kerning: {}
                 };
             }
@@ -134,7 +134,7 @@ Phaser.LoaderParser = {
 
                 function parseKerning(kerning) {
 
-                    data.chars[kerning._second].kerning[kerning._first] = parseInt(kerning._amount, 10);
+                    data.chars[kerning._second].kerning[kerning._first] = parseInt(kerning._amount, 10) / resolution;
 
                 }
 
