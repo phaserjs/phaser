@@ -52,7 +52,7 @@ BaseLoader.prototype = {
 
         file.path = this.path;
 
-        this.list.add(file);
+        this.list.set(file);
 
         return this;
     },
@@ -117,7 +117,7 @@ BaseLoader.prototype = {
         {
             if (file.state === CONST.FILE_PENDING && _this.inflight.size < _this.maxParallelDownloads)
             {
-                _this.inflight.add(file);
+                _this.inflight.set(file);
 
                 _this.list.delete(file);
 
@@ -156,11 +156,11 @@ BaseLoader.prototype = {
 
         if (success)
         {
-            this.queue.add(previousFile);
+            this.queue.set(previousFile);
         }
         else
         {
-            this.failed.add(previousFile);
+            this.failed.set(previousFile);
         }
 
         this.inflight.delete(previousFile);
@@ -203,7 +203,7 @@ BaseLoader.prototype = {
         //  This file has failed to load, so move it to the failed Set
         if (file.state === CONST.FILE_ERRORED)
         {
-            this.failed.add(file);
+            this.failed.set(file);
 
             if (file.linkFile)
             {
@@ -223,7 +223,7 @@ BaseLoader.prototype = {
             {
                 //  Partner has loaded, so add them both to Storage
 
-                this.storage.add({ type: file.linkType, fileA: file, fileB: file.linkFile });
+                this.storage.set({ type: file.linkType, fileA: file, fileB: file.linkFile });
 
                 this.queue.delete(file.linkFile);
 
@@ -232,7 +232,7 @@ BaseLoader.prototype = {
         }
         else
         {
-            this.storage.add(file);
+            this.storage.set(file);
 
             this.removeFromQueue(file);
         }
