@@ -31,17 +31,18 @@ Map.prototype = {
         {
             this.entries[key] = value;
         }
+
         return this;
     },
 
-    delete: function (value)
+    delete: function (key)
     {
-        var index = this.entries.indexOf(value);
-
-        if (index > -1)
+        if (this.entries.hasOwnProperty(key))
         {
-            this.entries.splice(index, 1);
+            delete this.entries[key];
         }
+
+        return this;
     },
 
     keys: function ()

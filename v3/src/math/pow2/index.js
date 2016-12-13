@@ -1,7 +1,7 @@
 module.export = {
 
     GetNext: require('./GetPowerOfTwo'),
-    IsValue: require('./IsValuePowerOfTwo'),
-    IsSize: require('./IsSizePowerOfTwo')
+    IsSize: require('./IsSizePowerOfTwo'),
+    IsValue: require('./IsValuePowerOfTwo')
 
 };

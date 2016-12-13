@@ -4,34 +4,26 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
-var Device = require('../device');
 var Config = require('./Config');
 var DebugHeader = require('./DebugHeader');
-var CreateRenderer = require('./CreateRenderer');
+var Device = require('../device');
+
+var AddToDOM = require('../dom/AddToDOM');
 var RequestAnimationFrame = require('../dom/RequestAnimationFrame');
 var DOMContentLoaded = require('../dom/DOMContentLoaded');
+
+var CreateRenderer = require('./CreateRenderer');
 var RandomDataGenerator = require('../math/random-data-generator/RandomDataGenerator');
 var StateManager = require('../state/StateManager');
-var FactoryContainer = require('../gameobjects/FactoryContainer');
-var GameObjects = require('../gameobjects/');
 var TextureManager = require ('../textures/TextureManager');
-var AddToDOM = require('../dom/AddToDOM');
 
 var Game = function (config)
 {
     this.config = new Config(config);
 
-    //  Decide which of the following should be Game properties, or placed elsewhere ...
-
     this.renderer = null;
     this.canvas = null;
     this.context = null;
-
-    /**
-    * @property {string|HTMLElement} parent - The Games DOM parent.
-    * @default
-    */
-    this.parent = parent;
 
     this.isBooted = false;
     this.isRunning = false;
@@ -45,17 +37,12 @@ var Game = function (config)
     /**
     * @property {Phaser.TextureManager} textures - Reference to the Phaser Texture Manager.
     */
-    this.textures = new TextureManager(this);
-
-    /**
-    * @property {Phaser.UpdateManager} updates - Reference to the Phaser Update Manager.
-    */
-    this.updates = null;
+    this.textures = new TextureManager();
 
     /**
     * @property {Phaser.Cache} cache - Reference to the assets cache.
     */
-    this.cache = null;
+    // this.cache = new Cache();
 
     /**
     * @property {Phaser.Input} input - Reference to the input manager
@@ -72,7 +59,7 @@ var Game = function (config)
     */
     this.device = Device;
 
-    //  More this somewhere else? Math perhaps? Doesn't need to be a Game level system.
+    //  Move this somewhere else? Math perhaps? Doesn't need to be a Game level system.
     this.rnd;
 
     //  Wait for the DOM Ready event, then call boot.

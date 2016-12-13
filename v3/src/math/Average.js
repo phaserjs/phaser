@@ -1,14 +1,13 @@
-var Average = function ()
+var Average = function (values)
 {
     var sum = 0;
-    var len = arguments.length;
 
-    for (var i = 0; i < len; i++)
+    for (var i = 0; i < values.length; i++)
     {
-        sum += (+arguments[i]);
+        sum += (+values[i]);
     }
 
-    return sum / len;
+    return sum / values.length;
 };
 
 module.exports = Average;

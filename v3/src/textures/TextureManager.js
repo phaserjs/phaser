@@ -17,13 +17,9 @@ var Texture = require('./Texture');
 *
 * @class Phaser.TextureManager
 * @constructor
-* @param {Phaser.Game} game
 */
-var TextureManager = function (game)
+var TextureManager = function ()
 {
-    //  Required? Remove if not
-    this.game = game;
-
     this.list = {};
 };
 
