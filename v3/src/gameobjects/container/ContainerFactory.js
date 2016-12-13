@@ -13,9 +13,9 @@ var ContainerFactory = {
 
     add: function (parent, x, y)
     {
-        if (group === undefined) { group = this.state; }
+        if (parent === undefined) { parent = this.state; }
 
-        return group.children.add(new Container(this.state, parent, x, y));
+        return parent.children.add(new Container(this.state, parent, x, y));
     },
 
     make: function (parent, x, y)

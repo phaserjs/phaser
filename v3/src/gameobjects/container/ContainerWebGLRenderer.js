@@ -1,7 +1,6 @@
 
 var ContainerWebGLRenderer = function (renderer, src, interpolationPercentage)
 {
-    var frame = src.frame;
     var alpha = src.color.worldAlpha * 255 << 24;
 
     //  Skip rendering?

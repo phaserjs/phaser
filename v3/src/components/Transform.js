@@ -4,6 +4,9 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
+var MATH_CONST = require('../math/const');
+var WrapAngle = require('../math/angle/Wrap');
+
 /**
 * 2D Transformation Component.
 *
@@ -787,12 +790,12 @@ Object.defineProperties(Transform.prototype, {
 
         get: function ()
         {
-            return Phaser.Math.wrapAngle(this.rotation * Phaser.Math.RAD_TO_DEG);
+            return WrapAngle(this.rotation * MATH_CONST.RAD_TO_DEG);
         },
 
         set: function (value)
         {
-            this.rotation = Phaser.Math.wrapAngle(value) * Phaser.Math.DEG_TO_RAD;
+            this.rotation = WrapAngle(value) * MATH_CONST.DEG_TO_RAD;
         }
 
     },
@@ -816,7 +819,7 @@ Object.defineProperties(Transform.prototype, {
             this._rotation = value;
             this.dirty = true;
 
-            if (this._rotation % Phaser.Math.PI2)
+            if (this._rotation % MATH_CONST.PI2)
             {
                 this.cache.sr = Math.sin(this._rotation);
                 this.cache.cr = Math.cos(this._rotation);

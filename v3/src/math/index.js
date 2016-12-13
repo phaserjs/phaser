@@ -1,5 +1,12 @@
 module.exports = {
 
+    //  CONSTs (makes them visible under Phaser.Math)
+    PI2: Math.PI * 2,
+    TAU: Math.PI * 0.5,
+    EPSILON: 1.0e-6,
+    DEG_TO_RAD: Math.PI / 180,
+    RAD_TO_DEG: 180 / Math.PI,
+
     //  Collections of functions
     Angle: require('./angle/'),
     Distance: require('./distance/'),
